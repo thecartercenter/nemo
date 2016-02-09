@@ -1,12 +1,19 @@
 class API::V1::AnswerSerializer < ActiveModel::Serializer
-  attributes :answer_id, :answer_value
+  attributes :id, :code, :question, :value
 
-  def answer_id
-    object.id
+  def filter(keys)
+    keys -= (scope.params[:controller] == "api/v1/answers" ? [:code, :question] : [])
   end
 
-  def answer_value
+  def code
+    object.question.code
+  end
+
+  def question
+    object.question.name
+  end
+
+  def value
     object.casted_value
   end
-
 end

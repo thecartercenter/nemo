@@ -24,21 +24,6 @@
 /* user edit */
 form.user_form {
 
-  div.form_field#login {
-
-    input#user_login {
-      width: 330px;
-      display: inline-block;
-      vertical-align: middle;
-    }
-
-    .btn-default {
-      width: 80px;
-      display: inline-block;
-      vertical-align: middle;
-    }
-  }
-
   textarea#user_notes {
     height: 100px;
   }

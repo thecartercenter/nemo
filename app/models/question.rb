@@ -74,7 +74,6 @@ class Question < ActiveRecord::Base
            :all_options,
            :first_leaf_option,
            :first_level_options,
-           :geographic?,
            :option_path_to_rank_path,
            :rank_path_to_option_path,
            :multi_level?,
@@ -130,6 +129,10 @@ class Question < ActiveRecord::Base
   # returns the question type object associated with this question
   def qtype
     QuestionType[qtype_name]
+  end
+
+  def geographic?
+    qtype_name == 'location' || qtype_name == 'select_one' && option_set.geographic?
   end
 
   # DEPRECATED: this method should go away later

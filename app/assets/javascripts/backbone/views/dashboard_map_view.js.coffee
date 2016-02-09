@@ -41,15 +41,14 @@ class ELMO.Views.DashboardMapView extends Backbone.View
     google.maps.event.addListener(@map, 'bounds_changed', => this.save_bounds(@params.serialization_key))
 
   add_answer: (answer) ->
-    [response_id, loc] = answer
+    [response_id, latitude, longitude] = answer
 
     # only add each response_id/lat/long once
     return if @distinct_answers[answer]
 
     # get float values from string
-    split = loc.split(' ')
-    lat = parseFloat(split[0])
-    lng = parseFloat(split[1])
+    lat = parseFloat(latitude)
+    lng = parseFloat(longitude)
 
     # create marker
     p = new google.maps.LatLng(lat, lng)

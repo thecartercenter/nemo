@@ -16,6 +16,7 @@ class Setting < ActiveRecord::Base
   before_validation(:cleanup_locales)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)
   before_validation(:normalize_twilio_phone_number)
+  before_validation(:clear_sms_fields_if_requested)
   validate(:locales_are_valid)
   validate(:one_locale_must_have_translations)
   validate(:sms_adapter_is_valid)
@@ -24,8 +25,8 @@ class Setting < ActiveRecord::Base
 
   serialize :preferred_locales, JSON
 
-  # accessors for password/password confirm fields
-  attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1
+  # accessors for password/password confirm/clear fields
+  attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1, :clear_intellisms, :clear_twilio
 
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
@@ -171,7 +172,7 @@ class Setting < ActiveRecord::Base
       when "IntelliSms"
         intellisms_username.present? || intellisms_password1.present? || intellisms_password2.present?
       when "Twilio"
-        twilio_phone_number.present? || twilio_account_sid.present? || twilio_auth_token.present?
+        twilio_phone_number.present? || twilio_account_sid.present? || twilio_auth_token1.present?
       end
     end
 
@@ -189,14 +190,26 @@ class Setting < ActiveRecord::Base
       end
     end
 
+    # clear SMS fields if requested
+    def clear_sms_fields_if_requested
+      if clear_intellisms == "1"
+        self.intellisms_username = nil
+        self.intellisms_password = nil
+        self.intellisms_password1 = nil
+        self.intellisms_password2 = nil
+      end
+      if clear_twilio == "1"
+        self.twilio_phone_number = nil
+        self.twilio_account_sid = nil
+        self.twilio_auth_token = nil
+        self.twilio_auth_token1 = nil
+      end
+    end
+
     # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
     def save_sms_credentials
-      case default_outgoing_sms_adapter
-      when "IntelliSms"
-        self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
-      when "Twilio"
-        self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
-      end
+      self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
+      self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
       return true
     end
 

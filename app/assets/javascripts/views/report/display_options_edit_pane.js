@@ -98,7 +98,7 @@
 
     // update controls
     this.tally_type.update(report.attribs.tally_type)
-    this.tally_type.enable(!this.report.has_run());
+    this.tally_type.enable(this.report.new_record);
     this.form_id.update(report.attribs.form_id);
     this.display_type.update(report.attribs.display_type);
     this.percent_type.update(report.attribs.percent_type);

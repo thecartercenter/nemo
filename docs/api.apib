@@ -1,0 +1,317 @@
+FORMAT: 1A
+
+HOST: https://cceom.org/api/v1
+
+# ELMO API
+API for fetching forms, responses, and answers from ELMO.
+Below are methods and responses that will be used within the API.
+
+## HTTP Methods
+- `POST` - Create or update a resource
+- `PATCH` - Modify some parts of a resource
+- `PUT` - Completely replace a resource
+- `GET` - Retrieve a resource or list of resources
+- `DELETE` - Delete a resource
+
+## Typical Server Responses
+- 200 `OK` - The request was successful (some API calls may return 201 instead).
+- 201 `Created` - The request was successful and a resource was created.
+- 204 `No Content` - The request was successful but there is no representation to return (that is, the response is empty).
+- 401 `Unauthorized` - Authentication failed or user does not have permissions for the requested operation.
+- 403 `Forbidden` - Access denied.
+- 404 `Not Found` - Resource was not found.
+
+## Authentication
+
+In general, authentication is achieved via a per-user API key. A user can generate or retrieve their key via the edit profile page. The key should be sent via the `Authentication` header. For example:
+
+```
+Authentication: Token token=2f7a006eaecb358ab5eb026d5580dbc0
+```
+
+The key should be sent with each API request.
+
+An invalid token will result in a 401 response with the header `WWW-Authenticate: Token realm="Application"` and the body `HTTP Token: Access denied.`.
+
+## Error Codes
+If a request results in an handled error, one of the 4XX responses will be returned, plus the response payload will be a JSON object including an array of error codes (e.g. `{"errors": ["user_not_found"]}`). Other information may be included where appropriate (see below).
+
+In cases where errors must be displayed to the user, the client application should translate the error into the appropriate language.
+
+The error code `generic_error` will be returned if a handled error occurs that is not documented below.
+
+In the event of an unhandled error, a 500 code will be returned.
+
+## Pagination
+
+For paginated resource listings, pagination information is included in the `Link`, `Total`, and `Per-Page` headers. Clients should rely on these headers for traversing pages, and not try to guess the URL. Whether an action is paginated will be clearly indicated in the documentation below.
+
+For the sake of brevity, pagination headers are not given in the examples below. A typical example might look like this:
+
+```
+HTTP/1.1 200 OK
+...
+Link: <https://cceom.org/api/v1/m/mymission/responses?form_id=123&page=1>; rel="first",
+    <https://cceom.org/api/v1/m/mymission/responses?form_id=123&page=173>; rel="last",
+    <https://cceom.org/api/v1/m/mymission/responses?form_id=123&page=6>; rel="next",
+    <https://cceom.org/api/v1/m/mymission/responses?form_id=123&page=4>; rel="prev"
+Total: 4321
+Per-Page: 25
+...
+```
+
+Note that in the above, the `Link` header is split over several lines for readability. It is all one header.
+
+`first` and `prev` links will not be given if the requested page was the first page. Likewise, `next` and `last` links will not be given if the requested page was the last page. The client can therefore hide or disable pagination user interface elements based on the presence or absence of these links.
+
+## Testing using cURL
+
+You can use `curl` to test API requests. For example:
+
+```
+curl -v -H "Authorization: Token token=d875d6c9180919d140651fb898e7e24a" \
+  "https://cceom.org/api/v1/m/mymission/responses?form_id=123"
+```
+
+# Group Form
+Operations related to ELMO forms. A form is a set of questions.
+
+## Forms Collection [/forms]
+
+### List Forms [GET]
+Returns a list of forms.
+
+Only forms to which the user has API access will be returned.
+
++ Parameters
+
++ Request
+    + Body
+
++ Response 200 (application/json)
+    + Body
+
+        [{
+            "id": 85,
+            "name": "Tallying Checklist",
+            "responses_count": 43,
+        },{
+            "id": 89,
+            "name": "Polling Checklist",
+            "responses_count": 92,
+        }]
+
++ Response 404 (application/json)
+    + Body
+
+        {
+            "errors": ["mission_not_found"]
+        }
+
+## Single Form [/forms/{id}]
+
+### Get Form [GET]
+Returns information about the requested form and the questions thereon.
+
++ Response 200 (application/json)
+    + Body
+
+        {
+            "id": 85,
+            "name": "Tallying Checklist",
+            "responses_count": 43,
+            "questions": [{
+                "id": 1152,
+                "code": "GPS",
+                "name": "Record your GPS location:"
+            }, {
+                "id": 1194,
+                "code": "ConstituencyCName",
+                "name": "Constituency Tally Center name:"
+            }, {
+                "id": 1195,
+                "code": "ConstCenterNo",
+                "name": "Constituency Tally Center number:"
+            }, {
+                "id": 1043,
+                "code": "ArrivalTime",
+                "name": "Insert your arrival time (please use 24 hour clock):"
+            }]
+        }
+
++ Response 403 (application/json)
+    + Body
+
+        {
+            "errors": ["access_denied"]
+        }
+
++ Response 404 (application/json)
+    + Body
+
+        {
+            "errors": ["mission_not_found"]
+        }
+
+
+# Group Response
+Operations related to ELMO responses. A response is a single filled-out form.
+
+## Responses Collection [/responses]
+
+### List Responses by Form [GET]
+Returns a list of responses and answers for a given form.
+
+If the user does not have API access to the requested form, a 403 error will result.
+
+Answers to questions that are marked 'private' for API access are not shown.
+
+Responses are sorted by creation date, newest first.
+
++ Parameters
+    + form_id (required, int) ... The ID of the form for which to return responses. Can be obtained from the /forms endpoint.
+    + created_after (optional, datetime) ... Restricts results to those created on or after the given date/time.
+    + created_before (optional, datetime) ... Restricts results to those created on or before the given date/time.
+
++ Request
+    + Body
+
++ Response 200 (application/json)
+    + Body
+
+        [{
+            "id": 4398,
+            "submitter": "John Doe",
+            "created_at": "2013-08-05T18:22:01.000+03:00",
+            "updated_at": "2013-08-05T18:22:02.000+03:00",
+            "answers": [{
+                "id": 240772,
+                "question": "Record your GPS location:",
+                "code": "GPS",
+                "value": null
+            }, {
+                "id": 240778,
+                "question": "Constituency Tally Center name:",
+                "code": "ConstituencyCName",
+                "value": "Alpha Bravo"
+            }, {
+                "id": 240773,
+                "question": "Constituency Tally Center number:",
+                "code": "ConstCenterNo",
+                "value": 56
+            }, {
+                "id": 240771,
+                "question": "Insert your arrival time:",
+                "code": "ArrivalTime",
+                "value": "2000-01-01T20:15:00.000Z"
+            }]
+        },{
+            "id": 4395,
+            "submitter": "Sally Forsyth",
+            "created_at": "2013-08-05T18:17:01.000+03:00",
+            "updated_at": "2013-08-05T18:17:02.000+03:00",
+            "answers": [{
+                "id": 240782,
+                "question": "Record your GPS location:",
+                "code": "GPS",
+                "value": "12.12345 33.24143"
+            }, {
+                "id": 240799,
+                "question": "Constituency Tally Center name:",
+                "code": "ConstituencyCName",
+                "value": "Charlie Delta"
+            }, {
+                "id": 240732,
+                "question": "Constituency Tally Center number:",
+                "code": "ConstCenterNo",
+                "value": 99
+            }, {
+                "id": 240712,
+                "question": "Insert your arrival time:",
+                "code": "ArrivalTime",
+                "value": "2000-01-05T17:22:00.000Z"
+            }]
+        }]
+
++ Response 403 (application/json)
+    + Body
+
+        {
+            "errors": ["access_denied"]
+        }
+
++ Response 404 (application/json)
+    + Body
+
+        {
+            "errors": ["form_not_found"]
+        }
+
++ Response 422 (application/json)
+    + Body
+
+        {
+            "errors": ["form_id_required"]
+        }
+
+# Group Answer
+Operations related to ELMO answers. An answer is a single filled-out question.
+
+## Answers Collection [/answers]
+
+### List Answers by Form [GET]
+Returns a list of answers for a given form and question.
+
+If the user does not have API access to the requested form, a 403 error will result.
+
+Answers to questions that are marked 'private' for API access are not shown.
+
+Answers are sorted by creation date, newest first.
+
++ Parameters
+    + form_id (required, int) ... The ID of the form for which to return answers. Can be obtained from the /forms endpoint.
+    + question_id (required, int) ... The ID of the question for which to return responses. Can be obtained from the /forms endpoint.
+    + created_after (optional, datetime) ... Restricts results to those created on or after the given date/time.
+    + created_before (optional, datetime) ... Restricts results to those created on or before the given date/time.
+
++ Request
+    + Body
+
++ Response 200 (application/json)
+    + Body
+
+        [{
+            "id": 246329,
+            "value": "Yes"
+        },{
+            "id": 246361,
+            "value": "No"
+        }]
+
++ Response 403 (application/json)
+    + Body
+
+        {
+            "errors": ["access_denied"]
+        }
+
++ Response 404 (application/json)
+    + Body
+
+        {
+            "errors": ["form_not_found"]
+        }
+
++ Response 422 (application/json)
+    + Body
+
+        {
+            "errors": ["form_id_required"]
+        }
+
++ Response 422 (application/json)
+    + Body
+
+        {
+            "errors": ["question_id_required"]
+        }

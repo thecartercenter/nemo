@@ -63,7 +63,11 @@ ELMO::Application.routes.draw do
     resources :sms, only: [:index]
     resources :sms_tests, path: 'sms-tests'
 
-    resources :reports
+    resources :reports do
+      member do
+        get :data
+      end
+    end
 
     # need to list these all separately b/c rails is dumb sometimes
     resources :answer_tally_reports, controller: 'reports'
@@ -73,8 +77,6 @@ ELMO::Application.routes.draw do
 
     # special dashboard routes
     get '/info-window' => 'welcome#info_window', as: :dashboard_info_window
-    get '/report-update/:id' => 'welcome#report_update'
-
     get '/route-tests' => 'route_tests#mission_mode' if Rails.env.development? || Rails.env.test?
 
     # for /en/m/mission123

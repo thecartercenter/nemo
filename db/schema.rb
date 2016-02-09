@@ -11,12 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150817204307) do
+ActiveRecord::Schema.define(version: 20151130152925) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
     t.datetime "datetime_value"
     t.boolean "delta", limit: 1, default: true, null: false
+    t.decimal "latitude", precision: 8, scale: 6
+    t.decimal "longitude", precision: 9, scale: 6
     t.integer "option_id", limit: 4
     t.integer "questioning_id", limit: 4
     t.integer "rank", limit: 4
@@ -28,6 +30,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
 
   add_index "answers", ["option_id"], name: "answers_option_id_fk", using: :btree
   add_index "answers", ["questioning_id"], name: "answers_questioning_id_fk", using: :btree
+  add_index "answers", ["response_id", "questioning_id", "rank"], name: "index_answers_on_response_id_and_questioning_id_and_rank", unique: true, using: :btree
   add_index "answers", ["response_id"], name: "answers_response_id_fk", using: :btree
 
   create_table "assignments", force: :cascade do |t|
@@ -67,12 +70,24 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   create_table "choices", force: :cascade do |t|
     t.integer "answer_id", limit: 4, null: false
     t.datetime "created_at"
+    t.decimal "latitude", precision: 8, scale: 6
+    t.decimal "longitude", precision: 9, scale: 6
     t.integer "option_id", limit: 4, null: false
     t.datetime "updated_at"
   end
 
   add_index "choices", ["answer_id"], name: "choices_answer_id_fk", using: :btree
   add_index "choices", ["option_id"], name: "choices_option_id_fk", using: :btree
+
+  create_table "condition_option_nodes", force: :cascade do |t|
+    t.integer "condition_id", limit: 4, null: false
+    t.integer "option_node_id", limit: 4, null: false
+    t.integer "rank", limit: 4, null: false
+  end
+
+  add_index "condition_option_nodes", ["condition_id"], name: "index_condition_option_nodes_on_condition_id", using: :btree
+  add_index "condition_option_nodes", ["option_node_id"], name: "index_condition_option_nodes_on_option_node_id", using: :btree
+  add_index "condition_option_nodes", ["rank"], name: "index_condition_option_nodes_on_rank", using: :btree
 
   create_table "conditions", force: :cascade do |t|
     t.datetime "created_at"
@@ -110,6 +125,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.integer "ancestry_depth", limit: 4, null: false
     t.datetime "created_at"
     t.integer "form_id", limit: 4, null: false
+    t.string "group_hint_translations", limit: 255
     t.string "group_name_translations", limit: 255
     t.boolean "hidden", limit: 1, default: false, null: false
     t.integer "mission_id", limit: 4
@@ -299,9 +315,10 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.string "aggregation_name", limit: 255
     t.string "bar_style", limit: 255, default: "side_by_side"
     t.datetime "created_at"
+    t.integer "creator_id", limit: 4
     t.integer "disagg_qing_id", limit: 4
     t.string "display_type", limit: 255, default: "table"
-    t.string "filter", limit: 255
+    t.text "filter", limit: 65535
     t.integer "form_id", limit: 4
     t.boolean "group_by_tag", limit: 1, default: false, null: false
     t.integer "mission_id", limit: 4
@@ -318,6 +335,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.datetime "viewed_at"
   end
 
+  add_index "report_reports", ["creator_id"], name: "fk_rails_1df9873194", using: :btree
   add_index "report_reports", ["disagg_qing_id"], name: "report_reports_disagg_qing_id_fk", using: :btree
   add_index "report_reports", ["form_id"], name: "report_reports_form_id_fk", using: :btree
   add_index "report_reports", ["mission_id"], name: "report_reports_mission_id_fk", using: :btree
@@ -344,6 +362,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_index "responses", ["mission_id"], name: "responses_mission_id_fk", using: :btree
   add_index "responses", ["reviewed"], name: "index_responses_on_reviewed", using: :btree
   add_index "responses", ["updated_at"], name: "index_responses_on_updated_at", using: :btree
+  add_index "responses", ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id", using: :btree
   add_index "responses", ["user_id"], name: "responses_user_id_fk", using: :btree
 
   create_table "sessions", force: :cascade do |t|
@@ -438,6 +457,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.string "crypted_password", limit: 255
     t.datetime "current_login_at"
     t.string "email", limit: 255
+    t.integer "import_num", limit: 4
     t.integer "last_mission_id", limit: 4
     t.datetime "last_request_at"
     t.string "login", limit: 255, null: false
@@ -450,7 +470,6 @@ ActiveRecord::Schema.define(version: 20150817204307) do
     t.string "phone", limit: 255
     t.string "phone2", limit: 255
     t.string "pref_lang", limit: 255, null: false
-    t.string "single_access_token", limit: 255
     t.datetime "updated_at", null: false
   end
 
@@ -458,7 +477,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
   add_index "users", ["name"], name: "index_users_on_name", using: :btree
 
-  create_table "whitelists", force: :cascade do |t|
+  create_table "whitelistings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", limit: 4
@@ -476,6 +495,8 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fk"
   add_foreign_key "choices", "answers"
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
+  add_foreign_key "condition_option_nodes", "conditions"
+  add_foreign_key "condition_option_nodes", "option_nodes"
   add_foreign_key "conditions", "form_items", column: "questioning_id", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fk"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
@@ -505,6 +526,7 @@ ActiveRecord::Schema.define(version: 20150817204307) do
   add_foreign_key "report_reports", "form_items", column: "disagg_qing_id", name: "report_reports_disagg_qing_id_fk"
   add_foreign_key "report_reports", "forms", name: "report_reports_form_id_fk"
   add_foreign_key "report_reports", "missions", name: "report_reports_mission_id_fk"
+  add_foreign_key "report_reports", "users", column: "creator_id"
   add_foreign_key "responses", "forms", name: "responses_form_id_fk"
   add_foreign_key "responses", "missions", name: "responses_mission_id_fk"
   add_foreign_key "responses", "users", column: "checked_out_by_id", name: "responses_checked_out_by_id_fk"

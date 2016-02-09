@@ -241,6 +241,14 @@ module OptionNodeSupport
     }
   end
 
+  GEO_SINGLE_LEVEL_ATTRIBS = [{
+    'option_attribs' => { 'name_translations' => {'en' => 'Funton'}, latitude: -12.9, longitude: 22.7 },
+    'children_attribs' => 'NONE'
+  }, {
+    'option_attribs' => { 'name_translations' => {'en' => 'Sadton'}, latitude: 45.9, longitude: -15.91 },
+    'children_attribs' => 'NONE'
+  }]
+
   WITH_GRANDCHILDREN_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [
@@ -252,6 +260,30 @@ module OptionNodeSupport
     'children_attribs' => [
       { 'option_attribs' => { 'name_translations' => {'en' => 'Tulip'} }, 'children_attribs' => 'NONE' },
       { 'option_attribs' => { 'name_translations' => {'en' => 'Oak'} }, 'children_attribs' => 'NONE' }
+    ]
+  }]
+
+  GEO_WITH_GRANDCHILDREN_ATTRIBS = [{
+    'option_attribs' => { 'name_translations' => {'en' => 'Canada'} },
+    'children_attribs' => [
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Calgary'}, latitude: 51.045, longitude: -114.057222 },
+        'children_attribs' => 'NONE'
+      },{
+        'option_attribs' => { 'name_translations' => {'en' => 'Ottawa'}, latitude: 45.429299, longitude: -75.629883 },
+        'children_attribs' => 'NONE'
+      }
+    ]
+  }, {
+    'option_attribs' => { 'name_translations' => {'en' => 'Ghana'}, latitude: 7.1, longitude: 0.4 },
+    'children_attribs' => [
+      {
+        'option_attribs' => { 'name_translations' => {'en' => 'Accra'}, latitude: 5.5500, longitude: 0.2 },
+        'children_attribs' => 'NONE'
+      },{
+        'option_attribs' => { 'name_translations' => {'en' => 'Tamale'}, latitude: 9.4075, longitude: 0.8533 },
+        'children_attribs' => 'NONE'
+      }
     ]
   }]
 

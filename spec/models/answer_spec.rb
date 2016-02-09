@@ -1,7 +1,32 @@
 require 'spec_helper'
 
 describe Answer do
-  context 'has_coordinates?' do
+  let(:latitude) { 12 }
+  let(:longitude) { -12 }
+
+  describe '#simple_location_answer?' do
+    context 'with questioning of location type' do
+      let(:form) { create(:form, question_types: %w(location)) }
+      let(:questioning) { form.questionings.first }
+
+      it 'returns true' do
+        answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
+        expect(answer.simple_location_answer?).to be_truthy
+      end
+    end
+
+    context 'with questioning of a different type' do
+      let(:form) { create(:form, question_types: %w(text)) }
+      let(:questioning) { form.questionings.first }
+
+      it 'returns false' do
+        answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
+        expect(answer.simple_location_answer?).to be_falsy
+      end
+    end
+  end
+
+  describe '#has_coordinates?' do
     context 'with a select_one question' do
       let(:form) { create(:form, question_types: %w(select_one)) }
       let(:questioning) { form.questionings.first }
@@ -65,6 +90,68 @@ describe Answer do
 
         expect(answer.has_coordinates?).to be_truthy
       end
+    end
+  end
+
+  describe 'replicate_location_values' do
+    context 'when the answer is for simple location type question' do
+      let(:form) { create(:form, question_types: %w(location)) }
+      let(:questioning) { form.questionings.first }
+
+      it 'copies the coordinates from value to the lat/long fields' do
+        answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
+
+        expect(answer.simple_location_answer?).to be_truthy
+        expect(answer.latitude).to eq latitude
+        expect(answer.longitude).to eq longitude
+      end
+    end
+
+    context 'when answer is for a select one question of a location' do
+      let(:form) { create(:form, question_types: %w(select_one)) }
+      let(:questioning) { form.questionings.first }
+      let(:option) { questioning.options.first }
+
+      it 'copies the coordinates from the option to the answer lat/long columns' do
+        questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
+        option.update_attributes(latitude: latitude, longitude: longitude)
+
+        answer = create(:answer, option: option, questioning: questioning)
+        expect(answer.latitude).to eq latitude
+        expect(answer.longitude).to eq longitude
+      end
+    end
+  end
+
+  describe '.location_answers_for_mission' do
+    before do
+      user = create(:user)
+      form = create(:form, question_types: %w(location select_one select_multiple text integer))
+
+      # Configure select one question to be geographic
+      select_one_questioning = form.questionings.second
+      select_one_option = select_one_questioning.options.first
+      select_one_questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
+      select_one_option.update_attributes(latitude: 0, longitude: 0)
+
+      # Configure select multiple question to be geographic
+      select_multiple_questioning = form.questionings.third
+      option_one = select_multiple_questioning.options.first
+      option_two = select_multiple_questioning.options.second
+      select_multiple_questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
+      option_one.update_attributes(latitude: 0, longitude: 0)
+      option_two.update_attributes(latitude: 0, longitude: 0)
+
+      form.publish!
+
+      create(:response, user: user, form: form,
+        answer_values: ["#{latitude} #{longitude}", [select_one_option.name],
+        [option_one.name, option_two.name], "Non geo answer", 12])
+    end
+
+    it 'returns all answers for locations on a certain mission' do
+      location_answers = Answer.location_answers_for_mission(get_mission)
+      expect(location_answers.length).to eq 4
     end
   end
 end

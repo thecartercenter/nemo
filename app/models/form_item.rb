@@ -50,7 +50,9 @@ class FormItem < ActiveRecord::Base
   # * If an item points to an empty hash, it is a leaf node.
   # * The hash should be iterated by doing
   def arrange_descendants
-    with_self = self.class.arrange_nodes(subtree.order('(case when ancestry is null then 0 else 1 end), ancestry, rank').to_a)
+    sort = '(case when ancestry is null then 0 else 1 end), ancestry, rank'
+    # We eager load questions and option sets since they are likely to be needed.
+    with_self = self.class.arrange_nodes(subtree.includes(question: :option_set).order(sort).to_a)
     with_self.values[0]
   end
 

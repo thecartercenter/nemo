@@ -6,17 +6,15 @@ class User < ActiveRecord::Base
   ELMO = new name: "ELMO" # Dummy user for use in SMS log
 
   attr_writer(:reset_password_method)
-
-  # call before_destroy before :dependent => :destroy associations
-  # cf. https://github.com/rails/rails/issues/3458
-  before_destroy(:check_assoc)
-  before_save(:clear_assignments_without_roles)
+  attr_accessor(:batch_creation)
+  alias :batch_creation? :batch_creation
 
   has_many :responses, :inverse_of => :user
   has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
   has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
   has_many :operations, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :destroy
+  has_many :reports, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :nullify, class_name: 'Report::Report'
   has_many :user_groups, :dependent => :destroy
   has_many :groups, :through => :user_groups
   belongs_to :last_mission, class_name: 'Mission'
@@ -30,19 +28,29 @@ class User < ActiveRecord::Base
     c.disable_perishable_token_maintenance = true
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
-    c.validates_format_of_login_field_options = {:with => /[\a-zA-Z0-9\.]+/}
-    c.merge_validates_length_of_password_field_options minimum: 8
+
+    c.validates_format_of_login_field_options = {:with => /\A[a-zA-Z0-9\._]+\z/}
+    c.merge_validates_uniqueness_of_login_field_options(:unless => Proc.new{|u| u.batch_creation?})
+
+    c.merge_validates_length_of_password_field_options(minimum: 8,
+                                                       :unless => Proc.new{|u| u.batch_creation?})
 
     # email is not mandatory, but must be valid if given
     c.merge_validates_format_of_email_field_options(:allow_blank => true)
-    c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.email.blank?})
+    c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.batch_creation? ||
+                                                                                u.email.blank?})
   end
 
   after_initialize(:set_default_pref_lang)
-  after_initialize(:set_default_login)
   before_validation(:normalize_fields)
-  before_validation(:generate_password_if_none)
-  after_create(:regenerate_api_key)
+  before_validation(:generate_password_if_none, unless: :batch_creation?)
+  after_create(:regenerate_api_key, unless: :batch_creation?)
+  # call before_destroy before :dependent => :destroy associations
+  # cf. https://github.com/rails/rails/issues/3458
+  before_destroy(:check_assoc)
+  before_save(:clear_assignments_without_roles)
+
+  normalize_attribute :login, with: [:strip, :downcase]
 
   validates(:name, :presence => true)
   validates(:pref_lang, :presence => true)
@@ -51,8 +59,11 @@ class User < ActiveRecord::Base
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
   validate(:must_have_assignments_if_not_admin)
-  validate(:phone_should_be_unique)
-  validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/, if: :require_password?, message: :invalid_password }
+  validate(:phone_should_be_unique, unless: :batch_creation?)
+  validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
+                                 if: :require_password?,
+                                 unless: :batch_creation?,
+                                 message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
@@ -80,35 +91,6 @@ class User < ActiveRecord::Base
     (user && user.valid_password?(password)) ? user : nil
   end
 
-  def self.suggest_login(name)
-    # if it looks like a person's name, suggest f. initial + l. name
-    if m = name.match(/\A([a-z][a-z'’]+) ([a-z'’\- ]+)\z/i)
-      l = $1[0,1] + $2.gsub(/[^a-z]+/i, "")
-    # otherwise just use the whole thing and strip out weird chars
-    else
-      l = name.gsub(/[^a-z0-9\.]/i, "")
-    end
-
-    # convert to lowercase
-    suggestion = l[0,10].downcase
-
-    # if this login is taken, add a number to the end
-    if find_by_login(suggestion)
-
-      # get suffixes of all logins with same prefix
-      suffixes = where("login LIKE '#{suggestion}%'").all.collect{|u| u.login[suggestion.length..-1].to_i}
-
-      # get max suffix (skip 1 if necessary)
-      suffix = suffixes.max + 1
-      suffix = 2 if suffix <= 1
-
-      # apply suffix
-      suggestion += suffix.to_s
-    end
-
-    suggestion
-  end
-
   def self.search_qualifiers
     [
       Search::Qualifier.new(:name => "name", :col => "users.name", :type => :text, :default => true),
@@ -133,17 +115,62 @@ class User < ActiveRecord::Base
   end
 
 
-  # Returns an array of hashes of format {:name => "Some User", :count => 2}
+  # Returns an array of hashes of format {:name => "Some User", :response_count => 2}
   # of observer response counts for the given mission
   def self.sorted_observer_response_counts(mission, limit)
-    find_by_sql(["SELECT users.name AS name, COUNT(DISTINCT responses.id) AS response_count
-      FROM users
-        INNER JOIN assignments ON users.id = assignments.user_id AND assignments.mission_id = ?
-        LEFT JOIN responses ON responses.user_id = users.id AND responses.mission_id = ?
-      WHERE assignments.role = 'observer'
-      GROUP BY users.id, users.name
-      ORDER BY response_count
-      LIMIT ?", mission.id, mission.id, limit]).reverse
+    #First it tries to get user observers that don't have any response
+    result = self.observers_without_responses(mission, limit)
+    return result unless result.length < limit
+
+    # If the first query didn't get the necessary users quantity,
+    # we then get the ones with lowest activy
+    find_by_sql(["SELECT users.name, rc.response_count FROM users
+      JOIN (
+        SELECT assignments.user_id, COUNT(DISTINCT responses.id) AS response_count
+        FROM assignments
+          LEFT JOIN responses ON responses.user_id = assignments.user_id AND responses.mission_id = ?
+        WHERE assignments.role = 'observer' AND assignments.mission_id = ?
+        GROUP BY assignments.user_id        ORDER BY response_count        LIMIT ?
+      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit]).reverse
+  end
+
+  # Returns an array of hashes of format {:name => "Some User", :response_count => 0}
+  # of observers that doesn't have responses on the mission
+  def self.observers_without_responses(mission, limit)
+    find_by_sql(["SELECT users.name, 0 as response_count FROM users
+      JOIN (
+        SELECT a.user_id FROM assignments a
+        WHERE NOT EXISTS (
+          SELECT 1 FROM responses r
+          WHERE r.user_id = a.user_id AND r.mission_id = ?
+        ) AND a.role='observer' AND a.mission_id = ? LIMIT ?
+      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit])
+  end
+
+  # Returns all non-admin users in the form's mission with the given role that have
+  # not submitted any responses to the form
+  #
+  # options[:role] the role to check for
+  # options[:limit] how many users we want to fetch from the db
+  #
+  # Returns a hash with users instances and the count from the select without the LIMIT
+  def self.without_responses_for_form(form, options)
+    users = find_by_sql(["SELECT SQL_CALC_FOUND_ROWS * FROM users
+      INNER JOIN assignments ON assignments.user_id = users.id WHERE
+      assignments.mission_id = ? AND
+      assignments.role = ? AND
+      users.admin = FALSE AND
+      NOT EXISTS (
+        SELECT 1 FROM responses WHERE
+        responses.user_id=users.id AND
+        responses.form_id = ?
+      ) LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit]])
+
+    # This returns the count of the previous users select without the limit clause.
+    # Format: [[count]]
+    users_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS()').entries[0].first
+
+    { users: users, count: users_count }
   end
 
   # generates a cache key for the set of all users for the given mission.
@@ -299,13 +326,21 @@ class User < ActiveRecord::Base
     save validate: false
   end
 
+  # OVERRIDE AUTHLOGIC METHOD.
+  # This is to avoid unnecessary queries to the database if we want to skip
+  # certain validations.
+  #
+  # Resets the persistence_token field to a random hex value.
+  def reset_persistence_token
+    super unless batch_creation?
+  end
+
   private
     def normalize_fields
-      %w(phone phone2 login name email).each{|f| self.send("#{f}").try(:strip!)}
+      %w(phone phone2 name email).each{|f| self.send("#{f}").try(:strip!)}
       self.email = nil if email.blank?
       self.phone = PhoneNormalizer.normalize(phone)
       self.phone2 = PhoneNormalizer.normalize(phone2)
-      self.login = login.try(:downcase)
       return true
     end
 
@@ -374,15 +409,6 @@ class User < ActiveRecord::Base
     def set_default_pref_lang
       begin
         self.pref_lang ||= configatron.has_key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : 'en'
-      rescue ActiveModel::MissingAttributeError
-        # we rescue this error in case find_by_sql is being used
-      end
-    end
-
-    # sets the user's default login name
-    def set_default_login
-      begin
-        self.login ||= self.class.suggest_login(name) unless name.blank?
       rescue ActiveModel::MissingAttributeError
         # we rescue this error in case find_by_sql is being used
       end

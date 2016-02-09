@@ -6,9 +6,11 @@ class ELMO.Views.SettingsView extends Backbone.View
     'click #external_sql .control a': 'select_external_sql'
     'click .adapter_settings a': 'show_change_credential_fields'
     'click .using-incoming_sms_token': 'show_using_incoming_sms_token_modal'
+    'click .credential_fields input[type=checkbox]:checked': 'clear_sms_fields'
 
   initialize: (options) ->
     this.need_credentials = options.need_credentials || {}
+    this.show_credential_fields_with_errors()
 
   select_external_sql: (event) ->
     $("form.setting_form #external_sql .control pre").selectText()
@@ -29,3 +31,12 @@ class ELMO.Views.SettingsView extends Backbone.View
         new ELMO.Views.UsingIncomingSmsTokenModalView({ html: data.message.replace(/\n/g, "<br/>") })
       complete: ->
         ELMO.app.loading(false)
+
+  show_credential_fields_with_errors: () ->
+    adapters = $('.field_with_errors:hidden').closest('.adapter_settings')
+    $(adapters).find('.credential_fields').show()
+    $(adapters).find('a.show_credential_fields').hide()
+
+  clear_sms_fields: (event) ->
+    inputs = $(event.target).closest('.adapter_settings').find('input[type=text]')
+    $(inputs).val('')

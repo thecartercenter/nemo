@@ -14,7 +14,12 @@ module AnswersHelper
     when "decimal"
       answer.value.present? ? "%.2f" % answer.value.to_f : ''
     when "long_text"
-      answer.value.present? ? (context == :table_cell ? truncate(answer.value, :length => 32) : answer.value) : ''
+      if answer.value.present?
+        value = sanitize(answer.value)
+        context == :table_cell ? truncate(value, length: 32, escape: false) : value
+      else
+        ''
+      end
     else
       answer.value
     end

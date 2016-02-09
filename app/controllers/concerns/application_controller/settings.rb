@@ -8,8 +8,11 @@ module Concerns::ApplicationController::Settings
 
   # sets locale based on passed preferable lang or default
   def set_locale_or_default(pref_lang)
-    pref_lang_sym = pref_lang.blank? ? I18n.default_locale : pref_lang.to_sym
-    I18n.locale = configatron.full_locales.include?(pref_lang_sym) ? pref_lang_sym : I18n.default_locale
+    begin
+      I18n.locale = pref_lang.blank? ? I18n.default_locale : pref_lang.to_sym
+    rescue I18n::InvalidLocale
+      I18n.locale = I18n.default_locale
+    end
   end
 
   # Loads the user-specified timezone from configatron, if one exists

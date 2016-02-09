@@ -47,6 +47,15 @@ module OdkHelper
      }.reject{|k,v| v.nil?}).gsub(/_required=/, 'required=').html_safe
   end
 
+  # note: _readonly is used to get around the 'readonly' html attribute
+  def note_binding(group)
+    tag(:bind, {
+      'nodeset' => "/data/grp-header#{group.id}",
+      '_readonly' => "true()",
+      'type' => "string"
+    }.reject{|k,v| v.nil?}).gsub(/_readonly=/, 'readonly=').html_safe
+  end
+
   def binding_type_attrib(subq)
     # ODK wants non-first-level selects to have type 'string'
     subq.first_rank? ? subq.odk_name : 'string'

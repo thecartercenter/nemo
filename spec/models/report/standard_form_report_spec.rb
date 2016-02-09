@@ -77,7 +77,8 @@ describe Report::StandardFormReport do
 
     it "should return non-submitting observers" do
       # make observers
-      observers = %w(bob jojo cass sal).map{|n| create(:user, :login => n, :role_name => :observer)}
+      observers = %w(bob jojo cass sal).map{|n| create(:user, login: n, role_name: :observer,
+        name: n.capitalize)}
 
       # make decoy coord and admin users
       coord = create(:user, :role_name => :coordinator)
@@ -87,9 +88,16 @@ describe Report::StandardFormReport do
       @form = create(:form)
       observers[0...2].each{|o| create(:response, :form => @form, :user => o)}
 
-      # run report and check missing observers
       build_and_run_report
-      expect(@report.users_without_responses(:role => :observer).map(&:login).sort).to eq(%w(cass sal))
+
+      #check missing observers
+      missing_observers = @report.users_without_responses(role: :observer, limit: 10)[:users]
+      expect(missing_observers.map(&:login).sort).to eq(%w(cass sal))
+      expect(@report.observers_without_responses).to eq('Cass, Sal')
+
+      #Change constant size to check mission observers summarization
+      stub_const("Report::StandardFormReport::MISSING_OBSERVERS_SIZE_LIMIT", 1)
+      expect(@report.observers_without_responses).to eq('Cass, ... (2 in total)')
     end
 
     it "empty? should be false if responses" do

@@ -7,6 +7,7 @@ class Sms::Decoder
   # sms - an Sms::Message object
   def initialize(msg)
     @msg = msg
+    @qings_seen = {}
   end
 
   # main method called to do the decoding
@@ -19,9 +20,10 @@ class Sms::Decoder
 
     check_for_automated_sender
 
-    # try to get user
+    # try to get user from message
     # we do this first because it tells us what language to send errors in (if any)
-    find_user
+    @user = @msg.user
+    raise_decoding_error("user_not_found") unless @user && @user.active?
 
     # ignore duplicates (we do this after find user so that the reply will be in the right language)
     check_for_duplicate
@@ -95,14 +97,6 @@ class Sms::Decoder
       @questionings = @form.questionings.index_by(&:rank)
     end
 
-    # attempts to find and return the user for the given msg
-    # raises an error if not found
-    def find_user
-      @user = User.by_phone(@msg.from)
-      raise_decoding_error("user_not_found") unless @user && @user.active?
-      @msg.update_attributes user: @user
-    end
-
     def current_ability
       @current_ability ||= Ability.new(:user => @user, :mission => @msg.mission)
     end
@@ -113,10 +107,12 @@ class Sms::Decoder
     end
 
     # finds the Questioning object specified by the current value of @rank
-    # raises an error if no such question exists
+    # raises an error if no such question exists, or if qing has already been encountered
     def find_qing
       @qing = @questionings[@rank]
       raise_decoding_error("question_doesnt_exist", :rank => @rank) unless @qing
+      raise_decoding_error("duplicate_answers", :rank => @rank) if @qings_seen[@qing.id]
+      @qings_seen[@qing.id] = 1
     end
 
     # adds the answer contained in @value to the @response for the questioning in @qing

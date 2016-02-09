@@ -3,7 +3,8 @@
 
   // constructor
   ns.ReportController = klass = function(init_data) {
-    this.dont_set_title = init_data.dont_set_title;
+    this.embedded_mode = init_data.embedded_mode;
+    this.init_data = init_data;
 
     // create supporting models unless in read only mode
     if (!init_data.read_only) {
@@ -18,6 +19,7 @@
     }
 
     this.report_in_db = new ns.Report(init_data.report, this.menus);
+
     if (!init_data.read_only) this.report_in_db.prepare();
 
     // create copy of report to be referenced each run
@@ -31,15 +33,15 @@
       this.edit_view = new ns.EditView(this.menus, this.options, this);
 
     // if is new record, show dialog first page
-    if (!this.report_in_db.has_run())
+    if (this.report_in_db.new_record)
       this.show_edit_view(0);
-    // otherwise, the report must have already run, so update the view
-    else
-      this.display_report(this.report_last_run);
 
     // if in edit mode, show edit dialog second page, since report type is not editable
     if (init_data.edit_mode)
       this.show_edit_view(1);
+
+    if (this.report_last_run.populated)
+      this.display_report(this.report_last_run);
   }
 
   klass.prototype.show_edit_view = function(idx) {
@@ -47,8 +49,31 @@
     this.edit_view.show(this.report_last_run.clone(), idx);
   }
 
-  // sends an ajax request to server
-  klass.prototype.run_report = function(report) {
+  // Does not update, just runs.
+  klass.prototype.run_report = function() {
+    if (!this.embedded_mode)
+      ELMO.app.loading(true);
+
+    var promise = $.Deferred();
+
+    var url = ELMO.app.url_builder.build("reports", this.report_in_db.attribs.id, "data");
+    (function(_this) {
+      $.ajax({
+        type: 'GET',
+        url: url,
+        success: function(d, s, j) {
+          promise.resolve();
+          _this.run_success(d, s, j);
+        },
+        error: function(j, s, e) { _this.run_error(j, s, e); }
+      })
+    })(this);
+
+    return promise;
+  }
+
+  // Updates the report and runs it.
+  klass.prototype.update_and_run_report = function(report) {
     ELMO.app.loading(true);
 
     // get hash from report
@@ -73,7 +98,6 @@
   }
 
   klass.prototype.run_success = function(data, status, jqxhr) {
-
     // if the 'just created' flag is set, redirect to the show action so that links, etc., will work
     if (data.report.just_created) {
       ELMO.app.loading(true);
@@ -83,7 +107,7 @@
     } else {
       this.restore_view();
       this.report_last_run = new ns.Report(data.report, this.menus);
-      this.report_last_run.prepare();
+      if (!this.init_data.read_only) this.report_last_run.prepare();
       this.display_report(this.report_last_run);
     }
   }
@@ -97,12 +121,18 @@
 
   klass.prototype.edit_cancelled = function() {
     // if report is new, go back to report index
-    if (!this.report_in_db.has_run()) {
+    if (this.report_in_db.new_record) {
       ELMO.app.loading(true);
       window.location.href = ELMO.app.url_builder.build('reports');
     // else restore the view
-    } else
-      this.restore_view();
+    } else {
+      if (!this.report_last_run.populated) {
+        var self = this;
+        if (this.edit_view) this.edit_view.hide();
+        this.run_report().then(function(){ self.restore_view(); });
+      } else
+        this.restore_view();
+    }
   }
 
   klass.prototype.display_report = function(report) {
@@ -117,7 +147,8 @@
     // hide load ind
     ELMO.app.loading(false);
 
-    this.edit_view.hide();
+    if (this.edit_view)
+      this.edit_view.hide();
 
     // show links and body
     $(".report_links, .report_main").show();

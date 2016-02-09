@@ -53,6 +53,10 @@
     self.list_view.adjust_columns();
   };
 
+  klass.prototype.run_report = function() {
+    this.report_view.refresh();
+  };
+
   klass.prototype.adjust_pane_sizes = function() { var self = this;
     // set 3 pane widths/heights depending on container size
 
@@ -109,9 +113,7 @@
         $('.recent_responses').replaceWith(data.recent_responses);
         $('.report_stats').replaceWith(data.report_stats);
         self.map_view.update_map(data.response_locations);
-        $('.report_pane').replaceWith(data.report_pane);
-        self.report_view.hookup_report_chooser();
-
+        self.report_view.refresh();
         self.adjust_pane_sizes();
 
         self.reload_timer = setTimeout(function(){ self.reload_ajax(); }, AJAX_RELOAD_INTERVAL * 1000);
@@ -120,7 +122,6 @@
         $('#content').html(I18n.t('layout.server_contact_error'));
       }
     });
-
   };
 
   // Reloads the page via full refresh to avoid memory issues.

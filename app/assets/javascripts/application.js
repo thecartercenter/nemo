@@ -33,6 +33,7 @@
 //= require bootstrap
 //= require bootstrap-modal
 //= require bootstrap-modalmanager
+//= require phantomjs_polyfill-rails/bind-polyfill
 
 // some report superclasses need to come first due to inheritance
 //= require views/control/control

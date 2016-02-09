@@ -7,7 +7,7 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(master staging staging-old demo nigeria api cejp-rdc)
+set :stages, %w(production production-old staging staging-old demo nigeria api cejp-rdc loadtest1)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
@@ -81,6 +81,7 @@ namespace :deploy do
 
     # Files
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
+    run "ln -nfs #{shared_path}/config/memcached_server #{release_path}/config/memcached_server"
     run "ln -nfs #{shared_path}/config/thinking_sphinx.yml #{release_path}/config/thinking_sphinx.yml"
     run "ln -nfs #{shared_path}/config/local_config.rb #{release_path}/config/initializers/local_config.rb"
     run "ln -nfs #{shared_path}/config/railsenv #{release_path}/config/railsenv"

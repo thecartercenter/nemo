@@ -1,4 +1,4 @@
-module CsvHelper
+module CSVHelper
   # Formats paragraph style textual data in CSV to play nice with Excel.
   def format_csv_para_text(text)
     return text unless text.is_a?(String) && !text.blank?

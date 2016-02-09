@@ -5,7 +5,8 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     psuedo_qtype_name = qtype_name_or_question
 
     qtype_name = case psuedo_qtype_name
-    when 'multi_level_select_one', 'select_one_as_text_for_sms', 'multi_level_select_one_as_text_for_sms'
+    when 'multi_level_select_one', 'geo_select_one', 'geo_multi_level_select_one',
+      'select_one_as_text_for_sms', 'multi_level_select_one_as_text_for_sms'
       'select_one'
     else
       psuedo_qtype_name
@@ -15,6 +16,7 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       qtype_name: qtype_name,
       mission: form.mission,
       use_multilevel_option_set: !!(psuedo_qtype_name =~ /multi_level_select_one/),
+      use_geo_option_set: !!(psuedo_qtype_name =~ /geo/),
       text_type_for_sms: !!(psuedo_qtype_name =~ /as_text_for_sms/),
       is_standard: form.is_standard?
     }
@@ -59,7 +61,7 @@ FactoryGirl.define do
       # Build questions.
       items.each do |item|
         if item.is_a?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name')
+          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name', group_hint_en: 'Group Hint')
           item.each { |q| create_questioning(q, form, group, evaluator) }
         else
           create_questioning(item, form, form.root_group, evaluator)
@@ -67,6 +69,7 @@ FactoryGirl.define do
       end
     end
 
+    # DO NOT USE, USE FORM ABOVE
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
     # Used in the feature specs

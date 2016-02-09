@@ -10,7 +10,7 @@ class Response < ActiveRecord::Base
   has_many(:answers, -> { order('form_items.rank, answers.rank').includes(:questioning) }, autosave: true, dependent: :destroy, inverse_of: :response)
   belongs_to(:user, :inverse_of => :responses)
 
-  has_many(:location_answers, -> { where("questions.qtype_name = 'location'").order.('form_items.rank').includes(questioning: :question) }, class_name: 'Answer')
+  has_many(:location_answers, -> { where("questions.qtype_name = 'location'").order('form_items.rank').includes(questioning: :question) }, class_name: 'Answer')
 
   attr_accessor(:modifier, :excerpts)
 
@@ -19,20 +19,25 @@ class Response < ActiveRecord::Base
   validates(:user, :presence => true)
   validate(:no_missing_answers)
 
+  # This scope is DEPRECATED. Do not rely on it. Instead, call Response.unscoped and apply your own.
   default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
   scope(:unreviewed, -> { where(:reviewed => false) })
   scope(:by, ->(user) { where(:user_id => user.id) })
+  scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
+  scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
 
   # loads all the associations required for show, edit, etc.
-  scope(:with_associations, -> { includes(
-    :form, {
-      :answers => [
-        {:choices => :option},
+  scope :with_associations, -> { includes(
+    :form,
+    {
+      answers: [
+        {choices: :option},
         :option,
-        {:questioning => [:condition, {:question => :option_set}]}
+        { questioning: [:condition, { question: :option_set } ] }
       ]
-    }
-  ) })
+    },
+    :user
+  ) }
 
   # loads basic belongs_to associations
   scope(:with_basic_assoc, -> { includes(:form, :user) })
@@ -53,12 +58,6 @@ class Response < ActiveRecord::Base
     raise ArguementError, "A user is required" unless user
 
     Response.where(:checked_out_by_id => user).update_all(:checked_out_at => nil, :checked_out_by_id => nil)
-  end
-
-  # takes a Relation, adds a bunch of selects and joins, and uses find_by_sql to do the actual finding
-  # this technique is due to limitations (at the time of dev) in the Relation system
-  def self.for_export(rel)
-    find_by_sql(export_sql(rel))
   end
 
   # gets the list of fields to be searched for this class
@@ -183,7 +182,7 @@ class Response < ActiveRecord::Base
           answers.each do |a|
             r = responses_by_id[a.response_id]
             r.excerpts ||= []
-            r.excerpts << {:questioning_id => a.questioning_id, :code => a.questioning.code, :text => excerpter.excerpt!(a.value)}
+            r.excerpts << {:questioning_id => a.questioning_id, :code => a.questioning.code, :text => excerpter.excerpt!(a.value || a.option_name || a.option_names)}
           end
         end
       end
@@ -344,34 +343,6 @@ class Response < ActiveRecord::Base
   end
 
   private
-    def self.export_sql(rel)
-      # add all the selects
-      # assumes the language desired is English. currently does not respect the locale
-      rel = rel.select("responses.id AS response_id")
-      rel = rel.select("responses.created_at AS submission_time")
-      rel = rel.select("responses.reviewed AS is_reviewed")
-      rel = rel.select("forms.name AS form_name")
-
-      rel = rel.select("questions.code AS question_code")
-      rel = rel.select("questions.canonical_name AS question_name")
-      rel = rel.select("questions.qtype_name AS question_type")
-
-      rel = rel.select("users.name AS submitter_name")
-      rel = rel.select("answers.id AS answer_id")
-      rel = rel.select("answers.value AS answer_value")
-      rel = rel.select("answers.datetime_value AS answer_datetime_value")
-      rel = rel.select("answers.date_value AS answer_date_value")
-      rel = rel.select("answers.time_value AS answer_time_value")
-      rel = rel.select("IFNULL(ao.canonical_name, co.canonical_name) AS choice_name")
-      rel = rel.select("option_sets.name AS option_set")
-
-      # add all the joins
-      rel = rel.joins(Report::Join.list_to_sql([:users, :forms,
-        :answers, :questionings, :questions, :option_sets, :options, :choices]))
-
-      rel.to_sql
-    end
-
     def no_missing_answers
       errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
     end
