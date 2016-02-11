@@ -59,7 +59,7 @@ class Report::Report < ActiveRecord::Base
   def cache_key
     chunks = [super]
     chunks << option_set_choices.map(&:option_set_id)
-    chunks << ("calcs-" << (calculations.order(updated_at: :desc).first.try(:cache_key) || "none"))
+    chunks << ("calcs-" << (calculations.reorder(updated_at: :desc).first.try(:cache_key) || "none"))
     chunks.join("/")
   end
 
