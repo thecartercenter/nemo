@@ -6,11 +6,12 @@ class Media::ObjectsController < ApplicationController
     style = params[:style]
     @answer = @media_object.answer
     @response = @answer.response
+    disposition = (params[:dl] == "1") ? "attachment" : "inline"
     authorize! :show, @response
 
     send_file @media_object.item.path(style),
       type: @media_object.item_content_type,
-      disposition: "inline",
+      disposition: disposition,
       filename: media_filename
   end
 

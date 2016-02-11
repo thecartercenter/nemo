@@ -80,6 +80,15 @@ form.response_form {
     margin-left: $response-form-label-width;
   }
 
+  .media-thumbnail {
+    margin-bottom: 5px;
+
+    a.download {
+      position: absolute;
+      padding-left: 2px;
+    }
+  }
+
   input.qtype_integer, input.qtype_decimal {
     width: 100px;
   }

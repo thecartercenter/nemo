@@ -6,6 +6,12 @@ class Media::Object < ActiveRecord::Base
 
   delegate :url, to: :item
   delegate :mission, to: :answer
+
+  def download_url
+    dl_url = url
+    separator = (dl_url =~ /\?/) ? "&" : "?"
+    "#{dl_url}#{separator}dl=1"
+  end
 end
 
 Paperclip.interpolates :mission do |attachment, style|

@@ -33,16 +33,31 @@
 
 <% when 'image', 'annotated_image', 'signature', 'sketch' %>
 
-  <%= link_to image_tag(answer.media_object.url(:thumb)), answer.media_object.url %>
+  <div class='media-thumbnail'>
+    <%= link_to image_tag(answer.media_object.url(:thumb)), answer.media_object.url %>
+    <%= link_to answer.media_object.download_url, class: 'download' do %>
+      <i class='fa fa-download'></i>
+    <% end %>
+  </div>
 
 <% when 'audio' %>
 
-  <%= link_to image_tag('media/audio.png'), answer.media_object.url %>
+  <div class='media-thumbnail'>
+    <%= link_to image_tag('media/audio.png'), answer.media_object.url %>
+    <%= link_to answer.media_object.download_url, class: 'download' do %>
+      <i class='fa fa-download'></i>
+    <% end %>
+  </div>
 
 <% when 'video' %>
 
-  <%= link_to image_tag('media/video.png'), answer.media_object.url %>
-
+  <div class='media-thumbnail'>
+    <%= link_to image_tag('media/video.png'), answer.media_object.url %>
+    <%= link_to answer.media_object.download_url, class: 'download' do %>
+      <i class='fa fa-download'></i>
+    <% end %>
+  </div>
+  
 <% else %>
 
   <%# no need to output data-val here since same as human readable %>
