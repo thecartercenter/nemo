@@ -636,6 +636,7 @@ en:
           missing_answers: "Not all questions have answers."
           invalid_answers: "There are invalid answers."
           checked_out: "This response has been checked out by:"
+          form_unavailable: "The specified form does not exist in this mission."
         setting:
           attributes:
             preferred_locales_str:

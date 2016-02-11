@@ -2,21 +2,22 @@ class ResponsesController < ApplicationController
   include CsvRenderable
 
   # need to load with associations for show and edit
-  before_filter :load_with_associations, :only => [:show, :edit]
+  before_action :load_with_associations, only: [:show, :edit]
 
-  before_filter :fix_nil_time_values, :only => [:update, :create]
+  before_action :fix_nil_time_values, only: [:update, :create]
 
   # authorization via CanCan
   load_and_authorize_resource
+  before_action :assign_form, only: [:new]
 
-  before_filter :mark_response_as_checked_out, :only => [:edit]
+  before_action :mark_response_as_checked_out, only: [:edit]
 
   def index
     # Deprecating the default_scope on Response
     @responses = Response.unscoped.accessible_by(current_ability)
 
     # Disable cache, including back button
-    response.headers['Cache-Control'] = 'no-cache, max-age=0, must-revalidate, no-store'
+    response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-store"
 
     # handle different formats
     respond_to do |format|
@@ -28,7 +29,7 @@ class ResponsesController < ApplicationController
         @responses = @responses.order(created_at: :desc)
 
         # paginate
-        @responses = @responses.paginate(:page => params[:page], :per_page => 20)
+        @responses = @responses.paginate(page: params[:page], per_page: 20)
 
         # include answers so we can show key questions
         @responses = @responses.includes(:answers)
@@ -36,20 +37,20 @@ class ResponsesController < ApplicationController
         # do search, including excerpts, if applicable
         if params[:search].present?
           begin
-            @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => true)
+            @responses = Response.do_search(@responses, params[:search], {mission: current_mission}, include_excerpts: true)
           rescue Search::ParseError
             flash.now[:error] = $!.to_s
             @search_error = true
           rescue ThinkingSphinx::SphinxError
             # format sphinx message a little more nicely
-            sphinx_msg = $!.to_s.gsub(/index .+?:\s+/, '')
+            sphinx_msg = $!.to_s.gsub(/index .+?:\s+/, "")
             flash.now[:error] = sphinx_msg
             @search_error = true
           end
         end
 
         # render just the table if this is an ajax request
-        render(:partial => "table_only", :locals => {:responses => @responses}) if request.xhr?
+        render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
       end
 
       # csv output is for exporting responses
@@ -57,7 +58,7 @@ class ResponsesController < ApplicationController
         # do search, excluding excerpts
         if params[:search].present?
           begin
-            @responses = Response.do_search(@responses, params[:search], {:mission => current_mission}, :include_excerpts => false)
+            @responses = Response.do_search(@responses, params[:search], {mission: current_mission}, include_excerpts: false)
           rescue Search::ParseError
             flash.now[:error] = $!.to_s
             return
@@ -74,11 +75,12 @@ class ResponsesController < ApplicationController
   end
 
   def show
-    # if there is a search param, we try to load the response via the do_search mechanism so that we get highlighted excerpts
+    # if there is a search param, we try to load the response via the do_search mechanism
+    # so that we get highlighted excerpts
     if params[:search]
       # we pass a relation matching only one respoonse, so there should be at most one match
-      matches = Response.do_search(Response.where(:id => @response.id), params[:search], {:mission => current_mission},
-        :include_excerpts => true, :dont_truncate_excerpts => true)
+      matches = Response.do_search(Response.where(id: @response.id), params[:search], {mission: current_mission},
+        include_excerpts: true, dont_truncate_excerpts: true)
 
       # if we get a match, then we use that object instead, since it contains excerpts
       @response = matches.first if matches.first
@@ -87,19 +89,12 @@ class ResponsesController < ApplicationController
   end
 
   def new
-    # get the form specified in the params and error if it's not there
-    begin
-      @response.form = Form.find(params[:form_id])
-    rescue ActiveRecord::RecordNotFound
-      return redirect_to(index_url_with_page_num)
-    end
-
     # render the form template
     prepare_and_render_form
   end
 
   def edit
-    flash.now[:notice] = "#{t("response.checked_out")} #{@response.checked_out_by_name}" if @response.checked_out_by_others?(current_user)
+    flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}" if @response.checked_out_by_others?(current_user)
     prepare_and_render_form
   end
 
@@ -109,7 +104,7 @@ class ResponsesController < ApplicationController
 
       # if the method is HEAD or GET just render the 'no content' status since that's what odk wants!
       if %w(HEAD GET).include?(request.method)
-        render(:nothing => true, :status => 204)
+        render(nothing: true, status: 204)
 
       # otherwise, we should process the submission
       else
@@ -117,7 +112,7 @@ class ResponsesController < ApplicationController
           @response.user_id = current_user.id
 
           # If it looks like a J2ME submission, process accordingly
-          if params[:data] && params[:data][:'xmlns:jrm'] == 'http://dev.commcarehq.org/jr/xforms'
+          if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
             @response.populate_from_j2me(params[:data])
 
           # Otherwise treat it like an ODK submission
@@ -125,7 +120,7 @@ class ResponsesController < ApplicationController
             upfile = params[:xml_submission_file]
 
             unless upfile
-              render_xml_submission_failure('No XML file attached.', 422)
+              render_xml_submission_failure("No XML file attached.", 422)
               return false
             end
 
@@ -139,9 +134,9 @@ class ResponsesController < ApplicationController
 
           # save without validating, as we have no way to present validation errors to user,
           # and submitting apps already do validation
-          @response.save(:validate => false)
+          @response.save(validate: false)
 
-          render(:nothing => true, :status => 201)
+          render(nothing: true, status: 201)
 
         rescue CanCan::AccessDenied
           render_xml_submission_failure($!, 403)
@@ -190,97 +185,112 @@ class ResponsesController < ApplicationController
       end
     end
 
-    @possible_submitters = @possible_submitters.paginate(:page => params[:page], :per_page => 20)
+    @possible_submitters = @possible_submitters.paginate(page: params[:page], per_page: 20)
 
-    render :json => {
-      :possible_submitters => @possible_submitters.as_json(:only => %i(id name)),
-      :more => @possible_submitters.next_page.present?
+    render json: {
+      possible_submitters: @possible_submitters.as_json(only: %i(id name)),
+      more: @possible_submitters.next_page.present?
     }
   end
 
   private
-    # loads the response with its associations
-    def load_with_associations
-      @response = Response.with_associations.find(params[:id])
+  # loads the response with its associations
+  def load_with_associations
+    @response = Response.with_associations.find(params[:id])
+  end
+
+  # when editing a response, set timestamp to show it is being worked on
+  def mark_response_as_checked_out
+    @response.check_out!(current_user)
+  end
+
+  # handles creating/updating for the web form
+  def web_create_or_update
+    check_form_exists_in_mission
+
+    # set source/modifier to web
+    @response.source = "web" if params[:action] == "create"
+    @response.modifier = "web"
+
+    # check for "update and mark as reviewed"
+    @response.reviewed = true if params[:commit_and_mark_reviewed]
+    @response.check_in if params[:action] == "update"
+
+    # try to save
+    begin
+      @response.save!
+      set_success_and_redirect(@response)
+    rescue ActiveRecord::RecordInvalid
+      flash.now[:error] = I18n.t("activerecord.errors.models.response.general")
+      prepare_and_render_form
     end
+  end
 
-    # when editing a response, set timestamp to show it is being worked on
-    def mark_response_as_checked_out
-      @response.check_out!(current_user)
-    end
+  # prepares objects for and renders the form template
+  def prepare_and_render_form
+    # render the form
+    render(:form)
+  end
 
-    # handles creating/updating for the web form
-    def web_create_or_update
-      # set source/modifier to web
-      @response.source = "web" if params[:action] == "create"
-      @response.modifier = "web"
+  def render_xml_submission_failure(exception, code)
+    Rails.logger.info("XML submission failed: '#{exception.to_s}'")
+    render(nothing: true, status: code)
+  end
 
-      # check for "update and mark as reviewed"
-      @response.reviewed = true if params[:commit_and_mark_reviewed]
+  # get the form specified in the params and error if it's not there
+  def assign_form
+    @response.form = Form.find(params[:form_id])
+    check_form_exists_in_mission
+  rescue ActiveRecord::RecordNotFound
+    return redirect_to(index_url_with_page_num)
+  end
 
-      if params[:action] == "update"
-        @response.check_in
-      end
+  def response_params
+    if params[:response]
+      reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
+      params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |whitelisted|
+        whitelisted[:answers_attributes] = {}
 
-      # try to save
-      begin
-        @response.save!
-        set_success_and_redirect(@response)
-      rescue ActiveRecord::RecordInvalid
-        flash.now[:error] = I18n.t('activerecord.errors.models.response.general')
-        prepare_and_render_form
-      end
-    end
+        # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
+        # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
+        # on the answers.
+        permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
+          time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
+          datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
+          date_value(1i) date_value(2i) date_value(3i))
+        params[:response][:answers_attributes].each do |idx, attribs|
+          whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
 
-    # prepares objects for and renders the form template
-    def prepare_and_render_form
-      # render the form
-      render(:form)
-    end
-
-    def render_xml_submission_failure(exception, code)
-      Rails.logger.info("XML submission failed: '#{exception.to_s}'")
-      render(:nothing => true, :status => code)
-    end
-
-    def response_params
-      if params[:response]
-        reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
-        params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |whitelisted|
-          whitelisted[:answers_attributes] = {}
-
-          # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
-          # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
-          # on the answers.
-          permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
-            time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
-            datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
-            date_value(1i) date_value(2i) date_value(3i))
-          params[:response][:answers_attributes].each do |idx, attribs|
-            whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
-
-            # Handle choices, which are nested under answers.
-            if attribs[:choices_attributes]
-              whitelisted[:answers_attributes][idx][:choices_attributes] = {}
-              attribs[:choices_attributes].each do |idx2, attribs2|
-                whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
-              end
+          # Handle choices, which are nested under answers.
+          if attribs[:choices_attributes]
+            whitelisted[:answers_attributes][idx][:choices_attributes] = {}
+            attribs[:choices_attributes].each do |idx2, attribs2|
+              whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
             end
           end
         end
       end
     end
+  end
 
-    # Rails seems to have a bug wherein if a time_select field is left blank, the value that gets stored is not nil, but 00:00:00.
-    # This seems to be because the date is passed in as 0001-01-01 so it doesn't look like a nil.
-    # So here we correct it by setting the incoming parameters in such a situation to all blanks.
-    def fix_nil_time_values
-      if params[:response] && params[:response][:answers_attributes]
-        params[:response][:answers_attributes].each do |key, attribs|
-          if attribs['time_value(4i)'].blank? && attribs['time_value(5i)'].blank?
-            %w(1 2 3).each{ |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = '' }
-          end
+  def check_form_exists_in_mission
+    if @response.form.mission_id != current_mission.id
+      @error = CanCan::AccessDenied.new("Form does not exist in this mission.", :create, :response)
+      raise @error
+    end
+  end
+
+  # Rails seems to have a bug wherein if a time_select field is left blank,
+  # the value that gets stored is not nil, but 00:00:00.
+  # This seems to be because the date is passed in as 0001-01-01 so it doesn't look like a nil.
+  # So here we correct it by setting the incoming parameters in such a situation to all blanks.
+  def fix_nil_time_values
+    if params[:response] && params[:response][:answers_attributes]
+      params[:response][:answers_attributes].each do |key, attribs|
+        if attribs["time_value(4i)"].blank? && attribs["time_value(5i)"].blank?
+          %w(1 2 3).each { |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = "" }
         end
       end
     end
+  end
 end
