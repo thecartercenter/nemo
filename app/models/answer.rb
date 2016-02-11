@@ -5,6 +5,7 @@ class Answer < ActiveRecord::Base
   belongs_to(:option, inverse_of: :answers)
   belongs_to(:response, inverse_of: :answers, touch: true)
   has_many(:choices, dependent: :destroy, inverse_of: :answer, autosave: true)
+  has_one(:media_object, dependent: :destroy, autosave: true, class_name: 'Media::Object')
 
   before_validation(:clean_locations)
   before_save(:replicate_location_values)
@@ -28,6 +29,7 @@ class Answer < ActiveRecord::Base
   delegate :question, :qtype, :required?, :hidden?, :multimedia?, :option_set, :options, :condition, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
+  delegate :mission, to: :response
 
   scope :public_access, -> { joins(questioning: :question).
     where("questions.access_level = 'inherit'") }

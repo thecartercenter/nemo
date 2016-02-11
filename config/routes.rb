@@ -69,6 +69,10 @@ ELMO::Application.routes.draw do
       end
     end
 
+    namespace :media do
+      get ':type/:id(/:style)' => 'objects#show', defaults: { style: 'original' }
+    end
+
     # need to list these all separately b/c rails is dumb sometimes
     resources :answer_tally_reports, controller: 'reports'
     resources :response_tally_reports, controller: 'reports'
@@ -192,12 +196,6 @@ ELMO::Application.routes.draw do
         resources :responses, only: :index
         resources :answers, only: :index
       end
-    end
-  end
-
-  scope :uploads do
-    namespace :media do
-      get ':type/:id(/:style)' => 'objects#show', defaults: { style: 'original' }
     end
   end
 
