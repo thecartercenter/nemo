@@ -9,7 +9,7 @@ class Media::ObjectsController < ApplicationController
 
     send_file @media_object.item.path(style),
       type: @media_object.item_content_type,
-      disposition: "attachment",
+      disposition: "inline",
       filename: media_filename
   end
 
