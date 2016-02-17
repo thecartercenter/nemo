@@ -50,4 +50,12 @@ module AnswersHelper
 
     simple_format(html, {}, :sanitize => false)
   end
+
+  # Creates a media thumbnail link
+  def media_link(thumbnail, media_object)
+    content_tag(:div, class: 'media-thumbnail') do
+      concat(link_to(image_tag(thumbnail), media_object.url))
+      concat(link_to(content_tag(:i, "", class: 'fa fa-download'), media_object.download_url, class: 'download'))
+    end
+  end
 end
