@@ -31,6 +31,18 @@
   <%# no need to output data-val here since same as human readable %>
   <%= content_tag(:div, excerpt_if_exists(@response, answer), class: 'ro-val') %>
 
+<% when 'image', 'annotated_image', 'signature', 'sketch' %>
+
+  <%= media_link answer.media_object.url(:thumb), answer.media_object %>
+
+<% when 'audio' %>
+
+  <%= media_link 'media/audio.png', answer.media_object %>
+
+<% when 'video' %>
+
+  <%= media_link 'media/video.png', answer.media_object %>
+
 <% else %>
 
   <%# no need to output data-val here since same as human readable %>

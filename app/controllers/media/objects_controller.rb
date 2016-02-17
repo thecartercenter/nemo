@@ -4,16 +4,29 @@ class Media::ObjectsController < ApplicationController
 
   def show
     style = params[:style]
-    send_file @media_object.item.path(style), type: @media_object.item_content_type, disposition: "inline"
+    @answer = @media_object.answer
+    @response = @answer.response
+    disposition = (params[:dl] == "1") ? "attachment" : "inline"
+    authorize! :show, @response
+
+    send_file @media_object.item.path(style),
+      type: @media_object.item_content_type,
+      disposition: disposition,
+      filename: media_filename
   end
 
   private
-  
+
   def set_media_object
     @media_object = Media::Object.find(params[:id])
   end
 
   def media_object_params
     params.require(:media_object).permit(:answer_id, :annotation)
+  end
+
+  def media_filename
+    extension = File.extname(@media_object.item_file_name)
+    "elmo-#{@response.id}-#{@answer.id}#{extension}"
   end
 end
