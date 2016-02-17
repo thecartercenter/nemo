@@ -6,7 +6,6 @@ class SettingsController < ApplicationController
 
   def index
     # setting is already loaded by application controller
-
     prepare_and_render_form
   end
 
@@ -59,18 +58,14 @@ class SettingsController < ApplicationController
       # load options for sms adapter dropdown
       @adapter_options = Sms::Adapters::Factory.products(:can_deliver? => true).map(&:service_name)
 
-      unless admin_mode?
-        # get external sql from Response class
-        @external_sql = Response.export_sql(Response.accessible_by(current_ability))
-      end
-
       # render the template
       render(:index)
     end
 
     def setting_params
       params.require(:setting).permit(:timezone, :preferred_locales_str, :allow_unauthenticated_submissions,
-        :incoming_sms_number, :default_outgoing_sms_adapter, :intellisms_username, :intellisms_password1, :intellisms_password2,
-        :twilio_phone_number, :twilio_account_sid, :twilio_auth_token1)
+        :incoming_sms_number, :default_outgoing_sms_adapter, :intellisms_username,
+        :intellisms_password1, :intellisms_password2, :clear_intellisms,
+        :twilio_phone_number, :twilio_account_sid, :twilio_auth_token1, :clear_twilio)
     end
 end

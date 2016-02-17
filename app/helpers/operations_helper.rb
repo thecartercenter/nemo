@@ -26,7 +26,7 @@ module OperationsHelper
       content_tag(:span, class: "operation-status-#{status}") do
         body = ''.html_safe
 
-        body << t("operation.status.#{status}")
+        body << link_to(t("operation.status.#{status}"), operation_path(operation))
 
         if operation.job_outcome_url.present?
           body << ' ('.html_safe

@@ -126,7 +126,7 @@ FOREIGN_KEYS = {
     {col: 'last_mission_id', ref_tbl: 'missions'}
   ],
 
-  'whitelists' => [
+  'whitelistings' => [
     {col: 'user_id'},
     {col: 'whitelistable_id', polymorphic: true}
   ]

@@ -5,12 +5,19 @@
     <model>
       <instance>
         <data id="1" version="1">
+          <grp-header2/>
           <q1/>
           <q2/>
         </data>
       </instance>
       <itext>
         <translation lang="English">
+          <text id="grp-header2:label">
+            <value>Group Name</value>
+          </text>
+          <text id="grp-header2:hint">
+            <value>Group Hint</value>
+          </text>
           <text id="q1:label">
             <value>Question Title 1</value>
           </text>
@@ -31,13 +38,17 @@
           </text>
         </translation>
       </itext>
+      <bind nodeset="/data/grp-header2" readonly="true()" type="string"/>
       <bind nodeset="/data/q1" type="select1"/>
       <bind nodeset="/data/q2" type="select1"/>
     </model>
   </h:head>
   <h:body>
     <group appearance="field-list">
-      <label>Group Name</label>
+      <input ref="/data/grp-header2">
+        <label ref="jr:itext('grp-header2:label')"/>
+        <hint ref="jr:itext('grp-header2:hint')"/>
+      </input>
       <select1 appearance="label" ref="/data/q1">
         <label/>
         <item>

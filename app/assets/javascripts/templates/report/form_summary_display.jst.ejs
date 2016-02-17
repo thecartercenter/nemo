@@ -14,7 +14,7 @@
   </tr>
   <tr>
     <td><%= I18n.t('report/report.missing_observers') %></td>
-    <td><%= report.observers_without_responses.map(function(obs){ return obs.name; }).join(', ') %></td>
+    <td><%= report.observers_without_responses %></td>
   </tr>
 </table>
 

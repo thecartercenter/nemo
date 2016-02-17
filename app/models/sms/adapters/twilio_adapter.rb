@@ -1,9 +1,13 @@
 require 'twilio-ruby'
 
 class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
+  def self.header_signature_name
+    'X-Twilio-Signature'
+  end
+
   # checks if this adapter recognizes an incoming http receive request
   def self.recognize_receive_request?(request)
-    request.headers.include?('X-Twilio-Signature')
+    request.headers.include?(header_signature_name)
   end
 
   def self.can_deliver?
@@ -31,14 +35,15 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
   def receive(request)
     params = request.request_parameters.merge(request.query_parameters)
-
     validator = Twilio::Util::RequestValidator.new(configatron.twilio_auth_token)
-    unless validator.validate(request.original_url, params, request.headers['X-Twilio-Signature'])
-      raise Sms::Error.new("Could not validate incoming Twilio message from #{params[:From]}")
+    unless Rails.env.test?
+      unless validator.validate(request.original_url, params, request.headers['X-Twilio-Signature'])
+        raise Sms::Error.new("Could not validate incoming Twilio message from #{params[:From]}")
+      end
     end
 
-    # create and return the message
-    Sms::Incoming.create(
+    # return the message
+    Sms::Incoming.new(
       from: params[:From],
       to: params[:To],
       body: params[:Body],

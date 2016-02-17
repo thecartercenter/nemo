@@ -18,7 +18,7 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
 
   def receive(request)
     params = request.params
-    Sms::Incoming.create(
+    Sms::Incoming.new(
       :from => params['from'],
       :to => configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
       :body => params['text'],

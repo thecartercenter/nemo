@@ -25,7 +25,9 @@ class ELMO.Views.GroupModalView extends Backbone.View
     return this.form_data
 
   keypress: (e) ->
-    this.save() if e.keyCode == 13 # Enter
+    if e.keyCode == 13 # Enter
+      e.preventDefault()
+      this.save()
 
   save: ->
     ELMO.app.loading(true)
@@ -41,7 +43,7 @@ class ELMO.Views.GroupModalView extends Backbone.View
     @$el.modal('show')
 
   focus_first_box: ->
-    @$('input[type=text]')[0].focus();
+    @$('input[type=text]')[0].focus()
 
   hide: ->
     @$el.modal('hide')

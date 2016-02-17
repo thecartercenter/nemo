@@ -2,6 +2,7 @@ FactoryGirl.define do
   factory :question do
     transient do
       use_multilevel_option_set false
+      use_geo_option_set false
       add_to_form false
 
       # Optionally specifies the options for the option set.
@@ -16,7 +17,8 @@ FactoryGirl.define do
 
     option_set do
       if QuestionType[qtype_name].has_options?
-        os_attrs = {mission: mission, multi_level: use_multilevel_option_set, is_standard: is_standard}
+        os_attrs = {mission: mission, multi_level: use_multilevel_option_set,
+          geographic: use_geo_option_set, is_standard: is_standard}
         os_attrs[:option_names] = option_names unless option_names.nil?
         build(:option_set, os_attrs)
       else

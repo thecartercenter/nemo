@@ -13,7 +13,7 @@ For security reasons, it is not recommended to install ELMO as the `root` user.
 ### Install dependencies
 
     sudo apt-get update && sudo apt-get -y upgrade
-    sudo apt-get -y install nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev python-software-properties nodejs sphinxsearch memcached
+    sudo apt-get -y install nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev python-software-properties nodejs sphinxsearch memcached
 
 ### Get ELMO source code and change into project directory
 
@@ -72,7 +72,7 @@ Paste the contents of [this config file](nginx.conf). Update the `server_name` s
 
 Choose and save separate passwords for the `root` and `elmo` MySQL users you're about to create.
 
-    sudo apt-get install mysql-server mysql-client libmysqlclient-dev
+    sudo apt-get install -y mysql-server mysql-client libmysqlclient-dev
     # Enter the password you just created when prompted.
     mysql -u root -p
     create database elmo_production;
@@ -81,6 +81,8 @@ Choose and save separate passwords for the `root` and `elmo` MySQL users you're 
     exit
     # Add timezone tables (enter password again).
     mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
+
+In the last step, you may see errors mentioning `iso3166.tab` and `zone.tab`. You can ignore these.
 
 ### Configure ELMO
 

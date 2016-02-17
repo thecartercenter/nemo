@@ -2,6 +2,8 @@
 module Report::Gridable
   extend ActiveSupport::Concern
 
+  RESPONSES_QUANTITY_LIMIT = 1000
+
   included do
     attr_reader :header_set, :data, :totals, :query
   end
@@ -21,8 +23,17 @@ module Report::Gridable
     # extract headers
     @header_set = Report::HeaderSet.new(:row => get_row_header, :col => get_col_header)
 
-    # extract data
     @data = Report::Data.new(blank_data_table(@db_result))
+
+    # If it's a ListReport or ResponseTallyReport, we need to get the total row count
+    # because we are limiting how many we are showing
+    if self.is_a?(Report::ListReport) || self.is_a?(Report::ResponseTallyReport)
+      #Get the total row count from SQL_CALC_FOUND_ROWS on the report prep_query
+      total_row_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS()').entries[0].first
+      @data.total_row_count = total_row_count
+    end
+
+    # extract data
     @db_result.rows.each_with_index do |row, row_idx|
       extract_data_from_row(row, row_idx)
     end
@@ -32,6 +43,8 @@ module Report::Gridable
 
     # compute totals if appropriate
     @data.compute_totals if can_total?
+
+    self.populated = true
   end
 
   # Gridable reports can all be exported to csv

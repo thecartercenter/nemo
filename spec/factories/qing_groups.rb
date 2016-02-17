@@ -3,5 +3,6 @@
 FactoryGirl.define do
   factory :qing_group do
     group_name "group"
+    group_hint "hint"
   end
 end

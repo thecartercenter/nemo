@@ -119,8 +119,7 @@ describe ResponsesController, type: :request do
       expect(response.headers['Content-Disposition']).to match(
         /attachment; filename="elmo-#{get_mission.compact_name}-responses-\d{4}-\d\d-\d\d-\d{4}.csv"/)
       result = CSV.parse(response.body)
-      expect(result.size).to eq 5 # 4 answer rows, 1 header row
-      expect(result[0].size).to eq 16
+      expect(result.size).to eq 3 # 3 response rows, 1 header row
     end
   end
 end

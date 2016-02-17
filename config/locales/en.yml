@@ -281,6 +281,7 @@ en:
         option_levels: "Levels"
       qing_group:
         group_name: "Name"
+        group_hint: "Hint"
         add: "Add Group"
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
@@ -523,7 +524,7 @@ en:
         body: "Enter the body of the message."
       user:
         name: "The user's full name. Example: 'John Doe' or 'Team 1.1'"
-        login: "The username will be used to log in. Click the suggest button to suggest a login name."
+        login: "The username will be used to log in. It may contain only unaccented letters, numbers, periods, and underscores."
         phone: "Phone number must include the country code. Example: +25680344523"
         phone2: "Phone number must include the country code. Example: +25680344523"
         admin: "Whether this user is a system-wide administrator. You can control per-mission permissions using the fields below."
@@ -651,7 +652,7 @@ en:
             assignments:
               cant_be_empty_if_not_admin: "At least one assignment is required if user is not an admin."
             login:
-              invalid: "Please use only letters, numbers, or periods."
+              invalid: "Please use only unaccented letters, numbers, periods, and underscores."
             reset_password_method:
               cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
         user_batch:
@@ -1108,6 +1109,7 @@ en:
 
   operation:
     clear_confirm: "Are you sure you want to clear all operations?"
+    server_error: "Server error. Please contact support."
     description:
       user_import_operation_job: User import for %{mission_name} from %{file}
       option_set_import_operation_job: Option Set '%{name}' import for %{mission_name}
@@ -1214,6 +1216,7 @@ en:
     loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
     missing_observers: "Non-reporting Observers"
+    missing_observers_total_count: "%{user_count} in total"
     mission: "Mission"
     no_match: "No matching data were found."
     question_selection: "Select Questions"
@@ -1225,12 +1228,14 @@ en:
       other: "See dependent questions"
     show_examples: "Show Examples"
     show_text_responses: "Show text responses?"
+    showing_limited_answers: "Showing only the first %{count} answers"
     submitted_by_at: "By %{user} at %{datetime}"
     subset_intro: "Data for responses in which the answer to the '%{question}' question was '%{disagg_value}'"
     tally: "Tally"
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
-    total_rows: "Total Rows"
+    total_rows: "Total Rows: %{count}"
+    total_rows_showing: "Showing %{count} rows from a total of %{total_count}"
     view_response: "Response #%{id}"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
@@ -1242,6 +1247,7 @@ en:
     which_calculation: "Which calculation (if any) would you like to apply?"
     which_forms: "Which forms are you interested in?"
     which_questions: "Which question(s) would you like to include?"
+    zero_missing_observers: "None"
     bar_styles:
       side_by_side: "Side By Side"
       stacked: "Stacked"
@@ -1748,7 +1754,7 @@ en:
 
   user_batch:
     instructions_html: |-
-      Upload a spreadsheet with your users. An <a href="%{url}">example spreadsheet</a> is available as a starting point.
+      Upload a spreadsheet with your users. A <a href="%{url}">spreadsheet template</a> is available as a starting point.
 
   user:
     add_assignment: "Add Assignment"

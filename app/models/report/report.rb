@@ -7,6 +7,7 @@ class Report::Report < ActiveRecord::Base
   has_many(:option_sets, :through => :option_set_choices)
   has_many(:calculations, -> { order("rank") }, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
      :dependent => :destroy, :autosave => true)
+  belongs_to(:creator, class_name: "User")
 
   accepts_nested_attributes_for(:calculations, :allow_destroy => true)
   accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
@@ -20,6 +21,9 @@ class Report::Report < ActiveRecord::Base
   before_save(:normalize_attribs)
 
   attr_accessor :just_created
+
+  attr_accessor :populated
+  alias_method :populated?, :populated
 
   # this is overridden by StandardFormReport, and ignored elsewhere
   attr_accessor :disagg_question_id
@@ -52,6 +56,13 @@ class Report::Report < ActiveRecord::Base
     Report::OptionSetChoice.where(report_report_id: report_ids).delete_all
   end
 
+  def cache_key
+    chunks = [super]
+    chunks << option_set_choices.map(&:option_set_id)
+    chunks << ("calcs-" << (calculations.order(updated_at: :desc).first.try(:cache_key) || "none"))
+    chunks.join("/")
+  end
+
   # generates a default name that won't collide with any existing names
   def generate_default_name
     prefix = "New Report"
@@ -78,10 +89,11 @@ class Report::Report < ActiveRecord::Base
   end
 
   # records a viewing of the form, keeping the view_count up to date
+  # It's using the update_column to avoid it updating the updated_at
+  # value (which would invalidate the cache). It also skips validations.
   def record_viewing
-    self.viewed_at = Time.now
-    self.view_count += 1
-    save(:validate => false)
+    update_column(:viewed_at, Time.now)
+    update_column(:view_count, self.view_count += 1)
   end
 
   def as_json(options = {})
@@ -91,6 +103,7 @@ class Report::Report < ActiveRecord::Base
     h[:type] = type
     h[:filter] = filter
     h[:empty] = empty?
+    h[:populated] = populated?
     h
   end
 

@@ -2,6 +2,7 @@
 class Report::Data
 
   attr_accessor :rows
+  attr_accessor :total_row_count
   attr_reader :totals
 
   def initialize(rows)
@@ -51,6 +52,6 @@ class Report::Data
   end
 
   def as_json(options = {})
-    {:rows => @rows, :totals => @totals}
+    {rows: @rows, totals: @totals, total_row_count: @total_row_count}
   end
 end

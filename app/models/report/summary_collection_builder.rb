@@ -14,6 +14,9 @@ class Report::SummaryCollectionBuilder
     'long_text' => 'raw'
   }
 
+  # Quantity of raw answers that should be shown on report for each question
+  RAW_ANSWER_LIMIT = 100
+
   # builds a summary collection with the given questionings and disaggregation qing
   # if disagg_qing is nil, no disaggregation will be done
   # options[:restrict_to_user] - (optional) If specified, only Responses for the given user will be included in the results.
@@ -154,6 +157,7 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
         WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
+        ORDER BY NULL
       eos
 
       res = do_query(query, qing_ids)
@@ -471,6 +475,7 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
           WHERE a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
+          LIMIT #{RAW_ANSWER_LIMIT}
       eos
 
       do_query(query, qing_ids)
@@ -496,7 +501,7 @@ class Report::SummaryCollectionBuilder
 
         res = do_query(query, long_qing_ids)
 
-        Hash[*res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.flatten]
+        res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.to_h
       end
     end
 

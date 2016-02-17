@@ -34,30 +34,11 @@ class WelcomeController < ApplicationController
     render(:layout => false)
   end
 
-  # loads the specified report when chosen from the dropdown menu
-  def report_update
-    @report = Report::Report.find(params[:id])
-    prepare_report
-    render(:json => {
-      :title => render_to_string(:partial => 'report_pane_title'),
-      :main => render_to_string(:partial => 'reports/main')
-    })
-  end
-
   def unauthorized
   end
 
   private
     def dashboard_index
-      # we need to load the report outside the cache block b/c it's included in the cache key
-      # if report id given, load that
-      if !params[:report_id].blank?
-        @report = Report::Report.find(params[:report_id])
-      else
-        # else load the most popular report
-        @report = Report::Report.accessible_by(current_ability).by_popularity.first
-      end
-
       # we need to check for a cache fragment here because some of the below fetches are not lazy
       @cache_key = [
         # we include the locale in the cache key so the translations are correct
@@ -68,10 +49,7 @@ class WelcomeController < ApplicationController
 
         # we include assignments in the cache key since users show up in low activity etc. if a user gets removed or added to the mission, that should show up
         # but we don't include user's in the cache key since users get updated every request and that would defeat the purpose
-        Assignment.per_mission_cache_key(current_mission),
-
-        # we include the report in case the report definition changes
-        @report.try(:cache_key) || 'no-report'
+        Assignment.per_mission_cache_key(current_mission)
       ].join('-')
 
       # get a relation for accessible responses
@@ -92,7 +70,7 @@ class WelcomeController < ApplicationController
         location_answers = Answer.location_answers_for_mission(current_mission, current_user)
 
         @location_answers_count = location_answers.total_entries
-        @location_answers = location_answers.map { |answer| [answer.response_id, answer.value] }
+        @location_answers = location_answers.map{ |a| [a.response_id, a.latitude, a.longitude] }
       end
 
       unless fragment_exist?(@cache_key + '/stat_blocks')
@@ -106,9 +84,7 @@ class WelcomeController < ApplicationController
       # get list of all reports for the mission, for the dropdown
       @reports = Report::Report.accessible_by(current_ability).by_name
 
-      unless fragment_exist?(@cache_key + '/report_pane')
-        prepare_report
-      end
+      prepare_report
 
       # render JSON if ajax request
       if request.xhr?
@@ -118,8 +94,7 @@ class WelcomeController < ApplicationController
             answers: @location_answers,
             count: @location_answers_count
           },
-          report_stats: render_to_string(partial: 'report_stats'),
-          report_pane: render_to_string(partial: 'report_pane')
+          report_stats: render_to_string(partial: 'report_stats')
         }
         render json: data
       else
@@ -128,11 +103,19 @@ class WelcomeController < ApplicationController
     end
 
     def prepare_report
-      unless @report.nil?
+      # if report id given, load that else use most popular
+      if !params[:report_id].blank?
+        @report = Report::Report.find(params[:report_id])
+      else
+        @report = Report::Report.accessible_by(current_ability).by_popularity.first
+      end
+
+      if @report
+        # Make sure no funny business!
         authorize!(:read, @report)
-        run_and_handle_errors
-        build_report_data(:read_only => true, :dont_set_title => true)
+
+        # We don't run the report, that will happen on an ajax call.
+        build_report_data(read_only: true, embedded_mode: true)
       end
     end
-
 end

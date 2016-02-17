@@ -142,7 +142,7 @@ class OptionSet < ActiveRecord::Base
   end
 
   def multi_level?
-    @multi_level ||= root_node && root_node.has_grandchildren?
+    defined?(@multi_level) ? @multi_level : (@multi_level = root_node && root_node.has_grandchildren?)
   end
   alias_method :multi_level, :multi_level?
 
@@ -291,6 +291,23 @@ class OptionSet < ActiveRecord::Base
     else
       super(options)
     end
+  end
+
+  def worksheet_name
+    name = self.name
+    name = name.truncate(31) if self.name.size > 31
+    name = name.gsub(
+      /[\[\]\*\\?\:\/]/, {
+        '[' => '(',
+        ']' => ')',
+        '*' => '∗',
+        '?' => '',
+        ':' => '-',
+        '\\' => '-',
+        '/' => '-'
+      }
+    )
+    name
   end
 
   # Returns a string representation, including options, for the default locale.

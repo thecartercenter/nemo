@@ -122,6 +122,7 @@ body.welcome {
   /* report */
 
   form.report_chooser {
+    display: none;
     float: right;
     margin-top: 15px;
 
@@ -137,6 +138,11 @@ body.welcome {
       overflow: hidden;
       height: 20px;
       white-space: nowrap;
+    }
+
+    /* Don't show report edit link at the beginning.*/
+    .report_edit_link_container {
+      display: none;
     }
 
     a.action_link_edit {

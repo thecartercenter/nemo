@@ -89,7 +89,7 @@ gem "recaptcha", :require => "recaptcha/rails"
 # XLS support
 gem 'axlsx', '~> 2.1.0.pre'
 gem 'axlsx_rails'
-gem 'roo', github: 'roo-rb/roo', ref: 'c796bfc7992f910751054e537feb8f2247f197d7'
+gem 'roo', '~> 2.1.1'
 
 gem 'therubyracer', platforms: :ruby
 
@@ -100,6 +100,10 @@ gem 'reverse_markdown'
 gem 'twilio-ruby', ' ~> 4.1'
 
 gem 'fix-db-schema-conflicts'
+gem 'attribute_normalizer'
+
+# Polyfill for the bind function. Some older browsers don't have it.
+gem 'phantomjs_polyfill-rails'
 
 group :development do
   gem 'rails-erd'                     # generate with rake db:migrate
@@ -108,6 +112,7 @@ group :development do
   gem 'thin'                          # development web server
   gem 'rails-dev-tweaks', '~> 1.1'    # speed up development mode
   gem 'spring'
+  gem 'apiary'
 end
 
 group :development, :test do
@@ -125,4 +130,5 @@ group :development, :test do
   gem 'awesome_print'                # for debugging/console, prints an object nicely
   gem 'assert_difference'            # test assertion
   gem 'launchy'                      # auto-open capybara html file
+  gem 'ruby-jmeter', '~> 2.13.4'     # builds JMeter test plans
 end

@@ -39,7 +39,7 @@
 
     // update controls
     this.type_chooser.update(this.report.attribs.type);
-    this.type_chooser.enable(!this.report.has_run());
+    this.type_chooser.enable(this.report.new_record);
   }
 
   // extracts data from the view into the model

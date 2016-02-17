@@ -20,9 +20,10 @@ class Sms::Decoder
 
     check_for_automated_sender
 
-    # try to get user
+    # try to get user from message
     # we do this first because it tells us what language to send errors in (if any)
-    find_user
+    @user = @msg.user
+    raise_decoding_error("user_not_found") unless @user && @user.active?
 
     # ignore duplicates (we do this after find user so that the reply will be in the right language)
     check_for_duplicate
@@ -94,14 +95,6 @@ class Sms::Decoder
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
       @questionings = @form.questionings.index_by(&:rank)
-    end
-
-    # attempts to find and return the user for the given msg
-    # raises an error if not found
-    def find_user
-      @user = User.by_phone(@msg.from)
-      raise_decoding_error("user_not_found") unless @user && @user.active?
-      @msg.update_attributes user: @user
     end
 
     def current_ability

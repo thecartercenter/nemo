@@ -1,11 +1,11 @@
 class Form < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
-  API_ACCESS_LEVELS = %w(private protected public)
+  API_ACCESS_LEVELS = %w(private public)
 
   has_many(:responses, :inverse_of => :form)
   has_many(:versions, :class_name => "FormVersion", :inverse_of => :form, :dependent => :destroy)
-  has_many(:whitelist_users, :as => :whitelistable, class_name: "Whitelist", dependent: :destroy)
+  has_many(:whitelistings, :as => :whitelistable, class_name: "Whitelisting", dependent: :destroy)
   has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', dependent: :destroy)
 
   # while a form has many versions, this is a reference to the most up-to-date one
@@ -50,6 +50,7 @@ class Form < ActiveRecord::Base
            :children,
            :c,
            :descendants,
+           :child_groups,
            to: :root_group
 
   delegate :code, to: :current_version
@@ -77,7 +78,7 @@ class Form < ActiveRecord::Base
   end
 
   def add_questions_to_top_level(questions)
-    questions.each_with_index do |q, i|
+    Array.wrap(questions).each_with_index do |q, i|
       Questioning.create!(mission: mission, form: self, question: q, parent: root_group)
     end
   end
@@ -92,7 +93,12 @@ class Form < ActiveRecord::Base
   end
 
   def api_user_id_can_see?(api_user_id)
-    whitelist_users.pluck(:user_id).include?(api_user_id)
+    access_level == "public" || access_level == "protected" &&
+      whitelistings.pluck(:user_id).include?(api_user_id)
+  end
+
+  def api_visible_questions
+    questions.select{ |q| q.access_level == "inherit" }
   end
 
   def temp_response_id
@@ -296,7 +302,7 @@ class Form < ActiveRecord::Base
   end
 
   def has_white_listed_user?(user_id)
-    whitelist_users.where(user_id: user_id).exists?
+    whitelistings.where(user_id: user_id).exists?
   end
 
   private
