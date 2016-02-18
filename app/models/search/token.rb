@@ -106,7 +106,11 @@ class Search::Token
       if qual.type == :indexed
         "(#{qual.col} IN (####{@search.expressions.size-1}###))"
       else
-        sql
+        if op.kind == :noteq
+          "NOT(#{sql})"
+        else
+          sql
+        end
       end
     end
 
@@ -114,24 +118,26 @@ class Search::Token
       qualifier.col.map{ |c| comparison_fragment(qualifier, c, op, lex_tok) }.join(' OR ')
     end
 
-    # generates an sql where clause fragment for a comparison with the 
+    # generates an sql where clause fragment for a comparison with the
     # given qualifier, operator, and value token
     def comparison_fragment(qualifier, column, op, value_token)
       # get the sql representations
       value_sql = value_token.to_sql
       op_sql = op.to_sql
+      # Since we are negating the entire expression, treat != as = within the comparison
+      op_sql = "=" if op.kind == :noteq
 
       # Transform the value if qualifier has transformer.
       value_sql = qualifier.preprocessor.call(value_sql) if qualifier.preprocessor
 
       # if rhs is [blank], act accordingly
       inner = if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
-        op_sql = (op_sql == "=" ? "IS" : "IS NOT")
+        op_sql = "IS"
         "#{column} #{op_sql} NULL"
 
       # if translated qualifier, use special expression
       elsif qualifier.type == :translated
-        op_sql = op_sql == "=" ? "RLIKE" : "NOT RLIKE"
+        op_sql = "RLIKE"
         # Sanitize first with special markers, then add the enclosing syntax for matching the RLIKE.
         sanitize("#{column} #{op_sql} ?", "%%%1#{value_sql}%%%2").tap do |sql|
           sql.gsub!('%%%1', %{"#{I18n.locale}":"([^"\\]|\\\\\\\\.)*})
@@ -140,7 +146,7 @@ class Search::Token
 
       # if partial matches are allowed, change to LIKE
       elsif qualifier.type == :text
-        op_sql = op_sql == "=" ? "LIKE" : "NOT LIKE"
+        op_sql = "LIKE"
         sanitize("#{column} #{op_sql} ?", "%#{value_sql}%")
       else
         sanitize("#{column} #{op_sql} ?", value_sql)
