@@ -154,6 +154,10 @@ module FormsHelper
     'time' => 'fa-clock-o',
     'location' => 'fa-map-marker',
     'group' => 'fa-folder-open-o',
+    'image' => 'fa-image',
+    'sketch' => 'fa-pencil-square-o',
+    'audio' => 'fa-volume-up',
+    'video' => 'fa-film'
   }
 
   def form_item_icon(type)
