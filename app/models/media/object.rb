@@ -7,6 +7,8 @@ class Media::Object < ActiveRecord::Base
   delegate :url, to: :item
   delegate :mission, to: :answer
 
+  scope :expired, -> { where(answer_id: nil).where('created_at < ?', 12.hours.ago) }
+
   def download_url
     dl_url = url
     separator = (dl_url =~ /\?/) ? "&" : "?"

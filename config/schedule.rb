@@ -6,8 +6,8 @@
 # Example:
 #
 set :output, "log/cron.log"
-env :PATH, ENV['PATH']
-env :GEM_HOME, ENV['GEM_HOME']
+env :PATH, ENV["PATH"]
+env :GEM_HOME, ENV["GEM_HOME"]
 
 every 1.hour do
   # redo the indexes
@@ -15,4 +15,7 @@ every 1.hour do
 
   # make sure the daemon is running
   rake "ts:start"
+
+  # Clean up expired media
+  runner "MediaCleanupJob.perform_later"
 end
