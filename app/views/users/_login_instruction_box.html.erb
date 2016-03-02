@@ -19,6 +19,10 @@
       <td class="name"><%= User.human_attribute_name("password") %></td>
       <td class="value"><%= password %></td>
     </tr>
+    <tr>
+      <td class="name"><%= User.human_attribute_name("sms_auth_code") %></td>
+      <td class="value"><%= user.sms_auth_code %></td>
+    </tr>
   </table>
 
   <% t("user.login_instructions.closing").each do |para| %>

@@ -147,6 +147,8 @@ class Ability
             can :create, Sms::Test
           end
 
+          can :regenerate_sms_auth_code, User
+
           # can view the dashboard (individual dashboard components are checked separately)
           can :view, :dashboard
         end

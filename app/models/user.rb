@@ -45,6 +45,7 @@ class User < ActiveRecord::Base
   before_validation(:normalize_fields)
   before_validation(:generate_password_if_none, unless: :batch_creation?)
   after_create(:regenerate_api_key, unless: :batch_creation?)
+  after_create(:regenerate_sms_auth_code)
   # call before_destroy before :dependent => :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy(:check_assoc)
@@ -310,6 +311,14 @@ class User < ActiveRecord::Base
     save
   end
 
+  # regenerates sms auth code
+  def regenerate_sms_auth_code
+    begin
+      self.sms_auth_code = Random.alphanum(4)
+    end while User.exists?(sms_auth_code: sms_auth_code)
+    save
+  end
+
   # Returns the system's best guess as to which mission this user would like to see.
   def best_mission
     if last_mission && (admin? || assignments.map(&:mission).include?(last_mission))
@@ -399,6 +408,8 @@ class User < ActiveRecord::Base
         end
       end
     end
+
+
 
     # generates a random password before validation if this is a new record, unless one is already set
     def generate_password_if_none

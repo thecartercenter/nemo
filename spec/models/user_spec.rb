@@ -11,6 +11,10 @@ describe User do
     it 'should have an api_key generated' do
       expect(@user.api_key).to_not be_blank
     end
+
+    it 'should have an SMS auth code generated' do
+      expect(@user.sms_auth_code).to_not be_blank
+    end
   end
 
   describe 'best_mission' do
