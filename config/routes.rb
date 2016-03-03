@@ -158,6 +158,7 @@ ELMO::Application.routes.draw do
       member do
         get 'login_instructions', path: 'login-instructions'
         post 'regenerate_api_key'
+        post 'regenerate_sms_auth_code'
       end
       collection do
         post 'export'

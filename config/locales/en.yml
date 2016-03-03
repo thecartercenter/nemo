@@ -373,6 +373,7 @@ en:
         pref_lang: "Preferred Language"
         role: "Role"
         api_key: "API Key"
+        sms_auth_code: "SMS Auth Code"
       user_batch:
         file: "File"
 
@@ -534,6 +535,7 @@ en:
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
         api_key: "Use this key to connect to other Elmo applications."
+        sms_auth_code: "Use this code to submit SMS responses."
 
     # all error messages should be full sentences with a period, for consistency.
     errors:
