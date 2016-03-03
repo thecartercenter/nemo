@@ -308,7 +308,7 @@ class User < ActiveRecord::Base
     begin
       self.api_key = SecureRandom.hex
     end while User.exists?(api_key: api_key)
-    save
+    save(validate: false)
   end
 
   # regenerates sms auth code
@@ -316,7 +316,7 @@ class User < ActiveRecord::Base
     begin
       self.sms_auth_code = Random.alphanum(4)
     end while User.exists?(sms_auth_code: sms_auth_code)
-    save
+    save(validate: false)
   end
 
   # Returns the system's best guess as to which mission this user would like to see.
@@ -408,8 +408,6 @@ class User < ActiveRecord::Base
         end
       end
     end
-
-
 
     # generates a random password before validation if this is a new record, unless one is already set
     def generate_password_if_none

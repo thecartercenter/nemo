@@ -104,6 +104,10 @@ class Ability
 
           can_read_all_reports_but_only_update_destroy_own
 
+          can :regenerate_sms_auth_code, User do |u|
+            u == user
+          end
+
           # only need these abilities if not also a staffer
           unless role_in_mission?(:staffer)
             # can only see own responses
