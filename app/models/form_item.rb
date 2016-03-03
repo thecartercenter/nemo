@@ -65,13 +65,13 @@ class FormItem < ActiveRecord::Base
     end
   end
 
-  # Returns an array of ranks of all parents plus self, e.g. [1,2,1].
+  # Returns an array of ranks of all parents plus self, e.g. [2,5].
   # Uses the cached value setup by descendant_questionings if available.
   def full_rank
     @full_rank ||= path.map(&:rank)[1..-1]
   end
 
-  # Returns the full rank joined with a period separator, e.g. 1.2.1.
+  # Returns the full rank joined with a period separator, e.g. 2.5.
   def full_dotted_rank
     @full_dotted_rank ||= full_rank.join('.')
   end
