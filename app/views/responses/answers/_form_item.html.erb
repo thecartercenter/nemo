@@ -5,6 +5,8 @@
   <% unless subtree.empty? %>
     <%= render 'responses/answers/qing_group', item: item %>
   <% end %>
-<% else %>
-  <%= render 'responses/answers/answer_set', answer_set: @response.answer_groups.answer_set_for_questioning(item), group_instance: 0 unless item.hidden? %>
+<% elsif !item.hidden? %>
+  <%= render 'responses/answers/answer_set',
+        answer_set: @response.answer_groups.answer_set_for_questioning(item),
+        group_instance: nil %>
 <% end %>
