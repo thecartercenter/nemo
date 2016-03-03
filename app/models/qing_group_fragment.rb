@@ -20,8 +20,8 @@ class QingGroupFragment
     self.children = ActiveSupport::OrderedHash.new
   end
 
-  def multi_level?
-    children.keys.first.multi_level?
+  def multilevel?
+    children.keys.first.multilevel?
   end
 
 end

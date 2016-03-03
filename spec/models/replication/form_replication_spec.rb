@@ -62,7 +62,7 @@ describe Form do
     context 'with a condition referencing an option' do
       context 'from a multilevel set' do
         before do
-          @std = create(:form, question_types: %w(multi_level_select_one integer), is_standard: true)
+          @std = create(:form, question_types: %w(multilevel_select_one integer), is_standard: true)
 
           # Create condition on 2nd questioning.
           @std.c[1].condition = build(:condition,

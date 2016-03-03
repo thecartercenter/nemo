@@ -26,7 +26,7 @@ describe QingGroupOdkPartitioner do
   end
 
   before do
-    allow(multilevel_qing).to receive(:multi_level?) { true }
+    allow(multilevel_qing).to receive(:multilevel?) { true }
   end
 
   describe "#organize" do

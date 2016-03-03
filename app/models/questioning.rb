@@ -11,7 +11,7 @@ class Questioning < FormItem
            :code=,
            :level_count,
            :level,
-           :multi_level?,
+           :multilevel?,
            :option_set,
            :option_set=,
            :option_set_id,

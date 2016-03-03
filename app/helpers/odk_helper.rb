@@ -9,7 +9,7 @@ module OdkHelper
     opts ||= {}
     opts[:ref] = ["/data", group, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
-    opts[:query] = multi_level_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == 'select_one'
+    opts[:query] = multilevel_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == 'select_one'
     content_tag(odk_input_tagname(subq), opts, &block)
   end
 
@@ -113,7 +113,7 @@ module OdkHelper
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
   #      instance('os16')/root/item[parent_id=/data/q2_2]
-  def multi_level_option_nodeset_ref(qing, cur_subq, group = nil)
+  def multilevel_option_nodeset_ref(qing, cur_subq, group = nil)
     filter = if cur_subq.first_rank?
       ''
     else
@@ -138,7 +138,7 @@ module OdkHelper
       i.is_a?(Questioning) &&
       i.qtype_name == 'select_one' &&
       i.option_set == items[0].option_set &&
-      !i.multi_level?
+      !i.multilevel?
     end
   end
 

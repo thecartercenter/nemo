@@ -55,7 +55,7 @@
     self.allow_coordinates_changed();
 
     // watch for changes to multilevel property
-    $('#option_set_multi_level').on('change', function() { self.multilevel_changed(); });
+    $('#option_set_multilevel').on('change', function() { self.multilevel_changed(); });
     self.multilevel_changed();
 
     // events to enable/disable multilevel checkbox
@@ -97,10 +97,10 @@
     return self.options_field.list.dirty || self.option_levels_field.list.dirty;
   };
 
-  // enables/disables multi_level checkbox depending on option levels and optioning depths
+  // enables/disables multilevel checkbox depending on option levels and optioning depths
   // should be disabled unless there are 0 option levels and all options have depth 1
   klass.prototype.enable_multilevel_checkbox = function() { var self = this;
-    $('#option_set_multi_level').prop('disabled',
+    $('#option_set_multilevel').prop('disabled',
       !(self.option_levels_field.list.count() == 0 && self.options_field.list.max_depth() <= 1));
   };
 
@@ -139,10 +139,10 @@
   klass.prototype.multilevel_changed = function() { var self = this;
     var checked;
     // Check if multilevel checkbox is read only
-    if ($('#multi_level div.ro-val').length > 0)
-      checked = $('#multi_level div.ro-val').data('val');
+    if ($('#multilevel div.ro-val').length > 0)
+      checked = $('#multilevel div.ro-val').data('val');
     else
-      checked = $('#option_set_multi_level').is(':checked');
+      checked = $('#option_set_multilevel').is(':checked');
 
     // show/hide the option levels field
     self.option_levels_field.show(checked);
@@ -228,7 +228,7 @@
 
     // Update some params OptionSet model, as this may be used by modal
     self.params.option_set.name = data['option_set[name]'];
-    self.params.option_set.multi_level = data['option_set[multi_level]'] == '1';
+    self.params.option_set.multilevel = data['option_set[multilevel]'] == '1';
 
     return data;
   };
@@ -358,7 +358,7 @@
   // checks if number of option levels and option depths are compatible
   // returns whether submission should proceed
   klass.prototype.validate_option_depths = function() { var self = this;
-    if ($('#option_set_multi_level').is(':checked')) {
+    if ($('#option_set_multilevel').is(':checked')) {
       var levels = self.option_levels_field.list.size();
       var depth = self.options_field.list.max_depth();
       if (levels != depth) {

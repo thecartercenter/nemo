@@ -8,7 +8,7 @@ feature 'responses form', js: true, sphinx: true do
 
   describe 'general' do # This should be refactored to split into different scenarios.
     before do
-      @form = create(:form, question_types: %w(select_one multi_level_select_one select_multiple integer decimal
+      @form = create(:form, question_types: %w(select_one multilevel_select_one select_multiple integer decimal
         location text long_text datetime date time))
       @qings = @form.questionings
       @form.publish!
@@ -155,7 +155,7 @@ feature 'responses form', js: true, sphinx: true do
 
   describe 'repeat groups' do
     before do
-      @form = create(:form, question_types: ['select_one', ['integer', 'text', 'multi_level_select_one'], 'text'])
+      @form = create(:form, question_types: ['select_one', ['integer', 'text', 'multilevel_select_one'], 'text'])
       @group = @form.child_groups.first
       @group.repeats = true
       @qings = @form.questionings
@@ -187,7 +187,7 @@ feature 'responses form', js: true, sphinx: true do
 
   def expect_answer(qing_idx, value)
     qing = @qings[qing_idx]
-    csscls = qing.multi_level? ? 'option-name' : 'ro-val'
+    csscls = qing.multilevel? ? 'option-name' : 'ro-val'
     Array.wrap(value).each do |v|
       expect(page).to have_selector("#qing_#{qing.id} .#{csscls}", text: /^#{Regexp.escape(v)}$/)
     end

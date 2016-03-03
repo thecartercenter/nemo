@@ -160,12 +160,12 @@ describe Sms::Decoder do
   end
 
   it "select_one question treated as text should work for multilevel option set" do
-    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true)
     assert_decoding(body: "#{@form.code} 1.15 2.Tulip", answers: [15, ["Plant", "Tulip"]])
   end
 
   it "select_one question treated as text should work for multilevel option set for non-leaf option" do
-    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true)
     assert_decoding(body: "#{@form.code} 1.15 2.Plant", answers: [15, ["Plant", "NIL"]])
   end
 
@@ -402,7 +402,7 @@ describe Sms::Decoder do
         # for select one, the expected value is the english translation(s) of the desired option(s)
         expect(ansset.answers.map{ |a| a.option.try(:name_en) || "NIL" }).to eq(Array.wrap(expected))
         # Check answer ranks.
-        if qing.multi_level?
+        if qing.multilevel?
           expect(ansset.answers.map(&:rank)).to eq((1..expected.size).to_a), "Invalid answer ranks"
         else
           expect(ansset.first.rank).to be_nil, "Answer rank should be nil"

@@ -9,7 +9,7 @@ describe ResponseCSV do
 
   context "with some data" do
     let(:form1) do
-      create(:form, question_types: ["text", "geo_multi_level_select_one", "long_text",
+      create(:form, question_types: ["text", "geo_multilevel_select_one", "long_text",
         "integer", "decimal", "location", "select_one", ["select_one", "select_one"],
         "select_multiple", "datetime", "date", "time"])
     end

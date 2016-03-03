@@ -115,7 +115,7 @@ class Answer < ActiveRecord::Base
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
   def level
-    option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
+    option_set.try(:multilevel?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
   def choices_by_option

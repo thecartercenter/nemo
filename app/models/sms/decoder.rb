@@ -134,7 +134,7 @@ class Sms::Decoder
         if @qing.text_type_for_sms?
           option = @qing.option_set.all_options.where(canonical_name: @value.downcase).first
           raise_answer_error("answer_not_valid_option") unless option
-          build_answer(@qing.option_set.path_to_option(option).map{ |o| {:option => o} }, multi_level: @qing.multi_level?)
+          build_answer(@qing.option_set.path_to_option(option).map{ |o| {:option => o} }, multilevel: @qing.multilevel?)
 
         else
           # make sure the value is a letter(s)
@@ -257,7 +257,7 @@ class Sms::Decoder
     def build_answer(attribs_set, options = {})
       Array.wrap(attribs_set).each_with_index do |attribs, idx|
         @response.answers.build(attribs.merge(:questioning_id => @qing.id,
-          :rank => options[:multi_level] ? idx + 1 : nil))
+          :rank => options[:multilevel] ? idx + 1 : nil))
       end
     end
 

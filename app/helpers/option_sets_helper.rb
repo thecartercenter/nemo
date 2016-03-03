@@ -38,8 +38,8 @@ module OptionSetsHelper
     input_name_template.gsub('###', id.to_s).gsub(/[\[\]]+/, '_').gsub(/_$/, '')
   end
 
-  def multi_level_forbidden_notice
-    text = tmd('option_set.multi_level_forbidden_notice')
+  def multilevel_forbidden_notice
+    text = tmd('option_set.multilevel_forbidden_notice')
     icon = content_tag(:i, '', class: 'fa fa-exclamation-triangle')
     content_tag(:div, (icon << content_tag(:div, text)), class: "form-warning alert alert-info")
   end

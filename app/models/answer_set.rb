@@ -32,8 +32,8 @@ class AnswerSet
     ensure_answers
   end
 
-  def multi_level?
-    option_set.nil? ? false : option_set.multi_level?
+  def multilevel?
+    option_set.nil? ? false : option_set.multilevel?
   end
 
   # True if all answers are blank.

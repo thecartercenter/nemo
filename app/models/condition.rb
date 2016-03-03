@@ -121,7 +121,7 @@ class Condition < ActiveRecord::Base
       bits << ref_qing.code if prefs[:include_code]
 
       if ref_qing.qtype_name == 'select_one'
-        if ref_qing.multi_level?
+        if ref_qing.multilevel?
           # Get the option level for the depth matching the number of options we have.
           level = ref_qing.level(options.size)
           raise "no option level found for depth = #{options.size} for condition #{id}" if level.nil?

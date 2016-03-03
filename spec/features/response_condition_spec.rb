@@ -4,7 +4,7 @@ feature 'conditions in responses', js: true do
   before do
     @user = create(:user)
     @form = create(:form, name: 'Foo',
-      question_types: %w(long_text text integer text decimal select_one multi_level_select_one multi_level_select_one select_multiple datetime date time text))
+      question_types: %w(long_text text integer text decimal select_one multilevel_select_one multilevel_select_one select_multiple datetime date time text))
     @year = Time.now.year - 2
     @qings = @form.questionings
     @os2 = @qings[6].option_set

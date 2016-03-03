@@ -60,7 +60,7 @@ class QingGroupOdkPartitioner
     questionings.each do |qing|
       qing_object = qing[0]
 
-      if (qing_object.multi_level?)
+      if (qing_object.multilevel?)
         store_qing_group(group, qing_group_divided)
 
         # Start another group to separate these questionings from the old ones

@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Response do
   describe 'populate_from_hash' do
     before do
-      @form = create(:form, question_types: %w(select_one multi_level_select_one select_multiple integer multi_level_select_one))
+      @form = create(:form, question_types: %w(select_one multilevel_select_one select_multiple integer multilevel_select_one))
       @qs = @form.questions
       @qings = @form.questionings
       @cat = @qs[0].option_set.c[0]

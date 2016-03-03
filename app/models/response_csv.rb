@@ -66,7 +66,7 @@ class ResponseCSV
     return if column_exists_with_code?(code)
 
     if question
-      if question.multi_level?
+      if question.multilevel?
         question.levels.each_with_index do |level, i|
           create_column(code: code, name: [code, level.name])
         end
@@ -131,7 +131,7 @@ class ResponseCSV::QA
     arr = case question_type
     when 'select_one'
       arr = answers.map{ |a| format_csv_para_text(a.option_name) }
-      if question.multi_level?
+      if question.multilevel?
         arr += ([nil] * (question.level_count - arr.size))
       end
       if question.geographic?

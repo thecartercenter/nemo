@@ -12,7 +12,7 @@ describe FormsController, type: :request do
     before do
       @form1 = create(:form, mission: @mission, question_types: %w(integer integer)) # No select1's
       @form2 = create(:form, mission: @mission, question_types: %w(integer select_one)) # Regular select1
-      @form3 = create(:form, mission: @mission, question_types: %w(integer multi_level_select_one)) # Multilevel select1
+      @form3 = create(:form, mission: @mission, question_types: %w(integer multilevel_select_one)) # Multilevel select1
       @form1.publish!
       @form2.publish!
       @form3.publish!

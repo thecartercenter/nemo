@@ -236,7 +236,7 @@ fr:
       option_set:
         answers: "Résultats"
         geographic: "Géographique?"
-        multi_level: "Est-ce qu'il y a plusiers de niveaux?"
+        multilevel: "Est-ce qu'il y a plusiers de niveaux?"
         options: "Options"
         option_levels: "Niveaux"
       question:
@@ -391,7 +391,7 @@ fr:
       option_set:
         geographic: "Si cet ensemble des options représente l'information géographique, p. ex un ensemble des provinces ou des régions."
         name: "Un nom qui résume cet ensemble des options. Les utilisateurs normaux ne verront pas ce nom."
-        multi_level: "Si l'ensemble d'options comporte plusieurs niveaux d'options, telles que pays -> province-> ville."
+        multilevel: "Si l'ensemble d'options comporte plusieurs niveaux d'options, telles que pays -> province-> ville."
         options:
           editable: "Pour ajouter des options existantes, tapez-les et cliquez sur 'Ajouter'. Si vous ne voyez pas une option dans le menu déroulant, cliquez sur 'Créer une nouvelle option' pour créer un nouveau option."
           read_only: "Les options qui apparaissent pour les questions à l'aide de cet ensemble des options."
@@ -953,7 +953,7 @@ fr:
     edit_option_level: "Modifier Niveau"
     huge_notice: "Cet ensemble d'option est très large(%{count} Options) et donc seulement un échantillon est présenté ci-dessous. Le nom et d'autres propriétés peuvent être modifié, cependant vous devez utiliser la fonction importer/exporter pour modifier ces mêmes options."
     leave_page_warning: "Si vous quittez cette page, vous perdrez vos modifications à cet ensemble d'options."
-    multi_level_forbidden_notice: "Cet ensemble d'options est actuellement utilisé par au moins une question multiple et donc peut être converti à une option à multiple niveau."
+    multilevel_forbidden_notice: "Cet ensemble d'options est actuellement utilisé par au moins une question multiple et donc peut être converti à une option à multiple niveau."
     new_option_level: "Nouveau Niveau"
     none_found: "Il n'y avait pas d'options trouvés."
     searching: "En train de rechercher..."

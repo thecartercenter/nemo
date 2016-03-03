@@ -32,7 +32,7 @@ FactoryGirl.define do
       # Deliver broadcast so that Sms::Broadcast gets created
       broadcast.deliver
 
-      os = create(:option_set, multi_level: true, mission: mission)
+      os = create(:option_set, multilevel: true, mission: mission)
 
       # creates questionings and questions
       form = create(:form, mission: mission,

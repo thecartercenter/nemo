@@ -9,7 +9,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
   context 'sample form' do
     before do
-      @form = create(:form, question_types: %w(text long_text integer decimal location select_one multi_level_select_one select_multiple datetime date time))
+      @form = create(:form, question_types: %w(text long_text integer decimal location select_one multilevel_select_one select_multiple datetime date time))
       @form.publish!
       get(form_path(@form, format: :xml))
     end
@@ -78,7 +78,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
   context 'group form with multilevel select' do
     before do
-      @form = create(:form, question_types: [['text', 'date', 'multi_level_select_one', 'integer']])
+      @form = create(:form, question_types: [['text', 'date', 'multilevel_select_one', 'integer']])
       @form.publish!
 
       get(form_path(@form, format: :xml))
@@ -94,7 +94,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
 
     context 'repeat group form with multilevel select' do
       before do
-        @form = create(:form, question_types: [['text', 'date', 'multi_level_select_one', 'integer']])
+        @form = create(:form, question_types: [['text', 'date', 'multilevel_select_one', 'integer']])
         @form.child_groups.first.update_attributes!(repeats: true)
         @form.publish!
 
