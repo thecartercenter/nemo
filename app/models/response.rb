@@ -263,14 +263,11 @@ class Response < ActiveRecord::Base
     (@answers_by_question ||= answers.index_by(&:question))[question]
   end
 
-  def answer_for_qing(qing)
-    (@answers_by_qing ||= answers.index_by(&:questioning))[qing]
-  end
-
   # Returns an array of required questionings for which answers are missing.
-  # Used in cases other than the web form where answer objects may not be created for missing answers.
   def missing_answers
-    @missing_answers ||= visible_questionings.select{ |qing| qing.required? && answer_for_qing(qing).nil? }
+    return @missing_answers if @missing_answers
+    answers_by_qing = answers.index_by(&:questioning))
+    @missing_answers = visible_questionings.select{ |qing| qing.required? && answer_for_qing(qing).nil? }
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)
