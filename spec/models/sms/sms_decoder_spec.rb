@@ -24,6 +24,38 @@ describe Sms::Decoder do
     assert_decoding_fail(body: "lasjdalfksldjal", error: "invalid_form_code")
   end
 
+  context 'with SMS Authentication enabled' do
+    before(:all) { create_form(questions: %w(integer), authenticate_sms: true) }
+
+    it 'should work with the correct code provided' do
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
+
+    it 'should raise an error with an incorrect code provided' do
+      auth_code = 'n000'
+      assert_decoding_fail(body: "#{auth_code} #{@form.code} 1.17", error: "user_not_found")
+    end
+
+    it 'should raise an error if no code is provided' do
+      assert_decoding_fail(body: "#{@form.code} 1.17", error: "user_not_found")
+    end
+
+    it 'should lock account after 3 failed attempts' do
+      create_list(:sms_message, 3, user: user, auth_failed: true, type: "incoming")
+      assert_decoding_fail(body: "#{@form.code} 1.17", error: "account_locked")
+    end
+  end
+
+  context 'with SMS Authentication disabled' do
+    before(:all) { create_form(questions: %w(integer), authenticate_sms: false) }
+
+    it 'should work with the an unnecessary code provided' do
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
+  end
+
   it "submitting to unpublished form should produce appropriate error" do
     create_form(questions: %w(integer))
     @form.unpublish!
@@ -370,7 +402,8 @@ describe Sms::Decoder do
 
   def create_form(options)
     option_names = options[:default_option_names] ? nil : %w(Apple Banana Cherry Durian) + ["Elder Berry"]
-    @form = create(:form, smsable: true, question_types: options[:questions], option_names: option_names)
+    authenticate_sms = options[:authenticate_sms] ? options[:authenticate_sms] : false
+    @form = create(:form, smsable: true, question_types: options[:questions], option_names: option_names, authenticate_sms: authenticate_sms)
     @form.publish!
     @form.reload
   end

@@ -22,16 +22,20 @@ class Sms::Decoder
 
     # try to get user from message
     # we do this first because it tells us what language to send errors in (if any)
-    @user = @msg.user
-    raise_decoding_error("user_not_found") unless @user && @user.active?
+    find_user
+    check_for_brute_force
 
     # ignore duplicates (we do this after find user so that the reply will be in the right language)
     check_for_duplicate
+
+    # set auth code before fetching form to get it out of the token collection
+    set_auth_code
 
     # try to get form
     find_form
 
     # check user permissions for form and message mission, if not permitted, error
+    authenticate_user
     check_permission
 
     # create a blank response
@@ -95,6 +99,32 @@ class Sms::Decoder
       # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
       @form = v.form
       @questionings = @form.smsable_questionings
+    end
+
+    def find_user
+      @user = @msg.user
+      raise_decoding_error("user_not_found") unless @user && @user.active?
+    end
+
+    def set_auth_code
+      @auth_code = @tokens.shift.downcase if @tokens.first =~ /[a-z0-9]{4}/i
+    end
+
+    def authenticate_user
+      if @form.authenticate_sms
+        log_authentication_failure unless @auth_code.present? && @user.sms_auth_code == @auth_code
+      end
+    end
+
+    def log_authentication_failure
+      @msg.auth_failed = true
+      @msg.save(validate: false)
+      raise_decoding_error("user_not_found")
+    end
+
+    def check_for_brute_force
+      messages =  Sms::Message.where(user: @user).since(1.minute.ago).where(auth_failed: true)
+      raise_decoding_error("account_locked") if messages.count >= 3
     end
 
     def current_ability

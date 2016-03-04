@@ -50,6 +50,7 @@ FactoryGirl.define do
       option_names nil
     end
 
+    authenticate_sms false
     mission { is_standard ? nil : get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 
