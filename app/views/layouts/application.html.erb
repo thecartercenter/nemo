@@ -111,7 +111,7 @@
     <%# Show errors or alerts if any %>
     <%= render("layouts/flash", :flash => flash) %>
     <% unless @dont_print_title %>
-      <div id="title_block">
+      <div id="title_container">
         <%= h1_title %>
         <%= yield :title_content %>
       </div>
