@@ -46,6 +46,7 @@ en:
     confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
+    more_settings: "More settings"
     near: "Near"
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
