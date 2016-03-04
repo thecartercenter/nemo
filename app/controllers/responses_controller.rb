@@ -30,9 +30,6 @@ class ResponsesController < ApplicationController
         # paginate
         @responses = @responses.paginate(:page => params[:page], :per_page => 20)
 
-        # include answers so we can show key questions
-        @responses = @responses.includes(:answers)
-
         # do search, including excerpts, if applicable
         if params[:search].present?
           begin
@@ -47,6 +44,10 @@ class ResponsesController < ApplicationController
             @search_error = true
           end
         end
+
+        @responses = ResponsesDecorator.decorate(@responses, context: {
+          answer_finder: AnswerFinder.new(@responses)
+        })
 
         # render just the table if this is an ajax request
         render(:partial => "table_only", :locals => {:responses => @responses}) if request.xhr?
@@ -232,7 +233,6 @@ class ResponsesController < ApplicationController
 
     # prepares objects for and renders the form template
     def prepare_and_render_form
-      # render the form
       render(:form)
     end
 

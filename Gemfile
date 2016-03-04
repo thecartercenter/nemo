@@ -104,6 +104,8 @@ gem 'attribute_normalizer'
 # Polyfill for the bind function. Some older browsers don't have it.
 gem 'phantomjs_polyfill-rails'
 
+gem 'draper', '~> 2.1'
+
 group :development do
   gem 'rails-erd'                     # generate with rake db:migrate
   gem 'capistrano', '~> 2.15.4'       # deployment

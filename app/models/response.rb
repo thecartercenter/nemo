@@ -259,14 +259,10 @@ class Response < ActiveRecord::Base
     @answer_sets_by_questioning[questioning]
   end
 
-  def answer_for_question(question)
-    (@answers_by_question ||= answers.index_by(&:question))[question]
-  end
-
   # Returns an array of required questionings for which answers are missing.
   def missing_answers
     return @missing_answers if @missing_answers
-    answers_by_qing = answers.index_by(&:questioning))
+    answers_by_qing = answers.index_by(&:questioning)
     @missing_answers = visible_questionings.select{ |qing| qing.required? && answer_for_qing(qing).nil? }
   end
 
