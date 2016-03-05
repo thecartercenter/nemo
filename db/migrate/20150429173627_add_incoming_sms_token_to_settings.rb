@@ -4,7 +4,8 @@ class AddIncomingSmsTokenToSettings < ActiveRecord::Migration
 
     Setting.transaction do
       Setting.where.not(mission_id: nil).each do |setting|
-        setting.regenerate_incoming_sms_token!
+        setting.generate_incoming_sms_token(true)
+        setting.save(validate: false)
       end
     end
   end
