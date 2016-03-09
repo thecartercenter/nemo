@@ -106,7 +106,7 @@ namespace :deploy do
   desc "Check MySQL timezones."
   task :check_timezones, roles: :web do
     # Runs rake task if 'ok' flag file is not present
-    run "cd #{current_path} && [ ! -f tmp/tzok.txt ] && RAILS_ENV=#{rails_env} rake db:timezone_test && touch tmp/tzok.txt || echo"
+    run "cd #{current_path} && [ ! -f tmp/tzok.txt ] && RAILS_ENV=#{rails_env} bundle exec rake db:timezone_test && touch tmp/tzok.txt || echo"
   end
 
   desc "ping the server so that it connects to db"
