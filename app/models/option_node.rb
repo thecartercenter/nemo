@@ -30,6 +30,8 @@ class OptionNode < ActiveRecord::Base
 
   replicable child_assocs: [:children, :option], backward_assocs: :option_set, dont_copy: [:option_set_id, :option_id]
 
+  delegate :shortcode_length, to: :option_set
+
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
     ancestries = roots.map { |r| "'#{r.id}'" }.join(",")
@@ -285,6 +287,10 @@ class OptionNode < ActiveRecord::Base
       "option-set: #{option_set.try(:name) || '[None]'})" +
 
       "\n" + sorted_children.map { |c| c.to_s_indented(space: options[:space] + 2) }.join
+  end
+
+  def shortcode
+    @shortcode = Base36.to_padded_base36(sequence, length: shortcode_length)
   end
 
   protected

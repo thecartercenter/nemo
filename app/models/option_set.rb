@@ -24,6 +24,9 @@ class OptionSet < ActiveRecord::Base
   # the dependent object doesn't know who destroyed it.
   before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
 
+  # Generate sequence
+  after_save :generate_sequence
+
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
   scope :with_assoc_counts_and_published, ->(mission) {
@@ -328,6 +331,28 @@ class OptionSet < ActiveRecord::Base
       }
     )
     name
+  end
+
+  def shortcode_length
+    @max_sequence ||= descendants.maximum(:sequence).try(&:to_i) || 1
+    @shortcode_length ||= Base36.digits_needed(@max_sequence)
+  end
+
+  def shortcode_offset
+    @shortcode_offset ||= Base36.offset(shortcode_length)
+  end
+
+  def generate_sequence(batch: false)
+    return unless options_added? || options_removed? || batch
+    descendants.each_with_index do |option_node, i|
+      option_node.sequence = i + 1
+      save(validate: false)
+    end
+  end
+
+  def fetch_by_shortcode(shortcode)
+    sequence = shortcode - shortcode_offset
+    descendants.where(sequence: sequence).limit(1)
   end
 
   # Returns a string representation, including options, for the default locale.

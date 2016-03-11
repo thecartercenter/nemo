@@ -239,6 +239,7 @@ ActiveRecord::Schema.define(version: 20160329064209) do
     t.integer "option_id", limit: 4
     t.integer "option_set_id", limit: 4
     t.integer "rank", limit: 4, default: 1, null: false
+    t.integer "sequence", limit: 4
     t.datetime "updated_at", null: false
   end
 
