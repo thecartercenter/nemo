@@ -5,17 +5,14 @@
 # rank:
 # - The rank of the answer within a given set of answers for a multilevel select question.
 # - Starts at 1 (top level) and increases
-# - Should be nil for non-multilevel questions
+# - Should be 1 for non-multilevel questions
 #
 # group_instance:
-# - For repeat groups, the number of the set of answers in which this answer belongs
+# - The number of the set of answers in which this answer belongs
 # - Starts at 1 (first instance) and increases
 # - e.g. if a response has three instances of a given group, values will be 1, 2, 3, and
 #   there will be N answers in instance 1, N in instance 2, etc., where N is the number of Q's in the group
-# - Should be 1 for answers to questions in non-repeating groups
-# - Should be nil for answers to questions not in groups
-# - If a question gets moved from outside a group to inside a group, group_instance should be set to 1.
-# - Likewise, if a question gets moved from inside a group to outside, group_instance should be set to nil.
+# - Should be 1 for answers to top level questions and questions in non-repeating groups
 # - Questions with answers with group_instances higher than 1 shouldn't be allowed to be moved.
 #
 class Answer < ActiveRecord::Base

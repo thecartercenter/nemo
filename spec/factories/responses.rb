@@ -1,6 +1,6 @@
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
-  def self.build_answers(parent, values, group_instance = nil)
+  def self.build_answers(parent, values, group_instance = 1)
     parent.children.each_with_index.map do |item, i|
       if i < values.size
         value = values[i]
@@ -27,7 +27,7 @@ module ResponseFactoryHelper
     end.flatten
   end
 
-  def self.build_answer(qing, value, group_instance = nil)
+  def self.build_answer(qing, value, group_instance)
     answers = case qing.qtype_name
     when 'select_one'
       options_by_name = qing.all_options.index_by(&:name)
@@ -35,8 +35,8 @@ module ResponseFactoryHelper
       values.each_with_index.map do |v,i|
         Answer.new(
           questioning: qing,
-          rank: values.size > 1 ? i + 1 : nil,
-          option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'"),
+          rank: i + 1,
+          option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'")
         )
       end.shuffle
 
