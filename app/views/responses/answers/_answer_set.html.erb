@@ -10,7 +10,7 @@
     </label>
     <div class="control">
       <% if answer_set.multilevel? %>
-        <%# index just needs to be a unique integer, so we use the questioning ID. %>
+        <%# index just needs to be a unique string, so we use the questioning ID and group_instance. %>
         <%= render(read_only ? 'responses/answers/answer_set_read_only' : 'responses/answers/answer_set_editable',
           answer_set: answer_set, index: "#{answer_set.questioning_id}_#{group_instance}", group_instance: group_instance) %>
       <% else %>
