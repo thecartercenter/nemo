@@ -1,23 +1,34 @@
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
-  def self.build_answers(parent, values)
+  def self.build_answers(parent, values, group_instance = nil)
     parent.children.each_with_index.map do |item, i|
       if i < values.size
         value = values[i]
         if item.is_a?(QingGroup)
-          raise "expecting array of answer values for #{item.group_name}, got #{value.inspect}" unless value.is_a?(Array)
-          build_answers(item, value)
+          unless value.is_a?(Array)
+            raise "expecting array of answer values for #{item.group_name}, got #{value.inspect}"
+          end
+
+          # If first element of array is :repeating, remove it, leaving an array of answer groups.
+          # Otherwise, wrap value in array to get an array of answer groups, but with only one element.
+          answer_groups = if value.first == :repeating
+            value[1..-1]
+          else
+            [value]
+          end
+
+          answer_groups.each_with_index.map { |answer_group, i| build_answers(item, answer_group, i + 1) }
         else
-          build_answer(item, value)
+          build_answer(item, value, group_instance)
         end
       else
         nil
       end
-    end
+    end.flatten
   end
 
-  def self.build_answer(qing, value)
-    case qing.qtype_name
+  def self.build_answer(qing, value, group_instance = nil)
+    answers = case qing.qtype_name
     when 'select_one'
       options_by_name = qing.all_options.index_by(&:name)
       values = value.nil? ? [nil] : Array.wrap(value)
@@ -25,7 +36,7 @@ module ResponseFactoryHelper
         Answer.new(
           questioning: qing,
           rank: values.size > 1 ? i + 1 : nil,
-          option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'")
+          option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'"),
         )
       end.shuffle
 
@@ -44,6 +55,10 @@ module ResponseFactoryHelper
     else
       Answer.new(questioning: qing, value: value)
     end
+
+    answers = Array.wrap(answers)
+    answers.each { |a| a.group_instance = group_instance }
+    answers
   end
 end
 
