@@ -19,7 +19,7 @@ class AnswerNodeBuilder
   def initialize(response, options = {})
     self.response = response
     self.options = options
-    options[:include_blank_answers] = false unless options.has_key?(:include_blank_answers)
+    options[:include_missing_answers] = false unless options.has_key?(:include_missing_answers)
     options[:dont_load_answers] = false unless options.has_key?(:dont_load_answers)
   end
 
@@ -52,7 +52,7 @@ class AnswerNodeBuilder
   # Returns a new AnswerNode for the given FormItem and instance number.
   # Returns nil if:
   # - FormItem is a hidden Questioning and there are no answers for it.
-  # - include_blank_answers is false and there are no matching answers.
+  # - include_missing_answers is false and there are no matching answers.
   def build_node(item, inst_num)
     if item.is_a?(QingGroup)
       build_node_for_group(item, inst_num)
@@ -65,8 +65,8 @@ class AnswerNodeBuilder
     AnswerNode.new(item: item).tap do |node|
       instance_count = instance_counts[item.id] || 0
 
-      # Don't return a node if there are no answers for a group and blank_answers isn't on.
-      if instance_count == 0 && !options[:include_blank_answers]
+      # Don't return a node if there are no answers for a group and missing_answers isn't on.
+      if instance_count == 0 && !options[:include_missing_answers]
         return nil
       else
         # If there are no instances and we've gotten this far, we still want to include one.
@@ -82,7 +82,7 @@ class AnswerNodeBuilder
       end
 
       # Add blank instance if requested and this is a repeat group.
-      if item.repeats? && options[:include_blank_answers]
+      if item.repeats? && options[:include_missing_answers]
         node.blank_instance = AnswerInstance.new(
           nodes: item.ordered_children.map{ |c| build_node(c, :blank) }.compact,
           blank: true
@@ -94,7 +94,7 @@ class AnswerNodeBuilder
   def build_node_for_questioning(item, inst_num)
     AnswerNode.new(item: item).tap do |node|
       answers = answers_for(item.id, inst_num)
-      if answers.none? && (item.hidden? || !options[:include_blank_answers])
+      if answers.none? && (item.hidden? || !options[:include_missing_answers])
         return nil
       else
         node.set = AnswerSet.new(questioning: item, answers: answers)

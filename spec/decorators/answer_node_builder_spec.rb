@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe AnswerNodeBuilder do
 
-  let(:include_blank_answers) { false } # Overridden below
-  let(:nodes) { AnswerNodeBuilder.new(response, include_blank_answers: include_blank_answers).build }
+  let(:include_missing_answers) { false } # Overridden below
+  let(:nodes) { AnswerNodeBuilder.new(response, include_missing_answers: include_missing_answers).build }
 
   context "general form" do
     let(:form) do
@@ -88,12 +88,12 @@ describe AnswerNodeBuilder do
 
     context "when question is visible" do
       context "when option is true" do
-        let(:include_blank_answers) { true }
+        let(:include_missing_answers) { true }
         it_should_behave_like "include blank answers"
       end
 
       context "when option is false" do
-        let(:include_blank_answers) { false }
+        let(:include_missing_answers) { false }
         it_should_behave_like "don't include blank answers"
       end
     end
@@ -105,12 +105,12 @@ describe AnswerNodeBuilder do
       end
 
       context "when option is true" do
-        let(:include_blank_answers) { true }
+        let(:include_missing_answers) { true }
         it_should_behave_like "don't include blank answers"
       end
 
       context "when option is false" do
-        let(:include_blank_answers) { false }
+        let(:include_missing_answers) { false }
         it_should_behave_like "don't include blank answers"
       end
     end
@@ -132,7 +132,7 @@ describe AnswerNodeBuilder do
     end
   end
 
-  context "with repeat group and include_blank_answers" do
+  context "with repeat group and include_missing_answers" do
     let(:form) do
       create(:form, question_types: ["integer", ["integer", "integer"], "integer"]).tap do |f|
         f.children[1].update_attribute(:repeats, true)
@@ -150,7 +150,7 @@ describe AnswerNodeBuilder do
       ])
     end
 
-    let(:include_blank_answers) { true }
+    let(:include_missing_answers) { true }
 
     it "should include blank instance" do
       expect(nodes[0].set.answers[0].casted_value).to eq 123
@@ -174,10 +174,10 @@ describe AnswerNodeBuilder do
     end
   end
 
-  context "with non-repeat group and include_blank_answers" do
+  context "with non-repeat group and include_missing_answers" do
     let(:form) { create(:form, question_types: ["integer", ["integer", "integer"], "integer"]) }
     let(:response) { create(:response, form: form, answer_values: [123, [456, 789], 333]) }
-    let(:include_blank_answers) { true }
+    let(:include_missing_answers) { true }
 
     it "should not include blank instance" do
       expect(nodes[0].set.answers[0].casted_value).to eq 123
@@ -190,10 +190,10 @@ describe AnswerNodeBuilder do
     end
   end
 
-  context "with no answers and new_record response and include_blank_answers" do
+  context "with no answers and new_record response and include_missing_answers" do
     let(:form) { create(:form, question_types: ["integer", ["integer", "integer"], "integer"]) }
     let(:response) { Response.new(form: form) }
-    let(:include_blank_answers) { true }
+    let(:include_missing_answers) { true }
 
     it "should include blank answers and a single instance with blank answers" do
       expect(nodes[0].set.answers[0]).to be_new_record
@@ -209,7 +209,7 @@ describe AnswerNodeBuilder do
     end
   end
 
-  context "with no answers for a group and include_blank_answers false" do
+  context "with no answers for a group and include_missing_answers false" do
     let(:form) { create(:form, question_types: ["integer"]) }
     let(:response) { create(:response, form: form, answer_values: [123]) }
 

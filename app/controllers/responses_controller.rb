@@ -234,7 +234,7 @@ class ResponsesController < ApplicationController
       # Prepare the AnswerNodes.
       @nodes = AnswerNodeBuilder.new(@response,
         # No point in showing missing answers in show mode.
-        include_blank_answers: params[:action] != "show",
+        include_missing_answers: params[:action] != "show",
         # Must preserve submitted answers when in create/update action.
         dont_load_answers: %w(create update).include?(params[:action])
       ).build
