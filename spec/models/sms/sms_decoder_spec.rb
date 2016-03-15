@@ -379,10 +379,14 @@ describe Sms::Decoder do
     # ensure the form is correct
     expect(response.form_id).to eq(@form.id)
 
+    nodes = AnswerNodeBuilder.new(response, include_blank_answers: false).build
+
+    # ensure an expected answer was given for this question
+    expect(options[:answers].size >= nodes.size).to be_truthy, "No expected answer was given for question #{nodes.size + 1}"
+
     # ensure the answers match the expected ones
-    @form.root_questionings.each do |qing|
-      # ensure an expected answer was given for this question
-      expect(options[:answers].size >= qing.rank).to be_truthy, "No expected answer was given for question #{qing.rank}"
+    @form.root_questionings.each_with_index do |qing, i|
+      expect(nodes[i].item).to eq(qing), "Missing answer at i = #{i}"
 
       # copy the expected value
       expected = options[:answers][qing.rank - 1]
@@ -390,7 +394,7 @@ describe Sms::Decoder do
       # replace the array index with nil so that we know this one has been looked at
       options[:answers][qing.rank - 1] = nil
 
-      ansset = response.answer_set_for_questioning(qing)
+      ansset = nodes[i].set
 
       # ensure answer matches
       case qing.qtype_name
