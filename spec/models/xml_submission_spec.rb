@@ -15,9 +15,9 @@ describe XMLSubmission do
       submission = XMLSubmission.new(response: @response, data: @data, source: 'odk')
       response = submission.response
       response.answers.each_with_index do |answer|
-        expect(answer.group_instance).to eq nil unless answer.from_group?
+        expect(answer.inst_num).to eq nil unless answer.from_group?
       end
-      expect(response.answers.where('group_instance > ?', 1).count).to eq 2
+      expect(response.answers.where('inst_num > ?', 1).count).to eq 2
       expect(response).to be_valid
     end
   end

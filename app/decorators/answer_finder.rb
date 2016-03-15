@@ -22,7 +22,7 @@ class AnswerFinder
       joins(:questioning).
       where(response_id: responses.map(&:id)).
       where("form_items.question_id" => question.id).
-      where("group_instance = 1").
+      where("inst_num = 1").
       where("answers.rank = 1").
       index_by(&:response_id)
   end

@@ -3,7 +3,7 @@
 
   <%# Render children. %>
   <% subtree.each do |subitem, subsubtree| %>
-    <%= render 'responses/answers/answer_set', answer_set: subsubtree, group_instance: group_instance %>
+    <%= render 'responses/answers/answer_set', answer_set: subsubtree, inst_num: inst_num %>
   <% end %>
   <% unless read_only %>
     <a href='#' class="remove-instance"><%= "#{t('common.remove')} #{item.group_name}" %></a>

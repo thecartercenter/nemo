@@ -38,10 +38,10 @@ class AnswerNodeBuilder
   def load_answers
     # We eager load options, choices, and questionings since they are bound to be used.
     # We order the answers so that the answers in answer sets will be in the proper rank order.
-    # questioning_id and group_instance are included to match the DB index.
+    # questioning_id and inst_num are included to match the DB index.
     self.answers = response.answers.
       includes(:questioning, :option, choices: :option).
-      order(:questioning_id, :group_instance, :rank)
+      order(:questioning_id, :inst_num, :rank)
   end
 
   # Returns a new AnswerNode for the given FormItem and instance number.
@@ -66,13 +66,13 @@ class AnswerNodeBuilder
     node
   end
 
-  # Gets the max answer group_instance numbers for all QingGroups on this Response.
+  # Gets the max answer inst_num numbers for all QingGroups on this Response.
   def scan_max_instance_nums
     self.max_inst_nums = {}
 
     answers.each do |answer|
       parent_id = answer.questioning.parent_id
-      max_inst_nums[parent_id] = [max_inst_nums[parent_id], answer.group_instance, 1].compact.max
+      max_inst_nums[parent_id] = [max_inst_nums[parent_id], answer.inst_num, 1].compact.max
     end
   end
 
@@ -86,7 +86,7 @@ class AnswerNodeBuilder
     @answer_table = {}
     by_qing_id = answers.group_by(&:questioning_id)
     by_qing_id.each do |qing_id, answers_for_qing|
-      @answer_table[qing_id] = answers_for_qing.group_by(&:group_instance)
+      @answer_table[qing_id] = answers_for_qing.group_by(&:inst_num)
     end
     @answer_table
   end

@@ -1,19 +1,19 @@
 # An Answer is a single piece of data in response to a single question or sub-question.
 #
-# A note about rank/group_instance attributes
+# A note about rank/inst_num attributes
 #
 # rank:
 # - The rank of the answer within a given set of answers for a multilevel select question.
 # - Starts at 1 (top level) and increases
 # - Should be 1 for non-multilevel questions
 #
-# group_instance:
+# inst_num:
 # - The number of the set of answers in which this answer belongs
 # - Starts at 1 (first instance) and increases
 # - e.g. if a response has three instances of a given group, values will be 1, 2, 3, and
 #   there will be N answers in instance 1, N in instance 2, etc., where N is the number of Q's in the group
 # - Should be 1 for answers to top level questions and questions in non-repeating groups
-# - Questions with answers with group_instances higher than 1 shouldn't be allowed to be moved.
+# - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
 #
 class Answer < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper

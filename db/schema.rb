@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160314202503) do
+ActiveRecord::Schema.define(version: 20160315140833) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
     t.datetime "datetime_value"
     t.boolean "delta", limit: 1, default: true, null: false
-    t.integer "group_instance", limit: 4, default: 1, null: false
+    t.integer "inst_num", limit: 4, default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "option_id", limit: 4

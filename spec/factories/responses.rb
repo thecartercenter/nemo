@@ -1,6 +1,6 @@
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
-  def self.build_answers(parent, values, group_instance = 1)
+  def self.build_answers(parent, values, inst_num = 1)
     parent.children.each_with_index.map do |item, i|
       if i < values.size
         value = values[i]
@@ -19,7 +19,7 @@ module ResponseFactoryHelper
 
           answer_groups.each_with_index.map { |answer_group, i| build_answers(item, answer_group, i + 1) }
         else
-          build_answer(item, value, group_instance)
+          build_answer(item, value, inst_num)
         end
       else
         nil
@@ -27,7 +27,7 @@ module ResponseFactoryHelper
     end.flatten
   end
 
-  def self.build_answer(qing, value, group_instance)
+  def self.build_answer(qing, value, inst_num)
     answers = case qing.qtype_name
     when 'select_one'
       options_by_name = qing.all_options.index_by(&:name)
@@ -57,7 +57,7 @@ module ResponseFactoryHelper
     end
 
     answers = Array.wrap(answers)
-    answers.each { |a| a.group_instance = group_instance }
+    answers.each { |a| a.inst_num = inst_num }
     answers
   end
 end

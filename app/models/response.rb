@@ -322,7 +322,7 @@ class Response < ActiveRecord::Base
         value = hash[subq.odk_code]
         if value.is_a? Array
           value.each_with_index do |val, i|
-            answer = Answer.new(questioning: qing, rank: subq.rank, group_instance: i + 1)
+            answer = Answer.new(questioning: qing, rank: subq.rank, inst_num: i + 1)
             answer.populate_from_string(val)
             self.answers << answer
           end

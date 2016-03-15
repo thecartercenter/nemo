@@ -1,7 +1,7 @@
 <div class='qing-group' id='group-<%= item.id %>' data-group-id="<%= item.id %>">
   <div class='qing-group-instances'>
     <% @response.answer_groups.for_group(item).each do |instance, subtree| %>
-      <%= render 'responses/answers/qing_group_instance', item: item, subtree: subtree, group_instance: instance %>
+      <%= render 'responses/answers/qing_inst_num', item: item, subtree: subtree, inst_num: instance %>
     <% end %>
   </div>
   <% unless read_only %>
@@ -11,8 +11,8 @@
 
 <% @response.answer_groups_empty.for_group(item).each do |instance, subtree| %>
   <%# Construct a blank template to pass to the view model. %>
-  <% template = render('responses/answers/qing_group_instance',
-       item: item, subtree: subtree, group_instance: instance) %>
+  <% template = render('responses/answers/qing_inst_num',
+       item: item, subtree: subtree, inst_num: instance) %>
 
   <%= javascript_doc_ready do %>
     new ELMO.Views.RepeatGroupFormView(
