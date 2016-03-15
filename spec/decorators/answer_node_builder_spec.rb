@@ -189,4 +189,39 @@ describe AnswerNodeBuilder do
       expect(nodes[1].blank_instance).to be_nil
     end
   end
+
+  context "with no answers and new_record response and include_blank_answers" do
+    let(:form) { create(:form, question_types: ["integer", ["integer", "integer"], "integer"]) }
+    let(:response) { Response.new(form: form) }
+    let(:include_blank_answers) { true }
+
+    it "should include blank answers and a single instance with blank answers" do
+      expect(nodes[0].set.answers[0]).to be_new_record
+
+      # The instance is not considered a 'blank' instance in this case. It just has blank answers.
+      expect(nodes[1].instances[0]).not_to be_blank
+      expect(nodes[1].instances[0].nodes[0].set.answers[0]).to be_new_record
+      expect(nodes[1].instances[0].nodes[1].set.answers[0]).to be_new_record
+
+      expect(nodes[1].blank_instance).to be_nil
+
+      expect(nodes[2].set.answers[0]).to be_new_record
+    end
+  end
+
+  context "with no answers for a group and include_blank_answers false" do
+    let(:form) { create(:form, question_types: ["integer"]) }
+    let(:response) { create(:response, form: form, answer_values: [123]) }
+
+    before do
+      # Add a new group to form
+      group = create(:qing_group, form: form)
+      create(:questioning, form: form, parent: group)
+    end
+
+    it "should not create a node for the new group" do
+      expect(nodes[0].set.answers[0].casted_value).to eq 123
+      expect(nodes[1]).to be_nil
+    end
+  end
 end

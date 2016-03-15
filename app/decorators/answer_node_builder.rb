@@ -25,14 +25,14 @@ class AnswerNodeBuilder
   # Returns an array of AnswerNodes.
   def build
     load_answers
-    scan_max_instance_nums
+    scan_instance_counts
     root_node = build_node(response.form.root_group, 1)
     root_node.instances.first.nodes
   end
 
   private
 
-  attr_accessor :response, :answers, :max_inst_nums, :options
+  attr_accessor :response, :answers, :instance_counts, :options
 
   # We do our own loading here to control order, eager loading, etc.
   def load_answers
@@ -48,15 +48,31 @@ class AnswerNodeBuilder
   # - FormItem is a hidden Questioning and there are no answers for it.
   # - include_blank_answers is false and there are no matching answers.
   def build_node(item, inst_num)
-    node = AnswerNode.new(item: item)
     if item.is_a?(QingGroup)
-      # Add main instances.
-      max_inst_num = max_inst_nums[item.id] || 1
-      for inst_num in 1..max_inst_num
-        node.instances << AnswerInstance.new(
-          num: inst_num,
-          nodes: item.children.map{ |c| build_node(c, inst_num) }.compact
-        )
+      build_node_for_group(item, inst_num)
+    else
+      build_node_for_questioning(item, inst_num)
+    end
+  end
+
+  def build_node_for_group(item, inst_num)
+    AnswerNode.new(item: item).tap do |node|
+      instance_count = instance_counts[item.id] || 0
+
+      # Don't return a node if there are no answers for a group and blank_answers isn't on.
+      if instance_count == 0 && !options[:include_blank_answers]
+        return nil
+      else
+        # If there are no instances and we've gotten this far, we still want to include one.
+        instance_count = 1 if instance_count == 0
+
+        # Build instances.
+        for inst_num in 1..instance_count
+          node.instances << AnswerInstance.new(
+            num: inst_num,
+            nodes: item.children.map{ |c| build_node(c, inst_num) }.compact
+          )
+        end
       end
 
       # Add blank instance if requested and this is a repeat group.
@@ -66,7 +82,11 @@ class AnswerNodeBuilder
           blank: true
         )
       end
-    else
+    end
+  end
+
+  def build_node_for_questioning(item, inst_num)
+    AnswerNode.new(item: item).tap do |node|
       answers = answers_for(item.id, inst_num)
       if answers.none? && (item.hidden? || !options[:include_blank_answers])
         return nil
@@ -74,16 +94,19 @@ class AnswerNodeBuilder
         node.set = AnswerSet.new(questioning: item, answers: answers)
       end
     end
-    node
   end
 
-  # Gets the max answer inst_num numbers for all QingGroups on this Response.
-  def scan_max_instance_nums
-    self.max_inst_nums = {}
+  # Gets the max inst_num values for all QingGroups on this Response.
+  # If a QingGroup has no answers at all, instance_counts[group_id] will be nil.
+  def scan_instance_counts
+    self.instance_counts = {}
 
     answers.each do |answer|
       parent_id = answer.questioning.parent_id
-      max_inst_nums[parent_id] = [max_inst_nums[parent_id], answer.inst_num, 1].compact.max
+      current_max = instance_counts[parent_id]
+      if current_max.nil? || answer.inst_num > current_max
+        instance_counts[parent_id] = answer.inst_num
+      end
     end
   end
 
