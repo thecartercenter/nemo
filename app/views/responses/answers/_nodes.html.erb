@@ -1,0 +1,35 @@
+<% nodes.each do |node| %>
+  <%# Single answer set %>
+  <% if node.set %>
+
+    <%= render("responses/answers/set", set: node.set, inst_num: inst_num) %>
+
+  <%# Group with one or more instances %>
+  <% else %>
+
+    <div class="qing-group" id="group-<%= node.item.id %>" data-group-id="<%= node.item.id %>">
+
+      <div class="qing-group-instances">
+        <% node.instances.each do |instance| %>
+
+          <div class="qing-group-instance">
+            <h2><%= node.item.group_name %></h2>
+
+            <%= render("responses/answers/nodes", nodes: instance.nodes, inst_num: instance.num) %>
+
+            <% unless read_only %>
+              <a href="#" class="remove-instance"><%= "#{t("common.remove")} #{node.item.group_name}" %></a>
+            <% end %>
+          </div>
+
+        <% end %>
+      </div>
+
+      <% unless read_only %>
+        <a href="#" class="add-instance"><%= "#{t("common.add")} #{node.item.group_name}" %></a>
+      <% end %>
+
+    </div>
+
+  <% end %>
+<% end %>

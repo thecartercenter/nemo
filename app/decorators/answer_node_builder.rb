@@ -51,7 +51,7 @@ class AnswerNodeBuilder
     node = AnswerNode.new(item: item)
     if item.is_a?(QingGroup)
       for inst_num in 1..(max_inst_nums[item.id] || 1)
-        ai = AnswerInstance.new(nodes: item.children.map{ |c| build_node(c, inst_num) }.compact)
+        ai = AnswerInstance.new(num: inst_num, nodes: item.children.map{ |c| build_node(c, inst_num) }.compact)
         node.instances << ai
       end
     else

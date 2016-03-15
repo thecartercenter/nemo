@@ -40,10 +40,7 @@
 
   <% end %>
 
-  <%# Answer sets %>
-  <% @response.form.arrange_descendants.each do |item, subtree| %>
-    <%= render('responses/answers/form_item', item: item, subtree: subtree) %>
-  <% end %>
+  <%= render("responses/answers/nodes", nodes: @nodes, inst_num: 1) %>
 
   <%# Incomplete checkbox %>
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>

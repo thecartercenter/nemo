@@ -233,7 +233,7 @@ class ResponsesController < ApplicationController
     def prepare_and_render_form
       # Prepare the AnswerNodes. If this is the show action, we don't wan't to add blanks Answer objects,
       # for missing answers, but in all other cases we do.
-      @nodes = AnswerNodeBuilder.new(@response, include_blank_answers: params[:action] != "show")
+      @nodes = AnswerNodeBuilder.new(@response, include_blank_answers: params[:action] != "show").build
       render(:form)
     end
 
