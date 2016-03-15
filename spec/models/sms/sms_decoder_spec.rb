@@ -405,7 +405,7 @@ describe Sms::Decoder do
         if qing.multilevel?
           expect(ansset.answers.map(&:rank)).to eq((1..expected.size).to_a), "Invalid answer ranks"
         else
-          expect(ansset.first.rank).to be_nil, "Answer rank should be nil"
+          expect(ansset.first.rank).to eq(1), "Answer rank should be 1"
         end
       when "select_multiple"
         # for select multiple, the expected value is an array of the english translations of the desired options

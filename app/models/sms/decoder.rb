@@ -257,7 +257,7 @@ class Sms::Decoder
     def build_answer(attribs_set, options = {})
       Array.wrap(attribs_set).each_with_index do |attribs, idx|
         @response.answers.build(attribs.merge(:questioning_id => @qing.id,
-          :rank => options[:multilevel] ? idx + 1 : nil))
+          :rank => options[:multilevel] ? idx + 1 : 1))
       end
     end
 

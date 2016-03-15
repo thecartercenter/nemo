@@ -263,7 +263,7 @@ class Response < ActiveRecord::Base
   def missing_answers
     return @missing_answers if @missing_answers
     answers_by_qing = answers.index_by(&:questioning)
-    @missing_answers = visible_questionings.select{ |qing| qing.required? && answer_for_qing(qing).nil? }
+    @missing_answers = visible_questionings.select{ |qing| qing.required? && answers_by_qing[qing].nil? }
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)

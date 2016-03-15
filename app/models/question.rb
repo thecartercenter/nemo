@@ -122,7 +122,7 @@ class Question < ActiveRecord::Base
     @subquestions ||= if multilevel?
       levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
     else
-      [Subquestion.new(question: self)]
+      [Subquestion.new(question: self, rank: 1)]
     end
   end
 
