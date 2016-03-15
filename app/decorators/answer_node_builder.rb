@@ -76,7 +76,7 @@ class AnswerNodeBuilder
         for inst_num in 1..instance_count
           node.instances << AnswerInstance.new(
             num: inst_num,
-            nodes: item.children.map{ |c| build_node(c, inst_num) }.compact
+            nodes: item.ordered_children.map{ |c| build_node(c, inst_num) }.compact
           )
         end
       end
@@ -84,7 +84,7 @@ class AnswerNodeBuilder
       # Add blank instance if requested and this is a repeat group.
       if item.repeats? && options[:include_blank_answers]
         node.blank_instance = AnswerInstance.new(
-          nodes: item.children.map{ |c| build_node(c, :blank) }.compact,
+          nodes: item.ordered_children.map{ |c| build_node(c, :blank) }.compact,
           blank: true
         )
       end

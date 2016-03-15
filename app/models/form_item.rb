@@ -65,6 +65,10 @@ class FormItem < ActiveRecord::Base
     end
   end
 
+  def ordered_children
+    children.order(:rank)
+  end
+
   # Returns an array of ranks of all parents plus self, e.g. [2,5].
   # Uses the cached value setup by descendant_questionings if available.
   def full_rank
