@@ -4,7 +4,7 @@
 class AnswerNode
   attr_accessor :item, :instances, :blank_instance, :set
 
-  delegate :repeats?, to: :item
+  delegate :repeatable?, to: :item
 
   def initialize(params)
     self.item = params[:item]

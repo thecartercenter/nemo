@@ -62,7 +62,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
     before do
       @form = create(:form, question_types: [['text', 'text', 'text', 'text']])
       @form.questionings.last.update_attributes!(hidden: true, required: true)
-      @form.child_groups.first.update_attributes!(repeats: true)
+      @form.child_groups.first.update_attributes!(repeatable: true)
       @form.publish!
 
       get(form_path(@form, format: :xml))
@@ -95,7 +95,7 @@ describe 'form rendering for odk', clean_with_truncation: true do
     context 'repeat group form with multilevel select' do
       before do
         @form = create(:form, question_types: [['text', 'date', 'multilevel_select_one', 'integer']])
-        @form.child_groups.first.update_attributes!(repeats: true)
+        @form.child_groups.first.update_attributes!(repeatable: true)
         @form.publish!
 
         get(form_path(@form, format: :xml))

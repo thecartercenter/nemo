@@ -82,7 +82,7 @@ class AnswerNodeBuilder
       end
 
       # Add blank instance if requested and this is a repeat group.
-      if item.repeats? && options[:include_missing_answers]
+      if item.repeatable? && options[:include_missing_answers]
         node.blank_instance = AnswerInstance.new(
           nodes: item.ordered_children.map{ |c| build_node(c, :blank) }.compact,
           blank: true

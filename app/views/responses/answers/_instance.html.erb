@@ -3,7 +3,7 @@
 
   <%= render("responses/answers/nodes", nodes: instance.nodes, inst_num: instance.num) %>
 
-  <% if node.repeats? && !read_only %>
+  <% if node.repeatable? && !read_only %>
     <a href="#" class="remove-instance"><%= "#{t("common.remove")} #{node.item.group_name}" %></a>
   <% end %>
 </div>

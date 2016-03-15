@@ -157,7 +157,7 @@ feature 'responses form', js: true, sphinx: true do
     before do
       @form = create(:form, question_types: ['select_one', ['integer', 'text', 'multilevel_select_one'], 'text'])
       @group = @form.child_groups.first
-      @group.repeats = true
+      @group.repeatable = true
       @qings = @form.questionings
       @form.publish!
       login(@user)

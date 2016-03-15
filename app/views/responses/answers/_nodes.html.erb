@@ -15,11 +15,11 @@
         <% end %>
       </div>
 
-      <% if node.repeats? && !read_only %>
+      <% if node.repeatable? && !read_only %>
         <a href="#" class="add-instance"><%= "#{t("common.add")} #{node.item.group_name}" %></a>
       <% end %>
 
-      <% if node.repeats? && !read_only %>
+      <% if node.repeatable? && !read_only %>
         <%= javascript_doc_ready do %>
           new ELMO.Views.RepeatGroupFormView({
             el: <%=json "#group-#{node.item.id}" %>,

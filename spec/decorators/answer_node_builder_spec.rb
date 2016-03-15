@@ -16,7 +16,7 @@ describe AnswerNodeBuilder do
         "decimal"
       ])
       # Make the first group repeatable.
-      _form.children[4].update_attribute(:repeats, true)
+      _form.children[4].update_attribute(:repeatable, true)
       _form
     end
 
@@ -135,7 +135,7 @@ describe AnswerNodeBuilder do
   context "with repeat group and include_missing_answers" do
     let(:form) do
       create(:form, question_types: ["integer", ["integer", "integer"], "integer"]).tap do |f|
-        f.children[1].update_attribute(:repeats, true)
+        f.children[1].update_attribute(:repeatable, true)
       end
     end
 

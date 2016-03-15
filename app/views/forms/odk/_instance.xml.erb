@@ -3,7 +3,7 @@
   <%= data_tag @form, @style do %>
     <% @form.arrange_descendants.each do |item, subtree| %>
       <% if item.is_a?(QingGroup) %>
-        <% @attrs = {"jr:template" => ""} if item.repeats %>
+        <% @attrs = {"jr:template" => ""} if item.repeatable %>
         <%= content_tag("grp-#{item.id}", @attrs) do %>
           <%= tag("grp-header#{item.id}") %>
           <% subtree.keys.each do |qing| %>
