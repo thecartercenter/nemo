@@ -22,8 +22,8 @@ class AnswerFinder
       joins(:questioning).
       where(response_id: responses.map(&:id)).
       where("form_items.question_id" => question.id).
-      where("group_instance = 1 OR group_instance IS NULL").
-      where("answers.rank = 1 OR answers.rank IS NULL").
+      where("group_instance = 1").
+      where("answers.rank = 1").
       index_by(&:response_id)
   end
 end
