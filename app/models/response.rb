@@ -237,14 +237,6 @@ class Response < ActiveRecord::Base
     modifier != 'odk'
   end
 
-  def answer_groups
-    @answer_groups ||= AnswerGroup.new(self)
-  end
-
-  def answer_groups_empty
-    @answer_groups_empty ||= AnswerGroup.new(self, empty_answers: true)
-  end
-
   # Returns an array of required questionings for which answers are missing.
   def missing_answers
     return @missing_answers if @missing_answers
