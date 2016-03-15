@@ -20,6 +20,7 @@ class AnswerNodeBuilder
     self.response = response
     self.options = options
     options[:include_blank_answers] = false unless options.has_key?(:include_blank_answers)
+    options[:dont_load_answers] = false unless options.has_key?(:dont_load_answers)
   end
 
   # Returns an array of AnswerNodes.
@@ -35,12 +36,17 @@ class AnswerNodeBuilder
   attr_accessor :response, :answers, :instance_counts, :options
 
   # We do our own loading here to control order, eager loading, etc.
+  # (Unless instructed not to).
   def load_answers
-    # We eager load options, choices, and questionings since they are bound to be used.
-    # We order the answers so that the answers in answer sets will be in the proper rank order.
-    self.answers = response.answers.
-      includes(:questioning, :option, choices: :option).
-      order(:questioning_id, :inst_num, :rank)
+    if options[:dont_load_answers]
+      self.answers = response.answers
+    else
+      # We eager load options, choices, and questionings since they are bound to be used.
+      # We order the answers so that the answers in answer sets will be in the proper rank order.
+      self.answers = response.answers.
+        includes(:questioning, :option, choices: :option).
+        order(:questioning_id, :inst_num, :rank)
+    end
   end
 
   # Returns a new AnswerNode for the given FormItem and instance number.

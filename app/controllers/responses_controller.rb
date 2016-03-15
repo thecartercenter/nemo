@@ -231,9 +231,13 @@ class ResponsesController < ApplicationController
 
     # prepares objects for and renders the form template
     def prepare_and_render_form
-      # Prepare the AnswerNodes. If this is the show action, we don't wan't to add blanks Answer objects,
-      # for missing answers, but in all other cases we do.
-      @nodes = AnswerNodeBuilder.new(@response, include_blank_answers: params[:action] != "show").build
+      # Prepare the AnswerNodes.
+      @nodes = AnswerNodeBuilder.new(@response,
+        # No point in showing missing answers in show mode.
+        include_blank_answers: params[:action] != "show",
+        # Must preserve submitted answers when in create/update action.
+        dont_load_answers: %w(create update).include?(params[:action])
+      ).build
       render(:form)
     end
 
