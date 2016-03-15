@@ -199,6 +199,8 @@ class Answer < ActiveRecord::Base
     # don't validate if response says no
     return false if response && !response.validate_answers?
 
+    return false if marked_for_destruction?
+
     case field
     when :numericality
       qtype.numeric? && value.present?

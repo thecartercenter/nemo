@@ -16,4 +16,5 @@ class ELMO.Views.RepeatGroupFormView extends Backbone.View
   remove_instance: (event) ->
     event.preventDefault()
     instance = $(event.target.closest('.qing-group-instance'))
-    instance.remove()
+    instance.hide()
+    instance.find("[id$=_destroy]").val("1")

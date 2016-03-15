@@ -107,6 +107,9 @@ class AnswerNodeBuilder
   def scan_instance_counts
     self.instance_counts = {}
 
+    # Root group always has one instance
+    instance_counts[response.form.root_id] = 1
+
     answers.each do |answer|
       parent_id = answer.questioning.parent_id
       current_max = instance_counts[parent_id]
