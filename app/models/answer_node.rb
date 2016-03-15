@@ -2,7 +2,9 @@
 # (either group or individual question) on a single response.
 # See AnswerNodeBuilder for more documentation.
 class AnswerNode
-  attr_accessor :item, :instances, :set
+  attr_accessor :item, :instances, :blank_instance, :set
+
+  delegate :repeats?, to: :item
 
   def initialize(params)
     self.item = params[:item]

@@ -11,24 +11,22 @@
 
       <div class="qing-group-instances">
         <% node.instances.each do |instance| %>
-
-          <div class="qing-group-instance">
-            <h2><%= node.item.group_name %></h2>
-
-            <%= render("responses/answers/nodes", nodes: instance.nodes, inst_num: instance.num) %>
-
-            <% unless read_only %>
-              <a href="#" class="remove-instance"><%= "#{t("common.remove")} #{node.item.group_name}" %></a>
-            <% end %>
-          </div>
-
+          <%= render("responses/answers/instance", node: node, instance: instance) %>
         <% end %>
       </div>
 
-      <% unless read_only %>
+      <% if node.repeats? && !read_only %>
         <a href="#" class="add-instance"><%= "#{t("common.add")} #{node.item.group_name}" %></a>
       <% end %>
 
+      <% if node.repeats? && !read_only %>
+        <%= javascript_doc_ready do %>
+          new ELMO.Views.RepeatGroupFormView({
+            el: <%=json "#group-#{node.item.id}" %>,
+            tmpl: <%=json render("responses/answers/instance", node: node, instance: node.blank_instance) %>
+          })
+        <% end %>
+      <% end %>
     </div>
 
   <% end %>

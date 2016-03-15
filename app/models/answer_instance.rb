@@ -8,5 +8,9 @@ class AnswerInstance
     self.num = params[:num]
     self.nodes = params[:nodes]
     self.blank = params[:blank] || false
+
+    if blank?
+      self.num = "__INST_NUM__" # Used as placeholder
+    end
   end
 end
