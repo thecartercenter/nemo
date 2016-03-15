@@ -245,20 +245,6 @@ class Response < ActiveRecord::Base
     @answer_groups_empty ||= AnswerGroup.new(self, empty_answers: true)
   end
 
-  def answer_set_for_questioning(questioning)
-    # Build a hash of answer sets on the first call.
-    @answer_sets_by_questioning ||= {}.tap do |hash|
-      answers.group_by(&:questioning).each{ |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
-    end
-
-    # If answer set already exists, it will be in the answer_sets_by_questioning hash, else create a new one.
-    unless @answer_sets_by_questioning[questioning]
-      @answer_sets_by_questioning[questioning] = AnswerSet.new(questioning: questioning)
-    end
-
-    @answer_sets_by_questioning[questioning]
-  end
-
   # Returns an array of required questionings for which answers are missing.
   def missing_answers
     return @missing_answers if @missing_answers
