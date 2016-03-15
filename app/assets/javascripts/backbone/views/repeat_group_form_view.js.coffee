@@ -1,6 +1,7 @@
 class ELMO.Views.RepeatGroupFormView extends Backbone.View
-  initialize: (options, additional_options) ->
-    @template = additional_options.template
+  initialize: (options) ->
+    @tmpl = options.tmpl
+    @next_inst_num = parseInt(@$el.find('.qing-group-instances').data('count')) + 1
 
   events:
     'click .add-instance' : 'add_instance'
@@ -9,7 +10,8 @@ class ELMO.Views.RepeatGroupFormView extends Backbone.View
   add_instance: (event) ->
     event.preventDefault()
     qing_group = $(event.target).closest('.qing-group')
-    qing_group.find('.qing-group-instances').append(@template)
+    qing_group.find('.qing-group-instances').append(@tmpl.replace(/__INST_NUM__/g, @next_inst_num))
+    @next_inst_num++
 
   remove_instance: (event) ->
     event.preventDefault()

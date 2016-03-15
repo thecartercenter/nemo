@@ -9,7 +9,7 @@
 
     <div class="qing-group" id="group-<%= node.item.id %>" data-group-id="<%= node.item.id %>">
 
-      <div class="qing-group-instances">
+      <div class="qing-group-instances" data-count="<%= node.instances.size %>">
         <% node.instances.each do |instance| %>
           <%= render("responses/answers/instance", node: node, instance: instance) %>
         <% end %>
