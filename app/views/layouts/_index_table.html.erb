@@ -45,7 +45,7 @@
           <%# include the path for the current object in the tr tag so that we can support clicking anywhere on the row (may be nil) %>
           <% path = path_for_with_search(o) %>
           <%= content_tag(:tr,
-                :id => "#{o.class.name.underscore}_#{o.id}",
+                :id => "#{klass.model_name.singular_route_key}_#{o.id}",
                 :'data-href' => path,
                 :class => index_row_class(o, clickable: path.present?)) do %>
 
