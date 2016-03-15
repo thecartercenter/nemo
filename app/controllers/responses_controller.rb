@@ -1,5 +1,5 @@
 class ResponsesController < ApplicationController
-  include CsvRenderable
+  include CsvRenderable, ResponseIndexable
 
   # need to load with associations for show and edit
   before_filter :load_with_associations, :only => [:show, :edit]
@@ -45,9 +45,7 @@ class ResponsesController < ApplicationController
           end
         end
 
-        @responses = ResponsesDecorator.decorate(@responses, context: {
-          answer_finder: AnswerFinder.new(@responses)
-        })
+        decorate_responses
 
         # render just the table if this is an ajax request
         render(:partial => "table_only", :locals => {:responses => @responses}) if request.xhr?
@@ -233,6 +231,9 @@ class ResponsesController < ApplicationController
 
     # prepares objects for and renders the form template
     def prepare_and_render_form
+      # Prepare the AnswerNodes. If this is the show action, we don't wan't to add blanks Answer objects,
+      # for missing answers, but in all other cases we do.
+      @nodes = AnswerNodeBuilder.new(@response, include_blank_answers: params[:action] != "show")
       render(:form)
     end
 
