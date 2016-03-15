@@ -132,4 +132,61 @@ describe AnswerNodeBuilder do
     end
   end
 
+  context "with repeat group and include_blank_answers" do
+    let(:form) do
+      create(:form, question_types: ["integer", ["integer", "integer"], "integer"]).tap do |f|
+        f.children[1].update_attribute(:repeats, true)
+      end
+    end
+
+    let(:response) do
+      create(:response, form: form, answer_values: [
+        123,
+        [:repeating,
+          [456, 789],
+          [111, 222]
+        ],
+        333
+      ])
+    end
+
+    let(:include_blank_answers) { true }
+
+    it "should include blank instance" do
+      expect(nodes[0].set.answers[0].casted_value).to eq 123
+
+      expect(nodes[1].instances[0]).not_to be_blank
+      expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
+      expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
+
+      expect(nodes[1].instances[1]).not_to be_blank
+      expect(nodes[1].instances[1].nodes[0].set.answers[0].casted_value).to eq 111
+      expect(nodes[1].instances[1].nodes[1].set.answers[0].casted_value).to eq 222
+
+      expect(nodes[1].blank_instance).to be_blank
+      expect(nodes[1].blank_instance.nodes[0].set.answers[0]).to be_new_record
+      expect(nodes[1].blank_instance.nodes[1].set.answers[0]).to be_new_record
+      expect(nodes[1].blank_instance.nodes[0].set.questioning_id).to eq form.children[1].children[0].id
+      expect(nodes[1].blank_instance.nodes[1].set.questioning_id).to eq form.children[1].children[1].id
+
+      # Last question
+      expect(nodes[2].set.answers[0].casted_value).to eq 333
+    end
+  end
+
+  context "with non-repeat group and include_blank_answers" do
+    let(:form) { create(:form, question_types: ["integer", ["integer", "integer"], "integer"]) }
+    let(:response) { create(:response, form: form, answer_values: [123, [456, 789], 333]) }
+    let(:include_blank_answers) { true }
+
+    it "should not include blank instance" do
+      expect(nodes[0].set.answers[0].casted_value).to eq 123
+
+      expect(nodes[1].instances[0]).not_to be_blank
+      expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
+      expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
+
+      expect(nodes[1].blank_instance).to be_nil
+    end
+  end
 end

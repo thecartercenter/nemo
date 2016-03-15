@@ -50,9 +50,21 @@ class AnswerNodeBuilder
   def build_node(item, inst_num)
     node = AnswerNode.new(item: item)
     if item.is_a?(QingGroup)
-      for inst_num in 1..(max_inst_nums[item.id] || 1)
-        ai = AnswerInstance.new(num: inst_num, nodes: item.children.map{ |c| build_node(c, inst_num) }.compact)
-        node.instances << ai
+      # Add main instances.
+      max_inst_num = max_inst_nums[item.id] || 1
+      for inst_num in 1..max_inst_num
+        node.instances << AnswerInstance.new(
+          num: inst_num,
+          nodes: item.children.map{ |c| build_node(c, inst_num) }.compact
+        )
+      end
+
+      # Add blank instance if requested and this is a repeat group.
+      if item.repeats? && options[:include_blank_answers]
+        node.blank_instance = AnswerInstance.new(
+          nodes: item.children.map{ |c| build_node(c, :blank) }.compact,
+          blank: true
+        )
       end
     else
       answers = answers_for(item.id, inst_num)
@@ -76,6 +88,7 @@ class AnswerNodeBuilder
   end
 
   def answers_for(qing_id, inst_num)
+    return [] if inst_num == :blank
     return [] unless answer_table[qing_id]
     answer_table[qing_id][inst_num]
   end
