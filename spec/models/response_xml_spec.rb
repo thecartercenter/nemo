@@ -15,7 +15,7 @@ describe Response do
     end
 
     it 'should work' do
-      resp = Response.new(form: @form, mission: @form.mission)
+      resp = build(:response, form: @form, mission: @form.mission)
       resp.send(:populate_from_hash, {
         "q#{@qs[0].id}" => "on#{@cat.id}",
         "q#{@qs[1].id}_1" => "on#{@plant.id}",
@@ -25,25 +25,28 @@ describe Response do
         "q#{@qs[4].id}_1" => "on#{@animal.id}",
         "q#{@qs[4].id}_2" => 'none',
         })
+      resp.save!
 
-      expect(resp.answer_set_for_questioning(@qings[0]).answers[0].option).to eq @cat.option
-      expect(resp.answer_set_for_questioning(@qings[0]).answers[0].rank).to be_nil
+      nodes = AnswerNodeBuilder.new(resp).build
 
-      expect(resp.answer_set_for_questioning(@qings[1]).answers[0].option).to eq @plant.option
-      expect(resp.answer_set_for_questioning(@qings[1]).answers[0].rank).to eq 1
-      expect(resp.answer_set_for_questioning(@qings[1]).answers[1].option).to eq @oak.option
-      expect(resp.answer_set_for_questioning(@qings[1]).answers[1].rank).to eq 2
+      expect(nodes[0].set.answers[0].option).to eq @cat.option
+      expect(nodes[0].set.answers[0].rank).to eq 1
 
-      expect(resp.answer_set_for_questioning(@qings[2]).answers[0].choices.map(&:option)).to eq [@cat2.option, @dog2.option]
-      expect(resp.answer_set_for_questioning(@qings[2]).answers[0].rank).to be_nil
+      expect(nodes[1].set.answers[0].option).to eq @plant.option
+      expect(nodes[1].set.answers[0].rank).to eq 1
+      expect(nodes[1].set.answers[1].option).to eq @oak.option
+      expect(nodes[1].set.answers[1].rank).to eq 2
 
-      expect(resp.answer_set_for_questioning(@qings[3]).answers[0].value).to eq '123'
-      expect(resp.answer_set_for_questioning(@qings[3]).answers[0].rank).to be_nil
+      expect(nodes[2].set.answers[0].choices.map(&:option)).to eq [@cat2.option, @dog2.option]
+      expect(nodes[2].set.answers[0].rank).to eq 1
 
-      expect(resp.answer_set_for_questioning(@qings[4]).answers[0].option).to eq @animal.option
-      expect(resp.answer_set_for_questioning(@qings[4]).answers[0].rank).to eq 1
-      expect(resp.answer_set_for_questioning(@qings[4]).answers[1].option).to be_nil
-      expect(resp.answer_set_for_questioning(@qings[4]).answers[1].rank).to eq 2
+      expect(nodes[3].set.answers[0].value).to eq '123'
+      expect(nodes[3].set.answers[0].rank).to eq 1
+
+      expect(nodes[4].set.answers[0].option).to eq @animal.option
+      expect(nodes[4].set.answers[0].rank).to eq 1
+      expect(nodes[4].set.answers[1].option).to be_nil
+      expect(nodes[4].set.answers[1].rank).to eq 2
     end
   end
 end
