@@ -94,7 +94,7 @@ class AnswerNodeBuilder
   def build_node_for_questioning(item, inst_num)
     AnswerNode.new(item: item).tap do |node|
       answers = answers_for(item.id, inst_num)
-      if answers.none? && (item.hidden? || !options[:include_missing_answers])
+      if answers.blank? && (item.hidden? || !options[:include_missing_answers])
         return nil
       else
         node.set = AnswerSet.new(questioning: item, answers: answers)
