@@ -13,4 +13,28 @@ class AnswerInstance
       self.num = "__INST_NUM__" # Used as placeholder
     end
   end
+
+  # Ensures contiguous inst_num for all instances.
+  # Marks blank instances for destruction.
+  # Recurses to all child instances.
+  def normalize
+    mark_for_destruction if blank?
+    nodes.each { |node| node.normalize }
+  end
+
+  def update_inst_num(num)
+    nodes.each { |node| node.update_inst_num(num) }
+  end
+
+  def blank?
+    nodes.empty? || nodes.all?(&:blank?)
+  end
+
+  def mark_for_destruction
+    nodes.each(&:mark_for_destruction)
+  end
+
+  def marked_for_destruction?
+    nodes.all?(&:marked_for_destruction?)
+  end
 end
