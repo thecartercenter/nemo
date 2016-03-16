@@ -1,6 +1,6 @@
 <div class="cascading-selects" id="cascading-selects-<%= index %>">
   <% option_path.options.each_with_index do |option, i| %>
-    <div>
+    <div class="level">
       <% if read_only %>
         <% unless option_path.blank? %>
           <% if option_path.multilevel? %>

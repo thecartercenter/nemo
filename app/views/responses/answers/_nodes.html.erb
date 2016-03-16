@@ -7,27 +7,27 @@
   <%# Group with one or more instances %>
   <% else %>
 
-    <div class="qing-group" id="group-<%= node.item.id %>" data-group-id="<%= node.item.id %>">
-
-      <div class="qing-group-instances" data-count="<%= node.instances.size %>">
+    <div class="qing-group" data-group-id="<%= node.item.id %>" data-inst-count="<%= node.instances.size %>">
+      <div class="qing-group-instances">
         <% node.instances.each do |instance| %>
           <%= render("responses/answers/instance", node: node, instance: instance) %>
         <% end %>
       </div>
-
       <% if node.repeatable? && !read_only %>
-        <a href="#" class="add-instance"><%= "#{t("common.add")} #{node.item.group_name}" %></a>
-      <% end %>
-
-      <% if node.repeatable? && !read_only %>
-        <%= javascript_doc_ready do %>
-          new ELMO.Views.RepeatGroupFormView({
-            el: <%=json "#group-#{node.item.id}" %>,
-            tmpl: <%=json render("responses/answers/instance", node: node, instance: node.placeholder_instance) %>
-          })
-        <% end %>
+        <a href="#" class="add-instance">
+          <i class="fa fa-plus"></i> <%= node.item.group_name %>
+        </a>
       <% end %>
     </div>
+
+    <% if node.repeatable? && !read_only %>
+      <%= javascript_doc_ready do %>
+        new ELMO.Views.RepeatGroupFormView({
+          el: <%=json ".qing-group[data-group-id=#{node.item.id}]" %>,
+          tmpl: <%=json render("responses/answers/instance", node: node, instance: node.placeholder_instance) %>
+        })
+      <% end %>
+    <% end %>
 
   <% end %>
 <% end %>

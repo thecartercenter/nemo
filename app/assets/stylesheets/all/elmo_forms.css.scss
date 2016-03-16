@@ -22,7 +22,7 @@ div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
   border-bottom: 1px solid #DDD;
-  margin-bottom: 5px;
+  padding: 5px 0;
 
   > * {
     white-space: normal;
@@ -128,7 +128,6 @@ div.form_field {
 
   /* nice kooshy padding */
   input[type=text], input[type=password], textarea, select {
-    margin-bottom: 5px;
     padding: 3px;
   }
 
@@ -190,6 +189,14 @@ form.elmo_form.minimal {
 }
 
 div.cascading-selects {
+  .level {
+    margin-bottom: 3px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
   label, .option-level {
     display: block !important;
     font-size: 8pt;
