@@ -106,7 +106,7 @@ feature 'conditions in responses', js: true do
       cur_vis = visible.include?(i)
 
       # We do it this way (find, then assert) for timing issues.
-      expect(find("div.answer_field[data-index=\"#{qing.id}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
+      expect(find("div.answer_field[data-qing-id=\"#{qing.id}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
     end
   end
 end

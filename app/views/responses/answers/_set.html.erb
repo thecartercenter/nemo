@@ -1,8 +1,8 @@
 <% mode = read_only ? "read_only" : "editable" %>
-<div id="qing_<%= set.questioning_id %>"
-  class="form_field answer_field qtype_<%= set.qtype.name %> <%= mode %>"
+<div class="form_field answer_field qtype_<%= set.qtype.name %> <%= mode %>"
   data-qtype-name="<%= set.qtype.name %>"
-  data-index="<%= set.questioning_id %>">
+  data-qing-id="<%= set.questioning_id %>"
+  data-inst-num="<%= inst_num %>">
 
   <div class="label_and_control">
     <label class="main">
@@ -34,6 +34,6 @@
 <%# Note that we need to do this in any form mode, even show. %>
 <% if set.condition %>
   <%= javascript_doc_ready do %>
-    ELMO.Response.conditions.push(new ELMO.Views.ConditionChecker(<%=json set.condition %>));
+    (new ELMO.Views.ConditionChecker(<%=json set.condition %>, <%=json inst_num %>)).init();
   <% end %>
 <% end %>
