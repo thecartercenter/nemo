@@ -13,6 +13,8 @@ class Response < ActiveRecord::Base
 
   attr_accessor(:modifier, :excerpts)
 
+  before_save(:normalize_answers)
+
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates(:user, presence: true)
@@ -315,7 +317,12 @@ class Response < ActiveRecord::Base
   end
 
   private
-    def no_missing_answers
-      errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
-    end
+
+  def normalize_answers
+    AnswerArranger.new(self, include_missing_answers: false, dont_load_answers: true).build.normalize
+  end
+
+  def no_missing_answers
+    errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
+  end
 end

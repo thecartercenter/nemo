@@ -14,10 +14,10 @@ class AnswerNode
 
   def normalize
     return if instances.empty?
+    instances.each(&:normalize)
     instances.reject(&:marked_for_destruction?).each_with_index do |instance, i|
       instance.update_inst_num(i + 1)
     end
-    instances.each(&:normalize)
   end
 
   def empty?
