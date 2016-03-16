@@ -63,8 +63,10 @@ class OptionSetImport
         leaf_attribs = row.extract_options!
         row_number = leaf_attribs.delete(:_row_number)
 
-        # drop the :id attribute when re-importing exported spreadsheets
+        # drop the :id and :shortcode attributes when re-importing exported spreadsheets
         leaf_attribs.delete(:id)
+        leaf_attribs.delete(:shortcode)
+
 
         row.each_with_index do |cell, c|
           next if cur_nodes[c].present? && cell == cur_nodes[c].option.name
@@ -105,8 +107,9 @@ class OptionSetImport
         end
       end
 
-      raise ActiveRecord::Rollback if errors.present?
+      @option_set.generate_sequence(batch: true)
 
+      raise ActiveRecord::Rollback if errors.present?
     end
 
     errors.blank?
@@ -144,11 +147,12 @@ class OptionSetImport
       # Get special columns i18n values
       id_header = 'Id'
       coordinates_header = I18n.t('activerecord.attributes.option.coordinates')
+      shortcode_header = I18n.t('activerecord.attributes.option.shortcode')
 
       # Find any special columns
       special_columns = {}
       headers.each_with_index do |h,i|
-        special_columns[i] = h.downcase.to_sym if [id_header, coordinates_header].include?(h)
+        special_columns[i] = h.downcase.to_sym if [id_header, coordinates_header, shortcode_header].include?(h)
       end
 
       # Enforce maximum length limitation on headers

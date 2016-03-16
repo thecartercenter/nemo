@@ -242,6 +242,9 @@ class OptionNode < ActiveRecord::Base
         # add the coordinates if the option set allows coordinates
         row << node.option.coordinates if option_set.allow_coordinates?
 
+        # add the node's shortcode
+        row << node.shortcode
+
         rows << row
       end
 
@@ -290,6 +293,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def shortcode
+    # Rails.logger.ap self
     @shortcode = Base36.to_padded_base36(sequence, length: shortcode_length)
   end
 

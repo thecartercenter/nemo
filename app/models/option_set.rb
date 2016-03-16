@@ -298,6 +298,7 @@ class OptionSet < ActiveRecord::Base
       end
 
       headers << Option.human_attribute_name(:coordinates) if allow_coordinates?
+      headers << Option.human_attribute_name(:shortcode)
     end
   end
 
@@ -343,10 +344,10 @@ class OptionSet < ActiveRecord::Base
   end
 
   def generate_sequence(batch: false)
-    return unless options_added? || options_removed? || batch
+    return unless (options_added? || options_removed? || batch)
     descendants.each_with_index do |option_node, i|
       option_node.sequence = i + 1
-      save(validate: false)
+      option_node.save(validate: false)
     end
   end
 
