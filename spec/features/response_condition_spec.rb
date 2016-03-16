@@ -63,7 +63,7 @@ feature 'conditions in responses', js: true do
   end
 
   def fill_answer(qing, value)
-    idx = qing.id
+    idx = "#{qing.id}_1"
     id = "response_answers_attributes_#{idx}_value"
     case qing.qtype_name
     when 'long_text'

@@ -19,31 +19,31 @@ feature 'responses form', js: true, sphinx: true do
       visit_submit_page_and_select_user
 
       # Fill in answers
-      select('Dog', from: control_id(@qings[0], '_0_option_id'))
+      select('Dog', from: control_id(@qings[0], '_option_id'))
 
-      select('Plant', from: control_id(@qings[1], '_0_0_option_id'))
-      find('#' + control_id(@qings[1], '_0_1_option_id') + ' option', text: 'Oak')
-      select('Oak', from: control_id(@qings[1], '_0_1_option_id'))
+      select('Plant', from: control_id(@qings[1], '_0_option_id'))
+      find('#' + control_id(@qings[1], '_1_option_id') + ' option', text: 'Oak')
+      select('Oak', from: control_id(@qings[1], '_1_option_id'))
 
-      check(control_id(@qings[2], '_0_choices_attributes_0_checked')) # Cat
-      fill_in(control_id(@qings[3], '_0_value'), with: '10')
-      fill_in(control_id(@qings[4], '_0_value'), with: '10.2')
-      fill_in(control_id(@qings[5], '_0_value'), with: '42.277976 -83.817573')
-      fill_in(control_id(@qings[6], '_0_value'), with: 'Foo')
-      fill_in_ckeditor(control_id(@qings[7], '_0_value'), with: "Foo Bar\nBaz")
+      check(control_id(@qings[2], '_choices_attributes_0_checked')) # Cat
+      fill_in(control_id(@qings[3], '_value'), with: '10')
+      fill_in(control_id(@qings[4], '_value'), with: '10.2')
+      fill_in(control_id(@qings[5], '_value'), with: '42.277976 -83.817573')
+      fill_in(control_id(@qings[6], '_value'), with: 'Foo')
+      fill_in_ckeditor(control_id(@qings[7], '_value'), with: "Foo Bar\nBaz")
 
-      select(Time.now.year, from: control_id(@qings[8], '_0_datetime_value_1i'))
-      select('March', from: control_id(@qings[8], '_0_datetime_value_2i'))
-      select('12', from: control_id(@qings[8], '_0_datetime_value_3i'))
-      select('18', from: control_id(@qings[8], '_0_datetime_value_4i'))
-      select('32', from: control_id(@qings[8], '_0_datetime_value_5i'))
+      select(Time.now.year, from: control_id(@qings[8], '_datetime_value_1i'))
+      select('March', from: control_id(@qings[8], '_datetime_value_2i'))
+      select('12', from: control_id(@qings[8], '_datetime_value_3i'))
+      select('18', from: control_id(@qings[8], '_datetime_value_4i'))
+      select('32', from: control_id(@qings[8], '_datetime_value_5i'))
 
-      select(Time.now.year, from: control_id(@qings[9], '_0_date_value_1i'))
-      select('October', from: control_id(@qings[9], '_0_date_value_2i'))
-      select('26', from: control_id(@qings[9], '_0_date_value_3i'))
+      select(Time.now.year, from: control_id(@qings[9], '_date_value_1i'))
+      select('October', from: control_id(@qings[9], '_date_value_2i'))
+      select('26', from: control_id(@qings[9], '_date_value_3i'))
 
-      select('03', from: control_id(@qings[10], '_0_time_value_4i'))
-      select('08', from: control_id(@qings[10], '_0_time_value_5i'))
+      select('03', from: control_id(@qings[10], '_time_value_4i'))
+      select('08', from: control_id(@qings[10], '_time_value_5i'))
 
       # Save and check it worked.
       click_button('Save')
@@ -56,11 +56,11 @@ feature 'responses form', js: true, sphinx: true do
 
       # Check edit mode.
       click_link('Edit Response')
-      select('Animal', from: control_id(@qings[1], '_0_0_option_id'))
-      find('#' + control_id(@qings[1], '_0_1_option_id') + ' option', text: 'Cat')
-      select('Cat', from: control_id(@qings[1], '_0_1_option_id'))
-      uncheck(control_id(@qings[2], '_0_choices_attributes_0_checked')) # Cat
-      check(control_id(@qings[2], '_0_choices_attributes_1_checked')) # Dog
+      select('Animal', from: control_id(@qings[1], '_0_option_id'))
+      find('#' + control_id(@qings[1], '_1_option_id') + ' option', text: 'Cat')
+      select('Cat', from: control_id(@qings[1], '_1_option_id'))
+      uncheck(control_id(@qings[2], '_choices_attributes_0_checked')) # Cat
+      check(control_id(@qings[2], '_choices_attributes_1_checked')) # Dog
       click_button('Save')
 
       # Check that change occurred.
@@ -92,8 +92,8 @@ feature 'responses form', js: true, sphinx: true do
 
       # Ensure response saved properly.
       click_link(Response.first.id.to_s)
-      expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
-      expect(page).to have_selector("div.form_field#qing_#{@qing0.id} .ro-val", text: 'Foo')
+      expect(page).not_to have_selector("[data-qing-id=\"#{@qing1.id}\"]")
+      expect(page).to have_selector("[data-qing-id=\"#{@qing0.id}\"] .ro-val", text: 'Foo')
     end
   end
 
@@ -157,7 +157,7 @@ feature 'responses form', js: true, sphinx: true do
     before do
       @form = create(:form, question_types: ['select_one', ['integer', 'text', 'multilevel_select_one'], 'text'])
       @group = @form.child_groups.first
-      @group.repeatable = true
+      @group.update_attribute(:repeatable, true)
       @qings = @form.questionings
       @form.publish!
       login(@user)
@@ -166,14 +166,14 @@ feature 'responses form', js: true, sphinx: true do
     scenario 'should let you add two instances' do
       visit_submit_page_and_select_user
 
-      select 'Cat', from: control_id(@qings[0], '_0_option_id')
-      click_link 'Add Group Name'
-      fill_in control_id(@qings[1], '_1_value'), with: 10
+      select 'Cat', from: control_id(@qings[0], '_option_id')
+      find("a.add-instance").click
+      fill_in control_id(@qings[1], '_value', inst_num: 2), with: 10
     end
   end
 
-  def control_id(qing, suffix)
-    "response_answers_attributes_#{qing.id}#{suffix}"
+  def control_id(qing, suffix, inst_num: 1)
+    "response_answers_attributes_#{qing.id}_#{inst_num}#{suffix}"
   end
 
   def visit_submit_page_and_select_user
@@ -189,7 +189,7 @@ feature 'responses form', js: true, sphinx: true do
     qing = @qings[qing_idx]
     csscls = qing.multilevel? ? 'option-name' : 'ro-val'
     Array.wrap(value).each do |v|
-      expect(page).to have_selector("#qing_#{qing.id} .#{csscls}", text: /^#{Regexp.escape(v)}$/)
+      expect(page).to have_selector("[data-qing-id=\"#{qing.id}\"] .#{csscls}", text: /^#{Regexp.escape(v)}$/)
     end
   end
 
