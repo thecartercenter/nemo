@@ -26,14 +26,14 @@ class AnswerArranger
   # Returns a single AnswerInstance for the root group.
   def build
     load_answers
-    scan_instance_counts
+    scan_instance_nums
     root_node = build_node(response.form.root_group, 1)
     root_node.instances.first
   end
 
   private
 
-  attr_accessor :response, :answers, :instance_counts, :options
+  attr_accessor :response, :answers, :instance_nums, :options
 
   # We do our own loading here to control order, eager loading, etc.
   # (Unless instructed not to).
@@ -55,29 +55,30 @@ class AnswerArranger
   # - include_missing_answers is false and there are no matching answers.
   def build_node(item, inst_num)
     if item.is_a?(QingGroup)
-      build_node_for_group(item, inst_num)
+      build_node_for_group(item)
     else
       build_node_for_questioning(item, inst_num)
     end
   end
 
-  def build_node_for_group(item, inst_num)
+  def build_node_for_group(item)
     AnswerNode.new(item: item).tap do |node|
-      instance_count = instance_counts[item.id] || 0
+      nums = instance_nums[item.id] || []
 
       # Don't return a node if there are no answers for a group and missing_answers isn't on.
-      if instance_count == 0 && !options[:include_missing_answers]
+      if nums.empty? && !options[:include_missing_answers]
         return nil
       else
         # If there are no instances and we've gotten this far, we still want to include one.
-        instance_count = 1 if instance_count == 0
+        nums = [1] if nums.empty?
 
         # Build instances.
-        for inst_num in 1..instance_count
-          node.instances << AnswerInstance.new(
-            num: inst_num,
-            nodes: item.ordered_children.map{ |c| build_node(c, inst_num) }.compact
+        nums.each do |num|
+          instance = AnswerInstance.new(
+            num: num,
+            nodes: item.ordered_children.map{ |c| build_node(c, num) }.compact
           )
+          node.instances << instance
         end
       end
 
@@ -102,21 +103,21 @@ class AnswerArranger
     end
   end
 
-  # Gets the max inst_num values for all QingGroups on this Response.
-  # If a QingGroup has no answers at all, instance_counts[group_id] will be nil.
-  def scan_instance_counts
-    self.instance_counts = {}
+  # Gets all inst_num values for all QingGroups on this Response.
+  # If a QingGroup has no answers at all, instance_nums[group_id] will be nil.
+  def scan_instance_nums
+    self.instance_nums = {}
 
     # Root group always has one instance
-    instance_counts[response.form.root_id] = 1
+    instance_nums[response.form.root_id] = [1]
 
     answers.each do |answer|
       parent_id = answer.questioning.parent_id
-      current_max = instance_counts[parent_id]
-      if current_max.nil? || answer.inst_num > current_max
-        instance_counts[parent_id] = answer.inst_num
-      end
+      instance_nums[parent_id] ||= []
+      instance_nums[parent_id] << answer.inst_num
     end
+
+    instance_nums.each { |_, nums| nums.uniq!; nums.sort! }
   end
 
   def answers_for(qing_id, inst_num)
