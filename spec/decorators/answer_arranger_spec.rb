@@ -156,19 +156,19 @@ describe AnswerArranger do
     it "should include blank instance" do
       expect(nodes[0].set.answers[0].casted_value).to eq 123
 
-      expect(nodes[1].instances[0]).not_to be_blank
+      expect(nodes[1].instances[0]).not_to be_placeholder
       expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
       expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
 
-      expect(nodes[1].instances[1]).not_to be_blank
+      expect(nodes[1].instances[1]).not_to be_placeholder
       expect(nodes[1].instances[1].nodes[0].set.answers[0].casted_value).to eq 111
       expect(nodes[1].instances[1].nodes[1].set.answers[0].casted_value).to eq 222
 
-      expect(nodes[1].blank_instance).to be_blank
-      expect(nodes[1].blank_instance.nodes[0].set.answers[0]).to be_new_record
-      expect(nodes[1].blank_instance.nodes[1].set.answers[0]).to be_new_record
-      expect(nodes[1].blank_instance.nodes[0].set.questioning_id).to eq form.children[1].children[0].id
-      expect(nodes[1].blank_instance.nodes[1].set.questioning_id).to eq form.children[1].children[1].id
+      expect(nodes[1].placeholder_instance).to be_placeholder
+      expect(nodes[1].placeholder_instance.nodes[0].set.answers[0]).to be_new_record
+      expect(nodes[1].placeholder_instance.nodes[1].set.answers[0]).to be_new_record
+      expect(nodes[1].placeholder_instance.nodes[0].set.questioning_id).to eq form.children[1].children[0].id
+      expect(nodes[1].placeholder_instance.nodes[1].set.questioning_id).to eq form.children[1].children[1].id
 
       # Last question
       expect(nodes[2].set.answers[0].casted_value).to eq 333
@@ -183,11 +183,11 @@ describe AnswerArranger do
     it "should not include blank instance" do
       expect(nodes[0].set.answers[0].casted_value).to eq 123
 
-      expect(nodes[1].instances[0]).not_to be_blank
+      expect(nodes[1].instances[0]).not_to be_placeholder
       expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
       expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
 
-      expect(nodes[1].blank_instance).to be_nil
+      expect(nodes[1].placeholder_instance).to be_nil
     end
   end
 
@@ -200,11 +200,11 @@ describe AnswerArranger do
       expect(nodes[0].set.answers[0]).to be_new_record
 
       # The instance is not considered a 'blank' instance in this case. It just has blank answers.
-      expect(nodes[1].instances[0]).not_to be_blank
+      expect(nodes[1].instances[0]).not_to be_placeholder
       expect(nodes[1].instances[0].nodes[0].set.answers[0]).to be_new_record
       expect(nodes[1].instances[0].nodes[1].set.answers[0]).to be_new_record
 
-      expect(nodes[1].blank_instance).to be_nil
+      expect(nodes[1].placeholder_instance).to be_nil
 
       expect(nodes[2].set.answers[0]).to be_new_record
     end

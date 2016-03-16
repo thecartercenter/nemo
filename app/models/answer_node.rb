@@ -2,7 +2,7 @@
 # (either group or individual question) on a single response.
 # See AnswerArranger for more documentation.
 class AnswerNode
-  attr_accessor :item, :instances, :blank_instance, :set
+  attr_accessor :item, :instances, :placeholder_instance, :set
 
   delegate :repeatable?, to: :item
 

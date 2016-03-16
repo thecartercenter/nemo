@@ -81,11 +81,11 @@ class AnswerArranger
         end
       end
 
-      # Add blank instance if requested and this is a repeat group.
+      # Add placeholder instance if requested and this is a repeat group.
       if item.repeatable? && options[:include_missing_answers]
-        node.blank_instance = AnswerInstance.new(
-          nodes: item.ordered_children.map{ |c| build_node(c, :blank) }.compact,
-          blank: true
+        node.placeholder_instance = AnswerInstance.new(
+          nodes: item.ordered_children.map{ |c| build_node(c, :placeholder) }.compact,
+          placeholder: true
         )
       end
     end
@@ -120,7 +120,7 @@ class AnswerArranger
   end
 
   def answers_for(qing_id, inst_num)
-    return [] if inst_num == :blank
+    return [] if inst_num == :placeholder
     return [] unless answer_table[qing_id]
     answer_table[qing_id][inst_num]
   end
