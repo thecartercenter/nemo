@@ -1,4 +1,6 @@
-<div class="qing-group-instance">
+<div class="qing-group-instance"
+  <% if instance.marked_for_destruction? %>style="display: none"<% end %>>
+
   <h2><%= node.item.group_name %></h2>
 
   <%= render("responses/answers/nodes", nodes: instance.nodes, inst_num: instance.num) %>
@@ -6,4 +8,5 @@
   <% if node.repeatable? && !read_only %>
     <a href="#" class="remove-instance"><%= "#{t("common.remove")} #{node.item.group_name}" %></a>
   <% end %>
+
 </div>
