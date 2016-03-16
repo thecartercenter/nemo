@@ -379,7 +379,7 @@ describe Sms::Decoder do
     # ensure the form is correct
     expect(response.form_id).to eq(@form.id)
 
-    nodes = AnswerNodeBuilder.new(response).build
+    nodes = AnswerArranger.new(response).build.nodes
 
     # ensure an expected answer was given for this question
     expect(options[:answers].size >= nodes.size).to be_truthy, "No expected answer was given for question #{nodes.size + 1}"

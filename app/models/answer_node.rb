@@ -1,6 +1,6 @@
 # Models a group of answers in a single repeat-instance of a single FormItem
 # (either group or individual question) on a single response.
-# See AnswerNodeBuilder for more documentation.
+# See AnswerArranger for more documentation.
 class AnswerNode
   attr_accessor :item, :instances, :blank_instance, :set
 

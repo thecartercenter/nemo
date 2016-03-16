@@ -1,5 +1,5 @@
 # A set of AnswerNodes corresponding to one repeat instance of a QingGroup.
-# See AnswerNodeBuilder for more documentation.
+# See AnswerArranger for more documentation.
 class AnswerInstance
   attr_accessor :nodes, :num, :blank
   alias_method :blank?, :blank

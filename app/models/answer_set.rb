@@ -1,6 +1,6 @@
 # Represents a set of answers to one Questioning.
 # Usually has only one answer, except in case of Question with multi-level OptionSet.
-# See AnswerNodeBuilder for more documentation.
+# See AnswerArranger for more documentation.
 class AnswerSet
   attr_accessor :questioning, :answers
 

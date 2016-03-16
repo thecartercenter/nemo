@@ -15,7 +15,7 @@
 # Answer
 # - A single answer
 
-class AnswerNodeBuilder
+class AnswerArranger
   def initialize(response, options = {})
     self.response = response
     self.options = options
@@ -23,12 +23,12 @@ class AnswerNodeBuilder
     options[:dont_load_answers] = false unless options.has_key?(:dont_load_answers)
   end
 
-  # Returns an array of AnswerNodes.
+  # Returns a single AnswerInstance for the root group.
   def build
     load_answers
     scan_instance_counts
     root_node = build_node(response.form.root_group, 1)
-    root_node.instances.first.nodes
+    root_node.instances.first
   end
 
   private

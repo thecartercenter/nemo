@@ -27,7 +27,7 @@ describe Response do
         })
       resp.save!
 
-      nodes = AnswerNodeBuilder.new(resp).build
+      nodes = AnswerArranger.new(resp).build.nodes
 
       expect(nodes[0].set.answers[0].option).to eq @cat.option
       expect(nodes[0].set.answers[0].rank).to eq 1

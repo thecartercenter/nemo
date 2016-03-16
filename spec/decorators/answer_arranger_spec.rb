@@ -1,9 +1,10 @@
 require "spec_helper"
 
-describe AnswerNodeBuilder do
+describe AnswerArranger do
 
   let(:include_missing_answers) { false } # Overridden below
-  let(:nodes) { AnswerNodeBuilder.new(response, include_missing_answers: include_missing_answers).build }
+  let(:instance) { AnswerArranger.new(response, include_missing_answers: include_missing_answers).build }
+  let(:nodes) { instance.nodes }
 
   context "general form" do
     let(:form) do
