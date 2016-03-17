@@ -44,7 +44,10 @@ class ResponseCSV
         row = [response.form.name, response.user.name, response.created_at.to_s(:std_datetime), response.id]
 
         # Assign cell values for each column set
-        response.answers.group_by(&:question).each do |question, answers|
+        answers = response.answers.includes(:questioning, :option, choices: :option).
+          order(:questioning_id, :inst_num, :rank)
+
+        answers.group_by(&:question).each do |question, answers|
           columns = columns_by_question[question.code]
           qa = ResponseCSV::QA.new(question, answers)
           columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
