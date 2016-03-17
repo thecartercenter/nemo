@@ -20,26 +20,26 @@ a { color: $orange; }
 h1, h2, h3 { color: black; font-family: 'Open Sans', Helvetica, sans-serif; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 
+h1.title {
+  color: #777;
+  font-weight: bold;
+  margin-bottom: 28px;
+  margin-right: 10px;
+  float: left;
+
+  i {
+    color: $light-gray;
+    margin-right: 5px;
+  }
+
+  i.fa-certificate {
+    color: $gold;
+  }
+}
+
 div#title_container {
   overflow: auto;
   clear: both;
-
-  h1.title {
-    color: #777;
-    font-weight: bold;
-    margin-bottom: 28px;
-    margin-right: 10px;
-    float: left;
-
-    i {
-      color: $light-gray;
-      margin-right: 5px;
-    }
-
-    i.fa-certificate {
-      color: $gold;
-    }
-  }
 
   span.label {
     display: inline-block;
@@ -49,7 +49,6 @@ div#title_container {
     padding: .5em .8em
   }
 }
-
 
 /* std seal in title */
 h1.title img { width: 16px; height: 16px; }

@@ -1,13 +1,9 @@
 class DisableSmsAuthenticationOnForms < ActiveRecord::Migration
   def up
-    Form.find_each do |f|
-      f.update_column(:authenticate_sms, false)
-    end
+    Form.update_all(authenticate_sms: false)
   end
 
   def down
-    Form.find_each do |f|
-      f.update_column(:authenticate_sms, true)
-    end
+    Form.update_all(authenticate_sms: true)
   end
 end
