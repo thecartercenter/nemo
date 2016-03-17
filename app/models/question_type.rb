@@ -3,20 +3,20 @@ class QuestionType
   attr_reader :name, :odk_name, :properties
 
   @@attributes = [
-    { name: "text", odk_name: "string", properties: %w(form_printable smsable textual headerable) },
-    { name: "long_text", odk_name: "string", properties: %w(form_printable smsable textual) },
-    { name: "integer", odk_name: "int", properties: %w(form_printable smsable numeric headerable) },
-    { name: "decimal", odk_name: "decimal", properties: %w(form_printable smsable numeric headerable) },
+    { name: "text", odk_name: "string", properties: %w(printable smsable textual headerable) },
+    { name: "long_text", odk_name: "string", properties: %w(printable smsable textual) },
+    { name: "integer", odk_name: "int", properties: %w(printable smsable numeric headerable) },
+    { name: "decimal", odk_name: "decimal", properties: %w(printable smsable numeric headerable) },
     { name: "location", odk_name: "geopoint", properties: %w() },
-    { name: "select_one", odk_name: "select1", properties: %w(form_printable has_options smsable headerable) },
-    { name: "select_multiple", odk_name: "select", properties: %w(form_printable has_options smsable headerable) },
-    { name: "datetime", odk_name: "dateTime", properties: %w(form_printable temporal has_timezone smsable headerable) },
-    { name: "date", odk_name: "date", properties: %w(form_printable temporal smsable headerable) },
-    { name: "time", odk_name: "time", properties: %w(form_printable temporal smsable headerable) },
+    { name: "select_one", odk_name: "select1", properties: %w(printable has_options smsable headerable) },
+    { name: "select_multiple", odk_name: "select", properties: %w(printable has_options smsable headerable) },
+    { name: "datetime", odk_name: "dateTime", properties: %w(printable temporal has_timezone smsable headerable) },
+    { name: "date", odk_name: "date", properties: %w(printable temporal smsable headerable) },
+    { name: "time", odk_name: "time", properties: %w(printable temporal smsable headerable) },
     { name: "image", odk_name: "binary", properties: %w(multimedia) },
     { name: "annotated_image", odk_name: "binary", properties: %w(multimedia) },
-    { name: "signature", odk_name: "binary", properties: %w(multimedia form_printable) },
-    { name: "sketch", odk_name: "binary", properties: %w(multimedia form_printable) },
+    { name: "signature", odk_name: "binary", properties: %w(multimedia printable) },
+    { name: "sketch", odk_name: "binary", properties: %w(multimedia printable) },
     { name: "audio", odk_name: "binary", properties: %w(multimedia) },
     { name: "video", odk_name: "binary", properties: %w(multimedia) },
   ]
@@ -54,10 +54,9 @@ class QuestionType
   end
 
   # returns whether this question type makes sense to be printable on a form
-  def form_printable?
-    properties.include?("form_printable")
+  def printable?
+    properties.include?("printable")
   end
-  alias_method :printable?, :form_printable?
 
   # returns whether this question type has options
   def has_options?
