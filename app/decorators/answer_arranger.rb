@@ -25,10 +25,17 @@ class AnswerArranger
 
   # Returns a single AnswerInstance for the root group.
   def build
+    # Prep
     load_answers
     scan_instance_nums
+
+    # Build the nodes
     root_node = build_node(response.form.root_group, 1)
-    root_node.instances.first
+
+    # Get the root instance, mark as root, and return
+    root_node.instances.first.tap do |root_instance|
+      root_instance.root = true
+    end
   end
 
   private
