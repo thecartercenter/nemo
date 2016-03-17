@@ -145,7 +145,7 @@ module ApplicationHelper
   end
 
   def h1_title
-    content_tag(:h1, title, class: 'title')
+    content_tag(:h1, title, class: "title")
   end
 
   # pluralizes an activerecord model name
@@ -194,6 +194,11 @@ module ApplicationHelper
     end
 
     message
+  end
+
+  # pill label
+  def pill_label(text, kind: 'default')
+    content_tag(:span, text, class: "label label-#{kind}")
   end
 
   # makes a set of <li> wrapped links to the index actions of the given classes

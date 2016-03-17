@@ -24,6 +24,9 @@ h1.title {
   color: #777;
   font-weight: bold;
   margin-bottom: 28px;
+  margin-right: 10px;
+  float: left;
+
   i {
     color: $light-gray;
     margin-right: 5px;
@@ -31,6 +34,19 @@ h1.title {
 
   i.fa-certificate {
     color: $gold;
+  }
+}
+
+div#title_container {
+  overflow: auto;
+  clear: both;
+
+  span.label {
+    display: inline-block;
+    float: left;
+    font-size: 10px;
+    margin: .25em .5em;
+    padding: .5em .8em
   }
 }
 

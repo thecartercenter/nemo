@@ -261,6 +261,6 @@ class FormsController < ApplicationController
     end
 
     def form_params
-      params.require(:form).permit(:name, :smsable, :allow_incomplete, :access_level)
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :authenticate_sms, :access_level)
     end
 end
