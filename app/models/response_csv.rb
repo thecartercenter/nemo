@@ -41,7 +41,12 @@ class ResponseCSV
         process_form(response.form)
 
         # Start the row
-        row = [response.form.name, response.user.name, response.created_at.to_s(:std_datetime), response.id]
+        row = [
+          response.form.name,
+          response.user.name,
+          response.created_at.to_s(:std_datetime_with_tz),
+          response.id
+        ]
 
         # Assign cell values for each column set
         answers = response.answers.includes(:questioning, :option, choices: :option).
@@ -143,8 +148,12 @@ class ResponseCSV::QA
       arr
     when 'location'
       lat_lng(answer)
+    when 'datetime'
+      [answer.casted_value.try(:to_s, :std_datetime_with_tz)]
+    when 'date', 'time'
+      [answer.casted_value.try(:to_s, :"std_#{question_type}")]
     else
-      [format_csv_para_text(answer.formatted_value)]
+      [format_csv_para_text(answer.casted_value)]
     end
   end
 

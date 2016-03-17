@@ -149,18 +149,6 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  # Returns a formatted string based on casted_value, or nil if casted_value is nil.
-  def formatted_value
-    cv = casted_value
-    return nil if cv.nil?
-    case qtype.name
-    when 'datetime', 'date', 'time'
-      cv.to_s(:"std_#{qtype.name}")
-    else
-      casted_value
-    end
-  end
-
   # relevant defaults to true until set otherwise
   def relevant?
     @relevant.nil? ? true : @relevant
