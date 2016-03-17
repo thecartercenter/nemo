@@ -276,7 +276,7 @@ en:
         allow_coordinates: "With Coordinates?"
         answers: "Answers"
         geographic: "Is Geographic?"
-        multi_level: "Is Multilevel?"
+        multilevel: "Is Multilevel?"
         options: "Options"
         option_levels: "Levels"
       qing_group:
@@ -285,6 +285,7 @@ en:
         add: "Add Group"
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
+        repeatable: "Repeatable?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -459,7 +460,7 @@ en:
         allow_coordinates: "Whether this option set allows options with geographic coordinates."
         geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
-        multi_level: "Whether the option set has multiple levels of options, such as country -> state -> city."
+        multilevel: "Whether the option set has multiple levels of options, such as country -> state -> city."
         options:
           editable: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
           read_only: "The options that will appear for questions using this option set."
@@ -1101,7 +1102,7 @@ en:
     edit_option_level: "Edit Option Level"
     huge_notice: "This Option Set is very large (%{count} Options) and thus only a small sample of its Options are displayed below. You may edit its name and other properties here but please use the import/export features to edit the Options themselves."
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
-    multi_level_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
+    multilevel_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
     new_option_level: "New Option Level"
     none_found: "No matching options found"
     searching: "Searching..."

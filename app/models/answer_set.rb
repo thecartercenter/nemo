@@ -1,5 +1,6 @@
 # Represents a set of answers to one Questioning.
 # Usually has only one answer, except in case of Question with multi-level OptionSet.
+# See AnswerArranger for more documentation.
 class AnswerSet
   attr_accessor :questioning, :answers
 
@@ -8,7 +9,7 @@ class AnswerSet
   delegate :option_set, to: :question
   delegate :levels, to: :option_set
   delegate :first, to: :answers
-  delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, to: :first
+  delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, :inst_num, to: :first
   delegate :option_ids_with_no_nils, to: :option_path
 
   # Builds Answer attribute hashes from submitted answer_set params.
@@ -27,13 +28,12 @@ class AnswerSet
   end
 
   def initialize(attribs = {})
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
-
+    attribs.each{ |k,v| instance_variable_set("@#{k}", v) }
     ensure_answers
   end
 
-  def multi_level?
-    option_set.nil? ? false : option_set.multi_level?
+  def multilevel?
+    option_set.nil? ? false : option_set.multilevel?
   end
 
   # True if all answers are blank.

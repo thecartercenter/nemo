@@ -1,5 +1,7 @@
 $gray-blue: #D4DCE1;
 $response-form-label-width: 300px;
+$group-indent: 10px;
+$body-text-color: #222;
 
 /* response index */
 .responses_index {
@@ -108,40 +110,53 @@ form.response_form {
   }
 
   div.qing-group {
-    margin-top: -5px;
-    border-left: 10px solid $gray-blue;
+
+    div.qing-group-instances {
+      border-left: 10px solid $gray-blue;
+    }
 
     h2 {
-      margin: 0 0 5px 0;
+      margin: 0;
       padding: 5px 0 10px 2px;
       background-color: $gray-blue;
 
       a.hint {
         font-size: 9pt;
+
+        i.hint {
+          color: white !important;
+        }
+      }
+
+      a.remove-instance {
+        display: inline-block;
         float: right;
+        margin: 0 10px;
+      }
+
+      div.popover {
+        color: $body-text-color;
       }
     }
 
-    .form_field label {
-      width: 290px; // Normal width is 300px
-      padding-left: 5px; // Since there is now a left border.
+    a.add-instance {
+      display: inline-block;
+      margin: 5px 0 10px 0;
+
+      &, & i {
+        color: #aaa !important;
+      }
     }
 
-    .form_field div.control {
-      width: 415px;
-    }
-
-    // Second level of indentation
-    div.qing-group {
-      margin-left: 2px; // We need a little margin to separate inner group from outer.
-
-      .form_field label {
-        width: 278px;
+    /* Indented groups */
+    .form_field {
+      label {
+        width: $response-form-label-width - $group-indent;
+        padding-left: 5px; // Since there is now a left border.
       }
 
-      // Third level of indentation (that's enough!)
-      div.qing-group .form_field label {
-        width: 268px;
+      div.control {
+        margin-left: $response-form-label-width - $group-indent;
       }
     }
   }

@@ -1,3 +1,20 @@
+# An Answer is a single piece of data in response to a single question or sub-question.
+#
+# A note about rank/inst_num attributes
+#
+# rank:
+# - The rank of the answer within a given set of answers for a multilevel select question.
+# - Starts at 1 (top level) and increases
+# - Should be 1 for non-multilevel questions
+#
+# inst_num:
+# - The number of the set of answers in which this answer belongs
+# - Starts at 1 (first instance) and increases
+# - e.g. if a response has three instances of a given group, values will be 1, 2, 3, and
+#   there will be N answers in instance 1, N in instance 2, etc., where N is the number of Q's in the group
+# - Should be 1 for answers to top level questions and questions in non-repeating groups
+# - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
+#
 class Answer < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
@@ -97,7 +114,7 @@ class Answer < ActiveRecord::Base
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
   def level
-    option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
+    option_set.try(:multilevel?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
   def choices_by_option
@@ -131,18 +148,6 @@ class Answer < ActiveRecord::Base
     when 'select_one' then option_name
     when 'select_multiple' then choices.empty? ? nil : choices.map(&:option_name).join(';')
     else value.blank? ? nil : value
-    end
-  end
-
-  # Returns a formatted string based on casted_value, or nil if casted_value is nil.
-  def formatted_value
-    cv = casted_value
-    return nil if cv.nil?
-    case qtype.name
-    when 'datetime', 'date', 'time'
-      cv.to_s(:"std_#{qtype.name}")
-    else
-      casted_value
     end
   end
 
@@ -185,6 +190,8 @@ class Answer < ActiveRecord::Base
     # don't validate if response says no
     return false if response && !response.validate_answers?
 
+    return false if marked_for_destruction?
+
     case field
     when :numericality
       qtype.numeric? && value.present?
@@ -213,6 +220,10 @@ class Answer < ActiveRecord::Base
       # select_multiple
       choices.any?(&:has_coordinates?)
     end
+  end
+
+  def from_group?
+    questioning && questioning.parent && questioning.parent.type == 'QingGroup'
   end
 
   def option_name

@@ -1,4 +1,3 @@
-require "xml"
 class Response < ActiveRecord::Base
   include MissionBased
   include Cacheable
@@ -7,20 +6,16 @@ class Response < ActiveRecord::Base
 
   belongs_to(:form, inverse_of: :responses, counter_cache: true)
   belongs_to(:checked_out_by, class_name: "User")
-  has_many(:answers,
-    -> { order("form_items.rank, answers.rank").includes(:questioning) },
-    autosave: true,
-    dependent: :destroy,
-    inverse_of: :response
-  )
+  has_many(:answers, autosave: true, dependent: :destroy, inverse_of: :response)
   belongs_to(:user, inverse_of: :responses)
-
   has_many(:location_answers,
     -> { where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question) },
     class_name: "Answer"
   )
 
   attr_accessor(:modifier, :excerpts)
+
+  before_save(:normalize_answers)
 
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
@@ -30,6 +25,7 @@ class Response < ActiveRecord::Base
 
   # This scope is DEPRECATED. Do not rely on it. Instead, call Response.unscoped and apply your own.
   default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
+
   scope(:unreviewed, -> { where(reviewed: false) })
   scope(:by, ->(user) { where(user_id: user.id) })
   scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
@@ -57,14 +53,14 @@ class Response < ActiveRecord::Base
   # loads only answers with location info
   scope(:with_location_answers, -> { includes(:location_answers) })
 
-  accepts_nested_attributes_for(:answers)
+  accepts_nested_attributes_for(:answers, allow_destroy: true)
 
   delegate :name, to: :checked_out_by, prefix: true
   delegate :visible_questionings, to: :form
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
-    raise ArguementError, "A user is required" unless user
+    raise ArguementError, 'A user is required' unless user
 
     Response.where(checked_out_by_id: user).update_all(checked_out_at: nil, checked_out_by_id: nil)
   end
@@ -141,7 +137,7 @@ class Response < ActiveRecord::Base
       # not escaping the query value because double quotes were getting escaped which makes exact phrase not work
       attribs = {mission_id: scope[:mission].id}
 
-      if expression.qualifier.name == "text_by_code"
+      if expression.qualifier.name == 'text_by_code'
         # get qualifier text (e.g. {form}) and strip outer braces
         question_code = expression.qualifier_text[1..-2]
 
@@ -224,7 +220,7 @@ class Response < ActiveRecord::Base
   # nil means no recent responses
   def self.recent_count(rel)
     %w(hour day week month year).each do |p|
-      if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
+      if (count = rel.where('created_at > ?', 1.send(p).ago).count) > 0
         return [count, p]
       end
     end
@@ -262,62 +258,11 @@ class Response < ActiveRecord::Base
     modifier != "odk"
   end
 
-  def populate_from_odk(xml)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if mission.nil?
-
-    self.source = "odk"
-
-    data = XML::Parser.string(xml).parse.root
-
-    lookup_and_check_form(id: data["id"], version: data["version"])
-
-    # Loop over each child tag and create hash of odk_code => value
-    hash = Hash[*data.children.map { |c| [c.name, c.first.try(:content)] }.flatten(1)]
-
-    populate_from_hash(hash)
-  end
-
-  def populate_from_j2me(data)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if mission.nil?
-
-    self.source = "j2me"
-
-    lookup_and_check_form(id: data.delete("id"), version: data.delete("version"))
-
-    # Get rid of other unneeded keys.
-    data = data.except(*%w(uiVersion name xmlns xmlns:jrm))
-
-    populate_from_hash(data)
-  end
-
-  def answer_set_for_questioning(questioning)
-    # Build a hash of answer sets on the first call.
-    @answer_sets_by_questioning ||= {}.tap do |hash|
-      answers.group_by(&:questioning).each { |q, a| hash[q] = AnswerSet.new(questioning: q, answers: a) }
-    end
-
-    # If answer set already exists, it will be in the answer_sets_by_questioning hash, else create a new one.
-    unless @answer_sets_by_questioning[questioning]
-      @answer_sets_by_questioning[questioning] = AnswerSet.new(questioning: questioning)
-    end
-
-    @answer_sets_by_questioning[questioning]
-  end
-
-  def answer_for_question(question)
-    (@answers_by_question ||= answers.index_by(&:question))[question]
-  end
-
-  def answer_for_qing(qing)
-    (@answers_by_qing ||= answers.index_by(&:questioning))[qing]
-  end
-
   # Returns an array of required questionings for which answers are missing.
-  # Used in cases other than the web form where answer objects may not be created for missing answers.
   def missing_answers
-    @missing_answers ||= visible_questionings.select { |qing| qing.required? && answer_for_qing(qing).nil? }
+    return @missing_answers if @missing_answers
+    answers_by_qing = answers.index_by(&:questioning)
+    @missing_answers = visible_questionings.select{ |qing| qing.required? && answers_by_qing[qing].nil? }
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)
@@ -337,13 +282,13 @@ class Response < ActiveRecord::Base
   end
 
   def checked_out_by_others?(user = nil)
-    raise ArguementError, "A user is required" unless user
+    raise ArguementError, 'A user is required' unless user
 
     !self.checked_out_by.nil? && self.checked_out_by != user && check_out_valid?
   end
 
   def check_out!(user = nil)
-    raise ArgumentError, "A user is required to checkout a response" unless user
+    raise ArgumentError, 'A user is required to checkout a response' unless user
 
     if !checked_out_by_others?(user)
       transaction do
@@ -366,40 +311,41 @@ class Response < ActiveRecord::Base
     self.save!
   end
 
+  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
+  def populate_from_hash(hash)
+    # Response mission should already be set
+    raise "Submissions must have a mission" if mission.nil?
+
+    form.visible_questionings.each do |qing|
+      qing.subquestions.each do |subq|
+        value = hash[subq.odk_code]
+        if value.is_a? Array
+          value.each_with_index do |val, i|
+            answer = Answer.new(questioning: qing, rank: subq.rank, inst_num: i + 1)
+            answer.populate_from_string(val)
+            self.answers << answer
+          end
+        else
+          answer = Answer.new(questioning: qing, rank: subq.rank)
+          answer.populate_from_string(value)
+          self.answers << answer
+        end
+      end
+    end
+    self.incomplete = (hash[OdkHelper::IR_QUESTION] == "yes")
+  end
+
   private
-  def no_missing_answers
-    errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
+
+  def normalize_answers
+    AnswerArranger.new(self, include_missing_answers: false, dont_load_answers: true).build.normalize
   end
 
   def form_in_mission
     errors.add(:form, :form_unavailable) unless mission.forms.include?(form)
   end
 
-  # Checks if form ID and version were given, if form exists, and if version is correct
-  def lookup_and_check_form(params)
-    # if either of these is nil or not an integer, error
-    raise SubmissionError.new("no form id was given") if params[:id].nil?
-    raise FormVersionError.new("form version must be specified") if params[:version].nil?
-
-    # try to load form (will raise activerecord error if not found)
-    self.form = Form.find(params[:id])
-
-    # if form has no version, error
-    raise "xml submissions must be to versioned forms" if form.current_version.nil?
-
-    # if form version is outdated, error
-    raise FormVersionError.new("form version is outdated") if form.current_version.sequence > params[:version].to_i
-  end
-
-  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
-  def populate_from_hash(hash)
-    form.visible_questionings.each do |qing|
-      qing.subquestions.each do |subq|
-        answer = Answer.new(questioning: qing, rank: subq.rank)
-        answer.populate_from_string(hash[subq.odk_code])
-        self.answers << answer
-      end
-    end
-    self.incomplete = (hash[OdkHelper::IR_QUESTION] == "yes")
+  def no_missing_answers
+    errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
   end
 end

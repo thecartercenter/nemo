@@ -4,12 +4,12 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, opts, &block)
+  def odk_input_tag(qing, subq, opts, group_id = nil, &block)
+    group = group_id ? "grp-#{group_id}":nil
     opts ||= {}
-
-    opts[:ref] = "/data/#{subq.odk_code}"
+    opts[:ref] = ["/data", group, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
-    opts[:query] = multi_level_option_nodeset_ref(qing, subq) if !subq.first_rank? && subq.qtype.name == 'select_one'
+    opts[:query] = multilevel_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == 'select_one'
     content_tag(odk_input_tagname(subq), opts, &block)
   end
 
@@ -20,6 +20,32 @@ module OdkHelper
       :select
     else
       :input
+    end
+  end
+
+  def data_tag(form, style, &block)
+    if style == 'commcare'
+      content_tag(
+        "data",
+        {
+          'xmlns:jrm' => "http://dev.commcarehq.org/jr/xforms",
+          'xmlns' => "http://openrosa.org/formdesigner/#{form.id}",
+          'id' => "#{form.id}",
+          'uiVersion' => "1",
+          'version' => "#{form.current_version.sequence}",
+          'name' => "#{form.full_name}"
+        },
+        &block
+      )
+    else
+      content_tag(
+        "data",
+        {
+          'id' => "#{form.id}",
+          'version' => "#{form.current_version.sequence}"
+        },
+        &block
+      )
     end
   end
 
@@ -36,9 +62,9 @@ module OdkHelper
 
   # generator for binding portion of xml.
   # note: _required is used to get around the 'required' html attribute
-  def question_binding(form, qing, subq)
+  def question_binding(form, qing, subq, group: nil)
     tag(:bind, {
-      'nodeset' => "/data/#{subq.odk_code}",
+      'nodeset' => ["/data", group, subq.try(:odk_code)].compact.join("/"),
       'type' => binding_type_attrib(subq),
       '_required' => qing.required? && subq.first_rank? ? required_value(form) : nil,
       'relevant' => qing.has_condition? ? qing.condition.to_odk : nil,
@@ -50,7 +76,7 @@ module OdkHelper
   # note: _readonly is used to get around the 'readonly' html attribute
   def note_binding(group)
     tag(:bind, {
-      'nodeset' => "/data/grp-header#{group.id}",
+      'nodeset' => "/data/grp-#{group.id}/grp-header#{group.id}",
       '_readonly' => "true()",
       'type' => "string"
     }.reject{|k,v| v.nil?}).gsub(/_readonly=/, 'readonly=').html_safe
@@ -87,12 +113,13 @@ module OdkHelper
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
   #      instance('os16')/root/item[parent_id=/data/q2_2]
-  def multi_level_option_nodeset_ref(qing, cur_subq)
+  def multilevel_option_nodeset_ref(qing, cur_subq, group = nil)
     filter = if cur_subq.first_rank?
       ''
     else
       code = cur_subq.odk_code(previous: true)
-      "[parent_id=/data/#{code}]"
+      path = ["/data", group, code].compact.join("/")
+      "[parent_id=#{path}]"
     end
     "instance('os#{qing.option_set_id}')/root/item#{filter}"
   end
@@ -118,7 +145,7 @@ module OdkHelper
       i.is_a?(Questioning) &&
       i.qtype_name == 'select_one' &&
       i.option_set == items[0].option_set &&
-      !i.multi_level?
+      !i.multilevel?
     end
   end
 

@@ -238,7 +238,7 @@ es:
       option_set:
         answers: "Respuestas"
         geographic: "¿Es Geográfico?"
-        multi_level: "¿Es Multinivel?"
+        multilevel: "¿Es Multinivel?"
         options: "Opciones "
         option_levels: "Niveles"
       qing_group:
@@ -402,7 +402,7 @@ es:
       option_set:
         geographic: "Si este Conjunto de Opciones representa información geográfica, por ejemplo, un conjunto de provincias o regiones."
         name: "Un nombre que resume este conjunto de opciones. Los usuarios normales no verán este nombre."
-        multi_level: "Si el conjunto de opciones tiene varios niveles de opciones, como país -> estado -> ciudad."
+        multilevel: "Si el conjunto de opciones tiene varios niveles de opciones, como país -> estado -> ciudad."
         options:
           editable: "Añadir las opciones existentes, escribiendo y haciendo click en \"Agregar\".  Si no puede ver una opción en la lista desplegable, puede agregar una nueva haciendo click en \"Crear Nueva Opción\"."
           read_only: "Las opciones que aparecerán en las preguntas en las que se utiliza esta opción."
@@ -961,7 +961,7 @@ es:
     edit_option_level: "Editar este Nivel de Opción"
     huge_notice: "Este Conjunto de Opciones es muy largo (%{count} Options) y por lo tanto sólo una pequeña muestra de las Opciones están expuestas debajo. Puede editar el nombre y otras propiedades aquí pero por favor use las caracteríisticas de importación/exportación para editar las Opciones en si."
     leave_page_warning: "Al salir de esta página abandonará los cambios hechos en este Conjunto de Opciones."
-    multi_level_forbidden_notice: "Este Conjunto de Opciones está siendo usado actualmente por al menos una selección de varias preguntas y por lo tanto, no puede ser convertida a un set multi-nivel."
+    multilevel_forbidden_notice: "Este Conjunto de Opciones está siendo usado actualmente por al menos una selección de varias preguntas y por lo tanto, no puede ser convertida a un set multi-nivel."
     new_option_level: "Nuevo Nivel de Opción "
     none_found: "No se han encontrado opciones correspondientes"
     searching: "Buscando..."

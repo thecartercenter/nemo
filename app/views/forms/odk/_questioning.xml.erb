@@ -1,0 +1,16 @@
+<% label_row = !!local_assigns[:label_row]; grid_mode = !!local_assigns[:grid_mode]; # Default values %>
+<% group ||= nil %>
+<%# Note that subquestions here refers to multiple levels of a cascading select question, not question grouping. %>
+
+<% qing.subquestions.each do |subq| %>
+  <% if group && qing.multilevel? %>
+    <%= content_tag('group', appearance: 'field-list') do %>
+      <input ref="<%= "/data/grp-#{group.try(:id)}/grp-header#{group.try(:id)}"%>">
+        <hint ref="jr:itext('grp-header<%= group.try(:id) %>:hint')"/>
+      </input>
+      <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode, label_row: label_row, group: group, subq: subq) %>
+    <% end %>
+  <% else %>
+    <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode, label_row: label_row, group: group, subq: subq) %>
+  <% end %>
+<% end %>

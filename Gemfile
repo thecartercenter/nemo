@@ -17,7 +17,6 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'api-pagination'
 gem 'configatron', '~> 4.2'
-gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
@@ -105,6 +104,8 @@ gem 'attribute_normalizer'
 
 # Polyfill for the bind function. Some older browsers don't have it.
 gem 'phantomjs_polyfill-rails'
+
+gem 'draper', '~> 2.1'
 
 group :development do
   gem 'rails-erd'                     # generate with rake db:migrate

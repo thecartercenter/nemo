@@ -67,7 +67,7 @@ describe ItemsetsFormAttachment do
 
     context 'for regular form' do
       before do
-        @os1 = create(:option_set, multi_level: true)
+        @os1 = create(:option_set, multilevel: true)
         allow(@form).to receive(:option_sets).and_return([@os1])
       end
 
@@ -102,10 +102,10 @@ describe ItemsetsFormAttachment do
 
     context 'for multilevel sets' do
       before do
-        @os1 = create(:option_set, super_multi_level: true)
+        @os1 = create(:option_set, super_multilevel: true)
         @os2 = create(:option_set)
         @os2.options.first.update_attributes!(name: 'Cat, Large') # Add a space and comma to test enclosure.
-        @os3 = create(:option_set, multi_level: true)
+        @os3 = create(:option_set, multilevel: true)
         allow(@form).to receive(:option_sets).and_return([@os1, @os2, @os3])
       end
 
@@ -143,8 +143,8 @@ describe ItemsetsFormAttachment do
 
     context 'for uneven multilevel sets' do
       before do
-        @os1 = create(:option_set, super_multi_level: true)
-        @os2 = create(:option_set, multi_level: true)
+        @os1 = create(:option_set, super_multilevel: true)
+        @os2 = create(:option_set, multilevel: true)
 
         # Make the sets uneven so 'None' must be inserted.
         @os1.root_node.c[1].children.each{ |c| c.destroy } # Delete all Plant's children
@@ -182,7 +182,7 @@ describe ItemsetsFormAttachment do
     context 'for muliple languages' do
       before do
         configatron.preferred_locales = [:en, :fr]
-        @os1 = create(:option_set, multi_level: true)
+        @os1 = create(:option_set, multilevel: true)
         @os1.options[0].update_attributes(name_fr: 'Animale')
         @os1.options[1].update_attributes(name_fr: 'Plante')
         allow(@form).to receive(:option_sets).and_return([@os1])

@@ -4,7 +4,7 @@ describe OptionSet do
   include OptionNodeSupport
 
   it 'should get constructed properly' do
-    os = create(:option_set, multi_level: true)
+    os = create(:option_set, multilevel: true)
     # This assertion checks that option_set, mission, and is_standard? get cascaded properly.
     expect_node([['Animal', ['Cat', 'Dog']], ['Plant', ['Tulip', 'Oak']]], os.root_node)
     expect(Option.count).to eq 6
@@ -28,10 +28,10 @@ describe OptionSet do
     os.ranks_changed?
   end
 
-  it 'should delegate multi_level? to root node' do
+  it 'should delegate multilevel? to root node' do
     os = create(:option_set)
     expect(os.root_node).to receive(:has_grandchildren?)
-    os.multi_level?
+    os.multilevel?
   end
 
   it 'should be destructible' do
@@ -42,7 +42,7 @@ describe OptionSet do
   end
 
   describe 'options' do
-    before { @set = create(:option_set, multi_level: true) }
+    before { @set = create(:option_set, multilevel: true) }
 
     it 'should delegate to option node child options' do
       expect(@set.root_node).to receive(:child_options)
@@ -70,7 +70,7 @@ describe OptionSet do
     end
 
     it 'should be correct for multi level set' do
-      set = create(:option_set, multi_level: true)
+      set = create(:option_set, multilevel: true)
       expect(set.levels[0].name).to eq 'Kingdom'
       expect(set.levels[1].name).to eq 'Species'
     end

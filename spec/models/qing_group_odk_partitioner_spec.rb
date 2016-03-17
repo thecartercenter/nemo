@@ -26,40 +26,41 @@ describe QingGroupOdkPartitioner do
   end
 
   before do
-    allow(multilevel_qing).to receive(:multi_level?) { true }
+    allow(multilevel_qing).to receive(:multilevel?) { true }
   end
 
   describe "#organize" do
 
     it "splits qing groups in order to remove multilevel questions from them" do
-      results = organize_form_questions(form_questions_with_multilevel)
+      results = QingGroupOdkPartitioner.new(form_questions_with_multilevel).fragment
 
-      expect(results.length).to equal(3)
-      expect(results[0]).to be_a QingGroupFragment
-      expect(results[1]).to be_a Questioning
-      expect(results[2]).to be_a QingGroupFragment
+      expect(results.size).to eq(1)
+      expect(results.keys[0]).to be_a QingGroup
+      expect(results.values[0]).to be_a Hash
+      expect(results.values[0].keys.map(&:class)).to eq [QingGroupFragment, QingGroupFragment, QingGroupFragment]
     end
 
     it "doesn't create new groups if there isn't a multilevel question on it" do
-      results = organize_form_questions(form_questions)
+      results = QingGroupOdkPartitioner.new(form_questions).fragment
 
-      expect(results.length).to equal(1)
-      expect(results[0]).to be_a QingGroupFragment
+      expect(results.size).to eq(1)
+      expect(results.keys[0]).to be_a QingGroup
+      expect(results.values[0]).to be_a Hash
+      expect(results.values[0].keys[0]).to be_a QingGroupFragment
+      expect(results.values[0].values[0]).to be_a Hash
+      expect(results.values[0].values[0].keys.map(&:class)).to eq [Questioning, Questioning]
     end
 
     it "leaves questionings outside groups untouched" do
-      results = organize_form_questions(form_questions_without_groups)
+      results = QingGroupOdkPartitioner.new(form_questions_without_groups).fragment
 
-      expect(results.length).to equal(2)
-      expect(results[0]).to be_a Questioning
-      expect(results[1]).to be_a Questioning
+      expect(results.size).to equal(2)
+      expect(results.keys.map(&:class)).to eq [Questioning, Questioning]
     end
   end
 
   def organize_form_questions(form_questions)
-    qing_group_odk_partitioner = QingGroupOdkPartitioner.new(form_questions)
-    form_questions_organized = qing_group_odk_partitioner.fragment()
-    form_questions_organized.keys
+
   end
 
 end

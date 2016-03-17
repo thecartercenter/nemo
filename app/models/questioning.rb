@@ -11,7 +11,7 @@ class Questioning < FormItem
     :code=,
     :level_count,
     :level,
-    :multi_level?,
+    :multilevel?,
     :option_set,
     :option_set=,
     :option_set_id,
@@ -37,6 +37,7 @@ class Questioning < FormItem
     :tags,
     :text_type_for_sms?,
     to: :question
+
 
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
@@ -114,6 +115,9 @@ class Questioning < FormItem
     symbol.match(/\A((name|hint)_([a-z]{2})(=?))(_before_type_cast)?\z/)
   end
   # /REFACTOR
+  def inspect
+    id
+  end
 
   private
 

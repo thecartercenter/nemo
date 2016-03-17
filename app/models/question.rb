@@ -78,7 +78,7 @@ class Question < ActiveRecord::Base
            :first_level_options,
            :option_path_to_rank_path,
            :rank_path_to_option_path,
-           :multi_level?,
+           :multilevel?,
            :level_count,
            :level,
            :levels,
@@ -121,10 +121,10 @@ class Question < ActiveRecord::Base
   end
 
   def subquestions
-    @subquestions ||= if multi_level?
+    @subquestions ||= if multilevel?
       levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
     else
-      [Subquestion.new(question: self)]
+      [Subquestion.new(question: self, rank: 1)]
     end
   end
 

@@ -41,9 +41,10 @@ ELMO::Application.configure do
   config.assets.debug = false
 
   # Raises error for missing translations
-  config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = false
   config.i18n.fallbacks = false
 
+  config.action_view.logger = nil
   # bullet gem for query optimization
   # config.after_initialize do
   #   Bullet.enable = true
@@ -52,4 +53,3 @@ ELMO::Application.configure do
   #   Bullet.rails_logger = true
   # end
 end
-

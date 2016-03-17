@@ -1,5 +1,5 @@
 class ResponsesController < ApplicationController
-  include CsvRenderable
+  include CsvRenderable, ResponseIndexable
 
   # need to load with associations for show and edit
   before_action :load_with_associations, only: [:show, :edit]
@@ -31,9 +31,6 @@ class ResponsesController < ApplicationController
         # paginate
         @responses = @responses.paginate(page: params[:page], per_page: 20)
 
-        # include answers so we can show key questions
-        @responses = @responses.includes(:answers)
-
         # do search, including excerpts, if applicable
         if params[:search].present?
           begin
@@ -48,6 +45,8 @@ class ResponsesController < ApplicationController
             @search_error = true
           end
         end
+
+        decorate_responses
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
@@ -85,6 +84,7 @@ class ResponsesController < ApplicationController
       # if we get a match, then we use that object instead, since it contains excerpts
       @response = matches.first if matches.first
     end
+
     prepare_and_render_form
   end
 
@@ -110,13 +110,10 @@ class ResponsesController < ApplicationController
       else
         begin
           @response.user_id = current_user.id
-
           # If it looks like a J2ME submission, process accordingly
           if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
-            @response.populate_from_j2me(params[:data])
-
-          # Otherwise treat it like an ODK submission
-          else
+            XMLSubmission.new response: @response, data: params[:data], source: 'j2me'
+          else # Otherwise treat it like an ODK submission
             upfile = params[:xml_submission_file]
 
             unless upfile
@@ -126,7 +123,7 @@ class ResponsesController < ApplicationController
 
             xml = upfile.read
             Rails.logger.info("----------\nXML submission:\n#{xml}\n----------")
-            @response.populate_from_odk(xml)
+            XMLSubmission.new response: @response, data: xml, source: 'odk'
           end
 
           # ensure response's user can submit to the form
@@ -228,7 +225,13 @@ class ResponsesController < ApplicationController
 
   # prepares objects for and renders the form template
   def prepare_and_render_form
-    # render the form
+    # Prepare the AnswerNodes.
+    @nodes = AnswerArranger.new(@response,
+      # No point in showing missing answers in show mode.
+      include_missing_answers: params[:action] != "show",
+      # Must preserve submitted answers when in create/update action.
+      dont_load_answers: %w(create update).include?(params[:action])
+    ).build.nodes
     render(:form)
   end
 
@@ -257,7 +260,7 @@ class ResponsesController < ApplicationController
         permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
           time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
           datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
-          date_value(1i) date_value(2i) date_value(3i))
+          date_value(1i) date_value(2i) date_value(3i) inst_num _destroy)
         params[:response][:answers_attributes].each do |idx, attribs|
           whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
 
