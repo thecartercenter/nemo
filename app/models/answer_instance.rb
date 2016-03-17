@@ -24,6 +24,10 @@ class AnswerInstance
     nodes.each { |node| node.normalize }
   end
 
+  def leaf_nodes
+    nodes.map { |node| node.leaf? ? node : node.descendant_leaves }.flatten
+  end
+
   def update_inst_num(num)
     nodes.each { |node| node.update_inst_num(num) }
   end

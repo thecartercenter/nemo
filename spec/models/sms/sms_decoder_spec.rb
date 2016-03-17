@@ -360,7 +360,10 @@ describe Sms::Decoder do
 
   it "form with qing groups should work" do
     create_form(questions: ['integer', %w(text date), 'date'])
-    assert_decoding(body: "#{@form.code} 1.3 2.coffee and bagels 3.20151225 4.20160101", answers: [3, "coffee and bagels", Date.new(2015, 12, 25), Date.new(2016, 01, 01)])
+    assert_decoding(
+      body: "#{@form.code} 1.3 2.coffee and bagels 3.20151225 4.20160101",
+      answers: [3, "coffee and bagels", Date.new(2015, 12, 25), Date.new(2016, 01, 01)]
+    )
   end
 
   private
@@ -389,22 +392,24 @@ describe Sms::Decoder do
     # ensure the form is correct
     expect(response.form_id).to eq(@form.id)
 
-    nodes = AnswerArranger.new(response).build.nodes
+    nodes = AnswerArranger.new(response).build.leaf_nodes
 
     # ensure an expected answer was given for this question
     expect(options[:answers].size >= nodes.size).to be_truthy, "No expected answer was given for question #{nodes.size + 1}"
 
     # ensure the answers match the expected ones
-    @form.smsable_questionings.each do |index, qing|
-      expect(nodes[i].item).to eq(qing), "Missing answer at i = #{i}"
+    @form.questionings.each_with_index do |qing, i|
+      node = nodes[i]
+
+      expect(node.item).to eq(qing), "Missing answer at index #{i}"
 
       # copy the expected value
-      expected = options[:answers][index - 1]
+      expected = options[:answers][i]
 
       # replace the array index with nil so that we know this one has been looked at
-      options[:answers][index - 1] = nil
+      options[:answers][i] = nil
 
-      ansset = nodes[i].set
+      ansset = node.set
 
       # ensure answer matches
       case qing.qtype_name
