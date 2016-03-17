@@ -124,8 +124,8 @@ class Sms::Decoder
   end
 
   def check_for_brute_force
-    messages = Sms::Message.where(user: @user).since(1.minute.ago).where(auth_failed: true)
-    raise_decoding_error("account_locked") if messages.count >= 3
+    messages = Sms::Message.where(user: @user).since(Sms::BRUTE_FORCE_CHECK_WINDOW.ago).where(auth_failed: true)
+    raise_decoding_error("account_locked") if messages.count >= Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD
   end
 
   def current_ability

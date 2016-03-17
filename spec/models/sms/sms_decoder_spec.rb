@@ -42,8 +42,22 @@ describe Sms::Decoder do
     end
 
     it 'should lock account after 3 failed attempts' do
-      create_list(:sms_message, 3, user: user, auth_failed: true, type: "incoming")
+      create_list(:sms_message, Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD, user: user, auth_failed: true, type: "incoming")
       assert_decoding_fail(body: "#{@form.code} 1.17", error: "account_locked")
+    end
+
+    it 'should not lock account if threshold is not reached' do
+      safe_interval = (Sms::BRUTE_FORCE_CHECK_WINDOW / Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD) + 1
+      Timecop.freeze
+
+      3.times do
+        Timecop.travel(safe_interval)
+        create(:sms_message, user: user, auth_failed: true, type: "incoming")
+      end
+
+      Timecop.travel(safe_interval)
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
     end
   end
 
