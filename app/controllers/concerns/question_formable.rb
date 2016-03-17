@@ -25,8 +25,7 @@ module QuestionFormable
   end
 
   def setup_question_form_support_objs
-    # Temporarily excluding media question types until they are fully supported
-    @question_types = QuestionType.all.reject{ |qt| qt.properties.include?("multimedia") }
+    @question_types = QuestionType.all
     @option_sets = OptionSet.accessible_by(current_ability).default_order
   end
 
