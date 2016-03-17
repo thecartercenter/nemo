@@ -20,9 +20,7 @@
           <%= opt.name %>
         </div>
       <% end %>
-
-    <%# For long text types, the box should be the whole cell. %>
-    <% elsif qing.qtype_name != 'long_text' %>
+    <% else %>
       <div class="answer_box"></div>
     <% end %>
   </td>

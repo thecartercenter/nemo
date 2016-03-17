@@ -15,8 +15,8 @@ class QuestionType
     { name: "time", odk_name: "time", properties: %w(form_printable temporal smsable headerable) },
     { name: "image", odk_name: "binary", properties: %w(multimedia) },
     { name: "annotated_image", odk_name: "binary", properties: %w(multimedia) },
-    { name: "signature", odk_name: "binary", properties: %w(multimedia) },
-    { name: "sketch", odk_name: "binary", properties: %w(multimedia) },
+    { name: "signature", odk_name: "binary", properties: %w(multimedia form_printable) },
+    { name: "sketch", odk_name: "binary", properties: %w(multimedia form_printable) },
     { name: "audio", odk_name: "binary", properties: %w(multimedia) },
     { name: "video", odk_name: "binary", properties: %w(multimedia) },
   ]
