@@ -410,6 +410,7 @@ ActiveRecord::Schema.define(version: 20160315195711) do
 
   create_table "sms_messages", force: :cascade do |t|
     t.string "adapter_name", limit: 255
+    t.boolean "auth_failed", default: false, null: false
     t.text "body", limit: 65535
     t.integer "broadcast_id", limit: 4
     t.datetime "created_at", null: false
