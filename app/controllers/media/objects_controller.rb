@@ -17,6 +17,7 @@ class Media::ObjectsController < ApplicationController
 
   def create
     media = media_class(params[:type]).new(item: params[:upload])
+    # answer_id can be blank because creation is asynchronous and will be assigned when the response is submitted
     media.answer = Answer.find(params[:answer_id]) if params[:answer_id]
 
     if media.save
@@ -55,7 +56,7 @@ class Media::ObjectsController < ApplicationController
     when 'image'
       return Media::Image
     else
-      return Media::Object
+      raise "A valid media type must be specified"
     end
   end
 end
