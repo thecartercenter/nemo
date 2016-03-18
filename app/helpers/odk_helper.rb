@@ -10,6 +10,8 @@ module OdkHelper
     opts[:ref] = ["/data", group, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     opts[:query] = multilevel_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == "select_one"
+    opts[:appearance] = odk_media_appearance(subq) if subq.qtype.multimedia?
+    opts[:mediatype] = odk_media_type(subq) if subq.qtype.multimedia?
     content_tag(odk_input_tagname(subq), opts, &block)
   end
 
@@ -18,8 +20,32 @@ module OdkHelper
       :select1
     elsif subq.qtype.name == "select_multiple"
       :select
+    elsif subq.qtype.multimedia?
+      :upload
     else
       :input
+    end
+  end
+
+  def odk_media_type(subq)
+    case subq.qtype.name
+    when "image", "annotated_image", "sketch", "signature"
+      "image/*"
+    when "audio"
+      "audio/*"
+    when "video"
+      "video/*"
+    end
+  end
+
+  def odk_media_appearance(subq)
+    case subq.qtype.name
+    when "annotated_image"
+      "annotate"
+    when "sketch"
+      "draw"
+    when "signature"
+      "signature"
     end
   end
 

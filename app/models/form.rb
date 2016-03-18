@@ -172,7 +172,7 @@ class Form < ActiveRecord::Base
   end
 
   def visible_questionings
-    questionings.reject { |q| q.hidden? || q.multimedia? }
+    questionings.reject { |q| q.hidden? }
   end
 
   # returns hash of questionings that work with sms forms and are not hidden
