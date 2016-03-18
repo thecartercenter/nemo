@@ -9,14 +9,14 @@ module OdkHelper
     opts ||= {}
     opts[:ref] = ["/data", group, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
-    opts[:query] = multilevel_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == 'select_one'
+    opts[:query] = multilevel_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == "select_one"
     content_tag(odk_input_tagname(subq), opts, &block)
   end
 
   def odk_input_tagname(subq)
-    if subq.qtype.name == 'select_one' && subq.first_rank?
+    if subq.qtype.name == "select_one" && subq.first_rank?
       :select1
-    elsif subq.qtype.name == 'select_multiple'
+    elsif subq.qtype.name == "select_multiple"
       :select
     else
       :input
@@ -24,16 +24,16 @@ module OdkHelper
   end
 
   def data_tag(form, style, &block)
-    if style == 'commcare'
+    if style == "commcare"
       content_tag(
         "data",
         {
-          'xmlns:jrm' => "http://dev.commcarehq.org/jr/xforms",
-          'xmlns' => "http://openrosa.org/formdesigner/#{form.id}",
-          'id' => "#{form.id}",
-          'uiVersion' => "1",
-          'version' => "#{form.current_version.sequence}",
-          'name' => "#{form.full_name}"
+          "xmlns:jrm" => "http://dev.commcarehq.org/jr/xforms",
+          "xmlns" => "http://openrosa.org/formdesigner/#{form.id}",
+          "id" => "#{form.id}",
+          "uiVersion" => "1",
+          "version" => "#{form.current_version.sequence}",
+          "name" => "#{form.full_name}"
         },
         &block
       )
@@ -41,8 +41,8 @@ module OdkHelper
       content_tag(
         "data",
         {
-          'id' => "#{form.id}",
-          'version' => "#{form.current_version.sequence}"
+          "id" => "#{form.id}",
+          "version" => "#{form.current_version.sequence}"
         },
         &block
       )
@@ -56,57 +56,57 @@ module OdkHelper
   end
 
   def appearance(grid_mode, label_row)
-    return 'label' if label_row
-    return 'list-nolabel' if grid_mode
+    return "label" if label_row
+    return "list-nolabel" if grid_mode
   end
 
   # generator for binding portion of xml.
   # note: _required is used to get around the 'required' html attribute
   def question_binding(form, qing, subq, group: nil)
     tag(:bind, {
-      'nodeset' => ["/data", group, subq.try(:odk_code)].compact.join("/"),
-      'type' => binding_type_attrib(subq),
-      '_required' => qing.required? && subq.first_rank? ? required_value(form) : nil,
-      'relevant' => qing.has_condition? ? qing.condition.to_odk : nil,
-      'constraint' => subq.odk_constraint,
-      'jr:constraintMsg' => subq.min_max_error_msg,
-     }.reject{|k,v| v.nil?}).gsub(/_required=/, 'required=').html_safe
+      "nodeset" => ["/data", group, subq.try(:odk_code)].compact.join("/"),
+      "type" => binding_type_attrib(subq),
+      "_required" => qing.required? && subq.first_rank? ? required_value(form) : nil,
+      "relevant" => qing.has_condition? ? qing.condition.to_odk : nil,
+      "constraint" => subq.odk_constraint,
+      "jr:constraintMsg" => subq.min_max_error_msg,
+    }.reject { |k,v| v.nil? }).gsub(/_required=/, "required=").html_safe
   end
 
   # note: _readonly is used to get around the 'readonly' html attribute
   def note_binding(group)
     tag(:bind, {
-      'nodeset' => "/data/grp-#{group.id}/grp-header#{group.id}",
-      '_readonly' => "true()",
-      'type' => "string"
-    }.reject{|k,v| v.nil?}).gsub(/_readonly=/, 'readonly=').html_safe
+      "nodeset" => "/data/grp-#{group.id}/grp-header#{group.id}",
+      "_readonly" => "true()",
+      "type" => "string"
+    }.reject { |k,v| v.nil? }).gsub(/_readonly=/, "readonly=").html_safe
   end
 
   def binding_type_attrib(subq)
     # ODK wants non-first-level selects to have type 'string'
-    subq.first_rank? ? subq.odk_name : 'string'
+    subq.first_rank? ? subq.odk_name : "string"
   end
 
   # binding for incomplete response question
   # note: required is an html attribute. the gsub gets around this processing branch
-  def ir_question_binding(form)
+  def ir_question_binding(_form)
     tag("bind", {
-      'nodeset' => "/data/#{IR_QUESTION}",
-      'required' => "true()",
-      'type' => "select1",
-     }.reject{|k,v| v.nil?}).gsub(/"required"/, '"true()"').html_safe
+      "nodeset" => "/data/#{IR_QUESTION}",
+      "required" => "true()",
+      "type" => "select1",
+    }.reject { |k,v| v.nil? }).gsub(/"required"/, '"true()"').html_safe
   end
 
   # binding for incomplete response code
   # note: required is an html attribute. the gsub gets around this processing branch
   def ir_code_binding(form)
     tag("bind", {
-      'nodeset' => "/data/#{IR_CODE}",
-      'required' => "true()",
-      'relevant' => "selected(/data/#{IR_QUESTION}, 'yes')",
-      'constraint' => ". = '#{form.override_code}'",
-      'type' => "string",
-     }.reject{|k,v| v.nil?}).gsub(/"required"/, '"true()"').html_safe
+      "nodeset" => "/data/#{IR_CODE}",
+      "required" => "true()",
+      "relevant" => "selected(/data/#{IR_QUESTION}, 'yes')",
+      "constraint" => ". = '#{form.override_code}'",
+      "type" => "string",
+    }.reject { |k,v| v.nil? }).gsub(/"required"/, '"true()"').html_safe
   end
 
   # For the given subquestion, returns an xpath expression for the itemset tag nodeset attribute.
@@ -115,7 +115,7 @@ module OdkHelper
   #      instance('os16')/root/item[parent_id=/data/q2_2]
   def multilevel_option_nodeset_ref(qing, cur_subq, group = nil)
     filter = if cur_subq.first_rank?
-      ''
+      ""
     else
       code = cur_subq.odk_code(previous: true)
       path = ["/data", group, code].compact.join("/")
@@ -143,9 +143,9 @@ module OdkHelper
 
     items.all? do |i|
       i.is_a?(Questioning) &&
-      i.qtype_name == 'select_one' &&
-      i.option_set == items[0].option_set &&
-      !i.multilevel?
+        i.qtype_name == "select_one" &&
+        i.option_set == items[0].option_set &&
+        !i.multilevel?
     end
   end
 
@@ -154,6 +154,6 @@ module OdkHelper
   end
 
   def organize_qing_groups(descendants)
-    QingGroupOdkPartitioner.new(descendants).fragment();
+    QingGroupOdkPartitioner.new(descendants).fragment
   end
 end
