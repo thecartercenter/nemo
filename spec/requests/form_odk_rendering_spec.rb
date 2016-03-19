@@ -20,7 +20,7 @@ describe "form rendering for odk", clean_with_truncation: true do
 
       # Parse the XML and tidy.
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path("../../expectations/odk/sample_form.xml", __FILE__))
+      expect(doc.to_s).to eq expectation_file("odk/sample_form.xml")
     end
   end
 
@@ -38,7 +38,7 @@ describe "form rendering for odk", clean_with_truncation: true do
       expect(response).to be_success
 
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path("../../expectations/odk/grid_form.xml", __FILE__))
+      expect(doc.to_s).to eq expectation_file("odk/grid_form.xml")
     end
   end
 
@@ -58,6 +58,21 @@ describe "form rendering for odk", clean_with_truncation: true do
     end
   end
 
+  context "media question form" do
+    before do
+      @form = create(:form, question_types: %w(text image annotated_image sketch signature audio video))
+      @form.publish!
+      get(form_path(@form, format: :xml))
+    end
+
+    it "should render proper XML" do
+      expect(response).to be_success
+
+      doc = Nokogiri::XML(response.body) { |config| config.noblanks }
+      expect(doc.to_s).to eq expectation_file("odk/media_question_form.xml")
+    end
+  end
+
   context "group form" do
     before do
       @form = create(:form, question_types: [["text", "text", "text", "text"]])
@@ -71,7 +86,7 @@ describe "form rendering for odk", clean_with_truncation: true do
       expect(response).to be_success
 
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path("../../expectations/odk/group_form.xml", __FILE__))
+      expect(doc.to_s).to eq expectation_file("odk/group_form.xml")
     end
   end
 
@@ -89,7 +104,7 @@ describe "form rendering for odk", clean_with_truncation: true do
       expect(response).to be_success
 
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(File.expand_path("../../expectations/odk/repeat_group_form.xml", __FILE__))
+      expect(doc.to_s).to eq expectation_file("odk/repeat_group_form.xml")
     end
   end
 
@@ -105,8 +120,7 @@ describe "form rendering for odk", clean_with_truncation: true do
       expect(response).to be_success
 
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(
-        File.expand_path("../../expectations/odk/group_form_with_multilevel.xml", __FILE__))
+      expect(doc.to_s).to eq expectation_file("odk/group_form_with_multilevel.xml")
     end
   end
 
@@ -123,8 +137,7 @@ describe "form rendering for odk", clean_with_truncation: true do
       expect(response).to be_success
 
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
-      expect(doc.to_s).to eq File.read(
-        File.expand_path("../../expectations/odk/repeat_group_form_with_multilevel.xml", __FILE__))
+      expect(doc.to_s).to eq expectation_file("odk/repeat_group_form_with_multilevel.xml")
     end
   end
 end

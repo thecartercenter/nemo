@@ -8,4 +8,9 @@ module GeneralSpecHelpers
   def parse_json(body)
     JSON.parse(body, symbolize_names: true)
   end
+
+  # reads a file from spec/expectations
+  def expectation_file(filename)
+    File.read(Rails.root.join("spec", "expectations", filename))
+  end
 end
