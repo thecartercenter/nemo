@@ -13,7 +13,8 @@ class Setting < ActiveRecord::Base
 
   scope(:default, -> { where(DEFAULTS) })
 
-  before_validation(:cleanup_locales)
+  before_validation(:normalize_locales)
+  before_validation(:normalize_incoming_sms_numbers)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)
   before_validation(:normalize_twilio_phone_number)
   before_validation(:clear_sms_fields_if_requested)
@@ -146,9 +147,22 @@ class Setting < ActiveRecord::Base
   private
 
     # gets rid of any junk chars in locales
-    def cleanup_locales
+    def normalize_locales
       self.preferred_locales = preferred_locales.map{|l| l.to_s.downcase.gsub(/[^a-z]/, "")[0,2]}
       return true
+    end
+
+    def normalize_twilio_phone_number
+      # Allow for the use of a database that hasn't had the migration run
+      return unless respond_to?(:twilio_phone_number)
+
+      self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
+    end
+
+    def normalize_incoming_sms_numbers
+      # Most normalization is performed in the assignment method.
+      # Here we just ensure no nulls.
+      self.incoming_sms_numbers = [] if incoming_sms_numbers.blank?
     end
 
     # makes sure all language codes are valid ISO639 codes
@@ -228,12 +242,5 @@ class Setting < ActiveRecord::Base
       if mission_id.nil?
         (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each{|a| self.send("#{a}=", nil)}
       end
-    end
-
-    def normalize_twilio_phone_number
-      # Allow for the use of a database that hasn't had the migration run
-      return unless respond_to?(:twilio_phone_number)
-
-      self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
     end
 end
