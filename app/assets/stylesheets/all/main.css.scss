@@ -25,7 +25,6 @@ h1.title {
   font-weight: bold;
   margin-bottom: 28px;
   margin-right: 10px;
-  float: left;
 
   i {
     color: $light-gray;
@@ -48,6 +47,8 @@ div#title_container {
     margin: .25em .5em;
     padding: .5em .8em
   }
+
+  h1.title { float: left; }
 }
 
 /* std seal in title */
