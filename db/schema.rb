@@ -395,7 +395,7 @@ ActiveRecord::Schema.define(version: 20160321161018) do
     t.boolean "allow_unauthenticated_submissions", default: false
     t.datetime "created_at"
     t.string "default_outgoing_sms_adapter", limit: 255
-    t.text "incoming_sms_numbers", limit: 65535, null: false
+    t.text "incoming_sms_numbers", limit: 65535
     t.string "incoming_sms_token", limit: 255
     t.string "intellisms_password", limit: 255
     t.string "intellisms_username", limit: 255
