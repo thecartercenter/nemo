@@ -69,7 +69,7 @@ ELMO::Application.routes.draw do
       end
     end
 
-    namespace :media, type: /audio|image|video/ do
+    namespace :media, type: /audios|images|videos/ do
       get ':type/:id(/:style)' => 'objects#show', defaults: { style: 'original' }
       post ':type' => 'objects#create', as: :create
       delete ':type/:id' => 'objects#delete', as: :delete

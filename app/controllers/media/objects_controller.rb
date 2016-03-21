@@ -49,11 +49,11 @@ class Media::ObjectsController < ApplicationController
 
   def media_class(type)
     case type
-    when 'audio'
+    when 'audios'
       return Media::Audio
-    when 'video'
+    when 'videos'
       return Media::Video
-    when 'image'
+    when 'images'
       return Media::Image
     else
       raise "A valid media type must be specified"
