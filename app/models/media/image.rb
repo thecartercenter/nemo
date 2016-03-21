@@ -9,4 +9,8 @@ class Media::Image < Media::Object
   def thumb_path
     url(:thumb)
   end
+
+  def kind
+    "image"
+  end
 end

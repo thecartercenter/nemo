@@ -1,14 +1,22 @@
-<%= media_link(answer.media_object) if answer.has_media_object? %>
+<div id="media-uploader-<%= index %>">
+  <% if answer.has_media_object? %>
+    <div class="existing">
+      <%= media_link(answer.media_object, show_delete: true) %>
+    </div>
+  <% end %>
 
-<div id="dropzone-<%= index %>" class="dropzone"
-  <%= answer.has_media_object? ? 'style="display: none"'.html_safe : '' %>>
-  <%= hidden_field_tag("#{prefix}[media_object_id]", answer.media_object_id) %>
+  <div id="dropzone-<%= index %>" class="dropzone"
+    <%= answer.has_media_object? ? 'style="display: none"'.html_safe : '' %>>
+    <%= hidden_field_tag("#{prefix}[media_object_id]", answer.media_object_id) %>
+  </div>
 </div>
 
 <%= javascript_doc_ready do %>
+  <% media_type = answer.qtype.media_type.pluralize %>
   new ELMO.Views.MediaUploaderView(<%=json(
-    el: "#dropzone-#{index}",
+    el: "#media-uploader-#{index}",
     zone_id: "dropzone#{index.camelize.capitalize}", # Dropzone likes camel case
-    post_path: media_create_path(type: answer.qtype.media_type.pluralize)
+    post_path: media_create_path(type: media_type),
+    delete_path: answer.media_object ? media_delete_path(answer.media_object, type: media_type) : nil
   )%>);
 <% end %>

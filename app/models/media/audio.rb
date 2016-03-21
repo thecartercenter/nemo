@@ -5,4 +5,8 @@ class Media::Audio < Media::Object
   def thumb_path
     "media/audio.png"
   end
+
+  def kind
+    "audio"
+  end
 end

@@ -5,4 +5,8 @@ class Media::Video < Media::Object
   def thumb_path
     "media/video.png"
   end
+
+  def kind
+    "video"
+  end
 end

@@ -52,13 +52,18 @@ module AnswersHelper
   end
 
   # Creates a media thumbnail link
-  def media_link(media_object)
-    if media_object.nil?
+  def media_link(object, show_delete: false)
+    if object.nil?
       content_tag(:div, "[#{t("common.none")}]", class: "no-value")
     else
       content_tag(:div, class: 'media-thumbnail') do
-        concat(link_to(image_tag(media_object.thumb_path), media_object.url))
-        concat(link_to(content_tag(:i, "", class: 'fa fa-download'), media_object.download_url, class: 'download'))
+        concat(link_to(image_tag(object.thumb_path), object.url))
+        concat(link_to(content_tag(:i, "", class: 'fa fa-download'), object.download_url, class: 'download'))
+
+        if show_delete
+          concat(link_to(content_tag(:i, "", class: 'fa fa-trash-o'), "#", class: 'delete',
+            data: { "confirm-msg" => t("response.remove_media_object_confirm.#{object.kind}") }))
+        end
       end
     end
   end
