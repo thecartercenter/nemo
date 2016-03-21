@@ -238,6 +238,18 @@ class Answer < ActiveRecord::Base
     latitude.present? && longitude.present? ? [latitude, longitude] : nil
   end
 
+  # Used with nested attribs
+  def media_object_id
+    media_object.try(:id)
+  end
+
+  # Used with nested attribs
+  # Attempts to find unassociated media object with given ID and assoicate with this answer.
+  # Fails silently if not found.
+  def media_object_id=(id)
+    self.media_object = Media::Object.find_by(id: id, answer_id: nil)
+  end
+
   private
 
     def required
