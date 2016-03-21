@@ -16,10 +16,10 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     prepare_message_for_delivery(message)
 
     # encode the message (intellisms expects iso-8859-1 encoding)
-    body = message.body.encode("iso-8859-1", {:invalid => :replace, :undef => :replace, :replace => '?'})
+    body = message.body.encode("iso-8859-1", { invalid: :replace, undef: :replace, replace: '?' })
 
     # build the URI the request
-    params = {:to => message.recipient_numbers.join(','), :text => body}
+    params = { to: message.recipient_numbers.join(','), text: body }
 
     # include the from number if it is set
     params[:from] = message.from.gsub(/^\+/, "") if message.from
@@ -42,11 +42,11 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
 
     # return the message
     Sms::Incoming.new(
-      :from => "+#{params['from']}",
-      :to => configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
-      :body => params['text'],
-      :sent_at => Time.parse(params['sent']),
-      :adapter_name => service_name)
+      from: "+#{params['from']}",
+      to: configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
+      body: params['text'],
+      sent_at: Time.parse(params['sent']),
+      adapter_name: service_name)
   end
 
   # Check_balance returns the balance string. Raises error if balance check failed.
