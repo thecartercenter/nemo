@@ -38,6 +38,7 @@ class Response < ActiveRecord::Base
       answers: [
         {choices: :option},
         :option,
+        :media_object,
         { questioning: [:condition, { question: :option_set } ] }
       ]
     },

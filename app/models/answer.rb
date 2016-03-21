@@ -247,7 +247,9 @@ class Answer < ActiveRecord::Base
   # Attempts to find unassociated media object with given ID and assoicate with this answer.
   # Fails silently if not found.
   def media_object_id=(id)
-    unless media_object_id == id
+    if id.nil?
+      self.media_object = nil
+    elsif media_object_id != id.to_i
       self.media_object = Media::Object.find_by(id: id, answer_id: nil)
     end
   end
