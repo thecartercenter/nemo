@@ -1,4 +1,7 @@
-<div id="dropzone-<%= index %>" class="dropzone">
+<%= media_link(answer.media_object) if answer.has_media_object? %>
+
+<div id="dropzone-<%= index %>" class="dropzone"
+  <%= answer.has_media_object? ? 'style="display: none"'.html_safe : '' %>>
   <%= hidden_field_tag("#{prefix}[media_object_id]", answer.media_object_id) %>
 </div>
 
