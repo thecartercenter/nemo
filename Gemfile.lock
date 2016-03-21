@@ -172,6 +172,8 @@ GEM
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       request_store (~> 1.0)
+    dropzonejs-rails (0.7.3)
+      rails (> 3.1)
     ejs (1.1.1)
     erubis (2.7.0)
     eventmachine (1.0.7)
@@ -477,6 +479,7 @@ DEPENDENCIES
   delayed_job_active_record
   descriptive_statistics
   draper (~> 2.1)
+  dropzonejs-rails
   ejs
   factory_girl_rails (~> 4.0)
   fix-db-schema-conflicts

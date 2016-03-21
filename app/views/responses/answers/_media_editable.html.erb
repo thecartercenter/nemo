@@ -1,0 +1,9 @@
+<div id="dropzone_<%= index %>" class="dropzone"></div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.MediaUploaderView(<%=json(
+    el: "#dropzone_#{index}",
+    zone_id: "dropzone#{index.camelize.capitalize}", # Dropzone likes camel case
+    post_path: media_create_path(type: answer.qtype.media_type)
+  )%>);
+<% end %>

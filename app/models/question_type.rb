@@ -87,4 +87,12 @@ class QuestionType
   def multimedia?
     properties.include?("multimedia")
   end
+
+  def media_type
+    case name
+    when "image", "annotated_image", "signature", "sketch" then "image"
+    when "audio", "video" then name
+    else nil
+    end
+  end
 end

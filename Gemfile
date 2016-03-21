@@ -106,6 +106,7 @@ gem 'attribute_normalizer'
 gem 'phantomjs_polyfill-rails'
 
 gem 'draper', '~> 2.1'
+gem 'dropzonejs-rails'
 
 group :development do
   gem 'rails-erd'                     # generate with rake db:migrate
