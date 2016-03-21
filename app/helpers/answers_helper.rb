@@ -53,9 +53,13 @@ module AnswersHelper
 
   # Creates a media thumbnail link
   def media_link(thumbnail, media_object)
-    content_tag(:div, class: 'media-thumbnail') do
-      concat(link_to(image_tag(thumbnail), media_object.url))
-      concat(link_to(content_tag(:i, "", class: 'fa fa-download'), media_object.download_url, class: 'download'))
+    if media_object.nil?
+      content_tag(:div, "[#{t("common.none")}]", class: "no-value")
+    else
+      content_tag(:div, class: 'media-thumbnail') do
+        concat(link_to(image_tag(thumbnail), media_object.url))
+        concat(link_to(content_tag(:i, "", class: 'fa fa-download'), media_object.download_url, class: 'download'))
+      end
     end
   end
 end

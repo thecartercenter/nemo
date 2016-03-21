@@ -33,7 +33,7 @@
 
 <% when 'image', 'annotated_image', 'signature', 'sketch' %>
 
-  <%= media_link answer.media_object.url(:thumb), answer.media_object %>
+  <%= media_link answer.media_object.try(:url, :thumb), answer.media_object %>
 
 <% when 'audio' %>
 

@@ -2,6 +2,7 @@ $gray-blue: #D4DCE1;
 $response-form-label-width: 300px;
 $group-indent: 10px;
 $body-text-color: #222;
+$light-gray: #BDB9B9;
 
 /* response index */
 .responses_index {
@@ -89,6 +90,10 @@ form.response_form {
       position: absolute;
       padding-left: 2px;
     }
+  }
+
+  div.no-value {
+    color: $light-gray;
   }
 
   input.qtype_integer, input.qtype_decimal {
