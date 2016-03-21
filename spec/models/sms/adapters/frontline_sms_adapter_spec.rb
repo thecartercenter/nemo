@@ -34,7 +34,6 @@ describe Sms::Adapters::FrontlineSmsAdapter do
 
   it 'should correctly parse a frontline-style request' do
     Time.zone = ActiveSupport::TimeZone['Saskatchewan']
-    configatron.incoming_sms_number = '123456789'
 
     request = double(params: {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489'})
     msg = @adapter.receive(request)
@@ -48,8 +47,8 @@ describe Sms::Adapters::FrontlineSmsAdapter do
     expect(msg.mission).to be_nil # This gets set in controller.
   end
 
-  it 'should correctly parse a frontline-style request even if incoming_sms_number is not present' do
-    configatron.incoming_sms_number = ''
+  it 'should correctly parse a frontline-style request even if incoming_sms_numbers is empty' do
+    configatron.incoming_sms_numbers = []
     request = double(params: {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489'})
     msg = @adapter.receive(request)
     expect(msg.body).to eq 'foo'

@@ -2,7 +2,7 @@ class Setting < ActiveRecord::Base
   include MissionBased
 
   # attribs to copy to configatron
-  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_number twilio_phone_number twilio_account_sid twilio_auth_token)
+  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_numbers twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
@@ -24,6 +24,7 @@ class Setting < ActiveRecord::Base
   before_save(:save_sms_credentials)
 
   serialize :preferred_locales, JSON
+  serialize :incoming_sms_numbers, JSON
 
   # accessors for password/password confirm/clear fields
   attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1, :clear_intellisms, :clear_twilio

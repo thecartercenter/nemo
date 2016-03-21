@@ -139,8 +139,13 @@ module FormsHelper
   end
 
   # returns the sms submit number or an indicator that it's not set up
-  def submit_number
-    content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_form.guide.unknown_number") + "]" : configatron.incoming_sms_number)
+  def submit_numbers
+    numbers = if configatron.incoming_sms_numbers.empty?
+      "[" + t("sms_form.guide.unknown_number") + "]"
+    else
+      configatron.incoming_sms_numbers.join(", ")
+    end
+    content_tag("strong", numbers)
   end
 
   def allow_incomplete?

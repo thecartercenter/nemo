@@ -343,7 +343,7 @@ en:
         viewed_at: "Last Viewed"
       setting:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
-        incoming_sms_number: "Incoming Number(s)"
+        incoming_sms_numbers: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
         intellisms_password1: "Password"
         intellisms_password2: "Password Confirmation"
@@ -511,7 +511,7 @@ en:
           This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
-        incoming_sms_number: "Enter the phone number(s) to which incoming SMSes for SMS forms should be sent. This field will be displayed, verbatim, on the SMS guide. Only needed if using SMS submissions."
+        incoming_sms_numbers: "Enter the phone number(s) to which incoming SMSes for SMS forms should be sent. This field will be displayed, verbatim, on the SMS guide. Only needed if using SMS submissions."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
         using_incoming_sms_token_title: Using the Incoming SMS Token
@@ -1713,7 +1713,7 @@ en:
       step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
       step2: "Now please do the following to send in your data:"
       step2_substeps:
-        - "With your phone, begin an SMS to %{submit_number}."
+        - "With your phone, begin an SMS to one of these numbers: %{submit_numbers}."
         - "Enter the contents of each line on the right side of each page, going from top to bottom."
         - "Be careful that you enter each line exactly. Each line is important."
         - "Notice that each answer is separated by a 'SPC'. Enter a space for each time you see 'SPC'. Do not add any extra spaces."
