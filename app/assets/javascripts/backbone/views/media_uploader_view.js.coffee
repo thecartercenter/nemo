@@ -7,7 +7,12 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
       url: @post_path
       paramName: "upload" # The name that will be used to transfer the file
       maxFiles: 1
+      uploadMultiple: false
+
+      success: (_, response_data) =>
+        @$('input').val(response_data.id)
     }
+
 
 
 
