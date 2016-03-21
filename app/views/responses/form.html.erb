@@ -6,6 +6,11 @@
 
 <%= render("layouts/location_picker") %>
 
+<%# This needs to be up here so it runs before the MediaUploaderViews are initialized. %>
+<%= javascript_doc_ready do %>
+  ELMO.Response.dropzone_preview_template = <%=json render("responses/answers/dropzone_preview") %>;
+<% end %>
+
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <%= elmo_form_for(@response) do |f| %>
