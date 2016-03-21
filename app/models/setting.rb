@@ -7,7 +7,7 @@ class Setting < ActiveRecord::Base
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
 
-  DEFAULTS = {:timezone => "UTC", :preferred_locales => [:en]}
+  DEFAULTS = { timezone: "UTC", preferred_locales: [:en], incoming_sms_numbers: [] }
 
   scope(:by_mission, ->(m) { where(:mission_id => m ? m.id : nil) })
 
