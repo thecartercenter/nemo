@@ -252,6 +252,10 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  def has_media_object?
+    !media_object_id.nil?
+  end
+
   private
 
     def required
