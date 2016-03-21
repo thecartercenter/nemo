@@ -43,7 +43,7 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
     # return the message
     Sms::Incoming.new(
       from: "+#{params['from']}",
-      to: configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
+      to: nil, # IntelliSMS doesn't provide this
       body: params['text'],
       sent_at: Time.parse(params['sent']),
       adapter_name: service_name)

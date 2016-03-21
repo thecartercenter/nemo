@@ -20,7 +20,7 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
     params = request.params
     Sms::Incoming.new(
       from: params['from'],
-      to: configatron.incoming_sms_number, # Assume it's this since IntelliSms doesn't provide it.
+      to: nil, # Frontline doesn't provide this.
       body: params['text'],
       sent_at: Time.zone.now, # Frontline doesn't supply this
       adapter_name: service_name)

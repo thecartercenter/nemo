@@ -39,7 +39,7 @@ describe Sms::Adapters::FrontlineSmsAdapter do
     request = double(params: {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489'})
     msg = @adapter.receive(request)
     expect(msg).to be_a Sms::Incoming
-    expect(msg.to).to eq '+123456789'
+    expect(msg.to).to be_nil
     expect(msg.from).to eq '+2348036801489'
     expect(msg.body).to eq 'foo'
     expect(msg.adapter_name).to eq 'FrontlineSms'
