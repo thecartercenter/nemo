@@ -33,7 +33,7 @@ describe Setting do
           setting = Setting.load_for_mission(mission)
           expect(setting.new_record?).to be_falsey
           expect(setting.mission).to eq mission
-          expect(setting.timezone).to eq Setting::DEFAULTS[:timezone]
+          expect(setting.timezone).to eq Setting::DEFAULT_TIMEZONE
         end
       end
 

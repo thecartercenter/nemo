@@ -7,11 +7,9 @@ class Setting < ActiveRecord::Base
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
 
-  DEFAULTS = { timezone: "UTC", preferred_locales: [:en], incoming_sms_numbers: [] }
+  DEFAULT_TIMEZONE = "UTC"
 
   scope(:by_mission, ->(m) { where(:mission_id => m ? m.id : nil) })
-
-  scope(:default, -> { where(DEFAULTS) })
 
   before_validation(:normalize_locales)
   before_validation(:normalize_incoming_sms_numbers)
@@ -51,16 +49,14 @@ class Setting < ActiveRecord::Base
     return setting
   end
 
-  # builds and returns (but doesn't save) a default Setting object
-  # by using the defaults specified in this file and those specified in the local config
+  # Builds and returns (but doesn't save) a default Setting object
+  # by using defaults specified here and those specified in the local config
   # mission may be nil.
   def self.build_default(mission = nil)
-    # initialize a new setting object with default values
-    setting = by_mission(mission).default.new
-    # preferred_locales from default scope is converted to string
-    # bug in rails 4.2?
+    setting = by_mission(mission).new
+    setting.timezone = DEFAULT_TIMEZONE
     setting.preferred_locales = [:en]
-
+    setting.incoming_sms_numbers = []
     setting.generate_incoming_sms_token if mission.present?
 
     # copy default_settings from configatron
