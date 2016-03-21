@@ -295,7 +295,7 @@ es:
         viewed_at: "Última Vista"
       setting:
         allow_unauthenticated_submissions: "¿Permitir entregas no autentificadas?"
-        incoming_sms_numbers: "Número entrante"
+        incoming_sms_numbers_str: "Número entrante"
         intellisms_password1: "Contraseña "
         intellisms_password2: "Confirmación de la contraseña"
         intellisms_username: "Nombre de usuario "
@@ -446,7 +446,7 @@ es:
           Debe enviar este código a los observadores si es necesario que puedan enviar respuestas incompletas. ODK no permitirá que se entreguen respuestas incompletas sin este código.
 
           Si crea un código nuevo, por favor guarde el código viejo si aún existen formularios anteriores. El nuevo código sólo funcionara con los formularios que hayan sido descargados después de que el nuevo código haya sido creado.
-        incoming_sms_numbers: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
+        incoming_sms_numbers_str: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
         default_outgoing_sms_adapter: "El adaptador que se utiliza para enviar SMSes salientes. Tenga en cuenta que las respuestas SMS pueden ser enviadas a través de un adaptador diferente, dependiendo del adaptador del que provienen."
         intellisms_username: "El nombre de usuario de la cuenta IntelliSMS."
         intellisms_password1: "Escriba y vuelva a escribir una contraseña para cambiar la contraseña de la cuenta IntelliSMS."

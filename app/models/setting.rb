@@ -121,7 +121,6 @@ class Setting < ActiveRecord::Base
     (preferred_locales || []).join(',')
   end
 
-  # reverse of self.lang_codes
   def preferred_locales_str=(codes)
     self.preferred_locales = (codes || '').split(',')
   end
@@ -129,6 +128,14 @@ class Setting < ActiveRecord::Base
   # converts preferred locales to symbols on read
   def preferred_locales
     read_attribute('preferred_locales').map(&:to_sym)
+  end
+
+  def incoming_sms_numbers_str
+    incoming_sms_numbers.join(",")
+  end
+
+  def incoming_sms_numbers_str=(nums)
+    self.incoming_sms_numbers = (nums || "").split(",")
   end
 
   # Determines if this setting is read only due to mission being locked.

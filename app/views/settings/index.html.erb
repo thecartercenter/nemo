@@ -18,7 +18,7 @@
 
     <h2><%= t("setting.headings.sms") %></h2>
 
-    <%= f.field(:incoming_sms_number) %>
+    <%= f.field(:incoming_sms_numbers_str, type: :textarea) %>
 
     <%= f.regenerable_field(:incoming_sms_token,
       append: link_to(t('setting.using_incoming_sms_token'), '#', class: 'using-incoming_sms_token')) %>
