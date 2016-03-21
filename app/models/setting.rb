@@ -131,11 +131,11 @@ class Setting < ActiveRecord::Base
   end
 
   def incoming_sms_numbers_str
-    incoming_sms_numbers.join(",")
+    incoming_sms_numbers.join(", ")
   end
 
   def incoming_sms_numbers_str=(nums)
-    self.incoming_sms_numbers = (nums || "").split(",")
+    self.incoming_sms_numbers = (nums || "").split(",").map { |n| PhoneNormalizer.normalize(n) }.compact
   end
 
   # Determines if this setting is read only due to mission being locked.
