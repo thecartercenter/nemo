@@ -85,33 +85,6 @@ class Answer < ActiveRecord::Base
       WHERE (a.option_id = ? OR c.option_id = ?) AND a.questioning_id IN (?)", option_id, option_id, questioning_ids]).first.count > 0
   end
 
-  # Populates answer from odk-like string value.
-  def populate_from_string(str)
-    return if str.nil?
-
-    if qtype.name == "select_one"
-      # 'none' will be returned for a blank choice for a multilevel set.
-      self.option_id = option_id_for_submission(str) unless str == 'none'
-
-    elsif qtype.name == "select_multiple"
-      str.split(' ').each{ |oid| choices.build(option_id: option_id_for_submission(oid)) }
-
-    elsif qtype.temporal?
-      # Strip timezone info for datetime and time.
-      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, '') unless qtype.name == 'date'
-
-      val = Time.zone.parse(str)
-
-      # Not sure why this is here. Investigate later.
-      val = val.to_s(:"db_#{qtype.name}") unless qtype.has_timezone?
-
-      self.send("#{qtype.name}_value=", val)
-
-    else
-      self.value = str
-    end
-  end
-
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
   def level
     option_set.try(:multilevel?) ? option_set.levels[(rank || 1) - 1] : nil
@@ -305,14 +278,4 @@ class Answer < ActiveRecord::Base
       end
     end
 
-    # finds the appropriate Option instance for an ODK submission
-    def option_id_for_submission(id_or_str)
-      if id_or_str =~ /\Aon(\d+)\z/
-        # look up inputs of the form "on####" as option node ids
-        OptionNode.id_to_option_id($1)
-      else
-        # look up other inputs as option ids
-        Option.where(id: id_or_str).pluck(:id).first
-      end
-    end
 end

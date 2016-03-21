@@ -4,8 +4,6 @@ require 'spec_helper'
 describe 'odk submissions', type: :request do
   include ODKSubmissionSupport
 
-  ODK_XML_FILE = 'odk_xml_file.xml'
-
   before do
     allow_forgery_protection true
   end

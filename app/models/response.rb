@@ -313,30 +313,6 @@ class Response < ActiveRecord::Base
     self.save!
   end
 
-  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
-  def populate_from_hash(hash)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if mission.nil?
-
-    form.visible_questionings.each do |qing|
-      qing.subquestions.each do |subq|
-        value = hash[subq.odk_code]
-        if value.is_a? Array
-          value.each_with_index do |val, i|
-            answer = Answer.new(questioning: qing, rank: subq.rank, inst_num: i + 1)
-            answer.populate_from_string(val)
-            self.answers << answer
-          end
-        else
-          answer = Answer.new(questioning: qing, rank: subq.rank)
-          answer.populate_from_string(value)
-          self.answers << answer
-        end
-      end
-    end
-    self.incomplete = (hash[OdkHelper::IR_QUESTION] == "yes")
-  end
-
   private
 
   def normalize_answers

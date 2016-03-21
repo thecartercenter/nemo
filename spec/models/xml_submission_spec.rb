@@ -7,12 +7,12 @@ describe XMLSubmission do
     @form = create(:form, question_types: ['integer', ['integer', 'integer']])
     @form.publish!
     @response = create(:response, form: @form)
-    @data = build_odk_submission(@form, repeat: true)
+    @files = { xml_submission_file: StringIO.new(build_odk_submission(@form, repeat: true)) }
   end
 
   describe '.new' do
     it 'creates a submission and parses it to populate response' do
-      submission = XMLSubmission.new(response: @response, data: @data, source: 'odk')
+      submission = XMLSubmission.new(response: @response, files: @files, source: 'odk')
       response = submission.response
       response.answers.each_with_index do |answer|
         expect(answer.inst_num).to eq nil unless answer.from_group?

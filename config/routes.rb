@@ -70,9 +70,9 @@ ELMO::Application.routes.draw do
     end
 
     namespace :media, type: /audios|images|videos/ do
-      get ':type/:id(/:style)' => 'objects#show', defaults: { style: 'original' }
-      post ':type' => 'objects#create', as: :create
-      delete ':type/:id' => 'objects#delete', as: :delete
+      get ":type/:id(/:style)" => "objects#show", defaults: { style: "original" }
+      post ":type" => "objects#create", as: :create
+      delete ":type/:id" => "objects#delete", as: :delete
     end
 
     # need to list these all separately b/c rails is dumb sometimes
