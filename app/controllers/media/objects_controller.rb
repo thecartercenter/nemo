@@ -23,7 +23,10 @@ class Media::ObjectsController < ApplicationController
     if media.save
       render json: { id: media.id }, status: 201
     else
-      render json: { error: media.errors }, status: 422
+      # Currently there is only one type of validation failure: incorrect type.
+      # The default paperclip error messages are heinous, which is why we're doing this.
+      msg = I18n.t("activerecord.errors.models.media/object.invalid_format")
+      render json: { errors: [msg] }, status: 422
     end
   end
 

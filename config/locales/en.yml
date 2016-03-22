@@ -582,6 +582,9 @@ en:
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions."
           general: "Form is invalid (see below)."
+        media/object:
+          invalid_format: "The uploaded file was not an accepted format."
+          generic: "There was an error uploading the file."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "Please use only letters, numbers, and spaces."

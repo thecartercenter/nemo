@@ -14,9 +14,10 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
       previewTemplate: @manager.preview_template
     })
 
-    @dropzone.on 'success', (_, response_data) => @file_uploaded(response_data)
     @dropzone.on 'removedfile', => @file_removed()
     @dropzone.on 'sending', => @upload_starting()
+    @dropzone.on 'success', (_, response_data) => @file_uploaded(response_data)
+    @dropzone.on 'error', (file, msg) => @upload_errored(file, msg)
     @dropzone.on 'complete', => @upload_finished()
 
   events:
@@ -35,11 +36,20 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
   file_uploaded: (response_data) ->
     @id_field.val(response_data.id)
 
+  upload_errored: (file, response_data) ->
+    @dropzone.removeFile(file)
+    errors = if response_data.errorsx
+      response_data.errors.join("<br/>")
+    else
+      I18n.t("activerecord.errors.models.media/object.generic")
+    @$('.error-msg').show().html(errors)
+
   file_removed: ->
     @id_field.val('')
 
   upload_starting: ->
     @manager.upload_starting()
+    @$('.error-msg').hide()
 
   upload_finished: ->
     @manager.upload_finished()
