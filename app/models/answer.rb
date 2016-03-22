@@ -165,9 +165,8 @@ class Answer < ActiveRecord::Base
 
   # Checks if answer must be non-empty to be valid.
   # Non-first-rank answers are currently not required even if their questioning is required (i.e. partial answers allowed).
-  # TODO: Remove multimedia check once added to response form
   def required_and_relevant?
-    required? && !hidden? && !multimedia? && relevant? && first_rank? && qtype.name != "select_multiple"
+    required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
   end
 
   # Whether this Answer is the first in its set (i.e. rank is nil or 1)
@@ -177,7 +176,8 @@ class Answer < ActiveRecord::Base
 
   # check various fields for blankness
   def empty?
-    value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
+    value.blank? && time_value.blank? && date_value.blank? &&
+      datetime_value.blank? && option_id.nil? && media_object.nil?
   end
   alias_method :blank?, :empty?
 
