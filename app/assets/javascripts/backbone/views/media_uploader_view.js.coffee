@@ -29,9 +29,6 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
   delete_existing: (event) ->
     event.preventDefault()
     if confirm($(event.currentTarget).data('confirm-msg'))
-      $.ajax
-        url: @delete_path
-        method: "DELETE"
       @$('.existing').remove()
       @$('.dropzone').show()
       @id_field.val('')
