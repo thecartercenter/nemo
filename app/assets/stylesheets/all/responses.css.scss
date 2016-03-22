@@ -114,6 +114,16 @@ form.response_form {
     vertical-align: bottom;
   }
 
+  .dropzone {
+    a.hint, span.message {
+      color: $light-gray;
+    }
+
+    a.hint {
+      text-decoration: underline;
+    }
+  }
+
   #upload-progress-notice {
     display: none;
     font-style: italic;
