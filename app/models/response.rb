@@ -22,6 +22,7 @@ class Response < ActiveRecord::Base
   validates(:user, presence: true)
   validate(:no_missing_answers)
   validate(:form_in_mission)
+  validates_associated :answers # Forces validation of answers even if they haven't changed
 
   # This scope is DEPRECATED. Do not rely on it. Instead, call Response.unscoped and apply your own.
   default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
