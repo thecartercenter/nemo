@@ -10,7 +10,7 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
       paramName: "upload" # The name that will be used to transfer the file
       maxFiles: 1
       uploadMultiple: false
-      previewTemplate: ELMO.Response.dropzone_preview_template
+      previewTemplate: ELMO.media_uploader_manager.preview_template
     })
 
   events:
