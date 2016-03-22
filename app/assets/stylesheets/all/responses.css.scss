@@ -114,6 +114,11 @@ form.response_form {
     vertical-align: bottom;
   }
 
+  #upload-progress-notice {
+    display: none;
+    font-style: italic;
+  }
+
   div.qing-group {
 
     div.qing-group-instances {

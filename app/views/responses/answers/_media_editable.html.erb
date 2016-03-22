@@ -15,7 +15,7 @@
   <% media_type = answer.qtype.media_type.pluralize %>
   new ELMO.Views.MediaUploaderView(<%=json(
     el: "#media-uploader-#{index}",
-    zone_id: "dropzone#{index.camelize.capitalize}", # Dropzone likes camel case
+    zone_id: "#dropzone-#{index}",
     post_path: media_create_path(type: media_type),
     delete_path: answer.media_object ? media_delete_path(answer.media_object, type: media_type) : nil
   )%>);

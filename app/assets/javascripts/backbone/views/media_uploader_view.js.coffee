@@ -4,19 +4,23 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
     @post_path = options.post_path
     @delete_path = options.delete_path
     @id_field = @$('input')
+    @manager = ELMO.media_uploader_manager
 
-    @$('.dropzone').dropzone({
+    @dropzone = new Dropzone(@zone_id, {
       url: @post_path
       paramName: "upload" # The name that will be used to transfer the file
       maxFiles: 1
       uploadMultiple: false
-      previewTemplate: ELMO.media_uploader_manager.preview_template
+      previewTemplate: @manager.preview_template
     })
+
+    @dropzone.on 'success', (_, response_data) => @file_uploaded(response_data)
+    @dropzone.on 'removedfile', => @file_removed()
+    @dropzone.on 'sending', => @upload_starting()
+    @dropzone.on 'complete', => @upload_finished()
 
   events:
     'click .existing a.delete': 'delete_existing'
-    'success .dropzone': 'file_uploaded'
-    'removedfile .dropzone': 'file_removed'
 
   delete_existing: (event) ->
     event.preventDefault()
@@ -28,11 +32,15 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
       @$('.dropzone').show()
       @id_field.val('')
 
-  file_uploaded: ->
+  file_uploaded: (response_data) ->
     @id_field.val(response_data.id)
 
   file_removed: ->
     @id_field.val('')
 
+  upload_starting: ->
+    @manager.upload_starting()
 
+  upload_finished: ->
+    @manager.upload_finished()
 
