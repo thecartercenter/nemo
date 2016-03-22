@@ -59,12 +59,14 @@ module AnswersHelper
       content_tag(:div, class: 'media-thumbnail') do
         concat(link_to(image_tag(object.thumb_path), object.url, target: "_blank"))
 
-        concat(link_to(content_tag(:i, "", class: 'fa fa-download'), object.download_url, class: 'download'))
+        concat(content_tag(:div, class: "links") do
+          concat(link_to(content_tag(:i, "", class: 'fa fa-download'), object.download_url, class: 'download'))
 
-        if show_delete
-          concat(link_to(content_tag(:i, "", class: 'fa fa-trash-o'), "#", class: 'delete',
-            data: { "confirm-msg" => t("response.remove_media_object_confirm.#{object.kind}") }))
-        end
+          if show_delete
+            concat(link_to(content_tag(:i, "", class: 'fa fa-trash-o'), "#", class: 'delete',
+              data: { "confirm-msg" => t("response.remove_media_object_confirm.#{object.kind}") }))
+          end
+        end)
       end
     end
   end

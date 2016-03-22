@@ -3,6 +3,7 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
     @zone_id = options.zone_id
     @post_path = options.post_path
     @delete_path = options.delete_path
+    @generic_thumb_path = options.generic_thumb_path
     @id_field = @$('input')
     @manager = ELMO.media_uploader_manager
 
@@ -11,7 +12,9 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
       paramName: "upload" # The name that will be used to transfer the file
       maxFiles: 1
       uploadMultiple: false
-      previewTemplate: @manager.preview_template
+      previewTemplate: @manager.preview_template,
+      thumbnailWidth: 100,
+      thumbnailHeight: 100
     })
 
     @dropzone.on 'removedfile', => @file_removed()
@@ -38,17 +41,20 @@ class ELMO.Views.MediaUploaderView extends Backbone.View
 
   upload_errored: (file, response_data) ->
     @dropzone.removeFile(file)
-    errors = if response_data.errorsx
+    errors = if response_data.errors
       response_data.errors.join("<br/>")
     else
       I18n.t("activerecord.errors.models.media/object.generic")
     @$('.error-msg').show().html(errors)
 
   file_removed: ->
+    @$('.dz-message').show()
     @id_field.val('')
 
   upload_starting: ->
     @manager.upload_starting()
+    @$('img')[0].src = @generic_thumb_path
+    @$('.dz-message').hide()
     @$('.error-msg').hide()
 
   upload_finished: ->

@@ -1,4 +1,4 @@
-<div id="media-uploader-<%= index %>">
+<div id="media-uploader-<%= index %>" class="media-uploader">
   <% if answer.has_media_object? %>
     <div class="existing">
       <%= media_link(answer.media_object, show_delete: true) %>
@@ -24,6 +24,7 @@
   new ELMO.Views.MediaUploaderView(<%=json(
     el: "#media-uploader-#{index}",
     zone_id: "#dropzone-#{index}",
+    generic_thumb_path: image_path("media/#{answer.qtype.media_type}.png"),
     post_path: media_create_path(type: media_type),
     delete_path: answer.media_object ? media_delete_path(answer.media_object, type: media_type) : nil
   )%>);
