@@ -1131,6 +1131,7 @@ fr:
     save_and_mark_reviewed: "Enregistrer et Marquer comme Examiné"
     view_response: "Voir Réponse"
     checked_out: "Cette réponse a été examiné par:"
+    upload_progress_notice: "Téléchargement(s) en cours..."
   role:
     role: "Rôle"
     observer: "Observateur/Observatrice"

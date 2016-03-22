@@ -1345,7 +1345,7 @@ en:
       image: "Are you sure you want to delete this image?"
       audio: "Are you sure you want to delete this audio?"
       video: "Are you sure you want to delete this video?"
-    upload_progress_notice: "Uploads in progress..."
+    upload_progress_notice: "Upload(s) in progress..."
     drop_message: "Click or drop file here"
     drop_more_info: "More info"
     drop_hint:
