@@ -1,15 +1,25 @@
 class PhoneNormalizer
   def self.is_shortcode?(phone)
-    phone.present? && (phone =~ /[a-z]/i || phone.size <= 6)
+    return nil if phone.blank?
+    if phone =~ /[a-z]/i
+      true
+    else
+      digits = phone.gsub(/\D/, "")
+      !digits.empty? && digits.size <= 6
+    end
   end
 
   def self.normalize(phone)
-    if phone.blank?
-      return nil
-    elsif is_shortcode?(phone)
-      return phone
+    phone = phone.try(:strip)
+    if is_shortcode?(phone)
+      phone
     else
-      return '+' + phone.gsub(/\D+/, '')
+      digits = phone.try(:gsub, /\D/, "")
+      if digits.blank?
+        nil
+      else
+        "+#{digits}"
+      end
     end
   end
 end

@@ -4,7 +4,7 @@
       <%= render 'qing_groups/printable', qing_group: item %>
       <%= render 'form_items/printable', items: subitems %>
     <% end %>
-  <% else %>
+  <% elsif item.printable? %>
     <%= render 'questionings/printable', qing: item %>
   <% end %>
 <% end %>

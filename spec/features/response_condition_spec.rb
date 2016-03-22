@@ -4,7 +4,7 @@ feature 'conditions in responses', js: true do
   before do
     @user = create(:user)
     @form = create(:form, name: 'Foo',
-      question_types: %w(long_text text integer text decimal select_one multi_level_select_one multi_level_select_one select_multiple datetime date time text))
+      question_types: %w(long_text text integer text decimal select_one multilevel_select_one multilevel_select_one select_multiple datetime date time text))
     @year = Time.now.year - 2
     @qings = @form.questionings
     @os2 = @qings[6].option_set
@@ -63,7 +63,7 @@ feature 'conditions in responses', js: true do
   end
 
   def fill_answer(qing, value)
-    idx = qing.id
+    idx = "#{qing.id}_1"
     id = "response_answers_attributes_#{idx}_value"
     case qing.qtype_name
     when 'long_text'
@@ -106,7 +106,7 @@ feature 'conditions in responses', js: true do
       cur_vis = visible.include?(i)
 
       # We do it this way (find, then assert) for timing issues.
-      expect(find("div.answer_field[data-index=\"#{qing.id}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
+      expect(find("div.answer_field[data-qing-id=\"#{qing.id}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
     end
   end
 end

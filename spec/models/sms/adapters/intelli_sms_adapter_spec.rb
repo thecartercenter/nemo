@@ -33,11 +33,10 @@ describe Sms::Adapters::IntelliSmsAdapter do
   it 'should correctly parse an intellisms-style request' do
     Time.zone = ActiveSupport::TimeZone['Saskatchewan']
     request = double(params: {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489', 'msgid' => '1234'})
-    configatron.incoming_sms_number = '123456789'
 
     msg = @adapter.receive(request)
     expect(msg).to be_a Sms::Incoming
-    expect(msg.to).to eq '+123456789'
+    expect(msg.to).to be_nil
     expect(msg.from).to eq '+2348036801489'
     expect(msg.body).to eq 'foo'
     expect(msg.adapter_name).to eq 'IntelliSms'
@@ -46,8 +45,8 @@ describe Sms::Adapters::IntelliSmsAdapter do
   end
 
 
-  it 'should correctly parse a frontline-style request even if incoming_sms_number is not present' do
-    configatron.incoming_sms_number = ''
+  it 'should correctly parse a frontline-style request even if incoming_sms_numbers is empty' do
+    configatron.incoming_sms_numbers = []
     request = double(params: {'text' => 'foo', 'sent' => '2013-07-03T09:53:00+01:00', 'from' => '2348036801489', 'msgid' => '1234'})
     msg = @adapter.receive(request)
     expect(msg.body).to eq 'foo'

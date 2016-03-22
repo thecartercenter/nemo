@@ -1,9 +1,9 @@
 <div class="cascading-selects" id="cascading-selects-<%= index %>">
   <% option_path.options.each_with_index do |option, i| %>
-    <div>
+    <div class="level">
       <% if read_only %>
         <% unless option_path.blank? %>
-          <% if option_path.multi_level? %>
+          <% if option_path.multilevel? %>
             <div class="option-level">
               <%= option_path.level_name_for_depth(i+1) %>
             </div>
@@ -18,7 +18,7 @@
           </div>
         <% end %>
       <% else %>
-        <% if option_path.multi_level? %>
+        <% if option_path.multilevel? %>
           <label for="<%= cascading_select_input_id(input_name_template, i) %>">
             <%= option_path.level_name_for_depth(i+1) %>
           </label>
@@ -31,7 +31,7 @@
   <% end %>
 </div>
 
-<% if !read_only && option_path.multi_level? %>
+<% if !read_only && option_path.multilevel? %>
   <%= javascript_doc_ready do %>
     new ELMO.Views.CascadingSelectsView({
       el: $('#cascading-selects-<%= index %>'),

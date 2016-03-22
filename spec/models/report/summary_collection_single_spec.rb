@@ -80,7 +80,7 @@ describe "summary collection with single subset" do
   end
 
   it "select_one summary should be correct with multilevel option set" do
-    prepare_form_and_collection('multi_level_select_one', [%w(Animal Dog), %w(Animal), %w(Animal Cat), %w(Plant Tulip)])
+    prepare_form_and_collection('multilevel_select_one', [%w(Animal Dog), %w(Animal), %w(Animal Cat), %w(Plant Tulip)])
     animal, plant = @form.questions[0].option_set.options # Top level options
     expect(headers_and_items(:option, :count)).to eq({animal => 3, plant => 1})
     expect(headers_and_items(:option, :pct)).to eq({animal => 75.0, plant => 25.0})

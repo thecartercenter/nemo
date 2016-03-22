@@ -56,7 +56,7 @@ module QuestionsHelper
   # If no option sets found, returns empty string.
   def option_set_select_option_tags(sets, selected_id)
     sets.map do |s|
-      content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? 'selected' : nil, :'data-multilevel' => s.multi_level?)
+      content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? 'selected' : nil, :'data-multilevel' => s.multilevel?)
     end.reduce(:<<) || ""
   end
 

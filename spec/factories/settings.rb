@@ -6,5 +6,6 @@ FactoryGirl.define do
     intellisms_username "user"
     intellisms_password "pass"
     incoming_sms_token SecureRandom.hex
+    incoming_sms_numbers []
   end
 end

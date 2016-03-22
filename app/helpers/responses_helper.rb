@@ -16,7 +16,7 @@ module ResponsesHelper
   def format_responses_field(resp, field)
     # handle special case where field is hash
     if field.is_a?(Hash)
-      format_answer(resp.answer_for_question(field[:question]), :table_cell)
+      format_answer(resp.answer_for(field[:question]), :table_cell)
     else
       case field
       when "id" then link_to(resp.id, path_for_with_search(resp), :title => t("common.view"))

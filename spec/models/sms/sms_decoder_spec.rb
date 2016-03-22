@@ -24,6 +24,52 @@ describe Sms::Decoder do
     assert_decoding_fail(body: "lasjdalfksldjal", error: "invalid_form_code")
   end
 
+  context 'with SMS Authentication enabled' do
+    before(:all) { create_form(questions: %w(integer), authenticate_sms: true) }
+
+    it 'should work with the correct code provided' do
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
+
+    it 'should raise an error with an incorrect code provided' do
+      auth_code = 'n000'
+      assert_decoding_fail(body: "#{auth_code} #{@form.code} 1.17", error: "user_not_found")
+    end
+
+    it 'should raise an error if no code is provided' do
+      assert_decoding_fail(body: "#{@form.code} 1.17", error: "user_not_found")
+    end
+
+    it 'should lock account after 3 failed attempts' do
+      create_list(:sms_message, Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD, user: user, auth_failed: true, type: "incoming")
+      assert_decoding_fail(body: "#{@form.code} 1.17", error: "account_locked")
+    end
+
+    it 'should not lock account if threshold is not reached' do
+      safe_interval = (Sms::BRUTE_FORCE_CHECK_WINDOW / Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD) + 1
+      Timecop.freeze
+
+      3.times do
+        Timecop.travel(safe_interval)
+        create(:sms_message, user: user, auth_failed: true, type: "incoming")
+      end
+
+      Timecop.travel(safe_interval)
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
+  end
+
+  context 'with SMS Authentication disabled' do
+    before(:all) { create_form(questions: %w(integer), authenticate_sms: false) }
+
+    it 'should work with the an unnecessary code provided' do
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
+  end
+
   it "submitting to unpublished form should produce appropriate error" do
     create_form(questions: %w(integer))
     @form.unpublish!
@@ -121,7 +167,7 @@ describe Sms::Decoder do
 
   it "form with duplicate answers for the same question should error" do
     create_form(questions: %w(integer integer))
-    assert_decoding_fail(body: "#{@form.code} 1.15 2.8 2.9", error: "duplicate_answers", rank: 2)
+    assert_decoding_fail(body: "#{@form.code} 1.15 2.8 2.9", error: "duplicate_answer", rank: 2)
   end
 
   it "spaces after decimal points should not cause error" do
@@ -165,12 +211,12 @@ describe Sms::Decoder do
   end
 
   it "select_one question treated as text should work for multilevel option set" do
-    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true)
     assert_decoding(body: "#{@form.code} 1.15 2.Tulip", answers: [15, ["Plant", "Tulip"]])
   end
 
   it "select_one question treated as text should work for multilevel option set for non-leaf option" do
-    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true)
     assert_decoding(body: "#{@form.code} 1.15 2.Plant", answers: [15, ["Plant", "NIL"]])
   end
 
@@ -358,11 +404,20 @@ describe Sms::Decoder do
     end
   end
 
+  it "form with qing groups should work" do
+    create_form(questions: ['integer', %w(text date), 'date'])
+    assert_decoding(
+      body: "#{@form.code} 1.3 2.coffee and bagels 3.20151225 4.20160101",
+      answers: [3, "coffee and bagels", Date.new(2015, 12, 25), Date.new(2016, 01, 01)]
+    )
+  end
+
   private
 
   def create_form(options)
     option_names = options[:default_option_names] ? nil : %w(Apple Banana Cherry Durian) + ["Elder Berry"]
-    @form = create(:form, smsable: true, question_types: options[:questions], option_names: option_names)
+    authenticate_sms = options[:authenticate_sms] ? options[:authenticate_sms] : false
+    @form = create(:form, smsable: true, question_types: options[:questions], option_names: option_names, authenticate_sms: authenticate_sms)
     @form.publish!
     @form.reload
   end
@@ -384,18 +439,24 @@ describe Sms::Decoder do
     # ensure the form is correct
     expect(response.form_id).to eq(@form.id)
 
+    nodes = AnswerArranger.new(response).build.leaf_nodes
+
+    # ensure an expected answer was given for this question
+    expect(options[:answers].size >= nodes.size).to be_truthy, "No expected answer was given for question #{nodes.size + 1}"
+
     # ensure the answers match the expected ones
-    @form.root_questionings.each do |qing|
-      # ensure an expected answer was given for this question
-      expect(options[:answers].size >= qing.rank).to be_truthy, "No expected answer was given for question #{qing.rank}"
+    @form.questionings.each_with_index do |qing, i|
+      node = nodes[i]
+
+      expect(node.item).to eq(qing), "Missing answer at index #{i}"
 
       # copy the expected value
-      expected = options[:answers][qing.rank - 1]
+      expected = options[:answers][i]
 
       # replace the array index with nil so that we know this one has been looked at
-      options[:answers][qing.rank - 1] = nil
+      options[:answers][i] = nil
 
-      ansset = response.answer_set_for_questioning(qing)
+      ansset = node.set
 
       # ensure answer matches
       case qing.qtype_name
@@ -407,10 +468,10 @@ describe Sms::Decoder do
         # for select one, the expected value is the english translation(s) of the desired option(s)
         expect(ansset.answers.map{ |a| a.option.try(:name_en) || "NIL" }).to eq(Array.wrap(expected))
         # Check answer ranks.
-        if qing.multi_level?
+        if qing.multilevel?
           expect(ansset.answers.map(&:rank)).to eq((1..expected.size).to_a), "Invalid answer ranks"
         else
-          expect(ansset.first.rank).to be_nil, "Answer rank should be nil"
+          expect(ansset.first.rank).to eq(1), "Answer rank should be 1"
         end
       when "select_multiple"
         # for select multiple, the expected value is an array of the english translations of the desired options

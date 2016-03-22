@@ -9,6 +9,7 @@ require 'capybara/rspec'
 require 'capybara/rails'
 require 'capybara/poltergeist'
 require 'capybara-screenshot/rspec'
+require 'paperclip/matchers'
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app,
@@ -57,14 +58,15 @@ RSpec.configure do |config|
 
   config.include AssertDifference
   config.include GeneralSpecHelpers
+  config.include MediaSpecHelpers::FileHandling
   config.include ModelSpecHelpers, type: :model
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
   config.include AssertSelectRoot, type: :request
+  config.include Paperclip::Shoulda::Matchers
 
   # Locale should be reset to :en after each test if it is changed.
   config.after(:each) do
     puts "WARNING: I18n locale was left as #{I18n.locale}" unless I18n.locale = :en
   end
 end
-

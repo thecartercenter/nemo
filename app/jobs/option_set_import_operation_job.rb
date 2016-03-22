@@ -3,7 +3,7 @@ class OptionSetImportOperationJob < OperationJob
     # load the current mission's settings into configatron
     Setting.load_for_mission(current_mission)
 
-    import = OptionSetImport.new(mission_id: current_mission.id, name: name, file: File.new(path))
+    import = OptionSetImport.new(mission_id: current_mission.id, name: name, file: path)
     succeeded = import.create_option_set
 
     unless succeeded

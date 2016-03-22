@@ -41,10 +41,18 @@ class ResponseCSV
         process_form(response.form)
 
         # Start the row
-        row = [response.form.name, response.user.name, response.created_at.to_s(:std_datetime), response.id]
+        row = [
+          response.form.name,
+          response.user.name,
+          response.created_at.to_s(:std_datetime_with_tz),
+          response.id
+        ]
 
         # Assign cell values for each column set
-        response.answers.group_by(&:question).each do |question, answers|
+        answers = response.answers.includes(:questioning, :option, choices: :option).
+          order(:questioning_id, :inst_num, :rank)
+
+        answers.group_by(&:question).each do |question, answers|
           columns = columns_by_question[question.code]
           qa = ResponseCSV::QA.new(question, answers)
           columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
@@ -66,7 +74,8 @@ class ResponseCSV
     return if column_exists_with_code?(code)
 
     if question
-      if question.multi_level?
+      return if question.multimedia?
+      if question.multilevel?
         question.levels.each_with_index do |level, i|
           create_column(code: code, name: [code, level.name])
         end
@@ -131,7 +140,7 @@ class ResponseCSV::QA
     arr = case question_type
     when 'select_one'
       arr = answers.map{ |a| format_csv_para_text(a.option_name) }
-      if question.multi_level?
+      if question.multilevel?
         arr += ([nil] * (question.level_count - arr.size))
       end
       if question.geographic?
@@ -140,8 +149,12 @@ class ResponseCSV::QA
       arr
     when 'location'
       lat_lng(answer)
+    when 'datetime'
+      [answer.casted_value.try(:to_s, :std_datetime_with_tz)]
+    when 'date', 'time'
+      [answer.casted_value.try(:to_s, :"std_#{question_type}")]
     else
-      [format_csv_para_text(answer.formatted_value)]
+      [format_csv_para_text(answer.casted_value)]
     end
   end
 

@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Report::ListReport do
   context 'with multilevel option set' do
     before do
-      @form = create(:form, question_types: %w(multi_level_select_one integer multi_level_select_one))
+      @form = create(:form, question_types: %w(multilevel_select_one integer multilevel_select_one))
       @response1 = create(:response, form: @form, answer_values: [['Animal', 'Cat'], 5, ['Animal', 'Dog']])
       @response2 = create(:response, form: @form, answer_values: [['Animal'], 10, ['Plant', 'Oak']])
       @response3 = create(:response, form: @form, answer_values: [nil, 15, ['Plant']])

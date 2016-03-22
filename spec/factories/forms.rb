@@ -5,8 +5,8 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     psuedo_qtype_name = qtype_name_or_question
 
     qtype_name = case psuedo_qtype_name
-    when 'multi_level_select_one', 'geo_select_one', 'geo_multi_level_select_one',
-      'select_one_as_text_for_sms', 'multi_level_select_one_as_text_for_sms'
+    when 'multilevel_select_one', 'geo_select_one', 'geo_multilevel_select_one',
+      'select_one_as_text_for_sms', 'multilevel_select_one_as_text_for_sms'
       'select_one'
     else
       psuedo_qtype_name
@@ -15,7 +15,7 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     q_attribs = {
       qtype_name: qtype_name,
       mission: form.mission,
-      use_multilevel_option_set: !!(psuedo_qtype_name =~ /multi_level_select_one/),
+      use_multilevel_option_set: !!(psuedo_qtype_name =~ /multilevel_select_one/),
       use_geo_option_set: !!(psuedo_qtype_name =~ /geo/),
       text_type_for_sms: !!(psuedo_qtype_name =~ /as_text_for_sms/),
       is_standard: form.is_standard?
@@ -50,6 +50,7 @@ FactoryGirl.define do
       option_names nil
     end
 
+    authenticate_sms false
     mission { is_standard ? nil : get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 
@@ -87,7 +88,7 @@ FactoryGirl.define do
             # Multilevel select_one question.
             create(:questioning, mission: mission, form: form, parent: form.root_group,
               question: create(:question, mission: mission, name: 'Question 2', hint: 'Hint 2',
-                qtype_name: 'select_one', option_set: create(:option_set, name: 'Set 2', multi_level: true))),
+                qtype_name: 'select_one', option_set: create(:option_set, name: 'Set 2', multilevel: true))),
 
             # Integer question.
             create(:questioning, mission: mission, form: form, parent: form.root_group,

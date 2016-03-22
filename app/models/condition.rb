@@ -2,7 +2,7 @@ class Condition < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Replicable
 
   # question types that cannot be used in conditions
-  NON_REFABLE_TYPES = %w(location)
+  NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
 
   belongs_to(:questioning, inverse_of: :condition)
   belongs_to(:ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id", inverse_of: :referring_conditions)
@@ -121,7 +121,7 @@ class Condition < ActiveRecord::Base
       bits << ref_qing.code if prefs[:include_code]
 
       if ref_qing.qtype_name == 'select_one'
-        if ref_qing.multi_level?
+        if ref_qing.multilevel?
           # Get the option level for the depth matching the number of options we have.
           level = ref_qing.level(options.size)
           raise "no option level found for depth = #{options.size} for condition #{id}" if level.nil?

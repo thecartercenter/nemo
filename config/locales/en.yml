@@ -46,16 +46,20 @@ en:
     confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
+    less_settings: "Fewer settings"
+    more_settings: "More settings"
     near: "Near"
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
+    not_published: "Not Published"
     ok: "OK"
     or: "or"
     outgoing: "Outgoing"
     pending: "Pending"
     previous: "Previous"
     print: "Print"
+    published: "Published"
     regenerate: "Regenerate"
     remove: "Remove"
     report: "Report"
@@ -253,6 +257,7 @@ en:
         downloads: "Downloads"
         responses: "Responses"
         smsable: "SMSable?"
+        authenticate_sms: "Authenticate SMS?"
         updated_at: "Last Modified"
         version: "Version"
         item_list_heading: "Questions"
@@ -276,7 +281,7 @@ en:
         allow_coordinates: "With Coordinates?"
         answers: "Answers"
         geographic: "Is Geographic?"
-        multi_level: "Is Multilevel?"
+        multilevel: "Is Multilevel?"
         options: "Options"
         option_levels: "Levels"
       qing_group:
@@ -285,6 +290,7 @@ en:
         add: "Add Group"
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
+        repeatable: "Repeatable?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -337,7 +343,7 @@ en:
         viewed_at: "Last Viewed"
       setting:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
-        incoming_sms_number: "Incoming Number(s)"
+        incoming_sms_numbers_str: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
         intellisms_password1: "Password"
         intellisms_password2: "Password Confirmation"
@@ -373,6 +379,7 @@ en:
         pref_lang: "Preferred Language"
         role: "Role"
         api_key: "API Key"
+        sms_auth_code: "SMS Auth Code"
       user_batch:
         file: "File"
 
@@ -406,7 +413,7 @@ en:
         edit: "Edit Mission"
         destroy: "Delete Mission"
       operation:
-        clear: "Clear All Operations"
+        clear: "Clear All Completed Operations"
         destroy: "Clear Operation"
         index: "List Operations"
       option_set:
@@ -446,6 +453,7 @@ en:
       form:
         name: "A descriptive name for the form."
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
+        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an obsever to spoof submissions."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."
         access_level: "Public: Any ELMO user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
@@ -458,7 +466,7 @@ en:
         allow_coordinates: "Whether this option set allows options with geographic coordinates."
         geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
-        multi_level: "Whether the option set has multiple levels of options, such as country -> state -> city."
+        multilevel: "Whether the option set has multiple levels of options, such as country -> state -> city."
         options:
           editable: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
           read_only: "The options that will appear for questions using this option set."
@@ -503,7 +511,7 @@ en:
           This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
-        incoming_sms_number: "Enter the phone number(s) to which incoming SMSes for SMS forms should be sent. This field will be displayed, verbatim, on the SMS guide. Only needed if using SMS submissions."
+        incoming_sms_numbers_str: "Enter the phone number(s) (including country code, separated by commas) to which incoming SMSes for SMS forms should be sent. Only needed if using SMS submissions."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
         using_incoming_sms_token_title: Using the Incoming SMS Token
@@ -534,6 +542,7 @@ en:
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
         api_key: "Use this key to connect to other Elmo applications."
+        sms_auth_code: "Use this code to submit SMS responses."
 
     # all error messages should be full sentences with a period, for consistency.
     errors:
@@ -573,6 +582,9 @@ en:
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions."
           general: "Form is invalid (see below)."
+        media/object:
+          invalid_format: "The uploaded file was not an accepted format."
+          generic: "There was an error uploading the file."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "Please use only letters, numbers, and spaces."
@@ -594,6 +606,7 @@ en:
         option_set_import:
           general: "Option Set import is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
+          wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
         question:
           at_least_one_name: "You must enter a title in at least one language."
           attributes:
@@ -635,6 +648,7 @@ en:
           missing_answers: "Not all questions have answers."
           invalid_answers: "There are invalid answers."
           checked_out: "This response has been checked out by:"
+          form_unavailable: "The specified form does not exist in this mission."
         setting:
           attributes:
             preferred_locales_str:
@@ -1097,7 +1111,7 @@ en:
     edit_option_level: "Edit Option Level"
     huge_notice: "This Option Set is very large (%{count} Options) and thus only a small sample of its Options are displayed below. You may edit its name and other properties here but please use the import/export features to edit the Options themselves."
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
-    multi_level_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
+    multilevel_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
     new_option_level: "New Option Level"
     none_found: "No matching options found"
     searching: "Searching..."
@@ -1105,10 +1119,10 @@ en:
 
   option_set_import:
     instructions_html: |-
-      Upload a spreadsheet with your option set.
+      Upload a spreadsheet with your option set. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 
   operation:
-    clear_confirm: "Are you sure you want to clear all operations?"
+    clear_confirm: "Are you sure you want to clear all completed operations?"
     server_error: "Server error. Please contact support."
     description:
       user_import_operation_job: User import for %{mission_name} from %{file}
@@ -1178,6 +1192,12 @@ en:
     datetime: "Date/Time"
     date: "Date"
     time: "Time"
+    image: "Image"
+    annotated_image: "Annotated Image"
+    signature: "Signature"
+    sketch: "Sketch"
+    audio: "Audio"
+    video: "Video"
 
   recaptcha:
     errors:
@@ -1321,6 +1341,17 @@ en:
     save_and_mark_reviewed: "Save and Mark as Reviewed"
     view_response: "View Response"
     checked_out: "This response has been checked out by:"
+    remove_media_object_confirm:
+      image: "Are you sure you want to delete this image?"
+      audio: "Are you sure you want to delete this audio?"
+      video: "Are you sure you want to delete this video?"
+    upload_progress_notice: "Upload(s) in progress..."
+    drop_message: "Click or drop file here"
+    drop_more_info: "More info"
+    drop_hint:
+      image: "The image should be at most 5 MB in size. Accepted formats are: jpg, png."
+      video: "The video should be at most 25 MB in size. Accepted formats are: 3gp, mp4, webm, mpg, wmv, avi."
+      audio: "The audio should be at most 10 MB in size. Accepted formats are: mp3, ogg, webm, wav."
 
   role:
     role: "Role"
@@ -1669,6 +1700,7 @@ en:
       congrats: "Your response to form '%{form_code}' was received. Thank you!"
       duplicate_answer: "Sorry, your submission contained duplicate answers for question %{rank}."
       duplicate_submission: "Sorry, your response is a duplicate of one submitted recently."
+      first_answer_invalid: "Sorry, but %{token} is not a valid answer. Be sure to include a period after the question number."
       form_not_found: "Sorry, there is no form with code '%{form_code}'."
       form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
       form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."
@@ -1695,7 +1727,7 @@ en:
       step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
       step2: "Now please do the following to send in your data:"
       step2_substeps:
-        - "With your phone, begin an SMS to %{submit_number}."
+        - "With your phone, begin an SMS to one of these numbers: %{submit_numbers}."
         - "Enter the contents of each line on the right side of each page, going from top to bottom."
         - "Be careful that you enter each line exactly. Each line is important."
         - "Notice that each answer is separated by a 'SPC'. Enter a space for each time you see 'SPC'. Do not add any extra spaces."
@@ -1754,8 +1786,9 @@ en:
 
   user_batch:
     instructions_html: |-
-      Upload a spreadsheet with your users. A <a href="%{url}">spreadsheet template</a> is available as a starting point.
+      Upload a spreadsheet with your users. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 
+      A spreadsheet template is available in <a href="%{xlsx_url}">XLSX</a> and <a href="%{csv_url}">CSV</a> formats as a starting point.
   user:
     add_assignment: "Add Assignment"
     api_key:

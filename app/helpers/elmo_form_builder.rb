@@ -63,7 +63,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         }
         data['confirm'] = options.delete(:confirm) if options[:confirm]
 
-        body += @template.button_tag(@template.t("common.#{current ? 'regenerate' : 'generate'}"), :class => 'regenerate btn btn-default btn-xs', :data => data)
+        body += @template.button_tag(@template.t("common.#{current ? 'regenerate' : 'generate'}"),
+          :class => 'regenerate btn btn-default btn-xs', :data => data, :type => "button")
 
         # Loading indicator
         body += @template.loading_indicator(:success_failure => true)

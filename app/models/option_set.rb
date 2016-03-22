@@ -76,7 +76,7 @@ class OptionSet < ActiveRecord::Base
            to: :root_node
 
   # These methods are for the form.
-  attr_writer :multi_level
+  attr_writer :multilevel
 
   # Indicates that this OptionSet is being created to be added to a question of the given type
   attr_accessor :adding_to_question_type
@@ -130,7 +130,7 @@ class OptionSet < ActiveRecord::Base
   end
 
   def levels
-    @levels ||= multi_level? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
+    @levels ||= multilevel? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
   end
 
   def levels=(ls)
@@ -141,20 +141,20 @@ class OptionSet < ActiveRecord::Base
     levels.try(:size)
   end
 
-  def multi_level?
-    defined?(@multi_level) ? @multi_level : (@multi_level = root_node && root_node.has_grandchildren?)
+  def multilevel?
+    defined?(@multilevel) ? @multilevel : (@multilevel = root_node && root_node.has_grandchildren?)
   end
-  alias_method :multi_level, :multi_level?
+  alias_method :multilevel, :multilevel?
 
   def huge?
     root_node.present? ? root_node.huge? : false
   end
 
-  def can_be_multi_level?
-    !(has_select_multiple_questions? || huge? || !question_type_supports_multi_level?)
+  def can_be_multilevel?
+    !(has_select_multiple_questions? || huge? || !question_type_supports_multilevel?)
   end
 
-  def question_type_supports_multi_level?
+  def question_type_supports_multilevel?
     adding_to_question_type != "select_multiple"
   end
 
@@ -264,7 +264,7 @@ class OptionSet < ActiveRecord::Base
     [].tap do |headers|
       headers << self.class.human_attribute_name(:id)
 
-      if multi_level?
+      if multilevel?
         # use the level names as column headings for a multi-level option set
         headers.concat(levels.map(&:name))
       else

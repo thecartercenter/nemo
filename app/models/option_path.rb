@@ -2,7 +2,7 @@
 class OptionPath
   attr_accessor :option_set, :options
 
-  delegate :multi_level?, to: :option_set
+  delegate :multilevel?, to: :option_set
 
   def initialize(attribs = {})
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
@@ -39,7 +39,7 @@ class OptionPath
   def ensure_options_for_all_levels
     self.options ||= []
     level_count.times.each do |i|
-      rank = multi_level? ? i + 1 : nil
+      rank = multilevel? ? i + 1 : nil
       options[i] ||= nil
     end
   end

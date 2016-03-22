@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '4.2.2'
+gem 'rails', '4.2.5'
 
 gem 'sass-rails', '~> 4.0.2'
 gem 'uglifier', '>= 1.3.0'
@@ -17,16 +17,16 @@ gem 'will_paginate'
 gem 'will_paginate-bootstrap'
 gem 'api-pagination'
 gem 'configatron', '~> 4.2'
-gem 'libxml-ruby'
 gem 'rdiscount'
 gem 'jquery-rails'
 gem 'jquery-fileupload-rails'
 gem 'random_data'
 gem 'versionist'                 # versioning the api
 gem 'active_model_serializers'   # for making it easy to customize output for api
+gem 'paperclip'
 
 # Auto rank maintenance for sorted lists.
-gem 'acts_as_list', :git => 'https://github.com/swanandp/acts_as_list', branch: 'master'
+gem 'acts_as_list', git: 'https://github.com/swanandp/acts_as_list', branch: 'master'
 
 gem 'iso-639'
 gem 'responders', '~> 2.0'
@@ -36,7 +36,7 @@ gem 'cancancan', '~> 1.10'
 
 # i18n for js
 # temporary change to deal with rails 3.2.13 bug
-gem 'i18n-js', :git => 'https://github.com/fnando/i18n-js.git', :branch => 'master'
+gem 'i18n-js', git: 'https://github.com/fnando/i18n-js.git', branch: 'master'
 
 # i18n locale data
 gem 'rails-i18n', '~> 4.0.4'
@@ -53,7 +53,7 @@ gem 'dalli'
 gem 'immigrant'
 
 # mean, median, etc.
-gem 'descriptive_statistics', :require => 'descriptive_statistics/safe'
+gem 'descriptive_statistics', require: 'descriptive_statistics/safe'
 
 # underscore templates
 gem 'ejs'
@@ -67,7 +67,7 @@ gem 'thinking-sphinx', '~> 3.1.3'
 gem 'ts-delayed-delta', '~> 2.0.2'
 
 # cron management
-gem 'whenever', :require => false
+gem 'whenever', require: false
 
 # Bootstrap UI framework
 gem 'bootstrap-sass', '~> 3.3.3'
@@ -84,7 +84,7 @@ gem 'rails-backbone', github: 'codebrew/backbone-rails'
 gem 'rack-attack', github: 'sassafrastech/rack-attack'
 
 # reCAPTCHA support
-gem "recaptcha", :require => "recaptcha/rails"
+gem 'recaptcha', require: 'recaptcha/rails'
 
 # XLS support
 gem 'axlsx', '~> 2.1.0.pre'
@@ -104,6 +104,9 @@ gem 'attribute_normalizer'
 
 # Polyfill for the bind function. Some older browsers don't have it.
 gem 'phantomjs_polyfill-rails'
+
+gem 'draper', '~> 2.1'
+gem 'dropzonejs-rails'
 
 group :development do
   gem 'rails-erd'                     # generate with rake db:migrate

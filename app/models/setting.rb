@@ -2,18 +2,17 @@ class Setting < ActiveRecord::Base
   include MissionBased
 
   # attribs to copy to configatron
-  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_number twilio_phone_number twilio_account_sid twilio_auth_token)
+  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_numbers twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
 
-  DEFAULTS = {:timezone => "UTC", :preferred_locales => [:en]}
+  DEFAULT_TIMEZONE = "UTC"
 
   scope(:by_mission, ->(m) { where(:mission_id => m ? m.id : nil) })
 
-  scope(:default, -> { where(DEFAULTS) })
-
-  before_validation(:cleanup_locales)
+  before_validation(:normalize_locales)
+  before_validation(:normalize_incoming_sms_numbers)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)
   before_validation(:normalize_twilio_phone_number)
   before_validation(:clear_sms_fields_if_requested)
@@ -24,6 +23,7 @@ class Setting < ActiveRecord::Base
   before_save(:save_sms_credentials)
 
   serialize :preferred_locales, JSON
+  serialize :incoming_sms_numbers, JSON
 
   # accessors for password/password confirm/clear fields
   attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1, :clear_intellisms, :clear_twilio
@@ -49,16 +49,14 @@ class Setting < ActiveRecord::Base
     return setting
   end
 
-  # builds and returns (but doesn't save) a default Setting object
-  # by using the defaults specified in this file and those specified in the local config
+  # Builds and returns (but doesn't save) a default Setting object
+  # by using defaults specified here and those specified in the local config
   # mission may be nil.
   def self.build_default(mission = nil)
-    # initialize a new setting object with default values
-    setting = by_mission(mission).default.new
-    # preferred_locales from default scope is converted to string
-    # bug in rails 4.2?
+    setting = by_mission(mission).new
+    setting.timezone = DEFAULT_TIMEZONE
     setting.preferred_locales = [:en]
-
+    setting.incoming_sms_numbers = []
     setting.generate_incoming_sms_token if mission.present?
 
     # copy default_settings from configatron
@@ -120,7 +118,6 @@ class Setting < ActiveRecord::Base
     (preferred_locales || []).join(',')
   end
 
-  # reverse of self.lang_codes
   def preferred_locales_str=(codes)
     self.preferred_locales = (codes || '').split(',')
   end
@@ -128,6 +125,14 @@ class Setting < ActiveRecord::Base
   # converts preferred locales to symbols on read
   def preferred_locales
     read_attribute('preferred_locales').map(&:to_sym)
+  end
+
+  def incoming_sms_numbers_str
+    incoming_sms_numbers.join(", ")
+  end
+
+  def incoming_sms_numbers_str=(nums)
+    self.incoming_sms_numbers = (nums || "").split(",").map { |n| PhoneNormalizer.normalize(n) }.compact
   end
 
   # Determines if this setting is read only due to mission being locked.
@@ -138,9 +143,22 @@ class Setting < ActiveRecord::Base
   private
 
     # gets rid of any junk chars in locales
-    def cleanup_locales
+    def normalize_locales
       self.preferred_locales = preferred_locales.map{|l| l.to_s.downcase.gsub(/[^a-z]/, "")[0,2]}
       return true
+    end
+
+    def normalize_twilio_phone_number
+      # Allow for the use of a database that hasn't had the migration run
+      return unless respond_to?(:twilio_phone_number)
+
+      self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
+    end
+
+    def normalize_incoming_sms_numbers
+      # Most normalization is performed in the assignment method.
+      # Here we just ensure no nulls.
+      self.incoming_sms_numbers = [] if incoming_sms_numbers.blank?
     end
 
     # makes sure all language codes are valid ISO639 codes
@@ -220,12 +238,5 @@ class Setting < ActiveRecord::Base
       if mission_id.nil?
         (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each{|a| self.send("#{a}=", nil)}
       end
-    end
-
-    def normalize_twilio_phone_number
-      # Allow for the use of a database that hasn't had the migration run
-      return unless respond_to?(:twilio_phone_number)
-
-      self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
     end
 end

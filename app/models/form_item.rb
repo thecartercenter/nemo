@@ -48,7 +48,6 @@ class FormItem < ActiveRecord::Base
   # Some facts about the hash:
   # * This item itself is not included in the hash.
   # * If an item points to an empty hash, it is a leaf node.
-  # * The hash should be iterated by doing
   def arrange_descendants
     sort = '(case when ancestry is null then 0 else 1 end), ancestry, rank'
     # We eager load questions and option sets since they are likely to be needed.
@@ -66,13 +65,17 @@ class FormItem < ActiveRecord::Base
     end
   end
 
-  # Returns an array of ranks of all parents plus self, e.g. [1,2,1].
+  def ordered_children
+    children.order(:rank)
+  end
+
+  # Returns an array of ranks of all parents plus self, e.g. [2,5].
   # Uses the cached value setup by descendant_questionings if available.
   def full_rank
     @full_rank ||= path.map(&:rank)[1..-1]
   end
 
-  # Returns the full rank joined with a period separator, e.g. 1.2.1.
+  # Returns the full rank joined with a period separator, e.g. 2.5.
   def full_dotted_rank
     @full_dotted_rank ||= full_rank.join('.')
   end

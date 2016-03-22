@@ -8,7 +8,7 @@ feature 'responses form', js: true, sphinx: true do
 
   describe 'general' do # This should be refactored to split into different scenarios.
     before do
-      @form = create(:form, question_types: %w(select_one multi_level_select_one select_multiple integer decimal
+      @form = create(:form, question_types: %w(select_one multilevel_select_one select_multiple integer decimal
         location text long_text datetime date time))
       @qings = @form.questionings
       @form.publish!
@@ -92,8 +92,8 @@ feature 'responses form', js: true, sphinx: true do
 
       # Ensure response saved properly.
       click_link(Response.first.id.to_s)
-      expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
-      expect(page).to have_selector("div.form_field#qing_#{@qing0.id} .ro-val", text: 'Foo')
+      expect(page).not_to have_selector("[data-qing-id=\"#{@qing1.id}\"]")
+      expect(page).to have_selector("[data-qing-id=\"#{@qing0.id}\"] .ro-val", text: 'Foo')
     end
   end
 
@@ -153,8 +153,27 @@ feature 'responses form', js: true, sphinx: true do
     end
   end
 
-  def control_id(qing, suffix)
-    "response_answers_attributes_#{qing.id}#{suffix}"
+  describe 'repeat groups' do
+    before do
+      @form = create(:form, question_types: ['select_one', ['integer', 'text', 'multilevel_select_one'], 'text'])
+      @group = @form.child_groups.first
+      @group.update_attribute(:repeatable, true)
+      @qings = @form.questionings
+      @form.publish!
+      login(@user)
+    end
+
+    scenario 'should let you add two instances' do
+      visit_submit_page_and_select_user
+
+      select 'Cat', from: control_id(@qings[0], '_option_id')
+      find("a.add-instance").click
+      fill_in control_id(@qings[1], '_value', inst_num: 2), with: 10
+    end
+  end
+
+  def control_id(qing, suffix, inst_num: 1)
+    "response_answers_attributes_#{qing.id}_#{inst_num}#{suffix}"
   end
 
   def visit_submit_page_and_select_user
@@ -168,9 +187,9 @@ feature 'responses form', js: true, sphinx: true do
 
   def expect_answer(qing_idx, value)
     qing = @qings[qing_idx]
-    csscls = qing.multi_level? ? 'option-name' : 'ro-val'
+    csscls = qing.multilevel? ? 'option-name' : 'ro-val'
     Array.wrap(value).each do |v|
-      expect(page).to have_selector("#qing_#{qing.id} .#{csscls}", text: /^#{Regexp.escape(v)}$/)
+      expect(page).to have_selector("[data-qing-id=\"#{qing.id}\"] .#{csscls}", text: /^#{Regexp.escape(v)}$/)
     end
   end
 

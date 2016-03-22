@@ -15,7 +15,7 @@
       wrapper: params.wrapper,
       modal: params.modal,
       options_levels_read_only: params.options_levels_read_only,
-      multi_level: true,
+      multilevel: true,
       can_reorder: self.params.can_reorder,
       can_remove: self.params.can_remove,
       edit_link: self.params.edit_link,

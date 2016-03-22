@@ -5,6 +5,7 @@ require File.expand_path('../application', __FILE__)
 ELMO::Application.initialize!
 
 # Standard date-time format
+Time::DATE_FORMATS[:std_datetime_with_tz] = "%Y-%m-%d %H:%M %Z"
 Time::DATE_FORMATS[:std_datetime] = "%Y-%m-%d %H:%M"
 Time::DATE_FORMATS[:std_date] = "%Y-%m-%d"
 Time::DATE_FORMATS[:std_time] = "%H:%M"

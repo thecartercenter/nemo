@@ -1,5 +1,5 @@
 class WelcomeController < ApplicationController
-  include ReportEmbeddable
+  include ReportEmbeddable, ResponseIndexable
 
   # Don't need to authorize since we manually redirect to login if no user.
   # This is because anybody is 'allowed' to see the root and letting the auth system handle things
@@ -57,6 +57,7 @@ class WelcomeController < ApplicationController
 
       # load objects for the view
       @responses = accessible_responses.with_basic_assoc.with_basic_answers.paginate(:page => 1, :per_page => 20)
+      decorate_responses
 
       # total responses for this mission
       @total_response_count = accessible_responses.count

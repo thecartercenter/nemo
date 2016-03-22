@@ -43,6 +43,7 @@
     <% end %>
   <% end %>
   <%= f.regenerable_field(:api_key) if !@user.new_record? && can?(:regenerate_api_key, @user) %>
+  <%= f.regenerable_field(:sms_auth_code) if !@user.new_record? && can?(:regenerate_sms_auth_code, @user) %>
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
   </div>

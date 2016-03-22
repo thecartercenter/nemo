@@ -69,6 +69,12 @@ ELMO::Application.routes.draw do
       end
     end
 
+    namespace :media, type: /audios|images|videos/ do
+      get ':type/:id(/:style)' => 'objects#show', defaults: { style: 'original' }
+      post ':type' => 'objects#create', as: :create
+      delete ':type/:id' => 'objects#delete', as: :delete
+    end
+
     # need to list these all separately b/c rails is dumb sometimes
     resources :answer_tally_reports, controller: 'reports'
     resources :response_tally_reports, controller: 'reports'
@@ -154,6 +160,7 @@ ELMO::Application.routes.draw do
       member do
         get 'login_instructions', path: 'login-instructions'
         post 'regenerate_api_key'
+        post 'regenerate_sms_auth_code'
       end
       collection do
         post 'export'

@@ -39,6 +39,7 @@ class Question < ActiveRecord::Base
   scope(:default_order, -> { by_code })
   scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
   scope(:with_forms, -> { includes(:forms) })
+  scope(:reportable, -> { where.not(qtype_name: %w(image annotated_image signature sketch audio video)) })
 
   # fetches association counts along with the questions
   # accounts for copies with standard questions
@@ -66,6 +67,7 @@ class Question < ActiveRecord::Base
            :temporal?,
            :numeric?,
            :printable?,
+           :multimedia?,
            :odk_tag,
            :odk_name,
            :to => :qtype
@@ -76,7 +78,7 @@ class Question < ActiveRecord::Base
            :first_level_options,
            :option_path_to_rank_path,
            :rank_path_to_option_path,
-           :multi_level?,
+           :multilevel?,
            :level_count,
            :level,
            :levels,
@@ -101,7 +103,7 @@ class Question < ActiveRecord::Base
       Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
       Search::Qualifier.new(name: "title", col: "questions.name_translations", type: :translated, default: true),
       Search::Qualifier.new(name: "type", col: "questions.qtype_name", preprocessor: ->(s){ s.gsub(/[\-]/, '_') }),
-      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags),
+      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags, :type => :text),
     ]
   end
 
@@ -119,10 +121,10 @@ class Question < ActiveRecord::Base
   end
 
   def subquestions
-    @subquestions ||= if multi_level?
+    @subquestions ||= if multilevel?
       levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
     else
-      [Subquestion.new(question: self)]
+      [Subquestion.new(question: self, rank: 1)]
     end
   end
 

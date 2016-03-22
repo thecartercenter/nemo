@@ -10,7 +10,7 @@ describe 'settings' do
     expect(response).to be_success
 
     # ensure default timezone got loaded
-    expect(Time.zone.name).to eq(Setting::DEFAULTS[:timezone])
+    expect(Time.zone.name).to eq(Setting::DEFAULT_TIMEZONE)
   end
 
   context 'with logged in user' do
@@ -39,21 +39,21 @@ describe 'settings' do
       post(missions_path, mission: {name: "Foo"})
       follow_redirect!
       expect(response).to be_success
-      expect(Mission.find_by_name("Foo").setting.timezone).to eq(Setting::DEFAULTS[:timezone])
+      expect(Mission.find_by_name("Foo").setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
 
       # change to that mission and see that timezone changed
       get("/en/m/foo")
-      expect(Time.zone.name).to eq(Setting::DEFAULTS[:timezone])
+      expect(Time.zone.name).to eq(Setting::DEFAULT_TIMEZONE)
     end
 
     it "settings revert to defaults on logout" do
       # Switch to a mission with known funny timezone and make sure timezone not UTC.
       get(mission_root_path(mission_name: get_mission.compact_name))
-      expect(Time.zone.name).not_to eq(Setting::DEFAULTS[:timezone])
+      expect(Time.zone.name).not_to eq(Setting::DEFAULT_TIMEZONE)
 
       # logout and ensure timezone reverts to UTC
       logout
-      expect(Time.zone.name).to eq(Setting::DEFAULTS[:timezone])
+      expect(Time.zone.name).to eq(Setting::DEFAULT_TIMEZONE)
     end
 
     it "locales should get copied properly" do

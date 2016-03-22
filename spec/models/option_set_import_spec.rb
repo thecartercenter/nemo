@@ -74,6 +74,27 @@ describe OptionSetImport do
     expect(succeeded).to be_falsy
   end
 
+  it 'should successfully import csv option set' do
+    name = "CSV Set"
+
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: fixture("simple.csv"))
+
+    succeeded = import.create_option_set
+    expect(succeeded).to be_truthy
+
+    option_set = import.option_set
+
+    expect(option_set).to have_attributes(
+      name: name,
+      geographic?: false)
+
+    expect(option_set.levels).to be_nil
+    expect(option_set.level_names).to include('en' => 'Province')
+
+    expect(option_set.total_options).to eq(26)
+    expect(option_set.all_options).to include(have_attributes(canonical_name: "Kinshasa"))
+  end
+
   private
 
     def fixture(name)

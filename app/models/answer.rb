@@ -1,10 +1,28 @@
+# An Answer is a single piece of data in response to a single question or sub-question.
+#
+# A note about rank/inst_num attributes
+#
+# rank:
+# - The rank of the answer within a given set of answers for a multilevel select question.
+# - Starts at 1 (top level) and increases
+# - Should be 1 for non-multilevel questions
+#
+# inst_num:
+# - The number of the set of answers in which this answer belongs
+# - Starts at 1 (first instance) and increases
+# - e.g. if a response has three instances of a given group, values will be 1, 2, 3, and
+#   there will be N answers in instance 1, N in instance 2, etc., where N is the number of Q's in the group
+# - Should be 1 for answers to top level questions and questions in non-repeating groups
+# - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
+#
 class Answer < ActiveRecord::Base
   include ActionView::Helpers::NumberHelper
 
-  belongs_to(:questioning, :inverse_of => :answers)
-  belongs_to(:option, :inverse_of => :answers)
-  belongs_to(:response, :inverse_of => :answers, :touch => true)
-  has_many(:choices, :dependent => :destroy, :inverse_of => :answer, :autosave => true)
+  belongs_to(:questioning, inverse_of: :answers)
+  belongs_to(:option, inverse_of: :answers)
+  belongs_to(:response, inverse_of: :answers, touch: true)
+  has_many(:choices, dependent: :destroy, inverse_of: :answer, autosave: true)
+  has_one(:media_object, dependent: :destroy, autosave: true, class_name: 'Media::Object')
 
   before_validation(:clean_locations)
   before_save(:replicate_location_values)
@@ -16,20 +34,21 @@ class Answer < ActiveRecord::Base
     choices.destroy(*choices.reject(&:checked?))
   end
 
-  validates(:value, :numericality => true, :if => ->(a){ a.should_validate?(:numericality) })
+  validates(:value, numericality: true, if: ->(a){ a.should_validate?(:numericality) })
 
   # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
   # since this class really just represents one value
-  validate(:min_max, :if => ->(a){ a.should_validate?(:min_max) })
-  validate(:required, :if => ->(a){ a.should_validate?(:required) })
+  validate(:min_max, if: ->(a){ a.should_validate?(:min_max) })
+  validate(:required, if: ->(a){ a.should_validate?(:required) })
 
   accepts_nested_attributes_for(:choices)
 
-  delegate :question, :qtype, :required?, :hidden?, :option_set, :options, :condition, :to => :questioning
-  delegate :name, :hint, :to => :question, :prefix => true
+  delegate :question, :qtype, :required?, :hidden?, :multimedia?, :option_set, :options, :condition, to: :questioning
+  delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
+  delegate :mission, to: :response
 
-  scope :public_access, -> { joins(:questioning => :question).
+  scope :public_access, -> { joins(questioning: :question).
     where("questions.access_level = 'inherit'") }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
@@ -38,7 +57,7 @@ class Answer < ActiveRecord::Base
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
   def self.location_answers_for_mission(mission, user = nil, options = {})
-    response_conditions = { :mission_id => mission.try(:id) }
+    response_conditions = { mission_id: mission.try(:id) }
 
     # if the user is not a staffer or higher privilege, only show their own responses
     if user.present? && !user.role?(:staffer, mission)
@@ -48,7 +67,7 @@ class Answer < ActiveRecord::Base
     # return an AR relation
     joins(:response)
       .joins(%{LEFT JOIN `choices` ON `choices`.`answer_id` = `answers`.`id`})
-      .where(:responses => response_conditions)
+      .where(responses: response_conditions)
       .where(%{
         (`answers`.`latitude` IS NOT NULL AND `answers`.`longitude` IS NOT NULL)
         OR (`choices`.`latitude` IS NOT NULL AND `choices`.`longitude` IS NOT NULL)
@@ -57,7 +76,7 @@ class Answer < ActiveRecord::Base
         %{COALESCE(`answers`.`latitude`, `choices`.`latitude`) AS `latitude`,
           COALESCE(`answers`.`longitude`, `choices`.`longitude`) AS `longitude`})
       .order('`answers`.`response_id` DESC')
-      .paginate(:page => 1, :per_page => 1000)
+      .paginate(page: 1, per_page: 1000)
   end
 
   # Tests if there exists at least one answer referencing the option and questionings with the given IDs.
@@ -95,7 +114,7 @@ class Answer < ActiveRecord::Base
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
   def level
-    option_set.try(:multi_level?) ? option_set.levels[(rank || 1) - 1] : nil
+    option_set.try(:multilevel?) ? option_set.levels[(rank || 1) - 1] : nil
   end
 
   def choices_by_option
@@ -132,18 +151,6 @@ class Answer < ActiveRecord::Base
     end
   end
 
-  # Returns a formatted string based on casted_value, or nil if casted_value is nil.
-  def formatted_value
-    cv = casted_value
-    return nil if cv.nil?
-    case qtype.name
-    when 'datetime', 'date', 'time'
-      cv.to_s(:"std_#{qtype.name}")
-    else
-      casted_value
-    end
-  end
-
   # relevant defaults to true until set otherwise
   def relevant?
     @relevant.nil? ? true : @relevant
@@ -169,7 +176,8 @@ class Answer < ActiveRecord::Base
 
   # check various fields for blankness
   def empty?
-    value.blank? && time_value.blank? && date_value.blank? && datetime_value.blank? && option_id.nil?
+    value.blank? && time_value.blank? && date_value.blank? &&
+      datetime_value.blank? && option_id.nil? && media_object.nil?
   end
   alias_method :blank?, :empty?
 
@@ -181,6 +189,8 @@ class Answer < ActiveRecord::Base
   def should_validate?(field)
     # don't validate if response says no
     return false if response && !response.validate_answers?
+
+    return false if marked_for_destruction?
 
     case field
     when :numericality
@@ -212,6 +222,10 @@ class Answer < ActiveRecord::Base
     end
   end
 
+  def from_group?
+    questioning && questioning.parent && questioning.parent.type == 'QingGroup'
+  end
+
   def option_name
     option.canonical_name if option
   end
@@ -222,6 +236,26 @@ class Answer < ActiveRecord::Base
 
   def lat_lng
     latitude.present? && longitude.present? ? [latitude, longitude] : nil
+  end
+
+  # Used with nested attribs
+  def media_object_id
+    media_object.try(:id)
+  end
+
+  # Used with nested attribs
+  # Attempts to find unassociated media object with given ID and assoicate with this answer.
+  # Fails silently if not found.
+  def media_object_id=(id)
+    if id.nil?
+      self.media_object = nil
+    elsif media_object_id != id.to_i
+      self.media_object = Media::Object.find_by(id: id, answer_id: nil)
+    end
+  end
+
+  def has_media_object?
+    !media_object_id.nil?
   end
 
   private
@@ -251,8 +285,8 @@ class Answer < ActiveRecord::Base
     def clean_locations
       if simple_location_answer?
         if value.match(configatron.lat_lng_regexp)
-          lat = number_with_precision($1.to_f, :precision => 6)
-          lng = number_with_precision($3.to_f, :precision => 6)
+          lat = number_with_precision($1.to_f, precision: 6)
+          lng = number_with_precision($3.to_f, precision: 6)
           self.value = "#{lat} #{lng}"
         else
           self.value = ""

@@ -93,16 +93,11 @@ module ApplicationHelper
 
   # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
   def prepare_for_index(objs)
-    objs = if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
+    if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
       objs.paginate(:page => 1, :per_page => 1000000)
     else
       objs
     end
-
-    # ensure .to_a gets called so that a bunch of extra queries don't get triggered
-    objs = objs.to_a if objs.respond_to?(:to_a)
-
-    objs
   end
 
   def translate_model(model)
@@ -150,7 +145,7 @@ module ApplicationHelper
   end
 
   def h1_title
-    content_tag(:h1, title, class: 'title')
+    content_tag(:h1, title, class: "title")
   end
 
   # pluralizes an activerecord model name
@@ -199,6 +194,11 @@ module ApplicationHelper
     end
 
     message
+  end
+
+  # pill label
+  def pill_label(text, kind: 'default')
+    content_tag(:span, text, class: "label label-#{kind}")
   end
 
   # makes a set of <li> wrapped links to the index actions of the given classes

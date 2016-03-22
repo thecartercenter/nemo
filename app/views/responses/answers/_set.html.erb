@@ -1,0 +1,39 @@
+<% mode = read_only ? "read_only" : "editable" %>
+<div class="form_field answer_field qtype_<%= set.qtype.name %> <%= mode %>"
+  data-qtype-name="<%= set.qtype.name %>"
+  data-qing-id="<%= set.questioning_id %>"
+  data-inst-num="<%= inst_num %>">
+
+  <div class="label_and_control">
+    <label class="main">
+      <%= reqd_sym if set.required? %>
+      <%= set.question_name || "[#{t('answer.no_name')}]" %>:
+    </label>
+    <div class="control">
+      <% if set.multilevel? %>
+        <%= render("responses/answers/cascading_#{mode}",
+              answer_set: set,
+              index: "#{set.questioning_id}_#{inst_num}",
+              inst_num: inst_num) %>
+      <% else %>
+        <%= render("responses/answers/single_#{mode}",
+              answer: set.answers.first,
+              index: "#{set.questioning_id}_#{inst_num}",
+              inst_num: inst_num) %>
+      <% end %>
+    </div>
+  </div>
+
+  <% if form_mode && set.question_hint.present? %>
+    <a href="#" rel="popover" class="hint" data-content="<%= set.question_hint %>"
+      ><i class="hint fa fa-2x fa-info-circle"></i></a>
+  <% end %>
+</div>
+
+<%# Setup condition js object if a condition exists. %>
+<%# Note that we need to do this in any form mode, even show. %>
+<% if set.condition %>
+  <%= javascript_doc_ready do %>
+    (new ELMO.Views.ConditionChecker(<%=json set.condition %>, <%=json inst_num %>)).init();
+  <% end %>
+<% end %>

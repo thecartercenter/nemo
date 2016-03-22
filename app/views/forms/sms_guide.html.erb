@@ -40,15 +40,15 @@
     </tr>
 
     <%# loop over each question %>
-    <% @form.smsable_questionings.each do |qing| %>
+    <% @form.smsable_questionings.each do |index, qing| %>
       <tr>
-        <td class="rank"><%= qing.full_dotted_rank %>.</td>
+        <td class="rank"><%= index %>.</td>
         <td class="question">
           <%= qing.question.name %>
           <%= reqd_sym if qing.required? %>
         </td>
         <td class="answers">
-          <%= answer_space(" #{qing.rank}.") %>
+          <%= answer_space(" #{index}.") %>
         </td>
       </tr>
 
@@ -88,7 +88,7 @@
         <ol>
           <% t("sms_form.guide.step2_substeps").each do |ss| %>
             <%# OK to use html_safe here because we control the substep text and we're manually escaping the number. %>
-            <li><%= ss.gsub("%{submit_number}", html_escape(submit_number)).html_safe %></li>
+            <li><%= ss.gsub("%{submit_numbers}", html_escape(submit_numbers)).html_safe %></li>
           <% end %>
         </ol>
         <%= t("common.thanks_excl") %>
