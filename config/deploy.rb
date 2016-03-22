@@ -73,9 +73,11 @@ namespace :deploy do
     # Directories
     run "mkdir -p #{shared_path}/tmp"
     run "mkdir -p #{shared_path}/log"
+    run "mkdir -p #{shared_path}/uploads"
     run "mkdir -p #{shared_path}/db/sphinx/#{rails_env}"
     run "mkdir -p #{release_path}/db/sphinx"
     run "ln -nfs #{shared_path}/tmp #{release_path}/tmp"
+    run "ln -nfs #{shared_path}/uploads #{release_path}/uploads"
     run "ln -nfs #{shared_path}/log #{release_path}/log"
     run "ln -nfs #{shared_path}/db/sphinx/#{rails_env} #{release_path}/db/sphinx/#{rails_env}"
 
