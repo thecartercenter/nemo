@@ -7,6 +7,17 @@ describe Report::Gridable do
     @form = create(:form, question_types: %w(select_one integer text))
   end
 
+  describe "cache_key" do
+    before do
+      @report = create(:list_report, _calculations: ['submitter', 'source'])
+    end
+
+    it "should be correct" do
+      expect(@report.cache_key).to match(
+        %r{\Areport/list_reports/\d+-\d+//calcs-2-/report/identity_calculations/\d+-\d+\z})
+    end
+  end
+
   context 'calculation destruction' do
     before do
       @report = create(:list_report, _calculations: ['submitter', 'source'])
