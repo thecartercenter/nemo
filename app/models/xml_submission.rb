@@ -109,7 +109,7 @@ class XMLSubmission
       val = val.to_s(:"db_#{qtype.name}") unless qtype.has_timezone?
 
       answer.send("#{qtype.name}_value=", val)
-    when "image", "annotated_image", "sketch"
+    when "image", "annotated_image", "sketch", "signature"
       answer.media_object = Media::Image.create(item: @files[str].open) if @files[str]
     when "audio"
       answer.media_object = Media::Audio.create(item: @files[str].open) if @files[str]
