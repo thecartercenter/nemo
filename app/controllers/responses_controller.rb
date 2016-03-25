@@ -102,8 +102,14 @@ class ResponsesController < ApplicationController
     # if this is a non-web submission
     if request.format == Mime::XML
 
-      # if the method is HEAD or GET just render the 'no content' status since that's what odk wants!
-      if %w(HEAD GET).include?(request.method)
+
+      if request.method == "HEAD"
+        # For HEAD requests, ODK wants a 204 code with a Location header for some strange reason.
+        response.headers["Location"] = request.original_url
+        render(nothing: true, status: 204)
+
+      elsif request.method == "GET"
+        # This is what ODK wants for a GET request
         render(nothing: true, status: 204)
 
       # otherwise, we should process the submission
