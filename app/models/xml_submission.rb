@@ -1,15 +1,18 @@
 class XMLSubmission
   attr_accessor :response, :data
 
-  def initialize(response: nil, files: nil, source: nil)
+  def initialize(response: nil, files: nil, source: nil, data: nil)
     @response = response
-    @data = files.delete(:xml_submission_file).read
-    @files = files
+    @data = data
     @response.source = source
     case source
     when "odk"
+      @data = files.delete(:xml_submission_file).read
+      @files = files
       populate_from_odk(@data)
     when "j2me"
+      @data = data
+      @files = files
       populate_from_j2me(@data)
     end
   end
