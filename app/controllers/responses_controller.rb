@@ -110,15 +110,12 @@ class ResponsesController < ApplicationController
           upfile = params[:xml_submission_file]
           files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
           files.each { |k, v| files[k] = v.tempfile }
-          Rails.logger.ap files
 
           unless upfile
             render_xml_submission_failure("No XML file attached.", 422)
             return false
           end
 
-          # xml = upfile.read
-          # Rails.logger.info("----------\nXML submission:\n#{xml}\n----------")
           XMLSubmission.new response: @response, files: files, source: "odk"
         end
 
