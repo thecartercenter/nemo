@@ -1,6 +1,7 @@
 class FormsController < ApplicationController
   include StandardImportable
   include BatchProcessable
+  include OdkHeaderable
   helper OdkHelper
 
   # special find method before load_resource
@@ -240,12 +241,6 @@ class FormsController < ApplicationController
       (params[:whitelistings] || []).each do |api_user|
         @form.whitelistings.new(user_id: api_user)
       end
-    end
-
-    # adds the appropriate headers for openrosa content
-    def render_openrosa
-      render(content_type: "text/xml") if request.format.xml?
-      response.headers['X-OpenRosa-Version'] = "1.0"
     end
 
     # prepares objects and renders the form template

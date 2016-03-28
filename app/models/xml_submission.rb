@@ -17,6 +17,31 @@ class XMLSubmission
     end
   end
 
+  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
+  def populate_from_hash(hash)
+    # Response mission should already be set
+    raise "Submissions must have a mission" if @response.mission.nil?
+
+    @response.form.visible_questionings.each do |qing|
+      qing.subquestions.each do |subq|
+        value = hash[subq.odk_code]
+        if value.is_a? Array
+          value.each_with_index do |val, i|
+            answer = Answer.new(questioning: qing, rank: subq.rank, inst_num: i + 1)
+            answer = populate_from_string(answer, val)
+            @response.answers << answer
+          end
+        else
+          answer = Answer.new(questioning: qing, rank: subq.rank)
+          answer = populate_from_string(answer, value)
+          @response.answers << answer
+        end
+      end
+    end
+    @response.incomplete = (hash[OdkHelper::IR_QUESTION] == "yes")
+  end
+
+
   private
   # Checks if form ID and version were given, if form exists, and if version is correct
   def lookup_and_check_form(params)
@@ -37,7 +62,6 @@ class XMLSubmission
 
   def populate_from_odk(xml)
     data = Nokogiri::XML(xml).root
-    Rails.logger.ap xml
     lookup_and_check_form(id: data["id"], version: data["version"])
 
     # Loop over each child tag and create hash of odk_code => value
@@ -66,33 +90,9 @@ class XMLSubmission
     populate_from_hash(data)
   end
 
-  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
-  def populate_from_hash(hash)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if @response.mission.nil?
-
-    @response.form.visible_questionings.each do |qing|
-      qing.subquestions.each do |subq|
-        value = hash[subq.odk_code]
-        if value.is_a? Array
-          value.each_with_index do |val, i|
-            answer = Answer.new(questioning: qing, rank: subq.rank, inst_num: i + 1)
-            answer = populate_from_string(answer, val)
-            @response.answers << answer
-          end
-        else
-          answer = Answer.new(questioning: qing, rank: subq.rank)
-          answer = populate_from_string(answer, value)
-          @response.answers << answer
-        end
-      end
-    end
-    @response.incomplete = (hash[OdkHelper::IR_QUESTION] == "yes")
-  end
-
   # Populates answer from odk-like string value.
   def populate_from_string(answer, str)
-    return if str.nil?
+    return answer if str.nil?
 
     question_type = answer.qtype
 
@@ -101,10 +101,10 @@ class XMLSubmission
       # 'none' will be returned for a blank choice for a multilevel set.
       answer.option_id = option_id_for_submission(str) unless str == "none"
     when "select_multiple"
-      str.split(' ').each{ |oid| answer.choices.build(option_id: option_id_for_submission(oid)) }
+      str.split(" ").each { |oid| answer.choices.build(option_id: option_id_for_submission(oid)) }
     when question_type.temporal?
       # Strip timezone info for datetime and time.
-      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, '') unless answer.qtype.name == "date"
+      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, "") unless answer.qtype.name == "date"
 
       val = Time.zone.parse(str)
 

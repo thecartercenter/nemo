@@ -1,6 +1,6 @@
 module ODKSubmissionSupport
   ODK_XML_FILE = 'odk_xml_file.xml'
-  
+
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)
     if xml.nil?
@@ -19,17 +19,6 @@ module ODKSubmissionSupport
     post(path, {xml_submission_file: uploaded, format: "xml"},
       "HTTP_AUTHORIZATION" => encode_credentials(@user.login, test_password))
     assigns(:response)
-  end
-
-  def build_odk_media_submission(form, files)
-    "".tap do |xml|
-      xml << "<?xml version='1.0' ?><data id='#{form.id}' version='#{form.current_version.sequence}'>"
-      descendants = form.arrange_descendants
-
-      descendants.each_with_index do |qing, subtree|
-        xml << "<#{qing.question.odk_code}>#{files[i]}</#{qing.question.odk_code}>"
-      end
-    end
   end
 
   # Build a sample xml submission for the given form (assumes all questions are integer questions)

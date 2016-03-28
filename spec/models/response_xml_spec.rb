@@ -1,7 +1,7 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Response do
-  describe 'populate_from_hash' do
+  describe "populate_from_hash" do
     before do
       @form = create(:form, question_types: %w(select_one multilevel_select_one select_multiple integer multilevel_select_one))
       @qs = @form.questions
@@ -14,17 +14,17 @@ describe Response do
       @animal = @qs[4].option_set.c[0]
     end
 
-    it 'should work' do
+    it "should work" do
       resp = build(:response, form: @form, mission: @form.mission)
       resp.send(:populate_from_hash, {
         "q#{@qs[0].id}" => "on#{@cat.id}",
         "q#{@qs[1].id}_1" => "on#{@plant.id}",
         "q#{@qs[1].id}_2" => "on#{@oak.id}",
         "q#{@qs[2].id}" => "on#{@cat2.id} on#{@dog2.id}",
-        "q#{@qs[3].id}" => '123',
+        "q#{@qs[3].id}" => "123",
         "q#{@qs[4].id}_1" => "on#{@animal.id}",
-        "q#{@qs[4].id}_2" => 'none',
-        })
+        "q#{@qs[4].id}_2" => "none",
+      })
       resp.save!
 
       nodes = AnswerArranger.new(resp).build.nodes
@@ -40,7 +40,7 @@ describe Response do
       expect(nodes[2].set.answers[0].choices.map(&:option)).to eq [@cat2.option, @dog2.option]
       expect(nodes[2].set.answers[0].rank).to eq 1
 
-      expect(nodes[3].set.answers[0].value).to eq '123'
+      expect(nodes[3].set.answers[0].value).to eq "123"
       expect(nodes[3].set.answers[0].rank).to eq 1
 
       expect(nodes[4].set.answers[0].option).to eq @animal.option
