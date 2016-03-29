@@ -352,8 +352,8 @@ class OptionSet < ActiveRecord::Base
   end
 
   def fetch_by_shortcode(shortcode)
-    sequence = shortcode - shortcode_offset
-    descendants.where(sequence: sequence).limit(1)
+    sequence = shortcode.to_i(36) - shortcode_offset
+    descendants.find_by(sequence: sequence)
   end
 
   # Returns a string representation, including options, for the default locale.

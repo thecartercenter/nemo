@@ -23,7 +23,7 @@ FactoryGirl.define do
       elsif geographic
         OptionNodeSupport::GEO_SINGLE_LEVEL_ATTRIBS
       else
-        option_names.map{ |n| { 'option_attribs' => { 'name_translations' => {'en' => n} } } }
+        option_names.map{ |n| { "option_attribs" => { "name_translations" => {"en" => n} } } }
       end
     end
 

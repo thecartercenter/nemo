@@ -11,6 +11,10 @@ module Base36
   end
 
   def self.offset(length)
-    36 ** (length - 1)
+    if length > 1
+      36 ** (length - 1)
+    else
+      0
+    end
   end
 end
