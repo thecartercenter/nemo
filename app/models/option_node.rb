@@ -293,7 +293,6 @@ class OptionNode < ActiveRecord::Base
   end
 
   def shortcode
-    # Rails.logger.ap self
     @shortcode = Base36.to_padded_base36(sequence, length: shortcode_length)
   end
 
