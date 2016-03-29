@@ -105,7 +105,7 @@ class ResponsesController < ApplicationController
         @response.user_id = current_user.id
         # If it looks like a J2ME submission, process accordingly
         if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
-          XMLSubmission.new response: @response, data: params[:data], source: "j2me"
+          @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
         else # Otherwise treat it like an ODK submission
           upfile = params[:xml_submission_file]
           files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
@@ -116,15 +116,16 @@ class ResponsesController < ApplicationController
             return false
           end
 
-          XMLSubmission.new response: @response, files: files, source: "odk"
+          @response.incomplete = true if params["*isIncomplete*"] == "yes"
+          @submission = XMLSubmission.new response: @response, files: files, source: "odk"
         end
 
         # ensure response's user can submit to the form
-        authorize!(:submit_to, @response.form)
+        authorize!(:submit_to, @submission.response.form)
 
         # save without validating, as we have no way to present validation errors to user,
         # and submitting apps already do validation
-        @response.save(validate: false)
+        @submission.save(validate: false)
 
         render(nothing: true, status: 201)
       rescue CanCan::AccessDenied

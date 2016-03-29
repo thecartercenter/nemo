@@ -3,12 +3,13 @@ class XMLSubmission
 
   def initialize(response: nil, files: nil, source: nil, data: nil)
     @response = response
-    @data = data
     @response.source = source
     case source
     when "odk"
       @data = files.delete(:xml_submission_file).read
       @files = files
+      check_for_existing_response
+      @response.odk_hash = generate_odk_hash if @response.incomplete
       populate_from_odk(@data)
     when "j2me"
       @data = data
@@ -34,13 +35,16 @@ class XMLSubmission
         else
           answer = Answer.new(questioning: qing, rank: subq.rank)
           answer = populate_from_string(answer, value)
-          @response.answers << answer
+          @response.answers << answer if answer
         end
       end
     end
-    @response.incomplete = (hash[OdkHelper::IR_QUESTION] == "yes")
+    @response.incomplete ||= (hash[OdkHelper::IR_QUESTION] == "yes")
   end
 
+  def save(validate: true)
+    @response.save(validate: validate)
+  end
 
   private
   # Checks if form ID and version were given, if form exists, and if version is correct
@@ -121,7 +125,8 @@ class XMLSubmission
     else
       answer.value = str
     end
-
+    # nullify answers if string suggests multimedia answer but no file present to make multi-chunk submissions work
+    answer = nil if (question_type.multimedia? && answer.media_object.blank?)
     answer
   end
 
@@ -134,5 +139,14 @@ class XMLSubmission
       # look up other inputs as option ids
       Option.where(id: id_or_str).pluck(:id).first
     end
+  end
+
+  def generate_odk_hash
+    @odk_hash ||= Digest::SHA256.base64digest @data
+  end
+
+  def check_for_existing_response
+    response = Response.find_by(odk_hash: generate_odk_hash)
+    @response = response if response.present?
   end
 end

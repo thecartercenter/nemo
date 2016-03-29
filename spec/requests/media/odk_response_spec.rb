@@ -41,31 +41,34 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       image2 = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
 
-      submission_path = Rails.root.join("spec", "expectations", "odk", "responses", "multiple_part_medi.xml")
+      submission_path = Rails.root.join("spec", "expectations", "odk", "responses", "multiple_part_media.xml")
       submission_file = fixture_file_upload(submission_path, "text/xml")
 
       # Submit first part
       post submission_path(@mission), {
         xml_submission_file: submission_file,
         "the_swing.jpg" => image,
-        "*isincomplete*" => "yes"},
+        "*isIncomplete*" => "yes"},
         "HTTP_AUTHORIZATION" => encode_credentials(@user.login, test_password)
       expect(response).to have_http_status 201
+      expect(Response.count).to eq 1
 
       # Submit second part
       post submission_path(@mission), {
         xml_submission_file: submission_file,
         "another_swing.jpg" => image2 },
         "HTTP_AUTHORIZATION" => encode_credentials(@user.login, test_password)
-      expect(response).to have_http_status 201
 
-      # form_response = Response.last
-      # expect(form_response.form).to eq @form
-      # expect(form_response.answers.count).to eq 2
-      #
-      # form_response.answers.each do |answer|
-      #   expect(answer.media_object).to be_present
-      # end
+      expect(response).to have_http_status 201
+      expect(Response.count).to eq 1
+
+      form_response = Response.last
+      expect(form_response.form).to eq @form
+      expect(form_response.answers.count).to eq 2
+
+      form_response.answers.each do |answer|
+        expect(answer.media_object).to be_present
+      end
     end
   end
 end
