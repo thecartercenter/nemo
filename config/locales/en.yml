@@ -112,6 +112,12 @@ en:
     protected: "Protected"
     inherit: "Inherit"
 
+  sms_guide_formatting_options:
+    auto: Automatic
+    inline: Inline
+    appendix: Appendix
+    treat_as_text: Treat as text
+
   # general error messages (there are others under activerecord.errors)
   errors:
     # our messages are all complete sentences so we use the colon
@@ -472,6 +478,11 @@ en:
           editable: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
           read_only: "The options that will appear for questions using this option set."
         option_levels: "The names of each level of options, e.g. 'Country', 'State', 'City'. Note that these are distinct from the options themselves (e.g. 'United States', 'Illinois', 'Chicago'), which are defined below."
+        sms_guide_formatting: "The meanings of the options are as follows:
+          Auto: Automatically determine whether to use 'inline' or 'appendix'.
+          Inline: Show the list of options on the SMS Guide.
+          Appendix: Include the list of options in an appendix created by a Coordinator.
+          Treat as text: Accept options for this option set as if they were text entries"
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"

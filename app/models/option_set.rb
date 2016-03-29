@@ -1,10 +1,10 @@
 class OptionSet < ActiveRecord::Base
-
   # We use this instead of autosave since autosave doesn't work right for belongs_to.
   # It is up here because it should happen early, e.g., before form version callbacks.
   after_save :save_root_node
 
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
+  SMS_GUIDE_FORMATTING_OPTIONS = %w(auto inline appendix treat_as_text)
 
   # This need to be up here or they will run too late.
   before_destroy :check_associations
@@ -297,6 +297,15 @@ class OptionSet < ActiveRecord::Base
 
       headers << Option.human_attribute_name(:coordinates) if allow_coordinates?
       headers << Option.human_attribute_name(:shortcode)
+    end
+  end
+
+  def sms_formatting
+    case sms_guide_formatting
+    when "auto"
+      (descendants.count <= 26) ? "inline" : "appendix"
+    else
+      sms_guide_formatting
     end
   end
 

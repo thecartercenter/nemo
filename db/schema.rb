@@ -259,6 +259,7 @@ ActiveRecord::Schema.define(version: 20160401022944) do
     t.string "name", limit: 255
     t.integer "original_id", limit: 4
     t.integer "root_node_id", limit: 4
+    t.string "sms_guide_formatting", limit: 255, default: "auto", null: false
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
   end

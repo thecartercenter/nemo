@@ -53,7 +53,7 @@
       </tr>
 
       <%# options area, for select_* questions %>
-      <% if qing.question.qtype.has_options? && !qing.text_type_for_sms? %>
+      <% if qing.question.qtype.has_options? && qing.option_set.sms_formatting == "inline" %>
         <tr>
           <td class="rank"></td>
           <td class="options">
