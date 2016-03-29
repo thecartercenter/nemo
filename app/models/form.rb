@@ -162,6 +162,10 @@ class Form < ActiveRecord::Base
     questionings.map(&:question).map(&:option_set).compact.uniq
   end
 
+  def option_sets_with_appendix
+    option_sets.select { |os| os.sms_formatting == "appendix" }
+  end
+
   # Returns all descendant questionings in one flat array, sorted in traversal order.
   def questionings(reload = false)
     root_group.descendant_questionings.flatten
