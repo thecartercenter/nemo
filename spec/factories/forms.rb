@@ -2,22 +2,21 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
   question = if qtype_name_or_question.is_a?(Question)
     qtype_name_or_question
   else
-    psuedo_qtype_name = qtype_name_or_question
+    pseudo_qtype_name = qtype_name_or_question
 
-    qtype_name = case psuedo_qtype_name
-    when 'multilevel_select_one', 'geo_select_one', 'geo_multilevel_select_one',
-      'select_one_as_text_for_sms', 'multilevel_select_one_as_text_for_sms'
-      'select_one'
+    qtype_name = case pseudo_qtype_name
+    when "multilevel_select_one", "geo_select_one", "geo_multilevel_select_one",
+      "select_one_as_text_for_sms", "multilevel_select_one_as_text_for_sms"
+      "select_one"
     else
-      psuedo_qtype_name
+      pseudo_qtype_name
     end
 
     q_attribs = {
       qtype_name: qtype_name,
       mission: form.mission,
-      use_multilevel_option_set: !!(psuedo_qtype_name =~ /multilevel_select_one/),
-      use_geo_option_set: !!(psuedo_qtype_name =~ /geo/),
-      text_type_for_sms: !!(psuedo_qtype_name =~ /as_text_for_sms/),
+      use_multilevel_option_set: !!(pseudo_qtype_name =~ /multilevel_select_one/),
+      use_geo_option_set: !!(pseudo_qtype_name =~ /geo/),
       is_standard: form.is_standard?
     }
 
@@ -27,14 +26,18 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       q_attribs[:option_names] = evaluator.option_names
     end
 
-    build(:question, q_attribs)
+    question = build(:question, q_attribs)
+    question.option_set.sms_guide_formatting = "treat_as_text" if pseudo_qtype_name =~ /as_text_for_sms/
+    question
   end
 
-  form.questionings << create(:questioning,
+  questioning = create(:questioning,
     mission: form.mission,
     parent: parent,
     form: form,
     question: question)
+
+  form.questionings << questioning
 end
 
 # Only works with create
@@ -62,7 +65,7 @@ FactoryGirl.define do
       # Build questions.
       items.each do |item|
         if item.is_a?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: 'Group Name', group_hint_en: 'Group Hint')
+          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
           item.each { |q| create_questioning(q, form, group, evaluator) }
         else
           create_questioning(item, form, form.root_group, evaluator)
@@ -75,25 +78,25 @@ FactoryGirl.define do
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
     # Used in the feature specs
     factory :sample_form do
-      name 'Sample Form'
+      name "Sample Form"
 
       after(:create) do |form, evaluator|
         form.questionings do
           [
             # Single level select_one question.
             create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: 'Question 1', hint: 'Hint 1',
-                qtype_name: 'select_one', option_set: create(:option_set, name: 'Set 1'))),
+              question: create(:question, mission: mission, name: "Question 1", hint: "Hint 1",
+                qtype_name: "select_one", option_set: create(:option_set, name: "Set 1"))),
 
             # Multilevel select_one question.
             create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: 'Question 2', hint: 'Hint 2',
-                qtype_name: 'select_one', option_set: create(:option_set, name: 'Set 2', multilevel: true))),
+              question: create(:question, mission: mission, name: "Question 2", hint: "Hint 2",
+                qtype_name: "select_one", option_set: create(:option_set, name: "Set 2", multilevel: true))),
 
             # Integer question.
             create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: 'Question 3', hint: 'Hint 3',
-                qtype_name: 'integer'))
+              question: create(:question, mission: mission, name: "Question 3", hint: "Hint 3",
+                qtype_name: "integer"))
           ]
         end
       end

@@ -1736,6 +1736,7 @@ en:
         decimal: "Write your answer here."
         select_one: "Write the letter for your choice here. Write only one letter."
         select_one_as_text: "Write your answer here. Be sure to write the exact option name."
+        select_one_with_appendix: "Write the shortcode for your choice here. See the appendix for your options."
         select_multiple: "Write the letter for each choice here with no spaces."
         datetime: "Write your answer here in YYYYMMDD HHMM format."
         date: "Write your answer here in YYYYMMDD format."

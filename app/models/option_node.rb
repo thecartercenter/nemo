@@ -135,6 +135,10 @@ class OptionNode < ActiveRecord::Base
     (sc = sorted_children).any? ? sc.first.first_leaf_option : self.option
   end
 
+  def first_leaf_option_node
+    (sc = sorted_children).any? ? sc.first : self
+  end
+
   def options_by_id(nodes, options = {})
     return @options_by_id if @options_by_id
 

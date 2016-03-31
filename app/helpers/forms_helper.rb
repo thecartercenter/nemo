@@ -24,12 +24,12 @@ module FormsHelper
     case field
     when "std_icon" then std_icon(form)
     when "version" then form.version
-    when "name" then link_to(form.name, form_path(form), :title => t("common.view"))
+    when "name" then link_to(form.name, form_path(form), title: t("common.view"))
     when "questions" then form.questionings_count
     when "updated_at" then l(form.updated_at)
     when "responses"
       form.responses_count == 0 ? 0 :
-        link_to(form.responses_count, responses_path(:search => "form:\"#{form.name}\""))
+        link_to(form.responses_count, responses_path(search: "form:\"#{form.name}\""))
     when "downloads" then form.downloads || 0
     when "published" then tbool(form.published?)
     when "smsable" then tbool(form.smsable?)
@@ -42,13 +42,13 @@ module FormsHelper
         # get the appropriate publish icon and add link, if auth'd
         if can?(:publish, form)
           verb = form.published? ? "unpublish" : "publish"
-          links << action_link(verb, publish_form_path(form), :title => t("form.#{verb}"), :'data-method' => 'put')
+          links << action_link(verb, publish_form_path(form), title: t("form.#{verb}"), :'data-method' => 'put')
         end
 
         # add a clone link if auth'd
         if can?(:clone, form)
           links << action_link("clone", clone_form_path(form), :'data-method' => 'put',
-            :title => t("common.clone"), data: {confim: t("form.clone_confirm")}, :form_name => form.name)
+            title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
         end
 
         # add a print link if auth'd
@@ -58,11 +58,11 @@ module FormsHelper
 
         # add an sms template link if appropriate
         if form.smsable? && form.published? && !admin_mode?
-          links << action_link("sms", form_path(form, :sms_guide => 1), :title => "Sms Guide")
+          links << action_link("sms", form_path(form, sms_guide: 1), title: "Sms Guide")
         end
 
         # add a loading indicator
-        links << loading_indicator(:id => form.id, :floating => true)
+        links << loading_indicator(id: form.id, floating: true)
       end
     else form.send(field)
     end
@@ -74,7 +74,7 @@ module FormsHelper
     options[:show_spc_glyph] = true if options[:show_spc_glyph].nil?
 
     text.split("").collect do |char|
-      content_tag("span", :class => "answer_space") do
+      content_tag("span", class: "answer_space") do
         case char
         when " " then options[:show_spc_glyph] ? spc_glyph : " "
         when "." then "&bull;".html_safe
@@ -84,9 +84,25 @@ module FormsHelper
     end.reduce(:<<)
   end
 
+  # returns the type of pointer to show on the SMS guide
+  def pointer_type(qing)
+    case qing.qtype_name
+    when "select_one"
+      if qing.text_type_for_sms?
+        "select_one_as_text"
+      elsif qing.option_set && qing.option_set.sms_formatting == "appendix"
+        "select_one_with_appendix"
+      else
+        qing.qtype_name
+      end
+    else
+      qing.qtype_name
+    end
+  end
+
   # returns a SPC glyph type thing for use in the sms guide
   def spc_glyph
-    content_tag("span", "SPC", :class => "spc_glyph")
+    content_tag("span", "SPC", class: "spc_glyph")
   end
 
   # converts a number into a letter e.g. 1 = a, 2 = b, 3 = c, ..., 26 = z, 27 = aa, ...
@@ -107,7 +123,11 @@ module FormsHelper
     content = case qing.question.qtype.name
     when "integer" then "3"
     when "decimal" then "12.5"
-    when "select_one" then qing.text_type_for_sms? ? qing.first_leaf_option.name : "b"
+    when "select_one"
+      if qing.text_type_for_sms? then qing.first_leaf_option.name
+      elsif qing.option_set && qing.option_set.sms_formatting == "appendix" then qing.first_leaf_option_node.shortcode
+      else "b"
+      end
     when "select_multiple" then "ac"
     when "datetime" then "20120228 1430"
     when "date" then "20121118"
@@ -127,7 +147,11 @@ module FormsHelper
     # determine the number of spaces
     size = case qing.question.qtype.name
     when "integer" then 1
-    when "select_one" then qing.text_type_for_sms? ? 8 : 1
+    when "select_one"
+      if qing.text_type_for_sms? then 8
+      elsif qing.option_set && qing.option_set.sms_formatting == "appendix" then 4
+      else 1
+      end
     when "decimal" then 2
     when "time", "select_multiple" then 4
     when "date" then 6
@@ -135,7 +159,7 @@ module FormsHelper
     else 4
     end
 
-    answer_space(" " * size, :show_spc_glyph => false)
+    answer_space(" " * size, show_spc_glyph: false)
   end
 
   # returns the sms submit number or an indicator that it's not set up

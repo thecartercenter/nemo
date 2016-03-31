@@ -78,6 +78,7 @@ class OptionSet < ActiveRecord::Base
     :option_path_to_rank_path,
     :rank_path_to_option_path,
     :first_leaf_option,
+    :first_leaf_option_node,
     to: :root_node
 
   # These methods are for the form.
