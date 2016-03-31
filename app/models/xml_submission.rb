@@ -4,12 +4,11 @@ class XMLSubmission
   def initialize(response: nil, files: nil, source: nil, data: nil)
     @response = response
     @response.source = source
+    @awaiting_media = @response.awaiting_media
     case source
     when "odk"
       @data = files.delete(:xml_submission_file).read
       @files = files
-      check_for_existing_response
-      @response.odk_hash = generate_odk_hash if @response.incomplete
       populate_from_odk(@data)
     when "j2me"
       @data = data
@@ -28,12 +27,12 @@ class XMLSubmission
         value = hash[subq.odk_code]
         if value.is_a? Array
           value.each_with_index do |val, i|
-            answer = Answer.new(questioning: qing, rank: subq.rank, inst_num: i + 1)
+            answer = fetch_or_build_answer(questioning: qing, rank: subq.rank, inst_num: i + 1)
             answer = populate_from_string(answer, val)
             @response.answers << answer
           end
         else
-          answer = Answer.new(questioning: qing, rank: subq.rank)
+          answer = fetch_or_build_answer(questioning: qing, rank: subq.rank)
           answer = populate_from_string(answer, value)
           @response.answers << answer if answer
         end
@@ -54,7 +53,8 @@ class XMLSubmission
     raise FormVersionError.new("form version must be specified") if params[:version].nil?
 
     # try to load form (will raise activerecord error if not found)
-    @response.form = Form.find(params[:id])
+    # if the response already has a form, don't fetch it again
+    @response.form = Form.find(params[:id]) unless @response.form.present?
     form = @response.form
 
     # if form has no version, error
@@ -67,6 +67,13 @@ class XMLSubmission
   def populate_from_odk(xml)
     data = Nokogiri::XML(xml).root
     lookup_and_check_form(id: data["id"], version: data["version"])
+    check_for_existing_response
+
+    if @awaiting_media
+      @response.odk_hash = odk_hash
+    else
+      @response.odk_hash = nil
+    end
 
     # Loop over each child tag and create hash of odk_code => value
     hash = {}
@@ -126,7 +133,7 @@ class XMLSubmission
       answer.value = str
     end
     # nullify answers if string suggests multimedia answer but no file present to make multi-chunk submissions work
-    answer = nil if (question_type.multimedia? && answer.media_object.blank?)
+    return nil if (question_type.multimedia? && answer.media_object.blank?)
     answer
   end
 
@@ -141,12 +148,23 @@ class XMLSubmission
     end
   end
 
-  def generate_odk_hash
+  # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
+  # can be uniquely identified and handled
+  def odk_hash
     @odk_hash ||= Digest::SHA256.base64digest @data
   end
 
   def check_for_existing_response
-    response = Response.find_by(odk_hash: generate_odk_hash)
-    @response = response if response.present?
+    response = Response.find_by(odk_hash: odk_hash, form_id: @response.form_id)
+    @existing_response = response.present?
+    @response = response if @existing_response
+  end
+
+  def fetch_or_build_answer(answer_params)
+    if @existing_response
+      Answer.find_or_initialize_by(answer_params)
+    else
+      Answer.new(answer_params)
+    end
   end
 end

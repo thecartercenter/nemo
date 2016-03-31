@@ -44,7 +44,6 @@ class FormsController < ApplicationController
           # This query is not deferred so we have to check if it should be run or not.
           @forms = @forms.published
         end
-        render
       end
     end
   end
@@ -87,8 +86,6 @@ class FormsController < ApplicationController
 
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || 'odk'
-
-        render
       end
     end
   end
@@ -101,7 +98,6 @@ class FormsController < ApplicationController
       @ifa = ItemsetsFormAttachment.new(form: @form)
       @ifa.ensure_generated
     end
-    render
   end
 
   # Format is always :csv

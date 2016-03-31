@@ -6,7 +6,7 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
 
   context "with single part" do
     before do
-      @form = create(:form, question_types: %w(image))
+      @form = create(:form, question_types: %w(text image))
       @form.publish!
       @user = create(:user,role_name: "observer")
       @mission = @form.mission
@@ -24,14 +24,15 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
       form_response = Response.last
       expect(form_response.form).to eq @form
       form_response.answers.each do |answer|
-        expect(answer.media_object).to be_present
+        qing = answer.questioning
+        expect(answer.media_object).to be_present if qing.qtype.multimedia?
       end
     end
   end
 
   context "with multiple parts" do
     before do
-      @form = create(:form, question_types: %w(image sketch))
+      @form = create(:form, question_types: %w(text image sketch))
       @form.publish!
       @user = create(:user,role_name: "observer")
       @mission = @form.mission
@@ -53,6 +54,9 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
       expect(response).to have_http_status 201
       expect(Response.count).to eq 1
 
+      form_response = Response.last
+      expect(form_response.odk_hash).to be_present
+
       # Submit second part
       post submission_path(@mission), {
         xml_submission_file: submission_file,
@@ -63,11 +67,14 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
       expect(Response.count).to eq 1
 
       form_response = Response.last
+      expect(form_response.odk_hash).to_not be_present
+
       expect(form_response.form).to eq @form
-      expect(form_response.answers.count).to eq 2
+      expect(form_response.answers.count).to eq 3
 
       form_response.answers.each do |answer|
-        expect(answer.media_object).to be_present
+        qing = answer.questioning
+        expect(answer.media_object).to be_present if qing.qtype.multimedia?
       end
     end
   end

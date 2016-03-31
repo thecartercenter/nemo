@@ -5,12 +5,9 @@ class Media::Object < ActiveRecord::Base
   validates_attachment_presence :item
 
   delegate :mission, to: :answer
+  delegate :url, to: :item, allow_nil: true
 
-  scope :expired, -> { where(answer_id: nil).where('created_at < ?', 12.hours.ago) }
-
-  def url(style = nil)
-    item.url(style) if item.present?
-  end
+  scope :expired, -> { where(answer_id: nil).where("created_at < ?", 12.hours.ago) }
 
   def download_url
     dl_url = url

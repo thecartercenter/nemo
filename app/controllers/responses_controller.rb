@@ -116,7 +116,7 @@ class ResponsesController < ApplicationController
             return false
           end
 
-          @response.incomplete = true if params["*isIncomplete*"] == "yes"
+          @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
           @submission = XMLSubmission.new response: @response, files: files, source: "odk"
         end
 
