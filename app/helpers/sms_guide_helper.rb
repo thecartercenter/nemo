@@ -5,7 +5,11 @@ module SmsGuideHelper
     # determine the number of spaces
     width = case qing.question.qtype.name
     when "integer" then 3
-    when "select_one" then qing.text_type_for_sms? ? 8 : 1
+    when "select_one"
+      if qing.text_type_for_sms? then 8
+      elsif qing.option_set && qing.option_set.sms_formatting == "appendix" then 4
+      else 1
+      end
     when "decimal" then 3
     when "time", "select_multiple" then 4
     when "date" then 6
@@ -49,7 +53,11 @@ module SmsGuideHelper
     content = case qing.qtype_name
     when "integer" then "3"
     when "decimal" then "12.5"
-    when "select_one" then qing.text_type_for_sms? ? qing.first_leaf_option.name : "b"
+    when "select_one"
+      if qing.text_type_for_sms? then qing.first_leaf_option.name
+      elsif qing.option_set && qing.option_set.sms_formatting == "appendix" then qing.first_leaf_option_node.shortcode
+      else "b"
+      end
     when "select_multiple" then "a,c"
     when "datetime" then "20120228 1430"
     when "date" then "20121118"
@@ -64,6 +72,26 @@ module SmsGuideHelper
     end
   end
 
+  # returns the type of pointer to show on the SMS guide
+  def pointer_type(qing)
+    case qing.qtype_name
+    when "select_one"
+      if qing.text_type_for_sms?
+        "select_one_as_text"
+      elsif qing.option_set && qing.option_set.sms_formatting == "appendix"
+        "select_one_with_appendix"
+      else
+        qing.qtype_name
+      end
+    when "integer", "decimal"
+      "number"
+    when "text", "long_text"
+      "text"
+    else
+      qing.qtype_name
+    end
+  end
+
   # returns the sms submit number or an indicator that it's not set up
   def submit_numbers
     numbers = if configatron.incoming_sms_numbers.empty?
@@ -75,10 +103,35 @@ module SmsGuideHelper
   end
 
   def sms_guide_hint(qing)
-    qtype_name = qing.text_type_for_sms? ? 'select_one_as_text' : qing.qtype_name
     hint = "".html_safe << (qing.question.hint || "")
     hint << "." unless hint =~ /\.\z/ || hint.empty?
-    hint << " " << t(".pointers.#{qtype_name}")
+    hint << " " << t(".pointers.#{pointer_type(qing)}")
     hint << " " << sms_example_for_questioning(qing)
+  end
+
+  def appendix_alert
+    appendix_links = []
+
+    if @number_appendix
+      appendix_links << link_to(t(".multiple_sms_numbers"), incoming_numbers_sms_path)
+    end
+
+    @form.option_sets_with_appendix.each do |option_set|
+      appendix_links << link_to("#{OptionSet.model_name.human}: #{option_set.name}",
+        export_option_set_path(option_set))
+    end
+
+    if appendix_links.size == 0
+      nil
+    else
+      alerts(notice: if appendix_links.size == 1
+          t(".appendix", count: 1).html_safe << " " << appendix_links.first
+        else
+          t(".appendix", count: 2).html_safe << content_tag(:ol) do
+            appendix_links.map { |l| content_tag(:li, l) }.reduce(:<<)
+          end
+        end
+      )
+    end
   end
 end

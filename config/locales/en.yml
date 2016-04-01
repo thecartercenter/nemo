@@ -1078,20 +1078,18 @@ en:
   forms:
     sms_guide:
       appendix:
-        introduction: "The following option sets require an appendix to be printed."
-        export: "Export <a href=\"%{url}\">%{option_set}</a>"
+        one: "The following appendix should be included with this form:"
+        other: "The following appendices should be included with this form:"
       header: "ELMO SMS Composition Guide"
       auth_code: "User authorization code (required)"
       header: "ELMO SMS Guide"
       for_paper_record: "For paper record only"
       form_code: "Unique form code (required)"
-      multiple_sms_numbers_html: "There are <a href=\"%{url}\">multiple SMS submission numbers</a> that should be included as an appendix to this form."
+      multiple_sms_numbers: "Multiple SMS submission numbers"
       sms_message: "SMS Message"
       pointers:
-        text: "Write your answer here in the box. Abbreviate if necessary."
-        long_text: "Write your answer in the box. Abbreviate if necessary."
-        integer: "Write your answer in the box."
-        decimal: "Write your answer in the box."
+        text: "Write your answer in the box. Abbreviate if necessary."
+        number: "Write your answer in the box."
         select_one: "Write the letter for your choice in the box. Write only one letter."
         select_one_as_text: "Write your answer in the box. Be sure to write the exact option name."
         select_one_with_appendix: "Write the shortcode for your choice in the box. See the appendix for your options."

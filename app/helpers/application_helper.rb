@@ -16,6 +16,19 @@ module ApplicationHelper
     {create: :new, update: :edit}[a] || a
   end
 
+  def alerts(hash)
+    hash.map do |name, msg|
+      # Only echo valid message types
+      if css_class = bootstrap_flash_class(name)
+        content_tag(:div, class: css_class) do
+          content_tag(:strong, t("flash_message_types.#{name}")) << ": " << msg
+        end
+      else
+        ""
+      end
+    end.reduce(:<<)
+  end
+
   # pairs flash errors with bootstrap styling
   def bootstrap_flash_class(level)
     case level.to_sym

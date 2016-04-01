@@ -1,5 +1,7 @@
 <% @title = @form.name %>
 
+<% content_for(:alerts) { appendix_alert } %>
+
 <% locale_was = I18n.locale; I18n.locale = @lang %>
 <div class="sms_guide">
 

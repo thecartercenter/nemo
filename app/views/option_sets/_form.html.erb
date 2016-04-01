@@ -1,7 +1,7 @@
 <div class="option_set_form">
 
   <%# need to print this here if in ajax mode %>
-  <%= render("layouts/flash", :flash => flash) if request.xhr? %>
+  <%= alerts(flash) if request.xhr? %>
 
   <%= top_action_links(@option_set, :append => [:export]) unless request.xhr? %>
 

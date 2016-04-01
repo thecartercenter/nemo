@@ -89,28 +89,8 @@ class FormsController < ApplicationController
 
     @qings_with_indices = @form.smsable_questionings
 
-    # Set up the message for a flash notice in case one is needed.
-    msg = ""
-
     # If there are more than one incoming numbers, we need to set a flash notice.
     @number_appendix = configatron.incoming_sms_numbers.size > 1
-    if @number_appendix
-      msg << t("sms_form.guide.multiple_sms_numbers_html", url: incoming_numbers_sms_path)
-    end
-
-    # If the form has option sets with an appendix, add export links to the flash
-    if @form.option_sets_with_appendix.present?
-      msg << content_tag(:p, t("sms_form.guide.appendix.introduction"))
-      @form.option_sets_with_appendix.each do |option_set|
-        msg << content_tag(:p, t("sms_form.guide.appendix.export",
-          option_set: html_escape(option_set.name),
-          url: export_option_set_path(option_set)
-        ))
-      end
-    end
-
-    # prepare flash message if it's present
-    flash.now[:notice] = msg.html_safe if msg.present?
   end
 
   # Format is always :xml
