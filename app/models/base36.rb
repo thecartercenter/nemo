@@ -1,5 +1,6 @@
 module Base36
   def self.digits_needed(n)
+    return 1 if n == 0
     Math::log(n, 36).floor + 1
   end
 

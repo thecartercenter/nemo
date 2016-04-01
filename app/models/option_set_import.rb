@@ -88,7 +88,9 @@ class OptionSetImport
                 mission: mission,
                 rank: cur_ranks[c],
                 option_set: option_set,
-                option: option)
+                option: option,
+                sequence: r + 1)
+
 
               if node.invalid?
                 add_errors_for_row(row_number, node.errors)
@@ -107,7 +109,6 @@ class OptionSetImport
         end
       end
 
-      @option_set.generate_sequence(batch: true)
 
       raise ActiveRecord::Rollback if errors.present?
     end
@@ -152,7 +153,9 @@ class OptionSetImport
       # Find any special columns
       special_columns = {}
       headers.each_with_index do |h,i|
-        special_columns[i] = h.downcase.to_sym if [id_header, coordinates_header, shortcode_header].include?(h)
+        if [id_header, coordinates_header, shortcode_header].include?(h)
+          special_columns[i] = h.downcase.to_sym
+        end
       end
 
       # Enforce maximum length limitation on headers

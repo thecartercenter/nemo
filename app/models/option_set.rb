@@ -24,9 +24,6 @@ class OptionSet < ActiveRecord::Base
   # the dependent object doesn't know who destroyed it.
   before_destroy { report_option_set_choices.each(&:option_set_destroyed) }
 
-  # Generate sequence
-  after_save :generate_sequence
-
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
   scope :with_assoc_counts_and_published, ->(mission) {
@@ -180,7 +177,8 @@ class OptionSet < ActiveRecord::Base
     # Do one query for all and cache.
     @option_ids_with_answers ||= Answer.where(
       questioning_id: questionings.map(&:id),
-      option_id: descendants.map(&:option_id)).pluck("DISTINCT option_id")
+      option_id: descendants.map(&:option_id)
+      ).pluck("DISTINCT option_id")
 
     # Respond to particular request.
     @option_ids_with_answers.include?(option_id)
@@ -217,7 +215,7 @@ class OptionSet < ActiveRecord::Base
   def copy_question_count
     if is_standard?
       if respond_to?(:copy_question_count_col)
-        (copy_question_count_col || 0)
+        copy_question_count_col || 0
       else
         copies.inject(0) { |sum, c| sum += c.question_count }
       end
@@ -343,14 +341,6 @@ class OptionSet < ActiveRecord::Base
     @shortcode_offset ||= Base36.offset(shortcode_length)
   end
 
-  def generate_sequence(batch: false)
-    return unless (options_added? || options_removed? || batch)
-    descendants.each_with_index do |option_node, i|
-      option_node.sequence = i + 1
-      option_node.save(validate: false)
-    end
-  end
-
   def fetch_by_shortcode(shortcode)
     sequence = shortcode.to_i(36) - shortcode_offset
     descendants.find_by(sequence: sequence)
@@ -364,7 +354,7 @@ class OptionSet < ActiveRecord::Base
   private
 
   def copy_attribs_to_root_node
-    root_node.assign_attributes(mission: mission, option_set: self)
+    root_node.assign_attributes(mission: mission, option_set: self, sequence: 0)
   end
 
   def check_associations

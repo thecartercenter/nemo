@@ -19,7 +19,7 @@ describe OptionNode do
     let(:option_set) { create(:option_set, super_multilevel: true) }
 
     it "should return shortcodes based on sequence" do
-      shortcodes = option_set.descendants.map(&:shortcode)
+      shortcodes = option_set.descendants.map(&:shortcode).sort
       expect(shortcodes).to eq ["1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e"]
     end
   end

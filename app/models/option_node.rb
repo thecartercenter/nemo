@@ -282,18 +282,25 @@ class OptionNode < ActiveRecord::Base
     (" " * options[:space]) +
 
       # option level name, option name
-      ["(#{level.try(:name)})", "#{rank}. #{option.try(:name) || '[Root]'}"].compact.join(" ") +
+      ["(#{level.try(:name)})", "#{rank}. #{option.try(:name) || '[Root]'} [#{id}]"].compact.join(" ") +
 
       # parent, mission
       " (mission: #{mission.try(:name) || '[None]'}, " +
       "option-mission: #{option ? option.mission.try(:name) || '[None]' : '[N/A]'}, " +
-      "option-set: #{option_set.try(:name) || '[None]'})" +
+      "option-set: #{option_set.try(:name) || '[None]'} " +
+      "sequence: #{self.try(:sequence) || '[None]'})" +
 
       "\n" + sorted_children.map { |c| c.to_s_indented(space: options[:space] + 2) }.join
   end
 
   def shortcode
     @shortcode = Base36.to_padded_base36(sequence, length: shortcode_length)
+  end
+
+  def max_sequence
+    # for some reason ancestry scopes requests through the current node even if you don't
+    # call where through self, so you need to explicitly call unscoped here
+    self.class.unscoped.where(option_set_id: option_set_id).maximum(:sequence) || 0
   end
 
   protected
@@ -342,7 +349,7 @@ class OptionNode < ActiveRecord::Base
         self.options_added = true
 
         # We need to strip ID in case it's present due to a node changing parents.
-        children.create!(attribs.except(:id).merge(rank: i + 1))
+        children.create!(attribs.except(:id).merge(rank: i + 1).merge(sequence: max_sequence + 1))
       end
     end
 
