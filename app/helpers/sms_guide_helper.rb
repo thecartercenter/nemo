@@ -83,6 +83,12 @@ module SmsGuideHelper
       else
         qing.qtype_name
       end
+    when "select_multiple"
+      if qing.option_set && qing.option_set.sms_formatting == "appendix"
+        "select_multiple_with_appendix"
+      else
+        qing.qtype_name
+      end
     when "integer", "decimal"
       "number"
     when "text", "long_text"

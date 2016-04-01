@@ -1094,6 +1094,7 @@ en:
         select_one_as_text: "Write your answer in the box. Be sure to write the exact option name."
         select_one_with_appendix: "Write the shortcode for your choice in the box. See the appendix for your options."
         select_multiple: "Write the letters for each of your choices separated by commas in the box."
+        select_multiple_with_appendix: "Write the letters for each of your choices separated by commas in the box. See the appendix for your options."
         datetime: "Write your answer in the box. Use YYYYMMDD HHMM format."
         date: "Write your answer in the box. Use YYYYMMDD format."
         time: "Write your answer in the box. Use HHMM format."
