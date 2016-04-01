@@ -106,6 +106,7 @@ ELMO::Application.routes.draw do
         put "clone"
         put "publish"
         get "choose_questions", path: "choose-questions"
+        get "sms_guide", path: "sms-guide"
       end
     end
     resources :markers

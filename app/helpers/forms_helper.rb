@@ -58,7 +58,7 @@ module FormsHelper
 
         # add an sms template link if appropriate
         if form.smsable? && form.published? && !admin_mode?
-          links << action_link("sms", form_path(form, sms_guide: 1), title: "Sms Guide")
+          links << action_link("sms", sms_guide_form_path(form), title: "SMS Guide")
         end
 
         # add a loading indicator

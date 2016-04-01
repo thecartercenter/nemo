@@ -1,8 +1,33 @@
-div.sms_guide {
+.forms_sms_guide {
   div.header {
     float: right;
     color: #888;
     font-size: 15px;
+  }
+
+  div.controls {
+    margin-bottom: 20px;
+
+    form {
+      display: inline-block; margin-right: 10px;
+    }
+
+    a {
+      display: inline-block;
+    }
+  }
+
+  #user-field {
+    margin-bottom: 10px;
+
+    div {
+      width: 400px;
+      border-bottom: 1px solid #666;
+      color: #ddd;
+      display: inline-block;
+      padding-bottom: 2px;
+      text-align: center;
+    }
   }
 
   table {
@@ -90,5 +115,25 @@ div.sms_guide {
     font-weight: bold;
     padding: 0 5px;
     border-bottom: 1px solid black;
+  }
+
+  @media screen {
+    .sms_guide {
+      max-width: 900px;
+    }
+
+    h1.printable {
+      display: none;
+    }
+
+    div.header {
+      margin-top: -54px;
+    }
+  }
+
+  @media print {
+    h1.title, .alert, div.controls {
+      display: none;
+    }
   }
 }

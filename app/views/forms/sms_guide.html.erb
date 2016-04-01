@@ -2,8 +2,10 @@
 
 <% locale_was = I18n.locale; I18n.locale = @lang %>
 <div class="sms_guide">
-  <div class="header"><%= t("sms_form.guide.header") %></div>
+
+  <div class="header"><%= t(".header") %></div>
   <h1 class="printable"><%= title %></h1>
+
   <div class="controls">
     <form>
       <input type="hidden" name="sms_guide" value="1">
@@ -16,23 +18,28 @@
 
     <%= link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test) %>
   </div>
+
+  <div id="user-field">
+    <%= Response.human_attribute_name(:user_id) %>:
+    <div><%= t(".for_paper_record") %></div>
+  </div>
+
   <table>
     <tr>
       <td colspan="2" class="user-field">
-        <%= Response.human_attribute_name(:user_id) %>: _________________________________________
       </td>
     </tr>
     <tr>
       <td colspan="2" class="step1">
-        <strong><%= t("common.step") %> 1:</strong> <%= t("sms_form.guide.step1") %>
-        <%= t(@form.all_required? ? "sms_form.guide.all_required" : "sms_form.guide.not_all_required") %>
+        <strong><%= t("common.step") %> 1:</strong> <%= t(".step1") %>
+        <%= t(@form.all_required? ? ".all_required" : ".not_all_required") %>
       </td>
       <td class="answers"></td>
     </tr>
     <tr>
       <td class="rank"></td>
       <td class="pointer">
-        <em><%= t("sms_form.guide.unique_code") %> </em>
+        <em><%= t(".unique_code") %> </em>
       </td>
       <td class="answers">
         <%= answer_space(@form.current_version.code) %>
@@ -70,8 +77,13 @@
         <td class="rank"></td>
         <td class="pointer">
           <em>
+<<<<<<< 8e10e2c78758ce168b493a296edbb644b59fd852
             <% qtype_name = pointer_type(qing) %>
             <%= t("sms_form.guide.pointers.#{qtype_name}") %>
+=======
+            <% qtype_name = qing.text_type_for_sms? ? 'select_one_as_text' : qing.qtype_name %>
+            <%= t(".pointers.#{qtype_name}") %>
+>>>>>>> 4128: Refactored styles, translations, route, and user field
             <%= sms_example_for_question(qing) %>
           </em>
         </td>
@@ -84,9 +96,9 @@
     <%# final instructions %>
     <tr>
       <td colspan="3" class="step2">
-        <strong><%= t("common.step") %> 2:</strong> <%= t("sms_form.guide.step2") %>
+        <strong><%= t("common.step") %> 2:</strong> <%= t(".step2") %>
         <ol>
-          <% t("sms_form.guide.step2_substeps").each do |ss| %>
+          <% t(".step2_substeps").each do |ss| %>
             <%# OK to use html_safe here because we control the substep text and we're manually escaping the number. %>
             <li><%= ss.gsub("%{submit_numbers}", html_escape(submit_numbers)).html_safe %></li>
           <% end %>

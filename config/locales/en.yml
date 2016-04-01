@@ -1075,6 +1075,39 @@ en:
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
 
+  forms:
+    sms_guide:
+      appendix:
+        introduction: "The following option sets require an appendix to be printed."
+        export: "Export <a href=\"%{url}\">%{option_set}</a>"
+      header: "ELMO SMS Composition Guide"
+      for_paper_record: "For paper record only"
+      multiple_sms_numbers_html: "There are <a href=\"%{url}\">multiple SMS submission numbers</a> that should be included as an appendix to this form."
+      pointers:
+        text: "Write your answer here. Abbreviate if necessary."
+        long_text: "Write your answer here. Abbreviate if necessary."
+        integer: "Write your answer here."
+        decimal: "Write your answer here."
+        select_one: "Write the letter for your choice here. Write only one letter."
+        select_one_as_text: "Write your answer here. Be sure to write the exact option name."
+        select_one_with_appendix: "Write the shortcode for your choice here. See the appendix for your options."
+        select_multiple: "Write the letter for each choice here with no spaces."
+        datetime: "Write your answer here in YYYYMMDD HHMM format."
+        date: "Write your answer here in YYYYMMDD format."
+        time: "Write your answer here in HHMM format."
+      step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
+      step2: "Now please do the following to send in your data:"
+      step2_substeps:
+        - "With your phone, begin an SMS to one of these numbers: %{submit_numbers}."
+        - "Enter the contents of each line on the right side of each page, going from top to bottom."
+        - "Be careful that you enter each line exactly. Each line is important."
+        - "Notice that each answer is separated by a 'SPC'. Enter a space for each time you see 'SPC'. Do not add any extra spaces."
+        - "When you have finished entering, double-check your message to make sure it matches the form."
+        - "Send the message and wait for a response with further instructions."
+        - "If you do not receive a response within 5 minutes, please send the message again."
+      unique_code: "This is the unique code for the form"
+      unknown_number: "Unknown Number"
+
   import:
     row_error: "Row %{row}: %{error}"
     queued_html: |-
@@ -1721,38 +1754,6 @@ en:
       invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
       question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
       user_not_found: "Sorry, we couldn't find you in the system."
-    guide:
-      all_required: "Please answer all questions."
-      appendix:
-        introduction: "The following option sets require an appendix to be printed."
-        export: "Export <a href=\"%{url}\">%{option_set}</a>"
-      header: "ELMO SMS Composition Guide"
-      multiple_sms_numbers_html: "There are <a href=\"%{url}\">multiple SMS submission numbers</a> that should be included as an appendix to this form."
-      not_all_required: "Questions marked with an asterisk (*) are required."
-      pointers:
-        text: "Write your answer here. Abbreviate if necessary."
-        long_text: "Write your answer here. Abbreviate if necessary."
-        integer: "Write your answer here."
-        decimal: "Write your answer here."
-        select_one: "Write the letter for your choice here. Write only one letter."
-        select_one_as_text: "Write your answer here. Be sure to write the exact option name."
-        select_one_with_appendix: "Write the shortcode for your choice here. See the appendix for your options."
-        select_multiple: "Write the letter for each choice here with no spaces."
-        datetime: "Write your answer here in YYYYMMDD HHMM format."
-        date: "Write your answer here in YYYYMMDD format."
-        time: "Write your answer here in HHMM format."
-      step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
-      step2: "Now please do the following to send in your data:"
-      step2_substeps:
-        - "With your phone, begin an SMS to one of these numbers: %{submit_numbers}."
-        - "Enter the contents of each line on the right side of each page, going from top to bottom."
-        - "Be careful that you enter each line exactly. Each line is important."
-        - "Notice that each answer is separated by a 'SPC'. Enter a space for each time you see 'SPC'. Do not add any extra spaces."
-        - "When you have finished entering, double-check your message to make sure it matches the form."
-        - "Send the message and wait for a response with further instructions."
-        - "If you do not receive a response within 5 minutes, please send the message again."
-      unique_code: "This is the unique code for the form"
-      unknown_number: "Unknown Number"
     incoming_numbers:
       id: "id"
       phone_number: "phone_number"

@@ -60,43 +60,10 @@ class FormsController < ApplicationController
   def show
     respond_to do |format|
 
-      # for html, render the printable or sms_guide styles if requested, otherwise render the form
+      # for html, render the printable style if requested, otherwise render the form
       format.html do
         if params[:print] && request.xhr?
           render(:form, :layout => false)
-
-        # sms guide style
-        elsif params[:sms_guide]
-          # determine the most appropriate language to show the form in
-          # if params[:lang] is set, use that
-          # otherwise try to use the current locale set
-          @lang = params[:lang] || I18n.locale
-
-          # Set up the message for a flash notice in case one is needed.
-          msg = ""
-
-          # If there are more than one incoming numbers, we need to set a flash notice.
-          if configatron.incoming_sms_numbers.size > 1
-            msg << t("sms_form.guide.multiple_sms_numbers_html", url: incoming_numbers_sms_path)
-          end
-
-          # If the form has option sets with an appendix, add export links to the flash
-          if @form.option_sets_with_appendix.present?
-            msg << content_tag(:p, t("sms_form.guide.appendix.introduction"))
-            @form.option_sets_with_appendix.each do |option_set|
-              msg << content_tag(:p, t("sms_form.guide.appendix.export",
-                option_set: html_escape(option_set.name),
-                url: export_option_set_path(option_set)
-              ))
-            end
-          end
-
-
-          # prepare flash message if it's present
-          flash.now[:notice] = msg.html_safe if msg.present?
-
-          render("sms_guide")
-
         # otherwise just normal!
         else
           prepare_and_render_form
@@ -112,6 +79,36 @@ class FormsController < ApplicationController
         @style = params[:style] || 'odk'
       end
     end
+  end
+
+  def sms_guide
+    # determine the most appropriate language to show the form in
+    # if params[:lang] is set, use that
+    # otherwise try to use the current locale set
+    @lang = params[:lang] || I18n.locale
+
+    # Set up the message for a flash notice in case one is needed.
+    msg = ""
+
+    # If there are more than one incoming numbers, we need to set a flash notice.
+    if configatron.incoming_sms_numbers.size > 1
+      msg << t("sms_form.guide.multiple_sms_numbers_html", url: incoming_numbers_sms_path)
+    end
+
+    # If the form has option sets with an appendix, add export links to the flash
+    if @form.option_sets_with_appendix.present?
+      msg << content_tag(:p, t("sms_form.guide.appendix.introduction"))
+      @form.option_sets_with_appendix.each do |option_set|
+        msg << content_tag(:p, t("sms_form.guide.appendix.export",
+          option_set: html_escape(option_set.name),
+          url: export_option_set_path(option_set)
+        ))
+      end
+    end
+
+
+    # prepare flash message if it's present
+    flash.now[:notice] = msg.html_safe if msg.present?
   end
 
   # Format is always :xml

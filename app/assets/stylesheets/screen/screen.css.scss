@@ -313,11 +313,3 @@ body.reports {
     }
   }
 }
-
-/* dont show the printable title */
-div.sms_guide h1.printable { display: none; }
-div.sms_guide { max-width: 900px; }
-div.sms_guide div.header { margin-top: -40px; }
-div.sms_guide div.controls { margin-bottom: 10px; }
-div.sms_guide div.controls form { display: inline-block; margin-right: 10px; }
-div.sms_guide div.controls a { display: inline-block; }
