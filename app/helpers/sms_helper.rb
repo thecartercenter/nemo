@@ -66,4 +66,15 @@ module SmsHelper
     str
   end
 
+  def numbers_to_csv(numbers)
+    CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
+      # Add header row
+      csv << %w(id phone_number).map{ |k| I18n.t("sms_form.incoming_numbers.#{k}") }
+
+      # Add numbers
+      numbers.each_with_index do |number, i|
+        csv << [i + 1, number]
+      end
+    end
+  end
 end

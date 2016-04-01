@@ -22,7 +22,7 @@ module Report::ReportsHelper
   # converts the given report to CSV format
   def report_to_csv(report)
     # We use \r\n because Excel seems to prefer it.
-    CSV.generate(row_sep: "\r\n") do |csv|
+    CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
       # determine if we need blank cell for row headers
       blank = report.header_set[:row] ? [""] : []
 

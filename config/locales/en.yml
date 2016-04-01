@@ -1736,6 +1736,9 @@ en:
         - "If you do not receive a response within 5 minutes, please send the message again."
       unique_code: "This is the unique code for the form"
       unknown_number: "Unknown Number"
+    incoming_numbers:
+      id: "id"
+      phone_number: "phone_number"
     validation:
       invalid_answer: "Sorry, the answer to question %{rank} %{error}."
       missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."

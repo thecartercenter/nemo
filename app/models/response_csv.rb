@@ -1,8 +1,6 @@
 class ResponseCSV
-  # We default to \r\n for row separator because Excel seems to prefer it.
-  def initialize(responses, row_sep: "\r\n")
+  def initialize(responses)
     @responses = responses
-    @row_sep = row_sep
     @columns = []
     @columns_by_question = {}
     @processed_forms = []
@@ -14,7 +12,7 @@ class ResponseCSV
 
   private
 
-  attr_accessor :responses, :row_sep, :columns, :columns_by_question, :processed_forms
+  attr_accessor :responses, :columns, :columns_by_question, :processed_forms
 
   def generate
     # We have to build the body first so that the headers are correct.
@@ -23,13 +21,13 @@ class ResponseCSV
   end
 
   def headers
-    CSV.generate(row_sep: row_sep) do |csv|
+    CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
       csv << columns
     end
   end
 
   def body
-    CSV.generate(row_sep: row_sep) do |csv|
+    CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
       # Initial columns
       find_or_create_column(code: "Form")
       find_or_create_column(code: "Submitter")

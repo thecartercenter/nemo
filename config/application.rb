@@ -85,5 +85,8 @@ module ELMO
 
     # default timeout for sensitive areas requiring a password reprompt
     configatron.recent_login_max_age = 60.minutes
+
+    # We use \r\n for CSV row separator because Excel seems to prefer it.
+    configatron.csv_row_separator = "\r\n"
   end
 end

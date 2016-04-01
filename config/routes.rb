@@ -60,12 +60,17 @@ ELMO::Application.routes.draw do
         get "possible_submitters", path: "possible-submitters", on: type
       end
     end
-    resources :sms, only: [:index]
+    resources :sms, only: [:index] do
+      collection do
+        get "incoming_numbers", path: "incoming-numbers", defaults: { format: "csv" }
+      end
+    end
+
     resources :sms_tests, path: "sms-tests"
 
     resources :reports do
       member do
-        get :data
+        get "data"
       end
     end
 
