@@ -1,5 +1,5 @@
 class ResponsesController < ApplicationController
-  include CsvRenderable, ResponseIndexable
+  include CsvRenderable, ResponseIndexable, OdkHeaderable
 
   # need to load with associations for show and edit
   before_action :load_with_associations, only: [:show, :edit]
@@ -101,56 +101,44 @@ class ResponsesController < ApplicationController
   def create
     # if this is a non-web submission
     if request.format == Mime::XML
+      begin
+        @response.user_id = current_user.id
+        # If it looks like a J2ME submission, process accordingly
+        if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
+          @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
+        else # Otherwise treat it like an ODK submission
+          upfile = params[:xml_submission_file]
+          files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
+          files.each { |k, v| files[k] = v.tempfile }
 
-      # if the method is HEAD or GET just render the 'no content' status since that's what odk wants!
-      if %w(HEAD GET).include?(request.method)
-        render(nothing: true, status: 204)
-
-      # otherwise, we should process the submission
-      else
-        begin
-          @response.user_id = current_user.id
-          # If it looks like a J2ME submission, process accordingly
-          if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
-            XMLSubmission.new response: @response, data: params[:data], source: 'j2me'
-          else # Otherwise treat it like an ODK submission
-            upfile = params[:xml_submission_file]
-
-            unless upfile
-              render_xml_submission_failure("No XML file attached.", 422)
-              return false
-            end
-
-            xml = upfile.read
-            Rails.logger.info("----------\nXML submission:\n#{xml}\n----------")
-            XMLSubmission.new response: @response, data: xml, source: 'odk'
+          unless upfile
+            render_xml_submission_failure("No XML file attached.", 422)
+            return false
           end
 
-          # ensure response's user can submit to the form
-          authorize!(:submit_to, @response.form)
-
-          # save without validating, as we have no way to present validation errors to user,
-          # and submitting apps already do validation
-          @response.save(validate: false)
-
-          render(nothing: true, status: 201)
-
-        rescue CanCan::AccessDenied
-          render_xml_submission_failure($!, 403)
-
-        rescue ActiveRecord::RecordNotFound
-          render_xml_submission_failure($!, 404)
-
-        rescue FormVersionError
-          # 426 - upgrade needed
-          # We use this because ODK can't display custom failure messages so this provides a little more info.
-          render_xml_submission_failure($!, 426)
-
-        rescue SubmissionError
-          render_xml_submission_failure($!, 422)
+          @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
+          @submission = XMLSubmission.new response: @response, files: files, source: "odk"
         end
-      end
 
+        # ensure response's user can submit to the form
+        authorize!(:submit_to, @submission.response.form)
+
+        # save without validating, as we have no way to present validation errors to user,
+        # and submitting apps already do validation
+        @submission.save(validate: false)
+
+        render(nothing: true, status: 201)
+      rescue CanCan::AccessDenied
+        render_xml_submission_failure($!, 403)
+      rescue ActiveRecord::RecordNotFound
+        render_xml_submission_failure($!, 404)
+      rescue FormVersionError
+        # 426 - upgrade needed
+        # We use this because ODK can't display custom failure messages so this provides a little more info.
+        render_xml_submission_failure($!, 426)
+      rescue SubmissionError
+        render_xml_submission_failure($!, 422)
+      end
     # for HTML format just use the method below
     else
       web_create_or_update

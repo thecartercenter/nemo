@@ -75,9 +75,9 @@ ELMO::Application.routes.draw do
     end
 
     namespace :media, type: /audios|images|videos/ do
-      get ':type/:id(/:style)' => 'objects#show', defaults: { style: 'original' }
-      post ':type' => 'objects#create', as: :create
-      delete ':type/:id' => 'objects#delete', as: :delete
+      get ":type/:id(/:style)" => "objects#show", defaults: { style: "original" }
+      post ":type" => "objects#create", as: :create
+      delete ":type/:id" => "objects#delete", as: :delete
     end
 
     # need to list these all separately b/c rails is dumb sometimes
@@ -190,10 +190,13 @@ ELMO::Application.routes.draw do
     get "/forms/:id" => "forms#show", as: :odk_form, defaults: {format: "xml"}
     get "/forms/:id/manifest" => "forms#odk_manifest", as: :odk_form_manifest, defaults: {format: "xml"}
     get "/forms/:id/itemsets" => "forms#odk_itemsets", as: :odk_form_itemsets, defaults: {format: "csv"}
-    match "/submission" => "responses#create", via: [:get, :head, :post], defaults: {format: "xml"}
+
+    match "/submission" => "responses#odk_headers", via: [:head, :get], defaults: { format: "xml" }
+    post "/submission" => "responses#create", defaults: { format: "xml" }
 
     # Unauthenticated submissions
-    match "/noauth/submission" => "responses#create", via: [:get, :head, :post], defaults: {format: :xml, direct_auth: "none"}
+    match "/noauth/submission" => "responses#odk_headers", via: [:head, :get], defaults: { format: "xml", direct_auth: "none" }
+    post "/noauth/submission" => "responses#create", defaults: { format: "xml", direct_auth: "none" }
   end
 
   # API routes.

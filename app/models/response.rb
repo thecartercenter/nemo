@@ -13,7 +13,7 @@ class Response < ActiveRecord::Base
     class_name: "Answer"
   )
 
-  attr_accessor(:modifier, :excerpts)
+  attr_accessor(:modifier, :excerpts, :awaiting_media)
 
   before_save(:normalize_answers)
 
@@ -62,7 +62,7 @@ class Response < ActiveRecord::Base
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
-    raise ArguementError, 'A user is required' unless user
+    raise ArguementError, "A user is required" unless user
 
     Response.where(checked_out_by_id: user).update_all(checked_out_at: nil, checked_out_by_id: nil)
   end
@@ -139,7 +139,7 @@ class Response < ActiveRecord::Base
       # not escaping the query value because double quotes were getting escaped which makes exact phrase not work
       attribs = {mission_id: scope[:mission].id}
 
-      if expression.qualifier.name == 'text_by_code'
+      if expression.qualifier.name == "text_by_code"
         # get qualifier text (e.g. {form}) and strip outer braces
         question_code = expression.qualifier_text[1..-2]
 
@@ -222,7 +222,7 @@ class Response < ActiveRecord::Base
   # nil means no recent responses
   def self.recent_count(rel)
     %w(hour day week month year).each do |p|
-      if (count = rel.where('created_at > ?', 1.send(p).ago).count) > 0
+      if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
         return [count, p]
       end
     end
@@ -284,13 +284,13 @@ class Response < ActiveRecord::Base
   end
 
   def checked_out_by_others?(user = nil)
-    raise ArguementError, 'A user is required' unless user
+    raise ArguementError, "A user is required" unless user
 
     !self.checked_out_by.nil? && self.checked_out_by != user && check_out_valid?
   end
 
   def check_out!(user = nil)
-    raise ArgumentError, 'A user is required to checkout a response' unless user
+    raise ArgumentError, "A user is required to checkout a response" unless user
 
     if !checked_out_by_others?(user)
       transaction do
@@ -311,30 +311,6 @@ class Response < ActiveRecord::Base
   def check_in!
     self.check_in
     self.save!
-  end
-
-  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
-  def populate_from_hash(hash)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if mission.nil?
-
-    form.visible_questionings.each do |qing|
-      qing.subquestions.each do |subq|
-        value = hash[subq.odk_code]
-        if value.is_a? Array
-          value.each_with_index do |val, i|
-            answer = Answer.new(questioning: qing, rank: subq.rank, inst_num: i + 1)
-            answer.populate_from_string(val)
-            self.answers << answer
-          end
-        else
-          answer = Answer.new(questioning: qing, rank: subq.rank)
-          answer.populate_from_string(value)
-          self.answers << answer
-        end
-      end
-    end
-    self.incomplete = (hash[OdkHelper::IR_QUESTION] == "yes")
   end
 
   private

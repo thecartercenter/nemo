@@ -1,6 +1,7 @@
 class FormsController < ApplicationController
   include StandardImportable
   include BatchProcessable
+  include OdkHeaderable
   helper OdkHelper
 
   # special find method before load_resource
@@ -43,7 +44,6 @@ class FormsController < ApplicationController
           # This query is not deferred so we have to check if it should be run or not.
           @forms = @forms.published
         end
-        render_openrosa
       end
     end
   end
@@ -92,8 +92,6 @@ class FormsController < ApplicationController
 
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || 'odk'
-
-        render_openrosa
       end
     end
   end
@@ -106,7 +104,6 @@ class FormsController < ApplicationController
       @ifa = ItemsetsFormAttachment.new(form: @form)
       @ifa.ensure_generated
     end
-    render_openrosa
   end
 
   # Format is always :csv
@@ -246,12 +243,6 @@ class FormsController < ApplicationController
       (params[:whitelistings] || []).each do |api_user|
         @form.whitelistings.new(user_id: api_user)
       end
-    end
-
-    # adds the appropriate headers for openrosa content
-    def render_openrosa
-      render(content_type: "text/xml") if request.format.xml?
-      response.headers['X-OpenRosa-Version'] = "1.0"
     end
 
     # prepares objects and renders the form template
