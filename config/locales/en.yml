@@ -1099,7 +1099,7 @@ en:
         instructions: "Instructions"
         intro: "Please read all instructions to begin. You will use this paper first and then your phone."
         paper: "Paper"
-        1a: "First answer all the questions below and ll in each dashed box, e.g.:"
+        1a: "First answer all the questions below and fill in each dashed box, e.g.:"
         phone: "Phone"
         2a_appendix: "With your mobile, begin an SMS to one of the numbers on the attached sheet."
         2a_number_html: "With your mobile, begin an SMS to <strong>%{number}</strong>."

@@ -18,7 +18,7 @@ module SmsGuideHelper
 
   # Returns a space glyph type thing for use in the sms guide.
   def spc_glyph
-    image_tag("spc.png")
+    image_tag("sms_guide/spc.png")
   end
 
   # Returns a period glyph type thing for use in the sms guide.

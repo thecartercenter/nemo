@@ -58,6 +58,14 @@
     i.fa {
       font-size: 14px;
     }
+
+    #example-box {
+      margin-left: 10px;
+      border: 2px dashed #666;
+      display: inline-block;
+      text-align: center;
+      width: 20px;
+    }
   }
 
   #example-sms {
