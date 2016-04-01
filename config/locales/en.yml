@@ -291,6 +291,7 @@ en:
         multilevel: "Is Multilevel?"
         options: "Options"
         option_levels: "Levels"
+        sms_guide_formatting: "SMS Guide Formatting"
       qing_group:
         group_name: "Name"
         group_hint: "Hint"
