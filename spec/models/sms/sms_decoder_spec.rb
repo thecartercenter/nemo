@@ -268,6 +268,27 @@ describe Sms::Decoder do
       rank: 2, value: "abhk", invalid_options: "h, k")
   end
 
+  it "select_multiple question with appendix should work" do
+    create_form(questions: %w(integer select_multiple_with_appendix_for_sms))
+    assert_decoding(body: "#{@form.code} 1.15 2.2,4", answers: [15, %w(Banana Durian)])
+  end
+
+  it "select_multiple question with appendix and one non-existent option should error" do
+    create_form(questions: %w(integer select_multiple_with_appendix_for_sms))
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.2,4,no",
+      error: "answer_not_valid_option_multi",
+      rank: 2, value: "2,4,no", invalid_options: "no")
+  end
+
+  it "select_multiple question with appendix and several non-existent options should error" do
+    create_form(questions: %w(integer select_multiple_with_appendix_for_sms))
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.2,no,nope",
+      error: "answer_not_valid_options_multi",
+      rank: 2, value: "2,no,nope", invalid_options: "no, nope")
+  end
+
   it "decimal question should work" do
     create_form(questions: %w(decimal))
     assert_decoding(body: "#{@form.code} 1.1.15", answers: [1.15])
