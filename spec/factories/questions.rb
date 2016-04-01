@@ -3,6 +3,7 @@ FactoryGirl.define do
     transient do
       use_multilevel_option_set false
       use_geo_option_set false
+      use_large_option_set false
       add_to_form false
 
       # Optionally specifies the options for the option set.
@@ -21,6 +22,7 @@ FactoryGirl.define do
           mission: mission,
           multilevel: use_multilevel_option_set,
           geographic: use_geo_option_set,
+          large: use_large_option_set,
           is_standard: is_standard
         }
         os_attrs[:option_names] = option_names unless option_names.nil?
