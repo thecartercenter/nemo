@@ -165,12 +165,12 @@ class Sms::Decoder
       build_answer(value: @value)
 
     when "select_one"
-      if @qing.text_type_for_sms?
+      if @qing.sms_formatting_as_text?
         option = @qing.option_set.all_options.where(canonical_name: @value.downcase).first
         raise_answer_error("answer_not_valid_option") unless option
         build_answer(@qing.option_set.path_to_option(option).map { |o| {option: o} }, multilevel: @qing.multilevel?)
 
-      elsif @qing.option_set && @qing.option_set.sms_formatting == "appendix"
+      elsif @qing.sms_formatting_as_appendix?
         option = @qing.option_set.fetch_by_shortcode(@value.downcase).try(:option)
         raise_answer_error("answer_not_valid_option") unless option
         build_answer(@qing.option_set.path_to_option(option).map { |o| {option: o} }, multilevel: @qing.multilevel?)

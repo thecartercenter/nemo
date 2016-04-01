@@ -6,8 +6,8 @@ module SmsGuideHelper
     width = case qing.question.qtype.name
     when "integer" then 3
     when "select_one"
-      if qing.text_type_for_sms? then 8
-      elsif qing.option_set && qing.option_set.sms_formatting == "appendix" then 4
+      if qing.sms_formatting_as_text? then 8
+      elsif qing.sms_formatting_as_appendix? then 4
       else 1
       end
     when "decimal" then 3
@@ -54,9 +54,12 @@ module SmsGuideHelper
     when "integer" then "3"
     when "decimal" then "12.5"
     when "select_one"
-      if qing.text_type_for_sms? then qing.first_leaf_option.name
-      elsif qing.option_set && qing.option_set.sms_formatting == "appendix" then qing.first_leaf_option_node.shortcode
-      else "b"
+      if qing.sms_formatting_as_text?
+        qing.first_leaf_option.name
+      elsif qing.sms_formatting_as_appendix?
+        qing.first_leaf_option_node.shortcode
+      else
+        "b"
       end
     when "select_multiple" then "a,c"
     when "datetime" then "20120228 1430"
@@ -76,15 +79,15 @@ module SmsGuideHelper
   def pointer_type(qing)
     case qing.qtype_name
     when "select_one"
-      if qing.text_type_for_sms?
+      if qing.sms_formatting_as_text?
         "select_one_as_text"
-      elsif qing.option_set && qing.option_set.sms_formatting == "appendix"
+      elsif qing.sms_formatting_as_appendix?
         "select_one_with_appendix"
       else
         qing.qtype_name
       end
     when "select_multiple"
-      if qing.option_set && qing.option_set.sms_formatting == "appendix"
+      if qing.sms_formatting_as_appendix?
         "select_multiple_with_appendix"
       else
         qing.qtype_name

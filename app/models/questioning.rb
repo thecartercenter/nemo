@@ -36,6 +36,8 @@ class Questioning < FormItem
     :multimedia?,
     :numeric?,
     :tags,
+    :sms_formatting_as_text?,
+    :sms_formatting_as_appendix?,
     to: :question
 
 
@@ -117,10 +119,6 @@ class Questioning < FormItem
   # /REFACTOR
   def inspect
     id
-  end
-
-  def text_type_for_sms?
-    option_set.sms_guide_formatting == "treat_as_text" if has_options?
   end
 
   private
