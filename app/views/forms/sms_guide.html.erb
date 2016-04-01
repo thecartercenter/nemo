@@ -75,12 +75,12 @@
       </tr>
       <% if @form.authenticate_sms? %>
         <tr>
-          <td><%= t(".auth_code") %></td>
+          <td><strong><%= t(".auth_code") %></strong></td>
           <td class="answer"><%= answer_space(width: 4) %> <%= spc_glyph %></td>
         </tr>
       <% end %>
       <tr>
-        <td><%= t(".form_code") %></td>
+        <td><strong><%= t(".form_code") %></strong></td>
         <td class="answer"><span class="prefilled-text"><%= @form.code %></span> <%= spc_glyph %></td>
       </tr>
 
