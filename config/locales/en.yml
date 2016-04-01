@@ -1106,7 +1106,7 @@ en:
         - "Send the message and wait for a response with further instructions."
         - "If you do not receive a response within 5 minutes, please send the message again."
       unique_code: "This is the unique code for the form"
-      unknown_number: "Unknown Number"
+      unknown_number: "unknown number"
 
   import:
     row_error: "Row %{row}: %{error}"

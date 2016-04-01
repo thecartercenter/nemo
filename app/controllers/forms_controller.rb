@@ -91,7 +91,8 @@ class FormsController < ApplicationController
     msg = ""
 
     # If there are more than one incoming numbers, we need to set a flash notice.
-    if configatron.incoming_sms_numbers.size > 1
+    @number_appendix = configatron.incoming_sms_numbers.size > 1
+    if @number_appendix
       msg << t("sms_form.guide.multiple_sms_numbers_html", url: incoming_numbers_sms_path)
     end
 
@@ -105,7 +106,6 @@ class FormsController < ApplicationController
         ))
       end
     end
-
 
     # prepare flash message if it's present
     flash.now[:notice] = msg.html_safe if msg.present?

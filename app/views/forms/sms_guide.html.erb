@@ -3,9 +3,6 @@
 <% locale_was = I18n.locale; I18n.locale = @lang %>
 <div class="sms_guide">
 
-  <div class="header"><%= t(".header") %></div>
-  <h1 class="printable"><%= title %></h1>
-
   <div class="controls">
     <form>
       <input type="hidden" name="sms_guide" value="1">
@@ -19,43 +16,75 @@
     <%= link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test) %>
   </div>
 
-  <div id="user-field">
-    <%= Response.human_attribute_name(:user_id) %>:
-    <div><%= t(".for_paper_record") %></div>
-  </div>
+  <div id="body">
+    <div class="header"><%= t(".header") %></div>
+    <h1 class="title inner"><%= title %></h1>
 
-  <table>
-    <tr>
-      <td colspan="2" class="user-field">
-      </td>
-    </tr>
-    <tr>
-      <td colspan="2" class="step1">
-        <strong><%= t("common.step") %> 1:</strong> <%= t(".step1") %>
-        <%= t(@form.all_required? ? ".all_required" : ".not_all_required") %>
-      </td>
-      <td class="answers"></td>
-    </tr>
-    <tr>
-      <td class="rank"></td>
-      <td class="pointer">
-        <em><%= t(".unique_code") %> </em>
-      </td>
-      <td class="answers">
-        <%= answer_space(@form.current_version.code) %>
-      </td>
-    </tr>
+    <div id="user-field">
+      <%= Response.human_attribute_name(:user_id) %>:
+      <div><%= t(".for_paper_record") %></div>
+    </div>
 
-    <%# loop over each question %>
-    <% @form.smsable_questionings.each do |index, qing| %>
+    <div id="instructions">
+      <h3>Instructions</h3>
+      <p>Please read all instructions to begin. You will use this paper first and then your phone.</p>
+      <ol>
+        <li>
+          <%= icon_tag("file-o") %> PAPER
+          <ol>
+            <li>
+              First answer all the questions below and ll in each dashed box, e.g.
+            </li>
+          </ol>
+        </li>
+        <li>
+          <%= icon_tag("phone") %> MOBILE
+          <ol>
+            <li>
+              With your mobile, begin an SMS to
+              <% if @number_appendix %>
+                one of the numbers on the attached sheet.
+              <% elsif configatron.incoming_sms_numbers.any? %>
+                <strong><%= configatron.incoming_sms_numbers.first %></strong>.
+              <% else %>
+                <strong>[<%= t(".unknown_number") %>]</strong>.
+              <% end %>
+            </li>
+            <li>
+              Enter the contents of each line on the right side of the page, going from top to bottom.
+            </li>
+            <li>
+              Periods and spaces are denoted by <%= period_glyph %> and <%= spc_glyph %>, respectively. It is important to enter both periods and spaces.
+            </li>
+            <li>
+              Example SMS: &nbsp;
+              <span id="example-sms">
+                3439 jks 1.c 2.ab 3.a 4.d 5.observer 6.a 7.c 8.c 9.z 10.90 1.c 2.ab 3.a 4.d 5.observer 6.a 7.c 8.c 9.z 10.90
+              </span>
+            </li>
+          </ol>
+        </li>
+     </div>
+
+    <table>
       <tr>
-        <td class="rank"><%= index %>.</td>
-        <td class="question">
-          <%= qing.question.name %>
-          <%= reqd_sym if qing.required? %>
+        <td colspan="2" class="user-field">
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" class="step1">
+          <strong><%= t("common.step") %> 1:</strong> <%= t(".step1") %>
+          <%= t(@form.all_required? ? ".all_required" : ".not_all_required") %>
+        </td>
+        <td class="answers"></td>
+      </tr>
+      <tr>
+        <td class="rank"></td>
+        <td class="pointer">
+          <em><%= t(".unique_code") %> </em>
         </td>
         <td class="answers">
-          <%= answer_space(" #{index}.") %>
+          <%= answer_space(@form.current_version.code) %>
         </td>
       </tr>
 
@@ -63,51 +92,36 @@
       <% if qing.question.qtype.has_options? && qing.option_set.sms_formatting == "inline" %>
         <tr>
           <td class="rank"></td>
-          <td class="options">
-            <% qing.question.options.each_with_index do |opt, idx| %>
-              <span><%= index_to_letter(idx + 1) %>) <%= opt.name %></span>
-            <% end %>
+          <td class="pointer">
+            <em>
+              <% qtype_name = qing.text_type_for_sms? ? 'select_one_as_text' : qing.qtype_name %>
+              <%= t(".pointers.#{qtype_name}") %>
+              <%= sms_example_for_question(qing) %>
+            </em>
           </td>
-          <td class="answers"></td>
+          <td class="answers">
+            <%= answer_space_for_question(qing) %>
+          </td>
         </tr>
       <% end %>
 
-      <%# pointer/answer row, depends on question type %>
+      <%# final instructions %>
       <tr>
         <td class="rank"></td>
         <td class="pointer">
           <em>
-<<<<<<< 8e10e2c78758ce168b493a296edbb644b59fd852
             <% qtype_name = pointer_type(qing) %>
-            <%= t("sms_form.guide.pointers.#{qtype_name}") %>
-=======
-            <% qtype_name = qing.text_type_for_sms? ? 'select_one_as_text' : qing.qtype_name %>
             <%= t(".pointers.#{qtype_name}") %>
->>>>>>> 4128: Refactored styles, translations, route, and user field
             <%= sms_example_for_question(qing) %>
           </em>
         </td>
         <td class="answers">
           <%= answer_space_for_question(qing) %>
         </td>
+        <td></td>
       </tr>
-    <% end %>
 
-    <%# final instructions %>
-    <tr>
-      <td colspan="3" class="step2">
-        <strong><%= t("common.step") %> 2:</strong> <%= t(".step2") %>
-        <ol>
-          <% t(".step2_substeps").each do |ss| %>
-            <%# OK to use html_safe here because we control the substep text and we're manually escaping the number. %>
-            <li><%= ss.gsub("%{submit_numbers}", html_escape(submit_numbers)).html_safe %></li>
-          <% end %>
-        </ol>
-        <%= t("common.thanks_excl") %>
-      </td>
-      <td></td>
-    </tr>
-
-  </table>
+    </table>
+  </div>
 </div>
 <% I18n.locale = locale_was %>

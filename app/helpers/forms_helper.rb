@@ -68,6 +68,7 @@ module FormsHelper
     end
   end
 
+<<<<<<< 25750fa72e66ef2f9991abef8514de44a2ed0939
   # returns a set of divs making up an answer space for the given text for use in the sms guide
   def answer_space(text, options = {})
     # default to showing the spc glyph
@@ -172,6 +173,8 @@ module FormsHelper
     content_tag("strong", numbers)
   end
 
+=======
+>>>>>>> 4128: Added new instructions
   def allow_incomplete?
     @form.allow_incomplete? && @style != 'commcare'
   end
