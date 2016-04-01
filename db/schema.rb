@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160329064209) do
+ActiveRecord::Schema.define(version: 20160401022944) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -239,6 +239,7 @@ ActiveRecord::Schema.define(version: 20160329064209) do
     t.integer "option_id", limit: 4
     t.integer "option_set_id", limit: 4
     t.integer "rank", limit: 4, default: 1, null: false
+    t.integer "sequence", limit: 4
     t.datetime "updated_at", null: false
   end
 

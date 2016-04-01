@@ -277,6 +277,7 @@ en:
       option:
         base: "" # this is a sort of hack to get error msg to display properly
         coordinates: "Coordinates"
+        shortcode: "Shortcode"
       option_set:
         allow_coordinates: "With Coordinates?"
         answers: "Answers"

@@ -30,11 +30,16 @@ class OptionNode < ActiveRecord::Base
 
   replicable child_assocs: [:children, :option], backward_assocs: :option_set, dont_copy: [:option_set_id, :option_id]
 
+  delegate :shortcode_length, to: :option_set
+
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
-    ancestries = roots.map{ |r| "'#{r.id}'" }.join(',')
-    nodes_by_root_id = OptionNode.includes(:option).where("ancestry IN (#{ancestries})").order('rank').group_by{ |n| n.ancestry.to_i }
-    roots.each{ |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
+    ancestries = roots.map { |r| "'#{r.id}'" }.join(",")
+    nodes_by_root_id = OptionNode.includes(:option).
+      where("ancestry IN (#{ancestries})").
+      order("rank").
+      group_by { |n| n.ancestry.to_i }
+    roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
 
   # Efficiently gets an option id from an option node id. id may be a string or integer.
@@ -57,7 +62,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def max_depth
-    @max_depth ||= descendants.maximum('ancestry_depth')
+    @max_depth ||= descendants.maximum("ancestry_depth")
   end
 
   # Returns options of children, ordered by rank.
@@ -84,7 +89,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def child_with_option_id(oid)
-    children.detect{ |c| c.option_id == oid }
+    children.detect { |c| c.option_id == oid }
   end
 
   # The total number of descendant options.
@@ -123,7 +128,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def sorted_children
-    children.order('rank')
+    children.order("rank")
   end
 
   def first_leaf_option
@@ -176,7 +181,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   # Serializes all descendants. Meant to be called on root.
-  def as_json(options = {})
+  def as_json(_ = {})
     arrange_as_json
   end
 
@@ -188,12 +193,12 @@ class OptionNode < ActiveRecord::Base
     nodes = if huge? && options[:truncate_if_huge]
       first_n_descendants(TO_SERIALIZE_IF_HUGE)
     else
-      descendants.ordered_by_ancestry_and('rank')
+      descendants.ordered_by_ancestry_and("rank")
     end
 
     # Manually eager load options.
     opt_hash = options_by_id(nodes, options)
-    nodes.each{ |n| n.option = opt_hash[n.option_id] }
+    nodes.each { |n| n.option = opt_hash[n.option_id] }
 
     # arrange_nodes is an Ancestry gem function that takes a set of nodes and arranges them in the hash structure.
     hash = self.class.arrange_nodes(nodes)
@@ -207,7 +212,7 @@ class OptionNode < ActiveRecord::Base
 
     hash.map do |node, children|
       {}.tap do |branch|
-        %w(id rank).each{ |k| branch[k.to_sym] = node[k] }
+        %w(id rank).each { |k| branch[k.to_sym] = node[k] }
         branch[:option] = node.option.as_json(for_option_set_form: true)
 
         # Don't need to look up this property if huge, since not editable.
@@ -237,6 +242,9 @@ class OptionNode < ActiveRecord::Base
         # add the coordinates if the option set allows coordinates
         row << node.option.coordinates if option_set.allow_coordinates?
 
+        # add the node's shortcode
+        row << node.shortcode
+
         rows << row
       end
 
@@ -246,7 +254,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def preferred_name_translations(path)
-    path.map{ |p| p.name(configatron.preferred_locale.to_s) }
+    path.map { |p| p.name(configatron.preferred_locale.to_s) }
   end
 
   # Returns the total number of options omitted from the JSON serialization.
@@ -260,9 +268,9 @@ class OptionNode < ActiveRecord::Base
 
   def to_s
     "Option Node: ID #{id}  Option ID: " +
-    (is_root? ? '[ROOT]' : option_id || '[No option]').to_s +
-    " Option: #{option.try(:name)}"
-    "  System ID: #{object_id}"
+      (is_root? ? "[ROOT]" : option_id || "[No option]").to_s +
+      " Option: #{option.try(:name)}" +
+      "  System ID: #{object_id}"
   end
 
   # returns a string representation of this node and its children, indented by the given amount
@@ -271,103 +279,112 @@ class OptionNode < ActiveRecord::Base
     options[:space] ||= 0
 
     # indentation
-    (' ' * options[:space]) +
+    (" " * options[:space]) +
 
       # option level name, option name
-      ["(#{level.try(:name)})", "#{rank}. #{option.try(:name) || '[Root]'}"].compact.join(' ') +
+      ["(#{level.try(:name)})", "#{rank}. #{option.try(:name) || '[Root]'} [#{id}]"].compact.join(" ") +
 
       # parent, mission
       " (mission: #{mission.try(:name) || '[None]'}, " +
-        "option-mission: #{option ? option.mission.try(:name) || '[None]' : '[N/A]'}, " +
-        "option-set: #{option_set.try(:name) || '[None]'})" +
+      "option-mission: #{option ? option.mission.try(:name) || '[None]' : '[N/A]'}, " +
+      "option-set: #{option_set.try(:name) || '[None]'} " +
+      "sequence: #{self.try(:sequence) || '[None]'})" +
 
-      "\n" + sorted_children.map{ |c| c.to_s_indented(:space => options[:space] + 2) }.join
+      "\n" + sorted_children.map { |c| c.to_s_indented(space: options[:space] + 2) }.join
+  end
+
+  def shortcode
+    @shortcode = Base36.to_padded_base36(sequence, length: shortcode_length)
+  end
+
+  def max_sequence
+    # for some reason ancestry scopes requests through the current node even if you don't
+    # call where through self, so you need to explicitly call unscoped here
+    self.class.unscoped.where(option_set_id: option_set_id).maximum(:sequence) || 0
   end
 
   protected
 
-    # Special method for creating/updating a tree of nodes via the children_attribs hash.
-    # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
-    def update_children
-      # It's important not to run through this method if children_attribs is nil, since otherwise
-      # children will get deleted on a partial update.
-      return if children_attribs.nil?
+  # Special method for creating/updating a tree of nodes via the children_attribs hash.
+  # Sets ranks_changed? flag if the ranks of any of the descendants' children change.
+  def update_children
+    # It's important not to run through this method if children_attribs is nil, since otherwise
+    # children will get deleted on a partial update.
+    return if children_attribs.nil?
 
-      self.children_attribs = [] if children_attribs == 'NONE'
+    self.children_attribs = [] if children_attribs == "NONE"
 
-      reload # Ancestry doesn't seem to work properly without this.
+    reload # Ancestry doesn't seem to work properly without this.
 
-      # Symbolize keys if regular Hash. (not needed for HashWithIndifferentAccess)
-      children_attribs.each{ |a| a.symbolize_keys! if a.respond_to?(:symbolize_keys!) }
+    # Symbolize keys if regular Hash. (not needed for HashWithIndifferentAccess)
+    children_attribs.each { |a| a.symbolize_keys! if a.respond_to?(:symbolize_keys!) }
 
-      self.ranks_changed = false # Assume false to begin.
-      self.options_added = false
-      self.options_removed = false
+    self.ranks_changed = false # Assume false to begin.
+    self.options_added = false
+    self.options_removed = false
 
-      # Index all children by ID for better performance
-      children_by_id = children.index_by(&:id)
+    # Index all children by ID for better performance
+    children_by_id = children.index_by(&:id)
 
-      # Loop over all children attributes.
-      # We use the ! variant of update and create below so that validation
-      # errors on children and options will cascade up.
-      (children_attribs || []).each_with_index do |attribs, i|
+    # Loop over all children attributes.
+    # We use the ! variant of update and create below so that validation
+    # errors on children and options will cascade up.
+    (children_attribs || []).each_with_index do |attribs, i|
 
-        # If there is a matching (by id) existing child.
-        attribs[:id] = attribs[:id].to_i if attribs.key?(:id)
-        if attribs[:id] && matching = children_by_id[attribs[:id]]
-          self.ranks_changed = true if matching.rank != i + 1
+      # If there is a matching (by id) existing child.
+      attribs[:id] = attribs[:id].to_i if attribs.key?(:id)
+      if attribs[:id] && matching = children_by_id[attribs[:id]]
+        self.ranks_changed = true if matching.rank != i + 1
 
-          # Not sure why this is needed, temporary hack.
-          attribs[:children_attribs] = 'NONE' if attribs[:children_attribs].nil?
+        # Not sure why this is needed, temporary hack.
+        attribs[:children_attribs] = "NONE" if attribs[:children_attribs].nil?
 
-          matching.update_attributes!(attribs.merge(rank: i + 1))
-          copy_flags_from_subnode(matching)
+        matching.update_attributes!(attribs.merge(rank: i + 1))
+        copy_flags_from_subnode(matching)
 
-          # Remove from hash so that we'll know later which ones weren't updated.
-          children_by_id.delete(attribs[:id])
-        else
-          attribs = copy_denormalized_attribs_to_attrib_hash(attribs)
-          self.options_added = true
+        # Remove from hash so that we'll know later which ones weren't updated.
+        children_by_id.delete(attribs[:id])
+      else
+        attribs = copy_denormalized_attribs_to_attrib_hash(attribs)
+        self.options_added = true
 
-          # We need to strip ID in case it's present due to a node changing parents.
-          children.create!(attribs.except(:id).merge(rank: i + 1))
-        end
+        # We need to strip ID in case it's present due to a node changing parents.
+        children.create!(attribs.except(:id).merge(rank: i + 1).merge(sequence: max_sequence + 1))
       end
-
-      # Destroy existing children that were not mentioned in the update.
-      self.options_removed = true unless children_by_id.empty?
-      children_by_id.values.each{ |c| c.destroy }
-
-      # Don't need this anymore. Nullify to prevent duplication on future saves.
-      self.children_attribs = nil
     end
+
+    # Destroy existing children that were not mentioned in the update.
+    self.options_removed = true unless children_by_id.empty?
+    children_by_id.values.each { |c| c.destroy }
+
+    # Don't need this anymore. Nullify to prevent duplication on future saves.
+    self.children_attribs = nil
+  end
 
   private
 
-    def copy_flags_from_subnode(node)
-      self.ranks_changed = true if node.ranks_changed?
-      self.options_added = true if node.options_added?
-      self.options_removed = true if node.options_removed?
-    end
+  def copy_flags_from_subnode(node)
+    self.ranks_changed = true if node.ranks_changed?
+    self.options_added = true if node.options_added?
+    self.options_removed = true if node.options_removed?
+  end
 
-    # Copies denormalized attributes like mission, option_set, etc., to:
-    # 1. The given hash.
-    # 2. The given hash's subhash at key :option_attribs, if present.
-    # Returns the modified hash.
-    def copy_denormalized_attribs_to_attrib_hash(hash)
-      %w(mission_id option_set_id).each{ |k| hash[k.to_sym] = send(k) }
-      if hash[:option_attribs]
-        %w(mission_id).each{ |k| hash[:option_attribs][k.to_sym] = send(k) }
-      end
-      hash
-    end
+  # Copies denormalized attributes like mission, option_set, etc., to:
+  # 1. The given hash.
+  # 2. The given hash's subhash at key :option_attribs, if present.
+  # Returns the modified hash.
+  def copy_denormalized_attribs_to_attrib_hash(hash)
+    %w(mission_id option_set_id).each { |k| hash[k.to_sym] = send(k) }
+    %w(mission_id).each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
+    hash
+  end
 
-    def has_answers?
-      # option_set may not be present when node first getting built
-      !is_root? && option_set.present? && option_set.has_answers_for_option?(option_id)
-    end
+  def has_answers?
+    # option_set may not be present when node first getting built
+    !is_root? && option_set.present? && option_set.has_answers_for_option?(option_id)
+  end
 
-    def ensure_no_answers_or_choices
-      raise DeletionError.new(:cant_delete_if_has_response) if has_answers?
-    end
+  def ensure_no_answers_or_choices
+    raise DeletionError.new(:cant_delete_if_has_response) if has_answers?
+  end
 end
