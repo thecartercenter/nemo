@@ -6,7 +6,7 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
 
     qtype_name = case pseudo_qtype_name
     when "multilevel_select_one", "geo_select_one", "geo_multilevel_select_one",
-      "select_one_as_text_for_sms", "multilevel_select_one_as_text_for_sms"
+      "select_one_as_text_for_sms", "multilevel_select_one_as_text_for_sms", "select_one_with_appendix_for_sms"
       "select_one"
     else
       pseudo_qtype_name
@@ -28,6 +28,7 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
 
     question = build(:question, q_attribs)
     question.option_set.sms_guide_formatting = "treat_as_text" if pseudo_qtype_name =~ /as_text_for_sms/
+    question.option_set.sms_guide_formatting = "appendix" if pseudo_qtype_name =~ /with_appendix_for_sms/
     question
   end
 

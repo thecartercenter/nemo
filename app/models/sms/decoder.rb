@@ -171,7 +171,7 @@ class Sms::Decoder
         build_answer(@qing.option_set.path_to_option(option).map { |o| {option: o} }, multilevel: @qing.multilevel?)
 
       elsif @qing.option_set && @qing.option_set.sms_formatting == "appendix"
-        option = @qing.option_set.fetch_by_shortcode(canonical_name: @value.downcase)
+        option = @qing.option_set.fetch_by_shortcode(@value.downcase).try(:option)
         raise_answer_error("answer_not_valid_option") unless option
         build_answer(@qing.option_set.path_to_option(option).map { |o| {option: o}}, multilevel: @qing.multilevel?)
 

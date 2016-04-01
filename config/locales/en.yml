@@ -1725,7 +1725,7 @@ en:
       all_required: "Please answer all questions."
       appendix:
         introduction: "The following option sets require an appendix to be printed."
-        export: "Export %{option_set}"
+        export: "Export <a href=\"%{url}\">%{option_set}</a>"
       header: "ELMO SMS Composition Guide"
       multiple_sms_numbers_html: "There are <a href=\"%{url}\">multiple SMS submission numbers</a> that should be included as an appendix to this form."
       not_all_required: "Questions marked with an asterisk (*) are required."
