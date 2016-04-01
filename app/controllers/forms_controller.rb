@@ -2,6 +2,7 @@ class FormsController < ApplicationController
   include StandardImportable
   include BatchProcessable
   include OdkHeaderable
+  include ERB::Util
   helper OdkHelper
 
   # special find method before load_resource
@@ -76,17 +77,17 @@ class FormsController < ApplicationController
 
           # If there are more than one incoming numbers, we need to set a flash notice.
           if configatron.incoming_sms_numbers.size > 1
-            msg += t("sms_form.guide.multiple_sms_numbers_html", url: incoming_numbers_sms_path)
+            msg << t("sms_form.guide.multiple_sms_numbers_html", url: incoming_numbers_sms_path)
           end
 
           # If the form has option sets with an appendix, add export links to the flash
           if @form.option_sets_with_appendix.present?
-            msg += "<p>" + t("sms_form.guide.appendix.introduction") + "</p>"
+            msg << content_tag(:p, t("sms_form.guide.appendix.introduction"))
             @form.option_sets_with_appendix.each do |option_set|
-              msg += "<p>" + t("sms_form.guide.appendix.export",
-                option_set: option_set.name,
+              msg << content_tag(:p, t("sms_form.guide.appendix.export",
+                option_set: html_escape(option_set.name),
                 url: export_option_set_path(option_set)
-              ) + "</p>"
+              ))
             end
           end
 
