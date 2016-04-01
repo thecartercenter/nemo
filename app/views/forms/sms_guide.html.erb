@@ -20,13 +20,7 @@
     <div class="header"><%= t(".header") %></div>
     <h1 class="title inner"><%= title %></h1>
 
-    <div id="user-field">
-      <%= Response.human_attribute_name(:user_id) %>:
-      <div><%= t(".for_paper_record") %></div>
-    </div>
-
     <div id="instructions">
-      <h3><%= t(".instructions.instructions") %></h3>
       <p><%= t(".instructions.intro") %></p>
       <ol>
         <li>
@@ -34,6 +28,10 @@
           <ol>
             <li>
               <%= t(".instructions.1a") %>
+              <div id="user-field"><%= t(".for_paper_record") %></div>
+            </li>
+            <li>
+              <%= t(".instructions.1b") %>
               <div id="example-box"><%= image_tag("sms_guide/b.png") %></div>
             </li>
           </ol>
@@ -65,13 +63,12 @@
             </li>
           </ol>
         </li>
-     </div>
-
+    </div>
     <table>
       <tr id="message-arrow">
         <td></td>
         <td class="answer">
-          <%= t(".sms_message")%><br/><%= icon_tag("arrow-down") %>
+          <%= icon_tag("arrow-down") %> <%= t(".sms_message")%>
         </td>
       </tr>
       <% if @form.authenticate_sms? %>
