@@ -8,6 +8,8 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     when "multilevel_select_one", "geo_select_one", "geo_multilevel_select_one",
       "select_one_as_text_for_sms", "multilevel_select_one_as_text_for_sms", "select_one_with_appendix_for_sms"
       "select_one"
+    when "select_multiple_with_appendix_for_sms"
+      "select_multiple"
     else
       pseudo_qtype_name
     end

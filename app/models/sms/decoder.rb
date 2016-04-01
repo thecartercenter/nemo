@@ -132,9 +132,11 @@ class Sms::Decoder
     @current_ability ||= Ability.new(user: @user, mission: @msg.mission)
   end
 
-  # checks if the current @user has permission to submit to form @form and the form mission matches the msg mission, raises an error if not
+  # checks if the current @user has permission to submit to form @form and
+  # the form mission matches the msg mission, raises an error if not
   def check_permission
-    raise_decoding_error("form_not_permitted") unless current_ability.can?(:submit_to, @form) && @form.mission == @msg.mission
+    raise_decoding_error("form_not_permitted") unless current_ability.can?(:submit_to, @form) &&
+        @form.mission == @msg.mission
   end
 
   # finds the Questioning object specified by the current value of @rank
@@ -198,24 +200,50 @@ class Sms::Decoder
       # hopefully this stays empty!
       invalid = []
 
-      # split and deal with each option, accumulating a list of indices
-      idxs = @value.split("").map do |l|
+      # split options
 
-        # make sure it's a letter
-        if l =~ /[a-z]/
+      # if the option set has no commas, and has <= 26 options, assume it's a legacy submission
+      # and split on spaces, otherwise split on commas
+      if @qing.option_set.descendants.count <= 26 && @value =~ /\A[A-Z]+\z/i
+        split_options = @value.split("")
+      else
+        split_options = @value.split(",")
+      end
 
-          # convert to an index
-          idx = letters_to_index(l)
+      if @qing.option_set.sms_formatting == "appendix"
+        # fetch each option by shortcode
+        idxs = split_options.map do |l|
+          option = @qing.option_set.fetch_by_shortcode(l).try(:option)
+          # make sure an option was found
+          if option.present?
+            # convert to an index
+            option_to_index(option)
+          # otherwise add to invalid and return nonsense index
+          else
+            invalid << l unless option.present?
+            -1
+          end
+        end
+      else
+        # deal with each option, accumulating a list of indices
+        idxs = split_options.map do |l|
 
-          # make sure this index makes sense for the option set
-          invalid << l if idx > @qing.question.options.size
+          # make sure it's a letter
+          if l =~ /[a-z]/
 
-          idx
+            # convert to an index
+            idx = letters_to_index(l)
 
-        # otherwise add to invalid and return a nonsense index
-        else
-          invalid << l
-          -1
+            # make sure this index makes sense for the option set
+            invalid << l if idx > @qing.question.options.size
+
+            idx
+
+          # otherwise add to invalid and return a nonsense index
+          else
+            invalid << l
+            -1
+          end
         end
       end
 
@@ -330,6 +358,11 @@ class Sms::Decoder
       sum += (letter.ord - 96) * (26 ** (letters.size - i - 1))
     end
     sum
+  end
+
+  def option_to_index(option)
+    # add one because of how letter indexes are counted
+    index = @qing.question.options.index { |o| o.id == option.id } + 1
   end
 
   # looks for identical messages within window. raises error if found
