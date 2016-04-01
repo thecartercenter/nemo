@@ -71,6 +71,12 @@ class FormsController < ApplicationController
           # otherwise try to use the current locale set
           @lang = params[:lang] || I18n.locale
 
+          # If there are more than one incoming numbers, we need to set a flash notice.
+          if configatron.incoming_sms_numbers.size > 1
+            msg = t("sms_form.guide.multiple_sms_numbers_html", url: incoming_numbers_sms_path)
+            flash.now[:notice] = msg.html_safe
+          end
+
           render("sms_guide")
 
         # otherwise just normal!

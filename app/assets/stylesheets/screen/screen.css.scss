@@ -24,6 +24,12 @@ body {
   margin-bottom: 10px;
 }
 
+/* Make link color same as text color in alert-info box */
+.alert-info a {
+  color: #31708f;
+  text-decoration: underline;
+}
+
 .users_edit .ro-val {
   font-family: monospace;
 }
