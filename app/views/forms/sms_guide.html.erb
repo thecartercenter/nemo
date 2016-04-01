@@ -58,7 +58,9 @@
             <li>
               <%= t(".instructions.example_sms") %>: &nbsp;
               <span id="example-sms">
-                3439 jks 1.c 2.ab 3.a 4.d 5.observer 6.a 7.c 8.c 9.z 10.90 1.c 2.ab 3.a 4.d 5.observer 6.a 7.c 8.c 9.z 10.90
+                <%= 3439 if @form.authenticate_sms? %>
+                <%= @form.code %>
+                1.c 2.c,f 3.27 4.d 5.door was locked 6.20160401 7.c
               </span>
             </li>
           </ol>
