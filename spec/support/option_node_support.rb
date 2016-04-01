@@ -249,6 +249,13 @@ module OptionNodeSupport
     'children_attribs' => 'NONE'
   }]
 
+  LARGE_SINGLE_LEVEL_ATTRIBS = (1..100).map do |i|
+    {
+      'option_attribs' => { 'name_translations' => { 'en' => i.to_s } },
+      'children_attribs' => 'NONE'
+    }
+  end
+
   WITH_GRANDCHILDREN_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [

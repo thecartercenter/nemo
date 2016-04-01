@@ -5,10 +5,10 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     pseudo_qtype_name = qtype_name_or_question
 
     qtype_name = case pseudo_qtype_name
-    when "multilevel_select_one", "geo_select_one", "geo_multilevel_select_one",
+    when "multilevel_select_one", "geo_select_one", "geo_multilevel_select_one", "large_select_one",
       "select_one_as_text_for_sms", "multilevel_select_one_as_text_for_sms", "select_one_with_appendix_for_sms"
       "select_one"
-    when "select_multiple_with_appendix_for_sms"
+    when "select_multiple_with_appendix_for_sms", "large_select_multiple"
       "select_multiple"
     else
       pseudo_qtype_name
@@ -19,6 +19,7 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       mission: form.mission,
       use_multilevel_option_set: !!(pseudo_qtype_name =~ /multilevel_select_one/),
       use_geo_option_set: !!(pseudo_qtype_name =~ /geo/),
+      use_large_option_set: !!(pseudo_qtype_name =~ /large/),
       is_standard: form.is_standard?
     }
 
