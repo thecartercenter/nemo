@@ -1,19 +1,24 @@
 module SmsGuideHelper
 
-  # returns a set of divs making up an answer space for the given text for use in the sms guide
-  def answer_space(text, options = {})
-    # default to showing the spc glyph
-    options[:show_spc_glyph] = true if options[:show_spc_glyph].nil?
+  # Returns an answer space for the given question type
+  def answer_space_for_questioning(qing)
+    # determine the number of spaces
+    width = case qing.question.qtype.name
+    when "integer" then 3
+    when "select_one" then qing.text_type_for_sms? ? 8 : 1
+    when "decimal" then 3
+    when "time", "select_multiple" then 4
+    when "date" then 6
+    when "datetime", "text", "long_text" then 8
+    else 4
+    end
 
-    text.split("").collect do |char|
-      content_tag("span", :class => "answer_space") do
-        case char
-        when " " then options[:show_spc_glyph] ? spc_glyph : " "
-        when "." then "&bull;".html_safe
-        else char
-        end
-      end
-    end.reduce(:<<)
+    answer_space(width: width)
+  end
+
+  # Returns a blank space for an answer to be written in.
+  def answer_space(width: 1, content: "")
+    content_tag(:div, content, class: "answer-space width-#{width}")
   end
 
   # Returns a space glyph type thing for use in the sms guide.
@@ -40,12 +45,12 @@ module SmsGuideHelper
   end
 
   # Returns an example answer based on the question type, to be used in the sms guide
-  def sms_example_for_question(qing)
-    content = case qing.question.qtype.name
+  def sms_example_for_questioning(qing)
+    content = case qing.qtype_name
     when "integer" then "3"
     when "decimal" then "12.5"
     when "select_one" then qing.text_type_for_sms? ? qing.first_leaf_option.name : "b"
-    when "select_multiple" then "ac"
+    when "select_multiple" then "a,c"
     when "datetime" then "20120228 1430"
     when "date" then "20121118"
     when "time" then "0930"
@@ -53,26 +58,10 @@ module SmsGuideHelper
     end
 
     if content
-      t("common.example_abbr").html_safe << " " << content_tag(:span, content, class: "sms_example")
+      t("common.example_abbr").html_safe << " " << content_tag(:span, content, class: "sms-example")
     else
       ""
     end
-  end
-
-  # returns a set of answer spaces for the given question type
-  def answer_space_for_question(qing)
-    # determine the number of spaces
-    size = case qing.question.qtype.name
-    when "integer" then 1
-    when "select_one" then qing.text_type_for_sms? ? 8 : 1
-    when "decimal" then 2
-    when "time", "select_multiple" then 4
-    when "date" then 6
-    when "datetime", "text", "long_text" then 8
-    else 4
-    end
-
-    answer_space(" " * size, :show_spc_glyph => false)
   end
 
   # returns the sms submit number or an indicator that it's not set up
@@ -83,5 +72,13 @@ module SmsGuideHelper
       configatron.incoming_sms_numbers.join(", ")
     end
     content_tag("strong", numbers)
+  end
+
+  def sms_guide_hint(qing)
+    qtype_name = qing.text_type_for_sms? ? 'select_one_as_text' : qing.qtype_name
+    hint = "".html_safe << (qing.question.hint || "")
+    hint << "." unless hint =~ /\.\z/ || hint.empty?
+    hint << " " << t(".pointers.#{qtype_name}")
+    hint << " " << sms_example_for_questioning(qing)
   end
 end

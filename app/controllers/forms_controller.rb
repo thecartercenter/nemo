@@ -87,6 +87,8 @@ class FormsController < ApplicationController
     # otherwise try to use the current locale set
     @lang = params[:lang] || I18n.locale
 
+    @qings_with_indices = @form.smsable_questionings
+
     # Set up the message for a flash notice in case one is needed.
     msg = ""
 

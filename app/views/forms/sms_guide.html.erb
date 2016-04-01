@@ -66,40 +66,46 @@
      </div>
 
     <table>
-      <tr>
-        <td colspan="2" class="user-field">
+      <tr id="message-arrow">
+        <td></td>
+        <td class="answer">
+          <%= t(".sms_message")%><br/><%= icon_tag("arrow-down") %>
         </td>
       </tr>
+      <% if @form.authenticate_sms? %>
+        <tr>
+          <td><%= t(".auth_code") %></td>
+          <td class="answer"><%= answer_space(width: 4) %> <%= spc_glyph %></td>
+        </tr>
+      <% end %>
       <tr>
-        <td colspan="2" class="step1">
-          <strong><%= t("common.step") %> 1:</strong> <%= t(".step1") %>
-          <%= t(@form.all_required? ? ".all_required" : ".not_all_required") %>
-        </td>
-        <td class="answers"></td>
-      </tr>
-      <tr>
-        <td class="rank"></td>
-        <td class="pointer">
-          <em><%= t(".unique_code") %> </em>
-        </td>
-        <td class="answers">
-          <%= answer_space(@form.current_version.code) %>
-        </td>
+        <td><%= t(".form_code") %></td>
+        <td class="answer"><span class="prefilled-text"><%= @form.code %></span> <%= spc_glyph %></td>
       </tr>
 
-      <%# options area, for select_* questions %>
-      <% if qing.question.qtype.has_options? && qing.option_set.sms_formatting == "inline" %>
+      <% @qings_with_indices.each do |index, qing| %>
         <tr>
-          <td class="rank"></td>
-          <td class="pointer">
-            <em>
-              <% qtype_name = qing.text_type_for_sms? ? 'select_one_as_text' : qing.qtype_name %>
-              <%= t(".pointers.#{qtype_name}") %>
-              <%= sms_example_for_question(qing) %>
-            </em>
+          <td>
+            <div class="question">
+              <strong><%= index %>. <%= qing.question.name %><%= reqd_sym if qing.required? %></strong>
+            </div>
+
+            <%# Options area, for select_* questions %>
+            <% if qing.has_options? && qing.option_set.sms_formatting == "inline" %>
+              <div class="options">
+                <% qing.options.each_with_index do |opt, idx| %>
+                  <span><%= index_to_letter(idx + 1) %>) <%= opt.name %></span>
+                <% end %>
+              </div>
+            <% end %>
+
+            <div class="hint"><%= sms_guide_hint(qing) %></div>
           </td>
-          <td class="answers">
-            <%= answer_space_for_question(qing) %>
+          <td class="answer">
+            <span class="prefilled-text"><%= index %></span>
+            <%= period_glyph %>
+            <%= answer_space_for_questioning(qing) %>
+            <%= spc_glyph unless index == @qings_with_indices.size %>
           </td>
         </tr>
       <% end %>
