@@ -1,7 +1,7 @@
 <div class="option_set_form">
 
   <%# need to print this here if in ajax mode %>
-  <%= render("layouts/flash", :flash => flash) if request.xhr? %>
+  <%= alerts(flash) if request.xhr? %>
 
   <%= top_action_links(@option_set, :append => [:export]) unless request.xhr? %>
 
@@ -14,7 +14,14 @@
 
   <%= elmo_form_for(@option_set) do |f| %>
     <%= f.field(:name, :required => true, :read_only => cannot?(:update_core, @option_set)) %>
-    <%= f.field(:sms_guide_formatting, type: :select, options: translate_options(OptionSet::SMS_GUIDE_FORMATTING_OPTIONS, 'sms_guide_formatting_options'), required: true, read_only: cannot?(:update_core, @option_set), prompt: false) %>
+
+    <%= f.field(:sms_guide_formatting,
+      type: :select,
+      options: translate_options(OptionSet::SMS_GUIDE_FORMATTING_OPTIONS, 'sms_guide_formatting_options'),
+      required: true,
+      read_only: cannot?(:update_core, @option_set) || @option_set.published?,
+      prompt: false) %>
+
     <%= f.field(:geographic, :type => :check_box, :read_only => cannot?(:change_geographic, @option_set)) %>
     <%= f.field(:allow_coordinates, :type => :check_box, :read_only => cannot?(:change_geographic, @option_set)) %>
     <%= f.field(:multilevel, :type => :check_box,

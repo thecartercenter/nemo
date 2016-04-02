@@ -1,9 +1,0 @@
-<%# Display flash errors or succeses if any %>
-<% flash.each do |name, msg| %>
-  <%# Only echo valid message types %>
-  <% if css_class = bootstrap_flash_class(name) %>
-    <div class="<%= css_class %>">
-      <strong><%= I18n.t("flash_message_types.#{name}") %></strong>: <%= msg %>
-    </div>
-  <% end %>
-<% end %>

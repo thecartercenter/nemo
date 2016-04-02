@@ -81,9 +81,6 @@
       $(".form_field#key input[id$='_key']").val("");
       $(".form_field#key input[id$='_key']").prop("checked", false);
     }
-
-    // show/hide text_type_for_sms
-    $("#text_type_for_sms")[selected_type == "select_one" ? "show" : "hide"]();
   }
 
   klass.prototype.show_option_set_select = function(show, options) { var self = this;

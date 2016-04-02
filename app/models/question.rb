@@ -83,6 +83,8 @@ class Question < ActiveRecord::Base
            :level_count,
            :level,
            :levels,
+           :sms_formatting_as_text?,
+           :sms_formatting_as_appendix?,
            :to => :option_set, :allow_nil => true
 
   replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
@@ -261,9 +263,6 @@ class Question < ActiveRecord::Base
       self.code = code.strip
 
       normalize_constraint_values
-
-      # Only allowed for select_one questions.
-      self.text_type_for_sms = false unless qtype_name == 'select_one'
 
       return true
     end

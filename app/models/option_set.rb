@@ -310,6 +310,14 @@ class OptionSet < ActiveRecord::Base
     end
   end
 
+  def sms_formatting_as_text?
+    sms_formatting == "treat_as_text"
+  end
+
+  def sms_formatting_as_appendix?
+    sms_formatting == "appendix"
+  end
+
   def to_hash
     root_node.subtree.arrange_serializable(order: "rank")
   end

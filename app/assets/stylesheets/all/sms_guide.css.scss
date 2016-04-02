@@ -1,94 +1,177 @@
-div.sms_guide {
+$answer-unit-width: 20;
+$answer-box-border: 2px dashed #222;
+
+.forms_sms_guide {
+  div.alert ol {
+    margin-top: 10px;
+  }
+
+  h1.title {
+    display: none;
+  }
+
+  h1.title.inner {
+    display: block;
+    margin-bottom: 10px;
+  }
+
   div.header {
     float: right;
-    color: #888;
+    color: #ccc;
     font-size: 15px;
+  }
+
+  div.controls {
+    margin-bottom: 20px;
+
+    form {
+      display: inline-block; margin-right: 10px;
+    }
+
+    a {
+      display: inline-block;
+    }
+  }
+
+  #user-field {
+    width: 300px;
+    border-bottom: 1px solid #666;
+    color: #ccc;
+    display: inline-block;
+    text-align: center;
+    margin-bottom: -2px;
+  }
+
+  #instructions {
+    > ol {
+      margin-left: -25px;
+
+      ol {
+        margin-left: -10px;
+      }
+    }
+
+    ol ol li {
+      list-style-type: lower-alpha;
+    }
+
+    i.fa {
+      font-size: 14px;
+    }
+
+    #example-box {
+      margin-left: 5px;
+      border: $answer-box-border;
+      display: inline-block;
+      text-align: center;
+      width: 20px;
+    }
+  }
+
+  #example-sms {
+    font-family: monospace;
+    font-size: 14px;
   }
 
   table {
     width: 100%;
+    margin-top: -5px;
+
+    td {
+      border: 1px solid #aaa;
+      padding: 6px 6px 4px 6px;
+    }
+
+    td.answer {
+      width: $answer-unit-width * 8px + 70px;
+      vertical-align: middle;
+    }
+
+    tr#message-arrow td {
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      padding-top: 0;
+      padding-bottom: 5px;
+    }
   }
 
-  table td {
-    vertical-align: top;
+  div.question {
+    margin-bottom: 5px;
+
+    .reqd-sym {
+      display: inline-block;
+      margin: 0 3px;
+    }
   }
 
-  td.user-field {
-    padding-bottom: 10px;
+  div.options {
+    margin-bottom: 5px;
   }
 
-  td.step1 {
-    padding-bottom: 10px;
+  div.hint {
+    font-style: italic;
+
+    .sms-example {
+      font-style: normal;
+      font-family: monospace;
+      white-space: nowrap;
+    }
   }
 
-  td.step2 {
-    padding-top: 10px;
+  .prefilled-text {
+    font-family: monospace;
+    font-size: 16px;
   }
 
-  td.step2 ol {
-    padding-left: 18px;
-  }
-
-  td.rank {
-    font-weight: bold;
-    width: 20px;
-  }
-
-  td.question {
-    font-weight: bold;
-  }
-
-  td.question .reqd-sym {
+  .answer-space {
+    border: $answer-box-border;
+    height: 30px;
     display: inline-block;
-    color: black;
+    font-family: monospace;
     font-size: 18px;
+
+    &.width-1 { width: $answer-unit-width * 1px; }
+    &.width-2 { width: $answer-unit-width * 2px; }
+    &.width-3 { width: $answer-unit-width * 3px; }
+    &.width-4 { width: $answer-unit-width * 4px; }
+    &.width-6 { width: $answer-unit-width * 6px; }
+    &.width-8 { width: $answer-unit-width * 8px; }
   }
 
-  td.options {
-    padding-bottom: 10px;
+  @media screen {
+    .sms_guide {
+      max-width: 900px;
+    }
+
+    #body {
+      background-color: #eee;
+      padding: 20px;
+    }
   }
 
-  td.options span {
-    display: inline-block;
-    margin-right: 8px;
-  }
+  @media print {
+    .alert, div.controls {
+      display: none;
+    }
 
-  td.pointer {
-    background: image-url('long-arrow.png') no-repeat right top;
-    padding: 0 5px 0 0;
-  }
+    table {
+      /* To avoid strange border cutting issue. */
+      width: 98%;
+    }
 
-  td.pointer em {
-    display: inline-block;
-    background-color: white;
-    margin-right: 30px;
-    padding: 0 5px 10px 0;
-  }
+    /* Trick to get faint text to print */
+    div.header, #user-field {
+      color: rgba(0, 0, 0, 0);
+      text-shadow: 0 0 0 #ccb !important;
+    }
 
-  td.answers {
-    width: 160px;
-    padding-left: 10px;
-  }
-
-  span.answer_space {
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    text-align: center;
-    border-bottom: 2px solid black;
-    font-weight: bold;
-    font-size: 14px;
-  }
-
-  span.spc_glyph {
-    font-size: 7px;
-  }
-
-  span.sms_example {
-    display: inline-block;
-    font-style: normal;
-    font-weight: bold;
-    padding: 0 5px;
-    border-bottom: 1px solid black;
+    @media print and (-webkit-min-device-pixel-ratio: 0) {
+      div.header, #user-field {
+        color: #ccb !important;
+        -webkit-print-color-adjust: exact;
+      }
+    }
   }
 }
