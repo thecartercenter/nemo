@@ -2,6 +2,8 @@ require 'spec_helper'
 
 describe OptionSuggester do
 
+  before { configatron.preferred_locale = :en }
+
   context 'general case' do
     before do
       ['Bar', "Foo's Bar", 'Foo', '(with parenthesis)'].each{ |n| create(:option, name: n) }
