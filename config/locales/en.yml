@@ -364,6 +364,7 @@ en:
         twilio_account_sid: "Account SID"
         twilio_auth_token1: "Auth Token"
         twilio_phone_number: "Outgoing Number"
+        frontlinecloud_api_key1: "API Key"
       sms/message:
         adapter_name: "Adapter"
         body: "Body"
@@ -537,6 +538,7 @@ en:
         twilio_phone_number: "The phone number registered with Twilio. Outgoing SMS broadcasts won't work unless this number is owned by your Twilio account. This number must include the country code. Example: +25680344523"
         twilio_account_sid: "The Account SID for the Twilio account."
         twilio_auth_token1: "The Auth Token for the Twilio account."
+        frontlinecloud_api_key1: "The API Key for the FrontlineCloud activity."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
@@ -1716,6 +1718,7 @@ en:
   setting:
     change_sms_password: "Change Password"
     change_twilio_auth_token: "Change Auth Token"
+    change_api_key: "Change API Key"
     override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     using_incoming_sms_token: "How do I use this?"
     headings:
@@ -1723,6 +1726,7 @@ en:
       sms: "Shared SMS Settings"
       intellisms: "IntelliSMS Settings"
       twilio: "Twilio Settings"
+      frontlinecloud: "FrontlineCloud Settings"
 
   sms:
     extra_recipients_html: "<br/>... and %{count} more"

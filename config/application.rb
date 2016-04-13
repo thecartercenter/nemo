@@ -39,7 +39,7 @@ module ELMO
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :password_confirmation, :twilio_account_sid, :twilio_auth_token]
+    config.filter_parameters += [:password, :password_confirmation, :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key]
 
     # Enable the asset pipeline
     config.assets.enabled = true

@@ -1,6 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-describe 'intellisms incoming sms' do
+describe "frontlinecloud incoming sms" do
   include IncomingSmsSupport
 
   before :all do
@@ -9,8 +9,7 @@ describe 'intellisms incoming sms' do
   end
 
   it "reply should be sent via adapter" do
-    do_incoming_request(from: '+1234567890', incoming: {body: 'foo', adapter: "IntelliSms"})
+    do_incoming_request(from: "+1234567890", incoming: {body: "foo", adapter: "FrontlineCloud"})
     expect(assigns(:outgoing_adapter).deliveries.size).to eq(1)
-    expect(response.body).to eq('REPLY_SENT')
   end
 end
