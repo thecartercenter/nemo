@@ -211,7 +211,9 @@ class Setting < ActiveRecord::Base
       end
 
       if should_validate?("FrontlineCloud")
-        errors.add(:frontlinecloud_api_key, :blank) if frontlinecloud_api_key.blank?
+        if frontlinecloud_api_key.blank? && frontlinecloud_api_key1.blank?
+          errors.add(:frontlinecloud_api_key1, :blank)
+        end
       end
     end
 
