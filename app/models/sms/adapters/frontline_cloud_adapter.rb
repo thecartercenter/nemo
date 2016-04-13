@@ -1,6 +1,4 @@
 class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
-
-
   def self.recognize_receive_request?(request)
     %w(from body sent_at frontlinecloud) - request.params.keys == []
   end
@@ -44,8 +42,7 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
   private
 
   def convert_time(timestamp)
-    timestamp = timestamp.to_i
-    timestamp_in_seconds = timestamp / 1000
+    timestamp = timestamp.to_i / 1000 # frontlinecloud sends unix timestamp in milliseconds
     datetime = Time.at(timestamp_in_seconds).to_datetime
   end
 end

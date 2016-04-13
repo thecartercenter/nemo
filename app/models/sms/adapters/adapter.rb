@@ -5,7 +5,7 @@ class Sms::Adapters::Adapter
   attr_writer :deliveries
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(_request)
+  def self.recognize_receive_request?(request)
     false
   end
 
@@ -39,7 +39,7 @@ class Sms::Adapters::Adapter
     deliveries << message
   end
 
-  def deliver(_message)
+  def deliver(message)
     raise NotImplementedError
   end
 
@@ -47,7 +47,7 @@ class Sms::Adapters::Adapter
   # returns an Sms::Message object
   #
   # params  The incoming HTTP request params.
-  def receive(_params)
+  def receive(params)
     raise NotImplementedError
   end
 
@@ -73,13 +73,14 @@ class Sms::Adapters::Adapter
     http = Net::HTTP.new(uri.host, uri.port)
     http.open_timeout = 30 # in seconds
     http.read_timeout = 30 # in seconds
+    http.use_ssl = true if uri.scheme == "https"
+
 
     # create request
     case method
     when :get
       request = Net::HTTP::Get.new(uri.request_uri)
     when :post # only used for FrontlineCloud
-      http.use_ssl = true
       request = Net::HTTP::Post.new(uri.request_uri, initheader = { "Content-Type" => "application/json" })
       request.body = payload.to_json
     end

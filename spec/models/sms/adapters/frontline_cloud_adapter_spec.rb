@@ -51,7 +51,7 @@ def frontlinecloud_params(params = {})
     "frontlinecloud" => "1",
     "body" => "foo",
     "from" => "+2348036801489",
-    "sent_at" => Time.zone.now.to_i
+    "sent_at" => Time.zone.now.to_i * 1000 # frontlinecloud sends millisecond timestamps
   }
   default_params.merge(params).compact
 end
