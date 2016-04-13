@@ -34,7 +34,7 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
   def receive(request)
     params = request.params
     Sms::Incoming.new(
-      from: params["from"],
+      from: PhoneNormalizer.normalize(params["from"]),
       to: nil, # Frontline doesn't provide this.
       body: params["body"],
       sent_at: convert_time(params["sent_at"]),
@@ -45,6 +45,7 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
 
   def convert_time(timestamp)
     timestamp = timestamp.to_i
-    datetime = Time.at(timestamp).to_datetime
+    timestamp_in_seconds = timestamp / 1000
+    datetime = Time.at(timestamp_in_seconds).to_datetime
   end
 end
