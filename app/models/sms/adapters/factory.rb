@@ -1,5 +1,5 @@
 class Sms::Adapters::Factory
-  VALID_ADAPTERS = %w(FrontlineSms IntelliSms Twilio TwilioTestStub)
+  VALID_ADAPTERS = %w(FrontlineSms FrontlineCloud IntelliSms Twilio TwilioTestStub)
 
   def self.name_is_valid?(name)
     VALID_ADAPTERS.include?(name)

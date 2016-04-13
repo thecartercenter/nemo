@@ -1,11 +1,11 @@
 # models a generic sms adapter. should be subclassed.
-require 'net/http'
+require "net/http"
 class Sms::Adapters::Adapter
 
   attr_writer :deliveries
 
   # checks if this adapter recognizes an incoming http receive request
-  def self.recognize_receive_request?(request)
+  def self.recognize_receive_request?(_request)
     false
   end
 
@@ -17,7 +17,7 @@ class Sms::Adapters::Adapter
   # Service name is just the descendant class name minus the modules and Adapter suffix.
   def self.service_name
     # Warning: don't memoize this or a bunch of things fail.
-    name.split('::').last.gsub(/Adapter$/, '')
+    name.split("::").last.gsub(/Adapter$/, "")
   end
 
   def service_name
@@ -39,7 +39,7 @@ class Sms::Adapters::Adapter
     deliveries << message
   end
 
-  def deliver(message)
+  def deliver(_message)
     raise NotImplementedError
   end
 
@@ -47,7 +47,7 @@ class Sms::Adapters::Adapter
   # returns an Sms::Message object
   #
   # params  The incoming HTTP request params.
-  def receive(params)
+  def receive(_params)
     raise NotImplementedError
   end
 
@@ -67,33 +67,39 @@ class Sms::Adapters::Adapter
 
   protected
 
-    # sends request to given uri, handles errors, or returns response text if success
-    def send_request(uri)
-      # create http handler
-      http = Net::HTTP.new(uri.host, uri.port)
-      http.open_timeout = 30 # in seconds
-      http.read_timeout = 30 # in seconds
+  # sends request to given uri, handles errors, or returns response text if success
+  def send_request(uri, method = :get, payload = {})
+    # create http handler
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.open_timeout = 30 # in seconds
+    http.read_timeout = 30 # in seconds
 
-      # create request
+    # create request
+    case method
+    when :get
       request = Net::HTTP::Get.new(uri.request_uri)
-
-      # Don't want to actually send HTTP request in test mode.
-      return "" if Rails.env.test?
-
-      # send request and catch errors
-      begin
-        response = http.request(request)
-      rescue Timeout::Error
-        raise Sms::Error.new("error contacting #{service_name} (timeout)")
-      rescue
-        raise Sms::Error.new("error contacting #{service_name} (#{$!.class.name}: #{$!.to_s})")
-      end
-
-      # return body if it's a clean success, else error
-      if response.is_a?(Net::HTTPSuccess)
-        return response.body
-      else
-        raise Sms::Error.new("error contacting #{service_name} (#{response.class.name})")
-      end
+    when :post # only used for FrontlineCloud
+      request = Net::HTTP::Post.new(uri.request_uri, initheader = { "Content-Type" => "application/json" })
+      request.body = payload.to_json
     end
+
+    # Don't want to actually send HTTP request in test mode.
+    return "" if Rails.env.test?
+
+    # send request and catch errors
+    begin
+      response = http.request(request)
+    rescue Timeout::Error
+      raise Sms::Error.new("error contacting #{service_name} (timeout)")
+    rescue
+      raise Sms::Error.new("error contacting #{service_name} (#{$!.class.name}: #{$!.to_s})")
+    end
+
+    # return body if it's a clean success, else error
+    if response.is_a?(Net::HTTPSuccess)
+      return response.body
+    else
+      raise Sms::Error.new("error contacting #{service_name} (#{response.class.name})")
+    end
+  end
 end

@@ -26,7 +26,8 @@ class Setting < ActiveRecord::Base
   serialize :incoming_sms_numbers, JSON
 
   # accessors for password/password confirm/clear fields
-  attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1, :clear_intellisms, :clear_twilio
+  attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1, :frontlinecloud_api_key1,
+    :clear_intellisms, :clear_twilio, :clear_frontlinecloud
 
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
@@ -191,6 +192,8 @@ class Setting < ActiveRecord::Base
         intellisms_username.present? || intellisms_password1.present? || intellisms_password2.present?
       when "Twilio"
         twilio_phone_number.present? || twilio_account_sid.present? || twilio_auth_token1.present?
+      when "FrontlineCloud"
+        frontlinecloud_api_key.present?
       end
     end
 
@@ -205,6 +208,10 @@ class Setting < ActiveRecord::Base
       if should_validate?("Twilio")
         errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
         errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
+      end
+
+      if should_validate?("FrontlineCloud")
+        errors.add(:frontlinecloud_api_key, :blank) if frontlinecloud_api_key.blank?
       end
     end
 
@@ -222,12 +229,16 @@ class Setting < ActiveRecord::Base
         self.twilio_auth_token = nil
         self.twilio_auth_token1 = nil
       end
+      if clear_frontlinecloud == "1"
+        self.frontlinecloud_api_key = nil
+      end
     end
 
     # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
     def save_sms_credentials
       self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
       self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
+      self.frontlinecloud_api_key = frontlinecloud_api_key1 unless frontlinecloud_api_key1.blank?
       return true
     end
 

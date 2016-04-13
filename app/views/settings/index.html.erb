@@ -39,6 +39,17 @@
       </div>
     </div>
 
+    <h2><%= t("setting.headings.frontlinecloud") %></h2>
+    <div class="adapter_settings" data-adapter="FrontlineCloud">
+
+      <%= link_to(t("setting.change_api_key"), "#", class: 'show_credential_fields') %>
+
+      <div class="credential_fields">
+        <%= f.field(:frontlinecloud_api_key1, type: :password) %>
+        <%= f.field(:clear_frontlinecloud, type: :check_box, label: t('common.clear')) %>
+      </div>
+    </div>
+
     <h2><%= t("setting.headings.twilio") %></h2>
     <div class="adapter_settings" data-adapter="Twilio">
       <%= f.field(:twilio_phone_number) %>

@@ -72,6 +72,13 @@ module IncomingSmsSupport
         "sent" => params[:sent_at].utc.strftime("%Y-%m-%d %T.%L"),
         "frontline" => "1"
       }
+    when "FrontlineCloud"
+      req_params = {
+        "from" => params[:from],
+        "body" => params[:incoming][:body],
+        "sent_at" => params[:sent_at].strftime("%s"),
+        "frontlinecloud" => "1"
+      }
     when "TwilioSms"
       req_params = {
         "From" => params[:from],
