@@ -6,6 +6,8 @@
   <% unless options[:table_only] %>
     <div class="header link_set">
       <% if paginable?(objects) %>
+        <%# explicitly load the objects here to work around counting behavior for grouped models %>
+        <% objects.load if objects.respond_to?(:load) %>
         <%= page_entries_info(objects, :model => klass) %>.
         &nbsp;
       <% end %>
@@ -104,4 +106,3 @@
   <% end %>
 
 </div>
-
