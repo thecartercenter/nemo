@@ -9,7 +9,6 @@ class OptionSetImport
   attr_accessor :mission_id, :name, :file
   attr_reader :option_set
 
-  validates(:mission, presence: true)
   validates(:name, presence: true)
   validates(:file, presence: true)
 
@@ -52,6 +51,7 @@ class OptionSetImport
         levels: headers.map{ |h| OptionLevel.new(name: h) },
         geographic: allow_coordinates,
         allow_coordinates: allow_coordinates,
+        is_standard: @mission.nil?,
         root_node: OptionNode.new)
 
 
