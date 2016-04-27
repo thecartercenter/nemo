@@ -4,7 +4,12 @@ xlsx_package.workbook.tap do |wb|
   header_style = wb.styles.add_style(b: true, alignment: { horizontal: :center })
   row_style = wb.styles.add_style(locked: false)
 
-  locale = @option_set.mission.setting.preferred_locales.first || :en
+  if @option_set.mission
+    locale = @option_set.mission.setting.preferred_locales.first || :en
+  else
+    locale = :en
+  end
+
   I18n.with_locale(locale) do
     wb.add_worksheet(name: @option_set.worksheet_name) do |sheet|
       sheet.add_row(@headers, style: header_style)
