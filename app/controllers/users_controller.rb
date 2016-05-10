@@ -153,6 +153,11 @@ class UsersController < ApplicationController
     render json: { value: @user.api_key }
   end
 
+  def regenerate_sms_auth_code
+    @user.regenerate_sms_auth_code
+    render json: { value: @user.sms_auth_code }
+  end
+
   private
 
     # if we need to print instructions, redirects to the instructions action. otherwise redirects to index.

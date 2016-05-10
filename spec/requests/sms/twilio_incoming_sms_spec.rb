@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'incoming sms' do
+describe 'twilio incoming sms' do
   include IncomingSmsSupport
 
   before :all do

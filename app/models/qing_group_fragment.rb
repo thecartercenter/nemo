@@ -13,11 +13,15 @@ class QingGroupFragment
   attr_accessor :children, :qing_group
 
   delegate :hidden, :id, :group_name, :group_hint, :group_name_translations,
-    :group_hint_translations, to: :qing_group
+    :group_hint_translations, :repeatable, to: :qing_group
 
   def initialize(qing_group)
     self.qing_group = qing_group
     self.children = ActiveSupport::OrderedHash.new
   end
-end
 
+  def multilevel?
+    children.keys.first.multilevel?
+  end
+
+end

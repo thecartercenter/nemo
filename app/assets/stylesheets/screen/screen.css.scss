@@ -7,6 +7,7 @@ $gray-blue: #D4DCE1;
 $gray: #3F3E3E;
 $light-gray: #BDB9B9;
 $elmo-blue: #879CAA;
+$elmo-darker-blue: #02648A;
 $sans-serif: 'Open Sans', Helvetica, sans-serif;
 
 body {
@@ -21,6 +22,12 @@ body {
   padding-top: 5px;
   padding-bottom: 5px;
   margin-bottom: 10px;
+}
+
+/* Make link color same as text color in alert-info box */
+.alert-info a {
+  color: #31708f;
+  text-decoration: underline;
 }
 
 .users_edit .ro-val {
@@ -306,11 +313,3 @@ body.reports {
     }
   }
 }
-
-/* dont show the printable title */
-div.sms_guide h1.printable { display: none; }
-div.sms_guide { max-width: 900px; }
-div.sms_guide div.header { margin-top: -40px; }
-div.sms_guide div.controls { margin-bottom: 10px; }
-div.sms_guide div.controls form { display: inline-block; margin-right: 10px; }
-div.sms_guide div.controls a { display: inline-block; }

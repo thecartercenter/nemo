@@ -14,9 +14,10 @@ class Sms::Incoming < Sms::Message
   end
 
   def recipient_numbers
-    [to]
+    [to] # `to` may be nil
   end
 
+  # Returns a set of hashes of form {user: x, phone: y} for recipients.
   def recipient_hashes(options = {})
     [user: User::ELMO, phone: to]
   end

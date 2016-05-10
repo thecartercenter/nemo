@@ -144,6 +144,15 @@ describe Report::StandardFormReport do
     end
   end
 
+  describe "cache_key" do
+    let(:report) { create(:standard_form_report) }
+
+    it "should be correct" do
+      expect(report.cache_key).to match(
+        %r{\Areport/standard_form_reports/\d+-\d+//calcs-0-/none\z})
+    end
+  end
+
   def build_form_and_responses(options = {})
     @form = create(:form, :question_types => %w(integer integer decimal select_one location))
     (options[:response_count] || 5).times do

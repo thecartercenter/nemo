@@ -65,8 +65,22 @@
       $(".form_field#maximum input[id$='_maxstrictly']").prop("checked", false);
     }
 
-    // show/hide text_type_for_sms
-    $("#text_type_for_sms")[selected_type == "select_one" ? "show" : "hide"]();
+    // show/hide key question
+    var hide_key_q = (
+      selected_type == "image" ||
+      selected_type == "annotated_image" ||
+      selected_type == "signature" ||
+      selected_type == "sketch" ||
+      selected_type == "audio" ||
+      selected_type == "video"
+    );
+    $(".question_fields .question_key")[hide_key_q ? 'hide' : 'show']();
+
+    // reset boxes if hiding
+    if (hide_key_q) {
+      $(".form_field#key input[id$='_key']").val("");
+      $(".form_field#key input[id$='_key']").prop("checked", false);
+    }
   }
 
   klass.prototype.show_option_set_select = function(show, options) { var self = this;
@@ -104,7 +118,7 @@
     $("#create-option-set").modal('hide');
 
     // add the new option set to the list and select it
-    var option = $('<option>', {value: option_set.id, 'data-multilevel': option_set.multi_level}).text(option_set.name);
+    var option = $('<option>', {value: option_set.id, 'data-multilevel': option_set.multilevel}).text(option_set.name);
     $('div.question_fields .form_field#option_set_id select').append(option).val(option_set.id);
 
     // flash the option set row

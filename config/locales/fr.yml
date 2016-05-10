@@ -236,7 +236,7 @@ fr:
       option_set:
         answers: "Résultats"
         geographic: "Géographique?"
-        multi_level: "Est-ce qu'il y a plusiers de niveaux?"
+        multilevel: "Est-ce qu'il y a plusiers de niveaux?"
         options: "Options"
         option_levels: "Niveaux"
       question:
@@ -287,7 +287,7 @@ fr:
         viewed_at: "Date de dernière consultation"
       setting:
         allow_unauthenticated_submissions: "Permettre les réponses non authentifiées"
-        incoming_sms_number: "Numéro de SMS entrant"
+        incoming_sms_numbers_str: "Numéro de SMS entrant"
         intellisms_password1: "Mot de passe"
         intellisms_password2: "Confirmation du mot de passe"
         intellisms_username: "Identifiant"
@@ -391,7 +391,7 @@ fr:
       option_set:
         geographic: "Si cet ensemble des options représente l'information géographique, p. ex un ensemble des provinces ou des régions."
         name: "Un nom qui résume cet ensemble des options. Les utilisateurs normaux ne verront pas ce nom."
-        multi_level: "Si l'ensemble d'options comporte plusieurs niveaux d'options, telles que pays -> province-> ville."
+        multilevel: "Si l'ensemble d'options comporte plusieurs niveaux d'options, telles que pays -> province-> ville."
         options:
           editable: "Pour ajouter des options existantes, tapez-les et cliquez sur 'Ajouter'. Si vous ne voyez pas une option dans le menu déroulant, cliquez sur 'Créer une nouvelle option' pour créer un nouveau option."
           read_only: "Les options qui apparaissent pour les questions à l'aide de cet ensemble des options."
@@ -433,7 +433,7 @@ fr:
           * La langue pour les questions et les options
         override_code: |-
           S'il est necessaire d'avoir la capacité de soumettre des réponses incomplètes, ce code devra être fournis aux observateurs. ODK ne permettra pas les réponses incomplètes sans ce code. Il sera possible de générer un nouveau code en tout temps et tout formulaires subséquent requirons ce code-ci. Cependant, tout les formulaires créé avant la generation du nouveau code utliseront l'ancien code.
-        incoming_sms_number: "Entrez le numéro de téléphone où les SMS entrants pour les formes SMS doivent être envoyés. Il sera affiché sur le guide du SMS."
+        incoming_sms_numbers_str: "Entrez le numéro de téléphone où les SMS entrants pour les formes SMS doivent être envoyés. Il sera affiché sur le guide du SMS."
         default_outgoing_sms_adapter: "L'adaptateur utilisé pour envoyer les SMSs. Notez que les réponses par SMS peuvent être envoyées a partir de différent adaptateurs, selon l'adaptateur par lequel ils arrivent."
         intellisms_username: "l'Identifiant pour le compte IntelliSMS."
         intellisms_password1: "Entrez et rentrez un mot de passe pour changer le mot de passe du compte IntelliSMS."
@@ -953,7 +953,7 @@ fr:
     edit_option_level: "Modifier Niveau"
     huge_notice: "Cet ensemble d'option est très large(%{count} Options) et donc seulement un échantillon est présenté ci-dessous. Le nom et d'autres propriétés peuvent être modifié, cependant vous devez utiliser la fonction importer/exporter pour modifier ces mêmes options."
     leave_page_warning: "Si vous quittez cette page, vous perdrez vos modifications à cet ensemble d'options."
-    multi_level_forbidden_notice: "Cet ensemble d'options est actuellement utilisé par au moins une question multiple et donc peut être converti à une option à multiple niveau."
+    multilevel_forbidden_notice: "Cet ensemble d'options est actuellement utilisé par au moins une question multiple et donc peut être converti à une option à multiple niveau."
     new_option_level: "Nouveau Niveau"
     none_found: "Il n'y avait pas d'options trouvés."
     searching: "En train de rechercher..."
@@ -1131,6 +1131,7 @@ fr:
     save_and_mark_reviewed: "Enregistrer et Marquer comme Examiné"
     view_response: "Voir Réponse"
     checked_out: "Cette réponse a été examiné par:"
+    upload_progress_notice: "Téléchargement(s) en cours..."
   role:
     role: "Rôle"
     observer: "Observateur/Observatrice"
@@ -1379,7 +1380,7 @@ fr:
       step1: "Répondez à toutes les questions qui suivent et utilisez les instructions a la fin de le formulaire pour envoyer vos reports."
       step2: "Maintenant, suivez les étapes suivants pour envoyer votre données:"
       step2_substeps:
-      - Avec votre téléphone, commencer un SMS à %{submit_number}.
+      - Avec votre téléphone, commencer un SMS à %{submit_numbers}.
       - Entrez les contenus de chaque ligne sur le côté droit de chaque page, allant de haut en bas.
       - Faites attention que vous entrez chaque ligne exactement. Chaque ligne est importante.
       - Notez que chaque réponse est séparé par un «SPC». Entrez un espace pour chaque fois que vous voyez «SPC». N'ajoutez pas d'espaces supplémentaires.

@@ -54,9 +54,8 @@ class OptionSetImport
         allow_coordinates: allow_coordinates,
         root_node: OptionNode.new)
 
-      unless @option_set.valid?
-        add_errors_for_row(1, @option_set.errors)
-      end
+
+      add_errors_for_row(1, @option_set.errors) unless @option_set.valid?
 
       # State variables. cur_ranks has a default value of 0 to simplify the code below.
       cur_nodes, cur_ranks = Array.new(headers.size), Array.new(headers.size, 0)
@@ -64,8 +63,10 @@ class OptionSetImport
         leaf_attribs = row.extract_options!
         row_number = leaf_attribs.delete(:_row_number)
 
-        # drop the :id attribute when re-importing exported spreadsheets
+        # drop the :id and :shortcode attributes when re-importing exported spreadsheets
         leaf_attribs.delete(:id)
+        leaf_attribs.delete(:shortcode)
+
 
         row.each_with_index do |cell, c|
           next if cur_nodes[c].present? && cell == cur_nodes[c].option.name
@@ -87,7 +88,9 @@ class OptionSetImport
                 mission: mission,
                 rank: cur_ranks[c],
                 option_set: option_set,
-                option: option)
+                option: option,
+                sequence: r + 1)
+
 
               if node.invalid?
                 add_errors_for_row(row_number, node.errors)
@@ -106,11 +109,11 @@ class OptionSetImport
         end
       end
 
-      raise ActiveRecord::Rollback if errors.present?
 
+      raise ActiveRecord::Rollback if errors.present?
     end
 
-    return errors.blank?
+    errors.blank?
   end
 
   protected
@@ -126,20 +129,31 @@ class OptionSetImport
     end
 
     def load_and_clean_data
-      sheet = Roo::Excelx.new(file).sheet(0)
+      sheet = nil
+      begin
+        sheet = Roo::Spreadsheet.open(file).sheet(0)
+      rescue TypeError => e
+        if e.to_s =~ /not an Excel 2007 file/
+          errors.add(:base, :wrong_type)
+          return
+        else
+          raise e
+        end
+      end
 
       # Get headers from first row and strip nils
       headers = sheet.row(1)
       headers = headers[0...headers.index(nil)] if headers.any?(&:nil?)
 
       # Get special columns i18n values
-      id_header = "Id"
+      id_header = 'Id'
       coordinates_header = I18n.t('activerecord.attributes.option.coordinates')
+      shortcode_header = I18n.t('activerecord.attributes.option.shortcode')
 
       # Find any special columns
       special_columns = {}
       headers.each_with_index do |h,i|
-        if [id_header, coordinates_header].include?(h)
+        if [id_header, coordinates_header, shortcode_header].include?(h)
           special_columns[i] = h.downcase.to_sym
         end
       end
@@ -176,7 +190,7 @@ class OptionSetImport
       # Error out if there are no rows.
       if rows.empty?
         # TODO: i18n
-        errors.add(:option_set, "No rows to import.")
+        errors.add(:option_set, 'No rows to import.')
         return
       end
 

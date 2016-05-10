@@ -3,7 +3,7 @@ require 'spec_helper'
 feature 'conditions flow', js: true do
   before do
     @user = create(:user)
-    @form = create(:form, name: 'Foo', question_types: %w(multi_level_select_one integer text))
+    @form = create(:form, name: 'Foo', question_types: %w(multilevel_select_one integer text))
     login(@user)
     visit(edit_form_path(@form, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
     expect(page).to have_content('Edit Form')

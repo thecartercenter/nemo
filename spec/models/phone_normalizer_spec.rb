@@ -29,14 +29,20 @@ describe PhoneNormalizer do
 
   describe '#normalize' do
     it 'returns nil for blank inputs' do
-      [nil, '', ' ', "\t"].each do |phone|
+      [nil, '', ' ', "\t", '+ '].each do |phone|
         expect(PhoneNormalizer.normalize(phone)).to be_nil
+      end
+    end
+
+    it 'trims spaces' do
+      [' 12345678', '12345678 ', '  12345678   '].each do |phone|
+        expect(PhoneNormalizer.normalize(phone)).to eq('+12345678')
       end
     end
 
     it 'returns the value itself for short codes' do
       ['54321'].each do |phone|
-        expect(PhoneNormalizer.normalize(phone)).to be(phone)
+        expect(PhoneNormalizer.normalize(phone)).to eq(phone)
       end
     end
 

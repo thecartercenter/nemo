@@ -109,8 +109,14 @@
 
   <div id="content" class="<%= ctlr_action_name %>">
     <%# Show errors or alerts if any %>
-    <%= render("layouts/flash", :flash => flash) %>
-    <%= h1_title unless @dont_print_title %>
+    <%= alerts(flash) %>
+    <%= yield(:alerts) %>
+    <% unless @dont_print_title %>
+      <div id="title_container">
+        <%= h1_title %>
+        <%= yield :title_content %>
+      </div>
+    <% end %>
     <%= body %>
   </div>
 

@@ -14,7 +14,6 @@ class StressSmsHelper
   end
 
   def self.create_reply_sms(reply)
-    reply.from = configatron.incoming_sms_number unless configatron.incoming_sms_number.blank?
     Sms::Adapters::TwilioTestStubAdapter.new.prepare_message_for_delivery(reply)
   end
 

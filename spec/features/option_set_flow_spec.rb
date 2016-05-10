@@ -55,7 +55,7 @@ feature 'option suggestion dropdown' do
   end
 
   scenario 'importing, editing, and showing standard', js: true do
-    @std_set = create(:option_set, name: 'Gold', is_standard: true, multi_level: true)
+    @std_set = create(:option_set, name: 'Gold', is_standard: true, multilevel: true)
     click_link('Option Sets')
 
     # Import
@@ -85,7 +85,7 @@ feature 'option suggestion dropdown' do
   end
 
   scenario 'deleting' do
-    os = create(:option_set, multi_level: true)
+    os = create(:option_set, multilevel: true)
     visit(option_sets_path(mode: 'm', mission_name: os.mission.compact_name, locale: 'en'))
     find('a.action_link_destroy').click
     expect(page).to have_selector('.alert-success', text: 'Option Set deleted successfully')

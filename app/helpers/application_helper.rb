@@ -16,26 +16,38 @@ module ApplicationHelper
     {create: :new, update: :edit}[a] || a
   end
 
+  def alerts(hash)
+    hash.map do |name, msg|
+      # Only echo valid message types
+      if css_class = bootstrap_flash_class(name)
+        content_tag(:div, class: css_class) do
+          content_tag(:strong, t("flash_message_types.#{name}")) << ": " << msg
+        end
+      end
+    end.compact.reduce(:<<)
+  end
+
   # pairs flash errors with bootstrap styling
   def bootstrap_flash_class(level)
     case level.to_sym
-      when :notice then "alert alert-info"
-      when :success then "alert alert-success"
-      when :error then "alert alert-danger"
-      when :alert then "alert alert-warning"
-      else nil
+    when :notice then "alert alert-info"
+    when :success then "alert alert-success"
+    when :error then "alert alert-danger"
+    when :alert then "alert alert-warning"
     end
   end
 
   # renders a loading indicator image wrapped in a wrapper
   def loading_indicator(options = {})
-    content_tag("div", :class => "loading_indicator loading_indicator#{options[:floating] ? '_floating' : '_inline'}", :id => options[:id]) do
-      body = image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif", :style => "display: none",
-          :id => "loading_indicator" + (options[:id] ? "_#{options[:id]}" : ""))
+    floating = options[:floating] ? "_floating" : "_inline"
+    content_tag("div", class: "loading_indicator loading_indicator#{floating}", id: options[:id]) do
+      body = image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif",
+        style: "display: none",
+        id: "loading_indicator" + (options[:id] ? "_#{options[:id]}" : ""))
 
       if options[:success_failure]
-        body += content_tag('i', '', :class => 'success fa fa-fw fa-check-circle', :style => 'display: none')
-        body += content_tag('i', '', :class => 'failure fa fa-fw fa-minus-circle', :style => 'display: none')
+        body += content_tag("i", "", class: "success fa fa-fw fa-check-circle", style: "display: none")
+        body += content_tag("i", "", class: "failure fa fa-fw fa-minus-circle", style: "display: none")
       end
 
       body
@@ -76,9 +88,10 @@ module ApplicationHelper
     obj.to_json.html_safe
   end
 
-  # takes an array of keys and a scope and builds an options array (e.g. [["Option 1", "opt1"], ["Option 2", "opt2"], ...])
+  # takes an array of keys and a scope and builds an options array
+  # e.g. [["Option 1", "opt1"], ["Option 2", "opt2"], ...]
   def translate_options(keys, scope)
-    keys.map{|k| [t(k, :scope => scope), k]}
+    keys.map { |k| [t(k, scope: scope), k] }
   end
 
   # translates a boolean value
@@ -93,20 +106,15 @@ module ApplicationHelper
 
   # if the given array is not paginated, apply an infinite pagination so the will_paginate methods will still work
   def prepare_for_index(objs)
-    objs = if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
-      objs.paginate(:page => 1, :per_page => 1000000)
+    if !objs.respond_to?(:total_entries) && objs.respond_to?(:paginate)
+      objs.paginate(page: 1, per_page: 1000000)
     else
       objs
     end
-
-    # ensure .to_a gets called so that a bunch of extra queries don't get triggered
-    objs = objs.to_a if objs.respond_to?(:to_a)
-
-    objs
   end
 
   def translate_model(model)
-    pluralize_model(model, :count => 1)
+    pluralize_model(model, count: 1)
   end
 
   # gets or constructs the page title from the translation file or from an explicitly set @title
@@ -144,33 +152,31 @@ module ApplicationHelper
       if options[:name_only]
         ttl << @title_args[:name]
       else
-        ttl << t(action, {:scope => "page_titles.#{controller_name}", :default => [:all, ""]}.merge(@title_args || {}))
+        ttl << t(action, {scope: "page_titles.#{controller_name}", default: [:all, ""]}.merge(@title_args || {}))
       end
     end
   end
 
   def h1_title
-    content_tag(:h1, title, class: 'title')
+    content_tag(:h1, title, class: "title")
   end
 
   # pluralizes an activerecord model name
   # assumes 2 if count not given in options
   def pluralize_model(klass, options = {})
     klass = klass.constantize if klass.is_a?(String)
-    t("activerecord.models.#{klass.model_name.i18n_key}", :count => options[:count] || 2)
+    t("activerecord.models.#{klass.model_name.i18n_key}", count: options[:count] || 2)
   end
 
   # Translates and interprets markdown style translations.
   # Escapes HTML in any arguments.
   def tmd(key, options = {})
-    options.keys.each{ |k| options[k] = html_escape(options[k]).to_s unless %w(default scope).include?(k.to_s) }
+    options.keys.each { |k| options[k] = html_escape(options[k]).to_s unless %w(default scope).include?(k.to_s) }
 
     html = BlueCloth.new(t(key, options)).to_html
 
     # Remove surrounding <p> tags if present.
-    if html[0,3] == '<p>' && html[-4,4] == '</p>'
-      html = html[3..-5]
-    end
+    html = html[3..-5] if html[0,3] == "<p>" && html[-4,4] == "</p>"
 
     # We can safely do this because we control what's in the translation file
     # and we've escaped the options.
@@ -185,20 +191,24 @@ module ApplicationHelper
     end
 
     # join all messages into one string
-    message = messages.join(', ')
+    message = messages.join(", ")
 
     # add a custom prefix if given
     if options[:prefix]
       # remove the inital cap also
-      message = options[:prefix] + ' ' + message.gsub(/^([A-Z])/){$1.downcase}
+      message = options[:prefix] + " " + message.gsub(/^([A-Z])/) { $1.downcase }
     end
 
     # add Error: unless in compact mode
-    unless options[:compact]
-      message = t("common.error", :count => obj.errors.size) + ": " + message
-    end
+    message = t("common.error", count: obj.errors.size) + ": " + message unless options[:compact]
+
 
     message
+  end
+
+  # pill label
+  def pill_label(text, kind: "default")
+    content_tag(:span, text, class: "label label-#{kind}")
   end
 
   # makes a set of <li> wrapped links to the index actions of the given classes
@@ -208,7 +218,7 @@ module ApplicationHelper
       if can?(:index, k)
         path = dynamic_path(k, action: :index)
         active = current_page?(path)
-        links << content_tag(:li, :class => active ? 'active' : '') do
+        links << content_tag(:li, class: active ? "active" : "") do
           link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
         end
       end

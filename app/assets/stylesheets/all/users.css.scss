@@ -3,12 +3,17 @@
     margin-bottom: 10px;
   }
 
+  td {
+    font-size: 15px;
+  }
+
   td.name {
-    width: 100px;
+    width: 150px;
   }
 
   td.value {
     font-weight: bold;
+    font-family: monospace;
     width: 300px;
   }
 }

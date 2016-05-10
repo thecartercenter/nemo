@@ -5,12 +5,12 @@
 (function(ns, klass) {
 
   // constructor
-  ns.ConditionChecker = klass = function(condition) {
+  ns.ConditionChecker = klass = function(condition, inst_num) {
     this.condition = condition;
 
     // get refs to main row and ref'd question row
-    this.row = $("#qing_" + this.condition.questioning_id);
-    this.rq_row = $("#qing_" + this.condition.ref_qing_id);
+    this.row = this.form_row(this.condition.questioning_id, inst_num);
+    this.rq_row = this.form_row(this.condition.ref_qing_id, inst_num);
 
     // check if readonly
     this.read_only = this.row.is('.read_only');
@@ -172,6 +172,11 @@
 
   klass.prototype.get_ckeditor = function() {
     return CKEDITOR.instances[this.rq_row.find("div.control textarea").attr('id')];
+  }
+
+  // Gets a jQuery object for the form row for the given questioning id and inst_num.
+  klass.prototype.form_row = function(qing_id, inst_num) {
+    return $('.form_field[data-qing-id=' + qing_id + '][data-inst-num=' + inst_num + ']');
   }
 
 })(ELMO.Views);

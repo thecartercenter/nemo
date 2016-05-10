@@ -1,6 +1,8 @@
 class FormsController < ApplicationController
   include StandardImportable
   include BatchProcessable
+  include OdkHeaderable
+  include ERB::Util
   helper OdkHelper
 
   # special find method before load_resource
@@ -43,7 +45,6 @@ class FormsController < ApplicationController
           # This query is not deferred so we have to check if it should be run or not.
           @forms = @forms.published
         end
-        render_openrosa
       end
     end
   end
@@ -59,20 +60,10 @@ class FormsController < ApplicationController
   def show
     respond_to do |format|
 
-      # for html, render the printable or sms_guide styles if requested, otherwise render the form
+      # for html, render the printable style if requested, otherwise render the form
       format.html do
         if params[:print] && request.xhr?
           render(:form, :layout => false)
-
-        # sms guide style
-        elsif params[:sms_guide]
-          # determine the most appropriate language to show the form in
-          # if params[:lang] is set, use that
-          # otherwise try to use the current locale set
-          @lang = params[:lang] || I18n.locale
-
-          render("sms_guide")
-
         # otherwise just normal!
         else
           prepare_and_render_form
@@ -86,10 +77,20 @@ class FormsController < ApplicationController
 
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || 'odk'
-
-        render_openrosa
       end
     end
+  end
+
+  def sms_guide
+    # determine the most appropriate language to show the form in
+    # if params[:lang] is set, use that
+    # otherwise try to use the current locale set
+    @lang = params[:lang] || I18n.locale
+
+    @qings_with_indices = @form.smsable_questionings
+
+    # If there are more than one incoming numbers, we need to set a flash notice.
+    @number_appendix = configatron.incoming_sms_numbers.size > 1
   end
 
   # Format is always :xml
@@ -100,7 +101,6 @@ class FormsController < ApplicationController
       @ifa = ItemsetsFormAttachment.new(form: @form)
       @ifa.ensure_generated
     end
-    render_openrosa
   end
 
   # Format is always :csv
@@ -242,12 +242,6 @@ class FormsController < ApplicationController
       end
     end
 
-    # adds the appropriate headers for openrosa content
-    def render_openrosa
-      render(content_type: "text/xml") if request.format.xml?
-      response.headers['X-OpenRosa-Version'] = "1.0"
-    end
-
     # prepares objects and renders the form template
     def prepare_and_render_form
       # We need this array only when in mission mode since it's for the API permissions which are not
@@ -261,6 +255,6 @@ class FormsController < ApplicationController
     end
 
     def form_params
-      params.require(:form).permit(:name, :smsable, :allow_incomplete, :access_level)
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :authenticate_sms, :access_level)
     end
 end

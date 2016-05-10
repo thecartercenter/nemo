@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Sms::Decoder do
 
@@ -11,7 +11,8 @@ describe Sms::Decoder do
 
   it "form with long_text question should work" do
     create_form(questions: %w(text integer))
-    assert_decoding(body: "#{@form.code} 1.weather is very hot and humid with threats of storms 2.4345",
+    assert_decoding(
+      body: "#{@form.code} 1.weather is very hot and humid with threats of storms 2.4345",
       answers: ["weather is very hot and humid with threats of storms", 4345])
   end
 
@@ -22,6 +23,52 @@ describe Sms::Decoder do
 
   it "submitting garbage should fail" do
     assert_decoding_fail(body: "lasjdalfksldjal", error: "invalid_form_code")
+  end
+
+  context "with SMS Authentication enabled" do
+    before(:all) { create_form(questions: %w(integer), authenticate_sms: true) }
+
+    it "should work with the correct code provided" do
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
+
+    it "should raise an error with an incorrect code provided" do
+      auth_code = "n000"
+      assert_decoding_fail(body: "#{auth_code} #{@form.code} 1.17", error: "user_not_found")
+    end
+
+    it "should raise an error if no code is provided" do
+      assert_decoding_fail(body: "#{@form.code} 1.17", error: "user_not_found")
+    end
+
+    it "should lock account after 3 failed attempts" do
+      create_list(:sms_message, Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD, user: user, auth_failed: true, type: "incoming")
+      assert_decoding_fail(body: "#{@form.code} 1.17", error: "account_locked")
+    end
+
+    it "should not lock account if threshold is not reached" do
+      safe_interval = (Sms::BRUTE_FORCE_CHECK_WINDOW / Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD) + 1
+      Timecop.freeze
+
+      3.times do
+        Timecop.travel(safe_interval)
+        create(:sms_message, user: user, auth_failed: true, type: "incoming")
+      end
+
+      Timecop.travel(safe_interval)
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
+  end
+
+  context "with SMS Authentication disabled" do
+    before(:all) { create_form(questions: %w(integer), authenticate_sms: false) }
+
+    it "should work with the an unnecessary code provided" do
+      auth_code = user.sms_auth_code
+      assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+    end
   end
 
   it "submitting to unpublished form should produce appropriate error" do
@@ -65,7 +112,10 @@ describe Sms::Decoder do
     other_user.reload
 
     # ensure user doesn't have permission on form
-    expect(Ability.new(user: other_user, mission: other_mission).cannot?(:submit_to, @form)).to be_truthy, "User test2 shouldn't be able to access form."
+    expect(Ability.new(
+      user: other_user,
+      mission: other_mission
+    ).cannot?(:submit_to, @form)).to be_truthy, "User test2 shouldn't be able to access form."
 
     # ensure decoding fails due to no permission
     assert_decoding_fail(body: "#{@form.code} 1.15", user: other_user, error: "form_not_permitted")
@@ -121,7 +171,7 @@ describe Sms::Decoder do
 
   it "form with duplicate answers for the same question should error" do
     create_form(questions: %w(integer integer))
-    assert_decoding_fail(body: "#{@form.code} 1.15 2.8 2.9", error: "duplicate_answers", rank: 2)
+    assert_decoding_fail(body: "#{@form.code} 1.15 2.8 2.9", error: "duplicate_answer", rank: 2)
   end
 
   it "spaces after decimal points should not cause error" do
@@ -165,13 +215,23 @@ describe Sms::Decoder do
   end
 
   it "select_one question treated as text should work for multilevel option set" do
-    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true)
     assert_decoding(body: "#{@form.code} 1.15 2.Tulip", answers: [15, ["Plant", "Tulip"]])
   end
 
   it "select_one question treated as text should work for multilevel option set for non-leaf option" do
-    create_form(questions: %w(integer multi_level_select_one_as_text_for_sms), default_option_names: true)
+    create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true)
     assert_decoding(body: "#{@form.code} 1.15 2.Plant", answers: [15, ["Plant", "NIL"]])
+  end
+
+  it "select_one question with appendix and invalid option should not work" do
+    create_form(questions: %w(integer select_one_with_appendix_for_sms))
+    assert_decoding_fail(body: "#{@form.code} 1.15 2.no", error: "answer_not_valid_option")
+  end
+
+  it "select_one question with appendix should work" do
+    create_form(questions: %w(integer select_one_with_appendix_for_sms))
+    assert_decoding(body: "#{@form.code} 1.15 2.2", answers: [15, "Banana"])
   end
 
   it "option codes should be case insensitive" do
@@ -186,20 +246,47 @@ describe Sms::Decoder do
 
   it "select_multiple question with one numeric option should error" do
     create_form(questions: %w(integer select_multiple))
-    assert_decoding_fail(body: "#{@form.code} 1.15 2.b3d", error: "answer_not_valid_option_multi",
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.b3d",
+      error: "answer_not_valid_option_multi",
       rank: 2, value: "b3d", invalid_options: "3")
   end
 
   it "select_multiple question with one non-existent option should error" do
     create_form(questions: %w(integer select_multiple))
-    assert_decoding_fail(body: "#{@form.code} 1.15 2.abh", error: "answer_not_valid_option_multi",
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.abh",
+      error: "answer_not_valid_option_multi",
       rank: 2, value: "abh", invalid_options: "h")
   end
 
   it "select_multiple question with several non-existent options should error" do
     create_form(questions: %w(integer select_multiple))
-    assert_decoding_fail(body: "#{@form.code} 1.15 2.abhk", error: "answer_not_valid_options_multi",
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.abhk",
+      error: "answer_not_valid_options_multi",
       rank: 2, value: "abhk", invalid_options: "h, k")
+  end
+
+  it "select_multiple question with appendix should work" do
+    create_form(questions: %w(integer select_multiple_with_appendix_for_sms))
+    assert_decoding(body: "#{@form.code} 1.15 2.2,4", answers: [15, %w(Banana Durian)])
+  end
+
+  it "select_multiple question with appendix and one non-existent option should error" do
+    create_form(questions: %w(integer select_multiple_with_appendix_for_sms))
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.2,4,no",
+      error: "answer_not_valid_option_multi",
+      rank: 2, value: "2,4,no", invalid_options: "no")
+  end
+
+  it "select_multiple question with appendix and several non-existent options should error" do
+    create_form(questions: %w(integer select_multiple_with_appendix_for_sms))
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.2,no,nope",
+      error: "answer_not_valid_options_multi",
+      rank: 2, value: "2,no,nope", invalid_options: "no, nope")
   end
 
   it "decimal question should work" do
@@ -234,7 +321,9 @@ describe Sms::Decoder do
 
   it "long_text question in middle of message should work" do
     create_form(questions: %w(select_one long_text integer))
-    assert_decoding(body: "#{@form.code} 1.a 2.foo bar that is very long 3.15", answers: ["Apple", "foo bar that is very long", 15])
+    assert_decoding(
+      body: "#{@form.code} 1.a 2.foo bar that is very long 3.15",
+      answers: ["Apple", "foo bar that is very long", 15])
   end
 
   it "text question at end of message should work" do
@@ -244,7 +333,9 @@ describe Sms::Decoder do
 
   it "long_text question at end of message should work" do
     create_form(questions: %w(select_one integer long_text))
-    assert_decoding(body: "#{@form.code} 1.a 2.15 3.foo bar that is very long", answers: ["Apple", 15, "foo bar that is very long"])
+    assert_decoding(
+      body: "#{@form.code} 1.a 2.15 3.foo bar that is very long",
+      answers: ["Apple", 15, "foo bar that is very long"])
   end
 
   it "text question with space after decimal should work" do
@@ -254,7 +345,9 @@ describe Sms::Decoder do
 
   it "weird chunk should error" do
     create_form(questions: %w(select_one text integer))
-    assert_decoding_fail(body: "#{@form.code} 1.a 2. foo bar 3.15 baz", error: "answer_not_integer", rank: 3, value: "15 baz")
+    assert_decoding_fail(
+      body: "#{@form.code} 1.a 2. foo bar 3.15 baz",
+      error: "answer_not_integer", rank: 3, value: "15 baz")
   end
 
   it "date question should work" do
@@ -315,7 +408,9 @@ describe Sms::Decoder do
     # use sask b/c no daylight savings
     Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
 
-    response = assert_decoding(body: "#{@form.code} 1.4 2.20120229 1230", answers: [4, Time.zone.parse("2012-02-29 12:30")])
+    response = assert_decoding(
+      body: "#{@form.code} 1.4 2.20120229 1230",
+      answers: [4, Time.zone.parse("2012-02-29 12:30")])
 
     # make sure time gets saved properly and zone doesn't mess up
     response.reload
@@ -358,11 +453,23 @@ describe Sms::Decoder do
     end
   end
 
+  it "form with qing groups should work" do
+    create_form(questions: ["integer", %w(text date), "date"])
+    assert_decoding(
+      body: "#{@form.code} 1.3 2.coffee and bagels 3.20151225 4.20160101",
+      answers: [3, "coffee and bagels", Date.new(2015, 12, 25), Date.new(2016, 01, 01)]
+    )
+  end
+
   private
 
   def create_form(options)
     option_names = options[:default_option_names] ? nil : %w(Apple Banana Cherry Durian) + ["Elder Berry"]
-    @form = create(:form, smsable: true, question_types: options[:questions], option_names: option_names)
+    authenticate_sms = options[:authenticate_sms] ? options[:authenticate_sms] : false
+    @form = create(:form,
+      smsable: true,
+      question_types: options[:questions],
+      option_names: option_names, authenticate_sms: authenticate_sms)
     @form.publish!
     @form.reload
   end
@@ -384,18 +491,25 @@ describe Sms::Decoder do
     # ensure the form is correct
     expect(response.form_id).to eq(@form.id)
 
+    nodes = AnswerArranger.new(response).build.leaf_nodes
+
+    # ensure an expected answer was given for this question
+    expect(options[:answers].size >= nodes.size).to be_truthy,
+      "No expected answer was given for question #{nodes.size + 1}"
+
     # ensure the answers match the expected ones
-    @form.root_questionings.each do |qing|
-      # ensure an expected answer was given for this question
-      expect(options[:answers].size >= qing.rank).to be_truthy, "No expected answer was given for question #{qing.rank}"
+    @form.questionings.each_with_index do |qing, i|
+      node = nodes[i]
+
+      expect(node.item).to eq(qing), "Missing answer at index #{i}"
 
       # copy the expected value
-      expected = options[:answers][qing.rank - 1]
+      expected = options[:answers][i]
 
       # replace the array index with nil so that we know this one has been looked at
-      options[:answers][qing.rank - 1] = nil
+      options[:answers][i] = nil
 
-      ansset = response.answer_set_for_questioning(qing)
+      ansset = node.set
 
       # ensure answer matches
       case qing.qtype_name
@@ -405,16 +519,16 @@ describe Sms::Decoder do
         expect(ansset.value.to_f).to eq(expected)
       when "select_one"
         # for select one, the expected value is the english translation(s) of the desired option(s)
-        expect(ansset.answers.map{ |a| a.option.try(:name_en) || "NIL" }).to eq(Array.wrap(expected))
+        expect(ansset.answers.map { |a| a.option.try(:name_en) || "NIL" }).to eq(Array.wrap(expected))
         # Check answer ranks.
-        if qing.multi_level?
+        if qing.multilevel?
           expect(ansset.answers.map(&:rank)).to eq((1..expected.size).to_a), "Invalid answer ranks"
         else
-          expect(ansset.first.rank).to be_nil, "Answer rank should be nil"
+          expect(ansset.first.rank).to eq(1), "Answer rank should be 1"
         end
       when "select_multiple"
         # for select multiple, the expected value is an array of the english translations of the desired options
-        expect(ansset.choices.collect{|c| c.option.name_en}).to eq(expected)
+        expect(ansset.choices.collect { |c| c.option.name_en }).to eq(expected)
       when "text", "long_text"
         expect(ansset.value).to eq(expected)
       when "date"
@@ -433,7 +547,7 @@ describe Sms::Decoder do
       expect(a).to be_nil, "No answer was given for question #{i+1}"
     end
 
-    return response
+    response
   end
 
   # tests that a decoding fails

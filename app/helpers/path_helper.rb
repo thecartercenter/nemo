@@ -22,6 +22,7 @@ module PathHelper
     key = KEYS[klass.name] || klass.name.demodulize.underscore
     key = PLURAL_KEYS[klass.name] || key.pluralize if action == :index
     key = "#{action}_#{key}" if [:new, :edit].include?(action)
+    key.gsub!("_decorator", "")
     args = [:new, :index].include?(action) ? [options] : [obj, options]
     send("#{key}_path", *args)
   end

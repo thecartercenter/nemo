@@ -24,12 +24,12 @@ module FormsHelper
     case field
     when "std_icon" then std_icon(form)
     when "version" then form.version
-    when "name" then link_to(form.name, form_path(form), :title => t("common.view"))
+    when "name" then link_to(form.name, form_path(form), title: t("common.view"))
     when "questions" then form.questionings_count
     when "updated_at" then l(form.updated_at)
     when "responses"
       form.responses_count == 0 ? 0 :
-        link_to(form.responses_count, responses_path(:search => "form:\"#{form.name}\""))
+        link_to(form.responses_count, responses_path(search: "form:\"#{form.name}\""))
     when "downloads" then form.downloads || 0
     when "published" then tbool(form.published?)
     when "smsable" then tbool(form.smsable?)
@@ -42,13 +42,13 @@ module FormsHelper
         # get the appropriate publish icon and add link, if auth'd
         if can?(:publish, form)
           verb = form.published? ? "unpublish" : "publish"
-          links << action_link(verb, publish_form_path(form), :title => t("form.#{verb}"), :'data-method' => 'put')
+          links << action_link(verb, publish_form_path(form), title: t("form.#{verb}"), :'data-method' => 'put')
         end
 
         # add a clone link if auth'd
         if can?(:clone, form)
           links << action_link("clone", clone_form_path(form), :'data-method' => 'put',
-            :title => t("common.clone"), data: {confim: t("form.clone_confirm")}, :form_name => form.name)
+            title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
         end
 
         # add a print link if auth'd
@@ -58,89 +58,14 @@ module FormsHelper
 
         # add an sms template link if appropriate
         if form.smsable? && form.published? && !admin_mode?
-          links << action_link("sms", form_path(form, :sms_guide => 1), :title => "Sms Guide")
+          links << action_link("sms", sms_guide_form_path(form), title: "SMS Guide")
         end
 
         # add a loading indicator
-        links << loading_indicator(:id => form.id, :floating => true)
+        links << loading_indicator(id: form.id, floating: true)
       end
     else form.send(field)
     end
-  end
-
-  # returns a set of divs making up an answer space for the given text for use in the sms guide
-  def answer_space(text, options = {})
-    # default to showing the spc glyph
-    options[:show_spc_glyph] = true if options[:show_spc_glyph].nil?
-
-    text.split("").collect do |char|
-      content_tag("span", :class => "answer_space") do
-        case char
-        when " " then options[:show_spc_glyph] ? spc_glyph : " "
-        when "." then "&bull;".html_safe
-        else char
-        end
-      end
-    end.reduce(:<<)
-  end
-
-  # returns a SPC glyph type thing for use in the sms guide
-  def spc_glyph
-    content_tag("span", "SPC", :class => "spc_glyph")
-  end
-
-  # converts a number into a letter e.g. 1 = a, 2 = b, 3 = c, ..., 26 = z, 27 = aa, ...
-  def index_to_letter(idx)
-    letter = ""
-    while true
-      idx -= 1
-      r = idx % 26
-      idx /= 26
-      letter = (r + 97).chr + letter
-      break if idx <= 0
-    end
-    letter
-  end
-
-  # Returns an example answer based on the question type, to be used in the sms guide
-  def sms_example_for_question(qing)
-    content = case qing.question.qtype.name
-    when "integer" then "3"
-    when "decimal" then "12.5"
-    when "select_one" then qing.text_type_for_sms? ? qing.first_leaf_option.name : "b"
-    when "select_multiple" then "ac"
-    when "datetime" then "20120228 1430"
-    when "date" then "20121118"
-    when "time" then "0930"
-    else nil
-    end
-
-    if content
-      t("common.example_abbr").html_safe << " " << content_tag(:span, content, class: "sms_example")
-    else
-      ""
-    end
-  end
-
-  # returns a set of answer spaces for the given question type
-  def answer_space_for_question(qing)
-    # determine the number of spaces
-    size = case qing.question.qtype.name
-    when "integer" then 1
-    when "select_one" then qing.text_type_for_sms? ? 8 : 1
-    when "decimal" then 2
-    when "time", "select_multiple" then 4
-    when "date" then 6
-    when "datetime", "text", "long_text" then 8
-    else 4
-    end
-
-    answer_space(" " * size, :show_spc_glyph => false)
-  end
-
-  # returns the sms submit number or an indicator that it's not set up
-  def submit_number
-    content_tag("strong", configatron.incoming_sms_number.blank? ? "[" + t("sms_form.guide.unknown_number") + "]" : configatron.incoming_sms_number)
   end
 
   def allow_incomplete?
@@ -154,6 +79,10 @@ module FormsHelper
     'time' => 'fa-clock-o',
     'location' => 'fa-map-marker',
     'group' => 'fa-folder-open-o',
+    'image' => 'fa-image',
+    'sketch' => 'fa-pencil-square-o',
+    'audio' => 'fa-volume-up',
+    'video' => 'fa-film'
   }
 
   def form_item_icon(type)

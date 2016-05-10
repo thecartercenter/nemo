@@ -10,7 +10,7 @@ class OptionSuggester
     query = query[0...Option::MAX_NAME_LENGTH]
 
     name_clause = sanitize("name_translations RLIKE ?", "%%%1#{Regexp.escape(query)}%%%2").tap do |sql|
-      sql.gsub!('%%%1', %{"#{I18n.locale}":"})
+      sql.gsub!('%%%1', %{"#{configatron.preferred_locale}":"})
       sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
     end
 
@@ -32,7 +32,7 @@ class OptionSuggester
     matches = matches[0...MAX_SUGGESTIONS]
 
     # if there was no exact match, we append a 'new option' placeholder
-    matches << Option.new(:name => query) unless exact_match
+    matches << Option.new(:"name_#{configatron.preferred_locale}" => query) unless exact_match
 
     matches
   end

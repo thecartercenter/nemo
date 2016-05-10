@@ -6,6 +6,14 @@
 
 <%= render("layouts/location_picker") %>
 
+<%# This needs to be up here so it runs before the MediaUploaderViews are initialized. %>
+<%= javascript_doc_ready do %>
+  ELMO.media_uploader_manager = new ELMO.Views.MediaUploaderManager(<%=json(
+    el: ".response_form",
+    preview_template: render("responses/answers/dropzone_preview")
+  )%>);
+<% end %>
+
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <%= elmo_form_for(@response) do |f| %>
@@ -40,26 +48,25 @@
 
   <% end %>
 
-  <%# Answer sets %>
-  <% @response.form.arrange_descendants.each do |item, subtree| %>
-    <%= render('form_item', item: item, subtree: subtree) %>
-  <% end %>
+  <%= render("responses/answers/nodes", nodes: @nodes, inst_num: 1) %>
 
-
-  <%# incomplete checkbox %>
+  <%# Incomplete checkbox %>
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
 
-  <div class ="submit-buttons">
+  <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
     <% if form_mode == :edit && can?(:review, @response) %>
       <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed') %>
     <% end %>
+    <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
+      <%= image_tag("load-ind-small.gif") %>
+      <%= t("response.upload_progress_notice") %>
+    </div>
   </div>
 
 <% end %>
 
 <%= javascript_doc_ready do %>
-  $('.answer_field textarea').each(function(){ CKEDITOR.replace(this.id); });
   ELMO.Response.init(<%=json({
     url: @response.new_record? ? possible_submitters_new_response_path : possible_submitters_response_path(@response)
   })%>);

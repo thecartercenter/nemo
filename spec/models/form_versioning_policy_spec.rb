@@ -171,32 +171,6 @@ describe FormVersioningPolicy do
     publish_and_check_versions(:should_change => true)
   end
 
-  it "changing question text_type_for_sms should cause bump" do
-    # add non-required question to first two forms
-    @forms[0...2].each do |f|
-      q = FactoryGirl.create(:question, :qtype_name => 'select_one')
-      Questioning.create(:form_id => f.id, :question_id => q.id, :parent => f.root_group)
-    end
-
-    save_old_version_codes
-
-    # now change field
-    @forms[0...2].each do |f|
-      f.questions.first.update_attributes(:text_type_for_sms => true)
-    end
-
-    publish_and_check_versions(:should_change => true)
-
-    save_old_version_codes
-
-    # now change questioning type back to not required
-    @forms[0...2].each do |f|
-      f.questions.first.update_attributes(:text_type_for_sms => false)
-    end
-
-    publish_and_check_versions(:should_change => true)
-  end
-
   it "deleting question should cause upgrade if question appeared not at end of an smsable form" do
     # add questions to first two forms
     q1 = FactoryGirl.create(:question)
@@ -248,6 +222,18 @@ describe FormVersioningPolicy do
     @os.update_attributes!(no_change_changeset(@os.root_node))
 
     publish_and_check_versions(:should_change => false)
+  end
+
+  it "changing option set sms_guide_formatting should cause bump on smsable form" do
+    setup_option_set
+
+    @os.forms.each{|f| f.update_attributes(:smsable => true)}
+
+    save_old_version_codes
+
+    @os.update_attributes(sms_guide_formatting: "appendix")
+
+    publish_and_check_versions(:should_change => true)
   end
 
   it "adding an option to a set should not cause upgrade on non-smsable form" do
@@ -327,7 +313,7 @@ describe FormVersioningPolicy do
 
   # creates an option set, and a question that has the option set, and adds it to first two forms
   def setup_option_set(options = {})
-    @os = FactoryGirl.create(:option_set, multi_level: true)
+    @os = FactoryGirl.create(:option_set, multilevel: true)
     @q = FactoryGirl.create(:question, :qtype_name => "select_one", :option_set => @os)
     @forms[0...2].each do |f|
       FactoryGirl.create(:questioning, form: f, question: @q)

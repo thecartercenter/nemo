@@ -20,6 +20,7 @@ class Sms::Message < ActiveRecord::Base
 
   # order by id after created_at to make sure they are in creation order
   scope(:latest_first, ->{ order('created_at DESC, id DESC') })
+  scope :since, -> (time) { where('created_at > ?', time) }
 
   # Remove all non-digit chars and add a plus at the front.
   # (unless the number looks like a shortcode, in which case we leave it alone)

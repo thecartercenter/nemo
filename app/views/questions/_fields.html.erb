@@ -34,7 +34,6 @@
   </div>
 
   <%= f.field(:tag_ids, partial: 'questions/tags') %>
-  <%= f.field(:text_type_for_sms, :type => :check_box) %>
 
   <% unless admin_mode? %>
     <%= f.field(:key, :type => :check_box) %>

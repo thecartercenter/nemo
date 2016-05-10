@@ -39,7 +39,7 @@ module ELMO
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :password_confirmation, :twilio_account_sid, :twilio_auth_token]
+    config.filter_parameters += [:password, :password_confirmation, :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key]
 
     # Enable the asset pipeline
     config.assets.enabled = true
@@ -85,5 +85,8 @@ module ELMO
 
     # default timeout for sensitive areas requiring a password reprompt
     configatron.recent_login_max_age = 60.minutes
+
+    # We use \r\n for CSV row separator because Excel seems to prefer it.
+    configatron.csv_row_separator = "\r\n"
   end
 end

@@ -27,7 +27,7 @@ class FormVersioningPolicy
       case action
       when :update
         # changing the option order is a trigger if the form is smsable
-        return obj.forms.select(&:smsable?) if obj.ranks_changed?
+        return obj.forms.select(&:smsable?) if obj.ranks_changed? || obj.sms_guide_formatting_changed?
       end
 
     when "OptionNode"
@@ -74,9 +74,9 @@ class FormVersioningPolicy
     when "Question"
       case action
       when :update
-        # changing question type, option set, constraints, or text_type_for_sms is a trigger
+        # changing question type, option set, constraints
         return obj.forms if obj.qtype_name_changed? || obj.option_set_id_changed? ||
-          obj.constraint_changed? || obj.text_type_for_sms_changed?
+          obj.constraint_changed?
       end
     end
 

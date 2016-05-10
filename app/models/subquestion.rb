@@ -1,4 +1,4 @@
-# For a select question with a multi_level option set, represents one level of the question.
+# For a select question with a multilevel option set, represents one level of the question.
 # For all other questions, just an alias.
 class Subquestion
   attr_accessor :question, :level, :rank
@@ -10,7 +10,7 @@ class Subquestion
   # Returns the odk code for the question. If options[:previous] is true,
   # returns the code for the immediately previous subquestion (multilevel only).
   def odk_code(options = {})
-    if multi_level?
+    if multilevel?
       r = options[:previous] ? rank - 1 : rank
       "#{question.odk_code}_#{r}"
     else
@@ -20,7 +20,7 @@ class Subquestion
 
   def name(*args)
     base = question.send(:name, *args)
-    multi_level? ? "#{base} - #{level.name}" : base
+    multilevel? ? "#{base} - #{level.name}" : base
   end
 
   # Whether this Subquestion is the first in its set (i.e. rank is nil or 1)

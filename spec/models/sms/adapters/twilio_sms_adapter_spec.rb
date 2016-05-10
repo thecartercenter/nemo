@@ -46,8 +46,8 @@ describe Sms::Adapters::TwilioAdapter do
     end
   end
 
-  it 'should correctly parse a twilio-style request even if incoming_sms_number is not present' do
-    configatron.incoming_sms_number = ''
+  it 'should correctly parse a twilio-style request even if incoming_sms_numbers is empty' do
+    configatron.incoming_sms_numbers = []
     request = twilio_request(params: {Body: 'foo', From: '2348036801489'})
     msg = @adapter.receive(request)
     expect(msg.body).to eq 'foo'

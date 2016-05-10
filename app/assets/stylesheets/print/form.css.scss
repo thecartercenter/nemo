@@ -61,9 +61,11 @@
   div.condition {
     font-weight: bold;
   }
+
   div#reqd_message {
     float: right;
   }
+
   div.reqd-sym {
     display: inline-block;
     font-weight: bold;
@@ -71,30 +73,41 @@
     line-height: 5px;
     vertical-align: middle;
   }
+
   .option {
     float: left;
     margin-right: 20px;
   }
-  .option_box, .answer_box, td.text_answer {
+
+  .option_box, .answer_box {
     background-color: #ccc !important;
   }
-  td.long_text_answer {
-    background-color: #ccc !important;
-  }
+
   .option_box {
     float: left;
     width: 0.15in;
     height: 0.15in;
     margin-right: 2px;
   }
+
   .answer_box {
-    height: 0.20in;
+    height: 0.2in;
   }
+
   td.integer_answer, td.decimal_answer {
     .answer_box {
       width: 1.5in;
     }
   }
+
+  td.signature_answer .answer_box {
+    height: 0.3in;
+  }
+
+  td.sketch_answer .answer_box {
+    height: 1in;
+  }
+
   .hint {
     font-style: italic;
     color: #888;

@@ -4,37 +4,37 @@ FactoryGirl.define do
       # First level option names.
       option_names %w(Cat Dog)
 
-      multi_level false
-      super_multi_level false
+      multilevel false
+      super_multilevel false
     end
 
     sequence(:name) { |n| "Option Set #{n}" }
     mission { is_standard ? nil : get_mission }
 
     children_attribs do
-      if multi_level
+      if multilevel
         if geographic
           OptionNodeSupport::GEO_WITH_GRANDCHILDREN_ATTRIBS
         else
           OptionNodeSupport::WITH_GRANDCHILDREN_ATTRIBS
         end
-      elsif super_multi_level
+      elsif super_multilevel
         OptionNodeSupport::WITH_GREAT_GRANDCHILDREN_ATTRIBS
       elsif geographic
         OptionNodeSupport::GEO_SINGLE_LEVEL_ATTRIBS
       else
-        option_names.map{ |n| { 'option_attribs' => { 'name_translations' => {'en' => n} } } }
+        option_names.map{ |n| { "option_attribs" => { "name_translations" => {"en" => n} } } }
       end
     end
 
     level_names do
-      if multi_level
+      if multilevel
         if geographic
           [{'en' => 'Country'}, {'en' => 'City'}]
         else
           [{'en' => 'Kingdom'}, {'en' => 'Species'}]
         end
-      elsif super_multi_level
+      elsif super_multilevel
         [{'en' => 'Kingdom'}, {'en' => 'Family'}, {'en' => 'Species'}]
       else
         nil

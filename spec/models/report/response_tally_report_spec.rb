@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Report::ResponseTallyReport do
   context 'with multilevel option set' do
     before do
-      @form = create(:form, question_types: %w(multi_level_select_one))
+      @form = create(:form, question_types: %w(multilevel_select_one))
       create(:response, form: @form, answer_values: [['Animal', 'Cat']], source: 'web')
       create(:response, form: @form, answer_values: [['Animal', 'Dog']], source: 'web')
       create(:response, form: @form, answer_values: [['Animal']], source: 'odk')

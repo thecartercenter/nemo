@@ -2,15 +2,9 @@
 
   ns.Response = klass = {}
 
-  // conditions array
-  klass.conditions = [];
-
   klass.init = function(options) {
     // hookup edit location links
     $("a.edit_location_link").click(function(e){ klass.show_location_picker(e); return false; });
-
-    // initialize conditions
-    $.each(klass.conditions, function(i, cond){ cond.init(); });
 
     // enable select2 for user selector
     $('#response_user_id').select2({

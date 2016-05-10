@@ -46,16 +46,20 @@ en:
     confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
+    less_settings: "Fewer settings"
+    more_settings: "More settings"
     near: "Near"
     next: "Next"
     _no: "No" # using 'no' by itself as a key causes an error in i18n-js
     none: "None"
+    not_published: "Not Published"
     ok: "OK"
     or: "or"
     outgoing: "Outgoing"
     pending: "Pending"
     previous: "Previous"
     print: "Print"
+    published: "Published"
     regenerate: "Regenerate"
     remove: "Remove"
     report: "Report"
@@ -107,6 +111,12 @@ en:
     private: "Private"
     protected: "Protected"
     inherit: "Inherit"
+
+  sms_guide_formatting_options:
+    auto: Automatic
+    inline: Inline
+    appendix: Appendix
+    treat_as_text: Treat as text
 
   # general error messages (there are others under activerecord.errors)
   errors:
@@ -253,6 +263,7 @@ en:
         downloads: "Downloads"
         responses: "Responses"
         smsable: "SMSable?"
+        authenticate_sms: "Authenticate SMS?"
         updated_at: "Last Modified"
         version: "Version"
         item_list_heading: "Questions"
@@ -272,19 +283,22 @@ en:
       option:
         base: "" # this is a sort of hack to get error msg to display properly
         coordinates: "Coordinates"
+        shortcode: "Shortcode"
       option_set:
         allow_coordinates: "With Coordinates?"
         answers: "Answers"
         geographic: "Is Geographic?"
-        multi_level: "Is Multilevel?"
+        multilevel: "Is Multilevel?"
         options: "Options"
         option_levels: "Levels"
+        sms_guide_formatting: "SMS Guide Formatting"
       qing_group:
         group_name: "Name"
         group_hint: "Hint"
         add: "Add Group"
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
+        repeatable: "Repeatable?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -300,7 +314,7 @@ en:
         option_set_id: "Option Set"
         qtype_name: "Type"
         tag_ids: "Tags"
-        text_type_for_sms: "Free Response on SMS Forms?"
+        sms_guide_formatting: "SMS Guide Formatting"
       questioning:
         name: "Title"
         condition: "Condition?"
@@ -337,7 +351,7 @@ en:
         viewed_at: "Last Viewed"
       setting:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
-        incoming_sms_number: "Incoming Number(s)"
+        incoming_sms_numbers_str: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
         intellisms_password1: "Password"
         intellisms_password2: "Password Confirmation"
@@ -350,6 +364,7 @@ en:
         twilio_account_sid: "Account SID"
         twilio_auth_token1: "Auth Token"
         twilio_phone_number: "Outgoing Number"
+        frontlinecloud_api_key1: "API Key"
       sms/message:
         adapter_name: "Adapter"
         body: "Body"
@@ -373,6 +388,7 @@ en:
         pref_lang: "Preferred Language"
         role: "Role"
         api_key: "API Key"
+        sms_auth_code: "SMS Auth Code"
       user_batch:
         file: "File"
 
@@ -406,7 +422,7 @@ en:
         edit: "Edit Mission"
         destroy: "Delete Mission"
       operation:
-        clear: "Clear All Operations"
+        clear: "Clear All Completed Operations"
         destroy: "Clear Operation"
         index: "List Operations"
       option_set:
@@ -446,6 +462,7 @@ en:
       form:
         name: "A descriptive name for the form."
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
+        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an obsever to spoof submissions."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."
         access_level: "Public: Any ELMO user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
@@ -458,11 +475,16 @@ en:
         allow_coordinates: "Whether this option set allows options with geographic coordinates."
         geographic: "Whether this option set represents geographic information, e.g. a set of provinces or regions."
         name: "A name that summarizes this set of options. Normal users will not see this name."
-        multi_level: "Whether the option set has multiple levels of options, such as country -> state -> city."
+        multilevel: "Whether the option set has multiple levels of options, such as country -> state -> city."
         options:
           editable: "Add existing options by typing them and clicking 'Add'. If you do not see an option in the drop down, you can add a new one by clicking 'Create New Option'."
           read_only: "The options that will appear for questions using this option set."
         option_levels: "The names of each level of options, e.g. 'Country', 'State', 'City'. Note that these are distinct from the options themselves (e.g. 'United States', 'Illinois', 'Chicago'), which are defined below."
+        sms_guide_formatting: "The meanings of the options are as follows:
+          Auto: Automatically determine whether to use 'inline' or 'appendix'.
+          Inline: Show the list of options on the SMS Guide.
+          Appendix: Include the list of options in an appendix created by a Coordinator.
+          Treat as text: Accept options for this option set as if they were text entries"
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
@@ -473,7 +495,6 @@ en:
         option_set_id: "The set of options the user will be able to choose from."
         qtype_name: "The kind of information the user will be entering."
         access_level: "Inherit: Same access level as parent form. Private: No one can access the data via the API, regardless of parent form access level."
-        text_type_for_sms: "If checked, this question will appear on the SMS Guide as a free response text question. Useful for questions with large option sets. Ignore if SMS use is not planned for this form."
       questioning:
         hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override the condition and required settings below."
         condition: "An optional condition which must be met in order for this question to be shown to the user."
@@ -503,7 +524,7 @@ en:
           This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
-        incoming_sms_number: "Enter the phone number(s) to which incoming SMSes for SMS forms should be sent. This field will be displayed, verbatim, on the SMS guide. Only needed if using SMS submissions."
+        incoming_sms_numbers_str: "Enter the phone number(s) (including country code, separated by commas) to which incoming SMSes for SMS forms should be sent. Only needed if using SMS submissions."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
         using_incoming_sms_token_title: Using the Incoming SMS Token
@@ -517,6 +538,7 @@ en:
         twilio_phone_number: "The phone number registered with Twilio. Outgoing SMS broadcasts won't work unless this number is owned by your Twilio account. This number must include the country code. Example: +25680344523"
         twilio_account_sid: "The Account SID for the Twilio account."
         twilio_auth_token1: "The Auth Token for the Twilio account."
+        frontlinecloud_api_key1: "The API Key for the FrontlineCloud activity."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
       sms/test:
@@ -534,6 +556,7 @@ en:
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
         api_key: "Use this key to connect to other Elmo applications."
+        sms_auth_code: "Use this code to submit SMS responses."
 
     # all error messages should be full sentences with a period, for consistency.
     errors:
@@ -573,6 +596,9 @@ en:
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions."
           general: "Form is invalid (see below)."
+        media/object:
+          invalid_format: "The uploaded file was not an accepted format."
+          generic: "There was an error uploading the file."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "Please use only letters, numbers, and spaces."
@@ -594,6 +620,7 @@ en:
         option_set_import:
           general: "Option Set import is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
+          wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
         question:
           at_least_one_name: "You must enter a title in at least one language."
           attributes:
@@ -635,6 +662,7 @@ en:
           missing_answers: "Not all questions have answers."
           invalid_answers: "There are invalid answers."
           checked_out: "This response has been checked out by:"
+          form_unavailable: "The specified form does not exist in this mission."
         setting:
           attributes:
             preferred_locales_str:
@@ -1001,7 +1029,7 @@ en:
       form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable, and questions cannot be added, removed, or re-ordered. Please proceed with caution when making any changes."
       questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
       question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
-      option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers, thus Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
+      option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus non-editable, and Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
       sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
       odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
 
@@ -1048,6 +1076,44 @@ en:
     unpublish_form: "Unpublish Form"
     unsaved_rank_notice: "You have not yet saved the changes you made to the Question order. You should click the 'Save' button if you want to save these changes."
     view_sms_guide: "View SMS Guide"
+
+  forms:
+    sms_guide:
+      appendix:
+        one: "The following appendix should be included with this form:"
+        other: "The following appendices should be included with this form:"
+      header: "ELMO SMS Composition Guide"
+      auth_code: "User authorization code (required)"
+      header: "ELMO SMS Guide"
+      for_paper_record: "For paper record only"
+      form_code: "Unique form code (required)"
+      multiple_sms_numbers: "Multiple SMS submission numbers"
+      sms_message: "SMS Message"
+      pointers:
+        text: "Write your answer in the box. Abbreviate if necessary."
+        number: "Write your answer in the box."
+        select_one: "Write the letter for your choice in the box. Write only one letter."
+        select_one_as_text: "Write your answer in the box. Be sure to write the exact option name."
+        select_one_with_appendix: "Write the shortcode for your choice in the box. See the appendix for your options."
+        select_multiple: "Write the letters for each of your choices separated by commas in the box."
+        select_multiple_with_appendix: "Write the letters for each of your choices separated by commas in the box. See the appendix for your options."
+        datetime: "Write your answer in the box. Use YYYYMMDD HHMM format."
+        date: "Write your answer in the box. Use YYYYMMDD format."
+        time: "Write your answer in the box. Use HHMM format."
+      instructions:
+        instructions: "Instructions"
+        intro: "Please read all instructions to begin. You will use this paper first and then your phone."
+        paper: "Paper"
+        1a: "Write your user/team name here:"
+        1b: "First answer all the questions below and fill in each dashed box, e.g.:"
+        phone: "Phone"
+        2a_appendix: "With your phone, begin an SMS to one of the numbers on the attached sheet."
+        2a_number_html: "With your phone, begin an SMS to <strong>%{number}</strong>."
+        2b: "Enter the contents of each line on the right side of the page, going from top to bottom."
+        2c_html: "Periods are denoted by %{period} and spaces are denoted by %{spc}. It is important to enter both periods and spaces."
+        example_sms: "Example SMS"
+      unique_code: "This is the unique code for the form"
+      unknown_number: "[unknown number]"
 
   import:
     row_error: "Row %{row}: %{error}"
@@ -1097,7 +1163,7 @@ en:
     edit_option_level: "Edit Option Level"
     huge_notice: "This Option Set is very large (%{count} Options) and thus only a small sample of its Options are displayed below. You may edit its name and other properties here but please use the import/export features to edit the Options themselves."
     leave_page_warning: "Leaving this page will abandon your changes to this Option Set."
-    multi_level_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
+    multilevel_forbidden_notice: "This Option Set is currently used by at least one select-multiple Question and thus it cannot be converted to a multi-level set."
     new_option_level: "New Option Level"
     none_found: "No matching options found"
     searching: "Searching..."
@@ -1105,10 +1171,10 @@ en:
 
   option_set_import:
     instructions_html: |-
-      Upload a spreadsheet with your option set.
+      Upload a spreadsheet with your option set. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 
   operation:
-    clear_confirm: "Are you sure you want to clear all operations?"
+    clear_confirm: "Are you sure you want to clear all completed operations?"
     server_error: "Server error. Please contact support."
     description:
       user_import_operation_job: User import for %{mission_name} from %{file}
@@ -1178,6 +1244,12 @@ en:
     datetime: "Date/Time"
     date: "Date"
     time: "Time"
+    image: "Image"
+    annotated_image: "Annotated Image"
+    signature: "Signature"
+    sketch: "Sketch"
+    audio: "Audio"
+    video: "Video"
 
   recaptcha:
     errors:
@@ -1321,6 +1393,17 @@ en:
     save_and_mark_reviewed: "Save and Mark as Reviewed"
     view_response: "View Response"
     checked_out: "This response has been checked out by:"
+    remove_media_object_confirm:
+      image: "Are you sure you want to delete this image?"
+      audio: "Are you sure you want to delete this audio?"
+      video: "Are you sure you want to delete this video?"
+    upload_progress_notice: "Upload(s) in progress..."
+    drop_message: "Click or drop file here"
+    drop_more_info: "More info"
+    drop_hint:
+      image: "The image should be at most 5 MB in size. Accepted formats are: jpg, png."
+      video: "The video should be at most 25 MB in size. Accepted formats are: 3gp, mp4, webm, mpg, wmv, avi."
+      audio: "The audio should be at most 10 MB in size. Accepted formats are: mp3, ogg, webm, wav."
 
   role:
     role: "Role"
@@ -1635,6 +1718,7 @@ en:
   setting:
     change_sms_password: "Change Password"
     change_twilio_auth_token: "Change Auth Token"
+    change_api_key: "Change API Key"
     override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
     using_incoming_sms_token: "How do I use this?"
     headings:
@@ -1642,6 +1726,7 @@ en:
       sms: "Shared SMS Settings"
       intellisms: "IntelliSMS Settings"
       twilio: "Twilio Settings"
+      frontlinecloud: "FrontlineCloud Settings"
 
   sms:
     extra_recipients_html: "<br/>... and %{count} more"
@@ -1669,6 +1754,7 @@ en:
       congrats: "Your response to form '%{form_code}' was received. Thank you!"
       duplicate_answer: "Sorry, your submission contained duplicate answers for question %{rank}."
       duplicate_submission: "Sorry, your response is a duplicate of one submitted recently."
+      first_answer_invalid: "Sorry, but %{token} is not a valid answer. Be sure to include a period after the question number."
       form_not_found: "Sorry, there is no form with code '%{form_code}'."
       form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
       form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."
@@ -1677,33 +1763,9 @@ en:
       invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
       question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
       user_not_found: "Sorry, we couldn't find you in the system."
-    guide:
-      all_required: "Please answer all questions."
-      header: "ELMO SMS Composition Guide"
-      not_all_required: "Questions marked with an asterisk (*) are required."
-      pointers:
-        text: "Write your answer here. Abbreviate if necessary."
-        long_text: "Write your answer here. Abbreviate if necessary."
-        integer: "Write your answer here."
-        decimal: "Write your answer here."
-        select_one: "Write the letter for your choice here. Write only one letter."
-        select_one_as_text: "Write your answer here. Be sure to write the exact option name."
-        select_multiple: "Write the letter for each choice here with no spaces."
-        datetime: "Write your answer here in YYYYMMDD HHMM format."
-        date: "Write your answer here in YYYYMMDD format."
-        time: "Write your answer here in HHMM format."
-      step1: "Please answer all the questions below and follow the instructions at the end of the form to send in your data. You can use lower or UPPER case letters."
-      step2: "Now please do the following to send in your data:"
-      step2_substeps:
-        - "With your phone, begin an SMS to %{submit_number}."
-        - "Enter the contents of each line on the right side of each page, going from top to bottom."
-        - "Be careful that you enter each line exactly. Each line is important."
-        - "Notice that each answer is separated by a 'SPC'. Enter a space for each time you see 'SPC'. Do not add any extra spaces."
-        - "When you have finished entering, double-check your message to make sure it matches the form."
-        - "Send the message and wait for a response with further instructions."
-        - "If you do not receive a response within 5 minutes, please send the message again."
-      unique_code: "This is the unique code for the form"
-      unknown_number: "Unknown Number"
+    incoming_numbers:
+      id: "id"
+      phone_number: "phone_number"
     validation:
       invalid_answer: "Sorry, the answer to question %{rank} %{error}."
       missing_answer: "Sorry, the answer to the required question %{ranks} was missing from your response to form '%{form_code}'."
@@ -1754,8 +1816,9 @@ en:
 
   user_batch:
     instructions_html: |-
-      Upload a spreadsheet with your users. A <a href="%{url}">spreadsheet template</a> is available as a starting point.
+      Upload a spreadsheet with your users. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 
+      A spreadsheet template is available in <a href="%{xlsx_url}">XLSX</a> and <a href="%{csv_url}">CSV</a> formats as a starting point.
   user:
     add_assignment: "Add Assignment"
     api_key:

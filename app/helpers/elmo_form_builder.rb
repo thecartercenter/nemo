@@ -63,7 +63,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         }
         data['confirm'] = options.delete(:confirm) if options[:confirm]
 
-        body += @template.button_tag(@template.t("common.#{current ? 'regenerate' : 'generate'}"), :class => 'regenerate btn btn-default btn-xs', :data => data)
+        body += @template.button_tag(@template.t("common.#{current ? 'regenerate' : 'generate'}"),
+          :class => 'regenerate btn btn-default btn-xs', :data => data, :type => "button")
 
         # Loading indicator
         body += @template.loading_indicator(:success_failure => true)
@@ -161,7 +162,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
               password_field(field_name, :class => 'text form-control')
 
             when :select
-              select(field_name, options[:options], {:include_blank => options[:prompt] || true}, {:class => "form-control"})
+              prompt = options[:prompt].nil? ? true : options[:prompt]
+              select(field_name, options[:options], {:include_blank => prompt }, {:class => "form-control"})
 
             when :timezone
               time_zone_select(field_name, nil, {}, {:class => "form-control"})

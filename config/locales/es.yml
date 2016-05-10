@@ -238,7 +238,7 @@ es:
       option_set:
         answers: "Respuestas"
         geographic: "¿Es Geográfico?"
-        multi_level: "¿Es Multinivel?"
+        multilevel: "¿Es Multinivel?"
         options: "Opciones "
         option_levels: "Niveles"
       qing_group:
@@ -295,7 +295,7 @@ es:
         viewed_at: "Última Vista"
       setting:
         allow_unauthenticated_submissions: "¿Permitir entregas no autentificadas?"
-        incoming_sms_number: "Número entrante"
+        incoming_sms_numbers_str: "Número entrante"
         intellisms_password1: "Contraseña "
         intellisms_password2: "Confirmación de la contraseña"
         intellisms_username: "Nombre de usuario "
@@ -402,7 +402,7 @@ es:
       option_set:
         geographic: "Si este Conjunto de Opciones representa información geográfica, por ejemplo, un conjunto de provincias o regiones."
         name: "Un nombre que resume este conjunto de opciones. Los usuarios normales no verán este nombre."
-        multi_level: "Si el conjunto de opciones tiene varios niveles de opciones, como país -> estado -> ciudad."
+        multilevel: "Si el conjunto de opciones tiene varios niveles de opciones, como país -> estado -> ciudad."
         options:
           editable: "Añadir las opciones existentes, escribiendo y haciendo click en \"Agregar\".  Si no puede ver una opción en la lista desplegable, puede agregar una nueva haciendo click en \"Crear Nueva Opción\"."
           read_only: "Las opciones que aparecerán en las preguntas en las que se utiliza esta opción."
@@ -446,7 +446,7 @@ es:
           Debe enviar este código a los observadores si es necesario que puedan enviar respuestas incompletas. ODK no permitirá que se entreguen respuestas incompletas sin este código.
 
           Si crea un código nuevo, por favor guarde el código viejo si aún existen formularios anteriores. El nuevo código sólo funcionara con los formularios que hayan sido descargados después de que el nuevo código haya sido creado.
-        incoming_sms_number: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
+        incoming_sms_numbers_str: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
         default_outgoing_sms_adapter: "El adaptador que se utiliza para enviar SMSes salientes. Tenga en cuenta que las respuestas SMS pueden ser enviadas a través de un adaptador diferente, dependiendo del adaptador del que provienen."
         intellisms_username: "El nombre de usuario de la cuenta IntelliSMS."
         intellisms_password1: "Escriba y vuelva a escribir una contraseña para cambiar la contraseña de la cuenta IntelliSMS."
@@ -961,7 +961,7 @@ es:
     edit_option_level: "Editar este Nivel de Opción"
     huge_notice: "Este Conjunto de Opciones es muy largo (%{count} Options) y por lo tanto sólo una pequeña muestra de las Opciones están expuestas debajo. Puede editar el nombre y otras propiedades aquí pero por favor use las caracteríisticas de importación/exportación para editar las Opciones en si."
     leave_page_warning: "Al salir de esta página abandonará los cambios hechos en este Conjunto de Opciones."
-    multi_level_forbidden_notice: "Este Conjunto de Opciones está siendo usado actualmente por al menos una selección de varias preguntas y por lo tanto, no puede ser convertida a un set multi-nivel."
+    multilevel_forbidden_notice: "Este Conjunto de Opciones está siendo usado actualmente por al menos una selección de varias preguntas y por lo tanto, no puede ser convertida a un set multi-nivel."
     new_option_level: "Nuevo Nivel de Opción "
     none_found: "No se han encontrado opciones correspondientes"
     searching: "Buscando..."
@@ -1237,7 +1237,7 @@ es:
       step1: "Responda todas las preguntas a continuación y siga las instrucciones al final del formulario para enviar sus datos. Puede usar minúsculas o mayúsculas."
       step2: "Ahora, por favor, haga lo siguiente para enviar sus datos:"
       step2_substeps:
-      - Con su teléfono, empiece un SMS para %{submit_number}.
+      - Con su teléfono, empiece un SMS para %{submit_numbers}.
       - Entre el contenido de cada línea en el lado derecho de cada página, empezando de arriba hacia abajo.
       - Asegúrese de entrar cada línea exactamente igual. Cada línea es importante
       - Note que cada respuesta está separada por un 'SPC'. Entre un espacio cada vez que vea 'SPC'. No añada ningún espacio adicional.
