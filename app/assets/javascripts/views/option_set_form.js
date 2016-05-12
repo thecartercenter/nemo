@@ -84,6 +84,9 @@
     // hookup form submit
     $('form.option_set_form').on('submit', function(){ return self.form_submitted(); });
 
+    // hoookup hints
+    ELMO.app.hookup_hints()
+
     // hookup leave page warning unless ajax request
     if (!self.params.modal_mode)
       window.onbeforeunload = function(){
