@@ -21,7 +21,7 @@
 //= require jquery.mjs.nestedSortable-2.0
 //= require jquery.spin
 //= require core_ext/jquery_ext
-//= require common
+//= require legacy/common
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
@@ -37,10 +37,10 @@
 //= require dropzone
 
 // some report superclasses need to come first due to inheritance
-//= require views/control/control
-//= require controllers/report/report_controller
-//= require models/report/object_menu
-//= require views/report/display
-//= require views/report/edit_pane
+//= require legacy/views/control/control
+//= require legacy/controllers/report/report_controller
+//= require legacy/models/report/object_menu
+//= require legacy/views/report/display
+//= require legacy/views/report/edit_pane
 
 //= require_tree .
