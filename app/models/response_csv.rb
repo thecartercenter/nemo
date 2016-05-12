@@ -51,6 +51,7 @@ class ResponseCSV
           order(:questioning_id, :inst_num, :rank)
 
         answers.group_by(&:question).each do |question, answers|
+          next if question.multimedia?
           columns = columns_by_question[question.code]
           qa = ResponseCSV::QA.new(question, answers)
           columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
