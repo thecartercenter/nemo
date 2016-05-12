@@ -59,7 +59,10 @@ class User < ActiveRecord::Base
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
-  validate(:must_have_assignments_if_not_admin)
+  # This validation causes issues when deleting missions,
+  # orphaned users can no longer change their profile or password
+  # which can be an issue if they will be being re-assigned
+  # validate(:must_have_assignments_if_not_admin)
   validate(:phone_should_be_unique, unless: :batch_creation?)
   validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
                                  if: :require_password?,
