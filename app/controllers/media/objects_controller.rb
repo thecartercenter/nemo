@@ -5,9 +5,15 @@ class Media::ObjectsController < ApplicationController
   def show
     style = params[:style]
     @answer = @media_object.answer
-    @response = @answer.response
+    @response = @answer.try(:response)
     disposition = (params[:dl] == "1") ? "attachment" : "inline"
-    authorize! :show, @response
+
+    if @response
+      authorize! :show, @response
+    else
+      authorized = @media_object.token == params[:token]
+      raise CanCan::AccessDenied.new("Not authorized to show media", :view, :media_object) unless authorized
+    end
 
     send_file @media_object.item.path(style),
       type: @media_object.item_content_type,
@@ -47,7 +53,7 @@ class Media::ObjectsController < ApplicationController
 
   def media_filename
     extension = File.extname(@media_object.item_file_name)
-    "elmo-#{@response.id}-#{@answer.id}#{extension}"
+    "elmo-#{@response.try(:id)}-#{@answer.try(:id)}#{extension}"
   end
 
   def media_class(type)

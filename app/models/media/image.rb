@@ -7,7 +7,7 @@ class Media::Image < Media::Object
   validates_attachment_file_name :item, matches: /\.(png|jpe?g)\Z/i
 
   def thumb_path
-    url(:thumb)
+    token_url(style: :thumb)
   end
 
   def kind
