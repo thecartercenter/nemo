@@ -289,6 +289,19 @@ describe Sms::Decoder do
       rank: 2, value: "2,no,nope", invalid_options: "no, nope")
   end
 
+  it "select_multiple questions with large option set should work" do
+    create_form(questions: %w(integer large_select_multiple))
+    assert_decoding(body: "#{@form.code} 1.15 2.11,20,1a", answers: [15, %w(1 36 10)])
+  end
+
+  it "select_multiple questions with large option set and no commas should fail" do
+    create_form(questions: %w(integer large_select_multiple))
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2.nope",
+      error: "answer_not_valid_option_multi",
+      rank: 2, value: "nope", invalid_options: "nope")
+  end
+
   it "decimal question should work" do
     create_form(questions: %w(decimal))
     assert_decoding(body: "#{@form.code} 1.1.15", answers: [1.15])

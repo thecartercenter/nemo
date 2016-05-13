@@ -6,6 +6,7 @@ FactoryGirl.define do
 
       multilevel false
       super_multilevel false
+      large false
     end
 
     sequence(:name) { |n| "Option Set #{n}" }
@@ -22,6 +23,8 @@ FactoryGirl.define do
         OptionNodeSupport::WITH_GREAT_GRANDCHILDREN_ATTRIBS
       elsif geographic
         OptionNodeSupport::GEO_SINGLE_LEVEL_ATTRIBS
+      elsif large
+        OptionNodeSupport::LARGE_SINGLE_LEVEL_ATTRIBS
       else
         option_names.map{ |n| { "option_attribs" => { "name_translations" => {"en" => n} } } }
       end
