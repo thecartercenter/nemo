@@ -21,13 +21,13 @@
             <value>Group Hint</value>
           </text>
           <text id="q1:label">
-            <value>Question Title 1</value>
+            <value>Select One Question Title 1</value>
           </text>
           <text id="q1:hint">
             <value>Question Hint 1</value>
           </text>
           <text id="q2:label">
-            <value>Question Title 2</value>
+            <value>Select One Question Title 2</value>
           </text>
           <text id="q2:hint">
             <value>Question Hint 2</value>

@@ -12,7 +12,7 @@ FactoryGirl.define do
 
     sequence(:code) { |n| "Question#{n}" }
     qtype_name "integer"
-    sequence(:name) { |n| "Question Title #{n}" }
+    sequence(:name) { |n| "#{qtype_name.titleize} Question Title #{n}" }
     sequence(:hint) { |n| "Question Hint #{n}" }
     mission { is_standard ? nil : get_mission }
 

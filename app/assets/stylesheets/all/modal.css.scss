@@ -8,3 +8,23 @@ div.ui-dialog-content {
     display: none;
   }
 }
+
+.modal-body {
+  word-wrap: break-word;
+}
+
+@media (min-width: 768px) {
+  .modal-dialog {
+    min-width: 600px;
+    max-width: 768px;
+    width: auto;
+  }
+}
+
+@media(min-width: 1024px) {
+  .modal-dialog {
+    min-width: 600px;
+    max-width: 1024px;
+    width: auto;
+  }
+}
