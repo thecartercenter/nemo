@@ -53,7 +53,7 @@ class Questioning < FormItem
   def self.terminate_sub_relationships(questioning_ids)
     answers = Answer.where(questioning_id: questioning_ids)
     Choice.where(answer_id: answers).delete_all
-    answers.delete_all
+    answers.destroy_all
   end
 
   def has_condition?
