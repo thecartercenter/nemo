@@ -244,13 +244,17 @@ div.cascading-selects {
       border: none;
     }
 
-   div.control {
-      width: 60%;
+    div.label_and_control {
+      width: 75%;
 
-      div.widget {
-        // These can't be as wide as normally.
-        input[type=text], input.text, input[type=password], select, textarea {
-          width: 100%;
+      div.control {
+        width: 60%;
+
+        div.widget {
+          // These can't be as wide as normally.
+          input[type=text], input.text, input[type=password], select, textarea {
+            width: 100%;
+          }
         }
       }
     }
