@@ -11,10 +11,11 @@ class OptionSetImportsController < ApplicationController
     if @option_set_import.valid?
       begin
         stored_path = store_uploaded_file(@option_set_import.file)
+        mission_name = current_mission.try(:name) || t('standard.standard')
 
         operation = current_user.operations.build(
           job_class: OptionSetImportOperationJob,
-          description: t('operation.description.option_set_import_operation_job', name: @option_set_import.name, mission_name: current_mission.name))
+          description: t('operation.description.option_set_import_operation_job', name: @option_set_import.name, mission_name: mission_name))
         operation.begin!(@option_set_import.mission, @option_set_import.name, stored_path)
 
         flash[:notice] = t('import.queued_html', type: OptionSet.model_name.human, url: operations_path).html_safe

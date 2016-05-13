@@ -128,6 +128,10 @@ class Setting < ActiveRecord::Base
     read_attribute('preferred_locales').map(&:to_sym)
   end
 
+  def default_locale
+    preferred_locales.first
+  end
+
   def incoming_sms_numbers_str
     incoming_sms_numbers.join(", ")
   end

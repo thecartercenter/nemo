@@ -54,7 +54,7 @@ class Ability
         when "admin"
 
           # standard objects, missions, settings, and all users are available in no-mission (admin) mode
-          [Form, Questioning, QingGroup, Condition, Question, OptionSet, OptionNode, Option, Tag, Tagging].each do |k|
+          [Form, Questioning, QingGroup, Condition, Question, OptionSet, OptionNode, Option, OptionSetImport, Tag, Tagging].each do |k|
             can :manage, k, mission_id: nil
           end
           can :manage, Mission

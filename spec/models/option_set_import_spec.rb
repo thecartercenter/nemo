@@ -17,15 +17,20 @@ describe OptionSetImport do
 
     option_set = import.option_set
 
-    expect(option_set).to have_attributes(
-      name: name,
-      geographic?: false)
+    expect_simple_option_set(option_set, name: name)
+  end
 
-    expect(option_set.levels).to be_nil
-    expect(option_set.level_names).to include('en' => 'Province')
+  it 'should be able to import an option set in admin mode' do
+    name = "Simple Standard"
 
-    expect(option_set.total_options).to eq(26)
-    expect(option_set.all_options).to include(have_attributes(canonical_name: "Kinshasa"))
+    import = OptionSetImport.new(mission_id: nil, name: name, file: fixture("simple.xlsx"))
+
+    succeeded = import.create_option_set
+    expect(succeeded).to be_truthy
+
+    option_set = import.option_set
+
+    expect_simple_option_set(option_set, name: name, standard: true)
   end
 
   it 'should be able to import a multi-level geographic option set' do
@@ -84,9 +89,20 @@ describe OptionSetImport do
 
     option_set = import.option_set
 
+    expect_simple_option_set(option_set, name: "CSV Set")
+  end
+
+  private
+
+  def fixture(name)
+    File.expand_path("../../fixtures/option_set_imports/#{name}", __FILE__)
+  end
+
+  def expect_simple_option_set(option_set, name: "Simple", standard: false)
     expect(option_set).to have_attributes(
       name: name,
-      geographic?: false)
+      geographic?: false,
+      is_standard: standard)
 
     expect(option_set.levels).to be_nil
     expect(option_set.level_names).to include('en' => 'Province')
@@ -94,10 +110,4 @@ describe OptionSetImport do
     expect(option_set.total_options).to eq(26)
     expect(option_set.all_options).to include(have_attributes(canonical_name: "Kinshasa"))
   end
-
-  private
-
-    def fixture(name)
-      File.expand_path("../../fixtures/option_set_imports/#{name}", __FILE__)
-    end
 end

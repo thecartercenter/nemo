@@ -8,7 +8,7 @@ class AdminMailer < ActionMailer::Base
     @params = params
     @env = env
     @user = user
-    @hostname = env['SERVER_NAME'] || env['HTTP_HOST'] || env['HTTP_ORIGIN']
+    @hostname = env['SERVER_NAME'] || env['HTTP_HOST'] || env['HTTP_ORIGIN'] if env
     @rails_env = Rails.env
     path = (env && env['REQUEST_URI']) ? (": " + env['REQUEST_URI']) : ""
     exception_name = @exception ? ": #{@exception.class} #{@exception.message}" : ""
