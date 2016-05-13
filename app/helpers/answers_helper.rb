@@ -57,7 +57,7 @@ module AnswersHelper
       content_tag(:div, "[#{t("common.none")}]", class: "no-value")
     else
       content_tag(:div, class: 'media-thumbnail') do
-        concat(link_to(image_tag(object.thumb_path), object.url, target: "_blank"))
+        concat(link_to(image_tag(object.thumb_path), object.token_url, target: "_blank"))
 
         concat(content_tag(:div, class: "links") do
           concat(link_to(content_tag(:i, "", class: 'fa fa-download'), object.download_url, class: 'download'))

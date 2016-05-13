@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160413015100) do
+ActiveRecord::Schema.define(version: 20160513152852) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -197,6 +197,7 @@ ActiveRecord::Schema.define(version: 20160413015100) do
     t.string "item_file_name", limit: 255
     t.integer "item_file_size", limit: 4
     t.datetime "item_updated_at"
+    t.string "token", limit: 255
     t.string "type", limit: 255
     t.datetime "updated_at", null: false
   end
