@@ -5,9 +5,9 @@ xlsx_package.workbook.tap do |wb|
   row_style = wb.styles.add_style(locked: false)
 
   if @option_set.mission
-    locale = @option_set.mission.setting.preferred_locales.first || :en
+    locale = @option_set.mission.default_locale || I18n.default_locale
   else
-    locale = :en
+    locale = I18n.default_locale
   end
 
   I18n.with_locale(locale) do
@@ -22,7 +22,7 @@ xlsx_package.workbook.tap do |wb|
       end
 
       # protect the sheet to allow the header to be locked
-      sheet.sheet_protection.password = 'ELMO'
+      sheet.sheet_protection.password = "ELMO"
 
       # hide the "Id" column
       sheet.column_info.first.hidden = true
