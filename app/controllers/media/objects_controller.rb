@@ -11,8 +11,7 @@ class Media::ObjectsController < ApplicationController
     if @response
       authorize! :show, @response
     else
-      authorized = @media_object.token == params[:token]
-      raise CanCan::AccessDenied.new("Not authorized to show media", :view, :media_object) unless authorized
+      raise CanCan::AccessDenied.new("Not authorized", :view, :media_object) unless @media_object.token == params[:token]
     end
 
     send_file @media_object.item.path(style),
@@ -53,16 +52,20 @@ class Media::ObjectsController < ApplicationController
 
   def media_filename
     extension = File.extname(@media_object.item_file_name)
-    "elmo-#{@response.try(:id)}-#{@answer.try(:id)}#{extension}"
+    if @response && @answer
+      "elmo-#{@response.id}-#{@answer.id}#{extension}"
+    else
+      "elmo-unsaved_response-#{@media_object.id}#{extension}"
+    end
   end
 
   def media_class(type)
     case type
-    when 'audios'
+    when "audios"
       return Media::Audio
-    when 'videos'
+    when "videos"
       return Media::Video
-    when 'images'
+    when "images"
       return Media::Image
     else
       raise "A valid media type must be specified"
