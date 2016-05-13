@@ -67,6 +67,7 @@ class SmsController < ApplicationController
 
     def deliver_reply(reply)
       if @incoming_adapter.reply_style == :via_adapter
+        raise Sms::Error.new("No adapter configured for outgoing response") if @outgoing_adapter.nil?
         @outgoing_adapter.deliver(reply)
       else # reply via response
         @incoming_adapter.prepare_message_for_delivery(reply)
