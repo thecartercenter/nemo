@@ -25,6 +25,10 @@ Note to install the software below we recommend the following package managers:
   - The Rails Gem that talks to Sphinx is called Thinking Sphinx.
   - The [Thinking Sphinx site](http://pat.github.io/thinking-sphinx/) is a good place to go for troubleshooting and documentation.
 
+1. **ImageMagick 6.7+**
+  - ImageMagick is used to resize uploaded images.
+  - It should be available through any of the package managers listed above. If not it can be built from source.
+
 1. **PhantomJS 1.9+**
   - PhantomJS is a headless browser that allows testing JavaScript.
   - It should be available through any of the package managers listed above. If not it can be built from source.
