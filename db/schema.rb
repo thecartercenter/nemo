@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160520114403) do
+ActiveRecord::Schema.define(version: 20160520200852) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -454,6 +454,25 @@ ActiveRecord::Schema.define(version: 20160520114403) do
   add_index "tags", ["mission_id"], name: "index_tags_on_mission_id", using: :btree
   add_index "tags", ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", using: :btree
 
+  create_table "user_group_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_group_id", limit: 4
+    t.integer "user_id", limit: 4
+  end
+
+  add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
+  add_index "user_group_assignments", ["user_id"], name: "index_user_group_assignments_on_user_id", using: :btree
+
+  create_table "user_groups", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "mission_id", limit: 4
+    t.string "name", limit: 255
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "user_groups", ["mission_id"], name: "index_user_groups_on_mission_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "admin", default: false, null: false
@@ -543,4 +562,7 @@ ActiveRecord::Schema.define(version: 20160520114403) do
   add_foreign_key "sms_messages", "missions", name: "sms_messages_mission_id_fk"
   add_foreign_key "sms_messages", "sms_messages", column: "reply_to_id", name: "sms_messages_reply_to_id_fk"
   add_foreign_key "sms_messages", "users", name: "sms_messages_user_id_fk"
+  add_foreign_key "user_group_assignments", "user_groups"
+  add_foreign_key "user_group_assignments", "users"
+  add_foreign_key "user_groups", "missions"
 end
