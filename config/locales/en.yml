@@ -1543,6 +1543,10 @@ en:
 
         will search for users named Susan with an example.com email address.
 
+        You can match blank values using '[blank]':
+
+        * __phone: [blank]__
+
         The full set of qualifiers you can use is as follows:
 
         * __name__ The user's full name
