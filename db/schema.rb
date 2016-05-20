@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160513152852) do
+ActiveRecord::Schema.define(version: 20160520114403) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -180,15 +180,6 @@ ActiveRecord::Schema.define(version: 20160513152852) do
   add_index "forms", ["current_version_id"], name: "forms_current_version_id_fk", using: :btree
   add_index "forms", ["mission_id", "name"], name: "index_forms_on_mission_id_and_name", unique: true, using: :btree
   add_index "forms", ["original_id"], name: "index_forms_on_standard_id", using: :btree
-
-  create_table "groups", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "mission_id", limit: 4, null: false
-    t.string "name", limit: 255, null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "groups", ["mission_id"], name: "groups_mission_id_fk", using: :btree
 
   create_table "media_objects", force: :cascade do |t|
     t.integer "answer_id", limit: 4
@@ -463,16 +454,6 @@ ActiveRecord::Schema.define(version: 20160513152852) do
   add_index "tags", ["mission_id"], name: "index_tags_on_mission_id", using: :btree
   add_index "tags", ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", using: :btree
 
-  create_table "user_groups", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.integer "group_id", limit: 4, null: false
-    t.datetime "updated_at", null: false
-    t.integer "user_id", limit: 4, null: false
-  end
-
-  add_index "user_groups", ["group_id"], name: "user_groups_group_id_fk", using: :btree
-  add_index "user_groups", ["user_id"], name: "user_groups_user_id_fk", using: :btree
-
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "admin", default: false, null: false
@@ -533,7 +514,6 @@ ActiveRecord::Schema.define(version: 20160513152852) do
   add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fk", on_delete: :nullify
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk", on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
-  add_foreign_key "groups", "missions", name: "groups_mission_id_fk"
   add_foreign_key "media_objects", "answers"
   add_foreign_key "operations", "users", column: "creator_id"
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
@@ -563,6 +543,4 @@ ActiveRecord::Schema.define(version: 20160513152852) do
   add_foreign_key "sms_messages", "missions", name: "sms_messages_mission_id_fk"
   add_foreign_key "sms_messages", "sms_messages", column: "reply_to_id", name: "sms_messages_reply_to_id_fk"
   add_foreign_key "sms_messages", "users", name: "sms_messages_user_id_fk"
-  add_foreign_key "user_groups", "groups", name: "user_groups_group_id_fk"
-  add_foreign_key "user_groups", "users", name: "user_groups_user_id_fk"
 end
