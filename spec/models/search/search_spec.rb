@@ -127,7 +127,7 @@ describe Search::Search do
   end
 
   it "not-equals operator should work for regular qualifiers" do
-    assert_search(str: "source != v1", sql: "(NOT((t.source = 'v1')))")
+    assert_search(str: "source != v1", sql: "(NOT((t.source = 'v1' AND t.source IS NOT NULL)))")
   end
 
   it "gt operator should not work for regular qualifiers" do
@@ -187,7 +187,7 @@ describe Search::Search do
   end
 
   it "not equals operator should work with text qualifier" do
-    assert_search(str: "submitter != v1", sql: "(NOT((t3.f3 LIKE '%v1%')))")
+    assert_search(str: "submitter != v1", sql: "(NOT((t3.f3 LIKE '%v1%' AND t3.f3 IS NOT NULL)))")
   end
 
   it "quoted string with quoted string inside should still work" do
@@ -222,7 +222,7 @@ describe Search::Search do
   end
 
   it "translated qualifier negated should work" do
-    assert_search(str: 'name != foo', sql: %{(NOT((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"')))})
+    assert_search(str: 'name != foo', sql: %{(NOT((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"' AND t.name IS NOT NULL)))})
   end
 
   it "translated qualifier with gt operator should error" do

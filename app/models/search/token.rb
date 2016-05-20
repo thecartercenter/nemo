@@ -130,27 +130,31 @@ class Search::Token
       # Transform the value if qualifier has transformer.
       value_sql = qualifier.preprocessor.call(value_sql) if qualifier.preprocessor
 
+      # Need to use this or negations don't work as expected.
+      and_not_null = op.kind == :noteq ? " AND #{column} IS NOT NULL" : ""
+
       # if rhs is [blank], act accordingly
-      inner = if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
-        op_sql = "IS"
-        "#{column} #{op_sql} NULL"
+      inner =
+        if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
+          op_sql = "IS"
+          "#{column} #{op_sql} NULL"
 
-      # if translated qualifier, use special expression
-      elsif qualifier.type == :translated
-        op_sql = "RLIKE"
-        # Sanitize first with special markers, then add the enclosing syntax for matching the RLIKE.
-        sanitize("#{column} #{op_sql} ?", "%%%1#{value_sql}%%%2").tap do |sql|
-          sql.gsub!('%%%1', %{"#{I18n.locale}":"([^"\\]|\\\\\\\\.)*})
-          sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
+        # if translated qualifier, use special expression
+        elsif qualifier.type == :translated
+          op_sql = "RLIKE"
+          # Sanitize first with special markers, then add the enclosing syntax for matching the RLIKE.
+          sanitize("#{column} #{op_sql} ?#{and_not_null}", "%%%1#{value_sql}%%%2").tap do |sql|
+            sql.gsub!('%%%1', %{"#{I18n.locale}":"([^"\\]|\\\\\\\\.)*})
+            sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
+          end
+
+        # if partial matches are allowed, change to LIKE
+        elsif qualifier.type == :text
+          op_sql = "LIKE"
+          sanitize("#{column} #{op_sql} ?#{and_not_null}", "%#{value_sql}%")
+        else
+          sanitize("#{column} #{op_sql} ?#{and_not_null}", value_sql)
         end
-
-      # if partial matches are allowed, change to LIKE
-      elsif qualifier.type == :text
-        op_sql = "LIKE"
-        sanitize("#{column} #{op_sql} ?", "%#{value_sql}%")
-      else
-        sanitize("#{column} #{op_sql} ?", value_sql)
-      end
 
       "(#{inner})"
     end
