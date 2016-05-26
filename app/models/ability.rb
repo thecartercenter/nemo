@@ -178,6 +178,10 @@ class Ability
             # can create user batches
             can :manage, UserBatch
 
+            # can manage user groups
+            can :manage, UserGroup, mission_id: mission.id
+            can :manage, UserGroupAssignment
+
             # can destroy users only if they have only one mission and it's the current mission
             can [:bulk_destroy, :destroy], User do |other_user|
               other_user.assignments.count == 1 && other_user.assignments.first.mission_id == mission.id

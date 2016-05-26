@@ -462,6 +462,7 @@ ActiveRecord::Schema.define(version: 20160520200852) do
   end
 
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
+  add_index "user_group_assignments", ["user_id", "user_group_id"], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, using: :btree
   add_index "user_group_assignments", ["user_id"], name: "index_user_group_assignments_on_user_id", using: :btree
 
   create_table "user_groups", force: :cascade do |t|

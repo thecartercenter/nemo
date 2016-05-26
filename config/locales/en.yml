@@ -389,6 +389,7 @@ en:
         role: "Role"
         api_key: "API Key"
         sms_auth_code: "SMS Auth Code"
+        user_groups: "Groups"
       user_batch:
         file: "File"
 
@@ -457,6 +458,13 @@ en:
         show: "View User"
         edit: "Edit User"
         destroy: "Delete User"
+      user_group:
+        new: "Create New User Group"
+        index: "List User Groups"
+        show: "View User Group"
+        edit: "Edit User Group"
+        destroy: "Delete User Group"
+        members: "List Members"
 
     hints:
       form:
@@ -854,6 +862,7 @@ en:
     username: "username"
     content: "content"
     number: "number"
+    group: "group"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)

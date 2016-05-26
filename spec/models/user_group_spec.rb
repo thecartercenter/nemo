@@ -1,5 +1,8 @@
-require 'rails_helper'
+require "spec_helper"
 
-RSpec.describe UserGroup, type: :model do
-  pending "add some examples to (or delete) #{__FILE__}"
+describe UserGroup do
+  it "has a valid factory" do
+    user_group = create(:user_group)
+    expect(user_group).to be_valid
+  end
 end

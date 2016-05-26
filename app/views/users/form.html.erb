@@ -20,6 +20,17 @@
     <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments", :required => !admin_mode?) %>
   <% end %>
 
+  <% if @user.user_groups.present? %>
+    <div class="form_field user_groups">
+      <div class="label_and_control">
+        <label class="main"><%= I18n.t('activerecord.attributes.user.user_groups') %>:</label>
+        <div class="control read_only">
+          <%= @user.user_groups.map(&:name).join(', ') %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
   <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
   <%= f.field(:notes, :type => :textarea) %>

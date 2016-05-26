@@ -6,5 +6,6 @@ class CreateUserGroupAssignments < ActiveRecord::Migration
 
       t.timestamps null: false
     end
+    add_index :user_group_assignments, [:user_id, :user_group_id], unique: true
   end
 end
