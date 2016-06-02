@@ -207,6 +207,10 @@ class User < ActiveRecord::Base
     name
   end
 
+  def group_names
+    user_groups.map(&:name).join(", ")
+  end
+
   def active?
     self.active
   end

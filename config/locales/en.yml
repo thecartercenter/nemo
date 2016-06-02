@@ -241,6 +241,10 @@ en:
         zero: "Users"
         one: "User"
         other: "Users"
+      user_group:
+        zero: "User Groups"
+        one: "User Group"
+        other: "User Groups"
       tag:
         zero: "Tags"
         one: "Tag"
@@ -460,7 +464,7 @@ en:
         destroy: "Delete User"
       user_group:
         new: "Create New User Group"
-        index: "List User Groups"
+        index: "User Groups"
         show: "View User Group"
         edit: "Edit User Group"
         destroy: "Delete User Group"

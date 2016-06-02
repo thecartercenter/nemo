@@ -457,8 +457,8 @@ ActiveRecord::Schema.define(version: 20160520200852) do
   create_table "user_group_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_group_id", limit: 4
-    t.integer "user_id", limit: 4
+    t.integer "user_group_id", limit: 4, null: false
+    t.integer "user_id", limit: 4, null: false
   end
 
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
@@ -468,7 +468,7 @@ ActiveRecord::Schema.define(version: 20160520200852) do
   create_table "user_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "mission_id", limit: 4
-    t.string "name", limit: 255
+    t.string "name", limit: 255, null: false
     t.datetime "updated_at", null: false
   end
 

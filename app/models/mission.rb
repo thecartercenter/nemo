@@ -5,8 +5,7 @@ class Mission < ActiveRecord::Base
   has_many(:broadcasts, inverse_of: :mission)
   has_many(:assignments, inverse_of: :mission)
   has_many(:users, through: :assignments)
-  has_many(:user_groups, inverse_of: :mission)
-  has_many(:groups, inverse_of: :mission)
+  has_many(:user_groups, inverse_of: :mission, dependent: :destroy)
   has_many(:questions, inverse_of: :mission)
   has_many(:qing_groups, inverse_of: :mission)
   has_many(:form_items, inverse_of: :mission)
@@ -61,7 +60,7 @@ class Mission < ActiveRecord::Base
         # the order of deletion is also important to avoid foreign key constraints
         relationships_to_delete = [Setting, Report::Report, Condition, QingGroup, Questioning,
                                    Question, OptionSet, Option, Response,
-                                   Form, Broadcast, Assignment, Sms::Message]
+                                   Form, Broadcast, Assignment, Sms::Message, UserGroup]
         relationships_to_delete.each { |r| r.mission_pre_delete(self) }
 
         self.reload
