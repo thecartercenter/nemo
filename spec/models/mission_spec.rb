@@ -9,7 +9,7 @@ describe Mission do
     it 'should delete all objects in mission' do
       expect(obj_counts).to eq [1, 1, 3, 1, 6, 2, 10, 13, 3, 1, 1, 5, 2, 1, 2]
       @mission.terminate
-      expect(obj_counts).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(obj_counts).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
     def obj_counts
