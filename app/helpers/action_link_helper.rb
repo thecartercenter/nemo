@@ -63,13 +63,16 @@ module ActionLinkHelper
       # skip to next action if action is excluded
       next if options[:exclude].include?(action.to_sym)
 
+      # check for ajax mode
+      ajax_mode = options[:ajax_mode].present?
+
       case action
       when "edit"
         # check permissions
         next unless can?(:update, obj)
 
         # build link
-        action_link(action, dynamic_path(obj, action: :edit), :title => t("common.edit"))
+        action_link(action, dynamic_path(obj, action: :edit), :title => t("common.edit"), remote: ajax_mode)
 
       when "destroy"
         # check permissions
@@ -77,7 +80,7 @@ module ActionLinkHelper
 
         # build link
         warning = delete_warning(obj, options.slice(:obj_description))
-        action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"))
+        action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"), remote: ajax_mode)
       end
 
     end.compact.reduce(:<<)
