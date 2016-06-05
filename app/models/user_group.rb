@@ -1,4 +1,6 @@
 class UserGroup < ActiveRecord::Base
-  belongs_to :group
-  belongs_to :user
+  include MissionBased
+
+  has_many :user_group_assignments, dependent: :destroy
+  has_many :users, through: :user_group_assignments
 end

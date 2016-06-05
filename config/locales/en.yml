@@ -241,6 +241,10 @@ en:
         zero: "Users"
         one: "User"
         other: "Users"
+      user_group:
+        zero: "User Groups"
+        one: "User Group"
+        other: "User Groups"
       tag:
         zero: "Tags"
         one: "Tag"
@@ -389,6 +393,7 @@ en:
         role: "Role"
         api_key: "API Key"
         sms_auth_code: "SMS Auth Code"
+        user_groups: "Groups"
       user_batch:
         file: "File"
 
@@ -457,6 +462,13 @@ en:
         show: "View User"
         edit: "Edit User"
         destroy: "Delete User"
+      user_group:
+        new: "Create New User Group"
+        index: "User Groups"
+        show: "View User Group"
+        edit: "Edit User Group"
+        destroy: "Delete User Group"
+        members: "List Members"
 
     hints:
       form:
@@ -854,6 +866,7 @@ en:
     username: "username"
     content: "content"
     number: "number"
+    group: "group"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
@@ -1851,6 +1864,7 @@ en:
     export_vcard: "Export as vCard"
     forgot_password: "Forgot Password?"
     leave_password_alone: "Leave password alone"
+    list_groups: "List User Groups"
     login_instructions:
       closing:
         - "Please note the 's' in 'https' in the site URL."

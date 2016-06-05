@@ -12,7 +12,7 @@ class UsersController < ApplicationController
 
   def index
     # sort and eager load
-    @users = @users.by_name
+    @users = @users.with_assoc.by_name
 
     # do search if applicable
     if params[:search].present?

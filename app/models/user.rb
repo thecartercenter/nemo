@@ -9,17 +9,17 @@ class User < ActiveRecord::Base
   attr_accessor(:batch_creation)
   alias :batch_creation? :batch_creation
 
-  has_many :responses, :inverse_of => :user
-  has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
-  has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
+  has_many :responses, inverse_of: :user
+  has_many :broadcast_addressings, inverse_of: :user, dependent: :destroy
+  has_many :assignments, autosave: true, dependent: :destroy, validate: true, inverse_of: :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
-  has_many :operations, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :destroy
-  has_many :reports, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :nullify, class_name: 'Report::Report'
-  has_many :user_groups, :dependent => :destroy
-  has_many :groups, :through => :user_groups
+  has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
+  has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: 'Report::Report'
+  has_many :user_group_assignments, dependent: :destroy
+  has_many :user_groups, through: :user_group_assignments, dependent: :destroy
   belongs_to :last_mission, class_name: 'Mission'
 
-  accepts_nested_attributes_for(:assignments, :allow_destroy => true)
+  accepts_nested_attributes_for(:assignments, allow_destroy: true)
 
   acts_as_authentic do |c|
     c.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
@@ -29,15 +29,15 @@ class User < ActiveRecord::Base
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
 
-    c.validates_format_of_login_field_options = {:with => /\A[a-zA-Z0-9\._]+\z/}
-    c.merge_validates_uniqueness_of_login_field_options(:unless => Proc.new{|u| u.batch_creation?})
+    c.validates_format_of_login_field_options = {with: /\A[a-zA-Z0-9\._]+\z/}
+    c.merge_validates_uniqueness_of_login_field_options(unless: Proc.new{|u| u.batch_creation?})
 
     c.merge_validates_length_of_password_field_options(minimum: 8,
-                                                       :unless => Proc.new{|u| u.batch_creation?})
+                                                       unless: Proc.new{|u| u.batch_creation?})
 
     # email is not mandatory, but must be valid if given
-    c.merge_validates_format_of_email_field_options(:allow_blank => true)
-    c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.batch_creation? ||
+    c.merge_validates_format_of_email_field_options(allow_blank: true)
+    c.merge_validates_uniqueness_of_email_field_options(unless: Proc.new{|u| u.batch_creation? ||
                                                                                 u.email.blank?})
   end
 
@@ -46,15 +46,15 @@ class User < ActiveRecord::Base
   before_validation(:generate_password_if_none, unless: :batch_creation?)
   after_create(:regenerate_api_key, unless: :batch_creation?)
   after_create(:regenerate_sms_auth_code)
-  # call before_destroy before :dependent => :destroy associations
+  # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy(:check_assoc)
   before_save(:clear_assignments_without_roles)
 
   normalize_attribute :login, with: [:strip, :downcase]
 
-  validates(:name, :presence => true)
-  validates(:pref_lang, :presence => true)
+  validates(:name, presence: true)
+  validates(:pref_lang, presence: true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
@@ -71,7 +71,7 @@ class User < ActiveRecord::Base
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
-  scope(:with_assoc, -> { includes(:missions, {:assignments => :mission}) })
+  scope(:with_assoc, -> { includes(:missions, {assignments: :mission}, :user_groups) })
 
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
@@ -97,10 +97,11 @@ class User < ActiveRecord::Base
 
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:name => "name", :col => "users.name", :type => :text, :default => true),
-      Search::Qualifier.new(:name => "login", :col => "users.login", :type => :text, :default => true),
-      Search::Qualifier.new(:name => "email", :col => "users.email", :type => :text, :default => true),
-      Search::Qualifier.new(:name => "phone", :col => "users.phone", :type => :text)
+      Search::Qualifier.new(name: "name", col: "users.name", type: :text, default: true),
+      Search::Qualifier.new(name: "login", col: "users.login", type: :text, default: true),
+      Search::Qualifier.new(name: "email", col: "users.email", type: :text, default: true),
+      Search::Qualifier.new(name: "phone", col: "users.phone", type: :text),
+      Search::Qualifier.new(name: "group", col: "user_groups.name", type: :text, assoc: :user_groups)
     ]
   end
 
@@ -109,7 +110,7 @@ class User < ActiveRecord::Base
   # query - the search query string (e.g. name:foo)
   def self.do_search(relation, query)
     # create a search object and generate qualifiers
-    search = Search::Search.new(:str => query, :qualifiers => search_qualifiers)
+    search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     # get the sql
     sql = search.sql
@@ -119,7 +120,7 @@ class User < ActiveRecord::Base
   end
 
 
-  # Returns an array of hashes of format {:name => "Some User", :response_count => 2}
+  # Returns an array of hashes of format {name: "Some User", response_count: 2}
   # of observer response counts for the given mission
   def self.sorted_observer_response_counts(mission, limit)
     #First it tries to get user observers that don't have any response
@@ -138,7 +139,7 @@ class User < ActiveRecord::Base
       ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit]).reverse
   end
 
-  # Returns an array of hashes of format {:name => "Some User", :response_count => 0}
+  # Returns an array of hashes of format {name: "Some User", response_count: 0}
   # of observers that doesn't have responses on the mission
   def self.observers_without_responses(mission, limit)
     find_by_sql(["SELECT users.name, 0 as response_count FROM users
@@ -180,7 +181,7 @@ class User < ActiveRecord::Base
   # generates a cache key for the set of all users for the given mission.
   # the key will change if the number of users changes, or if a user is updated.
   def self.per_mission_cache_key(mission)
-    count_and_date_cache_key(:rel => unscoped.assigned_to(mission), :prefix => "mission-#{mission.id}")
+    count_and_date_cache_key(rel: unscoped.assigned_to(mission), prefix: "mission-#{mission.id}")
   end
 
   def self.by_phone(phone)
@@ -204,6 +205,10 @@ class User < ActiveRecord::Base
 
   def full_name
     name
+  end
+
+  def group_names
+    user_groups.map(&:name).join(", ")
   end
 
   def active?
@@ -357,8 +362,8 @@ class User < ActiveRecord::Base
     end
 
     def phone_length_or_empty
-      errors.add(:phone, :at_least_digits, :num => 9) unless phone.blank? || phone.size >= 10
-      errors.add(:phone2, :at_least_digits, :num => 9) unless phone2.blank? || phone2.size >= 10
+      errors.add(:phone, :at_least_digits, num: 9) unless phone.blank? || phone.size >= 10
+      errors.add(:phone2, :at_least_digits, num: 9) unless phone2.blank? || phone2.size >= 10
     end
 
     def check_assoc
@@ -378,7 +383,7 @@ class User < ActiveRecord::Base
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
-        errors.add(:reset_password_method, :cant_passwd_email, :verb => verb)
+        errors.add(:reset_password_method, :cant_passwd_email, verb: verb)
       end
     end
 

@@ -20,6 +20,10 @@
     <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments", :required => !admin_mode?) %>
   <% end %>
 
+  <% if @user.user_groups.present? %>
+    <%= f.field(:group_names, read_only: true) %>
+  <% end %>
+
   <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
   <%= f.field(:notes, :type => :textarea) %>

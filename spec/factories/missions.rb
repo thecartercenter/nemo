@@ -17,6 +17,8 @@ FactoryGirl.define do
 
       users = create_list(:user, 3, mission: mission)
 
+      user_groups = create_list(:user_group, 2, mission: mission)
+
       broadcast = create(:broadcast, mission: mission, medium: "sms", recipients: users)
 
       # Deliver broadcast so that Sms::Broadcast gets created

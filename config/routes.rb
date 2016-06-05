@@ -132,7 +132,7 @@ ELMO::Application.routes.draw do
         get "example_spreadsheet", path: "example-user-batch", defaults: { format: "xslx" }
       end
     end
-    resources :groups
+    resources :user_groups
     resources :form_items, path: "form-items", only: [:update]
 
     resources :option_sets, path: "option-sets" do
