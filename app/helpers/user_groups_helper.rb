@@ -14,7 +14,7 @@ module UserGroupsHelper
     when "filter"
       filter_link(group)
     when "actions"
-      table_action_links(group)
+      table_action_links(group, ajax_mode: true)
     end
   end
 
