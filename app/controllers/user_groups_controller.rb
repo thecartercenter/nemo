@@ -6,6 +6,17 @@ class UserGroupsController < ApplicationController
     render(partial: "index_table") if request.xhr?
   end
 
+  def edit
+    render(partial: "edit_name")
+  end
+
+  def update
+    Rails.logger.ap params
+    @user_group.name = params[:name]
+    @user_group.save
+    render json: { name: @user_group.name }
+  end
+
   def destroy
     @user_group.destroy
     page_info = view_context.page_entries_info(load_user_groups, model: UserGroup)
