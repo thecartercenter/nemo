@@ -72,6 +72,7 @@ class User < ActiveRecord::Base
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
   scope(:with_assoc, -> { includes(:missions, {assignments: :mission}, :user_groups) })
+  scope(:with_groups, -> { joins(:user_groups) })
 
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })

@@ -1441,6 +1441,7 @@ en:
         - "phone:+443726458364"
         - "login:jsmith"
         - "email:jsmith@example.com"
+        - group:"The Smiths"
       questions:
         - "poll workers"
         - "code:BallotBoxes"
@@ -1566,6 +1567,7 @@ en:
         * __login__ The user's login name
         * __email__ The user's email address
         * __phone__ The user's phone number (no dashes or other punctuation)
+        * __group__ The user's group membership
 
         Partial matches are allowed for all qualifiers.
 
