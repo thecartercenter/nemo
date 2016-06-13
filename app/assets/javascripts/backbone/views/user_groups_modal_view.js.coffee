@@ -5,6 +5,7 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
     "ajax:success .action_link_edit": "process_edit"
     "ajax:success .action_link_destroy": "process_destroy"
     "click a.action_link_update": "update_name"
+    "click button.new": "create_group"
 
   initialize: (params) ->
     @params = params
@@ -15,6 +16,20 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
 
   show: ->
     $(@el).modal('show')
+
+  create_group: (e) ->
+    e.preventDefault();
+    group_name = prompt(I18n.t('user_group.create_prompt'))
+    # @$(".modal-body").html("")
+    ELMO.app.loading(true)
+    $.ajax
+      url: ELMO.app.url_builder.build('user_groups')
+      method: "post"
+      data: { name: group_name }
+      success: (html) =>
+        @$(".modal-body").html(html)
+        ELMO.app.loading(false)
+
 
   update_name: (e) ->
     e.preventDefault();

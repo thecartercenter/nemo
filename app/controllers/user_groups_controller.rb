@@ -11,10 +11,15 @@ class UserGroupsController < ApplicationController
   end
 
   def update
-    Rails.logger.ap params
     @user_group.name = params[:name]
     @user_group.save
     render json: { name: @user_group.name }
+  end
+
+  def create
+    @user_group.name = params[:name]
+    @user_group.save
+    render(partial: "index_table") if request.xhr?
   end
 
   def destroy

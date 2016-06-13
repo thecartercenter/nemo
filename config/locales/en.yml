@@ -1896,6 +1896,9 @@ en:
     set_admin_password: "Set your admin password and profile information"
     show_printable_instructions: "show printable instructions"
 
+  user_group:
+    create_prompt: "Please enter the name of your group."
+
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"
     by_you: "**%{count}** Submissions By You"
