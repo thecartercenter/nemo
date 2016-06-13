@@ -2,7 +2,8 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
   el: '#user-groups-modal'
 
   events:
-    "ajax:success": "process_response"
+    "ajax:success .action_link_edit": "process_edit"
+    "ajax:success .action_link_destroy": "process_destroy"
     "click a.action_link_update": "update_name"
 
   initialize: (params) ->
@@ -27,12 +28,11 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
         @$(e.currentTarget).closest("tr").find(".name_col").html("<div>" + data.name + "</div>")
 
 
-  process_response: (e, data, status, xhr) ->
-    event_target = e.target
-    if @$(event_target).hasClass("action_link_destroy")
-      target_row = $(event_target).closest("tr")
-      @$(target_row).remove()
-      @$(".header.link_set").html(data.page_entries_info)
-    else if @$(event_target).hasClass("action_link_edit")
-      target_field = $(event_target).closest("tr").find(".name_col")
-      @$(target_field).html(data)
+  process_edit: (e, data, status, xhr) ->
+    target_field = $(e.target).closest("tr").find(".name_col")
+    @$(target_field).html(data)
+
+  process_destroy: (e, data) ->
+    target_row = $(e.target).closest("tr")
+    @$(target_row).remove()
+    @$(".header.link_set").html(data.page_entries_info)
