@@ -69,7 +69,7 @@ module ELMO
     configatron.broadcast_tag = "[ELMO]"
 
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
-    configatron.full_locales = [:en, :fr, :es]
+    configatron.full_locales = [:en, :fr, :es, :ar, :ko]
 
     # For security.
     config.action_dispatch.default_headers = { 'X-Frame-Options' => 'DENY' }
