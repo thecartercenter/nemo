@@ -77,6 +77,7 @@ class OptionSet < ActiveRecord::Base
     :arrange_with_options,
     :option_path_to_rank_path,
     :rank_path_to_option_path,
+    :sorted_children,
     :first_leaf_option,
     :first_leaf_option_node,
     to: :root_node
