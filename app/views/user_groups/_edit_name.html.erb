@@ -1,0 +1,6 @@
+<div class="field_container">
+  <%= text_field(:user_group, :name, class: 'form-control') %>
+  <%= link_to user_group_path(@user_group), class: "action_link_update" do %>
+    <i class="fa fa-fw fa-save"></i>
+  <% end %>
+</div>

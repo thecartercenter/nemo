@@ -18,8 +18,8 @@
 
   <% unless objects.empty? %>
 
-    <%# wrap table in a form tag unless we are already in one %>
-    <% unless options[:within_form] %>
+    <%# wrap table in a form tag for batch operation support %>
+    <% unless options[:omit_form] %>
       <%= form_tag %>
     <% end %>
 
@@ -79,7 +79,7 @@
     </table>
 
     <%# close the form tag if necessary %>
-    <% unless options[:within_form] %>
+    <% unless options[:omit_form] %>
       </form>
     <% end %>
 
