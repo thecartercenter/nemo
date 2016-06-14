@@ -26,7 +26,7 @@
   }
 
   klass.prototype.build_assignment_form = function() { var self = this;
-    var template = JST['templates/assignment_miniform'];
+    var template = JST['legacy/templates/assignment_miniform'];
 
     // loop over assignments, adding rows
     self.params.assignments.forEach(function(assignment, idx) {
@@ -41,7 +41,7 @@
   }
 
   klass.prototype.add_assignment = function() { var self = this;
-    var template = JST['templates/assignment_miniform'];
+    var template = JST['legacy/templates/assignment_miniform'];
 
     $('.form_field[data-field-name=assignments] .assignments').append(template({
       params: self.params,
