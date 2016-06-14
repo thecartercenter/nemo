@@ -12,7 +12,7 @@
   klass.prototype.parent = ns.Display.prototype;
 
   klass.prototype.render = function() { var self = this;
-    var template = JST['templates/report/form_summary_display'];
+    var template = JST['legacy/templates/report/form_summary_display'];
     $('.report_body').empty().append(template({
       report: this.report.attribs,
       max_result_cols: this.report.attribs.question_labels == 'title' ? 5 : 8,
@@ -23,7 +23,7 @@
   klass.prototype.partial = function(name, params) {
     params.helper = this;
     params.report = this.report.attribs;
-    var template = JST['templates/report/form_summary_' + name];
+    var template = JST['legacy/templates/report/form_summary_' + name];
     return template(params);
   }
 
