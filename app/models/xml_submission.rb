@@ -29,7 +29,7 @@ class XMLSubmission
           value.each_with_index do |val, i|
             answer = fetch_or_build_answer(questioning: qing, rank: subq.rank, inst_num: i + 1)
             answer = populate_from_string(answer, val)
-            @response.answers << answer
+            @response.answers << answer if answer
           end
         else
           answer = fetch_or_build_answer(questioning: qing, rank: subq.rank)
