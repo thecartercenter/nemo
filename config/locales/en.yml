@@ -1867,6 +1867,7 @@ en:
     forgot_password: "Forgot Password?"
     leave_password_alone: "Leave password alone"
     list_groups: "List User Groups"
+    add_to_group: "Add Users to Group"
     login_instructions:
       closing:
         - "Please note the 's' in 'https' in the site URL."
@@ -1898,6 +1899,7 @@ en:
 
   user_group:
     create_prompt: "Please enter the name of your group."
+    add_users_success: "Successfully added %{count} users to group %{group}"
 
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"

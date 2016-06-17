@@ -108,6 +108,9 @@ class ELMO.Views.IndexTableView extends Backbone.View
     else
       _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
 
+  get_selected_items: ->
+    @form.find('input.batch_op:checked')
+
   # event handler for when a checkbox is clicked
   checkbox_changed: (event) ->
     # unset the select all field if a checkbox is changed in any way
