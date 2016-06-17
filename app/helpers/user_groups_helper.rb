@@ -1,12 +1,20 @@
 module UserGroupsHelper
   def user_groups_index_fields
-    %w(name users created_at filter actions)
+    if @add_mode
+      %w(name users created_at)
+    else
+      %w(name users created_at filter actions)
+    end
   end
 
   def format_user_groups_field(group, field_name)
     case field_name
     when "name"
-      group.name
+      if @add_mode
+        link_to group.name, user_group_add_users_path(group), class: "add-to-group"
+      else
+        group.name
+      end
     when "users"
       group.users.count
     when "created_at"

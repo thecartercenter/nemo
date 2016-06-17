@@ -31,6 +31,14 @@ namespace :db do
       "video"
     ])
 
+    # Create users and groups
+    FactoryGirl.create_list(:user, 25)
+    FactoryGirl.create_list(:user_group, 5, mission: mission)
+    50.times do
+      uga = UserGroupAssignment.new(user_group: UserGroup.all.sample, user: User.all.sample);
+      uga.save if uga.valid?
+    end
+
     puts "Created #{mission_name}"
   end
 end
