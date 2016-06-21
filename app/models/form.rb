@@ -88,6 +88,10 @@ class Form < ActiveRecord::Base
     root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
   end
 
+  def forwardees
+    User.all.sample(10)
+  end
+
   def odk_download_cache_key
     "odk-form/#{id}-#{pub_changed_at}"
   end

@@ -30,6 +30,11 @@ namespace :db do
       "audio",
       "video"
     ])
+    FactoryGirl.create(:form,
+      name: "SMS Form",
+      smsable: true,
+      mission: mission,
+      question_types: QuestionType.smsable.map(&:name))
 
     # Create users and groups
     FactoryGirl.create_list(:user, 25)

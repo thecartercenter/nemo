@@ -267,6 +267,7 @@ en:
         downloads: "Downloads"
         responses: "Responses"
         smsable: "SMSable?"
+        sms_relay: "SMS Forwarding?"
         authenticate_sms: "Authenticate SMS?"
         updated_at: "Last Modified"
         version: "Version"
@@ -474,6 +475,7 @@ en:
       form:
         name: "A descriptive name for the form."
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
+        sms_relay: "Whether to enable forwarding incoming SMS responses to users and user groups"
         authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an obsever to spoof submissions."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."

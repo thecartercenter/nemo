@@ -16,7 +16,7 @@ class Sms::Handler
       elmo_response.save!
 
       # send congrats!
-      t_sms_msg("sms_form.decoding.congrats", :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
+      t_sms_msg("sms_form.decoding.congrats", user: elmo_response.user, form: elmo_response.form, mission: sms.mission)
 
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
@@ -57,14 +57,15 @@ class Sms::Handler
         key += "s" if elmo_response.missing_answers.size > 1
 
         # translate
-        t_sms_msg(key, :ranks => ranks, :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
+        t_sms_msg(key, ranks: ranks, user: elmo_response.user, form: elmo_response.form, mission: sms.mission)
 
       when :invalid_answers
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
-        invalid_answer = elmo_response.answers.detect{|a| a.errors && a.errors.messages.size > 0}
-        t_sms_msg("sms_form.validation.invalid_answer", :rank => invalid_answer.questioning.rank,
-          :error => invalid_answer.errors.messages.values.join(", "),
-          :user => elmo_response.user, :form => elmo_response.form, :mission => sms.mission)
+        invalid_answer = elmo_response.answers.detect { |a| a.errors && a.errors.messages.size > 0 }
+        t_sms_msg("sms_form.validation.invalid_answer",
+          rank: invalid_answer.questioning.rank,
+          error: invalid_answer.errors.messages.values.join(", "),
+          user: elmo_response.user, form: elmo_response.form, mission: sms.mission)
 
       else
         # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.
@@ -72,11 +73,28 @@ class Sms::Handler
       end
     end
 
-    if reply_body.nil?
-      return nil
-    else
-      return Sms::Reply.new(to: sms.from, body: reply_body, mission: sms.mission, user: sms.user)
+    if reply_body.present?
+      reply = Sms::Reply.new(to: sms.from, body: reply_body, mission: sms.mission, user: sms.user)
     end
+
+    form = elmo_response.try(:form)
+
+    if form && form.sms_relay
+      broadcast = ::Broadcast.new(
+        recipients: form.forwardees,
+        medium: "sms_only",
+        body: sms.body,
+        which_phone: "both",
+        mission: sms.mission)
+
+      if broadcast.save
+        broadcast.deliver
+        forward = Sms::Forward.new(body: sms.body, mission: sms.mission, broadcast: broadcast)
+        forward.save
+      end
+    end
+
+    reply
   end
 
   private
@@ -89,6 +107,6 @@ class Sms::Handler
       lang = options[:user] && options[:user].pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale
 
       # do the translation, raising error on failure
-      I18n.t(key, options.merge(:locale => lang, :raise => true))
+      I18n.t(key, options.merge(locale: lang, raise: true))
     end
 end

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160520200852) do
+ActiveRecord::Schema.define(version: 20160621201731) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -171,6 +171,7 @@ ActiveRecord::Schema.define(version: 20160520200852) do
     t.boolean "published", default: false
     t.integer "responses_count", limit: 4, default: 0
     t.integer "root_id", limit: 4
+    t.boolean "sms_relay", default: false, null: false
     t.boolean "smsable", default: false
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"

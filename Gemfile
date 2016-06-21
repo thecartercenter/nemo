@@ -116,6 +116,8 @@ group :development do
   gem 'rails-dev-tweaks', '~> 1.1'    # speed up development mode
   gem 'spring'
   gem 'apiary'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 group :development, :test do
