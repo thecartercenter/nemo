@@ -54,6 +54,12 @@ class FormsController < ApplicationController
   end
 
   def edit
+    # STUB
+    user = User.assigned_to(current_mission).first
+    group = UserGroup.for_mission(current_mission).first
+    @form.sms_forwardees = [user, group].compact.map { |x| BroadcastRecipient.new(object: x) }
+    @form.sms_forwardee_ids = @form.sms_forwardees.map(&:id)
+
     prepare_and_render_form
   end
 

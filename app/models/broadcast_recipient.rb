@@ -8,11 +8,11 @@ class BroadcastRecipient
     @object = object
   end
 
-  def prefixed_id
+  def id
     "#{object.class.name.underscore}_#{object.id}"
   end
 
-  def full_name
+  def name
     "#{object.class.model_name.human}: #{object.name}"
   end
 end
