@@ -7,6 +7,9 @@ class Form < ActiveRecord::Base
   has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
   has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
+  has_many(:form_forwardings)
+  has_many(:forwardee_users, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "User")
+  has_many(:forwardee_user_groups, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "UserGroup")
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, class_name: "FormVersion")
@@ -91,7 +94,33 @@ class Form < ActiveRecord::Base
   end
 
   def forwardees
-    User.all.sample(10)
+    [forwardee_users, forwardee_user_groups].flatten
+  end
+
+  def forwardees_as_users
+    user_list = []
+    self.forwardees.each do |fwd|
+      case fwd.class.to_s
+      when "User"
+        user_list << fwd
+      when "UserGroup"
+        fwd.users.each do |u|
+          user_list << u
+        end
+      end
+    end
+    user_list
+  end
+
+  def forwardees=(forwardees)
+    forwardees.each do |fwd|
+      case fwd.class.to_s
+      when "User"
+        forwardee_users << fwd
+      when "UserGroup"
+        forwardee_user_groups << fwd
+      end
+    end
   end
 
   def odk_download_cache_key
