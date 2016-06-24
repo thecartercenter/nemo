@@ -89,7 +89,12 @@ class Sms::Handler
 
       if broadcast.save
         broadcast.deliver
-        forward = Sms::Forward.new(body: sms.body, mission: sms.mission, broadcast: broadcast)
+        forward = Sms::Forward.new(
+          body: sms.body,
+          mission: sms.mission,
+          broadcast: broadcast,
+          adapter_name: sms.adapter_name,
+          reply_to: sms)
         forward.save
       end
     end

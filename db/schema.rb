@@ -129,6 +129,7 @@ ActiveRecord::Schema.define(version: 20160624182026) do
     t.datetime "updated_at", null: false
   end
 
+  add_index "form_forwardings", ["form_id", "forwardee_id", "forwardee_type"], name: "form_forwardings_full", unique: true, using: :btree
   add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
   add_index "form_forwardings", ["forwardee_type", "forwardee_id"], name: "index_form_forwardings_on_forwardee_type_and_forwardee_id", using: :btree
 

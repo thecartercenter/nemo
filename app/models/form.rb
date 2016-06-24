@@ -30,8 +30,6 @@ class Form < ActiveRecord::Base
 
   scope(:published, -> { where(published: true) })
 
-  attr_accessor :sms_forwardees, :sms_forwardee_ids
-
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero
@@ -95,6 +93,31 @@ class Form < ActiveRecord::Base
 
   def forwardees
     [forwardee_users, forwardee_user_groups].flatten
+  end
+
+  def sms_forwardees
+    forwardees.map { |fwd| BroadcastRecipient.new(object: fwd) }
+  end
+
+  def sms_forwardee_ids
+    sms_forwardees.map(&:id)
+  end
+
+  def sms_forwardee_ids=(ids)
+    user_list = []
+    group_list = []
+    ids.each do |id_string|
+      type, _, id = id_string.rpartition("_")
+      case type
+      when "user"
+        user_list << id
+      when "user_group"
+        group_list << id
+      end
+    end
+    self.forwardee_users = User.where(id: user_list)
+    self.forwardee_user_groups = UserGroup.where(id: group_list)
+    self.save!
   end
 
   def forwardees_as_users
