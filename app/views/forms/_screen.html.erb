@@ -60,7 +60,9 @@
 <%= render('print_format_tips_modal') %>
 
 <%= javascript_doc_ready do %>
-  new ELMO.Views.FormSettingsView();
+  new ELMO.Views.FormSettingsView(<%=json(
+    forwardee_url: possible_recipients_broadcasts_path
+  )%>);
   new ELMO.Views.PrintFormView();
   new ELMO.Views.FormItemsView(<%=json(
     form_id: @form.id,

@@ -24,4 +24,8 @@ module Concerns::ApplicationController::Settings
   def load_settings_for_mission_into_config
     @setting = Setting.load_for_mission(current_mission)
   end
+
+  def default_serializer_options
+    {root: false}
+  end
 end

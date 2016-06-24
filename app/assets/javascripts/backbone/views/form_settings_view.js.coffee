@@ -11,6 +11,7 @@ class ELMO.Views.FormSettingsView extends Backbone.View
     @show_fields_with_errors()
     @show_hide_sms_settings()
     @show_hide_sms_forwardees()
+    @init_sms_forwardee_select()
 
   show_setting_fields: (event) ->
     event.preventDefault()
