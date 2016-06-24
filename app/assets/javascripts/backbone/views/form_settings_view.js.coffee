@@ -35,7 +35,7 @@ class ELMO.Views.FormSettingsView extends Backbone.View
 
   show_hide_sms_forwardees: ->
     m = if @$('#form_sms_relay').is(':checked') then 'show' else 'hide'
-    @$('.form_sms_forwardees')[m]()
+    @$('.form_sms_forwardee_ids')[m]()
 
   init_sms_forwardee_select: ->
     @$('#form_sms_forwardee_ids').select2
