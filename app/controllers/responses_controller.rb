@@ -173,9 +173,9 @@ class ResponsesController < ApplicationController
     @possible_submitters = @possible_submitters.paginate(page: params[:page], per_page: 20)
 
     render json: {
-      possible_submitters: @possible_submitters.as_json(only: %i(id name)),
+      possible_submitters: ActiveModel::ArraySerializer.new(@possible_submitters),
       more: @possible_submitters.next_page.present?
-    }
+    }, select2: true
   end
 
   private

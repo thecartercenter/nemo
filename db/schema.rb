@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160520200852) do
+ActiveRecord::Schema.define(version: 20160624182026) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -121,6 +121,18 @@ ActiveRecord::Schema.define(version: 20160520200852) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
 
+  create_table "form_forwardings", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "form_id", limit: 4
+    t.integer "forwardee_id", limit: 4
+    t.string "forwardee_type", limit: 255
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "form_forwardings", ["form_id", "forwardee_id", "forwardee_type"], name: "form_forwardings_full", unique: true, using: :btree
+  add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
+  add_index "form_forwardings", ["forwardee_type", "forwardee_id"], name: "index_form_forwardings_on_forwardee_type_and_forwardee_id", using: :btree
+
   create_table "form_items", force: :cascade do |t|
     t.string "ancestry", limit: 255
     t.integer "ancestry_depth", limit: 4, null: false
@@ -171,6 +183,7 @@ ActiveRecord::Schema.define(version: 20160520200852) do
     t.boolean "published", default: false
     t.integer "responses_count", limit: 4, default: 0
     t.integer "root_id", limit: 4
+    t.boolean "sms_relay", default: false, null: false
     t.boolean "smsable", default: false
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
@@ -527,6 +540,7 @@ ActiveRecord::Schema.define(version: 20160520200852) do
   add_foreign_key "conditions", "form_items", column: "questioning_id", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fk"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
+  add_foreign_key "form_forwardings", "forms"
   add_foreign_key "form_items", "forms", name: "questionings_form_id_fk"
   add_foreign_key "form_items", "missions", name: "questionings_mission_id_fk"
   add_foreign_key "form_items", "questions", name: "questionings_question_id_fk"

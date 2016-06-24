@@ -73,6 +73,7 @@ class User < ActiveRecord::Base
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
   scope(:with_assoc, -> { includes(:missions, {assignments: :mission}, :user_groups) })
   scope(:with_groups, -> { joins(:user_groups) })
+  scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
 
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
@@ -299,12 +300,6 @@ class User < ActiveRecord::Base
     max_age ||= configatron.recent_login_max_age
 
     current_login_age < max_age if current_login_at.present?
-  end
-
-  def as_json(options = {})
-    options[:only] ||= [:name]
-
-    super
   end
 
   # returns hash of missions to roles

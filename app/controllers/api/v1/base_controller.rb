@@ -28,10 +28,6 @@ class API::V1::BaseController < ApplicationController
 
   private
 
-  def default_serializer_options
-    {root: false}
-  end
-
   # Handles errors to give nice JSON response
   def handle_error(exception, options = {})
     if exception.is_a?(ActiveRecord::RecordNotFound)

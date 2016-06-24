@@ -35,6 +35,11 @@ class QuestionType
     @@all ||= @@attributes.map { |a| new(a) }
   end
 
+  # returns smsable types
+  def self.smsable
+    @@smsable ||= @@attributes.map { |a| new(a) }.select(&:smsable?)
+  end
+
   def initialize(attribs)
     attribs.each { |k,v| instance_variable_set("@#{k}", v) }
   end

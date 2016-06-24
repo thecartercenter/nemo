@@ -19,9 +19,8 @@
           };
         },
         processResults: function (data, page) {
-          var results = _.map(data.possible_submitters, function (i) { i.text = i.name; return i; });
           return {
-            results: results,
+            results: data.possible_submitters,
             pagination: { more: data.more }
           };
         },

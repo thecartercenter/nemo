@@ -70,6 +70,30 @@ class BroadcastsController < ApplicationController
     end
   end
 
+  # Returns a JSON array of Users and UserGroups matching params[:q].
+  # Returns a maximum of 10 users and 10 groups.
+  # User should refine search if they don't see what they're looking for at first.
+  # Also returns an indication of if there are more results available via pagination.
+  def possible_recipients
+    @users = User.assigned_to(current_mission).by_name
+    @groups = UserGroup.for_mission(current_mission).by_name
+
+    if params[:q].present?
+      @users = @users.name_matching(params[:q])
+      @groups = @groups.name_matching(params[:q])
+    end
+
+    @users = @users.paginate(page: 1, per_page: 5)
+    @groups = @groups.paginate(page: 1, per_page: 5)
+
+    @recipients = []
+    [@groups, @users].each do |set|
+      set.each { |u| @recipients << BroadcastRecipient.new(object: u) }
+    end
+
+    render json: @recipients
+  end
+
   private
 
     def set_medium_options

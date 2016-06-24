@@ -52,6 +52,7 @@ ELMO::Application.routes.draw do
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
     resources(:broadcasts) do
       collection do
+        get "possible_recipients", path: "possible-recipients"
         post "new_with_users", path: "new-with-users"
       end
     end

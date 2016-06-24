@@ -14,9 +14,15 @@ class SmsTestsController < ApplicationController
       :body => params[:sms_test][:body],
       :mission => current_mission)
 
-    if reply = Sms::Handler.new.handle(sms)
-      reply.adapter_name = 'Test Console'
+    reply, forward = Sms::Handler.new.handle(sms)
+    if reply
+      reply.adapter_name = "Test Console"
       reply.save
+    end
+
+    if forward
+      forward.adapter_name = "Test Console"
+      forward.save
     end
 
     # render the body of the reply
