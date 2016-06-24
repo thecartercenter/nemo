@@ -32,6 +32,7 @@
         <%= f.field(:smsable, :type => :check_box)  %>
         <div class="sms-fields">
           <%= f.field(:sms_relay, type: :check_box) %>
+          <%= f.field(:sms_forwardees, partial: 'sms_forwardees') %>
           <%= f.field(:authenticate_sms, type: :check_box) %>
         </div>
         <%= f.field(:allow_incomplete, :type => :check_box, :read_only => @form.published?) %>
