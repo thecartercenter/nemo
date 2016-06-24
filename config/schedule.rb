@@ -15,6 +15,10 @@ every "0 * * * *" do
   rake "ts:start"
 end
 
+every :reboot do
+  rake "ts:start"
+end
+
 # Every hour, at 5 after
 every "5 * * * *" do
   # redo the indexes
@@ -26,3 +30,4 @@ every "30 */6 * * *" do
   # Clean up expired media
   runner "MediaCleanupJob.perform_later"
 end
+
