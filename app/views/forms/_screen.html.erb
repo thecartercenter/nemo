@@ -32,7 +32,7 @@
         <%= f.field(:smsable, :type => :check_box)  %>
         <div class="sms-fields">
           <%= f.field(:sms_relay, type: :check_box) %>
-          <%= f.field(:sms_forwardees, partial: 'sms_forwardees') %>
+          <%= f.field(:sms_forwardee_ids, type: :select, options: [], multiple: true) %>
           <%= f.field(:authenticate_sms, type: :check_box) %>
         </div>
         <%= f.field(:allow_incomplete, :type => :check_box, :read_only => @form.published?) %>
@@ -61,7 +61,7 @@
 
 <%= javascript_doc_ready do %>
   new ELMO.Views.FormSettingsView(<%=json(
-    forwardee_url: possible_recipients_broadcasts_path
+    forwardee_options_url: possible_recipients_broadcasts_path
   )%>);
   new ELMO.Views.PrintFormView();
   new ELMO.Views.FormItemsView(<%=json(

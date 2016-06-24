@@ -27,6 +27,8 @@ class Form < ActiveRecord::Base
 
   scope(:published, -> { where(published: true) })
 
+  attr_accessor :sms_forwardee_ids
+
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
   # if the form is not a standard, these will just be zero

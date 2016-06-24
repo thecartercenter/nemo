@@ -1,16 +1,13 @@
 class UserSerializer < ActiveModel::Serializer
-  attributes :id, :name, :klass
-
-  def id
-    serialization_options[:include_klass] ? "#{klass}_#{object.id}" : object.id
-  end
+  attributes :id, :name, :text
 
   def filter(keys)
-    keys -= [:klass] unless serialization_options[:include_klass]
+    keys -= [:text] unless serialization_options[:select2]
+    keys -= [:name] if serialization_options[:select2]
     keys
   end
 
-  def klass
-    "user"
+  def text
+    object.name
   end
 end

@@ -7,10 +7,11 @@ class ELMO.Views.FormSettingsView extends Backbone.View
     'click #form_smsable': 'show_hide_sms_settings'
     'click #form_sms_relay': 'show_hide_sms_forwardees'
 
-  initialize: ->
+  initialize: (options) ->
     @show_fields_with_errors()
     @show_hide_sms_settings()
     @show_hide_sms_forwardees()
+    @forwardee_options_url = options.forwardee_options_url
     @init_sms_forwardee_select()
 
   show_setting_fields: (event) ->
@@ -35,3 +36,12 @@ class ELMO.Views.FormSettingsView extends Backbone.View
   show_hide_sms_forwardees: ->
     m = if @$('#form_sms_relay').is(':checked') then 'show' else 'hide'
     @$('.form_sms_forwardees')[m]()
+
+  init_sms_forwardee_select: ->
+    @$('#form_sms_forwardee_ids').select2
+      ajax:
+        url: @forwardee_options_url
+        dataType: 'json'
+        delay: 250
+        cache: true
+        processResults: (data) -> {results: data}

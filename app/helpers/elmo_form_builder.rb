@@ -163,7 +163,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
             when :select
               prompt = options[:prompt].nil? ? true : options[:prompt]
-              select(field_name, options[:options], {:include_blank => prompt }, {:class => "form-control"})
+              tag_options = {:class => "form-control"}
+              tag_options[:multiple] = true if options[:multiple]
+              select(field_name, options[:options], {:include_blank => prompt}, tag_options)
 
             when :timezone
               time_zone_select(field_name, nil, {}, {:class => "form-control"})
