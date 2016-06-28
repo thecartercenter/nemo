@@ -6,10 +6,11 @@ class DirectDBConn
 
   def insert(objects)
     column_names = escape_column_names(objects)
-    object_values = objects.map{ |o| convert_values_to_insert_syntax(o) }
+    object_values = objects.map { |o| convert_values_to_insert_syntax(o) }
+
     string_params = generate_string_params_template_from_attributes(objects.first.attributes)
 
-    string_params = add_parenthesis_to_params_string(string_params);
+    string_params = add_parenthesis_to_params_string(string_params)
 
     object_values = sanitize_object_values(object_values, string_params)
 
@@ -21,10 +22,10 @@ class DirectDBConn
 
   def insert_select(objects, object_to_insert, field_to_select, table_to_select, field_to_where)
     # Get the objects that are going to be inserted on the db
-    objects_to_insert = objects.map{ |u| u.send(object_to_insert).first }
+    objects_to_insert = objects.map { |u| u.send(object_to_insert).first }
 
     column_names = escape_column_names(objects_to_insert)
-    object_values = objects_to_insert.map{ |o| convert_values_to_insert_syntax(o) }
+    object_values = objects_to_insert.map { |o| convert_values_to_insert_syntax(o) }
     string_params = generate_string_params_template_from_attributes(objects_to_insert.first.attributes)
 
     # Change the value of the field with the name we want to SELECT on our INSERT..SELECT query
@@ -36,7 +37,7 @@ class DirectDBConn
       "SELECT #{object_values[i]} FROM #{table_to_select} WHERE #{field_to_where}=#{o.send(field_to_where)}"
     end
 
-    unified_select_queries = selects_queries.join(' UNION ')
+    unified_select_queries = selects_queries.join(" UNION ")
 
     sql_query_array = ["INSERT INTO #{@table} (#{column_names}) #{unified_select_queries}"]
 
@@ -46,7 +47,7 @@ class DirectDBConn
 
   def check_uniqueness(objects, fields)
     sql = "SELECT #{fields.join(', ')} FROM #{@table} WHERE "
-    field_values = fields.map{ |f| objects.map{ |u| u.send(f) } }.flatten
+    field_values = fields.map { |f| objects.map { |u| u.send(f) } }.flatten
     string_params = generate_string_params_template_with_quotes(field_values.length)
 
     conditions = []
@@ -60,7 +61,7 @@ class DirectDBConn
       end
     end
 
-    sql += conditions.join(' OR ')
+    sql += conditions.join(" OR ")
 
     execute_sanitized_query(sql).entries.flatten if sql_have_where_in_clause(sql)
   end
@@ -68,7 +69,7 @@ class DirectDBConn
   private
 
   def generate_string_params_template_from_attributes(attributes)
-    attributes.map{ |k,v| v.is_a?(String) ? "'%s'" : '%s' }.join(', ')
+    attributes.map { |k,v| v.is_a?(String) ? "'%s'" : "%s" }.join(", ")
   end
 
   def add_parenthesis_to_params_string(params_string)
@@ -76,24 +77,25 @@ class DirectDBConn
   end
 
   def change_field_value_with_field_name(object_values, column_names, field_name)
-    id_field_index = column_names.split(', ').index("`#{field_name}`")
+    id_field_index = column_names.split(", ").index("`#{field_name}`")
 
     object_values.map do |values_array|
-      values_array[id_field_index] = 'id'
+      values_array[id_field_index] = "id"
       values_array
     end
   end
 
   def generate_string_params_template_with_quotes(length)
-    Array.new(length){'%s'}.map{|p| "'#{p}'" }.join(',')
+    Array.new(length) { "%s" }.map { |p| "'#{p}'" }.join(",")
   end
 
   def sanitize_object_values(object_values, string_params)
-    object_values.map{ |o| sanitize_sql_query_array([string_params, o].flatten) }
+    # The 'gsub' is necessary to remove quoted nulls which can cause uniqueness failures
+    object_values.map { |o| sanitize_sql_query_array([string_params, o].flatten).gsub("'NULL'", "NULL") }
   end
 
   def add_parenthesis_on_each_value(object_values)
-    object_values.map{ |o| "(#{o})" }
+    object_values.map { |o| "(#{o})" }
   end
 
   def convert_values_to_insert_syntax(object)
@@ -101,13 +103,13 @@ class DirectDBConn
       if (k == "created_at" || k == "updated_at")
         "NOW()"
       else
-        (v.nil? ? 'NULL' : v)
+        (v.nil? ? "NULL" : v)
       end
     end
   end
 
   def sql_have_where_in_clause(sql)
-    sql.include? ' IN ('
+    sql.include? " IN ("
   end
 
   def execute_sql_query_array(sql_query_array)
@@ -116,7 +118,7 @@ class DirectDBConn
   end
 
   def escape_column_names(objects)
-    objects.first.attributes.keys.map{|k| "`#{k}`"}.join(', ')
+    objects.first.attributes.keys.map { |k| "`#{k}`" }.join(", ")
   end
 
   def execute_sanitized_query(sanitized_query)

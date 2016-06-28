@@ -43,7 +43,7 @@ class User < ActiveRecord::Base
 
   after_initialize(:set_default_pref_lang)
   before_validation(:normalize_fields)
-  before_validation(:generate_password_if_none, unless: :batch_creation?)
+  before_validation(:generate_password_if_none)
   after_create(:regenerate_api_key, unless: :batch_creation?)
   after_create(:regenerate_sms_auth_code)
   # call before_destroy before :dependent => :destroy associations
