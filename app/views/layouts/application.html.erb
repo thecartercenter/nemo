@@ -6,8 +6,6 @@
   <title><%= configatron.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
   <%= stylesheet_link_tag "application", :media => "all" %>
-  <%= stylesheet_link_tag "application-screen", :media => "screen" %>
-  <%= stylesheet_link_tag "application-print", :media => "print" %>
 
   <%# For Capybara. %>
   <%= stylesheet_link_tag 'disable-transition' if Rails.env.test? %>

@@ -1,5 +1,3 @@
-@import 'mixins';
-
 // Increased specificity to override default icon styles
 .form-items #form-items-header {
   @include action-links;
@@ -139,5 +137,3 @@
     }
   }
 }
-
-

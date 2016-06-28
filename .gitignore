@@ -27,5 +27,8 @@ config/*.sphinx.conf
 rake_tasks.txt
 routes.txt
 
+# theme variable overrides
+app/assets/stylesheets/all/variables/_theme.scss
+
 # file uploads
 /uploads
