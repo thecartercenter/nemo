@@ -137,4 +137,5 @@ group :development, :test do
   gem 'launchy'                      # auto-open capybara html file
   gem 'ruby-jmeter', '~> 2.13.4'     # builds JMeter test plans
   gem 'faker'
+  gem 'quiet_assets'                 # removes "get assets" from logs
 end
