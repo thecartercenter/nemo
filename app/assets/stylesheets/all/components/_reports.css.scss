@@ -8,12 +8,12 @@ div.report_body div#row_count { margin-bottom: 5px; }
 div.report_body table td, div.report_body table th { padding: 2px; border: 1px solid #ddd; }
 div.report_body table td.string { text-align: left; }
 div.report_body table td.number { text-align: right; }
-div.report_body table th { font-size: 90%; background-color: #eee; padding: 2px 5px 2px 2px; }
-div.report_body table td { background-color: white; }
+div.report_body table th { font-size: 90%; background-color: $super-light-gray; padding: 2px 5px 2px 2px; }
+div.report_body table td { background-color: $white; }
 div.report_body table th.col { text-align: left;  }
 div.report_body table th.row { text-align: left; white-space: nowrap; }
-div.report_body table td.row_total, div.report_body table td.col_total { background-color: #eee; }
-div.report_body th.row_grouping_label, div.report_body th.col_grouping_label { color: #888; font-weight: normal; }
+div.report_body table td.row_total, div.report_body table td.col_total { background-color: $super-light-gray; }
+div.report_body th.row_grouping_label, div.report_body th.col_grouping_label { color: $medium-gray; font-weight: normal; }
 div.report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }
 div.report_body th.col_grouping_label { text-align: center; }
 
@@ -47,7 +47,7 @@ div.report_body {
 
     /* subset intro */
     small {
-      color: #888;
+      color: $medium-gray;
       font-size: 11px;
       display: block;
       margin-bottom: 10px;
@@ -55,7 +55,7 @@ div.report_body {
 
     h3 {
       font-size: 14px;
-      color: #888;
+      color: $medium-gray;
       margin-bottom: 10px;
     }
 
@@ -106,26 +106,26 @@ div.report_body {
       }
 
       tr.cluster_header td {
-        color: #888;
+        color: $medium-gray;
         font-weight: bold;
         background-color: #f2f2ff;
       }
 
       tr.full_width_subhead td {
-        background-color: #eee;
+        background-color: $super-light-gray;
       }
 
       tr.summary {
         div.by_at {
           float: right;
           padding: 2px 5px;
-          background-color: #eee;
+          background-color: $super-light-gray;
           font-size: 90%;
-          color: #888;
+          color: $medium-gray;
           margin: -8px -3px 3px 3px;
 
           a {
-            color: #888;
+            color: $medium-gray;
           }
         }
       }
@@ -138,7 +138,7 @@ div.report_body {
         min-width: 300px;
 
         div.condition_info {
-          color: #888;
+          color: $medium-gray;
           font-size: 90%;
           font-style: italic;
         }
@@ -212,7 +212,7 @@ div.report_edit_pane div.section div.choice { display: inline-block; }
 div.report_edit_pane div.section div.name { font-weight: bold; }
 div.report_edit_pane div.section div.controls.vert { display: block; }
 div.report_edit_pane div.section label { margin-right: 10px; }
-div.report_edit_pane div.multiselect div.choices { overflow: auto; background-color: #e6e6e6; border: 1px solid #888; padding: 5px; }
+div.report_edit_pane div.multiselect div.choices { overflow: auto; background-color: #e6e6e6; border: 1px solid $medium-gray; padding: 5px; }
 div.report_edit_pane div.multiselect div.links { margin-top: 5px; }
 div.report_edit_pane div.multiselect div.links a { display: inline-block; margin-right: 5px; }
 
@@ -285,7 +285,7 @@ div.report_edit_pane.display_options div.section.tally_type {
     em {
       font-size: 11px;
       font-style: normal;
-      color: #888;
+      color: $medium-gray;
       display: block;
       margin-bottom: 5px;
     }

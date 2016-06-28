@@ -41,7 +41,7 @@ form.response_form {
     }
 
     &.dz-drag-hover {
-      background: #eee;
+      background: $super-light-gray;
     }
 
     .dz-preview {
@@ -99,7 +99,7 @@ form.response_form {
 
     div.error-msg {
       display: none;
-      color: red;
+      color: $theme-red;
       margin-top: 5px;
     }
   }

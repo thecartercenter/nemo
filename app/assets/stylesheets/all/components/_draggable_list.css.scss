@@ -29,7 +29,7 @@
         -webkit-border-radius: 5px;
         padding: 5px;
         border: 1px solid #CCC;
-        background: $list-item-background;
+        background: $super-light-gray;
         cursor: default;
 
         /* icon */
@@ -45,7 +45,7 @@
           font-style: normal;
           font-size: 10px;
           margin-left: 5px;
-          color: $theme_green;
+          color: $theme-green;
         }
 
         /* edit/remove links */
@@ -62,12 +62,12 @@
     border: 1px dashed #aaa;
 
     &.mjs-nestedSortable-error {
-      border: 1px dashed red;
+      border: 1px dashed $theme-red;
 
       // Error message
       div {
         margin: 5px 0 0 5px;
-        color: red;
+        color: $theme-red;
       }
     }
   }

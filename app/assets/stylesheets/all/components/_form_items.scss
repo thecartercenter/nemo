@@ -39,7 +39,7 @@
         top: 0;
         bottom: 0;
         width: 100%;
-        background-color: white;
+        background-color: $white;
         opacity: 0.7;
         z-index: 2;
       }
@@ -55,7 +55,7 @@
     }
 
     .type, .actions {
-      color: #879CAA;
+      color: $elmo-blue;
     }
 
     .inner {
@@ -124,12 +124,12 @@
     }
 
     .condition {
-      color: #666;
+      color: $medium-gray;
       margin-right: 10px;
     }
 
     .required-sym {
-      color: #fd8452;
+      color: $orange;
     }
 
     .token-input-token-elmo {

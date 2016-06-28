@@ -2,7 +2,7 @@ div.ui-dialog-content {
   margin-top: 10px;
 
   div.modal_error {
-    color: #d02000;
+    color: $theme-red;
     font-weight: bold;
     margin-bottom: 10px;
     display: none;

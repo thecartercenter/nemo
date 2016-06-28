@@ -37,7 +37,7 @@
 
 .responses_index, .responses_show {
   em.match {
-    background-color: #ffffaa;
+    background-color: $light-yellow;
     font-style: normal;
   }
 }
@@ -114,7 +114,7 @@ form.response_form {
         font-size: 9pt;
 
         i.hint {
-          color: white !important;
+          color: $white !important;
         }
       }
 

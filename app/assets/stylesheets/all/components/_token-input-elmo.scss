@@ -32,7 +32,7 @@ ul.token-input-list-elmo {
     height: 15px;
     margin: 6px 3px;
     padding: 1px 3px;
-    background-color: #f7f1aa;
+    background-color: $light-yellow;
     color: #000;
     cursor: default;
     border: 1px solid #c7bf32;
@@ -69,7 +69,7 @@ li.token-input-selected-token-elmo {
 div.token-input-dropdown-elmo {
     position: absolute;
     width: 400px;
-    background-color: #eee;
+    background-color: $super-light-gray;
     overflow: hidden;
     border-left: 1px solid #ccc;
     border-right: 1px solid #ccc;
@@ -92,18 +92,18 @@ div.token-input-dropdown-elmo ul {
 }
 
 div.token-input-dropdown-elmo ul li {
-    background-color: #eee;
+    background-color: $super-light-gray;
     padding: 3px;
     margin: 0;
     list-style-type: none;
 }
 
 div.token-input-dropdown-elmo ul li.token-input-dropdown-item-elmo {
-    background-color: #eee;
+    background-color: $super-light-gray;
 }
 
 div.token-input-dropdown-elmo ul li.token-input-dropdown-item2-elmo {
-    background-color: #eee;
+    background-color: $super-light-gray;
 }
 
 div.token-input-dropdown-elmo ul li em {
@@ -121,5 +121,5 @@ div.token-input-dropdown-elmo ul li .details.create_new {
 }
 
 div.token-input-dropdown-elmo ul li.token-input-selected-dropdown-item-elmo {
-    background-color: #f7f1aa;
+    background-color: $light-yellow;
 }
