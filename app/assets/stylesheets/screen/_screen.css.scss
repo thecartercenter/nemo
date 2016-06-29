@@ -1,10 +1,6 @@
 /* general layout styles */
 body {
-  background-color: $elmo-blue;
-
-  .fa-pencil {
-    color: $elmo-blue;
-  }
+  background-color: $body-background-color;
 }
 
 .alert-compact {
@@ -123,125 +119,24 @@ body {
   }
 }
 
-
-nav {
-  /* Override Bootstrap */
-  margin-bottom: 0px !important;
-  border-radius: 0px !important;
-  height: 51px;
-
-  /* For standard label in admin mode */
-  .navbar-header.std {
-    margin-left: 27px !important;
-    text-transform: uppercase;
-    color: $light-gray;
-    margin: 18px 27px 0px 30px;
-    font-weight: bold;
-  }
-
-  ul.navbar-nav {
-
-    li {
-      padding: 15px 6px 15px 6px;
-      margin: 0px 6px 0px 0px;
-
-      a:hover, &:hover, &:focus {
-        color: $orange;
-      }
-
-      /* Overriding bootstrap navbar prefs */
-      &.active a {
-        background-color: $light-blue !important;
-      }
-
-      a {
-        text-decoration: none;
-        font-family: "Raleway";
-        font-weight: bold;
-        font-size: 11pt;
-        display: inline-block;
-        vertical-align: middle;
-        padding: 0;
-
-        &:hover, &:focus {
-          text-decoration: none;
-          color: $orange !important;
-        }
-
-      }
-
-      i {
-        vertical-align: middle;
-        margin-right: 5px;
-        display: inline-block;
-        color: $light-gray;
-        font-size: 13pt;
-      }
-
-      &.active {
-        background-color: $light-blue;
-      }
-
-      &:hover {
-        color: $light-blue;
-      }
-    }
-
-    .line {
-      border-right: 1px solid $light-gray;
-      display: inline-block;
-      width: 2px;
-      height: 20px;
-    }
-
-    ul.dropdown-menu {
-      top: 78%;
-      left: 24px;
-      li {
-        font-weight: normal;
-        font-family: $sans-serif;
-        padding: 4px 9px 6px 15px;
-
-        &:hover, &:focus {
-          background: none;
-        }
-        a {
-          font-weight: normal;
-          font-family: $sans-serif;
-          font-size: 10pt;
-          display: block;
-
-          &:hover, &:focus {
-            background: none;
-            color: $orange;
-          }
-        }
-      }
-    }
-    li.dropdown {
-      padding-left: 28px;
-    }
-  }
-}
-
 #content {
   padding: 20px 25px 30px 25px;
   min-height: 400px;
   background-color: $white;
-  a i { color: $elmo-blue; }
-  .index_table a i.fa:hover { color: darken($elmo-blue, 20%) }
+  .index_table a i.fa { color: $primary-icon-color; }
+  .index_table a i.fa:hover { color: darken($primary-icon-color, 20%) }
 }
 
 #footer {
   padding-top: 108px;
   vertical-align: middle;
-  background-color: $gray-blue;
-  color: #888888;
+  background-color: $footer-background-color;
+  color: $footer-text-color;
   text-align: center;
   height: 300px;
 
   a {
-    color: $orange;
+    color: $link-text-color;
   }
 
   #locale_form {

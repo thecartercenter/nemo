@@ -18,3 +18,29 @@ $lighter-gray: #CCCCCC;
 $orange: #F77D48;
 $super-light-gray: #F0F0F0;
 $white: white;
+
+// New color definitions
+$body-background-color: $elmo-blue;
+$header-background-color: $elmo-blue;
+$header-text-color: inherit;
+
+$footer-background-color: $gray-blue;
+$footer-text-color: gray;
+
+$body-text-color: $body-text-color;
+$link-text-color: $orange;
+
+$primary-icon-color: $elmo-blue;
+$primary-icon-hover-color: darken($elmo-blue, 20%);
+
+$primary-btn-background-color: $orange;
+$primary-btn-text-color: white;
+
+$primary-btn-hover-background-color: darken($primary-btn-background-color, 10%);
+$primary-btn-hover-text-color: white;
+
+$nav-background-color: #F8F8F8;
+$nav-active-background-color: $light-blue;
+$nav-text-color: #777;
+$nav-icon-color: #bdb9b9;
+$nav-border-color: #E7E7E7;
