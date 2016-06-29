@@ -236,7 +236,7 @@ nav {
   padding-top: 108px;
   vertical-align: middle;
   background-color: $gray-blue;
-  color: $medium-gray;
+  color: #888888;
   text-align: center;
   height: 300px;
 
@@ -266,7 +266,7 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 
   #instructions {
     width: 600px;
-    border: 1px solid $medium-gray;
+    border: 1px solid #888888;
     padding: 10px;
   }
 }
