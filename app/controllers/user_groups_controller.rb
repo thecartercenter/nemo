@@ -33,9 +33,9 @@ class UserGroupsController < ApplicationController
 
   def add_users
     users = load_users(params[:user_ids])
-    @user_group.users = users
+    @user_group.users << (users - @user_group.users)
     @user_group.save
-    flash[:success] = I18n.t('user_group.add_users_success', count: users.count, group: @user_group.name)
+    flash[:success] = I18n.t("user_group.add_users_success", count: users.count, group: @user_group.name)
     flash.keep(:success)
     render nothing: true
   end
