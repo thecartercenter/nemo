@@ -72,7 +72,7 @@
       case "gt": return lhs > rhs;
       case "leq": return lhs <= rhs;
       case "geq": return lhs >= rhs;
-      case "neq": return !this.test_equality(lhs, rhs);
+      case "neq": return this.test_inequality(lhs, rhs);
       case "inc": return lhs.indexOf(rhs) != -1;
       case "ninc": return lhs.indexOf(rhs) == -1;
       default: return false;
@@ -83,6 +83,27 @@
   klass.prototype.test_equality = function(a,b) {
     return $.isArray(a) && $.isArray(b) ? a.equalsArray(b) : a == b;
   };
+
+  // for inequality conditions, ignore nulls for relevance test
+  // unless null is the value being checked by the condition
+  // improves UX for appearing/disappearing questions
+  klass.prototype.test_inequality = function(ref_value, expected) {
+    if($.isArray(ref_value) && $.isArray(expected)) {
+      if(ref_value.equalsArray([]) && !expected.equalsArray([])) {
+        return false
+      } else {
+        return !ref_value.equalsArray(expected)
+      }
+    } else {
+      // if you aren't checking for "not null"
+      if(ref_value == null && expected != null) {
+        return false
+      }
+      else {
+        return ref_value != expected
+      }
+    }
+  }
 
   // determines the left hand side of the comparison, which comes from the referred question
   klass.prototype.lhs = function() {
