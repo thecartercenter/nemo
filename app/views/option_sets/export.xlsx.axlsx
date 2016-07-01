@@ -22,7 +22,7 @@ xlsx_package.workbook.tap do |wb|
       end
 
       # protect the sheet to allow the header to be locked
-      sheet.sheet_protection.password = "ELMO"
+      sheet.sheet_protection.password = configatron.site_shortname
 
       # hide the "Id" column
       sheet.column_info.first.hidden = true

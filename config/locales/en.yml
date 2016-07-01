@@ -482,7 +482,7 @@ en:
         authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an obsever to spoof submissions."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."
-        access_level: "Public: Any ELMO user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
+        access_level: "Public: Any user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
         locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
@@ -572,7 +572,7 @@ en:
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
-        api_key: "Use this key to connect to other Elmo applications."
+        api_key: "Use this key to connect to other applications."
         sms_auth_code: "Use this code to submit SMS responses."
 
     # all error messages should be full sentences with a period, for consistency.
@@ -713,7 +713,7 @@ en:
 
   # application-wide strings
   layout:
-    about: "About ELMO"
+    about: "About %{site_name}"
     actions: "Actions"
     are_you_sure: "Are you sure?"
     change_language: "Change Language"
@@ -1105,9 +1105,9 @@ en:
       appendix:
         one: "The following appendix should be included with this form:"
         other: "The following appendices should be included with this form:"
-      header: "ELMO SMS Composition Guide"
+      header: "SMS Composition Guide"
       auth_code: "User authorization code (required)"
-      header: "ELMO SMS Guide"
+      header: "SMS Guide"
       for_paper_record: "For paper record only"
       form_code: "Unique form code (required)"
       multiple_sms_numbers: "Multiple SMS submission numbers"

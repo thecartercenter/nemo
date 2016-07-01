@@ -46,7 +46,11 @@
 
     <%# Logo and mission if selected %>
     <div id="title">
-      <%= link_to(image_tag("logo.png"), current_root_path) %>
+      <% if configatron.logo_path %>
+        <%= link_to(image_tag(configatron.logo_path), current_root_path) %>
+      <% else %>
+        <%= link_to(image_tag("logo.png"), current_root_path) %>
+      <% end %>
       <%# Stripping title name since we have a logo now %>
       <h2>
         <% if admin_mode? %>
@@ -143,7 +147,7 @@
 
     <%= t("layout.system_version") %>: <%= configatron.system_version %> &nbsp;|&nbsp;
 
-    <%= link_to(t('layout.about'), 'http://getelmo.org') %>
+    <%= link_to(t('layout.about', site_name: configatron.site_shortname), 'http://getelmo.org') %>
   </div>
 
   <div id="glb-load-ind">
