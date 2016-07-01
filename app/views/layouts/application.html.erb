@@ -46,7 +46,7 @@
 
     <%# Logo and mission if selected %>
     <div id="title">
-      <% if configatron.logo_path %>
+      <% if configatron.has_key?(:logo_path) %>
         <%= link_to(image_tag(configatron.logo_path), current_root_path) %>
       <% else %>
         <%= link_to(image_tag("logo.png"), current_root_path) %>
