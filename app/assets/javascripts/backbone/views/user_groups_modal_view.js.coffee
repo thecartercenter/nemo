@@ -17,6 +17,9 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
   set_body: (html) ->
     @$('.modal-body').html(html)
 
+  set_mode: (mode) ->
+    @add_mode = mode
+
   show: ->
     $(@el).modal('show')
 
@@ -30,9 +33,11 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
       method: "post"
       data: { name: group_name }
       success: (html) =>
-        @$(".modal-body").html(html)
+        @set_body(html)
         ELMO.app.loading(false)
-
+      error: (data) =>
+        @$el.modal('hide')
+        location.reload()
 
   add_users_to_group: (e) ->
     e.preventDefault()
@@ -46,6 +51,9 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
         success: (data) =>
           @$el.modal('hide')
           location.reload()
+        error: (data) =>
+          @$el.modal('hide')
+          location.reload()
 
   update_name: (e) ->
     e.preventDefault();
@@ -57,6 +65,9 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
       data: { name: target_value }
       success: (data) =>
         @$(e.currentTarget).closest("tr").find(".name_col").html("<div>" + data.name + "</div>")
+      error: (data) =>
+        @$el.modal('hide')
+        location.reload()
 
 
   process_edit: (e, data, status, xhr) ->

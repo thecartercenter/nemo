@@ -8,6 +8,7 @@ class ELMO.Views.UserListView extends Backbone.View
 
   initialize: (params) ->
     @params = params
+    @modal_view = new ELMO.Views.UserGroupsModalView(user_table_view: ELMO.index_table_views.user)
 
   show_groups_modal: (event) ->
     event.preventDefault()
@@ -24,6 +25,7 @@ class ELMO.Views.UserListView extends Backbone.View
       url: url
       method: "get"
       success: (html) =>
-        modal_view = new ELMO.Views.UserGroupsModalView({html: html, user_table_view: ELMO.index_table_views.user, add_mode: true})
+        @modal_view.set_body(html)
+        @modal_view.set_mode(add_mode)
         ELMO.app.loading(false)
-        modal_view.show()
+        @modal_view.show()
