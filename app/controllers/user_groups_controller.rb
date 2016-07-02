@@ -14,15 +14,23 @@ class UserGroupsController < ApplicationController
 
   def update
     @user_group.name = params[:name]
-    @user_group.save
-    render json: { name: @user_group.name }
+    if @user_group.save
+      render json: { name: @user_group.name }
+    else
+      flash[:error] = @user_group.errors.full_messages.join(", ")
+      render nothing: true, status: 422
+    end
   end
 
   def create
     @add_mode = params[:add].present?
     @user_group.name = params[:name]
-    @user_group.save
-    render(partial: "index_table") if request.xhr?
+    if @user_group.save
+      render(partial: "index_table") if request.xhr?
+    else
+      flash[:error] = @user_group.errors.full_messages.join(", ")
+      render nothing: true, status: 422
+    end
   end
 
   def destroy
