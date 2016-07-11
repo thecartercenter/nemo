@@ -60,7 +60,7 @@
               <span id="example-sms">
                 <%= 3439 if @form.authenticate_sms? %>
                 <%= @form.code %>
-                1.c 2.c,f 3.27 4.d 5.door was locked 6.20160401 7.c
+                <%= t(".instructions.example_sms_body") %>
               </span>
             </li>
           </ol>
