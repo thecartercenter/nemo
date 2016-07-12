@@ -1135,6 +1135,7 @@ en:
         2b: "Enter the contents of each line on the right side of the page, going from top to bottom."
         2c_html: "Periods are denoted by %{period} and spaces are denoted by %{spc}. It is important to enter both periods and spaces."
         example_sms: "Example SMS"
+        example_sms_body: 1.c 2.c,f 3.27 4.d 5.door was locked 6.20160401 7.c
       unique_code: "This is the unique code for the form"
       unknown_number: "[unknown number]"
 
