@@ -1,5 +1,8 @@
 # Site name (shows up in banner and page title)
-configatron.site_name = "ELMO"
+configatron.site_name = "ELMO (Longer Name)"
+configatron.site_shortname = "ELMO"
+# configatron.logo_path = "logo-override.png"
+# configatron.broadcast_tag = "[ELMO]"
 
 # Address(es) where webmaster notifications (e.g. for system errors) will be sent.
 configatron.webmaster_emails = ["someone@somplace.com"]
