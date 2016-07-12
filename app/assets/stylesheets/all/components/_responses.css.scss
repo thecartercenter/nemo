@@ -1,9 +1,3 @@
-$gray-blue: #D4DCE1;
-$response-form-label-width: 300px;
-$group-indent: 10px;
-$body-text-color: #222;
-$light-gray: #BDB9B9;
-
 /* response index */
 .responses_index {
   form#form_chooser {
@@ -43,7 +37,7 @@ $light-gray: #BDB9B9;
 
 .responses_index, .responses_show {
   em.match {
-    background-color: #ffffaa;
+    background-color: $light-yellow;
     font-style: normal;
   }
 }
@@ -120,7 +114,7 @@ form.response_form {
         font-size: 9pt;
 
         i.hint {
-          color: white !important;
+          color: $white !important;
         }
       }
 

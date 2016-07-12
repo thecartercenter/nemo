@@ -18,11 +18,11 @@ form.user_batch_form {
     }
 
     &.line_ok div.info {
-      color: #9dc400;
+      color: $theme-green;
     }
 
     &.line_error div.info {
-      color: #d02000;
+      color: $theme-red;
     }
   }
 }

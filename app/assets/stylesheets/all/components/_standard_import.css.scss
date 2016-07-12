@@ -4,11 +4,6 @@
     overflow-y: scroll;
     max-height: 560px;
   }
-
-  .btn-primary {
-    background-color: #F77D48;
-    border: 0;
-  }
 }
 
 div.importable {
@@ -24,7 +19,7 @@ div.importable {
       padding: 5px;
 
       &:hover {
-        background-color: #eee;
+        background-color: $super-light-gray;
       }
 
       input[type=checkbox] {
@@ -37,7 +32,7 @@ div.importable {
         cursor: pointer;
 
         small {
-          color: #888;
+          color: #888888;
           font-size: 11px;
         }
       }

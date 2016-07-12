@@ -1,11 +1,7 @@
-$orange: #F77D48;
-$elmo-form-width: 660px;
-$label-width: 200px;
-
 /* base errors may appear outside the form. */
 div.form-errors {
   font-weight: bold;
-  color: #CC3232;
+  color: $theme_red;
   margin-bottom: 5px;
 }
 
@@ -146,11 +142,6 @@ div.form_field {
   }
 }
 
-form input[type="submit"].btn-primary {
-  background-color: $orange;
-  border: 0px;
-}
-
 form {
   div.submit-buttons {
     text-align: right;
@@ -205,7 +196,7 @@ div.cascading-selects {
     display: block !important;
     font-size: 8pt;
     margin-bottom: 3px;
-    color: #888;
+    color: #888888;
     padding: 0;
   }
 }
@@ -220,7 +211,7 @@ div.cascading-selects {
 
     i { /* For blank values */
       font-style: normal;
-      color: #ccc;
+      color: $lighter-gray;
     }
   }
 
