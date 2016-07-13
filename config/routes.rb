@@ -136,6 +136,7 @@ ELMO::Application.routes.draw do
 
     resources :user_groups do
       post "add_users"
+      post "remove_users"
     end
 
     resources :form_items, path: "form-items", only: [:update]

@@ -1,10 +1,11 @@
 class UserGroupsController < ApplicationController
   before_action :load_user_groups
-  before_action :find_user_group, only: [:add_users]
+  before_action :find_user_group, only: [:add_users, :remove_users]
   load_and_authorize_resource
 
   def index
     @add_mode = params[:add].present?
+    @remove_mode = params[:remove].present?
     render(partial: "index_table") if request.xhr?
   end
 
@@ -44,6 +45,15 @@ class UserGroupsController < ApplicationController
     @user_group.users << (users - @user_group.users)
     @user_group.save
     flash[:success] = I18n.t("user_group.add_users_success", count: users.count, group: @user_group.name)
+    flash.keep(:success)
+    render nothing: true
+  end
+
+  def remove_users
+    users = load_users(params[:user_ids])
+    @user_group.users = (@user_group.users - users)
+    @user_group.save
+    flash[:success] = I18n.t("user_group.remove_users_success", count: users.count, group: @user_group.name)
     flash.keep(:success)
     render nothing: true
   end
