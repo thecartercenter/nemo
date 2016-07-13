@@ -11,10 +11,12 @@ class BroadcastsController < ApplicationController
   end
 
   def new
-    flash[:success] = t("broadcast.instructions")
+    @broadcast = Broadcast.accessible_by(current_ability).new
+    @users = User.accessible_by(current_ability).all
+    authorize!(:create, @broadcast)
 
-    # redirect to the users index, but don't worry about preserving the page number
-    redirect_to(users_url)
+    set_medium_options
+    render(:form)
   end
 
   # Displays a new broadcast form with the given recipients.
