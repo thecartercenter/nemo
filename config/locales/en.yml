@@ -262,6 +262,8 @@ en:
         subject: "Subject"
         to: "To"
         which_phone: "Which Phone(s)"
+        recipient_selection: "Recipients"
+        recipient_ids: "To"
       form:
         allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"
@@ -1002,6 +1004,10 @@ en:
         email_only: "Email only (don't send any SMSes)"
         both: "Both SMS and email"
     no_possible_recipients: "None of the users you selected has an email address or phone number. Please try again."
+    recipient_selection_options:
+      all_users: "All users in mission"
+      all_observers: "All observers in mission"
+      specific_users: "Specific users in mission"
     send_broadcast: "Send Broadcast"
     send_success: "Broadcast sent successfully."
     send_error: "Error sending broadcast (see below)."

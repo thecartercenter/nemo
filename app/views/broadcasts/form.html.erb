@@ -1,11 +1,15 @@
 <%= elmo_form_for(@broadcast) do |f| %>
 
   <%= top_action_links(@broadcast, :only => :index) %>
-
-  <%= f.field(:recipient_ids, :type => :hidden, :multiple => true) %>
-  <%= f.field(:to, :content => safe_join(@broadcast.recipients.collect{|u| link_to(u.name, u)}, ", ")) %>
   <%= f.field(:medium, :type => :select, :required => true,
     :options => translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
+
+  <%= f.field(:recipient_selection, type: :select, required: true,
+    options: translate_options(Broadcast::RECIPIENT_SELECTION_OPTIONS, [:broadcast, :recipient_selection_options])) %>
+
+  <%= f.field(:recipient_ids, :type => :select, :multiple => true,
+    options: sel_opts_from_objs(@users)) %>
+  <% f.field(:to, :content => safe_join(@broadcast.recipients.collect{|u| link_to(u.name, u)}, ", ")) %>
 
   <%# only show balance if we were able to retrieve one and if we're not in read_only mode %>
   <%= f.field(:balance, :partial => "balance") if @balance.present? && @broadcast.new_record? %>
@@ -28,4 +32,5 @@
 <%= javascript_doc_ready do %>
   $("#broadcast_medium").change(broadcast_medium_changed);
   $("#broadcast_medium").trigger("change");
+  $("#broadcast_recipient_ids").select2();
 <% end %>

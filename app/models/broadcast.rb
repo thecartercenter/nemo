@@ -15,7 +15,7 @@ class Broadcast < ActiveRecord::Base
   default_scope { includes(:recipients).order("broadcasts.created_at DESC") }
 
   # this method isn't used except for attaching errors
-  attr_accessor :to
+  attr_accessor :to, :recipient_selection
 
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
@@ -24,6 +24,9 @@ class Broadcast < ActiveRecord::Base
 
   # options for which phone numbers the broadcast should be sent to
   WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
+
+  # options for recipients
+  RECIPIENT_SELECTION_OPTIONS = %w(all_users all_observers specific_users)
 
   def self.terminate_sub_relationships(broadcast_ids)
     BroadcastAddressing.where(broadcast_id: broadcast_ids).delete_all
