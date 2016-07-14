@@ -21,7 +21,17 @@ class BroadcastsController < ApplicationController
   # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
   def new_with_users
     if params[:select_all].present?
-      users = User.accessible_by(current_ability).to_a
+      if params[:search].present?
+        users = User.accessible_by(current_ability).with_assoc.by_name
+        begin
+          users = User.do_search(users, params[:search]).to_a
+        rescue Search::ParseError
+          flash.now[:error] = $!.to_s
+          @search_error = true
+        end
+      else
+        users = User.accessible_by(current_ability).to_a
+      end
     else
       users = User.accessible_by(current_ability).where(:id => params[:selected].keys).to_a
     end

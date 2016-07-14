@@ -17,6 +17,7 @@ class UsersController < ApplicationController
     # do search if applicable
     if params[:search].present?
       begin
+        @search_params = params[:search]
         @users = User.do_search(@users, params[:search])
       rescue Search::ParseError
         flash.now[:error] = $!.to_s
