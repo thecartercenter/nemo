@@ -11,6 +11,7 @@ module UsersHelper
 
     links << link_to(t("user.list_groups"), "#user-group-modal", class: 'list-groups') if can?(:view, UserGroup)
     links << link_to(t("user.add_to_group"), "#user-group-modal", class: 'add-to-group') if can?(:view, UserGroup)
+    links << link_to(t("user.remove_from_group"), "#user-group-modal", class: 'remove-from-group') if can?(:view, UserGroup)
 
     links
   end

@@ -1,6 +1,6 @@
 module UserGroupsHelper
   def user_groups_index_fields
-    if @add_mode
+    if @add_mode || @remove_mode
       %w(name users created_at)
     else
       %w(name users created_at filter actions)
@@ -12,6 +12,8 @@ module UserGroupsHelper
     when "name"
       if @add_mode
         link_to group.name, user_group_add_users_path(group), class: "add-to-group"
+      elsif @remove_mode
+        link_to group.name, user_group_remove_users_path(group), class: "remove-from-group"
       else
         group.name
       end

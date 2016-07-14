@@ -7,18 +7,19 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
     "click a.action_link_update": "update_name"
     "click button.new": "create_group"
     "click .add-to-group": "add_users_to_group"
+    "click .remove-from-group": "remove_users_from_group"
 
   initialize: (params) ->
     @params = params
     @user_table_view = params.user_table_view
-    @add_mode = params.add_mode
+    @mode = params.mode
     @set_body(params.html)
 
   set_body: (html) ->
     @$('.modal-body').html(html)
 
   set_mode: (mode) ->
-    @add_mode = mode
+    @mode = mode
 
   show: ->
     $(@el).modal('show')
@@ -26,10 +27,10 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
   create_group: (e) ->
     e.preventDefault();
     group_name = prompt(I18n.t('user_group.create_prompt'))
-    url_mode = if @add_mode then 'user_groups?add=true' else 'user_groups'
+    mode = if (@mode == "add" || @mode == "remove") then "user_groups?#{@mode}=true" else "user_groups"
     ELMO.app.loading(true)
     $.ajax
-      url: ELMO.app.url_builder.build(url_mode)
+      url: ELMO.app.url_builder.build(mode)
       method: "post"
       data: { name: group_name }
       success: (html) =>
@@ -54,6 +55,23 @@ class ELMO.Views.UserGroupsModalView extends Backbone.View
         error: (data) =>
           @$el.modal('hide')
           location.reload()
+
+  remove_users_from_group: (e) ->
+    e.preventDefault()
+    user_checkboxes = @user_table_view.get_selected_items()
+    user_ids = ($(cb).data('userId') for cb in user_checkboxes)
+    if user_ids.length > 0
+      $.ajax
+        url: $(e.currentTarget).attr("href")
+        method: "post"
+        data: { user_ids: user_ids }
+        success: (data) =>
+          @$el.modal('hide')
+          location.reload()
+        error: (data) =>
+          @$el.modal('hide')
+          # location.reload()
+
 
   update_name: (e) ->
     e.preventDefault();
