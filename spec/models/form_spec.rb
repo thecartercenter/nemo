@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe Form do
+  let(:mission) { create(:mission) }
 
   context "API User" do
     before do
@@ -127,7 +128,7 @@ describe Form do
 
   describe "destroy" do
     before do
-      @form = create(:form, mission: @mission, question_types: ["integer", ["text", "text"], "text"])
+      @form = create(:form, mission: mission, question_types: ["integer", ["text", "text"], "text"])
     end
 
     it "should work" do

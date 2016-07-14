@@ -10,6 +10,7 @@ module Replication::Standardizable
 
     before_destroy(:unlink_copies)
     before_save(:scrub_original_link_if_becoming_incompatible)
+    validate(:non_standard_items_must_have_mission)
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
     def self.importable_to(mission)
@@ -60,6 +61,12 @@ module Replication::Standardizable
       end
     end
     return true
+  end
+
+  def non_standard_items_must_have_mission
+    unless is_standard? || self.mission.present?
+      errors.add(:mission, :blank)
+    end
   end
 
   private
