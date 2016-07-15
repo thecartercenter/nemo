@@ -87,8 +87,20 @@ namespace :deploy do
     run "ln -nfs #{shared_path}/config/thinking_sphinx.yml #{release_path}/config/thinking_sphinx.yml"
     run "ln -nfs #{shared_path}/config/local_config.rb #{release_path}/config/initializers/local_config.rb"
     run "ln -nfs #{shared_path}/config/railsenv #{release_path}/config/railsenv"
+    run "ln -nfs #{shared_path}/app/assets/stylesheets/all/variables/_theme.scss #{release_path}/app/assets/stylesheets/all/variables/_theme.scss"
+    run "ln -nfs #{shared_path}/app/assets/images/logo-override.png #{release_path}/app/assets/images/logo-override.png"
   end
   before "deploy:finalize_update", "deploy:symlink_config"
+
+  desc "Copy theme override files to server"
+  task :theme_config, role: :app do
+    theme = fetch(:theme, "app/assets/stylesheets/all/variables/_default_theme.scss")
+    logo = fetch(:logo, "app/assets/images/logo.png")
+    run "mkdir -p #{shared_path}/app/assets/stylesheets/all/variables/"
+    run "mkdir -p #{shared_path}/app/assets/images/"
+    top.upload theme, "#{shared_path}/app/assets/stylesheets/all/variables/_theme.scss"
+    top.upload logo, "#{shared_path}/app/assets/images/logo-override.png"
+  end
 
   desc "Make sure local git is in sync with remote."
   task :check_revision, roles: :web do
