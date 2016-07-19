@@ -4,22 +4,20 @@ class PhoneNormalizer
     if phone =~ /[a-z]/i
       true
     else
-      digits = phone.gsub(/\D/, "")
-      !digits.empty? && digits.size <= 6
+      phone_digits = phone.gsub(/\D/, "")
+      return false unless phone_digits.present?
+      return true if phone_digits.size <= 6
+      country_code = Phony.split(phone_digits).first
+      phone_digits.size - country_code.size <= 6
     end
   end
 
   def self.normalize(phone)
-    phone = phone.try(:strip)
-    if is_shortcode?(phone)
-      phone
-    else
-      digits = phone.try(:gsub, /\D/, "")
-      if digits.blank?
-        nil
-      else
-        "+#{digits}"
-      end
-    end
+    return unless phone.present?
+    return phone if is_shortcode?(phone)
+    return unless phone.gsub(/\D/, "").present?
+    normalized = Phony.normalize(phone)
+    return unless normalized.present?
+    Phony.format(normalized, format: :+, spaces: "", local_spaces: "", parentheses: false)
   end
 end
