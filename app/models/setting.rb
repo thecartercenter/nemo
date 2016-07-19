@@ -2,14 +2,15 @@ class Setting < ActiveRecord::Base
   include MissionBased
 
   # attribs to copy to configatron
-  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_numbers twilio_phone_number twilio_account_sid twilio_auth_token frontlinecloud_api_key)
+  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_numbers
+    twilio_phone_number twilio_account_sid twilio_auth_token frontlinecloud_api_key)
 
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
 
   DEFAULT_TIMEZONE = "UTC"
 
-  scope(:by_mission, ->(m) { where(:mission_id => m ? m.id : nil) })
+  scope(:by_mission, ->(m) { where(mission_id: m ? m.id : nil) })
 
   before_validation(:normalize_locales)
   before_validation(:normalize_incoming_sms_numbers)
@@ -40,14 +41,14 @@ class Setting < ActiveRecord::Base
     end
 
     setting.load
-    return setting
+    setting
   end
 
   # loads the default settings without saving
   def self.load_default
     setting = build_default
     setting.load
-    return setting
+    setting
   end
 
   # Builds and returns (but doesn't save) a default Setting object
@@ -75,9 +76,7 @@ class Setting < ActiveRecord::Base
 
   def generate_incoming_sms_token(replace=false)
     # Don't replace token unless replace==true
-    unless incoming_sms_token.nil? or replace
-      return
-    end
+    return unless incoming_sms_token.nil? || replace
 
     # Ensure that the new token is actually different
     begin
@@ -95,7 +94,7 @@ class Setting < ActiveRecord::Base
   # copies this setting to configatron
   def load
     # build hash
-    hsh = Hash[*KEYS_TO_COPY.collect{|k| [k.to_sym, send(k)]}.flatten(1)]
+    hsh = Hash[*KEYS_TO_COPY.collect { |k| [k.to_sym, send(k)] }.flatten(1)]
 
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
@@ -116,16 +115,16 @@ class Setting < ActiveRecord::Base
 
   # converts preferred_locales to a comma delimited string
   def preferred_locales_str
-    (preferred_locales || []).join(',')
+    (preferred_locales || []).join(",")
   end
 
   def preferred_locales_str=(codes)
-    self.preferred_locales = (codes || '').split(',')
+    self.preferred_locales = (codes || "").split(",")
   end
 
   # converts preferred locales to symbols on read
   def preferred_locales
-    read_attribute('preferred_locales').map(&:to_sym)
+    read_attribute("preferred_locales").map(&:to_sym)
   end
 
   def default_locale
@@ -147,113 +146,112 @@ class Setting < ActiveRecord::Base
 
   private
 
-    # gets rid of any junk chars in locales
-    def normalize_locales
-      self.preferred_locales = preferred_locales.map{|l| l.to_s.downcase.gsub(/[^a-z]/, "")[0,2]}
-      return true
+  # gets rid of any junk chars in locales
+  def normalize_locales
+    self.preferred_locales = preferred_locales.map { |l| l.to_s.downcase.gsub(/[^a-z]/, "")[0,2] }
+    true
+  end
+
+  def normalize_twilio_phone_number
+    # Allow for the use of a database that hasn't had the migration run
+    return unless respond_to?(:twilio_phone_number)
+
+    self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
+  end
+
+  def normalize_incoming_sms_numbers
+    # Most normalization is performed in the assignment method.
+    # Here we just ensure no nulls.
+    self.incoming_sms_numbers = [] if incoming_sms_numbers.blank?
+  end
+
+  # makes sure all language codes are valid ISO639 codes
+  def locales_are_valid
+    preferred_locales.each do |l|
+      errors.add(:preferred_locales_str, :invalid_code, code: l) unless ISO_639.find(l.to_s)
+    end
+  end
+
+  # makes sure at least one of the chosen locales is an available locale
+  def one_locale_must_have_translations
+    if (preferred_locales & configatron.full_locales).empty?
+      errors.add(:preferred_locales_str, :one_must_have_translations, locales: configatron.full_locales.join(","))
+    end
+  end
+
+  # sms adapter can be blank or must be valid according to the Factory
+  def sms_adapter_is_valid
+    errors.add(:default_outgoing_sms_adapter, :is_invalid) unless default_outgoing_sms_adapter.blank? ||
+        Sms::Adapters::Factory.name_is_valid?(default_outgoing_sms_adapter)
+  end
+
+  # check if settings for a particular adapter should be validated
+  def should_validate?(adapter)
+    # settings for the default outgoing adapter should always be validated
+    return true if default_outgoing_sms_adapter == adapter
+
+    # settings for an adapter should be validated if any settings for that adapter are present
+    case adapter
+    when "IntelliSms"
+      intellisms_username.present? || intellisms_password1.present? || intellisms_password2.present?
+    when "Twilio"
+      twilio_phone_number.present? || twilio_account_sid.present? || twilio_auth_token1.present?
+    when "FrontlineCloud"
+      frontlinecloud_api_key.present?
+    end
+  end
+
+  # checks that the provided credentials are valid
+  def sms_credentials_are_valid
+    if should_validate?("IntelliSms")
+      errors.add(:intellisms_username, :blank) if intellisms_username.blank?
+      errors.add(:intellisms_password1, :blank) if [intellisms_password, intellisms_password1,
+          intellisms_password2].all?(&:blank?)
+      errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
     end
 
-    def normalize_twilio_phone_number
-      # Allow for the use of a database that hasn't had the migration run
-      return unless respond_to?(:twilio_phone_number)
-
-      self.twilio_phone_number = PhoneNormalizer.normalize(twilio_phone_number)
+    if should_validate?("Twilio")
+      errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
+      errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
     end
 
-    def normalize_incoming_sms_numbers
-      # Most normalization is performed in the assignment method.
-      # Here we just ensure no nulls.
-      self.incoming_sms_numbers = [] if incoming_sms_numbers.blank?
+    if should_validate?("FrontlineCloud")
+      errors.add(:frontlinecloud_api_key1, :blank) if frontlinecloud_api_key.blank? && frontlinecloud_api_key1.blank?
     end
+  end
 
-    # makes sure all language codes are valid ISO639 codes
-    def locales_are_valid
-      preferred_locales.each do |l|
-        errors.add(:preferred_locales_str, :invalid_code, :code => l) unless ISO_639.find(l.to_s)
-      end
+  # clear SMS fields if requested
+  def clear_sms_fields_if_requested
+    if clear_intellisms == "1"
+      self.intellisms_username = nil
+      self.intellisms_password = nil
+      self.intellisms_password1 = nil
+      self.intellisms_password2 = nil
     end
-
-    # makes sure at least one of the chosen locales is an available locale
-    def one_locale_must_have_translations
-      if (preferred_locales & configatron.full_locales).empty?
-        errors.add(:preferred_locales_str, :one_must_have_translations, :locales => configatron.full_locales.join(","))
-      end
+    if clear_twilio == "1"
+      self.twilio_phone_number = nil
+      self.twilio_account_sid = nil
+      self.twilio_auth_token = nil
+      self.twilio_auth_token1 = nil
     end
+    self.frontlinecloud_api_key = nil if clear_frontlinecloud == "1"
+  end
 
-    # sms adapter can be blank or must be valid according to the Factory
-    def sms_adapter_is_valid
-      errors.add(:default_outgoing_sms_adapter, :is_invalid) unless default_outgoing_sms_adapter.blank? || Sms::Adapters::Factory.name_is_valid?(default_outgoing_sms_adapter)
+  # if the sms credentials temp fields are set (and they match, which is checked above),
+  # copy the value to the real field
+  def save_sms_credentials
+    self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
+    self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
+    self.frontlinecloud_api_key = frontlinecloud_api_key1 unless frontlinecloud_api_key1.blank?
+    true
+  end
+
+  # if we are in admin mode, then a bunch of fields don't make sense and should be null
+  # make sure they are in fact null
+  def nullify_fields_if_these_are_admin_mode_settings
+    # if mission_id is nil, that means we're in admin mode
+    if mission_id.nil?
+      (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each { |a| self.send("#{a}=", nil) }
     end
-
-    # check if settings for a particular adapter should be validated
-    def should_validate?(adapter)
-      # settings for the default outgoing adapter should always be validated
-      return true if default_outgoing_sms_adapter == adapter
-
-      # settings for an adapter should be validated if any settings for that adapter are present
-      case adapter
-      when "IntelliSms"
-        intellisms_username.present? || intellisms_password1.present? || intellisms_password2.present?
-      when "Twilio"
-        twilio_phone_number.present? || twilio_account_sid.present? || twilio_auth_token1.present?
-      when "FrontlineCloud"
-        frontlinecloud_api_key.present?
-      end
-    end
-
-    # checks that the provided credentials are valid
-    def sms_credentials_are_valid
-      if should_validate?("IntelliSms")
-        errors.add(:intellisms_username, :blank) if intellisms_username.blank?
-        errors.add(:intellisms_password1, :blank) if intellisms_password.blank? && intellisms_password1.blank? && intellisms_password2.blank?
-        errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
-      end
-
-      if should_validate?("Twilio")
-        errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
-        errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
-      end
-
-      if should_validate?("FrontlineCloud")
-        if frontlinecloud_api_key.blank? && frontlinecloud_api_key1.blank?
-          errors.add(:frontlinecloud_api_key1, :blank)
-        end
-      end
-    end
-
-    # clear SMS fields if requested
-    def clear_sms_fields_if_requested
-      if clear_intellisms == "1"
-        self.intellisms_username = nil
-        self.intellisms_password = nil
-        self.intellisms_password1 = nil
-        self.intellisms_password2 = nil
-      end
-      if clear_twilio == "1"
-        self.twilio_phone_number = nil
-        self.twilio_account_sid = nil
-        self.twilio_auth_token = nil
-        self.twilio_auth_token1 = nil
-      end
-      if clear_frontlinecloud == "1"
-        self.frontlinecloud_api_key = nil
-      end
-    end
-
-    # if the sms credentials temp fields are set (and they match, which is checked above), copy the value to the real field
-    def save_sms_credentials
-      self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
-      self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
-      self.frontlinecloud_api_key = frontlinecloud_api_key1 unless frontlinecloud_api_key1.blank?
-      return true
-    end
-
-    # if we are in admin mode, then a bunch of fields don't make sense and should be null
-    # make sure they are in fact null
-    def nullify_fields_if_these_are_admin_mode_settings
-      # if mission_id is nil, that means we're in admin mode
-      if mission_id.nil?
-        (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each{|a| self.send("#{a}=", nil)}
-      end
-    end
+  end
 end
