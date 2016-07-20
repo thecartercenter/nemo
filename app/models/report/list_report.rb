@@ -45,7 +45,9 @@ class Report::ListReport < Report::Report
         rel = rel.order("answers.rank")
       end
 
-      rel = rel.limit(RESPONSES_QUANTITY_LIMIT)
+      response_limit = questions.present? ? (RESPONSES_QUANTITY_LIMIT * questions.count) : RESPONSES_QUANTITY_LIMIT
+
+      rel = rel.limit(response_limit)
 
       # apply filter
       rel = apply_filter(rel)

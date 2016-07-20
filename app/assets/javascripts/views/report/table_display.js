@@ -215,10 +215,9 @@
   klass.prototype.i18n_total_rows_label = function(data){
     var resp_tally_or_list = this.report.attribs.type.match(/ListReport/) ||
       this.is_response_tally_report(this.report)
-
-    if (resp_tally_or_list && data.rows < data.total_row_count) {
+    if (resp_tally_or_list && data.returned_row_count < data.total_row_count) {
       return I18n.t("report/report.total_rows_showing",
-        {count: data.rows.length, total_count: data.total_row_count})
+        {count: data.rows.length, percent: this.format_percent(data.returned_row_count / data.total_row_count)})
     } else {
       return I18n.t("report/report.total_rows", {count: data.rows.length})
     }
