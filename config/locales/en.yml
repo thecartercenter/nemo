@@ -1331,7 +1331,7 @@ en:
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
     total_rows: "Total Rows: %{count}"
-    total_rows_showing: "Showing %{count} rows from a total of %{total_count}"
+    total_rows_showing: "Showing %{count} rows. (%{percent} of total)"
     view_response: "Response #%{id}"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
