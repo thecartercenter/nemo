@@ -103,7 +103,7 @@ class Sms::Decoder
 
   def find_user
     @user = @msg.user
-    raise_decoding_error("user_not_found") unless @user && @user.active?
+    log_authentication_failure unless @user && @user.active?
   end
 
   def set_auth_code
