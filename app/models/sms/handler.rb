@@ -6,6 +6,9 @@ class Sms::Handler
   # takes an incoming sms and returns an outgoing one
   # may return nil if no response is appropriate
   def handle(sms)
+    # abort if the SMS in question is from one of the incoming SMS numbers
+    return if configatron.incoming_sms_numbers.include? sms.from
+
     elmo_response = nil
 
     reply_body = begin
