@@ -117,7 +117,7 @@ class Form < ActiveRecord::Base
     end
     self.forwardee_users = User.where(id: user_list)
     self.forwardee_user_groups = UserGroup.where(id: group_list)
-    self.save!
+    self.save! unless self.new_record?
   end
 
   def forwardees_as_users
