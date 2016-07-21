@@ -1,5 +1,9 @@
 <div id="printable_form" class="printable">
-  <%= image_tag("logo-dark.png", class: 'logo') %>
+  <% if configatron.has_key?(:logo__dark_path) %>
+    <%= image_tag(configatron.logo_dark_path, class: 'logo') %>
+  <% else %>
+    <%= image_tag("logo-dark.png", class: 'logo') %>
+  <% end %>
   <h1 class="title"><%= title(name_only: true) %></h1>
   <div class="mission"><%= current_mission.try(:name) || "[#{t('form.no_mission')}]" %></div>
   <table>
