@@ -30,6 +30,7 @@ module Report::Gridable
     if self.is_a?(Report::ListReport) || self.is_a?(Report::ResponseTallyReport)
       #Get the total row count from SQL_CALC_FOUND_ROWS on the report prep_query
       total_row_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS()').entries[0].first
+      @data.returned_row_count = @db_result.rows.count
       @data.total_row_count = total_row_count
     end
 
