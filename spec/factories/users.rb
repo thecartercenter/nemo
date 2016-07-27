@@ -24,7 +24,7 @@ FactoryGirl.define do
     reset_password_method "print"
     password { test_password }
     password_confirmation { test_password }
-    phone { Random.phone }
+    phone { Random.phone_num }
     pref_lang "en"
     login_count 1
 
