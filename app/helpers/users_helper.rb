@@ -25,7 +25,10 @@ module UsersHelper
 
   def format_users_field(user, field)
     case field
-    when "name" then link_to(user.name + (user.active? ? "" : ' (#{t(\'common.inactive\')})'), user_path(user))
+    when "name"
+      link_to(user.name + (user.active? ? "" : ' (#{t(\'common.inactive\')})'), user_path(user))
+    when "login"
+      sanitize(user.login) << render_groups(user.user_groups.all)
     when "email" then mail_to(user.email)
     when "latest_mission" then (lm = user.latest_mission) ? lm.name : '[#{t(\'common.none\')}]'
     when "role" then t(user.roles[current_mission], scope: :role)
