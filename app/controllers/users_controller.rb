@@ -13,6 +13,7 @@ class UsersController < ApplicationController
   def index
     # sort and eager load
     @users = @users.with_assoc.by_name
+    @groups = UserGroup.accessible_by(current_ability).order(:name)
 
     # do search if applicable
     if params[:search].present?

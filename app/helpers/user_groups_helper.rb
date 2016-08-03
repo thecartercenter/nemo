@@ -30,9 +30,27 @@ module UserGroupsHelper
 
   def filter_link(group)
     qualifier = I18n.t('search_qualifiers.group')
-    link_text = I18n.t('activerecord.action_links.user_group.members')
+    link_text = "#{group.name}"
     query = %[#{qualifier}:"#{group.name}"]
 
     link_to link_text, users_path(search: query)
+  end
+
+  def render_groups(groups, options = {})
+    if groups.present?
+      content_tag(:ul, class: "tags groups #{options[:class]}") do
+        groups.map do |group|
+          render_group(group)
+        end.reduce(:<<)
+      end
+    else
+      ""
+    end
+  end
+
+  def render_group(group)
+    content_tag(:li, group.name, class: "token-input-token-elmo group") do
+      filter_link(group)
+    end
   end
 end
