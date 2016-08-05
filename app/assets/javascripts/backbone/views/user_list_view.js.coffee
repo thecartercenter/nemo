@@ -1,6 +1,6 @@
 class ELMO.Views.UserListView extends Backbone.View
 
-  el: '.link_set'
+  el: '#index_table'
 
   events:
     'click .list-groups': 'show_groups_modal'
@@ -9,7 +9,9 @@ class ELMO.Views.UserListView extends Backbone.View
 
   initialize: (params) ->
     @params = params
-    @modal_view = new ELMO.Views.UserGroupsModalView(user_table_view: ELMO.index_table_views.user)
+    @user_table_view = ELMO.index_table_views.user
+    @modal_view = new ELMO.Views.UserGroupsModalView(user_table_view: @user_table_view)
+    @alert = this.$el.find("div.alert")
 
   show_groups_modal: (event) ->
     event.preventDefault()
@@ -18,13 +20,25 @@ class ELMO.Views.UserListView extends Backbone.View
 
   add_to_group_modal: (event) ->
     event.preventDefault()
-    ELMO.app.loading(true)
-    @fetch_group_listing(ELMO.app.url_builder.build('user_groups?add=true'), "add")
+    if @selected_users().length > 0
+      ELMO.app.loading(true)
+      @fetch_group_listing(ELMO.app.url_builder.build('user_groups?add=true'), "add")
+    else
+      @alert.html(I18n.t("layout.no_selection")).addClass('alert-danger').show()
+      @alert.delay(2500).fadeOut('slow', @user_table_view.reset_alert.bind(this))
 
   remove_from_group_modal: (event) ->
     event.preventDefault()
-    ELMO.app.loading(true)
-    @fetch_group_listing(ELMO.app.url_builder.build('user_groups?remove=true'), "remove")
+    if @selected_users().length > 0
+      ELMO.app.loading(true)
+      @fetch_group_listing(ELMO.app.url_builder.build('user_groups?remove=true'), "remove")
+    else
+      @alert.html(I18n.t("layout.no_selection")).addClass('alert-danger').show()
+      @alert.delay(2500).fadeOut('slow', @user_table_view.reset_alert.bind(this))
+
+  selected_users: (event) ->
+    user_checkboxes = @user_table_view.get_selected_items()
+    user_ids = ($(cb).data("userId") for cb in user_checkboxes)
 
   fetch_group_listing: (url, mode) ->
     $.ajax

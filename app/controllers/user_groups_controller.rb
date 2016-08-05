@@ -6,7 +6,12 @@ class UserGroupsController < ApplicationController
   def index
     @add_mode = params[:add].present?
     @remove_mode = params[:remove].present?
-    render(partial: "index_table") if request.xhr?
+    if params[:add].present?
+      @mode_string = "add_to_group"
+    elsif params[:remove].present?
+      @mode_string = "remove_from_group"
+    end
+    render(partial: "group_select_modal") if request.xhr?
   end
 
   def edit
