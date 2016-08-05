@@ -294,6 +294,11 @@ describe Sms::Decoder do
     assert_decoding(body: "#{@form.code} 1.15 2.11,20,1a", answers: [15, %w(1 36 10)])
   end
 
+  it "select_multiple question with large option set and spaces around commas should work" do
+    create_form(questions: %w(integer large_select_multiple))
+    assert_decoding(body: "#{@form.code} 1.15 2.11 ,20, 1a", answers: [15, %w(1 36 10)])
+  end
+
   it "select_multiple questions with large option set and no commas should fail" do
     create_form(questions: %w(integer large_select_multiple))
     assert_decoding_fail(
