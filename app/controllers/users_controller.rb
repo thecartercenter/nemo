@@ -208,22 +208,24 @@ class UsersController < ApplicationController
     user_group_ids = permitted_params.delete(:user_group_ids)
     user_groups = []
 
-    user_group_ids.reject(&:blank?).each do |group_id|
-      begin
-        group = UserGroup.accessible_by(current_ability).find(group_id)
-      rescue ActiveRecord::RecordNotFound
-        group = nil
+    if user_group_ids
+      user_group_ids.reject(&:blank?).each do |group_id|
+        begin
+          group = UserGroup.accessible_by(current_ability).find(group_id)
+        rescue ActiveRecord::RecordNotFound
+          group = nil
+        end
+
+        if group
+          user_groups << group
+        else
+          user_groups << UserGroup.new(name: group_id, mission: current_mission)
+        end
       end
-      
-      if group
-        user_groups << group
-      else
-        user_groups << UserGroup.new(name: group_id, mission: current_mission)
-      end
+      @user.user_groups = user_groups
     end
 
     @user.assign_attributes(permitted_params)
-    @user.user_groups = user_groups
   end
 
   def user_params
