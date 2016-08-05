@@ -20,6 +20,7 @@ class User < ActiveRecord::Base
   belongs_to :last_mission, class_name: 'Mission'
 
   accepts_nested_attributes_for(:assignments, allow_destroy: true)
+  accepts_nested_attributes_for(:user_groups)
 
   acts_as_authentic do |c|
     c.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]

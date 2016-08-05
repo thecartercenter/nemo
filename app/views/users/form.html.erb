@@ -20,9 +20,8 @@
     <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments", :required => !admin_mode?) %>
   <% end %>
 
-  <% if @user.user_groups.present? %>
-    <%= f.field(:group_names, read_only: true) %>
-  <% end %>
+  <%= f.field(:user_group_ids, type: :select, multiple: true,
+    options: sel_opts_from_objs(@user.user_groups), read_only_content: render_groups(@user.user_groups, profile_mode: true)) %>
 
   <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
 
@@ -65,5 +64,8 @@
         assignable_roles: @assignable_roles
       )%>
     <% end %>
+  );
+  new ELMO.Views.UserProfileFormView(
+    <%= json(user_group_options_url: possible_groups_user_groups_path) %>
   );
 <% end %>
