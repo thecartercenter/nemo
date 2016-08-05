@@ -207,7 +207,7 @@ class Sms::Decoder
       if @qing.option_set.descendants.count <= 26 && @value =~ /\A[A-Z]+\z/i
         split_options = @value.split("")
       else
-        split_options = @value.split(",")
+        split_options = @value.split(/\s*,\s*/)
       end
 
       if @qing.option_set.sms_formatting == "appendix"
