@@ -96,6 +96,19 @@ Enter the database password for the `elmo` user under the 'production' section. 
 
 Enter sensible values for the settings in the file. Entering a functioning email server is important as ELMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have ELMO running, you can test your email setup by creating a new user for yourself and delivering the login instructions via email or by using the password reset feature.
 
+### Theming ELMO
+
+If you want to change the colors for ELMO's themeable elements, perform the following steps:
+
+    cp app/assets/stylesheets/all/variables/\_default\_theme.scss app/assets/stylesheets/all/variables/\_theme.scss
+    nano app/assets/stylesheets/all/variables/\_theme.scss
+
+Enter new color values for the components in the file.
+
+In order to change the logo you must add the file to the folder `app/images/` (we recommend naming it `logo-override.png`) and modify the setting `configatron.logo_path` in `config/initializers/local_config.rb` to `"logo-override.png"` (or the actual name of the new logo file)
+
+Once that's done, proceed with the final config.
+
 ### Final config
 
     # Set Rails environment.
