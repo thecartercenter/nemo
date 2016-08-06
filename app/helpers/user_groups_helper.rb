@@ -40,7 +40,7 @@ module UserGroupsHelper
     if groups.present?
       content_tag(:ul, class: "tags groups #{options[:class]}") do
         groups.map do |group|
-          render_group(group)
+          render_group(group, profile_mode: options[:profile_mode])
         end.reduce(:<<)
       end
     else
@@ -48,9 +48,9 @@ module UserGroupsHelper
     end
   end
 
-  def render_group(group)
+  def render_group(group, options = {})
     content_tag(:li, group.name, class: "token-input-token-elmo group") do
-      filter_link(group)
+      options[:profile_mode] ? group.name : filter_link(group)
     end
   end
 end

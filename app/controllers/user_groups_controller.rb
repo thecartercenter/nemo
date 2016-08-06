@@ -63,6 +63,11 @@ class UserGroupsController < ApplicationController
     render nothing: true
   end
 
+  def possible_groups
+    @user_groups = @user_groups.name_matching(params[:q])
+    render json: @user_groups
+  end
+
   private
 
   def load_user_groups

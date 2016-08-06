@@ -396,7 +396,7 @@ en:
         role: "Role"
         api_key: "API Key"
         sms_auth_code: "SMS Auth Code"
-        user_groups: "Groups"
+        user_group_ids: "Groups"
       user_batch:
         file: "File"
 
@@ -466,7 +466,7 @@ en:
         edit: "Edit User"
         destroy: "Delete User"
       user_group:
-        new: "Create New User Group"
+        new: "New Group"
         index: "User Groups"
         show: "View User Group"
         edit: "Edit User Group"
@@ -1912,6 +1912,7 @@ en:
     create_prompt: "Please enter the name of your group."
     add_users_success: "Successfully added %{count} users to group %{group}"
     remove_users_success: "Successfully removeed %{count} users from group %{group}"
+    new_group: "New Group"
 
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"
