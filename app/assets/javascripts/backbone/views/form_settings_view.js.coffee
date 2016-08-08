@@ -52,6 +52,6 @@ class ELMO.Views.FormSettingsView extends Backbone.View
       ajax:
         url: @forwardee_options_url
         dataType: 'json'
+        data: (params) -> { term: params.term, page: params.page || 1 }
         delay: 250
         cache: true
-        processResults: (data) -> {results: data}

@@ -3,11 +3,11 @@ class BroadcastsController < ApplicationController
   load_and_authorize_resource
 
   # this method is special
-  skip_load_and_authorize_resource :only => :new_with_users
+  skip_load_and_authorize_resource only: :new_with_users
 
   def index
     # apply pagination
-    @broadcasts = @broadcasts.paginate(:page => params[:page], :per_page => 50)
+    @broadcasts = @broadcasts.paginate(page: params[:page], per_page: 50)
   end
 
   def new
@@ -33,11 +33,11 @@ class BroadcastsController < ApplicationController
         users = User.accessible_by(current_ability).to_a
       end
     else
-      users = User.accessible_by(current_ability).where(:id => params[:selected].keys).to_a
+      users = User.accessible_by(current_ability).where(id: params[:selected].keys).to_a
     end
     raise "no users given" if users.empty? # This should be impossible
 
-    @broadcast = Broadcast.accessible_by(current_ability).new(:recipients => users)
+    @broadcast = Broadcast.accessible_by(current_ability).new(recipients: users)
 
     authorize!(:create, @broadcast)
 
@@ -93,15 +93,22 @@ class BroadcastsController < ApplicationController
       @groups = @groups.name_matching(params[:q])
     end
 
-    @users = @users.paginate(page: 1, per_page: 5)
-    @groups = @groups.paginate(page: 1, per_page: 5)
+    @users = @users.paginate(page: params[:page], per_page: 5)
+    @groups = @groups.paginate(page: params[:page], per_page: 5)
+
+    users_fetched = @users.total_pages > params[:page].to_i
+    groups_fetched = @groups.total_pages > params[:page].to_i
 
     @recipients = []
     [@groups, @users].each do |set|
       set.each { |u| @recipients << BroadcastRecipient.new(object: u) }
     end
 
-    render json: @recipients
+
+    render json: {
+      results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: BroadcastRecipientSerializer),
+      pagination: { more: (users_fetched || groups_fetched) }
+    }
   end
 
   private
@@ -111,6 +118,6 @@ class BroadcastsController < ApplicationController
     end
 
     def broadcast_params
-      params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id, :recipient_ids => [])
+      params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id, recipient_ids: [])
     end
 end
