@@ -113,7 +113,7 @@ class XMLSubmission
       answer.option_id = option_id_for_submission(str) unless str == "none"
     when "select_multiple"
       str.split(" ").each { |oid| answer.choices.build(option_id: option_id_for_submission(oid)) }
-    when question_type.temporal?
+    when "date", "datetime", "time"
       # Strip timezone info for datetime and time.
       str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, "") unless answer.qtype.name == "date"
 
