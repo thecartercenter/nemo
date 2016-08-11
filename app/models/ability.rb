@@ -134,7 +134,7 @@ class Ability
         end
 
         if role_in_mission?(:reviewer)
-          #can :review
+          can :review, Response
         end
 
         # staffer abilities
