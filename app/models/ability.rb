@@ -134,7 +134,7 @@ class Ability
         end
 
         if role_in_mission?(:reviewer)
-          can :review, Response
+          can %i[index read update export review], Response
         end
 
         # staffer abilities
