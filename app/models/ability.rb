@@ -133,6 +133,10 @@ class Ability
 
         end
 
+        if role_in_mission?(:reviewer)
+          #can :review
+        end
+
         # staffer abilities
         if role_in_mission?(:staffer)
           # can send broadcasts for the current mission
