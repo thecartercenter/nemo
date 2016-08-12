@@ -54,9 +54,10 @@
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
 
   <div class="submit-buttons">
+    <%= hidden_field_tag(:button, nil) %>
     <%= f.submit(:class => "btn btn-primary") %>
     <% if form_mode == :edit && can?(:review, @response) %>
-      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed') %>
+      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed')%>
     <% end %>
     <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
       <%= image_tag("load-ind-small.gif") %>
@@ -65,8 +66,10 @@
   </div>
 
 <% end %>
-
 <%= javascript_doc_ready do %>
+  $("input[type='submit']").click(function(el){
+    $("#button").val(el.target.name);
+  });
   ELMO.Response.init(<%=json({
     url: @response.new_record? ? possible_submitters_new_response_path : possible_submitters_response_path(@response)
   })%>);
