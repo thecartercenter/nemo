@@ -133,6 +133,13 @@ class Ability
 
         end
 
+        if role_in_mission?(:reviewer)
+          can %i[index read export review], Response
+          if !mission.locked?
+            can %i[update], Response, mission_id: mission.id
+          end
+        end
+
         # staffer abilities
         if role_in_mission?(:staffer)
           # can send broadcasts for the current mission

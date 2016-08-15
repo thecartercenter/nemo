@@ -238,25 +238,32 @@ class ResponsesController < ApplicationController
 
   def response_params
     if params[:response]
-      reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
-      params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |whitelisted|
-        whitelisted[:answers_attributes] = {}
+      if params[:button].to_s.inquiry.commit_and_mark_reviewed?
+        params[:response][:reviewed] = "1"
+      end
+      if can?(:review, @response)
+        reviewer_only = [:reviewed, :reviewer_notes] if @response.present?
+        params.require(:response).permit(*reviewer_only)
+      else
+        params.require(:response).permit(:form_id, :user_id, :incomplete).tap do |whitelisted|
+          whitelisted[:answers_attributes] = {}
 
-        # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
-        # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
-        # on the answers.
-        permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
-          time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
-          datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
-          date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy)
-        params[:response][:answers_attributes].each do |idx, attribs|
-          whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
+          # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
+          # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
+          # on the answers.
+          permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
+            time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
+            datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
+            date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy)
+          params[:response][:answers_attributes].each do |idx, attribs|
+            whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
 
-          # Handle choices, which are nested under answers.
-          if attribs[:choices_attributes]
-            whitelisted[:answers_attributes][idx][:choices_attributes] = {}
-            attribs[:choices_attributes].each do |idx2, attribs2|
-              whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
+            # Handle choices, which are nested under answers.
+            if attribs[:choices_attributes]
+              whitelisted[:answers_attributes][idx][:choices_attributes] = {}
+              attribs[:choices_attributes].each do |idx2, attribs2|
+                whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
+              end
             end
           end
         end
