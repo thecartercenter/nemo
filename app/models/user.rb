@@ -72,7 +72,9 @@ class User < ActiveRecord::Base
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
-  scope(:with_assoc, -> { includes(:missions, {assignments: :mission}, :user_groups) })
+  scope(:with_assoc, -> {
+    includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } ).with_groups
+  })
   scope(:with_groups, -> { joins(:user_groups) })
   scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
 
