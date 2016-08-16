@@ -172,7 +172,7 @@ class Form < ActiveRecord::Base
   end
 
   def has_questions?
-    root_questionings.any?
+    questionings.any?
   end
 
   def full_name
