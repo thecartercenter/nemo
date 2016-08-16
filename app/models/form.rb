@@ -369,22 +369,23 @@ class Form < ActiveRecord::Base
   end
 
   private
-    def init_downloads
-      self.downloads = 0
-      return true
-    end
 
-    def name_unique_per_mission
-      errors.add(:name, :taken) unless unique_in_mission?(:name)
-    end
+  def init_downloads
+    self.downloads = 0
+    true
+  end
 
-    def normalize_fields
-      self.name = name.strip
-      return true
-    end
+  def name_unique_per_mission
+    errors.add(:name, :taken) unless unique_in_mission?(:name)
+  end
 
-    def update_pub_changed_at
-      self.pub_changed_at = Time.now if published_changed?
-      return true
-    end
+  def normalize_fields
+    self.name = name.strip
+    true
+  end
+
+  def update_pub_changed_at
+    self.pub_changed_at = Time.now if published_changed?
+    true
+  end
 end
