@@ -57,7 +57,7 @@ class UsersController < ApplicationController
 
     # if create failed, render the form again
     else
-      flash.now[:error] = I18n.t('activerecord.errors.models.user.general')
+      flash.now[:error] = I18n.t("activerecord.errors.models.user.general")
       prepare_and_render_form
     end
   end
@@ -83,7 +83,7 @@ class UsersController < ApplicationController
 
     # if save failed, render the form again
     else
-      flash.now[:error] = I18n.t('activerecord.errors.models.user.general')
+      flash.now[:error] = I18n.t("activerecord.errors.models.user.general")
       prepare_and_render_form
     end
   end
@@ -142,7 +142,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.vcf do
         @users = load_selected_objects(User)
-        render(text: @users.collect{|u| u.to_vcf}.join("\n"))
+        render(text: @users.collect { |u| u.to_vcf }.join("\n"))
       end
     end
   end
@@ -177,25 +177,40 @@ class UsersController < ApplicationController
 
       # get assignable missons and roles for this user
       @assignments = @user.assignments.as_json(include: :mission, methods: :new_record?)
-      @assignment_permissions = @user.assignments.map{|a| can?(:update, a)}
-      @assignable_missions = Mission.accessible_by(current_ability, :assign_to).sorted_by_name.as_json(only: [:id, :name])
+      @assignment_permissions = @user.assignments.map { |a| can?(:update, a) }
+      @assignable_missions = Mission.accessible_by(current_ability, :assign_to).sorted_by_name.as_json(
+        only: [:id, :name])
       @assignable_roles = Ability.assignable_roles(current_user)
 
     else
 
-      @current_assignment = @user.assignments_by_mission[current_mission] || @user.assignments.build(mission: current_mission)
+      @current_assignment = @user.assignments_by_mission[current_mission] ||
+        @user.assignments.build(mission: current_mission)
 
     end
 
     render(:form)
   end
 
-  # builds a user with an appropriate mission assignment if the current_user doesn't have permission to edit a blank user
+  # builds a user with an appropriate mission assignment if the current_user
+  # doesn't have permission to edit a blank user
   def build_user_with_proper_mission
-    @user = User.new(user_params)
-    if cannot?(:create, @user) && @user.assignments.empty?
-      @user.assignments.build(mission: current_mission)
+    permitted_params = user_params
+
+    # Remove user group IDs from permitted params
+    if permitted_params && permitted_params[:user_group_ids]
+      user_group_ids = permitted_params.delete(:user_group_ids)
     end
+
+    # Build user
+    @user = User.new(permitted_params)
+
+
+    @user.assignments.build(mission: current_mission) if cannot?(:create, @user) && @user.assignments.empty?
+
+
+    # Add processed user groups back
+    @user.user_groups = process_user_groups(user_group_ids)
   end
 
   def prepare_user_for_update
@@ -206,6 +221,12 @@ class UsersController < ApplicationController
     authorize!(:activate, @user) if permitted_params[:active]
 
     user_group_ids = permitted_params.delete(:user_group_ids)
+    @user.user_groups = process_user_groups(user_group_ids)
+
+    @user.assign_attributes(permitted_params)
+  end
+
+  def process_user_groups(user_group_ids)
     user_groups = []
 
     if user_group_ids
@@ -222,10 +243,8 @@ class UsersController < ApplicationController
           user_groups << UserGroup.new(name: group_id, mission: current_mission)
         end
       end
-      @user.user_groups = user_groups
     end
-
-    @user.assign_attributes(permitted_params)
+    user_groups
   end
 
   def user_params
