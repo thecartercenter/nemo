@@ -91,14 +91,7 @@ class Sms::Handler
         mission: sms.mission)
 
       if broadcast.save
-        broadcast.deliver
-        forward = Sms::Forward.new(
-          body: sms.body,
-          mission: sms.mission,
-          broadcast: broadcast,
-          adapter_name: sms.adapter_name,
-          reply_to: sms)
-        forward.save
+        Sms::Forwarder.deliver(broadcast, broadcast.which_phone, sms.body)
       end
     end
 
@@ -106,15 +99,16 @@ class Sms::Handler
   end
 
   private
-    # translates a message for the sms reply using the appropriate locale
-    def t_sms_msg(key, options = {})
-      # throw in the form_code if it's not there already and we have the form
-      options[:form_code] ||= options[:form].current_version.code if options[:form]
 
-      # get the reply language (if we have the user, use their pref_lang; if not, use default)
-      lang = options[:user] && options[:user].pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale
+  # translates a message for the sms reply using the appropriate locale
+  def t_sms_msg(key, options = {})
+    # throw in the form_code if it's not there already and we have the form
+    options[:form_code] ||= options[:form].current_version.code if options[:form]
 
-      # do the translation, raising error on failure
-      I18n.t(key, options.merge(locale: lang, raise: true))
-    end
+    # get the reply language (if we have the user, use their pref_lang; if not, use default)
+    lang = options[:user] && options[:user].pref_lang ? options[:user].pref_lang.to_sym : I18n.default_locale
+
+    # do the translation, raising error on failure
+    I18n.t(key, options.merge(locale: lang, raise: true))
+  end
 end

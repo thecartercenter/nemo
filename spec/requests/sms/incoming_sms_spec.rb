@@ -125,4 +125,22 @@ describe 'incoming sms' do
       incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
     expect(@response.status).to eq(401)
   end
+
+  context "with SMS relay enabled" do
+    let(:forwardees) { create_list(:user, 5) }
+    before { setup_form(questions: %w(integer text), forward_recipients: forwardees) }
+
+    it "sends forwards" do
+      incoming_body = "#{form_code} 1.15 2.something"
+      assert_sms_response(incoming: incoming_body , outgoing: "Your response to form '#{form_code}' was received. Thank you!")
+
+      # get forward
+      sms_forward = Sms::Forward.last
+      expect(sms_forward.body).to eq incoming_body
+
+      # get forward recipients
+      recipients = sms_forward.recipient_hashes.map{|hash| hash[:user] }
+      expect(recipients).to eq forwardees
+    end
+  end
 end

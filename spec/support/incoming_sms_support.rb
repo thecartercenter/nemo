@@ -3,6 +3,10 @@ module IncomingSmsSupport
   def setup_form(options)
     @form = create(:form, smsable: true, question_types: options[:questions])
     @form.questionings.each{ |q| q.update_attribute(:required, true) } if options[:required]
+    if options[:forward_recipients]
+      @form.sms_relay = true
+      @form.forwardees = options[:forward_recipients]
+    end
     @form.publish!
     @form.reload
   end
