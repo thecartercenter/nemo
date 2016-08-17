@@ -91,7 +91,7 @@ class Sms::Handler
         mission: sms.mission)
 
       if broadcast.save
-        Sms::Forwarder.deliver(broadcast, broadcast.which_phone, sms.body)
+        Sms::Forwarder.deliver(broadcast, elmo_response, sms.body)
       end
     end
 

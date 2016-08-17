@@ -7,6 +7,7 @@ module IncomingSmsSupport
       @form.sms_relay = true
       @form.forwardees = options[:forward_recipients]
     end
+    @form.authenticate_sms = true if options[:authenticate_sms]
     @form.publish!
     @form.reload
   end
@@ -14,6 +15,10 @@ module IncomingSmsSupport
   # gets the version code for the current form
   def form_code
     @form.current_version.code
+  end
+
+  def auth_code
+    @user.sms_auth_code
   end
 
   # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
