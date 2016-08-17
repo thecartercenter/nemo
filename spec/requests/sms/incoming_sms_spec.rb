@@ -132,7 +132,7 @@ describe 'incoming sms' do
 
     it "sends forwards" do
       incoming_body = "#{form_code} 1.15 2.something"
-      assert_sms_response(incoming: incoming_body , outgoing: "Your response to form '#{form_code}' was received. Thank you!")
+      assert_sms_response(incoming: incoming_body , outgoing: /#{form_code}.+thank you/i)
 
       # get forward
       sms_forward = Sms::Forward.last
@@ -141,6 +141,17 @@ describe 'incoming sms' do
       # get forward recipients
       recipients = sms_forward.recipient_hashes.map{|hash| hash[:user] }
       expect(recipients).to eq forwardees
+    end
+
+    context "with sms authentication enabled" do
+      before { setup_form(questions: %w(integer text), forward_recipients: forwardees, authenticate_sms: true) }
+
+      it "strips auth code from forward" do
+        incoming_body = "#{auth_code} #{form_code} 1.29 2.something"
+        assert_sms_response(incoming: incoming_body, outgoing: /#{form_code}.+thank you/i)
+        sms_forward = Sms::Forward.last
+        expect(sms_forward.body).to eq "#{form_code} 1.29 2.something"
+      end
     end
   end
 end
