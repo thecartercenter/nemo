@@ -932,7 +932,6 @@ fr:
         sms_only: "Seulement SMS (n'envoyer pas d'emails)"
         email_only: "Seulement E-mail (n'envoyez pas des SMS)"
         both: "SMS et E-mail"
-    no_possible_recipients: "Aucun des utilisateurs sélectionnés n'a une adresse  email ou numéro de téléphone. Réessayer encore."
     send_broadcast: "Diffuser une émission "
     send_success: "L'émission envoyé avec succès."
     send_error: "Erreur en envoyant l'émission (voir dessous)."

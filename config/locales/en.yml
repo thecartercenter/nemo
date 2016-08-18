@@ -1003,7 +1003,6 @@ en:
         sms_only: "SMS only (don't send any emails)"
         email_only: "Email only (don't send any SMSes)"
         both: "Both SMS and email"
-    no_possible_recipients: "None of the users you selected has an email address or phone number. Please try again."
     recipient_selection_options:
       all_users: "All users in mission"
       all_observers: "All observers in mission"

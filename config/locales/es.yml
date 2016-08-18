@@ -834,7 +834,6 @@ es:
         sms_only: "SMS sólo (no enviar ningún mensaje de correo electrónico)"
         email_only: "Sólo Correo Electrónico (no enviar ningún SMSes)"
         both: "Ambos SMS y Correo Electrónico"
-    no_possible_recipients: "Ninguno de los usuarios que ha seleccionado tiene una dirección de correo electrónico o número de teléfono. Por favor, vuelva a intentarlo."
     send_broadcast: "Enviar Emisión"
     send_success: "Emisión enviada con éxito."
     send_error: "Error al enviar la emisión (vea a continuación)."

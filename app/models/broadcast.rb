@@ -73,10 +73,6 @@ class Broadcast < ActiveRecord::Base
     self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
   end
 
-  def no_possible_recipients?
-    recipients.all? { |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
-  end
-
   def recipient_numbers
     @recipient_numbers ||= [].tap do |numbers|
       recipients.each do |r|

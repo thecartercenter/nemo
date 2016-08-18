@@ -44,15 +44,8 @@ class BroadcastsController < ApplicationController
     @broadcast = Broadcast.accessible_by(current_ability).new(recipients: users)
 
     authorize!(:create, @broadcast)
-
-    if @broadcast.no_possible_recipients?
-      flash[:error] = t('broadcast.no_possible_recipients')
-      redirect_to(users_path)
-    else
-
-      prep_form_vars
-      render(:form)
-    end
+    prep_form_vars
+    render(:form)
   end
 
   def show
