@@ -1,12 +1,14 @@
 class Broadcast < ActiveRecord::Base
   include MissionBased
 
+  # This has_many through association stores specific users that were selected as recipients.
+  # It will be empty if recipient_selection is all_users or all_observers.
   has_many :broadcast_addressings, inverse_of: :broadcast, dependent: :destroy
   has_many :recipients, through: :broadcast_addressings, source: :user
 
-  validates :recipient_selection, presence: true
-  validates :recipients, presence: true
   validates :medium, presence: true
+  validates :recipient_selection, presence: true
+  validates :recipients, presence: true, if: :specific_recipients?
   validates :subject, presence: true, unless: :sms_possible?
   validates :which_phone, presence: true, if: :sms_possible?
   validates :body, presence: true
@@ -46,6 +48,10 @@ class Broadcast < ActiveRecord::Base
     recipients.map(&:name).join(", ")
   end
 
+  def specific_recipients?
+    recipient_selection == "specific_users"
+  end
+
   def deliver
     # send emails
     begin
@@ -75,7 +81,7 @@ class Broadcast < ActiveRecord::Base
 
   def recipient_numbers
     @recipient_numbers ||= [].tap do |numbers|
-      recipients.each do |r|
+      actual_recipients.each do |r|
         next unless r.can_get_sms?
         numbers << r.phone if main_phone?
         numbers << r.phone2 if alternate_phone?
@@ -86,7 +92,7 @@ class Broadcast < ActiveRecord::Base
   # Returns total number of users getting an sms.
   def sms_recipient_count
     return 0 unless sms_possible?
-    @sms_recipient_count ||= recipients.count(&:can_get_sms?)
+    @sms_recipient_count ||= actual_recipients.count(&:can_get_sms?)
   end
 
   # Returns a set of hashes of form {user: x, phone: y} for recipients that got smses.
@@ -95,7 +101,7 @@ class Broadcast < ActiveRecord::Base
   def sms_recipient_hashes(options = {})
     return [] unless sms_possible?
     @sms_recipient_hashes ||= [].tap do |hashes|
-      recipients.each do |r|
+      actual_recipients.each do |r|
         next unless r.can_get_sms?
         hashes << { user: r, phone: main_phone? ? r.phone : r.phone2 }
         break if options[:max] && hashes.size >= options[:max]
@@ -104,10 +110,25 @@ class Broadcast < ActiveRecord::Base
   end
 
   def recipient_emails
-    @recipient_emails ||= recipients.map { |r| r.email if r.can_get_email? }.compact
+    @recipient_emails ||= actual_recipients.map { |r| r.email if r.can_get_email? }.compact
   end
 
   private
+
+  # Returns the recipients of the message. If recipient_selection is set to all_users or all_observers,
+  # this will be different than `recipients`.
+  def actual_recipients
+    case recipient_selection
+    when "specific_users"
+      recipients
+    when "all_users"
+      mission.users
+    when "all_observers"
+      mission.users.where("assignments.role" => "observer")
+    else
+      raise "invalid recipient_selection"
+    end
+  end
 
   def check_eligible_recipients
     unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
