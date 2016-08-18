@@ -606,7 +606,7 @@ en:
         assignment:
           blank: "is required."
         broadcast:
-          no_recipients: "None of these recipients would receive this broadcast. Please adjust the medium and try again."
+          no_recipients: "Nobody would receive this broadcast."
         condition:
           all_required: "All condition fields are required."
         form:

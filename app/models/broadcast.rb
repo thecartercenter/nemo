@@ -8,7 +8,7 @@ class Broadcast < ActiveRecord::Base
 
   validates :medium, presence: true
   validates :recipient_selection, presence: true
-  validates :recipients, presence: true, if: :specific_recipients?
+  validates :recipient_ids, presence: true, if: :specific_recipients?
   validates :subject, presence: true, unless: :sms_possible?
   validates :which_phone, presence: true, if: :sms_possible?
   validates :body, presence: true
@@ -16,9 +16,6 @@ class Broadcast < ActiveRecord::Base
   validate :check_eligible_recipients
 
   default_scope { includes(:recipients).order("broadcasts.created_at DESC") }
-
-  # this method isn't used except for attaching errors
-  attr_accessor :to
 
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
@@ -131,8 +128,12 @@ class Broadcast < ActiveRecord::Base
   end
 
   def check_eligible_recipients
+    # No need to proceed if no recipients at all.
+    return if specific_recipients? && recipients.empty?
+
     unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
-      errors.add(:to, :no_recipients)
+      attrib_to_add_error = specific_recipients? ? :recipient_ids : :recipient_selection
+      errors.add(attrib_to_add_error, :no_recipients)
     end
   end
 
