@@ -263,7 +263,7 @@ en:
         to: "To"
         which_phone: "Which Phone(s)"
         recipient_selection: "Recipients"
-        recipient_ids: "To"
+        recipient_ids: "Users"
       form:
         allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"
