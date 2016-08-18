@@ -1,16 +1,16 @@
 class Broadcast < ActiveRecord::Base
   include MissionBased
 
-  has_many(:broadcast_addressings, :inverse_of => :broadcast, :dependent => :destroy)
-  has_many(:recipients, :through => :broadcast_addressings, :source => :user)
+  has_many :broadcast_addressings, inverse_of: :broadcast, dependent: :destroy
+  has_many :recipients, through: :broadcast_addressings, source: :user
 
-  validates(:recipients, :presence => true)
-  validates(:medium, :presence => true)
-  validates(:subject, :presence => true, :if => Proc.new{|b| !b.sms_possible?})
-  validates(:which_phone, :presence => true, :if => Proc.new{|b| b.sms_possible?})
-  validates(:body, :presence => true)
-  validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
-  validate(:check_eligible_recipients)
+  validates :recipients, presence: true
+  validates :medium, presence: true
+  validates :subject, presence: true, unless: :sms_possible?
+  validates :which_phone, presence: true, if: :sms_possible?
+  validates :body, presence: true
+  validates :body, length: {maximum: 140}, if: :sms_possible?
+  validate :check_eligible_recipients
 
   default_scope { includes(:recipients).order("broadcasts.created_at DESC") }
 
@@ -34,12 +34,12 @@ class Broadcast < ActiveRecord::Base
   end
 
   def recipient_ids
-    recipients.collect{|r| r.id}.join(",")
+    recipients.collect { |r| r.id }.join(",")
   end
 
   def recipient_ids=(ids)
     ids = Array.wrap(ids).flat_map { |e| e.split(",") }
-    self.recipients = ids.map{ |id| User.find_by_id(id) }.compact
+    self.recipients = ids.map { |id| User.find_by_id(id) }.compact
   end
 
   def sms_possible?
@@ -67,7 +67,7 @@ class Broadcast < ActiveRecord::Base
       end
     rescue Sms::Error
       # one error per line
-      $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
+      $!.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
     end
 
     save if send_errors
@@ -78,7 +78,7 @@ class Broadcast < ActiveRecord::Base
   end
 
   def no_possible_recipients?
-    recipients.all?{ |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
+    recipients.all? { |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
   end
 
   def recipient_numbers
@@ -117,18 +117,17 @@ class Broadcast < ActiveRecord::Base
 
   private
 
-    def check_eligible_recipients
-      unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
-        errors.add(:to, :no_recipients)
-      end
+  def check_eligible_recipients
+    unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
+      errors.add(:to, :no_recipients)
     end
+  end
 
-    def main_phone?
-      %w(main_only both).include?(which_phone)
-    end
+  def main_phone?
+    %w(main_only both).include?(which_phone)
+  end
 
-    def alternate_phone?
-      %w(alternate_only both).include?(which_phone)
-    end
-
+  def alternate_phone?
+    %w(alternate_only both).include?(which_phone)
+  end
 end
