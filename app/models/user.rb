@@ -72,7 +72,9 @@ class User < ActiveRecord::Base
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
-  scope(:with_assoc, -> { includes(:missions, {assignments: :mission}, :user_groups) })
+  scope(:with_assoc, -> {
+    includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
+  })
   scope(:with_groups, -> { joins(:user_groups) })
   scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
 
@@ -114,6 +116,9 @@ class User < ActiveRecord::Base
   def self.do_search(relation, query)
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
+
+    # add associations
+    relation = relation.joins(search.associations)
 
     # get the sql
     sql = search.sql

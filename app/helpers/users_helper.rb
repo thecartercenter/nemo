@@ -30,7 +30,7 @@ module UsersHelper
     when "login"
       sanitize(user.login) << render_groups(user.user_groups.all)
     when "email" then mail_to(user.email)
-    when "latest_mission" then (lm = user.latest_mission) ? lm.name : '[#{t(\'common.none\')}]'
+    when "latest_mission" then (lm = user.latest_mission) ? lm.name : "[#{t('common.none')}]"
     when "role" then t(user.roles[current_mission], scope: :role)
     when "admin" then user.admin? ? t("common._yes") : ""
     when "actions" then table_action_links(user)
