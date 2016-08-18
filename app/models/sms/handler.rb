@@ -82,7 +82,7 @@ class Sms::Handler
 
     form = elmo_response.try(:form)
 
-    if form && form.sms_relay
+    if form && form.sms_relay?
       broadcast = ::Broadcast.new(
         recipients: form.forwardees_as_users,
         medium: "sms_only",
