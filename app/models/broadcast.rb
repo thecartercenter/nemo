@@ -42,6 +42,10 @@ class Broadcast < ActiveRecord::Base
     medium != "sms_only"
   end
 
+  def recipient_names
+    recipients.map(&:name).join(", ")
+  end
+
   def deliver
     # send emails
     begin

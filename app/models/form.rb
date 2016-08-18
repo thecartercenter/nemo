@@ -99,6 +99,10 @@ class Form < ActiveRecord::Base
     forwardees.map { |fwd| BroadcastRecipient.new(object: fwd) }
   end
 
+  def sms_forwardee_names
+    sms_forwardees.map(&:name).join(", ")
+  end
+
   def sms_forwardee_ids
     sms_forwardees.map(&:id)
   end
