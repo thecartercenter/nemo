@@ -4,6 +4,7 @@ class Broadcast < ActiveRecord::Base
   has_many :broadcast_addressings, inverse_of: :broadcast, dependent: :destroy
   has_many :recipients, through: :broadcast_addressings, source: :user
 
+  validates :recipient_selection, presence: true
   validates :recipients, presence: true
   validates :medium, presence: true
   validates :subject, presence: true, unless: :sms_possible?
@@ -15,7 +16,7 @@ class Broadcast < ActiveRecord::Base
   default_scope { includes(:recipients).order("broadcasts.created_at DESC") }
 
   # this method isn't used except for attaching errors
-  attr_accessor :to, :recipient_selection
+  attr_accessor :to
 
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
@@ -31,15 +32,6 @@ class Broadcast < ActiveRecord::Base
   def self.terminate_sub_relationships(broadcast_ids)
     BroadcastAddressing.where(broadcast_id: broadcast_ids).delete_all
     Sms::Message.where(broadcast_id: broadcast_ids).delete_all
-  end
-
-  def recipient_ids
-    recipients.collect { |r| r.id }.join(",")
-  end
-
-  def recipient_ids=(ids)
-    ids = Array.wrap(ids).flat_map { |e| e.split(",") }
-    self.recipients = ids.map { |id| User.find_by_id(id) }.compact
   end
 
   def sms_possible?

@@ -12,10 +12,9 @@ class BroadcastsController < ApplicationController
 
   def new
     @broadcast = Broadcast.accessible_by(current_ability).new
-    @users = User.accessible_by(current_ability).all
     authorize!(:create, @broadcast)
 
-    set_medium_options
+    prep_form_vars
     render(:form)
   end
 
@@ -56,7 +55,7 @@ class BroadcastsController < ApplicationController
         logger.error("SMS balance request error: #{$!}")
       end
 
-      set_medium_options
+      prep_form_vars
       render(:form)
     end
   end
@@ -77,7 +76,7 @@ class BroadcastsController < ApplicationController
       end
       redirect_to(broadcast_url(@broadcast))
     else
-      set_medium_options
+      prep_form_vars
       render(:form)
     end
   end
@@ -115,11 +114,14 @@ class BroadcastsController < ApplicationController
 
   private
 
-    def set_medium_options
-      @medium_options = configatron.to_h[:outgoing_sms_adapter] ? Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
-    end
+  def prep_form_vars
+    @medium_options = configatron.to_h[:outgoing_sms_adapter] ?
+      Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
+    @users = User.accessible_by(current_ability).all
+  end
 
-    def broadcast_params
-      params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone, :mission_id, recipient_ids: [])
-    end
+  def broadcast_params
+    params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone,
+      :mission_id, :recipient_selection, recipient_ids: [])
+  end
 end
