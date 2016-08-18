@@ -32,7 +32,5 @@
 <% end %>
 
 <%= javascript_doc_ready do %>
-  $("#broadcast_medium").change(broadcast_medium_changed);
-  $("#broadcast_medium").trigger("change");
-  $("#broadcast_recipient_ids").select2();
+  new ELMO.Views.BroadcastsView();
 <% end %>
