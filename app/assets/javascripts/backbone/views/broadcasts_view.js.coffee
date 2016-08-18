@@ -1,4 +1,4 @@
-class ELMO.Views.BroadcastsView extends Backbone.View
+class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
   el: '.broadcast_form'
 
   initialize: ->
@@ -12,11 +12,11 @@ class ELMO.Views.BroadcastsView extends Backbone.View
     'keyup #broadcast_body': 'update_char_limit'
 
   recipient_selection_changed: (e) ->
-    specific = @$('#broadcast_recipient_selection').val() == 'specific_users'
+    specific = @form_value('broadcast', 'recipient_selection') == 'specific_users'
     @$('.form_field.broadcast_recipient_ids')[if specific then 'show' else 'hide']()
 
   medium_changed: (e) ->
-    selected = @$('#broadcast_medium').val()
+    selected = @form_value('broadcast', 'medium')
     sms_possible = selected != 'email_only' && selected != ''
 
     # Hide/show char limit and subject
