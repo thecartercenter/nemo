@@ -10,8 +10,8 @@
 
   <%# Leaving this as non-remote fetching for now, as we will end up reusing the stuff from Form when
      we make it possible to send broadcasts to groups later. %>
-  <%= f.field(:recipient_ids, type: :select, multiple: true, options: sel_opts_from_objs(@users),
-    read_only_content: @broadcast.recipient_names) %>
+  <%= f.field(:recipient_ids, type: :select, multiple: true, prompt: false,
+    options: sel_opts_from_objs(@users), read_only_content: @broadcast.recipient_names) %>
 
   <%# only show balance if we were able to retrieve one and if we're not in read_only mode %>
   <%= f.field(:balance, partial: "balance") if @balance.present? && @broadcast.new_record? %>
