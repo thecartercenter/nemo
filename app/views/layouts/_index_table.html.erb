@@ -87,7 +87,7 @@
 
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
-      ELMO.index_table_views.<%= objects.first.class.name.underscore %> = new ELMO.Views.IndexTableView(<%=json(
+      ELMO.index_table_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.IndexTableView(<%=json(
         class_name: objects.first.class.name.underscore,
         modified_obj_id: flash[:modified_obj_id],
         no_whole_row_link: options[:no_whole_row_link],
