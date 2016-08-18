@@ -19,10 +19,13 @@ class BroadcastsController < ApplicationController
   end
 
   # Displays a new broadcast form with the given recipients.
-  # @param [Hash] selected A Hash user ids as keys, referring to recipients of the broadcast.
+  # If params[:selected] is given, it is a hash with user ids as keys, referring to recipients of the broadcast.
+  # If params[:select_all] is given, it means the broadcast should be sent to all users in the system
+  # If params[:search] is also given, that search should be applied to obtain recipients.
   def new_with_users
     if params[:select_all].present?
       if params[:search].present?
+        # TODO move this into UserSearchable concern
         users = User.accessible_by(current_ability).with_assoc.by_name
         begin
           users = User.do_search(users, params[:search]).to_a
