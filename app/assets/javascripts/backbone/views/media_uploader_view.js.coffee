@@ -1,4 +1,4 @@
-class ELMO.Views.MediaUploaderView extends Backbone.View
+class ELMO.Views.MediaUploaderView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @zone_id = options.zone_id
     @post_path = options.post_path

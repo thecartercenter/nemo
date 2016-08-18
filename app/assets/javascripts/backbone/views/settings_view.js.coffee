@@ -1,4 +1,4 @@
-class ELMO.Views.SettingsView extends Backbone.View
+class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
 
   el: 'form.setting_form'
 

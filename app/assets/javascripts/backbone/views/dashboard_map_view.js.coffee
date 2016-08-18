@@ -1,7 +1,7 @@
 # ELMO.Views.DashboardMapView
 #
 # View model for the dashboard map
-class ELMO.Views.DashboardMapView extends Backbone.View
+class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
 
   # constructor
   initialize: (params) ->

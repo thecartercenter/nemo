@@ -1,4 +1,4 @@
-class ELMO.Views.RegenerableFieldView extends Backbone.View
+class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
 
   events:
     'click .regenerate': 'regenerate_field'

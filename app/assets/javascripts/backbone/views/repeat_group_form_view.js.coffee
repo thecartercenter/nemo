@@ -1,4 +1,4 @@
-class ELMO.Views.RepeatGroupFormView extends Backbone.View
+class ELMO.Views.RepeatGroupFormView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @tmpl = options.tmpl
     @next_inst_num = parseInt(@$el.data('inst-count')) + 1

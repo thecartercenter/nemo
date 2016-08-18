@@ -1,4 +1,4 @@
-class ELMO.Views.UserProfileFormView extends Backbone.View
+class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
   el: "form.user_form"
 
   initialize: (params) ->

@@ -1,4 +1,4 @@
-class ELMO.Views.PrintFormView extends Backbone.View
+class ELMO.Views.PrintFormView extends ELMO.Views.ApplicationView
 
   initialize: ->
     # For some reason this doesn't work if you put it in the events hash.

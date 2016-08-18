@@ -1,5 +1,5 @@
 # Controls add/edit/delete operations for form items list.
-class ELMO.Views.FormItemsView extends Backbone.View
+class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
 
   el: '.form-items'
 

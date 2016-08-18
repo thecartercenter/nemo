@@ -1,4 +1,4 @@
-class ELMO.Views.UsingIncomingSmsTokenModalView extends Backbone.View
+class ELMO.Views.UsingIncomingSmsTokenModalView extends ELMO.Views.ApplicationView
 
   el: '#using-incoming_sms_token-modal'
 

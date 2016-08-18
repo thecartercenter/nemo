@@ -1,4 +1,4 @@
-class ELMO.Views.MediaUploaderManager extends Backbone.View
+class ELMO.Views.MediaUploaderManager extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @preview_template = options.preview_template
     Dropzone.autoDiscover = false

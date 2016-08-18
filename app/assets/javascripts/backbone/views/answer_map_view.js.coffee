@@ -1,4 +1,4 @@
-class ELMO.Views.AnswerMapView extends Backbone.View
+class ELMO.Views.AnswerMapView extends ELMO.Views.ApplicationView
 
   initialize: (params) ->
     # create the map

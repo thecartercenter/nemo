@@ -1,4 +1,4 @@
-class ELMO.Views.GroupModalView extends Backbone.View
+class ELMO.Views.GroupModalView extends ELMO.Views.ApplicationView
 
   events:
     'click .save': 'save'

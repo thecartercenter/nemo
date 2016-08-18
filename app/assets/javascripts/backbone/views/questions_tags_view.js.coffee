@@ -1,5 +1,5 @@
 # For the tags on the questions index page.
-class ELMO.Views.QuestionsTagsView extends Backbone.View
+class ELMO.Views.QuestionsTagsView extends ELMO.Views.ApplicationView
 
   el: 'ul.tags'
 

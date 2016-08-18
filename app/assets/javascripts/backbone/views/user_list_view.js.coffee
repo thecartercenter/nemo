@@ -1,4 +1,4 @@
-class ELMO.Views.UserListView extends Backbone.View
+class ELMO.Views.UserListView extends ELMO.Views.ApplicationView
 
   el: '#index_table'
 

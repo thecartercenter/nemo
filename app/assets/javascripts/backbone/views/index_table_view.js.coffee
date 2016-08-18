@@ -1,5 +1,5 @@
 #// Models an index table view as shown on most index pages.
-class ELMO.Views.IndexTableView extends Backbone.View
+class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
 
   el: '#index_table'
 

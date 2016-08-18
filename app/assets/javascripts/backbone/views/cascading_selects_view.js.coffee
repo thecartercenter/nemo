@@ -1,4 +1,4 @@
-class ELMO.Views.CascadingSelectsView extends Backbone.View
+class ELMO.Views.CascadingSelectsView extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
     @option_set_id = options.option_set_id

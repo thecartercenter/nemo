@@ -1,4 +1,4 @@
-class ELMO.Views.UserGroupsModalView extends Backbone.View
+class ELMO.Views.UserGroupsModalView extends ELMO.Views.ApplicationView
   el: '#user-groups-modal'
 
   events:
