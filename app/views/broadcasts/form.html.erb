@@ -1,31 +1,32 @@
 <%= elmo_form_for(@broadcast) do |f| %>
 
-  <%= top_action_links(@broadcast, :only => :index) %>
-  <%= f.field(:medium, :type => :select, :required => true,
-    :options => translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
+  <%= top_action_links(@broadcast, only: :index) %>
+
+  <%= f.field(:medium, type: :select, required: true,
+    options: translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
 
   <%= f.field(:recipient_selection, type: :select, required: true,
     options: translate_options(Broadcast::RECIPIENT_SELECTION_OPTIONS, [:broadcast, :recipient_selection_options])) %>
 
-  <%= f.field(:recipient_ids, :type => :select, :multiple => true,
-    options: sel_opts_from_objs(@users)) %>
-  <% f.field(:to, :content => safe_join(@broadcast.recipients.collect{|u| link_to(u.name, u)}, ", ")) %>
+  <%# Leaving this as non-remote fetching for now, as we will end up reusing the stuff from Form when
+     we make it possible to send broadcasts to groups later. %>
+  <%= f.field(:recipient_ids, type: :select, multiple: true, options: sel_opts_from_objs(@users)) %>
 
   <%# only show balance if we were able to retrieve one and if we're not in read_only mode %>
-  <%= f.field(:balance, :partial => "balance") if @balance.present? && @broadcast.new_record? %>
+  <%= f.field(:balance, partial: "balance") if @balance.present? && @broadcast.new_record? %>
 
-  <%= f.field(:which_phone, :type => :select, :required => true,
-    :options => translate_options(Broadcast::WHICH_PHONE_OPTIONS, [:broadcast, :which_phone_options])) %>
-  <%= f.field(:subject, :required => true) %>
-  <%= f.field(:body, :required => true, :partial => "body") %>
+  <%= f.field(:which_phone, type: :select, required: true,
+    options: translate_options(Broadcast::WHICH_PHONE_OPTIONS, [:broadcast, :which_phone_options])) %>
+  <%= f.field(:subject, required: true) %>
+  <%= f.field(:body, required: true, partial: "body") %>
 
   <%# show any errors if we're in show mode %>
   <% if read_only && @broadcast.send_errors %>
-    <%= f.field(:send_errors, :partial => "send_errors") %>
+    <%= f.field(:send_errors, partial: "send_errors") %>
   <% end %>
 
   <div class="submit-buttons">
-    <%= f.submit(:send, :class => "btn btn-primary") %>
+    <%= f.submit(:send, class: "btn btn-primary") %>
   </div>
 <% end %>
 
