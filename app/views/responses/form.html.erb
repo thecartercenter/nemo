@@ -16,7 +16,7 @@
 
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
-<%= elmo_form_for(@response) do |f| %>
+<%= elmo_form_for(@response, read_only: @read_only) do |f| %>
 
   <%= top_action_links(@response, :except => :new) %>
 
@@ -44,11 +44,14 @@
     <%= f.field(:reviewed, :type => :check_box, :read_only => cannot?(:review, @response)) %>
 
     <%# only show the reviewer notes to reviewers %>
-    <%= f.field(:reviewer_notes, :type => :textarea, :read_only_content => simple_format(@response.reviewer_notes)) if can?(:review, @response) %>
+    <%= f.field(:reviewer_notes,
+      type: :textarea,
+      read_only: cannot?(:review, @response),
+      read_only_content: simple_format(@response.reviewer_notes)) if can?(:review, @response) %>
 
   <% end %>
 
-  <%= render("responses/answers/nodes", nodes: @nodes, inst_num: 1) %>
+  <%= render("responses/answers/nodes", nodes: @nodes, inst_num: 1, read_only: f.read_only?) %>
 
   <%# Incomplete checkbox %>
   <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
@@ -56,7 +59,7 @@
   <div class="submit-buttons">
     <%= f.submit(:class => "btn btn-primary") %>
     <% if form_mode == :edit && can?(:review, @response) %>
-      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed') %>
+      <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed', read_only: false) %>
     <% end %>
     <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
       <%= image_tag("load-ind-small.gif") %>

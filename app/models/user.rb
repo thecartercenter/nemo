@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   include Cacheable
 
-  ROLES = %w[observer staffer coordinator]
+  ROLES = %w[observer reviewer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   SITE = new name: configatron.site_shortname # Dummy user for use in SMS log
 

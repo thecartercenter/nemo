@@ -1432,6 +1432,7 @@ en:
   role:
     role: "Role"
     observer: "Observer"
+    reviewer: "Reviewer"
     staffer: "Staffer"
     coordinator: "Coordinator"
     admin: "Admin"

@@ -226,7 +226,11 @@ class Form < ActiveRecord::Base
 
   # Returns all descendant questionings in one flat array, sorted in traversal order.
   def questionings(reload = false)
-    root_group.descendant_questionings.flatten
+    if root_group
+      root_group.descendant_questionings.flatten
+    else
+      []
+    end
   end
 
   def questions(reload = false)
