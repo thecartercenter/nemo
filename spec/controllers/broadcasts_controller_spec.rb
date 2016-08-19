@@ -28,7 +28,7 @@ describe BroadcastsController, type: :request do
       @user2, @user3 = create(:user), create(:user)
     end
 
-    it 'new_with_users should work' do
+    it 'new_with_users should disable the locale select box' do
       post_s(new_with_users_broadcasts_path, selected: {@user2.id => '1', @user3.id => '1'})
 
       # Change language box should be disabled since this is a rendering POST request.
@@ -37,7 +37,8 @@ describe BroadcastsController, type: :request do
 
     it 'create and show should work' do
       post(broadcasts_path, broadcast: {
-        recipient_ids: [@user2.id,@user3.id],
+        recipient_selection: 'specific_users',
+        recipient_ids: [@user2.id, @user3.id],
         medium: 'sms',
         which_phone: 'both',
         subject: '',
@@ -58,6 +59,7 @@ describe BroadcastsController, type: :request do
 
     it 'create should show error' do
       post_s(broadcasts_path, broadcast: {
+        recipient_selection: 'specific_users',
         recipient_ids: "#{@user2.id},#{@user3.id}",
         medium: 'sms_only',
         which_phone: 'both',
@@ -67,18 +69,6 @@ describe BroadcastsController, type: :request do
       expect(configatron.outgoing_sms_adapter.deliveries.size).to eq 0
       expect(flash[:success]).to be_nil
       expect(assigns(:broadcast).errors).not_to be_empty
-    end
-  end
-
-  context 'for users with no phone or email' do
-    before do
-      @user2, @user3 = create(:user, phone: nil, email: nil), create(:user, phone: nil, email: nil)
-    end
-
-    it 'new_with_users should redirect with error' do
-      post(new_with_users_broadcasts_path, selected: {@user2.id => '1', @user3.id => '1'})
-      expect(response).to redirect_to(users_path)
-      expect(flash[:error]).to match(/None of the users you selected/)
     end
   end
 end
