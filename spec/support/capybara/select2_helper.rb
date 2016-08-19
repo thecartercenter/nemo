@@ -10,9 +10,7 @@ module Select2Helper
     # find the results element
     results = find_by_id(results_id)
 
-    # wait for an LI to become available with the expected value, then click it
-    expect(results.find('li')).to have_content(value)
-    results.first('li', value).click
+    results.find('li', text: /\A#{value}\z/).click
 
     # assert that the original select field was updated with the intended value
     select(value, options)
