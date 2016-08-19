@@ -14,14 +14,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   def field(field_name, options = {})
     return hidden_field(field_name, options) if options[:type] == :hidden
 
-    # options[:read_only] must be true if form_mode is show
-    # it may optionally be true if specified by the user
-    # else it is false
-    if form_mode == :show
-      options[:read_only] = read_only?
-    else
-      options[:read_only] ||= read_only? if options[:read_only].nil?
-    end
+    # Get form-level read_only value if it's not explicitly given for this field, or if the form_mode is :show.
+    # We do not respect the field-level override if form_mode is :show.
+    options[:read_only] = read_only? if options[:read_only].nil? || form_mode == :show
+
 
     # don't render password fields in readonly mode
     return "" if options[:read_only] && options[:type] == :password
@@ -42,14 +38,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def submit(label = nil, options = {})
-    # options[:read_only] must be true if form_mode is show
-    # it may optionally be true if specified by the user
-    # else it is false
-    if form_mode == :show
-      options[:read_only] = read_only?
-    else
-      options[:read_only] ||= read_only? if options[:read_only].nil?
-    end
+    # Get form-level read_only value if it's not explicitly given for this field, or if the form_mode is :show.
+    # We do not respect the field-level override if form_mode is :show.
+    options[:read_only] = read_only? if options[:read_only].nil? || form_mode == :show
 
     return "" if options[:read_only]
 
