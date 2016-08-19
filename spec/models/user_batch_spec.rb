@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe UserBatch do
+describe UserBatch, :slow do
   let(:mission) { get_mission }
 
   it "creates users with varying amounts of info" do
