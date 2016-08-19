@@ -214,6 +214,7 @@ class ResponsesController < ApplicationController
   # prepares objects for and renders the form template
   def prepare_and_render_form
     # Prepare the AnswerNodes.
+    set_read_only
     @nodes = AnswerArranger.new(@response,
       # No point in showing missing answers in show mode.
       include_missing_answers: params[:action] != "show",
@@ -236,10 +237,23 @@ class ResponsesController < ApplicationController
     return redirect_to(index_url_with_page_num)
   end
 
+  def set_read_only
+    case action_name
+    when "show"
+      @read_only = true
+    else
+      @read_only = cannot?(:modify_answers, @response)
+    end
+  end
+
   def response_params
     if params[:response]
       reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
-      params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |whitelisted|
+      permitted_params = params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only)
+      return permitted_params if action_name == "update" && cannot?(:modify_answers, @response)
+
+
+      permitted_params.tap do |whitelisted|
         whitelisted[:answers_attributes] = {}
 
         # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }

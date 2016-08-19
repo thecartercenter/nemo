@@ -1,8 +1,4 @@
-<%= elmo_form_for(@setting) do |f| %>
-
-  <%# Need to specify form mode explicitly since it can't be surmised from action. %>
-  <% @form_mode = @setting.read_only? ? :show : :edit %>
-
+<%= elmo_form_for(@setting, read_only: @setting.read_only?) do |f| %>
   <h2><%= t("setting.headings.general") %></h2>
 
   <%= f.field(:timezone, type: :timezone, required: true) %>
