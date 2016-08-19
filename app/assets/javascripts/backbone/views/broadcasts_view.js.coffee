@@ -24,13 +24,11 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
       @$('#char_limit').show()
       @$('.form_field.broadcast_which_phone').show()
       @$('.form_field.broadcast_subject').hide()
-      @$('.form_field.broadcast_balance').show()
       @update_char_limit()
     else
       @$('#char_limit').hide()
       @$('.form_field.broadcast_which_phone').hide()
       @$('.form_field.broadcast_subject').show()
-      @$('.form_field.broadcast_balance').hide()
 
   update_char_limit: ->
     div = @$('#char_limit')

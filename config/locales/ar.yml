@@ -350,7 +350,6 @@ ar:
 
     attributes:
       broadcast:
-        balance: "موازنة الرسالة النصية القصيرة "
         body: "رسالة"
         created_at: "وقت الإرسال"
         errors: "أخطأ"
@@ -1105,8 +1104,6 @@ ar:
     reviewed: "تمت المراجعة"
 
   broadcast:
-    balance_check_failed: "فشل التحقق من رصيد الرسائل النصية القصيرة."
-    balance_notice: "لديك رصيد %{balance} الرسائل النصية القصيرة في%حسابك {account_type}."
     chars: # these are for informing the user how many chars they have left in their sms
       remaining: "الرموز المتبقية "
       too_many: "رموز كثيرة"

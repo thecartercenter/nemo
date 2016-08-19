@@ -49,12 +49,6 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
       adapter_name: service_name)
   end
 
-  # Check_balance returns the balance string. Raises error if balance check failed.
-  def check_balance
-    response = send_request(build_uri(:balance))
-    response.match(/\ABALANCE:(\d+)\s*\z/) ? $1.to_i : parse_and_raise_any_errors(response)
-  end
-
   # How replies should be sent.
   def reply_style
     :via_adapter
@@ -68,7 +62,6 @@ class Sms::Adapters::IntelliSmsAdapter < Sms::Adapters::Adapter
 
       page = case action
       when :deliver then "sendmsg"
-      when :balance then "getbalance"
       else
         raise ArgumentError.new
       end

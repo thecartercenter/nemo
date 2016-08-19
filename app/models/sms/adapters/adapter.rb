@@ -51,11 +51,6 @@ class Sms::Adapters::Adapter
     raise NotImplementedError
   end
 
-  # returns the number of sms credits available in the provider account
-  def check_balance
-    raise NotImplementedError
-  end
-
   # How replies should be sent. Should be implemented by subclasses.
   def reply_style
     raise NotImplementedError

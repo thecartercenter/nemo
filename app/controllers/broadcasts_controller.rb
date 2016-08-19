@@ -110,18 +110,6 @@ class BroadcastsController < ApplicationController
     @medium_options = configatron.to_h[:outgoing_sms_adapter] ?
       Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
     @users = User.accessible_by(current_ability).all
-    get_balance
-  end
-
-  def get_balance
-    begin
-      @balance = Sms::Broadcaster.check_balance
-    rescue NotImplementedError
-      # don't need to do anything here
-    rescue
-      @balance = :failed
-      logger.error("SMS balance request error: #{$!}")
-    end
   end
 
   def broadcast_params

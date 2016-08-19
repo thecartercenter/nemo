@@ -222,7 +222,6 @@ ko:
         other: "태그"
     attributes:
       broadcast:
-        balance: "SMS 잔고"
         body: "메세지"
         created_at: "보내기 시"
         errors: "오류"

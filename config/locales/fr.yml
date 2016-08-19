@@ -235,7 +235,6 @@ fr:
         other: "Tags"
     attributes:
       broadcast:
-        balance: "Solde du compte SMS"
         body: "Message"
         created_at: "Heure d'envoi"
         errors: "Erreurs?"
@@ -910,8 +909,6 @@ fr:
     response_id: "Numero de la réponse"
     reviewed: "Revu?"
   broadcast:
-    balance_check_failed: "Consultation de crédit échoué"
-    balance_notice: "Vous avez %{balance} crédits de SMS dans votre %{account_type} compte."
     chars:
       remaining: "caractères restants"
       too_many: "trop de caractères"

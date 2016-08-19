@@ -214,7 +214,6 @@ es:
         other: "Etiquetas"
     attributes:
       broadcast:
-        balance: "Equilibrio SMS"
         body: "Mensaje"
         created_at: "Hora de envío"
         errors: "¿Errores?"
@@ -812,8 +811,6 @@ es:
     response_id: "Identificación de la Respuesta"
     reviewed: "Revisado"
   broadcast:
-    balance_check_failed: "Error en la comprobación del saldo SMS."
-    balance_notice: "Tiene %{balance} de crédito SMS es su %{account_type} cuenta."
     chars:
       remaining: "carácteres restantes"
       too_many: "demasiados carácteres"

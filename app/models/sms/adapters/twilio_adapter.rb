@@ -51,11 +51,6 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
       adapter_name: service_name)
   end
 
-  # Check_balance returns the balance string. Raises error if balance check failed.
-  def check_balance
-    raise NotImplementedError
-  end
-
   # How replies should be sent.
   def reply_style
     :via_response

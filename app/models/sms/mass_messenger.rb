@@ -3,16 +3,6 @@ class Sms::MassMessenger
     raise NotImplementedError
   end
 
-  # Check_balance uses the outgoing adapter to retrieve the SMS balance
-  # Currently, the only SMS service that supports balance checks via the API is IntelliSMS, and we are
-  # moving away from them, so this feature should probably be removed.
-  def self.check_balance
-    # first ensure we have a valid adapter
-    ensure_adapter
-
-    configatron.outgoing_sms_adapter.check_balance
-  end
-
   def self.outgoing_service_name
     # first ensure we have a valid adapter
     ensure_adapter
