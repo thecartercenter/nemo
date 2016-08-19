@@ -21,18 +21,31 @@ class BroadcastsController < ApplicationController
   end
 
   # Displays a new broadcast form with the given recipients.
-  # If params[:selected] is given, it is a hash with user ids as keys, referring to recipients of the broadcast.
-  # If params[:select_all] is given, it means the broadcast should be sent to all users in the system
-  # If params[:search] is given along with :select_all, that search should be applied to obtain recipients.
+  # If params[:selected] is given, it is a hash with user ids as keys,
+  # referring to recipients of the broadcast.
+  # If params[:select_all] is given without params[:search],
+  # it means the broadcast should be sent to all users in the system.
+  # If params[:search] is given along with params[:select_all],
+  # that search should be applied to obtain recipients.
   def new_with_users
-    users = User.accessible_by(current_ability).with_assoc.by_name
-    if params[:select_all].present?
-      users = apply_search_if_given(User, users)
-    else
-      users = users.where(id: params[:selected].keys)
-    end
+    # We default to this since it is usually the case.
+    # It will be overridden if select_all is given without search.
+    recipient_selection = "specific_users"
 
-    @broadcast = Broadcast.accessible_by(current_ability).new(recipients: users)
+    @broadcast = Broadcast.accessible_by(current_ability).new
+    users = User.accessible_by(current_ability).with_assoc.by_name
+
+    if params[:select_all].present?
+      if params[:search].present?
+        @broadcast.recipients = apply_search(User, users)
+        @broadcast.recipient_selection = "specific_users"
+      else
+        @broadcast.recipient_selection = "all_users"
+      end
+    else
+      @broadcast.recipients = users.where(id: params[:selected].keys)
+      @broadcast.recipient_selection = "specific_users"
+    end
 
     authorize!(:create, @broadcast)
     prep_form_vars
