@@ -1008,6 +1008,9 @@ en:
     send_success: "Broadcast sent successfully."
     send_error: "Error sending broadcast (see below)."
     sms_error: "SMS Error"
+    user_count:
+      one: "1 user"
+      other: "%{count} users"
     which_phone_options:
       main_only: "Main phone only"
       alternate_only: "Alternate phone only"
