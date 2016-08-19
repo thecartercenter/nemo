@@ -7,8 +7,13 @@ describe Response do
     Ability.new(user: user, mission: get_mission)
   end
 
-  let(:response) { create(:response, form: create_form, answer_values: create_answers) }
-  let(:own_response) { create(:response, form: create_form, answer_values: create_answers, user: user) }
+  let(:form) do
+    FactoryGirl.create(:form,
+      name: "SMS Form", smsable: true, mission: get_mission, question_types: %w(integer text))
+  end
+  let(:form_answers) { [1, "Lorem ipsum try me again"] }
+  let(:response) { create(:response, form: form, answer_values: form_answers) }
+  let(:own_response) { create(:response, form: form, answer_values: form_answers, user: user) }
 
   context "as an observer" do
     it "should be able to create a response" do
@@ -55,17 +60,4 @@ describe Response do
       end
     end
   end
-end
-
-
-def create_form
-  FactoryGirl.create(:form,
-    name: "SMS Form",
-    smsable: true,
-    mission: get_mission,
-    question_types: %w(integer text))
-end
-
-def create_answers
-  [1, "Lorem ipsum try me again"]
 end
