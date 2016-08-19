@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  include BatchProcessable
+  include BatchProcessable, Searchable
 
   # special find method before load_resource
   before_filter :build_user_with_proper_mission, only: [:new, :create]
@@ -17,17 +17,8 @@ class UsersController < ApplicationController
     # sort and eager load
     @users = @users.with_assoc.by_name
     @groups = UserGroup.accessible_by(current_ability).order(:name)
-
-    # do search if applicable
-    if params[:search].present?
-      begin
-        @search_params = params[:search]
-        @users = User.do_search(@users, params[:search])
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
-        @search_error = true
-      end
-    end
+    @search_params = params[:search]
+    @users = apply_search_if_given(User, @users)
 
     # Apply pagination
     @users = @users.paginate(page: params[:page], per_page: 50)

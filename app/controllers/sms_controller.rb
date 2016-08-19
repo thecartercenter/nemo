@@ -1,6 +1,6 @@
 # handles incoming sms messages from various providers
 class SmsController < ApplicationController
-  include CsvRenderable
+  include CsvRenderable, Searchable
 
   rescue_from Sms::UnverifiedTokenError do |exception|
     render plain: "Unauthorized", status: :unauthorized
@@ -16,15 +16,7 @@ class SmsController < ApplicationController
   protect_from_forgery except: :create
 
   def index
-    # do search if applicable
-    if params[:search].present?
-      begin
-        @sms = Sms::Message.do_search(@sms, params[:search])
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
-        @search_error = true
-      end
-    end
+    @sms = apply_search_if_given(Sms::Message, @sms)
 
     # cancan load_resource messes up the inflection so we need to create smses from sms
     @smses = @sms.latest_first.paginate(page: params[:page], per_page: 50)

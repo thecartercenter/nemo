@@ -1,4 +1,6 @@
 class BroadcastsController < ApplicationController
+  include Searchable # Searches users
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -21,25 +23,14 @@ class BroadcastsController < ApplicationController
   # Displays a new broadcast form with the given recipients.
   # If params[:selected] is given, it is a hash with user ids as keys, referring to recipients of the broadcast.
   # If params[:select_all] is given, it means the broadcast should be sent to all users in the system
-  # If params[:search] is also given, that search should be applied to obtain recipients.
+  # If params[:search] is given along with :select_all, that search should be applied to obtain recipients.
   def new_with_users
+    users = User.accessible_by(current_ability).with_assoc.by_name
     if params[:select_all].present?
-      if params[:search].present?
-        # TODO move this into UserSearchable concern
-        users = User.accessible_by(current_ability).with_assoc.by_name
-        begin
-          users = User.do_search(users, params[:search]).to_a
-        rescue Search::ParseError
-          flash.now[:error] = $!.to_s
-          @search_error = true
-        end
-      else
-        users = User.accessible_by(current_ability).to_a
-      end
+      users = apply_search_if_given(User, users)
     else
-      users = User.accessible_by(current_ability).where(id: params[:selected].keys).to_a
+      users = users.where(id: params[:selected].keys)
     end
-    raise "no users given" if users.empty? # This should be impossible
 
     @broadcast = Broadcast.accessible_by(current_ability).new(recipients: users)
 

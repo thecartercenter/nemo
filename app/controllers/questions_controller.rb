@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  include StandardImportable
+  include StandardImportable, Searchable
 
   include Parameters
 
@@ -9,18 +9,8 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    # do search if applicable
-    if params[:search].present?
-      begin
-        @questions = Question.do_search(@questions, params[:search])
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
-        @search_error = true
-      end
-    end
-
+    @questions = apply_search_if_given(Question, @questions)
     @tags = Tag.mission_tags(@current_mission)
-
     @questions = @questions.includes(:tags).with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
     load_importable_objs
   end
