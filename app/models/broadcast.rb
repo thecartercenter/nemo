@@ -4,11 +4,14 @@ class Broadcast < ActiveRecord::Base
   # This has_many through association stores specific users that were selected as recipients.
   # It will be empty if recipient_selection is all_users or all_observers.
   has_many :broadcast_addressings, inverse_of: :broadcast, dependent: :destroy
-  has_many :recipients, through: :broadcast_addressings, as: :addressees, source: :addressee, source_type: "User"
+  has_many :recipient_users, through: :broadcast_addressings, as: :addressees,
+    source: :addressee, source_type: "User"
+  has_many :recipient_groups, through: :broadcast_addressings, as: :addressees,
+    source: :addressee, source_type: "UserGroup"
 
   validates :medium, presence: true
   validates :recipient_selection, presence: true
-  validates :recipient_ids, presence: true, if: :specific_recipients?
+  #validates :recipient_ids, presence: true, if: :specific_recipients?
   validates :subject, presence: true, unless: :sms_possible?
   validates :which_phone, presence: true, if: :sms_possible?
   validates :body, presence: true
@@ -42,7 +45,7 @@ class Broadcast < ActiveRecord::Base
   end
 
   def recipient_names
-    recipients.map(&:name).join(", ")
+    recipient_users.map(&:name).join(", ")
   end
 
   def specific_recipients?
@@ -112,12 +115,16 @@ class Broadcast < ActiveRecord::Base
 
   private
 
+  def recipients
+    recipient_users + recipient_groups
+  end
+
   # Returns the recipients of the message. If recipient_selection is set to all_users or all_observers,
   # this will be different than `recipients`.
   def actual_recipients
-    case recipient_selection
+    @actual_recipients ||= case recipient_selection
     when "specific"
-      recipients
+      (recipient_users + recipient_groups.flat_map(&:users)).uniq
     when "all_users"
       mission.users
     when "all_observers"
