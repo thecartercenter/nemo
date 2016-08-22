@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160822144404) do
+ActiveRecord::Schema.define(version: 20160822152546) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -534,7 +534,6 @@ ActiveRecord::Schema.define(version: 20160822144404) do
   add_foreign_key "assignments", "missions", name: "assignments_mission_id_fk"
   add_foreign_key "assignments", "users", name: "assignments_user_id_fk"
   add_foreign_key "broadcast_addressings", "broadcasts", name: "broadcast_addressings_broadcast_id_fk"
-  add_foreign_key "broadcast_addressings", "users", column: "addressee_id", name: "broadcast_addressings_user_id_fk"
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fk"
   add_foreign_key "choices", "answers"
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
