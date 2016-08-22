@@ -4,7 +4,7 @@ class Broadcast < ActiveRecord::Base
   # This has_many through association stores specific users that were selected as recipients.
   # It will be empty if recipient_selection is all_users or all_observers.
   has_many :broadcast_addressings, inverse_of: :broadcast, dependent: :destroy
-  has_many :recipients, through: :broadcast_addressings, source: :user
+  has_many :recipients, through: :broadcast_addressings, as: :addressees, source: :addressee, source_type: "User"
 
   validates :medium, presence: true
   validates :recipient_selection, presence: true
