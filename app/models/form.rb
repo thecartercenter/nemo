@@ -9,7 +9,7 @@ class Form < ActiveRecord::Base
   has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
   has_many(:form_forwardings)
   has_many(:forwardee_users, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "User")
-  has_many(:forwardee_user_groups, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "UserGroup")
+  has_many(:forwardee_groups, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "UserGroup")
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, class_name: "FormVersion")
@@ -92,7 +92,7 @@ class Form < ActiveRecord::Base
   end
 
   def forwardees
-    [forwardee_users, forwardee_user_groups].flatten
+    [forwardee_users, forwardee_groups].flatten
   end
 
   def sms_forwardees
@@ -120,7 +120,7 @@ class Form < ActiveRecord::Base
       end
     end
     self.forwardee_users = User.where(id: user_list)
-    self.forwardee_user_groups = UserGroup.where(id: group_list)
+    self.forwardee_groups = UserGroup.where(id: group_list)
     self.save! unless self.new_record?
   end
 
@@ -145,7 +145,7 @@ class Form < ActiveRecord::Base
       when "User"
         forwardee_users << fwd
       when "UserGroup"
-        forwardee_user_groups << fwd
+        forwardee_groups << fwd
       end
     end
   end
