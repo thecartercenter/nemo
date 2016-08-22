@@ -262,7 +262,7 @@ en:
         to: "To"
         which_phone: "Which Phone(s)"
         recipient_selection: "Recipients"
-        recipient_ids: "Users"
+        recipient_ids: "Users/Groups"
       form:
         allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"
@@ -1003,7 +1003,7 @@ en:
     recipient_selection_options:
       all_users: "All users in mission"
       all_observers: "All observers in mission"
-      specific: "Specific users in mission"
+      specific: "Specific users/groups in mission"
     send_broadcast: "Send Broadcast"
     send_success: "Broadcast sent successfully."
     send_error: "Error sending broadcast (see below)."

@@ -18,8 +18,6 @@ class Broadcast < ActiveRecord::Base
   validates :body, length: {maximum: 140}, if: :sms_possible?
   validate :check_eligible_recipients
 
-  default_scope { includes(:recipients).order("broadcasts.created_at DESC") }
-
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
 
@@ -45,7 +43,7 @@ class Broadcast < ActiveRecord::Base
   end
 
   def recipient_names
-    recipient_users.map(&:name).join(", ")
+    recipients.map(&:name).join(", ")
   end
 
   def specific_recipients?
@@ -77,6 +75,28 @@ class Broadcast < ActiveRecord::Base
 
   def add_send_error(msg)
     self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
+  end
+
+  # Returns user and group recipients together, each wrapped in the BroadcastRecipient wrapper.
+  def recipients
+    (recipient_users + recipient_groups).map { |r| BroadcastRecipient.new(object: r) }
+  end
+
+  def recipient_ids
+    recipients.map(&:id)
+  end
+
+  def recipient_ids=(ids)
+    user_ids, group_ids = [], []
+    ids.each do |str|
+      type, _, id = str.rpartition("_")
+      case type
+      when "user" then user_ids << id
+      when "user_group" then group_ids << id
+      end
+    end
+    self.recipient_user_ids = user_ids
+    self.recipient_group_ids = group_ids
   end
 
   def recipient_numbers
@@ -114,10 +134,6 @@ class Broadcast < ActiveRecord::Base
   end
 
   private
-
-  def recipients
-    recipient_users + recipient_groups
-  end
 
   # Returns the recipients of the message. If recipient_selection is set to all_users or all_observers,
   # this will be different than `recipients`.

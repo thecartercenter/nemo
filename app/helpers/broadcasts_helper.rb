@@ -11,7 +11,7 @@ module BroadcastsHelper
     case field
     when "recipients"
       if broadcast.recipient_selection == "specific"
-        t("broadcast.user_count", count: broadcast.recipients.count)
+        t("broadcast.user_count", count: broadcast.recipients.size)
       else
         t("broadcast.recipient_selection_options.#{broadcast.recipient_selection}")
       end
