@@ -10,7 +10,7 @@ module BroadcastsHelper
   def format_broadcasts_field(broadcast, field)
     case field
     when "recipients"
-      if broadcast.recipient_selection == "specific_users"
+      if broadcast.recipient_selection == "specific"
         t("broadcast.user_count", count: broadcast.recipients.count)
       else
         t("broadcast.recipient_selection_options.#{broadcast.recipient_selection}")

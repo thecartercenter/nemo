@@ -7,8 +7,9 @@ describe Broadcast do
   let!(:userX) { create(:user, phone: "+17345550004", mission: create(:mission)) }
 
   describe "recipient_numbers" do
-    context "with specific_users" do
-      let(:broadcast) { create(:broadcast, recipient_selection: "specific_users", recipients: [user1, user3]) }
+    context "with specific users" do
+      let(:broadcast) { create(:broadcast, recipient_selection: "specific",
+        recipients: [user1, user3]) }
 
       it "returns correct numbers" do
         expect(broadcast.recipient_numbers).to eq(%w(+17345550001 +17345550003))

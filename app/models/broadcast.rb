@@ -26,7 +26,7 @@ class Broadcast < ActiveRecord::Base
   WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
 
   # options for recipients
-  RECIPIENT_SELECTION_OPTIONS = %w(all_users all_observers specific_users)
+  RECIPIENT_SELECTION_OPTIONS = %w(all_users all_observers specific)
 
   def self.terminate_sub_relationships(broadcast_ids)
     BroadcastAddressing.where(broadcast_id: broadcast_ids).delete_all
@@ -46,7 +46,7 @@ class Broadcast < ActiveRecord::Base
   end
 
   def specific_recipients?
-    recipient_selection == "specific_users"
+    recipient_selection == "specific"
   end
 
   def deliver
@@ -116,7 +116,7 @@ class Broadcast < ActiveRecord::Base
   # this will be different than `recipients`.
   def actual_recipients
     case recipient_selection
-    when "specific_users"
+    when "specific"
       recipients
     when "all_users"
       mission.users

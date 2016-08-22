@@ -12,7 +12,7 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
     'keyup #broadcast_body': 'update_char_limit'
 
   recipient_selection_changed: (e) ->
-    specific = @form_value('broadcast', 'recipient_selection') == 'specific_users'
+    specific = @form_value('broadcast', 'recipient_selection') == 'specific'
     @$('.form_field.broadcast_recipient_ids')[if specific then 'show' else 'hide']()
 
   medium_changed: (e) ->

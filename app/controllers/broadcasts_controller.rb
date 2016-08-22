@@ -30,7 +30,7 @@ class BroadcastsController < ApplicationController
   def new_with_users
     # We default to this since it is usually the case.
     # It will be overridden if select_all is given without search.
-    recipient_selection = "specific_users"
+    recipient_selection = "specific"
 
     @broadcast = Broadcast.accessible_by(current_ability).new
     users = User.accessible_by(current_ability).with_assoc.by_name
@@ -38,13 +38,13 @@ class BroadcastsController < ApplicationController
     if params[:select_all].present?
       if params[:search].present?
         @broadcast.recipients = apply_search(User, users)
-        @broadcast.recipient_selection = "specific_users"
+        @broadcast.recipient_selection = "specific"
       else
         @broadcast.recipient_selection = "all_users"
       end
     else
       @broadcast.recipients = users.where(id: params[:selected].keys)
-      @broadcast.recipient_selection = "specific_users"
+      @broadcast.recipient_selection = "specific"
     end
 
     authorize!(:create, @broadcast)
