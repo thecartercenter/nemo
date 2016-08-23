@@ -8,6 +8,19 @@ body.welcome {
   div#content {
     margin-left: 0;
     padding-bottom: 53px;
+
+    // If .expand-map class is on #content, we have to kill the padding and all the content except map.
+    &.expanded-map {
+      padding: 0;
+
+      div.right_col, h2, div.recent_responses, div.dashboard-footer, div.map-top-matter {
+        display: none;
+      }
+
+      .response_locations {
+        display: block !important;
+      }
+    }
   }
 
   /* close link */
