@@ -16,7 +16,7 @@ class User < ActiveRecord::Base
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
   has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: 'Report::Report'
   has_many :user_group_assignments, dependent: :destroy
-  has_many :user_groups, through: :user_group_assignments, dependent: :destroy
+  has_many :user_groups, through: :user_group_assignments
   belongs_to :last_mission, class_name: 'Mission'
 
   accepts_nested_attributes_for(:assignments, allow_destroy: true)
