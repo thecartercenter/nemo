@@ -1,15 +1,17 @@
 class Form < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
+  def self.receivable_association
+    {name: :form_forwardings, fk: :recipient}
+  end
+  include Receivable
+
   API_ACCESS_LEVELS = %w(private public)
 
   has_many(:responses, inverse_of: :form)
   has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
   has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
-  has_many(:form_forwardings)
-  has_many(:recipient_users, through: :form_forwardings, as: :recipients, source: :recipient, source_type: "User")
-  has_many(:recipient_groups, through: :form_forwardings, as: :recipients, source: :recipient, source_type: "UserGroup")
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, class_name: "FormVersion")
@@ -89,46 +91,6 @@ class Form < ActiveRecord::Base
   def root_questionings(reload = false)
     # Not memoizing this because it causes all sorts of problems.
     root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
-  end
-
-  def recipients
-    (recipient_users + recipient_groups).map { |fwd| Recipient.new(object: fwd) }
-  end
-
-  def recipient_names
-    recipients.map(&:name).join(", ")
-  end
-
-  def recipient_ids
-    recipients.map(&:id)
-  end
-
-  def recipient_ids=(ids)
-    user_list = []
-    group_list = []
-    ids.each do |id_string|
-      type, _, id = id_string.rpartition("_")
-      case type
-      when "user"
-        user_list << id
-      when "user_group"
-        group_list << id
-      end
-    end
-    self.recipient_users = User.where(id: user_list)
-    self.recipient_groups = UserGroup.where(id: group_list)
-    self.save! unless self.new_record?
-  end
-
-  def recipients=(recips)
-    recips.each do |r|
-      case r.class.to_s
-      when "User"
-        recipient_users << r
-      when "UserGroup"
-        recipient_groups << r
-      end
-    end
   end
 
   def odk_download_cache_key

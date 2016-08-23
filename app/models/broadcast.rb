@@ -1,13 +1,10 @@
 class Broadcast < ActiveRecord::Base
   include MissionBased
 
-  # This has_many through association stores specific users that were selected as recipients.
-  # It will be empty if recipient_selection is all_users or all_observers.
-  has_many :broadcast_addressings, inverse_of: :broadcast, dependent: :destroy
-  has_many :recipient_users, through: :broadcast_addressings, as: :addressees,
-    source: :addressee, source_type: "User"
-  has_many :recipient_groups, through: :broadcast_addressings, as: :addressees,
-    source: :addressee, source_type: "UserGroup"
+  def self.receivable_association
+    {name: :broadcast_addressings, fk: :addressee}
+  end
+  include Receivable
 
   validates :medium, presence: true
   validates :recipient_selection, presence: true
@@ -70,51 +67,6 @@ class Broadcast < ActiveRecord::Base
 
   def add_send_error(msg)
     self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
-  end
-
-  # Returns user and group recipients together, each wrapped in the Recipient wrapper.
-  def recipients
-    (recipient_users + recipient_groups).map { |r| Recipient.new(object: r) }
-  end
-
-  def recipients=(recipients)
-    recipients.each do |r|
-      case r.class.to_s
-      when "User"
-        recipient_users << r
-      when "UserGroup"
-        recipient_groups << r
-      end
-    end
-  end
-
-  def recipient_names
-    recipients.map(&:name).join(", ")
-  end
-
-  def recipient_user_count
-    broadcast_addressings.select { |ba| ba.addressee_type == 'User' }.size
-  end
-
-  def recipient_group_count
-    broadcast_addressings.select { |ba| ba.addressee_type == 'UserGroup' }.size
-  end
-
-  def recipient_ids
-    recipients.map(&:id)
-  end
-
-  def recipient_ids=(ids)
-    user_ids, group_ids = [], []
-    ids.each do |str|
-      type, _, id = str.rpartition("_")
-      case type
-      when "user" then user_ids << id
-      when "user_group" then group_ids << id
-      end
-    end
-    self.recipient_user_ids = user_ids
-    self.recipient_group_ids = group_ids
   end
 
   def recipient_numbers
