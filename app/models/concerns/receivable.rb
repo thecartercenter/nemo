@@ -1,5 +1,6 @@
 # Methods relating to managing User and UserGroup recipients.
-# Expects a RECEIVABLE_ASSOCIATION constant to be defined on the model before this module is included.
+# Expects a receivable_association class method to be defined on the model before this module is included.
+# The method should return a hash with :name and :fk as keys.
 module Receivable
   extend ActiveSupport::Concern
 
