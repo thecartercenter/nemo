@@ -8,8 +8,8 @@ class Form < ActiveRecord::Base
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
   has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
   has_many(:form_forwardings)
-  has_many(:forwardee_users, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "User")
-  has_many(:forwardee_groups, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "UserGroup")
+  has_many(:recipient_users, through: :form_forwardings, as: :recipients, source: :recipient, source_type: "User")
+  has_many(:recipient_groups, through: :form_forwardings, as: :recipients, source: :recipient, source_type: "UserGroup")
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, class_name: "FormVersion")
@@ -91,19 +91,19 @@ class Form < ActiveRecord::Base
     root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
   end
 
-  def forwardees
-    (forwardee_users + forwardee_groups).map { |fwd| BroadcastRecipient.new(object: fwd) }
+  def recipients
+    (recipient_users + recipient_groups).map { |fwd| BroadcastRecipient.new(object: fwd) }
   end
 
-  def forwardee_names
-    forwardees.map(&:name).join(", ")
+  def recipient_names
+    recipients.map(&:name).join(", ")
   end
 
-  def forwardee_ids
-    forwardees.map(&:id)
+  def recipient_ids
+    recipients.map(&:id)
   end
 
-  def forwardee_ids=(ids)
+  def recipient_ids=(ids)
     user_list = []
     group_list = []
     ids.each do |id_string|
@@ -115,18 +115,18 @@ class Form < ActiveRecord::Base
         group_list << id
       end
     end
-    self.forwardee_users = User.where(id: user_list)
-    self.forwardee_groups = UserGroup.where(id: group_list)
+    self.recipient_users = User.where(id: user_list)
+    self.recipient_groups = UserGroup.where(id: group_list)
     self.save! unless self.new_record?
   end
 
-  def forwardees=(forwardees)
-    forwardees.each do |fwd|
-      case fwd.class.to_s
+  def recipients=(recips)
+    recips.each do |r|
+      case r.class.to_s
       when "User"
-        forwardee_users << fwd
+        recipient_users << r
       when "UserGroup"
-        forwardee_groups << fwd
+        recipient_groups << r
       end
     end
   end

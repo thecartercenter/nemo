@@ -41,20 +41,8 @@ class Broadcast < ActiveRecord::Base
     medium != "sms_only"
   end
 
-  def recipient_names
-    recipients.map(&:name).join(", ")
-  end
-
   def specific_recipients?
     recipient_selection == "specific"
-  end
-
-  def recipient_user_count
-    broadcast_addressings.select { |ba| ba.addressee_type == 'User' }.size
-  end
-
-  def recipient_group_count
-    broadcast_addressings.select { |ba| ba.addressee_type == 'UserGroup' }.size
   end
 
   def deliver
@@ -87,6 +75,29 @@ class Broadcast < ActiveRecord::Base
   # Returns user and group recipients together, each wrapped in the BroadcastRecipient wrapper.
   def recipients
     (recipient_users + recipient_groups).map { |r| BroadcastRecipient.new(object: r) }
+  end
+
+  def recipients=(recipients)
+    recipients.each do |r|
+      case r.class.to_s
+      when "User"
+        recipient_users << r
+      when "UserGroup"
+        recipient_groups << r
+      end
+    end
+  end
+
+  def recipient_names
+    recipients.map(&:name).join(", ")
+  end
+
+  def recipient_user_count
+    broadcast_addressings.select { |ba| ba.addressee_type == 'User' }.size
+  end
+
+  def recipient_group_count
+    broadcast_addressings.select { |ba| ba.addressee_type == 'UserGroup' }.size
   end
 
   def recipient_ids

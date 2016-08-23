@@ -129,9 +129,9 @@ describe 'incoming sms' do
   context "with SMS relay enabled" do
     let(:users) { create_list(:user, 2) }
     let(:group) { create(:user_group, users: create_list(:user, 3)) }
-    let(:forwardees) { users + [group] }
+    let(:recipients) { users + [group] }
 
-    before { setup_form(questions: %w(integer text), forward_recipients: forwardees) }
+    before { setup_form(questions: %w(integer text), forward_recipients: recipients) }
 
     it "sends forwards" do
       incoming_body = "#{form_code} 1.15 2.something"
@@ -147,7 +147,7 @@ describe 'incoming sms' do
     end
 
     context "with sms authentication enabled" do
-      before { setup_form(questions: %w(integer text), forward_recipients: forwardees, authenticate_sms: true) }
+      before { setup_form(questions: %w(integer text), forward_recipients: recipients, authenticate_sms: true) }
 
       it "strips auth code from forward" do
         incoming_body = "#{auth_code} #{form_code} 1.29 2.something"

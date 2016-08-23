@@ -9,7 +9,7 @@ describe UserGroup do
   describe "destroy" do
     let(:group) { create(:user_group, users: [create(:user)]) }
     let!(:broadcast) { create(:broadcast, recipient_groups: [group]) }
-    let!(:form) { create(:form, sms_relay: true, forwardee_groups: [group]) }
+    let!(:form) { create(:form, sms_relay: true, recipient_groups: [group]) }
 
     it "destroys appropriate associated objects" do
       # First ensure the objects exist

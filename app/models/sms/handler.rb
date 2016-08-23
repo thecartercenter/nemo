@@ -85,8 +85,8 @@ class Sms::Handler
     if form && form.sms_relay?
       broadcast = ::Broadcast.new(
         recipient_selection: "specific",
-        recipient_users: form.forwardee_users,
-        recipient_groups: form.forwardee_groups,
+        recipient_users: form.recipient_users,
+        recipient_groups: form.recipient_groups,
         medium: "sms_only",
         body: sms.body,
         which_phone: "both",

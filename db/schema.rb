@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823160207) do
+ActiveRecord::Schema.define(version: 20160823175421) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -127,14 +127,14 @@ ActiveRecord::Schema.define(version: 20160823160207) do
   create_table "form_forwardings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "form_id", limit: 4
-    t.integer "forwardee_id", limit: 4
-    t.string "forwardee_type", limit: 255
+    t.integer "recipient_id", limit: 4
+    t.string "recipient_type", limit: 255
     t.datetime "updated_at", null: false
   end
 
-  add_index "form_forwardings", ["form_id", "forwardee_id", "forwardee_type"], name: "form_forwardings_full", unique: true, using: :btree
+  add_index "form_forwardings", ["form_id", "recipient_id", "recipient_type"], name: "form_forwardings_full", unique: true, using: :btree
   add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
-  add_index "form_forwardings", ["forwardee_type", "forwardee_id"], name: "index_form_forwardings_on_forwardee_type_and_forwardee_id", using: :btree
+  add_index "form_forwardings", ["recipient_type", "recipient_id"], name: "index_form_forwardings_on_recipient_type_and_recipient_id", using: :btree
 
   create_table "form_items", force: :cascade do |t|
     t.string "ancestry", limit: 255

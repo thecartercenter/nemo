@@ -5,7 +5,7 @@ module IncomingSmsSupport
     @form.questionings.each{ |q| q.update_attribute(:required, true) } if options[:required]
     if options[:forward_recipients]
       @form.sms_relay = true
-      @form.forwardees = options[:forward_recipients]
+      @form.recipients = options[:forward_recipients]
     end
     @form.authenticate_sms = true if options[:authenticate_sms]
     @form.publish!

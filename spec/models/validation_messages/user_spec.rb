@@ -20,7 +20,7 @@ describe User do
   describe "destroy" do
     let(:user) { create(:user) }
     let!(:broadcast) { create(:broadcast, recipient_users: [user]) }
-    let!(:form) { create(:form, sms_relay: true, forwardee_users: [user]) }
+    let!(:form) { create(:form, sms_relay: true, recipient_users: [user]) }
 
     it "destroys appropriate associated objects" do
       # First ensure the objects exist
