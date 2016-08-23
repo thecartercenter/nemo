@@ -97,12 +97,12 @@ class BroadcastsController < ApplicationController
 
     @recipients = []
     [@groups, @users].each do |set|
-      set.each { |u| @recipients << BroadcastRecipient.new(object: u) }
+      set.each { |u| @recipients << Recipient.new(object: u) }
     end
 
 
     render json: {
-      results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: BroadcastRecipientSerializer),
+      results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: RecipientSerializer),
       pagination: { more: (users_fetched || groups_fetched) }
     }
   end

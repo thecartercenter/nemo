@@ -72,9 +72,9 @@ class Broadcast < ActiveRecord::Base
     self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
   end
 
-  # Returns user and group recipients together, each wrapped in the BroadcastRecipient wrapper.
+  # Returns user and group recipients together, each wrapped in the Recipient wrapper.
   def recipients
-    (recipient_users + recipient_groups).map { |r| BroadcastRecipient.new(object: r) }
+    (recipient_users + recipient_groups).map { |r| Recipient.new(object: r) }
   end
 
   def recipients=(recipients)

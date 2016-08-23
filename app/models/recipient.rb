@@ -1,5 +1,6 @@
-# Lightweight wrapper around a user or group, modeling useful properties in the context of broadcasts.
-class BroadcastRecipient
+# Lightweight wrapper around a user or group, modeling useful properties
+# in the context of broadcasts and other models.
+class Recipient
   include ActiveModel::SerializerSupport
 
   attr_reader :object

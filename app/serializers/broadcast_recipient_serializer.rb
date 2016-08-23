@@ -1,4 +1,4 @@
-class BroadcastRecipientSerializer < ActiveModel::Serializer
+class RecipientSerializer < ActiveModel::Serializer
   attributes :id, :text
 
   def text

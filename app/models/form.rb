@@ -92,7 +92,7 @@ class Form < ActiveRecord::Base
   end
 
   def recipients
-    (recipient_users + recipient_groups).map { |fwd| BroadcastRecipient.new(object: fwd) }
+    (recipient_users + recipient_groups).map { |fwd| Recipient.new(object: fwd) }
   end
 
   def recipient_names
