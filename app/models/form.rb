@@ -91,12 +91,8 @@ class Form < ActiveRecord::Base
     root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
   end
 
-  def forwardees
-    [forwardee_users, forwardee_groups].flatten
-  end
-
   def sms_forwardees
-    forwardees.map { |fwd| BroadcastRecipient.new(object: fwd) }
+    (forwardee_users + forwardee_groups).map { |fwd| BroadcastRecipient.new(object: fwd) }
   end
 
   def sms_forwardee_names
@@ -122,21 +118,6 @@ class Form < ActiveRecord::Base
     self.forwardee_users = User.where(id: user_list)
     self.forwardee_groups = UserGroup.where(id: group_list)
     self.save! unless self.new_record?
-  end
-
-  def forwardees_as_users
-    user_list = []
-    self.forwardees.each do |fwd|
-      case fwd.class.to_s
-      when "User"
-        user_list << fwd
-      when "UserGroup"
-        fwd.users.each do |u|
-          user_list << u
-        end
-      end
-    end
-    user_list
   end
 
   def forwardees=(forwardees)
