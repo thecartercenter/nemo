@@ -127,7 +127,10 @@ describe 'incoming sms' do
   end
 
   context "with SMS relay enabled" do
-    let(:forwardees) { create_list(:user, 5) }
+    let(:users) { create_list(:user, 2) }
+    let(:group) { create(:user_group, users: create_list(:user, 3)) }
+    let(:forwardees) { users + [group] }
+
     before { setup_form(questions: %w(integer text), forward_recipients: forwardees) }
 
     it "sends forwards" do
@@ -139,8 +142,8 @@ describe 'incoming sms' do
       expect(sms_forward.body).to eq incoming_body
 
       # get forward recipients
-      recipients = sms_forward.recipient_hashes.map{|hash| hash[:user] }
-      expect(recipients).to eq forwardees
+      recipients = sms_forward.recipient_hashes.map { |hash| hash[:user] }
+      expect(recipients).to contain_exactly(*(users + group.users))
     end
 
     context "with sms authentication enabled" do
