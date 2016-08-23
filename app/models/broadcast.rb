@@ -11,12 +11,11 @@ class Broadcast < ActiveRecord::Base
 
   validates :medium, presence: true
   validates :recipient_selection, presence: true
-  #validates :recipient_ids, presence: true, if: :specific_recipients?
   validates :subject, presence: true, unless: :sms_possible?
   validates :which_phone, presence: true, if: :sms_possible?
   validates :body, presence: true
   validates :body, length: {maximum: 140}, if: :sms_possible?
-  validate :check_eligible_recipients
+  validate :validate_recipients
 
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
@@ -150,11 +149,13 @@ class Broadcast < ActiveRecord::Base
     end
   end
 
-  def check_eligible_recipients
-    # No need to proceed if no recipients at all.
-    return if specific_recipients? && recipients.empty?
+  def validate_recipients
+    # If no recipients at all, show 'can't be blank' error
+    if specific_recipients? && recipients.empty?
+      errors.add(:recipient_ids, :blank)
 
-    unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
+    # Else ensure at least one of the selected recipients can get the message!
+    elsif !(sms_possible? && recipient_numbers.present?) && !(email_possible? && recipient_emails.present?)
       attrib_to_add_error = specific_recipients? ? :recipient_ids : :recipient_selection
       errors.add(attrib_to_add_error, :no_recipients)
     end
