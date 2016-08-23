@@ -14,6 +14,7 @@ class Recipient
   end
 
   def name
-    "#{object.class.model_name.human}: #{object.name}"
+    prefix = I18n.t("recipient.prefixes.#{object.class.name.underscore}")
+    "#{prefix}: #{object.name}"
   end
 end
