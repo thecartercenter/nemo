@@ -985,6 +985,9 @@ en:
       too_many: "characters too many"
     email_intro: "This is a broadcast message from"
     email_error: "Email Error"
+    group_count:
+      one: "1 group"
+      other: "%{count} groups"
     instructions: "To send a broadcast, first select the recipients below, and then click 'Send Broadcast'."
     may_not_be_enough: "This may not be enough."
     mediums:

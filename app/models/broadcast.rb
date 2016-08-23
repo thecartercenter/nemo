@@ -49,6 +49,14 @@ class Broadcast < ActiveRecord::Base
     recipient_selection == "specific"
   end
 
+  def recipient_user_count
+    broadcast_addressings.select { |ba| ba.addressee_type == 'User' }.size
+  end
+
+  def recipient_group_count
+    broadcast_addressings.select { |ba| ba.addressee_type == 'UserGroup' }.size
+  end
+
   def deliver
     # send emails
     begin

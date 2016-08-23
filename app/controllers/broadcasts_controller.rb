@@ -9,7 +9,10 @@ class BroadcastsController < ApplicationController
 
   def index
     # apply pagination
-    @broadcasts = @broadcasts.paginate(page: params[:page], per_page: 50)
+    @broadcasts = @broadcasts.
+      includes(:broadcast_addressings).
+      paginate(page: params[:page], per_page: 50).
+      order(created_at: :desc)
   end
 
   def new
