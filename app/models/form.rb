@@ -91,19 +91,19 @@ class Form < ActiveRecord::Base
     root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
   end
 
-  def sms_forwardees
+  def forwardees
     (forwardee_users + forwardee_groups).map { |fwd| BroadcastRecipient.new(object: fwd) }
   end
 
-  def sms_forwardee_names
-    sms_forwardees.map(&:name).join(", ")
+  def forwardee_names
+    forwardees.map(&:name).join(", ")
   end
 
-  def sms_forwardee_ids
-    sms_forwardees.map(&:id)
+  def forwardee_ids
+    forwardees.map(&:id)
   end
 
-  def sms_forwardee_ids=(ids)
+  def forwardee_ids=(ids)
     user_list = []
     group_list = []
     ids.each do |id_string|
