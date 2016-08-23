@@ -11,7 +11,10 @@
     self.params = params;
 
     // hook up full screen link
-    $("a.full-screen").on('click', function(obj) {self.toggle_full_screen(); return false;});
+    $("a.full-screen").on('click', function(obj) {self.toggle_view_setting('full-screen'); return false;});
+
+    // hook up expand map link
+    $("a.toggle-map").on('click', function(obj) {self.toggle_view_setting('expanded-map'); return false;});
 
     // readjust stuff on window resize
     $(window).on('resize', function(){
@@ -132,38 +135,47 @@
       + ((id = self.report_view.current_report_id) ? '&report_id=' + id : '');
   };
 
-  klass.prototype.toggle_full_screen = function() { var self = this;
-    // read in full screen from local storage
-    var full_screen = JSON.parse(localStorage.getItem("full-screen"));
+  // Toggles the value of a setting stored in localStorage, then calls the execute method to make the change.
+  klass.prototype.toggle_view_setting = function(setting_name) { var self = this;
+    var current = JSON.parse(localStorage.getItem(setting_name));
+    current ? localStorage.setItem(setting_name, false) : localStorage.setItem(setting_name, true);
+    self.execute_view_setting(setting_name);
+  };
 
-    // toggle item in local storage
-    full_screen ? localStorage.setItem("full-screen", false) : localStorage.setItem("full-screen", true);
+  // Reads a view setting from localStorage and makes it happen.
+  klass.prototype.execute_view_setting = function(setting_name) { var self = this;
+    var setting = JSON.parse(localStorage.getItem(setting_name));
 
-    // display results
-    self.display_full_screen();
-  }
+    switch (setting_name) {
 
-  klass.prototype.display_full_screen = function() { var self = this;
+    case 'full-screen':
 
-    var fs = JSON.parse(localStorage.getItem("full-screen"));
-    // if not in full screen mode, show everything (default)
-    if(!fs) {
-      $('#footer').show();
-      $('#main-nav').show();
-      $('#userinfo').show();
-      $('#title img').css('height', 'initial');
-      $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
-    // else full screen is true, hide things
-    } else {
-      $('#footer').hide();
-      $('#main-nav').hide();
-      $('#userinfo').hide();
-      $('#title img').css('height', '30px');
-      $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
+      // if not in full screen mode, show everything (default)
+      if (!setting) {
+        $('#footer').show();
+        $('#main-nav').show();
+        $('#userinfo').show();
+        $('#title img').css('height', 'initial');
+        $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
+      // else full screen is true, hide things
+      } else {
+        $('#footer').hide();
+        $('#main-nav').hide();
+        $('#userinfo').hide();
+        $('#title img').css('height', '30px');
+        $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
+      }
+
+      // Set link text
+      $('a.full-screen span').text(I18n.t('dashboard.' + (setting ? 'exit' : 'enter') + '_full_screen'));
+
+    case 'expanded-map':
+      if ($('#content').is('.expanded-map'))
+        $('#content').removeClass('expanded-map');
+      else
+        $('#content').addClass('expanded-map');
+
     }
-
-    // Set link text
-    $('a.full-screen span').text(I18n.t('dashboard.' + (fs ? 'exit' : 'enter') + '_full_screen'));
-  }
+  };
 
 }(ELMO.Views));
