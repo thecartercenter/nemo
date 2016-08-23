@@ -11,7 +11,7 @@ feature 'broadcasts flow', js: true do
     click_link("Send Broadcast")
     select("Both SMS and email", from: "Medium")
     select("Specific users", from: "Recipients")
-    select2(user2.name, from: "broadcast_recipient_ids")
+    select2("User: #{user2.name}", from: "broadcast_recipient_ids")
     select("Main phone only", from: "Which Phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")
