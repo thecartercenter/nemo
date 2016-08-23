@@ -40,13 +40,13 @@ class BroadcastsController < ApplicationController
 
     if params[:select_all].present?
       if params[:search].present?
-        @broadcast.recipients = apply_search(User, users)
+        @broadcast.recipient_users = apply_search(User, users)
         @broadcast.recipient_selection = "specific"
       else
         @broadcast.recipient_selection = "all_users"
       end
     else
-      @broadcast.recipients = users.where(id: params[:selected].keys)
+      @broadcast.recipient_users = users.where(id: params[:selected].keys)
       @broadcast.recipient_selection = "specific"
     end
 
