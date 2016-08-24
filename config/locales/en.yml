@@ -386,6 +386,10 @@ en:
       user:
         admin: "Is Administrator?"
         assignments: "Assignments"
+        birth_year: "Birth Year"
+        nationality: "Nationality"
+        gender: "Gender"
+        gender_custom: "Specify Gender"
         latest_mission: "Latest Mission"
         login: "Username"
         name: "Full Name"
@@ -1883,6 +1887,11 @@ en:
     export_vcard: "Export as vCard"
     forgot_password: "Forgot Password?"
     leave_password_alone: "Leave password alone"
+    gender_options:
+      man: "Man"
+      woman: "Woman"
+      no_answer: "Decline to Answer"
+      specify: "Specify..."
     add_to_group: "Add Multiple Group Users"
     remove_from_group: "Remove Multiple Group Users"
     login_instructions:

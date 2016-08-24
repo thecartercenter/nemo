@@ -4,6 +4,7 @@ class User < ActiveRecord::Base
   ROLES = %w[observer reviewer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   SITE = new name: configatron.site_shortname # Dummy user for use in SMS log
+  GENDER_OPTIONS = %w[man woman no_answer specify]
 
   attr_writer(:reset_password_method)
   attr_accessor(:batch_creation)

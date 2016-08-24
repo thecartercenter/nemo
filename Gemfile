@@ -54,7 +54,8 @@ gem "acts_as_list", github: "swanandp/acts_as_list", branch: "master"
 gem "i18n-js", "~> 3.0.0.rc11"
 gem "rails-i18n", "~> 4.0.4"
 gem "iso-639"
-
+gem "i18n-country-translations"
+gem "i18n_country_select"
 # memcache
 gem "dalli"
 
