@@ -87,6 +87,7 @@ class Sms::Handler
         recipient_selection: "specific",
         recipient_users: form.recipient_users,
         recipient_groups: form.recipient_groups,
+        source: "forward",
         medium: "sms_only",
         body: sms.body,
         which_phone: "both",

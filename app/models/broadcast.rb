@@ -25,6 +25,8 @@ class Broadcast < ActiveRecord::Base
   # options for recipients
   RECIPIENT_SELECTION_OPTIONS = %w(all_users all_observers specific)
 
+  scope :manual_only, -> { where(source: "manual") }
+
   def self.terminate_sub_relationships(broadcast_ids)
     BroadcastAddressing.where(broadcast_id: broadcast_ids).delete_all
     Sms::Message.where(broadcast_id: broadcast_ids).delete_all

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823175421) do
+ActiveRecord::Schema.define(version: 20160824180252) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -64,6 +64,7 @@ ActiveRecord::Schema.define(version: 20160823175421) do
     t.text "recipient_query", limit: 65535
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors", limit: 65535
+    t.string "source", limit: 255, default: "manual", null: false
     t.string "subject", limit: 255
     t.datetime "updated_at"
     t.string "which_phone", limit: 255

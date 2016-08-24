@@ -8,8 +8,8 @@ class BroadcastsController < ApplicationController
   skip_load_and_authorize_resource only: :new_with_users
 
   def index
-    # apply pagination
     @broadcasts = @broadcasts.
+      manual_only.
       includes(:broadcast_addressings).
       paginate(page: params[:page], per_page: 50).
       order(created_at: :desc)
