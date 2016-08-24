@@ -6,7 +6,9 @@
   <%= f.field(:from) %>
   <%= f.field(:body, :type => :textarea) %>
 
-  <%= f.submit(:submit) %>
+  <div class="submit-buttons">
+    <%= f.submit(:send, class: "btn btn-primary") %>
+  </div>
   <%= loading_indicator %>
 <% end %>
 
