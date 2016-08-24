@@ -35,6 +35,17 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
 
     # else use bounds determined above
     else
+      # Prevent map from zooming in too far when calling fitBounds.
+      # Does this by handling the asynchronous zoom and bounds changed events.
+      google.maps.event.addListener @map, 'zoom_changed', =>
+        zoomChangeBoundsListener =
+          google.maps.event.addListener @map, 'bounds_changed', (event) =>
+            if @map.getZoom() > 10 && @map.initialZoom
+              @map.setZoom(10);
+              @map.initialZoom = false;
+            google.maps.event.removeListener(zoomChangeBoundsListener)
+      @map.initialZoom = true;
+
       # center/zoom the map
       @map.fitBounds(bounds)
 
