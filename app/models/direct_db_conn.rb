@@ -6,9 +6,10 @@ class DirectDBConn
 
   def insert(objects)
     column_names = escape_column_names(objects)
+
     object_values = objects.map { |o| convert_values_to_insert_syntax(o) }
 
-    string_params = generate_string_params_template_from_attributes(objects.first.attributes)
+    string_params = generate_string_params_template_from_class(objects.first.class)
 
     string_params = add_parenthesis_to_params_string(string_params)
 
@@ -26,7 +27,7 @@ class DirectDBConn
 
     column_names = escape_column_names(objects_to_insert)
     object_values = objects_to_insert.map { |o| convert_values_to_insert_syntax(o) }
-    string_params = generate_string_params_template_from_attributes(objects_to_insert.first.attributes)
+    string_params = generate_string_params_template_from_class(objects_to_insert.first.class)
 
     # Change the value of the field with the name we want to SELECT on our INSERT..SELECT query
     object_values = change_field_value_with_field_name(object_values, column_names, field_to_select)
@@ -68,8 +69,36 @@ class DirectDBConn
 
   private
 
-  def generate_string_params_template_from_attributes(attributes)
-    attributes.map { |k,v| v.is_a?(String) ? "'%s'" : "%s" }.join(", ")
+  # We need to iterate over every attribute in order to see whether *any* instance of that attribute is a String
+  # Otherwise if the first object is null or does not otherwise parse as a string in a string column
+  # it won't be escaped which will cause the insert to silently fail and makes devs trying to debug very sad
+  # Deprecated for now
+  def generate_string_params_template_from_objects(objects)
+    # Create an array of all the values for each attribute
+    attribute_values = []
+    objects.each do |obj|
+      obj.attributes.each_with_index do |(key, value), index|
+        attribute_values[index] ||= []
+        attribute_values[index] << value
+      end
+    end
+
+    # Construct the params template
+    params_template = []
+    attribute_values.each do |v_array|
+      if v_array.any? { |v| v.is_a?(String) }
+        params_template << "'%s'"
+      else
+        params_template << "%s"
+      end
+    end
+    params_template.join(", ")
+  end
+
+  def generate_string_params_template_from_class(klass)
+    klass.columns_hash.map do |column, column_type|
+      [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
+    end.join(", ")
   end
 
   def add_parenthesis_to_params_string(params_string)

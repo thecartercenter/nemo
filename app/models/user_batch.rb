@@ -5,7 +5,7 @@ class UserBatch
 
   IMPORT_ERROR_CUTOFF = 50
   BATCH_SIZE = 1000
-  PERMITTED_ATTRIBS = %i(login name phone phone2 email notes)
+  PERMITTED_ATTRIBS = %i(login name phone phone2 email birth_year gender gender_custom nationality notes)
 
   attr_accessor :file
   attr_reader :users
@@ -90,7 +90,7 @@ class UserBatch
 
   def parse_headers(row)
     # building map of translated field names to symbolic field names
-    expected_headers = Hash[*%i{login name phone phone2 email notes}.map do |field|
+    expected_headers = Hash[*%i{login name phone phone2 email birth_year gender nationality notes}.map do |field|
       [User.human_attribute_name(field), field]
     end.flatten]
 
@@ -129,6 +129,9 @@ class UserBatch
           attributes[k] = attributes[k].to_i.to_s
         end
       end
+
+      attributes[:gender], attributes[:gender_custom] = coerce_gender(attributes[:gender])
+      attributes[:nationality] = coerce_nationality(attributes[:nationality])
 
       user_batch_attributes << attributes
     end
@@ -210,6 +213,24 @@ class UserBatch
       end
       @validation_error = true
     end
+  end
+
+  # Takes a happy, uncoerced gender and stuffs it into a recognized box
+  def coerce_gender(gender_string)
+    return nil unless gender_string.present?
+    gender_options = I18n.t("user.gender_options")
+    gender_selection = gender_options.find { |k, v| gender_string == v }
+    gender = gender_selection.try(:first) || :specify
+    gender_custom = gender_string if gender == :specify
+    return gender.to_s, gender_custom
+  end
+
+  def coerce_nationality(nationality_string)
+    return nil unless nationality_string.present?
+    nationality_options = I18n.t("countries")
+    nationality_selection = nationality_options.find { |k, v| nationality_string == v }
+    nationality = nationality_selection.try(:first)
+    nationality.to_s
   end
 
   def error_is_on_persistence_token?(user)
