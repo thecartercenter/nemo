@@ -32,8 +32,8 @@
         <%= f.field(:smsable, :type => :check_box)  %>
         <div class="sms-fields">
           <%= f.field(:sms_relay, type: :check_box) %>
-          <%= f.field(:sms_forwardee_ids, type: :select, multiple: true, prompt: false,
-            options: sel_opts_from_objs(@form.sms_forwardees), read_only_content: @form.sms_forwardee_names) %>
+          <%= f.field(:recipient_ids, type: :select, multiple: true, prompt: false,
+            options: sel_opts_from_objs(@form.recipients), read_only_content: @form.recipient_names) %>
           <%= f.field(:authenticate_sms, type: :check_box) %>
         </div>
         <%= f.field(:allow_incomplete, :type => :check_box, :read_only => @form.published?) %>
@@ -63,7 +63,7 @@
 <%= javascript_doc_ready do %>
   <% unless admin_mode? %>
     new ELMO.Views.FormSettingsView(<%=json(
-      forwardee_options_url: possible_recipients_broadcasts_path
+      recipient_options_url: possible_recipients_broadcasts_path
     )%>);
   <% end %>
   new ELMO.Views.PrintFormView();

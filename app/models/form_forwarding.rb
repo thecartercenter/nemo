@@ -1,4 +1,4 @@
 class FormForwarding < ActiveRecord::Base
   belongs_to :form
-  belongs_to :forwardee, polymorphic: true
+  belongs_to :recipient, polymorphic: true
 end

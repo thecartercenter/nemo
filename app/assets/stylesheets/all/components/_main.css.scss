@@ -271,14 +271,6 @@ form.setting_form #external_sql .control a { font-size: 9pt; }
   td.body_col > div { width: auto; overflow: hidden; }
 }
 
-/* sms test console */
-form#new_sms_test input#sms_test_from { width: 150px; }
-form#new_sms_test textarea { height: 75px; }
-form#new_sms_test .form_buttons, form#new_sms_test .loading_indicator { display: inline-block; }
-form#new_sms_test .loading_indicator { vertical-align: bottom; margin-bottom: 6px; }
-.sms_tests_new h2 { display: none; }
-.sms_test_result { font-family: "courier new", monospace; }
-
 /* action links */
 #content div.top-action-links {
   @include action-links;

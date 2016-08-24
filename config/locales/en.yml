@@ -262,7 +262,7 @@ en:
         to: "To"
         which_phone: "Which Phone(s)"
         recipient_selection: "Recipients"
-        recipient_ids: "Users"
+        recipient_ids: "Users/Groups"
       form:
         allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"
@@ -270,7 +270,7 @@ en:
         responses: "Responses"
         smsable: "SMSable?"
         sms_relay: "SMS Forwarding?"
-        sms_forwardee_ids: "SMS Forward Recipients"
+        recipient_ids: "SMS Forward Recipients"
         authenticate_sms: "Authenticate SMS?"
         updated_at: "Last Modified"
         version: "Version"
@@ -483,7 +483,7 @@ en:
         name: "A descriptive name for the form."
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
         sms_relay: "Whether to enable forwarding incoming SMS responses to users and user groups"
-        sms_forwardee_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
+        recipient_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
         authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an obsever to spoof submissions."
         allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
         version: "The current version number and letter code."
@@ -989,6 +989,9 @@ en:
       too_many: "characters too many"
     email_intro: "This is a broadcast message from"
     email_error: "Email Error"
+    group_count:
+      one: "1 group"
+      other: "%{count} groups"
     instructions: "To send a broadcast, first select the recipients below, and then click 'Send Broadcast'."
     may_not_be_enough: "This may not be enough."
     mediums:
@@ -1007,7 +1010,7 @@ en:
     recipient_selection_options:
       all_users: "All users in mission"
       all_observers: "All observers in mission"
-      specific_users: "Specific users in mission"
+      specific: "Specific users/groups in mission"
     send_broadcast: "Send Broadcast"
     send_success: "Broadcast sent successfully."
     send_error: "Error sending broadcast (see below)."
@@ -1290,6 +1293,11 @@ en:
     errors:
       verification_failed: "Verification response is incorrect, please try again."
       recaptcha_unreachable: "Oops, we failed to validate your verification response. Please try again."
+
+  recipient:
+    prefixes:
+      user: "User"
+      user_group: "Group"
 
   report/report:
     add_column: "Add Column"

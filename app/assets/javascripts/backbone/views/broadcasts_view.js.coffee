@@ -1,10 +1,17 @@
 class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
   el: '.broadcast_form'
 
-  initialize: ->
+  initialize: (options) ->
     @medium_changed()
     @recipient_selection_changed()
-    @$("#broadcast_recipient_ids").select2()
+
+    @$("#broadcast_recipient_ids").select2
+      ajax:
+        url: options.recipient_options_url
+        dataType: 'json'
+        data: (params) -> { term: params.term, page: params.page || 1 }
+        delay: 250
+        cache: true
 
   events:
     'change #broadcast_medium': 'medium_changed'
@@ -12,7 +19,7 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
     'keyup #broadcast_body': 'update_char_limit'
 
   recipient_selection_changed: (e) ->
-    specific = @form_value('broadcast', 'recipient_selection') == 'specific_users'
+    specific = @form_value('broadcast', 'recipient_selection') == 'specific'
     @$('.form_field.broadcast_recipient_ids')[if specific then 'show' else 'hide']()
 
   medium_changed: (e) ->

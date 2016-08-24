@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824013123) do
+ActiveRecord::Schema.define(version: 20160824180252) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -46,22 +46,25 @@ ActiveRecord::Schema.define(version: 20160824013123) do
   add_index "assignments", ["user_id"], name: "assignments_user_id_fk", using: :btree
 
   create_table "broadcast_addressings", force: :cascade do |t|
-    t.integer "broadcast_id", limit: 4
+    t.integer "addressee_id", limit: 4, null: false
+    t.string "addressee_type", limit: 255, null: false
+    t.integer "broadcast_id", limit: 4, null: false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "user_id", limit: 4
   end
 
+  add_index "broadcast_addressings", ["addressee_id"], name: "broadcast_addressings_user_id_fk", using: :btree
   add_index "broadcast_addressings", ["broadcast_id"], name: "broadcast_addressings_broadcast_id_fk", using: :btree
-  add_index "broadcast_addressings", ["user_id"], name: "broadcast_addressings_user_id_fk", using: :btree
 
   create_table "broadcasts", force: :cascade do |t|
     t.text "body", limit: 65535
     t.datetime "created_at"
     t.string "medium", limit: 255
     t.integer "mission_id", limit: 4
+    t.text "recipient_query", limit: 65535
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors", limit: 65535
+    t.string "source", limit: 255, default: "manual", null: false
     t.string "subject", limit: 255
     t.datetime "updated_at"
     t.string "which_phone", limit: 255
@@ -125,14 +128,14 @@ ActiveRecord::Schema.define(version: 20160824013123) do
   create_table "form_forwardings", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "form_id", limit: 4
-    t.integer "forwardee_id", limit: 4
-    t.string "forwardee_type", limit: 255
+    t.integer "recipient_id", limit: 4
+    t.string "recipient_type", limit: 255
     t.datetime "updated_at", null: false
   end
 
-  add_index "form_forwardings", ["form_id", "forwardee_id", "forwardee_type"], name: "form_forwardings_full", unique: true, using: :btree
+  add_index "form_forwardings", ["form_id", "recipient_id", "recipient_type"], name: "form_forwardings_full", unique: true, using: :btree
   add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
-  add_index "form_forwardings", ["forwardee_type", "forwardee_id"], name: "index_form_forwardings_on_forwardee_type_and_forwardee_id", using: :btree
+  add_index "form_forwardings", ["recipient_type", "recipient_id"], name: "index_form_forwardings_on_recipient_type_and_recipient_id", using: :btree
 
   create_table "form_items", force: :cascade do |t|
     t.string "ancestry", limit: 255
@@ -471,8 +474,8 @@ ActiveRecord::Schema.define(version: 20160824013123) do
   create_table "user_group_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_group_id", limit: 4, null: false
-    t.integer "user_id", limit: 4, null: false
+    t.integer "user_group_id", limit: 4
+    t.integer "user_id", limit: 4
   end
 
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
@@ -482,7 +485,7 @@ ActiveRecord::Schema.define(version: 20160824013123) do
   create_table "user_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "mission_id", limit: 4
-    t.string "name", limit: 255, null: false
+    t.string "name", limit: 255
     t.datetime "updated_at", null: false
   end
 
@@ -537,7 +540,6 @@ ActiveRecord::Schema.define(version: 20160824013123) do
   add_foreign_key "assignments", "missions", name: "assignments_mission_id_fk"
   add_foreign_key "assignments", "users", name: "assignments_user_id_fk"
   add_foreign_key "broadcast_addressings", "broadcasts", name: "broadcast_addressings_broadcast_id_fk"
-  add_foreign_key "broadcast_addressings", "users", name: "broadcast_addressings_user_id_fk"
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fk"
   add_foreign_key "choices", "answers"
   add_foreign_key "choices", "options", name: "choices_option_id_fk"

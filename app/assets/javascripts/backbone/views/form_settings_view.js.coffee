@@ -5,14 +5,14 @@ class ELMO.Views.FormSettingsView extends ELMO.Views.ApplicationView
     'click .more-settings': 'show_setting_fields'
     'click .less-settings': 'hide_setting_fields'
     'click #form_smsable': 'show_hide_sms_settings'
-    'click #form_sms_relay': 'show_hide_sms_forwardees'
+    'click #form_sms_relay': 'show_hide_recipients'
 
   initialize: (options) ->
     @show_fields_with_errors()
     @show_hide_sms_settings()
-    @show_hide_sms_forwardees()
-    @forwardee_options_url = options.forwardee_options_url
-    @init_sms_forwardee_select()
+    @show_hide_recipients()
+    @recipient_options_url = options.recipient_options_url
+    @init_recipient_select()
 
   show_setting_fields: (event) ->
     event.preventDefault()
@@ -38,19 +38,19 @@ class ELMO.Views.FormSettingsView extends ELMO.Views.ApplicationView
 
     @$('.sms-fields')[m]()
 
-  show_hide_sms_forwardees: ->
+  show_hide_recipients: ->
     read_only = @$('#sms_relay div.ro-val').length > 0
     if read_only
       m = if @$('#sms_relay div.ro-val').data('val') then 'show' else 'hide'
     else
       m = if @$('#form_sms_relay').is(':checked') then 'show' else 'hide'
 
-    @$('.form_sms_forwardee_ids')[m]()
+    @$('.form_recipient_ids')[m]()
 
-  init_sms_forwardee_select: ->
-    @$('#form_sms_forwardee_ids').select2
+  init_recipient_select: ->
+    @$('#form_recipient_ids').select2
       ajax:
-        url: @forwardee_options_url
+        url: @recipient_options_url
         dataType: 'json'
         data: (params) -> { term: params.term, page: params.page || 1 }
         delay: 250

@@ -8,8 +8,11 @@ class BroadcastsController < ApplicationController
   skip_load_and_authorize_resource only: :new_with_users
 
   def index
-    # apply pagination
-    @broadcasts = @broadcasts.paginate(page: params[:page], per_page: 50)
+    @broadcasts = @broadcasts.
+      manual_only.
+      includes(:broadcast_addressings).
+      paginate(page: params[:page], per_page: 50).
+      order(created_at: :desc)
   end
 
   def new
@@ -30,21 +33,21 @@ class BroadcastsController < ApplicationController
   def new_with_users
     # We default to this since it is usually the case.
     # It will be overridden if select_all is given without search.
-    recipient_selection = "specific_users"
+    recipient_selection = "specific"
 
     @broadcast = Broadcast.accessible_by(current_ability).new
     users = User.accessible_by(current_ability).with_assoc.by_name
 
     if params[:select_all].present?
       if params[:search].present?
-        @broadcast.recipients = apply_search(User, users)
-        @broadcast.recipient_selection = "specific_users"
+        @broadcast.recipient_users = apply_search(User, users)
+        @broadcast.recipient_selection = "specific"
       else
         @broadcast.recipient_selection = "all_users"
       end
     else
-      @broadcast.recipients = users.where(id: params[:selected].keys)
-      @broadcast.recipient_selection = "specific_users"
+      @broadcast.recipient_users = users.where(id: params[:selected].keys)
+      @broadcast.recipient_selection = "specific"
     end
 
     authorize!(:create, @broadcast)
@@ -94,12 +97,12 @@ class BroadcastsController < ApplicationController
 
     @recipients = []
     [@groups, @users].each do |set|
-      set.each { |u| @recipients << BroadcastRecipient.new(object: u) }
+      set.each { |u| @recipients << Recipient.new(object: u) }
     end
 
 
     render json: {
-      results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: BroadcastRecipientSerializer),
+      results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: RecipientSerializer),
       pagination: { more: (users_fetched || groups_fetched) }
     }
   end

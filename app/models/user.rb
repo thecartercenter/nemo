@@ -11,13 +11,14 @@ class User < ActiveRecord::Base
   alias :batch_creation? :batch_creation
 
   has_many :responses, inverse_of: :user
-  has_many :broadcast_addressings, inverse_of: :user, dependent: :destroy
+  has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
+  has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
   has_many :assignments, autosave: true, dependent: :destroy, validate: true, inverse_of: :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
   has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: 'Report::Report'
   has_many :user_group_assignments, dependent: :destroy
-  has_many :user_groups, through: :user_group_assignments, dependent: :destroy
+  has_many :user_groups, through: :user_group_assignments
   belongs_to :last_mission, class_name: 'Mission'
 
   accepts_nested_attributes_for(:assignments, allow_destroy: true)

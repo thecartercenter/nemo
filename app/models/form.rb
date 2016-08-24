@@ -1,15 +1,17 @@
 class Form < ActiveRecord::Base
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
+  def self.receivable_association
+    {name: :form_forwardings, fk: :recipient}
+  end
+  include Receivable
+
   API_ACCESS_LEVELS = %w(private public)
 
   has_many(:responses, inverse_of: :form)
   has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
   has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
-  has_many(:form_forwardings)
-  has_many(:forwardee_users, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "User")
-  has_many(:forwardee_user_groups, through: :form_forwardings, as: :forwardees, source: :forwardee, source_type: "UserGroup")
 
   # while a form has many versions, this is a reference to the most up-to-date one
   belongs_to(:current_version, class_name: "FormVersion")
@@ -89,65 +91,6 @@ class Form < ActiveRecord::Base
   def root_questionings(reload = false)
     # Not memoizing this because it causes all sorts of problems.
     root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
-  end
-
-  def forwardees
-    [forwardee_users, forwardee_user_groups].flatten
-  end
-
-  def sms_forwardees
-    forwardees.map { |fwd| BroadcastRecipient.new(object: fwd) }
-  end
-
-  def sms_forwardee_names
-    sms_forwardees.map(&:name).join(", ")
-  end
-
-  def sms_forwardee_ids
-    sms_forwardees.map(&:id)
-  end
-
-  def sms_forwardee_ids=(ids)
-    user_list = []
-    group_list = []
-    ids.each do |id_string|
-      type, _, id = id_string.rpartition("_")
-      case type
-      when "user"
-        user_list << id
-      when "user_group"
-        group_list << id
-      end
-    end
-    self.forwardee_users = User.where(id: user_list)
-    self.forwardee_user_groups = UserGroup.where(id: group_list)
-    self.save! unless self.new_record?
-  end
-
-  def forwardees_as_users
-    user_list = []
-    self.forwardees.each do |fwd|
-      case fwd.class.to_s
-      when "User"
-        user_list << fwd
-      when "UserGroup"
-        fwd.users.each do |u|
-          user_list << u
-        end
-      end
-    end
-    user_list
-  end
-
-  def forwardees=(forwardees)
-    forwardees.each do |fwd|
-      case fwd.class.to_s
-      when "User"
-        forwardee_users << fwd
-      when "UserGroup"
-        forwardee_user_groups << fwd
-      end
-    end
   end
 
   def odk_download_cache_key

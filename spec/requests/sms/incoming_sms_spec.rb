@@ -127,8 +127,11 @@ describe 'incoming sms' do
   end
 
   context "with SMS relay enabled" do
-    let(:forwardees) { create_list(:user, 5) }
-    before { setup_form(questions: %w(integer text), forward_recipients: forwardees) }
+    let(:users) { create_list(:user, 2) }
+    let(:group) { create(:user_group, users: create_list(:user, 3)) }
+    let(:recipients) { users + [group] }
+
+    before { setup_form(questions: %w(integer text), forward_recipients: recipients) }
 
     it "sends forwards" do
       incoming_body = "#{form_code} 1.15 2.something"
@@ -139,12 +142,12 @@ describe 'incoming sms' do
       expect(sms_forward.body).to eq incoming_body
 
       # get forward recipients
-      recipients = sms_forward.recipient_hashes.map{|hash| hash[:user] }
-      expect(recipients).to eq forwardees
+      recipients = sms_forward.recipient_hashes.map { |hash| hash[:user] }
+      expect(recipients).to contain_exactly(*(users + group.users))
     end
 
     context "with sms authentication enabled" do
-      before { setup_form(questions: %w(integer text), forward_recipients: forwardees, authenticate_sms: true) }
+      before { setup_form(questions: %w(integer text), forward_recipients: recipients, authenticate_sms: true) }
 
       it "strips auth code from forward" do
         incoming_body = "#{auth_code} #{form_code} 1.29 2.something"

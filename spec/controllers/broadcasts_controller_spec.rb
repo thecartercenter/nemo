@@ -37,8 +37,8 @@ describe BroadcastsController, type: :request do
 
     it 'create and show should work' do
       post(broadcasts_path, broadcast: {
-        recipient_selection: 'specific_users',
-        recipient_ids: [@user2.id, @user3.id],
+        recipient_selection: 'specific',
+        recipient_ids: ["user_#{@user2.id}", "user_#{@user3.id}"],
         medium: 'sms',
         which_phone: 'both',
         subject: '',
@@ -59,7 +59,7 @@ describe BroadcastsController, type: :request do
 
     it 'create should show error' do
       post_s(broadcasts_path, broadcast: {
-        recipient_selection: 'specific_users',
+        recipient_selection: 'specific',
         recipient_ids: "#{@user2.id},#{@user3.id}",
         medium: 'sms_only',
         which_phone: 'both',

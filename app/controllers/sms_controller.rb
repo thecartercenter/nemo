@@ -33,16 +33,24 @@ class SmsController < ApplicationController
     @incoming.mission = current_mission
     @incoming.save
 
-    # Store the reply in an instance variable so the functional test can access them
-    @reply = Sms::Handler.new.handle(@incoming)
+    result = Sms::Handler.new.handle(@incoming)
+
+    # Store the reply in an instance variable so the functional test can access it.
+    @reply = result[:reply]
 
     # Expose this to tests even if we don't use it.
     @outgoing_adapter = configatron.outgoing_sms_adapter
 
+    # Deliver the reply via adapter or response.
     if @reply
       deliver_reply(@reply) # This method does an appropriate render
     else
       render text: "", status: 204 # No Content
+    end
+
+    # Deliver the forward, if it exists, via the outgoing adapter (can't deliver this via response).
+    if result[:forward]
+      @outgoing_adapter.deliver(result[:forward])
     end
   end
 
