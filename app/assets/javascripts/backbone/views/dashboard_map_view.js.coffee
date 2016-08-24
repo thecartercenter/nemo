@@ -10,7 +10,8 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
     # create the map
     @map = new google.maps.Map($('div.response_locations')[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
-      zoom: 1,
+      # This default zoom level shows most of the world on a big screen, but avoids grey bars at top/bottom.
+      zoom: 3,
       streetViewControl: false,
       draggableCursor: 'pointer'
     })
