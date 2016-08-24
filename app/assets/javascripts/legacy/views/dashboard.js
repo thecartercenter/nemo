@@ -110,12 +110,12 @@
 
   // Reloads the page via AJAX, passing the current report id
   klass.prototype.reload_ajax = function(args) { var self = this;
-    // Don't have session timeout if in full screen mode
-    var full_screen = JSON.parse(localStorage.getItem("full-screen")) ? 1 : undefined;
 
-    // only set the 'auto' parameter on this request if in full screen mode
-    // the dashboard in full screen mode is meant to be a long-running page so doesn't make
-    // sense to let the session expire
+    // We only set the 'auto' parameter on this request if NOT in full screen mode.
+    // The auto param prevents the AJAX request from resetting the auto-logout timer.
+    // The dashboard in full screen mode is meant to be a long-running page so doesn't make
+    // sense to let the session expire.
+    var auto = view_setting("full-screen") ? undefined : 1;
 
     $.ajax({
       url: ELMO.app.url_builder.build('/'),
@@ -123,7 +123,7 @@
       data: {
         report_id: self.report_view.current_report_id,
         latest_response_id: self.list_view.latest_response_id(),
-        auto: full_screen
+        auto: auto
       },
       success: function(data) {
         $('.recent_responses').replaceWith(data.recent_responses);
