@@ -10,7 +10,8 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
     # create the map
     @map = new google.maps.Map($('div.response_locations')[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
-      zoom: 1,
+      # This default zoom level shows most of the world on a big screen, but avoids grey bars at top/bottom.
+      zoom: 3,
       streetViewControl: false,
       draggableCursor: 'pointer'
     })
@@ -34,6 +35,17 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
 
     # else use bounds determined above
     else
+      # Prevent map from zooming in too far when calling fitBounds.
+      # Does this by handling the asynchronous zoom and bounds changed events.
+      google.maps.event.addListener @map, 'zoom_changed', =>
+        zoomChangeBoundsListener =
+          google.maps.event.addListener @map, 'bounds_changed', (event) =>
+            if @map.getZoom() > 10 && @map.initialZoom
+              @map.setZoom(10);
+              @map.initialZoom = false;
+            google.maps.event.removeListener(zoomChangeBoundsListener)
+      @map.initialZoom = true;
+
       # center/zoom the map
       @map.fitBounds(bounds)
 
@@ -121,3 +133,11 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
   update_map: (data) ->
     this.add_answer(answer) for answer in data.answers
     # TODO: Deal with data.count
+
+  center: ->
+    @map.getCenter()
+
+  # Called after viewport is resized. If center is given, sets the new center for the map.
+  resized: (center) ->
+    google.maps.event.trigger(@map, "resize")
+    @map.setCenter(center) if center

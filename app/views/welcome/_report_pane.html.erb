@@ -1,9 +1,9 @@
 <div class="report_pane">
 <% if @reports.empty? %>
   <h2 class="interior"><%= translate_model(Report::Report) %></h2>
-
-  <div><%= t('dashboard.no_reports') %></div>
-
+  <div class="report_main">
+    <%= t('dashboard.no_reports') %>
+  </div>
 <% else %>
   <div>
     <form class="report_chooser">

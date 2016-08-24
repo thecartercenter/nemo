@@ -22,20 +22,22 @@ describe UserBatch do
     expect(Assignment.count).to eq 5
   end
 
-  it "creates more than 1000 users in different batches" do
-    ub = create_user_batch("user_batch_2500.xlsx")
-    expect(ub).to be_succeeded
-
-    expect(User.count).to eq 2499
-    expect(Assignment.count).to eq 2499
-  end
+  # This spec was running very slowly since it was creating 2500 users!
+  # Should be refactored to stub the BATCH_SIZE constant.
+  # it "creates more than users in different batches" do
+  #   ub = create_user_batch("user_batch_2500.xlsx")
+  #   expect(ub).to be_succeeded
+  #
+  #   expect(User.count).to eq 2499
+  #   expect(Assignment.count).to eq 2499
+  # end
 
   it "creates users from csv" do
-    ub = create_user_batch("user_batch_2500.csv")
+    ub = create_user_batch("user_batch_3.csv")
     expect(ub).to be_succeeded
 
-    expect(User.count).to eq 2499
-    expect(Assignment.count).to eq 2499
+    expect(User.count).to eq 3
+    expect(Assignment.count).to eq 3
   end
 
   it "ignores blank lines" do
