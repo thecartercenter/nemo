@@ -33,8 +33,9 @@ class SmsController < ApplicationController
     @incoming.mission = current_mission
     @incoming.save
 
-    # Store the reply in an instance variable so the functional test can access them
     result = Sms::Handler.new.handle(@incoming)
+
+    # Store the reply in an instance variable so the functional test can access it.
     @reply = result[:reply]
 
     # Expose this to tests even if we don't use it.
