@@ -134,6 +134,10 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
     this.add_answer(answer) for answer in data.answers
     # TODO: Deal with data.count
 
-  # Called after viewport is resized.
-  resized: ->
+  center: ->
+    @map.getCenter()
+
+  # Called after viewport is resized. If center is given, sets the new center for the map.
+  resized: (center) ->
     google.maps.event.trigger(@map, "resize")
+    @map.setCenter(center) if center

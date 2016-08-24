@@ -75,6 +75,9 @@
     var cont_w = $('#content').width() - 4;
     var cont_h = $(window).height() - $('#title').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
 
+    // Save map center so we can recenter after resize.
+    var map_center = this.map_view.center();
+
     if (view_setting('expanded-map')) {
 
       $('.response_locations').width("100%").height(cont_h);
@@ -105,7 +108,7 @@
       $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
     }
 
-    this.map_view.resized();
+    this.map_view.resized(map_center);
   };
 
   // Reloads the page via AJAX, passing the current report id
