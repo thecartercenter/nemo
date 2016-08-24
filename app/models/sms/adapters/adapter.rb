@@ -24,7 +24,7 @@ class Sms::Adapters::Adapter
     self.class.service_name
   end
 
-  # Raises an error if no recipients or message empty. Adds adapter name.
+  # Saves the message to the DB. Raises an error if no recipients or message empty. Adds adapter name.
   def prepare_message_for_delivery(message)
     # apply the adapter name to the message
     message.adapter_name = service_name
