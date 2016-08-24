@@ -1,171 +1,171 @@
 source "http://rubygems.org"
 
-gem "rails", "4.2.5"
+gem "rails", "~> 4.2.5"
 
 # Assets / Javascript
-gem "sass-rails", "~> 4.0.2"
-gem "uglifier", ">= 1.3.0"
-gem "bootstrap-modal-rails"
-gem "actionpack-page_caching"
-gem "jquery-rails"
-gem "jquery-fileupload-rails"
+gem "sass-rails", "~> 4.0.5"
+gem "uglifier", "~> 2.7.1"
+gem "bootstrap-modal-rails", "~> 2.2.5"
+gem "actionpack-page_caching", "~> 1.0.2"
+gem "jquery-rails", "~> 4.0.4"
+gem "jquery-fileupload-rails", "~> 0.4.5"
 gem "rails-backbone", github: "codebrew/backbone-rails"
-gem "dropzonejs-rails"
-gem "phantomjs_polyfill-rails"
+gem "dropzonejs-rails", "~> 0.7.3"
+gem "phantomjs_polyfill-rails", "~> 1.0.0"
 
 # Authentication
-gem "activerecord-session_store"
-gem "authlogic", "3.4.5"
-gem "scrypt", "1.2"
+gem "activerecord-session_store", "~> 0.1.1"
+gem "authlogic", "~> 3.4.5"
+gem "scrypt", "~> 1.2.0"
 
 # authorization
-gem "cancancan", "~> 1.10"
+gem "cancancan", "~> 1.10.1"
 
 # core
-gem "rake"
-gem "mysql2", ">= 0.3.15"
-gem "configatron", "~> 4.2"
-gem "random_data"
-gem "paperclip"
-gem "term-ansicolor"
-gem "therubyracer", platforms: :ruby
-gem "draper", "~> 2.1"
-gem "attribute_normalizer"
-gem "responders"
+gem "rake", "~> 10.4.2"
+gem "mysql2", "~> 0.3.18"
+gem "configatron", "~> 4.5.0"
+gem "random_data", "~> 1.6.0"
+gem "paperclip", "~> 4.3.2"
+gem "term-ansicolor", "~> 1.3.0"
+gem "therubyracer", "~> 0.12.2", platforms: :ruby
+gem "draper", "~> 2.1.0"
+gem "attribute_normalizer", "~> 1.2.0"
+gem "responders", "~> 2.3.0"
 
 # pagination
-gem "will_paginate"
-gem "will_paginate-bootstrap"
+gem "will_paginate", "~> 3.0.7"
+gem "will_paginate-bootstrap", "~> 1.0.1"
 
 # markdown support
-gem "bluecloth"
-gem "rdiscount"
-gem "reverse_markdown"
+gem "bluecloth", "~> 2.2.0"
+gem "rdiscount", "~> 2.1.8"
+gem "reverse_markdown", "~> 1.0.3"
 
 # API
-gem "versionist"
-gem "active_model_serializers"
-gem "api-pagination"
+gem "versionist", "~> 1.4.1"
+gem "active_model_serializers", "~> 0.9.3"
+gem "api-pagination", "~> 4.1.1"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list", github: "swanandp/acts_as_list", branch: "master"
 
 # i18n
-gem "i18n-js", "~> 3.0.0.rc11"
+gem "i18n-js", "~> 3.0.0.rc13"
 gem "rails-i18n", "~> 4.0.4"
-gem "iso-639"
-gem "i18n-country-translations"
-gem "i18n_country_select"
+gem "iso-639", "~> 0.2.5"
+gem "i18n-country-translations", "~> 1.2.3"
+gem "i18n_country_select", "~> 1.1.7"
 # memcache
-gem "dalli"
+gem "dalli", "~> 2.7.4"
 
 # foreign key maintenance
-gem "immigrant"
+gem "immigrant", "~> 0.3.1"
 
 # mean, median, etc.
-gem "descriptive_statistics", require: "descriptive_statistics/safe"
+gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe"
 
 # underscore templates
-gem "ejs"
+gem "ejs", "~> 1.1.1"
 
 # background job support
-gem "daemons"
-gem "delayed_job_active_record"
+gem "daemons", "~> 1.2.1"
+gem "delayed_job_active_record", "~> 4.0.3"
 
 # search
 gem "thinking-sphinx", "~> 3.1.3"
 gem "ts-delayed-delta", "~> 2.0.2"
 
 # cron management
-gem "whenever", require: false
+gem "whenever", "~> 0.9.4", require: false
 
 # Bootstrap UI framework
-gem "bootstrap-sass", "~> 3.3.3"
+gem "bootstrap-sass", "~> 3.3.4"
 
 # spinner
 gem "spinjs-rails", "1.3"
 
 # tree data structure
-gem "ancestry", "~> 2.0"
+gem "ancestry", "~> 2.1.0"
 
 # Middleware for handling abusive requests
 gem "rack-attack", github: "sassafrastech/rack-attack"
 
 # reCAPTCHA support
-gem "recaptcha", require: "recaptcha/rails"
+gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
 
 # XLS support
 gem "axlsx", "~> 2.1.0.pre"
-gem "axlsx_rails"
+gem "axlsx_rails", "~> 0.3.0"
 gem "roo", "~> 2.1.1"
 
 # Twilio SMS integration
-gem "twilio-ruby", " ~> 4.1"
+gem "twilio-ruby", "~> 4.1.0"
 
 # Phone number normalization
-gem "phony"
+gem "phony", "~> 2.15.26"
 
 group :development do
   # generate diagrams with rake db:migrate
-  gem "rails-erd"
+  gem "rails-erd", "~> 1.4.0"
 
   # deployment
-  gem "capistrano", "~> 2.15.4"
+  gem "capistrano", "~> 2.15.5"
 
   # query optimization
-  gem "bullet"
+  gem "bullet", "~> 4.14.4"
 
   # development web server
-  gem "thin"
+  gem "thin", "~> 1.6.3"
 
   # speed up development mode
-  gem "rails-dev-tweaks", "~> 1.1"
-  gem "spring"
+  gem "rails-dev-tweaks", "~> 1.2.0"
+  gem "spring", "~> 1.3.3"
 
   # Better error pages
-  gem "better_errors"
-  gem "binding_of_caller"
+  gem "better_errors", "~> 2.1.1"
+  gem "binding_of_caller", "~> 0.7.2"
 
   # misc
-  gem "apiary"
-  gem "fix-db-schema-conflicts"
+  gem "apiary", "~> 0.0.5"
+  gem "fix-db-schema-conflicts", "~> 1.0.1"
 end
 
 group :development, :test do
   # test framework
   gem "jasmine-rails", "~> 0.10.7"
-  gem "rspec-rails", "~> 3.0"
-  gem "rspec-collection_matchers"
+  gem "rspec-rails", "~> 3.2.1"
+  gem "rspec-collection_matchers", "~> 1.1.2"
 
   # mocking/stubbing/factories
-  gem "mocha"
-  gem "faker"
-  gem "factory_girl_rails", "~> 4.0"
+  gem "mocha", "~> 1.1.0"
+  gem "faker", "~> 1.6.3"
+  gem "factory_girl_rails", "~> 4.5.0"
 
   # acceptance tests
-  gem "capybara"
-  gem "capybara-screenshot"
-  gem "selenium-webdriver"
-  gem "poltergeist", "~> 1.6"
+  gem "capybara", "~> 2.4.4"
+  gem "capybara-screenshot", "~> 1.0.11"
+  gem "selenium-webdriver", "~> 2.45.0"
+  gem "poltergeist", "~> 1.6.0"
 
   # cleans database for testing
-  gem "database_cleaner"
+  gem "database_cleaner", "~> 1.4.1"
 
    # sets time for testing
-  gem "timecop"
+  gem "timecop", "~> 0.7.3"
 
   # for debugging/console, prints an object nicely
-  gem "awesome_print"
+  gem "awesome_print", "~> 1.6.1"
 
   # test assertion
-  gem "assert_difference"
+  gem "assert_difference", "~> 1.0.0"
 
   # auto-open capybara html file
-  gem "launchy"
+  gem "launchy", "~> 2.4.3"
 
   # builds JMeter test plans
   gem "ruby-jmeter", "~> 2.13.4"
 
   # removes "get assets" from logs
-  gem "quiet_assets"
+  gem "quiet_assets", "~> 1.1.0"
 end
