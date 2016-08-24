@@ -144,9 +144,9 @@
   // Enables/disables full screen mode. Uses stored setting if no param given.
   // Toggles setting if 'toggle' given.
   klass.prototype.set_full_screen = function(value) {
-    bool = update_view_setting('full-screen', value);
+    var full = view_setting('full-screen', value);
 
-    if (bool) {
+    if (full) {
       $('#footer').hide();
       $('#main-nav').hide();
       $('#userinfo').hide();
@@ -161,25 +161,33 @@
     }
 
     // Set link text
-    $('a.full-screen span').text(I18n.t('dashboard.' + (bool ? 'exit' : 'enter') + '_full_screen'));
+    $('a.full-screen span').text(I18n.t('dashboard.' + (full ? 'exit' : 'enter') + '_full_screen'));
   };
 
   // Enables/disables expanded map. Uses stored setting if no param given.
-  // Toggles setting if 'toggle' given. Always enables full screen if expanding map.
+  // Toggles setting if 'toggle' given.
+  // Always enables full screen if expanding map.
+  // When collapsing map, disables full screen if it wasn't on when map was expanded.
   klass.prototype.set_expanded_map = function(value) {
-    bool = update_view_setting('expanded-map', value);
+    var expand = view_setting('expanded-map', value);
 
-    if (bool) {
+    if (expand) {
+      var was_full = view_setting('full-screen');
+      view_setting('screen-full-before-map-expand', was_full);
       this.set_full_screen(true);
+
       $('#content').addClass('expanded-map');
       $('.response_locations').width('100%');
     } else {
+      var was_full = view_setting('screen-full-before-map-expand');
+      if (!was_full) this.set_full_screen(false);
+
       $('#content').removeClass('expanded-map');
       this.adjust_pane_sizes();
     }
   };
 
-  function update_view_setting(setting_name, value) {
+  function view_setting(setting_name, value) {
     // Fetch current.
     var bool = JSON.parse(localStorage.getItem(setting_name));
 

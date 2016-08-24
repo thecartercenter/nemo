@@ -60,6 +60,14 @@ end %>
   <%= render partial: 'report_pane' %>
 </div>
 
+<%# Link for shrinking map. Shown only when expanded map is shown. %>
+<div class="expanded-map-links">
+  <a href="#" class="toggle-map">
+    <i class="fa fa-compress"></i>
+    <%= t("dashboard.shrink_map") %>
+  </a>
+</div>
+
 <%= javascript_doc_ready do %>
   <%# Hides/displays appropriate full screen elements if necessary %>
   ELMO.app.dashboard.set_full_screen();
