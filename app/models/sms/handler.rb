@@ -1,10 +1,10 @@
-# Takes an incoming Sms::Message and returns a translated and formatted reply.
+# Takes an incoming Sms::Message and returns a translated and formatted reply and/or forward.
 # Handles errors.
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Handler
 
-  # takes an incoming sms and returns an outgoing one
-  # may return nil if no response is appropriate
+  # Takes an incoming sms, decodes it, and constructs a reply and/or a forward.
+  # Returns a hash with keys :reply and :forward. Either value may be nil.
   def handle(sms)
     # abort if the SMS in question is from one of the incoming SMS numbers
     return if configatron.incoming_sms_numbers.include? sms.from
@@ -80,6 +80,12 @@ class Sms::Handler
       reply = Sms::Reply.new(to: sms.from, body: reply_body, mission: sms.mission, user: sms.user)
     end
 
+    {reply: reply, forward: handle_forward(sms, elmo_response)}
+  end
+
+  # Decides if an SMS forward is called for, and builds and returns the Sms::Forward object if so.
+  # Returns nil if no forward is called for, or if an error is encountered in constructing the message.
+  def handle_forward(sms, elmo_response)
     form = elmo_response.try(:form)
 
     if form && form.sms_relay?
@@ -91,14 +97,16 @@ class Sms::Handler
         medium: "sms_only",
         body: sms.body,
         which_phone: "both",
-        mission: sms.mission)
+        mission: sms.mission
+      )
 
       if broadcast.save
-        Sms::Forwarder.deliver(broadcast, elmo_response, sms.body)
+        message = strip_auth_code(sms.body, form)
+        return Sms::Forward.new(broadcast: broadcast, body: message, mission: broadcast.mission)
       end
     end
 
-    reply
+    nil
   end
 
   private
@@ -113,5 +121,11 @@ class Sms::Handler
 
     # do the translation, raising error on failure
     I18n.t(key, options.merge(locale: lang, raise: true))
+  end
+
+  def strip_auth_code(message, form)
+    split_message = message.split(" ")
+    split_message.shift if form.authenticate_sms?
+    joined_message = split_message.join(" ")
   end
 end

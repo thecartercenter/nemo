@@ -5,29 +5,26 @@ class SmsTestsController < ApplicationController
   def new
   end
 
-  # handles a request for a test. this will be an AJAX call so we only return the message body
+  # Handles a request for a test. This will be an AJAX call so we only return the reply and forward body.
   def create
-    # create an incoming sms object
-    sms = Sms::Incoming.create(adapter_name: 'Test Console',
+    # Create an incoming sms object.
+    # Should eventually refactor to do this via the TestConsoleAdapter.
+    sms = Sms::Incoming.create(adapter_name: Sms::Adapters::TestConsoleAdapter.service_name,
       to: nil,
       from: params[:sms_test][:from],
       body: params[:sms_test][:body],
       mission: current_mission
     )
 
-    reply, forward = Sms::Handler.new.handle(sms)
-    if reply
-      reply.adapter_name = "Test Console"
-      reply.save
-    end
+    result = Sms::Handler.new.handle(sms)
 
-    if forward
-      forward.adapter_name = "Test Console"
-      forward.save
-    end
+    # Send both the reply and forward (if exist) via the TestConsoleAdapter.
+    # This really just saves them and sets the adapter name.
+    adapter = Sms::Adapters::TestConsoleAdapter.new
+    result.values.compact.each { |m| adapter.deliver(m) }
 
-    # render the body of the reply
-    render text: reply ? reply.body : content_tag(:em, t('sms_console.no_reply'))
+    # Render the body of the reply.
+    render text: result[:reply] ? result[:reply].body : content_tag(:em, t('sms_console.no_reply'))
   end
 
   protected
