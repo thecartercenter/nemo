@@ -11,10 +11,16 @@
     self.params = params;
 
     // hook up full screen link
-    $("a.full-screen").on('click', function(obj) {self.toggle_view_setting('full-screen'); return false;});
+    $("a.full-screen").on('click', function(obj) {
+      self.set_full_screen('toggle');
+      return false;
+    });
 
     // hook up expand map link
-    $("a.toggle-map").on('click', function(obj) {self.toggle_view_setting('expanded-map'); return false;});
+    $("a.toggle-map").on('click', function(obj) {
+      self.set_expanded_map('toggle');
+      return false;
+    });
 
     // readjust stuff on window resize
     $(window).on('resize', function(){
@@ -135,47 +141,63 @@
       + ((id = self.report_view.current_report_id) ? '&report_id=' + id : '');
   };
 
-  // Toggles the value of a setting stored in localStorage, then calls the execute method to make the change.
-  klass.prototype.toggle_view_setting = function(setting_name) { var self = this;
-    var current = JSON.parse(localStorage.getItem(setting_name));
-    current ? localStorage.setItem(setting_name, false) : localStorage.setItem(setting_name, true);
-    self.execute_view_setting(setting_name);
+  // Enables/disables full screen mode. Uses stored setting if no param given.
+  // Toggles setting if 'toggle' given.
+  klass.prototype.set_full_screen = function(value) {
+    bool = update_view_setting('full-screen', value);
+
+    if (bool) {
+      $('#footer').hide();
+      $('#main-nav').hide();
+      $('#userinfo').hide();
+      $('#title img').css('height', '30px');
+      $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
+    } else {
+      $('#footer').show();
+      $('#main-nav').show();
+      $('#userinfo').show();
+      $('#title img').css('height', 'initial');
+      $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
+    }
+
+    // Set link text
+    $('a.full-screen span').text(I18n.t('dashboard.' + (bool ? 'exit' : 'enter') + '_full_screen'));
   };
 
-  // Reads a view setting from localStorage and makes it happen.
-  klass.prototype.execute_view_setting = function(setting_name) { var self = this;
-    var setting = JSON.parse(localStorage.getItem(setting_name));
+  // Enables/disables expanded map. Uses stored setting if no param given.
+  // Toggles setting if 'toggle' given. Always enables full screen if expanding map.
+  klass.prototype.set_expanded_map = function(value) {
+    bool = update_view_setting('expanded-map', value);
 
-    switch (setting_name) {
-
-    case 'full-screen':
-
-      // if not in full screen mode, show everything (default)
-      if (!setting) {
-        $('#footer').show();
-        $('#main-nav').show();
-        $('#userinfo').show();
-        $('#title img').css('height', 'initial');
-        $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
-      // else full screen is true, hide things
-      } else {
-        $('#footer').hide();
-        $('#main-nav').hide();
-        $('#userinfo').hide();
-        $('#title img').css('height', '30px');
-        $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
-      }
-
-      // Set link text
-      $('a.full-screen span').text(I18n.t('dashboard.' + (setting ? 'exit' : 'enter') + '_full_screen'));
-
-    case 'expanded-map':
-      if ($('#content').is('.expanded-map'))
-        $('#content').removeClass('expanded-map');
-      else
-        $('#content').addClass('expanded-map');
-
+    if (bool) {
+      this.set_full_screen(true);
+      $('#content').addClass('expanded-map');
+      $('.response_locations').width('100%');
+    } else {
+      $('#content').removeClass('expanded-map');
+      this.adjust_pane_sizes();
     }
   };
 
+  function update_view_setting(setting_name, value) {
+    // Fetch current.
+    var bool = JSON.parse(localStorage.getItem(setting_name));
+
+    // Return unchanged if no value given.
+    if (typeof value == 'undefined')
+      return bool;
+
+    // Toggle if requested.
+    else if (value == 'toggle')
+      bool = !bool;
+
+    // Else set directly.
+    else
+      bool = value;
+
+    // Store for future recall.
+    localStorage.setItem(setting_name, bool);
+
+    return bool;
+  }
 }(ELMO.Views));

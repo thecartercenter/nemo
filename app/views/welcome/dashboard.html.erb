@@ -62,7 +62,8 @@ end %>
 
 <%= javascript_doc_ready do %>
   <%# Hides/displays appropriate full screen elements if necessary %>
-  ELMO.app.dashboard.execute_view_setting('full-screen');
+  ELMO.app.dashboard.set_full_screen();
+  ELMO.app.dashboard.set_expanded_map();
 
   <%# Runs report %>
   ELMO.app.dashboard.run_report();

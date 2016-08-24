@@ -13,12 +13,18 @@ body.welcome {
     &.expanded-map {
       padding: 0;
 
-      div.right_col, h2, div.recent_responses, div.dashboard-footer, div.map-top-matter {
+      div.right_col, h2, div.recent_responses, div.dashboard-footer, a.expand-map {
         display: none;
+      }
+
+      .left_col {
+        width: 100%;
+        padding: 0;
       }
 
       .response_locations {
         display: block !important;
+        width: 100%;
       }
     }
   }
