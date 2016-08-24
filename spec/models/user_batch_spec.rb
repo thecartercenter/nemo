@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe UserBatch, :slow do
   let(:mission) { get_mission }
@@ -91,8 +91,8 @@ describe UserBatch, :slow do
 
   context "when checking uniqueness on db" do
     before do
-      create(:user, login: 'a.bob', name: 'A Bob', phone: '+2279182137', phone2: nil, email: 'a@bc.com')
-      create(:user, phone: '+9837494434', phone2: '+983755482')
+      create(:user, login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil, email: "a@bc.com")
+      create(:user, phone: "+9837494434", phone2: "+983755482")
     end
 
     it "checks for login, email and phones repetitions" do

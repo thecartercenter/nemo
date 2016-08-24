@@ -69,32 +69,6 @@ class DirectDBConn
 
   private
 
-  # We need to iterate over every attribute in order to see whether *any* instance of that attribute is a String
-  # Otherwise if the first object is null or does not otherwise parse as a string in a string column
-  # it won't be escaped which will cause the insert to silently fail and makes devs trying to debug very sad
-  # Deprecated for now
-  def generate_string_params_template_from_objects(objects)
-    # Create an array of all the values for each attribute
-    attribute_values = []
-    objects.each do |obj|
-      obj.attributes.each_with_index do |(key, value), index|
-        attribute_values[index] ||= []
-        attribute_values[index] << value
-      end
-    end
-
-    # Construct the params template
-    params_template = []
-    attribute_values.each do |v_array|
-      if v_array.any? { |v| v.is_a?(String) }
-        params_template << "'%s'"
-      else
-        params_template << "%s"
-      end
-    end
-    params_template.join(", ")
-  end
-
   def generate_string_params_template_from_class(klass)
     klass.columns_hash.map do |column, column_type|
       [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
