@@ -121,3 +121,7 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
   update_map: (data) ->
     this.add_answer(answer) for answer in data.answers
     # TODO: Deal with data.count
+
+  # Called after viewport is resized.
+  resized: ->
+    google.maps.event.trigger(@map, "resize")

@@ -48,9 +48,6 @@
       ELMO.app.dashboard_reload_timer = setTimeout(function(){ self.reload_page(); }, PAGE_RELOAD_INTERVAL * 60000);
       $('a.reload-page').on('click', function() { self.reload_page(); });
     }
-    // adjust sizes for the initial load
-    self.adjust_pane_sizes();
-
     // save mission_id as map serialization key
     self.params.map.serialization_key = self.params.mission_id;
 
@@ -59,6 +56,8 @@
     self.map_view = new ELMO.Views.DashboardMapView(self.params.map);
     self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);
 
+    // Adjust sizes for the initial load
+    self.adjust_pane_sizes();
     self.list_view.adjust_columns();
   };
 
@@ -76,29 +75,37 @@
     var cont_w = $('#content').width() - 4;
     var cont_h = $(window).height() - $('#title').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
 
-    // height of the h2 elements
-    var title_h = $('#content h2').height();
+    if (view_setting('expanded-map')) {
 
-    // height of the stats pane
-    var stats_h = $('.report_stats').height();
+      $('.response_locations').width("100%").height(cont_h);
 
-    // left col is slightly narrower than right col
-    var left_w = (cont_w - spacing) * .9 / 2;
-    $('.recent_responses, .response_locations').width(left_w);
-    var right_w = cont_w - spacing - left_w - 15;
-    $('.report_main').width(right_w);
+    } else {
+      // height of the h2 elements
+      var title_h = $('#content h2').height();
 
-    // must control width of stat block li's
-    $('.report_stats .stat_block li').css('maxWidth', (right_w / 3) - 25);
+      // height of the stats pane
+      var stats_h = $('.report_stats').height();
 
-    // must control report title width or we get weird wrapping
-    $('.report_pane h2').css('maxWidth', right_w - 200);
+      // left col is slightly narrower than right col
+      var left_w = (cont_w - spacing) * .9 / 2;
+      $('.recent_responses, .response_locations').width(left_w);
+      var right_w = cont_w - spacing - left_w - 15;
+      $('.report_main').width(right_w);
 
-    // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
-    $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
+      // must control width of stat block li's
+      $('.report_stats .stat_block li').css('maxWidth', (right_w / 3) - 25);
 
-    // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
-    $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
+      // must control report title width or we get weird wrapping
+      $('.report_pane h2').css('maxWidth', right_w - 200);
+
+      // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
+      $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
+
+      // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
+      $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
+    }
+
+    this.map_view.resized();
   };
 
   // Reloads the page via AJAX, passing the current report id
@@ -177,14 +184,13 @@
       this.set_full_screen(true);
 
       $('#content').addClass('expanded-map');
-      $('.response_locations').width('100%');
     } else {
       var was_full = view_setting('screen-full-before-map-expand');
       if (!was_full) this.set_full_screen(false);
 
       $('#content').removeClass('expanded-map');
-      this.adjust_pane_sizes();
     }
+    this.adjust_pane_sizes();
   };
 
   function view_setting(setting_name, value) {
