@@ -8,8 +8,14 @@ class ELMO.Views.SmsTestConsoleView extends ELMO.Views.ApplicationView
   submit: (e) ->
     e.preventDefault()
 
+    if @$('input#sms_test_from').val().trim() == ''
+      msg = I18n.t('activerecord.errors.messages.blank')
+      @$('.sms_test_from .control').prepend('<div class="form-errors">' + msg + '</div>')
+      return
+
     ELMO.app.loading(true);
     @$('.sms_test_result').hide()
+    @$('.form-errors').remove()
 
     $.ajax
       type: 'POST'

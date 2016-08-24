@@ -1780,6 +1780,7 @@ en:
 
   sms_console:
     back_to_forms: "Back to Forms"
+    from_number_required: "From number is required."
     no_reply: "No reply."
     submit_error: "There was an error submitting your test."
 
