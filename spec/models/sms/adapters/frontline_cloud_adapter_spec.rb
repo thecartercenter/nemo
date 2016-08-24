@@ -38,6 +38,8 @@ describe Sms::Adapters::FrontlineCloudAdapter do
   end
 
   it "should correctly parse a frontlinecloud-style request even if incoming_sms_numbers is empty" do
+    Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
+    
     configatron.incoming_sms_numbers = []
     request = double(params: frontlinecloud_params)
     msg = @adapter.receive(request)

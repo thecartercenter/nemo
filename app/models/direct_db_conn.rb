@@ -6,9 +6,10 @@ class DirectDBConn
 
   def insert(objects)
     column_names = escape_column_names(objects)
+
     object_values = objects.map { |o| convert_values_to_insert_syntax(o) }
 
-    string_params = generate_string_params_template_from_attributes(objects.first.attributes)
+    string_params = generate_string_params_template_from_class(objects.first.class)
 
     string_params = add_parenthesis_to_params_string(string_params)
 
@@ -26,7 +27,7 @@ class DirectDBConn
 
     column_names = escape_column_names(objects_to_insert)
     object_values = objects_to_insert.map { |o| convert_values_to_insert_syntax(o) }
-    string_params = generate_string_params_template_from_attributes(objects_to_insert.first.attributes)
+    string_params = generate_string_params_template_from_class(objects_to_insert.first.class)
 
     # Change the value of the field with the name we want to SELECT on our INSERT..SELECT query
     object_values = change_field_value_with_field_name(object_values, column_names, field_to_select)
@@ -68,8 +69,10 @@ class DirectDBConn
 
   private
 
-  def generate_string_params_template_from_attributes(attributes)
-    attributes.map { |k,v| v.is_a?(String) ? "'%s'" : "%s" }.join(", ")
+  def generate_string_params_template_from_class(klass)
+    klass.columns_hash.map do |column, column_type|
+      [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
+    end.join(", ")
   end
 
   def add_parenthesis_to_params_string(params_string)

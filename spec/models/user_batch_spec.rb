@@ -1,22 +1,27 @@
-require 'spec_helper'
+require "spec_helper"
 
-describe UserBatch do
+describe UserBatch, :slow do
   let(:mission) { get_mission }
 
   it "creates users with varying amounts of info" do
     ub = create_user_batch("varying_info.xlsx")
     expect(ub).to be_succeeded
 
-    assert_user_attribs(ub.users[0], login: "a.bob", name: 'A Bob',
-      phone: '+2279182137', phone2: nil, email: 'a@bc.com')
-    assert_user_attribs(ub.users[1], login: "bcod", name: 'Bo Cod',
-      phone: nil, phone2: nil, email: 'b@co.com')
-    assert_user_attribs(ub.users[2], login: "flim.flo", name: 'Flim Flo',
-      phone: '+123456789', phone2: nil, email: 'f@fl.com')
-    assert_user_attribs(ub.users[3], login: "shobo", name: 'Sho Bo',
-      phone: nil, phone2: nil, email: 'd@ef.stu')
-    assert_user_attribs(ub.users[4], login: "clo", name: 'Cha Lo',
-      phone: '+983755482', phone2: '+9837494434', email: 'ch@lo.com')
+    assert_user_attribs(ub.users[0],
+      login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil,
+      gender: "man", email: "a@bc.com")
+    assert_user_attribs(ub.users[1],
+      login: "bcod", name: "Bo Cod", phone: nil, phone2: nil,
+      gender: "woman", email: "b@co.com")
+    assert_user_attribs(ub.users[2],
+      login: "flim.flo", name: "Flim Flo", phone: "+123456789", phone2: nil,
+      birth_year: 1989, email: "f@fl.com")
+    assert_user_attribs(ub.users[3],
+      login: "shobo", name: "Sho Bo", phone: nil, phone2: nil,
+      gender: "specify", gender_custom: "Genderqueer", email: "d@ef.stu")
+    assert_user_attribs(ub.users[4],
+      login: "clo", name: "Cha Lo", phone: "+983755482", phone2: "+9837494434",
+      birth_year: nil, gender: nil, gender_custom: nil, email: "ch@lo.com")
 
     expect(User.count).to eq 5
     expect(Assignment.count).to eq 5
@@ -88,8 +93,8 @@ describe UserBatch do
 
   context "when checking uniqueness on db" do
     before do
-      create(:user, login: 'a.bob', name: 'A Bob', phone: '+2279182137', phone2: nil, email: 'a@bc.com')
-      create(:user, phone: '+9837494434', phone2: '+983755482')
+      create(:user, login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil, email: "a@bc.com")
+      create(:user, phone: "+9837494434", phone2: "+983755482")
     end
 
     it "checks for login, email and phones repetitions" do

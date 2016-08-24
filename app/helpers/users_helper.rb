@@ -48,4 +48,18 @@ module UsersHelper
     e << User.human_attribute_name(:mission_id) + " " + @user.errors[:'assignments.mission'].first unless @user.errors[:'assignments.mission'].empty?
     e
   end
+
+  def birth_year_options
+    first_year = 120.years.ago.year
+    last_year = Time.zone.now.year
+    (first_year..last_year).to_a.reverse
+  end
+
+  def country_options
+    country_translations = {}
+    I18n.t("countries").keys.each do |country_code|
+      country_translations[code] = I18n.t(code, scope: :countries)
+    end
+    country_translations
+  end
 end
