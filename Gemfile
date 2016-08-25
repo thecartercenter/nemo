@@ -128,7 +128,7 @@ group :development do
 
   # misc
   gem "apiary", "~> 0.0.5"
-  gem "fix-db-schema-conflicts", "~> 1.0.1"
+  gem "fix-db-schema-conflicts", "~> 2.0.0"
 end
 
 group :development, :test do

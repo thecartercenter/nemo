@@ -5,6 +5,7 @@ class AddGroupSupportToBroadcastAddressings < ActiveRecord::Migration
     change_column_null :broadcast_addressings, :user_id, false
     change_column_null :broadcast_addressings, :broadcast_id, false
 
+    remove_foreign_key "broadcast_addressings", "user"
     rename_column :broadcast_addressings, :user_id, :addressee_id
     add_column :broadcast_addressings, :addressee_type, :string
 

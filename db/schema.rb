@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 20160824180252) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "form_forwardings", ["form_id", "recipient_id", "recipient_type"], name: "form_forwardings_full", unique: true, using: :btree
+  add_index "form_forwardings", %w(form_id recipient_id recipient_type), name: "form_forwardings_full", unique: true, using: :btree
   add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
   add_index "form_forwardings", ["recipient_type", "recipient_id"], name: "index_form_forwardings_on_recipient_type_and_recipient_id", using: :btree
 
