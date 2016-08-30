@@ -315,6 +315,11 @@ describe Sms::Decoder do
       rank: 2, value: "nope", invalid_options: "nope")
   end
 
+  it "select_multiple questions with large option set and more than 4 selections should work" do
+    create_form(questions: %w(integer large_select_multiple))
+    assert_decoding(body: "#{@form.code} 1.15 2.11,12,13,14,15,20,1a", answers: [15, %w(1 2 3 4 5 36 10)])
+  end
+
   it "decimal question should work" do
     create_form(questions: %w(decimal))
     assert_decoding(body: "#{@form.code} 1.1.15", answers: [1.15])

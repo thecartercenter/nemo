@@ -195,8 +195,6 @@ class Sms::Decoder
       # case insensitive
       @value.downcase!
 
-      raise_answer_error("answer_not_valid_long_option_multi") if @value.length > 10
-
       # hopefully this stays empty!
       invalid = []
 
@@ -205,6 +203,8 @@ class Sms::Decoder
       # if the option set has no commas, and has <= 26 options, assume it's a legacy submission
       # and split on spaces, otherwise split on commas
       if @qing.option_set.descendants.count <= 26 && @value =~ /\A[A-Z]+\z/i
+        # Not sure why this check is here, even in the old system it should be possible to represent more than 10 options since it's alphanumeric, but commenting for now in case this needs to go back
+        # raise_answer_error("answer_not_valid_long_option_multi") if @value.length > 10
         split_options = @value.split("")
       else
         split_options = @value.split(/\s*,\s*/)
