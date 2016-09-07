@@ -26,8 +26,9 @@
 
     <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
 
-    <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>
+
     <% unless admin_mode? %>
+      <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>
       <div class="setting-fields">
         <%= f.field(:smsable, :type => :check_box)  %>
         <div class="sms-fields">
