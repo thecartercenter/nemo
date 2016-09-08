@@ -74,6 +74,14 @@ RSpec::Matchers.define :match_xml do |expected|
   end
 end
 
+RSpec::Matchers.define :match_csv do |expected|
+  match do |actual|
+    # Strip BOM from actual
+    doc = actual.gsub("\xEF\xBB\xBF", "")
+    doc.to_s == expected
+  end
+end
+
 RSpec::Matchers.define :be_able_to do |op, target|
   match do |ability|
     ability.can?(op.to_sym, target)

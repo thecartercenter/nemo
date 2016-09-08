@@ -108,7 +108,7 @@ describe ResponsesController, type: :request do
     end
   end
 
-  describe 'csv' do
+  describe 'csv', :csv do
     before do
       create(:response, :form => @form, :answer_values => %w(2 Animal))
       create(:response, :form => @form, :answer_values => %w(15 Plant))
