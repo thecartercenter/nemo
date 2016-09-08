@@ -6,6 +6,7 @@ class Mission < ActiveRecord::Base
   has_many(:assignments, inverse_of: :mission)
   has_many(:users, through: :assignments)
   has_many(:user_groups, inverse_of: :mission, dependent: :destroy)
+  has_many(:user_group_assignments, through: :user_groups)
   has_many(:questions, inverse_of: :mission)
   has_many(:qing_groups, inverse_of: :mission)
   has_many(:form_items, inverse_of: :mission)

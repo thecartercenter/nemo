@@ -11,4 +11,9 @@ class UserGroup < ActiveRecord::Base
 
   scope :by_name, -> { order(:name) }
   scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+
+  # remove heirarchy of objects
+  def self.terminate_sub_relationships(group_ids)
+    UserGroupAssignment.where(user_group_id: group_ids).delete_all
+  end
 end
