@@ -268,6 +268,14 @@ describe Sms::Decoder, :sms do
       rank: 2, value: "abhk", invalid_options: "h, k")
   end
 
+  it "select_multiple question with period in option should error" do
+    create_form(questions: %w(integer select_multiple))
+    assert_decoding_fail(
+      body: "#{@form.code} 1.15 2..B",
+      error: "answer_not_valid_option_multi",
+      rank: 2, value: ".b", invalid_options: ".b")
+  end
+
   it "select_multiple question with appendix should work" do
     create_form(questions: %w(integer select_multiple_with_appendix_for_sms))
     assert_decoding(body: "#{@form.code} 1.15 2.2,4", answers: [15, %w(Banana Durian)])

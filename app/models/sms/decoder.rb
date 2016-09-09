@@ -229,7 +229,7 @@ class Sms::Decoder
         idxs = split_options.map do |l|
 
           # make sure it's a letter
-          if l =~ /[a-z]/
+          if l =~ /\A[a-z]\z/i
 
             # convert to an index
             idx = letters_to_index(l)
