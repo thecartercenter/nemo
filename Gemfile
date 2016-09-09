@@ -129,6 +129,7 @@ group :development do
   # misc
   gem "apiary", "~> 0.0.5"
   gem "fix-db-schema-conflicts", "~> 2.0.0"
+  gem "letter_opener", "~> 1.4.1"
 end
 
 group :development, :test do
