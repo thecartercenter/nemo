@@ -88,5 +88,10 @@ module ELMO
 
     # We use \r\n for CSV row separator because Excel seems to prefer it.
     configatron.csv_row_separator = "\r\n"
+
+    # Restrict available locales to defined system locales
+    # This should replace `configatron.full_locales` eventually
+    # assuming this caused no further issues
+    I18n.available_locales = configatron.full_locales
   end
 end
