@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sms::Adapters::TwilioAdapter do
+describe Sms::Adapters::TwilioAdapter, :sms do
   before :all do
     configatron.twilio_account_sid = 'AC00000000000000000000000000000000'
     configatron.twilio_auth_token = '12121212121212121212121212121212'

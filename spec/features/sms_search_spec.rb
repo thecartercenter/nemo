@@ -1,6 +1,6 @@
 require "spec_helper"
 
-feature "sms search" do
+feature "sms search", :sms do
   before do
     @mission = get_mission
 

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sms::Incoming do
+describe Sms::Incoming, :sms do
   before do
     @user1 = FactoryGirl.create(:user, phone: '1234567890')
   end

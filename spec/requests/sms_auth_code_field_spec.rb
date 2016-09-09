@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "sms auth code field", database_cleaner: :all do
+describe "sms auth code field", :sms, database_cleaner: :all do
 
   before(:all) do
     @user = FactoryGirl.create(:user)

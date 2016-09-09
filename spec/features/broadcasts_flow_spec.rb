@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'broadcasts flow', js: true do
+feature 'broadcasts flow', :sms, js: true do
   let!(:user) { create(:user, role_name: "staffer") }
   let!(:user2) { create(:user) }
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160824180252) do
+ActiveRecord::Schema.define(version: 20160909161815) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -411,8 +411,6 @@ ActiveRecord::Schema.define(version: 20160824180252) do
     t.string "frontlinecloud_api_key", limit: 255
     t.text "incoming_sms_numbers", limit: 65535
     t.string "incoming_sms_token", limit: 255
-    t.string "intellisms_password", limit: 255
-    t.string "intellisms_username", limit: 255
     t.integer "mission_id", limit: 4
     t.string "override_code", limit: 255
     t.string "preferred_locales", limit: 255

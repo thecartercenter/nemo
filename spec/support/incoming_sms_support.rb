@@ -61,19 +61,11 @@ module IncomingSmsSupport
 
     params[:sent_at] ||= Time.now
     params[:mission] ||= get_mission
-    params[:incoming][:adapter] ||= 'IntelliSms'
+    params[:incoming][:adapter] ||= 'TwilioSms'
     params[:url] ||= "/m/#{params[:mission].compact_name}/sms/submit/#{params[:mission].setting.incoming_sms_token}"
     params[:method] ||= :post
 
     case params[:incoming][:adapter]
-    when "IntelliSms"
-      req_params = {
-        # intellisms also doesn't use the + sign
-        "from" => params[:from].gsub("+", ""),
-        "text" => params[:incoming][:body],
-        "msgid" => "123",
-        "sent" => params[:sent_at].utc.strftime("%Y-%m-%dT%T%z")
-      }
     when "FrontlineSms"
       req_params = {
         "from" => params[:from],

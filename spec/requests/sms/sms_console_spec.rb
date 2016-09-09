@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sms console" do
+describe "sms console", :sms do
   it "going to the page to create a new sms should succeed" do
     user = get_user
     login(user)

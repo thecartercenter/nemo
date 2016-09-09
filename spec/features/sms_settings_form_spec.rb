@@ -1,6 +1,6 @@
 require "spec_helper"
 
-feature "sms settings form" do
+feature "sms settings form", :sms do
   let(:mission){ create(:mission, setting: setting) }
   let(:user){ create(:user, admin: true) }
 
@@ -8,37 +8,36 @@ feature "sms settings form" do
     login(user)
   end
 
-  context "intellisms" do
+  context "twilio" do
     context "with no prior settings" do
-      let(:setting){ build(:setting, intellisms_username: nil, intellisms_password: nil) }
+      let(:setting){ build(:setting, twilio_phone_number: nil, twilio_account_sid: nil, twilio_auth_token: nil) }
 
-      scenario "filling in username only should error" do
+      scenario "filling in account sid only should error" do
         visit("/en/m/#{mission.compact_name}/settings")
-        fill_in("setting_intellisms_username", with: "abc")
+        fill_in("setting_twilio_account_sid", with: "abc")
         click_button("Save")
         expect(page).to have_content("Settings are invalid (see below).")
-        expect(find("#intellisms_password1 .form-errors")).to have_content("This field is required.")
+        expect(find("#twilio_auth_token1 .form-errors")).to have_content("This field is required.")
       end
 
-      scenario "filling in password only should error" do
+      scenario "filling in auth token only should error" do
         visit("/en/m/#{mission.compact_name}/settings")
-        fill_in("setting_intellisms_password1", with: "abc")
+        click_link("Change Auth Token")
+        fill_in("setting_twilio_auth_token1", with: "abc")
         click_button("Save")
         expect(page).to have_content("Settings are invalid (see below).")
-        expect(find("#intellisms_username .form-errors")).to have_content("This field is required.")
-        expect(find("#intellisms_password1 .form-errors")).to have_content("match")
+        expect(find("#twilio_account_sid .form-errors")).to have_content("This field is required.")
       end
 
       scenario "filling in both should work" do
         visit("/en/m/#{mission.compact_name}/settings")
-        fill_in("setting_intellisms_username", with: "abc")
-        fill_in("setting_intellisms_password1", with: "jfjfjfjf")
-        fill_in("setting_intellisms_password2", with: "jfjfjfjf")
+        fill_in("setting_twilio_account_sid", with: "abc")
+        click_link("Change Auth Token")
+        fill_in("setting_twilio_auth_token1", with: "jfjfjfjf")
         click_button("Save")
         expect(page).to have_content("Settings updated successfully")
-        expect(find('#setting_intellisms_username').value).to eq "abc"
-        expect(find('#setting_intellisms_password1').value).to eq nil
-        expect(find('#setting_intellisms_password2').value).to eq nil
+        expect(find('#setting_twilio_account_sid').value).to eq "abc"
+        expect(find('#setting_twilio_auth_token1').value).to eq nil
       end
     end
   end

@@ -1,7 +1,6 @@
-require 'spec_helper'
+require "spec_helper"
 
-describe 'throttling for xml requests' do
-
+describe "throttling for xml requests" do
   let(:limit) { configatron.direct_auth_request_limit }
 
   before(:all) do
@@ -22,15 +21,15 @@ describe 'throttling for xml requests' do
     Rack::Attack.cache.store = ActiveSupport::Cache::MemoryStore.new
   end
 
-  context 'with the same ip address' do
-    it 'should not apply to requests below the limit' do
+  context "with the same ip address" do
+    it "should not apply to requests below the limit" do
       limit.times do
         get "/m/#{get_mission.compact_name}/formList"
         assert_response :unauthorized
       end
     end
 
-    it 'should apply to requests above the limit with response code 429' do
+    it "should apply to requests above the limit with response code 429" do
       (limit + 1).times do |i|
         get "/m/#{get_mission.compact_name}/formList"
         if i < limit
@@ -41,7 +40,7 @@ describe 'throttling for xml requests' do
       end
     end
 
-    it 'should apply to /m/mission_name/noauth/submission requests above the limit with response code 429' do
+    it "should apply to /m/mission_name/noauth/submission requests above the limit with response code 429" do
       (limit + 1).times do |i|
         post "/m/#{get_mission.compact_name}/noauth/submission"
         if i < limit
@@ -53,10 +52,10 @@ describe 'throttling for xml requests' do
     end
   end
 
-  context 'with different ip addresses' do
-    let(:remote_addrs) { ['1.1.1.1', '2.2.2.2', '3.3.3.3'] * limit }
+  context "with different ip addresses" do
+    let(:remote_addrs) { ["1.1.1.1", "2.2.2.2", "3.3.3.3"] * limit }
 
-    it 'should not apply' do
+    it "should not apply" do
       (limit * 2).times do |i|
         get "/m/#{get_mission.compact_name}/formList", nil, { REMOTE_ADDR: remote_addrs[i] }
         assert_response :unauthorized
@@ -64,14 +63,13 @@ describe 'throttling for xml requests' do
     end
   end
 
-  context 'for sms requests under /m/mission_name' do
-    it 'should not apply' do
+  context "for sms requests under /m/mission_name", :sms do
+    it "should not apply" do
       (limit + 1).times do |i|
         post "/m/#{get_mission.compact_name}/sms/submit/#{get_mission.setting.incoming_sms_token}",
-          { from: 14045551212, text: 'test', msgid: 123, sent: '2015-04-27T10:53:00-700' }
+          { from: 14045551212, body: "test", sent_at: Time.zone.now.strftime("%Q"), frontlinecloud: 1 }
         assert_response :ok
       end
     end
   end
-
 end

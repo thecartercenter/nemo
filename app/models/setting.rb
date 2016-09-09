@@ -2,8 +2,8 @@ class Setting < ActiveRecord::Base
   include MissionBased
 
   # attribs to copy to configatron
-  KEYS_TO_COPY = %w(timezone preferred_locales intellisms_username intellisms_password incoming_sms_numbers
-    twilio_phone_number twilio_account_sid twilio_auth_token frontlinecloud_api_key)
+  KEYS_TO_COPY = %w(timezone preferred_locales incoming_sms_numbers frontlinecloud_api_key
+    twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w(timezone preferred_locales)
@@ -27,8 +27,7 @@ class Setting < ActiveRecord::Base
   serialize :incoming_sms_numbers, JSON
 
   # accessors for password/password confirm/clear fields
-  attr_accessor :intellisms_password1, :intellisms_password2, :twilio_auth_token1, :frontlinecloud_api_key1,
-    :clear_intellisms, :clear_twilio, :clear_frontlinecloud
+  attr_accessor :twilio_auth_token1, :frontlinecloud_api_key1, :clear_twilio, :clear_frontlinecloud
 
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
@@ -192,8 +191,6 @@ class Setting < ActiveRecord::Base
 
     # settings for an adapter should be validated if any settings for that adapter are present
     case adapter
-    when "IntelliSms"
-      intellisms_username.present? || intellisms_password1.present? || intellisms_password2.present?
     when "Twilio"
       twilio_phone_number.present? || twilio_account_sid.present? || twilio_auth_token1.present?
     when "FrontlineCloud"
@@ -203,13 +200,6 @@ class Setting < ActiveRecord::Base
 
   # checks that the provided credentials are valid
   def sms_credentials_are_valid
-    if should_validate?("IntelliSms")
-      errors.add(:intellisms_username, :blank) if intellisms_username.blank?
-      errors.add(:intellisms_password1, :blank) if [intellisms_password, intellisms_password1,
-          intellisms_password2].all?(&:blank?)
-      errors.add(:intellisms_password1, :did_not_match) unless intellisms_password1 == intellisms_password2
-    end
-
     if should_validate?("Twilio")
       errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
       errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
@@ -222,12 +212,6 @@ class Setting < ActiveRecord::Base
 
   # clear SMS fields if requested
   def clear_sms_fields_if_requested
-    if clear_intellisms == "1"
-      self.intellisms_username = nil
-      self.intellisms_password = nil
-      self.intellisms_password1 = nil
-      self.intellisms_password2 = nil
-    end
     if clear_twilio == "1"
       self.twilio_phone_number = nil
       self.twilio_account_sid = nil
@@ -240,7 +224,6 @@ class Setting < ActiveRecord::Base
   # if the sms credentials temp fields are set (and they match, which is checked above),
   # copy the value to the real field
   def save_sms_credentials
-    self.intellisms_password = intellisms_password1 unless intellisms_password1.blank?
     self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
     self.frontlinecloud_api_key = frontlinecloud_api_key1 unless frontlinecloud_api_key1.blank?
     true

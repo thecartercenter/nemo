@@ -35,7 +35,7 @@ describe BroadcastsController, type: :request do
       assert_select('select#locale[disabled=disabled]', true)
     end
 
-    it 'create and show should work' do
+    it 'create and show should work', :sms do
       post(broadcasts_path, broadcast: {
         recipient_selection: 'specific',
         recipient_ids: ["user_#{@user2.id}", "user_#{@user3.id}"],
@@ -52,7 +52,7 @@ describe BroadcastsController, type: :request do
     end
   end
 
-  context 'for users with no phone' do
+  context 'for users with no phone', :sms do
     before do
       @user2, @user3 = create(:user, phone: nil), create(:user, phone: nil)
     end

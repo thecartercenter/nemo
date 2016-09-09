@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'incoming sms' do
+describe 'incoming sms', :sms do
   include IncomingSmsSupport
 
   REPLY_VIA_RESPONSE_STYLE_ADAPTER = 'FrontlineSms'
