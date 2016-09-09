@@ -1,20 +1,15 @@
 module IncomingSmsSupport
   # helper that sets up a new form with the given parameters
   def setup_form(options)
-    @form = create(:form, smsable: true, question_types: options[:questions])
-    @form.questionings.each{ |q| q.update_attribute(:required, true) } if options[:required]
+    form = create(:form, smsable: true, question_types: options[:questions])
+    form.questionings.each { |q| q.update_attribute(:required, true) } if options[:required]
     if options[:forward_recipients]
-      @form.sms_relay = true
-      @form.recipients = options[:forward_recipients]
+      form.sms_relay = true
+      form.recipients = options[:forward_recipients]
     end
-    @form.authenticate_sms = true if options[:authenticate_sms]
-    @form.publish!
-    @form.reload
-  end
-
-  # gets the version code for the current form
-  def form_code
-    @form.current_version.code
+    form.authenticate_sms = true if options[:authenticate_sms]
+    form.publish!
+    form.reload
   end
 
   def auth_code
@@ -61,7 +56,7 @@ module IncomingSmsSupport
 
     params[:sent_at] ||= Time.now
     params[:mission] ||= get_mission
-    params[:incoming][:adapter] ||= 'TwilioSms'
+    params[:incoming][:adapter] ||= "TwilioSms"
     params[:url] ||= "/m/#{params[:mission].compact_name}/sms/submit/#{params[:mission].setting.incoming_sms_token}"
     params[:method] ||= :post
 
