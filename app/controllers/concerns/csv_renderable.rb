@@ -16,12 +16,10 @@ module CsvRenderable
       headers["Content-Type"] ||= 'text/csv'
       headers["Content-Disposition"] = "attachment; filename=\"#{filename}\""
     end
-
-    render(:layout => false)
   end
 
   # Removes any non-filename-safe characters from a string so that it can be used in a filename
   def sanitize_filename(filename)
-    filename.strip.gsub(/[^0-9A-Za-z.\-]|\s/, '_')
+    filename.strip.gsub(/[^0-9A-Za-z.\-]|\s/, "_")
   end
 end
