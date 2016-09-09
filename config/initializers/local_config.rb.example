@@ -31,6 +31,9 @@ configatron.default_settings.outgoing_sms_adapter = "Twilio"
 configatron.default_settings.twilio_account_sid = "xxx"
 configatron.default_settings.twilio_auth_token = "xxx"
 
+# Google API Keys
+configatron.google_maps_api_key = "xxx"
+
 # Allows submissions without password via the /noauth/submission route.
 # This setting overrides the per-mission setting.
 # Also, if not true, the per-mission setting will not be available in UI.

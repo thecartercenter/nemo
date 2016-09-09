@@ -1,6 +1,6 @@
-require File.expand_path('../boot', __FILE__)
+require File.expand_path("../boot", __FILE__)
 
-require 'rails/all'
+require "rails/all"
 
 Bundler.require(*Rails.groups)
 
@@ -27,7 +27,7 @@ module ELMO
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # default to eastern -- this will be overwritten if there is a timezone setting in the DB
-    config.time_zone = 'Eastern Time (US & Canada)'
+    config.time_zone = "Eastern Time (US & Canada)"
 
     # be picky about available locales
     config.i18n.enforce_available_locales = true
@@ -39,13 +39,14 @@ module ELMO
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :password_confirmation, :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key]
+    config.filter_parameters += [:password, :password_confirmation,
+      :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key]
 
     # Enable the asset pipeline
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
+    config.assets.version = "1.0"
 
     # Use Delayed::Job as the ActiveJob queue adapter
     config.active_job.queue_adapter = :delayed_job
@@ -65,6 +66,9 @@ module ELMO
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 
+    # site's short name
+    configatron.site_shortname = "ELMO"
+
     # a short tag that starts smses and email subjects for broadcasts
     configatron.broadcast_tag = "[ELMO]"
 
@@ -72,7 +76,7 @@ module ELMO
     configatron.full_locales = [:en, :fr, :es, :ar, :ko]
 
     # For security.
-    config.action_dispatch.default_headers = { 'X-Frame-Options' => 'DENY' }
+    config.action_dispatch.default_headers = { "X-Frame-Options" => "DENY" }
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
