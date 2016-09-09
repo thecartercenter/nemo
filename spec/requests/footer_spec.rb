@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'footer' do
-  describe 'sms adapter' do
+  describe 'sms adapter', :sms do
     before do
       login(create(:user, admin: true))
     end

@@ -61,7 +61,7 @@ module IncomingSmsSupport
 
     params[:sent_at] ||= Time.now
     params[:mission] ||= get_mission
-    params[:incoming][:adapter] ||= 'Twilio'
+    params[:incoming][:adapter] ||= 'TwilioSms'
     params[:url] ||= "/m/#{params[:mission].compact_name}/sms/submit/#{params[:mission].setting.incoming_sms_token}"
     params[:method] ||= :post
 

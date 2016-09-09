@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Sms::Adapters::FrontlineCloudAdapter do
+describe Sms::Adapters::FrontlineCloudAdapter, :sms do
   before :all do
     @adapter = Sms::Adapters::Factory.new.create("FrontlineCloud")
   end
@@ -39,7 +39,7 @@ describe Sms::Adapters::FrontlineCloudAdapter do
 
   it "should correctly parse a frontlinecloud-style request even if incoming_sms_numbers is empty" do
     Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
-    
+
     configatron.incoming_sms_numbers = []
     request = double(params: frontlinecloud_params)
     msg = @adapter.receive(request)

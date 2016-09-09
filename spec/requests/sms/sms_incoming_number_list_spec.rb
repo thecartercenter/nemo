@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "incoming_numbers" do
+describe "incoming_numbers", :sms do
   context "with incoming numbers" do
     let(:user) { create(:user, role_name: :coordinator) }
 

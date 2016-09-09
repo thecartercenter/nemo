@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Sms::Decoder do
+describe Sms::Decoder, :sms do
 
   let(:user) { get_user }
 

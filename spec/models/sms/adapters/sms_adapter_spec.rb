@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 # Tests methods common to all adapters.
-describe Sms::Adapters::Adapter do
+describe Sms::Adapters::Adapter, :sms do
   before do
     get_mission.setting.load
   end

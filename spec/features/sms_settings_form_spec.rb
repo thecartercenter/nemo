@@ -1,6 +1,6 @@
 require "spec_helper"
 
-feature "sms settings form" do
+feature "sms settings form", :sms do
   let(:mission){ create(:mission, setting: setting) }
   let(:user){ create(:user, admin: true) }
 
