@@ -136,6 +136,11 @@ body.welcome {
     vertical-align: top;
     margin-right: 25px;
 
+    h2 {
+      white-space: normal;
+      max-width: 200px;
+    }
+
     ul {
       list-style-type: none;
       padding: 0;

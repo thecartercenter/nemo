@@ -134,9 +134,9 @@ fr:
         one: "Tâche"
         other: "Tâches"
       broadcast:
-        zero: "Messages audio"
-        one: "Message audio"
-        other: "Messages audio"
+        zero: "Messages"
+        one: "Message"
+        other: "Messages"
       choice:
         zero: "Choix"
         one: "Choix"
