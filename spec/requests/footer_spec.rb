@@ -20,7 +20,7 @@ describe 'footer' do
     context 'with an adapter set' do # One is set by default
       it 'should say adapter name' do
         get_s(mission_root_path(mission_name: get_mission.compact_name))
-        assert_select("div#footer", /Outgoing SMS Provider:\s+IntelliSms/m)
+        assert_select("div#footer", /Outgoing SMS Provider:\s+Twilio/m)
       end
     end
   end

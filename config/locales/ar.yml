@@ -454,9 +454,6 @@ ar:
         allow_unauthenticated_submissions: "السماح بتسليم غير مصدق"
         incoming_sms_numbers_str: "الأرقام الواردة"
         incoming_sms_token: " الرسائل النصية القصيرة الواردة المأخوذة"
-        intellisms_password1: "كلمة المرور"
-        intellisms_password2: "تأكيد كلمة المرور"
-        intellisms_username: "إسم المستخدم"
         preferred_locales_str: "اللغة المفضلة"
         default_outgoing_sms_adapter: "المزود الصادر الافتراضي"
         override_code: "رمز التجاوز"
@@ -635,8 +632,6 @@ ar:
         using_incoming_sms_token_title: 'إستخدام رمز الرسالة النصية القصيرة الورادة '
         using_incoming_sms_token_body: "يرجى تسجيل URL  الخاص بالرسائل النصية القصيرة الوارد مع مزود بوابتك: \n\n%{url}"
         default_outgoing_sms_adapter: "المحول المستخدم لإرسال الرسائل النصية القصيرة. يرجى ملاحظة أن الإجابة على الرسائل القصيرة النصية قد يرسل عبر نفس المحول أو محول آخر إعتماداً على المحول الذي وردة الرسالة الأصلية عليه"
-        intellisms_username: "اسم المستخدم لحساب IntelliSMS."
-        intellisms_password1: "أدخل وإعادة إدخال كلمة المرور لتغيير كلمة المرور لحساب IntelliSMS."
         twilio_phone_number: "رقم الهاتف مسجل في (Twilio ). نشرات الرسائل النصية القصيرة الصادرة مالم يمتلك حسب (Twilio ) لهذا الرقم. يجب أن يحتوي الرقم على رمز الدولة . مثل :+2568034423"
         twilio_account_sid: "SID الخاص بحساب Twilio"
         twilio_auth_token1: "رمز التخويل لحساب Twilio"
@@ -1659,7 +1654,6 @@ ar:
     headings:
       general: "الضبط العام"
       sms: "ضبط الرسالة النصية القصيرة المشتركة"
-      intellisms: "ضبط الرسالة النصية القصير Intelli"
       twilio: "ضبط Twilio"
       frontlinecloud: "ضبط FrontlineCloud "
 

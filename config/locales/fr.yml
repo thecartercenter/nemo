@@ -337,9 +337,6 @@ fr:
         allow_unauthenticated_submissions: "Permettre les réponses non authentifiées"
         incoming_sms_numbers_str: "Numéro(s) de SMS entrant"
         incoming_sms_token: "Jeton du SMS entrant"
-        intellisms_password1: "Mot de passe"
-        intellisms_password2: "Confirmation du mot de passe"
-        intellisms_username: "Identifiant"
         preferred_locales_str: "Langues Préférées"
         default_outgoing_sms_adapter: "Fournisseur par defaut de SMS sortant"
         override_code: "Code de Contournement"
@@ -511,8 +508,6 @@ fr:
         using_incoming_sms_token_title: Utilisation du jeton du SMS entrant
         using_incoming_sms_token_body: "Veuillez enregistrer l'URL du SMS entrant chez votre fournisseur \n\n%{url}"
         default_outgoing_sms_adapter: "L'adaptateur utilisé pour envoyer les SMSs. Notez que les réponses par SMS peuvent être envoyées a partir de différent adaptateurs, selon l'adaptateur par lequel ils arrivent."
-        intellisms_username: "l'Identifiant pour le compte IntelliSMS."
-        intellisms_password1: "Entrez et rentrez un mot de passe pour changer le mot de passe du compte IntelliSMS."
         twilio_phone_number: "Le numéro de téléphone enregistré chez Twilio. Les diffusions SMS sortant ne vont pas s'effectuer si ce numéro n'est pas associé à votre compte Twilio. Ce numéro doit contenir le code pays. Ex: +25680344523"
         twilio_account_sid: "Le \"Account SID\" pour le compte Twilio."
         twilio_auth_token1: "Le jeton d'authentification du compte Twilio"
@@ -1539,7 +1534,6 @@ fr:
     headings:
       general: "Paramètres généraux"
       sms: "Paramètres pour SMS globaux"
-      intellisms: "Paramètres pour IntelliSMS"
       twilio: "Paramètres pour Twilio"
       frontlinecloud: "Paramètres pour FrontlineCloud"
   sms:

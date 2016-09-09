@@ -361,9 +361,6 @@ en:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
         incoming_sms_numbers_str: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
-        intellisms_password1: "Password"
-        intellisms_password2: "Password Confirmation"
-        intellisms_username: "Username"
         preferred_locales_str: "Preferred Languages"
         default_outgoing_sms_adapter: "Default Outgoing Provider"
         override_code: "Override Code"
@@ -555,8 +552,6 @@ en:
 
           %{url}
         default_outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
-        intellisms_username: "The username for the IntelliSMS account."
-        intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
         twilio_phone_number: "The phone number registered with Twilio. Outgoing SMS broadcasts won't work unless this number is owned by your Twilio account. This number must include the country code. Example: +25680344523"
         twilio_account_sid: "The Account SID for the Twilio account."
         twilio_auth_token1: "The Auth Token for the Twilio account."
@@ -1774,7 +1769,6 @@ en:
     headings:
       general: "General Settings"
       sms: "Shared SMS Settings"
-      intellisms: "IntelliSMS Settings"
       twilio: "Twilio Settings"
       frontlinecloud: "FrontlineCloud Settings"
 
