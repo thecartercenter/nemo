@@ -12,7 +12,7 @@ class FormVersion < ActiveRecord::Base
   # increments sequence
   # sets self.is_current = false
   def upgrade
-    upgraded = self.class.new(:form_id => form_id, :sequence => sequence + 1)
+    upgraded = self.class.new(form_id: form_id, sequence: sequence + 1)
     self.is_current = false
     save
     return upgraded
