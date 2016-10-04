@@ -2,7 +2,7 @@
 
 This guide assumes:
 
-* You have an Ubuntu server up and running (version 14.04 recommended).
+* You have an Ubuntu server up and running (version 16.04 recommended).
 * You have a domain name (e.g. yoursite.example.com) pointing to the server's IP address.
 * Port 443 on the server is open to the world.
 * You have a valid SSL certificate for your domain. ELMO requires SSL for general security and to comply with ODK Collect's requirement for same. Free SSL certificates are widely available nowadays. Try [here](https://google.com/search?q=free+ssl+certificate).
@@ -41,7 +41,7 @@ For security reasons, it is not recommended to install ELMO as the `root` user.
     # Add HTTPS support to APT
     sudo apt-get -y install apt-transport-https
     # Add the passenger repository
-    sudo sh -c "echo 'deb https://oss-binaries.phusionpassenger.com/apt/passenger trusty main' >> /etc/apt/sources.list.d/passenger.list"
+    sudo sh -c "echo 'deb https://oss-binaries.phusionpassenger.com/apt/passenger xenial main' >> /etc/apt/sources.list.d/passenger.list"
     sudo chown root: /etc/apt/sources.list.d/passenger.list
     sudo chmod 600 /etc/apt/sources.list.d/passenger.list
     sudo apt-get update
@@ -100,8 +100,8 @@ Enter sensible values for the settings in the file. Entering a functioning email
 
 If you want to change the colors for ELMO's themeable elements, perform the following steps:
 
-    cp app/assets/stylesheets/all/variables/\_default\_theme.scss app/assets/stylesheets/all/variables/\_theme.scss
-    nano app/assets/stylesheets/all/variables/\_theme.scss
+    cp app/assets/stylesheets/all/variables/_default_theme.scss app/assets/stylesheets/all/variables/_theme.scss
+    nano app/assets/stylesheets/all/variables/_theme.scss
 
 Enter new color values for the components in the file.
 

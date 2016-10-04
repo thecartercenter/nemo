@@ -7,7 +7,8 @@
 
 require 'bundler/capistrano'
 
-set :stages, %w(production production-old staging staging-old demo nigeria api cejp-rdc burundi gtri)
+set :stages, %w(production production-old staging staging-old demo nigeria api
+  cejp-rdc burundi gtri nemo-hrdef)
 set :default_stage, "staging"
 require "capistrano/ext/multistage"
 
@@ -46,6 +47,7 @@ end
 
 # Always rebuild the search indices to make sure they're fresh and working.
 # This also restarts the sphinx daemon.
+after "deploy", "thinking_sphinx:configure"
 after "deploy", "thinking_sphinx:rebuild"
 
 after "deploy", "deploy:check_timezones"
@@ -83,12 +85,21 @@ namespace :deploy do
 
     # Files
     run "ln -nfs #{shared_path}/config/database.yml #{release_path}/config/database.yml"
-    run "ln -nfs #{shared_path}/config/memcached_server #{release_path}/config/memcached_server"
     run "ln -nfs #{shared_path}/config/thinking_sphinx.yml #{release_path}/config/thinking_sphinx.yml"
     run "ln -nfs #{shared_path}/config/local_config.rb #{release_path}/config/initializers/local_config.rb"
-    run "ln -nfs #{shared_path}/config/railsenv #{release_path}/config/railsenv"
-    run "ln -nfs #{shared_path}/app/assets/stylesheets/all/variables/_theme.scss #{release_path}/app/assets/stylesheets/all/variables/_theme.scss"
-    run "ln -nfs #{shared_path}/app/assets/images/logo-override.png #{release_path}/app/assets/images/logo-override.png"
+
+    to_link_if_exist = %w(
+      config/railsenv
+      config/memcached_server
+      app/assets/stylesheets/all/variables/_theme.scss
+      app/assets/images/logo-override.png
+    )
+
+    to_link_if_exist.each do |path|
+      if remote_file_exists?("#{shared_path}/#{path}")
+        run "ln -nfs #{shared_path}/#{path} #{release_path}/#{path}"
+      end
+    end
   end
   before "deploy:finalize_update", "deploy:symlink_config"
 
@@ -128,4 +139,10 @@ namespace :deploy do
     run "curl -s #{ping_url} > /dev/null"
   end
   after "deploy:restart", "deploy:ping"
+end
+
+
+# Note, this won't work for a multiple-host setup.
+def remote_file_exists?(full_path)
+  'true' == capture("if [ -e #{full_path} ]; then echo 'true'; fi").strip
 end
