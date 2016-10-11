@@ -1,5 +1,5 @@
 <%# load the mapping API %>
-<% content_for(:per_page_js){ javascript_include_tag("https://maps.googleapis.com/maps/api/js?v=3&sensor=false") } %>
+<% content_for(:per_page_js){ javascript_google_maps } %>
 
 <%# title includes ID if defined %>
 <% @title_args = {:id => @response.id} %>
