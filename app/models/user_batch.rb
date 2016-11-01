@@ -95,7 +95,7 @@ class UserBatch
     end.flatten]
 
     # Remove blank headers from row
-    row.reject! { |i| i.strip.empty? }.compact!
+    row = row.reject { |i| i.strip.empty? }.compact
 
     # building map of column indices to field names
     @fields = Hash[*row.map.with_index do |header,index|

@@ -15,14 +15,6 @@ GIT
     rack-attack (4.3.0)
       rack
 
-GIT
-  remote: https://github.com/swanandp/acts_as_list.git
-  revision: 67a97244f772106e0cf1beb7fe4a3ec4d8e71101
-  ref: 67a97244f772106e0cf1beb7fe4a3ec4d8e71101
-  specs:
-    acts_as_list (0.8.0)
-      activerecord (>= 3.0)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -69,6 +61,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
+    acts_as_list (0.8.0)
+      activerecord (>= 3.0)
     addressable (2.4.0)
     ancestry (2.1.0)
       activerecord (>= 3.0.0)
@@ -473,7 +467,7 @@ DEPENDENCIES
   actionpack-page_caching (~> 1.0.2)
   active_model_serializers (~> 0.9.3)
   activerecord-session_store (~> 0.1.1)
-  acts_as_list!
+  acts_as_list (~> 0.8.0)
   ancestry (~> 2.1.0)
   api-pagination (~> 4.1.1)
   apiary (~> 0.0.5)
