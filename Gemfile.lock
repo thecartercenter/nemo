@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/codebrew/backbone-rails.git
+  remote: https://github.com/codebrew/backbone-rails.git
   revision: 231090bd690cd365a9486c17b00eec1e73ec37ec
   specs:
     rails-backbone (1.2.2)
@@ -9,16 +9,16 @@ GIT
       railties
 
 GIT
-  remote: git://github.com/sassafrastech/rack-attack.git
+  remote: https://github.com/sassafrastech/rack-attack.git
   revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
   specs:
     rack-attack (4.3.0)
       rack
 
 GIT
-  remote: git://github.com/swanandp/acts_as_list.git
+  remote: https://github.com/swanandp/acts_as_list.git
   revision: 67a97244f772106e0cf1beb7fe4a3ec4d8e71101
-  branch: master
+  ref: 67a97244f772106e0cf1beb7fe4a3ec4d8e71101
   specs:
     acts_as_list (0.8.0)
       activerecord (>= 3.0)
@@ -557,4 +557,4 @@ DEPENDENCIES
   will_paginate-bootstrap (~> 1.0.1)
 
 BUNDLED WITH
-   1.12.5
+   1.13.1
