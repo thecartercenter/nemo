@@ -1,7 +1,7 @@
 <% body = yield %>
 <% ctlr_action_name = "#{route_key}_#{controller.action_name.gsub('update', 'edit').gsub('create', 'new')}" %>
 <!DOCTYPE html>
-<html>
+<html dir="<%= t('locale_dir', default: 'ltr') %>">
 <head>
   <title><%= configatron.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
