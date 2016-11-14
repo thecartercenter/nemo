@@ -40,7 +40,9 @@ configatron.google_maps_api_key = "xxx"
 # Enable only if you really know what you are doing!
 configatron.allow_unauthenticated_submissions = false
 
-# generate your secret key with `rake secret`
+# Generate your secret key with this command:
+#   ruby -e "require 'securerandom'; puts SecureRandom.hex(128)"
+# And copy and paste into this file in place of `secret-token`.
 ELMO::Application.config.secret_key_base = 'secret-token'
 
 # Configure reCAPTCHA for brute-force login protection
