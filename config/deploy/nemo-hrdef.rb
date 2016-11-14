@@ -10,7 +10,7 @@ set :default_environment, {
   "PATH" => "$HOME/.rbenv/shims:$PATH"
 }
 
-server '52.28.239.218', :app, :web, :db, primary: true
+server 'hrdef.getnemo.org', :app, :web, :db, primary: true
 
 namespace :deploy do
   %w[start stop restart].each do |command|
