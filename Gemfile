@@ -48,7 +48,8 @@ gem "active_model_serializers", "~> 0.9.3"
 gem "api-pagination", "~> 4.1.1"
 
 # Auto rank maintenance for sorted lists.
-gem "acts_as_list", github: "swanandp/acts_as_list", branch: "master"
+# The former master branch we were relying on is now a stable release
+gem "acts_as_list", "~> 0.8.0"
 
 # i18n
 gem "i18n-js", "~> 3.0.0.rc13"
