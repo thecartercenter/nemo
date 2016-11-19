@@ -10,6 +10,8 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       "select_one"
     when "select_multiple_with_appendix_for_sms", "large_select_multiple"
       "select_multiple"
+    when "multilingual_text", "multilingual_text_with_user_locale"
+      "text"
     else
       pseudo_qtype_name
     end
@@ -20,6 +22,8 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       use_multilevel_option_set: !!(pseudo_qtype_name =~ /multilevel_select_one/),
       use_geo_option_set: !!(pseudo_qtype_name =~ /geo/),
       use_large_option_set: !!(pseudo_qtype_name =~ /large/),
+      multilingual: !!(pseudo_qtype_name =~ /multilingual/),
+      with_user_locale: !!(pseudo_qtype_name =~ /with_user_locale/),
       is_standard: form.is_standard?
     }
 
