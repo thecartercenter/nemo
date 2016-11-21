@@ -126,6 +126,7 @@ class Setting < ActiveRecord::Base
     read_attribute("preferred_locales").map(&:to_sym)
   end
 
+  # union of system locales with the mission's user-defined locales
   def all_locales
     configatron.full_locales | preferred_locales
   end

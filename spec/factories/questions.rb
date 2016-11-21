@@ -15,12 +15,14 @@ FactoryGirl.define do
     sequence(:code) { |n| "Question#{n}" }
     qtype_name "integer"
 
+
     sequence(:name_translations) do |n|
       translations = { en: "#{qtype_name.titleize} Question Title #{n}" }
       translations.merge!({ fr: "fr: #{qtype_name.titleize} Title #{n}" }) if multilingual
       translations.merge!({ rw: "rw: #{qtype_name.titleize} Title #{n}" }) if with_user_locale
       translations
     end
+    sequence(:name) { |n| "#{qtype_name.titleize} Question Title #{n}" } # needed for some i18n specs
 
     sequence(:hint_translations) do |n|
       translations = { en: "Question Hint #{n}" }
@@ -28,6 +30,8 @@ FactoryGirl.define do
       translations.merge!({ rw: "rw: Question Hint #{n}" }) if with_user_locale
       translations
     end
+    sequence(:hint) { |n| "Question Hint #{n}" } # needed for some i18n specs
+
 
     mission { is_standard ? nil : get_mission }
 

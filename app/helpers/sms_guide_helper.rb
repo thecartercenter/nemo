@@ -55,7 +55,7 @@ module SmsGuideHelper
     when "decimal" then "12.5"
     when "select_one"
       if qing.sms_formatting_as_text?
-        qing.first_leaf_option.name
+        qing.first_leaf_option.name(locale, strict: false)
       elsif qing.sms_formatting_as_appendix?
         qing.first_leaf_option_node.shortcode
       else
@@ -69,7 +69,7 @@ module SmsGuideHelper
     end
 
     if content
-      t("common.example_abbr", locale: @lang).html_safe << " " << content_tag(:span, content, class: "sms-example")
+      t("common.example_abbr", locale: @locale).html_safe << " " << content_tag(:span, content, class: "sms-example")
     else
       ""
     end
@@ -112,7 +112,7 @@ module SmsGuideHelper
   end
 
   def sms_guide_hint(qing, locale: configatron.default_locale)
-    hint = "".html_safe << (qing.question.hint(locale) || "")
+    hint = "".html_safe << (qing.question.hint(locale, strict: false) || "")
     hint << "." unless hint =~ /\.\z/ || hint.empty?
     hint << " " << t(".pointers.#{pointer_type(qing)}", locale: locale)
     hint << " " << sms_example_for_questioning(qing)
