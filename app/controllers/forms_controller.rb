@@ -85,7 +85,7 @@ class FormsController < ApplicationController
     # determine the most appropriate language to show the form in
     # if params[:lang] is set, use that
     # otherwise try to use the current locale set
-    @lang = params[:lang] || I18n.locale
+    @locale = params[:lang] || I18n.locale
 
     @qings_with_indices = @form.smsable_questionings
 
