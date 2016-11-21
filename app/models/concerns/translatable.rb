@@ -115,11 +115,14 @@ module Translatable
 
     # otherwise just return what we have
     else
-      if send("#{field}_translations").nil?
-        str = nil
-      else
-        # try the specified locale
-        str = send("#{field}_translations")[locale]
+      str = nil
+      unless send("#{field}_translations").nil?
+        # try the specified locale and fallbacks
+        to_try = [locale] + (options[:fallbacks] || [])
+        to_try.each do |l|
+          str = send("#{field}_translations")[l.to_s]
+          break if str.present?
+        end
 
         # if the translation is blank and strict mode is off
         if str.blank? && !options[:strict]
