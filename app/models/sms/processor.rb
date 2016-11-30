@@ -15,7 +15,22 @@ class Sms::Processor
     # abort if the SMS in question is from one of the incoming SMS numbers
     return if configatron.incoming_sms_numbers.include?(incoming_msg.from)
 
-    reply_body = begin
+    if reply_body.present?
+      self.reply = Sms::Reply.new(
+        body: reply_body,
+        to: incoming_msg.from,
+        mission: incoming_msg.mission,
+        user: incoming_msg.user
+      )
+    end
+
+    {reply: reply, forward: handle_forward}
+  end
+
+  private
+
+  def reply_body
+    @reply_body ||= begin
       # decode and get the (ELMO) response
       self.elmo_response = Sms::Decoder.new(incoming_msg).decode
 
@@ -77,16 +92,7 @@ class Sms::Processor
         error_msg
       end
     end
-
-    if reply_body.present?
-      self.reply = Sms::Reply.new(body: reply_body, to: incoming_msg.from,
-        mission: incoming_msg.mission, user: incoming_msg.user)
-    end
-
-    {reply: reply, forward: handle_forward}
   end
-
-  private
 
   # Decides if an SMS forward is called for, and builds and returns the Sms::Forward object if so.
   # Returns nil if no forward is called for, or if an error is encountered in constructing the message.
