@@ -3,7 +3,7 @@
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Processor
 
-  attr_accessor :incoming_msg
+  attr_accessor :incoming_msg, :elmo_response, :reply, :forward
 
   def initialize(incoming_msg)
     @incoming_msg = incoming_msg
@@ -13,13 +13,11 @@ class Sms::Processor
   # Returns a hash with keys :reply and :forward. Either value may be nil.
   def process
     # abort if the SMS in question is from one of the incoming SMS numbers
-    return if configatron.incoming_sms_numbers.include? incoming_msg.from
-
-    elmo_response = nil
+    return if configatron.incoming_sms_numbers.include?(incoming_msg.from)
 
     reply_body = begin
       # decode and get the (ELMO) response
-      elmo_response = Sms::Decoder.new(incoming_msg).decode
+      self.elmo_response = Sms::Decoder.new(incoming_msg).decode
 
       # attempt to save it
       elmo_response.save!
@@ -83,17 +81,17 @@ class Sms::Processor
     end
 
     if reply_body.present?
-      reply = Sms::Reply.new(to: incoming_msg.from, body: reply_body, mission: incoming_msg.mission, user: incoming_msg.user)
+      self.reply = Sms::Reply.new(to: incoming_msg.from, body: reply_body, mission: incoming_msg.mission, user: incoming_msg.user)
     end
 
-    {reply: reply, forward: handle_forward(elmo_response)}
+    {reply: reply, forward: handle_forward}
   end
 
   private
 
   # Decides if an SMS forward is called for, and builds and returns the Sms::Forward object if so.
   # Returns nil if no forward is called for, or if an error is encountered in constructing the message.
-  def handle_forward(elmo_response)
+  def handle_forward
     form = elmo_response.try(:form)
 
     if form && form.sms_relay?
