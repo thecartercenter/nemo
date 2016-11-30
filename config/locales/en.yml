@@ -1807,6 +1807,7 @@ en:
       invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
       question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
       user_not_found: "Sorry, we couldn't find you in the system."
+      wrong_mission: "Sorry, the form '%{form_code}' is not in the correct mission."
     incoming_numbers:
       id: "id"
       phone_number: "phone_number"

@@ -86,6 +86,21 @@ class Sms::Decoder
     # if version not found, raise error
     raise_decoding_error("form_not_found", form_code: code) unless v
 
+    if @msg.mission
+      # if we already know the mission (it may or may not be already stored on the message)
+      # and it doesn't match the form's mission, complain
+      if v.form.mission != @msg.mission
+        raise_decoding_error("wrong_mission", form_code: code)
+      end
+    else
+      # If the mission is not stored on the message, set it based on form.
+      # This is allowed due to situations where multiple missions may want to use the same phone
+      # number or same gateway provider that doesn't support different submit URLs
+      # based on incoming phone number.
+      @msg.mission = v.form.mission
+      @msg.save!
+    end
+
     # if version outdated, raise error
     # here we must specify the form AND form_code since they are different
     raise_decoding_error("form_version_outdated", form: v.form, form_code: code) unless v.is_current?

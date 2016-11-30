@@ -144,6 +144,30 @@ describe Sms::Decoder, :sms do
     end
   end
 
+  describe "mission lookup and checking" do
+    let(:form) { create_form(questions: %w(integer)) }
+
+    context "with mission pre-specified and form in mission" do
+      it "succeeds" do
+        assert_decoding(body: "#{form.code} 1.15", answers: [15], mission: form.mission)
+      end
+    end
+
+    context "with mission pre-specified and form from other mission" do
+      it "fails with wrong_mission" do
+        assert_decoding_fail(body: "#{form.code} 1.15", mission: create(:mission), error: "wrong_mission")
+      end
+    end
+
+    context "with no mission pre-specified" do
+      it "succeeds and sets correct mission on message" do
+        assert_decoding(body: "#{form.code} 1.15", answers: [15], mission: nil)
+        expect(@msg.reload.mission).not_to be_nil
+        expect(@msg.mission).to eq form.mission
+      end
+    end
+  end
+
   describe "answer parsing" do
     it "form with text question should work" do
       create_form(questions: %w(text integer))
@@ -415,11 +439,11 @@ describe Sms::Decoder, :sms do
 
     it "time question should work" do
       create_form(questions: %w(integer time))
-      response = assert_decoding(body: "#{@form.code} 1.4 2.1230", answers: [4, Time.parse("2000-01-01 12:30 UTC")])
+      assert_decoding(body: "#{@form.code} 1.4 2.1230", answers: [4, Time.parse("2000-01-01 12:30 UTC")])
 
       # make sure time gets saved properly and zone doesn't mess up
-      response.reload
-      expect(response.answers.last.time_value.hour).to eq(12)
+      @response.reload
+      expect(@response.answers.last.time_value.hour).to eq(12)
 
       # check other formats
       assert_decoding(body: "#{@form.code} 1.4 2.12:30", answers: [4, Time.parse("2000-01-01 12:30 UTC")])
@@ -446,16 +470,16 @@ describe Sms::Decoder, :sms do
       # use sask b/c no daylight savings
       Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
 
-      response = assert_decoding(
+      assert_decoding(
         body: "#{@form.code} 1.4 2.20120229 1230",
         answers: [4, Time.zone.parse("2012-02-29 12:30")])
 
       # make sure time gets saved properly and zone doesn't mess up
-      response.reload
-      expect(response.answers.last.datetime_value.hour).to eq(12)
+      @response.reload
+      expect(@response.answers.last.datetime_value.hour).to eq(12)
 
       # make sure timezone gets set properly (Saskatchewan is CST)
-      expect(response.answers.last.datetime_value.zone.to_s).to eq("CST")
+      expect(@response.answers.last.datetime_value.zone.to_s).to eq("CST")
 
       # check other formats
       assert_decoding(body: "#{@form.code} 1.4 2.20120229 230", answers: [4, Time.zone.parse("2012-02-29 2:30")])
@@ -518,21 +542,23 @@ describe Sms::Decoder, :sms do
   # tests that a decoding was successful
   def assert_decoding(options)
     options[:user] ||= user
+    options[:mission] = get_mission unless options.has_key?(:mission)
+    options[:from] ||= options[:user].phone
 
     # create the Sms object
-    msg = Sms::Incoming.create(from: options[:from] || options[:user].phone, body: options[:body], mission: get_mission)
+    @msg = Sms::Incoming.create(options.slice(:from, :body, :mission))
 
     # perform the decoding
-    response = Sms::Decoder.new(msg).decode
-    response.save!
+    @response = Sms::Decoder.new(@msg).decode
+    @response.save!
 
     # if we get this far and were expecting a failure, we didn't get one, so just return
     return if options[:expecting_fail]
 
     # ensure the form is correct
-    expect(response.form_id).to eq(@form.id)
+    expect(@response.form_id).to eq(@form.id)
 
-    nodes = AnswerArranger.new(response).build.leaf_nodes
+    nodes = AnswerArranger.new(@response).build.leaf_nodes
 
     # ensure an expected answer was given for this question
     expect(options[:answers].size >= nodes.size).to be_truthy,
@@ -587,8 +613,6 @@ describe Sms::Decoder, :sms do
     options[:answers].each_with_index do |a, i|
       expect(a).to be_nil, "No answer was given for question #{i+1}"
     end
-
-    response
   end
 
   # tests that a decoding fails
