@@ -15,6 +15,13 @@ class Sms::Processor
     # abort if the SMS in question is from one of the incoming SMS numbers
     return if configatron.incoming_sms_numbers.include?(incoming_msg.from)
 
+    self.reply = handle_reply
+    self.forward = handle_forward
+  end
+
+  private
+
+  def handle_reply
     if reply_body.present?
       self.reply = Sms::Reply.new(
         body: reply_body,
@@ -23,11 +30,7 @@ class Sms::Processor
         user: incoming_msg.user
       )
     end
-
-    {reply: reply, forward: handle_forward}
   end
-
-  private
 
   def reply_body
     @reply_body ||= begin

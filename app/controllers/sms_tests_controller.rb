@@ -1,6 +1,6 @@
 class SmsTestsController < ApplicationController
   # authorization via CanCan
-  load_and_authorize_resource :class => "Sms::Test"
+  load_and_authorize_resource class: "Sms::Test"
 
   def new
   end
@@ -16,20 +16,23 @@ class SmsTestsController < ApplicationController
       mission: current_mission
     )
 
-    result = Sms::Processor.new(incoming_msg).process
+    processor = Sms::Processor.new(incoming_msg)
+    processor.process
 
     # Send both the reply and forward (if exist) via the TestConsoleAdapter.
     # This really just saves them and sets the adapter name.
     adapter = Sms::Adapters::TestConsoleAdapter.new
-    result.values.compact.each { |m| adapter.deliver(m) }
+    adapter.deliver(processor.reply) if processor.reply
+    adapter.deliver(processor.forward) if processor.forward
 
     # Render the body of the reply.
-    render text: result[:reply] ? result[:reply].body : content_tag(:em, t('sms_console.no_reply'))
+    render text: processor.reply.try(:body) || content_tag(:em, t('sms_console.no_reply'))
   end
 
   protected
-    # specify the class the this controller controls, since it's not easily guessed
-    def model_class
-      Sms::Test
-    end
+
+  # specify the class the this controller controls, since it's not easily guessed
+  def model_class
+    Sms::Test
+  end
 end

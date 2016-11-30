@@ -25,33 +25,14 @@ class SmsController < ApplicationController
   def create
     raise Sms::UnverifiedTokenError if params[:token] != current_mission.setting.incoming_sms_token
 
-    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(request)
-    raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
-
-    # Create and save the message
-    incoming_msg = @incoming_adapter.receive(request)
-    incoming_msg.mission = current_mission
-    incoming_msg.save
-
-    result = Sms::Processor.new(incoming_msg).process
+    processor = Sms::Processor.new(incoming_msg)
+    processor.process
+    deliver_reply(processor.reply)
+    deliver_forward(processor.forward)
 
     # Store the reply in an instance variable so the functional test can access it.
-    @reply = result[:reply]
-
-    # Expose this to tests even if we don't use it.
-    @outgoing_adapter = configatron.outgoing_sms_adapter
-
-    # Deliver the reply via adapter or response.
-    if @reply
-      deliver_reply(@reply) # This method does an appropriate render
-    else
-      render text: "", status: 204 # No Content
-    end
-
-    # Deliver the forward, if it exists, via the outgoing adapter (can't deliver this via response).
-    if result[:forward]
-      @outgoing_adapter.deliver(result[:forward])
-    end
+    # (Should be refactored some day).
+    @reply = processor.reply
   end
 
   # Returns a CSV list of available incoming numbers.
@@ -63,15 +44,45 @@ class SmsController < ApplicationController
 
   private
 
-  def deliver_reply(reply)
-    if @incoming_adapter.reply_style == :via_adapter
-      raise Sms::Error.new("No adapter configured for outgoing response") if @outgoing_adapter.nil?
-      @outgoing_adapter.deliver(reply)
-    else # reply via response
-      @incoming_adapter.prepare_message_for_delivery(reply)
-    end
+  # Builds and saves the incoming SMS message based on the request.
+  def incoming_msg
+    raise Sms::Error.new("No adapters recognized this receive request") if incoming_adapter.nil?
 
-    render partial: "#{@incoming_adapter.service_name.downcase}_response",
-      formats: [:html, :text], locals: {reply: reply}
+    # Create and save the message
+    incoming_adapter.receive(request).tap do |msg|
+      msg.mission = current_mission
+      msg.save
+    end
+  end
+
+  # Sends the reply via an adapter or renders an appropriate response, depending on the reply type.
+  def deliver_reply(reply)
+    if reply
+      if incoming_adapter.reply_style == :via_adapter
+        raise Sms::Error.new("No adapter configured for outgoing response") if outgoing_adapter.nil?
+        outgoing_adapter.deliver(reply)
+      else # reply via response
+        incoming_adapter.prepare_message_for_delivery(reply)
+      end
+
+      render partial: "#{incoming_adapter.service_name.downcase}_response",
+        formats: [:html, :text], locals: {reply: reply}
+    else
+      render text: "", status: 204 # No Content
+    end
+  end
+
+  # Delivers the forward, if it exists, via the outgoing adapter (can't deliver this via response).
+  def deliver_forward(forward)
+    outgoing_adapter.deliver(forward) if forward
+  end
+
+  def incoming_adapter
+    return @incoming_adapter if defined?(@incoming_adapter)
+    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(request)
+  end
+
+  def outgoing_adapter
+    configatron.outgoing_sms_adapter
   end
 end

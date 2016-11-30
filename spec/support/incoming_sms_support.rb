@@ -94,6 +94,6 @@ module IncomingSmsSupport
 
 
   def expect_no_messages_delivered_through_adapter
-    expect(assigns(:outgoing_adapter).deliveries.size).to eq(0)
+    expect(configatron.outgoing_sms_adapter.deliveries.size).to eq(0)
   end
 end
