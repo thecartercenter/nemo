@@ -330,9 +330,6 @@ class Sms::Decoder
 
   # raises an sms decoding error with the given type and includes the form_code if available
   def raise_decoding_error(type, options = {})
-    # add the mission since we know it from the @msg
-    options[:mission] = @msg.mission
-
     # add in the form and form_code in case they're needed
     if @form
       options[:form] ||= @form
