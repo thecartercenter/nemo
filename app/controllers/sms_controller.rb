@@ -29,11 +29,11 @@ class SmsController < ApplicationController
     raise Sms::Error.new("No adapters recognized this receive request") if @incoming_adapter.nil?
 
     # Create and save the message
-    @incoming = @incoming_adapter.receive(request)
-    @incoming.mission = current_mission
-    @incoming.save
+    incoming_msg = @incoming_adapter.receive(request)
+    incoming_msg.mission = current_mission
+    incoming_msg.save
 
-    result = Sms::Handler.new.handle(@incoming)
+    result = Sms::Handler.new.handle(incoming_msg)
 
     # Store the reply in an instance variable so the functional test can access it.
     @reply = result[:reply]
@@ -71,6 +71,7 @@ class SmsController < ApplicationController
       @incoming_adapter.prepare_message_for_delivery(reply)
     end
 
-    render partial: "#{@incoming_adapter.service_name.downcase}_response", formats: [:html, :text]
+    render partial: "#{@incoming_adapter.service_name.downcase}_response",
+      formats: [:html, :text], locals: {reply: reply}
   end
 end

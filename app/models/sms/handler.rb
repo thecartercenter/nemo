@@ -1,5 +1,5 @@
 # Takes an incoming Sms::Message and returns a translated and formatted reply and/or forward.
-# Handles errors.
+# Handles errors and crafts reply messages reporting them, as appropriate.
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Handler
 
