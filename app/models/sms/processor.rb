@@ -23,7 +23,7 @@ class Sms::Processor
       elmo_response.save!
 
       # send congrats!
-      t_sms_msg("sms_form.decoding.congrats", user: elmo_response.user, form: elmo_response.form, mission: incoming_msg.mission)
+      t_sms_msg("sms_form.decoding.congrats")
 
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
@@ -64,15 +64,13 @@ class Sms::Processor
         key += "s" if elmo_response.missing_answers.size > 1
 
         # translate
-        t_sms_msg(key, ranks: ranks, user: elmo_response.user, form: elmo_response.form, mission: incoming_msg.mission)
+        t_sms_msg(key, ranks: ranks)
 
       when :invalid_answers
         # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
         invalid_answer = elmo_response.answers.detect { |a| a.errors && a.errors.messages.size > 0 }
-        t_sms_msg("sms_form.validation.invalid_answer",
-          rank: invalid_answer.questioning.rank,
-          error: invalid_answer.errors.messages.values.join(", "),
-          user: elmo_response.user, form: elmo_response.form, mission: incoming_msg.mission)
+        t_sms_msg("sms_form.validation.invalid_answer", rank: invalid_answer.questioning.rank,
+          error: invalid_answer.errors.messages.values.join(", "))
 
       else
         # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.
@@ -81,7 +79,8 @@ class Sms::Processor
     end
 
     if reply_body.present?
-      self.reply = Sms::Reply.new(to: incoming_msg.from, body: reply_body, mission: incoming_msg.mission, user: incoming_msg.user)
+      self.reply = Sms::Reply.new(body: reply_body, to: incoming_msg.from,
+        mission: incoming_msg.mission, user: incoming_msg.user)
     end
 
     {reply: reply, forward: handle_forward}
@@ -117,6 +116,11 @@ class Sms::Processor
 
   # translates a message for the sms reply using the appropriate locale
   def t_sms_msg(key, options = {})
+    # Get some options from Response (if available) unless they're explicitly given
+    if elmo_response
+      %i(user form mission).each { |a| options[a] = elmo_response.send(a) unless options.has_key?(a) }
+    end
+
     # throw in the form_code if it's not there already and we have the form
     options[:form_code] ||= options[:form].current_version.code if options[:form]
 
