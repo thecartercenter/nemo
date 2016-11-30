@@ -9,14 +9,14 @@ class SmsTestsController < ApplicationController
   def create
     # Create an incoming sms object.
     # Should eventually refactor to do this via the TestConsoleAdapter.
-    sms = Sms::Incoming.create(adapter_name: Sms::Adapters::TestConsoleAdapter.service_name,
+    incoming_msg = Sms::Incoming.create(adapter_name: Sms::Adapters::TestConsoleAdapter.service_name,
       to: nil,
       from: params[:sms_test][:from],
       body: params[:sms_test][:body],
       mission: current_mission
     )
 
-    result = Sms::Handler.new.handle(sms)
+    result = Sms::Processor.new(incoming_msg).process
 
     # Send both the reply and forward (if exist) via the TestConsoleAdapter.
     # This really just saves them and sets the adapter name.
