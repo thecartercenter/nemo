@@ -26,6 +26,6 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
       adapter_name: service_name)
   end
 
-  def validate
+  def validate(request)
   end
 end

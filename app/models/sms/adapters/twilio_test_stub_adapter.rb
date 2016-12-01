@@ -14,4 +14,7 @@ class Sms::Adapters::TwilioTestStubAdapter < Sms::Adapters::TwilioAdapter
   def deliver(message)
     # DO NOTHING
   end
+
+  def validate(request)
+  end
 end
