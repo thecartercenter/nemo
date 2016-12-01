@@ -43,13 +43,9 @@ class Sms::Processor
 
   def reply_body
     @reply_body ||= begin
-      # decode and get the (ELMO) response
+      # Decode, validate, and send congrats.
       self.elmo_response = Sms::Decoder.new(incoming_msg).decode
-
-      # attempt to save it
       raise ActiveRecord::RecordInvalid.new(elmo_response) unless elmo_response.valid?
-
-      # send congrats!
       t_sms_msg("sms_form.decoding.congrats")
 
     # if there is a decoding error, respond accordingly
