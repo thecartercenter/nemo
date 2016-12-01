@@ -167,6 +167,22 @@ describe "incoming sms", :sms do
     expect(@response.status).to eq(401)
   end
 
+  context "with failing Twilio validation" do
+    let(:twilio_adapter) { Sms::Adapters::TwilioAdapter.new }
+
+    before do
+      expect(twilio_adapter).to receive(:validate).and_raise(Sms::Error)
+      expect(Sms::Adapters::Factory.instance).to receive(:create_for_request).and_return(twilio_adapter)
+    end
+
+    it "should raise error" do
+      expect do
+        do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{get_mission.setting.incoming_sms_token}",
+          from: @user.phone, incoming: {body: "#{form_code} 1.15 2.20", adapter: "TwilioSms"})
+      end.to raise_error(Sms::Error)
+    end
+  end
+
   context "with SMS relay enabled" do
     let(:users) { create_list(:user, 2) }
     let(:group) { create(:user_group, users: create_list(:user, 3)) }

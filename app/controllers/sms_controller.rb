@@ -43,6 +43,7 @@ class SmsController < ApplicationController
     if params[:token] != current_mission.setting.incoming_sms_token
       raise Sms::UnverifiedTokenError
     end
+    incoming_adapter.validate(request)
 
     processor.finalize
     deliver_reply(processor.reply)
@@ -93,7 +94,7 @@ class SmsController < ApplicationController
 
   def incoming_adapter
     return @incoming_adapter if defined?(@incoming_adapter)
-    @incoming_adapter = Sms::Adapters::Factory.new.create_for_request(request)
+    @incoming_adapter = Sms::Adapters::Factory.instance.create_for_request(request)
   end
 
   def outgoing_adapter

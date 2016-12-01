@@ -42,6 +42,9 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
       adapter_name: service_name)
   end
 
+  def validate
+  end
+
   private
 
   def convert_time(timestamp)

@@ -1,4 +1,6 @@
 class Sms::Adapters::Factory
+  include Singleton
+
   VALID_ADAPTERS = %w(FrontlineSms FrontlineCloud Twilio TwilioTestStub)
 
   def self.name_is_valid?(name)

@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Sms::Adapters::FrontlineCloudAdapter, :sms do
   before :all do
-    @adapter = Sms::Adapters::Factory.new.create("FrontlineCloud")
+    @adapter = Sms::Adapters::Factory.instance.create("FrontlineCloud")
   end
 
   it "should be created by factory" do
