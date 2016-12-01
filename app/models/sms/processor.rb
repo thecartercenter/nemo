@@ -23,7 +23,9 @@ class Sms::Processor
   # Finalizes the process, should be called after all checks have passed.
   # No objects are persisted before this point.
   def finalize
-    elmo_response.save! if elmo_response
+    # Validations have already been run by this point so the response may be invalid.
+    # So we don't use validate: false or save! We just want to save it if it's valid.
+    elmo_response.save if elmo_response
   end
 
   private
