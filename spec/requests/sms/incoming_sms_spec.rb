@@ -99,8 +99,20 @@ describe "incoming sms", :sms do
     expect(Sms::Reply.count).to eq 0
   end
 
-  it "message from unrecognized normal number should get error" do
-    assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x", outgoing: /couldn't find you/)
+  context "from unrecognized normal number" do
+    it "should get error reply" do
+      assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x",
+        outgoing: /couldn't find you/)
+    end
+
+    context "with missionless url" do
+      let(:missionless_url) { true }
+
+      it "should get error reply" do
+        assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x",
+          outgoing: /couldn't find you/, mission: nil)
+      end
+    end
   end
 
   it "message inactive user should get error" do
