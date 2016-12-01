@@ -248,7 +248,6 @@ describe "incoming sms", :sms do
 
       context "with invalid token" do
         it "raises error and doesn't persist broacast or forward" do
-
           do_incoming_request(url: "/sms/submit/#{bad_incoming_token}", from: @user.phone,
             incoming: {body: "#{form_code} 1.15 2.something", })
           expect(@response.status).to eq(401)
