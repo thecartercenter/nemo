@@ -20,10 +20,12 @@ module IncomingSmsSupport
   def assert_sms_response(params)
     params[:from] ||= @user.phone
     params[:sent_at] ||= Time.now
+    params[:mission] = get_mission unless params.has_key?(:mission)
 
     # hashify incoming/outgoing if they're not hashes
     params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
     params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
+
 
     # do post request based on params
     do_incoming_request(params)
@@ -39,7 +41,7 @@ module IncomingSmsSupport
       # Ensure attribs are appropriate
       expect(reply.to).to eq(params[:from])
       expect(reply.body).to match(params[:outgoing][:body])
-      expect(reply.mission).to eq(get_mission)
+      expect(reply.mission).to eq(params[:mission])
       expect(reply.body).not_to match(/%\{|translation missing/)
       expect(reply.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
     end
@@ -50,9 +52,11 @@ module IncomingSmsSupport
     req_params = {}
     req_env = {}
 
+    url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
+
     params[:sent_at] ||= Time.now
     params[:incoming][:adapter] ||= "TwilioSms"
-    params[:url] ||= "/m/#{get_mission.compact_name}/sms/submit/#{get_mission.setting.incoming_sms_token}"
+    params[:url] ||= "#{url_prefix}/sms/submit/#{get_mission.setting.incoming_sms_token}"
     params[:method] ||= :post
 
     case params[:incoming][:adapter]

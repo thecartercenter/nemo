@@ -3,17 +3,18 @@
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Processor
 
-  attr_accessor :incoming_msg, :elmo_response, :reply, :forward
+  attr_accessor :incoming_msg, :elmo_response, :reply, :forward, :all_incoming_numbers
 
   def initialize(incoming_msg)
     @incoming_msg = incoming_msg
+    @all_incoming_numbers = Setting.pluck(:incoming_sms_numbers).compact.reduce(:concat)
   end
 
   # Takes an incoming sms, decodes it, and constructs a reply and/or a forward.
   # Returns a hash with keys :reply and :forward. Either value may be nil.
   def process
     # abort if the SMS in question is from one of the incoming SMS numbers
-    return if configatron.incoming_sms_numbers.include?(incoming_msg.from)
+    return if all_incoming_numbers.include?(incoming_msg.from)
 
     self.reply = handle_reply
     self.forward = handle_forward
@@ -114,7 +115,7 @@ class Sms::Processor
         mission: incoming_msg.mission
       )
 
-      if broadcast.save
+      if broadcast.valid?
         message = strip_auth_code(incoming_msg.body, form)
         return Sms::Forward.new(broadcast: broadcast, body: message, mission: broadcast.mission)
       end

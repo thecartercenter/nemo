@@ -7,6 +7,7 @@ describe "incoming sms", :sms do
 
   let(:form) { setup_form(questions: %w(integer integer), required: true) }
   let(:form_code) { form.current_version.code }
+  let(:wrong_code) { form_code.sub(form.code[0], form.code[0] == "a" ? "b" : "a") }
 
   before :all do
     @user = get_user
@@ -173,12 +174,18 @@ describe "incoming sms", :sms do
     let(:sms_forward) { Sms::Forward.first }
     let(:actual_recipients) { sms_forward.recipient_hashes.map { |hash| hash[:user] } }
 
-    it "sends forwards" do
-      incoming_body = "#{form_code} 1.15 2.something"
-      assert_sms_response(incoming: incoming_body , outgoing: /#{form_code}.+thank you/i)
-      expect(sms_forward.body).to eq incoming_body
-      expect(actual_recipients).to contain_exactly(*(users + group.users))
-      expect(Broadcast.count).to eq 1 # Ensure persisted
+    shared_examples_for "sends forwards" do
+      it "sends forwards" do
+        incoming_body = "#{form_code} 1.15 2.something"
+        assert_sms_response(incoming: incoming_body , outgoing: /#{form_code}.+thank you/i)
+        expect(sms_forward.body).to eq incoming_body
+        expect(actual_recipients).to contain_exactly(*(users + group.users))
+        expect(Broadcast.count).to eq 1 # Ensure persisted
+      end
+    end
+
+    context "normally" do
+      it_behaves_like "sends forwards"
     end
 
     context "with sms authentication enabled" do
@@ -189,6 +196,40 @@ describe "incoming sms", :sms do
         assert_sms_response(incoming: incoming_body, outgoing: /#{form_code}.+thank you/i)
         expect(sms_forward.body).to eq "#{form_code} 1.29 2.something"
       end
+    end
+
+    context "with missionless url" do
+      let(:missionless_url) { true }
+      it_behaves_like "sends forwards"
+
+      context "with invalid token" do
+        it "raises error and doesn't persist broacast or forward" do
+          bad_token = "0" * 32
+          do_incoming_request(url: "/sms/submit/#{bad_token}", from: @user.phone,
+            incoming: {body: "#{form_code} 1.15 2.something", })
+          expect(@response.status).to eq(401)
+          expect(Broadcast.count).to eq 0
+          expect(Sms::Forward.count).to eq 0
+        end
+      end
+    end
+  end
+
+  context "with no mission in URL" do
+    # TODO: I am thinking this is how we should refactor this spec: change assert_sms_response into
+    # a custom matcher and define any special request options in a `let`.
+    # For now I'm checking request_options in the helper method.
+    let(:missionless_url) { true }
+
+    it "should process correctly with valid form code" do
+      assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
+      expect(Sms::Incoming.first.mission).to eq get_mission
+      expect(Sms::Reply.first.mission).to eq get_mission
+    end
+
+    it "should send reply if form not found" do
+      assert_sms_response(incoming: "#{wrong_code} 1.15 2.20",
+        outgoing: /there is no form with code/, mission: nil)
     end
   end
 end

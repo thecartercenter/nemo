@@ -23,10 +23,27 @@ class SmsController < ApplicationController
   end
 
   def create
-    raise Sms::UnverifiedTokenError if params[:token] != current_mission.setting.incoming_sms_token
-
     processor = Sms::Processor.new(incoming_msg)
     processor.process
+
+    if current_mission.nil?
+      if incoming_msg.mission
+        @current_mission = incoming_msg.mission
+        load_settings_for_mission_into_config if current_mission
+      else
+        # If we get to this point, the reply waiting to be sent must be a complaint of form not found,
+        # since if it were found, the mission would be stored on the incoming_msg by now.
+        # So we just send the reply and quit.
+        deliver_reply(processor.reply)
+        return
+      end
+    end
+
+    # Mission is guaranteed to be set by this point.
+    if params[:token] != current_mission.setting.incoming_sms_token
+      raise Sms::UnverifiedTokenError
+    end
+
     deliver_reply(processor.reply)
     deliver_forward(processor.forward)
   end
@@ -45,7 +62,7 @@ class SmsController < ApplicationController
     raise Sms::Error.new("No adapters recognized this receive request") if incoming_adapter.nil?
 
     # Create and save the message
-    incoming_adapter.receive(request).tap do |msg|
+    @incoming_msg ||= incoming_adapter.receive(request).tap do |msg|
       msg.mission = current_mission
       msg.save
     end
