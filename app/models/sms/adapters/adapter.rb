@@ -3,6 +3,7 @@ require "net/http"
 class Sms::Adapters::Adapter
 
   attr_writer :deliveries
+  attr_reader :config
 
   # checks if this adapter recognizes an incoming http receive request
   def self.recognize_receive_request?(request)
@@ -18,6 +19,10 @@ class Sms::Adapters::Adapter
   def self.service_name
     # Warning: don't memoize this or a bunch of things fail.
     name.split("::").last.gsub(/Adapter$/, "")
+  end
+
+  def initialize(options = {})
+    @config = options[:config]
   end
 
   def service_name

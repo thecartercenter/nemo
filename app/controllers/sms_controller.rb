@@ -74,7 +74,6 @@ class SmsController < ApplicationController
   def deliver_reply(reply)
     if reply
       if incoming_adapter.reply_style == :via_adapter
-        raise Sms::Error.new("No adapter configured for outgoing response") if outgoing_adapter.nil?
         outgoing_adapter.deliver(reply)
       else # reply via response
         incoming_adapter.prepare_message_for_delivery(reply)
@@ -97,7 +96,14 @@ class SmsController < ApplicationController
     @incoming_adapter = Sms::Adapters::Factory.instance.create_for_request(request)
   end
 
+  # Returns the outgoing adapter. If none is found, tries default settings. If still none found, raises.
   def outgoing_adapter
-    configatron.outgoing_sms_adapter
+    if configatron.outgoing_sms_adapter
+      configatron.outgoing_sms_adapter
+    elsif (default_adapter_name = configatron.default_settings.outgoing_sms_adapter).present?
+      Sms::Adapters::Factory.instance.create(default_adapter_name, config: configatron.default_settings)
+    else
+      raise Sms::Error.new("No adapter configured for outgoing response")
+    end
   end
 end

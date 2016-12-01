@@ -29,7 +29,7 @@ describe Sms::Adapters::Adapter, :sms do
   # loops over each known adapter and yields to a block
   def each_adapter(options)
     Sms::Adapters::Factory.products(options).each do |klass|
-      yield(klass.new)
+      Sms::Adapters::Factory.instance.create(klass)
     end
   end
 end

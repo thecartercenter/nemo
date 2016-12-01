@@ -14,7 +14,7 @@ class StressSmsHelper
   end
 
   def self.create_reply_sms(reply)
-    Sms::Adapters::TwilioTestStubAdapter.new.prepare_message_for_delivery(reply)
+    Sms::Adapters::Factory.instance.create("TwilioTestStub").prepare_message_for_delivery(reply)
   end
 
   def self.signature_for_params(url, params, auth_token)

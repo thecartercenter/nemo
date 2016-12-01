@@ -23,7 +23,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     return true if Rails.env.test?
 
     begin
-      client = Twilio::REST::Client.new(configatron.twilio_account_sid, configatron.twilio_auth_token)
+      client = Twilio::REST::Client.new(config.twilio_account_sid, config.twilio_auth_token)
 
       send_message_for_each_recipient(message, client)
     rescue Twilio::REST::RequestError => e
@@ -47,7 +47,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
   def validate(request)
     params = request.request_parameters.merge(request.query_parameters)
-    validator = Twilio::Util::RequestValidator.new(configatron.twilio_auth_token)
+    validator = Twilio::Util::RequestValidator.new(config.twilio_auth_token)
     unless Rails.env.test?
       unless validator.validate(request.original_url, params, request.headers['X-Twilio-Signature'])
         raise Sms::Error.new("Could not validate incoming Twilio message from #{params[:From]}")
@@ -65,7 +65,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   def send_message_for_each_recipient(message, client)
     message.recipient_numbers.each do |number|
       client.messages.create(
-        from: configatron.twilio_phone_number,
+        from: config.twilio_phone_number,
         to: number,
         body: message.body)
     end

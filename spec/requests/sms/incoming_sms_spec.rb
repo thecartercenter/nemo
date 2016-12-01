@@ -195,7 +195,7 @@ describe "incoming sms", :sms do
   end
 
   context "with failing Twilio validation" do
-    let(:twilio_adapter) { Sms::Adapters::TwilioAdapter.new }
+    let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio") }
 
     before do
       expect(twilio_adapter).to receive(:validate).and_raise(Sms::Error)
@@ -259,7 +259,7 @@ describe "incoming sms", :sms do
     end
   end
 
-  context "with no mission in URL" do
+  context "with missionless url" do
     # TODO: I am thinking this is how we should refactor this spec: change assert_sms_response into
     # a custom matcher and define any special request options in a `let`.
     # For now I'm checking request_options in the helper method.
@@ -274,6 +274,31 @@ describe "incoming sms", :sms do
     it "should send reply if form not found" do
       assert_sms_response(incoming: "#{wrong_code} 1.15 2.20",
         outgoing: /there is no form with code/, mission: nil)
+    end
+
+    context "with reply via_adapter adapter" do
+      context "with default adapter" do
+        before do
+          configatron.default_settings.outgoing_sms_adapter = "Twilio"
+        end
+
+        it "should send reply via default adapter if form not found" do
+          assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
+            outgoing: {body: /there is no form with code/, adapter: "Twilio"}, mission: nil)
+        end
+      end
+
+      context "without default adapter" do
+        before do
+          configatron.default_settings.outgoing_sms_adapter = ""
+        end
+
+        it "should raise error if form not found" do
+          expect do
+            assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"})
+          end.to raise_error(Sms::Error)
+        end
+      end
     end
   end
 end

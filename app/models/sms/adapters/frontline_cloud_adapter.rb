@@ -18,7 +18,7 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
     recipients = message.recipient_numbers.map { |number| { "type" => "mobile", "value" => number } }
 
     payload = {
-      "apiKey" => configatron.frontlinecloud_api_key,
+      "apiKey" => config.frontlinecloud_api_key,
       "payload" => {
         "message" => message.body,
         "recipients" => recipients
