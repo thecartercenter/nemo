@@ -20,6 +20,12 @@ class Sms::Processor
     self.forward = handle_forward
   end
 
+  # Finalizes the process, should be called after all checks have passed.
+  # No objects are persisted before this point.
+  def finalize
+    elmo_response.save! if elmo_response
+  end
+
   private
 
   def handle_reply
@@ -39,7 +45,7 @@ class Sms::Processor
       self.elmo_response = Sms::Decoder.new(incoming_msg).decode
 
       # attempt to save it
-      elmo_response.save!
+      raise ActiveRecord::RecordInvalid.new(elmo_response) unless elmo_response.valid?
 
       # send congrats!
       t_sms_msg("sms_form.decoding.congrats")

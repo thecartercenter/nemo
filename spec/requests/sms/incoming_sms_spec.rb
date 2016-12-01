@@ -8,6 +8,7 @@ describe "incoming sms", :sms do
   let(:form) { setup_form(questions: %w(integer integer), required: true) }
   let(:form_code) { form.current_version.code }
   let(:wrong_code) { form_code.sub(form.code[0], form.code[0] == "a" ? "b" : "a") }
+  let(:bad_incoming_token) { "0" * 32 }
 
   before :all do
     @user = get_user
@@ -204,12 +205,13 @@ describe "incoming sms", :sms do
 
       context "with invalid token" do
         it "raises error and doesn't persist broacast or forward" do
-          bad_token = "0" * 32
-          do_incoming_request(url: "/sms/submit/#{bad_token}", from: @user.phone,
+
+          do_incoming_request(url: "/sms/submit/#{bad_incoming_token}", from: @user.phone,
             incoming: {body: "#{form_code} 1.15 2.something", })
           expect(@response.status).to eq(401)
           expect(Broadcast.count).to eq 0
           expect(Sms::Forward.count).to eq 0
+          expect(Response.count).to eq 0
         end
       end
     end

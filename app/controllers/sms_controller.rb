@@ -44,6 +44,7 @@ class SmsController < ApplicationController
       raise Sms::UnverifiedTokenError
     end
 
+    processor.finalize
     deliver_reply(processor.reply)
     deliver_forward(processor.forward)
   end
