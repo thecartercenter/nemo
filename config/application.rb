@@ -60,8 +60,8 @@ module ELMO
     # CUSTOM SETTINGS
     ####################################
 
-    # read system version as git tag
-    configatron.system_version = `git describe`.strip rescue "?"
+    # read system version from file
+    configatron.system_version = File.read("#{Rails.root}/VERSION").strip
 
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
