@@ -25,11 +25,18 @@ ActionMailer::Base.smtp_settings = {
   :password       => "password"
 }
 
-# Default settings for outgoing sms adapter when new mission is created.
-# If you don't have an SMS gateway service, you don't need to edit these.
-configatron.default_settings.outgoing_sms_adapter = "Twilio"
-configatron.default_settings.twilio_account_sid = "xxx"
-configatron.default_settings.twilio_auth_token = "xxx"
+# Default outgoing SMS adapter settings. Uncomment one of the below sets of settings as needed.
+# These settings are copied by default to any new mission in the system.
+# This adapter is also used to send replies if the incoming message has an unknown mission and the
+# incoming adapter's reply style is `via_adapter`.
+# ** Twilio **
+# configatron.default_settings.outgoing_sms_adapter = "Twilio"
+# configatron.default_settings.twilio_account_sid = "xxx"
+# configatron.default_settings.twilio_auth_token = "xxx"
+# configatron.default_settings.twilio_phone_number = "+15555551212"
+# ** FrontlineCloud **
+# configatron.default_settings.outgoing_sms_adapter = "FrontlineCloud"
+# configatron.default_settings.frontlinecloud_api_key = "xxx"
 
 # Google API Keys
 configatron.google_maps_api_key = "xxx"
