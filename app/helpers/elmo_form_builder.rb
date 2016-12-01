@@ -62,7 +62,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       # Current value display
       body = @template.content_tag(:span, current || "[#{@template.t('common.none')}]", data: { value: current || "" })
 
-      unless read_only?
+      unless read_only? || options[:no_button] == true
         # Generate/Regenerate button
         data = {
           "handler" => options.delete(:handler) || "#{@template.url_for(@object)}/regenerate_#{field_name}"

@@ -40,9 +40,8 @@ class SmsController < ApplicationController
     end
 
     # Mission is guaranteed to be set by this point.
-    if params[:token] != current_mission.setting.incoming_sms_token
-      raise Sms::UnverifiedTokenError
-    end
+    raise Sms::UnverifiedTokenError unless verify_token(params[:token])
+
     incoming_adapter.validate(request)
 
     processor.finalize
@@ -105,5 +104,12 @@ class SmsController < ApplicationController
     else
       raise Sms::Error.new("No adapter configured for outgoing response")
     end
+  end
+
+  def verify_token(token)
+    mission_token = current_mission.setting.incoming_sms_token
+    global_token = configatron.has_key?(:universal_sms_token) ? configatron.universal_sms_token : nil
+
+    [mission_token, global_token].compact.include? token
   end
 end
