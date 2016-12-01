@@ -154,8 +154,8 @@ describe Sms::Decoder, :sms do
     end
 
     context "with mission pre-specified and form from other mission" do
-      it "fails with wrong_mission" do
-        assert_decoding_fail(body: "#{form.code} 1.15", mission: create(:mission), error: "wrong_mission")
+      it "fails with form not found error" do
+        assert_decoding_fail(body: "#{form.code} 1.15", mission: create(:mission), error: "form_not_found")
       end
     end
 

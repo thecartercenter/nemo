@@ -90,7 +90,7 @@ class Sms::Decoder
       # if we already know the mission (it may or may not be already stored on the message)
       # and it doesn't match the form's mission, complain
       if v.form.mission != @msg.mission
-        raise_decoding_error("wrong_mission", form_code: code)
+        raise_decoding_error("form_not_found", form_code: code)
       end
     else
       # If the mission is not stored on the message, set it based on form.
