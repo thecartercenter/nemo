@@ -40,7 +40,7 @@ class SmsController < ApplicationController
     end
 
     # Mission is guaranteed to be set by this point.
-    if params[:token] != current_mission.setting.incoming_sms_token
+    unless [current_mission.setting.incoming_sms_token, configatron.universal_sms_token].include? params[:token]
       raise Sms::UnverifiedTokenError
     end
     incoming_adapter.validate(request)

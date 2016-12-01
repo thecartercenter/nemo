@@ -3,6 +3,10 @@
 
   <%= f.field(:timezone, type: :timezone, required: true) %>
   <%= f.field(:preferred_locales_str, required: true) %>
+  <% if configatron.has_key?(:universal_sms_token) %>
+    <%= f.regenerable_field(:universal_sms_token, no_button: true,
+      append: link_to(t('setting.using_incoming_sms_token'), '#', class: 'using-universal_sms_token')) %>
+  <% end %>
 
   <%# None of the rest of this is relevant in admin mode. %>
   <% unless admin_mode? %>

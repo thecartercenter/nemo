@@ -361,6 +361,7 @@ en:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
         incoming_sms_numbers_str: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
+        universal_sms_token: "Universal SMS Token"
         preferred_locales_str: "Preferred Languages"
         default_outgoing_sms_adapter: "Default Outgoing Provider"
         override_code: "Override Code"
@@ -546,6 +547,8 @@ en:
         incoming_sms_numbers_str: "Enter the phone number(s) (including country code, separated by commas) to which incoming SMSes for SMS forms should be sent. Only needed if using SMS submissions."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
+        universal_sms_token: |-
+          This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages. Use this URL if you need to allow multiple missions to submit via the same URL.
         using_incoming_sms_token_title: Using the Incoming SMS Token
         using_incoming_sms_token_body: |-
           Please register the following incoming SMS URL with your gateway provider:

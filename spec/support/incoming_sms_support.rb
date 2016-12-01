@@ -53,10 +53,11 @@ module IncomingSmsSupport
     req_env = {}
 
     url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
+    url_token = defined?(missionless_url) && missionless_url ? configatron.universal_sms_token : get_mission.setting.incoming_sms_token
 
     params[:sent_at] ||= Time.now
     params[:incoming][:adapter] ||= "TwilioSms"
-    params[:url] ||= "#{url_prefix}/sms/submit/#{get_mission.setting.incoming_sms_token}"
+    params[:url] ||= "#{url_prefix}/sms/submit/#{url_token}"
     params[:method] ||= :post
 
     case params[:incoming][:adapter]

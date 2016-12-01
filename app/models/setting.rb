@@ -6,7 +6,7 @@ class Setting < ActiveRecord::Base
     twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
-  ADMIN_MODE_KEYS = %w(timezone preferred_locales)
+  ADMIN_MODE_KEYS = %w(timezone preferred_locales universal_sms_token)
 
   DEFAULT_TIMEZONE = "UTC"
 
@@ -71,6 +71,10 @@ class Setting < ActiveRecord::Base
   def generate_override_code!(size = 6)
     self.override_code = Random.alphanum_no_zero(size)
     self.save!
+  end
+
+  def universal_sms_token
+    configatron.universal_sms_token
   end
 
   def generate_incoming_sms_token(replace=false)

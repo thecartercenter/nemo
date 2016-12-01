@@ -35,7 +35,11 @@ class SettingsController < ApplicationController
   end
 
   def using_incoming_sms_token_message
-    url = mission_sms_submission_url(@setting.incoming_sms_token, locale: nil)
+    if params[:missionless].present?
+      url = missionless_sms_submission_url(@setting.universal_sms_token, locale: nil, mission_name: nil, mode: nil)
+    else
+      url = mission_sms_submission_url(@setting.incoming_sms_token, locale: nil)
+    end
     message = t('activerecord.hints.setting.using_incoming_sms_token_body', url: url)
 
     render json: { message: message }
