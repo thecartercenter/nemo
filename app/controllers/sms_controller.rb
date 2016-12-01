@@ -29,10 +29,6 @@ class SmsController < ApplicationController
     processor.process
     deliver_reply(processor.reply)
     deliver_forward(processor.forward)
-
-    # Store the reply in an instance variable so the functional test can access it.
-    # (Should be refactored some day).
-    @reply = processor.reply
   end
 
   # Returns a CSV list of available incoming numbers.

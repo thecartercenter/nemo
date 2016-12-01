@@ -67,13 +67,16 @@ describe "incoming sms", :sms do
         outgoing: /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+contained multiple invalid options/)
     end
 
-    it "message with invalid options should get error" do
-      assert_sms_response(
-        incoming: "#{form_code} 1.abhk",
-        outgoing: /Sorry.+answer 'abhk'.+contained invalid options 'h, k'/)
+    it "message with one invalid option should get error" do
       assert_sms_response(
         incoming: "#{form_code} 1.abh",
         outgoing: /Sorry.+answer 'abh'.+contained the invalid option 'h'/)
+    end
+
+    it "message with multiple invalid options should get error" do
+      assert_sms_response(
+        incoming: "#{form_code} 1.abhk",
+        outgoing: /Sorry.+answer 'abhk'.+contained invalid options 'h, k'/)
     end
   end
 
@@ -112,8 +115,11 @@ describe "incoming sms", :sms do
     assert_sms_response(incoming: "123", outgoing: /not a valid form code/i)
   end
 
-  it "missing answer should get error" do
+  it "message missing one answer should get error" do
     assert_sms_response(incoming: "#{form_code} 2.20", outgoing: /answer.+required question 1 was.+#{form_code}/)
+  end
+
+  it "message missing multiple answers should get error" do
     assert_sms_response(incoming: "#{form_code}", outgoing: /answers.+required questions 1,2 were.+#{form_code}/)
   end
 
@@ -128,7 +134,7 @@ describe "incoming sms", :sms do
   end
 
   it "duplicate should result error message" do
-    assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
+    create(:sms_incoming, from: @user.phone, body: "#{form_code} 1.15 2.20", sent_at: Time.now)
     Timecop.travel(10.minutes) do
       assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/)
     end

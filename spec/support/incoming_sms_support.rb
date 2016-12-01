@@ -32,21 +32,26 @@ module IncomingSmsSupport
     do_incoming_request(params)
     assert_response(:success)
 
-    # compare the response to the outgoing spec
-    sms = assigns(:reply)
+    reply = find_reply_and_ensure_no_multiple
 
     # if there was no reply, check that this was expected
-    if sms.nil?
+    if reply.nil?
       expect(params[:outgoing][:body]).to be_nil
     else
-      assert_instance_of(Sms::Reply, sms)
+      assert_instance_of(Sms::Reply, reply)
       # Ensure attribs are appropriate
-      expect(sms.to).to eq(params[:from])
-      assert_match(params[:outgoing][:body], sms.body)
-      expect(sms.mission).to eq(params[:mission])
-      expect(sms.body).not_to match(/%\{|translation missing/)
-      expect(sms.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
+      expect(reply.to).to eq(params[:from])
+      assert_match(params[:outgoing][:body], reply.body)
+      expect(reply.mission).to eq(params[:mission])
+      expect(reply.body).not_to match(/%\{|translation missing/)
+      expect(reply.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
     end
+  end
+
+  def find_reply_and_ensure_no_multiple
+    replies = Sms::Reply.all
+    expect(replies.size).to be < 2, "Should be no more than 1 reply"
+    replies.first
   end
 
   # builds and sends the HTTP POST request to mimic incoming adapter
