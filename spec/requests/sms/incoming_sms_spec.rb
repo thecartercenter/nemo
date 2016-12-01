@@ -151,11 +151,26 @@ describe "incoming sms", :sms do
     assert_sms_response(incoming: "#{form_code} 1.21 2.21", outgoing: /Must be less than or equal to 20/)
   end
 
-  it "duplicate should result error message" do
-    create(:sms_incoming, from: @user.phone, body: "#{form_code} 1.15 2.20", sent_at: Time.now)
-    Timecop.travel(10.minutes) do
-      assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/)
-      expect(Sms::Incoming.count).to eq 2
+  context "duplicate response" do
+    before do
+      create(:sms_incoming, from: @user.phone, body: "#{form_code} 1.15 2.20", sent_at: Time.now)
+    end
+
+    it "should result in error message" do
+      Timecop.travel(10.minutes) do
+        assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/)
+        expect(Sms::Incoming.count).to eq 2
+      end
+    end
+
+    context "with missionless url" do
+      let(:missionless_url) { true }
+
+      it "should still result in error message" do
+        Timecop.travel(10.minutes) do
+          assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/, mission: nil)
+        end
+      end
     end
   end
 
