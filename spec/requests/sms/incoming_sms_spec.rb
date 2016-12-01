@@ -17,6 +17,9 @@ describe "incoming sms", :sms do
 
     it "can accept text answers" do
       assert_sms_response(incoming: "#{form_code} 1.this is a text answer", outgoing: /#{form_code}.+thank you/i)
+      # Ensure objects are persisted
+      expect(Sms::Incoming.count).to eq 1
+      expect(Sms::Reply.count).to eq 1
     end
   end
 
@@ -91,6 +94,7 @@ describe "incoming sms", :sms do
 
   it "message from automated sender should get no response" do
     assert_sms_response(from: "VODAFONE", incoming: "blah blah junk", outgoing: nil)
+    expect(Sms::Reply.count).to eq 0
   end
 
   it "message from unrecognized normal number should get error" do
@@ -137,6 +141,7 @@ describe "incoming sms", :sms do
     create(:sms_incoming, from: @user.phone, body: "#{form_code} 1.15 2.20", sent_at: Time.now)
     Timecop.travel(10.minutes) do
       assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/)
+      expect(Sms::Incoming.count).to eq 2
     end
   end
 
@@ -165,18 +170,15 @@ describe "incoming sms", :sms do
     let(:group) { create(:user_group, users: create_list(:user, 3)) }
     let(:recipients) { users + [group] }
     let(:form) { setup_form(questions: %w(integer text), forward_recipients: recipients) }
+    let(:sms_forward) { Sms::Forward.first }
+    let(:actual_recipients) { sms_forward.recipient_hashes.map { |hash| hash[:user] } }
 
     it "sends forwards" do
       incoming_body = "#{form_code} 1.15 2.something"
       assert_sms_response(incoming: incoming_body , outgoing: /#{form_code}.+thank you/i)
-
-      # get forward
-      sms_forward = Sms::Forward.last
       expect(sms_forward.body).to eq incoming_body
-
-      # get forward recipients
-      recipients = sms_forward.recipient_hashes.map { |hash| hash[:user] }
-      expect(recipients).to contain_exactly(*(users + group.users))
+      expect(actual_recipients).to contain_exactly(*(users + group.users))
+      expect(Broadcast.count).to eq 1 # Ensure persisted
     end
 
     context "with sms authentication enabled" do
@@ -185,7 +187,6 @@ describe "incoming sms", :sms do
       it "strips auth code from forward" do
         incoming_body = "#{auth_code} #{form_code} 1.29 2.something"
         assert_sms_response(incoming: incoming_body, outgoing: /#{form_code}.+thank you/i)
-        sms_forward = Sms::Forward.last
         expect(sms_forward.body).to eq "#{form_code} 1.29 2.something"
       end
     end

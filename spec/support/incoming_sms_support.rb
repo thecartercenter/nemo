@@ -32,7 +32,7 @@ module IncomingSmsSupport
     do_incoming_request(params)
     assert_response(:success)
 
-    reply = find_reply_and_ensure_no_multiple
+    reply = Sms::Reply.first
 
     # if there was no reply, check that this was expected
     if reply.nil?
@@ -46,12 +46,6 @@ module IncomingSmsSupport
       expect(reply.body).not_to match(/%\{|translation missing/)
       expect(reply.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
     end
-  end
-
-  def find_reply_and_ensure_no_multiple
-    replies = Sms::Reply.all
-    expect(replies.size).to be < 2, "Should be no more than 1 reply"
-    replies.first
   end
 
   # builds and sends the HTTP POST request to mimic incoming adapter
