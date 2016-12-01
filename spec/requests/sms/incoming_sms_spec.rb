@@ -12,6 +12,7 @@ describe "incoming sms", :sms do
 
   before :all do
     @user = get_user
+    configatron.universal_sms_token = SecureRandom.hex
   end
 
   context "with text form" do
@@ -274,6 +275,32 @@ describe "incoming sms", :sms do
     it "should send reply if form not found" do
       assert_sms_response(incoming: "#{wrong_code} 1.15 2.20",
         outgoing: /there is no form with code/, mission: nil)
+    end
+
+    context "with multiple missions" do
+      let(:first_mission) { get_mission }
+      let(:second_mission) { create(:mission, with_user: @user) }
+      let(:first_form) { setup_form(questions: %w(integer text), mission: first_mission) }
+      let(:second_form) { setup_form(questions: %w(integer text), mission: second_mission) }
+      let(:first_form_code) { first_form.current_version.code }
+      let(:second_form_code) { second_form.current_version.code }
+      let(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
+
+      it "should process first mission correctly with valid form code" do
+        assert_sms_response(
+          mission: first_mission,
+          incoming: "#{first_form_code} 1.15 2.oooh",
+          outgoing: /#{first_form_code}.+thank you/i,
+          url: submission_url)
+      end
+
+      it "should process second mission correctly with valid form code" do
+        assert_sms_response(
+          mission: second_mission,
+          incoming: "#{second_form_code} 1.15 2.oooh",
+          outgoing: /#{second_form_code}.+thank you/i,
+          url: submission_url)
+      end
     end
 
     context "with reply via_adapter adapter" do

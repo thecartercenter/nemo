@@ -74,7 +74,7 @@ class Setting < ActiveRecord::Base
   end
 
   def universal_sms_token
-    configatron.universal_sms_token
+    configatron.has_key?(:universal_sms_token) ? configatron.universal_sms_token : nil
   end
 
   def generate_incoming_sms_token(replace=false)

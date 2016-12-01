@@ -37,6 +37,8 @@ ActionMailer::Base.smtp_settings = {
 # ** FrontlineCloud **
 # configatron.default_settings.outgoing_sms_adapter = "FrontlineCloud"
 # configatron.default_settings.frontlinecloud_api_key = "xxx"
+
+# Sets a universal SMS token so that multiple missions can submit to the same URL
 # configatron.universal_sms_token = "50b488c71be4e9cd0ba34a7bf0b7053f"
 
 # Google API Keys

@@ -1,7 +1,8 @@
 module IncomingSmsSupport
   # helper that sets up a new form with the given parameters
   def setup_form(options)
-    form = create(:form, smsable: true, question_types: options[:questions])
+    mission = options[:mission].present? ? options[:mission] : get_mission
+    form = create(:form, smsable: true, question_types: options[:questions], mission: mission)
     form.questionings.each { |q| q.update_attribute(:required, true) } if options[:required]
     if options[:forward_recipients]
       form.sms_relay = true
@@ -25,7 +26,6 @@ module IncomingSmsSupport
     # hashify incoming/outgoing if they're not hashes
     params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
     params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
-
 
     # do post request based on params
     do_incoming_request(params)
@@ -53,7 +53,12 @@ module IncomingSmsSupport
     req_env = {}
 
     url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
-    url_token = defined?(missionless_url) && missionless_url ? configatron.universal_sms_token : get_mission.setting.incoming_sms_token
+
+    if defined?(missionless_url) && missionless_url
+      url_token = configatron.has_key?(:universal_sms_token) ? configatron.universal_sms_token : nil
+    else
+      url_token = get_mission.setting.incoming_sms_token
+    end
 
     params[:sent_at] ||= Time.now
     params[:incoming][:adapter] ||= "TwilioSms"
