@@ -78,7 +78,7 @@ class Broadcast < ActiveRecord::Base
         numbers << r.phone if main_phone?
         numbers << r.phone2 if alternate_phone?
       end
-    end
+    end.compact
   end
 
   # Returns total number of users getting an sms.
