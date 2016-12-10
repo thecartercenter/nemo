@@ -166,7 +166,7 @@
       $('#footer').show();
       $('#main-nav').show();
       $('#userinfo').show();
-      $('#title img').css('height', 'initial');
+      $('#title img').css('height', '54px'); //initial does weird stuff on first load with oversized logo
       $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
     }
 
