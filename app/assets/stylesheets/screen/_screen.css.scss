@@ -139,6 +139,11 @@ body {
     color: $link-text-color;
   }
 
+  //workaround for arabic display order issue
+  #locale_form_link {
+    display: inline-block;
+  }
+
   #locale_form {
     display: none;
   }
