@@ -110,9 +110,6 @@ group :development do
   # generate diagrams with rake db:migrate
   gem "rails-erd", "~> 1.4.0"
 
-  # deployment
-  gem "capistrano", "~> 2.15.5"
-
   # query optimization
   gem "bullet", "~> 4.14.4"
 
