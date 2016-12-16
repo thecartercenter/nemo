@@ -13,7 +13,7 @@
   <%= f.field(:phone) %>
   <%= f.field(:phone2) %>
   <%= f.field(:birth_year, type: :select, options: birth_year_options,
-        read_only_content: @user.birth_year.present? ? @user.birth_year.to_s : nil ) %>
+        read_only_content: @user.birth_year.try(:to_s)) %>
   <%= f.field(:gender, type: :select, options: translate_options(User::GENDER_OPTIONS, [:user, :gender_options])) %>
   <%= f.field(:gender_custom) %>
   <%= f.field(:nationality, type: :select, options: translate_options(I18n.t("countries").keys, [:countries]).sort) %>
