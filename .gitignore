@@ -30,6 +30,7 @@ routes.txt
 # theme variable overrides
 app/assets/stylesheets/all/variables/_theme.scss
 app/assets/images/logo-override.png
+app/assets/images/logo-dark-override.png
 
 # file uploads
 /uploads

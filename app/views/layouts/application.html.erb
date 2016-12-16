@@ -46,11 +46,7 @@
 
     <%# Logo and mission if selected %>
     <div id="title">
-      <% if configatron.has_key?(:logo_path) %>
-        <%= link_to(image_tag(configatron.logo_path), current_root_path) %>
-      <% else %>
-        <%= link_to(image_tag("logo.png"), current_root_path) %>
-      <% end %>
+      <%= link_to(logo_image, current_root_path) %>
       <%# Stripping title name since we have a logo now %>
       <h2>
         <% if admin_mode? %>
@@ -155,8 +151,8 @@
     <%= t('layout.loading') %>
   </div>
 
-<%# Include logo-dark (used for printing) here because for just-in-time ajax loading (e.g. forms) it may not load in time. %>
-<%= image_tag('logo-dark.png', class: 'hidden') if controller_name == 'forms' %>
+  <%# Include logo-dark (used for printing) here because for just-in-time ajax loading (e.g. forms) it may not load in time. %>
+  <%= logo_dark_image(class: 'hidden') if controller_name == 'forms' %>
 
   <%# insert any audio objects at the end %>
   <%= yield(:audio) %>
