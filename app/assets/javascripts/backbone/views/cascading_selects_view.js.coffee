@@ -33,7 +33,7 @@ class ELMO.Views.CascadingSelectsView extends ELMO.Views.ApplicationView
     select.load(url, $.param(node_id: node_id), -> ELMO.app.loading(false))
 
   selected_value_before: (select) ->
-    select.parent().prev().find('select').val()
+    select.closest('div.level').prev().find('select').val()
 
   # Gets an array of values of all the selects.
   val: ->

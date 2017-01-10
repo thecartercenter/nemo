@@ -18,16 +18,19 @@
           </div>
         <% end %>
       <% else %>
-        <% if option_node_path.multilevel? %>
-          <label for="<%= cascading_select_input_id(input_name_template, i) %>">
-            <%= option_node_path.level_name_for_depth(i + 1) %>
-          </label>
-        <% end %>
-        <%= select_tag(input_name_template.gsub('###', i.to_s),
+        <% next_select_tag = select_tag(input_name_template.gsub('###', i.to_s),
               options_from_collection_for_select(option_node_path.nodes_for_depth(i + 1),
                 'id', 'option_name', node.try(:id)),
               include_blank: true,
               class: 'form-control') %>
+        <% if option_node_path.multilevel? %>
+          <label>
+            <%= option_node_path.level_name_for_depth(i + 1) %>
+            <%= next_select_tag %>
+          </label>
+        <% else %>
+          <%= next_select_tag %>
+        <% end %>
       <% end %>
     </div>
   <% end %>
