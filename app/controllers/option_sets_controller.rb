@@ -90,7 +90,7 @@ class OptionSetsController < ApplicationController
 
   # Returns the options available at the node in the option tree specified by the given array of option IDs
   def options_for_node
-    @options = @option_set.options_for_node(params[:ids].map(&:to_i))
+    @options = OptionNode.find(params[:node_id]).child_options
     render(layout: false)
   end
 

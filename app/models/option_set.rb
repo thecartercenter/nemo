@@ -145,7 +145,11 @@ class OptionSet < ActiveRecord::Base
   end
 
   def level_count
-    levels.try(:size)
+    levels.try(:size) || 1
+  end
+
+  def level_name_for_depth(depth)
+    levels[depth-1].name
   end
 
   def multilevel?

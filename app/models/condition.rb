@@ -6,6 +6,7 @@ class Condition < ActiveRecord::Base
 
   belongs_to(:questioning, inverse_of: :condition)
   belongs_to(:ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id", inverse_of: :referring_conditions)
+  belongs_to(:option_node)
 
   before_validation(:clear_blanks)
   before_validation(:clean_times)
@@ -55,6 +56,10 @@ class Condition < ActiveRecord::Base
   # Builds an OptionPath representing the selected options.
   def option_path
     @option_path ||= OptionPath.new(option_set: ref_qing.option_set, options: options)
+  end
+
+  def option_node_path
+    OptionNodePath.new(option_set: ref_qing.option_set, target_node: option_node)
   end
 
   # Accepts a hash of the form {'0' => '1234', '1' => '1238', ...} and converts to option_ids.

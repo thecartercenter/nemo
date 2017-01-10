@@ -17,8 +17,10 @@
   <div class="field">
     <%= f.label(:value, t('condition.value')) %>
     <% if @condition.ref_qing.present? && @condition.ref_qing_has_options? %>
-      <%= render('option_sets/cascading_selects', index: 1, option_path: @condition.option_path,
-        input_name_template: 'questioning[condition_attributes][option_path_attribs][###]') %>
+      <%= render('option_sets/cascading_selects',
+            index: 1,
+            option_node_path: @condition.option_node_path,
+            input_name_template: 'questioning[condition_attributes][option_node_ids][###]') %>
     <% else %>
       <%= f.text_field(:value, class: 'text form-control') %>
     <% end %>

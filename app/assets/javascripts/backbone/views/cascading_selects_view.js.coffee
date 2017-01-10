@@ -28,17 +28,12 @@ class ELMO.Views.CascadingSelectsView extends ELMO.Views.ApplicationView
   # Fetches option tags for the given select from the server.
   reload_options_for: (select) ->
     ELMO.app.loading(true)
-    vals = this.selected_values_before(select)
+    node_id = @selected_value_before(select)
     url = ELMO.app.url_builder.build('option-sets', @option_set_id, 'options-for-node')
-    select.load(url, $.param({ids: vals}), -> ELMO.app.loading(false))
+    select.load(url, $.param(node_id: node_id), -> ELMO.app.loading(false))
 
-  # Gets the values of the selects before the given one.
-  selected_values_before: (select) ->
-    this.selects_before(select).get().map((s) -> $(s).val())
-
-  # Gets all the select tags before the given one.
-  selects_before: (select) ->
-    select.parent().prevAll().find('select')
+  selected_value_before: (select) ->
+    select.parent().prev().find('select').val()
 
   # Gets an array of values of all the selects.
   val: ->
@@ -52,4 +47,3 @@ class ELMO.Views.CascadingSelectsView extends ELMO.Views.ApplicationView
       true
     else
       false
-

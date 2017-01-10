@@ -31,6 +31,7 @@ class OptionNode < ActiveRecord::Base
   replicable child_assocs: [:children, :option], backward_assocs: :option_set, dont_copy: [:option_set_id, :option_id]
 
   delegate :shortcode_length, to: :option_set
+  delegate :name, to: :option, prefix: true
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
