@@ -62,11 +62,6 @@ class Condition < ActiveRecord::Base
     self.option_ids = hash.empty? ? nil : hash.values.map{ |id| id.blank? ? nil : id.to_i }.compact
   end
 
-  # Given a rank path,  sets option_ids by getting the option path from the referred option set.
-  def set_options_by_rank_path(rank_path)
-    self.option_ids = ref_qing.rank_path_to_option_path(rank_path).map(&:id)
-  end
-
   # all questionings that can be referred to by this condition
   def refable_qings
     questioning.previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
