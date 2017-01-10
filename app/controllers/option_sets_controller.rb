@@ -6,7 +6,7 @@ class OptionSetsController < ApplicationController
 
   # authorization via cancan
   load_and_authorize_resource
-  skip_authorization_check only: :options_for_node
+  skip_authorization_check only: :child_nodes
 
   def index
     # get the total entries before adding the big joins
@@ -88,9 +88,9 @@ class OptionSetsController < ApplicationController
     redirect_to(index_url_with_page_num)
   end
 
-  # Returns the options available at the node in the option tree specified by the given array of option IDs
-  def options_for_node
-    @options = OptionNode.find(params[:node_id]).child_options
+  # Returns the options available at the node in the option tree specified by the given node
+  def child_nodes
+    @children = OptionNode.find(params[:node_id]).sorted_children
     render(layout: false)
   end
 

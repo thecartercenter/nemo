@@ -29,7 +29,7 @@ class ELMO.Views.CascadingSelectsView extends ELMO.Views.ApplicationView
   reload_options_for: (select) ->
     ELMO.app.loading(true)
     node_id = @selected_value_before(select)
-    url = ELMO.app.url_builder.build('option-sets', @option_set_id, 'options-for-node')
+    url = ELMO.app.url_builder.build('option-sets', @option_set_id, 'child-nodes')
     select.load(url, $.param(node_id: node_id), -> ELMO.app.loading(false))
 
   selected_value_before: (select) ->

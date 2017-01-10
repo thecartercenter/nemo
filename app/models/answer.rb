@@ -85,6 +85,18 @@ class Answer < ActiveRecord::Base
       WHERE (a.option_id = ? OR c.option_id = ?) AND a.questioning_id IN (?)", option_id, option_id, questioning_ids]).first.count > 0
   end
 
+  # This is a temporary method for fetching option_node based on the related OptionSet and Option.
+  # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
+  def option_node
+    OptionNode.where(option_id: option_id, option_set_id: option_set.id).first
+  end
+
+  # This is a temporary method for assigning option based on an OptionNode ID.
+  # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
+  def option_node_id=(id)
+    self.option_id = id.present? ? OptionNode.find(id).option_id : nil
+  end
+
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
   def level
     option_set.try(:multilevel?) ? option_set.levels[(rank || 1) - 1] : nil

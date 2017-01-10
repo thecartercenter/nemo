@@ -68,7 +68,7 @@ class OptionNode < ActiveRecord::Base
 
   # Returns options of children, ordered by rank.
   def child_options
-    @child_options ||= sorted_children.includes(:option).map(&:option)
+    @child_options ||= sorted_children.map(&:option)
   end
 
   # Returns the child options of the node defined by path of option ids.
@@ -129,7 +129,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def sorted_children
-    children.order("rank")
+    children.order("rank").includes(:option)
   end
 
   def first_leaf_option

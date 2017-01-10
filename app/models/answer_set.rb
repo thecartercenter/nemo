@@ -10,7 +10,7 @@ class AnswerSet
   delegate :levels, to: :option_set
   delegate :first, to: :answers
   delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, :inst_num, to: :first
-  delegate :option_ids_with_no_nils, to: :option_path
+  delegate :option_ids_with_no_nils, to: :option_node_path
 
   # Builds Answer attribute hashes from submitted answer_set params.
   # Returns an array of Answer attribute hashes.
@@ -45,6 +45,10 @@ class AnswerSet
     @option_path ||= OptionPath.new(option_set: option_set, options: answers.map(&:option))
   end
 
+  def option_node_path
+    OptionNodePath.new(option_set: option_set, target_node: lowest_non_nil_answer.try(:option_node))
+  end
+
   private
 
   # Ensures empty answers for all levels of questioning.
@@ -54,5 +58,10 @@ class AnswerSet
       rank = (questioning.level_count || 1) > 1 ? i + 1 : nil
       answers[i] ||= Answer.new(questioning: questioning, rank: rank)
     end
+  end
+
+  # Returns the non-nil answer with the lowest rank. May return nil if the set is blank.
+  def lowest_non_nil_answer
+    answers.reverse.find(&:present?)
   end
 end
