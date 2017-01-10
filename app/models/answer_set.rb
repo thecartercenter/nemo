@@ -41,10 +41,6 @@ class AnswerSet
     answers.all?(&:blank?)
   end
 
-  def option_path
-    @option_path ||= OptionPath.new(option_set: option_set, options: answers.map(&:option))
-  end
-
   def option_node_path
     OptionNodePath.new(option_set: option_set, target_node: lowest_non_nil_answer.try(:option_node))
   end

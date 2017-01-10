@@ -94,7 +94,7 @@ class Answer < ActiveRecord::Base
   # This is a temporary method for assigning option based on an OptionNode ID.
   # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
   def option_node_id=(id)
-    self.option_id = id.present? ? OptionNode.find(id).option_id : nil
+    self.option_id = id.present? ? OptionNode.id_to_option_id(id) : nil
   end
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.

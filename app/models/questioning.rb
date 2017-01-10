@@ -25,8 +25,6 @@ class Questioning < FormItem
     :all_options,
     :first_leaf_option,
     :first_leaf_option_node,
-    :option_path_to_rank_path,
-    :rank_path_to_option_path,
     :select_options,
     :odk_code,
     :odk_constraint,

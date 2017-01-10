@@ -60,18 +60,8 @@ class Condition < ActiveRecord::Base
     self.option_ids = o.nil? ? nil : [o.id]
   end
 
-  # Builds an OptionPath representing the selected options.
-  def option_path
-    @option_path ||= OptionPath.new(option_set: ref_qing.option_set, options: options)
-  end
-
   def option_node_path
     OptionNodePath.new(option_set: ref_qing.option_set, target_node: option_node)
-  end
-
-  # Accepts a hash of the form {'0' => '1234', '1' => '1238', ...} and converts to option_ids.
-  def option_path_attribs=(hash)
-    self.option_ids = hash.empty? ? nil : hash.values.map{ |id| id.blank? ? nil : id.to_i }.compact
   end
 
   # all questionings that can be referred to by this condition

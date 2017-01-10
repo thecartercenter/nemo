@@ -71,24 +71,6 @@ class OptionNode < ActiveRecord::Base
     @child_options ||= sorted_children.map(&:option)
   end
 
-  # Returns the child options of the node defined by path of option ids.
-  # If node at end of path is leaf node, returns [].
-  def options_for_node(path)
-    find_descendant_by_option_path(path).try(:child_options) || []
-  end
-
-  # Traces the given path of option ids down the tree, returning the OptionNode at the end.
-  # Assumes path is an array of Option IDs with 0 or more elements.
-  # Returns self if path is empty.
-  # Returns nil if any point in path does not find a match.
-  # Returns nil if path contains any nils.
-  def find_descendant_by_option_path(path)
-    return self if path.empty?
-    return nil if path.any?(&:nil?)
-    return nil unless match = child_with_option_id(path[0])
-    match.find_descendant_by_option_path(path[1..-1])
-  end
-
   def child_with_option_id(oid)
     children.detect { |c| c.option_id == oid }
   end
@@ -149,30 +131,6 @@ class OptionNode < ActiveRecord::Base
     rel = rel.includes(:option_sets, :answers, :choices) if options[:eager_load_option_assocs]
 
     @options_by_id = rel.index_by(&:id)
-  end
-
-  # Given a path (array) of options, returns the ranks of those options at each step of the path.
-  # Raises ArgumentError if path not found
-  def option_path_to_rank_path(options)
-    if options.empty?
-      []
-    else
-      child = child_with_option_id(options.first.id)
-      raise ArgumentError.new("Could not find child of node #{id} with option ID #{options.first.id}") if child.nil?
-      [child.rank] + child.option_path_to_rank_path(options[1..-1])
-    end
-  end
-
-  # Given a path (array) of option ranks, returns the options at each step of the path.
-  # Raises ArgumentError if path not found.
-  def rank_path_to_option_path(ranks)
-    if ranks.empty?
-      []
-    else
-      child = children.where(rank: ranks.first).first
-      raise ArgumentError.new("Could not find child of node #{id} with rank #{ranks.first}") if child.nil?
-      [child.option] + child.rank_path_to_option_path(ranks[1..-1])
-    end
   end
 
   # an odk-friendly unique code
