@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160909161815) do
+ActiveRecord::Schema.define(version: 20170109183447) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -99,6 +99,7 @@ ActiveRecord::Schema.define(version: 20160909161815) do
     t.integer "mission_id", limit: 4
     t.string "op", limit: 255
     t.string "option_ids", limit: 255
+    t.integer "option_node_id", limit: 4
     t.integer "questioning_id", limit: 4
     t.integer "ref_qing_id", limit: 4
     t.datetime "updated_at"
@@ -106,6 +107,7 @@ ActiveRecord::Schema.define(version: 20160909161815) do
   end
 
   add_index "conditions", ["mission_id"], name: "index_conditions_on_mission_id", using: :btree
+  add_index "conditions", ["option_node_id"], name: "index_conditions_on_option_node_id", using: :btree
   add_index "conditions", ["questioning_id"], name: "conditions_questioning_id_fk", using: :btree
   add_index "conditions", ["ref_qing_id"], name: "conditions_ref_qing_id_fk", using: :btree
 
@@ -546,6 +548,7 @@ ActiveRecord::Schema.define(version: 20160909161815) do
   add_foreign_key "conditions", "form_items", column: "questioning_id", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fk"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
+  add_foreign_key "conditions", "option_nodes"
   add_foreign_key "form_forwardings", "forms"
   add_foreign_key "form_items", "forms", name: "questionings_form_id_fk"
   add_foreign_key "form_items", "missions", name: "questionings_mission_id_fk"
