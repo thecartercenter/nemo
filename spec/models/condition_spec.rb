@@ -25,9 +25,8 @@ describe Condition do
   end
 
   describe 'any_fields_empty?' do
-    before do
-      @form = create(:form, question_types: %w(select_one integer))
-    end
+    let(:form) { create(:form, question_types: %w(select_one integer)) }
+    let(:option_node_id) { form.questionings[0].option_set.children.first.id }
 
     it 'should be true if missing ref_qing' do
       @condition = Condition.new(ref_qing: nil, op: 'eq', option_ids: '[1]')
@@ -35,27 +34,27 @@ describe Condition do
     end
 
     it 'should be true if missing operator' do
-      @condition = Condition.new(ref_qing: @form.questionings[0], op: nil, option_ids: [@form.questionings[0].options.first])
+      @condition = Condition.new(ref_qing: form.questionings[0], op: nil, option_node_id: option_node_id)
       expect(@condition.send(:any_fields_empty?)).to be true
     end
 
-    it 'should be true if missing options' do
-      @condition = Condition.new(ref_qing: @form.questionings[0], op: 'eq', option_ids: nil)
+    it 'should be true if missing option node' do
+      @condition = Condition.new(ref_qing: form.questionings[0], op: 'eq', option_node_id: nil)
       expect(@condition.send(:any_fields_empty?)).to be true
     end
 
     it 'should be true if missing value' do
-      @condition = Condition.new(ref_qing: @form.questionings[1], op: 'eq', value: nil)
+      @condition = Condition.new(ref_qing: form.questionings[1], op: 'eq', value: nil)
       expect(@condition.send(:any_fields_empty?)).to be true
     end
 
-    it 'should be false if options given' do
-      @condition = Condition.new(ref_qing: @form.questionings[0], op: 'eq', option_ids: [@form.questionings[0].options.first])
+    it 'should be false if option node given' do
+      @condition = Condition.new(ref_qing: form.questionings[0], op: 'eq', option_node_id: option_node_id)
       expect(@condition.send(:any_fields_empty?)).to be false
     end
 
     it 'should be false if value given' do
-      @condition = Condition.new(ref_qing: @form.questionings[1], op: 'eq', value: '5')
+      @condition = Condition.new(ref_qing: form.questionings[1], op: 'eq', value: '5')
       expect(@condition.send(:any_fields_empty?)).to be false
     end
   end
