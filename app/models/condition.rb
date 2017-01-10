@@ -35,6 +35,13 @@ class Condition < ActiveRecord::Base
       {name: :option_ids, target_class_name: 'Option', type: :serialized, skip_obj_if_missing: true}],
     dont_copy: [:ref_qing_id, :questioning_id, :option_ids]
 
+  # We accept a list of OptionNode IDs as a way to set the option_node association.
+  # This is useful for forms, etc. We just pluck the last non-blank ID off the end.
+  # If all are blank, we set the association to nil.
+  def option_node_ids=(ids)
+    self.option_node_id = ids.reverse.find(&:present?)
+  end
+
   def options
     # We need to sort since ar#find doesn't guarantee order
     option_ids.nil? ? nil : Option.find(option_ids).sort_by{ |o| option_ids.index(o.id) }
@@ -188,7 +195,7 @@ class Condition < ActiveRecord::Base
     end
 
     def any_fields_empty?
-      ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_ids.blank? : value.blank?)
+      ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
     end
 
     # copy mission from questioning

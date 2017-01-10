@@ -20,7 +20,7 @@
       <%= render('option_sets/cascading_selects',
             index: 1,
             option_node_path: @condition.option_node_path,
-            input_name_template: 'questioning[condition_attributes][option_node_ids][###]') %>
+            input_name_template: 'questioning[condition_attributes][option_node_ids][]') %>
     <% else %>
       <%= f.text_field(:value, class: 'text form-control') %>
     <% end %>
