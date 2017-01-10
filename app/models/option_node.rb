@@ -9,6 +9,7 @@ class OptionNode < ActiveRecord::Base
 
   belongs_to :option_set
   belongs_to :option, autosave: true
+  has_many :conditions
   has_ancestry cache_depth: true
 
   before_validation { self.ancestry = nil if self.ancestry.blank? }
@@ -180,7 +181,10 @@ class OptionNode < ActiveRecord::Base
 
         # Don't need to look up this property if huge, since not editable.
         # And option_has_answers? kicks off a big SQL query for a huge set.
-        branch[:removable?] = !option_set.option_has_answers?(node.option_id) unless huge?
+        # Conditions association should be eager loaded.
+        unless huge?
+          branch[:removable?] = !option_set.option_has_answers?(node.option_id) && node.conditions.empty?
+        end
 
         # Recursive step.
         branch[:children] = arrange_as_json(children) unless children.empty?
