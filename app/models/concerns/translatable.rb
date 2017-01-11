@@ -38,6 +38,13 @@ module Translatable
     def translate_options
       class_variable_defined?('@@translate_options') ? class_variable_get('@@translate_options') : nil
     end
+
+    def validates_translated_length_of(*attr_names)
+      attr_names = attr_names.map do |attr_name|
+        attr_name.is_a?(Symbol) ? "#{attr_name}_translations".to_sym : attr_name
+      end
+      validates_with Translatable::TranslatableLengthValidator, _merge_attributes(attr_names)
+    end
   end
 
   # define methods like name_en, etc.
@@ -214,5 +221,21 @@ module Translatable
     locales -= [I18n.locale] if options[:except_current]
 
     locales
+  end
+end
+module Translatable
+  class TranslatableLengthValidator < ActiveModel::Validations::LengthValidator
+
+    def tokenize(value)
+      if value.is_a?(String)
+        if options[:tokenizer]
+          options[:tokenizer].call(value)
+        elsif !value.encoding_aware?
+          value.mb_chars
+        end
+      elsif value.is_a?(Hash)
+        value.to_json
+      end
+    end
   end
 end
