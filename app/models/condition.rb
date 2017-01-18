@@ -43,12 +43,11 @@ class Condition < ActiveRecord::Base
   end
 
   def options
-    # We need to sort since ar#find doesn't guarantee order
-    option_ids.nil? ? nil : Option.find(option_ids).sort_by{ |o| option_ids.index(o.id) }
+    option_nodes.map(&:option)
   end
 
   def option_nodes
-    option_ids.nil? ? nil : OptionNode.where(option_id: option_ids, option_set_id: ref_qing.option_set).sort_by { |on| option_ids.index(on.option_id) }
+    option_node.nil? ? nil : option_node.ancestors[1..-1] << option_node
   end
 
   def option
