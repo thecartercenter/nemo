@@ -166,6 +166,10 @@ class OptionSet < ActiveRecord::Base
     adding_to_question_type != "select_multiple"
   end
 
+  def first_level_option_nodes
+    root_node.sorted_children
+  end
+
   def first_level_options
     root_node.child_options
   end

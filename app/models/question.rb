@@ -73,6 +73,7 @@ class Question < ActiveRecord::Base
            :to => :qtype
 
   delegate :options,
+           :first_level_option_nodes,
            :all_options,
            :first_leaf_option,
            :first_leaf_option_node,

@@ -2,7 +2,7 @@
 <%= hidden_field_tag("#{prefix}[id]", choice.id) unless choice.new_record? %>
 
 <%# Always include this so Condition JS can find it. %>
-<%= hidden_field_tag("#{prefix}[option_id]", choice.option_id) %>
+<%= hidden_field_tag("#{prefix}[option_node_id]", choice.option_node_id) %>
 
 <%# Ensures 0 gets passed if box not checked %>
 <%# Need to set id: nil or there would be a duplicate ID %>

@@ -43,7 +43,8 @@ class Answer < ActiveRecord::Base
 
   accepts_nested_attributes_for(:choices)
 
-  delegate :question, :qtype, :required?, :hidden?, :multimedia?, :option_set, :options, :condition, to: :questioning
+  delegate :question, :qtype, :required?, :hidden?, :multimedia?,
+    :option_set, :options, :first_level_option_nodes, :condition, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :mission, to: :response
@@ -89,6 +90,10 @@ class Answer < ActiveRecord::Base
   # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
   def option_node
     OptionNode.where(option_id: option_id, option_set_id: option_set.id).first
+  end
+
+  def option_node_id
+    option_node.try(:id)
   end
 
   # This is a temporary method for assigning option based on an OptionNode ID.

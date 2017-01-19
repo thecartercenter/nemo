@@ -270,7 +270,8 @@ class ResponsesController < ApplicationController
           if attribs[:choices_attributes]
             whitelisted[:answers_attributes][idx][:choices_attributes] = {}
             attribs[:choices_attributes].each do |idx2, attribs2|
-              whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
+              whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(
+                :id, :option_id, :option_node_id, :checked)
             end
           end
         end

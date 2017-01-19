@@ -22,6 +22,7 @@ class Questioning < FormItem
     :qtype,
     :has_options?,
     :options,
+    :first_level_option_nodes,
     :all_options,
     :first_leaf_option,
     :first_leaf_option_node,
