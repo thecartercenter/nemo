@@ -136,11 +136,6 @@ class Condition < ActiveRecord::Base
     end
   end
 
-  def as_json(options = {})
-    fields = %w(questioning_id ref_qing_id form_id op value option_ids)
-    Hash[*fields.map{|k| [k, send(k)]}.flatten(1)]
-  end
-
   def temporal_ref_question?
     ref_qing.try(:temporal?)
   end

@@ -132,25 +132,25 @@
           return parseFloat(this.rq_row.find("div.control input[type='text']").val());
 
         case "select_one":
-          var ids = [];
-          // Get non-null/blank selected option ids
-          this.rq_row.find("select").each(function(i, el){
-            var id = $(el).val();
-            if (id) ids.push(parseInt(id));
-          });
-          // Trim to match length of rhs.
-          return ids.slice(0, this.rhs().length);
+          var last_option_node_id;
 
-        case "datetime": case "date": case "time":
-          return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
+          // Get last non-null/blank selected option_node_id
+          this.rq_row.find("select").each(function() {
+            var this_id = $(this).val();
+            if (this_id) last_option_node_id = parseInt(this_id);
+          });
+          return last_option_node_id;
 
         case "select_multiple":
           // use prev sibling call to get to rails gen'd hidden field that holds the id
-          return this.rq_row.find("div.control input:checked").map(function(){
-            // given a checkbox, get the value of the associated option_id hidden field made by rails
-            // this field is the nearest prior sibling input tag with name attribute ending in [option_id]
-            return parseInt($(this).prevAll("input[name$='[option_id]']").first().val());
+          return this.rq_row.find("div.control input:checked").map(function() {
+            // given a checkbox, get the value of the associated option_node_id hidden field made by rails
+            // this field is the nearest prior sibling input with name attribute ending in [option_node_id]
+            return parseInt($(this).prevAll("input[name$='[option_node_id]']").first().val());
           }).get();
+
+        case "datetime": case "date": case "time":
+          return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
 
         default:
           return this.rq_row.find("div.control input[type='text']").val();
@@ -171,11 +171,8 @@
       case "integer": case "decimal":
         return parseFloat(this.condition.value);
 
-      case "select_one":
-        return this.condition.option_ids;
-
-      case "select_multiple":
-        return this.condition.option_ids[0];
+      case "select_one": case "select_multiple":
+        return this.condition.option_node_id;
     }
   }
 

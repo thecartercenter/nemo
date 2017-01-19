@@ -34,6 +34,9 @@
 <%# Note that we need to do this in any form mode, even show. %>
 <% if set.condition %>
   <%= javascript_doc_ready do %>
-    (new ELMO.Views.ConditionChecker(<%=json set.condition %>, <%=json inst_num %>)).init();
+    (new ELMO.Views.ConditionChecker(
+      <%=json ConditionSerializer.new(set.condition, root: false) %>,
+      <%=json inst_num %>)
+    ).init();
   <% end %>
 <% end %>

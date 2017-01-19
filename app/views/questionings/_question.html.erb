@@ -38,7 +38,8 @@
 
       <%# Condition %>
       <% if qing.has_condition? %>
-        <div class="condition" data-ref-id="<%= qing.condition_ref_qing_id %>">
+        <div class="condition" data-ref-id="<%= qing.condition_ref_qing_id %>"
+          title="<%= qing.condition %>">
           <i class="fa fa-link"></i> #<span><%= qing.condition_ref_qing_full_dotted_rank %></span>
         </div>
       <% end %>
