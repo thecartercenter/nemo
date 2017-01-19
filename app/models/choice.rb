@@ -18,6 +18,12 @@ class Choice < ActiveRecord::Base
     @checked = (value == true || value == '1')
   end
 
+  # We need to override this because of the transient `checked` attribute.
+  # Since it's transient and defaults to true, the only way it will have 'changed' is if it's now false.
+  def changed?
+    !checked? || super
+  end
+
   # This is a temporary method for fetching option_node based on the related OptionSet and Option.
   # Eventually Options will be removed and OptionNodes will be stored on Choices directly.
   def option_node
