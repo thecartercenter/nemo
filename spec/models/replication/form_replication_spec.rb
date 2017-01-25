@@ -67,7 +67,7 @@ describe Form do
           # Create condition on 2nd questioning.
           @std.c[1].condition = build(:condition,
             ref_qing: @std.c[0], op: 'eq',
-            option_ids: [@std.questions[0].option_set.c[1].option_id, @std.questions[0].option_set.c[1].c[0].option_id])
+            option_node_id: @std.questions[0].option_set.c[1].c[0].id)
           @std.c[1].condition.save!
         end
 
@@ -82,29 +82,17 @@ describe Form do
             expect(@std.c[1]).not_to eq @copy.c[1]
             expect(@std.c[1].condition).not_to eq @copy_cond
             expect(@std.c[0].options[0]).not_to eq @copy_opt_set.options[0]
+            expect(@std.c[1].condition.option_node).not_to eq @copy_cond.option_node
           end
 
           it 'should produce correct condition-qing link' do
             expect(@copy_cond.ref_qing).to eq @copy.c[0]
           end
 
-          it 'should produce correct new option references' do
-            expect(@copy_cond.option_ids).to eq([@copy_opt_set.c[1].option_id, @copy_opt_set.c[1].c[0].option_id])
-          end
-        end
-
-        context 'if option is not found' do
-          before do
-            # First replicate the option set and destroy the option.
-            @copy_os = @std.c[0].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
-            @copy_os.c[1].c[0].option.destroy
-
-            # Now replicate the form.
-            @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-          end
-
-          it 'should delete the condition' do
-            expect(@copy.c[1].condition).to be_nil
+          it 'should produce correct new option node reference' do
+            expect(@copy_cond.option_node_id).to eq(@copy_opt_set.c[1].c[0].id)
+            expect(@copy_cond.option_node.option).to eq(@copy_opt_set.c[1].c[0].option)
+            expect(@copy_cond.option_node.option_name).to eq "Tulip"
           end
         end
       end
