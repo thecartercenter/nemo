@@ -29,6 +29,10 @@ class OptionSetImport
     @mission = mission
   end
 
+  def run(_options)
+    create_option_set
+  end
+
   def create_option_set
     # check validity before processing spreadsheet
     validate

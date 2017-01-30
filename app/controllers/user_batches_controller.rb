@@ -18,11 +18,11 @@ class UserBatchesController < ApplicationController
         stored_path = store_uploaded_file(@user_batch.file)
 
         operation = current_user.operations.build(
-          job_class: UserImportOperationJob,
+          job_class: TabularImportOperationJob,
           description: t("operation.description.user_import_operation_job",
             file: @user_batch.file.original_filename,
             mission_name: current_mission.name))
-        operation.begin!(current_mission, stored_path)
+        operation.begin!(current_mission, nil, stored_path, @user_batch.class.to_s)
 
         flash[:notice] = t("import.queued_html", type: UserBatch.model_name.human, url: operations_path).html_safe
         redirect_to(users_url)
