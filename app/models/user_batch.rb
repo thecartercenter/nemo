@@ -94,6 +94,9 @@ class UserBatch
       [User.human_attribute_name(field), field]
     end.flatten]
 
+    # Remove blank headers from row
+    row = row.reject { |i| i.strip.empty? }.compact
+
     # building map of column indices to field names
     @fields = Hash[*row.map.with_index do |header,index|
       [index, expected_headers[header]]

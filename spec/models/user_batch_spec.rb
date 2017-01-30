@@ -44,6 +44,11 @@ describe UserBatch do
     expect(2).to eq(ub.users.size)
   end
 
+  it "succeeds when headers have trailing invisible blanks" do
+    ub = create_user_batch("abnormal_headers.xlsx")
+    expect(ub).to be_succeeded
+  end
+
   it "succeeds when creating users without emails" do
     ub = create_user_batch("empty_emails.xlsx")
     expect(ub).to be_succeeded
