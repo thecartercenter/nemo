@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170109183447) do
+ActiveRecord::Schema.define(version: 20170130174450) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -249,6 +249,7 @@ ActiveRecord::Schema.define(version: 20170109183447) do
     t.integer "mission_id", limit: 4
     t.integer "option_id", limit: 4
     t.integer "option_set_id", limit: 4
+    t.integer "original_id", limit: 4
     t.integer "rank", limit: 4, default: 1, null: false
     t.integer "sequence", limit: 4
     t.datetime "updated_at", null: false
@@ -258,6 +259,7 @@ ActiveRecord::Schema.define(version: 20170109183447) do
   add_index "option_nodes", ["mission_id"], name: "option_nodes_mission_id_fk", using: :btree
   add_index "option_nodes", ["option_id"], name: "option_nodes_option_id_fk", using: :btree
   add_index "option_nodes", ["option_set_id"], name: "option_nodes_option_set_id_fk", using: :btree
+  add_index "option_nodes", ["original_id"], name: "option_nodes_standard_id_fk", using: :btree
   add_index "option_nodes", ["rank"], name: "index_option_nodes_on_rank", using: :btree
 
   create_table "option_sets", force: :cascade do |t|
@@ -560,6 +562,7 @@ ActiveRecord::Schema.define(version: 20170109183447) do
   add_foreign_key "media_objects", "answers"
   add_foreign_key "operations", "users", column: "creator_id"
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
+  add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_standard_id_fk", on_delete: :nullify
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
