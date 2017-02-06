@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170130174450) do
+ActiveRecord::Schema.define(version: 20170206215259) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -246,12 +246,14 @@ ActiveRecord::Schema.define(version: 20170130174450) do
     t.string "ancestry", limit: 255
     t.integer "ancestry_depth", limit: 4, default: 0
     t.datetime "created_at", null: false
+    t.boolean "is_standard", default: false
     t.integer "mission_id", limit: 4
     t.integer "option_id", limit: 4
-    t.integer "option_set_id", limit: 4
+    t.integer "option_set_id", limit: 4, null: false
     t.integer "original_id", limit: 4
     t.integer "rank", limit: 4, default: 1, null: false
     t.integer "sequence", limit: 4
+    t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at", null: false
   end
 

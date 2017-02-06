@@ -378,7 +378,13 @@ class OptionSet < ActiveRecord::Base
   private
 
   def copy_attribs_to_root_node
-    root_node.assign_attributes(mission: mission, option_set: self, sequence: 0)
+    root_node.assign_attributes(
+      mission: mission,
+      option_set: self,
+      sequence: 0,
+      is_standard: is_standard,
+      standard_copy: standard_copy
+    )
   end
 
   def check_associations
@@ -401,7 +407,9 @@ class OptionSet < ActiveRecord::Base
 
   def save_root_node
     if root_node
-      root_node.option_set = self
+      # Need to copy this here instead of copy_attribs_to_root_node because the ID may not exist yet
+      # in the latter.
+      root_node.option_set_id = id
       root_node.save!
     end
   end
