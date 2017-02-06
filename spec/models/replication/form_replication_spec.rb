@@ -103,8 +103,11 @@ describe Form do
         @std = create(:form, question_types: %w(select_one integer), is_standard: true)
 
         # Create condition.
-        @std.c[1].condition = build(:condition, ref_qing: @std.c[0], op: 'eq',
-          option_ids: [@std.c[0].question.option_set.c[1].option_id])
+        @std.c[1].condition = build(:condition,
+          ref_qing: @std.c[0],
+          op: 'eq',
+          option_node_id: @std.c[0].option_set.c[1].id
+        )
         @std.c[1].condition.save!
 
         # Replicate question first and render the copy incompatible.
@@ -118,6 +121,10 @@ describe Form do
         @copy_q1.reload
       end
 
+      # This also tests that OptionNodes can be found using their original_id because:
+      # 1. on this copy operation, the OptionSet and OptionNodes are not actually copied, just reused
+      # 2. this is because they were copied previously when the question was copied
+      # 3. therefore the only way to link the condition correctly is by finding the OptionNode by original_id
       it 'should make a new copy of the question and link properly' do
         # Link should get erased when becoming incompatible.
         expect(@copy_q1.original_id).to be_nil
@@ -130,7 +137,7 @@ describe Form do
 
         # Condition should point to newer question copy.
         expect(@copy.c[1].condition.ref_qing).to eq @copy.c[0]
-        expect(@copy.c[1].condition.options).not_to be_empty
+        expect(@copy.c[1].condition.option_node_id).to eq @copy.c[0].option_set.c[1].id
       end
     end
   end
