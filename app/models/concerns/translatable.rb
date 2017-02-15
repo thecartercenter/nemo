@@ -225,7 +225,11 @@ module Translatable
 end
 module Translatable
   class TranslatableLengthValidator < ActiveModel::Validations::LengthValidator
-
+    # The tokenizer determines how to split up an attribute value before it is counted by the length validator
+    # by default, it will split a string based on characters, but you can pass in a proc to use a different tokenizer
+    # this only works for strings, however.
+    # For these serialized fields, the value the validator has access to is a hash so this overridden tokenizer
+    # checks for a hash and converts it to its json representation to count the number of characters before storing it
     def tokenize(value)
       if value.is_a?(String)
         if options[:tokenizer]
