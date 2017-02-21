@@ -241,8 +241,10 @@ class UsersController < ApplicationController
   def user_params
     return if params[:user].nil?
 
-    params.require(:user).permit(:name, :login, :birth_year, :gender, :gender_custom, :nationality,
-      :email, :phone, :admin, :active, :phone2, :pref_lang, :notes, :password, :password_confirmation,
+    admin_only = [:admin] if can?(:adminify, @user)
+
+    params.require(:user).permit(*admin_only, :name, :login, :birth_year, :gender, :gender_custom, :nationality,
+      :email, :phone, :active, :phone2, :pref_lang, :notes, :password, :password_confirmation,
       :reset_password_method, user_group_ids: [], assignments_attributes: [:role, :mission_id, :_destroy, :id])
   end
 end
