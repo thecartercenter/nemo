@@ -18,8 +18,6 @@ class Condition < ActiveRecord::Base
   delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, to: :questioning
 
-  serialize :option_ids, JSON
-
   OPERATORS = [
     {name: 'eq', types: %w(decimal integer text long_text address select_one datetime date time), code: "="},
     {name: 'lt', types: %w(decimal integer datetime date time), code: "<"},

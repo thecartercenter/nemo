@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170223155802) do
+ActiveRecord::Schema.define(version: 20170223185101) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -88,7 +88,6 @@ ActiveRecord::Schema.define(version: 20170223155802) do
     t.datetime "created_at"
     t.integer "mission_id", limit: 4
     t.string "op", limit: 255
-    t.string "option_ids", limit: 255
     t.integer "option_node_id", limit: 4
     t.integer "questioning_id", limit: 4
     t.integer "ref_qing_id", limit: 4
