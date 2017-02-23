@@ -51,7 +51,7 @@ class OptionSetImport
         levels: headers.map{ |h| OptionLevel.new(name: h) },
         geographic: allow_coordinates,
         allow_coordinates: allow_coordinates,
-        is_standard: @mission.nil?,
+        is_standard: mission.nil?,
         root_node: OptionNode.new)
 
 
@@ -89,8 +89,9 @@ class OptionSetImport
                 rank: cur_ranks[c],
                 option_set: option_set,
                 option: option,
-                sequence: r + 1)
-
+                sequence: r + 1,
+                is_standard: mission.nil?
+              )
 
               if node.invalid?
                 add_errors_for_row(row_number, node.errors)
