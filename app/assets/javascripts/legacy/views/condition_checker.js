@@ -133,11 +133,18 @@
 
         case "select_one":
           var last_option_node_id;
+          var self = this;
 
-          // Get last non-null/blank selected option_node_id
+          // Follow the path of selected options. If we find the condition's option_node_id,
+          // we should stop and return that ID since we support partial matches like this.
+          // If we don't find it, return the last non-null/blank option_node_id.
           this.rq_row.find("select").each(function() {
             var this_id = $(this).val();
-            if (this_id) last_option_node_id = parseInt(this_id);
+            if (this_id) {
+              last_option_node_id = parseInt(this_id);
+              if (last_option_node_id == self.condition.option_node_id)
+                return false; // Break out of the loop, we are done.
+            }
           });
           return last_option_node_id;
 
