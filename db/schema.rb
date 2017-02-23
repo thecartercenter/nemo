@@ -61,7 +61,6 @@ ActiveRecord::Schema.define(version: 20170223185101) do
     t.datetime "created_at"
     t.string "medium", limit: 255
     t.integer "mission_id", limit: 4
-    t.text "recipient_query", limit: 65535
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors", limit: 65535
     t.string "source", limit: 255, default: "manual", null: false
@@ -89,6 +88,7 @@ ActiveRecord::Schema.define(version: 20170223185101) do
     t.integer "mission_id", limit: 4
     t.string "op", limit: 255
     t.integer "option_node_id", limit: 4
+    t.integer "original_id", limit: 4
     t.integer "questioning_id", limit: 4
     t.integer "ref_qing_id", limit: 4
     t.datetime "updated_at"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20170223185101) do
 
   add_index "conditions", ["mission_id"], name: "index_conditions_on_mission_id", using: :btree
   add_index "conditions", ["option_node_id"], name: "index_conditions_on_option_node_id", using: :btree
+  add_index "conditions", ["original_id"], name: "index_conditions_on_original_id", using: :btree
   add_index "conditions", ["questioning_id"], name: "conditions_questioning_id_fk", using: :btree
   add_index "conditions", ["ref_qing_id"], name: "conditions_ref_qing_id_fk", using: :btree
 
@@ -133,11 +134,11 @@ ActiveRecord::Schema.define(version: 20170223185101) do
     t.integer "ancestry_depth", limit: 4, null: false
     t.datetime "created_at"
     t.integer "form_id", limit: 4, null: false
-    t.integer "group_rank", limit: 4
     t.text "group_hint_translations", limit: 65535
     t.text "group_name_translations", limit: 65535
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id", limit: 4
+    t.integer "original_id", limit: 4
     t.integer "question_id", limit: 4
     t.integer "rank", limit: 4, null: false
     t.boolean "repeatable"
@@ -149,6 +150,7 @@ ActiveRecord::Schema.define(version: 20170223185101) do
   add_index "form_items", ["ancestry"], name: "index_form_items_on_ancestry", using: :btree
   add_index "form_items", ["form_id"], name: "questionings_form_id_fk", using: :btree
   add_index "form_items", ["mission_id"], name: "index_questionings_on_mission_id", using: :btree
+  add_index "form_items", ["original_id"], name: "index_questionings_on_original_id", using: :btree
   add_index "form_items", ["question_id"], name: "questionings_question_id_fk", using: :btree
 
   create_table "form_versions", force: :cascade do |t|
@@ -250,7 +252,7 @@ ActiveRecord::Schema.define(version: 20170223185101) do
   add_index "option_nodes", ["mission_id"], name: "option_nodes_mission_id_fk", using: :btree
   add_index "option_nodes", ["option_id"], name: "option_nodes_option_id_fk", using: :btree
   add_index "option_nodes", ["option_set_id"], name: "option_nodes_option_set_id_fk", using: :btree
-  add_index "option_nodes", ["original_id"], name: "option_nodes_standard_id_fk", using: :btree
+  add_index "option_nodes", ["original_id"], name: "index_option_nodes_on_original_id", using: :btree
   add_index "option_nodes", ["rank"], name: "index_option_nodes_on_rank", using: :btree
 
   create_table "option_sets", force: :cascade do |t|
@@ -280,11 +282,13 @@ ActiveRecord::Schema.define(version: 20170223185101) do
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "mission_id", limit: 4
     t.text "name_translations", limit: 65535
+    t.integer "original_id", limit: 4
     t.datetime "updated_at"
   end
 
   add_index "options", ["canonical_name", "mission_id"], name: "index_options_on_canonical_name_and_mission_id", using: :btree
   add_index "options", ["mission_id"], name: "index_options_on_mission_id", using: :btree
+  add_index "options", ["original_id"], name: "index_options_on_original_id", using: :btree
 
   create_table "questions", force: :cascade do |t|
     t.string "access_level", limit: 255, default: "inherit", null: false
@@ -446,11 +450,13 @@ ActiveRecord::Schema.define(version: 20170223185101) do
 
   create_table "taggings", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "original_id", limit: 4
     t.integer "question_id", limit: 4, null: false
     t.integer "tag_id", limit: 4, null: false
     t.datetime "updated_at", null: false
   end
 
+  add_index "taggings", ["original_id"], name: "index_taggings_on_original_id", using: :btree
   add_index "taggings", ["question_id"], name: "index_taggings_on_question_id", using: :btree
   add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
 
@@ -458,17 +464,19 @@ ActiveRecord::Schema.define(version: 20170223185101) do
     t.datetime "created_at", null: false
     t.integer "mission_id", limit: 4
     t.string "name", limit: 64, null: false
+    t.integer "original_id", limit: 4
     t.datetime "updated_at", null: false
   end
 
   add_index "tags", ["mission_id"], name: "index_tags_on_mission_id", using: :btree
   add_index "tags", ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", using: :btree
+  add_index "tags", ["original_id"], name: "index_tags_on_original_id", using: :btree
 
   create_table "user_group_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_group_id", limit: 4
-    t.integer "user_id", limit: 4
+    t.integer "user_group_id", limit: 4, null: false
+    t.integer "user_id", limit: 4, null: false
   end
 
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
@@ -478,11 +486,12 @@ ActiveRecord::Schema.define(version: 20170223185101) do
   create_table "user_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "mission_id", limit: 4
-    t.string "name", limit: 255
+    t.string "name", limit: 255, null: false
     t.datetime "updated_at", null: false
   end
 
   add_index "user_groups", ["mission_id"], name: "index_user_groups_on_mission_id", using: :btree
+  add_index "user_groups", ["name", "mission_id"], name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
 
   create_table "users", force: :cascade do |t|
     t.boolean "active", default: true, null: false
@@ -536,30 +545,37 @@ ActiveRecord::Schema.define(version: 20170223185101) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fk"
   add_foreign_key "choices", "answers"
   add_foreign_key "choices", "options", name: "choices_option_id_fk"
+  add_foreign_key "conditions", "conditions", column: "original_id", name: "conditions_original_id_fk"
   add_foreign_key "conditions", "form_items", column: "questioning_id", name: "conditions_questioning_id_fk"
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fk"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fk"
   add_foreign_key "conditions", "option_nodes"
   add_foreign_key "form_forwardings", "forms"
+  add_foreign_key "form_items", "form_items", column: "original_id", name: "questionings_original_id_fk"
   add_foreign_key "form_items", "forms", name: "questionings_form_id_fk"
   add_foreign_key "form_items", "missions", name: "questionings_mission_id_fk"
   add_foreign_key "form_items", "questions", name: "questionings_question_id_fk"
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
   add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fk", on_delete: :nullify
+  add_foreign_key "forms", "forms", column: "original_id", name: "forms_original_id_fk"
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk", on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
   add_foreign_key "media_objects", "answers"
   add_foreign_key "operations", "users", column: "creator_id"
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
+  add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_original_id_fk"
   add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_standard_id_fk", on_delete: :nullify
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_nodes", column: "root_node_id", name: "option_sets_root_node_id_fk"
+  add_foreign_key "option_sets", "option_sets", column: "original_id", name: "option_sets_original_id_fk"
   add_foreign_key "option_sets", "option_sets", column: "original_id", name: "option_sets_standard_id_fk", on_delete: :nullify
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
+  add_foreign_key "options", "options", column: "original_id", name: "options_original_id_fk"
   add_foreign_key "questions", "missions", name: "questions_mission_id_fk"
   add_foreign_key "questions", "option_sets", name: "questions_option_set_id_fk"
+  add_foreign_key "questions", "questions", column: "original_id", name: "questions_original_id_fk"
   add_foreign_key "questions", "questions", column: "original_id", name: "questions_standard_id_fk", on_delete: :nullify
   add_foreign_key "report_calculations", "questions", column: "question1_id", name: "report_calculations_question1_id_fk"
   add_foreign_key "report_calculations", "report_reports", name: "report_calculations_report_report_id_fk"
@@ -578,6 +594,8 @@ ActiveRecord::Schema.define(version: 20170223185101) do
   add_foreign_key "sms_messages", "missions", name: "sms_messages_mission_id_fk"
   add_foreign_key "sms_messages", "sms_messages", column: "reply_to_id", name: "sms_messages_reply_to_id_fk"
   add_foreign_key "sms_messages", "users", name: "sms_messages_user_id_fk"
+  add_foreign_key "taggings", "taggings", column: "original_id", name: "taggings_original_id_fk"
+  add_foreign_key "tags", "tags", column: "original_id", name: "tags_original_id_fk"
   add_foreign_key "user_group_assignments", "user_groups"
   add_foreign_key "user_group_assignments", "users"
   add_foreign_key "user_groups", "missions"
