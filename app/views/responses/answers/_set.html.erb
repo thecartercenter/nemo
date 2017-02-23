@@ -35,7 +35,7 @@
 <% if set.condition %>
   <%= javascript_doc_ready do %>
     (new ELMO.Views.ConditionChecker(
-      <%=json ConditionSerializer.new(set.condition, root: false) %>,
+      <%=json ConditionSerializer.new(set.condition) %>,
       <%=json inst_num %>)
     ).init();
   <% end %>
