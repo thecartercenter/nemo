@@ -47,15 +47,6 @@ class Condition < ActiveRecord::Base
     option_node.nil? ? nil : option_node.ancestors[1..-1] << option_node
   end
 
-  def option
-    options.try(:first)
-  end
-
-  # Sets the first option
-  def option=(o)
-    self.option_ids = o.nil? ? nil : [o.id]
-  end
-
   def option_node_path
     OptionNodePath.new(option_set: ref_qing.option_set, target_node: option_node)
   end
