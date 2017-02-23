@@ -204,12 +204,11 @@ describe Condition do
   end
 
   describe 'clear blanks' do
-    let(:cond) { Condition.new(op: 'eq', value: '  ', option_ids: '') }
+    let(:cond) { Condition.new(op: 'eq', value: '  ') }
 
     it 'should clear blanks' do
       cond.valid?
       expect(cond.value).to be_nil
-      expect(cond.option_ids).to be_nil
     end
   end
 

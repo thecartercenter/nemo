@@ -128,9 +128,8 @@ class Condition < ActiveRecord::Base
   private
 
   # Gets the referenced Subquestion.
-  # If option_ids is not set, returns the first subquestion of ref_qing (just an alias).
-  # If option_ids is set, uses the number of
-  # option_ids in the array to determines the subquestion rank.
+  # If option_node is not set, returns the first subquestion of ref_qing (just an alias).
+  # If option_node is set, uses the depth to determine the subquestion rank.
   def ref_subquestion
     ref_qing.subquestions[option_node.blank? ? 0 : option_node.depth - 1]
   end
@@ -138,7 +137,6 @@ class Condition < ActiveRecord::Base
   def clear_blanks
     unless destroyed?
       self.value = nil if value.blank? || ref_qing && ref_qing.has_options?
-      self.option_ids = nil if option_ids.blank? || ref_qing && !ref_qing.has_options?
     end
     return true
   end
