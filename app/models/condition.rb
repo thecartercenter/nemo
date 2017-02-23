@@ -145,45 +145,44 @@ class Condition < ActiveRecord::Base
 
   private
 
-    # Gets the referenced Subquestion.
-    # If option_ids is not set, returns the first subquestion of ref_qing (just an alias).
-    # If option_ids is set, uses the number of
-    # option_ids in the array to determines the subquestion rank.
-    def ref_subquestion
-      ref_qing.subquestions[option_ids.blank? ? 0 : option_ids.size - 1]
-    end
+  # Gets the referenced Subquestion.
+  # If option_ids is not set, returns the first subquestion of ref_qing (just an alias).
+  # If option_ids is set, uses the number of
+  # option_ids in the array to determines the subquestion rank.
+  def ref_subquestion
+    ref_qing.subquestions[option_ids.blank? ? 0 : option_ids.size - 1]
+  end
 
-    def clear_blanks
-      unless destroyed?
-        self.value = nil if value.blank? || ref_qing && ref_qing.has_options?
-        self.option_ids = nil if option_ids.blank? || ref_qing && !ref_qing.has_options?
+  def clear_blanks
+    unless destroyed?
+      self.value = nil if value.blank? || ref_qing && ref_qing.has_options?
+      self.option_ids = nil if option_ids.blank? || ref_qing && !ref_qing.has_options?
+    end
+    return true
+  end
+
+  # Parses and reformats time strings given as conditions.
+  def clean_times
+    if !destroyed? && temporal_ref_question? && value.present?
+      begin
+        self.value = Time.zone.parse(value).to_s(:"std_#{ref_qing.qtype_name}")
+      rescue ArgumentError
+        self.value = nil
       end
-      return true
     end
+    return true
+  end
 
-    # Parses and reformats time strings given as conditions.
-    def clean_times
-      if !destroyed? && temporal_ref_question? && value.present?
-        begin
-          self.value = Time.zone.parse(value).to_s(:"std_#{ref_qing.qtype_name}")
-        rescue ArgumentError
-          self.value = nil
-        end
-      end
-      return true
-    end
+  def all_fields_required
+    errors.add(:base, :all_required) if any_fields_empty?
+  end
 
-    def all_fields_required
-      errors.add(:base, :all_required) if any_fields_empty?
-    end
+  def any_fields_empty?
+    ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
+  end
 
-    def any_fields_empty?
-      ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
-    end
-
-    # copy mission from questioning
-    def set_mission
-      self.mission = questioning.try(:mission)
-    end
-
+  # copy mission from questioning
+  def set_mission
+    self.mission = questioning.try(:mission)
+  end
 end
