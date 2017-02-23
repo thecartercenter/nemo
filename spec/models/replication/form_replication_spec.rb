@@ -95,6 +95,25 @@ describe Form do
             expect(@copy_cond.option_node.option_name).to eq "Tulip"
           end
         end
+
+        context 'if the option has since been deleted in the mission' do
+          before do
+            # Replicate just the OptionSet into the mission
+            os_copy = @std.questions[0].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
+
+            # Now delete the copy of the option node that is referenced by the condition
+            os_copy.c[1].c[0].destroy
+          end
+
+          let!(:copy) { @std.replicate(mode: :to_mission, dest_mission: get_mission) }
+
+          it 'should succeed but not copy the condition' do
+            # Question should still be copied but copy should not have a condition
+            expect(copy.c[1].code).to eq @std.c[1].code
+            expect(@std.c[1].condition).to be_present
+            expect(copy.c[1].condition).to be_nil
+          end
+        end
       end
     end
 

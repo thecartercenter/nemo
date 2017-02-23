@@ -31,7 +31,7 @@ class Condition < ActiveRecord::Base
     {name: 'ninc', types: %w(select_multiple), code: "!="}
   ]
 
-  replicable backward_assocs: [:questioning, :ref_qing, :option_node],
+  replicable backward_assocs: [:questioning, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
     dont_copy: [:ref_qing_id, :questioning_id, :option_node_id, :option_ids]
 
   # We accept a list of OptionNode IDs as a way to set the option_node association.
