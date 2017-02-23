@@ -133,9 +133,9 @@ ActiveRecord::Schema.define(version: 20170223185101) do
     t.integer "ancestry_depth", limit: 4, null: false
     t.datetime "created_at"
     t.integer "form_id", limit: 4, null: false
-    t.string "group_hint_translations", limit: 255
-    t.string "group_name_translations", limit: 255
     t.integer "group_rank", limit: 4
+    t.text "group_hint_translations", limit: 65535
+    t.text "group_name_translations", limit: 65535
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id", limit: 4
     t.integer "question_id", limit: 4
