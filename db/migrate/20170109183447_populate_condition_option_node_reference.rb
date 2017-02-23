@@ -14,7 +14,7 @@ end
 
 class OptionNode < ActiveRecord::Base
   belongs_to :option, autosave: true
-  has_ancestry
+  has_ancestry cache_depth: true
 end
 
 class PopulateConditionOptionNodeReference < ActiveRecord::Migration
