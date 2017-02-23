@@ -38,6 +38,13 @@ module Translatable
     def translate_options
       class_variable_defined?('@@translate_options') ? class_variable_get('@@translate_options') : nil
     end
+
+    def validates_translated_length_of(*attr_names)
+      attr_names = attr_names.map do |attr_name|
+        attr_name.is_a?(Symbol) ? "#{attr_name}_translations".to_sym : attr_name
+      end
+      validates_with Translatable::TranslatableLengthValidator, _merge_attributes(attr_names)
+    end
   end
 
   # define methods like name_en, etc.
@@ -214,5 +221,25 @@ module Translatable
     locales -= [I18n.locale] if options[:except_current]
 
     locales
+  end
+end
+module Translatable
+  class TranslatableLengthValidator < ActiveModel::Validations::LengthValidator
+    # The tokenizer determines how to split up an attribute value before it is counted by the length validator
+    # by default, it will split a string based on characters, but you can pass in a proc to use a different tokenizer
+    # this only works for strings, however.
+    # For these serialized fields, the value the validator has access to is a hash so this overridden tokenizer
+    # checks for a hash and converts it to its json representation to count the number of characters before storing it
+    def tokenize(value)
+      if value.is_a?(String)
+        if options[:tokenizer]
+          options[:tokenizer].call(value)
+        elsif !value.encoding_aware?
+          value.mb_chars
+        end
+      elsif value.is_a?(Hash)
+        value.to_json
+      end
+    end
   end
 end
