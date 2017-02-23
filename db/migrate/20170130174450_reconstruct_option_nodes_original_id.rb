@@ -15,7 +15,7 @@ class ReconstructOptionNodesOriginalId < ActiveRecord::Migration
       OptionSet.where("original_id IS NOT NULL").each do |option_set|
         if original = option_set.original
           puts "Processing option set #{option_set.name}"
-          option_set.root_node.update_attribute(:original_id, original.root_node_id)
+          option_set.root_node.update_columns(original_id: original.root_node_id)
           check_children_for_matches(option_set.root_node, original.root_node, 1)
         end
       end
@@ -29,7 +29,7 @@ class ReconstructOptionNodesOriginalId < ActiveRecord::Migration
     copy_children.each do |copy_child|
       puts "#{indent}Checking for original of #{copy_child.option.canonical_name}"
       if match = orig_children[copy_child.option.canonical_name]
-        copy_child.update_attribute(:original_id, match.id)
+        copy_child.update_columns(original_id: match.id)
         if copy_child.children.any? && match.children.any?
           puts "#{indent}  Recursing"
           check_children_for_matches(copy_child, match, level + 1)
