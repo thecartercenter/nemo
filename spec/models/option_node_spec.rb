@@ -58,6 +58,7 @@ describe OptionNode do
       # we use a mixture of existing and new options
       @dog = create(:option, name_en: "Dog")
       @node = OptionNode.create!(
+        "option_set" => create(:option_set),
         "mission_id" => get_mission.id,
         "option" => nil,
         "children_attribs" => [
@@ -78,6 +79,7 @@ describe OptionNode do
       @dog = create(:option, name_en: "Dog")
       @oak = create(:option, name_en: "Oak")
       @node = OptionNode.create!(
+        "option_set" => create(:option_set),
         "option" => nil,
         "mission_id" => get_mission.id,
         "children_attribs" => [{
