@@ -38,7 +38,8 @@ class PopulateConditionOptionNodeReference < ActiveRecord::Migration
               option_set_id: condition.ref_qing.option_set_id,
               option_id: option.id,
               mission_id: condition.mission_id,
-              rank: condition.ref_qing.option_set.root_node.children.count + 1
+              rank: condition.ref_qing.option_set.root_node.children.count + 1,
+              sequence: condition.ref_qing.option_set.descendants.maximum(:sequence)
             )
           elsif node.try(:option_id) != option.id
             puts "Condition ##{condition.id}: OptionNode ##{node.try(:id)} didn't match Option ##{option.id}"
