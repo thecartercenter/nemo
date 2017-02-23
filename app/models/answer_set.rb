@@ -10,7 +10,6 @@ class AnswerSet
   delegate :levels, to: :option_set
   delegate :first, to: :answers
   delegate :errors, :choices, :all_choices, :value, :datetime_value, :date_value, :time_value, :response_id, :questioning_id, :relevant, :inst_num, to: :first
-  delegate :option_ids_with_no_nils, to: :option_node_path
 
   # Builds Answer attribute hashes from submitted answer_set params.
   # Returns an array of Answer attribute hashes.
@@ -39,6 +38,10 @@ class AnswerSet
   # True if all answers are blank.
   def blank?
     answers.all?(&:blank?)
+  end
+
+  def option_node_ids
+    answers.map(&:option_node_id)
   end
 
   def option_node_path

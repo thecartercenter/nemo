@@ -64,15 +64,4 @@ describe OptionNodePath do
       end
     end
   end
-
-  describe "option_ids_with_no_nils" do
-    let(:path) { OptionNodePath.new(option_set: ml_set, target_node: leaf_node) }
-
-    it "should be correct" do
-      expect(path.option_ids_with_no_nils).to eq [
-        ml_set.children[0].option_id,
-        ml_set.children[0].children[1].option_id
-      ]
-    end
-  end
 end

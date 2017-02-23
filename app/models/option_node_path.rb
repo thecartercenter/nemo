@@ -27,10 +27,6 @@ class OptionNodePath
     nodes[depth - 1].try(:children) || []
   end
 
-  def option_ids_with_no_nils
-    nodes_without_root.compact.map(&:option_id)
-  end
-
   def nodes_without_root
     nodes[1..-1]
   end

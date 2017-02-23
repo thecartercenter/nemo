@@ -30,7 +30,7 @@ class Condition < ActiveRecord::Base
   ]
 
   replicable backward_assocs: [:questioning, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
-    dont_copy: [:ref_qing_id, :questioning_id, :option_node_id, :option_ids]
+    dont_copy: [:ref_qing_id, :questioning_id, :option_node_id]
 
   # We accept a list of OptionNode IDs as a way to set the option_node association.
   # This is useful for forms, etc. We just pluck the last non-blank ID off the end.

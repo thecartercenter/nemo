@@ -65,6 +65,15 @@
     var lhs = this.lhs();
     var rhs = this.rhs();
 
+    // For select_one questions, the lhs will be an array of selected option_node_ids.
+    // We should return true if the expected option_node_id is anywhere in that list.
+    // So `eq` just becomes `inc` and `neq` becomes `ninc`.
+    // We could label it this way in the condition form but it seems that would be confusing.
+    if (this.rq_type == 'select_one') {
+      if (this.condition.op == 'eq') this.condition.op = 'inc';
+      if (this.condition.op == 'neq') this.condition.op = 'ninc';
+    }
+
     // perform comparison
     switch (this.condition.op) {
       case "eq": return this.test_equality(lhs, rhs);
@@ -132,21 +141,11 @@
           return parseFloat(this.rq_row.find("div.control input[type='text']").val());
 
         case "select_one":
-          var last_option_node_id;
-          var self = this;
-
-          // Follow the path of selected options. If we find the condition's option_node_id,
-          // we should stop and return that ID since we support partial matches like this.
-          // If we don't find it, return the last non-null/blank option_node_id.
-          this.rq_row.find("select").each(function() {
+          // Return all selected option_node_ids.
+          return this.rq_row.find("select").map(function() {
             var this_id = $(this).val();
-            if (this_id) {
-              last_option_node_id = parseInt(this_id);
-              if (last_option_node_id == self.condition.option_node_id)
-                return false; // Break out of the loop, we are done.
-            }
-          });
-          return last_option_node_id;
+            return this_id ? parseInt(this_id) : null;
+          }).get();
 
         case "select_multiple":
           // use prev sibling call to get to rails gen'd hidden field that holds the id

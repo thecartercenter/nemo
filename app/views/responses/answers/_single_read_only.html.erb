@@ -5,7 +5,7 @@
 
   <%= render('responses/answers/map', answer: answer) if answer.has_coordinates? %>
 
-  <%= content_tag(:div, answer.option.try(:name), class: 'ro-val', data: {val: answer.option_node_id}) %>
+  <%= content_tag(:div, answer.option.try(:name), class: 'ro-val', data: {val: [answer.option_node_id]}) %>
 
 <% when 'select_multiple' %>
 
