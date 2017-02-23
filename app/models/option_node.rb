@@ -33,6 +33,7 @@ class OptionNode < ActiveRecord::Base
 
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :option, prefix: true
+  delegate :name, to: :level, prefix: true, allow_nil: true
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)

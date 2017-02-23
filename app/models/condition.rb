@@ -115,18 +115,11 @@ class Condition < ActiveRecord::Base
       bits << "##{ref_qing.full_dotted_rank}"
       bits << ref_qing.code if prefs[:include_code]
 
-      if ref_qing.qtype_name == 'select_one'
-        if ref_qing.multilevel?
-          # Get the option level for the depth matching the number of options we have.
-          level = ref_qing.level(options.size)
-          raise "no option level found for depth = #{options.size} for condition #{id}" if level.nil?
-          bits << level.name
-          target = options.last.name
-        else
-          target = option.name
-        end
+      if ref_qing_has_options?
+        bits << option_node.level_name if ref_qing.multilevel?
+        target = option_node.option_name
       else
-        target = option ? option.name : value
+        target = value
       end
 
       bits << I18n.t("condition.operators.#{op}")
@@ -150,7 +143,7 @@ class Condition < ActiveRecord::Base
   # If option_ids is set, uses the number of
   # option_ids in the array to determines the subquestion rank.
   def ref_subquestion
-    ref_qing.subquestions[option_ids.blank? ? 0 : option_ids.size - 1]
+    ref_qing.subquestions[option_node.blank? ? 0 : option_node.depth - 1]
   end
 
   def clear_blanks
