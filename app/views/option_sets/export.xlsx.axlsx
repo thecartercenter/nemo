@@ -22,7 +22,8 @@ xlsx_package.workbook.tap do |wb|
       end
 
       # protect the sheet to allow the header to be locked
-      sheet.sheet_protection.password = configatron.site_shortname
+      # sheet protection is now causing some encryption behavior that is problematic on re-import
+      # sheet.sheet_protection.password = configatron.site_shortname
 
       # hide the "Id" column
       sheet.column_info.first.hidden = true
