@@ -81,7 +81,7 @@ class UsersController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@user)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   def bulk_destroy
@@ -121,7 +121,7 @@ class UsersController < ApplicationController
     rescue
       flash[:error] =  t("user.#{$!}")
     end
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   # shows printable login instructions for the user
@@ -157,7 +157,7 @@ class UsersController < ApplicationController
       flash[:password] = @user.password
       redirect_to(action: :login_instructions, id: @user.id)
     else
-      redirect_to(index_url_with_page_num)
+      redirect_to(index_url_with_context)
     end
   end
 

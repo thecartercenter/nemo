@@ -151,7 +151,7 @@ class FormsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@form)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   # publishes/unpublishes a form
@@ -165,7 +165,7 @@ class FormsController < ApplicationController
     end
 
     # redirect to index or edit
-    redirect_to(verb == :publish ? index_url_with_page_num : edit_form_path(@form))
+    redirect_to(verb == :publish ? index_url_with_context : edit_form_path(@form))
   end
 
   # shows the form to either choose existing questions or create a new one to add
@@ -227,7 +227,7 @@ class FormsController < ApplicationController
     rescue
       flash[:error] = t("form.clone_error", :msg => $!.to_s)
     end
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   private

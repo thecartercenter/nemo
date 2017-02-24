@@ -152,7 +152,7 @@ class ResponsesController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@response)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   def possible_submitters
@@ -262,7 +262,7 @@ class ResponsesController < ApplicationController
     @response.form = Form.find(params[:form_id])
     check_form_exists_in_mission
   rescue ActiveRecord::RecordNotFound
-    return redirect_to(index_url_with_page_num)
+    return redirect_to(index_url_with_context)
   end
 
   def set_read_only

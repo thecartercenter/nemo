@@ -29,7 +29,7 @@ class ApplicationController < ActionController::Base
   before_filter(:get_user)
   before_filter(:protect_admin_mode)
   before_filter(:remember_mission)
-  before_filter(:remember_page_number, only: :index)
+  before_filter(:remember_context, only: :index)
   before_filter(:load_settings_for_mission_into_config)
   before_filter(:load_accessible_missions)
 

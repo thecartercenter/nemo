@@ -85,7 +85,7 @@ class OptionSetsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@option_set)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   # Returns the options available at the node in the option tree specified by the given node
@@ -106,7 +106,7 @@ class OptionSetsController < ApplicationController
     rescue
       flash[:error] = t("option_set.clone_error", msg: $!.to_s)
     end
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   private
