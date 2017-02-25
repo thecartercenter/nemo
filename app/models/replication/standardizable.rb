@@ -71,7 +71,7 @@ module Replication::Standardizable
 
   private
 
-    def unlink_copies
-      copies.update_all(original_id: nil, standard_copy: false)
-    end
+  def unlink_copies
+    copies.update_all(original_id: nil, standard_copy: false)
+  end
 end

@@ -146,7 +146,7 @@ ELMO::Application.routes.draw do
 
     resources :option_sets, path: "option-sets" do
       member do
-        get "options_for_node", path: "options-for-node"
+        get "child_nodes", path: "child-nodes"
         put "clone"
         get "export", defaults: { format: "xlsx" }
       end

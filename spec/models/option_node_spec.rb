@@ -58,6 +58,7 @@ describe OptionNode do
       # we use a mixture of existing and new options
       @dog = create(:option, name_en: "Dog")
       @node = OptionNode.create!(
+        "option_set" => create(:option_set),
         "mission_id" => get_mission.id,
         "option" => nil,
         "children_attribs" => [
@@ -78,6 +79,7 @@ describe OptionNode do
       @dog = create(:option, name_en: "Dog")
       @oak = create(:option, name_en: "Oak")
       @node = OptionNode.create!(
+        "option_set" => create(:option_set),
         "option" => nil,
         "mission_id" => get_mission.id,
         "children_attribs" => [{
@@ -249,50 +251,6 @@ describe OptionNode do
     it "should return child options in sorted order" do
       node = create(:option_node_with_grandchildren)
       expect(node.child_options.map(&:name)).to eq %w(Animal Plant)
-    end
-  end
-
-  describe "options_for_node" do
-    it "should return correct options for various nodes" do
-      node = create(:option_node_with_great_grandchildren)
-      expect(node.options_for_node([]).map(&:name)).to eq %w(Animal Plant)
-      expect(node.options_for_node([node.c[1].option_id]).map(&:name)).to eq %w(Tree Flower)
-    end
-  end
-
-  describe "option_path_to_rank_path" do
-    before do
-      @node = create(:option_node_with_grandchildren)
-    end
-
-    it "should be correct for partial path" do
-      expect(@node.option_path_to_rank_path([@node.c[0].option])).to eq [1]
-    end
-
-    it "should be correct for full path" do
-      expect(@node.option_path_to_rank_path([@node.c[1].option, @node.c[1].c[0].option])).to eq [2,1]
-    end
-
-    it "should raise error for invalid path" do
-      expect { @node.option_path_to_rank_path([create(:option)]) }.to raise_error(ArgumentError)
-    end
-  end
-
-  describe "rank_path_to_option_path" do
-    before do
-      @node = create(:option_node_with_grandchildren)
-    end
-
-    it "should be correct for partial path" do
-      expect(@node.rank_path_to_option_path([2])).to eq [@node.c[1].option]
-    end
-
-    it "should be correct for full path" do
-      expect(@node.rank_path_to_option_path([2,1])).to eq [@node.c[1].option, @node.c[1].c[0].option]
-    end
-
-    it "should raise error for invalid path" do
-      expect { @node.rank_path_to_option_path([1,4]) }.to raise_error(ArgumentError)
     end
   end
 end

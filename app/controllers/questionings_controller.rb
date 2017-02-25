@@ -108,9 +108,7 @@ class QuestioningsController < ApplicationController
 
     def questioning_params
       params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden, :required,
-        { condition_attributes: [:id, :ref_qing_id, :op, :value, :option_ids,
-          # We need to whitelist each level of the option path. 5 levels should be plenty.
-          option_path_attribs: [%w(0 1 2 3 4)]] },
+        { condition_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
         { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
     end
 end

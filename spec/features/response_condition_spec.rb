@@ -4,7 +4,21 @@ feature 'conditions in responses', js: true do
   before do
     @user = create(:user)
     @form = create(:form, name: 'Foo',
-      question_types: %w(long_text text integer text decimal select_one multilevel_select_one multilevel_select_one select_multiple datetime date time text))
+      question_types: [
+        "long_text",             #  0
+        "text",                  #  1
+        "integer",               #  2
+        "text",                  #  3
+        "decimal",               #  4
+        "select_one",            #  5
+        "multilevel_select_one", #  6
+        "multilevel_select_one", #  7
+        "select_multiple",       #  8
+        "datetime",              #  9
+        "date",                  # 10
+        "time",                  # 11
+        "text"                   # 12
+    ])
     @year = Time.now.year - 2
     @qings = @form.questionings
     @os2 = @qings[6].option_set
@@ -15,12 +29,10 @@ feature 'conditions in responses', js: true do
     @qings[2].create_condition(ref_qing: @qings[1], op: 'neq', value: 'bar')
     @qings[4].create_condition(ref_qing: @qings[2], op: 'gt', value: '10')
     @qings[5].create_condition(ref_qing: @qings[4], op: 'eq', value: '21.72')
-    @qings[6].create_condition(ref_qing: @qings[5], op: 'eq', option_ids: [@qings[5].options.last.id]) # Dog
-    @qings[7].create_condition(ref_qing: @qings[6], op: 'eq',
-      option_ids: [@os2.c[1].option_id, @os2.c[1].c[0].option_id]) # Plant > Tulip
-    @qings[8].create_condition(ref_qing: @qings[7], op: 'eq',
-      option_ids: [@os3.c[0].option_id]) # Animal (this tests partial multilevel response)
-    @qings[9].create_condition(ref_qing: @qings[8], op: 'inc', option_ids: [@qings[8].options.first.id]) # Cat
+    @qings[6].create_condition(ref_qing: @qings[5], op: 'eq', option_node: @qings[5].option_set.c[1]) # Dog
+    @qings[7].create_condition(ref_qing: @qings[6], op: 'eq', option_node: @os2.c[1].c[0]) # Plant > Tulip
+    @qings[8].create_condition(ref_qing: @qings[7], op: 'eq', option_node: @os3.c[0]) # Animal (partial resp.)
+    @qings[9].create_condition(ref_qing: @qings[8], op: 'inc', option_node: @qings[8].option_set.c[0]) # Cat
     @qings[10].create_condition(ref_qing: @qings[9], op: 'lt', value: "#{@year}-01-01 5:00")
     @qings[11].create_condition(ref_qing: @qings[10], op: 'eq', value: "#{@year}-03-22")
     @qings[12].create_condition(ref_qing: @qings[11], op: 'geq', value: '3:00pm')
@@ -71,12 +83,12 @@ feature 'conditions in responses', js: true do
     when 'select_one'
       if value.is_a?(Array)
         value.each_with_index do |o,i|
-          id = "response_answers_attributes_#{idx}_#{i}_option_id"
-          find("#response_answers_attributes_#{idx}_#{i}_option_id option", text: o)
+          id = "response_answers_attributes_#{idx}_#{i}_option_node_id"
+          find("#response_answers_attributes_#{idx}_#{i}_option_node_id option", text: o)
           select(o, from: id)
         end
       else
-        select(value, from: "response_answers_attributes_#{idx}_option_id")
+        select(value, from: "response_answers_attributes_#{idx}_option_node_id")
       end
     when 'select_multiple'
       qing.options.each_with_index do |o,i|
@@ -104,9 +116,7 @@ feature 'conditions in responses', js: true do
     visible = visible.to_a if visible.is_a?(Range)
     @qings.each_with_index do |qing,i|
       cur_vis = visible.include?(i)
-
-      # We do it this way (find, then assert) for timing issues.
-      expect(find("div.answer_field[data-qing-id=\"#{qing.id}\"]", visible: cur_vis)).send(cur_vis ? :to : :not_to, be_visible)
+      expect(page).to have_css("div.answer_field[data-qing-id=\"#{qing.id}\"]", visible: cur_vis)
     end
   end
 end

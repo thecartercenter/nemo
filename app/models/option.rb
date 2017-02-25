@@ -25,9 +25,13 @@ class Option < ActiveRecord::Base
 
   MAX_NAME_LENGTH = 45
 
-  def published?; !option_sets.detect{|os| os.published?}.nil?; end
+  def published?
+    option_sets.any?(&:published?)
+  end
 
-  def questions; option_sets.collect{|os| os.questions}.flatten.uniq; end
+  def questions
+    option_sets.map(&:questions).flatten.uniq
+  end
 
   def has_answers?
     !answers.empty?

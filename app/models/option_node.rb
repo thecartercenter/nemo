@@ -1,5 +1,5 @@
 class OptionNode < ActiveRecord::Base
-  include MissionBased, FormVersionable, Replication::Replicable
+  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   # Number of descendants that make a 'huge' node.
   HUGE_CUTOFF = 100
@@ -9,6 +9,7 @@ class OptionNode < ActiveRecord::Base
 
   belongs_to :option_set
   belongs_to :option, autosave: true
+  has_many :conditions
   has_ancestry cache_depth: true
 
   before_validation { self.ancestry = nil if self.ancestry.blank? }
@@ -31,6 +32,8 @@ class OptionNode < ActiveRecord::Base
   replicable child_assocs: [:children, :option], backward_assocs: :option_set, dont_copy: [:option_set_id, :option_id]
 
   delegate :shortcode_length, to: :option_set
+  delegate :name, to: :option, prefix: true
+  delegate :name, to: :level, prefix: true, allow_nil: true
 
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
@@ -67,25 +70,7 @@ class OptionNode < ActiveRecord::Base
 
   # Returns options of children, ordered by rank.
   def child_options
-    @child_options ||= sorted_children.includes(:option).map(&:option)
-  end
-
-  # Returns the child options of the node defined by path of option ids.
-  # If node at end of path is leaf node, returns [].
-  def options_for_node(path)
-    find_descendant_by_option_path(path).try(:child_options) || []
-  end
-
-  # Traces the given path of option ids down the tree, returning the OptionNode at the end.
-  # Assumes path is an array of Option IDs with 0 or more elements.
-  # Returns self if path is empty.
-  # Returns nil if any point in path does not find a match.
-  # Returns nil if path contains any nils.
-  def find_descendant_by_option_path(path)
-    return self if path.empty?
-    return nil if path.any?(&:nil?)
-    return nil unless match = child_with_option_id(path[0])
-    match.find_descendant_by_option_path(path[1..-1])
+    @child_options ||= sorted_children.map(&:option)
   end
 
   def child_with_option_id(oid)
@@ -128,7 +113,7 @@ class OptionNode < ActiveRecord::Base
   end
 
   def sorted_children
-    children.order("rank")
+    children.order("rank").includes(:option)
   end
 
   def first_leaf_option
@@ -148,30 +133,6 @@ class OptionNode < ActiveRecord::Base
     rel = rel.includes(:option_sets, :answers, :choices) if options[:eager_load_option_assocs]
 
     @options_by_id = rel.index_by(&:id)
-  end
-
-  # Given a path (array) of options, returns the ranks of those options at each step of the path.
-  # Raises ArgumentError if path not found
-  def option_path_to_rank_path(options)
-    if options.empty?
-      []
-    else
-      child = child_with_option_id(options.first.id)
-      raise ArgumentError.new("Could not find child of node #{id} with option ID #{options.first.id}") if child.nil?
-      [child.rank] + child.option_path_to_rank_path(options[1..-1])
-    end
-  end
-
-  # Given a path (array) of option ranks, returns the options at each step of the path.
-  # Raises ArgumentError if path not found.
-  def rank_path_to_option_path(ranks)
-    if ranks.empty?
-      []
-    else
-      child = children.where(rank: ranks.first).first
-      raise ArgumentError.new("Could not find child of node #{id} with rank #{ranks.first}") if child.nil?
-      [child.option] + child.rank_path_to_option_path(ranks[1..-1])
-    end
   end
 
   # an odk-friendly unique code
@@ -221,7 +182,10 @@ class OptionNode < ActiveRecord::Base
 
         # Don't need to look up this property if huge, since not editable.
         # And option_has_answers? kicks off a big SQL query for a huge set.
-        branch[:removable?] = !option_set.option_has_answers?(node.option_id) unless huge?
+        # Conditions association should be eager loaded.
+        unless huge?
+          branch[:removable?] = !option_set.option_has_answers?(node.option_id) && node.conditions.empty?
+        end
 
         # Recursive step.
         branch[:children] = arrange_as_json(children) unless children.empty?
@@ -378,7 +342,7 @@ class OptionNode < ActiveRecord::Base
   # 2. The given hash's subhash at key :option_attribs, if present.
   # Returns the modified hash.
   def copy_denormalized_attribs_to_attrib_hash(hash)
-    %w(mission_id option_set_id).each { |k| hash[k.to_sym] = send(k) }
+    %w(mission_id option_set_id is_standard standard_copy).each { |k| hash[k.to_sym] = send(k) }
     %w(mission_id).each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
     hash
   end

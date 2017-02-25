@@ -19,11 +19,11 @@ feature 'responses form', js: true, sphinx: true do
       visit_submit_page_and_select_user
 
       # Fill in answers
-      select('Dog', from: control_id(@qings[0], '_option_id'))
+      select('Dog', from: control_id(@qings[0], '_option_node_id'))
 
-      select('Plant', from: control_id(@qings[1], '_0_option_id'))
-      find('#' + control_id(@qings[1], '_1_option_id') + ' option', text: 'Oak')
-      select('Oak', from: control_id(@qings[1], '_1_option_id'))
+      select('Plant', from: control_id(@qings[1], '_0_option_node_id'))
+      find('#' + control_id(@qings[1], '_1_option_node_id') + ' option', text: 'Oak')
+      select('Oak', from: control_id(@qings[1], '_1_option_node_id'))
 
       check(control_id(@qings[2], '_choices_attributes_0_checked')) # Cat
       fill_in(control_id(@qings[3], '_value'), with: '10')
@@ -56,9 +56,9 @@ feature 'responses form', js: true, sphinx: true do
 
       # Check edit mode.
       click_link('Edit Response')
-      select('Animal', from: control_id(@qings[1], '_0_option_id'))
-      find('#' + control_id(@qings[1], '_1_option_id') + ' option', text: 'Cat')
-      select('Cat', from: control_id(@qings[1], '_1_option_id'))
+      select('Animal', from: control_id(@qings[1], '_0_option_node_id'))
+      find('#' + control_id(@qings[1], '_1_option_node_id') + ' option', text: 'Cat')
+      select('Cat', from: control_id(@qings[1], '_1_option_node_id'))
       uncheck(control_id(@qings[2], '_choices_attributes_0_checked')) # Cat
       check(control_id(@qings[2], '_choices_attributes_1_checked')) # Dog
       click_button('Save')
@@ -166,7 +166,7 @@ feature 'responses form', js: true, sphinx: true do
     scenario 'should let you add two instances' do
       visit_submit_page_and_select_user
 
-      select 'Cat', from: control_id(@qings[0], '_option_id')
+      select 'Cat', from: control_id(@qings[0], '_option_node_id')
       find("a.add-instance").click
       fill_in control_id(@qings[1], '_value', inst_num: 2), with: 10
     end

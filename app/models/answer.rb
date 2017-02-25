@@ -43,7 +43,8 @@ class Answer < ActiveRecord::Base
 
   accepts_nested_attributes_for(:choices)
 
-  delegate :question, :qtype, :required?, :hidden?, :multimedia?, :option_set, :options, :condition, to: :questioning
+  delegate :question, :qtype, :required?, :hidden?, :multimedia?,
+    :option_set, :options, :first_level_option_nodes, :condition, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :mission, to: :response
@@ -83,6 +84,22 @@ class Answer < ActiveRecord::Base
   def self.any_for_option_and_questionings?(option_id, questioning_ids)
     find_by_sql(["SELECT COUNT(*) AS count FROM answers a LEFT OUTER JOIN choices c ON c.answer_id = a.id
       WHERE (a.option_id = ? OR c.option_id = ?) AND a.questioning_id IN (?)", option_id, option_id, questioning_ids]).first.count > 0
+  end
+
+  # This is a temporary method for fetching option_node based on the related OptionSet and Option.
+  # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
+  def option_node
+    OptionNode.where(option_id: option_id, option_set_id: option_set.id).first
+  end
+
+  def option_node_id
+    option_node.try(:id)
+  end
+
+  # This is a temporary method for assigning option based on an OptionNode ID.
+  # Eventually Options will be removed and OptionNodes will be stored on Answers directly.
+  def option_node_id=(id)
+    self.option_id = id.present? ? OptionNode.id_to_option_id(id) : nil
   end
 
   # If this is an answer to a multilevel select_one question, returns the OptionLevel, else returns nil.
