@@ -100,7 +100,7 @@ ELMO::Application.routes.draw do
   scope ":locale/:mode(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/, mission_name: /[a-z][a-z0-9]*/ do
 
     # the rest of these routes can have admin mode or not
-    resources :forms do
+    resources :forms, constraints: -> (req) { req.format == :html } do
       member do
         post "add_questions", path: "add-questions"
         post "remove_questions", path: "remove-questions"
@@ -199,7 +199,7 @@ ELMO::Application.routes.draw do
   # which executes before routing. Be sure that all paths marked with
   # :direct_auth => true are also matched by the direct_auth? method in
   # config/initializers/rack-attack.rb
-  scope "/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: { mode: "m", direct_auth: "basic" } do
+  scope "(/:locale)/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: { mode: "m", direct_auth: "basic" }, constraints: -> (req) { req.format == :xml || req.format == :csv } do
     get "/formList" => "forms#index", as: :odk_form_list, defaults: {format: "xml"}
     get "/forms/:id" => "forms#show", as: :odk_form, defaults: {format: "xml"}
     get "/forms/:id/manifest" => "forms#odk_manifest", as: :odk_form_manifest, defaults: {format: "xml"}
