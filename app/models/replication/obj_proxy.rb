@@ -192,7 +192,8 @@ class Replication::ObjProxy
 
     def get_copy_id(target_class, orig_id)
       # Try to find the appropriate copy in the replicator history
-      if copy = replicator.history.get_copy(target_class, orig_id)
+      copy = replicator.history.get_copy(target_class, orig_id) if orig_id
+      if copy
         copy.id
 
       # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
