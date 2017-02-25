@@ -38,11 +38,19 @@ FactoryGirl.define do
 
       os = create(:option_set, multilevel: true, mission: mission)
 
+      # test that cloned objects can be deleted
+      os.replicate(mode: :clone)
+
       # creates questionings and questions
       form = create(:form, mission: mission,
         question_types: ["integer", "select_one", ["integer", "integer"], "select_multiple"])
 
       create(:question, qtype_name: "select_one", option_set: os, mission: mission)
+
+      create(:condition, ref_qing: form.c.first, questioning: form.c.last, mission: mission)
+
+      # test that cloned objects can be deleted
+      form.replicate(mode: :clone)
 
       create(:report, mission: mission)
 
