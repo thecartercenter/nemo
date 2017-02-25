@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  require 'authlogic'
+  require "authlogic"
   include ActionView::Helpers::AssetTagHelper
 
   include Concerns::ApplicationController::Authentication
@@ -16,9 +16,10 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception, unless: -> { request.format.json? || request.format.xml? }
 
-  rescue_from Exception, :with => :notify_error
-  rescue_from CanCan::AccessDenied, :with => :handle_access_denied
-  rescue_from RecentLoginRequiredError, :with => :handle_recent_login_required
+  rescue_from Exception, with: :notify_error
+  rescue_from CanCan::AccessDenied, with: :handle_access_denied
+  rescue_from RecentLoginRequiredError, with: :handle_recent_login_required
+  rescue_from ActionController::ParameterMissing, with: :handle_parameter_missing
 
   before_filter(:check_route)
   before_filter(:remove_missionchange_flag)
@@ -28,7 +29,7 @@ class ApplicationController < ActionController::Base
   before_filter(:get_user)
   before_filter(:protect_admin_mode)
   before_filter(:remember_mission)
-  before_filter(:remember_page_number, :only => :index)
+  before_filter(:remember_page_number, only: :index)
   before_filter(:load_settings_for_mission_into_config)
   before_filter(:load_accessible_missions)
 

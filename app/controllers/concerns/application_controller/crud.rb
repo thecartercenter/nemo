@@ -13,6 +13,11 @@ module Concerns::ApplicationController::Crud
     end
   end
 
+  # Handles ParamaterMissing errors
+  def handle_parameter_missing
+    render nothing: true, status: 400
+  end
+
   # sets a success message based on the given object
   def set_success(obj)
     # get verb (past tense) based on action
