@@ -178,6 +178,34 @@ class ResponsesController < ApplicationController
     }, select2: true
   end
 
+  def possible_users
+    mode = params[:search_mode] || "submitters"
+
+    case mode
+    when "submitters"
+      @possible_users = User.assigned_to_or_submitter(current_mission, @response).by_name
+    when "reviewers"
+      @possible_users = User.with_roles(current_mission, %w(coordinator staffer reviewer)).by_name
+    end
+
+    # do search if applicable
+    if params[:search].present?
+      begin
+        @possible_users = User.do_search(@possible_users, params[:search])
+      rescue Search::ParseError
+        flash.now[:error] = $!.to_s
+        @search_error = true
+      end
+    end
+
+    @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
+
+    render json: {
+      possible_users: ActiveModel::ArraySerializer.new(@possible_users),
+      more: @possible_users.next_page.present?
+    }, select2: true
+  end
+
   private
   # loads the response with its associations
   def load_with_associations
@@ -248,7 +276,7 @@ class ResponsesController < ApplicationController
 
   def response_params
     if params[:response]
-      reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
+      reviewer_only = [:reviewed, :reviewer_notes, :reviewer_id] if @response.present? && can?(:review, @response)
       permitted_params = params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only)
       return permitted_params if action_name == "update" && cannot?(:modify_answers, @response)
 

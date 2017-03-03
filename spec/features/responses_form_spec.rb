@@ -15,6 +15,8 @@ feature 'responses form', js: true, sphinx: true do
       login(@user)
     end
 
+    let!(:reviewer) { create(:user) }
+
     scenario 'should work' do
       visit_submit_page_and_select_user
 
@@ -56,6 +58,7 @@ feature 'responses form', js: true, sphinx: true do
 
       # Check edit mode.
       click_link('Edit Response')
+      select2(reviewer.name, from: "response_reviewer_id")
       select('Animal', from: control_id(@qings[1], '_0_option_node_id'))
       find('#' + control_id(@qings[1], '_1_option_node_id') + ' option', text: 'Cat')
       select('Cat', from: control_id(@qings[1], '_1_option_node_id'))
@@ -130,26 +133,28 @@ feature 'responses form', js: true, sphinx: true do
     before do
       @observer = create(:user, role_name: :observer)
       @form = create(:form, question_types: %w(integer))
-      @notes = "Zero? (##{SecureRandom.hex})"
-      @response = create(:response, form: @form, answer_values: [0], reviewer_notes: @notes, user: @observer)
+      # @notes = "Zero? (##{SecureRandom.hex})"
+      @response = create(:response, :is_reviewed, form: @form, answer_values: [0], user: @observer)
     end
+
+    let(:notes) { @response.reviewer_notes }
 
     scenario 'should not be visible to normal users' do
       login(@observer)
       visit(response_path(@response, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
-      expect(page).not_to have_content(@notes)
+      expect(page).not_to have_content(notes)
     end
 
     scenario 'should be visible to admin' do
       login(create(:user, admin: true))
       visit(response_path(@response, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
-      expect(page).to have_content(@notes)
+      expect(page).to have_content(notes)
     end
 
     scenario 'should be visible to staffer' do
       login(create(:user, role_name: :staffer))
       visit(response_path(@response, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
-      expect(page).to have_content(@notes)
+      expect(page).to have_content(notes)
     end
   end
 

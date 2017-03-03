@@ -40,6 +40,12 @@
 
     <%= f.field(:source) if read_only %>
 
+    <%# only show the reviewer select as editable if the user can review the response %>
+    <%= f.field(:reviewer_id, type: :select, options: sel_opts_from_objs(@response.reviewer),
+      read_only: cannot?(:review, @response),
+
+      read_only_content: can?(:read, @response.reviewer) ? link_to(@response.reviewer.try(:name), @response.reviewer) : nil) %>
+
     <%# only show the reviewed checkbox as editable if the user can review the response %>
     <%= f.field(:reviewed, :type => :check_box, :read_only => cannot?(:review, @response)) %>
 
@@ -71,6 +77,7 @@
 
 <%= javascript_doc_ready do %>
   ELMO.Response.init(<%=json({
-    url: @response.new_record? ? possible_submitters_new_response_path : possible_submitters_response_path(@response)
+    submitter_url: @response.new_record? ? possible_users_new_response_path(search_mode: "submitters") : possible_users_response_path(@response, search_mode: "submitters"),
+    reviewer_url: @response.new_record? ? possible_users_new_response_path(search_mode: "reviewers") : possible_users_response_path(@response, search_mode: "reviewers")
   })%>);
 <% end %>

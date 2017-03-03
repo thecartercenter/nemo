@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170223185101) do
+ActiveRecord::Schema.define(version: 20170303160721) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -373,6 +373,7 @@ ActiveRecord::Schema.define(version: 20170223185101) do
     t.integer "mission_id", limit: 4
     t.string "odk_hash", limit: 255
     t.boolean "reviewed", default: false
+    t.integer "reviewer_id", limit: 4
     t.text "reviewer_notes", limit: 65535
     t.string "source", limit: 255
     t.datetime "updated_at"
@@ -386,6 +387,7 @@ ActiveRecord::Schema.define(version: 20170223185101) do
   add_index "responses", ["form_id"], name: "responses_form_id_fk", using: :btree
   add_index "responses", ["mission_id"], name: "responses_mission_id_fk", using: :btree
   add_index "responses", ["reviewed"], name: "index_responses_on_reviewed", using: :btree
+  add_index "responses", ["reviewer_id"], name: "index_responses_on_reviewer_id", using: :btree
   add_index "responses", ["updated_at"], name: "index_responses_on_updated_at", using: :btree
   add_index "responses", ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id", using: :btree
   add_index "responses", ["user_id"], name: "responses_user_id_fk", using: :btree
@@ -572,6 +574,7 @@ ActiveRecord::Schema.define(version: 20170223185101) do
   add_foreign_key "responses", "forms", name: "responses_form_id_fk"
   add_foreign_key "responses", "missions", name: "responses_mission_id_fk"
   add_foreign_key "responses", "users", column: "checked_out_by_id", name: "responses_checked_out_by_id_fk"
+  add_foreign_key "responses", "users", column: "reviewer_id"
   add_foreign_key "responses", "users", name: "responses_user_id_fk"
   add_foreign_key "settings", "missions", name: "settings_mission_id_fk"
   add_foreign_key "sms_messages", "broadcasts", name: "sms_messages_broadcast_id_fk"

@@ -79,6 +79,7 @@ class User < ActiveRecord::Base
   })
   scope(:with_groups, -> { joins(:user_groups) })
   scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+  scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).where(assignments: { mission: m.try(:id), role: roles }) }
 
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })

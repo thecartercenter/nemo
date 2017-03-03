@@ -73,6 +73,12 @@ FactoryGirl.define do
     form { create(:form, :mission => mission) }
     source 'web'
 
+    trait :is_reviewed do
+      reviewed true
+      reviewer_notes { Faker::Lorem.paragraphs }
+      reviewer { create(:user) }
+    end
+
     # Build answer objects from answer_values array
     # Array may contain nils, which should result in answers with nil values.
     # Array may also contain recursively nested sub-arrays. Sub arrays may be given for:

@@ -9,7 +9,7 @@
     // enable select2 for user selector
     $('#response_user_id').select2({
       ajax: {
-        url: options.url,
+        url: options.submitter_url,
         dataType: 'json',
         delay: 250,
         data: function (params) {
@@ -20,13 +20,38 @@
         },
         processResults: function (data, page) {
           return {
-            results: data.possible_submitters,
+            results: data.possible_users,
             pagination: { more: data.more }
           };
         },
         cache: true
       }
     });
+
+    $('#response_reviewer_id').select2({
+      ajax: {
+        url: options.reviewer_url,
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term,
+            page: params.page
+          };
+        },
+        processResults: function (data, page) {
+          return {
+            results: data.possible_users,
+            pagination: { more: data.more }
+          };
+        },
+        cache: true
+      }
+    });
+  }
+
+  klass.build_select2_params = function(url) {
+    /*TODO refactor to share between reviewer and submitter*/
   }
 
   // shows the map and location search box
