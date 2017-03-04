@@ -428,6 +428,7 @@ en:
         form_id: "Form"
         reviewed: "Reviewed?"
         reviewer_notes: "Reviewer Notes"
+        reviewer_id: "Reviewer"
         source: "Source"
         user_id: "User/Team"
         incomplete: "Are there missing required answers?"

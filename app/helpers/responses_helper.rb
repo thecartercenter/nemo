@@ -4,7 +4,7 @@ module ResponsesHelper
     if params[:controller] == 'welcome'
       fields = %w(form_id user_id) + key_question_hashes(2) + %w(created_at reviewed)
     else
-      fields = %w(id form_id user_id) + key_question_hashes(2) + %w(incomplete created_at age reviewed actions)
+      fields = %w(id form_id user_id) + key_question_hashes(2) + %w(incomplete created_at age reviewed reviewer_id actions)
     end
   end
 
@@ -26,6 +26,7 @@ module ResponsesHelper
       when "incomplete" then tbool(resp.incomplete?)
       when "reviewed" then reviewed_status(resp)
       when "user_id" then can?(:read, resp.user) ? link_to(resp.user.name, resp.user) : resp.user.name
+      when "reviewer_id" then resp.reviewer.present? ? (can?(:read, resp.reviewer) ? link_to(resp.reviewer.name, resp.reviewer) : resp.reviewer.name) : ""
       when "actions"
         # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
         # the controller actions will still be auth'd
