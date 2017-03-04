@@ -7,51 +7,33 @@
     $("a.edit_location_link").click(function(e){ klass.show_location_picker(e); return false; });
 
     // enable select2 for user selector
-    $('#response_user_id').select2({
-      ajax: {
-        url: options.submitter_url,
-        dataType: 'json',
-        delay: 250,
-        data: function (params) {
-          return {
-            search: params.term,
-            page: params.page
-          };
-        },
-        processResults: function (data, page) {
-          return {
-            results: data.possible_users,
-            pagination: { more: data.more }
-          };
-        },
-        cache: true
-      }
-    });
+    $('#response_user_id').select2(klass.build_select2_params(options.submitter_url));
 
-    $('#response_reviewer_id').select2({
-      ajax: {
-        url: options.reviewer_url,
-        dataType: 'json',
-        delay: 250,
-        data: function (params) {
-          return {
-            search: params.term,
-            page: params.page
-          };
-        },
-        processResults: function (data, page) {
-          return {
-            results: data.possible_users,
-            pagination: { more: data.more }
-          };
-        },
-        cache: true
-      }
-    });
+    // enable select2 for reviewer selector
+    $('#response_reviewer_id').select2(klass.build_select2_params(options.reviewer_url));
   }
 
   klass.build_select2_params = function(url) {
-    /*TODO refactor to share between reviewer and submitter*/
+    return {
+      ajax: {
+        url: url,
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+          return {
+            search: params.term,
+            page: params.page
+          };
+        },
+        processResults: function (data, page) {
+          return {
+            results: data.possible_users,
+            pagination: { more: data.more }
+          };
+        },
+        cache: true
+      }
+    }
   }
 
   // shows the map and location search box
