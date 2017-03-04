@@ -43,6 +43,7 @@ ActionMailer::Base.smtp_settings = {
 # configatron.universal_sms_token = "50b488c71be4e9cd0ba34a7bf0b7053f"
 
 # Google Maps API Key (Requires Google Maps Javascript and Geocoding APIs)
+# Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
 configatron.google_maps_api_key = "xxx"
 
 # Allows submissions without password via the /noauth/submission route.
