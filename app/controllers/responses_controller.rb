@@ -179,9 +179,9 @@ class ResponsesController < ApplicationController
   end
 
   def possible_users
-    mode = params[:search_mode] || "submitters"
+    search_mode = params[:search_mode] || "submitters"
 
-    case mode
+    case search_mode
     when "submitters"
       @possible_users = User.assigned_to_or_submitter(current_mission, @response).by_name
     when "reviewers"

@@ -26,7 +26,12 @@ module ResponsesHelper
       when "incomplete" then tbool(resp.incomplete?)
       when "reviewed" then reviewed_status(resp)
       when "user_id" then can?(:read, resp.user) ? link_to(resp.user.name, resp.user) : resp.user.name
-      when "reviewer_id" then resp.reviewer.present? ? (can?(:read, resp.reviewer) ? link_to(resp.reviewer.name, resp.reviewer) : resp.reviewer.name) : ""
+      when "reviewer_id"
+        if resp.reviewer.present?
+          (can?(:read, resp.reviewer) ? link_to(resp.reviewer.name, resp.reviewer) : resp.reviewer.name)
+        else
+          ""
+        end
       when "actions"
         # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
         # the controller actions will still be auth'd
