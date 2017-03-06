@@ -151,7 +151,7 @@ describe Report::AnswerTallyReport do
       expect(report).to have_data_grid(nil)
     end
 
-    it "counts of options across a select one question and select multiple question", :investigate => true do
+    it "counts of options across a select one question and select multiple question", :investigate do
       # create several questions and responses for them
       yes_no = create(:option_set, option_names: %w(Yes No))
       rgb = create(:option_set, option_names: %w(Red Blue Green))
