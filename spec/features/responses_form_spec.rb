@@ -133,7 +133,6 @@ feature 'responses form', js: true, sphinx: true do
     before do
       @observer = create(:user, role_name: :observer)
       @form = create(:form, question_types: %w(integer))
-      # @notes = "Zero? (##{SecureRandom.hex})"
       @response = create(:response, :is_reviewed, form: @form, answer_values: [0], user: @observer)
     end
 
