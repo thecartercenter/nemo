@@ -89,6 +89,13 @@ class Report::AttribField < Report::Field
         :name_expr_params => {:sql_tplt => "IF(responses.reviewed, 'Yes', 'No')", :name => "name", :clause => :select},
         :value_expr_params => {:sql_tplt => "IF(responses.reviewed, 1, 0)", :name => "value", :clause => :select},
         :data_type => :text,
+        :groupable => true},
+      :reviewer => {
+        :name => :reviewer,
+        :name_expr_params => {:sql_tplt => "__TBL_PFX__reviewers.name", :name => "name", :clause => :select},
+        :value_expr_params => {:sql_tplt => "__TBL_PFX__reviewers.name", :name => "value", :clause => :select},
+        :joins => [:reviewers],
+        :data_type => :text,
         :groupable => true}
     }
 end
