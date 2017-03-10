@@ -71,6 +71,15 @@ form.response_form {
 
   label.main {
     width: $response-form-label-width;
+
+    display: inline-block;
+    float: left;
+    p.rank {
+      display: inline-block;
+      text-align: left;
+      float: left;
+      margin-left: 12px;
+    }
   }
 
   div.control {
@@ -102,6 +111,7 @@ form.response_form {
   div.qing-group {
 
     div.qing-group-instances {
+      background-color: lighten($gray-blue, 10%);
       border-left: 10px solid $gray-blue;
     }
 
