@@ -32,6 +32,7 @@ gem "therubyracer", "~> 0.12.2", platforms: :ruby
 gem "draper", "~> 2.1.0"
 gem "attribute_normalizer", "~> 1.2.0"
 gem "responders", "~> 2.3.0"
+gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove version constraint when fixed.
 
 # pagination
 gem "will_paginate", "~> 3.0.7"

@@ -7,9 +7,16 @@
     $("a.edit_location_link").click(function(e){ klass.show_location_picker(e); return false; });
 
     // enable select2 for user selector
-    $('#response_user_id').select2({
+    $('#response_user_id').select2(klass.build_select2_params(options.submitter_url));
+
+    // enable select2 for reviewer selector
+    $('#response_reviewer_id').select2(klass.build_select2_params(options.reviewer_url));
+  }
+
+  klass.build_select2_params = function(url) {
+    return {
       ajax: {
-        url: options.url,
+        url: url,
         dataType: 'json',
         delay: 250,
         data: function (params) {
@@ -20,13 +27,13 @@
         },
         processResults: function (data, page) {
           return {
-            results: data.possible_submitters,
+            results: data.possible_users,
             pagination: { more: data.more }
           };
         },
         cache: true
       }
-    });
+    }
   }
 
   // shows the map and location search box
