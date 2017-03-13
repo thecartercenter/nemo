@@ -68,7 +68,7 @@ module Report::Gridable
   protected
     # adds the given array of joins to the given relation by using the Join class
     def add_joins_to_relation(rel, joins)
-      return rel.joins(Report::Join.list_to_sql(joins))
+      return rel.joins(Results::Join.list_to_sql(joins))
     end
 
     # builds a nested SQL IF statement of the form IF(a, x, IF(b, y, IF(c, z, ...)))

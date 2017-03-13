@@ -1,5 +1,5 @@
 # models the various joins in the Response/Answer db structure
-class Report::Join
+class Results::Join
 
   attr_reader :name, :sql, :dependencies
 

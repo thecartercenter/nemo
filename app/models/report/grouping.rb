@@ -29,7 +29,7 @@ class Report::Grouping
     rel = rel.order(sort_expr.sql) if sort_expr
 
     # add joins, with label as prefix
-    rel = rel.joins(Report::Join.list_to_sql(@calculation.joins, prefix))
+    rel = rel.joins(Results::Join.list_to_sql(@calculation.joins, prefix))
 
     # Filter for top-level answers only if applicable.
     rel = filter_non_top_level_answers(rel, prefix) if @calculation.question1
