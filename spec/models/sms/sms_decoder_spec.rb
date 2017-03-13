@@ -22,7 +22,7 @@ describe Sms::Decoder, :sms do
         assert_decoding_fail(body: "#{@form.code} 1.17", error: "user_not_found")
       end
 
-      it "should lock account after 3 failed attempts" do
+      it "should lock account after 3 failed attempts", :investigate do
         create_list(:sms_message, Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD, user: user, auth_failed: true, type: "incoming")
         assert_decoding_fail(body: "#{@form.code} 1.17", error: "account_locked")
       end

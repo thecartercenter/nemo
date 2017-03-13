@@ -146,7 +146,7 @@ group :development, :test do
   gem "capybara", "~> 2.4.4"
   gem "capybara-screenshot", "~> 1.0.11"
   gem "selenium-webdriver", "~> 2.45.0"
-  gem "poltergeist", "~> 1.6.0"
+  gem "poltergeist", "~> 1.7.0"
 
   # cleans database for testing
   gem "database_cleaner", "~> 1.4.1"

@@ -59,8 +59,8 @@ module Concerns::ApplicationController::Crud
   end
 
   def remember_search(search)
-    session[:last_search] ||= {}
-    session[:last_search][last_context_hash_key] = search
+    session[:last_searches] ||= {}
+    session[:last_searches][last_context_hash_key] = search
   end
 
   def remember_page(page)
@@ -75,16 +75,18 @@ module Concerns::ApplicationController::Crud
 
   def get_last_context
     page = get_last_page_number if session[:last_page_numbers]
-    search = get_last_search if session[:last_search]
-    { page: page, search: search }
+    search = get_last_searches if session[:last_searches]
+    {page: page, search: search}
   end
 
   def get_last_page_number
+    return unless session[:last_page_numbers]
     session[:last_page_numbers][last_context_hash_key].presence
   end
 
-  def get_last_search
-    session[:last_search][last_context_hash_key].presence
+  def get_last_searches
+    return unless session[:last_searches]
+    session[:last_searches][last_context_hash_key].presence
   end
 
   # gets the request's referrer without the query string
