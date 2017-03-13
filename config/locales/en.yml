@@ -1071,6 +1071,7 @@ en:
     date_submitted: "Date Submitted"
     response_id: "Response ID"
     reviewed: "Reviewed"
+    reviewer: "Reviewer"
 
   broadcast:
     chars: # these are for informing the user how many chars they have left in their sms

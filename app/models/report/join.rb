@@ -76,6 +76,10 @@ class Report::Join
     :users => new(
       :name => :users,
       :sql => "LEFT JOIN users __users ON responses.user_id = __users.id"
+    ),
+    :reviewers => new(
+      :name => :reviewers,
+      :sql => "LEFT JOIN users __reviewers ON responses.reviewer_id = __reviewers.id"
     )
   }
 end

@@ -75,21 +75,22 @@ describe Report::ListReport do
       questions << create(:question, code: "Happy", qtype_name: "select_one", option_set: yes_no)
       form = create(:form, questions: questions)
       create(:response, form: form, user: user, source: "odk", answer_values: %w(10 ga Yes))
-      create(:response, form: form, user: user, source: "web", answer_values: %w(3 ga No))
-      create(:response, form: form, user: user, source: "web", answer_values: %w(5 al No))
+      create(:response, :is_reviewed, form: form, user: user, source: "web", answer_values: %w(3 ga No), reviewer_name: "Reviewer")
+      create(:response, :is_reviewed, form: form, user: user, source: "web", answer_values: %w(5 al No), reviewer_name: "Michelle")
 
       report = create_report("List", calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
         {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
         {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
         {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"},
-        {rank: 5, type: "Report::IdentityCalculation", question1_id: questions[2].id}
+        {rank: 5, type: "Report::IdentityCalculation", attrib1_name: "reviewer"},
+        {rank: 6, type: "Report::IdentityCalculation", question1_id: questions[2].id}
       ])
 
-      expect(report).to have_data_grid(%w( Submitter  Inty  State   Source  Happy ),
-                                       %w( Foo        10    ga      odk     Yes   ),
-                                       %w( Foo        3     ga      web     No    ),
-                                       %w( Foo        5     al      web     No    ))
+      expect(report).to have_data_grid(%w( Submitter  Inty  State   Source  Reviewer  Happy ),
+                                       %w( Foo        10    ga      odk     _         Yes   ),
+                                       %w( Foo        3     ga      web     Reviewer  No    ),
+                                       %w( Foo        5     al      web     Michelle  No    ))
     end
 
     it "response and list reports using same attrib" do

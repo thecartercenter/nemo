@@ -74,9 +74,12 @@ FactoryGirl.define do
     source 'web'
 
     trait :is_reviewed do
+      transient do
+        reviewer_name "Default"
+      end
       reviewed true
       reviewer_notes { Faker::Lorem.paragraphs }
-      reviewer { create(:user) }
+      reviewer { create(:user, name: reviewer_name) }
     end
 
     # Build answer objects from answer_values array
