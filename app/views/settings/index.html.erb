@@ -50,6 +50,9 @@
         <%= f.field(:clear_twilio, type: :check_box, label: t('common.clear')) %>
       </div>
     </div>
+
+    <h2><%= t('activerecord.attributes.setting.external_sql') %></h2>
+    <%= f.field(:external_sql, :partial => "external_sql") %>
   <% end %>
 
   <div class="submit-buttons">
