@@ -172,13 +172,13 @@ feature "questions flow" do
 
     # Click tag
     first('li', text: 'awesome').click
-    expect(current_url).to include 'search=cheese+tag%253Aawesome'
+    expect(current_url).to include 'search=cheese+tag%3Aawesome'
     expect(page).to have_content(@question1.code)
     expect(page).not_to have_content(@question2.code)
 
     # Click another tag
     first('li', text: 'twenty dollaz').click
-    expect(current_url).to include 'search=cheese+tag%253A%22twenty+dollaz%22'
+    expect(current_url).to include 'search=cheese+tag%3A%22twenty+dollaz%22'
     expect(current_url).not_to include 'awesome'
     expect(page).to have_content(@question1.code)
     expect(page).not_to have_content(@question2.code)
@@ -186,10 +186,10 @@ feature "questions flow" do
     # More complicated searches
     search_for('tag: (awesome |thriftshop )cheese')
     first('li', text: 'awesome').click
-    expect(current_url).to include 'search=cheese+tag%253Aawesome'
+    expect(current_url).to include 'search=cheese+tag%3Aawesome'
 
     search_for('cheese tag: "twenty dollaz"')
     first('li', text: 'awesome').click
-    expect(current_url).to include 'search=cheese+tag%253Aawesome'
+    expect(current_url).to include 'search=cheese+tag%3Aawesome'
   end
 end
