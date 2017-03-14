@@ -255,7 +255,7 @@ describe Sms::Decoder, :sms do
       assert_decoding(body: "#{@form.code} 1.15 2.Plant", answers: [15, ["Plant", "NIL"]])
     end
 
-    it "select_one question with appendix and invalid option should not work" do
+    it "select_one question with appendix and invalid option should not work", :investigate do
       create_form(questions: %w(integer select_one_with_appendix_for_sms))
       assert_decoding_fail(body: "#{@form.code} 1.15 2.no", error: "answer_not_valid_option")
     end
@@ -351,7 +351,7 @@ describe Sms::Decoder, :sms do
       assert_decoding(body: "#{@form.code} 1.15 2.11,12,13,14,15,20,1a", answers: [15, %w(1 2 3 4 5 36 10)])
     end
 
-    it "decimal question should work" do
+    it "decimal question should work", :investigate do
       create_form(questions: %w(decimal))
       assert_decoding(body: "#{@form.code} 1.1.15", answers: [1.15])
     end
