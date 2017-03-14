@@ -106,23 +106,23 @@
     var question_type_param = '?adding_to_question_type=' + self.field_value('qtype_name'),
         loadUrl = self.params.new_option_set_path + question_type_param;
 
-    var modal_header = "option_set.create_for_question";
-    let question_code = $("#question_code").val().trim();
-    if (question_code === "") {
-      modal_header = "option_set.create_for_new_question";
+    var modal_header = 'option_set.create_for_question';
+    var question_code = $('#question_code').val().trim();
+    if (question_code === '') {
+      modal_header = 'option_set.create_for_new_question';
     }
-    $("#create-option-set .modal-title").html(I18n.t(modal_header, {code: question_code}));
+    $('#create-option-set .modal-title').html(I18n.t(modal_header, {code: question_code}));
 
     // populate and show the modal
-    $("#create-option-set .modal-body.option-set").load(loadUrl, function(){
-      $("#create-option-set").modal('show');
+    $('#create-option-set .modal-body.option-set').load(loadUrl, function(){
+      $('#create-option-set').modal('show');
     });
   }
 
   // called when the option set is created so we can add it to the dropdown
   klass.prototype.option_set_created = function(option_set) { var self = this;
     // close the dialog
-    $("#create-option-set").modal('hide');
+    $('#create-option-set').modal('hide');
 
     // add the new option set to the list and select it
     var option = $('<option>', {value: option_set.id, 'data-multilevel': option_set.multilevel}).text(option_set.name);
