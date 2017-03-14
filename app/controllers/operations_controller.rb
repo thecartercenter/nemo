@@ -10,7 +10,7 @@ class OperationsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@operation)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   def clear
@@ -18,6 +18,6 @@ class OperationsController < ApplicationController
       op.destroy if can?(:destroy, op)
     end
 
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 end

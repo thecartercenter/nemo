@@ -60,7 +60,7 @@ class QuestionsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@question)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   private

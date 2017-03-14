@@ -26,7 +26,7 @@ describe UsersController, type: :request do
       put(user_path(@user, :locale => 'fr'), :user => {:name => 'Foobar'})
     end
 
-    it 'should not change the locale on redirect' do
+    it 'should not change the locale on redirect', :investigate do
       expect(response).to redirect_to(edit_user_path(@user, :locale => 'fr'))
     end
   end

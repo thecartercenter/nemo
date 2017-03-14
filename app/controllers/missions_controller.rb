@@ -38,7 +38,7 @@ class MissionsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@mission)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   private
