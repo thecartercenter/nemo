@@ -15,6 +15,9 @@ describe Results::SqlGenerator do
       answer_values: [3, "Cat", [5, 6], %w(Cat Dog)]
     )
   end
+  let(:other_mission) { create(:mission) }
+  let(:other_form) { create(:form, mission: other_mission, question_types: ["integer"]) }
+  let!(:other_response) { create(:response, mission: other_mission, form: other_form, answer_values: [3]) }
   let(:sql) { described_class.new(mission).generate }
 
   it "should generate valid SQL" do
@@ -53,6 +56,7 @@ describe Results::SqlGenerator do
         LEFT JOIN options co ON choices.option_id = co.id
         LEFT JOIN option_nodes ch_opt_nodes ON ch_opt_nodes.option_id = co.id
           AND ch_opt_nodes.option_set_id = option_sets.id
+      WHERE (responses.mission_id = #{mission.id})
       ORDER BY responses.created_at DESC"))
 
     # 5 Answers, one row per answer, except two rows for the Answer with two Choices

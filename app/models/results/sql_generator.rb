@@ -6,10 +6,11 @@ class Results::SqlGenerator
   # We accept a mission parameter here for scoping. Obviously, anybody able to run queries on the
   # DB has at least read access to all data, so this is not a security measure, just a convenience one.
   def initialize(mission)
+    raise ArgumentError.new("mission is required") unless mission && mission.persisted?
     self.mission = mission
   end
 
-  # Generates SQL that produces one row per Answer and/or Choice.
+  # Generates SQL that produces one row per Answer and/or Choice for the given mission.
   # Assumes the language desired is English. Currently does not respect the locale (uses canonical_name).
   def generate
     Response.
@@ -34,6 +35,7 @@ class Results::SqlGenerator
       select("option_sets.name AS option_set").
       joins(Results::Join.list_to_sql(:users, :forms, :answers, :questionings,
         :questions, :option_sets, :options, :choices)).
+      where("responses.mission_id = ?", mission.id).
       order("responses.created_at DESC").
       to_sql
   end
