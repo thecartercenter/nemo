@@ -106,7 +106,12 @@
     var question_type_param = '?adding_to_question_type=' + self.field_value('qtype_name'),
         loadUrl = self.params.new_option_set_path + question_type_param;
 
-    $("#create-option-set .modal-title").html(I18n.t("lfadjzfadlz"))
+    var modal_header = "option_set.create_for_question";
+    let question_code = $("#question_code").val().trim();
+    if (question_code === "") {
+      modal_header = "option_set.create_for_new_question";
+    }
+    $("#create-option-set .modal-title").html(I18n.t(modal_header, {code: question_code}));
 
     // populate and show the modal
     $("#create-option-set .modal-body.option-set").load(loadUrl, function(){
