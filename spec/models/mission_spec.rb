@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Mission do
-  describe "terminate" do
+  describe "terminate", :investigate do
     let!(:mission) { create(:mission_with_full_heirarchy) }
     let(:expected_counts) do
       { mission: 1, broadcast: 1, assignment: 3, form: 2, question: 6, questioning: 10, qing_group: 4, option: 10,
