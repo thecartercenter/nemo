@@ -429,6 +429,7 @@ en:
         reviewed: "Reviewed?"
         reviewer_notes: "Reviewer Notes"
         reviewer_id: "Reviewer"
+        shortcode: "Response ID"
         source: "Source"
         user_id: "User/Team"
         incomplete: "Are there missing required answers?"

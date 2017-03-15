@@ -2,7 +2,7 @@
 <% content_for(:per_page_js){ javascript_google_maps } %>
 
 <%# title includes ID if defined %>
-<% @title_args = {:id => @response.id} %>
+<% @title_args = {id: @response.shortcode} %>
 
 <%= render("layouts/location_picker") %>
 
