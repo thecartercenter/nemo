@@ -323,7 +323,7 @@ class Response < ActiveRecord::Base
 
   def generate_shortcode
     begin
-      response_code = CODE_LENGTH.times.map { shortcode_chars.sample }.join
+      response_code = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
       mission_code = mission.shortcode
       form_code = form.code
 

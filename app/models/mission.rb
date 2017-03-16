@@ -1,4 +1,7 @@
 class Mission < ActiveRecord::Base
+  CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
+  CODE_LENGTH = 2
+
   has_many(:responses, inverse_of: :mission)
   has_many(:forms, inverse_of: :mission)
   has_many(:report_reports, class_name: "Report::Report", inverse_of: :mission)
@@ -19,6 +22,7 @@ class Mission < ActiveRecord::Base
 
   before_validation(:create_compact_name)
   before_create(:ensure_setting)
+  before_create(:generate_shortcode)
 
   validates(:name, presence: true)
   validates(:name, format: { with: /\A[a-z][a-z0-9 ]*\z/i, message: :let_num_spc_only },
@@ -72,6 +76,12 @@ class Mission < ActiveRecord::Base
         raise e
       end
     end
+  end
+
+  def generate_shortcode
+    begin
+      self.shortcode = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
+    end while Mission.exists?(shortcode: self.shortcode)
   end
 
   # returns a string representation used for debugging

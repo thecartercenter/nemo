@@ -7,7 +7,7 @@ class ResponsesController < ApplicationController
   before_action :fix_nil_time_values, only: [:update, :create]
 
   # authorization via CanCan
-  load_and_authorize_resource
+  load_and_authorize_resource find_by: :shortcode
   before_action :assign_form, only: [:new]
 
   before_action :mark_response_as_checked_out, only: [:edit]
@@ -209,20 +209,7 @@ class ResponsesController < ApplicationController
   private
   # loads the response with its associations
   def load_with_associations
-    case id_type
-    when "shortcode"
-      @response = Response.with_associations.find_by(shortcode: params[:id])
-    when "numeric"
-      @response = Response.with_associations.find(params[:id])
-    end
-  end
-
-  def id_type
-    if params[:id] =~ /[a-z0-9]{2}-[a-z]{3}-[a-z0-9]{5}/
-      "shortcode"
-    else
-      "numeric"
-    end
+    @response = Response.with_associations.friendly.find(params[:id])
   end
 
   # when editing a response, set timestamp to show it is being worked on

@@ -81,6 +81,12 @@ FactoryGirl.define do
       end
     end
 
+    trait :published do
+      after(:create) do |form|
+        form.publish!
+      end
+    end
+
     # DO NOT USE, USE FORM ABOVE
     # A form with different question types.
     # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
