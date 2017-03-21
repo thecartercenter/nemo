@@ -114,7 +114,7 @@ describe Report::AnswerTallyReport do
                                        %w( TTL 21  9  30 ))
     end
 
-    it "counts of options for specific questions across two option sets" do
+    it "counts of options for specific questions across two option sets", :investigate do
       yes_no = create(:option_set, option_names: %w(Yes No))
       high_low = create(:option_set, option_names: %w(High Low))
       questions = []
