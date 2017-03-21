@@ -47,7 +47,8 @@ describe "odk submissions", type: :request do
     end
 
     it "should fail for non-existent mission" do
-      expect { do_submission("/m/foo/submission") }.to raise_error(ActiveRecord::RecordNotFound)
+      do_submission("/m/foo/submission")
+      expect(response.response_code).to eq 404
     end
 
     it "should return error 426 upgrade required if old version of form" do
