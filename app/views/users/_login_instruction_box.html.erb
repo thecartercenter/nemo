@@ -8,9 +8,8 @@
       <td class="value"><%= user.full_name %></td>
     </tr>
     <tr>
-      <td class="name"><%= t("user.login_instructions.site_url") %></td>
-      <td class="value">https://<%= request.host_with_port %></td>
-    </tr>
+      <td class="name"><%= t("user.login_instructions.site_url") %></td> 
+      <td class="value"><%= mission_root_url %></td>
     <tr>
       <td class="name"><%= User.human_attribute_name("login") %></td>
       <td class="value"><%= user.login %></td>
