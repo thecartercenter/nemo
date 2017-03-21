@@ -23,6 +23,10 @@
       <td class="name"><%= User.human_attribute_name("sms_auth_code") %></td>
       <td class="value"><%= user.sms_auth_code %></td>
     </tr>
+    <tr>
+      <td class="name"><%= "Mission" %></td>
+      <td class="value"><%= "#{@current_mission.name} (#{@current_mission.shortname})" %></td>
+    </tr>
   </table>
 
   <% t("user.login_instructions.closing").each do |para| %>
