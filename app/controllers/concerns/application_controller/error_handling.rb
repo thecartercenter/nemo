@@ -13,4 +13,8 @@ module Concerns::ApplicationController::ErrorHandling
     # still show error page unless requested not to
     raise exception unless options[:dont_re_raise]
   end
+
+  def handle_not_found
+    render nothing: true, status: 404
+  end
 end
