@@ -14,11 +14,11 @@ module Concerns::ApplicationController::ErrorHandling
     raise exception unless options[:dont_re_raise]
   end
 
-  def handle_not_found
-    render nothing: true, status: 404
+  def handle_not_found(exception, options = {})
+    raise exception unless options[:dont_re_raise]
   end
 
-  def handle_invalid_authenticity_token
-    render nothing:true, status: 401
+  def handle_invalid_authenticity_token(exception, options = {})
+    raise exception unless options[:dont_re_raise]
   end
 end
