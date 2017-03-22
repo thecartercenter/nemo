@@ -17,4 +17,7 @@ module Concerns::ApplicationController::ErrorHandling
   def handle_not_found
     render nothing: true, status: 404
   end
+
+  def handle_invalid_authenticity_token
+    render nothing:true, status: 401
 end

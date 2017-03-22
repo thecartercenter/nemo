@@ -21,7 +21,7 @@ class ApplicationController < ActionController::Base
   rescue_from RecentLoginRequiredError, with: :handle_recent_login_required
   rescue_from ActionController::ParameterMissing, with: :handle_parameter_missing
   rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
-  rescue_from ActionController::InvalidAuthenticityToken, with: :handle_access_denied
+  rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
 
   before_filter(:check_route)
   before_filter(:remove_missionchange_flag)
