@@ -24,7 +24,7 @@ feature "remember context", js: true, sphinx: true do
 
     # view response
     first("tr.clickable").click
-    expect(page).to have_content "Response: #"
+    expect(page).to have_content "Response: "
 
     # delete response
     accept_alert do

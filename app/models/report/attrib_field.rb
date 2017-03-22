@@ -48,7 +48,7 @@ class Report::AttribField < Report::Field
   attr_writer :joins
 
   @@ATTRIBS = {
-    response_shortcode: {
+    response_id: {
       name: :response_id,
       name_expr_params: {sql_tplt: "responses.shortcode", name: "name", clause: :select},
       value_expr_params: {sql_tplt: "responses.shortcode", name: "value", clause: :select},
