@@ -20,4 +20,5 @@ module Concerns::ApplicationController::ErrorHandling
 
   def handle_invalid_authenticity_token
     render nothing:true, status: 401
+  end
 end
