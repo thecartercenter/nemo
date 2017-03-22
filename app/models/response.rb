@@ -325,7 +325,9 @@ class Response < ActiveRecord::Base
     begin
       response_code = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
       mission_code = mission.shortcode
-      form_code = form.code
+      # form code should never be nil, because one is generated on publish
+      # but we are falling back to "000" just in case something goes wrong
+      form_code = form.code || "000"
 
       self.shortcode = [mission_code, form_code, response_code].join("-")
     end while Response.exists?(shortcode: self.shortcode)

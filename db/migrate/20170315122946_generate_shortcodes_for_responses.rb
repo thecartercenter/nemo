@@ -10,7 +10,6 @@ class Response < ActiveRecord::Base
       mission_code = mission.shortcode
       form_code = form.code
       shortcode = [mission_code, form_code, response_code].join("-")
-      puts shortcode
       self.shortcode = shortcode
     end while Response.exists?(shortcode: self.shortcode)
   end
@@ -18,7 +17,7 @@ end
 
 class GenerateShortcodesForResponses < ActiveRecord::Migration
   def up
-    Response.find_each do |response|
+    Response.includes(:form, :mission).find_each do |response|
       response.generate_shortcode
       response.save!
     end
