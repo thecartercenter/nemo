@@ -111,7 +111,7 @@
     if (question_code === '') {
       modal_header = 'option_set.create_for_new_question';
     }
-    $('#create-option-set .modal-title').html(I18n.t(modal_header, {code: question_code}));
+    $('#create-option-set .modal-title').text(I18n.t(modal_header, {code: question_code}));
 
     // populate and show the modal
     $('#create-option-set .modal-body.option-set').load(loadUrl, function(){
