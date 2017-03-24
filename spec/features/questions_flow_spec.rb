@@ -50,7 +50,7 @@ feature "questions flow" do
     click_button("Search")
   end
 
-  scenario 'question tag add/remove', js: true do
+  scenario 'question tag add/remove', :investigate, js: true do
     tag_add_remove_test(
       qtype: 'question',
       edit_path: edit_question_path(@question1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),

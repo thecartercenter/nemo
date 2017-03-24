@@ -13,4 +13,12 @@ module Concerns::ApplicationController::ErrorHandling
     # still show error page unless requested not to
     raise exception unless options[:dont_re_raise]
   end
+
+  def handle_not_found(exception, options = {})
+    raise exception unless options[:dont_re_raise]
+  end
+
+  def handle_invalid_authenticity_token(exception, options = {})
+    raise exception unless options[:dont_re_raise]
+  end
 end
