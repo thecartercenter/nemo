@@ -21,15 +21,13 @@ module ResponseFactoryHelper
         else
           build_answer(item, value, inst_num)
         end
-      else
-        nil
       end
     end.flatten
   end
 
   def self.build_answer(qing, value, inst_num)
     answers = case qing.qtype_name
-    when 'select_one'
+    when "select_one"
       options_by_name = qing.all_options.index_by(&:name)
       values = value.nil? ? [nil] : Array.wrap(value)
       values.each_with_index.map do |v,i|
@@ -41,15 +39,16 @@ module ResponseFactoryHelper
       end.shuffle
 
     # in this case, a should be an array of choice names
-    when 'select_multiple'
+    when "select_multiple"
       options_by_name = qing.options.index_by(&:name)
       raise "expecting array answer value for question #{qing.code}, got #{value.inspect}" unless value.is_a?(Array)
       Answer.new(
         questioning: qing,
-        choices: value.map{ |c| Choice.new(option: options_by_name[c]) or raise "could not find option with name '#{c}'" }
+        choices:
+          value.map { |c| Choice.new(option: options_by_name[c]) or raise "could not find option with name '#{c}'" }
       )
 
-    when 'date', 'time', 'datetime'
+    when "date", "time", "datetime"
       Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value)
 
     else
@@ -70,8 +69,8 @@ FactoryGirl.define do
 
     user
     mission { get_mission }
-    form { create(:form, :mission => mission) }
-    source 'web'
+    form { create(:form, :published, mission: mission) }
+    source "web"
 
     trait :is_reviewed do
       transient do
@@ -80,6 +79,15 @@ FactoryGirl.define do
       reviewed true
       reviewer_notes { Faker::Lorem.paragraphs }
       reviewer { create(:user, name: reviewer_name) }
+    end
+
+    # Ensure unpublished form associations have been published at least once
+    after(:build) do |response|
+      form = response.form
+      unless form.published? && form.current_version.present?
+        form.publish!
+        form.unpublish!
+      end
     end
 
     # Build answer objects from answer_values array

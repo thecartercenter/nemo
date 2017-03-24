@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170303160721) do
+ActiveRecord::Schema.define(version: 20170315131809) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -208,10 +208,12 @@ ActiveRecord::Schema.define(version: 20170303160721) do
     t.datetime "created_at"
     t.boolean "locked", default: false, null: false
     t.string "name", limit: 255
+    t.string "shortcode", limit: 255, null: false
     t.datetime "updated_at"
   end
 
   add_index "missions", ["compact_name"], name: "index_missions_on_compact_name", using: :btree
+  add_index "missions", ["shortcode"], name: "index_missions_on_shortcode", unique: true, using: :btree
 
   create_table "operations", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -375,6 +377,7 @@ ActiveRecord::Schema.define(version: 20170303160721) do
     t.boolean "reviewed", default: false
     t.integer "reviewer_id", limit: 4
     t.text "reviewer_notes", limit: 65535
+    t.string "shortcode", limit: 255, null: false
     t.string "source", limit: 255
     t.datetime "updated_at"
     t.integer "user_id", limit: 4
@@ -388,6 +391,7 @@ ActiveRecord::Schema.define(version: 20170303160721) do
   add_index "responses", ["mission_id"], name: "responses_mission_id_fk", using: :btree
   add_index "responses", ["reviewed"], name: "index_responses_on_reviewed", using: :btree
   add_index "responses", ["reviewer_id"], name: "index_responses_on_reviewer_id", using: :btree
+  add_index "responses", ["shortcode"], name: "index_responses_on_shortcode", unique: true, using: :btree
   add_index "responses", ["updated_at"], name: "index_responses_on_updated_at", using: :btree
   add_index "responses", ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id", using: :btree
   add_index "responses", ["user_id"], name: "responses_user_id_fk", using: :btree

@@ -1,8 +1,11 @@
 class Response < ActiveRecord::Base
+  extend FriendlyId
   include MissionBased
   include Cacheable
 
   LOCK_OUT_TIME = 10.minutes
+  CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
+  CODE_LENGTH = 5
 
   belongs_to(:form, inverse_of: :responses, counter_cache: true)
   belongs_to(:checked_out_by, class_name: "User")
@@ -17,7 +20,10 @@ class Response < ActiveRecord::Base
 
   attr_accessor(:modifier, :excerpts, :awaiting_media)
 
+  friendly_id :shortcode
+
   before_save(:normalize_answers)
+  before_create :generate_shortcode
 
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
@@ -266,7 +272,7 @@ class Response < ActiveRecord::Base
   def missing_answers
     return @missing_answers if @missing_answers
     answers_by_qing = answers.index_by(&:questioning)
-    @missing_answers = visible_questionings.select{ |qing| qing.required? && answers_by_qing[qing].nil? }
+    @missing_answers = visible_questionings.select { |qing| qing.required? && answers_by_qing[qing].nil? }
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)
@@ -313,6 +319,18 @@ class Response < ActiveRecord::Base
   def check_in!
     self.check_in
     self.save!
+  end
+
+  def generate_shortcode
+    begin
+      response_code = CODE_LENGTH.times.map { CODE_CHARS.sample }.join
+      mission_code = mission.shortcode
+      # form code should never be nil, because one is generated on publish
+      # but we are falling back to "000" just in case something goes wrong
+      form_code = form.code || "000"
+
+      self.shortcode = [mission_code, form_code, response_code].join("-")
+    end while Response.exists?(shortcode: self.shortcode)
   end
 
   private
