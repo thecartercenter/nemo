@@ -1,15 +1,15 @@
 # models the various joins in the Response/Answer db structure
-class Report::Join
+class Results::Join
 
   attr_reader :name, :sql, :dependencies
 
-  def self.list_to_sql(list, prefix = "")
-    expand(list).collect{|join| join.to_sql(prefix)}
+  def self.list_to_sql(*list, prefix: "")
+    expand(list.flatten).map { |j| j.to_sql(prefix) }
   end
 
   def self.expand(list)
     expanded = []
-    list.each{|j| expanded += @@joins[j.to_sym].expand}
+    list.each { |j| expanded += @@joins[j.to_sym].expand }
     expanded.flatten.uniq
   end
 

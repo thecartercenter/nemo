@@ -6,25 +6,25 @@ describe Sms::Decoder, :sms do
 
   describe "authentication" do
     context "with SMS Authentication enabled" do
-      before(:all) { create_form(questions: %w(integer), authenticate_sms: true) }
+      let(:form) { create_form(questions: %w(integer), authenticate_sms: true) }
 
       it "should work with the correct code provided" do
         auth_code = user.sms_auth_code
-        assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+        assert_decoding(body: "#{auth_code} #{form.code} 1.17", answers: [17])
       end
 
       it "should raise an error with an incorrect code provided" do
         auth_code = "n000"
-        assert_decoding_fail(body: "#{auth_code} #{@form.code} 1.17", error: "user_not_found")
+        assert_decoding_fail(body: "#{auth_code} #{form.code} 1.17", error: "user_not_found")
       end
 
       it "should raise an error if no code is provided" do
-        assert_decoding_fail(body: "#{@form.code} 1.17", error: "user_not_found")
+        assert_decoding_fail(body: "#{form.code} 1.17", error: "user_not_found")
       end
 
       it "should lock account after 3 failed attempts", :investigate do
         create_list(:sms_message, Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD, user: user, auth_failed: true, type: "incoming")
-        assert_decoding_fail(body: "#{@form.code} 1.17", error: "account_locked")
+        assert_decoding_fail(body: "#{form.code} 1.17", error: "account_locked")
       end
 
       it "should not lock account if threshold is not reached" do
@@ -38,16 +38,16 @@ describe Sms::Decoder, :sms do
 
         Timecop.travel(safe_interval)
         auth_code = user.sms_auth_code
-        assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+        assert_decoding(body: "#{auth_code} #{form.code} 1.17", answers: [17])
       end
     end
 
     context "with SMS Authentication disabled" do
-      before(:all) { create_form(questions: %w(integer), authenticate_sms: false) }
+      let(:form) { create_form(questions: %w(integer), authenticate_sms: false) }
 
       it "should work with the an unnecessary code provided" do
         auth_code = user.sms_auth_code
-        assert_decoding(body: "#{auth_code} #{@form.code} 1.17", answers: [17])
+        assert_decoding(body: "#{auth_code} #{form.code} 1.17", answers: [17])
       end
     end
   end

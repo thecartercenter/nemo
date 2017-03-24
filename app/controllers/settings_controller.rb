@@ -57,12 +57,10 @@ class SettingsController < ApplicationController
       authorize!(:update, @setting)
     end
 
-    # prepares objects and renders the form template (which in this case is really the index template)
+    # Prepares objects and renders the form template (which in this case is really the index template)
     def prepare_and_render_form
-      # load options for sms adapter dropdown
       @adapter_options = Sms::Adapters::Factory.products(:can_deliver? => true).map(&:service_name)
-
-      # render the template
+      @external_sql = Results::SqlGenerator.new(current_mission).generate unless admin_mode?
       render(:index)
     end
 

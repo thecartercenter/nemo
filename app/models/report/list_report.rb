@@ -28,13 +28,13 @@ class Report::ListReport < Report::Report
           rel = rel.select(c.select_expressions.collect{|e| "#{e.sql} AS #{idx}_#{e.name}"})
         end
         joins += c.joins
-        rel = rel.joins(Report::Join.list_to_sql(c.joins))
+        rel = rel.joins(Results::Join.list_to_sql(c.joins))
       end
 
       # apply the question filter and answer select items if necessary
       unless questions.empty?
         rel = rel.select("questions.id AS question_id")
-        joins = Report::Join.expand(joins).collect(&:name)
+        joins = Results::Join.expand(joins).collect(&:name)
         Report::AnswerField.expressions_for_clause(:select, joins, :tbl_pfx => "").each{|e| rel = rel.select("#{e.sql} AS answer_#{e.name}")}
 
         # question filter

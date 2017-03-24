@@ -255,11 +255,6 @@ div.regenerable-field {
 /* missions */
 .missions_index .name_col { width: 225px; }
 
-/* settings */
-form.setting_form .adapter_settings .credential_fields { display: none; }
-form.setting_form #external_sql .control pre { width: 415px; height: 100px; overflow: auto; border: 1px solid #ccc; margin: 0 0 3px 0; font-size: 8pt; }
-form.setting_form #external_sql .control a { font-size: 9pt; }
-
 /* sms log */
 .sms_index {
   td.to_col { width: 225px; }

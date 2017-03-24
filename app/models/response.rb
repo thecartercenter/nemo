@@ -125,7 +125,7 @@ class Response < ActiveRecord::Base
     search = Search::Search.new(str: query, qualifiers: search_qualifiers(scope))
 
     # apply the needed associations
-    relation = relation.joins(Report::Join.list_to_sql(search.associations))
+    relation = relation.joins(Results::Join.list_to_sql(search.associations))
 
     # get the sql
     sql = search.sql
