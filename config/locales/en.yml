@@ -1291,7 +1291,7 @@ en:
     clone_error: "There was a problem cloning the Option Set (%{msg})."
     clone_success: "Option Set '%{name}' cloned successfully."
     create_new: "[Create New Option]"
-    create_for_question: "Create Option Set for Question: %{code}"
+    create_for_question: "Create Option Set for Question: %{identifier}"
     create_for_new_question: "Create Option Set for New Question"
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"

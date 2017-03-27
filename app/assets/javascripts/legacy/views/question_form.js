@@ -106,19 +106,20 @@
     var question_type_param = '?adding_to_question_type=' + self.field_value('qtype_name'),
         loadUrl = self.params.new_option_set_path + question_type_param;
 
-    var attribute_for_modal_header = "code" //can be updated to title
+    var attribute_for_question_identifier = "code"; //can be updated to 'name_{locale}' for title
     var modal_header = 'option_set.create_for_question';
-    var question_identifier = $('#question_' + attribute_for_modal_header).val()
+    var question_identifier = $('#question_' + attribute_for_question_identifier).val();
     if (question_identifier == undefined) {
-      question_identifier = $('#questioning_question_attributes_' + attribute_for_modal_header).val()
+      question_identifier = $('#questioning_question_attributes_' + attribute_for_question_identifier).val();
     }
+    var trimmed_question_identifier = undefined;
     if (question_identifier != undefined) {
-      
+      trimmed_question_identifier = question_identifier.trim()
     }
-
+    if (trimmed_question_identifier == undefined || trimmed_question_identifier === "") {
       modal_header = 'option_set.create_for_new_question';
     }
-    $('#create-option-set .modal-title').text(I18n.t(modal_header, {code: question_code}));
+    $('#create-option-set .modal-title').text(I18n.t(modal_header, {identifier: trimmed_question_identifier}));
 
     // populate and show the modal
     $('#create-option-set .modal-body.option-set').load(loadUrl, function(){
