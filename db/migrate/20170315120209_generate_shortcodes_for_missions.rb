@@ -1,13 +1,17 @@
 class Mission < ActiveRecord::Base
+  def generate_shortcode
+    charset = ("a".."z").to_a + ("0".."9").to_a
+    begin
+      self.shortcode = 2.times.map { charset.sample }.join
+    end while Mission.exists?(shortcode: self.shortcode)
+  end
 end
 
 class GenerateShortcodesForMissions < ActiveRecord::Migration
   def up
-    charset = ("a".."z").to_a + ("0".."9").to_a
-
     Mission.find_each do |mission|
-      sc = 2.times.map { charset.sample }.join
-      mission.update_attributes(shortcode: sc)
+      mission.generate_shortcode
+      mission.save!
     end
   end
 
