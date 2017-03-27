@@ -106,9 +106,16 @@
     var question_type_param = '?adding_to_question_type=' + self.field_value('qtype_name'),
         loadUrl = self.params.new_option_set_path + question_type_param;
 
+    var attribute_for_modal_header = "code" //can be updated to title
     var modal_header = 'option_set.create_for_question';
-    var question_code = $('#question_code').val().trim();
-    if (question_code === '') {
+    var question_identifier = $('#question_' + attribute_for_modal_header).val()
+    if (question_identifier == undefined) {
+      question_identifier = $('#questioning_question_attributes_' + attribute_for_modal_header).val()
+    }
+    if (question_identifier != undefined) {
+      
+    }
+
       modal_header = 'option_set.create_for_new_question';
     }
     $('#create-option-set .modal-title').text(I18n.t(modal_header, {code: question_code}));
