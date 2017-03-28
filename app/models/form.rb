@@ -112,11 +112,7 @@ class Form < ApplicationRecord
   end
 
   def version
-    current_version.try(:sequence) || ""
-  end
-
-  def version_with_code
-    current_version.try(:sequence_and_code) || ""
+    current_version.try(:code) || ""
   end
 
   def has_questions?

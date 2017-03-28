@@ -61,7 +61,7 @@ class XMLSubmission
     raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
     # if form version is outdated, error
-    raise FormVersionError.new("form version is outdated") if form.current_version.sequence > params[:version].to_i
+    raise FormVersionError.new("form version is outdated") if form.current_version.code != params[:version]
   end
 
   def populate_from_odk(xml)
