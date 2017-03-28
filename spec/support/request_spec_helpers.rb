@@ -43,10 +43,9 @@ module RequestSpecHelpers
     # Add all the extra stuff that J2ME adds to the data hash
     params[:data]['id'] = @form.id.to_s
     params[:data]['uiVersion'] = '1'
-    params[:data]['version'] = @form.current_version.sequence
     params[:data]['name'] = @form.name
     params[:data]['xmlns:jrm'] = 'http://dev.commcarehq.org/jr/xforms'
-    params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.sequence}"
+    params[:data]['xmlns'] = "http://openrosa.org/formdesigner/#{@form.current_version.code}"
 
     # If we are doing a normally authenticated submission, add credentials.
     headers = params[:auth] ? {'HTTP_AUTHORIZATION' => encode_credentials(@user.login, test_password)} : {}
