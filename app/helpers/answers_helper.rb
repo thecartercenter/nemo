@@ -36,7 +36,7 @@ module AnswersHelper
   # This is safe since we are escaping str before inserting the <em> tags, and also Sphinx should be
   # stripping html from the excerpts.
   def excerpt_to_html(str)
-    html_escape(str).gsub('{{{', '<em class="match">').gsub('}}}', '</em>').html_safe
+    html_escape(str).gsub('{{{', '<em class="match">').gsub('}}}', '</em>')
   end
 
   # checks for an excerpt for the given answer in the given response object and shows it if found
@@ -47,8 +47,7 @@ module AnswersHelper
     else
       answer.value
     end
-
-    simple_format(html, {}, :sanitize => false)
+    simple_format(html) #rely on simple_format to sanitize by default
   end
 
   # Creates a media thumbnail link
