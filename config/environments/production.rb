@@ -79,4 +79,7 @@ ELMO::Application.configure do
 
   # Enable rack-attack middleware for protecting against brute-force login attempts
   config.middleware.use Rack::Attack
+
+  # Force SSL since application deployments should be SSL
+  config.force_ssl
 end
