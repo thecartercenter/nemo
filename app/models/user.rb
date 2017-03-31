@@ -167,11 +167,10 @@ class User < ActiveRecord::Base
   # not submitted any responses to the form
   #
   # options[:role] the role to check for
-  # options[:limit] how many users we want to fetch from the db
-  #
-  # Returns a hash with users instances and the count from the select without the LIMIT
+  # options[:limit] how many users we want to fetch from the db. This method returns at most
+  #   one more than this number so you can report truncation to the user.
   def self.without_responses_for_form(form, options)
-    users = find_by_sql(["SELECT SQL_CALC_FOUND_ROWS * FROM users
+    find_by_sql(["SELECT * FROM users
       INNER JOIN assignments ON assignments.user_id = users.id WHERE
       assignments.mission_id = ? AND
       assignments.role = ? AND
@@ -180,13 +179,7 @@ class User < ActiveRecord::Base
         SELECT 1 FROM responses WHERE
         responses.user_id=users.id AND
         responses.form_id = ?
-      ) LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit]])
-
-    # This returns the count of the previous users select without the limit clause.
-    # Format: [[count]]
-    users_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS()').entries[0].first
-
-    { users: users, count: users_count }
+      ) LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit] + 1])
   end
 
   # generates a cache key for the set of all users for the given mission.

@@ -76,28 +76,28 @@ describe Report::StandardFormReport do
     end
 
     it "should return non-submitting observers" do
-      # make observers
-      observers = %w(bob jojo cass sal).map{|n| create(:user, login: n, role_name: :observer,
-        name: n.capitalize)}
+      observers = %w(bob jojo cass sal toz).map do |n|
+        create(:user, login: n, role_name: :observer, name: n.capitalize)
+      end
 
-      # make decoy coord and admin users
-      coord = create(:user, :role_name => :coordinator)
-      admin = create(:user, :role_name => :observer, :admin => true)
+      # Make decoy coord and admin users
+      coord = create(:user, role_name: :coordinator)
+      admin = create(:user, role_name: :observer, admin: true)
 
-      # make simple form and add responses from first two users
+      # Make simple form and add responses from first two users
       @form = create(:form)
-      observers[0...2].each{|o| create(:response, :form => @form, :user => o)}
+      observers[0...2].each { |o| create(:response, form: @form, user: o) }
 
       build_and_run_report
 
-      #check missing observers
-      missing_observers = @report.users_without_responses(role: :observer, limit: 10)[:users]
-      expect(missing_observers.map(&:login).sort).to eq(%w(cass sal))
-      expect(@report.observers_without_responses).to eq('Cass, Sal')
+      # Check missing observers
+      missing_observers = @report.users_without_responses(role: :observer, limit: 10)
+      expect(missing_observers.map(&:login).sort).to eq(%w(cass sal toz))
+      expect(@report.observers_without_responses).to eq('Cass, Sal, Toz')
 
-      #Change constant size to check mission observers summarization
-      stub_const("Report::StandardFormReport::MISSING_OBSERVERS_SIZE_LIMIT", 1)
-      expect(@report.observers_without_responses).to eq('Cass, ... (2 in total)')
+      # Change constant size to check mission observers summarization
+      stub_const("Report::StandardFormReport::MISSING_OBSERVERS_SIZE_LIMIT", 2)
+      expect(@report.observers_without_responses).to eq('Cass, Sal, ... (Clipped)')
     end
 
     it "empty? should be false if responses" do
