@@ -31,7 +31,7 @@ class Results::SqlGenerator
       select("answers.time_value AS time_value").
       select("answers.latitude AS latitude").
       select("answers.longitude AS longitude").
-      select("IFNULL(ao.canonical_name, co.canonical_name) AS choice_name").
+      select("COALESCE(ao.canonical_name, co.canonical_name) AS choice_name").
       select("option_sets.name AS option_set").
       joins(Results::Join.list_to_sql(:users, :forms, :answers, :questionings,
         :questions, :option_sets, :options, :choices)).

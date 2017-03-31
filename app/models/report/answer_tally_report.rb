@@ -36,12 +36,12 @@ class Report::AnswerTallyReport < Report::TallyReport
     # if we have an option set, we don't use calculation objects
     unless option_sets.empty?
       # add name expression
-      expr = "IFNULL(ao.name_translations, co.name_translations)"
+      expr = "COALESCE(ao.name_translations, co.name_translations)"
       rel = rel.select("#{expr} AS sec_name")
       rel = rel.group(expr)
 
       # add value expression
-      expr = "IFNULL(ans_opt_nodes.rank, ch_opt_nodes.rank)"
+      expr = "COALESCE(ans_opt_nodes.rank, ch_opt_nodes.rank)"
       rel = rel.select("#{expr} AS sec_value")
       rel = rel.group(expr)
       rel = rel.where("option_sets.id" => option_sets.collect{|os| os.id})
