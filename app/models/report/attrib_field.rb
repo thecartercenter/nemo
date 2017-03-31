@@ -81,11 +81,11 @@ class Report::AttribField < Report::Field
     date_submitted: {
       name: :date_submitted,
       name_expr_params: {
-        sql_tplt: "DATE(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__'))",
+        sql_tplt: "CAST(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__') AS DATE)",
         name: "name",
         clause: :select},
       value_expr_params: {
-        sql_tplt: "DATE(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__'))",
+        sql_tplt: "CAST(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__') AS DATE)",
         name: "value",
         clause: :select},
       data_type: :date,
