@@ -92,8 +92,16 @@ class Report::AttribField < Report::Field
       groupable: true},
     reviewed: {
       name: :reviewed,
-      name_expr_params: {sql_tplt: "IF(responses.reviewed, 'Yes', 'No')", name: "name", clause: :select},
-      value_expr_params: {sql_tplt: "IF(responses.reviewed, 1, 0)", name: "value", clause: :select},
+      name_expr_params: {
+        sql_tplt: "(CASE WHEN responses.reviewed THEN 'Yes' ELSE 'No' END)",
+        name: "name",
+        clause: :select
+      },
+      value_expr_params: {
+        sql_tplt: "(CASE WHEN responses.reviewed THEN 1 ELSE 0 END)",
+        name: "value",
+        clause: :select
+      },
       data_type: :text,
       groupable: true},
     reviewer: {

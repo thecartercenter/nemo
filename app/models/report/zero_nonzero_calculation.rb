@@ -1,18 +1,30 @@
 # A calculation that returns 0 if the answer value is 0 and 1 otherwise
 class Report::ZeroNonzeroCalculation < Report::Calculation
   def name_expr
-    @name_expr ||= Report::Expression.new(:sql_tplt => "IF(__TBL_PFX__answers.value > 0, 'One or More', 'Zero')",
-      :name => "name", :clause => :select, :chunks => {:tbl_pfx => table_prefix})
+    @name_expr ||= Report::Expression.new(
+      sql_tplt: "CASE WHEN __TBL_PFX__answers.value > 0 THEN 'One or More' ELSE 'Zero' END",
+      name: "name",
+      clause: :select,
+      chunks: {tbl_pfx: table_prefix}
+    )
   end
 
   def value_expr
-    @value_expr ||= Report::Expression.new(:sql_tplt => "IF(__TBL_PFX__answers.value > 0, 1, 0)",
-      :name => "value", :clause => :select, :chunks => {:tbl_pfx => table_prefix})
+    @value_expr ||= Report::Expression.new(
+      sql_tplt: "CASE WHEN __TBL_PFX__answers.value > 0 THEN 1 ELSE 0 END",
+      name: "value",
+      clause: :select,
+      chunks: {tbl_pfx: table_prefix}
+    )
   end
 
   def sort_expr
-    @sort_expr ||= Report::Expression.new(:sql_tplt => "IF(__TBL_PFX__answers.value > 0, 1, 0)",
-      :name => "sort", :clause => :select, :chunks => {:tbl_pfx => table_prefix})
+    @sort_expr ||= Report::Expression.new(
+      sql_tplt: "CASE WHEN __TBL_PFX__answers.value > 0 THEN 1 ELSE 0 END",
+      name: "sort",
+      clause: :select,
+      chunks: {tbl_pfx: table_prefix}
+    )
   end
 
   def where_expr

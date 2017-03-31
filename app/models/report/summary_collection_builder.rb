@@ -127,10 +127,10 @@ class Report::SummaryCollectionBuilder
         SELECT #{disagg_select_expr} qing.id AS qing_id, q.qtype_name AS qtype_name,
           SUM(
             CASE q.qtype_name
-              WHEN 'integer' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
-              WHEN 'decimal' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
-              WHEN 'time' THEN IF(a.time_value IS NULL, 1, 0)
-              WHEN 'datetime' THEN IF(a.datetime_value IS NULL, 1, 0)
+              WHEN 'integer' THEN (CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END)
+              WHEN 'decimal' THEN (CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END)
+              WHEN 'time' THEN (CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END)
+              WHEN 'datetime' THEN (CASE WHEN a.datetime_value IS NULL THEN 1 ELSE 0 END)
             END
           ) AS null_count,
           CASE q.qtype_name

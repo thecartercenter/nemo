@@ -104,7 +104,7 @@ class Report::AnswerTallyReport < Report::TallyReport
       return exprs.first.sql
     else
       rest = build_nested_if(exprs[1..-1], conds[1..-1])
-      "IF(#{conds.first.sql}, #{exprs.first.sql}, #{rest})"
+      "(CASE WHEN (#{conds.first.sql}) THEN (#{exprs.first.sql}) ELSE #{rest} END)"
     end
   end
 
