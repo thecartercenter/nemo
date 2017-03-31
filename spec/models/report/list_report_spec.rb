@@ -60,7 +60,8 @@ describe Report::ListReport, :reports do
         {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"}
       ])
 
-      expect(report).to have_data_grid(%w( Submitter  Inty  State   Source ),
+      expect(report).to have_data_grid(
+        %w( Submitter  Inty  State   Source ),
         %w( Foo        10    ga      odk    ),
         %w( Foo        3     ga      web    ),
         %w( Foo        5     al      web    ))
@@ -83,14 +84,16 @@ describe Report::ListReport, :reports do
         {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
         {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
         {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"},
-        {rank: 5, type: "Report::IdentityCalculation", attrib1_name: "reviewer"},
-        {rank: 6, type: "Report::IdentityCalculation", question1_id: questions[2].id}
+        {rank: 5, type: "Report::IdentityCalculation", attrib1_name: "reviewed"},
+        {rank: 6, type: "Report::IdentityCalculation", attrib1_name: "reviewer"},
+        {rank: 7, type: "Report::IdentityCalculation", question1_id: questions[2].id}
       ])
 
-      expect(report).to have_data_grid(%w( Submitter  Inty  State   Source  Reviewer  Happy ),
-        %w( Foo        10    ga      odk     _         Yes   ),
-        %w( Foo        3     ga      web     Reviewer  No    ),
-        %w( Foo        5     al      web     Michelle  No    ))
+      expect(report).to have_data_grid(
+        %w( Submitter  Inty  State   Source  Reviewed Reviewer  Happy ),
+        %w( Foo        10    ga      odk     No       _         Yes   ),
+        %w( Foo        3     ga      web     Yes      Reviewer  No    ),
+        %w( Foo        5     al      web     Yes      Michelle  No    ))
     end
 
     it "response and list reports using same attrib" do
@@ -104,7 +107,8 @@ describe Report::ListReport, :reports do
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
       ])
 
-      expect(report).to have_data_grid(%w( Submitter ),
+      expect(report).to have_data_grid(
+        %w( Submitter ),
         %w( Foo       ),
         %w( Foo       ))
 
@@ -112,7 +116,8 @@ describe Report::ListReport, :reports do
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"}
       ])
 
-      expect(report).to have_data_grid(%w( Tally TTL ),
+      expect(report).to have_data_grid(
+        %w( Tally TTL ),
         %w( Foo      2   2 ),
         %w( TTL      2   2 ))
     end
