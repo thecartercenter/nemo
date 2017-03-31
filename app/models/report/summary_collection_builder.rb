@@ -134,20 +134,20 @@ class Report::SummaryCollectionBuilder
             END
           ) AS null_count,
           CASE q.qtype_name
-            WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN AVG(CONVERT(a.value, DECIMAL(9,6)))
+            WHEN 'integer' THEN AVG(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'decimal' THEN AVG(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN SEC_TO_TIME(AVG(TIME_TO_SEC(a.time_value)))
             WHEN 'datetime' THEN FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(a.datetime_value)))
           END AS mean,
           CASE q.qtype_name
-            WHEN 'integer' THEN MIN(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN MIN(CONVERT(a.value, DECIMAL(9,6)))
+            WHEN 'integer' THEN MIN(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'decimal' THEN MIN(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN MIN(a.time_value)
             WHEN 'datetime' THEN MIN(a.datetime_value)
           END AS min,
           CASE q.qtype_name
-            WHEN 'integer' THEN MAX(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN MAX(CONVERT(a.value, DECIMAL(9,6)))
+            WHEN 'integer' THEN MAX(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'decimal' THEN MAX(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN MAX(a.time_value)
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max

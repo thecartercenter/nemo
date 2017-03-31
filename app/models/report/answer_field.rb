@@ -12,8 +12,8 @@ class Report::AnswerField < Report::Field
     {:sql_tplt => "__TBL_PFX__ch_opt_nodes.rank", :name => "select_multiple_value", :clause => :select, :join => :choices},
 
     # these question types have their own value columns
-    {:sql_tplt => "CONVERT(__TBL_PFX__answers.value, SIGNED INTEGER)", :name => "integer_value", :clause => :select, :join => :answers},
-    {:sql_tplt => "CONVERT(__TBL_PFX__answers.value, DECIMAL)", :name => "decimal_value", :clause => :select, :join => :answers},
+    {:sql_tplt => "CAST(__TBL_PFX__answers.value AS SIGNED INTEGER)", :name => "integer_value", :clause => :select, :join => :answers},
+    {:sql_tplt => "CAST(__TBL_PFX__answers.value AS DECIMAL)", :name => "decimal_value", :clause => :select, :join => :answers},
     {:sql_tplt => "__TBL_PFX__answers.datetime_value", :name => "datetime_value", :clause => :select, :join => :answers},
     {:sql_tplt => "__TBL_PFX__answers.date_value", :name => "date_value", :clause => :select, :join => :answers},
     {:sql_tplt => "__TBL_PFX__answers.time_value", :name => "time_value", :clause => :select, :join => :answers},
