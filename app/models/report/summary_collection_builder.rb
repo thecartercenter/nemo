@@ -164,7 +164,7 @@ class Report::SummaryCollectionBuilder
 
       # build hash
       hash = ActiveSupport::OrderedHash[]
-      res.each(:as => :hash) do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
         hash[[row['disagg_value'], row['qing_id']]] = row
@@ -264,13 +264,13 @@ class Report::SummaryCollectionBuilder
 
       # read tallies into hashes
       tallies = {}
-      sel_one_res.each(:as => :hash).each do |row|
+      sel_one_res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
         tallies[[row['disagg_value'], row['qing_id'], row['option_id']]] = row['answer_count']
       end
-      sel_mult_res.each(:as => :hash).each do |row|
+      sel_mult_res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -302,7 +302,7 @@ class Report::SummaryCollectionBuilder
 
       # read non-null answer counts into hash
       tallies = {}
-      res.each(:as => :hash).each do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -383,7 +383,7 @@ class Report::SummaryCollectionBuilder
 
       # read into tallies, preserving sorted date order
       tallies = {}
-      res.each(:as => :hash).each do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -408,7 +408,7 @@ class Report::SummaryCollectionBuilder
       # also keep null counts
       items_hash = {}
       null_counts_hash = {}
-      res.each(:as => :hash) do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -501,7 +501,7 @@ class Report::SummaryCollectionBuilder
 
         res = do_query(query, long_qing_ids)
 
-        res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.to_h
+        res.map{|row| [row['answer_id'], row['submitter_name']]}.to_h
       end
     end
 
@@ -564,7 +564,8 @@ class Report::SummaryCollectionBuilder
       "#{disagg_column},"
     end
 
+    # Runs query and returns hash of results
     def do_query(*args)
-      ActiveRecord::Base.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, args))
+      ActiveRecord::Base.connection.exec_query(ActiveRecord::Base.send(:sanitize_sql_array, args))
     end
 end
