@@ -16,12 +16,12 @@ class Report::AttribField < Report::Field
 
   def name_expr(chunks)
     @name_expr ||= Report::Expression.new(
-      name_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.mysql_name)))
+      name_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.tzinfo.name)))
   end
 
   def value_expr(chunks)
     @value_expr ||= Report::Expression.new(
-      value_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.mysql_name)))
+      value_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.tzinfo.name)))
   end
 
   def where_expr(_chunks)

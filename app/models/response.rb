@@ -86,7 +86,7 @@ class Response < ActiveRecord::Base
       Search::Qualifier.new(name: "source", col: "responses.source"),
       Search::Qualifier.new(
         name: "submit_date",
-        col: "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.mysql_name}'))",
+        col: "DATE(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.tzinfo.name}'))",
         type: :scale
       ),
 
