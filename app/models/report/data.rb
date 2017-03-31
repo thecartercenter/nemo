@@ -4,10 +4,12 @@ class Report::Data
   attr_accessor :rows
   attr_accessor :total_row_count
   attr_accessor :returned_row_count
+  attr_accessor :truncated
   attr_reader :totals
 
   def initialize(rows)
     @rows = rows
+    @truncated = false
   end
 
   # sets the value of the cell given by row, col to value
@@ -49,6 +51,18 @@ class Report::Data
         @totals[:col][c] += safe_value
         @totals[:grand] += safe_value
       end
+    end
+  end
+
+  # Strips any extra rows. This is also done at the query level, but a few extra are left on
+  # so we can tell if we are actually truncating or not and set a flag to display to the user.
+  def truncate(max_rows)
+    if @rows.size > max_rows
+      @truncated = true
+      @rows.slice!(max_rows..-1)
+      true
+    else
+      false
     end
   end
 
