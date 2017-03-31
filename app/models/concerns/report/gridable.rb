@@ -65,33 +65,6 @@ module Report::Gridable
     return rel.joins(Results::Join.list_to_sql(joins))
   end
 
-  # builds a nested SQL IF statement of the form IF(a, x, IF(b, y, IF(c, z, ...)))
-  def build_nested_if(exprs, conds, options = {})\
-    unless options[:dont_optimize]
-      # optimize by joining conditions for identical expressions
-      # first build a hash
-      expr_hash = {}
-      exprs.each_with_index do |expr, i|
-        expr_hash[expr] ||= []
-        expr_hash[expr] << conds[i]
-      end
-
-      # rebuild condensed exprs and conds arrays
-      exprs, conds = [], []
-      expr_hash.each do |expr, cond_set|
-        exprs << expr
-        conds << cond_set.join(" OR ")
-      end
-    end
-
-    if exprs.size == 1
-      return exprs.first
-    else
-      rest = build_nested_if(exprs[1..-1], conds[1..-1], :dont_optimize => true)
-      "IF(#{conds.first}, #{exprs.first}, #{rest})"
-    end
-  end
-
   # by default we don't have to worry about blank rows
   def remove_blank_rows
   end
