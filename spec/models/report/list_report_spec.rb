@@ -117,4 +117,35 @@ describe Report::ListReport, :reports do
         %w( TTL      2   2 ))
     end
   end
+
+  context "with date & time attribs and answers" do
+    let(:form) { create(:form, question_types: %w(integer)) }
+    let!(:response) { create(:response, form: form, answer_values: ["123"]) }
+    let(:report) do
+      create_report("List", calculations_attributes: [
+        {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "date_submitted"}
+      ])
+    end
+
+    around do |example|
+      in_timezone("Saskatchewan") do
+        # We use 22:00 because it will convert to Jan 2 when saved as UTC in DB
+        Timecop.freeze("2017-01-01 22:00 -0600") do
+          example.run
+        end
+      end
+    end
+
+    # This really should be happening for times as well in the Formatter class but it isn't.
+    # Perhaps add it later once we decide what to do with reports.
+    it "should convert fetched dates to current timezone" do
+      # Timestamps and datetime_values are stored in UTC (note that the created_at day has jumped to Jan 2)
+      expect(Response.connection.execute("SELECT created_at FROM responses").to_a[0][0].day).to eq 2
+
+      report.run
+
+      # date_submitted should be converted to right timezone
+      expect(report.data.rows[0][0]).to eq "Jan 01 2017"
+    end
+  end
 end
