@@ -2,10 +2,6 @@ require "spec_helper"
 
 describe Question do
   describe "search" do
-    def search(query)
-      Question.do_search(Question, query)
-    end
-
     before do
       @questions = [
         create(:question, name_en: 'How many cheeses?', name_fr: 'Combien de fromages?', code: 'Cheese'),
@@ -43,6 +39,10 @@ describe Question do
 
     it "empty search" do
       expect(search '').to eq @questions
+    end
+
+    def search(query)
+      Question.do_search(Question, query)
     end
   end
 end
