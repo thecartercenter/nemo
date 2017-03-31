@@ -1228,7 +1228,6 @@ fr:
     tally_type: "vous voudriez compter quels résultats? "
     these_questions: "Ces questions spécifique"
     total_rows: "total des lignes :%{count}"
-    total_rows_showing: "affichage de  %{count}  lignes sur un total de  %{total_count}"
     view_response: "Réponse #%{id}"
     what_attrib_col_headers: "Quel attribut ou question voudriez-vous utiliser pour les titre des colonnes (optional)?"
     what_attrib_row_headers: "Quel attribut ou question voudriez-vous utiliser pour les titres des rangées?"

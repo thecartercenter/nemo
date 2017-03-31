@@ -2,8 +2,6 @@
 class Report::Data
 
   attr_accessor :rows
-  attr_accessor :total_row_count
-  attr_accessor :returned_row_count
   attr_accessor :truncated
   attr_reader :totals
 
@@ -67,6 +65,6 @@ class Report::Data
   end
 
   def as_json(options = {})
-    {rows: @rows, totals: @totals, total_row_count: @total_row_count, returned_row_count: @returned_row_count}
+    {rows: rows, totals: totals, truncated: truncated}
   end
 end
