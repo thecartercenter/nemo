@@ -18,6 +18,23 @@ describe Response do
       end
     end
 
+    describe "submit_date qualifier" do
+      let(:r1) { create(:response, form: form, created_at: "2017-01-01 22:00") }
+
+      around do |example|
+        in_timezone("Saskatchewan") { example.run }
+      end
+
+      it "should match dates in local timezone" do
+        r1 # Ensure this gets built inside correct timezone now, not before the `around` executes.
+
+        # Verify time stored in UTC (Jan 2), but search matches Jan 1.
+        expect(Response.connection.execute("SELECT created_at FROM responses").to_a[0][0].day).to eq 2
+        assert_search(%{submit-date:2017-01-01}, r1)
+        assert_search(%{submit-date:2017-01-02})
+      end
+    end
+
     describe "full text search" do
       # Long text and short text question
       let!(:q1) { create(:question, qtype_name: "long_text", code: "mauve", add_to_form: form) }
