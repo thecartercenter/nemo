@@ -34,11 +34,19 @@ class ResponseCSV
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseID")
 
+
+
       responses.each do |response|
         # Ensure we have all this response's columns in our table.
         process_form(response.form)
-
+        # puts "Columns for response #{response.id} (#{@columns_by_question.count}): "
+        # puts @columns_by_question.awesome_inspect
         # Start the row
+        answers = response.answers
+        repeatable_answers = answers.select{ |a| a.questioning.parent_repeatable? }
+        non_repeat_answers = answers - repeatable_answers
+
+        # make initial row
         row = [
           response.form.name,
           response.user.name,
@@ -47,16 +55,48 @@ class ResponseCSV
         ]
 
         # Assign cell values for each column set
-        answers = response.answers.includes(:questioning, :option, choices: :option).
-          order(:questioning_id, :inst_num, :rank)
+        #non_repeat_answers = non_repeat_answers.includes(:questioning, :option, choices: :option).
+        #  order(:questioning_id, :inst_num, :rank)
 
-        answers.group_by(&:question).each do |question, answers|
+        non_repeat_answers.group_by(&:question).each do |question, answers|
           next if question.multimedia?
           columns = columns_by_question[question.code]
           qa = ResponseCSV::QA.new(question, answers)
+          puts "ANCESTOR DEPTH: #{answers.first.questioning.ancestry_depth}"
+
+          # puts "Cells for question: #{question.code}:"
+          # puts qa.cells.awesome_inspect
           columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
         end
+
+        repeating_row_part = row.dup
         csv << row
+
+        # puts repeatable_answers.group_by(&:inst_num).awesome_inspect
+        repeat_groups = repeatable_answers.group_by { |a| a.questioning.parent }
+        repeat_groups.each do |repeat_group, group_answers|
+          group_answers.group_by(&:inst_num).each do |inst_num, repeat_answers|
+            # puts repeat_answers.awesome_inspect
+            puts "REPEATING ROW PART: #{repeating_row_part}"
+            row = repeating_row_part.dup
+
+            repeat_answers.group_by(&:question).each do |question, answers|
+              next if question.multimedia?
+              columns = columns_by_question[question.code]
+              qa = ResponseCSV::QA.new(question, answers)
+
+              puts "ANCESTOR DEPTH: #{answers.first.questioning.ancestry_depth}"
+
+
+              # puts "Cells for question: #{question.code}:"
+              # puts qa.cells.awesome_inspect
+              columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
+            end
+
+
+            csv << row
+          end
+        end
       end
     end
   end
@@ -136,6 +176,8 @@ class ResponseCSV::QA
   end
 
   def cells
+    #puts "CELLS - ANSWERS for question #{@question.code} (#{@answers.count}):"
+    #puts @answers.map(&:casted_value).inspect
     arr = case question_type
     when 'select_one'
       arr = answers.map{ |a| format_csv_para_text(a.option_name) }
