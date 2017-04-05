@@ -320,6 +320,10 @@ class Form < ActiveRecord::Base
     whitelistings.where(user_id: user_id).exists?
   end
 
+  def has_repeat_groups?
+    questionings.select{ |q| q.parent_repeatable?}.count > 0
+  end
+
   private
 
   def init_downloads

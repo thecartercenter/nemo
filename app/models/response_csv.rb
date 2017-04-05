@@ -36,9 +36,11 @@ class ResponseCSV
 
 
 
+
       responses.each do |response|
         # Ensure we have all this response's columns in our table.
         process_form(response.form)
+
         # puts "Columns for response #{response.id} (#{@columns_by_question.count}): "
         # puts @columns_by_question.awesome_inspect
         # Start the row
@@ -46,17 +48,17 @@ class ResponseCSV
         repeatable_answers = answers.select{ |a| a.questioning.parent_repeatable? }
         non_repeat_answers = answers - repeatable_answers
 
-        puts "\nREPEAT GROUP ANSWERS: "
-        puts repeatable_answers.awesome_inspect
-        puts "\nNON REPEAT GROUP ANSWERS: "
-        puts non_repeat_answers.awesome_inspect
+        # puts "\nREPEAT GROUP ANSWERS: "
+        # puts repeatable_answers.awesome_inspect
+        # puts "\nNON REPEAT GROUP ANSWERS: "
+        # puts non_repeat_answers.awesome_inspect
 
         # make initial row
         row = [
           response.form.name,
           response.user.name,
           response.created_at.to_s(:std_datetime_with_tz),
-          response.id
+          response.id,
         ]
 
         # Assign cell values for each column set
@@ -67,38 +69,58 @@ class ResponseCSV
           next if question.multimedia?
           columns = columns_by_question[question.code]
           qa = ResponseCSV::QA.new(question, answers)
-          puts "ANCESTOR DEPTH: #{answers.first.questioning.ancestry_depth}"
+          #puts "ANCESTOR DEPTH: #{}"
 
           # puts "Cells for question: #{question.code}:"
           # puts qa.cells.awesome_inspect
           columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
+          repeat_level = answers.first.questioning.ancestry_depth - 1
+          if response.form.has_repeat_groups?
+            repeat_level = answers.first.questioning.ancestry_depth - 1
+            row[columns_by_question["RepeatLevel"].first.position] = repeat_level
+          end
         end
 
         repeating_row_part = row.dup
-        puts "Adding repeat row #{row}"
+        #puts "Adding repeat row #{row}"
+
+        if row.count < columns.count
+          row[columns.count - 1] = nil
+        end
         csv << row
 
         # puts repeatable_answers.group_by(&:inst_num).awesome_inspect
         repeat_groups = repeatable_answers.group_by { |a| a.questioning.parent }
+
         repeat_groups.each do |repeat_group, group_answers|
+          puts "NUM COLUMNS: #{columns_by_question.count}, about to process #{repeat_group.id}"
           group_answers.group_by(&:inst_num).each do |inst_num, repeat_answers|
             # puts repeat_answers.awesome_inspect
-            puts "REPEATING ROW PART: #{repeating_row_part}"
+            #puts "REPEATING ROW PART: #{repeating_row_part}"
             row = repeating_row_part.dup
-            puts "Repeat row part: #{row}"
+            #puts "Repeat row part: #{row}"
+
             repeat_answers.group_by(&:question).each do |question, answers|
               next if question.multimedia?
               columns = columns_by_question[question.code]
               qa = ResponseCSV::QA.new(question, answers)
 
-              puts "ANCESTOR DEPTH: #{answers.first.questioning.ancestry_depth}"
+              #puts "ANCESTOR DEPTH: #{answers.first.questioning.ancestry_depth}"
 
 
               # puts "Cells for question: #{question.code}:"
-              # puts qa.cells.awesome_inspect
+              # puts qa.cells.awesome_inspec
+
               columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
+              if response.form.has_repeat_groups?
+                repeat_level = answers.first.questioning.ancestry_depth - 1
+                row[columns_by_question["RepeatLevel"].first.position] = repeat_level
+              end
             end
-            puts "Adding row #{row}"
+            #puts "Adding row #{row}"
+            if row.count < columns.count
+              row[columns.count - 1] = nil
+            end
             csv << row
           end
         end
@@ -109,6 +131,9 @@ class ResponseCSV
   def process_form(form)
     return if processed_forms.include?(form.id)
     form.questions.each{ |q| find_or_create_column(question: q) }
+    if form.has_repeat_groups?
+      find_or_create_column(code: "RepeatLevel")
+    end
     processed_forms << form.id
   end
 
