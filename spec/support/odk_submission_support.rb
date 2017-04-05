@@ -30,7 +30,7 @@ module ODKSubmissionSupport
     raise "form should have version" if form.current_version.nil?
 
     "".tap do |xml|
-      xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.sequence}\">"
+      xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.code}\">"
 
       if options[:no_answers]
         xml << "<#{OdkHelper::IR_QUESTION}>yes</#{OdkHelper::IR_QUESTION}>" if form.allow_incomplete?

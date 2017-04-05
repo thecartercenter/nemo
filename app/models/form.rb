@@ -13,9 +13,6 @@ class Form < ApplicationRecord
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
   has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
 
-  # while a form has many versions, this is a reference to the most up-to-date one
-  belongs_to(:current_version, class_name: "FormVersion")
-
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
@@ -30,7 +27,7 @@ class Form < ApplicationRecord
 
   before_create(:init_downloads)
 
-  scope(:published, -> { where(published: true) })
+  scope :published, -> { where(published: true) }
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
@@ -262,15 +259,19 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
+  def current_version
+    versions.current.first
+  end
+
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!
     raise "standard forms should not be versioned" if is_standard?
 
     if current_version
-      self.current_version = current_version.upgrade
+      current_version.upgrade!
     else
-      self.build_current_version(form_id: id)
+      FormVersion.create(form_id: id, is_current: true)
     end
 
     # since we've upgraded, we can lower the upgrade flag

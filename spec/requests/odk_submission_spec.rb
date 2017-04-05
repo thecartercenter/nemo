@@ -92,7 +92,7 @@ describe "odk submissions", type: :request do
       expect(resp.answers.first.value).to eq "5"
 
       # Attempt submission of value to wrong question
-      xml = build_odk_submission(form2, override_form_id: form.id)
+      xml = build_odk_submission(form)
       do_submission(submission_path(get_mission), xml)
       expect(response).to be_success
 
