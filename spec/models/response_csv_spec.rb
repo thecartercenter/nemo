@@ -7,64 +7,6 @@ describe ResponseCSV do
     end
   end
 
-  context "with repeat groups" do
-    let(:repeat_form) do
-      create(:form, question_types: ["integer", [:repeating, "text", "integer"], "integer", [:repeating, "text", "integer"]]).tap do |f|
-        f.children[1].update_attribute(:repeatable, true)
-      end
-    end
-
-    let(:response_a) do
-      create(:response, form: repeat_form, answer_values: [
-        1,
-        [:repeating,
-          ["Apple", 1],
-          ["Banana", 2]
-        ],
-        2,
-        [:repeating,
-          ["Asparagus", 3]
-        ]
-      ])
-    end
-
-    let(:response_b) do
-      create(:response, form: repeat_form, answer_values: [
-        3,
-        [:repeating,
-          ["Xigua", 10],
-          ["Yuzu", 9],
-          ["Ugli", 8]
-        ],
-        4,
-        [:repeating,
-          ["Zucchini", 7],
-          ["Yam", 6]
-        ]
-      ])
-    end
-
-    # Use a specific timezone
-    @old_tz = Time.zone
-    Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
-
-    it "should generate a row per repeat group answer, plus one row per responseß" do
-      Timecop.freeze(Time.parse("2015-11-20 12:30 UTC")) do
-        response_a
-        response_b
-      end
-
-      responses = Response.order(:id)
-      expected = File.read(File.expand_path('../../expectations/response_csv/repeat_groups.csv', __FILE__))
-      actual = ResponseCSV.new(responses)
-      expect(actual.to_s).to eq expected
-    end
-    
-    after do
-      Time.zone = @old_tz
-    end
-  end
-
   context "with some data without repeat groups" do
     let(:form1) do
       create(:form, question_types: ["text", "geo_multilevel_select_one", "long_text",
@@ -125,4 +67,64 @@ describe ResponseCSV do
       expect(ResponseCSV.new(responses).to_s).to eq expected
     end
   end
+
+  context "with repeat groups" do
+    let(:repeat_form) do
+      create(:form, question_types: ["integer", [:repeating, "text", "integer"], "integer", [:repeating, "text", "integer"]]).tap do |f|
+        f.children[1].update_attribute(:repeatable, true)
+      end
+    end
+
+    let(:response_a) do
+      create(:response, id: 101, form: repeat_form, answer_values: [
+        1,
+        [:repeating,
+          ["Apple", 1],
+          ["Banana", 2]
+        ],
+        2,
+        [:repeating,
+          ["Asparagus", 3]
+        ]
+      ])
+    end
+
+    let(:response_b) do
+      create(:response, id: 102, form: repeat_form, answer_values: [
+        3,
+        [:repeating,
+          ["Xigua", 10],
+          ["Yuzu", 9],
+          ["Ugli", 8]
+        ],
+        4,
+        [:repeating,
+          ["Zucchini", 7],
+          ["Yam", 6]
+        ]
+      ])
+    end
+
+    # Use a specific timezone
+    @old_tz = Time.zone
+    Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
+
+    it "should generate a row per repeat group answer, plus one row per responseß" do
+      FactoryGirl.reload
+      Timecop.freeze(Time.parse("2015-11-20 12:30 UTC")) do
+        response_a
+        response_b
+      end
+
+      responses = Response.order(:id)
+      expected = File.read(File.expand_path('../../expectations/response_csv/repeat_groups.csv', __FILE__))
+      actual = ResponseCSV.new(responses)
+      expect(actual.to_s).to eq expected
+    end
+
+    after do
+      Time.zone = @old_tz
+    end
+  end
+
 end

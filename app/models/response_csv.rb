@@ -34,31 +34,21 @@ class ResponseCSV
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseID")
 
-
-
-
       responses.each do |response|
         # Ensure we have all this response's columns in our table.
         process_form(response.form)
 
-        # puts "Columns for response #{response.id} (#{@columns_by_question.count}): "
-        # puts @columns_by_question.awesome_inspect
         # Start the row
-        answers = response.answers
+        answers = response.answers.includes(:questioning, :option, choices: :option).order(:questioning_id, :inst_num, :rank)
         repeatable_answers = answers.select{ |a| a.questioning.parent_repeatable? }
         non_repeat_answers = answers - repeatable_answers
-
-        # puts "\nREPEAT GROUP ANSWERS: "
-        # puts repeatable_answers.awesome_inspect
-        # puts "\nNON REPEAT GROUP ANSWERS: "
-        # puts non_repeat_answers.awesome_inspect
 
         # make initial row
         row = [
           response.form.name,
           response.user.name,
           response.created_at.to_s(:std_datetime_with_tz),
-          response.id,
+          response.id
         ]
 
         # Assign cell values for each column set
