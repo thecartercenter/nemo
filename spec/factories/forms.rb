@@ -87,6 +87,15 @@ FactoryGirl.define do
       end
     end
 
+    trait :with_version do
+      transient { version nil }
+
+      after(:create) do |form, evaluator|
+        cv = form.current_version
+        cv.update_attributes(code: evaluator.version) if cv && evaluator.version
+      end
+    end
+
     trait :published do
       after(:create) do |form|
         form.publish!
