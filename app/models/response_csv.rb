@@ -38,7 +38,8 @@ class ResponseCSV
         # Ensure we have all this response's columns in our table.
         process_form(response.form)
 
-        # Start the row
+        # Split response into repeatable and non-repeatable answers. There will be one row with the non
+        # repeat answers, and then one row for each repeat group answer.
         answers = response.answers.includes(:questioning, :option, choices: :option).order(:questioning_id, :inst_num, :rank)
         repeatable_answers = answers.select{ |a| a.questioning.parent_repeatable? }
         non_repeat_answers = answers - repeatable_answers
@@ -52,48 +53,42 @@ class ResponseCSV
         ]
 
         non_repeat_answers.group_by(&:question).each do |question, answers|
-          next if question.multimedia?
-          columns = columns_by_question[question.code]
-          qa = ResponseCSV::QA.new(question, answers)
-
-          columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
-          repeat_level = answers.first.questioning.ancestry_depth - 1
-          if response.form.has_repeat_groups?
-            repeat_level = answers.first.repeat_level
-            row[columns_by_question["RepeatLevel"].first.position] = repeat_level
-          end
+          add_question_answers_to_row(response, row, question, answers)
         end
-
         repeating_row_part = row.dup
-
-        if row.count < columns.count
-          row[columns.count - 1] = nil
-        end
+        ensure_row_complete(row)
         csv << row
 
+        #Make a row for each repeat_group answer
         repeat_groups = repeatable_answers.group_by { |a| a.questioning.parent }
-
         repeat_groups.each do |repeat_group, group_answers|
           group_answers.group_by(&:inst_num).each do |inst_num, repeat_answers|
             row = repeating_row_part.dup
-
             repeat_answers.group_by(&:question).each do |question, answers|
-              next if question.multimedia?
-              columns = columns_by_question[question.code]
-              qa = ResponseCSV::QA.new(question, answers)
-              columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
-              if response.form.has_repeat_groups?
-                repeat_level = answers.first.repeat_level
-                row[columns_by_question["RepeatLevel"].first.position] = repeat_level
-              end
+              add_question_answers_to_row(response, row, question, answers)
             end
-            if row.count < columns.count
-              row[columns.count - 1] = nil
-            end
+            ensure_row_complete(row)
             csv << row
           end
         end
       end
+    end
+  end
+
+  def add_question_answers_to_row(response, row, question, answers)
+    return if question.multimedia?
+    columns = columns_by_question[question.code]
+    qa = ResponseCSV::QA.new(question, answers)
+    columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
+    if response.form.has_repeat_groups?
+      repeat_level = answers.first.repeat_level
+      row[columns_by_question["RepeatLevel"].first.position] = repeat_level
+    end
+  end
+
+  def ensure_row_complete(row)
+    if row.count < columns.count
+      row[columns.count - 1] = nil
     end
   end
 
