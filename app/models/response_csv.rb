@@ -46,6 +46,11 @@ class ResponseCSV
         repeatable_answers = answers.select{ |a| a.questioning.parent_repeatable? }
         non_repeat_answers = answers - repeatable_answers
 
+        puts "\nREPEAT GROUP ANSWERS: "
+        puts repeatable_answers.awesome_inspect
+        puts "\nNON REPEAT GROUP ANSWERS: "
+        puts non_repeat_answers.awesome_inspect
+
         # make initial row
         row = [
           response.form.name,
@@ -70,6 +75,7 @@ class ResponseCSV
         end
 
         repeating_row_part = row.dup
+        puts "Adding repeat row #{row}"
         csv << row
 
         # puts repeatable_answers.group_by(&:inst_num).awesome_inspect
@@ -79,7 +85,7 @@ class ResponseCSV
             # puts repeat_answers.awesome_inspect
             puts "REPEATING ROW PART: #{repeating_row_part}"
             row = repeating_row_part.dup
-
+            puts "Repeat row part: #{row}"
             repeat_answers.group_by(&:question).each do |question, answers|
               next if question.multimedia?
               columns = columns_by_question[question.code]
@@ -92,8 +98,7 @@ class ResponseCSV
               # puts qa.cells.awesome_inspect
               columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
             end
-
-
+            puts "Adding row #{row}"
             csv << row
           end
         end

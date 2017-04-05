@@ -73,8 +73,14 @@ FactoryGirl.define do
       # Build questions.
       items.each do |item|
         if item.is_a?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
+          # If first element of array is :repeating, remove it, leaving an array of answer groups.
+          # Otherwise, wrap value in array to get an array of answer groups, but with only one element.
+          is_repeat_group = item.first == :repeating
+          item = is_repeat_group ? item [1..-1] : item
+          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint", repeatable: is_repeat_group)
           item.each { |q| create_questioning(q, form, group, evaluator) }
+          puts "Form factory creating group for #{item.awesome_inspect}"
+          puts "QingGroup: #{group.awesome_inspect}"
         else
           create_questioning(item, form, form.root_group, evaluator)
         end

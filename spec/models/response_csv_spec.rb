@@ -2,8 +2,57 @@ require 'spec_helper'
 
 describe ResponseCSV do
   context "with no data" do
-    it "should generate empy string" do
+    it "should generate empty string" do
       expect(ResponseCSV.new([]).to_s).to eq ""
+    end
+  end
+
+  context "with repeat groups" do
+    let(:repeat_form) do
+      create(:form, question_types: ["integer", [:repeating, "text", "integer"], "integer", [:repeating, "text", "integer"]]).tap do |f|
+        f.children[1].update_attribute(:repeatable, true)
+      end
+    end
+
+    let(:response_a) do
+      create(:response, form: repeat_form, answer_values: [
+        1,
+        [:repeating,
+          ["Apple", 1],
+          ["Banana", 2]
+        ],
+        2,
+        [:repeating,
+          ["Asparagus", 3]
+        ]
+      ])
+    end
+
+    let(:response_b) do
+      create(:response, form: repeat_form, answer_values: [
+        3,
+        [:repeating,
+          ["Xigua", 10],
+          ["Yuzu", 9],
+          ["Ugli", 8]
+        ],
+        4,
+        [:repeating,
+          ["Zucchini", 7],
+          ["Yam", 6]
+        ]
+      ])
+    end
+
+    it "should generate a row per repeat group answer, plus one row per responseß" do
+      response_a
+      response_b
+      responses = Response.order(:id)
+      expected = File.read(File.expand_path('../../expectations/response_csv/repeat_groups.csv', __FILE__))
+      actual = ResponseCSV.new(responses)
+      expect(actual.to_s).to eq expected
+
+
     end
   end
 
@@ -63,7 +112,7 @@ describe ResponseCSV do
 
     it "should generate correct CSV" do
       responses = Response.unscoped.with_associations.order(:created_at)
-      expected = File.read(File.expand_path('../../expectations/responses.csv', __FILE__))
+      expected = File.read(File.expand_path('../../expectations/response_csv/responses.csv', __FILE__))
       expect(ResponseCSV.new(responses).to_s).to eq expected
     end
   end
