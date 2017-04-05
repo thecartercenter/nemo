@@ -248,6 +248,10 @@ class Answer < ActiveRecord::Base
     !media_object_id.nil?
   end
 
+  def repeat_level
+    questioning.ancestry_depth - 1
+  end
+
   private
 
     def required
@@ -294,5 +298,4 @@ class Answer < ActiveRecord::Base
         self.longitude = option.longitude
       end
     end
-
 end

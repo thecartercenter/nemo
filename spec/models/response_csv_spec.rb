@@ -44,19 +44,28 @@ describe ResponseCSV do
       ])
     end
 
+    # Use a specific timezone
+    @old_tz = Time.zone
+    Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
+
     it "should generate a row per repeat group answer, plus one row per responseß" do
-      response_a
-      response_b
+      Timecop.freeze(Time.parse("2015-11-20 12:30 UTC")) do
+        response_a
+        response_b
+      end
+
       responses = Response.order(:id)
       expected = File.read(File.expand_path('../../expectations/response_csv/repeat_groups.csv', __FILE__))
       actual = ResponseCSV.new(responses)
       expect(actual.to_s).to eq expected
-
-
+    end
+    
+    after do
+      Time.zone = @old_tz
     end
   end
 
-  context "with some data" do
+  context "with some data without repeat groups" do
     let(:form1) do
       create(:form, question_types: ["text", "geo_multilevel_select_one", "long_text",
         "integer", "decimal", "location", "select_one", ["select_one", "select_one"],

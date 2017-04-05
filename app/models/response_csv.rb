@@ -76,7 +76,7 @@ class ResponseCSV
           columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
           repeat_level = answers.first.questioning.ancestry_depth - 1
           if response.form.has_repeat_groups?
-            repeat_level = answers.first.questioning.ancestry_depth - 1
+            repeat_level = answers.first.repeat_level
             row[columns_by_question["RepeatLevel"].first.position] = repeat_level
           end
         end
@@ -113,7 +113,7 @@ class ResponseCSV
 
               columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
               if response.form.has_repeat_groups?
-                repeat_level = answers.first.questioning.ancestry_depth - 1
+                repeat_level = answers.first.repeat_level
                 row[columns_by_question["RepeatLevel"].first.position] = repeat_level
               end
             end
