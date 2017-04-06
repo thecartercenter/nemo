@@ -10,6 +10,8 @@ module Replication::Replicable
 
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
+      # puts "REPLICABLE OPTIONS #{self.name}:"
+      # puts options.awesome_inspect
       options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:backward_assocs] = Array.wrap(options[:backward_assocs])
       options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)
@@ -88,7 +90,7 @@ module Replication::Replicable
     def do_standard_assertions
       return unless standardizable?
       tbl = self.class.table_name
-      assert_no_results("select id from #{tbl} where mission_id is not null and is_standard = 1",
+      assert_no_results("select id from #{tbl} where mission_id is not null and is_standard = true",
         'mission based objects should not standard')
     end
 

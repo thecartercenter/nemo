@@ -24,6 +24,7 @@ gem "cancancan", "~> 1.10.1"
 # core
 gem "rake", "~> 10.4.2"
 gem "mysql2", "~> 0.3.18"
+gem "pg"
 gem "configatron", "~> 4.5.0"
 gem "random_data", "~> 1.6.0"
 gem "paperclip", "~> 4.3.2"
@@ -107,6 +108,9 @@ gem "twilio-ruby", "~> 4.1.0"
 
 # Phone number normalization
 gem "phony", "~> 2.15.26"
+
+# Data conversion
+gem "mysqltopostgres", github: "sassafrastech/mysql2postgres"
 
 group :development do
   # generate diagrams with rake db:migrate

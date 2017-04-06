@@ -40,6 +40,9 @@ class Replication::Replicator
     # context[:copy_parent] - The copy of the parent of the Obj to be replicated.
     # Returns the copy Replication::ObjProxy.
     def do_replicate(context)
+      puts "DO REPLICATE: #{context[:orig].klass.name} ##{context[:orig].id}"
+      # puts Questioning.all.map(&:id).inspect
+      # puts Questioning.find(3).try(&:awesome_inspect)
       log("Object: #{context[:orig].klass.name}")
       begin
         context[:copy] = context[:orig].make_copy(context)
@@ -55,9 +58,9 @@ class Replication::Replicator
     def replicate_children(context)
       log("Child assocs: #{context[:orig].child_assocs.map(&:name)}")
       context[:orig].child_assocs.each do |assoc|
-        log("Assoc: #{assoc.name}")
         copy_child = nil
         context[:orig].children(assoc).map do |child|
+          puts "CHILD #{child.klass} ##{child.id}"
           log("Child: ##{child.id}")
           # Try to find an existing copy. If one doesn't exist, make one.
           unless copy_child = child.find_copy
