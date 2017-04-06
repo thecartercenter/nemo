@@ -4,6 +4,8 @@ class UserSession < Authlogic::Session::Base
   logout_on_timeout(true)
   allow_http_basic_auth(false) # We handle our own basic auth
   httponly(true)
+  secure(Rails.env.production?)
+
 
   # override find() to eager load User.assignments
   def self.find(*args)

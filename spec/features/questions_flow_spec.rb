@@ -62,7 +62,7 @@ feature "questions flow" do
     )
   end
 
-  scenario 'questioning tag add/remove', js: true do
+  scenario 'questioning tag add/remove', :investigate, js: true do
     tag_add_remove_test(
       qtype: 'questioning',
       edit_path: edit_questioning_path(@questioning1, mode: 'm', mission_name: @mission.compact_name, locale: 'en'),
