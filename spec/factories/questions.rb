@@ -12,8 +12,8 @@ FactoryGirl.define do
       option_names nil
     end
 
-    sequence(:code) { |n| "Question#{n}" }
     qtype_name "integer"
+    sequence(:code) { |n| "#{qtype_name.camelize}Q#{n}" }
 
 
     sequence(:name_translations) do |n|

@@ -1,4 +1,4 @@
-Form,Submitter,DateSubmitted,ResponseID,Question1,Question2:Country,Question2:City,Question2:Latitude,Question2:Longitude,Question3,Question4,Question5,Question6:Latitude,Question6:Longitude,Question7,Question8,Question9,Question10,Question11,Question12,Question13,Question14,Question15,Question16,Question16:Latitude,Question16:Longitude
+Form,Submitter,DateSubmitted,ResponseID,TextQ1,SelectOneQ2:Country,SelectOneQ2:City,SelectOneQ2:Latitude,SelectOneQ2:Longitude,LongTextQ3,IntegerQ4,DecimalQ5,LocationQ6:Latitude,LocationQ6:Longitude,SelectOneQ7,SelectOneQ8,SelectOneQ9,SelectMultipleQ10,DatetimeQ11,DateQ12,TimeQ13,TextQ14,LongTextQ15,SelectOneQ16,SelectOneQ16:Latitude,SelectOneQ16:Longitude
 Sample Form 1,A User 2,2015-11-20 06:20 CST,11,alpha,Ghana,Tamale,9.4075,0.8533,bravo,80,1.23,,,,Dog,,Cat,2015-01-12 03:15 CST,2014-02-03,03:43
 Sample Form 1,A User 1,2015-11-20 06:30 CST,10,foo✓,Canada,Calgary,51.045,-114.057222,"foo
 
