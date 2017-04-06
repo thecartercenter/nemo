@@ -47,8 +47,7 @@ module AnswersHelper
     else
       answer.value
     end
-
-    simple_format(html, {}, :sanitize => false)
+    simple_format(html) #rely on simple_format to sanitize by default
   end
 
   # Creates a media thumbnail link
