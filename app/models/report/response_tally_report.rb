@@ -8,51 +8,60 @@ class Report::ResponseTallyReport < Report::TallyReport
 
   protected
 
-    def prep_query(rel)
-      joins = []
+  def prep_query(rel)
+    joins = []
 
-      # add tally to select
-      rel = rel.select("SQL_CALC_FOUND_ROWS COUNT(responses.id) AS tally")
+    # add tally to select
+    rel = rel.select("COUNT(responses.id) AS tally")
 
-      # add filter
-      rel = apply_filter(rel)
+    # add filter
+    rel = apply_filter(rel)
 
-      # add groupings
-      rel = apply_groupings(rel)
+    # add groupings
+    rel = apply_groupings(rel)
 
-      rel = rel.limit(RESPONSES_QUANTITY_LIMIT)
-    end
+    rel = rel.limit(response_limit)
+  end
 
-    # applys both groupings
-    def apply_groupings(rel, options = {})
-      raise Report::ReportError.new("primary groupings not allowed for this report type") if pri_grouping && options[:secondary_only]
-      rel = pri_grouping.apply(rel) if pri_grouping
-      rel = sec_grouping.apply(rel) if sec_grouping
-      return rel
-    end
+  # applys both groupings
+  def apply_groupings(rel, options = {})
+    raise Report::ReportError.new("primary groupings not allowed for this report type") if pri_grouping && options[:secondary_only]
+    rel = pri_grouping.apply(rel) if pri_grouping
+    rel = sec_grouping.apply(rel) if sec_grouping
+    return rel
+  end
 
-    def has_grouping(which)
-      grouping = which == :row ? pri_grouping : sec_grouping
-      !grouping.nil?
-    end
+  def has_grouping(which)
+    grouping = which == :row ? pri_grouping : sec_grouping
+    !grouping.nil?
+  end
 
-    def header_title(which)
-      grouping = which == :row ? pri_grouping : sec_grouping
-      grouping ? grouping.header_title : nil
-    end
+  def header_title(which)
+    grouping = which == :row ? pri_grouping : sec_grouping
+    grouping ? grouping.header_title : nil
+  end
+
+  def truncatable?
+    true
+  end
 
   private
 
-    def grouping(rank)
-      c = calculations.find_by_rank(rank)
-      c.nil? ? nil : Report::Grouping.new(c, [:primary, :secondary][rank-1])
-    end
+  def grouping(rank)
+    c = calculations.find_by_rank(rank)
+    c.nil? ? nil : Report::Grouping.new(c, [:primary, :secondary][rank-1])
+  end
 
-    def pri_grouping
-      @pri_grouping ||= grouping(1)
-    end
+  def pri_grouping
+    @pri_grouping ||= grouping(1)
+  end
 
-    def sec_grouping
-      @sec_grouping ||= grouping(2)
-    end
+  def sec_grouping
+    @sec_grouping ||= grouping(2)
+  end
+
+  def response_limit
+    # We do plus one and delete the one extra later so that we know if there are more than the limit.
+    RESPONSES_QUANTITY_LIMIT + 1
+  end
 end

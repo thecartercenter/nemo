@@ -123,31 +123,43 @@ class Report::SummaryCollectionBuilder
     def run_stat_query(stat_qs)
       qing_ids = stat_qs.map(&:id)
 
+      # NOTE TO MEL
+      # The SEC_TO_TIME and TIME_TO_SEC below compute average times (not datetimes, see below for that).
+      # There is test coverage for this.
+      # In postgres an equivalent might be to do
+      #   EXTRACT(hour FROM t)*60*60 + EXTRACT(minutes FROM t)*60 + EXTRACT(seconds FROM t)
+      # and then
+      #   to_char( (9999999 ||' seconds')::interval, 'HH24:MM:SS' )`
+      # This will produce a string instead of a time, but that should be ok.
+      #
+      # FROM_UNIXTIME and UNIX_TIMESTAMP should be easier to replace.
+      # I think to_timestamp and extract(epoch FROM your_datetime_column) should do it.
+
       query = <<-eos
         SELECT #{disagg_select_expr} qing.id AS qing_id, q.qtype_name AS qtype_name,
           SUM(
             CASE q.qtype_name
-              WHEN 'integer' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
-              WHEN 'decimal' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
-              WHEN 'time' THEN IF(a.time_value IS NULL, 1, 0)
-              WHEN 'datetime' THEN IF(a.datetime_value IS NULL, 1, 0)
+              WHEN 'integer' THEN (CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END)
+              WHEN 'decimal' THEN (CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END)
+              WHEN 'time' THEN (CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END)
+              WHEN 'datetime' THEN (CASE WHEN a.datetime_value IS NULL THEN 1 ELSE 0 END)
             END
           ) AS null_count,
           CASE q.qtype_name
-            WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN AVG(CONVERT(a.value, DECIMAL(9,6)))
+            WHEN 'integer' THEN AVG(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'decimal' THEN AVG(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN SEC_TO_TIME(AVG(TIME_TO_SEC(a.time_value)))
             WHEN 'datetime' THEN FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(a.datetime_value)))
           END AS mean,
           CASE q.qtype_name
-            WHEN 'integer' THEN MIN(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN MIN(CONVERT(a.value, DECIMAL(9,6)))
+            WHEN 'integer' THEN MIN(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'decimal' THEN MIN(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN MIN(a.time_value)
             WHEN 'datetime' THEN MIN(a.datetime_value)
           END AS min,
           CASE q.qtype_name
-            WHEN 'integer' THEN MAX(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN MAX(CONVERT(a.value, DECIMAL(9,6)))
+            WHEN 'integer' THEN MAX(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'decimal' THEN MAX(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN MAX(a.time_value)
             WHEN 'datetime' THEN MAX(a.datetime_value)
           END AS max
@@ -164,7 +176,7 @@ class Report::SummaryCollectionBuilder
 
       # build hash
       hash = ActiveSupport::OrderedHash[]
-      res.each(:as => :hash) do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
         hash[[row['disagg_value'], row['qing_id']]] = row
@@ -264,13 +276,13 @@ class Report::SummaryCollectionBuilder
 
       # read tallies into hashes
       tallies = {}
-      sel_one_res.each(:as => :hash).each do |row|
+      sel_one_res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
         tallies[[row['disagg_value'], row['qing_id'], row['option_id']]] = row['answer_count']
       end
-      sel_mult_res.each(:as => :hash).each do |row|
+      sel_mult_res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -302,7 +314,7 @@ class Report::SummaryCollectionBuilder
 
       # read non-null answer counts into hash
       tallies = {}
-      res.each(:as => :hash).each do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -383,7 +395,7 @@ class Report::SummaryCollectionBuilder
 
       # read into tallies, preserving sorted date order
       tallies = {}
-      res.each(:as => :hash).each do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -408,7 +420,7 @@ class Report::SummaryCollectionBuilder
       # also keep null counts
       items_hash = {}
       null_counts_hash = {}
-      res.each(:as => :hash) do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -501,7 +513,7 @@ class Report::SummaryCollectionBuilder
 
         res = do_query(query, long_qing_ids)
 
-        res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.to_h
+        res.map{|row| [row['answer_id'], row['submitter_name']]}.to_h
       end
     end
 
@@ -564,7 +576,8 @@ class Report::SummaryCollectionBuilder
       "#{disagg_column},"
     end
 
+    # Runs query and returns hash of results
     def do_query(*args)
-      ActiveRecord::Base.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, args))
+      ActiveRecord::Base.connection.exec_query(ActiveRecord::Base.send(:sanitize_sql_array, args))
     end
 end

@@ -2,12 +2,12 @@
 class Report::Data
 
   attr_accessor :rows
-  attr_accessor :total_row_count
-  attr_accessor :returned_row_count
+  attr_accessor :truncated
   attr_reader :totals
 
   def initialize(rows)
     @rows = rows
+    @truncated = false
   end
 
   # sets the value of the cell given by row, col to value
@@ -52,7 +52,19 @@ class Report::Data
     end
   end
 
+  # Strips any extra rows. This is also done at the query level, but a few extra are left on
+  # so we can tell if we are actually truncating or not and set a flag to display to the user.
+  def truncate(max_rows)
+    if @rows.size > max_rows
+      @truncated = true
+      @rows.slice!(max_rows..-1)
+      true
+    else
+      false
+    end
+  end
+
   def as_json(options = {})
-    {rows: @rows, totals: @totals, total_row_count: @total_row_count, returned_row_count: @returned_row_count}
+    {rows: rows, totals: totals, truncated: truncated}
   end
 end

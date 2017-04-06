@@ -113,24 +113,20 @@ class Report::StandardFormReport < Report::Report
   end
 
   def observers_without_responses
-    users_response = users_without_responses({role: :observer, limit: MISSING_OBSERVERS_SIZE_LIMIT})
-    users = users_response[:users]
+    users = users_without_responses({role: :observer, limit: MISSING_OBSERVERS_SIZE_LIMIT})
 
     if users.empty?
       I18n.t('report/report.zero_missing_observers')
     else
-      format_observers_names(users, users_response[:count])
+      truncated = false
+      if users.size > MISSING_OBSERVERS_SIZE_LIMIT
+        users.slice!(MISSING_OBSERVERS_SIZE_LIMIT..-1)
+        truncated = true
+      end
+      names = users.map(&:name).join(', ')
+      truncation_msg = truncated ? ", ... (#{I18n.t('common.clipped')})" : ""
+      "#{names}#{truncation_msg}"
     end
-  end
-
-  def format_observers_names(users, users_total_count)
-    users_list = users.map(&:name).join(', ')
-
-    total_count_label = I18n.t('report/report.missing_observers_total_count',
-      user_count: users_total_count)
-    users_list = "#{users_list}, ... (#{total_count_label})" if users_total_count > MISSING_OBSERVERS_SIZE_LIMIT
-
-    users_list
   end
 
   # returns the list of questionings to include in this report

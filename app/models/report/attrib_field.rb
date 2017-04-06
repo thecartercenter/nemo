@@ -16,12 +16,12 @@ class Report::AttribField < Report::Field
 
   def name_expr(chunks)
     @name_expr ||= Report::Expression.new(
-      name_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.mysql_name)))
+      name_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.tzinfo.name)))
   end
 
   def value_expr(chunks)
     @value_expr ||= Report::Expression.new(
-      value_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.mysql_name)))
+      value_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.tzinfo.name)))
   end
 
   def where_expr(_chunks)
@@ -81,19 +81,27 @@ class Report::AttribField < Report::Field
     date_submitted: {
       name: :date_submitted,
       name_expr_params: {
-        sql_tplt: "DATE(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__'))",
+        sql_tplt: "CAST(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__') AS DATE)",
         name: "name",
         clause: :select},
       value_expr_params: {
-        sql_tplt: "DATE(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__'))",
+        sql_tplt: "CAST(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__') AS DATE)",
         name: "value",
         clause: :select},
       data_type: :date,
       groupable: true},
     reviewed: {
       name: :reviewed,
-      name_expr_params: {sql_tplt: "IF(responses.reviewed, 'Yes', 'No')", name: "name", clause: :select},
-      value_expr_params: {sql_tplt: "IF(responses.reviewed, 1, 0)", name: "value", clause: :select},
+      name_expr_params: {
+        sql_tplt: "(CASE WHEN responses.reviewed THEN 'Yes' ELSE 'No' END)",
+        name: "name",
+        clause: :select
+      },
+      value_expr_params: {
+        sql_tplt: "(CASE WHEN responses.reviewed THEN 1 ELSE 0 END)",
+        name: "value",
+        clause: :select
+      },
       data_type: :text,
       groupable: true},
     reviewer: {

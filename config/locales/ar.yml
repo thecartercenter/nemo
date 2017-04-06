@@ -1470,7 +1470,6 @@ ar:
     tally_type: "ما الذي تود إحصائه؟"
     these_questions: "هذه الأسئلة بالتحديد"
     total_rows: "مجموع السطور:%{count} "
-    total_rows_showing: "عرض%{count} السطور من إجمالي%{} TOTAL_COUNT"
     view_response: "رد #%{id}"
     what_attrib_col_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس للأعمدة (اختياري)؟"
     what_attrib_row_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس السطور(اختياري)؟"

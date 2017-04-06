@@ -40,7 +40,7 @@ describe Results::SqlGenerator do
         answers.time_value AS time_value,
         answers.latitude AS latitude,
         answers.longitude AS longitude,
-        IFNULL(ao.canonical_name, co.canonical_name) AS choice_name,
+        COALESCE(ao.canonical_name, co.canonical_name) AS choice_name,
         option_sets.name AS option_set
       FROM `responses`
         LEFT JOIN users users ON responses.user_id = users.id
