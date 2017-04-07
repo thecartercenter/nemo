@@ -1,5 +1,5 @@
 module ODKSubmissionSupport
-  ODK_XML_FILE = 'odk_xml_file.xml'
+  ODK_XML_FILE = "odk_xml_file.xml"
 
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)
@@ -17,7 +17,7 @@ module ODKSubmissionSupport
     # Upload and do request.
     uploaded = fixture_file_upload(fixture_file, "text/xml")
     post(path, {xml_submission_file: uploaded, format: "xml"},
-      "HTTP_AUTHORIZATION" => encode_credentials(@user.login, test_password))
+      "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password))
     assigns(:response)
   end
 

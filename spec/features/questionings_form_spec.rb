@@ -1,50 +1,46 @@
-require 'spec_helper'
+require "spec_helper"
 
-describe 'questionings form' do
+describe "questionings form" do
+  let(:user) { create(:user, role_name: "coordinator") }
+
   before do
-    @user = create(:user, role_name: 'coordinator')
-    login(@user)
+    login(user)
   end
 
-  context 'for mission-based' do
-    before do
-      @form = create(:form, question_types: %w(text text))
-      @qing = @form.questionings[1]
-    end
+  context "for mission-based" do
+    let(:form) { create(:form, question_types: %w(text text)) }
+    let(:qing) { form.questionings.last }
 
-    context 'when unpublished' do
-      it 'should display all fields as editable' do
-        visit(edit_questioning_path(@qing, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
-        expect_editable('required', true)
-        expect_editable('hidden', true)
-        expect_editable('condition', true)
+    context "when unpublished" do
+      it "should display all fields as editable" do
+        visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+        expect_editable("required", true)
+        expect_editable("hidden", true)
+        expect_editable("condition", true)
       end
     end
 
-    context 'when published' do
-      before { @form.publish! }
-
-      it 'should display all fields as not editable' do
-        visit(edit_questioning_path(@qing, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
-        expect_editable('required', false)
-        expect_editable('hidden', false)
-        expect_editable('condition', false)
+    context "when published" do
+      it "should display all fields as not editable" do
+        form.publish!
+        visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+        expect_editable("required", false)
+        expect_editable("hidden", false)
+        expect_editable("condition", false)
       end
     end
   end
 
-  context 'for unpublished std copy' do
-    before do
-      @std = create(:form, question_types: %w(text text), is_standard: true)
-      @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-      @qing = @copy.questionings[1]
-    end
+  context "for unpublished std copy" do
+    let(:standard_form) { create(:form, question_types: %w(text text), is_standard: true) }
+    let(:copied_form) { standard_form.replicate(mode: :to_mission, dest_mission: get_mission) }
+    let(:qing) { copied_form.questionings.last }
 
-    it 'should display all fields as editable' do
-      visit(edit_questioning_path(@qing, locale: 'en', mode: 'm', mission_name: get_mission.compact_name))
-      expect_editable('required', true)
-      expect_editable('hidden', true)
-      expect_editable('condition', true)
+    it "should display all fields as editable" do
+      visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+      expect_editable("required", true)
+      expect_editable("hidden", true)
+      expect_editable("condition", true)
     end
   end
 
