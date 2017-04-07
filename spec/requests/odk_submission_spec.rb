@@ -13,20 +13,17 @@ describe "odk submissions", type: :request do
   end
 
   context "to regular mission" do
-
-    before do
-      @user = create(:user, role_name: "observer")
-      @mission1 = get_mission
-      @mission2 = create(:mission)
-    end
+    let!(:user) { create(:user, role_name: "observer") }
+    let!(:mission1) { get_mission }
+    let!(:mission2) { create(:mission) }
 
     describe "get and head requests" do
       it "should return 204 and no content" do
-        head(submission_path, {format: "xml"}, "HTTP_AUTHORIZATION" => encode_credentials(@user.login, test_password))
+        head(submission_path, {format: "xml"}, "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
 
-        get(submission_path, {format: "xml"}, "HTTP_AUTHORIZATION" => encode_credentials(@user.login, test_password))
+        get(submission_path, {format: "xml"}, "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password))
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
       end
@@ -36,13 +33,12 @@ describe "odk submissions", type: :request do
       do_submission(submission_path)
       expect(response.response_code).to eq 201
       resp = Response.first
-      expect(resp.answers[0].value).to eq "5"
-      expect(resp.answers[1].value).to eq "10"
+      expect(resp.answers.map(&:value)).to match_array ["5", "10"]
       expect(resp.mission).to eq get_mission
     end
 
     it "should fail if user not assigned to mission" do
-      do_submission(submission_path(@mission2))
+      do_submission(submission_path(mission2))
       expect(response.response_code).to eq 403
     end
 
@@ -120,24 +116,19 @@ describe "odk submissions", type: :request do
   end
 
   context "to locked mission" do
-    before do
-      @mission = create(:mission, locked: true)
-      @user = create(:user, role_name: "observer", mission: @mission)
-
-    end
+    let(:mission) { create(:mission, locked: true) }
+    let(:user) { create(:user, role_name: "observer", mission: mission) }
 
     it "should fail" do
-      resp = do_submission(submission_path(@mission), "foo")
+      resp = do_submission(submission_path(mission), "foo")
       expect(response.status).to eq 403
     end
   end
 
   context "inactive user" do
-    before do
-      @user = create(:user, role_name: "observer", active: false)
-      @mission1 = get_mission
-      @mission2 = create(:mission)
-    end
+    let(:user) { create(:user, role_name: "observer", active: false) }
+    let(:mission1) { get_mission }
+    let(:mission2) { create(:mission) }
 
     it "should fail" do
       do_submission(submission_path)
