@@ -43,6 +43,8 @@ class Questioning < FormItem
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
+  delegate :repeatable?, to: :parent, prefix: true, allow_nil: true
+
 
   scope(:visible, -> { where(hidden: false) })
 
@@ -115,7 +117,7 @@ class Questioning < FormItem
   def is_question_method?(symbol)
     symbol.match(/\A((name|hint)_([a-z]{2})(=?))(_before_type_cast)?\z/)
   end
-  
+
   # /REFACTOR
   def inspect
     id
