@@ -1,4 +1,5 @@
-def create_questioning(qtype_name_or_question, form, parent, evaluator)
+def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = nil)
+  parent ||= form.root_group # root if not specified
   question = if qtype_name_or_question.is_a?(Question)
     qtype_name_or_question
   else
@@ -27,9 +28,9 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       is_standard: form.is_standard?
     }
 
-    if evaluator.option_set
+    if evaluator.try(:option_set)
       q_attribs[:option_set] = evaluator.option_set
-    elsif evaluator.option_names
+    elsif evaluator.try(:option_names)
       q_attribs[:option_names] = evaluator.option_names
     end
 
@@ -46,6 +47,7 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     question: question)
 
   form.questionings << questioning
+  questioning
 end
 
 # Only works with create
