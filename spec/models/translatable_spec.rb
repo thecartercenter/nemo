@@ -136,7 +136,7 @@ describe "Translatable" do
 
       b = BClass.new
       b.name = 'Foo'
-      expect{b.canonical_name}.to raise_error
+      expect{b.canonical_name}.to raise_error NoMethodError, /canonical_name/
     end
 
     it 'should be updated if name_translations gets updated directly' do
