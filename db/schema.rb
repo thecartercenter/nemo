@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170315131809) do
+ActiveRecord::Schema.define(version: 20170411152518) do
   create_table "answers", force: :cascade do |t|
     t.datetime "created_at"
     t.date "date_value"
@@ -61,7 +61,6 @@ ActiveRecord::Schema.define(version: 20170315131809) do
     t.datetime "created_at"
     t.string "medium", limit: 255
     t.integer "mission_id", limit: 4
-    t.text "recipient_query", limit: 65535
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors", limit: 65535
     t.string "source", limit: 255, default: "manual", null: false
@@ -135,7 +134,6 @@ ActiveRecord::Schema.define(version: 20170315131809) do
     t.integer "form_id", limit: 4, null: false
     t.text "group_hint_translations", limit: 65535
     t.text "group_name_translations", limit: 65535
-    t.integer "group_rank", limit: 4
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id", limit: 4
     t.integer "question_id", limit: 4
@@ -473,8 +471,8 @@ ActiveRecord::Schema.define(version: 20170315131809) do
   create_table "user_group_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_group_id", limit: 4
-    t.integer "user_id", limit: 4
+    t.integer "user_group_id", limit: 4, null: false
+    t.integer "user_id", limit: 4, null: false
   end
 
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
@@ -484,7 +482,7 @@ ActiveRecord::Schema.define(version: 20170315131809) do
   create_table "user_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "mission_id", limit: 4
-    t.string "name", limit: 255
+    t.string "name", limit: 255, null: false
     t.datetime "updated_at", null: false
   end
 
