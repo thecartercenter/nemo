@@ -18,7 +18,7 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/mysql2postgres.git
-  revision: 8eca24ce38ed8ff9999d7ac61dcf246f120581a0
+  revision: 5a84649eb10a5ec8e0604b6af0a2e7cd49bce0ac
   specs:
     mysqltopostgres (0.3.0)
       mysql-pr (~> 2.9)
