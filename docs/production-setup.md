@@ -153,6 +153,7 @@ Then load the site in your browser. You should see the new version number in the
 1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
 1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
 1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
+1. Ignore the `no COPY in progress` message.
 1. Update `config/database.yml` to point to Postgres. Use `config/database.yml.example` as a guide.
 1. Restart your server. You should now be running on PostgreSQL!
 1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
