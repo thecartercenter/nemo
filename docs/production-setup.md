@@ -156,6 +156,7 @@ Then load the site in your browser. You should see the new version number in the
 1. Ignore the `no COPY in progress` message.
 1. Update `config/database.yml` to point to Postgres. Use `config/database.yml.example` as a guide.
 1. Restart your server. You should now be running on PostgreSQL!
+1. Run bundle exec rake ts:rebuild to rebuild your indices against the new DB and restart Sphinx.
 1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
 
 Troubleshooting
