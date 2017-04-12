@@ -146,29 +146,29 @@ class Report::SummaryCollectionBuilder
             END
           ) AS null_count,
           CASE q.qtype_name
-            WHEN 'integer' THEN AVG(CAST(a.value AS INTEGER))
-            WHEN 'decimal' THEN AVG(CAST(a.value AS DECIMAL(9,6)))
-            WHEN 'time' THEN (TO_CHAR(
+            WHEN 'integer' THEN CAST(AVG(CAST(a.value AS INTEGER)) AS TEXT)
+            WHEN 'decimal' THEN CAST(AVG(CAST(a.value AS DECIMAL(9,6))) AS TEXT)
+            WHEN 'time' THEN CAST(TO_CHAR(
               (
                 AVG(
                   EXTRACT(hour from a.time_value)*60*60 +
                   EXTRACT(minutes FROM a.time_value)*60 +
                   EXTRACT(seconds FROM a.time_value)
                 ) || ' seconds'
-              )::interval, 'HH24::MM:SS'))
-            WHEN 'datetime' THEN to_timestamp(AVG(extract(epoch FROM a.datetime_value)))
+              )::interval, 'HH24::MM:SS') AS TEXT)
+            WHEN 'datetime' THEN CAST(to_timestamp(AVG(extract(epoch FROM a.datetime_value))) AS TEXT)
           END AS mean,
           CASE q.qtype_name
-            WHEN 'integer' THEN MIN(CAST(a.value AS INTEGER))
-            WHEN 'decimal' THEN MIN(CAST(a.value AS DECIMAL(9,6)))
-            WHEN 'time' THEN MIN(a.time_value)
-            WHEN 'datetime' THEN MIN(a.datetime_value)
+            WHEN 'integer' THEN CAST(MIN(CAST(a.value AS INTEGER)) AS TEXT)
+            WHEN 'decimal' THEN CAST(MIN(CAST(a.value AS DECIMAL(9,6))) AS TEXT)
+            WHEN 'time' THEN CAST(MIN(a.time_value) AS TEXT)
+            WHEN 'datetime' THEN CAST(MIN(a.datetime_value) AS TEXT)
           END AS min,
           CASE q.qtype_name
-            WHEN 'integer' THEN MAX(CAST(a.value AS INTEGER))
-            WHEN 'decimal' THEN MAX(CAST(a.value AS DECIMAL(9,6)))
-            WHEN 'time' THEN MAX(a.time_value)
-            WHEN 'datetime' THEN MAX(a.datetime_value)
+            WHEN 'integer' THEN CAST(MAX(CAST(a.value AS INTEGER)) AS TEXT)
+            WHEN 'decimal' THEN CAST(MAX(CAST(a.value AS DECIMAL(9,6))) AS TEXT)
+            WHEN 'time' THEN CAST(MAX(a.time_value) AS TEXT)
+            WHEN 'datetime' THEN CAST(MAX(a.datetime_value) AS TEXT)
           END AS max
         FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
           INNER JOIN questions q ON q.id = qing.question_id
@@ -176,7 +176,6 @@ class Report::SummaryCollectionBuilder
           #{current_user_join_clause}
         WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
-        ORDER BY NULL
       eos
 
       res = do_query(query, qing_ids)
