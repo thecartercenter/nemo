@@ -70,7 +70,7 @@ describe ResponseCSV do
 
   context "with repeat groups" do
     let(:repeat_form) do
-      create(:form, question_types: ["integer", [:repeating, "text", "integer", "select_multiple"], "integer", [:repeating, "text", "geo_multilevel_select_one",  "integer"]]).tap do |f|
+      create(:form, question_types: ["integer", {repeating: ["text", "integer", "select_multiple"]}, "integer", {repeating: ["text", "geo_multilevel_select_one",  "integer"]}]).tap do |f|
         f.children[1].update_attribute(:repeatable, true)
       end
     end
