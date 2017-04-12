@@ -146,19 +146,26 @@ class Report::SummaryCollectionBuilder
             END
           ) AS null_count,
           CASE q.qtype_name
-            WHEN 'integer' THEN AVG(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'integer' THEN AVG(CAST(a.value AS INTEGER))
             WHEN 'decimal' THEN AVG(CAST(a.value AS DECIMAL(9,6)))
-            WHEN 'time' THEN SEC_TO_TIME(AVG(TIME_TO_SEC(a.time_value)))
-            WHEN 'datetime' THEN FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(a.datetime_value)))
+            WHEN 'time' THEN (TO_CHAR(
+              (
+                AVG(
+                  EXTRACT(hour from a.time_value)*60*60 +
+                  EXTRACT(minutes FROM a.time_value)*60 +
+                  EXTRACT(seconds FROM a.time_value)
+                ) || ' seconds'
+              )::interval, 'HH24::MM:SS'))
+            WHEN 'datetime' THEN to_timestamp(AVG(extract(epoch FROM a.datetime_value)))
           END AS mean,
           CASE q.qtype_name
-            WHEN 'integer' THEN MIN(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'integer' THEN MIN(CAST(a.value AS INTEGER))
             WHEN 'decimal' THEN MIN(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN MIN(a.time_value)
             WHEN 'datetime' THEN MIN(a.datetime_value)
           END AS min,
           CASE q.qtype_name
-            WHEN 'integer' THEN MAX(CAST(a.value AS SIGNED INTEGER))
+            WHEN 'integer' THEN MAX(CAST(a.value AS INTEGER))
             WHEN 'decimal' THEN MAX(CAST(a.value AS DECIMAL(9,6)))
             WHEN 'time' THEN MAX(a.time_value)
             WHEN 'datetime' THEN MAX(a.datetime_value)

@@ -47,7 +47,7 @@ class Report::AnswerTallyReport < Report::TallyReport
       rel = rel.where("option_sets.id" => option_sets.collect{|os| os.id})
 
       # type is just text
-      rel = rel.select("'text' AS sec_type")
+      # rel = rel.select("'text' AS sec_type")
 
       # we order first by question name/code and then by option rank, which is the same as sec_value
       rel = rel.order("pri_value, sec_value")

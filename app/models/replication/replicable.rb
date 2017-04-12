@@ -10,8 +10,6 @@ module Replication::Replicable
 
     # dsl-style method for setting options from base class
     def self.replicable(options = {})
-      # puts "REPLICABLE OPTIONS #{self.name}:"
-      # puts options.awesome_inspect
       options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:backward_assocs] = Array.wrap(options[:backward_assocs])
       options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)

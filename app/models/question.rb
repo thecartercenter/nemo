@@ -48,13 +48,13 @@ class Question < ActiveRecord::Base
       questions.*,
       COUNT(DISTINCT answers.id) AS answer_count_col,
       COUNT(DISTINCT forms.id) AS form_count_col,
-      MAX(DISTINCT forms.published) AS form_published_col,
+      BOOL_OR(DISTINCT forms.published) AS form_published_col,
       COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col
     }).joins(%{
       LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
       LEFT OUTER JOIN forms ON forms.id = questionings.form_id
       LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.original_id
+      LEFT OUTER JOIN questions copies ON questions.is_standard = true AND questions.id = copies.original_id
       LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
       LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
       LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id

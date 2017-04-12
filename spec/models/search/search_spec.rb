@@ -191,7 +191,7 @@ describe Search::Search do
   end
 
   it "quoted string with quoted string inside should still work" do
-    assert_search(str: 'submitter:"v1 \\"v2 v3\\" v4"', sql: %{((t3.f3 LIKE '%v1 \\"v2 v3\\" v4%'))})
+    assert_search(str: 'submitter:"v1 \\"v2 v3\\" v4"', sql: %{((t3.f3 LIKE '%v1 "v2 v3" v4%'))})
   end
 
   it "translated qualifier should work" do
@@ -199,7 +199,7 @@ describe Search::Search do
   end
 
   it "translated qualifier should sanitize properly" do
-    assert_search(str: "name: foo';DROP_DB", sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo\\';DROP_DB([^"\\]|\\\\.)*"'))})
+    assert_search(str: "name: foo';DROP_DB", sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo'';DROP_DB([^"\\]|\\\\.)*"'))})
   end
 
   it "translated qualifier should work for different locale" do
@@ -258,12 +258,12 @@ describe Search::Search do
   end
 
   it "odd characters in terms should still work" do
-    assert_search(str: "v1-_+'^&", sql: "((t1.f1 = 'v1-_+\\'^&'))")
+    assert_search(str: "v1-_+'^&", sql: "((t1.f1 = 'v1-_+''^&'))")
   end
 
   it "blank search should work" do
-    assert_search(str: "  ", sql: "1")
-    assert_search(str: nil, sql: "1")
+    assert_search(str: "  ", sql: "true")
+    assert_search(str: nil, sql: "true")
   end
 
   it "regex qualifier should match correctly" do

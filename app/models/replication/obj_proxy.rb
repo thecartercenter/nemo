@@ -127,9 +127,6 @@ class Replication::ObjProxy
     def get_copy_ancestry(context)
       # If self is a root node (ancestry == nil) then we just copy nil.
       # Else we construct the ancestry by looking at that of the copy_parent.
-      puts "GETTING COPY ANCESTRY"
-      puts "COPY PARENt"
-      puts context[:copy_parent].awesome_inspect
       if ancestry.nil?
         nil
       else

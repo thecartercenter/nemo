@@ -39,12 +39,12 @@ class Form < ActiveRecord::Base
       forms.*,
       COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
-      SUM(copies.published) AS published_copy_count_col,
+      SUM(CASE copies.published WHEN true THEN 1 ELSE 0 END) AS published_copy_count_col,
       SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins(%{
       LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
-      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
+      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = true
     })
     .group("forms.id") })
 

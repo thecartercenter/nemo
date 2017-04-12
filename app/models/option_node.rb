@@ -18,7 +18,6 @@ class OptionNode < ActiveRecord::Base
 
   attr_accessor :children_attribs
   attr_reader :option_attribs
-  alias_method :c, :children
 
   # This attribute is set ONLY after an update using children_attribs.
   # It is true only if the node or any of its descendants have existing children
@@ -115,6 +114,7 @@ class OptionNode < ActiveRecord::Base
   def sorted_children
     children.order("rank").includes(:option)
   end
+  alias_method :c, :sorted_children
 
   def first_leaf_option
     (sc = sorted_children).any? ? sc.first.first_leaf_option : self.option

@@ -1,20 +1,16 @@
-production:
-  adapter: mysql2
-  database: elmo_production
+default: &default
+  adapter: postgresql
+  encoding: utf8
   host: localhost
-  username: elmo
-  password: xxx
+
+production:
+  <<: *default
+  database: elmo_production
 
 test:
-  adapter: mysql2
+  <<: *default
   database: elmo_test
-  host: localhost
-  username: elmo
-  password: xxx
 
 development:
-  adapter: mysql2
+  <<: *default
   database: elmo_development
-  host: localhost
-  username: elmo
-  password: xxx
