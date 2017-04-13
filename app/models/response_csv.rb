@@ -82,7 +82,7 @@ class ResponseCSV
     columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
     if response.form.has_repeat_groups?
       repeat_level = answers.first.repeat_level
-      repeat_group_name = answers.first.repeat_group_name
+      repeat_group_name = answers.first.parent_group_name
       row[columns_by_question["RepeatGroupName"].first.position] = repeat_group_name
       row[columns_by_question["RepeatLevel"].first.position] = repeat_level
     end
@@ -96,7 +96,7 @@ class ResponseCSV
 
   def process_form(form)
     return if processed_forms.include?(form.id)
-    form.questions.each{ |q| find_or_create_column(question: q) }
+    form.questionings.each{ |q| find_or_create_column(qing: q) }
     if form.has_repeat_groups?
       find_or_create_column(code: "RepeatGroupName")
       find_or_create_column(code: "RepeatLevel")
@@ -104,29 +104,37 @@ class ResponseCSV
     processed_forms << form.id
   end
 
-  def find_or_create_column(code: nil, question: nil)
-    code ||= question.code
+  def find_or_create_column(code: nil, qing: nil)
+    question = nil
+    if code.nil?
+      question = qing.question
+      code = question.code
+    end
 
     return if column_exists_with_code?(code)
 
     if question
       return if question.multimedia?
+      name = [code]
+      if qing.parent_repeatable?
+        name = [qing.parent_group_name, code]
+      end
       if question.multilevel?
         question.levels.each_with_index do |level, i|
-          create_column(code: code, name: [code, level.name])
+          create_column(code: code, name: name + [level.name])
         end
       else
         # Location questions only have lng/lat cols which are added below.
         unless question.qtype_name == 'location'
-          create_column(code: code)
+          create_column(code: code, name: name)
         end
       end
       if question.geographic?
-        create_column(code: code, name: [code, 'Latitude'])
-        create_column(code: code, name: [code, 'Longitude'])
+        create_column(code: code, name: name + ['Latitude'])
+        create_column(code: code, name: name + ['Longitude'])
       end
     else
-      create_column(code: code)
+      create_column(code: code, name: name)
     end
   end
 
