@@ -32,7 +32,7 @@
   // gets the ID of the latest response in the list, or empty string if no responses
   klass.prototype.latest_response_id = function(args) { var self = this;
     var dom_id = $('.recent_responses tbody tr:first-child').attr('id');
-    return dom_id ? dom_id.replace(/[^\d]/g, '') : '';
+    return dom_id ? dom_id.replace(/^response_/, '') : '';
   };
 
   // highlights all responses after (higher in the list than) the response with the given id
