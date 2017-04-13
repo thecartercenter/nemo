@@ -82,6 +82,8 @@ class ResponseCSV
     columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
     if response.form.has_repeat_groups?
       repeat_level = answers.first.repeat_level
+      repeat_group_name = answers.first.repeat_group_name
+      row[columns_by_question["RepeatGroupName"].first.position] = repeat_group_name
       row[columns_by_question["RepeatLevel"].first.position] = repeat_level
     end
   end
@@ -96,6 +98,7 @@ class ResponseCSV
     return if processed_forms.include?(form.id)
     form.questions.each{ |q| find_or_create_column(question: q) }
     if form.has_repeat_groups?
+      find_or_create_column(code: "RepeatGroupName")
       find_or_create_column(code: "RepeatLevel")
     end
     processed_forms << form.id

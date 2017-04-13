@@ -252,6 +252,10 @@ class Answer < ApplicationRecord
     questioning.ancestry_depth - 1
   end
 
+  def repeat_group_name
+    questioning.parent.try(:group_name)
+  end
+
   private
 
     def required
