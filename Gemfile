@@ -74,6 +74,9 @@ gem "font-awesome-rails", "~> 4.7"
 # Rich text editor
 gem "ckeditor", "~> 4.2"
 
+# Select box on steriods
+gem "select2-rails", "~> 4.0"
+
 # underscore templates
 gem "ejs", "~> 1.1.1"
 
