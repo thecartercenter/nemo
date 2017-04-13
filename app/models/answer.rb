@@ -15,7 +15,7 @@
 # - Should be 1 for answers to top level questions and questions in non-repeating groups
 # - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
 #
-class Answer < ActiveRecord::Base
+class Answer < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
   belongs_to(:questioning, inverse_of: :answers)

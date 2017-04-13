@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe OptionNode do
+  it_behaves_like "has a uuid"
+
   include OptionNodeSupport
 
   describe "destroy" do

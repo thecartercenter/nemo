@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Answer do
+  it_behaves_like "has a uuid"
+
   let(:latitude) { 12 }
   let(:longitude) { -12 }
 

@@ -1,4 +1,4 @@
-class Condition < ActiveRecord::Base
+class Condition < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable
 
   # question types that cannot be used in conditions

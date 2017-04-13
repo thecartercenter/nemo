@@ -1,4 +1,4 @@
-class Media::Object < ActiveRecord::Base
+class Media::Object < ApplicationRecord
   belongs_to :answer
 
   has_attached_file :item

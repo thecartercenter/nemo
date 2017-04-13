@@ -3,7 +3,7 @@ module Replication::Replicable
   extend ActiveSupport::Concern
 
   # A basic list of attributes that we don't want to copy from the src_obj to the dest_obj.
-  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id is_standard standard_copy original_id ancestry)
+  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id is_standard standard_copy original_id ancestry uuid)
 
   included do
     after_save(:sync_chosen_attributes)

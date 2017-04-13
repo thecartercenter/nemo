@@ -1,4 +1,4 @@
-class Option < ActiveRecord::Base
+class Option < ApplicationRecord
   include MissionBased, FormVersionable, Translatable, Replication::Replicable
 
   has_many(:option_sets, through: :option_nodes)
