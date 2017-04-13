@@ -71,6 +71,9 @@ gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe"
 # icons
 gem "font-awesome-rails", "~> 4.7"
 
+# Rich text editor
+gem "ckeditor", "~> 4.2"
+
 # underscore templates
 gem "ejs", "~> 1.1.1"
 
