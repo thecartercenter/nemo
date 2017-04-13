@@ -76,8 +76,8 @@ FactoryGirl.define do
       items.each do |item|
         if item.is_a?(Hash) && item.key?(:repeating)
           item = item[:repeating]
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint", repeatable: true)
-          item.each { |q| create_questioning(q, form, group, evaluator) }
+          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: item[:name], group_hint_en: "Group Hint", repeatable: true)
+          item[:q_types].each { |q| create_questioning(q, form, group, evaluator) }
         elsif item.is_a?(Array)
           group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
           item.each { |q| create_questioning(q, form, group, evaluator) }
