@@ -1,4 +1,4 @@
-class UserGroup < ActiveRecord::Base
+class UserGroup < ApplicationRecord
   include MissionBased
 
   has_many :user_group_assignments, dependent: :destroy

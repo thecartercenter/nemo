@@ -1,4 +1,4 @@
-class Form < ActiveRecord::Base
+class Form < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   def self.receivable_association

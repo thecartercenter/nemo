@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe QingGroup do
+  it_behaves_like "has a uuid"
+
   let(:form) { create(:form, question_types: [["text", "text", "text"]]) }
 
   it "should return a list of groups" do

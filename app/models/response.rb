@@ -1,4 +1,4 @@
-class Response < ActiveRecord::Base
+class Response < ApplicationRecord
   extend FriendlyId
   include MissionBased
   include Cacheable

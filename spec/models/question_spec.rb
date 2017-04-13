@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Question do
+  it_behaves_like "has a uuid"
 
   it "creation" do
     create(:question) # should not raise

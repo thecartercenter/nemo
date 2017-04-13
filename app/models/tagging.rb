@@ -1,4 +1,4 @@
-class Tagging < ActiveRecord::Base
+class Tagging < ApplicationRecord
   include MissionBased
 
   belongs_to :question

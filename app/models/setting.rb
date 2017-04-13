@@ -1,4 +1,4 @@
-class Setting < ActiveRecord::Base
+class Setting < ApplicationRecord
   include MissionBased
 
   # attribs to copy to configatron
@@ -6,7 +6,7 @@ class Setting < ActiveRecord::Base
     twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
-  ADMIN_MODE_KEYS = %w(timezone preferred_locales universal_sms_token)
+  ADMIN_MODE_KEYS = %w(timezone preferred_locales universal_sms_token uuid)
 
   DEFAULT_TIMEZONE = "UTC"
 

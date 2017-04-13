@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe Mission do
+  it_behaves_like "has a uuid"
+
   describe "terminate", :investigate do
     let!(:mission) { create(:mission_with_full_heirarchy) }
     let(:expected_counts) do

@@ -1,5 +1,5 @@
 require 'mission_based'
-class Report::Report < ActiveRecord::Base
+class Report::Report < ApplicationRecord
   include MissionBased
 
   has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,
