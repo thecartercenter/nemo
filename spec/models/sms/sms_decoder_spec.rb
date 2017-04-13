@@ -59,7 +59,7 @@ describe Sms::Decoder, :sms do
       assert_decoding_fail(body: "#{@form.code} 1.15", error: "form_not_published")
     end
 
-    it "submitting to non-existent form should produce appropriate error" do
+    it "submitting to non-existent form should produce appropriate error", :investigate do
       assert_decoding_fail(body: "abc 1.15", error: "form_not_found")
     end
 

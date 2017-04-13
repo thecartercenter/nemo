@@ -1,11 +1,11 @@
-Form,Submitter,DateSubmitted,ResponseID,IntegerQ1,TextQ2,IntegerQ3,SelectMultipleQ4,IntegerQ5,TextQ6,SelectOneQ7:Country,SelectOneQ7:City,SelectOneQ7:Latitude,SelectOneQ7:Longitude,IntegerQ8,RepeatGroupName,RepeatLevel
+Form,Submitter,DateSubmitted,ResponseID,IntegerQ1,Fruit:TextQ2,Fruit:IntegerQ3,Fruit:SelectMultipleQ4,IntegerQ5,Vegetable:TextQ6,Vegetable:SelectOneQ7:Country,Vegetable:SelectOneQ7:City,Vegetable:SelectOneQ7:Latitude,Vegetable:SelectOneQ7:Longitude,Vegetable:IntegerQ8,RepeatGroupName,RepeatLevel
 Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,,,,2,,,,,,,,0
-Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,Apple,1,Cat;Dog,2,,,,,,,Fruit Group Name,1
-Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,Banana,2,Cat,2,,,,,,,Fruit Group Name,1
-Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,,,,2,Asparagus,Ghana,Accra,5.55,0.2,3,Vegetable Group Name,1
+Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,Apple,1,Cat;Dog,2,,,,,,,Fruit,1
+Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,Banana,2,Cat,2,,,,,,,Fruit,1
+Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,,,,2,Asparagus,Ghana,Accra,5.55,0.2,3,Vegetable,1
 Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,,,,,,,,0
-Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Xigua,10,Dog,4,,,,,,,Fruit Group Name,1
-Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Yuzu,9,Cat;Dog,4,,,,,,,Fruit Group Name,1
-Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Ugli,8,Cat,4,,,,,,,Fruit Group Name,1
-Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,Zucchini,Canada,Calgary,51.045,-114.057222,7,Vegetable Group Name,1
-Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,Yam,Canada,Ottawa,45.429299,-75.629883,6,Vegetable Group Name,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Xigua,10,Dog,4,,,,,,,Fruit,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Yuzu,9,Cat;Dog,4,,,,,,,Fruit,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Ugli,8,Cat,4,,,,,,,Fruit,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,Zucchini,Canada,Calgary,51.045,-114.057222,7,Vegetable,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,Yam,Canada,Ottawa,45.429299,-75.629883,6,Vegetable,1
