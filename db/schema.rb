@@ -67,7 +67,6 @@ ActiveRecord::Schema.define(version: 20170413033406) do
     t.datetime "created_at"
     t.string "medium", limit: 255
     t.integer "mission_id", limit: 4
-    t.text "recipient_query", limit: 65535
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors", limit: 65535
     t.string "source", limit: 255, default: "manual", null: false
@@ -149,7 +148,6 @@ ActiveRecord::Schema.define(version: 20170413033406) do
     t.integer "form_id", limit: 4, null: false
     t.text "group_hint_translations", limit: 65535
     t.text "group_name_translations", limit: 65535
-    t.integer "group_rank", limit: 4
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id", limit: 4
     t.integer "question_id", limit: 4
@@ -279,7 +277,7 @@ ActiveRecord::Schema.define(version: 20170413033406) do
   add_index "option_nodes", ["mission_id"], name: "option_nodes_mission_id_fk", using: :btree
   add_index "option_nodes", ["option_id"], name: "option_nodes_option_id_fk", using: :btree
   add_index "option_nodes", ["option_set_id"], name: "option_nodes_option_set_id_fk", using: :btree
-  add_index "option_nodes", ["original_id"], name: "option_nodes_standard_id_fk", using: :btree
+  add_index "option_nodes", ["original_id"], name: "index_option_nodes_on_original_id", using: :btree
   add_index "option_nodes", ["rank"], name: "index_option_nodes_on_rank", using: :btree
   add_index "option_nodes", ["uuid"], name: "index_option_nodes_on_uuid", using: :btree
 
@@ -523,8 +521,8 @@ ActiveRecord::Schema.define(version: 20170413033406) do
   create_table "user_group_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_group_id", limit: 4
-    t.integer "user_id", limit: 4
+    t.integer "user_group_id", limit: 4, null: false
+    t.integer "user_id", limit: 4, null: false
     t.string "uuid", limit: 255, null: false
   end
 
@@ -536,12 +534,13 @@ ActiveRecord::Schema.define(version: 20170413033406) do
   create_table "user_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "mission_id", limit: 4
-    t.string "name", limit: 255
+    t.string "name", limit: 255, null: false
     t.datetime "updated_at", null: false
     t.string "uuid", limit: 255, null: false
   end
 
   add_index "user_groups", ["mission_id"], name: "index_user_groups_on_mission_id", using: :btree
+  add_index "user_groups", ["name", "mission_id"], name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
   add_index "user_groups", ["uuid"], name: "index_user_groups_on_uuid", using: :btree
 
   create_table "users", force: :cascade do |t|
@@ -611,20 +610,24 @@ ActiveRecord::Schema.define(version: 20170413033406) do
   add_foreign_key "form_items", "questions", name: "questionings_question_id_fk"
   add_foreign_key "form_versions", "forms", name: "form_versions_form_id_fk"
   add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fk", on_delete: :nullify
+  add_foreign_key "forms", "forms", column: "original_id", name: "forms_original_id_fk"
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk", on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fk"
   add_foreign_key "media_objects", "answers"
   add_foreign_key "operations", "users", column: "creator_id"
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fk"
+  add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_original_id_fk"
   add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_standard_id_fk", on_delete: :nullify
   add_foreign_key "option_nodes", "option_sets", name: "option_nodes_option_set_id_fk"
   add_foreign_key "option_nodes", "options", name: "option_nodes_option_id_fk"
   add_foreign_key "option_sets", "missions", name: "option_sets_mission_id_fk"
   add_foreign_key "option_sets", "option_nodes", column: "root_node_id", name: "option_sets_root_node_id_fk"
+  add_foreign_key "option_sets", "option_sets", column: "original_id", name: "option_sets_original_id_fk"
   add_foreign_key "option_sets", "option_sets", column: "original_id", name: "option_sets_standard_id_fk", on_delete: :nullify
   add_foreign_key "options", "missions", name: "options_mission_id_fk"
   add_foreign_key "questions", "missions", name: "questions_mission_id_fk"
   add_foreign_key "questions", "option_sets", name: "questions_option_set_id_fk"
+  add_foreign_key "questions", "questions", column: "original_id", name: "questions_original_id_fk"
   add_foreign_key "questions", "questions", column: "original_id", name: "questions_standard_id_fk", on_delete: :nullify
   add_foreign_key "report_calculations", "questions", column: "question1_id", name: "report_calculations_question1_id_fk"
   add_foreign_key "report_calculations", "report_reports", name: "report_calculations_report_report_id_fk"

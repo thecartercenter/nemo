@@ -7,8 +7,7 @@ class GenerateUuidForModels < ActiveRecord::Migration
   def up
     MODELS_WITH_UUIDS.each do |model|
       model.find_each do |instance|
-        instance.uuid = SecureRandom.uuid
-        instance.save!
+        instance.update_column(:uuid, SecureRandom.uuid)
       end
     end
   end
