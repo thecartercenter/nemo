@@ -175,6 +175,8 @@ GEM
       rake
     fix-db-schema-conflicts (2.0.0)
       rubocop (>= 0.38.0)
+    font-awesome-rails (4.7.0.1)
+      railties (>= 3.2, < 5.1)
     friendly_id (5.1.0)
       activerecord (>= 4.0.0)
     globalid (0.3.7)
@@ -484,6 +486,7 @@ DEPENDENCIES
   factory_girl_rails (~> 4.5.0)
   faker (~> 1.6.3)
   fix-db-schema-conflicts (~> 2.0.0)
+  font-awesome-rails (~> 4.7)
   friendly_id (~> 5.1.0)
   i18n-country-translations (~> 1.2.3)
   i18n-js (~> 3.0.0.rc13)

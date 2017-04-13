@@ -68,6 +68,9 @@ gem "immigrant", "~> 0.3.1"
 # mean, median, etc.
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe"
 
+# icons
+gem "font-awesome-rails", "~> 4.7"
+
 # underscore templates
 gem "ejs", "~> 1.1.1"
 
