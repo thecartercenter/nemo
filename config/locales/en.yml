@@ -1135,6 +1135,7 @@ en:
     exit_full_screen: "Exit Full Screen"
     expand_map: "Expand Map"
     low_activity: "Low Activity"
+    map_offline: "Map is not available in offline mode"
     my_responses: "My Responses"
     no_reports: "No Reports have been created for this mission yet."
     recent_responses: "Latest Responses"

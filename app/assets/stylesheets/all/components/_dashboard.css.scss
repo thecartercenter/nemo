@@ -9,6 +9,12 @@ body.welcome {
     margin-left: 0;
     padding-bottom: 40px;
 
+    .response_locations_offline {
+      color: $light-gray;
+      margin-top: 30px;
+      text-align: center;
+    }
+
     .expanded-map-links {
       display: none;
     }
