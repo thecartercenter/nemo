@@ -32,7 +32,7 @@ feature "SMS Guide", js: true do
       click_link "SMS Guide"
       select("Français", from: "lang")
       expect(page).to have_content "Formulaire"
-      expect(page).to have_content "fr: Text Title"
+      expect(page).to have_content "fr: Text Question Title"
       expect(page).to have_content "fr: Question Hint"
     end
 
@@ -41,7 +41,7 @@ feature "SMS Guide", js: true do
       click_link "SMS Guide"
       select("Kinyarwanda", from: "lang")
       expect(page).to have_content ".instructions.paper"
-      expect(page).to have_content "rw: Text Title"
+      expect(page).to have_content "rw: Text Question Title"
       expect(page).to have_content "rw: Question Hint"
     end
 
@@ -59,7 +59,7 @@ feature "SMS Guide", js: true do
         click_link "SMS Guide"
         select("Français", from: "lang")
         expect(page).to have_content "Formulaire"
-        expect(page).to have_content "fr: Text Title"
+        expect(page).to have_content "fr: Text Question Title"
         expect(page).to have_content "fr: Question Hint"
       end
 
@@ -70,7 +70,7 @@ feature "SMS Guide", js: true do
         click_link "SMS Guide"
         select("Kinyarwanda", from: "lang")
         expect(page).to have_content ".instructions.paper"
-        expect(page).to have_content "rw: Text Title"
+        expect(page).to have_content "rw: Text Question Title"
         expect(page).to have_content "rw: Question Hint"
       end
     end

@@ -144,7 +144,7 @@ end
 group :development, :test do
   # test framework
   gem "jasmine-rails", "~> 0.10.7"
-  gem "rspec-rails", "~> 3.2.1"
+  gem "rspec-rails", "~> 3.3.0"
   gem "rspec-collection_matchers", "~> 1.1.2"
 
   # mocking/stubbing/factories

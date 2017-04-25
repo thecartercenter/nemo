@@ -4,18 +4,15 @@ require "spec_helper"
 describe FormsController, type: :request do
   let!(:mission) { create(:mission) }
   let!(:user) { create(:user, role_name: :coordinator, mission: mission) }
-  let(:form) { create(:form, mission: mission, question_types: %w(integer integer)) } # No select1's
-  let(:form_select) { create(:form, mission: mission, question_types: %w(integer select_one)) } # Regular select1
-  let(:form_multiselect) do
-    create(:form, mission: mission, question_types: %w(integer multilevel_select_one)) # Multilevel select1
+  let!(:form) { create(:form, :published, mission: mission, question_types: %w(integer integer)) }
+  let!(:form_select) { create(:form, :published, mission: mission, question_types: %w(integer select_one)) }
+  let!(:form_multiselect) do
+    create(:form, :published, mission: mission, question_types: %w(integer multilevel_select_one))
   end
 
 
   before do
     login(user)
-    form.publish!
-    form_select.publish!
-    form_multiselect.publish!
   end
 
   context "for regular mission" do
