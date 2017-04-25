@@ -45,7 +45,6 @@ class Questioning < FormItem
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
   delegate :repeatable?, to: :parent, prefix: true, allow_nil: true
 
-
   scope(:visible, -> { where(hidden: false) })
 
   replicable child_assocs: [:question, :condition], backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]

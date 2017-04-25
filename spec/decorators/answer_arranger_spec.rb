@@ -12,7 +12,7 @@ describe AnswerArranger do
         "select_one",
         "integer",
         "multilevel_select_one",
-        ["text", "multilevel_select_one", "integer"],
+        {repeating: ["text", "multilevel_select_one", "integer"]},
         ["select_one", "select_multiple"],
         "decimal"
       ])
