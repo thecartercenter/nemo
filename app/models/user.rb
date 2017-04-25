@@ -61,6 +61,7 @@ class User < ApplicationRecord
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
+  validate(:print_password_reset_only_for_observer)
   validate(:no_duplicate_assignments)
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
@@ -290,6 +291,10 @@ class User < ApplicationRecord
     end
   end
 
+  def observer_only?
+    assignments.all?{ |a| a.role === "observer" }
+  end
+
   def session_time_left
     SESSION_TIMEOUT - (Time.now - last_request_at)
   end
@@ -382,6 +387,12 @@ class User < ApplicationRecord
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
         errors.add(:reset_password_method, :cant_passwd_email, verb: verb)
+      end
+    end
+
+    def print_password_reset_only_for_observer
+      if reset_password_method && !observer_only?
+        errors.add(:reset_password_method, :print_password_reset_only_for_observer)
       end
     end
 
