@@ -69,6 +69,12 @@ describe ResponseCSV do
   end
 
   context "with repeat groups" do
+    before do
+        # Use a specific timezone
+        @old_tz = Time.zone
+        Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
+    end
+
     let(:repeat_form) do
       create(:form, question_types: ["integer", {repeating: ["text", "integer", "select_multiple"]}, "integer", {repeating: ["text", "geo_multilevel_select_one",  "integer"]}]).tap do |f|
         f.children[1].update_attribute(:repeatable, true)
@@ -104,10 +110,6 @@ describe ResponseCSV do
         ]
       ])
     end
-
-    # Use a specific timezone
-    @old_tz = Time.zone
-    Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
 
     it "should generate a row per repeat group answer, plus one row per responseß" do
       FactoryGirl.reload
