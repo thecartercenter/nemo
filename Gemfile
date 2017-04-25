@@ -9,7 +9,7 @@ gem "bootstrap-modal-rails", "~> 2.2.5"
 gem "actionpack-page_caching", "~> 1.0.2"
 gem "jquery-rails", "~> 4.0.4"
 gem "jquery-fileupload-rails", "~> 0.4.5"
-gem "rails-backbone", github: "codebrew/backbone-rails"
+gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "dropzonejs-rails", "~> 0.7.3"
 gem "phantomjs_polyfill-rails", "~> 1.0.0"
 
@@ -23,8 +23,8 @@ gem "cancancan", "~> 1.10.1"
 
 # core
 gem "rake", "~> 10.4.2"
+gem "pg", "~> 0.20"
 gem "mysql2", "~> 0.3.18"
-gem "pg"
 gem "configatron", "~> 4.5.0"
 gem "random_data", "~> 1.6.0"
 gem "paperclip", "~> 4.3.2"
@@ -93,7 +93,7 @@ gem "spinjs-rails", "1.3"
 gem "ancestry", "~> 2.1.0"
 
 # Middleware for handling abusive requests
-gem "rack-attack", github: "sassafrastech/rack-attack"
+gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 
 # reCAPTCHA support
 gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
@@ -109,8 +109,9 @@ gem "twilio-ruby", "~> 4.1.0"
 # Phone number normalization
 gem "phony", "~> 2.15.26"
 
-# Data conversion
-gem "mysqltopostgres", github: "sassafrastech/mysql2postgres"
+# Temporarily included for converting MySQL to PostgreSQL
+gem "mysql-pr", git: 'https://github.com/sassafrastech/mysql-pr.git'
+gem "mysqltopostgres", git: "https://github.com/sassafrastech/mysql2postgres.git"
 
 group :development do
   # generate diagrams with rake db:migrate
