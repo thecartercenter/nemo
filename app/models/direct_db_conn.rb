@@ -1,3 +1,5 @@
+# This model is poorly named. It is part of the user import code and should be namespaced.
+# It should not be used in a generic way.
 class DirectDBConn
 
   def initialize(table)

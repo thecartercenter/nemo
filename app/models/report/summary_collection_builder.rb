@@ -71,7 +71,6 @@ class Report::SummaryCollectionBuilder
 
         # loop over each stat qing
         summaries = stat_qs.map do |qing|
-
           # get stat values from has we built above
           stat_values = results_by_disagg_value_and_qing_id[[disagg_value, qing.id]]
 
@@ -178,7 +177,7 @@ class Report::SummaryCollectionBuilder
         GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
       eos
 
-      res = do_query(query, qing_ids)
+      res = sql_runner.run(query, qing_ids)
 
       # build hash
       hash = ActiveSupport::OrderedHash[]
@@ -262,7 +261,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
 
-      sel_one_res = do_query(query, qing_ids)
+      sel_one_res = sql_runner.run(query, qing_ids)
 
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
@@ -278,7 +277,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
 
-      sel_mult_res = do_query(query, qing_ids)
+      sel_mult_res = sql_runner.run(query, qing_ids)
 
       # read tallies into hashes
       tallies = {}
@@ -316,7 +315,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id
       eos
 
-      res = do_query(query, qing_ids)
+      res = sql_runner.run(query, qing_ids)
 
       # read non-null answer counts into hash
       tallies = {}
@@ -397,7 +396,7 @@ class Report::SummaryCollectionBuilder
           ORDER BY disagg_value, qing_id, date
       eos
 
-      res = do_query(query, qing_ids)
+      res = sql_runner.run(query, qing_ids)
 
       # read into tallies, preserving sorted date order
       tallies = {}
@@ -496,7 +495,7 @@ class Report::SummaryCollectionBuilder
           LIMIT #{RAW_ANSWER_LIMIT}
       eos
 
-      do_query(query, qing_ids)
+      sql_runner.run(query, qing_ids)
     end
 
     # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
@@ -517,7 +516,7 @@ class Report::SummaryCollectionBuilder
           WHERE a.questioning_id IN (?)
         eos
 
-        res = do_query(query, long_qing_ids)
+        res = sql_runner.run(query, long_qing_ids)
 
         res.map{|row| [row['answer_id'], row['submitter_name']]}.to_h
       end
@@ -582,8 +581,7 @@ class Report::SummaryCollectionBuilder
       "#{disagg_column},"
     end
 
-    # Runs query and returns hash of results
-    def do_query(*args)
-      ApplicationRecord.connection.exec_query(ApplicationRecord.send(:sanitize_sql_array, args))
+    def sql_runner
+      SqlRunner.instance
     end
 end
