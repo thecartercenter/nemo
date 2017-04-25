@@ -1,4 +1,4 @@
-class Assignment < ActiveRecord::Base
+class Assignment < ApplicationRecord
   include Cacheable
 
   belongs_to(:mission)

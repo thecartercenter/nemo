@@ -1,4 +1,4 @@
-class Broadcast < ActiveRecord::Base
+class Broadcast < ApplicationRecord
   include MissionBased
 
   def self.receivable_association

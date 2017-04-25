@@ -1,4 +1,4 @@
-class Choice < ActiveRecord::Base
+class Choice < ApplicationRecord
   belongs_to(:answer, :inverse_of => :choices, :touch => true)
   belongs_to(:option, :inverse_of => :choices)
 

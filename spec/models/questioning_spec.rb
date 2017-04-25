@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Questioning do
+  it_behaves_like "has a uuid"
+
   it "previous" do
     f = create(:form, :question_types => %w(integer decimal integer))
     expect(f.questionings.last.previous).to eq(f.questionings[0..1])

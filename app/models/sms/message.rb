@@ -7,7 +7,7 @@
 # from        a string holding a single phone number. can be nil in case of an outgoing message.
 # body        a string holding the body of the message
 # sent_at     the time the message was sent/received
-class Sms::Message < ActiveRecord::Base
+class Sms::Message < ApplicationRecord
   include MissionBased
 
   belongs_to :mission

@@ -1,4 +1,4 @@
-class FormItem < ActiveRecord::Base
+class FormItem < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable
 
   acts_as_list column: :rank, scope: [:form_id, :ancestry]

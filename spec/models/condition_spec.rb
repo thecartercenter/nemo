@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Condition do
+  it_behaves_like "has a uuid"
+
   before(:all) do
     I18n.locale = :en
   end

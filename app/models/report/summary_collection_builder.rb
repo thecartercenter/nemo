@@ -578,6 +578,6 @@ class Report::SummaryCollectionBuilder
 
     # Runs query and returns hash of results
     def do_query(*args)
-      ActiveRecord::Base.connection.exec_query(ActiveRecord::Base.send(:sanitize_sql_array, args))
+      ApplicationRecord.connection.exec_query(ApplicationRecord.send(:sanitize_sql_array, args))
     end
 end

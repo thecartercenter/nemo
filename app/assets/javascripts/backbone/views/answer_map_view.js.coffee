@@ -1,6 +1,10 @@
 class ELMO.Views.AnswerMapView extends ELMO.Views.ApplicationView
 
   initialize: (params) ->
+    return if typeof(google) == 'undefined'
+
+    this.$el.show();
+
     # create the map
     @map = new google.maps.Map(this.$el[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,

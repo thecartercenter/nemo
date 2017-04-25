@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Setting do
+  it_behaves_like "has a uuid"
 
   let(:setting) { get_mission.setting }
 
