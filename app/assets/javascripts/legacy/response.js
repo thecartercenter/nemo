@@ -38,12 +38,15 @@
 
   // shows the map and location search box
   klass.show_location_picker = function(event) {
-    // store existing gps if any
-    var location_box = $(event.target).parents("div.control").find("input.qtype_location")[0];
-    // create and intialize location picker dialog
-    new ELMO.LocationPicker(location_box);
-    $('#location-picker-modal').modal('show');
-
+    if (typeof(google) == 'undefined') {
+      alert(I18n.t("common.map_offline"));
+    } else {
+      // store existing gps if any
+      var location_box = $(event.target).parents("div.control").find("input.qtype_location")[0];
+      // create and intialize location picker dialog
+      new ELMO.LocationPicker(location_box);
+      $('#location-picker-modal').modal('show');
+    }
   }
 
 }(ELMO));

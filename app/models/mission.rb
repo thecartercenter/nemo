@@ -1,4 +1,4 @@
-class Mission < ActiveRecord::Base
+class Mission < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 2
 
@@ -58,7 +58,7 @@ class Mission < ActiveRecord::Base
   # remove this mission and other related records from the Database
   # * this method is designed for speed.
   def terminate
-    ActiveRecord::Base.transaction do
+    ApplicationRecord.transaction do
       begin
         # Remove MissionBased Classes
         # note that we don't need to remove OptionNodes directly since OptionSet takes care of that

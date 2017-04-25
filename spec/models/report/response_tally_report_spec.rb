@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Report::ResponseTallyReport do
+  it_behaves_like "has a uuid"
+
   context 'with multilevel option set' do
     before do
       @form = create(:form, question_types: %w(multilevel_select_one))

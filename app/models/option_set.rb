@@ -1,4 +1,4 @@
-class OptionSet < ActiveRecord::Base
+class OptionSet < ApplicationRecord
   # We use this instead of autosave since autosave doesn't work right for belongs_to.
   # It is up here because it should happen early, e.g., before form version callbacks.
   after_save :save_root_node

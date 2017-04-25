@@ -35,6 +35,8 @@
 //= require bootstrap-modalmanager
 //= require phantomjs_polyfill-rails/bind-polyfill
 //= require dropzone
+//= require ckeditor/init
+//= require select2
 
 // some report superclasses need to come first due to inheritance
 //= require legacy/views/control/control

@@ -7,6 +7,17 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
   initialize: (params) ->
     @params = params
 
+    @offline = typeof(google) == 'undefined'
+    if @offline
+      @show_offline_notice()
+    else
+      @setup_map()
+
+  show_offline_notice: ->
+    $('.response_locations').remove();
+    $('.response_locations_offline').show();
+
+  setup_map: ->
     # create the map
     @map = new google.maps.Map($('div.response_locations')[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -131,13 +142,16 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
     return false
 
   update_map: (data) ->
+    return if @offline
     this.add_answer(answer) for answer in data.answers
     # TODO: Deal with data.count
 
   center: ->
+    return null if @offline
     @map.getCenter()
 
   # Called after viewport is resized. If center is given, sets the new center for the map.
   resized: (center) ->
+    return if @offline
     google.maps.event.trigger(@map, "resize")
     @map.setCenter(center) if center

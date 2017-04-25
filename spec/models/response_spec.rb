@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Response do
+  it_behaves_like "has a uuid"
+
   it "cache key" do
     user = create(:user)
     form = create(:form, question_types: %w(integer))

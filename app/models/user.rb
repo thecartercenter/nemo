@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Cacheable
 
   ROLES = %w[observer reviewer staffer coordinator]

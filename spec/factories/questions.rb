@@ -17,12 +17,15 @@ FactoryGirl.define do
 
 
     sequence(:name_translations) do |n|
-      translations = { en: "#{qtype_name.titleize} Question Title #{n}" }
-      translations.merge!({ fr: "fr: #{qtype_name.titleize} Title #{n}" }) if multilingual
-      translations.merge!({ rw: "rw: #{qtype_name.titleize} Title #{n}" }) if with_user_locale
+      translation_string = "#{qtype_name.titleize} Question Title #{n}"
+      translation_string = translation_string.prepend "Geographic " if use_geo_option_set
+      translation_string = translation_string.prepend "Multilevel " if use_multilevel_option_set
+      translations = { en: translation_string }
+      translations.merge!({ fr: "fr: #{translation_string}" }) if multilingual
+      translations.merge!({ rw: "rw: #{translation_string}" }) if with_user_locale
       translations
     end
-    sequence(:name) { |n| "#{qtype_name.titleize} Question Title #{n}" } # needed for some i18n specs
+    name { name_translations[:en] }
 
     sequence(:hint_translations) do |n|
       translations = { en: "Question Hint #{n}" }

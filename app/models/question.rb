@@ -1,5 +1,5 @@
 # a question on a form
-class Question < ActiveRecord::Base
+class Question < ApplicationRecord
   include MissionBased, Replication::Standardizable, Replication::Replicable, FormVersionable, Translatable
 
   # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)

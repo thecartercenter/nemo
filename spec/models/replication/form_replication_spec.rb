@@ -2,56 +2,54 @@
 require "spec_helper"
 
 describe Form do
-  before(:all) do
-    @mission1 = create(:mission)
-    @mission2 = create(:mission)
-  end
+  let(:mission1) { create(:mission) }
 
   describe "to_mission" do
     context "with nested questions" do
-      before do
-        @std = create(:form, question_types: ["integer", %w(select_one integer)], is_standard: true)
-        @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-        @copy.reload
-      end
+      let!(:std) { create(:form, question_types: ["integer", %w(select_one integer)], is_standard: true) }
+      let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+      let(:std_group) { std.children.detect { |c| c.is_a? QingGroup } }
+      let(:copy_group) { copy.children.detect { |c| c.is_a? QingGroup } }
+      let(:std_group_select) { std_group.children.detect { |c| c.qtype_name == "select_one" } }
+      let(:copy_group_select) { copy_group.children.detect { |c| c.qtype_name == "select_one" } }
 
       it "should not produce blank ancestry (only nil)" do
-        expect(@copy.root_group.ancestry).to be_nil
+        expect(copy.root_group.ancestry).to be_nil
       end
 
       it "should produce distinct child objects" do
-        expect(@std).not_to eq @copy
-        expect(@std.root_group).not_to eq @copy.root_group
-        expect(@std.c[1]).not_to eq @copy.c[1]
-        expect(@std.c[1].c[1]).not_to eq @copy.c[1].c[1]
+        expect(std).not_to eq copy
+        expect(std.root_group).not_to eq copy.root_group
+        expect(std_group).not_to eq copy_group
+        expect(std_group_select).not_to eq copy_group_select
       end
 
       it "should produce correct form references" do
-        expect(@copy.root_group.form).to eq @copy
-        expect(@copy.c[0].form).to eq @copy
-        expect(@copy.c[1].c[0].form).to eq @copy
+        expect(copy.root_group.form).to eq copy
+        expect(copy.children.first.form).to eq copy
+        expect(copy_group_select.form).to eq copy
       end
     end
 
     context "with an existing copy of form in mission" do
-      before do
-        @std = create(:form, question_types: %w(select_one integer), is_standard: true)
-        @copy1 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-        @copy2 = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-      end
+      let!(:std) { create(:form, question_types: %w(select_one integer), is_standard: true) }
+      let!(:copy1) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+      let!(:copy2) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+      let(:copy1_select) { copy1.children.detect { |c| c.qtype_name == "select_one" } }
+      let(:copy2_select) { copy2.children.detect { |c| c.qtype_name == "select_one" } }
 
       it "should create a second copy but re-use questions, option sets" do
-        expect(@copy1).not_to eq @copy2
-        expect(@copy1.c[0]).not_to eq @copy2.c[0]
-        expect(@copy1.c[0].question).to eq @copy2.c[0].question
-        expect(@copy1.c[0].question.option_set).to eq @copy2.c[0].question.option_set
+        expect(copy1).not_to eq copy2
+        expect(copy1_select).not_to eq copy2_select
+        expect(copy1_select.question).to eq copy2_select.question
+        expect(copy1_select.question.option_set).to eq copy2_select.question.option_set
       end
 
       context "when using eager loaded values from form items query" do
         it "keeps the questioning count consistent" do
-          std_qing_count = form_items_qing_count(@std)
-          copy1_qing_count = form_items_qing_count(@copy1)
-          copy2_qing_count = form_items_qing_count(@copy2)
+          std_qing_count = form_items_qing_count(std)
+          copy1_qing_count = form_items_qing_count(copy1)
+          copy2_qing_count = form_items_qing_count(copy2)
 
           expect(std_qing_count).to eq copy1_qing_count
           expect(std_qing_count).to eq copy2_qing_count
@@ -61,65 +59,88 @@ describe Form do
 
     context "with a condition referencing an option" do
       context "from a multilevel set" do
-        before do
-          @std = create(:form, question_types: %w(multilevel_select_one integer), is_standard: true)
-
-          # Create condition on 2nd questioning.
-          puts "@STD CHILDREN"
-          puts @std.c.awesome_inspect
-          @std.c[1].condition = build(:condition,
-            ref_qing: @std.c[0], op: "eq",
-            option_node_id: @std.questions[0].option_set.c[1].c[0].id)
-          @std.c[1].condition.save!
+        let!(:std) { create(:form, is_standard: true) }
+        let!(:std_questionings) do
+          {
+            multilevel: create_questioning("multilevel_select_one", std),
+            integer: create_questioning("integer", std)
+          }
+        end
+        let!(:std_option_node) do
+          std_questionings[:multilevel].option_set.children.
+            detect { |c| c.option_name == "Plant" }.children.
+            detect { |c| c.option_name == "Tulip" }
+        end
+        let!(:std_condition) do
+          std_questionings[:integer].
+            create_condition(ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
+          std_questionings[:integer].condition
+        end
+        let(:copy_questionings) do
+          {
+            multilevel: copy.children.detect { |c| c.qtype_name == "select_one" },
+            integer: copy.children.detect { |c| c.qtype_name == "integer" }
+          }
         end
 
+
         context "if all goes well" do
-          before do
-            @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
-            @copy_cond = @copy.c[1].condition
-            @copy_opt_set = @copy.c[0].option_set
+          let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+
+          let!(:copy_condition) { copy_questionings[:integer].condition }
+          let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
+          let!(:copy_option_node) do
+            copy_questionings[:multilevel].option_set.children.
+              detect { |c| c.option_name == "Plant" }.children.
+              detect { |c| c.option_name == "Tulip" }
           end
 
+
           it "should produce distinct child objects" do
-            expect(@std.c[1]).not_to eq @copy.c[1]
-            expect(@std.c[1].condition).not_to eq @copy_cond
-            expect(@std.c[0].options[0]).not_to eq @copy_opt_set.options[0]
-            expect(@std.c[1].condition.option_node).not_to eq @copy_cond.option_node
+            expect(std_questionings[:integer]).not_to eq copy_questionings[:integer]
+            expect(std_condition).not_to eq copy_condition
+            expect(std_questionings[:multilevel].options.sort.first).not_to eq copy_opt_set.options.sort.first
+            expect(std_questionings[:integer].condition.option_node).not_to eq copy_condition.option_node
           end
 
           it "should produce correct condition-qing link" do
-            expect(@copy_cond.ref_qing).to eq @copy.c[0]
+            expect(copy_condition.ref_qing).to eq copy_questionings[:multilevel]
           end
 
           it "should produce correct new option node reference" do
-            expect(@copy_cond.option_node_id).to eq(@copy_opt_set.c[1].c[0].id)
-            expect(@copy_cond.option_node.option).to eq(@copy_opt_set.c[1].c[0].option)
-            expect(@copy_cond.option_node.option_name).to eq "Tulip"
+            expect(copy_condition.option_node_id).to eq(copy_option_node.id)
+            expect(copy_condition.option_node.option).to eq(copy_option_node.option)
+            expect(copy_condition.option_node.option_name).to eq "Tulip"
           end
         end
 
         context "if the option has since been deleted in the mission" do
-          before do
-            # Replicate just the OptionSet into the mission
-            os_copy = @std.questions[0].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
+          let!(:option_set_copy) do
+            # replicate the option set
+            os_copy = std_questionings[:multilevel].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
 
-            # Now delete the copy of the option node that is referenced by the condition
-            os_copy.c[1].c[0].destroy
+
+            os_copy.children.
+              detect { |c| c.option_name == "Plant" }.children.
+              detect { |c| c.option_name == "Tulip" }.destroy
+
+            os_copy
           end
-
-          let!(:copy) { @std.replicate(mode: :to_mission, dest_mission: get_mission) }
+          let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
 
           it "should succeed but not copy the condition" do
             # Question should still be copied but copy should not have a condition
-            expect(copy.c[1].code).to eq @std.c[1].code
-            expect(@std.c[1].condition).to be_present
-            expect(copy.c[1].condition).to be_nil
+            expect(copy_questionings[:integer].code).to eq std_questionings[:integer].code
+            expect(std_questionings[:integer].condition).to be_present
+            expect(copy_questionings[:integer].condition).to be_nil
           end
         end
       end
     end
 
     context "with a condition referencing a now-incompatible question" do
+      let!(:std) { create(:form, is_standard: true) }
+
       before do
         @std = create(:form, question_types: %w(select_one integer), is_standard: true)
 
@@ -133,8 +154,8 @@ describe Form do
 
         # Replicate question first and render the copy incompatible.
         @orig_q1 = @std.c[0].question
-        @copy_q1 = @orig_q1.replicate(mode: :to_mission, dest_mission: @mission1)
-        @copy_q1.option_set = create(:option_set, mission: @mission1)
+        @copy_q1 = @orig_q1.replicate(mode: :to_mission, dest_mission: mission1)
+        @copy_q1.option_set = create(:option_set, mission: mission1)
         @copy_q1.save!
 
         # Replicate form.

@@ -1,4 +1,4 @@
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   include MissionBased, Comparable
 
   belongs_to :mission

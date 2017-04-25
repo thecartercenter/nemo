@@ -69,6 +69,15 @@ gem "immigrant", "~> 0.3.1"
 # mean, median, etc.
 gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe"
 
+# icons
+gem "font-awesome-rails", "~> 4.7"
+
+# Rich text editor
+gem "ckeditor", "~> 4.2"
+
+# Select box on steriods
+gem "select2-rails", "~> 4.0"
+
 # underscore templates
 gem "ejs", "~> 1.1.1"
 
@@ -140,7 +149,7 @@ end
 group :development, :test do
   # test framework
   gem "jasmine-rails", "~> 0.10.7"
-  gem "rspec-rails", "~> 3.2.1"
+  gem "rspec-rails", "~> 3.3.0"
   gem "rspec-collection_matchers", "~> 1.1.2"
 
   # mocking/stubbing/factories

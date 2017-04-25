@@ -134,7 +134,7 @@
           var content = ckeditor ? ckeditor.getData() : this.rq_row.find("div.control textarea").val();
 
           // Strip wrapping <p> tag for comparison.
-          return content.replace(/(^<p>|<\/p>$)/ig, "")
+          return content.trim().replace(/(^<p>|<\/p>$)/ig, "")
 
         case "integer":
         case "decimal":

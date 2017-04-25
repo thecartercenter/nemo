@@ -1,4 +1,4 @@
-class OptionNode < ActiveRecord::Base
+class OptionNode < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
 
   # Number of descendants that make a 'huge' node.

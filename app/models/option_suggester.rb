@@ -38,6 +38,6 @@ class OptionSuggester
   end
 
   def sanitize(*args)
-    ActiveRecord::Base.__send__(:sanitize_sql, args, '')
+    ApplicationRecord.__send__(:sanitize_sql, args, '')
   end
 end

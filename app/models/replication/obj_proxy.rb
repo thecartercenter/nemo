@@ -82,6 +82,7 @@ class Replication::ObjProxy
     mappings += unique_col_mappings(replicator, context)
     mappings += standardizable_col_mappings(replicator, context)
     mappings += backward_assoc_col_mappings(replicator, context)
+    mappings += [[:uuid, "'#{SecureRandom.uuid}'"]]
 
     if klass.has_ancestry?
       new_ancestry = get_copy_ancestry(context)
@@ -144,7 +145,7 @@ class Replication::ObjProxy
       return [] unless uniq_spec = klass.replicable_opts[:uniqueness]
       generator = Replication::UniqueFieldGenerator.new(
         uniq_spec.merge(klass: klass, orig_id: id, mission_id: replicator.target_mission_id))
-      [[uniq_spec[:field], ActiveRecord::Base.connection.quote(generator.generate)]]
+      [[uniq_spec[:field], ApplicationRecord.connection.quote(generator.generate)]]
     end
 
     def standardizable_col_mappings(replicator, context)

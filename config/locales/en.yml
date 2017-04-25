@@ -54,6 +54,7 @@ en:
     confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
+    map_offline: "Map is not available in offline mode"
     less_settings: "Fewer settings"
     more_settings: "More settings"
     near: "Near"

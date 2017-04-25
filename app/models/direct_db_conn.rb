@@ -125,10 +125,10 @@ class DirectDBConn
   end
 
   def execute_sanitized_query(sanitized_query)
-    ActiveRecord::Base.connection.execute(sanitized_query)
+    ApplicationRecord.connection.execute(sanitized_query)
   end
 
   def sanitize_sql_query_array(sql_query_array)
-    ActiveRecord::Base.send(:sanitize_sql_array, sql_query_array)
+    ApplicationRecord.send(:sanitize_sql_array, sql_query_array)
   end
 end

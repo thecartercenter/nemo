@@ -1,4 +1,4 @@
-class Operation < ActiveRecord::Base
+class Operation < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
   default_scope -> { order('operations.created_at DESC') }
