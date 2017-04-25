@@ -44,6 +44,10 @@ class Questioning < FormItem
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
   delegate :repeatable?, to: :parent, prefix: true, allow_nil: true
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
 
   scope(:visible, -> { where(hidden: false) })
 
@@ -79,7 +83,7 @@ class Questioning < FormItem
 
   # Gets full dotted ranks of all referring conditions' questionings.
   def referring_condition_ranks
-    referring_conditions.map{ |c| c.questioning.full_dotted_rank }
+    referring_conditions.map { |c| c.questioning.full_dotted_rank }
   end
 
   # Returns any questionings appearing before this one on the form.
@@ -87,7 +91,7 @@ class Questioning < FormItem
   # If an unsaved question does not have a form defined, this will result in an error.
   def previous
     return form.questionings if new_record?
-    form.questionings.reject{ |q| q == self || (q.full_rank <=> full_rank) == 1 }
+    form.questionings.reject { |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
   # Returns smsable forms
@@ -116,6 +120,7 @@ class Questioning < FormItem
   def is_question_method?(symbol)
     symbol.match(/\A((name|hint)_([a-z]{2})(=?))(_before_type_cast)?\z/)
   end
+
   # /REFACTOR
   def inspect
     id

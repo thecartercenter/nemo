@@ -3,129 +3,173 @@ require "spec_helper"
 # Should change this to no_sphinx for performance reasons when TS bug #914 is fixed.
 feature "responses form", js: true, sphinx: true do
   let(:user) { create(:user) }
-  let(:form) do
-    create(:form, :published, question_types: %w(select_one multilevel_select_one select_multiple integer decimal
-      location text long_text datetime date time))
-  end
-  let(:qings) { form.questionings }
+  let!(:form) { create(:form, :published) }
+  let(:form_questionings) { form.questionings }
   let(:response_link) { Response.first.decorate.shortcode.to_s }
+  let(:response_path_params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
-  describe "general" do
-    # This should be refactored to split into different scenarios.
-    before do
+  describe "general", database_cleaner: :all, order: :defined do
+    let!(:questionings) do
+      {
+        select_one: create_questioning("select_one", form),
+        multilevel_select_one: create_questioning("multilevel_select_one", form),
+        select_multiple: create_questioning("select_multiple", form),
+        integer: create_questioning("integer", form),
+        decimal: create_questioning("decimal", form),
+        location: create_questioning("location", form),
+        text: create_questioning("text", form),
+        long_text: create_questioning("long_text", form),
+        datetime: create_questioning("datetime", form),
+        date: create_questioning("date", form),
+        time: create_questioning("time", form)
+      }
+    end
+    let(:questioning_answers) do
+      {
+        select_one: "Dog",
+        multilevel_select_one: %w(Plant Oak),
+        select_multiple: "Cat",
+        integer: "10",
+        decimal: "10.2",
+        location: "42.277976 -83.817573",
+        text: "Foo",
+        long_text: "Foo Bar Baz",
+        datetime: "Mar 12 #{Time.now.year} 18:32",
+        date: "Oct 26 #{Time.now.year}",
+        time: "03:08"
+      }
+    end
+    let(:reviewer) { create(:user) }
+
+    # TODO: find a better way to share this data for show/edit
+    before(:each) do
       login(user)
+      visit new_response_path(response_path_params)
+      select2(user.name, from: "response_user_id")
+
+      control_for(questionings[:select_one]).select("Dog")
+      control_for(questionings[:multilevel_select_one], subfield: 1).select("Plant")
+      control_for(questionings[:multilevel_select_one], subfield: 2).select("Oak")
+      control_for(questionings[:select_multiple]).check("Cat")
+
+      fill_in(control_id_for(questionings[:integer]), with: "10")
+      fill_in(control_id_for(questionings[:decimal]), with: "10.2")
+      fill_in(control_id_for(questionings[:location]), with: "42.277976 -83.817573")
+      fill_in(control_id_for(questionings[:text]), with: "Foo")
+      fill_in_ckeditor(control_id_for(questionings[:long_text], visible: false), with: "Foo Bar\nBaz")
+
+      control_for(questionings[:datetime], subfield: :year).select(Time.now.year)
+      control_for(questionings[:datetime], subfield: :month).select("March")
+      control_for(questionings[:datetime], subfield: :day).select("12")
+      control_for(questionings[:datetime], subfield: :hour).select("18")
+      control_for(questionings[:datetime], subfield: :minute).select("32")
+
+      control_for(questionings[:date], subfield: :year).select(Time.now.year)
+      control_for(questionings[:date], subfield: :month).select("October")
+      control_for(questionings[:date], subfield: :day).select("26")
+
+      control_for(questionings[:time], subfield: :hour).select("03")
+      control_for(questionings[:time], subfield: :minute).select("08")
+
+      click_button("Save")
     end
 
-    let!(:reviewer) { create(:user) }
-
-    scenario "should work" do
-      visit_submit_page_and_select_user
-
-      # Fill in answers
-      select("Dog", from: control_id(qings[0], "_option_node_id"))
-
-      select("Plant", from: control_id(qings[1], "_0_option_node_id"))
-      find("#" + control_id(qings[1], "_1_option_node_id") + " option", text: "Oak")
-      select("Oak", from: control_id(qings[1], "_1_option_node_id"))
-
-      check(control_id(qings[2], "_choices_attributes_0_checked")) # Cat
-      fill_in(control_id(qings[3], "_value"), with: "10")
-      fill_in(control_id(qings[4], "_value"), with: "10.2")
-      fill_in(control_id(qings[5], "_value"), with: "42.277976 -83.817573")
-      fill_in(control_id(qings[6], "_value"), with: "Foo")
-      fill_in_ckeditor(control_id(qings[7], "_value"), with: "Foo Bar\nBaz")
-
-      select(Time.now.year, from: control_id(qings[8], "_datetime_value_1i"))
-      select("March", from: control_id(qings[8], "_datetime_value_2i"))
-      select("12", from: control_id(qings[8], "_datetime_value_3i"))
-      select("18", from: control_id(qings[8], "_datetime_value_4i"))
-      select("32", from: control_id(qings[8], "_datetime_value_5i"))
-
-      select(Time.now.year, from: control_id(qings[9], "_date_value_1i"))
-      select("October", from: control_id(qings[9], "_date_value_2i"))
-      select("26", from: control_id(qings[9], "_date_value_3i"))
-
-      select("03", from: control_id(qings[10], "_time_value_4i"))
-      select("08", from: control_id(qings[10], "_time_value_5i"))
-
-      # Save and check it worked.
-      click_button("Save")
+    scenario "submit response" do
       expect(page).to have_selector("h1", text: "Response")
+    end
 
-      # Check show mode.
+    scenario "show response" do
+      # Check answers saved
       click_link(response_link)
-      check_response_show_form("Dog", %w(Plant Oak), "Cat", "10", "10.2", "42.277976 -83.817573", "Foo",
-        "Foo Bar Baz", "Mar 12 #{Time.now.year} 18:32", "Oct 26 #{Time.now.year}", "03:08")
 
-      # Check edit mode.
+      questioning_answers.each do |qing, answer|
+        expect_answer(questioning: qing, answer: answer)
+      end
+    end
+
+    scenario "edit response" do
+      click_link(response_link)
       click_link("Edit Response")
       select2(reviewer.name, from: "response_reviewer_id")
-      select("Animal", from: control_id(qings[1], "_0_option_node_id"))
-      find("#" + control_id(qings[1], "_1_option_node_id") + " option", text: "Cat")
-      select("Cat", from: control_id(qings[1], "_1_option_node_id"))
-      uncheck(control_id(qings[2], "_choices_attributes_0_checked")) # Cat
-      check(control_id(qings[2], "_choices_attributes_1_checked")) # Dog
+
+      control_for(questionings[:multilevel_select_one], subfield: 1).select("Animal")
+      control_for(questionings[:multilevel_select_one], subfield: 2).select("Cat")
+
+      control_for(questionings[:select_multiple]).uncheck("Cat")
+      control_for(questionings[:select_multiple]).check("Dog")
+
       click_button("Save")
-
-      # Check that change occurred.
       click_link(response_link)
-      check_response_show_form("Dog", %w(Animal Cat), "Dog", "10", "10.2", "42.277976 -83.817573", "Foo",
-        "Foo Bar Baz", "Mar 12 #{Time.now.year} 18:32", "Oct 26 #{Time.now.year}", "03:08")
 
-      # Delete.
-      handle_js_confirm { click_link("Delete Response") }
+      modified_answers = questioning_answers.merge({multilevel_select_one: %w(Animal Cat), select_multiple: "Dog"})
+      modified_answers.each do |qing, answer|
+        expect_answer(questioning: qing, answer: answer)
+      end
+    end
+
+    scenario "delete response" do
+      click_link(response_link)
+
+      accept_confirm do
+        click_link("Delete Response")
+      end
+
       expect(page).to have_selector(".alert-success", text: "deleted")
     end
   end
 
   describe "hidden questions" do
-    let(:form) { create(:form, :published, question_types: %w(text text)) }
-
-    before do
-      @qing0, @qing1 = qings
-      @qing1.update_attributes(hidden: true, required: true) # Being required shouldn't make a difference.
-      login(user)
+    let!(:questionings) do
+      {
+        text: create_questioning("text", form),
+        text_hidden: create(:questioning,
+          question: create(:question, qtype_name: "text"), form: form, hidden: true, required: true)
+      }
     end
+    before { login(user) }
 
     scenario "should be properly ignored" do
-      visit_submit_page_and_select_user
+      visit new_response_path(response_path_params)
+      select2(user.name, from: "response_user_id")
 
-      expect(page).not_to have_selector("div.form_field#qing_#{@qing1.id}")
-      fill_in(control_id(@qing0, "_value"), with: "Foo")
+      expect(page).not_to have_selector("div.form_field#qing_#{questionings[:text_hidden].id}")
+      fill_in(control_id_for(questionings[:text]), with: "Foo")
       click_button("Save")
 
       # Ensure response saved properly.
       click_link(response_link)
-      expect(page).not_to have_selector("[data-qing-id=\"#{@qing1.id}\"]")
-      expect(page).to have_selector("[data-qing-id=\"#{@qing0.id}\"] .ro-val", text: "Foo")
+      expect(page).not_to have_selector("[data-qing-id=\"#{questionings[:text_hidden].id}\"]")
+      expect(page).to have_selector("[data-qing-id=\"#{questionings[:text].id}\"] .ro-val", text: "Foo")
     end
   end
 
   describe "integer constraints" do
-    let(:form) { create(:form, :published, question_types: %w(integer)) }
-
-    before do
-      form.questions[0].update_attributes!(minimum: 10)
-      login(user)
+    let!(:questionings) do
+      {
+        integer: create(:questioning, form: form, question: create(:question, qtype_name: "integer", minimum: 10))
+      }
     end
 
+    before { login(user) }
+
     scenario "should be enforced if appropriate" do
-      # Should raise error if value filled in.
-      visit_submit_page_and_select_user
-      fill_in(control_id(qings[0], "_value"), with: "9")
-      click_button("Save")
-      expect(page).to have_content("greater than or equal to 10")
+      visit new_response_path(response_path_params)
+      select2(user.name, from: "response_user_id")
 
-      # Should not raise error if value is valid.
-      fill_in(control_id(qings[0], "_value"), with: "11")
+      fill_in(control_id_for(questionings[:integer]), with: "9")
       click_button("Save")
-      expect(page).to have_content("Response created successfully")
+      expect(page).to have_content "greater than or equal to 10"
 
-      # Should not raise error if left blank.
-      visit_submit_page_and_select_user
-      fill_in(control_id(qings[0], "_value"), with: "")
+      fill_in(control_id_for(questionings[:integer]), with: "11")
       click_button("Save")
-      expect(page).to have_content("Response created successfully")
+      expect(page).to have_content "Response created successfully"
+
+      click_link(response_link)
+      click_link("Edit Response")
+
+      fill_in(control_id_for(questionings[:integer]), with: "")
+      click_button("Save")
+      expect(page).to have_content "Response updated successfully"
     end
   end
 
@@ -155,49 +199,57 @@ feature "responses form", js: true, sphinx: true do
   end
 
   describe "repeat groups" do
-    let(:form) { create(:form, :published, question_types: ["select_one", ["integer", "text", "multilevel_select_one"], "text"]) }
-    let(:group) { form.child_groups.first }
-
-    before do
-      group.update_attribute(:repeatable, true)
-      login(user)
+    let(:qing_group) { create(:qing_group, form: form, repeatable: true) }
+    let!(:questionings) do
+      {
+        select_one: create_questioning("select_one", form),
+        group_integer: create_questioning("integer", form, qing_group),
+        group_text: create_questioning("text", form, qing_group),
+        group_multilevel: create_questioning("multilevel_select_one", form, qing_group),
+        text: create_questioning("text", form)
+      }
     end
+
+    before { login(user) }
 
     scenario "should let you add two instances" do
-      visit_submit_page_and_select_user
+      visit new_response_path(response_path_params)
+      select2(user.name, from: "response_user_id")
 
-      select "Cat", from: control_id(qings[0], "_option_node_id")
+      control_for(questionings[:select_one]).select("Cat")
       find("a.add-instance").click
-      fill_in control_id(qings[1], "_value", inst_num: 2), with: 10
+      fill_in control_id_for(questionings[:group_integer], instance_num: 2), with: 10
     end
   end
 
-  def control_id(qing, suffix, inst_num: 1)
-    "response_answers_attributes_#{qing.id}_#{inst_num}#{suffix}"
-  end
+  def control_for(questioning, subfield: nil, visible: true, instance_num: nil)
+    instance_prefix = "[data-inst-num='#{instance_num}']" if instance_num
+    prefix = "div[data-qing-id='#{questioning.id}']#{instance_prefix} .control"
 
-  def visit_submit_page_and_select_user
-    visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
-    select2(user.name, from: "response_user_id")
-  end
-
-  def check_response_show_form(*values)
-    values.each_with_index { |v,i| expect_answer(i, v) }
-  end
-
-  def expect_answer(qing_idx, value)
-    qing = qings[qing_idx]
-    csscls = qing.multilevel? ? "option-name" : "ro-val"
-    Array.wrap(value).each do |v|
-      expect(page).to have_selector("[data-qing-id=\"#{qing.id}\"] .#{csscls}", text: /^#{Regexp.escape(v)}$/)
+    if questioning.qtype_name == "select_multiple"
+      find("#{prefix} .widget", visible: visible)
+    elsif questioning.temporal?
+      find("#{prefix} select[id$='#{temporal_mapping[subfield]}']", visible: visible)
+    elsif questioning.multilevel?
+      find("#{prefix} .level:nth-child(#{subfield}) .form-control", visible: visible)
+    else
+      find("#{prefix} .form-control", visible: visible)
     end
   end
 
-  # helper method
-  def handle_js_confirm
-    page.evaluate_script "window.confirmMsg = null"
-    page.evaluate_script "window.confirm = function(msg) { window.confirmMsg = msg; return true; }"
-    yield
-    page.evaluate_script "window.confirmMsg"
+  def control_id_for(questioning, subfield: nil, visible: true, instance_num: nil)
+    control_for(questioning, subfield: subfield, visible: visible, instance_num: instance_num)["id"]
+  end
+
+  def temporal_mapping
+    { year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i" }
+  end
+
+  def expect_answer(questioning: nil, answer: nil)
+    qing = questionings[questioning]
+    selector_class = qing.multilevel? ? "option-name" : "ro-val"
+    Array.wrap(answer).each do |a|
+      expect(page).to have_selector("[data-qing-id=\"#{qing.id}\"] .#{selector_class}", text: /^#{Regexp.escape(a)}$/)
+    end
   end
 end
