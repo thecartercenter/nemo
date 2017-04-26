@@ -33,6 +33,10 @@ class ResponseCSV
       find_or_create_column(code: "Submitter")
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseID")
+      if responses.any?{|r| r.form.has_repeat_groups?}
+        find_or_create_column(code: "GroupName")
+        find_or_create_column(code: "GroupLevel")
+      end
 
       responses.each do |response|
         # Ensure we have all this response's columns in our table.
@@ -81,10 +85,10 @@ class ResponseCSV
     qa = ResponseCSV::QA.new(question, answers)
     columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
     if response.form.has_repeat_groups?
-      repeat_level = answers.first.repeat_level
-      repeat_group_name = answers.first.parent_group_name
-      row[columns_by_question["RepeatGroupName"].first.position] = repeat_group_name
-      row[columns_by_question["RepeatLevel"].first.position] = repeat_level
+      group_level = answers.first.group_level
+      group_name = answers.first.parent_group_name
+      row[columns_by_question["GroupName"].first.position] = group_name
+      row[columns_by_question["GroupLevel"].first.position] = group_level
     end
   end
 
@@ -97,10 +101,6 @@ class ResponseCSV
   def process_form(form)
     return if processed_forms.include?(form.id)
     form.questionings.each{ |q| find_or_create_column(qing: q) }
-    if form.has_repeat_groups?
-      find_or_create_column(code: "RepeatGroupName")
-      find_or_create_column(code: "RepeatLevel")
-    end
     processed_forms << form.id
   end
 
