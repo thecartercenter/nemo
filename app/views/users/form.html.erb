@@ -48,7 +48,7 @@
 
       <% verb = @user.new_record? ? "choose" : "reset" %>
       <% label = t("user.reset_password_label_" + verb) %>
-      <% @show_print_option = !admin_mode? && (!@user.new_record? && @user.observer_only?) %>
+      <% @show_print_option = !admin_mode? && (@user.new_record? || @user.observer_only?) %>
       <% hint = t("user.reset_password_hint_" + verb) + " " + t("user.reset_password_hint_ending", verb: t("common." + verb).downcase) %>
       <%= f.field(:reset_password_method, label: label, hint: hint, show_print_option: @show_print_option, partial: "reset_password_method") %>
 

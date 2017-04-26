@@ -391,7 +391,7 @@ class User < ApplicationRecord
     end
 
     def print_password_reset_only_for_observer
-      if reset_password_method && !observer_only?
+      if reset_password_method == "print" && !observer_only?
         errors.add(:reset_password_method, :print_password_reset_only_for_observer)
       end
     end

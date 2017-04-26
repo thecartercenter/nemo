@@ -2049,7 +2049,7 @@ en:
     profile_updated: "Profile updated successfully."
     reset_password_and: "Reset password and"
     reset_password_hint_choose: "Select how this user should get their password."
-    reset_password_hint_ending: "The system can send them an email with instructions on how to %{verb} the password online. When managing an observer within a mission, you can choose a printable instruction sheet including a randomly generated password."
+    reset_password_hint_ending: "The system can send them an email with instructions on how to %{verb} the password online. A printable instruction sheet including a randomly generated password is available within a mission for a user whose only role is observer."
     reset_password_hint_reset: "Choose whether and how to reset this user's password."
     reset_password_label_choose: "Password Creation"
     reset_password_label_reset: "Reset Password?"
