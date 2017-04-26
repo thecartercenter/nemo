@@ -33,7 +33,7 @@ class ResponseCSV
       find_or_create_column(code: "Submitter")
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseID")
-      if responses.any?{|r| r.form.has_repeat_groups?}
+      if responses.any?{ |r| r.form.has_repeat_groups? }
         find_or_create_column(code: "GroupName")
         find_or_create_column(code: "GroupLevel")
       end
