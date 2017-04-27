@@ -110,7 +110,7 @@ class OptionSet < ApplicationRecord
   def self.first_level_option_nodes_for_sets(set_ids)
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).to_a.map(&:root_node_id)
-    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).to_a
+    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).order(:option_set_id, :rank).to_a
   end
 
   def children_attribs=(attribs)
