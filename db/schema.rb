@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170425172648) do
+ActiveRecord::Schema.define(version: 20170427151659) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -149,8 +149,8 @@ ActiveRecord::Schema.define(version: 20170425172648) do
     t.integer "ancestry_depth", null: false
     t.datetime "created_at"
     t.integer "form_id", null: false
-    t.text "group_hint_translations"
-    t.text "group_name_translations"
+    t.jsonb "group_hint_translations", default: {}
+    t.jsonb "group_name_translations", default: {}
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id"
     t.integer "question_id"
@@ -312,7 +312,7 @@ ActiveRecord::Schema.define(version: 20170425172648) do
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "mission_id"
-    t.text "name_translations"
+    t.jsonb "name_translations", default: {}
     t.datetime "updated_at"
     t.string "uuid", null: false
   end
@@ -326,7 +326,7 @@ ActiveRecord::Schema.define(version: 20170425172648) do
     t.text "canonical_name", null: false
     t.string "code", limit: 255
     t.datetime "created_at"
-    t.text "hint_translations"
+    t.jsonb "hint_translations", default: {}
     t.boolean "is_standard", default: false
     t.boolean "key", default: false
     t.decimal "maximum", precision: 15, scale: 8
@@ -334,7 +334,7 @@ ActiveRecord::Schema.define(version: 20170425172648) do
     t.decimal "minimum", precision: 15, scale: 8
     t.boolean "minstrictly"
     t.integer "mission_id"
-    t.text "name_translations"
+    t.jsonb "name_translations", default: {}
     t.integer "option_set_id"
     t.integer "original_id"
     t.string "qtype_name", limit: 255
