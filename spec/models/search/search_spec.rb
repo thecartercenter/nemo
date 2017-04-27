@@ -195,34 +195,34 @@ describe Search::Search do
   end
 
   it "translated qualifier should work" do
-    assert_search(str: 'name: foo', sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name: foo', sql: %{((t.name ->> 'en' ILIKE '%foo%'))})
   end
 
   it "translated qualifier should sanitize properly" do
-    assert_search(str: "name: foo';DROP_DB", sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo'';DROP_DB([^"\\]|\\\\.)*"'))})
+    assert_search(str: "name: foo';DROP_DB", sql: %{((t.name ->> 'en' ILIKE '%foo'';DROP_DB%'))})
   end
 
   it "translated qualifier should work for different locale" do
     I18n.locale = :fr
-    assert_search(str: 'name: foo', sql: %{((t.name RLIKE '"fr":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name: foo', sql: %{((t.name ->> 'fr' ILIKE '%foo%'))})
     I18n.locale = :en
   end
 
   it "translated qualifier with quoted string should work" do
-    assert_search(str: 'name: "foo bar"', sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo bar([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name: "foo bar"', sql: %{((t.name ->> 'en' ILIKE '%foo bar%'))})
   end
 
   it "translated qualifier with and should work" do
     assert_search(str: 'name: (foo bar)',
-      sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"') AND (t.name RLIKE '"en":"([^"\\]|\\\\.)*bar([^"\\]|\\\\.)*"'))})
+      sql: %{((t.name ->> 'en' ILIKE '%foo%') AND (t.name ->> 'en' ILIKE '%bar%'))})
   end
 
   it "translated qualifier with equals operator should work" do
-    assert_search(str: 'name = foo', sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name = foo', sql: %{((t.name ->> 'en' ILIKE '%foo%'))})
   end
 
   it "translated qualifier negated should work" do
-    assert_search(str: 'name != foo', sql: %{(NOT((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"' AND t.name IS NOT NULL)))})
+    assert_search(str: 'name != foo', sql: %{(NOT((t.name ->> 'en' ILIKE '%foo%' AND t.name IS NOT NULL)))})
   end
 
   it "translated qualifier with gt operator should error" do
