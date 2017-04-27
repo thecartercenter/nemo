@@ -165,21 +165,21 @@ describe Search::Search do
   end
 
   it "text qualifier should work" do
-    assert_search(str: "submitter: (v1 v2) source: bar", sql: "((t3.f3 LIKE '%v1%') AND (t3.f3 LIKE '%v2%')) AND ((t.source = 'bar'))")
+    assert_search(str: "submitter: (v1 v2) source: bar", sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with quoted string should work" do
-    assert_search(str: "submitter: (v1 \"v2 v3\") source: bar", sql: "((t3.f3 LIKE '%v1%') AND (t3.f3 LIKE '%v2 v3%')) AND ((t.source = 'bar'))")
-    assert_search(str: 'submitter: "v1 v2" source: bar', sql: "((t3.f3 LIKE '%v1 v2%')) AND ((t.source = 'bar'))")
+    assert_search(str: "submitter: (v1 \"v2 v3\") source: bar", sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2 v3%')) AND ((t.source = 'bar'))")
+    assert_search(str: 'submitter: "v1 v2" source: bar', sql: "((t3.f3 ILIKE '%v1 v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with OR should work" do
-    assert_search(str: "submitter: (v1 | v2) source: bar", sql: "((t3.f3 LIKE '%v1%') OR (t3.f3 LIKE '%v2%')) AND ((t.source = 'bar'))")
+    assert_search(str: "submitter: (v1 | v2) source: bar", sql: "((t3.f3 ILIKE '%v1%') OR (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with AND and OR should work" do
     assert_search(str: "submitter: (v1 v2 | v3) source: bar",
-      sql: "((t3.f3 LIKE '%v1%') AND (t3.f3 LIKE '%v2%') OR (t3.f3 LIKE '%v3%')) AND ((t.source = 'bar'))")
+      sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%') OR (t3.f3 ILIKE '%v3%')) AND ((t.source = 'bar'))")
   end
 
   it "gt operator shouldnt be allowed for text qualifier" do
@@ -187,11 +187,11 @@ describe Search::Search do
   end
 
   it "not equals operator should work with text qualifier" do
-    assert_search(str: "submitter != v1", sql: "(NOT((t3.f3 LIKE '%v1%' AND t3.f3 IS NOT NULL)))")
+    assert_search(str: "submitter != v1", sql: "(NOT((t3.f3 ILIKE '%v1%' AND t3.f3 IS NOT NULL)))")
   end
 
   it "quoted string with quoted string inside should still work" do
-    assert_search(str: 'submitter:"v1 \\"v2 v3\\" v4"', sql: %{((t3.f3 LIKE '%v1 "v2 v3" v4%'))})
+    assert_search(str: 'submitter:"v1 \\"v2 v3\\" v4"', sql: %{((t3.f3 ILIKE '%v1 "v2 v3" v4%'))})
   end
 
   it "translated qualifier should work" do
@@ -290,7 +290,7 @@ describe Search::Search do
   end
 
   it "supports multiple columns to generate a sql" do
-    assert_search(str: 'number:987', sql: "((msg.to LIKE '%987%') OR (msg.from LIKE '%987%'))", qualifiers: INDEXED)
+    assert_search(str: 'number:987', sql: "((msg.to ILIKE '%987%') OR (msg.from ILIKE '%987%'))", qualifiers: INDEXED)
     assert_search(str: 'date:date', sql: "((msg.created_at = 'date') OR (msg.updated_at = 'date'))", qualifiers: INDEXED)
   end
 
