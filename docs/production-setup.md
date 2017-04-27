@@ -135,6 +135,8 @@ See the [ELMO Documentation](http://getelmo.org/documentation/start/) for help o
 
 ### Upgrading
 
+**IMPORTANT**: If you are upgrading from v5.x or earlier, see the instructions below on converting to PostgreSQL.
+
 When new versions of ELMO are released, you will want to upgrade. To do so, ssh to your server and change to the `elmo` directory, then:
 
     git pull
@@ -150,6 +152,8 @@ Then load the site in your browser. You should see the new version number in the
 
 ### Converting an Existing Instance from MySQL to PostgreSQL
 
+1. Install PostgreSQL (see above).
+1. First upgrade to version v5.99 (`git checkout v5.99`), which is the last MySQL compatible version.
 1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
 1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
 1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
@@ -158,6 +162,7 @@ Then load the site in your browser. You should see the new version number in the
 1. Restart your server. You should now be running on PostgreSQL!
 1. Run bundle exec rake ts:rebuild to rebuild your indices against the new DB and restart Sphinx.
 1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
+1. You can upgrade to your desired 6+ version.
 
 Troubleshooting
 
