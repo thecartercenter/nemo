@@ -144,7 +144,7 @@ class Search::Token
 
         # if partial matches are allowed, change to LIKE
         elsif qualifier.type == :text
-          op_sql = "LIKE"
+          op_sql = "ILIKE"
           sanitize("#{column} #{op_sql} ?#{and_not_null}", "%#{value_sql}%")
         else
           sanitize("#{column} #{op_sql} ?#{and_not_null}", value_sql)
