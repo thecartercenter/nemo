@@ -393,7 +393,6 @@ class Sms::Decoder
 
   # Checks if sender looks like a shortcode and raises error if so.
   def check_for_automated_sender
-    p @msg.from
     raise_decoding_error("automated_sender") if @msg.from_shortcode?
   end
 end
