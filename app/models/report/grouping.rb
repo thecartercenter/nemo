@@ -23,7 +23,6 @@ class Report::Grouping
     rel = rel.where(where_expr.sql)
     rel = rel.group(name_expr.sql)
     rel = rel.group(value_expr.sql)
-    # rel = rel.group(type_expr.sql)
 
     # add order
     rel = rel.order(sort_expr.sql) if sort_expr
