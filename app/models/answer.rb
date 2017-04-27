@@ -242,6 +242,10 @@ class Answer < ApplicationRecord
     !media_object_id.nil?
   end
 
+  def repeat_level
+    questioning.ancestry_depth - 1
+  end
+
   private
 
   def required
@@ -288,5 +292,4 @@ class Answer < ApplicationRecord
       self.longitude = option.longitude
     end
   end
-
 end

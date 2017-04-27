@@ -1,0 +1,11 @@
+Form,Submitter,DateSubmitted,ResponseID,IntegerQ1,TextQ2,IntegerQ3,SelectMultipleQ4,IntegerQ5,TextQ6,SelectOneQ7:Country,SelectOneQ7:City,SelectOneQ7:Latitude,SelectOneQ7:Longitude,IntegerQ8,RepeatLevel
+Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,,,,2,,,,,,,0
+Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,Apple,1,Cat;Dog,2,,,,,,,1
+Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,Banana,2,Cat,2,,,,,,,1
+Sample Form 1,A User 1,2015-11-20 06:30 CST,101,1,,,,2,Asparagus,Ghana,Accra,5.55,0.2,3,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,,,,,,,0
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Xigua,10,Dog,4,,,,,,,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Yuzu,9,Cat;Dog,4,,,,,,,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,Ugli,8,Cat,4,,,,,,,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,Zucchini,Canada,Calgary,51.045,-114.057222,7,1
+Sample Form 1,A User 2,2015-11-20 06:30 CST,102,3,,,,4,Yam,Canada,Ottawa,45.429299,-75.629883,6,1
