@@ -29,7 +29,7 @@ describe Response do
         r1 # Ensure this gets built inside correct timezone now, not before the `around` executes.
 
         # Verify time stored in UTC (Jan 2), but search matches Jan 1.
-        expect(Response.connection.execute("SELECT created_at FROM responses").to_a[0][0].day).to eq 2
+        expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq 2
         assert_search(%{submit-date:2017-01-01}, r1)
         assert_search(%{submit-date:2017-01-02})
       end
