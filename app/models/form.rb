@@ -53,6 +53,7 @@ class Form < ApplicationRecord
 
   delegate :arrange_descendants,
     :children,
+    :ordered_children,
     :c,
     :descendants,
     :child_groups,
