@@ -92,7 +92,7 @@ class Form < ApplicationRecord
 
   def root_questionings(reload = false)
     # Not memoizing this because it causes all sorts of problems.
-    root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
+    root_group ? root_group.sorted_children.reject{ |q| q.is_a?(QingGroup) } : []
   end
 
   def odk_download_cache_key

@@ -11,7 +11,7 @@ module OptionNodeSupport
     expect(node.mission).to eq options[:root].mission
 
     if val.is_a?(Array)
-      children = node.children.order(:rank)
+      children = node.sorted_children
       expect(children.map(&:rank)).to eq (1..val[1].size).to_a # Contiguous ranks and correct count
       options[:recursed] = true
       children.each_with_index { |c, i| expect_node(val[1][i], c, options) } # Recurse

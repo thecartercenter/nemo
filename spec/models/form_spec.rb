@@ -120,11 +120,11 @@ describe Form do
     end
 
     it "has 3 children" do
-      expect(@form.root_group.children.count).to eq 3
+      expect(@form.root_group.sorted_children.count).to eq 3
     end
 
     it "has one subgroup with two children" do
-      expect(@form.root_group.children[1].children.count).to eq 2
+      expect(@form.root_group.sorted_children[1].sorted_children.count).to eq 2
     end
   end
 

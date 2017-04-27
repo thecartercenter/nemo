@@ -26,7 +26,7 @@ describe Form do
 
       it "should produce correct form references" do
         expect(copy.root_group.form).to eq copy
-        expect(copy.children.first.form).to eq copy
+        expect(copy.sorted_children.first.form).to eq copy
         expect(copy_group_select.form).to eq copy
       end
     end
