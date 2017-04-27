@@ -36,6 +36,7 @@ class Question < ApplicationRecord
   validate(:at_least_one_name)
 
   scope(:by_code, -> { order('questions.code') })
+  scope(:with_code, ->(c) { where("LOWER(code) = ?", c.downcase) })
   scope(:default_order, -> { by_code })
   scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
   scope(:with_forms, -> { includes(:forms) })
