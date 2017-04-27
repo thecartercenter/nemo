@@ -19,8 +19,12 @@ class DirectDBConn
 
     sql_query_array = ["INSERT INTO #{@table} (#{column_names}) VALUES #{object_values.join(', ')}"]
 
-    # Rescue because this uniqueness validation is already inserted on the model
-    execute_sql_query_array(sql_query_array) rescue ActiveRecord::RecordNotUnique
+
+    begin
+      execute_sql_query_array(sql_query_array)
+    rescue ActiveRecord::RecordNotUnique
+      # Do nothing in this case because this uniqueness validation is already inserted on the model
+    end
   end
 
   def insert_select(objects, object_to_insert, field_to_select, table_to_select, field_to_where)
@@ -73,8 +77,12 @@ class DirectDBConn
 
   def generate_string_params_template_from_class(klass)
     klass.columns_hash.map do |column, column_type|
-      [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
-    end.join(", ")
+      if column == "id"
+        nil
+      else
+        [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
+      end
+    end.compact.join(", ")
   end
 
   def add_parenthesis_to_params_string(params_string)
@@ -82,7 +90,7 @@ class DirectDBConn
   end
 
   def change_field_value_with_field_name(object_values, column_names, field_name)
-    id_field_index = column_names.split(", ").index("`#{field_name}`")
+    id_field_index = column_names.split(", ").index("\"#{field_name}\"")
 
     object_values.map do |values_array|
       values_array[id_field_index] = "id"
@@ -105,12 +113,14 @@ class DirectDBConn
 
   def convert_values_to_insert_syntax(object)
     object.attributes.map do |k, v|
-      if (k == "created_at" || k == "updated_at")
+      if k == "id"
+        nil
+      elsif (k == "created_at" || k == "updated_at")
         "NOW()"
       else
         (v.nil? ? "NULL" : v)
       end
-    end
+    end.compact
   end
 
   def sql_have_where_in_clause(sql)
@@ -123,7 +133,7 @@ class DirectDBConn
   end
 
   def escape_column_names(objects)
-    objects.first.attributes.keys.map { |k| "`#{k}`" }.join(", ")
+    (objects.first.attributes.keys - ["id"]).map { |k| "\"#{k}\"" }.join(", ")
   end
 
   def execute_sanitized_query(sanitized_query)
