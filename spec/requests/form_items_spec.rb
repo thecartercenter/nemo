@@ -3,8 +3,8 @@ require "spec_helper"
 describe "form items" do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:form) { create(:form, question_types: ["text", ["text", "text"]]) }
-  let(:qing) { form.ordered_children.select{ |c| c.type == "Questioning" }.first }
-  let(:qing_group) { form.ordered_children.select { |c| c.type == "QingGroup" }.first }
+  let(:qing) { form.sorted_children.select{ |c| c.type == "Questioning" }.first }
+  let(:qing_group) { form.sorted_children.select { |c| c.type == "QingGroup" }.first }
 
   before do
     login(user)

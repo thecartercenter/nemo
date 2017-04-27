@@ -168,9 +168,9 @@ describe AnswerArranger do
       expect(nodes[1].placeholder_instance.nodes[0].set.answers[0]).to be_new_record
       expect(nodes[1].placeholder_instance.nodes[1].set.answers[0]).to be_new_record
       expect(nodes[1].placeholder_instance.nodes[0].set.questioning_id).to eq(
-        form.ordered_children[1].ordered_children[0].id)
+        form.sorted_children[1].sorted_children[0].id)
       expect(nodes[1].placeholder_instance.nodes[1].set.questioning_id).to eq(
-        form.ordered_children[1].ordered_children[1].id)
+        form.sorted_children[1].sorted_children[1].id)
 
       # Last question
       expect(nodes[2].set.answers[0].casted_value).to eq 333

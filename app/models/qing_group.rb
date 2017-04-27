@@ -5,7 +5,7 @@ class QingGroup < FormItem
 
   replicable child_assocs: :children, backward_assocs: :form, dont_copy: [:form_id]
 
-  alias_method :c, :ordered_children
+  alias_method :c, :sorted_children
 
   def child_groups
     children.where(type: "QingGroup")
