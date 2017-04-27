@@ -124,7 +124,7 @@ describe Response do
           fail("No error was raised.")
         end
       else
-        expect(run_search(query)).to eq(objs_or_error)
+        expect(run_search(query)).to contain_exactly(*objs_or_error)
       end
     end
 
