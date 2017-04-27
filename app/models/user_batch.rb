@@ -48,7 +48,6 @@ class UserBatch
       User.transaction do
 
         @import_num = last_import_num_on_users
-
         user_batch_attributes = parse_rows
 
         (0..number_of_iterations).each do |i|
@@ -71,8 +70,11 @@ class UserBatch
 
           break if errors_reached_limit
 
-          @direct_db_conn.insert(users_batch)
-          insert_assignments(users_batch)
+          # No point doing the insert if it's going to be rolled back anyway.
+          unless @validation_error
+            @direct_db_conn.insert(users_batch)
+            insert_assignments(users_batch)
+          end
 
           users.concat users_batch
         end
@@ -276,15 +278,9 @@ class UserBatch
   end
 
   def check_uniqueness_on_db(objects, fields)
-    results = @direct_db_conn.check_uniqueness(objects, fields)
-
-    add_results_errors_on_objects(results, fields) unless results.nil?
-  end
-
-  def add_results_errors_on_objects(results, fields)
+    results = @direct_db_conn.check_uniqueness(objects, fields) || []
     key = correct_field_key(fields)
-
-    results.reject(&:nil?).each do |result|
+    results.each do |result|
       @fields_hash_table[key][result].each do |object|
         fields.each { |f| add_uniqueness_error_checking_field_value(object, f, result) }
       end
