@@ -17,7 +17,9 @@ module Translatable
 
       # Setup an accessor if not present.
       translated_fields.each do |f|
-        attr_accessor "#{f}_translations" unless respond_to?("#{f}_translations")
+        unless ancestors.include?(ActiveRecord::Base)
+          attr_accessor "#{f}_translations"
+        end
       end
 
       # Setup *_translations assignment handlers for each field.
@@ -204,7 +206,7 @@ module Translatable
   end
 
   def translatable_get(field)
-    if respond_to?(:read_attribute, true)
+    if is_a?(ActiveRecord::Base)
       read_attribute(:"#{field}_translations")
     else
       instance_variable_get("@#{field}_translations")
@@ -212,7 +214,7 @@ module Translatable
   end
 
   def translatable_set(field, value)
-    if respond_to?(:write_attribute, true)
+    if is_a?(ActiveRecord::Base)
       write_attribute(:"#{field}_translations", value)
     else
       instance_variable_set("@#{field}_translations", value)
