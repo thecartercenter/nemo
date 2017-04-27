@@ -183,7 +183,7 @@ class Sms::Decoder
 
     when "select_one"
       if @qing.sms_formatting_as_text?
-        option = @qing.option_set.all_options.where(canonical_name: @value.downcase).first
+        option = @qing.option_set.all_options.by_canonical_name(@value).first
         raise_answer_error("answer_not_valid_option") unless option
         build_answer(@qing.option_set.path_to_option(option).map { |o| {option: o} }, multilevel: @qing.multilevel?)
 
@@ -393,6 +393,7 @@ class Sms::Decoder
 
   # Checks if sender looks like a shortcode and raises error if so.
   def check_for_automated_sender
+    p @msg.from
     raise_decoding_error("automated_sender") if @msg.from_shortcode?
   end
 end

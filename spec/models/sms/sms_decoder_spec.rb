@@ -232,7 +232,7 @@ describe Sms::Decoder, :sms do
 
     it "select_one question treated as text should work if option name has spaces" do
       create_form(questions: %w(integer select_one_as_text_for_sms integer))
-      assert_decoding(body: "#{@form.code} 1.15 2.Elder Berry 3.99", answers: [15, "Elder Berry", 99])
+      assert_decoding(body: "#{@form.code} 1.15 2.Elder berry 3.99", answers: [15, "Elder Berry", 99])
     end
 
     it "select_one question treated as text should not work with normal encoding" do
@@ -247,7 +247,7 @@ describe Sms::Decoder, :sms do
 
     it "select_one question treated as text should work for multilevel option set" do
       create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true)
-      assert_decoding(body: "#{@form.code} 1.15 2.Tulip", answers: [15, ["Plant", "Tulip"]])
+      assert_decoding(body: "#{@form.code} 1.15 2.tulip", answers: [15, ["Plant", "Tulip"]])
     end
 
     it "select_one question treated as text should work for multilevel option set for non-leaf option" do
