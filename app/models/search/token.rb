@@ -139,14 +139,8 @@ class Search::Token
           op_sql = "IS"
           "#{column} #{op_sql} NULL"
 
-        # if translated qualifier, use special expression
         elsif qualifier.type == :translated
-          op_sql = "RLIKE"
-          # Sanitize first with special markers, then add the enclosing syntax for matching the RLIKE.
-          sanitize("#{column} #{op_sql} ?#{and_not_null}", "%%%1#{value_sql}%%%2").tap do |sql|
-            sql.gsub!('%%%1', %{"#{I18n.locale}":"([^"\\]|\\\\\\\\.)*})
-            sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
-          end
+          sanitize("#{column} ->> ? ILIKE ?#{and_not_null}", I18n.locale, "%#{value_sql}%")
 
         # if partial matches are allowed, change to LIKE
         elsif qualifier.type == :text
@@ -172,7 +166,7 @@ class Search::Token
     end
 
     def sanitize(*args)
-      ApplicationRecord.__send__(:sanitize_sql, args, '')
+      SqlRunner.instance.sanitize(*args)
     end
 
     # expands the current token into its component lextokens (leaf nodes)
