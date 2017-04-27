@@ -165,8 +165,6 @@ class Replication::ObjProxy
     end
 
     def backward_assoc_col_mappings(replicator, context)
-      # puts "BACKWARDS ASSOCS"
-      # puts klass.backward_assocs.awesome_inspect
       klass.backward_assocs.map do |assoc|
         begin
           if assoc.serialized?
@@ -183,8 +181,6 @@ class Replication::ObjProxy
     end
 
     def singular_backward_assoc_id(assoc)
-      # puts "SINGULAR BACKWARD ASSOC"
-      # puts assoc.awesome_inspect
       orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
       get_copy_id(assoc.target_class, orig_foreign_id) ||
         (raise Replication::BackwardAssocError.new("Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}"))
