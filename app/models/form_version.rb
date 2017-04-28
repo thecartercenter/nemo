@@ -23,15 +23,14 @@ class FormVersion < ApplicationRecord
 
   private
 
-    # generates the unique random code
+  # generates the unique random code
   def generate_code
     # only need to do this if code not set
     return if code
-
     ensure_unique_code
   end
 
-    # double checks that code is still unique
+  # double checks that code is still unique
   def ensure_unique_code
     # keep trying new random codes until no match
     while self.class.find_by_code(self.code = Random.letters(CODE_LENGTH)); end
