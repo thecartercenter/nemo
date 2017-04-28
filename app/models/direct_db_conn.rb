@@ -1,3 +1,5 @@
+# This model is poorly named. It is part of the user import code and should be namespaced.
+# It should not be used in a generic way.
 class DirectDBConn
 
   def initialize(table)
@@ -15,10 +17,7 @@ class DirectDBConn
 
     object_values = sanitize_object_values(object_values, string_params)
 
-    sql_query_array = ["INSERT INTO #{@table} (#{column_names}) VALUES #{object_values.join(', ')}"]
-
-    # Rescue because this uniqueness validation is already inserted on the model
-    execute_sql_query_array(sql_query_array) rescue ActiveRecord::RecordNotUnique
+    sql_runner.run("INSERT INTO #{@table} (#{column_names}) VALUES #{object_values.join(', ')}")
   end
 
   def insert_select(objects, object_to_insert, field_to_select, table_to_select, field_to_where)
@@ -40,10 +39,7 @@ class DirectDBConn
 
     unified_select_queries = selects_queries.join(" UNION ")
 
-    sql_query_array = ["INSERT INTO #{@table} (#{column_names}) #{unified_select_queries}"]
-
-    # Rescue because this uniqueness validation is already inserted on the model
-    execute_sql_query_array(sql_query_array) rescue ActiveRecord::RecordNotUnique
+    sql_runner.run("INSERT INTO #{@table} (#{column_names}) #{unified_select_queries}")
   end
 
   def check_uniqueness(objects, fields)
@@ -57,22 +53,26 @@ class DirectDBConn
       #Avoid building query if fields aren't present
       unless field_values.all?(&:nil?)
         field_in_values_sql = ["#{field} IN (#{string_params})", field_values].flatten
-        sanitized_query = sanitize_sql_query_array(field_in_values_sql)
+        sanitized_query = sql_runner.sanitize(*field_in_values_sql)
         conditions << sanitized_query
       end
     end
 
     sql += conditions.join(" OR ")
 
-    execute_sanitized_query(sql).entries.flatten if sql_have_where_in_clause(sql)
+    sql_runner.run(sql).map(&:values).flatten.compact if sql_have_where_in_clause(sql)
   end
 
   private
 
   def generate_string_params_template_from_class(klass)
     klass.columns_hash.map do |column, column_type|
-      [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
-    end.join(", ")
+      if column == "id"
+        nil
+      else
+        [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
+      end
+    end.compact.join(", ")
   end
 
   def add_parenthesis_to_params_string(params_string)
@@ -80,7 +80,7 @@ class DirectDBConn
   end
 
   def change_field_value_with_field_name(object_values, column_names, field_name)
-    id_field_index = column_names.split(", ").index("`#{field_name}`")
+    id_field_index = column_names.split(", ").index("\"#{field_name}\"")
 
     object_values.map do |values_array|
       values_array[id_field_index] = "id"
@@ -94,7 +94,7 @@ class DirectDBConn
 
   def sanitize_object_values(object_values, string_params)
     # The 'gsub' is necessary to remove quoted nulls which can cause uniqueness failures
-    object_values.map { |o| sanitize_sql_query_array([string_params, o].flatten).gsub("'NULL'", "NULL") }
+    object_values.map { |o| sql_runner.sanitize(*[string_params, o].flatten).gsub("'NULL'", "NULL") }
   end
 
   def add_parenthesis_on_each_value(object_values)
@@ -103,32 +103,25 @@ class DirectDBConn
 
   def convert_values_to_insert_syntax(object)
     object.attributes.map do |k, v|
-      if (k == "created_at" || k == "updated_at")
+      if k == "id"
+        nil
+      elsif (k == "created_at" || k == "updated_at")
         "NOW()"
       else
         (v.nil? ? "NULL" : v)
       end
-    end
+    end.compact
   end
 
   def sql_have_where_in_clause(sql)
     sql.include? " IN ("
   end
 
-  def execute_sql_query_array(sql_query_array)
-    sanitized_query = sanitize_sql_query_array(sql_query_array)
-    execute_sanitized_query(sanitized_query)
-  end
-
   def escape_column_names(objects)
-    objects.first.attributes.keys.map { |k| "`#{k}`" }.join(", ")
+    (objects.first.attributes.keys - ["id"]).map { |k| "\"#{k}\"" }.join(", ")
   end
 
-  def execute_sanitized_query(sanitized_query)
-    ApplicationRecord.connection.execute(sanitized_query)
-  end
-
-  def sanitize_sql_query_array(sql_query_array)
-    ApplicationRecord.send(:sanitize_sql_array, sql_query_array)
+  def sql_runner
+    SqlRunner.instance
   end
 end

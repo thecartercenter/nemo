@@ -14,7 +14,8 @@ module ELMO
     config.autoload_paths += [
       "#{config.root}/app/controllers/concerns",
       "#{config.root}/app/controllers/concerns/application_controller",
-      "#{config.root}/app/models/concerns"
+      "#{config.root}/app/models/concerns",
+      "#{config.root}/lib"
     ]
 
     # Only load the plugins named here, in the order given (default is alphabetical).

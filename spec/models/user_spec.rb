@@ -1,36 +1,36 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe User do
   it_behaves_like "has a uuid"
 
   let(:mission) { get_mission }
 
-  context 'when user is created' do
+  context "when user is created" do
     before do
       @user = create(:user)
     end
 
-    it 'should have an api_key generated' do
+    it "should have an api_key generated" do
       expect(@user.api_key).to_not be_blank
     end
 
-    it 'should have an SMS auth code generated' do
+    it "should have an SMS auth code generated" do
       expect(@user.sms_auth_code).to_not be_blank
     end
   end
 
-  describe 'best_mission' do
+  describe "best_mission" do
     before do
       @user = build(:user)
     end
 
-    context 'with no last mission' do
-      context 'with no assignments' do
+    context "with no last mission" do
+      context "with no assignments" do
         before { allow(@user).to receive(:assignments).and_return([]) }
         specify { expect(@user.best_mission).to be_nil }
       end
 
-      context 'with assignments' do
+      context "with assignments" do
         before do
           allow(@user).to receive(:assignments).and_return([
                            build(:assignment, user: @user, updated_at: 2.days.ago),
@@ -39,19 +39,19 @@ describe User do
           ])
         end
 
-        it 'should return the mission from the most recently updated assignment' do
+        it "should return the mission from the most recently updated assignment" do
           expect(@user.best_mission).to eq @most_recent.mission
         end
       end
     end
 
-    context 'with last mission' do
+    context "with last mission" do
       before do
         @last_mission = build(:mission)
         allow(@user).to receive(:last_mission).and_return(@last_mission)
       end
 
-      context 'and a more recent assignment to another mission' do
+      context "and a more recent assignment to another mission" do
         before do
           allow(@user).to receive(:assignments).and_return([
             build(:assignment, user: @user, mission: @last_mission, updated_at: 2.days.ago),
@@ -59,10 +59,10 @@ describe User do
           ])
         end
 
-        specify { expect(@user.best_mission).to eq @last_mission }
+        specify { expect(@user.best_mission.name).to eq @last_mission.name }
       end
 
-      context 'but no longer assigned to last mission' do
+      context "but no longer assigned to last mission" do
         before { allow(@user).to receive(:assignments).and_return([]) }
         specify { expect(@user.best_mission).to be_nil }
       end
@@ -93,10 +93,10 @@ describe User do
   end
 
   it "creating a user with minimal info should produce good defaults" do
-    user = User.create!(name: 'Alpha Tester', login: 'alpha', reset_password_method: 'print',
-      assignments: [Assignment.new(mission: mission, role: User::ROLES.first)])
-    expect(user.pref_lang).to eq('en')
-    expect(user.login).to eq('alpha')
+    user = User.create!(name: "Alpha Tester", login: "alpha", reset_password_method: "print",
+                        assignments: [Assignment.new(mission: mission, role: User::ROLES.first)])
+    expect(user.pref_lang).to eq("en")
+    expect(user.login).to eq("alpha")
   end
 
   it "phone numbers should be unique" do

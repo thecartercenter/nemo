@@ -21,10 +21,13 @@ FactoryGirl.define do
     login { Random.letters(8) }
     sequence(:name) { |n| "A User #{n}" }
     email { Random.letters(8) + '@example.com' }
-    reset_password_method "print"
+    reset_password_method "email"
     password { test_password }
     password_confirmation { test_password }
-    phone { Random.phone_num }
+
+    # Need to be careful with this as random strings of digits get normalized
+    # in funny ways by PhoneNormalizer/Phony
+    phone { "+1709" << (1000000 + rand(9000000)).to_s }
     pref_lang "en"
     login_count 1
 

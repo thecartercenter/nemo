@@ -6,7 +6,7 @@ This guide assumes:
 * You have a domain name (e.g. yoursite.example.com) pointing to the server's IP address.
 * Port 443 on the server is open to the world.
 * You have a valid SSL certificate for your domain. ELMO requires SSL for general security and to comply with ODK Collect's requirement for same. Free SSL certificates are widely available nowadays. Try [here](https://google.com/search?q=free+ssl+certificate).
-* You have ssh'ed to the server as a user with sudo privileges.
+* You have ssh'ed to the server as a user with sudo privileges (`ubuntu` is assumed as the username).
 
 For security reasons, it is not recommended to install ELMO as the `root` user.
 
@@ -68,28 +68,20 @@ Paste the contents of your `.key` file, save, and exit. Be careful not to share 
 
 Paste the contents of [this config file](nginx.conf). Update the `server_name` setting to match your domain. If your username is not `ubuntu`, also update the `root` and `passenger_ruby` settings to match your username. Save and exit.
 
-### Install MySQL and create database
+### Install PostgreSQL and create database
 
-Choose and save separate passwords for the `root` and `elmo` MySQL users you're about to create.
-
-    sudo apt-get install -y mysql-server mysql-client libmysqlclient-dev
-    # Enter the password you just created when prompted.
-    mysql -u root -p
-    create database elmo_production;
-    # NOTE: Replace xxx with your elmo user password.
-    grant all privileges on elmo_production.* to elmo@localhost identified by 'xxx';
-    exit
-    # Add timezone tables (enter password again).
-    mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql
-
-In the last step, you may see errors mentioning `iso3166.tab` and `zone.tab`. You can ignore these.
+    sudo /bin/su -c "echo 'deb http://apt.postgresql.org/pub/repos/apt/ xenial-pgdg main' >> /etc/apt/sources.list.d/pgdg.list"
+    wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+    sudo apt-get update
+    sudo apt-get install postgresql-client-9.4 postgresql-9.4 postgresql-contrib-9.4 libpq-dev postgresql-server-dev-9.4
+    sudo -u postgres createuser -d ubuntu
+    createdb elmo_production
 
 ### Configure ELMO
 
     cp config/database.yml.example config/database.yml
-    nano config/database.yml
 
-Enter the database password for the `elmo` user under the 'production' section. You can ignore the other two sections. Save, and exit.
+You shouldn't need to edit `database.yml` if you followed the PostgreSQL setup instructions above.
 
     cp config/initializers/local_config.rb.example config/initializers/local_config.rb
     nano config/initializers/local_config.rb
@@ -143,6 +135,8 @@ See the [ELMO Documentation](http://getelmo.org/documentation/start/) for help o
 
 ### Upgrading
 
+**IMPORTANT**: If you are upgrading from v5.x or earlier, see the instructions below on converting to PostgreSQL.
+
 When new versions of ELMO are released, you will want to upgrade. To do so, ssh to your server and change to the `elmo` directory, then:
 
     git pull
@@ -155,6 +149,25 @@ When new versions of ELMO are released, you will want to upgrade. To do so, ssh 
     touch tmp/restart.txt
 
 Then load the site in your browser. You should see the new version number in the page footer.
+
+### Converting an Existing Instance from MySQL to PostgreSQL
+
+1. Install PostgreSQL (see above).
+1. First upgrade to version v5.99 (`git checkout v5.99`), which is the last MySQL compatible version.
+1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
+1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
+1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
+1. Ignore the `no COPY in progress` message.
+1. Update `config/database.yml` to point to Postgres. Use `config/database.yml.example` as a guide.
+1. Restart your server. You should now be running on PostgreSQL!
+1. Run bundle exec rake ts:rebuild to rebuild your indices against the new DB and restart Sphinx.
+1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
+1. You can upgrade to your desired 6+ version.
+
+Troubleshooting
+
+* `MysqlPR::ClientError::ServerGoneError: The MySQL server has gone away` - Check your DB name in `config/mysql2postgres.yml`.
+
 
 ### Troubleshooting
 

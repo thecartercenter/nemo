@@ -13,9 +13,6 @@ class Form < ApplicationRecord
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
   has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
 
-  # while a form has many versions, this is a reference to the most up-to-date one
-  belongs_to(:current_version, class_name: "FormVersion")
-
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
@@ -30,7 +27,7 @@ class Form < ApplicationRecord
 
   before_create(:init_downloads)
 
-  scope(:published, -> { where(published: true) })
+  scope :published, -> { where(published: true) }
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
@@ -39,12 +36,12 @@ class Form < ApplicationRecord
       forms.*,
       COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
-      SUM(copies.published) AS published_copy_count_col,
+      SUM(CASE copies.published WHEN true THEN 1 ELSE 0 END) AS published_copy_count_col,
       SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins(%{
       LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
-      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
+      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = true
     })
     .group("forms.id") })
 
@@ -53,6 +50,7 @@ class Form < ApplicationRecord
 
   delegate :arrange_descendants,
     :children,
+    :sorted_children,
     :c,
     :descendants,
     :child_groups,
@@ -91,7 +89,7 @@ class Form < ApplicationRecord
 
   def root_questionings(reload = false)
     # Not memoizing this because it causes all sorts of problems.
-    root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
+    root_group ? root_group.sorted_children.reject{ |q| q.is_a?(QingGroup) } : []
   end
 
   def odk_download_cache_key
@@ -112,11 +110,7 @@ class Form < ApplicationRecord
   end
 
   def version
-    current_version.try(:sequence) || ""
-  end
-
-  def version_with_code
-    current_version.try(:sequence_and_code) || ""
+    current_version.try(:code) || ""
   end
 
   def has_questions?
@@ -266,15 +260,19 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
+  def current_version
+    versions.current.first
+  end
+
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!
     raise "standard forms should not be versioned" if is_standard?
 
     if current_version
-      self.current_version = current_version.upgrade
+      current_version.upgrade!
     else
-      self.build_current_version(form_id: id)
+      FormVersion.create(form_id: id, is_current: true)
     end
 
     # since we've upgraded, we can lower the upgrade flag

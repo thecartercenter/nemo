@@ -4,7 +4,7 @@
     <h:title>Sample Form 1</h:title>
     <model>
       <instance>
-        <data id="1" version="1">
+        <data id="1" version="abc">
           <q1/>
           <q2/>
           <q3/>

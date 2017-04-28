@@ -797,6 +797,7 @@ en:
               invalid: "Please use only unaccented letters, numbers, periods, and underscores."
             reset_password_method:
               cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
+              print_password_reset_only_for_observer: "Printed instructions are only available to observers. "
         user_batch:
           general: "User batch is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
@@ -1890,6 +1891,7 @@ en:
 
   sms_form:
     decoding:
+      account_locked: "Sorry, your account has been temporarily locked. Please check your auth code and wait a few minutes before trying again."
       answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
       answer_not_date: "was not a valid date"
       answer_not_datetime: "was not a valid datetime"
@@ -2047,8 +2049,8 @@ en:
     logout_success: "You have logged out successfully."
     profile_updated: "Profile updated successfully."
     reset_password_and: "Reset password and"
-    reset_password_hint_choose: "Choose how this user should get their password."
-    reset_password_hint_ending: "The system can either send them an email with instructions on how to %{verb} the password online, or display a printable instruction sheet including a randomly generated password."
+    reset_password_hint_choose: "Select how this user should get their password."
+    reset_password_hint_ending: "The system can send them an email with instructions on how to %{verb} the password online. A printable instruction sheet including a randomly generated password is available within a mission for a user whose only role is observer."
     reset_password_hint_reset: "Choose whether and how to reset this user's password."
     reset_password_label_choose: "Password Creation"
     reset_password_label_reset: "Reset Password?"

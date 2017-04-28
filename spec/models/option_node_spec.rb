@@ -8,8 +8,8 @@ describe OptionNode do
   describe "destroy" do
     before do
       @node = create(:option_node_with_grandchildren)
-      @option = @node.children[0].option
-      @node.children[0].destroy
+      @option = @node.sorted_children[0].option
+      @node.sorted_children[0].destroy
     end
 
     it "should not destroy option" do

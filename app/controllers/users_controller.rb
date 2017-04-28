@@ -126,6 +126,7 @@ class UsersController < ApplicationController
 
   # shows printable login instructions for the user
   def login_instructions
+    @site_url = admin_mode? ? basic_root_url : mission_root_url
   end
 
   # exports the selected users to VCF format

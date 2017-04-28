@@ -2,7 +2,7 @@
 class Report::ZeroNonzeroCalculation < Report::Calculation
   def name_expr
     @name_expr ||= Report::Expression.new(
-      sql_tplt: "CASE WHEN __TBL_PFX__answers.value > 0 THEN 'One or More' ELSE 'Zero' END",
+      sql_tplt: "CASE WHEN CAST(__TBL_PFX__answers.value AS INTEGER) > 0 THEN 'One or More' ELSE 'Zero' END",
       name: "name",
       clause: :select,
       chunks: {tbl_pfx: table_prefix}
@@ -11,7 +11,7 @@ class Report::ZeroNonzeroCalculation < Report::Calculation
 
   def value_expr
     @value_expr ||= Report::Expression.new(
-      sql_tplt: "CASE WHEN __TBL_PFX__answers.value > 0 THEN 1 ELSE 0 END",
+      sql_tplt: "CASE WHEN CAST(__TBL_PFX__answers.value AS INTEGER) > 0 THEN 1 ELSE 0 END",
       name: "value",
       clause: :select,
       chunks: {tbl_pfx: table_prefix}
@@ -20,7 +20,7 @@ class Report::ZeroNonzeroCalculation < Report::Calculation
 
   def sort_expr
     @sort_expr ||= Report::Expression.new(
-      sql_tplt: "CASE WHEN __TBL_PFX__answers.value > 0 THEN 1 ELSE 0 END",
+      sql_tplt: "CASE WHEN CAST(__TBL_PFX__answers.value AS INTEGER) > 0 THEN 1 ELSE 0 END",
       name: "sort",
       clause: :select,
       chunks: {tbl_pfx: table_prefix}

@@ -171,10 +171,10 @@ describe Report::AnswerTallyReport do
       ])
 
       # Make sure we account for the null (no answer given) values that will come up for the rgb question (we use a _)
-      expect(report).to have_data_grid(%w(      Yes No _ Red Blue Green TTL ),
-                                       %w( yn     6  4 _   _    _     _  10 ),
-                                       %w( rgb    _  _ 2   5    5     7  19 ),
-                                       %w( TTL    6  4 2   5    5     7  29 ))
+      expect(report).to have_data_grid(%w(      Yes No Red Blue Green _ TTL ),
+                                       %w( yn     6  4   _    _     _ _  10 ),
+                                       %w( rgb    _  _   5    5     7 2  19 ),
+                                       %w( TTL    6  4   5    5     7 2  29 ))
     end
   end
 end

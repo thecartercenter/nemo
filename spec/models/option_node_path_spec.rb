@@ -6,9 +6,9 @@ describe OptionNodePath do
   let(:sl_set) { create(:option_set) }
   let(:ml_set) { create(:option_set, multilevel: true) }
   let(:sml_set) { create(:option_set, super_multilevel: true) }
-  let(:node) { sl_set.children[1] } # Dog
-  let(:leaf_node) { ml_set.children[0].children[1] } # Dog
-  let(:interior_node) { sml_set.children[1] } # Plant
+  let(:node) { sl_set.sorted_children[1] } # Dog
+  let(:leaf_node) { ml_set.sorted_children[0].sorted_children[1] } # Dog
+  let(:interior_node) { sml_set.sorted_children[1] } # Plant
 
   describe "blank?" do
     it "should be true for nil target_node" do

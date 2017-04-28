@@ -53,10 +53,6 @@ describe "user management" do
     end
   end
 
-
-
-
-
   private
 
   def test_create_user(mission)
@@ -64,7 +60,7 @@ describe "user management" do
     post("/en/m/#{mission.compact_name}/users", user: {
       name: "Alan Bob",
       login: "abob",
-      assignments_attributes: {"1" => {"mission_id" => mission.id, "role" => "staffer"}},
+      assignments_attributes: {"1" => {"mission_id" => mission.id, "role" => "observer"}},
       reset_password_method: "print"
     })
 

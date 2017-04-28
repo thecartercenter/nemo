@@ -1,7 +1,7 @@
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
   def self.build_answers(parent, values, inst_num = 1)
-    parent.children.each_with_index.map do |item, i|
+    parent.sorted_children.each_with_index.map do |item, i|
       if i < values.size
         value = values[i]
         if item.is_a?(QingGroup)
