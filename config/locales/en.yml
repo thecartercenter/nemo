@@ -1891,6 +1891,7 @@ en:
 
   sms_form:
     decoding:
+      account_locked: "Sorry, your account has been temporarily locked. Please check your auth code and wait a few minutes before trying again."
       answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
       answer_not_date: "was not a valid date"
       answer_not_datetime: "was not a valid datetime"
