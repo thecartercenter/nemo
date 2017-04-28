@@ -2,7 +2,7 @@
 <% content_for :title_content do %>
   <% if @form.published? %>
     <%= pill_label(t('common.published'), kind: 'success') %>
-    <%= pill_label("#{t('activerecord.attributes.form.version')}: #{@form.version_with_code}", kind: 'primary') %>
+    <%= pill_label("#{t('activerecord.attributes.form.version')}: #{@form.code}", kind: 'primary') %>
   <% else %>
     <%= pill_label(t('common.not_published')) %>
   <% end %>

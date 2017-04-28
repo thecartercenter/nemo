@@ -58,7 +58,7 @@ module OdkHelper
           "xmlns" => "http://openrosa.org/formdesigner/#{form.id}",
           "id" => "#{form.id}",
           "uiVersion" => "1",
-          "version" => "#{form.current_version.sequence}",
+          "version" => "#{form.current_version.code}",
           "name" => "#{form.full_name}"
         },
         &block
@@ -68,7 +68,7 @@ module OdkHelper
         "data",
         {
           "id" => "#{form.id}",
-          "version" => "#{form.current_version.sequence}"
+          "version" => "#{form.current_version.code}"
         },
         &block
       )
