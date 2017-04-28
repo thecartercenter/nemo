@@ -83,7 +83,7 @@ class AnswerArranger
         nums.each do |num|
           instance = AnswerInstance.new(
             num: num,
-            nodes: item.ordered_children.map{ |c| build_node(c, num) }.compact
+            nodes: item.sorted_children.map{ |c| build_node(c, num) }.compact
           )
           node.instances << instance
         end
@@ -92,7 +92,7 @@ class AnswerArranger
       # Add placeholder instance if requested and this is a repeat group.
       if item.repeatable? && options[:include_missing_answers]
         node.placeholder_instance = AnswerInstance.new(
-          nodes: item.ordered_children.map{ |c| build_node(c, :placeholder) }.compact,
+          nodes: item.sorted_children.map{ |c| build_node(c, :placeholder) }.compact,
           placeholder: true
         )
       end

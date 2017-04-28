@@ -138,7 +138,7 @@ describe "summary collection with single subset" do
 
   it "time question summary should be correct in normal case" do
     prepare_form_and_collection('time', %w(9:30 10:15 22:15))
-    expect(headers_and_items(:stat, :stat)).to eq({:mean => '14:00', :min => '09:30', :max => '22:15'})
+    expect(headers_and_items(:stat, :stat)).to eq({mean: '14:00', min: '09:30', max: '22:15'})
   end
 
   it "null_count should be correct for time" do
@@ -153,8 +153,11 @@ describe "summary collection with single subset" do
 
   it "datetime summary should be correct in normal case" do
     prepare_form_and_collection('datetime', ['2013-10-26 18:45', '2013-10-26 10:15', '2013-10-27 19:00'])
-    expect(headers_and_items(:stat, :stat)).to eq({:mean => 'Oct 27 2013 00:00',
-      :min => 'Oct 26 2013 10:15', :max => 'Oct 27 2013 19:00'})
+    expect(headers_and_items(:stat, :stat)).to eq(
+      mean: 'Oct 27 2013 00:00',
+      min: 'Oct 26 2013 10:15',
+      max: 'Oct 27 2013 19:00'
+    )
   end
 
   it "null_count should be correct for datetime" do

@@ -15,9 +15,11 @@ module Translatable
       # save the list of translated fields
       class_variable_set('@@translated_fields', args)
 
-      # set up the _translations fields to serialize
+      # Setup an accessor if not present.
       translated_fields.each do |f|
-        ancestors.include?(ApplicationRecord) ? (serialize "#{f}_translations", JSON) : (attr_accessor "#{f}_translations")
+        unless ancestors.include?(ActiveRecord::Base)
+          attr_accessor "#{f}_translations"
+        end
       end
 
       # Setup *_translations assignment handlers for each field.
@@ -91,13 +93,7 @@ module Translatable
       value = nil if value.empty?
     end
 
-    # Use write_attribute if available.
-    if respond_to?(:write_attribute, true)
-      write_attribute(:"#{field}_translations", value)
-    else
-      instance_variable_set("@#{field}_translations", value)
-    end
-
+    translatable_set(field, value)
     translatable_set_canonical(field)
   end
 
@@ -105,7 +101,7 @@ module Translatable
   def translatable_set_canonical(field)
     # Set canonical_name if appropriate
     if respond_to?("canonical_#{field}=")
-      trans = send("#{field}_translations") || {}
+      trans = translatable_get(field) || {}
       send("canonical_#{field}=", trans[I18n.default_locale.to_s] || trans.values.first)
     end
   end
@@ -114,7 +110,7 @@ module Translatable
 
     # if we're setting the value
     if is_setter
-      cur_hash = send("#{field}_translations") || {}
+      cur_hash = translatable_get(field) || {}
 
       # set the value in the appropriate translation hash
       # we use the merge method because otherwise the _changed? method doesn't work right
@@ -123,26 +119,26 @@ module Translatable
     # otherwise just return what we have
     else
       str = nil
-      unless send("#{field}_translations").nil?
+      unless translatable_get(field).nil?
         # try the specified locale and fallbacks
         to_try = [locale] + (options[:fallbacks] || [])
         to_try.each do |l|
-          str = send("#{field}_translations")[l.to_s]
+          str = translatable_get(field)[l.to_s]
           break if str.present?
         end
 
         # if the translation is blank and strict mode is off
         if str.blank? && !options[:strict]
           # try the current locale
-          str = send("#{field}_translations")[I18n.locale.to_s]
+          str = translatable_get(field)[I18n.locale.to_s]
 
           if str.blank?
             # try the default locale
-            str = send("#{field}_translations")[I18n.default_locale.to_s]
+            str = translatable_get(field)[I18n.default_locale.to_s]
 
             # if str is still blank, search the translations for /any/ non-blank string
             if str.blank?
-              if (non_blank_pair = send("#{field}_translations").find{|locale, value| !value.blank?})
+              if (non_blank_pair = translatable_get(field).find{|locale, value| !value.blank?})
                 str = non_blank_pair[1]
               end
             end
@@ -157,7 +153,7 @@ module Translatable
 
   # checks if all the translations are blank for the given field
   def translatable_all_blank?(field, locale, is_setter, options, args)
-    send("#{field}_translations").nil? || !send("#{field}_translations").detect{|l,t| !t.blank?}
+    translatable_get(field).nil? || !translatable_get(field).detect{|l,t| !t.blank?}
   end
 
   def translatable_parse_method(symbol, arg1 = nil, arg2 = nil)
@@ -209,10 +205,26 @@ module Translatable
     end
   end
 
+  def translatable_get(field)
+    if is_a?(ActiveRecord::Base)
+      read_attribute(:"#{field}_translations")
+    else
+      instance_variable_get("@#{field}_translations")
+    end
+  end
+
+  def translatable_set(field, value)
+    if is_a?(ActiveRecord::Base)
+      write_attribute(:"#{field}_translations", value)
+    else
+      instance_variable_set("@#{field}_translations", value)
+    end
+  end
+
   def available_locales(options = {})
     # get union of all locales of all translated fields, and convert to symbol
     locales = self.class.translated_fields.inject([]) do |union, field|
-      trans = send("#{field}_translations")
+      trans = translatable_get(field)
       union |= trans.keys unless trans.nil?
       union
     end.map{|l| l.to_sym}

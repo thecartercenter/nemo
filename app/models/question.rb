@@ -36,29 +36,56 @@ class Question < ApplicationRecord
   validate(:at_least_one_name)
 
   scope(:by_code, -> { order('questions.code') })
+  scope(:with_code, ->(c) { where("LOWER(code) = ?", c.downcase) })
   scope(:default_order, -> { by_code })
   scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
   scope(:with_forms, -> { includes(:forms) })
   scope(:reportable, -> { where.not(qtype_name: %w(image annotated_image signature sketch audio video)) })
 
-  # fetches association counts along with the questions
-  # accounts for copies with standard questions
-  # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
-  scope(:with_assoc_counts, -> { select(%{
-      questions.*,
-      COUNT(DISTINCT answers.id) AS answer_count_col,
-      COUNT(DISTINCT forms.id) AS form_count_col,
-      MAX(DISTINCT forms.published) AS form_published_col,
-      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col
-    }).joins(%{
-      LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
-      LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-      LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.original_id
-      LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
-      LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
-      LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questions.id') })
+  # Fetches association counts along with the questions.
+  # Accounts for copies with standard questions.
+  # - form_published_col contains true if any associated forms are published, false or nil otherwise
+  scope(:with_assoc_counts, -> {
+    select("questions.*").
+    select("(
+      SELECT COUNT(DISTINCT answers.id)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
+        LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
+        WHERE inner_questions.id = questions.id
+    ) AS answer_count_col").
+    select("(
+      SELECT COUNT(DISTINCT forms.id)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
+        WHERE inner_questions.id = questions.id
+    ) AS form_count_col").
+    select("(
+      SELECT BOOL_OR(DISTINCT forms.published)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
+        WHERE inner_questions.id = questions.id
+    ) AS form_published_col").
+    select("(
+      SELECT COUNT(DISTINCT copy_answers.id)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
+        LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
+        LEFT OUTER JOIN questions copies ON questions.is_standard = true AND questions.id = copies.original_id
+        LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
+        LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
+        WHERE inner_questions.id = questions.id
+    ) AS copy_answer_count_col")
+  })
 
   translates :name, :hint
 

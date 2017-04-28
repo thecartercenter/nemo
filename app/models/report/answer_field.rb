@@ -12,8 +12,6 @@ class Report::AnswerField < Report::Field
     {:sql_tplt => "__TBL_PFX__ch_opt_nodes.rank", :name => "select_multiple_value", :clause => :select, :join => :choices},
 
     # these question types have their own value columns
-    {:sql_tplt => "CAST(__TBL_PFX__answers.value AS SIGNED INTEGER)", :name => "integer_value", :clause => :select, :join => :answers},
-    {:sql_tplt => "CAST(__TBL_PFX__answers.value AS DECIMAL)", :name => "decimal_value", :clause => :select, :join => :answers},
     {:sql_tplt => "__TBL_PFX__answers.datetime_value", :name => "datetime_value", :clause => :select, :join => :answers},
     {:sql_tplt => "__TBL_PFX__answers.date_value", :name => "date_value", :clause => :select, :join => :answers},
     {:sql_tplt => "__TBL_PFX__answers.time_value", :name => "time_value", :clause => :select, :join => :answers},
@@ -58,7 +56,7 @@ class Report::AnswerField < Report::Field
   def value_expr(chunks)
     @value_expr ||= case data_type
     # for these types, there is a special value expression
-    when "select_one", "select_multiple", "integer", "decimal", "datetime", "date", "time"
+    when "select_one", "select_multiple", "datetime", "date", "time"
       self.class.expression(:name => "#{data_type}_value", :chunks => chunks)
     # else it's just the straight up value column
     else

@@ -22,7 +22,7 @@ class Answer < ApplicationRecord
   belongs_to(:option, inverse_of: :answers)
   belongs_to(:response, inverse_of: :answers, touch: true)
   has_many(:choices, dependent: :destroy, inverse_of: :answer, autosave: true)
-  has_one(:media_object, dependent: :destroy, autosave: true, class_name: 'Media::Object')
+  has_one(:media_object, dependent: :destroy, autosave: true, class_name: "Media::Object")
 
   before_validation(:clean_locations)
   before_save(:replicate_location_values)
@@ -34,12 +34,12 @@ class Answer < ApplicationRecord
     choices.destroy(*choices.reject(&:checked?))
   end
 
-  validates(:value, numericality: true, if: ->(a){ a.should_validate?(:numericality) })
+  validates(:value, numericality: true, if: ->(a) { a.should_validate?(:numericality) })
 
   # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
   # since this class really just represents one value
-  validate(:min_max, if: ->(a){ a.should_validate?(:min_max) })
-  validate(:required, if: ->(a){ a.should_validate?(:required) })
+  validate(:min_max, if: ->(a) { a.should_validate?(:min_max) })
+  validate(:required, if: ->(a) { a.should_validate?(:required) })
 
   accepts_nested_attributes_for(:choices)
 
@@ -57,26 +57,24 @@ class Answer < ApplicationRecord
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
-  def self.location_answers_for_mission(mission, user = nil, options = {})
+  def self.location_answers_for_mission(mission, user = nil, _options = {})
     response_conditions = { mission_id: mission.try(:id) }
 
     # if the user is not a staffer or higher privilege, only show their own responses
-    if user.present? && !user.role?(:staffer, mission)
-      response_conditions[:user_id] = user.id
-    end
+    response_conditions[:user_id] = user.id if user.present? && !user.role?(:staffer, mission)
 
     # return an AR relation
     joins(:response)
-      .joins(%{LEFT JOIN `choices` ON `choices`.`answer_id` = `answers`.`id`})
+      .joins(%{LEFT JOIN "choices" ON "choices"."answer_id" = "answers"."id"})
       .where(responses: response_conditions)
       .where(%{
-        (`answers`.`latitude` IS NOT NULL AND `answers`.`longitude` IS NOT NULL)
-        OR (`choices`.`latitude` IS NOT NULL AND `choices`.`longitude` IS NOT NULL)
+        ("answers"."latitude" IS NOT NULL AND "answers"."longitude" IS NOT NULL)
+        OR ("choices"."latitude" IS NOT NULL AND "choices"."longitude" IS NOT NULL)
       })
       .select(:response_id,
-        %{COALESCE(`answers`.`latitude`, `choices`.`latitude`) AS `latitude`,
-          COALESCE(`answers`.`longitude`, `choices`.`longitude`) AS `longitude`})
-      .order('`answers`.`response_id` DESC')
+        %{COALESCE("answers"."latitude", "choices"."latitude") AS "latitude",
+          COALESCE("answers"."longitude", "choices"."longitude") AS "longitude"})
+      .order(%{"answers"."response_id" DESC})
       .paginate(page: 1, per_page: 1000)
   end
 
@@ -114,29 +112,25 @@ class Answer < ApplicationRecord
   def all_choices
     # for each option, if we have a matching choice, just return it (checked? defaults to true)
     # otherwise create one and set checked? to false
-    options.map{ |o| choices_by_option[o] || choices.new(option: o, checked: false) }
+    options.map { |o| choices_by_option[o] || choices.new(option: o, checked: false) }
   end
 
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
   # lat long. else returns nil
   def location
-    if simple_location_answer?
-      value.split(' ')
-    else
-      nil
-    end
+    value.split(" ") if simple_location_answer?
   end
 
   # returns the value for this answer casted to the appropriate data type
   def casted_value
     case qtype.name
-    when 'date' then date_value
-    when 'time' then time_value
-    when 'datetime' then datetime_value
-    when 'integer' then value.try(:to_i)
-    when 'decimal' then value.try(:to_f)
-    when 'select_one' then option_name
-    when 'select_multiple' then choices.empty? ? nil : choices.map(&:option_name).join(';')
+    when "date" then date_value
+    when "time" then time_value
+    when "datetime" then datetime_value
+    when "integer" then value.try(:to_i)
+    when "decimal" then value.try(:to_f)
+    when "select_one" then option_name
+    when "select_multiple" then choices.empty? ? nil : choices.map(&:option_name).join(";")
     else value.blank? ? nil : value
     end
   end
@@ -196,7 +190,7 @@ class Answer < ApplicationRecord
   end
 
   def simple_location_answer?
-    qtype.name == 'location' && value.present?
+    qtype.name == "location" && value.present?
   end
 
   # check whether this answer has coordinates
@@ -213,7 +207,7 @@ class Answer < ApplicationRecord
   end
 
   def from_group?
-    questioning && questioning.parent && questioning.parent.type == 'QingGroup'
+    questioning && questioning.parent && questioning.parent.type == "QingGroup"
   end
 
   def option_name
@@ -221,7 +215,7 @@ class Answer < ApplicationRecord
   end
 
   def option_names
-    choices.map(&:option).map(&:canonical_name).join(', ') if choices
+    choices.map(&:option).map(&:canonical_name).join(", ") if choices
   end
 
   def lat_lng
@@ -254,48 +248,48 @@ class Answer < ApplicationRecord
 
   private
 
-    def required
-      errors.add(:value, :required) if required_but_empty?
-    end
+  def required
+    errors.add(:value, :required) if required_but_empty?
+  end
 
-    def round_ints
-      self.value = value.to_i if qtype.name == "integer" && !value.blank?
-      return true
-    end
+  def round_ints
+    self.value = value.to_i if qtype.name == "integer" && !value.blank?
+    true
+  end
 
-    def blanks_to_nulls
-      self.value = nil if value.blank?
-      return true
-    end
+  def blanks_to_nulls
+    self.value = nil if value.blank?
+    true
+  end
 
-    def min_max
-      val_f = value.to_f
-      if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
-         question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
-        errors.add(:value, question.min_max_error_msg)
+  def min_max
+    val_f = value.to_f
+    if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
+        question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+      errors.add(:value, question.min_max_error_msg)
+    end
+  end
+
+  def clean_locations
+    if simple_location_answer?
+      if value.match(configatron.lat_lng_regexp)
+        lat = number_with_precision($1.to_f, precision: 6)
+        lng = number_with_precision($3.to_f, precision: 6)
+        self.value = "#{lat} #{lng}"
+      else
+        self.value = ""
       end
     end
+  end
 
-    def clean_locations
-      if simple_location_answer?
-        if value.match(configatron.lat_lng_regexp)
-          lat = number_with_precision($1.to_f, precision: 6)
-          lng = number_with_precision($3.to_f, precision: 6)
-          self.value = "#{lat} #{lng}"
-        else
-          self.value = ""
-        end
-      end
+  def replicate_location_values
+    if simple_location_answer?
+      lat, long = self.value.split(" ")
+      self.latitude = BigDecimal.new(lat)
+      self.longitude = BigDecimal.new(long)
+    elsif option.present? && option.has_coordinates?
+      self.latitude = option.latitude
+      self.longitude = option.longitude
     end
-
-    def replicate_location_values
-      if simple_location_answer?
-        lat, long = self.value.split(' ')
-        self.latitude = BigDecimal.new(lat)
-        self.longitude = BigDecimal.new(long)
-      elsif option.present? && option.has_coordinates?
-        self.latitude = option.latitude
-        self.longitude = option.longitude
-      end
-    end
+  end
 end

@@ -71,7 +71,6 @@ class Report::SummaryCollectionBuilder
 
         # loop over each stat qing
         summaries = stat_qs.map do |qing|
-
           # get stat values from has we built above
           stat_values = results_by_disagg_value_and_qing_id[[disagg_value, qing.id]]
 
@@ -92,7 +91,10 @@ class Report::SummaryCollectionBuilder
             when 'time'
               stats.each{|s| stat_values[s] = I18n.l(Time.parse(stat_values[s]), :format => :time_only)}
             when 'datetime'
-              stats.each{|s| stat_values[s] = I18n.l(Time.zone.parse(stat_values[s] + ' UTC'))}
+              # Datetime values are in UTC so we convert them to string and then parse them into our zone.
+              # Sometimes the zone shown in to_s is something other than UTC but it really is UTC so we
+              # strip it out before parsing.
+              stats.each{|s| stat_values[s] = I18n.l(Time.zone.parse(stat_values[s].strftime("%Y-%m-%d %H:%M:%S UTC")))}
             end
 
             # build items
@@ -135,53 +137,78 @@ class Report::SummaryCollectionBuilder
       # FROM_UNIXTIME and UNIX_TIMESTAMP should be easier to replace.
       # I think to_timestamp and extract(epoch FROM your_datetime_column) should do it.
 
-      query = <<-eos
-        SELECT #{disagg_select_expr} qing.id AS qing_id, q.qtype_name AS qtype_name,
-          SUM(
-            CASE q.qtype_name
-              WHEN 'integer' THEN (CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END)
-              WHEN 'decimal' THEN (CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END)
-              WHEN 'time' THEN (CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END)
-              WHEN 'datetime' THEN (CASE WHEN a.datetime_value IS NULL THEN 1 ELSE 0 END)
-            END
-          ) AS null_count,
-          CASE q.qtype_name
-            WHEN 'integer' THEN AVG(CAST(a.value AS SIGNED INTEGER))
-            WHEN 'decimal' THEN AVG(CAST(a.value AS DECIMAL(9,6)))
-            WHEN 'time' THEN SEC_TO_TIME(AVG(TIME_TO_SEC(a.time_value)))
-            WHEN 'datetime' THEN FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(a.datetime_value)))
-          END AS mean,
-          CASE q.qtype_name
-            WHEN 'integer' THEN MIN(CAST(a.value AS SIGNED INTEGER))
-            WHEN 'decimal' THEN MIN(CAST(a.value AS DECIMAL(9,6)))
-            WHEN 'time' THEN MIN(a.time_value)
-            WHEN 'datetime' THEN MIN(a.datetime_value)
-          END AS min,
-          CASE q.qtype_name
-            WHEN 'integer' THEN MAX(CAST(a.value AS SIGNED INTEGER))
-            WHEN 'decimal' THEN MAX(CAST(a.value AS DECIMAL(9,6)))
-            WHEN 'time' THEN MAX(a.time_value)
-            WHEN 'datetime' THEN MAX(a.datetime_value)
-          END AS max
+      queries = []
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
+          CAST(AVG(CAST(a.value AS INTEGER)) AS TEXT) AS mean,
+          CAST(MIN(CAST(a.value AS INTEGER)) AS TEXT) AS min,
+          CAST(MAX(CAST(a.value AS INTEGER)) AS TEXT) AS max
         FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
           INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
-        GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
-        ORDER BY NULL
+        WHERE q.qtype_name = 'integer'
+        GROUP BY #{disagg_group_by_expr} qing.id
       eos
 
-      res = do_query(query, qing_ids)
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
+          CAST(AVG(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS mean,
+          CAST(MIN(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS min,
+          CAST(MAX(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS max
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id
+          #{disagg_join_clause}
+          #{current_user_join_clause}
+        WHERE q.qtype_name = 'decimal'
+        GROUP BY #{disagg_group_by_expr} qing.id
+      eos
 
-      # build hash
-      hash = ActiveSupport::OrderedHash[]
-      res.each do |row|
-        # get the object from the disagg value as returned from the db
-        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
-        hash[[row['disagg_value'], row['qing_id']]] = row
+      time_extracts = "EXTRACT(hour from a.time_value)*60*60 + " \
+        "EXTRACT(minutes FROM a.time_value)*60 + " \
+        "EXTRACT(seconds FROM a.time_value)"
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END) AS null_count,
+          CAST(TO_CHAR((AVG(#{time_extracts}) || ' seconds')::interval, 'HH24:MM:SS') AS TEXT) AS mean,
+          CAST(MIN(a.time_value) AS TEXT) AS min,
+          CAST(MAX(a.time_value) AS TEXT) AS max
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id
+          #{disagg_join_clause}
+          #{current_user_join_clause}
+        WHERE q.qtype_name = 'time'
+        GROUP BY #{disagg_group_by_expr} qing.id
+      eos
+
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.datetime_value IS NULL THEN 1 ELSE 0 END) AS null_count,
+          to_timestamp(AVG(extract(epoch FROM a.datetime_value))) AS mean,
+          MIN(a.datetime_value) AS min,
+          MAX(a.datetime_value) AS max
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id
+          #{disagg_join_clause}
+          #{current_user_join_clause}
+        WHERE q.qtype_name = 'datetime'
+        GROUP BY #{disagg_group_by_expr} qing.id
+      eos
+
+      # Run queries and build hash
+      ActiveSupport::OrderedHash.new.tap do |hash|
+        queries.each do |query|
+          res = sql_runner.run(query, qing_ids)
+
+          res.each do |row|
+            # Get the object from the disagg value as returned from the db
+            row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
+            hash[[row['disagg_value'], row['qing_id']]] = row
+          end
+        end
       end
-      hash
     end
 
     ####################################################################
@@ -256,7 +283,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
 
-      sel_one_res = do_query(query, qing_ids)
+      sel_one_res = sql_runner.run(query, qing_ids)
 
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
@@ -272,7 +299,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
 
-      sel_mult_res = do_query(query, qing_ids)
+      sel_mult_res = sql_runner.run(query, qing_ids)
 
       # read tallies into hashes
       tallies = {}
@@ -310,7 +337,7 @@ class Report::SummaryCollectionBuilder
           GROUP BY #{disagg_group_by_expr} qings.id
       eos
 
-      res = do_query(query, qing_ids)
+      res = sql_runner.run(query, qing_ids)
 
       # read non-null answer counts into hash
       tallies = {}
@@ -391,7 +418,7 @@ class Report::SummaryCollectionBuilder
           ORDER BY disagg_value, qing_id, date
       eos
 
-      res = do_query(query, qing_ids)
+      res = sql_runner.run(query, qing_ids)
 
       # read into tallies, preserving sorted date order
       tallies = {}
@@ -490,7 +517,7 @@ class Report::SummaryCollectionBuilder
           LIMIT #{RAW_ANSWER_LIMIT}
       eos
 
-      do_query(query, qing_ids)
+      sql_runner.run(query, qing_ids)
     end
 
     # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
@@ -511,7 +538,7 @@ class Report::SummaryCollectionBuilder
           WHERE a.questioning_id IN (?)
         eos
 
-        res = do_query(query, long_qing_ids)
+        res = sql_runner.run(query, long_qing_ids)
 
         res.map{|row| [row['answer_id'], row['submitter_name']]}.to_h
       end
@@ -542,7 +569,7 @@ class Report::SummaryCollectionBuilder
     # returns a fully qualified column reference for the disaggregation value
     def disagg_column
       if disagg_qing.nil?
-        "'all'"
+        "CAST('all' AS TEXT)"
       else
         'disagg_ans.option_id'
       end
@@ -576,8 +603,7 @@ class Report::SummaryCollectionBuilder
       "#{disagg_column},"
     end
 
-    # Runs query and returns hash of results
-    def do_query(*args)
-      ApplicationRecord.connection.exec_query(ApplicationRecord.send(:sanitize_sql_array, args))
+    def sql_runner
+      SqlRunner.instance
     end
 end

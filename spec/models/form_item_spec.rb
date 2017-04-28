@@ -4,13 +4,13 @@ describe FormItem do
   before do
     @user = create(:user, role_name: 'coordinator')
     @form = create(:form, question_types: ['text', ['text', 'text']])
-    @qing = @form.c[0]
-    @qing_group = @form.c[1]
+    @qing = @form.sorted_children[0]
+    @qing_group = @form.sorted_children[1]
   end
 
   describe "parent validation" do
     it "should raise error if attempting to set questioning as parent of questioning" do
-      @qing2 = @form.c[1].c[0]
+      @qing2 = @form.sorted_children[1].sorted_children[0]
       @qing2.parent = @qing
       @qing2.save
       expect(@qing2.errors.messages.values.flatten).to include "Parent must be a group."
@@ -31,20 +31,20 @@ describe FormItem do
       end
 
       it 'should create 4 questionings and one group with correct ranks' do
-        expect(@f.c.size).to eq(5)
-        expect(@f.c[0].rank).to be < @f.c[1].rank
-        expect(@f.c[1].rank).to be < @f.c[2].rank
-        expect(@f.c[2].rank).to be < @f.c[3].rank
+        expect(@f.sorted_children.size).to eq(5)
+        expect(@f.sorted_children[0].rank).to be < @f.sorted_children[1].rank
+        expect(@f.sorted_children[1].rank).to be < @f.sorted_children[2].rank
+        expect(@f.sorted_children[2].rank).to be < @f.sorted_children[3].rank
       end
 
       it 'should assign a rank to a newly created group' do
-        expect(@f.c[3].rank).to be < @group.rank
+        expect(@f.sorted_children[3].rank).to be < @group.rank
       end
 
       it 'should adjust ranks when existing questioning moved to the empty group' do
-        @old_rank_2 = @f.c[1]
-        @old_rank_3 = @f.c[2]
-        @old_rank_4 = @f.c[3]
+        @old_rank_2 = @f.sorted_children[1]
+        @old_rank_3 = @f.sorted_children[2]
+        @old_rank_4 = @f.sorted_children[3]
         @old_rank_2.parent = @group;
         @old_rank_2.save
         expect(@old_rank_2.reload.rank).to eq 1
@@ -53,15 +53,19 @@ describe FormItem do
       end
 
       it 'should change order of the questioning moved higher' do
-        @qing = @f.c[3]
-        @qing.move_higher
-        expect(@f.c[3].rank).to be < @f.c[2].rank
+        child2 = @f.sorted_children[2]
+        child3 = @f.sorted_children[3]
+        child3.move_higher
+        expect(child2.reload.rank).to eq 4
+        expect(child3.reload.rank).to eq 3
       end
 
       it 'should change order of the questioning moved lower' do
-        @qing = @f.c[0]
-        @qing.move_lower
-        expect(@f.c[1].rank).to be < @f.c[0].rank
+        child0 = @f.sorted_children[0]
+        child1 = @f.sorted_children[1]
+        child0.move_lower
+        expect(child0.reload.rank).to eq 2
+        expect(child1.reload.rank).to eq 1
       end
     end
 
@@ -71,7 +75,7 @@ describe FormItem do
       end
 
       it 'should work when changing ranks of second level items' do
-        @q1, @q2 = @f.c[1].children
+        @q1, @q2 = @f.sorted_children[1].sorted_children
         @q2.update_attributes!(rank: 1)
         expect(@q1.reload.rank).to eq 2
         expect(@q2.reload.rank).to eq 1

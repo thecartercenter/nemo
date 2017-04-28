@@ -27,7 +27,7 @@ class Report::ListReport < Report::Report
         questions << c.question1
       # otherwise we add the attrib to the select clause
       else
-        rel = rel.select(c.select_expressions.collect{|e| "#{e.sql} AS #{idx}_#{e.name}"})
+        rel = rel.select(c.select_expressions.collect{|e| "#{e.sql} AS e#{idx}_#{e.name}"})
       end
       joins += c.joins
       rel = rel.joins(Results::Join.list_to_sql(c.joins))
@@ -87,8 +87,8 @@ class Report::ListReport < Report::Report
           col = @header_set[:col].find_key_idx(c)
 
           # get the name and type values
-          name = db_row["#{idx}_#{c.name_expr.name}"]
-          type = db_row["#{idx}_#{c.data_type_expr.name}"]
+          name = db_row["e#{idx}_#{c.name_expr.name}"]
+          type = db_row["e#{idx}_#{c.data_type_expr.name}"]
           cell = Report::Formatter.format(name, type, :cell)
 
           # enter the value

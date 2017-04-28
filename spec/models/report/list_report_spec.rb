@@ -147,7 +147,7 @@ describe Report::ListReport, :reports do
     # Perhaps add it later once we decide what to do with reports.
     it "should convert fetched dates to current timezone" do
       # Timestamps and datetime_values are stored in UTC (note that the created_at day has jumped to Jan 2)
-      expect(Response.connection.execute("SELECT created_at FROM responses").to_a[0][0].day).to eq 2
+      expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq 2
 
       report.run
 

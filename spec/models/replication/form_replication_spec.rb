@@ -26,7 +26,7 @@ describe Form do
 
       it "should produce correct form references" do
         expect(copy.root_group.form).to eq copy
-        expect(copy.children.first.form).to eq copy
+        expect(copy.sorted_children.first.form).to eq copy
         expect(copy_group_select.form).to eq copy
       end
     end
@@ -193,7 +193,7 @@ describe Form do
         @copy.reload
       end
 
-      it "should reuse only standardizable objects" do
+      it "should reuse only standardizable objects", :implicit_ordering do
         expect(@orig).not_to eq @copy
         expect(@orig.root_group).not_to eq @copy.root_group
         expect(@orig.c[0]).not_to eq @copy.c[0]
@@ -201,7 +201,7 @@ describe Form do
         expect(@orig.c[1].c[0]).not_to eq @copy.c[1].c[0]
       end
 
-      it "should produce correct form references" do
+      it "should produce correct form references", :implicit_ordering do
         expect(@copy.root_group.form).to eq @copy
         expect(@copy.c[0].form).to eq @copy
         expect(@copy.c[1].c[0].form).to eq @copy

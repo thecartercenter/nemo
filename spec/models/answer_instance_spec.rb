@@ -20,7 +20,7 @@ describe AnswerInstance do
     context "with blank instance" do
       before do
         # Add blank instance
-        form.children[1].children.each_with_index do |qing, i|
+        form.sorted_children[1].sorted_children.each_with_index do |qing, i|
           response.answers.build(inst_num: 5, questioning: qing, response: response, value: "")
         end
       end

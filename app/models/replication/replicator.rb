@@ -55,7 +55,6 @@ class Replication::Replicator
     def replicate_children(context)
       log("Child assocs: #{context[:orig].child_assocs.map(&:name)}")
       context[:orig].child_assocs.each do |assoc|
-        log("Assoc: #{assoc.name}")
         copy_child = nil
         context[:orig].children(assoc).map do |child|
           log("Child: ##{child.id}")

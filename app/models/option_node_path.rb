@@ -24,7 +24,7 @@ class OptionNodePath
   def nodes_for_depth(depth)
     raise ArgumentError.new("depth must be > 1") if depth < 1
     raise ArgumentError.new("depth is too large") if depth >= nodes.size
-    nodes[depth - 1].try(:children) || []
+    nodes[depth - 1].try(:sorted_children) || []
   end
 
   def nodes_without_root

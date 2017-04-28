@@ -19,7 +19,7 @@ describe Broadcast do
         recipient_users: [user1, user3]) }
 
       it "returns correct numbers" do
-        expect(broadcast.recipient_numbers).to eq(%w(+17345550001 +17345550003))
+        expect(broadcast.recipient_numbers).to contain_exactly(*%w(+17345550001 +17345550003))
       end
     end
 
@@ -30,8 +30,8 @@ describe Broadcast do
         recipient_groups: [group1, group2]) }
 
       it "returns correct numbers without duplication" do
-        expect(broadcast.recipient_numbers).to eq(
-          %w(+17345550005 +17345550004 +17345550001 +17345550002))
+        expect(broadcast.recipient_numbers).to contain_exactly(
+          *%w(+17345550005 +17345550004 +17345550001 +17345550002))
       end
     end
 
@@ -39,8 +39,8 @@ describe Broadcast do
       let(:broadcast) { create(:broadcast, recipient_selection: "all_users") }
 
       it "returns correct numbers" do
-        expect(broadcast.recipient_numbers).to eq(
-          %w(+17345550001 +17345550002 +17345550003 +17345550004 +17345550005))
+        expect(broadcast.recipient_numbers).to contain_exactly(
+          *%w(+17345550001 +17345550002 +17345550003 +17345550004 +17345550005))
       end
     end
 
@@ -48,7 +48,7 @@ describe Broadcast do
       let(:broadcast) { create(:broadcast, recipient_selection: "all_observers") }
 
       it "returns correct numbers" do
-        expect(broadcast.recipient_numbers).to eq(%w(+17345550001 +17345550002))
+        expect(broadcast.recipient_numbers).to contain_exactly(*%w(+17345550001 +17345550002))
       end
     end
 
@@ -64,7 +64,8 @@ describe Broadcast do
       end
 
       it "uses both available numbers for all users and eliminates nulls" do
-        expect(broadcast.recipient_numbers).to eq %w(+17345550011 +17345550021 +17345550022 +17345550013)
+        expect(broadcast.recipient_numbers).to contain_exactly(
+          *%w(+17345550011 +17345550021 +17345550022 +17345550013))
       end
     end
   end
