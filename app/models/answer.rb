@@ -48,6 +48,7 @@ class Answer < ApplicationRecord
   delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :mission, to: :response
+  delegate :parent_group_name, to: :questioning
 
   scope :public_access, -> { joins(questioning: :question).
     where("questions.access_level = 'inherit'") }
@@ -242,7 +243,7 @@ class Answer < ApplicationRecord
     !media_object_id.nil?
   end
 
-  def repeat_level
+  def group_level
     questioning.ancestry_depth - 1
   end
 

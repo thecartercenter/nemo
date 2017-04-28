@@ -76,7 +76,13 @@ describe ResponseCSV do
     end
 
     let(:repeat_form) do
-      create(:form, question_types: ["integer", {repeating: ["text", "integer", "select_multiple"]}, "integer", {repeating: ["text", "geo_multilevel_select_one",  "integer"]}]).tap do |f|
+      create(:form,
+              question_types:
+                ["integer",
+                  {repeating: {q_types: ["text", "integer", "select_multiple"], name: "Fruit"}},
+                  "integer",
+                  {repeating: {q_types: ["text", "geo_multilevel_select_one",  "integer"], name: "Vegetable"}}
+                ]).tap do |f|
         f.children[1].update_attribute(:repeatable, true)
       end
     end

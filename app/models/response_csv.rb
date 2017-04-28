@@ -33,6 +33,10 @@ class ResponseCSV
       find_or_create_column(code: "Submitter")
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseID")
+      if responses.any?{ |r| r.form.has_repeat_groups? }
+        find_or_create_column(code: "GroupName")
+        find_or_create_column(code: "GroupLevel")
+      end
 
       responses.each do |response|
         # Ensure we have all this response's columns in our table.
@@ -81,8 +85,10 @@ class ResponseCSV
     qa = ResponseCSV::QA.new(question, answers)
     columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
     if response.form.has_repeat_groups?
-      repeat_level = answers.first.repeat_level
-      row[columns_by_question["RepeatLevel"].first.position] = repeat_level
+      group_level = answers.first.group_level
+      group_name = answers.first.parent_group_name
+      row[columns_by_question["GroupName"].first.position] = group_name
+      row[columns_by_question["GroupLevel"].first.position] = group_level
     end
   end
 
@@ -94,36 +100,41 @@ class ResponseCSV
 
   def process_form(form)
     return if processed_forms.include?(form.id)
-    form.questions.each{ |q| find_or_create_column(question: q) }
-    if form.has_repeat_groups?
-      find_or_create_column(code: "RepeatLevel")
-    end
+    form.questionings.each{ |q| find_or_create_column(qing: q) }
     processed_forms << form.id
   end
 
-  def find_or_create_column(code: nil, question: nil)
-    code ||= question.code
+  def find_or_create_column(code: nil, qing: nil)
+    question = nil
+    if code.nil?
+      question = qing.question
+      code = question.code
+    end
 
     return if column_exists_with_code?(code)
 
     if question
       return if question.multimedia?
+      name = [code]
+      if qing.parent_repeatable?
+        name = [qing.parent_group_name, code]
+      end
       if question.multilevel?
         question.levels.each_with_index do |level, i|
-          create_column(code: code, name: [code, level.name])
+          create_column(code: code, name: name + [level.name])
         end
       else
         # Location questions only have lng/lat cols which are added below.
         unless question.qtype_name == 'location'
-          create_column(code: code)
+          create_column(code: code, name: name)
         end
       end
       if question.geographic?
-        create_column(code: code, name: [code, 'Latitude'])
-        create_column(code: code, name: [code, 'Longitude'])
+        create_column(code: code, name: name + ['Latitude'])
+        create_column(code: code, name: name + ['Longitude'])
       end
     else
-      create_column(code: code)
+      create_column(code: code, name: name)
     end
   end
 
