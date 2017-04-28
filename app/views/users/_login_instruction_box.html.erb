@@ -8,8 +8,8 @@
       <td class="value"><%= user.full_name %></td>
     </tr>
     <tr>
-      <td class="name"><%= t("user.login_instructions.site_url") %></td> 
-      <td class="value"><%= mission_root_url %></td>
+      <td class="name"><%= t("user.login_instructions.site_url") %></td>
+      <td class="value"><%= @site_url %></td>
     <tr>
       <td class="name"><%= User.human_attribute_name("login") %></td>
       <td class="value"><%= user.login %></td>
@@ -22,10 +22,12 @@
       <td class="name"><%= User.human_attribute_name("sms_auth_code") %></td>
       <td class="value"><%= user.sms_auth_code %></td>
     </tr>
-    <tr>
-      <td class="name"><%=I18n.t("activerecord.models.mission.one")%></td>
-      <td class="value"><%= "#{@current_mission.name}" %></td>
-    </tr>
+    <% unless admin_mode? %>
+      <tr>
+        <td class="name"><%=I18n.t("activerecord.models.mission.one")%></td>
+        <td class="value"><%= "#{@current_mission.name}" %></td>
+      </tr>
+    <% end %>
   </table>
 
   <% t("user.login_instructions.closing").each do |para| %>
