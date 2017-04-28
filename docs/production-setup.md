@@ -153,7 +153,7 @@ Then load the site in your browser. You should see the new version number in the
 ### Converting an Existing Instance from MySQL to PostgreSQL
 
 1. Install PostgreSQL (see above).
-1. First upgrade to version v5.99 (`git checkout v5.99`), which is the last MySQL compatible version.
+1. First upgrade to version v5.16 (`git checkout v5.16`), which is the last MySQL compatible version.
 1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
 1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
 1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
