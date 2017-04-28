@@ -5,6 +5,7 @@ class User < ApplicationRecord
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   SITE = new name: configatron.site_shortname # Dummy user for use in SMS log
   GENDER_OPTIONS = %w[man woman no_answer specify]
+  PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
 
   attr_writer(:reset_password_method)
   attr_accessor(:batch_creation)
@@ -68,7 +69,7 @@ class User < ApplicationRecord
   # which can be an issue if they will be being re-assigned
   # validate(:must_have_assignments_if_not_admin)
   validate(:phone_should_be_unique, unless: :batch_creation?)
-  validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
+  validates :password, format: { with: PASSWORD_FORMAT,
                                  if: :require_password?,
                                  unless: :batch_creation?,
                                  message: :invalid_password }
@@ -85,18 +86,23 @@ class User < ApplicationRecord
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
 
-  def self.random_password(size = 8)
-    size = 8 if size < 8
+  def self.random_password(size = 12)
+    size = 12 if size < 12
+
     num_size = size.even? ? 2 : 3
-    alpha_size = (size - num_size) / 2
+    symbol_size = 2
+    alpha_size = (size - num_size - symbol_size) / 2
+
     num = %w{2 3 4 6 7 9}
     alpha = %w{a c d e f g h j k m n p q r t v w x y z}
-    (random(num, num_size) + random(alpha, alpha_size) + random(alpha.map(&:upcase), alpha_size)).shuffle.join
-  end
+    symbol = %w{@ & # + %}
 
-  def self.random(chars, n)
-    return "" if n <= 0
-    (chars * (n / chars.size + 1)).shuffle[0..n - 1]
+    alpha_component = alpha_size.times.map { alpha.sample }
+    upper_component = alpha_size.times.map { alpha.sample.upcase }
+    num_component = num_size.times.map { num.sample }
+    symbol_component = symbol_size.times.map { symbol.sample }
+
+    (alpha_component + upper_component + num_component + symbol_component).shuffle.join
   end
 
   def self.find_by_credentials(login, password)
