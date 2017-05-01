@@ -17,7 +17,7 @@ describe FormsController, type: :request do
 
   context "for regular mission" do
     describe "listing forms" do
-      it "should succeed" do
+      it "should succeed", :investigate do
         get_s( "/en/m/#{mission.compact_name}/formList", format: :xml)
 
         # Only form3 should have a manifest.
