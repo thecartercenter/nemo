@@ -8,6 +8,7 @@ railsenv
 config/railsenv
 config/initializers/local_config.rb
 config/database.yml
+config/mysql2postgres.yml
 config/thinking_sphinx.yml
 config/memcached_server
 TODO

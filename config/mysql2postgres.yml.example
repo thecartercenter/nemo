@@ -1,26 +1,18 @@
-default: &default
-  adapter: jdbcpostgresql
-  encoding: unicode
-  pool: 4
-
-production: &production
-  <<: *default
-  database: elmo_production
-
-mysql_data_source: &pii
-  hostname: localhost
-  port: 3306
-  username: root
-  password:
-  database: elmo_production
-
 mysql2psql:
   mysql:
-    <<: *pii
+    hostname: localhost
+    port: 3306
+    username: elmo
+    password: pass123
+    database: elmo_production
 
   destination:
     production:
-      <<: *production
+      adapter: postgresql
+      encoding: utf8
+      pool: 4
+      host: /var/run/postgresql
+      database: elmo_production
 
   # If suppress_data is true, only the schema definition will be exported/migrated, and not the data
   suppress_data: false

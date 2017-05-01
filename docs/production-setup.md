@@ -154,15 +154,17 @@ Then load the site in your browser. You should see the new version number in the
 
 1. Install PostgreSQL (see above).
 1. First upgrade to version v5.16 (`git checkout v5.16`), which is the last MySQL compatible version.
+1. `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
 1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
 1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
+1. Ensure you can connect to the database (e.g. using `psql elmo_production`) from the user account that runs the app. If you need a password or different host, be sure to update the mysql2postgres.yml file to reflect this.
 1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
 1. Ignore the `no COPY in progress` message.
 1. Update `config/database.yml` to point to Postgres. Use `config/database.yml.example` as a guide.
+1. Upgrade to version v6+. Version 6+ is required when running against Postgres.
 1. Restart your server. You should now be running on PostgreSQL!
 1. Run bundle exec rake ts:rebuild to rebuild your indices against the new DB and restart Sphinx.
 1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
-1. You can upgrade to your desired 6+ version.
 
 Troubleshooting
 
