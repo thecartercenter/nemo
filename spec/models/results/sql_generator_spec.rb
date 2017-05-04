@@ -42,7 +42,7 @@ describe Results::SqlGenerator do
         answers.longitude AS longitude,
         COALESCE(ao.canonical_name, co.canonical_name) AS choice_name,
         option_sets.name AS option_set
-      FROM `responses`
+      FROM \"responses\"
         LEFT JOIN users users ON responses.user_id = users.id
         INNER JOIN forms forms ON responses.form_id = forms.id
         LEFT JOIN answers answers ON answers.response_id = responses.id

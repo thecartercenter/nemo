@@ -28,7 +28,6 @@ describe Report::StandardFormReport do
 
     it "should return correct response count" do
       build_form_and_responses
-      Rails.logger.debug('----------------------------------------------------------------------------------------------')
       build_and_run_report
       expect(@report.response_count).to eq(5)
     end

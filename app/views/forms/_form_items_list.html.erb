@@ -22,7 +22,7 @@
   <% unless @form.new_record? %>
     <div class="draggable-list-wrapper">
       <ol class="form-items-list item-list">
-        <% @form.children.order(:rank).each do |item| %>
+        <% @form.sorted_children.each do |item| %>
           <%= render('form_item', item: item) %>
         <% end %>
       </ol>

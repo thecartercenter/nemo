@@ -117,7 +117,7 @@ describe ResponseCSV do
       ])
     end
 
-    it "should generate a row per repeat group answer, plus one row per responseß" do
+    it "should generate a row per repeat group answer, plus one row per response" do
       FactoryGirl.reload
       Timecop.freeze(Time.parse("2015-11-20 12:30 UTC")) do
         response_a

@@ -41,10 +41,10 @@ describe XMLSubmission do
         questions = @form.questions
 
         # set short names for options
-        cat = questions[0].option_set.children.first
-        plant, oak = questions[1].option_set.children
-        cat2, dog2 = questions[2].option_set.children
-        animal = questions[4].option_set.children.first
+        cat = questions[0].option_set.sorted_children.first
+        plant, oak = questions[1].option_set.sorted_children
+        cat2, dog2 = questions[2].option_set.sorted_children
+        animal = questions[4].option_set.sorted_children.first
 
         @submission.populate_from_hash({
           "q#{questions[0].id}" => "on#{cat.id}",

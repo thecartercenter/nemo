@@ -3,7 +3,7 @@ require "spec_helper"
 describe "qing groups", type: :request do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:form) { create(:form, question_types: ["text", ["text", "text"]]) }
-  let(:qing_group) { form.children.select { |c| c.type == "QingGroup" }.first }
+  let(:qing_group) { form.sorted_children.select { |c| c.type == "QingGroup" }.first }
 
   before do
     login(user)

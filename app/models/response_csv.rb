@@ -100,7 +100,7 @@ class ResponseCSV
 
   def process_form(form)
     return if processed_forms.include?(form.id)
-    form.questionings.each{ |q| find_or_create_column(qing: q) }
+    form.questionings.each { |q| find_or_create_column(qing: q) }
     processed_forms << form.id
   end
 

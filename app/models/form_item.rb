@@ -65,7 +65,7 @@ class FormItem < ApplicationRecord
     end
   end
 
-  def ordered_children
+  def sorted_children
     children.order(:rank)
   end
 

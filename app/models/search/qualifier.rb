@@ -32,7 +32,7 @@ class Search::Qualifier
 
     # if we haven't found a matching qualifier yet, look for any regexp style ones
     if qualifier.nil?
-      set.find_all{|q| q.regexp?}.each do |q|
+      set.find_all { |q| q.regexp? }.each do |q|
         # check against the regular expression and then against the validator (if defined)
         if q.matches(chunk)
           qualifier = q

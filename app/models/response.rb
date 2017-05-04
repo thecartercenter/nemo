@@ -86,7 +86,7 @@ class Response < ApplicationRecord
       Search::Qualifier.new(name: "source", col: "responses.source"),
       Search::Qualifier.new(
         name: "submit_date",
-        col: "CAST(CONVERT_TZ(responses.created_at, 'UTC', '#{Time.zone.tzinfo.name}') AS DATE)",
+        col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)",
         type: :scale
       ),
 
@@ -110,7 +110,7 @@ class Response < ApplicationRecord
         pattern: /\A\{(#{Question::CODE_FORMAT})\}\z/,
         col: "responses.id",
         type: :indexed,
-        validator: ->(md) { Question.exists?(mission_id: scope[:mission].id, code: md[1]) }
+        validator: ->(md) { Question.for_mission(scope[:mission]).with_code(md[1]).exists? }
       )
     ]
   end
@@ -152,7 +152,7 @@ class Response < ApplicationRecord
         question_code = expression.qualifier_text[1..-2]
 
         # get the question with the given code
-        question = Question.where(mission_id: scope[:mission].id).where(code: question_code).first
+        question = Question.for_mission(scope[:mission]).with_code(question_code).first
 
         # raising here since this shouldn't happen due to validator
         raise "question with code '#{question_code}' not found" if question.nil?

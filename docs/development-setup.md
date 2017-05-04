@@ -14,14 +14,12 @@ Note to install the software below we recommend the following package managers:
 1. **Memcached 1.4+**
   - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it. In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
 
-1. **MySQL 5.0+**
-  - Create an empty database and accompanying user for use by the app (e.g. database *elmo_development* with username *elmo*)
-  - Populate the timezone tables in mysql: See "Populating the Time Zone Tables" in [doc here](http://dev.mysql.com/doc/refman/5.5/en/time-zone-support.html)
+1. **PostgreSQL 9.4+**
+  - Create an empty database for use by the app (typically *elmo_development*)
 
 1. **Sphinx 2.0.6+**
   - Sphinx is an open source search engine.
   - It should be available through any of the package managers listed above. If not it can be built from source.
-  - It is important that Sphinx be installed **with MySQL bindings**. This is not turned on by default in some cases.
   - The Rails Gem that talks to Sphinx is called Thinking Sphinx.
   - The [Thinking Sphinx site](http://pat.github.io/thinking-sphinx/) is a good place to go for troubleshooting and documentation.
 
@@ -59,11 +57,11 @@ Note to install the software below we recommend the following package managers:
   git checkout develop
   ```
 
-1. **Bundle, configure, and migrate**
+1. **Bundle, configure, and load schema**
   - Install the required gems by running `bundle install` in the project directory.
   - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
   - Copy `config/thinking_sphinx.yml.example` to `thinking_sphinx.yml` and adjust any settings (usually not necessary).
-  - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass. 
+  - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
   - Load the database schema: `rake db:schema:load`.
   - Create an admin account: `rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it to be used on your first login).
 

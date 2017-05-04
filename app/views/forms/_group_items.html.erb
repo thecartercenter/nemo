@@ -1,5 +1,5 @@
 <ol class="item-list">
-  <% group.children.each do |item| %>
+  <% group.sorted_children.each do |item| %>
     <%= render('form_item', item: item) %>
   <% end %>
 </ol>

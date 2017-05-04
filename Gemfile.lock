@@ -1,5 +1,5 @@
 GIT
-  remote: git://github.com/codebrew/backbone-rails.git
+  remote: https://github.com/codebrew/backbone-rails.git
   revision: 231090bd690cd365a9486c17b00eec1e73ec37ec
   specs:
     rails-backbone (1.2.2)
@@ -7,13 +7,6 @@ GIT
       ejs
       jquery-rails
       railties
-
-GIT
-  remote: git://github.com/sassafrastech/rack-attack.git
-  revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
-  specs:
-    rack-attack (4.3.0)
-      rack
 
 GIT
   remote: https://github.com/sassafrastech/mysql-pr.git
@@ -31,6 +24,13 @@ GIT
       mysql-pr (~> 2.9)
       postgres-pr (~> 0.6)
       test-unit (~> 2.1)
+
+GIT
+  remote: https://github.com/sassafrastech/rack-attack.git
+  revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
+  specs:
+    rack-attack (4.3.0)
+      rack
 
 GEM
   remote: http://rubygems.org/

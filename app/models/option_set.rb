@@ -32,10 +32,10 @@ class OptionSet < ApplicationRecord
         option_sets.*,
         COUNT(DISTINCT answers.id) AS answer_count_col,
         COUNT(DISTINCT questions.id) AS question_count_col,
-        MAX(forms.published) AS published_col,
+        BOOL_OR(forms.published) AS published_col,
         COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
         COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
-        MAX(copy_forms.published) AS copy_published_col
+        BOOL_OR(copy_forms.published) AS copy_published_col
       }).
       joins(%{
         LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
@@ -43,7 +43,7 @@ class OptionSet < ApplicationRecord
           AND questionings.type = 'Questioning'
         LEFT OUTER JOIN forms ON forms.id = questionings.form_id
         LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-        LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.original_id = option_sets.id
+        LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = true AND copies.original_id = option_sets.id
         LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
         LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copy_questions.id
           AND questionings.type = 'Questioning'
@@ -110,7 +110,7 @@ class OptionSet < ApplicationRecord
   def self.first_level_option_nodes_for_sets(set_ids)
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).to_a.map(&:root_node_id)
-    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).to_a
+    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).order(:option_set_id, :rank).to_a
   end
 
   def children_attribs=(attribs)

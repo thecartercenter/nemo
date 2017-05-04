@@ -167,7 +167,8 @@ class User < ApplicationRecord
           SELECT 1 FROM responses r
           WHERE r.user_id = a.user_id AND r.mission_id = ?
         ) AND a.role='observer' AND a.mission_id = ? LIMIT ?
-      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit])
+      ) as rc ON users.id = rc.user_id
+      ORDER BY users.name", mission.id, mission.id, limit])
   end
 
   # Returns all non-admin users in the form's mission with the given role that have
@@ -186,7 +187,9 @@ class User < ApplicationRecord
         SELECT 1 FROM responses WHERE
         responses.user_id=users.id AND
         responses.form_id = ?
-      ) LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit] + 1])
+      )
+      ORDER BY users.name
+      LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit] + 1])
   end
 
   # generates a cache key for the set of all users for the given mission.

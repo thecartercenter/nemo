@@ -10,6 +10,10 @@ class Replication::ObjProxy
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}
   end
 
+  def inspect
+    "<ObjProxy: klass=#{klass.name}, id=#{id}, id_class=#{id.class}, ancestry=#{ancestry}>"
+  end
+
   # Loads the full ActiveRecord object proxied by this one.
   def full_object
     @full_object ||= klass.find(id)
@@ -87,7 +91,7 @@ class Replication::ObjProxy
       new_ancestry = nil
     end
 
-    new_id = do_insert(mappings)
+    new_id = do_insert(mappings).to_i
 
     self.class.new(klass: klass, id: new_id, ancestry: new_ancestry, replicator: replicator)
   end
@@ -110,6 +114,7 @@ class Replication::ObjProxy
       data = db.select_all("SELECT #{cols.join(',')} FROM #{options[:target_klass].table_name} WHERE #{condition} #{options[:order]}")
 
       data.map do |attribs|
+        attribs["id"] = attribs["id"].to_i
         tc = get_target_class_from_type_col ? attribs.delete('type').constantize : options[:target_klass]
         self.class.new(attribs.merge(klass: tc, replicator: replicator))
       end
@@ -147,13 +152,13 @@ class Replication::ObjProxy
       mappings = []
       case replicator.mode
       when :promote
-        mappings << ['is_standard', 1] if klass.standardizable?
+        mappings << ['is_standard', true] if klass.standardizable?
       when :clone
         mappings << 'mission_id'
         mappings << 'is_standard' if klass.standardizable?
       when :to_mission
         mappings << ['mission_id', replicator.target_mission_id]
-        mappings << ['standard_copy', 1] if klass.standardizable? && replicator.source_is_standard?
+        mappings << ['standard_copy', true] if klass.standardizable? && replicator.source_is_standard?
       end
       mappings << ['original_id', 'id'] if klass.standardizable?
       mappings
@@ -212,9 +217,12 @@ class Replication::ObjProxy
     end
 
     def do_insert(mappings)
-      insert_cols = mappings.map{ |s| s.is_a?(Array) ? s[0] : s}.join(',')
-      select_chunks = mappings.map{ |s| s.is_a?(Array) ? s[1] : s}.map{ |s| s.nil? ? 'NULL' : s }.join(',')
-      db.insert("INSERT INTO #{klass.table_name} (#{insert_cols})
-        SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = #{id}")
+      insert_cols = mappings.map{ |s| s.is_a?(Array) ? s[0] : s}.join(",")
+      select_chunks = mappings.map{ |s| s.is_a?(Array) ? s[1] : s}.map{ |s| s.nil? ? "NULL" : s }.join(",")
+
+      sql = "INSERT INTO #{klass.table_name} (#{insert_cols})
+        SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = #{id} RETURNING id"
+
+      db.insert(sql)
     end
 end
