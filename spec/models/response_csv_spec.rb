@@ -65,7 +65,9 @@ describe ResponseCSV do
     it "should generate correct CSV" do
       responses = Response.unscoped.with_associations.order(:created_at)
       #expected = File.read(File.expand_path('../../expectations/response_csv/responses.csv', __FILE__))
-      expected = ResponseCSVExpectation.get_expectation
+      uuids = responses.map(&:uuid)
+      shortcodes = responses.map(&:shortcode)
+      expected = ResponseCSVExpectation.get_expectation(uuids,shortcodes)
       expect(ResponseCSV.new(responses).to_s).to eq expected
     end
   end
