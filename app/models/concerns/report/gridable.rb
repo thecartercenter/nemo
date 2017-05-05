@@ -2,7 +2,7 @@
 module Report::Gridable
   extend ActiveSupport::Concern
 
-  RESPONSES_QUANTITY_LIMIT = 1000
+  RESPONSES_QUANTITY_LIMIT = 5000
 
   included do
     attr_reader :header_set, :data, :totals, :query
