@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'expectations/response_csv/response_csv_expectation'
 
 describe ResponseCSV do
   context "with no data" do
@@ -63,7 +64,8 @@ describe ResponseCSV do
 
     it "should generate correct CSV" do
       responses = Response.unscoped.with_associations.order(:created_at)
-      expected = File.read(File.expand_path('../../expectations/response_csv/responses.csv', __FILE__))
+      #expected = File.read(File.expand_path('../../expectations/response_csv/responses.csv', __FILE__))
+      expected = ResponseCSVExpectation.get_expectation
       expect(ResponseCSV.new(responses).to_s).to eq expected
     end
   end
@@ -76,13 +78,7 @@ describe ResponseCSV do
     end
 
     let(:repeat_form) do
-      create(:form,
-              question_types:
-                ["integer",
-                  {repeating: {q_types: ["text", "integer", "select_multiple"], name: "Fruit"}},
-                  "integer",
-                  {repeating: {q_types: ["text", "geo_multilevel_select_one",  "integer"], name: "Vegetable"}}
-                ]).tap do |f|
+      create(:form, question_types: ["integer", {repeating: ["text", "integer", "select_multiple"]}, "integer", {repeating: ["text", "geo_multilevel_select_one",  "integer"]}]).tap do |f|
         f.children[1].update_attribute(:repeatable, true)
       end
     end

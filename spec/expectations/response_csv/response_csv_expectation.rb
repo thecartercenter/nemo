@@ -1,0 +1,12 @@
+class ResponseCSVExpectation
+  def self.get_expectation
+    return ("Form,Submitter,DateSubmitted,ResponseID,TextQ1,SelectOneQ2:Country,SelectOneQ2:City,SelectOneQ2:Latitude,SelectOneQ2:Longitude,LongTextQ3,IntegerQ4,DecimalQ5,LocationQ6:Latitude,LocationQ6:Longitude,SelectOneQ7,SelectOneQ8,SelectOneQ9,SelectMultipleQ10,DatetimeQ11,DateQ12,TimeQ13,TextQ14,LongTextQ15,SelectOneQ16,SelectOneQ16:Latitude,SelectOneQ16:Longitude\r
+Sample Form 1,A User 2,2015-11-20 06:20 CST,11,alpha,Ghana,Tamale,9.4075,0.8533,bravo,80,1.23,,,,Dog,,Cat,2015-01-12 03:15 CST,2014-02-03,03:43\r
+Sample Form 1,A User 1,2015-11-20 06:30 CST,10,foo✓,Canada,Calgary,51.045,-114.057222,\"foo\r
+\r
+\"\"bar\"\"  \r\nbaz\",100,-123.5,15.937378,44.36453,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15\r
+Sample Form 1,A User 3,2015-11-20 06:30 CST,12,foo,Canada,,,,bar,100,-123.5,15.937378,44.36453,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15\r
+Sample Form 1,A User 4,2015-11-20 06:30 CST,13,foo,Ghana,,7.1,0.4,bar,100,-123.5,15.937378,44.36453,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15\r
+Sample Form 2,A User 5,2015-11-20 06:30 CST,14,,Ghana,Accra,5.55,0.2,,,,,,,,,,,,,foo,bar,Funton,-12.9,22.7\r\n")
+  end
+end
