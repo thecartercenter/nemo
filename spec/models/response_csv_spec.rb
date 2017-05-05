@@ -1,5 +1,5 @@
 require 'spec_helper'
-require 'expectations/response_csv/response_csv_expectation'
+require 'expectations/response_csv_expectation_maker'
 
 describe ResponseCSV do
   context "with no data" do
@@ -67,7 +67,7 @@ describe ResponseCSV do
       #expected = File.read(File.expand_path('../../expectations/response_csv/responses.csv', __FILE__))
       uuids = responses.map(&:uuid)
       shortcodes = responses.map(&:shortcode)
-      expected = ResponseCSVExpectation.get_expectation(uuids,shortcodes)
+      expected = ResponseCSVExpectationMaker.make_expectation_without_repeat_groups(uuids,shortcodes)
       expect(ResponseCSV.new(responses).to_s).to eq expected
     end
   end
@@ -80,7 +80,13 @@ describe ResponseCSV do
     end
 
     let(:repeat_form) do
-      create(:form, question_types: ["integer", {repeating: ["text", "integer", "select_multiple"]}, "integer", {repeating: ["text", "geo_multilevel_select_one",  "integer"]}]).tap do |f|
+      create(:form,
+      question_types:
+      ["integer",
+        {repeating: {q_types: ["text", "integer", "select_multiple"], name: "Fruit"}},
+        "integer",
+        {repeating: {q_types: ["text", "geo_multilevel_select_one",  "integer"], name: "Vegetable"}}
+        ]).tap do |f|
         f.children[1].update_attribute(:repeatable, true)
       end
     end
@@ -123,7 +129,9 @@ describe ResponseCSV do
       end
 
       responses = Response.order(:id)
-      expected = File.read(File.expand_path('../../expectations/response_csv/repeat_groups.csv', __FILE__))
+      uuids = responses.map(&:uuid)
+      shortcodes = responses.map(&:shortcode)
+      expected = ResponseCSVExpectationMaker.make_expectation_with_repeat_groups(uuids, shortcodes)
       actual = ResponseCSV.new(responses)
       expect(actual.to_s).to eq expected
     end
