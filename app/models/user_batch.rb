@@ -7,7 +7,7 @@ class UserBatch
   BATCH_SIZE = 1000
   PERMITTED_ATTRIBS = %i(login name phone phone2 email birth_year gender gender_custom nationality notes)
 
-  attr_accessor :file
+  attr_accessor :file, :mission_id, :name
   attr_reader :users
 
   validates :file, presence: true
@@ -24,6 +24,10 @@ class UserBatch
 
   def succeeded?
     !@validation_error
+  end
+
+  def run(mission)
+    create_users(mission)
   end
 
   # creates users based on the data submitted via the users attribute
