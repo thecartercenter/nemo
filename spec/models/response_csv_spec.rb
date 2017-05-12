@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'expectations/response_csv_expectation_maker'
 
 describe ResponseCSV do
   context "with no data" do
@@ -64,10 +63,9 @@ describe ResponseCSV do
 
     it "should generate correct CSV" do
       responses = Response.unscoped.with_associations.order(:created_at)
-      #expected = File.read(File.expand_path('../../expectations/response_csv/responses.csv', __FILE__))
       uuids = responses.map(&:uuid)
       shortcodes = responses.map(&:shortcode)
-      expected = ResponseCSVExpectationMaker.make_expectation_without_repeat_groups(uuids,shortcodes)
+      expected = response_csv_expectation_without_repeat_groups(uuids,shortcodes)
       expect(ResponseCSV.new(responses).to_s).to eq expected
     end
   end
@@ -131,7 +129,7 @@ describe ResponseCSV do
       responses = Response.order(:id)
       uuids = responses.map(&:uuid)
       shortcodes = responses.map(&:shortcode)
-      expected = ResponseCSVExpectationMaker.make_expectation_with_repeat_groups(uuids, shortcodes)
+      expected = response_csv_expectation_with_repeat_groups(uuids, shortcodes)
       actual = ResponseCSV.new(responses)
       expect(actual.to_s).to eq expected
     end

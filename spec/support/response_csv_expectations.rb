@@ -1,5 +1,5 @@
-class ResponseCSVExpectationMaker
-  def self.make_expectation_without_repeat_groups(uuids, shortcodes)
+module ResponseCSVExpectations
+  def response_csv_expectation_without_repeat_groups(uuids, shortcodes)
     return ("Form,Submitter,DateSubmitted,ResponseUUID,ResponseShortcode,TextQ1,SelectOneQ2:Country,SelectOneQ2:City,SelectOneQ2:Latitude,SelectOneQ2:Longitude,LongTextQ3,IntegerQ4,DecimalQ5,LocationQ6:Latitude,LocationQ6:Longitude,SelectOneQ7,SelectOneQ8,SelectOneQ9,SelectMultipleQ10,DatetimeQ11,DateQ12,TimeQ13,TextQ14,LongTextQ15,SelectOneQ16,SelectOneQ16:Latitude,SelectOneQ16:Longitude\r
 Sample Form 1,A User 2,2015-11-20 06:20 CST,#{uuids[0]},#{shortcodes[0]},alpha,Ghana,Tamale,9.4075,0.8533,bravo,80,1.23,,,,Dog,,Cat,2015-01-12 03:15 CST,2014-02-03,03:43\r
 Sample Form 1,A User 1,2015-11-20 06:30 CST,#{uuids[1]},#{shortcodes[1]},foo✓,Canada,Calgary,51.045,-114.057222,\"foo\r
@@ -10,7 +10,7 @@ Sample Form 1,A User 4,2015-11-20 06:30 CST,#{uuids[3]},#{shortcodes[3]},foo,Gha
 Sample Form 2,A User 5,2015-11-20 06:30 CST,#{uuids[4]},#{shortcodes[4]},,Ghana,Accra,5.55,0.2,,,,,,,,,,,,,foo,bar,Funton,-12.9,22.7\r\n")
   end
 
-  def self.make_expectation_with_repeat_groups(uuids, shortcodes)
+  def response_csv_expectation_with_repeat_groups(uuids, shortcodes)
     return ("Form,Submitter,DateSubmitted,ResponseUUID,ResponseShortcode,GroupName,GroupLevel,IntegerQ1,Fruit:TextQ2,Fruit:IntegerQ3,Fruit:SelectMultipleQ4,IntegerQ5,Vegetable:TextQ6,Vegetable:SelectOneQ7:Country,Vegetable:SelectOneQ7:City,Vegetable:SelectOneQ7:Latitude,Vegetable:SelectOneQ7:Longitude,Vegetable:IntegerQ8\r
 Sample Form 1,A User 1,2015-11-20 06:30 CST,#{uuids[0]},#{shortcodes[0]},,0,1,,,,2,,,,,,\r
 Sample Form 1,A User 1,2015-11-20 06:30 CST,#{uuids[0]},#{shortcodes[0]},Fruit,1,1,Apple,1,Cat;Dog,2,,,,,,\r
