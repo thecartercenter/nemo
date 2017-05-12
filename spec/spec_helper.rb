@@ -67,6 +67,7 @@ RSpec.configure do |config|
   config.include FeatureSpecHelpers, type: :feature
   config.include AssertSelectRoot, type: :request
   config.include Paperclip::Shoulda::Matchers
+  config.include ResponseCSVExpectations, type: :model
 
   # Locale should be reset to :en after each test if it is changed.
   config.after(:each) do

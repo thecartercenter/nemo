@@ -12,6 +12,7 @@ describe "response API requests" do
       expect(json.size).to eq 3
       expect(json.first.keys.sort).to eq %w(answers created_at id submitter updated_at)
       expect(json.first["answers"].size).to eq 2
+      #answers should be sorted by rank, expect integer question first
       expect(json.map{ |r| r["answers"].first["value"] }).to eq [3, 2, 1]
       expect(json.first["answers"].first.keys.sort).to eq %w(code id question value)
     end
@@ -22,6 +23,7 @@ describe "response API requests" do
       get "/api/v1/m/mission1/responses?form_id=#{@form.id}&created_before=#{t2}&created_after=#{t1}", {}, headers
       expect(response).to have_http_status(200)
       expect(json.size).to eq 1
+      #answers should be sorted by rank, expect integer question first
       expect(json.first["answers"].first["value"]).to eq 2
     end
   end

@@ -51,7 +51,7 @@ class Answer < ApplicationRecord
   delegate :parent_group_name, to: :questioning
 
   scope :public_access, -> { joins(questioning: :question).
-    where("questions.access_level = 'inherit'") }
+    where("questions.access_level = 'inherit'").order("form_items.rank") }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
   scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }

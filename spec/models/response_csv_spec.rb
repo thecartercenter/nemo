@@ -62,9 +62,9 @@ describe ResponseCSV do
     end
 
     it "should generate correct CSV" do
-      responses = Response.unscoped.with_associations.order(:created_at)
-      expected = File.read(File.expand_path('../../expectations/response_csv/responses.csv', __FILE__))
-      expect(ResponseCSV.new(responses).to_s).to eq expected
+      ordered_responses = Response.unscoped.with_associations.order(:created_at)
+      expected = response_csv_expectation_without_repeat_groups(ordered_responses)
+      expect(ResponseCSV.new(ordered_responses).to_s).to eq expected
     end
   end
 
@@ -77,12 +77,12 @@ describe ResponseCSV do
 
     let(:repeat_form) do
       create(:form,
-              question_types:
-                ["integer",
-                  {repeating: {q_types: ["text", "integer", "select_multiple"], name: "Fruit"}},
-                  "integer",
-                  {repeating: {q_types: ["text", "geo_multilevel_select_one",  "integer"], name: "Vegetable"}}
-                ]).tap do |f|
+        question_types:
+          ["integer",
+            {repeating: {q_types: ["text", "integer", "select_multiple"], name: "Fruit"}},
+            "integer",
+            {repeating: {q_types: ["text", "geo_multilevel_select_one",  "integer"], name: "Vegetable"}}
+          ]).tap do |f|
         f.children[1].update_attribute(:repeatable, true)
       end
     end
@@ -124,9 +124,9 @@ describe ResponseCSV do
         response_b
       end
 
-      responses = Response.order(:id)
-      expected = File.read(File.expand_path('../../expectations/response_csv/repeat_groups.csv', __FILE__))
-      actual = ResponseCSV.new(responses)
+      ordered_responses = Response.order(:id)
+      expected = response_csv_expectation_with_repeat_groups(ordered_responses)
+      actual = ResponseCSV.new(ordered_responses)
       expect(actual.to_s).to eq expected
     end
 

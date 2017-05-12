@@ -32,7 +32,8 @@ class ResponseCSV
       find_or_create_column(code: "Form")
       find_or_create_column(code: "Submitter")
       find_or_create_column(code: "DateSubmitted")
-      find_or_create_column(code: "ResponseID")
+      find_or_create_column(code: "ResponseUUID")
+      find_or_create_column(code: "ResponseShortcode")
       if responses.any?{ |r| r.form.has_repeat_groups? }
         find_or_create_column(code: "GroupName")
         find_or_create_column(code: "GroupLevel")
@@ -53,7 +54,8 @@ class ResponseCSV
           response.form.name,
           response.user.name,
           response.created_at.to_s(:std_datetime_with_tz),
-          response.id
+          response.uuid,
+          response.shortcode
         ]
 
         non_repeat_answers.group_by(&:question).each do |question, answers|
