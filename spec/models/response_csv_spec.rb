@@ -62,11 +62,9 @@ describe ResponseCSV do
     end
 
     it "should generate correct CSV" do
-      responses = Response.unscoped.with_associations.order(:created_at)
-      uuids = responses.map(&:uuid)
-      shortcodes = responses.map(&:shortcode)
-      expected = response_csv_expectation_without_repeat_groups(uuids,shortcodes)
-      expect(ResponseCSV.new(responses).to_s).to eq expected
+      ordered_responses = Response.unscoped.with_associations.order(:created_at)
+      expected = response_csv_expectation_without_repeat_groups(ordered_responses)
+      expect(ResponseCSV.new(ordered_responses).to_s).to eq expected
     end
   end
 
@@ -126,11 +124,9 @@ describe ResponseCSV do
         response_b
       end
 
-      responses = Response.order(:id)
-      uuids = responses.map(&:uuid)
-      shortcodes = responses.map(&:shortcode)
-      expected = response_csv_expectation_with_repeat_groups(uuids, shortcodes)
-      actual = ResponseCSV.new(responses)
+      ordered_responses = Response.order(:id)
+      expected = response_csv_expectation_with_repeat_groups(ordered_responses)
+      actual = ResponseCSV.new(ordered_responses)
       expect(actual.to_s).to eq expected
     end
 
