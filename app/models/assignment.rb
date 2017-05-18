@@ -9,7 +9,6 @@ class Assignment < ApplicationRecord
   validates(:mission, :presence => true)
   validates(:role, presence: true, unless: lambda { |a| a.user.admin? })
 
-  default_scope { includes(:mission) }
   scope(:sorted_recent_first, -> { order("created_at DESC") })
 
   # checks if there are any duplicates in the given set of assignments

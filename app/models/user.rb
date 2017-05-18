@@ -14,7 +14,8 @@ class User < ApplicationRecord
   has_many :responses, inverse_of: :user
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
-  has_many :assignments, autosave: true, dependent: :destroy, validate: true, inverse_of: :user
+  has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
+    validate: true, inverse_of: :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
   has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: 'Report::Report'
