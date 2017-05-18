@@ -1,4 +1,4 @@
-class Mission < ActiveRecord::Base
+class Mission < ApplicationRecord
   def generate_shortcode
     charset = ("a".."z").to_a + ("0".."9").to_a
     begin

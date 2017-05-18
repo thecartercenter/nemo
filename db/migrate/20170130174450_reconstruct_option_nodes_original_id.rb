@@ -1,12 +1,12 @@
-class OptionSet < ActiveRecord::Base
+class OptionSet < ApplicationRecord
   belongs_to :original, class_name: "OptionSet"
   belongs_to :root_node, -> { where(option_id: nil) }, class_name: OptionNode, dependent: :destroy
 end
-class OptionNode < ActiveRecord::Base
+class OptionNode < ApplicationRecord
   has_ancestry cache_depth: true
   belongs_to :option
 end
-class Option < ActiveRecord::Base; end
+class Option < ApplicationRecord; end
 
 class ReconstructOptionNodesOriginalId < ActiveRecord::Migration
   def up
