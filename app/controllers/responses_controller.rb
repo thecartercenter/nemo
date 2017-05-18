@@ -13,7 +13,6 @@ class ResponsesController < ApplicationController
   before_action :mark_response_as_checked_out, only: [:edit]
 
   def index
-    # Deprecating the default_scope on Response
     @responses = Response.unscoped.accessible_by(current_ability)
 
     # Disable cache, including back button
