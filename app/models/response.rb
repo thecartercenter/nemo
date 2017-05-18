@@ -32,13 +32,11 @@ class Response < ApplicationRecord
   validate(:form_in_mission)
   validates_associated :answers # Forces validation of answers even if they haven't changed
 
-  # This scope is DEPRECATED. Do not rely on it. Instead, call Response.unscoped and apply your own.
-  default_scope( -> { includes(:form, :user).order("responses.created_at DESC") })
-
   scope(:unreviewed, -> { where(reviewed: false) })
   scope(:by, ->(user) { where(user_id: user.id) })
   scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
+  scope :latest_first, -> { order(created_at: :desc) }
 
   # loads all the associations required for show, edit, etc.
   scope :with_associations, -> { includes(

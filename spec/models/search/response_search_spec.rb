@@ -137,7 +137,7 @@ describe Response do
 
     def run_search(query, options = {})
       options[:include_excerpts] ||= false
-      Response.do_search(Response.unscoped, query, {mission: get_mission}, options)
+      Response.do_search(Response, query, {mission: get_mission}, options)
     end
   end
 end
