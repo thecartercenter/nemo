@@ -1,8 +1,6 @@
 class Operation < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
-  default_scope -> { order('operations.created_at DESC') }
-
   validates :job_class, presence: true
   validates :creator, presence: true
   validates :description, presence: true
