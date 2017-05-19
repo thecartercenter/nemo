@@ -1,12 +1,12 @@
-# This model is poorly named. It is part of the user import code and should be namespaced.
-# It should not be used in a generic way.
-class DirectDBConn
+# Class for efficiently inserting objects into the database using combined INSERTs and SELECT ... INSERT.
+class FastInserter
   ATTRIBS_TO_SKIP = %w(id deleted_at)
 
   def initialize(table)
     @table = table
   end
 
+  # Inserts a large amount of objects in a single query.
   def insert(objects)
     column_names = escape_column_names(objects)
     object_values = objects.map { |o| convert_values_to_insert_syntax(o) }
@@ -15,6 +15,7 @@ class DirectDBConn
     sql_runner.run("INSERT INTO #{@table} (#{column_names}) VALUES #{object_values.join(', ')}")
   end
 
+  # Inserts a large amount of objects based on a query of other objects using SELECT ... INSERT.
   def insert_select(objects, object_to_insert, field_to_select, table_to_select, field_to_where)
     # Get the objects that are going to be inserted on the db
     objects_to_insert = objects.map { |u| u.send(object_to_insert).first }
@@ -37,6 +38,7 @@ class DirectDBConn
     sql_runner.run("INSERT INTO #{@table} (#{column_names}) #{unified_select_queries}")
   end
 
+  # Checks uniqueness across multiple columns using SQL.
   def check_uniqueness(objects, fields)
     sql = "SELECT #{fields.join(', ')} FROM #{@table} WHERE "
     field_values = fields.map { |f| objects.map { |u| u.send(f) } }.flatten

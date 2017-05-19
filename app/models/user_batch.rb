@@ -14,7 +14,7 @@ class UserBatch
 
   def initialize(attribs = {})
     @users = []
-    @direct_db_conn = DirectDBConn.new("users")
+    @direct_db_conn = FastInserter.new("users")
     attribs.each { |k,v| instance_variable_set("@#{k}", v) }
   end
 
@@ -298,7 +298,7 @@ class UserBatch
   end
 
   def insert_assignments(users_batch)
-    DirectDBConn.new("assignments").insert_select(
+    FastInserter.new("assignments").insert_select(
       users_batch, "assignments", "user_id", "users", "import_num")
   end
 
