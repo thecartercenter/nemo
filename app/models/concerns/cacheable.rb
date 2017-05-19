@@ -7,7 +7,7 @@ module Cacheable
     # options[:rel] - a relation to use instead of .all
     # options[:prefix] - a prefix to use after the class name and before the date and count
     def self.count_and_date_cache_key(options = nil)
-      rel = options[:rel] || unscoped
+      rel = options[:rel] || all
 
       # add class name
       pieces = [name.downcase]

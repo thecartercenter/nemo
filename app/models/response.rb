@@ -254,7 +254,7 @@ class Response < ApplicationRecord
   # generates a cache key for the set of all responses for the given mission.
   # the key will change if the number of responses changes, or if a response is updated.
   def self.per_mission_cache_key(mission)
-    count_and_date_cache_key(rel: unscoped.for_mission(mission), prefix: "mission-#{mission.id}")
+    count_and_date_cache_key(rel: for_mission(mission), prefix: "mission-#{mission.id}")
   end
 
   # We need a name field so that this class matches the Nameable duck type.
