@@ -16,7 +16,11 @@ class Results::Join
   def initialize(params)
     @sql = params[:sql]
     @name = params[:name]
-    @dependencies = params[:dependencies] ? (params[:dependencies].is_a?(Symbol) ? [params[:dependencies]] : params[:dependencies]) : []
+    @dependencies = if params[:dependencies]
+      params[:dependencies].is_a?(Symbol) ? [params[:dependencies]] : params[:dependencies]
+    else
+      []
+    end
   end
 
   # expands dependencies to find all necessary joins
@@ -31,55 +35,68 @@ class Results::Join
   end
 
   @@joins = {
-    :answers => new(
-      :name => :answers,                                              # no __ here b/c responses never needs to be prefixed
-      :sql => "LEFT JOIN answers __answers ON __answers.response_id = responses.id"
+    # Note there is no __ on responses below b/c responses never needs to be prefixed
+    answers: new(
+      name: :answers,
+      sql: "LEFT JOIN answers __answers ON __answers.response_id = responses.id " \
+        "AND __answers.deleted_at IS NULL"
     ),
-    :questionings => new(
-      :dependencies => :answers,
-      :name => :questionings,
-      :sql => "INNER JOIN form_items __questionings ON __answers.questioning_id = __questionings.id"
+    questionings: new(
+      dependencies: :answers,
+      name: :questionings,
+      sql: "INNER JOIN form_items __questionings ON __answers.questioning_id = __questionings.id " \
+        "AND __questionings.deleted_at IS NULL"
     ),
-    :questions => new(
-      :name => :questions,
-      :dependencies => :questionings,
-      :sql => "INNER JOIN questions __questions ON __questionings.question_id = __questions.id"
+    questions: new(
+      name: :questions,
+      dependencies: :questionings,
+      sql: "INNER JOIN questions __questions ON __questionings.question_id = __questions.id " \
+        "AND __questions.deleted_at IS NULL"
     ),
-    :option_sets => new(
-      :name => :option_sets,
-      :dependencies => :questions,
-      :sql => "LEFT JOIN option_sets __option_sets ON __questions.option_set_id = __option_sets.id"
+    option_sets: new(
+      name: :option_sets,
+      dependencies: :questions,
+      sql: "LEFT JOIN option_sets __option_sets ON __questions.option_set_id = __option_sets.id " \
+        "AND __option_sets.deleted_at IS NULL"
     ),
-    :options => new(
-      :dependencies => [:answers, :option_sets],
-      :name => :options,
-      :sql => [
-        "LEFT JOIN options __ao ON __answers.option_id = __ao.id",
-        "LEFT JOIN option_nodes __ans_opt_nodes ON __ans_opt_nodes.option_id = __ao.id " +
-          "AND __ans_opt_nodes.option_set_id = __option_sets.id"
+    options: new(
+      dependencies: [:answers, :option_sets],
+      name: :options,
+      sql: [
+        "LEFT JOIN options __ao ON __answers.option_id = __ao.id " \
+          "AND __ao.deleted_at IS NULL",
+        "LEFT JOIN option_nodes __ans_opt_nodes ON __ans_opt_nodes.option_id = __ao.id " \
+          "AND __ans_opt_nodes.option_set_id = __option_sets.id " \
+          "AND __ans_opt_nodes.deleted_at IS NULL"
       ]
     ),
-    :choices => new(
-      :dependencies => [:answers, :option_sets],
-      :name => :choices,
-      :sql => [
-        "LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",
-        "LEFT JOIN options __co ON __choices.option_id = __co.id",
-        "LEFT JOIN option_nodes __ch_opt_nodes ON __ch_opt_nodes.option_id = __co.id " +
-          "AND __ch_opt_nodes.option_set_id = __option_sets.id"
+    choices: new(
+      dependencies: [:answers, :option_sets],
+      name: :choices,
+      sql: [
+        "LEFT JOIN choices __choices ON __choices.answer_id = __answers.id " \
+          "AND __choices.deleted_at IS NULL",
+        "LEFT JOIN options __co ON __choices.option_id = __co.id " \
+          "AND __co.deleted_at IS NULL",
+        "LEFT JOIN option_nodes __ch_opt_nodes ON __ch_opt_nodes.option_id = __co.id " \
+          "AND __ch_opt_nodes.option_set_id = __option_sets.id " \
+          "AND __ch_opt_nodes.deleted_at IS NULL"
       ]
     ),
-    :forms => new(
-      :name => :forms,
-      :sql => "INNER JOIN forms __forms ON responses.form_id = __forms.id"
+    forms: new(
+      name: :forms,
+      sql: "INNER JOIN forms __forms ON responses.form_id = __forms.id " \
+        "AND __forms.deleted_at IS NULL"
     ),
-    :users => new(
-      :name => :users,
-      :sql => "LEFT JOIN users __users ON responses.user_id = __users.id"
+    users: new(
+      name: :users,
+      sql: "LEFT JOIN users __users ON responses.user_id = __users.id " \
+        "AND __users.deleted_at IS NULL"
     ),
-    :reviewers => new(
-      :name => :reviewers,
-      :sql => "LEFT JOIN users __reviewers ON responses.reviewer_id = __reviewers.id"
+    reviewers: new(
+      name: :reviewers,
+      sql: "LEFT JOIN users __reviewers ON responses.reviewer_id = __reviewers.id " \
+        "AND __reviewers.deleted_at IS NULL"
     )
   }
 end
