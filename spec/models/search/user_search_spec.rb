@@ -9,19 +9,22 @@ describe User do
     let!(:first_user) { create(:user_group_assignment, user_group: first_group).user }
     let!(:second_user) { create(:user_group_assignment, user_group: first_group).user }
     let!(:third_user) { create(:user_group_assignment, user_group: second_group).user }
+    subject { User.with_groups.do_search(User.with_groups, %[group:"#{group_sought.name}"]).to_a }
 
-    it "group qualifier should work" do
-      expect(group_search(first_group)).to eq [first_user, second_user]
-      expect(group_search(second_group)).to eq [third_user]
+    context "searching for first group" do
+      let(:group_sought) { first_group }
+
+      it "should work" do
+        expect(subject).to contain_exactly(first_user, second_user)
+      end
+    end
+
+    context "searching for first group" do
+      let(:group_sought) { second_group }
+
+      it "should work" do
+        expect(subject).to contain_exactly(third_user)
+      end
     end
   end
-end
-
-def perform_search(query)
-  results = User.with_groups.do_search(User.with_groups, query)
-  results.to_a
-end
-
-def group_search(group)
-  perform_search(%[group:"#{group.name}"])
 end
