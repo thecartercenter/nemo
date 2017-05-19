@@ -38,7 +38,7 @@ describe Question do
     end
 
     it "empty search" do
-      expect(search "").to eq @questions
+      expect(search "").to match_array(@questions)
     end
 
     def search(query)
