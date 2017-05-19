@@ -1,6 +1,8 @@
 class Condition < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable
 
+  acts_as_paranoid
+
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
 

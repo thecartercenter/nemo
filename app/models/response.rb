@@ -7,6 +7,8 @@ class Response < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 5
 
+  acts_as_paranoid
+
   belongs_to(:form, inverse_of: :responses, counter_cache: true)
   belongs_to(:checked_out_by, class_name: "User")
   belongs_to(:user, inverse_of: :responses)

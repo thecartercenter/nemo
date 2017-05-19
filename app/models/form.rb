@@ -8,6 +8,8 @@ class Form < ApplicationRecord
 
   API_ACCESS_LEVELS = %w(private public)
 
+  acts_as_paranoid
+
   has_many(:responses, inverse_of: :form)
   has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)

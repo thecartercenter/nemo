@@ -1,6 +1,8 @@
 class Option < ApplicationRecord
   include MissionBased, FormVersionable, Translatable, Replication::Replicable
 
+  acts_as_paranoid
+
   has_many(:option_sets, through: :option_nodes)
   has_many(:option_nodes, inverse_of: :option, dependent: :destroy, autosave: true)
   has_many(:answers, inverse_of: :option)

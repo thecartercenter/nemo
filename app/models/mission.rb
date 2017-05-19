@@ -1,4 +1,6 @@
 class Mission < ApplicationRecord
+  acts_as_paranoid
+
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 2
 
@@ -44,11 +46,6 @@ class Mission < ApplicationRecord
     where(compact_name: name).first || (raise ActiveRecord::RecordNotFound.new("Mission not found"))
   end
 
-  # Override default destory
-  def destroy
-    terminate
-  end
-
   # checks to make sure there are no associated objects.
   def check_associations
     to_check = [:assignments, :responses, :forms, :report_reports, :questions, :broadcasts]
@@ -57,7 +54,7 @@ class Mission < ApplicationRecord
 
   # remove this mission and other related records from the Database
   # * this method is designed for speed.
-  def terminate
+  def destroy
     ApplicationRecord.transaction do
       begin
         # Remove MissionBased Classes
@@ -68,9 +65,9 @@ class Mission < ApplicationRecord
                                    Form, Broadcast, Assignment, Sms::Message, UserGroup]
         relationships_to_delete.each { |r| r.mission_pre_delete(self) }
 
-        self.reload
+        reload
         check_associations
-        self.delete
+        delete
       rescue Exception => e
         Rails.logger.error "We had to rescue from the delete for mission: #{self.id}-#{self.name}. #{e}"
         raise e

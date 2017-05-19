@@ -7,6 +7,8 @@ class User < ApplicationRecord
   GENDER_OPTIONS = %w[man woman no_answer specify]
   PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
 
+  acts_as_paranoid
+
   attr_writer(:reset_password_method)
   attr_accessor(:batch_creation)
   alias :batch_creation? :batch_creation

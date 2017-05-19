@@ -14,7 +14,7 @@ describe Mission do
 
     it "should delete all objects in mission" do
       expect(obj_counts).to eq expected_counts
-      mission.terminate
+      mission.destroy
       expect(obj_counts).to eq deleted_counts
     end
 

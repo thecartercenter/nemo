@@ -1,6 +1,8 @@
 class UserGroup < ApplicationRecord
   include MissionBased
 
+  acts_as_paranoid
+
   has_many :user_group_assignments, dependent: :destroy
   has_many :users, through: :user_group_assignments
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy

@@ -18,6 +18,8 @@
 class Answer < ApplicationRecord
   include ActionView::Helpers::NumberHelper
 
+  acts_as_paranoid
+
   belongs_to(:questioning, inverse_of: :answers)
   belongs_to(:option, inverse_of: :answers)
   belongs_to(:response, inverse_of: :answers, touch: true)

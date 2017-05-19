@@ -1,6 +1,7 @@
 class FormItem < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable
 
+  acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry]
 
   belongs_to(:form)

@@ -1,6 +1,8 @@
 class Assignment < ApplicationRecord
   include Cacheable
 
+  acts_as_paranoid
+
   belongs_to(:mission)
   belongs_to(:user, :inverse_of => :assignments)
 
