@@ -2,11 +2,12 @@ class OperationStatus
   attr_reader :total, :started, :failed, :completed, :in_progress
 
   def initialize(operations)
-    sql = operations.unscope(:order).select(
-      'count(1) as total',
-      'count(operations.job_started_at) as started',
-      'count(operations.job_failed_at) as failed',
-      'count(operations.job_completed_at) as completed').to_sql
+    sql = operations.select(
+      "count(1) as total",
+      "count(operations.job_started_at) as started",
+      "count(operations.job_failed_at) as failed",
+      "count(operations.job_completed_at) as completed"
+    ).to_sql
 
     @total, @started, @failed, @completed = operations.connection.execute(sql).first.values.map(&:to_i)
     @in_progress = @total - @completed

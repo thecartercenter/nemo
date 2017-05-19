@@ -13,8 +13,7 @@ class ResponsesController < ApplicationController
   before_action :mark_response_as_checked_out, only: [:edit]
 
   def index
-    # Deprecating the default_scope on Response
-    @responses = Response.unscoped.accessible_by(current_ability)
+    @responses = Response.accessible_by(current_ability)
 
     # Disable cache, including back button
     response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-store"
@@ -26,9 +25,11 @@ class ResponsesController < ApplicationController
         # apply search and pagination
         params[:page] ||= 1
 
-        @responses = @responses.order(created_at: :desc)
+        @responses = @responses.with_basic_assoc.order(created_at: :desc)
 
-        # paginate
+        # Needed for permission check
+        @responses = @responses.includes(user: :assignments)
+
         @responses = @responses.paginate(page: params[:page], per_page: 20)
 
         # do search, including excerpts, if applicable
