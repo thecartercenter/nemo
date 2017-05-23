@@ -59,7 +59,6 @@ class FormsController < ApplicationController
 
   def show
     respond_to do |format|
-
       # for html, render the printable style if requested, otherwise render the form
       format.html do
         if params[:print] && request.xhr?
