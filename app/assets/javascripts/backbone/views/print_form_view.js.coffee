@@ -26,15 +26,16 @@ class ELMO.Views.PrintFormView extends ELMO.Views.ApplicationView
     $('.print-content').remove()
 
     # Load specially formatted show page into div.
-    $.ajax({
-      url: ELMO.app.url_builder.build('forms', this.id),
-      method: "get",
-      data: {print: 1},
+    $.ajax
+      url: ELMO.app.url_builder.build('forms', this.id)
+      method: 'get'
+      headers:
+        accept: 'text/html' # Without this, we get 404 due to route constraints.
+      data: {print: 1}
       success: (data) =>
         $('<div>').addClass('print-content').html(data).appendTo(this.el)
         ELMO.app.loading(false)
-        this.do_print();
-    })
+        this.do_print()
 
   should_show_format_tips: ->
     # Show if not already shown today.
