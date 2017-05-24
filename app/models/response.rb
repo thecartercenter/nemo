@@ -244,8 +244,8 @@ class Response < ApplicationRecord
 
     find_by_sql("
       SELECT forms.name AS form_name, COUNT(responses.id) AS count
-      FROM responses INNER JOIN forms ON responses.form_id = forms.id
-      WHERE #{where_clause}
+      FROM responses INNER JOIN forms ON forms.deleted_at IS NULL AND responses.form_id = forms.id
+      WHERE responses.deleted_at IS NULL AND #{where_clause}
       GROUP BY forms.id, forms.name
       ORDER BY count DESC
       LIMIT #{n}")
