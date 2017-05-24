@@ -190,15 +190,16 @@ class User < ApplicationRecord
   #   one more than this number so you can report truncation to the user.
   def self.without_responses_for_form(form, options)
     find_by_sql(["SELECT * FROM users
-      INNER JOIN assignments ON assignments.user_id = users.id WHERE
-      assignments.mission_id = ? AND
-      assignments.role = ? AND
-      users.admin = FALSE AND
-      NOT EXISTS (
-        SELECT 1 FROM responses WHERE
-        responses.user_id=users.id AND
-        responses.form_id = ?
-      )
+      INNER JOIN assignments ON assignments.deleted_at IS NULL AND assignments.user_id = users.id
+      WHERE users.deleted_at IS NULL
+        AND assignments.mission_id = ?
+        AND assignments.role = ?
+        AND users.admin = FALSE
+        AND NOT EXISTS (
+          SELECT 1
+          FROM responses
+          WHERE responses.deleted_at IS NULL AND responses.user_id=users.id AND responses.form_id = ?
+        )
       ORDER BY users.name
       LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit] + 1])
   end
