@@ -78,16 +78,19 @@ class User < ApplicationRecord
                                  message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
-  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
+  scope(:assigned_to, ->(m) { where("users.id IN (
+    SELECT user_id FROM assignments WHERE deleted_at IS NULL AND mission_id = ?)", m.try(:id)) })
   scope(:with_assoc, -> {
     includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
   })
   scope(:with_groups, -> { joins(:user_groups) })
   scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
-  scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).where(assignments: { mission: m.try(:id), role: roles }) }
+  scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).
+    where(assignments: { mission: m.try(:id), role: roles }) }
 
   # returns users who are assigned to the given mission OR who submitted the given response
-  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
+  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments
+    WHERE deleted_at IS NULL AND mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
 
   def self.random_password(size = 12)
     size = 12 if size < 12
