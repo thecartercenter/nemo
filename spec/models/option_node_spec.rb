@@ -26,6 +26,36 @@ describe OptionNode do
     end
   end
 
+  describe "removable?" do
+    let(:form) { create(:form, question_types: %w(select_one)) }
+    let(:node) { form.questions[0].option_set.children[0] }
+
+    context "with no answers" do
+      it "returns true" do
+        expect(node.removable?).to be true
+      end
+    end
+
+    context "with answers" do
+      let!(:responses) { create_list(:response, 2, form: form, answer_values: [node.option_name]) }
+
+      it "returns false" do
+        expect(node.removable?).to be false
+      end
+
+      context "if deleted" do
+        before do
+          responses.map(&:destroy)
+          node.reload
+        end
+
+        it "returns true" do
+          expect(node.removable?).to be true
+        end
+      end
+    end
+  end
+
   describe "option_level" do
     before do
       @node = create(:option_node_with_grandchildren)
