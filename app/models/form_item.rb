@@ -26,7 +26,7 @@ class FormItem < ApplicationRecord
       SELECT id FROM form_items fi1
       WHERE fi1.deleted_at IS NULL AND fi1.rank > 1 AND NOT EXISTS (
         SELECT id FROM form_items fi2
-        WHERE fi2.deleted_at IS NULL fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)
+        WHERE fi2.deleted_at IS NULL AND fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)
     ").empty?
   end
 
