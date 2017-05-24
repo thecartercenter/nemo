@@ -40,7 +40,7 @@ class FastInserter
 
   # Checks uniqueness across multiple columns using SQL.
   def check_uniqueness(objects, fields)
-    sql = "SELECT #{fields.join(', ')} FROM #{@table} WHERE "
+    sql = "SELECT #{fields.join(', ')} FROM #{@table} WHERE #{@table}.deleted_at IS NULL AND "
     field_values = fields.map { |f| objects.map { |u| u.send(f) } }.flatten
     string_params = (["'%s'"] * field_values.length).join(",")
 
