@@ -88,7 +88,8 @@ module Replication::Replicable
     def do_standard_assertions
       return unless standardizable?
       tbl = self.class.table_name
-      assert_no_results("select id from #{tbl} where mission_id is not null and is_standard = true",
+      assert_no_results("SELECT id FROM #{tbl} WHERE #{tbl}.deleted_at IS NULL
+        AND mission_id IS NOT NULL AND is_standard = TRUE",
         'mission based objects should not standard')
     end
 
