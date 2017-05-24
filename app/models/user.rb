@@ -147,7 +147,7 @@ class User < ApplicationRecord
   # Returns an array of hashes of format {name: "Some User", response_count: 2}
   # of observer response counts for the given mission
   def self.sorted_observer_response_counts(mission, limit)
-    #First it tries to get user observers that don't have any response
+    # First it tries to get user observers that don't have any response
     result = self.observers_without_responses(mission, limit)
     return result unless result.length < limit
 
@@ -157,10 +157,13 @@ class User < ApplicationRecord
       JOIN (
         SELECT assignments.user_id, COUNT(DISTINCT responses.id) AS response_count
         FROM assignments
-          LEFT JOIN responses ON responses.user_id = assignments.user_id AND responses.mission_id = ?
-        WHERE assignments.role = 'observer' AND assignments.mission_id = ?
+          LEFT JOIN responses ON responses.deleted_at IS NULL
+            AND responses.user_id = assignments.user_id AND responses.mission_id = ?
+        WHERE assignments.deleted_at IS NULL
+          AND assignments.role = 'observer' AND assignments.mission_id = ?
         GROUP BY assignments.user_id        ORDER BY response_count        LIMIT ?
-      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit]).reverse
+      ) as rc ON users.id = rc.user_id
+      WHERE users.deleted_at IS NULL", mission.id, mission.id, limit]).reverse
   end
 
   # Returns an array of hashes of format {name: "Some User", response_count: 0}
@@ -169,11 +172,13 @@ class User < ApplicationRecord
     find_by_sql(["SELECT users.name, 0 as response_count FROM users
       JOIN (
         SELECT a.user_id FROM assignments a
-        WHERE NOT EXISTS (
-          SELECT 1 FROM responses r
-          WHERE r.user_id = a.user_id AND r.mission_id = ?
-        ) AND a.role='observer' AND a.mission_id = ? LIMIT ?
+        WHERE a.deleted_at IS NULL
+          AND NOT EXISTS (SELECT 1 FROM responses r
+            WHERE r.deleted_at IS NULL AND r.user_id = a.user_id AND r.mission_id = ?)
+          AND a.role = 'observer' AND a.mission_id = ?
+        LIMIT ?
       ) as rc ON users.id = rc.user_id
+      WHERE users.deleted_at IS NULL
       ORDER BY users.name", mission.id, mission.id, limit])
   end
 
