@@ -71,7 +71,7 @@ describe UserBatch, :slow do
     end
 
     it "checks for phone uniqueness on both numbers, ignoring deleted data" do
-      create(:user, phone: "+983755482", deleted_at: Time.now) # Decoy
+      create(:user, :deleted, phone: "+983755482") # Decoy
 
       ub = create_user_batch("phone_problems.xlsx")
       expect(ub).not_to be_succeeded

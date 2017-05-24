@@ -81,10 +81,6 @@ FactoryGirl.define do
       reviewer { create(:user, name: reviewer_name) }
     end
 
-    trait :deleted do
-      deleted_at { Time.now }
-    end
-
     # Ensure unpublished form associations have been published at least once
     after(:build) do |response|
       form = response.form
