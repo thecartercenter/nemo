@@ -53,39 +53,47 @@ class Question < ApplicationRecord
       SELECT COUNT(DISTINCT answers.id)
         FROM questions inner_questions
         LEFT OUTER JOIN form_items questionings
-          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-        LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-        WHERE inner_questions.id = questions.id
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = questionings.id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
     ) AS answer_count_col").
     select("(
       SELECT COUNT(DISTINCT forms.id)
         FROM questions inner_questions
         LEFT OUTER JOIN form_items questionings
-          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-        WHERE inner_questions.id = questions.id
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
     ) AS form_count_col").
     select("(
       SELECT BOOL_OR(DISTINCT forms.published)
         FROM questions inner_questions
         LEFT OUTER JOIN form_items questionings
-          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-        WHERE inner_questions.id = questions.id
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
     ) AS form_published_col").
     select("(
       SELECT COUNT(DISTINCT copy_answers.id)
         FROM questions inner_questions
         LEFT OUTER JOIN form_items questionings
-          ON questionings.question_id = inner_questions.id AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-        LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-        LEFT OUTER JOIN questions copies ON questions.is_standard = true AND questions.id = copies.original_id
-        LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
-        LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-        WHERE inner_questions.id = questions.id
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = questionings.id
+        LEFT OUTER JOIN questions copies ON questions.deleted_at IS NULL AND questions.is_standard = true
+          AND questions.id = copies.original_id
+        LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.deleted_at IS NULL
+          AND copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms copy_forms ON copy_forms.deleted_at IS NULL
+          AND copy_forms.id = copy_questionings.form_id
+        LEFT OUTER JOIN answers copy_answers ON copy_answers.deleted_at IS NULL
+          AND copy_answers.questioning_id = copy_questionings.id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
     ) AS copy_answer_count_col")
   })
 
