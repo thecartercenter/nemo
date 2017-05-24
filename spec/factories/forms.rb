@@ -50,6 +50,19 @@ def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = n
   questioning
 end
 
+def build_item(item, form, parent, evaluator)
+  if item.is_a?(Hash) && item.key?(:repeating)
+    item = item[:repeating]
+    group = QingGroup.create!(parent: parent, form: form, group_name_en: item[:name], group_hint_en: item[:name], repeatable: true)
+    item[:items].each { |c| build_item(c, form, group, evaluator) }
+  elsif item.is_a?(Array)
+    group = QingGroup.create!(parent: parent, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
+    item.each { |q| built_item(q, form, group, evaluator) }
+  else #must be a questioning
+    create_questioning(item, form, parent, evaluator)
+  end
+end
+
 # Only works with create
 FactoryGirl.define do
   factory :form do
@@ -74,16 +87,7 @@ FactoryGirl.define do
       items = evaluator.questions.present? ? evaluator.questions : evaluator.question_types
       # Build questions.
       items.each do |item|
-        if item.is_a?(Hash) && item.key?(:repeating)
-          item = item[:repeating]
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: item[:name], group_hint_en: "Group Hint", repeatable: true)
-          item[:q_types].each { |q| create_questioning(q, form, group, evaluator) }
-        elsif item.is_a?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
-          item.each { |q| create_questioning(q, form, group, evaluator) }
-        else
-          create_questioning(item, form, form.root_group, evaluator)
-        end
+        build_item(item, form, form.root_group, evaluator)
       end
     end
 

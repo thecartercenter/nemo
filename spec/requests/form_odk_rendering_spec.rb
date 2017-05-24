@@ -89,6 +89,45 @@ describe "form rendering for odk", clean_with_truncation: true do
     end
   end
 
+  context "nested repeat group form" do
+    let(:form) do
+      form = create(:form, :published, :with_version, version: "abc",
+      question_types:
+        [
+          {repeating:
+            {
+              items:
+                ["text",
+                  "text",
+                  {
+                    repeating:
+                      {
+                        items: ["text", "text"],
+                        name: "Repeat Group A"
+                      }
+                  },
+                  "text" #q8
+                ],
+                name: "Repeat Group 1"
+            }
+          },
+          "text", #q9
+          {
+            repeating: {
+              items: ["text"], #q10
+              name: "Repeat Group 2"
+            }
+          }
+      ])
+      form.child_groups
+    end
+
+    it "should render proper xml" do
+      expect(response).to be_success
+      expect(response.body).to match_xml expectation_file("odk/nested_repeat_group_form.xml")
+    end
+  end
+
   context "group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,
