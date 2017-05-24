@@ -83,8 +83,12 @@ class Answer < ApplicationRecord
 
   # Tests if there exists at least one answer referencing the option and questionings with the given IDs.
   def self.any_for_option_and_questionings?(option_id, questioning_ids)
-    find_by_sql(["SELECT COUNT(*) AS count FROM answers a LEFT OUTER JOIN choices c ON c.answer_id = a.id
-      WHERE (a.option_id = ? OR c.option_id = ?) AND a.questioning_id IN (?)", option_id, option_id, questioning_ids]).first.count > 0
+    find_by_sql(["
+      SELECT COUNT(*) AS count
+      FROM answers a
+        LEFT OUTER JOIN choices c ON c.deleted_at IS NULL AND c.answer_id = a.id
+      WHERE a.deleted_at IS NULL AND (a.option_id = ? OR c.option_id = ?) AND a.questioning_id IN (?)",
+      option_id, option_id, questioning_ids]).first.count > 0
   end
 
   # This is a temporary method for fetching option_node based on the related OptionSet and Option.
