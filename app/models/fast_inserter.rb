@@ -30,7 +30,8 @@ class FastInserter
 
     # Build the select queries for each object using the params
     selects_queries = objects.map.with_index do |o, i|
-      "SELECT #{object_values[i]} FROM #{table_to_select} WHERE #{field_to_where}=#{o.send(field_to_where)}"
+      "SELECT #{object_values[i]} FROM #{table_to_select}
+        WHERE #{table_to_select}.deleted_at IS NULL AND #{field_to_where}=#{o.send(field_to_where)}"
     end
 
     unified_select_queries = selects_queries.join(" UNION ")
