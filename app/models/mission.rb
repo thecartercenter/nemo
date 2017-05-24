@@ -32,12 +32,10 @@ class Mission < ApplicationRecord
                    if: Proc.new { |m| !m.name.blank? })
   validate(:compact_name_unique)
 
-  # This gets used in Ability
-  FOR_USER_MISSION_SQL = "missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)"
-
   scope(:sorted_by_name, -> { order("name") })
   scope(:sorted_recent_first, -> { order("missions.created_at DESC") })
-  scope(:for_user, ->(u) { where(FOR_USER_MISSION_SQL, u.id) })
+  scope(:for_user, ->(u) { where("missions.id IN 
+    (SELECT mission_id FROM assignments WHERE deleted_at IS NULL AND user_id = ?)", u.id) })
 
   delegate(:override_code, :allow_unauthenticated_submissions?, :default_locale, to: :setting)
 
