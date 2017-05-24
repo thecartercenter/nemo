@@ -161,7 +161,9 @@ class User < ApplicationRecord
             AND responses.user_id = assignments.user_id AND responses.mission_id = ?
         WHERE assignments.deleted_at IS NULL
           AND assignments.role = 'observer' AND assignments.mission_id = ?
-        GROUP BY assignments.user_id        ORDER BY response_count        LIMIT ?
+        GROUP BY assignments.user_id
+        ORDER BY response_count
+        LIMIT ?
       ) as rc ON users.id = rc.user_id
       WHERE users.deleted_at IS NULL", mission.id, mission.id, limit]).reverse
   end
