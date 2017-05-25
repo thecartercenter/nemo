@@ -57,7 +57,7 @@ def build_item(item, form, parent, evaluator)
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)
     group = QingGroup.create!(parent: parent, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
-    item.each { |q| built_item(q, form, group, evaluator) }
+    item.each { |q| build_item(q, form, group, evaluator) }
   else #must be a questioning
     create_questioning(item, form, parent, evaluator)
   end

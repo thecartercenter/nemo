@@ -1,0 +1,17 @@
+<% if item.is_a?(QingGroup) %>
+  <% @attrs = {"jr:template" => ""} if item.repeatable %>
+  <%= content_tag("grp-#{item.id}", @attrs) do %>
+    <%= tag("grp-header#{item.id}") %>
+    <% subtree.keys.each do |child| %>
+      <% child.arrange_descendants.each do |node, children| %>
+        <%= render "forms/odk/instance_node", :item => node, :subtree => children %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% unless item.hidden %>
+    <% item.subquestions.each do |subq| %>
+      <%= tag(subq.odk_code) %>
+    <% end %>
+  <% end %>
+<% end %>
