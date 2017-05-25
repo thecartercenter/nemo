@@ -119,7 +119,6 @@ describe "form rendering for odk", clean_with_truncation: true do
             }
           }
       ])
-      form.child_groups
     end
 
     it "should render proper xml" do
