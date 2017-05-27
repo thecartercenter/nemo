@@ -1,0 +1,215 @@
+answers:
+  class: Answer
+  foreign_keys:
+    actual:
+      option_id: options
+      questioning_id: form_items
+      response_id: responses
+
+assignments:
+  class: Assignment
+  foreign_keys:
+    actual:
+      mission_id: missions
+      user_id: users
+
+broadcast_addressings:
+  class: BroadcastAddressing
+  foreign_keys:
+    actual:
+      broadcast_id: broadcasts
+    polymorphic:
+      addressee_id:
+        type_column: addressee_type
+
+broadcasts:
+  class: Broadcast
+  foreign_keys:
+    actual:
+      mission_id: missions
+
+choices:
+  class: Choice
+  foreign_keys:
+    actual:
+      answer_id: answers
+      option_id: options
+
+conditions:
+  class: Condition
+  foreign_keys:
+    actual:
+      mission_id: missions
+      option_node_id: option_nodes
+      questioning_id: form_items
+      ref_qing_id: form_items
+
+form_forwardings:
+  class: FormForwarding
+  foreign_keys:
+    actual:
+      form_id: forms
+    polymorphic:
+      recipient_id:
+        type_column: recipient_type
+
+form_items:
+  class: FormItem
+  ancestry: true
+  foreign_keys:
+    actual:
+      form_id: forms
+      mission_id: missions
+      question_id: questions
+
+form_versions:
+  class: FormVersion
+  foreign_keys:
+    actual:
+      form_id: forms
+
+forms:
+  class: Form
+  foreign_keys:
+    actual:
+      current_version_id: form_versions
+      mission_id: missions
+      original_id: forms
+      root_id: form_items
+
+media_objects:
+  class: Media::Object
+  foreign_keys:
+    actual:
+      answer_id: answers
+
+missions:
+  class: Mission
+
+operations:
+  class: Operation
+  foreign_keys:
+    actual:
+      creator_id: users
+      provider_job_id: delayed_jobs
+
+option_nodes:
+  class: OptionNode
+  ancestry: true
+  foreign_keys:
+    actual:
+      mission_id: missions
+      option_id: options
+      option_set_id: option_sets
+      original_id: option_nodes
+
+option_sets:
+  class: OptionSet
+  foreign_keys:
+    actual:
+      mission_id: missions
+      original_id: option_sets
+      root_node_id: option_nodes
+
+options:
+  class: Option
+  foreign_keys:
+    actual:
+      mission_id: missions
+
+questions:
+  class: Question
+  foreign_keys:
+    actual:
+      mission_id: missions
+      option_set_id: option_sets
+      original_id: questions
+
+report_calculations:
+  class: Report::Calculation
+  foreign_keys:
+    actual:
+      question1_id: questions
+      report_report_id: report_reports
+
+report_option_set_choices:
+  class: Report::OptionSetChoice
+  foreign_keys:
+    actual:
+      option_set_id: option_sets
+      report_report_id: report_reports
+
+report_reports:
+  class: Report::Report
+  foreign_keys:
+    actual:
+      creator_id: users
+      disagg_qing_id: form_items
+      form_id: forms
+      mission_id: missions
+
+responses:
+  class: Response
+  foreign_keys:
+    actual:
+      checked_out_by_id: users
+      form_id: forms
+      mission_id: missions
+      reviewer_id: users
+      user_id: users
+
+settings:
+  class: Setting
+  foreign_keys:
+    actual:
+      mission_id: missions
+
+sms_messages:
+  class: Sms::Message
+  foreign_keys:
+    actual:
+      broadcast_id: broadcasts
+      mission_id: missions
+      reply_to_id: sms_messages
+      user_id: users
+
+taggings:
+  class: Tagging
+  foreign_keys:
+    actual:
+      question_id: questions
+      tag_id: tags
+
+tags:
+  class: Tag
+  foreign_keys:
+    actual:
+      mission_id: missions
+
+user_group_assignments:
+  class: UserGroupAssignment
+  foreign_keys:
+    actual:
+      user_group_id: user_groups
+      user_id: users
+
+user_groups:
+  class: UserGroup
+  foreign_keys:
+    actual:
+      mission_id: missions
+
+users:
+  class: User
+  foreign_keys:
+    actual:
+      last_mission_id: missions
+
+whitelistings:
+  class: Whitelisting
+  foreign_keys:
+    actual:
+      user_id: users
+    polymorphic:
+      whitelistable_id:
+        type_column: whitelistable_type
