@@ -1,14 +1,19 @@
+<% puts "inside instance node template. is a QingGroup? #{item.is_a?(QingGroup)}" %>
 <% if item.is_a?(QingGroup) %>
+  <% puts "is qing group" %>
   <% @attrs = {"jr:template" => ""} if item.repeatable %>
   <%= content_tag("grp-#{item.id}", @attrs) do %>
     <%= tag("grp-header#{item.id}") %>
-    <% subtree.keys.each do |child| %>
-      <% child.arrange_descendants.each do |node, children| %>
-        <%= render "forms/odk/instance_node", :item => node, :subtree => children %>
-      <% end %>
+    <% subtree.each do |child, grandchildren| %>
+      <%puts "child:" %>
+      <% puts child.awesome_inspect %>
+      <%puts "grandchildren:" %>
+      <% puts grandchildren.awesome_inspect %>
+      <%= render "forms/odk/instance_node", :item => child, :subtree => grandchildren %>
     <% end %>
   <% end %>
 <% else %>
+  <%puts "not a qing group"%>
   <% unless item.hidden %>
     <% item.subquestions.each do |subq| %>
       <%= tag(subq.odk_code) %>
