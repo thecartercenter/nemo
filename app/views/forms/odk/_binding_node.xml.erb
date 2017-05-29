@@ -1,0 +1,26 @@
+<% if subtree.empty? %>
+  <% unless node.hidden %>
+    <% node.subquestions.each do |subq| %>
+      <% group_attr = parent_node.present? ? "grp-#{parent_node.id}" : nil %>
+      <%= question_binding(@form, node, subq, group: group_attr) %>
+    <% end %>
+  <% end %>
+<% else %>
+  <%= tag("bind", nodeset: "/data/grp-#{node.id}") %>
+  <%= note_binding(node) %>
+  <% subtree.each do |child, grandchildren| %>
+    <%= render "forms/odk/binding_node", :node => child, :subtree => grandchildren, :parent_node => node %>
+  <% end %>
+<% end %>
+
+
+<%# incomplete response question bindings %>
+<% if allow_incomplete? %>
+  <%= ir_question_binding(@form) %>
+  <%= ir_code_binding(@form) %>
+<% end %>
+
+<%# Special username field for commcare. %>
+<% if @style == 'commcare' %>
+  <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
+<% end %>

@@ -1,21 +1,5 @@
 <% @form.arrange_descendants.each do |item, subtree| %>
-  <% if item.is_a?(QingGroup) %>
-    <%= tag("bind", nodeset: "/data/grp-#{item.id}") %>
-    <%= note_binding(item) %>
-    <% subtree.keys.each do |qing| %>
-      <% unless qing.hidden %>
-        <% qing.subquestions.each do |subq| %>
-          <%= question_binding(@form, qing, subq, group: "grp-#{item.id}") %>
-        <% end %>
-      <% end %>
-    <% end %>
-  <% else %>
-    <% unless item.hidden %>
-      <% item.subquestions.each do |subq| %>
-        <%= question_binding(@form, item, subq) %>
-      <% end %>
-    <% end %>
-  <% end %>
+  <%= render "forms/odk/binding_node", :node => item, :subtree => subtree, :parent_node => nil %>
 <% end %>
 
 <%# incomplete response question bindings %>
