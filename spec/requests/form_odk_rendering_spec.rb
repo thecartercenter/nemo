@@ -102,22 +102,22 @@ describe "form rendering for odk", clean_with_truncation: true do
                   {
                     repeating:
                       {
-                        items: ["text", "text"],
+                        items: ["integer", "integer"],
                         name: "Repeat Group A"
                       }
                   },
-                  "text" #q8
+                  "long_text" #q8
                 ],
                 name: "Repeat Group 1"
             }
-          },
-          "text", #q9
-          {
-            repeating: {
-              items: ["text"], #q10
-              name: "Repeat Group 2"
-            }
-          }
+          }#,
+          # "text", #q9
+          # {
+          #   repeating: {
+          #     items: ["text"], #q10
+          #     name: "Repeat Group 2"
+          #   }
+          # }
       ])
     end
 

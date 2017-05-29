@@ -1,22 +1,22 @@
-<% puts "inside instance node template. is a QingGroup? #{item.is_a?(QingGroup)}" %>
-<% if item.is_a?(QingGroup) %>
-  <% puts "is qing group" %>
+<% #puts "inside instance node template. is a QingGroup? #{item.is_a?(QingGroup)} #{item.uuid}" %>
+<% if subtree.empty? %>
+  <%#puts "subtree empty: #{subtree}"%>
+  <% unless item.hidden %>
+    <% item.subquestions.each do |subq| %>
+      <%= tag(subq.odk_code) %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% #puts "subtree present: #{subtree}" %>
   <% @attrs = {"jr:template" => ""} if item.repeatable %>
   <%= content_tag("grp-#{item.id}", @attrs) do %>
     <%= tag("grp-header#{item.id}") %>
     <% subtree.each do |child, grandchildren| %>
-      <%puts "child:" %>
-      <% puts child.awesome_inspect %>
-      <%puts "grandchildren:" %>
-      <% puts grandchildren.awesome_inspect %>
+      <%#puts "child:" %>
+      <% #puts child.awesome_inspect %>
+      <%#puts "grandchildren:" %>
+      <%# puts grandchildren.awesome_inspect %>
       <%= render "forms/odk/instance_node", :item => child, :subtree => grandchildren %>
-    <% end %>
-  <% end %>
-<% else %>
-  <%puts "not a qing group"%>
-  <% unless item.hidden %>
-    <% item.subquestions.each do |subq| %>
-      <%= tag(subq.odk_code) %>
     <% end %>
   <% end %>
 <% end %>
