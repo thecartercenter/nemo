@@ -18,9 +18,14 @@ class PasswordResetsController < ApplicationController
   def create
     @password_reset = PasswordReset.new(password_reset_params)
     if user = @password_reset.user
-      user.deliver_password_reset_instructions!
-      flash[:success] = t("password_reset.check_email")
-      redirect_to(login_url)
+      if user.email.present?
+        user.deliver_password_reset_instructions!
+        flash[:success] = t("password_reset.check_email")
+        redirect_to(login_url)
+      else
+        flash.now[:error] = t("password_reset.no_associated_email")
+        render :new
+      end
     else
       flash.now[:error] = t("password_reset.user_not_found")
       render :new

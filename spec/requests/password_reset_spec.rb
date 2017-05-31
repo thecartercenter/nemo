@@ -29,6 +29,18 @@ describe PasswordResetsController, type: :request do
       expect(ActionMailer::Base.deliveries.last.to).to eq [user.email]
       expect(response).to redirect_to(login_url)
     end
+
+    context "with user with no email address" do
+      let(:user) { create(:user, :no_email) }
+
+      it "resetting password with login should show error" do
+        assert_difference("ActionMailer::Base.deliveries.size", 0) do
+          post password_resets_path, {password_reset: {identifier: user.login}}
+        end
+        expect(response).to be_success
+        expect(response.body).to match("There is no email address associated with that account")
+      end
+    end
   end
 
   context "if already logged in" do

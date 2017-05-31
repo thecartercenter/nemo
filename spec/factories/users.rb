@@ -38,6 +38,12 @@ FactoryGirl.define do
       user.assignments.build(:mission => evaluator.mission, :role => evaluator.role_name.to_s)
     end
 
+    trait :no_email do
+      email nil
+      reset_password_method "print"
+      role_name :observer # Needed to allow print password resetting
+    end
+
     factory :admin do
       admin true
     end

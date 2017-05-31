@@ -1347,6 +1347,7 @@ en:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
     enter_new_pass: "%{name}, please enter a new password for your account."
     fill_out_form: "Enter your email or username below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
+    no_associated_email: "There is no email address associated with that account. Please contact an administrator to have your password changed."
     success: "Password updated successfully."
     token_not_found: |-
       We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL
