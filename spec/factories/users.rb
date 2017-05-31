@@ -37,5 +37,9 @@ FactoryGirl.define do
     after(:build) do |user, evaluator|
       user.assignments.build(:mission => evaluator.mission, :role => evaluator.role_name.to_s)
     end
+
+    factory :admin do
+      admin true
+    end
   end
 end
