@@ -12,7 +12,7 @@ class PasswordReset
 
   # Looks up the user matching the identifier. Returns nil if not found.
   def user
-    User.find_by(email: identifier)
+    User.find_by(email: identifier) || User.find_by(login: identifier)
   end
 
   def persisted?

@@ -21,6 +21,14 @@ describe PasswordResetsController, type: :request do
       expect(response).to redirect_to(login_url)
       follow_redirect!
     end
+
+    it "should work with login instead of email" do
+      assert_difference("ActionMailer::Base.deliveries.size", +1) do
+        post password_resets_path, {password_reset: {identifier: user.login}}
+      end
+      expect(ActionMailer::Base.deliveries.last.to).to eq [user.email]
+      expect(response).to redirect_to(login_url)
+    end
   end
 
   context "if already logged in" do
