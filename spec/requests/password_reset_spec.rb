@@ -13,9 +13,8 @@ describe PasswordResetsController, type: :request do
     it "submitting password reset form should reset perishable token and send email" do
       old_tok = user.perishable_token
 
-      # Should be redirected to login
       assert_difference("ActionMailer::Base.deliveries.size", +1) do
-        post password_resets_path, {password_reset: {email: user.email}}
+        post password_resets_path, {password_reset: {identifier: user.email}}
       end
 
       expect(old_tok).not_to eq user.reload.perishable_token
