@@ -22,18 +22,20 @@ describe PasswordResetsController, type: :request do
       follow_redirect!
     end
 
-    it "should work with login instead of email" do
-      assert_difference("ActionMailer::Base.deliveries.size", +1) do
-        post password_resets_path, {password_reset: {identifier: user.login}}
+    context "with user with email address" do
+      it "should work when using login instead of email" do
+        assert_difference("ActionMailer::Base.deliveries.size", +1) do
+          post password_resets_path, {password_reset: {identifier: user.login}}
+        end
+        expect(ActionMailer::Base.deliveries.last.to).to eq [user.email]
+        expect(response).to redirect_to(login_url)
       end
-      expect(ActionMailer::Base.deliveries.last.to).to eq [user.email]
-      expect(response).to redirect_to(login_url)
     end
 
     context "with user with no email address" do
       let(:user) { create(:user, :no_email) }
 
-      it "resetting password with login should show error" do
+      it "should show error when using login instead of email" do
         assert_difference("ActionMailer::Base.deliveries.size", 0) do
           post password_resets_path, {password_reset: {identifier: user.login}}
         end
