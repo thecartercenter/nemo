@@ -8,6 +8,8 @@ class Form < ApplicationRecord
 
   API_ACCESS_LEVELS = %w(private public)
 
+  acts_as_paranoid
+
   has_many(:responses, inverse_of: :form)
   has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
   has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
@@ -305,8 +307,10 @@ class Form < ApplicationRecord
 
     @answer_counts ||= Questioning.find_by_sql([%{
       SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
-      FROM form_items LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id AND form_items.type = 'Questioning'
-      WHERE form_items.form_id = ?
+      FROM form_items
+        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = form_items.id
+          AND form_items.type = 'Questioning'
+      WHERE form_items.deleted_at IS NULL AND form_items.form_id = ?
       GROUP BY form_items.id
     }, id]).index_by(&:id)
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170427151659) do
+ActiveRecord::Schema.define(version: 20170519153433) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.datetime "created_at"
     t.date "date_value"
     t.datetime "datetime_value"
+    t.datetime "deleted_at"
     t.boolean "delta", default: true, null: false
     t.integer "inst_num", default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
@@ -33,6 +34,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.text "value"
   end
 
+  add_index "answers", ["deleted_at"], name: "index_answers_on_deleted_at", using: :btree
   add_index "answers", ["option_id"], name: "answers_option_id_fk", using: :btree
   add_index "answers", ["questioning_id"], name: "answers_questioning_id_fk", using: :btree
   add_index "answers", %w(response_id questioning_id inst_num rank), name: "answers_full", unique: true, using: :btree
@@ -41,6 +43,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
 
   create_table "assignments", force: :cascade do |t|
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.integer "mission_id"
     t.string "role", limit: 255
     t.datetime "updated_at"
@@ -48,6 +51,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "uuid", null: false
   end
 
+  add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
   add_index "assignments", ["mission_id"], name: "assignments_mission_id_fk", using: :btree
   add_index "assignments", ["user_id"], name: "assignments_user_id_fk", using: :btree
   add_index "assignments", ["uuid"], name: "index_assignments_on_uuid", using: :btree
@@ -85,6 +89,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   create_table "choices", force: :cascade do |t|
     t.integer "answer_id", null: false
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "option_id", null: false
@@ -93,11 +98,13 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "choices", ["answer_id"], name: "choices_answer_id_fk", using: :btree
+  add_index "choices", ["deleted_at"], name: "index_choices_on_deleted_at", using: :btree
   add_index "choices", ["option_id"], name: "choices_option_id_fk", using: :btree
   add_index "choices", ["uuid"], name: "index_choices_on_uuid", using: :btree
 
   create_table "conditions", force: :cascade do |t|
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.integer "mission_id"
     t.string "op", limit: 255
     t.integer "option_node_id"
@@ -108,6 +115,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "value", limit: 255
   end
 
+  add_index "conditions", ["deleted_at"], name: "index_conditions_on_deleted_at", using: :btree
   add_index "conditions", ["mission_id"], name: "index_conditions_on_mission_id", using: :btree
   add_index "conditions", ["option_node_id"], name: "index_conditions_on_option_node_id", using: :btree
   add_index "conditions", ["questioning_id"], name: "conditions_questioning_id_fk", using: :btree
@@ -148,6 +156,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "ancestry", limit: 255
     t.integer "ancestry_depth", null: false
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.integer "form_id", null: false
     t.jsonb "group_hint_translations", default: {}
     t.jsonb "group_name_translations", default: {}
@@ -163,6 +172,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "form_items", ["ancestry"], name: "index_form_items_on_ancestry", using: :btree
+  add_index "form_items", ["deleted_at"], name: "index_form_items_on_deleted_at", using: :btree
   add_index "form_items", ["form_id"], name: "questionings_form_id_fk", using: :btree
   add_index "form_items", ["mission_id"], name: "index_questionings_on_mission_id", using: :btree
   add_index "form_items", ["question_id"], name: "questionings_question_id_fk", using: :btree
@@ -171,6 +181,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   create_table "form_versions", force: :cascade do |t|
     t.string "code", limit: 255
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.integer "form_id"
     t.boolean "is_current", default: true
     t.integer "sequence", default: 1
@@ -179,6 +190,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "form_versions", ["code"], name: "index_form_versions_on_code", unique: true, using: :btree
+  add_index "form_versions", ["deleted_at"], name: "index_form_versions_on_deleted_at", using: :btree
   add_index "form_versions", ["form_id"], name: "form_versions_form_id_fk", using: :btree
   add_index "form_versions", ["uuid"], name: "index_form_versions_on_uuid", using: :btree
 
@@ -188,6 +200,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.boolean "authenticate_sms", default: true
     t.datetime "created_at"
     t.integer "current_version_id"
+    t.datetime "deleted_at"
     t.integer "downloads"
     t.boolean "is_standard", default: false
     t.integer "mission_id"
@@ -206,6 +219,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "forms", ["current_version_id"], name: "forms_current_version_id_fk", using: :btree
+  add_index "forms", ["deleted_at"], name: "index_forms_on_deleted_at", using: :btree
   add_index "forms", ["mission_id", "name"], name: "index_forms_on_mission_id_and_name", unique: true, using: :btree
   add_index "forms", ["original_id"], name: "index_forms_on_standard_id", using: :btree
   add_index "forms", ["uuid"], name: "index_forms_on_uuid", using: :btree
@@ -213,6 +227,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   create_table "media_objects", force: :cascade do |t|
     t.integer "answer_id"
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.string "item_content_type", limit: 255
     t.string "item_file_name", limit: 255
     t.integer "item_file_size"
@@ -224,11 +239,13 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "media_objects", ["answer_id"], name: "index_media_objects_on_answer_id", using: :btree
+  add_index "media_objects", ["deleted_at"], name: "index_media_objects_on_deleted_at", using: :btree
   add_index "media_objects", ["uuid"], name: "index_media_objects_on_uuid", using: :btree
 
   create_table "missions", force: :cascade do |t|
     t.string "compact_name", limit: 255
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.boolean "locked", default: false, null: false
     t.string "name", limit: 255
     t.string "shortcode", limit: 255, null: false
@@ -237,6 +254,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "missions", ["compact_name"], name: "index_missions_on_compact_name", using: :btree
+  add_index "missions", ["deleted_at"], name: "index_missions_on_deleted_at", using: :btree
   add_index "missions", ["shortcode"], name: "index_missions_on_shortcode", unique: true, using: :btree
   add_index "missions", ["uuid"], name: "index_missions_on_uuid", using: :btree
 
@@ -264,6 +282,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "ancestry", limit: 255
     t.integer "ancestry_depth", default: 0
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.boolean "is_standard", default: false
     t.integer "mission_id"
     t.integer "option_id"
@@ -277,6 +296,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "option_nodes", ["ancestry"], name: "index_option_nodes_on_ancestry", using: :btree
+  add_index "option_nodes", ["deleted_at"], name: "index_option_nodes_on_deleted_at", using: :btree
   add_index "option_nodes", ["mission_id"], name: "option_nodes_mission_id_fk", using: :btree
   add_index "option_nodes", ["option_id"], name: "option_nodes_option_id_fk", using: :btree
   add_index "option_nodes", ["option_set_id"], name: "option_nodes_option_set_id_fk", using: :btree
@@ -287,6 +307,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   create_table "option_sets", force: :cascade do |t|
     t.boolean "allow_coordinates", default: false, null: false
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.boolean "geographic", default: false, null: false
     t.boolean "is_standard", default: false
     t.text "level_names"
@@ -300,6 +321,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "uuid", null: false
   end
 
+  add_index "option_sets", ["deleted_at"], name: "index_option_sets_on_deleted_at", using: :btree
   add_index "option_sets", ["geographic"], name: "index_option_sets_on_geographic", using: :btree
   add_index "option_sets", ["mission_id"], name: "index_option_sets_on_mission_id", using: :btree
   add_index "option_sets", ["original_id"], name: "index_option_sets_on_standard_id", using: :btree
@@ -309,6 +331,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   create_table "options", force: :cascade do |t|
     t.string "canonical_name", limit: 255, null: false
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "mission_id"
@@ -318,6 +341,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "options", ["canonical_name", "mission_id"], name: "index_options_on_canonical_name_and_mission_id", using: :btree
+  add_index "options", ["deleted_at"], name: "index_options_on_deleted_at", using: :btree
   add_index "options", ["mission_id"], name: "index_options_on_mission_id", using: :btree
   add_index "options", ["uuid"], name: "index_options_on_uuid", using: :btree
 
@@ -326,6 +350,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.text "canonical_name", null: false
     t.string "code", limit: 255
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.jsonb "hint_translations", default: {}
     t.boolean "is_standard", default: false
     t.boolean "key", default: false
@@ -344,6 +369,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "uuid", null: false
   end
 
+  add_index "questions", ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
   add_index "questions", ["mission_id", "code"], name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
   add_index "questions", ["option_set_id"], name: "questions_option_set_id_fk", using: :btree
   add_index "questions", ["original_id"], name: "index_questions_on_standard_id", using: :btree
@@ -353,6 +379,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   create_table "report_calculations", force: :cascade do |t|
     t.string "attrib1_name", limit: 255
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.integer "question1_id"
     t.integer "rank"
     t.integer "report_report_id"
@@ -361,16 +388,19 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "uuid", null: false
   end
 
+  add_index "report_calculations", ["deleted_at"], name: "index_report_calculations_on_deleted_at", using: :btree
   add_index "report_calculations", ["question1_id"], name: "report_calculations_question1_id_fk", using: :btree
   add_index "report_calculations", ["report_report_id"], name: "report_calculations_report_report_id_fk", using: :btree
   add_index "report_calculations", ["uuid"], name: "index_report_calculations_on_uuid", using: :btree
 
   create_table "report_option_set_choices", force: :cascade do |t|
+    t.datetime "deleted_at"
     t.integer "option_set_id"
     t.integer "report_report_id"
     t.string "uuid", null: false
   end
 
+  add_index "report_option_set_choices", ["deleted_at"], name: "index_report_option_set_choices_on_deleted_at", using: :btree
   add_index "report_option_set_choices", ["option_set_id"], name: "report_option_set_choices_option_set_id_fk", using: :btree
   add_index "report_option_set_choices", ["report_report_id"], name: "report_option_set_choices_report_report_id_fk", using: :btree
   add_index "report_option_set_choices", ["uuid"], name: "index_report_option_set_choices_on_uuid", using: :btree
@@ -380,6 +410,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "bar_style", limit: 255, default: "side_by_side"
     t.datetime "created_at"
     t.integer "creator_id"
+    t.datetime "deleted_at"
     t.integer "disagg_qing_id"
     t.string "display_type", limit: 255, default: "table"
     t.text "filter"
@@ -401,6 +432,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   end
 
   add_index "report_reports", ["creator_id"], name: "fk_rails_1df9873194", using: :btree
+  add_index "report_reports", ["deleted_at"], name: "index_report_reports_on_deleted_at", using: :btree
   add_index "report_reports", ["disagg_qing_id"], name: "report_reports_disagg_qing_id_fk", using: :btree
   add_index "report_reports", ["form_id"], name: "report_reports_form_id_fk", using: :btree
   add_index "report_reports", ["mission_id"], name: "report_reports_mission_id_fk", using: :btree
@@ -411,6 +443,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.datetime "checked_out_at"
     t.integer "checked_out_by_id"
     t.datetime "created_at"
+    t.datetime "deleted_at"
     t.integer "form_id"
     t.boolean "incomplete", default: false, null: false
     t.integer "mission_id"
@@ -428,6 +461,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
   add_index "responses", ["checked_out_at"], name: "index_responses_on_checked_out_at", using: :btree
   add_index "responses", ["checked_out_by_id"], name: "responses_checked_out_by_id_fk", using: :btree
   add_index "responses", ["created_at"], name: "index_responses_on_created_at", using: :btree
+  add_index "responses", ["deleted_at"], name: "index_responses_on_deleted_at", using: :btree
   add_index "responses", ["form_id", "odk_hash"], name: "index_responses_on_form_id_and_odk_hash", unique: true, using: :btree
   add_index "responses", ["form_id"], name: "responses_form_id_fk", using: :btree
   add_index "responses", ["mission_id"], name: "responses_mission_id_fk", using: :btree
@@ -499,36 +533,42 @@ ActiveRecord::Schema.define(version: 20170427151659) do
 
   create_table "taggings", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.integer "question_id", null: false
     t.integer "tag_id", null: false
     t.datetime "updated_at", null: false
     t.string "uuid", null: false
   end
 
+  add_index "taggings", ["deleted_at"], name: "index_taggings_on_deleted_at", using: :btree
   add_index "taggings", ["question_id"], name: "index_taggings_on_question_id", using: :btree
   add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
   add_index "taggings", ["uuid"], name: "index_taggings_on_uuid", using: :btree
 
   create_table "tags", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.integer "mission_id"
     t.string "name", limit: 64, null: false
     t.datetime "updated_at", null: false
     t.string "uuid", null: false
   end
 
+  add_index "tags", ["deleted_at"], name: "index_tags_on_deleted_at", using: :btree
   add_index "tags", ["mission_id"], name: "index_tags_on_mission_id", using: :btree
   add_index "tags", ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", using: :btree
   add_index "tags", ["uuid"], name: "index_tags_on_uuid", using: :btree
 
   create_table "user_group_assignments", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.datetime "updated_at", null: false
     t.integer "user_group_id", null: false
     t.integer "user_id", null: false
     t.string "uuid", null: false
   end
 
+  add_index "user_group_assignments", ["deleted_at"], name: "index_user_group_assignments_on_deleted_at", using: :btree
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
   add_index "user_group_assignments", ["user_id", "user_group_id"], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, using: :btree
   add_index "user_group_assignments", ["user_id"], name: "index_user_group_assignments_on_user_id", using: :btree
@@ -536,12 +576,14 @@ ActiveRecord::Schema.define(version: 20170427151659) do
 
   create_table "user_groups", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.datetime "deleted_at"
     t.integer "mission_id"
     t.string "name", limit: 255, null: false
     t.datetime "updated_at", null: false
     t.string "uuid", null: false
   end
 
+  add_index "user_groups", ["deleted_at"], name: "index_user_groups_on_deleted_at", using: :btree
   add_index "user_groups", ["mission_id"], name: "index_user_groups_on_mission_id", using: :btree
   add_index "user_groups", ["name", "mission_id"], name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
   add_index "user_groups", ["uuid"], name: "index_user_groups_on_uuid", using: :btree
@@ -554,6 +596,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.datetime "created_at", null: false
     t.string "crypted_password", limit: 255
     t.datetime "current_login_at"
+    t.datetime "deleted_at"
     t.string "email", limit: 255
     t.text "experience"
     t.string "gender", limit: 255
@@ -577,6 +620,7 @@ ActiveRecord::Schema.define(version: 20170427151659) do
     t.string "uuid", null: false
   end
 
+  add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["login"], name: "index_users_on_login", unique: true, using: :btree
   add_index "users", ["name"], name: "index_users_on_name", using: :btree

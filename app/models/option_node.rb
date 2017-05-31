@@ -7,6 +7,8 @@ class OptionNode < ApplicationRecord
   # Number of nodes to return as JSON if node is 'huge'.
   TO_SERIALIZE_IF_HUGE = 10
 
+  acts_as_paranoid
+
   belongs_to :option_set
   belongs_to :option, autosave: true
   has_many :conditions
@@ -266,9 +268,10 @@ class OptionNode < ApplicationRecord
   end
 
   def max_sequence
-    # for some reason ancestry scopes requests through the current node even if you don't
-    # call where through self, so you need to explicitly call unscoped here
-    self.class.unscoped.where(option_set_id: option_set_id).maximum(:sequence) || 0
+    # For some reason ancestry scopes requests through the current node even if you don't
+    # call `where` through `self`, so you need to explicitly call unscoped here.
+    # Also need to explicitly ignore deleted records because using unscoped.
+    self.class.unscoped.where(option_set_id: option_set_id, deleted_at: nil).maximum(:sequence) || 0
   end
 
   protected

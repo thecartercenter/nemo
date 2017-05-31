@@ -55,6 +55,10 @@ describe Report::ListReport, :reports do
       create(:response, form: form, user: user, source: "web", answer_values: %w(3 ga))
       create(:response, form: form, user: user, source: "web", answer_values: %w(5 al))
 
+      # Ensure destroyed data is ignored
+      decoy = create(:response, form: form, user: user, source: "web", answer_values: %w(5 al))
+      decoy.destroy
+
       report = create_report("List", calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
         {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},

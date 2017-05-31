@@ -9,7 +9,7 @@ class OperationStatus
       "count(operations.job_completed_at) as completed"
     ).to_sql
 
-    @total, @started, @failed, @completed = operations.connection.execute(sql).first.values.map(&:to_i)
+    @total, @started, @failed, @completed = SqlRunner.instance.run(sql).first.values
     @in_progress = @total - @completed
   end
 

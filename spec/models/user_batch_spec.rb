@@ -70,12 +70,13 @@ describe UserBatch, :slow do
       expect(ub.users[0].errors.full_messages.join).to match(/at least \d+ digits/)
     end
 
-    it "checks for phone uniqueness on both numbers" do
+    it "checks for phone uniqueness on both numbers, ignoring deleted data" do
+      create(:user, :deleted, phone: "+983755482") # Decoy
+
       ub = create_user_batch("phone_problems.xlsx")
       expect(ub).not_to be_succeeded
 
       error_messages = ub.errors.messages.values
-
       expect(error_messages.length).to eq 4
       expect(error_messages[0]).to eq ["Row 2: Main Phone: Please enter a unique value."]
       expect(error_messages[1]).to eq ["Row 4: Main Phone: Please enter a unique value."]

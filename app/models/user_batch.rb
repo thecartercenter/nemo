@@ -14,7 +14,7 @@ class UserBatch
 
   def initialize(attribs = {})
     @users = []
-    @direct_db_conn = DirectDBConn.new("users")
+    @inserter = FastInserter.new("users")
     attribs.each { |k,v| instance_variable_set("@#{k}", v) }
   end
 
@@ -76,7 +76,7 @@ class UserBatch
 
           # No point doing the insert if it's going to be rolled back anyway.
           unless @validation_error
-            @direct_db_conn.insert(users_batch)
+            @inserter.insert(users_batch)
             insert_assignments(users_batch)
           end
 
@@ -282,7 +282,7 @@ class UserBatch
   end
 
   def check_uniqueness_on_db(objects, fields)
-    results = @direct_db_conn.check_uniqueness(objects, fields) || []
+    results = @inserter.check_uniqueness(objects, fields) || []
     key = correct_field_key(fields)
     results.each do |result|
       @fields_hash_table[key][result].each do |object|
@@ -298,7 +298,7 @@ class UserBatch
   end
 
   def insert_assignments(users_batch)
-    DirectDBConn.new("assignments").insert_select(
+    FastInserter.new("assignments").insert_select(
       users_batch, "assignments", "user_id", "users", "import_num")
   end
 

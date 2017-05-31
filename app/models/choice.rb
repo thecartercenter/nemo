@@ -1,4 +1,6 @@
 class Choice < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to(:answer, :inverse_of => :choices, :touch => true)
   belongs_to(:option, :inverse_of => :choices)
 

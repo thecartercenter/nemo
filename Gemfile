@@ -118,6 +118,9 @@ gem "twilio-ruby", "~> 4.1.0"
 # Phone number normalization
 gem "phony", "~> 2.15.26"
 
+# Soft delete
+gem "acts_as_paranoid", "~> 0.5.0"
+
 # Temporarily included for converting MySQL to PostgreSQL
 gem "mysql-pr", git: 'https://github.com/sassafrastech/mysql-pr.git'
 gem "mysqltopostgres", git: "https://github.com/sassafrastech/mysql2postgres.git"

@@ -1,4 +1,6 @@
 class Mission < ApplicationRecord
+  acts_as_paranoid
+
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 2
 
@@ -30,23 +32,16 @@ class Mission < ApplicationRecord
                    if: Proc.new { |m| !m.name.blank? })
   validate(:compact_name_unique)
 
-  # This gets used in Ability
-  FOR_USER_MISSION_SQL = "missions.id IN (SELECT mission_id FROM assignments WHERE user_id = ?)"
-
   scope(:sorted_by_name, -> { order("name") })
   scope(:sorted_recent_first, -> { order("missions.created_at DESC") })
-  scope(:for_user, ->(u) { where(FOR_USER_MISSION_SQL, u.id) })
+  scope(:for_user, ->(u) { where("missions.id IN 
+    (SELECT mission_id FROM assignments WHERE deleted_at IS NULL AND user_id = ?)", u.id) })
 
   delegate(:override_code, :allow_unauthenticated_submissions?, :default_locale, to: :setting)
 
   # Raises ActiveRecord::RecordNotFound if not found.
   def self.with_compact_name(name)
     where(compact_name: name).first || (raise ActiveRecord::RecordNotFound.new("Mission not found"))
-  end
-
-  # Override default destory
-  def destroy
-    terminate
   end
 
   # checks to make sure there are no associated objects.
@@ -57,7 +52,7 @@ class Mission < ApplicationRecord
 
   # remove this mission and other related records from the Database
   # * this method is designed for speed.
-  def terminate
+  def destroy
     ApplicationRecord.transaction do
       begin
         # Remove MissionBased Classes
@@ -68,9 +63,9 @@ class Mission < ApplicationRecord
                                    Form, Broadcast, Assignment, Sms::Message, UserGroup]
         relationships_to_delete.each { |r| r.mission_pre_delete(self) }
 
-        self.reload
+        reload
         check_associations
-        self.delete
+        delete
       rescue Exception => e
         Rails.logger.error "We had to rescue from the delete for mission: #{self.id}-#{self.name}. #{e}"
         raise e

@@ -1,6 +1,8 @@
 class Report::Calculation < ApplicationRecord
   TYPES = %w(identity zero_nonzero)
 
+  acts_as_paranoid
+
   attr_writer :table_prefix
 
   belongs_to(:report, :class_name => "Report::Report", :foreign_key => "report_report_id", :inverse_of => :calculations)
