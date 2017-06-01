@@ -13,7 +13,7 @@ For security reasons, it is not recommended to install ELMO as the `root` user.
 ### Install dependencies
 
     sudo apt-get update && sudo apt-get -y upgrade
-    sudo apt-get -y install nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev python-software-properties nodejs sphinxsearch memcached imagemagick
+    sudo apt-get -y install nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev libmysqlclient-dev python-software-properties nodejs sphinxsearch memcached imagemagick
 
 ### Get ELMO source code and change into project directory
 
