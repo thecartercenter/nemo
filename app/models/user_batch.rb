@@ -62,11 +62,8 @@ class UserBatch
 
           validate_users_batch(users_batch)
 
-          check_uniqueness_on_objects(users_batch, ["email"])
           check_uniqueness_on_objects(users_batch, ["login"])
           check_uniqueness_on_objects(users_batch, ["phone", "phone2"])
-
-          check_uniqueness_on_db(users_batch, ["email"])
           check_uniqueness_on_db(users_batch, ["login"])
           check_uniqueness_on_db(users_batch, ["phone", "phone2"])
 

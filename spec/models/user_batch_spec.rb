@@ -84,37 +84,29 @@ describe UserBatch, :slow do
       expect(error_messages[3]).to eq ["Row 5: Main Phone: Please enter a unique value."]
     end
 
-    it "checks for email uniqueness" do
-      ub = create_user_batch("email_problems.xlsx")
-      expect(ub).not_to be_succeeded
-
-      error_messages = ub.errors.messages.values
-
-      expect(error_messages.length).to eq 3
-      expect(error_messages[0]).to eq ["Row 2: Email: Please enter a unique value."]
-      expect(error_messages[1]).to eq ["Row 3: Email: Please enter a unique value."]
-      expect(error_messages[2]).to eq ["Row 6: Email: Please enter a unique value."]
+    it "does not check for email uniqueness" do
+      ub = create_user_batch("duplicate_emails.xlsx")
+      expect(ub).to be_succeeded
     end
   end
 
   context "when checking uniqueness on db" do
     before do
+      # a@bc.com also exists in fixure but we don't care about email uniqueness
       create(:user, login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil, email: "a@bc.com")
       create(:user, phone: "+9837494434", phone2: "+983755482")
     end
 
-    it "checks for login, email and phones repetitions" do
+    it "checks for duplicate usernames and phones" do
       ub = create_user_batch("varying_info.xlsx")
       expect(ub).not_to be_succeeded
-
       error_messages = ub.errors.messages.values
 
-      expect(error_messages.length).to eq 5
-      expect(error_messages[0]).to eq ["Row 2: Email: Please enter a unique value."]
-      expect(error_messages[1]).to eq ["Row 2: Username: Please enter a unique value."]
-      expect(error_messages[2]).to eq ["Row 2: Main Phone: Please enter a unique value."]
-      expect(error_messages[4]).to eq ["Row 6: Main Phone: Please enter a unique value."]
-      expect(error_messages[3]).to eq ["Row 6: Alternate Phone: Please enter a unique value."]
+      expect(error_messages.length).to eq 4
+      expect(error_messages[0]).to eq ["Row 2: Username: Please enter a unique value."]
+      expect(error_messages[1]).to eq ["Row 2: Main Phone: Please enter a unique value."]
+      expect(error_messages[2]).to eq ["Row 6: Alternate Phone: Please enter a unique value."]
+      expect(error_messages[3]).to eq ["Row 6: Main Phone: Please enter a unique value."]
     end
   end
 
