@@ -16,6 +16,9 @@ TODO
 NOTES
 .idea
 
+# MS Office backup files
+~$*
+
 # compiled assets
 public/assets
 
