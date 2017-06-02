@@ -16,8 +16,8 @@ describe User do
       expect(user.sms_auth_code).to_not be_blank
     end
 
-    context "when user exists with same email" do
-      let!(:other_user) { create(:user, email: "foo@bar.com") }
+    context "when distinct user exists with same email" do
+      let(:other_user) { create(:user, email: "foo@bar.com") }
 
       it "should allow creation" do
         expect(user.email).to eq other_user.email
