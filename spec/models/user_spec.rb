@@ -5,17 +5,23 @@ describe User do
 
   let(:mission) { get_mission }
 
-  context "when user is created" do
-    before do
-      @user = create(:user)
-    end
+  describe "creation" do
+    let(:user) { create(:user, email: "foo@bar.com") }
 
     it "should have an api_key generated" do
-      expect(@user.api_key).to_not be_blank
+      expect(user.api_key).to_not be_blank
     end
 
     it "should have an SMS auth code generated" do
-      expect(@user.sms_auth_code).to_not be_blank
+      expect(user.sms_auth_code).to_not be_blank
+    end
+
+    context "when user exists with same email" do
+      let!(:other_user) { create(:user, email: "foo@bar.com") }
+
+      it "should allow creation" do
+        expect(user.email).to eq other_user.email
+      end
     end
   end
 
@@ -122,6 +128,7 @@ describe User do
   end
 
   private
+
   def assert_phone_uniqueness_error(user)
     user.valid?
     expect(user.errors.full_messages.join).to match(/phone.+assigned/i)

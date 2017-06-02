@@ -37,15 +37,12 @@ class User < ApplicationRecord
     c.logged_in_timeout(SESSION_TIMEOUT)
 
     c.validates_format_of_login_field_options = {with: /\A[a-zA-Z0-9\._]+\z/}
-    c.merge_validates_uniqueness_of_login_field_options(unless: Proc.new{|u| u.batch_creation?})
-
-    c.merge_validates_length_of_password_field_options(minimum: 8,
-                                                       unless: Proc.new{|u| u.batch_creation?})
-
-    # email is not mandatory, but must be valid if given
+    c.merge_validates_uniqueness_of_login_field_options(unless: ->(u) { u.batch_creation? })
+    c.merge_validates_length_of_password_field_options(minimum: 8, unless: ->(u) { u.batch_creation? })
     c.merge_validates_format_of_email_field_options(allow_blank: true)
-    c.merge_validates_uniqueness_of_email_field_options(unless: Proc.new{|u| u.batch_creation? ||
-                                                                                u.email.blank?})
+
+    # Email does not have to be unique.
+    c.merge_validates_uniqueness_of_email_field_options(if: -> { false })
   end
 
   after_initialize(:set_default_pref_lang)
