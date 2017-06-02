@@ -35,7 +35,7 @@ FactoryGirl.define do
     perishable_token { Authlogic::Random.friendly_token }
 
     after(:build) do |user, evaluator|
-      user.assignments.build(:mission => evaluator.mission, :role => evaluator.role_name.to_s)
+      user.assignments.build(mission: evaluator.mission, role: evaluator.role_name.to_s)
     end
 
     trait :no_email do
