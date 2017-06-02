@@ -10,9 +10,9 @@ class PasswordReset
     self.identifier = identifier
   end
 
-  # Looks up the user matching the identifier. Returns nil if not found.
-  def user
-    User.find_by(email: identifier) || User.find_by(login: identifier)
+  # Looks up the users matching the identifier. Returns empty array if none found.
+  def matches
+    (User.where(email: identifier).to_a << User.find_by(login: identifier)).compact
   end
 
   def persisted?

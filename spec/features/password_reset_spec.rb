@@ -38,6 +38,17 @@ feature "password reset"  do
         end
       end
     end
+
+    context "with ambiguous email address" do
+      let(:users) { create_list(:user, 2, email: "foo@bar.com") }
+
+      it "should show special error" do
+        assert_difference("ActionMailer::Base.deliveries.size", 0) do
+          request_password_reset(users.first.email)
+          expect(page).to have_content("There are multiple accounts associated with that email address")
+        end
+      end
+    end
   end
 
   context "if already logged in" do
