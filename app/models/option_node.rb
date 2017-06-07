@@ -58,7 +58,8 @@ class OptionNode < ApplicationRecord
   end
 
   def has_grandchildren?
-    @has_grandchildren ||= descendants(at_depth: 2).any?
+    return @has_grandchildren if defined?(@has_grandchildren)
+    @has_grandchildren = descendants(at_depth: 2).any?
   end
 
   def all_options

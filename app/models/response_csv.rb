@@ -1,3 +1,4 @@
+# Generates CSV from a collection of Responses.
 class ResponseCSV
   def initialize(responses)
     @responses = responses
@@ -68,7 +69,7 @@ class ResponseCSV
         ensure_row_complete(row)
         csv << row
 
-        #Make a row for each repeat_group answer
+        # Make a row for each repeat_group answer
         repeat_groups = repeatable_answers.group_by { |a| a.questioning.parent }
         repeat_groups.each do |repeat_group, group_answers|
           group_answers.group_by(&:inst_num).each do |inst_num, repeat_answers|
@@ -97,8 +98,8 @@ class ResponseCSV
     end
   end
 
-  # Checks if given response has repeat groups by using a per-form lookup table to avoid a ton of
-  # repeated queries.
+  # Checks if given response has repeat groups by using a per-form
+  # lookup table to avoid a ton of repeated queries.
   def has_repeat_group?(response)
     @form_repeat_group_presence ||= {}
     unless @form_repeat_group_presence.has_key?(response.form_id)
@@ -198,7 +199,7 @@ class ResponseCSV::QA
   def cells
     arr = case question_type
     when 'select_one'
-      arr = answers.map{ |a| format_csv_para_text(a.option_name) }
+      arr = answers.map { |a| format_csv_para_text(a.option_name) }
       if question.multilevel?
         arr += ([nil] * (question.level_count - arr.size))
       end
