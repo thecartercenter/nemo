@@ -5,7 +5,11 @@ class ResponseCSV
     @columns = []
     @columns_by_question = {}
     @processed_forms = []
-    @attrib_cache = AttribCache.new
+
+    # AttribCache is used to cache object attributes.
+    # This is used to cache certain often-read attributes that tend to cause performance
+    # problems due to kicking off tons of queries.
+    @cache = AttribCache.new
   end
 
   def to_s
@@ -14,14 +18,7 @@ class ResponseCSV
 
   private
 
-  attr_accessor :responses, :columns, :columns_by_question, :processed_forms, :attrib_cache
-
-  # Uses AttribCache to cache object attributes.
-  # This is used to cache certain often-read attributes that tend to cause performance
-  # problems due to kicking off tons of queries.
-  def cache(*args)
-    attrib_cache.fetch(*args)
-  end
+  attr_accessor :responses, :columns, :columns_by_question, :processed_forms, :cache
 
   def generate
     # We have to build the body first so that the headers are correct.
@@ -43,7 +40,7 @@ class ResponseCSV
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseUUID")
       find_or_create_column(code: "ResponseShortcode")
-      if responses.any? { |r| cache(r.form, :has_repeat_group?) }
+      if responses.any? { |r| cache[r.form, :has_repeat_group?] }
         find_or_create_column(code: "GroupName")
         find_or_create_column(code: "GroupLevel")
       end
@@ -97,9 +94,9 @@ class ResponseCSV
   def add_question_answers_to_row(response, row, question, answers)
     return if question.multimedia?
     columns = columns_by_question[question.code]
-    qa = ResponseCSV::QA.new(question, answers)
-    columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
-    if cache(response.form, :has_repeat_group?)
+    qa = ResponseCSV::QA.new(question, answers, cache)
+    columns.each_with_index { |c, i| row[c.position] = qa.cells[i] }
+    if cache[response.form, :has_repeat_group?]
       group_level = answers.first.group_level
       group_name = answers.first.parent_group_name
       row[columns_by_question["GroupName"].first.position] = group_name
@@ -134,7 +131,7 @@ class ResponseCSV
       if qing.parent_repeatable?
         name = [qing.parent_group_name, code]
       end
-      if question.multilevel?
+      if cache[question, :multilevel?]
         question.levels.each_with_index do |level, i|
           create_column(code: code, name: name + [level.name])
         end
@@ -188,18 +185,19 @@ end
 class ResponseCSV::QA
   include CSVHelper
 
-  def initialize(question, answers)
+  def initialize(question, answers, cache)
     @question = question
     @answers = answers
     @answer = answers.first
     @question_type = question.qtype_name
+    @cache = cache
   end
 
   def cells
     arr = case question_type
     when 'select_one'
       arr = answers.map { |a| format_csv_para_text(a.option_name) }
-      if question.multilevel?
+      if cache[question, :multilevel?]
         arr += ([nil] * (question.level_count - arr.size))
       end
       if question.geographic?
@@ -219,7 +217,7 @@ class ResponseCSV::QA
 
   private
 
-  attr_accessor :question, :answers, :answer, :question_type
+  attr_accessor :question, :answers, :answer, :question_type, :cache
 
   def lat_lng(ans)
     ans.lat_lng || [nil, nil]

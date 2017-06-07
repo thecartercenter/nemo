@@ -7,7 +7,7 @@ class AttribCache
     self.table = {}
   end
 
-  def fetch(object, attrib)
+  def [](object, attrib)
     subtable = table[object.class] ||= {}
     if subtable.has_key?(object.id)
       subtable[object.id]
