@@ -169,6 +169,8 @@ class Form < ApplicationRecord
   end
 
   # Returns all descendant questionings in one flat array, sorted in traversal order.
+  # Uses FormItem.descendant_questionings which uses FormItem.arrange_descendants, which
+  # eager loads questions and option sets.
   def questionings(reload = false)
     if root_group
       root_group.descendant_questionings.flatten

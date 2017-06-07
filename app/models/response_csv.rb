@@ -45,11 +45,14 @@ class ResponseCSV
 
         # Split response into repeatable and non-repeatable answers. There will be one row with the non
         # repeat answers, and then one row for each repeat group answer.
-        answers = response.answers.includes(:questioning, :option, choices: :option).order(:questioning_id, :inst_num, :rank)
-        repeatable_answers = answers.select{ |a| a.questioning.parent_repeatable? }
+        # We do eager loading here per-Response instead of all at once to avoid creating too many objects
+        # in memory at once in the case of large result sets.
+        answers = response.answers.includes(:option, questioning: [question: :option_set], choices: :option).
+          order(:questioning_id, :inst_num, :rank)
+        repeatable_answers = answers.select { |a| a.questioning.parent_repeatable? }
         non_repeat_answers = answers - repeatable_answers
 
-        # make initial row
+        # Make initial row
         row = [
           response.form.name,
           response.user.name,
