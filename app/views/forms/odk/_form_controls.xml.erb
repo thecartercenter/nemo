@@ -1,14 +1,18 @@
-<% organize_qing_groups(@form.arrange_descendants).each do |item, subtree| %>
-  <% if item.is_a?(QingGroup) %>
-    <%= content_tag("group") do %>
-      <%= content_tag("label", item.group_name) %>
-      <% if item.repeatable %>
-        <%= render('forms/odk/repeat_group', group: item, fragments: subtree) %>
-      <% else %>
-        <%= render('forms/odk/group', group: item, fragments: subtree) %>
-      <% end %>
-    <% end %>
+<% @form.sorted_children.each do |node| %>
+  <% if node.is_childless? %>
+    <%= render('forms/odk/questioning', qing: node) unless node.hidden %>
   <% else %>
-    <%= render('forms/odk/questioning', qing: item) unless item.hidden %>
+    <% if node.sorted_children.none?{|child| child.is_a?(QingGroup)} %>
+      <% organize_qing_groups({node => node.arrange_descendants}).each do |item, subtree| %>
+        <%= content_tag("group") do %>
+          <%= content_tag("label", item.group_name) %>
+          <% if node.repeatable %>
+            <%= render('forms/odk/repeat_group', group: item, fragments: subtree) %>
+          <% else %>
+            <%= render('forms/odk/group', group: item, fragments: subtree) %>
+          <% end %>
+        <% end %>
+      <% end%>
+    <% end %>
   <% end %>
 <% end %>
