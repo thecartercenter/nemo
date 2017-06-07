@@ -30,9 +30,13 @@ describe Report::ResponseTallyReport do
       yes_no = create(:option_set, option_names: %w(Yes No))
       questions = [create(:question, code: "yn", qtype_name: "select_one", option_set: yes_no)]
       form = create(:form, questions: questions)
-      create_list(:response, 1, form: form, created_at: Time.zone.parse("2012-01-01 1:00:00"), answer_values: %w(Yes))
-      create_list(:response, 2, form: form, created_at: Time.zone.parse("2012-01-05 1:00:00"), answer_values: %w(Yes))
-      create_list(:response, 6, form: form, created_at: Time.zone.parse("2012-01-05 1:00:00"), answer_values: %w(No))
+      create_list(:response, 1, form: form, created_at: "2012-01-01 1:00:00", answer_values: %w(Yes))
+      create_list(:response, 2, form: form, created_at: "2012-01-05 1:00:00", answer_values: %w(Yes))
+      create_list(:response, 6, form: form, created_at: "2012-01-05 1:00:00", answer_values: %w(No))
+
+      # Ensure destroyed data is ignored
+      decoy = create(:response, form: form, created_at: "2012-01-01 1:00:00", answer_values: %w(Yes))
+      decoy.destroy
 
       report = create_report("ResponseTally", calculations: [
         Report::IdentityCalculation.new(rank: 1, attrib1_name: :date_submitted),

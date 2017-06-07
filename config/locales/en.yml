@@ -392,6 +392,8 @@ en:
         options: "Options"
         option_levels: "Levels"
         sms_guide_formatting: "SMS Guide Formatting"
+      password_reset:
+        identifier: "Email or Username"
       qing_group:
         group_name: "Name"
         group_hint: "Hint"
@@ -1344,12 +1346,14 @@ en:
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
     enter_new_pass: "%{name}, please enter a new password for your account."
-    fill_out_form: "Fill out the form below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
+    fill_out_form: "Enter your email or username below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
+    multiple_accounts: "There are multiple accounts associated with that email address. Please try entering your username, or contact an administrator."
+    no_associated_email: "There is no email address associated with that account. Please contact an administrator to have your password changed."
     success: "Password updated successfully."
     token_not_found: |-
       We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL
       from your email into your browser or restarting the reset password process.
-    user_not_found: "No user was found with that email address."
+    user_not_found: "No user was found with that email address or username."
 
   permission_error:
     need_mission: "You can't view this without selecting a mission"

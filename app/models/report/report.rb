@@ -2,6 +2,8 @@ require 'mission_based'
 class Report::Report < ApplicationRecord
   include MissionBased
 
+  acts_as_paranoid
+
   has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,
     :dependent => :destroy, :autosave => true)
   has_many(:option_sets, :through => :option_set_choices)
@@ -20,9 +22,7 @@ class Report::Report < ApplicationRecord
 
   before_save(:normalize_attribs)
 
-  attr_accessor :just_created
-
-  attr_accessor :populated
+  attr_accessor :just_created, :populated
   alias_method :populated?, :populated
 
   # this is overridden by StandardFormReport, and ignored elsewhere

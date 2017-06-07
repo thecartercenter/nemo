@@ -54,7 +54,12 @@ class Replication::ObjProxy
     # reuse_col should obviously be indexed.
     elsif reuse_col = klass.replicable_opts[:reuse_if_match]
       build_from_sql("#{eql_sql(:mission_id, replicator.target_mission_id)}
-        AND #{reuse_col} = (SELECT #{reuse_col} FROM #{klass.table_name} WHERE id = #{id})").first
+        AND #{reuse_col} = (
+          SELECT #{reuse_col}
+          FROM #{klass.table_name}
+          WHERE #{klass.table_name}.deleted_at IS NULL AND id = #{id}
+        )
+      ").first
     # If klass is standardizable, we can look for matching using original_id
     elsif klass.standardizable?
       build_from_sql("original_id = #{id} AND #{eql_sql(:mission_id, replicator.target_mission_id)}").first
@@ -111,7 +116,12 @@ class Replication::ObjProxy
       cols = [:id]
       cols << :ancestry if options[:target_klass].has_ancestry?
       cols << :type if get_target_class_from_type_col
-      data = db.select_all("SELECT #{cols.join(',')} FROM #{options[:target_klass].table_name} WHERE #{condition} #{options[:order]}")
+      data = db.select_all("
+        SELECT #{cols.join(',')}
+        FROM #{options[:target_klass].table_name}
+        WHERE #{options[:target_klass].table_name}.deleted_at IS NULL
+          AND #{condition} #{options[:order]}
+      ")
 
       data.map do |attribs|
         attribs["id"] = attribs["id"].to_i

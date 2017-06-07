@@ -7,6 +7,8 @@ class User < ApplicationRecord
   GENDER_OPTIONS = %w[man woman no_answer specify]
   PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
 
+  acts_as_paranoid
+
   attr_writer(:reset_password_method)
   attr_accessor(:batch_creation)
   alias :batch_creation? :batch_creation
@@ -35,15 +37,12 @@ class User < ApplicationRecord
     c.logged_in_timeout(SESSION_TIMEOUT)
 
     c.validates_format_of_login_field_options = {with: /\A[a-zA-Z0-9\._]+\z/}
-    c.merge_validates_uniqueness_of_login_field_options(unless: Proc.new{|u| u.batch_creation?})
-
-    c.merge_validates_length_of_password_field_options(minimum: 8,
-                                                       unless: Proc.new{|u| u.batch_creation?})
-
-    # email is not mandatory, but must be valid if given
+    c.merge_validates_uniqueness_of_login_field_options(unless: :batch_creation?)
+    c.merge_validates_length_of_password_field_options(minimum: 8, unless: :batch_creation?)
     c.merge_validates_format_of_email_field_options(allow_blank: true)
-    c.merge_validates_uniqueness_of_email_field_options(unless: Proc.new{|u| u.batch_creation? ||
-                                                                                u.email.blank?})
+
+    # Email does not have to be unique.
+    c.merge_validates_uniqueness_of_email_field_options(if: -> { false })
   end
 
   after_initialize(:set_default_pref_lang)
@@ -76,16 +75,19 @@ class User < ApplicationRecord
                                  message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
-  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
+  scope(:assigned_to, ->(m) { where("users.id IN (
+    SELECT user_id FROM assignments WHERE deleted_at IS NULL AND mission_id = ?)", m.try(:id)) })
   scope(:with_assoc, -> {
     includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
   })
   scope(:with_groups, -> { joins(:user_groups) })
   scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
-  scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).where(assignments: { mission: m.try(:id), role: roles }) }
+  scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).
+    where(assignments: { mission: m.try(:id), role: roles }) }
 
   # returns users who are assigned to the given mission OR who submitted the given response
-  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
+  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments
+    WHERE deleted_at IS NULL AND mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
 
   def self.random_password(size = 12)
     size = 12 if size < 12
@@ -142,7 +144,7 @@ class User < ApplicationRecord
   # Returns an array of hashes of format {name: "Some User", response_count: 2}
   # of observer response counts for the given mission
   def self.sorted_observer_response_counts(mission, limit)
-    #First it tries to get user observers that don't have any response
+    # First it tries to get user observers that don't have any response
     result = self.observers_without_responses(mission, limit)
     return result unless result.length < limit
 
@@ -152,10 +154,15 @@ class User < ApplicationRecord
       JOIN (
         SELECT assignments.user_id, COUNT(DISTINCT responses.id) AS response_count
         FROM assignments
-          LEFT JOIN responses ON responses.user_id = assignments.user_id AND responses.mission_id = ?
-        WHERE assignments.role = 'observer' AND assignments.mission_id = ?
-        GROUP BY assignments.user_id        ORDER BY response_count        LIMIT ?
-      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit]).reverse
+          LEFT JOIN responses ON responses.deleted_at IS NULL
+            AND responses.user_id = assignments.user_id AND responses.mission_id = ?
+        WHERE assignments.deleted_at IS NULL
+          AND assignments.role = 'observer' AND assignments.mission_id = ?
+        GROUP BY assignments.user_id
+        ORDER BY response_count
+        LIMIT ?
+      ) as rc ON users.id = rc.user_id
+      WHERE users.deleted_at IS NULL", mission.id, mission.id, limit]).reverse
   end
 
   # Returns an array of hashes of format {name: "Some User", response_count: 0}
@@ -164,11 +171,13 @@ class User < ApplicationRecord
     find_by_sql(["SELECT users.name, 0 as response_count FROM users
       JOIN (
         SELECT a.user_id FROM assignments a
-        WHERE NOT EXISTS (
-          SELECT 1 FROM responses r
-          WHERE r.user_id = a.user_id AND r.mission_id = ?
-        ) AND a.role='observer' AND a.mission_id = ? LIMIT ?
+        WHERE a.deleted_at IS NULL
+          AND NOT EXISTS (SELECT 1 FROM responses r
+            WHERE r.deleted_at IS NULL AND r.user_id = a.user_id AND r.mission_id = ?)
+          AND a.role = 'observer' AND a.mission_id = ?
+        LIMIT ?
       ) as rc ON users.id = rc.user_id
+      WHERE users.deleted_at IS NULL
       ORDER BY users.name", mission.id, mission.id, limit])
   end
 
@@ -180,15 +189,16 @@ class User < ApplicationRecord
   #   one more than this number so you can report truncation to the user.
   def self.without_responses_for_form(form, options)
     find_by_sql(["SELECT * FROM users
-      INNER JOIN assignments ON assignments.user_id = users.id WHERE
-      assignments.mission_id = ? AND
-      assignments.role = ? AND
-      users.admin = FALSE AND
-      NOT EXISTS (
-        SELECT 1 FROM responses WHERE
-        responses.user_id=users.id AND
-        responses.form_id = ?
-      )
+      INNER JOIN assignments ON assignments.deleted_at IS NULL AND assignments.user_id = users.id
+      WHERE users.deleted_at IS NULL
+        AND assignments.mission_id = ?
+        AND assignments.role = ?
+        AND users.admin = FALSE
+        AND NOT EXISTS (
+          SELECT 1
+          FROM responses
+          WHERE responses.deleted_at IS NULL AND responses.user_id=users.id AND responses.form_id = ?
+        )
       ORDER BY users.name
       LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit] + 1])
   end
@@ -196,7 +206,7 @@ class User < ApplicationRecord
   # generates a cache key for the set of all users for the given mission.
   # the key will change if the number of users changes, or if a user is updated.
   def self.per_mission_cache_key(mission)
-    count_and_date_cache_key(rel: unscoped.assigned_to(mission), prefix: "mission-#{mission.id}")
+    count_and_date_cache_key(rel: assigned_to(mission), prefix: "mission-#{mission.id}")
   end
 
   def self.by_phone(phone)

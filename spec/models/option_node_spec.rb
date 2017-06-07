@@ -26,6 +26,58 @@ describe OptionNode do
     end
   end
 
+  describe "max_sequence" do
+    let!(:option_set) { create(:option_set, multilevel: true) }
+
+    it "should return the highest sequence in the set" do
+      expect(option_set.children[0].max_sequence).to eq 6
+    end
+
+    it "should work even when called on a leaf node" do
+      expect(option_set.children[0].children[0].max_sequence).to eq 6
+    end
+
+    context "with deleted nodes" do
+      before do
+        OptionNode.where(sequence: 6).destroy_all
+      end
+
+      it "should ignore the deleted node" do
+        expect(option_set.children[0].max_sequence).to eq 5
+      end
+    end
+  end
+
+  describe "removable?" do
+    let(:form) { create(:form, question_types: %w(select_one)) }
+    let(:node) { form.questions[0].option_set.children[0] }
+
+    context "with no answers" do
+      it "returns true" do
+        expect(node.removable?).to be true
+      end
+    end
+
+    context "with answers" do
+      let!(:responses) { create_list(:response, 2, form: form, answer_values: [node.option_name]) }
+
+      it "returns false" do
+        expect(node.removable?).to be false
+      end
+
+      context "if deleted" do
+        before do
+          responses.map(&:destroy)
+          node.reload
+        end
+
+        it "returns true" do
+          expect(node.removable?).to be true
+        end
+      end
+    end
+  end
+
   describe "option_level" do
     before do
       @node = create(:option_node_with_grandchildren)

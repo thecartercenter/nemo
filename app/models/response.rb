@@ -7,6 +7,8 @@ class Response < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 5
 
+  acts_as_paranoid
+
   belongs_to(:form, inverse_of: :responses, counter_cache: true)
   belongs_to(:checked_out_by, class_name: "User")
   belongs_to(:user, inverse_of: :responses)
@@ -242,8 +244,8 @@ class Response < ApplicationRecord
 
     find_by_sql("
       SELECT forms.name AS form_name, COUNT(responses.id) AS count
-      FROM responses INNER JOIN forms ON responses.form_id = forms.id
-      WHERE #{where_clause}
+      FROM responses INNER JOIN forms ON forms.deleted_at IS NULL AND responses.form_id = forms.id
+      WHERE responses.deleted_at IS NULL AND #{where_clause}
       GROUP BY forms.id, forms.name
       ORDER BY count DESC
       LIMIT #{n}")
@@ -252,7 +254,7 @@ class Response < ApplicationRecord
   # generates a cache key for the set of all responses for the given mission.
   # the key will change if the number of responses changes, or if a response is updated.
   def self.per_mission_cache_key(mission)
-    count_and_date_cache_key(rel: unscoped.for_mission(mission), prefix: "mission-#{mission.id}")
+    count_and_date_cache_key(rel: for_mission(mission), prefix: "mission-#{mission.id}")
   end
 
   # We need a name field so that this class matches the Nameable duck type.
