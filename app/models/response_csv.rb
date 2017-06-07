@@ -34,7 +34,7 @@ class ResponseCSV
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseUUID")
       find_or_create_column(code: "ResponseShortcode")
-      if responses.any?{ |r| r.form.has_repeat_groups? }
+      if responses.any? { |r| has_repeat_group?(r) }
         find_or_create_column(code: "GroupName")
         find_or_create_column(code: "GroupLevel")
       end
@@ -86,12 +86,22 @@ class ResponseCSV
     columns = columns_by_question[question.code]
     qa = ResponseCSV::QA.new(question, answers)
     columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
-    if response.form.has_repeat_groups?
+    if has_repeat_group?(response)
       group_level = answers.first.group_level
       group_name = answers.first.parent_group_name
       row[columns_by_question["GroupName"].first.position] = group_name
       row[columns_by_question["GroupLevel"].first.position] = group_level
     end
+  end
+
+  # Checks if given response has repeat groups by using a per-form lookup table to avoid a ton of
+  # repeated queries.
+  def has_repeat_group?(response)
+    @form_repeat_group_presence ||= {}
+    unless @form_repeat_group_presence.has_key?(response.form_id)
+      @form_repeat_group_presence[response.form_id] = response.form.has_repeat_group?
+    end
+    @form_repeat_group_presence[response.form_id]
   end
 
   def ensure_row_complete(row)

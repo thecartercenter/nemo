@@ -322,8 +322,9 @@ class Form < ApplicationRecord
     whitelistings.where(user_id: user_id).exists?
   end
 
-  def has_repeat_groups?
-    questionings.select{ |q| q.parent_repeatable?}.count > 0
+  # Efficiently tests if the form has at least one repeat group in it.
+  def has_repeat_group?
+    @has_repeat_group ||= FormItem.where(form_id: id, repeatable: true).any?
   end
 
   private
