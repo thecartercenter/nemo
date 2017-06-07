@@ -66,10 +66,10 @@ class ResponsesController < ApplicationController
         end
 
         # Get the response, for export, but not paginated.
-        # We deliberately don't eager load as that is handled in the ResponseCSV class.
+        # We deliberately don't eager load as that is handled in the Results::Csv::Generator class.
         @responses = @responses.order(:created_at)
 
-        @csv = ResponseCSV.new(@responses)
+        @csv = Results::Csv::Generator.new(@responses)
         render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")
       end
     end

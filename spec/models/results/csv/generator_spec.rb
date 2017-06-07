@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ResponseCSV do
+describe Results::Csv::Generator do
   let(:ordered_responses) { Response.with_associations.order(:created_at) }
 
   around do |example|
@@ -18,7 +18,7 @@ describe ResponseCSV do
 
   context "with no data" do
     it "should generate empty string" do
-      expect(ResponseCSV.new([]).to_s).to eq ""
+      expect(Results::Csv::Generator.new([]).to_s).to eq ""
     end
   end
 
@@ -73,8 +73,8 @@ describe ResponseCSV do
     end
 
     it "should generate correct CSV" do
-      expected = response_csv_expectation_without_repeat_groups(ordered_responses)
-      expect(ResponseCSV.new(ordered_responses).to_s).to eq expected
+      expected = results_csv_expectation_without_repeat_groups(ordered_responses)
+      expect(Results::Csv::Generator.new(ordered_responses).to_s).to eq expected
     end
   end
 
@@ -125,8 +125,8 @@ describe ResponseCSV do
         Timecop.freeze(10.minutes) { response_b }
       end
 
-      expected = response_csv_expectation_with_repeat_groups(ordered_responses)
-      actual = ResponseCSV.new(ordered_responses)
+      expected = results_csv_expectation_with_repeat_groups(ordered_responses)
+      actual = Results::Csv::Generator.new(ordered_responses)
       expect(actual.to_s).to eq expected
     end
   end
