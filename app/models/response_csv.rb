@@ -56,7 +56,7 @@ class ResponseCSV
         answers = response.answers.
           includes(:option, questioning: {question: {option_set: :root_node}}, choices: :option).
           order(:questioning_id, :inst_num, :rank)
-        repeatable_answers = answers.select { |a| a.questioning.parent_repeatable? }
+        repeatable_answers = answers.select { |a| cache[a.questioning, :parent_repeatable?] }
         non_repeat_answers = answers - repeatable_answers
 
         # Make initial row
@@ -128,7 +128,7 @@ class ResponseCSV
     if question
       return if question.multimedia?
       name = [code]
-      if qing.parent_repeatable?
+      if cache[qing, :parent_repeatable?]
         name = [qing.parent_group_name, code]
       end
       if cache[question, :multilevel?]
