@@ -5,6 +5,7 @@ class ResponseCSV
     @columns = []
     @columns_by_question = {}
     @processed_forms = []
+    @attrib_cache = AttribCache.new
   end
 
   def to_s
@@ -13,7 +14,14 @@ class ResponseCSV
 
   private
 
-  attr_accessor :responses, :columns, :columns_by_question, :processed_forms
+  attr_accessor :responses, :columns, :columns_by_question, :processed_forms, :attrib_cache
+
+  # Uses AttribCache to cache object attributes.
+  # This is used to cache certain often-read attributes that tend to cause performance
+  # problems due to kicking off tons of queries.
+  def cache(*args)
+    attrib_cache.fetch(*args)
+  end
 
   def generate
     # We have to build the body first so that the headers are correct.
@@ -35,7 +43,7 @@ class ResponseCSV
       find_or_create_column(code: "DateSubmitted")
       find_or_create_column(code: "ResponseUUID")
       find_or_create_column(code: "ResponseShortcode")
-      if responses.any? { |r| has_repeat_group?(r) }
+      if responses.any? { |r| cache(r.form, :has_repeat_group?) }
         find_or_create_column(code: "GroupName")
         find_or_create_column(code: "GroupLevel")
       end
@@ -91,22 +99,12 @@ class ResponseCSV
     columns = columns_by_question[question.code]
     qa = ResponseCSV::QA.new(question, answers)
     columns.each_with_index{ |c, i| row[c.position] = qa.cells[i] }
-    if has_repeat_group?(response)
+    if cache(response.form, :has_repeat_group?)
       group_level = answers.first.group_level
       group_name = answers.first.parent_group_name
       row[columns_by_question["GroupName"].first.position] = group_name
       row[columns_by_question["GroupLevel"].first.position] = group_level
     end
-  end
-
-  # Checks if given response has repeat groups by using a per-form
-  # lookup table to avoid a ton of repeated queries.
-  def has_repeat_group?(response)
-    @form_repeat_group_presence ||= {}
-    unless @form_repeat_group_presence.has_key?(response.form_id)
-      @form_repeat_group_presence[response.form_id] = response.form.has_repeat_group?
-    end
-    @form_repeat_group_presence[response.form_id]
   end
 
   def ensure_row_complete(row)
