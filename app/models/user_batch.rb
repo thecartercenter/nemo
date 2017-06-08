@@ -264,7 +264,7 @@ class UserBatch
     key = correct_field_key(fields)
 
     results.reject(&:nil?).each do |result|
-      @fields_hash_table[key][result].each do |object|
+      (@fields_hash_table[key][result] || []).each do |object|
         fields.each { |f| add_uniqueness_error_checking_field_value(object, f, result) }
       end
     end
