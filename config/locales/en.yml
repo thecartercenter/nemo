@@ -578,8 +578,8 @@ en:
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
         sms_relay: "Whether to enable forwarding incoming SMS responses to users and user groups"
         recipient_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
-        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an obsever to spoof submissions."
-        allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
+        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an observer to spoof submissions."
+        allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK only). Observers using ODK must enter an override code (see the Settings page) to do so."
         version: "The current version number and letter code."
         access_level: "Public: Any user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
       mission:
