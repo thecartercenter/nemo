@@ -5,20 +5,20 @@
     <model>
       <instance>
         <data id="1" version="abc">
-          <grp-2>
-            <grp-header2/>
+          <grp2>
+            <grp2-header/>
             <q1/>
             <q2/>
             <q3/>
-          </grp-2>
+          </grp2>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="grp-header2:label">
+          <text id="grp2-header:label">
             <value>Group Name</value>
           </text>
-          <text id="grp-header2:hint">
+          <text id="grp2-header:hint">
             <value>Group Hint</value>
           </text>
           <text id="q1:label">
@@ -41,29 +41,29 @@
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/grp-2"/>
-      <bind nodeset="/data/grp-2/grp-header2" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-2/q1" type="string"/>
-      <bind nodeset="/data/grp-2/q2" type="string"/>
-      <bind nodeset="/data/grp-2/q3" type="string"/>
+      <bind nodeset="/data/grp2"/>
+      <bind nodeset="/data/grp2/grp2-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/grp2/q1" type="string"/>
+      <bind nodeset="/data/grp2/q2" type="string"/>
+      <bind nodeset="/data/grp2/q3" type="string"/>
     </model>
   </h:head>
   <h:body>
     <group>
       <label>Group Name</label>
       <group appearance="field-list">
-        <input ref="/data/grp-2/grp-header2">
-          <hint ref="jr:itext('grp-header2:hint')"/>
+        <input ref="/data/grp2/grp2-header">
+          <hint ref="jr:itext('grp2-header:hint')"/>
         </input>
-        <input ref="/data/grp-2/q1">
+        <input ref="/data/grp2/q1">
           <label ref="jr:itext('q1:label')"/>
           <hint ref="jr:itext('q1:hint')"/>
         </input>
-        <input ref="/data/grp-2/q2">
+        <input ref="/data/grp2/q2">
           <label ref="jr:itext('q2:label')"/>
           <hint ref="jr:itext('q2:hint')"/>
         </input>
-        <input ref="/data/grp-2/q3">
+        <input ref="/data/grp2/q3">
           <label ref="jr:itext('q3:label')"/>
           <hint ref="jr:itext('q3:hint')"/>
         </input>

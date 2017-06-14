@@ -11,4 +11,7 @@ class QingGroup < FormItem
     children.where(type: "QingGroup")
   end
 
+  def odk_code
+    @odk_code ||= "grp#{id}"
+  end
 end

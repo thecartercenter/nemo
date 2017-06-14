@@ -2,10 +2,10 @@
 
   <%# group hint translations %>
   <% @form.child_groups.each do |group| %>
-    <text id="grp-header<%= group.id %>:label">
+    <text id="<%= group.odk_code %>-header:label">
       <value><%= group.group_name(lang, strict: false) %></value>
     </text>
-    <text id="grp-header<%= group.id %>:hint">
+    <text id="<%= group.odk_code %>-header:hint">
       <value><%= group.group_hint(lang, strict: false) %></value>
     </text>
   <% end %>

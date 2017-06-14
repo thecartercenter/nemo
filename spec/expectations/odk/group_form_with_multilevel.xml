@@ -5,22 +5,22 @@
     <model>
       <instance>
         <data id="1" version="abc">
-          <grp-2>
-            <grp-header2/>
+          <grp2>
+            <grp2-header/>
             <q1/>
             <q2/>
             <q3_1/>
             <q3_2/>
             <q4/>
-          </grp-2>
+          </grp2>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="grp-header2:label">
+          <text id="grp2-header:label">
             <value>Group Name</value>
           </text>
-          <text id="grp-header2:hint">
+          <text id="grp2-header:hint">
             <value>Group Hint</value>
           </text>
           <text id="q1:label">
@@ -61,36 +61,36 @@
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/grp-2"/>
-      <bind nodeset="/data/grp-2/grp-header2" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-2/q1" type="string"/>
-      <bind nodeset="/data/grp-2/q2" type="date"/>
-      <bind nodeset="/data/grp-2/q3_1" type="select1"/>
-      <bind nodeset="/data/grp-2/q3_2" type="string"/>
-      <bind nodeset="/data/grp-2/q4" type="int"/>
+      <bind nodeset="/data/grp2"/>
+      <bind nodeset="/data/grp2/grp2-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/grp2/q1" type="string"/>
+      <bind nodeset="/data/grp2/q2" type="date"/>
+      <bind nodeset="/data/grp2/q3_1" type="select1"/>
+      <bind nodeset="/data/grp2/q3_2" type="string"/>
+      <bind nodeset="/data/grp2/q4" type="int"/>
     </model>
   </h:head>
   <h:body>
     <group>
       <label>Group Name</label>
       <group appearance="field-list">
-        <input ref="/data/grp-2/grp-header2">
-          <hint ref="jr:itext('grp-header2:hint')"/>
+        <input ref="/data/grp2/grp2-header">
+          <hint ref="jr:itext('grp2-header:hint')"/>
         </input>
-        <input ref="/data/grp-2/q1">
+        <input ref="/data/grp2/q1">
           <label ref="jr:itext('q1:label')"/>
           <hint ref="jr:itext('q1:hint')"/>
         </input>
-        <input ref="/data/grp-2/q2">
+        <input ref="/data/grp2/q2">
           <label ref="jr:itext('q2:label')"/>
           <hint ref="jr:itext('q2:hint')"/>
         </input>
       </group>
       <group appearance="field-list">
-        <input ref="/data/grp-2/grp-header2">
-          <hint ref="jr:itext('grp-header2:hint')"/>
+        <input ref="/data/grp2/grp2-header">
+          <hint ref="jr:itext('grp2-header:hint')"/>
         </input>
-        <select1 ref="/data/grp-2/q3_1">
+        <select1 ref="/data/grp2/q3_1">
           <label ref="jr:itext('q3_1:label')"/>
           <hint ref="jr:itext('q3_1:hint')"/>
           <item>
@@ -104,19 +104,19 @@
         </select1>
       </group>
       <group appearance="field-list">
-        <input ref="/data/grp-2/grp-header2">
-          <hint ref="jr:itext('grp-header2:hint')"/>
+        <input ref="/data/grp2/grp2-header">
+          <hint ref="jr:itext('grp2-header:hint')"/>
         </input>
-        <input ref="/data/grp-2/q3_2" query="instance('os1')/root/item[parent_id=/data/grp-2/q3_1]">
+        <input ref="/data/grp2/q3_2" query="instance('os1')/root/item[parent_id=/data/grp2/q3_1]">
           <label ref="jr:itext('q3_2:label')"/>
           <hint ref="jr:itext('q3_2:hint')"/>
         </input>
       </group>
       <group appearance="field-list">
-        <input ref="/data/grp-2/grp-header2">
-          <hint ref="jr:itext('grp-header2:hint')"/>
+        <input ref="/data/grp2/grp2-header">
+          <hint ref="jr:itext('grp2-header:hint')"/>
         </input>
-        <input ref="/data/grp-2/q4">
+        <input ref="/data/grp2/q4">
           <label ref="jr:itext('q4:label')"/>
           <hint ref="jr:itext('q4:hint')"/>
         </input>

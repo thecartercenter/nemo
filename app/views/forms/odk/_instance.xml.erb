@@ -4,8 +4,8 @@
     <% @form.arrange_descendants.each do |item, subtree| %>
       <% if item.is_a?(QingGroup) %>
         <% attrs = item.repeatable ? {"jr:template" => ""} : {} %>
-        <%= content_tag("grp-#{item.id}", @attrs) do %>
-          <%= tag("grp-header#{item.id}") %>
+        <%= content_tag(item.odk_code, @attrs) do %>
+          <%= tag("#{item.odk_code}-header") %>
           <% subtree.keys.each do |qing| %>
             <% unless qing.hidden %>
               <% qing.subquestions.each do |subq| %>

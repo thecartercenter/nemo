@@ -1,11 +1,11 @@
 <% @form.arrange_descendants.each do |item, subtree| %>
   <% if item.is_a?(QingGroup) %>
-    <%= tag("bind", nodeset: "/data/grp-#{item.id}") %>
+    <%= tag("bind", nodeset: "/data/#{item.odk_code}") %>
     <%= note_binding(item) %>
     <% subtree.keys.each do |qing| %>
       <% unless qing.hidden %>
         <% qing.subquestions.each do |subq| %>
-          <%= question_binding(@form, qing, subq, group: "grp-#{item.id}") %>
+          <%= question_binding(@form, qing, subq, group: item.odk_code) %>
         <% end %>
       <% end %>
     <% end %>

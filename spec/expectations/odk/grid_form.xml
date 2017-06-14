@@ -5,19 +5,19 @@
     <model>
       <instance>
         <data id="1" version="abc">
-          <grp-2>
-            <grp-header2/>
+          <grp2>
+            <grp2-header/>
             <q1/>
             <q2/>
-          </grp-2>
+          </grp2>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="grp-header2:label">
+          <text id="grp2-header:label">
             <value>Group Name</value>
           </text>
-          <text id="grp-header2:hint">
+          <text id="grp2-header:hint">
             <value>Group Hint</value>
           </text>
           <text id="q1:label">
@@ -40,20 +40,20 @@
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/grp-2"/>
-      <bind nodeset="/data/grp-2/grp-header2" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-2/q1" type="select1"/>
-      <bind nodeset="/data/grp-2/q2" type="select1"/>
+      <bind nodeset="/data/grp2"/>
+      <bind nodeset="/data/grp2/grp2-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/grp2/q1" type="select1"/>
+      <bind nodeset="/data/grp2/q2" type="select1"/>
     </model>
   </h:head>
   <h:body>
     <group>
       <label>Group Name</label>
       <group appearance="field-list">
-        <input ref="/data/grp-2/grp-header2">
-          <hint ref="jr:itext('grp-header2:hint')"/>
+        <input ref="/data/grp2/grp2-header">
+          <hint ref="jr:itext('grp2-header:hint')"/>
         </input>
-        <select1 appearance="label" ref="/data/grp-2/q1">
+        <select1 appearance="label" ref="/data/grp2/q1">
           <label/>
           <item>
             <label ref="jr:itext('on2')"/>
@@ -64,7 +64,7 @@
             <value>on3</value>
           </item>
         </select1>
-        <select1 appearance="list-nolabel" ref="/data/grp-2/q1">
+        <select1 appearance="list-nolabel" ref="/data/grp2/q1">
           <label ref="jr:itext('q1:label')"/>
           <item>
             <label ref="jr:itext('on2')"/>
@@ -75,7 +75,7 @@
             <value>on3</value>
           </item>
         </select1>
-        <select1 appearance="list-nolabel" ref="/data/grp-2/q2">
+        <select1 appearance="list-nolabel" ref="/data/grp2/q2">
           <label ref="jr:itext('q2:label')"/>
           <item>
             <label ref="jr:itext('on2')"/>

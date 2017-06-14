@@ -4,12 +4,13 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, opts, group_id = nil, &block)
-    group = group_id ? "grp-#{group_id}":nil
+  def odk_input_tag(qing, subq, opts, group = nil, &block)
     opts ||= {}
-    opts[:ref] = ["/data", group, subq.try(:odk_code)].compact.join("/")
+    opts[:ref] = ["/data", group.try(:odk_code), subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
-    opts[:query] = multilevel_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == "select_one"
+    if !subq.first_rank? && subq.qtype.name == "select_one"
+      opts[:query] = multilevel_option_nodeset_ref(qing, subq, group.try(:odk_code))
+    end
     opts[:appearance] = odk_media_appearance(subq) if subq.qtype.multimedia?
     opts[:mediatype] = odk_media_type(subq) if subq.qtype.multimedia?
     content_tag(odk_input_tagname(subq), opts, &block)
@@ -102,7 +103,7 @@ module OdkHelper
   # note: _readonly is used to get around the 'readonly' html attribute
   def note_binding(group)
     tag(:bind, {
-      "nodeset" => "/data/grp-#{group.id}/grp-header#{group.id}",
+      "nodeset" => "/data/#{group.odk_code}/#{group.odk_code}-header",
       "_readonly" => "true()",
       "type" => "string"
     }.reject { |k,v| v.nil? }).gsub(/_readonly=/, "readonly=").html_safe
@@ -139,12 +140,12 @@ module OdkHelper
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
   #      instance('os16')/root/item[parent_id=/data/q2_2]
-  def multilevel_option_nodeset_ref(qing, cur_subq, group = nil)
+  def multilevel_option_nodeset_ref(qing, cur_subq, group_code = nil)
     filter = if cur_subq.first_rank?
       ""
     else
       code = cur_subq.odk_code(previous: true)
-      path = ["/data", group, code].compact.join("/")
+      path = ["/data", group_code, code].compact.join("/")
       "[parent_id=#{path}]"
     end
     "instance('os#{qing.option_set_id}')/root/item#{filter}"
