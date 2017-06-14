@@ -5,7 +5,7 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
   include ODKSubmissionSupport
 
   let(:user) { create(:user, role_name: "observer") }
-  let(:form) { create(:form, :published, :with_version, version: "abc", question_types: %w(text image)) }
+  let(:form) { create(:form, :published, :with_version, question_types: %w(text image)) }
   let(:mission) { form.mission }
   let(:tmp_path) { Rails.root.join("tmp/submission.xml") }
 
