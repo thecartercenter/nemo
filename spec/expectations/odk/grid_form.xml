@@ -4,86 +4,86 @@
     <h:title>Sample Form 1</h:title>
     <model>
       <instance>
-        <data id="1" version="abc">
-          <grp2>
-            <grp2-header/>
-            <q1/>
-            <q2/>
-          </grp2>
+        <data id="*form1*" version="*formver1*">
+          <*grpcode2*>
+            <*grpcode2*-header/>
+            <*qcode1*/>
+            <*qcode2*/>
+          </*grpcode2*>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="grp2-header:label">
+          <text id="*grpcode2*-header:label">
             <value>Group Name</value>
           </text>
-          <text id="grp2-header:hint">
+          <text id="*grpcode2*-header:hint">
             <value>Group Hint</value>
           </text>
-          <text id="q1:label">
+          <text id="*qcode1*:label">
             <value>Select One Question Title 1</value>
           </text>
-          <text id="q1:hint">
+          <text id="*qcode1*:hint">
             <value>Question Hint 1</value>
           </text>
-          <text id="q2:label">
+          <text id="*qcode2*:label">
             <value>Select One Question Title 2</value>
           </text>
-          <text id="q2:hint">
+          <text id="*qcode2*:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="on2">
+          <text id="*optcode2*">
             <value>Cat</value>
           </text>
-          <text id="on3">
+          <text id="*optcode3*">
             <value>Dog</value>
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/grp2"/>
-      <bind nodeset="/data/grp2/grp2-header" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp2/q1" type="select1"/>
-      <bind nodeset="/data/grp2/q2" type="select1"/>
+      <bind nodeset="/data/*grpcode2*"/>
+      <bind nodeset="/data/*grpcode2*/*grpcode2*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*grpcode2*/*qcode1*" type="select1"/>
+      <bind nodeset="/data/*grpcode2*/*qcode2*" type="select1"/>
     </model>
   </h:head>
   <h:body>
     <group>
       <label>Group Name</label>
       <group appearance="field-list">
-        <input ref="/data/grp2/grp2-header">
-          <hint ref="jr:itext('grp2-header:hint')"/>
+        <input ref="/data/*grpcode2*/*grpcode2*-header">
+          <hint ref="jr:itext('*grpcode2*-header:hint')"/>
         </input>
-        <select1 appearance="label" ref="/data/grp2/q1">
+        <select1 appearance="label" ref="/data/*grpcode2*/*qcode1*">
           <label/>
           <item>
-            <label ref="jr:itext('on2')"/>
-            <value>on2</value>
+            <label ref="jr:itext('*optcode2*')"/>
+            <value>*optcode2*</value>
           </item>
           <item>
-            <label ref="jr:itext('on3')"/>
-            <value>on3</value>
-          </item>
-        </select1>
-        <select1 appearance="list-nolabel" ref="/data/grp2/q1">
-          <label ref="jr:itext('q1:label')"/>
-          <item>
-            <label ref="jr:itext('on2')"/>
-            <value>on2</value>
-          </item>
-          <item>
-            <label ref="jr:itext('on3')"/>
-            <value>on3</value>
+            <label ref="jr:itext('*optcode3*')"/>
+            <value>*optcode3*</value>
           </item>
         </select1>
-        <select1 appearance="list-nolabel" ref="/data/grp2/q2">
-          <label ref="jr:itext('q2:label')"/>
+        <select1 appearance="list-nolabel" ref="/data/*grpcode2*/*qcode1*">
+          <label ref="jr:itext('*qcode1*:label')"/>
           <item>
-            <label ref="jr:itext('on2')"/>
-            <value>on2</value>
+            <label ref="jr:itext('*optcode2*')"/>
+            <value>*optcode2*</value>
           </item>
           <item>
-            <label ref="jr:itext('on3')"/>
-            <value>on3</value>
+            <label ref="jr:itext('*optcode3*')"/>
+            <value>*optcode3*</value>
+          </item>
+        </select1>
+        <select1 appearance="list-nolabel" ref="/data/*grpcode2*/*qcode2*">
+          <label ref="jr:itext('*qcode2*:label')"/>
+          <item>
+            <label ref="jr:itext('*optcode2*')"/>
+            <value>*optcode2*</value>
+          </item>
+          <item>
+            <label ref="jr:itext('*optcode3*')"/>
+            <value>*optcode3*</value>
           </item>
         </select1>
       </group>

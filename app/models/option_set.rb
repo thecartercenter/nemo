@@ -121,6 +121,10 @@ class OptionSet < ApplicationRecord
     root_node.children_attribs = attribs
   end
 
+  def preordered_option_nodes
+    root_node.preordered_descendants
+  end
+
   # Given an Option, returns the path down the tree of Options in this set to that Option.
   # Returns nil if option not found in set.
   def path_to_option(option)

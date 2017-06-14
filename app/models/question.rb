@@ -159,6 +159,10 @@ class Question < ApplicationRecord
     relation = relation.where(search.sql)
   end
 
+  def preordered_option_nodes
+    option_set.try(:preordered_option_nodes) || []
+  end
+
   def subquestions
     @subquestions ||= if multilevel?
       levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }

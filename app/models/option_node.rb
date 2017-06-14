@@ -113,8 +113,12 @@ class OptionNode < ApplicationRecord
     total_options > HUGE_CUTOFF
   end
 
+  def preordered_descendants
+    self.class.sort_by_ancestry(descendants.order(:rank))
+  end
+
   def sorted_children
-    children.order("rank").includes(:option)
+    children.order(:rank).includes(:option)
   end
   alias_method :c, :sorted_children
 

@@ -37,6 +37,7 @@ class Questioning < FormItem
     :tags,
     :sms_formatting_as_text?,
     :sms_formatting_as_appendix?,
+    :preordered_option_nodes,
     to: :question
 
 

@@ -4,68 +4,68 @@
     <h:title>Sample Form 1</h:title>
     <model>
       <instance>
-        <data id="1" version="abc">
-          <grp2>
-            <grp2-header/>
-            <q1/>
-            <q2/>
-            <q3/>
-          </grp2>
+        <data id="*form1*" version="*formver1*">
+          <*grpcode2*>
+            <*grpcode2*-header/>
+            <*qcode1*/>
+            <*qcode2*/>
+            <*qcode3*/>
+          </*grpcode2*>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="grp2-header:label">
+          <text id="*grpcode2*-header:label">
             <value>Group Name</value>
           </text>
-          <text id="grp2-header:hint">
+          <text id="*grpcode2*-header:hint">
             <value>Group Hint</value>
           </text>
-          <text id="q1:label">
+          <text id="*qcode1*:label">
             <value>Text Question Title 1</value>
           </text>
-          <text id="q1:hint">
+          <text id="*qcode1*:hint">
             <value>Question Hint 1</value>
           </text>
-          <text id="q2:label">
+          <text id="*qcode2*:label">
             <value>Text Question Title 2</value>
           </text>
-          <text id="q2:hint">
+          <text id="*qcode2*:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="q3:label">
+          <text id="*qcode3*:label">
             <value>Text Question Title 3</value>
           </text>
-          <text id="q3:hint">
+          <text id="*qcode3*:hint">
             <value>Question Hint 3</value>
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/grp2"/>
-      <bind nodeset="/data/grp2/grp2-header" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp2/q1" type="string"/>
-      <bind nodeset="/data/grp2/q2" type="string"/>
-      <bind nodeset="/data/grp2/q3" type="string"/>
+      <bind nodeset="/data/*grpcode2*"/>
+      <bind nodeset="/data/*grpcode2*/*grpcode2*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*grpcode2*/*qcode1*" type="string"/>
+      <bind nodeset="/data/*grpcode2*/*qcode2*" type="string"/>
+      <bind nodeset="/data/*grpcode2*/*qcode3*" type="string"/>
     </model>
   </h:head>
   <h:body>
     <group>
       <label>Group Name</label>
       <group appearance="field-list">
-        <input ref="/data/grp2/grp2-header">
-          <hint ref="jr:itext('grp2-header:hint')"/>
+        <input ref="/data/*grpcode2*/*grpcode2*-header">
+          <hint ref="jr:itext('*grpcode2*-header:hint')"/>
         </input>
-        <input ref="/data/grp2/q1">
-          <label ref="jr:itext('q1:label')"/>
-          <hint ref="jr:itext('q1:hint')"/>
+        <input ref="/data/*grpcode2*/*qcode1*">
+          <label ref="jr:itext('*qcode1*:label')"/>
+          <hint ref="jr:itext('*qcode1*:hint')"/>
         </input>
-        <input ref="/data/grp2/q2">
-          <label ref="jr:itext('q2:label')"/>
-          <hint ref="jr:itext('q2:hint')"/>
+        <input ref="/data/*grpcode2*/*qcode2*">
+          <label ref="jr:itext('*qcode2*:label')"/>
+          <hint ref="jr:itext('*qcode2*:hint')"/>
         </input>
-        <input ref="/data/grp2/q3">
-          <label ref="jr:itext('q3:label')"/>
-          <hint ref="jr:itext('q3:hint')"/>
+        <input ref="/data/*grpcode2*/*qcode3*">
+          <label ref="jr:itext('*qcode3*:label')"/>
+          <hint ref="jr:itext('*qcode3*:hint')"/>
         </input>
       </group>
     </group>

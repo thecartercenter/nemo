@@ -94,6 +94,10 @@ class Form < ApplicationRecord
     root_group ? root_group.sorted_children.reject{ |q| q.is_a?(QingGroup) } : []
   end
 
+  def preordered_items
+    root_group.preordered_descendants
+  end
+
   def odk_download_cache_key
     "odk-form/#{id}-#{pub_changed_at}"
   end

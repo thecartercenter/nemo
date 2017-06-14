@@ -76,6 +76,10 @@ class FormItem < ApplicationRecord
     end
   end
 
+  def preordered_descendants
+    self.class.sort_by_ancestry(descendants.order(:rank))
+  end
+
   def sorted_children
     children.order(:rank)
   end
