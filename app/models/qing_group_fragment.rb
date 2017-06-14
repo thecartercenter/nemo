@@ -15,13 +15,13 @@ class QingGroupFragment
   delegate :hidden, :id, :group_name, :group_hint, :group_name_translations,
     :group_hint_translations, :repeatable, to: :qing_group
 
-  def initialize(qing_group)
+  def initialize(qing_group, children)
     self.qing_group = qing_group
-    self.children = ActiveSupport::OrderedHash.new
+    self.children = children
   end
 
   def multilevel?
-    children.keys.first.multilevel?
+    children.first.multilevel?
   end
 
 end

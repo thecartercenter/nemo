@@ -2,65 +2,31 @@ require 'spec_helper'
 
 describe QingGroupOdkPartitioner do
 
-  let(:qing_group) { build_stubbed(:qing_group) }
-  let(:qing_1) { build_stubbed(:questioning) }
-  let(:qing_2) { build_stubbed(:questioning) }
-  let(:multilevel_qing) { build_stubbed(:questioning) }
-
-  let(:form_questions) do
-    { qing_group => { qing_1 => '',
-                      qing_2 => ''}
-    }
-  end
-
-  let(:form_questions_with_multilevel) do
-    { qing_group => { qing_1 => '',
-                      multilevel_qing => '',
-                      qing_2 => ''}
-    }
-  end
-
-  let(:form_questions_without_groups) do
-    { qing_1 => '',
-      qing_2 => ''}
-  end
-
-  before do
-    allow(multilevel_qing).to receive(:multilevel?) { true }
-  end
+  let(:form) { create(:form, question_types: [["text","text","multilevel_select_one","text"], ["text", "text", "text"]]) }
 
   describe "#organize" do
 
     it "splits qing groups in order to remove multilevel questions from them" do
-      results = QingGroupOdkPartitioner.new(form_questions_with_multilevel).fragment
+      results = QingGroupOdkPartitioner.new.fragment(form.sorted_children.first)
 
-      expect(results.size).to eq(1)
-      expect(results.keys[0]).to be_a QingGroup
-      expect(results.values[0]).to be_a Hash
-      expect(results.values[0].keys.map(&:class)).to eq [QingGroupFragment, QingGroupFragment, QingGroupFragment]
+      expect(results.size).to eq(3)
+      expect(results[0]).to be_a QingGroupFragment
+      expect(results[1]).to be_a QingGroupFragment
+      expect(results[2]).to be_a QingGroupFragment
+      expect(results[0].children.count).to eq 2
+      expect(results[1].children.count).to eq 1
+      expect(results[2].children.count).to eq 1
+      expect(results[0].children.first.multilevel?).to be_nil
+      expect(results[1].children.first.multilevel?).to be true
+      expect(results[2].children.first.multilevel?).to be_nil
+
     end
 
     it "doesn't create new groups if there isn't a multilevel question on it" do
-      results = QingGroupOdkPartitioner.new(form_questions).fragment
+      results = QingGroupOdkPartitioner.new.fragment(form.sorted_children.last)
 
       expect(results.size).to eq(1)
-      expect(results.keys[0]).to be_a QingGroup
-      expect(results.values[0]).to be_a Hash
-      expect(results.values[0].keys[0]).to be_a QingGroupFragment
-      expect(results.values[0].values[0]).to be_a Hash
-      expect(results.values[0].values[0].keys.map(&:class)).to eq [Questioning, Questioning]
-    end
-
-    it "leaves questionings outside groups untouched" do
-      results = QingGroupOdkPartitioner.new(form_questions_without_groups).fragment
-
-      expect(results.size).to equal(2)
-      expect(results.keys.map(&:class)).to eq [Questioning, Questioning]
+      expect(results[0]).to be_a QingGroup
     end
   end
-
-  def organize_form_questions(form_questions)
-
-  end
-
 end

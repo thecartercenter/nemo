@@ -5,98 +5,39 @@
 # if it's a child of a group.
 #
 # Input:
-# {
-#   Qing => {},
-#   QingGroup => {
-#     Qing(1) => {},
-#     Qing(2) => {},
-#     Qing(3-multilevel) => {},
-#     Qing(4) => {}
-#   },
-#   Qing => {},
-# }
-#
+#  QingGroup qgroup
+#     with children: Qing1, Qing2, MultilevelQing, Qing3
 # Output:
-# {
-#   Qing => {},
-#   QingGroup => {
-#     QingGroupFragment => {
-#       Qing(1) => {},
-#       Qing(2) => {},
-#     }
-#     QingGroupFragment => {
-#       Qing(3-multilevel) => {},
-#     },
-#     QingGroupFragment => {
-#       Qing(4) => {}
-#     },
-#   }
-#   Qing => {},
-# }
+#  [ QingGroupTransient with children Qing1 and Qing2,
+#    QingGroupTransient with child MultilevelQing,
+#    QingGroupTransient with child Qing3
+#   ]
+#
 class QingGroupOdkPartitioner
-  attr_accessor :descendants, :organized_descendants
 
-  def initialize(descendants)
-    @descendants = descendants
-    @organized_descendants = ActiveSupport::OrderedHash.new
-  end
-
-  def fragment
-    @descendants.each do |key, value|
-      if key.is_a? QingGroup
-        split_qing_group_as_necessary(key, value)
-      else
-        store_regular_qing(key)
-      end
+  def fragment(qing_group)
+    result = [qing_group]
+    if qing_group.children.any? {|c| c.multilevel?}
+      result = split_qing_group_as_necessary(qing_group)
     end
-    @organized_descendants
+    result
   end
 
   private
 
-  def split_qing_group_as_necessary(group, questionings)
-    qing_group_divided = QingGroupFragment.new(group)
-
-    questionings.each do |qing|
-      qing_object = qing[0]
-
-      if (qing_object.multilevel?)
-        store_qing_group(group, qing_group_divided)
-
-        # Start another group to separate these questionings from the old ones
-        qing_group_divided = QingGroupFragment.new(group)
-        add_qing_to_hash(qing_group_divided.children, qing_object)
-
-        # store multilevel qing and start new group
-        store_qing_group(group, qing_group_divided)
-        qing_group_divided = QingGroupFragment.new(group)
+  def split_qing_group_as_necessary(qing_group)
+    result = Array.new
+    temp_group_children = Array.new
+    qing_group.sorted_children.each do |child|
+      if child.multilevel?
+        result.push(QingGroupFragment.new(qing_group, temp_group_children))
+        result.push(QingGroupFragment.new(qing_group, [child]))
+        temp_group_children = []
       else
-        add_qing_to_hash(qing_group_divided.children, qing_object)
+        temp_group_children.push(child)
       end
     end
-
-    store_qing_group(group, qing_group_divided)
-  end
-
-  def store_qing_group(group, new_qing_group)
-    @organized_descendants[group] ||= {}
-    unless new_qing_group.children.empty?
-      @organized_descendants[group][new_qing_group] = new_qing_group.children
-    end
-  end
-
-  def store_multilevel_qing_outside_a_group(qing_object)
-    store_regular_qing(qing_object)
-  end
-
-  def store_regular_qing(key)
-    add_qing_to_hash(@organized_descendants, key)
-  end
-
-  # Since we are mimicking the original groups organization, we set
-  # questionings as the key of the hash and no value for it. The views
-  # are iterating through the keys later and just ignoring the values.
-  def add_qing_to_hash(hash, key)
-    hash[key] = ''
+    result.push(QingGroupFragment.new(qing_group, temp_group_children)) unless temp_group_children.empty?
+    result
   end
 end
