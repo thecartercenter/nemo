@@ -7,12 +7,12 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
   let(:user) { create(:user, role_name: "observer") }
   let(:form) { create(:form, :published, :with_version, version: "abc", question_types: %w(text image)) }
   let(:mission) { form.mission }
+  let(:tmp_path) { Rails.root.join("tmp/submission.xml") }
 
   context "with single part" do
     it "should successfully process the submission" do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
-      submission_path = Rails.root.join("spec", "expectations", "odk", "responses", "single_part_media.xml")
-      submission_file = fixture_file_upload(submission_path, "text/xml")
+      submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
       post submission_path(mission), { xml_submission_file: submission_file, "the_swing.jpg" => image },
         "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
@@ -33,9 +33,7 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
     it "should successfully process the submission" do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       image2 = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
-
-      submission_path = Rails.root.join("spec", "expectations", "odk", "responses", "multiple_part_media.xml")
-      submission_file = fixture_file_upload(submission_path, "text/xml")
+      submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
 
       # Submit first part
       post submission_path(mission), {
@@ -69,5 +67,12 @@ describe "odk media submissions", type: :request, clean_with_truncation: true do
         expect(answer.media_object).to be_present if qing.qtype.multimedia?
       end
     end
+  end
+
+  def prepare_and_upload_submission_file(template)
+    File.open(tmp_path, "w") do |f|
+      f.write(prepare_odk_expectation("responses/#{template}", form))
+    end
+    fixture_file_upload(tmp_path, "text/xml")
   end
 end
