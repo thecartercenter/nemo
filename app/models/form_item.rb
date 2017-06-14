@@ -77,7 +77,7 @@ class FormItem < ApplicationRecord
   end
 
   def preordered_descendants
-    self.class.sort_by_ancestry(descendants.order(:rank))
+    self.class.sort_by_ancestry(descendants.order(:rank)) { |a, b| a.rank <=> b.rank }
   end
 
   def sorted_children

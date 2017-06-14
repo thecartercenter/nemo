@@ -1,6 +1,6 @@
 <?xml version='1.0' ?>
 <data id="*form1*" version="*formver1*">
-  <*qcode1*>Some words</*qcode1*>
-  <*qcode2*>the_swing.jpg</*qcode2*>
-  <*qcode3*>another_swing.jpg</*qcode3*>
+  <*itemcode1*>Some words</*itemcode1*>
+  <*itemcode2*>the_swing.jpg</*itemcode2*>
+  <*itemcode3*>another_swing.jpg</*itemcode3*>
 </data>

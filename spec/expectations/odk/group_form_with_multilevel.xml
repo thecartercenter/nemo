@@ -5,120 +5,120 @@
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
-          <*grpcode2*>
-            <*grpcode2*-header/>
-            <*qcode1*/>
-            <*qcode2*/>
-            <*qcode3*_1/>
-            <*qcode3*_2/>
-            <*qcode4*/>
-          </*grpcode2*>
+          <*itemcode1*>
+            <*itemcode1*-header/>
+            <*itemcode2*/>
+            <*itemcode3*/>
+            <*itemcode4*_1/>
+            <*itemcode4*_2/>
+            <*itemcode5*/>
+          </*itemcode1*>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="*grpcode2*-header:label">
+          <text id="*itemcode1*-header:label">
             <value>Group Name</value>
           </text>
-          <text id="*grpcode2*-header:hint">
+          <text id="*itemcode1*-header:hint">
             <value>Group Hint</value>
           </text>
-          <text id="*qcode1*:label">
+          <text id="*itemcode2*:label">
             <value>Text Question Title 1</value>
           </text>
-          <text id="*qcode1*:hint">
+          <text id="*itemcode2*:hint">
             <value>Question Hint 1</value>
           </text>
-          <text id="*qcode2*:label">
+          <text id="*itemcode3*:label">
             <value>Date Question Title 2</value>
           </text>
-          <text id="*qcode2*:hint">
+          <text id="*itemcode3*:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="*qcode3*_1:label">
+          <text id="*itemcode4*_1:label">
             <value>Multilevel Select One Question Title 3 - Kingdom</value>
           </text>
-          <text id="*qcode3*_1:hint">
+          <text id="*itemcode4*_1:hint">
             <value>Question Hint 3</value>
           </text>
-          <text id="*qcode3*_2:label">
+          <text id="*itemcode4*_2:label">
             <value>Multilevel Select One Question Title 3 - Species</value>
           </text>
-          <text id="*qcode3*_2:hint">
+          <text id="*itemcode4*_2:hint">
             <value>Question Hint 3</value>
           </text>
-          <text id="*qcode4*:label">
+          <text id="*itemcode5*:label">
             <value>Integer Question Title 4</value>
           </text>
-          <text id="*qcode4*:hint">
+          <text id="*itemcode5*:hint">
             <value>Question Hint 4</value>
           </text>
-          <text id="*optcode2*">
+          <text id="*optcode1*">
             <value>Animal</value>
           </text>
-          <text id="*optcode5*">
+          <text id="*optcode4*">
             <value>Plant</value>
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/*grpcode2*"/>
-      <bind nodeset="/data/*grpcode2*/*grpcode2*-header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*grpcode2*/*qcode1*" type="string"/>
-      <bind nodeset="/data/*grpcode2*/*qcode2*" type="date"/>
-      <bind nodeset="/data/*grpcode2*/*qcode3*_1" type="select1"/>
-      <bind nodeset="/data/*grpcode2*/*qcode3*_2" type="string"/>
-      <bind nodeset="/data/*grpcode2*/*qcode4*" type="int"/>
+      <bind nodeset="/data/*itemcode1*"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode3*" type="date"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*_1" type="select1"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*_2" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode5*" type="int"/>
     </model>
   </h:head>
   <h:body>
     <group>
       <label>Group Name</label>
       <group appearance="field-list">
-        <input ref="/data/*grpcode2*/*grpcode2*-header">
-          <hint ref="jr:itext('*grpcode2*-header:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode1*-header">
+          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
         </input>
-        <input ref="/data/*grpcode2*/*qcode1*">
-          <label ref="jr:itext('*qcode1*:label')"/>
-          <hint ref="jr:itext('*qcode1*:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode2*">
+          <label ref="jr:itext('*itemcode2*:label')"/>
+          <hint ref="jr:itext('*itemcode2*:hint')"/>
         </input>
-        <input ref="/data/*grpcode2*/*qcode2*">
-          <label ref="jr:itext('*qcode2*:label')"/>
-          <hint ref="jr:itext('*qcode2*:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode3*">
+          <label ref="jr:itext('*itemcode3*:label')"/>
+          <hint ref="jr:itext('*itemcode3*:hint')"/>
         </input>
       </group>
       <group appearance="field-list">
-        <input ref="/data/*grpcode2*/*grpcode2*-header">
-          <hint ref="jr:itext('*grpcode2*-header:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode1*-header">
+          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
         </input>
-        <select1 ref="/data/*grpcode2*/*qcode3*_1">
-          <label ref="jr:itext('*qcode3*_1:label')"/>
-          <hint ref="jr:itext('*qcode3*_1:hint')"/>
+        <select1 ref="/data/*itemcode1*/*itemcode4*_1">
+          <label ref="jr:itext('*itemcode4*_1:label')"/>
+          <hint ref="jr:itext('*itemcode4*_1:hint')"/>
           <item>
-            <label ref="jr:itext('*optcode2*')"/>
-            <value>*optcode2*</value>
+            <label ref="jr:itext('*optcode1*')"/>
+            <value>*optcode1*</value>
           </item>
           <item>
-            <label ref="jr:itext('*optcode5*')"/>
-            <value>*optcode5*</value>
+            <label ref="jr:itext('*optcode4*')"/>
+            <value>*optcode4*</value>
           </item>
         </select1>
       </group>
       <group appearance="field-list">
-        <input ref="/data/*grpcode2*/*grpcode2*-header">
-          <hint ref="jr:itext('*grpcode2*-header:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode1*-header">
+          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
         </input>
-        <input ref="/data/*grpcode2*/*qcode3*_2" query="instance('os1')/root/item[parent_id=/data/*grpcode2*/*qcode3*_1]">
-          <label ref="jr:itext('*qcode3*_2:label')"/>
-          <hint ref="jr:itext('*qcode3*_2:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode4*_2" query="instance('os1')/root/item[parent_id=/data/*itemcode1*/*itemcode4*_1]">
+          <label ref="jr:itext('*itemcode4*_2:label')"/>
+          <hint ref="jr:itext('*itemcode4*_2:hint')"/>
         </input>
       </group>
       <group appearance="field-list">
-        <input ref="/data/*grpcode2*/*grpcode2*-header">
-          <hint ref="jr:itext('*grpcode2*-header:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode1*-header">
+          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
         </input>
-        <input ref="/data/*grpcode2*/*qcode4*">
-          <label ref="jr:itext('*qcode4*:label')"/>
-          <hint ref="jr:itext('*qcode4*:hint')"/>
+        <input ref="/data/*itemcode1*/*itemcode5*">
+          <label ref="jr:itext('*itemcode5*:label')"/>
+          <hint ref="jr:itext('*itemcode5*:hint')"/>
         </input>
       </group>
     </group>

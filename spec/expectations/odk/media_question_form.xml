@@ -5,98 +5,98 @@
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
-          <*qcode1*/>
-          <*qcode2*/>
-          <*qcode3*/>
-          <*qcode4*/>
-          <*qcode5*/>
-          <*qcode6*/>
-          <*qcode7*/>
+          <*itemcode1*/>
+          <*itemcode2*/>
+          <*itemcode3*/>
+          <*itemcode4*/>
+          <*itemcode5*/>
+          <*itemcode6*/>
+          <*itemcode7*/>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="*qcode1*:label">
+          <text id="*itemcode1*:label">
             <value>Text Question Title 1</value>
           </text>
-          <text id="*qcode1*:hint">
+          <text id="*itemcode1*:hint">
             <value>Question Hint 1</value>
           </text>
-          <text id="*qcode2*:label">
+          <text id="*itemcode2*:label">
             <value>Image Question Title 2</value>
           </text>
-          <text id="*qcode2*:hint">
+          <text id="*itemcode2*:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="*qcode3*:label">
+          <text id="*itemcode3*:label">
             <value>Annotated Image Question Title 3</value>
           </text>
-          <text id="*qcode3*:hint">
+          <text id="*itemcode3*:hint">
             <value>Question Hint 3</value>
           </text>
-          <text id="*qcode4*:label">
+          <text id="*itemcode4*:label">
             <value>Sketch Question Title 4</value>
           </text>
-          <text id="*qcode4*:hint">
+          <text id="*itemcode4*:hint">
             <value>Question Hint 4</value>
           </text>
-          <text id="*qcode5*:label">
+          <text id="*itemcode5*:label">
             <value>Signature Question Title 5</value>
           </text>
-          <text id="*qcode5*:hint">
+          <text id="*itemcode5*:hint">
             <value>Question Hint 5</value>
           </text>
-          <text id="*qcode6*:label">
+          <text id="*itemcode6*:label">
             <value>Audio Question Title 6</value>
           </text>
-          <text id="*qcode6*:hint">
+          <text id="*itemcode6*:hint">
             <value>Question Hint 6</value>
           </text>
-          <text id="*qcode7*:label">
+          <text id="*itemcode7*:label">
             <value>Video Question Title 7</value>
           </text>
-          <text id="*qcode7*:hint">
+          <text id="*itemcode7*:hint">
             <value>Question Hint 7</value>
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/*qcode1*" type="string"/>
-      <bind nodeset="/data/*qcode2*" type="binary"/>
-      <bind nodeset="/data/*qcode3*" type="binary"/>
-      <bind nodeset="/data/*qcode4*" type="binary"/>
-      <bind nodeset="/data/*qcode5*" type="binary"/>
-      <bind nodeset="/data/*qcode6*" type="binary"/>
-      <bind nodeset="/data/*qcode7*" type="binary"/>
+      <bind nodeset="/data/*itemcode1*" type="string"/>
+      <bind nodeset="/data/*itemcode2*" type="binary"/>
+      <bind nodeset="/data/*itemcode3*" type="binary"/>
+      <bind nodeset="/data/*itemcode4*" type="binary"/>
+      <bind nodeset="/data/*itemcode5*" type="binary"/>
+      <bind nodeset="/data/*itemcode6*" type="binary"/>
+      <bind nodeset="/data/*itemcode7*" type="binary"/>
     </model>
   </h:head>
   <h:body>
-    <input ref="/data/*qcode1*">
-      <label ref="jr:itext('*qcode1*:label')"/>
-      <hint ref="jr:itext('*qcode1*:hint')"/>
+    <input ref="/data/*itemcode1*">
+      <label ref="jr:itext('*itemcode1*:label')"/>
+      <hint ref="jr:itext('*itemcode1*:hint')"/>
     </input>
-    <upload ref="/data/*qcode2*" mediatype="image/*">
-      <label ref="jr:itext('*qcode2*:label')"/>
-      <hint ref="jr:itext('*qcode2*:hint')"/>
+    <upload ref="/data/*itemcode2*" mediatype="image/*">
+      <label ref="jr:itext('*itemcode2*:label')"/>
+      <hint ref="jr:itext('*itemcode2*:hint')"/>
     </upload>
-    <upload appearance="annotate" ref="/data/*qcode3*" mediatype="image/*">
-      <label ref="jr:itext('*qcode3*:label')"/>
-      <hint ref="jr:itext('*qcode3*:hint')"/>
+    <upload appearance="annotate" ref="/data/*itemcode3*" mediatype="image/*">
+      <label ref="jr:itext('*itemcode3*:label')"/>
+      <hint ref="jr:itext('*itemcode3*:hint')"/>
     </upload>
-    <upload appearance="draw" ref="/data/*qcode4*" mediatype="image/*">
-      <label ref="jr:itext('*qcode4*:label')"/>
-      <hint ref="jr:itext('*qcode4*:hint')"/>
+    <upload appearance="draw" ref="/data/*itemcode4*" mediatype="image/*">
+      <label ref="jr:itext('*itemcode4*:label')"/>
+      <hint ref="jr:itext('*itemcode4*:hint')"/>
     </upload>
-    <upload appearance="signature" ref="/data/*qcode5*" mediatype="image/*">
-      <label ref="jr:itext('*qcode5*:label')"/>
-      <hint ref="jr:itext('*qcode5*:hint')"/>
+    <upload appearance="signature" ref="/data/*itemcode5*" mediatype="image/*">
+      <label ref="jr:itext('*itemcode5*:label')"/>
+      <hint ref="jr:itext('*itemcode5*:hint')"/>
     </upload>
-    <upload ref="/data/*qcode6*" mediatype="audio/*">
-      <label ref="jr:itext('*qcode6*:label')"/>
-      <hint ref="jr:itext('*qcode6*:hint')"/>
+    <upload ref="/data/*itemcode6*" mediatype="audio/*">
+      <label ref="jr:itext('*itemcode6*:label')"/>
+      <hint ref="jr:itext('*itemcode6*:hint')"/>
     </upload>
-    <upload ref="/data/*qcode7*" mediatype="video/*">
-      <label ref="jr:itext('*qcode7*:label')"/>
-      <hint ref="jr:itext('*qcode7*:hint')"/>
+    <upload ref="/data/*itemcode7*" mediatype="video/*">
+      <label ref="jr:itext('*itemcode7*:label')"/>
+      <hint ref="jr:itext('*itemcode7*:hint')"/>
     </upload>
   </h:body>
 </h:html>
