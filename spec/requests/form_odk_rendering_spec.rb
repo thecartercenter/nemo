@@ -7,19 +7,18 @@ describe "form rendering for odk", clean_with_truncation: true do
 
   before do
     login(user)
-    get(form_path(form, format: :xml))
   end
 
   context "sample form" do
     let!(:form) do
       create(:form, :published, :with_version,
-        version: "abc", question_types: %w(text long_text integer decimal location select_one
+        question_types: %w(text long_text integer decimal location select_one
           multilevel_select_one select_multiple datetime date time))
     end
 
     it "should render proper xml" do
-      expect(response).to be_success
-      expect(response.body).to match_xml prepare_odk_expectation("sample_form.xml", form)
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("sample_form.xml", form)
     end
   end
 
@@ -27,22 +26,22 @@ describe "form rendering for odk", clean_with_truncation: true do
     let(:first_question) { create(:question, qtype_name: "select_one") }
     let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
     let(:form) do
-      create(:form, :published, :with_version, version: "abc", questions: [[first_question, second_question]])
+      create(:form, :published, :with_version, questions: [[first_question, second_question]])
     end
 
     it "should render proper xml" do
-      expect(response).to be_success
-      expect(response.body).to match_xml prepare_odk_expectation("grid_form.xml", form)
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_form.xml", form)
     end
   end
 
   context "form with & in option name" do
     let(:option_set) { create(:option_set, option_names: ["Salt & Pepper", "Peanut Butter & Jelly"]) }
     let(:question) { create(:question, option_set: option_set) }
-    let(:form) { create(:form, :published, :with_version, version: "abc", questions: [question] ) }
+    let(:form) { create(:form, :published, :with_version, questions: [question] ) }
 
     it "should not have parsing errors" do
-      expect(response).to be_success
+      do_request_and_expect_success
       doc = Nokogiri::XML(response.body) { |config| config.noblanks }
       expect(doc.errors).to be_empty
     end
@@ -51,67 +50,76 @@ describe "form rendering for odk", clean_with_truncation: true do
   context "media question form" do
     let(:form) do
       create(:form, :published, :with_version,
-        version: "abc", question_types: %w(text image annotated_image sketch signature audio video))
+        question_types: %w(text image annotated_image sketch signature audio video))
     end
 
     it "should render proper XML" do
-      expect(response).to be_success
-      expect(response.body).to match_xml prepare_odk_expectation("media_question_form.xml", form)
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("media_question_form.xml", form)
     end
   end
 
   context "group form" do
     let(:form) do
-      form = create(:form, :published, :with_version,
-        version: "abc", question_types: [["text", "text", "text", "text"]])
+      create(:form, :published, :with_version, question_types: [["text", "text", "text", "text"]])
+    end
+
+    before do
       form.questionings.last.update_attributes!(hidden: true, required: true)
-      form
     end
 
     it "should render proper xml" do
-      expect(response).to be_success
-      expect(response.body).to match_xml prepare_odk_expectation("group_form.xml", form)
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form.xml", form)
     end
   end
 
   context "repeat group form" do
-    let(:form) do
-      form = create(:form, :published, :with_version,
-        version: "abc", question_types: [["text", "text", "text", "text"]])
+    let!(:form) do
+      create(:form, :published, :with_version, question_types: [["text", "text", "text", "text"]])
+    end
+
+    before do
       form.questionings.last.update_attributes!(hidden: true, required: true)
       form.child_groups.first.update_attributes!(repeatable: true)
-      form
     end
 
     it "should render proper xml" do
-      expect(response).to be_success
-      expect(response.body).to match_xml prepare_odk_expectation("repeat_group_form.xml", form)
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("repeat_group_form.xml", form)
     end
   end
 
   context "group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,
-        version: "abc", question_types: [["text", "date", "multilevel_select_one", "integer"]])
+        question_types: [["text", "date", "multilevel_select_one", "integer"]])
     end
 
     it "should render proper xml" do
-      expect(response).to be_success
-      expect(response.body).to match_xml prepare_odk_expectation("group_form_with_multilevel.xml", form)
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form_with_multilevel.xml", form)
     end
   end
 
   context "repeat group form with multilevel select" do
     let(:form) do
-      form = create(:form, :published, :with_version,
-        version: "abc", question_types: [["text", "date", "multilevel_select_one", "integer"]])
+      create(:form, :published, :with_version,
+        question_types: [["text", "date", "multilevel_select_one", "integer"]])
+    end
+
+    before do
       form.child_groups.first.update_attributes!(repeatable: true)
-      form
     end
 
     it "should render proper xml" do
-      expect(response).to be_success
-      expect(response.body).to match_xml prepare_odk_expectation("repeat_group_form_with_multilevel.xml", form)
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("repeat_group_form_with_multilevel.xml", form)
     end
+  end
+
+  def do_request_and_expect_success
+    get(form_path(form, format: :xml))
+    expect(response).to be_success
   end
 end

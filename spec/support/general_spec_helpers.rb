@@ -47,4 +47,8 @@ module GeneralSpecHelpers
     yield
     Time.zone = old_tz
   end
+
+  def tidyxml(str)
+    Nokogiri::XML(str) { |config| config.noblanks }.to_s
+  end
 end
