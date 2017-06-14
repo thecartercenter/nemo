@@ -24,15 +24,12 @@ module GeneralSpecHelpers
           contents.gsub!("*#{key}#{i + 1}*", value.to_s)
         end
       end
-      puts contents
     end
   end
 
   def prepare_odk_expectation(filename, form)
     items = form.preordered_items
     nodes = items.map { |item| item.preordered_option_nodes }.uniq.flatten
-    puts items.each_with_index.map { |n,i| "#{n.odk_code} => #{i + 1} (#{n.rank})" }.join("\n")
-    puts nodes.each_with_index.map { |n,i| "#{n.odk_code} => #{i + 1} (#{n.option.name})" }.join("\n")
     prepare_expectation("odk/#{filename}",
       form: [form.id],
       formver: [form.code],
