@@ -32,7 +32,7 @@ feature "forms flow", js: true do
         page.execute_script("window.localStorage.setItem('form_print_format_tips_shown', '#{date}')")
       end
 
-      scenario "should not show tip" do
+      scenario "should not show tip", :investigate do
         visit(forms_path)
 
         # Second time printing should not show tips.
