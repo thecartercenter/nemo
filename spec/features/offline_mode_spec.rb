@@ -30,11 +30,6 @@ feature "offline mode" do
   end
 
   context "offline mode off" do
-    around do |example|
-      configatron.offline_mode = false
-      example.run
-    end
-
     scenario "email sent" do
       expect { AdminMailer.error(StandardError.new).deliver_now }.to(
         change { ActionMailer::Base.deliveries.size }.by(1))
