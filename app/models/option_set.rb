@@ -157,7 +157,8 @@ class OptionSet < ApplicationRecord
   end
 
   def multilevel?
-    defined?(@multilevel) ? @multilevel : (@multilevel = root_node && root_node.has_grandchildren?)
+    return @multilevel if defined?(@multilevel)
+    @multilevel = !!root_node.try(:has_grandchildren?)
   end
   alias_method :multilevel, :multilevel?
 

@@ -166,6 +166,32 @@ describe Form do
     end
   end
 
+  describe "has_repeat_group?" do
+    context "for empty form" do
+      let(:form) { create(:form) }
+
+      it "should be false" do
+        expect(form.has_repeat_group?).to be false
+      end
+    end
+
+    context "for form with non-repeat group" do
+      let(:form) { create(:form, question_types: ["text", ["text", "text"]]) }
+
+      it "should be false" do
+        expect(form.has_repeat_group?).to be false
+      end
+    end
+
+    context "for form with repeat group" do
+      let(:form) { create(:form, question_types: ["text", {repeating: {q_types: ["text", "text"]}}]) }
+
+      it "should be true" do
+        expect(form.has_repeat_group?).to be true
+      end
+    end
+  end
+
   def publish_and_reset_pub_changed_at(options = {})
     f = options[:form] || @form
     f.publish!

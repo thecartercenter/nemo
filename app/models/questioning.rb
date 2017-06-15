@@ -44,7 +44,7 @@ class Questioning < FormItem
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
-  delegate :repeatable?, :group_name, to: :parent, prefix: true, allow_nil: true
+  delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
   scope(:visible, -> { where(hidden: false) })
 
@@ -76,6 +76,12 @@ class Questioning < FormItem
 
   def condition_changed?
     condition.try(:changed?)
+  end
+
+  # Checks if this Questioning is in a repeat group.
+  def repeatable?
+    # Questions can only be repeatable if they're in a group, which they can't be if they're level 1.
+    ancestry_depth > 1 && parent.repeatable?
   end
 
   # Gets full dotted ranks of all referring conditions' questionings.

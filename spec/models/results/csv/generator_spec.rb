@@ -1,8 +1,9 @@
 require 'spec_helper'
 
-describe ResponseCSV do
+describe Results::Csv::Generator, :reset_factory_sequences do
   let(:responses) { Response.with_associations.order(:created_at) }
-  let(:generated_csv) { ResponseCSV.new(responses).to_s }
+  let(:generated_csv) { Results::Csv::Generator.new(responses).to_s }
+  let(:ordered_responses) { Response.with_associations.order(:created_at) }
 
   around do |example|
     # Use a weird timezone so we know times are handled properly.
@@ -10,11 +11,6 @@ describe ResponseCSV do
     Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
     example.run
     Time.zone = @old_tz
-  end
-
-  before do
-    # We rely on FactoryGirl sequences in expectations
-    FactoryGirl.reload
   end
 
   context "with no data" do
