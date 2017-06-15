@@ -15,6 +15,10 @@ class QingGroup < FormItem
     @odk_code ||= "grp#{id}"
   end
 
+  def option_set_id
+    nil
+  end
+
   def preordered_option_nodes
     []
   end

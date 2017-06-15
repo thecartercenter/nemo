@@ -34,7 +34,8 @@ module GeneralSpecHelpers
       form: [form.id],
       formver: [form.code],
       itemcode: items.map(&:odk_code),
-      optcode: nodes.map(&:odk_code)
+      optcode: nodes.map(&:odk_code),
+      optsetid: items.map(&:option_set_id).compact.uniq
     )
   end
 

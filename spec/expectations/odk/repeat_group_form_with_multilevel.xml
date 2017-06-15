@@ -108,7 +108,7 @@
           <input ref="/data/*itemcode1*/*itemcode1*-header">
             <hint ref="jr:itext('*itemcode1*-header:hint')"/>
           </input>
-          <input ref="/data/*itemcode1*/*itemcode4*_2" query="instance('os1')/root/item[parent_id=/data/*itemcode1*/*itemcode4*_1]">
+          <input ref="/data/*itemcode1*/*itemcode4*_2" query="instance('os*optsetid1*')/root/item[parent_id=/data/*itemcode1*/*itemcode4*_1]">
             <label ref="jr:itext('*itemcode4*_2:label')"/>
             <hint ref="jr:itext('*itemcode4*_2:hint')"/>
           </input>
