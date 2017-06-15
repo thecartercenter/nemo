@@ -3,8 +3,8 @@
   <%= data_tag @form, @style do %>
     <% @form.arrange_descendants.each do |item, subtree| %>
       <% if item.is_a?(QingGroup) %>
-        <% attrs = item.repeatable ? {"jr:template" => ""} : {} %>
-        <%= content_tag(item.odk_code, @attrs) do %>
+        <% attrs = item.repeatable? ? {"jr:template" => ""} : {} %>
+        <%= content_tag(item.odk_code, attrs) do %>
           <%= tag("#{item.odk_code}-header") %>
           <% subtree.keys.each do |qing| %>
             <% unless qing.hidden %>
