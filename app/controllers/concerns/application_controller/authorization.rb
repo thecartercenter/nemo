@@ -66,7 +66,6 @@ module Concerns::ApplicationController::Authorization
   end
 
   def offline_mode?
-    # Need to test explicitly for true here because configatron is silly.
-    configatron.offline_mode == true
+    configatron.offline_mode
   end
 end

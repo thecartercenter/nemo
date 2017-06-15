@@ -411,7 +411,7 @@ class User < ApplicationRecord
     end
 
     def print_password_reset_only_for_observer
-      if reset_password_method == "print" && !observer_only? && configatron.offline_mode != true
+      if reset_password_method == "print" && !observer_only? && !configatron.offline_mode
         errors.add(:reset_password_method, :print_password_reset_only_for_observer)
       end
     end
