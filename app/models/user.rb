@@ -312,7 +312,7 @@ class User < ApplicationRecord
   end
 
   def observer_only?
-    assignments.all?{ |a| a.role === "observer" }
+    assignments.all? { |a| a.role === "observer" }
   end
 
   def session_time_left
@@ -411,7 +411,7 @@ class User < ApplicationRecord
     end
 
     def print_password_reset_only_for_observer
-      if reset_password_method == "print" && !observer_only?
+      if reset_password_method == "print" && !observer_only? && configatron.offline_mode != true
         errors.add(:reset_password_method, :print_password_reset_only_for_observer)
       end
     end
