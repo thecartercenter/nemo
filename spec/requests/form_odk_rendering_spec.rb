@@ -1,7 +1,6 @@
 require "spec_helper"
 
-# We need to clean with truncation here b/c we use hard coded id's in expectation.
-describe "form rendering for odk", clean_with_truncation: true do
+describe "form rendering for odk", :reset_factory_sequences do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
 

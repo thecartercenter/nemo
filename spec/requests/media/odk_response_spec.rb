@@ -1,7 +1,7 @@
 require "spec_helper"
 require "support/media_spec_helpers"
 
-describe "odk media submissions", type: :request, clean_with_truncation: true do
+describe "odk media submissions", :reset_factory_sequences, type: :request do
   include ODKSubmissionSupport
 
   let(:user) { create(:user, role_name: "observer") }
