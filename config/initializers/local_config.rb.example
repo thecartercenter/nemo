@@ -46,6 +46,12 @@ ActionMailer::Base.smtp_settings = {
 # Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
 configatron.google_maps_api_key = "xxx"
 
+# Offline mode.
+# If set to true, you can't reset passwords via email or send broadcasts.
+# Email error reports are also not sent.
+# This should be set to true if the server doesn't have an internet connection.
+configatron.offline_mode = false
+
 # Allows submissions without password via the /noauth/submission route.
 # This setting overrides the per-mission setting.
 # Also, if not true, the per-mission setting will not be available in UI.

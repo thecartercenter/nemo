@@ -64,4 +64,8 @@ module Concerns::ApplicationController::Authorization
       redirect_to(new_login_confirmation_url)
     end
   end
+
+  def offline_mode?
+    configatron.offline_mode
+  end
 end

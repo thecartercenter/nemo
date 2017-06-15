@@ -1,14 +1,13 @@
-<%= elmo_form_for(@user_session, :url => user_session_path, :html => { :class => :minimal }) do |f| %>
+<%= elmo_form_for(@user_session, url: user_session_path, html: {class: :minimal}) do |f| %>
   <%= f.field(:login) %>
-  <%= f.field(:password, :type => :password) %>
-  <%= f.field(:verify, :content => recaptcha_tags) if captcha_required? %>
+  <%= f.field(:password, type: :password) %>
+  <%= f.field(:verify, content: recaptcha_tags) if captcha_required? %>
   <div class="submit-buttons">
-    <%= f.submit(:login, :class => "btn btn-primary") %><br/><br/>
-    <%= link_to(t("user.forgot_password"), new_password_reset_path) %>
+    <%= f.submit(:login, class: "btn btn-primary") %><br/><br/>
+    <%= link_to(t("user.forgot_password"), new_password_reset_path) unless offline_mode? %>
   </div>
 <% end %>
 
 <%= javascript_doc_ready do %>
   $("input#user_session_login").focus();
 <% end %>
-

@@ -1,6 +1,10 @@
 module BroadcastsHelper
   def broadcasts_index_links(broadcasts)
-    can?(:create, Broadcast) ? [link_to(t("broadcast.send_broadcast"), new_broadcast_path)] : []
+    if can?(:create, Broadcast) && !offline_mode?
+      [link_to(t("broadcast.send_broadcast"), new_broadcast_path)]
+    else
+      []
+    end
   end
 
   def broadcasts_index_fields
