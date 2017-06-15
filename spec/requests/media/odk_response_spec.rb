@@ -71,8 +71,16 @@ describe "odk media submissions", :reset_factory_sequences, type: :request do
 
   def prepare_and_upload_submission_file(template)
     File.open(tmp_path, "w") do |f|
-      f.write(prepare_odk_expectation("responses/#{template}", form))
+      f.write(prepare_odk_expectation(template, form))
     end
     fixture_file_upload(tmp_path, "text/xml")
+  end
+
+  def prepare_odk_expectation(filename, form)
+    prepare_expectation("odk/responses/#{filename}",
+      form: [form.id],
+      formver: [form.code],
+      itemcode: form.preordered_items.map(&:odk_code)
+    )
   end
 end
