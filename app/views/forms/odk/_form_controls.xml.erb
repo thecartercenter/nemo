@@ -3,13 +3,14 @@
     <%= render('forms/odk/questioning', qing: node) unless node.hidden %>
   <% else %>
     <% if node.sorted_children.none?{|child| child.is_a?(QingGroup)} %>
-      <% organize_qing_groups({node => node.arrange_descendants}).each do |item, subtree| %>
+      <% QingGroupOdkPartitioner.new.fragment(node).each do |fragment| %>
+        <% subtree = fragment.is_a?(QingGroup) ? fragment.arrange_descendants : {} %>
         <%= content_tag("group") do %>
-          <%= content_tag("label", item.group_name) %>
+          <%= content_tag("label", fragment.group_name) %>
           <% if node.repeatable %>
-            <%= render('forms/odk/repeat_group', group: item, fragments: subtree) %>
+            <%= render('forms/odk/repeat_group', group: fragment, fragments: subtree) %>
           <% else %>
-            <%= render('forms/odk/group', group: item, fragments: subtree) %>
+            <%= render('forms/odk/group', group: fragment, fragments: subtree) %>
           <% end %>
         <% end %>
       <% end%>
