@@ -1,0 +1,22 @@
+<% if node.childless? %>
+  <%= render('forms/odk/questioning', qing: node, grid_mode: nil, label_row: nil, group: parent) unless node.hidden %>
+<% else %>
+  <%= content_tag("group") do %>
+    <%= content_tag("label", node.group_name) %>
+    <% if node.repeatable? %>
+      <% node_id_string = "/data/grp-#{node.id}" %>
+      <repeat nodeset="<%=node_id_string%>">
+    <% end %>
+      <group appearance="field-list">
+        <input ref="/data/grp-2/grp-header2">
+          <hint ref="jr:itext('grp-header2:hint')"/>
+        </input>
+        <% node.sorted_children.each do |child| %>
+          <%= render('forms/odk/form_controls_node', node: child, parent: node) %>
+        <% end %>
+      </group>
+    <% if node.repeatable? %>
+  </repeat>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,19 +1,3 @@
 <% @form.sorted_children.each do |node| %>
-  <% if node.is_childless? %>
-    <%= render('forms/odk/questioning', qing: node) unless node.hidden %>
-  <% else %>
-    <% if node.sorted_children.none?{|child| child.is_a?(QingGroup)} %>
-      <% QingGroupOdkPartitioner.new.fragment(node).each do |fragment| %>
-        <% subtree = fragment.is_a?(QingGroup) ? fragment.arrange_descendants : {} %>
-        <%= content_tag("group") do %>
-          <%= content_tag("label", fragment.group_name) %>
-          <% if node.repeatable %>
-            <%= render('forms/odk/repeat_group', group: fragment, fragments: subtree) %>
-          <% else %>
-            <%= render('forms/odk/group', group: fragment, fragments: subtree) %>
-          <% end %>
-        <% end %>
-      <% end%>
-    <% end %>
-  <% end %>
+  <%= render "forms/odk/form_controls_node", node: node, parent: nil%>
 <% end %>
