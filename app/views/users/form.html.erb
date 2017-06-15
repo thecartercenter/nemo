@@ -44,8 +44,7 @@
       <%# Password reset %>
       <% verb = @user.new_record? ? "choose" : "reset" %>
       <% label = t("user.reset_password_label_#{verb}") %>
-      <% hint = t("user.reset_password_hint_#{verb}") + " " +
-        t("user.reset_password_hint_ending", verb: t("common.#{verb}").downcase) %>
+      <% hint = t("user.reset_password_hint_#{verb}") %>
       <%= f.field(:reset_password_method, label: label, hint: hint, partial: "reset_password_method") %>
     <% end %>
   <% end %>
