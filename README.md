@@ -10,6 +10,7 @@ Consider ELMO if you need:
 - Advanced user management with multiple permission levels
 - SMS broadcasting
 - Custom, real-time reporting
+- Offline operation in poorly-connected areas
 
 To learn more about the history and goals of the project, [visit the ELMO project site](http://getelmo.org).
 You can also learn more about The Carter Center's Election Standards [here](http://cartercenter.org).
