@@ -57,6 +57,12 @@ feature "user form password field" do
           click_button("Save")
           expect(page).to have_content("Printed instructions are only available to observers.")
         end
+
+        scenario "setting observer password via printable should be unavailable in admin mode" do
+          visit "/en/admin/users/new"
+          expect(page).to have_content("Send email instructions")
+          expect(page).not_to have_content("Show printable instructions")
+        end
       end
 
       context "offline mode" do
@@ -79,13 +85,24 @@ feature "user form password field" do
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
+
+        scenario "setting observer password via printable should work in admin mode" do
+          visit "/en/admin/users/new"
+          expect(page).to have_content("Show printable instructions")
+          expect(page).not_to have_content("Send email instructions")
+          fill_out_form(role: nil, admin: true)
+          choose("Show printable instructions")
+          click_button("Save")
+          expect(page).to have_content("Login Instructions")
+        end
       end
 
-      def fill_out_form(role: "Observer", email: true)
+      def fill_out_form(role: "Observer", email: true, admin: false)
         fill_in("* Full Name", with: "Foo")
         fill_in("* Username", with: "foo")
-        select role, from: "user_assignments_attributes_0_role"
+        select role, from: "user_assignments_attributes_0_role" unless role.nil?
         fill_in("Email", with: "foo@bar.com") if email
+        check("Is Administrator?") if admin
       end
     end
 
