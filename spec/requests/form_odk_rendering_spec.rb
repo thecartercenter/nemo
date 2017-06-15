@@ -121,4 +121,16 @@ describe "form rendering for odk", :reset_factory_sequences do
     get(form_path(form, format: :xml))
     expect(response).to be_success
   end
+
+  def prepare_odk_expectation(filename, form)
+    items = form.preordered_items
+    nodes = items.map { |item| item.preordered_option_nodes }.uniq.flatten
+    prepare_expectation("odk/#{filename}",
+      form: [form.id],
+      formver: [form.code],
+      itemcode: items.map(&:odk_code),
+      optcode: nodes.map(&:odk_code),
+      optsetid: items.map(&:option_set_id).compact.uniq
+    )
+  end
 end
