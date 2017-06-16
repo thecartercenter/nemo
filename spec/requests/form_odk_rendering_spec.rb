@@ -32,6 +32,7 @@ describe "form rendering for odk", clean_with_truncation: true do
 
     it "should render proper xml" do
       expect(response).to be_success
+      puts response.body
       expect(response.body).to match_xml expectation_file("odk/grid_form.xml")
     end
   end
@@ -98,32 +99,33 @@ describe "form rendering for odk", clean_with_truncation: true do
           {repeating:
             {
               items:
-                ["text",
-                  "text",
+                ["text", #q1
+                  "text", #q2
                   {
                     repeating:
                       {
-                        items: ["integer", "integer"],
+                        items: ["integer", "integer"], #q3,q4
                         name: "Repeat Group A"
                       }
                   },
-                  "long_text" #q8
+                  "long_text" #q5
                 ],
                 name: "Repeat Group 1"
             }
-          }#,
-          # "text", #q9
-          # {
-          #   repeating: {
-          #     items: ["text"], #q10
-          #     name: "Repeat Group 2"
-          #   }
-          # }
+          },
+          "text", #q6
+           {
+            repeating: {
+              items: ["text"], #q7
+              name: "Repeat Group 2"
+            }
+          }
       ])
     end
 
     it "should render proper xml" do
       expect(response).to be_success
+      puts response.body
       expect(response.body).to match_xml expectation_file("odk/nested_repeat_group_form.xml")
     end
   end
@@ -136,6 +138,8 @@ describe "form rendering for odk", clean_with_truncation: true do
 
     it "should render proper xml" do
       expect(response).to be_success
+
+      puts response.body
       expect(response.body).to match_xml expectation_file("odk/group_form_with_multilevel.xml")
     end
   end
@@ -150,6 +154,7 @@ describe "form rendering for odk", clean_with_truncation: true do
 
     it "should render proper xml" do
       expect(response).to be_success
+      puts response.body
       expect(response.body).to match_xml expectation_file("odk/repeat_group_form_with_multilevel.xml")
     end
   end
