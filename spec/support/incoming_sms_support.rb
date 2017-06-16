@@ -45,6 +45,8 @@ module IncomingSmsSupport
       expect(reply.body).not_to match(/%\{|translation missing/)
       expect(reply.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
     end
+
+    reply
   end
 
   # builds and sends the HTTP POST request to mimic incoming adapter
