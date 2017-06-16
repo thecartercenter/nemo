@@ -2,10 +2,15 @@
   <% puts "node #{node.id} childless" %>
   <%= render('forms/odk/questioning', qing: node, grid_mode: nil, label_row: nil, group: parent) unless node.hidden %>
 <% else %>
-  <% unless node.is_a?(QingGroupFragment) %>
+  <% if node.is_a?(QingGroup) %>
     <group>
     <%= content_tag("label", node.group_name) %>
-  <% end #qgf open%>
+    <% if node.repeatable %>
+      <% puts "node #{node.id} repeatable" %>
+      <% node_id_string = "/data/grp-#{node.id}" %>
+      <repeat nodeset="<%=node_id_string%>">
+    <% end #node.repeatable%>
+  <% end # is qg open%>
   <% fragments = QingGroupOdkPartitioner.new.fragment(node) %>
   <% puts fragments.awesome_inspect %>
   <% if fragments.present? %>
@@ -17,11 +22,7 @@
     <% puts "node #{node.id} has NO fragments" %>
 
 
-      <% if node.repeatable %>
-        <% puts "node #{node.id} repeatable" %>
-        <% node_id_string = "/data/grp-#{node.id}" %>
-        <repeat nodeset="<%=node_id_string%>">
-      <% end #node.repeatable%>
+
       <% unless node.try(:multilevel?)  %>
       <group appearance="field-list">
         <input ref="<%= "/data/grp-#{node.try(:id)}/grp-header#{node.try(:id)}"%>">
@@ -35,13 +36,15 @@
       <% unless node.try(:multilevel?) %>
         </group>
       <% end #multilevel close %>
-      <% if node.repeatable %>
-        <% puts "node #{node.id} repeatable" %>
-        </repeat>
-      <% end #node repeatable%>
+
 
   <% end #no fragments%>
-  <% unless node.is_a?(QingGroupFragment) %>
+
+  <% if node.is_a?(QingGroup) %>
+    <% if node.repeatable %>
+      <% puts "node #{node.id} repeatable" %>
+      </repeat>
+    <% end #node repeatable%>
     </group>
-  <% end #qgf end%>
+  <% end #qg end%>
 <% end #node childless%>
