@@ -1,6 +1,6 @@
 <% if node.childless? %>
   <% puts "node #{node.id} childless" %>
-  <%= render('forms/odk/questioning', qing: node, grid_mode: nil, label_row: nil, group: parent) unless node.hidden %>
+  <%= render('forms/odk/questioning', qing: node, grid_mode: grid_mode, label_row: nil, group: parent) unless node.hidden %>
 <% else %>
   <% if node.is_a?(QingGroup) %>
     <group>
@@ -16,22 +16,24 @@
   <% if fragments.present? %>
     <% puts "node #{node.id} has fragments" %>
     <% fragments.each do |fragment| %>
-      <%= render('forms/odk/form_controls_node', node: fragment, parent: nil) %>
+      <%= render('forms/odk/form_controls_node', node: fragment, parent: nil, grid_mode: false) %>
     <% end %>
   <% else #no fragments%>
     <% puts "node #{node.id} has NO fragments" %>
-
-
-
       <% unless node.try(:multilevel?)  %>
       <group appearance="field-list">
         <input ref="<%= "/data/grp-#{node.try(:id)}/grp-header#{node.try(:id)}"%>">
           <hint ref="jr:itext('grp-header<%= node.try(:id) %>:hint')"/>
         </input>
       <% end #multilevel open %>
+      <% child_grid_mode = grid_mode?(node.sorted_children) %>
+      <% if child_grid_mode %>
+        <% puts "GRID MODE!!!" %>
+        <%= render('forms/odk/questioning', qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node) %>
+      <% end #grid mode%>
       <% node.sorted_children.each do |child| %>
         <% puts "about to render child #{child.id} of node #{node.id}" %>
-        <%= render('forms/odk/form_controls_node', node: child, parent: node) %>
+        <%= render('forms/odk/form_controls_node', node: child, parent: node, grid_mode: child_grid_mode) %>
       <% end #sorted_children%>
       <% unless node.try(:multilevel?) %>
         </group>
