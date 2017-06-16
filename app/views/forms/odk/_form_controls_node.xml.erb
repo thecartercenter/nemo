@@ -1,30 +1,47 @@
 <% if node.childless? %>
+  <% puts "node #{node.id} childless" %>
   <%= render('forms/odk/questioning', qing: node, grid_mode: nil, label_row: nil, group: parent) unless node.hidden %>
 <% else %>
+  <% unless node.is_a?(QingGroupFragment) %>
+    <group>
+    <%= content_tag("label", node.group_name) %>
+  <% end #qgf open%>
   <% fragments = QingGroupOdkPartitioner.new.fragment(node) %>
-  <% if fragments %>
+  <% puts fragments.awesome_inspect %>
+  <% if fragments.present? %>
+    <% puts "node #{node.id} has fragments" %>
     <% fragments.each do |fragment| %>
       <%= render('forms/odk/form_controls_node', node: fragment, parent: nil) %>
     <% end %>
   <% else #no fragments%>
-  <%= content_tag("group") do %>
-    <%= content_tag("label", node.group_name) %>
+    <% puts "node #{node.id} has NO fragments" %>
 
-    <% if node.repeatable %>
-      <% node_id_string = "/data/grp-#{node.id}" %>
-      <repeat nodeset="<%=node_id_string%>">
-    <% end %>
-    <group appearance="field-list">
-      <input ref="<%= "/data/grp-#{node.try(:id)}/grp-header#{node.try(:id)}"%>">
-        <hint ref="jr:itext('grp-header<%= node.try(:id) %>:hint')"/>
-      </input>
-    <% node.sorted_children.each do |child| %>
+
+      <% if node.repeatable %>
+        <% puts "node #{node.id} repeatable" %>
+        <% node_id_string = "/data/grp-#{node.id}" %>
+        <repeat nodeset="<%=node_id_string%>">
+      <% end #node.repeatable%>
+      <% unless node.try(:multilevel?)  %>
+      <group appearance="field-list">
+        <input ref="<%= "/data/grp-#{node.try(:id)}/grp-header#{node.try(:id)}"%>">
+          <hint ref="jr:itext('grp-header<%= node.try(:id) %>:hint')"/>
+        </input>
+      <% end #multilevel open %>
+      <% node.sorted_children.each do |child| %>
+        <% puts "about to render child #{child.id} of node #{node.id}" %>
         <%= render('forms/odk/form_controls_node', node: child, parent: node) %>
-    <% end %>
-  </group>
-    <% if node.repeatable %>
-      </repeat>
-    <% end %>
-    <% end%>
-  <% end %>
-<% end %>
+      <% end #sorted_children%>
+      <% unless node.try(:multilevel?) %>
+        </group>
+      <% end #multilevel close %>
+      <% if node.repeatable %>
+        <% puts "node #{node.id} repeatable" %>
+        </repeat>
+      <% end #node repeatable%>
+
+  <% end #no fragments%>
+  <% unless node.is_a?(QingGroupFragment) %>
+    </group>
+  <% end #qgf end%>
+<% end #node childless%>
