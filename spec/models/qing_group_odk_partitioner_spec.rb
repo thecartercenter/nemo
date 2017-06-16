@@ -22,11 +22,14 @@ describe QingGroupOdkPartitioner do
 
     end
 
-    it "doesn't create new groups if there isn't a multilevel question on it" do
-      results = QingGroupOdkPartitioner.new.fragment(form.sorted_children.last)
+    it "return nil if there isn't a multilevel question on it" do
+      result = QingGroupOdkPartitioner.new.fragment(form.sorted_children.last)
 
-      expect(results.size).to eq(1)
-      expect(results[0]).to be_a QingGroup
+      expect(result).to be_nil
+    end
+
+    it "returns nil if the group is not a bottom-level group" do
+
     end
   end
 end

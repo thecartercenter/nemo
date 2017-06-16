@@ -16,8 +16,8 @@
 class QingGroupOdkPartitioner
 
   def fragment(qing_group)
-    result = [qing_group]
-    if qing_group.children.any? {|c| c.multilevel?}
+    result = nil
+    if qing_group.sorted_children.none? {|child| child.is_a?(QingGroup)} && qing_group.children.any? {|c| c.multilevel?} && qing_group.children.count > 1
       result = split_qing_group_as_necessary(qing_group)
     end
     result

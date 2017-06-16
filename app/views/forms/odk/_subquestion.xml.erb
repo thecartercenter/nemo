@@ -12,10 +12,10 @@
   <%# ODK wants the first-level options here for select questions, so we check if subq is first_rank. %>
   <%# Options from other levels go in itemsets.csv. %>
   <% if subq.has_options? && subq.first_rank? %>
-    <% subq.option_set.sorted_children.each do |node| %>
+    <% subq.option_set.sorted_children.each do |ch| %>
       <item>
-        <label ref="jr:itext('on<%= node.id %>')"/>
-        <value>on<%= node.id %></value>
+        <label ref="jr:itext('on<%= ch.id %>')"/>
+        <value>on<%= ch.id %></value>
       </item>
     <% end %>
   <% end  %>
