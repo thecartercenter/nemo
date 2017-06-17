@@ -111,7 +111,7 @@ describe "incoming sms", :sms do
 
       it "should get error reply" do
         assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x",
-          outgoing: /couldn't find you/, mission: nil)
+          outgoing: /couldn't find you/)
       end
     end
   end
@@ -169,7 +169,7 @@ describe "incoming sms", :sms do
 
       it "should still result in error message" do
         Timecop.travel(10.minutes) do
-          assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/, mission: nil)
+          assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/)
         end
       end
     end
