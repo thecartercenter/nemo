@@ -28,7 +28,7 @@ class Report::AnswerTallyReport < Report::TallyReport
 
     # add question grouping
     expr = question_labels == "title" ? "questions.name_translations" : "questions.code"
-    rel = rel.select("#{expr} AS pri_name, #{expr} AS pri_value, 'text' AS pri_type")
+    rel = rel.select("#{expr} AS pri_name, #{expr} AS pri_value, 'text'::text AS pri_type")
     joins << :questions
     rel = rel.group(expr)
 
@@ -73,7 +73,8 @@ class Report::AnswerTallyReport < Report::TallyReport
       rel = rel.where("(" + where_exprs.collect{|e| e.sql}.join(" OR ") + ")")
 
       # sort by sort expression
-      rel = rel.order("option_sets.name, sec_sort_value, pri_value")
+      # Moved pri_value ahead of sec_sort_value to make this deterministic (hopefully).
+      rel = rel.order("option_sets.name, pri_value, sec_sort_value")
     end
 
     # add joins to relation
