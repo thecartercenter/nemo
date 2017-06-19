@@ -111,7 +111,7 @@ describe "incoming sms", :sms do
 
       it "should get error reply" do
         assert_sms_response(from: "+737377373773", incoming: "#{form_code} 1.x 2.x",
-          outgoing: /couldn't find you/, mission: nil)
+          outgoing: /couldn't find you/)
       end
     end
   end
@@ -169,7 +169,7 @@ describe "incoming sms", :sms do
 
       it "should still result in error message" do
         Timecop.travel(10.minutes) do
-          assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/, mission: nil)
+          assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /duplicate/)
         end
       end
     end
@@ -326,6 +326,54 @@ describe "incoming sms", :sms do
           end.to raise_error(Sms::Error)
         end
       end
+    end
+  end
+
+  context "with duplicate phone numbers" do
+    # setup extra mission
+    let!(:missionless_url) { true }
+    let!(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
+    let!(:extra_mission) { create(:mission) }
+
+    # setup users
+    let!(:auth_code_user) { create(:user, phone: "+1-646-555-2638") }
+    let!(:mission_user) { create(:user, phone2: "+1-646-555-2638", mission: extra_mission) }
+    let!(:oldest_user) { create(:user, phone: "+1-646-555-2638", created_at: 2.months.ago) }
+
+    # setup forms
+    let!(:authenticated_form) { setup_form(questions: %w(integer text), authenticate_sms: true) }
+    let!(:mission_form) { setup_form(questions: %w(integer text), mission: extra_mission) }
+    let!(:oldest_form) { setup_form(questions: %w(integer text)) }
+
+    it "should get the user with the matching auth code if it's available" do
+      reply = assert_sms_response(
+        from: auth_code_user.phone,
+        incoming: { body: "#{auth_code_user.sms_auth_code} #{authenticated_form.code} 1.5 2.Y" },
+        outgoing: /#{authenticated_form.code}.+thank you/i,
+        url: submission_url)
+      user = reply.user
+      expect(user.id).to eq auth_code_user.id
+    end
+
+    it "should get the user that matches the mission if it cannot match the auth code" do
+      reply = assert_sms_response(
+        from: mission_user.phone2,
+        incoming: { body: "#{mission_form.code} 1.5 2.Y" },
+        outgoing: /#{mission_form.code}.+thank you/i,
+        mission: extra_mission,
+        url: submission_url)
+      user = reply.user
+      expect(user.id).to eq mission_user.id
+    end
+
+    it "should get the oldest user otherwise" do
+      reply = assert_sms_response(
+        from: oldest_user.phone,
+        incoming: { body: "#{oldest_form.code} 1.5 2.Y" },
+        outgoing: /#{oldest_form.code}.+thank you/i,
+        url: submission_url)
+      user = reply.user
+      expect(user.id).to eq oldest_user.id
     end
   end
 end
