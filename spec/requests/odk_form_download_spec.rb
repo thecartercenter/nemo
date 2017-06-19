@@ -17,13 +17,14 @@ describe FormsController, type: :request do
 
   context "for regular mission" do
     describe "listing forms" do
-      it "should succeed", :investigate do
-        get_s( "/en/m/#{mission.compact_name}/formList", format: :xml)
+      it "should succeed" do
+        get_s("/en/m/#{mission.compact_name}/formList", format: :xml)
 
-        # Only form3 should have a manifest.
+        # Only form_multiselect should have a manifest.
         assert_select("xform", count: 3) do |elements|
-          elements.each_with_index do |e,i|
-            assert_select(e, "manifestUrl", count: i == 2 ? 1 : 0)
+          elements.each do |element|
+            should_have_manifest = element.to_s.include?(":#{form_multiselect.id}</formID>")
+            assert_select(element, "manifestUrl", should_have_manifest ? 1 : 0)
           end
         end
       end
