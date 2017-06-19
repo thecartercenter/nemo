@@ -8,9 +8,9 @@
 #  QingGroup qgroup
 #     with children: Qing1, Qing2, MultilevelQing, Qing3
 # Output:
-#  [ QingGroupTransient with children Qing1 and Qing2,
-#    QingGroupTransient with child MultilevelQing,
-#    QingGroupTransient with child Qing3
+#  [ QingGroupFragment with children Qing1 and Qing2,
+#    QingGroupFragment with child MultilevelQing,
+#    QingGroupFragment with child Qing3
 #   ]
 #
 class QingGroupOdkPartitioner
