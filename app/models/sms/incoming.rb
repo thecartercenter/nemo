@@ -1,5 +1,8 @@
 class Sms::Incoming < Sms::Message
-  # Lookup the sender.
+  # Lookup the sender. We do this here in addition to
+  # in the decoder because having this information available
+  # as early as possible allows us to better handle error messages
+  # and saves the decoder some work if we already have the user assigned.
   before_create :set_user
 
   def sender

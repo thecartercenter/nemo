@@ -134,15 +134,18 @@ class Sms::Decoder
 
     # check auth code
     auth_code = @tokens.first if @tokens.first =~ AUTH_CODE_FORMAT
-    @user ||= possible_users.find_by(sms_auth_code: auth_code)
-
+    @user = possible_users.find_by(sms_auth_code: auth_code)
 
     # check assigned to mission
-    possible_users = possible_users.assigned_to(@msg.mission)
-    @user ||= possible_users.first if possible_users.count == 1
+    unless @user.present?
+      possible_users = possible_users.assigned_to(@msg.mission)
+      @user = possible_users.first if possible_users.count == 1
+    end
 
     # otherwise pick the oldest user
-    @user ||= possible_users.order(created_at: :asc).first
+    unless @user.present?
+      @user = possible_users.order(created_at: :asc).first
+    end
 
     # save user
     @msg.user = @user
