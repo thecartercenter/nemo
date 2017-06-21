@@ -1,215 +1,487 @@
 answers:
   class: Answer
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    answers_full:
+      fields: ["response_id", "questioning_id", "inst_num", "rank"]
+      unique: true
+      name: answers_full
   foreign_keys:
     actual:
-      option_id: options
-      questioning_id: form_items
-      response_id: responses
+      option_id:
+        foreign_table: options
+        name: answers_option_id_fkey
+      questioning_id:
+        foreign_table: form_items
+        name: answers_questioning_id_fkey
+      response_id:
+        foreign_table: responses
+        name: answers_response_id_fkey
 
 assignments:
   class: Assignment
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      mission_id: missions
-      user_id: users
+      mission_id:
+        foreign_table: missions
+        name: assignments_mission_id_fkey
+      user_id:
+        foreign_table: users
+        name: assignments_user_id_fkey
 
 broadcast_addressings:
   class: BroadcastAddressing
   foreign_keys:
     actual:
-      broadcast_id: broadcasts
+      broadcast_id:
+        foreign_table: broadcasts
+        name: broadcast_addressings_broadcast_id_fkey
     polymorphic:
       addressee_id:
+        kind: addressee
         type_column: addressee_type
 
 broadcasts:
   class: Broadcast
   foreign_keys:
     actual:
-      mission_id: missions
+      mission_id:
+        foreign_table: missions
+        name: broadcasts_mission_id_fkey
 
 choices:
   class: Choice
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      answer_id: answers
-      option_id: options
+      answer_id:
+        foreign_table: answers
+        name: choices_answer_id_fkey
+      option_id:
+        foreign_table: options
+        name: choices_option_id_fkey
 
 conditions:
   class: Condition
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      mission_id: missions
-      option_node_id: option_nodes
-      questioning_id: form_items
-      ref_qing_id: form_items
+      mission_id:
+        foreign_table: missions
+        name: conditions_mission_id_fkey
+      option_node_id:
+        foreign_table: option_nodes
+        name: conditions_option_node_id_fkey
+      questioning_id:
+        foreign_table: form_items
+        name: conditions_questioning_id_fkey
+      ref_qing_id:
+        foreign_table: form_items
+        name: conditions_ref_qing_id_fkey
 
 form_forwardings:
   class: FormForwarding
+  indexes:
+    form_forwardings_full:
+      fields: ["form_id", "recipient_id", "recipient_type"]
+      name: form_forwardings_full
+      unique: true
   foreign_keys:
     actual:
-      form_id: forms
+      form_id:
+        foreign_table: forms
+        name: form_forwardings_form_id_fkey
     polymorphic:
       recipient_id:
+        kind: recipient
         type_column: recipient_type
 
 form_items:
   class: FormItem
   ancestry: true
+  indexes:
+    ancestry:
+      fields: ["ancestry"]
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      form_id: forms
-      mission_id: missions
-      question_id: questions
+      form_id:
+        foreign_table: forms
+        name: form_items_form_id_fkey
+      mission_id:
+        foreign_table: missions
+        name: form_items_mission_id_fkey
+      question_id:
+        foreign_table: questions
+        name: form_items_question_id_fkey
 
 form_versions:
   class: FormVersion
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    code:
+      fields: ["code"]
   foreign_keys:
     actual:
-      form_id: forms
+      form_id:
+        foreign_table: forms
+        name: form_versions_form_id_fkey
 
 forms:
   class: Form
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      current_version_id: form_versions
-      mission_id: missions
-      original_id: forms
-      root_id: form_items
+      current_version_id:
+        foreign_table: form_versions
+        on_delete: nullify
+        name: forms_current_version_id_fkey
+      mission_id:
+        foreign_table: missions
+        name: forms_mission_id_fkey
+      original_id:
+        foreign_table: forms
+        on_delete: nullify
+        name: forms_original_id_fkey
+      root_id:
+        foreign_table: form_items
+        name: forms_root_id_fkey
 
 media_objects:
   class: Media::Object
   foreign_keys:
     actual:
-      answer_id: answers
+      answer_id:
+        foreign_table: answers
+        name: media_objects_answer_id_fkey
 
 missions:
   class: Mission
+  indexes:
+    compact_name:
+      fields: ["compact_name"]
+    deleted_at:
+      fields: ["deleted_at"]
+    shortcode:
+      fields: ["shortcode"]
+      unique: true
 
 operations:
   class: Operation
+  indexes:
+    created_at:
+      fields: ["created_at"]
   foreign_keys:
     actual:
-      creator_id: users
-      provider_job_id: delayed_jobs
+      creator_id:
+        foreign_table: users
+        name: operations_creator_id_fkey
+      # provider_job_id: delayed_jobs
 
 option_nodes:
   class: OptionNode
   ancestry: true
+  indexes:
+    ancestry:
+      fields: ["ancestry"]
+    deleted_at:
+      fields: ["deleted_at"]
+    rank:
+      fields: ["rank"]
   foreign_keys:
     actual:
-      mission_id: missions
-      option_id: options
-      option_set_id: option_sets
-      original_id: option_nodes
+      mission_id:
+        foreign_table: missions
+        name: option_nodes_mission_id_fkey
+      option_id:
+        foreign_table: options
+        name: option_nodes_option_id_fkey
+      option_set_id:
+        foreign_table: option_sets
+        name: option_nodes_option_set_id_fkey
+      original_id:
+        foreign_table: option_nodes
+        on_delete: nullify
+        name: option_nodes_original_id_fkey
 
 option_sets:
   class: OptionSet
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    geographic:
+      fields: ["geographic"]
   foreign_keys:
     actual:
-      mission_id: missions
-      original_id: option_sets
-      root_node_id: option_nodes
+      mission_id:
+        foreign_table: missions
+        name: option_sets_mission_id_fkey
+      original_id:
+        foreign_table: option_sets
+        on_delete: nullify
+        name: option_sets_original_id_fkey
+      root_node_id:
+        foreign_table: option_nodes
+        name: option_sets_option_node_id_fkey
 
 options:
   class: Option
+  indexes:
+    canonical_name:
+      fields: ["canonical_name"]
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      mission_id: missions
+      mission_id:
+        foreign_table: missions
+        name: options_mission_id_fkey
 
 questions:
   class: Question
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    mission_and_code:
+      fields: ["mission_id", "code"]
+      unique: true
+    qtype_name:
+      fields: ["qtype_name"]
   foreign_keys:
     actual:
-      mission_id: missions
-      option_set_id: option_sets
-      original_id: questions
+      mission_id:
+        foreign_table: missions
+        name: questions_mission_id_fkey
+      option_set_id:
+        foreign_table: option_sets
+        name: questions_option_set_id_fkey
+      original_id:
+        foreign_table: questions
+        on_delete: nullify
+        name: questions_original_id_fkey
 
 report_calculations:
   class: Report::Calculation
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      question1_id: questions
-      report_report_id: report_reports
+      question1_id:
+        foreign_table: questions
+        name: report_calculations_question1_id_fkey
+      report_report_id:
+        foreign_table: report_reports
+        name: report_calculations_report_report_id_fkey
 
 report_option_set_choices:
   class: Report::OptionSetChoice
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
   foreign_keys:
     actual:
-      option_set_id: option_sets
-      report_report_id: report_reports
+      option_set_id:
+        foreign_table: option_sets
+        name: report_option_set_choices_option_set_id_fkey
+      report_report_id:
+        foreign_table: report_reports
+        name: report_option_set_choices_report_report_id_fkey
 
 report_reports:
   class: Report::Report
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    view_count:
+      fields: ["view_count"]
   foreign_keys:
     actual:
-      creator_id: users
-      disagg_qing_id: form_items
-      form_id: forms
-      mission_id: missions
+      creator_id:
+        foreign_table: users
+        name: report_reports_creator_id_fkey
+      disagg_qing_id:
+        foreign_table: form_items
+        name: report_reports_disagg_qing_id_fkey
+      form_id:
+        foreign_table: forms
+        name: report_reports_form_id_fkey
+      mission_id:
+        foreign_table: missions
+        name: report_reports_mission_id_fkey
 
 responses:
   class: Response
+  indexes:
+    checked_out_at:
+      fields: ["checked_out_at"]
+    created_at:
+      fields: ["created_at"]
+    deleted_at:
+      fields: ["deleted_at"]
+    form_id_odk_hash:
+      fields: ["form_id", "odk_hash"]
+      unique: true
+    reviewed:
+      fields: ["reviewed"]
+    shortcode:
+      fields: ["shortcode"]
+    updated_at:
+      fields: ["updated_at"]
+    user_and_form:
+      fields: ["user_id", "form_id"]
   foreign_keys:
     actual:
-      checked_out_by_id: users
-      form_id: forms
-      mission_id: missions
-      reviewer_id: users
-      user_id: users
+      checked_out_by_id:
+        foreign_table: users
+        name: responses_checked_out_by_id_fkey
+      form_id:
+        foreign_table: forms
+        name: responses_form_id_fkey
+      mission_id:
+        foreign_table: missions
+        name: responses_mission_id_fkey
+      reviewer_id:
+        foreign_table: users
+        name: responses_reviewer_id_fkey
+      user_id:
+        foreign_table: users
+        name: responses_user_id_fkey
 
 settings:
   class: Setting
   foreign_keys:
     actual:
-      mission_id: missions
+      mission_id:
+        foreign_table: missions
+        name: settings_mission_id_fkey
 
 sms_messages:
   class: Sms::Message
+  indexes:
+    body:
+      fields: ["body"]
+    created_at:
+      fields: ["created_at"]
+    from:
+      fields: ["from"]
+    to:
+      fields: ["to"]
+    type:
+      fields: ["type"]
   foreign_keys:
     actual:
-      broadcast_id: broadcasts
-      mission_id: missions
-      reply_to_id: sms_messages
-      user_id: users
+      broadcast_id:
+        foreign_table: broadcasts
+        name: sms_messages_broadcast_id_fkey
+      mission_id:
+        foreign_table: missions
+        name: sms_messages_mission_id_fkey
+      reply_to_id:
+        foreign_table: sms_messages
+        name: sms_messages_reply_to_id_fkey
+      user_id:
+        foreign_table: users
+        name: sms_messages_user_id_fkey
 
 taggings:
   class: Tagging
-  foreign_keys:
-    actual:
-      question_id: questions
-      tag_id: tags
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+  # foreign_keys:
+    # actual:
+    #   question_id:
+    #     foreign_table: questions
+    #     name: taggings_question_id_fkey
+    #   tag_id:
+    #     foreign_table: tags
+    #     name: taggings_tag_id_fkey
 
 tags:
   class: Tag
-  foreign_keys:
-    actual:
-      mission_id: missions
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    name_and_mission:
+      fields: ["name", "mission_id"]
+  # foreign_keys:
+  #   actual:
+  #     mission_id:
+  #       foreign_table: missions
+  #       name: tags_mission_id_fkey
 
 user_group_assignments:
   class: UserGroupAssignment
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    user_and_group:
+      fields: ["user_id", "user_group_id"]
+      unique: true
   foreign_keys:
     actual:
-      user_group_id: user_groups
-      user_id: users
+      user_group_id:
+        foreign_table: user_groups
+        name: user_group_assignments_user_group_id_fkey
+      user_id:
+        foreign_table: users
+        name: user_group_assignments_user_id_fkey
 
 user_groups:
   class: UserGroup
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    name_and_mission:
+      fields: ["name", "mission_id"]
+      unique: true
   foreign_keys:
     actual:
-      mission_id: missions
+      mission_id:
+        foreign_table: missions
+        name: user_groups_mission_id_fkey
 
 users:
   class: User
-  foreign_keys:
-    actual:
-      last_mission_id: missions
+  indexes:
+    deleted_at:
+      fields: ["deleted_at"]
+    email:
+      fields: ["email"]
+    login:
+      fields: ["login"]
+    name:
+      fields: ["name"]
+    sms_auth_code:
+      fields: ["sms_auth_code"]
+      unique: true
+  # foreign_keys:
+    # actual:
+    #   last_mission_id:
+    #     foreign_table: missions
+    #     name: users_last_mission_id_fkey
 
 whitelistings:
   class: Whitelisting
   foreign_keys:
     actual:
-      user_id: users
+      user_id:
+        foreign_table: users
+        name: whitelistings_user_id_fkey
     polymorphic:
       whitelistable_id:
+        kind: whitelistable
         type_column: whitelistable_type
