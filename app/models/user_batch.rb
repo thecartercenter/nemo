@@ -54,7 +54,7 @@ class UserBatch
         @import_num = last_import_num_on_users
         user_batch_attributes = parse_rows
 
-        (0..number_of_iterations).each do |i|
+        (0...number_of_iterations).each do |i|
           current_attributes_batch = user_batch_attributes[i * BATCH_SIZE, BATCH_SIZE]
 
           users_batch = create_users_instances(current_attributes_batch, mission)
@@ -114,8 +114,7 @@ class UserBatch
   end
 
   def number_of_iterations
-    users_rows_count = @data.count - 1
-    ( users_rows_count / BATCH_SIZE.to_f ).ceil - 1
+    (@data.count / BATCH_SIZE.to_f).ceil
   end
 
   def parse_rows
