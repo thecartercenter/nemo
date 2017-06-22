@@ -401,14 +401,14 @@ taggings:
   indexes:
     deleted_at:
       fields: ["deleted_at"]
-  # foreign_keys:
-    # actual:
-    #   question_id:
-    #     foreign_table: questions
-    #     name: taggings_question_id_fkey
-    #   tag_id:
-    #     foreign_table: tags
-    #     name: taggings_tag_id_fkey
+  foreign_keys:
+    actual:
+      question_id:
+        foreign_table: questions
+        name: taggings_question_id_fkey
+      tag_id:
+        foreign_table: tags
+        name: taggings_tag_id_fkey
 
 tags:
   class: Tag
@@ -417,11 +417,11 @@ tags:
       fields: ["deleted_at"]
     name_and_mission:
       fields: ["name", "mission_id"]
-  # foreign_keys:
-  #   actual:
-  #     mission_id:
-  #       foreign_table: missions
-  #       name: tags_mission_id_fkey
+  foreign_keys:
+    actual:
+      mission_id:
+        foreign_table: missions
+        name: tags_mission_id_fkey
 
 user_group_assignments:
   class: UserGroupAssignment
