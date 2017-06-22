@@ -58,7 +58,14 @@ describe UserBatch do
     # This file was causing users to get created with passwords.
     ub = create_user_batch("no_passwords.xlsx")
     expect(ub).to be_succeeded
+    expect(User.count).to eq 29
     expect(User.all.map(&:crypted_password).any?(&:nil?)).to be false
+  end
+
+  it "works with one row" do
+    ub = create_user_batch("one_row.xlsx")
+    expect(ub).to be_succeeded
+    expect(User.count).to eq 1
   end
 
   context "when checking validation errors on spreadsheet" do
