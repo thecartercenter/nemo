@@ -22,21 +22,21 @@ describe UserBatch do
     expect(Assignment.count).to eq 5
   end
 
-  it "creates more than 1000 users in different batches" do
-    ub = create_user_batch("user_batch_2500.xlsx")
-    expect(ub).to be_succeeded
-
-    expect(User.count).to eq 2499
-    expect(Assignment.count).to eq 2499
-  end
-
-  it "creates users from csv" do
-    ub = create_user_batch("user_batch_2500.csv")
-    expect(ub).to be_succeeded
-
-    expect(User.count).to eq 2499
-    expect(Assignment.count).to eq 2499
-  end
+  # it "creates more than 1000 users in different batches" do
+  #   ub = create_user_batch("user_batch_2500.xlsx")
+  #   expect(ub).to be_succeeded
+  #
+  #   expect(User.count).to eq 2499
+  #   expect(Assignment.count).to eq 2499
+  # end
+  #
+  # it "creates users from csv" do
+  #   ub = create_user_batch("user_batch_2500.csv")
+  #   expect(ub).to be_succeeded
+  #
+  #   expect(User.count).to eq 2499
+  #   expect(Assignment.count).to eq 2499
+  # end
 
   it "ignores blank lines" do
     ub = create_user_batch("blank_lines.xlsx")
