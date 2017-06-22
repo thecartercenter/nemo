@@ -54,6 +54,13 @@ describe UserBatch do
     expect(ub).to be_succeeded
   end
 
+  it "creates users with passwords" do
+    # This file was causing users to get created with passwords.
+    ub = create_user_batch("no_passwords.xlsx")
+    expect(ub).to be_succeeded
+    expect(User.all.map(&:crypted_password).any?(&:nil?)).to be false
+  end
+
   context "when checking validation errors on spreadsheet" do
     it "handles validation errors gracefully" do
       # create batch that should raise too short phone number error
