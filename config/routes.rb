@@ -8,6 +8,9 @@ ELMO::Application.routes.draw do
   # Special shortcut for simulating login in feature specs.
   get "test-login" => "user_sessions#test_login" if Rails.env.test?
 
+  # For uptime checking
+  get "ping" => "ping#show"
+
   #####################################
   # Basic routes (neither mission nor admin mode)
   scope ":locale", locale: /[a-z]{2}/, defaults: {mode: nil, mission_name: nil} do
