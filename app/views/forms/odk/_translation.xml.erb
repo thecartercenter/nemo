@@ -1,13 +1,8 @@
 <translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
 
   <%# group hint translations %>
-  <% @form.child_groups.each do |group| %>
-    <text id="grp-header<%= group.id %>:label">
-      <value><%= group.group_name(lang, strict: false) %></value>
-    </text>
-    <text id="grp-header<%= group.id %>:hint">
-      <value><%= group.group_hint(lang, strict: false) %></value>
-    </text>
+  <% @form.sorted_children.each do |child| %>
+    <%= render('forms/odk/translation_group_node', node: child, lang: lang) %>
   <% end %>
 
   <%# Regular question translations %>
