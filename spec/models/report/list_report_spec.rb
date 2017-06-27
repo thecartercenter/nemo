@@ -115,5 +115,33 @@ describe Report::ListReport do
                                        %w( Foo      2   2 ),
                                        %w( TTL      2   2 ))
     end
+
+    context "with multiple forms that share a partial name" do
+      let!(:questions) { [ create(:question, code: "Inty", qtype_name: "integer") ] }
+      let!(:first_form) { create(:form, name: "SampleForm", questions: questions) }
+      let!(:second_form) { create(:form, name: "SampleForm A", questions: questions) }
+      let!(:third_form) { create(:form, name: "SampleB Form", questions: questions) }
+      let!(:responses) do
+        [
+          create(:response, form: first_form, answer_values: %w(1)),
+          create(:response, form: second_form, answer_values: %w(2)),
+          create(:response, form: third_form, answer_values: %w(3))
+        ]
+      end
+      let(:report) do
+        create(:list_report,
+          filter: %{exact-form:("SampleForm")},
+          _calculations: ["form"] + questions,
+          question_labels: "code"
+        )
+      end
+
+      it "only includes the exact matching form" do
+        expect(report).to have_data_grid(
+          %w(Form          Inty),
+          %w(SampleForm    1)
+        )
+      end
+    end
   end
 end
