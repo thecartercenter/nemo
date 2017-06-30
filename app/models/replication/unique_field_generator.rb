@@ -9,7 +9,7 @@ class Replication::UniqueFieldGenerator
   # attribs[:style] - The style to adhere to in generating the unique value (:sep_words or :camel_case).
   # attribs[:exclude_id] - (optional) An ID of an object to exclude when looking for conflicts.
   def initialize(attribs)
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
   end
 
   # ensures the given name or other field would be unique, and generates a new name if it wouldnt be
@@ -30,7 +30,7 @@ class Replication::UniqueFieldGenerator
 
     # build a relation to get existing objs matching prefix
     existing = klass.for_mission_id(mission_id).where(["#{field} LIKE ?", "#{prefix}%"])
-    existing = existing.where("id != #{exclude_id}") if exclude_id
+    existing = existing.where("id != '#{exclude_id}'") if exclude_id
 
     # get the number suffixes of all existing objects
     # e.g. if there are My Form, My Form 4, My Form 3, return [1, 4, 3]

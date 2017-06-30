@@ -41,7 +41,7 @@ class OptionNode < ApplicationRecord
     ancestries = roots.map { |r| "'#{r.id}'" }.join(",")
     nodes_by_root_id = OptionNode.includes(:option).
       where("ancestry IN (#{ancestries})").
-      order("rank").
+      order("sequence").
       group_by { |n| n.ancestry.to_i }
     roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
@@ -115,11 +115,11 @@ class OptionNode < ApplicationRecord
   end
 
   def preordered_descendants
-    self.class.sort_by_ancestry(descendants.order(:rank)) { |a, b| a.rank <=> b.rank }
+    self.class.sort_by_ancestry(descendants.order(:sequence)) { |a, b| a.sequence <=> b.sequence }
   end
 
   def sorted_children
-    children.order(:rank).includes(:option)
+    children.order(:sequence).includes(:option)
   end
   alias_method :c, :sorted_children
 
@@ -165,7 +165,7 @@ class OptionNode < ApplicationRecord
     nodes = if huge? && options[:truncate_if_huge]
       first_n_descendants(TO_SERIALIZE_IF_HUGE)
     else
-      descendants.ordered_by_ancestry_and("rank")
+      descendants.ordered_by_ancestry_and("sequence")
     end
 
     # Manually eager load options.

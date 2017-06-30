@@ -21,7 +21,7 @@ class Report::AnswerField < Report::Field
     {:sql_tplt => "__TBL_PFX__ans_opt_nodes.rank", :name => "select_one_sort", :clause => :select, :join => :options},
     {:sql_tplt => "__TBL_PFX__ch_opt_nodes.rank", :name => "select_multiple_sort", :clause => :select, :join => :choices},
 
-    {:sql_tplt => "__TBL_PFX__questions.id = __QUESTION_ID__", :name => "where_expr", :clause => :where, :join => :questions}
+    {:sql_tplt => "__TBL_PFX__questions.id = '__QUESTION_ID__'", :name => "where_expr", :clause => :where, :join => :questions}
   ]
 
   def self.expression(options)

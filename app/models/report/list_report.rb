@@ -42,7 +42,7 @@ class Report::ListReport < Report::Report
       end
 
       # question filter
-      qing_ids = questions.map(&:questionings).flatten.map(&:id).join(",")
+      qing_ids = questions.map(&:questionings).flatten.map(&:id).map { |id| "'#{id}'" }.join(",")
       rel = rel.where("questionings.id IN (#{qing_ids})") unless qing_ids.empty?
 
       # Add order by answer rank to accommodate multilevel answers.
