@@ -19,7 +19,7 @@
     <div class="base-info">
       <div class="wrapper"><%# Need this so we can handle wrapping nicely %>
         <div>
-          [<%= qing.code %>] <%= qing.name %>
+          [<%= qing.code %>] <%= link_to qing.name, questioning_path(qing) %>
 
           <%# Required question? %>
           <%= content_tag(:span, '*', class: 'required-sym') if qing.required %>
