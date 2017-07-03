@@ -280,8 +280,8 @@ class Answer < ApplicationRecord
   def clean_locations
     if simple_location_answer?
       if value.match(configatron.lat_lng_regexp)
-        lat = number_with_precision($1.to_f, precision: 6)
-        lng = number_with_precision($3.to_f, precision: 6)
+        lat = number_with_precision($1.to_f, precision: 6, separator: ".", delimiter: " ")
+        lng = number_with_precision($3.to_f, precision: 6, separator: ".", delimiter: " ")
         self.value = "#{lat} #{lng}"
       else
         self.value = ""
