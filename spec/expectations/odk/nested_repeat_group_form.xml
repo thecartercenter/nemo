@@ -21,7 +21,7 @@
             <grp-header10/>
             <q7/>
           </grp-10>
-      </data>
+        </data>
       </instance>
 
       <itext>
@@ -100,10 +100,9 @@
 
       <bind nodeset="/data/grp-2/q2" type="string"/>
 
-      <bind nodeset="/data/grp-2/grp-5/q3" type="int"/>
-      <bind nodeset="/data/grp-2/grp-5/grp-header5" readonly="true()" type="string"/>
       <bind nodeset="/data/grp-2/grp-5"/>
-
+      <bind nodeset="/data/grp-2/grp-5/grp-header5" readonly="true()" type="string"/>
+      <bind nodeset="/data/grp-2/grp-5/q3" type="int"/>
       <bind nodeset="/data/grp-2/grp-5/q4" type="int"/>
 
       <bind nodeset="/data/grp-2/q5" type="string"/>
@@ -120,7 +119,7 @@
     <group>
       <label>Repeat Group 1</label>
       <repeat nodeset="/data/grp-2">
-        <group appearance="field-list">
+        <group>
           <input ref="/data/grp-2/grp-header2">
             <hint ref="jr:itext('grp-header2:hint')"/>
           </input>
