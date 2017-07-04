@@ -1,32 +1,39 @@
 <% if node.childless? %>
-  <%= render('forms/odk/questioning', qing: node, grid_mode: grid_mode, label_row: nil, group: parent) unless node.hidden %>
+  <%= render('forms/odk/questioning', qing: node, grid_mode: grid_mode, label_row: nil, group: parent, xpath_prefix: xpath_prefix) unless node.hidden %>
 <% else %>
+  <% xpath = xpath_prefix %>
+  <% puts "XPATH PREFIX IS: #{xpath_prefix}" %>
   <% if node.is_a?(QingGroup) %>
+    <% xpath = "#{xpath_prefix}/grp-#{node.id}" %>
+    <% puts "XPATH IS: #{xpath}" %>
     <group>
     <%= content_tag("label", node.group_name) %>
     <% if node.repeatable %>
-      <% node_id_string = "/data/grp-#{node.id}" %>
+      <% node_id_string = "#{xpath_prefix}/grp-#{node.id}" %>
       <repeat nodeset="<%=node_id_string%>">
     <% end #node.repeatable%>
   <% end # is qg open%>
   <% fragments = QingGroupOdkPartitioner.new.fragment(node) %>
   <% if fragments.present? %>
     <% fragments.each do |fragment| %>
-      <%= render('forms/odk/form_controls_node', node: fragment, parent: nil, grid_mode: false) %>
+      <%= render('forms/odk/form_controls_node', node: fragment, parent: nil, grid_mode: false, xpath_prefix: xpath) %>
     <% end %>
   <% else #no fragments%>
+
       <% unless node.try(:multilevel?)  %>
       <group appearance="field-list">
-        <input ref="<%= "/data/grp-#{node.try(:id)}/grp-header#{node.try(:id)}"%>">
+        <input ref="<%= "#{xpath}/grp-header#{node.try(:id)}"%>">
           <hint ref="jr:itext('grp-header<%= node.try(:id) %>:hint')"/>
         </input>
       <% end #multilevel open %>
       <% child_grid_mode = grid_mode?(node.sorted_children) %>
       <% if child_grid_mode %>
-        <%= render('forms/odk/questioning', qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node) %>
+        <%= render('forms/odk/questioning', qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
       <% end #grid mode%>
       <% node.sorted_children.each do |child| %>
-        <%= render('forms/odk/form_controls_node', node: child, parent: node, grid_mode: child_grid_mode) %>
+        <%puts "HELLO" %>
+        <% puts xpath %>
+        <%= render('forms/odk/form_controls_node', node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
       <% end #sorted_children%>
       <% unless node.try(:multilevel?) %>
         </group>

@@ -87,6 +87,7 @@ describe "form rendering for odk", clean_with_truncation: true do
 
     it "should render proper xml" do
       expect(response).to be_success
+      puts response.body
       expect(response.body).to match_xml expectation_file("odk/repeat_group_form.xml")
     end
   end
@@ -139,7 +140,7 @@ describe "form rendering for odk", clean_with_truncation: true do
     it "should render proper xml" do
       expect(response).to be_success
 
-      #puts response.body
+      puts response.body
       expect(response.body).to match_xml expectation_file("odk/group_form_with_multilevel.xml")
     end
   end

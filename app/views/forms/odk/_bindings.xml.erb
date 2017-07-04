@@ -1,5 +1,5 @@
 <% @form.arrange_descendants.each do |item, subtree| %>
-  <%= render "forms/odk/binding_node", :node => item, :subtree => subtree, :parent_node => nil %>
+  <%= render "forms/odk/binding_node", :node => item, :subtree => subtree, :parent_node => nil, :xpath_prefix => "/data"%>
 <% end %>
 
 <%# incomplete response question bindings %>

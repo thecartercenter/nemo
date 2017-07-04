@@ -5,12 +5,12 @@
 <% qing.subquestions.each do |subq| %>
   <% if group && qing.multilevel? %>
     <%= content_tag('group', appearance: 'field-list') do %>
-      <input ref="<%= "/data/grp-#{group.try(:id)}/grp-header#{group.try(:id)}"%>">
+      <input ref="<%= "#{xpath_prefix}/grp-#{group.try(:id)}/grp-header#{group.try(:id)}"%>">
         <hint ref="jr:itext('grp-header<%= group.try(:id) %>:hint')"/>
       </input>
-      <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode, label_row: label_row, group: group, subq: subq) %>
+      <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode, label_row: label_row, group: group, subq: subq, xpath_prefix: xpath_prefix) %>
     <% end %>
   <% else %>
-    <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode, label_row: label_row, group: group, subq: subq) %>
+    <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode, label_row: label_row, group: group, subq: subq, xpath_prefix: xpath_prefix) %>
   <% end %>
 <% end %>

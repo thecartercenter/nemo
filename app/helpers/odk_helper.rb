@@ -4,10 +4,10 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, opts, group_id = nil, &block)
+  def odk_input_tag(qing, subq, opts, group_id = nil, xpath_prefix, &block)
     group = group_id ? "grp-#{group_id}":nil
     opts ||= {}
-    opts[:ref] = ["/data", group, subq.try(:odk_code)].compact.join("/")
+    opts[:ref] = [xpath_prefix, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     opts[:query] = multilevel_option_nodeset_ref(qing, subq, group) if !subq.first_rank? && subq.qtype.name == "select_one"
     opts[:appearance] = odk_media_appearance(subq) if subq.qtype.multimedia?
@@ -88,9 +88,9 @@ module OdkHelper
 
   # generator for binding portion of xml.
   # note: _required is used to get around the 'required' html attribute
-  def question_binding(form, qing, subq, group: nil)
+  def question_binding(form, qing, subq, group: nil, xpath_prefix: "/data")
     tag(:bind, {
-      "nodeset" => ["/data", group, subq.try(:odk_code)].compact.join("/"),
+      "nodeset" => [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
       "type" => binding_type_attrib(subq),
       "_required" => qing.required? && subq.first_rank? ? required_value(form) : nil,
       "relevant" => qing.has_condition? ? qing.condition.to_odk : nil,
@@ -100,9 +100,9 @@ module OdkHelper
   end
 
   # note: _readonly is used to get around the 'readonly' html attribute
-  def note_binding(group)
+  def note_binding(group, xpath_prefix)
     tag(:bind, {
-      "nodeset" => "/data/grp-#{group.id}/grp-header#{group.id}",
+      "nodeset" => "#{xpath_prefix}/grp-header#{group.id}",
       "_readonly" => "true()",
       "type" => "string"
     }.reject { |k,v| v.nil? }).gsub(/_readonly=/, "readonly=").html_safe

@@ -8,28 +8,20 @@
           <grp-2 jr:template="">
             <grp-header2/>
             <q1/>
-
             <q2/>
-
             <grp-5 jr:template="">
               <grp-header5/>
               <q3/>
-
               <q4/>
-
             </grp-5>
             <q5/>
-
           </grp-2>
           <q6/>
-
           <grp-10 jr:template="">
             <grp-header10/>
             <q7/>
-
           </grp-10>
-
-        </data>
+      </data>
       </instance>
 
       <itext>
@@ -108,11 +100,11 @@
 
       <bind nodeset="/data/grp-2/q2" type="string"/>
 
-      <bind nodeset="/data/grp-5"/>
-      <bind nodeset="/data/grp-5/grp-header5" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-5/q3" type="int"/>
+      <bind nodeset="/data/grp-2/grp-5/q3" type="int"/>
+      <bind nodeset="/data/grp-2/grp-5/grp-header5" readonly="true()" type="string"/>
+      <bind nodeset="/data/grp-2/grp-5"/>
 
-      <bind nodeset="/data/grp-5/q4" type="int"/>
+      <bind nodeset="/data/grp-2/grp-5/q4" type="int"/>
 
       <bind nodeset="/data/grp-2/q5" type="string"/>
 
@@ -149,20 +141,20 @@
 
           <group>
             <label>Repeat Group A</label>
-            <repeat nodeset="/data/grp-5">
+            <repeat nodeset="/data/grp-2/grp-5">
               <group appearance="field-list">
-                <input ref="/data/grp-5/grp-header5">
+                <input ref="/data/grp-2/grp-5/grp-header5">
                   <hint ref="jr:itext('grp-header5:hint')"/>
                 </input>
 
-                <input ref="/data/grp-5/q3">
+                <input ref="/data/grp-2/grp-5/q3">
                   <label ref="jr:itext('q3:label')"/>
 
                   <hint ref="jr:itext('q3:hint')"/>
 
                 </input>
 
-                <input ref="/data/grp-5/q4">
+                <input ref="/data/grp-2/grp-5/q4">
                   <label ref="jr:itext('q4:label')"/>
 
                   <hint ref="jr:itext('q4:hint')"/>
