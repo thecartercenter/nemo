@@ -21,7 +21,11 @@
   <% else #no fragments%>
 
       <% unless node.try(:multilevel?)  %>
-      <group appearance="field-list">
+      <% if node.children.any?{|c| c.is_a?(QingGroup)} %>
+        <group>
+      <%else %>
+        <group appearance="field-list">
+      <% end #no children are qing group%>
         <input ref="<%= "#{xpath}/grp-header#{node.try(:id)}"%>">
           <hint ref="jr:itext('grp-header<%= node.try(:id) %>:hint')"/>
         </input>
