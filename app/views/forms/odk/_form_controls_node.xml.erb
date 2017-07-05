@@ -2,10 +2,8 @@
   <%= render('forms/odk/questioning', qing: node, grid_mode: grid_mode, label_row: nil, group: parent, xpath_prefix: xpath_prefix) unless node.hidden %>
 <% else %>
   <% xpath = xpath_prefix %>
-  <% puts "XPATH PREFIX IS: #{xpath_prefix}" %>
   <% if node.is_a?(QingGroup) %>
     <% xpath = "#{xpath_prefix}/#{node.odk_code}" %>
-    <% puts "XPATH IS: #{xpath}" %>
     <group>
     <%= content_tag("label", node.group_name) %>
     <% if node.repeatable %>
@@ -35,8 +33,6 @@
         <%= render('forms/odk/questioning', qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
       <% end #grid mode%>
       <% node.sorted_children.each do |child| %>
-        <%puts "HELLO" %>
-        <% puts xpath %>
         <%= render('forms/odk/form_controls_node', node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
       <% end #sorted_children%>
       <% unless node.try(:multilevel?) %>

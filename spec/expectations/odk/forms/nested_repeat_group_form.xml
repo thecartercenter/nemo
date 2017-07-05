@@ -17,10 +17,10 @@
             <*itemcode7*/>
           </*itemcode1*>
           <*itemcode8*/>
-          <*itemcode10* jr:template="">
-            <*itemcode10*-header/>
-            <*itemcode11*/>
-          </*itemcode10*>
+          <*itemcode9* jr:template="">
+            <*itemcode9*-header/>
+            <*itemcode10*/>
+          </*itemcode9*>
         </data>
       </instance>
       <itext>
@@ -31,21 +31,18 @@
           <text id="*itemcode1*-header:hint">
             <value>Repeat Group 1</value>
           </text>
-
           <text id="*itemcode4*-header:label">
             <value>Repeat Group A</value>
           </text>
           <text id="*itemcode4*-header:hint">
             <value>Repeat Group A</value>
           </text>
-
-          <text id="*itemcode10*-header:label">
+          <text id="*itemcode9*-header:label">
             <value>Repeat Group 2</value>
           </text>
-          <text id="*itemcode10*-header:hint">
+          <text id="*itemcode9*-header:hint">
             <value>Repeat Group 2</value>
           </text>
-
           <text id="*itemcode2*:label">
             <value>Text Question Title 1</value>
           </text>
@@ -55,149 +52,114 @@
           <text id="*itemcode3*:label">
             <value>Text Question Title 2</value>
           </text>
-          <text id="*itemcode4*:hint">
+          <text id="*itemcode3*:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="q3:label">
+          <text id="*itemcode5*:label">
             <value>Integer Question Title 3</value>
           </text>
-          <text id="q3:hint">
+          <text id="*itemcode5*:hint">
             <value>Question Hint 3</value>
           </text>
-          <text id="q4:label">
+          <text id="*itemcode6*:label">
             <value>Integer Question Title 4</value>
           </text>
-          <text id="q4:hint">
+          <text id="*itemcode6*:hint">
             <value>Question Hint 4</value>
           </text>
-          <text id="q5:label">
+          <text id="*itemcode7*:label">
             <value>Long Text Question Title 5</value>
           </text>
-          <text id="q5:hint">
+          <text id="*itemcode7*:hint">
             <value>Question Hint 5</value>
           </text>
-          <text id="q6:label">
+          <text id="*itemcode8*:label">
             <value>Text Question Title 6</value>
           </text>
-          <text id="q6:hint">
+          <text id="*itemcode8*:hint">
             <value>Question Hint 6</value>
           </text>
-          <text id="q7:label">
+          <text id="*itemcode10*:label">
             <value>Text Question Title 7</value>
           </text>
-          <text id="q7:hint">
+          <text id="*itemcode10*:hint">
             <value>Question Hint 7</value>
           </text>
-
         </translation>
-
       </itext>
-      <bind nodeset="/data/grp-2"/>
-      <bind nodeset="/data/grp-2/grp-header2" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-2/q1" type="string"/>
-
-      <bind nodeset="/data/grp-2/q2" type="string"/>
-
-      <bind nodeset="/data/grp-2/grp-5"/>
-      <bind nodeset="/data/grp-2/grp-5/grp-header5" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-2/grp-5/q3" type="int"/>
-      <bind nodeset="/data/grp-2/grp-5/q4" type="int"/>
-
-      <bind nodeset="/data/grp-2/q5" type="string"/>
-
-      <bind nodeset="/data/q6" type="string"/>
-
-      <bind nodeset="/data/grp-10"/>
-      <bind nodeset="/data/grp-10/grp-header10" readonly="true()" type="string"/>
-      <bind nodeset="/data/grp-10/q7" type="string"/>
-
+      <bind nodeset="/data/*itemcode1*"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode4*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode5*" type="int"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode6*" type="int"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode7*" type="string"/>
+      <bind nodeset="/data/*itemcode8*" type="string"/>
+      <bind nodeset="/data/*itemcode9*"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode9*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode10*" type="string"/>
     </model>
   </h:head>
   <h:body>
     <group>
       <label>Repeat Group 1</label>
-      <repeat nodeset="/data/grp-2">
+      <repeat nodeset="/data/*itemcode1*">
         <group>
-          <input ref="/data/grp-2/grp-header2">
-            <hint ref="jr:itext('grp-header2:hint')"/>
+          <input ref="/data/*itemcode1*/*itemcode1*-header">
+            <hint ref="jr:itext('*itemcode1*-header:hint')"/>
           </input>
-
-          <input ref="/data/grp-2/q1">
-            <label ref="jr:itext('q1:label')"/>
-
-            <hint ref="jr:itext('q1:hint')"/>
-
+          <input ref="/data/*itemcode1*/*itemcode2*">
+            <label ref="jr:itext('*itemcode2*:label')"/>
+            <hint ref="jr:itext('*itemcode2*:hint')"/>
           </input>
-
-          <input ref="/data/grp-2/q2">
-            <label ref="jr:itext('q2:label')"/>
-
-            <hint ref="jr:itext('q2:hint')"/>
-
+          <input ref="/data/*itemcode1*/*itemcode3*">
+            <label ref="jr:itext('*itemcode3*:label')"/>
+            <hint ref="jr:itext('*itemcode3*:hint')"/>
           </input>
-
           <group>
             <label>Repeat Group A</label>
-            <repeat nodeset="/data/grp-2/grp-5">
+            <repeat nodeset="/data/*itemcode1*/*itemcode4*">
               <group appearance="field-list">
-                <input ref="/data/grp-2/grp-5/grp-header5">
-                  <hint ref="jr:itext('grp-header5:hint')"/>
+                <input ref="/data/*itemcode1*/*itemcode4*/*itemcode4*-header">
+                  <hint ref="jr:itext('*itemcode4*-header:hint')"/>
                 </input>
-
-                <input ref="/data/grp-2/grp-5/q3">
-                  <label ref="jr:itext('q3:label')"/>
-
-                  <hint ref="jr:itext('q3:hint')"/>
-
+                <input ref="/data/*itemcode1*/*itemcode4*/*itemcode5*">
+                  <label ref="jr:itext('*itemcode5*:label')"/>
+                  <hint ref="jr:itext('*itemcode5*:hint')"/>
                 </input>
-
-                <input ref="/data/grp-2/grp-5/q4">
-                  <label ref="jr:itext('q4:label')"/>
-
-                  <hint ref="jr:itext('q4:hint')"/>
-
+                <input ref="/data/*itemcode1*/*itemcode4*/*itemcode6*">
+                  <label ref="jr:itext('*itemcode6*:label')"/>
+                  <hint ref="jr:itext('*itemcode6*:hint')"/>
                 </input>
-
               </group>
             </repeat>
           </group>
-
-          <input ref="/data/grp-2/q5" rows="5">
-            <label ref="jr:itext('q5:label')"/>
-
-            <hint ref="jr:itext('q5:hint')"/>
-
+          <input ref="/data/*itemcode1*/*itemcode7*" rows="5">
+            <label ref="jr:itext('*itemcode7*:label')"/>
+            <hint ref="jr:itext('*itemcode7*:hint')"/>
           </input>
-
         </group>
       </repeat>
     </group>
-
-    <input ref="/data/q6">
-      <label ref="jr:itext('q6:label')"/>
-
-      <hint ref="jr:itext('q6:hint')"/>
-
+    <input ref="/data/*itemcode8*">
+      <label ref="jr:itext('*itemcode8*:label')"/>
+      <hint ref="jr:itext('*itemcode8*:hint')"/>
     </input>
-
     <group>
       <label>Repeat Group 2</label>
-      <repeat nodeset="/data/grp-10">
+      <repeat nodeset="/data/*itemcode9*">
         <group appearance="field-list">
-          <input ref="/data/grp-10/grp-header10">
-            <hint ref="jr:itext('grp-header10:hint')"/>
+          <input ref="/data/*itemcode9*/*itemcode9*-header">
+            <hint ref="jr:itext('*itemcode9*-header:hint')"/>
           </input>
-
-          <input ref="/data/grp-10/q7">
-            <label ref="jr:itext('q7:label')"/>
-
-            <hint ref="jr:itext('q7:hint')"/>
-
+          <input ref="/data/*itemcode9*/*itemcode10*">
+            <label ref="jr:itext('*itemcode10*:label')"/>
+            <hint ref="jr:itext('*itemcode10*:hint')"/>
           </input>
-
         </group>
       </repeat>
     </group>
-
   </h:body>
 </h:html>
