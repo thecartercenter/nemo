@@ -98,5 +98,8 @@ module ELMO
     # This should replace `configatron.full_locales` eventually
     # assuming this caused no further issues
     I18n.available_locales = configatron.full_locales
+
+    # This is the default. It can be overridden in local_config.rb, which comes later.
+    configatron.offline_mode = false
   end
 end

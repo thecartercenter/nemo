@@ -10,6 +10,8 @@ class FormVersion < ApplicationRecord
 
   scope :current, -> { where(is_current: true) }
 
+  delegate :mission, to: :form
+
   CODE_LENGTH = 3
 
   # inits a new FormVersion with same form_id

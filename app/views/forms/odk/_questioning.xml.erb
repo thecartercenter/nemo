@@ -5,8 +5,8 @@
 <% qing.subquestions.each do |subq| %>
   <% if group && qing.multilevel? %>
     <%= content_tag('group', appearance: 'field-list') do %>
-      <input ref="<%= "#{xpath_prefix}/grp-header#{group.try(:id)}"%>">
-        <hint ref="jr:itext('grp-header<%= group.try(:id) %>:hint')"/>
+      <input ref="<%= "#{xpath_prefix}/#{group.try(:odk_code)}-header"%>">
+        <hint ref="jr:itext('<%= group.try(:odk_code) %>-header:hint')"/>
       </input>
       <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode, label_row: label_row, group: group, subq: subq, xpath_prefix: xpath_prefix) %>
     <% end %>

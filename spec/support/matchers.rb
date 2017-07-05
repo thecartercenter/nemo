@@ -66,14 +66,6 @@ RSpec::Matchers.define :have_data_grid do |*expected|
   end
 end
 
-RSpec::Matchers.define :match_xml do |expected|
-  match do |actual|
-    # Parse the XML and tidy.
-    doc = Nokogiri::XML(actual) { |config| config.noblanks }
-    doc.to_s == expected
-  end
-end
-
 RSpec::Matchers.define :match_csv do |expected|
   match do |actual|
     # Strip BOM from actual

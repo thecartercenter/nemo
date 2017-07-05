@@ -1,0 +1,16 @@
+list_name,name,label::English,parent_id
+os*optsetid1*,*optcode1*,Animal,
+os*optsetid1*,*optcode2*,Vertebrate,*optcode1*
+os*optsetid1*,*optcode3*,Cat,*optcode2*
+os*optsetid1*,*optcode4*,Dog,*optcode2*
+os*optsetid1*,*optcode5*,Invertebrate,*optcode1*
+os*optsetid1*,*optcode6*,Lobster,*optcode5*
+os*optsetid1*,*optcode7*,Jellyfish,*optcode5*
+os*optsetid1*,*optcode8*,Plant,
+os*optsetid1*,none,[Blank],*optcode8*
+os*optsetid1*,none,[Blank],none
+os*optsetid2*,*optcode9*,Animal,
+os*optsetid2*,none,[Blank],*optcode9*
+os*optsetid2*,*optcode10*,Plant,
+os*optsetid2*,*optcode11*,Tulip,*optcode10*
+os*optsetid2*,*optcode12*,Oak,*optcode10*

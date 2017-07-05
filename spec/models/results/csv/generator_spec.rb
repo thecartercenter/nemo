@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe ResponseCSV do
+describe Results::Csv::Generator, :reset_factory_sequences do
+  let(:responses) { Response.with_associations.order(:created_at) }
+  let(:generated_csv) { Results::Csv::Generator.new(responses).to_s }
   let(:ordered_responses) { Response.with_associations.order(:created_at) }
 
   around do |example|
@@ -11,14 +13,9 @@ describe ResponseCSV do
     Time.zone = @old_tz
   end
 
-  before do
-    # We rely on FactoryGirl sequences in expectations
-    FactoryGirl.reload
-  end
-
   context "with no data" do
     it "should generate empty string" do
-      expect(ResponseCSV.new([]).to_s).to eq ""
+      expect(generated_csv).to eq ""
     end
   end
 
@@ -73,8 +70,7 @@ describe ResponseCSV do
     end
 
     it "should generate correct CSV" do
-      expected = response_csv_expectation_without_repeat_groups(ordered_responses)
-      expect(ResponseCSV.new(ordered_responses).to_s).to eq expected
+      expect(generated_csv).to eq prepare_response_csv_expectation("basic.csv")
     end
   end
 
@@ -124,10 +120,12 @@ describe ResponseCSV do
         response_a
         Timecop.freeze(10.minutes) { response_b }
       end
-
-      expected = response_csv_expectation_with_repeat_groups(ordered_responses)
-      actual = ResponseCSV.new(ordered_responses)
-      expect(actual.to_s).to eq expected
+      expect(generated_csv).to eq prepare_response_csv_expectation("with_repeat_groups.csv")
     end
+  end
+
+  def prepare_response_csv_expectation(filename)
+    prepare_expectation("response_csv/#{filename}",
+      uuid: responses.map(&:uuid), shortcode: responses.map(&:shortcode))
   end
 end

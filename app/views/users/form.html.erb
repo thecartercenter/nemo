@@ -36,22 +36,16 @@
   <%= f.field(:notes, type: :textarea) %>
 
   <% unless read_only %>
-
-    <%# allow to change password if editing profile %>
     <% if @user == current_user %>
-
+      <%# Change password in profile %>
       <%= f.field(:password, type: :password) %>
       <%= f.field(:password_confirmation, type: :password) %>
-
-    <%# else allow password reset %>
     <% else %>
-
+      <%# Password reset %>
       <% verb = @user.new_record? ? "choose" : "reset" %>
-      <% label = t("user.reset_password_label_" + verb) %>
-      <% @show_print_option = !admin_mode? && (@user.new_record? || @user.observer_only?) %>
-      <% hint = t("user.reset_password_hint_" + verb) + " " + t("user.reset_password_hint_ending", verb: t("common." + verb).downcase) %>
+      <% label = t("user.reset_password_label_#{verb}") %>
+      <% hint = t("user.reset_password_hint_#{verb}") %>
       <%= f.field(:reset_password_method, label: label, hint: hint, partial: "reset_password_method") %>
-
     <% end %>
   <% end %>
   <%= f.regenerable_field(:api_key) if !@user.new_record? && can?(:regenerate_api_key, @user) %>

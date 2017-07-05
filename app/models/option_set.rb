@@ -121,6 +121,10 @@ class OptionSet < ApplicationRecord
     root_node.children_attribs = attribs
   end
 
+  def preordered_option_nodes
+    root_node.preordered_descendants
+  end
+
   # Given an Option, returns the path down the tree of Options in this set to that Option.
   # Returns nil if option not found in set.
   def path_to_option(option)
@@ -153,7 +157,8 @@ class OptionSet < ApplicationRecord
   end
 
   def multilevel?
-    defined?(@multilevel) ? @multilevel : (@multilevel = root_node && root_node.has_grandchildren?)
+    return @multilevel if defined?(@multilevel)
+    @multilevel = !!root_node.try(:has_grandchildren?)
   end
   alias_method :multilevel, :multilevel?
 

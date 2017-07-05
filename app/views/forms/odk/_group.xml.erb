@@ -2,8 +2,8 @@
   <% unless empty_qing_group?(subtree) %>
     <% unless fragment.multilevel? %>
       <group appearance="field-list">
-        <input ref="<%= "/data/grp-#{group.try(:id)}/grp-header#{group.try(:id)}"%>">
-          <hint ref="jr:itext('grp-header<%= group.try(:id) %>:hint')"/>
+        <input ref="<%= "/data/#{group.try(:odk_code)}/#{group.try(:odk_code)}-header"%>">
+          <hint ref="jr:itext('<%= group.try(:odk_code) %>-header:hint')"/>
         </input>
     <% end %>
       <% children = subtree.keys %>

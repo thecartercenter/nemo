@@ -11,4 +11,15 @@ class QingGroup < FormItem
     children.where(type: "QingGroup")
   end
 
+  def odk_code
+    @odk_code ||= "grp#{id}"
+  end
+
+  def option_set_id
+    nil
+  end
+
+  def preordered_option_nodes
+    []
+  end
 end

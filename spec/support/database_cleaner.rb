@@ -1,19 +1,10 @@
 RSpec.configure do |config|
-
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
   end
 
   config.before(:each) do
     DatabaseCleaner.strategy = :transaction
-  end
-
-  config.before(:each, clean_with_truncation: true) do
-    DatabaseCleaner.strategy = :truncation
-    DatabaseCleaner.clean
-
-    # Ensure sequences are reset
-    FactoryGirl.reload
   end
 
   # Sphinx indexing doesn't work with transaction since it can't see from separate connection.

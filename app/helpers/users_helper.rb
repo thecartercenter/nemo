@@ -1,9 +1,21 @@
 module UsersHelper
   def users_index_links(users)
     links = []
-    links << batch_op_link(name: t("broadcast.send_broadcast"), path: new_with_users_broadcasts_path(search: @search_params)) if can?(:create, Broadcast)
-    links << batch_op_link(name: t("user.export_vcard"), path: export_users_path(format: :vcf)) if can?(:export, User)
-    links << batch_op_link(name: t("user.bulk_destroy"), path: bulk_destroy_users_path, confirm: "user.bulk_destroy_confirm") if can?(:bulk_destroy, User)
+
+    if can?(:create, Broadcast) && !offline_mode?
+      links << batch_op_link(name: t("broadcast.send_broadcast"),
+        path: new_with_users_broadcasts_path(search: @search_params))
+    end
+
+    if can?(:export, User)
+      links << batch_op_link(name: t("user.export_vcard"), path: export_users_path(format: :vcf))
+    end
+
+    if can?(:bulk_destroy, User)
+      links << batch_op_link(name: t("user.bulk_destroy"), path: bulk_destroy_users_path,
+        confirm: "user.bulk_destroy_confirm")
+    end
+
     links << create_link(User) if can?(:create, User)
 
     # Can't batch create users in admin mode since there is no mission to assign them to.

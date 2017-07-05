@@ -4,12 +4,12 @@
   <% xpath = xpath_prefix %>
   <% puts "XPATH PREFIX IS: #{xpath_prefix}" %>
   <% if node.is_a?(QingGroup) %>
-    <% xpath = "#{xpath_prefix}/grp-#{node.id}" %>
+    <% xpath = "#{xpath_prefix}/#{node.odk_code}" %>
     <% puts "XPATH IS: #{xpath}" %>
     <group>
     <%= content_tag("label", node.group_name) %>
     <% if node.repeatable %>
-      <% node_id_string = "#{xpath_prefix}/grp-#{node.id}" %>
+      <% node_id_string = "#{xpath_prefix}/#{node.odk_code}" %>
       <repeat nodeset="<%=node_id_string%>">
     <% end #node.repeatable%>
   <% end # is qg open%>
@@ -26,8 +26,8 @@
       <%else %>
         <group appearance="field-list">
       <% end #no children are qing group%>
-        <input ref="<%= "#{xpath}/grp-header#{node.try(:id)}"%>">
-          <hint ref="jr:itext('grp-header<%= node.try(:id) %>:hint')"/>
+        <input ref="<%= "#{xpath}/#{node.try(:odk_code)}-header"%>">
+          <hint ref="jr:itext('<%= node.try(:odk_code) %>-header:hint')"/>
         </input>
       <% end #multilevel open %>
       <% child_grid_mode = grid_mode?(node.sorted_children) %>

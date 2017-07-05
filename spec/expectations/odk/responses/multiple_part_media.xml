@@ -1,6 +1,6 @@
 <?xml version='1.0' ?>
-<data id="1" version="abc">
-  <q1>Some words</q1>
-  <q2>the_swing.jpg</q2>
-  <q3>another_swing.jpg</q3>
+<data id="*form1*" version="*formver1*">
+  <*itemcode1*>Some words</*itemcode1*>
+  <*itemcode2*>the_swing.jpg</*itemcode2*>
+  <*itemcode3*>another_swing.jpg</*itemcode3*>
 </data>

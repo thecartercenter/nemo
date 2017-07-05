@@ -58,7 +58,8 @@ class OptionNode < ApplicationRecord
   end
 
   def has_grandchildren?
-    @has_grandchildren ||= descendants(at_depth: 2).any?
+    return @has_grandchildren if defined?(@has_grandchildren)
+    @has_grandchildren = descendants(at_depth: 2).any?
   end
 
   def all_options
@@ -113,8 +114,12 @@ class OptionNode < ApplicationRecord
     total_options > HUGE_CUTOFF
   end
 
+  def preordered_descendants
+    self.class.sort_by_ancestry(descendants.order(:rank)) { |a, b| a.rank <=> b.rank }
+  end
+
   def sorted_children
-    children.order("rank").includes(:option)
+    children.order(:rank).includes(:option)
   end
   alias_method :c, :sorted_children
 

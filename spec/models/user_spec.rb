@@ -105,28 +105,6 @@ describe User do
     expect(user.login).to eq("alpha")
   end
 
-  it "phone numbers should be unique" do
-    # create a user with two phone numbers
-    first = create(:user, phone: "+19998887777", phone2: "+17776665537")
-
-    assert_phone_uniqueness_error(build(:user, login: "foo", phone: "+19998887777"))
-    assert_phone_uniqueness_error(build(:user, login: "foo", phone2: "+19998887777"))
-    assert_phone_uniqueness_error(build(:user, login: "foo", phone: "+17776665537"))
-    assert_phone_uniqueness_error(build(:user, login: "foo", phone2: "+17776665537"))
-
-    # User with no phone.
-    second = build(:user, login: "foo")
-    expect(second).to be_valid
-
-    # Try to edit this new user to conflicting phone number, should fail
-    second.assign_attributes(phone: "+19998887777")
-    assert_phone_uniqueness_error(second)
-
-    # Create a user with different phone numbers and make sure no error
-    third = build(:user, login: "bar", phone: "+19998887770", phone2: "+17776665530")
-    expect(third).to be_valid
-  end
-
   private
 
   def assert_phone_uniqueness_error(user)

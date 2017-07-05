@@ -1,0 +1,11 @@
+Form,Submitter,DateSubmitted,ResponseUUID,ResponseShortcode,GroupName,GroupLevel,IntegerQ1,Fruit:TextQ2,Fruit:IntegerQ3,Fruit:SelectMultipleQ4,IntegerQ5,Vegetable:TextQ6,Vegetable:SelectOneQ7:Country,Vegetable:SelectOneQ7:City,Vegetable:SelectOneQ7:Latitude,Vegetable:SelectOneQ7:Longitude,Vegetable:IntegerQ8
+Sample Form 1,A User 1,2015-11-20 06:30 CST,*uuid1*,*shortcode1*,,0,1,,,,2,,,,,,
+Sample Form 1,A User 1,2015-11-20 06:30 CST,*uuid1*,*shortcode1*,Fruit,1,1,Apple,1,Cat;Dog,2,,,,,,
+Sample Form 1,A User 1,2015-11-20 06:30 CST,*uuid1*,*shortcode1*,Fruit,1,1,Banana,2,Cat,2,,,,,,
+Sample Form 1,A User 1,2015-11-20 06:30 CST,*uuid1*,*shortcode1*,Vegetable,1,1,,,,2,Asparagus,Ghana,Accra,5.55,0.2,3
+Sample Form 1,A User 2,2015-11-20 06:40 CST,*uuid2*,*shortcode2*,,0,3,,,,4,,,,,,
+Sample Form 1,A User 2,2015-11-20 06:40 CST,*uuid2*,*shortcode2*,Fruit,1,3,Xigua,10,Dog,4,,,,,,
+Sample Form 1,A User 2,2015-11-20 06:40 CST,*uuid2*,*shortcode2*,Fruit,1,3,Yuzu,9,Cat;Dog,4,,,,,,
+Sample Form 1,A User 2,2015-11-20 06:40 CST,*uuid2*,*shortcode2*,Fruit,1,3,Ugli,8,Cat,4,,,,,,
+Sample Form 1,A User 2,2015-11-20 06:40 CST,*uuid2*,*shortcode2*,Vegetable,1,3,,,,4,Zucchini,Canada,Calgary,51.045,-114.057222,7
+Sample Form 1,A User 2,2015-11-20 06:40 CST,*uuid2*,*shortcode2*,Vegetable,1,3,,,,4,Yam,Canada,Ottawa,45.429299,-75.629883,6

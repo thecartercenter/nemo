@@ -5,6 +5,23 @@ configatron.site_shortname = "ELMO"
 # configatron.logo_dark_path = "logo-dark-override.png"
 # configatron.broadcast_tag = "[ELMO]"
 
+# Offline mode.
+# If set to true, you can't reset passwords via email or send broadcasts.
+# Email error reports are also not sent.
+# This should be set to true if the server doesn't have an internet connection.
+configatron.offline_mode = false
+
+# Generate your secret key with this command:
+#   ruby -e "require 'securerandom'; puts SecureRandom.hex(128)"
+# And copy and paste into this file in place of `secret-token`.
+ELMO::Application.config.secret_key_base = "secret-token"
+
+
+
+##################################
+# Email Settings
+# You can leave these unchanged for offline setups.
+
 # Address(es) where webmaster notifications (e.g. for system errors) will be sent.
 configatron.webmaster_emails = ["someone@somplace.com"]
 
@@ -13,18 +30,24 @@ configatron.webmaster_emails = ["someone@somplace.com"]
 # for email, use an email address hosted in your Google Apps account.
 configatron.site_email = "\"#{configatron.site_name}\" <someone@someplace.com>"
 
-# Whether to use HTTPS in the mailer URLs. This should be 'https' if your site uses SSL, and 'http' if not.
-configatron.mailer_url_protocol = 'https'
+# Whether to use HTTPS in the mailer URLs. This should be "https" if your site uses SSL, and "http" if not.
+configatron.mailer_url_protocol = "https"
 
 # Mailer settings
 ActionMailer::Base.smtp_settings = {
-  :address        => 'smtp.example.com',
+  :address        => "smtp.example.com",
   :port           => 587,
   :domain         => "example.com",
   :authentication => :plain,
   :user_name      => "who@example.com",
   :password       => "password"
 }
+
+
+
+##################################
+# SMS Settings
+# You can leave these unchanged for offline setups or if not using SMS.
 
 # Default outgoing SMS adapter settings. Uncomment one of the below sets of settings as needed.
 # These settings are copied by default to any new mission in the system.
@@ -42,7 +65,17 @@ ActionMailer::Base.smtp_settings = {
 # Sets a universal SMS token so that multiple missions can submit to the same URL
 # configatron.universal_sms_token = "50b488c71be4e9cd0ba34a7bf0b7053f"
 
+
+# reCAPTCHA for brute-force login protection
+# Keys may be obtained from https://www.google.com/recaptcha/admin
+# Can be left unchanged in offline setups.
+Recaptcha.configure do |config|
+  config.public_key = "xxx"
+  config.private_key = "xxx"
+end
+
 # Google Maps API Key (Requires Google Maps Javascript and Geocoding APIs)
+# Can be left unchanged in offline setups.
 # Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
 configatron.google_maps_api_key = "xxx"
 
@@ -51,15 +84,3 @@ configatron.google_maps_api_key = "xxx"
 # Also, if not true, the per-mission setting will not be available in UI.
 # Enable only if you really know what you are doing!
 configatron.allow_unauthenticated_submissions = false
-
-# Generate your secret key with this command:
-#   ruby -e "require 'securerandom'; puts SecureRandom.hex(128)"
-# And copy and paste into this file in place of `secret-token`.
-ELMO::Application.config.secret_key_base = 'secret-token'
-
-# Configure reCAPTCHA for brute-force login protection
-# Keys may be obtained from https://www.google.com/recaptcha/admin
-Recaptcha.configure do |config|
-  config.public_key = nil  # '6LdN_QUTAAAAAN_oha......................'
-  config.private_key = nil # '6LdN_QUTAAAAAOaPvp......................'
-end

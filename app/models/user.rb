@@ -68,7 +68,6 @@ class User < ApplicationRecord
   # orphaned users can no longer change their profile or password
   # which can be an issue if they will be being re-assigned
   # validate(:must_have_assignments_if_not_admin)
-  validate(:phone_should_be_unique, unless: :batch_creation?)
   validates :password, format: { with: PASSWORD_FORMAT,
                                  if: :require_password?,
                                  unless: :batch_creation?,
@@ -88,6 +87,9 @@ class User < ApplicationRecord
   # returns users who are assigned to the given mission OR who submitted the given response
   scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments
     WHERE deleted_at IS NULL AND mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
+
+  scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
+  scope(:active, -> { where(active: true) })
 
   def self.random_password(size = 12)
     size = 12 if size < 12
@@ -209,10 +211,6 @@ class User < ApplicationRecord
     count_and_date_cache_key(rel: assigned_to(mission), prefix: "mission-#{mission.id}")
   end
 
-  def self.by_phone(phone)
-    where("phone = ? OR phone2 = ?", phone, phone).first
-  end
-
   def reset_password
     self.password = self.password_confirmation = self.class.random_password
   end
@@ -312,7 +310,7 @@ class User < ApplicationRecord
   end
 
   def observer_only?
-    assignments.all?{ |a| a.role === "observer" }
+    assignments.all? { |a| a.role === "observer" }
   end
 
   def session_time_left
@@ -411,7 +409,7 @@ class User < ApplicationRecord
     end
 
     def print_password_reset_only_for_observer
-      if reset_password_method == "print" && !observer_only?
+      if reset_password_method == "print" && !observer_only? && !configatron.offline_mode
         errors.add(:reset_password_method, :print_password_reset_only_for_observer)
       end
     end
@@ -428,22 +426,6 @@ class User < ApplicationRecord
 
     def clear_assignments_without_roles
       assignments.delete(assignments.select(&:no_role?))
-    end
-
-    # ensures phone and phone2 are unique
-    def phone_should_be_unique
-      [:phone, :phone2].each do |field|
-        val = send(field)
-        # if phone/phone2 is not nil and we can find a user with a different ID from ours that has a matching phone OR phone2
-        # then it's not unique
-        # start building relation
-        rel = User.where("phone = ? OR phone2 = ?", val, val)
-        # add ID clause if this is not a new record
-        rel = rel.where("id != ?", id) unless new_record?
-        if !val.nil? && rel.count > 0
-          errors.add(field, :phone_assigned_to_other)
-        end
-      end
     end
 
     # generates a random password before validation if this is a new record, unless one is already set

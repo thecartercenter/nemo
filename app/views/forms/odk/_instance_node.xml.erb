@@ -6,8 +6,8 @@
   <% end %>
 <% else %>
   <% @attrs = {"jr:template" => ""} if item.repeatable %>
-  <%= content_tag("grp-#{item.id}", @attrs) do %>
-    <%= tag("grp-header#{item.id}") %>
+  <%= content_tag(item.odk_code, @attrs) do %>
+    <%= tag("#{item.odk_code}-header") %>
     <% subtree.each do |child, grandchildren| %>
       <%= render "forms/odk/instance_node", :item => child, :subtree => grandchildren %>
     <% end %>

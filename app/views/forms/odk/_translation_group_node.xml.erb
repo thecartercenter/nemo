@@ -1,11 +1,11 @@
 <% if node.is_a?(QingGroup) %>
-<text id="grp-header<%= node.id %>:label">
-  <value><%= node.group_name(lang, strict: false) %></value>
-</text>
-<text id="grp-header<%= node.id %>:hint">
-  <value><%= node.group_hint(lang, strict: false) %></value>
-</text>
-<% node.sorted_children.each do |child| %>
-  <%= render('forms/odk/translation_group_node', node: child, lang: lang) %>
-<% end %>
+  <text id="<%= node.odk_code %>-header:label">
+    <value><%= node.group_name(lang, strict: false) %></value>
+  </text>
+  <text id="<%= node.odk_code %>-header:hint">
+    <value><%= node.group_hint(lang, strict: false) %></value>
+  </text>
+  <% node.sorted_children.each do |child| %>
+    <%= render('forms/odk/translation_group_node', node: child, lang: lang) %>
+  <% end %>
 <% end %>

@@ -41,14 +41,14 @@ module ODKSubmissionSupport
         descendants.each do |qing, subtree|
           if qing.is_a? QingGroup
             loop do
-              xml << "<grp-#{qing.id}>"
+              xml << "<grp#{qing.id}>"
 
               subtree.each do |qing, subtree|
                 xml << "<#{qing.question.odk_code}>#{i*5}</#{qing.question.odk_code}>"
                 i += 1
               end
 
-              xml << "</grp-#{qing.id}>"
+              xml << "</grp#{qing.id}>"
               break unless options[:repeat] && i <= descendants.flatten.size
             end
           else

@@ -1,12 +1,12 @@
 <% if subtree.empty? %>
   <% unless node.hidden %>
     <% node.subquestions.each do |subq| %>
-      <% group_attr = parent_node.present? ? "grp-#{parent_node.id}" : nil %>
+      <% group_attr = parent_node.present? ? parent_node.odk_code : nil %>
       <%= question_binding(@form, node, subq, group: group_attr, xpath_prefix: xpath_prefix) %>
     <% end %>
   <% end %>
 <% else %>
-  <% xpath = "#{xpath_prefix}/grp-#{node.id}" %>
+  <% xpath = "#{xpath_prefix}/#{node.odk_code}" %>
   <%= tag("bind", nodeset: xpath) %>
   <%= note_binding(node, xpath) %>
   <% subtree.each do |child, grandchildren| %>

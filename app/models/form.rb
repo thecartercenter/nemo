@@ -94,6 +94,10 @@ class Form < ApplicationRecord
     root_group ? root_group.sorted_children.reject{ |q| q.is_a?(QingGroup) } : []
   end
 
+  def preordered_items
+    root_group.preordered_descendants
+  end
+
   def odk_download_cache_key
     "odk-form/#{id}-#{pub_changed_at}"
   end
@@ -169,6 +173,8 @@ class Form < ApplicationRecord
   end
 
   # Returns all descendant questionings in one flat array, sorted in traversal order.
+  # Uses FormItem.descendant_questionings which uses FormItem.arrange_descendants, which
+  # eager loads questions and option sets.
   def questionings(reload = false)
     if root_group
       root_group.descendant_questionings.flatten
@@ -322,8 +328,9 @@ class Form < ApplicationRecord
     whitelistings.where(user_id: user_id).exists?
   end
 
-  def has_repeat_groups?
-    questionings.select{ |q| q.parent_repeatable?}.count > 0
+  # Efficiently tests if the form has at least one repeat group in it.
+  def has_repeat_group?
+    @has_repeat_group ||= FormItem.where(form_id: id, repeatable: true).any?
   end
 
   private

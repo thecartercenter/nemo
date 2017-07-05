@@ -131,6 +131,8 @@ describe Report::AnswerTallyReport do
       report = create_report("AnswerTally",
         calculations: [0, 1, 3].map{ |i| Report::IdentityCalculation.new(question1: questions[i]) })
 
+
+      # Attempted to fix flapping here by changing sort order slightly. See answer_tally_report.rb.
       expect(report).to have_data_grid(%w(     Yes No High Low TTL ),
                                        %w( yn0   6  4    _   _  10 ),
                                        %w( yn1   7  3    _   _  10 ),

@@ -6,7 +6,7 @@ describe "response API requests" do
   describe "list responses by form" do
     include_context "api_form_with_responses"
 
-    it "should return appropriate json sorted newest first" do
+    it "should return appropriate json sorted newest first", :investigate do
       get "/api/v1/m/mission1/responses?form_id=#{@form.id}", {}, headers
       expect(response).to have_http_status(200)
       expect(json.size).to eq 3

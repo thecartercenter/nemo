@@ -62,7 +62,8 @@ class FormItem < ApplicationRecord
   def arrange_descendants
     sort = '(case when ancestry is null then 0 else 1 end), ancestry, rank'
     # We eager load questions and option sets since they are likely to be needed.
-    with_self = self.class.arrange_nodes(subtree.includes(question: :option_set).order(sort).to_a)
+    nodes = subtree.includes(question: {option_set: :root_node}).order(sort).to_a
+    with_self = self.class.arrange_nodes(nodes)
     with_self.values[0]
   end
 
@@ -74,6 +75,10 @@ class FormItem < ApplicationRecord
     nodes.map do |form_item, children|
       form_item.is_a?(Questioning) ? form_item : descendant_questionings(children)
     end
+  end
+
+  def preordered_descendants
+    self.class.sort_by_ancestry(descendants.order(:rank)) { |a, b| a.rank <=> b.rank }
   end
 
   def sorted_children
