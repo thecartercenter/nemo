@@ -186,4 +186,7 @@ group :development, :test do
 
   # removes "get assets" from logs
   gem "quiet_assets", "~> 1.1.0"
+
+  # for xml expectations
+  gem 'equivalent-xml', '~> 0.6.0'
 end
