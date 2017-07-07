@@ -47,7 +47,6 @@ def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = n
     question: question)
 
   form.questionings << questioning
-  #puts "made #{questioning.uuid} for #{qtype_name_or_question}"
   questioning
 end
 
@@ -56,15 +55,12 @@ def build_item(item, form, parent, evaluator)
 
     item = item[:repeating]
     group = QingGroup.create!(parent: parent, form: form, group_name_en: item[:name], group_hint_en: item[:name], repeatable: true)
-    #puts ("made #{group.uuid} repeating: #{item[:name]} with parent #{parent.uuid}")
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)
 
     group = QingGroup.create!(parent: parent, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
-    #puts ("made non-repeat group #{group.uuid} with parent #{parent.uuid}")
     item.each { |q| build_item(q, form, group, evaluator) }
   else #must be a questioning
-    #puts ("making #{item} with parent #{parent.uuid}")
     create_questioning(item, form, parent, evaluator)
   end
 end

@@ -2,8 +2,6 @@
   <%# include both form ID and form version sequence number in ODK form ID %>
   <%= data_tag @form, @style do %>
     <% @form.arrange_descendants.each do |item, subtree| %>
-      <% #puts item.awesome_inspect %>
-      <% #puts subtree.awesome_inspect %>
       <%= render "forms/odk/instance_node", :item => item, :subtree => subtree %>
     <% end %>
 
