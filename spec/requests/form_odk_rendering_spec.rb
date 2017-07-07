@@ -123,9 +123,7 @@ describe "form rendering for odk", :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expected = Nokogiri::XML(prepare_odk_expectation("nested_repeat_group_form.xml", form))
-      actual = Nokogiri::XML(tidyxml(response.body))
-      expect(actual).to be_equivalent_to(expected)
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("nested_repeat_group_form.xml", form)
     end
   end
 

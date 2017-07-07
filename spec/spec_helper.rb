@@ -10,7 +10,6 @@ require 'capybara/rails'
 require 'capybara/poltergeist'
 require 'capybara-screenshot/rspec'
 require 'paperclip/matchers'
-require 'equivalent-xml'
 
 Capybara.register_driver :poltergeist do |app|
   Capybara::Poltergeist::Driver.new(app,
