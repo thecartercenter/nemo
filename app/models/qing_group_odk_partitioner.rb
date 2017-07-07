@@ -17,13 +17,19 @@ class QingGroupOdkPartitioner
 
   def fragment(qing_group)
     result = nil
-    if qing_group.sorted_children.none? {|child| child.is_a?(QingGroup)} && qing_group.children.any? {|c| c.multilevel?} && qing_group.children.count > 1
+    if eligible_for_partition(qing_group)
       result = split_qing_group_as_necessary(qing_group)
     end
     result
   end
 
   private
+
+  def eligible_for_partition(qing_group)
+    qing_group.children.count > 1 &&
+      qing_group.sorted_children.none? {|child| child.is_a?(QingGroup)} &&
+      qing_group.children.any? {|c| c.multilevel?}
+  end
 
   def split_qing_group_as_necessary(qing_group)
     result = Array.new

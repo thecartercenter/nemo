@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe QingGroupOdkPartitioner do
 
-  let(:form) { create(:form, question_types: [["text","text","multilevel_select_one","text"], ["text", "text", "text"]]) }
+  let(:form) { create(:form, question_types: [["text","text","multilevel_select_one","text"],["text", "text", "text"]]) }
 
   describe "#organize" do
 
@@ -29,7 +29,15 @@ describe QingGroupOdkPartitioner do
     end
 
     it "returns nil if the group is not a bottom-level group" do
+      result = QingGroupOdkPartitioner.new.fragment(form)
 
+      expect(result).to be_nil
+    end
+
+    it "returns nil if has no children" do
+      result = QingGroupOdkPartitioner.new.fragment(form.sorted_children.first.sorted_children.first)
+
+      expect(result).to be_nil
     end
   end
 end
