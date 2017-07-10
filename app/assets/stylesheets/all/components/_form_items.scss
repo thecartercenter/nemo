@@ -32,6 +32,10 @@
       display: none;
     }
 
+    &.form-item-question .inner {
+      cursor: pointer;
+    }
+
     &.form-item-hidden {
       .hidden-curtain {
         display: block;
