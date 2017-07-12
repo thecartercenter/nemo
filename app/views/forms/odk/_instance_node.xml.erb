@@ -9,7 +9,7 @@
   <%= content_tag(node.odk_code, @attrs) do %>
     <%= tag("#{node.odk_code}-header") %>
     <% node.sorted_children.each do |child| %>
-      <%= render "forms/odk/instance_node", :node => child %>
+      <%= render "forms/odk/instance_node", node: child %>
     <% end %>
   <% end %>
 <% end %>
