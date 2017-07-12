@@ -24,7 +24,7 @@ describe Report::ResponseTallyReport do
     end
   end
 
-  describe "results", no_sphinx: true do
+  describe "results" do
     it "counts of yes, no per day for a given question" do
       # create several yes/no questions and responses for them
       yes_no = create(:option_set, option_names: %w(Yes No))

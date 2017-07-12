@@ -137,7 +137,7 @@ class Response < ApplicationRecord
     # get the sql
     sql = search.sql
 
-    sphinx_param_sets = []
+    fulltext_param_sets = []
 
     # replace any fulltext search placeholders
     sql = sql.gsub(/###(\d+)###/) do
@@ -146,7 +146,7 @@ class Response < ApplicationRecord
 
       # search all answers in this mission for a match
       # not escaping the query value because double quotes were getting escaped which makes exact phrase not work
-      attribs = {mission_id: scope[:mission].id}
+      attribs = {responses: {mission_id: scope[:mission].id}}
 
       if expression.qualifier.name == "text_by_code"
         # get qualifier text (e.g. {form}) and strip outer braces
@@ -158,16 +158,15 @@ class Response < ApplicationRecord
         # raising here since this shouldn't happen due to validator
         raise "question with code '#{question_code}' not found" if question.nil?
 
-        # add an attrib to this sphinx search
-        attribs[:question_id] = question.id
+        # add an attrib to this search
+        attribs.merge!({form_items: { question_id: question.id}})
       end
 
-      # save the search params as we'll need them again
-      sphinx_params = [expression.values, {with: attribs, max_matches: 1000000, per_page: 1000000}]
-      sphinx_param_sets << sphinx_params
-
       # run the sphinx search
-      answer_ids = Answer.search_for_ids(*sphinx_params)
+
+      answers = Answer.joins(:response, :questioning).where(attribs).search_for_ids(expression.values)
+      excerpted = Answer.search_for_ids(expression.values)
+      answer_ids = answers.pluck(:id)
 
       # turn into an sql fragment
       fragment = if answer_ids.present?
@@ -182,48 +181,7 @@ class Response < ApplicationRecord
     # apply the conditions
     relation = relation.where(sql)
 
-    # do excerpts
-    if !sphinx_param_sets.empty? && options[:include_excerpts]
 
-      # get matches
-      responses = relation.all
-
-      unless responses.empty?
-        responses_by_id = responses.index_by(&:id)
-
-        # run answer searches again, but this time restricting response_ids to the matches responses
-        sphinx_param_sets.each do |sphinx_params|
-
-          # run search again
-          sphinx_params[1][:with][:response_id] = responses_by_id.keys
-          sphinx_params[1][:sql] = {include: {questioning: :question}}
-          answers = Answer.search(*sphinx_params)
-
-          excerpter_options = {before_match: "{{{", after_match: "}}}", chunk_separator: " ... ", query_mode: true}
-          excerpter_options[:limit] = 1000000 if options[:dont_truncate_excerpts]
-
-          # create excerpter
-          excerpter = ThinkingSphinx::Excerpter.new("answer_core", sphinx_params[0], excerpter_options)
-
-          # for each matching answer, add to excerpt to appropriate response
-          answers.each do |a|
-            r = responses_by_id[a.response_id]
-            r.excerpts ||= []
-            r.excerpts << {
-              questioning_id: a.questioning_id,
-              code: a.questioning.code,
-              text: excerpter.excerpt!(a.value || a.option_name || a.option_names)
-            }
-          end
-        end
-      end
-
-      # return responses
-      responses
-    else
-      # no excerpts, just return the relation
-      relation
-    end
   end
 
   # returns a count how many responses have arrived recently

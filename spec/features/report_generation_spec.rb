@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'report generation', js: true, no_sphinx: true do
+feature 'report generation', js: true do
   before do
     @user = create(:user)
     login(@user)

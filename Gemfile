@@ -88,8 +88,7 @@ gem "daemons", "~> 1.2.1"
 gem "delayed_job_active_record", "~> 4.0.3"
 
 # search
-gem "thinking-sphinx", "~> 3.1.3"
-gem "ts-delayed-delta", "~> 2.0.2"
+gem "pg_search"
 
 # cron management
 gem "whenever", "~> 0.9.4", require: false

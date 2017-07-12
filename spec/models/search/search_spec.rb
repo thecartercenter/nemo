@@ -9,7 +9,7 @@ describe Search::Search do
     # this is just a regular-type qualifier that is not the default
     Search::Qualifier.new(name: "source", col: "t.source"),
 
-    # this qualifier allows partial matches but is not indexed with sphinx
+    # this qualifier allows partial matches but is not indexed 
     Search::Qualifier.new(name: "submitter", col: "t3.f3", type: :text),
 
     # this qualifier supports scale-type comparison operators
