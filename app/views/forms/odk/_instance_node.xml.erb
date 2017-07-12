@@ -1,15 +1,15 @@
-<% if subtree.empty? %>
-  <% unless item.hidden %>
-    <% item.subquestions.each do |subq| %>
+<% if node.childless? %>
+  <% unless node.hidden %>
+    <% node.subquestions.each do |subq| %>
       <%= tag(subq.odk_code) %>
     <% end %>
   <% end %>
 <% else %>
-  <% @attrs = {"jr:template" => ""} if item.repeatable %>
-  <%= content_tag(item.odk_code, @attrs) do %>
-    <%= tag("#{item.odk_code}-header") %>
-    <% subtree.each do |child, grandchildren| %>
-      <%= render "forms/odk/instance_node", :item => child, :subtree => grandchildren %>
+  <% @attrs = {"jr:template" => ""} if node.repeatable %>
+  <%= content_tag(node.odk_code, @attrs) do %>
+    <%= tag("#{node.odk_code}-header") %>
+    <% node.sorted_children.each do |child| %>
+      <%= render "forms/odk/instance_node", :node => child %>
     <% end %>
   <% end %>
 <% end %>
