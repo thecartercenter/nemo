@@ -81,6 +81,7 @@ class Response < ApplicationRecord
   def self.search_qualifiers(scope)
     [
       Search::Qualifier.new(name: "form", col: "forms.name", assoc: :forms, type: :text),
+      Search::Qualifier.new(name: "exact_form", col: "forms.name", assoc: :forms),
       Search::Qualifier.new(name: "reviewed", col: "responses.reviewed"),
       Search::Qualifier.new(name: "submitter", col: "users.name", assoc: :users, type: :text),
       Search::Qualifier.new(name: "source", col: "responses.source"),

@@ -957,6 +957,7 @@ en:
     text: "text"
     email: "email"
     form: "form"
+    exact_form: "exact-form"
     login: "login"
     name: "name"
     option_set: "option-set"
