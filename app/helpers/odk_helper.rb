@@ -9,7 +9,7 @@ module OdkHelper
     opts[:ref] = [xpath_prefix, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     if !subq.first_rank? && subq.qtype.name == "select_one"
-      opts[:query] = multilevel_option_nodeset_ref(qing, subq, group.try(:odk_code))
+      opts[:query] = multilevel_option_nodeset_ref(qing, subq, group.try(:odk_code), xpath_prefix)
     end
     opts[:appearance] = odk_media_appearance(subq) if subq.qtype.multimedia?
     opts[:mediatype] = odk_media_type(subq) if subq.qtype.multimedia?
@@ -140,12 +140,12 @@ module OdkHelper
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
   #      instance('os16')/root/item[parent_id=/data/q2_2]
-  def multilevel_option_nodeset_ref(qing, cur_subq, group_code = nil)
+  def multilevel_option_nodeset_ref(qing, cur_subq, group_code = nil, xpath_prefix)
     filter = if cur_subq.first_rank?
       ""
     else
       code = cur_subq.odk_code(previous: true)
-      path = ["/data", group_code, code].compact.join("/")
+      path = [xpath_prefix, code].compact.join("/")
       "[parent_id=#{path}]"
     end
     "instance('os#{qing.option_set_id}')/root/item#{filter}"

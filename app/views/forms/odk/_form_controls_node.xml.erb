@@ -17,7 +17,6 @@
       <%= render('forms/odk/form_controls_node', node: fragment, parent: nil, grid_mode: false, xpath_prefix: xpath) %>
     <% end %>
   <% else #no fragments%>
-
       <% unless node.try(:multilevel?)  %>
       <% if node.children.any?{|c| c.is_a?(QingGroup)} %>
         <group>
