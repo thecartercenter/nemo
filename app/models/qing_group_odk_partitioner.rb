@@ -27,23 +27,23 @@ class QingGroupOdkPartitioner
 
   def eligible_for_partition(qing_group)
     qing_group.children.count > 1 &&
-      qing_group.sorted_children.none? {|child| child.is_a?(QingGroup)} &&
-      qing_group.children.any? {|c| c.multilevel?}
+      qing_group.sorted_children.none? { |child| child.is_a?(QingGroup) } &&
+      qing_group.children.any?(&:multilevel?)
   end
 
   def split_qing_group_as_necessary(qing_group)
-    result = Array.new
-    temp_group_children = Array.new
+    result = []
+    temp_group_children = []
     qing_group.sorted_children.each do |child|
       if child.multilevel?
-        result.push(QingGroupFragment.new(qing_group, temp_group_children))
-        result.push(QingGroupFragment.new(qing_group, [child]))
+        result << QingGroupFragment.new(qing_group, temp_group_children)
+        result << QingGroupFragment.new(qing_group, [child])
         temp_group_children = []
       else
-        temp_group_children.push(child)
+        temp_group_children << child
       end
     end
-    result.push(QingGroupFragment.new(qing_group, temp_group_children)) unless temp_group_children.empty?
+    result << QingGroupFragment.new(qing_group, temp_group_children) unless temp_group_children.empty?
     result
   end
 end

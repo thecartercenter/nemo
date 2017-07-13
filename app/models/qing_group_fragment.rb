@@ -25,10 +25,10 @@ class QingGroupFragment
   end
 
   def childless?
-    self.children.empty?
+    children.empty?
   end
 
   def sorted_children
-    self.children #already sorted in partitioner
+    children # sorted when fragment created in partitioner
   end
 end

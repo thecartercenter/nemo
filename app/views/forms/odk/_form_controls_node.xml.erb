@@ -8,40 +8,40 @@
     <%= content_tag("label", node.group_name) %>
     <% if node.repeatable %>
       <% node_id_string = "#{xpath_prefix}/#{node.odk_code}" %>
-      <repeat nodeset="<%=node_id_string%>">
-    <% end #node.repeatable%>
-  <% end # is qg open%>
+      <repeat nodeset="<%= node_id_string %>">
+    <% end #node.repeatable %>
+  <% end # is qg open %>
   <% fragments = QingGroupOdkPartitioner.new.fragment(node) %>
   <% if fragments.present? %>
     <% fragments.each do |fragment| %>
       <%= render('forms/odk/form_controls_node', node: fragment, parent: nil, grid_mode: false, xpath_prefix: xpath) %>
     <% end %>
-  <% else #no fragments%>
+  <% else #no fragments %>
       <% unless node.try(:multilevel?)  %>
       <% if node.children.any?{|c| c.is_a?(QingGroup)} %>
         <group>
       <%else %>
         <group appearance="field-list">
-      <% end #no children are qing group%>
-        <input ref="<%= "#{xpath}/#{node.try(:odk_code)}-header"%>">
+      <% end #no children are qing group %>
+        <input ref="<%= "#{xpath}/#{node.try(:odk_code)}-header" %>">
           <hint ref="jr:itext('<%= node.try(:odk_code) %>-header:hint')"/>
         </input>
       <% end #multilevel open %>
       <% child_grid_mode = grid_mode?(node.sorted_children) %>
       <% if child_grid_mode %>
         <%= render('forms/odk/questioning', qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
-      <% end #grid mode%>
+      <% end #grid mode %>
       <% node.sorted_children.each do |child| %>
         <%= render('forms/odk/form_controls_node', node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
-      <% end #sorted_children%>
+      <% end #sorted_children %>
       <% unless node.try(:multilevel?) %>
         </group>
       <% end #multilevel close %>
-  <% end #no fragments%>
+  <% end #no fragments %>
   <% if node.is_a?(QingGroup) %>
     <% if node.repeatable %>
       </repeat>
-    <% end #node repeatable%>
+    <% end #node repeatable %>
     </group>
-  <% end #qg end%>
-<% end #node childless%>
+  <% end #qg end %>
+<% end #node childless %>
