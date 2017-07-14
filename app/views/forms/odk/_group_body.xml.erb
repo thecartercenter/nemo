@@ -4,5 +4,5 @@
   <%= render("forms/odk/questioning", qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
 <% end %>
 <% node.sorted_children.each do |child| %>
-  <%= render("forms/odk/form_controls_node", node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
+  <%= render("forms/odk/node", node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
 <% end %>

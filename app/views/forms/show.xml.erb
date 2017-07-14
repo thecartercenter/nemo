@@ -14,7 +14,10 @@
     </h:head>
     <h:body>
       <%# Regular question form controls. %>
-      <%= render('forms/odk/form_controls') %>
+      <% @form.sorted_children.each do |node| %>
+        <%= render "forms/odk/node", 
+          node: node, parent: nil, grid_mode: false, xpath_prefix: "/data" %>
+      <% end %>
       <%# Incomplete response question form controls. %>
       <% if allow_incomplete? %>
         <%= render('forms/odk/incomplete_question') %>

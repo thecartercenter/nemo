@@ -163,6 +163,27 @@ module OdkHelper
     odk_options.reduce(&:concat)
   end
 
+  def odk_group(node, xpath_prefix, &block)
+    if node.is_a?(QingGroup)
+      xpath = "#{xpath_prefix}/#{node.odk_code}"
+      content_tag(:group) do
+        content_tag(:label, node.group_name) <<
+        if node.repeatable?
+          node_id_string = "#{xpath_prefix}/#{node.odk_code}"
+          content_tag(:repeat, odk_group_inner(node, xpath), nodeset: node_id_string)
+        else
+          odk_group_inner(node, xpath)
+        end
+      end
+    else
+      odk_group_inner(node, xpath_prefix)
+    end
+  end
+
+  def odk_group_inner(node, xpath)
+    render("forms/odk/group_inner", node: node, xpath: xpath)
+  end
+
   # Tests if all items in the group are Questionings with the same type and option set.
   def grid_mode?(items)
     # more than one question is needed for grid mode
