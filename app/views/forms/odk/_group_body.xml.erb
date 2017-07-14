@@ -1,0 +1,8 @@
+<% # if any children have grid mode, then the first child is rendered as a label row %>
+<% child_grid_mode = grid_mode?(node.sorted_children) %>
+<% if child_grid_mode %>
+  <%= render("forms/odk/questioning", qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
+<% end %>
+<% node.sorted_children.each do |child| %>
+  <%= render("forms/odk/form_controls_node", node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
+<% end %>

@@ -27,13 +27,7 @@
           <hint ref="jr:itext('<%= node.try(:odk_code) %>-header:hint')"/>
         </input>
       <% end #multilevel open %>
-      <% child_grid_mode = grid_mode?(node.sorted_children) %>
-      <% if child_grid_mode %>
-        <%= render('forms/odk/questioning', qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
-      <% end #grid mode %>
-      <% node.sorted_children.each do |child| %>
-        <%= render('forms/odk/form_controls_node', node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
-      <% end #sorted_children %>
+      <%= render('forms/odk/group_body', node: node, xpath: xpath) %>
       <% unless node.try(:multilevel?) %>
         </group>
       <% end #multilevel close %>
