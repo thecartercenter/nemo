@@ -9,6 +9,6 @@
 <% end %>
 
 <%# Special username field for commcare. %>
-<% if @style == 'commcare' %>
+<% if @style == "commcare" %>
   <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
 <% end %>
