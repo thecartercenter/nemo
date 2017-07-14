@@ -5,7 +5,7 @@
   <% if node.is_a?(QingGroup) %>
     <% xpath = "#{xpath_prefix}/#{node.odk_code}" %>
     <group>
-    <%= content_tag("label", node.group_name) %>
+    <%= content_tag(:label, node.group_name) %>
     <% if node.repeatable %>
       <% node_id_string = "#{xpath_prefix}/#{node.odk_code}" %>
       <repeat nodeset="<%= node_id_string %>">
@@ -16,21 +16,18 @@
     <% fragments.each do |fragment| %>
       <%= render('forms/odk/form_controls_node', node: fragment, parent: nil, grid_mode: false, xpath_prefix: xpath) %>
     <% end %>
-  <% else #no fragments %>
-      <% unless node.try(:multilevel?)  %>
-      <% if node.children.any?{|c| c.is_a?(QingGroup)} %>
-        <group>
-      <%else %>
-        <group appearance="field-list">
-      <% end #no children are qing group %>
+  <% else # no fragments %>
+    <% if node.multilevel_fragment? %>
+      <%= render('forms/odk/group_body', node: node, xpath: xpath) %>
+    <% else %>
+      <% appearance = node.has_group_child? ? nil : "field-list" %>
+      <%= content_tag(:group, appearance: appearance) do %>
         <input ref="<%= "#{xpath}/#{node.try(:odk_code)}-header" %>">
           <hint ref="jr:itext('<%= node.try(:odk_code) %>-header:hint')"/>
         </input>
-      <% end #multilevel open %>
-      <%= render('forms/odk/group_body', node: node, xpath: xpath) %>
-      <% unless node.try(:multilevel?) %>
-        </group>
-      <% end #multilevel close %>
+        <%= render('forms/odk/group_body', node: node, xpath: xpath) %>
+      <% end %>
+    <% end %>
   <% end #no fragments %>
   <% if node.is_a?(QingGroup) %>
     <% if node.repeatable %>
