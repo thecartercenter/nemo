@@ -86,4 +86,73 @@ describe XMLSubmission do
       expect(nodes[4].set.answers[1].rank).to eq 2
     end
   end
+
+  context "with location type" do
+    let(:form) do
+      create(:form,
+        question_types: %w(location)
+      )
+    end
+    let(:data) do
+      {
+        form.c[0] => "12.3456 -76.99388"
+      }
+    end
+
+    it "processes correct values" do
+      expect(nodes[0].set.answers[0].value).to eq "12.345600 -76.993880"
+      expect(nodes[0].set.answers[0].latitude).to eq 12.3456
+      expect(nodes[0].set.answers[0].longitude).to eq -76.99388
+    end
+  end
+
+  context "with date/time types" do
+    let(:form) do
+      create(:form,
+        question_types: %w(datetime date time)
+      )
+    end
+    let(:data) do
+      {
+        form.c[0] => "2017-07-12T16:40:00.000+03",
+        form.c[1] => "2017-07-01",
+        form.c[2] => "14:30:00.000+03"
+      }
+    end
+
+    around do |example|
+      in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
+    end
+
+    it "discards timezone information in favor of current zone" do
+      expect(nodes[0].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:40 -06")
+      expect(nodes[1].set.answers[0].date_value).to eq Date.parse("2017-07-01")
+      expect(nodes[2].set.answers[0].time_value).to eq Time.zone.parse("2000-01-01 14:30 -06").utc
+      expect(nodes[0].set.answers[0].value).to be_nil
+      expect(nodes[1].set.answers[0].value).to be_nil
+      expect(nodes[2].set.answers[0].value).to be_nil
+    end
+  end
+
+  context "with other question types" do
+    let(:form) do
+      create(:form,
+        question_types: %w(text long_text decimal)
+      )
+    end
+    let(:data) do
+      {
+        form.c[0] => "Quick",
+        form.c[1] => "The quick brown fox jumps over the lazy dog",
+        form.c[2] => "9.6",
+        form.c[3] => "12.3456 -76.99388"
+      }
+    end
+
+    it "processes correct values" do
+      expect(nodes[0].set.answers[0].value).to eq "Quick"
+      expect(nodes[1].set.answers[0].value).to eq "The quick brown fox jumps over the lazy dog"
+      expect(nodes[2].set.answers[0].value).to eq "9.6"
+    end
+  end
 end
