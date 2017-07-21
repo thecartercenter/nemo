@@ -83,7 +83,7 @@ describe "odk submissions", type: :request do
       form2.publish!
 
       # Attempt submission to proper form
-      xml = build_odk_submission(form2)
+      xml = build_odk_submission(form2, data: {form2.questionings[0] => "5"})
       do_submission(submission_path(get_mission), xml)
       expect(response).to be_success
 
@@ -107,10 +107,10 @@ describe "odk submissions", type: :request do
       form.c[0].update_attributes!(required: true)
       form.reload.publish!
 
-      [false, true].each do |no_answers|
-        resp = do_submission(submission_path, build_odk_submission(form, no_answers: no_answers))
+      [false, true].each do |no_data|
+        resp = do_submission(submission_path, build_odk_submission(form, no_data: no_data))
         expect(response.response_code).to eq 201
-        expect(resp.incomplete).to be no_answers
+        expect(resp.incomplete).to be no_data
       end
     end
   end
