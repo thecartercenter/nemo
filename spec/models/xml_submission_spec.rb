@@ -3,15 +3,15 @@ require "spec_helper"
 describe XMLSubmission do
   include ODKSubmissionSupport
 
-  let(:blank_response) { create(:response, form: form) }
   let(:xml) { build_odk_submission(form, data: data) }
   let(:files) { {xml_submission_file: StringIO.new(xml)} }
-  let(:submission) { XMLSubmission.new(response: blank_response, source: "odk", files: files) }
-  let(:response) { submission.response }
+  let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+  let(:submission) { XMLSubmission.new(response: response, source: "odk", files: files) }
   let(:nodes) { AnswerArranger.new(response).build.nodes }
 
   before do
     form.publish!
+    submission.save
   end
 
   context "with a repeat group and two instances" do
@@ -144,8 +144,7 @@ describe XMLSubmission do
       {
         form.c[0] => "Quick",
         form.c[1] => "The quick brown fox jumps over the lazy dog",
-        form.c[2] => "9.6",
-        form.c[3] => "12.3456 -76.99388"
+        form.c[2] => "9.6"
       }
     end
 
