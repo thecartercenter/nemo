@@ -1,21 +1,5 @@
-<% @form.arrange_descendants.each do |item, subtree| %>
-  <% if item.is_a?(QingGroup) %>
-    <%= tag("bind", nodeset: "/data/#{item.odk_code}") %>
-    <%= note_binding(item) %>
-    <% subtree.keys.each do |qing| %>
-      <% unless qing.hidden %>
-        <% qing.subquestions.each do |subq| %>
-          <%= question_binding(@form, qing, subq, group: item.odk_code) %>
-        <% end %>
-      <% end %>
-    <% end %>
-  <% else %>
-    <% unless item.hidden %>
-      <% item.subquestions.each do |subq| %>
-        <%= question_binding(@form, item, subq) %>
-      <% end %>
-    <% end %>
-  <% end %>
+<% @form.sorted_children.each do |node| %>
+  <%= render "forms/odk/binding_node", node: node, parent: nil, xpath_prefix: "/data" %>
 <% end %>
 
 <%# incomplete response question bindings %>
@@ -25,6 +9,6 @@
 <% end %>
 
 <%# Special username field for commcare. %>
-<% if @style == 'commcare' %>
+<% if @style == "commcare" %>
   <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
 <% end %>

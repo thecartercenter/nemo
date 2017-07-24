@@ -6,7 +6,7 @@ module ODKSubmissionSupport
     if xml.nil?
       form = create(:form, question_types: %w(integer integer))
       form.publish!
-      xml = build_odk_submission(form)
+      xml = build_odk_submission(form, data: {form.questionings[0] => "5", form.questionings[1] => "10"})
     end
 
     # write xml to file
@@ -21,39 +21,46 @@ module ODKSubmissionSupport
     assigns(:response)
   end
 
-  # Build a sample xml submission for the given form (assumes all questions are integer questions)
-  # Assigns answers in the sequence 5, 10, 15, ...
-  def build_odk_submission(form, options = {})
+  # Build a sample xml submission for the given form.
+  # Takes answer value (should be a string) from given data hash (with questionings as keys) if present,
+  # generates random int otherwise.
+  def build_odk_submission(form, data: {}, override_form_id: false, repeat: false, no_data: false)
     # allow form id to be overridden for testing bad submissions
-    form_id = options[:override_form_id] || form.id
+    form_id = override_form_id || form.id
 
     raise "form should have version" if form.current_version.nil?
 
     "".tap do |xml|
       xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.code}\">"
 
-      if options[:no_answers]
+      if no_data
         xml << "<#{OdkHelper::IR_QUESTION}>yes</#{OdkHelper::IR_QUESTION}>" if form.allow_incomplete?
       else
         i = 1
         descendants = form.arrange_descendants
 
-        descendants.each do |qing, subtree|
-          if qing.is_a? QingGroup
-            loop do
-              xml << "<grp#{qing.id}>"
-
-              subtree.each do |qing, subtree|
-                xml << "<#{qing.question.odk_code}>#{i*5}</#{qing.question.odk_code}>"
-                i += 1
+        descendants.each do |item, subitems|
+          if item.is_a? QingGroup
+            # Iterate over repeat instances (if any)
+            Array.wrap(data[item] || {}).each do |instance|
+              xml << "<grp#{item.id}>"
+              subitems.each do |subitem, _|
+                xml << "<#{subitem.question.odk_code}>"
+                xml << (instance[subitem] || rand(100).to_s)
+                xml << "</#{subitem.question.odk_code}>"
               end
-
-              xml << "</grp#{qing.id}>"
-              break unless options[:repeat] && i <= descendants.flatten.size
+              xml << "</grp#{item.id}>"
+            end
+          elsif item.multilevel?
+            item.level_count.times do |level|
+              xml << "<#{item.question.odk_code}_#{level + 1}>"
+              xml << (data[item].try(:[], level) || rand(100).to_s)
+              xml << "</#{item.question.odk_code}_#{level + 1}>"
             end
           else
-            xml << "<#{qing.question.odk_code}>#{i*5}</#{qing.question.odk_code}>"
-            i += 1
+            xml << "<#{item.question.odk_code}>"
+            xml << (data[item] || rand(100).to_s)
+            xml << "</#{item.question.odk_code}>"
           end
         end
       end

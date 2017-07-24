@@ -1,7 +1,6 @@
 require 'spec_helper'
 
-# Using request spec b/c Authlogic won't work with controller spec
-describe BroadcastsController, type: :request do
+describe "broadcasts" do
   before(:all) do
     @user1 = create(:user)
     login(@user1)

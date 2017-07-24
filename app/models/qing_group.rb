@@ -22,4 +22,8 @@ class QingGroup < FormItem
   def preordered_option_nodes
     []
   end
+
+  def multilevel_fragment?
+    false # is QingGroup, so isn't a fragment 
+  end
 end

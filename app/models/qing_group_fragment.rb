@@ -13,15 +13,22 @@ class QingGroupFragment
   attr_accessor :children, :qing_group
 
   delegate :hidden, :id, :group_name, :group_hint, :group_name_translations,
-    :group_hint_translations, :repeatable, to: :qing_group
+    :group_hint_translations, :repeatable, :odk_code, :has_group_child?, to: :qing_group
 
-  def initialize(qing_group)
+  def initialize(qing_group, children)
     self.qing_group = qing_group
-    self.children = ActiveSupport::OrderedHash.new
+    self.children = children
   end
 
-  def multilevel?
-    children.keys.first.multilevel?
+  def multilevel_fragment?
+    children.size == 1 && children.first.multilevel?
   end
 
+  def childless?
+    children.empty?
+  end
+
+  def sorted_children
+    children # sorted when fragment created in partitioner
+  end
 end
