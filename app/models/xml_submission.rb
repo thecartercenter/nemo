@@ -17,35 +17,12 @@ class XMLSubmission
     end
   end
 
-  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
-  def populate_from_hash(hash)
-    # Response mission should already be set
-    raise "Submissions must have a mission" if @response.mission.nil?
-
-    @response.form.visible_questionings.each do |qing|
-      qing.subquestions.each do |subq|
-        value = hash[subq.odk_code]
-        if value.is_a? Array
-          value.each_with_index do |val, i|
-            answer = fetch_or_build_answer(questioning: qing, rank: subq.rank, inst_num: i + 1)
-            answer = populate_from_string(answer, val)
-            @response.answers << answer if answer
-          end
-        else
-          answer = fetch_or_build_answer(questioning: qing, rank: subq.rank)
-          answer = populate_from_string(answer, value)
-          @response.answers << answer if answer
-        end
-      end
-    end
-    @response.incomplete ||= (hash[OdkHelper::IR_QUESTION] == "yes")
-  end
+  private
 
   def save(validate: true)
     @response.save(validate: validate)
   end
 
-  private
   # Checks if form ID and version were given, if form exists, and if version is correct
   def lookup_and_check_form(params)
     # if either of these is nil or not an integer, error
@@ -100,6 +77,30 @@ class XMLSubmission
     data = data.except(*%w(uiVersion name xmlns xmlns:jrm))
 
     populate_from_hash(data)
+  end
+
+  # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
+  def populate_from_hash(hash)
+    # Response mission should already be set
+    raise "Submissions must have a mission" if @response.mission.nil?
+
+    @response.form.visible_questionings.each do |qing|
+      qing.subquestions.each do |subq|
+        value = hash[subq.odk_code]
+        if value.is_a? Array
+          value.each_with_index do |val, i|
+            answer = fetch_or_build_answer(questioning: qing, rank: subq.rank, inst_num: i + 1)
+            answer = populate_from_string(answer, val)
+            @response.answers << answer if answer
+          end
+        else
+          answer = fetch_or_build_answer(questioning: qing, rank: subq.rank)
+          answer = populate_from_string(answer, value)
+          @response.answers << answer if answer
+        end
+      end
+    end
+    @response.incomplete ||= (hash[OdkHelper::IR_QUESTION] == "yes")
   end
 
   # Populates answer from odk-like string value.
