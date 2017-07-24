@@ -97,6 +97,10 @@ class FormItem < ApplicationRecord
     result = super(options)
   end
 
+  def has_group_child?
+    children.any? { |c| c.is_a?(QingGroup) }
+  end
+
   private
 
   # copy mission from question

@@ -1,0 +1,27 @@
+<% if node.childless? %>
+  <% unless node.hidden %>
+    <% node.subquestions.each do |subq| %>
+      <% group_attr = parent.present? ? parent.odk_code : nil %>
+      <%= question_binding(@form, node, subq, group: group_attr, xpath_prefix: xpath_prefix) %>
+    <% end %>
+  <% end %>
+<% else %>
+  <% xpath = "#{xpath_prefix}/#{node.odk_code}" %>
+  <%= tag("bind", nodeset: xpath) %>
+  <%= note_binding(node, xpath) %>
+  <% node.sorted_children.each do |child| %>
+    <%= render "forms/odk/binding_node", node: child, parent: node, xpath_prefix: xpath %>
+  <% end %>
+<% end %>
+
+
+<%# incomplete response question bindings %>
+<% if allow_incomplete? %>
+  <%= ir_question_binding(@form) %>
+  <%= ir_code_binding(@form) %>
+<% end %>
+
+<%# Special username field for commcare. %>
+<% if @style == 'commcare' %>
+  <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
+<% end %>

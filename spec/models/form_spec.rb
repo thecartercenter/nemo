@@ -184,7 +184,7 @@ describe Form do
     end
 
     context "for form with repeat group" do
-      let(:form) { create(:form, question_types: ["text", {repeating: {q_types: ["text", "text"]}}]) }
+      let(:form) { create(:form, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
 
       it "should be true" do
         expect(form.has_repeat_group?).to be true

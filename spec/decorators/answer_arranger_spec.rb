@@ -12,7 +12,7 @@ describe AnswerArranger do
         "select_one",
         "integer",
         "multilevel_select_one",
-        {repeating: {q_types: ["text", "multilevel_select_one", "integer"], name: "Repeat Group"}},
+        {repeating: {items: ["text", "multilevel_select_one", "integer"], name: "Repeat Group"}},
         ["select_one", "select_multiple"],
         "decimal"
       ])
