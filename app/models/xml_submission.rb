@@ -17,11 +17,11 @@ class XMLSubmission
     end
   end
 
-  private
-
   def save(validate: true)
     @response.save(validate: validate)
   end
+
+  private
 
   # Checks if form ID and version were given, if form exists, and if version is correct
   def lookup_and_check_form(params)
