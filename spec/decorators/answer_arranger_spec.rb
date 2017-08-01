@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe AnswerArranger do
 
-  let(:include_missing_answers) { false } # Overridden below
-  let(:instance) { AnswerArranger.new(response, include_missing_answers: include_missing_answers).build }
+  let(:placeholders) { :none } # Overridden below
+  let(:instance) { AnswerArranger.new(response, placeholders: placeholders).build }
   let(:nodes) { instance.nodes }
 
   context "general form" do
@@ -69,7 +69,7 @@ describe AnswerArranger do
     let(:form) { create(:form, question_types: %w(integer integer)) }
     let(:response) { create(:response, form: form, answer_values: [123]) }
 
-    shared_examples_for "include blank answers" do
+    shared_examples_for "include placeholders" do
       it "should include blank answer set with question" do
         expect(nodes[0].set.answers[0].casted_value).to eq 123
 
@@ -80,7 +80,7 @@ describe AnswerArranger do
       end
     end
 
-    shared_examples_for "don't include blank answers" do
+    shared_examples_for "don't include placeholders" do
       it "should not include blank answer set" do
         expect(nodes[0].set.answers[0].casted_value).to eq 123
         expect(nodes.size).to eq 1
@@ -88,14 +88,19 @@ describe AnswerArranger do
     end
 
     context "when question is visible" do
-      context "when option is true" do
-        let(:include_missing_answers) { true }
-        it_should_behave_like "include blank answers"
+      context do
+        let(:placeholders) { :all }
+        it_should_behave_like "include placeholders"
       end
 
-      context "when option is false" do
-        let(:include_missing_answers) { false }
-        it_should_behave_like "don't include blank answers"
+      context do
+        let(:placeholders) { :except_repeats }
+        it_should_behave_like "include placeholders"
+      end
+
+      context do
+        let(:placeholders) { :none }
+        it_should_behave_like "don't include placeholders"
       end
     end
 
@@ -105,14 +110,19 @@ describe AnswerArranger do
         form.reload
       end
 
-      context "when option is true" do
-        let(:include_missing_answers) { true }
-        it_should_behave_like "don't include blank answers"
+      context do
+        let(:placeholders) { :all }
+        it_should_behave_like "don't include placeholders"
       end
 
-      context "when option is false" do
-        let(:include_missing_answers) { false }
-        it_should_behave_like "don't include blank answers"
+      context do
+        let(:placeholders) { :except_repeats }
+        it_should_behave_like "don't include placeholders"
+      end
+
+      context do
+        let(:placeholders) { :none }
+        it_should_behave_like "don't include placeholders"
       end
     end
   end
@@ -133,7 +143,7 @@ describe AnswerArranger do
     end
   end
 
-  context "with repeat group and include_missing_answers" do
+  context "with repeat group" do
     let(:form) do
       create(:form, question_types: ["integer", ["integer", "integer"], "integer"]).tap do |f|
         f.children[1].update_attribute(:repeatable, true)
@@ -151,54 +161,111 @@ describe AnswerArranger do
       ])
     end
 
-    let(:include_missing_answers) { true }
+    shared_examples_for "repeat group answers" do
+      it do
+        expect(nodes[0].set.answers[0].casted_value).to eq 123
 
-    it "should include blank instance" do
-      expect(nodes[0].set.answers[0].casted_value).to eq 123
+        expect(nodes[1].instances[0]).not_to be_placeholder
+        expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
+        expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
 
-      expect(nodes[1].instances[0]).not_to be_placeholder
-      expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
-      expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
+        expect(nodes[1].instances[1]).not_to be_placeholder
+        expect(nodes[1].instances[1].nodes[0].set.answers[0].casted_value).to eq 111
+        expect(nodes[1].instances[1].nodes[1].set.answers[0].casted_value).to eq 222
 
-      expect(nodes[1].instances[1]).not_to be_placeholder
-      expect(nodes[1].instances[1].nodes[0].set.answers[0].casted_value).to eq 111
-      expect(nodes[1].instances[1].nodes[1].set.answers[0].casted_value).to eq 222
+        expect(nodes[2].set.answers[0].casted_value).to eq 333
+      end
+    end
 
-      expect(nodes[1].placeholder_instance).to be_placeholder
-      expect(nodes[1].placeholder_instance.nodes[0].set.answers[0]).to be_new_record
-      expect(nodes[1].placeholder_instance.nodes[1].set.answers[0]).to be_new_record
-      expect(nodes[1].placeholder_instance.nodes[0].set.questioning_id).to eq(
-        form.sorted_children[1].sorted_children[0].id)
-      expect(nodes[1].placeholder_instance.nodes[1].set.questioning_id).to eq(
-        form.sorted_children[1].sorted_children[1].id)
+    context "all placeholders" do
+      let(:placeholders) { :all }
 
-      # Last question
-      expect(nodes[2].set.answers[0].casted_value).to eq 333
+      it_should_behave_like "repeat group answers"
+
+      it "should include placeholder instance" do
+        expect(nodes[1].placeholder_instance).to be_placeholder
+        expect(nodes[1].placeholder_instance.nodes[0].set.answers[0]).to be_new_record
+        expect(nodes[1].placeholder_instance.nodes[1].set.answers[0]).to be_new_record
+        expect(nodes[1].placeholder_instance.nodes[0].set.questioning_id).to eq(
+          form.sorted_children[1].sorted_children[0].id)
+        expect(nodes[1].placeholder_instance.nodes[1].set.questioning_id).to eq(
+          form.sorted_children[1].sorted_children[1].id)
+      end
+    end
+
+    context "placeholders except_repeats" do
+      let(:placeholders) { :except_repeats }
+
+      it_should_behave_like "repeat group answers"
+
+      it "should not include placeholder instance" do
+        expect(nodes[1].placeholder_instance).to be_nil
+      end
+    end
+
+    context "no placeholders" do
+      let(:placeholders) { :none }
+
+      it_should_behave_like "repeat group answers"
+
+      it "should not include placeholder instance" do
+        expect(nodes[1].placeholder_instance).to be_nil
+      end
     end
   end
 
-  context "with non-repeat group and include_missing_answers" do
+  context "with non-repeat group" do
     let(:form) { create(:form, question_types: ["integer", ["integer", "integer"], "integer"]) }
-    let(:response) { create(:response, form: form, answer_values: [123, [456, 789], 333]) }
-    let(:include_missing_answers) { true }
 
-    it "should not include blank instance" do
-      expect(nodes[0].set.answers[0].casted_value).to eq 123
+    context "with full answers" do
+      let(:response) { create(:response, form: form, answer_values: [123, [456, 789], 333]) }
 
-      expect(nodes[1].instances[0]).not_to be_placeholder
-      expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
-      expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
+      it do
+        expect(nodes[0].set.answers[0].casted_value).to eq 123
 
-      expect(nodes[1].placeholder_instance).to be_nil
+        expect(nodes[1].instances[0]).not_to be_placeholder
+        expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to eq 456
+        expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to eq 789
+
+        expect(nodes[1].placeholder_instance).to be_nil
+      end
+    end
+
+    context "with no answers in group" do
+      let(:response) { create(:response, form: form, answer_values: [123, nil, 333]) }
+
+      context "placeholders except_repeats" do
+        let(:placeholders) { :except_repeats }
+
+        it "should not include placeholder_instance but should include instance with blank answers" do
+          expect(nodes[0].set.answers[0].casted_value).to eq 123
+
+          expect(nodes[1].instances[0]).not_to be_placeholder
+          expect(nodes[1].instances[0].nodes[0].set.answers[0].casted_value).to be_nil
+          expect(nodes[1].instances[0].nodes[1].set.answers[0].casted_value).to be_nil
+
+          expect(nodes[1].placeholder_instance).to be_nil
+        end
+      end
+
+      context "no placeholders" do
+        let(:placeholders) { :none }
+
+        it "should not include placeholder_instance or instance with blank answers" do
+          expect(nodes[0].set.answers[0].casted_value).to eq 123
+          expect(nodes[1].instances).to be_empty
+          expect(nodes[1].placeholder_instance).to be_nil
+        end
+      end
     end
   end
 
-  context "with no answers and new_record response and include_missing_answers" do
+  context "with no answers and new_record response and placeholders" do
     let(:form) { create(:form, question_types: ["integer", ["integer", "integer"], "integer"]) }
     let(:response) { Response.new(form: form) }
-    let(:include_missing_answers) { true }
+    let(:placeholders) { :all }
 
-    it "should include blank answers and a single instance with blank answers" do
+    it "should include answer placeholders and a single instance with answers placeholders" do
       expect(nodes[0].set.answers[0]).to be_new_record
 
       # The instance is not considered a 'blank' instance in this case. It just has blank answers.
@@ -212,7 +279,7 @@ describe AnswerArranger do
     end
   end
 
-  context "with no answers for a group and include_missing_answers false" do
+  context "with no answers for a group and no placeholders" do
     let(:form) { create(:form, question_types: ["integer"]) }
     let(:response) { create(:response, form: form, answer_values: [123]) }
 
