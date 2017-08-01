@@ -1,6 +1,12 @@
 # Creates AnswerNodes, AnswerInstances, and AnswerSets for a given response.
 # None of these are persisted to the database. Only Answer is persisted.
 #
+# Options:
+#   - placeholders - Whether to include blank answers for groups and questions.
+#       Can be :none, :except_repeats, or :all.
+#   - dont_load_answers - If true, does not load answers explicitly (and more efficiently) from the database.
+#       Instead, uses whatever `response.answers` returns.
+#
 # Answer object hierarchy:
 #
 # AnswerNode
@@ -19,7 +25,7 @@ class AnswerArranger
   def initialize(response, options = {})
     self.response = response
     self.options = options
-    options[:include_missing_answers] = false unless options.has_key?(:include_missing_answers)
+    options[:placeholders] = :none unless options.has_key?(:placeholders)
     options[:dont_load_answers] = false unless options.has_key?(:dont_load_answers)
   end
 
@@ -57,9 +63,7 @@ class AnswerArranger
   end
 
   # Returns a new AnswerNode for the given FormItem and instance number.
-  # Returns nil if:
-  # - FormItem is a hidden Questioning and there are no answers for it.
-  # - include_missing_answers is false and there are no matching answers.
+  # inst_num required only if item is a Questioning.
   def build_node(item, inst_num)
     if item.is_a?(QingGroup)
       build_node_for_group(item)
@@ -68,31 +72,33 @@ class AnswerArranger
     end
   end
 
-  def build_node_for_group(item)
-    AnswerNode.new(item: item).tap do |node|
-      nums = instance_nums[item.id] || []
+  def build_node_for_group(group)
+    AnswerNode.new(item: group).tap do |node|
+      nums = instance_nums[group.id] || []
+      no_answers_for_group = nums.empty?
 
-      # Don't return a node if there are no answers for a group and missing_answers isn't on.
-      if nums.empty? && !options[:include_missing_answers]
-        return nil
-      else
-        # If there are no instances and we've gotten this far, we still want to include one.
-        nums = [1] if nums.empty?
-
-        # Build instances.
-        nums.each do |num|
-          instance = AnswerInstance.new(
-            num: num,
-            nodes: item.sorted_children.map{ |c| build_node(c, num) }.compact
-          )
-          node.instances << instance
+      if no_answers_for_group
+        if group.repeatable? && options[:placeholders] != :all || options[:placeholders] == :none
+          return nil
+        else
+          # If there are no instances and we've gotten this far, we still want to include one
+          # to illustrate that there is a group here but no answers in it.
+          nums = [1] if no_answers_for_group
         end
       end
 
-      # Add placeholder instance if requested and this is a repeat group.
-      if item.repeatable? && options[:include_missing_answers]
+      # Build instances.
+      nums.each do |num|
+        instance = AnswerInstance.new(
+          num: num,
+          nodes: group.sorted_children.map { |c| build_node(c, num) }.compact
+        )
+        node.instances << instance
+      end
+
+      if group.repeatable? && options[:placeholders] == :all
         node.placeholder_instance = AnswerInstance.new(
-          nodes: item.sorted_children.map{ |c| build_node(c, :placeholder) }.compact,
+          nodes: group.sorted_children.map { |c| build_node(c, :placeholder) }.compact,
           placeholder: true
         )
       end
@@ -102,7 +108,7 @@ class AnswerArranger
   def build_node_for_questioning(item, inst_num)
     AnswerNode.new(item: item).tap do |node|
       answers = answers_for(item.id, inst_num)
-      if answers.blank? && (item.hidden? || !options[:include_missing_answers])
+      if answers.blank? && (item.hidden? || options[:placeholders] == :none)
         return nil
       else
         node.set = AnswerSet.new(questioning: item, answers: answers)
