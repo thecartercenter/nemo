@@ -317,7 +317,7 @@ class Response < ActiveRecord::Base
   private
 
   def normalize_answers
-    AnswerArranger.new(self, include_missing_answers: false, dont_load_answers: true).build.normalize
+    AnswerArranger.new(self, placeholders: :none, dont_load_answers: true).build.normalize
   end
 
   def form_in_mission

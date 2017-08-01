@@ -14,7 +14,7 @@ describe AnswerInstance do
       ])
     end
     let(:root_instance) do
-      AnswerArranger.new(response, include_missing_answers: false, dont_load_answers: true).build
+      AnswerArranger.new(response, placeholders: :none, dont_load_answers: true).build
     end
 
     context "with blank instance" do

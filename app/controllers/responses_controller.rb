@@ -215,8 +215,7 @@ class ResponsesController < ApplicationController
   def prepare_and_render_form
     # Prepare the AnswerNodes.
     @nodes = AnswerArranger.new(@response,
-      # No point in showing missing answers in show mode.
-      include_missing_answers: params[:action] != "show",
+      placeholders: params[:action] == "show" ? :except_repeats : :all,
       # Must preserve submitted answers when in create/update action.
       dont_load_answers: %w(create update).include?(params[:action])
     ).build.nodes
