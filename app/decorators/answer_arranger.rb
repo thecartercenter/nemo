@@ -98,7 +98,7 @@ class AnswerArranger
 
       if group.repeatable? && options[:placeholders] == :all
         node.placeholder_instance = AnswerInstance.new(
-          nodes: item.ordered_children.map{ |c| build_node(c, :placeholder) }.compact,
+          nodes: group.ordered_children.map{ |c| build_node(c, :placeholder) }.compact,
           placeholder: true
         )
       end
