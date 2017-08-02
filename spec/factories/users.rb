@@ -24,7 +24,11 @@ FactoryGirl.define do
     reset_password_method "print"
     password { test_password }
     password_confirmation { test_password }
-    phone { Random.phone }
+
+    # Need to be careful with this as random strings of digits get normalized
+    # in funny ways by PhoneNormalizer/Phony
+    phone { "+1709" << (1000000 + rand(9000000)).to_s }
+
     pref_lang "en"
     login_count 1
 
