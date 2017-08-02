@@ -9,9 +9,7 @@ set :output, "log/cron.log"
 env :PATH, ENV["PATH"]
 env :GEM_HOME, ENV["GEM_HOME"]
 
-# Every hour, on the hour
-every "0 * * * *" do
-  # make sure the daemon is running
+every :reboot do
   rake "ts:start"
 end
 
@@ -21,8 +19,7 @@ every "5 * * * *" do
   rake "ts:index"
 end
 
-# Every 6 hours, at 30 minutes past the hour
+# Every 6 hours, at half past
 every "30 */6 * * *" do
-  # Clean up expired media
-  runner "MediaCleanupJob.perform_later"
+  runner "CleanupJob.perform_later"
 end
