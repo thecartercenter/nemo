@@ -1,17 +1,15 @@
 class UsersController < ApplicationController
   include BatchProcessable, Searchable
 
-  # special find method before load_resource
-  before_filter :build_user_with_proper_mission, only: [:new, :create]
+  # These filters need to be before load_and_authorize_resource because they preemptively setup @user
+  # before load_and_authorize_resource because if left to its own devices, load_and_authorize_resource
+  # would mess things up with user_groups and mission permissions!
+  before_action :build_user_with_proper_mission, only: :new
+  before_action :load_user, only: [:update, :create]
 
-  # authorization via CanCan
   load_and_authorize_resource
 
-  # ensure a recent login for most actions
   before_action :require_recent_login, except: [:export, :index, :login_instructions]
-
-  # prepare user for update
-  before_action :prepare_user_for_update, only: [:update]
 
   def index
     # sort and eager load
@@ -54,11 +52,14 @@ class UsersController < ApplicationController
   end
 
   def update
+    # In cases where the user can't change these things, the params shouldn't even appear at all
+    # since the fields shouldn't be rendered. So it's enough to just check if they're there.
+    authorize!(:change_assignments, @user) if params[:user].has_key?(:assignments_attributes)
+    authorize!(:activate, @user) if params[:user].has_key?(:active)
 
     pref_lang_changed = @user.pref_lang_changed?
 
     if @user.save
-
       if @user == current_user
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
         flash[:success] = t("user.profile_updated")
@@ -71,7 +72,6 @@ class UsersController < ApplicationController
 
         handle_printable_instructions
       end
-
     # if save failed, render the form again
     else
       flash.now[:error] = I18n.t("activerecord.errors.models.user.general")
@@ -184,34 +184,24 @@ class UsersController < ApplicationController
     render(:form)
   end
 
-  # builds a user with an appropriate mission assignment if the current_user
-  # doesn't have permission to edit a blank user
+  # Builds a user with an appropriate mission assignment if the current_user
+  # doesn't have permission to edit a user with no assignments.
+  # If we don't do this before load_and_authorize_resource runs, we will get a 403.
   def build_user_with_proper_mission
-    permitted_params = user_params
-
-    # Remove user group IDs from permitted params
-    if permitted_params && permitted_params[:user_group_ids]
-      user_group_ids = permitted_params.delete(:user_group_ids)
+    @user = User.new
+    if cannot?(:create, @user)
+      @user.assignments.build(mission: current_mission)
     end
-
-    # Build user
-    @user = User.new(permitted_params)
-
-
-    @user.assignments.build(mission: current_mission) if cannot?(:create, @user) && @user.assignments.empty?
-
-
-    # Add processed user groups back
-    @user.user_groups = process_user_groups(user_group_ids)
   end
 
-  def prepare_user_for_update
+  # Finds or builds a User object and populates with the provided params.
+  # We do this here instead of allowing load_and_authorize_resource to do it because
+  # the latter would mess up the user_groups stuff.
+  def load_user
+    @user = params[:id] ? User.find(params[:id]) : User.new
+
+    # User groups need to be processed separately due to complexity.
     permitted_params = user_params
-
-    # make sure changing assignment role is permitted if attempting
-    authorize!(:change_assignments, @user) if permitted_params[:assignments_attributes]
-    authorize!(:activate, @user) if permitted_params[:active]
-
     user_group_ids = permitted_params.delete(:user_group_ids)
     @user.user_groups = process_user_groups(user_group_ids)
 
@@ -240,8 +230,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    return if params[:user].nil?
-
     admin_only = [:admin] if can?(:adminify, @user)
 
     params.require(:user).permit(*admin_only, :name, :login, :birth_year, :gender, :gender_custom, :nationality,
