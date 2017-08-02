@@ -42,7 +42,6 @@ class XMLSubmission
   end
 
   def populate_from_odk(xml)
-    Rails.logger.debug("----------\nXML submission:\n#{xml}\n----------")
     data = Nokogiri::XML(xml).root
     lookup_and_check_form(id: data["id"], version: data["version"])
     check_for_existing_response
