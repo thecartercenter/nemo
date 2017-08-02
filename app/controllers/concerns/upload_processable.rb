@@ -1,6 +1,8 @@
 module UploadProcessable
   extend ActiveSupport::Concern
 
+  STORAGE_PATH = Rails.root.join(*%w(tmp uploads))
+
   protected
 
   # Stores uploaded file in the tmp dir either 1) so that it hangs around
@@ -11,9 +13,9 @@ module UploadProcessable
   def store_uploaded_file(uploaded)
     file_extension = File.extname(uploaded.original_filename)
     file_name = "#{controller_name}-#{SecureRandom.uuid}#{file_extension}"
-    stored_path = Rails.root.join('tmp', 'uploads', file_name).to_s
+    stored_path = STORAGE_PATH.join(file_name).to_s
 
-    FileUtils.mkdir_p(File.dirname(stored_path), mode: 0755)
+    FileUtils.mkdir_p(STORAGE_PATH, mode: 0755)
     File.open(stored_path, 'wb') do |file|
       file.write(uploaded.read)
     end
