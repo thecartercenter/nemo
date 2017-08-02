@@ -1,5 +1,5 @@
 class ResponsesController < ApplicationController
-  include CsvRenderable, ResponseIndexable, OdkHeaderable
+  include CsvRenderable, ResponseIndexable, OdkHeaderable, UploadProcessable
 
   # need to load with associations for show and edit
   before_action :load_with_associations, only: [:show, :edit]
@@ -108,6 +108,10 @@ class ResponsesController < ApplicationController
           @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
         else # Otherwise treat it like an ODK submission
           upfile = params[:xml_submission_file]
+
+          # Store file for debugging purposes.
+          store_uploaded_file(params[:xml_submission_file])
+
           files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
           files.each { |k, v| files[k] = v.tempfile }
 
