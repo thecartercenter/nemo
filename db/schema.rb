@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170602182038) do
+ActiveRecord::Schema.define(version: 20170803175346) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -162,6 +162,7 @@ ActiveRecord::Schema.define(version: 20170602182038) do
     t.jsonb "group_name_translations", default: {}
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id"
+    t.boolean "one_screen"
     t.integer "question_id"
     t.integer "rank", null: false
     t.boolean "repeatable"
