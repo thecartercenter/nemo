@@ -14,7 +14,7 @@ class QingGroupsController < ApplicationController
     @form = Form.find(params[:form_id])
     # Adding group requires same permissions as removing questions.
     authorize!(:add_questions, @form)
-    @qing_group = QingGroup.new(form: @form)
+    @qing_group = QingGroup.new(form: @form, one_screen: true)
     render(partial: 'modal')
   end
 
