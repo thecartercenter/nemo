@@ -14,8 +14,6 @@ class CleanupJob < ApplicationJob
   end
 
   def cleanup_stored_uploads
-    Dir.glob(UploadProcessable::STORAGE_PATH.join("*")).each do |filename|
-      File.delete(filename) if Time.now - File.mtime(filename) > 30.days
-    end
+    UploadSaver.new.cleanup_old_files
   end
 end

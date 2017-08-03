@@ -1,6 +1,4 @@
 class OptionSetImportsController < ApplicationController
-  include UploadProcessable
-
   load_and_authorize_resource
 
   def new
@@ -10,7 +8,7 @@ class OptionSetImportsController < ApplicationController
   def create
     if @option_set_import.valid?
       begin
-        stored_path = store_uploaded_file(@option_set_import.file)
+        stored_path = UploadSaver.new.save_file(@option_set_import.file)
         mission_name = current_mission.try(:name) || t("standard.standard")
 
         operation = current_user.operations.build(

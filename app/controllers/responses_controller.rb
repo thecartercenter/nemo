@@ -1,5 +1,5 @@
 class ResponsesController < ApplicationController
-  include CsvRenderable, ResponseIndexable, OdkHeaderable, UploadProcessable
+  include CsvRenderable, ResponseIndexable, OdkHeaderable
 
   # need to load with associations for show and edit
   before_action :load_with_associations, only: [:show, :edit]
@@ -112,7 +112,7 @@ class ResponsesController < ApplicationController
           upfile = params[:xml_submission_file]
 
           # Store file for debugging purposes.
-          store_uploaded_file(params[:xml_submission_file])
+          UploadSaver.new.save_file(params[:xml_submission_file])
 
           files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
           files.each { |k, v| files[k] = v.tempfile }
