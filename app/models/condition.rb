@@ -86,7 +86,11 @@ class Condition < ActiveRecord::Base
     lhs = "/data/#{ref_subquestion.odk_code}"
 
     if ref_qing.has_options?
-
+      if option_nodes.empty?
+        raise "Could not find referred-to option node for questioning #{questioning.id}'s condition. "\
+          "Was it removed from the set? This is an old bug that is fixed in later versions. "\
+          "The way to fix it here is to edit questioning #{questioning.id} and fix the broken reference."
+      end
       selected = "selected(#{lhs}, '#{option_nodes.last.odk_code}')"
 
       # Apply negation if appropriate.
