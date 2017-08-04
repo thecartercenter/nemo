@@ -111,6 +111,28 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
+  context "group form with condition" do
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Basic Group",
+        question_types: [["text", "text", "text"]]
+      )
+    end
+
+    before do
+      form.questionings.last.create_condition!(
+        ref_qing: form.questionings.first,
+        op: "eq",
+        value: "foo"
+      )
+    end
+
+    it "should not render on single page due to condition" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form_with_condition.xml", form)
+    end
+  end
+
   context "multiscreen group form" do
     let(:form) do
       create(:form, :published, :with_version,
