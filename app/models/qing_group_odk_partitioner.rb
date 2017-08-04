@@ -1,14 +1,16 @@
-# Separates a qing group that contains multilevel
-# questionings into several groups. The idea here is to just remove the
-# multilevel questioning from the group, since ODK doesn't show it correctly
-# if it's a child of a group.
+# Separates a qing group that contains multilevel questionings into several groups.
+# The idea here is to just remove the multilevel questioning from the group and create a QingGroupFragment
+# for each level of the multilevel questioning, since ODK doesn't show multilevel questions correctly
+# if they're part of a one-screen group.
 #
 # Input:
 #  QingGroup qgroup
 #     with children: Qing1, Qing2, MultilevelQing, Qing3
 # Output:
 #  [ QingGroupFragment with children Qing1 and Qing2,
-#    QingGroupFragment with child MultilevelQing,
+#    QingGroupFragment with child MultilevelQing, level 1
+#    QingGroupFragment with child MultilevelQing, level 2
+#    QingGroupFragment with child MultilevelQing, level 3
 #    QingGroupFragment with child Qing3
 #   ]
 # or nil if the group does not need partitioning.
