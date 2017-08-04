@@ -34,6 +34,23 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
+  context "gridable form with one_screen set to false" do
+    let(:first_question) { create(:question, qtype_name: "select_one") }
+    let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
+    let(:form) do
+      create(:form, :published, :with_version, questions: [[first_question, second_question]])
+    end
+
+    before do
+      form.sorted_children[0].update_attributes!(one_screen: false)
+    end
+
+    it "should not render with grid format" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("multiscreen_gridable_form.xml", form)
+    end
+  end
+
   context "form with & in option name" do
     let(:option_set) { create(:option_set, option_names: ["Salt & Pepper", "Peanut Butter & Jelly"]) }
     let(:question) { create(:question, option_set: option_set) }

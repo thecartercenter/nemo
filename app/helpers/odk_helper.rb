@@ -224,9 +224,9 @@ module OdkHelper
   end
 
   # Tests if all items in the group are Questionings with the same type and option set.
-  def grid_mode?(items)
-    # more than one question is needed for grid mode
-    false unless items.size > 1
+  def odk_grid_mode?(group)
+    items = group.sorted_children
+    return false if items.size <= 1 || !group.one_screen?
 
     items.all? do |i|
       i.is_a?(Questioning) &&
