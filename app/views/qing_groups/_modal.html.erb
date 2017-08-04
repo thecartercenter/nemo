@@ -23,7 +23,12 @@
                 label: QingGroup.human_attribute_name("group_hint") + lang_suffix) %>
           <% end %>
           <%= f.field(:repeatable, type: :check_box) %>
-          <%= f.field(:one_screen, type: :check_box) %>
+          <% if @one_screen_disabled %>
+            <%= f.field(:one_screen, content: t("qing_group.one_screen_disabled")) %>
+            <%= f.hidden_field(:one_screen) %>
+          <% else %>
+            <%= f.field(:one_screen, type: :check_box) %>
+          <% end %>
         <% end %>
       </div>
 

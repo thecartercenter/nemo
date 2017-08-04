@@ -20,6 +20,11 @@ class QingGroupsController < ApplicationController
 
   def edit
     @qing_group = QingGroup.find(params[:id])
+
+    # The QingGroupDecorator might declare this group can't do one-screen even if the property is
+    # set to true. If so, we should disable the checkbox.
+    @one_screen_disabled = true unless odk_decorator.one_screen_appropriate?
+
     render(partial: 'modal')
   end
 
@@ -62,5 +67,9 @@ class QingGroupsController < ApplicationController
   def qing_group_params
     translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint)
     params.require(:qing_group).permit([:form_id, :repeatable, :one_screen] + translation_keys)
+  end
+
+  def odk_decorator
+    Odk::Rendering::DecoratorFactory.decorate(@qing_group)
   end
 end
