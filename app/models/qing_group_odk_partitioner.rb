@@ -28,10 +28,7 @@ class QingGroupOdkPartitioner
   private
 
   def needs_partition?(group)
-    !group.fragment? &&
-      group.children.count > 1 &&
-      group.sorted_children.none? { |child| child.is_a?(QingGroup) } &&
-      group.children.any?(&:multilevel?)
+    !group.fragment? && group.children.count > 1 && !group.group_children? && group.multilevel_children?
   end
 
   def split_group_as_necessary(group)

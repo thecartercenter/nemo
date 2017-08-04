@@ -24,10 +24,14 @@ class QingGroup < FormItem
   end
 
   def fragment?
-    false # is QingGroup, so isn't a fragment 
+    false # is QingGroup, so isn't a fragment
   end
 
   def multilevel_fragment?
     false # is QingGroup, so isn't a fragment
+  end
+
+  def multilevel_children?
+    children.any?(&:multilevel?)
   end
 end
