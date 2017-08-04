@@ -37,6 +37,11 @@ class QingGroupFragment
     children.size == 1 && children.first.multilevel?
   end
 
+  def one_screen?
+    # Fragments don't get created unless the group is set to one_screen
+    true
+  end
+
   def childless?
     children.empty?
   end

@@ -73,6 +73,21 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
+  context "multiscreen group form" do
+    let(:form) do
+      create(:form, :published, :with_version, question_types: [["text", "text", "text"]])
+    end
+
+    before do
+      form.sorted_children[0].update_attributes!(one_screen: false)
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("multiscreen_group_form.xml", form)
+    end
+  end
+
   context "repeat group form" do
     let!(:form) do
       create(:form, :published, :with_version, question_types: [["text", "text", "text", "text"]])

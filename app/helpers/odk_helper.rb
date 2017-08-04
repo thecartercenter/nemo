@@ -182,7 +182,7 @@ module OdkHelper
       else
         # Whether group/fragment should be shown on one screen
         # (for now this is if it doesn't have any group children)
-        one_screen = !node.group_children?
+        one_screen = node.one_screen? && !node.group_children?
 
         # If one_screen is true, then we render the group as a field-list.
         # We also include the hint.
