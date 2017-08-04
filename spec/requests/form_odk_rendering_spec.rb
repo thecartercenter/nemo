@@ -167,8 +167,24 @@ describe "form rendering for odk", :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expected = prepare_odk_expectation("group_form_with_multilevel.xml", form)
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form_with_multilevel.xml", form)
+    end
+  end
+
+  context "multiscreen group form with multilevel select" do
+    let(:form) do
+      create(:form, :published, :with_version,
+        question_types: [["text", "date", "multilevel_select_one", "integer"]])
+    end
+
+    before do
+      form.sorted_children[0].update_attributes!(one_screen: false)
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq(
+        prepare_odk_expectation("multiscreen_group_form_with_multilevel.xml", form))
     end
   end
 
@@ -215,8 +231,8 @@ describe "form rendering for odk", :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expected = prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
+      expect(tidyxml(response.body)).to eq(
+        prepare_odk_expectation("nested_group_form_with_multilevel.xml", form))
     end
   end
 

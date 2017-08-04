@@ -180,17 +180,14 @@ module OdkHelper
       if fragments
         fragments.map { |f| odk_group_or_fragment(f, xpath_prefix) }.reduce(:<<)
       else
-        # Whether group/fragment should be shown on one screen
-        # (for now this is if it doesn't have any group children)
-        one_screen = node.one_screen? && !node.group_children?
-
-        # If one_screen is true, then we render the group as a field-list.
+        # If appropriate for one-screen rendering, we render the group as a field-list.
         # We also include the hint.
         # In the case of fragments, this means we include hint each time, which is correct.
         # This covers the case where `node` is a fragment, because fragments should always
         # be shown on one screen since that's what they're for.
-        # If one_screen is false, we just render the hint as there is no need for the group tag.
-        conditional_tag(:group, one_screen, appearance: "field-list") do
+        # If one screen is not appropriate is false, we just render the hint
+        # as there is no need for the group tag.
+        conditional_tag(:group, node.one_screen_appropriate?, appearance: "field-list") do
           odk_group_hint(node, xpath) << odk_group_body(node, xpath)
         end
       end

@@ -23,6 +23,12 @@ class QingGroup < FormItem
     []
   end
 
+  # Whether this group should be shown on one screen for ODK. Consults the one_screen attribute
+  # as well as whether the group has group children.
+  def one_screen_appropriate?
+    one_screen? && !group_children?
+  end
+
   def fragment?
     false # is QingGroup, so isn't a fragment
   end

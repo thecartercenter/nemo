@@ -16,6 +16,7 @@
 # or nil if the group does not need partitioning.
 #
 # A group doesn't need to be partitioned if
+# - It's not a one-screen group
 # - It has only one question (in this case, if it's a multilevel question, it will get rendered
 #   on separate screens)
 # - It has any group children (in this case, we don't allow rendering the group on one screen)
@@ -30,7 +31,8 @@ class QingGroupOdkPartitioner
   private
 
   def needs_partition?(group)
-    !group.fragment? && group.children.count > 1 && !group.group_children? && group.multilevel_children?
+    !group.fragment? && group.one_screen? && group.children.count > 1 &&
+      !group.group_children? && group.multilevel_children?
   end
 
   def split_group_as_necessary(group)

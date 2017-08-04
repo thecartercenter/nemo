@@ -42,6 +42,10 @@ class QingGroupFragment
     true
   end
 
+  def one_screen_appropriate?
+    true
+  end
+
   def childless?
     children.empty?
   end
