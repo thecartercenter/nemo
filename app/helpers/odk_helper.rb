@@ -214,7 +214,7 @@ module OdkHelper
   end
 
   def odk_group_hint(node, xpath)
-    if node.no_hints?
+    if node.no_hint?
       "".html_safe
     else
       content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
