@@ -176,7 +176,7 @@ module OdkHelper
   def odk_group_or_fragment(node, xpath_prefix)
     xpath = "#{xpath_prefix}/#{node.odk_code}"
     odk_group_or_fragment_wrapper(node, xpath) do
-      fragments = QingGroupOdkPartitioner.new.fragment(node)
+      fragments = Odk::Rendering::QingGroupPartitioner.new.fragment(node)
       if fragments
         fragments.map { |f| odk_group_or_fragment(f, xpath_prefix) }.reduce(:<<)
       else
@@ -211,8 +211,8 @@ module OdkHelper
   end
 
   def odk_group_hint(node, xpath)
-    content_tag(:input, ref: "#{xpath}/#{node.try(:odk_code)}-header") do
-      tag(:hint, ref: "jr:itext('#{node.try(:odk_code)}-header:hint')")
+    content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
+      tag(:hint, ref: "jr:itext('#{node.odk_code}-header:hint')")
     end
   end
 

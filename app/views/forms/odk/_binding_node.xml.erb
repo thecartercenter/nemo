@@ -1,3 +1,4 @@
+<% node = Odk::Rendering::DecoratorFactory.decorate(node) %>
 <% if node.childless? %>
   <% unless node.hidden %>
     <% node.subquestions.each do |subq| %>
