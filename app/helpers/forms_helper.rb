@@ -90,7 +90,7 @@ module FormsHelper
     if cls = FORM_ITEM_ICON_CLASSES[type]
       content_tag(:i, "", class: "fa #{cls} type-icon")
     else
-      image_tag("form_items/#{type}.png", class: 'type-icon')
+      image_tag("form_items/#{type}.png", class: "type-icon")
     end
   end
 end
