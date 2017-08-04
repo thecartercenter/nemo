@@ -18,6 +18,7 @@ module Odk
         :group_hint_translations, :repeatable, :odk_code, to: :qing_group
 
       def initialize(qing_group, children, level = nil)
+        raise "QingGroup fragments must have at least one child" if children.blank?
         self.qing_group = qing_group
         self.children = children
         self.level = level
@@ -48,12 +49,12 @@ module Odk
         true
       end
 
-      def childless?
-        children.empty?
-      end
-
       def sorted_children
         children # sorted when fragment created in partitioner
+      end
+
+      def is_childless?
+        false
       end
     end
   end

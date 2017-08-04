@@ -174,6 +174,9 @@ module OdkHelper
   #   hint
   #   questions
   def odk_group_or_fragment(node, xpath_prefix)
+    # No need to render empty groups/fragments
+    return "" if node.is_childless?
+
     xpath = "#{xpath_prefix}/#{node.odk_code}"
     odk_group_or_fragment_wrapper(node, xpath) do
       fragments = Odk::Rendering::QingGroupPartitioner.new.fragment(node)
