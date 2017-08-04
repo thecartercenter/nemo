@@ -1378,6 +1378,10 @@ en:
 
   qing_group:
     one_screen_disabled: "Not available because the group contains either a condition or another group"
+    tooltips:
+      repeatable: "Repeatable"
+      one_screen: "Shows on one screen in ODK"
+      multi_screen: "Shows on multiple screens in ODK"
 
   question_type:
     text: "Text"
