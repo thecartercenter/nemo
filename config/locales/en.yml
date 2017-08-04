@@ -401,6 +401,7 @@ en:
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
         repeatable: "Repeatable?"
+        one_screen: "Show on One Screen?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"

@@ -45,22 +45,22 @@ class QingGroupsController < ApplicationController
 
   private
 
-    def validate_destroy
-      if @qing_group.children.size > 0
-        return render json: [], status: 404
-      end
+  def validate_destroy
+    if @qing_group.children.size > 0
+      return render json: [], status: 404
     end
+  end
 
-    # prepares qing_group
-    def prepare_qing_group
-      attrs = qing_group_params
-      attrs[:ancestry] = Form.find(attrs[:form_id]).root_id
-      @qing_group = QingGroup.accessible_by(current_ability).new(attrs)
-      @qing_group.mission = current_mission
-    end
+  # prepares qing_group
+  def prepare_qing_group
+    attrs = qing_group_params
+    attrs[:ancestry] = Form.find(attrs[:form_id]).root_id
+    @qing_group = QingGroup.accessible_by(current_ability).new(attrs)
+    @qing_group.mission = current_mission
+  end
 
-    def qing_group_params
-      translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint)
-      params.require(:qing_group).permit([:form_id, :repeatable] + translation_keys)
-    end
+  def qing_group_params
+    translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint)
+    params.require(:qing_group).permit([:form_id, :repeatable, :one_screen] + translation_keys)
+  end
 end
