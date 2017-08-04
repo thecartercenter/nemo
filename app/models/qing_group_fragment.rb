@@ -10,14 +10,23 @@
 class QingGroupFragment
   include Translatable
 
-  attr_accessor :children, :qing_group
+  attr_accessor :children, :qing_group, :level
 
   delegate :hidden, :id, :group_name, :group_hint, :group_name_translations,
     :group_hint_translations, :repeatable, :odk_code, :has_group_child?, to: :qing_group
 
-  def initialize(qing_group, children)
+  def initialize(qing_group, children, level = nil)
     self.qing_group = qing_group
     self.children = children
+    self.level = level
+  end
+
+  def fragment?
+    true
+  end
+
+  def repeatable?
+    false
   end
 
   def multilevel_fragment?

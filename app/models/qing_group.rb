@@ -23,7 +23,11 @@ class QingGroup < FormItem
     []
   end
 
-  def multilevel_fragment?
+  def fragment?
     false # is QingGroup, so isn't a fragment 
+  end
+
+  def multilevel_fragment?
+    false # is QingGroup, so isn't a fragment
   end
 end

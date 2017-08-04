@@ -1,8 +1,13 @@
-<% # if any children have grid mode, then the first child is rendered as a label row %>
-<% child_grid_mode = grid_mode?(node.sorted_children) %>
-<% if child_grid_mode %>
-  <%= render("forms/odk/questioning", qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
-<% end %>
-<% node.sorted_children.each do |child| %>
-  <%= render("forms/odk/node", node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
+<%# If this is a multilevel fragment, we are supposed to render just one of the subquestions. %>
+<% if node.multilevel_fragment? %>
+  <%= render("forms/odk/questioning", qing: node.sorted_children.first, group: node, xpath_prefix: xpath) %>
+<% else %>
+  <% # If any children have grid mode, then the first child is rendered as a label row %>
+  <% child_grid_mode = grid_mode?(node.sorted_children) %>
+  <% if child_grid_mode %>
+    <%= render("forms/odk/questioning", qing: node.sorted_children.first, grid_mode: true, label_row: true, group: node, xpath_prefix: xpath) %>
+  <% end %>
+  <% node.sorted_children.each do |child| %>
+    <%= render("forms/odk/node", node: child, parent: node, grid_mode: child_grid_mode, xpath_prefix: xpath) %>
+  <% end %>
 <% end %>

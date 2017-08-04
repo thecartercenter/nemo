@@ -163,25 +163,64 @@ module OdkHelper
     odk_options.reduce(&:concat)
   end
 
-  def odk_group(node, xpath_prefix, &block)
-    if node.is_a?(QingGroup)
-      xpath = "#{xpath_prefix}/#{node.odk_code}"
-      content_tag(:group) do
-        content_tag(:label, node.group_name) <<
-        if node.repeatable?
-          node_id_string = "#{xpath_prefix}/#{node.odk_code}"
-          content_tag(:repeat, odk_group_inner(node, xpath), nodeset: node_id_string)
-        else
-          odk_group_inner(node, xpath)
+  # The general structure for a group is:
+  # group tag
+  #   label
+  #   repeat (if repeatable group)
+  #     body
+  #
+  # The general structure for a fragment is:
+  # group tag with field-list
+  #   hint
+  #   questions
+  def odk_group_or_fragment(node, xpath_prefix)
+    xpath = "#{xpath_prefix}/#{node.odk_code}"
+    odk_group_or_fragment_wrapper(node, xpath) do
+      fragments = QingGroupOdkPartitioner.new.fragment(node)
+      if fragments
+        fragments.map { |f| odk_group_or_fragment(f, xpath_prefix) }.reduce(:<<)
+      else
+        # Whether group/fragment should be shown on one screen
+        # (for now this is if it doesn't have any group children)
+        one_screen = !node.has_group_child?
+
+        # If one_screen is true, then we render the group as a field-list.
+        # We also include the hint.
+        # In the case of fragments, this means we include hint each time, which is correct.
+        # This covers the case where `node` is a fragment, because fragments should always
+        # be shown on one screen since that's what they're for.
+        # If one_screen is false, we just render the hint as there is no need for the group tag.
+        conditional_tag(:group, one_screen, appearance: "field-list") do
+          odk_group_hint(node, xpath) << odk_group_body(node, xpath)
         end
       end
-    else
-      odk_group_inner(node, xpath_prefix)
     end
   end
 
-  def odk_group_inner(node, xpath)
-    render("forms/odk/group_inner", node: node, xpath: xpath)
+  def odk_group_or_fragment_wrapper(node, xpath, &block)
+    if node.fragment?
+      # Fragments need no outer wrapper, they will get wrapped by field-list further in.
+      capture(&block)
+    else
+      # Groups should get wrapped in a group tag and include the label.
+      # Also a repeat tag if the group is repeatable
+      content_tag(:group) do
+        content_tag(:label, node.group_name) <<
+        conditional_tag(:repeat, node.repeatable?, nodeset: xpath) do
+          capture(&block)
+        end
+      end
+    end
+  end
+
+  def odk_group_hint(node, xpath)
+    content_tag(:input, ref: "#{xpath}/#{node.try(:odk_code)}-header") do
+      tag(:hint, ref: "jr:itext('#{node.try(:odk_code)}-header:hint')")
+    end
+  end
+
+  def odk_group_body(node, xpath)
+    render("forms/odk/group_body", node: node, xpath: xpath)
   end
 
   # Tests if all items in the group are Questionings with the same type and option set.

@@ -127,39 +127,6 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
-  context "form with multilevel inside nested group" do
-    let(:form) do
-      form = create(:form, :published, :with_version, version: "abc",
-      question_types:
-        [
-          {repeating:
-            {
-              items:
-                ["text", #q1
-                  "text", #q2
-                  {
-                    repeating:
-                      {
-                        items: ["integer", "multilevel_select_one"], #q3,q4
-                        name: "Repeat Group A"
-                      }
-                  },
-                  "long_text" #q5
-                ],
-                name: "Repeat Group 1"
-            }
-          }
-      ])
-    end
-
-    it "should render proper xml" do
-      do_request_and_expect_success
-      expected = prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
-    end
-
-  end
-
   context "group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,
@@ -186,6 +153,38 @@ describe "form rendering for odk", :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("repeat_group_form_with_multilevel.xml", form)
+    end
+  end
+
+  context "nested group form with multilevel select" do
+    let(:form) do
+      form = create(:form, :published, :with_version, version: "abc",
+      question_types:
+        [
+          {repeating:
+            {
+              name: "Repeat Group 1",
+              items:
+                ["text", #q1
+                  "text", #q2
+                  {
+                    repeating:
+                      {
+                        name: "Repeat Group A",
+                        items: ["integer", "multilevel_select_one"] #q3,q4
+                      }
+                  },
+                  "long_text" #q5
+                ]
+            }
+          }
+      ])
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expected = prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
     end
   end
 
