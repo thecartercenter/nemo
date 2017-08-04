@@ -33,6 +33,10 @@ module Odk
         end
         false
       end
+
+      def no_hints?
+        group_hint_translations.nil? || group_hint_translations.values.all?(&:blank?)
+      end
     end
   end
 end

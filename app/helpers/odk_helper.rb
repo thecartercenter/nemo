@@ -214,8 +214,12 @@ module OdkHelper
   end
 
   def odk_group_hint(node, xpath)
-    content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
-      tag(:hint, ref: "jr:itext('#{node.odk_code}-header:hint')")
+    if node.no_hints?
+      "".html_safe
+    else
+      content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
+        tag(:hint, ref: "jr:itext('#{node.odk_code}-header:hint')")
+      end
     end
   end
 
