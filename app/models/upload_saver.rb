@@ -2,7 +2,7 @@ require "fileutils"
 
 # Saves uploaded files.
 class UploadSaver
-  STORAGE_PATH = Rails.root.join(*%w(tmp uploads))
+  STORAGE_PATH = Rails.root.join("tmp", "uploads")
 
   # Stores uploaded file in the tmp dir either 1) so that it hangs around
   # long enough for our operation to process it, or 2) so that we can examine
