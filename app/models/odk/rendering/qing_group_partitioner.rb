@@ -34,7 +34,7 @@ module Odk
 
       def needs_partition?(group)
         !group.fragment? && group.one_screen? && group.children.count > 1 &&
-          !group.group_children? && group.multilevel_children?
+          !group.has_group_children? && group.multilevel_children?
       end
 
       def split_group_as_necessary(group)
