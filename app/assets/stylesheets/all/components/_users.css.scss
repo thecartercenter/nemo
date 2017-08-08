@@ -9,12 +9,14 @@
 
   td.name {
     width: 150px;
+    padding-bottom:8px;
   }
 
   td.value {
     font-weight: bold;
     font-family: monospace;
     width: 300px;
+    padding-bottom:8px;
   }
 }
 
@@ -35,11 +37,12 @@
   }
 
   td {
-    border-left: solid 10px #000;
+    border-left: solid 3px #000;
     padding: 0;
+    padding-bottom: 0px;
     margin: 0;
     width: 0px;
-    height: 10px;
+    height: 3px;
   }
 
   td.black { border-color: #000; }
