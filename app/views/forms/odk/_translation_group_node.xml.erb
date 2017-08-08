@@ -1,4 +1,5 @@
 <% if node.is_a?(QingGroup) %>
+  <% node = Odk::Rendering::DecoratorFactory.decorate(node) %>
   <text id="<%= node.odk_code %>-header:label">
     <value><%= node.group_name(lang, strict: false) %></value>
   </text>

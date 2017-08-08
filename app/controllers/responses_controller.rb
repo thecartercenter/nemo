@@ -110,6 +110,10 @@ class ResponsesController < ApplicationController
           @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
         else # Otherwise treat it like an ODK submission
           upfile = params[:xml_submission_file]
+
+          # Store file for debugging purposes.
+          UploadSaver.new.save_file(params[:xml_submission_file])
+
           files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
           files.each { |k, v| files[k] = v.tempfile }
 

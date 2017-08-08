@@ -102,6 +102,11 @@ class Questioning < FormItem
     !hidden? && question.qtype.smsable?
   end
 
+  # Duck type
+  def fragment?
+    false
+  end
+
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
   def method_missing(*args)
     # pass appropriate methods on to question

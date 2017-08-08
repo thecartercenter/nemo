@@ -1,6 +1,4 @@
 class UserBatchesController < ApplicationController
-  include UploadProcessable
-
   # authorization via cancan
   load_and_authorize_resource
   skip_authorize_resource only: [:example_spreadsheet]
@@ -15,7 +13,7 @@ class UserBatchesController < ApplicationController
   def create
     if @user_batch.valid?
       begin
-        stored_path = store_uploaded_file(@user_batch.file)
+        stored_path = UploadSaver.new.save_file(@user_batch.file)
 
         operation = current_user.operations.build(
           job_class: TabularImportOperationJob,

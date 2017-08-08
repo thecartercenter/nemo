@@ -6,5 +6,6 @@ FactoryGirl.define do
     mission { form.mission }
     group_name "group"
     group_hint "hint"
+    one_screen true
   end
 end

@@ -172,7 +172,7 @@ class Form < ApplicationRecord
     option_sets.select { |os| os.sms_formatting == "appendix" }
   end
 
-  # Returns all descendant questionings in one flat array, sorted in traversal order.
+  # Returns all descendant questionings in one flat array, sorted in traversal and rank order.
   # Uses FormItem.descendant_questionings which uses FormItem.arrange_descendants, which
   # eager loads questions and option sets.
   def questionings(reload = false)
