@@ -401,6 +401,7 @@ en:
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
         repeatable: "Repeatable?"
+        one_screen: "Show on One Screen?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -1374,6 +1375,13 @@ en:
       strictly_lt: "Strictly less than"
       strictly_gt: "Strictly greater than"
     other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
+
+  qing_group:
+    one_screen_disabled: "Not available because the group contains either a condition or another group"
+    tooltips:
+      repeatable: "Repeatable"
+      one_screen: "Shows on one screen in ODK"
+      multi_screen: "Shows on multiple screens in ODK"
 
   question_type:
     text: "Text"

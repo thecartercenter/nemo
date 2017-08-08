@@ -1,5 +1,6 @@
-<% if node.childless? %>
+<% node = Odk::Rendering::DecoratorFactory.decorate(node) %>
+<% if node.is_a?(Questioning) %>
   <%= render('forms/odk/questioning', qing: node, grid_mode: grid_mode, label_row: nil, group: parent, xpath_prefix: xpath_prefix) unless node.hidden %>
 <% else %>
-  <%= odk_group(node, xpath_prefix) %>
+  <%= odk_group_or_fragment(node, xpath_prefix) %>
 <% end %>

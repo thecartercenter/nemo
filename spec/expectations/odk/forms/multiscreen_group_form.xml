@@ -51,23 +51,21 @@
   <h:body>
     <group>
       <label>Group Name</label>
-      <group appearance="field-list">
-        <input ref="/data/*itemcode1*/*itemcode1*-header">
-          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
-        </input>
-        <input ref="/data/*itemcode1*/*itemcode2*">
-          <label ref="jr:itext('*itemcode2*:label')"/>
-          <hint ref="jr:itext('*itemcode2*:hint')"/>
-        </input>
-        <input ref="/data/*itemcode1*/*itemcode3*">
-          <label ref="jr:itext('*itemcode3*:label')"/>
-          <hint ref="jr:itext('*itemcode3*:hint')"/>
-        </input>
-        <input ref="/data/*itemcode1*/*itemcode4*">
-          <label ref="jr:itext('*itemcode4*:label')"/>
-          <hint ref="jr:itext('*itemcode4*:hint')"/>
-        </input>
-      </group>
+      <input ref="/data/*itemcode1*/*itemcode1*-header">
+        <hint ref="jr:itext('*itemcode1*-header:hint')"/>
+      </input>
+      <input ref="/data/*itemcode1*/*itemcode2*">
+        <label ref="jr:itext('*itemcode2*:label')"/>
+        <hint ref="jr:itext('*itemcode2*:hint')"/>
+      </input>
+      <input ref="/data/*itemcode1*/*itemcode3*">
+        <label ref="jr:itext('*itemcode3*:label')"/>
+        <hint ref="jr:itext('*itemcode3*:hint')"/>
+      </input>
+      <input ref="/data/*itemcode1*/*itemcode4*">
+        <label ref="jr:itext('*itemcode4*:label')"/>
+        <hint ref="jr:itext('*itemcode4*:hint')"/>
+      </input>
     </group>
   </h:body>
 </h:html>

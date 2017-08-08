@@ -14,12 +14,17 @@ class QingGroupsController < ApplicationController
     @form = Form.find(params[:form_id])
     # Adding group requires same permissions as removing questions.
     authorize!(:add_questions, @form)
-    @qing_group = QingGroup.new(form: @form)
+    @qing_group = QingGroup.new(form: @form, one_screen: true)
     render(partial: 'modal')
   end
 
   def edit
     @qing_group = QingGroup.find(params[:id])
+
+    # The QingGroupDecorator might declare this group can't do one-screen even if the property is
+    # set to true. If so, we should disable the checkbox.
+    @one_screen_disabled = true unless odk_decorator.one_screen_appropriate?
+
     render(partial: 'modal')
   end
 
@@ -45,22 +50,26 @@ class QingGroupsController < ApplicationController
 
   private
 
-    def validate_destroy
-      if @qing_group.children.size > 0
-        return render json: [], status: 404
-      end
+  def validate_destroy
+    if @qing_group.children.size > 0
+      return render json: [], status: 404
     end
+  end
 
-    # prepares qing_group
-    def prepare_qing_group
-      attrs = qing_group_params
-      attrs[:ancestry] = Form.find(attrs[:form_id]).root_id
-      @qing_group = QingGroup.accessible_by(current_ability).new(attrs)
-      @qing_group.mission = current_mission
-    end
+  # prepares qing_group
+  def prepare_qing_group
+    attrs = qing_group_params
+    attrs[:ancestry] = Form.find(attrs[:form_id]).root_id
+    @qing_group = QingGroup.accessible_by(current_ability).new(attrs)
+    @qing_group.mission = current_mission
+  end
 
-    def qing_group_params
-      translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint)
-      params.require(:qing_group).permit([:form_id, :repeatable] + translation_keys)
-    end
+  def qing_group_params
+    translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint)
+    params.require(:qing_group).permit([:form_id, :repeatable, :one_screen] + translation_keys)
+  end
+
+  def odk_decorator
+    Odk::Rendering::DecoratorFactory.decorate(@qing_group)
+  end
 end

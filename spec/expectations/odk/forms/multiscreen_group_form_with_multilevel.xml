@@ -5,7 +5,7 @@
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
-          <*itemcode1* jr:template="">
+          <*itemcode1*>
             <*itemcode1*-header/>
             <*itemcode2*/>
             <*itemcode3*/>
@@ -73,56 +73,37 @@
   <h:body>
     <group>
       <label>Group Name</label>
-      <repeat nodeset="/data/*itemcode1*">
-        <group appearance="field-list">
-          <input ref="/data/*itemcode1*/*itemcode1*-header">
-            <hint ref="jr:itext('*itemcode1*-header:hint')"/>
-          </input>
-          <input ref="/data/*itemcode1*/*itemcode2*">
-            <label ref="jr:itext('*itemcode2*:label')"/>
-            <hint ref="jr:itext('*itemcode2*:hint')"/>
-          </input>
-          <input ref="/data/*itemcode1*/*itemcode3*">
-            <label ref="jr:itext('*itemcode3*:label')"/>
-            <hint ref="jr:itext('*itemcode3*:hint')"/>
-          </input>
-        </group>
-        <group appearance="field-list">
-          <input ref="/data/*itemcode1*/*itemcode1*-header">
-            <hint ref="jr:itext('*itemcode1*-header:hint')"/>
-          </input>
-          <select1 ref="/data/*itemcode1*/*itemcode4*_1">
-            <label ref="jr:itext('*itemcode4*_1:label')"/>
-            <hint ref="jr:itext('*itemcode4*_1:hint')"/>
-            <item>
-              <label ref="jr:itext('*optcode1*')"/>
-              <value>*optcode1*</value>
-            </item>
-            <item>
-              <label ref="jr:itext('*optcode4*')"/>
-              <value>*optcode4*</value>
-            </item>
-          </select1>
-        </group>
-        <group appearance="field-list">
-          <input ref="/data/*itemcode1*/*itemcode1*-header">
-            <hint ref="jr:itext('*itemcode1*-header:hint')"/>
-          </input>
-          <input ref="/data/*itemcode1*/*itemcode4*_2" query="instance('os*optsetid1*')/root/item[parent_id=/data/*itemcode1*/*itemcode4*_1]">
-            <label ref="jr:itext('*itemcode4*_2:label')"/>
-            <hint ref="jr:itext('*itemcode4*_2:hint')"/>
-          </input>
-        </group>
-        <group appearance="field-list">
-          <input ref="/data/*itemcode1*/*itemcode1*-header">
-            <hint ref="jr:itext('*itemcode1*-header:hint')"/>
-          </input>
-          <input ref="/data/*itemcode1*/*itemcode5*">
-            <label ref="jr:itext('*itemcode5*:label')"/>
-            <hint ref="jr:itext('*itemcode5*:hint')"/>
-          </input>
-        </group>
-      </repeat>
+      <input ref="/data/*itemcode1*/*itemcode1*-header">
+        <hint ref="jr:itext('*itemcode1*-header:hint')"/>
+      </input>
+      <input ref="/data/*itemcode1*/*itemcode2*">
+        <label ref="jr:itext('*itemcode2*:label')"/>
+        <hint ref="jr:itext('*itemcode2*:hint')"/>
+      </input>
+      <input ref="/data/*itemcode1*/*itemcode3*">
+        <label ref="jr:itext('*itemcode3*:label')"/>
+        <hint ref="jr:itext('*itemcode3*:hint')"/>
+      </input>
+      <select1 ref="/data/*itemcode1*/*itemcode4*_1">
+        <label ref="jr:itext('*itemcode4*_1:label')"/>
+        <hint ref="jr:itext('*itemcode4*_1:hint')"/>
+        <item>
+          <label ref="jr:itext('*optcode1*')"/>
+          <value>*optcode1*</value>
+        </item>
+        <item>
+          <label ref="jr:itext('*optcode4*')"/>
+          <value>*optcode4*</value>
+        </item>
+      </select1>
+      <input ref="/data/*itemcode1*/*itemcode4*_2" query="instance('os*optsetid1*')/root/item[parent_id=/data/*itemcode1*/*itemcode4*_1]">
+        <label ref="jr:itext('*itemcode4*_2:label')"/>
+        <hint ref="jr:itext('*itemcode4*_2:hint')"/>
+      </input>
+      <input ref="/data/*itemcode1*/*itemcode5*">
+        <label ref="jr:itext('*itemcode5*:label')"/>
+        <hint ref="jr:itext('*itemcode5*:hint')"/>
+      </input>
     </group>
   </h:body>
 </h:html>

@@ -76,6 +76,11 @@
     // We use table within a table so wrapping works nicely.
     .base-info .wrapper {
       display: table;
+
+      i.fa {
+        margin-left: 5px;
+        color: $elmo-blue;
+      }
     }
 
     // This is the question rank, e.g 8., or 2.1.1.

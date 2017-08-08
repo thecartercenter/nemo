@@ -1,8 +1,13 @@
 require "spec_helper"
+require "fileutils"
 
 describe "form rendering for odk", :reset_factory_sequences do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
+
+  # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk_test_forms`.
+  # Then use `adb push tmp/odk_test_forms /sdcard/odk/forms` or similar to load them into ODK for testing.
+  let(:save_expectations) { false }
 
   before do
     login(user)
@@ -10,7 +15,7 @@ describe "form rendering for odk", :reset_factory_sequences do
 
   context "sample form" do
     let!(:form) do
-      create(:form, :published, :with_version,
+      create(:form, :published, :with_version, name: "Sample",
         question_types: %w(text long_text integer decimal location select_one
           multilevel_select_one select_multiple datetime date time))
     end
@@ -25,7 +30,10 @@ describe "form rendering for odk", :reset_factory_sequences do
     let(:first_question) { create(:question, qtype_name: "select_one") }
     let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
     let(:form) do
-      create(:form, :published, :with_version, questions: [[first_question, second_question]])
+      create(:form, :published, :with_version,
+        name: "Grid",
+        questions: [[first_question, second_question]]
+      )
     end
 
     it "should render proper xml" do
@@ -34,10 +42,35 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
+  context "gridable form with one_screen set to false" do
+    let(:first_question) { create(:question, qtype_name: "select_one") }
+    let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Multi-screen Gridable",
+        questions: [[first_question, second_question]]
+      )
+    end
+
+    before do
+      form.sorted_children[0].update_attributes!(one_screen: false)
+    end
+
+    it "should not render with grid format" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("multiscreen_gridable_form.xml", form)
+    end
+  end
+
   context "form with & in option name" do
     let(:option_set) { create(:option_set, option_names: ["Salt & Pepper", "Peanut Butter & Jelly"]) }
     let(:question) { create(:question, option_set: option_set) }
-    let(:form) { create(:form, :published, :with_version, questions: [question] ) }
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Form with & in Option",
+        questions: [question]
+      )
+    end
 
     it "should not have parsing errors" do
       do_request_and_expect_success
@@ -49,7 +82,9 @@ describe "form rendering for odk", :reset_factory_sequences do
   context "media question form" do
     let(:form) do
       create(:form, :published, :with_version,
-        question_types: %w(text image annotated_image sketch signature audio video))
+        name: "Media Questions",
+        question_types: %w(text image annotated_image sketch signature audio video)
+      )
     end
 
     it "should render proper XML" do
@@ -60,7 +95,10 @@ describe "form rendering for odk", :reset_factory_sequences do
 
   context "group form" do
     let(:form) do
-      create(:form, :published, :with_version, question_types: [["text", "text", "text", "text"]])
+      create(:form, :published, :with_version,
+        name: "Basic Group",
+        question_types: [["text", "text", "text", "text"]]
+      )
     end
 
     before do
@@ -73,9 +111,52 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
+  context "group form with condition" do
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Basic Group",
+        question_types: [["text", "text", "text"]]
+      )
+    end
+
+    before do
+      form.questionings.last.create_condition!(
+        ref_qing: form.questionings.first,
+        op: "eq",
+        value: "foo"
+      )
+    end
+
+    it "should not render on single page due to condition" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form_with_condition.xml", form)
+    end
+  end
+
+  context "multiscreen group form" do
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Multi-screen Group",
+        question_types: [["text", "text", "text"]]
+      )
+    end
+
+    before do
+      form.sorted_children[0].update_attributes!(one_screen: false)
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("multiscreen_group_form.xml", form)
+    end
+  end
+
   context "repeat group form" do
     let!(:form) do
-      create(:form, :published, :with_version, question_types: [["text", "text", "text", "text"]])
+      create(:form, :published, :with_version,
+        name: "Repeat Group",
+        question_types: [["text", "text", "text", "text"]]
+      )
     end
 
     before do
@@ -91,9 +172,10 @@ describe "form rendering for odk", :reset_factory_sequences do
 
   context "nested repeat group form" do
     let(:form) do
-      form = create(:form, :published, :with_version, version: "abc",
-      question_types:
-        [
+      form = create(:form, :published, :with_version,
+        name: "Nested Repeat Group",
+        version: "abc",
+        question_types: [
           {repeating:
             {
               items:
@@ -118,7 +200,8 @@ describe "form rendering for odk", :reset_factory_sequences do
               name: "Repeat Group 2"
             }
           }
-      ])
+        ]
+      )
     end
 
     it "should render proper xml" do
@@ -127,56 +210,45 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
-  context "form with multilevel inside nested group" do
-    let(:form) do
-      form = create(:form, :published, :with_version, version: "abc",
-      question_types:
-        [
-          {repeating:
-            {
-              items:
-                ["text", #q1
-                  "text", #q2
-                  {
-                    repeating:
-                      {
-                        items: ["integer", "multilevel_select_one"], #q3,q4
-                        name: "Repeat Group A"
-                      }
-                  },
-                  "long_text" #q5
-                ],
-                name: "Repeat Group 1"
-            }
-          }
-      ])
-    end
-
-    it "should render proper xml" do
-      do_request_and_expect_success
-      expected = prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("nested_group_form_with_multilevel.xml", form)
-    end
-
-  end
-
   context "group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,
-        question_types: [["text", "date", "multilevel_select_one", "integer"]])
+        name: "Group with Multilevel Select",
+        question_types: [["text", "date", "multilevel_select_one", "integer"]]
+      )
     end
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expected = prepare_odk_expectation("group_form_with_multilevel.xml", form)
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form_with_multilevel.xml", form)
+    end
+  end
+
+  context "multiscreen group form with multilevel select" do
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Multi-screen Group with Multilev",
+        question_types: [["text", "date", "multilevel_select_one", "integer"]]
+      )
+    end
+
+    before do
+      form.sorted_children[0].update_attributes!(one_screen: false)
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq(
+        prepare_odk_expectation("multiscreen_group_form_with_multilevel.xml", form))
     end
   end
 
   context "repeat group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,
-        question_types: [["text", "date", "multilevel_select_one", "integer"]])
+        name: "Repeat Group with Multilevel",
+        question_types: [["text", "date", "multilevel_select_one", "integer"]]
+      )
     end
 
     before do
@@ -189,20 +261,61 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
+  context "nested group form with multilevel select" do
+    let(:form) do
+      form = create(:form, :published, :with_version,
+      name: "Nested Group with Multilevel",
+      version: "abc",
+      question_types: [
+        {repeating:
+          {
+            name: "Repeat Group 1",
+            items:
+              ["text", #q1
+                "text", #q2
+                {
+                  repeating:
+                    {
+                      name: "Repeat Group A",
+                      items: ["integer", "multilevel_select_one"] #q3,q4
+                    }
+                },
+                "long_text" #q5
+              ]
+            }
+          }
+        ]
+      )
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq(
+        prepare_odk_expectation("nested_group_form_with_multilevel.xml", form))
+    end
+  end
+
   def do_request_and_expect_success
     get(form_path(form, format: :xml))
     expect(response).to be_success
   end
 
   def prepare_odk_expectation(filename, form)
-    items = form.preordered_items
+    items = form.preordered_items.map { |i| Odk::Rendering::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
-    prepare_expectation("odk/forms/#{filename}",
+    xml = prepare_expectation("odk/forms/#{filename}",
+      formname: [form.name],
       form: [form.id],
       formver: [form.code],
       itemcode: items.map(&:odk_code),
       optcode: nodes.map(&:odk_code),
       optsetid: items.map(&:option_set_id).compact.uniq
     )
+    if save_expectations
+      dir = Rails.root.join("tmp", "odk_test_forms")
+      FileUtils.mkdir_p(dir)
+      File.open(dir.join(filename), "w") { |f| f.write(xml) }
+    end
+    xml
   end
 end
