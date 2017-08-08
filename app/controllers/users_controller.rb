@@ -127,6 +127,7 @@ class UsersController < ApplicationController
   # shows printable login instructions for the user
   def login_instructions
     @site_url = admin_mode? ? basic_root_url : mission_root_url
+    @config_qr = ODKConfigGenerator.new().generate_odk_config(@user.login, flash[:password], @site_url)
   end
 
   # exports the selected users to VCF format

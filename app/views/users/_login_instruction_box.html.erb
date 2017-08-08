@@ -28,6 +28,10 @@
         <td class="value"><%= "#{@current_mission.name}" %></td>
       </tr>
     <% end %>
+    <tr>
+      <td class="name"><%=I18n.t("activerecord.models.odk_qr_code.one")%></td>
+      <td class="value qrcode"><%= raw @config_qr.as_html %></td>
+    </tr>
   </table>
 
   <% t("user.login_instructions.closing").each do |para| %>
