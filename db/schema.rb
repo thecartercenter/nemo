@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 20170809200244) do
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id"
     t.boolean "one_screen"
+    t.string "prefill_pattern"
     t.integer "question_id"
     t.integer "rank", null: false
     t.boolean "repeatable"
