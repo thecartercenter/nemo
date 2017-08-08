@@ -6,7 +6,7 @@ describe ODKConfigGenerator do
       test_username = "test_user"
       test_pwd = "test_pwd"
       site_url = "https://secure.cceom.org/m/kenya2017"
-      expected = '{"general":{"password":"test_pwd","username":"test_user","server_url":"https:\/\/secure.cceom.org\/m\/kenya2017"},"admin":{}}'
+      expected = '{"general":{"password":"test_pwd","username":"test_user","server_url":"https://secure.cceom.org/m/kenya2017"},"admin":{}}'
       actual = ODKConfigGenerator.new().generate_string(test_username, test_pwd, site_url)
 
       expect(actual).to eq expected
