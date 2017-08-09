@@ -6,9 +6,15 @@ module TreeTraverseable
     self.ancestors.find(ancestor_id)
   end
 
-  def path_to_ancestor(ancestor)
-    i = ancestors.find_index { |a| a.id == ancestor.id }
-    ancestors[i..-1]
+  def path_from_ancestor(ancestor, include_ancestor: false, include_self: false)
+    ancestor_list = self.ancestors
+    # find ancestor
+    i = ancestor_list.find_index { |a| a.id == ancestor.id }
+
+    i += 1 unless include_ancestor
+    ancestor_list << self if include_self
+
+    ancestor_list[i..-1]
   end
 
   def self_and_ancestors

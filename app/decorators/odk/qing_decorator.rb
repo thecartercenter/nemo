@@ -11,8 +11,16 @@ module Odk
       # get the paths to the common ancestor
       common_ancestor = object.lowest_common_ancestor(other_qing)
 
-      ancestor_path = object.path_to_ancestor(common_ancestor)
-      other_ancestor_path = other_qing.path_to_ancestor(common_ancestor)
+      # include ancestor to get the right number of relative jumps
+      ancestor_path = object.path_from_ancestor(common_ancestor, include_ancestor: true)
+
+      # include self for easier relative path manipulation
+      other_ancestor_path = other_qing.path_from_ancestor(common_ancestor, include_self: true)
+
+      # add the other qing to path
+      path_to_other = other_ancestor_path
+
+      # decorate
       decorated_path_to_other = decorated_form_items(other_ancestor_path)
 
       # use ../ to get to the common ancestor
