@@ -1,5 +1,5 @@
 class FormItem < ApplicationRecord
-  include MissionBased, FormVersionable, Replication::Replicable
+  include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
 
   acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry]

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe XMLSubmission do
+describe XMLSubmission, :odk do
   include ODKSubmissionSupport
 
   let(:xml) { build_odk_submission(form, data: data) }

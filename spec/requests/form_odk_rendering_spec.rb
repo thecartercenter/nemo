@@ -1,7 +1,7 @@
 require "spec_helper"
 require "fileutils"
 
-describe "form rendering for odk", :reset_factory_sequences do
+describe "form rendering for odk",:odk, :reset_factory_sequences do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
 

@@ -27,7 +27,6 @@ class Questioning < FormItem
     :first_leaf_option,
     :first_leaf_option_node,
     :select_options,
-    :odk_code,
     :odk_constraint,
     :subquestions,
     :standardized?,

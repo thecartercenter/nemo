@@ -51,7 +51,7 @@ describe Form do
     end
   end
 
-  describe "needs_odk_manifest?" do
+  describe "needs_odk_manifest?", :odk do
     context "for form with single level option sets only" do
       before { @form = create(:form, question_types: %w(select_one)) }
       it "should return false" do
@@ -66,7 +66,7 @@ describe Form do
     end
   end
 
-  describe "odk_download_cache_key" do
+  describe "odk_download_cache_key", :odk do
     before do
       @form = create(:form)
       publish_and_reset_pub_changed_at
@@ -77,7 +77,7 @@ describe Form do
     end
   end
 
-  describe "odk_index_cache_key" do
+  describe "odk_index_cache_key", :odk do
     before do
       @form = create(:form)
       @form2 = create(:form)

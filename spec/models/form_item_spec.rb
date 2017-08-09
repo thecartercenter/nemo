@@ -81,5 +81,19 @@ describe FormItem do
         expect(@q2.reload.rank).to eq 1
       end
     end
+
+  end
+
+  describe "tree traversal" do
+    context "with deeply nested form" do
+      let(:form) { create(:form, question_types: ["text", ["text", "text"], ["text", "text", ["text", "text"]]]) }
+      let(:qing) { form.sorted_children[2].sorted_children[0] }
+      let(:other_qing) { form.sorted_children[2].sorted_children[2].sorted_children[0] }
+      let(:common_ancestor) { form.sorted_children[2] }
+
+      it "should be able to find its lowest common ancestor with another node" do
+        expect(qing.lowest_common_ancestor(other_qing).id).to eq common_ancestor.id
+      end
+    end
   end
 end

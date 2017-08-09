@@ -1,9 +1,10 @@
 module Odk
-  class QingGroupDecorator < ::ApplicationDecorator
+  class QingGroupDecorator < FormItemDecorator
     delegate_all
 
     def odk_code
-      @odk_code ||= "grp#{id}"
+      @odk_code = super
+      @odk_code ||= "grp#{object.id}"
     end
 
     # Duck type
