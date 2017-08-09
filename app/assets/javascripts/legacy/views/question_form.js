@@ -1,3 +1,5 @@
+// THIS VIEW IS DEPRECATED, PREFER THE NEWER ONE QuestionFormView
+//
 // ELMO.Views.QuestionForm
 //
 // View model for Question form

@@ -43,6 +43,12 @@ div.question_fields {
       vertical-align: middle
     }
   }
+
+  // Initially hidden fields
+  .question_option_set_id, .question_auto_increment, .question_casted_minimum,
+    .question_casted_maximum, .question_key {
+    display: none;
+  }
 }
 
 form.questioning_form .form_field#condition {
