@@ -312,7 +312,7 @@ describe "form rendering for odk", :reset_factory_sequences do
   end
 
   def prepare_odk_expectation(filename, form)
-    items = form.preordered_items.map { |i| Odk::Rendering::DecoratorFactory.decorate(i) }
+    items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
     xml = prepare_expectation("odk/forms/#{filename}",
       formname: [form.name],

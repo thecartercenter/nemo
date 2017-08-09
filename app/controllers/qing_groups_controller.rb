@@ -70,6 +70,6 @@ class QingGroupsController < ApplicationController
   end
 
   def odk_decorator
-    Odk::Rendering::DecoratorFactory.decorate(@qing_group)
+    Odk::DecoratorFactory.decorate(@qing_group)
   end
 end

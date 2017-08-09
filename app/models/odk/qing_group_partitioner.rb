@@ -23,37 +23,35 @@
 # - It doesn't have any multilevel children
 # - It is a QingGroupFragment (already meet the criteria above, by definition)
 module Odk
-  module Rendering
-    class QingGroupPartitioner
-      def fragment(group)
-        return nil unless needs_partition?(group)
-        split_group_as_necessary(group)
-      end
+  class QingGroupPartitioner
+    def fragment(group)
+      return nil unless needs_partition?(group)
+      split_group_as_necessary(group)
+    end
 
-      private
+    private
 
-      def needs_partition?(group)
-        !group.fragment? && group.one_screen? && group.children.count > 1 &&
-          !group.has_group_children? && group.multilevel_children?
-      end
+    def needs_partition?(group)
+      !group.fragment? && group.one_screen? && group.children.count > 1 &&
+        !group.has_group_children? && group.multilevel_children?
+    end
 
-      def split_group_as_necessary(group)
-        result = []
-        temp_group_children = []
-        group.sorted_children.each do |child|
-          if child.multilevel?
-            result << QingGroupFragment.new(group, temp_group_children)
-            child.level_count.times do |i|
-              result << QingGroupFragment.new(group, [child], i + 1)
-            end
-            temp_group_children = []
-          else
-            temp_group_children << child
+    def split_group_as_necessary(group)
+      result = []
+      temp_group_children = []
+      group.sorted_children.each do |child|
+        if child.multilevel?
+          result << QingGroupFragment.new(group, temp_group_children)
+          child.level_count.times do |i|
+            result << QingGroupFragment.new(group, [child], i + 1)
           end
+          temp_group_children = []
+        else
+          temp_group_children << child
         end
-        result << QingGroupFragment.new(group, temp_group_children) unless temp_group_children.empty?
-        result
       end
+      result << QingGroupFragment.new(group, temp_group_children) unless temp_group_children.empty?
+      result
     end
   end
 end

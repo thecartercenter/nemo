@@ -1,4 +1,4 @@
-<% node = Odk::Rendering::DecoratorFactory.decorate(node) %>
+<% node = Odk::DecoratorFactory.decorate(node) %>
 <% if node.is_a?(Questioning) %>
   <% unless node.hidden %>
     <% node.subquestions.each do |subq| %>

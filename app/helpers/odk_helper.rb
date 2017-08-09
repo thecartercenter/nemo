@@ -186,7 +186,7 @@ module OdkHelper
 
     xpath = "#{xpath_prefix}/#{node.odk_code}"
     odk_group_or_fragment_wrapper(node, xpath) do
-      fragments = Odk::Rendering::QingGroupPartitioner.new.fragment(node)
+      fragments = Odk::QingGroupPartitioner.new.fragment(node)
       if fragments
         fragments.map { |f| odk_group_or_fragment(f, xpath_prefix) }.reduce(:<<)
       else
