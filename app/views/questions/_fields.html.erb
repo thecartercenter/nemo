@@ -21,17 +21,19 @@
   <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
   <%= f.field(:option_set_id, :partial => 'questions/option_set_select', :read_only => cant_update_core) %>
 
-  <div class="minmax">
-    <%= f.field(:casted_minimum, :partial => 'questions/min_max_condition') %>
-    <%= f.field(:casted_maximum, :partial => 'questions/min_max_condition') %>
-  </div>
-
   <%# title and hint boxes, one for each language %>
   <div class="names_hints">
     <% configatron.preferred_locales.each_with_index do |lang, rank| %>
       <%= render("questions/title_and_hint", :f => f, :lang => lang, :rank => rank) %>
     <% end %>
   </div>
+
+  <div class="minmax">
+    <%= f.field(:casted_minimum, :partial => 'questions/min_max_condition') %>
+    <%= f.field(:casted_maximum, :partial => 'questions/min_max_condition') %>
+  </div>
+
+  <%= f.field(:auto_increment, type: :check_box) %>
 
   <%= f.field(:tag_ids, partial: 'questions/tags') %>
 
