@@ -4,6 +4,7 @@ class Report::SummaryCollectionBuilder
   # hash for converting qtypes to groups (stat, select, date, raw) used for generating summaries
   QTYPE_TO_SUMMARY_GROUP = {
     'integer' => 'stat',
+    'counter' => 'stat',
     'decimal' => 'stat',
     'time' => 'stat',
     'datetime' => 'stat',
@@ -83,7 +84,7 @@ class Report::SummaryCollectionBuilder
           else
             # convert stats to appropriate type
             case qing.qtype_name
-            when 'integer'
+            when 'integer', 'counter'
               stat_values['mean'] = stat_values['mean'].to_f
               %w(max min).each{|s| stat_values[s] = stat_values[s].to_i}
             when 'decimal'
@@ -150,7 +151,7 @@ class Report::SummaryCollectionBuilder
           INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND q.qtype_name = 'integer'
+        WHERE a.deleted_at IS NULL AND (q.qtype_name = 'integer' OR q.qtype_name = 'counter')
         GROUP BY #{disagg_group_by_expr} qing.id
       eos
 

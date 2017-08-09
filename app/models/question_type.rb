@@ -6,6 +6,7 @@ class QuestionType
     { name: "text", odk_name: "string", properties: %w(printable smsable textual headerable) },
     { name: "long_text", odk_name: "string", properties: %w(printable smsable textual) },
     { name: "integer", odk_name: "int", properties: %w(printable smsable numeric headerable) },
+    { name: "counter", odk_name: "int", properties: %w(printable smsable numeric headerable) },
     { name: "decimal", odk_name: "decimal", properties: %w(printable smsable numeric headerable) },
     { name: "location", odk_name: "geopoint", properties: %w() },
     { name: "select_one", odk_name: "select1", properties: %w(printable has_options smsable headerable) },

@@ -26,7 +26,6 @@
 
     <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
 
-
     <% unless admin_mode? %>
       <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>
       <div class="setting-fields">

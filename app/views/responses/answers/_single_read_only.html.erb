@@ -23,7 +23,7 @@
   <%# output time value in human readable and machine readable formats %>
   <%= content_tag(:div, val.nil? ? '' : l(val, format: format), class: 'ro-val', :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
 
-<% when 'integer', 'decimal' %>
+<% when 'integer', 'decimal', 'counter' %>
 
   <%= content_tag(:div, answer.value, class: 'ro-val', :'data-val' => answer.value) %>
 

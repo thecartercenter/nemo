@@ -1387,6 +1387,7 @@ en:
     text: "Text"
     long_text: "Long Text"
     integer: "Integer"
+    counter: "Counter"
     decimal: "Decimal"
     location: "Location"
     select_one: "Select One"

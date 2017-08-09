@@ -351,6 +351,11 @@ describe Sms::Decoder, :sms do
       assert_decoding(body: "#{@form.code} 1.15 2.11,12,13,14,15,20,1a", answers: [15, %w(1 2 3 4 5 36 10)])
     end
 
+    it "counter question should work" do
+      create_form(questions: %w(counter))
+      assert_decoding(body: "#{@form.code} 1.7", answers: [7])
+    end
+
     it "decimal question should work" do
       create_form(questions: %w(decimal))
       assert_decoding(body: "#{@form.code} 1.1.15", answers: [1.15])
@@ -580,7 +585,7 @@ describe Sms::Decoder, :sms do
 
       # ensure answer matches
       case qing.qtype_name
-      when "integer"
+      when "integer", "counter"
         expect(ansset.value.to_i).to eq(expected)
       when "decimal"
         expect(ansset.value.to_f).to eq(expected)

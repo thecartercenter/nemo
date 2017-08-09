@@ -21,12 +21,14 @@ class Condition < ApplicationRecord
   delegate :form, :form_id, to: :questioning
 
   OPERATORS = [
-    {name: 'eq', types: %w(decimal integer text long_text address select_one datetime date time), code: "="},
-    {name: 'lt', types: %w(decimal integer datetime date time), code: "<"},
-    {name: 'gt', types: %w(decimal integer datetime date time), code: ">"},
-    {name: 'leq', types: %w(decimal integer datetime date time), code: "<="},
-    {name: 'geq', types: %w(decimal integer datetime date time), code: ">="},
-    {name: 'neq', types: %w(decimal integer text long_text address select_one datetime date time), code: "!="},
+    {name: 'eq', types: %w(decimal integer counter text long_text address select_one datetime date time),
+      code: "="},
+    {name: 'lt', types: %w(decimal integer counter datetime date time), code: "<"},
+    {name: 'gt', types: %w(decimal integer counter datetime date time), code: ">"},
+    {name: 'leq', types: %w(decimal integer counter datetime date time), code: "<="},
+    {name: 'geq', types: %w(decimal integer counter datetime date time), code: ">="},
+    {name: 'neq', types: %w(decimal integer counter text long_text address select_one datetime date time),
+      code: "!="},
     {name: 'inc', types: %w(select_multiple), code: "="},
     {name: 'ninc', types: %w(select_multiple), code: "!="}
   ]
