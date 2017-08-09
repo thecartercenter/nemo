@@ -20,6 +20,8 @@ class FormItem < ApplicationRecord
 
   validate :parent_must_be_group
 
+  delegate :name, to: :form, prefix: true
+
   # Gets an OrderedHash of the following form for the descendants of this FormItem.
   # Uses only a constant number of database queries to do so.
   # {

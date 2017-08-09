@@ -4,16 +4,39 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, opts, group = nil, xpath_prefix, &block)
+  def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
     opts ||= {}
     opts[:ref] = [xpath_prefix, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     if !subq.first_rank? && subq.qtype.name == "select_one"
       opts[:query] = multilevel_option_nodeset_ref(qing, subq, group.try(:odk_code), xpath_prefix)
     end
-    opts[:appearance] = odk_media_appearance(subq) if subq.qtype.multimedia?
+    opts[:appearance] = odk_input_appearance(qing, grid_mode, label_row)
     opts[:mediatype] = odk_media_type(subq) if subq.qtype.multimedia?
     content_tag(odk_input_tagname(subq), opts, &block)
+  end
+
+  def odk_input_appearance(qing, grid_mode, label_row)
+    return "label" if label_row
+    return "list-nolabel" if grid_mode
+    
+    case qing.qtype_name
+    when "annotated_image"
+      "annotate"
+    when "sketch"
+      "draw"
+    when "signature"
+      "signature"
+    when "counter"
+      params = ActiveSupport::OrderedHash.new
+      params[:form_id] = "'#{qing.form_id}'"
+      params[:form_name] = "'#{qing.form_name}'"
+      params[:question_id] = "'#{qing.odk_code}'"
+      params[:question_name] = "'#{qing.code}'" # Code instead of title because it's not locale dependent
+      params[:increment] = "true()" if qing.auto_increment?
+      str = params.map { |k, v| "#{k}=#{v}" }.join(", ")
+      "ex:org.opendatakit.counter(#{str})".html_safe
+    end
   end
 
   def odk_input_tagname(subq)
@@ -36,17 +59,6 @@ module OdkHelper
       "audio/*"
     when "video"
       "video/*"
-    end
-  end
-
-  def odk_media_appearance(subq)
-    case subq.qtype.name
-    when "annotated_image"
-      "annotate"
-    when "sketch"
-      "draw"
-    when "signature"
-      "signature"
     end
   end
 
@@ -80,11 +92,6 @@ module OdkHelper
   def required_value(form)
     # if form allows incompletes, question is required only if the answer to 'are there missing answers' is 'no'
     form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
-  end
-
-  def appearance(grid_mode, label_row)
-    return "label" if label_row
-    return "list-nolabel" if grid_mode
   end
 
   # generator for binding portion of xml.

@@ -13,6 +13,10 @@ module Odk
         one_screen? && !has_group_children? && !internal_conditions?
       end
 
+      def code
+        nil
+      end
+
       def fragment?
         false # is QingGroup, so isn't a fragment
       end

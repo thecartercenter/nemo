@@ -26,6 +26,17 @@ describe "form rendering for odk", :reset_factory_sequences do
     end
   end
 
+  context "counter form" do
+    let!(:form) do
+      create(:form, :published, :with_version, name: "Counter", question_types: %w(counter counter_with_inc))
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("counter_form.xml", form)
+    end
+  end
+
   context "grid form" do
     let(:first_question) { create(:question, qtype_name: "select_one") }
     let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
@@ -308,6 +319,7 @@ describe "form rendering for odk", :reset_factory_sequences do
       form: [form.id],
       formver: [form.code],
       itemcode: items.map(&:odk_code),
+      itemqcode: items.map(&:code),
       optcode: nodes.map(&:odk_code),
       optsetid: items.map(&:option_set_id).compact.uniq
     )

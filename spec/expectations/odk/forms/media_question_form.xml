@@ -78,15 +78,15 @@
       <label ref="jr:itext('*itemcode2*:label')"/>
       <hint ref="jr:itext('*itemcode2*:hint')"/>
     </upload>
-    <upload appearance="annotate" ref="/data/*itemcode3*" mediatype="image/*">
+    <upload ref="/data/*itemcode3*" appearance="annotate" mediatype="image/*">
       <label ref="jr:itext('*itemcode3*:label')"/>
       <hint ref="jr:itext('*itemcode3*:hint')"/>
     </upload>
-    <upload appearance="draw" ref="/data/*itemcode4*" mediatype="image/*">
+    <upload ref="/data/*itemcode4*" appearance="draw" mediatype="image/*">
       <label ref="jr:itext('*itemcode4*:label')"/>
       <hint ref="jr:itext('*itemcode4*:hint')"/>
     </upload>
-    <upload appearance="signature" ref="/data/*itemcode5*" mediatype="image/*">
+    <upload ref="/data/*itemcode5*" appearance="signature" mediatype="image/*">
       <label ref="jr:itext('*itemcode5*:label')"/>
       <hint ref="jr:itext('*itemcode5*:hint')"/>
     </upload>

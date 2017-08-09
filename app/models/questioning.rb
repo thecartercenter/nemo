@@ -38,9 +38,8 @@ class Questioning < FormItem
     :sms_formatting_as_text?,
     :sms_formatting_as_appendix?,
     :preordered_option_nodes,
+    :auto_increment?,
     to: :question
-
-
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true

@@ -15,7 +15,6 @@ FactoryGirl.define do
     qtype_name "integer"
     sequence(:code) { |n| "#{qtype_name.camelize}Q#{n}" }
 
-
     sequence(:name_translations) do |n|
       translation_string = "#{qtype_name.titleize} Question Title #{n}"
       translation_string = translation_string.prepend "Geographic " if use_geo_option_set
