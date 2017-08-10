@@ -54,8 +54,6 @@ feature "conditions flow", js: true do
     select("Oak", from: "Species")
     click_button("Save")
 
-
-
     visit("/en/m/#{form.mission.compact_name}/questionings/#{last_questioning.id}")
     expect(page).to have_content("Question #1 #{question_code}
       Species is equal to \"Oak\"")

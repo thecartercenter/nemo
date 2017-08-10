@@ -53,7 +53,7 @@
         <input ref="/data/*itemcode1*/*itemcode1*-header">
           <hint ref="jr:itext('*itemcode1*-header:hint')"/>
         </input>
-        <select1 appearance="label" ref="/data/*itemcode1*/*itemcode2*">
+        <select1 ref="/data/*itemcode1*/*itemcode2*" appearance="label">
           <label/>
           <item>
             <label ref="jr:itext('*optcode1*')"/>
@@ -64,7 +64,7 @@
             <value>*optcode2*</value>
           </item>
         </select1>
-        <select1 appearance="list-nolabel" ref="/data/*itemcode1*/*itemcode2*">
+        <select1 ref="/data/*itemcode1*/*itemcode2*" appearance="list-nolabel">
           <label ref="jr:itext('*itemcode2*:label')"/>
           <item>
             <label ref="jr:itext('*optcode1*')"/>
@@ -75,7 +75,7 @@
             <value>*optcode2*</value>
           </item>
         </select1>
-        <select1 appearance="list-nolabel" ref="/data/*itemcode1*/*itemcode3*">
+        <select1 ref="/data/*itemcode1*/*itemcode3*" appearance="list-nolabel">
           <label ref="jr:itext('*itemcode3*:label')"/>
           <item>
             <label ref="jr:itext('*optcode1*')"/>

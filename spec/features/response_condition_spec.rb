@@ -8,6 +8,7 @@ feature "conditions in responses", js: true do
       long_text: create_questioning("long_text", form),
       text1: create_questioning("text", form),
       integer: create_questioning("integer", form),
+      counter: create_questioning("counter", form),
       text2: create_questioning("text", form),
       decimal: create_questioning("decimal", form),
       select_one: create_questioning("select_one", form),
@@ -30,8 +31,10 @@ feature "conditions in responses", js: true do
         ref_qing: questionings[:long_text], op: "eq", value: "foo"),
       integer_if_text1: questionings[:integer].create_condition(
         ref_qing: questionings[:text1], op: "neq", value: "bar"),
-      decimal_if_integer: questionings[:decimal].create_condition(
+      counter_if_integer: questionings[:counter].create_condition(
         ref_qing: questionings[:integer], op: "gt", value: "10"),
+      decimal_if_counter: questionings[:decimal].create_condition(
+        ref_qing: questionings[:counter], op: "gt", value: "5"),
       select_one_if_decimal: questionings[:select_one].create_condition(
         ref_qing: questionings[:decimal], op: "eq", value: "21.72"),
       ml_select_one_if_select_one: questionings[:multilevel_select_one].create_condition(
@@ -87,7 +90,13 @@ feature "conditions in responses", js: true do
       questioning: questionings[:integer], value: "10", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:integer], value: "11", visible: visible_qings << :decimal)
+      questioning: questionings[:integer], value: "11", visible: visible_qings << :counter)
+
+    fill_answer_and_expect_visible(
+      questioning: questionings[:counter], value: "5", visible: visible_qings)
+
+    fill_answer_and_expect_visible(
+      questioning: questionings[:counter], value: "6", visible: visible_qings << :decimal)
 
     fill_answer_and_expect_visible(
       questioning: questionings[:decimal], value: "21.7", visible: visible_qings)

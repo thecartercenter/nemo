@@ -57,6 +57,15 @@ describe "summary collection with single subset" do
     end
   end
 
+  describe "counter summary" do
+    it "should work like integer" do
+      prepare_form('counter', [10, 7, 6, 1, 1])
+      @responses.last.destroy
+      prepare_collection
+      expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.0, :max => 10, :min => 1})
+    end
+  end
+
   describe "decimal summary" do
     it "should be correct and ignore deleted values" do
       prepare_form('decimal', [10.0, 7.2, 6.7, 1.1, 11.5])

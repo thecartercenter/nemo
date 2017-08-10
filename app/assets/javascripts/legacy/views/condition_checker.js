@@ -138,6 +138,7 @@
 
         case "integer":
         case "decimal":
+        case "counter":
           return parseFloat(this.rq_row.find("div.control input[type='text']").val());
 
         case "select_one":
@@ -174,7 +175,7 @@
       case "long_text":
         return this.condition.value;
 
-      case "integer": case "decimal":
+      case "integer": case "decimal": case "counter":
         return parseFloat(this.condition.value);
 
       case "select_one": case "select_multiple":

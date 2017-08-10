@@ -82,7 +82,8 @@ module FormsHelper
     'image' => 'fa-image',
     'sketch' => 'fa-pencil-square-o',
     'audio' => 'fa-volume-up',
-    'video' => 'fa-film'
+    'video' => 'fa-film',
+    'counter' => 'fa-plus'
   }
 
   def form_item_icon(type)

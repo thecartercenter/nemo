@@ -11,6 +11,7 @@ namespace :db do
       "text",
       "long_text",
       "integer",
+      "counter",
       "decimal",
       "location",
       [

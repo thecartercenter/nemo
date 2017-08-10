@@ -4,7 +4,7 @@ module SmsGuideHelper
   def answer_space_for_questioning(qing)
     # determine the number of spaces
     width = case qing.question.qtype.name
-    when "integer" then 3
+    when "integer", "counter" then 3
     when "select_one"
       if qing.sms_formatting_as_text? then 8
       elsif qing.sms_formatting_as_appendix? then 4
@@ -51,7 +51,7 @@ module SmsGuideHelper
   # Returns an example answer based on the question type, to be used in the sms guide
   def sms_example_for_questioning(qing, locale: configatron.default_locale)
     content = case qing.qtype_name
-    when "integer" then "3"
+    when "integer", "counter" then "3"
     when "decimal" then "12.5"
     when "select_one"
       if qing.sms_formatting_as_text?
@@ -92,7 +92,7 @@ module SmsGuideHelper
       else
         qing.qtype_name
       end
-    when "integer", "decimal"
+    when "integer", "decimal", "counter"
       "number"
     when "text", "long_text"
       "text"

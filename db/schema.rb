@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170803175346) do
+ActiveRecord::Schema.define(version: 20170809200244) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -348,6 +348,7 @@ ActiveRecord::Schema.define(version: 20170803175346) do
 
   create_table "questions", force: :cascade do |t|
     t.string "access_level", limit: 255, default: "inherit", null: false
+    t.boolean "auto_increment", default: false, null: false
     t.text "canonical_name", null: false
     t.string "code", limit: 255
     t.datetime "created_at"
