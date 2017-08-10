@@ -1,4 +1,4 @@
-class PrefillExpressionParser
+class PrefillPatternParser
   CODE_PATTERN = /([$][!]?[A-z]\w+)/
   RESERVED_CODES = {
     "$!ItemNumber" => "position(..)"
@@ -7,11 +7,11 @@ class PrefillExpressionParser
   def initialize(qing)
     @qing = qing
     @form = @qing.form
-    @prefill_expression = @qing.prefill_pattern
+    @prefill_pattern = @qing.prefill_pattern
   end
 
   def extract_codes
-    @extracted_codes ||= @prefill_expression.scan(CODE_PATTERN).flatten
+    @extracted_codes ||= @prefill_pattern.scan(CODE_PATTERN).flatten
   end
 
   def code_mapping
@@ -39,7 +39,7 @@ class PrefillExpressionParser
       end
     end
 
-    expression_tokens = @prefill_expression.split(CODE_PATTERN).reject(&:empty?)
+    expression_tokens = @prefill_pattern.split(CODE_PATTERN).reject(&:empty?)
 
     expression_tokens = expression_tokens.map do |token|
       odk_mapping[token].present? ? odk_mapping[token] : "'#{token}'"
