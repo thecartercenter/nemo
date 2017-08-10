@@ -104,6 +104,7 @@ module OdkHelper
       "relevant" => qing.has_condition? ? qing.condition.to_odk : nil,
       "constraint" => subq.odk_constraint,
       "jr:constraintMsg" => subq.min_max_error_msg,
+      "calculate" => qing.prefill_pattern.present? ? PrefillExpressionParser.new(qing).to_odk : nil
     }.reject { |k,v| v.nil? }).gsub(/_required=/, "required=").html_safe
   end
 
