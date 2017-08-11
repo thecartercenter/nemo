@@ -1,20 +1,20 @@
 class ODKConfigGenerator
 
-  def generate_odk_config(username, password, site_url)
-    string = generate_string(username, password, site_url)
-    processed_string = Base64.strict_encode64(Zlib::Deflate.deflate(string))
-    qrcode = RQRCode::QRCode.new(processed_string)
+  def initialize(username, password, site_url)
+    @username = username
+    @password = password
+    @site_url = site_url
   end
 
-  def generate_string(username, password, site_url)
+  def encode_config
     hash = {
       general: {
-        password: password,
-        username: username,
-        server_url: site_url
+        password: @password,
+        username: @username,
+        server_url: @site_url
       },
       admin: {}
     }
-    hash.to_json
+    Base64.strict_encode64(Zlib::Deflate.deflate(hash.to_json))
   end
 end
