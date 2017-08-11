@@ -22,18 +22,18 @@ module Odk
         ])
       end
 
-      let(:qing) { described_class.decorate(form.sorted_children[1].sorted_children[2].sorted_children[0]) }
-      let(:other_qing) do
+      let(:qing6) { described_class.decorate(form.sorted_children[1].sorted_children[2].sorted_children[0]) }
+      let(:qing11) do
         described_class.decorate(form.sorted_children[1].sorted_children[3].sorted_children[1].sorted_children[0])
       end
 
       it "returns the absolute xpath", :reset_factory_sequences do
-        expect(qing.absolute_xpath).to eq "/data/grp3/grp6/q4"
-        expect(other_qing.absolute_xpath).to eq "/data/grp3/grp8/grp10/q6"
+        expect(qing6.absolute_xpath).to eq "/data/grp3/grp6/q4"
+        expect(qing11.absolute_xpath).to eq "/data/grp3/grp8/grp10/q6"
       end
 
       it "returns the relative xpath", :reset_factory_sequences do
-        expect(qing.relative_xpath(other_qing)).to eq "../../grp8/grp10/q6"
+        expect(qing6.relative_xpath(qing11)).to eq "../../grp8/grp10/q6"
       end
     end
   end
