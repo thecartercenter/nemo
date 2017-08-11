@@ -2,6 +2,10 @@ require "spec_helper"
 require "fileutils"
 
 describe UploadSaver do
+  before do
+    FileUtils.mkdir_p(Rails.root.join("tmp", "uploads"))
+  end
+
   describe "save_file" do
     let(:uploaded) { Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/file.txt"), "text/plain") }
     let(:saved_path) { UploadSaver.new.save_file(uploaded) }
