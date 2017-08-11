@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170809200244) do
+ActiveRecord::Schema.define(version: 20170811202952) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -166,6 +166,7 @@ ActiveRecord::Schema.define(version: 20170809200244) do
     t.string "prefill_pattern"
     t.integer "question_id"
     t.integer "rank", null: false
+    t.boolean "read_only"
     t.boolean "repeatable"
     t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
