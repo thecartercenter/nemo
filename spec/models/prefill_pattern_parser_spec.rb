@@ -47,12 +47,4 @@ describe PrefillPatternParser do
       expect(described_class.new(q22).to_odk).to eq "concat('hai-',position(..),'-thar')"
     end
   end
-
-  context "with alternate repeat num syntax" do
-    let(:pattern) { "hai-$RepeatNum-thar" }
-
-    it "should be correct" do
-      expect(described_class.new(q22).to_odk).to eq "concat('hai-',position(..),'-thar')"
-    end
-  end
 end

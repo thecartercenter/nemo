@@ -1,8 +1,7 @@
 class PrefillPatternParser
   CODE_PATTERN = /([$][!]?[A-z]\w+)/
   RESERVED_CODES = {
-    "$!RepeatNum" => "position(..)",
-    "$RepeatNum" => "position(..)"
+    "$!RepeatNum" => "position(..)"
   }
 
   def initialize(qing)
@@ -32,8 +31,6 @@ class PrefillPatternParser
 
     "concat(#{expression_tokens.join(',')})"
   end
-
-  private
 
   def extract_codes
     @extracted_codes ||= @prefill_pattern.scan(CODE_PATTERN).flatten
