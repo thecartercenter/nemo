@@ -123,6 +123,9 @@ gem "phony", "~> 2.15.26"
 # Soft delete
 gem "acts_as_paranoid", "~> 0.5.0"
 
+# QR barcode
+gem 'rqrcode', '~> 0.10.1'
+
 group :development do
   # generate diagrams with rake db:migrate
   gem "rails-erd", "~> 1.4.0"

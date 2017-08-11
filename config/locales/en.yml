@@ -2061,6 +2061,7 @@ en:
       preamble_plural: |-
         Login instructions are shown below. Please print these pages now and ensure the users below receive their instructions.
         Since the users' passwords are stored in encrypted format, they will be irretrievable after you leave this page.
+      qr_code: "ODK QR Code"
       site_url: "Site URL"
       title: "Login Instructions"
       welcome: "Welcome to %{site}. Your credentials are as follows:"
