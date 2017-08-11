@@ -249,11 +249,7 @@ class Ability
     # standard forms cannot be published and do not have versions, which are only assigned on publish
     cannot :publish, Form, is_standard: true
 
-    cannot [:destroy, :update, :update_required, :update_condition], Questioning do |q|
-      q.published?
-    end
-
-    cannot :update_hidden, Questioning do |q|
+    cannot [:destroy, :update, :update_core], Questioning do |q|
       q.published?
     end
 

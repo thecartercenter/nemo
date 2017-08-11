@@ -8,9 +8,9 @@
 
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
-  <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_hidden, @questioning)) %>
+  <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:condition, partial: "conditions/form") %>
-  <%= f.field(:required, type: :check_box, read_only: cannot?(:update_required, @questioning)) %>
+  <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
 
   <div class="submit-buttons">
     <%= f.submit(class: "btn btn-primary") %>
