@@ -1,5 +1,6 @@
 class QuestionType
-  AVAILABLE_PROPERTIES = %w(printable smsable textual headerable prefillable numeric multimedia temporal has_options has_timezone)
+  AVAILABLE_PROPERTIES = %w(printable smsable textual headerable prefillable numeric
+    multimedia temporal has_options has_timezone)
   attr_reader :name, :odk_name, :properties
 
   @@attributes = [
@@ -36,9 +37,8 @@ class QuestionType
     @@all ||= @@attributes.map { |a| new(a) }
   end
 
-  # returns smsable types
-  def self.smsable
-    @@smsable ||= @@attributes.map { |a| new(a) }.select(&:smsable?)
+  def self.with_property(property)
+    all.select(&:"#{property}?")
   end
 
   def initialize(attribs)
