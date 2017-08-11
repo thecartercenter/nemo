@@ -19,5 +19,7 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
     if @prefillableTypes
       if @prefillableTypes.indexOf(type) != -1
         @$('.questioning_prefill_pattern').show()
+        @$('.questioning_read_only').show()
       else
         @$('.questioning_prefill_pattern').hide()
+        @$('.questioning_read_only').hide()

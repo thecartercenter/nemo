@@ -12,6 +12,7 @@
   <%= f.field(:condition, partial: "conditions/form") %>
   <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:prefill_pattern, type: :string, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
 
   <div class="submit-buttons">
     <%= f.submit(class: "btn btn-primary") %>
