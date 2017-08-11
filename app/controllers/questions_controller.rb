@@ -64,24 +64,25 @@ class QuestionsController < ApplicationController
   end
 
   private
-    # creates/updates the question
-    def create_or_update
-      if @question.save
-        set_success_and_redirect(@question)
-      else
-        flash.now[:error] = I18n.t('activerecord.errors.models.question.general')
-        prepare_and_render_form
-      end
-    end
 
-    # prepares objects for and renders the form template
-    def prepare_and_render_form
-      # this method lives in the QuestionFormable concern
-      setup_question_form_support_objs
-      render(:form)
+  # creates/updates the question
+  def create_or_update
+    if @question.save
+      set_success_and_redirect(@question)
+    else
+      flash.now[:error] = I18n.t('activerecord.errors.models.question.general')
+      prepare_and_render_form
     end
+  end
 
-    def question_params
-      params.require(:question).permit(whitelisted_question_params(params[:question]))
-    end
+  # prepares objects for and renders the form template
+  def prepare_and_render_form
+    # this method lives in the QuestionFormable concern
+    setup_question_form_support_objs
+    render(:form)
+  end
+
+  def question_params
+    params.require(:question).permit(whitelisted_question_params(params[:question]))
+  end
 end

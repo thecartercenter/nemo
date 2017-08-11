@@ -10,5 +10,8 @@
 
 <%= javascript_doc_ready do %>
   // This is the newer view for controlling the Question/Questioning form, prefer this one to QuestionForm.
-  new ELMO.Views.QuestionFormView({el: '.question_form'});
+  new ELMO.Views.QuestionFormView(<%=json(
+    el: ".question_form",
+    prefillable_types: @prefillable_types.map(&:name)
+  )%>);
 <% end %>
