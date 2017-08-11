@@ -16,3 +16,8 @@
     <%= f.submit(class: "btn btn-primary") %>
   </div>
 <% end %>
+
+<%= javascript_doc_ready do %>
+  // This is the newer view for controlling the Question/Questioning form, prefer this one to QuestionForm.
+  new ELMO.Views.QuestionFormView({el: '.questioning_form'});
+<% end %>

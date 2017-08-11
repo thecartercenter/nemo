@@ -1,4 +1,4 @@
-# Newer view to manage question form (or question fields on questioning form).
+# Newer view to manage Question/Questioning form.
 class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @$('select[id$="_qtype_name"]').trigger('change')

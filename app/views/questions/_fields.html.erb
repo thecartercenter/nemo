@@ -65,12 +65,10 @@
 </div>
 
 <%= javascript_doc_ready do %>
+  // This view is deprecated. Use QuestionFormView instead.
   new ELMO.Views.QuestionForm(<%=json(
     new_option_set_path: new_option_set_path
   )%>);
-
-  // This is the newer view, prefer this one.
-  new ELMO.Views.QuestionFormView({el: '.question_fields'});
 
   new ELMO.Views.QuestionFormTagField(<%=json(
     suggest_tags_path: suggest_tags_path,
