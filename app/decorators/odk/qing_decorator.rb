@@ -31,5 +31,9 @@ module Odk
 
       [xpath_self_to_ancestor, xpath_ancestor_to_other].join("/")
     end
+
+    def can_prefill?
+      prefill_pattern.present? && qtype?.prefillable?
+    end
   end
 end

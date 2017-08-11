@@ -51,25 +51,32 @@ div.question_fields {
   }
 }
 
-form.questioning_form .form_field#condition {
-  select, input {
-    width: 317px;
-    display: inline;
+form.questioning_form {
+  .form_field#condition {
+    select, input {
+      width: 317px;
+      display: inline;
+    }
+
+    div.field {
+      margin-bottom: 4px;
+
+      label {
+        display: inline-block;
+        width: 100px;
+        vertical-align: top;
+        padding: 0;
+      }
+
+      div.cascading-selects {
+        display: inline-block;
+      }
+    }
   }
 
-  div.field {
-    margin-bottom: 4px;
-
-    label {
-      display: inline-block;
-      width: 100px;
-      vertical-align: top;
-      padding: 0;
-    }
-
-    div.cascading-selects {
-      display: inline-block;
-    }
+  // Initially hidden fields
+  .questioning_prefill_pattern {
+    display: none;
   }
 }
 
