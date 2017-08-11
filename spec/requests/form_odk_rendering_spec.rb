@@ -215,7 +215,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       )
     end
     # set prefill pattern
-    before { form.questioning_with_code("TextQ7").update_attributes(prefill_pattern: "$IntegerQ4-$!ItemNumber") }
+    before { form.questioning_with_code("TextQ7").update_attributes(prefill_pattern: "$IntegerQ4-$!RepeatNum") }
 
     it "should render proper xml" do
       do_request_and_expect_success

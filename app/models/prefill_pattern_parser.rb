@@ -1,7 +1,7 @@
 class PrefillPatternParser
   CODE_PATTERN = /([$][!]?[A-z]\w+)/
   RESERVED_CODES = {
-    "$!ItemNumber" => "position(..)"
+    "$!RepeatNum" => "position(..)"
   }
 
   def initialize(qing)
