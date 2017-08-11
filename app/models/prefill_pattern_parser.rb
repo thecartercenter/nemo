@@ -10,22 +10,6 @@ class PrefillPatternParser
     @prefill_pattern = @qing.prefill_pattern
   end
 
-  def extract_codes
-    @extracted_codes ||= @prefill_pattern.scan(CODE_PATTERN).flatten
-  end
-
-  def code_mapping
-    return @mapping if @mapping.present?
-    @mapping = {}
-    extract_codes.each do |code|
-      questioning = @form.questioning_with_code(code[1..-1])
-      @mapping[code] = questioning if questioning.present?
-      @mapping[code] = code if RESERVED_CODES.keys.include?(code)
-    end
-
-    @mapping
-  end
-
   def to_odk
     odk_mapping = {}
     decorated_qing = Odk::DecoratorFactory.decorate(@qing)
@@ -46,5 +30,23 @@ class PrefillPatternParser
     end
 
     "concat(#{expression_tokens.join(',')})"
+  end
+
+  private
+  
+  def extract_codes
+    @extracted_codes ||= @prefill_pattern.scan(CODE_PATTERN).flatten
+  end
+
+  def code_mapping
+    return @mapping if @mapping.present?
+    @mapping = {}
+    extract_codes.each do |code|
+      questioning = @form.questioning_with_code(code[1..-1])
+      @mapping[code] = questioning if questioning.present?
+      @mapping[code] = code if RESERVED_CODES.keys.include?(code)
+    end
+
+    @mapping
   end
 end
