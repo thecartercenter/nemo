@@ -107,7 +107,8 @@ class QuestioningsController < ApplicationController
     end
 
     def questioning_params
-      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden, :required,
+      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
+        :required, :prefill_pattern,
         { condition_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
         { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
     end

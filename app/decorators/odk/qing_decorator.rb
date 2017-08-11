@@ -33,7 +33,7 @@ module Odk
     end
 
     def can_prefill?
-      prefill_pattern.present? && qtype?.prefillable?
+      prefill_pattern.present? && qtype.prefillable?
     end
   end
 end
