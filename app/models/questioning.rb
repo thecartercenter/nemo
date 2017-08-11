@@ -76,6 +76,10 @@ class Questioning < FormItem
     condition.try(:changed?)
   end
 
+  def core_changed?
+    (changed & %w(required hidden prefill_pattern)).any? || condition_changed?
+  end
+
   # Checks if this Questioning is in a repeat group.
   def repeatable?
     # Questions can only be repeatable if they're in a group, which they can't be if they're level 1.

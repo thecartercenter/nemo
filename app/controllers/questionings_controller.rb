@@ -46,10 +46,7 @@ class QuestioningsController < ApplicationController
     @questioning.assign_attributes(permitted_params)
     @questioning.valid?
 
-    # authorize special abilities
-    %w(required hidden condition).each do |f|
-      authorize!(:"update_#{f}", @questioning) if @questioning.send("#{f}_changed?")
-    end
+    authorize!(:update_core, @questioning) if @questioning.core_changed?
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
     if @questioning.save
