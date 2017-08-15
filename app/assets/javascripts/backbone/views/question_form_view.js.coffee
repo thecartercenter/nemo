@@ -15,11 +15,11 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
     @toggleFields()
 
   prefillPatternChanged: (e) ->
-    prefill_value = e.target.value
-    @toggleReadOnly(prefill_value)
+    prefillValue = e.target.value
+    @toggleReadOnly(prefillValue)
 
-  toggleReadOnly: (prefill_value) ->
-    @$('.questioning_read_only')[if prefill_value == '' then 'hide' else 'show']()
+  toggleReadOnly: (prefillValue) ->
+    @$('.questioning_read_only')[if prefillValue == '' then 'hide' else 'show']()
 
   readOnlyStatusChanged: (e) ->
     @toggleRequired(e.target.checked)
