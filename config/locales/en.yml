@@ -621,7 +621,7 @@ en:
         condition: "An optional condition which must be met in order for this question to be shown to the user."
         required: "Whether this question must be completed on this form or is optional. Only enforced if question is not hidden the condition specified above is met."
         prefill_pattern: "Text entered here will be pre-filled in the answer space (for ODK only). You can enter $QuestionCode to include the value of a previous question, and $!RepeatNum to include the number of the current item in a repeat group.\n\nFor example, entering\n\nID: $Household-$!RepeatNum\n\nwould pre-fill the answer with\n\nID: 176-2\n\nfor the second person in household 176, assuming you have a question with code 'Household'."
-        read_only: "If checked, the observer won't be able to change the pre-filled value when using ODK Collect. Does not affect web or SMS responses."
+        read_only: "If checked, the observer won't be able to change the pre-filled value when using ODK. Does not affect web or SMS responses."
       report/report:
         name: "A descriptive title for this report."
         aggregation_id: "The operation you want to perform on the combined data."
