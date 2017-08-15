@@ -15,12 +15,10 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
     @toggleFields()
 
   prefillPatternChanged: (e) ->
-    console.log("prefill pattern changed")
     prefill_value = e.target.value
     @toggleReadOnly(prefill_value)
 
   toggleReadOnly: (prefill_value) ->
-    console.log('prefill value: ' + prefill_value)
     @$('.questioning_read_only')[if prefill_value == '' then 'hide' else 'show']()
 
   readOnlyStatusChanged: (e) ->
@@ -44,8 +42,6 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
         @$('.questioning_read_only').hide()
 
   toggleRequired: (readOnly) ->
-    console.log("toggle Required")
-    console.log("readonly is: " + readOnly)
     @$('.questioning_required')[if readOnly then 'hide' else 'show']()
 
   # Gets form field value, or static value if field is read-only
