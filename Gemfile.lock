@@ -557,6 +557,3 @@ DEPENDENCIES
   whenever (~> 0.9.4)
   will_paginate (~> 3.0.7)
   will_paginate-bootstrap (~> 1.0.1)
-
-BUNDLED WITH
-   1.14.6
