@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170602182038) do
+ActiveRecord::Schema.define(version: 20170811202952) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -162,8 +162,11 @@ ActiveRecord::Schema.define(version: 20170602182038) do
     t.jsonb "group_name_translations", default: {}
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id"
+    t.boolean "one_screen"
+    t.string "prefill_pattern"
     t.integer "question_id"
     t.integer "rank", null: false
+    t.boolean "read_only"
     t.boolean "repeatable"
     t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
@@ -347,6 +350,7 @@ ActiveRecord::Schema.define(version: 20170602182038) do
 
   create_table "questions", force: :cascade do |t|
     t.string "access_level", limit: 255, default: "inherit", null: false
+    t.boolean "auto_increment", default: false, null: false
     t.text "canonical_name", null: false
     t.string "code", limit: 255
     t.datetime "created_at"

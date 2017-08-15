@@ -110,6 +110,10 @@ class ResponsesController < ApplicationController
           @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
         else # Otherwise treat it like an ODK submission
           upfile = params[:xml_submission_file]
+
+          # Store file for debugging purposes.
+          UploadSaver.new.save_file(params[:xml_submission_file])
+
           files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
           files.each { |k, v| files[k] = v.tempfile }
 
@@ -246,8 +250,7 @@ class ResponsesController < ApplicationController
     # Prepare the AnswerNodes.
     set_read_only
     @nodes = AnswerArranger.new(@response,
-      # No point in showing missing answers in show mode.
-      include_missing_answers: params[:action] != "show",
+      placeholders: params[:action] == "show" ? :except_repeats : :all,
       # Must preserve submitted answers when in create/update action.
       dont_load_answers: %w(create update).include?(params[:action])
     ).build.nodes

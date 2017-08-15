@@ -1,7 +1,7 @@
 require "spec_helper"
 require "support/media_spec_helpers"
 
-describe "odk media submissions", :reset_factory_sequences, type: :request do
+describe "odk media submissions", :odk, :reset_factory_sequences, type: :request do
   include ODKSubmissionSupport
 
   let(:user) { create(:user, role_name: "observer") }
@@ -80,7 +80,7 @@ describe "odk media submissions", :reset_factory_sequences, type: :request do
     prepare_expectation("odk/responses/#{filename}",
       form: [form.id],
       formver: [form.code],
-      itemcode: form.preordered_items.map(&:odk_code)
+      itemcode: Odk::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code)
     )
   end
 end

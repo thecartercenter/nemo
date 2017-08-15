@@ -5,6 +5,7 @@ class Questioning < FormItem
   accepts_nested_attributes_for(:condition)
 
   before_validation(:destroy_condition_if_ref_qing_blank)
+  before_save(:set_not_required_if_read_only)
 
   delegate :name,
     :code,
@@ -27,7 +28,6 @@ class Questioning < FormItem
     :first_leaf_option,
     :first_leaf_option_node,
     :select_options,
-    :odk_code,
     :odk_constraint,
     :subquestions,
     :standardized?,
@@ -38,9 +38,8 @@ class Questioning < FormItem
     :sms_formatting_as_text?,
     :sms_formatting_as_appendix?,
     :preordered_option_nodes,
+    :auto_increment?,
     to: :question
-
-
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
@@ -78,6 +77,10 @@ class Questioning < FormItem
     condition.try(:changed?)
   end
 
+  def core_changed?
+    (changed & %w(required hidden prefill_pattern)).any? || condition_changed?
+  end
+
   # Checks if this Questioning is in a repeat group.
   def repeatable?
     # Questions can only be repeatable if they're in a group, which they can't be if they're level 1.
@@ -100,6 +103,11 @@ class Questioning < FormItem
   # Returns smsable forms
   def smsable?
     !hidden? && question.qtype.smsable?
+  end
+
+  # Duck type
+  def fragment?
+    false
   end
 
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
@@ -133,6 +141,13 @@ class Questioning < FormItem
 
   def destroy_condition_if_ref_qing_blank
     destroy_condition if condition && condition.ref_qing.blank?
+  end
+
+  def set_not_required_if_read_only
+    if read_only
+      self.required = false
+    end
+    true #otherwise assignment returns false, causing errors
   end
 
 end

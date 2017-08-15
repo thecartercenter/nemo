@@ -4,16 +4,39 @@ module OdkHelper
 
   # given a Subquestion object, builds an odk <input> tag
   # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, opts, group = nil, xpath_prefix, &block)
+  def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
     opts ||= {}
     opts[:ref] = [xpath_prefix, subq.try(:odk_code)].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     if !subq.first_rank? && subq.qtype.name == "select_one"
       opts[:query] = multilevel_option_nodeset_ref(qing, subq, group.try(:odk_code), xpath_prefix)
     end
-    opts[:appearance] = odk_media_appearance(subq) if subq.qtype.multimedia?
+    opts[:appearance] = odk_input_appearance(qing, grid_mode, label_row)
     opts[:mediatype] = odk_media_type(subq) if subq.qtype.multimedia?
     content_tag(odk_input_tagname(subq), opts, &block)
+  end
+
+  def odk_input_appearance(qing, grid_mode, label_row)
+    return "label" if label_row
+    return "list-nolabel" if grid_mode
+
+    case qing.qtype_name
+    when "annotated_image"
+      "annotate"
+    when "sketch"
+      "draw"
+    when "signature"
+      "signature"
+    when "counter"
+      params = ActiveSupport::OrderedHash.new
+      params[:form_id] = "'#{qing.form_id}'"
+      params[:form_name] = "'#{qing.form_name}'"
+      params[:question_id] = "'#{qing.odk_code}'"
+      params[:question_name] = "'#{qing.code}'" # Code instead of title because it's not locale dependent
+      params[:increment] = "true()" if qing.auto_increment?
+      str = params.map { |k, v| "#{k}=#{v}" }.join(", ")
+      "ex:org.opendatakit.counter(#{str})".html_safe
+    end
   end
 
   def odk_input_tagname(subq)
@@ -36,17 +59,6 @@ module OdkHelper
       "audio/*"
     when "video"
       "video/*"
-    end
-  end
-
-  def odk_media_appearance(subq)
-    case subq.qtype.name
-    when "annotated_image"
-      "annotate"
-    when "sketch"
-      "draw"
-    when "signature"
-      "signature"
     end
   end
 
@@ -82,11 +94,6 @@ module OdkHelper
     form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
   end
 
-  def appearance(grid_mode, label_row)
-    return "label" if label_row
-    return "list-nolabel" if grid_mode
-  end
-
   # generator for binding portion of xml.
   # note: _required is used to get around the 'required' html attribute
   def question_binding(form, qing, subq, group: nil, xpath_prefix: "/data")
@@ -97,6 +104,8 @@ module OdkHelper
       "relevant" => qing.has_condition? ? qing.condition.to_odk : nil,
       "constraint" => subq.odk_constraint,
       "jr:constraintMsg" => subq.min_max_error_msg,
+      "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil,
+      "readonly" => qing.can_prefill? && qing.read_only? ? "true()" : nil
     }.reject { |k,v| v.nil? }).gsub(/_required=/, "required=").html_safe
   end
 
@@ -163,31 +172,74 @@ module OdkHelper
     odk_options.reduce(&:concat)
   end
 
-  def odk_group(node, xpath_prefix, &block)
-    if node.is_a?(QingGroup)
-      xpath = "#{xpath_prefix}/#{node.odk_code}"
-      content_tag(:group) do
-        content_tag(:label, node.group_name) <<
-        if node.repeatable?
-          node_id_string = "#{xpath_prefix}/#{node.odk_code}"
-          content_tag(:repeat, odk_group_inner(node, xpath), nodeset: node_id_string)
-        else
-          odk_group_inner(node, xpath)
+  # The general structure for a group is:
+  # group tag
+  #   label
+  #   repeat (if repeatable group)
+  #     body
+  #
+  # The general structure for a fragment is:
+  # group tag with field-list
+  #   hint
+  #   questions
+  def odk_group_or_fragment(node, xpath_prefix)
+    # No need to render empty groups/fragments
+    return "" if node.is_childless?
+
+    xpath = "#{xpath_prefix}/#{node.odk_code}"
+    odk_group_or_fragment_wrapper(node, xpath) do
+      fragments = Odk::QingGroupPartitioner.new.fragment(node)
+      if fragments
+        fragments.map { |f| odk_group_or_fragment(f, xpath_prefix) }.reduce(:<<)
+      else
+        # If appropriate for one-screen rendering, we render the group as a field-list.
+        # We also include the hint.
+        # In the case of fragments, this means we include hint each time, which is correct.
+        # This covers the case where `node` is a fragment, because fragments should always
+        # be shown on one screen since that's what they're for.
+        # If one screen is not appropriate is false, we just render the hint
+        # as there is no need for the group tag.
+        conditional_tag(:group, node.one_screen_appropriate?, appearance: "field-list") do
+          odk_group_hint(node, xpath) << odk_group_body(node, xpath)
         end
       end
-    else
-      odk_group_inner(node, xpath_prefix)
     end
   end
 
-  def odk_group_inner(node, xpath)
-    render("forms/odk/group_inner", node: node, xpath: xpath)
+  def odk_group_or_fragment_wrapper(node, xpath, &block)
+    if node.fragment?
+      # Fragments need no outer wrapper, they will get wrapped by field-list further in.
+      capture(&block)
+    else
+      # Groups should get wrapped in a group tag and include the label.
+      # Also a repeat tag if the group is repeatable
+      content_tag(:group) do
+        content_tag(:label, node.group_name) <<
+        conditional_tag(:repeat, node.repeatable?, nodeset: xpath) do
+          capture(&block)
+        end
+      end
+    end
+  end
+
+  def odk_group_hint(node, xpath)
+    if node.no_hint?
+      "".html_safe
+    else
+      content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
+        tag(:hint, ref: "jr:itext('#{node.odk_code}-header:hint')")
+      end
+    end
+  end
+
+  def odk_group_body(node, xpath)
+    render("forms/odk/group_body", node: node, xpath: xpath)
   end
 
   # Tests if all items in the group are Questionings with the same type and option set.
-  def grid_mode?(items)
-    # more than one question is needed for grid mode
-    false unless items.size > 1
+  def odk_grid_mode?(group)
+    items = group.sorted_children
+    return false if items.size <= 1 || !group.one_screen?
 
     items.all? do |i|
       i.is_a?(Questioning) &&

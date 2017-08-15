@@ -28,13 +28,13 @@ describe "questionings", type: :request do
 
       it "changing required flag should be unauthorized" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          "questioning" => { "required" => "1" })
+          "questioning" => {"required" => "1"})
         expect(response).to redirect_to(unauthorized_path)
       end
 
       it "changing hidden flag should be unauthorized" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          "questioning" => { "hidden" => "1" })
+          "questioning" => {"hidden" => "1"})
         expect(response).to redirect_to(unauthorized_path)
       end
 

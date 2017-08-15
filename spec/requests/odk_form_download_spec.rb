@@ -1,7 +1,7 @@
 require "spec_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
-describe FormsController, type: :request do
+describe FormsController, :odk, type: :request do
   let!(:mission) { create(:mission) }
   let!(:user) { create(:user, role_name: :coordinator, mission: mission) }
   let!(:form) { create(:form, :published, mission: mission, question_types: %w(integer integer)) }

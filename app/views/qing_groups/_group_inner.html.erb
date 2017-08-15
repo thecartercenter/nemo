@@ -8,6 +8,14 @@
   <div class="base-info">
     <div class="wrapper"><%# Need this so we can handle wrapping nicely %>
       <div><%= qing_group.group_name %></div>
+      <% if qing_group.repeatable? %>
+        <%= icon_tag("repeat", title: t("qing_group.tooltips.repeatable")) %>
+      <% end %>
+      <% if Odk::DecoratorFactory.decorate(qing_group).one_screen_appropriate? %>
+        <%= icon_tag("file-o", title: t("qing_group.tooltips.one_screen")) %>
+      <% else %>
+        <%= icon_tag("files-o", title: t("qing_group.tooltips.multi_screen")) %>
+      <% end %>
     </div>
   </div>
 

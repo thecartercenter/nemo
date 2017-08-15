@@ -134,7 +134,7 @@ class Answer < ApplicationRecord
     when "date" then date_value
     when "time" then time_value
     when "datetime" then datetime_value
-    when "integer" then value.try(:to_i)
+    when "integer", "counter" then value.try(:to_i)
     when "decimal" then value.try(:to_f)
     when "select_one" then option_name
     when "select_multiple" then choices.empty? ? nil : choices.map(&:option_name).join(";")
@@ -260,7 +260,7 @@ class Answer < ApplicationRecord
   end
 
   def round_ints
-    self.value = value.to_i if qtype.name == "integer" && !value.blank?
+    self.value = value.to_i if %w(integer counter).include?(qtype.name) && !value.blank?
     true
   end
 

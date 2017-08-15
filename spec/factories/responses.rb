@@ -5,6 +5,7 @@ module ResponseFactoryHelper
       if i < values.size
         value = values[i]
         if item.is_a?(QingGroup)
+          next if value.nil?
           unless value.is_a?(Array)
             raise "expecting array of answer values for #{item.group_name}, got #{value.inspect}"
           end

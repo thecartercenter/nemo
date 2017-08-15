@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <h:head>
-    <h:title>Sample Form 1</h:title>
+    <h:title>*formname1*</h:title>
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
@@ -78,15 +78,15 @@
       <label ref="jr:itext('*itemcode2*:label')"/>
       <hint ref="jr:itext('*itemcode2*:hint')"/>
     </upload>
-    <upload appearance="annotate" ref="/data/*itemcode3*" mediatype="image/*">
+    <upload ref="/data/*itemcode3*" appearance="annotate" mediatype="image/*">
       <label ref="jr:itext('*itemcode3*:label')"/>
       <hint ref="jr:itext('*itemcode3*:hint')"/>
     </upload>
-    <upload appearance="draw" ref="/data/*itemcode4*" mediatype="image/*">
+    <upload ref="/data/*itemcode4*" appearance="draw" mediatype="image/*">
       <label ref="jr:itext('*itemcode4*:label')"/>
       <hint ref="jr:itext('*itemcode4*:hint')"/>
     </upload>
-    <upload appearance="signature" ref="/data/*itemcode5*" mediatype="image/*">
+    <upload ref="/data/*itemcode5*" appearance="signature" mediatype="image/*">
       <label ref="jr:itext('*itemcode5*:label')"/>
       <hint ref="jr:itext('*itemcode5*:hint')"/>
     </upload>

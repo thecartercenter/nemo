@@ -1,11 +1,13 @@
 class QuestionType
-
+  AVAILABLE_PROPERTIES = %w(printable smsable textual headerable prefillable numeric
+    multimedia temporal has_options has_timezone)
   attr_reader :name, :odk_name, :properties
 
   @@attributes = [
-    { name: "text", odk_name: "string", properties: %w(printable smsable textual headerable) },
+    { name: "text", odk_name: "string", properties: %w(printable smsable textual headerable prefillable) },
     { name: "long_text", odk_name: "string", properties: %w(printable smsable textual) },
     { name: "integer", odk_name: "int", properties: %w(printable smsable numeric headerable) },
+    { name: "counter", odk_name: "int", properties: %w(printable smsable numeric headerable) },
     { name: "decimal", odk_name: "decimal", properties: %w(printable smsable numeric headerable) },
     { name: "location", odk_name: "geopoint", properties: %w() },
     { name: "select_one", odk_name: "select1", properties: %w(printable has_options smsable headerable) },
@@ -35,9 +37,8 @@ class QuestionType
     @@all ||= @@attributes.map { |a| new(a) }
   end
 
-  # returns smsable types
-  def self.smsable
-    @@smsable ||= @@attributes.map { |a| new(a) }.select(&:smsable?)
+  def self.with_property(property)
+    all.select(&:"#{property}?")
   end
 
   def initialize(attribs)
@@ -48,49 +49,15 @@ class QuestionType
     name.gsub("_", "-")
   end
 
-  # returns whether this is a numeric type
-  def numeric?
-    properties.include?("numeric")
-  end
-
-  # returns whether this is an SMSable type
-  def smsable?
-    properties.include?("smsable")
-  end
-
-  # returns whether this question type makes sense to be printable on a form
-  def printable?
-    properties.include?("printable")
-  end
-
-  # returns whether this question type has options
-  def has_options?
-    properties.include?("has_options")
-  end
-
-  # returns whether this type has a timezone
-  def has_timezone?
-    properties.include?("has_timezone")
-  end
-
-  # returns whether this type is temporal
-  def temporal?
-    properties.include?("temporal")
-  end
-
-  # returns whether this is a textual type
-  def textual?
-    properties.include?("textual")
-  end
-
-  # whether values from this question type is suitable for a table header
-  def headerable?
-    properties.include?("headerable")
-  end
-
-  # whether this is a multimedia type
-  def multimedia?
-    properties.include?("multimedia")
+  # Defines methods for checking whether this type has a certain property
+  # for example:
+  #  def numeric?
+  #    properties.include?("numeric")
+  #  end
+  AVAILABLE_PROPERTIES.each do |property|
+    define_method "#{property}?" do
+      properties.include?(property)
+    end
   end
 
   def media_type

@@ -1,5 +1,5 @@
 class FormItem < ApplicationRecord
-  include MissionBased, FormVersionable, Replication::Replicable
+  include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
 
   acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry]
@@ -19,6 +19,8 @@ class FormItem < ApplicationRecord
   has_ancestry cache_depth: true
 
   validate :parent_must_be_group
+
+  delegate :name, to: :form, prefix: true
 
   # Gets an OrderedHash of the following form for the descendants of this FormItem.
   # Uses only a constant number of database queries to do so.
@@ -97,7 +99,7 @@ class FormItem < ApplicationRecord
     result = super(options)
   end
 
-  def has_group_child?
+  def has_group_children?
     children.any? { |c| c.is_a?(QingGroup) }
   end
 

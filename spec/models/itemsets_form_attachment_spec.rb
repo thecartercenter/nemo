@@ -2,7 +2,7 @@
 require "spec_helper"
 require "fileutils"
 
-describe ItemsetsFormAttachment do
+describe ItemsetsFormAttachment, :odk do
   let(:form) { create(:form) }
   let(:ifa) { ItemsetsFormAttachment.new(form: form) }
 

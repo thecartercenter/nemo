@@ -13,6 +13,8 @@ def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = n
       "select_multiple"
     when "multilingual_text", "multilingual_text_with_user_locale"
       "text"
+    when "counter_with_inc"
+      "counter"
     else
       pseudo_qtype_name
     end
@@ -25,6 +27,7 @@ def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = n
       use_large_option_set: !!(pseudo_qtype_name =~ /large/),
       multilingual: !!(pseudo_qtype_name =~ /multilingual/),
       with_user_locale: !!(pseudo_qtype_name =~ /with_user_locale/),
+      auto_increment: pseudo_qtype_name == "counter_with_inc",
       is_standard: form.is_standard?
     }
 
@@ -52,13 +55,22 @@ end
 
 def build_item(item, form, parent, evaluator)
   if item.is_a?(Hash) && item.key?(:repeating)
-
     item = item[:repeating]
-    group = QingGroup.create!(parent: parent, form: form, group_name_en: item[:name], group_hint_en: item[:name], repeatable: true)
+    group = create(:qing_group,
+      parent: parent,
+      form: form,
+      group_name_en: item[:name],
+      group_hint_en: item[:name],
+      repeatable: true
+    )
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)
-
-    group = QingGroup.create!(parent: parent, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
+    group = create(:qing_group,
+      parent: parent,
+      form: form,
+      group_name_en: "Group Name",
+      group_hint_en: "Group Hint"
+    )
     item.each { |q| build_item(q, form, group, evaluator) }
   else #must be a questioning
     create_questioning(item, form, parent, evaluator)
