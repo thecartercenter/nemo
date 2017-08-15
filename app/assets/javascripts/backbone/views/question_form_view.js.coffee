@@ -3,12 +3,17 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @prefillableTypes = options.prefillableTypes # Will be null for Question form
     @toggleFields()
+    @toggleRequired(@$('#questioning_read_only')[0].checked)
 
   events:
     'change select[id$="_qtype_name"]': 'typeChanged'
+    'click #questioning_read_only': 'readOnlyStatusChanged' #SYNTAX????
 
   typeChanged: (e) ->
     @toggleFields()
+
+  readOnlyStatusChanged: (e) ->
+    @toggleRequired(e.target.checked)
 
   toggleFields: ->
     type = @fieldValue('qtype_name')
@@ -25,8 +30,12 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
         @$('.questioning_read_only').show()
       else
         @$('.questioning_prefill_pattern').hide()
-
         @$('.questioning_read_only').hide()
+
+  toggleRequired: (readOnly) ->
+    console.log("toggle Required")
+    console.log("readonly is: " + readOnly)
+    @$('.questioning_required')[if readOnly then 'hide' else 'show']()
 
   # Gets form field value, or static value if field is read-only
   fieldValue: (attrib) ->
