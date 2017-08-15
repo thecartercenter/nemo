@@ -97,16 +97,19 @@ module OdkHelper
   # generator for binding portion of xml.
   # note: _required is used to get around the 'required' html attribute
   def question_binding(form, qing, subq, group: nil, xpath_prefix: "/data")
-    tag(:bind, {
+    attribs = {
       "nodeset" => [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
       "type" => binding_type_attrib(subq),
       "_required" => qing.required? && subq.first_rank? ? required_value(form) : nil,
+      "_readonly" => qing.can_prefill? && qing.read_only? ? "true()" : nil,
       "relevant" => qing.has_condition? ? qing.condition.to_odk : nil,
       "constraint" => subq.odk_constraint,
       "jr:constraintMsg" => subq.min_max_error_msg,
-      "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil,
-      "readonly" => qing.can_prefill? && qing.read_only? ? "true()" : nil
-    }.reject { |k,v| v.nil? }).gsub(/_required=/, "required=").html_safe
+      "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil
+    }
+    attribs.reject! { |k,v| v.nil? }
+    tag(:bind, attribs).gsub(/_required=/, "required=").
+      gsub(/_readonly=/, "readonly=").html_safe
   end
 
   # note: _readonly is used to get around the 'readonly' html attribute
