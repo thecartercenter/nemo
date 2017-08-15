@@ -3,13 +3,21 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @prefillableTypes = options.prefillableTypes # Will be null for Question form
     @toggleFields()
-    @toggleRequired(@$('#questioning_read_only')[0].checked)
-    @toggleReadOnly(@$('#questioning_prefill_pattern')[0].value)
+    @initRequired()
+    @initReadOnly()
 
   events:
     'change select[id$="_qtype_name"]': 'typeChanged'
     'click #questioning_read_only': 'readOnlyStatusChanged'
     'keyup #questioning_prefill_pattern' : 'prefillPatternChanged'
+
+  initRequired: () ->
+    if @$('#questioning_read_only')[0]
+      @toggleRequired(@$('#questioning_read_only')[0].checked)
+
+  initReadOnly: () ->
+    if @$('#questioning_prefill_pattern')[0]
+      @toggleReadOnly(@$('#questioning_prefill_pattern')[0].value)
 
   typeChanged: (e) ->
     @toggleFields()
