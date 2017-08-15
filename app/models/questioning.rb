@@ -5,6 +5,7 @@ class Questioning < FormItem
   accepts_nested_attributes_for(:condition)
 
   before_validation(:destroy_condition_if_ref_qing_blank)
+  before_save(:set_not_required_if_read_only)
 
   delegate :name,
     :code,
@@ -140,6 +141,13 @@ class Questioning < FormItem
 
   def destroy_condition_if_ref_qing_blank
     destroy_condition if condition && condition.ref_qing.blank?
+  end
+
+  def set_not_required_if_read_only
+    if read_only
+      self.required = false
+    end
+    true #otherwise assignment returns false, causing errors
   end
 
 end
