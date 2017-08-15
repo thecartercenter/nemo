@@ -7,7 +7,7 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
 
   events:
     'change select[id$="_qtype_name"]': 'typeChanged'
-    'click #questioning_read_only': 'readOnlyStatusChanged' #SYNTAX????
+    'click #questioning_read_only': 'readOnlyStatusChanged'
 
   typeChanged: (e) ->
     @toggleFields()
