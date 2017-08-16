@@ -23,7 +23,7 @@ class QingGroupsController < ApplicationController
 
     # The QingGroupDecorator might declare this group can't do one-screen even if the property is
     # set to true. If so, we should disable the checkbox.
-    @one_screen_disabled = true unless odk_decorator.one_screen_appropriate?
+    @one_screen_disabled = true unless odk_decorator.one_screen_allowed?
 
     render(partial: 'modal')
   end
