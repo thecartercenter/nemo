@@ -70,33 +70,6 @@ class Condition < ApplicationRecord
     @operator ||= OPERATORS.detect{|o| o[:name] == op}
   end
 
-  def to_odk
-    lhs = "/data/#{ref_subquestion.odk_code}"
-
-    if ref_qing.has_options?
-
-      selected = "selected(#{lhs}, '#{option_nodes.last.odk_code}')"
-
-      # Apply negation if appropriate.
-      %w(neq ninc).include?(operator[:name]) ? "not(#{selected})" : selected
-
-    else
-
-      # For temporal ref. questions, need to convert dates to appropriate format in xpath.
-      if ref_qing.temporal?
-        format = :"javarosa_#{ref_qing.qtype_name}"
-        formatted = Time.zone.parse(value).to_s(format)
-        lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
-        rhs = "'#{formatted}'"
-      else
-        rhs = ref_qing.numeric? ? value : "'#{value}'"
-      end
-
-      "#{lhs} #{operator[:code]} #{rhs}"
-
-    end
-  end
-
   # Generates a human readable representation of condition.
   # prefs[:include_code] - Includes the question code in the string. May not always be desireable e.g. with printable forms.
   def to_s(prefs = {})
@@ -129,14 +102,14 @@ class Condition < ApplicationRecord
     ref_qing.try(:numeric?)
   end
 
-  private
-
   # Gets the referenced Subquestion.
   # If option_node is not set, returns the first subquestion of ref_qing (just an alias).
   # If option_node is set, uses the depth to determine the subquestion rank.
   def ref_subquestion
     ref_qing.subquestions[option_node.blank? ? 0 : option_node.depth - 1]
   end
+
+  private
 
   def clear_blanks
     unless destroyed?

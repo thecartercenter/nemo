@@ -17,6 +17,8 @@ module Odk
         Odk::QingGroupDecorator.decorate(obj)
       when "Questioning"
         Odk::QingDecorator.decorate(obj)
+      when "Condition"
+        Odk::ConditionDecorator.decorate(obj)
       else
         obj
       end

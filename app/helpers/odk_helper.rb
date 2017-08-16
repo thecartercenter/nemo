@@ -102,7 +102,7 @@ module OdkHelper
       "type" => binding_type_attrib(subq),
       "_required" => qing.required? && subq.first_rank? ? required_value(form) : nil,
       "_readonly" => qing.can_prefill? && qing.read_only? ? "true()" : nil,
-      "relevant" => qing.has_condition? ? qing.condition.to_odk : nil,
+      "relevant" => qing.has_condition? ? Odk::DecoratorFactory.decorate(qing.condition).to_odk : nil,
       "constraint" => subq.odk_constraint,
       "jr:constraintMsg" => subq.min_max_error_msg,
       "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil
