@@ -41,7 +41,7 @@ module Odk
       temp_group_children = []
       group.sorted_children.each do |child|
         if child.multilevel?
-          result << QingGroupFragment.new(group, temp_group_children)
+          result << QingGroupFragment.new(group, temp_group_children) unless temp_group_children.empty?
           child.level_count.times do |i|
             result << QingGroupFragment.new(group, [child], i + 1)
           end
@@ -53,5 +53,7 @@ module Odk
       result << QingGroupFragment.new(group, temp_group_children) unless temp_group_children.empty?
       result
     end
+
+
   end
 end
