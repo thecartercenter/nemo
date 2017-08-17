@@ -115,5 +115,17 @@ describe Odk::ConditionDecorator do
         end
       end
     end
+
+    context "for intra-group reference" do
+      let(:form) { create(:form, question_types: [["text", "text"]]) }
+      let(:q1) { Odk::DecoratorFactory.decorate(form.sorted_children[0].sorted_children[0]) }
+      let(:q2) { Odk::DecoratorFactory.decorate(form.sorted_children[0].sorted_children[1]) }
+
+      let(:condition) { Condition.new(questioning: q2.object, ref_qing: q1.object, op: "eq", value: "foo") }
+
+      it do
+        expect(xpath).to eq "../#{q1.odk_code} = 'foo'"
+      end
+    end
   end
 end
