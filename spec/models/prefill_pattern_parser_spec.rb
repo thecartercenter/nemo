@@ -7,6 +7,7 @@ describe PrefillPatternParser do
   let(:q22) { Odk::QingDecorator.decorate(form.sorted_children[1].sorted_children[1]) }
   let(:g3) { Odk::QingGroupDecorator.decorate(form.sorted_children[2]) }
   let(:q31) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]) }
+  subject { described_class.new(q22).to_odk }
 
   before do
     q1.update!(code: "Q1")
@@ -19,7 +20,7 @@ describe PrefillPatternParser do
     let(:pattern) { "hai" }
 
     it "should be correct" do
-      expect(described_class.new(q22).to_odk).to eq "concat('hai')"
+      expect(subject).to eq "concat('hai')"
     end
   end
 
@@ -27,7 +28,7 @@ describe PrefillPatternParser do
     let(:pattern) { "hai-$Q21-thar" }
 
     it "should be correct" do
-      expect(described_class.new(q22).to_odk).to eq "concat('hai-',../#{q21.odk_code},'-thar')"
+      expect(subject).to eq "concat('hai-',../#{q21.odk_code},'-thar')"
     end
   end
 
@@ -35,7 +36,7 @@ describe PrefillPatternParser do
     let(:pattern) { "hai-$Q31-thar" }
 
     it "should be correct" do
-      expect(described_class.new(q22).to_odk).to eq(
+      expect(subject).to eq(
         "concat('hai-',../../#{g3.odk_code}/#{q31.odk_code},'-thar')")
     end
   end
@@ -44,7 +45,7 @@ describe PrefillPatternParser do
     let(:pattern) { "hai-$!RepeatNum-thar" }
 
     it "should be correct" do
-      expect(described_class.new(q22).to_odk).to eq "concat('hai-',position(..),'-thar')"
+      expect(subject).to eq "concat('hai-',position(..),'-thar')"
     end
   end
 end

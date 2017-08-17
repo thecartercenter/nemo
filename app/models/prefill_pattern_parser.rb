@@ -19,7 +19,7 @@ class PrefillPatternParser
       if RESERVED_CODES.keys.include?(code)
         odk_mapping[code] = RESERVED_CODES[code]
       else
-        odk_mapping[code] = decorated_qing.relative_xpath(other_qing)
+        odk_mapping[code] = decorated_qing.xpath_to(other_qing)
       end
     end
 

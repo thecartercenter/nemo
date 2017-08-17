@@ -103,6 +103,10 @@ class FormItem < ApplicationRecord
     children.any? { |c| c.is_a?(QingGroup) }
   end
 
+  def top_level?
+    depth == 1
+  end
+
   private
 
   # copy mission from question
