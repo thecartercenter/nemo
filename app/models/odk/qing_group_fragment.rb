@@ -48,6 +48,10 @@ module Odk
       true
     end
 
+    def one_screen_allowed?
+      true
+    end
+
     def sorted_children
       children # sorted when fragment created in partitioner
     end

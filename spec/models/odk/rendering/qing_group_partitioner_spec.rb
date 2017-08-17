@@ -2,10 +2,8 @@ require "spec_helper"
 
 module Odk
   describe QingGroupPartitioner, :odk do
-    let(:form) do
-      create(:form, question_types:
-        [["text","text","multilevel_select_one","integer"],["text", "text", "text"]])
-    end
+    let(:form) { create(:form, question_types: question_types) }
+    let(:question_types) { [["text","text","multilevel_select_one","integer"],["text", "text", "text"]] }
     let(:result) { described_class.new.fragment(QingGroupDecorator.new(group)) }
 
     context "with regular group" do
@@ -33,6 +31,17 @@ module Odk
 
       it "return nil" do
         expect(result).to be_nil
+      end
+    end
+
+    context "with multilevel question as first child" do
+      let(:group) { form.sorted_children.first }
+      let(:question_types) { [["multilevel_select_one","integer"]] }
+
+      it "splits correctly" do
+        expect(result[0].sorted_children.first.multilevel?).to be true
+        expect(result[1].sorted_children.first.multilevel?).to be true
+        expect(result[2].sorted_children.first.multilevel?).to be_falsey
       end
     end
 

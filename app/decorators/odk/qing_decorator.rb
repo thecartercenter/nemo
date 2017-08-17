@@ -7,7 +7,9 @@ module Odk
       @odk_code ||= "q#{object.question.id}"
     end
 
-    def relative_xpath(other_qing)
+    def xpath_to(other_qing)
+      return other_qing.absolute_xpath if top_level? || other_qing.top_level?
+
       # get the paths to the common ancestor
       common_ancestor = object.lowest_common_ancestor(other_qing)
 

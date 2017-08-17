@@ -427,7 +427,7 @@ en:
         required: "Required?"
         prefill_pattern: "Pre-filled Value"
         delete: "Are you sure you want to remove the question '%{code}' from this form?"
-        read_only: "Read Only"
+        read_only: "Read Only?"
       response:
         age: "Age"
         answers: "Answers"

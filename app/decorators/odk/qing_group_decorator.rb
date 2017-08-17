@@ -17,7 +17,11 @@ module Odk
     # - group must not have any group children (nested)
     # - group must not have any questions with conditions referring to other questions in the group
     def one_screen_appropriate?
-      one_screen? && !has_group_children? && !internal_conditions?
+      one_screen? && one_screen_allowed?
+    end
+
+    def one_screen_allowed?
+      !has_group_children? && !internal_conditions?
     end
 
     def fragment?
