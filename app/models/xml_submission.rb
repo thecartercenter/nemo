@@ -1,20 +1,13 @@
-class XMLSubmission
+class XMLSubmission #TODO: rename to Submission and move to odk namespace
   attr_accessor :response, :data
 
-  def initialize(response: nil, files: nil, source: nil, data: nil)
+  def initialize(response: nil, files: nil)
     @response = response
-    @response.source = source
     @awaiting_media = @response.awaiting_media
-    case source
-    when "odk"
-      @data = files.delete(:xml_submission_file).read
-      @files = files
-      populate_from_odk(@data)
-    when "j2me"
-      @data = data
-      @files = files
-      populate_from_j2me(@data)
-    end
+    @data = files.delete(:xml_submission_file).read
+    @files = files
+    @response.source = "odk" #this is only kind we expect an can process
+    populate_from_odk(@data)
   end
 
   def save(validate: true)
@@ -41,6 +34,27 @@ class XMLSubmission
     raise FormVersionError.new("form version is outdated") if form.current_version.code != params[:version]
   end
 
+  # def wrapper(data)
+  # end
+  #
+  # def recurse(node, form_item)
+  #   if node.no_children
+  #     if node.is a question
+  #       form = @response.form
+  #       odk_code = node.name
+  #       find what is needed to make answer (qing, subq, rank, instance number?)
+  #       make answer
+  #       add answer to @response
+  #       # are multipart questions different?
+  #     end
+  #   else
+  #     node.children.each
+  #       find form item matching this child
+  #       recurse (child, appropriate form item)
+  #     end
+  #   end
+  # end
+
   def populate_from_odk(xml)
     data = Nokogiri::XML(xml).root
     lookup_and_check_form(id: data["id"], version: data["version"])
@@ -52,6 +66,7 @@ class XMLSubmission
       @response.odk_hash = nil
     end
 
+    # TODO: make recursive, walk xml tree
     # Loop over each child tag and create hash of odk_code => value
     hash = {}
     data.elements.each do |child|
@@ -67,15 +82,6 @@ class XMLSubmission
     end
 
     populate_from_hash(hash)
-  end
-
-  def populate_from_j2me(data)
-    lookup_and_check_form(id: data.delete("id"), version: data.delete("version"))
-
-    # Get rid of other unneeded keys.
-    data = data.except(*%w(uiVersion name xmlns xmlns:jrm))
-
-    populate_from_hash(data)
   end
 
   # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.

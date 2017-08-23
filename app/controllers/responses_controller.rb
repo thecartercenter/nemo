@@ -105,26 +105,21 @@ class ResponsesController < ApplicationController
     if request.format == Mime::XML
       begin
         @response.user_id = current_user.id
-        # If it looks like a J2ME submission, process accordingly
-        if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
-          @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
-        else # Otherwise treat it like an ODK submission
-          upfile = params[:xml_submission_file]
+        upfile = params[:xml_submission_file]
 
-          # Store file for debugging purposes.
-          UploadSaver.new.save_file(params[:xml_submission_file])
+        # Store file for debugging purposes.
+        UploadSaver.new.save_file(params[:xml_submission_file])
 
-          files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
-          files.each { |k, v| files[k] = v.tempfile }
+        files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
+        files.each { |k, v| files[k] = v.tempfile }
 
-          unless upfile
-            render_xml_submission_failure("No XML file attached.", 422)
-            return false
-          end
-
-          @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-          @submission = XMLSubmission.new response: @response, files: files, source: "odk"
+        unless upfile
+          render_xml_submission_failure("No XML file attached.", 422)
+          return false
         end
+
+        @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
+        @submission = XMLSubmission.new response: @response, files: files, source: "odk"
 
         # ensure response's user can submit to the form
         authorize!(:submit_to, @submission.response.form)

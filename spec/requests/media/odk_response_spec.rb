@@ -9,6 +9,36 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
   let(:mission) { form.mission }
   let(:tmp_path) { Rails.root.join("tmp/submission.xml") }
 
+  context "ndeep nested response" do
+    ndeep_form = create(:form, :published, :with_version,
+    question_types: {
+      repeating: {
+        items: [
+          "text",
+          "text",
+          {
+            repeating:
+            {
+              items: ["integer", "integer"],
+              name: "Repeat Group A"
+            }
+          },
+          "long_text"
+          ],
+          name: "Repeat Group 1"
+        }
+      }
+    )
+    ndeep_mission = ndeep_form.mission
+    submission_file = prepare_and_upload_submission_file("ndeep.xml")
+    post submission_path(mission), {xml_submission_file}, "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
+    expect(response).to have_http_status 201
+
+    form_response = Response.last
+    expect(form_response.form).to eq form
+
+  end
+
   context "with single part" do
     it "should successfully process the submission" do
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
