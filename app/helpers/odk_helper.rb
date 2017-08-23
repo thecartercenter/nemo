@@ -259,4 +259,13 @@ module OdkHelper
   def organize_qing_groups(descendants)
     QingGroupOdkPartitioner.new(descendants).fragment
   end
+
+  def get_element_from_tag_name(tag_name, candidates)
+    candidates.detect do |c|
+      odk_code = Odk::DecoratorFactory.decorate(c).odk_code
+      puts c
+      puts odk_code
+      odk_code == tag_name
+    end
+  end
 end
