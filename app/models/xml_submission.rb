@@ -55,6 +55,17 @@ class XMLSubmission #TODO: rename to Submission and move to odk namespace
   #   end
   # end
 
+  def simple_recursive(node, hash)
+    if node.elements.empty?
+      hash[node.name] ||=[]
+      hash[node.name] << node.try(:content)
+    else
+      node.elements.each do |c|
+        simple_recursive(c, hash)
+      end
+    end
+  end
+
   def populate_from_odk(xml)
     data = Nokogiri::XML(xml).root
     lookup_and_check_form(id: data["id"], version: data["version"])
@@ -69,6 +80,7 @@ class XMLSubmission #TODO: rename to Submission and move to odk namespace
     # TODO: make recursive, walk xml tree
     # Loop over each child tag and create hash of odk_code => value
     hash = {}
+    #simple_recursive(data, hash)
     data.elements.each do |child|
       group = child if child.elements.present?
       if group
@@ -80,7 +92,7 @@ class XMLSubmission #TODO: rename to Submission and move to odk namespace
         hash[child.name] = child.try(:content)
       end
     end
-
+    puts hash
     populate_from_hash(hash)
   end
 
