@@ -77,7 +77,7 @@ end
 # Google Maps API Key (Requires Google Maps Javascript and Geocoding APIs)
 # Can be left unchanged in offline setups.
 # Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
-configatron.google_maps_api_key = "xxx"
+configatron.google_maps_api_key = ENV["ELMO_GOOGLE_MAPS_KEY"] || "your-key-here"
 
 # Allows submissions without password via the /noauth/submission route.
 # This setting overrides the per-mission setting.
