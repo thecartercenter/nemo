@@ -12,7 +12,7 @@ before_script:
   # Remove recaptcha settings in local config so they are picked up from ENV. This is brittle
   # and should go away when we get rid of local_config.rb some sweet day.
   - sed -ri '/(public|private)_key = nil/d' config/initializers/local_config.rb
-  - bundle exec rake db:setup ts:index ts:start
+  - bundle exec rake db:setup
 script: bundle exec rake
 env:
   global:
