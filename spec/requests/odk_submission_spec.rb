@@ -107,15 +107,15 @@ describe "odk submissions", :odk, type: :request do
       form.c[0].update_attributes!(required: true)
       form.reload.publish!
 
-      #[false, true].each do |no_data|
-        resp = do_submission(submission_path, build_odk_submission(form, no_data: false))
-        expect(response.response_code).to eq 201
-        expect(resp.incomplete).to be false
+      no_data = false
+      resp = do_submission(submission_path, build_odk_submission(form, no_data: no_data))
+      expect(response.response_code).to eq 201
+      expect(resp.incomplete).to be no_data
 
-        resp = do_submission(submission_path, build_odk_submission(form, no_data: true))
-        expect(response.response_code).to eq 201
-        expect(resp.incomplete).to be true
-      #end
+      no_data = true
+      resp = do_submission(submission_path, build_odk_submission(form, no_data: no_data))
+      expect(response.response_code).to eq 201
+      expect(resp.incomplete).to be no_data
     end
   end
 

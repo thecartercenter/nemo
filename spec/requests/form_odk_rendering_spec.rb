@@ -7,7 +7,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk_test_forms`.
   # Then use `adb push tmp/odk_test_forms /sdcard/odk/forms` or similar to load them into ODK for testing.
-  let(:save_expectations) { false }
+  let(:save_expectations) { true }
 
   before do
     login(user)
@@ -215,7 +215,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       )
     end
     # set prefill pattern
-    before { form.questioning_with_code("TextQ7").update_attributes(prefill_pattern: "$IntegerQ4-$!RepeatNum") }
+    #before { form.questioning_with_code("TextQ7").update_attributes(prefill_pattern: "$IntegerQ4-$!RepeatNum") }
 
     it "should render proper xml" do
       do_request_and_expect_success

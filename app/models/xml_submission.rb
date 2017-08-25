@@ -58,6 +58,8 @@ class XMLSubmission #TODO: rename to Submission and move to odk namespace
   def simple_recursive(node, hash)
     if node.elements.empty?
       hash[node.name] ||=[]
+      value = node.try(:content)
+      puts "#{node.name}: #{value}"
       hash[node.name] << node.try(:content)
     else
       node.elements.each do |c|
@@ -80,18 +82,8 @@ class XMLSubmission #TODO: rename to Submission and move to odk namespace
     # TODO: make recursive, walk xml tree
     # Loop over each child tag and create hash of odk_code => value
     hash = {}
-    #simple_recursive(data, hash)
-    data.elements.each do |child|
-      group = child if child.elements.present?
-      if group
-        group.elements.each do |c|
-          hash[c.name] ||= []
-          hash[c.name] << c.try(:content)
-        end
-      else
-        hash[child.name] = child.try(:content)
-      end
-    end
+    simple_recursive(data, hash)
+    puts "Hash:"
     puts hash
     populate_from_hash(hash)
   end
@@ -100,7 +92,7 @@ class XMLSubmission #TODO: rename to Submission and move to odk namespace
   def populate_from_hash(hash)
     # Response mission should already be set
     raise "Submissions must have a mission" if @response.mission.nil?
-
+    puts "#{@response.form.visible_questionings.count} questionings"
     @response.form.visible_questionings.each do |qing|
       qing.subquestions.each do |subq|
         value = hash[subq.odk_code]
@@ -118,6 +110,13 @@ class XMLSubmission #TODO: rename to Submission and move to odk namespace
       end
     end
     @response.incomplete ||= (hash[OdkHelper::IR_QUESTION] == "yes")
+    puts "Answers: "
+    puts @response.answers.count
+    @response.answers.map do |a|
+      puts "Q#{a.questioning.question_id} instance #{a.inst_num}"
+      puts a.value
+
+    end
   end
 
   # Populates answer from odk-like string value.

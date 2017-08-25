@@ -14,6 +14,78 @@ describe XMLSubmission, :odk do
     submission.save
   end
 
+  context "nested repeat groups" do
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Nested Repeat Group",
+        version: "abc",
+        question_types: [
+          {repeating:
+            {
+              items:
+                ["text", #q1
+                  "text", #q2
+                  {
+                    repeating:
+                      {
+                        items: ["integer", "integer"], #q3,q4
+                        name: "Repeat Group A"
+                      }
+                  },
+                  "long_text" #q5
+                ],
+                name: "Repeat Group 1"
+            }
+          },
+          "text", #q6
+           {
+            repeating: {
+              items: ["text"], #q7
+              name: "Repeat Group 2"
+            }
+          }
+        ]
+      )
+    end
+
+    let(:files) {{xml_submission_file: StringIO.new(prepare_odk_expectation("nested.xml", form))} }
+    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+    let(:submission) { XMLSubmission.new(response: response, files: files) }
+    let(:nodes) { AnswerArranger.new(response).build.nodes }
+
+
+    it "processes nested repeats correctly" do
+      expect(nodes[0].instances[0].nodes[0].set.answers[0].value).to eq "Bat"
+      expect(nodes[0].instances[0].nodes[1].set.answers[0].value).to eq "Cat"
+      expect(nodes[0].instances[0].nodes[2].instances[0].nodes[0].set.answers[0].value).to eq "1"
+      expect(nodes[0].instances[0].nodes[2].instances[0].nodes[1].set.answers[0].value).to eq "2"
+      expect(nodes[0].instances[0].nodes[2].instances[1].nodes[0].set.answers[0].value).to eq "3"
+      expect(nodes[0].instances[0].nodes[2].instances[1].nodes[1].set.answers[0].value).to eq "4"
+      expect(nodes[0].instances[0].nodes[3].set.answers[0].value).to eq "Whether"
+      expect(nodes[0].instances[1].nodes[0].set.answers[0].value).to eq "Box"
+      expect(nodes[0].instances[1].nodes[1].set.answers[0].value).to eq "Fox"
+      #BELOW works, but this is WRONG. Current data representation of answers has no knowledge of which parent repeat group 5 and 6 go in
+      # the answers 5 and 6 should be in the first instance of repeat group A in the 2nd instance of repeat group 1.
+      # currently they are in the 3rd instance of repeat group A in the 1st instance of repeat group 1, and
+      # there is no second instance of repeat group 1 according to answer arranger.
+      #expect(nodes[0].instances[0].nodes[2].instances[2].nodes[0].set.answers[0].value).to eq "5"
+      #expect(nodes[0].instances[0].nodes[2].instances[2].nodes[1].set.answers[0].value).to eq "6"
+      #below 2 lines does not work, and needs to work represent there are multiple instances of first repeat group
+      expect(nodes[0].instances[1].nodes[2].instances[0].nodes[0].set.answers[0].value).to eq "5"
+      expect(nodes[0].instances[1].nodes[2].instances[0].nodes[1].set.answers[0].value).to eq "6"
+
+      expect(nodes[0].instances[1].nodes[3].set.answers[0].value).to eq "Weather"
+      expect(nodes[1].set.answers[0].value).to eq "Tomato"
+      expect(nodes[2].instances[0].nodes[0].set.answers[0].value).to eq "Hi"
+      expect(nodes[2].instances[1].nodes[0].set.answers[0].value).to eq "Bye"
+
+
+
+
+
+    end
+  end
+
   context "with a repeat group and two instances" do
     let(:form) { create(:form, question_types: ["integer", ["integer", "integer"]]) }
     let(:data) do
@@ -153,5 +225,15 @@ describe XMLSubmission, :odk do
       expect(nodes[1].set.answers[0].value).to eq "The quick brown fox jumps over the lazy dog"
       expect(nodes[2].set.answers[0].value).to eq "9.6"
     end
+  end
+
+  def prepare_odk_expectation(filename, form)
+    substitutions = {
+      form: [form.id],
+      formver: [form.code],
+      itemcode: Odk::DecoratorFactory.decorate_collection(form.preordered_items).map(&:odk_code)
+    }
+    puts substitutions
+    prepare_expectation("odk/responses/#{filename}", substitutions)
   end
 end

@@ -99,7 +99,7 @@
       <bind nodeset="/data/*itemcode8*" type="string"/>
       <bind nodeset="/data/*itemcode9*"/>
       <bind nodeset="/data/*itemcode9*/*itemcode9*-header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode9*/*itemcode10*" type="string" calculate="concat(../../*itemcode1*/*itemcode4*/*itemcode6*,'-',position(..))"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode10*" type="string"/>
     </model>
   </h:head>
   <h:body>
