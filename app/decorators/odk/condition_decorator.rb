@@ -3,10 +3,10 @@ module Odk
     delegate_all
 
     def to_odk
-      lhs = "/data/#{ref_subquestion.odk_code}"
+      lhs = questioning.xpath_to(ref_qing)
 
       if ref_qing.has_options?
-        selected = "selected(#{lhs}, '#{option_nodes.last.odk_code}')"
+        selected = "selected(#{lhs}, '#{option_node.odk_code}')"
         %w(neq ninc).include?(operator[:name]) ? "not(#{selected})" : selected
       else
         if ref_qing.temporal?
@@ -19,6 +19,14 @@ module Odk
         end
         "#{lhs} #{operator[:code]} #{rhs}"
       end
+    end
+
+    def questioning
+      DecoratorFactory.decorate(object.questioning)
+    end
+
+    def ref_qing
+      DecoratorFactory.decorate(object.ref_qing)
     end
   end
 end
