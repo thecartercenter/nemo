@@ -37,7 +37,7 @@ describe PrefillPatternParser do
 
     it "should be correct" do
       expect(subject).to eq(
-        "concat('hai-',../../#{g3.odk_code}/#{q31.odk_code},'-thar')")
+        "concat('hai-',indexed-repeat(/data/#{g3.odk_code}/#{q31.odk_code},/data/#{g3.odk_code},1),'-thar')")
     end
   end
 
