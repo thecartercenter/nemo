@@ -8,30 +8,43 @@ module Odk
     end
 
     def xpath_to(other_qing)
-      return other_qing.absolute_xpath if top_level? || other_qing.top_level?
+      other_qing = decorate(other_qing)
+      return other_qing.absolute_xpath if other_qing.top_level?
 
       # get the paths to the common ancestor
       common_ancestor = object.lowest_common_ancestor(other_qing)
 
       # include ancestor to get the right number of relative jumps
-      ancestor_path = object.path_from_ancestor(common_ancestor, include_ancestor: true)
+      ancestor_to_self = object.path_from_ancestor(common_ancestor, include_ancestor: true)
 
       # include self for easier relative path manipulation
-      other_ancestor_path = other_qing.path_from_ancestor(common_ancestor, include_self: true)
+      ancestor_to_other = decorate(other_qing.path_from_ancestor(common_ancestor))
 
-      # add the other qing to path
-      path_to_other = other_ancestor_path
+      if ancestor_to_other.size > 0
+        args = [other_qing.absolute_xpath]
+        unless common_ancestor.root?
+          root_to_ancestor = decorate(common_ancestor.path_from_ancestor(ancestors.first, include_self: true))
+          root_to_ancestor.each_with_index do |node, i|
+            xpath_self_to_cur_group = ([".."] * (ancestry_depth - i - 1)).join("/")
+            args << node.absolute_xpath << "position(#{xpath_self_to_cur_group})"
+          end
+        end
 
-      # decorate
-      decorated_path_to_other = decorated_form_items(other_ancestor_path)
+        ancestor_to_other.each do |node|
+          args << node.absolute_xpath << "1"
+        end
 
-      # use ../ to get to the common ancestor
-      xpath_self_to_ancestor = ancestor_path.map{ ".." }.join("/")
+        "indexed-repeat(#{args.join(',')})"
+      else
+        # use ../ to get to the common ancestor
+        xpath_self_to_ancestor = ancestor_to_self.map{ ".." }.join("/")
 
-      # use odk_codes to get to the other qing
-      xpath_ancestor_to_other = decorated_path_to_other.map(&:odk_code).join("/")
+        # use odk_codes to get to the other qing
+        ancestor_to_other += [other_qing]
+        xpath_ancestor_to_other = ancestor_to_other.map(&:odk_code).join("/")
 
-      [xpath_self_to_ancestor, xpath_ancestor_to_other].join("/")
+        [xpath_self_to_ancestor, xpath_ancestor_to_other].join("/")
+      end
     end
 
     def can_prefill?
