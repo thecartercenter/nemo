@@ -1582,7 +1582,7 @@ en:
     blank: "blank"
     examples:
       responses:
-        - "\"some phrase\""
+        - "bed nets"
         - "submitter:\"john smith\""
         - "form:polling"
         - "reviewed:1"
@@ -1644,11 +1644,9 @@ en:
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
-        * __"the rain in spain"__
+        * __submitter:"John Smith"__
 
-        Double quoted phrases can be mixed with non-quoted terms:
-
-        * __apples oranges "passion fruit"__
+        Double quoted phrases can currently only be used with qualifiers other than "text".
 
         ## All Terms vs. Any Term
 
@@ -1658,13 +1656,9 @@ en:
 
         matches only responses with all three of those words. Use the vertical bar ('|') character to match several words/phrases:
 
-        * __apples | oranges | "passion fruit"__
-
-        The '|' character can also be used with qualifiers:
-
         * __form:( Lions | "Bears and Sharks" | Tigers )__
 
-        matches responses for any of the above forms.
+        matches responses for any of the above forms. The '|' can only be used with qualifiers other than "text".
 
         ## Operators
 

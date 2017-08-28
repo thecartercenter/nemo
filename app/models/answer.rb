@@ -68,7 +68,8 @@ class Answer < ApplicationRecord
     },
     using: {
       tsearch: {
-        prefix: true
+        prefix: true,
+        negation: true
       }
     }
 
