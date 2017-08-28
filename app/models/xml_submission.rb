@@ -84,7 +84,7 @@ class XMLSubmission
     raise "Submissions must have a mission" if @response.mission.nil?
 
     @response.form.visible_questionings.each do |qing|
-      qing.subquestions.each do |subq|
+      qing.subqings.each do |subq|
         value = hash[subq.odk_code]
         if value.is_a? Array
           value.each_with_index do |val, i|

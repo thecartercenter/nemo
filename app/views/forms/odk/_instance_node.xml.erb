@@ -1,7 +1,7 @@
 <% node = Odk::DecoratorFactory.decorate(node) %>
 <% if node.is_a?(Questioning) %>
   <% unless node.hidden %>
-    <% node.subquestions.each do |subq| %>
+    <% node.subqings.each do |subq| %>
       <%= tag(subq.odk_code) %>
     <% end %>
   <% end %>

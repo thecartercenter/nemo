@@ -102,11 +102,11 @@ class Condition < ApplicationRecord
     ref_qing.try(:numeric?)
   end
 
-  # Gets the referenced Subquestion.
-  # If option_node is not set, returns the first subquestion of ref_qing (just an alias).
-  # If option_node is set, uses the depth to determine the subquestion rank.
-  def ref_subquestion
-    ref_qing.subquestions[option_node.blank? ? 0 : option_node.depth - 1]
+  # Gets the referenced Subqing.
+  # If option_node is not set, returns the first subqing of ref_qing (just an alias).
+  # If option_node is set, uses the depth to determine the subqing rank.
+  def ref_subqing
+    ref_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1]
   end
 
   private

@@ -2,7 +2,7 @@ module OdkHelper
   IR_QUESTION = "ir01"   # incomplete response question
   IR_CODE     = "ir02"   # incomplete response code
 
-  # given a Subquestion object, builds an odk <input> tag
+  # given a Subqing object, builds an odk <input> tag
   # calls the provided block to get the tag content
   def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
     opts ||= {}
@@ -148,7 +148,7 @@ module OdkHelper
     }.reject { |k,v| v.nil? }).gsub(/"required"/, '"true()"').html_safe
   end
 
-  # For the given subquestion, returns an xpath expression for the itemset tag nodeset attribute.
+  # For the given subqing, returns an xpath expression for the itemset tag nodeset attribute.
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
   #      instance('os16')/root/item[parent_id=/data/q2_2]

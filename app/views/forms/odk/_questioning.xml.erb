@@ -1,11 +1,11 @@
 <% label_row = !!local_assigns[:label_row]; grid_mode = !!local_assigns[:grid_mode]; # Default values %>
 <% group ||= nil %>
-<%# Note that subquestions here refers to multiple levels of a cascading select question, not question grouping. %>
+<%# Note that subqings here refers to multiple levels of a cascading select question, not question grouping. %>
 
-<%# If group is a multilevel_fragment, we are supposed to just render one of the subquestions here. %>
+<%# If group is a multilevel_fragment, we are supposed to just render one of the subqings here. %>
 <%# This is so they can be wrapped with the appropriate group headers/hint and such. %>
-<% subquestions = group.try(:multilevel_fragment?) ? [qing.subquestions[group.level - 1]] : qing.subquestions %>
-<% subquestions.each do |subq| %>
-  <%= render('forms/odk/subquestion', qing: qing, grid_mode: grid_mode,
+<% subqings = group.try(:multilevel_fragment?) ? [qing.subqings[group.level - 1]] : qing.subqings %>
+<% subqings.each do |subq| %>
+  <%= render('forms/odk/subqing', qing: qing, grid_mode: grid_mode,
     label_row: label_row, group: group, subq: subq, xpath_prefix: xpath_prefix) %>
 <% end %>

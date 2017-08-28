@@ -163,14 +163,6 @@ class Question < ApplicationRecord
     option_set.try(:preordered_option_nodes) || []
   end
 
-  def subquestions
-    @subquestions ||= if multilevel?
-      levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
-    else
-      [Subquestion.new(question: self, rank: 1)]
-    end
-  end
-
   # returns the question type object associated with this question
   def qtype
     QuestionType[qtype_name]

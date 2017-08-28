@@ -12,6 +12,7 @@ class Questioning < FormItem
     :code=,
     :level_count,
     :level,
+    :levels,
     :multilevel?,
     :option_set,
     :option_set=,
@@ -29,7 +30,9 @@ class Questioning < FormItem
     :first_leaf_option_node,
     :select_options,
     :odk_constraint,
-    :subquestions,
+    :odk_name,
+    :min_max_error_msg,
+    :subqings,
     :standardized?,
     :temporal?,
     :multimedia?,
@@ -39,6 +42,8 @@ class Questioning < FormItem
     :sms_formatting_as_appendix?,
     :preordered_option_nodes,
     :auto_increment?,
+    :title,
+    :hint,
     to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
@@ -75,6 +80,14 @@ class Questioning < FormItem
 
   def condition_changed?
     condition.try(:changed?)
+  end
+
+  def subqings
+    @subqings ||= if multilevel?
+      levels.each_with_index.map{ |l, i| Subqing.new(questioning: self, level: l, rank: i + 1) }
+    else
+      [Subqing.new(questioning: self, rank: 1)]
+    end
   end
 
   def core_changed?
