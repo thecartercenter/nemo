@@ -83,17 +83,17 @@ class XMLSubmission
     # Response mission should already be set
     raise "Submissions must have a mission" if @response.mission.nil?
 
-    @response.form.visible_questionings.each do |qing|
+    Odk::DecoratorFactory.decorate_collection(@response.form.visible_questionings).each do |qing|
       qing.subqings.each do |subq|
         value = hash[subq.odk_code]
         if value.is_a? Array
           value.each_with_index do |val, i|
-            answer = fetch_or_build_answer(questioning: qing, rank: subq.rank, inst_num: i + 1)
+            answer = fetch_or_build_answer(questioning: qing.object, rank: subq.rank, inst_num: i + 1)
             answer = populate_from_string(answer, val)
             @response.answers << answer if answer
           end
         else
-          answer = fetch_or_build_answer(questioning: qing, rank: subq.rank)
+          answer = fetch_or_build_answer(questioning: qing.object, rank: subq.rank)
           answer = populate_from_string(answer, value)
           @response.answers << answer if answer
         end
