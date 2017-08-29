@@ -11,13 +11,8 @@ module Odk
       dest = decorate(dest)
       return dest.absolute_xpath if dest.top_level?
 
-      # get the paths to the common ancestor
       common_ancestor = object.lowest_common_ancestor(dest)
-
-      # include ancestor to get the right number of relative jumps
       ancestor_to_self = object.path_from_ancestor(common_ancestor, include_ancestor: true)
-
-      # include self for easier relative path manipulation
       ancestor_to_dest = decorate_collection(dest.path_from_ancestor(common_ancestor))
 
       if ancestor_to_dest.size > 0

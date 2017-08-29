@@ -98,7 +98,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       )
     end
 
-    it "should render proper XML" do
+    it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("media_question_form.xml", form)
     end
