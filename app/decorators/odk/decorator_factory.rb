@@ -19,6 +19,8 @@ module Odk
         Odk::QingDecorator.decorate(obj)
       when "Condition"
         Odk::ConditionDecorator.decorate(obj)
+      when "Subqing"
+        Odk::SubqingDecorator.decorate(obj)
       else
         obj
       end

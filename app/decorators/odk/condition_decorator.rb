@@ -1,9 +1,9 @@
 module Odk
-  class ConditionDecorator < ::ApplicationDecorator
+  class ConditionDecorator < BaseDecorator
     delegate_all
 
     def to_odk
-      lhs = questioning.xpath_to(ref_qing)
+      lhs = questioning.xpath_to(ref_subqing)
 
       if ref_qing.has_options?
         selected = "selected(#{lhs}, '#{option_node.odk_code}')"

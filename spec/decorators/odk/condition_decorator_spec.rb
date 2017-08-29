@@ -31,12 +31,14 @@ describe Odk::ConditionDecorator do
 
     context "for multilevel select one question" do
       let(:form) { create(:form, question_types: %w(multilevel_select_one)) }
+      let(:subqing1) { Odk::DecoratorFactory.decorate(qing.subqings[0]) }
+      let(:subqing2) { Odk::DecoratorFactory.decorate(qing.subqings[1]) }
 
       context "for first level" do
         let(:params) { {ref_qing: qing.object, op: "eq", option_node: opt_set.c[0]} }
 
         it do
-          expect(xpath).to eq "selected(/data/#{qing.subqings[0].odk_code}, 'on#{opt_set.c[0].id}')"
+          expect(xpath).to eq "selected(/data/#{subqing1.odk_code}, 'on#{opt_set.c[0].id}')"
         end
       end
 
@@ -44,7 +46,7 @@ describe Odk::ConditionDecorator do
         let(:params) { {ref_qing: qing.object, op: "eq", option_node: opt_set.c[0].c[1]} }
 
         it do
-          expect(xpath).to eq "selected(/data/#{qing.subqings[1].odk_code}, 'on#{opt_set.c[0].c[1].id}')"
+          expect(xpath).to eq "selected(/data/#{subqing2.odk_code}, 'on#{opt_set.c[0].c[1].id}')"
         end
       end
     end
