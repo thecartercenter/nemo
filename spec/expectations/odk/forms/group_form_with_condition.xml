@@ -5,7 +5,7 @@
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
-          <*itemcode1*>
+          <*itemcode1* jr:template="">
             <*itemcode1*-header/>
             <*itemcode2*/>
             <*itemcode3*/>
@@ -16,10 +16,10 @@
       <itext>
         <translation lang="English">
           <text id="*itemcode1*-header:label">
-            <value>Group Name</value>
+            <value>Group A</value>
           </text>
           <text id="*itemcode1*-header:hint">
-            <value>Group Hint</value>
+            <value>Group A</value>
           </text>
           <text id="*itemcode2*:label">
             <value>Text Question Title 1</value>
@@ -50,22 +50,24 @@
   </h:head>
   <h:body>
     <group>
-      <label>Group Name</label>
-      <input ref="/data/*itemcode1*/*itemcode1*-header">
-        <hint ref="jr:itext('*itemcode1*-header:hint')"/>
-      </input>
-      <input ref="/data/*itemcode1*/*itemcode2*">
-        <label ref="jr:itext('*itemcode2*:label')"/>
-        <hint ref="jr:itext('*itemcode2*:hint')"/>
-      </input>
-      <input ref="/data/*itemcode1*/*itemcode3*">
-        <label ref="jr:itext('*itemcode3*:label')"/>
-        <hint ref="jr:itext('*itemcode3*:hint')"/>
-      </input>
-      <input ref="/data/*itemcode1*/*itemcode4*">
-        <label ref="jr:itext('*itemcode4*:label')"/>
-        <hint ref="jr:itext('*itemcode4*:hint')"/>
-      </input>
+      <label>Group A</label>
+      <repeat nodeset="/data/*itemcode1*">
+        <input ref="/data/*itemcode1*/*itemcode1*-header">
+          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
+        </input>
+        <input ref="/data/*itemcode1*/*itemcode2*">
+          <label ref="jr:itext('*itemcode2*:label')"/>
+          <hint ref="jr:itext('*itemcode2*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode1*/*itemcode3*">
+          <label ref="jr:itext('*itemcode3*:label')"/>
+          <hint ref="jr:itext('*itemcode3*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode1*/*itemcode4*">
+          <label ref="jr:itext('*itemcode4*:label')"/>
+          <hint ref="jr:itext('*itemcode4*:hint')"/>
+        </input>
+      </repeat>
     </group>
   </h:body>
 </h:html>

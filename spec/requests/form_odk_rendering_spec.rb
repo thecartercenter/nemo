@@ -125,8 +125,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
   context "group form with condition" do
     let(:form) do
       create(:form, :published, :with_version,
-        name: "Basic Group",
-        question_types: [["text", "text", "text"]]
+        name: "Group with Condition",
+        question_types: [{repeating: {name: "Group A", items: ["text", "text", "text"]}}]
       )
     end
 
