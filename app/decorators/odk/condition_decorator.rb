@@ -22,11 +22,11 @@ module Odk
     end
 
     def questioning
-      DecoratorFactory.decorate(object.questioning)
+      decorate(object.questioning)
     end
 
     def ref_qing
-      DecoratorFactory.decorate(object.ref_qing)
+      decorate(object.ref_qing)
     end
   end
 end

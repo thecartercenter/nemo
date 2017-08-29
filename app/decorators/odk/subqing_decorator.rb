@@ -1,6 +1,8 @@
 module Odk
   class SubqingDecorator < BaseDecorator
-    # Delegation was working strangely here so we're doing it manually.
+    # Delegation was working strangely here so we're doing it manually instead of using delegate_all.
+    # We are delegating to two places -- these specific methods to the underlying Subqing,
+    # and everything else (via method_missing) to the decorated Questioning.
     delegate :name, :rank, :level, :first_rank?, to: :object
 
     # If options[:previous] is true, returns the code for the
@@ -20,7 +22,7 @@ module Odk
     end
 
     def decorated_questioning
-      @decorated_questioning ||= Odk::DecoratorFactory.decorate(object.questioning)
+      @decorated_questioning ||= decorate(object.questioning)
     end
 
     def method_missing(*args)

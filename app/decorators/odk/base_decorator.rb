@@ -5,11 +5,11 @@ module Odk
     protected
 
     def decorate(obj)
-      Odk::DecoratorFactory.decorate(obj)
+      DecoratorFactory.decorate(obj)
     end
 
     def decorate_collection(objs)
-      Odk::DecoratorFactory.decorate_collection(objs)
+      DecoratorFactory.decorate_collection(objs)
     end
   end
 end

@@ -14,13 +14,13 @@ module Odk
     def decorate(obj)
       case obj.class.name
       when "QingGroup"
-        Odk::QingGroupDecorator.decorate(obj)
+        QingGroupDecorator.decorate(obj)
       when "Questioning"
-        Odk::QingDecorator.decorate(obj)
+        QingDecorator.decorate(obj)
       when "Condition"
-        Odk::ConditionDecorator.decorate(obj)
+        ConditionDecorator.decorate(obj)
       when "Subqing"
-        Odk::SubqingDecorator.decorate(obj)
+        SubqingDecorator.decorate(obj)
       else
         obj
       end
