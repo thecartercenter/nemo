@@ -7,7 +7,7 @@ module Odk
     end
 
     def absolute_xpath
-      decorate(self_and_ancestors).map(&:odk_code).join("/")
+      decorate_collection(self_and_ancestors).map(&:odk_code).join("/")
     end
   end
 end

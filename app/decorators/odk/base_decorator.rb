@@ -4,12 +4,12 @@ module Odk
 
     protected
 
-    def decorate(items)
-      if items.is_a?(Array)
-        items.map { |item| Odk::DecoratorFactory.decorate(item) }
-      else
-        Odk::DecoratorFactory.decorate(items)
-      end
+    def decorate(obj)
+      Odk::DecoratorFactory.decorate(obj)
+    end
+
+    def decorate_collection(objs)
+      Odk::DecoratorFactory.decorate_collection(objs)
     end
   end
 end

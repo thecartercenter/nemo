@@ -1,8 +1,7 @@
 module Odk
   class SubqingDecorator < BaseDecorator
-    delegate_all
-    delegate :top_level?, :ancestors, :ancestor_ids, :path_from_ancestor, :multilevel?,
-      to: :decorated_questioning
+    # Delegation was working strangely here so we're doing it manually.
+    delegate :name, :rank, :level, :first_rank?, to: :object
 
     # If options[:previous] is true, returns the code for the
     # immediately previous subqing (multilevel only).
@@ -17,11 +16,15 @@ module Odk
     end
 
     def absolute_xpath
-      (decorate(ancestors.to_a) << self).map(&:odk_code).join("/")
+      (decorate_collection(ancestors.to_a) << self).map(&:odk_code).join("/")
     end
 
     def decorated_questioning
       @decorated_questioning ||= Odk::DecoratorFactory.decorate(object.questioning)
+    end
+
+    def method_missing(*args)
+      decorated_questioning.send(*args)
     end
   end
 end

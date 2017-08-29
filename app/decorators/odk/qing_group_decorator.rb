@@ -7,6 +7,10 @@ module Odk
       @odk_code ||= "grp#{object.id}"
     end
 
+    def sorted_children
+      decorate_collection(object.sorted_children)
+    end
+
     # Duck type
     def code
       nil

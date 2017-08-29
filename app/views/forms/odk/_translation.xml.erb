@@ -6,8 +6,8 @@
   <% end %>
 
   <%# Regular question translations %>
-  <% @form.visible_questionings.each do |q| %>
-    <% q.subqings.each do |subq| %>
+  <% Odk::DecoratorFactory.decorate_collection(@form.visible_questionings).each do |qing| %>
+    <% qing.subqings.each do |subq| %>
       <text id="<%= subq.odk_code %>:label">
         <value><%= subq.name(lang, :strict => false) %></value>
       </text>

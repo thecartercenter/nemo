@@ -18,12 +18,13 @@ module Odk
       ancestor_to_self = object.path_from_ancestor(common_ancestor, include_ancestor: true)
 
       # include self for easier relative path manipulation
-      ancestor_to_dest = decorate(dest.path_from_ancestor(common_ancestor))
+      ancestor_to_dest = decorate_collection(dest.path_from_ancestor(common_ancestor))
 
       if ancestor_to_dest.size > 0
         args = [dest.absolute_xpath]
         unless common_ancestor.root?
-          root_to_ancestor = decorate(common_ancestor.path_from_ancestor(ancestors.first, include_self: true))
+          root_to_ancestor = common_ancestor.path_from_ancestor(ancestors.first, include_self: true)
+          root_to_ancestor = decorate_collection(root_to_ancestor)
           root_to_ancestor.each_with_index do |node, i|
             xpath_self_to_cur_group = ([".."] * (ancestry_depth - i - 1)).join("/")
             args << node.absolute_xpath << "position(#{xpath_self_to_cur_group})"
@@ -49,6 +50,10 @@ module Odk
 
     def can_prefill?
       prefill_pattern.present? && qtype.prefillable?
+    end
+
+    def subqings
+      decorate_collection(object.subqings)
     end
   end
 end
