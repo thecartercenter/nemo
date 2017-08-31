@@ -27,7 +27,7 @@ class Answer < ApplicationRecord
   has_one(:media_object, dependent: :destroy, autosave: true, class_name: "Media::Object")
 
   before_validation(:clean_locations)
-  before_save(:replicate_location_values)
+  before_validation(:replicate_location_values)
   before_save(:round_ints)
   before_save(:blanks_to_nulls)
 
@@ -36,12 +36,11 @@ class Answer < ApplicationRecord
     choices.destroy(*choices.reject(&:checked?))
   end
 
-  validates(:value, numericality: true, if: ->(a) { a.should_validate?(:numericality) })
+  validates(:value, numericality: true, if: -> { should_validate?(:numericality) })
 
-  # in these custom validations, we add errors to the base, but we don't use full sentences (e.g. we use 'is required')
-  # since this class really just represents one value
-  validate(:min_max, if: ->(a) { a.should_validate?(:min_max) })
-  validate(:required, if: ->(a) { a.should_validate?(:required) })
+  validate(:validate_min_max, if: -> { should_validate?(:min_max) })
+  validate(:validate_required, if: -> { should_validate?(:required) })
+  validate(:validate_location, if: -> { should_validate?(:location) })
 
   accepts_nested_attributes_for(:choices)
 
@@ -177,25 +176,6 @@ class Answer < ApplicationRecord
     required_and_relevant? && empty?
   end
 
-  def should_validate?(field)
-    # don't validate if response says no
-    return false if response && !response.validate_answers?
-
-    return false if marked_for_destruction?
-
-    case field
-    when :numericality
-      qtype.numeric? && value.present?
-    when :required
-      # don't validate requiredness if response says no
-      !(response && response.incomplete?)
-    when :min_max
-      value.present?
-    else
-      true
-    end
-  end
-
   def simple_location_answer?
     qtype.name == "location" && value.present?
   end
@@ -255,8 +235,23 @@ class Answer < ApplicationRecord
 
   private
 
-  def required
-    errors.add(:value, :required) if required_but_empty?
+  def should_validate?(field)
+    return false if response && !response.validate_answers?
+    return false if marked_for_destruction?
+
+    case field
+    when :numericality
+      qtype.numeric? && value.present?
+    when :required
+      # don't validate requiredness if response says no
+      !(response && response.incomplete?)
+    when :min_max
+      value.present?
+    when :location
+      qtype.name == "location"
+    else
+      true
+    end
   end
 
   def round_ints
@@ -269,19 +264,11 @@ class Answer < ApplicationRecord
     true
   end
 
-  def min_max
-    val_f = value.to_f
-    if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
-        question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
-      errors.add(:value, question.min_max_error_msg)
-    end
-  end
-
   def clean_locations
     if simple_location_answer?
       if value.match(configatron.lat_lng_regexp)
-        lat = number_with_precision($1.to_f, precision: 6, separator: ".", delimiter: " ")
-        lng = number_with_precision($3.to_f, precision: 6, separator: ".", delimiter: " ")
+        lat = number_with_precision($1.to_f, precision: 6, separator: ".", delimiter: "")
+        lng = number_with_precision($3.to_f, precision: 6, separator: ".", delimiter: "")
         self.value = "#{lat} #{lng}"
       else
         self.value = ""
@@ -297,6 +284,30 @@ class Answer < ApplicationRecord
     elsif option.present? && option.has_coordinates?
       self.latitude = option.latitude
       self.longitude = option.longitude
+    end
+  end
+
+  def validate_required
+    errors.add(:value, :required) if required_but_empty?
+  end
+
+  def validate_min_max
+    val_f = value.to_f
+    if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
+        question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+      errors.add(:value, question.min_max_error_msg)
+    end
+  end
+
+  def validate_location
+    # Doesn't make sense to validate lat/lng if copied from options because the user
+    # can't do anything about that.
+    if simple_location_answer?
+      if latitude < -90 || latitude > 90
+        errors.add(:value, :invalid_latitude)
+      elsif longitude < -180 || longitude > 180
+        errors.add(:value, :invalid_longitude)
+      end
     end
   end
 end
