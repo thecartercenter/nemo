@@ -24,6 +24,8 @@
 
   <%= f.field(:form_id, :type => :hidden) %>
 
+  <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>
+
   <%# form name %>
   <%= f.field(:form_id, :content => link_to(@response.form.name, @response.form)) %>
 
