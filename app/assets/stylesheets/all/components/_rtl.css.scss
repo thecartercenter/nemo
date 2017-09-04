@@ -1,6 +1,48 @@
 html[dir="rtl"] {
+
+  // ul.nav.navbar-nav {
+  //   float: right;
+  //   display: flex;
+  //   flex-direction: row-reverse;
+  //   padding-right: 28px;
+  // }
+
+  // div#title{
+  //   text-align: right;
+  //   display: flex;
+  //   flex-direction: row-reverse;
+  //   padding-right: 34px;
+  // }
+  //
+  // div#title h2{
+  //   margin-top: auto;
+  // }
+  //
+  // div#userinfo{
+  //   float: left;
+  //   display: flex;
+  //   flex-direction: row-reverse;
+  //   padding-left: 34px;
+  // }
+  //
+  // header nav.navbar-default ul.navbar-nav li a {
+  //   display: flex;
+  //   flex-direction: row-reverse;
+  // }
+  //
+  // header nav.navbar-default ul.navbar-nav li i {
+  //   margin-left: 5px;
+  //   margin-right: 0px;
+  // }
+
+
+
+
+  //////////////////////
   #userinfo {
     float: left;
+    display: flex;
+    flex-direction: row-reverse;
 
     .icon-btn {
       float: right;
