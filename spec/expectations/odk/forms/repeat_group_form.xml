@@ -11,14 +11,25 @@
             <*itemcode3*/>
             <*itemcode4*/>
           </*itemcode1*>
+          <*itemcode5*>
+            <*itemcode5*-header/>
+            <*itemcode6*/>
+            <*itemcode7*/>
+          </*itemcode5*>
         </data>
       </instance>
       <itext>
         <translation lang="English">
           <text id="*itemcode1*-header:label">
-            <value>Group Name</value>
+            <value>Repeat Group 1</value>
           </text>
           <text id="*itemcode1*-header:hint">
+            <value>Repeat Group 1</value>
+          </text>
+          <text id="*itemcode5*-header:label">
+            <value>Group Name</value>
+          </text>
+          <text id="*itemcode5*-header:hint">
             <value>Group Hint</value>
           </text>
           <text id="*itemcode2*:label">
@@ -39,6 +50,18 @@
           <text id="*itemcode4*:hint">
             <value>Question Hint 3</value>
           </text>
+          <text id="*itemcode6*:label">
+            <value>Text Question Title 4</value>
+          </text>
+          <text id="*itemcode6*:hint">
+            <value>Question Hint 4</value>
+          </text>
+          <text id="*itemcode7*:label">
+            <value>Text Question Title 5</value>
+          </text>
+          <text id="*itemcode7*:hint">
+            <value>Question Hint 5</value>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*"/>
@@ -46,11 +69,15 @@
       <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*" type="string"/>
+      <bind nodeset="/data/*itemcode5*"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode5*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode6*" type="string"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode7*" type="string"/>
     </model>
   </h:head>
   <h:body>
     <group>
-      <label>Group Name</label>
+      <label>Repeat Group 1</label>
       <repeat nodeset="/data/*itemcode1*">
         <group appearance="field-list">
           <input ref="/data/*itemcode1*/*itemcode1*-header">
@@ -70,6 +97,22 @@
           </input>
         </group>
       </repeat>
+    </group>
+    <group>
+      <label>Group Name</label>
+      <group appearance="field-list">
+        <input ref="/data/*itemcode5*/*itemcode5*-header">
+          <hint ref="jr:itext('*itemcode5*-header:hint')"/>
+        </input>
+        <input ref="/data/*itemcode5*/*itemcode6*">
+          <label ref="jr:itext('*itemcode6*:label')"/>
+          <hint ref="jr:itext('*itemcode6*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode5*/*itemcode7*">
+          <label ref="jr:itext('*itemcode7*:label')"/>
+          <hint ref="jr:itext('*itemcode7*:hint')"/>
+        </input>
+      </group>
     </group>
   </h:body>
 </h:html>
