@@ -5,6 +5,8 @@ cache: bundler
 rvm:
   - 2.2.0
 sudo: false
+before_install:
+  - gem update bundler --no-rdoc --no-ri
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - for f in $(find -name '*.example'); do cp "$f" "${f%.example}"; done
