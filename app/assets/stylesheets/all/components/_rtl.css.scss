@@ -25,10 +25,18 @@ html[dir="rtl"] {
   //   padding-left: 34px;
   // }
   //
-  // header nav.navbar-default ul.navbar-nav li a {
-  //   display: flex;
-  //   flex-direction: row-reverse;
-  // }
+  header nav.navbar-default ul.navbar-nav {
+
+    li a {
+      display: flex;
+      flex-direction: row-reverse;
+      vertical-align: baseline;
+    }
+
+    .caret {
+      margin-top: 8px;
+    }
+  }
   //
   // header nav.navbar-default ul.navbar-nav li i {
   //   margin-left: 5px;
@@ -36,14 +44,19 @@ html[dir="rtl"] {
   // }
 
 
-  div#title h2{
-    margin-top: auto;
+  div#title {
+    padding-right: 34px;
+    h2 {
+      margin-top: auto;
+    }
   }
 
   //////////////////////
   #userinfo {
+    padding-top: 10px;
     float: left;
     display: flex;
+    padding-left: 34px;
 
 
     .icon-btn {
