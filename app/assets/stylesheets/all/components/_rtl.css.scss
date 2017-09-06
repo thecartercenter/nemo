@@ -1,30 +1,5 @@
 html[dir="rtl"] {
 
-  // ul.nav.navbar-nav {
-  //   float: right;
-  //   display: flex;
-  //   flex-direction: row-reverse;
-  //   padding-right: 28px;
-  // }
-
-  // div#title{
-  //   text-align: right;
-  //   display: flex;
-  //   flex-direction: row-reverse;
-  //   padding-right: 34px;
-  // }
-  //
-  // div#title h2{
-  //   margin-top: auto;
-  // }
-  //
-  // div#userinfo{
-  //   float: left;
-  //   display: flex;
-  //   flex-direction: row-reverse;
-  //   padding-left: 34px;
-  // }
-  //
   header nav.navbar-default ul.navbar-nav {
 
     li a {
@@ -37,12 +12,6 @@ html[dir="rtl"] {
       margin-top: 8px;
     }
   }
-  //
-  // header nav.navbar-default ul.navbar-nav li i {
-  //   margin-left: 5px;
-  //   margin-right: 0px;
-  // }
-
 
   div#title {
     padding-right: 34px;
@@ -51,7 +20,6 @@ html[dir="rtl"] {
     }
   }
 
-  //////////////////////
   #userinfo {
     padding-top: 10px;
     float: left;
@@ -106,10 +74,5 @@ html[dir="rtl"] {
   div.top-action-links a i {
     margin-right: 0;
     margin-left: 3px;
-  }
-
-  #userinfo a.login {
-    margin-right: 0;
-    margin-left: 22px;
   }
 }
