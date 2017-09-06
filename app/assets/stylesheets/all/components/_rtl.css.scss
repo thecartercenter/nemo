@@ -36,13 +36,15 @@ html[dir="rtl"] {
   // }
 
 
-
+  div#title h2{
+    margin-top: auto;
+  }
 
   //////////////////////
   #userinfo {
     float: left;
     display: flex;
-  
+
 
     .icon-btn {
       float: right;
