@@ -263,6 +263,12 @@ class Response < ApplicationRecord
     "##{id}"
   end
 
+  # When we migrate to UUIDs as primary keys, this will become a column and should be removed.
+  def old_id
+    raise "old_id method no longer necessary" if self.class.column_names.include?("old_id")
+    id
+  end
+
   # whether the answers should validate themselves
   def validate_answers?
     # dont validate if this is an ODK submission as we don't want to lose data

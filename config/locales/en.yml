@@ -431,6 +431,7 @@ en:
       response:
         age: "Age"
         answers: "Answers"
+        old_id: "Old ID"
         id: "Response ID"
         created_at: "Submission Time"
         form_id: "Form"
