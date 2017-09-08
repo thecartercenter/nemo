@@ -57,7 +57,7 @@
 
     // show/hide max/min
     var show_max_min = (selected_type == "decimal" || selected_type == "integer");
-    $(".question_fields .minmax")[show_max_min ? 'show' : 'hide']();
+    $(".question_fields .minmax .form_field")[show_max_min ? 'show' : 'hide']();
 
     // reset boxes if hiding
     if (!show_max_min) {
