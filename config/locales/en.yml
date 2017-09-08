@@ -707,6 +707,8 @@ en:
       models:
         answer:
           required: "Please enter a value."
+          invalid_latitude: "Latitude is out of range."
+          invalid_longitude: "Longitude is out of range."
         assignment:
           blank: "is required."
         broadcast:
