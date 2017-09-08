@@ -162,11 +162,9 @@ class Response < ApplicationRecord
         attribs.merge!({form_items: { question_id: question.id}})
       end
 
-      # run the sphinx search
-
-      answers = Answer.joins(:response, :questioning).where(attribs).search_for_ids(expression.values)
-      excerpted = Answer.search_for_ids(expression.values)
-      answer_ids = answers.pluck(:id)
+      # Run the full text search and get the matching answer IDs
+      answer_ids = Answer.joins(:response, :questioning).where(attribs).
+        search_by_value(expression.values).pluck(:id)
 
       # turn into an sql fragment
       fragment = if answer_ids.present?
@@ -180,8 +178,6 @@ class Response < ApplicationRecord
 
     # apply the conditions
     relation = relation.where(sql)
-
-
   end
 
   # returns a count how many responses have arrived recently

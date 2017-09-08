@@ -60,7 +60,7 @@ class Answer < ApplicationRecord
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
   scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }
 
-  pg_search_scope :search_for_ids,
+  pg_search_scope :search_by_value,
     against: :value,
     associated_against: {
       option: :canonical_name,

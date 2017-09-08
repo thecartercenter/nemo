@@ -9,7 +9,7 @@ describe Search::Search do
     # this is just a regular-type qualifier that is not the default
     Search::Qualifier.new(name: "source", col: "t.source"),
 
-    # this qualifier allows partial matches but is not indexed 
+    # this qualifier allows partial matches but is not indexed
     Search::Qualifier.new(name: "submitter", col: "t3.f3", type: :text),
 
     # this qualifier supports scale-type comparison operators
@@ -235,22 +235,22 @@ describe Search::Search do
 
   it "indexed qualifiers should work with multiple terms" do
     assert_search(str: 'source:bar text:(alpha bravo)', sql: "((t.source = 'bar')) AND ((tbl.id IN (###1###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('alpha bravo')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('alpha bravo')
   end
 
   it "indexed qualifiers should work with exact phrases" do
     assert_search(str: 'text:"alpha bravo"', sql: "((tbl.id IN (###0###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('"alpha bravo"')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('"alpha bravo"')
   end
 
   it "indexed qualifiers should work with OR operator" do
     assert_search(str: 'text:(alpha OR bravo)', sql: "((tbl.id IN (###0###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('alpha | bravo')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('alpha | bravo')
   end
 
   it "indexed qualifiers should work with minus operator" do
     assert_search(str: 'text:(alpha -bravo)', sql: "((tbl.id IN (###0###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('alpha -bravo')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('alpha -bravo')
   end
 
   it "indexed qualifiers should not allow not equals operator" do
