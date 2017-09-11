@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170811202952) do
+ActiveRecord::Schema.define(version: 20170908204729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20170811202952) do
     t.integer "rank", default: 1, null: false
     t.integer "response_id"
     t.time "time_value"
+    t.tsvector "tsv"
     t.datetime "updated_at"
     t.string "uuid", null: false
     t.text "value"
