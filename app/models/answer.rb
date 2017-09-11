@@ -69,6 +69,7 @@ class Answer < ApplicationRecord
     against: :value,
     using: {
       tsearch: {
+        tsvector_column: "tsv",
         prefix: true,
         negation: true
       }
