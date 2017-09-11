@@ -62,10 +62,6 @@ class Answer < ApplicationRecord
 
   pg_search_scope :search_by_value,
     against: :value,
-    associated_against: {
-      option: :canonical_name,
-      options: :canonical_name,
-    },
     using: {
       tsearch: {
         prefix: true,
