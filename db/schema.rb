@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170911140128) do
+ActiveRecord::Schema.define(version: 20170911141452) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20170911140128) do
   add_index "answers", ["questioning_id"], name: "answers_questioning_id_fk", using: :btree
   add_index "answers", %w(response_id questioning_id inst_num rank), name: "answers_full", unique: true, using: :btree
   add_index "answers", ["response_id"], name: "answers_response_id_fk", using: :btree
+  add_index "answers", ["tsv"], name: "index_answers_on_tsv", using: :gin
   add_index "answers", ["uuid"], name: "index_answers_on_uuid", using: :btree
 
   create_table "assignments", force: :cascade do |t|
