@@ -1,7 +1,6 @@
 require "spec_helper"
 
-# Should change this to no_sphinx for performance reasons when TS bug #914 is fixed.
-feature "responses form", js: true, sphinx: true do
+feature "responses form", js: true do
   let(:user) { create(:user) }
   let!(:form) { create(:form, :published) }
   let(:form_questionings) { form.questionings }

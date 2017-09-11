@@ -44,7 +44,7 @@ describe Report::ListReport, :reports do
     end
   end
 
-  describe "results", no_sphinx: true do
+  describe "results" do
     it "basic list" do
       user = create(:user, name: "Foo")
       questions = []

@@ -1,6 +1,6 @@
 require "spec_helper"
 
-feature "remember context", js: true, sphinx: true do
+feature "remember context", js: true do
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
   let!(:form) { create(:form) }

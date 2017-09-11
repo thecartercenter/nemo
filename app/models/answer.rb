@@ -17,13 +17,20 @@
 #
 class Answer < ApplicationRecord
   include ActionView::Helpers::NumberHelper
+  include PgSearch
 
   acts_as_paranoid
+
+  # Convert value to tsvector for use in full text search.
+  trigger.before(:insert, :update) do
+    "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
+  end
 
   belongs_to(:questioning, inverse_of: :answers)
   belongs_to(:option, inverse_of: :answers)
   belongs_to(:response, inverse_of: :answers, touch: true)
   has_many(:choices, dependent: :destroy, inverse_of: :answer, autosave: true)
+  has_many(:options, through: :choices)
   has_one(:media_object, dependent: :destroy, autosave: true, class_name: "Media::Object")
 
   before_validation(:clean_locations)
@@ -56,6 +63,16 @@ class Answer < ApplicationRecord
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
   scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }
+
+  pg_search_scope :search_by_value,
+    against: :value,
+    using: {
+      tsearch: {
+        tsvector_column: "tsv",
+        prefix: true,
+        negation: true
+      }
+    }
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value

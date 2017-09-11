@@ -39,11 +39,6 @@ class ResponsesController < ApplicationController
           rescue Search::ParseError
             flash.now[:error] = $!.to_s
             @search_error = true
-          rescue ThinkingSphinx::SphinxError
-            # format sphinx message a little more nicely
-            sphinx_msg = $!.to_s.gsub(/index .+?:\s+/, "")
-            flash.now[:error] = sphinx_msg
-            @search_error = true
           end
         end
 
