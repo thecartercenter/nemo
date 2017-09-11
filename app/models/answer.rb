@@ -21,6 +21,11 @@ class Answer < ApplicationRecord
 
   acts_as_paranoid
 
+  # Convert value to tsvector for use in full text search.
+  trigger.before(:insert, :update) do
+    "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
+  end
+
   belongs_to(:questioning, inverse_of: :answers)
   belongs_to(:option, inverse_of: :answers)
   belongs_to(:response, inverse_of: :answers, touch: true)
@@ -68,7 +73,6 @@ class Answer < ApplicationRecord
         negation: true
       }
     }
-
 
   # gets all location answers for the given mission
   # returns only the response ID and the answer value
