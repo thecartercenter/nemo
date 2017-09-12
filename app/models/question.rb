@@ -37,12 +37,15 @@ class Question < ApplicationRecord
   validate(:code_unique_per_mission)
   validate(:at_least_one_name)
 
-  scope(:by_code, -> { order('questions.code') })
-  scope(:with_code, ->(c) { where("LOWER(code) = ?", c.downcase) })
-  scope(:default_order, -> { by_code })
-  scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
-  scope(:with_forms, -> { includes(:forms) })
-  scope(:reportable, -> { where.not(qtype_name: %w(image annotated_image signature sketch audio video)) })
+  scope :by_code, -> { order('questions.code') }
+  scope :with_code, ->(c) { where("LOWER(code) = ?", c.downcase) }
+  scope :default_order, -> { by_code }
+  scope :select_types, -> { where(:qtype_name => %w(select_one select_multiple)) }
+  scope :with_forms, -> { includes(:forms) }
+  scope :reportable, -> { where.not(qtype_name: %w(image annotated_image signature sketch audio video)) }
+  scope :not_in_form, ->(form) { where("(questions.id NOT IN (
+    SELECT question_id FROM form_items
+      WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id) }
 
   # Fetches association counts along with the questions.
   # Accounts for copies with standard questions.
@@ -126,11 +129,6 @@ class Question < ApplicationRecord
   replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
     uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
     compatibility: [:qtype_name, :option_set_id]
-
-  # returns questions that do NOT already appear in the given form
-  def self.not_in_form(form)
-    all.where("(questions.id not in (select question_id from form_items where type='Questioning' and form_id='#{form.id}'))")
-  end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)
