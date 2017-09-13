@@ -197,17 +197,8 @@ class Answer < ApplicationRecord
     qtype.name == "location" && value.present?
   end
 
-  # check whether this answer has coordinates
   def has_coordinates?
-    return false unless qtype.has_options?
-
-    if option.present?
-      # select_one
-      option.has_coordinates?
-    else
-      # select_multiple
-      choices.any?(&:has_coordinates?)
-    end
+    latitude.present? && longitude.present?
   end
 
   def from_group?
@@ -294,6 +285,7 @@ class Answer < ApplicationRecord
   end
 
   def replicate_location_values
+    choices.each(&:replicate_location_values)
     if simple_location_answer?
       lat, long = self.value.split(" ")
       self.latitude = BigDecimal.new(lat)
@@ -301,6 +293,9 @@ class Answer < ApplicationRecord
     elsif option.present? && option.has_coordinates?
       self.latitude = option.latitude
       self.longitude = option.longitude
+    elsif choice = choices.detect(&:has_coordinates?)
+      self.latitude = choice.latitude
+      self.longitude = choice.longitude
     end
   end
 

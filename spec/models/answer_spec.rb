@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe Answer do
   it_behaves_like "has a uuid"
@@ -6,101 +6,106 @@ describe Answer do
   let(:latitude) { 12 }
   let(:longitude) { -12 }
 
-  describe '#simple_location_answer?' do
-    context 'with questioning of location type' do
-      let(:form) { create(:form, question_types: %w(location)) }
-      let(:questioning) { form.questionings.first }
+  let(:questioning) { form.questionings.first }
 
-      it 'returns true' do
+  describe "#simple_location_answer?" do
+    context "with questioning of location type" do
+      let(:form) { create(:form, question_types: %w(location)) }
+
+      it "returns true" do
         answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
         expect(answer.simple_location_answer?).to be true
       end
     end
 
-    context 'with questioning of a different type' do
+    context "with questioning of a different type" do
       let(:form) { create(:form, question_types: %w(text)) }
-      let(:questioning) { form.questionings.first }
 
-      it 'returns false' do
+      it "returns false" do
         answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
         expect(answer.simple_location_answer?).to be false
       end
     end
   end
 
-  describe '#has_coordinates?' do
-    context 'with a select_one question' do
+  describe "#has_coordinates?" do
+    context "with a select_one question" do
       let(:form) { create(:form, question_types: %w(select_one)) }
-      let(:questioning) { form.questionings.first }
       let(:option) { questioning.options.first }
 
-      it 'should return false if the selected option does not have coordinates' do
+      it "should return false if the selected option does not have coordinates" do
         answer = create(:answer, option: option, questioning: questioning)
-        expect(answer.has_coordinates?).to be false
+        expect(answer).not_to have_coordinates
       end
 
-      it 'should return true if the selected option has coordinates' do
+      it "should return true if the selected option has coordinates" do
         questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
         option.update_attributes(latitude: 0, longitude: 0)
 
         answer = create(:answer, option: option, questioning: questioning)
-        expect(answer.has_coordinates?).to be true
+        expect(answer).to have_coordinates
       end
     end
 
-    context 'with a select_multiple question' do
+    context "with a select_multiple question" do
       let(:form) { create(:form, question_types: %w(select_multiple)) }
-      let(:questioning) { form.questionings.first }
       let(:option_one) { questioning.options.first }
       let(:option_two) { questioning.options.second }
+      let(:answer) { create(:answer, questioning: questioning, choices: choices) }
 
-      it 'should return false if no options were selected' do
-        answer = create(:answer, questioning: questioning)
-        expect(answer.has_coordinates?).to be false
+      context "with no choices" do
+        let(:choices) { [] }
+
+        it "should return false if no options were selected" do
+          answer = create(:answer, questioning: questioning)
+          expect(answer).not_to have_coordinates
+        end
       end
 
-      it 'should return false if the selected options do not have coordinates' do
-        answer = create(:answer, questioning: questioning)
-        create(:choice, answer: answer, option: option_one)
-        create(:choice, answer: answer, option: option_two)
-        answer.reload
+      context "with choices" do
+        let(:choices) { [build(:choice, option: option_one), build(:choice, option: option_two)] }
 
-        expect(answer.has_coordinates?).to be false
+        before do
+          questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
+        end
+
+        it "should return false if the selected options do not have coordinates" do
+          expect(answer).not_to have_coordinates
+        end
+
+        it "should return true if all of the selected options have coordinates" do
+          option_one.update_attributes(latitude: 0, longitude: 0)
+          option_two.update_attributes(latitude: 0, longitude: 0)
+          expect(answer).to have_coordinates
+        end
+
+        it "should return true if any of the selected options have coordinates" do
+          option_one.update_attributes(latitude: 0, longitude: 0)
+          expect(answer).to have_coordinates
+        end
+      end
+    end
+
+    context "with a location question" do
+      let(:form) { create(:form, question_types: %w(location)) }
+
+      it "should return true if answer given" do
+        answer = create(:answer, questioning: questioning, value: "12.3 45.6")
+        expect(answer).to have_coordinates
       end
 
-      it 'should return true if all of the selected options have coordinates' do
-        questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
-        option_one.update_attributes(latitude: 0, longitude: 0)
-        option_two.update_attributes(latitude: 0, longitude: 0)
-
-        answer = create(:answer, questioning: questioning)
-        create(:choice, answer: answer, option: option_one)
-        create(:choice, answer: answer, option: option_two)
-        answer.reload
-
-        expect(answer.has_coordinates?).to be true
-      end
-
-      it 'should return true if any of the selected options have coordinates' do
-        questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
-        option_one.update_attributes(latitude: 0, longitude: 0)
-
-        answer = create(:answer, questioning: questioning)
-        create(:choice, answer: answer, option: option_one)
-        create(:choice, answer: answer, option: option_two)
-        answer.reload
-
-        expect(answer.has_coordinates?).to be true
+      it "should return false if answer blank" do
+        answer = create(:answer, questioning: questioning, value: "")
+        expect(answer).not_to have_coordinates
       end
     end
   end
 
-  describe 'replicate_location_values' do
-    context 'when the answer is for simple location type question' do
+  describe "replicate_location_values" do
+    context "when the answer is for simple location type question" do
       let(:form) { create(:form, question_types: %w(location)) }
-      let(:questioning) { form.questionings.first }
 
-      it 'copies the coordinates from value to the lat/long fields' do
+      it "copies the coordinates from value to the lat/long fields" do
         answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
 
         expect(answer.simple_location_answer?).to be true
@@ -109,12 +114,12 @@ describe Answer do
       end
     end
 
-    context 'when answer is for a select one question of a location' do
+    context "when answer is for a select one question of a location" do
       let(:form) { create(:form, question_types: %w(select_one)) }
       let(:questioning) { form.questionings.first }
       let(:option) { questioning.options.first }
 
-      it 'copies the coordinates from the option to the answer lat/long columns' do
+      it "copies the coordinates from the option to the answer lat/long columns" do
         questioning.option_set.update_attributes(geographic: true, allow_coordinates: true)
         option.update_attributes(latitude: latitude, longitude: longitude)
 
@@ -125,7 +130,7 @@ describe Answer do
     end
   end
 
-  describe '.location_answers_for_mission' do
+  describe ".location_answers_for_mission" do
     before do
       user = create(:user)
       form = create(:form, question_types: %w(location select_one select_multiple text integer))
@@ -151,7 +156,7 @@ describe Answer do
         [option_one.name, option_two.name], "Non geo answer", 12])
     end
 
-    it 'returns all answers for locations on a certain mission' do
+    it "returns all answers for locations on a certain mission" do
       location_answers = Answer.location_answers_for_mission(get_mission)
       expect(location_answers.length).to eq 4
     end

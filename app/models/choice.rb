@@ -1,13 +1,11 @@
 class Choice < ApplicationRecord
   acts_as_paranoid
 
-  belongs_to(:answer, :inverse_of => :choices, :touch => true)
-  belongs_to(:option, :inverse_of => :choices)
+  belongs_to(:answer, inverse_of: :choices, touch: true)
+  belongs_to(:option, inverse_of: :choices)
 
-  delegate :name, :to => :option, :prefix => true
-  delegate :has_coordinates?, :to => :option
-
-  before_save :replicate_location_values
+  delegate :name, to: :option, prefix: true
+  delegate :has_coordinates?, to: :option
 
   def checked
     # Only explicitly false should return false.
@@ -41,8 +39,6 @@ class Choice < ApplicationRecord
   def option_node_id=(id)
     self.option_id = id.present? ? OptionNode.id_to_option_id(id) : nil
   end
-
-  private
 
   def replicate_location_values
     if has_coordinates?
