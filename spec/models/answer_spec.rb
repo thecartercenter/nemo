@@ -13,7 +13,7 @@ describe Answer do
 
       it 'returns true' do
         answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
-        expect(answer.simple_location_answer?).to be_truthy
+        expect(answer.simple_location_answer?).to be true
       end
     end
 
@@ -23,7 +23,7 @@ describe Answer do
 
       it 'returns false' do
         answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
-        expect(answer.simple_location_answer?).to be_falsy
+        expect(answer.simple_location_answer?).to be false
       end
     end
   end
@@ -36,7 +36,7 @@ describe Answer do
 
       it 'should return false if the selected option does not have coordinates' do
         answer = create(:answer, option: option, questioning: questioning)
-        expect(answer.has_coordinates?).to be_falsy
+        expect(answer.has_coordinates?).to be false
       end
 
       it 'should return true if the selected option has coordinates' do
@@ -44,7 +44,7 @@ describe Answer do
         option.update_attributes(latitude: 0, longitude: 0)
 
         answer = create(:answer, option: option, questioning: questioning)
-        expect(answer.has_coordinates?).to be_truthy
+        expect(answer.has_coordinates?).to be true
       end
     end
 
@@ -56,7 +56,7 @@ describe Answer do
 
       it 'should return false if no options were selected' do
         answer = create(:answer, questioning: questioning)
-        expect(answer.has_coordinates?).to be_falsy
+        expect(answer.has_coordinates?).to be false
       end
 
       it 'should return false if the selected options do not have coordinates' do
@@ -65,7 +65,7 @@ describe Answer do
         create(:choice, answer: answer, option: option_two)
         answer.reload
 
-        expect(answer.has_coordinates?).to be_falsy
+        expect(answer.has_coordinates?).to be false
       end
 
       it 'should return true if all of the selected options have coordinates' do
@@ -78,7 +78,7 @@ describe Answer do
         create(:choice, answer: answer, option: option_two)
         answer.reload
 
-        expect(answer.has_coordinates?).to be_truthy
+        expect(answer.has_coordinates?).to be true
       end
 
       it 'should return true if any of the selected options have coordinates' do
@@ -90,7 +90,7 @@ describe Answer do
         create(:choice, answer: answer, option: option_two)
         answer.reload
 
-        expect(answer.has_coordinates?).to be_truthy
+        expect(answer.has_coordinates?).to be true
       end
     end
   end
@@ -103,7 +103,7 @@ describe Answer do
       it 'copies the coordinates from value to the lat/long fields' do
         answer = create(:answer, questioning: questioning, value: "#{latitude} #{longitude}")
 
-        expect(answer.simple_location_answer?).to be_truthy
+        expect(answer.simple_location_answer?).to be true
         expect(answer.latitude).to eq latitude
         expect(answer.longitude).to eq longitude
       end
