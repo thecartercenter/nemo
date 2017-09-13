@@ -124,9 +124,7 @@ class ResponsesController < ApplicationController
         # ensure response's user can submit to the form
         authorize!(:submit_to, @submission.response.form)
 
-        # save without validating, as we have no way to present validation errors to user,
-        # and submitting apps already do validation
-        @submission.save(validate: false)
+        @submission.save
 
         render(nothing: true, status: 201)
       rescue CanCan::AccessDenied

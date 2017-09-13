@@ -17,8 +17,10 @@ class XMLSubmission
     end
   end
 
-  def save(validate: true)
-    @response.save(validate: validate)
+  def save
+    # We save XML submissions without validating, as we have no way to present validation errors to user,
+    # and submitting apps already do validation.
+    @response.save(validate: false)
   end
 
   private
