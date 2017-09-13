@@ -710,6 +710,9 @@ en:
           required: "Please enter a value."
           invalid_latitude: "Latitude is out of range."
           invalid_longitude: "Longitude is out of range."
+          invalid_altitude: "Altitude is out of range."
+          invalid_accuracy: "Accuracy is out of range."
+          accuracy_negative: "Accuracy can't be negative."
         assignment:
           blank: "is required."
         broadcast:

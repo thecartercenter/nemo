@@ -26,28 +26,32 @@ class Answer < ApplicationRecord
     "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
   end
 
-  belongs_to(:questioning, inverse_of: :answers)
-  belongs_to(:option, inverse_of: :answers)
-  belongs_to(:response, inverse_of: :answers, touch: true)
-  has_many(:choices, dependent: :destroy, inverse_of: :answer, autosave: true)
-  has_many(:options, through: :choices)
-  has_one(:media_object, dependent: :destroy, autosave: true, class_name: "Media::Object")
+  attr_accessor :location_values_replicated
 
-  before_validation(:clean_locations)
-  before_validation(:replicate_location_values)
-  before_save(:round_ints)
-  before_save(:blanks_to_nulls)
+  belongs_to :questioning, inverse_of: :answers
+  belongs_to :option, inverse_of: :answers
+  belongs_to :response, inverse_of: :answers, touch: true
+  has_many :choices, dependent: :destroy, inverse_of: :answer, autosave: true
+  has_many :options, through: :choices
+  has_one :media_object, dependent: :destroy, autosave: true, class_name: "Media::Object"
+
+  before_validation :replicate_location_values
+  before_save :replicate_location_values
+  before_save :chop_decimals
+  before_save :format_location_value
+  before_save :round_ints
+  before_save :blanks_to_nulls
+  after_save { self.location_values_replicated = false }
 
   # Remove unchecked choices before saving.
   before_save do
     choices.destroy(*choices.reject(&:checked?))
   end
 
-  validates(:value, numericality: true, if: -> { should_validate?(:numericality) })
-
-  validate(:validate_min_max, if: -> { should_validate?(:min_max) })
-  validate(:validate_required, if: -> { should_validate?(:required) })
-  validate(:validate_location, if: -> { should_validate?(:location) })
+  validates :value, numericality: true, if: -> { should_validate?(:numericality) }
+  validate :validate_min_max, if: -> { should_validate?(:min_max) }
+  validate :validate_required, if: -> { should_validate?(:required) }
+  validate :validate_location, if: -> { should_validate?(:location) }
 
   accepts_nested_attributes_for(:choices)
 
@@ -141,7 +145,7 @@ class Answer < ApplicationRecord
   # if this answer is for a location question and the value is not blank, returns a two element array representing the
   # lat long. else returns nil
   def location
-    value.split(" ") if simple_location_answer?
+    value.split(" ") if location_type_with_value?
   end
 
   # returns the value for this answer casted to the appropriate data type
@@ -193,7 +197,7 @@ class Answer < ApplicationRecord
     required_and_relevant? && empty?
   end
 
-  def simple_location_answer?
+  def location_type_with_value?
     qtype.name == "location" && value.present?
   end
 
@@ -262,34 +266,20 @@ class Answer < ApplicationRecord
     end
   end
 
-  def round_ints
-    self.value = value.to_i if %w(integer counter).include?(qtype.name) && !value.blank?
-    true
-  end
-
-  def blanks_to_nulls
-    self.value = nil if value.blank?
-    true
-  end
-
-  def clean_locations
-    if simple_location_answer?
-      if value.match(configatron.lat_lng_regexp)
-        lat = number_with_precision($1.to_f, precision: 6, separator: ".", delimiter: "")
-        lng = number_with_precision($3.to_f, precision: 6, separator: ".", delimiter: "")
-        self.value = "#{lat} #{lng}"
-      else
-        self.value = ""
-      end
-    end
-  end
-
   def replicate_location_values
+    # This method is run before_validation and before_save in case validations are skipped.
+    # We use this flag to not duplicate effort.
+    return if location_values_replicated
+    self.location_values_replicated = true
+
     choices.each(&:replicate_location_values)
-    if simple_location_answer?
-      lat, long = self.value.split(" ")
-      self.latitude = BigDecimal.new(lat)
-      self.longitude = BigDecimal.new(long)
+
+    if location_type_with_value?
+      tokens = self.value.split(" ")
+      self.latitude = BigDecimal.new(tokens[0]) if tokens[0]
+      self.longitude = BigDecimal.new(tokens[1]) if tokens[1]
+      self.altitude = BigDecimal.new(tokens[2]) if tokens[2]
+      self.accuracy = BigDecimal.new(tokens[3]) if tokens[3]
     elsif option.present? && option.has_coordinates?
       self.latitude = option.latitude
       self.longitude = option.longitude
@@ -297,6 +287,44 @@ class Answer < ApplicationRecord
       self.latitude = choice.latitude
       self.longitude = choice.longitude
     end
+    true
+  end
+
+  # We sometimes save decimals without validating, so we need to be careful
+  # not to overflow the DB.
+  def chop_decimals
+    %i(latitude longitude altitude accuracy).each do |c|
+      next if self[c].nil?
+      column = self.class.column_for_attribute(c)
+      if self[c].abs > 10 ** (column.precision - column.scale)
+        self[c] = 0
+      end
+    end
+    self.accuracy = 0 if accuracy.present? && accuracy < 0
+    true
+  end
+
+  def format_location_value
+    if has_coordinates?
+      self.value = sprintf("%.6f %.6f", latitude, longitude)
+      if altitude.present?
+        self.value << sprintf(" %.3f", altitude)
+        if accuracy.present?
+          self.value << sprintf(" %.3f", accuracy)
+        end
+      end
+    end
+    true
+  end
+
+  def round_ints
+    self.value = value.to_i if %w(integer counter).include?(qtype.name) && value.present?
+    true
+  end
+
+  def blanks_to_nulls
+    self.value = nil if value.blank?
+    true
   end
 
   def validate_required
@@ -314,11 +342,22 @@ class Answer < ApplicationRecord
   def validate_location
     # Doesn't make sense to validate lat/lng if copied from options because the user
     # can't do anything about that.
-    if simple_location_answer?
-      if latitude < -90 || latitude > 90
+    if location_type_with_value?
+      if latitude.nil? || latitude < -90 || latitude > 90
         errors.add(:value, :invalid_latitude)
-      elsif longitude < -180 || longitude > 180
+      end
+      if longitude.nil? || longitude < -180 || longitude > 180
         errors.add(:value, :invalid_longitude)
+      end
+      if altitude.present? && (altitude >= 1e6 || altitude <= -1e6)
+        errors.add(:value, :invalid_altitude)
+      end
+      if accuracy.present?
+        if accuracy < 0
+          errors.add(:value, :accuracy_negative)
+        elsif accuracy >= 1e6
+          errors.add(:value, :invalid_accuracy)
+        end
       end
     end
   end

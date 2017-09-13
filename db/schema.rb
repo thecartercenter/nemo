@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20170913171159) do
   enable_extension "plpgsql"
 
   create_table "answers", force: :cascade do |t|
-    t.decimal "accuracy", precision: 6, scale: 1
+    t.decimal "accuracy", precision: 9, scale: 3
     t.decimal "altitude", precision: 9, scale: 3
     t.datetime "created_at"
     t.date "date_value"

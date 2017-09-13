@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe Answer do
+describe "answer location data" do
   let(:form) { create(:form, question_types: question_types) }
   let(:questioning) { form.questionings.first }
 
@@ -34,60 +34,15 @@ describe Answer do
     end
   end
 
-  describe "lat/lng processing" do
-    let(:question_types) { %w(location) }
-    let(:answer) { build(:answer, questioning: questioning, value: value) }
 
-    context "with normal values" do
-      let(:value) { "-2.366030 -0.039825" }
 
-      it { expect(answer.save).to be true }
-    end
-
-    context "with normal values but extra precision" do
-      let(:value) { "-2.3660309999 -0.0398259999" }
-
-      it do
-        expect(answer.save).to be true
-        expect(answer.value).to eq "-2.366031 -0.039826"
-      end
-    end
-
-    context "with invalid latitude" do
-      let(:value) { "-92.366030 -0.039825" }
-
-      it do
-        expect(answer).not_to be_valid
-        expect(answer.errors[:value].join).to match /Latitude is out of range/
-      end
-    end
-
-    context "with invalid longitude" do
-      let(:value) { "-4.366030 -181.039825" }
-
-      it do
-        expect(answer).not_to be_valid
-        expect(answer.errors[:value].join).to match /Longitude is out of range/
-      end
-    end
-
-    context "with hugely invalid latitude" do
-      let(:value) { "-4000000000000000.366030 -29.039825" }
-
-      it do
-        expect(answer).not_to be_valid
-        expect(answer.errors[:value].join).to match /Latitude is out of range/
-      end
-    end
-  end
-
-  describe "#simple_location_answer?" do
+  describe "#location_type_with_value?" do
     context "with questioning of location type" do
       let(:question_types) { %w(location) }
 
       it "returns true" do
         answer = create(:answer, questioning: questioning, value: "12.34 -56.78")
-        expect(answer.simple_location_answer?).to be true
+        expect(answer.location_type_with_value?).to be true
       end
     end
 
@@ -96,7 +51,7 @@ describe Answer do
 
       it "returns false" do
         answer = create(:answer, questioning: questioning, value: "12.34 -56.78")
-        expect(answer.simple_location_answer?).to be false
+        expect(answer.location_type_with_value?).to be false
       end
     end
   end
