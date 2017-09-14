@@ -172,6 +172,32 @@ feature "responses form", js: true do
     end
   end
 
+  describe "location answers" do
+    before { login(user) }
+
+    let!(:questionings) do
+      {
+        location: create_questioning("location", form),
+      }
+    end
+
+    scenario "should be handled properly" do
+      visit new_response_path(response_path_params)
+      select2(user.name, from: "response_user_id")
+
+      fill_in(control_id_for(questionings[:location]), with: "12.3 45.6")
+      click_button("Save")
+      click_link(response_link)
+      expect(page).to have_content "12.300000 45.600000"
+
+      click_link("Edit Response")
+      fill_in(control_id_for(questionings[:location]), with: "12.3 45.6 789.1 23")
+      click_button("Save")
+      click_link(response_link)
+      expect(page).to have_content "12.300000 45.600000 789.100 23.000"
+    end
+  end
+
   describe "reviewer notes" do
     let(:observer) { create(:user, role_name: :observer) }
     let(:form) { create(:form, :published, question_types: %w(integer)) }
