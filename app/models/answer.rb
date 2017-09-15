@@ -38,17 +38,13 @@ class Answer < ApplicationRecord
   has_one :media_object, dependent: :destroy, autosave: true, class_name: "Media::Object"
 
   before_validation :replicate_location_values
-  before_save :replicate_location_values
+  before_save :replicate_location_values # Doing this twice on purpose, see below.
   before_save :chop_decimals
   before_save :format_location_value
   before_save :round_ints
   before_save :blanks_to_nulls
-  after_save { self.location_values_replicated = false }
-
-  # Remove unchecked choices before saving.
-  before_save do
-    choices.destroy(*choices.reject(&:checked?))
-  end
+  before_save :remove_unchecked_choices
+  after_save :reset_location_flag
 
   validates :value, numericality: true, if: -> { should_validate?(:numericality) }
   validate :validate_min_max, if: -> { should_validate?(:min_max) }
@@ -324,6 +320,11 @@ class Answer < ApplicationRecord
     true
   end
 
+  def remove_unchecked_choices
+    choices.destroy(*choices.reject(&:checked?))
+    true
+  end
+
   def validate_required
     errors.add(:value, :required) if required_but_empty?
   end
@@ -357,5 +358,10 @@ class Answer < ApplicationRecord
         end
       end
     end
+  end
+
+  def reset_location_flag
+    self.location_values_replicated = false
+    true
   end
 end
