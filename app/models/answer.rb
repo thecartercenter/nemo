@@ -276,10 +276,9 @@ class Answer < ApplicationRecord
 
     if location_type_with_value?
       tokens = self.value.split(" ")
-      self.latitude = BigDecimal.new(tokens[0]) if tokens[0]
-      self.longitude = BigDecimal.new(tokens[1]) if tokens[1]
-      self.altitude = BigDecimal.new(tokens[2]) if tokens[2]
-      self.accuracy = BigDecimal.new(tokens[3]) if tokens[3]
+      %w(latitude longitude altitude accuracy).each_with_index do |attr, i|
+        self[attr] = tokens[i] ? BigDecimal.new(tokens[i]) : nil
+      end
     elsif option.present? && option.has_coordinates?
       self.latitude = option.latitude
       self.longitude = option.longitude

@@ -33,7 +33,7 @@ describe "geopoint processing" do
     let(:value) { "-2.366030 -0.039825 100.235" }
 
     it "should process properly" do
-      expect_location(val: value, lat: -2.366030, lng: -0.039825, alt: 100.235, acc: nil)
+      expect_location_answer(val: value, lat: -2.366030, lng: -0.039825, alt: 100.235, acc: nil)
     end
 
     it "should be valid" do
@@ -170,6 +170,18 @@ describe "geopoint processing" do
 
     it "should be valid" do
       expect(answer).to be_valid
+    end
+  end
+
+  context "updating with less data" do
+    let(:value) { "-2.366030 -0.039825 100.235 20.000" }
+
+    it "should update properly" do
+      expect_location_answer(val: "-2.366030 -0.039825 100.235 20.000",
+        lat: -2.366030, lng: -0.039825, alt: 100.235, acc: 20.0)
+      answer.value = "12.34 56.78"
+      expect_location_answer(val: "12.340000 56.780000",
+        lat: 12.34, lng: 56.78, alt: nil, acc: nil)
     end
   end
 end
