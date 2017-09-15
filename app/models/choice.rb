@@ -7,6 +7,8 @@ class Choice < ApplicationRecord
   delegate :name, to: :option, prefix: true
   delegate :has_coordinates?, to: :option
 
+  before_save :replicate_location_values
+
   def checked
     # Only explicitly false should return false.
     # This is so that the default value is true.
@@ -40,6 +42,7 @@ class Choice < ApplicationRecord
     self.option_id = id.present? ? OptionNode.id_to_option_id(id) : nil
   end
 
+  # This may get called twice during an answer save but who cares.
   def replicate_location_values
     if has_coordinates?
       self.latitude = option.latitude
