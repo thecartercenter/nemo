@@ -19,6 +19,8 @@ class Answer < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
+  LOCATION_ATTRIBS = %i(latitude longitude altitude accuracy)
+
   acts_as_paranoid
 
   # Convert value to tsvector for use in full text search.
@@ -217,10 +219,6 @@ class Answer < ApplicationRecord
     choices.map(&:option).map(&:canonical_name).join(", ") if choices
   end
 
-  def lat_lng
-    latitude.present? && longitude.present? ? [latitude, longitude] : nil
-  end
-
   # Used with nested attribs
   def media_object_id
     media_object.try(:id)
@@ -276,8 +274,8 @@ class Answer < ApplicationRecord
 
     if location_type_with_value?
       tokens = self.value.split(" ")
-      %w(latitude longitude altitude accuracy).each_with_index do |attr, i|
-        self[attr] = tokens[i] ? BigDecimal.new(tokens[i]) : nil
+      LOCATION_ATTRIBS.each_with_index do |a, i|
+        self[a] = tokens[i] ? BigDecimal.new(tokens[i]) : nil
       end
     elsif option.present? && option.has_coordinates?
       self.latitude = option.latitude
@@ -292,11 +290,11 @@ class Answer < ApplicationRecord
   # We sometimes save decimals without validating, so we need to be careful
   # not to overflow the DB.
   def chop_decimals
-    %i(latitude longitude altitude accuracy).each do |c|
-      next if self[c].nil?
-      column = self.class.column_for_attribute(c)
-      if self[c].abs > 10 ** (column.precision - column.scale)
-        self[c] = 0
+    LOCATION_ATTRIBS.each do |a|
+      next if self[a].nil?
+      column = self.class.column_for_attribute(a)
+      if self[a].abs > 10 ** (column.precision - column.scale)
+        self[a] = 0
       end
     end
     self.accuracy = 0 if accuracy.present? && accuracy < 0

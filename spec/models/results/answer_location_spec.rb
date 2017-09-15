@@ -136,7 +136,7 @@ describe "answer location data" do
       it "copies the coordinates from value to the lat/long fields" do
         answer = create(:answer, questioning: questioning, value: "12.34 -56.78")
 
-        expect(answer.simple_location_answer?).to be true
+        expect(answer).to be_location_type_with_value
         expect(answer.latitude).to eq 12.34
         expect(answer.longitude).to eq -56.78
       end

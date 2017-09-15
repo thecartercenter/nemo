@@ -19,11 +19,11 @@ module Results
             arr += ([nil] * (question.level_count - arr.size))
           end
           if question.geographic?
-            arr += lat_lng(answers.last)
+            arr += [answers.last.latitude, answers.last.longitude]
           end
           arr
         when 'location'
-          lat_lng(answer)
+          [answer.latitude, answer.longitude, answer.altitude, answer.accuracy]
         when 'datetime'
           [answer.casted_value.try(:to_s, :std_datetime_with_tz)]
         when 'date', 'time'
@@ -36,10 +36,6 @@ module Results
       private
 
       attr_accessor :question, :answers, :answer, :question_type, :cache
-
-      def lat_lng(ans)
-        ans.lat_lng || [nil, nil]
-      end
     end
   end
 end

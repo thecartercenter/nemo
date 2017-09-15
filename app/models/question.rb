@@ -166,8 +166,12 @@ class Question < ApplicationRecord
     QuestionType[qtype_name]
   end
 
+  def location_type?
+    qtype_name == "location"
+  end
+
   def geographic?
-    qtype_name == 'location' || qtype_name == 'select_one' && option_set.geographic?
+    location_type? || qtype_name == "select_one" && option_set.geographic?
   end
 
   # DEPRECATED: this method should go away later
