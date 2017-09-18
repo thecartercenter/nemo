@@ -12,7 +12,9 @@ class Replication::Replicator
 
   def replicate
     source.class.transaction do
-      obj = Replication::ObjProxy.new(klass: source.class, id: source.id, replicator: self) # Create wrapper
+      # Create wrapper
+      obj = Replication::ObjProxy.new(klass: source.class, id: source.id,
+        replicator: self, replication_root: true)
       do_replicate(orig: obj).full_object
     end
   end
@@ -48,7 +50,7 @@ class Replication::Replicator
       context[:copy]
     rescue Replication::BackwardAssocError
       # If it's explicitly ok to skip this object, do so, else raise again so this will fail loudly.
-      $!.ok_to_skip ? log("Backward association missing, skipping") : (raise $!)
+      $!.ok_to_skip ? log("Backward association missing (#{$!}), skipping") : (raise $!)
     end
   end
 

@@ -1,6 +1,7 @@
 # Wraps an object in a replication operation. Not the full object, just its ID and class.
 class Replication::ObjProxy
-  attr_accessor :klass, :id, :ancestry, :replicator
+  attr_accessor :klass, :id, :ancestry, :replicator, :replication_root
+  alias_method :replication_root?, :replication_root
 
   delegate :child_assocs, to: :klass
 
@@ -44,11 +45,7 @@ class Replication::ObjProxy
   # Looks for and returns a matching copy of this obj in the context of the current replicator.
   # Returns nil if none found.
   def find_copy
-    # If replication mode is clone and object is standardizable, copy is just self!
-    # This is because we always want to reuse standardizable objects when cloning, since clone is shallow operation.
-    # The only standardizable object we don't want to reuse is the one at the top of the tree,
-    # but find_copy is only called when dealing with children.
-    if replicator.mode == :clone && klass.standardizable?
+    if reusable?
       self
     # If reuse_if_match option is set, we check for a matching item in the dest mission using that column.
     # reuse_col should obviously be indexed.
@@ -99,6 +96,16 @@ class Replication::ObjProxy
     new_id = do_insert(mappings).to_i
 
     self.class.new(klass: klass, id: new_id, ancestry: new_ancestry, replicator: replicator)
+  end
+
+  protected
+
+  # If replication mode is clone and object is standardizable, we can reuse this object.
+  # This is because we always want to reuse standardizable
+  # objects when cloning, since clone is shallow operation.
+  # The only standardizable object we don't want to reuse is the one at the top of the tree (root).
+  def reusable?
+    !replication_root? && replicator.mode == :clone && klass.standardizable?
   end
 
   private
@@ -178,7 +185,7 @@ class Replication::ObjProxy
   def backward_assoc_col_mappings(replicator, context)
     klass.backward_assocs.map do |assoc|
       begin
-        [assoc.foreign_key, singular_backward_assoc_id(assoc)]
+        [assoc.foreign_key, backward_assoc_id(assoc)]
       rescue Replication::BackwardAssocError
         # If we have explicit instructions to delete the object if an association is missing, make a note of it.
         $!.ok_to_skip = assoc.skip_obj_if_missing
@@ -187,7 +194,7 @@ class Replication::ObjProxy
     end
   end
 
-  def singular_backward_assoc_id(assoc)
+  def backward_assoc_id(assoc)
     orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
     get_copy_id(assoc.target_class, orig_foreign_id) ||
       (raise Replication::BackwardAssocError.new("
@@ -195,10 +202,15 @@ class Replication::ObjProxy
   end
 
   def get_copy_id(target_class, orig_id)
+    return nil unless orig_id
+
     # Try to find the appropriate copy in the replicator history
-    copy = replicator.history.get_copy(target_class, orig_id) if orig_id
-    if copy
-      copy.id
+    if history_copy = replicator.history.get_copy(target_class, orig_id)
+      history_copy.id
+
+    # Reuse original if it's reusable.
+    elsif self.class.new(klass: target_class, id: orig_id, replicator: replicator).reusable?
+      orig_id
 
     # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
     elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
