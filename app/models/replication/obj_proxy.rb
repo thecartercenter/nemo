@@ -196,14 +196,13 @@ class Replication::ObjProxy
 
   def backward_assoc_id(assoc)
     orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
+    return nil if orig_foreign_id.nil?
     get_copy_id(assoc.target_class, orig_foreign_id) ||
       (raise Replication::BackwardAssocError.new("
         Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}"))
   end
 
   def get_copy_id(target_class, orig_id)
-    return nil unless orig_id
-
     # Try to find the appropriate copy in the replicator history
     if history_copy = replicator.history.get_copy(target_class, orig_id)
       history_copy.id
