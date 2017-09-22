@@ -25,13 +25,11 @@ div#title_container {
 
   span.label {
     display: inline-block;
-    float: left;
+    float: $left;
     font-size: 10px;
     margin: .25em .5em;
     padding: .5em .8em
   }
-
-  h1.title { float: left; }
 }
 
 /* std seal in title */
