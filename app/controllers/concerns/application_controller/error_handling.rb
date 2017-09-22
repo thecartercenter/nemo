@@ -11,16 +11,14 @@ module Concerns::ApplicationController::ErrorHandling
   end
 
   def prepare_exception_notifier
-    data = {}
-
     if current_user
-      data[:user] = {
-        id: current_user.id,
-        name: current_user.name,
-        email: current_user.email
+      request.env["exception_notifier.exception_data"] = {
+        user: {
+          id: current_user.id,
+          name: current_user.name,
+          email: current_user.email
+        }
       }
     end
-
-    request.env["exception_notifier.exception_data"] = data
   end
 end
