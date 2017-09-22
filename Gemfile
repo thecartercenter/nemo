@@ -128,6 +128,9 @@ gem 'rqrcode', '~> 0.10.1'
 # DB triggers
 gem "hairtrigger", '~> 0.2.20'
 
+# error emails
+gem "exception_notification"
+
 group :development do
   # generate diagrams with rake db:migrate
   gem "rails-erd", "~> 1.4.0"

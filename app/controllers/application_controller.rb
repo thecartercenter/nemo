@@ -16,7 +16,6 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :exception, unless: -> { request.format.json? || request.format.xml? }
 
-  rescue_from Exception, with: :notify_error
   rescue_from CanCan::AccessDenied, with: :handle_access_denied
   rescue_from RecentLoginRequiredError, with: :handle_recent_login_required
   rescue_from ActionController::ParameterMissing, with: :handle_parameter_missing
