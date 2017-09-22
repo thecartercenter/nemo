@@ -8,4 +8,18 @@ module Concerns::ApplicationController::ErrorHandling
   def handle_invalid_authenticity_token(exception)
     raise exception
   end
+
+  def prepare_exception_notifier
+    data = {}
+
+    if current_user
+      data[:user] = {
+        id: current_user.id,
+        name: current_user.name,
+        email: current_user.email
+      }
+    end
+
+    request.env["exception_notifier.exception_data"] = data
+  end
 end
