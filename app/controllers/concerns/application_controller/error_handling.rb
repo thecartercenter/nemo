@@ -1,6 +1,7 @@
 module Concerns::ApplicationController::ErrorHandling
   extend ActiveSupport::Concern
 
+  # If we handle these errors in here and then reraise them, they won't generate exception notifications.
   def handle_not_found(exception)
     raise exception
   end
