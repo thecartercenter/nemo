@@ -22,15 +22,6 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
 
-  # Temporary bug chasing code
-  before_filter do
-    if Rails.configuration.x.rank_fail_warned.blank? && (FormItem.rank_gaps? || FormItem.duplicate_ranks?)
-      Rails.configuration.x.rank_fail_warned = true # Don't warn again until app restarted.
-      `pg_dump #{ActiveRecord::Base.connection.current_database} > #{Rails.root}/tmp/rankfail-#{Time.current.strftime('%Y%m%d%H%M')}.sql`
-      ExceptionNotifier.notify_exception(StandardError.new("Last request introduced rank issues. DB dumped."))
-    end
-  end
-
   before_filter :check_route
   before_filter :remove_missionchange_flag
   before_filter :set_locale

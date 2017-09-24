@@ -9,6 +9,7 @@ class QingGroupsController < ApplicationController
 
   before_filter :prepare_qing_group, only: [:create]
   before_filter :validate_destroy, only: [:destroy]
+  after_action :check_rank_fail
 
   def new
     @form = Form.find(params[:form_id])

@@ -5,6 +5,7 @@ class QuestioningsController < ApplicationController
 
   # init the questioning object in a special way before load_resource
   before_filter :init_qing_with_form_id, :only => [:create]
+  after_action :check_rank_fail
 
   # authorization via cancan
   load_and_authorize_resource
