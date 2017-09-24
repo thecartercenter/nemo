@@ -2,19 +2,22 @@ class FormItem < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
 
   acts_as_paranoid
-  acts_as_list column: :rank, scope: [:form_id, :ancestry]
+  acts_as_list column: :rank, scope: [:form_id, :ancestry, :deleted_at]
 
-  belongs_to(:form)
+  belongs_to :form
 
   # These associations are really only applicable to Questioning, but
   # they are defined here to allow eager loading.
-  belongs_to(:question, autosave: true, inverse_of: :questionings)
-  has_many(:answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning)
-  has_one(:condition, foreign_key: :questioning_id, autosave: true, dependent: :destroy, inverse_of: :questioning)
-  has_many(:referring_conditions, class_name: 'Condition', foreign_key: :ref_qing_id, dependent: :destroy, inverse_of: :ref_qing)
-  has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', foreign_key: :disagg_qing_id, dependent: :nullify)
+  belongs_to :question, autosave: true, inverse_of: :questionings
+  has_many :answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
+  has_one :condition, foreign_key: :questioning_id, autosave: true,
+    dependent: :destroy, inverse_of: :questioning
+  has_many :referring_conditions, class_name: 'Condition', foreign_key: :ref_qing_id,
+    dependent: :destroy, inverse_of: :ref_qing
+  has_many :standard_form_reports, class_name: 'Report::StandardFormReport',
+    foreign_key: :disagg_qing_id, dependent: :nullify
 
-  before_create(:set_mission)
+  before_create :set_mission
 
   has_ancestry cache_depth: true
 
@@ -41,7 +44,6 @@ class FormItem < ApplicationRecord
       HAVING COUNT(id) > 1
     ").any?
   end
-
 
   # Gets an OrderedHash of the following form for the descendants of this FormItem.
   # Uses only a constant number of database queries to do so.

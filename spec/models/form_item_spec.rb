@@ -31,25 +31,26 @@ describe FormItem do
       end
 
       it 'should create 4 questionings and one group with correct ranks' do
-        expect(@f.sorted_children.size).to eq(5)
-        expect(@f.sorted_children[0].rank).to be < @f.sorted_children[1].rank
-        expect(@f.sorted_children[1].rank).to be < @f.sorted_children[2].rank
-        expect(@f.sorted_children[2].rank).to be < @f.sorted_children[3].rank
+        expect(@f.sorted_children.map(&:rank)).to eq [1, 2, 3, 4, 5]
       end
 
-      it 'should assign a rank to a newly created group' do
-        expect(@f.sorted_children[3].rank).to be < @group.rank
+      it 'should ignore deleted items when adding rank' do
+        @f.sorted_children[4].destroy
+        qing = create(:questioning, form: @f, parent: @f.root_group)
+        expect(qing.rank).to eq 5
       end
 
       it 'should adjust ranks when existing questioning moved to the empty group' do
-        @old_rank_2 = @f.sorted_children[1]
-        @old_rank_3 = @f.sorted_children[2]
-        @old_rank_4 = @f.sorted_children[3]
-        @old_rank_2.parent = @group;
-        @old_rank_2.save
-        expect(@old_rank_2.reload.rank).to eq 1
-        expect(@old_rank_3.reload.rank).to eq 2 # Should move up one.
-        expect(@old_rank_4.reload.rank).to eq 3 # Should move up one.
+        old1 = @f.sorted_children[0]
+        old2 = @f.sorted_children[1]
+        old3 = @f.sorted_children[2]
+        old4 = @f.sorted_children[3]
+        old2.parent = @group
+        old2.save
+        expect(old1.reload.rank).to eq 1
+        expect(old2.reload.rank).to eq 1
+        expect(old3.reload.rank).to eq 2 # Should move up one.
+        expect(old4.reload.rank).to eq 3 # Should move up one.
       end
 
       it 'should change order of the questioning moved higher' do
@@ -81,7 +82,6 @@ describe FormItem do
         expect(@q2.reload.rank).to eq 1
       end
     end
-
   end
 
   describe "tree traversal" do
