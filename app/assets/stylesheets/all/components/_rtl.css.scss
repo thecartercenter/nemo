@@ -1,9 +1,10 @@
 html[dir="rtl"] {
-  #userinfo {
-    float: left;
 
-    .icon-btn {
-      float: right;
+  #content {
+    #userinfo {
+      .icon-btn {
+        float: right;
+      }
     }
   }
 
@@ -28,17 +29,6 @@ html[dir="rtl"] {
     text-align: right;
   }
 
-  div.form_field {
-    label.main {
-      float: right;
-    }
-
-    div.control {
-      margin-left: 0;
-      margin-right: 200px;
-    }
-  }
-
   .search-footer {
     & > a {
       float: right;
@@ -49,10 +39,5 @@ html[dir="rtl"] {
   div.top-action-links a i {
     margin-right: 0;
     margin-left: 3px;
-  }
-
-  #userinfo a.login {
-    margin-right: 0;
-    margin-left: 22px;
   }
 }
