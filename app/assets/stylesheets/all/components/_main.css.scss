@@ -31,20 +31,8 @@ div#title_container {
     padding: .5em .8em
   }
 
-  // @include if-rtl {
-	// 	h1.title {
-  //     color: purple;
-	// 		margin-right: 0px;
-	// 	}
-	// }
-  // @include if-ltr {
-	// 	h1.title {
-  //     color: blue;
-	// 		margin-left: 0px;
-	// 	}
-	// }
   h1.title {
-    margin-#{$left}: 0px;
+    margin-#{$left}: 100px;
   }
 }
 

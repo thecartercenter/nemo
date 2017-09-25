@@ -1,16 +1,5 @@
 // directional-scss | Author: Tyson Matanich (http://matanich.com), 2013 | License: MIT
 
-// $dir: ltr;
-// html[dir="rtl"] {
-//   $dir: rtl !important;
-//   body {background-color: purple !important;}
-// }
-//
-// html[dir="ltr"] {
-//   $dir: ltr;
-//   body {background-color: green !important;}
-// }
-
 // Default $dir if not valid
 @if $dir != ltr and $dir != rtl {
     $dir: ltr;
