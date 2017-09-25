@@ -6,8 +6,8 @@ body.welcome {
   }
 
   div#content {
-    float: left;
-    margin-left: 0;
+    float: $left;
+    margin-#{$left}: 0;
     padding-bottom: 40px;
 
     h1.title {
