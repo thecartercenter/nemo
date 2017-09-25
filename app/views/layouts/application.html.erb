@@ -5,7 +5,11 @@
 <head>
   <title><%= configatron.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
-  <%= stylesheet_link_tag "application", :media => "all" %>
+  <% if t('locale_dir', default: 'ltr')%>
+    <%= stylesheet_link_tag "application_rtl" %>
+  <% else %>
+    <%= stylesheet_link_tag "application", :media => "all" %>
+  <% end %>
 
   <%# For Capybara. %>
   <%= stylesheet_link_tag 'disable-transition' if Rails.env.test? %>

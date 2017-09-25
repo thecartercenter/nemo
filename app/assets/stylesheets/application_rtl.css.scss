@@ -2,6 +2,7 @@
 @import "font-awesome";
 @import "select2";
 @import "all/variables/*";
+$dir: rtl;
 @import "all/directional";
 
 /*
@@ -23,6 +24,8 @@
  *= require bootstrap-modal-bs3patch
  *= require bootstrap-modal
  */
+
+
 
 @import "all/components/*";
 @media screen {
