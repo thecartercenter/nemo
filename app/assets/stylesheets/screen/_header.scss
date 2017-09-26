@@ -38,17 +38,36 @@ header {
           font-family: "Raleway";
           font-weight: bold;
           font-size: 11pt;
-          display: inline-block;
-          vertical-align: middle;
+          display: flex;
+          vertical-align: baseline;
           padding: 0;
           color: $nav-text-color;
+
+
 
           &:hover, &:focus {
             text-decoration: none;
             color: $link-text-color !important;
           }
 
+          .caret {
+            margin-top: 8px;
+          }
         }
+
+        @include if-ltr {
+          a {
+            flex-direction: row;
+          }
+        }
+
+        @include if-rtl {
+          a {
+            flex-direction: row-reverse;
+          }
+        }
+
+
 
         i {
           vertical-align: middle;

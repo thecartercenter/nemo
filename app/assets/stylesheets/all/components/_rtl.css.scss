@@ -3,14 +3,12 @@ html[dir="rtl"] {
   header nav.navbar-default ul.navbar-nav {
 
     li a {
-      display: flex;
-      flex-direction: row-reverse;
-      vertical-align: baseline;
+      // display: flex;
+      // flex-direction: row-reverse;
+      // vertical-align: baseline;
     }
 
-    .caret {
-      margin-top: 8px;
-    }
+  
   }
 
   div#title {
@@ -25,6 +23,7 @@ html[dir="rtl"] {
     float: left;
     display: flex;
     padding-left: 34px;
+  }
 
 
   #content {
