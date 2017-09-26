@@ -27,8 +27,11 @@ html[dir="rtl"] {
     padding-left: 34px;
 
 
-    .icon-btn {
-      float: right;
+  #content {
+    #userinfo {
+      .icon-btn {
+        float: right;
+      }
     }
   }
 
@@ -51,17 +54,6 @@ html[dir="rtl"] {
 
   th {
     text-align: right;
-  }
-
-  div.form_field {
-    label.main {
-      float: right;
-    }
-
-    div.control {
-      margin-left: 0;
-      margin-right: 200px;
-    }
   }
 
   .search-footer {
