@@ -1,43 +1,8 @@
 html[dir="rtl"] {
-
-  // #content {
-  //   #userinfo {
-  //     .icon-btn {
-  //       float: right;
-  //     }
-  //   }
-  // }
-
-  // .navbar-header {
-  //   float: right;
-  // }
-
-  .navbar-nav {
-    //float: right;
-
-    li {
-      //float: right;
-
-      i {
-        //margin-left: 5px;
-        //margin-right: 0;
-      }
-    }
-  }
-
-  th {
-    //text-align: right;
-  }
-
   .search-footer {
     & > a {
       float: right;
       margin-top: 2px;
     }
   }
-
-  // div.top-action-links a i {
-  //   margin-right: 0;
-  //   margin-left: 3px;
-  // }
 }
