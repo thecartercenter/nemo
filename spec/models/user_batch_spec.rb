@@ -75,6 +75,12 @@ describe UserBatch, :slow do
     expect(User.count).to eq 1
   end
 
+  it "gracefully handles missing header row with a number in it" do
+    ub = create_user_batch("missing_headers.xlsx")
+    expect(ub).not_to be_succeeded
+    expect(ub.errors.messages.values).to eq([["The uploaded spreadsheet has invalid headers."]])
+  end
+
   context "when checking validation errors on spreadsheet" do
     it "handles validation errors gracefully" do
       # create batch that should raise too short phone number error

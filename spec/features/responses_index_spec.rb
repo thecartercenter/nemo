@@ -5,7 +5,7 @@ feature "responses index" do
   let(:form) { create(:form, :published, name: "TheForm") }
   let(:response_link) { Response.first.decorate.shortcode }
 
-  scenario "returning to index after response loaded via ajax", js: true, sphinx: true do
+  scenario "returning to index after response loaded via ajax", js: true do
     login(user)
     click_link("Responses")
     expect(page).not_to have_content("TheForm")

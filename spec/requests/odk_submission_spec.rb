@@ -75,7 +75,7 @@ describe "odk submissions", :odk, type: :request do
       expect(response.response_code).to eq 426
     end
 
-    it "should fail gracefully on question type mismatch" do
+    it "should fail gracefully on question type mismatch", :investigate do
       # Create form with select one question
       form = create(:form, question_types: %w(select_one))
       form.publish!

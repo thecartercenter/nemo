@@ -41,7 +41,8 @@ module ELMO
 
     # Configure sensitive parameters which will be filtered from the log file.
     config.filter_parameters += [:password, :password_confirmation,
-      :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key]
+      :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key,
+      :session, :warden, :secret, :salt, :cookie, :csrf, :user_credentials, :session_id, :data]
 
     # Enable the asset pipeline
     config.assets.enabled = true

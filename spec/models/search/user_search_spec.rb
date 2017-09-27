@@ -1,6 +1,5 @@
 # tests the search functionality for the user model
 require "spec_helper"
-include SphinxSupport
 
 describe User do
   describe "search" do

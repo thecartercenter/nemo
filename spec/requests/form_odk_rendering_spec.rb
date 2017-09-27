@@ -166,13 +166,11 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     let!(:form) do
       create(:form, :published, :with_version,
         name: "Repeat Group",
-        question_types: [["text", "text", "text", "text"]]
+        question_types: [
+          {repeating: {name: "Repeat Group 1", items: ["text", "text", "text"]}},
+          ["text", "text"] # Include a normal group to ensure differentiated properly.
+        ]
       )
-    end
-
-    before do
-      form.questionings.last.update_attributes!(hidden: true, required: true)
-      form.child_groups.first.update_attributes!(repeatable: true)
     end
 
     it "should render proper xml" do

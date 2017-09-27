@@ -29,7 +29,7 @@ class QuestionType
     @@by_name ||= all.index_by(&:name)
 
     # return the requested object
-    @@by_name[name]
+    @@by_name[name.to_s]
   end
 
   # returns all question types

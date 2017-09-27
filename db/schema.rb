@@ -11,11 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170811202952) do
+ActiveRecord::Schema.define(version: 20170913171159) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "answers", force: :cascade do |t|
+    t.decimal "accuracy", precision: 9, scale: 3
+    t.decimal "altitude", precision: 9, scale: 3
     t.datetime "created_at"
     t.date "date_value"
     t.datetime "datetime_value"
@@ -29,6 +31,7 @@ ActiveRecord::Schema.define(version: 20170811202952) do
     t.integer "rank", default: 1, null: false
     t.integer "response_id"
     t.time "time_value"
+    t.tsvector "tsv"
     t.datetime "updated_at"
     t.string "uuid", null: false
     t.text "value"
@@ -39,6 +42,7 @@ ActiveRecord::Schema.define(version: 20170811202952) do
   add_index "answers", ["questioning_id"], name: "answers_questioning_id_fk", using: :btree
   add_index "answers", %w(response_id questioning_id inst_num rank), name: "answers_full", unique: true, using: :btree
   add_index "answers", ["response_id"], name: "answers_response_id_fk", using: :btree
+  add_index "answers", ["tsv"], name: "index_answers_on_tsv", using: :gin
   add_index "answers", ["uuid"], name: "index_answers_on_uuid", using: :btree
 
   create_table "assignments", force: :cascade do |t|
@@ -701,4 +705,9 @@ ActiveRecord::Schema.define(version: 20170811202952) do
   add_foreign_key "user_group_assignments", "user_groups", name: "user_group_assignments_user_group_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "user_group_assignments", "users", name: "user_group_assignments_user_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "user_groups", "missions", name: "user_groups_mission_id_fkey", on_update: :restrict, on_delete: :restrict
+  create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
+    .on("answers")
+    .before(:insert, :update) do
+    "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
+  end
 end

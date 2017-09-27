@@ -147,6 +147,10 @@ module Results
             create_column(code: code, name: name + ['Latitude'])
             create_column(code: code, name: name + ['Longitude'])
           end
+          if question.location_type?
+            create_column(code: code, name: name + ['Altitude'])
+            create_column(code: code, name: name + ['Accuracy'])
+          end
         else
           create_column(code: code, name: name)
         end

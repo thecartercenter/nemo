@@ -2,25 +2,48 @@ class FormItem < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
 
   acts_as_paranoid
-  acts_as_list column: :rank, scope: [:form_id, :ancestry]
+  acts_as_list column: :rank, scope: [:form_id, :ancestry, :deleted_at]
 
-  belongs_to(:form)
+  belongs_to :form
 
   # These associations are really only applicable to Questioning, but
   # they are defined here to allow eager loading.
-  belongs_to(:question, autosave: true, inverse_of: :questionings)
-  has_many(:answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning)
-  has_one(:condition, foreign_key: :questioning_id, autosave: true, dependent: :destroy, inverse_of: :questioning)
-  has_many(:referring_conditions, class_name: 'Condition', foreign_key: :ref_qing_id, dependent: :destroy, inverse_of: :ref_qing)
-  has_many(:standard_form_reports, class_name: 'Report::StandardFormReport', foreign_key: :disagg_qing_id, dependent: :nullify)
+  belongs_to :question, autosave: true, inverse_of: :questionings
+  has_many :answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
+  has_one :condition, foreign_key: :questioning_id, autosave: true,
+    dependent: :destroy, inverse_of: :questioning
+  has_many :referring_conditions, class_name: 'Condition', foreign_key: :ref_qing_id,
+    dependent: :destroy, inverse_of: :ref_qing
+  has_many :standard_form_reports, class_name: 'Report::StandardFormReport',
+    foreign_key: :disagg_qing_id, dependent: :nullify
 
-  before_create(:set_mission)
+  before_create :set_mission
 
   has_ancestry cache_depth: true
 
   validate :parent_must_be_group
 
   delegate :name, to: :form, prefix: true
+
+  def self.rank_gaps?
+    SqlRunner.instance.run("
+      SELECT id FROM form_items fi1
+      WHERE fi1.deleted_at IS NULL AND fi1.rank > 1 AND NOT EXISTS (
+        SELECT id FROM form_items fi2
+        WHERE fi2.deleted_at IS NULL AND fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)
+    ").any?
+  end
+
+  def self.duplicate_ranks?
+    SqlRunner.instance.run("
+      SELECT ancestry, rank
+      FROM form_items
+      WHERE deleted_at IS NULL AND ancestry is NOT NULL
+        AND ancestry != ''
+      GROUP BY ancestry, rank
+      HAVING COUNT(id) > 1
+    ").any?
+  end
 
   # Gets an OrderedHash of the following form for the descendants of this FormItem.
   # Uses only a constant number of database queries to do so.
@@ -83,13 +106,6 @@ class FormItem < ApplicationRecord
       new_parent = FormItem.find(new_parent_id)
       form_id = new_parent.form_id
       update_attributes(parent: new_parent, rank: new_rank)
-
-      # Extra safeguards to make sure ranks are correct. acts_as_list should prevent these.
-      if rank_gaps?
-        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused gaps in ranks."
-      elsif duplicate_ranks?
-        raise "Moving Qing #{id} to parent #{new_parent_id}, rank #{new_rank} would have caused duplicate ranks."
-      end
     end
   end
 
@@ -116,26 +132,5 @@ class FormItem < ApplicationRecord
 
   def parent_must_be_group
     errors.add(:parent, :must_be_group) unless parent.nil? || parent.is_a?(QingGroup)
-  end
-
-  # Checks for gaps in ranks in the db directly.
-  def rank_gaps?
-    SqlRunner.instance.run("
-      SELECT id FROM form_items fi1
-      WHERE fi1.deleted_at IS NULL AND fi1.form_id = ? AND fi1.rank > 1 AND NOT EXISTS (
-        SELECT id FROM form_items fi2
-        WHERE fi2.deleted_at IS NULL AND fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)
-    ", form_id).any?
-  end
-
-  def duplicate_ranks?
-    SqlRunner.instance.run("
-      SELECT ancestry, rank
-      FROM form_items
-      WHERE form_id = ? AND deleted_at IS NULL AND ancestry is NOT NULL
-        AND ancestry != ''
-      GROUP BY ancestry, rank
-      HAVING COUNT(id) > 1
-    ", form_id).any?
   end
 end

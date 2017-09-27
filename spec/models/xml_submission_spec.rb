@@ -44,11 +44,8 @@ describe XMLSubmission, :odk do
   end
 
   context "with complex selects" do
-    let(:form) do
-      create(:form,
-        question_types: %w(select_one multilevel_select_one select_multiple integer multilevel_select_one)
-      )
-    end
+    let(:form) { create(:form, question_types: %w(select_one multilevel_select_one
+      select_multiple integer multilevel_select_one)) }
     let(:cat) { form.c[0].option_set.sorted_children[0] }
     let(:plant) { form.c[1].option_set.sorted_children[0] }
     let(:oak) { form.c[1].option_set.sorted_children[1] }
@@ -88,30 +85,30 @@ describe XMLSubmission, :odk do
   end
 
   context "with location type" do
-    let(:form) do
-      create(:form,
-        question_types: %w(location)
-      )
-    end
-    let(:data) do
-      {
-        form.c[0] => "12.3456 -76.99388"
-      }
+    let(:form) { create(:form, question_types: %w(location)) }
+    let(:answer) { nodes[0].set.answers[0] }
+
+    context "with just lat/lng" do
+      let(:data) { {form.c[0] => "12.3456 -76.99388"} }
+
+      it "processes correct values" do
+        expect_location_answer(val: "12.345600 -76.993880",
+          lat: 12.3456, lng: -76.99388, alt: nil, acc: nil)
+      end
     end
 
-    it "processes correct values" do
-      expect(nodes[0].set.answers[0].value).to eq "12.345600 -76.993880"
-      expect(nodes[0].set.answers[0].latitude).to eq 12.3456
-      expect(nodes[0].set.answers[0].longitude).to eq -76.99388
+    context "with lat/lng/alt/acc" do
+      let(:data) { {form.c[0] => "12.3456 -76.99388 123.456 20.0"} }
+
+      it "processes correct values" do
+        expect_location_answer(val: "12.345600 -76.993880 123.456 20.000",
+          lat: 12.3456, lng: -76.99388, alt: 123.456, acc: 20.0)
+      end
     end
   end
 
   context "with date/time types" do
-    let(:form) do
-      create(:form,
-        question_types: %w(datetime date time)
-      )
-    end
+    let(:form) { create(:form, question_types: %w(datetime date time)) }
     let(:data) do
       {
         form.c[0] => "2017-07-12T16:40:00.000+03",
@@ -135,11 +132,7 @@ describe XMLSubmission, :odk do
   end
 
   context "with other question types" do
-    let(:form) do
-      create(:form,
-        question_types: %w(text long_text decimal)
-      )
-    end
+    let(:form) { create(:form, question_types: %w(text long_text decimal)) }
     let(:data) do
       {
         form.c[0] => "Quick",

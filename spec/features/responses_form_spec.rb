@@ -1,7 +1,6 @@
 require "spec_helper"
 
-# Should change this to no_sphinx for performance reasons when TS bug #914 is fixed.
-feature "responses form", js: true, sphinx: true do
+feature "responses form", js: true do
   let(:user) { create(:user) }
   let!(:form) { create(:form, :published) }
   let(:form_questionings) { form.questionings }
@@ -170,6 +169,32 @@ feature "responses form", js: true, sphinx: true do
       fill_in(control_id_for(questionings[:integer]), with: "")
       click_button("Save")
       expect(page).to have_content "Response updated successfully"
+    end
+  end
+
+  describe "location answers" do
+    before { login(user) }
+
+    let!(:questionings) do
+      {
+        location: create_questioning("location", form),
+      }
+    end
+
+    scenario "should be handled properly" do
+      visit new_response_path(response_path_params)
+      select2(user.name, from: "response_user_id")
+
+      fill_in(control_id_for(questionings[:location]), with: "12.3 45.6")
+      click_button("Save")
+      click_link(response_link)
+      expect(page).to have_content "12.300000 45.600000"
+
+      click_link("Edit Response")
+      fill_in(control_id_for(questionings[:location]), with: "12.3 45.6 789.1 23")
+      click_button("Save")
+      click_link(response_link)
+      expect(page).to have_content "12.300000 45.600000 789.100 23.000"
     end
   end
 

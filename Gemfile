@@ -88,8 +88,7 @@ gem "daemons", "~> 1.2.1"
 gem "delayed_job_active_record", "~> 4.0.3"
 
 # search
-gem "thinking-sphinx", "~> 3.1.3"
-gem "ts-delayed-delta", "~> 2.0.2"
+gem "pg_search"
 
 # cron management
 gem "whenever", "~> 0.9.4", require: false
@@ -126,6 +125,12 @@ gem "acts_as_paranoid", "~> 0.5.0"
 # QR barcode
 gem 'rqrcode', '~> 0.10.1'
 
+# DB triggers
+gem "hairtrigger", '~> 0.2.20'
+
+# error emails
+gem "exception_notification"
+
 group :development do
   # generate diagrams with rake db:migrate
   gem "rails-erd", "~> 1.4.0"
@@ -145,7 +150,6 @@ group :development do
   gem "binding_of_caller", "~> 0.7.2"
 
   # misc
-  gem "apiary", "~> 0.0.5"
   gem "fix-db-schema-conflicts", "~> 2.0.0"
   gem "letter_opener", "~> 1.4.1"
 end

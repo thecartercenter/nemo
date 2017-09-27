@@ -57,83 +57,76 @@ describe Form do
       end
     end
 
-    context "with a condition referencing an option" do
-      context "from a multilevel set" do
-        let!(:std) { create(:form, is_standard: true) }
-        let!(:std_questionings) do
-          {
-            multilevel: create_questioning("multilevel_select_one", std),
-            integer: create_questioning("integer", std)
-          }
-        end
-        let!(:std_option_node) do
-          std_questionings[:multilevel].option_set.children.
+    context "with a condition referencing an option from a multilevel set" do
+      let!(:std) { create(:form, is_standard: true) }
+      let!(:std_questionings) do
+        {
+          multilevel: create_questioning("multilevel_select_one", std),
+          integer: create_questioning("integer", std)
+        }
+      end
+      let!(:std_option_node) do
+        std_questionings[:multilevel].option_set.children.
+          detect { |c| c.option_name == "Plant" }.children.
+          detect { |c| c.option_name == "Tulip" }
+      end
+      let!(:std_condition) do
+        std_questionings[:integer].
+          create_condition(ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
+        std_questionings[:integer].condition
+      end
+      let(:copy_questionings) do
+        {
+          multilevel: copy.children.detect { |c| c.qtype_name == "select_one" },
+          integer: copy.children.detect { |c| c.qtype_name == "integer" }
+        }
+      end
+
+      context "if all goes well" do
+        let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+
+        let!(:copy_condition) { copy_questionings[:integer].condition }
+        let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
+        let!(:copy_option_node) do
+          copy_questionings[:multilevel].option_set.children.
             detect { |c| c.option_name == "Plant" }.children.
             detect { |c| c.option_name == "Tulip" }
         end
-        let!(:std_condition) do
-          std_questionings[:integer].
-            create_condition(ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
-          std_questionings[:integer].condition
-        end
-        let(:copy_questionings) do
-          {
-            multilevel: copy.children.detect { |c| c.qtype_name == "select_one" },
-            integer: copy.children.detect { |c| c.qtype_name == "integer" }
-          }
+
+        it "should produce distinct child objects" do
+          expect(std_questionings[:integer]).not_to eq copy_questionings[:integer]
+          expect(std_condition).not_to eq copy_condition
+          expect(std_questionings[:multilevel].options.sort.first).not_to eq copy_opt_set.options.sort.first
+          expect(std_questionings[:integer].condition.option_node).not_to eq copy_condition.option_node
         end
 
-
-        context "if all goes well" do
-          let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-
-          let!(:copy_condition) { copy_questionings[:integer].condition }
-          let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
-          let!(:copy_option_node) do
-            copy_questionings[:multilevel].option_set.children.
-              detect { |c| c.option_name == "Plant" }.children.
-              detect { |c| c.option_name == "Tulip" }
-          end
-
-
-          it "should produce distinct child objects" do
-            expect(std_questionings[:integer]).not_to eq copy_questionings[:integer]
-            expect(std_condition).not_to eq copy_condition
-            expect(std_questionings[:multilevel].options.sort.first).not_to eq copy_opt_set.options.sort.first
-            expect(std_questionings[:integer].condition.option_node).not_to eq copy_condition.option_node
-          end
-
-          it "should produce correct condition-qing link" do
-            expect(copy_condition.ref_qing).to eq copy_questionings[:multilevel]
-          end
-
-          it "should produce correct new option node reference" do
-            expect(copy_condition.option_node_id).to eq(copy_option_node.id)
-            expect(copy_condition.option_node.option).to eq(copy_option_node.option)
-            expect(copy_condition.option_node.option_name).to eq "Tulip"
-          end
+        it "should produce correct condition-qing link" do
+          expect(copy_condition.ref_qing).to eq copy_questionings[:multilevel]
         end
 
-        context "if the option has since been deleted in the mission" do
-          let!(:option_set_copy) do
-            # replicate the option set
-            os_copy = std_questionings[:multilevel].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
+        it "should produce correct new option node reference" do
+          expect(copy_condition.option_node_id).to eq(copy_option_node.id)
+          expect(copy_condition.option_node.option).to eq(copy_option_node.option)
+          expect(copy_condition.option_node.option_name).to eq "Tulip"
+        end
+      end
 
+      context "if the option has since been deleted in the mission" do
+        let!(:option_set_copy) do
+          # replicate the option set
+          os_copy = std_questionings[:multilevel].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
+          os_copy.children.
+            detect { |c| c.option_name == "Plant" }.children.
+            detect { |c| c.option_name == "Tulip" }.destroy
+          os_copy
+        end
+        let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
 
-            os_copy.children.
-              detect { |c| c.option_name == "Plant" }.children.
-              detect { |c| c.option_name == "Tulip" }.destroy
-
-            os_copy
-          end
-          let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-
-          it "should succeed but not copy the condition" do
-            # Question should still be copied but copy should not have a condition
-            expect(copy_questionings[:integer].code).to eq std_questionings[:integer].code
-            expect(std_questionings[:integer].condition).to be_present
-            expect(copy_questionings[:integer].condition).to be_nil
-          end
+        it "should succeed but not copy the condition" do
+          # Question should still be copied but copy should not have a condition
+          expect(copy_questionings[:integer].code).to eq std_questionings[:integer].code
+          expect(std_questionings[:integer].condition).to be_present
+          expect(copy_questionings[:integer].condition).to be_nil
         end
       end
     end
@@ -185,7 +178,6 @@ describe Form do
   end
 
   describe "clone" do
-
     context "basic" do
       before do
         @orig = create(:form, question_types: ["integer", %w(select_one integer)], is_standard: true)
@@ -231,6 +223,62 @@ describe Form do
 
       it "should work" do
         expect(@copy.name).to eq "The (Form) 2"
+      end
+    end
+
+    context "with a condition referencing an option from a multilevel set" do
+      let!(:std) { create(:form, mission: mission1) }
+      let!(:std_questionings) do
+        {
+          multilevel: create_questioning("multilevel_select_one", std),
+          integer: create_questioning("integer", std)
+        }
+      end
+      let!(:std_option_node) do
+        std_questionings[:multilevel].option_set.children.
+          detect { |c| c.option_name == "Plant" }.children.
+          detect { |c| c.option_name == "Tulip" }
+      end
+      let!(:std_condition) do
+        std_questionings[:integer].
+          create_condition(ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
+        std_questionings[:integer].condition
+      end
+      let(:copy_questionings) do
+        {
+          multilevel: copy.children.detect { |c| c.qtype_name == "select_one" },
+          integer: copy.children.detect { |c| c.qtype_name == "integer" }
+        }
+      end
+
+      context "if all goes well" do
+        let!(:copy) { std.replicate(mode: :clone) }
+        let!(:copy_condition) { copy_questionings[:integer].condition }
+        let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
+        let!(:copy_option_node) do
+          copy_questionings[:multilevel].option_set.children.
+            detect { |c| c.option_name == "Plant" }.children.
+            detect { |c| c.option_name == "Tulip" }
+        end
+
+        it "should produce distinct child objects" do
+          expect(std_questionings[:integer]).not_to eq copy_questionings[:integer]
+          expect(std_condition).not_to eq copy_condition
+
+          # These two should be equal because they're referencing the same option set.
+          expect(std_questionings[:multilevel].options.sort.first).to eq copy_opt_set.options.sort.first
+          expect(std_questionings[:integer].condition.option_node).to eq copy_condition.option_node
+        end
+
+        it "should produce correct condition-qing link" do
+          expect(copy_condition.ref_qing).to eq copy_questionings[:multilevel]
+        end
+
+        it "should produce correct new option node reference" do
+          expect(copy_condition.option_node_id).to eq(copy_option_node.id)
+          expect(copy_condition.option_node.option).to eq(copy_option_node.option)
+          expect(copy_condition.option_node.option_name).to eq "Tulip"
+        end
       end
     end
   end

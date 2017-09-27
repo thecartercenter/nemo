@@ -57,8 +57,9 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
         Timecop.freeze(15.minutes) do
           # Response with multilevel geo partial answer with node (Ghana) with coordinates
+          # and geo answer altitude & accuracy
           create(:response,  id: 13, form: form1, answer_values: ["foo", %w(Ghana), "bar", 100, -123.50,
-            "15.937378 44.36453", "Cat", %w(Dog Cat), %w(Dog Cat),
+            "15.937378 44.36453 123.45 20.4", "Cat", %w(Dog Cat), %w(Dog Cat),
             "2015-10-12 18:15 UTC", "2014-11-09", "23:15"])
         end
 

@@ -1,9 +1,9 @@
-Form,Submitter,DateSubmitted,ResponseUUID,ResponseShortcode,TextQ1,SelectOneQ2:Country,SelectOneQ2:City,SelectOneQ2:Latitude,SelectOneQ2:Longitude,LongTextQ3,IntegerQ4,DecimalQ5,LocationQ6:Latitude,LocationQ6:Longitude,SelectOneQ7,SelectOneQ8,SelectOneQ9,SelectMultipleQ10,DatetimeQ11,DateQ12,TimeQ13,TextQ14,LongTextQ15,SelectOneQ16,SelectOneQ16:Latitude,SelectOneQ16:Longitude
-Sample Form 1,A User 2,2015-11-20 06:20 CST,*uuid1*,*shortcode1*,alpha,Ghana,Tamale,9.4075,0.8533,bravo,80,1.23,,,,Dog,,Cat,2015-01-12 03:15 CST,2014-02-03,03:43
+Form,Submitter,DateSubmitted,ResponseUUID,ResponseShortcode,TextQ1,SelectOneQ2:Country,SelectOneQ2:City,SelectOneQ2:Latitude,SelectOneQ2:Longitude,LongTextQ3,IntegerQ4,DecimalQ5,LocationQ6:Latitude,LocationQ6:Longitude,LocationQ6:Altitude,LocationQ6:Accuracy,SelectOneQ7,SelectOneQ8,SelectOneQ9,SelectMultipleQ10,DatetimeQ11,DateQ12,TimeQ13,TextQ14,LongTextQ15,SelectOneQ16,SelectOneQ16:Latitude,SelectOneQ16:Longitude
+Sample Form 1,A User 2,2015-11-20 06:20 CST,*uuid1*,*shortcode1*,alpha,Ghana,Tamale,9.4075,0.8533,bravo,80,1.23,,,,,,Dog,,Cat,2015-01-12 03:15 CST,2014-02-03,03:43
 Sample Form 1,A User 1,2015-11-20 06:30 CST,*uuid2*,*shortcode2*,foo✓,Canada,Calgary,51.045,-114.057222,"foo
 
 ""bar""  
-baz",100,-123.5,15.937378,44.36453,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15
-Sample Form 1,A User 3,2015-11-20 06:40 CST,*uuid3*,*shortcode3*,foo,Canada,,,,bar,100,-123.5,15.937378,44.36453,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15
-Sample Form 1,A User 4,2015-11-20 06:45 CST,*uuid4*,*shortcode4*,foo,Ghana,,7.1,0.4,bar,100,-123.5,15.937378,44.36453,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15
-Sample Form 2,A User 5,2015-11-20 06:50 CST,*uuid5*,*shortcode5*,,Ghana,Accra,5.55,0.2,,,,,,,,,,,,,foo,bar,Funton,-12.9,22.7
+baz",100,-123.5,15.937378,44.36453,,,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15
+Sample Form 1,A User 3,2015-11-20 06:40 CST,*uuid3*,*shortcode3*,foo,Canada,,,,bar,100,-123.5,15.937378,44.36453,,,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15
+Sample Form 1,A User 4,2015-11-20 06:45 CST,*uuid4*,*shortcode4*,foo,Ghana,,7.1,0.4,bar,100,-123.5,15.937378,44.36453,123.45,20.4,Cat,Dog,Cat,Dog;Cat,2015-10-12 12:15 CST,2014-11-09,23:15
+Sample Form 2,A User 5,2015-11-20 06:50 CST,*uuid5*,*shortcode5*,,Ghana,Accra,5.55,0.2,,,,,,,,,,,,,,,foo,bar,Funton,-12.9,22.7

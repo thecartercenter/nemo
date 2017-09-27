@@ -25,23 +25,21 @@ class DenormalizeGeographicAnswerData < ActiveRecord::Migration
   def copy_location_info_to_new_columns
     location_answers = fetch_all_answers_with_locations
 
-    ThinkingSphinx::Deltas.suspend(:answer) do
-      puts "Coping #{location_answers.size} answer values"
-      location_answers.each_with_index do |answer, i|
-        puts "#{i}" if i % 100 == 0
+    puts "Coping #{location_answers.size} answer values"
+    location_answers.each_with_index do |answer, i|
+      puts "#{i}" if i % 100 == 0
 
-        # Regular location question
-        if answer.value
-          lat, long = answer.value.split(' ')
-          setLatLongValueOnNewColumns(answer, BigDecimal.new(lat), BigDecimal.new(long))
-        # Select one location question
-        elsif answer.option
-          setLatLongValueOnNewColumns(answer, answer.option.latitude, answer.option.longitude)
-        # Select multiple
-        else
-          answer.choices.each do |choice|
-            setLatLongValueOnNewColumns(choice, choice.option.latitude, choice.option.longitude)
-          end
+      # Regular location question
+      if answer.value
+        lat, long = answer.value.split(' ')
+        setLatLongValueOnNewColumns(answer, BigDecimal.new(lat), BigDecimal.new(long))
+      # Select one location question
+      elsif answer.option
+        setLatLongValueOnNewColumns(answer, answer.option.latitude, answer.option.longitude)
+      # Select multiple
+      else
+        answer.choices.each do |choice|
+          setLatLongValueOnNewColumns(choice, choice.option.latitude, choice.option.longitude)
         end
       end
     end

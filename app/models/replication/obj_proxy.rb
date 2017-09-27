@@ -1,6 +1,7 @@
 # Wraps an object in a replication operation. Not the full object, just its ID and class.
 class Replication::ObjProxy
-  attr_accessor :klass, :id, :ancestry, :replicator
+  attr_accessor :klass, :id, :ancestry, :replicator, :replication_root
+  alias_method :replication_root?, :replication_root
 
   delegate :child_assocs, to: :klass
 
@@ -44,11 +45,7 @@ class Replication::ObjProxy
   # Looks for and returns a matching copy of this obj in the context of the current replicator.
   # Returns nil if none found.
   def find_copy
-    # If replication mode is clone and object is standardizable, copy is just self!
-    # This is because we always want to reuse standardizable objects when cloning, since clone is shallow operation.
-    # The only standardizable object we don't want to reuse is the one at the top of the tree,
-    # but find_copy is only called when dealing with children.
-    if replicator.mode == :clone && klass.standardizable?
+    if reusable?
       self
     # If reuse_if_match option is set, we check for a matching item in the dest mission using that column.
     # reuse_col should obviously be indexed.
@@ -101,138 +98,140 @@ class Replication::ObjProxy
     self.class.new(klass: klass, id: new_id, ancestry: new_ancestry, replicator: replicator)
   end
 
+  protected
+
+  # If replication mode is clone and object is standardizable, we can reuse this object.
+  # This is because we always want to reuse standardizable
+  # objects when cloning, since clone is shallow operation.
+  # The only standardizable object we don't want to reuse is the one at the top of the tree (root).
+  def reusable?
+    !replication_root? && replicator.mode == :clone && klass.standardizable?
+  end
+
   private
-    def db
-      klass.connection
+
+  def db
+    klass.connection
+  end
+
+  # Given an SQL condition, builds a set of Objs with data resulting from that condition.
+  # options[:target_klass] - The class of the new Objs. Defaults to self.klass.
+  # options[:order] - An option ORDER BY clause.
+  def build_from_sql(condition, options = {})
+    options[:target_klass] ||= klass
+    get_target_class_from_type_col = options[:target_klass].column_names.include?('type')
+
+    cols = [:id]
+    cols << :ancestry if options[:target_klass].has_ancestry?
+    cols << :type if get_target_class_from_type_col
+    data = db.select_all("
+      SELECT #{cols.join(',')}
+      FROM #{options[:target_klass].table_name}
+      WHERE #{options[:target_klass].table_name}.deleted_at IS NULL
+        AND #{condition} #{options[:order]}
+    ")
+
+    data.map do |attribs|
+      attribs["id"] = attribs["id"].to_i
+      tc = get_target_class_from_type_col ? attribs.delete('type').constantize : options[:target_klass]
+      self.class.new(attribs.merge(klass: tc, replicator: replicator))
     end
+  end
 
-    # Given an SQL condition, builds a set of Objs with data resulting from that condition.
-    # options[:target_klass] - The class of the new Objs. Defaults to self.klass.
-    # options[:order] - An option ORDER BY clause.
-    def build_from_sql(condition, options = {})
-      options[:target_klass] ||= klass
-      get_target_class_from_type_col = options[:target_klass].column_names.include?('type')
+  # Generates an equality expression in SQL, respecting NULL.
+  def eql_sql(col, value)
+    value.nil? ? "#{col} IS NULL" : "#{col} = '#{value}'"
+  end
 
-      cols = [:id]
-      cols << :ancestry if options[:target_klass].has_ancestry?
-      cols << :type if get_target_class_from_type_col
-      data = db.select_all("
-        SELECT #{cols.join(',')}
-        FROM #{options[:target_klass].table_name}
-        WHERE #{options[:target_klass].table_name}.deleted_at IS NULL
-          AND #{condition} #{options[:order]}
-      ")
+  def get_copy_ancestry(context)
+    # If self is a root node (ancestry == nil) then we just copy nil.
+    # Else we construct the ancestry by looking at that of the copy_parent.
+    if ancestry.nil?
+      nil
+    else
+      # We combine the copy parent's own ancestry (which may be nil) plus its ID.
+      joined = [context[:copy_parent].ancestry, context[:copy_parent].id].compact.join('/')
+      joined.blank? ? nil : joined
+    end
+  end
 
-      data.map do |attribs|
-        attribs["id"] = attribs["id"].to_i
-        tc = get_target_class_from_type_col ? attribs.delete('type').constantize : options[:target_klass]
-        self.class.new(attribs.merge(klass: tc, replicator: replicator))
+  def date_col_mappings(replicator, context)
+    [['created_at', 'NOW()'], ['updated_at', 'NOW()']]
+  end
+
+  def unique_col_mappings(replicator, context)
+    return [] unless uniq_spec = klass.replicable_opts[:uniqueness]
+    generator = Replication::UniqueFieldGenerator.new(
+      uniq_spec.merge(klass: klass, orig_id: id, mission_id: replicator.target_mission_id))
+    [[uniq_spec[:field], ApplicationRecord.connection.quote(generator.generate)]]
+  end
+
+  def standardizable_col_mappings(replicator, context)
+    mappings = []
+    case replicator.mode
+    when :promote
+      mappings << ['is_standard', true] if klass.standardizable?
+    when :clone
+      mappings << 'mission_id'
+      mappings << 'is_standard' if klass.standardizable?
+    when :to_mission
+      mappings << ['mission_id', replicator.target_mission_id]
+      mappings << ['standard_copy', true] if klass.standardizable? && replicator.source_is_standard?
+    end
+    mappings << ['original_id', 'id'] if klass.standardizable?
+    mappings
+  end
+
+  def backward_assoc_col_mappings(replicator, context)
+    klass.backward_assocs.map do |assoc|
+      begin
+        [assoc.foreign_key, backward_assoc_id(assoc)]
+      rescue Replication::BackwardAssocError
+        # If we have explicit instructions to delete the object if an association is missing, make a note of it.
+        $!.ok_to_skip = assoc.skip_obj_if_missing
+        raise $! # Then we send on up the chain.
       end
     end
+  end
 
-    # Generates an equality expression in SQL, respecting NULL.
-    def eql_sql(col, value)
-      value.nil? ? "#{col} IS NULL" : "#{col} = '#{value}'"
+  def backward_assoc_id(assoc)
+    orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
+    return nil if orig_foreign_id.nil?
+    get_copy_id(assoc.target_class, orig_foreign_id) ||
+      (raise Replication::BackwardAssocError.new("
+        Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}"))
+  end
+
+  def get_copy_id(target_class, orig_id)
+    # Try to find the appropriate copy in the replicator history
+    if history_copy = replicator.history.get_copy(target_class, orig_id)
+      history_copy.id
+
+    # Reuse original if it's reusable.
+    elsif self.class.new(klass: target_class, id: orig_id, replicator: replicator).reusable?
+      orig_id
+
+    # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
+    elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
+      orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
+      target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
+
+    # Else try looking up original_id if available
+    elsif target_class.standardizable? && copy_id = target_class.where(original_id: orig_id).first.try(:id)
+      copy_id
+
+    else
+      nil
     end
+  end
 
-    def get_copy_ancestry(context)
-      # If self is a root node (ancestry == nil) then we just copy nil.
-      # Else we construct the ancestry by looking at that of the copy_parent.
-      if ancestry.nil?
-        nil
-      else
-        # We combine the copy parent's own ancestry (which may be nil) plus its ID.
-        joined = [context[:copy_parent].ancestry, context[:copy_parent].id].compact.join('/')
-        joined.blank? ? nil : joined
-      end
-    end
+  def do_insert(mappings)
+    insert_cols = mappings.map{ |s| s.is_a?(Array) ? s[0] : s}.join(",")
+    select_chunks = mappings.map{ |s| s.is_a?(Array) ? s[1] : s}.map{ |s| s.nil? ? "NULL" : s }.join(",")
 
-    def date_col_mappings(replicator, context)
-      [['created_at', 'NOW()'], ['updated_at', 'NOW()']]
-    end
+    sql = "INSERT INTO #{klass.table_name} (#{insert_cols})
+      SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = #{id} RETURNING id"
 
-    def unique_col_mappings(replicator, context)
-      return [] unless uniq_spec = klass.replicable_opts[:uniqueness]
-      generator = Replication::UniqueFieldGenerator.new(
-        uniq_spec.merge(klass: klass, orig_id: id, mission_id: replicator.target_mission_id))
-      [[uniq_spec[:field], ApplicationRecord.connection.quote(generator.generate)]]
-    end
-
-    def standardizable_col_mappings(replicator, context)
-      mappings = []
-      case replicator.mode
-      when :promote
-        mappings << ['is_standard', true] if klass.standardizable?
-      when :clone
-        mappings << 'mission_id'
-        mappings << 'is_standard' if klass.standardizable?
-      when :to_mission
-        mappings << ['mission_id', replicator.target_mission_id]
-        mappings << ['standard_copy', true] if klass.standardizable? && replicator.source_is_standard?
-      end
-      mappings << ['original_id', 'id'] if klass.standardizable?
-      mappings
-    end
-
-    def backward_assoc_col_mappings(replicator, context)
-      klass.backward_assocs.map do |assoc|
-        begin
-          if assoc.serialized?
-            [assoc.foreign_key, serialized_backward_assoc_ids(assoc)]
-          else
-            [assoc.foreign_key, singular_backward_assoc_id(assoc)]
-          end
-        rescue Replication::BackwardAssocError
-          # If we have explicit instructions to delete the object if an association is missing, make a note of it.
-          $!.ok_to_skip = assoc.skip_obj_if_missing
-          raise $! # Then we send on up the chain.
-        end
-      end
-    end
-
-    def singular_backward_assoc_id(assoc)
-      orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
-      get_copy_id(assoc.target_class, orig_foreign_id) ||
-        (raise Replication::BackwardAssocError.new("Couldn't find copy of #{assoc.target_class.name} ##{orig_foreign_id}"))
-    end
-
-    def serialized_backward_assoc_ids(assoc)
-      orig_foreign_ids = klass.where(id: id).pluck(assoc.foreign_key).first
-      return nil if orig_foreign_ids.nil?
-      copy_ids = orig_foreign_ids.map do |orig_id|
-        get_copy_id(assoc.target_class, orig_id) ||
-          (raise Replication::BackwardAssocError.new("Couldn't find copy of #{assoc.target_class.name} ##{orig_id}"))
-      end
-      "'#{copy_ids.to_json}'"
-    end
-
-    def get_copy_id(target_class, orig_id)
-      # Try to find the appropriate copy in the replicator history
-      copy = replicator.history.get_copy(target_class, orig_id) if orig_id
-      if copy
-        copy.id
-
-      # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
-      elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
-        orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
-        target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
-
-      # Else try looking up original_id if available
-      elsif target_class.standardizable? && copy_id = target_class.where(original_id: orig_id).first.try(:id)
-        copy_id
-
-      else
-        nil
-      end
-    end
-
-    def do_insert(mappings)
-      insert_cols = mappings.map{ |s| s.is_a?(Array) ? s[0] : s}.join(",")
-      select_chunks = mappings.map{ |s| s.is_a?(Array) ? s[1] : s}.map{ |s| s.nil? ? "NULL" : s }.join(",")
-
-      sql = "INSERT INTO #{klass.table_name} (#{insert_cols})
-        SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = #{id} RETURNING id"
-
-      db.insert(sql)
-    end
+    db.insert(sql)
+  end
 end

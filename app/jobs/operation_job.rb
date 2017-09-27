@@ -37,7 +37,7 @@ class OperationJob < ApplicationJob
 
     def operation_raised_error(exception)
       return unless operation.present?
-      AdminMailer.error(exception).deliver
+      ExceptionNotifier.notify_exception(exception)
       save_failure(I18n.t("operation.server_error"))
     end
 

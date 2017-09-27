@@ -6,7 +6,7 @@ rvm:
   - 2.2.0
 sudo: false
 before_install:
-  - gem install bundler # Get newer version of bundler
+  - gem update bundler --no-rdoc --no-ri
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - for f in $(find -name '*.example'); do cp "$f" "${f%.example}"; done
@@ -14,7 +14,7 @@ before_script:
   # Remove recaptcha settings in local config so they are picked up from ENV. This is brittle
   # and should go away when we get rid of local_config.rb some sweet day.
   - sed -ri '/(public|private)_key = nil/d' config/initializers/local_config.rb
-  - bundle exec rake db:setup ts:index ts:start
+  - bundle exec rake db:setup
 script: bundle exec rake
 env:
   global:
@@ -26,9 +26,7 @@ addons:
     paths:
     - $(ls /home/travis/build/thecartercenter/elmo/tmp/capybara/*.png | tr "\n" ":")
   postgresql: "9.4"
-  apt:
-    packages:
-      - sphinxsearch
+
 notifications:
   slack:
     secure: N2dcQMxN6oZbCLgmB/fHhqv/+Su9FzAo3ULYbSd0lFz7PQgtUuEB6Hn13eSV7CIiAMPSM1Bfe0AFUJmSKOKYylF2k3kKuSL6jijnuK4AA4b9kNoPHt0wYEO+uAFO27pyvV+Uq21Gov8SWDVvRbQ3799c3Dl3/D3H6UhEAv7vgYY=

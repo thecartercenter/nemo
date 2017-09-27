@@ -78,7 +78,7 @@ describe Report::AnswerTallyReport do
     end
   end
 
-  describe 'results', no_sphinx: true do
+  describe 'results' do
     it "counts of yes and no for all yes no questions" do
       yes_no = create(:option_set, option_names: %w(Yes No))
       questions = (1..3).to_a.map{ |i| create(:question, qtype_name: 'select_one', option_set: yes_no, name: "Q#{i}", code: "q#{i}") }
