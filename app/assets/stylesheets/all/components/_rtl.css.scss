@@ -1,26 +1,26 @@
 html[dir="rtl"] {
 
-  #content {
-    #userinfo {
-      .icon-btn {
-        float: right;
-      }
-    }
-  }
+  // #content {
+  //   #userinfo {
+  //     .icon-btn {
+  //       float: right;
+  //     }
+  //   }
+  // }
 
   .navbar-header {
     float: right;
   }
 
   .navbar-nav {
-    float: right;
+    //float: right;
 
     li {
-      float: right;
+      //float: right;
 
       i {
-        margin-left: 5px;
-        margin-right: 0;
+        //margin-left: 5px;
+        //margin-right: 0;
       }
     }
   }

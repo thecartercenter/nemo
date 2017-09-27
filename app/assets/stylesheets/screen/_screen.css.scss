@@ -44,6 +44,10 @@ body {
     text-align: center;
     vertical-align: top;
 
+    // @include if-rtl {
+    //   float: right;
+    // }
+
     a:hover {
       color: $light-blue;
       text-decoration: none;

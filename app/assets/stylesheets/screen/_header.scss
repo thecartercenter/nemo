@@ -22,7 +22,7 @@ header {
 
       li {
         padding: 15px 6px 15px 6px;
-        margin: 0px 6px 0px 0px;
+        margin: side-values(0px 6px 0px 0px);
 
         &:hover, &:hover, &:focus {
           color: $link-text-color;
@@ -52,7 +52,7 @@ header {
 
         i {
           vertical-align: middle;
-          margin-right: 5px;
+          margin-#{$right}: 5px;
           display: inline-block;
           color: $nav-icon-color;
           font-size: 13pt;
