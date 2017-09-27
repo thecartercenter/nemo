@@ -22,10 +22,10 @@ body {
 #userinfo {
   color: $white;
   text-align: right;
-  padding-right: 5px;
+  padding-#{$right}: 5px;
   margin-top: 19px;
   height: 25px;
-  float: right;
+  float: $right;
 
   a {
     color: $white;
@@ -43,10 +43,6 @@ body {
     margin: 0 5px 0 5px;
     text-align: center;
     vertical-align: top;
-
-    // @include if-rtl {
-    //   float: right;
-    // }
 
     a:hover {
       color: $light-blue;
@@ -86,7 +82,7 @@ body {
 
 #title {
   color: $white;
-  margin: 10px 0 10px 15px;
+  margin: side-values(10px 0 10px 15px);
   display: inline-block;
 
   > div {
