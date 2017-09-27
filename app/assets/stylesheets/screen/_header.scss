@@ -18,6 +18,12 @@ header {
       font-weight: bold;
     }
 
+    @include if-rtl {
+      .navbar-header {
+        float: right;
+      }
+    }
+
     ul.navbar-nav {
 
       li {
