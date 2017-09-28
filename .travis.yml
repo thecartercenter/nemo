@@ -5,6 +5,8 @@ cache: bundler
 rvm:
   - 2.2.0
 sudo: false
+before_install:
+  - gem update bundler --no-rdoc --no-ri
 before_script:
   - mysql -e 'create database elmo_test;'
   - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
