@@ -9,8 +9,6 @@ class UserImportOperationJob < OperationJob
     unless succeeded
       operation_failed(format_error_report(batch.errors))
     end
-  ensure
-    File.delete(path) rescue nil
   end
 
   private
