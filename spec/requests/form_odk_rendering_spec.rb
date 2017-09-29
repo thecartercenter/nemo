@@ -21,8 +21,9 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     end
 
     before do
-      # Include a hidden question, and mark it required just as an extra test.
+      # Include a hidden question.
       # Hidden questions should be included in the bind and instance sections but nowhere else.
+      # Required flag should be ignored for hidden questions.
       # This is so they can be used for prefilled data.
       form.sorted_children[8].update_attributes!(hidden: true, required: true)
     end

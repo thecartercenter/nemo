@@ -66,7 +66,6 @@ class Response < ApplicationRecord
   accepts_nested_attributes_for(:answers, allow_destroy: true)
 
   delegate :name, to: :checked_out_by, prefix: true
-  delegate :visible_questionings, to: :form
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
@@ -233,7 +232,7 @@ class Response < ApplicationRecord
   def missing_answers
     return @missing_answers if @missing_answers
     answers_by_qing = answers.index_by(&:questioning)
-    @missing_answers = visible_questionings.select { |qing| qing.required? && answers_by_qing[qing].nil? }
+    @missing_answers = questionings.select { |q| q.required? && !q.hidden? && answers_by_qing[q].nil? }
   end
 
   # if this response contains location questions, returns the gps location (as a 2 element array)

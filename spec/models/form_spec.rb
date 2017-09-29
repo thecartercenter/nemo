@@ -157,15 +157,6 @@ describe Form do
     end
   end
 
-  describe "all_required" do
-    it "should work" do
-      f = create(:form, question_types: %w(integer integer))
-      expect(f.all_required?).to be false
-      f.root_questionings.each{|q| q.required = true; q.save}
-      expect(f.all_required?).to be true
-    end
-  end
-
   describe "has_repeat_group?" do
     context "for empty form" do
       let(:form) { create(:form) }
