@@ -2,7 +2,7 @@ class FormItem < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
 
   acts_as_paranoid
-  acts_as_list column: :rank, scope: [:form_id, :ancestry, :deleted_at]
+  acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
 
   belongs_to :form
 
