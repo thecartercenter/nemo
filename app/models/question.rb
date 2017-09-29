@@ -22,7 +22,7 @@ class Question < ApplicationRecord
 
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
-  before_validation :normalize_fields
+  before_validation :normalize
 
   # We do this instead of using dependent: :destroy because in the latter case
   # the dependent object doesn't know who destroyed it.
@@ -294,7 +294,7 @@ class Question < ApplicationRecord
     errors.add(:code, :taken) unless unique_in_mission?(:code)
   end
 
-  def normalize_fields
+  def normalize
     self.code = code.strip
     normalize_constraint_values
     true

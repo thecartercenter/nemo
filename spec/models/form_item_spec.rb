@@ -102,4 +102,27 @@ describe FormItem do
       end
     end
   end
+
+  describe "normalization" do
+    # Run valid? to trigger normalization
+    let(:qing) { build(:questioning, submitted).tap(&:valid?) }
+    subject { qing.attributes.symbolize_keys.slice(*submitted.keys) }
+
+    describe "hidden/required" do
+      context do
+        let(:submitted) { {hidden: true, required: true} }
+        it { is_expected.to eq(hidden: true, required: false) }
+      end
+
+      context do
+        let(:submitted) { {hidden: true, required: false} }
+        it { is_expected.to eq(hidden: true, required: false) }
+      end
+
+      context do
+        let(:submitted) { {hidden: false, required: true} }
+        it { is_expected.to eq(hidden: false, required: true) }
+      end
+    end
+  end
 end
