@@ -17,7 +17,14 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     let!(:form) do
       create(:form, :published, :with_version, name: "Sample",
         question_types: %w(text long_text integer decimal location select_one
-          multilevel_select_one select_multiple datetime date time))
+          multilevel_select_one select_multiple text datetime date time))
+    end
+
+    before do
+      # Include a hidden question, and mark it required just as an extra test.
+      # Hidden questions should be included in the bind and instance sections but nowhere else.
+      # This is so they can be used for prefilled data.
+      form.sorted_children[8].update_attributes!(hidden: true, required: true)
     end
 
     it "should render proper xml" do
@@ -108,12 +115,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     let(:form) do
       create(:form, :published, :with_version,
         name: "Basic Group",
-        question_types: [["text", "text", "text", "text"]]
+        question_types: [["text", "text", "text"]]
       )
-    end
-
-    before do
-      form.questionings.last.update_attributes!(hidden: true, required: true)
     end
 
     it "should render proper xml" do
