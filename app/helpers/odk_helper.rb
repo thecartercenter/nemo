@@ -105,7 +105,7 @@ module OdkHelper
       "relevant" => qing.has_condition? ? Odk::DecoratorFactory.decorate(qing.condition).to_odk : nil,
       "constraint" => subq.odk_constraint,
       "jr:constraintMsg" => subq.min_max_error_msg,
-      "calculate" => qing.has_default? ? DefaultParser.new(qing).to_odk.html_safe : nil,
+      "calculate" => qing.has_default? ? DefaultPatternParser.new(qing).to_odk.html_safe : nil,
       "jr:preload" => qing.jr_preload,
       "jr:preloadParams" => qing.jr_preload_params
     }

@@ -1,18 +1,18 @@
 require "spec_helper"
 
-describe DefaultParser do
+describe DefaultPatternParser do
   let(:form) { create(:form, question_types: ["text", ["text", "text"], ["text"]]) }
   let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
   let(:q21) { Odk::QingDecorator.decorate(form.sorted_children[1].sorted_children[0]) }
   let(:q22) { Odk::QingDecorator.decorate(form.sorted_children[1].sorted_children[1]) }
   let(:g3) { Odk::QingGroupDecorator.decorate(form.sorted_children[2]) }
   let(:q31) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]) }
-  subject { described_class.new(q22).to_odk }
+  subject { described_class.new(pattern, src_item: q22).to_odk }
 
   before do
     q1.update!(code: "Q1")
     q21.update!(code: "Q21")
-    q22.update!(code: "Q22", default: pattern)
+    q22.update!(code: "Q22")
     q31.update!(code: "Q31")
   end
 
