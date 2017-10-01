@@ -83,10 +83,6 @@ class Questioning < FormItem
     form.questionings.reject { |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
-  def visible?
-    !hidden?
-  end
-
   def smsable?
     visible? && qtype.smsable?
   end

@@ -123,6 +123,10 @@ class FormItem < ApplicationRecord
     depth == 1
   end
 
+  def visible?
+    !hidden?
+  end
+
   private
 
   # copy mission from question

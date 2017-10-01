@@ -100,7 +100,7 @@ module OdkHelper
     attribs = {
       "nodeset" => [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
       "type" => binding_type_attrib(subq),
-      "_required" => qing.required? && !qing.hidden? && subq.first_rank? ? required_value(form) : nil,
+      "_required" => qing.required? && qing.visible? && subq.first_rank? ? required_value(form) : nil,
       "_readonly" => qing.can_prefill? && qing.read_only? ? "true()" : nil,
       "relevant" => qing.has_condition? ? Odk::DecoratorFactory.decorate(qing.condition).to_odk : nil,
       "constraint" => subq.odk_constraint,
