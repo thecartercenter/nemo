@@ -160,6 +160,11 @@ class Question < ApplicationRecord
     relation = relation.where(search.sql)
   end
 
+  # Returns name, or a default value (not nil) if name not defined.
+  def name_or_none
+    name || ""
+  end
+
   def preordered_option_nodes
     option_set.try(:preordered_option_nodes) || []
   end
