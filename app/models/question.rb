@@ -317,17 +317,10 @@ class Question < ApplicationRecord
 
     self.metadata_type = qtype_name == "datetime" ? metadata_type.presence : nil
 
-    if metadata_type.present?
-      self.name_translations = nil
-      self.canonical_name = code # This column is null false so we need something in there.
-      self.hint_translations = nil
-    end
-
     true
   end
 
   def at_least_one_name
-    # name not required if metadata_type is given.
-    errors.add(:base, :at_least_one_name) if metadata_type.blank? && name.blank?
+    errors.add(:base, :at_least_one_name) if name.blank?
   end
 end

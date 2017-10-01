@@ -13,13 +13,9 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
   toggleFields: ->
     @$('.question_auto_increment')[if @showAutoIncrement() then 'show' else 'hide']()
     @$('.question_metadata_type')[if @showMetaDataType() then 'show' else 'hide']()
-    @$('.names_hints')[if @showTitleHint() then 'show' else 'hide']()
 
   showAutoIncrement: ->
     @fieldValue('qtype_name') == 'counter'
-
-  showTitleHint: ->
-    @metadataTypeBlank()
 
   showMetaDataType: ->
     @fieldValue('qtype_name') == 'datetime'

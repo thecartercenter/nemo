@@ -92,19 +92,6 @@ describe Question do
       end
     end
 
-    describe "metadata and title/hint" do
-      context do
-        let(:submitted) { {qtype_name: "datetime", metadata_type: "formstart", name_en: "x", hint_en: "y"} }
-        it { is_expected.to eq(
-          qtype_name: "datetime", metadata_type: "formstart", name_en: nil, hint_en: nil) }
-      end
-
-      context do
-        let(:submitted) { {qtype_name: "datetime", metadata_type: "", name_en: "x", hint_en: "y"} }
-        it { is_expected.to eq(
-          qtype_name: "datetime", metadata_type: nil, name_en: "x", hint_en: "y") }
-      end
-    end
   end
 
   describe "validations" do
