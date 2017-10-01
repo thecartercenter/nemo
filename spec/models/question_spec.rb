@@ -22,9 +22,8 @@ describe Question do
   end
 
   describe "normalization" do
-    # Run valid? to trigger normalization
-    let(:question) { build(:question, submitted).tap(&:valid?) }
-    subject { question.attributes.symbolize_keys.slice(*submitted.keys) }
+    let(:question) { create(:question, submitted) }
+    subject { submitted.keys.map { |k| [k, question.send(k)] }.to_h }
 
     describe "min max constraints" do
       shared_examples_for "minmax" do |prefix|
@@ -74,6 +73,37 @@ describe Question do
 
       it_behaves_like "minmax", "min"
       it_behaves_like "minmax", "max"
+    end
+
+    describe "qtype and metadata" do
+      context do
+        let(:submitted) { {qtype_name: "datetime", metadata_type: "formstart"} }
+        it { is_expected.to eq(qtype_name: "datetime", metadata_type: "formstart") }
+      end
+
+      context do
+        let(:submitted) { {qtype_name: "datetime", metadata_type: ""} }
+        it { is_expected.to eq(qtype_name: "datetime", metadata_type: nil) }
+      end
+
+      context do
+        let(:submitted) { {qtype_name: "date", metadata_type: "formstart"} }
+        it { is_expected.to eq(qtype_name: "date", metadata_type: nil) }
+      end
+    end
+
+    describe "metadata and title/hint" do
+      context do
+        let(:submitted) { {qtype_name: "datetime", metadata_type: "formstart", name_en: "x", hint_en: "y"} }
+        it { is_expected.to eq(
+          qtype_name: "datetime", metadata_type: "formstart", name_en: nil, hint_en: nil) }
+      end
+
+      context do
+        let(:submitted) { {qtype_name: "datetime", metadata_type: "", name_en: "x", hint_en: "y"} }
+        it { is_expected.to eq(
+          qtype_name: "datetime", metadata_type: nil, name_en: "x", hint_en: "y") }
+      end
     end
   end
 

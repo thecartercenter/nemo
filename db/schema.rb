@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170913171159) do
+ActiveRecord::Schema.define(version: 20170929194841) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -364,6 +364,7 @@ ActiveRecord::Schema.define(version: 20170913171159) do
     t.boolean "key", default: false
     t.decimal "maximum", precision: 15, scale: 8
     t.boolean "maxstrictly"
+    t.string "metadata_type"
     t.decimal "minimum", precision: 15, scale: 8
     t.boolean "minstrictly"
     t.integer "mission_id"

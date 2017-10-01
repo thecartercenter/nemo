@@ -1,11 +1,8 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  accepts_nested_attributes_for(:question)
-  accepts_nested_attributes_for(:condition)
-
-  before_validation(:destroy_condition_if_ref_qing_blank)
-  before_save(:set_not_required_if_read_only)
+  before_validation :destroy_condition_if_ref_qing_blank
+  before_validation :normalize
 
   delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node, :first_leaf_option,
     :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels, :min_max_error_msg,
@@ -18,9 +15,13 @@ class Questioning < FormItem
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
-  scope(:visible, -> { where(hidden: false) })
+  scope :visible, -> { where(hidden: false) }
 
-  replicable child_assocs: [:question, :condition], backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
+  replicable child_assocs: [:question, :condition], backward_assocs: :form,
+    dont_copy: [:hidden, :form_id, :question_id]
+
+  accepts_nested_attributes_for :question
+  accepts_nested_attributes_for :condition
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(questioning_ids)
@@ -123,15 +124,15 @@ class Questioning < FormItem
 
   private
 
+  def normalize
+    if question.metadata_type.present?
+      self.hidden = true
+      destroy_condition
+    end
+    self.required = false if hidden? || read_only?
+  end
+
   def destroy_condition_if_ref_qing_blank
     destroy_condition if condition && condition.ref_qing.blank?
   end
-
-  def set_not_required_if_read_only
-    if read_only
-      self.required = false
-    end
-    true #otherwise assignment returns false, causing errors
-  end
-
 end

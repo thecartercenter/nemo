@@ -17,7 +17,6 @@ class FormItem < ApplicationRecord
   has_many :standard_form_reports, class_name: 'Report::StandardFormReport',
     foreign_key: :disagg_qing_id, dependent: :nullify
 
-  before_validation :normalize
   before_create :set_mission
 
   has_ancestry cache_depth: true
@@ -129,10 +128,6 @@ class FormItem < ApplicationRecord
   # copy mission from question
   def set_mission
     self.mission = form.try(:mission)
-  end
-
-  def normalize
-    self.required = false if hidden?
   end
 
   def parent_must_be_group
