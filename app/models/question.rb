@@ -9,6 +9,7 @@ class Question < ApplicationRecord
   # This is because we need to leave room for additional digits at the end during replication to maintain uniqueness.
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,21}"
   API_ACCESS_LEVELS = %w(inherit private)
+  METADATA_TYPES = %w(formstart formend)
 
   belongs_to :option_set, inverse_of: :questions, autosave: true
   has_many :questionings, dependent: :destroy, autosave: true, inverse_of: :question

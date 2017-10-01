@@ -124,6 +124,10 @@ en:
     protected: "Protected"
     inherit: "Inherit"
 
+  metadata_types:
+    formstart: "Form Start Time"
+    formend: "Form End Time"
+
   sms_guide_formatting_options:
     auto: Automatic
     inline: Inline
@@ -417,6 +421,7 @@ en:
         name: "Title"
         option_set_id: "Option Set"
         qtype_name: "Type"
+        metadata_type: "Metadata Type"
         tag_ids: "Tags"
         sms_guide_formatting: "SMS Guide Formatting"
       questioning:
@@ -617,6 +622,7 @@ en:
         option_set_id: "The set of options the user will be able to choose from."
         qtype_name: "The kind of information the user will be entering."
         access_level: "Inherit: Same access level as parent form. Private: No one can access the data via the API, regardless of parent form access level."
+        metadata_type: "A special value that can be pre-filled into this question. If chosen, this question will be automatically hidden and not required, and any conditions will be removed."
       questioning:
         hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override the condition and required settings below."
         condition: "An optional condition which must be met in order for this question to be shown to the user."

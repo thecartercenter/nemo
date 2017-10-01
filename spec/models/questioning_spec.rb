@@ -84,6 +84,12 @@ describe Questioning do
           expect(condition).to be_destroyed
         end
       end
+
+      context do
+        let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
+        let(:submitted) { {condition: nil} }
+        it { is_expected.to eq(condition: nil) }
+      end
     end
   end
 end

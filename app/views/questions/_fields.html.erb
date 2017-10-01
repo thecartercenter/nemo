@@ -34,12 +34,14 @@
   </div>
 
   <%= f.field(:auto_increment, type: :check_box) %>
-
-  <%= f.field(:tag_ids, partial: 'questions/tags') %>
+  <%= f.field(:tag_ids, partial: "questions/tags") %>
+  <%= f.field(:metadata_type, type: :select,
+    options: translate_options(Question::METADATA_TYPES, :metadata_types)) %>
 
   <% unless admin_mode? %>
-    <%= f.field(:key, :type => :check_box) %>
-    <%= f.field(:access_level, :type => :select, :options => translate_options(Question::API_ACCESS_LEVELS, 'access_levels')) %>
+    <%= f.field(:key, type: :check_box) %>
+    <%= f.field(:access_level, type: :select,
+      options: translate_options(Question::API_ACCESS_LEVELS, :access_levels)) %>
   <% end %>
 
   <%# new option set modal %>

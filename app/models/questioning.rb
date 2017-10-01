@@ -123,12 +123,14 @@ class Questioning < FormItem
   def normalize
     if question.metadata_type.present?
       self.hidden = true
-      destroy_condition
+      destroy_condition if condition
     end
     self.required = false if hidden? || read_only?
+    true
   end
 
   def destroy_condition_if_ref_qing_blank
     destroy_condition if condition && condition.ref_qing.blank?
+    true
   end
 end
