@@ -105,9 +105,11 @@ module OdkHelper
       "relevant" => qing.has_condition? ? Odk::DecoratorFactory.decorate(qing.condition).to_odk : nil,
       "constraint" => subq.odk_constraint,
       "jr:constraintMsg" => subq.min_max_error_msg,
-      "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil
+      "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil,
+      "jr:preload" => qing.jr_preload,
+      "jr:preloadParams" => qing.jr_preload_params
     }
-    attribs.reject! { |k,v| v.nil? }
+    attribs.reject! { |_, v| v.nil? }
     tag(:bind, attribs).gsub(/_required=/, "required=").
       gsub(/_readonly=/, "readonly=").html_safe
   end

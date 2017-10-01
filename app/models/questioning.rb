@@ -9,7 +9,8 @@ class Questioning < FormItem
     :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name, :option_set_id,
     :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes, :printable?,
     :qtype_name, :qtype_name=, :qtype, :select_options, :sms_formatting_as_appendix?,
-    :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, to: :question
+    :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, :metadata_type,
+    to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true

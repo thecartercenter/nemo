@@ -18,6 +18,8 @@
           <*itemcode10*/>
           <*itemcode11*/>
           <*itemcode12*/>
+          <*itemcode13*/>
+          <*itemcode14*/>
         </data>
       </instance>
       <itext>
@@ -127,6 +129,8 @@
       <bind nodeset="/data/*itemcode10*" type="dateTime"/>
       <bind nodeset="/data/*itemcode11*" type="date"/>
       <bind nodeset="/data/*itemcode12*" type="time"/>
+      <bind nodeset="/data/*itemcode13*" type="dateTime" jr:preload="timestamp" jr:preloadParams="start"/>
+      <bind nodeset="/data/*itemcode14*" type="dateTime" jr:preload="timestamp" jr:preloadParams="end"/>
     </model>
   </h:head>
   <h:body>
