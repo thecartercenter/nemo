@@ -5,6 +5,9 @@
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
+          <meta>
+            <instanceName/>
+          </meta>
           <*itemcode1*/>
           <*itemcode2*/>
           <*itemcode3*/>
@@ -116,6 +119,7 @@
           </text>
         </translation>
       </itext>
+      <bind calculate="concat(/data/*itemcode1*,' - ',/data/*itemcode2*)" nodeset="/data/meta/instanceName" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*" type="string"/>
       <bind nodeset="/data/*itemcode2*" type="string"/>
       <bind nodeset="/data/*itemcode3*" type="int"/>

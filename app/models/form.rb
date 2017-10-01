@@ -10,24 +10,24 @@ class Form < ApplicationRecord
 
   acts_as_paranoid
 
-  has_many(:responses, inverse_of: :form)
-  has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
-  has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
-  has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
+  has_many :responses, inverse_of: :form
+  has_many :versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy
+  has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
+  has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
-  before_validation(:normalize_fields)
-  before_save(:update_pub_changed_at)
+  before_validation :normalize
+  before_save :update_pub_changed_at
 
   # For some reason this works but dependent: :destroy doesn't.
   before_destroy { root_group.destroy }
 
-  validates(:name, presence: true, length: {maximum: 32})
-  validate(:name_unique_per_mission)
+  validates :name, presence: true, length: {maximum: 32}
+  validate :name_unique_per_mission
 
-  before_create(:init_downloads)
+  before_create :init_downloads
 
   scope :published, -> { where(published: true) }
 
@@ -330,8 +330,9 @@ class Form < ApplicationRecord
     errors.add(:name, :taken) unless unique_in_mission?(:name)
   end
 
-  def normalize_fields
+  def normalize
     self.name = name.strip
+    self.default_response_name = default_response_name.try(:strip).presence
     true
   end
 

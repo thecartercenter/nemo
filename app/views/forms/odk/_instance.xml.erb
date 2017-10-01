@@ -1,6 +1,8 @@
 <instance>
   <%# include both form ID and form version sequence number in ODK form ID %>
   <%= data_tag @form, @style do %>
+    <%= @form.default_response_name_instance_tag %>
+
     <% @form.sorted_children.each do |node| %>
       <%= render "forms/odk/instance_node", node: node %>
     <% end %>

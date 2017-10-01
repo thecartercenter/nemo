@@ -4,7 +4,7 @@ class DefaultPatternParser
     "$!RepeatNum" => "position(..)"
   }
 
-  def initialize(pattern, src_item: src_item)
+  def initialize(pattern, src_item:)
     @pattern = pattern
     @src_item = Odk::DecoratorFactory.decorate(src_item)
     @form = src_item.form

@@ -1,14 +1,16 @@
+<%= @form.default_response_name_bind_tag %>
+
 <% @form.sorted_children.each do |node| %>
   <%= render "forms/odk/binding_node", node: node, parent: nil, xpath_prefix: "/data" %>
 <% end %>
 
-<%# incomplete response question bindings %>
+<%# Incomplete response question bindings %>
 <% if allow_incomplete? %>
   <%= ir_question_binding(@form) %>
   <%= ir_code_binding(@form) %>
 <% end %>
 
-<%# Special username field for commcare. %>
+<%# Special username field for commcare %>
 <% if @style == "commcare" %>
   <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
 <% end %>

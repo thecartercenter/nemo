@@ -15,7 +15,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   context "sample form" do
     let!(:form) do
-      create(:form, :published, :with_version, name: "Sample",
+      create(:form, :published, :with_version, name: "Sample", default_response_name: "$Q0 - $Q1",
         question_types: %w(text long_text integer decimal location select_one
           multilevel_select_one select_multiple text datetime date time formstart formend))
     end
@@ -26,6 +26,9 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       # Required flag should be ignored for hidden questions.
       # This is so they can be used for prefilled data.
       form.sorted_children[8].update_attributes!(hidden: true, required: true)
+
+      # Set codes for use in default_response_name
+      [0, 1].each { |i| form.c[i].update!(code: "Q#{i}") }
     end
 
     it "should render proper xml" do
