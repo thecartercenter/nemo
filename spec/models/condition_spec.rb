@@ -126,11 +126,11 @@ describe Condition do
 
   describe 'clean times' do
     let(:form) { create(:form, question_types: %w(datetime integer)) }
-    let(:cond) { Condition.new(ref_qing: form.questionings[0], value: '2013-04-30 2:14pm') }
+    let(:cond) { Condition.new(ref_qing: form.questionings[0], value: '2013-04-30 2:14:12pm') }
 
     it 'should clean time' do
       cond.valid?
-      expect(cond.value).to eq '2013-04-30 14:14'
+      expect(cond.value).to eq '2013-04-30 14:14:12'
     end
   end
 
