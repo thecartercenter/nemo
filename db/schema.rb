@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170929194841) do
+ActiveRecord::Schema.define(version: 20171001200029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -160,6 +160,7 @@ ActiveRecord::Schema.define(version: 20170929194841) do
     t.string "ancestry", limit: 255
     t.integer "ancestry_depth", null: false
     t.datetime "created_at"
+    t.string "default"
     t.datetime "deleted_at"
     t.integer "form_id", null: false
     t.jsonb "group_hint_translations", default: {}
@@ -167,7 +168,6 @@ ActiveRecord::Schema.define(version: 20170929194841) do
     t.boolean "hidden", default: false, null: false
     t.integer "mission_id"
     t.boolean "one_screen"
-    t.string "prefill_pattern"
     t.integer "question_id"
     t.integer "rank", null: false
     t.boolean "read_only"

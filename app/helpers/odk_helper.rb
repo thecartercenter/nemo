@@ -101,11 +101,11 @@ module OdkHelper
       "nodeset" => [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
       "type" => binding_type_attrib(subq),
       "_required" => qing.required? && qing.visible? && subq.first_rank? ? required_value(form) : nil,
-      "_readonly" => qing.can_prefill? && qing.read_only? ? "true()" : nil,
+      "_readonly" => qing.has_default? && qing.read_only? ? "true()" : nil,
       "relevant" => qing.has_condition? ? Odk::DecoratorFactory.decorate(qing.condition).to_odk : nil,
       "constraint" => subq.odk_constraint,
       "jr:constraintMsg" => subq.min_max_error_msg,
-      "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil,
+      "calculate" => qing.has_default? ? DefaultParser.new(qing).to_odk.html_safe : nil,
       "jr:preload" => qing.jr_preload,
       "jr:preloadParams" => qing.jr_preload_params
     }

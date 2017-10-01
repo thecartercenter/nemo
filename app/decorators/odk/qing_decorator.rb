@@ -43,8 +43,8 @@ module Odk
       end
     end
 
-    def can_prefill?
-      prefill_pattern.present? && qtype.prefillable?
+    def has_default?
+      default.present? && qtype.defaultable?
     end
 
     def subqings

@@ -1,10 +1,10 @@
 class QuestionType
-  AVAILABLE_PROPERTIES = %w(printable smsable textual headerable prefillable numeric
+  AVAILABLE_PROPERTIES = %w(printable smsable textual headerable defaultable numeric
     multimedia temporal has_options has_timezone)
   attr_reader :name, :odk_name, :properties
 
   @@attributes = [
-    { name: "text", odk_name: "string", properties: %w(printable smsable textual headerable prefillable) },
+    { name: "text", odk_name: "string", properties: %w(printable smsable textual headerable defaultable) },
     { name: "long_text", odk_name: "string", properties: %w(printable smsable textual) },
     { name: "integer", odk_name: "int", properties: %w(printable smsable numeric headerable) },
     { name: "counter", odk_name: "int", properties: %w(printable smsable numeric headerable) },

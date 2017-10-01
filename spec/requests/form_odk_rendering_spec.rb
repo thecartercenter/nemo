@@ -218,8 +218,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     end
 
     before do
-      form.questioning_with_code("TextQ4").update_attributes!(prefill_pattern: "$TextQ2-$!RepeatNum")
-      form.questioning_with_code("TextQ7").update_attributes!(prefill_pattern: "$TextQ2-$!RepeatNum")
+      form.questioning_with_code("TextQ4").update_attributes!(default: "$TextQ2-$!RepeatNum")
+      form.questioning_with_code("TextQ7").update_attributes!(default: "$TextQ2-$!RepeatNum")
     end
 
     it "should render proper xml" do

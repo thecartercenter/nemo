@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe PrefillPatternParser do
+describe DefaultParser do
   let(:form) { create(:form, question_types: ["text", ["text", "text"], ["text"]]) }
   let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
   let(:q21) { Odk::QingDecorator.decorate(form.sorted_children[1].sorted_children[0]) }
@@ -12,7 +12,7 @@ describe PrefillPatternParser do
   before do
     q1.update!(code: "Q1")
     q21.update!(code: "Q21")
-    q22.update!(code: "Q22", prefill_pattern: pattern)
+    q22.update!(code: "Q22", default: pattern)
     q31.update!(code: "Q31")
   end
 

@@ -61,7 +61,7 @@ class Questioning < FormItem
   end
 
   def core_changed?
-    (changed & %w(required hidden prefill_pattern)).any? || condition_changed?
+    (changed & %w(required hidden default)).any? || condition_changed?
   end
 
   # Checks if this Questioning is in a repeat group.
