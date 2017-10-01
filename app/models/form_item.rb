@@ -127,6 +127,10 @@ class FormItem < ApplicationRecord
     !hidden?
   end
 
+  def self_and_ancestor_ids
+    ancestor_ids << id
+  end
+
   private
 
   # copy mission from question
