@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171001200029) do
+ActiveRecord::Schema.define(version: 20171001200543) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -207,6 +207,7 @@ ActiveRecord::Schema.define(version: 20171001200029) do
     t.boolean "authenticate_sms", default: true
     t.datetime "created_at"
     t.integer "current_version_id"
+    t.string "default_response_name"
     t.datetime "deleted_at"
     t.integer "downloads"
     t.boolean "is_standard", default: false
