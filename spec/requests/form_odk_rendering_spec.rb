@@ -15,7 +15,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   context "sample form" do
     let!(:form) do
-      create(:form, :published, :with_version, name: "Sample", default_response_name: "$Q0 - $Q1",
+      create(:form, :published, :with_version, name: "Sample",
+        default_response_name: "$Q0 --> $Q1", # We use a > on purpose so we can test escaping.
         question_types: %w(text long_text integer decimal location select_one
           multilevel_select_one select_multiple text datetime date time formstart formend))
     end
