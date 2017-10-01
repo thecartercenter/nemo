@@ -66,6 +66,7 @@ class Response < ApplicationRecord
   accepts_nested_attributes_for(:answers, allow_destroy: true)
 
   delegate :name, to: :checked_out_by, prefix: true
+  delegate :questionings, to: :form
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
