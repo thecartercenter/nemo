@@ -18,7 +18,16 @@ class DefaultPatternParser
       if reserved_codes.keys.include?(code)
         odk_mapping[code] = reserved_codes[code]
       else
-        odk_mapping[code] = src_item.xpath_to(other_qing)
+        if other_qing.has_options?
+          if other_qing.multilevel?
+            xpath = src_item.xpath_to(other_qing.subqings.first)
+          else
+            xpath = src_item.xpath_to(other_qing)
+          end
+          odk_mapping[code] = "jr:itext(#{xpath})"
+        else
+          odk_mapping[code] = src_item.xpath_to(other_qing)
+        end
       end
     end
 

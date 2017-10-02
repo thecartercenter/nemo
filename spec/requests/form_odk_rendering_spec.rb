@@ -7,7 +7,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk_test_forms`.
   # Then use `adb push tmp/odk_test_forms /sdcard/odk/forms` or similar to load them into ODK for testing.
-  let(:save_expectations) { false }
+  let(:save_expectations) { true }
 
   before do
     login(user)
@@ -16,7 +16,6 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
   context "sample form" do
     let!(:form) do
       create(:form, :published, :with_version, name: "Sample",
-        default_response_name: "$Q0 --> $Q1", # We use a > on purpose so we can test escaping.
         question_types: %w(text long_text integer decimal location select_one
           multilevel_select_one select_multiple text datetime date time formstart formend))
     end
@@ -27,9 +26,6 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       # Required flag should be ignored for hidden questions.
       # This is so they can be used for prefilled data.
       form.sorted_children[8].update_attributes!(hidden: true, required: true)
-
-      # Set codes for use in default_response_name
-      [0, 1].each { |i| form.c[i].update!(code: "Q#{i}") }
     end
 
     it "should render proper xml" do
@@ -222,8 +218,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     end
 
     before do
-      form.questioning_with_code("TextQ4").update_attributes!(default: "$TextQ2-$!RepeatNum")
-      form.questioning_with_code("TextQ7").update_attributes!(default: "$TextQ2-$!RepeatNum")
+      form.questioning_with_code("TextQ4").update!(default: "$TextQ2-$!RepeatNum")
+      form.questioning_with_code("TextQ7").update!(default: "$TextQ2-$!RepeatNum")
     end
 
     it "should render proper xml" do
@@ -314,6 +310,27 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq(
         prepare_odk_expectation("nested_group_form_with_multilevel.xml", form))
+    end
+  end
+
+  context "form with default patterns" do
+    let(:form) do
+      create(:form, :published, :with_version,
+        default_response_name: "$MSO --> $TXT", # We use a > on purpose so we can test escaping.
+        name: "Default Patterns",
+        question_types: [["text", "text", "select_one", "multilevel_select_one"], "text"]
+      )
+    end
+
+    before do
+      # Set codes for use in default_response_name
+      form.c[0].c[3].update!(code: "MSO")
+      form.c[1].update!(code: "TXT")
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("default_pattern_form.xml", form)
     end
   end
 
