@@ -1,0 +1,140 @@
+/* elmo specific styles for the token input plugin */
+ul.token-input-list-elmo {
+    overflow: hidden;
+    height: 34px;
+    width: 412px;
+    border: 1px solid #CCC;
+    cursor: text;
+    font-size: 12px;
+    z-index: 999;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    clear: left;
+    display: inline-block;
+    border-radius: 4px;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+    vertical-align: middle;
+}
+
+.control .widget ul.token-input-list-elmo li.token-input-input-token-elmo input[type=text] {
+    border: 0;
+    width: 100px;
+    height: 27px;
+    padding: 3px;
+    margin: 2px 0;
+    -webkit-appearance: caret;
+}
+
+.token-input-token-elmo {
+    overflow: hidden;
+    height: auto !important;
+    height: 15px;
+    margin: 6px 3px;
+    padding: 1px 3px;
+    background-color: $light-yellow;
+    color: #000;
+    cursor: default;
+    border: 1px solid #c7bf32;
+    font-size: 12px;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    float: left;
+    white-space: nowrap;
+    text-align: center;
+
+    &.group {
+      border: 1px solid $group-pill-border-color;
+      background-color: $group-pill-background-color;
+      a {
+        color: $group-pill-text-color;
+        &:hover {
+          text-decoration: none;
+
+        }
+      }
+      &:hover {
+        background-color: $group-pill-background-hover-color;
+      }
+    }
+}
+
+.read_only .token-input-token-elmo {
+  margin: 3px;
+}
+
+.token-input-token-elmo p {
+    display: inline;
+    padding: 0;
+    margin: 0;
+}
+
+.token-input-token-elmo span {
+    color: #555;
+    margin-left: 5px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+li.token-input-selected-token-elmo {
+    border: 1px solid #3b5998;
+}
+
+div.token-input-dropdown-elmo {
+    position: absolute;
+    width: 400px;
+    background-color: $super-light-gray;
+    overflow: hidden;
+    border-left: 1px solid #ccc;
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    cursor: default;
+    font-size: 13px;
+    z-index: 1;
+}
+
+div.token-input-dropdown-elmo p {
+    margin: 0;
+    padding: 5px;
+    font-weight: bold;
+    color: #777;
+}
+
+div.token-input-dropdown-elmo ul {
+    margin: 0;
+    padding: 0;
+}
+
+div.token-input-dropdown-elmo ul li {
+    background-color: $super-light-gray;
+    padding: 3px;
+    margin: 0;
+    list-style-type: none;
+}
+
+div.token-input-dropdown-elmo ul li.token-input-dropdown-item-elmo {
+    background-color: $super-light-gray;
+}
+
+div.token-input-dropdown-elmo ul li.token-input-dropdown-item2-elmo {
+    background-color: $super-light-gray;
+}
+
+div.token-input-dropdown-elmo ul li em {
+    font-weight: bold;
+    font-style: normal;
+}
+
+div.token-input-dropdown-elmo ul li div.details {
+  font-size: 11px;
+  color: #999;
+}
+
+div.token-input-dropdown-elmo ul li .details.create_new {
+  font-style: italic;
+}
+
+div.token-input-dropdown-elmo ul li.token-input-selected-dropdown-item-elmo {
+    background-color: $light-yellow;
+}

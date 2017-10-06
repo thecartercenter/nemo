@@ -1,64 +1,107 @@
 # a question on a form
-class Question < ActiveRecord::Base
+class Question < ApplicationRecord
   include MissionBased, Replication::Standardizable, Replication::Replicable, FormVersionable, Translatable
+
+  acts_as_paranoid
 
   # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)
   # The user is told that the max is 20.
   # This is because we need to leave room for additional digits at the end during replication to maintain uniqueness.
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,21}"
   API_ACCESS_LEVELS = %w(inherit private)
+  METADATA_TYPES = %w(formstart formend)
 
-  belongs_to(:option_set, :inverse_of => :questions, :autosave => true)
-  has_many(:questionings, :dependent => :destroy, :autosave => true, :inverse_of => :question)
-  has_many(:answers, :through => :questionings)
-  has_many(:referring_conditions, :through => :questionings)
-  has_many(:forms, :through => :questionings)
-  has_many(:calculations, class_name: 'Report::Calculation', foreign_key: 'question1_id', inverse_of: :question1)
-  has_many(:taggings, :dependent => :destroy)
-  has_many(:tags, :through => :taggings)
+  belongs_to :option_set, inverse_of: :questions, autosave: true
+  has_many :questionings, dependent: :destroy, autosave: true, inverse_of: :question
+  has_many :answers, through: :questionings
+  has_many :referring_conditions, through: :questionings
+  has_many :forms, through: :questionings
+  has_many :calculations, class_name: 'Report::Calculation',
+    foreign_key: 'question1_id', inverse_of: :question1
+  has_many :taggings, dependent: :destroy
+  has_many :tags, through: :taggings
 
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
-  before_validation(:normalize_fields)
+  before_validation :normalize
 
   # We do this instead of using dependent: :destroy because in the latter case
   # the dependent object doesn't know who destroyed it.
   before_destroy { calculations.each(&:question_destroyed) }
 
-  validates(:code, :presence => true)
-  validates(:code, :format => {:with => /\A#{CODE_FORMAT}\z/}, :if => Proc.new{|q| !q.code.blank?})
-  validates(:qtype_name, :presence => true)
-  validates(:option_set, :presence => true, :if => Proc.new{|q| q.qtype && q.has_options?})
+  validates :code, presence: true
+  validates :code, format: {with: /\A#{CODE_FORMAT}\z/}, unless: -> { code.blank? }
+  validates :qtype_name, presence: true
+  validates :option_set, presence: true, if: -> { qtype && has_options? }
   %w(minimum maximum).each do |field|
-    validates(:"casted_#{field}", :numericality => { :allow_blank => true, :greater_than => -10_000_000, :less_than => 10_000_000 })
+    # Numeric limits are due to column floating point restrictions
+    validates :"casted_#{field}", numericality: { allow_blank: true, greater_than: -1e7, less_than: 1e7 }
   end
-  validate(:code_unique_per_mission)
-  validate(:at_least_one_name)
+  validate :code_unique_per_mission
+  validate :at_least_one_name
 
-  scope(:by_code, -> { order('questions.code') })
-  scope(:default_order, -> { by_code })
-  scope(:select_types, -> { where(:qtype_name => %w(select_one select_multiple)) })
-  scope(:with_forms, -> { includes(:forms) })
-  scope(:reportable, -> { where.not(qtype_name: %w(image annotated_image signature sketch audio video)) })
+  scope :by_code, -> { order('questions.code') }
+  scope :with_code, ->(c) { where("LOWER(code) = ?", c.downcase) }
+  scope :default_order, -> { by_code }
+  scope :select_types, -> { where(:qtype_name => %w(select_one select_multiple)) }
+  scope :with_forms, -> { includes(:forms) }
+  scope :reportable, -> { where.not(qtype_name: %w(image annotated_image signature sketch audio video)) }
+  scope :not_in_form, ->(form) { where("(questions.id NOT IN (
+    SELECT question_id FROM form_items
+      WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id) }
 
-  # fetches association counts along with the questions
-  # accounts for copies with standard questions
-  # - form_published returns 1 if any associated forms are published, 0 or nil otherwise
-  scope(:with_assoc_counts, -> { select(%{
-      questions.*,
-      COUNT(DISTINCT answers.id) AS answer_count_col,
-      COUNT(DISTINCT forms.id) AS form_count_col,
-      MAX(DISTINCT forms.published) AS form_published_col,
-      COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col
-    }).joins(%{
-      LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id AND questionings.type = 'Questioning'
-      LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-      LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-      LEFT OUTER JOIN questions copies ON questions.is_standard = 1 AND questions.id = copies.original_id
-      LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
-      LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
-      LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-    }).group('questions.id') })
+  # Fetches association counts along with the questions.
+  # Accounts for copies with standard questions.
+  # - form_published_col contains true if any associated forms are published, false or nil otherwise
+  scope(:with_assoc_counts, -> {
+    select("questions.*").
+    select("(
+      SELECT COUNT(DISTINCT answers.id)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = questionings.id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
+    ) AS answer_count_col").
+    select("(
+      SELECT COUNT(DISTINCT forms.id)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
+    ) AS form_count_col").
+    select("(
+      SELECT BOOL_OR(DISTINCT forms.published)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
+    ) AS form_published_col").
+    select("(
+      SELECT COUNT(DISTINCT copy_answers.id)
+        FROM questions inner_questions
+        LEFT OUTER JOIN form_items questionings
+          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
+            AND questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
+        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = questionings.id
+        LEFT OUTER JOIN questions copies ON questions.deleted_at IS NULL AND questions.is_standard = true
+          AND questions.id = copies.original_id
+        LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.deleted_at IS NULL
+          AND copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
+        LEFT OUTER JOIN forms copy_forms ON copy_forms.deleted_at IS NULL
+          AND copy_forms.id = copy_questionings.form_id
+        LEFT OUTER JOIN answers copy_answers ON copy_answers.deleted_at IS NULL
+          AND copy_answers.questioning_id = copy_questionings.id
+        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
+    ) AS copy_answer_count_col")
+  })
 
   translates :name, :hint
 
@@ -70,31 +113,25 @@ class Question < ActiveRecord::Base
            :multimedia?,
            :odk_tag,
            :odk_name,
-           :to => :qtype
+           to: :qtype
 
   delegate :options,
+           :first_level_option_nodes,
            :all_options,
            :first_leaf_option,
            :first_leaf_option_node,
            :first_level_options,
-           :option_path_to_rank_path,
-           :rank_path_to_option_path,
            :multilevel?,
            :level_count,
            :level,
            :levels,
            :sms_formatting_as_text?,
            :sms_formatting_as_appendix?,
-           :to => :option_set, :allow_nil => true
+           to: :option_set, allow_nil: true
 
   replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
     uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
     compatibility: [:qtype_name, :option_set_id]
-
-  # returns questions that do NOT already appear in the given form
-  def self.not_in_form(form)
-    all.where("(questions.id not in (select question_id from form_items where type='Questioning' and form_id='#{form.id}'))")
-  end
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)
@@ -123,12 +160,13 @@ class Question < ActiveRecord::Base
     relation = relation.where(search.sql)
   end
 
-  def subquestions
-    @subquestions ||= if multilevel?
-      levels.each_with_index.map{ |l, i| Subquestion.new(question: self, level: l, rank: i + 1) }
-    else
-      [Subquestion.new(question: self, rank: 1)]
-    end
+  # Returns name, or a default value (not nil) if name not defined.
+  def name_or_none
+    name || ""
+  end
+
+  def preordered_option_nodes
+    option_set.try(:preordered_option_nodes) || []
   end
 
   # returns the question type object associated with this question
@@ -136,8 +174,12 @@ class Question < ActiveRecord::Base
     QuestionType[qtype_name]
   end
 
+  def location_type?
+    qtype_name == "location"
+  end
+
   def geographic?
-    qtype_name == 'location' || qtype_name == 'select_one' && option_set.geographic?
+    location_type? || qtype_name == "select_one" && option_set.geographic?
   end
 
   # DEPRECATED: this method should go away later
@@ -254,38 +296,31 @@ class Question < ActiveRecord::Base
 
   private
 
-    def code_unique_per_mission
-      errors.add(:code, :taken) unless unique_in_mission?(:code)
+  def code_unique_per_mission
+    errors.add(:code, :taken) unless unique_in_mission?(:code)
+  end
+
+  def normalize
+    self.code = code.strip
+
+    if qtype.try(:numeric?)
+      self.minstrictly = false if !minimum.nil? && minstrictly.nil?
+      self.maxstrictly = false if !maximum.nil? && maxstrictly.nil?
+      self.minstrictly = nil if minimum.nil?
+      self.maxstrictly = nil if maximum.nil?
+    else
+      self.minimum = nil
+      self.maximum = nil
+      self.minstrictly = nil
+      self.maxstrictly = nil
     end
 
-    def normalize_fields
-      # clear whitespace from code
-      self.code = code.strip
+    self.metadata_type = qtype_name == "datetime" ? metadata_type.presence : nil
 
-      normalize_constraint_values
+    true
+  end
 
-      return true
-    end
-
-    # normalizes constraints based on question type
-    def normalize_constraint_values
-      # constraint should be nil/non-nil depending on qtype
-      if qtype.try(:numeric?)
-        # for numeric qtype, min/max can still be nil, and booleans should be nil if min/max are nil, else should be false
-        self.minstrictly = false if !minimum.nil? && minstrictly.nil?
-        self.maxstrictly = false if !maximum.nil? && maxstrictly.nil?
-        self.minstrictly = nil if minimum.nil?
-        self.maxstrictly = nil if maximum.nil?
-      else
-        # for non-numeric qtype, all constraint fields should be nil
-        self.minimum = nil
-        self.maximum = nil
-        self.minstrictly = nil
-        self.maxstrictly = nil
-      end
-    end
-
-    def at_least_one_name
-      errors.add(:base, :at_least_one_name) if name.blank?
-    end
+  def at_least_one_name
+    errors.add(:base, :at_least_one_name) if name.blank?
+  end
 end

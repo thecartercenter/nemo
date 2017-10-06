@@ -2,5 +2,5 @@
   <%= form.object.body %>
 <% else %>
   <div id="char_limit"></div>
-  <%= form.text_area(:body, :onkeyup => "broadcast_update_char_limit()", :class => "form-control") %>
+  <%= form.text_area(:body, class: "form-control") %>
 <% end %>

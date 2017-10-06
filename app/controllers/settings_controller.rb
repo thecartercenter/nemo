@@ -35,7 +35,11 @@ class SettingsController < ApplicationController
   end
 
   def using_incoming_sms_token_message
-    url = mission_sms_submission_url(@setting.incoming_sms_token, locale: nil)
+    if params[:missionless].present?
+      url = missionless_sms_submission_url(@setting.universal_sms_token, locale: nil, mission_name: nil, mode: nil)
+    else
+      url = mission_sms_submission_url(@setting.incoming_sms_token, locale: nil)
+    end
     message = t('activerecord.hints.setting.using_incoming_sms_token_body', url: url)
 
     render json: { message: message }
@@ -53,20 +57,16 @@ class SettingsController < ApplicationController
       authorize!(:update, @setting)
     end
 
-    # prepares objects and renders the form template (which in this case is really the index template)
+    # Prepares objects and renders the form template (which in this case is really the index template)
     def prepare_and_render_form
-      # load options for sms adapter dropdown
       @adapter_options = Sms::Adapters::Factory.products(:can_deliver? => true).map(&:service_name)
-
-      # render the template
+      @external_sql = Results::SqlGenerator.new(current_mission).generate unless admin_mode?
       render(:index)
     end
 
     def setting_params
       params.require(:setting).permit(:timezone, :preferred_locales_str, :allow_unauthenticated_submissions,
-        :incoming_sms_numbers_str, :default_outgoing_sms_adapter, :intellisms_username,
-        :intellisms_password1, :intellisms_password2, :clear_intellisms,
-        :twilio_phone_number, :twilio_account_sid, :twilio_auth_token1, :clear_twilio,
-        :frontlinecloud_api_key1, :clear_frontlinecloud)
+        :incoming_sms_numbers_str, :default_outgoing_sms_adapter, :twilio_phone_number, :twilio_account_sid,
+        :twilio_auth_token1, :clear_twilio, :frontlinecloud_api_key1, :clear_frontlinecloud)
     end
 end

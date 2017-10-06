@@ -9,7 +9,7 @@ describe Search::Search do
     # this is just a regular-type qualifier that is not the default
     Search::Qualifier.new(name: "source", col: "t.source"),
 
-    # this qualifier allows partial matches but is not indexed with sphinx
+    # this qualifier allows partial matches but is not indexed
     Search::Qualifier.new(name: "submitter", col: "t3.f3", type: :text),
 
     # this qualifier supports scale-type comparison operators
@@ -127,7 +127,7 @@ describe Search::Search do
   end
 
   it "not-equals operator should work for regular qualifiers" do
-    assert_search(str: "source != v1", sql: "(NOT((t.source = 'v1')))")
+    assert_search(str: "source != v1", sql: "(NOT((t.source = 'v1' AND t.source IS NOT NULL)))")
   end
 
   it "gt operator should not work for regular qualifiers" do
@@ -165,21 +165,21 @@ describe Search::Search do
   end
 
   it "text qualifier should work" do
-    assert_search(str: "submitter: (v1 v2) source: bar", sql: "((t3.f3 LIKE '%v1%') AND (t3.f3 LIKE '%v2%')) AND ((t.source = 'bar'))")
+    assert_search(str: "submitter: (v1 v2) source: bar", sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with quoted string should work" do
-    assert_search(str: "submitter: (v1 \"v2 v3\") source: bar", sql: "((t3.f3 LIKE '%v1%') AND (t3.f3 LIKE '%v2 v3%')) AND ((t.source = 'bar'))")
-    assert_search(str: 'submitter: "v1 v2" source: bar', sql: "((t3.f3 LIKE '%v1 v2%')) AND ((t.source = 'bar'))")
+    assert_search(str: "submitter: (v1 \"v2 v3\") source: bar", sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2 v3%')) AND ((t.source = 'bar'))")
+    assert_search(str: 'submitter: "v1 v2" source: bar', sql: "((t3.f3 ILIKE '%v1 v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with OR should work" do
-    assert_search(str: "submitter: (v1 | v2) source: bar", sql: "((t3.f3 LIKE '%v1%') OR (t3.f3 LIKE '%v2%')) AND ((t.source = 'bar'))")
+    assert_search(str: "submitter: (v1 | v2) source: bar", sql: "((t3.f3 ILIKE '%v1%') OR (t3.f3 ILIKE '%v2%')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier with AND and OR should work" do
     assert_search(str: "submitter: (v1 v2 | v3) source: bar",
-      sql: "((t3.f3 LIKE '%v1%') AND (t3.f3 LIKE '%v2%') OR (t3.f3 LIKE '%v3%')) AND ((t.source = 'bar'))")
+      sql: "((t3.f3 ILIKE '%v1%') AND (t3.f3 ILIKE '%v2%') OR (t3.f3 ILIKE '%v3%')) AND ((t.source = 'bar'))")
   end
 
   it "gt operator shouldnt be allowed for text qualifier" do
@@ -187,42 +187,42 @@ describe Search::Search do
   end
 
   it "not equals operator should work with text qualifier" do
-    assert_search(str: "submitter != v1", sql: "(NOT((t3.f3 LIKE '%v1%')))")
+    assert_search(str: "submitter != v1", sql: "(NOT((t3.f3 ILIKE '%v1%' AND t3.f3 IS NOT NULL)))")
   end
 
   it "quoted string with quoted string inside should still work" do
-    assert_search(str: 'submitter:"v1 \\"v2 v3\\" v4"', sql: %{((t3.f3 LIKE '%v1 \\"v2 v3\\" v4%'))})
+    assert_search(str: 'submitter:"v1 \\"v2 v3\\" v4"', sql: %{((t3.f3 ILIKE '%v1 "v2 v3" v4%'))})
   end
 
   it "translated qualifier should work" do
-    assert_search(str: 'name: foo', sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name: foo', sql: %{((t.name ->> 'en' ILIKE '%foo%'))})
   end
 
   it "translated qualifier should sanitize properly" do
-    assert_search(str: "name: foo';DROP_DB", sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo\\';DROP_DB([^"\\]|\\\\.)*"'))})
+    assert_search(str: "name: foo';DROP_DB", sql: %{((t.name ->> 'en' ILIKE '%foo'';DROP_DB%'))})
   end
 
   it "translated qualifier should work for different locale" do
     I18n.locale = :fr
-    assert_search(str: 'name: foo', sql: %{((t.name RLIKE '"fr":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name: foo', sql: %{((t.name ->> 'fr' ILIKE '%foo%'))})
     I18n.locale = :en
   end
 
   it "translated qualifier with quoted string should work" do
-    assert_search(str: 'name: "foo bar"', sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo bar([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name: "foo bar"', sql: %{((t.name ->> 'en' ILIKE '%foo bar%'))})
   end
 
   it "translated qualifier with and should work" do
     assert_search(str: 'name: (foo bar)',
-      sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"') AND (t.name RLIKE '"en":"([^"\\]|\\\\.)*bar([^"\\]|\\\\.)*"'))})
+      sql: %{((t.name ->> 'en' ILIKE '%foo%') AND (t.name ->> 'en' ILIKE '%bar%'))})
   end
 
   it "translated qualifier with equals operator should work" do
-    assert_search(str: 'name = foo', sql: %{((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"'))})
+    assert_search(str: 'name = foo', sql: %{((t.name ->> 'en' ILIKE '%foo%'))})
   end
 
   it "translated qualifier negated should work" do
-    assert_search(str: 'name != foo', sql: %{(NOT((t.name RLIKE '"en":"([^"\\]|\\\\.)*foo([^"\\]|\\\\.)*"')))})
+    assert_search(str: 'name != foo', sql: %{(NOT((t.name ->> 'en' ILIKE '%foo%' AND t.name IS NOT NULL)))})
   end
 
   it "translated qualifier with gt operator should error" do
@@ -235,22 +235,22 @@ describe Search::Search do
 
   it "indexed qualifiers should work with multiple terms" do
     assert_search(str: 'source:bar text:(alpha bravo)', sql: "((t.source = 'bar')) AND ((tbl.id IN (###1###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('alpha bravo')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('alpha bravo')
   end
 
   it "indexed qualifiers should work with exact phrases" do
     assert_search(str: 'text:"alpha bravo"', sql: "((tbl.id IN (###0###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('"alpha bravo"')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('"alpha bravo"')
   end
 
   it "indexed qualifiers should work with OR operator" do
     assert_search(str: 'text:(alpha OR bravo)', sql: "((tbl.id IN (###0###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('alpha | bravo')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('alpha | bravo')
   end
 
   it "indexed qualifiers should work with minus operator" do
     assert_search(str: 'text:(alpha -bravo)', sql: "((tbl.id IN (###0###)))", qualifiers: INDEXED)
-    expect(@search.expressions.detect{|e| e.qualifier.name == 'text'}.values).to eq('alpha -bravo')
+    expect(@search.expressions.detect { |e| e.qualifier.name == 'text' }.values).to eq('alpha -bravo')
   end
 
   it "indexed qualifiers should not allow not equals operator" do
@@ -258,12 +258,12 @@ describe Search::Search do
   end
 
   it "odd characters in terms should still work" do
-    assert_search(str: "v1-_+'^&", sql: "((t1.f1 = 'v1-_+\\'^&'))")
+    assert_search(str: "v1-_+'^&", sql: "((t1.f1 = 'v1-_+''^&'))")
   end
 
   it "blank search should work" do
-    assert_search(str: "  ", sql: "1")
-    assert_search(str: nil, sql: "1")
+    assert_search(str: "  ", sql: "true")
+    assert_search(str: nil, sql: "true")
   end
 
   it "regex qualifier should match correctly" do
@@ -290,7 +290,7 @@ describe Search::Search do
   end
 
   it "supports multiple columns to generate a sql" do
-    assert_search(str: 'number:987', sql: "((msg.to LIKE '%987%') OR (msg.from LIKE '%987%'))", qualifiers: INDEXED)
+    assert_search(str: 'number:987', sql: "((msg.to ILIKE '%987%') OR (msg.from ILIKE '%987%'))", qualifiers: INDEXED)
     assert_search(str: 'date:date', sql: "((msg.created_at = 'date') OR (msg.updated_at = 'date'))", qualifiers: INDEXED)
   end
 

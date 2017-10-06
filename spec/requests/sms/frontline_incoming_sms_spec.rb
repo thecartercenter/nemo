@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'frontline incoming sms' do
+describe 'frontline incoming sms', :sms do
   include IncomingSmsSupport
 
   before :all do

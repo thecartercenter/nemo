@@ -2,65 +2,61 @@
 
 <% content_for(:alerts) { appendix_alert } %>
 
-<% locale_was = I18n.locale; I18n.locale = @lang %>
 <div class="sms_guide">
 
   <div class="controls">
     <form>
       <input type="hidden" name="sms_guide" value="1">
       <%= t("common.language") %>:
-      <select name="lang" onchange="this.form.submit();">
-        <%= configatron.full_locales.collect{|l| content_tag(:option, language_name(l),
-          {:value => l}.merge(@lang.to_s == l.to_s ? {:selected => "selected"} : {}))}.reduce(:<<) %>
-      </select>
+      <%= language_select(locale: @locale) %>
     </form>
 
     <%= link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test) %>
   </div>
 
   <div id="body">
-    <div class="header"><%= t(".header") %></div>
+    <div class="header"><%= t(".header", locale: @locale) %></div>
     <h1 class="title inner"><%= title %></h1>
 
     <div id="instructions">
-      <p><%= t(".instructions.intro") %></p>
+      <p><%= t(".instructions.intro", locale: @locale) %></p>
       <ol>
         <li>
-          <%= icon_tag("file-o") %> <%= t(".instructions.paper") %>
+          <%= icon_tag("file-o") %> <%= t(".instructions.paper", locale: @locale) %>
           <ol>
             <li>
-              <%= t(".instructions.1a") %>
-              <div id="user-field"><%= t(".for_paper_record") %></div>
+              <%= t(".instructions.1a", locale: @locale) %>
+              <div id="user-field"><%= t(".for_paper_record", locale: @locale) %></div>
             </li>
             <li>
-              <%= t(".instructions.1b") %>
+              <%= t(".instructions.1b", locale: @locale) %>
               <div id="example-box"><%= image_tag("sms_guide/b.png") %></div>
             </li>
           </ol>
         </li>
         <li>
-          <%= icon_tag("phone") %> <%= t(".instructions.phone") %>
+          <%= icon_tag("phone") %> <%= t(".instructions.phone", locale: @locale) %>
           <ol>
             <li>
               <% if @number_appendix %>
-                <%= t(".instructions.2a_appendix") %>
+                <%= t(".instructions.2a_appendix", locale: @locale) %>
               <% else  %>
-                <% number = configatron.incoming_sms_numbers.first || t(".unknown_number") %>
-                <%= t(".instructions.2a_number_html", number: number) %>
+                <% number = configatron.incoming_sms_numbers.first || t(".unknown_number", locale: @locale) %>
+                <%= t(".instructions.2a_number_html", number: number, locale: @locale) %>
               <% end %>
             </li>
             <li>
-              <%= t(".instructions.2b") %>
+              <%= t(".instructions.2b", locale: @locale) %>
             </li>
             <li>
-              <%= t(".instructions.2c_html", period: period_glyph, spc: spc_glyph) %>
+              <%= t(".instructions.2c_html", period: period_glyph, spc: spc_glyph, locale: @locale) %>
             </li>
             <li>
-              <%= t(".instructions.example_sms") %>: &nbsp;
+              <%= t(".instructions.example_sms", locale: @locale) %>: &nbsp;
               <span id="example-sms">
                 <%= 3439 if @form.authenticate_sms? %>
                 <%= @form.code %>
-                1.c 2.c,f 3.27 4.d 5.door was locked 6.20160401 7.c
+                <%= t(".instructions.example_sms_body", locale: @locale) %>
               </span>
             </li>
           </ol>
@@ -70,17 +66,17 @@
       <tr id="message-arrow">
         <td></td>
         <td class="answer">
-          <%= icon_tag("arrow-down") %> <%= t(".sms_message")%>
+          <%= icon_tag("arrow-down") %> <%= t(".sms_message", locale: @locale)%>
         </td>
       </tr>
       <% if @form.authenticate_sms? %>
         <tr>
-          <td><strong><%= t(".auth_code") %></strong></td>
+          <td><strong><%= t(".auth_code", locale: @locale) %></strong></td>
           <td class="answer"><%= answer_space(width: 4) %> <%= spc_glyph %></td>
         </tr>
       <% end %>
       <tr>
-        <td><strong><%= t(".form_code") %></strong></td>
+        <td><strong><%= t(".form_code", locale: @locale) %></strong></td>
         <td class="answer"><span class="prefilled-text"><%= @form.code %></span> <%= spc_glyph %></td>
       </tr>
 
@@ -88,19 +84,19 @@
         <tr>
           <td>
             <div class="question">
-              <strong><%= index %>. <%= qing.question.name %><%= reqd_sym if qing.required? %></strong>
+              <strong><%= index %>. <%= qing.question.name(@locale, strict: false) %><%= reqd_sym if qing.required? %></strong>
             </div>
 
             <%# Options area, for select_* questions %>
             <% if qing.has_options? && qing.option_set.sms_formatting == "inline" %>
               <div class="options">
                 <% qing.options.each_with_index do |opt, idx| %>
-                  <span><%= index_to_letter(idx + 1) %>) <%= opt.name %></span>
+                  <span><%= index_to_letter(idx + 1) %>) <%= opt.name(@locale, strict: false) %></span>
                 <% end %>
               </div>
             <% end %>
 
-            <div class="hint"><%= sms_guide_hint(qing) %></div>
+            <div class="hint"><%= sms_guide_hint(qing, locale: @locale) %></div>
           </td>
           <td class="answer">
             <span class="prefilled-text"><%= index %></span>
@@ -113,4 +109,3 @@
     </table>
   </div>
 </div>
-<% I18n.locale = locale_was %>

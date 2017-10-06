@@ -11,6 +11,7 @@ namespace :db do
       "text",
       "long_text",
       "integer",
+      "counter",
       "decimal",
       "location",
       [
@@ -30,6 +31,20 @@ namespace :db do
       "audio",
       "video"
     ])
+    FactoryGirl.create(:form,
+      name: "SMS Form",
+      smsable: true,
+      mission: mission,
+      question_types: QuestionType.with_property(:smsable).map(&:name)
+    )
+
+    # Create users and groups
+    FactoryGirl.create_list(:user, 25)
+    FactoryGirl.create_list(:user_group, 5, mission: mission)
+    50.times do
+      uga = UserGroupAssignment.new(user_group: UserGroup.all.sample, user: User.all.sample);
+      uga.save if uga.valid?
+    end
 
     puts "Created #{mission_name}"
   end

@@ -1,6 +1,8 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe FormVersion do
+  it_behaves_like "has a uuid"
+
   it "form version code generated on initialize" do
     fv = FormVersion.new
     assert_match(/[a-z]{#{FormVersion::CODE_LENGTH}}/, fv.code)
@@ -30,12 +32,11 @@ describe FormVersion do
     old_v1_code = fv1.code
 
     # do the upgrade and save both forms
-    fv2 = fv1.upgrade
-    fv1.save!; fv1.reload
-    fv2.save!; fv2.reload
+    fv2 = fv1.upgrade!
+    fv1.save! & fv1.reload
+    fv2.save! & fv2.reload
 
     # make sure values are updated properly
-    expect(fv2.sequence).to eq(2)
     expect(fv2.form_id).to eq(f.id)
     expect(fv2.code).not_to eq(fv1.code)
 

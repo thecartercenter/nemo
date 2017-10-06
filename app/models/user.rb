@@ -1,25 +1,32 @@
-class User < ActiveRecord::Base
+class User < ApplicationRecord
   include Cacheable
 
-  ROLES = %w[observer staffer coordinator]
+  ROLES = %w[observer reviewer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
-  ELMO = new name: "ELMO" # Dummy user for use in SMS log
+  SITE = new name: configatron.site_shortname # Dummy user for use in SMS log
+  GENDER_OPTIONS = %w[man woman no_answer specify]
+  PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
+
+  acts_as_paranoid
 
   attr_writer(:reset_password_method)
   attr_accessor(:batch_creation)
   alias :batch_creation? :batch_creation
 
-  has_many :responses, :inverse_of => :user
-  has_many :broadcast_addressings, :inverse_of => :user, :dependent => :destroy
-  has_many :assignments, :autosave => true, :dependent => :destroy, :validate => true, :inverse_of => :user
+  has_many :responses, inverse_of: :user
+  has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
+  has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
+  has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
+    validate: true, inverse_of: :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
-  has_many :operations, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :destroy
-  has_many :reports, :inverse_of => :creator, :foreign_key => :creator_id, :dependent => :nullify, class_name: 'Report::Report'
-  has_many :user_groups, :dependent => :destroy
-  has_many :groups, :through => :user_groups
+  has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
+  has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: 'Report::Report'
+  has_many :user_group_assignments, dependent: :destroy
+  has_many :user_groups, through: :user_group_assignments
   belongs_to :last_mission, class_name: 'Mission'
 
-  accepts_nested_attributes_for(:assignments, :allow_destroy => true)
+  accepts_nested_attributes_for(:assignments, allow_destroy: true)
+  accepts_nested_attributes_for(:user_groups)
 
   acts_as_authentic do |c|
     c.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
@@ -29,16 +36,13 @@ class User < ActiveRecord::Base
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
 
-    c.validates_format_of_login_field_options = {:with => /\A[a-zA-Z0-9\._]+\z/}
-    c.merge_validates_uniqueness_of_login_field_options(:unless => Proc.new{|u| u.batch_creation?})
+    c.validates_format_of_login_field_options = {with: /\A[a-zA-Z0-9\._]+\z/}
+    c.merge_validates_uniqueness_of_login_field_options(unless: :batch_creation?)
+    c.merge_validates_length_of_password_field_options(minimum: 8, unless: :batch_creation?)
+    c.merge_validates_format_of_email_field_options(allow_blank: true)
 
-    c.merge_validates_length_of_password_field_options(minimum: 8,
-                                                       :unless => Proc.new{|u| u.batch_creation?})
-
-    # email is not mandatory, but must be valid if given
-    c.merge_validates_format_of_email_field_options(:allow_blank => true)
-    c.merge_validates_uniqueness_of_email_field_options(:unless => Proc.new{|u| u.batch_creation? ||
-                                                                                u.email.blank?})
+    # Email does not have to be unique.
+    c.merge_validates_uniqueness_of_email_field_options(if: -> { false })
   end
 
   after_initialize(:set_default_pref_lang)
@@ -46,48 +50,64 @@ class User < ActiveRecord::Base
   before_validation(:generate_password_if_none)
   after_create(:regenerate_api_key, unless: :batch_creation?)
   after_create(:regenerate_sms_auth_code)
-  # call before_destroy before :dependent => :destroy associations
+  # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
   before_destroy(:check_assoc)
   before_save(:clear_assignments_without_roles)
 
   normalize_attribute :login, with: [:strip, :downcase]
 
-  validates(:name, :presence => true)
-  validates(:pref_lang, :presence => true)
+  validates(:name, presence: true)
+  validates(:pref_lang, presence: true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
+  validate(:print_password_reset_only_for_observer)
   validate(:no_duplicate_assignments)
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
   # which can be an issue if they will be being re-assigned
   # validate(:must_have_assignments_if_not_admin)
-  validate(:phone_should_be_unique, unless: :batch_creation?)
-  validates :password, format: { with: /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/,
+  validates :password, format: { with: PASSWORD_FORMAT,
                                  if: :require_password?,
                                  unless: :batch_creation?,
                                  message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
-  scope(:assigned_to, ->(m) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?)", m.try(:id)) })
-  scope(:with_assoc, -> { includes(:missions, {:assignments => :mission}) })
+  scope(:assigned_to, ->(m) { where("users.id IN (
+    SELECT user_id FROM assignments WHERE deleted_at IS NULL AND mission_id = ?)", m.try(:id)) })
+  scope(:with_assoc, -> {
+    includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
+  })
+  scope(:with_groups, -> { joins(:user_groups) })
+  scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+  scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).
+    where(assignments: { mission: m.try(:id), role: roles }) }
 
   # returns users who are assigned to the given mission OR who submitted the given response
-  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
+  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments
+    WHERE deleted_at IS NULL AND mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
 
-  def self.random_password(size = 8)
-    size = 8 if size < 8
+  scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
+  scope(:active, -> { where(active: true) })
+
+  def self.random_password(size = 12)
+    size = 12 if size < 12
+
     num_size = size.even? ? 2 : 3
-    alpha_size = (size - num_size) / 2
+    symbol_size = 2
+    alpha_size = (size - num_size - symbol_size) / 2
+
     num = %w{2 3 4 6 7 9}
     alpha = %w{a c d e f g h j k m n p q r t v w x y z}
-    (random(num, num_size) + random(alpha, alpha_size) + random(alpha.map(&:upcase), alpha_size)).shuffle.join
-  end
+    symbol = %w{@ & # + %}
 
-  def self.random(chars, n)
-    return "" if n <= 0
-    (chars * (n / chars.size + 1)).shuffle[0..n - 1]
+    alpha_component = alpha_size.times.map { alpha.sample }
+    upper_component = alpha_size.times.map { alpha.sample.upcase }
+    num_component = num_size.times.map { num.sample }
+    symbol_component = symbol_size.times.map { symbol.sample }
+
+    (alpha_component + upper_component + num_component + symbol_component).shuffle.join
   end
 
   def self.find_by_credentials(login, password)
@@ -97,10 +117,11 @@ class User < ActiveRecord::Base
 
   def self.search_qualifiers
     [
-      Search::Qualifier.new(:name => "name", :col => "users.name", :type => :text, :default => true),
-      Search::Qualifier.new(:name => "login", :col => "users.login", :type => :text, :default => true),
-      Search::Qualifier.new(:name => "email", :col => "users.email", :type => :text, :default => true),
-      Search::Qualifier.new(:name => "phone", :col => "users.phone", :type => :text)
+      Search::Qualifier.new(name: "name", col: "users.name", type: :text, default: true),
+      Search::Qualifier.new(name: "login", col: "users.login", type: :text, default: true),
+      Search::Qualifier.new(name: "email", col: "users.email", type: :text, default: true),
+      Search::Qualifier.new(name: "phone", col: "users.phone", type: :text),
+      Search::Qualifier.new(name: "group", col: "user_groups.name", type: :text, assoc: :user_groups)
     ]
   end
 
@@ -109,7 +130,10 @@ class User < ActiveRecord::Base
   # query - the search query string (e.g. name:foo)
   def self.do_search(relation, query)
     # create a search object and generate qualifiers
-    search = Search::Search.new(:str => query, :qualifiers => search_qualifiers)
+    search = Search::Search.new(str: query, qualifiers: search_qualifiers)
+
+    # add associations
+    relation = relation.joins(search.associations)
 
     # get the sql
     sql = search.sql
@@ -119,10 +143,10 @@ class User < ActiveRecord::Base
   end
 
 
-  # Returns an array of hashes of format {:name => "Some User", :response_count => 2}
+  # Returns an array of hashes of format {name: "Some User", response_count: 2}
   # of observer response counts for the given mission
   def self.sorted_observer_response_counts(mission, limit)
-    #First it tries to get user observers that don't have any response
+    # First it tries to get user observers that don't have any response
     result = self.observers_without_responses(mission, limit)
     return result unless result.length < limit
 
@@ -132,59 +156,59 @@ class User < ActiveRecord::Base
       JOIN (
         SELECT assignments.user_id, COUNT(DISTINCT responses.id) AS response_count
         FROM assignments
-          LEFT JOIN responses ON responses.user_id = assignments.user_id AND responses.mission_id = ?
-        WHERE assignments.role = 'observer' AND assignments.mission_id = ?
-        GROUP BY assignments.user_id        ORDER BY response_count        LIMIT ?
-      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit]).reverse
+          LEFT JOIN responses ON responses.deleted_at IS NULL
+            AND responses.user_id = assignments.user_id AND responses.mission_id = ?
+        WHERE assignments.deleted_at IS NULL
+          AND assignments.role = 'observer' AND assignments.mission_id = ?
+        GROUP BY assignments.user_id
+        ORDER BY response_count
+        LIMIT ?
+      ) as rc ON users.id = rc.user_id
+      WHERE users.deleted_at IS NULL", mission.id, mission.id, limit]).reverse
   end
 
-  # Returns an array of hashes of format {:name => "Some User", :response_count => 0}
+  # Returns an array of hashes of format {name: "Some User", response_count: 0}
   # of observers that doesn't have responses on the mission
   def self.observers_without_responses(mission, limit)
     find_by_sql(["SELECT users.name, 0 as response_count FROM users
       JOIN (
         SELECT a.user_id FROM assignments a
-        WHERE NOT EXISTS (
-          SELECT 1 FROM responses r
-          WHERE r.user_id = a.user_id AND r.mission_id = ?
-        ) AND a.role='observer' AND a.mission_id = ? LIMIT ?
-      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit])
+        WHERE a.deleted_at IS NULL
+          AND NOT EXISTS (SELECT 1 FROM responses r
+            WHERE r.deleted_at IS NULL AND r.user_id = a.user_id AND r.mission_id = ?)
+          AND a.role = 'observer' AND a.mission_id = ?
+        LIMIT ?
+      ) as rc ON users.id = rc.user_id
+      WHERE users.deleted_at IS NULL
+      ORDER BY users.name", mission.id, mission.id, limit])
   end
 
   # Returns all non-admin users in the form's mission with the given role that have
   # not submitted any responses to the form
   #
   # options[:role] the role to check for
-  # options[:limit] how many users we want to fetch from the db
-  #
-  # Returns a hash with users instances and the count from the select without the LIMIT
+  # options[:limit] how many users we want to fetch from the db. This method returns at most
+  #   one more than this number so you can report truncation to the user.
   def self.without_responses_for_form(form, options)
-    users = find_by_sql(["SELECT SQL_CALC_FOUND_ROWS * FROM users
-      INNER JOIN assignments ON assignments.user_id = users.id WHERE
-      assignments.mission_id = ? AND
-      assignments.role = ? AND
-      users.admin = FALSE AND
-      NOT EXISTS (
-        SELECT 1 FROM responses WHERE
-        responses.user_id=users.id AND
-        responses.form_id = ?
-      ) LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit]])
-
-    # This returns the count of the previous users select without the limit clause.
-    # Format: [[count]]
-    users_count = ActiveRecord::Base.connection.execute('SELECT FOUND_ROWS()').entries[0].first
-
-    { users: users, count: users_count }
+    find_by_sql(["SELECT * FROM users
+      INNER JOIN assignments ON assignments.deleted_at IS NULL AND assignments.user_id = users.id
+      WHERE users.deleted_at IS NULL
+        AND assignments.mission_id = ?
+        AND assignments.role = ?
+        AND users.admin = FALSE
+        AND NOT EXISTS (
+          SELECT 1
+          FROM responses
+          WHERE responses.deleted_at IS NULL AND responses.user_id=users.id AND responses.form_id = ?
+        )
+      ORDER BY users.name
+      LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit] + 1])
   end
 
   # generates a cache key for the set of all users for the given mission.
   # the key will change if the number of users changes, or if a user is updated.
   def self.per_mission_cache_key(mission)
-    count_and_date_cache_key(:rel => unscoped.assigned_to(mission), :prefix => "mission-#{mission.id}")
-  end
-
-  def self.by_phone(phone)
-    where("phone = ? OR phone2 = ?", phone, phone).first
+    count_and_date_cache_key(rel: assigned_to(mission), prefix: "mission-#{mission.id}")
   end
 
   def reset_password
@@ -204,6 +228,10 @@ class User < ActiveRecord::Base
 
   def full_name
     name
+  end
+
+  def group_names
+    user_groups.map(&:name).join(", ")
   end
 
   def active?
@@ -281,6 +309,10 @@ class User < ActiveRecord::Base
     end
   end
 
+  def observer_only?
+    assignments.all? { |a| a.role === "observer" }
+  end
+
   def session_time_left
     SESSION_TIMEOUT - (Time.now - last_request_at)
   end
@@ -293,12 +325,6 @@ class User < ActiveRecord::Base
     max_age ||= configatron.recent_login_max_age
 
     current_login_age < max_age if current_login_at.present?
-  end
-
-  def as_json(options = {})
-    options[:only] ||= [:name]
-
-    super
   end
 
   # returns hash of missions to roles
@@ -357,8 +383,8 @@ class User < ActiveRecord::Base
     end
 
     def phone_length_or_empty
-      errors.add(:phone, :at_least_digits, :num => 9) unless phone.blank? || phone.size >= 10
-      errors.add(:phone2, :at_least_digits, :num => 9) unless phone2.blank? || phone2.size >= 10
+      errors.add(:phone, :at_least_digits, num: 9) unless phone.blank? || phone.size >= 10
+      errors.add(:phone2, :at_least_digits, num: 9) unless phone2.blank? || phone2.size >= 10
     end
 
     def check_assoc
@@ -378,7 +404,13 @@ class User < ActiveRecord::Base
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
-        errors.add(:reset_password_method, :cant_passwd_email, :verb => verb)
+        errors.add(:reset_password_method, :cant_passwd_email, verb: verb)
+      end
+    end
+
+    def print_password_reset_only_for_observer
+      if reset_password_method == "print" && !observer_only? && !configatron.offline_mode
+        errors.add(:reset_password_method, :print_password_reset_only_for_observer)
       end
     end
 
@@ -394,22 +426,6 @@ class User < ActiveRecord::Base
 
     def clear_assignments_without_roles
       assignments.delete(assignments.select(&:no_role?))
-    end
-
-    # ensures phone and phone2 are unique
-    def phone_should_be_unique
-      [:phone, :phone2].each do |field|
-        val = send(field)
-        # if phone/phone2 is not nil and we can find a user with a different ID from ours that has a matching phone OR phone2
-        # then it's not unique
-        # start building relation
-        rel = User.where("phone = ? OR phone2 = ?", val, val)
-        # add ID clause if this is not a new record
-        rel = rel.where("id != ?", id) unless new_record?
-        if !val.nil? && rel.count > 0
-          errors.add(field, :phone_assigned_to_other)
-        end
-      end
     end
 
     # generates a random password before validation if this is a new record, unless one is already set

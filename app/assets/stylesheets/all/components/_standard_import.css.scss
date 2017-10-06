@@ -1,0 +1,41 @@
+#standard-import-form {
+
+  .modal-body {
+    overflow-y: scroll;
+    max-height: 560px;
+  }
+}
+
+div.importable {
+  display: none;
+
+  form {
+    margin-top: 10px;
+    border-top: 1px solid #ccc;
+
+    /* rows of the list */
+    & > div {
+      border-bottom: 1px solid #ccc;
+      padding: 5px;
+
+      &:hover {
+        background-color: $super-light-gray;
+      }
+
+      input[type=checkbox] {
+        float: left;
+      }
+
+      label {
+        display: block;
+        margin-left: 20px;
+        cursor: pointer;
+
+        small {
+          color: #888888;
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}

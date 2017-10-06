@@ -1,25 +1,22 @@
-<translation lang="<%= @style == 'commcare' ? lang : language_name(lang) %>">
+<translation lang="<%= @style == "commcare" ? lang : language_name(lang) %>">
 
   <%# group hint translations %>
-  <% @form.child_groups.each do |group| %>
-    <text id="grp-header<%= group.id %>:label">
-      <value><%= group.group_name(lang, strict: false) %></value>
-    </text>
-    <text id="grp-header<%= group.id %>:hint">
-      <value><%= group.group_hint(lang, strict: false) %></value>
-    </text>
+  <% @form.sorted_children.each do |child| %>
+    <%= render("forms/odk/translation_group_node", node: child, lang: lang) %>
   <% end %>
 
   <%# Regular question translations %>
-  <% @form.visible_questionings.each do |q| %>
-    <% q.subquestions.each do |subq| %>
-      <text id="<%= subq.odk_code %>:label">
-        <value><%= subq.name(lang, :strict => false) %></value>
-      </text>
-      <% unless @style == 'commcare' %>
-        <text id="<%= subq.odk_code %>:hint">
-          <value><%= subq.hint(lang, :strict => false) %></value>
+  <% Odk::DecoratorFactory.decorate_collection(@form.questionings).each do |qing| %>
+    <% if qing.visible? %>
+      <% qing.subqings.each do |subq| %>
+        <text id="<%= subq.odk_code %>:label">
+          <value><%= subq.name(lang, :strict => false) %></value>
         </text>
+        <% unless @style == "commcare" %>
+          <text id="<%= subq.odk_code %>:hint">
+            <value><%= subq.hint(lang, :strict => false) %></value>
+          </text>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>
@@ -29,10 +26,10 @@
   <%# incomplete response question translations %>
   <% if allow_incomplete? %>
     <text id="<%= OdkHelper::IR_QUESTION %>:label">
-      <value><%= t('incomplete_response.missing_answers.label') %></value>
+      <value><%= t("incomplete_response.missing_answers.label") %></value>
     </text>
     <text id="<%= OdkHelper::IR_QUESTION %>:hint">
-      <value><%= t('incomplete_response.missing_answers.hint') %></value>
+      <value><%= t("incomplete_response.missing_answers.hint") %></value>
     </text>
     <% [:no, :yes].each do |o| %>
       <text id="<%= OdkHelper::IR_QUESTION %>:options:<%= o %>">
@@ -40,7 +37,7 @@
       </text>
     <% end %>
     <text id="<%= OdkHelper::IR_CODE %>:label">
-      <value><%= t('incomplete_response.code_label') %></value>
+      <value><%= t("incomplete_response.code_label") %></value>
     </text>
     <text id="<%= OdkHelper::IR_CODE %>:hint">
       <%# no hint for this question currently %>

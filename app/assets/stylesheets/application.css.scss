@@ -1,3 +1,8 @@
+@import "bootstrap";
+@import "font-awesome";
+@import "select2";
+@import "all/variables/*";
+
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
  * listed below.
@@ -9,16 +14,19 @@
  * compiled file, but it's generally better to create a new file per style scope.
  *
  *= require_self
- *= require_tree ./all
  *= require token-input
  *= require jquery-ui-1.10.3.custom
  *= require jquery.fileupload
  *= require jquery.fileupload-ui
  *= require dropzone/basic
+ *= require bootstrap-modal-bs3patch
+ *= require bootstrap-modal
  */
 
-@import "bootstrap";
-
-/*= require bootstrap-modal-bs3patch
- *= require bootstrap-modal
-*/
+@import "all/components/*";
+@media screen {
+  @import "screen/*"
+}
+@media print {
+  @import "print/*"
+}

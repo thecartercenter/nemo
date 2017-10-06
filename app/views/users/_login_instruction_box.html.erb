@@ -9,8 +9,7 @@
     </tr>
     <tr>
       <td class="name"><%= t("user.login_instructions.site_url") %></td>
-      <td class="value">https://<%= request.host_with_port %></td>
-    </tr>
+      <td class="value"><%= @site_url %></td>
     <tr>
       <td class="name"><%= User.human_attribute_name("login") %></td>
       <td class="value"><%= user.login %></td>
@@ -22,6 +21,16 @@
     <tr>
       <td class="name"><%= User.human_attribute_name("sms_auth_code") %></td>
       <td class="value"><%= user.sms_auth_code %></td>
+    </tr>
+    <% unless admin_mode? %>
+      <tr>
+        <td class="name"><%= t("activerecord.models.mission.one") %></td>
+        <td class="value"><%= "#{@current_mission.name}" %></td>
+      </tr>
+    <% end %>
+    <tr>
+      <td class="name"><%= t("user.login_instructions.qr_code") %></td>
+      <td class="value qrcode"><%= raw @config_qr.as_html %></td>
     </tr>
   </table>
 

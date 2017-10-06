@@ -38,7 +38,9 @@ translations:
       "*.report/report.*",
       "*.response.*",
       "*.role.*",
+      "*.sms_console.*",
       "*.standard.*",
       "*.tag.*",
-      "*.user.bulk_destroy_confirm.*"
+      "*.user.bulk_destroy_confirm.*",
+      "*.user_group.*"
     ]

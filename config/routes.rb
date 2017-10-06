@@ -8,6 +8,9 @@ ELMO::Application.routes.draw do
   # Special shortcut for simulating login in feature specs.
   get "test-login" => "user_sessions#test_login" if Rails.env.test?
 
+  # For uptime checking
+  get "ping" => "ping#show"
+
   #####################################
   # Basic routes (neither mission nor admin mode)
   scope ":locale", locale: /[a-z]{2}/, defaults: {mode: nil, mission_name: nil} do
@@ -52,12 +55,13 @@ ELMO::Application.routes.draw do
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
     resources(:broadcasts) do
       collection do
+        get "possible_recipients", path: "possible-recipients"
         post "new_with_users", path: "new-with-users"
       end
     end
     resources :responses do
       %i(new member).each do |type|
-        get "possible_submitters", path: "possible-submitters", on: type
+        get "possible_users", path: "possible-users", on: type
       end
     end
     resources :sms, only: [:index] do
@@ -99,7 +103,7 @@ ELMO::Application.routes.draw do
   scope ":locale/:mode(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/, mission_name: /[a-z][a-z0-9]*/ do
 
     # the rest of these routes can have admin mode or not
-    resources :forms do
+    resources :forms, constraints: -> (req) { req.format == :html } do
       member do
         post "add_questions", path: "add-questions"
         post "remove_questions", path: "remove-questions"
@@ -132,12 +136,20 @@ ELMO::Application.routes.draw do
         get "example_spreadsheet", path: "example-user-batch", defaults: { format: "xslx" }
       end
     end
-    resources :groups
+
+    resources :user_groups do
+      post "add_users"
+      post "remove_users"
+      collection do
+        get "possible_groups", path: "possible-groups"
+      end
+    end
+
     resources :form_items, path: "form-items", only: [:update]
 
     resources :option_sets, path: "option-sets" do
       member do
-        get "options_for_node", path: "options-for-node"
+        get "child_nodes", path: "child-nodes"
         put "clone"
         get "export", defaults: { format: "xlsx" }
       end
@@ -176,9 +188,13 @@ ELMO::Application.routes.draw do
   end
 
   # Special SMS routes. No locale.
-  scope "/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: { mode: "m"} do
-    match "/sms/submit/:token" => "sms#create", token: /[0-9a-f]{32}/, via: [:get, :post], as: :mission_sms_submission
+  def sms_submission_route(as:)
+    match "/sms/submit/:token" => "sms#create", token: /[0-9a-f]{32}/, via: [:get, :post], as: as
   end
+  scope "/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: { mode: "m"} do
+    sms_submission_route(as: :mission_sms_submission)
+  end
+  sms_submission_route(as: :missionless_sms_submission)
 
   # Special ODK routes. No locale. They are down here so that forms_path doesn"t return the ODK variant.
   #
@@ -186,7 +202,7 @@ ELMO::Application.routes.draw do
   # which executes before routing. Be sure that all paths marked with
   # :direct_auth => true are also matched by the direct_auth? method in
   # config/initializers/rack-attack.rb
-  scope "/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: { mode: "m", direct_auth: "basic" } do
+  scope "(/:locale)/m/:mission_name", mission_name: /[a-z][a-z0-9]*/, defaults: { mode: "m", direct_auth: "basic" }, constraints: -> (req) { req.format == :xml || req.format == :csv } do
     get "/formList" => "forms#index", as: :odk_form_list, defaults: {format: "xml"}
     get "/forms/:id" => "forms#show", as: :odk_form, defaults: {format: "xml"}
     get "/forms/:id/manifest" => "forms#odk_manifest", as: :odk_form_manifest, defaults: {format: "xml"}

@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe OptionSet do
+  it_behaves_like "has a uuid"
+
   include OptionNodeSupport
 
   it "should get constructed properly" do

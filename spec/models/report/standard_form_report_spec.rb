@@ -1,7 +1,9 @@
 # There are more report tests in test/unit/report.
-require 'spec_helper'
+require "spec_helper"
 
 describe Report::StandardFormReport do
+  it_behaves_like "has a uuid"
+
   context "basic" do
     before do
       @new_report = Report::StandardFormReport.new
@@ -12,11 +14,11 @@ describe Report::StandardFormReport do
     end
 
     it "question_order should default to number" do
-      expect(@new_report.question_order).to eq('number')
+      expect(@new_report.question_order).to eq("number")
     end
 
     it "text_responses should default to all" do
-      expect(@new_report.text_responses).to eq('all')
+      expect(@new_report.text_responses).to eq("all")
     end
 
     it "form foreign key should work" do
@@ -26,30 +28,29 @@ describe Report::StandardFormReport do
 
     it "should return correct response count" do
       build_form_and_responses
-      Rails.logger.debug('----------------------------------------------------------------------------------------------')
       build_and_run_report
       expect(@report.response_count).to eq(5)
     end
 
     it "should return correct response count for a coordinator" do
       coordinator = get_user
-      ability = Ability.new(:user => coordinator, :mission => get_mission)
+      ability = Ability.new(user: coordinator, mission: get_mission)
 
       build_form_and_responses
 
-      @report = create(:standard_form_report, :form => @form)
+      @report = create(:standard_form_report, form: @form)
       @report.run(ability)
 
       expect(@report.response_count).to eq(5)
     end
 
     it "should return correct response count for an observer" do
-      observer = create(:user, :role_name => :observer)
-      ability = Ability.new(:user => observer, :mission => get_mission)
+      observer = create(:user, role_name: :observer)
+      ability = Ability.new(user: observer, mission: get_mission)
 
       build_form_and_responses
 
-      @report = create(:standard_form_report, :form => @form)
+      @report = create(:standard_form_report, form: @form)
       @report.run(ability)
 
       expect(@report.response_count).to eq(0)
@@ -69,35 +70,35 @@ describe Report::StandardFormReport do
     it "should return summaries matching questions" do
       build_form_and_responses
       build_and_run_report
-      expect(@report.subsets[0].summaries[2].qtype.name).to eq('decimal')
+      expect(@report.subsets[0].summaries[2].qtype.name).to eq("decimal")
 
       # We leave out the last questioning on the form since location questions should not be included.
       expect(@report.subsets[0].summaries.map(&:questioning)).to eq(@form.questionings[0..3])
     end
 
     it "should return non-submitting observers" do
-      # make observers
-      observers = %w(bob jojo cass sal).map{|n| create(:user, login: n, role_name: :observer,
-        name: n.capitalize)}
+      observers = %w(bob jojo cass sal toz).map do |n|
+        create(:user, login: n, role_name: :observer, name: n.capitalize)
+      end
 
-      # make decoy coord and admin users
-      coord = create(:user, :role_name => :coordinator)
-      admin = create(:user, :role_name => :observer, :admin => true)
+      # Make decoy coord and admin users
+      coord = create(:user, role_name: :coordinator)
+      admin = create(:user, role_name: :observer, admin: true)
 
-      # make simple form and add responses from first two users
+      # Make simple form and add responses from first two users
       @form = create(:form)
-      observers[0...2].each{|o| create(:response, :form => @form, :user => o)}
+      observers[0...2].each { |o| create(:response, form: @form, user: o) }
 
       build_and_run_report
 
-      #check missing observers
-      missing_observers = @report.users_without_responses(role: :observer, limit: 10)[:users]
-      expect(missing_observers.map(&:login).sort).to eq(%w(cass sal))
-      expect(@report.observers_without_responses).to eq('Cass, Sal')
+      # Check missing observers
+      missing_observers = @report.users_without_responses(role: :observer, limit: 10)
+      expect(missing_observers.map(&:login).sort).to eq(%w(cass sal toz))
+      expect(@report.observers_without_responses).to eq("Cass, Sal, Toz")
 
-      #Change constant size to check mission observers summarization
-      stub_const("Report::StandardFormReport::MISSING_OBSERVERS_SIZE_LIMIT", 1)
-      expect(@report.observers_without_responses).to eq('Cass, ... (2 in total)')
+      # Change constant size to check mission observers summarization
+      stub_const("Report::StandardFormReport::MISSING_OBSERVERS_SIZE_LIMIT", 2)
+      expect(@report.observers_without_responses).to eq("Cass, Sal, ... (Clipped)")
     end
 
     it "empty? should be false if responses" do
@@ -107,7 +108,7 @@ describe Report::StandardFormReport do
     end
 
     it "empty? should be true if no responses" do
-      build_form_and_responses(:response_count => 0)
+      build_form_and_responses(response_count: 0)
       build_and_run_report
       expect(@report.empty?).to be_truthy, "report should be empty"
     end
@@ -122,9 +123,8 @@ describe Report::StandardFormReport do
       build_form_and_responses
       build_and_run_report # defaults to numeric order
       expect(@report.subsets[0].tag_groups[0].type_groups.size).to eq(1)
-      expect(@report.subsets[0].tag_groups[0].type_groups[0].type_set).to eq('all')
+      expect(@report.subsets[0].tag_groups[0].type_groups[0].type_set).to eq("all")
     end
-
   end
 
   context "on destroy" do
@@ -133,12 +133,12 @@ describe Report::StandardFormReport do
       @report = create(:standard_form_report, form: @form, disagg_qing: @form.questionings[1])
     end
 
-    it 'should have disagg_qing nullified when questioning destroyed' do
+    it "should have disagg_qing nullified when questioning destroyed" do
       @form.questionings[1].destroy
       expect(@report.reload.disagg_qing).to be_nil
     end
 
-    it 'should be destroyed when form destroyed' do
+    it "should be destroyed when form destroyed" do
       @form.destroy
       expect(Report::Report.exists?(@report.id)).to be false
     end
@@ -154,16 +154,16 @@ describe Report::StandardFormReport do
   end
 
   def build_form_and_responses(options = {})
-    @form = create(:form, :question_types => %w(integer integer decimal select_one location))
+    @form = create(:form, question_types: %w(integer integer decimal select_one location))
     (options[:response_count] || 5).times do
-      create(:response, :form => @form, :answer_values => [1, 2, 1.5, nil, 'Cat'])
+      create(:response, form: @form, answer_values: [1, 2, 1.5, "Cat", nil])
     end
   end
 
   def build_and_run_report
     # assume we are running as admin
-    @user = create(:user, :admin => true)
-    @report = create(:standard_form_report, :form => @form)
-    @report.run(Ability.new(:user => @user, :mission => get_mission))
+    @user = create(:user, admin: true)
+    @report = create(:standard_form_report, form: @form)
+    @report.run(Ability.new(user: @user, mission: get_mission))
   end
 end

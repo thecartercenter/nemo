@@ -1,6 +1,9 @@
 require "spec_helper"
 
 describe Form do
+  it_behaves_like "has a uuid"
+
+  let(:mission) { create(:mission) }
 
   context "API User" do
     before do
@@ -48,7 +51,7 @@ describe Form do
     end
   end
 
-  describe "needs_odk_manifest?" do
+  describe "needs_odk_manifest?", :odk do
     context "for form with single level option sets only" do
       before { @form = create(:form, question_types: %w(select_one)) }
       it "should return false" do
@@ -63,7 +66,7 @@ describe Form do
     end
   end
 
-  describe "odk_download_cache_key" do
+  describe "odk_download_cache_key", :odk do
     before do
       @form = create(:form)
       publish_and_reset_pub_changed_at
@@ -74,7 +77,7 @@ describe Form do
     end
   end
 
-  describe "odk_index_cache_key" do
+  describe "odk_index_cache_key", :odk do
     before do
       @form = create(:form)
       @form2 = create(:form)
@@ -117,17 +120,17 @@ describe Form do
     end
 
     it "has 3 children" do
-      expect(@form.root_group.children.count).to eq 3
+      expect(@form.root_group.sorted_children.count).to eq 3
     end
 
     it "has one subgroup with two children" do
-      expect(@form.root_group.children[1].children.count).to eq 2
+      expect(@form.root_group.sorted_children[1].sorted_children.count).to eq 2
     end
   end
 
   describe "destroy" do
     before do
-      @form = create(:form, mission: @mission, question_types: ["integer", ["text", "text"], "text"])
+      @form = create(:form, mission: mission, question_types: ["integer", ["text", "text"], "text"])
     end
 
     it "should work" do
@@ -154,12 +157,29 @@ describe Form do
     end
   end
 
-  describe "all_required" do
-    it "should work" do
-      f = create(:form, question_types: %w(integer integer))
-      expect(f.all_required?).to be false
-      f.root_questionings.each{|q| q.required = true; q.save}
-      expect(f.all_required?).to be true
+  describe "has_repeat_group?" do
+    context "for empty form" do
+      let(:form) { create(:form) }
+
+      it "should be false" do
+        expect(form.has_repeat_group?).to be false
+      end
+    end
+
+    context "for form with non-repeat group" do
+      let(:form) { create(:form, question_types: ["text", ["text", "text"]]) }
+
+      it "should be false" do
+        expect(form.has_repeat_group?).to be false
+      end
+    end
+
+    context "for form with repeat group" do
+      let(:form) { create(:form, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
+
+      it "should be true" do
+        expect(form.has_repeat_group?).to be true
+      end
     end
   end
 

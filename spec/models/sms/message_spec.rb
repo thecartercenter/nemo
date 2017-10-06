@@ -1,6 +1,8 @@
 require 'spec_helper'
 
-describe Sms::Message do
+describe Sms::Message, :sms do
+  it_behaves_like "has a uuid"
+
   it "creating a message should work" do
     m = Sms::Reply.create!(to: "14045551212", body: "blah")
     m.reload # reload to make sure serialization is working right

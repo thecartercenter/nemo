@@ -8,6 +8,8 @@ class FormsController < ApplicationController
   # special find method before load_resource
   before_filter :load_form, :only => [:show, :edit, :update]
 
+  after_action :check_rank_fail
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -59,7 +61,6 @@ class FormsController < ApplicationController
 
   def show
     respond_to do |format|
-
       # for html, render the printable style if requested, otherwise render the form
       format.html do
         if params[:print] && request.xhr?
@@ -77,6 +78,8 @@ class FormsController < ApplicationController
 
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || 'odk'
+
+        @form = Odk::DecoratorFactory.decorate(@form)
       end
     end
   end
@@ -85,7 +88,7 @@ class FormsController < ApplicationController
     # determine the most appropriate language to show the form in
     # if params[:lang] is set, use that
     # otherwise try to use the current locale set
-    @lang = params[:lang] || I18n.locale
+    @locale = params[:lang] || I18n.locale
 
     @qings_with_indices = @form.smsable_questionings
 
@@ -151,7 +154,7 @@ class FormsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@form)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   # publishes/unpublishes a form
@@ -165,7 +168,7 @@ class FormsController < ApplicationController
     end
 
     # redirect to index or edit
-    redirect_to(verb == :publish ? index_url_with_page_num : edit_form_path(@form))
+    redirect_to(verb == :publish ? index_url_with_context : edit_form_path(@form))
   end
 
   # shows the form to either choose existing questions or create a new one to add
@@ -227,7 +230,7 @@ class FormsController < ApplicationController
     rescue
       flash[:error] = t("form.clone_error", :msg => $!.to_s)
     end
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   private
@@ -255,6 +258,7 @@ class FormsController < ApplicationController
     end
 
     def form_params
-      params.require(:form).permit(:name, :smsable, :allow_incomplete, :authenticate_sms, :access_level)
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :default_response_name,
+        :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
     end
 end

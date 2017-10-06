@@ -11,7 +11,16 @@
     self.params = params;
 
     // hook up full screen link
-    $("a.full-screen").on('click', function(obj) {self.toggle_full_screen(); return false;});
+    $("a.full-screen").on('click', function(obj) {
+      self.set_full_screen('toggle');
+      return false;
+    });
+
+    // hook up expand map link
+    $("a.toggle-map").on('click', function(obj) {
+      self.set_expanded_map('toggle');
+      return false;
+    });
 
     // readjust stuff on window resize
     $(window).on('resize', function(){
@@ -39,9 +48,6 @@
       ELMO.app.dashboard_reload_timer = setTimeout(function(){ self.reload_page(); }, PAGE_RELOAD_INTERVAL * 60000);
       $('a.reload-page').on('click', function() { self.reload_page(); });
     }
-    // adjust sizes for the initial load
-    self.adjust_pane_sizes();
-
     // save mission_id as map serialization key
     self.params.map.serialization_key = self.params.mission_id;
 
@@ -50,6 +56,8 @@
     self.map_view = new ELMO.Views.DashboardMapView(self.params.map);
     self.report_view = new ELMO.Views.DashboardReport(self, self.params.report);
 
+    // Adjust sizes for the initial load
+    self.adjust_pane_sizes();
     self.list_view.adjust_columns();
   };
 
@@ -67,39 +75,50 @@
     var cont_w = $('#content').width() - 4;
     var cont_h = $(window).height() - $('#title').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
 
-    // height of the h2 elements
-    var title_h = $('#content h2').height();
+    // Save map center so we can recenter after resize.
+    var map_center = this.map_view.center();
 
-    // height of the stats pane
-    var stats_h = $('.report_stats').height();
+    if (view_setting('expanded-map')) {
 
-    // left col is slightly narrower than right col
-    var left_w = (cont_w - spacing) * .9 / 2;
-    $('.recent_responses, .response_locations').width(left_w);
-    var right_w = cont_w - spacing - left_w - 15;
-    $('.report_main').width(right_w);
+      $('.response_locations').width("100%").height(cont_h);
 
-    // must control width of stat block li's
-    $('.report_stats .stat_block li').css('maxWidth', (right_w / 3) - 25);
+    } else {
+      // height of the h2 elements
+      var title_h = $('#content h2').height();
 
-    // must control report title width or we get weird wrapping
-    $('.report_pane h2').css('maxWidth', right_w - 200);
+      // height of the stats pane
+      var stats_h = $('.report_stats').height();
 
-    // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
-    $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
+      // left col is slightly narrower than right col
+      var left_w = (cont_w - spacing) * .9 / 2;
+      $('.recent_responses, .response_locations').width(left_w);
+      var right_w = cont_w - spacing - left_w - 15;
+      $('.report_main').width(right_w);
 
-    // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
-    $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
+      // must control width of stat block li's
+      $('.report_stats .stat_block li').css('maxWidth', (right_w / 3) - 25);
+
+      // must control report title width or we get weird wrapping
+      $('.report_pane h2').css('maxWidth', right_w - 200);
+
+      // for left panes height we subtract 2 title heights plus 3 spacings (2 bottom, one top)
+      $('.recent_responses, .response_locations').height((cont_h - 2 * title_h - 3 * spacing) / 2);
+
+      // for report pane we subtract 1 title height plus 2 spacings (1 bottom, 1 top) plus the stats pane height
+      $('.report_main').height(cont_h - title_h - 2 * spacing - stats_h);
+    }
+
+    this.map_view.resized(map_center);
   };
 
   // Reloads the page via AJAX, passing the current report id
   klass.prototype.reload_ajax = function(args) { var self = this;
-    // Don't have session timeout if in full screen mode
-    var full_screen = JSON.parse(localStorage.getItem("full-screen")) ? 1 : undefined;
 
-    // only set the 'auto' parameter on this request if in full screen mode
-    // the dashboard in full screen mode is meant to be a long-running page so doesn't make
-    // sense to let the session expire
+    // We only set the 'auto' parameter on this request if NOT in full screen mode.
+    // The auto param prevents the AJAX request from resetting the auto-logout timer.
+    // The dashboard in full screen mode is meant to be a long-running page so doesn't make
+    // sense to let the session expire.
+    var auto = view_setting("full-screen") ? undefined : 1;
 
     $.ajax({
       url: ELMO.app.url_builder.build('/'),
@@ -107,7 +126,7 @@
       data: {
         report_id: self.report_view.current_report_id,
         latest_response_id: self.list_view.latest_response_id(),
-        auto: full_screen
+        auto: auto
       },
       success: function(data) {
         $('.recent_responses').replaceWith(data.recent_responses);
@@ -132,38 +151,70 @@
       + ((id = self.report_view.current_report_id) ? '&report_id=' + id : '');
   };
 
-  klass.prototype.toggle_full_screen = function() { var self = this;
-    // read in full screen from local storage
-    var full_screen = JSON.parse(localStorage.getItem("full-screen"));
+  // Enables/disables full screen mode. Uses stored setting if no param given.
+  // Toggles setting if 'toggle' given.
+  klass.prototype.set_full_screen = function(value) {
+    var full = view_setting('full-screen', value);
 
-    // toggle item in local storage
-    full_screen ? localStorage.setItem("full-screen", false) : localStorage.setItem("full-screen", true);
-
-    // display results
-    self.display_full_screen();
-  }
-
-  klass.prototype.display_full_screen = function() { var self = this;
-
-    var fs = JSON.parse(localStorage.getItem("full-screen"));
-    // if not in full screen mode, show everything (default)
-    if(!fs) {
-      $('#footer').show();
-      $('#main-nav').show();
-      $('#userinfo').show();
-      $('#title img').css('height', 'initial');
-      $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
-    // else full screen is true, hide things
-    } else {
+    if (full) {
       $('#footer').hide();
       $('#main-nav').hide();
       $('#userinfo').hide();
       $('#title img').css('height', '30px');
       $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
+    } else {
+      $('#footer').show();
+      $('#main-nav').show();
+      $('#userinfo').show();
+      $('#title img').css('height', '54px'); //initial does weird stuff on first load with oversized logo
+      $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
     }
 
     // Set link text
-    $('a.full-screen span').text(I18n.t('dashboard.' + (fs ? 'exit' : 'enter') + '_full_screen'));
-  }
+    $('a.full-screen span').text(I18n.t('dashboard.' + (full ? 'exit' : 'enter') + '_full_screen'));
+  };
 
+  // Enables/disables expanded map. Uses stored setting if no param given.
+  // Toggles setting if 'toggle' given.
+  // Always enables full screen if expanding map.
+  // When collapsing map, disables full screen if it wasn't on when map was expanded.
+  klass.prototype.set_expanded_map = function(value) {
+    var expand = view_setting('expanded-map', value);
+
+    if (expand) {
+      var was_full = view_setting('full-screen');
+      view_setting('screen-full-before-map-expand', was_full);
+      this.set_full_screen(true);
+
+      $('#content').addClass('expanded-map');
+    } else {
+      var was_full = view_setting('screen-full-before-map-expand');
+      if (!was_full) this.set_full_screen(false);
+
+      $('#content').removeClass('expanded-map');
+    }
+    this.adjust_pane_sizes();
+  };
+
+  function view_setting(setting_name, value) {
+    // Fetch current.
+    var bool = JSON.parse(localStorage.getItem(setting_name));
+
+    // Return unchanged if no value given.
+    if (typeof value == 'undefined')
+      return bool;
+
+    // Toggle if requested.
+    else if (value == 'toggle')
+      bool = !bool;
+
+    // Else set directly.
+    else
+      bool = value;
+
+    // Store for future recall.
+    localStorage.setItem(setting_name, bool);
+
+    return bool;
+  }
 }(ELMO.Views));

@@ -1,7 +1,7 @@
 module IndexTableHelper
 
   # renders an index table for the given class and list of objects
-  # options[:within_form] - Whether the table is contained within a form tag. Affects whether a form tag is generated
+  # options[:omit_form] - Set to true to omit wrapping form tag
   #   to contain the batch op checkboxes.
   def index_table(*args)
     options = args.extract_options!

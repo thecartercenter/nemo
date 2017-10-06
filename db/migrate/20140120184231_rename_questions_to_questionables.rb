@@ -3,10 +3,10 @@ class RenameQuestionsToQuestionables < ActiveRecord::Migration
     rename_table :questions, :questionables
     add_column :questionables, :type, :string, :null => false
 
-    # ref to parent question for subquestions
+    # ref to parent question for subqings
     add_column :questionables, :parent_id, :integer
 
-    # ref to option level for subquestions
+    # ref to option level for subqings
     add_column :questionables, :option_level_id, :integer
 
     add_index :questionables, :type

@@ -2,8 +2,8 @@
 <%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), class: 'form-errors') unless answer_set.errors.empty? %>
 
 <%# This renders the select tags. %>
-<%= render('option_sets/cascading_selects', index: index, option_path: answer_set.option_path,
-  input_name_template: "response[answers_attributes][#{index}_###][option_id]") %>
+<%= render('option_sets/cascading_selects', index: index, option_node_path: answer_set.option_node_path,
+  input_name_template: "response[answers_attributes][#{index}_###][option_node_id]") %>
 
 <%# We also need the hidden fields for each answer. %>
 <% answer_set.answers.each_with_index do |a,i| %>

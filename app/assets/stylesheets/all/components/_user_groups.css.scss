@@ -1,0 +1,25 @@
+#user-groups-modal {
+  .modal-dialog {
+      min-width: 400px;
+      max-width: 500px;
+  }
+
+  .name_col {
+    .field_container {
+      width: 100%;
+
+      input {
+        float: left;
+        width: 90%;
+      }
+      a {
+        display: inline-block;
+
+        i {
+          float: right;
+          font-size: 1.5em;
+        }
+      }
+    }
+  }
+}

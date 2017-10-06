@@ -120,7 +120,7 @@ class Ability
 
             # can only submit/edit/delete own responses, and only if mission is not locked
             unless mission.locked?
-              can [:create, :update, :destroy], Response,
+              can [:create, :update, :destroy, :modify_answers], Response,
                 user_id: user.id, mission_id: mission.id, reviewed: false
             end
           end
@@ -131,6 +131,14 @@ class Ability
             can [:index, :read, :download], Form, mission_id: mission.id, published: true
           end
 
+        end
+
+        # reviewer abilities
+        if role_in_mission?(:reviewer)
+          # only need these abilities if not also a staffer
+          unless role_in_mission?(:staffer)
+            can [:index, :review, :show, :edit, :update], Response, mission_id: mission.id
+          end
         end
 
         # staffer abilities
@@ -178,6 +186,10 @@ class Ability
             # can create user batches
             can :manage, UserBatch
 
+            # can manage user groups
+            can :manage, UserGroup, mission_id: mission.id
+            can :manage, UserGroupAssignment
+
             # can destroy users only if they have only one mission and it's the current mission
             can [:bulk_destroy, :destroy], User do |other_user|
               other_user.assignments.count == 1 && other_user.assignments.first.mission_id == mission.id
@@ -187,9 +199,6 @@ class Ability
             [Form, OptionSet, OptionSetImport, Question, Questioning, QingGroup, Option, Tag, Tagging].each do |klass|
               can :manage, klass, mission_id: mission.id
             end
-
-            can :manage, Group, mission_id: mission.id
-            can :manage, UserGroup, mission_id: mission.id
           end
 
           # coord can manage these classes for the current mission even if locked
@@ -240,11 +249,7 @@ class Ability
     # standard forms cannot be published and do not have versions, which are only assigned on publish
     cannot :publish, Form, is_standard: true
 
-    cannot [:destroy, :update, :update_required, :update_condition], Questioning do |q|
-      q.published?
-    end
-
-    cannot :update_hidden, Questioning do |q|
+    cannot [:destroy, :update, :update_core], Questioning do |q|
       q.published?
     end
 

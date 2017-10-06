@@ -65,6 +65,15 @@
     var lhs = this.lhs();
     var rhs = this.rhs();
 
+    // For select_one questions, the lhs will be an array of selected option_node_ids.
+    // We should return true if the expected option_node_id is anywhere in that list.
+    // So `eq` just becomes `inc` and `neq` becomes `ninc`.
+    // We could label it this way in the condition form but it seems that would be confusing.
+    if (this.rq_type == 'select_one') {
+      if (this.condition.op == 'eq') this.condition.op = 'inc';
+      if (this.condition.op == 'neq') this.condition.op = 'ninc';
+    }
+
     // perform comparison
     switch (this.condition.op) {
       case "eq": return this.test_equality(lhs, rhs);
@@ -72,7 +81,7 @@
       case "gt": return lhs > rhs;
       case "leq": return lhs <= rhs;
       case "geq": return lhs >= rhs;
-      case "neq": return !this.test_equality(lhs, rhs);
+      case "neq": return this.test_inequality(lhs, rhs);
       case "inc": return lhs.indexOf(rhs) != -1;
       case "ninc": return lhs.indexOf(rhs) == -1;
       default: return false;
@@ -83,6 +92,27 @@
   klass.prototype.test_equality = function(a,b) {
     return $.isArray(a) && $.isArray(b) ? a.equalsArray(b) : a == b;
   };
+
+  // for inequality conditions, ignore nulls for relevance test
+  // unless null is the value being checked by the condition
+  // improves UX for appearing/disappearing questions
+  klass.prototype.test_inequality = function(ref_value, expected) {
+    if($.isArray(ref_value) && $.isArray(expected)) {
+      if(ref_value.equalsArray([]) && !expected.equalsArray([])) {
+        return false
+      } else {
+        return !ref_value.equalsArray(expected)
+      }
+    } else {
+      // if you aren't checking for "not null"
+      if(ref_value == null && expected != null) {
+        return false
+      }
+      else {
+        return ref_value != expected
+      }
+    }
+  }
 
   // determines the left hand side of the comparison, which comes from the referred question
   klass.prototype.lhs = function() {
@@ -104,32 +134,30 @@
           var content = ckeditor ? ckeditor.getData() : this.rq_row.find("div.control textarea").val();
 
           // Strip wrapping <p> tag for comparison.
-          return content.replace(/(^<p>|<\/p>$)/ig, "")
+          return content.trim().replace(/(^<p>|<\/p>$)/ig, "")
 
         case "integer":
         case "decimal":
+        case "counter":
           return parseFloat(this.rq_row.find("div.control input[type='text']").val());
 
         case "select_one":
-          var ids = [];
-          // Get non-null/blank selected option ids
-          this.rq_row.find("select").each(function(i, el){
-            var id = $(el).val();
-            if (id) ids.push(parseInt(id));
-          });
-          // Trim to match length of rhs.
-          return ids.slice(0, this.rhs().length);
-
-        case "datetime": case "date": case "time":
-          return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
+          // Return all selected option_node_ids.
+          return this.rq_row.find("select").map(function() {
+            var this_id = $(this).val();
+            return this_id ? parseInt(this_id) : null;
+          }).get();
 
         case "select_multiple":
           // use prev sibling call to get to rails gen'd hidden field that holds the id
-          return this.rq_row.find("div.control input:checked").map(function(){
-            // given a checkbox, get the value of the associated option_id hidden field made by rails
-            // this field is the nearest prior sibling input tag with name attribute ending in [option_id]
-            return parseInt($(this).prevAll("input[name$='[option_id]']").first().val());
+          return this.rq_row.find("div.control input:checked").map(function() {
+            // given a checkbox, get the value of the associated option_node_id hidden field made by rails
+            // this field is the nearest prior sibling input with name attribute ending in [option_node_id]
+            return parseInt($(this).prevAll("input[name$='[option_node_id]']").first().val());
           }).get();
+
+        case "datetime": case "date": case "time":
+          return (new ELMO.TimeFormField(this.rq_row.find("div.control"))).extract_str();
 
         default:
           return this.rq_row.find("div.control input[type='text']").val();
@@ -147,14 +175,11 @@
       case "long_text":
         return this.condition.value;
 
-      case "integer": case "decimal":
+      case "integer": case "decimal": case "counter":
         return parseFloat(this.condition.value);
 
-      case "select_one":
-        return this.condition.option_ids;
-
-      case "select_multiple":
-        return this.condition.option_ids[0];
+      case "select_one": case "select_multiple":
+        return this.condition.option_node_id;
     }
   }
 

@@ -1,51 +1,57 @@
 <%# special title if user is editing self %>
 <% @title_args = {name: @user.name || ''} %>
 <% @title_args[:name] += " (#{t('common.inactive')})" if !@user.active? %>
-<% @title = t("page_titles.users.#{form_mode}_profile", :name => @user.name) if @user == current_user %>
+<% @title = t("page_titles.users.#{form_mode}_profile", name: @user.name) if @user == current_user %>
 
 <%= elmo_form_for(@user) do |f| %>
 
-  <%= top_action_links(@user, :except => [:export]) %>
+  <%= top_action_links(@user, except: [:export]) %>
 
-  <%= f.field(:name, :required => true) %>
-  <%= f.field(:login, :required => true) %>
+  <%= f.field(:name, required: true) %>
+  <%= f.field(:login, required: true) %>
   <%= f.field(:email) %>
   <%= f.field(:phone) %>
   <%= f.field(:phone2) %>
-  <%= f.field(:admin, :type => :check_box) if can?(:adminify, @user) && admin_mode? %>
-  <%= f.field(:active, :type => :check_box) if can?(:activate, @user) %>
+  <%= f.field(:birth_year, type: :select, options: birth_year_options,
+        read_only_content: @user.birth_year.try(:to_s)) %>
+  <%= f.field(:gender, type: :select, options: translate_options(User::GENDER_OPTIONS, [:user, :gender_options])) %>
+  <%= f.field(:gender_custom) %>
+  <%= f.field(:nationality, type: :select, options: translate_options(I18n.t("countries").keys, [:countries]).sort) %>
+  <%= f.field(:admin, type: :check_box) if can?(:adminify, @user) && admin_mode? %>
+  <%= f.field(:active, type: :check_box) if can?(:activate, @user) %>
 
   <% if can?(:change_assignments, @user) %>
     <%# field name depends on whether we're in admin mode or not. under the hood it's all the same though %>
-    <%= f.field(admin_mode? ? :assignments : :role, :partial => "assignments", :required => !admin_mode?) %>
+    <%= f.field(admin_mode? ? :assignments : :role, partial: "assignments", required: !admin_mode?) %>
   <% end %>
 
-  <%= f.field(:pref_lang, :type => :select, :options => configatron.full_locales.map{|l| [language_name(l), l]}) %>
+  <% if can?(:manage, UserGroup.new(mission: current_mission)) %>
+    <%= f.field(:user_group_ids, type: :select, multiple: true,
+      options: sel_opts_from_objs(@user.user_groups),
+      read_only_content: render_groups(@user.user_groups, profile_mode: true)) %>
+  <% end %>
 
-  <%= f.field(:notes, :type => :textarea) %>
+  <%= f.field(:pref_lang, type: :select, options: configatron.full_locales.map{|l| [language_name(l), l]}) %>
+
+  <%= f.field(:notes, type: :textarea) %>
 
   <% unless read_only %>
-
-    <%# allow to change password if editing profile %>
     <% if @user == current_user %>
-
-      <%= f.field(:password, :type => :password) %>
-      <%= f.field(:password_confirmation, :type => :password) %>
-
-    <%# else allow password reset %>
+      <%# Change password in profile %>
+      <%= f.field(:password, type: :password) %>
+      <%= f.field(:password_confirmation, type: :password) %>
     <% else %>
-
+      <%# Password reset %>
       <% verb = @user.new_record? ? "choose" : "reset" %>
-      <% label = t("user.reset_password_label_" + verb) %>
-      <% hint = t("user.reset_password_hint_" + verb) + " " + t("user.reset_password_hint_ending", :verb => t("common." + verb).downcase) %>
-      <%= f.field(:reset_password_method, :label => label, :hint => hint, :partial => "reset_password_method") %>
-
+      <% label = t("user.reset_password_label_#{verb}") %>
+      <% hint = t("user.reset_password_hint_#{verb}") %>
+      <%= f.field(:reset_password_method, label: label, hint: hint, partial: "reset_password_method") %>
     <% end %>
   <% end %>
   <%= f.regenerable_field(:api_key) if !@user.new_record? && can?(:regenerate_api_key, @user) %>
   <%= f.regenerable_field(:sms_auth_code) if !@user.new_record? && can?(:regenerate_sms_auth_code, @user) %>
   <div class="submit-buttons">
-    <%= f.submit(:class => "btn btn-primary") %>
+    <%= f.submit(class: "btn btn-primary") %>
   </div>
 
 <% end %>
@@ -62,4 +68,9 @@
       )%>
     <% end %>
   );
+  <% unless current_mode == 'basic' %>
+    new ELMO.Views.UserProfileFormView(
+      <%= json(user_group_options_url: possible_groups_user_groups_path) %>
+    );
+  <% end %>
 <% end %>

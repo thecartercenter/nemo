@@ -1,5 +1,5 @@
 class QuestionsController < ApplicationController
-  include StandardImportable
+  include StandardImportable, Searchable
 
   include Parameters
 
@@ -9,18 +9,8 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    # do search if applicable
-    if params[:search].present?
-      begin
-        @questions = Question.do_search(@questions, params[:search])
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
-        @search_error = true
-      end
-    end
-
+    @questions = apply_search_if_given(Question, @questions)
     @tags = Tag.mission_tags(@current_mission)
-
     @questions = @questions.includes(:tags).with_assoc_counts.by_code.paginate(:page => params[:page], :per_page => 25)
     load_importable_objs
   end
@@ -70,28 +60,29 @@ class QuestionsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@question)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   private
-    # creates/updates the question
-    def create_or_update
-      if @question.save
-        set_success_and_redirect(@question)
-      else
-        flash.now[:error] = I18n.t('activerecord.errors.models.question.general')
-        prepare_and_render_form
-      end
-    end
 
-    # prepares objects for and renders the form template
-    def prepare_and_render_form
-      # this method lives in the QuestionFormable concern
-      setup_question_form_support_objs
-      render(:form)
+  # creates/updates the question
+  def create_or_update
+    if @question.save
+      set_success_and_redirect(@question)
+    else
+      flash.now[:error] = I18n.t('activerecord.errors.models.question.general')
+      prepare_and_render_form
     end
+  end
 
-    def question_params
-      params.require(:question).permit(whitelisted_question_params(params[:question]))
-    end
+  # prepares objects for and renders the form template
+  def prepare_and_render_form
+    # this method lives in the QuestionFormable concern
+    setup_question_form_support_objs
+    render(:form)
+  end
+
+  def question_params
+    params.require(:question).permit(whitelisted_question_params(params[:question]))
+  end
 end

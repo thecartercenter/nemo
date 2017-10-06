@@ -10,6 +10,7 @@ module Replication::Standardizable
 
     before_destroy(:unlink_copies)
     before_save(:scrub_original_link_if_becoming_incompatible)
+    validate(:non_standard_items_must_have_mission)
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
     def self.importable_to(mission)
@@ -62,9 +63,15 @@ module Replication::Standardizable
     return true
   end
 
+  def non_standard_items_must_have_mission
+    unless is_standard? || self.mission.present?
+      errors.add(:mission, :blank)
+    end
+  end
+
   private
 
-    def unlink_copies
-      copies.update_all(original_id: nil, standard_copy: false)
-    end
+  def unlink_copies
+    copies.update_all(original_id: nil, standard_copy: false)
+  end
 end

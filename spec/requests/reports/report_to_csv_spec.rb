@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "report CSV output" do
+describe "report CSV output", :csv do
 
   before do
     user = create(:user, role_name: 'coordinator')
@@ -14,7 +14,7 @@ describe "report CSV output" do
     report = create(:answer_tally_report, _calculations: [form.questions[0]])
     get("/en/m/#{form.mission.compact_name}/reports/#{report.id}.csv")
     expect(response).to be_success
-    expect(response.body).to eq %Q{"",Cat,Dog\r\n#{form.questions[0].name},2,3\r\n}
+    expect(response.body).to match_csv %Q{"",Cat,Dog\r\n#{form.questions[0].name},2,3\r\n}
   end
 
   it "should properly format long text" do
@@ -25,6 +25,6 @@ describe "report CSV output" do
     report = create(:list_report, _calculations: qs)
     get("/en/m/#{form.mission.compact_name}/reports/#{report.id}.csv")
     expect(response).to be_success
-    expect(response.body).to eq %Q{#{qs[0].name},#{qs[1].name}\r\nFoo,\"Some **long**\r\n\r\n1. text\r\n2. stuff&stuff\"\r\n}
+    expect(response.body).to match_csv %Q{#{qs[0].name},#{qs[1].name}\r\nFoo,\"Some **long**\r\n\r\n1. text\r\n2. stuff&stuff\"\r\n}
   end
 end

@@ -4,7 +4,7 @@ module SmsGuideHelper
   def answer_space_for_questioning(qing)
     # determine the number of spaces
     width = case qing.question.qtype.name
-    when "integer" then 3
+    when "integer", "counter" then 3
     when "select_one"
       if qing.sms_formatting_as_text? then 8
       elsif qing.sms_formatting_as_appendix? then 4
@@ -49,13 +49,13 @@ module SmsGuideHelper
   end
 
   # Returns an example answer based on the question type, to be used in the sms guide
-  def sms_example_for_questioning(qing)
+  def sms_example_for_questioning(qing, locale: configatron.default_locale)
     content = case qing.qtype_name
-    when "integer" then "3"
+    when "integer", "counter" then "3"
     when "decimal" then "12.5"
     when "select_one"
       if qing.sms_formatting_as_text?
-        qing.first_leaf_option.name
+        qing.first_leaf_option.name(locale, strict: false)
       elsif qing.sms_formatting_as_appendix?
         qing.first_leaf_option_node.shortcode
       else
@@ -69,7 +69,7 @@ module SmsGuideHelper
     end
 
     if content
-      t("common.example_abbr").html_safe << " " << content_tag(:span, content, class: "sms-example")
+      t("common.example_abbr", locale: @locale).html_safe << " " << content_tag(:span, content, class: "sms-example")
     else
       ""
     end
@@ -92,7 +92,7 @@ module SmsGuideHelper
       else
         qing.qtype_name
       end
-    when "integer", "decimal"
+    when "integer", "decimal", "counter"
       "number"
     when "text", "long_text"
       "text"
@@ -111,10 +111,10 @@ module SmsGuideHelper
     content_tag("strong", numbers)
   end
 
-  def sms_guide_hint(qing)
-    hint = "".html_safe << (qing.question.hint || "")
+  def sms_guide_hint(qing, locale: configatron.default_locale)
+    hint = "".html_safe << (qing.question.hint(locale, strict: false) || "")
     hint << "." unless hint =~ /\.\z/ || hint.empty?
-    hint << " " << t(".pointers.#{pointer_type(qing)}")
+    hint << " " << t(".pointers.#{pointer_type(qing)}", locale: locale)
     hint << " " << sms_example_for_questioning(qing)
   end
 

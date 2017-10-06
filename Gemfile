@@ -1,140 +1,195 @@
 source "http://rubygems.org"
 
-gem "rails", "4.2.5"
+gem "rails", "~> 4.2.5"
 
-gem "sass-rails", "~> 4.0.2"
-gem "uglifier", ">= 1.3.0"
-gem "bootstrap-modal-rails" # makes modals stackable
+# Assets / Javascript
+gem "sass-rails", "~> 4.0.5"
+gem "uglifier", "~> 2.7.1"
+gem "bootstrap-modal-rails", "~> 2.2.5"
+gem "actionpack-page_caching", "~> 1.0.2"
+gem "jquery-rails", "~> 4.0.4"
+gem "jquery-fileupload-rails", "~> 0.4.5"
+gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
+gem "dropzonejs-rails", "~> 0.7.3"
+gem "phantomjs_polyfill-rails", "~> 1.0.0"
 
-gem "actionpack-page_caching"
-gem "activerecord-session_store"
-
-gem "authlogic", "3.4.5"
-gem "scrypt", "1.2"
-gem "rake"
-gem "mysql2", ">= 0.3.15" #was '~> 0.3.12b5' # beta version needed for sphinx
-gem "will_paginate"
-gem "will_paginate-bootstrap"
-gem "api-pagination"
-gem "configatron", "~> 4.2"
-gem "rdiscount"
-gem "jquery-rails"
-gem "jquery-fileupload-rails"
-gem "random_data"
-gem "versionist"                 # versioning the api
-gem "active_model_serializers"   # for making it easy to customize output for api
-gem "paperclip"
-
-# Auto rank maintenance for sorted lists.
-gem "acts_as_list", git: "https://github.com/swanandp/acts_as_list", branch: "master"
-
-gem "iso-639"
-gem "responders", "~> 2.0"
+# Authentication
+gem "activerecord-session_store", "~> 0.1.1"
+gem "authlogic", "~> 3.4.5"
+gem "scrypt", "~> 1.2.0"
 
 # authorization
-gem "cancancan", "~> 1.10"
+gem "cancancan", "~> 1.10.1"
 
-# i18n for js
-# temporary change to deal with rails 3.2.13 bug
-gem "i18n-js", git: "https://github.com/fnando/i18n-js.git", branch: "master"
+# core
+gem "rake", "~> 10.4.2"
+gem "pg", "~> 0.20"
+gem "mysql2", "~> 0.3.18"
+gem "configatron", "~> 4.5.0"
+gem "random_data", "~> 1.6.0"
+gem "paperclip", "~> 4.3.2"
+gem "term-ansicolor", "~> 1.3.0"
+gem "therubyracer", "~> 0.12.2", platforms: :ruby
+gem "draper", "~> 2.1.0"
+gem "attribute_normalizer", "~> 1.2.0"
+gem "responders", "~> 2.3.0"
+gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove version constraint when fixed.
+gem "friendly_id", "~> 5.1.0"
 
-# i18n locale data
-gem "rails-i18n", "~> 4.0.4"
+# pagination
+gem "will_paginate", "~> 3.0.7"
+gem "will_paginate-bootstrap", "~> 1.0.1"
 
 # markdown support
-gem "bluecloth"
+gem "bluecloth", "~> 2.2.0"
+gem "rdiscount", "~> 2.1.8"
+gem "reverse_markdown", "~> 1.0.3"
 
-gem "term-ansicolor"
+# API
+gem "versionist", "~> 1.4.1"
+gem "active_model_serializers", "~> 0.9.3"
+gem "api-pagination", "~> 4.1.1"
 
+# Auto rank maintenance for sorted lists.
+# We are using a fork due to incompatibility with acts_as_paranoid.
+# See https://github.com/swanandp/acts_as_list/pull/286
+gem "acts_as_list", git: "https://github.com/sassafrastech/acts_as_list.git"
+
+# i18n
+gem "i18n-js", "~> 3.0.0.rc13"
+gem "rails-i18n", "~> 4.0.4"
+gem "iso-639", "~> 0.2.5"
+gem "i18n-country-translations", "~> 1.2.3"
+gem "i18n_country_select", "~> 1.1.7"
 # memcache
-gem "dalli"
+gem "dalli", "~> 2.7.4"
 
 # foreign key maintenance
-gem "immigrant"
+gem "immigrant", "~> 0.3.1"
 
 # mean, median, etc.
-gem "descriptive_statistics", require: "descriptive_statistics/safe"
+gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe"
+
+# icons
+gem "font-awesome-rails", "~> 4.7"
+
+# Rich text editor
+# Version 4.2.2 seems to have a bug with asset paths.
+# See https://github.com/galetahub/ckeditor/issues/712#issuecomment-278740179
+gem "ckeditor", "~> 4.1.0"
+
+# Select box on steriods
+gem "select2-rails", "~> 4.0"
 
 # underscore templates
-gem "ejs"
+gem "ejs", "~> 1.1.1"
 
 # background job support
-gem "daemons"
-gem "delayed_job_active_record"
+gem "daemons", "~> 1.2.1"
+gem "delayed_job_active_record", "~> 4.0.3"
 
 # search
-gem "thinking-sphinx", "~> 3.1.3"
-gem "ts-delayed-delta", "~> 2.0.2"
+gem "pg_search"
 
 # cron management
-gem "whenever", require: false
+gem "whenever", "~> 0.9.4", require: false
 
 # Bootstrap UI framework
-gem "bootstrap-sass", "~> 3.3.3"
+gem "bootstrap-sass", "~> 3.3.4"
 
 # spinner
 gem "spinjs-rails", "1.3"
 
 # tree data structure
-gem "ancestry", "~> 2.0"
-
-gem "rails-backbone", github: "codebrew/backbone-rails"
+gem "ancestry", "~> 2.1.0"
 
 # Middleware for handling abusive requests
-gem "rack-attack", github: "sassafrastech/rack-attack"
+gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 
 # reCAPTCHA support
-gem "recaptcha", require: "recaptcha/rails"
+gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
 
 # XLS support
 gem "axlsx", "~> 2.1.0.pre"
-gem "axlsx_rails"
+gem "axlsx_rails", "~> 0.3.0"
 gem "roo", "~> 2.1.1"
 
-gem "therubyracer", platforms: :ruby
-
-# Converting HTML to markdown for CSV export
-gem "reverse_markdown"
-
 # Twilio SMS integration
-gem "twilio-ruby", " ~> 4.1"
+gem "twilio-ruby", "~> 4.1.0"
 
 # Phone number normalization
-gem "phony"
+gem "phony", "~> 2.15.26"
 
-gem "fix-db-schema-conflicts"
-gem "attribute_normalizer"
+# Soft delete
+gem "acts_as_paranoid", "~> 0.5.0"
 
-# Polyfill for the bind function. Some older browsers don't have it.
-gem "phantomjs_polyfill-rails"
+# QR barcode
+gem 'rqrcode', '~> 0.10.1'
 
-gem "draper", "~> 2.1"
-gem "dropzonejs-rails"
+# DB triggers
+gem "hairtrigger", '~> 0.2.20'
+
+# error emails
+gem "exception_notification"
 
 group :development do
-  gem "rails-erd"                     # generate with rake db:migrate
-  gem "capistrano", "~> 2.15.4"       # deployment
-  gem "bullet"                        # query optimization
-  gem "thin"                          # development web server
-  gem "rails-dev-tweaks", "~> 1.1"    # speed up development mode
-  gem "spring"
-  gem "apiary"
+  # generate diagrams with rake db:migrate
+  gem "rails-erd", "~> 1.4.0"
+
+  # query optimization
+  gem "bullet", "~> 4.14.4"
+
+  # development web server
+  gem "thin", "~> 1.6.3"
+
+  # speed up development mode
+  gem "rails-dev-tweaks", "~> 1.2.0"
+  gem "spring", "~> 1.3.3"
+
+  # Better error pages
+  gem "better_errors", "~> 2.1.1"
+  gem "binding_of_caller", "~> 0.7.2"
+
+  # misc
+  gem "fix-db-schema-conflicts", "~> 2.0.0"
+  gem "letter_opener", "~> 1.4.1"
 end
 
 group :development, :test do
-  gem "factory_girl_rails", "~> 4.0"
-  gem "jasmine-rails", "~> 0.10.7"   # test framework
-  gem "rspec-rails", "~> 3.0"        # test framework
-  gem "rspec-collection_matchers"
-  gem "mocha"                        # mocking/stubbing
-  gem "capybara"                     # acceptance tests
-  gem "capybara-screenshot"          # automatic screenshots on failure
-  gem "selenium-webdriver"
-  gem "poltergeist", "~> 1.6"
-  gem "database_cleaner"             # cleans database for testing
-  gem "timecop"                      # sets time for testing
-  gem "awesome_print"                # for debugging/console, prints an object nicely
-  gem "assert_difference"            # test assertion
-  gem "launchy"                      # auto-open capybara html file
-  gem "ruby-jmeter", "~> 2.13.4"     # builds JMeter test plans
+  # test framework
+  gem "jasmine-rails", "~> 0.10.7"
+  gem "rspec-rails", "~> 3.3.0"
+  gem "rspec-collection_matchers", "~> 1.1.2"
+
+  # mocking/stubbing/factories
+  gem "mocha", "~> 1.1.0"
+  gem "faker", "~> 1.6.3"
+  gem "factory_girl_rails", "~> 4.5.0"
+
+  # acceptance tests
+  gem "capybara", "~> 2.4.4"
+  gem "capybara-screenshot", "~> 1.0.11"
+  gem "selenium-webdriver", "~> 2.45.0"
+  gem "poltergeist", "~> 1.7.0"
+
+  # cleans database for testing
+  gem "database_cleaner", "~> 1.4.1"
+
+   # sets time for testing
+  gem "timecop", "~> 0.7.3"
+
+  # for debugging/console, prints an object nicely
+  gem "awesome_print", "~> 1.6.1"
+
+  # test assertion
+  gem "assert_difference", "~> 1.0.0"
+
+  # auto-open capybara html file
+  gem "launchy", "~> 2.4.3"
+
+  # builds JMeter test plans
+  gem "ruby-jmeter", "~> 2.13.4"
+
+  # removes "get assets" from logs
+  gem "quiet_assets", "~> 1.1.0"
 end

@@ -2,7 +2,7 @@
   <%# Single answer set %>
   <% if node.set %>
 
-    <%= render("responses/answers/set", set: node.set, inst_num: inst_num) %>
+    <%= render("responses/answers/set", set: node.set, inst_num: inst_num, read_only: read_only) %>
 
   <%# Group with one or more instances %>
   <% else %>

@@ -1,4 +1,5 @@
-def create_questioning(qtype_name_or_question, form, parent, evaluator)
+def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = nil)
+  parent ||= form.root_group # root if not specified
   question = if qtype_name_or_question.is_a?(Question)
     qtype_name_or_question
   else
@@ -10,6 +11,12 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       "select_one"
     when "select_multiple_with_appendix_for_sms", "large_select_multiple"
       "select_multiple"
+    when "multilingual_text", "multilingual_text_with_user_locale"
+      "text"
+    when "counter_with_inc"
+      "counter"
+    when "formstart", "formend"
+      "datetime"
     else
       pseudo_qtype_name
     end
@@ -20,12 +27,16 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
       use_multilevel_option_set: !!(pseudo_qtype_name =~ /multilevel_select_one/),
       use_geo_option_set: !!(pseudo_qtype_name =~ /geo/),
       use_large_option_set: !!(pseudo_qtype_name =~ /large/),
-      is_standard: form.is_standard?
+      multilingual: !!(pseudo_qtype_name =~ /multilingual/),
+      with_user_locale: !!(pseudo_qtype_name =~ /with_user_locale/),
+      auto_increment: pseudo_qtype_name == "counter_with_inc",
+      is_standard: form.is_standard?,
+      metadata_type: %w(formstart formend).include?(pseudo_qtype_name) ? pseudo_qtype_name : nil
     }
 
-    if evaluator.option_set
+    if evaluator.try(:option_set)
       q_attribs[:option_set] = evaluator.option_set
-    elsif evaluator.option_names
+    elsif evaluator.try(:option_names)
       q_attribs[:option_names] = evaluator.option_names
     end
 
@@ -42,6 +53,31 @@ def create_questioning(qtype_name_or_question, form, parent, evaluator)
     question: question)
 
   form.questionings << questioning
+  questioning
+end
+
+def build_item(item, form, parent, evaluator)
+  if item.is_a?(Hash) && item.key?(:repeating)
+    item = item[:repeating]
+    group = create(:qing_group,
+      parent: parent,
+      form: form,
+      group_name_en: item[:name],
+      group_hint_en: item[:name],
+      repeatable: true
+    )
+    item[:items].each { |c| build_item(c, form, group, evaluator) }
+  elsif item.is_a?(Array)
+    group = create(:qing_group,
+      parent: parent,
+      form: form,
+      group_name_en: "Group Name",
+      group_hint_en: "Group Hint"
+    )
+    item.each { |q| build_item(q, form, group, evaluator) }
+  else #must be a questioning
+    create_questioning(item, form, parent, evaluator)
+  end
 end
 
 # Only works with create
@@ -68,12 +104,22 @@ FactoryGirl.define do
       items = evaluator.questions.present? ? evaluator.questions : evaluator.question_types
       # Build questions.
       items.each do |item|
-        if item.is_a?(Array)
-          group = QingGroup.create!(parent: form.root_group, form: form, group_name_en: "Group Name", group_hint_en: "Group Hint")
-          item.each { |q| create_questioning(q, form, group, evaluator) }
-        else
-          create_questioning(item, form, form.root_group, evaluator)
-        end
+        build_item(item, form, form.root_group, evaluator)
+      end
+    end
+
+    trait :with_version do
+      transient { version nil }
+
+      after(:create) do |form, evaluator|
+        cv = form.current_version
+        cv.update_attributes(code: evaluator.version) if cv && evaluator.version
+      end
+    end
+
+    trait :published do
+      after(:create) do |form|
+        form.publish!
       end
     end
 

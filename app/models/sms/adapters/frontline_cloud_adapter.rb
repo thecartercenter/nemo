@@ -18,7 +18,7 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
     recipients = message.recipient_numbers.map { |number| { "type" => "mobile", "value" => number } }
 
     payload = {
-      "apiKey" => configatron.frontlinecloud_api_key,
+      "apiKey" => config.frontlinecloud_api_key,
       "payload" => {
         "message" => message.body,
         "recipients" => recipients
@@ -40,6 +40,9 @@ class Sms::Adapters::FrontlineCloudAdapter < Sms::Adapters::Adapter
       body: params["body"],
       sent_at: convert_time(params["sent_at"]),
       adapter_name: service_name)
+  end
+
+  def validate(request)
   end
 
   private

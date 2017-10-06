@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "incoming_numbers" do
+describe "incoming_numbers", :sms do
   context "with incoming numbers" do
     let(:user) { create(:user, role_name: :coordinator) }
 
@@ -9,9 +9,9 @@ describe "incoming_numbers" do
       login(user)
     end
 
-    it "should return an appropriate csv" do
+    it "should return an appropriate csv", :csv do
       get("/en/m/#{get_mission.compact_name}/sms/incoming-numbers.csv")
-      expect(response.body).to eq(
+      expect(response.body).to match_csv(
         %Q{id,phone_number\r\n1,+12345678900\r\n2,+17387187382\r\n3,+7177637716\r\n})
     end
   end

@@ -4,16 +4,37 @@ FactoryGirl.define do
       use_multilevel_option_set false
       use_geo_option_set false
       use_large_option_set false
+      multilingual false
+      with_user_locale false
       add_to_form false
 
       # Optionally specifies the options for the option set.
       option_names nil
     end
 
-    sequence(:code) { |n| "Question#{n}" }
     qtype_name "integer"
-    sequence(:name) { |n| "#{qtype_name.titleize} Question Title #{n}" }
-    sequence(:hint) { |n| "Question Hint #{n}" }
+    sequence(:code) { |n| "#{qtype_name.camelize}Q#{n}" }
+
+    sequence(:name_translations) do |n|
+      translation_string = "#{qtype_name.titleize} Question Title #{n}"
+      translation_string = translation_string.prepend "Geographic " if use_geo_option_set
+      translation_string = translation_string.prepend "Multilevel " if use_multilevel_option_set
+      translations = { en: translation_string }
+      translations.merge!({ fr: "fr: #{translation_string}" }) if multilingual
+      translations.merge!({ rw: "rw: #{translation_string}" }) if with_user_locale
+      translations
+    end
+    name { name_translations[:en] }
+
+    sequence(:hint_translations) do |n|
+      translations = { en: "Question Hint #{n}" }
+      translations.merge!({ fr: "fr: Question Hint #{n}" }) if multilingual
+      translations.merge!({ rw: "rw: Question Hint #{n}" }) if with_user_locale
+      translations
+    end
+    sequence(:hint) { |n| "Question Hint #{n}" } # needed for some i18n specs
+
+
     mission { is_standard ? nil : get_mission }
 
     option_set do

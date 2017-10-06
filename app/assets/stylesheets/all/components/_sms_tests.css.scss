@@ -1,0 +1,28 @@
+.sms_tests_new {
+  form#new_sms_test {
+    input#sms_test_from {
+      width: 150px;
+    }
+
+    textarea {
+      height: 75px;
+    }
+
+    .loading_indicator {
+      vertical-align: bottom;
+      margin-bottom: 6px;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .sms_test_result {
+      display: none;
+
+      div {
+        font-family: "courier new", monospace;
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+.draggable-list-wrapper {
+
+  /* these styles only apply to the outer ol */
+  > ol {
+    margin: 0 0 5px -15px;
+
+    > li:first-child {
+      margin-top: 0;
+    }
+  }
+
+  ol {
+    padding-left: 0;
+
+    li {
+      display: block;
+      margin-left: 15px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+      div.inner {
+
+        margin: 5px 0;
+        min-height: 15px;
+        border-radius: 5px;
+        -moz-border-radius: 5px;
+        -webkit-border-radius: 5px;
+        padding: 5px;
+        border: 1px solid #CCC;
+        background: $super-light-gray;
+        cursor: default;
+
+        /* icon */
+        i.fa-times, i.fa-pencil, i.fa-trash-o {
+          color: $elmo-blue;
+        }
+        i.fa-sort {
+          margin-right: 5px;
+        }
+
+        /* locales */
+        em {
+          font-style: normal;
+          font-size: 10px;
+          margin-left: 5px;
+          color: $theme-green;
+        }
+
+        /* edit/remove links */
+        div.links {
+          float: right;
+          text-align: right;
+          width: 50px;
+        }
+      }
+    }
+  }
+
+  .placeholder {
+    border: 1px dashed #aaa;
+
+    &.mjs-nestedSortable-error {
+      border: 1px dashed $theme-red;
+
+      // Error message
+      div {
+        margin: 5px 0 0 5px;
+        color: $theme-red;
+      }
+    }
+  }
+}

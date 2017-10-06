@@ -1,5 +1,7 @@
-class Option < ActiveRecord::Base
+class Option < ApplicationRecord
   include MissionBased, FormVersionable, Translatable, Replication::Replicable
+
+  acts_as_paranoid
 
   has_many(:option_sets, through: :option_nodes)
   has_many(:option_nodes, inverse_of: :option, dependent: :destroy, autosave: true)
@@ -9,8 +11,9 @@ class Option < ActiveRecord::Base
   after_save(:invalidate_cache)
   after_destroy(:invalidate_cache)
 
-  scope(:with_questions_and_forms, -> { includes(option_sets: [:questionings, {questions: {questionings: :form}}]) })
-
+  scope :with_questions_and_forms, -> { includes(
+    option_sets: [:questionings, {questions: {questionings: :form}}]) }
+  scope :by_canonical_name, ->(name) { where("LOWER(canonical_name) = ?", name.downcase) }
   translates :name
 
   validate :check_invalid_coordinates_flag
@@ -25,9 +28,13 @@ class Option < ActiveRecord::Base
 
   MAX_NAME_LENGTH = 45
 
-  def published?; !option_sets.detect{|os| os.published?}.nil?; end
+  def published?
+    option_sets.any?(&:published?)
+  end
 
-  def questions; option_sets.collect{|os| os.questions}.flatten.uniq; end
+  def questions
+    option_sets.map(&:questions).flatten.uniq
+  end
 
   def has_answers?
     !answers.empty?

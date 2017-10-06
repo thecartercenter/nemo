@@ -1,0 +1,18 @@
+@mixin action-links {
+  margin-bottom: 10px;
+
+  a {
+    display: inline-block;
+    margin: 0 10px 5px 0;
+
+    &:hover {
+      color: $orange;
+    }
+
+    i {
+      color: $orange;
+      font-size: 110%;
+      margin-right: 3px;
+    }
+  }
+}

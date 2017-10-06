@@ -1,26 +1,10 @@
 <instance>
   <%# include both form ID and form version sequence number in ODK form ID %>
   <%= data_tag @form, @style do %>
-    <% @form.arrange_descendants.each do |item, subtree| %>
-      <% if item.is_a?(QingGroup) %>
-        <% @attrs = {"jr:template" => ""} if item.repeatable %>
-        <%= content_tag("grp-#{item.id}", @attrs) do %>
-          <%= tag("grp-header#{item.id}") %>
-          <% subtree.keys.each do |qing| %>
-            <% unless qing.hidden %>
-              <% qing.subquestions.each do |subq| %>
-                <%= tag(subq.odk_code) %>
-              <% end %>
-            <% end %>
-          <% end %>
-        <% end %>
-      <% else %>
-        <% unless item.hidden %>
-          <% item.subquestions.each do |subq| %>
-            <%= tag(subq.odk_code) %>
-          <% end %>
-        <% end %>
-      <% end %>
+    <%= @form.default_response_name_instance_tag %>
+
+    <% @form.sorted_children.each do |node| %>
+      <%= render "forms/odk/instance_node", node: node %>
     <% end %>
 
     <%# incomplete response question nodes %>

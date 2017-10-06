@@ -1,6 +1,7 @@
 ar:
   # This should be the name of the language as written in that language, e.g. English, Français, Español, etc.
   locale_name: "انكليزي"
+  locale_dir: "rtl"
 
   # common words (should be capitalized except for those that obviously shouldn't like and, or, e.g., etc.)
   common:
@@ -350,7 +351,6 @@ ar:
 
     attributes:
       broadcast:
-        balance: "موازنة الرسالة النصية القصيرة "
         body: "رسالة"
         created_at: "وقت الإرسال"
         errors: "أخطأ"
@@ -455,9 +455,6 @@ ar:
         allow_unauthenticated_submissions: "السماح بتسليم غير مصدق"
         incoming_sms_numbers_str: "الأرقام الواردة"
         incoming_sms_token: " الرسائل النصية القصيرة الواردة المأخوذة"
-        intellisms_password1: "كلمة المرور"
-        intellisms_password2: "تأكيد كلمة المرور"
-        intellisms_username: "إسم المستخدم"
         preferred_locales_str: "اللغة المفضلة"
         default_outgoing_sms_adapter: "المزود الصادر الافتراضي"
         override_code: "رمز التجاوز"
@@ -636,8 +633,6 @@ ar:
         using_incoming_sms_token_title: 'إستخدام رمز الرسالة النصية القصيرة الورادة '
         using_incoming_sms_token_body: "يرجى تسجيل URL  الخاص بالرسائل النصية القصيرة الوارد مع مزود بوابتك: \n\n%{url}"
         default_outgoing_sms_adapter: "المحول المستخدم لإرسال الرسائل النصية القصيرة. يرجى ملاحظة أن الإجابة على الرسائل القصيرة النصية قد يرسل عبر نفس المحول أو محول آخر إعتماداً على المحول الذي وردة الرسالة الأصلية عليه"
-        intellisms_username: "اسم المستخدم لحساب IntelliSMS."
-        intellisms_password1: "أدخل وإعادة إدخال كلمة المرور لتغيير كلمة المرور لحساب IntelliSMS."
         twilio_phone_number: "رقم الهاتف مسجل في (Twilio ). نشرات الرسائل النصية القصيرة الصادرة مالم يمتلك حسب (Twilio ) لهذا الرقم. يجب أن يحتوي الرقم على رمز الدولة . مثل :+2568034423"
         twilio_account_sid: "SID الخاص بحساب Twilio"
         twilio_auth_token1: "رمز التخويل لحساب Twilio"
@@ -973,33 +968,33 @@ ar:
       long: "%B %d %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M"
+      default: "%b %d %Y %H:%M:%S"
       short: "%b %d %H:%M"
       long: "%A, %B %d %Y %H:%M"
-      time_only: "%H:%M"
+      time_only: "%H:%M:%S"
 
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
   search_qualifiers:
     text: "نص"
-    email: "بريد إلكتروني"
+    email: "بريد-إلكتروني"
     form: "إستمارة"
-    login: "دخول "
+    login: "دخول"
     name: "اسم"
-    option_set: "مجموعة - خيار"
+    option_set: "مجموعة-خيار"
     phone: "هاتف"
     question: "سؤال"
-    question_type: "نوع السؤال"
-    reviewed: "تمت المراجعة"
+    question_type: "نوع-السؤال"
+    reviewed: "تمت-المراجعة"
     source: "مصدر"
-    submit_date: "وقت التسليم"
+    submit_date: "وقت-التسليم"
     submitter: "مُسْلِم"
     code: "رمز"
     title: "عنوان"
     type: "نوع"
     tag: "إشارة"
     date: "تاريخ"
-    datetime: "تاريخ وقت"
-    username: "اسم مستخدم"
+    datetime: "تاريخ-وقت"
+    username: "اسم-مستخدم"
     content: "محتوى"
     number: "عدد"
     group: "مجموعة"
@@ -1105,8 +1100,6 @@ ar:
     reviewed: "تمت المراجعة"
 
   broadcast:
-    balance_check_failed: "فشل التحقق من رصيد الرسائل النصية القصيرة."
-    balance_notice: "لديك رصيد %{balance} الرسائل النصية القصيرة في%حسابك {account_type}."
     chars: # these are for informing the user how many chars they have left in their sms
       remaining: "الرموز المتبقية "
       too_many: "رموز كثيرة"
@@ -1127,7 +1120,6 @@ ar:
         sms_only: "فقط رسائل نصية (لا ترسل بريد إلكتروني)"
         email_only: "بريد إلكتروني (لا ترسل أي رسائل نصية قصيرة )"
         both: "رسالة نصية قصيرة و بريد إلكتروني "
-    no_possible_recipients: "لا احد من  المستخدمين الذين حددتهم لديه عنوان بريد الإلكتروني أو رقم الهاتف. حاول مرة اخرى."
     send_broadcast: "إرسال نشرة"
     send_success: "تم ارسال النشرة بنجاح"
     send_error: "خطأ في ارسال النشرة (انظر ادناه)"
@@ -1266,7 +1258,7 @@ ar:
         2a_appendix: "باستخدام هاتفك، إبدء رسالة نصية قصيرة إلى أحد الأرقام الموجودة على الورقة مرفقة."
         2a_number_html: "بإستخدام هاتفك، إبدء رسالة نصية قصيرة إلى <strong>%{number} </ strong>."
         2b: "أدخل محتويات كل سطر على الجانب الأيمن من الصفحة، والانتقال يكون من أعلى إلى أسفل."
-        2c_html: "يتم ترميز الفترات بواسطة %{period} ويتم ترميز المساحات بواسطة %{SPC}. ومن المهم أن تدخل كل الفترات والمسافات."
+        2c_html: "يتم ترميز الفترات بواسطة %{period} ويتم ترميز المساحات بواسطة %{spc}. ومن المهم أن تدخل كل الفترات والمسافات."
         example_sms: "مثال رسالة نصية قصيرة"
       unique_code: "هذا هو الرمز الفريد للاستمارة"
       unknown_number: "[رقم مجهول]"
@@ -1479,7 +1471,6 @@ ar:
     tally_type: "ما الذي تود إحصائه؟"
     these_questions: "هذه الأسئلة بالتحديد"
     total_rows: "مجموع السطور:%{count} "
-    total_rows_showing: "عرض%{count} السطور من إجمالي%{} TOTAL_COUNT"
     view_response: "رد #%{id}"
     what_attrib_col_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس للأعمدة (اختياري)؟"
     what_attrib_row_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس السطور(اختياري)؟"
@@ -1663,7 +1654,6 @@ ar:
     headings:
       general: "الضبط العام"
       sms: "ضبط الرسالة النصية القصيرة المشتركة"
-      intellisms: "ضبط الرسالة النصية القصير Intelli"
       twilio: "ضبط Twilio"
       frontlinecloud: "ضبط FrontlineCloud "
 

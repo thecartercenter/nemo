@@ -1,38 +1,46 @@
 <div class="screen">
-
   <%= top_action_links(@form) do %>
     <% if @form.has_questions? %>
       <% if can?(:publish, @form) %>
         <% lbl = t("form.#{@form.verb}_form") %>
-        <%= link_to(icon_tag(@form.verb) + lbl, publish_form_path(@form), :'data-method' => 'put') %>
+        <%= link_to(icon_tag(@form.verb) + lbl, publish_form_path(@form), "data-method": "put") %>
       <% end %>
 
       <% if @form.smsable? && !admin_mode? %>
-        <%= link_to(icon_tag(:sms) + t('form.view_sms_guide'), sms_guide_form_path(@form)) if @form.published? %>
-        <%= link_to(icon_tag(:sms_console) + t('page_titles.sms_tests.all'), new_sms_test_path) if can?(:create, Sms::Test) %>
+        <% if @form.published? %>
+          <%= link_to(icon_tag(:sms) + t("form.view_sms_guide"), sms_guide_form_path(@form)) %>
+        <% end %>
+        <% if can?(:create, Sms::Test) %>
+          <%= link_to(icon_tag(:sms_console) + t("page_titles.sms_tests.all"), new_sms_test_path) %>
+        <% end %>
       <% end %>
 
       <%# This link should be last because it has loading ind after it. %>
-      <%= link_to(icon_tag(:print) + t('form.print_form'), "#", class: 'print-link', :'data-form-id' => @form.id) %>
-      <%= loading_indicator(:id => @form.id) %>
+      <%= link_to(icon_tag(:print) + t("form.print_form"), "#", class: "print-link",
+        "data-form-id": @form.id) %>
+      <%= loading_indicator(id: @form.id) %>
     <% end %>
   <% end %>
 
   <%= published_warning(@form) if @form.published? && form_mode == :edit %>
 
   <%= elmo_form_for(@form) do |f| %>
-
     <%= f.base_errors %>
+    <%= f.field(:name, required: true, read_only: cannot?(:rename, @form)) %>
 
-    <%= f.field(:name, :required => true, :read_only => cannot?(:rename, @form)) %>
-
-    <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>
     <% unless admin_mode? %>
-      <div class="setting_fields">
-        <%= f.field(:smsable, :type => :check_box)  %>
-        <%= f.field(:authenticate_sms, type: :check_box) %>
-        <%= f.field(:allow_incomplete, :type => :check_box, :read_only => @form.published?) %>
-        <%= f.field(:access_level, :partial => 'form_access_level') %>
+      <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>
+      <div class="setting-fields">
+        <%= f.field(:default_response_name) %>
+        <%= f.field(:access_level, partial: "form_access_level") %>
+        <%= f.field(:allow_incomplete, type: :check_box, read_only: @form.published?) %>
+        <%= f.field(:smsable, type: :check_box)  %>
+        <div class="sms-fields">
+          <%= f.field(:sms_relay, type: :check_box) %>
+          <%= f.field(:recipient_ids, type: :select, multiple: true, prompt: false,
+            options: sel_opts_from_objs(@form.recipients), read_only_content: @form.recipient_names) %>
+            <%= f.field(:authenticate_sms, type: :check_box) %>
+        </div>
       </div>
     <% end %>
     <div class="less-settings"><a href="#"><%= t("common.less_settings") %></a></div>
@@ -40,24 +48,26 @@
     <%# Submit/publish buttons %>
     <% unless read_only %>
       <% show_sp_btn = !@form.new_record? && !@form.published? && can?(:publish, @form) %>
-      <div class="submit-buttons <%= 'publish' if show_sp_btn %>">
+      <div class="submit-buttons <%= "publish" if show_sp_btn %>">
         <% if show_sp_btn %>
-          <%= f.submit(I18n.t('form.save_and_publish'), :name => 'save_and_publish', :class => 'btn btn-default') %>
+          <%= f.submit(I18n.t("form.save_and_publish"), name: "save_and_publish", class: "btn btn-default") %>
         <% end %>
-        <%= f.submit(:class => "btn btn-primary") %>
+        <%= f.submit(class: "btn btn-primary") %>
       </div>
     <% end %>
-
   <% end %>
 
-  <%= render('form_items_list') %>
+  <%= render("form_items_list") %>
 </div>
 
-<%= render('print_format_tips_modal') %>
+<%= render("print_format_tips_modal") %>
 
 <%= javascript_doc_ready do %>
-  Form.hookup_rank_boxes();
-  new ELMO.Views.FormSettingsView();
+  <% unless admin_mode? %>
+    new ELMO.Views.FormSettingsView(<%=json(
+      recipient_options_url: possible_recipients_broadcasts_path
+    )%>);
+  <% end %>
   new ELMO.Views.PrintFormView();
   new ELMO.Views.FormItemsView(<%=json(
     form_id: @form.id,

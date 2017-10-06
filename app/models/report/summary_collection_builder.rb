@@ -4,6 +4,7 @@ class Report::SummaryCollectionBuilder
   # hash for converting qtypes to groups (stat, select, date, raw) used for generating summaries
   QTYPE_TO_SUMMARY_GROUP = {
     'integer' => 'stat',
+    'counter' => 'stat',
     'decimal' => 'stat',
     'time' => 'stat',
     'datetime' => 'stat',
@@ -71,7 +72,6 @@ class Report::SummaryCollectionBuilder
 
         # loop over each stat qing
         summaries = stat_qs.map do |qing|
-
           # get stat values from has we built above
           stat_values = results_by_disagg_value_and_qing_id[[disagg_value, qing.id]]
 
@@ -84,7 +84,7 @@ class Report::SummaryCollectionBuilder
           else
             # convert stats to appropriate type
             case qing.qtype_name
-            when 'integer'
+            when 'integer', 'counter'
               stat_values['mean'] = stat_values['mean'].to_f
               %w(max min).each{|s| stat_values[s] = stat_values[s].to_i}
             when 'decimal'
@@ -92,7 +92,10 @@ class Report::SummaryCollectionBuilder
             when 'time'
               stats.each{|s| stat_values[s] = I18n.l(Time.parse(stat_values[s]), :format => :time_only)}
             when 'datetime'
-              stats.each{|s| stat_values[s] = I18n.l(Time.zone.parse(stat_values[s] + ' UTC'))}
+              # Datetime values are in UTC so we convert them to string and then parse them into our zone.
+              # Sometimes the zone shown in to_s is something other than UTC but it really is UTC so we
+              # strip it out before parsing.
+              stats.each{|s| stat_values[s] = I18n.l(Time.zone.parse(stat_values[s].strftime("%Y-%m-%d %H:%M:%S UTC")))}
             end
 
             # build items
@@ -123,53 +126,96 @@ class Report::SummaryCollectionBuilder
     def run_stat_query(stat_qs)
       qing_ids = stat_qs.map(&:id)
 
-      query = <<-eos
-        SELECT #{disagg_select_expr} qing.id AS qing_id, q.qtype_name AS qtype_name,
-          SUM(
-            CASE q.qtype_name
-              WHEN 'integer' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
-              WHEN 'decimal' THEN IF(a.value IS NULL OR a.value = '', 1, 0)
-              WHEN 'time' THEN IF(a.time_value IS NULL, 1, 0)
-              WHEN 'datetime' THEN IF(a.datetime_value IS NULL, 1, 0)
-            END
-          ) AS null_count,
-          CASE q.qtype_name
-            WHEN 'integer' THEN AVG(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN AVG(CONVERT(a.value, DECIMAL(9,6)))
-            WHEN 'time' THEN SEC_TO_TIME(AVG(TIME_TO_SEC(a.time_value)))
-            WHEN 'datetime' THEN FROM_UNIXTIME(AVG(UNIX_TIMESTAMP(a.datetime_value)))
-          END AS mean,
-          CASE q.qtype_name
-            WHEN 'integer' THEN MIN(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN MIN(CONVERT(a.value, DECIMAL(9,6)))
-            WHEN 'time' THEN MIN(a.time_value)
-            WHEN 'datetime' THEN MIN(a.datetime_value)
-          END AS min,
-          CASE q.qtype_name
-            WHEN 'integer' THEN MAX(CONVERT(a.value, SIGNED INTEGER))
-            WHEN 'decimal' THEN MAX(CONVERT(a.value, DECIMAL(9,6)))
-            WHEN 'time' THEN MAX(a.time_value)
-            WHEN 'datetime' THEN MAX(a.datetime_value)
-          END AS max
-        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
-          INNER JOIN questions q ON q.id = qing.question_id
+      # NOTE TO MEL
+      # The SEC_TO_TIME and TIME_TO_SEC below compute average times (not datetimes, see below for that).
+      # There is test coverage for this.
+      # In postgres an equivalent might be to do
+      #   EXTRACT(hour FROM t)*60*60 + EXTRACT(minutes FROM t)*60 + EXTRACT(seconds FROM t)
+      # and then
+      #   to_char( (9999999 ||' seconds')::interval, 'HH24:MM:SS' )`
+      # This will produce a string instead of a time, but that should be ok.
+      #
+      # FROM_UNIXTIME and UNIX_TIMESTAMP should be easier to replace.
+      # I think to_timestamp and extract(epoch FROM your_datetime_column) should do it.
+
+      queries = []
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
+          CAST(AVG(CAST(a.value AS INTEGER)) AS TEXT) AS mean,
+          CAST(MIN(CAST(a.value AS INTEGER)) AS TEXT) AS min,
+          CAST(MAX(CAST(a.value AS INTEGER)) AS TEXT) AS max
+        FROM answers a INNER JOIN form_items qing
+            ON qing.deleted_at IS NULL AND qing.type='Questioning'
+              AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE q.qtype_name in ('integer', 'decimal', 'time', 'datetime')
-        GROUP BY #{disagg_group_by_expr} qing.id, q.qtype_name
-        ORDER BY NULL
+        WHERE a.deleted_at IS NULL AND (q.qtype_name = 'integer' OR q.qtype_name = 'counter')
+        GROUP BY #{disagg_group_by_expr} qing.id
       eos
 
-      res = do_query(query, qing_ids)
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
+          CAST(AVG(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS mean,
+          CAST(MIN(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS min,
+          CAST(MAX(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS max
+        FROM answers a INNER JOIN form_items qing
+          ON qing.deleted_at IS NULL AND qing.type='Questioning'
+            AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
+          #{disagg_join_clause}
+          #{current_user_join_clause}
+        WHERE a.deleted_at IS NULL AND q.qtype_name = 'decimal'
+        GROUP BY #{disagg_group_by_expr} qing.id
+      eos
 
-      # build hash
-      hash = ActiveSupport::OrderedHash[]
-      res.each(:as => :hash) do |row|
-        # get the object from the disagg value as returned from the db
-        row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
-        hash[[row['disagg_value'], row['qing_id']]] = row
+      time_extracts = "EXTRACT(hour from a.time_value)*60*60 + " \
+        "EXTRACT(minutes FROM a.time_value)*60 + " \
+        "EXTRACT(seconds FROM a.time_value)"
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END) AS null_count,
+          CAST(TO_CHAR((AVG(#{time_extracts}) || ' seconds')::interval, 'HH24:MM:SS') AS TEXT) AS mean,
+          CAST(MIN(a.time_value) AS TEXT) AS min,
+          CAST(MAX(a.time_value) AS TEXT) AS max
+        FROM answers a INNER JOIN form_items qing ON qing.deleted_at IS NULL AND qing.type='Questioning'
+          AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
+          #{disagg_join_clause}
+          #{current_user_join_clause}
+        WHERE a.deleted_at IS NULL AND q.qtype_name = 'time'
+        GROUP BY #{disagg_group_by_expr} qing.id
+      eos
+
+      queries << <<-eos
+        SELECT #{disagg_select_expr} qing.id AS qing_id,
+          SUM(CASE WHEN a.datetime_value IS NULL THEN 1 ELSE 0 END) AS null_count,
+          to_timestamp(AVG(extract(epoch FROM a.datetime_value))) AS mean,
+          MIN(a.datetime_value) AS min,
+          MAX(a.datetime_value) AS max
+        FROM answers a INNER JOIN form_items qing ON qing.deleted_at IS NULL AND qing.type='Questioning'
+          AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.deleted_at IS NULL AND q.id = qing.question_id
+          #{disagg_join_clause}
+          #{current_user_join_clause}
+        WHERE a.deleted_at IS NULL AND q.qtype_name = 'datetime'
+        GROUP BY #{disagg_group_by_expr} qing.id
+      eos
+
+      # Run queries and build hash
+      ActiveSupport::OrderedHash.new.tap do |hash|
+        queries.each do |query|
+          res = sql_runner.run(query, qing_ids)
+
+          res.each do |row|
+            # Get the object from the disagg value as returned from the db
+            row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
+            hash[[row['disagg_value'], row['qing_id']]] = row
+          end
+        end
       end
-      hash
     end
 
     ####################################################################
@@ -233,44 +279,46 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
+          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE q.qtype_name = 'select_one'
+          WHERE qings.deleted_at IS NULL
+            AND q.qtype_name = 'select_one'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
             AND (a.rank IS NULL OR a.rank = 1)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       eos
 
-      sel_one_res = do_query(query, qing_ids)
+      sel_one_res = sql_runner.run(query, qing_ids)
 
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
-          LEFT OUTER JOIN choices c ON a.id = c.answer_id
+          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
+          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
+          LEFT OUTER JOIN choices c ON a.id = c.answer_id AND c.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE q.qtype_name = 'select_multiple'
+          WHERE qings.deleted_at IS NULL
+            AND q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
       eos
 
-      sel_mult_res = do_query(query, qing_ids)
+      sel_mult_res = sql_runner.run(query, qing_ids)
 
       # read tallies into hashes
       tallies = {}
-      sel_one_res.each(:as => :hash).each do |row|
+      sel_one_res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
         tallies[[row['disagg_value'], row['qing_id'], row['option_id']]] = row['answer_count']
       end
-      sel_mult_res.each(:as => :hash).each do |row|
+      sel_mult_res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -286,23 +334,24 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
-          LEFT OUTER JOIN choices c ON a.id = c.answer_id
+          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
+          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
+          LEFT OUTER JOIN choices c ON a.id = c.answer_id AND c.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE q.qtype_name = 'select_multiple'
+          WHERE qings.deleted_at IS NULL
+            AND q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
             AND c.id IS NOT NULL
           GROUP BY #{disagg_group_by_expr} qings.id
       eos
 
-      res = do_query(query, qing_ids)
+      res = sql_runner.run(query, qing_ids)
 
       # read non-null answer counts into hash
       tallies = {}
-      res.each(:as => :hash).each do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -368,22 +417,23 @@ class Report::SummaryCollectionBuilder
       query = <<-eos
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id
+          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
+          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE q.qtype_name = 'date'
+          WHERE qings.deleted_at IS NULL
+            AND q.qtype_name = 'date'
             AND qings.id IN (?)
             AND qings.type = 'Questioning'
           GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
           ORDER BY disagg_value, qing_id, date
       eos
 
-      res = do_query(query, qing_ids)
+      res = sql_runner.run(query, qing_ids)
 
       # read into tallies, preserving sorted date order
       tallies = {}
-      res.each(:as => :hash).each do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -402,13 +452,13 @@ class Report::SummaryCollectionBuilder
       res = run_raw_answer_query(raw_qs)
 
       # get submitter names for long text q's
-      submitter_names = get_submiter_names(raw_qs)
+      submitter_names = get_submitter_names(raw_qs)
 
       # build summary *items* and index by disagg_value and qing_id
       # also keep null counts
       items_hash = {}
       null_counts_hash = {}
-      res.each(:as => :hash) do |row|
+      res.each do |row|
         # get the object from the disagg value as returned from the db
         row['disagg_value'] = disagg_value_db_to_obj[row['disagg_value']]
 
@@ -473,16 +523,16 @@ class Report::SummaryCollectionBuilder
         FROM answers a
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE a.questioning_id IN (?)
+          WHERE a.deleted_at IS NULL AND a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
           LIMIT #{RAW_ANSWER_LIMIT}
       eos
 
-      do_query(query, qing_ids)
+      sql_runner.run(query, qing_ids)
     end
 
     # gets a hash of answer_id to submitter names for each long_text answer to questionings in the given array
-    def get_submiter_names(raw_qs)
+    def get_submitter_names(raw_qs)
       # get ids of long_text q's from the given array
       # (should be eager loaded with Question to avoid n+1)
       long_qing_ids = raw_qs.find_all{|q| q.qtype_name == 'long_text'}.map(&:id)
@@ -494,14 +544,14 @@ class Report::SummaryCollectionBuilder
         query = <<-eos
           SELECT a.id AS answer_id, u.name AS submitter_name
           FROM answers a
-            INNER JOIN responses r ON a.response_id = r.id
-            INNER JOIN users u ON r.user_id = u.id
-          WHERE a.questioning_id IN (?)
+            INNER JOIN responses r ON r.deleted_at IS NULL AND a.response_id = r.id
+            INNER JOIN users u ON u.deleted_at IS NULL AND r.user_id = u.id
+          WHERE a.deleted_at IS NULL AND a.questioning_id IN (?)
         eos
 
-        res = do_query(query, long_qing_ids)
+        res = sql_runner.run(query, long_qing_ids)
 
-        res.each(:as => :hash).map{|row| [row['answer_id'], row['submitter_name']]}.to_h
+        res.map{|row| [row['answer_id'], row['submitter_name']]}.to_h
       end
     end
 
@@ -530,7 +580,7 @@ class Report::SummaryCollectionBuilder
     # returns a fully qualified column reference for the disaggregation value
     def disagg_column
       if disagg_qing.nil?
-        "'all'"
+        "CAST('all' AS TEXT)"
       else
         'disagg_ans.option_id'
       end
@@ -545,8 +595,9 @@ class Report::SummaryCollectionBuilder
     def disagg_join_clause
       return '' if disagg_qing.nil?
       <<-eos
-        INNER JOIN responses r ON a.response_id = r.id
-        LEFT OUTER JOIN answers disagg_ans ON r.id = disagg_ans.response_id AND disagg_ans.questioning_id = #{disagg_qing.id}
+        INNER JOIN responses r ON r.deleted_at IS NULL AND a.response_id = r.id
+        LEFT OUTER JOIN answers disagg_ans ON disagg_ans.deleted_at IS NULL
+          AND r.id = disagg_ans.response_id AND disagg_ans.questioning_id = #{disagg_qing.id}
       eos
     end
 
@@ -554,7 +605,8 @@ class Report::SummaryCollectionBuilder
     def current_user_join_clause
       return '' unless @options && @options[:restrict_to_user]
       <<-eos
-        INNER JOIN responses res ON a.response_id = res.id AND res.user_id = #{@options[:restrict_to_user].id}
+        INNER JOIN responses res ON res.deleted_at IS NULL
+          AND a.response_id = res.id AND res.user_id = #{@options[:restrict_to_user].id}
       eos
     end
 
@@ -564,7 +616,7 @@ class Report::SummaryCollectionBuilder
       "#{disagg_column},"
     end
 
-    def do_query(*args)
-      ActiveRecord::Base.connection.execute(ActiveRecord::Base.send(:sanitize_sql_array, args))
+    def sql_runner
+      SqlRunner.instance
     end
 end

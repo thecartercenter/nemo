@@ -1,0 +1,115 @@
+/* Printable form */
+#printable_form {
+  img.logo {
+    float: right;
+    height: .3in;
+  }
+  div.mission {
+    margin-bottom: 10px;
+  }
+  table {
+    width: 100%;
+    page-break-after: auto;
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+
+      &.conditional td {
+        color: #999;
+      }
+    }
+
+    td {
+      padding: 0 0 0 0;
+      margin-bottom: 3px;
+      /* Fractional border widths don't work on some browsers */
+      border-top: 1px solid #aaa !important;
+      font-size: 8pt;
+      line-height: 12pt;
+
+      &.name {
+        width: 50%;
+      }
+      &.answer {
+        width: 50%;
+        vertical-align: middle;
+      }
+    }
+  }
+
+  tr.qing-group {
+    td {
+      background-color: #ddd !important;
+    }
+  }
+
+  tr.qing-group, tr.question {
+    &.depth-2 td.name {
+      border-left: 20px solid #ddd;
+    }
+
+    &.depth-3 td.name {
+      border-left: 40px solid #ddd;
+    }
+
+    &.depth-4 td.name {
+      border-left: 60px solid #ddd;
+    }
+  }
+
+  div.condition {
+    font-weight: bold;
+  }
+
+  div#reqd_message {
+    float: right;
+  }
+
+  div.reqd-sym {
+    display: inline-block;
+    font-weight: bold;
+    font-size: 125%;
+    line-height: 5px;
+    vertical-align: middle;
+  }
+
+  .option {
+    float: left;
+    margin-right: 20px;
+  }
+
+  .option_box, .answer_box {
+    background-color: #ccc !important;
+  }
+
+  .option_box {
+    float: left;
+    width: 0.15in;
+    height: 0.15in;
+    margin-right: 2px;
+  }
+
+  .answer_box {
+    height: 0.2in;
+  }
+
+  td.integer_answer, td.decimal_answer {
+    .answer_box {
+      width: 1.5in;
+    }
+  }
+
+  td.signature_answer .answer_box {
+    height: 0.3in;
+  }
+
+  td.sketch_answer .answer_box {
+    height: 1in;
+  }
+
+  .hint {
+    font-style: italic;
+    color: #888888;
+  }
+}

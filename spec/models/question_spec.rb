@@ -1,68 +1,129 @@
 require 'spec_helper'
 
 describe Question do
+  it_behaves_like "has a uuid"
 
-  it "creation" do
-    create(:question) # should not raise
+  describe ".not_in_form" do
+    let!(:form) { create(:form, question_types: %w(integer integer)) }
+    let!(:other_question) { create(:question) }
+
+    it "should work" do
+      expect(Question.not_in_form(form).all).to eq([other_question])
+    end
   end
 
-  it "code must be correct format" do
-    q = build(:question, code: 'a b')
-    q.save
-    assert_match(/Code: Should start with a letter/, q.errors.full_messages.join)
+  describe "#min_max_error_msg" do
+    let(:question) { build(:question, qtype_name: 'integer',
+      minimum: 10, maximum: 20, minstrictly: false, maxstrictly: true) }
 
-    # but dont raise this error if not present (let the presence validator handle that)
-    q = build(:question, code: '')
-    q.save
-    expect(q.errors.full_messages.join).not_to match(/Code: Should start with a letter/)
+    it "is correct" do
+      expect(question.min_max_error_msg).to eq("Must be greater than or equal to 10 and less than 20")
+    end
   end
 
-  # this also tests .qtype and .has_options (delegated)
-  it "select questions must have option set" do
-    q = build(:question, qtype_name: 'select_one')
-    q.option_set = nil
-    q.save
-    assert_match(/is required/, q.errors[:option_set].join)
+  describe "normalization" do
+    let(:question) { create(:question, submitted) }
+    subject { submitted.keys.map { |k| [k, question.send(k)] }.to_h }
+
+    describe "min max constraints" do
+      shared_examples_for "minmax" do |prefix|
+        let(:val) { :"#{prefix}imum" }
+        let(:strict) { :"#{prefix}strictly" }
+
+        context do
+          let(:submitted) { {qtype_name: "integer", val => 4, strict => nil} }
+          it { is_expected.to eq(qtype_name: "integer", val => 4, strict => false) }
+        end
+
+        context do
+          let(:submitted) { {qtype_name: "integer", val => 4, strict => false} }
+          it { is_expected.to eq(qtype_name: "integer", val => 4, strict => false) }
+        end
+
+        context do
+          let(:submitted) { {qtype_name: "integer", val => 4, strict => true} }
+          it { is_expected.to eq(qtype_name: "integer", val => 4, strict => true) }
+        end
+
+        context do
+          let(:submitted) { {qtype_name: "integer", val => nil, strict => nil} }
+          it { is_expected.to eq(qtype_name: "integer", val => nil, strict => nil) }
+        end
+
+        context do
+          let(:submitted) { {qtype_name: "integer", val => nil, strict => false} }
+          it { is_expected.to eq(qtype_name: "integer", val => nil, strict => nil) }
+        end
+
+        context do
+          let(:submitted) { {qtype_name: "integer", val => nil, strict => true} }
+          it { is_expected.to eq(qtype_name: "integer", val => nil, strict => nil) }
+        end
+
+        context do
+          let(:submitted) { {qtype_name: "integer", val => "", strict => true} }
+          it { is_expected.to eq(qtype_name: "integer", val => nil, strict => nil) }
+        end
+
+        context do
+          let(:submitted) { {qtype_name: "text", val => 5, strict => true} }
+          it { is_expected.to eq(qtype_name: "text", val => nil, strict => nil) }
+        end
+      end
+
+      it_behaves_like "minmax", "min"
+      it_behaves_like "minmax", "max"
+    end
+
+    describe "qtype and metadata" do
+      context do
+        let(:submitted) { {qtype_name: "datetime", metadata_type: "formstart"} }
+        it { is_expected.to eq(qtype_name: "datetime", metadata_type: "formstart") }
+      end
+
+      context do
+        let(:submitted) { {qtype_name: "datetime", metadata_type: ""} }
+        it { is_expected.to eq(qtype_name: "datetime", metadata_type: nil) }
+      end
+
+      context do
+        let(:submitted) { {qtype_name: "date", metadata_type: "formstart"} }
+        it { is_expected.to eq(qtype_name: "date", metadata_type: nil) }
+      end
+    end
+
   end
 
-  it "not in form" do
-    f = create(:form, question_types: %w(integer integer))
-    q = create(:question)
-    expect(Question.not_in_form(f).all).to eq([q])
-  end
+  describe "validations" do
+    describe "code format" do
+      let(:question) { build(:question, code: code) }
 
-  it "min max error message" do
-    q = build(:question, qtype_name: 'integer', minimum: 10, maximum: 20, minstrictly: false, maxstrictly: true)
-    expect(q.min_max_error_msg).to eq('Must be greater than or equal to 10 and less than 20')
-  end
+      context "with invalid code" do
+        let(:code) { "a b" }
 
-  it "options" do
-    q = create(:question, qtype_name: 'select_one')
-    q.reload
-    expect(q.options.map(&:name)).to eq(%w(Cat Dog))
-    q = create(:question, qtype_name: 'integer', code: 'intq')
-    expect(q.options).to be_nil
-  end
+        it "errors for format" do
+          expect(question).not_to be_valid
+          expect(question.errors[:code].join).to match(/Should start with a letter/)
+        end
+      end
 
-  it "integer question should have non-null minstrictly value if minimum is set" do
-    q = create(:question, qtype_name: 'integer', minimum: 4, minstrictly: nil)
-    expect(q.minstrictly).to eq(false)
-    q = create(:question, qtype_name: 'integer', minimum: 4, minstrictly: false)
-    expect(q.minstrictly).to eq(false)
-    q = create(:question, qtype_name: 'integer', minimum: 4, minstrictly: true)
-    expect(q.minstrictly).to eq(true)
-  end
+      context "with blank code" do
+        let(:code) { "" }
 
-  it "integer question should have null minstrictly value if minimum is null" do
-    q = create(:question, qtype_name: 'integer', minimum: nil, minstrictly: true)
-    expect(q.minstrictly).to be_nil
-    q = create(:question, qtype_name: 'integer', minimum: nil, minstrictly: false)
-    expect(q.minstrictly).to be_nil
-  end
+        it "errors for presence" do
+          expect(question).not_to be_valid
+          expect(question.errors[:code].join).to match(/is required/)
+        end
+      end
+    end
 
-  it "non numeric questions should have null constraint values" do
-    q = create(:question, qtype_name: 'text', minimum: 5, minstrictly: true)
-    expect(q.minimum).to be_nil
-    expect(q.minstrictly).to be_nil
+    describe "option set presence" do
+      let(:question) { build(:question, qtype_name: "select_one", option_set: nil) }
+
+      it "is enforced" do
+        expect(question).not_to be_valid
+        expect(question.errors[:option_set].join).to match(/is required/)
+      end
+    end
   end
 end

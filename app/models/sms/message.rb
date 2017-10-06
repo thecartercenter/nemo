@@ -7,7 +7,7 @@
 # from        a string holding a single phone number. can be nil in case of an outgoing message.
 # body        a string holding the body of the message
 # sent_at     the time the message was sent/received
-class Sms::Message < ActiveRecord::Base
+class Sms::Message < ApplicationRecord
   include MissionBased
 
   belongs_to :mission
@@ -32,7 +32,7 @@ class Sms::Message < ActiveRecord::Base
     [
       Search::Qualifier.new(name: "content", col: "sms_messages.body", type: :text, default: true),
       Search::Qualifier.new(name: "type", col: "sms_messages.type", type: :text),
-      Search::Qualifier.new(name: "date", col: "DATE(sms_messages.created_at)", type: :scale),
+      Search::Qualifier.new(name: "date", col: "CAST((sms_messages.created_at AT TIME ZONE 'UTC') AT TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)", type: :scale),
       Search::Qualifier.new(name: "datetime", col: "sms_messages.created_at", type: :scale),
       Search::Qualifier.new(name: "username", col: "users.login", type: :text, assoc: user_assoc, default: true),
       Search::Qualifier.new(name: "name", col: "users.name", type: :text, assoc: user_assoc, default: true),

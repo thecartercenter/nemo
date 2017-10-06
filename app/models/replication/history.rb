@@ -7,11 +7,11 @@ class Replication::History
   end
 
   def add_pair(orig, copy)
-    table[[orig.klass, orig.id]] = copy
+    table[[orig.klass.name, orig.id]] = copy
   end
 
   def get_copy(klass, id)
     raise "ID not given for history lookup" if id.blank?
-    table[[klass, id]]
+    table[[klass.name, id]]
   end
 end

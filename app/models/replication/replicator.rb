@@ -12,7 +12,9 @@ class Replication::Replicator
 
   def replicate
     source.class.transaction do
-      obj = Replication::ObjProxy.new(klass: source.class, id: source.id, replicator: self) # Create wrapper
+      # Create wrapper
+      obj = Replication::ObjProxy.new(klass: source.class, id: source.id,
+        replicator: self, replication_root: true)
       do_replicate(orig: obj).full_object
     end
   end
@@ -35,41 +37,40 @@ class Replication::Replicator
 
   private
 
-    # context[:orig] - The Obj to be replicated.
-    # context[:orig_parent] - The parent Obj of the Obj to be replicated.
-    # context[:copy_parent] - The copy of the parent of the Obj to be replicated.
-    # Returns the copy Replication::ObjProxy.
-    def do_replicate(context)
-      log("Object: #{context[:orig].klass.name}")
-      begin
-        context[:copy] = context[:orig].make_copy(context)
-        history.add_pair(context[:orig], context[:copy])
-        replicate_children(context)
-        context[:copy]
-      rescue Replication::BackwardAssocError
-        # If it's explicitly ok to skip this object, do so, else raise again so this will fail loudly.
-        $!.ok_to_skip ? nil : (raise $!)
-      end
+  # context[:orig] - The Obj to be replicated.
+  # context[:orig_parent] - The parent Obj of the Obj to be replicated.
+  # context[:copy_parent] - The copy of the parent of the Obj to be replicated.
+  # Returns the copy Replication::ObjProxy.
+  def do_replicate(context)
+    log("Object: #{context[:orig].klass.name}")
+    begin
+      context[:copy] = context[:orig].make_copy(context)
+      history.add_pair(context[:orig], context[:copy])
+      replicate_children(context)
+      context[:copy]
+    rescue Replication::BackwardAssocError
+      # If it's explicitly ok to skip this object, do so, else raise again so this will fail loudly.
+      $!.ok_to_skip ? log("Backward association missing (#{$!}), skipping") : (raise $!)
     end
+  end
 
-    def replicate_children(context)
-      log("Child assocs: #{context[:orig].child_assocs.map(&:name)}")
-      context[:orig].child_assocs.each do |assoc|
-        log("Assoc: #{assoc.name}")
-        copy_child = nil
-        context[:orig].children(assoc).map do |child|
-          log("Child: ##{child.id}")
-          # Try to find an existing copy. If one doesn't exist, make one.
-          unless copy_child = child.find_copy
-            copy_child = do_replicate(orig: child, orig_parent: context[:orig], copy_parent: context[:copy])
-          end
+  def replicate_children(context)
+    log("Child assocs: #{context[:orig].child_assocs.map(&:name)}")
+    context[:orig].child_assocs.each do |assoc|
+      copy_child = nil
+      context[:orig].children(assoc).map do |child|
+        log("Child: ##{child.id}")
+        # Try to find an existing copy. If one doesn't exist, make one.
+        unless copy_child = child.find_copy
+          copy_child = do_replicate(orig: child, orig_parent: context[:orig], copy_parent: context[:copy])
         end
+      end
 
-        # If the assoc is belongs_to, the foreign key couldn't be set during make_copy.
-        # So we set it now. (Note can only be one child for this association)
-        if assoc.belongs_to? && copy_child
-          context[:copy].associate(assoc, copy_child)
-        end
+      # If the assoc is belongs_to, the foreign key couldn't be set during make_copy.
+      # So we set it now. (Note can only be one child for this association)
+      if assoc.belongs_to? && copy_child
+        context[:copy].associate(assoc, copy_child)
       end
     end
   end
+end

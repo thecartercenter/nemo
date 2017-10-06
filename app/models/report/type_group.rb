@@ -7,7 +7,7 @@ class Report::TypeGroup
   # each TypeGroup contains a set of types. this is them, in the order they'll be displayed.
   TYPE_SETS = ActiveSupport::OrderedHash[
     'categorical' => %w(select_one select_multiple),
-    'numbers' => %w(integer decimal),
+    'numbers' => %w(integer counter decimal),
     'dates' => %w(date),
     'times' => %w(time datetime),
     'short_text' => %w(text),

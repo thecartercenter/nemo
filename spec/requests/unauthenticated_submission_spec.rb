@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'fileutils'
 
-describe 'unauthenticated submissions' do
+describe 'unauthenticated submissions', :odk do
 
   context 'when instance does not permit them' do
     before do

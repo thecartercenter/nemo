@@ -1,4 +1,4 @@
-class ELMO.Views.ConditionFormView extends Backbone.View
+class ELMO.Views.ConditionFormView extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
     @condition = options.condition

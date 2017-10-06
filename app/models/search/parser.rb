@@ -20,7 +20,7 @@ class Search::Parser
 
   def parse
     if @search.str.blank?
-      @sql = "1"
+      @sql = "true"
     else
       @lexer = Search::Lexer.new(@search.str)
       @lexer.lex

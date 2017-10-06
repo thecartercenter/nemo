@@ -5,16 +5,16 @@ class UserBatch
 
   IMPORT_ERROR_CUTOFF = 50
   BATCH_SIZE = 1000
-  PERMITTED_ATTRIBS = %i(login name phone phone2 email notes)
+  PERMITTED_ATTRIBS = %i(login name phone phone2 email birth_year gender gender_custom nationality notes)
 
-  attr_accessor :file
+  attr_accessor :file, :mission_id, :name
   attr_reader :users
 
   validates :file, presence: true
 
   def initialize(attribs = {})
     @users = []
-    @direct_db_conn = DirectDBConn.new("users")
+    @inserter = FastInserter.new("users")
     attribs.each { |k,v| instance_variable_set("@#{k}", v) }
   end
 
@@ -24,6 +24,10 @@ class UserBatch
 
   def succeeded?
     !@validation_error
+  end
+
+  def run(mission)
+    create_users(mission)
   end
 
   # creates users based on the data submitted via the users attribute
@@ -48,10 +52,9 @@ class UserBatch
       User.transaction do
 
         @import_num = last_import_num_on_users
-
         user_batch_attributes = parse_rows
 
-        (0..number_of_iterations).each do |i|
+        (0...number_of_iterations).each do |i|
           current_attributes_batch = user_batch_attributes[i * BATCH_SIZE, BATCH_SIZE]
 
           users_batch = create_users_instances(current_attributes_batch, mission)
@@ -59,11 +62,8 @@ class UserBatch
 
           validate_users_batch(users_batch)
 
-          check_uniqueness_on_objects(users_batch, ["email"])
           check_uniqueness_on_objects(users_batch, ["login"])
           check_uniqueness_on_objects(users_batch, ["phone", "phone2"])
-
-          check_uniqueness_on_db(users_batch, ["email"])
           check_uniqueness_on_db(users_batch, ["login"])
           check_uniqueness_on_db(users_batch, ["phone", "phone2"])
 
@@ -71,8 +71,11 @@ class UserBatch
 
           break if errors_reached_limit
 
-          @direct_db_conn.insert(users_batch)
-          insert_assignments(users_batch)
+          # No point doing the insert if it's going to be rolled back anyway.
+          unless @validation_error
+            @inserter.insert(users_batch)
+            insert_assignments(users_batch)
+          end
 
           users.concat users_batch
         end
@@ -90,12 +93,12 @@ class UserBatch
 
   def parse_headers(row)
     # building map of translated field names to symbolic field names
-    expected_headers = Hash[*%i{login name phone phone2 email notes}.map do |field|
+    expected_headers = Hash[*%i{login name phone phone2 email birth_year gender nationality notes}.map do |field|
       [User.human_attribute_name(field), field]
     end.flatten]
 
-    # Remove blank headers from row
-    row = row.reject { |i| i.strip.empty? }.compact
+    # Trim strings and remove blank headers from row
+    row = row.map { |s| s.to_s.strip.presence }.compact
 
     # building map of column indices to field names
     @fields = Hash[*row.map.with_index do |header,index|
@@ -111,8 +114,7 @@ class UserBatch
   end
 
   def number_of_iterations
-    users_rows_count = @data.count - 1
-    ( users_rows_count / BATCH_SIZE.to_f ).ceil - 1
+    (@data.count / BATCH_SIZE.to_f).ceil
   end
 
   def parse_rows
@@ -132,6 +134,9 @@ class UserBatch
           attributes[k] = attributes[k].to_i.to_s
         end
       end
+
+      attributes[:gender], attributes[:gender_custom] = coerce_gender(attributes[:gender])
+      attributes[:nationality] = coerce_nationality(attributes[:nationality])
 
       user_batch_attributes << attributes
     end
@@ -215,6 +220,24 @@ class UserBatch
     end
   end
 
+  # Takes a happy, uncoerced gender and stuffs it into a recognized box
+  def coerce_gender(gender_string)
+    return nil unless gender_string.present?
+    gender_options = I18n.t("user.gender_options")
+    gender_selection = gender_options.find { |k, v| gender_string == v }
+    gender = gender_selection.try(:first) || :specify
+    gender_custom = gender_string if gender == :specify
+    return gender.to_s, gender_custom
+  end
+
+  def coerce_nationality(nationality_string)
+    return nil unless nationality_string.present?
+    nationality_options = I18n.t("countries")
+    nationality_selection = nationality_options.find { |k, v| nationality_string == v }
+    nationality = nationality_selection.try(:first)
+    nationality.to_s
+  end
+
   def error_is_on_persistence_token?(user)
     (user.errors.keys.length == 1) && (user.errors.keys.include? :persistence_token)
   end
@@ -255,15 +278,9 @@ class UserBatch
   end
 
   def check_uniqueness_on_db(objects, fields)
-    results = @direct_db_conn.check_uniqueness(objects, fields)
-
-    add_results_errors_on_objects(results, fields) unless results.nil?
-  end
-
-  def add_results_errors_on_objects(results, fields)
+    results = @inserter.check_uniqueness(objects, fields) || []
     key = correct_field_key(fields)
-
-    results.reject(&:nil?).each do |result|
+    results.each do |result|
       (@fields_hash_table[key][result] || []).each do |object|
         fields.each { |f| add_uniqueness_error_checking_field_value(object, f, result) }
       end
@@ -277,7 +294,7 @@ class UserBatch
   end
 
   def insert_assignments(users_batch)
-    DirectDBConn.new("assignments").insert_select(
+    FastInserter.new("assignments").insert_select(
       users_batch, "assignments", "user_id", "users", "import_num")
   end
 

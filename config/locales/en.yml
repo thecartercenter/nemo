@@ -17,6 +17,7 @@ en:
       one: "Choose File..."
       other: "Choose Files..."
     clear: "Clear"
+    clipped: "Clipped"
     clone: "Clone"
     close: "Close"
     contact: "Contact"
@@ -30,14 +31,21 @@ en:
     error:
       zero: "Errors"
       one: "Error"
+      two: "Errors"
+      few: "Errors"
+      many: "Errors"
       other: "Errors"
     example:
       zero: "Examples"
       one: "Example"
+      two: "Examples"
+      few: "Examples"
+      many: "Examples"
       other: "Examples"
     example_abbr: "e.g."
     found: "Found"
     generate: "Generate"
+    group: "Group"
     inactive: "Inactive"
     import: "Import"
     incoming: "Incoming"
@@ -46,6 +54,7 @@ en:
     confirm_login: "Confirm Login"
     logout: "Logout"
     manage: "Manage"
+    map_offline: "Map is not available in offline mode"
     less_settings: "Fewer settings"
     more_settings: "More settings"
     near: "Near"
@@ -67,6 +76,9 @@ en:
     result:
       zero: "Results"
       one: "Result"
+      two: "Results"
+      few: "Results"
+      many: "Results"
       other: "Results"
     review: "Review"
     run: "Run"
@@ -112,6 +124,10 @@ en:
     protected: "Protected"
     inherit: "Inherit"
 
+  metadata_types:
+    formstart: "Form Start Time"
+    formend: "Form End Time"
+
   sms_guide_formatting_options:
     auto: Automatic
     inline: Inline
@@ -144,111 +160,195 @@ en:
       answer:
         zero: "Answers"
         one: "Answer"
+        two: "Answers"
+        few: "Answers"
+        many: "Answers"
         other: "Answers"
       assignment:
         zero: "Assignments"
         one: "Assignment"
+        two: "Assignments"
+        few: "Assignments"
+        many: "Assignments"
         other: "Assignments"
       broadcast:
         zero: "Broadcasts"
         one: "Broadcast"
+        two: "Broadcasts"
+        few: "Broadcasts"
+        many: "Broadcasts"
         other: "Broadcasts"
       choice:
         zero: "Choices"
         one: "Choice"
+        two: "Choices"
+        few: "Choices"
+        many: "Choices"
         other: "Choices"
       condition:
         zero: "Conditions"
         one: "Condition"
+        two: "Conditions"
+        few: "Conditions"
+        many: "Conditions"
         other: "Conditions"
       form:
         zero: "Forms"
         one: "Form"
+        two: "Forms"
+        few: "Forms"
+        many: "Forms"
         other: "Forms"
       mission:
         zero: "Missions"
         one: "Mission"
+        two: "Missions"
+        few: "Missions"
+        many: "Missions"
         other: "Missions"
       operation:
         zero: "Operations"
         one: "Operation"
+        two: "Operations"
+        few: "Operations"
+        many: "Operations"
         other: "Operations"
       option:
         zero: "Options"
         one: "Option"
+        two: "Options"
+        few: "Options"
+        many: "Options"
         other: "Options"
       option_set:
         zero: "Option Sets"
         one: "Option Set"
+        two: "Option Sets"
+        few: "Option Sets"
+        many: "Option Sets"
         other: "Option Sets"
       password_reset:
         zero: "Password Resets"
         one: "Password Reset"
+        two: "Password Resets"
+        few: "Password Resets"
+        many: "Password Resets"
         other: "Password Resets"
       question:
         zero: "Questions"
         one: "Question"
+        two: "Questions"
+        few: "Questions"
+        many: "Questions"
         other: "Questions"
       questioning: # should be same as question
         zero: "Questions"
         one: "Question"
+        two: "Questions"
+        few: "Questions"
+        many: "Questions"
         other: "Questions"
       report/calculation:
         zero: "Calculations"
         one: "Calculation"
+        two: "Calculations"
+        few: "Calculations"
+        many: "Calculations"
         other: "Calculations"
       report/report:
         zero: "Reports"
         one: "Report"
+        two: "Reports"
+        few: "Reports"
+        many: "Reports"
         other: "Reports"
       report/tally_report:
         zero: "Tally Reports"
         one: "Tally Report"
+        two: "Tally Reports"
+        few: "Tally Reports"
+        many: "Tally Reports"
         other: "Tally Reports"
       report/answer_tally_report:
         zero: "Answer Tally Reports"
         one: "Answer Tally Report"
+        two: "Answer Tally Reports"
+        few: "Answer Tally Reports"
+        many: "Answer Tally Reports"
         other: "Answer Tally Reports"
       report/response_tally_report:
         zero: "Response Tally Reports"
         one: "Response Tally Report"
+        two: "Response Tally Reports"
+        few: "Response Tally Reports"
+        many: "Response Tally Reports"
         other: "Response Tally Reports"
       report/list_report:
         zero: "List Reports"
         one: "List Report"
+        two: "List Reports"
+        few: "List Reports"
+        many: "List Reports"
         other: "List Reports"
       report/standard_form_report:
         zero: "Standard Form Reports"
         one: "Standard Form Report"
+        two: "Standard Form Reports"
+        few: "Standard Form Reports"
+        many: "Standard Form Reports"
         other: "Standard Form Reports"
       response:
         zero: "Responses"
         one: "Response"
+        two: "Responses"
+        few: "Responses"
+        many: "Responses"
         other: "Responses"
       search/search:
         zero: "Searches"
         one: "Search"
+        two: "Searches"
+        few: "Searches"
+        many: "Searches"
         other: "Searches"
       setting: # should always be plural
         zero: "Settings"
         one: "Settings"
+        two: "Settings"
+        few: "Settings"
+        many: "Settings"
         other: "Settings"
       sms/message:
         zero: "SMSes"
         one: "SMS"
+        two: "SMSes"
+        few: "SMSes"
+        many: "SMSes"
         other: "SMSes"
       user:
         zero: "Users"
         one: "User"
+        two: "Users"
+        few: "Users"
+        many: "Users"
         other: "Users"
+      user_group:
+        zero: "User Groups"
+        one: "User Group"
+        two: "User Groups"
+        few: "User Groups"
+        many: "User Groups"
+        other: "User Groups"
       tag:
         zero: "Tags"
         one: "Tag"
+        two: "Tags"
+        few: "Tags"
+        many: "Tags"
         other: "Tags"
 
     attributes:
       broadcast:
-        balance: "SMS Balance"
         body: "Message"
         created_at: "Send Time"
         errors: "Errors?"
@@ -257,16 +357,21 @@ en:
         subject: "Subject"
         to: "To"
         which_phone: "Which Phone(s)"
+        recipient_selection: "Recipients"
+        recipient_ids: "Users/Groups"
       form:
         allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"
         downloads: "Downloads"
         responses: "Responses"
         smsable: "SMSable?"
+        sms_relay: "SMS Forwarding?"
+        recipient_ids: "SMS Forward Recipients"
         authenticate_sms: "Authenticate SMS?"
         updated_at: "Last Modified"
         version: "Version"
         item_list_heading: "Questions"
+        default_response_name: "Default Response Name"
       mission:
         compact_name: "Compact Name"
         locked: "Locked?"
@@ -292,6 +397,8 @@ en:
         options: "Options"
         option_levels: "Levels"
         sms_guide_formatting: "SMS Guide Formatting"
+      password_reset:
+        identifier: "Email or Username"
       qing_group:
         group_name: "Name"
         group_hint: "Hint"
@@ -299,6 +406,7 @@ en:
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
         repeatable: "Repeatable?"
+        one_screen: "Show on One Screen?"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"
@@ -308,11 +416,13 @@ en:
         key: "Is Key Question?"
         minimum: "Minimum"
         maximum: "Maximum"
+        auto_increment: "Auto Increment Counter?"
         casted_minimum: "Minimum"
         casted_maximum: "Maximum"
         name: "Title"
         option_set_id: "Option Set"
         qtype_name: "Type"
+        metadata_type: "Metadata Type"
         tag_ids: "Tags"
         sms_guide_formatting: "SMS Guide Formatting"
       questioning:
@@ -321,15 +431,20 @@ en:
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
+        default: "Default Answer"
         delete: "Are you sure you want to remove the question '%{code}' from this form?"
+        read_only: "Read Only?"
       response:
         age: "Age"
         answers: "Answers"
+        old_id: "Old ID"
         id: "Response ID"
         created_at: "Submission Time"
         form_id: "Form"
         reviewed: "Reviewed?"
         reviewer_notes: "Reviewer Notes"
+        reviewer_id: "Reviewer"
+        shortcode: "Response ID"
         source: "Source"
         user_id: "User/Team"
         incomplete: "Are there missing required answers?"
@@ -353,9 +468,7 @@ en:
         allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
         incoming_sms_numbers_str: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
-        intellisms_password1: "Password"
-        intellisms_password2: "Password Confirmation"
-        intellisms_username: "Username"
+        universal_sms_token: "Universal SMS Token"
         preferred_locales_str: "Preferred Languages"
         default_outgoing_sms_adapter: "Default Outgoing Provider"
         override_code: "Override Code"
@@ -378,6 +491,10 @@ en:
       user:
         admin: "Is Administrator?"
         assignments: "Assignments"
+        birth_year: "Birth Year"
+        nationality: "Nationality"
+        gender: "Gender"
+        gender_custom: "Specify Gender"
         latest_mission: "Latest Mission"
         login: "Username"
         name: "Full Name"
@@ -389,6 +506,7 @@ en:
         role: "Role"
         api_key: "API Key"
         sms_auth_code: "SMS Auth Code"
+        user_group_ids: "Groups"
       user_batch:
         file: "File"
 
@@ -457,15 +575,25 @@ en:
         show: "View User"
         edit: "Edit User"
         destroy: "Delete User"
+      user_group:
+        new: "New Group"
+        index: "User Groups"
+        show: "View User Group"
+        edit: "Edit User Group"
+        destroy: "Delete User Group"
+        members: "List Members"
 
     hints:
       form:
         name: "A descriptive name for the form."
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
-        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an obsever to spoof submissions."
-        allow_incomplete: "Whether to allow incomplete submissions in extenuating cases where full information is not available. Note that the question 'required' featured should be preferred here."
+        sms_relay: "Whether to enable forwarding incoming SMS responses to users and user groups"
+        recipient_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
+        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an observer to spoof submissions."
+        allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK only). Observers using ODK must enter an override code (see the Settings page) to do so."
         version: "The current version number and letter code."
-        access_level: "Public: Any ELMO user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
+        access_level: "Public: Any user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
+        default_response_name: "Text entered here will be used as the default name of filled forms in ODK. You can enter $QuestionCode to include the value of a question in the form.\n\nFor example, entering:\n\n&nbsp;&nbsp;&nbsp;Survey for $VillageNum-$Household\n\nmight name the form:\n\n&nbsp;&nbsp;&nbsp;Survey for 7-Smith\n\nassuming you have questions with codes 'VillageNum' and 'Household'."
       mission:
         name: "A name for this Mission. Maximum 32 characters. Must be unique. Think about including the year if there will be future missions with the same name."
         locked: "If a mission is locked, Responses and Forms cannot be created or edited and Users cannot be added or deleted."
@@ -491,14 +619,18 @@ en:
         key: "Answers to key questions help summarize responses and appear in the response listing. Common key questions are location and overall evaluation."
         minimum: "The minimum value for the response. Check the box if the minimum itself is not valid."
         maximum: "The maximum value for the response. Check the box if the maximum itself is not valid."
+        auto_increment: "If this box is checked and you are using ODK, the value will be incremented each time you fill out a new form."
         name: "The main question text, e.g. 'How many people are in line?'"
         option_set_id: "The set of options the user will be able to choose from."
         qtype_name: "The kind of information the user will be entering."
         access_level: "Inherit: Same access level as parent form. Private: No one can access the data via the API, regardless of parent form access level."
+        metadata_type: "A special value that can be pre-filled into this question. If chosen, this question will be automatically hidden and not required, and any conditions will be removed."
       questioning:
         hidden: "Whether this question will be shown on this form. Use this to disable a question if you can't delete it. This value will override the condition and required settings below."
         condition: "An optional condition which must be met in order for this question to be shown to the user."
         required: "Whether this question must be completed on this form or is optional. Only enforced if question is not hidden the condition specified above is met."
+        default: "Text entered here will be pre-filled in the answer space (for ODK only). You can enter $QuestionCode to include the value of a previous question, and $!RepeatNum to include the number of the current item in a repeat group.\n\nFor example, entering\n\n&nbsp;&nbsp;&nbsp;ID: $Household-$!RepeatNum\n\nwould pre-fill the answer with\n\n&nbsp;&nbsp;&nbsp;ID: 176-2\n\nfor the second person in household 176, assuming you have a question with code 'Household'."
+        read_only: "If checked, the observer won't be able to change the pre-filled value when using ODK. Does not affect web or SMS responses."
       report/report:
         name: "A descriptive title for this report."
         aggregation_id: "The operation you want to perform on the combined data."
@@ -527,14 +659,14 @@ en:
         incoming_sms_numbers_str: "Enter the phone number(s) (including country code, separated by commas) to which incoming SMSes for SMS forms should be sent. Only needed if using SMS submissions."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
+        universal_sms_token: |-
+          This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages. Use this URL if you need to allow multiple missions to submit via the same URL.
         using_incoming_sms_token_title: Using the Incoming SMS Token
         using_incoming_sms_token_body: |-
           Please register the following incoming SMS URL with your gateway provider:
 
           %{url}
         default_outgoing_sms_adapter: "The adapter used to send outgoing SMSes. Note that SMS replies may be sent out on via a different adapter, depending the adapter by which they arrived."
-        intellisms_username: "The username for the IntelliSMS account."
-        intellisms_password1: "Enter and re-enter a password to change the password for the IntelliSMS account."
         twilio_phone_number: "The phone number registered with Twilio. Outgoing SMS broadcasts won't work unless this number is owned by your Twilio account. This number must include the country code. Example: +25680344523"
         twilio_account_sid: "The Account SID for the Twilio account."
         twilio_auth_token1: "The Auth Token for the Twilio account."
@@ -555,7 +687,7 @@ en:
         password_confirmation: "Enter the new password again."
         pref_lang: "The language in which you would like to use the system."
         role: "The role of the user in the current mission, and whether or not they are presently active. Inactive users cannot access the mission at all."
-        api_key: "Use this key to connect to other Elmo applications."
+        api_key: "Use this key to connect to other applications."
         sms_auth_code: "Use this code to submit SMS responses."
 
     # all error messages should be full sentences with a period, for consistency.
@@ -584,10 +716,15 @@ en:
       models:
         answer:
           required: "Please enter a value."
+          invalid_latitude: "Latitude is out of range."
+          invalid_longitude: "Longitude is out of range."
+          invalid_altitude: "Altitude is out of range."
+          invalid_accuracy: "Accuracy is out of range."
+          accuracy_negative: "Accuracy can't be negative."
         assignment:
           blank: "is required."
         broadcast:
-          no_recipients: "None of these recipients would receive this broadcast. Please adjust the medium and try again."
+          no_recipients: "Nobody would receive this broadcast."
         condition:
           all_required: "All condition fields are required."
         form:
@@ -683,15 +820,21 @@ en:
               invalid: "Please use only unaccented letters, numbers, periods, and underscores."
             reset_password_method:
               cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
+              print_password_reset_only_for_observer: "Printed instructions are only available to observers. "
         user_batch:
           general: "User batch is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
           invalid_headers: "The uploaded spreadsheet has invalid headers."
           too_many_errors: "The uploaded spreadsheet has too many errors. Processing stopped at row %{row}."
+        user_group:
+          general: "User group is invalid."
+          attributes:
+            name:
+              blank: "Please enter a name for your group."
 
   # application-wide strings
   layout:
-    about: "About ELMO"
+    about: "About %{site_name}"
     actions: "Actions"
     are_you_sure: "Are you sure?"
     change_language: "Change Language"
@@ -825,16 +968,17 @@ en:
       long: "%B %d %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M"
+      default: "%b %d %Y %H:%M:%S"
       short: "%b %d %H:%M"
       long: "%A, %B %d %Y %H:%M"
-      time_only: "%H:%M"
+      time_only: "%H:%M:%S"
 
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
   search_qualifiers:
     text: "text"
     email: "email"
     form: "form"
+    exact_form: "exact-form"
     login: "login"
     name: "name"
     option_set: "option-set"
@@ -854,6 +998,7 @@ en:
     username: "username"
     content: "content"
     number: "number"
+    group: "group"
 
   # all page titles by controller and action
   # controller names are usually plural (rails convention)
@@ -902,10 +1047,10 @@ en:
       new: "New Question"
       show: "Question: %{code}"
     responses:
-      edit: "Edit Response: #%{id}"
+      edit: "Edit Response: %{id}"
       index: "Responses"
       new: "New Response"
-      show: "Response: #%{id}"
+      show: "Response: %{id}"
     reports:
       index: "Reports"
       new: "New Report"
@@ -954,15 +1099,17 @@ en:
     date_submitted: "Date Submitted"
     response_id: "Response ID"
     reviewed: "Reviewed"
+    reviewer: "Reviewer"
 
   broadcast:
-    balance_check_failed: "SMS credit balance check failed."
-    balance_notice: "You have %{balance} SMS credits in your %{account_type} account."
     chars: # these are for informing the user how many chars they have left in their sms
       remaining: "characters remaining"
       too_many: "characters too many"
     email_intro: "This is a broadcast message from"
     email_error: "Email Error"
+    group_count:
+      one: "1 group"
+      other: "%{count} groups"
     instructions: "To send a broadcast, first select the recipients below, and then click 'Send Broadcast'."
     may_not_be_enough: "This may not be enough."
     mediums:
@@ -978,11 +1125,17 @@ en:
         sms_only: "SMS only (don't send any emails)"
         email_only: "Email only (don't send any SMSes)"
         both: "Both SMS and email"
-    no_possible_recipients: "None of the users you selected has an email address or phone number. Please try again."
+    recipient_selection_options:
+      all_users: "All users in mission"
+      all_observers: "All observers in mission"
+      specific: "Specific users/groups in mission"
     send_broadcast: "Send Broadcast"
     send_success: "Broadcast sent successfully."
     send_error: "Error sending broadcast (see below)."
     sms_error: "SMS Error"
+    user_count:
+      one: "1 user"
+      other: "%{count} users"
     which_phone_options:
       main_only: "Main phone only"
       alternate_only: "Alternate phone only"
@@ -1006,10 +1159,12 @@ en:
     close_dashboard: "Close Dashboard"
     enter_full_screen: "Enter Full Screen"
     exit_full_screen: "Exit Full Screen"
+    expand_map: "Expand Map"
     low_activity: "Low Activity"
     my_responses: "My Responses"
     no_reports: "No Reports have been created for this mission yet."
     recent_responses: "Latest Responses"
+    shrink_map: "Shrink Map"
     response_locations: "Response Locations"
     response_locations_truncated: "Showing the most recent %{shown} of %{total} responses"
     summary: "Summary"
@@ -1066,6 +1221,9 @@ en:
     remove_question_confirm:
       zero: "Are you sure you want to remove zero questions from the form?"
       one: "Are you sure you want to remove this question from the form?"
+      two: "Are you sure you want to remove these %{count} questions from the form?"
+      few: "Are you sure you want to remove these %{count} questions from the form?"
+      many: "Are you sure you want to remove these %{count} questions from the form?"
       other: "Are you sure you want to remove these %{count} questions from the form?"
     reqd_sym_definition: "Required questions are marked with a"
     save_and_publish: "Save and Publish"
@@ -1082,9 +1240,9 @@ en:
       appendix:
         one: "The following appendix should be included with this form:"
         other: "The following appendices should be included with this form:"
-      header: "ELMO SMS Composition Guide"
+      header: "SMS Composition Guide"
       auth_code: "User authorization code (required)"
-      header: "ELMO SMS Guide"
+      header: "SMS Guide"
       for_paper_record: "For paper record only"
       form_code: "Unique form code (required)"
       multiple_sms_numbers: "Multiple SMS submission numbers"
@@ -1112,6 +1270,7 @@ en:
         2b: "Enter the contents of each line on the right side of the page, going from top to bottom."
         2c_html: "Periods are denoted by %{period} and spaces are denoted by %{spc}. It is important to enter both periods and spaces."
         example_sms: "Example SMS"
+        example_sms_body: 1.c 2.c,f 3.27 4.d 5.door was locked 6.20160401 7.c
       unique_code: "This is the unique code for the form"
       unknown_number: "[unknown number]"
 
@@ -1159,6 +1318,8 @@ en:
     clone_error: "There was a problem cloning the Option Set (%{msg})."
     clone_success: "Option Set '%{name}' cloned successfully."
     create_new: "[Create New Option]"
+    create_for_question: "Create Option Set for Question: %{identifier}"
+    create_for_new_question: "Create Option Set for New Question"
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
     huge_notice: "This Option Set is very large (%{count} Options) and thus only a small sample of its Options are displayed below. You may edit its name and other properties here but please use the import/export features to edit the Options themselves."
@@ -1207,12 +1368,14 @@ en:
   password_reset:
     check_email: "Instructions to reset your password have been emailed to you. Please check your email."
     enter_new_pass: "%{name}, please enter a new password for your account."
-    fill_out_form: "Fill out the form below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
+    fill_out_form: "Enter your email or username below and instructions to reset your password will be emailed to you. If there is no email address associated with your account your password will have to reset by an administrator."
+    multiple_accounts: "There are multiple accounts associated with that email address. Please try entering your username, or contact an administrator."
+    no_associated_email: "There is no email address associated with that account. Please contact an administrator to have your password changed."
     success: "Password updated successfully."
     token_not_found: |-
       We're sorry, but we could not locate your account. If you are having issues try copying and pasting the URL
       from your email into your browser or restarting the reset password process.
-    user_not_found: "No user was found with that email address."
+    user_not_found: "No user was found with that email address or username."
 
   permission_error:
     need_mission: "You can't view this without selecting a mission"
@@ -1233,10 +1396,18 @@ en:
       strictly_gt: "Strictly greater than"
     other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
 
+  qing_group:
+    one_screen_disabled: "Not available because the group contains either a condition or another group"
+    tooltips:
+      repeatable: "Repeatable"
+      one_screen: "Shows on one screen in ODK"
+      multi_screen: "Shows on multiple screens in ODK"
+
   question_type:
     text: "Text"
     long_text: "Long Text"
     integer: "Integer"
+    counter: "Counter"
     decimal: "Decimal"
     location: "Location"
     select_one: "Select One"
@@ -1256,12 +1427,20 @@ en:
       verification_failed: "Verification response is incorrect, please try again."
       recaptcha_unreachable: "Oops, we failed to validate your verification response. Please try again."
 
+  recipient:
+    prefixes:
+      user: "User"
+      user_group: "Group"
+
   report/report:
     add_column: "Add Column"
     answered_only_if: "Answered only if"
     attribute:
       zero: "Attributes"
       one: "Attribute"
+      two: "Attributes"
+      few: "Attributes"
+      many: "Attributes"
       other: "Attributes"
     back_to_list: "Back To Report List"
     blank: "Blank" # should be very short
@@ -1307,7 +1486,6 @@ en:
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
     total_rows: "Total Rows: %{count}"
-    total_rows_showing: "Showing %{count} rows. (%{percent} of total)"
     view_response: "Response #%{id}"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
@@ -1408,6 +1586,7 @@ en:
   role:
     role: "Role"
     observer: "Observer"
+    reviewer: "Reviewer"
     staffer: "Staffer"
     coordinator: "Coordinator"
     admin: "Admin"
@@ -1417,7 +1596,7 @@ en:
     blank: "blank"
     examples:
       responses:
-        - "\"some phrase\""
+        - "bed nets"
         - "submitter:\"john smith\""
         - "form:polling"
         - "reviewed:1"
@@ -1428,6 +1607,7 @@ en:
         - "phone:+443726458364"
         - "login:jsmith"
         - "email:jsmith@example.com"
+        - group:"The Smiths"
       questions:
         - "poll workers"
         - "code:BallotBoxes"
@@ -1478,11 +1658,9 @@ en:
 
         Exact phrases can be matched by enclosing the phrase in double quotes:
 
-        * __"the rain in spain"__
+        * __submitter:"John Smith"__
 
-        Double quoted phrases can be mixed with non-quoted terms:
-
-        * __apples oranges "passion fruit"__
+        Double quoted phrases can currently only be used with qualifiers other than "text".
 
         ## All Terms vs. Any Term
 
@@ -1492,13 +1670,9 @@ en:
 
         matches only responses with all three of those words. Use the vertical bar ('|') character to match several words/phrases:
 
-        * __apples | oranges | "passion fruit"__
-
-        The '|' character can also be used with qualifiers:
-
         * __form:( Lions | "Bears and Sharks" | Tigers )__
 
-        matches responses for any of the above forms.
+        matches responses for any of the above forms. The '|' can only be used with qualifiers other than "text".
 
         ## Operators
 
@@ -1543,12 +1717,17 @@ en:
 
         will search for users named Susan with an example.com email address.
 
+        You can match blank values using '[blank]':
+
+        * __phone: [blank]__
+
         The full set of qualifiers you can use is as follows:
 
         * __name__ The user's full name
         * __login__ The user's login name
         * __email__ The user's email address
         * __phone__ The user's phone number (no dashes or other punctuation)
+        * __group__ The user's group membership
 
         Partial matches are allowed for all qualifiers.
 
@@ -1724,7 +1903,6 @@ en:
     headings:
       general: "General Settings"
       sms: "Shared SMS Settings"
-      intellisms: "IntelliSMS Settings"
       twilio: "Twilio Settings"
       frontlinecloud: "FrontlineCloud Settings"
 
@@ -1741,6 +1919,7 @@ en:
 
   sms_form:
     decoding:
+      account_locked: "Sorry, your account has been temporarily locked. Please check your auth code and wait a few minutes before trying again."
       answer_error_intro: "Sorry, your answer '%{value}' for question %{rank} on form '%{form_code}'"
       answer_not_date: "was not a valid date"
       answer_not_datetime: "was not a valid datetime"
@@ -1790,14 +1969,23 @@ en:
       forms:
         zero: "Successfully imported %{count} Forms."
         one: "Successfully imported %{count} Form."
+        two: "Successfully imported %{count} Forms."
+        few: "Successfully imported %{count} Forms."
+        many: "Successfully imported %{count} Forms."
         other: "Successfully imported %{count} Forms."
       option_sets:
         zero: "Successfully imported %{count} Option Sets."
         one: "Successfully imported %{count} Option Set."
+        two: "Successfully imported %{count} Option Sets."
+        few: "Successfully imported %{count} Option Sets."
+        many: "Successfully imported %{count} Option Sets."
         other: "Successfully imported %{count} Option Sets."
       questions:
         zero: "Successfully imported %{count} Questions."
         one: "Successfully imported %{count} Question."
+        two: "Successfully imported %{count} Questions."
+        few: "Successfully imported %{count} Questions."
+        many: "Successfully imported %{count} Questions."
         other: "Successfully imported %{count} Questions."
     no_importable:
       forms: "There is nothing available to import. Either there are no standard Forms, or they have all been imported already."
@@ -1808,6 +1996,9 @@ en:
     there_were_errors:
       zero: "There were %{count} errors."
       one: "There was %{count} error."
+      two: "There were %{count} errors."
+      few: "There were %{count} errors."
+      many: "There were %{count} errors."
       other: "There were %{count} errors."
 
   unauthorized:
@@ -1828,18 +2019,30 @@ en:
     bulk_destroy_confirm:
       zero: "Are you sure you want to delete zero users?"
       one: "Are you sure you want to delete this user?"
+      two: "Are you sure you want to delete these %{count} users?"
+      few: "Are you sure you want to delete these %{count} users?"
+      many: "Are you sure you want to delete these %{count} users?"
       other: "Are you sure you want to delete these %{count} users?"
     bulk_destroy_deleted:
       zero: "No users deleted successfully."
       one: "%{count} user deleted successfully."
+      two: "%{count} users deleted successfully."
+      few: "%{count} users deleted successfully."
+      many: "%{count} users deleted successfully."
       other: "%{count} users deleted successfully."
     bulk_destroy_deactivated:
       zero: "No users deactivated."
       one: "%{count} user could not be destroyed, so they were deactivated."
+      two: "%{count} users could not be destroyed, so they were deactivated."
+      few: "%{count} users could not be destroyed, so they were deactivated."
+      many: "%{count} users could not be destroyed, so they were deactivated."
       other: "%{count} users could not be destroyed, so they were deactivated."
     bulk_destroy_skipped:
       zero: "No users skipped."
       one: "%{count} user skipped."
+      two: "%{count} users skipped."
+      few: "%{count} users skipped."
+      many: "%{count} users skipped."
       other: "%{count} users skipped."
     bulk_destroy_skipped_current: "Not deleting the current user."
     create_multiple: "Create Multiple Users"
@@ -1847,6 +2050,13 @@ en:
     export_vcard: "Export as vCard"
     forgot_password: "Forgot Password?"
     leave_password_alone: "Leave password alone"
+    gender_options:
+      man: "Man"
+      woman: "Woman"
+      no_answer: "Decline to Answer"
+      specify: "Specify..."
+    add_to_group: "Add Multiple Group Users"
+    remove_from_group: "Remove Multiple Group Users"
     login_instructions:
       closing:
         - "Please note the 's' in 'https' in the site URL."
@@ -1861,20 +2071,26 @@ en:
       preamble_plural: |-
         Login instructions are shown below. Please print these pages now and ensure the users below receive their instructions.
         Since the users' passwords are stored in encrypted format, they will be irretrievable after you leave this page.
+      qr_code: "ODK QR Code"
       site_url: "Site URL"
       title: "Login Instructions"
       welcome: "Welcome to %{site}. Your credentials are as follows:"
     logout_success: "You have logged out successfully."
     profile_updated: "Profile updated successfully."
     reset_password_and: "Reset password and"
-    reset_password_hint_choose: "Choose how this user should get their password."
-    reset_password_hint_ending: "The system can either send them an email with instructions on how to %{verb} the password online, or display a printable instruction sheet including a randomly generated password."
+    reset_password_hint_choose: "Select how this user should get their password."
     reset_password_hint_reset: "Choose whether and how to reset this user's password."
     reset_password_label_choose: "Password Creation"
     reset_password_label_reset: "Reset Password?"
     send_email_instructions: "send email instructions"
     set_admin_password: "Set your admin password and profile information"
     show_printable_instructions: "show printable instructions"
+
+  user_group:
+    create_prompt: "Please enter the name of your group."
+    add_users_success: "Successfully added %{count} users to group %{group}"
+    remove_users_success: "Successfully removeed %{count} users from group %{group}"
+    new_group: "New Group"
 
   welcome:
     awaiting_review: "**%{count}** Awaiting Review"

@@ -1,0 +1,45 @@
+/*
+ * DEFAULT ELMO THEME
+ * -----------------------------------------------------------------
+ * These color names, and any others we need to add will, ultimately,
+ * be used to define the colors for every themeable component in the ELMO system
+ *
+ * Unfortunately, identifying and naming every themable component is a big task at present
+ * and will need to be taken care of gradually over time
+ *
+ * When creating new components, or updating existing ones, make an effort to use the colors
+ * defined in this file instead of plain color names for your themeable components. Eventually,
+ * gradually replacing them should result in a fully themeable ELMO system.
+ *
+ * This file can be copied to a file in this directory called `_theme.scss` in order to
+ * override any of these color definitions.
+ */
+$body-background-color: $elmo-blue;
+$header-background-color: $body-background-color;
+$header-text-color: inherit;
+
+$footer-background-color: $gray-blue;
+$footer-text-color: gray;
+
+$body-text-color: $body-text-color;
+$link-text-color: $orange;
+
+$primary-icon-color: $body-background-color;
+$primary-icon-hover-color: darken($primary-icon-color, 20%);
+
+$primary-btn-background-color: $link-text-color;
+$primary-btn-text-color: white;
+
+$primary-btn-hover-background-color: darken($primary-btn-background-color, 10%);
+$primary-btn-hover-text-color: white;
+
+$nav-background-color: #F8F8F8;
+$nav-active-background-color: $light-blue;
+$nav-text-color: #777;
+$nav-icon-color: #bdb9b9;
+$nav-border-color: #E7E7E7;
+
+$group-pill-background-color: $light-blue;
+$group-pill-background-hover-color: darken($light-blue, 10%);
+$group-pill-border-color: darken($light-blue, 20%);
+$group-pill-text-color: $body-text-color;

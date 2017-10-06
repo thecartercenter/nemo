@@ -9,8 +9,13 @@ module Concerns::ApplicationController::Crud
       obj.destroy
       flash[:success] = "#{obj.class.model_name.human} #{t('errors.messages.deleted_successfully')}"
     rescue DeletionError
-      flash[:error] = t($!.to_s, :scope => [:activerecord, :errors, :models, obj.class.model_name.i18n_key], :default => t("errors.messages.generic_delete_error"))
+      flash[:error] = t($!.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key], default: t("errors.messages.generic_delete_error"))
     end
+  end
+
+  # Handles ParamaterMissing errors
+  def handle_parameter_missing
+    render nothing: true, status: 400
   end
 
   # sets a success message based on the given object
@@ -24,14 +29,14 @@ module Concerns::ApplicationController::Crud
 
   # sets a success message and redirects
   def set_success_and_redirect(obj, options = {})
-    # redirect to index_url_with_page_num by default
-    options[:to] ||= index_url_with_page_num
+    # redirect to index_url_with_context by default
+    options[:to] ||= index_url_with_context
 
     # save the object id in the flash in case the view wants to have some fun with it
     flash[:modified_obj_id] = obj.id
 
-    # if options[:to] is a symbol, we really mean :action => xxx
-    options[:to] = {:action => options[:to]} if options[:to].is_a?(Symbol)
+    # if options[:to] is a symbol, we really mean action: xxx
+    options[:to] = {action: options[:to]} if options[:to].is_a?(Symbol)
 
     set_success(obj)
 
@@ -40,30 +45,48 @@ module Concerns::ApplicationController::Crud
   end
 
   # gets the url to an index action, ensuring the appropriate page is returned to
-  # ctlr - the controller whose index should be used. defaults to current controller
-  def index_url_with_page_num(ctlr = nil)
-    url_for(:controller => ctlr || controller_name, :action => :index, :page => get_last_page_number)
+  # target_controller - the controller whose index should be used. defaults to current controller
+  def index_url_with_context(target_controller = nil)
+    target_controller ||= controller_name
+    url_params = {controller: target_controller, action: :index}.merge(get_last_context)
+    url_for(url_params)
   end
 
   # remembers the last visited page number for each controller and mission
-  def remember_page_number
-    if params[:page]
-      session[:last_page_numbers] ||= {}
-      session[:last_page_numbers][last_page_number_hash_key] = params[:page]
-    end
+  def remember_context
+    remember_search(params[:search]) if params[:search]
+    remember_page(params[:page]) if params[:page]
   end
 
-  # builds a simple hash key for remembering page numbers
-  def last_page_number_hash_key
+  def remember_search(search)
+    session[:last_searches] ||= {}
+    session[:last_searches][last_context_hash_key] = search
+  end
+
+  def remember_page(page)
+    session[:last_page_numbers] ||= {}
+    session[:last_page_numbers][last_context_hash_key] = page
+  end
+
+  # builds a simple hash key for remembering page context
+  def last_context_hash_key
     controller_name + current_mission.try(:id).to_s
   end
 
+  def get_last_context
+    page = get_last_page_number if session[:last_page_numbers]
+    search = get_last_searches if session[:last_searches]
+    {page: page, search: search}
+  end
+
   def get_last_page_number
-    if session[:last_page_numbers]
-      session[:last_page_numbers][last_page_number_hash_key]
-    else
-      nil
-    end
+    return unless session[:last_page_numbers]
+    session[:last_page_numbers][last_context_hash_key].presence
+  end
+
+  def get_last_searches
+    return unless session[:last_searches]
+    session[:last_searches][last_context_hash_key].presence
   end
 
   # gets the request's referrer without the query string

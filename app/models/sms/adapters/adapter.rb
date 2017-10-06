@@ -3,6 +3,7 @@ require "net/http"
 class Sms::Adapters::Adapter
 
   attr_writer :deliveries
+  attr_reader :config
 
   # checks if this adapter recognizes an incoming http receive request
   def self.recognize_receive_request?(request)
@@ -20,11 +21,15 @@ class Sms::Adapters::Adapter
     name.split("::").last.gsub(/Adapter$/, "")
   end
 
+  def initialize(options = {})
+    @config = options[:config]
+  end
+
   def service_name
     self.class.service_name
   end
 
-  # Raises an error if no recipients or message empty. Adds adapter name.
+  # Saves the message to the DB. Raises an error if no recipients or message empty. Adds adapter name.
   def prepare_message_for_delivery(message)
     # apply the adapter name to the message
     message.adapter_name = service_name
@@ -45,14 +50,12 @@ class Sms::Adapters::Adapter
 
   # recieves one sms messages
   # returns an Sms::Message object
-  #
-  # params  The incoming HTTP request params.
-  def receive(params)
+  def receive(request)
     raise NotImplementedError
   end
 
-  # returns the number of sms credits available in the provider account
-  def check_balance
+  # Validates the authenticity of the request (if supported). If not supported, should do nothing.
+  def validate(request)
     raise NotImplementedError
   end
 

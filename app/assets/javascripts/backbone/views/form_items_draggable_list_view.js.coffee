@@ -1,5 +1,5 @@
 # Controls draggable list behavior for form items list.
-class ELMO.Views.FormItemsDraggableListView extends Backbone.View
+class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
 
   el: '.form-items-list'
 

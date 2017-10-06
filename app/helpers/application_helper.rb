@@ -82,6 +82,14 @@ module ApplicationHelper
     javascript_tag("$(document).ready(function(){#{content}});")
   end
 
+  # google maps
+  def javascript_google_maps
+    if configatron.has_key(:google_maps_api_key)
+      api_key = configatron.google_maps_api_key
+      javascript_include_tag("https://maps.googleapis.com/maps/api/js?key=#{api_key}&v=3")
+    end
+  end
+
   # Converts given object/value to json and runs through html_safe.
   # In Rails 4, this is necessary and sufficient to guard against XSS in JSON.
   def json(obj)
@@ -224,5 +232,13 @@ module ApplicationHelper
       end
     end
     links.reduce(:<<)
+  end
+
+  def conditional_tag(name, condition, options = {}, &block)
+    if condition
+      content_tag(name, options) { capture(&block) }
+    else
+      capture(&block)
+    end
   end
 end

@@ -1,0 +1,21 @@
+form.setting_form {
+  .adapter_settings .credential_fields {
+    display: none;
+  }
+
+  #external_sql .control {
+    pre {
+      width: 415px;
+      height: 100px;
+      overflow: auto;
+      border: 1px solid #ccc;
+      margin: 0 0 3px 0;
+      font-size: 8pt;
+      white-space: normal;
+    }
+
+    a {
+      font-size: 9pt;
+    }
+  }
+}

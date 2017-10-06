@@ -21,11 +21,6 @@
   <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
   <%= f.field(:option_set_id, :partial => 'questions/option_set_select', :read_only => cant_update_core) %>
 
-  <div class="minmax">
-    <%= f.field(:casted_minimum, :partial => 'questions/min_max_condition') %>
-    <%= f.field(:casted_maximum, :partial => 'questions/min_max_condition') %>
-  </div>
-
   <%# title and hint boxes, one for each language %>
   <div class="names_hints">
     <% configatron.preferred_locales.each_with_index do |lang, rank| %>
@@ -33,12 +28,20 @@
     <% end %>
   </div>
 
-  <%= f.field(:tag_ids, partial: 'questions/tags') %>
+  <div class="minmax">
+    <%= f.field(:casted_minimum, :partial => 'questions/min_max_condition') %>
+    <%= f.field(:casted_maximum, :partial => 'questions/min_max_condition') %>
+  </div>
 
+  <%= f.field(:auto_increment, type: :check_box) %>
+  <%= f.field(:metadata_type, type: :select,
+    options: translate_options(Question::METADATA_TYPES, :metadata_types)) %>
   <% unless admin_mode? %>
-    <%= f.field(:key, :type => :check_box) %>
-    <%= f.field(:access_level, :type => :select, :options => translate_options(Question::API_ACCESS_LEVELS, 'access_levels')) %>
+    <%= f.field(:key, type: :check_box) %>
+    <%= f.field(:access_level, type: :select,
+      options: translate_options(Question::API_ACCESS_LEVELS, :access_levels)) %>
   <% end %>
+  <%= f.field(:tag_ids, partial: "questions/tags") %>
 
   <%# new option set modal %>
   <% if form_mode != :show && can?(:create, OptionSet) %>
@@ -63,6 +66,7 @@
 </div>
 
 <%= javascript_doc_ready do %>
+  // This view is deprecated. Use QuestionFormView instead.
   new ELMO.Views.QuestionForm(<%=json(
     new_option_set_path: new_option_set_path
   )%>);

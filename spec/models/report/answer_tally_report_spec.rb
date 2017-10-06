@@ -2,6 +2,7 @@
 require 'spec_helper'
 
 describe Report::AnswerTallyReport do
+  it_behaves_like "has a uuid"
 
   shared_examples_for 'basic stuff' do
     describe 'destroy' do
@@ -77,7 +78,7 @@ describe Report::AnswerTallyReport do
     end
   end
 
-  describe 'results', no_sphinx: true do
+  describe 'results' do
     it "counts of yes and no for all yes no questions" do
       yes_no = create(:option_set, option_names: %w(Yes No))
       questions = (1..3).to_a.map{ |i| create(:question, qtype_name: 'select_one', option_set: yes_no, name: "Q#{i}", code: "q#{i}") }
@@ -114,7 +115,7 @@ describe Report::AnswerTallyReport do
                                        %w( TTL 21  9  30 ))
     end
 
-    it "counts of options for specific questions across two option sets" do
+    it "counts of options for specific questions across two option sets", :investigate do
       yes_no = create(:option_set, option_names: %w(Yes No))
       high_low = create(:option_set, option_names: %w(High Low))
       questions = []
@@ -130,6 +131,8 @@ describe Report::AnswerTallyReport do
       report = create_report("AnswerTally",
         calculations: [0, 1, 3].map{ |i| Report::IdentityCalculation.new(question1: questions[i]) })
 
+
+      # Attempted to fix flapping here by changing sort order slightly. See answer_tally_report.rb.
       expect(report).to have_data_grid(%w(     Yes No High Low TTL ),
                                        %w( yn0   6  4    _   _  10 ),
                                        %w( yn1   7  3    _   _  10 ),
@@ -151,7 +154,7 @@ describe Report::AnswerTallyReport do
       expect(report).to have_data_grid(nil)
     end
 
-    it "counts of options across a select one question and select multiple question" do
+    it "counts of options across a select one question and select multiple question", :investigate do
       # create several questions and responses for them
       yes_no = create(:option_set, option_names: %w(Yes No))
       rgb = create(:option_set, option_names: %w(Red Blue Green))
@@ -170,10 +173,10 @@ describe Report::AnswerTallyReport do
       ])
 
       # Make sure we account for the null (no answer given) values that will come up for the rgb question (we use a _)
-      expect(report).to have_data_grid(%w(      Yes No _ Red Blue Green TTL ),
-                                       %w( yn     6  4 _   _    _     _  10 ),
-                                       %w( rgb    _  _ 2   5    5     7  19 ),
-                                       %w( TTL    6  4 2   5    5     7  29 ))
+      expect(report).to have_data_grid(%w(      Yes No Red Blue Green _ TTL ),
+                                       %w( yn     6  4   _    _     _ _  10 ),
+                                       %w( rgb    _  _   5    5     7 2  19 ),
+                                       %w( TTL    6  4   5    5     7 2  29 ))
     end
   end
 end

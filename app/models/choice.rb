@@ -1,9 +1,11 @@
-class Choice < ActiveRecord::Base
-  belongs_to(:answer, :inverse_of => :choices, :touch => true)
-  belongs_to(:option, :inverse_of => :choices)
+class Choice < ApplicationRecord
+  acts_as_paranoid
 
-  delegate :name, :to => :option, :prefix => true
-  delegate :has_coordinates?, :to => :option
+  belongs_to :answer, inverse_of: :choices, touch: true
+  belongs_to :option, inverse_of: :choices
+
+  delegate :name, to: :option, prefix: true
+  delegate :has_coordinates?, to: :option
 
   before_save :replicate_location_values
 
@@ -18,8 +20,29 @@ class Choice < ActiveRecord::Base
     @checked = (value == true || value == '1')
   end
 
-  private
+  # We need to override this because of the transient `checked` attribute.
+  # Since it's transient and defaults to true, the only way it will have 'changed' is if it's now false.
+  def changed?
+    !checked? || super
+  end
 
+  # This is a temporary method for fetching option_node based on the related OptionSet and Option.
+  # Eventually Options will be removed and OptionNodes will be stored on Choices directly.
+  def option_node
+    OptionNode.where(option_id: option_id, option_set_id: answer.option_set.id).first
+  end
+
+  def option_node_id
+    option_node.try(:id)
+  end
+
+  # This is a temporary method for assigning option based on an OptionNode ID.
+  # Eventually Options will be removed and OptionNodes will be stored on Choices directly.
+  def option_node_id=(id)
+    self.option_id = id.present? ? OptionNode.id_to_option_id(id) : nil
+  end
+
+  # This may get called twice during an answer save but who cares.
   def replicate_location_values
     if has_coordinates?
       self.latitude = option.latitude

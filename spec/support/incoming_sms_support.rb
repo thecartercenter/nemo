@@ -1,48 +1,52 @@
 module IncomingSmsSupport
   # helper that sets up a new form with the given parameters
   def setup_form(options)
-    @form = create(:form, smsable: true, question_types: options[:questions])
-    @form.questionings.each{ |q| q.update_attribute(:required, true) } if options[:required]
-    @form.publish!
-    @form.reload
+    mission = options[:mission].present? ? options[:mission] : get_mission
+    form = create(:form, :published, smsable: true, question_types: options[:questions], mission: mission)
+    form.questionings.each { |q| q.update_attribute(:required, true) } if options[:required]
+    if options[:forward_recipients]
+      form.sms_relay = true
+      form.recipients = options[:forward_recipients]
+    end
+    form.authenticate_sms = true if options[:authenticate_sms]
+    form.publish!
+    form.reload
   end
 
-  # gets the version code for the current form
-  def form_code
-    @form.current_version.code
+  def auth_code
+    @user.sms_auth_code
   end
 
   # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
   def assert_sms_response(params)
     params[:from] ||= @user.phone
     params[:sent_at] ||= Time.now
+    params[:mission] = get_mission unless params.has_key?(:mission)
 
     # hashify incoming/outgoing if they're not hashes
     params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
     params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
 
-    # default mission to get_mission unless specified
-    params[:mission] ||= get_mission
-
     # do post request based on params
     do_incoming_request(params)
     assert_response(:success)
 
-    # compare the response to the outgoing spec
-    sms = assigns(:reply)
+    reply = Sms::Reply.first
 
     # if there was no reply, check that this was expected
-    if sms.nil?
+    if reply.nil?
       expect(params[:outgoing][:body]).to be_nil
     else
-      assert_instance_of(Sms::Reply, sms)
+      assert_instance_of(Sms::Reply, reply)
       # Ensure attribs are appropriate
-      expect(sms.to).to eq(params[:from])
-      assert_match(params[:outgoing][:body], sms.body)
-      expect(sms.mission).to eq(params[:mission])
-      expect(sms.body).not_to match(/%\{|translation missing/)
-      expect(sms.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
+      expect(reply.to).to eq(params[:from])
+      expect(reply.body).to match(params[:outgoing][:body])
+      expect(reply.mission).to eq(params[:mission])
+      expect(reply.body).not_to match(/%\{|translation missing/)
+      expect(reply.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
     end
+
+    reply
   end
 
   # builds and sends the HTTP POST request to mimic incoming adapter
@@ -50,21 +54,20 @@ module IncomingSmsSupport
     req_params = {}
     req_env = {}
 
+    url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
+
+    if defined?(missionless_url) && missionless_url
+      url_token = configatron.has_key?(:universal_sms_token) ? configatron.universal_sms_token : nil
+    else
+      url_token = get_mission.setting.incoming_sms_token
+    end
+
     params[:sent_at] ||= Time.now
-    params[:mission] ||= get_mission
-    params[:incoming][:adapter] ||= 'IntelliSms'
-    params[:url] ||= "/m/#{params[:mission].compact_name}/sms/submit/#{params[:mission].setting.incoming_sms_token}"
+    params[:incoming][:adapter] ||= "TwilioSms"
+    params[:url] ||= "#{url_prefix}/sms/submit/#{url_token}"
     params[:method] ||= :post
 
     case params[:incoming][:adapter]
-    when "IntelliSms"
-      req_params = {
-        # intellisms also doesn't use the + sign
-        "from" => params[:from].gsub("+", ""),
-        "text" => params[:incoming][:body],
-        "msgid" => "123",
-        "sent" => params[:sent_at].utc.strftime("%Y-%m-%dT%T%z")
-      }
     when "FrontlineSms"
       req_params = {
         "from" => params[:from],
@@ -98,6 +101,6 @@ module IncomingSmsSupport
 
 
   def expect_no_messages_delivered_through_adapter
-    expect(assigns(:outgoing_adapter).deliveries.size).to eq(0)
+    expect(configatron.outgoing_sms_adapter.deliveries.size).to eq(0)
   end
 end

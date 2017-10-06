@@ -7,14 +7,13 @@ class ResponsesController < ApplicationController
   before_action :fix_nil_time_values, only: [:update, :create]
 
   # authorization via CanCan
-  load_and_authorize_resource
+  load_and_authorize_resource find_by: :shortcode
   before_action :assign_form, only: [:new]
 
   before_action :mark_response_as_checked_out, only: [:edit]
 
   def index
-    # Deprecating the default_scope on Response
-    @responses = Response.unscoped.accessible_by(current_ability)
+    @responses = Response.accessible_by(current_ability)
 
     # Disable cache, including back button
     response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-store"
@@ -26,9 +25,11 @@ class ResponsesController < ApplicationController
         # apply search and pagination
         params[:page] ||= 1
 
-        @responses = @responses.order(created_at: :desc)
+        @responses = @responses.with_basic_assoc.order(created_at: :desc)
 
-        # paginate
+        # Needed for permission check
+        @responses = @responses.includes(user: :assignments)
+
         @responses = @responses.paginate(page: params[:page], per_page: 20)
 
         # do search, including excerpts, if applicable
@@ -37,11 +38,6 @@ class ResponsesController < ApplicationController
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission}, include_excerpts: true)
           rescue Search::ParseError
             flash.now[:error] = $!.to_s
-            @search_error = true
-          rescue ThinkingSphinx::SphinxError
-            # format sphinx message a little more nicely
-            sphinx_msg = $!.to_s.gsub(/index .+?:\s+/, "")
-            flash.now[:error] = sphinx_msg
             @search_error = true
           end
         end
@@ -64,10 +60,11 @@ class ResponsesController < ApplicationController
           end
         end
 
-        # get the response, for export, but not paginated
-        @responses = @responses.with_associations.order(:created_at)
+        # Get the response, for export, but not paginated.
+        # We deliberately don't eager load as that is handled in the Results::Csv::Generator class.
+        @responses = @responses.order(:created_at)
 
-        @csv = ResponseCSV.new(@responses)
+        @csv = Results::Csv::Generator.new(@responses)
         render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")
       end
     end
@@ -108,6 +105,10 @@ class ResponsesController < ApplicationController
           @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
         else # Otherwise treat it like an ODK submission
           upfile = params[:xml_submission_file]
+
+          # Store file for debugging purposes.
+          UploadSaver.new.save_file(params[:xml_submission_file])
+
           files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
           files.each { |k, v| files[k] = v.tempfile }
 
@@ -123,9 +124,7 @@ class ResponsesController < ApplicationController
         # ensure response's user can submit to the form
         authorize!(:submit_to, @submission.response.form)
 
-        # save without validating, as we have no way to present validation errors to user,
-        # and submitting apps already do validation
-        @submission.save(validate: false)
+        @submission.save
 
         render(nothing: true, status: 201)
       rescue CanCan::AccessDenied
@@ -152,7 +151,7 @@ class ResponsesController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@response)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   def possible_submitters
@@ -173,15 +172,43 @@ class ResponsesController < ApplicationController
     @possible_submitters = @possible_submitters.paginate(page: params[:page], per_page: 20)
 
     render json: {
-      possible_submitters: @possible_submitters.as_json(only: %i(id name)),
+      possible_submitters: ActiveModel::ArraySerializer.new(@possible_submitters),
       more: @possible_submitters.next_page.present?
-    }
+    }, select2: true
+  end
+
+  def possible_users
+    search_mode = params[:search_mode] || "submitters"
+
+    case search_mode
+    when "submitters"
+      @possible_users = User.assigned_to_or_submitter(current_mission, @response).by_name
+    when "reviewers"
+      @possible_users = User.with_roles(current_mission, %w(coordinator staffer reviewer)).by_name
+    end
+
+    # do search if applicable
+    if params[:search].present?
+      begin
+        @possible_users = User.do_search(@possible_users, params[:search])
+      rescue Search::ParseError
+        flash.now[:error] = $!.to_s
+        @search_error = true
+      end
+    end
+
+    @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
+
+    render json: {
+      possible_users: ActiveModel::ArraySerializer.new(@possible_users),
+      more: @possible_users.next_page.present?
+    }, select2: true
   end
 
   private
   # loads the response with its associations
   def load_with_associations
-    @response = Response.with_associations.find(params[:id])
+    @response = Response.with_associations.friendly.find(params[:id])
   end
 
   # when editing a response, set timestamp to show it is being worked on
@@ -214,9 +241,9 @@ class ResponsesController < ApplicationController
   # prepares objects for and renders the form template
   def prepare_and_render_form
     # Prepare the AnswerNodes.
+    set_read_only
     @nodes = AnswerArranger.new(@response,
-      # No point in showing missing answers in show mode.
-      include_missing_answers: params[:action] != "show",
+      placeholders: params[:action] == "show" ? :except_repeats : :all,
       # Must preserve submitted answers when in create/update action.
       dont_load_answers: %w(create update).include?(params[:action])
     ).build.nodes
@@ -233,32 +260,57 @@ class ResponsesController < ApplicationController
     @response.form = Form.find(params[:form_id])
     check_form_exists_in_mission
   rescue ActiveRecord::RecordNotFound
-    return redirect_to(index_url_with_page_num)
+    return redirect_to(index_url_with_context)
+  end
+
+  def set_read_only
+    case action_name
+    when "show"
+      @read_only = true
+    else
+      @read_only = cannot?(:modify_answers, @response)
+    end
   end
 
   def response_params
     if params[:response]
-      reviewer_only = [:reviewed, :reviewer_notes] if @response.present? && can?(:review, @response)
-      params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |whitelisted|
-        whitelisted[:answers_attributes] = {}
+      reviewer_only = if @response.present? && can?(:review, @response)
+        [:reviewed, :reviewer_notes, :reviewer_id]
+      else
+        []
+      end
 
-        # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
-        # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
-        # on the answers.
-        permitted_answer_attribs = %w(id value option_id questioning_id relevant rank
-          time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i)
-          datetime_value(1i) datetime_value(2i) datetime_value(3i) datetime_value(4i) datetime_value(5i)
-          date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy)
-        params[:response][:answers_attributes].each do |idx, attribs|
-          whitelisted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
+      params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |permitted|
+        # In some rare cases, create or update can occur without answers_attributes. Not sure how.
+        # Also need to respect the modify_answers permission here.
+        if params[:response][:answers_attributes] &&
+          (action_name != "update" || can?(:modify_answers, @response))
+          permit_answer_attributes(permitted)
+        end
+      end
+    end
+  end
 
-          # Handle choices, which are nested under answers.
-          if attribs[:choices_attributes]
-            whitelisted[:answers_attributes][idx][:choices_attributes] = {}
-            attribs[:choices_attributes].each do |idx2, attribs2|
-              whitelisted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(:id, :option_id, :checked)
-            end
-          end
+  def permit_answer_attributes(permitted)
+    permitted[:answers_attributes] = {}
+
+    # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
+    # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
+    # on the answers.
+    permitted_answer_attribs = %w(id value option_id option_node_id questioning_id relevant rank
+      time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i) time_value(6i)
+      datetime_value(1i) datetime_value(2i) datetime_value(3i)
+      datetime_value(4i) datetime_value(5i) datetime_value(6i)
+      date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy)
+
+    params[:response][:answers_attributes].each do |idx, attribs|
+      permitted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
+      # Handle choices, which are nested under answers.
+      if attribs[:choices_attributes]
+        permitted[:answers_attributes][idx][:choices_attributes] = {}
+        attribs[:choices_attributes].each do |idx2, attribs2|
+          permitted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(
+            :id, :option_id, :option_node_id, :checked)
         end
       end
     end

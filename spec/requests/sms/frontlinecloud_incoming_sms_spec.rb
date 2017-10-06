@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "frontlinecloud incoming sms" do
+describe "frontlinecloud incoming sms", :sms do
   include IncomingSmsSupport
 
   before :all do
@@ -10,6 +10,6 @@ describe "frontlinecloud incoming sms" do
 
   it "reply should be sent via adapter" do
     do_incoming_request(from: "+1234567890", incoming: {body: "foo", adapter: "FrontlineCloud"})
-    expect(assigns(:outgoing_adapter).deliveries.size).to eq(1)
+    expect(configatron.outgoing_sms_adapter.deliveries.size).to eq(1)
   end
 end

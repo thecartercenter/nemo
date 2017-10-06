@@ -214,7 +214,6 @@ es:
         other: "Etiquetas"
     attributes:
       broadcast:
-        balance: "Equilibrio SMS"
         body: "Mensaje"
         created_at: "Hora de envío"
         errors: "¿Errores?"
@@ -296,9 +295,6 @@ es:
       setting:
         allow_unauthenticated_submissions: "¿Permitir entregas no autentificadas?"
         incoming_sms_numbers_str: "Número entrante"
-        intellisms_password1: "Contraseña "
-        intellisms_password2: "Confirmación de la contraseña"
-        intellisms_username: "Nombre de usuario "
         preferred_locales_str: "Idiomas Preferidos"
         default_outgoing_sms_adapter: "Proveedor Saliente"
         override_code: "Código de Control Manual"
@@ -448,8 +444,6 @@ es:
           Si crea un código nuevo, por favor guarde el código viejo si aún existen formularios anteriores. El nuevo código sólo funcionara con los formularios que hayan sido descargados después de que el nuevo código haya sido creado.
         incoming_sms_numbers_str: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
         default_outgoing_sms_adapter: "El adaptador que se utiliza para enviar SMSes salientes. Tenga en cuenta que las respuestas SMS pueden ser enviadas a través de un adaptador diferente, dependiendo del adaptador del que provienen."
-        intellisms_username: "El nombre de usuario de la cuenta IntelliSMS."
-        intellisms_password1: "Escriba y vuelva a escribir una contraseña para cambiar la contraseña de la cuenta IntelliSMS."
         external_sql: "El código SQL utilizado para extraer los datos para su uso en aplicaciones externas. Haga click en \"Seleccionar todo\" y, a continuación, presione Ctrl-C para copiar."
         timezone: "La zona horaria que aparece en todo el sitio web."
       sms/test:
@@ -812,8 +806,6 @@ es:
     response_id: "Identificación de la Respuesta"
     reviewed: "Revisado"
   broadcast:
-    balance_check_failed: "Error en la comprobación del saldo SMS."
-    balance_notice: "Tiene %{balance} de crédito SMS es su %{account_type} cuenta."
     chars:
       remaining: "carácteres restantes"
       too_many: "demasiados carácteres"
@@ -834,7 +826,6 @@ es:
         sms_only: "SMS sólo (no enviar ningún mensaje de correo electrónico)"
         email_only: "Sólo Correo Electrónico (no enviar ningún SMSes)"
         both: "Ambos SMS y Correo Electrónico"
-    no_possible_recipients: "Ninguno de los usuarios que ha seleccionado tiene una dirección de correo electrónico o número de teléfono. Por favor, vuelva a intentarlo."
     send_broadcast: "Enviar Emisión"
     send_success: "Emisión enviada con éxito."
     send_error: "Error al enviar la emisión (vea a continuación)."

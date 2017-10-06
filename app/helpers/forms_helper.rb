@@ -82,12 +82,16 @@ module FormsHelper
     'image' => 'fa-image',
     'sketch' => 'fa-pencil-square-o',
     'audio' => 'fa-volume-up',
-    'video' => 'fa-film'
+    'video' => 'fa-film',
+    'counter' => 'fa-plus'
   }
 
   def form_item_icon(type)
-    cls = FORM_ITEM_ICON_CLASSES[type]
     # Use font awesome icon if defined, else use custom icon from assets dir.
-    cls ? content_tag(:i, "", class: "fa #{cls} type-icon") : image_tag("form_items/#{type}.png", class: 'type-icon')
+    if cls = FORM_ITEM_ICON_CLASSES[type]
+      content_tag(:i, "", class: "fa #{cls} type-icon")
+    else
+      image_tag("form_items/#{type}.png", class: "type-icon")
+    end
   end
 end

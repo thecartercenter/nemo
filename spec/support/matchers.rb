@@ -66,10 +66,10 @@ RSpec::Matchers.define :have_data_grid do |*expected|
   end
 end
 
-RSpec::Matchers.define :match_xml do |expected|
+RSpec::Matchers.define :match_csv do |expected|
   match do |actual|
-    # Parse the XML and tidy.
-    doc = Nokogiri::XML(actual) { |config| config.noblanks }
+    # Strip BOM from actual
+    doc = actual.gsub("\xEF\xBB\xBF", "")
     doc.to_s == expected
   end
 end

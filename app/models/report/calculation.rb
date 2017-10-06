@@ -1,5 +1,7 @@
-class Report::Calculation < ActiveRecord::Base
+class Report::Calculation < ApplicationRecord
   TYPES = %w(identity zero_nonzero)
+
+  acts_as_paranoid
 
   attr_writer :table_prefix
 

@@ -30,9 +30,9 @@
     if (type == "datetime" || type == "date")
       str_bits.push(vals.slice(0, 3).join("-"));
 
-    // if there is a time portion, add the last two selects, separated by ':'
+    // if there is a time portion, add the last three selects, separated by ':'
     if (type == "datetime" || type == "time")
-      str_bits.push(vals.slice(-2).join(":"));
+      str_bits.push(vals.slice(-3).join(":"));
 
     return str_bits.join(" ");
   }

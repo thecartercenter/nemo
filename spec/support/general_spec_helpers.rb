@@ -13,4 +13,28 @@ module GeneralSpecHelpers
   def expectation_file(filename)
     File.read(Rails.root.join("spec", "expectations", filename))
   end
+
+  # `substitutions` should be a hash of arrays.
+  # For each hash pair, e.g. `grp: groups_ids`, the method substitutes
+  # e.g. `*grp8*` in the file with `groups_ids[7]`.
+  def prepare_expectation(filename, substitutions)
+    expectation_file(filename).tap do |contents|
+      substitutions.each do |key, values|
+        values.each_with_index do |value, i|
+          contents.gsub!("*#{key}#{i + 1}*", value.to_s)
+        end
+      end
+    end
+  end
+
+  def in_timezone(tz)
+    old_tz = Time.zone
+    Time.zone = tz
+    yield
+    Time.zone = old_tz
+  end
+
+  def tidyxml(str)
+    Nokogiri::XML(str) { |config| config.noblanks }.to_s
+  end
 end

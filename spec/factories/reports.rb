@@ -18,17 +18,17 @@ FactoryGirl.define do
         end
       end
 
-      factory :answer_tally_report, class: 'Report::AnswerTallyReport' do
+      factory :answer_tally_report, aliases: [:report_answer_tally_report ],class: 'Report::AnswerTallyReport' do
       end
 
-      factory :response_tally_report, class: 'Report::ResponseTallyReport' do
+      factory :response_tally_report, aliases: [:report_response_tally_report], class: 'Report::ResponseTallyReport' do
       end
 
-      factory :list_report, class: 'Report::ListReport' do
+      factory :list_report, aliases: [:report_list_report], class: 'Report::ListReport' do
       end
     end
 
-    factory :standard_form_report, class: 'Report::StandardFormReport' do
+    factory :standard_form_report, aliases: [:report_standard_form_report], class: 'Report::StandardFormReport' do
       form
     end
   end

@@ -1,0 +1,51 @@
+form.option_set_form {
+
+  /* hide the option levels and allow_coordinates at first */
+  div.form_field {
+    &[data-field-name=allow_coordinates],
+    &[data-field-name=option_levels] {
+      display: none;
+    }
+  }
+
+  /* special case for add options widget */
+  #options div.widget {
+    vertical-align: top !important;
+  }
+
+  div.add_options {
+    margin-bottom: 20px;
+    width: 425px;
+
+    ul {
+      width: 320px;
+    }
+
+    input[type=text] {
+      width: 350px;
+    }
+
+    input[type=button] {
+      vertical-align: top;
+      margin-left: 5px;
+      display: inline-block;
+      width: 92px;
+    }
+  }
+
+  strong.and-n-more {
+    font-size: 14px;
+  }
+
+  .draggable-list-wrapper {
+    > ol {
+      width: 421px;
+    }
+  }
+}
+
+div.modal#edit-option, div.modal#edit-option-level {
+  .translation, .coordinate {
+    margin-bottom: 10px;
+  }
+}

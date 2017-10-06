@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Sms::Adapters::FrontlineSmsAdapter do
+describe Sms::Adapters::FrontlineSmsAdapter, :sms do
   before :all do
-    @adapter = Sms::Adapters::Factory.new.create('FrontlineSms')
+    @adapter = Sms::Adapters::Factory.instance.create('FrontlineSms')
   end
 
   it 'should be created by factory' do

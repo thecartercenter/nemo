@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Setting do
+  it_behaves_like "has a uuid"
 
   let(:setting) { get_mission.setting }
 
@@ -55,7 +56,7 @@ describe Setting do
       let(:mission) { nil }
       it_should_behave_like 'load_for_mission'
 
-      it 'should not have an incoming_sms_token' do
+      it 'should not have an incoming_sms_token', :sms do
         setting = Setting.load_for_mission(mission)
         expect(setting.incoming_sms_token).to be_nil
       end
@@ -65,12 +66,12 @@ describe Setting do
       let(:mission) { get_mission }
       it_should_behave_like 'load_for_mission'
 
-      it 'should have an incoming_sms_token' do
+      it 'should have an incoming_sms_token', :sms do
         setting = Setting.load_for_mission(mission)
         expect(setting.incoming_sms_token).to match(/\A[0-9a-f]{32}\z/)
       end
 
-      it 'should have the same incoming_sms_token after reloading' do
+      it 'should have the same incoming_sms_token after reloading', :sms do
         setting = Setting.load_for_mission(mission)
         token = setting.incoming_sms_token
 
@@ -79,7 +80,7 @@ describe Setting do
         expect(setting.incoming_sms_token).to eq(token)
       end
 
-      it 'should have a different incoming_sms_token after calling regenerate_incoming_sms_token!' do
+      it 'should have a different incoming_sms_token after calling regenerate_incoming_sms_token!', :sms do
         setting = Setting.load_for_mission(mission)
         token = setting.incoming_sms_token
 
@@ -88,7 +89,7 @@ describe Setting do
         expect(setting.incoming_sms_token).not_to eq(token)
       end
 
-      it 'should normalize the twilio_phone_number on save' do
+      it 'should normalize the twilio_phone_number on save', :sms do
         setting = Setting.load_for_mission(mission)
         setting.twilio_phone_number = "+1 770 555 1212"
         setting.twilio_account_sid = "AC0000000"

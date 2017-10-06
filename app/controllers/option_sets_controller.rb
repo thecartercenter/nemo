@@ -6,7 +6,7 @@ class OptionSetsController < ApplicationController
 
   # authorization via cancan
   load_and_authorize_resource
-  skip_authorization_check only: :options_for_node
+  skip_authorization_check only: :child_nodes
 
   def index
     # get the total entries before adding the big joins
@@ -85,12 +85,12 @@ class OptionSetsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@option_set)
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
-  # Returns the options available at the node in the option tree specified by the given array of option IDs
-  def options_for_node
-    @options = @option_set.options_for_node(params[:ids].map(&:to_i))
+  # Returns the options available at the node in the option tree specified by the given node
+  def child_nodes
+    @children = OptionNode.find(params[:node_id]).sorted_children
     render(layout: false)
   end
 
@@ -106,7 +106,7 @@ class OptionSetsController < ApplicationController
     rescue
       flash[:error] = t("option_set.clone_error", msg: $!.to_s)
     end
-    redirect_to(index_url_with_page_num)
+    redirect_to(index_url_with_context)
   end
 
   private

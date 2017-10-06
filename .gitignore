@@ -8,12 +8,16 @@ railsenv
 config/railsenv
 config/initializers/local_config.rb
 config/database.yml
+config/mysql2postgres.yml
 config/thinking_sphinx.yml
 config/memcached_server
 TODO
 .sass-cache/
 NOTES
 .idea
+
+# MS Office backup files
+~$*
 
 # compiled assets
 public/assets
@@ -26,6 +30,11 @@ config/*.sphinx.conf
 # manually generated files for quick searching
 rake_tasks.txt
 routes.txt
+
+# theme variable overrides
+app/assets/stylesheets/all/variables/_theme.scss
+app/assets/images/logo-override.png
+app/assets/images/logo-dark-override.png
 
 # file uploads
 /uploads

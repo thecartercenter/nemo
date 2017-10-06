@@ -1,0 +1,174 @@
+.forms_sms_guide {
+  div.alert ol {
+    margin-top: 10px;
+  }
+
+  h1.title {
+    display: none;
+  }
+
+  h1.title.inner {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  div.header {
+    float: right;
+    color: #ccc;
+    font-size: 15px;
+  }
+
+  div.controls {
+    margin-bottom: 20px;
+
+    form {
+      display: inline-block; margin-right: 10px;
+    }
+
+    a {
+      display: inline-block;
+    }
+  }
+
+  #user-field {
+    width: 300px;
+    border-bottom: 1px solid #666;
+    color: #ccc;
+    display: inline-block;
+    text-align: center;
+    margin-bottom: -2px;
+  }
+
+  #instructions {
+    > ol {
+      margin-left: -25px;
+
+      ol {
+        margin-left: -10px;
+      }
+    }
+
+    ol ol li {
+      list-style-type: lower-alpha;
+    }
+
+    i.fa {
+      font-size: 14px;
+    }
+
+    #example-box {
+      margin-left: 5px;
+      border: $answer-box-border;
+      display: inline-block;
+      text-align: center;
+      width: 20px;
+    }
+  }
+
+  #example-sms {
+    font-family: monospace;
+    font-size: 14px;
+  }
+
+  table {
+    width: 100%;
+    margin-top: -5px;
+
+    td {
+      border: 1px solid #aaa;
+      padding: 6px 6px 4px 6px;
+    }
+
+    td.answer {
+      width: $answer-unit-width * 8px + 70px;
+      vertical-align: middle;
+    }
+
+    tr#message-arrow td {
+      text-align: center;
+      font-size: 14px;
+      font-weight: bold;
+      border: none;
+      padding-top: 0;
+      padding-bottom: 5px;
+    }
+  }
+
+  div.question {
+    margin-bottom: 5px;
+
+    .reqd-sym {
+      display: inline-block;
+      margin: 0 3px;
+    }
+  }
+
+  div.options {
+    margin-bottom: 5px;
+  }
+
+  div.hint {
+    font-style: italic;
+
+    .sms-example {
+      font-style: normal;
+      font-family: monospace;
+      white-space: nowrap;
+    }
+  }
+
+  .prefilled-text {
+    font-family: monospace;
+    font-size: 16px;
+  }
+
+  .answer-space {
+    border: $answer-box-border;
+    height: 30px;
+    display: inline-block;
+    font-family: monospace;
+    font-size: 18px;
+
+    &.width-1 { width: $answer-unit-width * 1px; }
+    &.width-2 { width: $answer-unit-width * 2px; }
+    &.width-3 { width: $answer-unit-width * 3px; }
+    &.width-4 { width: $answer-unit-width * 4px; }
+    &.width-6 { width: $answer-unit-width * 6px; }
+    &.width-8 { width: $answer-unit-width * 8px; }
+  }
+
+  @media screen {
+    .sms_guide {
+      max-width: 900px;
+    }
+
+    #body {
+      background-color: $super-light-gray;
+      padding: 20px;
+    }
+  }
+
+  @media print {
+    .alert, div.controls {
+      display: none;
+    }
+
+    table {
+      /* To avoid strange border cutting issue. */
+      width: 98%;
+    }
+
+    /* Trick to get faint text to print */
+    div.header, #user-field {
+      color: rgba(0, 0, 0, 0);
+      text-shadow: 0 0 0 #ccb !important;
+    }
+
+    @media print and (-webkit-min-device-pixel-ratio: 0) {
+      div.header, #user-field {
+        color: #ccb !important;
+        -webkit-print-color-adjust: exact;
+      }
+    }
+  }
+}

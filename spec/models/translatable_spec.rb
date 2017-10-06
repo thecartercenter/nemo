@@ -106,7 +106,6 @@ describe "Translatable" do
     it 'should be first-entered locale if default is blank' do
       a.name_en = ''
       a.name_fr = 'Bar'
-      p a.name_en
       expect(a.canonical_name).to eq 'Bar'
 
       a.name_en = 'Foo'
@@ -137,7 +136,7 @@ describe "Translatable" do
 
       b = BClass.new
       b.name = 'Foo'
-      expect{b.canonical_name}.to raise_error
+      expect{b.canonical_name}.to raise_error NoMethodError, /canonical_name/
     end
 
     it 'should be updated if name_translations gets updated directly' do
@@ -158,4 +157,26 @@ describe "Translatable" do
     end
   end
 
+  describe "fallbacks" do
+    before do
+      a.name_en = "Eng"
+      a.name_fr = "Fra"
+    end
+
+    it "should return nil if translation missing and fallbacks not given" do
+      expect(a.name(:es)).to be_nil
+    end
+
+    it "should return french if given as first fallback" do
+      expect(a.name(:es, fallbacks: [:fr])).to eq("Fra")
+    end
+
+    it "should return french if second fallback but first fallback not found" do
+      expect(a.name(:es, fallbacks: [:de, :fr])).to eq("Fra")
+    end
+
+    it "should return english if strict mode and no fallbacks found" do
+      expect(a.name(:es, strict: false, fallbacks: [:de, :it])).to eq("Eng")
+    end
+  end
 end

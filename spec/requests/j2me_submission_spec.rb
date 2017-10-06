@@ -1,7 +1,7 @@
 require "spec_helper"
 require "fileutils"
 
-describe "j2me submissions" do
+describe "j2me submissions", :odk do
 
   context "for a valid user and mission" do
     before do

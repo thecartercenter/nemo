@@ -1,31 +1,35 @@
 <%= elmo_form_for(@broadcast) do |f| %>
 
-  <%= top_action_links(@broadcast, :only => :index) %>
+  <%= top_action_links(@broadcast, only: :index) %>
 
-  <%= f.field(:recipient_ids, :type => :hidden, :multiple => true) %>
-  <%= f.field(:to, :content => safe_join(@broadcast.recipients.collect{|u| link_to(u.name, u)}, ", ")) %>
-  <%= f.field(:medium, :type => :select, :required => true,
-    :options => translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
+  <%= f.field(:medium, type: :select, required: true,
+    options: translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
 
-  <%# only show balance if we were able to retrieve one and if we're not in read_only mode %>
-  <%= f.field(:balance, :partial => "balance") if @balance.present? && @broadcast.new_record? %>
+  <%= f.field(:recipient_selection, type: :select, required: true,
+    options: translate_options(Broadcast::RECIPIENT_SELECTION_OPTIONS, [:broadcast, :recipient_selection_options])) %>
 
-  <%= f.field(:which_phone, :type => :select, :required => true,
-    :options => translate_options(Broadcast::WHICH_PHONE_OPTIONS, [:broadcast, :which_phone_options])) %>
-  <%= f.field(:subject, :required => true) %>
-  <%= f.field(:body, :required => true, :partial => "body") %>
+  <%# Leaving this as non-remote fetching for now, as we will end up reusing the stuff from Form when
+     we make it possible to send broadcasts to groups later. %>
+  <%= f.field(:recipient_ids, type: :select, required: true, multiple: true, prompt: false,
+    options: sel_opts_from_objs(@broadcast.recipients), read_only_content: @broadcast.recipient_names) %>
+
+  <%= f.field(:which_phone, type: :select, required: true,
+    options: translate_options(Broadcast::WHICH_PHONE_OPTIONS, [:broadcast, :which_phone_options])) %>
+  <%= f.field(:subject, required: true) %>
+  <%= f.field(:body, required: true, partial: "body") %>
 
   <%# show any errors if we're in show mode %>
   <% if read_only && @broadcast.send_errors %>
-    <%= f.field(:send_errors, :partial => "send_errors") %>
+    <%= f.field(:send_errors, partial: "send_errors") %>
   <% end %>
 
   <div class="submit-buttons">
-    <%= f.submit(:send, :class => "btn btn-primary") %>
+    <%= f.submit(:send, class: "btn btn-primary") %>
   </div>
 <% end %>
 
 <%= javascript_doc_ready do %>
-  $("#broadcast_medium").change(broadcast_medium_changed);
-  $("#broadcast_medium").trigger("change");
+  new ELMO.Views.BroadcastsView(<%=json(
+    recipient_options_url: possible_recipients_broadcasts_path
+  )%>);
 <% end %>

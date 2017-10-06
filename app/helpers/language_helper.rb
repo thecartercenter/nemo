@@ -9,4 +9,14 @@ module LanguageHelper
       (entry = ISO_639.find(code.to_s)) ? entry.english_name : code.to_s
     end
   end
+
+  def language_select(locale: configatron.default_locale)
+    content_tag(:select, name: "lang", onchange: "this.form.submit();") do
+      locale_list = configatron.all_locales.map do |l|
+        selected = l.to_s == locale.to_s ? { selected: "selected" } : { }
+        content_tag(:option, language_name(l), { value: l }.merge(selected))
+      end
+      locale_list.reduce(:<<)
+    end
+  end
 end

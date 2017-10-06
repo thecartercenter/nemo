@@ -29,6 +29,11 @@ describe OptionSuggester do
       result = OptionSuggester.new.suggest(get_mission, '(with')
       expect(result.map(&:name)).to eq ['(with parenthesis)', '(with']
     end
+
+    it 'works with a single quote in the query string' do
+      result = OptionSuggester.new.suggest(get_mission, "Foo's")
+      expect(result.map(&:name)).to eq ["Foo's Bar", "Foo's"]
+    end
   end
 
   describe 'mission scoping' do

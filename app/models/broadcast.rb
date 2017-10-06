@@ -1,21 +1,18 @@
-class Broadcast < ActiveRecord::Base
+class Broadcast < ApplicationRecord
   include MissionBased
 
-  has_many(:broadcast_addressings, :inverse_of => :broadcast, :dependent => :destroy)
-  has_many(:recipients, :through => :broadcast_addressings, :source => :user)
+  def self.receivable_association
+    {name: :broadcast_addressings, fk: :addressee}
+  end
+  include Receivable
 
-  validates(:recipients, :presence => true)
-  validates(:medium, :presence => true)
-  validates(:subject, :presence => true, :if => Proc.new{|b| !b.sms_possible?})
-  validates(:which_phone, :presence => true, :if => Proc.new{|b| b.sms_possible?})
-  validates(:body, :presence => true)
-  validates(:body, :length => {:maximum => 140}, :if => Proc.new{|b| b.sms_possible?})
-  validate(:check_eligible_recipients)
-
-  default_scope { includes(:recipients).order("broadcasts.created_at DESC") }
-
-  # this method isn't used except for attaching errors
-  attr_accessor :to
+  validates :medium, presence: true
+  validates :recipient_selection, presence: true
+  validates :subject, presence: true, unless: :sms_possible?
+  validates :which_phone, presence: true, if: :sms_possible?
+  validates :body, presence: true
+  validates :body, length: {maximum: 140}, if: :sms_possible?
+  validate :validate_recipients
 
   # options for the medium used for the broadcast
   MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
@@ -25,18 +22,14 @@ class Broadcast < ActiveRecord::Base
   # options for which phone numbers the broadcast should be sent to
   WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
 
+  # options for recipients
+  RECIPIENT_SELECTION_OPTIONS = %w(all_users all_observers specific)
+
+  scope :manual_only, -> { where(source: "manual") }
+
   def self.terminate_sub_relationships(broadcast_ids)
     BroadcastAddressing.where(broadcast_id: broadcast_ids).delete_all
     Sms::Message.where(broadcast_id: broadcast_ids).delete_all
-  end
-
-  def recipient_ids
-    recipients.collect{|r| r.id}.join(",")
-  end
-
-  def recipient_ids=(ids)
-    ids = Array.wrap(ids).flat_map { |e| e.split(",") }
-    self.recipients = ids.map{ |id| User.find_by_id(id) }.compact
   end
 
   def sms_possible?
@@ -45,6 +38,10 @@ class Broadcast < ActiveRecord::Base
 
   def email_possible?
     medium != "sms_only"
+  end
+
+  def specific_recipients?
+    recipient_selection == "specific"
   end
 
   def deliver
@@ -64,7 +61,7 @@ class Broadcast < ActiveRecord::Base
       end
     rescue Sms::Error
       # one error per line
-      $!.to_s.split("\n").each{|e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}")}
+      $!.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
     end
 
     save if send_errors
@@ -74,24 +71,20 @@ class Broadcast < ActiveRecord::Base
     self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
   end
 
-  def no_possible_recipients?
-    recipients.all?{ |u| u.email.blank? && u.phone.blank? && u.phone2.blank? }
-  end
-
   def recipient_numbers
     @recipient_numbers ||= [].tap do |numbers|
-      recipients.each do |r|
+      actual_recipients.each do |r|
         next unless r.can_get_sms?
         numbers << r.phone if main_phone?
         numbers << r.phone2 if alternate_phone?
       end
-    end
+    end.compact
   end
 
   # Returns total number of users getting an sms.
   def sms_recipient_count
     return 0 unless sms_possible?
-    @sms_recipient_count ||= recipients.count(&:can_get_sms?)
+    @sms_recipient_count ||= actual_recipients.count(&:can_get_sms?)
   end
 
   # Returns a set of hashes of form {user: x, phone: y} for recipients that got smses.
@@ -100,7 +93,7 @@ class Broadcast < ActiveRecord::Base
   def sms_recipient_hashes(options = {})
     return [] unless sms_possible?
     @sms_recipient_hashes ||= [].tap do |hashes|
-      recipients.each do |r|
+      actual_recipients.each do |r|
         next unless r.can_get_sms?
         hashes << { user: r, phone: main_phone? ? r.phone : r.phone2 }
         break if options[:max] && hashes.size >= options[:max]
@@ -109,23 +102,43 @@ class Broadcast < ActiveRecord::Base
   end
 
   def recipient_emails
-    @recipient_emails ||= recipients.map { |r| r.email if r.can_get_email? }.compact
+    @recipient_emails ||= actual_recipients.map { |r| r.email if r.can_get_email? }.compact
   end
 
   private
 
-    def check_eligible_recipients
-      unless (sms_possible? && recipient_numbers.present?) || (email_possible? && recipient_emails.present?)
-        errors.add(:to, :no_recipients)
-      end
+  # Returns the recipients of the message. If recipient_selection is set to all_users or all_observers,
+  # this will be different than `recipients`.
+  def actual_recipients
+    @actual_recipients ||= case recipient_selection
+    when "specific"
+      (recipient_users + recipient_groups.flat_map(&:users)).uniq
+    when "all_users"
+      mission.users
+    when "all_observers"
+      mission.users.where("assignments.role" => "observer")
+    else
+      raise "invalid recipient_selection"
     end
+  end
 
-    def main_phone?
-      %w(main_only both).include?(which_phone)
+  def validate_recipients
+    # If no recipients at all, show 'can't be blank' error
+    if specific_recipients? && recipients.empty?
+      errors.add(:recipient_ids, :blank)
+
+    # Else ensure at least one of the selected recipients can get the message!
+    elsif !(sms_possible? && recipient_numbers.present?) && !(email_possible? && recipient_emails.present?)
+      attrib_to_add_error = specific_recipients? ? :recipient_ids : :recipient_selection
+      errors.add(attrib_to_add_error, :no_recipients)
     end
+  end
 
-    def alternate_phone?
-      %w(alternate_only both).include?(which_phone)
-    end
+  def main_phone?
+    %w(main_only both).include?(which_phone)
+  end
 
+  def alternate_phone?
+    %w(alternate_only both).include?(which_phone)
+  end
 end

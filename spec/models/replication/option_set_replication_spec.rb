@@ -37,6 +37,18 @@ describe OptionSet do
       expect(@copy.root_node.c[0].option_set_id).to eq @copy.id
       expect(@copy.root_node.c[0].c[0].option_set_id).to eq @copy.id
 
+      # Ensure option nodes get correct attributes
+      expect(@copy.root_node.c[0].is_standard).to be false
+      expect(@copy.root_node.c[0].c[0].is_standard).to be false
+      expect(@copy.root_node.c[0].standard_copy).to be true
+      expect(@copy.root_node.c[0].c[0].standard_copy).to be true
+
+      # Ensure option nodes get correct original references
+      expect(@copy.root_node.c[0].original_id).to eq @orig.root_node.c[0].id
+      expect(@copy.root_node.c[0].c[0].original_id).to eq @orig.root_node.c[0].c[0].id
+      expect(@copy.root_node.c[0].original).to eq @orig.root_node.c[0]
+      expect(@copy.root_node.c[0].c[0].original).to eq @orig.root_node.c[0].c[0]
+
       # Ensure no duplicates.
       expect(Option.count).to eq 12
       expect(OptionNode.count).to eq 14

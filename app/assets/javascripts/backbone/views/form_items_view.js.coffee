@@ -1,5 +1,5 @@
 # Controls add/edit/delete operations for form items list.
-class ELMO.Views.FormItemsView extends Backbone.View
+class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
 
   el: '.form-items'
 
@@ -8,6 +8,7 @@ class ELMO.Views.FormItemsView extends Backbone.View
     'click .form-item-group > .inner .edit': 'show_edit_group_modal'
     'click .form-item-group > .inner .delete': 'delete_item'
     'click .form-item-question > .inner .delete': 'delete_item'
+    'click .form-item-question': 'go_to_question'
 
   initialize: (params) ->
     this.draggable = new ELMO.Views.FormItemsDraggableListView({parent_view: this}) if params.can_reorder
@@ -90,3 +91,6 @@ class ELMO.Views.FormItemsView extends Backbone.View
 
   show_saving_message: (show) ->
     @$('#saving-message')[if show then 'show' else 'hide']()
+
+  go_to_question: (e) ->
+    window.location.href = @$(e.currentTarget).data('href') unless @$(e.target).parents('a').length > 0

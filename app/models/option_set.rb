@@ -1,10 +1,12 @@
-class OptionSet < ActiveRecord::Base
+class OptionSet < ApplicationRecord
   # We use this instead of autosave since autosave doesn't work right for belongs_to.
   # It is up here because it should happen early, e.g., before form version callbacks.
   after_save :save_root_node
 
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
   SMS_GUIDE_FORMATTING_OPTIONS = %w(auto inline appendix treat_as_text)
+
+  acts_as_paranoid
 
   # This need to be up here or they will run too late.
   before_destroy :check_associations
@@ -32,10 +34,10 @@ class OptionSet < ActiveRecord::Base
         option_sets.*,
         COUNT(DISTINCT answers.id) AS answer_count_col,
         COUNT(DISTINCT questions.id) AS question_count_col,
-        MAX(forms.published) AS published_col,
+        BOOL_OR(forms.published) AS published_col,
         COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
         COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
-        MAX(copy_forms.published) AS copy_published_col
+        BOOL_OR(copy_forms.published) AS copy_published_col
       }).
       joins(%{
         LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
@@ -43,7 +45,7 @@ class OptionSet < ActiveRecord::Base
           AND questionings.type = 'Questioning'
         LEFT OUTER JOIN forms ON forms.id = questionings.form_id
         LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-        LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = 1 AND copies.original_id = option_sets.id
+        LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = true AND copies.original_id = option_sets.id
         LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
         LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copy_questions.id
           AND questionings.type = 'Questioning'
@@ -70,13 +72,10 @@ class OptionSet < ActiveRecord::Base
     :total_options,
     :descendants,
     :all_options,
-    :options_for_node,
     :max_depth,
     :options_not_serialized,
     :arrange_as_rows,
     :arrange_with_options,
-    :option_path_to_rank_path,
-    :rank_path_to_option_path,
     :sorted_children,
     :first_leaf_option,
     :first_leaf_option_node,
@@ -106,19 +105,24 @@ class OptionSet < ActiveRecord::Base
   def self.all_options_for_sets(set_ids)
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).all.map(&:root_node_id)
-    node_where_clause = root_node_ids.map { |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(" OR ")
-    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{node_where_clause})").to_a
+    where_clause = root_node_ids.map { |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(" OR ")
+    where_clause << " AND deleted_at IS NULL"
+    Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{where_clause})").to_a
   end
 
   def self.first_level_option_nodes_for_sets(set_ids)
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).to_a.map(&:root_node_id)
-    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).to_a
+    OptionNode.where(ancestry: root_node_ids.map(&:to_s)).includes(:option).order(:option_set_id, :rank).to_a
   end
 
   def children_attribs=(attribs)
     build_root_node if root_node.nil?
     root_node.children_attribs = attribs
+  end
+
+  def preordered_option_nodes
+    root_node.preordered_descendants
   end
 
   # Given an Option, returns the path down the tree of Options in this set to that Option.
@@ -145,11 +149,16 @@ class OptionSet < ActiveRecord::Base
   end
 
   def level_count
-    levels.try(:size)
+    levels.try(:size) || 1
+  end
+
+  def level_name_for_depth(depth)
+    levels[depth-1].name
   end
 
   def multilevel?
-    defined?(@multilevel) ? @multilevel : (@multilevel = root_node && root_node.has_grandchildren?)
+    return @multilevel if defined?(@multilevel)
+    @multilevel = !!root_node.try(:has_grandchildren?)
   end
   alias_method :multilevel, :multilevel?
 
@@ -163,6 +172,10 @@ class OptionSet < ActiveRecord::Base
 
   def question_type_supports_multilevel?
     adding_to_question_type != "select_multiple"
+  end
+
+  def first_level_option_nodes
+    root_node.sorted_children
   end
 
   def first_level_options
@@ -373,7 +386,13 @@ class OptionSet < ActiveRecord::Base
   private
 
   def copy_attribs_to_root_node
-    root_node.assign_attributes(mission: mission, option_set: self, sequence: 0)
+    root_node.assign_attributes(
+      mission: mission,
+      option_set: self,
+      sequence: 0,
+      is_standard: is_standard,
+      standard_copy: standard_copy
+    )
   end
 
   def check_associations
@@ -396,7 +415,9 @@ class OptionSet < ActiveRecord::Base
 
   def save_root_node
     if root_node
-      root_node.option_set = self
+      # Need to copy this here instead of copy_attribs_to_root_node because the ID may not exist yet
+      # in the latter.
+      root_node.option_set_id = id
       root_node.save!
     end
   end

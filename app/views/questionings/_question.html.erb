@@ -1,5 +1,7 @@
 <%# This partial represents a question in the form form item list. %>
-<li class="form-item form-item-question<%= qing.hidden? ? " form-item-hidden" : "" %>" data-id="<%= qing.id %>">
+<% href = !read_only && can?(:update, qing) ? edit_questioning_path(qing) : questioning_path(qing) %>
+<li class="form-item form-item-question<%= qing.hidden? ? " form-item-hidden" : "" %>"
+  data-id="<%= qing.id %>" data-href="<%= href %>">
   <div class="inner">
 
     <%# Standard question? %>
@@ -38,7 +40,8 @@
 
       <%# Condition %>
       <% if qing.has_condition? %>
-        <div class="condition" data-ref-id="<%= qing.condition_ref_qing_id %>">
+        <div class="condition" data-ref-id="<%= qing.condition_ref_qing_id %>"
+          title="<%= qing.condition %>">
           <i class="fa fa-link"></i> #<span><%= qing.condition_ref_qing_full_dotted_rank %></span>
         </div>
       <% end %>

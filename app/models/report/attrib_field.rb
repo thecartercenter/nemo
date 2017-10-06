@@ -5,25 +5,27 @@ class Report::AttribField < Report::Field
 
   # builds one of each type of AttribField
   def self.all
-    @@ATTRIBS.values.collect{|a| new(a[:name])}
+    @@ATTRIBS.values.collect { |a| new(a[:name]) }
   end
 
   # builds a new object from the templates at the bottom of the file
   def initialize(attrib_name)
     raise "attrib_name #{attrib_name} not found when creating AttribField object" unless @@ATTRIBS[attrib_name.to_sym]
-    @@ATTRIBS[attrib_name.to_sym].each{|k,v| self.send("#{k}=", v)}
+    @@ATTRIBS[attrib_name.to_sym].each { |k,v| self.send("#{k}=", v) }
   end
 
   def name_expr(chunks)
-    @name_expr ||= Report::Expression.new(name_expr_params.merge(:chunks => chunks.merge(:current_timezone => Time.zone.mysql_name)))
+    @name_expr ||= Report::Expression.new(
+      name_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.tzinfo.name)))
   end
 
   def value_expr(chunks)
-    @value_expr ||= Report::Expression.new(value_expr_params.merge(:chunks => chunks.merge(:current_timezone => Time.zone.mysql_name)))
+    @value_expr ||= Report::Expression.new(
+      value_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.tzinfo.name)))
   end
 
-  def where_expr(chunks)
-    @where_expr ||= Report::Expression.new(:sql_tplt => "", :name => "where", :clause => :where)
+  def where_expr(_chunks)
+    @where_expr ||= Report::Expression.new(sql_tplt: "", name: "where", clause: :where)
   end
 
   def sort_expr(chunks)
@@ -34,61 +36,80 @@ class Report::AttribField < Report::Field
     @joins || []
   end
 
-  def as_json(options = {})
-    {:name => name, :title => title}
+  def as_json(_options = {})
+    {name: name, title: title}
   end
 
   def title
-    I18n.t("attrib_fields.#{name}", default: name.to_s.gsub('_', ' ').ucwords)
+    I18n.t("attrib_fields.#{name}", default: name.to_s.gsub("_", " ").ucwords)
   end
 
   private
-    def joins=(j)
-      @joins = j
-    end
+  attr_writer :joins
 
-    @@ATTRIBS = {
-      :response_id => {
-        :name => :response_id,
-        :name_expr_params => {:sql_tplt => "CONCAT('#',responses.id)", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "CONCAT('#',responses.id)", :name => "value", :clause => :select},
-        :data_type => :text},
-      :form => {
-        :name => :form,
-        :name_expr_params => {:sql_tplt => "__TBL_PFX__forms.name", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "__TBL_PFX__forms.name", :name => "value", :clause => :select},
-        :joins => [:forms],
-        :data_type => :text,
-        :groupable => true},
-      :submitter => {
-        :name => :submitter,
-        :name_expr_params => {:sql_tplt => "__TBL_PFX__users.name", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "__TBL_PFX__users.name", :name => "value", :clause => :select},
-        :joins => [:users],
-        :data_type => :text,
-        :groupable => true},
-      :source => {
-        :name => :source,
-        :name_expr_params => {:sql_tplt => "responses.source", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "responses.source", :name => "value", :clause => :select},
-        :data_type => :text,
-        :groupable => true},
-      :time_submitted => {
-        :name => :time_submitted,
-        :name_expr_params => {:sql_tplt => "responses.created_at", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "responses.created_at", :name => "value", :clause => :select},
-        :data_type => :datetime},
-      :date_submitted => {
-        :name => :date_submitted,
-        :name_expr_params => {:sql_tplt => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__'))", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "DATE(CONVERT_TZ(responses.created_at, 'UTC', '__CURRENT_TIMEZONE__'))", :name => "value", :clause => :select},
-        :data_type => :date,
-        :groupable => true},
-      :reviewed => {
-        :name => :reviewed,
-        :name_expr_params => {:sql_tplt => "IF(responses.reviewed, 'Yes', 'No')", :name => "name", :clause => :select},
-        :value_expr_params => {:sql_tplt => "IF(responses.reviewed, 1, 0)", :name => "value", :clause => :select},
-        :data_type => :text,
-        :groupable => true}
-    }
+  @@ATTRIBS = {
+    response_id: {
+      name: :response_id,
+      name_expr_params: {sql_tplt: "responses.shortcode", name: "name", clause: :select},
+      value_expr_params: {sql_tplt: "responses.shortcode", name: "value", clause: :select},
+      data_type: :text},
+    form: {
+      name: :form,
+      name_expr_params: {sql_tplt: "__TBL_PFX__forms.name", name: "name", clause: :select},
+      value_expr_params: {sql_tplt: "__TBL_PFX__forms.name", name: "value", clause: :select},
+      joins: [:forms],
+      data_type: :text,
+      groupable: true},
+    submitter: {
+      name: :submitter,
+      name_expr_params: {sql_tplt: "__TBL_PFX__users.name", name: "name", clause: :select},
+      value_expr_params: {sql_tplt: "__TBL_PFX__users.name", name: "value", clause: :select},
+      joins: [:users],
+      data_type: :text,
+      groupable: true},
+    source: {
+      name: :source,
+      name_expr_params: {sql_tplt: "responses.source", name: "name", clause: :select},
+      value_expr_params: {sql_tplt: "responses.source", name: "value", clause: :select},
+      data_type: :text,
+      groupable: true},
+    time_submitted: {
+      name: :time_submitted,
+      name_expr_params: {sql_tplt: "responses.created_at", name: "name", clause: :select},
+      value_expr_params: {sql_tplt: "responses.created_at", name: "value", clause: :select},
+      data_type: :datetime},
+    date_submitted: {
+      name: :date_submitted,
+      name_expr_params: {
+        sql_tplt: "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '__CURRENT_TIMEZONE__' AS DATE)",
+        name: "name",
+        clause: :select},
+      value_expr_params: {
+        sql_tplt: "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '__CURRENT_TIMEZONE__' AS DATE)",
+        name: "value",
+        clause: :select},
+      data_type: :date,
+      groupable: true},
+    reviewed: {
+      name: :reviewed,
+      name_expr_params: {
+        sql_tplt: "(CASE WHEN responses.reviewed THEN 'Yes' ELSE 'No' END)",
+        name: "name",
+        clause: :select
+      },
+      value_expr_params: {
+        sql_tplt: "(CASE WHEN responses.reviewed THEN 1 ELSE 0 END)",
+        name: "value",
+        clause: :select
+      },
+      data_type: :text,
+      groupable: true},
+    reviewer: {
+      name: :reviewer,
+      name_expr_params: {sql_tplt: "__TBL_PFX__reviewers.name", name: "name", clause: :select},
+      value_expr_params: {sql_tplt: "__TBL_PFX__reviewers.name", name: "value", clause: :select},
+      joins: [:reviewers],
+      data_type: :text,
+      groupable: true}
+  }
 end

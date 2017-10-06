@@ -18,8 +18,8 @@
 
   <% unless objects.empty? %>
 
-    <%# wrap table in a form tag unless we are already in one %>
-    <% unless options[:within_form] %>
+    <%# wrap table in a form tag for batch operation support %>
+    <% unless options[:omit_form] %>
       <%= form_tag %>
     <% end %>
 
@@ -35,7 +35,7 @@
               <% if f.is_a?(Hash) %>
                 <%= f[:title] %>
               <% else %>
-                <%= f == "actions" ? "" : t("activerecord.table_headers.#{objects.first.class.model_name.i18n_key}.#{f}",
+                <%= f == "actions" ? "" : t("activerecord.table_headers.#{objects[0].class.model_name.i18n_key}.#{f}",
                   :default => objects[0].class.human_attribute_name(f)) %>
               <% end %>
             </th>
@@ -53,7 +53,7 @@
 
             <% if batch_ops %>
               <td class="cb_col">
-                <%= check_box_tag("selected[#{o.id}]", 1, false, :class => 'batch_op') %>
+                <%= check_box_tag("selected[#{o.id}]", 1, false, :class => 'batch_op', :data => { "#{klass.model_name.singular_route_key}-id" => o.id }) %>
               </td>
             <% end %>
             <% fields.each do |f| %>
@@ -79,7 +79,7 @@
     </table>
 
     <%# close the form tag if necessary %>
-    <% unless options[:within_form] %>
+    <% unless options[:omit_form] %>
       </form>
     <% end %>
 
@@ -87,8 +87,8 @@
 
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
-      new ELMO.Views.IndexTableView(<%=json(
-        class_name: objects.first.class.name.underscore,
+      ELMO.index_table_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.IndexTableView(<%=json(
+        class_name: objects[0].class.name.underscore,
         modified_obj_id: flash[:modified_obj_id],
         no_whole_row_link: options[:no_whole_row_link],
         batch_ops: batch_ops,

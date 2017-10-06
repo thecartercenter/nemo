@@ -25,4 +25,7 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
       sent_at: Time.zone.now, # Frontline doesn't supply this
       adapter_name: service_name)
   end
+
+  def validate(request)
+  end
 end

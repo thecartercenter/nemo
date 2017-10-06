@@ -15,6 +15,8 @@ class FormVersioningPolicy
   # Returns a list of forms needing upgrade based on the given object and action.
   # If the list is empty, it means that no form's version will have to be updated.
   def forms_needing_upgrade(obj, action)
+    return [] if obj.id_changed? && action == :update # this is a create, not an update
+
     case obj.class.name
     when "Option"
       case action

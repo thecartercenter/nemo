@@ -6,13 +6,16 @@
   <%= f.field(:from) %>
   <%= f.field(:body, :type => :textarea) %>
 
-  <%= f.submit(:submit) %>
-  <%= loading_indicator %>
+  <div class="submit-buttons">
+    <%= f.submit(:send, class: "btn btn-primary") %>
+  </div>
+
+  <div class="sms_test_result">
+    <h2><%= t("common.result", count: 1) %></h2>
+    <div></div>
+  </div>
 <% end %>
 
-<h2><%= t("common.result", :count => 1) %></h2>
-<div class="sms_test_result"></div>
-
 <%= javascript_doc_ready do %>
-  new ELMO.SmsTestConsole();
+  new ELMO.Views.SmsTestConsoleView();
 <% end %>

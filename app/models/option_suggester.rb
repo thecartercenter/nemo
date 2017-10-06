@@ -5,15 +5,9 @@ class OptionSuggester
 
   # Returns an array of Options matching the given mission and textual query.
   def suggest(mission, query)
-
-    # Trim query to maximum length.
     query = query[0...Option::MAX_NAME_LENGTH]
-
-    name_clause = sanitize("name_translations RLIKE ?", "%%%1#{Regexp.escape(query)}%%%2").tap do |sql|
-      sql.gsub!('%%%1', %{"#{configatron.preferred_locale}":"})
-      sql.gsub!('%%%2', %{([^"\\]|\\\\\\\\.)*"})
-    end
-
+    name_clause = SqlRunner.instance.sanitize(
+      "name_translations ->> ? ILIKE ?", configatron.preferred_locale, "#{query}%")
     matches = Option.where(mission_id: mission.try(:id)).where(name_clause).to_a
 
     # Sort exact matches to top.
@@ -22,9 +16,9 @@ class OptionSuggester
       # If an exact match, set a flag and put it at the top
       if match.name =~ /\A#{Regexp.escape(query)}\z/i
         exact_match = true
-        [0,match.name]
+        [0, match.name]
       else
-        [1,match.name]
+        [1, match.name]
       end
     end
 
@@ -35,9 +29,5 @@ class OptionSuggester
     matches << Option.new(:"name_#{configatron.preferred_locale}" => query) unless exact_match
 
     matches
-  end
-
-  def sanitize(*args)
-    ActiveRecord::Base.__send__(:sanitize_sql, args, '')
   end
 end

@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-describe Sms::Adapters::TwilioAdapter do
+describe Sms::Adapters::TwilioAdapter, :sms do
   before :all do
     configatron.twilio_account_sid = 'AC00000000000000000000000000000000'
     configatron.twilio_auth_token = '12121212121212121212121212121212'
-    @adapter = Sms::Adapters::Factory.new.create('Twilio')
+    @adapter = Sms::Adapters::Factory.instance.create('Twilio')
   end
 
   it 'should be created by factory' do

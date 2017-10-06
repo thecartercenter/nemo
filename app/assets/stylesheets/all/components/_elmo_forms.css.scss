@@ -1,0 +1,269 @@
+/* base errors may appear outside the form. */
+div.form-errors {
+  font-weight: bold;
+  color: $theme_red;
+  margin-bottom: 5px;
+}
+
+/* standard form width */
+form.elmo_form, div.elmo_form {
+  width: $elmo-form-width;
+
+  p.instructions {
+    margin-bottom: 20px;
+  }
+}
+
+div.form_field {
+  /* the field div itself should not wrap, but we don't want this to inherit */
+  white-space: nowrap;
+  border-bottom: 1px solid #DDD;
+  padding: 5px 0;
+
+  > * {
+    white-space: normal;
+  }
+
+  a.hint {
+    white-space: nowrap;
+  }
+
+  div.form-errors {
+    /* cancel the left margin for form errors inside a form_field */
+    margin-left: 0;
+  }
+
+  div.reqd-sym {
+    display: inline;
+    font-weight: bold;
+    color: $orange;
+    font-size: 125%;
+    line-height: 5px;
+    vertical-align: middle;
+  }
+
+  label, .control {
+    vertical-align: top;
+    padding: 5px 0;
+  }
+
+  .label_and_control {
+    display: inline-block;
+
+    /* ensures label stays next to control */
+    white-space: nowrap;
+
+    label, .control {
+      /* allows normal wrapping inside of the the label and control */
+      white-space: normal;
+    }
+  }
+
+  /* for rich text editor */
+  .cke {
+    display: inline-block;
+    vertical-align: top;
+    width: 415px;
+  }
+
+  label.main {
+    // We float this instead of using inline-block because the latter doesn't
+    // print properly in FFox if the text spans longer than a page.
+    float: left;
+
+    // If this width is overridden for specific forms,
+    // the div.control margin needs to be changed too.
+    width: $label-width;
+
+    display: block;
+    vertical-align: top;
+    padding-right: 10px;
+    text-align: right;
+  }
+
+  div.control {
+    // Need this margin to match the width of the label. See above for why we
+    // do it this way.
+    margin-left: $label-width;
+
+    vertical-align: middle;
+    width: 425px;
+    min-height: 26px;
+    position: relative;
+
+    label {
+      font-weight: normal;
+    }
+
+    .widget {
+      display: inline-block;
+      vertical-align: top;
+
+      label {
+        margin-bottom: 0;
+      }
+
+      input[type=text], input.text, input[type=password], select {
+        height: 35px;
+      }
+
+      textarea {
+        height: 100px;
+      }
+
+      input[type=text], input.text, input[type=password], select, textarea {
+        width: 420px;
+      }
+    }
+
+  }
+  /* Override for multiple selects */
+  &.qtype_select_multiple .widget {
+    vertical-align: top !important;
+  }
+
+  div.control input.text {
+    padding: 3px;
+  }
+
+  /* nice kooshy padding */
+  input[type=text], input[type=password], textarea, select {
+    padding: 3px;
+  }
+
+  div.control input.radio {
+    width: 15px;
+  }
+
+  div.space_line {
+    margin: 0;
+    padding: 0;
+    width: auto;
+  }
+}
+
+form {
+  div.submit-buttons {
+    text-align: right;
+    margin-top: 20px;
+  }
+
+  input.btn-primary {
+    padding: 6px 35px;
+  }
+}
+
+div.form-warning {
+  margin: 10px 0;
+  width: $elmo-form-width;
+
+  i {
+    display: block;
+    float: left;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+
+  & > div {
+    margin-left: 20px;
+  }
+}
+
+/* Let integirty warnings have standard width in modals, else they overflow. */
+div.modal div.form-warning {
+  width: inherit;
+}
+
+/* Minimal form has no horiz lines and no hints */
+form.elmo_form.minimal {
+  width: 620px;
+
+  div.form_field {
+    border-bottom: none;
+  }
+}
+
+div.cascading-selects {
+  .level {
+    margin-bottom: 3px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  label, .option-level {
+    display: block !important;
+    font-size: 8pt;
+    margin-bottom: 3px;
+    color: #888888;
+    padding: 0;
+  }
+}
+
+.read_only div.cascading-selects {
+  label, .option-level {
+    margin-bottom: 0px;
+  }
+
+  .option-name {
+    margin-bottom: 5px;
+
+    i { /* For blank values */
+      font-style: normal;
+      color: $lighter-gray;
+    }
+  }
+
+  > div:last-child .option-name {
+    margin-bottom: 0;
+  }
+}
+
+.question_tag_ids div.read_only {
+  padding-top: 0;
+}
+
+// Style adjustments for ELMO forms in modals.
+.modal form.elmo_form {
+
+  width: 100%;
+
+  div.form_field {
+
+    &:last-child {
+      border: none;
+    }
+
+    div.label_and_control {
+      width: 75%;
+
+      div.control {
+        width: 60%;
+
+        div.widget {
+          // These can't be as wide as normally.
+          input[type=text], input.text, input[type=password], select, textarea {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+}
+
+// Override for qing group modal
+.modal form.qing_group_form {
+  .control, .widget {
+    width: 100% !important;
+  }
+}
+
+// Settings fields
+.setting-fields, div.less-settings {
+  display: none;
+}
+
+div.more-settings, div.less-settings {
+  text-align: right;
+}

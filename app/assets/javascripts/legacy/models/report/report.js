@@ -117,7 +117,7 @@
     if (this.attribs.form_ids == "ALL")
       return null;
     else
-      return "form:(\"" + this.menus.form.get_names(this.attribs.form_ids).join("\"|\"") + "\")";
+      return "exact-form:(\"" + this.menus.form.get_names(this.attribs.form_ids).join("\"|\"") + "\")";
   }
 
   klass.prototype.extract_form_ids_from_filter_str = function() {

@@ -1,0 +1,10 @@
+.broadcasts {
+  // Hidden initially, shown by JS
+  .form_field.broadcast_recipient_ids, .form_field.broadcast_which_phone {
+    display: none;
+  }
+
+  #char_limit {
+    margin-bottom: 5px;
+  }
+}

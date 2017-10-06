@@ -1,5 +1,7 @@
-class Tag < ActiveRecord::Base
+class Tag < ApplicationRecord
   include MissionBased, Comparable
+
+  acts_as_paranoid
 
   belongs_to :mission
   has_many :taggings, dependent: :destroy

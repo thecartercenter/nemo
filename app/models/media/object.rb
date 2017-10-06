@@ -1,4 +1,6 @@
-class Media::Object < ActiveRecord::Base
+class Media::Object < ApplicationRecord
+  acts_as_paranoid
+
   belongs_to :answer
 
   has_attached_file :item

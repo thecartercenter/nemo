@@ -3,7 +3,7 @@ module Replication::Replicable
   extend ActiveSupport::Concern
 
   # A basic list of attributes that we don't want to copy from the src_obj to the dest_obj.
-  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id is_standard standard_copy original_id ancestry)
+  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id is_standard standard_copy original_id ancestry uuid)
 
   included do
     after_save(:sync_chosen_attributes)
@@ -83,42 +83,43 @@ module Replication::Replicable
 
   private
 
-    # Runs some assertions against the database and raises an error if they fail so that the cause
-    # can be investigated.
-    def do_standard_assertions
-      return unless standardizable?
-      tbl = self.class.table_name
-      assert_no_results("select id from #{tbl} where mission_id is not null and is_standard = 1",
-        'mission based objects should not standard')
-    end
+  # Runs some assertions against the database and raises an error if they fail so that the cause
+  # can be investigated.
+  def do_standard_assertions
+    return unless standardizable?
+    tbl = self.class.table_name
+    assert_no_results("SELECT id FROM #{tbl} WHERE #{tbl}.deleted_at IS NULL
+      AND mission_id IS NOT NULL AND is_standard = TRUE",
+      'mission based objects should not standard')
+  end
 
-    # Raises an error if the given sql returns any results.
-    def assert_no_results(sql, msg)
-      raise "Assertion failed: #{msg}" unless self.class.find_by_sql(sql).empty?
-    end
+  # Raises an error if the given sql returns any results.
+  def assert_no_results(sql, msg)
+    raise "Assertion failed: #{msg}" unless self.class.find_by_sql(sql).empty?
+  end
 
-    # Syncs attributes chosen for syncing with copies via the ":sync' option in the replicable declaration.
-    def sync_chosen_attributes
-      return unless standardizable? && is_standard?
-      copies.where(is_standard: false).each do |c|
-        Array.wrap(replicable_opts[:sync]).each do |a|
-          sync_attribute_with_copy(a, c)
-        end
-        c.save(validate: false)
+  # Syncs attributes chosen for syncing with copies via the ":sync' option in the replicable declaration.
+  def sync_chosen_attributes
+    return unless standardizable? && is_standard?
+    copies.where(is_standard: false).each do |c|
+      Array.wrap(replicable_opts[:sync]).each do |a|
+        sync_attribute_with_copy(a, c)
       end
-      return true
+      c.save(validate: false)
     end
+    return true
+  end
 
-    # Sync the given attribut with the given copy, avoiding naming conflicts
-    def sync_attribute_with_copy(attrib_name, copy)
-      # Ensure uniqueness if appropriate.
-      uniqueness = replicable_opts[:uniqueness] || {}
-      val = if uniqueness[:field] == attrib_name
-        Replication::UniqueFieldGenerator.new(klass: self.class, orig_id: id, exclude_id: copy.id,
-          mission_id: copy.mission_id, field: attrib_name, style: uniqueness[:style]).generate
-      else
-        send(attrib_name)
-      end
-      copy.send("#{attrib_name}=", val)
+  # Sync the given attribut with the given copy, avoiding naming conflicts
+  def sync_attribute_with_copy(attrib_name, copy)
+    # Ensure uniqueness if appropriate.
+    uniqueness = replicable_opts[:uniqueness] || {}
+    val = if uniqueness[:field] == attrib_name
+      Replication::UniqueFieldGenerator.new(klass: self.class, orig_id: id, exclude_id: copy.id,
+        mission_id: copy.mission_id, field: attrib_name, style: uniqueness[:style]).generate
+    else
+      send(attrib_name)
     end
+    copy.send("#{attrib_name}=", val)
+  end
 end

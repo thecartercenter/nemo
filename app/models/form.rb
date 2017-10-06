@@ -1,31 +1,35 @@
-class Form < ActiveRecord::Base
+class Form < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
+
+  def self.receivable_association
+    {name: :form_forwardings, fk: :recipient}
+  end
+  include Receivable
 
   API_ACCESS_LEVELS = %w(private public)
 
-  has_many(:responses, inverse_of: :form)
-  has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
-  has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
-  has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
+  acts_as_paranoid
 
-  # while a form has many versions, this is a reference to the most up-to-date one
-  belongs_to(:current_version, class_name: "FormVersion")
+  has_many :responses, inverse_of: :form
+  has_many :versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy
+  has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
+  has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
-  before_validation(:normalize_fields)
-  before_save(:update_pub_changed_at)
+  before_validation :normalize
+  before_save :update_pub_changed_at
 
   # For some reason this works but dependent: :destroy doesn't.
   before_destroy { root_group.destroy }
 
-  validates(:name, presence: true, length: {maximum: 32})
-  validate(:name_unique_per_mission)
+  validates :name, presence: true, length: {maximum: 32}
+  validate :name_unique_per_mission
 
-  before_create(:init_downloads)
+  before_create :init_downloads
 
-  scope(:published, -> { where(published: true) })
+  scope :published, -> { where(published: true) }
 
   # this scope adds a count of the questionings on this form and
   # the number of copies of this form, and of those that are published
@@ -34,12 +38,12 @@ class Form < ActiveRecord::Base
       forms.*,
       COUNT(DISTINCT form_items.id) AS questionings_count_col,
       COUNT(DISTINCT copies.id) AS copy_count_col,
-      SUM(copies.published) AS published_copy_count_col,
+      SUM(CASE copies.published WHEN true THEN 1 ELSE 0 END) AS published_copy_count_col,
       SUM(copies.responses_count) AS copy_responses_count_col
     })
     .joins(%{
       LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
-      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = 1
+      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = true
     })
     .group("forms.id") })
 
@@ -48,6 +52,7 @@ class Form < ActiveRecord::Base
 
   delegate :arrange_descendants,
     :children,
+    :sorted_children,
     :c,
     :descendants,
     :child_groups,
@@ -62,6 +67,7 @@ class Form < ActiveRecord::Base
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
+    Form.where(id: form_ids).update_all(original_id: nil)
     FormVersion.where(form_id: form_ids).delete_all
     Questioning.where(form_id: form_ids).delete_all
   end
@@ -85,7 +91,11 @@ class Form < ActiveRecord::Base
 
   def root_questionings(reload = false)
     # Not memoizing this because it causes all sorts of problems.
-    root_group ? root_group.children.order(:rank).reject{ |q| q.is_a?(QingGroup) } : []
+    root_group ? root_group.sorted_children.reject{ |q| q.is_a?(QingGroup) } : []
+  end
+
+  def preordered_items
+    root_group.preordered_descendants
   end
 
   def odk_download_cache_key
@@ -106,15 +116,11 @@ class Form < ActiveRecord::Base
   end
 
   def version
-    current_version.try(:sequence) || ""
-  end
-
-  def version_with_code
-    current_version.try(:sequence_and_code) || ""
+    current_version.try(:code) || ""
   end
 
   def has_questions?
-    root_questionings.any?
+    questionings.any?
   end
 
   def full_name
@@ -166,17 +172,15 @@ class Form < ActiveRecord::Base
     option_sets.select { |os| os.sms_formatting == "appendix" }
   end
 
-  # Returns all descendant questionings in one flat array, sorted in traversal order.
+  # Returns all descendant questionings in one flat array, sorted in pre-order traversal and rank order.
+  # Uses FormItem.descendant_questionings which uses FormItem.arrange_descendants, which
+  # eager loads questions and option sets.
   def questionings(reload = false)
-    root_group.descendant_questionings.flatten
+    root_group.present? ? root_group.descendant_questionings.flatten : []
   end
 
   def questions(reload = false)
     questionings.map(&:question)
-  end
-
-  def visible_questionings
-    questionings.reject { |q| q.hidden? }
   end
 
   # returns hash of questionings that work with sms forms and are not hidden
@@ -256,15 +260,19 @@ class Form < ActiveRecord::Base
     save(validate: false)
   end
 
+  def current_version
+    versions.current.first
+  end
+
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!
     raise "standard forms should not be versioned" if is_standard?
 
     if current_version
-      self.current_version = current_version.upgrade
+      current_version.upgrade!
     else
-      self.build_current_version(form_id: id)
+      FormVersion.create(form_id: id, is_current: true)
     end
 
     # since we've upgraded, we can lower the upgrade flag
@@ -284,12 +292,6 @@ class Form < ActiveRecord::Base
     save(validate: false)
   end
 
-  # checks if this form doesn't have any non-required questions
-  # if options[:smsable] is set, specifically looks for non-required questions that are smsable
-  def all_required?(options = {})
-    @all_required ||= visible_questionings.reject{|qing| qing.required? || (options[:smsable] ? !qing.question.smsable? : false)}.empty?
-  end
-
   # efficiently gets the number of answers for the given questioning on this form
   # returns zero if form is standard
   def qing_answer_count(qing)
@@ -297,8 +299,10 @@ class Form < ActiveRecord::Base
 
     @answer_counts ||= Questioning.find_by_sql([%{
       SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
-      FROM form_items LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id AND form_items.type = 'Questioning'
-      WHERE form_items.form_id = ?
+      FROM form_items
+        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = form_items.id
+          AND form_items.type = 'Questioning'
+      WHERE form_items.deleted_at IS NULL AND form_items.form_id = ?
       GROUP BY form_items.id
     }, id]).index_by(&:id)
 
@@ -310,23 +314,30 @@ class Form < ActiveRecord::Base
     whitelistings.where(user_id: user_id).exists?
   end
 
+  # Efficiently tests if the form has at least one repeat group in it.
+  def has_repeat_group?
+    @has_repeat_group ||= FormItem.where(form_id: id, repeatable: true).any?
+  end
+
   private
-    def init_downloads
-      self.downloads = 0
-      return true
-    end
 
-    def name_unique_per_mission
-      errors.add(:name, :taken) unless unique_in_mission?(:name)
-    end
+  def init_downloads
+    self.downloads = 0
+    true
+  end
 
-    def normalize_fields
-      self.name = name.strip
-      return true
-    end
+  def name_unique_per_mission
+    errors.add(:name, :taken) unless unique_in_mission?(:name)
+  end
 
-    def update_pub_changed_at
-      self.pub_changed_at = Time.now if published_changed?
-      return true
-    end
+  def normalize
+    self.name = name.strip
+    self.default_response_name = default_response_name.try(:strip).presence
+    true
+  end
+
+  def update_pub_changed_at
+    self.pub_changed_at = Time.now if published_changed?
+    true
+  end
 end

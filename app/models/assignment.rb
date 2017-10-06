@@ -1,5 +1,7 @@
-class Assignment < ActiveRecord::Base
+class Assignment < ApplicationRecord
   include Cacheable
+
+  acts_as_paranoid
 
   belongs_to(:mission)
   belongs_to(:user, :inverse_of => :assignments)
@@ -9,7 +11,6 @@ class Assignment < ActiveRecord::Base
   validates(:mission, :presence => true)
   validates(:role, presence: true, unless: lambda { |a| a.user.admin? })
 
-  default_scope { includes(:mission) }
   scope(:sorted_recent_first, -> { order("created_at DESC") })
 
   # checks if there are any duplicates in the given set of assignments
@@ -26,7 +27,7 @@ class Assignment < ActiveRecord::Base
   # generates a cache key for the set of all assignments for the given mission.
   # the key will change if the number of assignments changes, or if an assignment is updated.
   def self.per_mission_cache_key(mission)
-    count_and_date_cache_key(:rel => unscoped.where(:mission_id => mission.id), :prefix => "mission-#{mission.id}")
+    count_and_date_cache_key(rel: where(mission_id: mission.id), prefix: "mission-#{mission.id}")
   end
 
   def no_role?

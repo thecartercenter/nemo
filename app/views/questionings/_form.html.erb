@@ -1,20 +1,28 @@
 <%= elmo_form_for(@questioning) do |f| %>
+  <%= f.field(:form_id, type: :hidden) %>
 
-  <%= f.field(:form_id, :type => :hidden) %>
-
-  <%= elmo_fields_for('questioning[question_attributes]', @questioning.question) do |qf| %>
+  <%= elmo_fields_for("questioning[question_attributes]", @questioning.question) do |qf| %>
     <%= qf.hidden_field(:id) %>
-    <%= render('questions/fields', :f => qf) %>
+    <%= render("questions/fields", f: qf) %>
   <% end %>
 
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
-  <%= f.field(:hidden, :type => :check_box, :read_only => cannot?(:update_hidden, @questioning)) %>
-  <%= f.field(:condition, :partial => 'conditions/form') %>
-  <%= f.field(:required, :type => :check_box, :read_only => cannot?(:update_required, @questioning)) %>
+  <%= f.field(:condition, partial: "conditions/form") %>
+  <%= f.field(:default, type: :string, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
 
   <div class="submit-buttons">
-    <%= f.submit(:class => 'btn btn-primary') %>
+    <%= f.submit(class: "btn btn-primary") %>
   </div>
+<% end %>
 
+<%= javascript_doc_ready do %>
+  // This is the newer view for controlling the Question/Questioning form, prefer this one to QuestionForm.
+  new ELMO.Views.QuestioningFormView(<%=json(
+    el: ".questioning_form",
+    defaultableTypes: @defaultable_types.map(&:name)
+  )%>);
 <% end %>

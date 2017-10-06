@@ -5,13 +5,16 @@ cache: bundler
 rvm:
   - 2.2.0
 sudo: false
+before_install:
+  - gem update bundler --no-rdoc --no-ri
 before_script:
-  - mysql -e 'create database elmo_test;'
-  - mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root mysql
-  - "for f in $(find -name '*.example'); do cp \"$f\" \"${f%.example}\"; done"
-  - "sed -ri 's/(username:).*/username: travis/; /password:/d' config/database.yml"
-  - "sed -ri '/config\\.(public|private)_key = nil/d' config/initializers/local_config.rb"
-  - bundle exec rake db:setup ts:index ts:start
+  - psql -c 'create database travis_ci_test;' -U postgres
+  - for f in $(find -name '*.example'); do cp "$f" "${f%.example}"; done
+  - cp config/database.yml.travis config/database.yml
+  # Remove recaptcha settings in local config so they are picked up from ENV. This is brittle
+  # and should go away when we get rid of local_config.rb some sweet day.
+  - sed -ri '/(public|private)_key = nil/d' config/initializers/local_config.rb
+  - bundle exec rake db:setup
 script: bundle exec rake
 env:
   global:
@@ -22,3 +25,8 @@ addons:
   artifacts:
     paths:
     - $(ls /home/travis/build/thecartercenter/elmo/tmp/capybara/*.png | tr "\n" ":")
+  postgresql: "9.4"
+
+notifications:
+  slack:
+    secure: N2dcQMxN6oZbCLgmB/fHhqv/+Su9FzAo3ULYbSd0lFz7PQgtUuEB6Hn13eSV7CIiAMPSM1Bfe0AFUJmSKOKYylF2k3kKuSL6jijnuK4AA4b9kNoPHt0wYEO+uAFO27pyvV+Uq21Gov8SWDVvRbQ3799c3Dl3/D3H6UhEAv7vgYY=

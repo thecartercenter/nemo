@@ -1,6 +1,6 @@
 <% content_for(:per_page_js) do
  # load the mapping API
- javascript_include_tag("https://maps.googleapis.com/maps/api/js?v=3&sensor=false") +
+ javascript_google_maps +
 
  # load report stuff
  report_js_includes
@@ -43,8 +43,16 @@ end %>
   </h2>
   <%= render partial: 'recent_responses' %>
 
-  <h2 class="interior"><%= t('dashboard.response_locations') %></h2>
-  <%= render partial: 'response_locations' %>
+  <div>
+    <a href="#" class="expand-map toggle-map">
+      <i class="fa fa-expand"></i>
+      <%= t("dashboard.expand_map") %>
+    </a>
+    <h2 class="interior">
+      <%= t('dashboard.response_locations') %>
+    </h2>
+    <%= render partial: 'response_locations' %>
+  </div>
 </div>
 
 <div class="col right_col">
@@ -52,9 +60,18 @@ end %>
   <%= render partial: 'report_pane' %>
 </div>
 
+<%# Link for shrinking map. Shown only when expanded map is shown. %>
+<div class="expanded-map-links">
+  <a href="#" class="toggle-map">
+    <i class="fa fa-compress"></i>
+    <%= t("dashboard.shrink_map") %>
+  </a>
+</div>
+
 <%= javascript_doc_ready do %>
   <%# Hides/displays appropriate full screen elements if necessary %>
-  ELMO.app.dashboard.display_full_screen();
+  ELMO.app.dashboard.set_full_screen();
+  ELMO.app.dashboard.set_expanded_map();
 
   <%# Runs report %>
   ELMO.app.dashboard.run_report();

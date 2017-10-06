@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>*formname1*</h:title>
+    <model>
+      <instance>
+        <data id="*form1*" version="*formver1*">
+          <*itemcode1* jr:template="">
+            <*itemcode1*-header/>
+            <*itemcode2*/>
+            <*itemcode3*/>
+            <*itemcode4*/>
+          </*itemcode1*>
+          <*itemcode5*>
+            <*itemcode5*-header/>
+            <*itemcode6*/>
+            <*itemcode7*/>
+          </*itemcode5*>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="*itemcode1*-header:label">
+            <value>Repeat Group 1</value>
+          </text>
+          <text id="*itemcode1*-header:hint">
+            <value>Repeat Group 1</value>
+          </text>
+          <text id="*itemcode5*-header:label">
+            <value>Group Name</value>
+          </text>
+          <text id="*itemcode5*-header:hint">
+            <value>Group Hint</value>
+          </text>
+          <text id="*itemcode2*:label">
+            <value>Text Question Title 1</value>
+          </text>
+          <text id="*itemcode2*:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="*itemcode3*:label">
+            <value>Text Question Title 2</value>
+          </text>
+          <text id="*itemcode3*:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="*itemcode4*:label">
+            <value>Text Question Title 3</value>
+          </text>
+          <text id="*itemcode4*:hint">
+            <value>Question Hint 3</value>
+          </text>
+          <text id="*itemcode6*:label">
+            <value>Text Question Title 4</value>
+          </text>
+          <text id="*itemcode6*:hint">
+            <value>Question Hint 4</value>
+          </text>
+          <text id="*itemcode7*:label">
+            <value>Text Question Title 5</value>
+          </text>
+          <text id="*itemcode7*:hint">
+            <value>Question Hint 5</value>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/*itemcode1*"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*" type="string"/>
+      <bind nodeset="/data/*itemcode5*"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode5*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode6*" type="string"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode7*" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <group>
+      <label>Repeat Group 1</label>
+      <repeat nodeset="/data/*itemcode1*">
+        <group appearance="field-list">
+          <input ref="/data/*itemcode1*/*itemcode1*-header">
+            <hint ref="jr:itext('*itemcode1*-header:hint')"/>
+          </input>
+          <input ref="/data/*itemcode1*/*itemcode2*">
+            <label ref="jr:itext('*itemcode2*:label')"/>
+            <hint ref="jr:itext('*itemcode2*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode1*/*itemcode3*">
+            <label ref="jr:itext('*itemcode3*:label')"/>
+            <hint ref="jr:itext('*itemcode3*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode1*/*itemcode4*">
+            <label ref="jr:itext('*itemcode4*:label')"/>
+            <hint ref="jr:itext('*itemcode4*:hint')"/>
+          </input>
+        </group>
+      </repeat>
+    </group>
+    <group>
+      <label>Group Name</label>
+      <group appearance="field-list">
+        <input ref="/data/*itemcode5*/*itemcode5*-header">
+          <hint ref="jr:itext('*itemcode5*-header:hint')"/>
+        </input>
+        <input ref="/data/*itemcode5*/*itemcode6*">
+          <label ref="jr:itext('*itemcode6*:label')"/>
+          <hint ref="jr:itext('*itemcode6*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode5*/*itemcode7*">
+          <label ref="jr:itext('*itemcode7*:label')"/>
+          <hint ref="jr:itext('*itemcode7*:hint')"/>
+        </input>
+      </group>
+    </group>
+  </h:body>
+</h:html>

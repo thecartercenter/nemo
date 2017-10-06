@@ -5,6 +5,7 @@ class QuestioningsController < ApplicationController
 
   # init the questioning object in a special way before load_resource
   before_filter :init_qing_with_form_id, :only => [:create]
+  after_action :check_rank_fail
 
   # authorization via cancan
   load_and_authorize_resource
@@ -46,10 +47,7 @@ class QuestioningsController < ApplicationController
     @questioning.assign_attributes(permitted_params)
     @questioning.valid?
 
-    # authorize special abilities
-    %w(required hidden condition).each do |f|
-      authorize!(:"update_#{f}", @questioning) if @questioning.send("#{f}_changed?")
-    end
+    authorize!(:update_core, @questioning) if @questioning.core_changed?
     authorize!(:update_core, @questioning.question) if @questioning.question.core_changed?
 
     if @questioning.save
@@ -107,10 +105,9 @@ class QuestioningsController < ApplicationController
     end
 
     def questioning_params
-      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden, :required,
-        { condition_attributes: [:id, :ref_qing_id, :op, :value, :option_ids,
-          # We need to whitelist each level of the option path. 5 levels should be plenty.
-          option_path_attribs: [%w(0 1 2 3 4)]] },
+      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
+        :required, :default, :read_only,
+        { condition_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
         { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
     end
 end

@@ -7,7 +7,7 @@
 
 <% else %>
 
-  <% if read_only || cannot?(:update_condition, @condition.questioning) %>
+  <% if read_only || cannot?(:update_core, @condition.questioning) %>
 
     <%# if in show mode and the condition is blank, just show 'none' %>
     <%= @condition.blank? || @condition.ref_qing.nil? ? t('common.none') : @condition.to_s(:include_code => true) %>
@@ -19,7 +19,10 @@
     </div>
 
     <%= javascript_doc_ready do %>
-      new ELMO.Views.ConditionFormView(<%=json( { condition: @condition, questioning_id: @questioning.id }) %>);
+      new ELMO.Views.ConditionFormView(<%=json({
+        condition: ConditionSerializer.new(@condition),
+        questioning_id: @questioning.id
+      }) %>);
     <% end %>
 
   <% end %>

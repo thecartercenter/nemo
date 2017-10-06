@@ -2,6 +2,7 @@
 class Sms::Decoder
   # window in which identical message is considered duplicate and discarded
   DUPLICATE_WINDOW = 12.hours
+  AUTH_CODE_FORMAT = /[a-z0-9]{4}/i
 
   # sets up a decoder
   # sms - an Sms::Message object
@@ -18,17 +19,24 @@ class Sms::Decoder
     # tokenize the message by spaces
     @tokens = @msg.body.split(" ")
 
+    # looks ahead to set the mission based on the form unless the message already has a mission
+    set_mission unless @msg.mission.present?
+
+    # attempts to determine whether the message was automated,
+    # in which case we do not wish to respond to it
     check_for_automated_sender
 
-    # try to get user from message
+    # assigns the user to the message if not already present
     # we do this first because it tells us what language to send errors in (if any)
     find_user
+
+    # Checks to see if this user has sent more messages than permitted within the brute force window
     check_for_brute_force
 
     # ignore duplicates (we do this after find user so that the reply will be in the right language)
     check_for_duplicate
 
-    # set auth code before fetching form to get it out of the token collection
+    # set auth code before fetching form, removing it from the token collection
     set_auth_code
 
     # try to get form
@@ -86,6 +94,21 @@ class Sms::Decoder
     # if version not found, raise error
     raise_decoding_error("form_not_found", form_code: code) unless v
 
+    if @msg.mission
+      # if we already know the mission (it may or may not be already stored on the message)
+      # and it doesn't match the form's mission, complain
+      if v.form.mission != @msg.mission
+        raise_decoding_error("form_not_found", form_code: code)
+      end
+    else
+      # If the mission is not stored on the message, set it based on form.
+      # This is allowed due to situations where multiple missions may want to use the same phone
+      # number or same gateway provider that doesn't support different submit URLs
+      # based on incoming phone number.
+      @msg.mission = v.form.mission
+      @msg.save!
+    end
+
     # if version outdated, raise error
     # here we must specify the form AND form_code since they are different
     raise_decoding_error("form_version_outdated", form: v.form, form_code: code) unless v.is_current?
@@ -103,11 +126,44 @@ class Sms::Decoder
 
   def find_user
     @user = @msg.user
-    log_authentication_failure unless @user && @user.active?
+    return if @user.present?
+
+    # get potential users
+    possible_users = User.by_phone(@msg.from).active
+    return log_authentication_failure unless possible_users.present?
+
+    # check auth code
+    auth_code = @tokens.first if @tokens.first =~ AUTH_CODE_FORMAT
+    @user = possible_users.find_by(sms_auth_code: auth_code)
+
+    # check assigned to mission
+    unless @user.present?
+      possible_users = possible_users.assigned_to(@msg.mission)
+      @user = possible_users.first if possible_users.count == 1
+    end
+
+    # otherwise pick the oldest user
+    unless @user.present?
+      @user = possible_users.order(created_at: :asc).first
+    end
+
+    # save user
+    @msg.user = @user
+    @msg.save!
   end
 
   def set_auth_code
-    @auth_code = @tokens.shift.downcase if @tokens.first =~ /[a-z0-9]{4}/i
+    @auth_code = @tokens.shift.downcase if @tokens.first =~ AUTH_CODE_FORMAT
+  end
+
+  def set_mission
+    form_code = (@tokens.first =~ AUTH_CODE_FORMAT) ? @tokens.second : @tokens.first
+    form_version = FormVersion.find_by(code: form_code)
+    # if version not found, raise error
+    raise_decoding_error("form_not_found", form_code: form_code) unless form_version
+    @mission = form_version.mission
+    @msg.mission = @mission
+    @msg.save!
   end
 
   def authenticate_user
@@ -152,7 +208,7 @@ class Sms::Decoder
   # raises an error if the answer doesn't make sense
   def add_answer
     case @qing.question.qtype.name
-    when "integer"
+    when "integer", "counter"
       # for integer question, make sure the value looks like a number
       raise_answer_error("answer_not_integer") unless @value =~ /\A\d+\z/
 
@@ -168,7 +224,7 @@ class Sms::Decoder
 
     when "select_one"
       if @qing.sms_formatting_as_text?
-        option = @qing.option_set.all_options.where(canonical_name: @value.downcase).first
+        option = @qing.option_set.all_options.by_canonical_name(@value).first
         raise_answer_error("answer_not_valid_option") unless option
         build_answer(@qing.option_set.path_to_option(option).map { |o| {option: o} }, multilevel: @qing.multilevel?)
 
@@ -330,9 +386,6 @@ class Sms::Decoder
 
   # raises an sms decoding error with the given type and includes the form_code if available
   def raise_decoding_error(type, options = {})
-    # add the mission since we know it from the @msg
-    options[:mission] = @msg.mission
-
     # add in the form and form_code in case they're needed
     if @form
       options[:form] ||= @form

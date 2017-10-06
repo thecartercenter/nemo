@@ -6,9 +6,11 @@
 <% case type = answer.qtype.name
    when "select_one" %>
 
-  <%= select_tag("#{field_name_prefix}[option_id]",
-    options_from_collection_for_select(answer.options, 'id', 'name', answer.option_id),
-    include_blank: true, class: 'form-control') %>
+  <%= select_tag("#{field_name_prefix}[option_node_id]",
+        options_from_collection_for_select(answer.first_level_option_nodes,
+          'id', 'option_name', answer.option_node_id),
+        include_blank: true,
+        class: 'form-control') %>
 
 <% when "select_multiple" %>
 
@@ -20,7 +22,8 @@
 
 <% when "datetime", "date", "time" %>
 
-  <%= send("#{type}_select", field_name_prefix, :"#{type}_value", include_blank: true, object: answer, class: "form-control", start_year: 1900) %>
+  <%= send("#{type}_select", field_name_prefix, :"#{type}_value",
+    include_blank: true, include_seconds: true, object: answer, class: "form-control", start_year: 1900) %>
 
 <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 

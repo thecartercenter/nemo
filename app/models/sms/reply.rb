@@ -3,7 +3,7 @@ class Sms::Reply < Sms::Message
   belongs_to :reply_to, class_name: "Sms::Incoming"
 
   def sender
-    User::ELMO
+    User::SITE
   end
 
   def recipient_count

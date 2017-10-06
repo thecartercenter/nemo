@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 # Tests methods common to all adapters.
-describe Sms::Adapters::Adapter do
+describe Sms::Adapters::Adapter, :sms do
   before do
     get_mission.setting.load
   end
@@ -29,7 +29,7 @@ describe Sms::Adapters::Adapter do
   # loops over each known adapter and yields to a block
   def each_adapter(options)
     Sms::Adapters::Factory.products(options).each do |klass|
-      yield(klass.new)
+      Sms::Adapters::Factory.instance.create(klass)
     end
   end
 end

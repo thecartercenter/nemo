@@ -1,5 +1,5 @@
 # Models the form for entering a search query.
-class ELMO.Views.SearchFormView extends Backbone.View
+class ELMO.Views.SearchFormView extends ELMO.Views.ApplicationView
 
   el: '.search_form',
 

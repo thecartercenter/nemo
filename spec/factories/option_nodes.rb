@@ -6,6 +6,7 @@ FactoryGirl.define do
 
     mission { get_mission }
     option
+    option_set
 
     factory :option_node_with_no_children do
       option nil

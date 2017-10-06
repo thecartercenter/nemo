@@ -17,7 +17,6 @@ class Replication::AssocProxy
 
   def self.valid?(attribs)
     attribs[:name] == :children ||
-      attribs[:type] == :serialized ||
       attribs[:klass].reflect_on_association(attribs[:name]).present?
   end
 
@@ -28,10 +27,6 @@ class Replication::AssocProxy
       self.target_class = klass
       self.foreign_key = 'ancestry'
       self.belongs_to = false
-    elsif type == :serialized
-      # target_class should already be defined
-      self.foreign_key = name.to_s
-      self.belongs_to = false
     else
       reflection = klass.reflect_on_association(name)
       raise "Association #{name} on #{klass.name} doesn't exist." if reflection.nil?
@@ -41,15 +36,15 @@ class Replication::AssocProxy
     end
   end
 
+  def inspect
+    "<AssocProxy name=#{name} klass=#{klass} foreign_key=#{foreign_key} target_class=#{target_class.name} type=#{type} skip=#{skip_obj_if_missing}>"
+  end
+
   def belongs_to?
     belongs_to
   end
 
   def ancestry?
     foreign_key == 'ancestry'
-  end
-
-  def serialized?
-    type == :serialized
   end
 end

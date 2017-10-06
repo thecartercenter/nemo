@@ -1,6 +1,6 @@
-require File.expand_path('../boot', __FILE__)
+require File.expand_path("../boot", __FILE__)
 
-require 'rails/all'
+require "rails/all"
 
 Bundler.require(*Rails.groups)
 
@@ -14,7 +14,8 @@ module ELMO
     config.autoload_paths += [
       "#{config.root}/app/controllers/concerns",
       "#{config.root}/app/controllers/concerns/application_controller",
-      "#{config.root}/app/models/concerns"
+      "#{config.root}/app/models/concerns",
+      "#{config.root}/lib"
     ]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
@@ -27,10 +28,10 @@ module ELMO
     # Set Time.zone default to the specified zone and make Active Record auto-convert to this zone.
     # Run "rake -D time" for a list of tasks for finding time zone names. Default is UTC.
     # default to eastern -- this will be overwritten if there is a timezone setting in the DB
-    config.time_zone = 'Eastern Time (US & Canada)'
+    config.time_zone = "Eastern Time (US & Canada)"
 
     # be picky about available locales
-    config.i18n.enforce_available_locales = true
+    config.i18n.enforce_available_locales = false
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
@@ -39,13 +40,15 @@ module ELMO
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :password_confirmation, :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key]
+    config.filter_parameters += [:password, :password_confirmation,
+      :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key,
+      :session, :warden, :secret, :salt, :cookie, :csrf, :user_credentials, :session_id, :data]
 
     # Enable the asset pipeline
     config.assets.enabled = true
 
     # Version of your assets, change this if you want to expire all your assets
-    config.assets.version = '1.0'
+    config.assets.version = "1.0"
 
     # Use Delayed::Job as the ActiveJob queue adapter
     config.active_job.queue_adapter = :delayed_job
@@ -59,11 +62,14 @@ module ELMO
     # CUSTOM SETTINGS
     ####################################
 
-    # read system version as git tag
-    configatron.system_version = `git describe`.strip rescue "?"
+    # read system version from file
+    configatron.system_version = File.read("#{Rails.root}/VERSION").strip
 
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
+
+    # site's short name
+    configatron.site_shortname = "ELMO"
 
     # a short tag that starts smses and email subjects for broadcasts
     configatron.broadcast_tag = "[ELMO]"
@@ -72,7 +78,7 @@ module ELMO
     configatron.full_locales = [:en, :fr, :es, :ar, :ko]
 
     # For security.
-    config.action_dispatch.default_headers = { 'X-Frame-Options' => 'DENY' }
+    config.action_dispatch.default_headers = { "X-Frame-Options" => "DENY" }
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
@@ -88,5 +94,13 @@ module ELMO
 
     # We use \r\n for CSV row separator because Excel seems to prefer it.
     configatron.csv_row_separator = "\r\n"
+
+    # Restrict available locales to defined system locales
+    # This should replace `configatron.full_locales` eventually
+    # assuming this caused no further issues
+    I18n.available_locales = configatron.full_locales
+
+    # This is the default. It can be overridden in local_config.rb, which comes later.
+    configatron.offline_mode = false
   end
 end
