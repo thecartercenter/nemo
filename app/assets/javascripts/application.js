@@ -45,4 +45,7 @@
 //= require legacy/views/report/display
 //= require legacy/views/report/edit_pane
 
+//= require react
+//= require react_ujs
+//= require components
 //= require_tree .

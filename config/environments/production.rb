@@ -81,4 +81,7 @@ ELMO::Application.configure do
 
   # Force SSL since application deployments should be SSL
   config.force_ssl
+
+  # React production variant (minified)
+  config.react.variant = :production
 end
