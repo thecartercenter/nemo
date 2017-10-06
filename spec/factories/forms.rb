@@ -15,6 +15,8 @@ def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = n
       "text"
     when "counter_with_inc"
       "counter"
+    when "formstart", "formend"
+      "datetime"
     else
       pseudo_qtype_name
     end
@@ -28,7 +30,8 @@ def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = n
       multilingual: !!(pseudo_qtype_name =~ /multilingual/),
       with_user_locale: !!(pseudo_qtype_name =~ /with_user_locale/),
       auto_increment: pseudo_qtype_name == "counter_with_inc",
-      is_standard: form.is_standard?
+      is_standard: form.is_standard?,
+      metadata_type: %w(formstart formend).include?(pseudo_qtype_name) ? pseudo_qtype_name : nil
     }
 
     if evaluator.try(:option_set)

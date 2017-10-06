@@ -78,6 +78,8 @@ class FormsController < ApplicationController
 
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || 'odk'
+
+        @form = Odk::DecoratorFactory.decorate(@form)
       end
     end
   end
@@ -256,7 +258,7 @@ class FormsController < ApplicationController
     end
 
     def form_params
-      params.require(:form).permit(:name, :smsable, :allow_incomplete,
+      params.require(:form).permit(:name, :smsable, :allow_incomplete, :default_response_name,
         :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
     end
 end

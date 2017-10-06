@@ -6,15 +6,17 @@
   <% end %>
 
   <%# Regular question translations %>
-  <% Odk::DecoratorFactory.decorate_collection(@form.visible_questionings).each do |qing| %>
-    <% qing.subqings.each do |subq| %>
-      <text id="<%= subq.odk_code %>:label">
-        <value><%= subq.name(lang, :strict => false) %></value>
-      </text>
-      <% unless @style == "commcare" %>
-        <text id="<%= subq.odk_code %>:hint">
-          <value><%= subq.hint(lang, :strict => false) %></value>
+  <% Odk::DecoratorFactory.decorate_collection(@form.questionings).each do |qing| %>
+    <% if qing.visible? %>
+      <% qing.subqings.each do |subq| %>
+        <text id="<%= subq.odk_code %>:label">
+          <value><%= subq.name(lang, :strict => false) %></value>
         </text>
+        <% unless @style == "commcare" %>
+          <text id="<%= subq.odk_code %>:hint">
+            <value><%= subq.hint(lang, :strict => false) %></value>
+          </text>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

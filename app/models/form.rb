@@ -10,24 +10,24 @@ class Form < ApplicationRecord
 
   acts_as_paranoid
 
-  has_many(:responses, inverse_of: :form)
-  has_many(:versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy)
-  has_many(:whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy)
-  has_many(:standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy)
+  has_many :responses, inverse_of: :form
+  has_many :versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy
+  has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
+  has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
-  before_validation(:normalize_fields)
-  before_save(:update_pub_changed_at)
+  before_validation :normalize
+  before_save :update_pub_changed_at
 
   # For some reason this works but dependent: :destroy doesn't.
   before_destroy { root_group.destroy }
 
-  validates(:name, presence: true, length: {maximum: 32})
-  validate(:name_unique_per_mission)
+  validates :name, presence: true, length: {maximum: 32}
+  validate :name_unique_per_mission
 
-  before_create(:init_downloads)
+  before_create :init_downloads
 
   scope :published, -> { where(published: true) }
 
@@ -172,23 +172,15 @@ class Form < ApplicationRecord
     option_sets.select { |os| os.sms_formatting == "appendix" }
   end
 
-  # Returns all descendant questionings in one flat array, sorted in traversal and rank order.
+  # Returns all descendant questionings in one flat array, sorted in pre-order traversal and rank order.
   # Uses FormItem.descendant_questionings which uses FormItem.arrange_descendants, which
   # eager loads questions and option sets.
   def questionings(reload = false)
-    if root_group
-      root_group.descendant_questionings.flatten
-    else
-      []
-    end
+    root_group.present? ? root_group.descendant_questionings.flatten : []
   end
 
   def questions(reload = false)
     questionings.map(&:question)
-  end
-
-  def visible_questionings
-    questionings.reject { |q| q.hidden? }
   end
 
   # returns hash of questionings that work with sms forms and are not hidden
@@ -300,12 +292,6 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
-  # checks if this form doesn't have any non-required questions
-  # if options[:smsable] is set, specifically looks for non-required questions that are smsable
-  def all_required?(options = {})
-    @all_required ||= visible_questionings.reject{|qing| qing.required? || (options[:smsable] ? !qing.question.smsable? : false)}.empty?
-  end
-
   # efficiently gets the number of answers for the given questioning on this form
   # returns zero if form is standard
   def qing_answer_count(qing)
@@ -344,8 +330,9 @@ class Form < ApplicationRecord
     errors.add(:name, :taken) unless unique_in_mission?(:name)
   end
 
-  def normalize_fields
+  def normalize
     self.name = name.strip
+    self.default_response_name = default_response_name.try(:strip).presence
     true
   end
 

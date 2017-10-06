@@ -122,12 +122,31 @@ describe XMLSubmission, :odk do
     end
 
     it "discards timezone information in favor of current zone" do
-      expect(nodes[0].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:40 -06")
+      expect(nodes[0].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:40:00 -06")
       expect(nodes[1].set.answers[0].date_value).to eq Date.parse("2017-07-01")
-      expect(nodes[2].set.answers[0].time_value).to eq Time.zone.parse("2000-01-01 14:30 -06").utc
+      expect(nodes[2].set.answers[0].time_value).to eq Time.zone.parse("2000-01-01 14:30:00 -06").utc
       expect(nodes[0].set.answers[0].value).to be_nil
       expect(nodes[1].set.answers[0].value).to be_nil
       expect(nodes[2].set.answers[0].value).to be_nil
+    end
+  end
+
+  context "with prefilled timestamps" do
+    let(:form) { create(:form, question_types: %w(formstart formend)) }
+    let(:data) do
+      {
+        form.c[0] => "2017-07-12T16:40:12.000-06",
+        form.c[1] => "2017-07-12T16:42:43.000-06"
+      }
+    end
+
+    around do |example|
+      in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
+    end
+
+    it "accepts data normally" do
+      expect(nodes[0].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:40:12 -06")
+      expect(nodes[1].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:42:43 -06")
     end
   end
 

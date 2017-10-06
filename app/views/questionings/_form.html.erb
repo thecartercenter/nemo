@@ -8,11 +8,11 @@
 
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
-  <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:condition, partial: "conditions/form") %>
-  <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
-  <%= f.field(:prefill_pattern, type: :string, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:default, type: :string, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
 
   <div class="submit-buttons">
     <%= f.submit(class: "btn btn-primary") %>
@@ -23,6 +23,6 @@
   // This is the newer view for controlling the Question/Questioning form, prefer this one to QuestionForm.
   new ELMO.Views.QuestioningFormView(<%=json(
     el: ".questioning_form",
-    prefillableTypes: @prefillable_types.map(&:name)
+    defaultableTypes: @defaultable_types.map(&:name)
   )%>);
 <% end %>

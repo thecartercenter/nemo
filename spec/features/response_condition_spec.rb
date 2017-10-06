@@ -56,7 +56,7 @@ feature "conditions in responses", js: true do
         op: "inc",
         option_node: multi_option_set.children.detect { |c| c.option_name == "Cat" }),
       date_if_datetime: questionings[:date].create_condition(
-        ref_qing: questionings[:datetime], op: "lt", value: "#{year}-01-01 5:00"),
+        ref_qing: questionings[:datetime], op: "lt", value: "#{year}-01-01 5:00:21"),
       time_if_date: questionings[:time].create_condition(
         ref_qing: questionings[:date], op: "eq", value: "#{year}-03-22"),
       text3_if_time: questionings[:text3].create_condition(
@@ -143,10 +143,10 @@ feature "conditions in responses", js: true do
       questioning: questionings[:select_multiple], value: ["Dog", "Cat"], visible: visible_qings << :datetime)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:datetime], value: "#{year}-01-01 5:00", visible: visible_qings)
+      questioning: questionings[:datetime], value: "#{year}-01-01 5:00:21", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:datetime], value: "#{year}-01-01 4:59", visible: visible_qings << :date)
+      questioning: questionings[:datetime], value: "#{year}-01-01 5:00:20", visible: visible_qings << :date)
 
     fill_answer_and_expect_visible(
       questioning: questionings[:date], value: "#{year}-03-21", visible: visible_qings)
@@ -155,10 +155,10 @@ feature "conditions in responses", js: true do
       questioning: questionings[:date], value: "#{year}-03-22", visible: visible_qings << :time)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:time], value: "6:00", visible: visible_qings)
+      questioning: questionings[:time], value: "6:00:00", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:time], value: "15:00", visible: visible_qings << :text3)
+      questioning: questionings[:time], value: "15:00:00", visible: visible_qings << :text3)
   end
 
   def fill_answer_and_expect_visible(questioning: nil, value: nil, visible: nil)
@@ -198,6 +198,7 @@ feature "conditions in responses", js: true do
       unless qing.qtype_name == "date"
         select(t.strftime("%H"), from: "#{prefix}_4i")
         select(t.strftime("%M"), from: "#{prefix}_5i")
+        select(t.strftime("%S"), from: "#{prefix}_6i")
       end
     else
       fill_in(id, with: value)

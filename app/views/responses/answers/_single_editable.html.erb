@@ -22,7 +22,8 @@
 
 <% when "datetime", "date", "time" %>
 
-  <%= send("#{type}_select", field_name_prefix, :"#{type}_value", include_blank: true, object: answer, class: "form-control", start_year: 1900) %>
+  <%= send("#{type}_select", field_name_prefix, :"#{type}_value",
+    include_blank: true, include_seconds: true, object: answer, class: "form-control", start_year: 1900) %>
 
 <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 

@@ -85,7 +85,7 @@ class XMLSubmission
     # Response mission should already be set
     raise "Submissions must have a mission" if @response.mission.nil?
 
-    Odk::DecoratorFactory.decorate_collection(@response.form.visible_questionings).each do |qing|
+    Odk::DecoratorFactory.decorate_collection(@response.form.questionings).each do |qing|
       qing.subqings.each do |subq|
         value = hash[subq.odk_code]
         if value.is_a? Array

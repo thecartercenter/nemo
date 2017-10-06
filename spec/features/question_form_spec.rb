@@ -17,7 +17,7 @@ describe "question form" do
     "Location"  => %i(key),
     "Select One"  => %i(key optset),
     "Select Multiple" => %i(key optset),
-    "Date/Time" => %i(key),
+    "Date/Time" => %i(key metadata),
     "Date"  => %i(key),
     "Time"  => %i(key),
     "Image" => %i(),
@@ -33,7 +33,8 @@ describe "question form" do
     optset: "Option Set",
     min: "Minimum",
     max: "Maximum",
-    autoinc: "Auto Increment Counter?"
+    autoinc: "Auto Increment Counter?",
+    metadata: "Metadata Type"
   }
 
   scenario "correct fields show for various question types", js: true do
@@ -41,7 +42,7 @@ describe "question form" do
     fill_in "Code", with: "AQuestion"
 
     EXPECTED_FIELDS.each do |type, fields|
-      select type, from: "Type"
+      select type, from: "* Type"
       fields.each do |k|
         expect(page).to have_css("label", text: FIELD_NAMES[k]), "#{type} should have #{k}"
       end

@@ -7,11 +7,9 @@ module CSVHelper
     # readable. Conversion also strips unknown tags.
     text = ReverseMarkdown.convert(text, unknown_tags: :drop)
 
-    # ReverseMarkdown adds extra whitespace.
-    text.strip!
-
     # Excel seems to like \r\n, so replace all plain \ns with \r\n in all string-type cells.
-    text.gsub!(/(?<!\r)\n/, "\r\n")
+    # Also ReverseMarkdown adds extra whitespace -- trim it.
+    text = text.split(/\r?\n/).map(&:strip).join("\r\n")
 
     # Also remove html entities.
     text.gsub(/&(?:[a-z\d]+|#\d+|#x[a-f\d]+);/i, "")
