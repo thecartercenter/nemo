@@ -106,7 +106,6 @@
     <% unless @dont_print_title %>
       <div id="title_container">
         <%= h1_title %>
-        <%= react_component("Test", {content: "Hello World"}) %>
         <%= yield :title_content %>
       </div>
     <% end %>
