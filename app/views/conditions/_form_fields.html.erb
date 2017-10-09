@@ -14,6 +14,8 @@
       {include_blank: true}, class: 'form-control') %>
   </div>
 
+  <%= react_component("TestField", {}, {prerender: true}) %>
+
   <div class="field">
     <%= f.label(:value, t('condition.value')) %>
     <% if @condition.ref_qing.present? && @condition.ref_qing_has_options? %>
