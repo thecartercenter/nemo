@@ -1,4 +1,4 @@
-class TestField extends React.Component {
+class FormSelect extends React.Component {
   render() {
     let options =
         [
@@ -6,6 +6,6 @@ class TestField extends React.Component {
           <option value="2" key="2">Iki</option>,
           <option value="3" key="3">Uc</option>
         ]
-    return <select value="1" className="form-control test-select">{options}</select>
+    return <select className="form-control test-select">{options}</select>
   }
 }
