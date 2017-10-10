@@ -6,8 +6,13 @@ body.welcome {
   }
 
   div#content {
-    margin-left: 0;
+    float: $left;
+    margin-#{$left}: 0;
     padding-bottom: 40px;
+
+    h1.title {
+      float: $left;
+    }
 
     .response_locations_offline {
       color: $light-gray;

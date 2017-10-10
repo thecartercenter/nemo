@@ -1,7 +1,15 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+// THIS FILE MUST BE IDENTICAL TO THE OTHER DIRECTION'S FILE EXECPT FOR THE $dir VARIABLE
+/////////////////////////////////////////////////////////////////////////////////////////
+
 @import "bootstrap";
 @import "font-awesome";
 @import "select2";
 @import "all/variables/*";
+
+//set direction for directional variables
+$dir: ltr;
+@import "all/directional";
 
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
