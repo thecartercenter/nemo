@@ -145,15 +145,26 @@ table.index_table {
 
 table.index_table th, table.form th { text-align: $left; color: #444; background-color: $super-light-gray;
     font-size: 90%; padding: 3px 10px 3px 3px; }
-div.loading_indicator_inline { width: 16px; display: inline-block; vertical-align: top; }
-div.loading_indicator_floating { width: 16px; float: $left; }
+
 
 div.loading_indicator {
   .success {
     color: $theme-green;
   }
+
   .failure {
     color: $theme-red;
+  }
+
+  div.loading_indicator_inline {
+    width: 16px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  div.loading_indicator_floating {
+    width: 16px;
+    float: $left;
   }
 }
 

@@ -1,11 +1,9 @@
 <% if read_only %>
-
   <div class="ro-val" data-val="<%= form.object.option_set_id %>"><%= form.object.option_set.try(:name) %></div>
-
 <% else %>
-
-  <%= form.select(:option_set_id, option_set_select_option_tags(@option_sets, form.object.option_set_id), {include_blank: true}, class: "form-control") %>
-  <%= link_to('+ ' + t('activerecord.action_links.option_set.new'), '#', :class => 'create_option_set') %>
+  <%= form.select(:option_set_id,
+    option_set_select_option_tags(@option_sets, form.object.option_set_id),
+    {include_blank: true}, class: "form-control") %>
+  <%= link_to('+ ' + t('activerecord.action_links.option_set.new'), '#', class: 'create_option_set') %>
   <%= loading_indicator %>
-
 <% end %>
