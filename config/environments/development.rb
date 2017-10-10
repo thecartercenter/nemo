@@ -52,4 +52,7 @@ ELMO::Application.configure do
   #   Bullet.console = true
   #   Bullet.rails_logger = true
   # end
+
+  # React development variant (unminified)
+  config.react.variant = :development
 end
