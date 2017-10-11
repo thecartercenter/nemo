@@ -8,14 +8,15 @@ h1, h2, h3 { color: $body-text-color; font-family: 'Open Sans', Helvetica, sans-
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 
 h1.title {
+  float: $left;
   color: #777;
   font-weight: bold;
   margin-bottom: 28px;
-  margin-right: 10px;
+  margin-#{$right}: 10px;
 
   i {
     color: $light-gray;
-    margin-right: 5px;
+    margin-#{$right}: 5px;
   }
 }
 

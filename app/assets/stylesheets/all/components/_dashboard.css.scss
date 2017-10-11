@@ -2,7 +2,11 @@ body.welcome {
 
   /* reduce margin on title and content */
   div#title {
-    margin-left: 10px;
+    margin-#{$left}: 10px;
+  }
+
+  .title {
+    float: none;
   }
 
   div#content {
