@@ -21,6 +21,8 @@ class Condition < ApplicationRecord
   delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, to: :questioning
 
+  scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
+
   OPERATORS = [
     {name: 'eq', types: %w(decimal integer counter text long_text address select_one datetime date time),
       code: "="},
@@ -40,7 +42,7 @@ class Condition < ApplicationRecord
   # Deletes any that have become invalid due to changes in the given question
   def self.check_integrity_after_question_change(question)
     if question.option_set_id_changed? || question.destroyed?
-      where(ref_qing_id: question.qing_ids).destroy_all
+      referring_to_question(question).destroy_all
     end
   end
 

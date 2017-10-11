@@ -181,6 +181,10 @@ class Question < ApplicationRecord
     qtype_name == "location"
   end
 
+  def has_conditions?
+    Condition.referring_to_question(self).any?
+  end
+
   def geographic?
     location_type? || qtype_name == "select_one" && option_set.geographic?
   end
