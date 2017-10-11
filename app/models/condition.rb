@@ -37,6 +37,13 @@ class Condition < ApplicationRecord
   replicable backward_assocs: [:questioning, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
     dont_copy: [:ref_qing_id, :questioning_id, :option_node_id]
 
+  # Deletes any that have become invalid due to changes in the given question
+  def self.check_integrity_after_question_change(question)
+    if question.option_set_id_changed? || question.destroyed?
+      where(ref_qing_id: question.qing_ids).destroy_all
+    end
+  end
+
   # We accept a list of OptionNode IDs as a way to set the option_node association.
   # This is useful for forms, etc. We just pluck the last non-blank ID off the end.
   # If all are blank, we set the association to nil.

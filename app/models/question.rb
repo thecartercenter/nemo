@@ -24,10 +24,13 @@ class Question < ApplicationRecord
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
   before_validation :normalize
+  before_save :check_condition_integrity
 
   # We do this instead of using dependent: :destroy because in the latter case
   # the dependent object doesn't know who destroyed it.
   before_destroy { calculations.each(&:question_destroyed) }
+
+  after_destroy :check_condition_integrity
 
   validates :code, presence: true
   validates :code, format: {with: /\A#{CODE_FORMAT}\z/}, unless: -> { code.blank? }
@@ -233,9 +236,8 @@ class Question < ApplicationRecord
     exps.empty? ? nil : "(" + exps.join(" and ") + ")"
   end
 
-  # shortcut method for tests
   def qing_ids
-    questionings.collect{|qing| qing.id}
+    questionings.pluck(:id)
   end
 
   # convert value stored as decimal to integer if integer question type
@@ -276,7 +278,7 @@ class Question < ApplicationRecord
   end
 
   def constraint_changed?
-    %w(minimum maximum minstrictly maxstrictly).any?{|f| send("#{f}_changed?")}
+    %w(minimum maximum minstrictly maxstrictly).any? { |f| send("#{f}_changed?") }
   end
 
   # checks if any core fields (type, option set, constraints) changed
@@ -322,5 +324,9 @@ class Question < ApplicationRecord
 
   def at_least_one_name
     errors.add(:base, :at_least_one_name) if name.blank?
+  end
+
+  def check_condition_integrity
+    Condition.check_integrity_after_question_change(self)
   end
 end
