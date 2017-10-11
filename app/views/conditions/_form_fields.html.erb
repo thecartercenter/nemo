@@ -2,33 +2,15 @@
   <%= f.base_errors %>
   <%= f.hidden_field(:id) %>
 
-  <% question_options = @condition.refable_qings.map{|q| {display: "#{q.full_dotted_rank}. #{q.question.code}", value: q.id}} %>
-  <%= react_component("FormField", {for: "questioning_condition_attributes_ref_qing_id", label: "Question", name: "questioning[condition_attributes][ref_qing_id]", id: "questioning_condition_attributes_ref_qing_id", options: question_options}, {prerender: true, class: "field"}) %>
+  <% reference_qing_options = @condition.refable_qings.map{|q| {display: "#{q.full_dotted_rank}. #{q.question.code}", value: q.id}} %>
+  <% reference_qing_data = {for: "questioning_condition_attributes_ref_qing_id", label: translate_model(Question), name: "questioning[condition_attributes][ref_qing_id]", id: "questioning_condition_attributes_ref_qing_id", type: "select", options: reference_qing_options}%>
 
-  <!-- <div class="field">
-    <%= f.label(:ref_qing_id, translate_model(Question)) %>
-    <%# ref_qing_id gets appended to first arg of elmo_fields_for. select options as array of tuples of [display, value]%>
-    <%= f.select(:ref_qing_id, @condition.refable_qings.map{|q| ["#{q.full_dotted_rank}. #{q.question.code}", q.id]},
-      {include_blank: true}, class: 'form-control') %>
-  </div> -->
+  <% operator_options = translate_options(@condition.applicable_operator_names, [:condition, :operators]) %>
+  <% operator_data = {for: "questioning_condition_attributes_op", label: t('condition.op'), name: "questioning[condition_attributes][op]", id: "questioning_condition_attributes_op", type: "select", options: operator_options } %>
 
-  <div class="field">
-    <%= f.label(:op, t('condition.op')) %>
-    <%= f.select(:op, translate_options(@condition.applicable_operator_names, [:condition, :operators]),
-      {include_blank: true}, class: 'form-control') %>
-  </div>
+  <% value_data = {for: "questioning_condition_attributes_value" , label: t('condition.value'), name: "questioning[condition_attributes][value]" , id: "questioning_condition_attributes_value" , type: "text"} %>
 
-  <%= react_component("FormField", {for: "test_for", label: "Test Two Level Props", options: [{value: "1", key: "1", display: "1. Merhaba"}, {value: "2", key: "2", display: "2. Hola"}, {value: "3", key: "3", display: "3. Xin chao"}]}, {prerender: true, class: "field"}) %>
+  <%= react_component("ConditionsFormField", {reference_qing_field: reference_qing_data, operator_field: operator_data, value_field: value_data}, {prerender: true}) %>
 
-  <div class="field">
-    <%= f.label(:value, t('condition.value')) %>
-    <% if @condition.ref_qing.present? && @condition.ref_qing_has_options? %>
-      <%= render('option_sets/cascading_selects',
-            index: 1,
-            option_node_path: @condition.option_node_path,
-            input_name_template: 'questioning[condition_attributes][option_node_ids][]') %>
-    <% else %>
-      <%= f.text_field(:value, class: 'text form-control') %>
-    <% end %>
-  </div>
+
 <% end %>
