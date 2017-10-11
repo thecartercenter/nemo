@@ -88,30 +88,6 @@ module OdkHelper
     end
   end
 
-  # if a question is required, then determine the appropriate value based off of if the form allows incomplete responses
-  def required_value(form)
-    # if form allows incompletes, question is required only if the answer to 'are there missing answers' is 'no'
-    form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
-  end
-
-  # generator for binding portion of xml.
-  # note: _required is used to get around the 'required' html attribute
-  def question_binding(form, qing, subq, group: nil, xpath_prefix: "/data")
-    attribs = {
-      "nodeset" => [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
-      "type" => binding_type_attrib(subq),
-      "_required" => qing.required? && subq.first_rank? ? required_value(form) : nil,
-      "_readonly" => qing.can_prefill? && qing.read_only? ? "true()" : nil,
-      "relevant" => qing.has_condition? ? Odk::DecoratorFactory.decorate(qing.condition).to_odk : nil,
-      "constraint" => subq.odk_constraint,
-      "jr:constraintMsg" => subq.min_max_error_msg,
-      "calculate" => qing.can_prefill? ? PrefillPatternParser.new(qing).to_odk.html_safe : nil
-    }
-    attribs.reject! { |k,v| v.nil? }
-    tag(:bind, attribs).gsub(/_required=/, "required=").
-      gsub(/_readonly=/, "readonly=").html_safe
-  end
-
   # note: _readonly is used to get around the 'readonly' html attribute
   def note_binding(group, xpath_prefix)
     tag(:bind, {
@@ -119,11 +95,6 @@ module OdkHelper
       "_readonly" => "true()",
       "type" => "string"
     }.reject { |k,v| v.nil? }).gsub(/_readonly=/, "readonly=").html_safe
-  end
-
-  def binding_type_attrib(subq)
-    # ODK wants non-first-level selects to have type 'string'
-    subq.first_rank? ? subq.odk_name : "string"
   end
 
   # binding for incomplete response question

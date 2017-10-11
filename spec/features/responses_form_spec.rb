@@ -33,9 +33,9 @@ feature "responses form", js: true do
         location: "42.277976 -83.817573",
         text: "Foo",
         long_text: "Foo Bar Baz",
-        datetime: "Mar 12 #{Time.now.year} 18:32",
+        datetime: "Mar 12 #{Time.now.year} 18:32:44",
         date: "Oct 26 #{Time.now.year}",
-        time: "03:08"
+        time: "03:08:23"
       }
     end
     let(:reviewer) { create(:user) }
@@ -62,6 +62,7 @@ feature "responses form", js: true do
       control_for(questionings[:datetime], subfield: :day).select("12")
       control_for(questionings[:datetime], subfield: :hour).select("18")
       control_for(questionings[:datetime], subfield: :minute).select("32")
+      control_for(questionings[:datetime], subfield: :second).select("44")
 
       control_for(questionings[:date], subfield: :year).select(Time.now.year)
       control_for(questionings[:date], subfield: :month).select("October")
@@ -69,6 +70,7 @@ feature "responses form", js: true do
 
       control_for(questionings[:time], subfield: :hour).select("03")
       control_for(questionings[:time], subfield: :minute).select("08")
+      control_for(questionings[:time], subfield: :second).select("23")
 
       click_button("Save")
     end
@@ -267,7 +269,7 @@ feature "responses form", js: true do
   end
 
   def temporal_mapping
-    { year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i" }
+    { year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i" }
   end
 
   def expect_answer(questioning: nil, answer: nil)

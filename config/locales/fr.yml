@@ -787,7 +787,7 @@ fr:
       default: "%d %b %Y %H:%M"
       short: "%d %b %H:%M"
       long: "%A, %d %B %Y %H:%M"
-      time_only: "%H:%M"
+      time_only: "%H:%M:%S"
   search_qualifiers:
     text: "texte"
     email: "email"

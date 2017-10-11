@@ -1,26 +1,28 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  accepts_nested_attributes_for(:question)
-  accepts_nested_attributes_for(:condition)
-
-  before_validation(:destroy_condition_if_ref_qing_blank)
-  before_save(:set_not_required_if_read_only)
+  before_validation :destroy_condition_if_ref_qing_blank
+  before_validation :normalize
 
   delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node, :first_leaf_option,
     :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels, :min_max_error_msg,
     :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name, :option_set_id,
     :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes, :printable?,
     :qtype_name, :qtype_name=, :qtype, :select_options, :sms_formatting_as_appendix?,
-    :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, to: :question
+    :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, :metadata_type,
+    to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
-  scope(:visible, -> { where(hidden: false) })
+  scope :visible, -> { where(hidden: false) }
 
-  replicable child_assocs: [:question, :condition], backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
+  replicable child_assocs: [:question, :condition], backward_assocs: :form,
+    dont_copy: [:hidden, :form_id, :question_id]
+
+  accepts_nested_attributes_for :question
+  accepts_nested_attributes_for :condition
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(questioning_ids)
@@ -59,7 +61,7 @@ class Questioning < FormItem
   end
 
   def core_changed?
-    (changed & %w(required hidden prefill_pattern)).any? || condition_changed?
+    (changed & %w(required hidden default)).any? || condition_changed?
   end
 
   # Checks if this Questioning is in a repeat group.
@@ -81,9 +83,8 @@ class Questioning < FormItem
     form.questionings.reject { |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
-  # Returns smsable forms
   def smsable?
-    !hidden? && question.qtype.smsable?
+    visible? && qtype.smsable?
   end
 
   # Duck type
@@ -112,23 +113,21 @@ class Questioning < FormItem
   def is_question_method?(symbol)
     symbol.match(/\A((name|hint)_([a-z]{2})(=?))(_before_type_cast)?\z/)
   end
-
   # /REFACTOR
-  def inspect
-    id
-  end
 
   private
 
+  def normalize
+    if question.metadata_type.present?
+      self.hidden = true
+      destroy_condition if condition
+    end
+    self.required = false if hidden? || read_only?
+    true
+  end
+
   def destroy_condition_if_ref_qing_blank
     destroy_condition if condition && condition.ref_qing.blank?
+    true
   end
-
-  def set_not_required_if_read_only
-    if read_only
-      self.required = false
-    end
-    true #otherwise assignment returns false, causing errors
-  end
-
 end

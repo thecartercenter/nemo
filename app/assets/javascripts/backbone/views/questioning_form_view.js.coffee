@@ -1,28 +1,35 @@
 # Newer view to manage Questioning form.
 class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
   initialize: (options) ->
-    @prefillableTypes = options.prefillableTypes
+    @super = @constructor.__super__
+    @defaultableTypes = options.defaultableTypes
     @toggleFields()
-    @toggleReadOnly()
 
   events:
-    'change select[id$="_qtype_name"]': 'typeChanged'
-    'click #questioning_read_only': 'toggleRequired'
-    'keyup #questioning_prefill_pattern' : 'toggleReadOnly'
+    'change select[id$="_qtype_name"]': 'toggleFields'
+    'change select[id$="_metadata_type"]': 'toggleFields'
+    'click #questioning_read_only': 'toggleFields'
+    'keyup #questioning_default' : 'toggleFields'
 
   toggleFields: ->
-    @constructor.__super__.toggleFields.call(this)
-    type = @fieldValue('qtype_name')
-    @togglePrefillPattern(type)
+    @super.toggleFields.call(this)
+    @$('.questioning_default')[if @showDefault() then 'show' else 'hide']()
+    @$('.questioning_read_only')[if @showReadOnly() then 'show' else 'hide']()
+    @$('.questioning_required')[if @showRequired() then 'show' else 'hide']()
+    @$('.questioning_hidden')[if @showHidden() then 'show' else 'hide']()
+    @$('.questioning_condition')[if @showCondition() then 'show' else 'hide']()
 
-  togglePrefillPattern: (type) ->
-    if @prefillableTypes.indexOf(type) != -1
-      @$('.questioning_prefill_pattern').show()
-      @$('.questioning_read_only').show()
-    else
-      @$('.questioning_prefill_pattern').hide()
-      @$('.questioning_read_only').hide()
+  showDefault: ->
+    @defaultableTypes.indexOf(@fieldValue('qtype_name')) != -1
 
-  toggleReadOnly: ->
-    prefillValue = (@fieldValue('prefill_pattern') || '').trim()
-    @$('.questioning_read_only')[if prefillValue == '' then 'hide' else 'show']()
+  showReadOnly: ->
+    @showDefault() && (@fieldValue('default') || '').trim() != ''
+
+  showRequired: ->
+    !@fieldValue('read_only') && @super.metadataTypeBlank.call(this)
+
+  showHidden: ->
+    @super.metadataTypeBlank.call(this)
+
+  showCondition: ->
+    @super.metadataTypeBlank.call(this)

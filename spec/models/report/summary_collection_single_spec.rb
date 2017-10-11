@@ -173,7 +173,7 @@ describe "summary collection with single subset" do
       prepare_form('time', %w(9:30 10:15 22:15 12:59))
       @responses.last.destroy
       prepare_collection
-      expect(headers_and_items(:stat, :stat)).to eq({mean: '14:00', min: '09:30', max: '22:15'})
+      expect(headers_and_items(:stat, :stat)).to eq({mean: '14:00:00', min: '09:30:00', max: '22:15:00'})
     end
 
     it "null_count should be correct" do
@@ -194,9 +194,9 @@ describe "summary collection with single subset" do
       @responses.last.destroy
       prepare_collection
       expect(headers_and_items(:stat, :stat)).to eq(
-        mean: 'Oct 27 2013 00:00',
-        min: 'Oct 26 2013 10:15',
-        max: 'Oct 27 2013 19:00'
+        mean: 'Oct 27 2013 00:00:00',
+        min: 'Oct 26 2013 10:15:00',
+        max: 'Oct 27 2013 19:00:00'
       )
     end
 

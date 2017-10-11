@@ -13,6 +13,8 @@ module Odk
 
     def decorate(obj)
       case obj.class.name
+      when "Form"
+        FormDecorator.decorate(obj)
       when "QingGroup"
         QingGroupDecorator.decorate(obj)
       when "Questioning"

@@ -9,8 +9,6 @@ class TabularImportOperationJob < OperationJob
     end
 
     operation_failed(format_error_report(import.try(:errors))) unless succeeded
-  ensure
-    File.delete(path) rescue nil
   end
 
   private

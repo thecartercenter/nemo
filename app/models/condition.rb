@@ -6,16 +6,17 @@ class Condition < ApplicationRecord
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
 
-  belongs_to(:questioning, inverse_of: :condition)
-  belongs_to(:ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id", inverse_of: :referring_conditions)
-  belongs_to(:option_node)
+  belongs_to :questioning, inverse_of: :condition
+  belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",
+    inverse_of: :referring_conditions
+  belongs_to :option_node
 
-  before_validation(:clear_blanks)
-  before_validation(:clean_times)
-  before_create(:set_mission)
+  before_validation :clear_blanks
+  before_validation :clean_times
+  before_create :set_mission
 
-  validate(:all_fields_required)
-  validates(:questioning, presence: true)
+  validate :all_fields_required
+  validates :questioning, presence: true
 
   delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, to: :questioning

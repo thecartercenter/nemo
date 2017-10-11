@@ -968,10 +968,10 @@ ar:
       long: "%B %d %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M"
+      default: "%b %d %Y %H:%M:%S"
       short: "%b %d %H:%M"
       long: "%A, %B %d %Y %H:%M"
-      time_only: "%H:%M"
+      time_only: "%H:%M:%S"
 
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
   search_qualifiers:

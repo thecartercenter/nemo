@@ -26,7 +26,7 @@ module QuestionFormable
 
   def setup_question_form_support_objs
     @question_types = QuestionType.all
-    @prefillable_types = QuestionType.with_property(:prefillable)
+    @defaultable_types = QuestionType.with_property(:defaultable)
     @option_sets = OptionSet.accessible_by(current_ability).default_order
   end
 
@@ -34,7 +34,7 @@ module QuestionFormable
     # We include :id because it's needed when question attribs are nested.
     permit_translations(submitted, :name, :hint) + [
       :id, :code, :qtype_name, :option_set_id, :casted_minimum,
-      :minstrictly, :casted_maximum, :maxstrictly, :auto_increment, :tag_ids, :key,
+      :minstrictly, :casted_maximum, :maxstrictly, :auto_increment, :tag_ids, :metadata_type, :key,
       :access_level, { tags_attributes: [:name, :mission_id] }]
   end
 end

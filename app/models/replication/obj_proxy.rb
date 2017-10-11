@@ -125,7 +125,7 @@ class Replication::ObjProxy
     cols << :ancestry if options[:target_klass].has_ancestry?
     cols << :type if get_target_class_from_type_col
     data = db.select_all("
-      SELECT #{cols.join(',')}
+      SELECT #{concat(cols)}
       FROM #{options[:target_klass].table_name}
       WHERE #{options[:target_klass].table_name}.deleted_at IS NULL
         AND #{condition} #{options[:order]}
@@ -226,12 +226,22 @@ class Replication::ObjProxy
   end
 
   def do_insert(mappings)
-    insert_cols = mappings.map{ |s| s.is_a?(Array) ? s[0] : s}.join(",")
-    select_chunks = mappings.map{ |s| s.is_a?(Array) ? s[1] : s}.map{ |s| s.nil? ? "NULL" : s }.join(",")
+    insert_cols = concat(mappings.map { |s| s.is_a?(Array) ? s[0] : s })
+    select_chunks = concat(mappings.map { |s| s.is_a?(Array) ? s[1] : s })
 
     sql = "INSERT INTO #{klass.table_name} (#{insert_cols})
       SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = #{id} RETURNING id"
 
     db.insert(sql)
+  end
+
+  def concat(exprs)
+    exprs.map do |expr|
+      case expr
+      when "default" then '"default"'
+      when nil then "NULL"
+      else expr
+      end
+    end.join(",")
   end
 end

@@ -2,13 +2,13 @@ class FormItem < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
 
   acts_as_paranoid
-  acts_as_list column: :rank, scope: [:form_id, :ancestry, :deleted_at]
-
-  belongs_to :form
+  acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
 
   # These associations are really only applicable to Questioning, but
   # they are defined here to allow eager loading.
   belongs_to :question, autosave: true, inverse_of: :questionings
+
+  belongs_to :form
   has_many :answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
   has_one :condition, foreign_key: :questioning_id, autosave: true,
     dependent: :destroy, inverse_of: :questioning
@@ -121,6 +121,14 @@ class FormItem < ApplicationRecord
 
   def top_level?
     depth == 1
+  end
+
+  def visible?
+    !hidden?
+  end
+
+  def self_and_ancestor_ids
+    ancestor_ids << id
   end
 
   private

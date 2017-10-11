@@ -3,18 +3,25 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @toggleFields()
 
+  # We use $= because the start of the ID can vary depending on whether
+  # it's a question form or questioning form.
+  # Note, these events must be redefined in any child classes.
   events:
-    'change select[id$="_qtype_name"]': 'typeChanged'
-
-  typeChanged: (e) ->
-    @toggleFields()
+    'change select[id$="_qtype_name"]': 'toggleFields'
+    'change select[id$="_metadata_type"]': 'toggleFields'
 
   toggleFields: ->
-    type = @fieldValue('qtype_name')
-    @toggleAutoIncrement(type)
+    @$('.question_auto_increment')[if @showAutoIncrement() then 'show' else 'hide']()
+    @$('.question_metadata_type')[if @showMetaDataType() then 'show' else 'hide']()
 
-  toggleAutoIncrement: (type) ->
-    @$('.question_auto_increment')[if type == 'counter' then 'show' else 'hide']()
+  showAutoIncrement: ->
+    @fieldValue('qtype_name') == 'counter'
+
+  showMetaDataType: ->
+    @fieldValue('qtype_name') == 'datetime'
+
+  metadataTypeBlank: ->
+    !@showMetaDataType() || @fieldValue('metadata_type') == ''
 
   # Gets form field value, or static value if field is read-only
   fieldValue: (attrib) ->

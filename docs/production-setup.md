@@ -114,8 +114,6 @@ Once that's done, proceed with the final config.
     bundle exec rake db:schema:load
     # Precompile assets
     bundle exec rake assets:precompile
-    # Build search indices
-    bundle exec rake ts:rebuild
     # Start background job processor
     bundle exec bin/delayed_job start
     # Restart server
@@ -144,7 +142,6 @@ When new versions of ELMO are released, you will want to upgrade. To do so, ssh 
     bundle exec whenever -i elmo
     bundle exec rake db:migrate
     bundle exec rake assets:precompile
-    bundle exec rake ts:rebuild
     bundle exec bin/delayed_job restart
     touch tmp/restart.txt
 

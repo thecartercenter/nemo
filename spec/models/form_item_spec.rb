@@ -68,6 +68,12 @@ describe FormItem do
         expect(child0.reload.rank).to eq 2
         expect(child1.reload.rank).to eq 1
       end
+
+      it 'should fix ranks when item deleted' do
+        (q = @f.sorted_children[1]).destroy
+        expect(@f.sorted_children).not_to include q
+        expect(@f.sorted_children.map(&:rank)).to eq [1, 2, 3, 4]
+      end
     end
 
     context "with nested form" do
