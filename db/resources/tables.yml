@@ -11,12 +11,15 @@ answers:
     actual:
       option_id:
         foreign_table: options
+        foreign_class: Option
         name: answers_option_id_fkey
       questioning_id:
         foreign_table: form_items
+        foreign_class: Questioning
         name: answers_questioning_id_fkey
       response_id:
         foreign_table: responses
+        foreign_class: Response
         name: answers_response_id_fkey
 
 assignments:
@@ -28,9 +31,11 @@ assignments:
     actual:
       mission_id:
         foreign_table: missions
+        foreign_class: Mission
         name: assignments_mission_id_fkey
       user_id:
         foreign_table: users
+        foreign_class: User
         name: assignments_user_id_fkey
 
 broadcast_addressings:
@@ -39,6 +44,7 @@ broadcast_addressings:
     actual:
       broadcast_id:
         foreign_table: broadcasts
+        foreign_class: Broadcast
         name: broadcast_addressings_broadcast_id_fkey
     polymorphic:
       addressee_id:
@@ -51,6 +57,7 @@ broadcasts:
     actual:
       mission_id:
         foreign_table: missions
+        foreign_class: Mission
         name: broadcasts_mission_id_fkey
 
 choices:
@@ -62,9 +69,11 @@ choices:
     actual:
       answer_id:
         foreign_table: answers
+        foreign_class: Answer
         name: choices_answer_id_fkey
       option_id:
         foreign_table: options
+        foreign_class: Option
         name: choices_option_id_fkey
 
 conditions:
@@ -76,15 +85,19 @@ conditions:
     actual:
       mission_id:
         foreign_table: missions
+        foreign_class: Mission
         name: conditions_mission_id_fkey
       option_node_id:
         foreign_table: option_nodes
+        foreign_class: OptionNode
         name: conditions_option_node_id_fkey
       questioning_id:
         foreign_table: form_items
+        foreign_class: Questioning
         name: conditions_questioning_id_fkey
       ref_qing_id:
         foreign_table: form_items
+        foreign_class: Questioning
         name: conditions_ref_qing_id_fkey
 
 form_forwardings:
@@ -98,6 +111,7 @@ form_forwardings:
     actual:
       form_id:
         foreign_table: forms
+        foreign_class: Form
         name: form_forwardings_form_id_fkey
     polymorphic:
       recipient_id:
@@ -116,12 +130,15 @@ form_items:
     actual:
       form_id:
         foreign_table: forms
+        foreign_class: Form
         name: form_items_form_id_fkey
       mission_id:
         foreign_table: missions
+        foreign_class: Mission
         name: form_items_mission_id_fkey
       question_id:
         foreign_table: questions
+        foreign_class: Question
         name: form_items_question_id_fkey
 
 form_versions:
@@ -134,6 +151,7 @@ form_versions:
   foreign_keys:
     actual:
       form_id:
+        foreign_class: Form
         foreign_table: forms
         name: form_versions_form_id_fkey
 
@@ -145,17 +163,21 @@ forms:
   foreign_keys:
     actual:
       current_version_id:
+        foreign_class: FormVersion
         foreign_table: form_versions
         on_delete: nullify
         name: forms_current_version_id_fkey
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: forms_mission_id_fkey
       original_id:
+        foreign_class: Form
         foreign_table: forms
         on_delete: nullify
         name: forms_original_id_fkey
       root_id:
+        foreign_class: FormItem
         foreign_table: form_items
         name: forms_root_id_fkey
 
@@ -164,6 +186,7 @@ media_objects:
   foreign_keys:
     actual:
       answer_id:
+        foreign_class: Answer
         foreign_table: answers
         name: media_objects_answer_id_fkey
 
@@ -186,6 +209,7 @@ operations:
   foreign_keys:
     actual:
       creator_id:
+        foreign_class: User
         foreign_table: users
         name: operations_creator_id_fkey
       # provider_job_id: delayed_jobs
@@ -203,15 +227,19 @@ option_nodes:
   foreign_keys:
     actual:
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: option_nodes_mission_id_fkey
       option_id:
+        foreign_class: Option
         foreign_table: options
         name: option_nodes_option_id_fkey
       option_set_id:
+        foreign_class: OptionSet
         foreign_table: option_sets
         name: option_nodes_option_set_id_fkey
       original_id:
+        foreign_class: OptionNode
         foreign_table: option_nodes
         on_delete: nullify
         name: option_nodes_original_id_fkey
@@ -226,13 +254,16 @@ option_sets:
   foreign_keys:
     actual:
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: option_sets_mission_id_fkey
       original_id:
+        foreign_class: OptionSet
         foreign_table: option_sets
         on_delete: nullify
         name: option_sets_original_id_fkey
       root_node_id:
+        foreign_class: OptionNode
         foreign_table: option_nodes
         name: option_sets_option_node_id_fkey
 
@@ -246,6 +277,7 @@ options:
   foreign_keys:
     actual:
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: options_mission_id_fkey
 
@@ -262,12 +294,15 @@ questions:
   foreign_keys:
     actual:
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: questions_mission_id_fkey
       option_set_id:
+        foreign_class: OptionSet
         foreign_table: option_sets
         name: questions_option_set_id_fkey
       original_id:
+        foreign_class: Question
         foreign_table: questions
         on_delete: nullify
         name: questions_original_id_fkey
@@ -280,9 +315,11 @@ report_calculations:
   foreign_keys:
     actual:
       question1_id:
+        foreign_class: Question
         foreign_table: questions
         name: report_calculations_question1_id_fkey
       report_report_id:
+        foreign_class: Report::Report
         foreign_table: report_reports
         name: report_calculations_report_report_id_fkey
 
@@ -294,9 +331,11 @@ report_option_set_choices:
   foreign_keys:
     actual:
       option_set_id:
+        foreign_class: OptionSet
         foreign_table: option_sets
         name: report_option_set_choices_option_set_id_fkey
       report_report_id:
+        foreign_class: Report::Report
         foreign_table: report_reports
         name: report_option_set_choices_report_report_id_fkey
 
@@ -310,15 +349,19 @@ report_reports:
   foreign_keys:
     actual:
       creator_id:
+        foreign_class: User
         foreign_table: users
         name: report_reports_creator_id_fkey
       disagg_qing_id:
+        foreign_class: Questioning
         foreign_table: form_items
         name: report_reports_disagg_qing_id_fkey
       form_id:
+        foreign_class: Form
         foreign_table: forms
         name: report_reports_form_id_fkey
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: report_reports_mission_id_fkey
 
@@ -345,18 +388,23 @@ responses:
   foreign_keys:
     actual:
       checked_out_by_id:
+        foreign_class: User
         foreign_table: users
         name: responses_checked_out_by_id_fkey
       form_id:
+        foreign_class: Form
         foreign_table: forms
         name: responses_form_id_fkey
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: responses_mission_id_fkey
       reviewer_id:
+        foreign_class: User
         foreign_table: users
         name: responses_reviewer_id_fkey
       user_id:
+        foreign_class: User
         foreign_table: users
         name: responses_user_id_fkey
 
@@ -365,6 +413,7 @@ settings:
   foreign_keys:
     actual:
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: settings_mission_id_fkey
 
@@ -384,34 +433,42 @@ sms_messages:
   foreign_keys:
     actual:
       broadcast_id:
+        foreign_class: Broadcast
         foreign_table: broadcasts
         name: sms_messages_broadcast_id_fkey
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: sms_messages_mission_id_fkey
       reply_to_id:
+        foreign_class: Sms::Message
         foreign_table: sms_messages
         name: sms_messages_reply_to_id_fkey
       user_id:
+        foreign_class: User
         foreign_table: users
         name: sms_messages_user_id_fkey
 
 taggings:
   class: Tagging
+  clean_orphans: true
   indexes:
     deleted_at:
       fields: ["deleted_at"]
   foreign_keys:
     actual:
       question_id:
+        foreign_class: Question
         foreign_table: questions
         name: taggings_question_id_fkey
       tag_id:
+        foreign_class: Tag
         foreign_table: tags
         name: taggings_tag_id_fkey
 
 tags:
   class: Tag
+  clean_orphans: true
   indexes:
     deleted_at:
       fields: ["deleted_at"]
@@ -420,6 +477,7 @@ tags:
   foreign_keys:
     actual:
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: tags_mission_id_fkey
 
@@ -434,9 +492,11 @@ user_group_assignments:
   foreign_keys:
     actual:
       user_group_id:
+        foreign_class: UserGroup
         foreign_table: user_groups
         name: user_group_assignments_user_group_id_fkey
       user_id:
+        foreign_class: User
         foreign_table: users
         name: user_group_assignments_user_id_fkey
 
@@ -451,11 +511,13 @@ user_groups:
   foreign_keys:
     actual:
       mission_id:
+        foreign_class: Mission
         foreign_table: missions
         name: user_groups_mission_id_fkey
 
 users:
   class: User
+  clean_orphans: true
   indexes:
     deleted_at:
       fields: ["deleted_at"]
@@ -468,17 +530,20 @@ users:
     sms_auth_code:
       fields: ["sms_auth_code"]
       unique: true
-  # foreign_keys:
-    # actual:
-    #   last_mission_id:
-    #     foreign_table: missions
-    #     name: users_last_mission_id_fkey
+  foreign_keys:
+    actual:
+      last_mission_id:
+        clean_method: nullify
+        foreign_class: Mission
+        foreign_table: missions
+        name: users_last_mission_id_fkey
 
 whitelistings:
   class: Whitelisting
   foreign_keys:
     actual:
       user_id:
+        foreign_class: User
         foreign_table: users
         name: whitelistings_user_id_fkey
     polymorphic:

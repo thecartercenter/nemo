@@ -15,6 +15,11 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
       remove_foreign_key :questions, name: "questions_original_id_fkey1"
 
       TABLES.each do |table_name, table_data|
+        # Seek out and clean orphaned records
+        clean_orphans(table_name, table_data) if table_data["clean_orphans"]
+      end
+
+      TABLES.each do |table_name, table_data|
         # then remove foreign keys from all tables
         remove_all_foreign_keys(table_name, table_data)
 
@@ -38,6 +43,10 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
         # Get the rails class for the table
         table_class = table_data["class"].constantize
 
+        # reload column information
+        table_class.connection.schema_cache.clear!
+        table_class.reset_column_information
+
         # populate new UUID fields
         puts "TABLE: #{table_class}"
         table_class.find_each do |instance|
@@ -46,7 +55,6 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
           instance_params[:ancestry] = rewrite_ancestry_field(instance, table_namespace) if table_data["ancestry"]
           instance.update_columns(instance_params)
         end
-        # raise
 
         # Set new primary key
         rename_column table_name, :id, :old_id
@@ -135,7 +143,7 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
   def create_new_columns(table_name, table_data)
     return unless table_data["foreign_keys"]
     table_data["foreign_keys"].each do |foreign_key_type, foreign_key_data|
-      foreign_key_data.each do |foreign_key_column, foreign_table|
+      foreign_key_data.each do |foreign_key_column, foreign_key_metadata|
         rename_column table_name, foreign_key_column, backup_column_name(foreign_key_column)
         change_column_null table_name, backup_column_name(foreign_key_column), true
         add_column table_name, foreign_key_column, :uuid
@@ -200,5 +208,27 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
   def backup_column_name(column_name)
     column_without_id = column_name.chomp("_id")
     "#{column_without_id}_old_id"
+  end
+
+  def clean_orphans(table_name, table_data)
+    puts "CLEAN ORPHANS FOR #{table_name}"
+    return unless table_data["foreign_keys"] && table_data["foreign_keys"]["actual"]
+    table_class = table_data["class"].constantize
+
+    # for each foreign key relationship
+    table_data["foreign_keys"]["actual"].each do |foreign_key_column, foreign_key_metadata|
+      foreign_table_class = foreign_key_metadata["foreign_class"].constantize
+
+      orphans = table_class.where.not(foreign_key_column => foreign_table_class.all)
+      orphans.each do |orphan|
+        if foreign_key_metadata["clean_method"] == "nullify"
+          puts "NULLIFY ORPHAN"
+          orphan.update_columns(foreign_key_column => nil)
+        else
+          puts "DELETE ORPHAN"
+          orphan.delete
+        end
+      end
+    end
   end
 end
