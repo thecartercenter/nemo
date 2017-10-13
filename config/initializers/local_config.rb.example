@@ -19,10 +19,10 @@ ELMO::Application.config.secret_key_base = "secret-token"
 # The hostname of your site
 configatron.url.host = "elmo.example.com"
 
-# Whether to use HTTPS in the mailer URLs. This should be "https" if your site uses SSL, and "http" if not.
+# Whether to use HTTPS in URLs. This should be "https" if your site uses SSL, and "http" if not.
 configatron.url.protocol = "https"
 
-# Optionally, the port your site runs on (optional).
+# The port your site runs on (optional).
 #configatron.url.port = 80
 
 ##################################
