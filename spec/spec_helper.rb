@@ -72,4 +72,10 @@ RSpec.configure do |config|
   config.after(:each) do
     puts "WARNING: I18n locale was left as #{I18n.locale}" unless I18n.locale = :en
   end
+
+  # Important that url options are consistent for specs regardless of what's in local config.
+  configatron.url.host = "www.example.com"
+  configatron.url.protocol = "http"
+  configatron.url.port = nil
+  ActionMailer::Base.default_url_options = configatron.url.to_h.slice(:host, :port, :protocol)
 end

@@ -4,7 +4,7 @@
       <mediaFile>
         <filename>itemsets.csv</filename><%# This is the filename ODK will create on the device. %>
         <hash><%= @ifa.md5 %></hash>
-        <downloadUrl><%= "#{request.scheme}://#{request.host_with_port}/#{@ifa.path}" %></downloadUrl>
+        <downloadUrl><%= url_for_path(@ifa.path) %></downloadUrl>
       </mediaFile>
     <% end %>
   </manifest>
