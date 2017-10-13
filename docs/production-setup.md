@@ -138,6 +138,15 @@ See the [ELMO Documentation](http://getelmo.org/documentation/start/) for help o
 When new versions of ELMO are released, you will want to upgrade. To do so, ssh to your server and change to the `elmo` directory, then:
 
     git pull
+
+Now be sure to check the [commit history of the local config file](https://github.com/thecartercenter/elmo/commits/develop/config/initializers/local_config.rb.example) and/or run:
+
+    diff config/initializers/local_config.rb config/initializers/local_config.rb.example
+
+to see if anything needs to be updated in your local configuration.
+
+Then:
+
     bundle install --without development test --deployment
     bundle exec whenever -i elmo
     bundle exec rake db:migrate

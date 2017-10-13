@@ -25,7 +25,6 @@ class ApplicationController < ActionController::Base
   before_filter :check_route
   before_filter :remove_missionchange_flag
   before_filter :set_locale
-  before_filter :mailer_set_url_options
   before_filter :get_mission
   before_filter :get_user
   before_action :prepare_exception_notifier
