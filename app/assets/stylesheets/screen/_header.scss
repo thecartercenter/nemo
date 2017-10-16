@@ -73,11 +73,15 @@ header {
         }
 
         i {
-          vertical-align: middle;
+          vertical-align: top;
           margin-right: 5px;
           display: inline-block;
           color: $nav-icon-color;
           font-size: 13pt;
+
+          @include if-rtl {
+            vertical-align: middle;
+          }
         }
 
         &.active {
