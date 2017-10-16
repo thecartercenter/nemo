@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
 
   include Concerns::ApplicationController::Authentication
   include Concerns::ApplicationController::Authorization
+  include Concerns::ApplicationController::Caching
   include Concerns::ApplicationController::Crud
   include Concerns::ApplicationController::ErrorHandling
   include Concerns::ApplicationController::LoginLogistics
@@ -22,6 +23,7 @@ class ApplicationController < ActionController::Base
   rescue_from ActiveRecord::RecordNotFound, with: :handle_not_found
   rescue_from ActionController::InvalidAuthenticityToken, with: :handle_invalid_authenticity_token
 
+  before_filter :disable_client_caching
   before_filter :check_route
   before_filter :remove_missionchange_flag
   before_filter :set_locale
