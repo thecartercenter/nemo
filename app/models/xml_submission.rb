@@ -117,17 +117,18 @@ class XMLSubmission
     when "select_multiple"
       str.split(" ").each { |oid| answer.choices.build(option_id: option_id_for_submission(oid)) }
     when "date", "datetime", "time"
-      # Strip timezone info for datetime and time.
-      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, "") if answer.qtype.name == "time"
-
-      p str
-
-      val = Time.zone.parse(str)
-
-      # Not sure why this is here. Investigate later.
-      # val = val.to_s(:"db_#{qtype.name}") unless qtype.has_timezone?
-
-      answer.send("#{question_type.name}_value=", val)
+      # Time answers arrive with timezone info (e.g. 18:30:00.000-04), but we treat a time question
+      # as having no timezone, useful for things like 'what time of day does the doctor usually arrive'
+      # as opposed to 'what exact date/time did the doctor last arrive'.
+      # If the latter information is desired, a datetime question should be used.
+      # Also, since Rails treats time data as always on 2000-01-01, using the timezone
+      # information could lead to DST issues. So we discard the timezone information for time questions only.
+      # We also make sure elsewhere in the app to not tz-shift time answers when we display them.
+      # (Rails by default keeps time columns as UTC and does not shift them to the system's timezone.)
+      if answer.qtype.name == "time"
+        str = str.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC"
+      end
+      answer.send("#{question_type.name}_value=", Time.zone.parse(str))
     when "image", "annotated_image", "sketch", "signature"
       answer.media_object = Media::Image.create(item: @files[str].open) if @files[str]
     when "audio"

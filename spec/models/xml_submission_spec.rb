@@ -107,6 +107,7 @@ describe XMLSubmission, :odk do
     end
   end
 
+  # We submit temporal data from a phone in +03 to a server in -06.
   context "with date/time types" do
     let(:form) { create(:form, question_types: %w(datetime date time)) }
     let(:data) do
@@ -121,10 +122,10 @@ describe XMLSubmission, :odk do
       in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
     end
 
-    it "retains timezone information" do
-      expect(nodes[0].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:40:00 +03")
-      expect(nodes[1].set.answers[0].date_value).to eq Date.parse("2017-07-01")
-      expect(nodes[2].set.answers[0].time_value).to eq Time.zone.parse("2000-01-01 14:30:00 -06").utc
+    it "retains timezone information for datetime but not time" do
+      expect(nodes[0].set.answers[0].datetime_value.to_s).to eq "2017-07-12 07:40:00 -0600"
+      expect(nodes[1].set.answers[0].date_value.to_s).to eq "2017-07-01"
+      expect(nodes[2].set.answers[0].time_value.to_s).to eq "2000-01-01 14:30:00 UTC"
       expect(nodes[0].set.answers[0].value).to be_nil
       expect(nodes[1].set.answers[0].value).to be_nil
       expect(nodes[2].set.answers[0].value).to be_nil
