@@ -1093,7 +1093,8 @@ en:
 
   attrib_fields:
     form: "Form"
-    submitter: "Submitter"
+    submitter: "Submitter Name"
+    submitter_username: "Submitter Username"
     source: "Source"
     time_submitted: "Time Submitted"
     date_submitted: "Date Submitted"

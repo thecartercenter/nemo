@@ -64,6 +64,13 @@ class Report::AttribField < Report::Field
       name: :submitter,
       name_expr_params: {sql_tplt: "__TBL_PFX__users.name", name: "name", clause: :select},
       value_expr_params: {sql_tplt: "__TBL_PFX__users.name", name: "value", clause: :select},
+        joins: [:users],
+        data_type: :text,
+        groupable: true},
+    submitter_username: {
+      name: :submitter_username,
+      name_expr_params: { sql_tplt: "__TBL_PFX__users.login", name: "name", clause: :select },
+      value_expr_params: {sql_tplt: "__TBL_PFX__users.login", name: "value", clause: :select},
       joins: [:users],
       data_type: :text,
       groupable: true},
