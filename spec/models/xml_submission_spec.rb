@@ -27,7 +27,8 @@ describe XMLSubmission do
 
     before do
       @form = create(:form,
-        question_types: %w(select_one multilevel_select_one select_multiple integer multilevel_select_one)
+        question_types: %w(select_one multilevel_select_one select_multiple integer multilevel_select_one
+          datetime date time)
       )
       @form.publish!
       @response = create(:response, form: @form)
@@ -37,6 +38,10 @@ describe XMLSubmission do
     end
 
     describe "populate_from_hash" do
+      around do |example|
+        in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
+      end
+
       it "populates a response with a hash" do
         questions = @form.questions
 
@@ -54,6 +59,11 @@ describe XMLSubmission do
           "q#{questions[3].id}" => "123",
           "q#{questions[4].id}_1" => "on#{animal.id}",
           "q#{questions[4].id}_2" => "none",
+
+          # We submit temporal data from a phone in +03 to a server in -06.
+          "q#{questions[5].id}" => "2017-07-12T16:40:00.000+03",
+          "q#{questions[6].id}" => "2017-07-01",
+          "q#{questions[7].id}" => "14:30:00.000+03",
         })
         resp = @submission.response
 
@@ -77,6 +87,16 @@ describe XMLSubmission do
         expect(nodes[4].set.answers[0].rank).to eq 1
         expect(nodes[4].set.answers[1].option).to be_nil
         expect(nodes[4].set.answers[1].rank).to eq 2
+
+        # Should retain timezone information for datetime but not time
+        expect(nodes[5].set.answers[0].datetime_value.to_s).to eq "2017-07-12 07:40:00 -0600"
+        expect(nodes[5].set.answers[0].value).to be_nil
+
+        expect(nodes[6].set.answers[0].date_value.to_s).to eq "2017-07-01"
+        expect(nodes[6].set.answers[0].value).to be_nil
+
+        expect(nodes[7].set.answers[0].time_value.to_s).to eq "2000-01-01 14:30:00 UTC"
+        expect(nodes[7].set.answers[0].value).to be_nil
       end
     end
   end

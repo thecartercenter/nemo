@@ -13,4 +13,11 @@ module GeneralSpecHelpers
   def expectation_file(filename)
     File.read(Rails.root.join("spec", "expectations", filename))
   end
+
+  def in_timezone(tz)
+    old_tz = Time.zone
+    Time.zone = tz
+    yield
+    Time.zone = old_tz
+  end
 end
