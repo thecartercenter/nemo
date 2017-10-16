@@ -21,6 +21,8 @@ class Condition < ApplicationRecord
   delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, to: :questioning
 
+  scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
+
   OPERATORS = [
     {name: 'eq', types: %w(decimal integer counter text long_text address select_one datetime date time),
       code: "="},
@@ -36,6 +38,13 @@ class Condition < ApplicationRecord
 
   replicable backward_assocs: [:questioning, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
     dont_copy: [:ref_qing_id, :questioning_id, :option_node_id]
+
+  # Deletes any that have become invalid due to changes in the given question
+  def self.check_integrity_after_question_change(question)
+    if question.option_set_id_changed? || question.destroyed?
+      referring_to_question(question).destroy_all
+    end
+  end
 
   # We accept a list of OptionNode IDs as a way to set the option_node association.
   # This is useful for forms, etc. We just pluck the last non-blank ID off the end.

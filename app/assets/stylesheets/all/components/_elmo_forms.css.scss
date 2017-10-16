@@ -115,6 +115,12 @@ div.form_field {
       input[type=text], input.text, input[type=password], select, textarea {
         width: 420px;
       }
+
+      div.note {
+        color: $gray-text;
+        font-size: 12px;
+        margin-top: 5px;
+      }
     }
 
   }
