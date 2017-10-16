@@ -118,7 +118,9 @@ class XMLSubmission
       str.split(" ").each { |oid| answer.choices.build(option_id: option_id_for_submission(oid)) }
     when "date", "datetime", "time"
       # Strip timezone info for datetime and time.
-      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, "") unless answer.qtype.name == "date"
+      str.gsub!(/(Z|[+\-]\d+(:\d+)?)$/, "") if answer.qtype.name == "time"
+
+      p str
 
       val = Time.zone.parse(str)
 

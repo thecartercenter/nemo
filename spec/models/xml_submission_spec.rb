@@ -121,8 +121,8 @@ describe XMLSubmission, :odk do
       in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
     end
 
-    it "discards timezone information in favor of current zone" do
-      expect(nodes[0].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:40:00 -06")
+    it "retains timezone information" do
+      expect(nodes[0].set.answers[0].datetime_value).to eq Time.zone.parse("2017-07-12 16:40:00 +03")
       expect(nodes[1].set.answers[0].date_value).to eq Date.parse("2017-07-01")
       expect(nodes[2].set.answers[0].time_value).to eq Time.zone.parse("2000-01-01 14:30:00 -06").utc
       expect(nodes[0].set.answers[0].value).to be_nil
