@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171001200543) do
+ActiveRecord::Schema.define(version: 20171017181413) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 20171001200543) do
     t.integer "option_node_id"
     t.integer "questioning_id"
     t.integer "ref_qing_id"
+    t.string "role", null: false
     t.datetime "updated_at"
     t.string "uuid", null: false
     t.string "value", limit: 255
