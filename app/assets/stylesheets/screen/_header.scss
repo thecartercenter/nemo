@@ -60,25 +60,28 @@ header {
           @include if-rtl {
             display: flex;
             flex-direction: row-reverse;
+
+            .caret {
+              margin-top: 8px;
+            }
           }
 
           &:hover, &:focus {
             text-decoration: none;
             color: $link-text-color !important;
           }
-
-          .caret {
-              margin-top: 8px;
-           }
-
         }
 
         i {
-          vertical-align: middle;
+          vertical-align: top;
           margin-right: 5px;
           display: inline-block;
           color: $nav-icon-color;
           font-size: 13pt;
+
+          @include if-rtl {
+            vertical-align: middle;
+          }
         }
 
         &.active {
