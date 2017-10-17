@@ -67,10 +67,10 @@ describe Report::ListReport, :reports do
       ])
 
       expect(report).to have_data_grid(
-        %w( Submitter  Inty  State   Source ),
-        %w( Foo        10    ga      odk    ),
-        %w( Foo        3     ga      web    ),
-        %w( Foo        5     al      web    ))
+        ["Submitter Name"] + %w( Inty  State   Source ),
+        %w( Foo                  10    ga      odk    ),
+        %w( Foo                  3     ga      web    ),
+        %w( Foo                  5     al      web    ))
     end
 
     it "list with select one" do
@@ -96,10 +96,10 @@ describe Report::ListReport, :reports do
       ])
 
       expect(report).to have_data_grid(
-        %w( Submitter  Inty  State   Source  Reviewed Reviewer  Happy ),
-        %w( Foo        10    ga      odk     No       _         Yes   ),
-        %w( Foo        3     ga      web     Yes      Reviewer  No    ),
-        %w( Foo        5     al      web     Yes      Michelle  No    ))
+        ["Submitter Name"] + %w( Inty  State   Source  Reviewed Reviewer  Happy ),
+        %w( Foo                  10    ga      odk     No       _         Yes   ),
+        %w( Foo                  3     ga      web     Yes      Reviewer  No    ),
+        %w( Foo                  5     al      web     Yes      Michelle  No    ))
     end
 
     it "response and list reports using same attrib" do
@@ -114,9 +114,9 @@ describe Report::ListReport, :reports do
       ])
 
       expect(report).to have_data_grid(
-        %w( Submitter ),
-        %w( Foo       ),
-        %w( Foo       ))
+        ["Submitter Name"] + %w(),
+        %w( Foo                 ),
+        %w( Foo                 ))
 
       report = create_report("ResponseTally", calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"}
