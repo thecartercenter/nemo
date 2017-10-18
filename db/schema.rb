@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171017181413) do
+ActiveRecord::Schema.define(version: 20171018153233) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,6 +163,7 @@ ActiveRecord::Schema.define(version: 20171017181413) do
     t.datetime "created_at"
     t.string "default"
     t.datetime "deleted_at"
+    t.string "display_if", default: "always", null: false
     t.integer "form_id", null: false
     t.jsonb "group_hint_translations", default: {}
     t.jsonb "group_name_translations", default: {}
