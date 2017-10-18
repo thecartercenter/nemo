@@ -42,12 +42,6 @@ class Questioning < FormItem
     form.qing_answer_count(self) > 0
   end
 
-  # destroys condition and ensures that the condition param is nulled out
-  def destroy_condition
-    condition.destroy
-    self.condition = nil
-  end
-
   def condition_changed?
     condition.try(:changed?)
   end

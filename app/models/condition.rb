@@ -22,6 +22,7 @@ class Condition < ApplicationRecord
   delegate :form, :form_id, to: :questioning
 
   scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
+  scope :with_display_role, -> { where(role: "display") }
 
   OPERATORS = [
     {name: 'eq', types: %w(decimal integer counter text long_text address select_one datetime date time),

@@ -10,12 +10,21 @@ class FormItem < ApplicationRecord
 
   belongs_to :form
   has_many :answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
+  has_many :standard_form_reports, class_name: "Report::StandardFormReport",
+    foreign_key: :disagg_qing_id, dependent: :nullify
+
+  # These associations have qing in their foreign keys but we have them here in FormItem instead
+  # because we will eventually support conditions on groups.
+  has_many :display_conditions, -> { with_display_role }, class_name: "Condition",
+    foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
+  has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
+    dependent: :destroy, inverse_of: :ref_qing
+
+  # TODO: Remove. This is temporary, just so that accepts_nested_attributes_for works for now.
+  # The methods provided by this association are overridden below to use display_conditions
+  # so that we don't get weird bugs caused by multiple copies of the same thing in memory.
   has_one :condition, foreign_key: :questioning_id, autosave: true,
     dependent: :destroy, inverse_of: :questioning
-  has_many :referring_conditions, class_name: 'Condition', foreign_key: :ref_qing_id,
-    dependent: :destroy, inverse_of: :ref_qing
-  has_many :standard_form_reports, class_name: 'Report::StandardFormReport',
-    foreign_key: :disagg_qing_id, dependent: :nullify
 
   before_create :set_mission
 
@@ -24,6 +33,8 @@ class FormItem < ApplicationRecord
   validate :parent_must_be_group
 
   delegate :name, to: :form, prefix: true
+
+  accepts_nested_attributes_for :display_conditions, allow_destroy: true
 
   def self.rank_gaps?
     SqlRunner.instance.run("
@@ -129,6 +140,35 @@ class FormItem < ApplicationRecord
 
   def self_and_ancestor_ids
     ancestor_ids << id
+  end
+
+  # We are temporarily preserving some old condition methods but these are deprecated in favor of
+  # display_conditions.
+  def condition(force_reload = false)
+    display_conditions(force_reload)[0]
+  end
+
+  def condition=(c)
+    self.display_conditions = c.nil? ? [] : [c]
+  end
+
+  def build_condition(attribs = {})
+    display_conditions.destroy_all
+    display_conditions.build(attribs)
+  end
+
+  def create_condition(attribs = {})
+    display_conditions.destroy_all
+    display_conditions.create(attribs)
+  end
+
+  def create_condition!(attribs = {})
+    display_conditions.destroy_all
+    display_conditions.create!(attribs)
+  end
+
+  def destroy_condition
+    display_conditions.destroy_all
   end
 
   private
