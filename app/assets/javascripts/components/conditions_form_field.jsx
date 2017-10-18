@@ -1,6 +1,7 @@
 class ConditionsFormField extends React.Component {
 
   constructor() {
+    console.log("constrcutore")
     super();
 
     this.name_prefix = "questioning[condition_attributes]"
@@ -12,31 +13,34 @@ class ConditionsFormField extends React.Component {
   getFieldData() {
     console.log("get field data!")
     //fake data first
-    let reference_qing_options = [["1", "One"], ["2", "Two"], ["3", "Three"]]
-    let reference_qing_data = {for: "questioning_condition_attributes_ref_qing_id", label: "question", name: "questioning[condition_attributes][ref_qing_id]", id: "questioning_condition_attributes_ref_qing_id", type: "select", options: reference_qing_options}
+    let reference_qing_data = { type: "select", options: [{id: 1, name: "One"}, {id: 2, name: "Two"}, {id: 3, name: "Three"}]}
+    //let reference_qing_data = {for: "questioning_condition_attributes_ref_qing_id", label: "question", name: "questioning[condition_attributes][ref_qing_id]", id: "questioning_condition_attributes_ref_qing_id", type: "select", options: reference_qing_options}
 
-    let operator_options = [["A", "Ey"], ["B", "Bee"], ["C", "See"]]
-    let operator_data = {for: "questioning_condition_attributes_op", label: "operator", name: "questioning[condition_attributes][op]", id: "questioning_condition_attributes_op", type: "select", options: operator_options }
+    let operator_data = { type: "select", options: [{id: "A", name: "Amandla"}, {id: "B", name: "Beyonce"}]}
+    //let operator_data = {for: "questioning_condition_attributes_op", label: "operator", name: "questioning[condition_attributes][op]", id: "questioning_condition_attributes_op", type: "select", options: operator_options }
 
-    let value_data = {for: "questioning_condition_attributes_value" , label: "Value", name: "questioning[condition_attributes][value]" , id: "questioning_condition_attributes_value" , type: "text"}
+    let value_data = {type: "select", options: [{id: "D", name: "Destiny's Child"}, {id: "S", name: "Sasha Fierce"}, {id: "L", name: "Lemonade"}]}
+    //let value_data = {for: "questioning_condition_attributes_value" , label: "Value", name: "questioning[condition_attributes][value]" , id: "questioning_condition_attributes_value" , type: "text"}
 
-    return {reference_qing_field: reference_qing_data, operator_field: operator_data, value_field: value_data}
+    return {reference_qing: reference_qing_data, operator: operator_data, value: value_data}
   }
 
-  componentDidMount() {
+  componentWillMount() {
+    console.log("component will mount")
     this.state = this.getFieldData()
   }
 
   render() {
-
-    let rq = this.state ? this.state.reference_qing_field : this.props.reference_qing_field
-    let ref_qing_form_field = <FormField for={rq.for} label={rq.label} type={rq.type} options={rq.options} id={rq.id} key={rq.id} changeFunc={() => alert("HI") }/>
-    let o = this.state ? this.state.operator_field : this.props.operator_field
-    let operator_form_field = <FormField for={o.for} label={o.label} type={o.type} options={o.options} id={o.id} key={o.id} changeFunc={() => alert("HI") }/>
-    let v = this.props.value_field
-    let value_form_field =  <FormField for={v.for} label={v.label} type={v.type} id={v.id} key={v.id}/>
+    console.log("render")
+    let rq = this.state ? this.state.reference_qing : this.props.reference_qing
+    console.log(this.state)
+    console.log("rq:" + rq.type)
+    let ref_qing_form_field = <FormField name="questioning[condition_attributes][ref_qing_id]" for="questioning_condition_attributes_ref_qing_id" label="Question TO TRANSLATE" type={rq.type} options={rq.options} id="questioning_condition_attributes_ref_qing_id" key="questioning_condition_attributes_ref_qing_id" changeFunc={() => this.getFieldData() }/>
+    let o = this.state ? this.state.operator : this.props.operator
+    let operator_form_field = <FormField name="questioning[condition_attributes][op]" for="questioning_condition_attributes_op" label="Operator TO TRANSLATE" type={o.type} options={o.options} id="questioning_condition_attributes_op" key="questioning_condition_attributes_op" changeFunc={() => this.getFieldData() }/>
+    let v = this.state ? this.state.value : this.props.value
+    let value_form_field =  <FormField name="questioning[condition_attributes][value]" for="questioning_condition_attributes_value" label="Value TO TRANSLATE" type={v.type} id="questioning_condition_attributes_value" key="questioning_condition_attributes_value" options={v.options}/>
     let fields = [ref_qing_form_field, operator_form_field, value_form_field]
     return <div>{fields}</div>
-
   }
 }
