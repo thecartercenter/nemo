@@ -1,7 +1,6 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  before_validation :destroy_condition_if_ref_qing_blank
   before_validation :normalize
 
   delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node, :first_leaf_option,
@@ -22,6 +21,8 @@ class Questioning < FormItem
     dont_copy: [:hidden, :form_id, :question_id]
 
   accepts_nested_attributes_for :question
+
+  # TODO remove
   accepts_nested_attributes_for :condition
 
   # remove heirarchy of objects
@@ -117,11 +118,6 @@ class Questioning < FormItem
       destroy_condition if condition
     end
     self.required = false if hidden? || read_only?
-    true
-  end
-
-  def destroy_condition_if_ref_qing_blank
-    destroy_condition if condition && condition.ref_qing.blank?
     true
   end
 end

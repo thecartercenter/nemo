@@ -108,7 +108,7 @@ describe FormItem do
     let(:ref_qing) { create(:questioning) }
     subject { submitted.keys.map { |k| [k, form_item.send(k)] }.to_h }
 
-    describe "display_if" do
+    describe "display_conditions and display_if" do
       context "with no conditions" do
         let(:cond_attrs) { [] }
 
@@ -128,7 +128,29 @@ describe FormItem do
         end
       end
 
-      context "with condition" do
+      context "with blank condition" do
+        let(:cond_attrs) { [{ref_qing_id: "", op: "", value: "  "}] }
+
+        context do
+          let(:submitted) { {display_if: "all_met"} }
+          it { is_expected.to eq(display_if: "always") }
+
+          it "should discard condition" do
+            expect(form_item.display_conditions).to be_empty
+          end
+        end
+      end
+
+      context "with partial condition" do
+        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "", value: "  "}] }
+        let(:submitted) { {display_if: "all_met"} }
+
+        it "should fail validation" do
+          expect { form_item }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
+
+      context "with full condition" do
         let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "eq", value: "foo"}] }
 
         context do

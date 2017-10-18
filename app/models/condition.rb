@@ -120,6 +120,10 @@ class Condition < ApplicationRecord
     ref_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1]
   end
 
+  def all_fields_blank?
+    ref_qing.blank? && op.blank? && option_node_id.blank? && value.blank?
+  end
+
   private
 
   def clear_blanks
@@ -142,14 +146,13 @@ class Condition < ApplicationRecord
   end
 
   def all_fields_required
-    errors.add(:base, :all_required) if any_fields_empty?
+    errors.add(:base, :all_required) if any_fields_blank?
   end
 
-  def any_fields_empty?
+  def any_fields_blank?
     ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
   end
 
-  # copy mission from questioning
   def set_mission
     self.mission = questioning.try(:mission)
   end

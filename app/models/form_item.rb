@@ -177,6 +177,10 @@ class FormItem < ApplicationRecord
   private
 
   def normalize
+    display_conditions.each do |cond|
+      display_conditions.destroy(cond) if cond.all_fields_blank?
+    end
+
     if display_conditions.none?
       self.display_if = "always"
     elsif display_if == "always"
