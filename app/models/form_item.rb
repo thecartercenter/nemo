@@ -1,6 +1,8 @@
 class FormItem < ApplicationRecord
   include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
 
+  DISPLAY_IF_OPTIONS = %i(always all_met any_met)
+
   acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
 
@@ -26,6 +28,7 @@ class FormItem < ApplicationRecord
   has_one :condition, foreign_key: :questioning_id, autosave: true,
     dependent: :destroy, inverse_of: :questioning
 
+  before_validation :normalize
   before_create :set_mission
 
   has_ancestry cache_depth: true
@@ -172,6 +175,14 @@ class FormItem < ApplicationRecord
   end
 
   private
+
+  def normalize
+    if display_conditions.none?
+      self.display_if = "always"
+    elsif display_if == "always"
+      self.display_if = "all_met"
+    end
+  end
 
   # copy mission from question
   def set_mission
