@@ -145,6 +145,10 @@ class FormItem < ApplicationRecord
     ancestor_ids << id
   end
 
+  def display_conditionally?
+    display_if != "always" && display_conditions.any?
+  end
+
   # We are temporarily preserving some old condition methods but these are deprecated in favor of
   # display_conditions.
   def condition(force_reload = false)

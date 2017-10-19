@@ -45,5 +45,23 @@ module Odk
         [xpath_self_to_ancestor, xpath_ancestor_to_dest].join("/")
       end
     end
+
+    # Boolean XPath expression determining whether to show this item.
+    def relevance
+      if display_conditionally?
+        if display_conditions.size == 1
+          display_conditions.first.to_odk
+        else
+          operator = display_if == "all_met" ? " and " : " or "
+          display_conditions.map { |c| "(#{c.to_odk})" }.join(operator)
+        end
+      else
+        nil
+      end
+    end
+
+    def display_conditions
+      @display_conditions ||= decorate_collection(object.display_conditions)
+    end
   end
 end
