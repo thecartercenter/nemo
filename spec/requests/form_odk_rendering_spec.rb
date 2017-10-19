@@ -26,6 +26,12 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       # Required flag should be ignored for hidden questions.
       # This is so they can be used for prefilled data.
       form.sorted_children[8].update_attributes!(hidden: true, required: true)
+
+      # Include multiple conditions on one question.
+      form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
+      form.c[6].display_conditions.create!(ref_qing: form.c[5], op: "eq",
+        option_node: form.c[5].option_set.c[0])
+      form.c[6].update!(display_if: "all_met")
     end
 
     it "should render proper xml" do
