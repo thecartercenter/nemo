@@ -2,53 +2,98 @@ require "spec_helper"
 
 feature "conditions in responses", js: true do
   let(:user) { create(:user) }
-  let!(:form) { create(:form) }
+  let(:form) { create(:form) }
+  let(:qings) { {} }
+  let(:form_qings) { form.questionings }
+  let(:year) { Time.now.year - 2 }
   let(:group) { create(:qing_group, form: form) }
   let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
-  let!(:qings) do
-    {
-      long_text: create_questioning("long_text", form),
-      text1: create_questioning("text", form),
-      integer: create_questioning("integer", form),
-      counter: create_questioning("counter", form),
-      text2: create_questioning("text", form),
-      decimal: create_questioning("decimal", form),
-      select_one: create_questioning("select_one", form),
-      mlev_sel_one: create_questioning("multilevel_select_one", form),
-      geo_sel_one: create_questioning("geo_multilevel_select_one", form),
-      select_multiple: create_questioning("select_multiple", form),
-      datetime: create_questioning("datetime", form),
-      date: create_questioning("date", form),
-      time: create_questioning("time", form),
-      text3: create_questioning("text", form),
-      grp1: create_questioning("text", form, group),
-      rpt1: create_questioning("text", form, rpt_group),
-      rpt2: create_questioning("text", form, rpt_group),
-      rpt3: create_questioning("text", form, rpt_group)
-    }
-  end
-  let(:oset1) { qings[:select_one].option_set }
-  let(:oset2) { qings[:mlev_sel_one].option_set }
-  let(:oset3) { qings[:geo_sel_one].option_set }
-  let(:oset4) { qings[:select_multiple].option_set }
-  let(:year) { Time.now.year - 2 }
 
   before do
-    create_cond(q: :text1, ref_q: :long_text, op: "eq", value: "foo")
-    create_cond(q: :integer, ref_q: :text1, op: "neq", value: "bar")
-    create_cond(q: :counter, ref_q: :integer, op: "gt", value: "10")
-    create_cond(q: :decimal, ref_q: :counter, op: "gt", value: "5")
-    create_cond(q: :select_one, ref_q: :decimal, op: "eq", value: "21.72")
-    create_cond(q: :mlev_sel_one, ref_q: :select_one, op: "eq", node: oset1.node("Dog"))
-    create_cond(q: :geo_sel_one, ref_q: :mlev_sel_one, op: "eq", node: oset2.node("Plant", "Tulip"))
-    create_cond(q: :select_multiple, ref_q: :geo_sel_one, op: "eq", node: oset3.node("Canada"))
-    create_cond(q: :datetime, ref_q: :select_multiple, op: "inc", node: oset4.node("Cat"))
-    create_cond(q: :date, ref_q: :datetime, op: "lt", value: "#{year}-01-01 5:00:21")
-    create_cond(q: :time, ref_q: :date, op: "eq", value: "#{year}-03-22")
-    create_cond(q: :text3, ref_q: :time, op: "geq", value: "3:00pm")
-    create_cond(q: :rpt1, ref_q: :text3, op: "eq", value: "baz") # References top level Q
-    create_cond(q: :rpt2, ref_q: :rpt1, op: "eq", value: "qux") # References same group Q
-    create_cond(q: :rpt3, ref_q: :grp1, op: "eq", value: "nix") # References Q from sibling group
+    qings[:long_text] = create_questioning("long_text", form)
+
+    qings[:text1] = create_questioning("text", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:long_text].id, op: "eq", value: "foo"}
+    ])
+
+    qings[:integer] = create_questioning("integer", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:text1].id, op: "neq", value: "bar"}
+    ])
+
+    qings[:counter] = create_questioning("counter", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:integer].id, op: "gt", value: "10"}
+    ])
+
+    qings[:text2] = create_questioning("text", form)
+
+    qings[:decimal] = create_questioning("decimal", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:counter].id, op: "gt", value: "5"}
+    ])
+
+    qings[:select_one] = create_questioning("select_one", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:decimal].id, op: "eq", value: "21.72"}
+    ])
+
+    oset = qings[:select_one].option_set
+    qings[:mlev_sel_one] = create_questioning("multilevel_select_one", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:select_one].id, op: "eq", option_node_id: oset.node("Dog").id}
+    ])
+
+    oset = qings[:mlev_sel_one].option_set
+    qings[:geo_sel_one] = create_questioning("geo_multilevel_select_one", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:mlev_sel_one].id, op: "eq", option_node_id: oset.node("Plant", "Tulip").id}
+    ])
+
+    oset = qings[:geo_sel_one].option_set
+    qings[:select_multiple] = create_questioning("select_multiple", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:geo_sel_one].id, op: "eq", option_node_id: oset.node("Canada").id}
+    ])
+
+    oset = qings[:select_multiple].option_set
+    qings[:datetime] = create_questioning("datetime", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:select_multiple].id, op: "inc", option_node_id: oset.node("Cat").id}
+    ])
+
+    qings[:date] = create_questioning("date", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:datetime].id, op: "lt", value: "#{year}-01-01 5:00:21"}
+    ])
+
+    qings[:time] = create_questioning("time", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:date].id, op: "eq", value: "#{year}-03-22"}
+    ])
+
+    qings[:text3] = create_questioning("text", form, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:time].id, op: "geq", value: "3:00pm"}
+    ])
+
+    qings[:grp1] = create_questioning("text", form, parent: group)
+
+    qings[:rpt1] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:text3].id, op: "eq", value: "baz"} # References top level Q
+    ])
+
+    qings[:rpt2] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:rpt1].id, op: "eq", value: "qux"} # References same group Q
+    ])
+
+    qings[:rpt3] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
+      display_conditions_attributes: [
+        {ref_qing_id: qings[:grp1].id, op: "eq", value: "nix"} # References Q from sibling group
+    ])
   end
 
   scenario "should work" do
@@ -96,15 +141,6 @@ feature "conditions in responses", js: true do
 
     # Changing value in grp1 should make *both* rpt3s disappear.
     fill_and_expect_visible(:grp1, "pix", visible -= [[:rpt3, inst: 1], [:rpt3, inst: 2]])
-  end
-
-  def create_cond(q:, ref_q:, op:, node: nil, value: nil)
-    qings[q].display_conditions.create!(
-      ref_qing: qings[ref_q],
-      op: op,
-      value: value,
-      option_node: node
-    )
   end
 
   def fill_and_expect_visible(field, value, visible)

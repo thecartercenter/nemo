@@ -1,5 +1,8 @@
-def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = nil)
-  parent ||= form.root_group # root if not specified
+# TODO: Should be a way to refactor this to be part of the questioning factory.
+def create_questioning(qtype_name_or_question, form, attribs = {})
+  attribs[:parent] ||= form.root_group
+  evaluator = attribs.delete(:evaluator)
+
   question = if qtype_name_or_question.is_a?(Question)
     qtype_name_or_question
   else
@@ -46,12 +49,10 @@ def create_questioning(qtype_name_or_question, form, parent = nil, evaluator = n
     question
   end
 
-  questioning = create(:questioning,
-    mission: form.mission,
-    parent: parent,
-    form: form,
-    question: question)
-
+  attribs[:mission] = form.mission
+  attribs[:form] = form
+  attribs[:question] = question
+  questioning = create(:questioning, attribs)
   form.questionings << questioning
   questioning
 end
@@ -76,7 +77,7 @@ def build_item(item, form, parent, evaluator)
     )
     item.each { |q| build_item(q, form, group, evaluator) }
   else #must be a questioning
-    create_questioning(item, form, parent, evaluator)
+    create_questioning(item, form, parent: parent, evaluator: evaluator)
   end
 end
 
