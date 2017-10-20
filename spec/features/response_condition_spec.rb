@@ -75,7 +75,8 @@ feature "conditions in responses", js: true do
     # fill in answers
     visible_qings = [:long_text, :text2]
 
-    fill_answer_and_expect_visible(questioning: questionings[:long_text], value: "fo", visible: visible_qings)
+    fill_answer_and_expect_visible(
+      questioning: questionings[:long_text], value: "fo", visible: visible_qings)
 
     fill_answer_and_expect_visible(
       questioning: questionings[:long_text], value: "foo", visible: visible_qings << :text1)
