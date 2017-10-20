@@ -103,8 +103,12 @@ feature "conditions in responses", js: true do
 
     visible = [:long_text, :text2]
     fill_and_expect_visible(:long_text, "fo", visible)
-    fill_and_expect_visible(:long_text, "foo", visible << :text1)
-    fill_and_expect_visible(:text1, "bar", visible)
+
+    # integer also becomes available here because it depends on text1 not being bar,
+    # which it isn't at first, because "" != "bar"
+    fill_and_expect_visible(:long_text, "foo", visible << :text1 << :integer)
+
+    fill_and_expect_visible(:text1, "bar", visible - [:integer])
     fill_and_expect_visible(:text1, "barz", visible << :integer)
     fill_and_expect_visible(:integer, "10", visible)
     fill_and_expect_visible(:integer, "11", visible << :counter)
