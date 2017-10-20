@@ -141,11 +141,12 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     end
 
     before do
-      form.questionings.last.create_condition!(
+      form.questionings.last.display_conditions.create!(
         ref_qing: form.questionings.first,
         op: "eq",
         value: "foo"
       )
+      form.questionings.last.update!(display_if: "all_met")
     end
 
     it "should not render on single page due to condition" do
