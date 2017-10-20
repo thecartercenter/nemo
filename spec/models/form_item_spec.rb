@@ -102,4 +102,72 @@ describe FormItem do
       end
     end
   end
+
+  describe "normalization" do
+    let(:form_item) { create(:qing_group, submitted.merge(display_conditions_attributes: cond_attrs)) }
+    let(:ref_qing) { create(:questioning) }
+    subject { submitted.keys.map { |k| [k, form_item.send(k)] }.to_h }
+
+    describe "display_conditions and display_if" do
+      context "with no conditions" do
+        let(:cond_attrs) { [] }
+
+        context do
+          let(:submitted) { {display_if: "all_met"} }
+          it { is_expected.to eq(display_if: "always") }
+        end
+
+        context do
+          let(:submitted) { {display_if: "any_met"} }
+          it { is_expected.to eq(display_if: "always") }
+        end
+
+        context do
+          let(:submitted) { {display_if: "always"} }
+          it { is_expected.to eq(display_if: "always") }
+        end
+      end
+
+      context "with blank condition" do
+        let(:cond_attrs) { [{ref_qing_id: "", op: "", value: "  "}] }
+
+        context do
+          let(:submitted) { {display_if: "all_met"} }
+          it { is_expected.to eq(display_if: "always") }
+
+          it "should discard condition" do
+            expect(form_item.display_conditions).to be_empty
+          end
+        end
+      end
+
+      context "with partial condition" do
+        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "", value: "  "}] }
+        let(:submitted) { {display_if: "all_met"} }
+
+        it "should fail validation" do
+          expect { form_item }.to raise_error(ActiveRecord::RecordInvalid)
+        end
+      end
+
+      context "with full condition" do
+        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "eq", value: "foo"}] }
+
+        context do
+          let(:submitted) { {display_if: "all_met"} }
+          it { is_expected.to eq(display_if: "all_met") }
+        end
+
+        context do
+          let(:submitted) { {display_if: "any_met"} }
+          it { is_expected.to eq(display_if: "any_met") }
+        end
+
+        context do
+          let(:submitted) { {display_if: "always"} }
+          it { is_expected.to eq(display_if: "all_met") }
+        end
+      end
+    end
+  end
 end
