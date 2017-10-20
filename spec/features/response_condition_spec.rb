@@ -84,8 +84,12 @@ feature "conditions in responses", js: true do
 
     visible = [:long_text, :text2]
     fill_and_expect_visible(:long_text, "fo", visible)
-    fill_and_expect_visible(:long_text, "foo", visible << :text1)
-    fill_and_expect_visible(:text1, "bar", visible)
+
+    # integer also becomes available here because it depends on text1 not being bar,
+    # which it isn't at first, because "" != "bar"
+    fill_and_expect_visible(:long_text, "foo", visible << :text1 << :integer)
+
+    fill_and_expect_visible(:text1, "bar", visible - [:integer])
     fill_and_expect_visible(:text1, "barz", visible << :integer)
     fill_and_expect_visible(:integer, "10", visible)
     fill_and_expect_visible(:integer, "11", visible << :counter)
@@ -156,11 +160,12 @@ feature "conditions in responses", js: true do
   end
 
   def expect_visible(visible_qing_names)
-    visible_qings = visible_qing_names.map { |qing_name| qings[qing_name] }
-    visible_qing_ids = visible_qings.map(&:id)
-    form_qings.each do |qing, i|
-      currently_visible = visible_qing_ids.include?(qing.id)
-      expect(page).to have_css("div.answer_field[data-qing-id=\"#{qing.id}\"]", visible: currently_visible)
+    visible_qing_ids = visible_qing_names.map { |qing_name| qings[qing_name].id }
+    qings.each do |key, qing|
+      visible = visible_qing_ids.include?(qing.id)
+      expect(page).send(visible ? :to : :not_to,
+        have_css("div.answer_field[data-qing-id=\"#{qing.id}\"]", visible: true),
+        "Expected #{key} #{visible ? '' : 'not '}to be visible at this point")
     end
   end
 end
