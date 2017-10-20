@@ -13,7 +13,7 @@ module Odk
         type: binding_type_attrib(subq),
         required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
         readonly: has_default? && read_only? ? "true()" : nil,
-        relevant: has_condition? ? decorate(condition).to_odk : nil,
+        relevant: relevance,
         constraint: subq.odk_constraint,
         "jr:constraintMsg": subq.min_max_error_msg,
         calculate: calculate,

@@ -32,6 +32,7 @@ class Questioning < FormItem
     answers.destroy_all
   end
 
+  # TODO remove
   def has_condition?
     !condition.nil?
   end
