@@ -4,7 +4,8 @@
 class AnswerSet
   attr_accessor :questioning, :answers
 
-  delegate :qtype, :required?, :question, :condition, :full_dotted_rank, to: :questioning
+  delegate :qtype, :required?, :question, :condition,
+    :full_dotted_rank, :display_conditionally?, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
   delegate :option_set, to: :question
   delegate :levels, to: :option_set
