@@ -131,6 +131,32 @@ describe Form do
       end
     end
 
+    context "with a question with multiple conditions" do
+      let!(:std) { create(:form, is_standard: true) }
+      let!(:std_qings) do
+        {}.tap do |qings|
+          qings[:q1] = create_questioning("integer", std)
+          qings[:q2] = create_questioning("decimal", std)
+          qings[:q3] = create_questioning("text", std, display_if: "all_met",
+            display_conditions_attributes: [
+              {ref_qing_id: qings[:q1].id, op: "gt", value: "10"},
+              {ref_qing_id: qings[:q2].id, op: "lt", value: "20"}
+          ])
+        end
+      end
+      let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+      let(:copy_qings) { {q1: copy.c[0], q2: copy.c[1], q3: copy.c[2]} }
+      let(:std_q3) { std_qings[:q3] }
+      let(:copy_q3) { copy_qings[:q3] }
+
+      it "should copy all conditions" do
+        expect(copy_q3.display_conditions.size).to eq 2
+        expect(copy_q3.display_conditions.map(&:id) & std_q3.display_conditions.map(&:id)).to be_empty
+        expect(copy_q3.display_conditions.detect { |c| c.op == "gt" }.ref_qing).to eq copy_qings[:q1]
+        expect(copy_q3.display_conditions.detect { |c| c.op == "lt" }.ref_qing).to eq copy_qings[:q2]
+      end
+    end
+
     context "with a condition referencing a now-incompatible question" do
       let!(:std) { create(:form, is_standard: true) }
 
