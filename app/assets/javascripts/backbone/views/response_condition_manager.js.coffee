@@ -2,7 +2,8 @@
 class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
-    @conditions = options.conditions
+    @item = options.item
+    @conditions = @item.display_conditions
     @inst = options.inst
     @row = @formRow(@conditions[0].questioning_id, @inst)
     @readOnly = @row.is('.read_only')
@@ -18,8 +19,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
   # Gathers results from all checkers and shows/hides the field based on them.
   refresh: ->
-    # TODO convert this to use all checkers
-    newResult = @checkers[0].result
+    newResult = @evaluate()
 
     if newResult != @result
       @result = newResult
@@ -28,6 +28,13 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
       # Simulate a change event on the control so that later conditions will be re-evaluated.
       @row.find('div.control').find('input, select, textarea').first().trigger('change')
+
+  evaluate: ->
+    # By now we know that display_if must be all_met or any_met.
+    if @item.display_if == 'all_met'
+      @results().indexOf(false) == -1
+    else # any_met
+      @results().indexOf(true) != -1
 
   # When the form is submitted, clears the answer if the eval_result is false.
   clearOnSubmitIfFalse: ->
@@ -58,3 +65,6 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
     # Now we use the parent selectors to scope the actual form_field lookup.
     @$("#{parentSelectors.join(' ')} div.form_field[data-qing-id=#{qingId}]")
+
+  results: ->
+    @checkers.map (c) -> c.result
