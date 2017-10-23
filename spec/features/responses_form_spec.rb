@@ -230,9 +230,9 @@ feature "responses form", js: true do
     let!(:questionings) do
       {
         select_one: create_questioning("select_one", form),
-        group_integer: create_questioning("integer", form, qing_group),
-        group_text: create_questioning("text", form, qing_group),
-        group_multilevel: create_questioning("multilevel_select_one", form, qing_group),
+        group_integer: create_questioning("integer", form, parent: qing_group),
+        group_text: create_questioning("text", form, parent: qing_group),
+        group_multilevel: create_questioning("multilevel_select_one", form, parent: qing_group),
         text: create_questioning("text", form)
       }
     end
