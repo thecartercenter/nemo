@@ -14,7 +14,7 @@ class Response < ApplicationRecord
   belongs_to(:user, inverse_of: :responses)
   belongs_to(:reviewer, class_name: "User")
 
-  has_many(:answers, autosave: true, dependent: :destroy, inverse_of: :response)
+  has_many(:answers, -> { order("rank") }, autosave: true, dependent: :destroy, inverse_of: :response)
   has_many(:location_answers,
     -> { where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question) },
     class_name: "Answer"
@@ -169,11 +169,11 @@ class Response < ApplicationRecord
       # turn into an sql fragment
       fragment = if answer_ids.present?
         # Get all response IDs and join into string
-        Answer.select("response_id").distinct.where("id IN (?)", answer_ids).map(&:response_id).join(",")
+        Answer.select("response_id").distinct.where(id: answer_ids).map{|r| "'#{r.response_id}'"}.join(",")
       end
 
-      # fall back to '0' if we get an empty fragment
-      fragment.presence || "0"
+      # fall back to 00000000-0000-0000-0000-000000000000' if we get an empty fragment
+      fragment.presence || "'00000000-0000-0000-0000-000000000000'"
     end
 
     # apply the conditions
@@ -215,12 +215,6 @@ class Response < ApplicationRecord
   # We need a name field so that this class matches the Nameable duck type.
   def name
     "##{id}"
-  end
-
-  # When we migrate to UUIDs as primary keys, this will become a column and should be removed.
-  def old_id
-    raise "old_id method no longer necessary" if self.class.column_names.include?("old_id")
-    id
   end
 
   # whether the answers should validate themselves

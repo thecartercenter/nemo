@@ -201,20 +201,21 @@ class Replication::ObjProxy
   def get_copy_id(target_class, orig_id)
     # Try to find the appropriate copy in the replicator history
     if history_copy = replicator.history.get_copy(target_class, orig_id)
-      history_copy.id
+      "'#{history_copy.id}'"
 
     # Reuse original if it's reusable.
     elsif self.class.new(klass: target_class, id: orig_id, replicator: replicator).reusable?
-      orig_id
+      "'#{orig_id}'"
 
     # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
     elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
       orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
-      target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
+      col_id = target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
+      "'#{col_id}'"
 
     # Else try looking up original_id if available
     elsif target_class.standardizable? && copy_id = target_class.where(original_id: orig_id).first.try(:id)
-      copy_id
+      "'#{copy_id}'"
     end
   end
 

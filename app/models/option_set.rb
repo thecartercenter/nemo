@@ -14,7 +14,7 @@ class OptionSet < ApplicationRecord
 
   has_many :questions, inverse_of: :option_set
   has_many :questionings, through: :questions
-  has_many :option_nodes, dependent: :destroy
+  has_many :option_nodes, -> { order(:rank) }, dependent: :destroy
   has_many :report_option_set_choices, class_name: "Report::OptionSetChoice"
 
   belongs_to :root_node, -> { where(option_id: nil) }, class_name: OptionNode, dependent: :destroy
