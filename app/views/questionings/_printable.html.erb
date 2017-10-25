@@ -1,7 +1,8 @@
 <tr class="question <%= "depth-#{qing.depth}" %><%= qing.condition ? ' conditional' : '' %>">
   <td class="name">
     <% if qing.condition %>
-      <div class="condition"><%= t("question.answer_only_caps") %> <%= qing.condition.to_s %></div>
+      <div class="condition"><%= t("question.answer_only_caps") %>
+        <%= qing.condition.decorate.human_readable %></div>
     <% end %>
     <div class="name">
       <%= qing.full_dotted_rank %>. <%= reqd_sym if qing.required? %>
