@@ -183,10 +183,7 @@ describe OptionNode do
   describe "updating from hash with full set of changes" do
     before do
       @node = create(:option_node_with_grandchildren)
-      puts @node.to_s_indented(space: 2)
-      puts "  " + ("-" * 100)
       @node.update_attributes!(standard_changeset(@node))
-      puts @node.to_s_indented(space: 2)
     end
 
     it "should be correct" do
