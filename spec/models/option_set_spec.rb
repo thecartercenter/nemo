@@ -93,7 +93,7 @@ describe OptionSet do
 
   describe "fetch_by_shortcode" do
     let!(:option_set) { create(:option_set, super_multilevel: true) }
-    let!(:option_node) { option_set.descendants.last }
+    let!(:option_node) { option_set.preordered_option_nodes.last }
 
     it "should fetch the correct node from shortcode" do
       fetched_node = option_set.fetch_by_shortcode("e")

@@ -226,7 +226,7 @@ class Answer < ApplicationRecord
   def media_object_id=(id)
     if id.nil?
       self.media_object = nil
-    elsif media_object_id != id.to_i
+    elsif media_object_id != id
       self.media_object = Media::Object.find_by(id: id, answer_id: nil)
     end
   end
