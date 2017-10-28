@@ -54,17 +54,23 @@ class XMLSubmission
       @response.odk_hash = nil
     end
 
+    # Response mission should already be set
+    raise "Submissions must have a mission" if @response.mission.nil?
+
+
     # Loop over each child tag and create hash of odk_code => value
     hash = {}
     data.elements.each do |child|
-      group = child if child.elements.present?
-      if group
-        group.elements.each do |c|
-          hash[c.name] ||= []
-          hash[c.name] << c.try(:content)
+      # If child is a group
+      if child.elements.present?
+        hash[child.name] ||= [] # Each element in the array is an instance.
+        instance = {}
+        child.elements.each do |c|
+          instance[c.name] = c.content
         end
+        hash[child.name] << instance
       else
-        hash[child.name] = child.try(:content)
+        hash[child.name] = child.content
       end
     end
 
@@ -85,23 +91,27 @@ class XMLSubmission
     # Response mission should already be set
     raise "Submissions must have a mission" if @response.mission.nil?
 
-    Odk::DecoratorFactory.decorate_collection(@response.form.questionings).each do |qing|
-      qing.subqings.each do |subq|
-        value = hash[subq.odk_code]
-        if value.is_a? Array
-          value.each_with_index do |val, i|
-            answer = fetch_or_build_answer(questioning: qing.object, rank: subq.rank, inst_num: i + 1)
-            answer = populate_from_string(answer, val)
-            @response.answers << answer if answer
+    Odk::DecoratorFactory.decorate_collection(@response.form.children).each do |item|
+      if item.group?
+        hash[item.odk_code].each_with_index do |instance, inst_num|
+          item.children.each do |qing|
+            add_answers_for_qing(Odk::DecoratorFactory.decorate(qing), instance, inst_num)
           end
-        else
-          answer = fetch_or_build_answer(questioning: qing.object, rank: subq.rank)
-          answer = populate_from_string(answer, value)
-          @response.answers << answer if answer
         end
+      else
+        add_answers_for_qing(item, hash, 1)
       end
     end
     @response.incomplete ||= (hash[OdkHelper::IR_QUESTION] == "yes")
+  end
+
+  def add_answers_for_qing(qing, hash, inst_num)
+    qing.subqings.each do |subq|
+      value = hash[subq.odk_code]
+      answer = fetch_or_build_answer(questioning: qing.object, rank: subq.rank, inst_num: inst_num)
+      answer = populate_from_string(answer, value)
+      @response.answers << answer if answer
+    end
   end
 
   # Populates answer from odk-like string value.

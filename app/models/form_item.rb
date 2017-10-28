@@ -131,6 +131,11 @@ class FormItem < ApplicationRecord
     ancestor_ids << id
   end
 
+  def group?
+    false
+  end
+
+
   private
 
   # copy mission from question
