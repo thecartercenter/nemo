@@ -47,6 +47,8 @@ describe XMLSubmission, :odk do
 
       expect(nodes[1].instances[2].nodes[0].set.answers[0].value).to eq "56"
       expect(nodes[1].instances[2].nodes[1].set.answers[0].value).to eq "78"
+
+      expect(response.odk_xml).to match /<data/
     end
   end
 
