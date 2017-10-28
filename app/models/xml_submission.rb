@@ -7,7 +7,8 @@ class XMLSubmission
     @awaiting_media = @response.awaiting_media
     case source
     when "odk"
-      @data = files.delete(:xml_submission_file).read
+      # We allow passing data via string in case we need to reprocess xml.
+      @data = data || files.delete(:xml_submission_file).read
       @files = files
       populate_from_odk(@data)
     when "j2me"
@@ -94,9 +95,9 @@ class XMLSubmission
 
     Odk::DecoratorFactory.decorate_collection(@response.form.children).each do |item|
       if item.group?
-        hash[item.odk_code].each_with_index do |instance, inst_num|
+        (hash[item.odk_code] || []).each_with_index do |instance, inst_num|
           item.children.each do |qing|
-            add_answers_for_qing(Odk::DecoratorFactory.decorate(qing), instance, inst_num)
+            add_answers_for_qing(Odk::DecoratorFactory.decorate(qing), instance, inst_num + 1)
           end
         end
       else
