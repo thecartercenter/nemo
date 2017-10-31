@@ -8,7 +8,7 @@ class QuestioningsController < ApplicationController
   after_action :check_rank_fail
 
   # authorization via cancan
-  load_and_authorize_resource
+  load_and_authorize_resource except: :condition_form
 
   def edit
     prepare_and_render_form
@@ -64,17 +64,41 @@ class QuestioningsController < ApplicationController
   end
 
   # Re-renders the fields in the condition form when requested by ajax.
+
+  # {
+  #   reference_qing:
+  #     {
+  #       type: "select",
+  #       options: [{id: 1, name: "One"}, {id: 2, name: "Two"}, {id: 3, name: "Three"}]
+  #     },
+  #   operator: {type: "select", options: []},
+  #   value: {type: "text", options: nil}
+  # }
   def condition_form
+
     if params[:questioning_id].present?
       @questioning = Questioning.find(params[:questioning_id])
     else
       # Create a dummy questioning so that the condition can look up the refable qings, etc.
       @questioning = init_qing(form_id: params[:form_id])
     end
+    puts "current user role: #{current_user.role(current_mission)}"
+    authorize! :condition_form, @questioning
+
 
     # Create a dummy condition with the given ref qing.
     @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
-    render(partial: 'conditions/form_fields')
+    #render(partial: 'conditions/form_fields')
+    data =  {
+      reference_qing:
+        {
+          type: "select",
+          options: [{id: 1, name: "One"}, {id: 2, name: "Two"}, {id: 3, name: "Three"}]
+        },
+      operator: {type: "select", options: []},
+      value: {type: "text", options: nil}
+    }
+    render json: data, status: 200
   end
 
   private

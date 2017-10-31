@@ -52,4 +52,60 @@ describe "questionings", type: :request do
       end
     end
   end
+
+  describe "condition_form_data" do
+
+    #set up form like above w/ four questionings, have the qing be the third one.
+    let(:form) { create(:form, :published, question_types: %w(text text integer text)) }
+    let(:qing) { form.questionings[2] }
+
+    context "without ref_qing_id" do
+      it "returns json with ref qing id options, no operator options, and no value options" do
+
+        puts "role: #{user.role(form.mission)}"
+
+
+        get "/en/m/#{get_mission.compact_name}/questionings/condition-form", {ref_qing_id: nil, form_id: form.id, questioning_id: qing.id}
+        puts response.body
+        expect(response).to have_http_status(200)
+
+        expected = {
+          reference_qing:
+            {
+              type: "select",
+              options: [{id: 1, name: "One"}, {id: 2, name: "Two"}, {id: 3, name: "Three"}]
+            },
+          operator: {type: "select", options: []},
+          value: {type: "text", options: nil}
+        }.to_json
+        expect(response.body).to eq expected
+      end
+    end
+
+    context "with ref_qing_id" do # ref_qing_id: 21. return all refqings, and operators, and options type.
+      context "with value options" do
+        #set up url
+
+        #make request
+
+        #expect json response
+
+        #expect json response contents to be
+        #QUESTION: should reference_qing have a selected value? no; front end keeps track.
+        # {
+        #   reference_qing:
+        #     {
+        #       type: "select",
+        #       options: [{id: 1, name: "One"}, {id: 2, name: "Two"}, {id: 3, name: "Three"}]
+        #     },
+        #   operator: {type: "select", options: []},
+        #   value: {type: "text", options: nil}
+        # }
+      end
+
+      context "without value options" do
+
+      end
+    end
+  end
 end
