@@ -18,7 +18,7 @@ class Report::ListReport < Report::Report
     joins = []
     self.questions = []
 
-    rel = rel.select("responses.id AS response_id").order("response_id")
+    rel = rel.select("responses.id AS response_id").order("responses.created_at")
 
     # add each calculation
     calculations.each_with_index do |c, idx|

@@ -14,7 +14,7 @@ class Response < ApplicationRecord
   belongs_to(:user, inverse_of: :responses)
   belongs_to(:reviewer, class_name: "User")
 
-  has_many(:answers, -> { order("rank") }, autosave: true, dependent: :destroy, inverse_of: :response)
+  has_many(:answers, -> { order(:inst_num, :rank) }, autosave: true, dependent: :destroy, inverse_of: :response)
   has_many(:location_answers,
     -> { where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question) },
     class_name: "Answer"
