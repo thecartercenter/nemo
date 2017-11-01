@@ -84,16 +84,15 @@ class QuestioningsController < ApplicationController
     end
     puts "current user role: #{current_user.role(current_mission)}"
     authorize! :condition_form, @questioning
-
-
     # Create a dummy condition with the given ref qing.
     @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
-    #render(partial: 'conditions/form_fields')
+    #render(partial: 'conditions/form_fields'
+    refable_qing_options = @condition.refable_qings.map{|q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id}}
     data =  {
       reference_qing:
         {
           type: "select",
-          options: [{id: 1, name: "One"}, {id: 2, name: "Two"}, {id: 3, name: "Three"}]
+          options: refable_qing_options
         },
       operator: {type: "select", options: []},
       value: {type: "text", options: nil}

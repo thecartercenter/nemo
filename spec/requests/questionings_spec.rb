@@ -69,11 +69,12 @@ describe "questionings", type: :request do
         puts response.body
         expect(response).to have_http_status(200)
 
+        expected_ref_qing_options = form.questionings.select{ |q| q.id < qing.id }.map{ |q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id} }
         expected = {
           reference_qing:
             {
               type: "select",
-              options: [{id: 1, name: "One"}, {id: 2, name: "Two"}, {id: 3, name: "Three"}]
+              options: expected_ref_qing_options
             },
           operator: {type: "select", options: []},
           value: {type: "text", options: nil}
