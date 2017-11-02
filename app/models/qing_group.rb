@@ -11,6 +11,10 @@ class QingGroup < FormItem
     children.where(type: "QingGroup")
   end
 
+  def group?
+    true
+  end
+
   def option_set_id
     nil
   end

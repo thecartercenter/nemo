@@ -178,6 +178,10 @@ class FormItem < ApplicationRecord
     display_conditions.destroy_all
   end
 
+  def group?
+    false
+  end
+
   private
 
   def normalize

@@ -14,7 +14,7 @@ describe XMLSubmission, :odk do
     submission.save
   end
 
-  context "with a repeat group and two instances" do
+  context "with a repeat group and instances" do
     let(:form) { create(:form, question_types: ["integer", ["integer", "integer"]]) }
     let(:data) do
       {
@@ -24,22 +24,31 @@ describe XMLSubmission, :odk do
             form.c[1].c[0] => "456",
             form.c[1].c[1] => "789"
           },{
-            form.c[1].c[0] => "12",
             form.c[1].c[1] => "34"
+          },{
+            form.c[1].c[0] => "56",
+            form.c[1].c[1] => "78"
           }
         ]
       }
     end
 
     it "processes repeats correctly" do
+      expect(nodes.size).to eq 2
       expect(nodes[0].set.answers[0].value).to eq "123"
       expect(nodes[0].set.answers[0].rank).to eq 1
 
+      expect(nodes[1].instances.size).to eq 3
       expect(nodes[1].instances[0].nodes[0].set.answers[0].value).to eq "456"
       expect(nodes[1].instances[0].nodes[1].set.answers[0].value).to eq "789"
 
-      expect(nodes[1].instances[1].nodes[0].set.answers[0].value).to eq "12"
+      expect(nodes[1].instances[1].nodes[0].set.answers[0].value).to be_nil
       expect(nodes[1].instances[1].nodes[1].set.answers[0].value).to eq "34"
+
+      expect(nodes[1].instances[2].nodes[0].set.answers[0].value).to eq "56"
+      expect(nodes[1].instances[2].nodes[1].set.answers[0].value).to eq "78"
+
+      expect(response.odk_xml).to match /<data/
     end
   end
 
