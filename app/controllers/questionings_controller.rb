@@ -87,17 +87,20 @@ class QuestioningsController < ApplicationController
     # Create a dummy condition with the given ref qing.
     @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
     #render(partial: 'conditions/form_fields'
-    refable_qing_options = @condition.refable_qings.map{|q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id}}
-    data =  {
-      reference_qing:
-        {
-          type: "select",
-          options: refable_qing_options
-        },
-      operator: {type: "select", options: []},
-      value: {type: "text", options: nil}
-    }
-    render json: data, status: 200
+    #refable_qing_options = @condition.refable_qings.map{|q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id}}
+
+    #operator_options = translate_options(@condition.applicable_operator_names, [:condition, :operators])
+
+    # data =  {ca
+    #   reference_qing:
+    #     {
+    #       type: "select",
+    #       options: refable_qing_options
+    #     },
+    #   operator: {type: "select", options: operator_options},
+    #   value: {type: "text", options: nil}
+    # }
+    render json: ConditionViewSerializer.new(@condition), status: 200
   end
 
   private
