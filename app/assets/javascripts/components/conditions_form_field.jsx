@@ -18,20 +18,39 @@ class ConditionsFormField extends React.Component {
   }
 
   getFieldData(ref_qing_id) {
-    console.log("get field data! ref_qing_id:")
-    console.log(ref_qing_id)
-    //fake data first
-    let reference_qing_options = [{id: 123, code: "One", rank: 1}, {id: 456, code: "Two", rank: 2}, {id: 789, code: "Three", rank: 3}]
-    //let reference_qing_data = {for: "questioning_condition_attributes_ref_qing_id", label: "question", name: "questioning[condition_attributes][ref_qing_id]", id: "questioning_condition_attributes_ref_qing_id", type: "select", options: reference_qing_options}
-
-    let operator_options = (ref_qing_id == 456) ? [{id: "A", name: "Amandla"}, {id: "B", name: "Beyonce"}] : []
-    //let operator_data = {for: "questioning_condition_attributes_op", label: "operator", name: "questioning[condition_attributes][op]", id: "questioning_condition_attributes_op", type: "select", options: operator_options }
-
-    let value_options = (ref_qing_id == 456) ? [{id: "D", name: "Destiny's Child"}, {id: "S", name: "Sasha Fierce"}, {id: "L", name: "Lemonade"}] : []
-    //let value_data = {for: "questioning_condition_attributes_value" , label: "Value", name: "questioning[condition_attributes][value]" , id: "questioning_condition_attributes_value" , type: "text"}
-
-    return {reference_qing_options : reference_qing_options, operator_options: operator_options, value_options: value_options}
+    var self = this;
+    $.ajax({
+      method: 'GET',
+      //url: `/en/m/questionings/fakemission2169/condition-form`,
+      url: "/json",
+      success: function(response) {
+        console.log(response)
+        console.log("success!")
+        self.setState({response})
+      },
+      error: function(res) {
+        console.log(res)
+        console.log("error!")
+      }
+    });
   }
+
+
+    ///////////////////
+    // console.log("get field data! ref_qing_id:")
+    // console.log(ref_qing_id)
+    // //fake data first
+    // let reference_qing_options = [{id: 123, code: "One", rank: 1}, {id: 456, code: "Two", rank: 2}, {id: 789, code: "Three", rank: 3}]
+    // //let reference_qing_data = {for: "questioning_condition_attributes_ref_qing_id", label: "question", name: "questioning[condition_attributes][ref_qing_id]", id: "questioning_condition_attributes_ref_qing_id", type: "select", options: reference_qing_options}
+    //
+    // let operator_options = (ref_qing_id == 456) ? [{id: "A", name: "Amandla"}, {id: "B", name: "Beyonce"}] : []
+    // //let operator_data = {for: "questioning_condition_attributes_op", label: "operator", name: "questioning[condition_attributes][op]", id: "questioning_condition_attributes_op", type: "select", options: operator_options }
+    //
+    // let value_options = (ref_qing_id == 456) ? [{id: "D", name: "Destiny's Child"}, {id: "S", name: "Sasha Fierce"}, {id: "L", name: "Lemonade"}] : []
+    // //let value_data = {for: "questioning_condition_attributes_value" , label: "Value", name: "questioning[condition_attributes][value]" , id: "questioning_condition_attributes_value" , type: "text"}
+    //
+    // return {reference_qing_options : reference_qing_options, operator_options: operator_options, value_options: value_options}
+
 
   formatRefQingOptions(reference_qing_options) {
     return reference_qing_options.map(function(o){

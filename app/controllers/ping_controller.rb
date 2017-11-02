@@ -9,6 +9,11 @@ class PingController < ApplicationController
     render layout: nil, formats: :text, status: @ok ? 200 : 503
   end
 
+
+  def json
+    render json: {test: "hi"}, status: 200
+  end
+
   private
 
   def pid_from_file_is_running(path)
@@ -22,4 +27,5 @@ class PingController < ApplicationController
   rescue Errno::ENOENT
     1_000_000
   end
+
 end
