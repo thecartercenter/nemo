@@ -16,7 +16,14 @@ configatron.offline_mode = false
 # And copy and paste into this file in place of `secret-token`.
 ELMO::Application.config.secret_key_base = "secret-token"
 
+# The hostname of your site
+configatron.url.host = "elmo.example.com"
 
+# Whether to use HTTPS in URLs. This should be "https" if your site uses SSL, and "http" if not.
+configatron.url.protocol = "https"
+
+# The port your site runs on (optional).
+#configatron.url.port = 80
 
 ##################################
 # Email Settings
@@ -29,9 +36,6 @@ configatron.webmaster_emails = ["someone@somplace.com"]
 # that this be a real address controlled by the mailserver itself. e.g. if you're using Google Apps
 # for email, use an email address hosted in your Google Apps account.
 configatron.site_email = "\"#{configatron.site_name}\" <someone@someplace.com>"
-
-# Whether to use HTTPS in the mailer URLs. This should be "https" if your site uses SSL, and "http" if not.
-configatron.mailer_url_protocol = "https"
 
 # Mailer settings
 ActionMailer::Base.smtp_settings = {

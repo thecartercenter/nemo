@@ -15,9 +15,6 @@ class ResponsesController < ApplicationController
   def index
     @responses = Response.accessible_by(current_ability)
 
-    # Disable cache, including back button
-    response.headers["Cache-Control"] = "no-cache, max-age=0, must-revalidate, no-store"
-
     # handle different formats
     respond_to do |format|
       # html is the normal index page

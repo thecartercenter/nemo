@@ -48,9 +48,11 @@ module ODKSubmissionSupport
             Array.wrap(data[item] || {}).each do |instance|
               xml << "<grp#{item.id}>"
               subitems.each do |subitem, _|
-                xml << "<#{subitem.question.odk_code}>"
-                xml << (instance[subitem] || rand(100).to_s)
-                xml << "</#{subitem.question.odk_code}>"
+                if instance[subitem]
+                  xml << "<#{subitem.question.odk_code}>"
+                  xml << instance[subitem]
+                  xml << "</#{subitem.question.odk_code}>"
+                end
               end
               xml << "</grp#{item.id}>"
             end

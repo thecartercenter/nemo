@@ -8,14 +8,15 @@ h1, h2, h3 { color: $body-text-color; font-family: 'Open Sans', Helvetica, sans-
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 
 h1.title {
+  float: $left;
   color: #777;
   font-weight: bold;
   margin-bottom: 28px;
-  margin-right: 10px;
+  margin-#{$right}: 10px;
 
   i {
     color: $light-gray;
-    margin-right: 5px;
+    margin-#{$right}: 5px;
   }
 }
 
@@ -25,14 +26,17 @@ div#title_container {
 
   span.label {
     display: inline-block;
-    float: left;
+    float: $left;
     font-size: 10px;
     margin: .25em .5em;
     padding: .5em .8em
   }
 
-  h1.title { float: left; }
+  h1.title {
+    margin-#{$left}: 0px;
+  }
 }
+
 
 /* std seal in title */
 h1.title img { width: 16px; height: 16px; }
@@ -140,17 +144,28 @@ table.index_table {
   }
 }
 
-table.index_table th, table.form th { text-align: left; color: #444; background-color: $super-light-gray;
+table.index_table th, table.form th { text-align: $left; color: #444; background-color: $super-light-gray;
     font-size: 90%; padding: 3px 10px 3px 3px; }
-div.loading_indicator_inline { width: 16px; display: inline-block; vertical-align: top; }
-div.loading_indicator_floating { width: 16px; float: left; }
+
 
 div.loading_indicator {
   .success {
     color: $theme-green;
   }
+
   .failure {
     color: $theme-red;
+  }
+
+  div.loading_indicator_inline {
+    width: 16px;
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  div.loading_indicator_floating {
+    width: 16px;
+    float: $left;
   }
 }
 

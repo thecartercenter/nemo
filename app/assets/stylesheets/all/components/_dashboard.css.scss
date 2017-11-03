@@ -2,11 +2,15 @@ body.welcome {
 
   /* reduce margin on title and content */
   div#title {
-    margin-left: 10px;
+    margin-#{$left}: 10px;
+  }
+
+  .title {
+    float: none;
   }
 
   div#content {
-    margin-left: 0;
+    margin-#{$left}: 0;
     padding-bottom: 40px;
 
     .response_locations_offline {

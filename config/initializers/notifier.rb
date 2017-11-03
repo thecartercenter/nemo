@@ -1,5 +1,6 @@
+# This file MUST come lexically after local_config.rb.
 Rails.configuration.middleware.use ExceptionNotification::Rack, email: {
-  email_prefix: "[ELMO ERROR] ",
+  email_prefix: "[#{configatron.url.host} ERROR] ",
   sender_address: configatron.site_email,
   exception_recipients: configatron.webmaster_emails,
 

@@ -29,7 +29,7 @@ feature 'report generation', js: true do
     #   find(".buttons button.next").click
     #   find(".buttons button.next").click
     #   click_link('Add Column')
-    #   all('select.field')[0].select('Submitter')
+    #   all('select.field')[0].select('Submitter Name')
     #   click_link('Add Column')
     #   all('select.field')[1].select(@qs[0].code)
     #   run_report_and_wait

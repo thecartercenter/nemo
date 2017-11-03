@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171001200543) do
+ActiveRecord::Schema.define(version: 20171028144126) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -114,6 +114,7 @@ ActiveRecord::Schema.define(version: 20171001200543) do
     t.integer "option_node_id"
     t.integer "questioning_id"
     t.integer "ref_qing_id"
+    t.string "role", null: false
     t.datetime "updated_at"
     t.string "uuid", null: false
     t.string "value", limit: 255
@@ -162,6 +163,7 @@ ActiveRecord::Schema.define(version: 20171001200543) do
     t.datetime "created_at"
     t.string "default"
     t.datetime "deleted_at"
+    t.string "display_if", default: "always", null: false
     t.integer "form_id", null: false
     t.jsonb "group_hint_translations", default: {}
     t.jsonb "group_name_translations", default: {}
@@ -458,6 +460,7 @@ ActiveRecord::Schema.define(version: 20171001200543) do
     t.boolean "incomplete", default: false, null: false
     t.integer "mission_id"
     t.string "odk_hash", limit: 255
+    t.text "odk_xml"
     t.boolean "reviewed", default: false
     t.integer "reviewer_id"
     t.text "reviewer_notes"

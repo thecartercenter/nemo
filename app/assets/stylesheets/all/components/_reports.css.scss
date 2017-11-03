@@ -2,16 +2,16 @@
 .reports_index .name_col { min-width: 300px; }
 
 /* report info & body */
-div.report_info div { display: inline-block; border-left: 1px solid #ccc; padding: 0 10px; }
-div.report_info div:first-child { border: none; padding-left: 0; }
+div.report_info div { display: inline-block; border-#{$left}: 1px solid #ccc; padding: 0 10px; }
+div.report_info div:first-child { border: none; padding-#{$left}: 0; }
 div.report_body div#row_count { margin-bottom: 5px; }
 div.report_body table td, div.report_body table th { padding: 2px; border: 1px solid #ddd; }
 div.report_body table td.string { text-align: left; }
 div.report_body table td.number { text-align: right; }
 div.report_body table th { font-size: 90%; background-color: $super-light-gray; padding: 2px 5px 2px 2px; }
 div.report_body table td { background-color: $white; }
-div.report_body table th.col { text-align: left;  }
-div.report_body table th.row { text-align: left; white-space: nowrap; }
+div.report_body table th.col { text-align: $left;  }
+div.report_body table th.row { text-align: $left; white-space: nowrap; }
 div.report_body table td.row_total, div.report_body table td.col_total { background-color: $super-light-gray; }
 div.report_body th.row_grouping_label, div.report_body th.col_grouping_label { color: #888888; font-weight: normal; }
 div.report_body th.row_grouping_label > div { margin-left: 3px; overflow: hidden; }

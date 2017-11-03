@@ -1093,7 +1093,8 @@ en:
 
   attrib_fields:
     form: "Form"
-    submitter: "Submitter"
+    submitter: "Submitter Name"
+    submitter_username: "Submitter Username"
     source: "Source"
     time_submitted: "Time Submitted"
     date_submitted: "Date Submitted"
@@ -1395,6 +1396,7 @@ en:
       strictly_lt: "Strictly less than"
       strictly_gt: "Strictly greater than"
     other_forms_published: "At least one of those forms is also published, so not all fields can be edited."
+    opt_set_warning: "Changing the option set will cause one or more conditions to be deleted."
 
   qing_group:
     one_screen_disabled: "Not available because the group contains either a condition or another group"

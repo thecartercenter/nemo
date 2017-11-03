@@ -4,6 +4,12 @@ module ApplicationHelper
     :'condition.base' => true
   }
 
+  # Builds a URL with the exact given path based on the system's host, protocol, and port.
+  def url_for_path(path)
+    path = "/#{path}" if path[0] != "/"
+    URI::HTTP.build(configatron.url.to_h.merge(path: path))
+  end
+
   # hackish way of getting the route key identical to what would be returned by model_name.route_key on a model
   # Should consider merging with ApplicationController's model_class at some point.
   def route_key

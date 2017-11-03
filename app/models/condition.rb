@@ -21,6 +21,9 @@ class Condition < ApplicationRecord
   delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, to: :questioning
 
+  scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
+  scope :with_display_role, -> { where(role: "display") }
+
   OPERATORS = [
     {name: 'eq', types: %w(decimal integer counter text long_text address select_one datetime date time),
       code: "="},
@@ -36,6 +39,13 @@ class Condition < ApplicationRecord
 
   replicable backward_assocs: [:questioning, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
     dont_copy: [:ref_qing_id, :questioning_id, :option_node_id]
+
+  # Deletes any that have become invalid due to changes in the given question
+  def self.check_integrity_after_question_change(question)
+    if question.option_set_id_changed? || question.destroyed?
+      referring_to_question(question).destroy_all
+    end
+  end
 
   # We accept a list of OptionNode IDs as a way to set the option_node association.
   # This is useful for forms, etc. We just pluck the last non-blank ID off the end.
@@ -110,6 +120,10 @@ class Condition < ApplicationRecord
     ref_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1]
   end
 
+  def all_fields_blank?
+    ref_qing.blank? && op.blank? && option_node_id.blank? && value.blank?
+  end
+
   private
 
   def clear_blanks
@@ -132,14 +146,13 @@ class Condition < ApplicationRecord
   end
 
   def all_fields_required
-    errors.add(:base, :all_required) if any_fields_empty?
+    errors.add(:base, :all_required) if any_fields_blank?
   end
 
-  def any_fields_empty?
+  def any_fields_blank?
     ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
   end
 
-  # copy mission from questioning
   def set_mission
     self.mission = questioning.try(:mission)
   end

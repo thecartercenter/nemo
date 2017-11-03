@@ -17,11 +17,9 @@ module QuestionFormable
   end
 
   def setup_qing_form_support_objs
+    @question ||= @questioning.question
     setup_question_form_support_objs
     @condition = @questioning.condition || @questioning.build_condition
-
-    # if the question instance var has not yet been set, get it from the questioning
-    @question ||= @questioning.question
   end
 
   def setup_question_form_support_objs

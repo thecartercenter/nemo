@@ -106,7 +106,7 @@ form.questioning_form {
 /* Special style for option set box to accommodate link and loading indicator */
 div.form_field.question_option_set_id {
 
-  div.control div.widget select#question_option_set_id {
+  div.control div.widget select {
     width: 260px;
     display: inline-block;
   }

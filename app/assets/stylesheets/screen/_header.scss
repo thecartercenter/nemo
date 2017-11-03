@@ -18,11 +18,25 @@ header {
       font-weight: bold;
     }
 
+    @include if-rtl {
+      .navbar-header {
+        float: right;
+      }
+    }
+
     ul.navbar-nav {
+
+      float: $left;
+
+      @include if-rtl {
+        display: flex;
+        padding-right: 0px;
+        height: 49px; //absolute needed with flex
+      }
 
       li {
         padding: 15px 6px 15px 6px;
-        margin: 0px 6px 0px 0px;
+        margin: side-values(0px 6px 0px 0px);
 
         &:hover, &:hover, &:focus {
           color: $link-text-color;
@@ -43,19 +57,31 @@ header {
           padding: 0;
           color: $nav-text-color;
 
+          @include if-rtl {
+            display: flex;
+            flex-direction: row-reverse;
+
+            .caret {
+              margin-top: 8px;
+            }
+          }
+
           &:hover, &:focus {
             text-decoration: none;
             color: $link-text-color !important;
           }
-
         }
 
         i {
-          vertical-align: middle;
+          vertical-align: top;
           margin-right: 5px;
           display: inline-block;
           color: $nav-icon-color;
           font-size: 13pt;
+
+          @include if-rtl {
+            vertical-align: middle;
+          }
         }
 
         &.active {
@@ -99,7 +125,7 @@ header {
         }
       }
       li.dropdown {
-        padding-left: 28px;
+        padding-#{$left}: 28px;
       }
     }
   }
