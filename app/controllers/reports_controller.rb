@@ -110,6 +110,8 @@ class ReportsController < ApplicationController
   private
     # custom load method because CanCan won't work with STI hack in report.rb
     def custom_load
+      # current_user or current_mission may be nil since this method runs before authorization.
+      return unless current_user && current_mission
       @report = Report::Report.create(report_params.merge(
         :mission_id => current_mission.id,
         :creator_id => current_user.id
