@@ -1,6 +1,6 @@
 class ConditionsFormField extends React.Component {
 
-  constructor() {
+  constructor(props) {
     console.log("constrcutore")
     super();
 
@@ -9,6 +9,8 @@ class ConditionsFormField extends React.Component {
     this.getFieldData = this.getFieldData.bind(this)
     this.updateFieldData = this.updateFieldData.bind(this)
     this.formatRefQingOptions = this.formatRefQingOptions.bind(this)
+    this.state = props;
+    console.log(this.state)
 
   }
 
@@ -18,15 +20,22 @@ class ConditionsFormField extends React.Component {
   }
 
   getFieldData(ref_qing_id) {
+    console.log("get field data")
     var self = this;
+    var form_id = 3;
+    var questioning_id = 35;
+    var url = ELMO.app.url_builder.build('questionings', 'condition-form')
+    url += '?ref_qing_id=' + ref_qing_id
+    url += '&form_id=' + form_id
+    url += '&questioning_id=' + questioning_id
     $.ajax({
       method: 'GET',
-      //url: `/en/m/questionings/fakemission2169/condition-form`,
-      url: "/json",
+      url: url,
       success: function(response) {
         console.log(response)
         console.log("success!")
-        self.setState({response})
+        self.setState(response)
+        console.log(self.state)
       },
       error: function(res) {
         console.log(res)
@@ -53,23 +62,26 @@ class ConditionsFormField extends React.Component {
 
 
   formatRefQingOptions(reference_qing_options) {
+    console.log("formatRefQingOptions")
+    console.log(JSON.stringify(reference_qing_options))
     return reference_qing_options.map(function(o){
       return {id: o.id, name: `${o.rank}. ${o.code}`, key: o.id}
     })
   }
 
-  componentWillMount() {
-    console.log("component will mount")
-    this.state = this.getFieldData()
+  componentDidMount() {
+    console.log("component did mount")
+    this.getFieldData()
   }
 
   render() {
     console.log("render")
-    let rq_options = this.state ? this.state.reference_qing_options : this.props.reference_qing_options
+    console.log(JSON.stringify(this.state))
+    let rq_options =  this.state.refable_qing_options
     let ref_qing_form_field = <FormField name="questioning[condition_attributes][ref_qing_id]" for="questioning_condition_attributes_ref_qing_id" label="Question TO TRANSLATE" type="select" options={this.formatRefQingOptions(rq_options)} id="questioning_condition_attributes_ref_qing_id" key="questioning_condition_attributes_ref_qing_id" changeFunc={this.updateFieldData}/>
-    let operator_options = this.state ? this.state.operator_options : this.props.operator_options
+    let operator_options =  this.state.operator_options
     let operator_form_field = <FormField name="questioning[condition_attributes][op]" for="questioning_condition_attributes_op" label="Operator TO TRANSLATE" type="select" options={operator_options} id="questioning_condition_attributes_op" key="questioning_condition_attributes_op"/>
-    let value_options = this.state ? this.state.value_options : this.props.value_options
+    let value_options =  this.state.value_options
     let value_form_field =  <FormField name="questioning[condition_attributes][value]" for="questioning_condition_attributes_value" label="Value TO TRANSLATE" type="text" id="questioning_condition_attributes_value" key="questioning_condition_attributes_value" options={value_options}/>
     let fields = [ref_qing_form_field, operator_form_field, value_form_field]
     return <div>{fields}</div>

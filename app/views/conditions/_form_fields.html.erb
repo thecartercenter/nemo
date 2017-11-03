@@ -13,5 +13,6 @@
   <% #replace w/ serializer in controller %>
   <% value_data = {for: "questioning_condition_attributes_value" , label: t('condition.value'), name: "questioning[condition_attributes][value]" , id: "questioning_condition_attributes_value" , type: "text"} %>
 
-  <%= react_component("ConditionsFormField", {reference_qing_field: reference_qing_data, operator_field: operator_data, value_field: value_data}) %>
+
+  <%= react_component("ConditionsFormField", {refable_qing_options: [], operator_options: [], value_options: []}) %>
 <% end %>
