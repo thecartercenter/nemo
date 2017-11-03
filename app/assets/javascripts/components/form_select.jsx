@@ -6,7 +6,8 @@ class FormSelect extends React.Component {
       className : "form-control test-select",
       name : this.props.name,
       id: this.props.id,
-      key: this.props.id
+      key: this.props.id,
+      defaultValue: this.props.value
     }
     if (this.props.changeFunc) {
       props["onChange"] = (e) => this.props.changeFunc(e.target.value)
