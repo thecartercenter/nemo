@@ -2,13 +2,13 @@
 module Translatable
   extend ActiveSupport::Concern
 
-  included do
-
-  end
-
   module ClassMethods
-
     def translates(*args)
+      # Tidy options if given.
+      if args[-1].is_a?(Hash)
+        args[-1][:locales] = args[-1][:locales].try(:map, &:to_s)
+      end
+
       # shave off the optional options hash at the end
       class_variable_set('@@translate_options', args[-1].is_a?(Hash) ? args.delete_at(-1) : {})
 
@@ -118,36 +118,32 @@ module Translatable
 
     # otherwise just return what we have
     else
-      str = nil
-      unless translatable_get(field).nil?
-        # try the specified locale and fallbacks
-        to_try = [locale] + (options[:fallbacks] || [])
-        to_try.each do |l|
-          str = translatable_get(field)[l.to_s]
-          break if str.present?
-        end
+      translations = translatable_get(field)
+      return nil if translations.nil?
 
-        # if the translation is blank and strict mode is off
-        if str.blank? && !options[:strict]
-          # try the current locale
-          str = translatable_get(field)[I18n.locale.to_s]
+      options[:fallbacks] = (options[:fallbacks] || []).map(&:to_s)
 
-          if str.blank?
-            # try the default locale
-            str = translatable_get(field)[I18n.default_locale.to_s]
+      # Try the specified locale and fallbacks.
+      to_try = [locale.to_s] + options[:fallbacks]
 
-            # if str is still blank, search the translations for /any/ non-blank string
-            if str.blank?
-              if (non_blank_pair = translatable_get(field).find{|locale, value| !value.blank?})
-                str = non_blank_pair[1]
-              end
-            end
-          end
+      # Strict options mean we only use the specified locale and fallbacks.
+      # Else we can try other locales too.
+      unless options[:strict]
+        to_try += [I18n.locale.to_s, I18n.default_locale.to_s] + translations.keys
+      end
+
+      # If allowed locales are given, restrict attempted locales to those.
+      if allowed = self.class.translate_options[:locales]
+        to_try &= allowed
+      end
+
+      to_try.each do |locale|
+        if found = translations[locale.to_s]
+          return found
         end
       end
 
-      # return whatever we have at this point, could be nil
-      return str
+      nil
     end
   end
 
@@ -227,7 +223,7 @@ module Translatable
       trans = translatable_get(field)
       union |= trans.keys unless trans.nil?
       union
-    end.map{|l| l.to_sym}
+    end.map(&:to_sym)
 
     # honor :except_current option
     locales -= [I18n.locale] if options[:except_current]
