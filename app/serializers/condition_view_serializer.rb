@@ -1,6 +1,14 @@
 class ConditionViewSerializer < ActiveModel::Serializer
   #attributes :id, :questioning_id, :refable_qing_options, :ref_qing_id, :form_id, :operator_options, :op, :value_options, :value, :option_node_id
-  attributes :refable_qing_options, :operator_options, :value_options
+  attributes :form_id, :questioning_id, :refable_qing_options, :operator_options, :value_options
+
+  def form_id
+    object.form.id
+  end
+
+  def questioning_id
+    object.questioning_id
+  end
 
   def refable_qing_options
     object.refable_qings.map{ |q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id} }

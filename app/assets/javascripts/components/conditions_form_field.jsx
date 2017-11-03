@@ -22,8 +22,8 @@ class ConditionsFormField extends React.Component {
   getFieldData(ref_qing_id) {
     console.log("get field data")
     var self = this;
-    var form_id = 3;
-    var questioning_id = 35;
+    var form_id = this.state.form_id;
+    var questioning_id = this.state.questioning_id;
     var url = ELMO.app.url_builder.build('questionings', 'condition-form')
     url += '?ref_qing_id=' + ref_qing_id
     url += '&form_id=' + form_id
