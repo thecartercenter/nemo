@@ -1,18 +1,5 @@
 <%= elmo_fields_for("questioning[condition_attributes]", @condition) do |f| %>
   <%= f.base_errors %>
   <%= f.hidden_field(:id) %>
-
-  <% #replace w/ serializer in controller %>
-  <% reference_qing_options = @condition.refable_qings.map{|q| {display: "#{q.full_dotted_rank}. #{q.question.code}", value: q.id}} %>
-  <% reference_qing_data = {for: "questioning_condition_attributes_ref_qing_id", label: translate_model(Question), name: "questioning[condition_attributes][ref_qing_id]", id: "questioning_condition_attributes_ref_qing_id", type: "select", options: reference_qing_options}%>
-
-
-  <% operator_options = translate_options(@condition.applicable_operator_names, [:condition, :operators]) %>
-  <% operator_data = {for: "questioning_condition_attributes_op", label: t('condition.op'), name: "questioning[condition_attributes][op]", id: "questioning_condition_attributes_op", type: "select", options: operator_options } %>
-
-  <% #replace w/ serializer in controller %>
-  <% value_data = {for: "questioning_condition_attributes_value" , label: t('condition.value'), name: "questioning[condition_attributes][value]" , id: "questioning_condition_attributes_value" , type: "text"} %>
-
-
   <%= react_component("ConditionsFormField", ConditionViewSerializer.new(@condition)) %>
 <% end %>
