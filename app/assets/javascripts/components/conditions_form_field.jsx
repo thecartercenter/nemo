@@ -20,6 +20,7 @@ class ConditionsFormField extends React.Component {
   }
 
   getFieldData(ref_qing_id) {
+    ELMO.app.loading(true)
     console.log("get field data")
     var self = this;
     var form_id = this.state.form_id;
@@ -36,12 +37,14 @@ class ConditionsFormField extends React.Component {
         console.log("success!")
         self.setState(response)
         console.log(self.state)
+        ELMO.app.loading(false)
       },
       error: function(res) {
         console.log(res)
         console.log("error!")
+        ELMO.app.loading(false) //QUESTION:how do I test this?
       }
-    });
+    }); 
   }
 
 
@@ -71,7 +74,7 @@ class ConditionsFormField extends React.Component {
 
   componentDidMount() {
     console.log("component did mount")
-    this.getFieldData()
+  //  this.getFieldData()
   }
 
   render() {
