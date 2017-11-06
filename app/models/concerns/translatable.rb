@@ -6,16 +6,15 @@ module Translatable
 
   module ClassMethods
     def translates(*args)
+      # Shave off the optional options hash at the end and merge with defaults.
+      options = args[-1].is_a?(Hash) ? args.delete_at(-1) : {}
+      default_options = configatron.translatable.default_options.to_h
+      options = default_options.merge(options)
+
       # Tidy options if given.
-      if args[-1].is_a?(Hash)
-        args[-1][:locales] = args[-1][:locales].try(:map, &:to_s)
-      end
+      options[:locales] = options[:locales].map(&:to_s) if options[:locales].is_a?(Array)
 
-      # shave off the optional options hash at the end and merge with defaults
-      class_variable_set('@@translate_options',
-        configatron.translatable.default_options.to_h.merge(args[-1].is_a?(Hash) ? args.delete_at(-1) : {}))
-
-      # save the list of translated fields
+      class_variable_set('@@translate_options', options)
       class_variable_set('@@translated_fields', args)
 
       # Setup an accessor if not present.

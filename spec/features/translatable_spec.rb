@@ -7,7 +7,8 @@ feature "translatable strings" do
   before do
     login(user)
 
-    # Simulate switching to French-only mission
+    # Simulate switching mission to French-only.
+    # Question above with only English translation should show as blank.
     question.mission.setting.update_attributes!(preferred_locales_str: "fr")
   end
 
