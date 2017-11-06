@@ -228,7 +228,7 @@ describe "Translatable" do
       it "should respect the setting" do
         # default_options are copied in when `translates` is called, so we have to do it this way.
         allowed = nil
-        Translatable.default_options = {locales: -> { allowed }}
+        configatron.translatable.default_options = {locales: -> { allowed }}
         class X
           include Translatable
           translates :name
@@ -243,7 +243,7 @@ describe "Translatable" do
         allowed = %i(en it)
         expect(obj.name).to eq "Ita"
 
-        Translatable.default_options = nil
+        configatron.translatable.default_options = nil
       end
     end
   end

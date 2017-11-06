@@ -13,7 +13,7 @@ module Translatable
 
       # shave off the optional options hash at the end and merge with defaults
       class_variable_set('@@translate_options',
-        (Translatable.default_options || {}).merge(args[-1].is_a?(Hash) ? args.delete_at(-1) : {}))
+        configatron.translatable.default_options.to_h.merge(args[-1].is_a?(Hash) ? args.delete_at(-1) : {}))
 
       # save the list of translated fields
       class_variable_set('@@translated_fields', args)
