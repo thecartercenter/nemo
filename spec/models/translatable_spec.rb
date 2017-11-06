@@ -1,5 +1,8 @@
 require 'spec_helper'
 
+opts = configatron.translatable.default_options
+configatron.translatable.default_options = nil
+
 class Basic
   include Translatable
   translates :name, :hint
@@ -16,6 +19,8 @@ class RestrictedLocales
   translates :name, :hint, locales: %i(en fr es)
   attr_accessor :canonical_name, :canonical_hint
 end
+
+configatron.translatable.default_options = opts
 
 describe "Translatable" do
   let(:obj) { Basic.new }
