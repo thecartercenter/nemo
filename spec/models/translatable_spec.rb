@@ -18,7 +18,6 @@ class RestrictedLocales
 end
 
 describe "Translatable" do
-
   let(:obj) { Basic.new }
 
   it "basic assignment and reading" do
@@ -187,39 +186,64 @@ describe "Translatable" do
   end
 
   describe "locale restrictions" do
-    let(:obj) { RestrictedLocales.new }
+    context "with restriction set at class level" do
+      let(:obj) { RestrictedLocales.new }
 
-    context "with allowed translations available" do
-      before do
-        obj.name_en = "Eng"
-        obj.name_fr = "Fra"
-        obj.name_it = "Ita"
+      context "with allowed translations available" do
+        before do
+          obj.name_en = "Eng"
+          obj.name_fr = "Fra"
+          obj.name_it = "Ita"
+        end
+
+        it "should work normally for an allowed locale" do
+          expect(obj.name_en).to eq "Eng"
+        end
+
+        it "should not return a disallowed locale and return nil instead if strict mode on" do
+          expect(obj.name(:it, strict: true)).to be_nil
+        end
+
+        it "should not return a disallowed locale and fallback to an allowed one if strict mode off" do
+          expect(obj.name(:it, strict: false)).to eq "Eng"
+        end
       end
 
-      it "should work normally for an allowed locale" do
-        expect(obj.name_en).to eq "Eng"
-      end
+      context "with only disallowed locales available" do
+        before do
+          obj.name_it = "Ita"
+        end
 
-      it "should not return a disallowed locale and return nil instead if strict mode on" do
-        expect(obj.name(:it, strict: true)).to be_nil
-      end
+        it "should return nil rather than the disallowed locale" do
+          expect(obj.name).to be_nil
+        end
 
-      it "should not return a disallowed locale and fallback to an allowed one if strict mode off" do
-        expect(obj.name(:it, strict: false)).to eq "Eng"
+        it "should return nil even if Italian given as explicit fallback" do
+          expect(obj.name(:en, fallbacks: [:it])).to be_nil
+        end
       end
     end
 
-    context "with only disallowed locales available" do
-      before do
+    context "with restriction set globally as proc" do
+      it "should respect the setting" do
+        # default_options are copied in when `translates` is called, so we have to do it this way.
+        allowed = nil
+        Translatable.default_options = {locales: -> { allowed }}
+        class X
+          include Translatable
+          translates :name
+        end
+
+        obj = X.new
         obj.name_it = "Ita"
-      end
 
-      it "should return nil rather than the disallowed locale" do
+        allowed = %i(en fr)
         expect(obj.name).to be_nil
-      end
 
-      it "should return nil even if Italian given as explicit fallback" do
-        expect(obj.name(:en, fallbacks: [:it])).to be_nil
+        allowed = %i(en it)
+        expect(obj.name).to eq "Ita"
+
+        Translatable.default_options = nil
       end
     end
   end

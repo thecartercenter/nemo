@@ -2,6 +2,8 @@
 module Translatable
   extend ActiveSupport::Concern
 
+  cattr_accessor :default_options
+
   module ClassMethods
     def translates(*args)
       # Tidy options if given.
@@ -9,8 +11,9 @@ module Translatable
         args[-1][:locales] = args[-1][:locales].try(:map, &:to_s)
       end
 
-      # shave off the optional options hash at the end
-      class_variable_set('@@translate_options', args[-1].is_a?(Hash) ? args.delete_at(-1) : {})
+      # shave off the optional options hash at the end and merge with defaults
+      class_variable_set('@@translate_options',
+        (Translatable.default_options || {}).merge(args[-1].is_a?(Hash) ? args.delete_at(-1) : {}))
 
       # save the list of translated fields
       class_variable_set('@@translated_fields', args)
@@ -107,7 +110,6 @@ module Translatable
   end
 
   def translatable_translate(field, locale, is_setter, options, args)
-
     # if we're setting the value
     if is_setter
       cur_hash = translatable_get(field) || {}
@@ -133,12 +135,12 @@ module Translatable
       end
 
       # If allowed locales are given, restrict attempted locales to those.
-      if allowed = self.class.translate_options[:locales]
-        to_try &= allowed
-      end
+      allowed = self.class.translate_options[:locales]
+      allowed = allowed.call if allowed.is_a?(Proc)
+      to_try &= allowed.map(&:to_s) if allowed.present?
 
       to_try.each do |locale|
-        if found = translations[locale.to_s]
+        if found = translations[locale]
           return found
         end
       end
