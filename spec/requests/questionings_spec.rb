@@ -61,14 +61,7 @@ describe "questionings", type: :request do
 
     context "without ref_qing_id" do
       it "returns json with ref qing id options, no operator options, and no value options" do
-
-        puts "role: #{user.role(form.mission)}"
-
-
-        get "/en/m/#{get_mission.compact_name}/questionings/condition-form", {ref_qing_id: nil, form_id: form.id, questioning_id: qing.id}
-        expect(response).to have_http_status(200)
-
-        expected_ref_qing_options = form.questionings.select{ |q| q.id < qing.id }.map{ |q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id} }
+        expected_ref_qing_options = form.questionings.select{|q| q.id < qing.id }.map{ |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } }
         expected = {
           id: nil,
           ref_qing_id: nil,
@@ -80,28 +73,50 @@ describe "questionings", type: :request do
           operator_options: [],
           value_options: nil
         }.to_json
+
+        get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
+          { ref_qing_id: nil,
+            form_id: form.id,
+            questioning_id: qing.id
+          }
+
+        expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
     end
 
-    context "with ref_qing_id" do # ref_qing_id: 21. return all refqings, and operators, and options type.
+    context "with ref_qing_id" do
       it "returns json with operator options" do
-        expected_ref_qing_options = form.questionings.select{ |q| q.id < qing.id }.map{ |q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id} }
-        get "/en/m/#{get_mission.compact_name}/questionings/condition-form", {ref_qing_id: form.questionings[0].id , form_id: form.id, questioning_id: qing.id}
+        expected_operator_options = [
+          { "name":"is equal to","id":"eq" },
+          { "name":"is less than","id":"lt" },
+          { "name":"is greater than","id":"gt" },
+          { "name":"is less than or equal to","id":"leq" },
+          { "name":"is greater than or equal to","id":"geq" },
+          { "name":"is not equal to","id":"neq" }
+        ]
+        expected_ref_qing_options = form.questionings.select{ |q| q.id < qing.id}.map{ |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } }
+
+                expected = {
+                  id: nil,
+                  ref_qing_id: form.questionings[0].id,
+                  op: nil,
+                  value: nil,
+                  form_id: form.id,
+                  questioning_id: qing.id,
+                  refable_qing_options: expected_ref_qing_options,
+                  operator_options: expected_operator_options,
+                  value_options: nil
+                }.to_json
+
+        get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
+          {
+            ref_qing_id: form.questionings[0].id,
+            form_id: form.id,
+            questioning_id: qing.id
+          }
+
         expect(response).to have_http_status(200)
-
-        expected = {
-          id: nil,
-          ref_qing_id: form.questionings[0].id,
-          op: nil,
-          value: nil,
-          form_id: form.id,
-          questioning_id: qing.id,
-          refable_qing_options: expected_ref_qing_options,
-          operator_options: [{"name":"is equal to","id":"eq"},{"name":"is less than","id":"lt"},{"name":"is greater than","id":"gt"},{"name":"is less than or equal to","id":"leq"},{"name":"is greater than or equal to","id":"geq"},{"name":"is not equal to","id":"neq"}],
-          value_options: nil
-        }.to_json
-
         expect(response.body).to eq expected
       end
     end

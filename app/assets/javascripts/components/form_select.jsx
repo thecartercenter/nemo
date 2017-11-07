@@ -13,6 +13,5 @@ class FormSelect extends React.Component {
       props["onChange"] = (e) => this.props.changeFunc(e.target.value)
     }
     return <select {...props} >{full_options}</select>
-  //  return <select className="form-control test-select" name={this.props.name} id={this.props.id} key={this.props.id} onChange={(e) => this.props.changeFunc(e.target.value)}>{full_options}</select>
   }
 }

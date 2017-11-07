@@ -10,7 +10,6 @@ class ConditionsFormField extends React.Component {
   }
 
   updateFieldData(ref_qing_id) {
-
     this.getFieldData(ref_qing_id);
   }
 
