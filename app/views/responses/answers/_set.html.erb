@@ -8,7 +8,7 @@
     <label class="main">
       <p class="rank"><%= set.full_dotted_rank %>.</p>
       <p><%= reqd_sym if set.required? %>
-      <%= set.question_name || "[#{t('answer.no_name')}]" %>:</p>
+      <%= set.question_name || "[#{t('answer.no_name')}]" %></p>
     </label>
     <div class="control">
       <% if set.multilevel? %>
