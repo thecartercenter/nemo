@@ -55,7 +55,6 @@ describe "questionings", type: :request do
 
   describe "condition_form_data" do
 
-    #set up form like above w/ four questionings, have the qing be the third one.
     let(:form) { create(:form, :published, question_types: %w(integer text integer text)) }
     let(:qing) { form.questionings[2] }
 
