@@ -3,10 +3,6 @@ require "spec_helper"
 describe Condition do
   it_behaves_like "has a uuid"
 
-  before(:all) do
-    I18n.locale = :en
-  end
-
   describe "any_fields_blank?" do
     let(:form) { create(:form, question_types: %w(select_one integer)) }
     let(:option_node_id) { form.questionings[0].option_set.children.first.id }
