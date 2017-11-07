@@ -82,7 +82,6 @@ class QuestioningsController < ApplicationController
       # Create a dummy questioning so that the condition can look up the refable qings, etc.
       @questioning = init_qing(form_id: params[:form_id])
     end
-    puts "current user role: #{current_user.role(current_mission)}"
     authorize! :condition_form, @questioning
     # Create a dummy condition with the given ref qing.
     @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
