@@ -10,13 +10,15 @@ class ConditionsFormField extends React.Component {
   }
 
   updateFieldData(ref_qing_id) {
-    this.setState(this.getFieldData(ref_qing_id))
+
+    this.getFieldData(ref_qing_id);
   }
 
   getFieldData(ref_qing_id) {
     ELMO.app.loading(true)
     var self = this;
     var url = this.buildUrl(ref_qing_id)
+    console.log(url)
     $.ajax(url)
       .done(function(response) {
           self.setState(response);
@@ -33,7 +35,9 @@ class ConditionsFormField extends React.Component {
     var url = ELMO.app.url_builder.build('questionings', 'condition-form')
     url += '?ref_qing_id=' + ref_qing_id
     url += '&form_id=' + this.state.form_id
-    url += '&questioning_id=' + this.state.questioning_id
+    if (this.state.questioning_id) {
+      url += '&questioning_id=' + this.state.questioning_id
+    }
     return url
   }
 
