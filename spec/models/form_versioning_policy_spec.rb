@@ -94,7 +94,7 @@ describe FormVersioningPolicy do
     @forms[0..1].each do |f|
       old1 = f.root_questionings.find { |q| q.rank == 1 }
       old2 = f.root_questionings.find { |q| q.rank == 2 }
-      old2.move(old2.parent_id, 1)
+      old2.move(old2.parent, 1)
     end
     publish_and_check_versions(should_change: false)
 
@@ -103,7 +103,7 @@ describe FormVersioningPolicy do
     @forms[0..1].each do |f|
       old1 = f.root_questionings(true).find { |q| q.rank == 1 }
       old2 = f.root_questionings.find { |q| q.rank == 2 }
-      old2.move(old2.parent_id, 1)
+      old2.move(old2.parent, 1)
     end
     publish_and_check_versions(should_change: true)
   end

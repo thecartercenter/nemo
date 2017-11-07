@@ -39,16 +39,12 @@ describe FormItem do
       end
 
       it "should adjust ranks when existing questioning moved to the empty group" do
-        old1 = form.c[0]
-        old2 = form.c[1]
-        old3 = form.c[2]
-        old4 = form.c[3]
-        old2.parent = group
-        old2.save
+        old1, old2, old3, old4 = form.c
+        old2.move(group, 1)
         expect(old1.reload.rank).to eq 1
         expect(old2.reload.rank).to eq 1
-        expect(old3.reload.rank).to eq 2 # Should move up one.
-        expect(old4.reload.rank).to eq 3 # Should move up one.
+        expect(old3.reload.rank).to eq 2 # Should move down one.
+        expect(old4.reload.rank).to eq 3 # Should move down one.
       end
 
       it "should change order of the questioning moved higher" do
@@ -79,9 +75,29 @@ describe FormItem do
 
       it "should work when changing ranks of second level items" do
         q1, q2 = form.c[1].c
-        q2.update_attributes!(rank: 1)
+        q2.move(q2.parent, 1)
         expect(q1.reload.rank).to eq 2
         expect(q2.reload.rank).to eq 1
+      end
+
+      it "should ignore deleted children when moving item to group" do
+        form.c[1].c[1].destroy
+        form.c[0].move(form.c[1], 2)
+        expect(form.reload.c[0].c.map(&:rank)).to eq [1, 2]
+      end
+
+      it "should trim requested rank when moving if too low" do
+        old1 = form.c[0]
+        form.c[0].move(form.c[1], 0)
+        expect(form.reload.c[0].c.map(&:rank)).to eq [1, 2, 3]
+        expect(old1.reload.rank).to eq 1
+      end
+
+      it "should trim requested rank when moving if too high" do
+        old1 = form.c[0]
+        form.c[0].move(form.c[1], 10)
+        expect(form.reload.c[0].c.map(&:rank)).to eq [1, 2, 3]
+        expect(old1.reload.rank).to eq 3
       end
     end
   end
