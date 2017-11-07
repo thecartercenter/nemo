@@ -96,18 +96,17 @@ describe "questionings", type: :request do
           { "name":"is not equal to","id":"neq" }
         ]
         expected_ref_qing_options = form.questionings.select{ |q| q.id < qing.id}.map{ |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } }
-
-                expected = {
-                  id: nil,
-                  ref_qing_id: form.questionings[0].id,
-                  op: nil,
-                  value: nil,
-                  form_id: form.id,
-                  questioning_id: qing.id,
-                  refable_qing_options: expected_ref_qing_options,
-                  operator_options: expected_operator_options,
-                  value_options: nil
-                }.to_json
+        expected = {
+          id: nil,
+          ref_qing_id: form.questionings[0].id,
+          op: nil,
+          value: nil,
+          form_id: form.id,
+          questioning_id: qing.id,
+          refable_qing_options: expected_ref_qing_options,
+          operator_options: expected_operator_options,
+          value_options: nil
+        }.to_json
 
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
           {
