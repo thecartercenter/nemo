@@ -21,12 +21,12 @@ module ResponsesHelper
     else
       case field
       when "shortcode" then link_to(resp.shortcode, path_for_with_search(resp), title: t("common.view"))
-      when "form_id" then link_to(resp.form.name, resp.form)
+      when "form_id" then resp.form.name
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
       when "incomplete" then tbool(resp.incomplete?)
       when "reviewed" then reviewed_status(resp)
-      when "user_id" then can?(:read, resp.user) ? link_to(resp.user.name, resp.user) : resp.user.name
+      when "user_id" then resp.user.name
       when "reviewer_id"
         if resp.reviewer.present?
           (can?(:read, resp.reviewer) ? link_to(resp.reviewer.name, resp.reviewer) : resp.reviewer.name)

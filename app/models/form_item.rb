@@ -115,11 +115,13 @@ class FormItem < ApplicationRecord
   end
 
   # Moves item to new rank and parent.
-  def move(new_parent_id, new_rank)
+  # Ensures new rank is not too low or high.
+  def move(new_parent, new_rank)
+    new_parent = FormItem.find(new_parent) unless new_parent.is_a?(FormItem)
     transaction do
-      new_parent = FormItem.find(new_parent_id)
-      form_id = new_parent.form_id
-      update_attributes(parent: new_parent, rank: new_rank)
+      self.parent = new_parent
+      self.rank = [1, [new_rank, new_parent.children.size + 1].min].max
+      save(validate: false)
     end
   end
 

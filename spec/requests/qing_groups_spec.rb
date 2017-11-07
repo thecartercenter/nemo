@@ -6,6 +6,7 @@ describe "qing groups", type: :request do
   let(:qing_group) { form.sorted_children.select { |c| c.type == "QingGroup" }.first }
 
   before do
+    form.mission.setting.update_attributes!(preferred_locales_str: "en,fr")
     login(user)
   end
 

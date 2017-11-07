@@ -46,11 +46,7 @@ feature "SMS Guide", js: true do
     end
 
     context "where current locale is different from preferred locale" do
-      around(:each) do |example|
-        I18n.locale = :es
-        example.run
-        I18n.locale = :en
-      end
+      before { I18n.locale = :es }
 
       scenario "view :fr guide" do
         visit user_path(user, mode: "m", mission_name: get_mission.compact_name, locale: I18n.locale)

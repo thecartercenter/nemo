@@ -45,10 +45,6 @@ describe Setting do
           setting = Setting.load_for_mission(mission)
           expect(setting.preferred_locales).to eq [:fr]
         end
-
-        after do
-          I18n.locale = :en
-        end
       end
     end
 

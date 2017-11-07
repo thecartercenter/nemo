@@ -2,17 +2,19 @@
 module Translatable
   extend ActiveSupport::Concern
 
-  included do
-
-  end
+  cattr_accessor :default_options
 
   module ClassMethods
-
     def translates(*args)
-      # shave off the optional options hash at the end
-      class_variable_set('@@translate_options', args[-1].is_a?(Hash) ? args.delete_at(-1) : {})
+      # Shave off the optional options hash at the end and merge with defaults.
+      options = args[-1].is_a?(Hash) ? args.delete_at(-1) : {}
+      default_options = configatron.translatable.default_options.to_h
+      options = default_options.merge(options)
 
-      # save the list of translated fields
+      # Tidy options if given.
+      options[:locales] = options[:locales].map(&:to_s) if options[:locales].is_a?(Array)
+
+      class_variable_set('@@translate_options', options)
       class_variable_set('@@translated_fields', args)
 
       # Setup an accessor if not present.
@@ -107,7 +109,6 @@ module Translatable
   end
 
   def translatable_translate(field, locale, is_setter, options, args)
-
     # if we're setting the value
     if is_setter
       cur_hash = translatable_get(field) || {}
@@ -118,36 +119,32 @@ module Translatable
 
     # otherwise just return what we have
     else
-      str = nil
-      unless translatable_get(field).nil?
-        # try the specified locale and fallbacks
-        to_try = [locale] + (options[:fallbacks] || [])
-        to_try.each do |l|
-          str = translatable_get(field)[l.to_s]
-          break if str.present?
-        end
+      translations = translatable_get(field)
+      return nil if translations.nil?
 
-        # if the translation is blank and strict mode is off
-        if str.blank? && !options[:strict]
-          # try the current locale
-          str = translatable_get(field)[I18n.locale.to_s]
+      options[:fallbacks] = (options[:fallbacks] || []).map(&:to_s)
 
-          if str.blank?
-            # try the default locale
-            str = translatable_get(field)[I18n.default_locale.to_s]
+      # Try the specified locale and fallbacks.
+      to_try = [locale.to_s] + options[:fallbacks]
 
-            # if str is still blank, search the translations for /any/ non-blank string
-            if str.blank?
-              if (non_blank_pair = translatable_get(field).find{|locale, value| !value.blank?})
-                str = non_blank_pair[1]
-              end
-            end
-          end
+      # Strict options mean we only use the specified locale and fallbacks.
+      # Else we can try other locales too.
+      unless options[:strict]
+        to_try += [I18n.locale.to_s, I18n.default_locale.to_s] + translations.keys
+      end
+
+      # If allowed locales are given, restrict attempted locales to those.
+      allowed = self.class.translate_options[:locales]
+      allowed = allowed.call if allowed.is_a?(Proc)
+      to_try &= allowed.map(&:to_s) if allowed.present?
+
+      to_try.each do |locale|
+        if found = translations[locale]
+          return found
         end
       end
 
-      # return whatever we have at this point, could be nil
-      return str
+      nil
     end
   end
 
@@ -227,7 +224,7 @@ module Translatable
       trans = translatable_get(field)
       union |= trans.keys unless trans.nil?
       union
-    end.map{|l| l.to_sym}
+    end.map(&:to_sym)
 
     # honor :except_current option
     locales -= [I18n.locale] if options[:except_current]

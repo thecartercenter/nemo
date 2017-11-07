@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe User do
-  before { I18n.locale = :en }
-
   context 'with assignment validation error' do
     before do
       @user = build(:user)

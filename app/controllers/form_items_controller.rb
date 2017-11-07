@@ -9,7 +9,7 @@ class FormItemsController < ApplicationController
     params[:parent_id] = @form_item.form.root_id if params[:parent_id].blank?
 
     # Moves to new position and attempts to save.
-    @form_item.move(params[:parent_id], params[:rank])
+    @form_item.move(FormItem.find(params[:parent_id]), params[:rank].to_i)
 
     if @form_item.valid?
       render nothing: true, status: 204
