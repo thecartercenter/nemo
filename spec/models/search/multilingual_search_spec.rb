@@ -45,7 +45,5 @@ describe "search qualifiers" do
       end
     end
     expect(errors).to be(false), "Errors found with qualifier translations."
-    I18n.locale = :en
   end
 end
-

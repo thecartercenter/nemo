@@ -145,7 +145,6 @@ describe Search::Search do
   it "blank should work in other language" do
     I18n.locale = :fr
     assert_search(str: "source: [vide]", sql: "((t.source IS NULL))")
-    I18n.locale = :en
   end
 
   it "gt operator should work with scale-type qualifier" do
@@ -205,7 +204,6 @@ describe Search::Search do
   it "translated qualifier should work for different locale" do
     I18n.locale = :fr
     assert_search(str: 'name: foo', sql: %{((t.name ->> 'fr' ILIKE '%foo%'))})
-    I18n.locale = :en
   end
 
   it "translated qualifier with quoted string should work" do

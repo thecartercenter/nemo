@@ -26,6 +26,7 @@ describe Report::ListReport, :reports do
   context "with non-english locale" do
     before do
       I18n.locale = :fr
+      configatron.preferred_locales = [:en, :fr]
       @form = create(:form, question_types: %w(integer integer))
       @response = create(:response, form: @form, answer_values: [5, 10])
       @report = create(:list_report, _calculations: @form.questions + ["form"])
@@ -37,10 +38,6 @@ describe Report::ListReport, :reports do
         @form.questions.map(&:name_fr) + ["Fiche"],
         %w(5 10) + [@form.name]
       )
-    end
-
-    after do
-      I18n.locale = :en
     end
   end
 

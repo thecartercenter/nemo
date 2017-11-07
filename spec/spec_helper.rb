@@ -68,9 +68,16 @@ RSpec.configure do |config|
   config.include AssertSelectRoot, type: :request
   config.include Paperclip::Shoulda::Matchers
 
-  # Locale should be reset to :en after each test if it is changed.
-  config.after(:each) do
-    puts "WARNING: I18n locale was left as #{I18n.locale}" unless I18n.locale = :en
+  # We have to use around so that this block runs before arounds and befores in actual specs.
+  config.around(:each) do |example|
+    # Previous specs might leave locale set to something else, which can cause issues.
+    I18n.locale = :en
+
+    # This setting is used in Translatable and can lead to weird results if it's set to
+    # something other than [:en] by a previous spec.
+    configatron.preferred_locales = [:en]
+
+    example.run
   end
 
   # Important that url options are consistent for specs regardless of what's in local config.
