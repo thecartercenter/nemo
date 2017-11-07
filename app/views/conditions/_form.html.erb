@@ -18,13 +18,6 @@
       <%= render('conditions/form_fields') %>
     </div>
 
-    <%= javascript_doc_ready do %>
-      new ELMO.Views.ConditionFormView(<%=json({
-        condition: ConditionSerializer.new(@condition),
-        questioning_id: @questioning.id
-      }) %>);
-    <% end %>
-
   <% end %>
 
 <% end %>

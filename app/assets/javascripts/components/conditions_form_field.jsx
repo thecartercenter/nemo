@@ -18,7 +18,6 @@ class ConditionsFormField extends React.Component {
     ELMO.app.loading(true)
     var self = this;
     var url = this.buildUrl(ref_qing_id)
-    console.log(url)
     $.ajax(url)
       .done(function(response) {
           self.setState(response);
