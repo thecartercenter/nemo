@@ -76,98 +76,99 @@ feature "conditions in responses", js: true do
     visible_qings = [:long_text, :text2]
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:long_text], value: "fo", visible: visible_qings)
+      qing: :long_text, value: "fo", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:long_text], value: "foo", visible: visible_qings << :text1)
+      qing: :long_text, value: "foo", visible: visible_qings << :text1)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:text1], value: "bar", visible: visible_qings)
+      qing: :text1, value: "bar", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:text1], value: "barz", visible: visible_qings << :integer)
+      qing: :text1, value: "barz", visible: visible_qings << :integer)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:integer], value: "10", visible: visible_qings)
+      qing: :integer, value: "10", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:integer], value: "11", visible: visible_qings << :counter)
+      qing: :integer, value: "11", visible: visible_qings << :counter)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:counter], value: "5", visible: visible_qings)
+      qing: :counter, value: "5", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:counter], value: "6", visible: visible_qings << :decimal)
+      qing: :counter, value: "6", visible: visible_qings << :decimal)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:decimal], value: "21.7", visible: visible_qings)
+      qing: :decimal, value: "21.7", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:decimal], value: "21.72", visible: visible_qings << :select_one)
+      qing: :decimal, value: "21.72", visible: visible_qings << :select_one)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:select_one], value: "Cat", visible: visible_qings)
+      qing: :select_one, value: "Cat", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:select_one], value: "Dog", visible: visible_qings << :multilevel_select_one)
+      qing: :select_one, value: "Dog", visible: visible_qings << :multilevel_select_one)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:multilevel_select_one], value: ["Plant"], visible: visible_qings)
+      qing: :multilevel_select_one, value: ["Plant"], visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:multilevel_select_one], value: ["Plant", "Oak"], visible: visible_qings)
+      qing: :multilevel_select_one, value: ["Plant", "Oak"], visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:multilevel_select_one],
+      qing: :multilevel_select_one,
       value: ["Plant", "Tulip"],
       visible: visible_qings << :geo_multilevel_select_one)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:geo_multilevel_select_one],
+      qing: :geo_multilevel_select_one,
       value: ["Ghana"],
       visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:geo_multilevel_select_one],
+      qing: :geo_multilevel_select_one,
       value: ["Canada"],
       visible: visible_qings << :select_multiple)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:geo_multilevel_select_one],
+      qing: :geo_multilevel_select_one,
       value: ["Canada", "Ottawa"],
       visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:select_multiple], value: ["Dog"], visible: visible_qings)
+      qing: :select_multiple, value: ["Dog"], visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:select_multiple], value: ["Dog", "Cat"], visible: visible_qings << :datetime)
+      qing: :select_multiple, value: ["Dog", "Cat"], visible: visible_qings << :datetime)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:datetime], value: "#{year}-01-01 5:00:21", visible: visible_qings)
+      qing: :datetime, value: "#{year}-01-01 5:00:21", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:datetime], value: "#{year}-01-01 5:00:20", visible: visible_qings << :date)
+      qing: :datetime, value: "#{year}-01-01 5:00:20", visible: visible_qings << :date)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:date], value: "#{year}-03-21", visible: visible_qings)
+      qing: :date, value: "#{year}-03-21", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:date], value: "#{year}-03-22", visible: visible_qings << :time)
+      qing: :date, value: "#{year}-03-22", visible: visible_qings << :time)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:time], value: "6:00:00", visible: visible_qings)
+      qing: :time, value: "6:00:00", visible: visible_qings)
 
     fill_answer_and_expect_visible(
-      questioning: questionings[:time], value: "15:00:00", visible: visible_qings << :text3)
+      qing: :time, value: "15:00:00", visible: visible_qings << :text3)
   end
 
-  def fill_answer_and_expect_visible(questioning: nil, value: nil, visible: nil)
-    fill_answer(qing: questioning, value: value)
+  def fill_answer_and_expect_visible(qing:, value:, visible:)
+    fill_answer(qing: qing, value: value)
     expect_visible(visible)
   end
 
-  def fill_answer(qing: nil, value: nil)
+  def fill_answer(qing:, value:)
+    qing = questionings[qing]
     idx = "#{qing.id}_1"
     id = "response_answers_attributes_#{idx}_value"
     case qing.qtype_name
