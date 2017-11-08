@@ -45,7 +45,7 @@ ActiveRecord::Schema.define(version: 20171112213842) do
   add_index "answers", ["deleted_at"], name: "index_answers_on_deleted_at", using: :btree
   add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
   add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
-  add_index "answers", %w(response_id questioning_id inst_num rank), name: "answers_full", unique: true, using: :btree
+  add_index "answers", %w(response_id questioning_id inst_num rank deleted_at), name: "answers_full", unique: true, using: :btree
   add_index "answers", ["response_id"], name: "index_answers_on_response_id", using: :btree
 
   create_table "assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -169,7 +169,6 @@ ActiveRecord::Schema.define(version: 20171112213842) do
     t.string "uuid", null: false
   end
 
-  add_index "form_forwardings", %w(form_id recipient_id recipient_type), name: "form_forwardings_full", unique: true, using: :btree
   add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
   add_index "form_forwardings", ["recipient_id"], name: "index_form_forwardings_on_recipient_id", using: :btree
 
@@ -219,7 +218,7 @@ ActiveRecord::Schema.define(version: 20171112213842) do
     t.string "uuid", null: false
   end
 
-  add_index "form_versions", ["code"], name: "index_form_versions_on_code", using: :btree
+  add_index "form_versions", ["code", "deleted_at"], name: "index_form_versions_on_code", unique: true, using: :btree
   add_index "form_versions", ["deleted_at"], name: "index_form_versions_on_deleted_at", using: :btree
   add_index "form_versions", ["form_id"], name: "index_form_versions_on_form_id", using: :btree
 
@@ -291,7 +290,7 @@ ActiveRecord::Schema.define(version: 20171112213842) do
 
   add_index "missions", ["compact_name"], name: "index_missions_on_compact_name", using: :btree
   add_index "missions", ["deleted_at"], name: "index_missions_on_deleted_at", using: :btree
-  add_index "missions", ["shortcode"], name: "index_missions_on_shortcode", unique: true, using: :btree
+  add_index "missions", ["shortcode", "deleted_at"], name: "index_missions_on_shortcode", unique: true, using: :btree
 
   create_table "operations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "created_at", null: false
@@ -420,7 +419,7 @@ ActiveRecord::Schema.define(version: 20171112213842) do
   end
 
   add_index "questions", ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
-  add_index "questions", ["mission_id", "code"], name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
+  add_index "questions", %w(mission_id code deleted_at), name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
   add_index "questions", ["mission_id"], name: "index_questions_on_mission_id", using: :btree
   add_index "questions", ["option_set_id"], name: "index_questions_on_option_set_id", using: :btree
   add_index "questions", ["original_id"], name: "index_questions_on_original_id", using: :btree
@@ -527,12 +526,12 @@ ActiveRecord::Schema.define(version: 20171112213842) do
   add_index "responses", ["checked_out_by_id"], name: "index_responses_on_checked_out_by_id", using: :btree
   add_index "responses", ["created_at"], name: "index_responses_on_created_at", using: :btree
   add_index "responses", ["deleted_at"], name: "index_responses_on_deleted_at", using: :btree
-  add_index "responses", ["form_id", "odk_hash"], name: "index_responses_on_form_id_and_odk_hash", unique: true, using: :btree
+  add_index "responses", %w(form_id odk_hash deleted_at), name: "index_responses_on_form_id_and_odk_hash", unique: true, using: :btree
   add_index "responses", ["form_id"], name: "index_responses_on_form_id", using: :btree
   add_index "responses", ["mission_id"], name: "index_responses_on_mission_id", using: :btree
   add_index "responses", ["reviewed"], name: "index_responses_on_reviewed", using: :btree
   add_index "responses", ["reviewer_id"], name: "index_responses_on_reviewer_id", using: :btree
-  add_index "responses", ["shortcode"], name: "index_responses_on_shortcode", using: :btree
+  add_index "responses", ["shortcode", "deleted_at"], name: "index_responses_on_shortcode", unique: true, using: :btree
   add_index "responses", ["updated_at"], name: "index_responses_on_updated_at", using: :btree
   add_index "responses", ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id", using: :btree
   add_index "responses", ["user_id"], name: "index_responses_on_user_id", using: :btree
@@ -645,7 +644,7 @@ ActiveRecord::Schema.define(version: 20171112213842) do
 
   add_index "user_group_assignments", ["deleted_at"], name: "index_user_group_assignments_on_deleted_at", using: :btree
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
-  add_index "user_group_assignments", ["user_id", "user_group_id"], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, using: :btree
+  add_index "user_group_assignments", %w(user_id user_group_id deleted_at), name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, using: :btree
   add_index "user_group_assignments", ["user_id"], name: "index_user_group_assignments_on_user_id", using: :btree
 
   create_table "user_groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -661,7 +660,7 @@ ActiveRecord::Schema.define(version: 20171112213842) do
 
   add_index "user_groups", ["deleted_at"], name: "index_user_groups_on_deleted_at", using: :btree
   add_index "user_groups", ["mission_id"], name: "index_user_groups_on_mission_id", using: :btree
-  add_index "user_groups", ["name", "mission_id"], name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
+  add_index "user_groups", %w(name mission_id deleted_at), name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
 
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.boolean "active", default: true, null: false
@@ -700,9 +699,9 @@ ActiveRecord::Schema.define(version: 20171112213842) do
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
   add_index "users", ["last_mission_id"], name: "index_users_on_last_mission_id", using: :btree
-  add_index "users", ["login"], name: "index_users_on_login", using: :btree
+  add_index "users", ["login", "deleted_at"], name: "index_users_on_login", unique: true, using: :btree
   add_index "users", ["name"], name: "index_users_on_name", using: :btree
-  add_index "users", ["sms_auth_code"], name: "index_users_on_sms_auth_code", unique: true, using: :btree
+  add_index "users", ["sms_auth_code", "deleted_at"], name: "index_users_on_sms_auth_code", unique: true, using: :btree
 
   create_table "whitelistings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "created_at", null: false
