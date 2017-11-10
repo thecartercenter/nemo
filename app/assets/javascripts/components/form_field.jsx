@@ -20,7 +20,7 @@ class FormField extends React.Component {
     }
     return (
       <div className="field">
-        <label htmlFor={this.props.for} key={this.props.for}> {this.props.label} </label>
+        <label htmlFor={this.props.for} key={this.props.for}>{this.props.label}</label>
         {control}
       </div>
     );
