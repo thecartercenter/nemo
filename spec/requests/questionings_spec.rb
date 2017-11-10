@@ -42,7 +42,7 @@ describe "questionings", type: :request do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
           "questioning" => {
             "condition_attributes" => {
-              "ref_qing_id" => form.questionings[0].id,
+              "ref_qing_id" => form.c[0].id,
               "op" => "eq",
               "value" => "foo"
             }
@@ -96,7 +96,7 @@ describe "questionings", type: :request do
         ]
         expected = {
           id: nil,
-          ref_qing_id: form.questionings[0].id,
+          ref_qing_id: form.c[0].id,
           op: nil,
           value: nil,
           form_id: form.id,
@@ -108,7 +108,7 @@ describe "questionings", type: :request do
 
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
           {
-            ref_qing_id: form.questionings[0].id,
+            ref_qing_id: form.c[0].id,
             form_id: form.id,
             questioning_id: qing.id
           }
