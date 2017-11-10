@@ -4,7 +4,12 @@ class FormField extends React.Component {
     if (this.props.type === "select") {
       control = <FormSelect value={this.props.value} key="input" name={this.props.name} id={this.props.id} options={this.props.options} changeFunc={this.props.changeFunc} />
     }
-    let content = [<FormLabel for={this.props.for} text={this.props.label} key="label"/>, control]
-    return <div className="field" key="XYZ"> {content} </div>
+    return (
+      <div className="field">
+        <label htmlFor={this.props.for} key={this.props.for}> {this.props.label} </label>
+        {control}
+      </div>
+
+    )
   }
 }
