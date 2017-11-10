@@ -11,8 +11,6 @@ ELMO::Application.routes.draw do
   # For uptime checking
   get "ping" => "ping#show"
 
-  get "json" => "ping#json"
-
   #####################################
   # Basic routes (neither mission nor admin mode)
   scope ":locale", locale: /[a-z]{2}/, defaults: {mode: nil, mission_name: nil} do

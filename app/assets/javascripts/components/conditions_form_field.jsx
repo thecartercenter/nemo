@@ -56,6 +56,7 @@ class ConditionsFormField extends React.Component {
     let ref_qing_field_props = {
       type: "select",
       name: `${name_prefix}[ref_qing_id]`,
+      id: `${id_prefix}_ref_qing_id`,
       for: `${id_prefix}_ref_qing_id`,
       key: `${id_prefix}_ref_qing_id`,
       value: this.state.ref_qing_id ? this.state.ref_qing_id : "",
@@ -66,6 +67,7 @@ class ConditionsFormField extends React.Component {
     let operator_field_props = {
       type: "select",
       name: `${name_prefix}[op]`,
+      id: `${id_prefix}_op`,
       for: `${id_prefix}_op`,
       key: `${id_prefix}_op`,
       value: this.state.op ? this.state.op : "",
@@ -76,6 +78,7 @@ class ConditionsFormField extends React.Component {
       type: "text",
       name: `${name_prefix}[value]`,
       for: `${id_prefix}_value`,
+      id: `${id_prefix}_value`,
       key: `${id_prefix}_value`,
       value: this.state.value ? this.state.value : "",
       label: I18n.t('activerecord.attributes.condition.value'),
