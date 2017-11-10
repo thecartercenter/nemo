@@ -36,6 +36,10 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
       @row.find("input[type='checkbox']:checked, input[type='radio']:checked").each ->
         $(this).removeAttr('checked')
 
+  # Finds the row in the response form for the given questioning ID within the instance
+  # described by inst. If qingId doesn't exist within inst but some of its ancestors do, it will
+  # do a partial match. This is useful for finding referred questioning rows
+  # starting from the referring instance.
   formRow: (qingId, inst) ->
     # We walk down through parent instances, constructing a
     # CSS selector for the appropriate instance at each step.
