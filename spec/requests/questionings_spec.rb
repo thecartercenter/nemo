@@ -57,10 +57,10 @@ describe "questionings", type: :request do
 
     let(:form) { create(:form, :published, question_types: %w(integer text integer text)) }
     let(:qing) { form.c[2] }
+    let(:expected_ref_qing_options) { form.c[0..1].map { |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } } }
 
     context "without ref_qing_id" do
       it "returns json with ref qing id options, no operator options, and no value options" do
-        expected_ref_qing_options = form.c[0..1].map { |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } }
         expected = {
           id: nil,
           ref_qing_id: nil,
@@ -94,7 +94,6 @@ describe "questionings", type: :request do
           {name:"is greater than or equal to", id:"geq" },
           {name:"is not equal to", id:"neq" }
         ]
-        expected_ref_qing_options = form.c[0..1].map{ |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } }
         expected = {
           id: nil,
           ref_qing_id: form.questionings[0].id,
