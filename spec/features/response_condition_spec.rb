@@ -3,6 +3,8 @@ require "spec_helper"
 feature "conditions in responses", js: true do
   let(:user) { create(:user) }
   let!(:form) { create(:form) }
+  let(:group) { create(:qing_group, form: form) }
+  let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
   let!(:questionings) do
     {
       long_text: create_questioning("long_text", form),
@@ -18,7 +20,11 @@ feature "conditions in responses", js: true do
       datetime: create_questioning("datetime", form),
       date: create_questioning("date", form),
       time: create_questioning("time", form),
-      text3: create_questioning("text", form)
+      text3: create_questioning("text", form),
+      grp1: create_questioning("text", form, group),
+      rpt1: create_questioning("text", form, rpt_group),
+      rpt2: create_questioning("text", form, rpt_group),
+      rpt3: create_questioning("text", form, rpt_group)
     }
   end
   let!(:so_option_set) { questionings[:select_one].option_set }
@@ -60,159 +66,220 @@ feature "conditions in responses", js: true do
       time_if_date: questionings[:time].create_condition(
         ref_qing: questionings[:date], op: "eq", value: "#{year}-03-22"),
       text3_if_time: questionings[:text3].create_condition(
-        ref_qing: questionings[:time], op: "geq", value: "3:00pm")
+        ref_qing: questionings[:time], op: "geq", value: "3:00pm"),
+      rpt1_if_text3: questionings[:rpt1].create_condition( # References top level Q
+        ref_qing: questionings[:text3], op: "eq", value: "baz"),
+      rpt2_if_rpt1: questionings[:rpt2].create_condition( # References same group Q
+        ref_qing: questionings[:rpt1], op: "eq", value: "qux"),
+      rpt3_if_grp1: questionings[:rpt3].create_condition( # References Q from sibling group
+        ref_qing: questionings[:grp1], op: "eq", value: "nix")
     }
   end
   let(:year) { Time.now.year - 2 }
-  let(:form_questionings) { form.questionings }
-
 
   scenario "should work" do
     login(user)
     visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
     expect(page).to have_content("New Response")
 
-    # fill in answers
-    visible_qings = [:long_text, :text2]
+    visible = [:long_text, :text2]
 
     fill_answer_and_expect_visible(
-      qing: :long_text, value: "fo", visible: visible_qings)
+      field: :long_text, value: "fo", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :long_text, value: "foo", visible: visible_qings << :text1)
+      field: :long_text, value: "foo", visible: visible << :text1)
 
     fill_answer_and_expect_visible(
-      qing: :text1, value: "bar", visible: visible_qings)
+      field: :text1, value: "bar", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :text1, value: "barz", visible: visible_qings << :integer)
+      field: :text1, value: "barz", visible: visible << :integer)
 
     fill_answer_and_expect_visible(
-      qing: :integer, value: "10", visible: visible_qings)
+      field: :integer, value: "10", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :integer, value: "11", visible: visible_qings << :counter)
+      field: :integer, value: "11", visible: visible << :counter)
 
     fill_answer_and_expect_visible(
-      qing: :counter, value: "5", visible: visible_qings)
+      field: :counter, value: "5", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :counter, value: "6", visible: visible_qings << :decimal)
+      field: :counter, value: "6", visible: visible << :decimal)
 
     fill_answer_and_expect_visible(
-      qing: :decimal, value: "21.7", visible: visible_qings)
+      field: :decimal, value: "21.7", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :decimal, value: "21.72", visible: visible_qings << :select_one)
+      field: :decimal, value: "21.72", visible: visible << :select_one)
 
     fill_answer_and_expect_visible(
-      qing: :select_one, value: "Cat", visible: visible_qings)
+      field: :select_one, value: "Cat", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :select_one, value: "Dog", visible: visible_qings << :multilevel_select_one)
+      field: :select_one, value: "Dog", visible: visible << :multilevel_select_one)
 
     fill_answer_and_expect_visible(
-      qing: :multilevel_select_one, value: ["Plant"], visible: visible_qings)
+      field: :multilevel_select_one, value: ["Plant"], visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :multilevel_select_one, value: ["Plant", "Oak"], visible: visible_qings)
+      field: :multilevel_select_one, value: ["Plant", "Oak"], visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :multilevel_select_one,
+      field: :multilevel_select_one,
       value: ["Plant", "Tulip"],
-      visible: visible_qings << :geo_multilevel_select_one)
+      visible: visible << :geo_multilevel_select_one)
 
     fill_answer_and_expect_visible(
-      qing: :geo_multilevel_select_one,
+      field: :geo_multilevel_select_one,
       value: ["Ghana"],
-      visible: visible_qings)
+      visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :geo_multilevel_select_one,
+      field: :geo_multilevel_select_one,
       value: ["Canada"],
-      visible: visible_qings << :select_multiple)
+      visible: visible << :select_multiple)
 
     fill_answer_and_expect_visible(
-      qing: :geo_multilevel_select_one,
+      field: :geo_multilevel_select_one,
       value: ["Canada", "Ottawa"],
-      visible: visible_qings)
+      visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :select_multiple, value: ["Dog"], visible: visible_qings)
+      field: :select_multiple, value: ["Dog"], visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :select_multiple, value: ["Dog", "Cat"], visible: visible_qings << :datetime)
+      field: :select_multiple, value: ["Dog", "Cat"], visible: visible << :datetime)
 
     fill_answer_and_expect_visible(
-      qing: :datetime, value: "#{year}-01-01 5:00:21", visible: visible_qings)
+      field: :datetime, value: "#{year}-01-01 5:00:21", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :datetime, value: "#{year}-01-01 5:00:20", visible: visible_qings << :date)
+      field: :datetime, value: "#{year}-01-01 5:00:20", visible: visible << :date)
 
     fill_answer_and_expect_visible(
-      qing: :date, value: "#{year}-03-21", visible: visible_qings)
+      field: :date, value: "#{year}-03-21", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :date, value: "#{year}-03-22", visible: visible_qings << :time)
+      field: :date, value: "#{year}-03-22", visible: visible << :time)
 
     fill_answer_and_expect_visible(
-      qing: :time, value: "6:00:00", visible: visible_qings)
+      field: :time, value: "6:00:00", visible: visible)
 
     fill_answer_and_expect_visible(
-      qing: :time, value: "15:00:00", visible: visible_qings << :text3)
+      field: :time, value: "15:00:00", visible: visible << :text3)
+
+    fill_answer_and_expect_visible(
+      field: :text3, value: "baz", visible: visible << [:rpt1, inst: 1])
+
+    fill_answer_and_expect_visible(
+      field: [:rpt1, inst: 1], value: "qux", visible: visible << [:rpt2, inst: 1])
+
+    fill_answer_and_expect_visible(
+      field: :grp1, value: "nix", visible: visible << [:rpt3, inst: 1])
+
+    find("a.add-instance").click
+
+    # rpt1 and rpt3 depend on q's outside of the repeat group so their visibility should match instance 1
+    expect_visible(visible << [:rpt1, inst: 2] << [:rpt3, inst: 2])
+
+    fill_answer_and_expect_visible(
+      field: [:rpt1, inst: 2], value: "qux", visible: visible << [:rpt2, inst: 2])
+
+    # Changing value in grp1 should make *both* rpt3s disappear.
+    fill_answer_and_expect_visible(
+      field: :grp1, value: "pix", visible: visible -= [[:rpt3, inst: 1], [:rpt3, inst: 2]])
   end
 
-  def fill_answer_and_expect_visible(qing:, value:, visible:)
-    fill_answer(qing: qing, value: value)
+  def fill_answer_and_expect_visible(field:, value:, visible:)
+    fill_answer(field: field, value: value)
     expect_visible(visible)
   end
 
-  def fill_answer(qing:, value:)
-    qing = questionings[qing]
-    idx = "#{qing.id}_1"
+  def fill_answer(field:, value:)
+    qing = questionings[field.is_a?(Symbol) ? field : field[0]]
+    inst = field.is_a?(Symbol) ? 1 : field[1][:inst]
+    idx = "#{qing.id}_#{inst}"
     id = "response_answers_attributes_#{idx}_value"
-    case qing.qtype_name
-    when "long_text"
-      fill_in_ckeditor(id, with: value)
-    when "select_one"
-      if value.is_a?(Array)
-        value.each_with_index do |o,i|
-          id = "response_answers_attributes_#{idx}_#{i}_option_node_id"
-          find("#response_answers_attributes_#{idx}_#{i}_option_node_id option", text: o)
-          select(o, from: id)
+    within(selector_for(qing, inst)) do
+      case qing.qtype_name
+      when "long_text"
+        fill_in_ckeditor(id, with: value)
+      when "select_one"
+        if value.is_a?(Array)
+          value.each_with_index do |o,i|
+            id = "response_answers_attributes_#{idx}_#{i}_option_node_id"
+            find("#response_answers_attributes_#{idx}_#{i}_option_node_id option", text: o)
+            select(o, from: id)
+          end
+        else
+          select(value, from: "response_answers_attributes_#{idx}_option_node_id")
+        end
+      when "select_multiple"
+        qing.options.each_with_index do |o,i|
+          id = "response_answers_attributes_#{idx}_choices_attributes_#{i}_checked"
+          value.include?(o.name) ? check(id) : uncheck(id)
+        end
+      when "datetime", "date", "time"
+        t = Time.parse(value)
+        prefix = "response_answers_attributes_#{idx}_#{qing.qtype_name}_value"
+        unless qing.qtype_name == "time"
+          select(t.strftime("%Y"), from: "#{prefix}_1i")
+          select(t.strftime("%B"), from: "#{prefix}_2i")
+          select(t.day.to_s, from: "#{prefix}_3i")
+        end
+        unless qing.qtype_name == "date"
+          select(t.strftime("%H"), from: "#{prefix}_4i")
+          select(t.strftime("%M"), from: "#{prefix}_5i")
+          select(t.strftime("%S"), from: "#{prefix}_6i")
         end
       else
-        select(value, from: "response_answers_attributes_#{idx}_option_node_id")
+        fill_in(id, with: value)
       end
-    when "select_multiple"
-      qing.options.each_with_index do |o,i|
-        id = "response_answers_attributes_#{idx}_choices_attributes_#{i}_checked"
-        value.include?(o.name) ? check(id) : uncheck(id)
-      end
-    when "datetime", "date", "time"
-      t = Time.parse(value)
-      prefix = "response_answers_attributes_#{idx}_#{qing.qtype_name}_value"
-      unless qing.qtype_name == "time"
-        select(t.strftime("%Y"), from: "#{prefix}_1i")
-        select(t.strftime("%B"), from: "#{prefix}_2i")
-        select(t.day.to_s, from: "#{prefix}_3i")
-      end
-      unless qing.qtype_name == "date"
-        select(t.strftime("%H"), from: "#{prefix}_4i")
-        select(t.strftime("%M"), from: "#{prefix}_5i")
-        select(t.strftime("%S"), from: "#{prefix}_6i")
-      end
-    else
-      fill_in(id, with: value)
     end
   end
 
-  def expect_visible(visible_qing_names)
-    visible_qings = visible_qing_names.map { |qing_name| questionings[qing_name] }
-    visible_qing_ids = visible_qings.map(&:id)
-    form_questionings.each do |qing, i|
-      currently_visible = visible_qing_ids.include?(qing.id)
-      expect(page).to have_css("div.answer_field[data-qing-id=\"#{qing.id}\"]", visible: currently_visible)
+  # visible_fields should be an array of symbols or pairs of form [symbol, {inst: X}] where X is
+  # the instance descriptor we should be looking in. If a plain symbol is passed, we assume instance 1.
+  def expect_visible(visible_fields)
+    # We transform visible_fields to the form {Questioning => [X, Y], ...} where X, Y are instance descriptors.
+    visible_fields = {}.tap do |list|
+      visible_fields.each do |item|
+        if item.is_a?(Symbol)
+          qing = questionings[item]
+          inst = 1
+        else
+          qing = questionings[item[0]]
+          inst = item[1][:inst]
+        end
+        list[qing] ||= []
+        list[qing] << inst
+      end
     end
+
+    form.questionings.each do |qing|
+      # Get instance count for parent instance.
+      inst_count = if qing.depth == 1
+        1
+      else
+        # TODO: When we add support for nested groups to this spec, we will need to refine this selector
+        # to distinguish between different sets of subinstances within a parent repeat group's instances.
+        page.all(%Q{div.qing-group-instance[data-group-id="#{qing.parent_id}"]}).size
+      end
+
+      # For each instance, check visibility.
+      # TODO: When we add support for nested groups to this spec, we will have to respect the full
+      # instance descriptor, not just a single number.
+      (1..inst_count).each do |inst|
+        currently_visible = (visible_fields[qing] || []).include?(inst)
+        expect(page).to have_css(selector_for(qing, inst), visible: currently_visible)
+      end
+    end
+  end
+
+  # Gets a CSS selector for the answer_field div described by the given qing and instance descriptor.
+  def selector_for(qing, inst)
+    %Q{div.answer_field[data-qing-id="#{qing.id}"][data-inst-num="#{inst}"]}
   end
 end

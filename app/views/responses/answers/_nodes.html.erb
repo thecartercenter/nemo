@@ -24,7 +24,8 @@
       <%= javascript_doc_ready do %>
         new ELMO.Views.RepeatGroupFormView({
           el: <%=json ".qing-group[data-group-id=#{node.item.id}]" %>,
-          tmpl: <%=json render("responses/answers/instance", node: node, instance: node.placeholder_instance) %>
+          tmpl: <%=json render("responses/answers/instance",
+            node: node, instance: node.placeholder_instance) %>
         })
       <% end %>
     <% end %>

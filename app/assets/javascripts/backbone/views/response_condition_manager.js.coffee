@@ -3,13 +3,13 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
     @conditions = options.conditions
-    @instNum = options.instNum
-    @row = @formRow(@conditions[0].questioning_id, @instNum)
+    @inst = options.inst
+    @row = @formRow(@conditions[0].questioning_id, @inst)
     @readOnly = @row.is('.read_only')
     @result = true
 
     @checkers = @conditions.map (c) =>
-      new ELMO.Views.ResponseConditionChecker(el: @el, manager: this, condition: c, instNum: @instNum)
+      new ELMO.Views.ResponseConditionChecker(el: @el, manager: this, condition: c, inst: @inst)
 
     @refresh()
 
@@ -36,5 +36,21 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
       @row.find("input[type='checkbox']:checked, input[type='radio']:checked").each ->
         $(this).removeAttr('checked')
 
-  formRow: (qingId, instNum) ->
-    @$(".form_field[data-qing-id=#{qingId}][data-inst-num=#{instNum}]")
+  formRow: (qingId, inst) ->
+    # We walk down through parent instances, constructing a
+    # CSS selector for the appropriate instance at each step.
+    # If there are no group parents, we just get an empty array.
+    groupParents = @$(".form_field[data-qing-id=#{qingId}]").first().parents("div.qing-group")
+    parentIds = groupParents.map(-> $(this).data("group-id").toString()).get()
+
+    ignore = false
+    parentSelectors = parentIds.map (id, depth) ->
+      # We need to check that the instance descriptor we got matches the group hierarchy of the
+      # requested node. If there is a mismatch as we walk down the tree, it means we should ignore the
+      # rest of the given instance descriptor, which means we default to instance 1.
+      ignore = true if !ignore && (!inst[depth] || inst[depth].id != id)
+      instNum = if ignore then 1 else inst[depth].num
+      "div.qing-group-instance[data-group-id=#{id}][data-inst-num=#{instNum}]"
+
+    # Now we use the parent selectors to scope the actual form_field lookup.
+    @$("#{parentSelectors.join(' ')} div.form_field[data-qing-id=#{qingId}]")

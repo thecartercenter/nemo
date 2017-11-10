@@ -38,7 +38,8 @@
     new ELMO.Views.ResponseConditionManager(<%=json(
       el: 'form.response_form',
       conditions: [ConditionSerializer.new(set.condition)],
-      instNum: inst_num
+      # Newer-style instance descriptor.
+      inst: set.depth == 1 ? [] : [{id: set.qing_parent_id.to_s, num: inst_num}]
     ) %>);
   <% end %>
 <% end %>
