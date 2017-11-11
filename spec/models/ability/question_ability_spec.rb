@@ -9,7 +9,7 @@ describe "abilities for questions" do
     end
 
     it "should be able to create and index" do
-      %w(create index).each { |op| expect(@ability).to be_able_to(op, Question) }
+      %i(create index).each { |op| expect(@ability).to be_able_to(op, Question) }
     end
 
     context "when unpublished" do
@@ -19,7 +19,7 @@ describe "abilities for questions" do
       end
 
       it "should be able to do all" do
-        %w(show update update_code update_core destroy).each { |op| expect(@ability).to be_able_to(op, @question) }
+        %i(show update update_code update_core destroy).each { |op| expect(@ability).to be_able_to(op, @question) }
       end
 
       context "with answers" do
@@ -28,8 +28,8 @@ describe "abilities for questions" do
         end
 
         it "should be able to do all but destroy and update core" do
-          %w(show update update_code).each { |op| expect(@ability).to be_able_to(op, @question) }
-          %w(update_core destroy).each { |op| expect(@ability).not_to be_able_to(op, @question) }
+          %i(show update update_code).each { |op| expect(@ability).to be_able_to(op, @question) }
+          %i(update_core destroy).each { |op| expect(@ability).not_to be_able_to(op, @question) }
         end
       end
     end
@@ -42,8 +42,8 @@ describe "abilities for questions" do
       end
 
       it "should be able show and update only" do
-        %w(show update update_code).each { |op| expect(@ability).to be_able_to(op, @question) }
-        %w(update_core destroy).each { |op| expect(@ability).not_to be_able_to(op, @question) }
+        %i(show update update_code).each { |op| expect(@ability).to be_able_to(op, @question) }
+        %i(update_core destroy).each { |op| expect(@ability).not_to be_able_to(op, @question) }
       end
     end
 
@@ -55,8 +55,8 @@ describe "abilities for questions" do
       end
 
       it "should be able to do all except update_code" do
-        %w(show update update_core destroy).each { |op| expect(@ability).to be_able_to(op, @question) }
-        %w(update_code).each { |op| expect(@ability).not_to be_able_to(op, @question) }
+        %i(show update update_core destroy).each { |op| expect(@ability).to be_able_to(op, @question) }
+        %i(update_code).each { |op| expect(@ability).not_to be_able_to(op, @question) }
       end
     end
   end

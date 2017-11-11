@@ -16,7 +16,7 @@ describe "abilities for questionings" do
       let(:qing) { form.questionings.first }
 
       it "should be able to do all" do
-        %w(show update update_core destroy).each do |op|
+        %i(show update update_core destroy).each do |op|
           expect(ability).to be_able_to(op, qing)
         end
       end
@@ -25,10 +25,10 @@ describe "abilities for questionings" do
         let!(:response) { create(:response, form: form, answer_values: ["foo"]) }
 
         it "should be able to do all but destroy" do
-          %w(show update update_core).each do |op|
+          %i(show update update_core).each do |op|
             expect(ability).to be_able_to(op, qing)
           end
-          %w(destroy).each do |op|
+          %i(destroy).each do |op|
             expect(ability).not_to be_able_to(op, qing)
           end
         end
@@ -40,11 +40,15 @@ describe "abilities for questionings" do
       let(:qing) { form.questionings.first }
 
       it "should be able show and update only" do
-        %w(show update).each do |op|
+        %i(show update).each do |op|
           expect(ability).to be_able_to(op, qing)
         end
-        %w(update_core destroy).each do |op|
-          expect(ability).not_to be_able_to(op, qing)
+        %i(update_core destroy).each do |op|
+          puts "OP: #{op.to_sym.awesome_inspect}"
+          puts "UPDATE CORE: #{ability.can?(:update_core, qing)}"
+          puts "DESTORY: #{ability.can?(:destroy, qing)}"
+          # puts "BE ABLE TO: #{be_able_to(op, qing)}"
+          expect(ability).not_to be_able_to(op.to_sym, qing)
         end
       end
     end
@@ -55,7 +59,7 @@ describe "abilities for questionings" do
       let(:qing) { copy.questionings.first }
 
       it "should be able to do all" do
-        %w(show update update_core destroy).each do |op|
+        %i(show update update_core destroy).each do |op|
           expect(ability).to be_able_to(op, qing)
         end
       end
