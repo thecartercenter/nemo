@@ -62,6 +62,7 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
         execute "ALTER TABLE #{table_name} DROP CONSTRAINT #{table_name}_pkey;"
         execute "ALTER TABLE #{table_name} ADD PRIMARY KEY (id);"
         change_column_null table_name, :old_id, true
+        change_column_default table_name, :old_id, nil
       end
 
       TABLES.each do |table_name, table_data|
@@ -76,7 +77,7 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
   end
 
   def down
-    # raise ActiveRecord::IrreversibleMigration
+    raise ActiveRecord::IrreversibleMigration
   end
 
   private
