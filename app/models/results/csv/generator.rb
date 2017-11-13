@@ -57,7 +57,7 @@ module Results
             # in memory at once in the case of large result sets.
             answers = response.answers.
               includes(:option, questioning: {question: {option_set: :root_node}}, choices: :option).
-              order(:questioning_id, :inst_num, :rank)
+                order("form_items.rank", "answers.inst_num", "answers.rank")
             repeatable_answers = answers.select { |a| cache[a.questioning, :repeatable?] }
             non_repeat_answers = answers - repeatable_answers
 
@@ -78,7 +78,7 @@ module Results
             csv << row
 
             # Make a row for each repeat_group answer
-            repeat_groups = repeatable_answers.group_by { |a| a.questioning.parent }
+            repeat_groups = repeatable_answers.group_by { |a| a.questioning.parent }.sort_by { |group, _| group.rank  }
             repeat_groups.each do |repeat_group, group_answers|
               group_answers.group_by(&:inst_num).each do |inst_num, repeat_answers|
                 row = repeating_row_part.dup

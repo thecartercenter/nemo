@@ -14,7 +14,7 @@ describe Report::Gridable do
 
     it "should be correct" do
       expect(@report.cache_key).to match(
-        %r{\Areport/list_reports/\d+-\d+//calcs-2-/report/identity_calculations/\d+-\d+\z})
+        %r{\Areport/list_reports/(.+)/calcs-2-/report/identity_calculations/(.+)\z})
     end
   end
 

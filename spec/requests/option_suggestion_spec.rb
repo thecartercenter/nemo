@@ -11,7 +11,7 @@ describe "option suggestion" do
 
   it "should return matching suggestions" do
     get_s suggest_options_path, q: "foo"
-    expect(response.body).to eq %Q|[{"id":#{option.id},"latitude":null,"longitude":null,| <<
+    expect(response.body).to eq %Q|[{"id":"#{option.id}","latitude":null,"longitude":null,| <<
       %Q|"name_translations":{"en":"Foo"},"name":"Foo","set_names":"","in_use?":false}]|
   end
 end

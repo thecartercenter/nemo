@@ -157,7 +157,7 @@ class XMLSubmission
 
   # finds the appropriate Option instance for an ODK submission
   def option_id_for_submission(id_or_str)
-    if id_or_str =~ /\Aon(\d+)\z/
+    if id_or_str =~ /\Aon([\w\-]+)\z/
       # look up inputs of the form "on####" as option node ids
       OptionNode.id_to_option_id($1)
     else

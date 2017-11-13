@@ -59,7 +59,7 @@ describe OptionSetImport do
     expect(option_set.options).to have(26).items
 
     # make sure that the non-leaf options have no coordinates
-    option_set.descendants.each do |node|
+    option_set.preordered_option_nodes.each do |node|
       if node.child_options.present?
         expect(node).to have_attributes(option: have_attributes(has_coordinates?: false))
       end

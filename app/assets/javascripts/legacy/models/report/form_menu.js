@@ -12,16 +12,18 @@
   klass.prototype.parent = ns.ObjectMenu.prototype;
 
   // gets the names (not fullnames) of the forms with the given ids
+  // Assumes `form_ids` is an array of strings.
   klass.prototype.get_names = function(form_ids) {
     var names = []
-    $(this.objs).each(function() { if (form_ids.indexOf(this.id) != -1) names.push(this.name); })
+    $(this.objs).each(function() { if (form_ids.indexOf(this.id.toString()) != -1) names.push(this.name); })
     return names;
   }
 
-  // gets the ids of the forms with the given names
+  // Gets the ids of the forms with the given names.
+  // Returns an arrat of strings.
   klass.prototype.get_ids_from_names = function(names) {
     var ids = []
-    $(this.objs).each(function() { if (names.indexOf(this.name) != -1) ids.push(this.id); })
+    $(this.objs).each(function() { if (names.indexOf(this.name) != -1) ids.push(this.id.toString()); })
     return ids;
   }
 

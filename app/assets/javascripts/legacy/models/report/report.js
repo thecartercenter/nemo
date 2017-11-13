@@ -122,7 +122,7 @@
 
   klass.prototype.extract_form_ids_from_filter_str = function() {
     var m;
-    if (this.attribs.filter && (m = this.attribs.filter.match(/^form:\((.*)\)$/))) {
+    if (this.attribs.filter && (m = this.attribs.filter.match(/^exact-form:\((.*)\)$/))) {
       this.attribs.filter = "";
 
       // split name str and strip quotes

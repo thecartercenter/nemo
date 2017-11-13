@@ -100,7 +100,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
           # Return all selected option_node_ids.
           @rqRow.find('select').map(->
             id = $(this).val()
-            if id then parseInt(id) else null
+            if id then id else null
           ).get()
 
         when 'select_multiple'
@@ -108,7 +108,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
           @rqRow.find('div.control input:checked').map(->
             # Given a checkbox, get the value of the associated option_node_id hidden field made by rails
             # this field is the nearest prior sibling input with name attribute ending in [option_node_id].
-            parseInt($(this).prevAll("input[name$='[option_node_id]']").first().val())
+            $(this).prevAll("input[name$='[option_node_id]']").first().val()
           ).get()
 
         when 'datetime', 'date', 'time'
