@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171112213842) do
+ActiveRecord::Schema.define(version: 20171113201301) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -169,6 +169,7 @@ ActiveRecord::Schema.define(version: 20171112213842) do
     t.string "uuid", null: false
   end
 
+  add_index "form_forwardings", %w(form_id recipient_id recipient_type), name: "form_forwardings_full", unique: true, using: :btree
   add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
   add_index "form_forwardings", ["recipient_id"], name: "index_form_forwardings_on_recipient_id", using: :btree
 
