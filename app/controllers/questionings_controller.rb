@@ -8,7 +8,7 @@ class QuestioningsController < ApplicationController
   after_action :check_rank_fail
 
   # authorization via cancan
-  load_and_authorize_resource
+  load_and_authorize_resource except: :condition_form
 
   def edit
     prepare_and_render_form
@@ -63,7 +63,7 @@ class QuestioningsController < ApplicationController
     render nothing: true, status: 204
   end
 
-  # Re-renders the fields in the condition form when requested by ajax.
+  # Responds to ajax request with json containing data needed for condition form.
   def condition_form
     if params[:questioning_id].present?
       @questioning = Questioning.find(params[:questioning_id])
@@ -71,10 +71,10 @@ class QuestioningsController < ApplicationController
       # Create a dummy questioning so that the condition can look up the refable qings, etc.
       @questioning = init_qing(form_id: params[:form_id])
     end
-
+    authorize! :condition_form, @questioning
     # Create a dummy condition with the given ref qing.
     @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
-    render(partial: 'conditions/form_fields')
+    render json: ConditionViewSerializer.new(@condition), status: 200
   end
 
   private
