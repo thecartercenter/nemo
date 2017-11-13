@@ -24,17 +24,17 @@ module Odk
       end
 
       let(:root) { decorate(form.root_group) }
-      let(:q1) { decorate(form.sc[0]) }
-      let(:grp3) { decorate(form.sc[1]) }
-      let(:q2) { decorate(form.sc[1].sc[0]) }
-      let(:q3) { decorate(form.sc[1].sc[1]) }
-      let(:grp6) { decorate(form.sc[1].sc[2]) }
-      let(:q4) { decorate(form.sc[1].sc[2].sc[0]) }
-      let(:grp8) { decorate(form.sc[1].sc[3]) }
-      let(:q5) { decorate(form.sc[1].sc[3].sc[0]) }
-      let(:grp10) { decorate(form.sc[1].sc[3].sc[1]) }
-      let(:q6) { decorate(form.sc[1].sc[3].sc[1].sc[0]) }
-      let(:q7) { decorate(form.sc[2]) }
+      let(:q1) { decorate(form.c[0]) }
+      let(:grp3) { decorate(form.c[1]) }
+      let(:q2) { decorate(form.c[1].c[0]) }
+      let(:q3) { decorate(form.c[1].c[1]) }
+      let(:grp6) { decorate(form.c[1].c[2]) }
+      let(:q4) { decorate(form.c[1].c[2].c[0]) }
+      let(:grp8) { decorate(form.c[1].c[3]) }
+      let(:q5) { decorate(form.c[1].c[3].c[0]) }
+      let(:grp10) { decorate(form.c[1].c[3].c[1]) }
+      let(:q6) { decorate(form.c[1].c[3].c[1].c[0]) }
+      let(:q7) { decorate(form.c[2]) }
 
       describe "absolute_xpath" do
         it do
