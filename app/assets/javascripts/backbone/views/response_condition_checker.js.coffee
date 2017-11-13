@@ -4,9 +4,9 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @manager = options.manager
     @condition = options.condition
-    @instNum = options.instNum
+    @inst = options.inst
 
-    @rqRow = @manager.formRow(@condition.ref_qing_id, @instNum)
+    @rqRow = @manager.formRow(@condition.ref_qing_id, @inst)
     @rqType = @rqRow.data('qtype-name')
     @result = true
 
