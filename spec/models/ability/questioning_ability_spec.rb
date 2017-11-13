@@ -44,10 +44,6 @@ describe "abilities for questionings" do
           expect(ability).to be_able_to(op, qing)
         end
         %i(update_core destroy).each do |op|
-          puts "OP: #{op.to_sym.awesome_inspect}"
-          puts "UPDATE CORE: #{ability.can?(:update_core, qing)}"
-          puts "DESTORY: #{ability.can?(:destroy, qing)}"
-          # puts "BE ABLE TO: #{be_able_to(op, qing)}"
           expect(ability).not_to be_able_to(op.to_sym, qing)
         end
       end

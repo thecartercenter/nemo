@@ -250,7 +250,6 @@ class Ability
     cannot :publish, Form, is_standard: true
 
     cannot [:destroy, :update, :update_core], Questioning do |q|
-      puts "PUBLISHED? #{q.published?}"
       q.published?
     end
 

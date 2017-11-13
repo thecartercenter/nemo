@@ -58,7 +58,6 @@ module Results
             answers = response.answers.
               includes(:option, questioning: {question: {option_set: :root_node}}, choices: :option).
                 order("form_items.rank", "answers.inst_num", "answers.rank")
-            # puts answers.map(&:questioning).map(&:full_dotted_rank).awesome_inspect
             repeatable_answers = answers.select { |a| cache[a.questioning, :repeatable?] }
             non_repeat_answers = answers - repeatable_answers
 
