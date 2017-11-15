@@ -36,19 +36,22 @@
     // store report reference
     this.report = report;
 
+    console.log(this.report.attribs.form_ids)
+
     // update controls
     // get selected IDs from model
     if (this.report.attribs.form_ids == "ALL")
       this.form_chooser.set_all(true);
-    else
+    else {
       this.form_chooser.update(this.report.attribs.form_ids);
+    }
   }
 
   // extracts data from the view into the model
   klass.prototype.extract = function(enabled) {
     if (enabled) {
       // send selected IDs to model
-      this.report.attribs.form_ids = this.form_chooser.all_selected() ? "ALL" : Sassafras.Utils.array_to_ints(this.form_chooser.get());
+      this.report.attribs.form_ids = this.form_chooser.all_selected() ? "ALL" : this.form_chooser.get();
     }
   }
 

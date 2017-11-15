@@ -4,7 +4,7 @@
 class AnswerSet
   attr_accessor :questioning, :answers
 
-  delegate :qtype, :required?, :question, :condition, :full_dotted_rank, to: :questioning
+  delegate :qtype, :required?, :question, :condition, :full_dotted_rank, :depth, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
   delegate :option_set, to: :question
   delegate :levels, to: :option_set
@@ -46,6 +46,10 @@ class AnswerSet
 
   def option_node_path
     OptionNodePath.new(option_set: option_set, target_node: lowest_non_nil_answer.try(:option_node))
+  end
+
+  def qing_parent_id
+    questioning.parent_id
   end
 
   private

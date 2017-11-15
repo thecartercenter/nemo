@@ -18,3 +18,20 @@ module Paperclip
     end
   end
 end
+
+module Paperclip
+  module Interpolations
+    # Returns the id of the instance in a split path form. e.g. returns
+      # 000/001/234 for an id of 1234.
+      def id_partition attachment, style_name
+        case id = attachment.instance.id
+        when Integer
+          ("%09d".freeze % id).scan(/\d{3}/).join("/".freeze)
+        when String
+          id.split("-".freeze).join("/".freeze)
+        else
+          nil
+        end
+      end
+  end
+end

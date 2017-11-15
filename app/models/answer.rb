@@ -33,9 +33,9 @@ class Answer < ApplicationRecord
   belongs_to :questioning, inverse_of: :answers
   belongs_to :option, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
-  has_many :choices, dependent: :destroy, inverse_of: :answer, autosave: true
+  has_many :choices, -> { order(:created_at) }, dependent: :destroy, inverse_of: :answer, autosave: true
   has_many :options, through: :choices
-  has_one :media_object, dependent: :destroy, autosave: true, class_name: "Media::Object"
+  has_one :media_object, dependent: :destroy, inverse_of: :answer, autosave: true, class_name: "Media::Object"
 
   before_validation :replicate_location_values
   before_save :replicate_location_values # Doing this twice on purpose, see below.
@@ -155,7 +155,7 @@ class Answer < ApplicationRecord
     when "integer", "counter" then value.try(:to_i)
     when "decimal" then value.try(:to_f)
     when "select_one" then option_name
-    when "select_multiple" then choices.empty? ? nil : choices.map(&:option_name).join(";")
+    when "select_multiple" then choices.empty? ? nil : choices.map(&:option_name).sort.join(";")
     else value.blank? ? nil : value
     end
   end
@@ -226,7 +226,7 @@ class Answer < ApplicationRecord
   def media_object_id=(id)
     if id.nil?
       self.media_object = nil
-    elsif media_object_id != id.to_i
+    elsif media_object_id != id
       self.media_object = Media::Object.find_by(id: id, answer_id: nil)
     end
   end

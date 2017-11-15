@@ -11,7 +11,7 @@ class Form < ApplicationRecord
   acts_as_paranoid
 
   has_many :responses, inverse_of: :form
-  has_many :versions, class_name: "FormVersion", inverse_of: :form, dependent: :destroy
+  has_many :versions, -> { order(:sequence) }, class_name: "FormVersion", inverse_of: :form, dependent: :destroy
   has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
@@ -54,6 +54,7 @@ class Form < ApplicationRecord
     :children,
     :sorted_children,
     :c,
+    :sc,
     :descendants,
     :child_groups,
     to: :root_group

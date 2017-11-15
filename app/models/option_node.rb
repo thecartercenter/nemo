@@ -42,7 +42,7 @@ class OptionNode < ApplicationRecord
     nodes_by_root_id = OptionNode.includes(:option).
       where("ancestry IN (#{ancestries})").
       order("rank").
-      group_by { |n| n.ancestry.to_i }
+      group_by { |n| n.ancestry }
     roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
 
@@ -308,7 +308,6 @@ class OptionNode < ApplicationRecord
     (children_attribs || []).each_with_index do |attribs, i|
 
       # If there is a matching (by id) existing child.
-      attribs[:id] = attribs[:id].to_i if attribs.key?(:id)
       if attribs[:id] && matching = children_by_id[attribs[:id]]
         self.ranks_changed = true if matching.rank != i + 1
 

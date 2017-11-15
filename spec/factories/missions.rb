@@ -1,5 +1,5 @@
 def get_mission
-  Mission.first || create(:mission)
+  Mission.order(:created_at).first || create(:mission)
 end
 
 FactoryGirl.define do

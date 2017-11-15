@@ -164,7 +164,7 @@ class Report::StandardFormReport < Report::Report
     if question_id.nil?
       self.disagg_qing = nil
     else
-      self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question_id.to_i}
+      self.disagg_qing = form.questionings.detect{|qing| qing.question_id == question_id}
     end
   end
 

@@ -84,7 +84,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
             "integer",
             {repeating: {items: ["text", "geo_multilevel_select_one",  "integer"], name: "Vegetable"}}
           ]).tap do |f|
-        f.children[1].update_attribute(:repeatable, true)
+        f.sorted_children[1].update_attribute(:repeatable, true)
       end
     end
     let(:response_a) do

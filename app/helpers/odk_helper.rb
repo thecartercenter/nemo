@@ -136,7 +136,10 @@ module OdkHelper
 
   # Returns <text> tags for all first-level options.
   def odk_option_translations(form, lang)
-    odk_options = form.all_first_level_option_nodes.collect do |on|
+    option_nodes = form.all_first_level_option_nodes
+    # sort these deterministically for the test suite when needed, order does not matter for ODK
+    option_nodes.sort_by! { |on| [on.option_set.name, on.option_name] } if Rails.env.test?
+    odk_options = option_nodes.map do |on|
       content_tag(:text, id: "on#{on.id}") do
         content_tag(:value) do
           on.option.name(lang, strict: false)

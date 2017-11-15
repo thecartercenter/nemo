@@ -44,7 +44,7 @@ class Report::AnswerTallyReport < Report::TallyReport
       expr = "COALESCE(ans_opt_nodes.rank, ch_opt_nodes.rank)"
       rel = rel.select("#{expr} AS sec_value")
       rel = rel.group(expr)
-      rel = rel.where("option_sets.id" => option_sets.collect{|os| os.id})
+      rel = rel.where("option_sets.id" => option_sets.collect { |os| os.id })
 
       # type is just text
       rel = rel.select("'text' AS sec_type")
