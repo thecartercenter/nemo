@@ -12,7 +12,7 @@ describe "abilities for reports" do
 
     it "should be able to do all" do
       expect(ability).to be_able_to(:create, Report::Report)
-      [:read, :update, :delete].each do |a|
+      [:read, :update, :delete, :export].each do |a|
         expect(ability).to be_able_to(a, own_report)
         expect(ability).to be_able_to(a, not_own_report)
         expect(ability).to be_able_to(a, anon_report)
@@ -48,7 +48,27 @@ describe "abilities for reports" do
     it_behaves_like "restricted", :staffer
   end
 
+  context "reviewer" do
+    let(:user) { create(:user, role_name: :reviewer) }
+
+    it "should not be able to export reports" do
+      expect(ability).not_to be_able_to(:export, own_report)
+      expect(ability).not_to be_able_to(:export, not_own_report)
+      expect(ability).not_to be_able_to(:export, anon_report)
+    end
+
+    it_behaves_like "restricted", :reviewer
+  end
+
   context "observer" do
+    let(:user) { create(:user, role_name: :observer) }
+
+    it "should not be able to export reports" do
+      expect(ability).not_to be_able_to(:export, own_report)
+      expect(ability).not_to be_able_to(:export, not_own_report)
+      expect(ability).not_to be_able_to(:export, anon_report)
+    end
+
     it_behaves_like "restricted", :observer
   end
 

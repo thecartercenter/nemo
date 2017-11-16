@@ -25,7 +25,7 @@ describe Response do
     end
 
     it "should not be able to see, modify, or delete the responses of others" do
-      %w(index show new create edit update destroy delete review).each do |action|
+      %w(index show new create edit update destroy delete review export).each do |action|
         expect(ability).to_not be_able_to action.to_sym, response
       end
     end
@@ -55,7 +55,7 @@ describe Response do
     end
 
     it "should not be able to edit or otherwise modify others responses" do
-      %w(modify destroy delete).each do |action|
+      %w(modify destroy delete export).each do |action|
         expect(ability).to_not be_able_to action.to_sym, response
       end
     end
