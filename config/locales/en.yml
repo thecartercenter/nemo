@@ -1409,6 +1409,7 @@ en:
     text: "Text"
     long_text: "Long Text"
     integer: "Integer"
+    barcode: "Barcode"
     counter: "Counter"
     decimal: "Decimal"
     location: "Location"

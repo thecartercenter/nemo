@@ -17,7 +17,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     let!(:form) do
       create(:form, :published, :with_version, name: "Sample",
         question_types: %w(text long_text integer decimal location select_one
-          multilevel_select_one select_multiple text datetime date time formstart formend))
+          multilevel_select_one select_multiple text datetime date time formstart formend barcode))
     end
 
     before do
