@@ -47,6 +47,9 @@ class ResponsesController < ApplicationController
 
       # csv output is for exporting responses
       format.csv do
+        authorize!(:export, Response)
+        @responses = @responses.accessible_by(current_ability, :export)
+
         # do search, excluding excerpts
         if params[:search].present?
           begin

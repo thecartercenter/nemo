@@ -147,6 +147,7 @@ class Ability
           can :manage, Broadcast, mission_id: mission.id
 
           can_read_all_reports_but_only_update_destroy_own
+          can :export, Report::Report
 
           if mission.locked?
             # can index, read, export responses for a locked mission
