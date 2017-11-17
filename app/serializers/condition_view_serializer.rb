@@ -13,7 +13,14 @@ class ConditionViewSerializer < ActiveModel::Serializer
     object.applicable_operator_names.map { |n| {name: I18n.t("condition.operators.#{n}"), id: n} }
   end
 
-  def value_options
-    nil
+
+  def value
+    nil # or text value or root option node id
+  end
+
+  #option set id for ref qing when applicable
+  def cascading_select_info
+    # option set id for ref qing when applicable
+    #
   end
 end
