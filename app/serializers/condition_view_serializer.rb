@@ -1,5 +1,5 @@
 class ConditionViewSerializer < ActiveModel::Serializer
-  attributes :id, :ref_qing_id, :op, :value, :form_id, :questioning_id, :refable_qing_options, :operator_options, :value
+  attributes :id, :ref_qing_id, :op, :value, :option_node_id, :form_id, :questioning_id, :refable_qing_options, :operator_options
 
   def questioning_id
     object.questioning_id
@@ -15,16 +15,14 @@ class ConditionViewSerializer < ActiveModel::Serializer
 
 
   def value
-    if object.ref_qing.present? && object.ref_qing_has_options?
-      {node_id: object.option_node.id}
-    else
-      object.value
-    end
+    object.value
   end
 
-  #option set id for ref qing when applicable
-  def cascading_select_info
-    # option set id for ref qing when applicable
-    #
+  def option_node_id
+    if object.ref_qing.present? && object.ref_qing_has_options?
+      object.option_node.id
+    else
+      nil
+    end
   end
 end
