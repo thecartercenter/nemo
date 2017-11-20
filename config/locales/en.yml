@@ -1250,6 +1250,7 @@ en:
       sms_message: "SMS Message"
       pointers:
         text: "Write your answer in the box. Abbreviate if necessary."
+        barcode: "Write your answer in the box."
         number: "Write your answer in the box."
         select_one: "Write the letter for your choice in the box. Write only one letter."
         select_one_as_text: "Write your answer in the box. Be sure to write the exact option name."
