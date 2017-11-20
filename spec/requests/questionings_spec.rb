@@ -70,7 +70,7 @@ describe "questionings", type: :request do
           questioning_id: qing.id,
           refable_qing_options: expected_ref_qing_options,
           operator_options: [],
-          value_options: nil
+          value: nil
         }.to_json
 
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",{
@@ -103,7 +103,7 @@ describe "questionings", type: :request do
           questioning_id: qing.id,
           refable_qing_options: expected_ref_qing_options,
           operator_options: expected_operator_options,
-          value_options: nil
+          value: nil
         }.to_json
 
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
@@ -115,6 +115,45 @@ describe "questionings", type: :request do
 
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
+      end
+
+      context " text value exists" do
+        let(:condition) { create(:condition, questioning: qing, ref_qing: form.c[1], value: "Test") } #ref_qing: form.c[1], op: "eq", value: "Test"}
+
+        it "returns text value" do
+          puts condition.value
+
+          expected_operator_options = [
+            {name:"is equal to", id:"eq" },
+            {name:"is not equal to", id:"neq" }
+          ]
+
+          expected = {
+            id: condition.id,
+            ref_qing_id: condition.ref_qing.id,
+            op: condition.op,
+            value: "Test",
+            form_id: form.id,
+            questioning_id: qing.id,
+            refable_qing_options: expected_ref_qing_options,
+            operator_options: expected_operator_options
+          }.to_json
+
+          get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
+            {
+              ref_qing_id: form.c[1].id,
+              form_id: form.id,
+              questioning_id: qing.id
+            }
+
+          expect(response).to have_http_status(200)
+          expect(response.body).to eq expected
+        end
+
+      end
+
+      context "option node value exists" do
+
       end
     end
   end
