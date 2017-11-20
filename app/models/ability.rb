@@ -111,7 +111,7 @@ class Ability
           # only need these abilities if not also a staffer
           unless role_in_mission?(:staffer)
             # can only see own responses
-            can [:index, :read, :export], Response, user_id: user.id, mission_id: mission.id
+            can [:index, :read], Response, user_id: user.id, mission_id: mission.id
 
             # observers can only mark a form as 'incomplete' if the form permits it
             can :submit_incomplete, Response do |r|
