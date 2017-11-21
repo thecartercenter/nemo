@@ -2034,11 +2034,11 @@ en:
       other: "%{count} users deleted successfully."
     bulk_destroy_deactivated:
       zero: "No users deactivated."
-      one: "%{count} user could not be destroyed, so they were deactivated."
-      two: "%{count} users could not be destroyed, so they were deactivated."
-      few: "%{count} users could not be destroyed, so they were deactivated."
-      many: "%{count} users could not be destroyed, so they were deactivated."
-      other: "%{count} users could not be destroyed, so they were deactivated."
+      one: "%{count} user could not be deleted, so they were deactivated."
+      two: "%{count} users could not be deleted, so they were deactivated."
+      few: "%{count} users could not be deleted, so they were deactivated."
+      many: "%{count} users could not be deleted, so they were deactivated."
+      other: "%{count} users could not be deleted, so they were deactivated."
     bulk_destroy_skipped:
       zero: "No users skipped."
       one: "%{count} user skipped."
