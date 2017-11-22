@@ -55,6 +55,7 @@ Note to install the software below we recommend the following package managers:
   - Install the required gems by running `bundle install` in the project directory.
   - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
   - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
+  - Setup the UUID postgres extension (must be done as postgres superuser): `sudo -u postgres psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
   - Load the database schema: `rake db:schema:load`.
   - Create an admin account: `rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it to be used on your first login).
 
