@@ -37,7 +37,7 @@ module ODKSubmissionSupport
       xml << "<meta><instanceName>foo</instanceName></meta>"
 
       if no_data
-        xml << "<#{OdkHelper::IR_QUESTION}>yes</#{OdkHelper::IR_QUESTION}>" if form.allow_incomplete?
+        xml << "<#{Odk::FormDecorator::IR_QUESTION}>yes</#{Odk::FormDecorator::IR_QUESTION}>" if form.allow_incomplete?
       else
         i = 1
         descendants = form.arrange_descendants

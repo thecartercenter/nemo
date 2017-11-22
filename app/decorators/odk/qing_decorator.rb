@@ -56,7 +56,7 @@ module Odk
     def required_value(form)
       # If form allows incompletes, question is required only if
       # the answer to 'are there missing answers' is 'no'.
-      form.allow_incomplete? ? "selected(/data/#{IR_QUESTION}, 'no')" : "true()"
+      form.allow_incomplete? ? "selected(/data/#{FormDecorator::IR_QUESTION}, 'no')" : "true()"
     end
 
     def binding_type_attrib(subq)

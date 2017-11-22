@@ -9,8 +9,8 @@
 
     <%# incomplete response question nodes %>
     <% if allow_incomplete? %>
-      <%= tag(OdkHelper::IR_QUESTION) %>
-      <%= tag(OdkHelper::IR_CODE) %>
+      <%= tag(Odk::FormDecorator::IR_QUESTION) %>
+      <%= tag(Odk::FormDecorator::IR_CODE) %>
     <% end %>
 
     <% if @style == 'commcare' %>
