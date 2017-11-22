@@ -9,7 +9,8 @@ module Concerns::ApplicationController::Crud
       obj.destroy
       flash[:success] = "#{obj.class.model_name.human} #{t('errors.messages.deleted_successfully')}"
     rescue DeletionError
-      flash[:error] = t($!.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key], default: t("errors.messages.generic_delete_error"))
+      flash[:error] = t($!.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key],
+        default: t("errors.messages.generic_delete_error"))
     end
   end
 

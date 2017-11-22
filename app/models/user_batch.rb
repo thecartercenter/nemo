@@ -51,7 +51,7 @@ class UserBatch
       # create the users in a transaction in case of validation error
       User.transaction do
 
-        @import_num = last_import_num_on_users
+        @import_num = (User.maximum(:import_num) || 0) + 1
         user_batch_attributes = parse_rows
 
         (0...number_of_iterations).each do |i|
@@ -202,7 +202,7 @@ class UserBatch
                admin: false,
                assignments: [Assignment.new(mission: mission, role: User::ROLES.first)],
                batch_creation: true,
-               import_num: @import_num += 1))
+               import_num: @import_num))
   end
 
   def add_validation_error_messages(user, row_number)
@@ -296,10 +296,5 @@ class UserBatch
   def insert_assignments(users_batch)
     FastInserter.new("assignments").insert_select(
       users_batch, "assignments", "user_id", "users", "import_num")
-  end
-
-  def last_import_num_on_users
-    import_num = User.order("import_num DESC").first.try(:import_num)
-    import_num.nil? ? 0 : import_num
   end
 end
