@@ -22,6 +22,7 @@ class Form < ApplicationRecord
   before_save :update_pub_changed_at
 
   # For some reason this works but dependent: :destroy doesn't.
+  # By default, has_ancestry destroys all children of a destroyed group, so this should cascade down.
   before_destroy { root_group.destroy }
 
   validates :name, presence: true, length: {maximum: 32}
