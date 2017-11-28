@@ -76,6 +76,7 @@ Paste the contents of [this config file](nginx.conf). Update the `server_name` s
     sudo apt-get install postgresql-client-9.4 postgresql-9.4 postgresql-contrib-9.4 libpq-dev postgresql-server-dev-9.4
     sudo -u postgres createuser -d ubuntu
     createdb elmo_production
+    sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'
 
 ### Configure ELMO
 

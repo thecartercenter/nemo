@@ -1,6 +1,6 @@
 # Class for efficiently inserting objects into the database using combined INSERTs and SELECT ... INSERT.
 class FastInserter
-  ATTRIBS_TO_SKIP = %w(id deleted_at old_id mission_old_id user_old_id)
+  ATTRIBS_TO_SKIP = %w(id deleted_at old_id mission_old_id user_old_id uuid)
 
   def initialize(table)
     @table = table
@@ -34,7 +34,7 @@ class FastInserter
         WHERE #{table_to_select}.deleted_at IS NULL AND #{field_to_where}=#{o.send(field_to_where)}"
     end
 
-    unified_select_queries = selects_queries.join(" UNION ")
+    unified_select_queries = selects_queries.uniq.join(" UNION ")
 
     sql_runner.run("INSERT INTO #{@table} (#{column_names}) #{unified_select_queries}")
   end

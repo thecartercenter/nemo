@@ -1,13 +1,13 @@
-<select1 ref="/data/<%= OdkHelper::IR_QUESTION %>">
-  <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:label')"/>
+<select1 ref="/data/<%= Odk::FormDecorator::IR_QUESTION %>">
+  <label ref="jr:itext('<%= Odk::FormDecorator::IR_QUESTION %>:label')"/>
   <% [:no, :yes].each do |o| %>
     <item>
-      <label ref="jr:itext('<%= OdkHelper::IR_QUESTION %>:options:<%= o %>')"/>
+      <label ref="jr:itext('<%= Odk::FormDecorator::IR_QUESTION %>:options:<%= o %>')"/>
       <value><%= o %></value>
     </item>
   <% end %>
 </select1>
-<input ref="/data/<%= OdkHelper::IR_CODE %>">
-  <label ref="jr:itext('<%= OdkHelper::IR_CODE %>:label')"/>
-  <hint ref="jr:itext('<%= OdkHelper::IR_CODE %>:hint')"/>
+<input ref="/data/<%= Odk::FormDecorator::IR_CODE %>">
+  <label ref="jr:itext('<%= Odk::FormDecorator::IR_CODE %>:label')"/>
+  <hint ref="jr:itext('<%= Odk::FormDecorator::IR_CODE %>:hint')"/>
 </input>

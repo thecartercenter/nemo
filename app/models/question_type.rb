@@ -6,6 +6,7 @@ class QuestionType
   @@attributes = [
     { name: "text", odk_name: "string", properties: %w(printable smsable textual headerable defaultable) },
     { name: "long_text", odk_name: "string", properties: %w(printable smsable textual) },
+    { name: "barcode", odk_name: "barcode", properties: %w(printable smsable textual) },
     { name: "integer", odk_name: "int", properties: %w(printable smsable numeric headerable) },
     { name: "counter", odk_name: "int", properties: %w(printable smsable numeric headerable) },
     { name: "decimal", odk_name: "decimal", properties: %w(printable smsable numeric headerable) },

@@ -1,7 +1,4 @@
 module OdkHelper
-  IR_QUESTION = "ir01"   # incomplete response question
-  IR_CODE     = "ir02"   # incomplete response code
-
   # given a Subqing object, builds an odk <input> tag
   # calls the provided block to get the tag content
   def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
@@ -95,28 +92,6 @@ module OdkHelper
       "_readonly" => "true()",
       "type" => "string"
     }.reject { |k,v| v.nil? }).gsub(/_readonly=/, "readonly=").html_safe
-  end
-
-  # binding for incomplete response question
-  # note: required is an html attribute. the gsub gets around this processing branch
-  def ir_question_binding(_form)
-    tag("bind", {
-      "nodeset" => "/data/#{IR_QUESTION}",
-      "required" => "true()",
-      "type" => "select1",
-    }.reject { |k,v| v.nil? }).gsub(/"required"/, '"true()"').html_safe
-  end
-
-  # binding for incomplete response code
-  # note: required is an html attribute. the gsub gets around this processing branch
-  def ir_code_binding(form)
-    tag("bind", {
-      "nodeset" => "/data/#{IR_CODE}",
-      "required" => "true()",
-      "relevant" => "selected(/data/#{IR_QUESTION}, 'yes')",
-      "constraint" => ". = '#{form.override_code}'",
-      "type" => "string",
-    }.reject { |k,v| v.nil? }).gsub(/"required"/, '"true()"').html_safe
   end
 
   # For the given subqing, returns an xpath expression for the itemset tag nodeset attribute.

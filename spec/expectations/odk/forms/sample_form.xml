@@ -20,6 +20,7 @@
           <*itemcode12*/>
           <*itemcode13*/>
           <*itemcode14*/>
+          <*itemcode15*/>
         </data>
       </instance>
       <itext>
@@ -96,6 +97,12 @@
           <text id="*itemcode12*:hint">
             <value>Question Hint 12</value>
           </text>
+          <text id="*itemcode15*:label">
+            <value>Barcode Question Title 15</value>
+          </text>
+          <text id="*itemcode15*:hint">
+            <value>Question Hint 15</value>
+          </text>
           <text id="*optcode1*">
             <value>Cat</value>
           </text>
@@ -131,6 +138,7 @@
       <bind nodeset="/data/*itemcode12*" type="time"/>
       <bind nodeset="/data/*itemcode13*" type="dateTime" jr:preload="timestamp" jr:preloadParams="start"/>
       <bind nodeset="/data/*itemcode14*" type="dateTime" jr:preload="timestamp" jr:preloadParams="end"/>
+      <bind nodeset="/data/*itemcode15*" type="barcode"/>
     </model>
   </h:head>
   <h:body>
@@ -205,6 +213,10 @@
     <input ref="/data/*itemcode12*">
       <label ref="jr:itext('*itemcode12*:label')"/>
       <hint ref="jr:itext('*itemcode12*:hint')"/>
+    </input>
+    <input ref="/data/*itemcode15*">
+      <label ref="jr:itext('*itemcode15*:label')"/>
+      <hint ref="jr:itext('*itemcode15*:hint')"/>
     </input>
   </h:body>
 </h:html>

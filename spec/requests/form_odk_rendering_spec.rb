@@ -17,7 +17,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     let!(:form) do
       create(:form, :published, :with_version, name: "Sample",
         question_types: %w(text long_text integer decimal location select_one
-          multilevel_select_one select_multiple text datetime date time formstart formend))
+          multilevel_select_one select_multiple text datetime date time formstart formend barcode))
     end
 
     before do
@@ -338,6 +338,23 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("default_pattern_form.xml", form)
+    end
+  end
+
+  context "form with incomplete responses allowed" do
+    let(:form) do
+      create(:form, :published, :with_version, name: "Allows Incomplete",
+        question_types: %w(integer), allow_incomplete: true)
+    end
+
+    before do
+      # Things don't get interesting unless you have at least one required question.
+      form.c[0].update_attribute(:required, true)
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("allows_incomplete.xml", form)
     end
   end
 

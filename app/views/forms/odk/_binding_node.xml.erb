@@ -13,13 +13,6 @@
   <% end %>
 <% end %>
 
-
-<%# incomplete response question bindings %>
-<% if allow_incomplete? %>
-  <%= ir_question_binding(@form) %>
-  <%= ir_code_binding(@form) %>
-<% end %>
-
 <%# Special username field for commcare. %>
 <% if @style == 'commcare' %>
   <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>

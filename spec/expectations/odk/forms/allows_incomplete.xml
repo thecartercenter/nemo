@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>*formname1*</h:title>
+    <model>
+      <instance>
+        <data id="*form1*" version="*formver1*">
+          <*itemcode1*/>
+          <ir01/>
+          <ir02/>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="*itemcode1*:label">
+            <value>Integer Question Title 1</value>
+          </text>
+          <text id="*itemcode1*:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="ir01:label">
+            <value>Is this form missing any required answers?</value>
+          </text>
+          <text id="ir01:hint">
+            <value>This form allows submission of incomplete responses in special situations. If you are not sure whether any required answers are missing, choose 'I don't think so' and then save.</value>
+          </text>
+          <text id="ir01:options:no">
+            <value>I don't think so</value>
+          </text>
+          <text id="ir01:options:yes">
+            <value>Yes</value>
+          </text>
+          <text id="ir02:label">
+            <value>Enter the incomplete override code</value>
+          </text>
+          <text id="ir02:hint">
+            <value/>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/*itemcode1*" type="int" required="selected(/data/ir01, 'no')"/>
+      <bind nodeset="/data/ir01" required="true()" type="select1"/>
+      <bind nodeset="/data/ir02" required="true()" relevant="selected(/data/ir01, 'yes')" constraint=". = ''" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/*itemcode1*">
+      <label ref="jr:itext('*itemcode1*:label')"/>
+      <hint ref="jr:itext('*itemcode1*:hint')"/>
+    </input>
+    <select1 ref="/data/ir01">
+      <label ref="jr:itext('ir01:label')"/>
+      <item>
+        <label ref="jr:itext('ir01:options:no')"/>
+        <value>no</value>
+      </item>
+      <item>
+        <label ref="jr:itext('ir01:options:yes')"/>
+        <value>yes</value>
+      </item>
+    </select1>
+    <input ref="/data/ir02">
+      <label ref="jr:itext('ir02:label')"/>
+      <hint ref="jr:itext('ir02:hint')"/>
+    </input>
+  </h:body>
+</h:html>

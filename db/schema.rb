@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171113201301) do
+ActiveRecord::Schema.define(version: 20171122193908) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -58,7 +58,6 @@ ActiveRecord::Schema.define(version: 20171113201301) do
     t.datetime "updated_at"
     t.uuid "user_id"
     t.integer "user_old_id"
-    t.string "uuid", null: false
   end
 
   add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
@@ -694,7 +693,6 @@ ActiveRecord::Schema.define(version: 20171113201301) do
     t.string "pref_lang", limit: 255, null: false
     t.string "sms_auth_code", limit: 255
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree

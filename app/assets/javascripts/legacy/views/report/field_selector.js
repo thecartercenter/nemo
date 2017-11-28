@@ -78,10 +78,6 @@
       field_params.question1_id = "";
       field_params.attrib1_name = "";
 
-      // convert to integer if necessary
-      if (field_val[0] == "question1_id")
-        field_val[1] = parseInt(field_val[1]);
-
       // build the attrib obj
       field_params.type = "Report::IdentityCalculation";
       field_params[field_val[0]] = field_val[1];
