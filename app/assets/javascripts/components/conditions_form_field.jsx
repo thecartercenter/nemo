@@ -6,6 +6,7 @@ class ConditionsFormField extends React.Component {
     this.updateFieldData = this.updateFieldData.bind(this);
     this.formatRefQingOptions = this.formatRefQingOptions.bind(this);
     this.buildUrl = this.buildUrl.bind(this);
+    this.buildValueProps = this.buildValueProps.bind(this);
     this.state = props;
   }
 
@@ -43,6 +44,30 @@ class ConditionsFormField extends React.Component {
     });
   }
 
+  buildValueProps(name_prefix, id_prefix) {
+    if (this.state.option_node != null) {
+      return {
+        type: "cascading_select",
+        name: `${name_prefix}[option_node_ids][]`,
+        for: `${id_prefix}_value`, //not a mistake; the for is for value; the others are for selects
+        id: `${id_prefix}_option_node_ids_`,
+        key: `${id_prefix}_option_node_ids_`,
+        option_node: this.state.option_node,
+        label: I18n.t('activerecord.attributes.condition.value')
+      }
+    } else {
+      return {
+        type: "text",
+        name: `${name_prefix}[value]`,
+        for: `${id_prefix}_value`,
+        id: `${id_prefix}_value`,
+        key: `${id_prefix}_value`,
+        value: this.state.value ? this.state.value : "",
+        label: I18n.t('activerecord.attributes.condition.value')
+      }
+    }
+  }
+
   render() {
     let name_prefix = 'questioning[condition_attributes]';
     let id_prefix = 'questioning_condition_attributes';
@@ -74,15 +99,7 @@ class ConditionsFormField extends React.Component {
       label: I18n.t('activerecord.attributes.condition.op'),
       options: this.state.operator_options
     };
-    let value_field_props = {
-      type: "text",
-      name: `${name_prefix}[value]`,
-      for: `${id_prefix}_value`,
-      id: `${id_prefix}_value`,
-      key: `${id_prefix}_value`,
-      value: this.state.value ? this.state.value : "",
-      label: I18n.t('activerecord.attributes.condition.value'),
-    };
+    let value_field_props = this.buildValueProps(name_prefix, id_prefix);
     return (
       <div>
         <input {...condition_field_props}/>

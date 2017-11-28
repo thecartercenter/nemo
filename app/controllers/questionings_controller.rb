@@ -72,12 +72,7 @@ class QuestioningsController < ApplicationController
       @questioning = init_qing(form_id: params[:form_id])
     end
     authorize! :condition_form, @questioning
-    if @questioning.condition.present?
-      @condition = @questioning.condition
-    else
-    # Create a dummy condition with the given ref qing.
-      @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
-    end
+    @condition = @questioning.build_condition(ref_qing_id: params[:ref_qing_id])
     render json: ConditionViewSerializer.new(@condition), status: 200
   end
 

@@ -18,6 +18,11 @@ class FormField extends React.Component {
         changeFunc={this.props.changeFunc}
       />
     }
+    if (this.props.type === "cascading_select") {
+      control = <CascadingSelect
+        {...this.props}
+        />
+    }
     return (
       <div className="field">
         <label htmlFor={this.props.for} key={this.props.for}>{this.props.label}</label>

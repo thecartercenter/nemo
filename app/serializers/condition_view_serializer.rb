@@ -13,14 +13,14 @@ class ConditionViewSerializer < ActiveModel::Serializer
     object.applicable_operator_names.map { |n| {name: I18n.t("condition.operators.#{n}"), id: n} }
   end
 
-
   def value
     object.value
   end
 
   def option_node
     if object.ref_qing.present? && object.ref_qing_has_options?
-      {node_id: object.option_node.id, set_id: object.option_node.option_set.id}
+      puts object.option_node
+      {node_id: object.option_node.try(:id), set_id: object.ref_qing.try(:option_set).try(:id)}
     else
       nil
     end
