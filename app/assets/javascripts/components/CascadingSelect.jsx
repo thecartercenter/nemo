@@ -6,40 +6,16 @@ class CascadingSelect extends React.Component {
     this.buildUrl = this.buildUrl.bind(this);
     this.buildLevelProps = this.buildLevelProps.bind(this);
     this.buildLevels = this.buildLevels.bind(this);
+    this.isLastLevel = this.isLastLevel.bind(this);
     this.state = props;
 
   }
   componentWillMount() {
-    this.updateData(this.props.option_node.node_id)
+    this.updateData(this.props.option_node.node_id);
   }
 
   updateData(nodeId) {
     this.getData(nodeId);
-    // this.setState({
-    //   levels: [
-    //     {name: "Kingdom",
-    //      selected: 2,
-    //      options: [
-    //        {name: "Animal", id:1 },
-    //        {name: "Plant", id: 2}
-    //       ]
-    //     },
-    //     {name: "Family",
-    //      selected: 3,
-    //      options: [
-    //        {name: "Tree", id: 3},
-    //        {name: "Flower", id: 4}
-    //       ]
-    //     },
-    //     {name: "Species",
-    //      selected: null,
-    //      options: [
-    //        {name: "Oak", id: 5},
-    //        {name: "Pine", id: 6}
-    //       ]
-    //     }
-    //   ]
-    // })
   }
 
   getData(nodeId) {
@@ -58,13 +34,11 @@ class CascadingSelect extends React.Component {
         });
   }
 
-//move up to condition view and pass as prop?
   buildUrl(optionNodeId) {
-    var url = `${ELMO.app.url_builder.build('option-sets', this.props.option_node.set_id, 'condition-form-view')}?option_node_id=${optionNodeId}`
-    return url;
+    return `${ELMO.app.url_builder.build('option-sets', this.props.option_node.set_id, 'condition-form-view')}?node_id=${optionNodeId}`;
   }
 
-  buildLevelProps(level) {
+  buildLevelProps(level, isLastLevel) {
     return {
       type: "select",
       name: `questioning[condition_attributes][option_node_ids][]`,
@@ -72,7 +46,7 @@ class CascadingSelect extends React.Component {
       key: `questioning_condition_attributes_option_node_ids_`,
       value: level.selected,
       options: level.options,
-      changeFunc: this.updateData
+      changeFunc: isLastLevel ? null : this.updateData
     }
   }
 
@@ -80,18 +54,22 @@ class CascadingSelect extends React.Component {
     let self = this;
     var result = [];
     if (this.state.levels) {
-      result = this.state.levels.map(function(level) {
+      result = this.state.levels.map(function(level, i) {
         return (
-          <div className="level">
+          <div className="level" key={level.name}>
             <label>
               {level.name}
-              <FormSelect {...self.buildLevelProps(level)} />
+              <FormSelect {...self.buildLevelProps(level, self.isLastLevel(i))} />
             </label>
           </div>
         );
       })
     }
     return result;
+  }
+
+  isLastLevel(i) {
+    return this.state.levels && this.state.levels.length === (i + 1);
   }
 
   render() {
