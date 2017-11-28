@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe User do
-  it_behaves_like "has a uuid"
-
   let(:mission) { get_mission }
 
   describe "creation" do

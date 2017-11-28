@@ -6,8 +6,8 @@
 
 <%# Incomplete response question bindings %>
 <% if allow_incomplete? %>
-  <%= ir_question_binding(@form) %>
-  <%= ir_code_binding(@form) %>
+  <%= @form.ir_question_binding %>
+  <%= @form.ir_code_binding %>
 <% end %>
 
 <%# Special username field for commcare %>

@@ -166,7 +166,7 @@ group :development, :test do
 
   # mocking/stubbing/factories
   gem "mocha", "~> 1.1.0"
-  gem "faker", "~> 1.6.3"
+  gem "faker", "~> 1.6"
   gem "factory_girl_rails", "~> 4.5.0"
 
   # acceptance tests

@@ -59,7 +59,6 @@ class XMLSubmission
     # Response mission should already be set
     raise "Submissions must have a mission" if @response.mission.nil?
 
-
     # Loop over each child tag and create hash of odk_code => value
     hash = {}
     data.elements.each do |child|
@@ -104,7 +103,7 @@ class XMLSubmission
         add_answers_for_qing(item, hash, 1)
       end
     end
-    @response.incomplete ||= (hash[OdkHelper::IR_QUESTION] == "yes")
+    @response.incomplete ||= (hash[Odk::FormDecorator::IR_QUESTION] == "yes")
   end
 
   def add_answers_for_qing(qing, hash, inst_num)

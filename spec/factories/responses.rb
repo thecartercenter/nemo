@@ -51,7 +51,8 @@ module ResponseFactoryHelper
 
     when "date", "time", "datetime"
       Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value)
-
+    when "image", "annotated_image", "signature", "sketch", "audio", "video"
+      Answer.new(questioning: qing, media_object: value)
     else
       Answer.new(questioning: qing, value: value)
     end
