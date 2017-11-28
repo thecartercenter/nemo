@@ -19,7 +19,6 @@ class ConditionViewSerializer < ActiveModel::Serializer
 
   def option_node
     if object.ref_qing.present? && object.ref_qing_has_options?
-      puts object.option_node
       {node_id: object.option_node.try(:id), set_id: object.ref_qing.try(:option_set).try(:id)}
     else
       nil
