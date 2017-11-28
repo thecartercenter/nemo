@@ -110,7 +110,7 @@ class OptionSetsController < ApplicationController
   end
 
   def condition_form_view
-    option_node = OptionNode.find_by_id(params[:node_id]) #return false if not there
+    option_node = OptionNode.find_by_id(params[:node_id]) #false if not found instead of throwing exception
     if !option_node
       option_node = @option_set.root_node
     end

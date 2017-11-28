@@ -54,7 +54,6 @@ describe "questionings", type: :request do
   end
 
   describe "condition_form_data" do
-
     let(:form) { create(:form, :published, question_types: %w(integer text select_one integer text)) }
     let(:qing) { form.c[3] }
     let(:expected_ref_qing_options) { form.c[0..2].map { |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } } }
@@ -72,13 +71,11 @@ describe "questionings", type: :request do
           refable_qing_options: expected_ref_qing_options,
           operator_options: []
         }.to_json
-
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",{
           ref_qing_id: nil,
           form_id: form.id,
           questioning_id: qing.id
         }
-
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
@@ -105,14 +102,12 @@ describe "questionings", type: :request do
           refable_qing_options: expected_ref_qing_options,
           operator_options: expected_operator_options,
         }.to_json
-
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
           {
             ref_qing_id: form.c[0].id,
             form_id: form.id,
             questioning_id: qing.id
           }
-
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
@@ -121,13 +116,10 @@ describe "questionings", type: :request do
         let(:condition) { create(:condition, questioning: qing, ref_qing: form.c[1], value: "Test") } #ref_qing: form.c[1], op: "eq", value: "Test"}
 
         it "returns text value" do
-          puts condition.value
-
           expected_operator_options = [
             {name:"is equal to", id:"eq" },
             {name:"is not equal to", id:"neq" }
           ]
-
           expected = {
             id: condition.id,
             ref_qing_id: condition.ref_qing.id,
@@ -139,31 +131,25 @@ describe "questionings", type: :request do
             refable_qing_options: expected_ref_qing_options,
             operator_options: expected_operator_options
           }.to_json
-
           get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
             {
               ref_qing_id: form.c[1].id,
               form_id: form.id,
               questioning_id: qing.id
             }
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
-
       end
 
       context "option node value exists" do
-        let(:condition) { create(:condition, questioning: qing, ref_qing: form.c[2], value: nil) } #ref_qing: form.c[1], op: "eq", value: "Test"}
+        let(:condition) { create(:condition, questioning: qing, ref_qing: form.c[2], value: nil) }
 
         it "returns text value" do
-          puts condition.value
-
           expected_operator_options = [
             {name:"is equal to", id:"eq" },
             {name:"is not equal to", id:"neq" }
           ]
-
           expected = {
             id: condition.id,
             ref_qing_id: condition.ref_qing.id,
@@ -175,14 +161,12 @@ describe "questionings", type: :request do
             refable_qing_options: expected_ref_qing_options,
             operator_options: expected_operator_options
           }.to_json
-
           get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
             {
-              ref_qing_id: form.c[1].id,
+              ref_qing_id: form.c[2].id,
               form_id: form.id,
               questioning_id: qing.id
             }
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end

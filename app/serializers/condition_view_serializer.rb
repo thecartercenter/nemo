@@ -1,6 +1,10 @@
 class ConditionViewSerializer < ActiveModel::Serializer
   attributes :id, :ref_qing_id, :op, :value, :option_node, :form_id, :questioning_id, :refable_qing_options, :operator_options
 
+  def id
+    object.id
+  end
+  
   def questioning_id
     object.questioning_id
   end

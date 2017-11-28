@@ -8,7 +8,7 @@ class OptionNodeConditionViewSerializer < ActiveModel::Serializer
       {
         name: path.multilevel? ? path.level_name_for_depth(i + 1) : nil,
         selected: path.nodes[i+1].try(:id),
-        options: path.nodes_for_depth(i+1).map {|n| {name: n.option.name, id: n.id}} #TO DO Translation
+        options: path.nodes_for_depth(i+1).map {|n| {name: n.option.name, id: n.id}}
       }
     end
     levels

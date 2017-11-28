@@ -9,9 +9,7 @@ describe "option_sets", type: :request do
   end
 
   describe "get_condition_view" do
-
     context "multilevel" do
-
       let(:option_set) { create(:option_set, super_multilevel: true) }
 
       context "nothing selected" do
@@ -36,7 +34,6 @@ describe "option_sets", type: :request do
               }
             ]
           }.to_json
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -71,7 +68,6 @@ describe "option_sets", type: :request do
               }
             ]
           }.to_json
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -103,7 +99,6 @@ describe "option_sets", type: :request do
               }
             ]
           }.to_json
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -138,7 +133,6 @@ describe "option_sets", type: :request do
               }
             ]
           }.to_json
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -163,7 +157,6 @@ describe "option_sets", type: :request do
               }
             ]
           }.to_json
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -183,7 +176,6 @@ describe "option_sets", type: :request do
               }
             ]
           }.to_json
-
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -192,6 +184,6 @@ describe "option_sets", type: :request do
   end
 
   def get_node(option_set, name)
-    option_set.option_nodes.select {|n| n.option && n.option.canonical_name == name}[0]
+    option_set.option_nodes.select { |n| n.option && n.option.canonical_name == name }[0]
   end
 end

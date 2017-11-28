@@ -152,7 +152,6 @@ ELMO::Application.routes.draw do
         get "child_nodes", path: "child-nodes"
         put "clone"
         get "export", defaults: { format: "xlsx" }
-        ###TEMPORARY, not sure where this should go
         get "condition_form_view", path: "condition-form-view"
       end
     end
