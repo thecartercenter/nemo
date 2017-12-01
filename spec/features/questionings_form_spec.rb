@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe "questionings form" do
+describe "questionings form", js: true  do
   let(:user) { create(:user, role_name: "coordinator") }
 
   before do

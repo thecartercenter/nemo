@@ -359,6 +359,10 @@ en:
         which_phone: "Which Phone(s)"
         recipient_selection: "Recipients"
         recipient_ids: "Users/Groups"
+      condition:
+        ref_qing_id: "Question"
+        op: "Comparison"
+        value: "Value"
       form:
         allow_incomplete: "Allow Incomplete?"
         copy_responses_count: "Copy Responses"

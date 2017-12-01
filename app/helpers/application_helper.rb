@@ -105,7 +105,7 @@ module ApplicationHelper
   # takes an array of keys and a scope and builds an options array
   # e.g. [["Option 1", "opt1"], ["Option 2", "opt2"], ...]
   def translate_options(keys, scope)
-    keys.map { |k| [t(k, scope: scope), k] }
+    keys.map { |k| [I18n.t(k, scope: scope), k] }
   end
 
   # translates a boolean value
