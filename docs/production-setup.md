@@ -134,11 +134,46 @@ See the [ELMO Documentation](http://getelmo.org/documentation/start/) for help o
 
 ### Upgrading
 
-**IMPORTANT**: If you are upgrading from v5.x or earlier, see the instructions below on converting to PostgreSQL.
+#### Upgrading from v5.x to v5.16
 
-When new versions of ELMO are released, you will want to upgrade. To do so, ssh to your server and change to the `elmo` directory, then:
+You should upgrade to v5.16 before moving on to v6.11. Follow the 'General Upgrade Instructions' below to upgrade to **v5.16** before moving to v6.x.
+
+#### Upgrading from v5.16 to v6.11
+
+You should upgrade to v6.11 before moving on to the latest master. Follow the instructions below to do so:
+
+1. Install PostgreSQL (see above).
+1. In project directory on server, `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
+1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
+1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
+1. Ensure you can connect to the database (e.g. using `psql elmo_production`) from the user account that runs the app. If you need a password or different host, be sure to update the mysql2postgres.yml file to reflect this.
+1. It is best to stop nginx at this point to prevent any data corruption.
+1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
+    1. If you get the error `MysqlPR::ClientError::ServerGoneError: The MySQL server has gone away`, check your DB name, username, and password in `config/mysql2postgres.yml`.
+1. Ignore the `no COPY in progress` message.
+1. Update `config/database.yml` to point to Postgres. Use `config/database.yml.example` as a guide.
+1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
+1. You should now follow the 'General Upgrade Instructions' below to upgrade to **v6.11** before moving to the latest master.
+
+#### Upgrading from v6.x to the latest master
+
+1. Make a backup of your database: `pg_dump elmo_production > v6-dump.sql`
+2. `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'`
+3. Follow the 'General Upgrade Instructions' below to upgrade to the latest master. Your data will be migrated to use UUIDs, and this may take awhile. Then you'll be all up to date!
+
+#### General Upgrade Instructions
+
+ssh to your server and change to the `elmo` directory, then:
 
     git pull
+
+If you want to upgrade to a particular version of ELMO, then try:
+
+    git checkout release-x.y
+
+where `x.y` is the version number you want. Otherwise you should ensure you're on the master branch:
+
+    git checkout master
 
 Now be sure to check the [commit history of the local config file](https://github.com/thecartercenter/elmo/commits/develop/config/initializers/local_config.rb.example) and/or run:
 
@@ -155,28 +190,7 @@ Then:
     bundle exec bin/delayed_job restart
     touch tmp/restart.txt
 
-Then load the site in your browser. You should see the new version number in the page footer.
-
-### Converting an Existing Instance from MySQL to PostgreSQL
-
-1. Install PostgreSQL (see above).
-1. First upgrade to version v5.16.x, which is the last MySQL compatible version.
-1. `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
-1. In `config/mysql2postgres.yml`, ensure the database under `mysql_data_source` matches your MySQL database name.
-1. Ensure a database `elmo_production` exists in PostgreSQL (note that anything in this DB will be destroyed).
-1. Ensure you can connect to the database (e.g. using `psql elmo_production`) from the user account that runs the app. If you need a password or different host, be sure to update the mysql2postgres.yml file to reflect this.
-1. It is best to turn off the server at this point to prevent any data corruption.
-1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
-1. Ignore the `no COPY in progress` message.
-1. Update `config/database.yml` to point to Postgres. Use `config/database.yml.example` as a guide.
-1. Upgrade to version v6+. Version 6+ is required when running against Postgres.
-1. Restart your server. You should now be running on PostgreSQL!
-1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
-
-Troubleshooting
-
-* `MysqlPR::ClientError::ServerGoneError: The MySQL server has gone away` - Check your DB name in `config/mysql2postgres.yml`.
-
+Start nginx if it had been stopped. Then load the site in your browser. You should see the new version number in the page footer.
 
 ### Troubleshooting
 
