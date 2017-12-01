@@ -4,7 +4,7 @@ class ConditionViewSerializer < ActiveModel::Serializer
   def id
     object.id
   end
-  
+
   def questioning_id
     object.questioning_id
   end
@@ -23,7 +23,7 @@ class ConditionViewSerializer < ActiveModel::Serializer
 
   def option_node
     if object.ref_qing.present? && object.ref_qing_has_options?
-      {node_id: object.option_node.try(:id), set_id: object.ref_qing.try(:option_set).try(:id)}
+      { node_id: object.option_node.try(:id), set_id: object.ref_qing.try(:option_set_id) }
     else
       nil
     end
