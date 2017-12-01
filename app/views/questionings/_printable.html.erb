@@ -3,12 +3,9 @@
     <% if qing.condition %>
       <div class="condition"><%= t("question.answer_only_caps") %> <%= qing.condition.to_s %></div>
     <% end %>
-    <div class="name">
-      <%= qing.full_dotted_rank %>. <%= reqd_sym if qing.required? %>
-      <%= qing.question.name %>
-    </div>
-    <% unless qing.question.hint.blank? %>
-      <div class="hint"><%= qing.question.hint %></div>
+    <div class="name"><%= qing.name_and_rank %></div>
+    <% unless qing.hint.blank? %>
+      <div class="hint"><%= qing.hint %></div>
     <% end %>
   </td>
   <td class="answer <%= qing.qtype_name %>_answer">

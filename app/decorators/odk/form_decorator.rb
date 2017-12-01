@@ -1,5 +1,5 @@
 module Odk
-  class FormDecorator < FormItemDecorator
+  class FormDecorator < BaseDecorator
     delegate_all
 
     def default_response_name_instance_tag
