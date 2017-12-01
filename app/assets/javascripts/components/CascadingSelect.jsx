@@ -75,8 +75,8 @@ class CascadingSelect extends React.Component {
   render() {
     return (
       <div className="cascading-selects" id="cascading-selects-1">
-         {this.buildLevels()}
-     </div>
+        {this.buildLevels()}
+      </div>
    );
   }
 }
