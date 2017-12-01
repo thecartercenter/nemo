@@ -9,10 +9,13 @@ class MigratePrimaryKeysToUuid < ActiveRecord::Migration
     enable_extension "uuid-ossp"
     transaction do
       # manually remove extra foreign keys first
-      remove_foreign_key :forms, name: "forms_original_id_fkey1".to_sym
-      remove_foreign_key :option_nodes, name: "option_nodes_original_id_fkey1"
-      remove_foreign_key :option_sets, name: "option_sets_original_id_fkey1"
-      remove_foreign_key :questions, name: "questions_original_id_fkey1"
+      to_remove = [
+        [:forms, "forms_original_id_fkey1"],
+        [:option_nodes, "option_nodes_original_id_fkey1"],
+        [:option_sets, "option_sets_original_id_fkey1"],
+        [:questions, "questions_original_id_fkey1"]
+      ]
+      to_remove.each { |t, n| p foreign_keys(t).map(&:name); remove_foreign_key(t, name: n) if foreign_keys(t).map(&:name).include?(n) }
 
       TABLES.each do |table_name, table_data|
         # Seek out and clean orphaned records
