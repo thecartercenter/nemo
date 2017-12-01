@@ -73,9 +73,3 @@ RSpec::Matchers.define :match_csv do |expected|
     doc.to_s == expected
   end
 end
-
-RSpec::Matchers.define :be_able_to do |op, target|
-  match do |ability|
-    ability.can?(op.to_sym, target)
-  end
-end

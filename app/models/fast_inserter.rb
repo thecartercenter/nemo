@@ -1,6 +1,6 @@
 # Class for efficiently inserting objects into the database using combined INSERTs and SELECT ... INSERT.
 class FastInserter
-  ATTRIBS_TO_SKIP = %w(id deleted_at)
+  ATTRIBS_TO_SKIP = %w(id deleted_at old_id mission_old_id user_old_id uuid)
 
   def initialize(table)
     @table = table
@@ -30,11 +30,11 @@ class FastInserter
 
     # Build the select queries for each object using the params
     selects_queries = objects.map.with_index do |o, i|
-      "SELECT #{object_values[i]} FROM #{table_to_select}
+      "SELECT #{object_values[i].gsub("'id'::uuid", 'id')} FROM #{table_to_select}
         WHERE #{table_to_select}.deleted_at IS NULL AND #{field_to_where}=#{o.send(field_to_where)}"
     end
 
-    unified_select_queries = selects_queries.join(" UNION ")
+    unified_select_queries = selects_queries.uniq.join(" UNION ")
 
     sql_runner.run("INSERT INTO #{@table} (#{column_names}) #{unified_select_queries}")
   end
@@ -68,7 +68,13 @@ class FastInserter
       if ATTRIBS_TO_SKIP.include?(column)
         nil
       else
-        [:string, :text].include?(column_type.type) ? "'%s'" : "%s"
+        if [:string, :text].include?(column_type.type)
+          "'%s'"
+        elsif column_type.type == :uuid
+          "'%s'::uuid"
+        else
+          "%s"
+        end
       end
     end.compact.join(", ")
   end

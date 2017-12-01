@@ -136,7 +136,7 @@ class OptionSetsController < ApplicationController
 
       if params[:modal_mode]
         # render the option set's ID in json format
-        render(json: @option_set.id)
+        render(json: @option_set.id.to_json)
       else
         # render where we should redirect
         render(json: option_sets_path.to_json)

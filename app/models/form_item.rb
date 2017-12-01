@@ -100,7 +100,7 @@ class FormItem < ApplicationRecord
   end
 
   def sorted_children
-    children.order(:rank)
+    sorted = children.order(:rank)
   end
 
   # Returns an array of ranks of all parents plus self, e.g. [2,5].

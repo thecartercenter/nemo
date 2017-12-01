@@ -24,8 +24,8 @@
     if (!options.form_ids || options.form_ids == "ALL")
       options.form_ids = [];
 
-    // sort the form_id array and convert all form_ids to integers for fast comparison
-    options.form_ids = Sassafras.Utils.array_to_ints(options.form_ids).sort(function(a,b){return a-b});
+    // Sort the form_id array to increase likelihood of cache hits.
+    options.form_ids = options.form_ids.sort();
 
     // sort the question types also
     if (options.question_types)

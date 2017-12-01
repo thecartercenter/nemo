@@ -53,7 +53,7 @@ class Media::ObjectsController < ApplicationController
   def media_filename
     extension = File.extname(@media_object.item_file_name)
     if @response && @answer
-      "elmo-#{@response.id}-#{@answer.id}#{extension}"
+      "elmo-#{@response.shortcode}-#{@answer.id}#{extension}"
     else
       "elmo-unsaved_response-#{@media_object.id}#{extension}"
     end

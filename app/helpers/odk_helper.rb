@@ -1,7 +1,4 @@
 module OdkHelper
-  IR_QUESTION = "ir01"   # incomplete response question
-  IR_CODE     = "ir02"   # incomplete response code
-
   # given a Subqing object, builds an odk <input> tag
   # calls the provided block to get the tag content
   def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
@@ -97,28 +94,6 @@ module OdkHelper
     }.reject { |k,v| v.nil? }).gsub(/_readonly=/, "readonly=").html_safe
   end
 
-  # binding for incomplete response question
-  # note: required is an html attribute. the gsub gets around this processing branch
-  def ir_question_binding(_form)
-    tag("bind", {
-      "nodeset" => "/data/#{IR_QUESTION}",
-      "required" => "true()",
-      "type" => "select1",
-    }.reject { |k,v| v.nil? }).gsub(/"required"/, '"true()"').html_safe
-  end
-
-  # binding for incomplete response code
-  # note: required is an html attribute. the gsub gets around this processing branch
-  def ir_code_binding(form)
-    tag("bind", {
-      "nodeset" => "/data/#{IR_CODE}",
-      "required" => "true()",
-      "relevant" => "selected(/data/#{IR_QUESTION}, 'yes')",
-      "constraint" => ". = '#{form.override_code}'",
-      "type" => "string",
-    }.reject { |k,v| v.nil? }).gsub(/"required"/, '"true()"').html_safe
-  end
-
   # For the given subqing, returns an xpath expression for the itemset tag nodeset attribute.
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
@@ -136,7 +111,10 @@ module OdkHelper
 
   # Returns <text> tags for all first-level options.
   def odk_option_translations(form, lang)
-    odk_options = form.all_first_level_option_nodes.collect do |on|
+    option_nodes = form.all_first_level_option_nodes
+    # sort these deterministically for the test suite when needed, order does not matter for ODK
+    option_nodes.sort_by! { |on| [on.option_set.name, on.option_name] } if Rails.env.test?
+    odk_options = option_nodes.map do |on|
       content_tag(:text, id: "on#{on.id}") do
         content_tag(:value) do
           on.option.name(lang, strict: false)

@@ -17,7 +17,7 @@ describe AnswerArranger do
         "decimal"
       ])
       # Make the first group repeatable.
-      _form.children[4].update_attribute(:repeatable, true)
+      _form.sorted_children[4].update_attribute(:repeatable, true)
       _form
     end
 
@@ -75,7 +75,7 @@ describe AnswerArranger do
 
         blank = nodes[1].set.answers[0]
         expect(blank).to be_new_record
-        expect(blank.questioning).to eq form.children.last
+        expect(blank.questioning).to eq form.sorted_children.last
         expect(blank.value).to be_nil
       end
     end
@@ -106,7 +106,7 @@ describe AnswerArranger do
 
     context "when question is hidden" do
       before do
-        form.children.last.update_attribute(:hidden, true)
+        form.sorted_children.last.update_attribute(:hidden, true)
         form.reload
       end
 
@@ -132,13 +132,13 @@ describe AnswerArranger do
     let(:response) { create(:response, form: form, answer_values: [123, 456]) }
 
     before do
-      form.children.last.update_attribute(:hidden, true)
+      form.sorted_children.last.update_attribute(:hidden, true)
       form.reload
     end
 
     it "should still include answer" do
       hidden = nodes[1].set.answers[0]
-      expect(hidden.questioning).to eq form.children.last
+      expect(hidden.questioning).to eq form.sorted_children.last
       expect(hidden.casted_value).to eq 456
     end
   end
@@ -146,7 +146,7 @@ describe AnswerArranger do
   context "with repeat group" do
     let(:form) do
       create(:form, question_types: ["integer", ["integer", "integer"], "integer"]).tap do |f|
-        f.children[1].update_attribute(:repeatable, true)
+        f.sorted_children[1].update_attribute(:repeatable, true)
       end
     end
 

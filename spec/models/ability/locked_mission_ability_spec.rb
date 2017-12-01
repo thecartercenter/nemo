@@ -75,9 +75,9 @@ describe "abilities for locked missions" do
     end
   end
 
-  it "observer should be able to index read and export own responses for a locked mission" do
+  it "observer should be able to index and read own responses for a locked mission" do
     resp = create(:response, mission: @locked, user: @obs)
-    [:index, :read, :export].each do |perm|
+    [:index, :read].each do |perm|
       expect(obs_locked_ability.can?(perm, resp)).to eq(true)
     end
   end

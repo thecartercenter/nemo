@@ -6,9 +6,9 @@ class Replication::ObjProxy
   delegate :child_assocs, to: :klass
 
   def initialize(attribs)
-    raise 'No ID given' unless attribs[:id] || attribs['id']
-    raise 'No klass given' unless attribs[:klass] || attribs['klass']
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    raise "No ID given" unless attribs[:id] || attribs["id"]
+    raise "No klass given" unless attribs[:klass] || attribs["klass"]
+    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
   end
 
   def inspect
@@ -24,7 +24,7 @@ class Replication::ObjProxy
   # The assoc must be a belongs_to or this won't make sense.
   def associate(assoc, obj)
     # We use update_all so we won't have to load the full object.
-    klass.where("id = #{id}").update_all("#{assoc.foreign_key} = #{obj.id}")
+    klass.where("id = '#{id}'").update_all("#{assoc.foreign_key} = '#{obj.id}'")
   end
 
   # assoc - A Replication::AssocProxy representing the association from which to return children.
@@ -35,10 +35,10 @@ class Replication::ObjProxy
       fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
       fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
     elsif assoc.ancestry?
-      child_ancestry = [ancestry, id].compact.join('/')
-      build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class, order: 'ORDER BY rank')
+      child_ancestry = [ancestry, id].compact.join("/")
+      build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class, order: "ORDER BY rank")
     else # has_one or has_many
-      build_from_sql("#{assoc.foreign_key} = #{id}", target_klass: assoc.target_class)
+      build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
     end
   end
 
@@ -54,14 +54,12 @@ class Replication::ObjProxy
         AND #{reuse_col} = (
           SELECT #{reuse_col}
           FROM #{klass.table_name}
-          WHERE #{klass.table_name}.deleted_at IS NULL AND id = #{id}
+          WHERE #{klass.table_name}.deleted_at IS NULL AND id = '#{id}'
         )
       ").first
     # If klass is standardizable, we can look for matching using original_id
     elsif klass.standardizable?
-      build_from_sql("original_id = #{id} AND #{eql_sql(:mission_id, replicator.target_mission_id)}").first
-    else
-      nil
+      build_from_sql("original_id = '#{id}' AND #{eql_sql(:mission_id, replicator.target_mission_id)}").first
     end
   end
 
@@ -69,15 +67,14 @@ class Replication::ObjProxy
   def make_copy(context)
     # The mappings variable will hold a set of 2-element arrays, or strings.
     # These values describe how the existing object should be copied to the new one.
-    # If value is a string, copy it verbatim. Else the values are SQL expressions representing the col name and new value, respectively.
+    # If value is a string, copy it verbatim. Else the values are SQL expressions
+    # representing the col name and new value, respectively.
 
     # First add the cols to be copied verbatim.
     mappings = klass.attribs_to_replicate
 
     # But don't copy verbatim columns that need to stay unique.
-    if klass.replicable_opts[:uniqueness]
-      mappings.delete(klass.replicable_opts[:uniqueness][:field].to_s)
-    end
+    mappings.delete(klass.replicable_opts[:uniqueness][:field].to_s) if klass.replicable_opts[:uniqueness]
 
     # Now add the non-trivial mappings.
     mappings += date_col_mappings(replicator, context)
@@ -88,12 +85,11 @@ class Replication::ObjProxy
 
     if klass.has_ancestry?
       new_ancestry = get_copy_ancestry(context)
-      mappings << ['ancestry', new_ancestry.nil? ? nil : "'#{new_ancestry}'"]
+      mappings << ["ancestry", new_ancestry.nil? ? nil : "'#{new_ancestry}'"]
     else
       new_ancestry = nil
     end
-
-    new_id = do_insert(mappings).to_i
+    new_id = do_insert(mappings)
 
     self.class.new(klass: klass, id: new_id, ancestry: new_ancestry, replicator: replicator)
   end
@@ -119,7 +115,7 @@ class Replication::ObjProxy
   # options[:order] - An option ORDER BY clause.
   def build_from_sql(condition, options = {})
     options[:target_klass] ||= klass
-    get_target_class_from_type_col = options[:target_klass].column_names.include?('type')
+    get_target_class_from_type_col = options[:target_klass].column_names.include?("type")
 
     cols = [:id]
     cols << :ancestry if options[:target_klass].has_ancestry?
@@ -132,8 +128,8 @@ class Replication::ObjProxy
     ")
 
     data.map do |attribs|
-      attribs["id"] = attribs["id"].to_i
-      tc = get_target_class_from_type_col ? attribs.delete('type').constantize : options[:target_klass]
+      attribs["id"] = attribs["id"]
+      tc = get_target_class_from_type_col ? attribs.delete("type").constantize : options[:target_klass]
       self.class.new(attribs.merge(klass: tc, replicator: replicator))
     end
   end
@@ -150,13 +146,13 @@ class Replication::ObjProxy
       nil
     else
       # We combine the copy parent's own ancestry (which may be nil) plus its ID.
-      joined = [context[:copy_parent].ancestry, context[:copy_parent].id].compact.join('/')
+      joined = [context[:copy_parent].ancestry, context[:copy_parent].id].compact.join("/")
       joined.blank? ? nil : joined
     end
   end
 
   def date_col_mappings(replicator, context)
-    [['created_at', 'NOW()'], ['updated_at', 'NOW()']]
+    [["created_at", "NOW()"], ["updated_at", "NOW()"]]
   end
 
   def unique_col_mappings(replicator, context)
@@ -170,15 +166,15 @@ class Replication::ObjProxy
     mappings = []
     case replicator.mode
     when :promote
-      mappings << ['is_standard', true] if klass.standardizable?
+      mappings << ["is_standard", true] if klass.standardizable?
     when :clone
-      mappings << 'mission_id'
-      mappings << 'is_standard' if klass.standardizable?
+      mappings << "mission_id"
+      mappings << "is_standard" if klass.standardizable?
     when :to_mission
-      mappings << ['mission_id', replicator.target_mission_id]
-      mappings << ['standard_copy', true] if klass.standardizable? && replicator.source_is_standard?
+      mappings << ["mission_id", "'#{replicator.target_mission_id}'"]
+      mappings << ["standard_copy", true] if klass.standardizable? && replicator.source_is_standard?
     end
-    mappings << ['original_id', 'id'] if klass.standardizable?
+    mappings << ["original_id", "id"] if klass.standardizable?
     mappings
   end
 
@@ -205,23 +201,21 @@ class Replication::ObjProxy
   def get_copy_id(target_class, orig_id)
     # Try to find the appropriate copy in the replicator history
     if history_copy = replicator.history.get_copy(target_class, orig_id)
-      history_copy.id
+      "'#{history_copy.id}'"
 
     # Reuse original if it's reusable.
     elsif self.class.new(klass: target_class, id: orig_id, replicator: replicator).reusable?
-      orig_id
+      "'#{orig_id}'"
 
     # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
     elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
       orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
-      target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
+      col_id = target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
+      "'#{col_id}'"
 
     # Else try looking up original_id if available
     elsif target_class.standardizable? && copy_id = target_class.where(original_id: orig_id).first.try(:id)
-      copy_id
-
-    else
-      nil
+      "'#{copy_id}'"
     end
   end
 
@@ -230,7 +224,7 @@ class Replication::ObjProxy
     select_chunks = concat(mappings.map { |s| s.is_a?(Array) ? s[1] : s })
 
     sql = "INSERT INTO #{klass.table_name} (#{insert_cols})
-      SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = #{id} RETURNING id"
+      SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = '#{id}' RETURNING id"
 
     db.insert(sql)
   end

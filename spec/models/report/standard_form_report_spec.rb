@@ -149,7 +149,7 @@ describe Report::StandardFormReport do
 
     it "should be correct" do
       expect(report.cache_key).to match(
-        %r{\Areport/standard_form_reports/\d+-\d+//calcs-0-/none\z})
+        %r{\Areport/standard_form_reports/.+//calcs-0-/none\z})
     end
   end
 

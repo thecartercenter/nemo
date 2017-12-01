@@ -115,7 +115,7 @@ class UsersController < ApplicationController
       success <<  t("user.bulk_destroy_deleted", count: destroyed_users.count) unless destroyed_users.empty?
       success <<  t("user.bulk_destroy_deactivated", count: deactivated_users.count) unless deactivated_users.empty?
       success <<  t("user.bulk_destroy_skipped", count: skipped_users.count) unless skipped_users.empty?
-      flash[:success] = success.join unless success.empty?
+      flash[:success] = success.join(" ") unless success.empty?
 
       flash[:error] =  t("user.bulk_destroy_skipped_current") if skipped_current
     rescue

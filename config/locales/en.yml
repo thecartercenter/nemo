@@ -1250,6 +1250,7 @@ en:
       sms_message: "SMS Message"
       pointers:
         text: "Write your answer in the box. Abbreviate if necessary."
+        barcode: "Write your answer in the box."
         number: "Write your answer in the box."
         select_one: "Write the letter for your choice in the box. Write only one letter."
         select_one_as_text: "Write your answer in the box. Be sure to write the exact option name."
@@ -1409,6 +1410,7 @@ en:
     text: "Text"
     long_text: "Long Text"
     integer: "Integer"
+    barcode: "Barcode"
     counter: "Counter"
     decimal: "Decimal"
     location: "Location"
@@ -2034,11 +2036,11 @@ en:
       other: "%{count} users deleted successfully."
     bulk_destroy_deactivated:
       zero: "No users deactivated."
-      one: "%{count} user could not be destroyed, so they were deactivated."
-      two: "%{count} users could not be destroyed, so they were deactivated."
-      few: "%{count} users could not be destroyed, so they were deactivated."
-      many: "%{count} users could not be destroyed, so they were deactivated."
-      other: "%{count} users could not be destroyed, so they were deactivated."
+      one: "%{count} user could not be deleted, so they were deactivated."
+      two: "%{count} users could not be deleted, so they were deactivated."
+      few: "%{count} users could not be deleted, so they were deactivated."
+      many: "%{count} users could not be deleted, so they were deactivated."
+      other: "%{count} users could not be deleted, so they were deactivated."
     bulk_destroy_skipped:
       zero: "No users skipped."
       one: "%{count} user skipped."

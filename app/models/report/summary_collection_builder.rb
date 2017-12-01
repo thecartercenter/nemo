@@ -597,7 +597,7 @@ class Report::SummaryCollectionBuilder
       <<-eos
         INNER JOIN responses r ON r.deleted_at IS NULL AND a.response_id = r.id
         LEFT OUTER JOIN answers disagg_ans ON disagg_ans.deleted_at IS NULL
-          AND r.id = disagg_ans.response_id AND disagg_ans.questioning_id = #{disagg_qing.id}
+          AND r.id = disagg_ans.response_id AND disagg_ans.questioning_id = '#{disagg_qing.id}'
       eos
     end
 
@@ -606,7 +606,7 @@ class Report::SummaryCollectionBuilder
       return '' unless @options && @options[:restrict_to_user]
       <<-eos
         INNER JOIN responses res ON res.deleted_at IS NULL
-          AND a.response_id = res.id AND res.user_id = #{@options[:restrict_to_user].id}
+          AND a.response_id = res.id AND res.user_id = '#{@options[:restrict_to_user].id}'
       eos
     end
 

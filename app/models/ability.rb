@@ -111,7 +111,7 @@ class Ability
           # only need these abilities if not also a staffer
           unless role_in_mission?(:staffer)
             # can only see own responses
-            can [:index, :read, :export], Response, user_id: user.id, mission_id: mission.id
+            can [:index, :read], Response, user_id: user.id, mission_id: mission.id
 
             # observers can only mark a form as 'incomplete' if the form permits it
             can :submit_incomplete, Response do |r|
@@ -147,6 +147,7 @@ class Ability
           can :manage, Broadcast, mission_id: mission.id
 
           can_read_all_reports_but_only_update_destroy_own
+          can :export, Report::Report
 
           if mission.locked?
             # can index, read, export responses for a locked mission
