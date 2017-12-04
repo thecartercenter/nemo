@@ -70,4 +70,39 @@ describe ConditionDecorator do
       end
     end
   end
+
+  describe "multiple_conditions_display" do
+
+    let(:form) { create(:form, question_types: %w(integer integer integer integer)) }
+    let(:qing) { form.c.last }
+    let (:condition1) { Condition.new(ref_qing: form.c[0], op: "gt", value: "1") }
+    let (:condition2) { Condition.new(ref_qing: form.c[1], op: "gt", value: "2") }
+    let (:condition3) { Condition.new(ref_qing: form.c[2], op: "gt", value: "3") }
+
+    context "display_if is all_met" do
+      it "displays with all and" do
+        qing.update_attribute(:display_if, "all_met")
+
+        expected = "#{condition1.human_readable} and #{condition2.human_readable} and #{condition3.human_readable}"
+        expect(qing.decorate.multiple_conditions_display).to eq expected
+      end
+    end
+
+    context "display_if is any_met" do
+      it "displays with all or" do
+        qing.update_attribute(:display_if, "any_met")
+
+        expected = "#{condition1.human_readable} or #{condition2.human_readable} or #{condition3.human_readable}"
+        expect(qing.multiple_conditions_display).to eq expected
+      end
+    end
+
+    context "display_if is always" do
+      it "displays nothing" do
+        qing.update_attribute(:display_if, "always")
+
+        expect(qing.multiple_conditions_display).to eq ""
+      end
+    end
+  end
 end
