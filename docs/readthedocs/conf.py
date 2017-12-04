@@ -53,8 +53,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'Elmo'
-copyright = u'2017, Sassafras'
-author = u'Sassafras'
+copyright = u'2017, The Carter Center'
+author = u'The Carter Center'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -146,7 +146,7 @@ latex_elements = {
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
     (master_doc, 'Elmo.tex', u'Elmo Documentation',
-     u'Sassafras', 'manual'),
+     u'The Carter Center', 'manual'),
 ]
 
 
