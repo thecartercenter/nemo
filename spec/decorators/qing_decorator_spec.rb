@@ -9,7 +9,7 @@ describe QuestioningDecorator do
     # let (:condition1) { Condition.new(ref_qing: form.c[0], op: "gt", value: "1") }
     # let (:condition2) { Condition.new(ref_qing: form.c[1], op: "gt", value: "2") }
     # let (:condition3) { Condition.new(ref_qing: form.c[2], op: "gt", value: "3") }
-    context "multiple conditions" do
+    context "concatenated_conditions" do
       let(:decorated_conditions) do [
         instance_double(ConditionDecorator, human_readable: 'foo'),
         instance_double(ConditionDecorator, human_readable: 'bar'),
@@ -25,7 +25,7 @@ describe QuestioningDecorator do
           decorated_qing.update_attribute(:display_if, "all_met")
 
           expected = "foo AND bar AND baz"
-          expect(decorated_qing.conditions_instructions).to eq expected
+          expect(decorated_qing.concatenated_conditions).to eq expected
         end
       end
 
@@ -34,7 +34,7 @@ describe QuestioningDecorator do
           decorated_qing.update_attribute(:display_if, "any_met")
 
           expected = "foo OR bar OR baz"
-          expect(decorated_qing.conditions_instructions).to eq expected
+          expect(decorated_qing.concatenated_conditions).to eq expected
         end
       end
     end
@@ -51,7 +51,7 @@ describe QuestioningDecorator do
       end
 
       it "returns only condition" do
-        expect(decorated_qing.conditions_instructions).to eq "foo"
+        expect(decorated_qing.concatenated_conditions).to eq "foo"
       end
     end
   end
