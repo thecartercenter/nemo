@@ -10,7 +10,7 @@
 <div class="condition_info">
   <% condition_info = []; %>
   <% if (summary.questioning.condition) { %>
-    <% condition_info.push(I18n.t('report/report.answered_only_if') + ' ' + summary.questioning.condition.to_s); %>
+    <% condition_info.push(I18n.t('report/report.answered_only_if') + ' ' + summary.questioning.condition.decorate.human_readable); %>
   <% } %>
   <% if (summary.questioning.referring_condition_ranks.length > 0) { %>
     <% condition_info.push(I18n.t('report/report.see_dependent_questions', {count: summary.questioning.referring_condition_ranks.length}) + ' ' +
