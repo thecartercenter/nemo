@@ -69,8 +69,8 @@ class ConditionsFormField extends React.Component {
   }
 
   render() {
-    let name_prefix = 'questioning[condition_attributes]';
-    let id_prefix = 'questioning_condition_attributes';
+    let name_prefix = 'questioning[display_conditions_attributes][]';
+    let id_prefix = 'questioning_display_conditions_attributes';
     let condition_field_props = {
       type: "hidden",
       name: `${name_prefix}[id]`,
@@ -101,11 +101,16 @@ class ConditionsFormField extends React.Component {
     };
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
     return (
-      <div>
-        <input {...condition_field_props}/>
-        <FormField {...ref_qing_field_props} />
-        <FormField {...operator_field_props} />
-        <FormField {...value_field_props} />
+      <div className="form_field">
+        <div className="label_and_control">
+          <label className="main">Condition {this.state.id}</label>
+          <div className="control">
+            <input {...condition_field_props}/>
+            <FormField {...ref_qing_field_props} />
+            <FormField {...operator_field_props} />
+            <FormField {...value_field_props} />
+          </div>
+        </div>
       </div>
     );
   }

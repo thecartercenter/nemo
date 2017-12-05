@@ -434,6 +434,7 @@ en:
       questioning:
         name: "Title"
         condition: "Condition?"
+        display_if: "Display Logic"
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
@@ -1281,6 +1282,12 @@ en:
         example_sms_body: 1.c 2.c,f 3.27 4.d 5.door was locked 6.20160401 7.c
       unique_code: "This is the unique code for the form"
       unknown_number: "[unknown number]"
+
+  form_item:
+    display_if_options:
+      always: "Always display this question."
+      all_met: "Display this question if all of these conditions are met."
+      any_met: "Display this question if any of these conditions are met."
 
   import:
     row_error: "Row %{row}: %{error}"

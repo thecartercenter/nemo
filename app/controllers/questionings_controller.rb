@@ -105,15 +105,9 @@ class QuestioningsController < ApplicationController
     end
 
     def questioning_params
-      qp = params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
-        :required, :default, :read_only,
-        { condition_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
+      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
+        :required, :default, :read_only, :display_if,
+        { display_conditions_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
         { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
-
-      # This is a temporary hack to set display_if to an appropriate value.
-      # Can be removed when old condition stuff is gone.
-      qp[:display_if] = qp[:condition_attributes].try(:[], :op).present? ? "all_met" : "always"
-
-      qp
     end
 end
