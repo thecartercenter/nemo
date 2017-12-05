@@ -11,7 +11,7 @@
   <td class="answer <%= qing.qtype_name %>_answer">
     <% # print options if necessary %>
     <% if qing.has_options? %>
-      <%= qing.question_type %>
+      <%= qing.selection_instructions %>
       <% qing.options.each do |opt| %>
         <div class="option">
           <div class="option_box"></div>

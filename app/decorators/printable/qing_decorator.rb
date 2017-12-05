@@ -8,7 +8,7 @@ module Printable
       str << name
     end
 
-    def question_type
+    def selection_instructions
       content = "#{I18n.t("question_type.#{qtype_name}")}:"
       str = h.content_tag(:strong, content)
       str << h.tag(:br)
