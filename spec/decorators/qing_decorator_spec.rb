@@ -2,13 +2,10 @@ require "spec_helper"
 
 describe QuestioningDecorator do
   describe "display_if" do
-
     let(:form) { create(:form, question_types: %w(integer integer integer integer)) }
     let(:qing) { form.c.last }
     let(:decorated_qing) { qing.decorate }
-    # let (:condition1) { Condition.new(ref_qing: form.c[0], op: "gt", value: "1") }
-    # let (:condition2) { Condition.new(ref_qing: form.c[1], op: "gt", value: "2") }
-    # let (:condition3) { Condition.new(ref_qing: form.c[2], op: "gt", value: "3") }
+
     context "concatenated_conditions" do
       let(:decorated_conditions) do [
         instance_double(ConditionDecorator, human_readable: 'foo'),
