@@ -17,7 +17,7 @@ For security reasons, it is not recommended to install ELMO as the `root` user.
 
 ### Get ELMO source code and change into project directory
 
-    git clone https://github.com/thecartercenter/elmo
+    git clone -b master https://github.com/thecartercenter/elmo
     cd elmo
 
 ### Install rbenv, Ruby, and Bundler
