@@ -128,7 +128,6 @@ ActiveRecord::Schema.define(version: 20171215185725) do
     t.integer "questioning_old_id"
     t.uuid "ref_qing_id"
     t.integer "ref_qing_old_id"
-    t.string "role", null: false
     t.datetime "updated_at"
     t.string "uuid", null: false
     t.string "value", limit: 255
