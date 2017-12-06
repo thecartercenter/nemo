@@ -10,7 +10,7 @@ Welcome to Elmo's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   content/intro/introduction
+   content/intro/getstarted
    
 
 Indices and tables
