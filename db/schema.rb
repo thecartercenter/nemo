@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171127201008) do
+ActiveRecord::Schema.define(version: 20171206204600) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -124,9 +124,9 @@ ActiveRecord::Schema.define(version: 20171127201008) do
     t.string "op", limit: 255
     t.uuid "option_node_id"
     t.integer "option_node_old_id"
-    t.uuid "questioning_id", null: false
+    t.uuid "questioning_id"
     t.integer "questioning_old_id"
-    t.uuid "ref_qing_id", null: false
+    t.uuid "ref_qing_id"
     t.integer "ref_qing_old_id"
     t.string "role", null: false
     t.datetime "updated_at"
