@@ -1,4 +1,4 @@
-### Getting Started
+### 1. Getting Started
 
 #### 1.1\. What is ELMO?
 
@@ -59,9 +59,9 @@ The footer is the bottom section of the screen. Here are its components:
 4.  The current version number of ELMO being used.
 5.  The About ELMO icon. Click this to go to getelmo.org.
 
-> Note: ELMO online languages are slowly being built and increasing through volunteer efforts. Although the languages available of these are limited, ELMO is multilingual ready (ISO 639-2 standard) for questions and forms. The list of available languages is [here](https://www.loc.gov/standards/iso639-2/php/code_list.php).
+> _**Note**: ELMO online languages are slowly being built and increasing through volunteer efforts. Although the languages available of these are limited, ELMO is multilingual ready (ISO 639-2 standard) for questions and forms. The list of available languages is [here](https://www.loc.gov/standards/iso639-2/php/code_list.php)._
 
-### 1.5\. Viewing the Dashboard
+#### 1.5\. Viewing the Dashboard
 
 ![ELMO-101-dashboard](ELMO-101-dashboard.png)
 
@@ -72,4 +72,4 @@ The first visible screen when logged into ELMO is the Dashboard. This feature gi
 3.  An overview of all form submissions
 4.  All reports created in the mission
 
-> Note: The report with the most views will appear at the initial Dashboard screen
+> _**Note**: The report with the most views will appear at the initial Dashboard screen_

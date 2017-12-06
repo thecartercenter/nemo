@@ -11,6 +11,7 @@ Welcome to Elmo's documentation!
    :caption: Contents:
 
    content/getstarted/getstarted
+   content/missionsetup/missionsetup
    
 
 Indices and tables
