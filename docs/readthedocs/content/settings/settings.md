@@ -6,29 +6,29 @@ Settings are where you can define language preferences and SMS information for e
 1.  Select the title of the mission in the drop down menu found in the top right corner, right of the Admin Mode selection
 2.  Select the _**Settings**_ menu
 
-#### Time Zone
+#### 3.1\. Time Zone
 
-1.  Set the appropriate time zone
+3.  Set the appropriate time zone
 
-#### Preferred Languages
+#### 3.2\. Preferred Languages
 
-1.  Set the language(s) for the mission. This allows questions and forms to be defined in multiple languages for each mission, but it does not change the entire web interface of ELMO (defined in “Viewing the Footer” section above).
+4.  Set the language(s) for the mission. This allows questions and forms to be defined in multiple languages for each mission, but it does not change the entire web interface of ELMO (defined in “Viewing the Footer” section above).
     1.  Enter the two-letter language code for the language (example: Arabic = ar; Chinese = zh). A list of ELMO compatible language codes can be found at this website: [http://www.loc.gov/standards/iso639-2/php/code_list.php](http://www.loc.gov/standards/iso639-2/php/code_list.php)
     2.  If multiple codes exist, type them in the preferred order of use and separate them with a comma (example: ar, zh)  
         ![multiple preferred langs](multiple-preferred-langs.png)
     3.  In this example, the mission’s primary language will be Arabic; Chinese will be used where Arabic is not available
 
 
-#### 3.1\. Override Code
+#### 3.3\. Override Code
 
-1.  Generate an Override Code
+5.  Generate an Override Code
     1.  Click on the _**Generate**_ button to set an override code. This code should be given to observers if the ability to send incomplete responses is needed. Users are not allowed to submit incomplete responses without this code when using the ODK app. (See section  for more detail)
     2.  Click on the _**Regenerate**_ button to create a new override code if desired.
     3.  If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
-2.  Choose whether to allow unauthenticated submissions.
+6.  Choose whether to allow unauthenticated submissions.
 
 
-#### 3.2\. Shared SMS settings
+#### 3.4\. Shared SMS settings
 
 Indepth information about SMS setup is available in the [section for Administrators below](#information-for-administrators-v5).
 
