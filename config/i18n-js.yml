@@ -29,6 +29,7 @@ translations:
       "*.form.invalid_drop_location.*",
       "*.form.remove_question_confirm.*",
       "*.form.unsaved_rank_notice",
+      "*.form_item.*",
       "*.index_table.*",
       "*.location_picker.*",
       "*.layout.*",

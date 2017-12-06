@@ -1,6 +1,8 @@
 class Questioning < FormItem
   include Replication::Replicable
 
+  NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
+
   before_validation :normalize
 
   delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node, :first_leaf_option,
@@ -64,6 +66,11 @@ class Questioning < FormItem
   def repeatable?
     # Questions can only be repeatable if they're in a group, which they can't be if they're level 1.
     ancestry_depth > 1 && parent.repeatable?
+  end
+
+  # all questionings that can be referred to by a condition
+  def refable_qings
+    previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
   end
 
   # Gets full dotted ranks of all referring conditions' questionings.

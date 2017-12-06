@@ -17,7 +17,7 @@ class FormItem < ApplicationRecord
 
   # These associations have qing in their foreign keys but we have them here in FormItem instead
   # because we will eventually support conditions on groups.
-  has_many :display_conditions, -> { with_display_role }, class_name: "Condition",
+  has_many :display_conditions, -> { with_display_role.by_ref_qing_rank }, class_name: "Condition",
     foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
     dependent: :destroy, inverse_of: :ref_qing

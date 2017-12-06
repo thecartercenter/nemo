@@ -8,9 +8,9 @@
 
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
-  <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %>
-  <%= f.field(:display_if, type: :select, options: translate_options(FormItem::DISPLAY_IF_OPTIONS, [:form_item, :display_if_options]), prompt: false) %>
-  <!-- <%= f.field(:condition, partial: "conditions/form") %> -->
+  <!-- <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %> -->
+  <!-- <%= f.field(:display_if, type: :select, options: translate_options(FormItem::DISPLAY_IF_OPTIONS, [:form_item, :display_if_options]), prompt: false) %> -->
+  <%= f.field(:display_if, partial: "questionings/display_logic") %>
   <%= f.field(:default, type: :string, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>

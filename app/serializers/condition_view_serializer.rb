@@ -1,5 +1,7 @@
 class ConditionViewSerializer < ActiveModel::Serializer
-  attributes :id, :ref_qing_id, :op, :value, :option_node, :form_id, :questioning_id, :refable_qing_options, :operator_options
+  attributes :id, :ref_qing_id, :op, :value, :option_node, :form_id, :questioning_id, :operator_options
+
+  has_many :refable_qings, serializer: QuestioningSerializer
 
   def id
     object.id
@@ -7,10 +9,6 @@ class ConditionViewSerializer < ActiveModel::Serializer
 
   def questioning_id
     object.questioning_id
-  end
-
-  def refable_qing_options
-    object.refable_qings.map { |q| {code: q.question.code, rank: q.full_dotted_rank, id: q.id} }
   end
 
   def operator_options

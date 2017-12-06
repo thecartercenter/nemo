@@ -1288,6 +1288,9 @@ en:
       always: "Always display this question."
       all_met: "Display this question if all of these conditions are met."
       any_met: "Display this question if any of these conditions are met."
+    display_if_operator:
+      all_met: "and"
+      any_met: "or"
 
   import:
     row_error: "Row %{row}: %{error}"
