@@ -12,6 +12,7 @@ Welcome to Elmo's documentation!
 
    content/getstarted/getstarted
    content/missionsetup/missionsetup
+   content/settings/settings
    
 
 Indices and tables
