@@ -30,10 +30,10 @@ The header is the top section of the screen. Here are its components:
 10.  The **Questions** menu. Click this to go to the Questions page, where you can create and import questions and see all of the questions that have already been created in or imported to the mission.
 11.  The **Option Sets** menu. Click this to go to the Option Sets page, where you can create or import option sets and see all of the reports that have already been created in or imported to the mission.
 12.  The **Users** menu. Click this to go to the Users page, where you can:
-    * Create new users.
-    * See information on all users that have already been created.
-    * Export user information as a vCard.
-    * Send a broadcast to one or more users.
+    1.  Create new users.
+    2.  See information on all users that have already been created.
+    3.  Export user information as a vCard.
+    4.  Send a broadcast to one or more users.
 13.  The **Broadcasts** menu. Click this to go to the Broadcasts page, where you can send a broadcast to users and view broadcasts that have already been sent.
 14.  The **SMS** menu. Click this to view all SMSes that have been sent and received by ELMO.
 15.  The **Settings** menu. Click this to view and change your personal settings.
