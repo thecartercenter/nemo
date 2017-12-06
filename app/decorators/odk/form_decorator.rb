@@ -1,5 +1,5 @@
 module Odk
-  class FormDecorator < FormItemDecorator
+  class FormDecorator < BaseDecorator
     delegate_all
 
     # XML tag names for the two incomplete response questions
