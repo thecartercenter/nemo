@@ -15,6 +15,7 @@ Welcome to Elmo's documentation!
    content/settings/settings
    content/formsoverall/formsoverall
    content/formsquestions/formsquestions
+   content/formsoptionsets/formsoptionsets
    
 
 Indices and tables
