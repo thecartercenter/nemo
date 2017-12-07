@@ -41,6 +41,10 @@ feature "conditions flow", js: true do
     visit("/en/m/#{form.mission.compact_name}/questionings/#{questionings[:integer].id}")
     expect(page).to have_content("Question #1 #{question_code}
       Species is equal to \"Dog\"")
+
+    # This is a temporary model-level check until the form includes this field explictly nd we can
+    # check it in the UI.
+    expect(form.c[1].reload.display_if).to eq "all_met"
   end
 
   scenario "add a new question with a condition" do
