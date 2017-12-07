@@ -112,7 +112,7 @@ class QuestioningsController < ApplicationController
 
       # This is a temporary hack to set display_if to an appropriate value.
       # Can be removed when old condition stuff is gone.
-      qp[:display_if] = qp[:condition_attributes][:op].blank? ? "always" : "all_met"
+      qp[:display_if] = qp[:condition_attributes].try(:[], :op).present? ? "all_met" : "always"
 
       qp
     end
