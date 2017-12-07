@@ -81,6 +81,11 @@ div.form_field {
     text-align: $right;
   }
 
+  .condition-fields {
+    padding: 1em 0;
+    border-bottom: 1px solid $nav-border-color
+  }
+
   div.control {
     // Need this margin to match the width of the label. See above for why we
     // do it this way.

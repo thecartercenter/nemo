@@ -1,0 +1,32 @@
+<%# NOTE this template does not use elmo_form_for because it is rendered inside the control area of
+    an elmo form field and therefore doesn't need all the structure that comes with an elmo form field %>
+<%# if there are no referrable questionings, no point in showing the condition form %>
+<% if @condition.refable_qings.empty? %>
+
+  <%= t('condition.no_refable_qings') %>
+
+<% else %>
+
+  <% if read_only || cannot?(:update_core, @condition.questioning) %>
+
+    <%# if in show mode and the condition is blank, just show 'none' %>
+    <% if @questioning.display_conditions.blank? %>
+      <%= t('common.none') %>
+    <% else %>
+      <dl>
+        <dt><%= t("form_item.display_if_options.#{@questioning.display_if}") %></dt>
+        <% @questioning.display_conditions.each do |condition| %>
+          <dd><%= condition.to_s(:include_code => true) %></dd>
+        <% end %>
+      </dl>
+    <% end %>
+
+  <% else %>
+
+    <div id="condition-form-fields">
+      <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %>
+    </div>
+
+  <% end %>
+
+<% end %>

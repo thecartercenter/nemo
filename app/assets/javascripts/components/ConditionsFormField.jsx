@@ -101,16 +101,11 @@ class ConditionsFormField extends React.Component {
     };
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
     return (
-      <div className="form_field">
-        <div className="label_and_control">
-          <label className="main">Condition</label>
-          <div className="control">
-            <input {...condition_field_props}/>
-            <FormField {...ref_qing_field_props} />
-            <FormField {...operator_field_props} />
-            <FormField {...value_field_props} />
-          </div>
-        </div>
+      <div className="condition-fields">
+        <input {...condition_field_props}/>
+        <FormField {...ref_qing_field_props} />
+        <FormField {...operator_field_props} />
+        <FormField {...value_field_props} />
       </div>
     );
   }
