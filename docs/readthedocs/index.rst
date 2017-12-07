@@ -19,6 +19,10 @@ Welcome to Elmo's documentation!
    content/submitonline/submitonline
    content/submittablet/submittablet
    content/submitsms/submitsms
+   content/reports/reports
+   content/features/features
+   content/admin/admin
+   content/licenses/licenses
    
 
 Indices and tables
