@@ -9,15 +9,15 @@ To create and import questions to a mission, navigate to the Questions page by c
 > *   _Required: it must be answered in order to submit the completed form, unless an override code is provided_
 
 
-#### 5.1.Create a Question
+#### 5.1. Create a Question
 
 ![create new question edited](create-new-question-edited.png)
 
 To create a question that will be used for the current mission:
 
-1.  Click on the **_Create Question_** link (in orange text)
-2.  Provide a unique name for the question in the box labeled **_Code_**. Normal users (in this case, users with the title of Observer) will not see this box
-3.  Select the Type of response needed for the question from the following options:
++ 1:  Click on the **_Create Question_** link (in orange text)
++ 2:  Provide a unique name for the question in the box labeled **_Code_**. Normal users (in this case, users with the title of Observer) will not see this box
++ 3:  Select the Type of response needed for the question from the following options:
 
 
 #### 5.2. Types of questions
@@ -40,20 +40,20 @@ To create a question that will be used for the current mission:
 | Audio           | Record or choose a sound                                                                                  |
 | Video           | Record or choose a video                                                                                  |
 
-4.  After selecting the type of question (and option set if applicable), enter the main text of the question in the title box
++ 4:  After selecting the type of question (and option set if applicable), enter the main text of the question in the title box
 
 A note on image, video, or audio submissions: those files can be big! Big files may also mean a lot of data costs as well. Consult with your ELMO or database administrator on best practices for your project.
 
 
 #### 5.3. Creating Hints
 
-5.  Add further instructions in the **_Hint_** box below the **_Title_** box (i.e.: for a Select Multiple question, add “Select all that apply” in the **_Hint_** box)
++ 5:  Add further instructions in the **_Hint_** box below the **_Title_** box (i.e.: for a Select Multiple question, add “Select all that apply” in the **_Hint_** box)
 
 ![hints](hints.png)
 
-6.  Below the Hint box, there is an option to make the question a **_Key Question_**. This option allows responses to the form to be organized based on the response to the question. If this box is marked, a column showing these answers will be added in the Responses tab.
-7.  Click **_Save_** to generate the question
-8.  To edit the question, return to the Questions page and select the corresponding **_Pencil icon_**
++ 6:  Below the Hint box, there is an option to make the question a **_Key Question_**. This option allows responses to the form to be organized based on the response to the question. If this box is marked, a column showing these answers will be added in the Responses tab.
++ 7:  Click **_Save_** to generate the question
++ 8:  To edit the question, return to the Questions page and select the corresponding **_Pencil icon_**
 
 
 #### 5.4. Language translations
