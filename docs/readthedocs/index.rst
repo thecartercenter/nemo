@@ -16,6 +16,9 @@ Welcome to Elmo's documentation!
    content/formsoverall/formsoverall
    content/formsquestions/formsquestions
    content/formsoptionsets/formsoptionsets
+   content/submitonline/submitonline
+   content/submittablet/submittablet
+   content/submitsms/submitsms
    
 
 Indices and tables

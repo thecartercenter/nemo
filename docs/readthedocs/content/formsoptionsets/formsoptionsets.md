@@ -1,4 +1,4 @@
-### 6.Forms: Option Sets
+### 6. Forms: Option Sets
 
 The Option Sets page is where the answers for Select One (ex. “What color is your shirt?”) and Select Multiple (ex. “What kinds of food do you like?”) question types can be created. Click the _**Option Sets**_ menu on the main menu bar to create or edit existing Option Sets.
 
