@@ -116,7 +116,7 @@ Note that questions do not have to be part of a group, nor does a group have to 
 Groups have some restrictions:
 
 1.  Groups cannot be placed within questions or other groups.
-2.  Groups cannot be made conditional or hold both [conditional questions](http://getelmo.org/version-5-documentation/#questions-tab-v5) and the questions that trigger them.
+2.  Groups cannot be made conditional or hold both [conditional questions](../formsoverall/formsoverall.html) and the questions that trigger them.
 
 To create a form with groups:
 

@@ -64,7 +64,7 @@ To submit forms to ELMO via SMS, the following is required:
 
 1.  Mobile phone
 2.  Phone credit
-3.  [SMS-able ELMO form](http://getelmo.org/version-5-documentation/#form-creation-v5) with three letter unique code listed in the SMS Composition Guide
+3.  [SMS-able ELMO form](#sms-form-creation) with three letter unique code listed in the SMS Composition Guide
 4.  ELMO number
 
 To submit a form:
