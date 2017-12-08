@@ -104,10 +104,6 @@
       return self.form_submitted()
     })
 
-    // hoookup hints
-    // this causes a regression for other views, commenting out for now
-    // ELMO.app.hookup_hints()
-
     // hookup leave page warning unless ajax request
     if (!self.params.modal_mode)
       window.onbeforeunload = function() {

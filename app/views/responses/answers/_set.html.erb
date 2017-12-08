@@ -24,10 +24,10 @@
       <% end %>
     </div>
   </div>
-
-  <% if form_mode && set.question_hint.present? %>
-    <a href="#" rel="popover" class="hint" data-content="<%= set.question_hint %>"
-      ><i class="hint fa fa-2x fa-info-circle"></i></a>
+  <% if form_mode %>
+    <% question_hint = set.question_hint.try(:chomp, ".").try(:<<, ".") %>
+    <% drop_hint = I18n.t("response.drop_hint.#{set.qtype.name}", default: "").presence %>
+    <%= hint_popover([question_hint, drop_hint].compact.join(" ")) %>
   <% end %>
 </div>
 

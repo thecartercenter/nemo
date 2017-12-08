@@ -4,16 +4,10 @@
   <h2>
     <%= node.full_dotted_rank %>.
     <%= node.item.group_name %>
-
     <% if node.repeatable? && !read_only %>
       <a href="#" class="remove-instance"><i class="fa fa-close"></i></a>
     <% end %>
-
-    <% if node.item.group_hint.present? %>
-      <a href="#" rel="popover" class="hint" data-content="<%= node.item.group_hint %>">
-        <i class="hint fa fa-2x fa-info-circle"></i>
-      </a>
-    <% end %>
+    <%= hint_popover(node.item.group_hint) %>
   </h2>
 
   <%= render("responses/answers/nodes", nodes: instance.nodes, inst_num: instance.num) %>
