@@ -19,6 +19,7 @@ Welcome to Elmo's documentation!
    content/submitonline/submitonline
    content/submittablet/submittablet
    content/submitsms/submitsms
+   content/search/search
    content/reports/reports
    content/features/features
    content/admin/admin
