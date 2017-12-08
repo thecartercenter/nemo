@@ -20,11 +20,11 @@ FrontlineCloud in order to obtain the Frontline API key.
 | Logging into your FrontlineCloud account, establish the following
   settings:
 
-1. Choose ***Connect to a Mobile Network***
-2. Select ***FrontlineSync***
-3. Select the ***Activity** menu*
-4. Create a ***New Activity***
-5. Select ***Forward to URL***
+1. Choose **Connect to a Mobile Network**
+2. Select **FrontlineSync**
+3. Select the **Activity** menu
+4. Create a **New Activity**
+5. Select **Forward to URL**
 
    1. Name your Activity: *this can be your mission name or whatever you
       want*
@@ -53,8 +53,8 @@ If an API is automatically generated for you, terrific! But if not, here
 are the steps you need to take in order to set up an API:
 
 1. Choose the Settings gear in the upper right of the screen
-2. Select ***API web services and integrations***
-3. Click the ***Connect a web service*** button
+2. Select **API web services and integrations**
+3. Click the **Connect a web service** button
 4. Select “Connect an external web service to your workspace”
 5. Name it something meaningful (e.g. “ELMO API”)
 
@@ -70,9 +70,9 @@ remember that information for the next steps.
 
 1. Add the SIM card number to the **Incoming Number** field. (if adding
    more than one number, separate the numbers with a comma)
-2. Then add the API code from Frontline into the ***Frontline Cloud
-   Settings*** field
-3. Set the ***Default Outgoing Provider*** to ***FrontlineCloud***
+2. Then add the API code from Frontline into the **Frontline Cloud
+   Settings** field
+3. Set the **Default Outgoing Provider** to **FrontlineCloud**
 4. Save the settings
 
 .. figure:: frontline-on-elmo-edited.png
@@ -86,10 +86,10 @@ remember that information for the next steps.
   the following settings:
 
 1. Tap on Settings in the FrontlineSync app
-2. Tap ***Configure Connection***
+2. Tap **Configure Connection**
 3. Enter the credentials for the FrontlineCloud activity you set up
    earlier
-4. Tap the ***Connect*** button
+4. Tap the **Connect** button
 5. New options will appear, now click the first two checkboxes:
 
    -  *Send messages using this Android*
@@ -97,7 +97,7 @@ remember that information for the next steps.
 
 6. Use the slider to set a check for outgoing messages “\ ***Every 1
    minute***\ ”
-7. Click the ***Update*** button
+7. Click the **Update** button
 
 A message should appear declaring success, with one more button to tap
 “\ **Done! Start Using FrontlineSync**.”
