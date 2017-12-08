@@ -13,10 +13,5 @@
 
     </div>
   </div>
-
-  <% if hint_html.present? %>
-    <a href="#" rel="popover" class="hint" data-content="<%= hint_html %>"><i class="hint fa fa-2x fa-info-circle"></i></a>
-  <% end %>
-
+  <%= hint_popover(hint_html) %>
 </div>
-

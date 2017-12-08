@@ -10,10 +10,6 @@
     <%= hidden_field_tag("#{prefix}[media_object_id]", answer.media_object_id) %>
     <div class="dz-message">
       <span class="message"><%= t("response.drop_message") %>&nbsp;</span>
-      <a href="#" rel="popover" class="hint"
-        data-content="<%= I18n.t("response.drop_hint.#{answer.qtype.media_type}") %>">
-        (<%= t("response.drop_more_info") %>)
-      </a>
     </div>
     <div class="error-msg"></div>
   </div>
