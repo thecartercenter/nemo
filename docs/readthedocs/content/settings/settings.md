@@ -30,7 +30,7 @@ Settings are where you can define language preferences and SMS information for e
 
 #### 3.4\. Shared SMS settings
 
-Indepth information about SMS setup is available in the [section for Administrators below](#information-for-administrators-v5).
+Indepth information about SMS setup is available in the [section for Administrators](../../admin/admin.html).
 
 7.  Shared SMS settings:
     1.  Incoming Number(s):

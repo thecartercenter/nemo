@@ -24,10 +24,3 @@ Welcome to Elmo's documentation!
    content/admin/admin
    content/licenses/licenses
    
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
