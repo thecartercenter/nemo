@@ -64,6 +64,21 @@ describe "incoming sms", :sms do
     end
   end
 
+  context "with datetime form" do
+    let(:form) { setup_form(questions: %w(datetime)) }
+
+    before do
+      form.mission.setting.update!(timezone: "Saskatchewan")
+    end
+
+    it "timezone should be handled properly" do
+      assert_sms_response(
+        incoming: "#{form_code} 1.201701011230",
+        outgoing: /#{form_code}.+thank you/i)
+      expect(Answer.first.datetime_value.to_s).to eq "2017-01-01 12:30:00 -0600"
+    end
+  end
+
   context "with select_multiple form" do
     let(:form) { setup_form(questions: %w(select_multiple), required: true) }
 
