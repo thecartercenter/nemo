@@ -5,7 +5,7 @@ module Printable
     def name_and_rank
       str = "#{full_dotted_rank}. "
       str << h.reqd_sym if required?
-      str << name
+      str << (name.presence || code)
     end
 
     def selection_instructions
