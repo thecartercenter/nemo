@@ -47,7 +47,6 @@ FrontlineCloud in order to obtain the Frontline API key.
 .. figure:: frontline-fwd-to-url-edited-with-numbers.png
    :alt: frontline fwd to url edited with numbers
 
-   frontline fwd to url edited with numbers
 
 If an API is automatically generated for you, terrific! But if not, here
 are the steps you need to take in order to set up an API:
@@ -78,7 +77,6 @@ remember that information for the next steps.
 .. figure:: frontline-on-elmo-edited.png
    :alt: frontline on elmo edited
 
-   frontline on elmo edited
 
 | **III. Android Device:**
 | To make a Android phone or tablet into a gateway, you need to download
@@ -95,14 +93,14 @@ remember that information for the next steps.
    -  *Send messages using this Android*
    -  *Upload incoming messages from FrontlineSync*
 
-6. Use the slider to set a check for outgoing messages “\ ***Every 1
-   minute***\ ”
+6. Use the slider to set a check for outgoing messages “\ **Every 1
+   minute**\ ”
 7. Click the **Update** button
 
 A message should appear declaring success, with one more button to tap
 “\ **Done! Start Using FrontlineSync**.”
 
-    ***Note:** MAKE SURE TO USE THE DEFAULT MESSENGER APP ON THE PHONE
+    **Note:** MAKE SURE TO USE THE DEFAULT MESSENGER APP ON THE PHONE
     —- ENCRYPTED SMS, such as What’s App, DOES NOT WORK. Look up Android
     settings help for how to make sure that your using the default
     messenger app.*

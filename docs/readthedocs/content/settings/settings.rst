@@ -1,9 +1,10 @@
 3. Settings
 ~~~~~~~~~~~
 
-| Settings are where you can define language preferences and SMS
+Settings are where you can define language preferences and SMS
 information for each mission.
-| |image0|
+
+|image0|
 
 1. Select the title of the mission in the drop down menu found in the
    top right corner, right of the Admin Mode selection
