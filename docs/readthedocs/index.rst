@@ -10,12 +10,18 @@ Welcome to Elmo's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   content/intro/introduction
+   content/getstarted/getstarted
+   content/missionsetup/missionsetup
+   content/settings/settings
+   content/formsoverall/formsoverall
+   content/formsquestions/formsquestions
+   content/formsoptionsets/formsoptionsets
+   content/submitonline/submitonline
+   content/submittablet/submittablet
+   content/submitsms/submitsms
+   content/search/search
+   content/reports/reports
+   content/features/features
+   content/admin/admin
+   content/licenses/licenses
    
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
