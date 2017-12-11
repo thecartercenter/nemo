@@ -43,7 +43,6 @@ Building a new form involves the following steps:
 .. figure:: Form-flowchart-e1460060337288.png
    :alt: Form flowchart
 
-   Form flowchart
 In ELMO, these steps can be done in any order. In addition, forms,
 questions, and option sets can be reused both within a mission and
 across missions, depending on whether they are created in Mission Mode
@@ -58,7 +57,6 @@ are the components:\ |forms tab edited|
 .. figure:: forms-tab-edited-inset.png
    :alt: forms tab edited inset
 
-   forms tab edited inset
 
 1. **Create New Form**: click this to create a new form
 2. **SMS Test Console**: click this to test form submission via SMS
@@ -130,7 +128,7 @@ or the Option Set “Yes/No/N/A/Didn’t observe.”
 To import a Standard Form:
 
 1. Go to the **Forms** menu in the mission
-2. Click\_ **Import Standard Forms**\ \_
+2. Click **Import Standard Forms**
 3. Choose Forms to import to the mission
 
     **NOTE**: Remember to select Admin Mode to create standard forms.
@@ -138,7 +136,7 @@ To import a Standard Form:
     not granted to create standard forms. ELMO Administrators can create
     and edit standard forms, standard questions, and standard option
     sets with the same actions used for general forms, questions, and
-    option sets, but these actions must be performed in Admin Mode.*
+    option sets, but these actions must be performed in Admin Mode.
 
 4.4. Creating a General Form
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -205,7 +203,6 @@ Here is an example of a few groups:
 .. figure:: Group-Example.jpg
    :alt: Group Example
 
-   Group Example
 Note that questions do not have to be part of a group, nor does a group
 have to consist of multiple questions. A group can have one question or
 no questions, but this would make the group redundant.
@@ -222,7 +219,6 @@ To create a form with groups:
 .. figure:: To-create-a-group-instructions-edited.png
    :alt: To create a group instructions edited
 
-   To create a group instructions edited
 
 1. Create a form
 2. Create or add questions to the form
@@ -247,7 +243,6 @@ Groups can be used to create grids, an example of which is shown below.
 .. figure:: Screenshot_2016-03-15-10-23-18.png
    :alt: Screenshot\_2016-03-15-10-23-18
 
-   Screenshot\_2016-03-15-10-23-18
 Grids can only be created under certain conditions:
 
 1. Questions must be in the same group.
@@ -293,7 +288,6 @@ accessed by observers, completed, and submitted. To publish a form:
 .. figure:: publish-forms-edited.png
    :alt: publish forms edited
 
-   publish forms edited
 4.8. Printing Forms
 ^^^^^^^^^^^^^^^^^^^
 

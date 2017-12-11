@@ -21,7 +21,7 @@ To send a Broadcast Message:
        **NOTE:** Observers **do NOT** have the ability to reply to
        broadcast messages – instruct observers to contact the observer
        coordinator directly if they need to discuss a broadcast message
-       or other issue.*
+       or other issue.
 
 3. Click **Send Broadcast**—this action will direct to a page where
    the medium of the broadcast can be selected, and the subject and its

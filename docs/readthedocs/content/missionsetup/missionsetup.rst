@@ -39,7 +39,7 @@ located in the top right corner of the screen. To create a mission:
        **Note:** To edit the name of a mission or to lock/unlock a
        mission after it has been created, Admin Mode must be activated.
        Once activated, click the Pencil icon (edit option) located to
-       the right of the mission to be edited.*
+       the right of the mission to be edited.
 
 2.2. User Permission Levels
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -91,7 +91,7 @@ To create new users:
 1. Click Create Multiple Users
 2. Upload a spreadsheet with information for the new users.
 
-   1. Click\_ **“Spreadsheet template”**\ \_ to download an example
+   1. Click **“Spreadsheet template”** to download an example
       spreadsheet with the correct formatting for uploading multiple
       users.
 

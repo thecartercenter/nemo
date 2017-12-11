@@ -63,7 +63,7 @@ If selected, the following prompts/options are available:
         1. Which attribute or question to use for the row headers
         2. Which attribute or question to use for the column headers
 
-2.  **List Report**\ *:* A raw listing of answers and attributes for a
+2.  **List Report:** A raw listing of answers and attributes for a
     set of responses. For example: |List Example|
 
     | If selected, the following prompts/options are available:
@@ -76,7 +76,7 @@ If selected, the following prompts/options are available:
     3. The form responses to include in the report
     4. Columns to include
 
-3. **Standard Report**\ *:* A question-by-question summary of the
+3. **Standard Report:** A question-by-question summary of the
     responses for a specific form. The purpose of this report is to help
     give a ready-made overview of responses for a specific
     questionnaire.  For example: |Standard Form Example|
@@ -151,8 +151,8 @@ friendly ELMO administrator who should be able to make sense of this!)
 **Connecting Tableau to the Database**
 
 1. Open Tableau.
-2. Click **Data* **> **Connect to Data**\ …(or on the left
-   **Connect* **\ sidebar, look under **To a Server**)
+2. Click **Data** > **Connect to Data** …(or on the left
+   **Connect** sidebar, look under **To a Server**)
 3. Select **MySQL**.
 4. For server name, enter IP address
 5. For port, enter the port you established through your tunnel session
@@ -182,8 +182,7 @@ In Tableau, select the database and then
 
 1. Select **Custom SQL**
 2. Copy the Tableau SQL code from ELMO as it appears above.
-3. Switch back to Tableau and paste the Tableau SQL code into the\*\*
-   *Custom SQL*\ \*\*
+3. Switch back to Tableau and paste the Tableau SQL code into the **Custom SQL**
 4. In the final box, give the connection a name such as ‘Presidential
    Runoff 2014’. You will be able to reuse this connection with other
    worksheets.

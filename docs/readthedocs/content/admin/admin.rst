@@ -103,7 +103,7 @@ A message should appear declaring success, with one more button to tap
     **Note:** MAKE SURE TO USE THE DEFAULT MESSENGER APP ON THE PHONE
     —- ENCRYPTED SMS, such as What’s App, DOES NOT WORK. Look up Android
     settings help for how to make sure that your using the default
-    messenger app.*
+    messenger app.
 
 | **Some additional (troubleshooting) notes, maybe:**
 | If you change settings on your FrontlineCloud after having set up your

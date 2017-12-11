@@ -40,7 +40,7 @@ Collect:
     https://example.getelmo.org/m/examplemission)
 
     1. To find the URL of the mission, log in to ELMO Online and go to
-       the mission’s home page by clicking the \ **Home** icon
+       the mission’s home page by clicking the **Home** icon
     2. Look in the address bar
     3. The URL in the address bar is the same as the URL of the mission,
        but with the language designation (ex. /en or /fr) removed
@@ -74,7 +74,7 @@ submitted. To download a form:
     coordinators during active missions usually need to be downloaded
     again to the tablets. Coordinators should also guide observers to
     delete previous versions to prevent confusion. Good team
-    communication is critical!*
+    communication is critical!
 
 8.3. Submitting forms
 ^^^^^^^^^^^^^^^^^^^^^
@@ -88,7 +88,7 @@ To fill out and submit a form:
    1. When obtaining GPS locations, stand outdoors. If indoors, stand by
       the nearest window.
 
-4. When the form is filled out, press **Save Form and Exit* **\ on the
+4. When the form is filled out, press **Save Form and Exit** on the
    last screen
 5. On the ODK Collect home screen, press **Send Finalized Form**
 6. Mark the box next to the form
@@ -138,7 +138,7 @@ To generate an Override code:
        observer teams. This avoids complications with communicating code
        updates and keeping track of different versions of forms. As a
        rule of thumb, frequent regeneration of codes should not be
-       necessary.*
+       necessary.
 
 3. Click **Generate** to obtain a new code
 
@@ -151,7 +151,7 @@ by observers in order to take effect.
 
 To submit an incomplete form with an override code, fill out the form as
 usual, other than the unanswered questions. At the end of the form, a
-question will appear: **Are there missing required answers?* **\ The
+question will appear: **Are there missing required answers?** The
 options will be **I don’t think so** and **Yes**.
 
 .. figure:: incomplete-tablet-response.png

@@ -39,7 +39,7 @@ menu on the main menu bar to create or edit existing Option Sets.
    **Add**. If an option in the drop down menu is not visible, add a
    new one by clicking **Create New** **Option**
 
-   1. The **Options* **\ box allows multiple options to be typed at
+   1. The **Options** box allows multiple options to be typed at
       once and added or created together by separating option names by
       commas. Conclude by clicking **Add**
 
@@ -93,7 +93,7 @@ and uploaded directly into ELMO:
    column header(e.g. Company \| Department \| Name ).
 3. Add the names of the options
     |excel option set|
-4. In ELMO, click on the **Option Set* **\ menu
+4. In ELMO, click on the **Option Set** menu
 5. Click **Import New Option Set**
 6. Create a Name for the option set
 7. Choose the CSV or XLS file created in steps 1-3
@@ -150,15 +150,14 @@ To upload a large geographic option set:
 4. In the column for “Coordinates,” include both latitude and longitude
    in decimal format separated by a comma (e.g. 0.054396, 18.259688)
 
-    | **NOTE**\ *:To* *find latitude and longitude coordinates in
-    decimal format:*
-    | *In Google Maps:*
-    | *1. Open Google Maps*
-    | *2. Right-click the place or area on the map*
-    | *3. Select* **What’s here?**
-    | *4. A card appears at the bottom of the screen with more info*
+    | **NOTE**: To find latitude and longitude coordinates in decimal format:
+    | In Google Maps:
+    | 1. Open Google Maps
+    | 2. Right-click the place or area on the map
+    | 3. Select **What’s here?**
+    | 4. A card appears at the bottom of the screen with more info
+    | In  ArcGIS: **Please view Appendix**
 
-    *In  ArcGIS:* **Please view Appendix**
 
 Example:
 
@@ -170,8 +169,7 @@ USA        \| GA     \| Atlanta  \| 33.747082, -84.380101
    :alt: large geographic option set
 
 
-5. In the mission you are working on, click on the **Option Set*
-   **\ menu
+5. In the mission you are working on, click on the **Option Set** menu
 6. Click **Import New Option Set**
 7. Create a Name for your option set
 8. Choose the CSV or XLS file you created

@@ -16,7 +16,7 @@ To submit a form online:
 
 To review a response:
 
-1. Click the **Responses* **\ menu
+1. Click the **Responses** menu
 2. Click the pencil icon on the same row as the response to be reviewed
     |reviewing responses 1 edited|
 3. Make any necessary changes to the form

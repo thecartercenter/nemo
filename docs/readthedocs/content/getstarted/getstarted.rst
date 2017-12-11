@@ -116,7 +116,7 @@ The footer is the bottom section of the screen. Here are its components:
     available of these are limited, ELMO is multilingual ready (ISO
     639-2 standard) for questions and forms. The list of available
     languages is
-    `here <https://www.loc.gov/standards/iso639-2/php/code_list.php>`__.*
+    `here <https://www.loc.gov/standards/iso639-2/php/code_list.php>`__.
 
 1.5. Viewing the Dashboard
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -134,4 +134,4 @@ Visible on the Dashboard screen are:
 4. All reports created in the mission
 
     **Note**: The report with the most views will appear at the initial
-    Dashboard screen*
+    Dashboard screen

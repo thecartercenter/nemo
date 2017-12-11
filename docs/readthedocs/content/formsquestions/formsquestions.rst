@@ -7,7 +7,7 @@ page by clicking on the **Questions** menu on the main menu bar.
     **Note:** When creating a new question within the form, there are
     three options for questions available: conditional, hidden and
     required. Each of these options affects how the form is filled out
-    by the user in the field. A question can be:*
+    by the user in the field. A question can be:
 
     -  *Conditional: whether or not it appears in the form is dependent
        upon how a previous question is answered*
@@ -108,8 +108,8 @@ ELMO or database administrator on best practices for your project.
 
 Question titles and hints can be translated into any language that has
 been set for the mission. To add a language to a mission, go to the
-**Preferred Languages** box in the **Settings* **\ menu. When
-creating or editing questions, the **Title* **\ box will appear for the
+**Preferred Languages** box in the **Settings** menu. When
+creating or editing questions, the **Title** box will appear for the
 first language in **Preferred Languages**, followed by the **Hint**
 box in that language, then the **Title** and **Hint** boxes for the
 second language, and so on. So, a **Preferred Languages** box that
