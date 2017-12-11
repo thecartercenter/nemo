@@ -3,8 +3,8 @@ require "spec_helper"
 describe Broadcast do
   it_behaves_like "has a uuid"
 
-  let!(:user1) { create(:user, phone: "+17345550001", role_name: "observer") }
-  let!(:user2) { create(:user, phone: "+17345550002", role_name: "observer") }
+  let!(:user1) { create(:user, phone: "+17345550001", role_name: "enumerator") }
+  let!(:user2) { create(:user, phone: "+17345550002", role_name: "enumerator") }
   let!(:user3) { create(:user, phone: "+17345550003", role_name: "staffer") }
   let!(:user4) { create(:user, phone: "+17345550004", role_name: "coordinator") }
   let!(:user5) { create(:user, phone: "+17345550005", role_name: "coordinator") }
@@ -45,7 +45,7 @@ describe Broadcast do
     end
 
     context "with all_users" do
-      let(:broadcast) { create(:broadcast, recipient_selection: "all_observers") }
+      let(:broadcast) { create(:broadcast, recipient_selection: "all_enumerators") }
 
       it "returns correct numbers" do
         expect(broadcast.recipient_numbers).to contain_exactly(*%w(+17345550001 +17345550002))
@@ -53,8 +53,8 @@ describe Broadcast do
     end
 
     context "with both_numbers" do
-      let!(:user1) { create(:user, phone: "+17345550011", phone2: "+17345550021", role_name: "observer") }
-      let!(:user2) { create(:user, phone: nil, phone2: "+17345550022", role_name: "observer") }
+      let!(:user1) { create(:user, phone: "+17345550011", phone2: "+17345550021", role_name: "enumerator") }
+      let!(:user2) { create(:user, phone: nil, phone2: "+17345550022", role_name: "enumerator") }
       let!(:user3) { create(:user, phone: "+17345550013", phone2: nil, role_name: "staffer") }
       let(:broadcast) do
         create(:broadcast,

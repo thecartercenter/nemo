@@ -56,7 +56,7 @@ class Report::StandardFormReport < Report::Report
 
   TEXT_RESPONSE_OPTIONS = %w(all short_only none)
 
-  # How many non reporting observers it will show on the report before summarizing the rest
+  # How many non reporting enumerators it will show on the report before summarizing the rest
   MISSING_OBSERVERS_SIZE_LIMIT = 100
 
   def as_json(options = {})
@@ -66,7 +66,7 @@ class Report::StandardFormReport < Report::Report
     h[:mission] = form.mission.as_json(:only => [:id, :name])
     h[:form] = form.as_json(:only => [:id, :name])
     h[:subsets] = subsets
-    h[:observers_without_responses] = observers_without_responses.as_json(:only => [:id, :name])
+    h[:enumerators_without_responses] = enumerators_without_responses.as_json(:only => [:id, :name])
     h[:disagg_question_id] = disagg_question_id
     h[:disagg_qing] = disagg_qing.as_json(:only => :id, :include => {:question => {:only => :code}})
     h[:no_data] = no_data?
@@ -89,7 +89,7 @@ class Report::StandardFormReport < Report::Report
     @response_count = form.responses.accessible_by(current_ability).count
 
     # determine if we should restrict the responses to a single user, or allow all
-    restrict_to_user = current_ability.user.role(form.mission) == 'observer' ? current_ability.user : nil
+    restrict_to_user = current_ability.user.role(form.mission) == 'enumerator' ? current_ability.user : nil
 
     # generate summary collection (sets of disaggregated summaries)
     @summary_collection = Report::SummaryCollectionBuilder.new(questionings_to_include(form), disagg_qing,
@@ -112,11 +112,11 @@ class Report::StandardFormReport < Report::Report
     User.without_responses_for_form(form, options)
   end
 
-  def observers_without_responses
-    users = users_without_responses({role: :observer, limit: MISSING_OBSERVERS_SIZE_LIMIT})
+  def enumerators_without_responses
+    users = users_without_responses({role: :enumerator, limit: MISSING_OBSERVERS_SIZE_LIMIT})
 
     if users.empty?
-      I18n.t('report/report.zero_missing_observers')
+      I18n.t('report/report.zero_missing_enumerators')
     else
       truncated = false
       if users.size > MISSING_OBSERVERS_SIZE_LIMIT

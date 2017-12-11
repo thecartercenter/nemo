@@ -8,7 +8,7 @@ describe "abilities for locked missions" do
 
     @admin = create(:user, admin: true)
 
-    @obs = create(:user, mission: @locked, role_name: :observer)
+    @obs = create(:user, mission: @locked, role_name: :enumerator)
     @staffer = create(:user, mission: @locked, role_name: :staffer)
     @coord = create(:user, mission: @locked, role_name: :coordinator)
 
@@ -32,12 +32,12 @@ describe "abilities for locked missions" do
   end
 
   it "coordinator shouldnt be able to create a new user in locked mission" do
-    @new_user = build(:user, mission: @locked, role_name: :observer)
+    @new_user = build(:user, mission: @locked, role_name: :enumerator)
     expect(coord_locked_ability.can?(:create, @new_user)).to eq(false), "shouldn't be able to create user"
   end
 
   it "coordinator should be able to create a new user in non-locked mission" do
-    @new_user = build(:user, mission: @unlocked, role_name: :observer)
+    @new_user = build(:user, mission: @unlocked, role_name: :enumerator)
     expect(coord_unlocked_ability.can?(:create, @new_user)).to eq(true), "should be able to create user in regular mission"
   end
 
@@ -75,14 +75,14 @@ describe "abilities for locked missions" do
     end
   end
 
-  it "observer should be able to index and read own responses for a locked mission" do
+  it "enumerator should be able to index and read own responses for a locked mission" do
     resp = create(:response, mission: @locked, user: @obs)
     [:index, :read].each do |perm|
       expect(obs_locked_ability.can?(perm, resp)).to eq(true)
     end
   end
 
-  it "observer shouldnt be able to create update or destroy own responses for a locked mission" do
+  it "enumerator shouldnt be able to create update or destroy own responses for a locked mission" do
     resp = build(:response, mission: @locked, user: @obs)
     [:create, :update, :destroy].each do |perm|
       expect(obs_locked_ability.can?(perm, resp)).to eq(false)
@@ -95,13 +95,13 @@ describe "abilities for locked missions" do
   end
 
   it "nobody should be able to edit an assignment on a locked mission" do
-    # get the observers assignment to the locked mission
+    # get the enumerators assignment to the locked mission
     assign = @obs.assignments.first
     expect(admin_ability.can?(:update, assign)).to eq(false)
   end
 
   it "admin should be able to edit an assignment on an unlocked mission" do
-    assign2 = @obs.assignments.create(mission: @unlocked, role: 'observer')
+    assign2 = @obs.assignments.create(mission: @unlocked, role: 'enumerator')
     expect(admin_ability.can?(:update, assign2)).to eq(true)
   end
 

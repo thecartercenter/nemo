@@ -82,7 +82,7 @@ class WelcomeController < ApplicationController
       @responses_by_form = Response.per_form(accessible_responses, STAT_ROWS)
 
       # responses per user
-      @responses_per_user = User.sorted_observer_response_counts(current_mission, STAT_ROWS)
+      @responses_per_user = User.sorted_enumerator_response_counts(current_mission, STAT_ROWS)
     end
 
     # get list of all reports for the mission, for the dropdown

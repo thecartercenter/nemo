@@ -6,7 +6,7 @@ describe "j2me submissions", :odk do
   context "for a valid user and mission" do
     before do
       @mission = FactoryGirl.create(:mission)
-      @user = FactoryGirl.create(:user, role_name: :observer)
+      @user = FactoryGirl.create(:user, role_name: :enumerator)
       @submission_url = "/m/#{@mission.compact_name}/submission"
       @form = FactoryGirl.create(:form, mission: @mission, question_types: %w(integer))
       @form.publish!

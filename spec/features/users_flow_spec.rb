@@ -13,7 +13,7 @@ feature "users flow" do
     fill_in "Full Name", with: "Foo Bar"
     fill_in "Username", with: "foobar"
     fill_in "Email", with: "foo@bar.com"
-    select "Observer", from: "user_assignments_attributes_0_role"
+    select "Enumerator", from: "user_assignments_attributes_0_role"
     choose "Send email instructions"
     click_button "Save"
     expect(page).to have_content("Success: User created successfully")

@@ -50,7 +50,7 @@ describe 'unauthenticated submissions', :odk do
 
       context 'with a valid username embedded' do
         before do
-          @user = FactoryGirl.create(:user, :role_name => :observer)
+          @user = FactoryGirl.create(:user, :role_name => :enumerator)
           submit_j2me_response(:data => {@question.odk_code => '42', 'username' => @user.login})
         end
 
@@ -88,7 +88,7 @@ describe 'unauthenticated submissions', :odk do
       context 'with user not able to access mission' do
         before do
           other_mission = FactoryGirl.create(:mission, :name => 'Other mission')
-          @user = FactoryGirl.create(:user, :role_name => :observer, :mission => other_mission)
+          @user = FactoryGirl.create(:user, :role_name => :enumerator, :mission => other_mission)
           submit_j2me_response(:data => {@question.odk_code => '42', 'username' => @user.login})
         end
 

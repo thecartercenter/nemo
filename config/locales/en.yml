@@ -596,8 +596,8 @@ en:
         smsable: "Whether the form accepts SMS submissions. This can affect when the version number is incremented."
         sms_relay: "Whether to enable forwarding incoming SMS responses to users and user groups"
         recipient_ids: "If you enter user or user group names here, any incoming SMS responses will be forwarded to them automatically."
-        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an observer to spoof submissions."
-        allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK only). Observers using ODK must enter an override code (see the Settings page) to do so."
+        authenticate_sms: "Whether to authenticate SMS responses. Disabling this can allow anyone who knows the phone number of an enumerator to spoof submissions."
+        allow_incomplete: "If checked, allows forms with incomplete required questions to be submitted anyway (via web and ODK only). Enumerators using ODK must enter an override code (see the Settings page) to do so."
         version: "The current version number and letter code."
         access_level: "Public: Any user can access the data via the API. Protected: Only specific users can access data via the API. Private: Nobody can access the data via the API."
         default_response_name: "Text entered here will be used as the default name of filled forms in ODK. You can enter $QuestionCode to include the value of a question in the form.\n\nFor example, entering:\n\n&nbsp;&nbsp;&nbsp;Survey for $VillageNum-$Household\n\nmight name the form:\n\n&nbsp;&nbsp;&nbsp;Survey for 7-Smith\n\nassuming you have questions with codes 'VillageNum' and 'Household'."
@@ -637,7 +637,7 @@ en:
         condition: "An optional condition which must be met in order for this question to be shown to the user."
         required: "Whether this question must be completed on this form or is optional. Only enforced if question is not hidden the condition specified above is met."
         default: "Text entered here will be pre-filled in the answer space (for ODK only). You can enter $QuestionCode to include the value of a previous question, and $!RepeatNum to include the number of the current item in a repeat group.\n\nFor example, entering\n\n&nbsp;&nbsp;&nbsp;ID: $Household-$!RepeatNum\n\nwould pre-fill the answer with\n\n&nbsp;&nbsp;&nbsp;ID: 176-2\n\nfor the second person in household 176, assuming you have a question with code 'Household'."
-        read_only: "If checked, the observer won't be able to change the pre-filled value when using ODK. Does not affect web or SMS responses."
+        read_only: "If checked, the enumerator won't be able to change the pre-filled value when using ODK. Does not affect web or SMS responses."
       report/report:
         name: "A descriptive title for this report."
         aggregation_id: "The operation you want to perform on the combined data."
@@ -660,7 +660,7 @@ en:
           * The default language for SMS replies
           * The languages for Questions and Options
         override_code: |-
-          This code should be given to observers if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
+          This code should be given to enumerators if the ability to send incomplete responses is needed. ODK will not allow submission of incomplete responses without this code.
 
           If generating a new code, please record the old code if there are previous live forms. The new code will only work for forms downloaded after the code is regenerated.
         incoming_sms_numbers_str: "Enter the phone number(s) (including country code, separated by commas) to which incoming SMSes for SMS forms should be sent. Only needed if using SMS submissions."
@@ -827,7 +827,7 @@ en:
               invalid: "Please use only unaccented letters, numbers, periods, and underscores."
             reset_password_method:
               cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
-              print_password_reset_only_for_observer: "Printed instructions are only available to observers. "
+              print_password_reset_only_for_enumerator: "Printed instructions are only available to enumerators. "
         user_batch:
           general: "User batch is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
@@ -1135,7 +1135,7 @@ en:
         both: "Both SMS and email"
     recipient_selection_options:
       all_users: "All users in mission"
-      all_observers: "All observers in mission"
+      all_enumerators: "All enumerators in mission"
       specific: "Specific users/groups in mission"
     send_broadcast: "Send Broadcast"
     send_success: "Broadcast sent successfully."
@@ -1189,10 +1189,10 @@ en:
     option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
     option_standard_copy_name_change_warning: "This Option is a copy of a standard Option. You should be sure to preserve the original meaning of the Option so that it agrees with the standard."
     published_warnings:
-      form: "This Form is published, meaning it may already be in the hands of observers. Some fields are thus not-editable, and questions cannot be added, removed, or re-ordered. Please proceed with caution when making any changes."
+      form: "This Form is published, meaning it may already be in the hands of enumerators. Some fields are thus not-editable, and questions cannot be added, removed, or re-ordered. Please proceed with caution when making any changes."
       questioning: "The Form to which the below fields apply is published and thus they cannot be edited."
-      question: "This Question appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
-      option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of observers. Some fields are thus non-editable, and Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
+      question: "This Question appears on at least one published Form, meaning it may already be in the hands of enumerators. Some fields are thus not-editable. Please be sure to not change the meaning of the question."
+      option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of enumerators. Some fields are thus non-editable, and Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
       sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
       odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
 
@@ -1401,7 +1401,7 @@ en:
     need_login: "You must login to view that page."
     no_permission: "You don't have permission to view that page."
     processing_error: "Error processing permission."
-    observers_cant_change_submitter: "Observers can't change the submitter for responses."
+    enumerators_cant_change_submitter: "Enumerators can't change the submitter for responses."
     must_be_admin: "You must be an administrator to view that page."
     must_be_logged_out: "You must be logged out to view that page."
 
@@ -1487,8 +1487,8 @@ en:
     how_to_order_questions: "How should questions be ordered?"
     loading_report: "Loading Report..."
     questions_with_option_sets: "Questions with these option sets"
-    missing_observers: "Non-reporting Observers"
-    missing_observers_total_count: "%{user_count} in total"
+    missing_enumerators: "Non-reporting Enumerators"
+    missing_enumerators_total_count: "%{user_count} in total"
     mission: "Mission"
     no_match: "No matching data were found."
     question_selection: "Select Questions"
@@ -1518,7 +1518,7 @@ en:
     which_calculation: "Which calculation (if any) would you like to apply?"
     which_forms: "Which forms are you interested in?"
     which_questions: "Which question(s) would you like to include?"
-    zero_missing_observers: "None"
+    zero_missing_enumerators: "None"
     bar_styles:
       side_by_side: "Side By Side"
       stacked: "Stacked"
@@ -1606,7 +1606,7 @@ en:
 
   role:
     role: "Role"
-    observer: "Observer"
+    enumerator: "Enumerator"
     reviewer: "Reviewer"
     staffer: "Staffer"
     coordinator: "Coordinator"

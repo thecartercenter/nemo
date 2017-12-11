@@ -29,7 +29,7 @@
         </ul>
       <% end %>
     </div>
-    <% if current_user.role(current_mission) != 'observer' %>
+    <% if current_user.role(current_mission) != 'enumerator' %>
       <div class="stat_block">
         <% unless @responses.empty? %>
           <h2><%= t('dashboard.low_activity') %></h2>

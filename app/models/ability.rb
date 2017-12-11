@@ -97,8 +97,8 @@ class Ability
       # all the rest of the permissions require a current mission to be set
       if mission
 
-        # observer abilities
-        if role_in_mission?(:observer)
+        # enumerator abilities
+        if role_in_mission?(:enumerator)
           # can view and export users in same mission
           can [:index, :read, :show, :export], User, assignments: { mission_id: mission.id }
 
@@ -113,7 +113,7 @@ class Ability
             # can only see own responses
             can [:index, :read], Response, user_id: user.id, mission_id: mission.id
 
-            # observers can only mark a form as 'incomplete' if the form permits it
+            # enumerators can only mark a form as 'incomplete' if the form permits it
             can :submit_incomplete, Response do |r|
               r.form.allow_incomplete?
             end

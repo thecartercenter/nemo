@@ -4,7 +4,7 @@ require "support/media_spec_helpers"
 describe "odk media submissions", :odk, :reset_factory_sequences, type: :request do
   include ODKSubmissionSupport
 
-  let(:user) { create(:user, role_name: "observer") }
+  let(:user) { create(:user, role_name: "enumerator") }
   let(:form) { create(:form, :published, :with_version, question_types: %w(text image)) }
   let(:mission) { form.mission }
   let(:tmp_path) { Rails.root.join("tmp/submission.xml") }

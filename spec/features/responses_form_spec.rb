@@ -201,13 +201,13 @@ feature "responses form", js: true do
   end
 
   describe "reviewer notes" do
-    let(:observer) { create(:user, role_name: :observer) }
+    let(:enumerator) { create(:user, role_name: :enumerator) }
     let(:form) { create(:form, :published, question_types: %w(integer)) }
-    let(:response) { create(:response, :is_reviewed, form: form, answer_values: [0], user: observer) }
+    let(:response) { create(:response, :is_reviewed, form: form, answer_values: [0], user: enumerator) }
     let(:notes) { response.reviewer_notes }
 
     scenario "should not be visible to normal users" do
-      login(observer)
+      login(enumerator)
       visit(response_path(response, locale: "en", mode: "m", mission_name: get_mission.compact_name))
       expect(page).not_to have_content(notes)
     end

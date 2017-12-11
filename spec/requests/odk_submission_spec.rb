@@ -13,7 +13,7 @@ describe "odk submissions", :odk, type: :request do
   end
 
   context "to regular mission" do
-    let!(:user) { create(:user, role_name: "observer") }
+    let!(:user) { create(:user, role_name: "enumerator") }
     let!(:mission1) { get_mission }
     let!(:mission2) { create(:mission) }
 
@@ -117,7 +117,7 @@ describe "odk submissions", :odk, type: :request do
 
   context "to locked mission" do
     let(:mission) { create(:mission, locked: true) }
-    let(:user) { create(:user, role_name: "observer", mission: mission) }
+    let(:user) { create(:user, role_name: "enumerator", mission: mission) }
 
     it "should fail" do
       resp = do_submission(submission_path(mission), "foo")
@@ -126,7 +126,7 @@ describe "odk submissions", :odk, type: :request do
   end
 
   context "inactive user" do
-    let(:user) { create(:user, role_name: "observer", active: false) }
+    let(:user) { create(:user, role_name: "enumerator", active: false) }
     let(:mission1) { get_mission }
     let(:mission2) { create(:mission) }
 

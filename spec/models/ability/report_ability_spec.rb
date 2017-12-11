@@ -60,8 +60,8 @@ describe "abilities for reports" do
     it_behaves_like "restricted", :reviewer
   end
 
-  context "observer" do
-    let(:user) { create(:user, role_name: :observer) }
+  context "enumerator" do
+    let(:user) { create(:user, role_name: :enumerator) }
 
     it "should not be able to export reports" do
       expect(ability).not_to be_able_to(:export, own_report)
@@ -69,7 +69,7 @@ describe "abilities for reports" do
       expect(ability).not_to be_able_to(:export, anon_report)
     end
 
-    it_behaves_like "restricted", :observer
+    it_behaves_like "restricted", :enumerator
   end
 
 end

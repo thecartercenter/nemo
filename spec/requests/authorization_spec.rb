@@ -28,7 +28,7 @@ describe 'authorization' do
   end
 
   it "user redirected to unauthorized page if unauthorized" do
-    user = create(:user, role_name: :observer)
+    user = create(:user, role_name: :enumerator)
     assert_cannot_access(user, '/en/admin/missions') # This assertion checks redirect
 
     follow_redirect!
@@ -44,29 +44,29 @@ describe 'authorization' do
     assert_cannot_access(user, "/en/m/#{mission2.compact_name}/forms")
   end
 
-  it "observer can update own name" do
-    user = create(:user, role_name: :observer, name: 'foo')
+  it "enumerator can update own name" do
+    user = create(:user, role_name: :enumerator, name: 'foo')
     login(user)
     put(user_path(user), user: {name: 'bar'})
     assert_response(302) # redirected
     expect(user.reload.name).to eq('bar')
   end
 
-  it "observer cant update own role" do
-    user = create(:user, role_name: :observer)
+  it "enumerator cant update own role" do
+    user = create(:user, role_name: :enumerator)
     login(user)
     assignments_attributes = user.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
     put(user_path(user), user: {assignments_attributes: [assignments_attributes]})
     expect(assigns(:access_denied)).to eq(true)
-    expect(user.reload.assignments.first.role).to eq('observer')
+    expect(user.reload.assignments.first.role).to eq('enumerator')
   end
 
   it "coordinator can update role of user in same mission" do
     coord = create(:user, role_name: :coordinator)
-    obs = create(:user, role_name: :observer)
+    obs = create(:user, role_name: :enumerator)
     login(coord)
 
-    # Get attributes for request to change observer role to staffer.
+    # Get attributes for request to change enumerator role to staffer.
     assignments_attributes = obs.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
 
     put(user_path(obs), user: {assignments_attributes: [assignments_attributes]})

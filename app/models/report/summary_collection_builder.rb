@@ -601,7 +601,7 @@ class Report::SummaryCollectionBuilder
       eos
     end
 
-    # restrict query to responses observer has access to. admins and coordinators have access to all responses.
+    # restrict query to responses enumerator has access to. admins and coordinators have access to all responses.
     def current_user_join_clause
       return '' unless @options && @options[:restrict_to_user]
       <<-eos
