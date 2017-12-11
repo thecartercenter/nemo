@@ -68,34 +68,34 @@ are the components:\ |forms tab edited|
 Once a form has been created, these components appear on the **Forms**
 menu
 
-5.  **Version**: this column shows the version numbers of the forms
+4.  **Version**: this column shows the version numbers of the forms
     that have been published
-6.  **Name**: this column shows the name of each form
-7.  **Questions**: this column shows the number of questions in each
+5.  **Name**: this column shows the name of each form
+6.  **Questions**: this column shows the number of questions in each
     form
-8.  **Published?**: this column displays a **Yes** if a form has
+7.  **Published?**: this column displays a **Yes** if a form has
     been published, and a **No** if it has not been published
-9.  **Downloads**: this column shows the number of times each form has
+8.  **Downloads**: this column shows the number of times each form has
     been downloaded
-10. **Responses**: this column shows the number of responses to each
+9. **Responses**: this column shows the number of responses to each
     form that have been submitted
-11. **SMSable**?: this column displays a **Yes** if a form can be
+10. **SMSable**?: this column displays a **Yes** if a form can be
     submitted via SMS, and a **No** if it cannot be submitted via SMS
-12. **Allow Incomplete?**: this column displays a **Yes** if a form
+11. **Allow Incomplete?**: this column displays a **Yes** if a form
     allows incomplete submissions, and a **No** if it does not allow
     incomplete submissions
-13. **Last Modified**: this column shows the date and the time that
+12. **Last Modified**: this column shows the date and the time that
     each form was last edited
-14. The **Edit** icon: click this to edit the form in this row
-15. The **Delete** icon: click this to delete the form in this row;
+13. The **Edit** icon: click this to edit the form in this row
+14. The **Delete** icon: click this to delete the form in this row;
     this can only be done for forms that are unpublished
-16. The **Publish** icon: click this to publish the form in this row;
+15. The **Publish** icon: click this to publish the form in this row;
     this can only be done for forms that are unpublished
-17. The **Unpublish** icon: click this to unpublish the form in this
+16. The **Unpublish** icon: click this to unpublish the form in this
     row; this can only be done for forms that are published
-18. The **Clone** icon: click this to create an identical copy of the
+17. The **Clone** icon: click this to create an identical copy of the
     form in this row
-19. The **Print** icon: click this to print the form in this row
+18. The **Print** icon: click this to print the form in this row
 
 In Admin Mode, the **Forms** menu only contains the following
 components:
@@ -153,35 +153,35 @@ can be done in any order.
 
 1. To create a new Form:
 
-1. Go to the Forms page by clicking on the **Forms** menu on the main
-   menu bar
-2. Click the **Create Form** link located under the Page title
+    1. Go to the Forms page by clicking on the **Forms** menu on the main
+       menu bar
+    2. Click the **Create Form** link located under the Page title
 
-   1. Give the form a name.
+       1. Give the form a name.
 
-   That’s all you have to do, but if you want to do more, click **More
-   Settings**:
+       That’s all you have to do, but if you want to do more, click **More
+       Settings**:
 
-   1. Check the **SMSable** box if you want to be able to receive
-      responses to the form via SMS
-   2. Check the **Allow Incomplete** box to allow forms to be
-      submitted without required questions filled in. This is not
-      typically desired, but an option if necessary
+       2. Check the **SMSable** box if you want to be able to receive
+          responses to the form via SMS
+       3. Check the **Allow Incomplete** box to allow forms to be
+          submitted without required questions filled in. This is not
+          typically desired, but an option if necessary
 
-3. Click **Save**
+    3. Click **Save**
 
 2. To add questions to the Form:
 
-1. Return to the Forms page
-2. Click the **Pencil icon** located on the same line as the desired
-   form
-3. Click the **Add Questions** icon:
+    1. Return to the Forms page
+    2. Click the **Pencil icon** located on the same line as the desired
+       form
+    3. Click the **Add Questions** icon:
 
-   1. Select from existing questions in the question bank
-   2. Create a new question to add to the Form (see *Questions* section
-      below for detailed instructions)
+       1. Select from existing questions in the question bank
+       2. Create a new question to add to the Form (see *Questions* section
+          below for detailed instructions)
 
-4. Click **Save** when finished editing
+    4. Click **Save** when finished editing
 
 4.5. Creating Groups and Grids
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
