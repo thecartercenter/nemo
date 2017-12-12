@@ -19,7 +19,7 @@ class Condition < ApplicationRecord
   validates :questioning, presence: true
 
   delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
-  delegate :form, :form_id, to: :questioning
+  delegate :form, :form_id, :refable_qings, to: :questioning
 
   scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
   scope :with_display_role, -> { where(role: "display") }
@@ -65,11 +65,6 @@ class Condition < ApplicationRecord
 
   def option_node_path
     OptionNodePath.new(option_set: ref_qing.option_set, target_node: option_node)
-  end
-
-  # all questionings that can be referred to by this condition
-  def refable_qings
-    questioning.previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
   end
 
   # returns names of all operators that are applicable to this condition based on its referred question

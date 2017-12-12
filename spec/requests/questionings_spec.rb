@@ -41,11 +41,11 @@ describe "questionings", type: :request do
       it "changing condition should be unauthorized" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
           "questioning" => {
-            "condition_attributes" => {
+            "display_conditions_attributes" => [{
               "ref_qing_id" => form.c[0].id,
               "op" => "eq",
               "value" => "foo"
-            }
+            }]
           }
         )
         expect(response).to redirect_to(unauthorized_path)
@@ -56,7 +56,7 @@ describe "questionings", type: :request do
   describe "condition_form_data" do
     let(:form) { create(:form, :published, question_types: %w(integer text select_one integer text)) }
     let(:qing) { form.c[3] }
-    let(:expected_ref_qing_options) { form.c[0..2].map { |q| { code: q.question.code, rank: q.full_dotted_rank, id: q.id } } }
+    let(:expected_ref_qing_options) { form.c[0..2].map { |q| {  id: q.id, code: q.question.code, rank: q.rank, full_dotted_rank: q.full_dotted_rank } } }
 
     context "without ref_qing_id" do
       it "returns json with ref qing id options, no operator options, and no value options" do
@@ -68,8 +68,8 @@ describe "questionings", type: :request do
           option_node: nil,
           form_id: form.id,
           questioning_id: qing.id,
-          refable_qing_options: expected_ref_qing_options,
-          operator_options: []
+          operator_options: [],
+          refable_qings: expected_ref_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",{
           ref_qing_id: nil,
@@ -99,8 +99,8 @@ describe "questionings", type: :request do
           option_node: nil,
           form_id: form.id,
           questioning_id: qing.id,
-          refable_qing_options: expected_ref_qing_options,
           operator_options: expected_operator_options,
+          refable_qings: expected_ref_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
           {
@@ -128,11 +128,12 @@ describe "questionings", type: :request do
             option_node: nil,
             form_id: form.id,
             questioning_id: qing.id,
-            refable_qing_options: expected_ref_qing_options,
-            operator_options: expected_operator_options
+            operator_options: expected_operator_options,
+            refable_qings: expected_ref_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
             {
+              condition_id: condition.id,
               ref_qing_id: form.c[1].id,
               form_id: form.id,
               questioning_id: qing.id
@@ -158,11 +159,12 @@ describe "questionings", type: :request do
             option_node: { node_id: form.c[2].option_set.c[0].id, set_id: form.c[2].option_set.id },
             form_id: form.id,
             questioning_id: qing.id,
-            refable_qing_options: expected_ref_qing_options,
-            operator_options: expected_operator_options
+            operator_options: expected_operator_options,
+            refable_qings: expected_ref_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/questionings/condition-form",
             {
+              condition_id: condition.id,
               ref_qing_id: form.c[2].id,
               form_id: form.id,
               questioning_id: qing.id

@@ -18,7 +18,9 @@ class DisplayLogicFormField extends React.Component {
       return (
         <div>
           {this.state.display_conditions.map((props, index) => <ConditionsFormField key={index} {...props}/>)}
-          <button onClick={this.addCondition} type="button" className="btn"><i className="fa fa-plus"></i> Add Condition</button>
+          <button onClick={this.addCondition} type="button" className="btn add_condition">
+            <i className="fa fa-plus"></i> {I18n.t("form_item.add_condition")}
+          </button>
         </div>
       )
     }

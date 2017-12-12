@@ -16,7 +16,7 @@ describe "questionings form", js: true  do
         visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
         expect_editable("required", true)
         expect_editable("hidden", true)
-        expect_editable("condition", true)
+        expect_editable("display_if", true, field_type: "select")
       end
     end
 
@@ -26,7 +26,7 @@ describe "questionings form", js: true  do
         visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
         expect_editable("required", false)
         expect_editable("hidden", false)
-        expect_editable("condition", false)
+        expect_editable("display_if", false, field_type: "select")
       end
     end
   end
@@ -40,12 +40,12 @@ describe "questionings form", js: true  do
       visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
       expect_editable("required", true)
       expect_editable("hidden", true)
-      expect_editable("condition", true)
+      expect_editable("display_if", true, field_type: "select")
     end
   end
 
-  def expect_editable(field, should_be_editable)
-    sel = "div.form_field.questioning_#{field} .widget input"
+  def expect_editable(field, should_be_editable, field_type: "input")
+    sel = "div.form_field.questioning_#{field} .widget #{field_type}"
     if should_be_editable
       expect(page).to have_selector(sel)
     else

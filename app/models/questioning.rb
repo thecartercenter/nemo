@@ -46,8 +46,8 @@ class Questioning < FormItem
     form.qing_answer_count(self) > 0
   end
 
-  def condition_changed?
-    condition.try(:changed?)
+  def conditions_changed?
+    display_conditions.any?(&:changed?) || display_conditions.any?(&:new_record?)
   end
 
   def subqings
@@ -59,7 +59,7 @@ class Questioning < FormItem
   end
 
   def core_changed?
-    (changed & %w(required hidden default)).any? || condition_changed?
+    (changed & %w(required hidden default)).any? || conditions_changed?
   end
 
   # Checks if this Questioning is in a repeat group.

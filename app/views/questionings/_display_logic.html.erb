@@ -16,7 +16,7 @@
       <dl>
         <dt><%= t("form_item.display_if_options.#{@questioning.display_if}") %></dt>
         <% @questioning.display_conditions.each do |condition| %>
-          <dd><%= condition.to_s(:include_code => true) %></dd>
+          <dd><%= condition.decorate.human_readable(:include_code => true) %></dd>
         <% end %>
       </dl>
     <% end %>
