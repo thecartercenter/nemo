@@ -1145,7 +1145,7 @@ fr:
     need_login: "Se connectez pour voir ça page."
     no_permission: "Vous n'a pas la permission pour voir cette page."
     processing_error: "Erreur avec la permission de la traitement."
-    observers_cant_change_submitter: "Les observateurs ne peuvent pas changer l'expéditeur des réponses."
+    enumerators_cant_change_submitter: "Les observateurs ne peuvent pas changer l'expéditeur des réponses."
     must_be_admin: "Seuls les administrateurs peuvent accéder à cette page."
     must_be_logged_out: "Vous vous déconnectez pour voir cette page."
   question:
@@ -1209,8 +1209,8 @@ fr:
     how_to_order_questions: "Comment devraient être ordonnés les questions?"
     loading_report: "Chargement Le Rapport..."
     questions_with_option_sets: "Questions avec ces ensembles d'options"
-    missing_observers: "Observateurs qui ne rapportent pas"
-    missing_observers_total_count: "%{user_count}au total"
+    missing_enumerators: "Observateurs qui ne rapportent pas"
+    missing_enumerators_total_count: "%{user_count}au total"
     mission: "Mission"
     no_match: "Aucune donnée correspondante n'a été trouvée"
     question_selection: "Selecter les Questions"
@@ -1239,7 +1239,7 @@ fr:
     which_calculation: "Quel calcul (le cas échéant) voudriez-vous appliquer?"
     which_forms: "Quel calcul vous interessé?"
     which_questions: "Quelle question(s) voudriez-vous inclure?"
-    zero_missing_observers: "Aucun"
+    zero_missing_enumerators: "Aucun"
     bar_styles:
       side_by_side: "Côte à côte"
       stacked: "Empilé"
@@ -1325,7 +1325,7 @@ fr:
       audio: "l'audio doit avoir au plus 10Mb, les formats acceptés sont: mp3, ogg, webm, wav"
   role:
     role: "Rôle"
-    observer: "Observateur/Observatrice"
+    enumerator: "Observateur/Observatrice"
     staffer: "Membre du Personnel"
     coordinator: "Coodinateur/Coordinatrice"
     admin: "Admin"

@@ -977,7 +977,7 @@ es:
     need_login: "Debe iniciar sesión para ver la página."
     no_permission: "No tiene permiso para ver esa página."
     processing_error: "Error al procesar permiso."
-    observers_cant_change_submitter: "Los observadores no pueden cambiar el remitente de las respuestas."
+    enumerators_cant_change_submitter: "Los observadores no pueden cambiar el remitente de las respuestas."
     must_be_admin: "Debe ser un administrador para ver la página."
     must_be_logged_out: "Debe cerrar sesión para ver la página."
   question:
@@ -1031,7 +1031,7 @@ es:
     how_to_order_questions: "¿Cómo deben organizarse las preguntas?"
     loading_report: "Cargando..."
     questions_with_option_sets: "Preguntas con estos conjuntos de opciones"
-    missing_observers: "Observadores que no presentan Informes"
+    missing_enumerators: "Observadores que no presentan Informes"
     mission: "Misión"
     no_match: "No se encontraron estadísticas coincidentes."
     question_selection: "Seleccione Preguntas"
@@ -1133,7 +1133,7 @@ es:
     checked_out: "Esta respuesta ha sido revisada por:"
   role:
     role: "Papel"
-    observer: "Observador "
+    enumerator: "Observador "
     staffer: "Empleado"
     coordinator: "Coordinador"
     admin: "Administrador"

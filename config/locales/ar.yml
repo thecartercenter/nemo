@@ -1376,7 +1376,7 @@ ar:
     need_login: "يجب عليك تسجيل الدخول لمشاهدة هذه الصفحة."
     no_permission: "ليس لديك الصلاحية لدخول هذه الصفحة."
     processing_error: "خطأ في معالجة التصريح"
-    observers_cant_change_submitter: "المراقبين لا يمكنهم تغيير مقدم الردود."
+    enumerators_cant_change_submitter: "المراقبين لا يمكنهم تغيير مقدم الردود."
     must_be_admin: "يجب أن تكون مسؤولا لمشاهدة هذه الصفحة."
     must_be_logged_out: "يجب تسجيل الخروج لمشاهدة هذه الصفحة."
 
@@ -1447,8 +1447,8 @@ ar:
     how_to_order_questions: "كيف ينبغي أن ترتب الأسئلة؟"
     loading_report: "تحميل تقرير ..."
     questions_with_option_sets: "أسئلة مع مجموعات الخيار"
-    missing_observers: "مراقبون غير مبلغين"
-    missing_observers_total_count: "%{user_count} in total"
+    missing_enumerators: "مراقبون غير مبلغين"
+    missing_enumerators_total_count: "%{user_count} in total"
     mission: "مهمة"
     no_match: "لم يتم العثور على بيانات مطابقة."
     question_selection: "إختار سؤال"
@@ -1482,7 +1482,7 @@ ar:
     which_calculation: "أي الحسابات تريد أن تطبق (إن وجدت)؟"
     which_forms: "بأي الاستمارت انت مهتم؟"
     which_questions: "أي الأسئلة تريد أن تضم؟"
-    zero_missing_observers: "لا شيء"
+    zero_missing_enumerators: "لا شيء"
     bar_styles:
       side_by_side: "جنب إالى جنب"
       stacked: "مكدسة"
@@ -1501,7 +1501,7 @@ ar:
       - Number of Very Good, Good, etc. answers for the Overall question
       - Percentage of Yes and No for all Yes-No questions
       - Number of responses per form for each team
-      - Percentage of Zero and Non-zero answers per State for the DomesticObservers question
+      - Percentage of Zero and Non-zero answers per State for the DomesticEnumerators question
       list_report:
       - List of answers to the Complaints and OtherIrreg questions along with the polling place number
       - List of all polling place numbers, with no duplicates
@@ -1570,7 +1570,7 @@ ar:
 
   role:
     role: "دور"
-    observer: "مراقب"
+    enumerator: "مراقب"
     staffer: "موظف"
     coordinator: "منسق"
     admin: "إدارة"
