@@ -39,7 +39,7 @@
     <div class="actions">
 
       <%# Condition %>
-      <% if qing.display_conditions.any? && qing.display_if != "always" %>
+      <% if qing.display_conditionally? %>
         <% qing.display_conditions.each do |condition| %>
           <div class="condition" data-ref-id="<%= condition.ref_qing_id %>" title="<%= condition %>">
             <i class="fa fa-link"></i> #<span><%= condition.ref_qing_full_dotted_rank %></span>

@@ -1,7 +1,7 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
+  NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video).to_set
 
   before_validation :normalize
 
@@ -52,7 +52,7 @@ class Questioning < FormItem
 
   def subqings
     @subqings ||= if multilevel?
-      levels.each_with_index.map{ |l, i| Subqing.new(questioning: self, level: l, rank: i + 1) }
+      levels.each_with_index.map { |l, i| Subqing.new(questioning: self, level: l, rank: i + 1) }
     else
       [Subqing.new(questioning: self, rank: 1)]
     end
@@ -70,7 +70,7 @@ class Questioning < FormItem
 
   # all questionings that can be referred to by a condition
   def refable_qings
-    previous.reject{|qing| NON_REFABLE_TYPES.include?(qing.qtype_name)}
+    previous.reject { |qing| NON_REFABLE_TYPES.include?(qing.qtype_name) }
   end
 
   # Gets full dotted ranks of all referring conditions' questionings.
