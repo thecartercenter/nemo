@@ -4,6 +4,6 @@ class ChangeObserverRoleToEnumerator < ActiveRecord::Migration
   end
 
   def down
-    execute("UPDATE assignments SET role = 'observer' WHERE role = 'enumerator")
+    execute("UPDATE assignments SET role = 'observer' WHERE role = 'enumerator'")
   end
 end
