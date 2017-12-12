@@ -44,7 +44,7 @@ namespace :db do
     puts "Creating users"
     # Create users and groups
     25.times do
-      FactoryGirl.create_list(:user, mission: mission, role_name: User::ROLES.sample)
+      FactoryGirl.create(:user, mission: mission, role_name: User::ROLES.sample)
     end
 
     FactoryGirl.create_list(:user_group, 5, mission: mission)

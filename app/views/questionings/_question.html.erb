@@ -39,11 +39,17 @@
     <div class="actions">
 
       <%# Condition %>
-      <% if qing.has_condition? %>
-        <div class="condition" data-ref-id="<%= qing.condition_ref_qing_id %>"
-          title="<%= qing.condition %>">
-          <i class="fa fa-link"></i> #<span><%= qing.condition_ref_qing_full_dotted_rank %></span>
-        </div>
+      <% if qing.display_conditionally? %>
+        <% qing.display_conditions.each do |condition| %>
+          <div class="condition" data-ref-id="<%= condition.ref_qing_id %>" title="<%= condition %>">
+            <i class="fa fa-link"></i> #<span><%= condition.ref_qing_full_dotted_rank %></span>
+          </div>
+          <% if condition.id != qing.display_conditions.last.id %>
+            <span class="operator">
+              <%= t("form_item.display_if_operator.#{qing.display_if}") %>
+            </span>
+          <% end %>
+        <% end %>
       <% end %>
 
       <% unless read_only %>

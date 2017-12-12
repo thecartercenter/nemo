@@ -41,9 +41,9 @@ class CascadingSelect extends React.Component {
   buildLevelProps(level, isLastLevel) {
     return {
       type: "select",
-      name: `questioning[condition_attributes][option_node_ids][]`,
-      id: `questioning_condition_attributes_option_node_ids_`,
-      key: `questioning_condition_attributes_option_node_ids_`,
+      name: `questioning[display_conditions_attributes][][option_node_ids][]`,
+      id: `questioning_display_conditions_attributes_option_node_ids_`,
+      key: `questioning_display_conditions_attributes_option_node_ids_`,
       value: level.selected,
       options: level.options,
       changeFunc: isLastLevel ? null : this.updateData

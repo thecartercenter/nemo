@@ -10,12 +10,21 @@
   <% if read_only || cannot?(:update_core, @condition.questioning) %>
 
     <%# if in show mode and the condition is blank, just show 'none' %>
-    <%= @condition.blank? || @condition.ref_qing.nil? ? t('common.none') : @condition.decorate.human_readable(:include_code => true) %>
+    <% if @questioning.display_conditions.blank? %>
+      <%= t('common.none') %>
+    <% else %>
+      <dl>
+        <dt><%= t("form_item.display_if_options.#{@questioning.display_if}") %></dt>
+        <% @questioning.display_conditions.each do |condition| %>
+          <dd><%= condition.decorate.human_readable(:include_code => true) %></dd>
+        <% end %>
+      </dl>
+    <% end %>
 
   <% else %>
 
     <div id="condition-form-fields">
-      <%= render('conditions/form_fields') %>
+      <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %>
     </div>
 
   <% end %>

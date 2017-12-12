@@ -71,8 +71,12 @@ class QuestioningsController < ApplicationController
       # Create a dummy questioning so that the condition can look up the refable qings, etc.
       @questioning = init_qing(form_id: params[:form_id])
     end
+
     authorize! :condition_form, @questioning
-    @condition = @questioning.condition || @questioning.build_condition()
+
+    @condition = @questioning.display_conditions.find_by(id: params[:condition_id])
+    @condition ||= @questioning.display_conditions.build
+
     @condition.ref_qing_id = params[:ref_qing_id]
     render json: ConditionViewSerializer.new(@condition), status: 200
   end
@@ -105,15 +109,9 @@ class QuestioningsController < ApplicationController
     end
 
     def questioning_params
-      qp = params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
-        :required, :default, :read_only,
-        { condition_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
+      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
+        :required, :default, :read_only, :display_if,
+        { display_conditions_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
         { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
-
-      # This is a temporary hack to set display_if to an appropriate value.
-      # Can be removed when old condition stuff is gone.
-      qp[:display_if] = qp[:condition_attributes].try(:[], :op).present? ? "all_met" : "always"
-
-      qp
     end
 end

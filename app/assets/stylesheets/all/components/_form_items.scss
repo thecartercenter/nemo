@@ -134,7 +134,10 @@
 
     .condition {
       color: #888888;
-      margin-right: 10px;
+    }
+    .operator {
+      margin-left: 0.25em;
+      margin-right: 0.25em;
     }
 
     .required-sym {

@@ -1,4 +1,0 @@
-<%= elmo_fields_for("questioning[condition_attributes]", @condition) do |f| %>
-  <%= f.base_errors %>
-  <%= react_component("ConditionsFormField", ConditionViewSerializer.new(@condition)) %>
-<% end %>

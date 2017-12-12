@@ -31,7 +31,7 @@ class ConditionsFormField extends React.Component {
   }
 
   buildUrl(refQingId) {
-    var url = `${ELMO.app.url_builder.build('questionings', 'condition-form')}?ref_qing_id=${refQingId}&form_id=${this.state.form_id}`
+    var url = `${ELMO.app.url_builder.build('questionings', 'condition-form')}?condition_id=${this.state.id}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`
     if (this.state.questioning_id) {
       url += '&questioning_id=' + this.state.questioning_id;
     }
@@ -40,7 +40,7 @@ class ConditionsFormField extends React.Component {
 
   formatRefQingOptions(reference_qing_options) {
     return reference_qing_options.map(function(o){
-      return {id: o.id, name: `${o.rank}. ${o.code}`, key: o.id};
+      return {id: o.id, name: `${o.full_dotted_rank}. ${o.code}`, key: o.id};
     });
   }
 
@@ -69,8 +69,8 @@ class ConditionsFormField extends React.Component {
   }
 
   render() {
-    let name_prefix = 'questioning[condition_attributes]';
-    let id_prefix = 'questioning_condition_attributes';
+    let name_prefix = 'questioning[display_conditions_attributes][]';
+    let id_prefix = 'questioning_display_conditions_attributes';
     let condition_field_props = {
       type: "hidden",
       name: `${name_prefix}[id]`,
@@ -86,7 +86,7 @@ class ConditionsFormField extends React.Component {
       key: `${id_prefix}_ref_qing_id`,
       value: this.state.ref_qing_id ? this.state.ref_qing_id : "",
       label: I18n.t('activerecord.attributes.condition.ref_qing_id'),
-      options: this.formatRefQingOptions(this.state.refable_qing_options),
+      options: this.formatRefQingOptions(this.state.refable_qings),
       changeFunc: this.updateFieldData
     };
     let operator_field_props = {
@@ -101,7 +101,7 @@ class ConditionsFormField extends React.Component {
     };
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
     return (
-      <div>
+      <div className="condition-fields">
         <input {...condition_field_props}/>
         <FormField {...ref_qing_field_props} />
         <FormField {...operator_field_props} />
