@@ -15,7 +15,7 @@ before_script:
   # and should go away when we get rid of local_config.rb some sweet day.
   - sed -ri '/(public|private)_key = nil/d' config/initializers/local_config.rb
   - bundle exec rake db:setup
-script: bundle exec rake
+script: bundle exec rspec --format progress
 env:
   global:
     # Set reCAPTCHA keys to dummy values
