@@ -23,9 +23,15 @@ module ApplicationHelper
   end
 
   def alerts(hash)
+    # html safety metadata is not preserved between the creation of the hash
+    # and its retrieval before being passed into this helper
+    # so we need to set the entire hash as html_safe by setting a key
+    html_safe = hash.delete(:html_safe)
     hash.map do |name, msg|
       # Only echo valid message types
       if css_class = bootstrap_flash_class(name)
+        msg = msg.html_safe if html_safe
+
         content_tag(:div, class: css_class) do
           content_tag(:strong, t("flash_message_types.#{name}")) << ": " << msg
         end

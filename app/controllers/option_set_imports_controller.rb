@@ -16,7 +16,8 @@ class OptionSetImportsController < ApplicationController
           description: t("operation.description.option_set_import_operation_job", name: @option_set_import.name, mission_name: mission_name))
         operation.begin!(@option_set_import.mission, @option_set_import.name, stored_path, @option_set_import.class.to_s)
 
-        flash[:notice] = t("import.queued_html", type: OptionSet.model_name.human, url: operations_path).html_safe
+        flash[:html_safe] = true
+        flash[:notice] = t("import.queued_html", type: OptionSet.model_name.human, url: operations_path)
         redirect_to(option_sets_url)
       rescue => e
         Rails.logger.error(e)
