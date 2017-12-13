@@ -4,7 +4,8 @@ feature "responses form", js: true do
   let(:user) { create(:user) }
   let!(:form) { create(:form, :published) }
   let(:form_questionings) { form.questionings }
-  let(:response_link) { Response.first.decorate.shortcode.to_s }
+  let(:response) { Response.first }
+  let(:response_link) { response.decorate.shortcode.to_s }
   let(:response_path_params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
   describe "general", database_cleaner: :all, order: :defined do
@@ -88,7 +89,7 @@ feature "responses form", js: true do
       end
     end
 
-    scenario "edit response" do
+    scenario "edit response", js: true do
       click_link(response_link)
       click_link("Edit Response")
       select2(reviewer.name, from: "response_reviewer_id")
@@ -99,8 +100,11 @@ feature "responses form", js: true do
       control_for(questionings[:select_multiple]).uncheck("Cat")
       control_for(questionings[:select_multiple]).check("Dog")
 
-      click_button("Save")
+      click_button("Save and Mark as Reviewed")
+
       click_link(response_link)
+
+      expect(page).to have_selector("#reviewed", text: "Yes")
 
       modified_answers = questioning_answers.merge({multilevel_select_one: %w(Animal Cat), select_multiple: "Dog"})
       modified_answers.each do |qing, answer|
