@@ -14,7 +14,7 @@ class Questioning < FormItem
     to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
-  delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
+  #delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :display_condition, prefix: true, allow_nil: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
   scope :visible, -> { where(hidden: false) }
@@ -25,7 +25,7 @@ class Questioning < FormItem
   accepts_nested_attributes_for :question
 
   # TODO remove
-  accepts_nested_attributes_for :condition
+  #accepts_nested_attributes_for :condition
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(questioning_ids)
@@ -125,9 +125,15 @@ class Questioning < FormItem
   private
 
   def normalize
+    puts "normalize in questioning"
+
     if question.metadata_type.present?
+      puts "metadata prsent"
       self.hidden = true
-      destroy_condition if condition
+      display_conditions.each do |cond|
+        puts "destroy cond"
+        display_conditions.destroy(cond)
+      end
     end
     self.required = false if hidden? || read_only?
     true

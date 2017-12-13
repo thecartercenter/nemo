@@ -6,7 +6,7 @@ class Condition < ApplicationRecord
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
 
-  belongs_to :questioning, inverse_of: :condition
+  belongs_to :questioning, inverse_of: :display_conditions
   belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",
     inverse_of: :referring_conditions
   belongs_to :option_node
@@ -22,7 +22,6 @@ class Condition < ApplicationRecord
   delegate :form, :form_id, :refable_qings, to: :questioning
 
   scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
-  scope :with_display_role, -> { where(role: "display") }
   scope :by_ref_qing_rank, -> { joins(:ref_qing).order("form_items.rank") }
 
   OPERATORS = [
@@ -122,7 +121,8 @@ class Condition < ApplicationRecord
   end
 
   def any_fields_blank?
-    ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
+    puts "any fields blank?"
+    ref_qing.blank? || op.blank? #|| (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
   end
 
   def set_mission

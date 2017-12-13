@@ -70,25 +70,29 @@ describe Questioning do
     describe "question metadata and condition" do
       let(:condition) { build(:condition) }
 
-      context do
+      context "not adding a metadata_type"do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: nil} }
-        let(:submitted) { {condition: condition} }
-        it { is_expected.to eq(condition: condition) }
+        let(:submitted) { {display_conditions: [condition]} }
+        it "should not destroy existing conditions" do
+          is_expected.to eq(display_conditions: [condition])
+        end
       end
 
-      context do
+      context "add a metadata_type with an existing condition" do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
-        let(:submitted) { {condition: condition} }
-        it do
-          is_expected.to eq(condition: nil)
+        let(:submitted) { {display_conditions: [condition]} }
+        it "should destroy existing conditions" do
+          is_expected.to eq(display_conditions: [])
           expect(condition).to be_destroyed
         end
       end
 
-      context do
+      context  "add a metadata_type with no existing conditions" do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
-        let(:submitted) { {condition: nil} }
-        it { is_expected.to eq(condition: nil) }
+        let(:submitted) { {display_conditions: []} }
+        it "should not change the display conditions" do
+          is_expected.to eq(display_conditions: [])
+        end
       end
     end
   end

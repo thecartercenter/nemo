@@ -123,7 +123,7 @@ describe FormVersioningPolicy do
     # add a condition in first 2 forms, should cause bump
     qings2[0...2].each_with_index do |qing, i|
       qing.reload
-      qing.build_condition(ref_qing: qings1[i], op: 'eq', value: '1')
+      qing.display_conditions.build({ ref_qing: qings1[i], op: 'eq', value: '1'})
       qing.save!
     end
     publish_and_check_versions(should_change: true)
@@ -133,7 +133,9 @@ describe FormVersioningPolicy do
     # modify condition, should cause bump
     qings2[0...2].each_with_index do |qing, i|
       qing.reload
-      qing.condition.value = '2'
+      condition = qing.display_conditions.first
+      condition.value = '2'
+      condition.save!
       qing.save!
     end
     publish_and_check_versions(should_change: true)
@@ -143,7 +145,7 @@ describe FormVersioningPolicy do
     # destroy condition, should cause bump
     qings2[0...2].each_with_index do |qing, i|
       qing.reload
-      qing.destroy_condition
+      qing.display_conditions.destroy_all
       qing.save!
     end
     publish_and_check_versions(should_change: true)

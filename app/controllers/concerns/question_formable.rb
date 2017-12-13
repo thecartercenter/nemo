@@ -19,7 +19,8 @@ module QuestionFormable
   def setup_qing_form_support_objs
     @question ||= @questioning.question
     setup_question_form_support_objs
-    @condition = @questioning.condition || @questioning.build_condition
+    @condition = @questioning.display_conditions.build
+    # @condition = @questioning.condition || @questioning.build_condition
   end
 
   def setup_question_form_support_objs
