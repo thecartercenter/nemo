@@ -34,6 +34,7 @@ class Sms::Processor
     if reply_body.present?
       self.reply = Sms::Reply.new(
         body: reply_body,
+        reply_to: incoming_msg,
         to: incoming_msg.from,
         mission: incoming_msg.mission,
         user: incoming_msg.user
@@ -105,6 +106,7 @@ class Sms::Processor
   # Decides if an SMS forward is called for, and builds and returns the Sms::Forward object if so.
   # Returns nil if no forward is called for, or if an error is encountered in constructing the message.
   def handle_forward
+    return unless elmo_response && elmo_response.valid?
     form = elmo_response.try(:form)
 
     if form && form.sms_relay?
