@@ -233,6 +233,19 @@ describe "incoming sms", :sms do
       it_behaves_like "sends forwards"
     end
 
+    context "with validation error on form" do
+      let(:integer_q) { create(:question, qtype_name: "integer", minimum: 20) }
+      let(:text_q) { create(:question, qtype_name: "text") }
+      let(:form) { setup_form(questions: [integer_q, text_q], forward_recipients: recipients) }
+
+      it "does not send forwards" do
+        incoming_body = "#{form_code} 1.15 2.something"
+        assert_sms_response(incoming: incoming_body, outgoing: /Must be greater than or equal to 20/)
+        expect(sms_forward).to be_nil
+        expect(Broadcast.count).to eq 0
+      end
+    end
+
     context "with sms authentication enabled" do
       let(:form) { setup_form(questions: %w(integer text), forward_recipients: recipients, authenticate_sms: true) }
 
