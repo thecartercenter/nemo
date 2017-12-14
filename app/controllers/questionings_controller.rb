@@ -43,8 +43,25 @@ class QuestioningsController < ApplicationController
       permitted_params[:question_attributes][:tag_ids] = tag_ids.split(',')
     end
 
+    # Convert option_node_id array to single option_node_id
+    if permitted_params[:display_conditions_attributes]
+      permitted_params[:display_conditions_attributes].each_with_index do |c, i|
+        puts c
+        puts i
+        if c[:option_node_ids]
+          puts c[:option_node_ids]
+          option_node_id = c[:option_node_ids].reject(&:empty?).last
+          permitted_params[:display_conditions_attributes][i][:option_node_id] = option_node_id
+        end
+      end
+    end
+
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @questioning.assign_attributes(permitted_params)
+    puts "+++++++++++++++PERMITTED PARAMS++++++++++++++"
+    puts permitted_params
+    puts "+++++++++++++++QUESTIONING++++++++++++++"
+    puts JSON.pretty_generate(QuestioningSerializer.new(@questioning).serializable_hash)
     @questioning.valid?
 
     authorize!(:update_core, @questioning) if @questioning.core_changed?

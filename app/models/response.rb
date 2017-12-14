@@ -48,7 +48,7 @@ class Response < ApplicationRecord
         {choices: :option},
         :option,
         :media_object,
-        { questioning: [:condition, { question: :option_set } ] }
+        { questioning: [:display_conditions, { question: :option_set } ] }
       ]
     },
     :user

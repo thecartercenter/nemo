@@ -14,7 +14,7 @@ class Questioning < FormItem
     to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
-  #delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :display_condition, prefix: true, allow_nil: true
+  delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :display_condition, prefix: true, allow_nil: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
   scope :visible, -> { where(hidden: false) }
@@ -34,10 +34,10 @@ class Questioning < FormItem
     answers.destroy_all
   end
 
-  # TODO remove
-  def has_condition?
-    !condition.nil?
-  end
+  # # TODO remove
+  # def has_condition?
+  #   !condition.nil?
+  # end
 
   # checks if this form has any answers
   # uses the form.qing_answer_count method because these requests tend to come in batches so better
@@ -125,13 +125,9 @@ class Questioning < FormItem
   private
 
   def normalize
-    puts "normalize in questioning"
-
     if question.metadata_type.present?
-      puts "metadata prsent"
       self.hidden = true
       display_conditions.each do |cond|
-        puts "destroy cond"
         display_conditions.destroy(cond)
       end
     end
