@@ -103,19 +103,7 @@ class QuestioningsController < ApplicationController
     def init_qing_with_form_id
       permitted_params = questioning_params
       authorize! :create, Questioning
-      strip_condition_params_if_empty(permitted_params)
       init_qing(permitted_params)
-    end
-
-    # strips out condition fields if they're blank and questioning has no existing condition
-    # this prevents an empty condition from getting initialized and then deleted again
-    # this is not set as a filter due to timing issues
-    def strip_condition_params_if_empty(permitted_params)
-    #   if permitted_params[:condition_attributes] &&
-    #     permitted_params[:condition_attributes][:ref_qing_id].blank? &&
-    #     (!@questioning || !@questioning.display_conditions.empty?)
-    #     permitted_params.delete(:condition_attributes)
-    #   end
     end
 
     def questioning_params

@@ -24,20 +24,12 @@ class Questioning < FormItem
 
   accepts_nested_attributes_for :question
 
-  # TODO remove
-  #accepts_nested_attributes_for :condition
-
   # remove heirarchy of objects
   def self.terminate_sub_relationships(questioning_ids)
     answers = Answer.where(questioning_id: questioning_ids)
     Choice.where(answer_id: answers).delete_all
     answers.destroy_all
   end
-
-  # # TODO remove
-  # def has_condition?
-  #   !condition.nil?
-  # end
 
   # checks if this form has any answers
   # uses the form.qing_answer_count method because these requests tend to come in batches so better

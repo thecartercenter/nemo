@@ -22,12 +22,6 @@ class FormItem < ApplicationRecord
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
     dependent: :destroy, inverse_of: :ref_qing
 
-  # TODO: Remove. This is temporary, just so that accepts_nested_attributes_for works for now.
-  # The methods provided by this association are overridden below to use display_conditions
-  # so that we don't get weird bugs caused by multiple copies of the same thing in memory.
-  # has_one :condition, foreign_key: :questioning_id, autosave: true,
-  #   dependent: :destroy, inverse_of: :questioning
-
   before_validation :normalize
   before_create :set_mission
 
@@ -150,35 +144,6 @@ class FormItem < ApplicationRecord
   def display_conditionally?
     display_if != "always" && display_conditions.any?
   end
-
-  # # We are temporarily preserving some old condition methods but these are deprecated in favor of
-  # # display_conditions.
-  # def condition(force_reload = false)
-  #   display_conditions(force_reload)[0]
-  # end
-  #
-  # def condition=(c)
-  #   self.display_conditions = c.nil? ? [] : [c]
-  # end
-  #
-  # def build_condition(attribs = {})
-  #   display_conditions.destroy_all
-  #   display_conditions.build(attribs)
-  # end
-  #
-  # def create_condition(attribs = {})
-  #   display_conditions.destroy_all
-  #   display_conditions.create(attribs)
-  # end
-  #
-  # def create_condition!(attribs = {})
-  #   display_conditions.destroy_all
-  #   display_conditions.create!(attribs)
-  # end
-  #
-  # def destroy_condition
-  #   display_conditions.destroy_all
-  # end
 
   def group?
     false

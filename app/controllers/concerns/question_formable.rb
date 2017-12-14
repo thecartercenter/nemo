@@ -23,7 +23,6 @@ module QuestionFormable
     if @questioning.display_conditions.empty?
       @questioning.display_conditions.build
     end
-    # @condition = @questioning.condition || @questioning.build_condition
   end
 
   def setup_question_form_support_objs
