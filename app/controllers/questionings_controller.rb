@@ -36,7 +36,6 @@ class QuestioningsController < ApplicationController
 
   def update
     permitted_params = questioning_params
-    strip_condition_params_if_empty(permitted_params)
 
     # Convert tag string from TokenInput to array
     if (tag_ids = permitted_params[:question_attributes].try(:[], :tag_ids))
