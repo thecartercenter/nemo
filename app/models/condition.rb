@@ -121,7 +121,6 @@ class Condition < ApplicationRecord
   end
 
   def any_fields_blank?
-    puts "any fields blank?"
     ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
   end
 
