@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171212145358) do
+ActiveRecord::Schema.define(version: 20171215185725) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -567,6 +567,21 @@ ActiveRecord::Schema.define(version: 20171212145358) do
 
   add_index "settings", ["mission_id"], name: "index_settings_on_mission_id", using: :btree
 
+  create_table "skip_rules", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "deleted_at"
+    t.uuid "dest_item_id"
+    t.string "destination", null: false
+    t.integer "rank", null: false
+    t.string "skip_if", null: false
+    t.uuid "source_item_id", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "skip_rules", ["deleted_at"], name: "index_skip_rules_on_deleted_at", using: :btree
+  add_index "skip_rules", ["dest_item_id"], name: "index_skip_rules_on_dest_item_id", using: :btree
+  add_index "skip_rules", ["source_item_id"], name: "index_skip_rules_on_source_item_id", using: :btree
+
   create_table "sms_messages", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string "adapter_name", limit: 255
     t.boolean "auth_failed", default: false, null: false
@@ -766,6 +781,8 @@ ActiveRecord::Schema.define(version: 20171212145358) do
   add_foreign_key "responses", "users", column: "reviewer_id", name: "responses_reviewer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "responses", "users", name: "responses_user_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "settings", "missions", name: "settings_mission_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "skip_rules", "form_items", column: "dest_item_id"
+  add_foreign_key "skip_rules", "form_items", column: "source_item_id"
   add_foreign_key "sms_messages", "broadcasts", name: "sms_messages_broadcast_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "sms_messages", "missions", name: "sms_messages_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "sms_messages", "sms_messages", column: "reply_to_id", name: "sms_messages_reply_to_id_fkey", on_update: :restrict, on_delete: :restrict
