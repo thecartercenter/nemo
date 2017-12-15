@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe Response do
-  let(:user) { create(:user, role_name: "observer") }
+  let(:user) { create(:user, role_name: "enumerator") }
 
   subject(:ability) do
     Ability.new(user: user, mission: get_mission)
@@ -15,7 +15,7 @@ describe Response do
   let(:response) { create(:response, form: form, answer_values: form_answers) }
   let(:own_response) { create(:response, form: form, answer_values: form_answers, user: user) }
 
-  context "as an observer" do
+  context "as an enumerator" do
     it "should be able to create a response" do
       expect(ability).to be_able_to :create, own_response
     end

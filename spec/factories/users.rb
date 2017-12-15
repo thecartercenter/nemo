@@ -41,7 +41,7 @@ FactoryGirl.define do
     trait :no_email do
       email nil
       reset_password_method "print"
-      role_name :observer # Needed to allow print password resetting
+      role_name :enumerator # Needed to allow print password resetting
     end
 
     factory :admin do

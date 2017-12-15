@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   include Cacheable
 
-  ROLES = %w[observer reviewer staffer coordinator]
+  ROLES = %w[enumerator reviewer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
   SITE = new name: configatron.site_shortname # Dummy user for use in SMS log
   GENDER_OPTIONS = %w[man woman no_answer specify]
@@ -62,7 +62,7 @@ class User < ApplicationRecord
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
   validate(:password_reset_cant_be_email_if_no_email)
-  validate(:print_password_reset_only_for_observer)
+  validate(:print_password_reset_only_for_enumerator)
   validate(:no_duplicate_assignments)
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
@@ -144,10 +144,10 @@ class User < ApplicationRecord
 
 
   # Returns an array of hashes of format {name: "Some User", response_count: 2}
-  # of observer response counts for the given mission
-  def self.sorted_observer_response_counts(mission, limit)
-    # First it tries to get user observers that don't have any response
-    result = self.observers_without_responses(mission, limit)
+  # of enumerator response counts for the given mission
+  def self.sorted_enumerator_response_counts(mission, limit)
+    # First it tries to get user enumerators that don't have any response
+    result = self.enumerators_without_responses(mission, limit)
     return result unless result.length < limit
 
     # If the first query didn't get the necessary users quantity,
@@ -159,7 +159,7 @@ class User < ApplicationRecord
           LEFT JOIN responses ON responses.deleted_at IS NULL
             AND responses.user_id = assignments.user_id AND responses.mission_id = ?
         WHERE assignments.deleted_at IS NULL
-          AND assignments.role = 'observer' AND assignments.mission_id = ?
+          AND assignments.role = 'enumerator' AND assignments.mission_id = ?
         GROUP BY assignments.user_id
         ORDER BY response_count
         LIMIT ?
@@ -168,15 +168,15 @@ class User < ApplicationRecord
   end
 
   # Returns an array of hashes of format {name: "Some User", response_count: 0}
-  # of observers that doesn't have responses on the mission
-  def self.observers_without_responses(mission, limit)
+  # of enumerators that doesn't have responses on the mission
+  def self.enumerators_without_responses(mission, limit)
     find_by_sql(["SELECT users.name, 0 as response_count FROM users
       JOIN (
         SELECT a.user_id FROM assignments a
         WHERE a.deleted_at IS NULL
           AND NOT EXISTS (SELECT 1 FROM responses r
             WHERE r.deleted_at IS NULL AND r.user_id = a.user_id AND r.mission_id = ?)
-          AND a.role = 'observer' AND a.mission_id = ?
+          AND a.role = 'enumerator' AND a.mission_id = ?
         LIMIT ?
       ) as rc ON users.id = rc.user_id
       WHERE users.deleted_at IS NULL
@@ -309,8 +309,8 @@ class User < ApplicationRecord
     end
   end
 
-  def observer_only?
-    assignments.all? { |a| a.role === "observer" }
+  def enumerator_only?
+    assignments.all? { |a| a.role === "enumerator" }
   end
 
   def session_time_left
@@ -408,9 +408,9 @@ class User < ApplicationRecord
       end
     end
 
-    def print_password_reset_only_for_observer
-      if reset_password_method == "print" && !observer_only? && !configatron.offline_mode
-        errors.add(:reset_password_method, :print_password_reset_only_for_observer)
+    def print_password_reset_only_for_enumerator
+      if reset_password_method == "print" && !enumerator_only? && !configatron.offline_mode
+        errors.add(:reset_password_method, :print_password_reset_only_for_enumerator)
       end
     end
 

@@ -24,7 +24,7 @@ feature "user form password field" do
 
     context "creating user" do
       context "normal mode" do
-        scenario "setting observer password via email should work" do
+        scenario "setting enumerator password via email should work" do
           visit "/en/m/#{mission.compact_name}/users/new"
           expect(page).to have_content("Send email instructions")
           expect(page).to have_content("Show printable instructions")
@@ -34,7 +34,7 @@ feature "user form password field" do
           expect(page).to have_content("User created successfully")
         end
 
-        scenario "setting observer password via email without email should fail" do
+        scenario "setting enumerator password via email without email should fail" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form(email: false)
           choose("Send email instructions")
@@ -42,7 +42,7 @@ feature "user form password field" do
           expect(page).to have_content("you didn't specify an email")
         end
 
-        scenario "setting observer password via printable should work" do
+        scenario "setting enumerator password via printable should work" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form
           choose("Show printable instructions")
@@ -55,10 +55,10 @@ feature "user form password field" do
           fill_out_form(role: "Coordinator")
           choose("Show printable instructions")
           click_button("Save")
-          expect(page).to have_content("Printed instructions are only available to observers.")
+          expect(page).to have_content("Printed instructions are only available to enumerators.")
         end
 
-        scenario "setting observer password via printable should be unavailable in admin mode" do
+        scenario "setting enumerator password via printable should be unavailable in admin mode" do
           visit "/en/admin/users/new"
           expect(page).to have_content("Send email instructions")
           expect(page).not_to have_content("Show printable instructions")
@@ -72,7 +72,7 @@ feature "user form password field" do
           configatron.offline_mode = false
         end
 
-        scenario "setting observer password via email should be unavailable" do
+        scenario "setting enumerator password via email should be unavailable" do
           visit "/en/m/#{mission.compact_name}/users/new"
           expect(page).to have_content("Show printable instructions")
           expect(page).not_to have_content("Send email instructions")
@@ -86,7 +86,7 @@ feature "user form password field" do
           expect(page).to have_content("Login Instructions")
         end
 
-        scenario "setting observer password via printable should work in admin mode" do
+        scenario "setting enumerator password via printable should work in admin mode" do
           visit "/en/admin/users/new"
           expect(page).to have_content("Show printable instructions")
           expect(page).not_to have_content("Send email instructions")
@@ -97,7 +97,7 @@ feature "user form password field" do
         end
       end
 
-      def fill_out_form(role: "Observer", email: true, admin: false)
+      def fill_out_form(role: "Enumerator", email: true, admin: false)
         fill_in("* Full Name", with: "Foo")
         fill_in("* Username", with: "foo")
         select role, from: "user_assignments_attributes_0_role" unless role.nil?
@@ -107,11 +107,11 @@ feature "user form password field" do
     end
 
     context "editing user" do
-      let(:observer) { create(:user, role_name: :observer, mission: mission) }
+      let(:enumerator) { create(:user, role_name: :enumerator, mission: mission) }
       let(:coordinator) { create(:user, role_name: :coordinator, mission: mission) }
 
-      scenario "resetting observer password via email should work" do
-        visit "/en/m/#{mission.compact_name}/users/#{observer.id}/edit"
+      scenario "resetting enumerator password via email should work" do
+        visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/edit"
         expect(page).to have_content("Reset password and send email instructions")
         expect(page).to have_content("Reset password and show printable instructions")
         choose("Reset password and send email instructions")
@@ -119,8 +119,8 @@ feature "user form password field" do
         expect(page).to have_content("User updated successfully")
       end
 
-      scenario "resetting observer password via printable should work" do
-        visit "/en/m/#{mission.compact_name}/users/#{observer.id}/edit"
+      scenario "resetting enumerator password via printable should work" do
+        visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/edit"
         choose("Reset password and show printable instructions")
         click_button("Save")
         expect(page).to have_content("Login Instructions")

@@ -124,9 +124,9 @@ ActiveRecord::Schema.define(version: 20171215185725) do
     t.string "op", limit: 255
     t.uuid "option_node_id"
     t.integer "option_node_old_id"
-    t.uuid "questioning_id", null: false
+    t.uuid "questioning_id"
     t.integer "questioning_old_id"
-    t.uuid "ref_qing_id", null: false
+    t.uuid "ref_qing_id"
     t.integer "ref_qing_old_id"
     t.string "role", null: false
     t.datetime "updated_at"

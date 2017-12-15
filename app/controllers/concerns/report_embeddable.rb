@@ -52,8 +52,8 @@ module ReportEmbeddable
     [
       I18n.locale.to_s,
 
-      # Need to include this because observers see only own data
-      current_user.role(current_mission) == "observer" ? "observer-#{current_user.id}" : nil,
+      # Need to include this because enumerators see only own data
+      current_user.role(current_mission) == "enumerator" ? "enumerator-#{current_user.id}" : nil,
 
       Response.per_mission_cache_key(current_mission),
       @report.cache_key

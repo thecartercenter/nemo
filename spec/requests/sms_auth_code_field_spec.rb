@@ -5,7 +5,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
   before(:all) do
     @user = FactoryGirl.create(:user)
     @staffer = FactoryGirl.create(:user, role_name: :staffer)
-    @observer = FactoryGirl.create(:user, role_name: :observer)
+    @enumerator = FactoryGirl.create(:user, role_name: :enumerator)
   end
 
   context 'in show mode for staffer' do
@@ -61,9 +61,9 @@ describe "sms auth code field", :sms, database_cleaner: :all do
     end
   end
 
-  context 'in show mode for observer' do
+  context 'in show mode for enumerator' do
     before(:all) do
-      login(@observer)
+      login(@enumerator)
       get("/en/m/#{get_mission.compact_name}/users/#{@user.id}")
     end
 
@@ -72,9 +72,9 @@ describe "sms auth code field", :sms, database_cleaner: :all do
     end
   end
 
-  context 'in edit mode for observer' do
+  context 'in edit mode for enumerator' do
     before(:all) do
-      login(@observer)
+      login(@enumerator)
     end
 
     context 'with other user' do
@@ -86,7 +86,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
     end
 
     context 'with own user' do
-      before(:all) { get("/en/m/#{get_mission.compact_name}/users/#{@observer.id}/edit") }
+      before(:all) { get("/en/m/#{get_mission.compact_name}/users/#{@enumerator.id}/edit") }
 
       old_key = nil
 
@@ -103,15 +103,15 @@ describe "sms auth code field", :sms, database_cleaner: :all do
 
       context 'on regenerate' do
         it 'should return the new sms_auth_code value as json' do
-          post(regenerate_sms_auth_code_user_path(@observer))
+          post(regenerate_sms_auth_code_user_path(@enumerator))
           expect(response).to be_success
 
-          @observer.reload
-          expect(response.body).to eq({ value: @observer.sms_auth_code }.to_json)
+          @enumerator.reload
+          expect(response.body).to eq({ value: @enumerator.sms_auth_code }.to_json)
         end
 
         it 'should have a new key' do
-          get "/en/m/#{get_mission.compact_name}/users/#{@observer.id}"
+          get "/en/m/#{get_mission.compact_name}/users/#{@enumerator.id}"
           assert_select('div.user_sms_auth_code') do |e|
             expect(old_key).not_to eq e.to_s
           end

@@ -17,13 +17,13 @@ describe "summary collection with single subset" do
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.0, :max => 10, :min => 1})
     end
 
-    it "should be correct for observer" do
+    it "should be correct for enumerator" do
       prepare_form('integer', [10, 7, 6, 1, 1])
 
-      observer = create(:user, :role_name => :observer)
-      [10, 7, 6, 1, 1].each{|a| create(:response, :form => @form, :answer_values => [a], :user => observer)}
+      enumerator = create(:user, :role_name => :enumerator)
+      [10, 7, 6, 1, 1].each{|a| create(:response, :form => @form, :answer_values => [a], :user => enumerator)}
 
-      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => observer).build
+      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => enumerator).build
 
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 5.0, :max => 10, :min => 1})
     end

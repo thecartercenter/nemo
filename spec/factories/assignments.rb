@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :assignment do
     mission
-    role 'observer'
+    role 'enumerator'
   end
 end

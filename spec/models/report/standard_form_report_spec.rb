@@ -44,9 +44,9 @@ describe Report::StandardFormReport do
       expect(@report.response_count).to eq(5)
     end
 
-    it "should return correct response count for an observer" do
-      observer = create(:user, role_name: :observer)
-      ability = Ability.new(user: observer, mission: get_mission)
+    it "should return correct response count for an enumerator" do
+      enumerator = create(:user, role_name: :enumerator)
+      ability = Ability.new(user: enumerator, mission: get_mission)
 
       build_form_and_responses
 
@@ -76,29 +76,29 @@ describe Report::StandardFormReport do
       expect(@report.subsets[0].summaries.map(&:questioning)).to eq(@form.questionings[0..3])
     end
 
-    it "should return non-submitting observers" do
-      observers = %w(bob jojo cass sal toz).map do |n|
-        create(:user, login: n, role_name: :observer, name: n.capitalize)
+    it "should return non-submitting enumerators" do
+      enumerators = %w(bob jojo cass sal toz).map do |n|
+        create(:user, login: n, role_name: :enumerator, name: n.capitalize)
       end
 
       # Make decoy coord and admin users
       coord = create(:user, role_name: :coordinator)
-      admin = create(:user, role_name: :observer, admin: true)
+      admin = create(:user, role_name: :enumerator, admin: true)
 
       # Make simple form and add responses from first two users
       @form = create(:form)
-      observers[0...2].each { |o| create(:response, form: @form, user: o) }
+      enumerators[0...2].each { |o| create(:response, form: @form, user: o) }
 
       build_and_run_report
 
-      # Check missing observers
-      missing_observers = @report.users_without_responses(role: :observer, limit: 10)
-      expect(missing_observers.map(&:login).sort).to eq(%w(cass sal toz))
-      expect(@report.observers_without_responses).to eq("Cass, Sal, Toz")
+      # Check missing enumerators
+      missing_enumerators = @report.users_without_responses(role: :enumerator, limit: 10)
+      expect(missing_enumerators.map(&:login).sort).to eq(%w(cass sal toz))
+      expect(@report.enumerators_without_responses).to eq("Cass, Sal, Toz")
 
-      # Change constant size to check mission observers summarization
+      # Change constant size to check mission enumerators summarization
       stub_const("Report::StandardFormReport::MISSING_OBSERVERS_SIZE_LIMIT", 2)
-      expect(@report.observers_without_responses).to eq("Cass, Sal, ... (Clipped)")
+      expect(@report.enumerators_without_responses).to eq("Cass, Sal, ... (Clipped)")
     end
 
     it "empty? should be false if responses" do

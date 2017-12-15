@@ -23,7 +23,7 @@ class Broadcast < ApplicationRecord
   WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
 
   # options for recipients
-  RECIPIENT_SELECTION_OPTIONS = %w(all_users all_observers specific)
+  RECIPIENT_SELECTION_OPTIONS = %w(all_users all_enumerators specific)
 
   scope :manual_only, -> { where(source: "manual") }
 
@@ -107,7 +107,7 @@ class Broadcast < ApplicationRecord
 
   private
 
-  # Returns the recipients of the message. If recipient_selection is set to all_users or all_observers,
+  # Returns the recipients of the message. If recipient_selection is set to all_users or all_enumerators,
   # this will be different than `recipients`.
   def actual_recipients
     @actual_recipients ||= case recipient_selection
@@ -115,8 +115,8 @@ class Broadcast < ApplicationRecord
       (recipient_users + recipient_groups.flat_map(&:users)).uniq
     when "all_users"
       mission.users
-    when "all_observers"
-      mission.users.where("assignments.role" => "observer")
+    when "all_enumerators"
+      mission.users.where("assignments.role" => "enumerator")
     else
       raise "invalid recipient_selection"
     end

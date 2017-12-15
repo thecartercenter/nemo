@@ -35,7 +35,7 @@ describe "user management" do
 
 
     it "can adminify user in current mission" do
-      user_to_adminify = create(:user, role_name: :observer)
+      user_to_adminify = create(:user, role_name: :enumerator)
       test_adminify_user(user: user_to_adminify, mission: mission, result: true)
     end
   end
@@ -48,7 +48,7 @@ describe "user management" do
     end
 
     it "cannot adminify other users" do
-      user_to_adminify = create(:user, role_name: :observer)
+      user_to_adminify = create(:user, role_name: :enumerator)
       test_adminify_user(user: user_to_adminify, mission: mission, result: false)
     end
   end
@@ -60,7 +60,7 @@ describe "user management" do
     post("/en/m/#{mission.compact_name}/users", user: {
       name: "Alan Bob",
       login: "abob",
-      assignments_attributes: {"1" => {"mission_id" => mission.id, "role" => "observer"}},
+      assignments_attributes: {"1" => {"mission_id" => mission.id, "role" => "enumerator"}},
       reset_password_method: "print"
     })
 

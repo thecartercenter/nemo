@@ -32,8 +32,8 @@ describe "redirect on mission change" do
   it "user should be redirected to home screen if was viewing object but redirect to object listing is not permitted" do
     @option_set = create(:option_set, mission: @mission1)
 
-    # add the user to the other mission as an observer so that the option_sets listing won't be allowed
-    @user.assignments.create!(mission: @mission2, role: "observer")
+    # add the user to the other mission as an enumerator so that the option_sets listing won't be allowed
+    @user.assignments.create!(mission: @mission2, role: "enumerator")
 
     assert_redirect_after_mission_change_from(
       from: "/en/m/mission1/option-sets/#{@option_set.id}",
@@ -53,8 +53,8 @@ describe "redirect on mission change" do
   end
 
   it "user should be redirected to home screen if current screen not permitted under new mission" do
-    # add the user to the other mission as an observer so that the option_sets listing won't be allowed
-    @user.assignments.create!(mission: @mission2, role: "observer")
+    # add the user to the other mission as an enumerator so that the option_sets listing won't be allowed
+    @user.assignments.create!(mission: @mission2, role: "enumerator")
 
     assert_redirect_after_mission_change_from(
       from: "/en/m/mission1/option-sets",
