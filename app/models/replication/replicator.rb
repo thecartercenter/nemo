@@ -57,8 +57,12 @@ class Replication::Replicator
   def replicate_children(context)
     log("Child assocs: #{context[:orig].child_assocs.map(&:name)}")
     context[:orig].child_assocs.each do |assoc|
+      children = context[:orig].children(assoc)
+
+      log("Replicating #{children.size} children for association #{assoc.name}")
+
       copy_child = nil
-      context[:orig].children(assoc).map do |child|
+      children.map do |child|
         log("Child: ##{child.id}")
         # Try to find an existing copy. If one doesn't exist, make one.
         unless copy_child = child.find_copy

@@ -34,6 +34,9 @@ class FormItem < ApplicationRecord
 
   delegate :name, to: :form, prefix: true
 
+  replicable child_assocs: [:question, :display_conditions, :children], backward_assocs: :form,
+    dont_copy: [:hidden, :form_id, :question_id]
+
   accepts_nested_attributes_for :display_conditions, allow_destroy: true
 
   def self.rank_gaps?

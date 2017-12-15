@@ -7,11 +7,13 @@ class Replication::History
   end
 
   def add_pair(orig, copy)
-    table[[orig.klass.name, orig.id]] = copy
+    # We don't need to track class name anymore since we're using UUIDs.
+    # Tracking class name is tricky in the case of inheritance anyway.
+    table[orig.id] = copy
   end
 
-  def get_copy(klass, id)
+  def get_copy(id)
     raise "ID not given for history lookup" if id.blank?
-    table[[klass.name, id]]
+    table[id]
   end
 end

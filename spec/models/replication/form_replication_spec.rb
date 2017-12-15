@@ -71,9 +71,8 @@ describe Form do
           detect { |c| c.option_name == "Tulip" }
       end
       let!(:std_condition) do
-        std_questionings[:integer].
-          create_condition(ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
-        std_questionings[:integer].condition
+        std_questionings[:integer].display_conditions.create!(
+          ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
       end
       let(:copy_questionings) do
         {
@@ -84,8 +83,7 @@ describe Form do
 
       context "if all goes well" do
         let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-
-        let!(:copy_condition) { copy_questionings[:integer].condition }
+        let!(:copy_condition) { copy_questionings[:integer].display_conditions.first }
         let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
         let!(:copy_option_node) do
           copy_questionings[:multilevel].option_set.children.
@@ -97,7 +95,7 @@ describe Form do
           expect(std_questionings[:integer]).not_to eq copy_questionings[:integer]
           expect(std_condition).not_to eq copy_condition
           expect(std_questionings[:multilevel].options.sort.first).not_to eq copy_opt_set.options.sort.first
-          expect(std_questionings[:integer].condition.option_node).not_to eq copy_condition.option_node
+          expect(std_questionings[:integer].display_conditions.first.option_node).not_to eq copy_condition.option_node
         end
 
         it "should produce correct condition-qing link" do
@@ -114,7 +112,8 @@ describe Form do
       context "if the option has since been deleted in the mission" do
         let!(:option_set_copy) do
           # replicate the option set
-          os_copy = std_questionings[:multilevel].option_set.replicate(mode: :to_mission, dest_mission: get_mission)
+          os_copy = std_questionings[:multilevel].option_set.
+            replicate(mode: :to_mission, dest_mission: get_mission)
           os_copy.children.
             detect { |c| c.option_name == "Plant" }.children.
             detect { |c| c.option_name == "Tulip" }.destroy
@@ -125,8 +124,8 @@ describe Form do
         it "should succeed but not copy the condition" do
           # Question should still be copied but copy should not have a condition
           expect(copy_questionings[:integer].code).to eq std_questionings[:integer].code
-          expect(std_questionings[:integer].condition).to be_present
-          expect(copy_questionings[:integer].condition).to be_nil
+          expect(std_questionings[:integer].display_conditions.first).to be_present
+          expect(copy_questionings[:integer].display_conditions.first).to be_nil
         end
       end
     end
@@ -138,12 +137,11 @@ describe Form do
         @std = create(:form, question_types: %w(select_one integer), is_standard: true)
 
         # Create condition.
-        @std.c[1].condition = build(:condition,
+        @std.c[1].display_conditions.create!(
           ref_qing: @std.c[0],
           op: "eq",
           option_node_id: @std.c[0].option_set.c[1].id
         )
-        @std.c[1].condition.save!
 
         # Replicate question first and render the copy incompatible.
         @orig_q1 = @std.c[0].question
@@ -171,8 +169,8 @@ describe Form do
         expect(@copy.c[0].question.standard_copy?).to be true
 
         # Condition should point to newer question copy.
-        expect(@copy.c[1].condition.ref_qing).to eq @copy.c[0]
-        expect(@copy.c[1].condition.option_node_id).to eq @copy.c[0].option_set.c[1].id
+        expect(@copy.c[1].display_conditions.first.ref_qing).to eq @copy.c[0]
+        expect(@copy.c[1].display_conditions.first.option_node_id).to eq @copy.c[0].option_set.c[1].id
       end
     end
   end
@@ -240,9 +238,8 @@ describe Form do
           detect { |c| c.option_name == "Tulip" }
       end
       let!(:std_condition) do
-        std_questionings[:integer].
-          create_condition(ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
-        std_questionings[:integer].condition
+        std_questionings[:integer].display_conditions.create!(
+          ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id)
       end
       let(:copy_questionings) do
         {
@@ -253,7 +250,7 @@ describe Form do
 
       context "if all goes well" do
         let!(:copy) { std.replicate(mode: :clone) }
-        let!(:copy_condition) { copy_questionings[:integer].condition }
+        let!(:copy_condition) { copy_questionings[:integer].display_conditions.first }
         let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
         let!(:copy_option_node) do
           copy_questionings[:multilevel].option_set.children.
@@ -267,7 +264,8 @@ describe Form do
 
           # These two should be equal because they're referencing the same option set.
           expect(std_questionings[:multilevel].options.sort.first).to eq copy_opt_set.options.sort.first
-          expect(std_questionings[:integer].condition.option_node).to eq copy_condition.option_node
+          expect(std_questionings[:integer].display_conditions.first.option_node).
+            to eq copy_condition.option_node
         end
 
         it "should produce correct condition-qing link" do

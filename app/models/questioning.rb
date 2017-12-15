@@ -19,9 +19,6 @@ class Questioning < FormItem
 
   scope :visible, -> { where(hidden: false) }
 
-  replicable child_assocs: [:question, :condition], backward_assocs: :form,
-    dont_copy: [:hidden, :form_id, :question_id]
-
   accepts_nested_attributes_for :question
 
   # remove heirarchy of objects
