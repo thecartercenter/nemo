@@ -7,7 +7,7 @@ describe Odk::ConditionDecorator do
     let(:option_node) { qing.option_set.c[0] }
     let(:xpath) { Odk::DecoratorFactory.decorate(condition).to_odk }
     let(:hostq) { Odk::DecoratorFactory.decorate(form.questionings.last) }
-    let(:condition) { Condition.new({questioning: hostq.object}.merge(params)) }
+    let(:condition) { Condition.new({conditionable: hostq.object}.merge(params)) }
 
     context "for single level select one question" do
       let(:form) { create(:form, question_types: %w(select_one text)) }

@@ -59,7 +59,7 @@ describe Condition do
 
   describe "refable qings" do
     let(:form) { create(:form, question_types: %w(location integer integer integer integer)) }
-    let(:cond) { Condition.new(questioning: form.questionings[3]) }
+    let(:cond) { Condition.new(conditionable: form.questionings[3]) }
 
     it "should be correct" do
       expect(cond.refable_qings).to eq form.questionings[1..2]
@@ -78,7 +78,7 @@ describe Condition do
   describe ".check_integrity_after_question_change" do
     let(:form) { create(:form, question_types: %w(select_one integer)) }
     let(:question) { form.c[0].question }
-    let!(:cond) { create(:condition, questioning: form.c[1], ref_qing: form.c[0]) }
+    let!(:cond) { create(:condition, conditionable: form.c[1], ref_qing: form.c[0]) }
 
     it "should delete the condition on option set change" do
       question.update!(option_set: create(:option_set))

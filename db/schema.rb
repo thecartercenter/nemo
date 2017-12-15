@@ -116,6 +116,8 @@ ActiveRecord::Schema.define(version: 20171215185725) do
   add_index "choices", ["option_id"], name: "index_choices_on_option_id", using: :btree
 
   create_table "conditions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.uuid "conditionable_id"
+    t.string "conditionable_type"
     t.datetime "created_at"
     t.datetime "deleted_at"
     t.uuid "mission_id"
@@ -124,7 +126,6 @@ ActiveRecord::Schema.define(version: 20171215185725) do
     t.string "op", limit: 255
     t.uuid "option_node_id"
     t.integer "option_node_old_id"
-    t.uuid "questioning_id"
     t.integer "questioning_old_id"
     t.uuid "ref_qing_id"
     t.integer "ref_qing_old_id"
@@ -133,10 +134,11 @@ ActiveRecord::Schema.define(version: 20171215185725) do
     t.string "value", limit: 255
   end
 
+  add_index "conditions", ["conditionable_id"], name: "index_conditions_on_conditionable_id", using: :btree
+  add_index "conditions", ["conditionable_type", "conditionable_id"], name: "index_conditions_on_conditionable_type_and_conditionable_id", using: :btree
   add_index "conditions", ["deleted_at"], name: "index_conditions_on_deleted_at", using: :btree
   add_index "conditions", ["mission_id"], name: "index_conditions_on_mission_id", using: :btree
   add_index "conditions", ["option_node_id"], name: "index_conditions_on_option_node_id", using: :btree
-  add_index "conditions", ["questioning_id"], name: "index_conditions_on_questioning_id", using: :btree
   add_index "conditions", ["ref_qing_id"], name: "index_conditions_on_ref_qing_id", using: :btree
 
   create_table "delayed_jobs", force: :cascade do |t|
@@ -740,7 +742,7 @@ ActiveRecord::Schema.define(version: 20171215185725) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "options", name: "choices_option_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "conditions", "form_items", column: "questioning_id", name: "conditions_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "conditions", "form_items", column: "conditionable_id", name: "conditions_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict

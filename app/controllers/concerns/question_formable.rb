@@ -21,7 +21,7 @@ module QuestionFormable
     setup_question_form_support_objs
 
     if @questioning.display_conditions.empty?
-      @questioning.display_conditions.build
+      @questioning.display_conditions.build(conditionable: @questioning)
     end
   end
 

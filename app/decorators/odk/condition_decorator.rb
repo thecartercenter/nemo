@@ -22,7 +22,7 @@ module Odk
     end
 
     def questioning
-      decorate(object.questioning)
+      decorate(object.conditionable)
     end
 
     def ref_qing

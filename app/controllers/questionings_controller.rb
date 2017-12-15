@@ -74,8 +74,8 @@ class QuestioningsController < ApplicationController
 
   # Responds to ajax request with json containing data needed for condition form.
   def condition_form
-    if params[:questioning_id].present?
-      @questioning = Questioning.find(params[:questioning_id])
+    if params[:conditionable_id].present?
+      @questioning = Questioning.find(params[:conditionable_id])
     else
       # Create a dummy questioning so that the condition can look up the refable qings, etc.
       @questioning = init_qing(form_id: params[:form_id])
@@ -84,7 +84,7 @@ class QuestioningsController < ApplicationController
     authorize! :condition_form, @questioning
 
     @condition = @questioning.display_conditions.find_by(id: params[:condition_id])
-    @condition ||= @questioning.display_conditions.build
+    @condition ||= @questioning.display_conditions.build(conditionable: @questioning)
 
     @condition.ref_qing_id = params[:ref_qing_id]
     render json: ConditionViewSerializer.new(@condition), status: 200

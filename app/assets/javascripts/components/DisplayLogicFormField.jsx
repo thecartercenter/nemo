@@ -28,7 +28,7 @@ class DisplayLogicFormField extends React.Component {
 
   addCondition() {
     let conditions = this.state.display_conditions
-    conditions.push({refable_qings: this.state.refable_qings, operator_options: [], questioning_id: this.state.id})
+    conditions.push({refable_qings: this.state.refable_qings, operator_options: [], conditionable_id: this.state.id})
 
     this.setState({display_conditions: conditions})
   }

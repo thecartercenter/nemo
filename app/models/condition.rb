@@ -6,7 +6,7 @@ class Condition < ApplicationRecord
   # question types that cannot be used in conditions
   NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
 
-  belongs_to :questioning, inverse_of: :display_conditions
+  belongs_to :conditionable, polymorphic: true
   belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",
     inverse_of: :referring_conditions
   belongs_to :option_node
@@ -16,10 +16,10 @@ class Condition < ApplicationRecord
   before_create :set_mission
 
   validate :all_fields_required
-  validates :questioning, presence: true
+  validates :conditionable, presence: true
 
   delegate :has_options?, :full_dotted_rank, to: :ref_qing, prefix: true
-  delegate :form, :form_id, :refable_qings, to: :questioning
+  delegate :form, :form_id, :refable_qings, to: :conditionable
 
   scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
   scope :by_ref_qing_rank, -> { joins(:ref_qing).order("form_items.rank") }
@@ -37,8 +37,8 @@ class Condition < ApplicationRecord
     {name: 'ninc', types: %w(select_multiple), code: "!="}
   ]
 
-  replicable backward_assocs: [:questioning, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
-    dont_copy: [:ref_qing_id, :questioning_id, :option_node_id]
+  replicable backward_assocs: [:conditionable, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
+    dont_copy: [:ref_qing_id, :conditionable_id, :option_node_id]
 
   # Deletes any that have become invalid due to changes in the given question
   def self.check_integrity_after_question_change(question)
@@ -125,6 +125,6 @@ class Condition < ApplicationRecord
   end
 
   def set_mission
-    self.mission = questioning.try(:mission)
+    self.mission = conditionable.try(:mission)
   end
 end

@@ -17,12 +17,15 @@ class FormItem < ApplicationRecord
 
   # These associations have qing in their foreign keys but we have them here in FormItem instead
   # because we will eventually support conditions on groups.
-  has_many :display_conditions, -> { by_ref_qing_rank }, class_name: "Condition",
-    foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
+  has_many :display_conditions, -> { by_ref_qing_rank }, as: :conditionable,
+    class_name: "Condition", dependent: :destroy
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
     dependent: :destroy, inverse_of: :ref_qing
 
   before_validation :normalize
+
+  # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
+  before_validation :set_foreign_key_on_conditions
   before_create :set_mission
 
   has_ancestry cache_depth: true
@@ -166,6 +169,10 @@ class FormItem < ApplicationRecord
   # copy mission from question
   def set_mission
     self.mission = form.try(:mission)
+  end
+
+  def set_foreign_key_on_conditions
+    display_conditions.each { |c| c.conditionable = self }
   end
 
   def parent_must_be_group
