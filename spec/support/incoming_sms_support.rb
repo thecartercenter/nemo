@@ -2,7 +2,11 @@ module IncomingSmsSupport
   # helper that sets up a new form with the given parameters
   def setup_form(options)
     mission = options[:mission].present? ? options[:mission] : get_mission
-    form = create(:form, :published, smsable: true, question_types: options[:questions], mission: mission)
+    if(options[:questions].all? { |q| q.is_a? Question })
+      form = create(:form, :published, smsable: true, questions: options[:questions], mission: mission)
+    else
+      form = create(:form, :published, smsable: true, question_types: options[:questions], mission: mission)
+    end
     form.questionings.each { |q| q.update_attribute(:required, true) } if options[:required]
     if options[:forward_recipients]
       form.sms_relay = true
