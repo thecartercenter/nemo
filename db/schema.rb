@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171215185725) do
+ActiveRecord::Schema.define(version: 20171218151148) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -742,7 +742,6 @@ ActiveRecord::Schema.define(version: 20171215185725) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "options", name: "choices_option_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "conditions", "form_items", column: "conditionable_id", name: "conditions_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
