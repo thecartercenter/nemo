@@ -116,7 +116,7 @@ ActiveRecord::Schema.define(version: 20171218151148) do
   add_index "choices", ["option_id"], name: "index_choices_on_option_id", using: :btree
 
   create_table "conditions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid "conditionable_id"
+    t.uuid "conditionable_id", null: false
     t.string "conditionable_type"
     t.datetime "created_at"
     t.datetime "deleted_at"
@@ -127,7 +127,7 @@ ActiveRecord::Schema.define(version: 20171218151148) do
     t.uuid "option_node_id"
     t.integer "option_node_old_id"
     t.integer "questioning_old_id"
-    t.uuid "ref_qing_id"
+    t.uuid "ref_qing_id", null: false
     t.integer "ref_qing_old_id"
     t.datetime "updated_at"
     t.string "uuid", null: false
