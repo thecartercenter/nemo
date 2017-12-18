@@ -14,7 +14,6 @@ class Questioning < FormItem
     to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
-  delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :display_condition, prefix: true, allow_nil: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
   scope :visible, -> { where(hidden: false) }
@@ -116,9 +115,7 @@ class Questioning < FormItem
   def normalize
     if question.metadata_type.present?
       self.hidden = true
-      display_conditions.each do |cond|
-        display_conditions.destroy(cond)
-      end
+      display_conditions.destroy_all
     end
     self.required = false if hidden? || read_only?
     true
