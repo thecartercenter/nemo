@@ -1,4 +1,4 @@
-<tr class="question <%= "depth-#{qing.depth}" %><%= qing.condition ? ' conditional' : '' %>">
+<tr class="question <%= "depth-#{qing.depth}" %><%= qing.display_conditionally? ? ' conditional' : '' %>">
   <td class="name">
     <% if qing.display_conditionally?%>
       <div class="condition">

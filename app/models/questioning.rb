@@ -14,29 +14,18 @@ class Questioning < FormItem
     to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
-  delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :condition, prefix: true, allow_nil: true
+  delegate :ref_qing_full_dotted_rank, :ref_qing_id, to: :display_condition, prefix: true, allow_nil: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
   scope :visible, -> { where(hidden: false) }
 
-  replicable child_assocs: [:question, :condition], backward_assocs: :form,
-    dont_copy: [:hidden, :form_id, :question_id]
-
   accepts_nested_attributes_for :question
-
-  # TODO remove
-  accepts_nested_attributes_for :condition
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(questioning_ids)
     answers = Answer.where(questioning_id: questioning_ids)
     Choice.where(answer_id: answers).delete_all
     answers.destroy_all
-  end
-
-  # TODO remove
-  def has_condition?
-    !condition.nil?
   end
 
   # checks if this form has any answers
@@ -127,7 +116,9 @@ class Questioning < FormItem
   def normalize
     if question.metadata_type.present?
       self.hidden = true
-      destroy_condition if condition
+      display_conditions.each do |cond|
+        display_conditions.destroy(cond)
+      end
     end
     self.required = false if hidden? || read_only?
     true

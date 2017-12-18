@@ -1,6 +1,8 @@
 # Wraps a parent or child association in the replication.
 class Replication::AssocProxy
-  attr_accessor :name, :klass, :foreign_key, :target_class, :belongs_to, :type, :skip_obj_if_missing
+  attr_accessor :name, :klass, :foreign_key, :foreign_type, :target_class, :belongs_to, :type,
+    :skip_obj_if_missing, :polymorphic
+  alias_method :polymorphic?, :polymorphic
 
   def self.get(klass, attribs)
     attribs = {name: attribs} if attribs.is_a?(Symbol)
@@ -21,7 +23,7 @@ class Replication::AssocProxy
   end
 
   def initialize(attribs)
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
 
     if name == :children
       self.target_class = klass
@@ -29,8 +31,15 @@ class Replication::AssocProxy
       self.belongs_to = false
     else
       reflection = klass.reflect_on_association(name)
-      raise "Association #{name} on #{klass.name} doesn't exist." if reflection.nil?
-      self.target_class = reflection.klass
+      if reflection.nil?
+        raise ArgumentError.new("Association #{name} on #{klass.name} doesn't exist.")
+      end
+      self.polymorphic = reflection.polymorphic?
+      if polymorphic?
+        self.foreign_type = reflection.foreign_type
+      else
+        self.target_class = reflection.klass
+      end
       self.foreign_key = reflection.foreign_key
       self.belongs_to = reflection.belongs_to?
     end

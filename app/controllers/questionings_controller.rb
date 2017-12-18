@@ -36,7 +36,6 @@ class QuestioningsController < ApplicationController
 
   def update
     permitted_params = questioning_params
-    strip_condition_params_if_empty(permitted_params)
 
     # Convert tag string from TokenInput to array
     if (tag_ids = permitted_params[:question_attributes].try(:[], :tag_ids))
@@ -65,8 +64,8 @@ class QuestioningsController < ApplicationController
 
   # Responds to ajax request with json containing data needed for condition form.
   def condition_form
-    if params[:questioning_id].present?
-      @questioning = Questioning.find(params[:questioning_id])
+    if params[:conditionable_id].present?
+      @questioning = Questioning.find(params[:conditionable_id])
     else
       # Create a dummy questioning so that the condition can look up the refable qings, etc.
       @questioning = init_qing(form_id: params[:form_id])
@@ -75,7 +74,7 @@ class QuestioningsController < ApplicationController
     authorize! :condition_form, @questioning
 
     @condition = @questioning.display_conditions.find_by(id: params[:condition_id])
-    @condition ||= @questioning.display_conditions.build
+    @condition ||= @questioning.display_conditions.build(conditionable: @questioning)
 
     @condition.ref_qing_id = params[:ref_qing_id]
     render json: ConditionViewSerializer.new(@condition), status: 200
@@ -93,19 +92,7 @@ class QuestioningsController < ApplicationController
     def init_qing_with_form_id
       permitted_params = questioning_params
       authorize! :create, Questioning
-      strip_condition_params_if_empty(permitted_params)
       init_qing(permitted_params)
-    end
-
-    # strips out condition fields if they're blank and questioning has no existing condition
-    # this prevents an empty condition from getting initialized and then deleted again
-    # this is not set as a filter due to timing issues
-    def strip_condition_params_if_empty(permitted_params)
-      if permitted_params[:condition_attributes] &&
-        permitted_params[:condition_attributes][:ref_qing_id].blank? &&
-        (!@questioning || !@questioning.condition)
-        permitted_params.delete(:condition_attributes)
-      end
     end
 
     def questioning_params

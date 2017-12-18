@@ -64,13 +64,13 @@ class FormVersioningPolicy
       case action
       when :create
         # creating a condition is a trigger if question is required
-        return [obj.form] if obj.questioning.required?
+        return [obj.form] if obj.conditionable.required?
       when :update
         # changing condition is a trigger if question is required
-        return [obj.form] if obj.changed? && obj.questioning.required?
+        return [obj.form] if obj.changed? && obj.conditionable.required?
       when :destroy
         # destroying a condition is a trigger if question is required
-        return [obj.form] if obj.questioning.required?
+        return [obj.form] if obj.conditionable.required?
       end
 
     when "Question"

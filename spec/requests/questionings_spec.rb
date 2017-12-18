@@ -67,14 +67,14 @@ describe "questionings", type: :request do
           value: nil,
           option_node: nil,
           form_id: form.id,
-          questioning_id: qing.id,
+          conditionable_id: qing.id,
           operator_options: [],
           refable_qings: expected_ref_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/questionings/condition-form",{
           ref_qing_id: nil,
           form_id: form.id,
-          questioning_id: qing.id
+          conditionable_id: qing.id
         }
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
@@ -98,7 +98,7 @@ describe "questionings", type: :request do
           value: nil,
           option_node: nil,
           form_id: form.id,
-          questioning_id: qing.id,
+          conditionable_id: qing.id,
           operator_options: expected_operator_options,
           refable_qings: expected_ref_qing_options
         }.to_json
@@ -106,14 +106,14 @@ describe "questionings", type: :request do
           {
             ref_qing_id: form.c[0].id,
             form_id: form.id,
-            questioning_id: qing.id
+            conditionable_id: qing.id
           }
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
 
       context " text value exists" do
-        let(:condition) { create(:condition, questioning: qing, ref_qing: form.c[1], value: "Test") } #ref_qing: form.c[1], op: "eq", value: "Test"}
+        let(:condition) { create(:condition, conditionable: qing, ref_qing: form.c[1], value: "Test") } #ref_qing: form.c[1], op: "eq", value: "Test"}
 
         it "returns text value" do
           expected_operator_options = [
@@ -127,7 +127,7 @@ describe "questionings", type: :request do
             value: "Test",
             option_node: nil,
             form_id: form.id,
-            questioning_id: qing.id,
+            conditionable_id: qing.id,
             operator_options: expected_operator_options,
             refable_qings: expected_ref_qing_options
           }.to_json
@@ -136,7 +136,7 @@ describe "questionings", type: :request do
               condition_id: condition.id,
               ref_qing_id: form.c[1].id,
               form_id: form.id,
-              questioning_id: qing.id
+              conditionable_id: qing.id
             }
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
@@ -144,7 +144,7 @@ describe "questionings", type: :request do
       end
 
       context "option node value exists" do
-        let(:condition) { create(:condition, questioning: qing, ref_qing: form.c[2], value: nil) }
+        let(:condition) { create(:condition, conditionable: qing, ref_qing: form.c[2], value: nil) }
 
         it "returns text value" do
           expected_operator_options = [
@@ -158,7 +158,7 @@ describe "questionings", type: :request do
             value: nil,
             option_node: { node_id: form.c[2].option_set.c[0].id, set_id: form.c[2].option_set.id },
             form_id: form.id,
-            questioning_id: qing.id,
+            conditionable_id: qing.id,
             operator_options: expected_operator_options,
             refable_qings: expected_ref_qing_options
           }.to_json
@@ -167,7 +167,7 @@ describe "questionings", type: :request do
               condition_id: condition.id,
               ref_qing_id: form.c[2].id,
               form_id: form.id,
-              questioning_id: qing.id
+              conditionable_id: qing.id
             }
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected

@@ -43,8 +43,10 @@ module Odk
     # Checks if there are any conditions in this group that refer to other questions in this group.
     def internal_conditions?
       children.each do |item|
-        next unless item.condition.present?
-        return true if item.condition.ref_qing.parent_id == id
+        next unless item.display_conditionally?
+        item.display_conditions.each do |condition|
+          return true if condition.ref_qing.parent_id == id
+        end
       end
       false
     end

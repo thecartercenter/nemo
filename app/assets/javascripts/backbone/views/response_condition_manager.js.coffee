@@ -5,7 +5,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
     @item = options.item
     @conditions = @item.display_conditions
     @inst = options.inst
-    @row = @formRow(@conditions[0].questioning_id, @inst)
+    @row = @formRow(@conditions[0].conditionable_id, @inst)
     @readOnly = @row.is('.read_only')
     @result = true
 

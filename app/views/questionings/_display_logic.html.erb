@@ -1,13 +1,13 @@
 <%# NOTE this template does not use elmo_form_for because it is rendered inside the control area of
     an elmo form field and therefore doesn't need all the structure that comes with an elmo form field %>
 <%# if there are no referrable questionings, no point in showing the condition form %>
-<% if @condition.refable_qings.empty? %>
+<% if @questioning.refable_qings.empty? %>
 
   <%= t('condition.no_refable_qings') %>
 
 <% else %>
 
-  <% if read_only || cannot?(:update_core, @condition.questioning) %>
+  <% if read_only || cannot?(:update_core, @questioning) %>
 
     <%# if in show mode and the condition is blank, just show 'none' %>
     <% if @questioning.display_conditions.blank? %>
