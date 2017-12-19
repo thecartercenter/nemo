@@ -11,6 +11,18 @@ module Odk
       decorate_collection(object.sorted_children)
     end
 
+    def bind_tag(xpath_prefix: "/data")
+      tag(:bind, nodeset: xpath(xpath_prefix), relevant: relevance)
+    end
+
+    def note_bind_tag(xpath_prefix: "/data")
+      tag(:bind, nodeset: xpath(xpath_prefix) << "/#{odk_code}-header", readonly: "true()", type: "string")
+    end
+
+    def xpath(prefix = "/data")
+      "#{prefix}/#{odk_code}"
+    end
+
     # Duck type
     def code
       nil

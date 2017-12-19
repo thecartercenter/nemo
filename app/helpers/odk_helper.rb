@@ -85,15 +85,6 @@ module OdkHelper
     end
   end
 
-  # note: _readonly is used to get around the 'readonly' html attribute
-  def note_binding(group, xpath_prefix)
-    tag(:bind, {
-      "nodeset" => "#{xpath_prefix}/#{group.odk_code}-header",
-      "_readonly" => "true()",
-      "type" => "string"
-    }.reject { |k,v| v.nil? }).gsub(/_readonly=/, "readonly=").html_safe
-  end
-
   # For the given subqing, returns an xpath expression for the itemset tag nodeset attribute.
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or

@@ -5,11 +5,10 @@
     <%= node.bind_tag(@form, subq, group: group_attr, xpath_prefix: xpath_prefix) %>
   <% end %>
 <% else %>
-  <% xpath = "#{xpath_prefix}/#{node.odk_code}" %>
-  <%= tag("bind", nodeset: xpath) %>
-  <%= note_binding(node, xpath) %>
+  <%= node.bind_tag(xpath_prefix: xpath_prefix) %>
+  <%= node.note_bind_tag(xpath_prefix: xpath_prefix) %>
   <% node.sorted_children.each do |child| %>
-    <%= render "forms/odk/binding_node", node: child, parent: node, xpath_prefix: xpath %>
+    <%= render "forms/odk/binding_node", node: child, parent: node, xpath_prefix: node.xpath(xpath_prefix) %>
   <% end %>
 <% end %>
 
