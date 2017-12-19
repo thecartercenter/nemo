@@ -81,24 +81,24 @@ class QuestioningsController < ApplicationController
   end
 
   private
-    # prepares objects for and renders the form template
-    def prepare_and_render_form
-      # this method lives in the QuestionFormable concern
-      setup_qing_form_support_objs
-      render(:form)
-    end
+  # prepares objects for and renders the form template
+  def prepare_and_render_form
+    # this method lives in the QuestionFormable concern
+    setup_qing_form_support_objs
+    render(:form)
+  end
 
-    # inits the questioning using the proper method in QuestionFormable
-    def init_qing_with_form_id
-      permitted_params = questioning_params
-      authorize! :create, Questioning
-      init_qing(permitted_params)
-    end
+  # inits the questioning using the proper method in QuestionFormable
+  def init_qing_with_form_id
+    permitted_params = questioning_params
+    authorize! :create, Questioning
+    init_qing(permitted_params)
+  end
 
-    def questioning_params
-      params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
-        :required, :default, :read_only, :display_if,
-        { display_conditions_attributes: [:id, :ref_qing_id, :op, :value, option_node_ids: []] },
-        { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
-    end
+  def questioning_params
+    params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
+      :required, :default, :read_only, :display_if,
+      { display_conditions_attributes: [:_destroy, :id, :ref_qing_id, :op, :value, option_node_ids: []] },
+      { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
+  end
 end
