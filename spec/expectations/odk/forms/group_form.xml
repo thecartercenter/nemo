@@ -5,26 +5,27 @@
     <model>
       <instance>
         <data id="*form1*" version="*formver1*">
-          <*itemcode1*>
-            <*itemcode1*-header/>
-            <*itemcode2*/>
+          <*itemcode1*/>
+          <*itemcode2*>
+            <*itemcode2*-header/>
             <*itemcode3*/>
             <*itemcode4*/>
-          </*itemcode1*>
+            <*itemcode5*/>
+          </*itemcode2*>
         </data>
       </instance>
       <itext>
         <translation lang="English">
-          <text id="*itemcode1*-header:label">
+          <text id="*itemcode2*-header:label">
             <value>Group Name</value>
           </text>
-          <text id="*itemcode1*-header:hint">
+          <text id="*itemcode2*-header:hint">
             <value>Group Hint</value>
           </text>
-          <text id="*itemcode2*:label">
+          <text id="*itemcode1*:label">
             <value>Text Question Title 1</value>
           </text>
-          <text id="*itemcode2*:hint">
+          <text id="*itemcode1*:hint">
             <value>Question Hint 1</value>
           </text>
           <text id="*itemcode3*:label">
@@ -39,33 +40,44 @@
           <text id="*itemcode4*:hint">
             <value>Question Hint 3</value>
           </text>
+          <text id="*itemcode5*:label">
+            <value>Text Question Title 4</value>
+          </text>
+          <text id="*itemcode5*:hint">
+            <value>Question Hint 4</value>
+          </text>
         </translation>
       </itext>
-      <bind nodeset="/data/*itemcode1*"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*" type="string"/>
+      <bind nodeset="/data/*itemcode1*" type="string"/>
+      <bind nodeset="/data/*itemcode2*" relevant="/data/*itemcode1* = 'foo'"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode2*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode3*" type="string"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="string"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode5*" type="string"/>
     </model>
   </h:head>
   <h:body>
+    <input ref="/data/*itemcode1*">
+      <label ref="jr:itext('*itemcode1*:label')"/>
+      <hint ref="jr:itext('*itemcode1*:hint')"/>
+    </input>
     <group>
       <label>Group Name</label>
       <group appearance="field-list">
-        <input ref="/data/*itemcode1*/*itemcode1*-header">
-          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
+        <input ref="/data/*itemcode2*/*itemcode2*-header">
+          <hint ref="jr:itext('*itemcode2*-header:hint')"/>
         </input>
-        <input ref="/data/*itemcode1*/*itemcode2*">
-          <label ref="jr:itext('*itemcode2*:label')"/>
-          <hint ref="jr:itext('*itemcode2*:hint')"/>
-        </input>
-        <input ref="/data/*itemcode1*/*itemcode3*">
+        <input ref="/data/*itemcode2*/*itemcode3*">
           <label ref="jr:itext('*itemcode3*:label')"/>
           <hint ref="jr:itext('*itemcode3*:hint')"/>
         </input>
-        <input ref="/data/*itemcode1*/*itemcode4*">
+        <input ref="/data/*itemcode2*/*itemcode4*">
           <label ref="jr:itext('*itemcode4*:label')"/>
           <hint ref="jr:itext('*itemcode4*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode2*/*itemcode5*">
+          <label ref="jr:itext('*itemcode5*:label')"/>
+          <hint ref="jr:itext('*itemcode5*:hint')"/>
         </input>
       </group>
     </group>
