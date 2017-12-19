@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171218151148) do
+ActiveRecord::Schema.define(version: 20171219154111) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -568,7 +568,7 @@ ActiveRecord::Schema.define(version: 20171218151148) do
 
   add_index "settings", ["mission_id"], name: "index_settings_on_mission_id", using: :btree
 
-  create_table "skip_rules", force: :cascade do |t|
+  create_table "skip_rules", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.uuid "dest_item_id"
