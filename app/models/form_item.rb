@@ -21,7 +21,7 @@ class FormItem < ApplicationRecord
     class_name: "Condition", dependent: :destroy
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
     dependent: :destroy, inverse_of: :ref_qing
-  has_many :skip_rules, inverse_of: :source_item, dependent: :destroy
+  has_many :skip_rules, foreign_key: :source_item_id, inverse_of: :source_item, dependent: :destroy
 
   before_validation :normalize
 
@@ -38,6 +38,7 @@ class FormItem < ApplicationRecord
     dont_copy: [:hidden, :form_id, :question_id]
 
   accepts_nested_attributes_for :display_conditions, allow_destroy: true
+  accepts_nested_attributes_for :skip_rules, allow_destroy: true
 
   def self.rank_gaps?
     SqlRunner.instance.run("
@@ -166,6 +167,10 @@ class FormItem < ApplicationRecord
       self.display_if = "always"
     elsif display_if == "always"
       self.display_if = "all_met"
+    end
+
+    skip_rules.each do |rule|
+      skip_rules.destroy(rule) if rule.all_fields_blank?
     end
   end
 

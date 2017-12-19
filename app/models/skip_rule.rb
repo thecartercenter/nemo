@@ -11,6 +11,10 @@ class SkipRule < ActiveRecord::Base
 
   accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
+  def all_fields_blank?
+    destination.blank? && dest_item.blank? && conditions.all?(&:all_fields_blank?)
+  end
+
   private
 
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly

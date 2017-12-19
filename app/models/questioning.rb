@@ -3,8 +3,6 @@ class Questioning < FormItem
 
   NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video).to_set
 
-  before_validation :normalize
-
   delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node, :first_leaf_option,
     :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels, :min_max_error_msg,
     :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name, :option_set_id,
@@ -113,6 +111,7 @@ class Questioning < FormItem
   private
 
   def normalize
+    super
     if question.metadata_type.present?
       self.hidden = true
       display_conditions.destroy_all

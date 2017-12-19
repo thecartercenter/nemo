@@ -28,4 +28,18 @@ describe "form items" do
       end
     end
   end
+
+  describe "normalization" do
+    describe "skip_rules" do
+      it "should be discarded if totally empty" do
+        qing = create(:questioning, skip_rules_attributes: [
+          {destination: "end", skip_if: "always"},
+          {destination: "", skip_if: "", conditions_attributes: []},
+          {destination: "", skip_if: "", conditions_attributes: [{ref_qing_id: "", op: "", value: ""}]}
+        ])
+        expect(qing.skip_rules.count).to eq 1
+        expect(qing.skip_rules[0].destination).to eq "end"
+      end
+    end
+  end
 end
