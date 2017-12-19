@@ -33,4 +33,17 @@ describe SkipRule do
       end
     end
   end
+
+  describe "validation" do
+    describe "conditions" do
+      it "should set validation error if incomplete condition" do
+        rule = build(:skip_rule, source_item: qing2, conditions_attributes: [
+          {ref_qing_id: qing1.id, op: "eq", value: ""}
+        ])
+        expect(rule).not_to be_valid
+        expect(rule.errors["conditions.base"].join).to eq "All condition fields are required."
+        expect(rule.conditions[0].errors[:base].join).to eq "All condition fields are required."
+      end
+    end
+  end
 end
