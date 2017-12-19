@@ -6,6 +6,7 @@ class SkipRule < ActiveRecord::Base
   has_many :conditions, -> { by_ref_qing_rank }, as: :conditionable, dependent: :destroy
 
   before_validation :set_foreign_key_on_conditions
+  before_validation :normalize
 
   validate :require_dest_item
 
@@ -20,6 +21,14 @@ class SkipRule < ActiveRecord::Base
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
   def set_foreign_key_on_conditions
     conditions.each { |c| c.conditionable = self}
+  end
+
+  def normalize
+    if conditions.none?
+      self.skip_if = "always"
+    elsif skip_if == "always"
+      self.skip_if = "all_met"
+    end
   end
 
   def require_dest_item
