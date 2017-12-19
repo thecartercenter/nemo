@@ -47,7 +47,16 @@ FactoryGirl.define do
 
       create(:question, qtype_name: "select_one", option_set: os, mission: mission)
 
-      create(:condition, ref_qing: form.c.first, conditionable: form.c.last, mission: mission)
+      create(:condition, ref_qing: form.c[0], conditionable: form.c[3], mission: mission)
+
+      create(:skip_rule,
+        source_item: form.c[1],
+        destination: "item",
+        dest_item: form.c[3],
+        conditions_attributes: [
+          {ref_qing_id: form.c[0].id, op: "eq", value: "5"}
+        ]
+      )
 
       # test that cloned objects can be deleted
       form.replicate(mode: :clone)

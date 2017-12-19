@@ -34,7 +34,7 @@ class Mission < ApplicationRecord
 
   scope(:sorted_by_name, -> { order("name") })
   scope(:sorted_recent_first, -> { order("missions.created_at DESC") })
-  scope(:for_user, ->(u) { where("missions.id IN 
+  scope(:for_user, ->(u) { where("missions.id IN
     (SELECT mission_id FROM assignments WHERE deleted_at IS NULL AND user_id = ?)", u.id) })
 
   delegate(:override_code, :allow_unauthenticated_submissions?, :default_locale, to: :setting)
@@ -58,7 +58,7 @@ class Mission < ApplicationRecord
         # Remove MissionBased Classes
         # note that we don't need to remove OptionNodes directly since OptionSet takes care of that
         # the order of deletion is also important to avoid foreign key constraints
-        relationships_to_delete = [Setting, Report::Report, Condition, QingGroup, Questioning,
+        relationships_to_delete = [Setting, Report::Report, Condition, FormItem,
                                    Question, OptionSet, Option, Response,
                                    Form, Broadcast, Assignment, Sms::Message, UserGroup]
         relationships_to_delete.each { |r| r.mission_pre_delete(self) }

@@ -71,7 +71,6 @@ class Form < ApplicationRecord
   def self.terminate_sub_relationships(form_ids)
     Form.where(id: form_ids).update_all(original_id: nil)
     FormVersion.where(form_id: form_ids).delete_all
-    Questioning.where(form_id: form_ids).delete_all
   end
 
   # Gets a cache key based on the mission and the max (latest) pub_changed_at value.

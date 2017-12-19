@@ -212,6 +212,13 @@ class Response < ApplicationRecord
     count_and_date_cache_key(rel: for_mission(mission), prefix: "mission-#{mission.id}")
   end
 
+  def self.terminate_sub_relationships(response_ids)
+    answer_ids = Answer.where(response_id: response_ids).pluck(:id)
+    Choice.where(answer_id: answer_ids).delete_all
+    Media::Object.where(answer_id: answer_ids).delete_all
+    Answer.where(response_id: response_ids).destroy_all
+  end
+
   # We need a name field so that this class matches the Nameable duck type.
   def name
     "##{id}"

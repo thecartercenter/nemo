@@ -20,7 +20,7 @@ class SkipRule < ActiveRecord::Base
 
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
   def set_foreign_key_on_conditions
-    conditions.each { |c| c.conditionable = self}
+    conditions.each { |c| c.conditionable = self }
   end
 
   def normalize

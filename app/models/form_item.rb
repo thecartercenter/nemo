@@ -60,6 +60,10 @@ class FormItem < ApplicationRecord
     ").any?
   end
 
+  def self.terminate_sub_relationships(form_item_ids)
+    SkipRule.where(source_item_id: form_item_ids).destroy_all
+  end
+
   # Gets an OrderedHash of the following form for the descendants of this FormItem.
   # Uses only a constant number of database queries to do so.
   # {
