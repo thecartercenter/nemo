@@ -61,6 +61,9 @@ class FormVersioningPolicy
       end
 
     when "Condition"
+      # Conditions on SkipRules and QingGroups need to be treated separately here.
+      # For now this is just for Conditions on Questionings.
+      return [] unless obj.conditionable.is_a?(Questioning)
       case action
       when :create
         # creating a condition is a trigger if question is required

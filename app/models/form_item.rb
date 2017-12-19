@@ -21,11 +21,10 @@ class FormItem < ApplicationRecord
     class_name: "Condition", dependent: :destroy
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
     dependent: :destroy, inverse_of: :ref_qing
-  has_many :skip_rules, inverse_of: :source_item
+  has_many :skip_rules, inverse_of: :source_item, dependent: :destroy
 
   before_validation :normalize
 
-  # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
   before_validation :set_foreign_key_on_conditions
   before_create :set_mission
 
@@ -175,6 +174,7 @@ class FormItem < ApplicationRecord
     self.mission = form.try(:mission)
   end
 
+  # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
   def set_foreign_key_on_conditions
     display_conditions.each { |c| c.conditionable = self }
   end
