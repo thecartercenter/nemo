@@ -35,6 +35,14 @@ describe SkipRule do
   end
 
   describe "validation" do
+    describe "dest_item" do
+      it "should be required if destination is 'item'" do
+        rule = build(:skip_rule, source_item: qing2, destination: "item", dest_item_id: nil)
+        expect(rule).not_to be_valid
+        expect(rule.errors[:dest_item_id].join).to match /unless you choose 'skip to end of form'/
+      end
+    end
+
     describe "conditions" do
       it "should set validation error if incomplete condition" do
         rule = build(:skip_rule, source_item: qing2, conditions_attributes: [

@@ -719,7 +719,6 @@ en:
           other: "Please enter exactly %{count} characters."
         must_be_group: "Parent must be a group."
         invalid_password: "Password must include at least one number, one lowercase letter, and one capital letter."
-
       models:
         answer:
           required: "Please enter a value."
@@ -813,6 +812,10 @@ en:
               invalid_code: "The language code '%{code}' is invalid."
               one_must_have_translations: "Please choose at least one language that has translations (%{locales})."
           general: "Settings are invalid (see below)."
+        skip_rule:
+          attributes:
+            dest_item_id:
+              blank_unless_goto_end: "This field is required unless you choose 'skip to end of form'."
         user:
           at_least_digits: "Please enter at least %{num} digits."
           cant_delete_if_responses: "You can't delete this user because they have associated responses."
