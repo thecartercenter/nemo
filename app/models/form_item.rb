@@ -21,6 +21,7 @@ class FormItem < ApplicationRecord
     class_name: "Condition", dependent: :destroy
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
     dependent: :destroy, inverse_of: :ref_qing
+  has_many :skip_rules, inverse_of: :source_item
 
   before_validation :normalize
 
