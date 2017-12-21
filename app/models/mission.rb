@@ -4,38 +4,35 @@ class Mission < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 2
 
-  has_many(:responses, inverse_of: :mission)
-  has_many(:forms, inverse_of: :mission)
-  has_many(:report_reports, class_name: "Report::Report", inverse_of: :mission)
-  has_many(:broadcasts, inverse_of: :mission)
-  has_many(:assignments, inverse_of: :mission)
-  has_many(:users, through: :assignments)
-  has_many(:user_groups, inverse_of: :mission, dependent: :destroy)
-  has_many(:user_group_assignments, through: :user_groups)
-  has_many(:questions, inverse_of: :mission)
-  has_many(:qing_groups, inverse_of: :mission)
-  has_many(:form_items, inverse_of: :mission)
-  has_many(:conditions, inverse_of: :mission)
-  has_many(:options, inverse_of: :mission, dependent: :destroy)
-  has_many(:option_sets, inverse_of: :mission, dependent: :destroy)
-  has_many(:option_nodes, inverse_of: :mission, dependent: :destroy)
-  has_many(:taggings, inverse_of: :mission, dependent: :destroy)
-  has_one(:setting, inverse_of: :mission, dependent: :destroy)
+  has_many :responses, inverse_of: :mission
+  has_many :forms, inverse_of: :mission
+  has_many :report_reports, class_name: "Report::Report", inverse_of: :mission
+  has_many :broadcasts, inverse_of: :mission
+  has_many :assignments, inverse_of: :mission
+  has_many :users, through: :assignments
+  has_many :user_groups, inverse_of: :mission, dependent: :destroy
+  has_many :user_group_assignments, through: :user_groups
+  has_many :questions, inverse_of: :mission
+  has_many :qing_groups, inverse_of: :mission
+  has_many :form_items, inverse_of: :mission
+  has_many :conditions, inverse_of: :mission
+  has_many :options, inverse_of: :mission, dependent: :destroy
+  has_many :option_sets, inverse_of: :mission, dependent: :destroy
+  has_many :option_nodes, inverse_of: :mission, dependent: :destroy
+  has_many :taggings, inverse_of: :mission, dependent: :destroy
+  has_one :setting, inverse_of: :mission, dependent: :destroy
 
-  before_validation(:create_compact_name)
-  before_create(:ensure_setting)
-  before_create(:generate_shortcode)
+  before_validation :create_compact_name
+  before_create :ensure_setting
+  before_create :generate_shortcode
 
-  validates(:name, presence: true)
-  validates(:name, format: { with: /\A[a-z][a-z0-9 ]*\z/i, message: :let_num_spc_only },
-                   length: { minimum: 3, maximum: 32 },
-                   if: Proc.new { |m| !m.name.blank? })
-  validate(:compact_name_unique)
+  validates :name, presence: true
+  validates :name, format: { with: /\A[a-z][a-z0-9 ]*\z/i, message: :let_num_spc_only },
+    length: { minimum: 3, maximum: 32 }, if: Proc.new { |m| !m.name.blank? }
+  validate :compact_name_unique
 
-  scope(:sorted_by_name, -> { order("name") })
-  scope(:sorted_recent_first, -> { order("missions.created_at DESC") })
-  scope(:for_user, ->(u) { where("missions.id IN
-    (SELECT mission_id FROM assignments WHERE deleted_at IS NULL AND user_id = ?)", u.id) })
+  scope :sorted_by_name, -> { order(:name) }
+  scope :sorted_recent_first, -> { order(created_at: :desc) }
 
   delegate(:override_code, :allow_unauthenticated_submissions?, :default_locale, to: :setting)
 
