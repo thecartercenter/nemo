@@ -112,7 +112,7 @@ class ConditionsFormField extends React.Component {
       value: this.state.destroy ? "1" : "0",
     }
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
-    if(this.state.destroy == true) {
+    if (this.state.destroy === true) {
       return (
         <div className="condition-fields">
           <input {...condition_field_props} />
