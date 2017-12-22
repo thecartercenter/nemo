@@ -11,7 +11,14 @@ module Odk
       objs.map { |obj| instance.decorate(obj) }
     end
 
+
+
+
     def decorate(obj)
+      if obj.decorated? #decorated? replace w/ draper property that says it's already decorated
+        return   obj
+      end
+
       case obj.class.name
       when "Form"
         FormDecorator.decorate(obj)
