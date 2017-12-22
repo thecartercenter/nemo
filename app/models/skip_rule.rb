@@ -16,6 +16,10 @@ class SkipRule < ActiveRecord::Base
     destination.blank? && dest_item.blank? && conditions.all?(&:all_fields_blank?)
   end
 
+  def condition_group
+    @condition_group ||= ConditionGroup.new(true_if: skip_if, members: conditions, negate: true)
+  end
+
   private
 
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
