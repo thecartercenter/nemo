@@ -12,9 +12,9 @@ module Odk
     end
 
     def decorate(obj)
-      if obj.respond_to?(:decorated?) # used in testing
-        return   obj
-      end
+      # if obj.respond_to?(:decorated?) # used in testing
+      #   return   obj
+      # end
 
       case obj.class.name
       when "Form"
