@@ -23,6 +23,16 @@ module Odk
       end
     end
 
+    context "non-nested condition group with any true" do
+
+      let(:condition_group) { Forms::ConditionGroup.new( true_if: "any_met", negate: false, members: [double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"), double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"), double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")]) }
+
+      it "" do
+        result = Odk::DecoratorFactory.decorate(condition_group).to_odk
+        expect(result).to eq "(a) or (b) or (c)"
+      end
+    end
+
     context "nested condition group" do
 
       let(:condition_group) { Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [
