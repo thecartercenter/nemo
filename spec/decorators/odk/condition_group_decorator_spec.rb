@@ -35,7 +35,7 @@ module Odk
 
     context "nested condition group" do
 
-      let(:condition_group) { Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [
+      let(:condition_group) { Forms::ConditionGroup.new( true_if: "any_met", negate: false, members: [
 
         #decorated? replace w/ draper property that says it's already decorated
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
@@ -43,9 +43,9 @@ module Odk
         Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "e"), instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "f"), instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "g")])
       ]) }
 
-      it "TODO" do
+      it "it nests groups" do
         result = Odk::DecoratorFactory.decorate(condition_group).to_odk
-        expect(result).to eq ""
+        expect(result).to eq "(a) or (not((b) and (c) and (d))) or ((e) and (f) and (g))"
       end
     end
 
