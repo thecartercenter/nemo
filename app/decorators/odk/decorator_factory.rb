@@ -11,11 +11,9 @@ module Odk
       objs.map { |obj| instance.decorate(obj) }
     end
 
-
-
-
     def decorate(obj)
-      if obj.decorated? #decorated? replace w/ draper property that says it's already decorated
+      puts obj.class.name
+      if obj.respond_to?(:decorated?) #decorated? replace w/ draper property that says it's already decorated
         return   obj
       end
 
@@ -30,6 +28,8 @@ module Odk
         ConditionDecorator.decorate(obj)
       when "Subqing"
         SubqingDecorator.decorate(obj)
+      when "Forms::ConditionGroup"
+        ConditionGroupDecorator.decorate(obj)
       else
         obj
       end
