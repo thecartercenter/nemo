@@ -12,8 +12,7 @@ module Odk
     end
 
     def decorate(obj)
-      puts obj.class.name
-      if obj.respond_to?(:decorated?) #decorated? replace w/ draper property that says it's already decorated
+      if obj.respond_to?(:decorated?) # used in testing
         return   obj
       end
 

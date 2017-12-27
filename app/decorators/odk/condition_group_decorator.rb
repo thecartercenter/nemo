@@ -2,13 +2,12 @@ module Odk
   class ConditionGroupDecorator < BaseDecorator
 
     def to_odk
-      concatenator = (true_if == "all_met") ? I18n.t("common.and") : I18n.t("common.or")
-      result = decorated_members.map{ |m| "(#{m.to_odk})"}.join(" #{concatenator} ")
+      conjuction = (true_if == "all_met") ? I18n.t("common.and") : I18n.t("common.or")
+      result = decorated_members.map{ |m| "(#{m.to_odk})"}.join(" #{conjuction} ")
       if negate?
         result = "not(#{result})"
       end
       result
-
     end
 
     private
