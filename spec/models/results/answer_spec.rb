@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe Answer do
-  it_behaves_like "has a uuid"
-
   describe "#media_object_id=" do
     context "with existing media object" do
       let(:object) { create(:media_image) }

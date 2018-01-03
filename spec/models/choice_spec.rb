@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe Choice do
-  it_behaves_like "has a uuid"
-
   describe "#replicate_location_values" do
     context "when choice is for a location option" do
       let(:form) { create(:form, question_types: %w(select_multiple)) }

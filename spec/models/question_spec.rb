@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Question do
-  it_behaves_like "has a uuid"
-
   describe ".not_in_form" do
     let!(:form) { create(:form, question_types: %w(integer integer)) }
     let!(:other_question) { create(:question) }

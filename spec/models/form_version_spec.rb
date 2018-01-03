@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe FormVersion do
-  it_behaves_like "has a uuid"
-
   it "form version code generated on initialize" do
     fv = FormVersion.new
     assert_match(/[a-z]{#{FormVersion::CODE_LENGTH}}/, fv.code)

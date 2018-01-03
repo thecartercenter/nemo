@@ -81,7 +81,6 @@ class Replication::ObjProxy
     mappings += unique_col_mappings(replicator, context)
     mappings += standardizable_col_mappings(replicator, context)
     mappings += backward_assoc_col_mappings(replicator, context)
-    mappings += [[:uuid, "'#{SecureRandom.uuid}'"]]
 
     if klass.has_ancestry?
       new_ancestry = get_copy_ancestry(context)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171219154111) do
+ActiveRecord::Schema.define(version: 20180103201901) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -38,7 +38,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.time "time_value"
     t.tsvector "tsv"
     t.datetime "updated_at"
-    t.string "uuid", null: false
     t.text "value"
   end
 
@@ -73,7 +72,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.datetime "created_at"
     t.integer "old_id"
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "broadcast_addressings", ["addressee_id"], name: "index_broadcast_addressings_on_addressee_id", using: :btree
@@ -91,7 +89,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.string "source", limit: 255, default: "manual", null: false
     t.string "subject", limit: 255
     t.datetime "updated_at"
-    t.string "uuid", null: false
     t.string "which_phone", limit: 255
   end
 
@@ -108,7 +105,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.uuid "option_id"
     t.integer "option_old_id"
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "choices", ["answer_id"], name: "index_choices_on_answer_id", using: :btree
@@ -130,7 +126,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.uuid "ref_qing_id", null: false
     t.integer "ref_qing_old_id"
     t.datetime "updated_at"
-    t.string "uuid", null: false
     t.string "value", limit: 255
   end
 
@@ -166,7 +161,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "recipient_old_id"
     t.string "recipient_type", limit: 255
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "form_forwardings", %w(form_id recipient_id recipient_type), name: "form_forwardings_full", unique: true, using: :btree
@@ -197,7 +191,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "form_items", ["ancestry"], name: "index_form_items_on_ancestry", using: :btree
@@ -216,7 +209,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "old_id"
     t.integer "sequence", default: 1
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "form_versions", ["code", "deleted_at"], name: "index_form_versions_on_code", unique: true, using: :btree
@@ -250,7 +242,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
     t.boolean "upgrade_needed", default: false
-    t.string "uuid", null: false
   end
 
   add_index "forms", ["current_version_id"], name: "index_forms_on_current_version_id", using: :btree
@@ -272,7 +263,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.string "token", limit: 255
     t.string "type", limit: 255
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "media_objects", ["answer_id"], name: "index_media_objects_on_answer_id", using: :btree
@@ -286,7 +276,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "old_id"
     t.string "shortcode", limit: 255, null: false
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "missions", ["compact_name"], name: "index_missions_on_compact_name", using: :btree
@@ -308,7 +297,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "old_id"
     t.string "provider_job_id", limit: 255
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "operations", ["created_at"], name: "index_operations_on_created_at", using: :btree
@@ -333,7 +321,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "sequence"
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "option_nodes", ["ancestry"], name: "index_option_nodes_on_ancestry", using: :btree
@@ -362,7 +349,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.string "sms_guide_formatting", limit: 255, default: "auto", null: false
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "option_sets", ["deleted_at"], name: "index_option_sets_on_deleted_at", using: :btree
@@ -382,7 +368,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.jsonb "name_translations", default: {}
     t.integer "old_id"
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "options", ["canonical_name"], name: "index_options_on_canonical_name", using: :btree
@@ -416,7 +401,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.boolean "standard_copy", default: false, null: false
     t.boolean "text_type_for_sms", default: false, null: false
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "questions", ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
@@ -438,7 +422,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "report_report_old_id"
     t.string "type", limit: 255
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "report_calculations", ["deleted_at"], name: "index_report_calculations_on_deleted_at", using: :btree
@@ -452,7 +435,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "option_set_old_id"
     t.uuid "report_report_id"
     t.integer "report_report_old_id"
-    t.string "uuid", null: false
   end
 
   add_index "report_option_set_choices", ["deleted_at"], name: "index_report_option_set_choices_on_deleted_at", using: :btree
@@ -485,7 +467,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.boolean "unique_rows", default: false
     t.boolean "unreviewed", default: false
     t.datetime "updated_at"
-    t.string "uuid", null: false
     t.integer "view_count", default: 0
     t.datetime "viewed_at"
   end
@@ -520,7 +501,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.datetime "updated_at"
     t.uuid "user_id"
     t.integer "user_old_id"
-    t.string "uuid", null: false
   end
 
   add_index "responses", ["checked_out_at"], name: "index_responses_on_checked_out_at", using: :btree
@@ -563,7 +543,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.string "twilio_auth_token", limit: 255
     t.string "twilio_phone_number", limit: 255
     t.datetime "updated_at"
-    t.string "uuid", null: false
   end
 
   add_index "settings", ["mission_id"], name: "index_settings_on_mission_id", using: :btree
@@ -602,7 +581,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.datetime "updated_at", null: false
     t.uuid "user_id"
     t.integer "user_old_id"
-    t.string "uuid", null: false
   end
 
   add_index "sms_messages", ["body"], name: "index_sms_messages_on_body", using: :btree
@@ -624,7 +602,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.uuid "tag_id"
     t.integer "tag_old_id"
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "taggings", ["deleted_at"], name: "index_taggings_on_deleted_at", using: :btree
@@ -639,7 +616,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.string "name", limit: 64, null: false
     t.integer "old_id"
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "tags", ["deleted_at"], name: "index_tags_on_deleted_at", using: :btree
@@ -655,7 +631,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.integer "user_group_old_id"
     t.uuid "user_id"
     t.integer "user_old_id"
-    t.string "uuid", null: false
   end
 
   add_index "user_group_assignments", ["deleted_at"], name: "index_user_group_assignments_on_deleted_at", using: :btree
@@ -671,7 +646,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.string "name", limit: 255, null: false
     t.integer "old_id"
     t.datetime "updated_at", null: false
-    t.string "uuid", null: false
   end
 
   add_index "user_groups", ["deleted_at"], name: "index_user_groups_on_deleted_at", using: :btree
@@ -724,7 +698,6 @@ ActiveRecord::Schema.define(version: 20171219154111) do
     t.datetime "updated_at", null: false
     t.uuid "user_id"
     t.integer "user_old_id"
-    t.string "uuid", null: false
     t.uuid "whitelistable_id"
     t.integer "whitelistable_old_id"
     t.string "whitelistable_type", limit: 255

@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe UserGroup do
-  it_behaves_like "has a uuid"
-
   let(:user_group) { create(:user_group) }
 
   it "has a valid factory" do

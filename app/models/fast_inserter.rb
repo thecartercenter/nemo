@@ -1,6 +1,6 @@
 # Class for efficiently inserting objects into the database using combined INSERTs and SELECT ... INSERT.
 class FastInserter
-  ATTRIBS_TO_SKIP = %w(id deleted_at old_id mission_old_id user_old_id uuid)
+  ATTRIBS_TO_SKIP = %w(id deleted_at old_id mission_old_id user_old_id)
 
   def initialize(table)
     @table = table
