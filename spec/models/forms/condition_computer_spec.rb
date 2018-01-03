@@ -24,7 +24,7 @@ describe Forms::ConditionComputer do
         "integer",
         ["integer", "integer", "integer"],
         "integer",
-        ["integer", "integer", "integer"],
+        ["integer", "integer", ["integer", "integer"]],
         "integer"
       ])
     end
@@ -73,7 +73,7 @@ describe Forms::ConditionComputer do
     let(:sr5) do # Sub to different sub
       build_skip_rule(form.c[3].c[1],
         destination: "item",
-        dest_item: form.c[5].c[2]
+        dest_item: form.c[5].c[2].c[1]
       )
     end
 
@@ -85,7 +85,7 @@ describe Forms::ConditionComputer do
     end
 
     let(:sr7) do # Sub to end
-      build_skip_rule(form.c[5].c[1],
+      build_skip_rule(form.c[5].c[2].c[0],
         destination: "end"
       )
     end
@@ -119,7 +119,9 @@ describe Forms::ConditionComputer do
     # G6          SR1                 SR6
     #  Q6.1                       SR5
     #  Q6.2                       SR5
-    #  Q6.3                               SR7
+    #  G6.3
+    #   Q6.3.1                    SR5
+    #   Q6.3.2                            SR7
     # Q7                                  SR7
 
     it "returns correct ConditionGroups" do
@@ -135,7 +137,9 @@ describe Forms::ConditionComputer do
       expect_condition_group(form.c[5], members: [sr1grp, sr6grp])
       expect_condition_group(form.c[5].c[0], members: [sr5grp])
       expect_condition_group(form.c[5].c[1], members: [sr5grp])
-      expect_condition_group(form.c[5].c[2], members: [sr7grp])
+      expect_condition_group(form.c[5].c[2], empty: true)
+      expect_condition_group(form.c[5].c[2].c[0], members: [sr5grp])
+      expect_condition_group(form.c[5].c[2].c[1], members: [sr7grp])
       expect_condition_group(form.c[6], members: [sr7grp])
     end
   end
