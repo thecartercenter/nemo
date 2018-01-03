@@ -95,7 +95,7 @@ class Form < ApplicationRecord
     root_group ? root_group.sorted_children.reject{ |q| q.is_a?(QingGroup) } : []
   end
 
-  def preordered_items(eager_load:)
+  def preordered_items(eager_load: nil)
     root_group.preordered_descendants(eager_load: eager_load)
   end
 
