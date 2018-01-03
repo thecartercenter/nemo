@@ -1,6 +1,21 @@
 require "spec_helper"
 
 describe Forms::ConditionComputer do
+  let(:computer) { Forms::ConditionComputer.new(form) }
+
+  context "with no conditions or skip rules" do
+    let(:form) { create(:form, question_types: ["integer", "integer", ["integer", "integer"]]) }
+
+    it "returns empty group for each question" do
+      computer.build_table
+      expect_condition_group(form.c[0], empty: true)
+      expect_condition_group(form.c[1], empty: true)
+      expect_condition_group(form.c[2], empty: true)
+      expect_condition_group(form.c[2][0], empty: true)
+      expect_condition_group(form.c[2][1], empty: true)
+    end
+  end
+
   context "with lots of conditions and skip rules" do
     let(:form) do
       create(:form, question_types: [
@@ -13,7 +28,6 @@ describe Forms::ConditionComputer do
         "integer"
       ])
     end
-    let(:computer) { Forms::ConditionComputer.new(form) }
     let(:form_items) { computer.form_items }
 
     # ConditionGroup doesn't really contain a _name attrib, but this can be useful
@@ -110,7 +124,7 @@ describe Forms::ConditionComputer do
 
     it "returns correct ConditionGroups" do
       computer.build_table
-      expect_condition_group(form.c[0], members: [])
+      expect_condition_group(form.c[0], empty: true)
       expect_condition_group(form.c[1], members: [sr1grp, sr2grp])
       expect_condition_group(form.c[2], members: [q3grp, sr1grp, sr2grp, sr3grp])
       expect_condition_group(form.c[3], members: [sr1grp])
@@ -124,30 +138,30 @@ describe Forms::ConditionComputer do
       expect_condition_group(form.c[5].c[2], members: [sr7grp])
       expect_condition_group(form.c[6], members: [sr7grp])
     end
+  end
 
-    # Checks that the ConditionGroup returned for the given FormItem looks right
-    # and has the expected member ConditionGroups.
-    def expect_condition_group(form_item, members:)
-      group = computer.condition_group_for(form_item)
-      if members.empty?
-        expect(group).to be_empty
-      else
-        expect(group.true_if).to eq "all_met"
-        expect(group.negate?).to be false
-        expect(group.members).to match_array(members)
-      end
+  # Checks that the ConditionGroup returned for the given FormItem looks right
+  # and has the expected member ConditionGroups.
+  def expect_condition_group(form_item, members: [], empty: false)
+    group = computer.condition_group_for(form_item)
+    if empty
+      expect(group).to be_empty
+    else
+      expect(group.true_if).to eq "all_met"
+      expect(group.negate?).to be false
+      expect(group.members).to match_array(members)
     end
+  end
 
-    def build_skip_rule(item, attribs)
-      get_item(item).skip_rules.build(attribs)
-    end
+  def build_skip_rule(item, attribs)
+    get_item(item).skip_rules.build(attribs)
+  end
 
-    # We get form item references this way because if we stub `item` directly
-    # it will not be picked up by the Computer, because Computer iterates over a flat array
-    # of items returned by form.preordered_items. These objects are distinct from those returned
-    # by e.g. form.c[1]. Unfortunate! closure_tree has a way around this.
-    def get_item(item)
-      form_items.detect { |i| i.id == item.id }
-    end
+  # We get form item references this way because if we stub `item` directly
+  # it will not be picked up by the Computer, because Computer iterates over a flat array
+  # of items returned by form.preordered_items. These objects are distinct from those returned
+  # by e.g. form.c[1]. Unfortunate! closure_tree has a way around this.
+  def get_item(item)
+    form_items.detect { |i| i.id == item.id }
   end
 end
