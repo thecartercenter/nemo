@@ -84,7 +84,7 @@ class Replication::ObjProxy
 
     if klass.has_ancestry?
       new_ancestry = get_copy_ancestry(context)
-      mappings << ["ancestry", new_ancestry.nil? ? nil : "'#{new_ancestry}'"]
+      mappings << ["ancestry", new_ancestry.nil? ? nil : quote_or_null(new_ancestry)]
     else
       new_ancestry = nil
     end
@@ -181,7 +181,7 @@ class Replication::ObjProxy
       mappings << "mission_id"
       mappings << "is_standard" if klass.standardizable?
     when :to_mission
-      mappings << ["mission_id", "'#{replicator.target_mission_id}'"]
+      mappings << ["mission_id", quote_or_null(replicator.target_mission_id)]
       mappings << ["standard_copy", true] if klass.standardizable? && replicator.source_is_standard?
     end
     mappings << ["original_id", "id"] if klass.standardizable?
@@ -195,7 +195,7 @@ class Replication::ObjProxy
     assocs = second_pass ? klass.second_pass_backward_assocs : klass.backward_assocs
     assocs.map do |assoc|
       begin
-        [assoc.foreign_key, backward_assoc_id(replicator, context, assoc)]
+        [assoc.foreign_key, quote_or_null(backward_assoc_id(replicator, context, assoc))]
       rescue Replication::BackwardAssocError
         # If we have explicit instructions to delete the object if an association is missing, make a note of it.
         $!.ok_to_skip = assoc.skip_obj_if_missing
@@ -208,7 +208,7 @@ class Replication::ObjProxy
     orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
     if orig_foreign_id.nil?
       replicator.log("Original foreign ID for backward assoc #{assoc.name} is NULL, skipping")
-      return "NULL"
+      return nil
     end
 
     # If it's the first pass but the association specifies second pass, we shouldn't try to find the
@@ -221,10 +221,10 @@ class Replication::ObjProxy
       if assoc.temp_id.present?
         foreign_id = assoc.temp_id.call(context[:copy_parent].full_object)
         replicator.log("Using temp ID #{foreign_id} instead")
-        "'#{foreign_id}'"
+        foreign_id
       else
         replicator.log("Leaving association as NULL for now")
-        "NULL"
+        nil
       end
     else
       target_class = if assoc.polymorphic?
@@ -241,21 +241,22 @@ class Replication::ObjProxy
   def get_copy_id(target_class, orig_id)
     # Try to find the appropriate copy in the replicator history
     if history_copy = replicator.history.get_copy(orig_id)
-      "'#{history_copy.id}'"
+      history_copy.id
 
     # Reuse original if it's reusable.
     elsif self.class.new(klass: target_class, id: orig_id, replicator: replicator).reusable?
-      "'#{orig_id}'"
+      orig_id
 
     # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
     elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
       orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
-      col_id = target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
-      "'#{col_id}'"
+      target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
 
     # Else try looking up original_id if available
     elsif target_class.standardizable? && copy_id = target_class.where(original_id: orig_id).first.try(:id)
-      "'#{copy_id}'"
+      copy_id
+    else
+      nil
     end
   end
 
@@ -277,5 +278,9 @@ class Replication::ObjProxy
       else expr
       end
     end.join(",")
+  end
+
+  def quote_or_null(id)
+    id.nil? ? "NULL" : "'#{id}'"
   end
 end
