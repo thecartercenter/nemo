@@ -101,9 +101,9 @@ class FormItem < ApplicationRecord
   end
 
   def preordered_descendants(eager_load: nil)
-    rel = descendants.order(:rank)
-    rel = rel.includes(eager_load) if eager_load
-    self.class.sort_by_ancestry(rel) { |a, b| a.rank <=> b.rank }
+    items = descendants.order(:rank)
+    items = items.includes(eager_load) if eager_load
+    self.class.sort_by_ancestry(items) { |a, b| a.rank <=> b.rank }
   end
 
   def sorted_children

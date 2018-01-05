@@ -1,11 +1,12 @@
 # Computes display conditions that are implied from SkipRules.
 module Forms
   class ConditionComputer
-    attr_accessor :form, :form_items, :table, :active_rules, :last_item_cache
+    attr_accessor :form, :preordered_form_items, :table, :active_rules, :last_item_cache
 
     def initialize(form)
       self.form = form
-      self.form_items = form.preordered_items(eager_load: [:display_conditions, skip_rules: :conditions])
+      self.preordered_form_items = form.preordered_items(
+        eager_load: [:display_conditions, skip_rules: :conditions])
     end
 
     def condition_group_for(item)
@@ -19,7 +20,7 @@ module Forms
       self.table = {}
       self.active_rules = []
       self.last_item_cache = {}
-      form_items.each do |item|
+      preordered_form_items.each do |item|
         add_display_conditions(item)
         deactivate_rules_if_at_dest_item(item)
         process_active_rules_for_item(item)

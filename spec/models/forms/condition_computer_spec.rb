@@ -27,7 +27,7 @@ describe Forms::ConditionComputer do
         "integer"
       ])
     end
-    let(:form_items) { computer.form_items }
+    let(:form_items) { computer.preordered_form_items }
 
     # ConditionGroup doesn't really contain a _name attrib, but this can be useful
     # for debugging.
@@ -44,49 +44,42 @@ describe Forms::ConditionComputer do
     let(:sr1) do # Root to root
       build_skip_rule(form.c[0],
         destination: "item",
-        dest_item: form.c[6]
-      )
+        dest_item: form.c[6])
     end
 
     let(:sr2) do # Root to group (not questioning)
       build_skip_rule(form.c[0],
         destination: "item",
-        dest_item: form.c[3] # This is a QingGroup
-      )
+        dest_item: form.c[3]) # This is a QingGroup
     end
 
     let(:sr3) do # Root to sub (this is a second SkipRule for form.c[1])
       build_skip_rule(form.c[1],
         destination: "item",
-        dest_item: form.c[3].c[1]
-      )
+        dest_item: form.c[3].c[1])
     end
 
     let(:sr4) do # Sub to same sub
       build_skip_rule(form.c[3].c[0],
         destination: "item",
-        dest_item: form.c[3].c[2]
-      )
+        dest_item: form.c[3].c[2])
     end
 
     let(:sr5) do # Sub to different sub
       build_skip_rule(form.c[3].c[1],
         destination: "item",
-        dest_item: form.c[5].c[2].c[1]
-      )
+        dest_item: form.c[5].c[2].c[1])
     end
 
     let(:sr6) do # Sub to root
       build_skip_rule(form.c[3].c[2],
         destination: "item",
-        dest_item: form.c[6]
-      )
+        dest_item: form.c[6])
     end
 
     let(:sr7) do # Sub to end
       build_skip_rule(form.c[5].c[2].c[0],
-        destination: "end"
-      )
+        destination: "end")
     end
 
     before do
@@ -149,10 +142,14 @@ describe Forms::ConditionComputer do
     if empty
       expect(group).to be_empty
     else
-      expect(group.true_if).to eq "all_met"
-      expect(group.negate?).to be false
-      expect(group.members).to match_array(members)
+      expect_group_with_members(group, members)
     end
+  end
+
+  def expect_group_with_members(group, members)
+    expect(group.true_if).to eq "all_met"
+    expect(group.negate?).to be false
+    expect(group.members).to match_array(members)
   end
 
   def build_skip_rule(item, attribs)
