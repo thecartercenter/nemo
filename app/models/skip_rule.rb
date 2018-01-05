@@ -1,4 +1,6 @@
 class SkipRule < ActiveRecord::Base
+  include MissionBased
+
   acts_as_list column: :rank, scope: [:source_item_id, deleted_at: nil]
 
   belongs_to :source_item, class_name: "FormItem", inverse_of: :skip_rules
@@ -7,6 +9,7 @@ class SkipRule < ActiveRecord::Base
 
   before_validation :set_foreign_key_on_conditions
   before_validation :normalize
+  before_create :set_mission
 
   validate :require_dest_item
 
@@ -35,5 +38,9 @@ class SkipRule < ActiveRecord::Base
     if destination != "end" && dest_item.nil?
       errors.add(:dest_item_id, :blank_unless_goto_end)
     end
+  end
+
+  def set_mission
+    self.mission = source_item.mission
   end
 end

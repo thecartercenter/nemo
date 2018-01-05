@@ -552,6 +552,7 @@ ActiveRecord::Schema.define(version: 20180103201901) do
     t.datetime "deleted_at"
     t.uuid "dest_item_id"
     t.string "destination", null: false
+    t.uuid "mission_id"
     t.integer "rank", null: false
     t.string "skip_if", null: false
     t.uuid "source_item_id", null: false

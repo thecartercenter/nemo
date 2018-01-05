@@ -21,6 +21,7 @@ class Mission < ApplicationRecord
   has_many :option_nodes, inverse_of: :mission, dependent: :destroy
   has_many :taggings, inverse_of: :mission, dependent: :destroy
   has_one :setting, inverse_of: :mission, dependent: :destroy
+  has_many :skip_rules, inverse_of: :mission, dependent: :destroy
 
   before_validation :create_compact_name
   before_create :ensure_setting
