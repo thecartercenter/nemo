@@ -1,8 +1,9 @@
 # Wraps a parent or child association in the replication.
 class Replication::AssocProxy
   attr_accessor :name, :klass, :foreign_key, :foreign_type, :target_class, :belongs_to, :type,
-    :skip_obj_if_missing, :polymorphic
+    :skip_obj_if_missing, :second_pass, :polymorphic, :temp_id
   alias_method :polymorphic?, :polymorphic
+  alias_method :second_pass?, :second_pass
 
   def self.get(klass, attribs)
     attribs = {name: attribs} if attribs.is_a?(Symbol)
@@ -46,7 +47,8 @@ class Replication::AssocProxy
   end
 
   def inspect
-    "<AssocProxy name=#{name} klass=#{klass} foreign_key=#{foreign_key} target_class=#{target_class.name} type=#{type} skip=#{skip_obj_if_missing}>"
+    "<AssocProxy name=#{name} klass=#{klass} foreign_key=#{foreign_key} target_class=#{target_class.name} "\
+      " type=#{type} skip=#{skip_obj_if_missing} second_pass=#{second_pass} temp_id=#{temp_id}>"
   end
 
   def belongs_to?

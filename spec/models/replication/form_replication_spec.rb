@@ -182,6 +182,37 @@ describe Form do
         expect(@copy.c[1].display_conditions[0].option_node_id).to eq @copy.c[0].option_set.c[1].id
       end
     end
+
+    context "with skip rules" do
+      let(:std) { create(:form, is_standard: true, question_types: %w(integer integer integer integer)) }
+
+      before do
+        std.c[1].skip_rules.create!(destination: "item", dest_item: std.c[3], skip_if: "all_met",
+          conditions_attributes: [
+            {ref_qing_id: std.c[0].id, op: "eq", value: "4"},
+            {ref_qing_id: std.c[1].id, op: "eq", value: "8"}
+        ])
+      end
+
+      context "if all goes well" do
+        let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+
+        it "should produce distinct child objects with correct references" do
+          expect(std.reload.c[1].skip_rules.size).to eq 1
+          expect(copy.c[1].skip_rules.size).to eq 1
+          expect(copy.c[1].skip_rules[0].destination).to eq "item"
+          expect(copy.c[1].skip_rules[0].skip_if).to eq "all_met"
+          expect(copy.c[1].skip_rules[0].dest_item_id).to eq copy.c[3].id
+          expect(copy.c[1].skip_rules[0].conditions.size).to eq 2
+          expect(copy.c[1].skip_rules[0].conditions[0].ref_qing_id).to eq copy.c[0].id
+          expect(copy.c[1].skip_rules[0].conditions[0].value).to eq "4"
+          expect(copy.c[1].skip_rules[0].conditions[1].ref_qing_id).to eq copy.c[1].id
+          expect(copy.c[1].skip_rules[0].conditions[1].value).to eq "8"
+          expect(copy.c[0].id).not_to eq std.c[0].id
+          expect(copy.c[1].id).not_to eq std.c[1].id
+        end
+      end
+    end
   end
 
   describe "clone" do

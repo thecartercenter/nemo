@@ -34,6 +34,10 @@ module Replication::Replicable
       memoize_class_var(:backward_assocs, build_assoc_wrappers(:backward))
     end
 
+    def self.second_pass_backward_assocs
+      memoize_class_var(:second_pass_backward_assocs, backward_assocs.select(&:second_pass?))
+    end
+
     def self.build_assoc_wrappers(type)
       replicable_opts[:"#{type}_assocs"].map{ |a| Replication::AssocProxy.get(self, a) }.compact
     end

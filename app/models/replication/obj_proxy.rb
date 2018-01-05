@@ -93,6 +93,17 @@ class Replication::ObjProxy
     self.class.new(klass: klass, id: new_id, ancestry: new_ancestry, replicator: replicator)
   end
 
+  # Some backward associations may be unknowable during first pass. So we fix them on the second pass.
+  def fix_backward_assocs_on_copy(context)
+    if klass.second_pass_backward_assocs.any?
+      mappings = backward_assoc_col_mappings(replicator, context, second_pass: true)
+      replicator.log("Fixing backward associations on #{context[:copy].id}")
+      assignments = mappings.map { |m| "#{m[0]} = #{m[1]}" }.join(",")
+      sql = "UPDATE #{klass.table_name} SET #{assignments} WHERE id = '#{context[:copy].id}'"
+      db.execute(sql)
+    end
+  end
+
   protected
 
   # If replication mode is clone and object is standardizable, we can reuse this object.
@@ -177,10 +188,14 @@ class Replication::ObjProxy
     mappings
   end
 
-  def backward_assoc_col_mappings(replicator, context)
-    klass.backward_assocs.map do |assoc|
+  # Returns column mappings for backward associations.
+  # If second_pass is true, it means we only want second pass-type backward associations.
+  # Otherwise, we want all of them.
+  def backward_assoc_col_mappings(replicator, context, second_pass: false)
+    assocs = second_pass ? klass.second_pass_backward_assocs : klass.backward_assocs
+    assocs.map do |assoc|
       begin
-        [assoc.foreign_key, backward_assoc_id(assoc)]
+        [assoc.foreign_key, backward_assoc_id(replicator, context, assoc)]
       rescue Replication::BackwardAssocError
         # If we have explicit instructions to delete the object if an association is missing, make a note of it.
         $!.ok_to_skip = assoc.skip_obj_if_missing
@@ -189,17 +204,38 @@ class Replication::ObjProxy
     end
   end
 
-  def backward_assoc_id(assoc)
+  def backward_assoc_id(replicator, context, assoc)
     orig_foreign_id = klass.where(id: id).pluck(assoc.foreign_key).first
-    return nil if orig_foreign_id.nil?
-    target_class = if assoc.polymorphic?
-      klass.where(id: id).pluck(assoc.foreign_type).first.constantize
-    else
-      assoc.target_class
+    if orig_foreign_id.nil?
+      replicator.log("Original foreign ID for backward assoc #{assoc.name} is NULL, skipping")
+      return "NULL"
     end
-    get_copy_id(target_class, orig_foreign_id) ||
-      (raise Replication::BackwardAssocError.new("
-        Couldn't find copy of #{target_class.name} ##{orig_foreign_id}"))
+
+    # If it's the first pass but the association specifies second pass, we shouldn't try to find the
+    # associated copy, because it might not exist yet.
+    if replicator.first_pass? && assoc.second_pass?
+      replicator.log("Not attempting to locate backward associated object in first pass for #{assoc.name}")
+      # If `temp_id` is set to something, it means we still need to set the foreign
+      # key, maybe because there a null constraint.
+      # We call the temp_id Proc and pass the copy_parent obj.
+      if assoc.temp_id.present?
+        foreign_id = assoc.temp_id.call(context[:copy_parent].full_object)
+        replicator.log("Using temp ID #{foreign_id} instead")
+        "'#{foreign_id}'"
+      else
+        replicator.log("Leaving association as NULL for now")
+        "NULL"
+      end
+    else
+      target_class = if assoc.polymorphic?
+        klass.where(id: id).pluck(assoc.foreign_type).first.constantize
+      else
+        assoc.target_class
+      end
+      get_copy_id(target_class, orig_foreign_id) ||
+        (raise Replication::BackwardAssocError.new("
+          Couldn't find copy of #{target_class.name} ##{orig_foreign_id}"))
+    end
   end
 
   def get_copy_id(target_class, orig_id)

@@ -1,5 +1,5 @@
 class SkipRule < ActiveRecord::Base
-  include MissionBased
+  include MissionBased, Replication::Replicable
 
   acts_as_list column: :rank, scope: [:source_item_id, deleted_at: nil]
 
@@ -15,8 +15,20 @@ class SkipRule < ActiveRecord::Base
 
   accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
+  replicable child_assocs: [:conditions], dont_copy: [:source_item_id, :dest_item_id],
+    backward_assocs: [
+      :source_item,
+      # This is a second pass association because the dest_item won't have been copied yet on the 1st pass.
+      {name: :dest_item, second_pass: true}
+    ]
+
   def all_fields_blank?
     destination.blank? && dest_item.blank? && conditions.all?(&:all_fields_blank?)
+  end
+
+  # Duck type used for retrieving the main FormItem associated with this object, which is src_item.
+  def base_item
+    source_item
   end
 
   private

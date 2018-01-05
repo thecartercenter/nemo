@@ -34,8 +34,8 @@ class FormItem < ApplicationRecord
 
   delegate :name, to: :form, prefix: true
 
-  replicable child_assocs: [:question, :display_conditions, :children], backward_assocs: :form,
-    dont_copy: [:hidden, :form_id, :question_id]
+  replicable child_assocs: [:question, :display_conditions, :skip_rules, :children],
+    backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
 
   accepts_nested_attributes_for :display_conditions, allow_destroy: true
   accepts_nested_attributes_for :skip_rules, allow_destroy: true
@@ -62,6 +62,11 @@ class FormItem < ApplicationRecord
 
   def self.terminate_sub_relationships(form_item_ids)
     SkipRule.where(source_item_id: form_item_ids).destroy_all
+  end
+
+  # Duck type used for retrieving the main FormItem associated with this object, which is itself.
+  def base_item
+    self
   end
 
   # Gets an OrderedHash of the following form for the descendants of this FormItem.
