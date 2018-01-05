@@ -7,7 +7,6 @@ describe Forms::ConditionComputer do
     let(:form) { create(:form, question_types: ["integer", "integer", ["integer", "integer"]]) }
 
     it "returns empty group for each question" do
-      computer.build_table
       expect_condition_group(form.c[0], empty: true)
       expect_condition_group(form.c[1], empty: true)
       expect_condition_group(form.c[2], empty: true)
@@ -125,7 +124,6 @@ describe Forms::ConditionComputer do
     # Q7                                  SR7
 
     it "returns correct ConditionGroups" do
-      computer.build_table
       expect_condition_group(form.c[0], empty: true)
       expect_condition_group(form.c[1], members: [sr1grp, sr2grp])
       expect_condition_group(form.c[2], members: [q3grp, sr1grp, sr2grp, sr3grp])

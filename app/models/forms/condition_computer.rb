@@ -9,8 +9,11 @@ module Forms
     end
 
     def condition_group_for(item)
+      build_table if table.nil?
       table[item] || empty_group
     end
+
+    private
 
     def build_table
       self.table = {}
@@ -23,8 +26,6 @@ module Forms
         activate_rules_from_item(item)
       end
     end
-
-    private
 
     def add_display_conditions(item)
       add_to_table(item, item.condition_group) if item.display_conditionally?
