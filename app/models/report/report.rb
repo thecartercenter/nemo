@@ -4,23 +4,23 @@ class Report::Report < ApplicationRecord
 
   acts_as_paranoid
 
-  has_many(:option_set_choices, :class_name => "Report::OptionSetChoice", :foreign_key => "report_report_id", :inverse_of => :report,
-    :dependent => :destroy, :autosave => true)
-  has_many(:option_sets, :through => :option_set_choices)
-  has_many(:calculations, -> { order("rank") }, :class_name => "Report::Calculation", :foreign_key => "report_report_id", :inverse_of => :report,
-     :dependent => :destroy, :autosave => true)
-  belongs_to(:creator, class_name: "User")
+  has_many :option_set_choices, class_name: "Report::OptionSetChoice", foreign_key: "report_report_id", inverse_of: :report,
+    dependent: :destroy, autosave: true
+  has_many :option_sets, through: :option_set_choices
+  has_many :calculations, -> { order("rank") }, class_name: "Report::Calculation", foreign_key: "report_report_id", inverse_of: :report,
+     dependent: :destroy, autosave: true
+  belongs_to :creator, class_name: "User"
 
-  accepts_nested_attributes_for(:calculations, :allow_destroy => true)
-  accepts_nested_attributes_for(:option_set_choices, :allow_destroy => true)
+  accepts_nested_attributes_for :calculations, allow_destroy: true
+  accepts_nested_attributes_for :option_set_choices, allow_destroy: true
 
-  validates(:mission, :presence => true)
+  validates :mission, presence: true
 
-  scope(:by_viewed_at, -> { order("viewed_at desc") })
-  scope(:by_popularity, -> { order("view_count desc") })
-  scope(:by_name, -> { order("name") })
+  scope :by_viewed_at, -> { order("viewed_at desc") }
+  scope :by_popularity, -> { order("view_count desc") }
+  scope :by_name, -> { order("name") }
 
-  before_save(:normalize_attribs)
+  before_save :normalize_attribs
 
   attr_accessor :just_created, :populated
   alias_method :populated?, :populated
@@ -120,13 +120,12 @@ class Report::Report < ApplicationRecord
 
   private
 
-    def normalize_attribs
-      # we now do default values here as well as changing blanks to nils.
-      # the AR default stuff doesn't work b/c the blank from the client side overwrites the default and there's no easy way to get it back
-      self.bar_style = "side_by_side" if bar_style.blank?
-      self.display_type = "table" if display_type.blank?
-      self.percent_type = "none" if percent_type.blank?
-      self.text_responses = nil if text_responses.blank?
-    end
-
+  def normalize_attribs
+    # we now do default values here as well as changing blanks to nils.
+    # the AR default stuff doesn't work b/c the blank from the client side overwrites the default and there's no easy way to get it back
+    self.bar_style = "side_by_side" if bar_style.blank?
+    self.display_type = "table" if display_type.blank?
+    self.percent_type = "none" if percent_type.blank?
+    self.text_responses = nil if text_responses.blank?
+  end
 end
