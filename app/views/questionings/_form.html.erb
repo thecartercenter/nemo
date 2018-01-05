@@ -9,6 +9,7 @@
   <%= published_warning(@questioning) if @questioning.published? && form_mode == :edit %>
 
   <%= f.field(:display_if, partial: "questionings/display_logic") %>
+  <%= f.field(:skip_logic, partial: "questionings/skip_logic") %>
   <%= f.field(:default, type: :string, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>

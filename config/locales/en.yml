@@ -435,6 +435,7 @@ en:
         name: "Title"
         condition: "Condition?"
         display_if: "Display Logic"
+        skip_logic: "Skip Logic"
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
@@ -1295,6 +1296,9 @@ en:
     display_if_operator:
       all_met: "and"
       any_met: "or"
+    skip_logic_options:
+      dont_skip: "After this question, go to the next question"
+      skip: "After this question, skip to..."
 
   import:
     row_error: "Row %{row}: %{error}"

@@ -14,7 +14,7 @@ class DisplayLogicFormField extends React.Component {
   }
 
   buildConditions(args) {
-    if(this.state.display_if != "always") {
+    if (this.state.display_if != "always") {
       return (
         <div>
           {this.state.display_conditions.map((props, index) => <ConditionsFormField key={index} {...props}/>)}
