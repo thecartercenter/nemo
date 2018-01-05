@@ -100,8 +100,10 @@ class FormItem < ApplicationRecord
     end
   end
 
-  def preordered_descendants
-    self.class.sort_by_ancestry(descendants.order(:rank)) { |a, b| a.rank <=> b.rank }
+  def preordered_descendants(eager_load: nil)
+    items = descendants.order(:rank)
+    items = items.includes(eager_load) if eager_load
+    self.class.sort_by_ancestry(items) { |a, b| a.rank <=> b.rank }
   end
 
   def sorted_children
@@ -154,6 +156,10 @@ class FormItem < ApplicationRecord
 
   def display_conditionally?
     display_if != "always" && display_conditions.any?
+  end
+
+  def condition_group
+    @condition_group ||= ConditionGroup.new(true_if: display_if, members: display_conditions)
   end
 
   def group?

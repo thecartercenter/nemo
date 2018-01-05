@@ -122,8 +122,14 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     let(:form) do
       create(:form, :published, :with_version,
         name: "Basic Group",
-        question_types: [["text", "text", "text"]]
+        question_types: ["text", ["text", "text", "text"]]
       )
+    end
+
+    before do
+      # Test conditions on groups.
+      form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
+      form.c[1].update!(display_if: "all_met")
     end
 
     it "should render proper xml" do
