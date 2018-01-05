@@ -46,7 +46,7 @@ class DisplayLogicFormField extends React.Component {
       <div>
         <select {...select_props}>
           <option value="always">{I18n.t("form_item.display_if_options.always")}</option>
-          <option value="all_met">{I18n.t("form_item.display_if_options.all_met")}.</option>
+          <option value="all_met">{I18n.t("form_item.display_if_options.all_met")}</option>
           <option value="any_met">{I18n.t("form_item.display_if_options.any_met")}</option>
         </select>
         {this.buildConditions()}
