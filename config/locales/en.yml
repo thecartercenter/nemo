@@ -1299,6 +1299,10 @@ en:
     skip_logic_options:
       dont_skip: "After this question, go to the next question"
       skip: "After this question, skip to..."
+    skip_if_options:
+      always: "in all cases"
+      all_met: "if all of these conditions are met"
+      any_met: "if any of these conditions are met"
     end_of_form: "The end of the form"
 
   import:

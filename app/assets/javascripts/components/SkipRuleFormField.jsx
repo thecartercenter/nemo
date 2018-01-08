@@ -6,6 +6,7 @@ class SkipRuleFormField extends React.Component {
     console.log(this.state)
 
     this.changeDestinationOption = this.changeDestinationOption.bind(this);
+    this.changeSkipIf = this.changeSkipIf.bind(this);
   }
 
   changeDestinationOption(value) {
@@ -16,6 +17,10 @@ class SkipRuleFormField extends React.Component {
     });
   }
 
+  changeSkipIf(value) {
+
+  }
+
   formatTargetItemOptions(items) {
     return items.map(function(o){
       return {id: o.id, name: `${o.full_dotted_rank}. ${o.code}`, key: o.id};
@@ -23,17 +28,29 @@ class SkipRuleFormField extends React.Component {
   }
 
   render() {
-    let destination_select_props = {
+    let name_prefix = `questioning[skip_rules_attributes][${this.state.id}]`;
+
+    let destination_props = {
       value: this.state.dest_item_id_or_end || "",
       options: this.formatTargetItemOptions(this.state.later_items),
       changeFunc: this.changeDestinationOption
     };
-    let name_prefix = 'questioning[skip_rules_attributes][]';
-    let id_prefix = 'questioning_skip_rules_attributes';
+    let skip_if_props = {
+      name: `${name_prefix}[skip_if]`,
+      value: this.state.skip_if,
+      className: "form-control",
+      onChange: this.changeSkipIf
+    };
 
     return (
       <div>
-        <FormSelect {...destination_select_props} />
+        <FormSelect {...destination_props} />
+        <select {...skip_if_props}>
+          <option value="always">{I18n.t("form_item.skip_if_options.always")}</option>
+          <option value="all_met">{I18n.t("form_item.skip_if_options.all_met")}</option>
+          <option value="any_met">{I18n.t("form_item.skip_if_options.any_met")}</option>
+        </select>
+        <input type="hidden" name={`${name_prefix}[id]`} value={this.state.id || ""} />
         <input type="hidden" name={`${name_prefix}[destination]`} value={this.state.destination} />
         <input type="hidden" name={`${name_prefix}[dest_item_id]`} value={this.state.dest_item_id || ""} />
       </div>
