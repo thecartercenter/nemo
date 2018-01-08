@@ -13,6 +13,8 @@ class SkipRule < ActiveRecord::Base
 
   validate :require_dest_item
 
+  delegate :form, :form_id, :refable_qings, to: :source_item
+
   accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
   replicable child_assocs: [:conditions], dont_copy: [:source_item_id, :dest_item_id],

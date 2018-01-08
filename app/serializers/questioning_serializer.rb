@@ -4,4 +4,5 @@ class QuestioningSerializer < ActiveModel::Serializer
   has_many :display_conditions, serializer: ConditionViewSerializer
   has_many :skip_rules, serializer: SkipRuleSerializer
   has_many :refable_qings, serializer: RefableQuestioningSerializer
+  has_many :later_items, serializer: RefableQuestioningSerializer
 end

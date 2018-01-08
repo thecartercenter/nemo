@@ -171,6 +171,10 @@ class FormItem < ApplicationRecord
     false
   end
 
+  def later_items
+    root.preordered_descendants
+  end
+
   private
 
   def normalize
