@@ -541,6 +541,7 @@ DEPENDENCIES
   rqrcode (~> 0.10.1)
   rspec-collection_matchers (~> 1.1.2)
   rspec-rails (~> 3.3.0)
+  rubocop (~> 0.52.1)
   ruby-jmeter (~> 2.13.4)
   sass-rails (~> 4.0.5)
   scrypt (~> 1.2.0)
