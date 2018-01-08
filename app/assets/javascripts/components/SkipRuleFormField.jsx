@@ -3,7 +3,6 @@ class SkipRuleFormField extends React.Component {
     super();
     let dest_item_id_or_end = props.destination == "end" ? "end" : props.dest_item_id;
     this.state = Object.assign({}, props, {dest_item_id_or_end: dest_item_id_or_end});
-    console.log(this.state)
 
     this.changeDestinationOption = this.changeDestinationOption.bind(this);
     this.changeSkipIf = this.changeSkipIf.bind(this);
@@ -35,11 +34,19 @@ class SkipRuleFormField extends React.Component {
       options: this.formatTargetItemOptions(this.state.later_items),
       changeFunc: this.changeDestinationOption
     };
+
     let skip_if_props = {
       name: `${name_prefix}[skip_if]`,
       value: this.state.skip_if,
       className: "form-control",
       onChange: this.changeSkipIf
+    };
+
+    let condition_set_props = {
+      conditions: this.state.conditions,
+      conditionable_id: this.state.id,
+      refable_qings: this.state.refable_qings,
+      name_prefix: name_prefix
     };
 
     return (
@@ -50,6 +57,7 @@ class SkipRuleFormField extends React.Component {
           <option value="all_met">{I18n.t("form_item.skip_if_options.all_met")}</option>
           <option value="any_met">{I18n.t("form_item.skip_if_options.any_met")}</option>
         </select>
+        <ConditionSetFormField {...condition_set_props} />
         <input type="hidden" name={`${name_prefix}[id]`} value={this.state.id || ""} />
         <input type="hidden" name={`${name_prefix}[destination]`} value={this.state.destination} />
         <input type="hidden" name={`${name_prefix}[dest_item_id]`} value={this.state.dest_item_id || ""} />

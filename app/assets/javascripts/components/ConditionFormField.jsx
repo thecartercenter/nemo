@@ -1,4 +1,4 @@
-class ConditionsFormField extends React.Component {
+class ConditionFormField extends React.Component {
 
   constructor(props) {
     super();
@@ -74,8 +74,8 @@ class ConditionsFormField extends React.Component {
   }
 
   render() {
-    let name_prefix = 'questioning[display_conditions_attributes][]';
-    let id_prefix = 'questioning_display_conditions_attributes';
+    let name_prefix = this.state.name_prefix + `[${this.state.index}]`;
+    let id_prefix = this.state.name_prefix.replace(/[\[\]]/g, '_');
     let condition_field_props = {
       type: "hidden",
       name: `${name_prefix}[id]`,

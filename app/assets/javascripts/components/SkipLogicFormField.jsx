@@ -4,10 +4,6 @@ class SkipLogicFormField extends React.Component {
     let skip = props.skip_rules.length == 0 ? 'dont_skip' : 'skip';
     this.state = Object.assign({}, props, {skip: skip});
     this.changeSkipOption = this.changeSkipOption.bind(this);
-
-    // Add reference to later_items to each skip rule.
-    let self = this;
-    this.state.skip_rules.forEach((r) => r.later_items = self.state.later_items);
   }
 
   changeSkipOption(event) {
@@ -17,7 +13,12 @@ class SkipLogicFormField extends React.Component {
   buildSkipRules(args) {
     return (
       <div>
-        {this.state.skip_rules.map((props, index) => <SkipRuleFormField key={index} {...props}/>)}
+        {this.state.skip_rules.map((props, index) =>
+          <SkipRuleFormField
+            key={index}
+            later_items={this.state.later_items}
+            refable_qings={this.state.refable_qings}
+            {...props}/>)}
       </div>
     )
   }

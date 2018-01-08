@@ -3,34 +3,12 @@ class DisplayLogicFormField extends React.Component {
     super();
     this.state = props;
     this.changeDisplayOption = this.changeDisplayOption.bind(this);
-    this.buildConditions = this.buildConditions.bind(this);
-    this.addCondition = this.addCondition.bind(this)
   }
 
   changeDisplayOption(event) {
     let value = event.target.value
 
     this.setState({display_if: value})
-  }
-
-  buildConditions(args) {
-    if (this.state.display_if != "always") {
-      return (
-        <div>
-          {this.state.display_conditions.map((props, index) => <ConditionsFormField key={index} {...props}/>)}
-          <button onClick={this.addCondition} type="button" className="btn add_condition">
-            <i className="fa fa-plus"></i> {I18n.t("form_item.add_condition")}
-          </button>
-        </div>
-      )
-    }
-  }
-
-  addCondition() {
-    let conditions = this.state.display_conditions
-    conditions.push({refable_qings: this.state.refable_qings, operator_options: [], conditionable_id: this.state.id})
-
-    this.setState({display_conditions: conditions})
   }
 
   render() {
@@ -42,6 +20,13 @@ class DisplayLogicFormField extends React.Component {
       onChange: this.changeDisplayOption
     }
 
+    let condition_set_props = {
+      conditions: this.state.display_conditions,
+      conditionable_id: this.state.id,
+      refable_qings: this.state.refable_qings,
+      name_prefix: "questioning[display_conditions_attributes]"
+    };
+
     return (
       <div>
         <select {...select_props}>
@@ -49,7 +34,7 @@ class DisplayLogicFormField extends React.Component {
           <option value="all_met">{I18n.t("form_item.display_if_options.all_met")}</option>
           <option value="any_met">{I18n.t("form_item.display_if_options.any_met")}</option>
         </select>
-        {this.buildConditions()}
+        <ConditionSetFormField {...condition_set_props} />
       </div>
     );
   }
