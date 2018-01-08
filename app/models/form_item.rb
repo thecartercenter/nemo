@@ -171,8 +171,10 @@ class FormItem < ApplicationRecord
     false
   end
 
-  def later_items
-    root.preordered_descendants
+  # Returns all form items after this one in the form, in preorder traversal order.
+  def later_items(eager_load: nil)
+    all_items = root.preordered_descendants(eager_load: eager_load)
+    all_items[(all_items.index(self) + 1)..-1]
   end
 
   private

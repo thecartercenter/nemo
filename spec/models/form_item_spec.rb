@@ -182,4 +182,33 @@ describe FormItem do
       end
     end
   end
+
+  describe "#later_items" do
+    let(:form) { create(:form, question_types:
+      ["text", "text", ["text", %w(text text text), "text"], "text", "text"]) }
+
+    it "is correct for subsubquestion" do
+      expect(form.c[2].c[1].c[1].later_items).to eq [
+        form.c[2].c[1].c[2],
+        form.c[2].c[2],
+        form.c[3],
+        form.c[4]
+      ]
+    end
+
+    it "is correct for first question" do
+      expect(form.c[0].later_items).to eq(form.root_group.preordered_descendants - [form.c[0]])
+    end
+
+    it "is correct for last question" do
+      expect(form.c[4].later_items).to be_empty
+    end
+
+    it "passes along eager_load" do
+      item = form.c[0]
+      expect(item).to receive(:root).and_return(root = double())
+      expect(root).to receive(:preordered_descendants).with(eager_load: :form).and_return([item])
+      item.later_items(eager_load: :form)
+    end
+  end
 end
