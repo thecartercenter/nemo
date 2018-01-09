@@ -3,32 +3,28 @@ module Odk
   class DecoratorFactory
     include Singleton
 
-    def self.decorate(obj)
-      instance.decorate(obj)
+    def self.decorate(obj, context: {})
+      instance.decorate(obj, context: context)
     end
 
-    def self.decorate_collection(objs)
-      objs.map { |obj| instance.decorate(obj) }
+    def self.decorate_collection(objs, context: {})
+      objs.map { |obj| instance.decorate(obj, context: context) }
     end
 
-    def decorate(obj)
-      # if obj.respond_to?(:decorated?) # used in testing
-      #   return   obj
-      # end
-
+    def decorate(obj, context: {})
       case obj.class.name
       when "Form"
-        FormDecorator.decorate(obj)
+        FormDecorator.new(obj, context: context)
       when "QingGroup"
-        QingGroupDecorator.decorate(obj)
+        QingGroupDecorator.new(obj, context: context)
       when "Questioning"
-        QingDecorator.decorate(obj)
+        QingDecorator.new(obj, context: context)
       when "Condition"
-        ConditionDecorator.decorate(obj)
+        ConditionDecorator.new(obj, context: context)
       when "Subqing"
-        SubqingDecorator.decorate(obj)
+        SubqingDecorator.new(obj, context: context)
       when "Forms::ConditionGroup"
-        ConditionGroupDecorator.decorate(obj)
+        ConditionGroupDecorator.new(obj, context: context)
       else
         obj
       end

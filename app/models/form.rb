@@ -84,6 +84,10 @@ class Form < ApplicationRecord
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
   end
 
+  def condition_computer
+    @condition_computer ||= Forms::ConditionComputer.new(self)
+  end
+
   def add_questions_to_top_level(questions)
     Array.wrap(questions).each_with_index do |q, i|
       Questioning.create!(mission: mission, form: self, question: q, parent: root_group)

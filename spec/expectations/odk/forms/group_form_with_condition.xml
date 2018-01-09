@@ -45,7 +45,7 @@
       <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*" type="string" relevant="../*itemcode2* = 'foo'"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*" type="string" relevant="((../*itemcode2* = 'foo'))"/>
     </model>
   </h:head>
   <h:body>

@@ -23,12 +23,12 @@ module Odk
       h.content_tag(*args)
     end
 
-    def decorate(obj)
-      DecoratorFactory.decorate(obj)
+    def decorate(obj, context: {})
+      DecoratorFactory.decorate(obj, context: context)
     end
 
-    def decorate_collection(objs)
-      DecoratorFactory.decorate_collection(objs)
+    def decorate_collection(objs, context: {})
+      DecoratorFactory.decorate_collection(objs, context: context)
     end
   end
 end

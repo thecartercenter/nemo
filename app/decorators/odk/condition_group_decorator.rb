@@ -7,7 +7,7 @@ module Odk
       if negate?
         result = "not(#{result})"
       end
-      result
+      decorated_members.count == 0 ? nil : result
     end
 
     private

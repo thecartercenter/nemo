@@ -2,6 +2,16 @@ require "spec_helper"
 
 module Odk
   describe ConditionGroupDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
+
+    context "empty condition group" do
+      let(:condition_group) { Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [])}
+
+      it "should return nil" do
+        result = Odk::DecoratorFactory.decorate(condition_group).to_odk
+        expect(result).to be_nil
+      end
+    end
+
     context "non-nested condition group all true" do
       let(:condition_group) { Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),

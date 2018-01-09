@@ -8,6 +8,8 @@ module Odk
     end
 
     def bind_tag(form, subq, group: nil, xpath_prefix: "/data")
+      puts "in qing decorator bind_tag"
+      puts @context[:condition_computer].object_id
       tag(:bind,
         nodeset: [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
         type: binding_type_attrib(subq),
@@ -23,7 +25,7 @@ module Odk
     end
 
     def subqings
-      decorate_collection(object.subqings)
+      decorate_collection(object.subqings, context: context)
     end
 
     private
@@ -50,6 +52,11 @@ module Odk
       else nil
       end
     end
+
+    # def relevance
+    #   computed_condition_group = context[:condition_computer].condition_group_for(object)
+    #   ConditionGroupDecorator.decorate(computed_condition_group).to_odk
+    # end
 
     # If a question is required, then determine the appropriate value
     # based on whether the form allows incomplete responses.

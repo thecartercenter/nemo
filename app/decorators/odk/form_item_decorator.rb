@@ -48,16 +48,8 @@ module Odk
 
     # Boolean XPath expression determining whether to show this item.
     def relevance
-      if display_conditionally?
-        if display_conditions.size == 1
-          display_conditions.first.to_odk
-        else
-          operator = display_if == "all_met" ? " and " : " or "
-          display_conditions.map { |c| "(#{c.to_odk})" }.join(operator)
-        end
-      else
-        nil
-      end
+      computed_condition_group = context[:condition_computer].condition_group_for(object)
+      ConditionGroupDecorator.decorate(computed_condition_group).to_odk
     end
 
     def display_conditions
