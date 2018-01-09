@@ -53,7 +53,7 @@ class ConditionFormField extends React.Component {
     if (this.state.option_node != null) {
       return {
         type: "cascading_select",
-        name: `${name_prefix}[option_node_ids][]`,
+        name_prefix: name_prefix,
         for: `${id_prefix}_value`, //not a mistake; the for is for value; the others are for selects
         id: `${id_prefix}_option_node_ids_`,
         key: `${id_prefix}_option_node_ids_`,
@@ -75,7 +75,7 @@ class ConditionFormField extends React.Component {
 
   render() {
     let name_prefix = this.state.name_prefix + `[${this.state.index}]`;
-    let id_prefix = this.state.name_prefix.replace(/[\[\]]/g, '_');
+    let id_prefix = name_prefix.replace(/[\[\]]/g, '_');
     let condition_field_props = {
       type: "hidden",
       name: `${name_prefix}[id]`,
