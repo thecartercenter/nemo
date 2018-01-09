@@ -21,13 +21,15 @@ class ConditionFormField extends React.Component {
     var url = this.buildUrl(refQingId);
     $.ajax(url)
       .done(function(response) {
-          self.setState(response);
-        })
-        .fail(function(jqXHR, exception){
-          console.log(exception);
-        })
-        .always(function() {
+          // Need to put this before we set state because setting state may trigger a new one.
           ELMO.app.loading(false);
+
+          // We set option node ID to null since the new ref_qing may have a new option set.
+          self.setState(Object.assign(response, {option_node_id: null}));
+        })
+        .fail(function(jqXHR, exception) {
+          ELMO.app.loading(false);
+          console.log(exception);
         });
   }
 
@@ -50,14 +52,15 @@ class ConditionFormField extends React.Component {
   }
 
   buildValueProps(name_prefix, id_prefix) {
-    if (this.state.option_node != null) {
+    if (this.state.option_set_id != null) {
       return {
         type: "cascading_select",
         name_prefix: name_prefix,
         for: `${id_prefix}_value`, //not a mistake; the for is for value; the others are for selects
         id: `${id_prefix}_option_node_ids_`,
         key: `${id_prefix}_option_node_ids_`,
-        option_node: this.state.option_node,
+        option_set_id: this.state.option_set_id,
+        option_node_id: this.state.option_node_id,
         label: I18n.t('activerecord.attributes.condition.value')
       }
     } else {

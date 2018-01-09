@@ -15,7 +15,7 @@ class Condition < ApplicationRecord
   validate :all_fields_required
   validates :conditionable, presence: true
 
-  delegate :has_options?, :rank, :full_dotted_rank, to: :ref_qing, prefix: true
+  delegate :has_options?, :rank, :full_dotted_rank, :option_set_id, to: :ref_qing, prefix: true
   delegate :form, :form_id, :refable_qings, to: :conditionable
 
   scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }

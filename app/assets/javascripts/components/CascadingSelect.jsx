@@ -1,27 +1,33 @@
 class CascadingSelect extends React.Component {
   constructor(props) {
     super();
-    this.getData = this.getData.bind(this);
-    this.updateData = this.updateData.bind(this);
+    this.nodeChanged = this.nodeChanged.bind(this);
     this.buildUrl = this.buildUrl.bind(this);
     this.buildLevelProps = this.buildLevelProps.bind(this);
     this.buildLevels = this.buildLevels.bind(this);
     this.isLastLevel = this.isLastLevel.bind(this);
     this.state = props;
-
-  }
-  componentWillMount() {
-    this.updateData(this.props.option_node.node_id);
   }
 
-  updateData(nodeId) {
-    this.getData(nodeId);
+  componentDidMount() {
+    this.getData(this.state.option_set_id, this.state.option_node_id);
   }
 
-  getData(nodeId) {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.option_set_id != this.state.option_set_id) {
+      this.getData(nextProps.option_set_id, nextProps.option_node_id);
+    }
+  }
+
+  nodeChanged(newNodeId) {
+    this.getData(this.state.option_set_id, newNodeId);
+  }
+
+  // Fetches data to populate the control. nodeId may be null if there is no node selected.
+  getData(setId, nodeId) {
     ELMO.app.loading(true);
     var self = this;
-    var url = this.buildUrl(nodeId);
+    var url = this.buildUrl(setId, nodeId);
     $.ajax(url)
       .done(function(response) {
           self.setState(response);
@@ -34,8 +40,8 @@ class CascadingSelect extends React.Component {
         });
   }
 
-  buildUrl(optionNodeId) {
-    return `${ELMO.app.url_builder.build('option-sets', this.props.option_node.set_id, 'condition-form-view')}?node_id=${optionNodeId}`;
+  buildUrl(setId, nodeId) {
+    return `${ELMO.app.url_builder.build('option-sets', setId, 'condition-form-view')}?node_id=${nodeId}`;
   }
 
   buildLevelProps(level, isLastLevel) {
@@ -46,7 +52,7 @@ class CascadingSelect extends React.Component {
       key: `questioning_display_conditions_attributes_option_node_ids_`,
       value: level.selected,
       options: level.options,
-      changeFunc: isLastLevel ? null : this.updateData
+      changeFunc: isLastLevel ? null : this.nodeChanged
     }
   }
 
