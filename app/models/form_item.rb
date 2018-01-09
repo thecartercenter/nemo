@@ -127,8 +127,10 @@ class FormItem < ApplicationRecord
   end
 
   # Returns all form items after this one in the form, in preorder traversal order.
+  # If item is not persisted, returns empty array.
   def later_items(eager_load: nil)
-    all_items = root.preordered_descendants(eager_load: eager_load)
+    return [] unless persisted?
+    all_items = form.preordered_items(eager_load: eager_load)
     all_items[(all_items.index(self) + 1)..-1]
   end
 

@@ -236,10 +236,14 @@ describe FormItem do
       expect(form.c[4].later_items).to be_empty
     end
 
+    it "returns empty array if host item not persisted" do
+      expect(FormItem.new(form: form).later_items).to be_empty
+    end
+
     it "passes along eager_load" do
       item = form.c[0]
-      expect(item).to receive(:root).and_return(root = double())
-      expect(root).to receive(:preordered_descendants).with(eager_load: :form).and_return([item])
+      expect(item).to receive(:form).and_return(form = double())
+      expect(form).to receive(:preordered_items).with(eager_load: :form).and_return([item])
       item.later_items(eager_load: :form)
     end
   end
