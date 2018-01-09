@@ -9,6 +9,10 @@ class QingGroup < FormItem
     nil
   end
 
+  def qtype_name
+    nil
+  end
+
   def child_groups
     children.where(type: "QingGroup")
   end

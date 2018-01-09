@@ -115,6 +115,23 @@ class FormItem < ApplicationRecord
     sorted = children.order(:rank)
   end
 
+  # All questionings that can be referred to by a condition if it were defined on this item.
+  def refable_qings
+    all_items = form.preordered_items
+    all_previous = persisted? ? all_items[0...(all_items.index(self))] : all_items
+    all_previous.select(&:refable?)
+  end
+
+  def refable?
+    qtype_name && QuestionType[qtype_name].refable?
+  end
+
+  # Returns all form items after this one in the form, in preorder traversal order.
+  def later_items(eager_load: nil)
+    all_items = root.preordered_descendants(eager_load: eager_load)
+    all_items[(all_items.index(self) + 1)..-1]
+  end
+
   # Returns an array of ranks of all parents plus self, e.g. [2,5].
   # Uses the cached value setup by descendant_questionings if available.
   def full_rank
@@ -169,12 +186,6 @@ class FormItem < ApplicationRecord
 
   def group?
     false
-  end
-
-  # Returns all form items after this one in the form, in preorder traversal order.
-  def later_items(eager_load: nil)
-    all_items = root.preordered_descendants(eager_load: eager_load)
-    all_items[(all_items.index(self) + 1)..-1]
   end
 
   private

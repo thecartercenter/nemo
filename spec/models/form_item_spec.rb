@@ -183,6 +183,38 @@ describe FormItem do
     end
   end
 
+  describe "#refable_qings" do
+    let(:form) { create(:form, question_types:
+      ["text", "location", "text", ["text", %w(text text text), "text"], "text", "text"]) }
+
+    it "is correct for subsubquestion" do
+      expect(form.c[3].c[1].c[1].refable_qings).to eq [
+        form.c[0],
+        form.c[2],
+        form.c[3].c[0],
+        form.c[3].c[1].c[0]
+      ]
+    end
+
+    it "is correct for subgroup" do
+      expect(form.c[3].c[1].refable_qings).to eq [
+        form.c[0],
+        form.c[2],
+        form.c[3].c[0]
+      ]
+    end
+
+    it "is correct for first question on form" do
+      expect(form.c[0].refable_qings).to be_empty
+    end
+
+    it "returns all questionings of refable type on form if host item not persisted" do
+      # Expect everything except groups and location question.
+      expect(FormItem.new(form: form).refable_qings).to eq(
+        (form.preordered_items - [form.c[1], form.c[3], form.c[3].c[1]]))
+    end
+  end
+
   describe "#later_items" do
     let(:form) { create(:form, question_types:
       ["text", "text", ["text", %w(text text text), "text"], "text", "text"]) }
