@@ -21,6 +21,6 @@ class ConditionViewSerializer < ActiveModel::Serializer
   end
 
   def option_set_id
-    object.ref_qing.option_set_id
+    object.ref_qing.try(:option_set_id)
   end
 end

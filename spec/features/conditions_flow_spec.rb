@@ -21,7 +21,7 @@ feature "conditions flow", js: true do
 
   scenario "add and update condition to existing question" do
     all("a.action_link.edit")[1].click
-    select("Display this question if all of these conditions are met.", from: "Display Logic")
+    select("Display this question if all of these conditions are met", from: "Display Logic")
     select_question_and_wait_to_populate_other_selects(1, question_code)
     select("is equal to", from: "Comparison")
     select("Animal", from: "Kingdom")
@@ -43,7 +43,7 @@ feature "conditions flow", js: true do
     expect(page).to have_content("Question #1 #{question_code}
       Species is equal to \"Dog\"")
 
-    expect(page).to have_content("Display this question if all of these conditions are met.")
+    expect(page).to have_content("Display this question if all of these conditions are met")
   end
 
   scenario "add a new question with a condition" do
@@ -51,7 +51,7 @@ feature "conditions flow", js: true do
     fill_in("Code", with: "NewQ")
     select("Text", from: "Type")
     fill_in("Title (English)", with: "New Question")
-    select("Display this question if all of these conditions are met.", from: "Display Logic")
+    select("Display this question if all of these conditions are met", from: "Display Logic")
     select_question_and_wait_to_populate_other_selects(1, question_code)
     select("is equal to", from: "Comparison")
     select("Plant", from: "Kingdom")
@@ -68,7 +68,7 @@ feature "conditions flow", js: true do
 
     scenario "add a less than condition" do
       all("a.action_link.edit")[2].click
-      select("Display this question if any of these conditions are met.", from: "Display Logic")
+      select("Display this question if any of these conditions are met", from: "Display Logic")
       select_question_and_wait_to_populate_other_selects(2, question_code)
       select("is less than", from: "Comparison")
       fill_in("Value", with: "5")
