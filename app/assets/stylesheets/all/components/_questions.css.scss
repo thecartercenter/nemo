@@ -21,11 +21,11 @@ form.question_form {
 
 div.question_fields {
 
-  textarea:not([id*=_ar]) {
+  textarea {
     direction: ltr;
   }
 
-  textarea[id*=_ar] {
+  textarea[id*=_ar], textarea[id*=_he] {
     direction: rtl;
   }  
 
