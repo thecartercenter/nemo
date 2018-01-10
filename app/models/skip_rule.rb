@@ -17,7 +17,7 @@ class SkipRule < ActiveRecord::Base
   end
 
   def condition_group
-    @condition_group ||= ConditionGroup.new(true_if: skip_if, members: conditions, negate: true)
+    @condition_group ||= Forms::ConditionGroup.new(true_if: skip_if, members: conditions, negate: true)
   end
 
   private
