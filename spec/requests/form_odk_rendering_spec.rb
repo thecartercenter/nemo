@@ -398,12 +398,15 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
       # Include multiple conditions on one question.
       form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
-      form.c[6].display_conditions.create!(ref_qing: form.c[5], op: "eq",
-        option_node: form.c[5].option_set.c[0])
+      form.c[6].display_conditions.create!(ref_qing: form.c[5], op: "eq", option_node: form.c[5].option_set.c[0])
       form.c[6].update!(display_if: "all_met")
-      create(:skip_rule, source_item: form.c[2], destination: "item", dest_item_id: form.c[7].id, skip_if: "all_met", conditions_attributes: [{ref_qing_id: form.c[2].id, op: "eq", value: 0}])
-      puts "should have a skip rule: "
-      puts form.c[2].skip_rules
+      create(:skip_rule,
+        source_item: form.c[2],
+        destination: "item",
+        dest_item_id: form.c[7].id,
+        skip_if: "all_met",
+        conditions_attributes: [{ref_qing_id: form.c[2].id, op: "eq", value: 0}]
+      )
     end
 
     it "should render proper xml" do
