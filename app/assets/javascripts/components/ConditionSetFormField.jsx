@@ -8,6 +8,7 @@ class ConditionSetFormField extends React.Component {
   addCondition() {
     this.setState({conditions:
       this.state.conditions.concat([{
+        form_id: this.state.form_id,
         refable_qings: this.state.refable_qings,
         operator_options: [],
         conditionable_id: this.state.conditionable_id
@@ -17,13 +18,13 @@ class ConditionSetFormField extends React.Component {
 
   render() {
     return (
-      <div>
+      <div style={{display: this.props.show ? '' : 'none'}}>
         {this.state.conditions.map((props, index) =>
           <ConditionFormField key={index} index={index} name_prefix={this.state.name_prefix} {...props}/>)}
         <button onClick={this.addCondition} type="button" className="btn">
           <i className="fa fa-plus"></i> {I18n.t("form_item.add_condition")}
         </button>
       </div>
-    )
+    );
   }
 }

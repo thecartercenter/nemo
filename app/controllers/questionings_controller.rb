@@ -81,6 +81,7 @@ class QuestioningsController < ApplicationController
   end
 
   private
+
   # prepares objects for and renders the form template
   def prepare_and_render_form
     # this method lives in the QuestionFormable concern

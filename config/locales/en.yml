@@ -1288,7 +1288,7 @@ en:
       unknown_number: "[unknown number]"
 
   form_item:
-    add_condition: "Add condition"
+    add_condition: "Add Condition"
     display_if_options:
       always: "Always display this question"
       all_met: "Display this question if all of these conditions are met"

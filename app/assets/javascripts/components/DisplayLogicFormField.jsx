@@ -24,6 +24,8 @@ class DisplayLogicFormField extends React.Component {
       conditions: this.state.display_conditions,
       conditionable_id: this.state.id,
       refable_qings: this.state.refable_qings,
+      form_id: this.state.form_id,
+      show: this.state.display_if != "always",
       name_prefix: "questioning[display_conditions_attributes]"
     };
 

@@ -116,14 +116,17 @@ class ConditionFormField extends React.Component {
     }
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
     if (this.state.destroy === true) {
-      return (
-        <div className="condition-fields">
-          <input {...condition_field_props} />
-          <input {...destroy_field_props} />
-        </div>
-      )
-    }
-    else {
+      if (this.state.id) {
+        return (
+          <div className="condition-fields" style={{display: none}}>
+            <input {...condition_field_props} />
+            <input {...destroy_field_props} />
+          </div>
+        )
+      } else {
+        return null;
+      }
+    } else {
       return (
         <div className="condition-fields">
           <a className="action-link" onClick={this.deleteCondition}><i className="fa fa-trash-o"></i></a>
