@@ -1,0 +1,501 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2017, The Carter Center
+# This file is distributed under the same license as the Elmo package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Elmo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-10 16:48+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../content/features/features.rst:2
+msgid "12. Additional features and information"
+msgstr ""
+
+#: ../../content/features/features.rst:5
+msgid "12.1. Broadcast messages"
+msgstr ""
+
+#: ../../content/features/features.rst:7
+msgid "Coordinators may want to broadcast messages to observer teams in the field in the instance of a change of polling location, schedule, or another event. Administrators and coordinators can send Broadcasts via email or SMS to individual users or all active users on a mission."
+msgstr ""
+
+#: ../../content/features/features.rst:12
+msgid "Please note that you need an ELMO SMS gateway with SMS credit established before messages can be sent."
+msgstr ""
+
+#: ../../content/features/features.rst:15
+msgid "To send a Broadcast Message:"
+msgstr ""
+
+#: ../../content/features/features.rst:17
+msgid "Click the **Users** menu"
+msgstr ""
+
+#: ../../content/features/features.rst:18
+msgid "Select the user(s) to receive a message by marking the boxes next to their name(s)"
+msgstr ""
+
+#: ../../content/features/features.rst:21
+msgid "**NOTE:** Observers **do NOT** have the ability to reply to broadcast messages – instruct observers to contact the observer coordinator directly if they need to discuss a broadcast message or other issue."
+msgstr ""
+
+#: ../../content/features/features.rst:26
+msgid "Click **Send Broadcast**—this action will direct to a page where the medium of the broadcast can be selected, and the subject and its content can be entered into a text field"
+msgstr ""
+
+#: ../../content/features/features.rst:29
+msgid "|broadcast selection edited|"
+msgstr ""
+
+#: ../../content/features/features.rst:30
+msgid "Select a medium from the drop down list:"
+msgstr ""
+
+#: ../../content/features/features.rst:32
+msgid "**SMS preferred**: will try to send a SMS and then an email, if unsuccessful"
+msgstr ""
+
+#: ../../content/features/features.rst:34
+msgid "**Email preferred**: will try to send an email and then an SMS if unsuccessful"
+msgstr ""
+
+#: ../../content/features/features.rst:36
+msgid "**SMS only**: will send only SMS"
+msgstr ""
+
+#: ../../content/features/features.rst:37
+msgid "**Email only**: will send only email"
+msgstr ""
+
+#: ../../content/features/features.rst:38
+msgid "**Both SMS and Email**: will send both SMS and email"
+msgstr ""
+
+#: ../../content/features/features.rst:40
+msgid "Type a subject in the Subject line"
+msgstr ""
+
+#: ../../content/features/features.rst:41
+msgid "Type your broadcast message in the Message box"
+msgstr ""
+
+#: ../../content/features/features.rst:0
+msgid "Click **Send**"
+msgstr ""
+
+#: ../../content/features/features.rst:0
+msgid "|broadcasts edited|"
+msgstr ""
+
+#: ../../content/features/features.rst:46
+msgid "12.2. Converting and Displaying GPS Coordinates in ARcGIS 10"
+msgstr ""
+
+#: ../../content/features/features.rst:48
+msgid "There are many ways of representing locations.  One of the most common uses angular latitude and longitude coordinates to specify the location of a point.  These `Geographic coordinates <http://en.wikipedia.org/wiki/Geographic_coordinate_system>`__ may be expressed in several different notations, including Decimal Degrees (DD), Degrees Decimal Minutes (DDM), and Degrees Minutes and Seconds (DMS). The formula for `converting Degree Minutes and Seconds to Decimal Degrees <http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html>`__ is discussed in the ArcGIS 10 Help.  Another common method is to use a projected coordinate system and X and Y coordinate pairs, that is, two sets of numbers in a planar Cartesian system."
+msgstr ""
+
+#: ../../content/features/features.rst:61
+msgid "Gridded systems, like Universal Transverse Mercator (`UTM <http://en.wikipedia.org/wiki/Universal_Transverse_Mercator_coordinate_system>`__), United States National Grid (`USNG <http://en.wikipedia.org/wiki/USNG>`__), Military Grid Reference System (`MGRS <http://en.wikipedia.org/wiki/MGRS>`__) divide the world into zones which are projected and then overlaid with one or more grids.  Within the grids, point locations are specified by their position East and North the zone origin or the southeast corner of the cell. For USNG and MGRS the numeric values of the northing and easting can vary from 1 to 5 digits, depending on the precision of the location (they must both use the same number of digits) and then the values are concatenated."
+msgstr ""
+
+#: ../../content/features/features.rst:74
+msgid "Two less frequently used systems, the Global Area Reference System (`GARS <http://en.wikipedia.org/wiki/Global_Area_Reference_System>`__) and Geographic Reference System (`GEOREF <http://en.wikipedia.org/wiki/Georef>`__), divide the world into polygonal areas based on different sets of nested grids and encode locations as a string of grid ID values."
+msgstr ""
+
+#: ../../content/features/features.rst:84
+msgid "Each of these ways of representing a location results in different strings of characters with a variety of formats.  This table shows the coordinate representation for Philadelphia, Pennsylvania in the US (75° 9’ 18.382” West longitude by 39° 59’ 0.637” North latitude) in each of these systems.  This is not an exhaustive list of the delimiters and hemisphere indicators that are used in each system."
+msgstr ""
+
+#: ../../content/features/features.rst:91
+msgid "ArcGIS 10 can convert coordinates expressed in each of these systems into the others, and provides ways of displaying and accepting coordinate input in most of them."
+msgstr ""
+
+#: ../../content/features/features.rst:95
+msgid "**Displaying Coordinates**"
+msgstr ""
+
+#: ../../content/features/features.rst:100
+msgid "You can see the coordinate value for a place on a map in the ArcMap status bar, at the bottom right of the application. The default coordinate format in the status bar is based on the units of the first layer added to the map, often feet, meters, or degrees of longitude/latitude."
+msgstr ""
+
+#: ../../content/features/features.rst:109
+msgid "You can change the coordinate display to use any of these systems (except GARS and GEOREF) by right-clicking Layers in the table of contents and selecting Properties. On the General tab, under Units, you can select the type of coordinates you would like to see, for example MGRS."
+msgstr ""
+
+#: ../../content/features/features.rst:115
+msgid "**Go To XY Coordinates**"
+msgstr ""
+
+#: ../../content/features/features.rst:120
+msgid "If you have a set of coordinates and you want to find their location on the map, you can use the Go To XY tool."
+msgstr ""
+
+#: ../../content/features/features.rst:126
+msgid "Open the tool from the toolbar, then select a coordinate format. Type (or paste) the coordinates into the text box and click one of the buttons to Pan to, Zoom to, Flash, Add a Point, Add a Point Labeled with Coordinates, or Add a Callout."
+msgstr ""
+
+#: ../../content/features/features.rst:131
+msgid "The Go To XY tool also keeps a record of recent locations, which you can return to by clicking the Recent button and selecting the location. You can use this to manually convert coordinates from one format to another. To do so, select your input coordinate notation, input your coordinates and pan to the location. Then select your new output format and select the coordinates from the Recent button."
+msgstr ""
+
+#: ../../content/features/features.rst:138
+msgid "**Find MGRS coordinates**"
+msgstr ""
+
+#: ../../content/features/features.rst:143
+msgid "If you work with MGRS coordinates, the Find tool has an MGRS Locator that works like the Go To XY tool, but provides additional capabilities tailored to the MGRS system."
+msgstr ""
+
+#: ../../content/features/features.rst:150
+msgid "To use these, open the Find tool on the Tools toolbar.  In the Find tool dialog box, click the Locations tab, select MGRS from the locator drop-down list.  Then type (or paste) the coordinate into the MGRS box and click Find."
+msgstr ""
+
+#: ../../content/features/features.rst:158
+msgid "The tool will return a list of location matches (in our case there should only be one). If you right-click on the coordinate you have various options for marking the location."
+msgstr ""
+
+#: ../../content/features/features.rst:162
+msgid "So what’s different about the MGRS Locator?"
+msgstr ""
+
+#: ../../content/features/features.rst:164
+msgid "The locator has options for matching shortened MGRS coordinates when you work in the same Grid Zone Designator (GZD).  It has options to pull the GZD and 100,000 meter square identifier from the current map center, a default value, or use the last one used. This is convenient if you work in the same GZD over and over again, you can type “8675725939” or “VK8675725939” rather than “18SVK8675725939”, which will save you a few extra key strokes when entering your coordinates."
+msgstr ""
+
+#: ../../content/features/features.rst:172
+msgid "**Converting Tables of Coordinates**"
+msgstr ""
+
+#: ../../content/features/features.rst:177
+msgid "There may be times when you have a lot of coordinates that you need to convert to another system.  If you have the coordinates in a table, you can convert all of them by running the Convert Coordinate Notation (CCN) geoprocessing tool."
+msgstr ""
+
+#: ../../content/features/features.rst:182
+msgid "For example, you might convert a table of longitude and latitude values in decimal degrees (DD) to MGRS."
+msgstr ""
+
+#: ../../content/features/features.rst:188
+msgid "With the CCN tool you can convert between DD, DDM, DMS, UTM, USNG, MGRS, GARS, and GEOREF."
+msgstr ""
+
+#: ../../content/features/features.rst:191
+msgid "The tool takes your table of coordinates and converts them to point features with an attribute containing the new output notation."
+msgstr ""
+
+#: ../../content/features/features.rst:194
+msgid "It is important to note that the CCN tool is a geoprocessing tool and represents a single-focus process of converting a table of coordinates; its only function is to do the conversion. The output point features do not have the same fields as the input table."
+msgstr ""
+
+#: ../../content/features/features.rst:199
+msgid "If you want the output points to have  all of the attributes of the input table (in addition to the new notation field) you must put the tool in a `Model Builder model <http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html>`__ that uses the `Join Field tool <http://help.arcgis.com/en/arcgisdesktop/10.0/help/index.html>`__ to attach the original fields."
+msgstr ""
+
+#: ../../content/features/features.rst:207
+msgid "The model would look something like this:"
+msgstr ""
+
+#: ../../content/features/features.rst:212
+msgid "This table lists the coordinate notations mentioned above, and shows the different tools and functions that support them."
+msgstr ""
+
+#: ../../content/features/features.rst:218
+msgid "*Content provided by Matt Funk*"
+msgstr ""
+
+#: ../../content/features/features.rst:221
+msgid "12.3. Device Security"
+msgstr ""
+
+#: ../../content/features/features.rst:223
+msgid "Data sent to ELMO should be set up securely using HTTPS (**Administrators take note!**). In addition, each physical device should also be secured. Here are some security methods you might consider:"
+msgstr ""
+
+#: ../../content/features/features.rst:228
+msgid "Use a Screen Lock"
+msgstr ""
+
+#: ../../content/features/features.rst:229
+msgid "Encrypt Device with SD Card Encryption"
+msgstr ""
+
+#: ../../content/features/features.rst:230
+msgid "Turn off Developer Options"
+msgstr ""
+
+#: ../../content/features/features.rst:231
+msgid "Protect Device from Harmful Applications"
+msgstr ""
+
+#: ../../content/features/features.rst:232
+msgid "Delete forms automatically after being sent in ODK Collect"
+msgstr ""
+
+#: ../../content/features/features.rst:234
+msgid "These suggestions are covered in more detail below. They are just here for your consideration; you should refer to the Android Quick Start Guide for more information. If your device is on Android version 5.x, `click here <https://play.google.com/books/reader?id=dnzVBAAAQBAJ&printsec=frontcover&output=reader&hl=en&pg=GBS.PR1>`__; if it is on 6.x, `click here <https://play.google.com/books/reader?id=tu6bCgAAQBAJ&printsec=frontcover&output=reader&hl=en&pg=GBS.PP1>`__."
+msgstr ""
+
+#: ../../content/features/features.rst:243
+msgid "12.3.1. Use a Screen Lock"
+msgstr ""
+
+#: ../../content/features/features.rst:245
+msgid "Think of a screen lock as a password to unlock a phone. Using a screen lock is important for security. If someone is in physical possession of a device, to access the device’s information, they will need to know how to unlock the device."
+msgstr ""
+
+#: ../../content/features/features.rst:250
+msgid "Android has several options for screen locks. These include drawing a pattern, a numerical keyphrase, and a text passphrase. On newer devices, fingerprint scanning is also possible as a screen lock."
+msgstr ""
+
+#: ../../content/features/features.rst:254
+msgid "A screen lock should allow the user of the device easy access to the device and their data, but should be difficult for someone else to guess or access."
+msgstr ""
+
+#: ../../content/features/features.rst:258
+msgid "**Opening the Screen Lock Menu**"
+msgstr ""
+
+#: ../../content/features/features.rst:260
+msgid "To change screen lock settings, go to the main settings menu and look for a Lock Screen, Screen Lock, or Security or something similar."
+msgstr ""
+
+#: ../../content/features/features.rst:263
+msgid "**Android 6.0 and up**"
+msgstr ""
+
+#: ../../content/features/features.rst:265
+msgid "*Settings > Security > Screen Lock*"
+msgstr ""
+
+#: ../../content/features/features.rst:267
+msgid "Open the device’s Settings application. Look for Security and select it. Then select Screen Lock."
+msgstr ""
+
+#: ../../content/features/features.rst:270
+#: ../../content/features/features.rst:363
+#: ../../content/features/features.rst:406
+#: ../../content/features/features.rst:417
+msgid "**Android 5.0**"
+msgstr ""
+
+#: ../../content/features/features.rst:272
+msgid "*Settings > Lock screen*"
+msgstr ""
+
+#: ../../content/features/features.rst:274
+msgid "From the Home screen, pull down the main menu by swiping down. The gear menu in the right corner opens Settings. Inside Settings, find and select Lock Screen."
+msgstr ""
+
+#: ../../content/features/features.rst:278
+msgid "**Changing The Screen Lock**"
+msgstr ""
+
+#: ../../content/features/features.rst:280
+msgid "Once inside the screen lock menu, select the screen lock you wish to use. You will be guided through how to change the screen lock. The screen lock options available depend on each device, its operating system (OS), and the version of the OS on the device."
+msgstr ""
+
+#: ../../content/features/features.rst:286
+msgid "12.3.2. Encrypt Device with SD Card Encryption"
+msgstr ""
+
+#: ../../content/features/features.rst:288
+msgid "If a device is lost, stolen, or in someone else’s possession, they may be able to gain access to the data on the device by physically accessing the data card. Encryption stores data in a scrambled state. Encryption ensures that only those with credentials can unscramble or unencrypt the data and read it."
+msgstr ""
+
+#: ../../content/features/features.rst:294
+msgid "According to Android documentation: “Encryption stores… data in a form that can only be read if you have the right credentials. This can provide additional protection in case [a] device is stolen.” (1) Types of data that can be encrypted include “account data, app data, music and other media, and downloaded information.” `(source) <https://support.google.com/nexus/answer/2844831>`__"
+msgstr ""
+
+#: ../../content/features/features.rst:301
+msgid "**To Access Encryption Settings**"
+msgstr ""
+
+#: ../../content/features/features.rst:303
+msgid "In the main settings menu, look for *Security* or similar. Inside the security screen, look for *Encryption*, *Encrypt phone*, *Encrypt tablet*, or similar."
+msgstr ""
+
+#: ../../content/features/features.rst:307
+msgid "**Android (5.0, 4.4 and lower)**"
+msgstr ""
+
+#: ../../content/features/features.rst:309
+msgid "*Settings > Security > Encrypt [device]*"
+msgstr ""
+
+#: ../../content/features/features.rst:311
+msgid "**Encrypting Your Device**"
+msgstr ""
+
+#: ../../content/features/features.rst:313
+msgid "Inside the Encryption menu, follow the instructions on the screen to encrypt the device. You will need to have access to a charger and set aside an hour or more for the encryption process."
+msgstr ""
+
+#: ../../content/features/features.rst:317
+msgid "**Use Encryption with a screen lock**"
+msgstr ""
+
+#: ../../content/features/features.rst:319
+msgid "It is recommended to use a screen lock if encryption is used on a device. Without a screen lock, encryption’s security protection is reduced."
+msgstr ""
+
+#: ../../content/features/features.rst:323
+msgid "Some devices require a screen lock if encryption is enabled. Some devices only allow certain types of screen locks to be used, such as a pin or password, when encryption is enabled."
+msgstr ""
+
+#: ../../content/features/features.rst:328
+msgid "12.3.3. Turn off Developer Options"
+msgstr ""
+
+#: ../../content/features/features.rst:330
+msgid "Developer options are settings within the Android system that allow a device to be used to develop and debug an application. If you are not actively testing an application, you do not need to keep developer options on."
+msgstr ""
+
+#: ../../content/features/features.rst:335
+msgid "**Determine If You Have Ever Activated Developer Options**"
+msgstr ""
+
+#: ../../content/features/features.rst:337
+msgid "By default, developer options are completely hidden in Settings. Look in the main settings menu. Is there an option listed for *Developer Options* or something similar?"
+msgstr ""
+
+#: ../../content/features/features.rst:341
+msgid "If not, developer options have not been activated on the device. You can skip the remaining steps in this section."
+msgstr ""
+
+#: ../../content/features/features.rst:344
+msgid "If *Developer Options* or something similar is listed, you should follow the next steps to secure the device."
+msgstr ""
+
+#: ../../content/features/features.rst:347
+msgid "**Open Developer Options**"
+msgstr ""
+
+#: ../../content/features/features.rst:349
+msgid "*Settings > Developer Options*"
+msgstr ""
+
+#: ../../content/features/features.rst:351
+msgid "**Turn Off Developer Options**"
+msgstr ""
+
+#: ../../content/features/features.rst:353
+msgid "Once *Developer Options* is open, turn off *Developer Options*."
+msgstr ""
+
+#: ../../content/features/features.rst:355
+msgid "Inside *Developer Options*, if you see that *Developer Options* are already turned off on this device, this device is protected. You can skip the remaining steps in this section."
+msgstr ""
+
+#: ../../content/features/features.rst:359
+msgid "Turning off *Developer Options* may involve moving a toggle from the “\\ *on*\\ ” to “\\ *off*\\ ” position. Or it may involve deselecting all options so that no checkboxes remain checked."
+msgstr ""
+
+#: ../../content/features/features.rst:365
+msgid "On the top bar inside *Developer Options*, switch the toggle from *On* to *Off*. You will know *Developer Options* are turned off when the options on the screen are grayed out."
+msgstr ""
+
+#: ../../content/features/features.rst:370
+msgid "12.3.4. Protection from Harmful Applications"
+msgstr ""
+
+#: ../../content/features/features.rst:372
+msgid "Each time an application is installed, it has the potential to access data and media, information about other apps, geolocation, and a great deal of information about each device. It is important to install only trusted applications and to remove any applications that are not trusted."
+msgstr ""
+
+#: ../../content/features/features.rst:378
+msgid "After the initial install of necessary programs on the device, such as ELMO software, device preparers can add security measures to protect against harmful applications."
+msgstr ""
+
+#: ../../content/features/features.rst:382
+msgid "**Use the Approved Application Store**"
+msgstr ""
+
+#: ../../content/features/features.rst:384
+msgid "It is recommended to install applications through the operating system’s approved application store. For Android devices, this means most applications should be installed through *Google Play Store*. The applications found in the operating system’s approved application store have been vetted to ensure the application does not contain malware. Despite this, it is possible for an application from the approved application store to be rouge in some way, including asking for permissions to information on your device that it does not need. It is good practice for election observers and device preparers to only install programs that are needed and trusted."
+msgstr ""
+
+#: ../../content/features/features.rst:395
+msgid "**Turn Off Unknown Sources**"
+msgstr ""
+
+#: ../../content/features/features.rst:397
+msgid "To ensure only applications from the approved application store can be used, device prepares can turn off the *Unknown Sources* setting."
+msgstr ""
+
+#: ../../content/features/features.rst:400
+msgid "Inside the device’s settings, look for a setting related to types of applications that can be installed. On some devices, this may mean making sure the box marked next to *Unknown Sources* is not checked or to uncheck it, if needed. On other devices, there may be a different way to turn off *Unknown Sources*."
+msgstr ""
+
+#: ../../content/features/features.rst:408
+msgid "*Settings > Security > Phone Administration > Unknown Sources*"
+msgstr ""
+
+#: ../../content/features/features.rst:410
+msgid "**Turn on App Verification**"
+msgstr ""
+
+#: ../../content/features/features.rst:412
+msgid "App verification ensures that an application undergoes a security check on install and periodically. Look for a setting inside the main settings security menu related to “\\ *app verification*,” “\\ *verify apps*,” or something similar. Ensure that application verification is enabled."
+msgstr ""
+
+#: ../../content/features/features.rst:419
+msgid "*Settings > Security > Phone Administration > Verify Apps*"
+msgstr ""
+
+#: ../../content/features/features.rst:421
+msgid "Make sure the box next to Verify apps is checked."
+msgstr ""
+
+#: ../../content/features/features.rst:423
+msgid "**Android 6.0**"
+msgstr ""
+
+#: ../../content/features/features.rst:425
+msgid "Access *Google Settings*. You can use one of these methods:"
+msgstr ""
+
+#: ../../content/features/features.rst:427
+msgid "Open the *Settings* Touch *Google*."
+msgstr ""
+
+#: ../../content/features/features.rst:428
+msgid "Open the *Google Settings*"
+msgstr ""
+
+#: ../../content/features/features.rst:430
+msgid "Inside *Google Settings*, touch *Security*."
+msgstr ""
+
+#: ../../content/features/features.rst:431
+msgid "Under *Verify Apps*, ensure that *Verify Apps* is turned on and turn on *Scan device for security threats*."
+msgstr ""
+
+#: ../../content/features/features.rst:434
+msgid "**Uninstall questionable applications**"
+msgstr ""
+
+#: ../../content/features/features.rst:436
+msgid "If questionable apps have been installed on a device or there are applications that are no longer needed on the device, it is recommended that these applications be uninstalled for added security."
+msgstr ""
+
+#: ../../content/features/features.rst:441
+msgid "12.3.5. ODK Collect: Delete after sending forms"
+msgstr ""
+
+#: ../../content/features/features.rst:443
+msgid "In case you are worried about sensitive information you’ve collected and “what if I lose my device,” you may want to also consider removing any filled out forms on the ODK Collect app after they have been submitted and received by ELMO."
+msgstr ""
+
+#: ../../content/features/features.rst:448
+msgid "The “Delete After Send” option is available through ODK Collect settings. For more information, please visit https://opendatakit.org/."
+msgstr ""
+

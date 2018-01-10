@@ -1,0 +1,298 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2017, The Carter Center
+# This file is distributed under the same license as the Elmo package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Elmo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-10 16:48+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ../../content/search/search.rst:2
+msgid "10. Search"
+msgstr ""
+
+#: ../../content/search/search.rst:4
+msgid "Searching is a critical aspect of being able to find the information you need. This function is available on many parts of ELMO."
+msgstr ""
+
+#: ../../content/search/search.rst:8
+msgid "10.1. Operators"
+msgstr ""
+
+#: ../../content/search/search.rst:10
+msgid "Keywords are just the words you use in your search. Combining Keywords with Operators give the parameters for a search to occur. Keywords and Operators form Expressions."
+msgstr ""
+
+#: ../../content/search/search.rst:14
+msgid "Operators in ELMO are: **AND, OR, NOT**\\ ( ! or -), **grouping** operator (parentheses), and **phrase** operator (“”)."
+msgstr ""
+
+#: ../../content/search/search.rst:18
+msgid "operator"
+msgstr ""
+
+#: ../../content/search/search.rst:18
+msgid "description"
+msgstr ""
+
+#: ../../content/search/search.rst:21
+msgid "AND"
+msgstr ""
+
+#: ../../content/search/search.rst:21
+msgid "default implicit operator; matches when both of its arguments match example (with three keywords and two implicit AND operators between them): voters ballots stations returns matches with voters AND ballots AND stations."
+msgstr ""
+
+#: ../../content/search/search.rst:26
+msgid "OR ( \\| )"
+msgstr ""
+
+#: ../../content/search/search.rst:26
+msgid "Matches when any of its two arguments match. example: one \\| two returns matches that have one OR two example: “Opening Form” \\| “Polling Form” returns matches that are that are Opening Form or Polling Form."
+msgstr ""
+
+#: ../../content/search/search.rst:31
+msgid "NOT (!= or -)"
+msgstr ""
+
+#: ../../content/search/search.rst:31
+msgid "Matches when the first argument matches, but the second one does not. example: form != Closing returns the matches of forms that are NOT the Closing form example: ballot -box matches any response with an answer containing the word ballot but NOT the word box."
+msgstr ""
+
+#: ../../content/search/search.rst:36
+msgid "(… )"
+msgstr ""
+
+#: ../../content/search/search.rst:36
+msgid "Grouping parenthesis explicitly denotes the argument boundaries. example: (red"
+msgstr ""
+
+#: ../../content/search/search.rst:39
+msgid "“…”"
+msgstr ""
+
+#: ../../content/search/search.rst:39
+msgid "Quotes match when argument Keywords match an exact phrase. example: “The red fox jumped over the fence“ example: “Voter lines went outside the center and down the street“"
+msgstr ""
+
+#: ../../content/search/search.rst:45
+msgid "10.2. Qualifiers"
+msgstr ""
+
+#: ../../content/search/search.rst:47
+msgid "A qualifier is a word you add to an expression to specify where to search. For example, searching **form: observation** within the Responses menu will return all forms with the word “observation” in them. Another example: searching **type: long** text in the Questions menu returns all questions of the long text type."
+msgstr ""
+
+#: ../../content/search/search.rst:53
+msgid "Available qualifiers depend on the view or menu that you are working within. They are listed below:"
+msgstr ""
+
+#: ../../content/search/search.rst:56
+msgid "**Responses menu**"
+msgstr ""
+
+#: ../../content/search/search.rst:59
+#: ../../content/search/search.rst:81
+#: ../../content/search/search.rst:96
+#: ../../content/search/search.rst:113
+msgid "Qualifier"
+msgstr ""
+
+#: ../../content/search/search.rst:59
+#: ../../content/search/search.rst:81
+#: ../../content/search/search.rst:96
+#: ../../content/search/search.rst:113
+msgid "Function"
+msgstr ""
+
+#: ../../content/search/search.rst:61
+msgid "form:"
+msgstr ""
+
+#: ../../content/search/search.rst:61
+msgid "The name of the form submitted"
+msgstr ""
+
+#: ../../content/search/search.rst:63
+msgid "submitter:"
+msgstr ""
+
+#: ../../content/search/search.rst:63
+msgid "The name of the user that submitted the response (partial matches allowed"
+msgstr ""
+
+#: ../../content/search/search.rst:66
+msgid "submit-date :"
+msgstr ""
+
+#: ../../content/search/search.rst:66
+msgid "The date the response was submitted (e.g. 1985-03-22)"
+msgstr ""
+
+#: ../../content/search/search.rst:69
+msgid "reviewed:"
+msgstr ""
+
+#: ../../content/search/search.rst:69
+msgid "Whether the response has been marked ‘reviewed’ (1 = yes or 0 = no)"
+msgstr ""
+
+#: ../../content/search/search.rst:72
+msgid "source:"
+msgstr ""
+
+#: ../../content/search/search.rst:72
+msgid "The medium via which the response was submitted (‘web’, ‘odk’, or ‘sms’)"
+msgstr ""
+
+#: ../../content/search/search.rst:75
+msgid "text:"
+msgstr ""
+
+#: ../../content/search/search.rst:75
+msgid "Answers to textual questions"
+msgstr ""
+
+#: ../../content/search/search.rst:78
+msgid "**Questions menu**"
+msgstr ""
+
+#: ../../content/search/search.rst:83
+msgid "code:"
+msgstr ""
+
+#: ../../content/search/search.rst:83
+msgid "The question code (partial matches allowed)"
+msgstr ""
+
+#: ../../content/search/search.rst:85
+msgid "title:"
+msgstr ""
+
+#: ../../content/search/search.rst:85
+msgid "The question title (partial matches allowed)"
+msgstr ""
+
+#: ../../content/search/search.rst:87
+#: ../../content/search/search.rst:117
+msgid "type:"
+msgstr ""
+
+#: ../../content/search/search.rst:87
+msgid "The question type (text, long-text, integer, decimal, location, select-one, select-multiple, datetime, date, time)"
+msgstr ""
+
+#: ../../content/search/search.rst:90
+msgid "tag:"
+msgstr ""
+
+#: ../../content/search/search.rst:90
+msgid "Tags applied to the question"
+msgstr ""
+
+#: ../../content/search/search.rst:93
+msgid "**Users menu**"
+msgstr ""
+
+#: ../../content/search/search.rst:98
+#: ../../content/search/search.rst:122
+msgid "name:"
+msgstr ""
+
+#: ../../content/search/search.rst:98
+msgid "The user’s full name"
+msgstr ""
+
+#: ../../content/search/search.rst:100
+msgid "login:"
+msgstr ""
+
+#: ../../content/search/search.rst:100
+msgid "The user’s username"
+msgstr ""
+
+#: ../../content/search/search.rst:102
+msgid "email:"
+msgstr ""
+
+#: ../../content/search/search.rst:102
+msgid "The user’s email address"
+msgstr ""
+
+#: ../../content/search/search.rst:104
+msgid "phone:"
+msgstr ""
+
+#: ../../content/search/search.rst:104
+msgid "The user’s phone number (no dashes or other punctuation, e.g. 1112223333"
+msgstr ""
+
+#: ../../content/search/search.rst:107
+msgid "group:"
+msgstr ""
+
+#: ../../content/search/search.rst:107
+msgid "The user group that the user belongs to"
+msgstr ""
+
+#: ../../content/search/search.rst:110
+msgid "**SMS Menu**"
+msgstr ""
+
+#: ../../content/search/search.rst:115
+msgid "content"
+msgstr ""
+
+#: ../../content/search/search.rst:115
+msgid "The message content (partial matches allowed)"
+msgstr ""
+
+#: ../../content/search/search.rst:117
+msgid "The message type (incoming, reply, or broadcast) (partial matches allowed"
+msgstr ""
+
+#: ../../content/search/search.rst:120
+msgid "username"
+msgstr ""
+
+#: ../../content/search/search.rst:120
+msgid "The username of the sender or receiver (partial matches allowed)"
+msgstr ""
+
+#: ../../content/search/search.rst:122
+msgid "The full name of the sender or receiver (partial matches allowed)"
+msgstr ""
+
+#: ../../content/search/search.rst:124
+msgid "number:"
+msgstr ""
+
+#: ../../content/search/search.rst:124
+msgid "The phone number of the sender or receiver (partial matches"
+msgstr ""
+
+#: ../../content/search/search.rst:126
+msgid "date:"
+msgstr ""
+
+#: ../../content/search/search.rst:126
+msgid "The date the message was sent or received (e.g. 2015-01-29)"
+msgstr ""
+
+#: ../../content/search/search.rst:128
+msgid "datetime"
+msgstr ""
+
+#: ../../content/search/search.rst:128
+msgid "The date and time the message was sent or received (use quotation marks and 24-hr time, e.g. “2015-01-29 14:00”)"
+msgstr ""
+
