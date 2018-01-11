@@ -1300,11 +1300,7 @@ en:
       any_met: "or"
     skip_logic_options:
       dont_skip: "After this question, go to the next question"
-      skip: "After this question, skip to..."
-    skip_if_options:
-      always: "in all cases"
-      all_met: "if all of these conditions are met"
-      any_met: "if any of these conditions are met"
+      skip: "After this question, ..."
     end_of_form: "The end of the form"
 
   import:
@@ -1940,6 +1936,13 @@ en:
       sms: "Shared SMS Settings"
       twilio: "Twilio Settings"
       frontlinecloud: "FrontlineCloud Settings"
+
+  skip_rule:
+    skip_if_options:
+      always: "in all cases"
+      all_met: "if all of these conditions are met"
+      any_met: "if any of these conditions are met"
+    skip_to_item: "Skip to %{label}"
 
   sms:
     extra_recipients_html: "<br/>... and %{count} more"

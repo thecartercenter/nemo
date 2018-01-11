@@ -30,7 +30,11 @@ class SkipRuleFormField extends React.Component {
 
   formatTargetItemOptions(items) {
     return items.map(function(o){
-      return {id: o.id, name: `${o.full_dotted_rank}. ${o.code}`, key: o.id};
+      return {
+        id: o.id,
+        key: o.id,
+        name: I18n.t("skip_rule.skip_to_item", {label: `${o.full_dotted_rank}. ${o.code}`})
+      };
     }).concat([{id: "end", name: I18n.t("form_item.end_of_form"), key: "end"}]);
   }
 
@@ -76,9 +80,9 @@ class SkipRuleFormField extends React.Component {
         <a className="action-link" onClick={this.removeRule}><i className="fa fa-trash-o"></i></a>
         <FormSelect {...destination_props} />
         <select {...skip_if_props}>
-          <option value="always">{I18n.t("form_item.skip_if_options.always")}</option>
-          <option value="all_met">{I18n.t("form_item.skip_if_options.all_met")}</option>
-          <option value="any_met">{I18n.t("form_item.skip_if_options.any_met")}</option>
+          <option value="always">{I18n.t("skip_rule.skip_if_options.always")}</option>
+          <option value="all_met">{I18n.t("skip_rule.skip_if_options.all_met")}</option>
+          <option value="any_met">{I18n.t("skip_rule.skip_if_options.any_met")}</option>
         </select>
         <ConditionSetFormField {...condition_set_props} />
         <input {...id_field_props} />
