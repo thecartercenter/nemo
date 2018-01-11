@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe Form do
-  it_behaves_like "has a uuid"
-
   let(:mission) { create(:mission) }
 
   context "API User" do

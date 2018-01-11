@@ -1,8 +1,6 @@
 require "spec_helper"
 
 describe Broadcast do
-  it_behaves_like "has a uuid"
-
   let!(:user1) { create(:user, phone: "+17345550001", role_name: "enumerator") }
   let!(:user2) { create(:user, phone: "+17345550002", role_name: "enumerator") }
   let!(:user3) { create(:user, phone: "+17345550003", role_name: "staffer") }

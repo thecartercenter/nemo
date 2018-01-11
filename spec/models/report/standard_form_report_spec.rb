@@ -2,8 +2,6 @@
 require "spec_helper"
 
 describe Report::StandardFormReport do
-  it_behaves_like "has a uuid"
-
   context "basic" do
     before do
       @new_report = Report::StandardFormReport.new

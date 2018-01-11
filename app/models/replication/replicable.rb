@@ -3,7 +3,7 @@ module Replication::Replicable
   extend ActiveSupport::Concern
 
   # A basic list of attributes that we don't want to copy from the src_obj to the dest_obj.
-  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id is_standard standard_copy original_id ancestry uuid)
+  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id is_standard standard_copy original_id ancestry)
 
   included do
     after_save(:sync_chosen_attributes)
@@ -32,6 +32,10 @@ module Replication::Replicable
 
     def self.backward_assocs
       memoize_class_var(:backward_assocs, build_assoc_wrappers(:backward))
+    end
+
+    def self.second_pass_backward_assocs
+      memoize_class_var(:second_pass_backward_assocs, backward_assocs.select(&:second_pass?))
     end
 
     def self.build_assoc_wrappers(type)

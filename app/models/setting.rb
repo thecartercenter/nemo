@@ -6,7 +6,7 @@ class Setting < ApplicationRecord
     twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
-  ADMIN_MODE_KEYS = %w(timezone preferred_locales universal_sms_token uuid)
+  ADMIN_MODE_KEYS = %w(timezone preferred_locales universal_sms_token)
 
   DEFAULT_TIMEZONE = "UTC"
 

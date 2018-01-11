@@ -2,8 +2,6 @@
 require 'spec_helper'
 
 describe Report::AnswerTallyReport do
-  it_behaves_like "has a uuid"
-
   shared_examples_for 'basic stuff' do
     describe 'destroy' do
       before do

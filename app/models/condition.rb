@@ -37,8 +37,14 @@ class Condition < ApplicationRecord
     {name: 'ninc', types: %w(select_multiple), code: "!="}
   ]
 
-  replicable backward_assocs: [:conditionable, :ref_qing, {name: :option_node, skip_obj_if_missing: true}],
-    dont_copy: [:ref_qing_id, :conditionable_id, :option_node_id]
+  replicable dont_copy: [:ref_qing_id, :conditionable_id, :option_node_id], backward_assocs: [
+    :conditionable,
+    {name: :option_node, skip_obj_if_missing: true},
+    # This is a second pass association because the ref_qing may not have been copied yet.
+    # We have to set ref_qing to something due to a null constraint.
+    # For a temporary object, we can just use the FormItem this condition is attached to (base_item).
+    {name: :ref_qing, second_pass: true, temp_id: ->(conditionable) { conditionable.base_item.id }}
+  ]
 
   # Deletes any that have become invalid due to changes in the given question
   def self.check_integrity_after_question_change(question)

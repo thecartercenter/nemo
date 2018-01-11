@@ -37,10 +37,10 @@ module Results
       def body
         CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
           # Initial columns
+          find_or_create_column(code: "ID")
           find_or_create_column(code: "Form")
           find_or_create_column(code: "Submitter")
           find_or_create_column(code: "DateSubmitted")
-          find_or_create_column(code: "ResponseUUID")
           find_or_create_column(code: "ResponseShortcode")
           if responses.any? { |r| cache[r.form, :has_repeat_group?] }
             find_or_create_column(code: "GroupName")
@@ -63,10 +63,10 @@ module Results
 
             # Make initial row
             row = [
+              response.id,
               response.form.name,
               response.user.name,
               response.created_at.to_s(:std_datetime_with_tz),
-              response.uuid,
               response.shortcode
             ]
 

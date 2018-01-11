@@ -1,13 +1,14 @@
 # Handles copying of objects between missions and to/from standards.
 class Replication::Replicator
-  attr_accessor :source, :mode, :dest_mission, :history
+  attr_accessor :source, :mode, :dest_mission, :history, :pass_num
 
   # options[:source] - The root object to be replicated.
   # options[:mode] - See Replication::Replicable concern for documentation.
   # options[:dest_mission] - See Replication::Replicable concern for documentation.
   def initialize(attribs)
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
     self.history = Replication::History.new
+    self.pass_num = 1
   end
 
   def replicate
@@ -15,6 +16,8 @@ class Replication::Replicator
       # Create wrapper
       obj = Replication::ObjProxy.new(klass: source.class, id: source.id,
         replicator: self, replication_root: true)
+      do_replicate(orig: obj)
+      self.pass_num = 2
       do_replicate(orig: obj).full_object
     end
   end
@@ -32,7 +35,15 @@ class Replication::Replicator
   end
 
   def log(msg)
-    Rails.logger.debug("REPLICATION: #{msg}") if Rails.env.development? || Rails.env.test?
+    Rails.logger.debug("REPLICATION [PASS #{pass_num}]: #{msg}") if Rails.env.development? || Rails.env.test?
+  end
+
+  def first_pass?
+    pass_num == 1
+  end
+
+  def second_pass?
+    pass_num == 2
   end
 
   private
@@ -44,8 +55,17 @@ class Replication::Replicator
   def do_replicate(context)
     log("Object: #{context[:orig].klass.name}")
     begin
-      context[:copy] = context[:orig].make_copy(context)
-      history.add_pair(context[:orig], context[:copy])
+      if first_pass?
+        log("Making copy")
+        context[:copy] = context[:orig].make_copy(context)
+        history.add_pair(context[:orig], context[:copy])
+      else
+        context[:copy] = history.get_copy(context[:orig].id)
+        # Copy may not exist if e.g. it was skipped due to skip_obj_if_missing param.
+        if context[:copy]
+          context[:orig].fix_backward_assocs_on_copy(context)
+        end
+      end
       replicate_children(context)
       context[:copy]
     rescue Replication::BackwardAssocError
@@ -63,7 +83,8 @@ class Replication::Replicator
 
       copy_child = nil
       children.map do |child|
-        log("Child: ##{child.id}")
+        log("Original Child ID: ##{child.id}")
+
         # Try to find an existing copy. If one doesn't exist, make one.
         unless copy_child = child.find_copy
           copy_child = do_replicate(orig: child, orig_parent: context[:orig], copy_parent: context[:copy])
@@ -72,7 +93,7 @@ class Replication::Replicator
 
       # If the assoc is belongs_to, the foreign key couldn't be set during make_copy.
       # So we set it now. (Note can only be one child for this association)
-      if assoc.belongs_to? && copy_child
+      if first_pass? && assoc.belongs_to? && copy_child
         context[:copy].associate(assoc, copy_child)
       end
     end

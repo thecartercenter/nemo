@@ -2,8 +2,6 @@
 require "spec_helper"
 
 describe Report::ListReport, :reports do
-  it_behaves_like "has a uuid"
-
   context "with multilevel option set" do
     before do
       @form = create(:form, question_types: %w(multilevel_select_one integer multilevel_select_one))

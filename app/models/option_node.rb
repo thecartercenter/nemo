@@ -30,7 +30,8 @@ class OptionNode < ApplicationRecord
   alias_method :options_added?, :options_added
   alias_method :options_removed?, :options_removed
 
-  replicable child_assocs: [:children, :option], backward_assocs: :option_set, dont_copy: [:option_set_id, :option_id]
+  replicable child_assocs: [:children, :option], backward_assocs: :option_set,
+    dont_copy: [:option_set_id, :option_id]
 
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :option, prefix: true

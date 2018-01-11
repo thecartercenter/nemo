@@ -1,8 +1,6 @@
 require 'spec_helper'
 
 describe Sms::Incoming, :sms do
-  it_behaves_like "has a uuid"
-
   before do
     @user1 = FactoryGirl.create(:user, phone: '1234567890')
   end
