@@ -5,6 +5,13 @@ class SkipRuleSetFormField extends React.Component {
     this.addRule = this.addRule.bind(this);
   }
 
+  // If about to show the set and it's empty, add a blank one.
+  componentWillReceiveProps(newProps) {
+    if (!newProps.hide && this.props.hide && this.state.skip_rules.length == 0) {
+      this.addRule();
+    }
+  }
+
   addRule() {
     this.setState({skip_rules:
       this.state.skip_rules.concat([{
