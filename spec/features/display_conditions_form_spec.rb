@@ -134,7 +134,7 @@ feature "display conditions form", js: true do
 
       # View and check saved properly.
       visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}/edit")
-      expect(page).to have_select("questioning_display_if",
+      expect(page).to have_select("questioning_display_logic",
         selected: "Display this question if any of these conditions are met")
       expect(all(".condition-fields").size).to eq 2
 
