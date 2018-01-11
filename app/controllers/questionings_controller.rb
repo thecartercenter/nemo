@@ -79,9 +79,12 @@ class QuestioningsController < ApplicationController
   end
 
   def questioning_params
+    condition_params = [:id, :ref_qing_id, :op, :value, :_destroy, option_node_ids: []]
     params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
       :required, :default, :read_only, :display_if,
-      { display_conditions_attributes: [:_destroy, :id, :ref_qing_id, :op, :value, option_node_ids: []] },
-      { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
+      {display_conditions_attributes: condition_params},
+      {skip_rules_attributes: [:id, :destination, :dest_item_id, :skip_if, :_destroy,
+        conditions_attributes: condition_params]},
+      {question_attributes: whitelisted_question_params(params[:questioning][:question_attributes])})
   end
 end

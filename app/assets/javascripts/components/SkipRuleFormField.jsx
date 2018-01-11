@@ -50,7 +50,7 @@ class SkipRuleFormField extends React.Component {
       conditions: this.state.conditions,
       conditionable_id: this.state.id,
       refable_qings: this.state.refable_qings,
-      name_prefix: `${name_prefix}[conditions]`,
+      name_prefix: `${name_prefix}[conditions_attributes]`,
       form_id: this.state.form_id,
       show: this.state.skip_if != "always"
     };
