@@ -14,7 +14,7 @@ class DisplayLogicFormField extends React.Component {
     let select_props = {
       className: "form-control",
       name: "questioning[display_if]",
-      id: "questioning_display_if",
+      id: "questioning_display_logic",
       value: this.state.display_if,
       onChange: this.changeDisplayOption
     }

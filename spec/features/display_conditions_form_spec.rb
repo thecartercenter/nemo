@@ -49,6 +49,7 @@ feature "display conditions form", js: true do
 
     # Accidentally change display_if selector, should not delete selections.
     select("Always display this question", from: "Display Logic")
+    expect(page).not_to have_css(".condition-fields")
     select("Display this question if all of these conditions are met", from: "Display Logic")
 
     click_button("Save")
