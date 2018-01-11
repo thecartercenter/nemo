@@ -18,13 +18,14 @@ class SkipRuleSetFormField extends React.Component {
 
   render() {
     return (
-      <div style={{display: this.props.show ? '' : 'none'}}>
+      <div style={{display: this.props.hide ? 'none' : ''}}>
         {this.state.skip_rules.map((props, index) =>
           <SkipRuleFormField
             key={index}
             later_items={this.state.later_items}
             refable_qings={this.state.refable_qings}
             form_id={this.state.form_id}
+            hide={this.props.hide}
             name_prefix={`questioning[skip_rules_attributes][${index}]`}
             {...props}/>)}
         <button onClick={this.addRule} type="button" className="btn">
