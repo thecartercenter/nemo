@@ -13,7 +13,6 @@ class Condition < ApplicationRecord
   before_create :set_mission
 
   validate :all_fields_required
-  validates :conditionable, presence: true
 
   delegate :has_options?, :rank, :full_dotted_rank, :option_set_id, to: :ref_qing, prefix: true
   delegate :form, :form_id, :refable_qings, to: :conditionable
