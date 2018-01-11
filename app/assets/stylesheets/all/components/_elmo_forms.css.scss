@@ -92,7 +92,7 @@ div.form_field {
     margin-#{$left}: $label-width;
 
     vertical-align: middle;
-    width: 425px;
+    width: $elmo-form-width - 230px;
     min-height: 26px;
     position: relative;
 
@@ -117,7 +117,7 @@ div.form_field {
       }
 
       input[type=text], input.text, input[type=password], select, textarea {
-        width: 420px;
+        width: $elmo-form-width - 240px;
       }
 
       div.note {
@@ -166,7 +166,6 @@ form {
 
 div.form-warning {
   margin: 10px 0;
-  width: $elmo-form-width;
 
   i {
     display: block;
