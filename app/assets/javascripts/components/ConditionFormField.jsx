@@ -7,7 +7,7 @@ class ConditionFormField extends React.Component {
     this.formatRefQingOptions = this.formatRefQingOptions.bind(this);
     this.buildUrl = this.buildUrl.bind(this);
     this.buildValueProps = this.buildValueProps.bind(this);
-    this.deleteCondition = this.deleteCondition.bind(this);
+    this.removeCondition = this.removeCondition.bind(this);
     this.state = props;
   }
 
@@ -49,8 +49,8 @@ class ConditionFormField extends React.Component {
     });
   }
 
-  deleteCondition() {
-    this.setState({destroy: true})
+  removeCondition() {
+    this.setState({remove: true})
   }
 
   buildValueProps(name_prefix, id_prefix) {
@@ -81,7 +81,7 @@ class ConditionFormField extends React.Component {
   render() {
     let name_prefix = this.state.name_prefix + `[${this.state.index}]`;
     let id_prefix = name_prefix.replace(/[\[\]]/g, '_');
-    let condition_field_props = {
+    let id_field_props = {
       type: "hidden",
       name: `${name_prefix}[id]`,
       id: `${id_prefix}_id`,
@@ -114,30 +114,23 @@ class ConditionFormField extends React.Component {
       name: `${name_prefix}[_destroy]`,
       id: `${id_prefix}__destroy`,
       key: `${id_prefix}__destroy`,
-      value: this.state.destroy ? "1" : "0",
+      value: this.shouldDestroy() ? "1" : "0",
     }
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
-    if (this.state.destroy === true) {
-      if (this.state.id) {
-        return (
-          <div className="condition-fields" style={{display: "none"}}>
-            <input {...condition_field_props} />
-            <input {...destroy_field_props} />
-          </div>
-        )
-      } else {
-        return null;
-      }
-    } else {
-      return (
-        <div className="condition-fields">
-          <a className="action-link" onClick={this.deleteCondition}><i className="fa fa-trash-o"></i></a>
-          <input {...condition_field_props}/>
-          <FormField {...ref_qing_field_props} />
-          <FormField {...operator_field_props} />
-          <FormField {...value_field_props} />
-        </div>
-      );
-    }
+
+    return (
+      <div className="condition-fields" style={{display: this.shouldDestroy() ? "none" : ""}}>
+        <a className="action-link" onClick={this.removeCondition}><i className="fa fa-trash-o"></i></a>
+        <input {...id_field_props}/>
+        <input {...destroy_field_props} />
+        <FormField {...ref_qing_field_props} />
+        <FormField {...operator_field_props} />
+        <FormField {...value_field_props} />
+      </div>
+    );
+  }
+
+  shouldDestroy() {
+    return this.state.remove || this.props.hide;
   }
 }

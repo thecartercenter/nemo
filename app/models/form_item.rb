@@ -197,7 +197,7 @@ class FormItem < ApplicationRecord
       display_conditions.destroy(cond) if cond.all_fields_blank?
     end
 
-    if display_conditions.none?
+    if display_conditions.reject(&:marked_for_destruction?).none?
       self.display_if = "always"
     elsif display_if == "always"
       self.display_if = "all_met"

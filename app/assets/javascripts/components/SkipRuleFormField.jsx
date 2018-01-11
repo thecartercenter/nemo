@@ -7,7 +7,7 @@ class SkipRuleFormField extends React.Component {
 
     this.changeDestinationOption = this.changeDestinationOption.bind(this);
     this.changeSkipIf = this.changeSkipIf.bind(this);
-    this.deleteRule = this.deleteRule.bind(this);
+    this.removeRule = this.removeRule.bind(this);
   }
 
   changeDestinationOption(value) {
@@ -24,8 +24,8 @@ class SkipRuleFormField extends React.Component {
     })
   }
 
-  deleteRule() {
-    this.setState({destroy: true});
+  removeRule() {
+    this.setState({remove: true});
   }
 
   formatTargetItemOptions(items) {
@@ -43,12 +43,12 @@ class SkipRuleFormField extends React.Component {
       value: this.state.id || ""
     };
 
-    if (this.state.destroy === true) {
+    if (this.state.remove === true) {
       if (this.state.id) {
         let destroy_field_props = {
           type: "hidden",
           name: `${name_prefix}[_destroy]`,
-          value: this.state.destroy ? "1" : "0",
+          value: this.state.remove ? "1" : "0",
         }
 
         return (
@@ -82,12 +82,12 @@ class SkipRuleFormField extends React.Component {
         refable_qings: this.state.refable_qings,
         name_prefix: `${name_prefix}[conditions_attributes]`,
         form_id: this.state.form_id,
-        show: this.state.skip_if != "always"
+        hide: this.state.skip_if == "always"
       };
 
       return (
         <div>
-          <a className="action-link" onClick={this.deleteRule}><i className="fa fa-trash-o"></i></a>
+          <a className="action-link" onClick={this.removeRule}><i className="fa fa-trash-o"></i></a>
           <FormSelect {...destination_props} />
           <select {...skip_if_props}>
             <option value="always">{I18n.t("form_item.skip_if_options.always")}</option>

@@ -46,7 +46,7 @@ class SkipRule < ActiveRecord::Base
   end
 
   def normalize
-    if conditions.none?
+    if conditions.reject(&:marked_for_destruction?).none?
       self.skip_if = "always"
     elsif skip_if == "always"
       self.skip_if = "all_met"

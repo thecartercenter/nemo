@@ -6,8 +6,7 @@ class DisplayLogicFormField extends React.Component {
   }
 
   changeDisplayOption(event) {
-    let value = event.target.value
-
+    let value = event.target.value;
     this.setState({display_if: value})
   }
 
@@ -26,7 +25,7 @@ class DisplayLogicFormField extends React.Component {
       conditionable_type: "FormItem",
       refable_qings: this.state.refable_qings,
       form_id: this.state.form_id,
-      show: this.state.display_if != "always",
+      hide: this.state.display_if == "always",
       name_prefix: "questioning[display_conditions_attributes]"
     };
 
