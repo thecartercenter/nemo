@@ -78,6 +78,7 @@ class SkipRuleFormField extends React.Component {
       let condition_set_props = {
         conditions: this.state.conditions,
         conditionable_id: this.state.id,
+        conditionable_type: "SkipRule",
         refable_qings: this.state.refable_qings,
         name_prefix: `${name_prefix}[conditions_attributes]`,
         form_id: this.state.form_id,

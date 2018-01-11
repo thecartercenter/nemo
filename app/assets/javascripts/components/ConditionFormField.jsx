@@ -38,6 +38,7 @@ class ConditionFormField extends React.Component {
     url += `condition_id=${this.state.id || ""}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`;
     if (this.state.conditionable_id) {
       url += '&conditionable_id=' + this.state.conditionable_id;
+      url += '&conditionable_type=' + this.state.conditionable_type;
     }
     return url;
   }

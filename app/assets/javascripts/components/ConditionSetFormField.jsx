@@ -11,7 +11,8 @@ class ConditionSetFormField extends React.Component {
         form_id: this.state.form_id,
         refable_qings: this.state.refable_qings,
         operator_options: [],
-        conditionable_id: this.state.conditionable_id
+        conditionable_id: this.state.conditionable_id,
+        conditionable_type: this.state.conditionable_type
       }])
     });
   }
