@@ -9,16 +9,19 @@ class CascadingSelect extends React.Component {
     this.state = props;
   }
 
+  // Refresh data on mount.
   componentDidMount() {
     this.getData(this.state.option_set_id, this.state.option_node_id);
   }
 
+  // Refresh data if the option set is changing.
   componentWillReceiveProps(nextProps) {
     if (nextProps.option_set_id != this.state.option_set_id) {
       this.getData(nextProps.option_set_id, nextProps.option_node_id);
     }
   }
 
+  // Refresh data if the selected node changed.
   nodeChanged(newNodeId) {
     this.getData(this.state.option_set_id, newNodeId);
   }
