@@ -52,6 +52,7 @@ class QuestioningsController < ApplicationController
     if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
+      flash.now[:error] = I18n.t("activerecord.errors.models.question.general")
       prepare_and_render_form
     end
   end

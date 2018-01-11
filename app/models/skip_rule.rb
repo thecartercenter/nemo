@@ -13,6 +13,7 @@ class SkipRule < ActiveRecord::Base
   before_create :set_mission
 
   validate :require_dest_item
+  validate :collect_condition_errors
 
   delegate :form, :form_id, :refable_qings, to: :source_item
 
@@ -56,6 +57,14 @@ class SkipRule < ActiveRecord::Base
   def require_dest_item
     if destination != "end" && dest_item.nil?
       errors.add(:dest_item_id, :blank_unless_goto_end)
+    end
+  end
+
+  # If there is a validation error on the conditions, we know it has to be due
+  # to a missing field. This is easier to catch here instead of React for now.
+  def collect_condition_errors
+    if conditions.any?(&:invalid?)
+      errors.add(:base, :all_required)
     end
   end
 

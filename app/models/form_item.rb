@@ -6,6 +6,9 @@ class FormItem < ApplicationRecord
   acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
 
+  # These are just for mounting validation errors.
+  attr_accessor :display_logic, :skip_logic
+
   # These associations are really only applicable to Questioning, but
   # they are defined here to allow eager loading.
   belongs_to :question, autosave: true, inverse_of: :questionings
@@ -31,6 +34,7 @@ class FormItem < ApplicationRecord
   has_ancestry cache_depth: true
 
   validate :parent_must_be_group
+  validate :collect_conditional_logic_errors
 
   delegate :name, to: :form, prefix: true
 
@@ -220,5 +224,17 @@ class FormItem < ApplicationRecord
 
   def parent_must_be_group
     errors.add(:parent, :must_be_group) unless parent.nil? || parent.is_a?(QingGroup)
+  end
+
+  # If there is a validation error on display logic or skip logic, we know it has to be due
+  # to a missing field. This is easier to catch here instead of React for now.
+  def collect_conditional_logic_errors
+    if display_conditions.any?(&:invalid?)
+      errors.add(:display_logic, :all_required)
+    end
+
+    if skip_rules.any?(&:invalid?)
+      errors.add(:skip_logic, :all_required)
+    end
   end
 end

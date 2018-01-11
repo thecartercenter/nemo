@@ -434,7 +434,7 @@ en:
       questioning:
         name: "Title"
         condition: "Condition?"
-        display_if: "Display Logic"
+        display_logic: "Display Logic"
         skip_logic: "Skip Logic"
         hidden: "Hidden?"
         rank: "Rank"
@@ -720,6 +720,7 @@ en:
           other: "Please enter exactly %{count} characters."
         must_be_group: "Parent must be a group."
         invalid_password: "Password must include at least one number, one lowercase letter, and one capital letter."
+        all_required: "All fields are required."
       models:
         answer:
           required: "Please enter a value."

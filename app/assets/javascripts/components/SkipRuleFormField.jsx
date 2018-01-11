@@ -44,7 +44,6 @@ class SkipRuleFormField extends React.Component {
     };
 
     let destination_props = {
-      include_blank: false,
       value: this.state.dest_item_id_or_end || "",
       options: this.formatTargetItemOptions(this.state.later_items),
       changeFunc: this.changeDestinationOption
