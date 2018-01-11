@@ -34,7 +34,8 @@ class ConditionFormField extends React.Component {
   }
 
   buildUrl(refQingId) {
-    var url = `${ELMO.app.url_builder.build('questionings', 'condition-form')}?condition_id=${this.state.id}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`
+    var url = `${ELMO.app.url_builder.build('form-items', 'condition-form')}?`;
+    url += `condition_id=${this.state.id || ""}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`;
     if (this.state.conditionable_id) {
       url += '&conditionable_id=' + this.state.conditionable_id;
     }

@@ -54,7 +54,8 @@ class Ability
         when "admin"
 
           # standard objects, missions, settings, and all users are available in no-mission (admin) mode
-          [Form, Questioning, QingGroup, Condition, Question, OptionSet, OptionNode, Option, OptionSetImport, Tag, Tagging].each do |k|
+          [Form, Questioning, FormItem, SkipRule, QingGroup, Condition, Question, OptionSet,
+            OptionNode, Option, OptionSetImport, Tag, Tagging].each do |k|
             can :manage, k, mission_id: nil
           end
           can :manage, Mission
@@ -197,7 +198,8 @@ class Ability
             end
 
             # coord can manage these classes for the current mission
-            [Form, OptionSet, OptionSetImport, Question, Questioning, QingGroup, Option, Tag, Tagging].each do |klass|
+            [Form, OptionSet, OptionSetImport, Question, Questioning, FormItem, SkipRule,
+              QingGroup, Option, Tag, Tagging].each do |klass|
               can :manage, klass, mission_id: mission.id
             end
           end
