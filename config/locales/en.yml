@@ -1289,6 +1289,7 @@ en:
 
   form_item:
     add_condition: "Add Condition"
+    add_rule: "Add Rule"
     display_if_options:
       always: "Always display this question"
       all_met: "Display this question if all of these conditions are met"

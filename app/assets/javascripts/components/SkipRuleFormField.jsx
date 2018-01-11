@@ -1,6 +1,7 @@
 class SkipRuleFormField extends React.Component {
   constructor(props) {
     super();
+
     let dest_item_id_or_end = props.destination == "end" ? "end" : props.dest_item_id;
     this.state = Object.assign({}, props, {dest_item_id_or_end: dest_item_id_or_end});
 
@@ -16,8 +17,10 @@ class SkipRuleFormField extends React.Component {
     });
   }
 
-  changeSkipIf(value) {
-
+  changeSkipIf(event) {
+    this.setState({
+      skip_if: event.target.value
+    })
   }
 
   formatTargetItemOptions(items) {
@@ -27,9 +30,10 @@ class SkipRuleFormField extends React.Component {
   }
 
   render() {
-    let name_prefix = `questioning[skip_rules_attributes][${this.state.id}]`;
+    let name_prefix = this.props.name_prefix;
 
     let destination_props = {
+      include_blank: false,
       value: this.state.dest_item_id_or_end || "",
       options: this.formatTargetItemOptions(this.state.later_items),
       changeFunc: this.changeDestinationOption
@@ -46,7 +50,9 @@ class SkipRuleFormField extends React.Component {
       conditions: this.state.conditions,
       conditionable_id: this.state.id,
       refable_qings: this.state.refable_qings,
-      name_prefix: name_prefix
+      name_prefix: `${name_prefix}[conditions]`,
+      form_id: this.state.form_id,
+      show: this.state.skip_if != "always"
     };
 
     return (
