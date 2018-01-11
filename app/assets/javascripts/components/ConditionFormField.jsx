@@ -118,7 +118,7 @@ class ConditionFormField extends React.Component {
     if (this.state.destroy === true) {
       if (this.state.id) {
         return (
-          <div className="condition-fields" style={{display: none}}>
+          <div className="condition-fields" style={{display: "none"}}>
             <input {...condition_field_props} />
             <input {...destroy_field_props} />
           </div>
