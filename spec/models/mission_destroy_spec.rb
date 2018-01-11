@@ -8,7 +8,7 @@ describe "mission destroy" do
       "Assignment": 3,
       "Broadcast": 1,
       "Choice": 2,
-      "Condition": 3,
+      "Condition": 4,
       "Form": 2,
       "Mission": 1,
       "Option": 10,
@@ -20,7 +20,7 @@ describe "mission destroy" do
       "Report::Report": 1,
       "Response": 1,
       "Sms::Message": 1,
-      "SkipRule": 1,
+      "SkipRule": 2,
       "UserGroup": 2,
       "UserGroupAssignment": 3
     }
