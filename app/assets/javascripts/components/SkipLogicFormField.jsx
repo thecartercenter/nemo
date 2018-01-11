@@ -3,10 +3,10 @@ class SkipLogicFormField extends React.Component {
     super();
     let skip = props.skip_rules.length == 0 ? 'dont_skip' : 'skip';
     this.state = Object.assign({}, props, {skip: skip});
-    this.changeSkipOption = this.changeSkipOption.bind(this);
+    this.skipOptionChanged = this.skipOptionChanged.bind(this);
   }
 
-  changeSkipOption(event) {
+  skipOptionChanged(event) {
     this.setState({skip: event.target.value});
   }
 
@@ -14,7 +14,7 @@ class SkipLogicFormField extends React.Component {
     let select_props = {
       className: "form-control",
       value: this.state.skip,
-      onChange: this.changeSkipOption
+      onChange: this.skipOptionChanged
     };
 
     return (

@@ -2,10 +2,10 @@ class DisplayLogicFormField extends React.Component {
   constructor(props) {
     super();
     this.state = props;
-    this.changeDisplayOption = this.changeDisplayOption.bind(this);
+    this.displayIfChanged = this.displayIfChanged.bind(this);
   }
 
-  changeDisplayOption(event) {
+  displayIfChanged(event) {
     let value = event.target.value;
     this.setState({display_if: value})
   }
@@ -16,7 +16,7 @@ class DisplayLogicFormField extends React.Component {
       name: "questioning[display_if]",
       id: "questioning_display_logic",
       value: this.state.display_if,
-      onChange: this.changeDisplayOption
+      onChange: this.displayIfChanged
     }
 
     let condition_set_props = {
