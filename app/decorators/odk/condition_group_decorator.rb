@@ -2,12 +2,15 @@ module Odk
   class ConditionGroupDecorator < BaseDecorator
 
     def to_odk
+      if members.empty?
+        return nil
+      end
       conjuction = (true_if == "all_met") ? I18n.t("common.and") : I18n.t("common.or")
       result = decorated_members.map{ |m| "(#{m.to_odk})"}.join(" #{conjuction} ")
       if negate?
         result = "not(#{result})"
       end
-      decorated_members.count == 0 ? nil : result
+      result
     end
 
     private

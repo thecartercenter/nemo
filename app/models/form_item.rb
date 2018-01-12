@@ -163,10 +163,6 @@ class FormItem < ApplicationRecord
     @condition_group ||= Forms::ConditionGroup.new(true_if: display_if, members: display_conditions)
   end
 
-  def computed_condition_group
-    condition_computer.condition_group_for(self)
-  end
-
   def group?
     false
   end

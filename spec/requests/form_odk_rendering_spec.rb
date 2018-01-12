@@ -196,28 +196,6 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     end
   end
 
-  context "with multiple conditions and skip rules" do
-    let(:form) do
-      create(:form, question_types: [
-        "integer",
-        "integer",
-        "integer",
-        ["integer", "integer", "integer"],
-        "integer",
-        ["integer", "integer", ["integer", "integer"]],
-        "integer"
-      ])
-    end
-
-    it "should render proper xml" do
-      form.c[0].skip_rules.build(destination: "item", dest_item: form.c[6])
-    end
-
-
-
-
-  end
-
   context "nested repeat group form" do
     let(:form) do
       form = create(:form, :published, :with_version,
