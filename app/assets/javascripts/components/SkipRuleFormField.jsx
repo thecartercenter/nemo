@@ -77,7 +77,7 @@ class SkipRuleFormField extends React.Component {
 
     return (
       <div style={{display: this.shouldDestroy() ? "none" : ""}}>
-        <a className="action-link" onClick={this.removeRule}><i className="fa fa-trash-o"></i></a>
+        <a onClick={this.removeRule}><i className="fa fa-trash-o"></i></a>
         <FormSelect {...destination_props} />
         <select {...skip_if_props}>
           <option value="always">{I18n.t("skip_rule.skip_if_options.always")}</option>
