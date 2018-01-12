@@ -3,17 +3,18 @@ require "spec_helper"
 module Odk
   describe ConditionGroupDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
 
-    context "empty condition group" do
-      let(:condition_group) { Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [])}
+    # This is what will be returned from a skip rule set to skip_if = always.
+    context "empty, negated condition group" do
+      let(:condition_group) { Forms::ConditionGroup.new(true_if: "always", negate: true, members: [])}
 
-      it "should return nil" do
+      it "should return true" do
         result = Odk::DecoratorFactory.decorate(condition_group).to_odk
-        expect(result).to be_nil
+        expect(result).to eq "not(true())"
       end
     end
 
     context "non-nested condition group all true" do
-      let(:condition_group) { Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [
+      let(:condition_group) { Forms::ConditionGroup.new(true_if: "all_met", negate: false, members: [
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")
@@ -26,7 +27,7 @@ module Odk
     end
 
     context "non-nested condition group negated" do
-      let(:condition_group) { Forms::ConditionGroup.new( true_if: "all_met", negate: true, members: [
+      let(:condition_group) { Forms::ConditionGroup.new(true_if: "all_met", negate: true, members: [
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")
@@ -39,7 +40,7 @@ module Odk
     end
 
     context "non-nested condition group with any true" do
-      let(:condition_group) { Forms::ConditionGroup.new( true_if: "any_met", negate: false, members: [
+      let(:condition_group) { Forms::ConditionGroup.new(true_if: "any_met", negate: false, members: [
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")]) }
@@ -51,14 +52,14 @@ module Odk
     end
 
     context "nested condition group" do
-      let(:condition_group) { Forms::ConditionGroup.new( true_if: "any_met", negate: false, members: [
+      let(:condition_group) { Forms::ConditionGroup.new(true_if: "any_met", negate: false, members: [
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "a"),
-        Forms::ConditionGroup.new( true_if: "all_met", negate: true, members: [
+        Forms::ConditionGroup.new(true_if: "all_met", negate: true, members: [
           instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "b"),
           instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c"),
            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "d")
         ]),
-        Forms::ConditionGroup.new( true_if: "all_met", negate: false, members: [
+        Forms::ConditionGroup.new(true_if: "all_met", negate: false, members: [
           instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "e"),
           instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "f"),
            instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "g")
