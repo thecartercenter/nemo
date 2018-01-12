@@ -1,0 +1,234 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2017, The Carter Center
+# This file is distributed under the same license as the Elmo package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Elmo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-10 16:48+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.5.1\n"
+
+#: ../../content/settings/settings.rst:2
+msgid "3. Settings"
+msgstr ""
+
+#: ../../content/settings/settings.rst:4
+msgid ""
+"Settings are where you can define language preferences and SMS "
+"information for each mission."
+msgstr ""
+
+#: ../../content/settings/settings.rst:7
+msgid "|image0|"
+msgstr ""
+
+#: ../../content/settings/settings.rst:9
+msgid ""
+"Select the title of the mission in the drop down menu found in the top "
+"right corner, right of the Admin Mode selection"
+msgstr ""
+
+#: ../../content/settings/settings.rst:11
+msgid "Select the **Settings** menu"
+msgstr ""
+
+#: ../../content/settings/settings.rst:14
+msgid "3.1. Time Zone"
+msgstr ""
+
+#: ../../content/settings/settings.rst:16
+msgid "Set the appropriate time zone"
+msgstr ""
+
+#: ../../content/settings/settings.rst:19
+msgid "3.2. Preferred Languages"
+msgstr ""
+
+#: ../../content/settings/settings.rst:21
+msgid ""
+"Set the language(s) for the mission. This allows questions and forms to "
+"be defined in multiple languages for each mission, but it does not change"
+" the entire web interface of ELMO (defined in “Viewing the Footer” "
+"section above)."
+msgstr ""
+
+#: ../../content/settings/settings.rst:26
+msgid ""
+"Enter the two-letter language code for the language (example: Arabic = "
+"ar; Chinese = zh). A list of ELMO compatible language codes can be found "
+"at this website: http://www.loc.gov/standards/iso639-2/php/code_list.php"
+msgstr ""
+
+#: ../../content/settings/settings.rst:30
+msgid ""
+"If multiple codes exist, type them in the preferred order of use and "
+"separate them with a comma (example: ar, zh)"
+msgstr ""
+
+#: ../../content/settings/settings.rst:32
+msgid "|multiple preferred langs|"
+msgstr ""
+
+#: ../../content/settings/settings.rst:33
+msgid ""
+"In this example, the mission’s primary language will be Arabic; Chinese "
+"will be used where Arabic is not available"
+msgstr ""
+
+#: ../../content/settings/settings.rst:37
+msgid "3.3. Override Code"
+msgstr ""
+
+#: ../../content/settings/settings.rst:39
+msgid "Generate an Override Code"
+msgstr ""
+
+#: ../../content/settings/settings.rst:41
+msgid ""
+"Click on the **Generate** button to set an override code. This code "
+"should be given to observers if the ability to send incomplete responses "
+"is needed. Users are not allowed to submit incomplete responses without "
+"this code when using the ODK app. (See section  for more detail)"
+msgstr ""
+
+#: ../../content/settings/settings.rst:46
+msgid ""
+"Click on the **Regenerate** button to create a new override code if "
+"desired."
+msgstr ""
+
+#: ../../content/settings/settings.rst:48
+msgid ""
+"If generating a new code, please record the old code if there are "
+"previous live forms. The new code will only work for forms downloaded "
+"after the code is regenerated."
+msgstr ""
+
+#: ../../content/settings/settings.rst:52
+msgid "Choose whether to allow unauthenticated submissions."
+msgstr ""
+
+#: ../../content/settings/settings.rst:55
+msgid "3.4. Shared SMS settings"
+msgstr ""
+
+#: ../../content/settings/settings.rst:57
+msgid ""
+"Indepth information about SMS setup is available in the `section for "
+"Administrators <../admin/admin.html>`__."
+msgstr ""
+
+#: ../../content/settings/settings.rst:60
+msgid "Shared SMS settings:"
+msgstr ""
+
+#: ../../content/settings/settings.rst:62
+msgid "Incoming Number(s):"
+msgstr ""
+
+#: ../../content/settings/settings.rst:64
+msgid ""
+"Enter the phone number(s) to which incoming SMSes for SMS forms should be"
+" sent. This field will be displayed, verbatim, on the SMS guide. Only "
+"needed if using SMS submissions"
+msgstr ""
+
+#: ../../content/settings/settings.rst:68
+msgid "Incoming SMS Token:"
+msgstr ""
+
+#: ../../content/settings/settings.rst:70
+msgid ""
+"This token is included in the URL used by the incoming SMS provider to "
+"prevent the submission of unauthorized messages."
+msgstr ""
+
+#: ../../content/settings/settings.rst:72
+msgid "Click on **“How do I use this?”** for further instructions."
+msgstr ""
+
+#: ../../content/settings/settings.rst:73
+msgid "Register the incoming SMS URL with your gateway provider"
+msgstr ""
+
+#: ../../content/settings/settings.rst:74
+msgid "Copy the URL from the pop up screen"
+msgstr ""
+
+#: ../../content/settings/settings.rst:76
+msgid "Default Outgoing Provider:"
+msgstr ""
+
+#: ../../content/settings/settings.rst:78
+msgid ""
+"The adapter used to send outgoing SMSes. Note that SMS replies may be "
+"sent out via a different adapter, depending on the adapter by which they "
+"arrived."
+msgstr ""
+
+#: ../../content/settings/settings.rst:81
+msgid ""
+"Our current provider choices are IntelliSMS and Twilio (refer to section "
+" for how to set this up)"
+msgstr ""
+
+#: ../../content/settings/settings.rst:84
+msgid "IntelliSMS Settings:"
+msgstr ""
+
+#: ../../content/settings/settings.rst:86
+msgid "Enter the username for the IntelliSMS account"
+msgstr ""
+
+#: ../../content/settings/settings.rst:88
+msgid "FrontlineCloud Settings:"
+msgstr ""
+
+#: ../../content/settings/settings.rst:90
+msgid ""
+"Click \\ **Change API Key** and enter the API Key for the FrontlineCloud "
+"activity"
+msgstr ""
+
+#: ../../content/settings/settings.rst:93
+msgid "Twilio Settings:"
+msgstr ""
+
+#: ../../content/settings/settings.rst:95
+msgid "Enter the outgoing number"
+msgstr ""
+
+#: ../../content/settings/settings.rst:97
+msgid ""
+"This is the phone number registered with Twilio. Outgoing SMS broadcasts "
+"won’t work unless this number is owned by your Twilio account. This "
+"number must include the country code. Example: +25680344523"
+msgstr ""
+
+#: ../../content/settings/settings.rst:102
+msgid "Enter the account SID:"
+msgstr ""
+
+#: ../../content/settings/settings.rst:104
+msgid "This is the account SID for the Twilio account"
+msgstr ""
+
+#: ../../content/settings/settings.rst:105
+msgid ""
+"If needed, click **Change Auth Token** to change the auth token for the "
+"Twilio account."
+msgstr ""
+
+#: ../../content/settings/settings.rst:108
+msgid "Click **Save** to keep any settings."
+msgstr ""
+

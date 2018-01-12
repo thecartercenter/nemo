@@ -1,0 +1,285 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2017, The Carter Center
+# This file is distributed under the same license as the Elmo package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Elmo 7.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-01-10 16:48+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: zied abaoub <abaoubzied@gmail.com>, 2018\n"
+"Language-Team: French (https://www.transifex.com/sassafras-tech-collective/teams/17549/fr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: ../../content/admin/admin.rst:2
+msgid "13. Information for Administrators"
+msgstr "13. Information pour les administrateurs"
+
+#: ../../content/admin/admin.rst:5
+msgid ""
+"More in-depth information on the following topics is provided in this "
+"section:"
+msgstr "Dans cette section vous trouverez plus de détail sur ces sujets:"
+
+#: ../../content/admin/admin.rst:6
+msgid "\\* SMS Gateways (FrontlineSMS/Twilio)"
+msgstr "\\* Passerelles SMS (FrontlineSMS/Twilio)"
+
+#: ../../content/admin/admin.rst:7
+msgid "\\* Standards and Data Integrity"
+msgstr "\\* Standard et integrité des données"
+
+#: ../../content/admin/admin.rst:10
+msgid "13.1. FrontlineSMS gateway setup"
+msgstr ""
+
+#: ../../content/admin/admin.rst:12
+msgid ""
+"You can turn your Android smartphone or tablet into a gateway using the "
+"FrontlineSync app and a FrontlineCloud account. Check out Frontline’s "
+"documentation for the full details (http://www.frontlinesms.com/)."
+msgstr ""
+
+#: ../../content/admin/admin.rst:16
+msgid ""
+"Before entering your settings on ELMO, you will need to set things up on "
+"FrontlineCloud in order to obtain the Frontline API key."
+msgstr ""
+
+#: ../../content/admin/admin.rst:19
+msgid "**I. FrontlineCloud**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:21
+msgid ""
+"Logging into your FrontlineCloud account, establish the following settings:"
+msgstr ""
+
+#: ../../content/admin/admin.rst:23
+msgid "Choose **Connect to a Mobile Network**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:24
+msgid "Select **FrontlineSync**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:25
+msgid "Select the **Activity** menu"
+msgstr ""
+
+#: ../../content/admin/admin.rst:26
+msgid "Create a **New Activity**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:27
+msgid "Select **Forward to URL**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:29
+msgid ""
+"Name your Activity: *this can be your mission name or whatever you want*"
+msgstr ""
+
+#: ../../content/admin/admin.rst:31
+msgid "Select **“All inbound SMS”** from the toggle choices"
+msgstr ""
+
+#: ../../content/admin/admin.rst:32
+msgid ""
+"Target URL is the URL generated the Incoming SMS Token in the Settings panel"
+" of the ELMO Mission"
+msgstr ""
+
+#: ../../content/admin/admin.rst:34
+msgid "HTTP Method: POST"
+msgstr ""
+
+#: ../../content/admin/admin.rst:35
+msgid "Create Keys:"
+msgstr ""
+
+#: ../../content/admin/admin.rst:38
+msgid "**from**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:38
+msgid "**${trigger.sourceNumber}**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:40
+msgid "frontlinecloud"
+msgstr ""
+
+#: ../../content/admin/admin.rst:40
+msgid "1"
+msgstr ""
+
+#: ../../content/admin/admin.rst:42
+msgid "sent\\_at"
+msgstr ""
+
+#: ../../content/admin/admin.rst:42
+msgid "${trigger.date.time}"
+msgstr ""
+
+#: ../../content/admin/admin.rst:44
+msgid "body"
+msgstr ""
+
+#: ../../content/admin/admin.rst:44
+msgid "${trigger.text}"
+msgstr ""
+
+#: ../../content/admin/admin.rst:51
+msgid ""
+"If an API is automatically generated for you, terrific! But if not, here are"
+" the steps you need to take in order to set up an API:"
+msgstr ""
+
+#: ../../content/admin/admin.rst:54
+msgid "Choose the Settings gear in the upper right of the screen"
+msgstr ""
+
+#: ../../content/admin/admin.rst:55
+msgid "Select **API web services and integrations**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:56
+msgid "Click the **Connect a web service** button"
+msgstr ""
+
+#: ../../content/admin/admin.rst:57
+msgid "Select “Connect an external web service to your workspace”"
+msgstr ""
+
+#: ../../content/admin/admin.rst:58
+msgid "Name it something meaningful (e.g. “ELMO API”)"
+msgstr ""
+
+#: ../../content/admin/admin.rst:60
+msgid ""
+"A new row will appear on the screen with an API key in the details, "
+"beginning with “API Key:” Everything after the “:” is the API key, remember "
+"that information for the next steps."
+msgstr ""
+
+#: ../../content/admin/admin.rst:64
+msgid "**II. ELMO:**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:68
+msgid ""
+"In ELMO, you can establish multiple incoming and outgoing SMS numbers on "
+"different gateway services such as Twilio or Frontline. We will deal with "
+"the simplest case first, a single number for SMSes. In settings,"
+msgstr ""
+
+#: ../../content/admin/admin.rst:70
+msgid ""
+"Add the SIM card number to the **Incoming Number** field. (if adding more "
+"than one number, separate the numbers with a comma)"
+msgstr ""
+
+#: ../../content/admin/admin.rst:72
+msgid ""
+"Then add the API code from Frontline into the **Frontline Cloud Settings** "
+"field"
+msgstr ""
+
+#: ../../content/admin/admin.rst:74
+msgid "Set the **Default Outgoing Provider** to **FrontlineCloud**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:75
+msgid "Save the settings"
+msgstr ""
+
+#: ../../content/admin/admin.rst:81
+msgid "**III. Android Device:**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:84
+msgid ""
+"To make a Android phone or tablet into a gateway, you need to download and "
+"install FrontlineSync App from the Google Play store. Then, enter the "
+"following settings:"
+msgstr ""
+
+#: ../../content/admin/admin.rst:86
+msgid "Tap on Settings in the FrontlineSync app"
+msgstr ""
+
+#: ../../content/admin/admin.rst:87
+msgid "Tap **Configure Connection**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:88
+msgid ""
+"Enter the credentials for the FrontlineCloud activity you set up earlier"
+msgstr ""
+
+#: ../../content/admin/admin.rst:90
+msgid "Tap the **Connect** button"
+msgstr ""
+
+#: ../../content/admin/admin.rst:91
+msgid "New options will appear, now click the first two checkboxes:"
+msgstr ""
+
+#: ../../content/admin/admin.rst:93
+msgid "*Send messages using this Android*"
+msgstr ""
+
+#: ../../content/admin/admin.rst:94
+msgid "*Upload incoming messages from FrontlineSync*"
+msgstr ""
+
+#: ../../content/admin/admin.rst:96
+msgid ""
+"Use the slider to set a check for outgoing messages “\\ **Every 1 minute**\\"
+" ”"
+msgstr ""
+
+#: ../../content/admin/admin.rst:98
+msgid "Click the **Update** button"
+msgstr ""
+
+#: ../../content/admin/admin.rst:100
+msgid ""
+"A message should appear declaring success, with one more button to tap “\\ "
+"**Done! Start Using FrontlineSync**.”"
+msgstr ""
+
+#: ../../content/admin/admin.rst:103
+msgid ""
+"**Note:** MAKE SURE TO USE THE DEFAULT MESSENGER APP ON THE PHONE —- "
+"ENCRYPTED SMS, such as What’s App, DOES NOT WORK. Look up Android settings "
+"help for how to make sure that your using the default messenger app."
+msgstr ""
+
+#: ../../content/admin/admin.rst:108
+msgid "**Some additional (troubleshooting) notes, maybe:**"
+msgstr ""
+
+#: ../../content/admin/admin.rst:111
+msgid ""
+"If you change settings on your FrontlineCloud after having set up your "
+"Android Device, you may need to enter your credentials to configure your "
+"connection, and make sure everything is up to date."
+msgstr ""
+
+#: ../../content/admin/admin.rst:113
+msgid ""
+"Also, if you set up more than one device or phone to a FrontlineCloud "
+"account, please pay attention to the “connections to mobile networks” "
+"settings, which is available off the gear menu located on the upper right "
+"corner of the screen. Check with FrontlineSMS for more information on these "
+"parameters."
+msgstr ""
