@@ -36,7 +36,9 @@ class SkipRuleSetFormField extends React.Component {
             hide={this.props.hide}
             name_prefix={`questioning[skip_rules_attributes][${index}]`}
             {...props}/>)}
-        <a onClick={this.addRule}><i className="fa fa-plus"></i> {I18n.t("form_item.add_rule")}</a>
+        <a onClick={this.addRule} tabIndex="0">
+          <i className="fa fa-plus"></i> {I18n.t("form_item.add_rule")}
+        </a>
       </div>
     );
   }
