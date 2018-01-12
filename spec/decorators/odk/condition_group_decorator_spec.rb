@@ -2,14 +2,22 @@ require "spec_helper"
 
 module Odk
   describe ConditionGroupDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
+    let(:result) { Odk::DecoratorFactory.decorate(condition_group).to_odk }
+
+    context "empty, non-negated condition group" do
+      let(:condition_group) { Forms::ConditionGroup.new(true_if: "always", negate: false, members: [])}
+
+      it "should return nil" do
+        expect(result).to be_nil
+      end
+    end
 
     # This is what will be returned from a skip rule set to skip_if = always.
     context "empty, negated condition group" do
       let(:condition_group) { Forms::ConditionGroup.new(true_if: "always", negate: true, members: [])}
 
-      it "should return true" do
-        result = Odk::DecoratorFactory.decorate(condition_group).to_odk
-        expect(result).to eq "not(true())"
+      it "should return false" do
+        expect(result).to eq "false()"
       end
     end
 
@@ -21,7 +29,6 @@ module Odk
       ]) }
 
       it "concatenates with and" do
-        result = Odk::DecoratorFactory.decorate(condition_group).to_odk
         expect(result).to eq "(a) and (b) and (c)"
       end
     end
@@ -34,7 +41,6 @@ module Odk
       ])}
 
       it "adds the xpath not function" do
-        result = Odk::DecoratorFactory.decorate(condition_group).to_odk
         expect(result).to eq "not((a) and (b) and (c))"
       end
     end
@@ -46,7 +52,6 @@ module Odk
         instance_double(Odk::ConditionDecorator, decorated?: true, to_odk: "c")]) }
 
       it "concatenates with or" do
-        result = Odk::DecoratorFactory.decorate(condition_group).to_odk
         expect(result).to eq "(a) or (b) or (c)"
       end
     end
@@ -67,7 +72,6 @@ module Odk
       ]) }
 
       it "it nests groups" do
-        result = Odk::DecoratorFactory.decorate(condition_group).to_odk
         expect(result).to eq "(a) or (not((b) and (c) and (d))) or ((e) and (f) and (g))"
       end
     end
