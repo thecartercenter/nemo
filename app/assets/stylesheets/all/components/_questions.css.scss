@@ -21,6 +21,14 @@ form.question_form {
 
 div.question_fields {
 
+  textarea {
+    direction: ltr;
+  }
+
+  textarea[id*=_ar], textarea[id*=_he] {
+    direction: rtl;
+  }  
+
   .names_hints div.form_field div.control textarea[id*=_name_] {
     height: 55px;
   }
