@@ -1301,7 +1301,7 @@ en:
     skip_logic_options:
       dont_skip: "After this question, go to the next question"
       skip: "After this question, skip ..."
-    end_of_form: "The end of the form"
+    end_of_form: "Skip to the end of the form"
 
   import:
     row_error: "Row %{row}: %{error}"
