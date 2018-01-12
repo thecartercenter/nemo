@@ -24,27 +24,26 @@ feature "display conditions form", js: true do
 
     # First condition
     within(all(".condition-fields")[0]) do
-      select_question_and_wait_to_populate_other_selects(form.c[0].code)
-      select("is less than", from: "Comparison")
-      fill_in("Value", with: "5")
+      select_question(form.c[0].code)
+      select_operator("is less than")
+      fill_in_value("5")
     end
 
     # Second condition (deleted)
-    click_on("Add Condition")
+    click_add_condition
     within(all(".condition-fields")[1]) do
-      select_question_and_wait_to_populate_other_selects(form.c[0].code)
-      select("is greater than", from: "Comparison")
-      fill_in("Value", with: "0")
-      find(".fa-trash-o").click
+      select_question(form.c[0].code)
+      select_operator("is greater than")
+      fill_in_value("0")
+      click_delete_link
     end
 
     # Third condition
-    click_on("Add Condition")
+    click_add_condition
     within(all(".condition-fields")[1]) do
-      select_question_and_wait_to_populate_other_selects(form.c[1].code)
-      select("is equal to", from: "Comparison")
-      select("Plant", from: "Kingdom")
-      select("Oak", from: "Species")
+      select_question(form.c[1].code)
+      select_operator("is equal to")
+      select_values("Plant", "Oak")
     end
 
     # Accidentally change display_if selector, should not delete selections.
@@ -61,7 +60,7 @@ feature "display conditions form", js: true do
     within(all(".condition-fields")[0]) do
       expect_selected_question(form.c[0])
       expect_selected_operator("is less than")
-      expect_entered_value("5")
+      expect_filled_in_value("5")
     end
 
     within(all(".condition-fields")[1]) do
@@ -84,49 +83,47 @@ feature "display conditions form", js: true do
 
       # Delete existing condition
       within(all(".condition-fields")[0]) do
-        find(".fa-trash-o").click
+        click_delete_link
         expect(page).not_to have_css(".condition-fields", visible: true)
       end
 
       # Edit existing condition
       within(all(".condition-fields")[0]) do
-        select_question_and_wait_to_populate_other_selects(form.c[1].code)
-        select("is equal to", from: "Comparison")
-        select("Plant", from: "Kingdom")
-        select("Oak", from: "Species")
+        select_question(form.c[1].code)
+        select_operator("is equal to")
+        select_values("Plant", "Oak")
 
         # Change mind!
-        select_question_and_wait_to_populate_other_selects(form.c[0].code)
-        select("is equal to", from: "Comparison")
-        fill_in("Value", with: "8")
+        select_question(form.c[0].code)
+        select_operator("is equal to")
+        fill_in_value("8")
       end
 
       # Add new condition
-      click_on("Add Condition")
+      click_add_condition
       within(all(".condition-fields")[1]) do
-        select_question_and_wait_to_populate_other_selects(form.c[0].code)
-        select("is less than", from: "Comparison")
-        fill_in("Value", with: "25")
+        select_question(form.c[0].code)
+        select_operator("is less than")
+        fill_in_value("25")
 
         # Change mind!
-        select_question_and_wait_to_populate_other_selects(form.c[1].code)
-        select("is equal to", from: "Comparison")
-        select("Plant", from: "Kingdom")
-        select("Oak", from: "Species")
+        select_question(form.c[1].code)
+        select_operator("is equal to")
+        select_values("Plant", "Oak")
 
         # Change again!
-        select_question_and_wait_to_populate_other_selects(form.c[2].code)
-        select("is equal to", from: "Comparison")
-        find('[name*="option_node_ids"]').select("Cat")
+        select_question(form.c[2].code)
+        select_operator("is equal to")
+        select_values("Cat")
       end
 
       # Add another new condition and delete
-      click_on("Add Condition")
+      click_add_condition
       within(all(".condition-fields")[2]) do
-        select_question_and_wait_to_populate_other_selects(form.c[0].code)
-        select("is less than or equal to", from: "Comparison")
-        fill_in("Value", with: "99")
-        find(".fa-trash-o").click
+        select_question(form.c[0].code)
+        select_operator("is less than or equal to")
+        fill_in_value("99")
+        click_delete_link
       end
 
       click_button("Save")
@@ -141,7 +138,7 @@ feature "display conditions form", js: true do
       within(all(".condition-fields")[0]) do
         expect_selected_question(form.c[0])
         expect_selected_operator("is equal to")
-        expect_entered_value("8")
+        expect_filled_in_value("8")
       end
 
       within(all(".condition-fields")[1]) do
@@ -159,10 +156,9 @@ feature "display conditions form", js: true do
     end
   end
 
-
-  def select_question_and_wait_to_populate_other_selects(question_code)
-    select(question_code, from: "Question")
-    wait_for_ajax
+  def select_question(code)
+    find('select[name*="\\[ref_qing_id\\]"]').select(code)
+    wait_for_ajax # Changing the question triggers an ajax call (for now)
   end
 
   def expect_selected_question(qing)
@@ -170,9 +166,20 @@ feature "display conditions form", js: true do
     expect(page).to have_select(select[:name], selected: "#{qing.full_dotted_rank}. #{qing.code}")
   end
 
+  def select_operator(op)
+    find('select[name*="\\[op\\]"]').select(op)
+  end
+
   def expect_selected_operator(op)
     select = find('select[name*="\\[op\\]"]')
     expect(page).to have_select(select[:name], selected: op)
+  end
+
+  def select_values(*values)
+    selects = all('select[name*="\\[option_node_ids\\]"]')
+    values.each_with_index do |value, i|
+      selects[i].select(value)
+    end
   end
 
   def expect_selected_values(*values)
@@ -183,8 +190,20 @@ feature "display conditions form", js: true do
     end
   end
 
-  def expect_entered_value(value)
+  def fill_in_value(value)
+    find('input[name*="\\[value\\]"]').set(value)
+  end
+
+  def expect_filled_in_value(value)
     input = find('input[name*="\\[value\\]"]')
     expect(page).to have_field(input[:name], with: value)
+  end
+
+  def click_add_condition
+    find("a", text: "Add Condition").click
+  end
+
+  def click_delete_link
+    find(".fa-close").click
   end
 end

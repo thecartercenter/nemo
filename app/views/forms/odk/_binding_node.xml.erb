@@ -1,6 +1,4 @@
 <% node = Odk::DecoratorFactory.decorate(node, context: {condition_computer: @condition_computer}) %>
-<% puts "in view" %>
-<% puts @condition_computer %>
 <% if node.is_a?(Questioning) %>
   <% node.subqings.each do |subq| %>
     <% group_attr = parent.present? ? parent.odk_code : nil %>

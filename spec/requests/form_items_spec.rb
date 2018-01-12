@@ -47,7 +47,7 @@ describe "form items" do
     let(:form) { create(:form, :published, question_types: %w(integer text select_one integer text)) }
     let(:qing) { form.c[3] }
     let(:expected_ref_qing_options) do
-      form.c[0..2].map do |q|
+      form.c[0..3].map do |q|
         {id: q.id, code: q.question.code, rank: q.rank, full_dotted_rank: q.full_dotted_rank}
       end
     end

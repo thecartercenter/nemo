@@ -108,8 +108,19 @@
       top: 7px;
       right: 5px;
 
-      .condition {
+      .refd-qing-links,
+      .skip-rule-links {
         display: inline-block;
+        margin-right: 10px;
+      }
+
+      .refd-qing,
+      .skip-rule-link {
+        display: inline-block;
+
+        &:not(:last-of-type)::after {
+          content: ',';
+        }
       }
     }
 

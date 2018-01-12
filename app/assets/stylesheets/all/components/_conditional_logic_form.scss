@@ -1,0 +1,83 @@
+form {
+  #display_logic,
+  #skip_logic {
+    @mixin remove-link-div {
+      flex: none;
+      width: 20px;
+      text-align: $right;
+
+      i {
+        font-size: 16px;
+        color: $deemphasized-link-color;
+      }
+    }
+
+    a {
+      cursor: pointer;
+    }
+
+    .condition-set {
+      margin-#{$left}: 20px;
+    }
+
+    .condition-set, .skip-rule-set {
+      margin-top: 10px;
+    }
+
+    .skip-rule {
+      display: flex;
+      padding: 10px 0;
+      border-top: $light-border;
+      margin-bottom: 10px;
+
+      &:last-of-type {
+        border-bottom: $light-border;
+      }
+
+      .skip-rule-main {
+        flex: auto;
+      }
+
+      .skip-rule-attribs {
+        margin-bottom: 10px;
+        display: flex;
+
+        select {
+          flex: 1;
+
+          &:first-child {
+            margin-#{$right}: 10px;
+          }
+        }
+      }
+
+      .skip-rule-remove {
+        @include remove-link-div;
+      }
+    }
+
+    .condition-fields {
+      display: flex;
+      padding-bottom: 10px;
+
+      .form-control[name$=\[ref_qing_id\]] {
+        flex: 2;
+        width: 150px;
+      }
+
+      .form-control[name$=\[op\]] {
+        flex: 1;
+        width: 75px;
+        margin: 0 10px;
+      }
+
+      .condition-value {
+        flex: 2;
+      }
+
+      .condition-remove {
+        @include remove-link-div;
+      }
+    }
+  }
+}

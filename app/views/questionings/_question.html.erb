@@ -38,18 +38,25 @@
 
     <div class="actions">
 
-      <%# Condition %>
-      <% if qing.display_conditionally? %>
-        <% qing.display_conditions.each do |condition| %>
-          <div class="condition" data-ref-id="<%= condition.ref_qing_id %>" title="<%= condition %>">
-            <i class="fa fa-link"></i> #<span><%= condition.ref_qing_full_dotted_rank %></span>
-          </div>
-          <% if condition.id != qing.display_conditions.last.id %>
-            <span class="operator">
-              <%= t("form_item.display_if_operator.#{qing.display_if}") %>
-            </span>
+      <%# Ranks of questions to which this question refers, by either display or skip logic.
+          Used to inform the user, and data in data-ref-id used by the drag-drop system for constraint
+          enforcement. %>
+      <% if qing.refd_qings.any? %>
+        <div class="refd-qing-links">
+          <i class="fa fa-link"></i>
+          <% qing.refd_qings.each do |q| %>
+            <div class="refd-qing" data-ref-id="<%= q.id %>">#<span><%= q.full_dotted_rank %></span></div>
           <% end %>
-        <% end %>
+        </div>
+      <% end %>
+
+      <% if qing.skip_rules.any? %>
+        <div class="skip-rule-links">
+          <i class="fa fa-mail-forward"></i>
+          <% qing.skip_rule_targets.each do |t| %>
+            <div class="skip-rule-link"><span><%= t %></span></div>
+          <% end %>
+        </div>
       <% end %>
 
       <% unless read_only %>

@@ -39,6 +39,10 @@ class SkipRule < ActiveRecord::Base
     source_item
   end
 
+  def ref_qings
+    conditions.map(&:ref_qing)
+  end
+
   private
 
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly

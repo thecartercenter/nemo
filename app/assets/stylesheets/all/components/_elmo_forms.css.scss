@@ -17,7 +17,7 @@ form.elmo_form, div.elmo_form {
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
-  border-bottom: 1px solid #DDD;
+  border-bottom: $light-border;
   padding: 5px 0;
 
   > * {
@@ -25,12 +25,24 @@ div.form_field {
   }
 
   a.hint {
+    margin-top: 6px;
+    display: inline-block;
     white-space: nowrap;
+
+    i.hint {
+      display: inline-block;
+      color: $elmo-blue;
+      font-size: 1.5em;
+      vertical-align: middle;
+
+      // Right padding is so things look ok when there is a bg color.
+      padding: 0 3px;
+    }
   }
 
   div.form-errors {
     /* cancel the left margin for form errors inside a form_field */
-    margin-left: 0;
+    margin-#{$left}: 0;
   }
 
   div.reqd-sym {
@@ -49,6 +61,7 @@ div.form_field {
 
   .label_and_control {
     display: inline-block;
+    vertical-align: top;
 
     /* ensures label stays next to control */
     white-space: nowrap;
@@ -81,18 +94,13 @@ div.form_field {
     text-align: $right;
   }
 
-  .condition-fields {
-    padding: 1em 0;
-    border-bottom: 1px solid $nav-border-color
-  }
-
   div.control {
     // Need this margin to match the width of the label. See above for why we
     // do it this way.
     margin-#{$left}: $label-width;
 
     vertical-align: middle;
-    width: 425px;
+    width: $elmo-form-width - 225px;
     min-height: 26px;
     position: relative;
 
@@ -101,7 +109,6 @@ div.form_field {
     }
 
     .widget {
-      display: inline-block;
       vertical-align: top;
 
       label {
@@ -117,7 +124,7 @@ div.form_field {
       }
 
       input[type=text], input.text, input[type=password], select, textarea {
-        width: 420px;
+        width: 100%;
       }
 
       div.note {
@@ -155,7 +162,7 @@ div.form_field {
 
 form {
   div.submit-buttons {
-    text-align: right;
+    text-align: $right;
     margin-top: 20px;
   }
 
@@ -166,17 +173,16 @@ form {
 
 div.form-warning {
   margin: 10px 0;
-  width: $elmo-form-width;
 
   i {
     display: block;
-    float: left;
+    float: $left;
     font-size: 14px;
     margin-top: 1px;
   }
 
   & > div {
-    margin-left: 20px;
+    margin-#{$left}: 20px;
   }
 }
 
@@ -187,7 +193,7 @@ div.modal div.form-warning {
 
 /* Minimal form has no horiz lines and no hints */
 form.elmo_form.minimal {
-  width: 620px;
+  width: $elmo-form-width - 20px;
 
   div.form_field {
     border-bottom: none;
@@ -276,5 +282,5 @@ div.cascading-selects {
 }
 
 div.more-settings, div.less-settings {
-  text-align: right;
+  text-align: $right;
 }

@@ -68,8 +68,6 @@
 }
 
 form.response_form {
-  width: 760px; /* Responses form should be wider */
-
   label.main {
     width: $response-form-label-width;
 
@@ -85,6 +83,11 @@ form.response_form {
 
   div.control {
     margin-left: $response-form-label-width;
+
+    // TODO this needs to be refactored, all width stuff needs to be genericized and moved into
+    // the main form styles.
+    // For now, this new width accounts for the wider labels.
+    width: $elmo-form-width - 325px;
   }
 
   div.no-value {

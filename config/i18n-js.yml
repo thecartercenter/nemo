@@ -39,6 +39,7 @@ translations:
       "*.report/report.*",
       "*.response.*",
       "*.role.*",
+      "*.skip_rule.*",
       "*.sms_console.*",
       "*.standard.*",
       "*.tag.*",

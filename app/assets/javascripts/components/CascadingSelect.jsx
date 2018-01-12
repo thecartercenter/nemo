@@ -55,6 +55,7 @@ class CascadingSelect extends React.Component {
       key: `questioning_display_conditions_attributes_option_node_ids_`,
       value: level.selected,
       options: level.options,
+      prompt: I18n.t("option_set.choose_level", {level: level.name}),
       changeFunc: isLastLevel ? null : this.nodeChanged
     }
   }
@@ -66,10 +67,7 @@ class CascadingSelect extends React.Component {
       result = this.state.levels.map(function(level, i) {
         return (
           <div className="level" key={level.name}>
-            <label>
-              {level.name}
-              <FormSelect {...self.buildLevelProps(level, self.isLastLevel(i))} />
-            </label>
+            <FormSelect {...self.buildLevelProps(level, self.isLastLevel(i))} />
           </div>
         );
       })

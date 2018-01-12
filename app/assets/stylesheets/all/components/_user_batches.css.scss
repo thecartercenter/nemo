@@ -2,7 +2,7 @@ form.user_batch_form {
   /* special form */
   div.batch_line_with_info {
     padding: 10px 0;
-    border-top: 1px solid #ddd;
+    border-top: $light-border;
 
     input[type=text] {
       vertical-align: top;

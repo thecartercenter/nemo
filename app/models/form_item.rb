@@ -123,7 +123,7 @@ class FormItem < ApplicationRecord
   # All questionings that can be referred to by a condition if it were defined on this item.
   def refable_qings
     all_items = form.preordered_items
-    all_previous = persisted? ? all_items[0...(all_items.index(self))] : all_items
+    all_previous = persisted? ? all_items[0..(all_items.index(self))] : all_items
     all_previous.select(&:refable?)
   end
 

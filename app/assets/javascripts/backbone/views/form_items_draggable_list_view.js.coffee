@@ -86,8 +86,8 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
     # the placeholder must be before all the referring questions.
     child_ids = item.find('.form-item').andSelf().map -> $(this).data('id')
     for id in child_ids.get()
-      for condition in @$(".condition[data-ref-id=#{id}]") # Loop over all matching conditions
-        referrer = $(condition.closest('li.form-item'))
+      for refd_qing in @$(".refd-qing[data-ref-id=#{id}]") # Loop over all matching refd_qings
+        referrer = $(refd_qing.closest('li.form-item'))
         return false unless this.compare_ranks(placeholder, referrer) == -1
 
     true

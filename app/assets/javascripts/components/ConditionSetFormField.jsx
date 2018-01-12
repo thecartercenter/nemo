@@ -26,7 +26,7 @@ class ConditionSetFormField extends React.Component {
 
   render() {
     return (
-      <div style={{display: this.props.hide ? 'none' : ''}}>
+      <div className="condition-set" style={{display: this.props.hide ? 'none' : ''}}>
         {this.state.conditions.map((props, index) =>
           <ConditionFormField
             key={index}
@@ -34,9 +34,9 @@ class ConditionSetFormField extends React.Component {
             hide={this.props.hide}
             name_prefix={this.state.name_prefix}
             {...props}/> )}
-        <button onClick={this.addCondition} type="button" className="btn">
+        <a onClick={this.addCondition} tabIndex="0">
           <i className="fa fa-plus"></i> {I18n.t("form_item.add_condition")}
-        </button>
+        </a>
       </div>
     );
   }

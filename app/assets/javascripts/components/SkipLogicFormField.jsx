@@ -12,7 +12,7 @@ class SkipLogicFormField extends React.Component {
 
   render() {
     let select_props = {
-      className: "form-control",
+      className: "form-control skip-or-not",
       value: this.state.skip,
       onChange: this.skipOptionChanged
     };

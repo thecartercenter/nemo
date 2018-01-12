@@ -1,5 +1,5 @@
 <% if item.is_a?(Questioning) %>
-  <%= render('questionings/question', qing: item) %>
+  <%= render('questionings/question', qing: item.decorate) %>
 <% else %>
   <%= render('qing_groups/group', qing_group: item) %>
 <% end %>

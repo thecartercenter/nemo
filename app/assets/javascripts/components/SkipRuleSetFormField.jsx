@@ -13,10 +13,11 @@ class SkipRuleSetFormField extends React.Component {
   }
 
   addRule() {
+    let later_items_exist = this.state.later_items.length > 0;
     this.setState({skip_rules:
       this.state.skip_rules.concat([{
-        destination: this.state.later_items.length > 0 ? "item" : "end",
-        dest_item_id: this.state.later_items[0].id,
+        destination: later_items_exist ? "item" : "end",
+        dest_item_id: later_items_exist ? this.state.later_items[0] : null,
         skip_if: "always",
         conditions: []
       }])
@@ -25,7 +26,7 @@ class SkipRuleSetFormField extends React.Component {
 
   render() {
     return (
-      <div style={{display: this.props.hide ? 'none' : ''}}>
+      <div className="skip-rule-set" style={{display: this.props.hide ? 'none' : ''}}>
         {this.state.skip_rules.map((props, index) =>
           <SkipRuleFormField
             key={index}
@@ -35,9 +36,9 @@ class SkipRuleSetFormField extends React.Component {
             hide={this.props.hide}
             name_prefix={`questioning[skip_rules_attributes][${index}]`}
             {...props}/>)}
-        <button onClick={this.addRule} type="button" className="btn">
+        <a onClick={this.addRule} tabIndex="0">
           <i className="fa fa-plus"></i> {I18n.t("form_item.add_rule")}
-        </button>
+        </a>
       </div>
     );
   }
