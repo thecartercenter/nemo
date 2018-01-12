@@ -1300,7 +1300,7 @@ en:
       any_met: "or"
     skip_logic_options:
       dont_skip: "After this question, go to the next question"
-      skip: "After this question, ..."
+      skip: "After this question, skip ..."
     end_of_form: "The end of the form"
 
   import:
