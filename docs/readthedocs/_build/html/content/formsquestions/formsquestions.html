@@ -1,0 +1,426 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>5. Forms: Questions &mdash; documentation Elmo 7.0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Recherche" href="../../search.html"/>
+    <link rel="top" title="documentation Elmo 7.0" href="../../index.html"/>
+        <link rel="next" title="6. Forms: Option Sets" href="../formsoptionsets/formsoptionsets.html"/>
+        <link rel="prev" title="4. Forms: Overall" href="../formsoverall/formsoverall.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Elmo
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getstarted/getstarted.html">1. Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../missionsetup/missionsetup.html">2. Setting up a Mission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings/settings.html">3. Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formsoverall/formsoverall.html">4. Forms: Overall</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">5. Forms: Questions</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#create-a-question">5.1. Create a Question</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#types-of-questions">5.2. Types of questions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-hints">5.3. Creating Hints</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#language-translations">5.4. Language translations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tags">5.5. Tags</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../formsoptionsets/formsoptionsets.html">6. Forms: Option Sets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../submitonline/submitonline.html">7. Submitting data: Online</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../submittablet/submittablet.html">8. Submitting data: Tablet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../submitsms/submitsms.html">9. Submitting data: SMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search/search.html">10. Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reports/reports.html">11. Reports and Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/features.html">12. Additional features and information</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../admin/admin.html">13. Information for Administrators</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses/licenses.html">14. About ELMO licenses</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Elmo</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>5. Forms: Questions</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/content/formsquestions/formsquestions.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="forms-questions">
+<h1>5. Forms: Questions<a class="headerlink" href="#forms-questions" title="Lien permanent vers ce titre">¶</a></h1>
+<p>To create and import questions to a mission, navigate to the Questions
+page by clicking on the <strong>Questions</strong> menu on the main menu bar.</p>
+<blockquote>
+<div><p><strong>Note:</strong> When creating a new question within the form, there are
+three options for questions available: conditional, hidden and
+required. Each of these options affects how the form is filled out
+by the user in the field. A question can be:</p>
+<ul class="simple">
+<li><em>Conditional: whether or not it appears in the form is dependent
+upon how a previous question is answered</em></li>
+<li><em>Hidden: it is not shown on the form – only to be used if it
+cannot be deleted</em></li>
+<li><em>Required: it must be answered in order to submit the completed
+form, unless an override code is provided</em></li>
+</ul>
+</div></blockquote>
+<div class="section" id="create-a-question">
+<h2>5.1. Create a Question<a class="headerlink" href="#create-a-question" title="Lien permanent vers ce titre">¶</a></h2>
+<div class="figure">
+<img alt="create new question edited" src="../../_images/create-new-question-edited.png" />
+</div>
+<p>To create a question that will be used for the current mission:</p>
+<ul class="simple">
+<li>1: Click on the <strong>Create Question</strong> link (in orange text)</li>
+<li>2: Provide a unique name for the question in the box labeled
+<strong>Code</strong>. Normal users (in this case, users with the title of
+Observer) will not see this box</li>
+<li>3: Select the Type of response needed for the question from the
+following options:</li>
+</ul>
+</div>
+<div class="section" id="types-of-questions">
+<h2>5.2. Types of questions<a class="headerlink" href="#types-of-questions" title="Lien permanent vers ce titre">¶</a></h2>
+<table border="1" class="docutils">
+<colgroup>
+<col width="16%" />
+<col width="84%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Text</th>
+<th class="head">Text designed with a shorter character limit, specifically
+used for SMS</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>Long Text</td>
+<td>Text designed for paragraphs rather than simple
+phrases/sentences</td>
+</tr>
+<tr class="row-odd"><td>Integer</td>
+<td>This is a numeric answer that must be a whole number without
+decimals</td>
+</tr>
+<tr class="row-even"><td>Decimal</td>
+<td>This is numeric answer that allows for decimals</td>
+</tr>
+<tr class="row-odd"><td>Location</td>
+<td>This question may be answered with a GPS coordinate derived
+from the user’s device (e.g. tablet with GPS)</td>
+</tr>
+<tr class="row-even"><td>Select One</td>
+<td>Only one answer may be selected from a multiple choice Option
+Set</td>
+</tr>
+<tr class="row-odd"><td>Select
+Multiple</td>
+<td>Multiple answers may be selected from a multiple choice
+Option Set</td>
+</tr>
+<tr class="row-even"><td>Date/Time</td>
+<td>Enter both the date and the time</td>
+</tr>
+<tr class="row-odd"><td>Date</td>
+<td>Enter the date</td>
+</tr>
+<tr class="row-even"><td>Time</td>
+<td>Enter the time</td>
+</tr>
+<tr class="row-odd"><td>Image</td>
+<td>Take a picture or choose a jpg orpngimage</td>
+</tr>
+<tr class="row-even"><td>Annotated
+Image</td>
+<td>Take or choose a picture and annotate it</td>
+</tr>
+<tr class="row-odd"><td>Signature</td>
+<td>Sign with a finger</td>
+</tr>
+<tr class="row-even"><td>Sketch</td>
+<td>Sketch an image with a finger</td>
+</tr>
+<tr class="row-odd"><td>Audio</td>
+<td>Record or choose a sound</td>
+</tr>
+<tr class="row-even"><td>Video</td>
+<td>Record or choose a video</td>
+</tr>
+</tbody>
+</table>
+<ul class="simple">
+<li>4: After selecting the type of question (and option set if
+applicable), enter the main text of the question in the title box</li>
+</ul>
+<p>A note on image, video, or audio submissions: those files can be big!
+Big files may also mean a lot of data costs as well. Consult with your
+ELMO or database administrator on best practices for your project.</p>
+</div>
+<div class="section" id="creating-hints">
+<h2>5.3. Creating Hints<a class="headerlink" href="#creating-hints" title="Lien permanent vers ce titre">¶</a></h2>
+<ul class="simple">
+<li>5: Add further instructions in the <strong>Hint</strong> box below the
+<strong>Title</strong> box (i.e.: for a Select Multiple question, add “Select
+all that apply” in the <strong>Hint</strong> box)</li>
+</ul>
+<div class="figure">
+<img alt="hints" src="../../_images/hints.png" />
+</div>
+<ul class="simple">
+<li>6: Below the Hint box, there is an option to make the question a
+<strong>Key Question</strong>. This option allows responses to the form to be
+organized based on the response to the question. If this box is
+marked, a column showing these answers will be added in the Responses
+tab.</li>
+<li>7: Click <strong>Save</strong> to generate the question</li>
+<li>8: To edit the question, return to the Questions page and select the
+corresponding <strong>Pencil icon</strong></li>
+</ul>
+</div>
+<div class="section" id="language-translations">
+<h2>5.4. Language translations<a class="headerlink" href="#language-translations" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Question titles and hints can be translated into any language that has
+been set for the mission. To add a language to a mission, go to the
+<strong>Preferred Languages</strong> box in the <strong>Settings</strong> menu. When
+creating or editing questions, the <strong>Title</strong> box will appear for the
+first language in <strong>Preferred Languages</strong>, followed by the <strong>Hint</strong>
+box in that language, then the <strong>Title</strong> and <strong>Hint</strong> boxes for the
+second language, and so on. So, a <strong>Preferred Languages</strong> box that
+looks like this:</p>
+<div class="figure">
+<img alt="preferred languages enfr" src="../../_images/preferred-languages-enfr.png" />
+</div>
+<p>Results in this:</p>
+<div class="figure">
+<img alt="title hint enfr" src="../../_images/title-hint-enfr.png" />
+</div>
+<p>To translate a title or a hint, type the translation in the
+corresponding box and click <strong>Save</strong>. To view the translation, change
+the language by clicking <strong>Change Language</strong> in the footer. Questions
+that have been translated into the selected language will appear
+translated once that language is selected. For example, the French
+translation of an English question will appear once French is selected.</p>
+</div>
+<div class="section" id="tags">
+<h2>5.5. Tags<a class="headerlink" href="#tags" title="Lien permanent vers ce titre">¶</a></h2>
+<p>Tags are an easy way to organize information around a common keyword or
+theme. In ELMO, questions may be “tagged” with keywords or descriptors,
+which may be used to find all of the questions with the same tag. Tags
+are also used in Reports to help sort information assigned to questions.</p>
+<div class="figure">
+<img alt="tags" src="../../_images/tags.png" />
+</div>
+<p>To tag questions:</p>
+<ol class="arabic simple">
+<li>Open or create the question you wish to tag.</li>
+<li>Type in the <strong>Tags</strong> box. (You may add multiple tags.)</li>
+<li>Click <strong>Enter</strong> to add a tag.</li>
+<li>To delete a tag, click on the <strong>X</strong> next to the tag.</li>
+<li>Click <strong>Save</strong> after adding tags to save your changes.</li>
+</ol>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../formsoptionsets/formsoptionsets.html" class="btn btn-neutral float-right" title="6. Forms: Option Sets" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../formsoverall/formsoverall.html" class="btn btn-neutral" title="4. Forms: Overall" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, The Carter Center.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'7.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

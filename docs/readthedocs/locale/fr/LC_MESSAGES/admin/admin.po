@@ -38,7 +38,7 @@ msgstr "\\* Standard et integrité des données"
 
 #: ../../content/admin/admin.rst:10
 msgid "13.1. FrontlineSMS gateway setup"
-msgstr ""
+msgstr "13.1. Paramétrage de la passerelle FrontlineSMS"
 
 #: ../../content/admin/admin.rst:12
 msgid ""

@@ -1,0 +1,381 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>13. Information for Administrators &mdash; documentation Elmo 7.0</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="../../genindex.html"/>
+        <link rel="search" title="Recherche" href="../../search.html"/>
+    <link rel="top" title="documentation Elmo 7.0" href="../../index.html"/>
+        <link rel="next" title="14. About ELMO licenses" href="../licenses/licenses.html"/>
+        <link rel="prev" title="12. Additional features and information" href="../features/features.html"/> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Elmo
+          
+
+          
+          </a>
+
+          
+            
+            
+              <div class="version">
+                7.0
+              </div>
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../getstarted/getstarted.html">1. Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../missionsetup/missionsetup.html">2. Setting up a Mission</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../settings/settings.html">3. Settings</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formsoverall/formsoverall.html">4. Forms: Overall</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formsquestions/formsquestions.html">5. Forms: Questions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../formsoptionsets/formsoptionsets.html">6. Forms: Option Sets</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../submitonline/submitonline.html">7. Submitting data: Online</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../submittablet/submittablet.html">8. Submitting data: Tablet</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../submitsms/submitsms.html">9. Submitting data: SMS</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../search/search.html">10. Search</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reports/reports.html">11. Reports and Data Analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../features/features.html">12. Additional features and information</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">13. Information for Administrators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#frontlinesms-gateway-setup">13.1. FrontlineSMS gateway setup</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses/licenses.html">14. About ELMO licenses</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Elmo</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>13. Information for Administrators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/content/admin/admin.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="information-for-administrators">
+<h1>13. Information for Administrators<a class="headerlink" href="#information-for-administrators" title="Lien permanent vers ce titre">¶</a></h1>
+<div class="line-block">
+<div class="line">More in-depth information on the following topics is provided in this
+section:</div>
+<div class="line">* SMS Gateways (FrontlineSMS/Twilio)</div>
+<div class="line">* Standards and Data Integrity</div>
+</div>
+<div class="section" id="frontlinesms-gateway-setup">
+<h2>13.1. FrontlineSMS gateway setup<a class="headerlink" href="#frontlinesms-gateway-setup" title="Lien permanent vers ce titre">¶</a></h2>
+<p>You can turn your Android smartphone or tablet into a gateway using the
+FrontlineSync app and a FrontlineCloud account. Check out Frontline’s
+documentation for the full details (<a class="reference external" href="http://www.frontlinesms.com/">http://www.frontlinesms.com/</a>).</p>
+<p>Before entering your settings on ELMO, you will need to set things up on
+FrontlineCloud in order to obtain the Frontline API key.</p>
+<div class="line-block">
+<div class="line"><strong>I. FrontlineCloud</strong></div>
+<div class="line">Logging into your FrontlineCloud account, establish the following
+settings:</div>
+</div>
+<ol class="arabic simple">
+<li>Choose <strong>Connect to a Mobile Network</strong></li>
+<li>Select <strong>FrontlineSync</strong></li>
+<li>Select the <strong>Activity</strong> menu</li>
+<li>Create a <strong>New Activity</strong></li>
+<li>Select <strong>Forward to URL</strong><ol class="arabic">
+<li>Name your Activity: <em>this can be your mission name or whatever you
+want</em></li>
+<li>Select <strong>“All inbound SMS”</strong> from the toggle choices</li>
+<li>Target URL is the URL generated the Incoming SMS Token in the
+Settings panel of the ELMO Mission</li>
+<li>HTTP Method: POST</li>
+<li>Create Keys:</li>
+</ol>
+</li>
+</ol>
+<table border="1" class="docutils">
+<colgroup>
+<col width="37%" />
+<col width="63%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head"><strong>from</strong></th>
+<th class="head"><strong>${trigger.sourceNumber}</strong></th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td>frontlinecloud</td>
+<td>1</td>
+</tr>
+<tr class="row-odd"><td>sent_at</td>
+<td>${trigger.date.time}</td>
+</tr>
+<tr class="row-even"><td>body</td>
+<td>${trigger.text}</td>
+</tr>
+</tbody>
+</table>
+<div class="figure">
+<img alt="frontline fwd to url edited with numbers" src="../../_images/frontline-fwd-to-url-edited-with-numbers.png" />
+</div>
+<p>If an API is automatically generated for you, terrific! But if not, here
+are the steps you need to take in order to set up an API:</p>
+<ol class="arabic simple">
+<li>Choose the Settings gear in the upper right of the screen</li>
+<li>Select <strong>API web services and integrations</strong></li>
+<li>Click the <strong>Connect a web service</strong> button</li>
+<li>Select “Connect an external web service to your workspace”</li>
+<li>Name it something meaningful (e.g. “ELMO API”)</li>
+</ol>
+<p>A new row will appear on the screen with an API key in the details,
+beginning with “API Key:” Everything after the “:” is the API key,
+remember that information for the next steps.</p>
+<div class="line-block">
+<div class="line"><strong>II. ELMO:</strong></div>
+<div class="line">In ELMO, you can establish multiple incoming and outgoing SMS numbers
+on different gateway services such as Twilio or Frontline. We will
+deal with the simplest case first, a single number for SMSes. In
+settings,</div>
+</div>
+<ol class="arabic simple">
+<li>Add the SIM card number to the <strong>Incoming Number</strong> field. (if adding
+more than one number, separate the numbers with a comma)</li>
+<li>Then add the API code from Frontline into the <strong>Frontline Cloud
+Settings</strong> field</li>
+<li>Set the <strong>Default Outgoing Provider</strong> to <strong>FrontlineCloud</strong></li>
+<li>Save the settings</li>
+</ol>
+<div class="figure">
+<img alt="frontline on elmo edited" src="../../_images/frontline-on-elmo-edited.png" />
+</div>
+<div class="line-block">
+<div class="line"><strong>III. Android Device:</strong></div>
+<div class="line">To make a Android phone or tablet into a gateway, you need to download
+and install FrontlineSync App from the Google Play store. Then, enter
+the following settings:</div>
+</div>
+<ol class="arabic simple">
+<li>Tap on Settings in the FrontlineSync app</li>
+<li>Tap <strong>Configure Connection</strong></li>
+<li>Enter the credentials for the FrontlineCloud activity you set up
+earlier</li>
+<li>Tap the <strong>Connect</strong> button</li>
+<li>New options will appear, now click the first two checkboxes:<ul>
+<li><em>Send messages using this Android</em></li>
+<li><em>Upload incoming messages from FrontlineSync</em></li>
+</ul>
+</li>
+<li>Use the slider to set a check for outgoing messages “<strong>Every 1
+minute</strong>”</li>
+<li>Click the <strong>Update</strong> button</li>
+</ol>
+<p>A message should appear declaring success, with one more button to tap
+“<strong>Done! Start Using FrontlineSync</strong>.”</p>
+<blockquote>
+<div><strong>Note:</strong> MAKE SURE TO USE THE DEFAULT MESSENGER APP ON THE PHONE
+—- ENCRYPTED SMS, such as What’s App, DOES NOT WORK. Look up Android
+settings help for how to make sure that your using the default
+messenger app.</div></blockquote>
+<div class="line-block">
+<div class="line"><strong>Some additional (troubleshooting) notes, maybe:</strong></div>
+<div class="line">If you change settings on your FrontlineCloud after having set up your
+Android Device, you may need to enter your credentials to configure
+your connection, and make sure everything is up to date.</div>
+</div>
+<p>Also, if you set up more than one device or phone to a FrontlineCloud
+account, please pay attention to the “connections to mobile networks”
+settings, which is available off the gear menu located on the upper
+right corner of the screen. Check with FrontlineSMS for more information
+on these parameters.</p>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../licenses/licenses.html" class="btn btn-neutral float-right" title="14. About ELMO licenses" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="../features/features.html" class="btn btn-neutral" title="12. Additional features and information" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2017, The Carter Center.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'7.0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="../../_static/translations.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
