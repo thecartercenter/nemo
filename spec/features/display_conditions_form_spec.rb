@@ -30,7 +30,7 @@ feature "display conditions form", js: true do
     end
 
     # Second condition (deleted)
-    click_on("Add Condition")
+    click_add_condition
     within(all(".condition-fields")[1]) do
       select_question(form.c[0].code)
       select_operator("is greater than")
@@ -39,7 +39,7 @@ feature "display conditions form", js: true do
     end
 
     # Third condition
-    click_on("Add Condition")
+    click_add_condition
     within(all(".condition-fields")[1]) do
       select_question(form.c[1].code)
       select_operator("is equal to")
@@ -100,7 +100,7 @@ feature "display conditions form", js: true do
       end
 
       # Add new condition
-      click_on("Add Condition")
+      click_add_condition
       within(all(".condition-fields")[1]) do
         select_question(form.c[0].code)
         select_operator("is less than")
@@ -118,7 +118,7 @@ feature "display conditions form", js: true do
       end
 
       # Add another new condition and delete
-      click_on("Add Condition")
+      click_add_condition
       within(all(".condition-fields")[2]) do
         select_question(form.c[0].code)
         select_operator("is less than or equal to")
@@ -197,6 +197,10 @@ feature "display conditions form", js: true do
   def expect_filled_in_value(value)
     input = find('input[name*="\\[value\\]"]')
     expect(page).to have_field(input[:name], with: value)
+  end
+
+  def click_add_condition
+    find("a", text: "Add Condition").click
   end
 
   def click_delete_link
