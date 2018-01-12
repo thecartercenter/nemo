@@ -16,6 +16,16 @@ GIT
       activerecord (>= 3.0)
 
 GIT
+  remote: https://github.com/sassafrastech/axlsx.git
+  revision: fe90f05dd4f85ecd4af9823a70084355049831ef
+  branch: stable
+  specs:
+    axlsx (2.1.1)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (~> 1.1)
+
+GIT
   remote: https://github.com/sassafrastech/rack-attack.git
   revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
   specs:
@@ -88,10 +98,6 @@ GEM
     autoprefixer-rails (6.7.6)
       execjs
     awesome_print (1.6.1)
-    axlsx (2.1.0.pre)
-      htmlentities (~> 4.3.1)
-      nokogiri (>= 1.4.1)
-      rubyzip (~> 1.1.7)
     axlsx_rails (0.3.0)
       axlsx (>= 2.0.1)
       rails (>= 3.1)
@@ -251,7 +257,6 @@ GEM
     mocha (1.1.0)
       metaclass (~> 0.0.1)
     multi_json (1.12.1)
-    mysql2 (0.3.21)
     netrc (0.11.0)
     nokogiri (1.7.1)
       mini_portile2 (~> 2.1.0)
@@ -262,8 +267,9 @@ GEM
       cocaine (~> 0.5.5)
       mime-types
       mimemagic (= 0.3.0)
-    parser (2.4.0.0)
-      ast (~> 2.2)
+    parallel (1.12.1)
+    parser (2.4.0.2)
+      ast (~> 2.3)
     pg (0.20.0)
     pg_search (2.0.1)
       activerecord (>= 4.2)
@@ -319,7 +325,7 @@ GEM
       activesupport (= 4.2.8)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
-    rainbow (2.2.1)
+    rainbow (3.0.0)
     rake (10.4.2)
     random_data (1.6.0)
     rdiscount (2.1.8)
@@ -364,23 +370,24 @@ GEM
       rspec-mocks (~> 3.3.0)
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
-    rubocop (0.47.1)
-      parser (>= 2.3.3.1, < 3.0)
+    rubocop (0.52.1)
+      parallel (~> 1.10)
+      parser (>= 2.4.0.2, < 3.0)
       powerpack (~> 0.1)
-      rainbow (>= 1.99.1, < 3.0)
+      rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
       unicode-display_width (~> 1.0, >= 1.0.1)
     ruby-graphviz (1.2.2)
     ruby-jmeter (2.13.10)
       nokogiri
       rest-client
-    ruby-progressbar (1.8.1)
+    ruby-progressbar (1.9.0)
     ruby2ruby (2.4.0)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.6)
     ruby_parser (3.10.1)
       sexp_processor (~> 4.9)
-    rubyzip (1.1.7)
+    rubyzip (1.2.1)
     sass (3.2.19)
     sass-rails (4.0.5)
       railties (>= 4.0.0, < 5.0)
@@ -436,7 +443,7 @@ GEM
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-    unicode-display_width (1.1.3)
+    unicode-display_width (1.3.0)
     unicode_utils (1.4.0)
     uniform_notifier (1.9.0)
     versionist (1.4.1)
@@ -454,7 +461,7 @@ GEM
       will_paginate (>= 3.0.3)
     xpath (2.0.0)
       nokogiri (~> 1.3)
-    yard (0.9.8)
+    yard (0.9.12)
 
 PLATFORMS
   ruby
@@ -471,7 +478,7 @@ DEPENDENCIES
   attribute_normalizer (~> 1.2.0)
   authlogic (~> 3.4.5)
   awesome_print (~> 1.6.1)
-  axlsx (~> 2.1.0.pre)
+  axlsx (~> 2.1.1)!
   axlsx_rails (~> 0.3.0)
   better_errors (~> 2.1.1)
   binding_of_caller (~> 0.7.2)
@@ -510,7 +517,6 @@ DEPENDENCIES
   launchy (~> 2.4.3)
   letter_opener (~> 1.4.1)
   mocha (~> 1.1.0)
-  mysql2 (~> 0.3.18)
   paperclip (~> 4.3.2)
   pg (~> 0.20)
   pg_search
@@ -535,6 +541,7 @@ DEPENDENCIES
   rqrcode (~> 0.10.1)
   rspec-collection_matchers (~> 1.1.2)
   rspec-rails (~> 3.3.0)
+  rubocop (~> 0.52.1)
   ruby-jmeter (~> 2.13.4)
   sass-rails (~> 4.0.5)
   scrypt (~> 1.2.0)
@@ -555,4 +562,4 @@ DEPENDENCIES
   will_paginate-bootstrap (~> 1.0.1)
 
 BUNDLED WITH
-   1.16.0
+   1.16.1

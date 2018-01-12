@@ -24,7 +24,6 @@ gem "cancancan", "~> 1.10.1"
 # core
 gem "rake", "~> 10.4.2"
 gem "pg", "~> 0.20"
-gem "mysql2", "~> 0.3.18"
 gem "configatron", "~> 4.5.0"
 gem "random_data", "~> 1.6.0"
 gem "paperclip", "~> 4.3.2"
@@ -110,7 +109,7 @@ gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
 gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
 
 # XLS support
-gem "axlsx", "~> 2.1.0.pre"
+gem "axlsx", "~> 2.1.1", git: "https://github.com/sassafrastech/axlsx.git", branch: "stable"
 gem "axlsx_rails", "~> 0.3.0"
 gem "roo", "~> 2.1.1"
 
@@ -156,6 +155,7 @@ group :development do
   # misc
   gem "fix-db-schema-conflicts", "~> 2.0.0"
   gem "letter_opener", "~> 1.4.1"
+  gem "rubocop", "~> 0.52.1", require: false
 end
 
 group :development, :test do
