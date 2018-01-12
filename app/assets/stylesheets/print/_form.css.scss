@@ -46,15 +46,15 @@
 
   tr.qing-group, tr.question {
     &.depth-2 td.name {
-      border-left: 20px solid #ddd;
+      border-left: 20px solid $light-border-color;
     }
 
     &.depth-3 td.name {
-      border-left: 40px solid #ddd;
+      border-left: 40px solid $light-border-color;
     }
 
     &.depth-4 td.name {
-      border-left: 60px solid #ddd;
+      border-left: 60px solid $light-border-color;
     }
   }
 

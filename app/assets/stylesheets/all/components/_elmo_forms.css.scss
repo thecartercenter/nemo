@@ -17,7 +17,7 @@ form.elmo_form, div.elmo_form {
 div.form_field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
-  border-bottom: 1px solid #DDD;
+  border-bottom: $light-border;
   padding: 5px 0;
 
   > * {
@@ -81,11 +81,6 @@ div.form_field {
     text-align: $right;
   }
 
-  .condition-fields {
-    padding: 1em 0;
-    border-bottom: 1px solid $nav-border-color
-  }
-
   div.control {
     // Need this margin to match the width of the label. See above for why we
     // do it this way.
@@ -103,6 +98,7 @@ div.form_field {
     .widget {
       display: inline-block;
       vertical-align: top;
+      width: $elmo-form-width - 240px;
 
       label {
         margin-bottom: 0;
@@ -117,7 +113,7 @@ div.form_field {
       }
 
       input[type=text], input.text, input[type=password], select, textarea {
-        width: $elmo-form-width - 240px;
+        width: 100%;
       }
 
       div.note {

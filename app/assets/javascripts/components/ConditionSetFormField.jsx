@@ -26,7 +26,7 @@ class ConditionSetFormField extends React.Component {
 
   render() {
     return (
-      <div style={{display: this.props.hide ? 'none' : ''}}>
+      <div className="condition-set" style={{display: this.props.hide ? 'none' : ''}}>
         {this.state.conditions.map((props, index) =>
           <ConditionFormField
             key={index}

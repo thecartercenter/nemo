@@ -191,7 +191,7 @@ body.reports {
   display: none;
 
   #api-users-scrollbox {
-    border: 1px solid #dddddd;
+    border: $light-border;
     padding: 4px;
     overflow-y: scroll;
     height: 150px;

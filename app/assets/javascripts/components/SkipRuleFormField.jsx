@@ -76,19 +76,25 @@ class SkipRuleFormField extends React.Component {
     }
 
     return (
-      <div style={{display: this.shouldDestroy() ? "none" : ""}}>
-        <a onClick={this.removeRule}><i className="fa fa-trash-o"></i></a>
-        <FormSelect {...destination_props} />
-        <select {...skip_if_props}>
-          <option value="always">{I18n.t("skip_rule.skip_if_options.always")}</option>
-          <option value="all_met">{I18n.t("skip_rule.skip_if_options.all_met")}</option>
-          <option value="any_met">{I18n.t("skip_rule.skip_if_options.any_met")}</option>
-        </select>
-        <ConditionSetFormField {...condition_set_props} />
-        <input {...id_field_props} />
-        <input {...destroy_field_props} />
-        <input type="hidden" name={`${name_prefix}[destination]`} value={this.state.destination} />
-        <input type="hidden" name={`${name_prefix}[dest_item_id]`} value={this.state.dest_item_id || ""} />
+      <div className="skip-rule" style={{display: this.shouldDestroy() ? "none" : ""}}>
+        <div className="skip-rule-main">
+          <div className="skip-rule-attribs">
+            <FormSelect {...destination_props} />
+            <select {...skip_if_props}>
+              <option value="always">{I18n.t("skip_rule.skip_if_options.always")}</option>
+              <option value="all_met">{I18n.t("skip_rule.skip_if_options.all_met")}</option>
+              <option value="any_met">{I18n.t("skip_rule.skip_if_options.any_met")}</option>
+            </select>
+          </div>
+          <ConditionSetFormField {...condition_set_props} />
+          <input {...id_field_props} />
+          <input {...destroy_field_props} />
+          <input type="hidden" name={`${name_prefix}[destination]`} value={this.state.destination} />
+          <input type="hidden" name={`${name_prefix}[dest_item_id]`} value={this.state.dest_item_id || ""} />
+        </div>
+        <div className="skip-rule-remove">
+          <a onClick={this.removeRule}><i className="fa fa-close"></i></a>
+        </div>
       </div>
     );
   }

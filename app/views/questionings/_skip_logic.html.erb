@@ -1,6 +1,4 @@
 <% if read_only || cannot?(:update_core, @questioning) %>
 <% else %>
-  <div id="skip-logic-form-fields">
-    <%= react_component("SkipLogicFormField", QuestioningSerializer.new(@questioning)) %>
-  </div>
+  <%= react_component("SkipLogicFormField", QuestioningSerializer.new(@questioning)) %>
 <% end %>

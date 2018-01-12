@@ -16,8 +16,6 @@
       </dl>
     <% end %>
   <% else %>
-    <div id="condition-form-fields">
-      <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %>
-    </div>
+    <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %>
   <% end %>
 <% end %>

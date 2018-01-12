@@ -96,13 +96,13 @@ table.index_table {
   }
 
   tr:last-child td {
-    border-bottom: 1px solid #ddd;
+    border-bottom: $light-border;
   }
 
   td {
     vertical-align: middle;
 
-    border-top: 1px solid #ddd;
+    border-top: $light-border;
     padding: 6px 10px 6px 3px;
 
     /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */

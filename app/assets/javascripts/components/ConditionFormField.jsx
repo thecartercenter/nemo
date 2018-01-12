@@ -116,12 +116,16 @@ class ConditionFormField extends React.Component {
 
     return (
       <div className="condition-fields" style={{display: this.shouldDestroy() ? "none" : ""}}>
-        <a onClick={this.removeCondition}><i className="fa fa-trash-o"></i></a>
         <input {...id_field_props}/>
         <input {...destroy_field_props} />
         <FormField {...ref_qing_field_props} />
         <FormField {...operator_field_props} />
-        <FormField {...value_field_props} />
+        <div className="condition-value">
+          <FormField {...value_field_props} />
+        </div>
+        <div className="condition-remove">
+          <a onClick={this.removeCondition}><i className="fa fa-close"></i></a>
+        </div>
       </div>
     );
   }

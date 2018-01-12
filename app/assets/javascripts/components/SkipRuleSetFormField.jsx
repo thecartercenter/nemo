@@ -25,7 +25,7 @@ class SkipRuleSetFormField extends React.Component {
 
   render() {
     return (
-      <div style={{display: this.props.hide ? 'none' : ''}}>
+      <div className="skip-rule-set" style={{display: this.props.hide ? 'none' : ''}}>
         {this.state.skip_rules.map((props, index) =>
           <SkipRuleFormField
             key={index}

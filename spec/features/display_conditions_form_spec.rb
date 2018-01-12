@@ -200,6 +200,6 @@ feature "display conditions form", js: true do
   end
 
   def click_delete_link
-    find(".fa-trash-o").click
+    find(".fa-close").click
   end
 end
