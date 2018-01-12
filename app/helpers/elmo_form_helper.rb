@@ -54,7 +54,7 @@ module ElmoFormHelper
   def hint_popover(content, link: nil)
     return "" if content.blank?
     link ||= content_tag(:i, "", class: "hint fa fa-2x fa-info-circle")
-    content_tag(:a, link, tabindex: "0", role: "button", "data-trigger": "focus", rel: "popover",
+    content_tag(:a, link, tabindex: -1, role: "button", "data-trigger": "focus", rel: "popover",
       class: "hint", "data-content": content)
   end
 
