@@ -6,7 +6,7 @@ class QingGroup < FormItem
   alias_method :c, :sorted_children
 
   def code
-    nil
+    group_name
   end
 
   def qtype_name
