@@ -63,7 +63,6 @@ class ConditionFormField extends React.Component {
         key: `${id_prefix}_option_node_ids_`,
         option_set_id: this.state.option_set_id,
         option_node_id: this.state.option_node_id,
-        label: I18n.t('activerecord.attributes.condition.value')
       }
     } else {
       return {
@@ -73,7 +72,6 @@ class ConditionFormField extends React.Component {
         id: `${id_prefix}_value`,
         key: `${id_prefix}_value`,
         value: this.state.value ? this.state.value : "",
-        label: I18n.t('activerecord.attributes.condition.value')
       }
     }
   }
@@ -95,7 +93,6 @@ class ConditionFormField extends React.Component {
       for: `${id_prefix}_ref_qing_id`,
       key: `${id_prefix}_ref_qing_id`,
       value: this.state.ref_qing_id ? this.state.ref_qing_id : "",
-      label: I18n.t('activerecord.attributes.condition.ref_qing_id'),
       options: this.formatRefQingOptions(this.state.refable_qings),
       changeFunc: this.updateFieldData
     };
@@ -106,7 +103,6 @@ class ConditionFormField extends React.Component {
       for: `${id_prefix}_op`,
       key: `${id_prefix}_op`,
       value: this.state.op ? this.state.op : "",
-      label: I18n.t('activerecord.attributes.condition.op'),
       options: this.state.operator_options
     };
     let destroy_field_props = {
