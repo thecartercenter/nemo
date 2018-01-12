@@ -1939,6 +1939,7 @@ en:
       frontlinecloud: "FrontlineCloud Settings"
 
   skip_rule:
+    end: "End"
     skip_if_options:
       always: "in all cases"
       all_met: "if all of these conditions are met"
