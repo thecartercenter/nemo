@@ -13,10 +13,11 @@ class SkipRuleSetFormField extends React.Component {
   }
 
   addRule() {
+    let later_items_exist = this.state.later_items.length > 0;
     this.setState({skip_rules:
       this.state.skip_rules.concat([{
-        destination: this.state.later_items.length > 0 ? "item" : "end",
-        dest_item_id: this.state.later_items[0].id,
+        destination: later_items_exist ? "item" : "end",
+        dest_item_id: later_items_exist ? this.state.later_items[0] : null,
         skip_if: "always",
         conditions: []
       }])
