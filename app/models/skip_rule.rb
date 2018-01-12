@@ -1,6 +1,7 @@
 class SkipRule < ActiveRecord::Base
   include MissionBased, Replication::Replicable
 
+  acts_as_paranoid
   acts_as_list column: :rank, scope: [:source_item_id, deleted_at: nil]
 
   belongs_to :source_item, class_name: "FormItem", inverse_of: :skip_rules
@@ -12,6 +13,9 @@ class SkipRule < ActiveRecord::Base
   before_create :set_mission
 
   validate :require_dest_item
+  validate :collect_condition_errors
+
+  delegate :form, :form_id, :refable_qings, to: :source_item
 
   accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
@@ -43,7 +47,7 @@ class SkipRule < ActiveRecord::Base
   end
 
   def normalize
-    if conditions.none?
+    if conditions.reject(&:marked_for_destruction?).none?
       self.skip_if = "always"
     elsif skip_if == "always"
       self.skip_if = "all_met"
@@ -53,6 +57,14 @@ class SkipRule < ActiveRecord::Base
   def require_dest_item
     if destination != "end" && dest_item.nil?
       errors.add(:dest_item_id, :blank_unless_goto_end)
+    end
+  end
+
+  # If there is a validation error on the conditions, we know it has to be due
+  # to a missing field. This is easier to catch here instead of React for now.
+  def collect_condition_errors
+    if conditions.any?(&:invalid?)
+      errors.add(:base, :all_required)
     end
   end
 

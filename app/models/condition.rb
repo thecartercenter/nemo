@@ -3,9 +3,6 @@ class Condition < ApplicationRecord
 
   acts_as_paranoid
 
-  # question types that cannot be used in conditions
-  NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video)
-
   belongs_to :conditionable, polymorphic: true
   belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",
     inverse_of: :referring_conditions
@@ -16,7 +13,6 @@ class Condition < ApplicationRecord
   before_create :set_mission
 
   validate :all_fields_required
-  validates :conditionable, presence: true
 
   delegate :has_options?, :rank, :full_dotted_rank, to: :ref_qing, prefix: true
   delegate :form, :form_id, :refable_qings, to: :conditionable

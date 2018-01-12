@@ -115,12 +115,7 @@ ELMO::Application.routes.draw do
     end
     resources :markers
     resources :questions
-    resources :questionings do
-      collection do
-        get "condition_form", path: "condition-form"
-      end
-    end
-
+    resources :questionings
     resources :qing_groups, path: "qing-groups", except: :index
     resources :settings do
       member do
@@ -145,7 +140,11 @@ ELMO::Application.routes.draw do
       end
     end
 
-    resources :form_items, path: "form-items", only: [:update]
+    resources :form_items, path: "form-items", only: [:update] do
+      collection do
+        get "condition_form", path: "condition-form"
+      end
+    end
 
     resources :option_sets, path: "option-sets" do
       member do

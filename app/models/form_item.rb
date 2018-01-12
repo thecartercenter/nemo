@@ -6,6 +6,9 @@ class FormItem < ApplicationRecord
   acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
 
+  # These are just for mounting validation errors.
+  attr_accessor :display_logic, :skip_logic
+
   # These associations are really only applicable to Questioning, but
   # they are defined here to allow eager loading.
   belongs_to :question, autosave: true, inverse_of: :questionings
@@ -31,6 +34,7 @@ class FormItem < ApplicationRecord
   has_ancestry cache_depth: true
 
   validate :parent_must_be_group
+  validate :collect_conditional_logic_errors
 
   delegate :name, to: :form, prefix: true
 
@@ -115,6 +119,25 @@ class FormItem < ApplicationRecord
     sorted = children.order(:rank)
   end
 
+  # All questionings that can be referred to by a condition if it were defined on this item.
+  def refable_qings
+    all_items = form.preordered_items
+    all_previous = persisted? ? all_items[0...(all_items.index(self))] : all_items
+    all_previous.select(&:refable?)
+  end
+
+  def refable?
+    qtype_name && QuestionType[qtype_name].refable?
+  end
+
+  # Returns all form items after this one in the form, in preorder traversal order.
+  # If item is not persisted, returns empty array.
+  def later_items(eager_load: nil)
+    return [] unless persisted?
+    all_items = form.preordered_items(eager_load: eager_load)
+    all_items[(all_items.index(self) + 1)..-1]
+  end
+
   # Returns an array of ranks of all parents plus self, e.g. [2,5].
   # Uses the cached value setup by descendant_questionings if available.
   def full_rank
@@ -178,7 +201,7 @@ class FormItem < ApplicationRecord
       display_conditions.destroy(cond) if cond.all_fields_blank?
     end
 
-    if display_conditions.none?
+    if display_conditions.reject(&:marked_for_destruction?).none?
       self.display_if = "always"
     elsif display_if == "always"
       self.display_if = "all_met"
@@ -201,5 +224,17 @@ class FormItem < ApplicationRecord
 
   def parent_must_be_group
     errors.add(:parent, :must_be_group) unless parent.nil? || parent.is_a?(QingGroup)
+  end
+
+  # If there is a validation error on display logic or skip logic, we know it has to be due
+  # to a missing field. This is easier to catch here instead of React for now.
+  def collect_conditional_logic_errors
+    if display_conditions.any?(&:invalid?)
+      errors.add(:display_logic, :all_required)
+    end
+
+    if skip_rules.any?(&:invalid?)
+      errors.add(:skip_logic, :all_required)
+    end
   end
 end

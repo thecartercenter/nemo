@@ -434,7 +434,8 @@ en:
       questioning:
         name: "Title"
         condition: "Condition?"
-        display_if: "Display Logic"
+        display_logic: "Display Logic"
+        skip_logic: "Skip Logic"
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
@@ -719,6 +720,7 @@ en:
           other: "Please enter exactly %{count} characters."
         must_be_group: "Parent must be a group."
         invalid_password: "Password must include at least one number, one lowercase letter, and one capital letter."
+        all_required: "All fields are required."
       models:
         answer:
           required: "Please enter a value."
@@ -1287,14 +1289,23 @@ en:
       unknown_number: "[unknown number]"
 
   form_item:
-    add_condition: "Add condition"
+    add_condition: "Add Condition"
+    add_rule: "Add Rule"
     display_if_options:
-      always: "Always display this question."
-      all_met: "Display this question if all of these conditions are met."
-      any_met: "Display this question if any of these conditions are met."
+      always: "Always display this question"
+      all_met: "Display this question if all of these conditions are met"
+      any_met: "Display this question if any of these conditions are met"
     display_if_operator:
       all_met: "and"
       any_met: "or"
+    skip_logic_options:
+      dont_skip: "After this question, go to the next question"
+      skip: "After this question, skip to..."
+    skip_if_options:
+      always: "in all cases"
+      all_met: "if all of these conditions are met"
+      any_met: "if any of these conditions are met"
+    end_of_form: "The end of the form"
 
   import:
     row_error: "Row %{row}: %{error}"

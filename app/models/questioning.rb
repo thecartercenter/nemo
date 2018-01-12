@@ -1,8 +1,6 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  NON_REFABLE_TYPES = %w(location image annotated_image signature sketch audio video).to_set
-
   delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node, :first_leaf_option,
     :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels, :min_max_error_msg,
     :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name, :option_set_id,
@@ -47,22 +45,9 @@ class Questioning < FormItem
     ancestry_depth > 1 && parent.repeatable?
   end
 
-  # all questionings that can be referred to by a condition
-  def refable_qings
-    previous.reject { |qing| NON_REFABLE_TYPES.include?(qing.qtype_name) }
-  end
-
   # Gets full dotted ranks of all referring conditions' questionings.
   def referring_condition_ranks
     referring_conditions.map { |c| c.questioning.full_dotted_rank }
-  end
-
-  # Returns any questionings appearing before this one on the form.
-  # For an unsaved questioning, returns all questions on form.
-  # If an unsaved question does not have a form defined, this will result in an error.
-  def previous
-    return form.questionings if new_record?
-    form.questionings.reject { |q| q == self || (q.full_rank <=> full_rank) == 1 }
   end
 
   def smsable?

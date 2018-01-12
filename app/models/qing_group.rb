@@ -5,6 +5,14 @@ class QingGroup < FormItem
 
   alias_method :c, :sorted_children
 
+  def code
+    nil
+  end
+
+  def qtype_name
+    nil
+  end
+
   def child_groups
     children.where(type: "QingGroup")
   end

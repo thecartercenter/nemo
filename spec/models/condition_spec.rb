@@ -55,15 +55,6 @@ describe Condition do
     end
   end
 
-  describe "refable qings" do
-    let(:form) { create(:form, question_types: %w(location integer integer integer integer)) }
-    let(:cond) { Condition.new(conditionable: form.questionings[3]) }
-
-    it "should be correct" do
-      expect(cond.refable_qings).to eq form.questionings[1..2]
-    end
-  end
-
   describe "applicable operator names" do
     let(:form) { create(:form, question_types: %w(select_one integer)) }
     let(:cond) { Condition.new(ref_qing: form.questionings[0]) }

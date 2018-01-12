@@ -1,4 +1,4 @@
-class ConditionsFormField extends React.Component {
+class ConditionFormField extends React.Component {
 
   constructor(props) {
     super();
@@ -7,7 +7,7 @@ class ConditionsFormField extends React.Component {
     this.formatRefQingOptions = this.formatRefQingOptions.bind(this);
     this.buildUrl = this.buildUrl.bind(this);
     this.buildValueProps = this.buildValueProps.bind(this);
-    this.deleteCondition = this.deleteCondition.bind(this);
+    this.removeCondition = this.removeCondition.bind(this);
     this.state = props;
   }
 
@@ -21,20 +21,24 @@ class ConditionsFormField extends React.Component {
     var url = this.buildUrl(refQingId);
     $.ajax(url)
       .done(function(response) {
-          self.setState(response);
-        })
-        .fail(function(jqXHR, exception){
-          console.log(exception);
-        })
-        .always(function() {
+          // Need to put this before we set state because setting state may trigger a new one.
           ELMO.app.loading(false);
+
+          // We set option node ID to null since the new ref_qing may have a new option set.
+          self.setState(Object.assign(response, {option_node_id: null}));
+        })
+        .fail(function(jqXHR, exception) {
+          ELMO.app.loading(false);
+          console.log(exception);
         });
   }
 
   buildUrl(refQingId) {
-    var url = `${ELMO.app.url_builder.build('questionings', 'condition-form')}?condition_id=${this.state.id}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`
+    var url = `${ELMO.app.url_builder.build('form-items', 'condition-form')}?`;
+    url += `condition_id=${this.state.id || ""}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`;
     if (this.state.conditionable_id) {
       url += '&conditionable_id=' + this.state.conditionable_id;
+      url += '&conditionable_type=' + this.state.conditionable_type;
     }
     return url;
   }
@@ -45,19 +49,20 @@ class ConditionsFormField extends React.Component {
     });
   }
 
-  deleteCondition() {
-    this.setState({destroy: true})
+  removeCondition() {
+    this.setState({remove: true})
   }
 
   buildValueProps(name_prefix, id_prefix) {
-    if (this.state.option_node != null) {
+    if (this.state.option_set_id != null) {
       return {
         type: "cascading_select",
-        name: `${name_prefix}[option_node_ids][]`,
+        name_prefix: name_prefix,
         for: `${id_prefix}_value`, //not a mistake; the for is for value; the others are for selects
         id: `${id_prefix}_option_node_ids_`,
         key: `${id_prefix}_option_node_ids_`,
-        option_node: this.state.option_node,
+        option_set_id: this.state.option_set_id,
+        option_node_id: this.state.option_node_id,
         label: I18n.t('activerecord.attributes.condition.value')
       }
     } else {
@@ -74,9 +79,9 @@ class ConditionsFormField extends React.Component {
   }
 
   render() {
-    let name_prefix = 'questioning[display_conditions_attributes][]';
-    let id_prefix = 'questioning_display_conditions_attributes';
-    let condition_field_props = {
+    let name_prefix = this.state.name_prefix + `[${this.state.index}]`;
+    let id_prefix = name_prefix.replace(/[\[\]]/g, '_');
+    let id_field_props = {
       type: "hidden",
       name: `${name_prefix}[id]`,
       id: `${id_prefix}_id`,
@@ -109,27 +114,23 @@ class ConditionsFormField extends React.Component {
       name: `${name_prefix}[_destroy]`,
       id: `${id_prefix}__destroy`,
       key: `${id_prefix}__destroy`,
-      value: this.state.destroy ? "1" : "0",
+      value: this.shouldDestroy() ? "1" : "0",
     }
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
-    if (this.state.destroy === true) {
-      return (
-        <div className="condition-fields">
-          <input {...condition_field_props} />
-          <input {...destroy_field_props} />
-        </div>
-      )
-    }
-    else {
-      return (
-        <div className="condition-fields">
-          <a className="action-link" onClick={this.deleteCondition}><i className="fa fa-trash-o"></i></a>
-          <input {...condition_field_props}/>
-          <FormField {...ref_qing_field_props} />
-          <FormField {...operator_field_props} />
-          <FormField {...value_field_props} />
-        </div>
-      );
-    }
+
+    return (
+      <div className="condition-fields" style={{display: this.shouldDestroy() ? "none" : ""}}>
+        <a className="action-link" onClick={this.removeCondition}><i className="fa fa-trash-o"></i></a>
+        <input {...id_field_props}/>
+        <input {...destroy_field_props} />
+        <FormField {...ref_qing_field_props} />
+        <FormField {...operator_field_props} />
+        <FormField {...value_field_props} />
+      </div>
+    );
+  }
+
+  shouldDestroy() {
+    return this.state.remove || this.props.hide;
   }
 }

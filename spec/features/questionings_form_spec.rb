@@ -16,7 +16,8 @@ describe "questionings form", js: true  do
         visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
         expect_editable("required", true)
         expect_editable("hidden", true)
-        expect_editable("display_if", true, field_type: "select")
+        expect_editable("display_logic", true, field_type: "select")
+        expect_editable("skip_logic", true, field_type: "select")
       end
     end
 
@@ -26,7 +27,8 @@ describe "questionings form", js: true  do
         visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
         expect_editable("required", false)
         expect_editable("hidden", false)
-        expect_editable("display_if", false, field_type: "select")
+        expect_editable("display_logic", false, field_type: "select")
+        expect_editable("skip_logic", false, field_type: "select")
       end
     end
   end
@@ -40,7 +42,8 @@ describe "questionings form", js: true  do
       visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
       expect_editable("required", true)
       expect_editable("hidden", true)
-      expect_editable("display_if", true, field_type: "select")
+      expect_editable("display_logic", true, field_type: "select")
+      expect_editable("skip_logic", true, field_type: "select")
     end
   end
 

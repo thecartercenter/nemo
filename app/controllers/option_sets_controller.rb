@@ -110,7 +110,7 @@ class OptionSetsController < ApplicationController
   end
 
   def condition_form_view
-    option_node = OptionNode.find_by_id(params[:node_id]) #false if not found instead of throwing exception
+    option_node = OptionNode.find_by_id(params[:node_id]) # null if not found instead of throwing exception
     option_node ||= @option_set.root_node
     render json: OptionNodeConditionViewSerializer.new(option_node)
   end

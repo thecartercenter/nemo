@@ -1,7 +1,8 @@
 class ConditionViewSerializer < ActiveModel::Serializer
-  attributes :id, :ref_qing_id, :op, :value, :option_node, :form_id, :conditionable_id, :operator_options
+  attributes :id, :ref_qing_id, :op, :value, :option_node_id, :option_set_id,
+    :form_id, :conditionable_id, :conditionable_type, :operator_options
 
-  has_many :refable_qings, serializer: RefableQuestioningSerializer
+  has_many :refable_qings, serializer: TargetFormItemSerializer
 
   def id
     object.id
@@ -19,11 +20,7 @@ class ConditionViewSerializer < ActiveModel::Serializer
     object.value
   end
 
-  def option_node
-    if object.ref_qing.present? && object.ref_qing_has_options?
-      { node_id: object.option_node.try(:id), set_id: object.ref_qing.try(:option_set_id) }
-    else
-      nil
-    end
+  def option_set_id
+    object.ref_qing.try(:option_set_id)
   end
 end

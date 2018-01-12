@@ -52,6 +52,7 @@ class QuestioningsController < ApplicationController
     if @questioning.save
       set_success_and_redirect(@questioning.question, :to => edit_form_path(@questioning.form))
     else
+      flash.now[:error] = I18n.t("activerecord.errors.models.question.general")
       prepare_and_render_form
     end
   end
@@ -62,25 +63,8 @@ class QuestioningsController < ApplicationController
     render nothing: true, status: 204
   end
 
-  # Responds to ajax request with json containing data needed for condition form.
-  def condition_form
-    if params[:conditionable_id].present?
-      @questioning = Questioning.find(params[:conditionable_id])
-    else
-      # Create a dummy questioning so that the condition can look up the refable qings, etc.
-      @questioning = init_qing(form_id: params[:form_id])
-    end
-
-    authorize! :condition_form, @questioning
-
-    @condition = @questioning.display_conditions.find_by(id: params[:condition_id])
-    @condition ||= @questioning.display_conditions.build(conditionable: @questioning)
-
-    @condition.ref_qing_id = params[:ref_qing_id]
-    render json: ConditionViewSerializer.new(@condition), status: 200
-  end
-
   private
+
   # prepares objects for and renders the form template
   def prepare_and_render_form
     # this method lives in the QuestionFormable concern
@@ -96,9 +80,12 @@ class QuestioningsController < ApplicationController
   end
 
   def questioning_params
+    condition_params = [:id, :ref_qing_id, :op, :value, :_destroy, option_node_ids: []]
     params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
       :required, :default, :read_only, :display_if,
-      { display_conditions_attributes: [:_destroy, :id, :ref_qing_id, :op, :value, option_node_ids: []] },
-      { question_attributes: whitelisted_question_params(params[:questioning][:question_attributes]) })
+      {display_conditions_attributes: condition_params},
+      {skip_rules_attributes: [:id, :destination, :dest_item_id, :skip_if, :_destroy,
+        conditions_attributes: condition_params]},
+      {question_attributes: whitelisted_question_params(params[:questioning][:question_attributes])})
   end
 end
