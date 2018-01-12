@@ -60,8 +60,21 @@ module Forms
 
     def add_to_table(item, condition_group)
       table[item] ||= empty_group
-      table[item].members << condition_group
+      table[item].members << update_conditionables(condition_group, item)
       last_item_cache[condition_group] = item
+    end
+
+    # In the database, the members' (uncomputed) conditions have their conditionable as the skip rule.
+    # When displaying in the view, computed conditions have the current form item as their conditionable.
+    # We make copies to avoid incorrect data elsewhere
+    def update_conditionables(condition_group, item)
+      new_group = condition_group.dup
+      new_group.members = condition_group.members.map do |condition|
+        new_condition = condition.dup
+        new_condition.conditionable = item
+        new_condition
+      end
+      new_group
     end
 
     def empty_group

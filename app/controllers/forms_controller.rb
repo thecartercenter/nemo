@@ -78,7 +78,7 @@ class FormsController < ApplicationController
 
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || 'odk'
-
+        setup_condition_computer
         @form = Odk::DecoratorFactory.decorate(@form)
       end
     end
@@ -234,6 +234,10 @@ class FormsController < ApplicationController
   end
 
   private
+
+    def setup_condition_computer
+      @condition_computer = Forms::ConditionComputer.new(@form)
+    end
 
     def set_api_users
       return unless params[:form][:access_level] == 'protected'

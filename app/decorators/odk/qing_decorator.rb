@@ -23,7 +23,7 @@ module Odk
     end
 
     def subqings
-      decorate_collection(object.subqings)
+      decorate_collection(object.subqings, context: context)
     end
 
     private

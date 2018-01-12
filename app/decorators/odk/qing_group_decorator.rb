@@ -8,7 +8,7 @@ module Odk
     end
 
     def sorted_children
-      decorate_collection(object.sorted_children)
+      decorate_collection(object.sorted_children, context: context)
     end
 
     def bind_tag(xpath_prefix: "/data")

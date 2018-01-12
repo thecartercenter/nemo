@@ -85,51 +85,6 @@ module Odk
       end
     end
 
-    describe "#relevance" do
-      let(:form) { create(:form, question_types: %w(integer integer)) }
-      let(:qing) { form.c[1] }
-      subject { decorate(qing).relevance }
-
-      before do
-        allow(qing).to receive(:display_conditions).and_return(disp_conds)
-        qing.display_if = display_if
-      end
-
-      context "with multiple conditions" do
-        let(:disp_conds) { [double(to_odk: "foo"), double(to_odk: "bar")] }
-
-        context "with display_if all_met" do
-          let(:display_if) { "all_met" }
-          it { is_expected.to eq "(foo) and (bar)" }
-        end
-
-        context "with display_if any_met" do
-          let(:display_if) { "any_met" }
-          it { is_expected.to eq "(foo) or (bar)" }
-        end
-      end
-
-      context "with one condition" do
-        let(:disp_conds) { [double(to_odk: "foo")] }
-
-        context "with display_if all_met" do
-          let(:display_if) { "all_met" }
-          it { is_expected.to eq "foo" }
-        end
-
-        context "with display_if any_met" do
-          let(:display_if) { "any_met" }
-          it { is_expected.to eq "foo" }
-        end
-      end
-
-      context "with no conditions" do
-        let(:disp_conds) { [] }
-        let(:display_if) { "always" }
-        it { is_expected.to be_nil }
-      end
-    end
-
     def decorate(obj)
       Odk::DecoratorFactory.decorate(obj)
     end

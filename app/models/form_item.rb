@@ -36,6 +36,7 @@ class FormItem < ApplicationRecord
   validate :parent_must_be_group
   validate :collect_conditional_logic_errors
 
+  delegate :condition_computer, to: :form
   delegate :name, to: :form, prefix: true
 
   replicable child_assocs: [:question, :display_conditions, :skip_rules, :children],
@@ -187,7 +188,7 @@ class FormItem < ApplicationRecord
   end
 
   def condition_group
-    @condition_group ||= ConditionGroup.new(true_if: display_if, members: display_conditions)
+    @condition_group ||= Forms::ConditionGroup.new(true_if: display_if, members: display_conditions)
   end
 
   def group?

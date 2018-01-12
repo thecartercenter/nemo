@@ -364,6 +364,35 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     end
   end
 
+  context "form with skip rule and display conditions" do
+    let!(:form) do
+      create(:form, :published, :with_version, name: "Sample",
+        question_types: %w(text long_text integer decimal location select_one
+          multilevel_select_one select_multiple text datetime ))
+    end
+
+    before do
+      form.sorted_children[8].update_attributes!(hidden: true, required: true)
+
+      # Include multiple conditions on one question.
+      form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
+      form.c[6].display_conditions.create!(ref_qing: form.c[5], op: "eq", option_node: form.c[5].option_set.c[0])
+      form.c[6].update!(display_if: "all_met")
+      create(:skip_rule,
+        source_item: form.c[2],
+        destination: "item",
+        dest_item_id: form.c[7].id,
+        skip_if: "all_met",
+        conditions_attributes: [{ref_qing_id: form.c[2].id, op: "eq", value: 0}]
+      )
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("form_with_skip_rule.xml", form)
+    end
+  end
+
   def do_request_and_expect_success
     get(form_path(form, format: :xml))
     expect(response).to be_success
