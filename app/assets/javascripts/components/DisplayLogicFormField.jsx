@@ -19,11 +19,14 @@ class DisplayLogicFormField extends React.Component {
       onChange: this.displayIfChanged
     }
 
+    // Display logic conditions can't reference self, as that doesn't make sense.
+    let refable_qings = this.state.refable_qings.slice(0, -1);
+
     let condition_set_props = {
       conditions: this.state.display_conditions,
       conditionable_id: this.state.id,
       conditionable_type: "FormItem",
-      refable_qings: this.state.refable_qings,
+      refable_qings: refable_qings,
       form_id: this.state.form_id,
       hide: this.state.display_if == "always",
       name_prefix: "questioning[display_conditions_attributes]"

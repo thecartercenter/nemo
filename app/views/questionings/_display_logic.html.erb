@@ -1,21 +1,16 @@
 <%# NOTE this template does not use elmo_form_for because it is rendered inside the control area of
     an elmo form field and therefore doesn't need all the structure that comes with an elmo form field %>
-<%# if there are no referrable questionings, no point in showing the condition form %>
-<% if !read_only && @questioning.refable_qings.empty? %>
-  <%= t("condition.no_refable_qings") %>
-<% else %>
-  <% if read_only || cannot?(:update_core, @questioning) %>
-    <% if @questioning.display_if == "always" %>
-      <%= t("form_item.display_if_options.always") %>
-    <% else %>
-      <dl>
-        <dt><%= t("form_item.display_if_options.#{@questioning.display_if}") %></dt>
-        <% @questioning.display_conditions.each do |condition| %>
-          <dd><%= condition.decorate.human_readable(include_code: true) %></dd>
-        <% end %>
-      </dl>
-    <% end %>
+<% if read_only || cannot?(:update_core, @questioning) %>
+  <% if @questioning.display_if == "always" %>
+    <%= t("form_item.display_if_options.always") %>
   <% else %>
-    <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %>
+    <dl>
+      <dt><%= t("form_item.display_if_options.#{@questioning.display_if}") %></dt>
+      <% @questioning.display_conditions.each do |condition| %>
+        <dd><%= condition.decorate.human_readable(include_code: true) %></dd>
+      <% end %>
+    </dl>
   <% end %>
+<% else %>
+  <%= react_component("DisplayLogicFormField", QuestioningSerializer.new(@questioning)) %>
 <% end %>

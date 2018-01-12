@@ -192,7 +192,8 @@ describe FormItem do
         form.c[0],
         form.c[2],
         form.c[3].c[0],
-        form.c[3].c[1].c[0]
+        form.c[3].c[1].c[0],
+        form.c[3].c[1].c[1]
       ]
     end
 
@@ -205,7 +206,7 @@ describe FormItem do
     end
 
     it "is correct for first question on form" do
-      expect(form.c[0].refable_qings).to be_empty
+      expect(form.c[0].refable_qings).to eq [form.c[0]]
     end
 
     it "returns all questionings of refable type on form if host item not persisted" do
