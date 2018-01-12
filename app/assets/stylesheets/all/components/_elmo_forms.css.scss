@@ -40,7 +40,7 @@ div.form_field {
 
   div.form-errors {
     /* cancel the left margin for form errors inside a form_field */
-    margin-left: 0;
+    margin-#{$left}: 0;
   }
 
   div.reqd-sym {
@@ -160,7 +160,7 @@ div.form_field {
 
 form {
   div.submit-buttons {
-    text-align: right;
+    text-align: $right;
     margin-top: 20px;
   }
 
@@ -174,13 +174,13 @@ div.form-warning {
 
   i {
     display: block;
-    float: left;
+    float: $left;
     font-size: 14px;
     margin-top: 1px;
   }
 
   & > div {
-    margin-left: 20px;
+    margin-#{$left}: 20px;
   }
 }
 
@@ -280,5 +280,5 @@ div.cascading-selects {
 }
 
 div.more-settings, div.less-settings {
-  text-align: right;
+  text-align: $right;
 }

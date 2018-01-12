@@ -4,7 +4,7 @@ form {
     @mixin remove-link-div {
       flex: none;
       width: 20px;
-      text-align: right;
+      text-align: $right;
 
       i {
         font-size: 16px;
@@ -17,7 +17,7 @@ form {
     }
 
     .condition-set {
-      margin-left: 20px;
+      margin-#{$left}: 20px;
     }
 
     .condition-set, .skip-rule-set {
@@ -46,7 +46,7 @@ form {
           flex: 1;
 
           &:first-child {
-            margin-right: 10px;
+            margin-#{$right}: 10px;
           }
         }
       }
