@@ -25,7 +25,17 @@ div.form_field {
   }
 
   a.hint {
+    margin-top: 6px;
+    display: inline-block;
     white-space: nowrap;
+
+    i.hint {
+      display: inline-block;
+      color: $elmo-blue;
+      font-size: 1.5em;
+      vertical-align: middle;
+      padding-#{$left}: 5px;
+    }
   }
 
   div.form-errors {
@@ -49,6 +59,7 @@ div.form_field {
 
   .label_and_control {
     display: inline-block;
+    vertical-align: top;
 
     /* ensures label stays next to control */
     white-space: nowrap;
@@ -87,7 +98,7 @@ div.form_field {
     margin-#{$left}: $label-width;
 
     vertical-align: middle;
-    width: $elmo-form-width - 230px;
+    width: $elmo-form-width - 225px;
     min-height: 26px;
     position: relative;
 
@@ -96,9 +107,7 @@ div.form_field {
     }
 
     .widget {
-      display: inline-block;
       vertical-align: top;
-      width: $elmo-form-width - 240px;
 
       label {
         margin-bottom: 0;

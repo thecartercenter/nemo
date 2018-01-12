@@ -69,14 +69,6 @@ div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; 
 a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin-right: 3px; }
 table a.action_link { margin: -2px 10px -2px 0; }
 
-i.hint {
-  display: inline-block;
-  color: $elmo-blue;
-  font-size: 1.5em;
-  vertical-align: middle;
-  padding: 0 5px;
-}
-
 div.popover {
   top: -2.5px;
   width: 300px;
