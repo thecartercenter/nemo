@@ -11,11 +11,8 @@ menu on the main menu bar to create or edit existing Option Sets.
 
 1. Click **Create New Option** **Set** link available from the
    **Option Sets** menu. Option set settings appear:
-    |new option set edited|
-2. In the box marked **Name**, create a unique name that summarizes
-   the Option Set being created.
-
-   1. Observer users will not be able to view this name
+   |new option set edited|
+2. In the box marked **Name**, create a unique name that summarizes the Option Set being created. Observer users will not be able to view this name.
 
 3. If this Option Set represents geographic information, check the box
    labeled **Is Geographic?** (i.e. a set of provinces or regions).
@@ -68,7 +65,12 @@ To create a Multilevel Option Set:
 4. Repeat step 3 until all levels have been created
 5. Click and drag levels so that the first level is at the top and the
    last level is at the bottom. Do not indent levels:
-    |levels WRONG| [|levels RIGHT|
+
+   .. image:: levels-WRONG.png
+      :alt: levels WRONG
+
+   .. image:: levels-RIGHT.png
+      :alt: levels RIGHT
 6. Add options
 7. Click and drag options so that options of any level below the first
    are beneath and indented to the right of the options of the level

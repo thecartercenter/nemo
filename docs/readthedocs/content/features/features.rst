@@ -26,7 +26,7 @@ To send a Broadcast Message:
 3. Click **Send Broadcast**—this action will direct to a page where
    the medium of the broadcast can be selected, and the subject and its
    content can be entered into a text field
-    |broadcast selection edited|
+   |broadcast selection edited|
 4. Select a medium from the drop down list:
 
    1. **SMS preferred**: will try to send a SMS and then an email, if
