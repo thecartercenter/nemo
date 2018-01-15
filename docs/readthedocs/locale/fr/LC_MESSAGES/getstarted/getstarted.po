@@ -1,8 +1,8 @@
 # SOME DESCRIPTIVE TITLE.
 # Copyright (C) 2017, The Carter Center
 # This file is distributed under the same license as the Elmo package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2018.
-#
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# 
 #, fuzzy
 msgid ""
 msgstr ""
@@ -10,32 +10,42 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-10 16:48+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Last-Translator: zied abaoub <abaoubzied@gmail.com>, 2018\n"
+"Language-Team: French (https://www.transifex.com/sassafras-tech-collective/teams/17549/fr/)\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=utf-8\n"
+"Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Generated-By: Babel 2.5.1\n"
+"Language: fr\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: ../../content/getstarted/getstarted.rst:2
 msgid "1. Getting Started"
-msgstr ""
+msgstr "1. Introduction"
 
 #: ../../content/getstarted/getstarted.rst:5
 msgid "1.1. What is ELMO?"
-msgstr ""
+msgstr "1.1. ELMO"
 
 #: ../../content/getstarted/getstarted.rst:7
 msgid ""
-"ELMO is The Carter Center’s open-source ELection MOnitoring data "
-"collection and reporting system, built specifically with election "
-"monitoring in mind. Equipped with ELMO, observers can submit evaluations "
-"of a process – via tablets (utilizing Open Data Kit), SMS, or directly "
-"online – in real-time to field or *mission* headquarters. ELMO’s "
-"reporting system organizes observer findings, and is relied upon by The "
-"Carter Center missions around the globe to analyze data and to assess "
-"elections as well as broader political processes."
+"ELMO is The Carter Center’s open-source ELection MOnitoring data collection "
+"and reporting system, built specifically with election monitoring in mind. "
+"Equipped with ELMO, observers can submit evaluations of a process – via "
+"tablets (utilizing Open Data Kit), SMS, or directly online – in real-time to"
+" field or *mission* headquarters. ELMO’s reporting system organizes observer"
+" findings, and is relied upon by The Carter Center missions around the globe"
+" to analyze data and to assess elections as well as broader political "
+"processes."
 msgstr ""
+"ELMO est le système de collecte de données et de reporting de ELection "
+"MOnitoring open-source du Centre Carter, spécialement conçu pour le suivi "
+"des élections. Equipé d'ELMO, les observateurs peuvent soumettre des "
+"évaluations d'un processus - via des tablettes (en utilisant Open Data Kit),"
+" SMS, ou directement en ligne - en temps réel au siège de la mission ou de "
+"la mission *. Le système de rapports d'ELMO organise les résultats des "
+"observateurs et est utilisé par les missions du Centre Carter dans le monde "
+"entier pour analyser les données et évaluer les élections ainsi que les "
+"processus politiques plus larges."
 
 #: ../../content/getstarted/getstarted.rst:16
 msgid ""
@@ -73,23 +83,23 @@ msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:36
 msgid ""
-"The mission selection box. Click this to display all missions that can be"
-" accessed by the user. Click on a mission to go to its home page, or "
-"click the box again to hide the list."
+"The mission selection box. Click this to display all missions that can be "
+"accessed by the user. Click on a mission to go to its home page, or click "
+"the box again to hide the list."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:39
 msgid ""
-"The **Admin Mode** icon (Admins only). Click this to enter Admin Mode. "
-"The header in this mode looks different, but the function of each icon is"
-" the same. There are only two new icons, the functions of which will be "
-"discussed later."
+"The **Admin Mode** icon (Admins only). Click this to enter Admin Mode. The "
+"header in this mode looks different, but the function of each icon is the "
+"same. There are only two new icons, the functions of which will be discussed"
+" later."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:43
 msgid ""
-"The edit profile icon. The icon shows your username and role. Click this "
-"to edit your profile."
+"The edit profile icon. The icon shows your username and role. Click this to "
+"edit your profile."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:45
@@ -99,43 +109,42 @@ msgstr ""
 #: ../../content/getstarted/getstarted.rst:46
 msgid ""
 "The **Submit** menu. Click this to display a list of all published forms "
-"within the current mission. Click a form to fill it out and submit it, or"
-" click the menu again to hide the list."
+"within the current mission. Click a form to fill it out and submit it, or "
+"click the menu again to hide the list."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:49
 msgid ""
-"The **Responses** menu. Click this to go to the Responses page, which "
-"shows all responses that have been submitted to all forms within the "
-"mission."
+"The **Responses** menu. Click this to go to the Responses page, which shows "
+"all responses that have been submitted to all forms within the mission."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:52
 msgid ""
-"The **Reports** menu. Click this to go to the Reports page, where you can"
-" generate reports and see all of the reports that have already been "
-"generated within the mission."
+"The **Reports** menu. Click this to go to the Reports page, where you can "
+"generate reports and see all of the reports that have already been generated"
+" within the mission."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:55
 msgid ""
-"The **Forms** menu. Click this to go to the Forms page, where you can "
-"create and import forms and see all of the forms that have already been "
-"created in or imported to the mission."
+"The **Forms** menu. Click this to go to the Forms page, where you can create"
+" and import forms and see all of the forms that have already been created in"
+" or imported to the mission."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:58
 msgid ""
-"The **Questions** menu. Click this to go to the Questions page, where you"
-" can create and import questions and see all of the questions that have "
+"The **Questions** menu. Click this to go to the Questions page, where you "
+"can create and import questions and see all of the questions that have "
 "already been created in or imported to the mission."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:62
 msgid ""
-"The **Option Sets** menu. Click this to go to the Option Sets page, where"
-" you can create or import option sets and see all of the reports that "
-"have already been created in or imported to the mission."
+"The **Option Sets** menu. Click this to go to the Option Sets page, where "
+"you can create or import option sets and see all of the reports that have "
+"already been created in or imported to the mission."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:66
@@ -160,9 +169,9 @@ msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:74
 msgid ""
-"The **Broadcasts** menu. Click this to go to the Broadcasts page, where "
-"you can send a broadcast to users and view broadcasts that have already "
-"been sent."
+"The **Broadcasts** menu. Click this to go to the Broadcasts page, where you "
+"can send a broadcast to users and view broadcasts that have already been "
+"sent."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:77
@@ -173,8 +182,7 @@ msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:79
 msgid ""
-"The **Settings** menu. Click this to view and change your personal "
-"settings."
+"The **Settings** menu. Click this to view and change your personal settings."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:82
@@ -191,9 +199,8 @@ msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:90
 msgid ""
-"The **Missions** menu. Click this to go to the Missions page, where you "
-"can create a new mission and see all missions that have already been "
-"created."
+"The **Missions** menu. Click this to go to the Missions page, where you can "
+"create a new mission and see all missions that have already been created."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:95
@@ -201,15 +208,16 @@ msgid "1.4. Viewing the Footer"
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:100
-msgid "The footer is the bottom section of the screen. Here are its components:"
+msgid ""
+"The footer is the bottom section of the screen. Here are its components:"
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:102
 msgid ""
 "The Language menu. Click **Change Language** to reveal a list of all "
-"languages available. Click a different language to access that language’s"
-" online version of ELMO, or click the current language to close the list."
-" **Change Language** will not return, but you can click on the current "
+"languages available. Click a different language to access that language’s "
+"online version of ELMO, or click the current language to close the list. "
+"**Change Language** will not return, but you can click on the current "
 "language to reveal the list again."
 msgstr ""
 
@@ -221,8 +229,7 @@ msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:109
 msgid ""
-"The outgoing SMS provider for the current mission (not shown in Admin "
-"mode)."
+"The outgoing SMS provider for the current mission (not shown in Admin mode)."
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:111
@@ -236,9 +243,9 @@ msgstr ""
 #: ../../content/getstarted/getstarted.rst:117
 msgid ""
 "ELMO online languages are slowly being built and increasing through "
-"volunteer efforts. Although the languages available of these are limited,"
-" ELMO is multilingual ready (ISO 639-2 standard) for questions and forms."
-" The list of available languages is `here "
+"volunteer efforts. Although the languages available of these are limited, "
+"ELMO is multilingual ready (ISO 639-2 standard) for questions and forms. The"
+" list of available languages is `here "
 "<https://www.loc.gov/standards/iso639-2/php/code_list.php>`__."
 msgstr ""
 
@@ -249,8 +256,8 @@ msgstr ""
 #: ../../content/getstarted/getstarted.rst:130
 msgid ""
 "The first visible screen when logged into ELMO is the Dashboard. This "
-"feature gives an overview of data gathered from responses to forms. "
-"Visible on the Dashboard screen are:"
+"feature gives an overview of data gathered from responses to forms. Visible "
+"on the Dashboard screen are:"
 msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:134
@@ -274,4 +281,3 @@ msgid ""
 "**Note**: The report with the most views will appear at the initial "
 "Dashboard screen"
 msgstr ""
-
