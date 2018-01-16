@@ -19,11 +19,11 @@ msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:2
 msgid "1. Getting Started"
-msgstr "Introduction"
+msgstr "1. Introduction"
 
 #: ../../content/getstarted/getstarted.rst:5
 msgid "1.1. What is ELMO?"
-msgstr "ELMO"
+msgstr "1.1. ELMO"
 
 #: ../../content/getstarted/getstarted.rst:7
 msgid ""

@@ -19,9 +19,9 @@ msgstr ""
 
 #: ../../index.rst:7
 msgid "Welcome to ELMO and NEMO's documentation!"
-msgstr ""
+msgstr "Bienvenue dans la documentation de ELMO et NEMO"
 
 #: ../../index.rst:9
 msgid "Contents:"
-msgstr ""
+msgstr "Sommaire"
 
