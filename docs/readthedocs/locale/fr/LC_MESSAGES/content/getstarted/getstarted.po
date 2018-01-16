@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Elmo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 16:48+0100\n"
+"POT-Creation-Date: 2018-01-16 15:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,11 +19,11 @@ msgstr ""
 
 #: ../../content/getstarted/getstarted.rst:2
 msgid "1. Getting Started"
-msgstr ""
+msgstr "Introduction"
 
 #: ../../content/getstarted/getstarted.rst:5
 msgid "1.1. What is ELMO?"
-msgstr ""
+msgstr "ELMO"
 
 #: ../../content/getstarted/getstarted.rst:7
 msgid ""
@@ -35,7 +35,7 @@ msgid ""
 "reporting system organizes observer findings, and is relied upon by The "
 "Carter Center missions around the globe to analyze data and to assess "
 "elections as well as broader political processes."
-msgstr ""
+msgstr "ELMO est l'outil de ..."
 
 #: ../../content/getstarted/getstarted.rst:16
 msgid ""

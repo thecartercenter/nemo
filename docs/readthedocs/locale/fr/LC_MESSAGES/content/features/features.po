@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Elmo 7.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-01-10 16:48+0100\n"
+"POT-Creation-Date: 2018-01-16 15:18+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -64,11 +64,7 @@ msgstr ""
 msgid ""
 "Click **Send Broadcast**—this action will direct to a page where the "
 "medium of the broadcast can be selected, and the subject and its content "
-"can be entered into a text field"
-msgstr ""
-
-#: ../../content/features/features.rst:29
-msgid "|broadcast selection edited|"
+"can be entered into a text field |broadcast selection edited|"
 msgstr ""
 
 #: ../../content/features/features.rst:30
