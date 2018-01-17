@@ -19,11 +19,11 @@ msgstr ""
 
 #: ../../content/features/features.rst:2
 msgid "12. Additional features and information"
-msgstr ""
+msgstr "\12. fonctionnalités et informations supplémentaires"
 
 #: ../../content/features/features.rst:5
 msgid "12.1. Broadcast messages"
-msgstr ""
+msgstr "12.1. messages de diffusion"
 
 #: ../../content/features/features.rst:7
 msgid ""

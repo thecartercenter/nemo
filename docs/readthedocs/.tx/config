@@ -2,73 +2,7 @@
 host = https://www.transifex.com
 type = PO
 
-[elmo.admin]
-file_filter = locale/<lang>/LC_MESSAGES/admin/admin.po
-source_file = _build/gettext/content/admin/admin.pot
+[elmo.content--getstarted--getstarted]
+file_filter = locale/<lang>/LC_MESSAGES/content/getstarted/getstarted.po
+source_file = _build/locale/content/getstarted/getstarted.pot
 source_lang = en
-
-[elmo.features]
-file_filter = locale/<lang>/LC_MESSAGES/features/features.po
-source_file = _build/gettext/content/features/features.pot
-source_lang = en
-
-[elmo.formsoptionsets]
-file_filter = locale/<lang>/LC_MESSAGES/formsoptionsets/formsoptionsets.po
-source_file = _build/gettext/content/formsoptionsets/formsoptionsets.pot
-source_lang = en
-
-[elmo.formsoverall]
-file_filter = locale/<lang>/LC_MESSAGES/formsoverall/formsoverall.po
-source_file = _build/gettext/content/formsoverall/formsoverall.pot
-source_lang = en
-
-[elmo.formsquestions]
-file_filter = locale/<lang>/LC_MESSAGES/formsquestions/formsquestions.po
-source_file = _build/gettext/content/formsquestions/formsquestions.pot
-source_lang = en
-
-[elmo.getstarted]
-file_filter = locale/<lang>/LC_MESSAGES/getstarted/getstarted.po
-source_file = _build/gettext/content/getstarted/getstarted.pot
-source_lang = en
-
-[elmo.licenses--licenses]
-file_filter = locale/<lang>/LC_MESSAGES/licenses/licenses.po
-source_file = _build/gettext/content/licenses/licenses.pot
-source_lang = en
-
-[elmo.missionsetup]
-file_filter = locale/<lang>/LC_MESSAGES/missionsetup/missionsetup.po
-source_file = _build/gettext/content/missionsetup/missionsetup.pot
-source_lang = en
-
-[elmo.reports]
-file_filter = locale/<lang>/LC_MESSAGES/reports/reports.po
-source_file = _build/gettext/content/reports/reports.pot
-source_lang = en
-
-[elmo.search]
-file_filter = locale/<lang>/LC_MESSAGES/search/search.po
-source_file = _build/gettext/content/search/search.pot
-source_lang = en
-
-[elmo.settings]
-file_filter = locale/<lang>/LC_MESSAGES/settings/settings.po
-source_file = _build/gettext/content/settings/settings.pot
-source_lang = en
-
-[elmo.submitonline]
-file_filter = locale/<lang>/LC_MESSAGES/submitonline/submitonline.po
-source_file = _build/gettext/content/submitonline/submitonline.pot
-source_lang = en
-
-[elmo.submitsms]
-file_filter = locale/<lang>/LC_MESSAGES/submitsms/submitsms.po
-source_file = _build/gettext/content/submitsms/submitsms.pot
-source_lang = en
-
-[elmo.submittablet]
-file_filter = locale/<lang>/LC_MESSAGES/submittablet/submittablet.po
-source_file = _build/gettext/content/submittablet/submittablet.pot
-source_lang = en
-
