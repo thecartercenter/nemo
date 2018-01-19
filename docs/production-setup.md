@@ -98,7 +98,7 @@ If you want to change the colors for ELMO's themeable elements, perform the foll
 
 Enter new color values for the components in the file.
 
-In order to change the logo you must add the file to the folder `app/images/` (we recommend naming it `logo-override.png`) and modify the setting `configatron.logo_path` in `config/initializers/local_config.rb` to `"logo-override.png"` (or the actual name of the new logo file)
+In order to change the logo you must add the file to the folder `app/assets/images/` (we recommend naming it `logo-override.png`) and modify the setting `configatron.logo_path` in `config/initializers/local_config.rb` to `"logo-override.png"` (or the actual name of the new logo file)
 
 Once that's done, proceed with the final config.
 
