@@ -6,15 +6,7 @@ MODELS_WITH_UUIDS = [Answer, Assignment, BroadcastAddressing, Broadcast, Choice,
 class GenerateUuidForModels < ActiveRecord::Migration
   def up
     MODELS_WITH_UUIDS.each do |model|
-      model.find_each do |instance|
-        instance.update_column(:uuid, SecureRandom.uuid)
-      end
-    end
-  end
-
-  def down
-    MODELS_WITH_UUIDS.each do |model|
-      model.update_all(uuid: nil)
+      model.update_all("uuid = (SELECT uuid())")
     end
   end
 end
