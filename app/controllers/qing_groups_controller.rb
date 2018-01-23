@@ -66,7 +66,7 @@ class QingGroupsController < ApplicationController
   end
 
   def qing_group_params
-    translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint)
+    translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint, :group_item_name)
     params.require(:qing_group).permit([:form_id, :repeatable, :one_screen] + translation_keys)
   end
 

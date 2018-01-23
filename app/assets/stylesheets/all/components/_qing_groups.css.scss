@@ -1,0 +1,5 @@
+form.qing_group_form {
+  div[data-field-name^="group_item_name_"] {
+    display: none;
+  }
+}

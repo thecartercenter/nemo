@@ -1,7 +1,7 @@
 class QingGroup < FormItem
   include Translatable
 
-  translates :group_name, :group_hint
+  translates :group_name, :group_hint, :group_item_name
 
   alias_method :c, :sorted_children
 
@@ -27,5 +27,13 @@ class QingGroup < FormItem
 
   def preordered_option_nodes
     []
+  end
+
+  def normalize
+    super
+    unless repeatable?
+      self.group_item_name_translations = {}
+    end
+    true
   end
 end

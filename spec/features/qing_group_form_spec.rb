@@ -21,8 +21,8 @@ feature "adding and editing qing group on form", js: true do
 
     expect(page).not_to have_content("Item Name (English)")
     check("qing_group_repeatable")
-    # fill_in("Item Name (English):", with: "Test Name")
-    # fill_in("Item Name (Français):", with: "Nom d'essaie")
+    fill_in("Item Name (English):", with: "Test Name")
+    fill_in("Item Name (Français):", with: "Nom d'essaie")
     uncheck("qing_group_one_screen")
     within(".modal") { click_button("Save") }
 
@@ -34,8 +34,8 @@ feature "adding and editing qing group on form", js: true do
     expect(page).to have_field("qing_group_group_hint_fr", with: "Barre Hinte")
     expect(page).to have_field("qing_group_repeatable", checked: true)
     expect(page).to have_field("qing_group_one_screen", checked: false)
-    #expect(page).to have_field("qing_group_group_item_name_en", with: "Test Name")
-    #expect(page).to have_field("qing_group_group_item_name_fr", with: "Nom d'essaie")
+    expect(page).to have_field("qing_group_group_item_name_en", with: "Test Name")
+    expect(page).to have_field("qing_group_group_item_name_fr", with: "Nom d'essaie")
 
     fill_in("Name (English):", with: "New Group Name")
     within(".modal") { click_button("Save") }
