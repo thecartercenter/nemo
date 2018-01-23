@@ -6,15 +6,3 @@
     (<%- I18n.t('report/report.showing_limited_answers', {count: summary.items.length}) %>)
   <% } %>
 </div>
-
-<div class="condition_info">
-  <% condition_info = []; %>
-  <% if (summary.questioning.condition) { %>
-    <% condition_info.push(I18n.t('report/report.answered_only_if') + ' ' + summary.questioning.condition.to_s); %>
-  <% } %>
-  <% if (summary.questioning.referring_condition_ranks.length > 0) { %>
-    <% condition_info.push(I18n.t('report/report.see_dependent_questions', {count: summary.questioning.referring_condition_ranks.length}) + ' ' +
-      summary.questioning.referring_condition_ranks.map(function(r){ return '#' + r; }).join(', ')); %>
-  <% } %>
-  <%- condition_info.join('; ') %>
-</div>
