@@ -45,11 +45,6 @@ class Questioning < FormItem
     ancestry_depth > 1 && parent.repeatable?
   end
 
-  # Gets full dotted ranks of all referring conditions' questionings.
-  def referring_condition_ranks
-    referring_conditions.map { |c| c.questioning.full_dotted_rank }
-  end
-
   def smsable?
     visible? && qtype.smsable?
   end
