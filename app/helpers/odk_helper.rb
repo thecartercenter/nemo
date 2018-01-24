@@ -143,7 +143,7 @@ module OdkHelper
         # If one screen is not appropriate is false, we just render the hint
         # as there is no need for the group tag.
         conditional_tag(:group, node.one_screen_appropriate?, appearance: "field-list") do
-          odk_group_hint(node, xpath) << odk_group_body(node, xpath)
+            odk_group_item_name(node) << odk_group_hint(node, xpath) << odk_group_body(node, xpath)
         end
       end
     end
@@ -172,6 +172,17 @@ module OdkHelper
       content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
         tag(:hint, ref: "jr:itext('#{node.odk_code}-header:hint')")
       end
+    end
+  end
+
+  def odk_group_item_name(node)
+    # Group item name should only be present for repeatable qing groups.
+    if node.respond_to?(:group_item_name) && node.group_item_name && !node.group_item_name.empty?
+      content_tag(:label) do
+        node.group_item_name
+      end
+    else
+        "".html_safe
     end
   end
 

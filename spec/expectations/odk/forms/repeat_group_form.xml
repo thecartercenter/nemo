@@ -80,6 +80,7 @@
       <label>Repeat Group 1</label>
       <repeat nodeset="/data/*itemcode1*">
         <group appearance="field-list">
+          <label>Group Item Label</label>
           <input ref="/data/*itemcode1*/*itemcode1*-header">
             <hint ref="jr:itext('*itemcode1*-header:hint')"/>
           </input>
