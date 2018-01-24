@@ -25,22 +25,22 @@
       </instance>
       <itext>
         <translation lang="English">
-          <text id="*itemcode1*-header:label">
+          <text id="*itemcode1*:label">
             <value>Repeat Group 1</value>
           </text>
-          <text id="*itemcode1*-header:hint">
+          <text id="*itemcode1*:hint">
             <value>Repeat Group 1</value>
           </text>
-          <text id="*itemcode4*-header:label">
+          <text id="*itemcode4*:label">
             <value>Repeat Group A</value>
           </text>
-          <text id="*itemcode4*-header:hint">
+          <text id="*itemcode4*:hint">
             <value>Repeat Group A</value>
           </text>
-          <text id="*itemcode9*-header:label">
+          <text id="*itemcode9*:label">
             <value>Repeat Group 2</value>
           </text>
-          <text id="*itemcode9*-header:hint">
+          <text id="*itemcode9*:hint">
             <value>Repeat Group 2</value>
           </text>
           <text id="*itemcode2*:label">
@@ -104,10 +104,10 @@
   </h:head>
   <h:body>
     <group>
-      <label ref="jr:itext('*itemcode1*-header:label')"/>
+      <label ref="jr:itext('*itemcode1*:label')"/>
       <repeat nodeset="/data/*itemcode1*">
         <input ref="/data/*itemcode1*/*itemcode1*-header">
-          <hint ref="jr:itext('*itemcode1*-header:hint')"/>
+          <hint ref="jr:itext('*itemcode1*:hint')"/>
         </input>
         <input ref="/data/*itemcode1*/*itemcode2*">
           <label ref="jr:itext('*itemcode2*:label')"/>
@@ -118,11 +118,11 @@
           <hint ref="jr:itext('*itemcode3*:hint')"/>
         </input>
         <group>
-          <label ref="jr:itext('*itemcode4*-header:label')"/>
+          <label ref="jr:itext('*itemcode4*:label')"/>
           <repeat nodeset="/data/*itemcode1*/*itemcode4*">
             <group appearance="field-list">
               <input ref="/data/*itemcode1*/*itemcode4*/*itemcode4*-header">
-                <hint ref="jr:itext('*itemcode4*-header:hint')"/>
+                <hint ref="jr:itext('*itemcode4*:hint')"/>
               </input>
               <input ref="/data/*itemcode1*/*itemcode4*/*itemcode5*">
                 <label ref="jr:itext('*itemcode5*:label')"/>
@@ -146,11 +146,11 @@
       <hint ref="jr:itext('*itemcode8*:hint')"/>
     </input>
     <group>
-      <label ref="jr:itext('*itemcode9*-header:label')"/>
+      <label ref="jr:itext('*itemcode9*:label')"/>
       <repeat nodeset="/data/*itemcode9*">
         <group appearance="field-list">
           <input ref="/data/*itemcode9*/*itemcode9*-header">
-            <hint ref="jr:itext('*itemcode9*-header:hint')"/>
+            <hint ref="jr:itext('*itemcode9*:hint')"/>
           </input>
           <input ref="/data/*itemcode9*/*itemcode10*">
             <label ref="jr:itext('*itemcode10*:label')"/>

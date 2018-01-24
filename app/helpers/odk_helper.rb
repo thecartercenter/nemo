@@ -157,7 +157,7 @@ module OdkHelper
       # Groups should get wrapped in a group tag and include the label.
       # Also a repeat tag if the group is repeatable
       content_tag(:group) do
-        tag(:label, ref: "jr:itext('#{node.odk_code}-header:label')") <<
+        tag(:label, ref: "jr:itext('#{node.odk_code}:label')") <<
           conditional_tag(:repeat, node.repeatable?, nodeset: xpath) do
             capture(&block)
           end
@@ -170,7 +170,7 @@ module OdkHelper
       "".html_safe
     else
       content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
-        tag(:hint, ref: "jr:itext('#{node.odk_code}-header:hint')")
+        tag(:hint, ref: "jr:itext('#{node.odk_code}:hint')")
       end
     end
   end

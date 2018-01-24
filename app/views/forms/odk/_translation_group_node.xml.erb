@@ -1,9 +1,9 @@
 <% if node.is_a?(QingGroup) %>
   <% node = Odk::DecoratorFactory.decorate(node) %>
-  <text id="<%= node.odk_code %>-header:label">
+  <text id="<%= node.odk_code %>:label">
     <value><%= node.group_name(lang, strict: false) %></value>
   </text>
-  <text id="<%= node.odk_code %>-header:hint">
+  <text id="<%= node.odk_code %>:hint">
     <value><%= node.group_hint(lang, strict: false) %></value>
   </text>
   <% node.sorted_children.each do |child| %>

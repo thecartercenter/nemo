@@ -16,10 +16,10 @@
       </instance>
       <itext>
         <translation lang="English">
-          <text id="*itemcode2*-header:label">
+          <text id="*itemcode2*:label">
             <value>Group Name</value>
           </text>
-          <text id="*itemcode2*-header:hint">
+          <text id="*itemcode2*:hint">
             <value>Group Hint</value>
           </text>
           <text id="*itemcode1*:label">
@@ -62,10 +62,10 @@
       <hint ref="jr:itext('*itemcode1*:hint')"/>
     </input>
     <group>
-      <label ref="jr:itext('*itemcode2*-header:label')"/>
+      <label ref="jr:itext('*itemcode2*:label')"/>
       <group appearance="field-list">
         <input ref="/data/*itemcode2*/*itemcode2*-header">
-          <hint ref="jr:itext('*itemcode2*-header:hint')"/>
+          <hint ref="jr:itext('*itemcode2*:hint')"/>
         </input>
         <input ref="/data/*itemcode2*/*itemcode3*">
           <label ref="jr:itext('*itemcode3*:label')"/>
