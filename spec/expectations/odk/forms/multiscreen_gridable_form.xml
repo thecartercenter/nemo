@@ -48,7 +48,7 @@
   </h:head>
   <h:body>
     <group>
-      <label>Group Name</label>
+      <label ref="jr:itext('*itemcode1*-header:label')"/>
       <input ref="/data/*itemcode1*/*itemcode1*-header">
         <hint ref="jr:itext('*itemcode1*-header:hint')"/>
       </input>

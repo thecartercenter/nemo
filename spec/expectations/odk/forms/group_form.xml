@@ -62,7 +62,7 @@
       <hint ref="jr:itext('*itemcode1*:hint')"/>
     </input>
     <group>
-      <label>Group Name</label>
+      <label ref="jr:itext('*itemcode2*-header:label')"/>
       <group appearance="field-list">
         <input ref="/data/*itemcode2*/*itemcode2*-header">
           <hint ref="jr:itext('*itemcode2*-header:hint')"/>

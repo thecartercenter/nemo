@@ -104,7 +104,7 @@
   </h:head>
   <h:body>
     <group>
-      <label>Repeat Group 1</label>
+      <label ref="jr:itext('*itemcode1*-header:label')"/>
       <repeat nodeset="/data/*itemcode1*">
         <input ref="/data/*itemcode1*/*itemcode1*-header">
           <hint ref="jr:itext('*itemcode1*-header:hint')"/>
@@ -118,7 +118,7 @@
           <hint ref="jr:itext('*itemcode3*:hint')"/>
         </input>
         <group>
-          <label>Repeat Group A</label>
+          <label ref="jr:itext('*itemcode4*-header:label')"/>
           <repeat nodeset="/data/*itemcode1*/*itemcode4*">
             <group appearance="field-list">
               <input ref="/data/*itemcode1*/*itemcode4*/*itemcode4*-header">
@@ -146,7 +146,7 @@
       <hint ref="jr:itext('*itemcode8*:hint')"/>
     </input>
     <group>
-      <label>Repeat Group 2</label>
+      <label ref="jr:itext('*itemcode9*-header:label')"/>
       <repeat nodeset="/data/*itemcode9*">
         <group appearance="field-list">
           <input ref="/data/*itemcode9*/*itemcode9*-header">

@@ -50,7 +50,7 @@
   </h:head>
   <h:body>
     <group>
-      <label>Group A</label>
+      <label ref="jr:itext('*itemcode1*-header:label')"/>
       <repeat nodeset="/data/*itemcode1*">
         <input ref="/data/*itemcode1*/*itemcode1*-header">
           <hint ref="jr:itext('*itemcode1*-header:hint')"/>

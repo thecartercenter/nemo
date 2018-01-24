@@ -157,10 +157,10 @@ module OdkHelper
       # Groups should get wrapped in a group tag and include the label.
       # Also a repeat tag if the group is repeatable
       content_tag(:group) do
-        content_tag(:label, node.group_name) <<
-        conditional_tag(:repeat, node.repeatable?, nodeset: xpath) do
-          capture(&block)
-        end
+        tag(:label, ref: "jr:itext('#{node.odk_code}-header:label')") <<
+          conditional_tag(:repeat, node.repeatable?, nodeset: xpath) do
+            capture(&block)
+          end
       end
     end
   end
