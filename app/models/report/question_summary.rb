@@ -38,8 +38,7 @@ class Report::QuestionSummary
     h = super(options)
     h[:questioning] = questioning.as_json(
       :only => [:id, :rank],
-      :methods => [:code, :name, :referring_condition_ranks],
-      :include => {:condition => {:only => [], :methods => :to_s}}
+      :methods => [:code, :name]
     )
     h[:items] = items
     h[:null_count] = null_count
