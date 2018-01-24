@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_103_201_901) do
+ActiveRecord::Schema.define(version: 20_180_123_192_530) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -177,6 +177,7 @@ ActiveRecord::Schema.define(version: 20_180_103_201_901) do
     t.uuid "form_id"
     t.integer "form_old_id"
     t.jsonb "group_hint_translations", default: {}
+    t.jsonb "group_item_name_translations", default: {}
     t.jsonb "group_name_translations", default: {}
     t.boolean "hidden", default: false, null: false
     t.uuid "mission_id"
