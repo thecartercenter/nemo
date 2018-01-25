@@ -151,7 +151,7 @@ You should upgrade to v6.11 before moving on to the latest master. Follow the in
 1. From the project root, run `RAILS_ENV=production bundle exec mysqltopostgres config/mysql2postgres.yml`.
     1. If you get the error `MysqlPR::ClientError::ServerGoneError: The MySQL server has gone away`, check your DB name, username, and password in `config/mysql2postgres.yml`.
 1. Ignore the `no COPY in progress` message.
-1. Update `config/database.yml` to point to Postgres. Use `config/database.yml.example` as a guide.
+1. Update `config/database.yml` to point to Postgres. Use [this file](https://raw.githubusercontent.com/thecartercenter/elmo/v6.11/config/database.yml.example) as a guide. The `test` and `development` blocks are not needed.
 1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
 1. You should now follow the 'General Upgrade Instructions' below to upgrade to **v6.11** before moving to the latest master.
 
