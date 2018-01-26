@@ -184,7 +184,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       create(:form, :published, :with_version,
         name: "Repeat Group",
         question_types: [
-          {repeating: {name: "Repeat Group 1", items: ["text", "text", "text"], group_item_name_translations: {en: "Group Item Label"}}},
+          {repeating: {name: "Repeat Group 1", items: ["text", "text", "text"], group_item_name_translations: {en: "Group Item Name"}}},
           ["text", "text"] # Include a normal group to ensure differentiated properly.
         ]
       )

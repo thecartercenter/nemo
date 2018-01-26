@@ -6,6 +6,11 @@
   <text id="<%= node.odk_code %>:hint">
     <value><%= node.group_hint(lang, strict: false) %></value>
   </text>
+  <% if node.group_item_name.present? %>
+    <text id="<%= node.odk_code %>:groupitemname">
+      <value><%= node.group_item_name(lang, strict: false) %></value>
+    </text>
+  <% end %>
   <% node.sorted_children.each do |child| %>
     <%= render('forms/odk/translation_group_node', node: child, lang: lang) %>
   <% end %>
