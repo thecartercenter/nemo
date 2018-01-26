@@ -31,7 +31,7 @@ describe QingGroup do
         repeatable: true,
         group_item_name_translations: {en: "Name", fr: "Nom"}
       )
-      expect(group.group_item_name_translations).to eq({"en" => "Name", "fr" => "Nom"})
+      expect(group.group_item_name_translations).to eq("en" => "Name", "fr" => "Nom")
     end
   end
 end

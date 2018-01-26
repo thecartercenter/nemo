@@ -184,8 +184,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       create(:form, :published, :with_version,
         name: "Repeat Group",
         question_types: [
-          {repeating: {name: "Repeat Group 1", items: ["text", "text", "text"], group_item_name_translations: {en: "Group Item Name"}}},
-          ["text", "text"] # Include a normal group to ensure differentiated properly.
+          {repeating: {name: "Repeat Group 1", items: %w(text text text), group_item_name: "Group Item Name"}},
+          %w(text text) # Include a normal group to ensure differentiated properly.
         ]
       )
     end
@@ -210,7 +210,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
                   {
                     repeating:
                       {
-                        items: ["integer", "text"], #q3,q4
+                        items: %w(integer text), #q3,q4
                         name: "Repeat Group A"
                       }
                   },
@@ -222,7 +222,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
           "text", #q6
            {
             repeating: {
-              items: ["text"], #q7
+              items: %w(text), #q7
               name: "Repeat Group 2"
             }
           }

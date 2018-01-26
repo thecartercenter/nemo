@@ -31,9 +31,7 @@ class QingGroup < FormItem
 
   def normalize
     super
-    unless repeatable?
-      self.group_item_name_translations = {}
-    end
+    self.group_item_name_translations = {} unless repeatable?
     true
   end
 end
