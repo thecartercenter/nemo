@@ -15,14 +15,16 @@
       <div class="modal-body group-form">
         <%= elmo_form_for(@qing_group) do |f| %>
           <%= f.field(:form_id, type: :hidden) %>
+          <%= f.field(:repeatable, type: :check_box) %>
           <% configatron.preferred_locales.each do |locale| %>
             <% lang_suffix = " (#{language_name(locale)})" %>
             <%= f.field(:"group_name_#{locale}",
                 label: QingGroup.human_attribute_name("group_name") + lang_suffix) %>
             <%= f.field(:"group_hint_#{locale}",
                 label: QingGroup.human_attribute_name("group_hint") + lang_suffix) %>
+            <%= f.field(:"group_item_name_#{locale}",
+                label: QingGroup.human_attribute_name("group_item_name") + lang_suffix) %>
           <% end %>
-          <%= f.field(:repeatable, type: :check_box) %>
           <% if @one_screen_disabled %>
             <%= f.field(:one_screen, content: t("qing_group.one_screen_disabled")) %>
             <%= f.hidden_field(:one_screen) %>

@@ -143,7 +143,7 @@ module OdkHelper
         # If one screen is not appropriate is false, we just render the hint
         # as there is no need for the group tag.
         conditional_tag(:group, node.one_screen_appropriate?, appearance: "field-list") do
-          odk_group_hint(node, xpath) << odk_group_body(node, xpath)
+            odk_group_item_name(node, xpath) << odk_group_hint(node, xpath) << odk_group_body(node, xpath)
         end
       end
     end
@@ -157,10 +157,10 @@ module OdkHelper
       # Groups should get wrapped in a group tag and include the label.
       # Also a repeat tag if the group is repeatable
       content_tag(:group) do
-        content_tag(:label, node.group_name) <<
-        conditional_tag(:repeat, node.repeatable?, nodeset: xpath) do
-          capture(&block)
-        end
+        tag(:label, ref: "jr:itext('#{node.odk_code}:label')") <<
+          conditional_tag(:repeat, node.repeatable?, nodeset: xpath) do
+            capture(&block)
+          end
       end
     end
   end
@@ -170,8 +170,17 @@ module OdkHelper
       "".html_safe
     else
       content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
-        tag(:hint, ref: "jr:itext('#{node.odk_code}-header:hint')")
+        tag(:hint, ref: "jr:itext('#{node.odk_code}:hint')")
       end
+    end
+  end
+
+  def odk_group_item_name(node, xpath)
+    # Group item name should only be present for repeatable qing groups.
+    if node.respond_to?(:group_item_name) && node.group_item_name && !node.group_item_name.empty?
+      tag(:label, ref: "jr:itext('#{node.odk_code}:itemname')")
+    else
+        "".html_safe
     end
   end
 

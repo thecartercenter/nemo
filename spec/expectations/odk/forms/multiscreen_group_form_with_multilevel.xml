@@ -17,10 +17,10 @@
       </instance>
       <itext>
         <translation lang="English">
-          <text id="*itemcode1*-header:label">
+          <text id="*itemcode1*:label">
             <value>Group Name</value>
           </text>
-          <text id="*itemcode1*-header:hint">
+          <text id="*itemcode1*:hint">
             <value>Group Hint</value>
           </text>
           <text id="*itemcode2*:label">
@@ -72,9 +72,9 @@
   </h:head>
   <h:body>
     <group>
-      <label>Group Name</label>
+      <label ref="jr:itext('*itemcode1*:label')"/>
       <input ref="/data/*itemcode1*/*itemcode1*-header">
-        <hint ref="jr:itext('*itemcode1*-header:hint')"/>
+        <hint ref="jr:itext('*itemcode1*:hint')"/>
       </input>
       <input ref="/data/*itemcode1*/*itemcode2*">
         <label ref="jr:itext('*itemcode2*:label')"/>

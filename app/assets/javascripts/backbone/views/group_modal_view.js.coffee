@@ -3,7 +3,8 @@ class ELMO.Views.GroupModalView extends ELMO.Views.ApplicationView
   events:
     'click .save': 'save'
     'keypress': 'keypress'
-    'shown.bs.modal': 'focus_first_box'
+    'shown.bs.modal': 'modal_shown'
+    'click #qing_group_repeatable': 'toggle_item_name'
 
   initialize: (options) ->
     @list_view = options.list_view
@@ -17,7 +18,6 @@ class ELMO.Views.GroupModalView extends ELMO.Views.ApplicationView
       $('body').append(options.html)
 
     this.setElement($('#group-modal')[0])
-
     this.show()
 
   serialize: ->
@@ -42,8 +42,9 @@ class ELMO.Views.GroupModalView extends ELMO.Views.ApplicationView
   show: ->
     @$el.modal('show')
 
-  focus_first_box: ->
+  modal_shown: ->
     @$('input[type=text]')[0].focus()
+    @toggle_item_name()
 
   hide: ->
     @$el.modal('hide')
@@ -71,3 +72,9 @@ class ELMO.Views.GroupModalView extends ELMO.Views.ApplicationView
         @list_view.update_group_on_edit(data)
         ELMO.app.loading(false)
     })
+
+  toggle_item_name: ->
+    if @$("#qing_group_repeatable")[0].checked
+      @$('div[data-field-name^="group_item_name_"]').show()
+    else
+      @$('div[data-field-name^="group_item_name_"]').hide()

@@ -408,6 +408,7 @@ en:
       qing_group:
         group_name: "Name"
         group_hint: "Hint"
+        group_item_name: "Repeat Item Name"
         add: "Add Group"
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
