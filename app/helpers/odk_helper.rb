@@ -178,7 +178,7 @@ module OdkHelper
   def odk_group_item_name(node, xpath)
     # Group item name should only be present for repeatable qing groups.
     if node.respond_to?(:group_item_name) && node.group_item_name && !node.group_item_name.empty?
-      tag(:label, ref: "jr:itext('#{node.odk_code}:groupitemname')")
+      tag(:label, ref: "jr:itext('#{node.odk_code}:itemname')")
     else
         "".html_safe
     end
