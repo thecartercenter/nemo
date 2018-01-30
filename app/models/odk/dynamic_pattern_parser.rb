@@ -1,3 +1,4 @@
-class DynamicPatternParser
-
+module Odk
+  class DynamicPatternParser
+  end
 end
