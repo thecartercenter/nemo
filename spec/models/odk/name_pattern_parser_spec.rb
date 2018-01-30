@@ -8,7 +8,7 @@ describe Odk::NamePatternParser do
   let(:g3) { Odk::QingGroupDecorator.decorate(form.sorted_children[2]) }
   let(:q31) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]) }
   let(:q31a) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]).subqings.first }
-  subject { described_class.new(form, pattern).to_odk }
+  subject { described_class.new(pattern, src_item: form.root_group).to_odk }
 
   before do
     q1.update!(code: "Q1")
