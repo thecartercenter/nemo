@@ -27,7 +27,7 @@
             <value>Repeat Group 1</value>
           </text>
           <text id="*itemcode1*:itemname">
-            <value>Group Item Name</value>
+            <value>Group Item Name <output value="/data/*itemcode1*/*itemcode2*"/></value>
           </text>
           <text id="*itemcode5*:label">
             <value>Group Name</value>
