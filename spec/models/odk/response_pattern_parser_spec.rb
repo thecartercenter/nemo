@@ -1,6 +1,6 @@
 require "spec_helper"
 
-describe DefaultPatternParser do
+describe Odk::ResponsePatternParser do
   let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
   let(:g2) { Odk::QingGroupDecorator.decorate(form.sorted_children[1]) }
   let(:q21) { Odk::QingDecorator.decorate(form.sorted_children[1].sorted_children[0]) }
