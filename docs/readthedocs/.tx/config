@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+type = PO
+
+[elmo.content--getstarted--getstarted]
+file_filter = locale/<lang>/LC_MESSAGES/content/getstarted/getstarted.po
+source_file = _build/locale/content/getstarted/getstarted.pot
+source_lang = en
