@@ -22,14 +22,14 @@ describe Odk::NamePatternParser do
 
     context "$ phrase with question code" do
       let(:pattern) { "Person: $Q22" }
-      it { is_expected.to eq %Q{Person: <output value="/data/#{g2.odk_code}/#{q22.odk_code}"/>} }
+      it { is_expected.to eq %Q{Person: <output value="/data/#{g2.odk_code}/#{q22.odk_code}" />} }
     end
 
     context "two $'s separated by only whitespace" do
       let(:pattern) { "Person: $Q21 $Q22" }
       it "replaces with &#160;" do
-        is_expected.to eq %Q{Person: <output value="/data/#{g2.odk_code}/#{q21.odk_code}"/>&#160;} <<
-          %Q{<output value="/data/#{g2.odk_code}/#{q22.odk_code}"/>}
+        is_expected.to eq %Q{Person: <output value="/data/#{g2.odk_code}/#{q21.odk_code}" />&#160;} <<
+          %Q{<output value="/data/#{g2.odk_code}/#{q22.odk_code}" />}
       end
     end
   end
