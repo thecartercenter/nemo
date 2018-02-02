@@ -2,6 +2,7 @@
 # Returns output in xml format using `output` tags.
 module Odk
   class NamePatternParser < DynamicPatternParser
+    include ActionView::Helpers::TagHelper
 
     def initialize(pattern, src_item:)
       # Name pattern output seems to require all absolute xpath.
@@ -32,7 +33,7 @@ module Odk
         %Q{<output value="jr:itext(coalesce(#{xpath},'blank'))"/>}
       else
         xpath = other_qing.absolute_xpath
-        %Q{<output value="#{xpath}"/>}
+        tag(:output, value: xpath)
       end
     end
 

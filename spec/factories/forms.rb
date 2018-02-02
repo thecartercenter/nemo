@@ -65,8 +65,7 @@ def build_item(item, form, parent, evaluator)
       form: form,
       group_name_en: item[:name],
       group_hint_en: item[:name],
-      repeatable: true,
-      group_item_name_en: item[:group_item_name]
+      repeatable: true
     )
     item[:items].each { |c| build_item(c, form, group, evaluator) }
   elsif item.is_a?(Array)

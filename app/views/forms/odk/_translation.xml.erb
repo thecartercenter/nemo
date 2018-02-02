@@ -41,7 +41,13 @@
     </text>
     <text id="<%= Odk::FormDecorator::IR_CODE %>:hint">
       <%# no hint for this question currently %>
-      <value></value>
+      <value/>
     </text>
   <% end %>
+
+  <%# Include a 'blank' node in every file. Unfilled values referenced for $ naming come back as '[itext]' %>
+  <%# and we use this node with coalesce to display an empty string in that case %>
+  <text id="BLANK">
+    <value></value>
+  </text>
 </translation>
