@@ -137,9 +137,9 @@
 
     // show/hide the allow coordinates field
     if (checked) {
-      self.allow_coordinates_field.show()
+      self.allow_coordinates_field.css('display', 'flex')
     } else {
-      self.allow_coordinates_field.hide()
+      self.allow_coordinates_field.css('display', 'none')
       self.allow_coordinates_field.find("input[type=checkbox]").attr("checked", false)
     }
   }

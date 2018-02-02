@@ -7,7 +7,7 @@ div.form-errors {
 
 /* standard form width */
 form.elmo_form, div.elmo_form {
-  width: $elmo-form-width;
+  max-width: $elmo-form-width;
 
   p.instructions {
     margin-bottom: 20px;
@@ -19,25 +19,10 @@ div.form_field {
   white-space: nowrap;
   border-bottom: $light-border;
   padding: 5px 0;
+  display: flex;
 
   > * {
     white-space: normal;
-  }
-
-  a.hint {
-    margin-top: 6px;
-    display: inline-block;
-    white-space: nowrap;
-
-    i.hint {
-      display: inline-block;
-      color: $elmo-blue;
-      font-size: 1.5em;
-      vertical-align: middle;
-
-      // Right padding is so things look ok when there is a bg color.
-      padding: 0 3px;
-    }
   }
 
   div.form-errors {
@@ -59,19 +44,6 @@ div.form_field {
     padding: 5px 0;
   }
 
-  .label_and_control {
-    display: inline-block;
-    vertical-align: top;
-
-    /* ensures label stays next to control */
-    white-space: nowrap;
-
-    label, .control {
-      /* allows normal wrapping inside of the the label and control */
-      white-space: normal;
-    }
-  }
-
   /* for rich text editor */
   .cke {
     display: inline-block;
@@ -80,12 +52,6 @@ div.form_field {
   }
 
   label.main {
-    // We float this instead of using inline-block because the latter doesn't
-    // print properly in FFox if the text spans longer than a page.
-    float: $left;
-
-    // If this width is overridden for specific forms,
-    // the div.control margin needs to be changed too.
     width: $label-width;
 
     display: block;
@@ -95,14 +61,9 @@ div.form_field {
   }
 
   div.control {
-    // Need this margin to match the width of the label. See above for why we
-    // do it this way.
-    margin-#{$left}: $label-width;
-
     vertical-align: middle;
-    width: $elmo-form-width - 225px;
     min-height: 26px;
-    position: relative;
+    flex-grow: 1;
 
     label {
       font-weight: normal;
@@ -133,8 +94,29 @@ div.form_field {
         margin-top: 5px;
       }
     }
-
   }
+
+  .hint-wrapper {
+    width: 25px;
+    text-align: right;
+
+    a.hint {
+      margin-top: 6px;
+      display: inline-block;
+      white-space: nowrap;
+
+      i.hint {
+        display: inline-block;
+        color: $elmo-blue;
+        font-size: 1.5em;
+        vertical-align: middle;
+
+        // Right padding is so things look ok when there is a bg color.
+        padding: 0 3px;
+      }
+    }
+  }
+
   /* Override for multiple selects */
   &.qtype_select_multiple .widget {
     vertical-align: top !important;
@@ -243,28 +225,9 @@ div.cascading-selects {
 
 // Style adjustments for ELMO forms in modals.
 .modal form.elmo_form {
-
-  width: 100%;
-
   div.form_field {
-
     &:last-child {
-      border: none;
-    }
-
-    div.label_and_control {
-      width: 75%;
-
-      div.control {
-        width: 60%;
-
-        div.widget {
-          // These can't be as wide as normally.
-          input[type=text], input.text, input[type=password], select, textarea {
-            width: 100%;
-          }
-        }
-      }
+      border-bottom: none;
     }
   }
 }

@@ -57,7 +57,7 @@
 
     // show/hide max/min
     var show_max_min = (selected_type == "decimal" || selected_type == "integer");
-    $(".question_fields .minmax .form_field")[show_max_min ? 'show' : 'hide']();
+    $(".question_fields .minmax .form_field").css("display", show_max_min ? "flex" : "none");
 
     // reset boxes if hiding
     if (!show_max_min) {
@@ -76,7 +76,7 @@
       selected_type == "audio" ||
       selected_type == "video"
     );
-    $(".question_fields .question_key")[hide_key_q ? 'hide' : 'show']();
+    $(".question_fields .question_key").css('display', hide_key_q ? 'none' : 'flex');
 
     // reset boxes if hiding
     if (hide_key_q) {
@@ -87,7 +87,7 @@
 
   klass.prototype.show_option_set_select = function(show, options) { var self = this;
     var select = $("div.question_fields .form_field[data-field-name=option_set_id]");
-    select[show ? 'show' : 'hide']();
+    select.css('display', show ? 'flex' : 'none');
 
     // If showing, disable the multilevel options based on options.multilevel.
     if (show) {

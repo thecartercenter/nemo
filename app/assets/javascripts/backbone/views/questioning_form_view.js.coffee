@@ -13,11 +13,11 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
 
   toggleFields: ->
     @super.toggleFields.call(this)
-    @$('.questioning_default')[if @showDefault() then 'show' else 'hide']()
-    @$('.questioning_read_only')[if @showReadOnly() then 'show' else 'hide']()
-    @$('.questioning_required')[if @showRequired() then 'show' else 'hide']()
-    @$('.questioning_hidden')[if @showHidden() then 'show' else 'hide']()
-    @$('.questioning_condition')[if @showCondition() then 'show' else 'hide']()
+    @showField('default', @showDefault())
+    @showField('read_only', @showReadOnly())
+    @showField('required', @showRequired())
+    @showField('hidden', @showHidden())
+    @showField('condition', @showCondition())
 
   showDefault: ->
     @defaultableTypes.indexOf(@fieldValue('qtype_name')) != -1

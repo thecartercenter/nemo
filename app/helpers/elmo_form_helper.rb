@@ -48,14 +48,19 @@ module ElmoFormHelper
     content_tag(:div, "*", class: "reqd-sym")
   end
 
-  # Renders a hint link that displays a popover. Note that an instance of FormHintView must exist
+  # Renders a hint wrapper and link that displays a popover. Note that an instance of FormHintView must exist
   # and be covering this element for the popover to work.
   # Default link content is the question mark icon, but can be overridden.
+  # If content is blank, returns an empty wrapper.
   def hint_popover(content, link: nil)
-    return "" if content.blank?
-    link ||= content_tag(:i, "", class: "hint fa fa-2x fa-info-circle")
-    content_tag(:a, link, tabindex: -1, role: "button", "data-trigger": "focus", rel: "popover",
-      class: "hint", "data-content": content)
+    inner = if content.blank?
+      ""
+    else
+      link ||= content_tag(:i, "", class: "hint fa fa-2x fa-info-circle")
+      content_tag(:a, link, tabindex: -1, role: "button", "data-trigger": "focus", rel: "popover",
+        class: "hint", "data-content": content)
+    end
+    content_tag(:div, inner, class: "hint-wrapper")
   end
 
   private

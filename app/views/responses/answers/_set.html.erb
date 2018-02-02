@@ -4,25 +4,23 @@
   data-qing-id="<%= set.questioning_id %>"
   data-inst-num="<%= inst_num %>">
 
-  <div class="label_and_control">
-    <label class="main">
-      <p class="rank"><%= set.full_dotted_rank %>.</p>
-      <p><%= reqd_sym if set.required? %>
-      <%= set.question_name || "[#{t('answer.no_name')}]" %></p>
-    </label>
-    <div class="control">
-      <% if set.multilevel? %>
-        <%= render("responses/answers/cascading_#{mode}",
-              answer_set: set,
-              index: "#{set.questioning_id}_#{inst_num}",
-              inst_num: inst_num) %>
-      <% else %>
-        <%= render("responses/answers/single_#{mode}",
-              answer: set.answers.first,
-              index: "#{set.questioning_id}_#{inst_num}",
-              inst_num: inst_num) %>
-      <% end %>
-    </div>
+  <label class="main">
+    <p class="rank"><%= set.full_dotted_rank %>.</p>
+    <p><%= reqd_sym if set.required? %>
+    <%= set.question_name || "[#{t('answer.no_name')}]" %></p>
+  </label>
+  <div class="control">
+    <% if set.multilevel? %>
+      <%= render("responses/answers/cascading_#{mode}",
+            answer_set: set,
+            index: "#{set.questioning_id}_#{inst_num}",
+            inst_num: inst_num) %>
+    <% else %>
+      <%= render("responses/answers/single_#{mode}",
+            answer: set.answers.first,
+            index: "#{set.questioning_id}_#{inst_num}",
+            inst_num: inst_num) %>
+    <% end %>
   </div>
   <% if form_mode %>
     <% question_hint = set.question_hint.try(:chomp, ".").try(:<<, ".") %>
