@@ -185,13 +185,25 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
         name: "Repeat Group",
         question_types: [
           {repeating: {name: "Repeat Group 1", items: %w(text text text)}},
-          %w(text text) # Include a normal group to ensure differentiated properly.
+
+          # Include a normal group to ensure differentiated properly.
+          %w(text text),
+
+          # Second repeat group, one_screen false.
+          {repeating: {name: "Repeat Group 2", items: %w(text text)}}
         ]
       )
     end
 
+    before do
+      form.c[0].update_attribute(:group_item_name_en, "1st Item Name $#{form.c[0].c[0].code}")
+      form.c[2].update_attributes(
+        group_item_name_en: "2nd Item Name $#{form.c[2].c[0].code}",
+        one_screen: false
+      )
+    end
+
     it "should render proper xml" do
-      form.c[0].update_attribute(:group_item_name_en, "Group Item Name $#{form.c[0].c[0].code}")
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("repeat_group_form.xml", form)
     end

@@ -135,15 +135,12 @@ module OdkHelper
       if fragments
         fragments.map { |f| odk_group_or_fragment(f, xpath_prefix) }.reduce(:<<)
       else
-        # If appropriate for one-screen rendering, we render the group as a field-list.
-        # We also include the hint.
-        # In the case of fragments, this means we include hint each time, which is correct.
-        # This covers the case where `node` is a fragment, because fragments should always
-        # be shown on one screen since that's what they're for.
-        # If one screen is not appropriate is false, we just render the hint
-        # as there is no need for the group tag.
-        conditional_tag(:group, node.one_screen_appropriate?, appearance: "field-list") do
-            odk_group_item_name(node, xpath) << odk_group_hint(node, xpath) << odk_group_body(node, xpath)
+        odk_inner_group_tag(node) do
+          # We include the hint here.
+          # In the case of fragments, this means we include hint each time, which is correct.
+          # This covers the case where `node` is a fragment, because fragments should always
+          # be shown on one screen since that's what they're for.
+          odk_group_item_name(node, xpath) << odk_group_hint(node, xpath) << odk_group_body(node, xpath)
         end
       end
     end
@@ -165,6 +162,20 @@ module OdkHelper
     end
   end
 
+  # Sometimes we need a second, inner group tag. There are two possible reasons:
+  #
+  # 1. It's a repeat group, in which case the item label goes inside the inner group.
+  # 2. It's a one_screen group, in which case we need to set appearance="field-list"
+  #
+  # Note both can be true at once.
+  def odk_inner_group_tag(node, &block)
+    do_inner_tag = node.one_screen_appropriate? || node.repeatable?
+    appearance = node.one_screen_appropriate? ? "field-list" : nil
+    conditional_tag(:group, do_inner_tag, appearance: appearance) do
+      capture(&block)
+    end
+  end
+
   def odk_group_hint(node, xpath)
     if node.no_hint?
       "".html_safe
@@ -180,7 +191,7 @@ module OdkHelper
     if node.respond_to?(:group_item_name) && node.group_item_name && !node.group_item_name.empty?
       tag(:label, ref: "jr:itext('#{node.odk_code}:itemname')")
     else
-        "".html_safe
+      "".html_safe
     end
   end
 
