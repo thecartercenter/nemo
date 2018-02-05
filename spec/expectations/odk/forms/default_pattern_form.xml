@@ -75,6 +75,9 @@
           <text id="*optcode6*">
             <value>Plant</value>
           </text>
+          <text id="BLANK">
+            <value/>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/meta/instanceName" calculate="concat(jr:itext(indexed-repeat(/data/*itemcode1*/*itemcode5*_1,/data/*itemcode1*,1)),' --&gt; ',/data/*itemcode6*)" readonly="true()" type="string"/>

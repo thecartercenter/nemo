@@ -59,6 +59,9 @@
           <text id="*optcode4*">
             <value>Plant</value>
           </text>
+          <text id="BLANK">
+            <value/>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*"/>

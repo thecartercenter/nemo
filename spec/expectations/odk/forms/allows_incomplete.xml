@@ -36,6 +36,9 @@
           <text id="ir02:hint">
             <value/>
           </text>
+          <text id="BLANK">
+            <value/>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*" type="int" required="selected(/data/ir01, 'no')"/>

@@ -98,6 +98,9 @@
           <text id="*optcode10*">
             <value>Dog</value>
           </text>
+          <text id="BLANK">
+            <value/>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*" type="string"/>
