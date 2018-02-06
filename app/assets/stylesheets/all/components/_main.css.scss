@@ -57,7 +57,6 @@ input[type="radio"], input[type="checkbox"] {
 div.subtitle { margin: -10px 0 10px 0; color: #888888; }
 div.tip { margin-bottom: 10px; width: 800px; }
 div.important { font-weight: bold; color: Black; }
-div.boilerplate { display: none; }
 div.dialog { position: absolute; background-color: $white; border: 1px solid #555; padding: 10px; }
 div.dialog h2 { margin: 0 0 10px 0; }
 .translation_missing { color: $theme-red; }
@@ -196,9 +195,6 @@ div.field_with_errors { display: inline; }
 /* login form */
 .user_sessions_new .form_buttons { margin-bottom: 10px; }
 
-/* place map */
-#map_canvas { width: 600px; height: 400px; }
-
 /* form index */
 .forms_index .name_col { min-width: 200px; }
 
@@ -223,28 +219,6 @@ textarea#broadcast_body { height: 170px; }
 
 /* form choose questions */
 .forms_choose_questions div.question_form { display: none; }
-
-/* location picker */
-#location-picker-modal {
-  // This needs to be refactored to use a column grid so it resizes nicely and doesn't have to be hard coded.
-  .modal-dialog {
-    width: 860px;
-  }
-
-  .modal-body {
-    height: 500px;
-
-    .link_set {
-      display: inline-block;
-    }
-  }
-}
-
-div.location_picker div.map_canvas { width: 500px; height: 400px; border: 1px solid #ccc; float: left; margin-right: 10px; }
-div.location_picker span.cur_lat_lng { font-weight: bold; }
-div.location_picker form.location_search { float: right; width: 275px; }
-div.location_picker form.location_search input.query { width: 250px; margin-bottom: 10px; color: #888888; font-style: italic; }
-div.location_picker form.location_search div.results a { display: block; margin-bottom: 8px; }
 
 /* regenerable fields */
 div.regenerable-field {

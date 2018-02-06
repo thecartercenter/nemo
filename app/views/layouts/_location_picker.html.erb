@@ -1,34 +1,28 @@
-
- <%# help search modal %>
-<div class="boilerplate">
-  <div class="modal fade location_picker" id="location-picker-modal" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title" id="myModalLabel"><%= t("location_picker.choose_location") %></h4>
-        </div>
-        <div class="modal-body">
-
-          <div class="link_set">
-            <span class="cur_lat_lng"></span>
+<div class="modal fade location_picker" id="location-picker-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel"><%= t("location_picker.choose_location") %></h4>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+          <div class="col-xs-8">
+            <div class="map-canvas"></div>
+            <div class="cur-lat-lng"></div>
           </div>
-          <form class="location_search">
-            <input type="text" class="query form-control" name="query" value=""/>
-            <%= loading_indicator %>
-            <div class="results">
-              <%= t("location_picker.enter_query") %>
-            </div>
-          </form>
-          <%# are both id and class needed? %>
-          <div id="map-canvas" class="map_canvas"></div>
-
+          <div class="col-xs-4">
+            <form class="location-search">
+              <input type="text" class="query form-control" name="query" value=""/>
+              <div class="results"><%= t("location_picker.enter_query") %></div>
+            </form>
+          </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
-          <button type="button" class="btn btn-primary accept_link" ><%= t("common.accept") %></button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
-</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
+        <button type="button" class="btn btn-primary accept_link" ><%= t("common.accept") %></button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
