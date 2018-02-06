@@ -44,13 +44,6 @@ div.form_field {
     padding: 5px 0;
   }
 
-  /* for rich text editor */
-  .cke {
-    display: inline-block;
-    vertical-align: top;
-    width: 415px;
-  }
-
   label.main {
     width: $label-width;
 
@@ -76,12 +69,16 @@ div.form_field {
         margin-bottom: 0;
       }
 
-      input[type=text], input.text, input[type=password], select {
+      input[type=text], input.text, input[type=number], input[type=password], select {
         height: 35px;
       }
 
       textarea {
         height: 100px;
+      }
+
+      input[type=number] {
+        width: 100px;
       }
 
       input[type=text], input.text, input[type=password], select, textarea {
@@ -97,8 +94,8 @@ div.form_field {
   }
 
   .hint-wrapper {
-    width: 25px;
-    text-align: right;
+    width: 30px;
+    text-align: center;
 
     a.hint {
       margin-top: 6px;

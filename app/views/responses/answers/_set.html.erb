@@ -5,9 +5,9 @@
   data-inst-num="<%= inst_num %>">
 
   <label class="main">
-    <p class="rank"><%= set.full_dotted_rank %>.</p>
-    <p><%= reqd_sym if set.required? %>
-    <%= set.question_name || "[#{t('answer.no_name')}]" %></p>
+    <%= reqd_sym if set.required? %>
+    <%= set.full_dotted_rank %>.
+    <%= set.question_name || "[#{t('answer.no_name')}]" %>
   </label>
   <div class="control">
     <% if set.multilevel? %>

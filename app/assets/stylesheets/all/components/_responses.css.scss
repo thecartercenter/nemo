@@ -43,8 +43,7 @@
 }
 
 .responses_show {
-
-  /* text responses with paragraphs in show mode */
+  // Text responses with paragraphs in show mode
   .form_field.qtype_long_text, .form_field.qtype_text {
 
     .control {
@@ -68,52 +67,38 @@
 }
 
 form.response_form {
+  // Response forms are more complex, so a bit more width is nice.
+  max-width: 950px;
+
+  // Question titles can be rather long.
   label.main {
     width: $response-form-label-width;
-
-    display: inline-block;
-    float: left;
-    p.rank {
-      display: inline-block;
-      text-align: left;
-      float: left;
-      margin-left: 12px;
-    }
-  }
-
-  div.control {
-    margin-left: $response-form-label-width;
-
-    // TODO this needs to be refactored, all width stuff needs to be genericized and moved into
-    // the main form styles.
-    // For now, this new width accounts for the wider labels.
-    width: $elmo-form-width - 325px;
   }
 
   div.no-value {
     color: $light-gray;
   }
 
-  input.qtype_integer, input.qtype_decimal {
-    width: 100px;
+  // Need to compete with specificity in main form style.
+  .form_field.qtype_location .control .widget {
+    input {
+      width: 300px;
+      display: inline-block;
+    }
+
+    a.edit_location_link img {
+      vertical-align: bottom;
+    }
   }
 
-  textarea.qtype_long_text {
-    width: 340px;
-    height: 100px;
-  }
-
-  input.qtype_location {
-    width: 300px;
-    display: inline-block;
-  }
-
-  a.edit_location_link img {
-    vertical-align: bottom;
+  .form_field.qtype_date, .form_field.qtype_time, .form_field.qtype_datetime {
+    .control .widget select {
+      width: 75px;
+      display: inline-block;
+    }
   }
 
   div.qing-group {
-
     div.qing-group-instances {
       background-color: lighten($gray-blue, 10%);
       border-left: 10px solid $gray-blue;
@@ -154,13 +139,11 @@ form.response_form {
 
     /* Indented groups */
     .form_field {
-      label {
+      label.main {
         width: $response-form-label-width - $group-indent;
-        padding-left: 5px; // Since there is now a left border.
-      }
 
-      div.control {
-        margin-left: $response-form-label-width - $group-indent;
+        // Since there is now a left border, having the text right up against it looks bad.
+        padding-#{$left}: 5px;
       }
     }
   }
