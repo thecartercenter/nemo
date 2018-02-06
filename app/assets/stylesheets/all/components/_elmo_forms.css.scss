@@ -176,12 +176,15 @@ div.modal div.form-warning {
   width: inherit;
 }
 
-/* Minimal form has no horiz lines and no hints */
-form.elmo_form.minimal {
-  width: $elmo-form-width - 20px;
-
-  div.form_field {
+// Minimal form has no horiz lines and no hints
+.elmo_form.minimal {
+  .form_field {
     border-bottom: none;
+  }
+
+  // We need to hide this because otherwise the bottom buttons don't line up nicely.
+  .hint-wrapper {
+    display: none;
   }
 }
 
