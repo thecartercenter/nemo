@@ -1,6 +1,6 @@
 form.option_set_form {
 
-  /* hide the option levels and allow_coordinates at first */
+  // Hide the option levels and allow_coordinates at first.
   div.form-field {
     &[data-field-name=allow_coordinates],
     &[data-field-name=option_levels] {
