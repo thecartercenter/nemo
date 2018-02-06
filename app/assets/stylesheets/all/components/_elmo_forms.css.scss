@@ -1,17 +1,23 @@
-/* base errors may appear outside the form. */
+// Base errors may appear outside the form
 div.form-errors {
   font-weight: bold;
   color: $theme_red;
   margin-bottom: 5px;
 }
 
-/* standard form width */
 form.elmo_form, div.elmo_form {
+  // Standard form width
   max-width: $elmo-form-width;
 
   p.instructions {
     margin-bottom: 20px;
   }
+}
+
+// Modals typically have a limited width anyway,
+// so it's nice to have the form fit snugly into the modal.
+.modal form.elmo_form {
+  max-width: 100%;
 }
 
 div.form_field {

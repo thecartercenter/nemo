@@ -27,7 +27,7 @@ div.question_fields {
 
   textarea[id*=_ar], textarea[id*=_he] {
     direction: rtl;
-  }  
+  }
 
   .names_hints div.form_field div.control textarea[id*=_name_] {
     height: 55px;
@@ -92,7 +92,7 @@ form.questioning_form {
   z-index: 500;
 
   .modal-dialog {
-    width: 900px;
+    width: 800px;
   }
 
   .modal-body {
