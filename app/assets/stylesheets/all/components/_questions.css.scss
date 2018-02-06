@@ -29,11 +29,11 @@ div.question_fields {
     direction: rtl;
   }
 
-  .names_hints div.form_field div.control textarea[id*=_name_] {
+  .names_hints div.form-field div.control textarea[id*=_name_] {
     height: 55px;
   }
 
-  .names_hints div.form_field div.control textarea[id*=_hint_] {
+  .names_hints div.form-field div.control textarea[id*=_hint_] {
     height: 70px;
   }
 
@@ -60,7 +60,7 @@ div.question_fields {
 }
 
 form.questioning_form {
-  .form_field#condition {
+  .form-field#condition {
     select, input {
       width: 317px;
       display: inline;
@@ -108,7 +108,7 @@ form.questioning_form {
 }
 
 /* Special style for option set box to accommodate link and loading indicator */
-div.form_field.question_option_set_id {
+div.form-field.question_option_set_id {
 
   div.control div.widget select {
     width: 260px;

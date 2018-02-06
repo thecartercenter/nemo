@@ -33,7 +33,7 @@
 
   klass.prototype.show = function(yn) { var self = this;
     // select option level and corresponding hint
-    var multiOptionField = $('.form_field[data-field-name=option_levels]');
+    var multiOptionField = $('.form-field[data-field-name=option_levels]');
     multiOptionField.css('display', yn ? 'flex' : 'none');
   };
 

@@ -44,7 +44,7 @@
 
 .responses_show {
   // Text responses with paragraphs in show mode
-  .form_field.qtype_long_text, .form_field.qtype_text {
+  .form-field.qtype_long_text, .form-field.qtype_text {
 
     .control {
       p:first-child {
@@ -80,7 +80,7 @@ form.response_form {
   }
 
   // Need to compete with specificity in main form style.
-  .form_field.qtype_location .control .widget {
+  .form-field.qtype_location .control .widget {
     input {
       width: 300px;
       display: inline-block;
@@ -91,11 +91,15 @@ form.response_form {
     }
   }
 
-  .form_field.qtype_date, .form_field.qtype_time, .form_field.qtype_datetime {
+  .form-field.qtype_date, .form-field.qtype_time, .form-field.qtype_datetime {
     .control .widget select {
       width: 75px;
       display: inline-block;
     }
+  }
+
+  .form-field.qtype_select_multiple .control .widget {
+    vertical-align: top !important;
   }
 
   div.qing-group {
@@ -138,7 +142,7 @@ form.response_form {
     }
 
     /* Indented groups */
-    .form_field {
+    .form-field {
       label.main {
         width: $response-form-label-width - $group-indent;
 

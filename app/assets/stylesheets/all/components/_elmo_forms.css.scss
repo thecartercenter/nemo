@@ -5,7 +5,7 @@ div.form-errors {
   margin-bottom: 5px;
 }
 
-form.elmo_form, div.elmo_form {
+form.elmo-form, div.elmo-form {
   // Standard form width
   max-width: $elmo-form-width;
 
@@ -16,11 +16,11 @@ form.elmo_form, div.elmo_form {
 
 // Modals typically have a limited width anyway,
 // so it's nice to have the form fit snugly into the modal.
-.modal form.elmo_form {
+.modal form.elmo-form {
   max-width: 100%;
 }
 
-div.form_field {
+div.form-field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
   border-bottom: $light-border;
@@ -32,7 +32,7 @@ div.form_field {
   }
 
   div.form-errors {
-    /* cancel the left margin for form errors inside a form_field */
+    /* cancel the left margin for form errors inside a form-field */
     margin-#{$left}: 0;
   }
 
@@ -120,11 +120,6 @@ div.form_field {
     }
   }
 
-  /* Override for multiple selects */
-  &.qtype_select_multiple .widget {
-    vertical-align: top !important;
-  }
-
   div.control input.text {
     padding: 3px;
   }
@@ -136,12 +131,6 @@ div.form_field {
 
   div.control input.radio {
     width: 15px;
-  }
-
-  div.space_line {
-    margin: 0;
-    padding: 0;
-    width: auto;
   }
 }
 
@@ -177,8 +166,8 @@ div.modal div.form-warning {
 }
 
 // Minimal form has no horiz lines and no hints
-.elmo_form.minimal {
-  .form_field {
+.elmo-form.minimal {
+  .form-field {
     border-bottom: none;
   }
 
@@ -206,7 +195,7 @@ div.cascading-selects {
   }
 }
 
-.read_only div.cascading-selects {
+.read-only div.cascading-selects {
   label, .option-level {
     margin-bottom: 0px;
   }
@@ -214,7 +203,7 @@ div.cascading-selects {
   .option-name {
     margin-bottom: 5px;
 
-    i { /* For blank values */
+    i { // For blank values
       font-style: normal;
       color: $lighter-gray;
     }
@@ -225,20 +214,20 @@ div.cascading-selects {
   }
 }
 
-.question_tag_ids div.read_only {
+.question_tag_ids .read-only {
   padding-top: 0;
 }
 
 // Style adjustments for ELMO forms in modals.
-.modal form.elmo_form {
-  div.form_field {
+.modal form.elmo-form {
+  div.form-field {
     &:last-child {
       border-bottom: none;
     }
   }
 }
 
-// Settings fields
+// Expandable settings fields for forms
 .setting-fields, div.less-settings {
   display: none;
 }

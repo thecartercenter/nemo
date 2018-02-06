@@ -137,7 +137,7 @@ feature "responses form", js: true do
       visit new_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
 
-      expect(page).not_to have_selector("div.form_field#qing_#{questionings[:text_hidden].id}")
+      expect(page).not_to have_selector("div.form-field#qing_#{questionings[:text_hidden].id}")
       fill_in(control_id_for(questionings[:text]), with: "Foo")
       click_button("Save")
 

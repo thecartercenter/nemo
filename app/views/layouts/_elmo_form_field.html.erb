@@ -1,7 +1,7 @@
 <%# TODO the id attrib below should be deprecated as its not well scoped. %>
-<div class="form_field <%= object_name %>_<%= field_name %>" id="<%= field_name %>" data-field-name="<%= field_name %>">
+<div class="form-field <%= object_name %>_<%= field_name %>" id="<%= field_name %>" data-field-name="<%= field_name %>">
   <%= label_tag %>
-  <div class="control <%= options[:read_only] ? 'read_only' : '' %>">
+  <div class="control <%= options[:read_only] ? 'read-only' : '' %>">
     <%# errors %>
     <%= content_tag(:div, errors.join(' '), :class => 'form-errors') if errors && !errors.empty? %>
     <div class="widget">

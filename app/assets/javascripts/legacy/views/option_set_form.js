@@ -35,7 +35,7 @@
     })
 
     // find the allow_coordinates field
-    self.allow_coordinates_field = $(".form_field[data-field-name=allow_coordinates]")
+    self.allow_coordinates_field = $(".form-field[data-field-name=allow_coordinates]")
 
     // add option button click event
     $("div.add_options input[type=button]").on("click", function() {

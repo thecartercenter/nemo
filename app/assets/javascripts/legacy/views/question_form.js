@@ -10,7 +10,7 @@
     self.params = params;
 
     // hookup type change event and trigger immediately
-    var type_box = $('div.question_fields .form_field#qtype_name .control select');
+    var type_box = $('div.question_fields .form-field#qtype_name .control select');
     type_box.on('change', function(e){ self.question_type_changed(); });
 
     // run the type box changed event immediately
@@ -32,10 +32,10 @@
   // gets the current value of the field with the given name
   // still works if field is read_only
   klass.prototype.field_value = function(field_name) { var self = this;
-    var field_div = $('.question_fields .form_field[data-field-name=' + field_name + '] .control');
+    var field_div = $('.question_fields .form-field[data-field-name=' + field_name + '] .control');
 
     // if read only
-    if (field_div.is('.read_only')) {
+    if (field_div.is('.read-only')) {
       // first get the wrapper
       var wrapper = field_div.find('.ro-val');
 
@@ -57,14 +57,14 @@
 
     // show/hide max/min
     var show_max_min = (selected_type == "decimal" || selected_type == "integer");
-    $(".question_fields .minmax .form_field").css("display", show_max_min ? "flex" : "none");
+    $(".question_fields .minmax .form-field").css("display", show_max_min ? "flex" : "none");
 
     // reset boxes if hiding
     if (!show_max_min) {
-      $(".form_field#minimum input[id$='_minimum']").val("");
-      $(".form_field#minimum input[id$='_minstrictly']").prop("checked", false);
-      $(".form_field#maximum input[id$='_maximum']").val("");
-      $(".form_field#maximum input[id$='_maxstrictly']").prop("checked", false);
+      $(".form-field#minimum input[id$='_minimum']").val("");
+      $(".form-field#minimum input[id$='_minstrictly']").prop("checked", false);
+      $(".form-field#maximum input[id$='_maximum']").val("");
+      $(".form-field#maximum input[id$='_maxstrictly']").prop("checked", false);
     }
 
     // show/hide key question
@@ -80,13 +80,13 @@
 
     // reset boxes if hiding
     if (hide_key_q) {
-      $(".form_field#key input[id$='_key']").val("");
-      $(".form_field#key input[id$='_key']").prop("checked", false);
+      $(".form-field#key input[id$='_key']").val("");
+      $(".form-field#key input[id$='_key']").prop("checked", false);
     }
   }
 
   klass.prototype.show_option_set_select = function(show, options) { var self = this;
-    var select = $("div.question_fields .form_field[data-field-name=option_set_id]");
+    var select = $("div.question_fields .form-field[data-field-name=option_set_id]");
     select.css('display', show ? 'flex' : 'none');
 
     // If showing, disable the multilevel options based on options.multilevel.
@@ -137,10 +137,10 @@
 
     // add the new option set to the list and select it
     var option = $('<option>', {value: option_set.id, 'data-multilevel': option_set.multilevel}).text(option_set.name);
-    $('div.question_fields .form_field#option_set_id select').append(option).val(option_set.id);
+    $('div.question_fields .form-field#option_set_id select').append(option).val(option_set.id);
 
     // flash the option set row
-    $('div.question_fields .form_field#option_set_id').effect("highlight", {}, 1000);
+    $('div.question_fields .form-field#option_set_id').effect("highlight", {}, 1000);
   };
 
 }(ELMO.Views));

@@ -25,8 +25,8 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.FormView
 
   # Gets form field value, or static value if field is read-only
   fieldValue: (attrib) ->
-    div = @$(".form_field[data-field-name=#{attrib}] .control")
-    if div.is('.read_only')
+    div = @$(".form-field[data-field-name=#{attrib}] .control")
+    if div.is('.read-only')
       wrapper = div.find('.ro-val')
       wrapper.data('val') || wrapper.text()
     else

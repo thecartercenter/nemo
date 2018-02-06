@@ -6,7 +6,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
     @conditions = @item.display_conditions
     @inst = options.inst
     @row = @formRow(@conditions[0].conditionable_id, @inst)
-    @readOnly = @row.is('.read_only')
+    @readOnly = @row.is('.read-only')
     @result = true
 
     @checkers = @conditions.map (c) =>
@@ -51,7 +51,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
     # We walk down through parent instances, constructing a
     # CSS selector for the appropriate instance at each step.
     # If there are no group parents, we just get an empty array.
-    groupParents = @$(".form_field[data-qing-id=#{qingId}]").first().parents("div.qing-group")
+    groupParents = @$(".form-field[data-qing-id=#{qingId}]").first().parents("div.qing-group")
     parentIds = groupParents.map(-> $(this).data("group-id").toString()).get()
 
     ignore = false
@@ -63,8 +63,8 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
       instNum = if ignore then 1 else inst[depth].num
       "div.qing-group-instance[data-group-id=#{id}][data-inst-num=#{instNum}]"
 
-    # Now we use the parent selectors to scope the actual form_field lookup.
-    @$("#{parentSelectors.join(' ')} div.form_field[data-qing-id=#{qingId}]")
+    # Now we use the parent selectors to scope the actual form-field lookup.
+    @$("#{parentSelectors.join(' ')} div.form-field[data-qing-id=#{qingId}]")
 
   results: ->
     @checkers.map (c) -> c.result

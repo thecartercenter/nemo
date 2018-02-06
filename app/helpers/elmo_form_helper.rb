@@ -7,7 +7,7 @@ module ElmoFormHelper
     defaults = {
       builder: ElmoFormBuilder,
       html: {
-        class: "#{specific_class} elmo_form"
+        class: "#{specific_class} elmo-form"
       }
     }
 

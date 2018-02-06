@@ -1,5 +1,5 @@
 <% mode = read_only ? "read_only" : "editable" %>
-<div class="form_field answer_field qtype_<%= set.qtype.name %> <%= mode %>"
+<div class="form-field answer_field qtype_<%= set.qtype.name %> <%= read_only ? "read-only" : "editable" %>"
   data-qtype-name="<%= set.qtype.name %>"
   data-qing-id="<%= set.questioning_id %>"
   data-inst-num="<%= inst_num %>">
