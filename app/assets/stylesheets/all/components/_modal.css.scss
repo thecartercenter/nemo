@@ -9,22 +9,23 @@ div.ui-dialog-content {
   }
 }
 
-.modal-body {
-  word-wrap: break-word;
-}
+.modal-dialog {
+  min-width: 600px;
+  max-width: 800px;
+  width: 90%;
 
-@media (min-width: 768px) {
-  .modal-dialog {
-    min-width: 600px;
-    max-width: 768px;
-    width: auto;
+  .modal-body {
+    word-wrap: break-word;
+
+    h1, h2, h3, h4, h5, h6 {
+      &:first-child {
+        margin-top: 0;
+      }
+    }
   }
 }
 
-@media(min-width: 1024px) {
-  .modal-dialog {
-    min-width: 600px;
-    max-width: 1024px;
-    width: auto;
-  }
+.modal-small .modal-dialog {
+  min-width: 400px;
+  max-width: 400px;
 }

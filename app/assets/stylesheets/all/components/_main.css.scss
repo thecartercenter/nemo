@@ -226,6 +226,7 @@ textarea#broadcast_body { height: 170px; }
 
 /* location picker */
 #location-picker-modal {
+  // This needs to be refactored to use a column grid so it resizes nicely and doesn't have to be hard coded.
   .modal-dialog {
     width: 860px;
   }

@@ -30,26 +30,8 @@ form.search_form {
 
 /* search help */
 #search-help-modal {
-
-  .modal-dialog {
-    width: 800px;
-
-      .modal-body {
-        overflow: auto;
-        max-height: 500px;
-      }
-
-  }
-}
-div.search_help {
-  /* initially hidden, shown as modal */
-  display: none;
-
-  ul {
-    list-style: none;
-  }
-
-  h2:first-child {
-    margin-top: 0;
+  .modal-body {
+    overflow: auto;
+    max-height: 500px;
   }
 }
