@@ -1,5 +1,8 @@
 <%# TODO the id attrib below should be deprecated as its not well scoped. %>
 <div class="form-field <%= object_name %>_<%= field_name %>" id="<%= field_name %>" data-field-name="<%= field_name %>">
+  <%# This appears first here but is usually moved to the end using flex box %>
+  <%# We do it this way so we can move the control to its own line in certain cases %>
+  <%= hint_popover(hint_html) %>
   <%= label_tag %>
   <div class="control <%= options[:read_only] ? 'read-only' : '' %>">
     <%# errors %>
@@ -8,5 +11,4 @@
       <%= field_html %>
     </div>
   </div>
-  <%= hint_popover(hint_html) %>
 </div>

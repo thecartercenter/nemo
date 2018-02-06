@@ -1,9 +1,16 @@
 <% mode = read_only ? "read_only" : "editable" %>
-<div class="form-field answer_field qtype_<%= set.qtype.name %> <%= read_only ? "read-only" : "editable" %>"
+<div class="form-field answer_field qtype_<%= set.qtype.name %>
+  <%= read_only ? "read-only" : "editable" %> <%= set.lengthy? ? "lengthy" : "" %>"
   data-qtype-name="<%= set.qtype.name %>"
   data-qing-id="<%= set.questioning_id %>"
   data-inst-num="<%= inst_num %>">
-
+  <% if form_mode %>
+    <%# This appears first here but is usually moved to the end using flex box %>
+    <%# We do it this way so we can move the control to its own line when printing a long text answer. %>
+    <% question_hint = set.question_hint.try(:chomp, ".").try(:<<, ".") %>
+    <% drop_hint = I18n.t("response.drop_hint.#{set.qtype.name}", default: "").presence %>
+    <%= hint_popover([question_hint, drop_hint].compact.join(" ")) %>
+  <% end %>
   <label class="main">
     <%= reqd_sym if set.required? %>
     <%= set.full_dotted_rank %>.
@@ -22,11 +29,6 @@
             inst_num: inst_num) %>
     <% end %>
   </div>
-  <% if form_mode %>
-    <% question_hint = set.question_hint.try(:chomp, ".").try(:<<, ".") %>
-    <% drop_hint = I18n.t("response.drop_hint.#{set.qtype.name}", default: "").presence %>
-    <%= hint_popover([question_hint, drop_hint].compact.join(" ")) %>
-  <% end %>
 </div>
 
 <%# Setup condition js. %>

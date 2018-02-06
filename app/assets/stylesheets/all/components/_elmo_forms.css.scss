@@ -7,7 +7,7 @@ div.form-errors {
 
 form.elmo-form, div.elmo-form {
   // Standard form width
-  max-width: $elmo-form-width;
+  max-width: 760px;
 
   p.instructions {
     margin-bottom: 20px;
@@ -51,7 +51,7 @@ div.form-field {
   }
 
   label.main {
-    width: $label-width;
+    flex: 0 0 200px;
 
     display: block;
     vertical-align: top;
@@ -100,7 +100,8 @@ div.form-field {
   }
 
   .hint-wrapper {
-    width: 30px;
+    flex: 0 0 30px;
+    order: 10; // Move it to the end of the line.
     text-align: center;
 
     a.hint {
