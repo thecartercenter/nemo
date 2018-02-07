@@ -24,6 +24,9 @@
         'edit': I18n.t('option_set.edit_option_level')
       }
     });
+
+    // No nesting for levels
+    self.list.allow_nesting(false);
   };
 
   // initiates add level process
