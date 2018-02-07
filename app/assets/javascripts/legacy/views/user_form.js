@@ -12,13 +12,13 @@
       self.build_assignment_form();
 
     // hookup add assignment link
-    $('.form_field[data-field-name=assignments] .add_assignment').on('click', function(e){
+    $('.form-field[data-field-name=assignments] .add_assignment').on('click', function(e){
       self.add_assignment();
       e.preventDefault();
     })
 
     // hookup delete assignment links
-    $('.form_field[data-field-name=assignments]').on('click', '.delete_assignment', function(e){
+    $('.form-field[data-field-name=assignments]').on('click', '.delete_assignment', function(e){
       self.delete_assignment($(e.target).closest('.assignment'));
       e.preventDefault();
     })
@@ -30,7 +30,7 @@
 
     // loop over assignments, adding rows
     self.params.assignments.forEach(function(assignment, idx) {
-      $('.form_field[data-field-name=assignments] .assignments').append(template({
+      $('.form-field[data-field-name=assignments] .assignments').append(template({
         params: self.params,
         assignment: assignment,
         can_update: self.params.form_mode != 'show' && self.params.assignment_permissions[idx],
@@ -43,12 +43,12 @@
   klass.prototype.add_assignment = function() { var self = this;
     var template = JST['legacy/templates/assignment_miniform'];
 
-    $('.form_field[data-field-name=assignments] .assignments').append(template({
+    $('.form-field[data-field-name=assignments] .assignments').append(template({
       params: self.params,
       assignment: {},
       can_update: true,
       new_record: true,
-      idx: $('.form_field[data-field-name=assignments] .assignments .assignment').length
+      idx: $('.form-field[data-field-name=assignments] .assignments .assignment').length
     }));
   }
 

@@ -43,9 +43,8 @@
 }
 
 .responses_show {
-
-  /* text responses with paragraphs in show mode */
-  .form_field.qtype_long_text, .form_field.qtype_text {
+  // Text responses with paragraphs in show mode
+  .form-field.qtype_long_text, .form-field.qtype_text {
 
     .control {
       p:first-child {
@@ -68,52 +67,59 @@
 }
 
 form.response_form {
+  $label-width: 300px;
+  $group-indent: 10px;
+
+  // Response forms are more complex, so a bit more width is nice.
+  max-width: 950px;
+
+  // Question titles can be rather long.
   label.main {
-    width: $response-form-label-width;
-
-    display: inline-block;
-    float: left;
-    p.rank {
-      display: inline-block;
-      text-align: left;
-      float: left;
-      margin-left: 12px;
-    }
-  }
-
-  div.control {
-    margin-left: $response-form-label-width;
-
-    // TODO this needs to be refactored, all width stuff needs to be genericized and moved into
-    // the main form styles.
-    // For now, this new width accounts for the wider labels.
-    width: $elmo-form-width - 325px;
+    flex: 0 0 $label-width;
   }
 
   div.no-value {
     color: $light-gray;
   }
 
-  input.qtype_integer, input.qtype_decimal {
-    width: 100px;
+  // Need to compete with specificity in main form style.
+  .form-field.qtype_location .control .widget {
+    input {
+      width: 300px;
+      display: inline-block;
+    }
+
+    a.edit_location_link img {
+      vertical-align: bottom;
+    }
   }
 
-  textarea.qtype_long_text {
-    width: 340px;
-    height: 100px;
+  .form-field.qtype_date, .form-field.qtype_time, .form-field.qtype_datetime {
+    .control .widget select {
+      width: 75px;
+      display: inline-block;
+    }
   }
 
-  input.qtype_location {
-    width: 300px;
-    display: inline-block;
+  .form-field.qtype_select_multiple .control .widget {
+    vertical-align: top !important;
   }
 
-  a.edit_location_link img {
-    vertical-align: bottom;
+  // Long text qs in read-only mode marked .lengthy should use the whole column for their value.
+  // This looks nicer and prints better when the text is super long.
+  .form-field.qtype_long_text.read-only.lengthy {
+    display: block;
+
+    label.main {
+      text-align: $left;
+    }
+
+    .hint-wrapper {
+      float: $right;
+    }
   }
 
   div.qing-group {
-
     div.qing-group-instances {
       background-color: lighten($gray-blue, 10%);
       border-left: 10px solid $gray-blue;
@@ -153,14 +159,19 @@ form.response_form {
     }
 
     /* Indented groups */
-    .form_field {
-      label {
-        width: $response-form-label-width - $group-indent;
-        padding-left: 5px; // Since there is now a left border.
+    .form-field {
+      $nested-block-padding: 10px;
+
+      label.main {
+        width: $label-width - $group-indent;
+
+        // Since there is now a left border, having the text right up against it looks bad.
+        padding-#{$left}: $nested-block-padding;
       }
 
-      div.control {
-        margin-left: $response-form-label-width - $group-indent;
+      // For long text qs in read-only mode, the control is on its own line, so it needs some padding.
+      &.qtype_long_text.read-only.lengthy .control {
+        padding: 0 $nested-block-padding;
       }
     }
   }

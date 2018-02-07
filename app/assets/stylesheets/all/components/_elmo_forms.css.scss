@@ -1,47 +1,38 @@
-/* base errors may appear outside the form. */
+// Base errors may appear outside the form
 div.form-errors {
   font-weight: bold;
   color: $theme_red;
   margin-bottom: 5px;
 }
 
-/* standard form width */
-form.elmo_form, div.elmo_form {
-  width: $elmo-form-width;
+form.elmo-form, div.elmo-form {
+  // Standard form width
+  max-width: 760px;
 
   p.instructions {
     margin-bottom: 20px;
   }
 }
 
-div.form_field {
+// Modals typically have a limited width anyway,
+// so it's nice to have the form fit snugly into the modal.
+.modal form.elmo-form {
+  max-width: 100%;
+}
+
+div.form-field {
   /* the field div itself should not wrap, but we don't want this to inherit */
   white-space: nowrap;
   border-bottom: $light-border;
   padding: 5px 0;
+  display: flex;
 
   > * {
     white-space: normal;
   }
 
-  a.hint {
-    margin-top: 6px;
-    display: inline-block;
-    white-space: nowrap;
-
-    i.hint {
-      display: inline-block;
-      color: $elmo-blue;
-      font-size: 1.5em;
-      vertical-align: middle;
-
-      // Right padding is so things look ok when there is a bg color.
-      padding: 0 3px;
-    }
-  }
-
   div.form-errors {
-    /* cancel the left margin for form errors inside a form_field */
+    /* cancel the left margin for form errors inside a form-field */
     margin-#{$left}: 0;
   }
 
@@ -59,34 +50,8 @@ div.form_field {
     padding: 5px 0;
   }
 
-  .label_and_control {
-    display: inline-block;
-    vertical-align: top;
-
-    /* ensures label stays next to control */
-    white-space: nowrap;
-
-    label, .control {
-      /* allows normal wrapping inside of the the label and control */
-      white-space: normal;
-    }
-  }
-
-  /* for rich text editor */
-  .cke {
-    display: inline-block;
-    vertical-align: top;
-    width: 415px;
-  }
-
   label.main {
-    // We float this instead of using inline-block because the latter doesn't
-    // print properly in FFox if the text spans longer than a page.
-    float: $left;
-
-    // If this width is overridden for specific forms,
-    // the div.control margin needs to be changed too.
-    width: $label-width;
+    flex: 0 0 200px;
 
     display: block;
     vertical-align: top;
@@ -95,14 +60,9 @@ div.form_field {
   }
 
   div.control {
-    // Need this margin to match the width of the label. See above for why we
-    // do it this way.
-    margin-#{$left}: $label-width;
-
     vertical-align: middle;
-    width: $elmo-form-width - 225px;
     min-height: 26px;
-    position: relative;
+    flex-grow: 1;
 
     label {
       font-weight: normal;
@@ -115,12 +75,16 @@ div.form_field {
         margin-bottom: 0;
       }
 
-      input[type=text], input.text, input[type=password], select {
+      input[type=text], input.text, input[type=number], input[type=password], select {
         height: 35px;
       }
 
       textarea {
         height: 100px;
+      }
+
+      input[type=number] {
+        width: 100px;
       }
 
       input[type=text], input.text, input[type=password], select, textarea {
@@ -133,11 +97,28 @@ div.form_field {
         margin-top: 5px;
       }
     }
-
   }
-  /* Override for multiple selects */
-  &.qtype_select_multiple .widget {
-    vertical-align: top !important;
+
+  .hint-wrapper {
+    flex: 0 0 30px;
+    order: 10; // Move it to the end of the line.
+    text-align: center;
+
+    a.hint {
+      margin-top: 6px;
+      display: inline-block;
+      white-space: nowrap;
+
+      i.hint {
+        display: inline-block;
+        color: $elmo-blue;
+        font-size: 1.5em;
+        vertical-align: middle;
+
+        // Right padding is so things look ok when there is a bg color.
+        padding: 0 3px;
+      }
+    }
   }
 
   div.control input.text {
@@ -151,12 +132,6 @@ div.form_field {
 
   div.control input.radio {
     width: 15px;
-  }
-
-  div.space_line {
-    margin: 0;
-    padding: 0;
-    width: auto;
   }
 }
 
@@ -191,12 +166,15 @@ div.modal div.form-warning {
   width: inherit;
 }
 
-/* Minimal form has no horiz lines and no hints */
-form.elmo_form.minimal {
-  width: $elmo-form-width - 20px;
-
-  div.form_field {
+// Minimal form has no horiz lines and no hints
+.elmo-form.minimal {
+  .form-field {
     border-bottom: none;
+  }
+
+  // We need to hide this because otherwise the bottom buttons don't line up nicely.
+  .hint-wrapper {
+    display: none;
   }
 }
 
@@ -218,7 +196,7 @@ div.cascading-selects {
   }
 }
 
-.read_only div.cascading-selects {
+.read-only div.cascading-selects {
   label, .option-level {
     margin-bottom: 0px;
   }
@@ -226,7 +204,7 @@ div.cascading-selects {
   .option-name {
     margin-bottom: 5px;
 
-    i { /* For blank values */
+    i { // For blank values
       font-style: normal;
       color: $lighter-gray;
     }
@@ -237,46 +215,20 @@ div.cascading-selects {
   }
 }
 
-.question_tag_ids div.read_only {
+.question_tag_ids .read-only {
   padding-top: 0;
 }
 
 // Style adjustments for ELMO forms in modals.
-.modal form.elmo_form {
-
-  width: 100%;
-
-  div.form_field {
-
+.modal form.elmo-form {
+  div.form-field {
     &:last-child {
-      border: none;
-    }
-
-    div.label_and_control {
-      width: 75%;
-
-      div.control {
-        width: 60%;
-
-        div.widget {
-          // These can't be as wide as normally.
-          input[type=text], input.text, input[type=password], select, textarea {
-            width: 100%;
-          }
-        }
-      }
+      border-bottom: none;
     }
   }
 }
 
-// Override for qing group modal
-.modal form.qing_group_form {
-  .control, .widget {
-    width: 100% !important;
-  }
-}
-
-// Settings fields
+// Expandable settings fields for forms
 .setting-fields, div.less-settings {
   display: none;
 }

@@ -1,4 +1,4 @@
-class ELMO.Views.GroupModalView extends ELMO.Views.ApplicationView
+class ELMO.Views.GroupModalView extends ELMO.Views.FormView
 
   events:
     'click .save': 'save'
@@ -74,7 +74,4 @@ class ELMO.Views.GroupModalView extends ELMO.Views.ApplicationView
     })
 
   toggle_item_name: ->
-    if @$("#qing_group_repeatable")[0].checked
-      @$('div[data-field-name^="group_item_name_"]').show()
-    else
-      @$('div[data-field-name^="group_item_name_"]').hide()
+    @showField("group_item_name_", @$("#qing_group_repeatable")[0].checked, prefix: true)

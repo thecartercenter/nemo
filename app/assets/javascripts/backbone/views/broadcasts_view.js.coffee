@@ -1,4 +1,4 @@
-class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
+class ELMO.Views.BroadcastsView extends ELMO.Views.FormView
   el: '.broadcast_form'
 
   initialize: (options) ->
@@ -20,7 +20,7 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
 
   recipient_selection_changed: (e) ->
     specific = @form_value('broadcast', 'recipient_selection') == 'specific'
-    @$('.form_field.broadcast_recipient_ids')[if specific then 'show' else 'hide']()
+    @$('.form-field.broadcast_recipient_ids')[if specific then 'show' else 'hide']()
 
   medium_changed: (e) ->
     selected = @form_value('broadcast', 'medium')
@@ -29,13 +29,13 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
     # Hide/show char limit and subject
     if sms_possible
       @$('#char_limit').show()
-      @$('.form_field.broadcast_which_phone').show()
-      @$('.form_field.broadcast_subject').hide()
+      @$('.form-field.broadcast_which_phone').show()
+      @$('.form-field.broadcast_subject').hide()
       @update_char_limit()
     else
       @$('#char_limit').hide()
-      @$('.form_field.broadcast_which_phone').hide()
-      @$('.form_field.broadcast_subject').show()
+      @$('.form-field.broadcast_which_phone').hide()
+      @$('.form-field.broadcast_subject').show()
 
   update_char_limit: ->
     div = @$('#char_limit')

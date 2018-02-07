@@ -27,6 +27,10 @@ public/form-attachments/
 # these are auto generated
 config/*.sphinx.conf
 
+# Read the docs files
+*.mo
+docs/readthedocs/_build
+
 # manually generated files for quick searching
 rake_tasks.txt
 routes.txt

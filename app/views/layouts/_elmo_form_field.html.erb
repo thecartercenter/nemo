@@ -1,17 +1,14 @@
 <%# TODO the id attrib below should be deprecated as its not well scoped. %>
-<div class="form_field <%= object_name %>_<%= field_name %>" id="<%= field_name %>" data-field-name="<%= field_name %>">
-
-  <div class="label_and_control">
-    <%# spacing here is important. must be no space after label tag %>
-    <%= label_tag %><div class="control <%= options[:read_only] ? 'read_only' : '' %>">
-
-      <%# errors %>
-      <%= content_tag(:div, errors.join(' '), :class => 'form-errors') if errors && !errors.empty? %>
-      <div class="widget">
-        <%= field_html %>
-      </div>
-
+<div class="form-field <%= object_name %>_<%= field_name %>" id="<%= field_name %>" data-field-name="<%= field_name %>">
+  <%# This appears first here but is usually moved to the end using flex box %>
+  <%# We do it this way so we can move the control to its own line in certain cases %>
+  <%= hint_popover(hint_html) %>
+  <%= label_tag %>
+  <div class="control <%= options[:read_only] ? 'read-only' : '' %>">
+    <%# errors %>
+    <%= content_tag(:div, errors.join(' '), :class => 'form-errors') if errors && !errors.empty? %>
+    <div class="widget">
+      <%= field_html %>
     </div>
   </div>
-  <%= hint_popover(hint_html) %>
 </div>

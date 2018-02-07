@@ -160,6 +160,10 @@ class Answer < ApplicationRecord
     end
   end
 
+  def lengthy?
+    value.present? && value.size >= 1000
+  end
+
   # relevant defaults to true until set otherwise
   def relevant?
     @relevant.nil? ? true : @relevant

@@ -48,7 +48,7 @@ describe "questionings form", js: true  do
   end
 
   def expect_editable(field, should_be_editable, field_type: "input")
-    sel = "div.form_field.questioning_#{field} .widget #{field_type}"
+    sel = "div.form-field.questioning_#{field} .widget #{field_type}"
     if should_be_editable
       expect(page).to have_selector(sel)
     else

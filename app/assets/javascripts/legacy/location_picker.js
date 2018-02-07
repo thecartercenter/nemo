@@ -21,7 +21,7 @@
     if (!self.location)
       self.set_location([-34.397, 150.644]); // Default center
 
-    self.map = new google.maps.Map($("#map-canvas")[0], {
+    self.map = new google.maps.Map(self.el.find(".map-canvas")[0], {
       mapTypeId: google.maps.MapTypeId.ROADMAP,
       zoom: self.location ? 7 : 2,
       streetViewControl: false,
@@ -34,10 +34,10 @@
 
     // Hook up events.
     google.maps.event.addListener(self.map, 'click', function(event) {self.map_click(event)});
-    self.el.find("button.accept_link").click(function() {self.close(true); return false;});
-    self.el.find("form.location_search input.query").focus(function() {self.search_focus(true);});
-    self.el.find("form.location_search input.query").blur(function() {self.search_focus(false);});
-    self.el.find("form.location_search").submit(function() {self.search_submit(); return false;});
+    self.el.find("button.accept-link").click(function() {self.close(true); return false;});
+    self.el.find("form.location-search input.query").focus(function() {self.search_focus(true);});
+    self.el.find("form.location-search input.query").blur(function() {self.search_focus(false);});
+    self.el.find("form.location-search").submit(function() {self.search_submit(); return false;});
 
     self.map_ready = true;
   }
@@ -57,7 +57,7 @@
   klass.prototype.search_focus = function(is_focus) { var self = this;
     console.log(self.el);
     // get ref.
-    var box = self.el.find("form.location_search input.query");
+    var box = self.el.find("form.location-search input.query");
     var init_str = I18n.t("location_picker.search_locations");
 
     // if focused, blank the box and set the color and font style
@@ -73,13 +73,12 @@
   klass.prototype.search_submit = function() { var self = this;
 
     // get query
-    var query = self.el.find("form.location_search input.query").val().trim();
+    var query = self.el.find("form.location-search input.query").val().trim();
 
     // do nothing if empty
     if (query == "") return;
 
-    // show loading indicator
-    self.el.find("div.loading_indicator img").show();
+    ELMO.app.loading(true);
 
     // submit, giving callback method
     new ELMO.GoogleGeocoder(query, function(r){self.show_search_results(r)});
@@ -87,11 +86,10 @@
 
   // displays the search results and hooks up the links
   klass.prototype.show_search_results = function(results) { var self = this;
-    // hide loading indicator
-    self.el.find("div.loading_indicator img").hide();
+    ELMO.app.loading(false);
 
     // get ref to div and empty it
-    var results_div = self.el.find("form.location_search div.results").empty();
+    var results_div = self.el.find("form.location-search div.results").empty();
 
     // show error if there is one
     if (typeof(results) == "string")
@@ -100,11 +98,11 @@
       // create links
       for (var i = 0; i < results.length; i++)
         results_div.append($("<a>").
-          attr("href", "#").addClass("result_link").
+          attr("href", "#").addClass("result-link").
           attr("title", results[i].geometry.location.lat + "," + results[i].geometry.location.lng).
           text(results[i].formatted_address));
 
-      self.el.find("a.result_link").click(function(e){
+      self.el.find("a.result-link").click(function(e){
         self.set_location(self.parse_lat_lng(e.target.title));
         self.mark_location({pan: true});
       });
@@ -117,8 +115,7 @@
 
   // updates the map to indicate that the current location has been chosen
   klass.prototype.mark_location = function(options) { var self = this;
-    // hide loading indicator
-    self.el.find("div.loading_indicator img").hide();
+    ELMO.app.loading(false);
 
     if (self.location) {
       if (!self.marker)
@@ -129,7 +126,7 @@
     }
 
     // show the chosen location
-    self.el.find("span.cur_lat_lng").html(I18n.t("location_picker.current_location") + ": " +
+    self.el.find(".cur-lat-lng").html(I18n.t("location_picker.current_location") + ": " +
       (self.location ? self.location[0] + " " + self.location[1] : "None"));
 
     // pan if requested

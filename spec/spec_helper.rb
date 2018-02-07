@@ -7,24 +7,33 @@ require 'rspec/collection_matchers'
 # Add this to load Capybara integration:
 require 'capybara/rspec'
 require 'capybara/rails'
-require 'capybara/poltergeist'
+require 'selenium-webdriver'
 require 'capybara-screenshot/rspec'
 require 'paperclip/matchers'
 require 'cancan/matchers'
 
-Capybara.register_driver :poltergeist do |app|
-  Capybara::Poltergeist::Driver.new(app,
-    phantomjs_options: ['--ignore-ssl-errors=yes'],
-    extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
+Capybara.register_driver :selenium_chrome_headless do |app|
+  options = Selenium::WebDriver::Chrome::Options.new(
+    args: %w[disable-gpu no-sandbox] + (ENV["HEADED"] ? [] : ["headless"]),
+    # This makes logs available, but doesn't cause them to appear
+    # in real time on the console.
+    # Use `page.driver.browser.manage.logs.get(:browser)` to get the log,
+    # or tag your example with :dump_log to print it to the test output.
+    # You MUST use console.warn or console.error for this to work.
+    loggingPrefs: {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
+  )
+
+  Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
+    driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(1280, 1024)
+  end
 end
 
-Capybara.register_driver :poltergeist_debug do |app|
-  Capybara::Poltergeist::Driver.new(app, inspector: true,
-    phantomjs_options: ['--ignore-ssl-errors=yes'],
-    extensions: [File.expand_path("../support/phantomjs_ext/geolocation.js", __FILE__)])
-end
+Capybara.javascript_driver = :selenium_chrome_headless
 
-Capybara.javascript_driver = :poltergeist
+# Add support for Headless Chrome screenshots.
+Capybara::Screenshot.register_driver(:selenium_chrome_headless) do |driver, path|
+  driver.browser.save_screenshot(path)
+end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -79,6 +88,12 @@ RSpec.configure do |config|
     configatron.preferred_locales = [:en]
 
     example.run
+  end
+
+  config.after(:each, type: :feature, dump_log: true) do
+    puts "------------ BROWSER LOGS -------------"
+    puts page.driver.browser.manage.logs.get(:browser).join("\n")
+    puts "---------------------------------------"
   end
 
   # Important that url options are consistent for specs regardless of what's in local config.
