@@ -18,17 +18,6 @@
 /* hide screen-only things */
 .screen { display: none; }
 
-/* The outer title on forms pages should be hidden since we include it separately. */
-.forms_index, .forms_show, .forms_edit {
-  h1.title {
-    display: none;
-  }
-  #printable_form h1.title {
-    display: block;
-    margin-bottom: 3px;
-  }
-}
-
 /* reports */
 div.report_edit_dialog, div.report_edit_pane { display: none !important; }
 
