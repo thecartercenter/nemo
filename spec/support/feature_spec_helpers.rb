@@ -103,7 +103,7 @@ module FeatureSpecHelpers
   private
 
   def wait_for_ckeditor(locator)
-    Timeout.timeout(Capybara.default_wait_time) do
+    Timeout.timeout(Capybara.default_max_wait_time) do
       loop until ckeditor_ready? locator
     end
   end

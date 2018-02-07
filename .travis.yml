@@ -1,12 +1,14 @@
 ---
+dist: trusty # Need this in order to use Chrome headless, as of 2/6/18
 bundler_args: --without development
 language: ruby
 cache: bundler
 rvm:
-  - 2.2.0
-sudo: false
+  - 2.4.3
+sudo: required
 before_install:
   - gem update bundler --no-rdoc --no-ri
+  - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
 before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - for f in $(find -name '*.example'); do cp "$f" "${f%.example}"; done
@@ -15,6 +17,10 @@ before_script:
   # and should go away when we get rid of local_config.rb some sweet day.
   - sed -ri '/(public|private)_key = nil/d' config/initializers/local_config.rb
   - bundle exec rake db:setup
+  - wget http://chromedriver.storage.googleapis.com/2.35/chromedriver_linux64.zip
+  - unzip chromedriver_linux64.zip
+  - sudo cp chromedriver /usr/local/bin/.
+  - export DISPLAY=:99.0
 script: bundle exec rspec --format progress
 env:
   global:
@@ -26,6 +32,7 @@ addons:
     paths:
     - $(ls /home/travis/build/thecartercenter/elmo/tmp/capybara/*.png | tr "\n" ":")
   postgresql: "9.4"
+  chrome: stable
 
 notifications:
   slack:
