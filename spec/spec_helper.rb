@@ -17,6 +17,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
     args: %w[headless disable-gpu no-sandbox],
     # This makes logs available, but doesn't cause them to appear
     # in real time on the console.
+    # Use `page.driver.browser.manage.logs.get(:browser)` to get logs.
     loggingPrefs: {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
   )
 
