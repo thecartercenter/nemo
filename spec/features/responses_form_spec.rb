@@ -59,14 +59,14 @@ feature "responses form", js: true do
       fill_in_ckeditor(control_id_for(questionings[:long_text], visible: false), with: "Foo Bar\nBaz")
 
       control_for(questionings[:datetime], subfield: :year).select(Time.now.year)
-      control_for(questionings[:datetime], subfield: :month).select("March")
+      control_for(questionings[:datetime], subfield: :month).select("Mar")
       control_for(questionings[:datetime], subfield: :day).select("12")
       control_for(questionings[:datetime], subfield: :hour).select("18")
       control_for(questionings[:datetime], subfield: :minute).select("32")
       control_for(questionings[:datetime], subfield: :second).select("44")
 
       control_for(questionings[:date], subfield: :year).select(Time.now.year)
-      control_for(questionings[:date], subfield: :month).select("October")
+      control_for(questionings[:date], subfield: :month).select("Oct")
       control_for(questionings[:date], subfield: :day).select("26")
 
       control_for(questionings[:time], subfield: :hour).select("03")
@@ -273,7 +273,7 @@ feature "responses form", js: true do
   end
 
   def temporal_mapping
-    { year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i" }
+    {year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i"}
   end
 
   def expect_answer(questioning: nil, answer: nil)
