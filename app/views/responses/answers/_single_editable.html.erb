@@ -40,7 +40,9 @@
 
   <% when "integer", "decimal", "counter" %>
 
-    <%= number_field_tag("#{field_name_prefix}[value]", answer.value, class: "qtype_#{type} form-control") %>
+    <%= number_field_tag("#{field_name_prefix}[value]", answer.value,
+          class: "qtype_#{type} form-control",
+          step: type == "decimal" ? "any" : nil) %>
 
   <% else %>
 
