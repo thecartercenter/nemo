@@ -12,7 +12,8 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
 
     # These handlers must be set dynamically based on rqRow.
     @rqRow.find('div.control').find('input, select, textarea').on('change', => @checkAndTell())
-    @rqRow.find("div.control input[type='text']").on('keyup', => @checkAndTell())
+    @rqRow.find("div.control input[type=text]").on('keyup', => @checkAndTell())
+    @rqRow.find("div.control input[type=number]").on('keyup', => @checkAndTell())
     if @rqType == 'long_text' && !@manager.readOnly
       @ckeditorInstance().on('change', => @checkAndTell())
 
@@ -94,7 +95,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
           content.trim().replace(/(^<p>|<\/p>$)/ig, '')
 
         when 'integer', 'decimal', 'counter'
-          parseFloat(@rqRow.find("div.control input[type='text']").val())
+          parseFloat(@rqRow.find("div.control input[type=number]").val())
 
         when 'select_one'
           # Return all selected option_node_ids.

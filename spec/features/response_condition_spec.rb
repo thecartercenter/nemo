@@ -242,7 +242,7 @@ feature "conditions in responses", js: true do
         prefix = "response_answers_attributes_#{idx}_#{qing.qtype_name}_value"
         unless qing.qtype_name == "time"
           select(t.strftime("%Y"), from: "#{prefix}_1i")
-          select(t.strftime("%B"), from: "#{prefix}_2i")
+          select(t.strftime("%b"), from: "#{prefix}_2i")
           select(t.day.to_s, from: "#{prefix}_3i")
         end
         unless qing.qtype_name == "date"
