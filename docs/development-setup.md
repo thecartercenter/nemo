@@ -21,13 +21,13 @@ Note to install the software below we recommend the following package managers:
   - ImageMagick is used to resize uploaded images.
   - It should be available through any of the package managers listed above. If not it can be built from source.
 
-1. **PhantomJS 1.9+**
-  - PhantomJS is a headless browser that allows testing JavaScript.
-  - It should be available through any of the package managers listed above. If not it can be built from source.
-  - The Rails Gem that talks to PhantomJS is called Poltergeist.
+1. **Chrome (Browser) 60+**
+  - Used for automated browser testing.
 
-1. **Firefox**
-  - Firefox is used for automated browser testing.
+1. **Chromedriver 2.35+**
+  - Handles running Chrome headlessly for feature specs.
+  - It should be available through any of the package managers listed above. If not it can be built from source.
+  - The Rails Gem that talks to Chromedriver is called `selenium-webdriver`.
 
 1. **GraphViz 2.36+**
   - [GraphViz](http://graphviz.org/) is used to visualize the relationships between data in the database.
@@ -61,7 +61,8 @@ Note to install the software below we recommend the following package managers:
 
 1. **Run the tests**
   - Run `rspec`.
-  - All tests should pass. Running them takes a few minutes.
+  - All tests should pass. Running them takes about 10-15 minutes.
+  - If you have trouble debugging a feature spec, you can run it headed (so you can watch the browser go through the spec) by doing `HEADED=1 bundle exec rspec spec/features/your_spec.rb`.
 
 1. **Start the server**
   - For a development setup, just run `rails s`.
@@ -73,7 +74,7 @@ Note to install the software below we recommend the following package managers:
 
 ### Testing with ODK
 
-1. **Download the ODK application onto your android phone or tablet**
+1. **Download the ODK application onto your Android phone or tablet**
   - https://opendatakit.org/
 
 1. **Configure your rails development server so ODK can find it**
