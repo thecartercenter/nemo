@@ -130,11 +130,16 @@ form.response_form {
       padding: 5px 0 10px 2px;
       background-color: $gray-blue;
 
+      .hint-wrapper {
+        display: inline-block;
+      }
+
       a.hint {
         font-size: 9pt;
 
         i.hint {
           color: $white !important;
+          font-size: 17px;
         }
       }
 
