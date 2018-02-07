@@ -1,4 +1,4 @@
-class ELMO.Views.BroadcastsView extends ELMO.Views.ApplicationView
+class ELMO.Views.BroadcastsView extends ELMO.Views.FormView
   el: '.broadcast_form'
 
   initialize: (options) ->
