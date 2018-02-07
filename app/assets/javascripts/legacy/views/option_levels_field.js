@@ -25,7 +25,7 @@
       }
     });
 
-    // No nesting for levels
+    // No nesting for option levels
     self.list.allow_nesting(false);
   };
 
