@@ -253,8 +253,9 @@ class Replication::ObjProxy
       target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
 
     # Else try looking up original_id if available
-    elsif target_class.standardizable? && copy_id = target_class.where(original_id: orig_id).first.try(:id)
-      copy_id
+    elsif target_class.standardizable?
+      copies_in_mission = target_class.where(mission_id: replicator.target_mission_id, original_id: orig_id)
+      copies_in_mission.any? ? copies_in_mission.first.id : nil
     else
       nil
     end
