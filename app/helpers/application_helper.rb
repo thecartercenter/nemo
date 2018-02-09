@@ -177,8 +177,10 @@ module ApplicationHelper
     end
   end
 
-  def h1_title
-    content_tag(:h1, title, class: "title")
+  def h1_title(content: "")
+    content_tag(:h1, class: "title") do
+      title << content
+    end
   end
 
   # pluralizes an activerecord model name

@@ -106,8 +106,7 @@
     <%= yield(:alerts) %>
     <% unless @dont_print_title %>
       <div id="title_container">
-        <%= h1_title %>
-        <%= yield :title_content %>
+        <%= h1_title(content: yield(:title_content)) %>
       </div>
     <% end %>
     <%= body %>
