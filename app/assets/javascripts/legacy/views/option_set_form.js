@@ -166,6 +166,9 @@
 
     // show/hide the option levels field
     self.option_levels_field.show(checked)
+
+    // enable/disable nested options
+    self.options_field.list.allow_nesting(checked)
   }
 
   // returns the html to insert in the token input result list
