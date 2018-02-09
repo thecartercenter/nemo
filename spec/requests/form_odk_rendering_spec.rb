@@ -184,9 +184,22 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       create(:form, :published, :with_version,
         name: "Repeat Group",
         question_types: [
-          {repeating: {name: "Repeat Group 1", items: %w(text text text), group_item_name: "Group Item Name"}},
-          %w(text text) # Include a normal group to ensure differentiated properly.
+          {repeating: {name: "Repeat Group 1", items: %w(text text text)}},
+
+          # Include a normal group to ensure differentiated properly.
+          %w(text text),
+
+          # Second repeat group, one_screen false.
+          {repeating: {name: "Repeat Group 2", items: %w(text text)}}
         ]
+      )
+    end
+
+    before do
+      form.c[0].update_attribute(:group_item_name_en, "1st Item Name $#{form.c[0].c[0].code}")
+      form.c[2].update_attributes(
+        group_item_name_en: "2nd Item Name $#{form.c[2].c[0].code}",
+        one_screen: false
       )
     end
 

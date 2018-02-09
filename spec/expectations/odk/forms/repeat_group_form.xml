@@ -16,6 +16,11 @@
             <*itemcode6*/>
             <*itemcode7*/>
           </*itemcode5*>
+          <*itemcode8* jr:template="">
+            <*itemcode8*-header/>
+            <*itemcode9*/>
+            <*itemcode10*/>
+          </*itemcode8*>
         </data>
       </instance>
       <itext>
@@ -27,13 +32,22 @@
             <value>Repeat Group 1</value>
           </text>
           <text id="*itemcode1*:itemname">
-            <value>Group Item Name</value>
+            <value>1st Item Name <output value="/data/*itemcode1*/*itemcode2*"/></value>
           </text>
           <text id="*itemcode5*:label">
             <value>Group Name</value>
           </text>
           <text id="*itemcode5*:hint">
             <value>Group Hint</value>
+          </text>
+          <text id="*itemcode8*:label">
+            <value>Repeat Group 2</value>
+          </text>
+          <text id="*itemcode8*:hint">
+            <value>Repeat Group 2</value>
+          </text>
+          <text id="*itemcode8*:itemname">
+            <value>2nd Item Name <output value="/data/*itemcode8*/*itemcode9*"/></value>
           </text>
           <text id="*itemcode2*:label">
             <value>Text Question Title 1</value>
@@ -65,6 +79,21 @@
           <text id="*itemcode7*:hint">
             <value>Question Hint 5</value>
           </text>
+          <text id="*itemcode9*:label">
+            <value>Text Question Title 6</value>
+          </text>
+          <text id="*itemcode9*:hint">
+            <value>Question Hint 6</value>
+          </text>
+          <text id="*itemcode10*:label">
+            <value>Text Question Title 7</value>
+          </text>
+          <text id="*itemcode10*:hint">
+            <value>Question Hint 7</value>
+          </text>
+          <text id="BLANK">
+            <value/>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*"/>
@@ -76,6 +105,10 @@
       <bind nodeset="/data/*itemcode5*/*itemcode5*-header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode5*/*itemcode6*" type="string"/>
       <bind nodeset="/data/*itemcode5*/*itemcode7*" type="string"/>
+      <bind nodeset="/data/*itemcode8*"/>
+      <bind nodeset="/data/*itemcode8*/*itemcode8*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode8*/*itemcode9*" type="string"/>
+      <bind nodeset="/data/*itemcode8*/*itemcode10*" type="string"/>
     </model>
   </h:head>
   <h:body>
@@ -117,6 +150,25 @@
           <hint ref="jr:itext('*itemcode7*:hint')"/>
         </input>
       </group>
+    </group>
+    <group>
+      <label ref="jr:itext('*itemcode8*:label')"/>
+      <repeat nodeset="/data/*itemcode8*">
+        <group>
+          <label ref="jr:itext('*itemcode8*:itemname')"/>
+          <input ref="/data/*itemcode8*/*itemcode8*-header">
+            <hint ref="jr:itext('*itemcode8*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode8*/*itemcode9*">
+            <label ref="jr:itext('*itemcode9*:label')"/>
+            <hint ref="jr:itext('*itemcode9*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode8*/*itemcode10*">
+            <label ref="jr:itext('*itemcode10*:label')"/>
+            <hint ref="jr:itext('*itemcode10*:hint')"/>
+          </input>
+        </group>
+      </repeat>
     </group>
   </h:body>
 </h:html>

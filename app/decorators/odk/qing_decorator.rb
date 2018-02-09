@@ -33,7 +33,7 @@ module Odk
     end
 
     def calculate
-      has_default? ? DefaultPatternParser.new(default, src_item: self).to_odk : nil
+      has_default? ? Odk::ResponsePatternParser.new(default, src_item: self).to_odk : nil
     end
 
     def jr_preload

@@ -622,6 +622,8 @@ en:
           Inline: Show the list of options on the SMS Guide.
           Appendix: Include the list of options in an appendix created by a Coordinator.
           Treat as text: Accept options for this option set as if they were text entries"
+      qing_group:
+        group_item_name: "You can enter $QuestionCode to include the value of a question (for ODK only).\n\nFor example, suppose you are making a repeat group where the code for the first question is 'HouseholdID' and you enter\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID \n\n You create one group and answer '123' for 'HouseholdID.' Then you create a second group and answer '789' for 'HouseholdID.' The first group item name will be 'Household: 123.' The second group item name will be 'Household: 789.'"
       question:
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"

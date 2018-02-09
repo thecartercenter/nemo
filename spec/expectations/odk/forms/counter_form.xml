@@ -23,6 +23,9 @@
           <text id="*itemcode2*:hint">
             <value>Question Hint 2</value>
           </text>
+          <text id="BLANK">
+            <value/>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*" type="int"/>

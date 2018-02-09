@@ -46,6 +46,9 @@
           <text id="*itemcode5*:hint">
             <value>Question Hint 4</value>
           </text>
+          <text id="BLANK">
+            <value/>
+          </text>
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*" type="string"/>

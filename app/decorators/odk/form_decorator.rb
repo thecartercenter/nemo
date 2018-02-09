@@ -18,7 +18,7 @@ module Odk
       if default_response_name.present?
         tag(:bind,
           nodeset: "/data/meta/instanceName",
-          calculate: DefaultPatternParser.new(default_response_name, src_item: root_group).to_odk,
+          calculate: Odk::ResponsePatternParser.new(default_response_name, src_item: root_group).to_odk,
           readonly: "true()",
           type: "string"
         )

@@ -8,7 +8,7 @@
   </text>
   <% if node.group_item_name.present? %>
     <text id="<%= node.odk_code %>:itemname">
-      <value><%= node.group_item_name(lang, strict: false) %></value>
+      <value><%= Odk::NamePatternParser.new(node.group_item_name(lang, strict: false), src_item: node).to_odk.html_safe %></value>
     </text>
   <% end %>
   <% node.sorted_children.each do |child| %>
