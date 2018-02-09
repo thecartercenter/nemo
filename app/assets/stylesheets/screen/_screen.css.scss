@@ -173,9 +173,6 @@ div.dialog_bg * { opacity: 1; filter: alpha(opacity=100); }
 /* hide printable things */
 .printable { display: none; }
 
-/* report view */
-.reports_new h1.title, .reports_show h1.title { display: inline-block; }
-
 body.reports {
   div.report_view {
     display: table-row;

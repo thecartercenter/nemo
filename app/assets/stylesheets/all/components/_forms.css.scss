@@ -7,3 +7,17 @@ form.form_form {
     display: none; // Initially hidden
   }
 }
+
+@media print {
+  // The outer title on forms pages should be hidden since we include it separately.
+  .forms_index, .forms_show, .forms_edit {
+    h1.title {
+      display: none;
+    }
+    
+    #printable_form h1.title {
+      display: block;
+      margin-bottom: 3px;
+    }
+  }
+}
