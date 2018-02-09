@@ -139,6 +139,29 @@ describe Form do
       end
     end
 
+    context "with an option set already imported to a different mission" do
+      let(:mission1) { create(:mission) }
+      let(:mission2) { create(:mission) }
+      let!(:std) { create(:form, is_standard: true, question_types: %w(select_one integer)) }
+
+      before do
+        std.c[1].display_conditions.create!(ref_qing: std.c[0], op: "eq",
+          option_node: std.c[0].option_set.c[0])
+        std.replicate(mode: :to_mission, dest_mission: mission1)
+      end
+
+      context "with same option set previously copied to mission2" do
+        before do
+          std.c[0].option_set.replicate(mode: :to_mission, dest_mission: mission2)
+        end
+
+        it "should link the condition properly" do
+          copy2 = std.replicate(mode: :to_mission, dest_mission: mission2)
+          expect(copy2.c[1].display_conditions.first.option_node.mission).to eq mission2
+        end
+      end
+    end
+
     context "with a condition referencing a now-incompatible question" do
       let!(:std) { create(:form, is_standard: true) }
 
