@@ -1,0 +1,1683 @@
+ko:
+  locale_name: "영어"
+  common:
+    accept: "승인"
+    active: "활성화"
+    add: "추가"
+    and: "그리고"
+    back: "뒤로"
+    blank: "빈 칸"
+    by: "by "
+    cancel: "취소"
+    choose: "선택"
+    choose_file:
+      other: "파일 선택"
+    clear: "삭제"
+    clipped: "편집된"
+    clone: "복사"
+    close: "닫기"
+    contact: "연락"
+    create: "생성"
+    created: "생성된"
+    copy: "복사"
+    data: "데이타"
+    delete: "삭제"
+    design: "디자인"
+    edit: "편집"
+    error:
+      zero: "오류"
+      one: "오류"
+      two: "오류"
+      few: "오류"
+      many: "오류"
+      other: "오류"
+    example:
+      zero: "예시"
+      one: "예시"
+      two: "예시"
+      few: "예시"
+      many: "예시"
+      other: "예시"
+    example_abbr: "예."
+    found: "검색된"
+    generate: "생성"
+    group: "그룹"
+    inactive: "비활성"
+    import: "가져오기"
+    incoming: "수신"
+    language: "언어"
+    login: "로그인"
+    confirm_login: "로그인 확인"
+    logout: "로그아웃"
+    manage: "관리"
+    map_offline: "오프라인 모드에서는 지도를 사용할 수 없습니다."
+    less_settings: "설정 덜 보기"
+    more_settings: "설정 더 보기"
+    near: "근접한"
+    next: "다음"
+    _no: "아니오"
+    none: "없음"
+    not_published: "게제되지 않음"
+    ok: "확인"
+    or: "혹은"
+    outgoing: "발신"
+    pending: "보류"
+    previous: "이전의"
+    print: "인쇄"
+    published: "게재된"
+    regenerate: "재생성"
+    remove: "제거"
+    report: "리포트"
+    reset: "초기화"
+    result:
+      zero: "결과"
+      one: "결과"
+      two: "결과"
+      few: "결과"
+      many: "결과"
+      other: "결과"
+    review: "검토"
+    run: "실행"
+    save: "저장"
+    search: "검색"
+    send: "보내기"
+    showing: "보이는"
+    step: "단계"
+    suggest: "제안"
+    submit: "제출"
+    success:
+      other: "성공"
+    successfully: "성공적으로"
+    thanks_excl: "감사합니다."
+    this: "이"
+    total: "총"
+    try_again: "다시 시도하십시오"
+    updated: "업데이트 된"
+    view: "보기"
+    _yes: "네"
+  attributes:
+    access_level: "API 보안 레벨"
+    name: "이름"
+    code: "코드"
+    copy_count: "복사"
+    created_at: "생성 시간"
+    email: "이메일"
+    hint: "힌트"
+    password: "비밀번호"
+    published: "게재되었습니까?"
+    questions: "질문"
+    title: "제목"
+    type: "종류"
+    value: "값"
+  access_levels:
+    public: "공개"
+    private: "비공개"
+    protected: "안전한"
+    inherit: "기본값 유지"
+  sms_guide_formatting_options:
+    auto: 자동
+    inline: 인라인
+    appendix: 부록
+    treat_as_text: 텍스트로 취급
+  errors:
+    format: "%{속성}: %{메세지}"
+    messages:
+      deleted_successfully: "성공적으로 삭제되었습니다"
+      generic_delete_error: "삭제 중 오류 발생"
+  helpers:
+    submit:
+      create: "저장"
+      update: "저장"
+  flash_message_types:
+    success: "성공"
+    error: "오류"
+    alert: "경고"
+    notice: "알림"
+  activerecord:
+    models:
+      answer:
+        zero: "응답"
+        one: "응답"
+        two: "응답"
+        few: "응답"
+        many: "응답"
+        other: "응답"
+      assignment:
+        zero: "배정"
+        one: "배정"
+        two: "할 일"
+        few: "할 일"
+        many: "할 일"
+        other: "배정"
+      broadcast:
+        zero: "발송"
+        one: "발송"
+        two: "발송"
+        few: "발송"
+        many: "발송"
+        other: "발송"
+      choice:
+        zero: "선택"
+        one: "선택"
+        two: "선택"
+        few: "선택"
+        many: "선택"
+        other: "선택"
+      condition:
+        zero: "조건"
+        one: "조건"
+        two: "조건"
+        few: "조건"
+        many: "조건"
+        other: "조건"
+      form:
+        zero: "질문지"
+        one: "질문지"
+        two: "설문지"
+        few: "설문지"
+        many: "설문지"
+        other: "질문지"
+      mission:
+        zero: "미션"
+        one: "미션"
+        two: "미션"
+        few: "미션"
+        many: "미션"
+        other: "미션"
+      operation:
+        zero: "작동"
+        one: "작동"
+        two: "작동"
+        few: "작동"
+        many: "작동"
+        other: "작동"
+      option:
+        zero: "선택항목"
+        one: "선택항목"
+        two: "선택 항목"
+        few: "선택 항목"
+        many: "선택 항목"
+        other: "선택항목"
+      option_set:
+        zero: "선택지"
+        one: "선택지"
+        two: "선택지"
+        few: "선택지"
+        many: "선택지"
+        other: "선택지"
+      password_reset:
+        zero: "비밀번호 초기화"
+        one: "비밀번호 초기화"
+        two: "비밀번호 초기화"
+        few: "비밀번호 초기화"
+        many: "비밀번호 초기화"
+        other: "비밀번호 초기화"
+      question:
+        zero: "질문"
+        one: "질문"
+        two: "질문"
+        few: "질문"
+        many: "질문"
+        other: "질문"
+      questioning:
+        zero: "질문"
+        one: "질문"
+        two: "질문"
+        few: "질문"
+        many: "질문"
+        other: "질문"
+      report/calculation:
+        zero: "계산"
+        one: "계산"
+        two: "계산"
+        few: "계산"
+        many: "계산"
+        other: "계산"
+      report/report:
+        zero: "보고서"
+        one: "보고서"
+        two: "보고서"
+        few: "보고서"
+        many: "보고서"
+        other: "보고서"
+      report/tally_report:
+        zero: "총계 보고서"
+        one: "총계 보고서"
+        two: "총계 보고서"
+        few: "총계 보고서"
+        many: "총계 보고서"
+        other: "총계 보고서"
+      report/answer_tally_report:
+        zero: "응답 총계 보고서"
+        one: "응답 총계 보고서"
+        two: "총계 보고서 응답"
+        few: "총계 보고서 응답"
+        many: "총계 보고서 응답"
+        other: "응답 총계 보고서"
+      report/response_tally_report:
+        zero: "응답 총계 보고서"
+        one: "응답 총계 보고서"
+        two: "총계 보고서 응답"
+        few: "총계 보고서 응답"
+        many: "총계 보고서 응답"
+        other: "응답 총계 보고서"
+      report/list_report:
+        zero: "목록 보고서 "
+        one: "보고서 목록"
+        two: "목록 보고서 "
+        few: "목록 보고서 "
+        many: "목록 보고서 "
+        other: "목록 보고서 "
+      report/standard_form_report:
+        zero: "표준 보고서"
+        one: "표준 보고서"
+        two: "표준 보고서"
+        few: "표준 보고서"
+        many: "표준 보고서"
+        other: "표준 보고서"
+      response:
+        zero: "응답"
+        one: "응답"
+        two: "응답"
+        few: "응답"
+        many: "응답"
+        other: "응답"
+      search/search:
+        zero: "검색"
+        one: "검색"
+        two: "검색"
+        few: "검색"
+        many: "검색"
+        other: "검색"
+      setting:
+        zero: "설정"
+        one: "설정"
+        two: "설정"
+        few: "설정"
+        many: "설정"
+        other: "설정"
+      sms/message:
+        zero: "SMS"
+        one: "SMS"
+        two: "SMS"
+        few: "SMS"
+        many: "SMS"
+        other: "SMS"
+      user:
+        zero: "사용자"
+        one: "사용자"
+        two: "사용자"
+        few: "사용자"
+        many: "사용자"
+        other: "사용자"
+      user_group:
+        zero: "사용자 그룹"
+        one: "사용자 그룹"
+        two: "사용자 그룹"
+        few: "사용자 그룹"
+        many: "사용자 그룹"
+        other: "사용자 그룹"
+      tag:
+        zero: "태그"
+        one: "태그"
+        two: "태그"
+        few: "태그"
+        many: "태그"
+        other: "태그"
+    attributes:
+      broadcast:
+        body: "문자"
+        created_at: "발신 시간"
+        errors: "오류"
+        medium: "매체"
+        send_errors: "전달 오류"
+        subject: "대상"
+        to: "수신자"
+        which_phone: "선택할 전화번호"
+        recipient_selection: "수신자"
+        recipient_ids: "사용자/그룹"
+      form:
+        allow_incomplete: "미완성 답변을 허용하시겠습니까?"
+        copy_responses_count: "응답 복사"
+        downloads: "다운로드"
+        responses: "응답"
+        smsable: "SMS 사용 가능"
+        sms_relay: "SMS 전달"
+        recipient_ids: "SMS 전달 수신자"
+        authenticate_sms: "SMS 본인 확인"
+        updated_at: "최근 수정 시간"
+        version: "버전"
+        item_list_heading: "질문"
+      mission:
+        compact_name: "간결한 이름"
+        locked: "잠금"
+      operation:
+        created_at: "시작 시간"
+        creator: "시작한 사용자"
+        description: "설명"
+        job_started_at: "시작 시점"
+        job_failed_at: "실패 시점"
+        job_completed_at: "완료 시점"
+        job_outcome_url: "결과 URL "
+        job_error_report: "오류 보고"
+        status: "상태"
+      option:
+        coordinates: "조정"
+        shortcode: "짧은 코드"
+      option_set:
+        allow_coordinates: "좌표값을 입력하시겠습니까?"
+        answers: "응답"
+        geographic: "지리적 질문입니까?"
+        multilevel: "다층 선택지입니까?"
+        options: "선택지"
+        option_levels: "레벨"
+        sms_guide_formatting: "SMS 가이드 형식"
+      password_reset:
+        identifier: "이메일 혹은 사용자이름"
+      qing_group:
+        group_name: "이름"
+        group_hint: "힌트"
+        add: "그룹 생성"
+        edit: "그룹 수정"
+        delete: "정말 그룹 '%{name}'을 지우시겠습니까?"
+        repeatable: "반복 가능 합니까?"
+      question:
+        code: "코드"
+        answer_count: "응답"
+        form_count: "질문지"
+        published: "게재되었습니까?"
+        key: "주요 질문입니까?"
+        minimum: "최소 값"
+        maximum: "최대 값"
+        casted_minimum: "최소 값"
+        casted_maximum: "최대 값"
+        name: "제목"
+        option_set_id: "선택지"
+        qtype_name: "종류"
+        tag_ids: "태그"
+        sms_guide_formatting: "SMS 가이드 서식"
+      questioning:
+        name: "제목"
+        condition: "조건 질문입니까?"
+        hidden: "숨겨진 질문입니까?"
+        rank: "등급"
+        required: "필수 질문입니까?"
+        delete: "정말로 질문 '%{code}'를 질문지에서 지우시겠습니까?"
+      response:
+        age: "나이"
+        answers: "응답"
+        id: "응답 ID"
+        created_at: "제출 시기"
+        form_id: "질문지"
+        reviewed: "검토 되었습니까?"
+        reviewer_notes: "검토자 노트"
+        reviewer_id: "검토자"
+        shortcode: "응답자 ID"
+        source: "소스"
+        user_id: "사용자/팀"
+        incomplete: "작성하지 않은 필수 응답 항목이 있습니까?"
+      report/report:
+        aggregation: "작동"
+        aggregation_id: "작동"
+        bar_style: "바 형식"
+        display_type: "게재 형식"
+        fields: "속성/질문"
+        name: "제목"
+        percent_type: "백분율 형식"
+        pri_grouping: "그룹 1"
+        sec_grouping: "그룹 2"
+        submit_edit: "수정 내용 저장"
+        submit_new: "보고서 생성"
+        unique_rows: "반복된 열 숨기기"
+        unreviewed: "검토 안된 응답지 허용"
+        view_count: "보기"
+        viewed_at: "마지막으로 본 시각"
+      setting:
+        allow_unauthenticated_submissions: "본인 확인되지 않은 제출을 허용 하시겠습니까?"
+        incoming_sms_numbers_str: "수신 번호"
+        incoming_sms_token: "수신 SMS 암호"
+        universal_sms_token: "공통 SMS 암호"
+        preferred_locales_str: "선호 언어"
+        default_outgoing_sms_adapter: "기본 발신 매체"
+        override_code: "무효화 암호"
+        external_sql: "외부 SQL"
+        timezone: "표준 시간대"
+        twilio_account_sid: "계정 SID"
+        twilio_auth_token1: "본인 확인 암호"
+        twilio_phone_number: "발신 번호"
+        frontlinecloud_api_key1: "API 키"
+      sms/message:
+        adapter_name: "어댑터"
+        body: "본문"
+        from: "발신인"
+        sent_at: "발신 시각"
+        to: "수신인"
+        received_at: "수신 시각"
+      sms/test:
+        from: "발신인"
+        body: "본문"
+      user:
+        admin: "관리자입니까?"
+        assignments: "배정"
+        birth_year: "출생 연도"
+        nationality: "국적"
+        gender: "성별"
+        gender_custom: "정확한 성별"
+        latest_mission: "최근 미션"
+        login: "사용자 이름"
+        name: "이름"
+        notes: "메모"
+        password_confirmation: "비밀번호 재입력"
+        phone: "주요 연락처"
+        phone2: "보조 연락처"
+        pref_lang: "선호 언어"
+        role: "역할"
+        api_key: "API 키"
+        sms_auth_code: "SMS 본인 확인 암호"
+        user_group_ids: "그룹"
+      user_batch:
+        file: "파일"
+    table_headers:
+      response:
+        incomplete: "미완성입니까?"
+      user:
+        admin: "관리자입니까?"
+    placeholders:
+      question:
+        code: "내 질문"
+    action_links:
+      broadcast:
+        index: "발송 기록"
+      form:
+        new: "새 질문지 생성"
+        index: "질문지 목록"
+        show: "질문지 보기"
+        edit: "질문지 수정"
+        destroy: "질문지 삭제"
+        publish: "질문지 올리기"
+        unpublish: "질문지 비게재하기"
+        print: "질문지 인쇄"
+      mission:
+        new: "새 미션 생성"
+        index: "미션 목록"
+        show: "미션 보기"
+        edit: "미션 수정"
+        destroy: "미션 삭제"
+      operation:
+        clear: "모든 완료된 활동 삭제"
+        destroy: "활동 삭제"
+        index: "활동 목록"
+      option_set:
+        new: "새 선택지 작성"
+        index: "선택지 목록"
+        show: "선택지 보기"
+        edit: "선택지 수정"
+        destroy: "선택지 삭제"
+        export: "선택지 내보내기"
+      option_set_import:
+        new: "선택지 가져오기"
+      question:
+        new: "새 질문 생성"
+        index: "질문 목록"
+        show: "질문 보기"
+        edit: "질문 편집"
+        destroy: "질문 삭제"
+      report/report:
+        new: "새 보고서 생성"
+        index: "보고서 목록"
+        show: "보고서 보기"
+        edit: "보고서 수정"
+        destroy: "보고서 삭제"
+      response:
+        index: "응답지 목록"
+        show: "응답지 보기"
+        edit: "응답지 수정"
+        destroy: "응답지 삭제"
+      user:
+        new: "새 사용자 생성"
+        index: "사용자 목록"
+        show: "사용자 보기"
+        edit: "사용자 편집"
+        destroy: "사용자 삭제"
+      user_group:
+        new: "새 그룹"
+        index: "사용자 그룹"
+        show: "사용자 그룹 보기"
+        edit: "사용자 그룹 편집"
+        destroy: "사용자 그룹 삭제"
+        members: "멤버 목록"
+    hints:
+      form:
+        name: "질문지 제목을 입력하십시오."
+        smsable: "이 질문지에 대한 SMS 응답을 허용합니까? 이는 버전이 높아질 때 영향을 줄 수 있습니다."
+        sms_relay: "SMS 응답 문자를 사용자/사용자 그룹에게 전달하시겠습니까?"
+        recipient_ids: "이 곳에 입력된 사용자 혹은 사용자 그룹으로 수신된 SMS 응답이 자동적으로 전달됩니다. "
+        version: "현재 버전 숫자와 알파벳 코드"
+        access_level: "공개: 모든 ELMO 사용자가 API를 통해 데이터에 접근할 수 있습니다. 보호: 오직 특정 사용자만이 API를 통해 데이터에 접근 할 수 있습니다. 비공개: 어떤 사용자도 API를 통해 데이터에 접근할 수 없습니다."
+      mission:
+        name: "최대 32글자의 고유한 미션 이름을 입력하십시오. 후에 같은 이름의 미션을 생성할 가능성이 있을 시, 미션 이름에 연도를 포함할 것을 추천합니다. "
+        locked: "잠금된 미션에서는 응답지와 질문지를 생성하거나 수정할 수 없으며, 사용자를 생성하거나 삭제할 수 없습니다."
+      option:
+        name: "사용자가 보게 될 선택지에 대한 설명을 입력하십시오."
+      option_set:
+        allow_coordinates: "이 선택지가 지리 좌표를 사용할 수 있는지 선택하십시오."
+        geographic: "이 선택지가 지역 및 지방 이름등의 지리적 정보를 나타냅니까?"
+        name: "이 선택지의 내용을 요약하는 이름을 입력하십시오. 일반 사용자는 이 이름을 볼 수 없습니다. "
+        multilevel: "선택지가 다층 구조로 되어있습니까? 예. 나라-> 시-> 구"
+        options:
+          editable: "기존의 선택지를 추가하려면 입력 후 '추가'를 누르십시오. 만약 자동완성 창에 뜨지 않는다면 '새 선택지 생성'을 눌러 선택지를 추가하십시오."
+          read_only: "이 선택지를 사용하는 질문에 보여질 선택항목들"
+        option_levels: "선택지의 각 계층의 이름을 입력하십시오. (예. '나라', '시', '구') 이는 선택지 자체와는 다릅니다. (예. '한국', '서울시', '종로구')"
+        sms_guide_formatting: "선택지의 뜻은 다음과 같습니다. \n자동: 인라인과 부록중 어느것을 쓸지를 자동적으로 결정합니다.\n인라인: SMS 가이드의 선택지 목록을 보여줍니다.\n부록: 조정자에 의해 생성된 부록의 선택지 목록을 포함합니다. \n텍스트로 취급: 이 선택지의 선택항목들을 글자처럼 취급합니다."
+      question:
+        code: "2-20자 내의 짧은 코드명을 입력하십시오. 영어 알파벳과 숫자만 사용할수 있습니다. (예. BallotBoxSealed, DepartTime)"
+        hint: "부가적인 지시사항을 입력하십시오. (예. 투표를 위해 줄 서있던 대략적인 사람수를 입력하세요)"
+        key: "주요 질문에 대한 대답은 응답지들을 요약하는데 도움을 주며, 응답항목에 리스트로 나타납니다. 주요 질문은 보통 장소나 전반적 평가에 쓰입니다."
+        minimum: "응답 내용의 최소값. 입력한 최소값을 포함하지 않으려면 박스를 체크하십시오."
+        maximum: "응답 내용의 최대값. 입력한 최대값을 포함하지 않으려면 박스를 포함하십시오."
+        name: "주요 질문, 예. 얼마나 많은 사람이 줄 서 있었습니까?"
+        option_set_id: "사용자가 선택할 선택지 묶음"
+        qtype_name: "사용자가 입력할 정보의 종류"
+        access_level: "고유값: 원본 질문지와 같은 접속 레벨 \n비공개: 원본 질문지의 접속레벨과 무관하게 어떤 사용자도 API를 통해 데이타에 접속할수 없음"
+      questioning:
+        hidden: "이 질문이 질문지에 보여지게 하시겠습니까? 질문을 삭제할 수 없을때 이 기능을 사용하십시오. 숨겨진 질문에는 아래에서 선택된 조건들과 옵션이 적용되지 않습니다."
+        condition: "조건이 충족되어야 이 조건질문이 사용자에게 보여집니다. "
+        required: "이 질문이 반드시 응답되어야 하는 질문입니까? "
+      report/report:
+        name: "이 보고서의 내용을 설명하는 제목"
+        aggregation_id: "이 복합된 데이터에 수행하고 싶은 명령"
+        kind: "작업하고자하는 데이터의 타입"
+        display_type: "작업 결과가 보여지는 방식"
+        unreviewed: "검토되지 않은 데이터가 보고서에 포함되도록 하시겠습니까?"
+        unique_rows: "복사된 열이 보고서에서 생략되도록 하시겠습니까?"
+        pri_grouping: "계산된 응답이 묶어질 특성이나 질문. (예. 주, 전반적 평가)"
+        percent_type: "보고서에서 백분율로 계산될지, 그리고 어떻게 백분율로 계산될지 여부를 결정하십시오."
+        bar_style: "막대 그래프의 막대가 나란히 나열될지, 포개져 나열될지를 선택하십시오. "
+      response:
+        incomplete: "응답 불가능한 필수 질문이 있다면 이 박스에 체크하십시오. 박스가 체크되면, 해당 질문에 응답하지 않고 질문지를 저장할 수 있습니다. 저장된 질문지는 '미완성'으로 표시됩니다."
+      setting:
+        allow_unauthenticated_submissions: "이 박스가 체크되면 누구라도 비밀번호 입력 없이 이 미션에 데이터를 제출할 수 있으니, 사용시 주의하십시오."
+        preferred_locales_str: |-
+          이 미션에 사용되길 선호하는 언어들을 <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>두글자 코드</a>와,  쉼표로 구분하여 입력하십시오.
+
+          이 설정은 다음과 같은 항목을 결정합니다.
+          *새 사용자의 기본 선호 언어
+          *SMS 응답 문자의 기본 언어
+          *질문과 선택지에 사용되는 언어
+        incoming_sms_numbers_str: "SMS 응답지가 제출 될 전화 번호(들)를 (국가 번호는 쉼표로 구분하여) 입력하십시오. 이 번호는 오직 SMS 제출을 할 때에만 필요합니다.  "
+        incoming_sms_token: |-
+          이 암호는 SMS 수신번호 매체에 사용된 URL에 포함되어 있습니다. 이는 본인 확인되지 않은 메세지 제출을 방지합니다.
+        universal_sms_token: |-
+          이 암호는 수신 SMS 제공자에 사용된 URL에 포함되어 승인되지 않은 응답 제출을 방지합니다. 같은 URL을 이용하여 여러 미션에 응답을 제출 할 시 이 URL을 사용하십시오.
+        using_incoming_sms_token_title: SMS 수신 암호 사용
+        using_incoming_sms_token_body: |-
+          등록된 다음의 수신 SMS URL을 gateway 매체와 함께 입력하십시오.
+
+          %{url}
+        default_outgoing_sms_adapter: "SMS 발신에 사용된 어댑터. SMS 응답은 다른 어댑터를 통해 보내질 수 있습니다. "
+        twilio_phone_number: "Twilio에 등록된 휴대 전화 번호. SMS 발신은 이 번호가 Twilio 계정에 등록되었을 때에만 가능합니다. 이 번호는 반드시 국가번호를 포함해야 합니다. 예: +25680344523"
+        twilio_account_sid: "Twilio 계정 보안 식별 장치."
+        twilio_auth_token1: "Twilio 계정 본인 확인 암호"
+        frontlinecloud_api_key1: "FrontlineCloud 활동을 위한 API 키 "
+        external_sql: "외부 앱으로 데이타 추출에 사용된 QL 코드. '모두 선택'을 선택한 후 Ctrl-C 버튼을 눌러 복사하십시오."
+        timezone: "사이트에 게시되는 시간대를 선택합니다."
+      sms/test:
+        from: "이 SMS의 발신번호로 표시될 폰 번호를 입력하십시오. 이 번호는 반드시 국가번호를 포함해야 합니다. (예. +1 404 555 1212, +23476543212)."
+        body: "메세지의 내용을 입력하십시오."
+      user:
+        name: "사용자의 풀네임을 입력하십시오. 예: '마이클 조던' 혹은 '팀 1.1' "
+        login: "로그인에 사용 될 사용자 이름을 입려하십시오. 억양이 표기되지 않은 문자, 숫자, 마침표, 그리고 밑줄 만 사용될 수 있습니다."
+        phone: "전화번호는 국가 코드가 포함해야 합니다. 예시: +25680344523"
+        phone2: "전화번호는 국가 코드가 포함해야 합니다. 예시: +25680344523"
+        admin: "이 사용자가 전체 시스템의 관리자입니까? 미션마다 아래의 필드를 이용해 사용자의 역할을 결정할 수 있습니다."
+        assignments: "이 사용자가 배정될 미션을 고르십시오."
+        password: "기존의 비밀번호를 변경하고 싶다면 여기에 새 비밀번호를 입력하십시오."
+        password_confirmation: "새 비밀번호를 재입력해 주십시오."
+        pref_lang: "이 시스템에서 사용하고자 하는 언어를 선택해 주십시오."
+        role: "현재 미션에서 사용자의 역할과 사용자가 현재 활성화 됐는지를 선택해 주십시오. 비활성화 된 사용자는 미션에 접속할 수 없습니다. "
+        api_key: "이 키를 다른 앱에 연결할 때 사용하십시오."
+        sms_auth_code: "이 암호를 SMS 응답을 제출할 때 사용하십시오."
+    errors:
+      messages:
+        taken: "기존의 코드와 중복되지 않은 코드를 입력하십시오."
+        is_invalid: "유효한 정보를 입력하십시오."
+        blank: "이는 필수 입력 정보입니다."
+        empty: "이 필드는 비워둘 수 없습니다."
+        not_a_number: "유효한 숫자를 입력하십시오."
+        not_an_integer: "유효한 정수값을 입력하십시오."
+        did_not_match: "비밀번호가 일치하지 않습니다."
+        too_long:
+          other: "최대 %{count} 글자를 입력할 수 있습니다."
+        too_short:
+          other: "최소 %{count} 글자를 입력할 수 있습니다."
+        wrong_length:
+          other: "정확히 %{count} 글자를 입력해주십시오."
+        must_be_group: "상위 항목은 그룹이어야 합니다."
+        invalid_password: "비밀번호는 적어도 숫자와 소문자, 그리고 대문자를 하나씩 포함해야 합니다."
+      models:
+        answer:
+          required: "이 항목을 입력해 주십시오."
+        assignment:
+          blank: "필수 항목입니다."
+        broadcast:
+          no_recipients: "수신자가 없습니다."
+        condition:
+          all_required: "이 조건 항목들은 모두 필수항목입니다."
+        form:
+          cant_delete_if_has_responses: "이미 응답된 질문지는 삭제 할 수 없습니다."
+          cant_delete_published: "게재된 질문지는 삭제 할 수 없습니다."
+          cant_edit_published: "게재된 질문지는 편집할 수 없습니다."
+          ranks_break_conditions: "새 랭킹이 하나 이상의 조건을 무효화합니다."
+          general: "이 질문지는 유효하지 않습니다. (아래의 항목을 체크하십시오)"
+        media/object:
+          invalid_format: "업로드 된 파일이 허용된 형식이 아닙니다."
+          generic: "파일 업로드 시 오류가 발생했습니다."
+        mission:
+          cant_delete_if_assoc: "질문지, 응답지, 혹은 다른 항목들과 연관된 미션은 삭제할 수 없습니다."
+          let_num_spc_only: "오직 영문자, 숫자, 공백만 사용할 수 있습니다."
+          not_unique: "이 이름은 이미 존재하는 '%{existing}' 미션과 유사합니다."
+          general: "이 미션은 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
+        option:
+          cant_delete_if_has_response: "이미 응답된 선택지는 삭제할 수 없습니다."
+          cant_change_if_published: "게재된 질문지에 사용된 선택지는 수정할 수 없습니다."
+          cant_delete_if_published: "게재된 질문지에 사용된 선택지는 삭제할 수 없습니다."
+          names_cant_be_all_blank: "각 선택지에 적어도 하나 이상의 번역본이 필요합니다"
+          names_too_long: "이름은 최대 30자까지 입력할 수 있습니다."
+          invalid_coordinates: "입력된 좌표값이 유효하지 않습니다."
+        option_set:
+          at_least_one: "적어도 하나의 항목을 선택해야 합니다."
+          cant_delete_if_has_questions: "질문에 적어도 한 번 이상 사용된 선택지는 삭제 할 수 없습니다."
+          cant_delete_if_has_answers: "적어도 한번 이상 응답된 선택지는 삭제 할 수 없습니다."
+          general: "이 선택지를 저장하는데 문제가 발생했습니다."
+          wrong_depth: "%{levels}개의 층이 설정되었기에 선택 항목들 간에 %{depth}개의 층이 생성될 수 없습니다."
+        option_set_import:
+          general: "선택지를 가져올 수 없습니다. (아래의 항목을 체크하십시오.)"
+          internal: "업로드시 내부 오류가 발생했습니다."
+          wrong_type: "업로드 될 파일은 반드시 유효한 XLSX 형식의 엑셀파일이어야 합니다."
+        question:
+          at_least_one_name: "적어도 하나의 언어를 사용하여 제목을 입력하십시오. "
+          attributes:
+            code:
+              invalid: "영문자로 시작해야 하며, 오직 영문자, 숫자만을 이용하여 최대 20자까지 입력하십시오."
+          cant_change_if_conditions: "이 질문에 달린 조건질문이 있다면 질문종류나 선택지를 변경할 수 없습니다."
+          cant_change_if_responses: "이미 응답된 질문의 질문종류나 선택지를 변경할 수 없습니다."
+          cant_delete_if_has_answers: "적어도 하나 이상의 응답에서 이 질문이 참조되었다면 이 질문을 삭제할 수 없습니다."
+          cant_delete_if_published: "적어도 하나이상의 게재된 질문지에 사용된 질문은 삭제할 수 없습니다."
+          general: "이 질문은 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
+        questioning:
+          attributes:
+            code:
+              invalid: "영문자로 시작해야 하며, 오직 영문자, 숫자만을 이용하여 최대 20자까지 입력하십시오."
+          cant_delete_if_has_answers: "이 질문은 제거할 수 없습니다. 이미 이 질문지에서 적어도 한 번 이상 응답된 질문입니다."
+          invalid_condition: "조건이 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
+          question: "질문"
+        report/report:
+          attributes:
+            fields:
+              blank: "적어도 하나 이상의 질문이나 특성을 선택해야 합니다."
+            form_id:
+              blank: "보고서에 쓰일 질문지를 선택해야 합니다."
+            name:
+              blank: "보고서 제목을 입력해야 합니다."
+            question_order:
+              blank: "질문 순서를 선택해야 합니다."
+            questions:
+              blank: "적어도 하나의 질문이나 선택지를 선택해야 합니다."
+            tally_type:
+              blank: "총계 종류를 선택해야 합니다."
+            text_responses:
+              blank: "텍스트 응답 게시 형식을 선택해야 합니다."
+            type:
+              blank: "보고서 타입을 선택해야 합니다."
+          no_calc_or_opt_set: "보고서 '%{name}'를 위해 선택된 질문이나 선택지가 없습니다. 선택 후 다시 시도해주십시오."
+        response:
+          general: "응답이 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
+          missing_answers: "모든 질문에 응답하지 않았습니다."
+          invalid_answers: "유효하지 않은 응답이 있습니다."
+          checked_out: "이 응답지는 검토되었습니다. 검토자:"
+          form_unavailable: "검색된 질문지가 이 미션에 존재하지 않습니다. "
+        setting:
+          attributes:
+            preferred_locales_str:
+              invalid_code: "언어 코드 '%{code}'가 유효하지 않습니다."
+              one_must_have_translations: "적어도 하나 이상의 언어를 선택해 주십시오. (%{locales})"
+          general: "설정이 유효하지 않습니다. (아래의 항목을 체크해주십시오.)"
+        user:
+          at_least_digits: "적어도 %{num}자리 이상의 숫자를 입력해주십시오."
+          cant_delete_if_responses: "이미 응답을 제출한 사용자는 삭제할 수 없습니다."
+          duplicate_assignments: "중복된 배정입니다."
+          no_missions: "배정된 미션이 없습니다."
+          phone_assigned_to_other: "이 번호는 이미 다른 사용자로 등록된 번호입니다."
+          general: "사용자가 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
+          attributes:
+            assignments:
+              cant_be_empty_if_not_admin: "조정자가 아닌 사용자는 적어도 하나 이상의 미션에 배정되어야 합니다."
+            login:
+              invalid: "조음부호 없는 영문자, 숫자, 마침표, 밑줄만 사용할 수 있습니다."
+            reset_password_method:
+              cant_passwd_email: "이메일 주소를 입력해야 이메일로 비밀번호를 %{verb}할 수 있습니다."
+        user_batch:
+          general: "사용자 집단이 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
+          internal: "업로드 중 내부 에러가 발생했습니다."
+          invalid_headers: "업로드된 엑셀파일의 헤더가 유효하지 않습니다."
+          too_many_errors: "업로드된 엑셀파일에 다수의 오류가 발생했습니다.  처리 과정이 %{row}에서 멈췄습니다. "
+        user_group:
+          general: "사용자 그룹이 유효하지 않습니다. "
+          attributes:
+            name:
+              blank: "그룹의 이름을 입력하십시오. "
+  layout:
+    about: "%{site_name}"
+    actions: "활동"
+    are_you_sure: "확실하십니까?"
+    change_language: "언어 바꾸기"
+    created_by: "생성자:"
+    delete_warning: "정말로 %{obj_description}를 완전히 삭제하시겠습니까?"
+    deselect_all: "모두 삭제하기"
+    loading: "로딩중"
+    locale_change_get_only: "이 페이지에서 언어를 바꾸면 데이타가 손실될 수 있습니다. 질문지 작성을 완성하거나 취소한 후, 다시 시도해주십시오."
+    logged_in_as: "로그인 아이디:"
+    mission_change_get_only: "이 페이지에서 미션을 바꾸면 데이타가 손실될 수 있습니다. 질문지 작성을 완성하거나 취소한 후, 다시 시도해주십시오."
+    must_be: "반드시"
+    no_selection: "선택된 항목이 없습니다."
+    reqd_sym_definition: "필수 항목은 %{reqd_sym}로 표시되었습니다."
+    select_all: "모두 선택하기"
+    server_contact_error: "서버 접속중 오류 발생"
+    system_error: "시스템 오류 발생. 조정자에게 전달되었습니다. "
+    system_version: "시스템 버젼"
+    time_ago: "%{time} 전"
+    time_zone: "시간대"
+    updated_at: "마지막 업데이트 시간:"
+    no_published_forms: "게재된 질문지가 없습니다."
+  will_paginate:
+    previous_label: "&#171;"
+    next_label: "&#187;"
+    page_gap: "&hellip;"
+    broadcast:
+      page_entries_info:
+        single_page_html:
+          zero: "발송된 기록이 없습니다. "
+          one: "<b>1</b>개의 발송 기록을 찾았습니다."
+          other: " <b>모든 %{count}</b>개의 발송 내용을 찾았합니다."
+        multi_page_html: " <b>%{from} - %{to}</b> 총 <b>%{count}</b>개의 발송 기록을 찾았습니다."
+    form:
+      page_entries_info:
+        single_page_html:
+          zero: "질문지를 찾지 못했습니다."
+          one: "<b>1</b>의 질문지를 찾았습니다."
+          other: "<b>총 %{count}</b> 개의 질문지를 찾았습니다."
+    mission:
+      page_entries_info:
+        single_page_html:
+          zero: "미션을 찾지 못했습니다."
+          one: "<b>1</b>개의 미션을 찾았습니다."
+          other: "<b>총 %{count}</b>개의 미션을 찾았습니다."
+    option:
+      page_entries_info:
+        single_page_html:
+          zero: "선택지를 찾지 못했습니다."
+          one: " <b>1</b>개의 선택지를 찾았습니다."
+          other: "<b>총 %{count}</b>개의 선택지를 찾았습니다."
+    option_set:
+      page_entries_info:
+        single_page_html:
+          zero: "선택지를 찾았습니다."
+          one: " <b>1</b>개의 선택지를 찾았습니다."
+          other: "<b>총 %{count}</b>개의 선택지를 찾았습니다."
+    question:
+      page_entries_info:
+        single_page_html:
+          zero: "질문을 찾지 못했습니다."
+          one: " <b>1</b>개의 질문을 찾았습니다."
+          other: "<b>총 %{count}</b>개의 질문을 찾았습니다."
+          multi_page_html: " <b>%{from} - %{to}</b> 총 <b>%{count}</b>개의 질문을 찾았습니다."
+    questioning:
+      page_entries_info:
+        single_page_html:
+          zero: "질문을 찾지 못했습니다."
+          one: " <b>1</b>개의 질문을 찾았습니다."
+          other: "<b>총 %{count}</b>개의 질문을 찾았습니다."
+          multi_page_html: " <b>%{from} - %{to}</b> 총 <b>%{count}</b>개의 질문을 찾았습니다."
+    report/report:
+      page_entries_info:
+        single_page_html:
+          zero: "보고서를 찾지 못했습니다."
+          one: " <b>1</b>개의 보고서를 찾았습니다."
+          other: "<b>총 %{count}</b>개의 보고서를 찾았습니다."
+    response:
+      page_entries_info:
+        single_page_html:
+          zero: "응답지를 찾지 못했습니다."
+          one: " <b>1</b>개의 응답지를 찾았습니다."
+          other: "<b>총 %{count}</b>개의 응답지를 찾았습니다."
+        multi_page_html: "<b>%{from} - %{to}</b> 총 <b>%{count}</b>개의 응답지를 찾았습니다."
+    sms/message:
+      page_entries_info:
+        single_page_html:
+          zero: "SMS를 찾지 못했습니다."
+          one: " <b>1</b>개의 SMS를 찾았습니다."
+          other: "<b>총 %{count}</b>개의 SMS를 찾았습니다."
+        multi_page_html: "<b>%{from} - %{to}</b> 총 <b>%{count}</b>개의 SMS를 찾았습니다."
+    user:
+      page_entries_info:
+        single_page_html:
+          zero: "사용자를 찾지 못했습니다."
+          one: " <b>1</b>명의 사용자를 찾았습니다."
+          other: "<b>총 %{count}</b>명의 사용자를 찾았습니다."
+        multi_page_html: "<b>%{from} - %{to}</b> 총 <b>%{count}</b>명의 사용자를 찾았습니다."
+  authlogic:
+    error_messages:
+      consecutive_failed_logins_limit_exceeded: "정해진 연속 로그인 오류 횟수를 초과했습니다. 이 계정은 사용불가능 합니다."
+      email_invalid: "이메일 주소의 형태이어야 합니다."
+      login_blank: "사용자이름을 입력하십시오."
+      login_invalid: "영문자, 숫자, 공백, .-_@만을 사용할 수 있습니다."
+      login_not_found: "유효하지 않습니다."
+      no_authentication_details: "본인 확인 정보를 입력하지 않았습니다."
+      not_active: "계정이 활성화 되어있지 않습니다."
+      not_approved: "계정이 승인되지 않았습니다."
+      not_confirmed: "계정이 확인되지 않았습니다."
+      password_blank: "비밀번호를 입력하십시오."
+      password_invalid: "유효하지 않습니다. 비밀번호 보안 기준이 최근 업그레이드 되었습니다. 현재 비밀번호가 작동하지 않는다면 비밀번호를 새로 생성하시길 바랍니다. "
+    models:
+      user_session: "사용자 세션"
+    attributes:
+      user_session:
+        login: "사용자이름"
+        password: "비밀번호"
+        remember_me: "내 계정 기억하기"
+        verify: "검증하기"
+  date:
+    formats:
+      default: "%b %d %Y"
+      short: "%b %d"
+      long: "%B %d %Y"
+  time:
+    formats:
+      short: "%b %d %H:%M"
+      long: "%A, %B %d %Y %H:%M"
+  search_qualifiers:
+    text: "텍스트"
+    email: "이메일"
+    form: "질문지"
+    login: "로그인"
+    name: "이름"
+    option_set: "선택지"
+    phone: "전화"
+    question: "질문"
+    question_type: "질문 종류"
+    reviewed: "검토됨"
+    source: "소스"
+    submit_date: "제출 날짜"
+    submitter: "제출자"
+    code: "코드"
+    title: "제목"
+    type: "종류"
+    tag: "태그"
+    date: "날짜"
+    datetime: "날짜와 시간"
+    username: "사용자이름"
+    content: "내용"
+    number: "숫자"
+    group: "그룹"
+  page_titles:
+    broadcasts:
+      index: "발송"
+      new: "발송하기"
+      new_with_users: "발송하기"
+      show: "발송"
+    forms:
+      choose_questions: "질문지 %{name}에 질문 추가하기"
+      edit: "질문지 %{name} 수정하기"
+      index: "질문지"
+      new: "새 질문지"
+      show: "질문지 %{name}"
+    missions:
+      edit: "미션 %{name} 수정하기"
+      index: "미션"
+      new: "새 미션"
+      show: "미션 %{name}"
+    operations:
+      index: "작동"
+      show: "작동 %{name}"
+    option_sets:
+      edit: "선택지 %{name} 수정하기"
+      index: "선택지"
+      new: "새 선택지"
+      show: "선택지 %{name}"
+    option_set_imports:
+      new: "새 선택지 가져오기"
+    options:
+      edit: "선택지 %{name} 수정"
+      index: "선택지"
+      new: "새 선택지"
+      show: "선택지 %{name}"
+    password_resets:
+      all: "비밀번호 새로 만들기"
+    questions:
+      edit: "질문 %{code} 수정하기"
+      index: "질문"
+      new: "새 질문"
+      show: "질문 %{code}"
+    questionings:
+      edit: "질문 %{code} 수정하기"
+      index: "질문"
+      new: "새 질문"
+      show: "질문 %{code}"
+    responses:
+      edit: "응답 수정하기: %{id}"
+      index: "응답"
+      new: "새 응답"
+      show: "응답: %{id}"
+    reports:
+      index: "보고서"
+      new: "새 보고서"
+      edit: "보고서 수정하기"
+    settings:
+      all: "설정"
+    sms:
+      index: "SMS 기록"
+    sms_tests:
+      all: "SMS 테스팅"
+    user_batches:
+      all: "다수의 사용자 생성하기"
+    user_sessions:
+      new: "로그인"
+      login_confirmation: "로그인 승인"
+      logged_out: "로그아웃"
+    users:
+      edit: "사용자 %{name} 수정하기"
+      edit_profile: "사용자 정보"
+      show_profile: "사용자 정보 %{name}"
+      index: "사용자"
+      login_instructions: "로그인 방법"
+      new: "새로운 사용자"
+      show: "사용자 %{name}"
+    welcome:
+      index: "메인페이지"
+      unauthorized: "본인 확인 되지 않은"
+  admin_mode:
+    admin_mode: "조정자 모드"
+    exit_admin_mode: "조정자 모드 끝내기"
+    goto_admin_mode: "조정자 모드"
+  answer:
+    no_name: "입력된 이름이 없습니다."
+    this_answer: "이 답변"
+  attrib_fields:
+    form: "질문지"
+    source: "소스"
+    time_submitted: "제출시간"
+    date_submitted: "제출날짜"
+    response_id: "응답 ID"
+    reviewed: "검토됨"
+    reviewer: "검토자"
+  broadcast:
+    chars:
+      remaining: "남아있는 글자"
+      too_many: "글자 수 초과"
+    email_intro: "이 메세지는 발송 된 메세지 입니다. 발신자:"
+    email_error: "이메일 오류"
+    group_count:
+      other: "%{count} 그룹"
+    instructions: "발송하려면 먼저 아래의 수신자를 선택하고 '발송하기'를 선택하십시오."
+    may_not_be_enough: "충분하지 않습니다."
+    mediums:
+      names:
+        sms: "SMS"
+        email: "이메일"
+        sms_only: "SMS만 보내기"
+        email_only: "이메일만 보내기"
+        both: "SMS와 이메일 둘다 보내기"
+      options:
+        sms: "SMS 선호 (사용자의 전화번호가 없을 때만 이메일 발송)"
+        email: "이메일 선호 (사용자의 이메일주소가 없을 때만 SMS발송)"
+        sms_only: "SMS만 보내기 (이메일은 발송하지 않음)"
+        email_only: "이메일만 보내기 (SMS는 발송하지 않음)"
+        both: "SMS와 이메일 둘다 보내기"
+    recipient_selection_options:
+      all_users: "미션의 모든 사용자"
+      specific: "미션의 특정 사용자/그룹"
+    send_broadcast: "발송하기"
+    send_success: "성공적으로 발송 되었습니다."
+    send_error: "발송 중 오류가 발생했습니다. (아래의 항목을 체크하십시오.)"
+    sms_error: "SMS 오류"
+    user_count:
+      other: "%{count} 사용자"
+    which_phone_options:
+      main_only: "주 번호에만 보내기"
+      alternate_only: "보조 번호에만 보내기"
+      both: "두 번호에 모두 보내기"
+  condition:
+    operators:
+      eq: "는 다음의 수와 같습니다:"
+      lt: "는 다음의 수보다 적습니다:"
+      gt: "는 다음의 수보다 큽니다:"
+      leq: "는 다음의 수보다 적거나 같습니다:"
+      geq: "는 다음의 수보다 크거나 같습니다:"
+      neq: "는 다음의 수와 같지 않습니다:"
+      inc: "는 다음의 수를 포함합니다:"
+      ninc: "는 다음의 수를 포함하지 않습니다:"
+    no_refable_qings: "조건 질문이 추가될 질문이 존재하지 않습니다."
+    op: "비교"
+    value: "값"
+  dashboard:
+    close_dashboard: "대쉬보드 닫기"
+    enter_full_screen: "전체화면 보기"
+    exit_full_screen: "전체화면 닫기"
+    expand_map: "지도 확대"
+    low_activity: "낮은 활동률"
+    my_responses: "내 응답"
+    no_reports: "이 미션에는 아직 생성된 보고서가 없습니다."
+    recent_responses: "최근 응답지"
+    shrink_map: "지도 축소"
+    response_locations: "응답 지역"
+    response_locations_truncated: "%{total} 중 %{shown}개의 최근 응답지를 보여줍니다."
+    summary: "요약"
+    top_forms: "가장 많이 다운받은 질문지"
+  data_integrity:
+    appears_elsewhere_warnings:
+      by_type:
+        question: "이 질문은 질문지 *%{related}*에 사용되었습니다. 수정된 사항은 질문지에 반영됩니다."
+        option_set: "이 선택지는 질문 *%{related}*에 사용되었습니다. 수정된 사항은 질문에 반영됩니다."
+    has_answers_warnings:
+      by_type:
+        question: "이 질문에 이미 응답한 응답지가 있습니다. 일부 항목은 수정이 불가능합니다."
+    option_in_use_name_change_warning: "이 선택항목은 게재된 질문지에 쓰였거나 제출된 응답지에 참조되었습니다. 수정시 선택항목의 뜻을 바꾸지 않도록 주의하십시오."
+    option_standard_copy_name_change_warning: "이 선택항목은 표준 선택항목의 복사 버전입니다. 선택항목의 의미가 원래의 표준 버전과 일치하도록 주의하십시오."
+    published_warnings:
+      questioning: "아래의 항목들에 해당되는 질문지는 게재되었으므로 수정할 수 없습니다. "
+      sms: "이러한 변화는 사용자들이 현재 버전의 질문지에 SMS으로 응답할 시 오류를 가져올 수 있습니다. "
+      odk: "이러한 변화는 ODK로 응답지 제출을 막진 않지만, 데이타 손실이나 유효하지 않은 응답지 (필수 질문에 응답하지 않은 응답지 등.)의 손실을 가져올 수 있습니다. "
+  form:
+    select_api_users: "API를 통해 데이타에 접근 가능한 사용자들을 모두 선택하십시오."
+    add_group: "그룹 추가"
+    add_questions: "질문 추가"
+    add_selected: "선택된 질문들을 질문지에 추가"
+    back_to_questions: "질문 목록으로 돌아가기"
+    choose_form: "질문지를 선택하십시오."
+    clone_confirm: "정말로 질문지 '%{form_name}'를 복사하시겠습니까?"
+    clone_error: "질문지 (%{msg})를 복사하는데 문제가 발생했습니다."
+    clone_success: "질문지 '%{form_name}'가 무사히 복사되었습니다."
+    no_mission: "미션 없음"
+    no_questions_yet: "생성된 질문이 없습니다."
+    invalid_drop_location:
+      parent_must_be_group: "상위 항목은 반드시 그룹이어야 합니다. "
+      max_depth: "그룹은 다른 그룹에 속할 수 없습니다."
+      invalid_condition: "이 위치는 조건을 무효화 시킬 수 있습니다."
+    print_form: "질문지 인쇄"
+    print_format_tips:
+      title: "형식 팁 인쇄"
+      body: "질문지를 올바르게 인쇄하기 위해서 윈도우 창의 인쇄 설정에서 배경 색과 이미지 인쇄 허용을 선택하십시오. 아래의 'OK'를 선택하자 마자 윈도우 창이 뜰것입니다."
+    publish: "게재하기"
+    publish_error: "질문지 (%{msg})을/를 게재하는데 문제가 발생했습니다."
+    publish_success: "질문지가 성공적으로 게재되었습니다."
+    publish_form: "질문지 게재하기"
+    question_remove_error: "질문 (%{msg})을/를 삭제하는데 문제가 발생했습니다."
+    question_remove_answer_error: "선택된 질문들 중 응답된 질문들이 있어 삭제 할 수 없습니다."
+    questions_add_error: "질문 (%{msg})을/를 추가하는데 문제가 발생했습니다."
+    questions_add_success: "질문이 성공적으로 추가되었습니다."
+    questions_remove_success: "질문이 성공적으로 삭제되었습니다."
+    remove_selected: "선택된 항목들을 삭제하기"
+    remove_question_confirm:
+      zero: "이 질문지에서 0개의 질문을 삭제하시겠습니까?"
+      one: "정말로 이 질문을 질문지에서 삭제하시겠습니까?"
+      two: "정말로 이 %{count}개의 질문을 질문지에서 삭제하시겠습니까?"
+      few: "정말로 이 %{count}개의 질문을 질문지에서 삭제하시겠습니까?"
+      many: "정말로 이 %{count}개의 질문을 질문지에서 삭제하시겠습니까?"
+      other: "정말로 %{count}개의 질문을 질문지에서 삭제하시겠습니까?"
+    reqd_sym_definition: "필수 질문은 다음의 부호로 표시되었습니다:"
+    save_and_publish: "저장하고 게재하기"
+    saving_order: "저장 순서"
+    unpublish_error: "질문지 (%{msg})를 비게재하는데 문제가 발생했습니다."
+    unpublish_success: "질문지가 성공적으로 비게재되었습니다."
+    unpublish: "비게재하기"
+    unpublish_form: "질문지 비게재하기"
+    unsaved_rank_notice: "변경한 질문 순서가 아직 저장되지 않았습니다. 변경사항을 저장하고 싶다면 '저장'버튼을 누르십시오. "
+    view_sms_guide: "SMS 가이드 보기"
+  forms:
+    sms_guide:
+      appendix:
+        other: "다음의 부록이 이 질문지에 포함되어야 합니다:"
+      auth_code: "사용자 본인 확인 암호 (필수)"
+      header: "SMS 가이드"
+      for_paper_record: "종이 문서 기록시에만"
+      form_code: "고유한 질문지 암호 (필수)"
+      multiple_sms_numbers: "복수 SMS 제출 번호"
+      sms_message: "SMS 메세지"
+      pointers:
+        text: "빈칸에 답변을 적으십시오. 필요하다면 축약된 글자를 사용하셔도 좋습니다."
+        number: "빈칸에 답변을 적으십시오."
+        select_one: "빈칸에 선택한 영문자를 적으십시오. 하나의 영문자만 쓸수 있습니다."
+        select_one_as_text: "빈칸에 답변을 적으십시오. 정확한 선택지 이름을 적으십시오."
+        select_one_with_appendix: "빈칸에 선택한 짧은코드를 적으십시오. 선택지를 보려면 부록을 참조하십시오."
+        select_multiple: "선택한 영문자들을 쉼표로 구분하여 빈칸에 적으십시오. "
+        select_multiple_with_appendix: "선택한 영문자들을 쉼표로 구분하여 빈칸에 적으십시오. 선택지를 보려면 부록을 참조하십시오."
+        datetime: "YYYYMMDD HHMM의 형태로 빈칸에 답변을 적으십시오."
+        date: "YYYYMMDD의 형태로 빈칸에 답변을 적으십시오."
+        time: "HHMM의 형태로 빈칸에 답변을 적으십시오."
+      instructions:
+        instructions: "가이드"
+        intro: "가이드를 모두 읽고 답변을 적기 시작하십시오. 현재 문서에 먼저 답변을 기록하고 다음에 휴대전화에 적으십시오."
+        paper: "종이 문서"
+        1a: "당신의 사용자/팀 이름을 이곳에 적으십시오:"
+        1b: "아래의 모든 질문에 대한 답변을 기록한 후, 점선으로 된 상자에 답변을 적으십시오. 예:"
+        phone: "휴대폰"
+        2a_appendix: "휴대전화로 이 문서에 첨부된 번호 중 하나로 SMS문자를 보내십시오."
+        2a_number_html: "휴대전화로 <strong>%{number}</strong>에 SMS 문자를 보내십시오."
+        2b: "위에서 아래로 문서의 오른쪽 칸에 답변을 기록하십시오."
+        2c_html: "마침표는 %{period}로, 공백은 %{spc}로 표시되었습니다. 마침표와 공백을 모두 입력하는 것이 중요합니다."
+        example_sms: "예시 SMS 문자"
+        example_sms_body: 1.c 2.c,f 3.27 4.d 5.문이 잠겨있었다 6.20160401 7.c
+      unique_code: "이것은 이 질문지의 고유 암호입니다."
+      unknown_number: "[알수 없는 번호]"
+  import:
+    row_error: "줄 %{row}: %{error}"
+    queued_html: |-
+      %{type} 들여오기가 대기중입니다. <a href="%{url}">작동 패널</a>을 체크하십시오.
+  incomplete_response:
+    missing_answers:
+      label: "질문지에서 응답하지 않은 필수 질문이 있습니까?"
+      hint: "이 질문지는 예외적인 경우에만 미완성 응답을 허용합니다. 만약 응답하지 않은 필수 질문이 있는지 확실하지 않다면 '확실하지 않습니다'를 선택하시고 질문지를 저장하십시오."
+      foo: "바"
+      options:
+        'no': "확실하지 않습니다."
+        'yes': "네"
+    code_label: "필수 응답 무효화 암호를 입력하십시오."
+  index_table:
+    messages:
+      all_rows_selected: "<strong>all</strong> %{count}개의 줄이 선택되었습니다"
+      searched_rows_selected: "현재의 검색결과에 해당되는 <strong>all</strong> %{count}개의 줄이 선택되었습니다."
+  location_picker:
+    choose_location: "위치 선택"
+    current_location: "현재 위치"
+    enter_query: "구글의 지리 데이터에서 위치 검색을 하려면 위의 빈칸에 입력해주십시오."
+    search_locations: "위치 검색하기"
+  notifier:
+    if_link_doesnt_work: "위의 링크가 작동하지 않으면 브라우저 창에 복사 및 붙여넣기를 시도해 보시기 바랍니다."
+    if_you_made_it: "정말로 요청하신 사항이 맞다면 아래의 링크를 선택하십시오."
+    login_name: "로그인 이름: %{login}"
+    to_choose: "비밀번호를 선택하려면 다음의 링크로 가십시오:"
+    must_choose: "모바일 시스템 및 선거 감독 서버를 이용하기 전에 반드시 비밀번호를 선택해야 합니다. "
+    password_reset_instructions: "비밀번호 초기화 가이드"
+    request_made: "%{site} 비밀번호 초기화 요청이 접수되었습니다. 만약 요청하신 적이 없다면 이 이메일에 응답하실 필요 없습니다. "
+    welcome: "%{site}에 오신것을 환영합니다!"
+  option_set:
+    add_level: "레벨 추가하기"
+    and_n_more: "%{count}개의 추가적 선택지"
+    clone_confirm: "정말로 선택지 '%{name}'를 복사하시겠습니까?"
+    clone_error: "선택지 (%{msg})를 복사하는데 문제가 발생했습니다."
+    clone_success: "선택지 '%{name}'를 성공적으로 복사했습니다."
+    create_new: "[새 선택지 만들기]"
+    create_for_question: "이 질문에 쓰일 선택지 생성: %{identifier}"
+    create_for_new_question: "새 질문에 쓰일 새로운 선택지 생성"
+    edit_option: "선택지 수정하기"
+    edit_option_level: "선택지 레벨 수정하기"
+    huge_notice: "이 선택지는 매우 용량이 크므로 (%{count}개의 선택항목) 전체 선택지의 일부만 아래에 보여집니다. 서버에서 선택지 이름 및 특성을 수정할 수 있지만, 들여오기/내보내기 기능을 이용하여 전체 선택항목을 수정하시기 바랍니다."
+    leave_page_warning: "이 페에지를 떠나면 선택지를 수정한 변경사항이 적용되지 않습니다."
+    multilevel_forbidden_notice: "이 선택지는 다른 단수/복수 선택 질문에 사용되었으므로 다층 선택지로 변경할 수 없습니다."
+    new_option_level: "새로운 선택지 레벨"
+    none_found: "해당하는 선택항목을 찾지 못했습니다."
+    searching: "검색중"
+    type_to_add_new: "선택 항목 이름을 입력하십시오."
+  option_set_import:
+    instructions_html: |-
+      선택항목이 기록된 스프레드시트를 들여오십시오. XLSX타입의 엑셀 스프레드시트나 CSV만 들여올 수 있습니다.
+  operation:
+    clear_confirm: "정말로 모든 수행완료된 작동 기록을 지우시겠습니까? "
+    server_error: "서버 오류 발생. 지원팀에 연락하십시오."
+    description:
+      user_import_operation_job: '%{file}로 부터 %{mission_name} 들여오기'
+      option_set_import_operation_job: '%{mission_name}로 선택지 ''%{name}'' 들여오기'
+    outcome_link_text: "링크"
+    status:
+      completed: "성공"
+      failed: "실패"
+      pending: "대기중"
+      running: "실행"
+    summary:
+      all_in_progress:
+        other: "%{count}개의 작동이 진행중입니다."
+      some_completed: "%{completed}/%{total} 의 작동이 수행 완료 되었습니다."
+      all_completed:
+        other: "%{count}개의 작동이 수행 완료 되었습니다."
+      with_errors:
+        other: "%{message} (%{count}개의 오류)"
+  tag:
+    none_found: "해당되는 태그를 찾지 못했습니다."
+    searching: "검색중"
+    type_to_add_new: "태그 이름을 입력하십시오"
+    new_tag: "새 태그"
+    click_to_filter: "이 태그로 검색하려면 선택하십시오."
+  password_reset:
+    check_email: "비밀번호 초기와 가이드가 당신의 이메일로 발송되었습니다. 이메일을 체크하십시오."
+    enter_new_pass: "%{name}, 새로운 비밀번호를 입력하십시오. "
+    fill_out_form: "이메일주소 혹은 사용자이름을 아래에 입력하면 비밀번호 초기화 방법이 이메일로 전송 될 것입니다. 계정에 연결된 이메일 주소가 없을 시, 비밀번호는 관리자에 의해 초기화 되어야 합니다."
+    multiple_accounts: "이 이메일 주소에 여러 계정이 연결되어 있습니다. 사용자 이름을 입력하거나 관리자에게 연락하여 주십시오."
+    no_associated_email: "이 계정에 연결되어 있는 이메일 주소가 없습니다. 관리자에게 비밀번호 변경을 요청해 주십시오."
+    success: "비밀번호가 성공적으로 업데이트 되었습니다."
+    token_not_found: |+
+      죄송합니다. 당신의 계정을 찾지 못했습니다. 문제가 있다면 다음의 URL을 이메일에서 브라우저 창으로 복사 및 붙여넣기를 시도해 보시기 바랍니다. 혹은 비밀번호 초기화 과정을 다시 시도해 보시기 바랍니다.
+
+    user_not_found: "다음의 이메일 주소 혹은 사용자이름을 가진 사용자를 찾을 수 없습니다."
+  permission_error:
+    need_mission: "미션을 선택해야 보실 수 있습니다."
+    need_login: "이 페이지를 보기위해서는 로그인을 해야합니다."
+    no_permission: "이 페이지에 대한 접근 권한이 없습니다."
+    processing_error: "승인 허가 중 오류가 발생했습니다."
+    must_be_admin: "이 페이지를 보려면 조정자여야 합니다."
+    must_be_logged_out: "이 페이지를 보려면 로그아웃 해야합니다."
+  question:
+    answer_only_caps: "다음 사항에 해당할 때만 대답하십시오:"
+    maxmin:
+      gt: "다음의 수 이상일 때:"
+      lt: "다음의 수 이하일 때:"
+      or_eq: "혹은 다음의 수와 같을 때:"
+      strictly_lt: "다음의 수 미만일 때:"
+      strictly_gt: "다음의 수 초과일 때:"
+    other_forms_published: "적어도 하나 이상의 질문지가 게재되었으므로 모든 항목이 수정 가능하지 않습니다."
+  question_type:
+    text: "단답"
+    long_text: "서술"
+    integer: "정수"
+    decimal: "소수"
+    location: "위치"
+    select_one: "단수 선택"
+    select_multiple: "복수 선택"
+    datetime: "날짜/시간"
+    date: "날짜"
+    time: "시간"
+    image: "이미지"
+    annotated_image: "주석달린 이미지"
+    signature: "서명"
+    sketch: "스케치"
+    audio: "오디오"
+    video: "비디오"
+  recaptcha:
+    errors:
+      verification_failed: "승인 정보가 올바르지 않습니다. 다시 시도해 주십시오."
+      recaptcha_unreachable: "승인 정보를 유효화하는데 실패했습니다. 다시 시도해 주십시오."
+  recipient:
+    prefixes:
+      user: "사용자"
+      user_group: "그룹"
+  report/report:
+    add_column: "열 추가"
+    answered_only_if: "다음에 해당할 때만 응답하십시오:"
+    attribute:
+      zero: "특성"
+      one: "특성"
+      two: "특성"
+      few: "특성"
+      many: "특성"
+      other: "특성"
+    back_to_list: "보고서 목록으로 돌아가기"
+    blank: "빈칸"
+    choose_attrib_question: "특성 혹은 질문을 선택하십시오"
+    choose_disagg_qing: "질문을 선택하십시오"
+    choose_form: "질문지를 선택하십시오"
+    choose_report: "보고서를 선택하십시오"
+    columns: "열"
+    display_options: "선택사항"
+    edit_report: "보고서 수정하기"
+    enter_name: "보고서 제목을 정하십시오"
+    export_to_csv: "데이타를 CSV 형식으로 내보내기"
+    fields: "필드"
+    form: "질문지"
+    form_selection: "질문지를 선택하십시오"
+    generated_at: "생성 시간:"
+    group_by_tag: "태그로 질문을 분류하시겠습니까?"
+    grouping: "분류기준:"
+    groupings: "분류"
+    how_to_disaggregate: "특수 질문으로 보고서를 나누시겠습니까?"
+    how_to_display_questions: "질문이 게재되는 방식을 선택하십시오"
+    how_to_display_results: "결과가 게재될 방식을 선택하십시오"
+    how_to_order_questions: "질문이 나열될 순서를 선택하십시오"
+    loading_report: "보고서 로딩 중"
+    questions_with_option_sets: "이 선택지가 쓰인 질문"
+    mission: "미션"
+    no_match: "해당하는 데이타를 찾지 못했습니다."
+    question_selection: "질문 선택하기"
+    report_type: "보고서 형식"
+    response_count: "총 제출 수"
+    see_dependent_questions:
+      other: "의존 질문 보기"
+    show_examples: "예시 보기"
+    show_text_responses: "단답 응답 보기"
+    showing_limited_answers: "첫 %{count}개의 응답만 보기"
+    submitted_by_at: "응답자 및 응답시간: %{user}, %{datetime}"
+    subset_intro: "질문 '%{question}'에 대한 응답이 '%{disagg_value}'인 데이타"
+    tally: "총계"
+    tally_type: "원하는 총계 형식을 선택하십시오."
+    these_questions: "특정한 질문"
+    total_rows: "총 행 수: %{count}"
+    view_response: "응답 #%{id}"
+    what_attrib_col_headers: "열의 헤더에 어떤 특성 혹은 질문을 게시하겠습니까? (선택사항)"
+    what_attrib_row_headers: "열의 헤더에 어떤 특성 혹은 질문을 게시하겠습니까?"
+    what_bar_style: "막대 형식을 선택하십시오."
+    what_percent_style: "백분율 형식을 선택하십시오."
+    what_columns_in_list: "목록에서 보여질 열을 선택하십시오."
+    what_form: "보고서를 생성할 질문지를 선택하십시오."
+    what_type: "보고서 형식을 선택하십시오"
+    which_calculation: "(필요시) 계산 형식을 선택하십시오 "
+    which_forms: "어떤 질문지를 선택하시겠습니까?"
+    which_questions: "어떤 질문(들)을 포함시키겠습니까?"
+    bar_styles:
+      side_by_side: "나란히 나열"
+      stacked: "쌓아서 나열"
+    calculation_descriptions:
+      identity: "없음"
+      zero_nonzero: "답변이 0과 같거나 클 때"
+    display_types:
+      table: "표"
+      bar_chart: "막대 그래프"
+    descriptions:
+      tally_report: "특성으로 분류된 응답의 총계"
+      list_report: "답변 및 특성의 행 나열"
+      standard_form_report: "특정 질문지에 대한 응답의 질문별 요약"
+    examples:
+      list_report:
+      - 질문 목록
+      - 중복 없는 목록 수
+      - 제출자 이름, 날짜, 답변의 목록
+      standard_form_report:
+      - (백분율, 평균, 중간 값 등) 질문지의 모든 질문의 요약
+      - 질문 형식 혹인 태그에 의해 분류될 수 있는지 여부
+      - '특수 질문에 대한 대답으로 나눌 수 있는지에 대한 여부 (예: 지역 별)'
+    percent_types:
+      none: "백분율 없음"
+      overall: "전체 백분율"
+      by_row: "열별 백분율"
+      by_col: "행별 백분율"
+    question_labels:
+      code: "코드만 표시 (공간을 덜 차지합니다)"
+      title: "전체 질문 표시 (읽기 쉽습니다)"
+    question_orders:
+      number: "질문 번호"
+      type: "질문 타입"
+    standard_form_report:
+      overall_headers:
+        dates: "날짜"
+        responses: "응답지"
+      stat_headers:
+        mean: "평균"
+        median: "중간 값"
+        min: "최소 값"
+        max: "최대 값"
+      type_sets:
+        categorical: "범주형 데이타"
+        numbers: "통계형 데이타"
+        dates: "날짜"
+        times: "시간"
+        short_text: "단답식 응답"
+        long_text: "장문형 응답"
+    tally_types:
+      answer: "질문별 응답"
+      response: "질문/특성별 응답"
+    tally_type_examples:
+      answer: "모든 네/아니오 질문에 대한 네 혹은 아니오의 총계"
+      response: "각 팀의 질문지 별 응답의 통계"
+    text_response_options:
+      all: "모두 보기"
+      short_only: "장문형 질문 보지 않기"
+      none: "보일 자료가 없습니다"
+  response:
+    edit_this_response: "이 응답지 수정하기"
+    export_to_csv: "CSV 형식으로 내보내기"
+    loading: "응답지 로딩중"
+    observation_time: "관찰 시간"
+    save_and_mark_reviewed: "'검토 됨'으로 표시하고 저장하기"
+    view_response: "응답지 보기"
+    checked_out: "이 응답지는 다음 사용자에 의해 검토되었습니다:"
+    remove_media_object_confirm:
+      image: "정말로 이 이미지 파일을 삭제하겠습니까?"
+      audio: "정말로 이 오디오 파일을 삭제하시겠습니까?"
+      video: "정말로 이 비디오 파일을 삭제하시겠습니까?"
+    drop_message: "파일을 선택하거나 이곳에 내려놓으십시오"
+    drop_more_info: "더 많은 정보 보기"
+    drop_hint:
+      image: "이미지 파일은 최대 5MB이어야 합니다. 허용되는 형식:jpg, png"
+      video: "비디오 파일은 최대 25MB이어야 합니다. 허용되는 형식: 3gp, mp4, webm, mpg, wmv, avi"
+      audio: "오디오 파일은 최대 10MB이어야 합니다. 허용되는 형식: mp3, ogg, webm, wav"
+  role:
+    role: "역할"
+    reviewer: "검토자"
+    staffer: "보조자"
+    coordinator: "조정자"
+    admin: "관리자"
+    blank: "없음"
+  search:
+    blank: "빈 칸"
+    examples:
+      users:
+      - john smith
+      - phone:+443726458364
+      - login:jsmith
+      - email:jsmith@example.com
+      - group:"The Smiths"
+      questions:
+      - poll workers
+      - code:BallotBoxes
+      - type:select-one
+      sms:
+      - poll workers
+      - 1.b
+      - '+1234567890'
+      - john smith
+      - jsmith
+      - type:reply
+      - date >= 2015-01-29
+      - datetime < "2015-01-12 14:00"
+    expected: "예상되는"
+    help_link: "검색 도우미"
+    help_title: "검색 도우미"
+    invalid_op: "작동어 '%{op}'는 한정어 '%{qualifier}'와 사용시 유효하지 않습니다."
+    multiple_terms_not_allowed: "'%{qualifier}'를 사용시, OR을 사용할 때만 여러개의 단어를 입력할 수 있습니다."
+    must_use_qualifier: "모든 검색어는 한정어와 함께 사용해야 합니다."
+    or_not_allowed_between: "OR은 단어의 중간에 사용할 수 없습니다."
+    invalid_qualifier: "'%{chunk}'는 유효한 검색 한정어가 아닙니다."
+    search_error: "검색 오류"
+    unexpected: "'%{str}' 옆의 단어로 인해 검색어를 이해할 수 없습니다. "
+    unexpected_end: "검색어 끝의 단어로 인해 검색어를 이해할 수 없습니다."
+  setting:
+    change_sms_password: "비밀번호 변경하기"
+    change_twilio_auth_token: "본인 확인 암호 변경하기"
+    change_api_key: "API 키 변경하기"
+    override_code_warning: "이미 다운로드 된 질문지에는 새로운 무효화 암호가 작동하지 않습니다. 이 문제를 위해서는 현재 암호를 기록해 놓으십시오. 정말로 암호를 새로 생성하시겠습니까?"
+    using_incoming_sms_token: "어떻게 사용하나요?"
+    headings:
+      general: "일반 설정"
+      sms: "공유된 SMS 설정"
+      twilio: "Twilio 설정"
+      frontlinecloud: "FrontlineCloud 설정"
+  sms:
+    extra_recipients_html: "<br/>... and %{count} more"
+    no_valid_adapter: "유효한 SMS 발신 어댑터가 없습니다. 설정을 다시 확인해주십시오."
+    outgoing_provider: "발신 SMS 매체"
+    timestamp_with_diff_html: "%{time}<br/>(sent %{time_diff} earlier)"
+  sms_console:
+    back_to_forms: "질문지로 돌아가기"
+    no_reply: "응답 없음"
+    submit_error: "테스트를 제출하는데 오류가 발생했습니다."
+  sms_form:
+    decoding:
+      account_locked: "죄송합니다. 이 계정은 임시적으로 사용 중지 되었습니다. 본인 확인 암호를 다시 확인 후 몇 분 후 다시 시도해 주시기 바랍니다."
+      answer_error_intro: "죄송합니다. 질문지 %{form_code}의 질문 %{rank}의 응답값: '%{value}'"
+      answer_not_date: "유효한 날짜가 아닙니다"
+      answer_not_datetime: "유효한 날짜 및 시간이 아닙니다"
+      answer_not_decimal: "유효한 숫자가 아닙니다"
+      answer_not_integer: "유요한 정수가 아닙니다"
+      answer_not_time: "유요한 시간이 아닙니다"
+      answer_not_valid_option: "유요한 선택지가 아닙니다"
+      answer_not_valid_long_option_multi: "다수의 유효하지 않은 옵션을 포함하고 있습니다"
+      answer_not_valid_option_multi: "유요하지 않은 옵션 '%{invalid_options}'을 포함하고 있습니다 "
+      answer_not_valid_options_multi: "유효하지 않은 옵션 '%{invalid_options}'을 포함하고 있습니다"
+      congrats: "질문지 '%{form_code}'에 대한 응답이 제출되었습니다. 감사합니다."
+      duplicate_answer: "죄송합니다. 제출된 응답지에 질문 %{rank}에 대한 중복되는 응답이 포함되어 있습니다."
+      duplicate_submission: "죄송합니다. 이미 최근에 제출된 응답지와 중복됩니다."
+      first_answer_invalid: "죄송합니다. %{token}는 유효하지 않은 응답입니다. 질문 번호 다음에 마침표를 입력하십시오."
+      form_not_found: "죄송합니다. '%{form_code}'라는 질문지가 존재하지 않습니다."
+      form_not_permitted: "죄송합니다. 질문지 '%{form_code}'의 응답을 제출할 권한이 없습니다."
+      form_not_published: "죄송합니다. 질문지 '%{form_code}'는 현재 응답지 제출이 불가능합니다."
+      form_not_smsable: "죄송합니다. 질문지 '%{form_code}'는 현재 SMS 제출이 불가능합니다."
+      form_version_outdated: "죄송합니다. 질문지 코드 '%{form_code}'는 오래된 버젼입니다. 업데이트 된 제출 가이드를 이용하십시오."
+      invalid_form_code: "죄송합니다. '%{form_code}'는 유요한 코드가 아닙니다."
+      question_doesnt_exist: "죄송합니다. 질문 %{rank}는 질문지 '%{form_code}'에 존재하지 않습니다."
+      user_not_found: "죄송합니다. 시스템에서 본 사용자를 찾지 못했습니다."
+    incoming_numbers:
+      id: "아이디"
+      phone_number: "전화번호"
+    validation:
+      invalid_answer: "죄송합니다. 질문 %{rank}에 대한 대답 %{error}"
+      missing_answer: "죄송합니다. 질문지 '%{form_code}'의 필수 질문 %{ranks}에 대한 응답을 찾지 못했습니다."
+      missing_answers: "죄송합니다. 질문지 '%{form_code}'의 필수 질문 %{ranks}의 응답을 하지 않았습니다."
+  standard:
+    import: "들여오기"
+    import_choose_one:
+      forms: "들여올 질문지를 하나 이상 선택해 주십시오."
+      option_sets: "들여올 선택지를 하나 이상 선태해 주십시오."
+      questions: "들여올 질문을 하나 이상 선택해 주십시오."
+    import_errors: "오류가 발생했습니다."
+    import_instructions:
+      forms: "들여오고 싶은 질문지 옆의 박스를 체크한 후 '들여오기' 버튼을 선택해 주십시오."
+      option_sets: "들여오고 싶은 선택지 옆의 박스를 체크한 후 '들여오기' 버튼을 선택해 주십시오."
+      questions: "들여오고 싶은 질문 옆의 박스를 체크한 후 '들여오기' 버튼을 선택해 주십시오."
+    import_standard:
+      forms: "표준 질문지 들여오기"
+      option_sets: "표준 선택지 들여오기"
+      questions: "표준 질문 들여오기"
+    import_success:
+      forms:
+        zero: "성공적으로 %{count} 질문지를 들여왔습니다."
+        one: "성공적으로 %{count} 질문지를 들여왔습니다."
+        two: "성공적으로 %{count}개의 질문지를 "
+        few: "성공적으로 %{count}개의 질문지를 들여왔습니다."
+        many: "성공적으로%{count}개의 질문지를 들여왔습니다."
+        other: "성공적으로 %{count} 질문지를 들여왔습니다."
+      option_sets:
+        zero: "성공적으로 %{count} 선택지를 들여왔습니다."
+        one: "성공적으로 %{count} 선택지를 들여왔습니다."
+        two: "성공적으로 %{count}개의 선택지를 들여왔습니다."
+        few: "성공적으로 %{count}개의 선택지를 들여왔습니다."
+        many: "성공적으로 %{count}개의 선택지를 들여왔습니다."
+        other: "성공적으로 %{count} 선택지를 들여왔습니다."
+      questions:
+        zero: "성공적으로 %{count} 질문을 들여왔습니다."
+        one: "성공적으로 %{count} 질문을 들여왔습니다."
+        two: "성공적으로%{count}개의 질문을 들여왔습니다."
+        few: "성공적으로%{count}개의 질문을 들여왔습니다."
+        many: "성공적으로 %{count}개의 질문을 들여왔습니다."
+        other: "성공적으로 %{count} 질문을 들여왔습니다."
+    no_importable:
+      forms: "들여올 수 있는 질문지가 없습니다. 표준 질문지가 없거나 모두 이미 들여온 상태입니다."
+      option_sets: "들여올 수 있는 선택문지가 없습니다. 표준 선택지가 없거나 모두 이미 들여온 상태입니다."
+      questions: "들여올 수 있는 질문이 없습니다. 표준 질문이 없거나 모두 이미 들여온 상태입니다."
+    standard: "표준"
+    standard_forms: "표준 질문지"
+    there_were_errors:
+      zero: "%{count} 오류가 발생했습니다."
+      one: "%{count} 오류가 발생했습니다."
+      two: "%{count}개의 오류가 있습니다."
+      few: "%{count}개의 오류가 있습니다."
+      many: "%{count}개의 오류가 있습니다."
+      other: "%{count} 오류가 발생했습니다."
+  unauthorized:
+    default: "해당 페이지 혹은 작동에 대한 권한이 없습니다."
+    must_login: "로그인 후 페이지를 볼 수 있습니다."
+  user_batch:
+    instructions_html: |-
+      스프레드시트를 업로드 하십시오. XLSX 형식의 엑셀파일이나 CSV 파일만 가능합니다.
+
+      스프레드시트 예시 파일을 참조하십시오. <a href="%{xlsx_url}">XLSX</a> 그리고 <a href="%{csv_url}">CSV</a>
+  user:
+    add_assignment: "배정될 미션 추가"
+    api_key:
+      regenerate: "생성하기"
+    back_to_index: "사용자 목록으로 돌아가기"
+    bulk_destroy: "다수의 사용자 삭제하기"
+    bulk_destroy_confirm:
+      zero: "정말로 0명의 사용자를 삭제하시겠습니까?"
+      one: "정말로 이 사용자를 삭제하시겠습니까?"
+      two: "정말로 %{count}명의 사용자를 삭제하시겠습니까?"
+      few: "정말로 %{count}명의 사용자를 삭제하시겠습니까?"
+      many: "정말로 %{count}명의 사용자를 삭제하시겠습니까?"
+      other: "정말로 %{count}명의 사용자를 삭제하시겠습니까?"
+    bulk_destroy_deleted:
+      zero: "새 사용자가 성공적으로 삭제되었습니다."
+      one: "%{count}명의 사용자가 성공적으로 삭제되었습니다."
+      two: "%{count}명의 사용자가 성공적으로 삭제되었습니다."
+      few: "%{count}명의 사용자가 성공적으로 삭제되었습니다."
+      many: "%{count}명의 사용자가 성공적으로 삭제되었습니다."
+      other: "%{count}명의 사용자가 성공적으로 삭제되었습니다."
+    bulk_destroy_deactivated:
+      zero: "0명의 사용자가 비활성화 되었습니다."
+    bulk_destroy_skipped:
+      zero: "0명의 사용자가 생략되었습니다."
+      one: "%{count}명의 사용자가 생략되었습니다."
+      two: "%{count}명의 사용자가 건너뛰어졌습니다."
+      few: "%{count}명의 사용자가 건너뛰어졌습니다."
+      many: "%{count}명의 사용자가 건너뛰어졌습니다."
+      other: "%{count}명의 사용자가 생략되었습니다."
+    bulk_destroy_skipped_current: "현재 사용자를 삭제하지 않습니다."
+    create_multiple: "다수 사용자 생성하기"
+    edit_profile: "프로필 수정하기"
+    export_vcard: "vCard로 내보내기"
+    forgot_password: "비밀번호를 잊어버리셨습니까?"
+    leave_password_alone: "비밀번호 바꾸지 않기"
+    gender_options:
+      man: "남성"
+      woman: "여성"
+      no_answer: "응답 거절"
+      specify: "정확히 기술해 주십시오."
+    add_to_group: "다수의 사용자 그룹 추가하기"
+    remove_from_group: "다수의 사용자 그룹 제거하기"
+    login_instructions:
+      closing:
+      - 사이트 URL의 'https'에서 's'를 생략하지 마십시오.
+      - 더 기억하기 쉬운 비밀번호를 선택하고 싶다면 웹사이트에서 비밀번호를 변경할 수 있습니다.
+      - 위의 자격은 안드로이드 기기에서도 작동합니다. 자격을 입력하고 'ODK Collect'앱을 시작하려면 'Menu' 버튼을 누르고 'Preferences'을 선택후 각 사용자의 '사용자이름'과 '비밀번호'를 선택하십시오.
+      preamble_singular: |-
+        로그인 가이드가 아래에 보여집니다. 이 페이지를 인쇄해 아래의 사용자들에게 나누어 주십시오.
+        사용자의 비밀번호는 암호화되어 저장되어있기 때문에 이 페이지를 떠나면 다시 볼 수 없습니다.
+      preamble_plural: |-
+        로그인 가이드가 아래에 보여집니다. 이 페이지를 인쇄해 아래의 사용자들에게 나누어 주십시오.
+        사용자의 비밀번호는 암호화되어 저장되어있기 때문에 이 페이지를 떠나면 다시 볼 수 없습니다.
+      site_url: "사이트 URL"
+      title: "로그인 가이드"
+      welcome: "%{site}에 오신 것을 환영합니다. 당신의 역할은 다음과 같습니다:"
+    logout_success: "성공적으로 로그아웃 되었습니다."
+    profile_updated: "프로필이 성공적으로 갱신되었습니다."
+    reset_password_and: "비밀번호 리셋하고"
+    reset_password_hint_choose: "사용자의 비밀번호 접근 방법을 선택하십시오."
+    reset_password_hint_reset: "이 사용자의 비밀번호를 어떻게 리셋할지 선택하십시오."
+    reset_password_label_choose: "비밀번호 생성하기"
+    reset_password_label_reset: "비밀번호를 리셋하시겠습니까?"
+    send_email_instructions: "이메일 가이드 보내기"
+    set_admin_password: "당신의 관리자 비밀번호와 프로필 정보를 설정하십시오"
+    show_printable_instructions: "인쇄 가능한 가이드 보기"
+  user_group:
+    create_prompt: "그룹의 이름을 입력하십시오."
+    add_users_success: "성공적으로 %{count}명의 사용자를 그룹 %{group}에 추가했습니다"
+    remove_users_success: "성공적으로 %{count}명의 사용자를 그룹 %{group}로부터 삭제했습니다"
+    new_group: "새 그룹"
+  welcome:
+    awaiting_review: "**%{count}**개의 검토 대기중인 응답"
+    by_you: "**%{count}**개의 제출된 응답"
+    form_count: "**%{count}**개의 질문지"
+    in_the_past_day: "지난 하루동안 제출된 수: **%{count}**"
+    in_the_past_hour: "지난 한 시간동안 제출된 수: **%{count}**"
+    in_the_past_month: "지난 한 달동안 제출된 수: **%{count}**"
+    in_the_past_week: "지난 한 주동안 제출된 수: **%{count}**"
+    in_the_past_year: "지난 한 해동안 제출된 수: **%{count}**"
+    no_mission_selected:
+      title: "선택된 미션이 없습니다"
+      choose: "화면의 오른쪽 위의 하단메뉴로부터 미션을 선택하십시오."
+      choose_or_create: "화면의 오른쪽 위의 하단메뉴로부터 미션을 선택하십시오. 혹은"
+      create_link: "새 미션 생성하기"
+      need_to_create: "현재 활동중인 미션이 없습니다."
+      no_missions: "현재 시스템에 미션이 없습니다. 조정자에게 연락하십시오."
+    no_recent: "**0**개의 최근 응답수"
+    published_form_count: "**%{count}**개의 게재된 질문지"
+    select_a_form: "제출할 질문지를 선택하십시오"
+    select_a_report: "게시할 보고서를 선택하십시오"
+    total_responses: "**%{count}**개의 총 응답수"
+    total_users: "**%{count}**명의 총 사용자"
+    unpublished_form_count: "**%{count}**개의 비게재된 질문지"

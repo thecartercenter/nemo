@@ -1,0 +1,1734 @@
+ar:
+  locale_name: "العربية"
+  common:
+    accept: "قبول"
+    active: "تفعيل"
+    add: "اضافة"
+    and: "و"
+    back: "رجوع"
+    blank: "فارغ"
+    by: "بواسطة"
+    cancel: "إلغاء"
+    choose: "اختار"
+    choose_file:
+      zero: ":) الرجاء ترجمة هذا:\"choose files...\""
+      one: ":) الرجاء ترجمة هذا:\"choose files...\""
+      two: ":) الرجاء ترجمة هذا:\"choose files...\""
+      few: ":) الرجاء ترجمة هذا:\"choose files...\""
+      many: ":) الرجاء ترجمة هذا:\"choose files...\""
+      other: "اختار الملفات..."
+    clear: "مسح"
+    clone: "إنسخ"
+    close: "إغلاق"
+    contact: "جهة إتصال"
+    create: "انتاج"
+    created: "إنشئ"
+    copy: "نسخ"
+    data: "بيانات"
+    delete: "حذف"
+    design: "تصميم"
+    edit: "تعديل"
+    error:
+      zero: "أخطاء"
+      one: "خطأ"
+      other: "أخطاء"
+    example:
+      zero: "أمثلة "
+      one: "مثال"
+      other: "مثال"
+    example_abbr: "على سبيل المثال"
+    found: "وجد"
+    generate: "إنتاج"
+    inactive: "غير فعال"
+    import: "استيراد"
+    incoming: "وارد"
+    language: "لغة"
+    login: "تسجيل الدخول "
+    confirm_login: "تأكيد تسجيل الدخول "
+    logout: "تسجيل الخروج"
+    manage: "ادارة"
+    less_settings: "اعدادات أقل"
+    more_settings: "اعدادات أكثر"
+    near: "قريب"
+    next: "التالي"
+    _no: "لا"
+    none: "لا يوجد"
+    not_published: "غير منشور"
+    ok: "موافق"
+    or: "أو"
+    outgoing: "صادر"
+    pending: "معلق"
+    previous: "السابق"
+    print: "طباعة"
+    published: "نٌشر"
+    regenerate: "إعادة إنتاج"
+    remove: "إزالة"
+    report: "تقرير"
+    reset: "إعادة ضبط"
+    result:
+      zero: "نتائج"
+      one: "نتيجة"
+      other: "نتائج"
+    review: "عرض"
+    run: "تشغيل"
+    save: "حفظ"
+    search: "بحث"
+    send: "إرسال"
+    showing: "إظهار"
+    step: "خطوة"
+    suggest: "إقترح"
+    submit: "تقديم"
+    success:
+      zero: " :) الرجاء ترجمة هذا:number of successes "
+      one: " :) الرجاء ترجمة هذا:number of successes "
+      two: " :) الرجاء ترجمة هذا:number of successes "
+      few: " :) الرجاء ترجمة هذا:number of successes "
+      many: " :) الرجاء ترجمة هذا:number of successes "
+      other: "نجاحات"
+    successfully: "بنجاح"
+    thanks_excl: "شكراً"
+    this: "هذا"
+    total: "مجموع"
+    try_again: "عاود المحاولة"
+    updated: "تحديث"
+    view: "عرض"
+    _yes: "نعم"
+  attributes:
+    access_level: "مرحلة (API) الأمنية"
+    name: "اسم"
+    code: "رمز"
+    copy_count: "نُسخ"
+    created_at: "وقت الانشاء"
+    email: "بريد الكتروني"
+    hint: "تلميح"
+    password: "كلمة المرور"
+    published: "نٌشر؟"
+    questions: "الأسئلة"
+    title: "عنوان"
+    type: "نوع"
+    value: "قيمة"
+  access_levels:
+    public: "عام"
+    private: "خاص"
+    protected: "محمي"
+    inherit: "ورِثَ"
+  sms_guide_formatting_options:
+    auto: اوتماتيكي
+    inline: بالتناسق
+    appendix: ملحق
+    treat_as_text: معاملة كنص
+  errors:
+    format: "%{attribute}: %{message}"
+    messages:
+      deleted_successfully: "تم الحذف بنجاح"
+      generic_delete_error: "حصل خطأ اثناء الحذف"
+  helpers:
+    submit:
+      create: "حفظ"
+      update: "حفظ"
+  flash_message_types:
+    success: "نجاح"
+    error: "خطأ"
+    alert: "تنبيه"
+    notice: "مُلاحظة"
+  activerecord:
+    models:
+      answer:
+        zero: "أجوبة"
+        one: "جواب"
+        other: "أجوبة"
+      assignment:
+        zero: "واجبات"
+        one: "مهمةواجب"
+        other: "واجبات"
+      broadcast:
+        zero: "نشرات"
+        one: "نشرة"
+        other: "نشرات"
+      choice:
+        zero: "خيارات"
+        one: "خيار"
+        other: "خيارات"
+      condition:
+        zero: "شروط"
+        one: "شرط"
+        other: "شروط"
+      form:
+        zero: "استمارات"
+        one: "استمارة"
+        other: "استمارات"
+      mission:
+        zero: "مهمات"
+        one: "مهمة"
+        other: "مهمات"
+      operation:
+        zero: "عمليات"
+        one: "عملية"
+        other: "عمليات"
+      option:
+        zero: "خيارات"
+        one: "خيار"
+        other: "خيارات"
+      option_set:
+        zero: "مجاميع الخيار "
+        one: "مجموعة الخيار "
+        other: "مجموعات الخيار"
+      password_reset:
+        zero: "اعادة ضبط كلمة المرور"
+        one: "اعادة ضبط كلمة السر"
+        other: "إعادة ضبط كلمة السر"
+      question:
+        zero: "أسئلة"
+        one: "سؤال"
+        other: "أسئلة"
+      questioning:
+        zero: "أسئلة"
+        one: "سؤال"
+        other: "أسئلة"
+      report/calculation:
+        zero: "حسابات"
+        one: "حساب"
+        other: "حسابات"
+      report/report:
+        zero: "تقارير"
+        one: "تقرير"
+        other: "تقارير"
+      report/tally_report:
+        zero: "تقارير الحساب"
+        one: "تقرير الحساب"
+        other: "تقارير الحساب"
+      report/answer_tally_report:
+        zero: "إجابات تقارير الحساب"
+        one: "إجابات تقرير الحساب"
+        other: "إجابات تقارير الحساب"
+      report/response_tally_report:
+        zero: "رد تقارير الحساب"
+        one: "رد تقرير الحساب"
+        other: "رد تقارير الحساب"
+      report/list_report:
+        zero: "قائمة التقارير"
+        one: "قائمة التقرير"
+        other: "قائمة التقارير"
+      report/standard_form_report:
+        zero: "إستمارة التقارير القياسية"
+        one: "إستمارة التقرير القياسية"
+        other: "إستمارة التقارير القياسية"
+      response:
+        zero: "ردود"
+        one: "رد"
+        other: "ردود"
+      search/search:
+        zero: "بحوث"
+        one: "بحث"
+        other: "بحوث"
+      setting:
+        zero: "إعدادات"
+        one: "إعدادات"
+        other: "إعدادات"
+      sms/message:
+        zero: "رسائل نصية قصيرة"
+        one: "رسالة نصية قصيرة"
+        other: "رسائل نصية قصيرة"
+      user:
+        zero: "مستخدمين"
+        one: "مستخدم"
+        other: "مستخدمين"
+      user_group:
+        zero: "مجاميع مستخدم"
+        one: "مجموعة مستخدم"
+        other: "مجاميع مستخدم"
+      tag:
+        zero: "إشارات"
+        one: "إشارة"
+        other: "إشارات"
+    attributes:
+      broadcast:
+        body: "رسالة"
+        created_at: "وقت الإرسال"
+        errors: "أخطاء؟"
+        medium: "متوسط"
+        send_errors: "أخطأ في التسليم"
+        subject: "موضوع"
+        to: "إلى"
+        which_phone: "أي هاتف/ هواتف"
+      form:
+        allow_incomplete: "إتاحة عدم الإكمال؟"
+        copy_responses_count: "نسخ الإستجابات"
+        downloads: "تنزيلات"
+        responses: "ردود"
+        smsable: "قابل للإرسال برسالة نصية قصيرة؟"
+        authenticate_sms: "رسالة مصرح بها؟"
+        updated_at: "آخر تعديل"
+        version: "نسخة"
+        item_list_heading: "أسئلة"
+      mission:
+        compact_name: "إسم مدمج"
+        locked: "مقفل؟"
+      operation:
+        created_at: "وقت البداية"
+        creator: "بدء بواسطة"
+        description: "وصف"
+        job_started_at: "بدء عند"
+        job_failed_at: "فشل في"
+        job_completed_at: "إكتمل عند"
+        job_outcome_url: "URL النتائج"
+        job_error_report: "تقرير الخطأ"
+        status: "حالة"
+      option:
+        coordinates: "إحداثيات"
+        shortcode: "رمز قصير"
+      option_set:
+        allow_coordinates: "مع الإحداثيات؟"
+        answers: "إجابات"
+        geographic: "جغرافي؟"
+        multilevel: "متعدد المراحل؟"
+        options: "خيارات"
+        option_levels: "مراحل"
+        sms_guide_formatting: "دليل تنسيق الرسائل القصيرة"
+      qing_group:
+        group_name: "اسم"
+        group_hint: "تلميح"
+        add: "إضافة مجموعة"
+        edit: "تعديل المجموعة"
+        delete: " هل أنت متأكد بأنك تريد حذف مجموعة '%{name}'؟ "
+        repeatable: "قابل للتكرار؟"
+      question:
+        code: "رمز"
+        answer_count: "إجابات"
+        form_count: "إستمارات"
+        published: "نٌشر؟"
+        key: "سؤال مهم؟"
+        minimum: "الأقل"
+        maximum: "الأكثر"
+        casted_minimum: "الأقل"
+        casted_maximum: "الأكثر"
+        name: "عنوان"
+        option_set_id: "مجموعة الخيار "
+        qtype_name: "نوع"
+        tag_ids: "إشارات"
+        sms_guide_formatting: "دليل تنسيق الرسائل القصيرة"
+      questioning:
+        name: "عنوان"
+        condition: "شرط؟"
+        hidden: "مخفي؟"
+        rank: "مرتبة"
+        required: "مطلوب؟"
+        delete: "هل أنت متأكد من حذف السؤال '%{code}' من هذه الاستمارة؟"
+      response:
+        age: "عمر"
+        answers: "إجابات"
+        id: "هوية الرد"
+        created_at: "وقت التقديم"
+        form_id: "استمارة"
+        reviewed: "تم المراجعة؟"
+        reviewer_notes: "ملاحظات المُراجع"
+        source: "مصدر"
+        user_id: "مستخدم/ فريق"
+        incomplete: "هل هنالك اجابات مطلوبة غير موجودة؟"
+      report/report:
+        aggregation: "عملية"
+        aggregation_id: "عملية"
+        bar_style: "طراز الشريط"
+        display_type: "نوع العرض"
+        fields: "أسئلة/ ميزات"
+        name: "عنوان"
+        percent_type: "نوع النسبة المئوية"
+        pri_grouping: "تجميع 1"
+        sec_grouping: "تجميع 2"
+        submit_edit: "إحفظ التغييرات"
+        submit_new: "إنتاج تقرير"
+        unique_rows: "أخفاء الأسطر المكررة"
+        unreviewed: "السماح بالردود غير المراجعة"
+        view_count: "مراجعات"
+        viewed_at: "آخر مراجعة"
+      setting:
+        allow_unauthenticated_submissions: "السماح بتسليم غير مصرح به"
+        incoming_sms_numbers_str: "الأرقام الواردة"
+        incoming_sms_token: "رمز  الرسائل النصية القصيرة الواردة "
+        preferred_locales_str: "اللغة المفضلة"
+        default_outgoing_sms_adapter: "المزود الصادر الافتراضي"
+        override_code: "رمز التجاوز"
+        external_sql: "SQL خارجي"
+        timezone: "وقت المنطقة"
+        twilio_account_sid: "SID الحساب"
+        twilio_auth_token1: "رمز التصريح"
+        twilio_phone_number: "الأرقام الصادرة"
+        frontlinecloud_api_key1: "API مفتاح"
+      sms/message:
+        adapter_name: "محول"
+        body: "النص"
+        from: "من"
+        sent_at: "وقت الإرسال"
+        to: "إلى"
+        received_at: "وقت الإستلام"
+      sms/test:
+        from: "من"
+        body: "النص"
+      user:
+        admin: "مسؤول؟"
+        assignments: "واجبات"
+        latest_mission: "آخر المهمات"
+        login: "إسم المستخدم"
+        name: "الإسم الكامل"
+        notes: "ملاحظات"
+        password_confirmation: "إعادة كتابة كلمة المرور"
+        phone: "الهاتف الرئيسي"
+        phone2: "الهاتف البديل"
+        pref_lang: "اللغة المفضلة"
+        role: "دور"
+        api_key: "API مفتاح"
+        sms_auth_code: "رمز تصريح الرسالة النصية القصيرة"
+      user_batch:
+        file: "ملف"
+    table_headers:
+      response:
+        incomplete: "غير مكتمل"
+      user:
+        admin: "إدارة؟"
+    placeholders:
+      question:
+        code: "سؤالي"
+    action_links:
+      broadcast:
+        index: "قائمة النشرات"
+      form:
+        new: "أنشئ إستمارة جديدة"
+        index: "قائمة الإستمارات"
+        show: "عرض الإستمارة"
+        edit: "تعديل الإستمارة"
+        destroy: "حذف الإستمارة"
+        publish: "نشر الإستمارة"
+        unpublish: "إستمارة غير منشورة"
+        print: "طبع الإستمارة"
+      mission:
+        new: "أنشئ مهمة جديدة"
+        index: "قائمة المهام"
+        show: "عرض المهمة"
+        edit: "تعديل المهمة"
+        destroy: "حذف المهمة"
+      operation:
+        clear: "إزالة كل العمليات المكتملة"
+        destroy: "أزالة العملية"
+        index: "قائمة العمليات"
+      option_set:
+        new: "إنشاء مجموعة خيار جديدة"
+        index: "قائمة مجموعة الخيار"
+        show: "عرض مجموعة الخيار"
+        edit: "تعديل مجموعة الخيار "
+        destroy: "حذف مجموعة الخيار"
+        export: "تصدير مجموعة الخيار "
+      option_set_import:
+        new: "إستيراد مجموعة خيار جديد"
+      question:
+        new: "إنشاء سؤال جديد"
+        index: "قائمة الأسئلة"
+        show: "مراجعة السؤال"
+        edit: "تعديل السؤال"
+        destroy: "حذف السؤال "
+      report/report:
+        new: "إنشاء تقرير جديد"
+        index: "قائمة التقارير"
+        show: "عرض التقرير"
+        edit: "تعديل التقرير"
+        destroy: "حذف التقرير"
+      response:
+        index: "قائمة الردود"
+        show: "عرض الرد"
+        edit: "تعديل الرد"
+        destroy: "حذف الرد"
+      user:
+        new: "إنشاء مستخدم جديد"
+        index: "قائمة المستخدمين"
+        show: "عرض المستخدم"
+        edit: "تعديل المستخدم"
+        destroy: "حذف المستخدم"
+      user_group:
+        index: "مجاميع مستخدم"
+        show: "عرض مجموعة مستخدم"
+        edit: "تعديل مجموعة مستخدم"
+        destroy: "حذف مجموعة مستخدم"
+        members: "قائمة الاعضاء"
+    hints:
+      form:
+        name: "اسم وصفي للإستمارة"
+        smsable: "فيما إذا كانت الإستمارة تقبل تسليم رسائل نصية قصيرة. حيث يمكن لهذا أن يؤثر عند تزايد رقم النسخة "
+        version: "الرقم والرمز الحرفي للنسخة الحالية "
+      mission:
+        name: "اسم لهذه المهمة. 32 حرف وفراغ كحد أقصى. يجب أن يكون متفرد. خذ بنظر الإعتبار استخدام السنة اذا كان هنالك مهمام مستقبلية بنفس الاسم"
+        locked: "إذا كانت المهمة مقفلة، فلا يمكن إنشاء الردود والإستمارات و لا تعديلها، ولا يمكن إضافة المستخدمين أو حذفهم"
+      option:
+        name: "الوصفي النصي لهذا الخيار والذي سيشاهده المستخدم"
+      option_set:
+        allow_coordinates: "فيما إذا يسمح هذا الخيار لخيارات مصاحب لإحداثيات جيوغرافية"
+        geographic: "إذا كانت مجموعة الخيار  تمثل معلومات الجغرافية، على سبيل المثال، مجموعة من المحافظات أو المناطق."
+        name: "اسم يلخص مجموعة الخيارات هذه، المستخدم العادي لن يكون قادراً على رؤيته."
+        multilevel: "إذا كانت مجموعة الخيار لديها مستويات متعددة من الخيارات، مثل البلد -> الدولة -> المدينة."
+        options:
+          editable: "إضافة خيارات موجودة عن طريق كتابتها والضغط على 'إضافة'. إذا كنت لا ترى خيارا في القائمة المنسدلة، يمكنك إضافة واحدة جديدة عن طريق النقر على 'إنشاء خيار جديد \"."
+          read_only: "الخيارات التي سوف تظهر للأسئلة التي تستخدم مجموعة الخيار هذه."
+        option_levels: "أسماء كل مستوى من الخيارات، على سبيل المثال، 'البلد'، 'الولاية'، 'المدينة'. لاحظ أن هذه تختلف عن الخيارات نفسها (مثل \"الولايات المتحدة\"، \"إلينوي\"، \"شيكاغو\")، والتي يتم تعريفها أدناه."
+        sms_guide_formatting: "معاني الخيارات هي: تلقائي: تحديد تلقائيا ما إذا كان استخدام \"بالتناسق\" أو \"ملحق\". بالتناسق: عرض قائمة من الخيارات على دليل الرسائل القصيرة. ملحق: وتشمل قائمة الخيارات في ملحق إنشء بواسطة منسق. المعاملة كنص: قبول خيارات لضبط هذا الخيار كما لو كانوا إدخالات نص"
+      question:
+        code: "والاسم الرمزى قصير (بين 2-20 رمز). يجب أن يحتوي على أحرف وأرقام فقط بدن فراغات، على سبيل المثال، صندوقالاقتراعمقفول، المغادرةالوقت."
+        hint: "تعليمات إضافية، على سبيل المثال، \"أدخل عدد تقريبي للناس في طابور الاقتراع\"."
+        key: "أجوبة على أسئلة رئيسية تساعد تلخيص الردود وتظهر في قائمة الرد. الأسئلة الرئيسية المشتركة هي عن الموقع والتقييم الشامل."
+        minimum: "قيمة الحد الأدنى للردود. ضع علامة في المربع إذا كان الحد الأدنى نفسه غير صالح."
+        maximum: "القيمة الأكبر للردود. ضع علامة في المربع إذا كان الحد الأقصى نفسه غير صالح."
+        name: "نص السؤال الرئيسي، على سبيل المثال، \"كم عدد الأشخاص في الطابور؟\""
+        option_set_id: "مجموعة من الخيارات التي يمكن للمستخدم الاختيار منها."
+        qtype_name: "هذا النوع من معلومات الذي سيدخله المستخدم."
+        access_level: "مورث : مستوى الوصول نفسه كما الإستمارة الأصلية. خاص: لا أحد يمكن الوصول إلى البيانات عبر API، بغض النظر عن مستوى وصول الإستمارة الأصلية."
+      questioning:
+        hidden: "ما إذا كان سيتم عرض هذا السؤال في هذه الإستمارة. استخدم هذا لتعطيل سؤال إذا كنت لا يمكن حذفه. ستتجاوز هذه القيمة الشرط والإعدادات المطلوبة أدناه."
+        condition: "شرط إختياري الذي  يجب الإلتزام به من أجل إظهار هذا السؤال للمستخدم."
+        required: "ما إذا كان يجب أن يكتمل هذا السؤال في هذه الإستمارة أو انه اختياري. ينفذ فقط أذا لم يكن السؤال مخفياً وتم تحقيق الشرط المحدد أعلاه."
+      report/report:
+        name: "عنوان وصفي لهذا التقرير."
+        aggregation_id: "العملية التي تريد تنفيذها على البيانات المدمجة."
+        kind: "نوع البيانات التي ترغب العمل بها."
+        display_type: "الطريقة التي تريد عرض النتائج بها"
+        unreviewed: "إذا كان ينبغي إدراج الردود التي لم تتم مراجعتها في التقرير."
+        unique_rows: "ما إذا كان ينبغي حذف السطور المكررة في التقرير."
+        pri_grouping: "ميزة أو سؤال التي ينبغي تجميع عدد الردود بناءاً عليها (مثل الولاية، التصنيف العام)."
+        percent_type: "ما اذا كان ينبغي أن تحسب النسب المئوية للتقرير و كيف."
+        bar_style: "هل يجب أن تكون الأشرطة  مكدسة أو جنبا إلى جنب."
+      response:
+        incomplete: "حدد هذا المربع إذا كان هناك أسئلة مطلوبة التي لا يمكن أن توفر إجابات لها. سوف تكون بعد ذلك قادر على حفظ هذا الرد دون الإجابة عن هذه الأسئلة وسيؤشر هذا الرد  'غير مكتملة'"
+      setting:
+        allow_unauthenticated_submissions: "إذا تم تحديد هذا المربع، سيسمح لأي شخص أن يقدم البيانات للمهمة دون إدخال كلمة مرور. استخدام هذا التحذير."
+        preferred_locales_str: |-
+          أدخل target='_blank'> <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' رموز من حرفين </A>، مفصولة بفواصل، لللغات لهذه المهمة، وذلك من التفضيلات.
+
+          يحدد هذا الإعداد:
+          * تفضيل اللغة الافتراضية للمستخدم الجديد
+          * اللغة الافتراضية لردود الرسائل النصية القصيرة
+          * اللغات للأسئلة والخيارات
+        incoming_sms_numbers_str: "أدخل رقم الهاتف / هواتف (بما في ذلك رمز البلد، مفصولة بفواصل) التي يجب أن ترسل استمارات الرسائل القصيرة الواردة لها ، تحتاج هذا فقط في حالة التقديم بواسطة الرسائل النصية القصيرة ."
+        incoming_sms_token: |-
+          هذا الرمز يستخدم في (URL) المستخدم للرسائل الواردة من أجل منع التسليم غير المصرح به للرسائل
+        using_incoming_sms_token_title: 'إستخدام رمز الرسالة النصية القصيرة الورادة '
+        using_incoming_sms_token_body: |-
+          يرجى تسجيل URL  الخاص بالرسائل النصية القصيرة الوارد مع مزود بوابتك:
+
+          ٪ {url}
+        default_outgoing_sms_adapter: "المحول المستخدم لإرسال الرسائل النصية القصيرة. يرجى ملاحظة أن الإجابة على الرسائل القصيرة النصية قد يرسل عبر نفس المحول أو محول آخر إعتماداً على المحول الذي وردة الرسالة الأصلية عليه"
+        twilio_phone_number: "رقم الهاتف مسجل في (Twilio ). نشرات الرسائل النصية القصيرة الصادرة لن تعمل مالم يمتلك حساب (Twilio ) هذا الرقم. يجب أن يحتوي الرقم على رمز الدولة . مثل :2568034423+"
+        twilio_account_sid: "SID الخاص بحساب Twilio"
+        twilio_auth_token1: "رمز التصريح لحساب Twilio"
+        frontlinecloud_api_key1: "مفتاح API الخاص بنشاطات FrontlineCloud"
+        external_sql: "رمز SQL المستخدمة لاستخراج البيانات لاستخدامها في تطبيقات خارجية. انقر فوق \"تحديد الكل\" ثم اضغط على Ctrl-C لنسخ."
+        timezone: "المنطقة الزمنية التي تستخدم للأوقات في الموقع."
+      sms/test:
+        from: "أدخل رقم الهاتف الذي يجب أن تظهر لإنشاء الرسائل القصيرة . ويجب أن يتضمن هذا العدد رمز البلد (على سبيل المثال 1 404 555 1212+، 23476543212+)."
+        body: "أدخل نص الرسالة."
+      user:
+        name: "اسم المستخدم الكامل. مثال: \"فلان الفلاني\" أو \"فريق 1.1\""
+        login: "سيتم استخدام اسم المستخدم لتسجيل الدخول، وربما تحتوي على أحرف فقط غير معلمة، وأرقام، فترات، وخط على السطر."
+        phone: "يجب أن يتضمن رقم الهاتف رمز البلد. على سبيل المثال: 25680344523+"
+        phone2: "يجب أن يتضمن رقم الهاتف رمز البلد. على سبيل المثال: 25680344523+"
+        admin: "فيما اذا كان المستخدم مسؤول في عموم النظام. يمكنك السيطرة على أذونات ما قبل المهمة بإستخدام الحقول أدناه"
+        assignments: "المهام المخصصة لهذا المستخدم"
+        password: "إدخال كلمة مرور جديدة هنا إذا كنت ترغب في تغيير كلمة المرور الحالية ."
+        password_confirmation: "أدخل كلمة المرور الجديدة مرة أخرى."
+        pref_lang: "اللغة المستخدمة في النظام"
+        role: "دور المستخدم في المهمة الحالية، وعما إذا كان أو لم يكن فعال في الوقت الحاضر. لا يمكن للمستخدم غير الفعال الوصول إلى مهمة على الإطلاق."
+        sms_auth_code: "استخدام هذا الرمز لتقديم ردود رسائل نصية قصيرة ."
+    errors:
+      messages:
+        taken: "الرجاء إدخال قيمة فريدة من نوعها."
+        is_invalid: "يرجى إدخال قيمة صالحة."
+        blank: "هذا الحقل مطلوب."
+        empty: "هذا الحقل لا يمكن ان يكون فارغا."
+        not_a_number: "الرجاء إدخال رقم صالح."
+        not_an_integer: "الرجاء إدخال عدد صحيح صالح."
+        did_not_match: " كلمات المرور غير متطابقة."
+        too_long:
+          zero: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
+          one: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
+          two: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
+          few: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
+          many: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
+          other: "يرجى إدخال ٪ {count} كحد أقصى من الأحرف."
+        too_short:
+          zero: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
+          one: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
+          two: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
+          few: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
+          many: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
+          other: "يرجى إدخال على الأقل٪ {count} من الأحرف."
+        wrong_length:
+          zero: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
+          one: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
+          two: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
+          few: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
+          many: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
+          other: "يرجى إدخال ٪ {count} أحرف بالضبط."
+        must_be_group: "الأصل يجب أن يكون مجموعة"
+        invalid_password: "ويجب أن تتضمن كلمة المرور رقم واحد على الأقل، حرف صغير واحد، وحرف كبير واحد."
+      models:
+        answer:
+          required: "ادخل قيمه من فضلك."
+        assignment:
+          blank: "مطلوب"
+        condition:
+          all_required: "كل حقول الشروط مطلوبة"
+        form:
+          cant_delete_if_has_responses: "لا يمكنك حذف هذه الاستمارة لأنها تحتوي على ردود."
+          cant_delete_published: "لا يمكن حذف استمارة منشورة."
+          cant_edit_published: "لا يمكن تعديل استمارة منشورة."
+          ranks_break_conditions: "التصنيف الجديد جعل شرط واحد أو أكثر غير صالح"
+          general: "إستمارة غير صالحة (انظر أدناه)"
+        media/object:
+          invalid_format: "الملف الذي تم تحميله ليس بصيغة مقبولة"
+          generic: "حصل خطأ أثناء تحميل الملف"
+        mission:
+          cant_delete_if_assoc: "لا يمكنك حذف هذه المهمة لأنها ترتبط بإستمارات، ردود، أو أشياء أخرى."
+          let_num_spc_only: "الرجاء استخدام احرف وارقام ومسافات فقط."
+          not_unique: "الاسم مشابه كثيرا لمهمة موجودة '٪ {existing }"
+          general: "مهمة غير صالحة (انظر أدناه)"
+        option:
+          cant_delete_if_has_response: "لا يمكنك حذف هذا الخيار لأنه من ضمن رد واحد على الأقل."
+          cant_change_if_published: "لا يمكنك تغيير هذا الخيار لأنه يظهر في إستمارة منشورة واحدة على الأقل."
+          cant_delete_if_published: "لا يمكنك حذف هذا الخيار لأنه من ضمن رد واحد على الأقل."
+          names_cant_be_all_blank: "يجب أن يعطى اسم مترجم واحد على الاقل لكل خيار"
+          names_too_long: "طول الأسماء يجب ان لا يزيد على 30 حرف."
+          invalid_coordinates: "الإحداثيات المقدمة غير صالحة."
+        option_set:
+          at_least_one: "يجب عليك اختيار خيار واحد على الأقل."
+          cant_delete_if_has_questions: "لا يمكنك حذف مجموعة الخيار هذه لأن سؤال واحد او اكثر مرتبط بها."
+          cant_delete_if_has_answers: "لا يمكنك حذف مجموعة الخيار لانها ضمن محتوى جواب واحد على الأقل."
+          general: "كانت هنالك مشكلة غي حفظ مجموعة الخيار"
+          wrong_depth: "لديك٪ {levels} مستويات الخيار ولكن شجرة الخيار الخاصة بك هي ٪ {depth} عمق الخيارات."
+        option_set_import:
+          general: "ايراد مجموعة الخيار غير صالح (انظر ادناه)"
+          internal: "حدث خطأ داخلي أثناء معالجة التحميل."
+          wrong_type: "يجب أن يكون الملف الذي تم تحميله صالح ومن نوع XLSX  وملف Excel ."
+        question:
+          at_least_one_name: "يجب إدخال عنوان بلغة واحدة على الأقل."
+          attributes:
+            code:
+              invalid: "يجب أن تبدأ بحرف، استخدم فقط الحروف والأرقام، وتكون بحد أقصى 20 رمز."
+          cant_change_if_conditions: "لا يمكنك تغيير النوع او مجموعة الخيار بسبب وجود بعض الشروط التي تشير لهذا السؤال"
+          cant_change_if_responses: "لا يمكنك تغيير النوع او مجموعة الخيار بسبب وجود ردود لهذا السؤال"
+          cant_delete_if_has_answers: "لا يمكن حذف السؤال لانه يشير على اقل تقدير لجواب واحد"
+          cant_delete_if_published: "لا يمكن حذف السؤال لانه يظهر على الاقل في استمارة منشورة واحدة"
+          general: "السؤال غير صالح (انظر ادناه)"
+        questioning:
+          attributes:
+            code:
+              invalid: "يجب أن تبدأ بحرف، استخدم فقط الحروف والأرقام، وتكون بحد أقصى 20 رمز."
+          cant_delete_if_has_answers: "لا يمكن إزالة السؤال لانه يحوي على جواب او اكثر لهذه الاستمارة."
+          invalid_condition: "الشرط غير صالح (انظر ادناه)."
+          question: "سؤال"
+        report/report:
+          attributes:
+            fields:
+              blank: "يجب اختيار سؤال واحد او ميزة واحدة على اقل تقدير."
+            form_id:
+              blank: "يجب اختيار استمارة لرفع تقرير عنها."
+            name:
+              blank: "يجب ادخال عنوان للتقرير."
+            question_order:
+              blank: "يجب ان تختار ترتيب الاسئلة."
+            questions:
+              blank: "يحجب ان تختار سؤال واحد او مجموعة خيار على اقل تقدير."
+            tally_type:
+              blank: "يجب ان تختار طريقة حساب ."
+            text_responses:
+              blank: "يجب ان تختار طريق عرض نص الردود."
+            type:
+              blank: "يجي ان تختار نوع التقرير."
+          no_calc_or_opt_set: "تقرير '٪ {name}' لا يوجد لديه أسئلة أو مجموعات الخيار محددة. يرجى تعديل التقرير لتصحيح هذا الخطأ."
+        response:
+          general: "رد عير صالح (انظر ادناه)."
+          missing_answers: "ليس لكل الأسئلة اجوبة "
+          invalid_answers: "هنالك أجوبة غير صالحة"
+          checked_out: "تم فحص هذا الرد بواسطة:"
+          form_unavailable: "الاستمارة المحددة غير موجودة في هذه المهمة"
+        setting:
+          attributes:
+            preferred_locales_str:
+              invalid_code: "رمز اللغة '٪ {code}' غير صالح."
+              one_must_have_translations: "الرجاء اختيار لغة واحدة على الأقل مترجمة (٪ {locales})."
+          general: "الإعدادات غير صالحة (انظر ادناه)"
+        user:
+          at_least_digits: "الرجاء إدخال ما لا يقل عن٪ {num} أرقام."
+          cant_delete_if_responses: "لا يمكنك حذف هذا المستخدم لأنه مرتبط بردود."
+          duplicate_assignments: "هناك واجبات مكررة."
+          no_missions: "لست جزء من اي مهمة."
+          phone_assigned_to_other: "هذا الرقم قد تم تخصيصه لمستخدم اخر."
+          general: "المستخدم غير صالح (انظر ادناه)."
+          attributes:
+            assignments:
+              cant_be_empty_if_not_admin: "مطلوب واجب واحد على الاقل اذا كان المستخدم ليس بمسؤول."
+            login:
+              invalid: "الرجاء استخدام حروف فقط غير معلمة، وأرقام، فترات، وخط على السطر."
+            reset_password_method:
+              cant_passwd_email: "لا يمكنك٪ {verb} كلمة المرور عن طريق البريد الإلكتروني لأنك لم تحدد عنوان بريد إلكتروني."
+        user_batch:
+          general: "حزمة المستخدمين غير صالحة (انظر ادناه)"
+          internal: "حدث خطأ داخلي أثناء معالجة التحميل."
+          invalid_headers: "جدول البيانات الذي تم تحميله فيه عناوين اعمدة غير صالحة."
+          too_many_errors: "جدول البيانات الذي تم تحميله فيه أخطاء كثيرة جدا. توقفت المعالجة في السطر٪ {row}."
+  layout:
+    actions: "اجراءات"
+    are_you_sure: "هل انت متأكد؟"
+    change_language: "تغيير اللغة"
+    created_by: "أنشئ بواسطة"
+    delete_warning: "هل أنت متأكد أنك تريد حذف بشكل دائم٪ {obj_description}؟"
+    deselect_all: "الغاء تحديد الكل"
+    loading: "تحميل..."
+    locale_change_get_only: "تغيير اللغة من هذه الصفحة قد يؤدي إلى فقدان البيانات. يرجى إكمال أو إلغاء الاستمارة وحاول مرة أخرى."
+    logged_in_as: "تسجيل الدخول ك"
+    mission_change_get_only: "تغيير المهمة من هذه الصفحة قد يؤدي إلى فقدان البيانات. يرجى إكمال أو إلغاء الاستمارة وحاول مرة أخرى."
+    must_be: "يجب ان"
+    no_selection: "لم تحدد اي شيء"
+    reqd_sym_definition: "الحقول الإلزامية مشار إليها ب٪ {reqd_sym}."
+    select_all: "تحديد الكل"
+    server_contact_error: "خطأ في الاتصال بالخادم"
+    system_error: "خطأ بالنظام. قد تم إخطار المسؤول."
+    system_version: "نسخة إصدار النظام"
+    time_ago: "%{time} مضى"
+    time_zone: "منطقة زمنية"
+    updated_at: "تم التحديث في"
+    no_published_forms: "لا توجد استمارات منشورة "
+  will_paginate:
+    previous_label: "&#171;"
+    next_label: "&#187;"
+    page_gap: "&hellip;"
+    broadcast:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على نشرات"
+          one: "عرض <b> 1 </b> النشرة"
+          other: "عرض <b٪ {count} </ b> نشرات"
+        multi_page_html: "عرض نشرات  <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+    form:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على استمارة"
+          one: "عرض <b> 1 </ b> استمارة"
+          other: "عرض <b٪ {count} </ b> استمارات"
+    mission:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على مهمة"
+          one: "عرض <b> 1 </ b> مهمة"
+          other: "عرض <b٪ {count}كل </ b> مهمات"
+    option:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على خيارات"
+          one: "عرض <b> 1 </ b> خيار"
+          other: "عرض <b٪ {count} </ b> الخيارات"
+    option_set:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على مجموعة خيار"
+          one: "عرض <b> 1 </ B> مجموعة الخيار"
+          other: "عرض <b٪ {count} </ b> مجموعات الخيار "
+    question:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على أسئلة"
+          one: "عرض <b> 1 </b> السؤال"
+          other: "عرض <b٪ {count} </ b> الأسئلة"
+          multi_page_html: "عرض الأسئلة <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+    questioning:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على أسئلة"
+          one: "عرض <b> 1 </b> السؤال"
+          other: "عرض <b٪ {count} </ b> الأسئلة"
+          multi_page_html: "عرض الأسئلة <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+    report/report:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على تقرير"
+          one: "عرض <b> 1 </b> التقرير"
+          other: "عرض <b٪ {count} </ b> التقارير"
+    response:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على ردود"
+          one: "عرض <b> 1 </b> الرد"
+          other: "عرض <b٪ {count} </ b> الردود"
+        multi_page_html: "عرض الردود <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+    sms/message:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على رسائل نصية قصيرة"
+          one: "عرض <b> 1 </b> الرسالة النصية القصيرة"
+          other: "عرض <b٪ {count} </ b> الرسائل النصية القصيرة"
+        multi_page_html: "عرض الرسائل النصية القصيرة <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+    user:
+      page_entries_info:
+        single_page_html:
+          zero: "لم يتم العثور على مستخدمين"
+          one: "عرض <b> 1 </b> المستخدم"
+          other: "عرض <b٪ {count} </ b> المستخدمين"
+        multi_page_html: "عرض المستخدمين <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+  authlogic:
+    error_messages:
+      consecutive_failed_logins_limit_exceeded: "لقد تجاوزت الحد الأقصى لمحاولا ت تسجيل الدخول الفاشلة المتوالية. تم تعطيل حسابك."
+      email_invalid: "يجب أن تبدو وكأنها عنوان بريد إلكتروني"
+      login_blank: "الرجاء إدخال اسم مستخدم."
+      login_invalid: "يجب أن تستخدم فقط الأحرف والأرقام والمسافات و.-_ @"
+      login_not_found: "غير صالح"
+      no_authentication_details: "أنت لم تقدم أي تفاصيل للتصريح."
+      not_active: "حسابك غير فعال."
+      not_approved: "حسابك غير مصادق عليه."
+      not_confirmed: "حسابك غير مؤكد."
+      password_blank: "الرجاء إدخال كلمة مرور."
+      password_invalid: "غير صالح. تم مؤخرا تحديث معايير كلمة المرور. إذا كانت كلمة المرور الخاصة بك لا تعمل، يرجى استخدام خيار إعادة تعيين كلمة المرور لاختيار واحدة جديدة."
+    models:
+      user_session: "جلسة المستخدم."
+    attributes:
+      user_session:
+        login: "اسم المستخدم."
+        password: "كلمة المرور."
+        remember_me: "تذكرني"
+        verify: "تحقق"
+  date:
+    formats:
+      default: "%b %d %Y"
+      short: "%b %d"
+      long: "%B %d %Y"
+  time:
+    formats:
+      short: "%b %d %H:%M"
+      long: "%A, %B %d %Y %H:%M"
+  search_qualifiers:
+    text: "نص"
+    email: "بريد إلكتروني"
+    form: "إستمارة"
+    login: "تسجيل دخول "
+    name: "اسم"
+    option_set: "مجموعة - خيار"
+    phone: "هاتف"
+    question: "سؤال"
+    question_type: "نوع السؤال"
+    reviewed: "تمت المراجعة"
+    source: "مصدر"
+    submit_date: "وقت التقديم"
+    submitter: "مُقدم"
+    code: "رمز"
+    title: "عنوان"
+    type: "نوع"
+    tag: "إشارة"
+    date: "تاريخ"
+    datetime: "تاريخ وقت"
+    username: "اسم مستخدم"
+    content: "محتوى"
+    number: "عدد"
+    group: "مجموعة"
+  page_titles:
+    broadcasts:
+      index: "نشرات"
+      new: "إرسال نشرات"
+      new_with_users: "إرسال نشرة"
+      show: "نشرة"
+    forms:
+      choose_questions: "إضافة أسئلة إلى الاستمارة :٪ {name}"
+      edit: "تعديل استمارة:٪ {name}"
+      index: "إستمارات"
+      new: "إستمارة جديدة"
+      show: "استمارة:٪ {name}"
+    missions:
+      edit: "تعديل مهمة:٪ {name}"
+      index: "مهمات"
+      new: "مهمة جديدة"
+      show: "المهمة:٪ {name}"
+    operations:
+      index: "عمليات"
+      show: "عملية:٪ {name}"
+    option_sets:
+      edit: "تعديل مجموعة الخيار:٪ {name}"
+      index: "مجموعات الخيار "
+      new: "مجموعة خيار جديدة "
+      show: "مجموعة خيار:٪ {name}"
+    option_set_imports:
+      new: "إستيراد مجموعة خيار جديد"
+    options:
+      edit: "تعديل الخيار:٪ {name}"
+      index: "خيارات"
+      new: "خيار جديد"
+      show: " الخيار:٪ {name}"
+    password_resets:
+      all: "إعادة ضيط كلمة المرور"
+    questions:
+      edit: "تعديل سؤال:٪ {code}"
+      index: "أسئلة"
+      new: "سؤال جديد"
+      show: "سؤال:٪ {code}"
+    questionings:
+      edit: "تعديل سؤال:٪ {code}"
+      index: "أسئلة"
+      new: "سؤال جديد"
+      show: "سؤال:٪ {code}"
+    responses:
+      index: "ردود"
+      new: "رد جديدة"
+    reports:
+      index: "تقارير"
+      new: "تقرير جديد"
+      edit: "تعديل التقرير"
+    settings:
+      all: "إعدادات"
+    sms:
+      index: "سجل الرسائل"
+    sms_tests:
+      all: "وحدة تحكم اختبار الرسائل النصية القصيرة"
+    user_batches:
+      all: "أنشاء مستخدمين متعددين"
+    user_sessions:
+      new: "تسيجل الدخول"
+      login_confirmation: "تأكيد تسيجيل الدخول "
+      logged_out: "تم تسجيل الخروج "
+    users:
+      edit: "تعديل المستخدم:٪ {name}"
+      edit_profile: "تعديل الحساب "
+      show_profile: "حساب:٪ {name}"
+      index: "مستخدمين"
+      login_instructions: "تعليمات تسجيل الدخول "
+      new: "مستخدم جديد"
+      show: "مستخدم:٪ {name}"
+    welcome:
+      index: "الرئيسية"
+      unauthorized: "غير مخول "
+  admin_mode:
+    admin_mode: "وضع المشرف "
+    exit_admin_mode: "الخروج من وضع المشرف "
+    goto_admin_mode: "وضع المشرف "
+  answer:
+    no_name: "لا يوجد اسم"
+    this_answer: "هذا الإجابة"
+  attrib_fields:
+    form: "استمارة"
+    source: "مصدر"
+    time_submitted: "وقت التقديم"
+    date_submitted: "تاريخ التقديم"
+    response_id: "هوية الرد"
+    reviewed: "تمت المراجعة"
+  broadcast:
+    chars:
+      remaining: "الرموز المتبقية "
+      too_many: "رموز كثيرة"
+    email_intro: "هذه نشرة رسالة من "
+    email_error: "خطأ في البريد الإلكتروني "
+    instructions: "لإرسال نشرة، أولا يجب تحديد المستلمين أدناه، ثم انقر فوق \"إرسال النشرة\"."
+    may_not_be_enough: "قد يكون هذا غير كافي "
+    mediums:
+      names:
+        sms: "رسالة نصية قصيرة"
+        email: "البريد الالكتروني"
+        sms_only: "رسالة نصية قصيرة فقط"
+        email_only: "بريد إلكتروني فقط"
+        both: "بريد إلكتروني ورسالة نصية قصيرة"
+      options:
+        sms: "يفضل رسالة نصية قصيرة  (يستخدم البريد الإلكتروني في حال لم يملك المستلم هاتف)"
+        email: "يفضل البريد الإلكتروني ( تستخدم الرسائل النصية في حال لم يمتلك المستلم بريد إلكتروني)"
+        sms_only: "رسائل نصية قصيرة فقط (لا ترسل بريد إلكتروني)"
+        email_only: "بريد إلكتروني فقط (لا ترسل أي رسائل نصية قصيرة )"
+        both: "رسالة نصية قصيرة و بريد إلكتروني "
+    send_broadcast: "إرسال نشرة"
+    send_success: "تم ارسال النشرة بنجاح"
+    send_error: "خطأ في ارسال النشرة (انظر ادناه)"
+    sms_error: "خطأ بالرسالة النصية القصيرة"
+    which_phone_options:
+      main_only: "الهاتف الرئيسي فقط"
+      alternate_only: "الهاتف البديل فقط"
+      both: "كلا الهاتفين"
+  condition:
+    operators:
+      eq: "يساوي "
+      lt: "أقل من "
+      gt: "أكبر من"
+      leq: "أقل من أو يساوي "
+      geq: "أكبر من أو يساوي"
+      neq: "لا يساوي"
+      inc: "يتضمن"
+      ninc: "لا يتضمن"
+    no_refable_qings: "لا يوجد أي سؤال في هذه الإستمار يمكن أن يستدل به أي شرط"
+    op: "مقارنة"
+    value: "قيمة"
+  dashboard:
+    close_dashboard: "إغلاق اللوحة الرئيسية"
+    enter_full_screen: "دخول الشاشة الكاملة"
+    exit_full_screen: "خروج من الشاشة الكاملة"
+    low_activity: "فعالية قليلة"
+    my_responses: "ردودي"
+    no_reports: "لم يتم إنشاء تقارير لهذه المهمة بعد."
+    recent_responses: "آخر الردود"
+    response_locations: "مواقع الردود"
+    response_locations_truncated: "عرض أحدث٪ {shown} من٪ {total} الردود"
+    summary: "خلاصة"
+    top_forms: "أفضل الإستمارات"
+  data_integrity:
+    appears_elsewhere_warnings:
+      by_type:
+        question: "يظهر هذا السؤال في الاستمارت التالية: *٪ {related} *. سوف تنعكس أية تغييرات تجريها أدناه على تلك الاستمارات."
+        option_set: "تظهر مجموعة الخيار هذه في الأسئلة التالية: *٪ {related} *. سوف تنعكس أية تغييرات تجريها أدناه على تلك الأسئلة."
+    has_answers_warnings:
+      by_type:
+        question: "لهذا السؤال اجوبة موجودة، لهذا بعض الحقول لا يمكن تعديلها"
+    option_in_use_name_change_warning: "هذا الخيار قيد الاستخدام في أستمارات أخرى منشورة أو تتم الإشارة اليه في الردود الحالية. يجب أن تكون حريصا على عدم تغيير معنى الخيار في تعديلاتك."
+    option_standard_copy_name_change_warning: "هذا الخيار هو نسخة من خيار قياسي. يجب أن تتأكد من الحفاظ على المعنى الأصلي للخيار بحيث تتفق مع المقاييس."
+    published_warnings:
+      questioning: "الاستمارة التي تنطبق عليها الحقول أدناه منشورة، لذا لا يمكن تعديلهم"
+      sms: "هذا النوع من التغيير سيسبب تلقي مستخدمي استمارة الرسائل النصية القصيرة خطأ إذا حاولوا تقديم النسخة الحالية من الاستمارة."
+      odk: "هذه التغييرات لا توقف الردود من ODK، ولكن قد تسبب فقدان بعض البيانات و / أو ردود غير صالحة (على سبيل المثال، فقدان اجوبة المطلوبة)."
+  form:
+    select_api_users: "تحديد كافة المستخدمين الذين يمكنهم الوصول لبيانات الاستمارة عبر API:"
+    add_group: "إضافة مجموعة"
+    add_questions: "إضافة أسئلة"
+    add_selected: "إضافة الأسئلة المختارة للإستمارة"
+    back_to_questions: "العودة لقائمة الأسئلة"
+    choose_form: "إختار إستمارة"
+    clone_confirm: "هل أنت متأكد أنك تريد أن تنشئ نسخة من الاستمارة '{FORM_NAME}٪'؟"
+    clone_error: "كانت هناك مشكلة في استنساخ الاستمارة (٪ {msg})."
+    clone_success: "الاستمارة  '٪ {FORM_NAME}' أستنسخت بنجاح."
+    no_mission: "لا توجد مهمات"
+    no_questions_yet: "لا توجد أسئلة بعد"
+    invalid_drop_location:
+      parent_must_be_group: "الأصل يجب أن يكون مجموعة."
+      max_depth: "المجاميع لا يمكن أن تكون فروع لمجاميع اخرى."
+      invalid_condition: "هذا الوضع سيبطل شرط معين."
+    print_form: "طباعة الإستمارة"
+    print_format_tips:
+      title: "نصائح تنسيق الطباعة"
+      body: "لضمان طباعة الاستمارة بشكل صحيح، الرجاء تفعيل طباعة ألوان الخلفية والصور في نافذة خيارات الطباعة للنظام الخاص بك. يجب أن تظهر تلك النافذة بمجرد النقر فوق \"موافق\" أدناه."
+    publish: "نشر"
+    publish_error: "كانت هناك مشكلة في نشر الاستمارة (٪ {msg})."
+    publish_success: "تم نشر الإستمارة بنجاح"
+    publish_form: "نشر الإستمارة"
+    question_remove_error: "كانت هناك مشكلة بحذف الأسئلة (٪ {msg})."
+    question_remove_answer_error: "واحد أو أكثر من الأسئلة المختارة لديها إجابات ولا يمكن حذفها."
+    questions_add_error: "كانت هناك مشكلة بإضافة الأسئلة (٪ {msg})."
+    questions_add_success: "تم إضافة أسئلة بنجاح"
+    questions_remove_success: "تم إزالة الأسئلة بنجاح"
+    remove_selected: "حذف المحدد"
+    remove_question_confirm:
+      zero: "هل أنت متأكد من عدم حذف أي من الأسئلة في الإستمارة؟"
+      one: "هل أنت متأكد من حذف هذا السؤال من الإستمارة؟"
+      other: "هل أنت متأكد أنك تريد حذف هذه٪ {count} من الأسئلة من الاستمارة؟"
+    reqd_sym_definition: "الأسئلة المطلوبة مؤشرة بواسطة"
+    save_and_publish: "حفظ و نشر"
+    saving_order: "ترتيب الحفظ..."
+    unpublish_error: "كانت هناك مشكلة في سحب نشر الاستمارة (٪ {msg})."
+    unpublish_success: "الإستمارة لم تنشر بنجاح"
+    unpublish: "غير منشور"
+    unpublish_form: "إستمارة غير منشورة"
+    unsaved_rank_notice: "لم تحفظ التغييرات التي أجريتها على ترتيب الأسئلة. يجب أن تنقر على \"حفظ\" اذا تريد حفظ التغييرات."
+    view_sms_guide: "عرض دليل الرسالة النصية القصيرة"
+  forms:
+    sms_guide:
+      appendix:
+        zero: " :) الرجاء ترجمة :The following appendices should be included with this form. "
+        one: " :) الرجاء ترجمة :The following appendices should be included with this form. "
+        two: " :) الرجاء ترجمة :The following appendices should be included with this form. "
+        few: " :) الرجاء ترجمة :The following appendices should be included with this form. "
+        many: " :) الرجاء ترجمة :The following appendices should be included with this form. "
+        other: "الملاحق التالية يجب أن تكون ضمن هذه الاستمارة:"
+      auth_code: "رمز تصريح المستخدم (مطلوب)"
+      for_paper_record: "للسجلات الورقية فقط"
+      form_code: "رمز الإستمارة المتفرد (مطلوب)"
+      multiple_sms_numbers: "أعداد التقديم للرسائل النصية المتعددة"
+      sms_message: "رسالة نصية قصيرة"
+      pointers:
+        text: "أكتب إجابتك في المربع. اختصر إذا لزم الأمر."
+        number: "أكتب الإجابة في المربع"
+        select_one: "إرسل الحرف الخاص بإختيارك في المربع. أكتب حرف واحد فقط."
+        select_one_as_text: "إرسل إجابتك في المربع. تأكد من كتابة اسم الخيار المحدد."
+        select_one_with_appendix: "كتابة الرمز القصير لاختيارك في المربع. انظر للملاحق لخياراتك."
+        select_multiple: "إرسال رسائل لكل من اختياراتك مفصولة بفواصل في المربع."
+        select_multiple_with_appendix: "إرسال رسائل لكل من اختياراتك مفصولة بفواصل في المربع. انظر للملاحق لخياراتك."
+        datetime: "أكتب إجابتك في المربع. استخدم التنسيق YYYYMMDD HHMM."
+        date: "أكتب إجابتك في المربع. استخدم التنسيق YYYYMMDD HHMM."
+        time: "أكتب إجابتك في المربع. استخدم التنسيق  HHMM."
+      instructions:
+        instructions: "تعليمات"
+        intro: "يرجى قراءة كافة التعليمات للبدء. سوف تستخدم هذه الورقة بداية ثم هاتفك."
+        paper: "ورقة"
+        1a: "أكتب اسم المستخدم /الفريق هنا:"
+        1b: "الإجابة أولا على جميع الأسئلة أدناه وملء كل مربع متقطع، على سبيل المثال:"
+        phone: "هاتف"
+        2a_appendix: "باستخدام هاتفك، إبدء رسالة نصية قصيرة إلى أحد الأرقام الموجودة على الورقة مرفقة."
+        2a_number_html: "بإستخدام هاتفك، إبدء رسالة نصية قصيرة إلى <strong>٪ {number} </ strong>."
+        2b: "أدخل محتويات كل سطر على الجانب الأيمن من الصفحة، والانتقال يكون من أعلى إلى أسفل."
+        2c_html: "يتم ترميز الفترات بواسطة ٪ {period} ويتم ترميز المساحات بواسطة ٪ {SPC}. ومن المهم أن تدخل كل الفترات والمسافات."
+        example_sms: "مثال رسالة نصية قصيرة"
+      unique_code: "هذا هو الرمز الفريد للاستمارة"
+      unknown_number: "[رقم مجهول]"
+  import:
+    row_error: "السطر٪ {row}:٪ {error}"
+    queued_html: |-
+      ٪ {type} طابور الاستيراد. تحقق من لوحة العمليات <a href="٪{url}"> </a> للحصول على المعلومات.
+  incomplete_response:
+    missing_answers:
+      label: "هل تفتقد هذه الاستمارة لأي إجابة مطلوبة؟"
+      hint: "هذه الاستمارة تسمح بتقديم ردود غير كاملة في حالات خاصة. إذا لم تكن متأكدا ما إذا كان أي من الإجابات المطلوبة مفقودة، اختر \"أنا لا أعتقد ذلك\" ثم \"حفظ\"."
+      foo: "شريط"
+      options:
+        'no': "لا أعتقد هذا"
+        'yes': "نعم"
+    code_label: "أدخل رمز التجاوز للغير مكتمل"
+  index_table:
+    messages:
+      all_rows_selected: "لاحظ بأن <strong> كافة </ strong>٪ {count} السطور غير محددة"
+      searched_rows_selected: "لاحظ بأن <strong> كافة </ strong>٪ {count} السطور تتطابق مع البحث المحدد حالياً"
+  location_picker:
+    choose_location: "أختار الموقع"
+    current_location: "الموقع الحالي"
+    enter_query: "أدخل طلب البحث في المربع أعلاه للبحث عن موقع في قاعدة البيانات غوغل الجغرافية."
+    search_locations: "بحث المواقع"
+  notifier:
+    if_link_doesnt_work: "إذا لم يعمل الرابط أعلاه حاول نسخه ولصقه في متصفحك."
+    if_you_made_it: "أذا أنت من عمل هذا الطلب فانقر على الرابط أدناه:"
+    login_name: "اسم الدخول الخاص بك هو٪ {login}."
+    to_choose: "لاختيار كلمة المرور، يرجى الذهاب هنا:"
+    must_choose: "يجب عليك اختيار كلمة مرور قبل أن تتمكن من استخدام أي من أنظمة مراقبة الانتخابات، بما في ذلك النظم القائمة على الهاتف المحمول."
+    password_reset_instructions: "تعليمات إعادة تعيين كلمة المرور "
+    request_made: "قد تم تقديم طلب لإعادة تعيين كلمة المرور للويب ٪ {site} . إذا كنت لم تتقدم بهذا الطلب، ببساطة تجاهل هذا البريد الإلكتروني."
+    welcome: "أهلا بك في٪ {site}!"
+  option_set:
+    add_level: "إضافة مرحلة"
+    and_n_more: "... و٪ {count} المزيد من الخيارات."
+    clone_confirm: "هل أنت متأكد أنك تريد أن تنشئ نسخة من مجموعة الخيار '{FORM_NAME}٪'؟"
+    clone_error: "كانت هناك مشكلة في استنساخ مجموعة الخيار (٪ {msg})."
+    clone_success: "مجموعة الخيار '٪ {FORM_NAME}' نسخت بنجاح."
+    create_new: "[إنشاء خيار جديد]"
+    edit_option: "التعديل الخيار "
+    edit_option_level: "تعديل مرحلة الخيار "
+    huge_notice: "مجموعة الخيار هذه كبيرة جدا (٪ {count} Options)، وبالتالي عينة صغيرة من الخيارات معروضة أدناه. تستطيع تعديل الاسم خصائص اخرى هنا ولكن يرجى استخدام خيارات الاستيراد / التصدير لتعديل الخيارات."
+    leave_page_warning: "إن ترك هذه الصفحة سيتخلى عن التغييرات لمجموعة الخيار هذه."
+    multilevel_forbidden_notice: "تستخدم مجموعة الخيار هذه حاليا من قبل اختيار متعدد الأسئلة، وبالتالي فإنه لا يمكن تحويلها إلى مجموعة متعددة المستويات."
+    new_option_level: "مرحلة خيار جديدة"
+    none_found: "لا توجد خيارات مطابقة"
+    searching: "جاري البحث..."
+    type_to_add_new: "اكتب اسم الخيار"
+  option_set_import:
+    instructions_html: |-
+      تحميل جدول بيانات مع مجموعة الخيار الخاص بك. وتقبل جداول من نوع  XLSX البيانات لإكسل وملفات CSV.
+  operation:
+    clear_confirm: "هل أنت متأكد أنك تريد مسح جميع العمليات المنجزة؟"
+    server_error: "خطأ في الخادم. يرجى الاتصال بالدعم."
+    description:
+      user_import_operation_job: استيراد المستخدم ل٪ {mission_name} من٪ {file}
+      option_set_import_operation_job: مجموعة الخيار  '٪ {name}' استيراد ل٪ {mission_name}
+    outcome_link_text: "رابط"
+    status:
+      completed: "نجاح"
+      failed: "فشل"
+      pending: "معلق"
+      running: "جاري التنفيذ"
+    summary:
+      all_in_progress:
+        zero: "%{count} operations in progress"
+        one: "%{count} operations in progress"
+        two: "%{count} operations in progress"
+        few: "%{count} operations in progress"
+        many: "%{count} operations in progress"
+        other: "٪ {count} عمليات قيد الانجاز"
+      some_completed: "٪ {completed} / {٪ total} عمليات إكتملت"
+      all_completed:
+        zero: "%{count} operations complete"
+        one: "%{count} operations complete"
+        two: "%{count} operations complete"
+        few: "%{count} operations complete"
+        many: "%{count} operations complete"
+        other: "٪ {count} عمليات انجزت"
+      with_errors:
+        zero: "%{message} (%{count} errors)"
+        one: "%{message} (%{count} errors)"
+        two: "%{message} (%{count} errors)"
+        few: "%{message} (%{count} errors)"
+        many: "%{message} (%{count} errors)"
+        other: "٪ {message} (٪ {count} أخطاء)"
+  tag:
+    none_found: "لا  توجد إشارات مطابقة"
+    searching: "جاري البحث..."
+    type_to_add_new: "اكتب اسم إشارة"
+    new_tag: "إشارة جديدة"
+    click_to_filter: "اضغط للتصفية وفق هذه الإشارة"
+  password_reset:
+    check_email: "تم إرسال رسالة إلكترونية تحتوي على تعليمات لإعادة تعيين كلمة المرور الخاصة بك. تفقد بريدك الالكتروني من فضلك."
+    enter_new_pass: "٪ {name}، يرجى إدخال كلمة مرور جديدة لحسابك."
+    success: "تم تحديث كلمة المرور بنجاح"
+    token_not_found: |-
+      نحن آسفون، لكن لا يمكن العثور على حسابك. إذا كنت تواجه مشاكل فحاول نسخ ولصق URL
+      من البريد الإلكتروني الخاص بك في المتصفح أو إعادة عملية تعيين كلمة المرور.
+  permission_error:
+    need_mission: "لا يمكنك مشاهدة هذا دون تحديد مهمة"
+    need_login: "يجب عليك تسجيل الدخول لمشاهدة هذه الصفحة."
+    no_permission: "ليس لديك الصلاحية لدخول هذه الصفحة."
+    processing_error: "خطأ في معالجة التصريح"
+    must_be_admin: "يجب أن تكون مسؤولا لمشاهدة هذه الصفحة."
+    must_be_logged_out: "يجب تسجيل الخروج لمشاهدة هذه الصفحة."
+  question:
+    answer_only_caps: "أجب فقط إذا"
+    maxmin:
+      gt: "أكبر من"
+      lt: "أقل من "
+      or_eq: "أو يساوي "
+      strictly_lt: "أقل من بدقة"
+      strictly_gt: "أكثر من بدقة"
+    other_forms_published: "واحد على الأقل من تلك الاستمارات تم نشرها أيضا، لذلك لا يمكن أن تعدل كل الحقول."
+  question_type:
+    text: "نص"
+    long_text: "نص طويل"
+    integer: "عدد صحيح"
+    decimal: "عدد عشري"
+    location: "موقع"
+    select_one: "حدد واحد"
+    select_multiple: "حدد أكثر من واحد"
+    datetime: "تاريخ / وقت"
+    date: "تاريخ"
+    time: "وقت"
+    image: "صورة"
+    annotated_image: "صورة مع تعليق"
+    signature: "توقيع"
+    sketch: "رسم تخطيطي"
+    audio: "سمعي"
+    video: "فديو"
+  recaptcha:
+    errors:
+      verification_failed: "رد التحقق غير صحيح، يرجى المحاولة مرة أخرى."
+      recaptcha_unreachable: "عفوا، لم نتمكن من ان نتأكد من صلاحية رد التحقق. حاول مرة اخرى."
+  report/report:
+    add_column: "إضافة عامود"
+    answered_only_if: "أجب فقط إذا"
+    attribute:
+      zero: "ميزات"
+      one: "ميزة"
+      other: "ميزات"
+    back_to_list: "العودة لقائمة التقرير"
+    blank: "فارغ"
+    choose_attrib_question: "إختار ميزة أو سؤال"
+    choose_disagg_qing: "أختار سؤال"
+    choose_form: "إختار إستمارة"
+    choose_report: "إختار تقرير"
+    columns: "أعمدة"
+    display_options: "خيارات"
+    edit_report: "تعديل التقرير"
+    enter_name: "ما هو عنوان التقرير؟"
+    export_to_csv: "تصدير البيانات لصيغة CSV"
+    fields: "حقول"
+    form: "إستمارة"
+    form_selection: "إختار إستمارات"
+    generated_at: "إنتجت في"
+    group_by_tag: "تجميع أسئلة بإشارة؟"
+    grouping: "تجميع بواسطة"
+    groupings: "تجميع"
+    how_to_disaggregate: "تقسيم تقرير بسؤال خاص؟"
+    how_to_display_questions: "كيف يجب أن يتم عرض الأسئلة؟"
+    how_to_display_results: "كيف تريد عرض النتائج؟"
+    how_to_order_questions: "كيف ينبغي أن ترتب الأسئلة؟"
+    loading_report: "تحميل تقرير ..."
+    questions_with_option_sets: "أسئلة مع مجموعات الخيار"
+    mission: "مهمة"
+    no_match: "لم يتم العثور على بيانات مطابقة."
+    question_selection: "حدد سؤال"
+    report_type: "نوع التقرير"
+    response_count: "مجموع التسليمات"
+    see_dependent_questions:
+      zero: "See dependent questions"
+      one: "See dependent questions"
+      two: "See dependent questions"
+      few: "See dependent questions"
+      many: "See dependent questions"
+      other: "أنظر الأسئلة المتعلقة"
+    show_examples: "عرض أمثلة"
+    show_text_responses: "عرض نص الردود؟"
+    showing_limited_answers: "عرض فقط أول٪ {count} الإجابات"
+    submitted_by_at: "بواسطة٪ {user} في٪ {datetime}"
+    subset_intro: "بيانات للردود التي كانت الإجابة على '٪ {question}' السؤال  '٪ {disagg_value}"
+    tally: "إحصاء"
+    tally_type: "ما الذي تود إحصائه؟"
+    these_questions: "هذه الأسئلة بالتحديد"
+    total_rows: "مجموع السطور:٪ {count} "
+    view_response: "رد #٪ {id}"
+    what_attrib_col_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس للأعمدة (اختياري)؟"
+    what_attrib_row_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس السطور(اختياري)؟"
+    what_bar_style: "أي نمط للشريط تريد؟"
+    what_percent_style: "أي نمط للنسبة المئوية تريد؟"
+    what_columns_in_list: "ما هي الأعمدة التي تريد رؤيتها في القائمة؟"
+    what_form: "أي استمارة تريد أن تستعملها لارسال التقرير عنها؟"
+    what_type: "أي نوع من التقارير تريد؟"
+    which_calculation: "أي الحسابات تريد أن تطبق (إن وجدت)؟"
+    which_forms: "بأي الاستمارت انت مهتم؟"
+    which_questions: "أي الأسئلة تريد أن تضم؟"
+    bar_styles:
+      side_by_side: "جنب إلى جنب"
+      stacked: "مكدسة"
+    calculation_descriptions:
+      identity: "لا شيء"
+      zero_nonzero: "إذا كان الجواب صفر أو أكبر من صفر"
+    display_types:
+      table: "جدول"
+      bar_chart: "شريط المخطط"
+    descriptions:
+      tally_report: "احصاءات الإجمالية الإجابات أو الردود، مجمعة حسب السمات المهمة."
+      list_report: "وهناك قائمة من الإجابات ميزات لمجموعة من الردود ."
+      standard_form_report: "ملخص السؤال تلو السؤال الخاص بالردود لاستمارة محددة."
+    examples:
+      list_report:
+      - List of answers to the Complaints and OtherIrreg questions along with the polling place number
+      - List of all polling place numbers, with no duplicates
+      - List of submitter name, date, and answer to the NeedSecurityContact question
+      standard_form_report:
+      - Summaries (percentage, averages, medians, etc.) of all questions on a form
+      - Can be grouped by question type or question tag
+      - Can be split by the answer to a specific question (e.g. region or urban/rural)
+    percent_types:
+      none: "لا توجد نسبة مئوية"
+      overall: "النسبة المئوية الكلية"
+      by_row: "النسبة المئوية على أساس السطر "
+      by_col: "النسبة المئوية على أساس العمود"
+    question_labels:
+      code: "رموز فقط (تحفظ المسافات)"
+      title: "العناوين الكاملة (أسهل في القراءة)"
+    question_orders:
+      number: "بواسطة الرقم"
+      type: "بواسطة النوع"
+    standard_form_report:
+      overall_headers:
+        dates: "تواريخ"
+        responses: "ردود"
+      stat_headers:
+        mean: "معدل"
+        median: "متوسط"
+        min: "أقل"
+        max: "أكثر"
+      type_sets:
+        categorical: "بيانات مصنفة"
+        numbers: "بيانات احصائية"
+        dates: "تواريخ"
+        times: "أوقات"
+        short_text: "اجابات نصية قصيرة"
+        long_text: "اجابات نصية طويلة"
+    tally_types:
+      answer: "إجابات لكل سؤال"
+      response: "ردود لكل إجابة/ ميزة"
+    tally_type_examples:
+      answer: "احصائية ال(نعم) وال (لا) لكل الأسئلة ذا الإجابات بنعم أو لا "
+      response: "احصائيات الردود لكل استمارة لكل فريق"
+    text_response_options:
+      all: "عرض الكل"
+      short_only: "لا تعرض الأسئلة النصية الطويلة"
+      none: "لا تعرض أي شيء"
+  response:
+    edit_this_response: "تعديل هذا الرد"
+    export_to_csv: "تصدير بصيغة CSV"
+    loading: "تحميل الرد..."
+    observation_time: "وقت المراقبة "
+    save_and_mark_reviewed: "حفظ و تؤشر بأن تمت المراجعة"
+    view_response: "عرض الرد"
+    checked_out: "تم فحص هذا الرد بواسطة:"
+    remove_media_object_confirm:
+      image: "هل انت متأكد من أنك تريد حذف الصورة؟"
+      audio: "هل أنت متأكد من أنك تريد حذف هذا الصوت؟"
+      video: "هل أنت متأكد من أنك تريد حذف هذا الفديو؟"
+    upload_progress_notice: "التحميل قيد التنفيذ..."
+    drop_message: "انقر أو إجلب الملف هنا"
+    drop_more_info: "معلومات أكثر"
+    drop_hint:
+      image: "يجب أن يكون حجم الصورة على الأكثر 5 ميغا بايت. الصيغ المقبولة هي: JPG، PNG."
+      video: "يجب أن يكون حجم الفيديو على الأكثر 25 ميغا بايت. الصيغ المقبولة هي: 3GP، MP4، webm، MPEG، WMV، AVI."
+      audio: "ينبغي أن يكون حج الملف الصوتي على الأكثر 10 ميغابايت. الصيغ المقبولة هي: MP3، OGG، webm، wav."
+  role:
+    role: "دور"
+    staffer: "موظف"
+    coordinator: "منسق"
+    admin: "إدارة"
+    blank: "لا شيء"
+  search:
+    blank: "فارغ"
+    examples:
+      users:
+      - john smith
+      - phone:+443726458364
+      - login:jsmith
+      - email:jsmith@example.com
+      - group:"The Smiths"
+      questions:
+      - poll workers
+      - code:BallotBoxes
+      - type:select-one
+      sms:
+      - poll workers
+      - 1.b
+      - '+1234567890'
+      - john smith
+      - jsmith
+      - type:reply
+      - date >= 2015-01-29
+      - datetime < "2015-01-12 14:00"
+    expected: "متوقع"
+    help_link: "مساعدة البحث"
+    help_title: "مساعدة البحث"
+    help_text:
+      users: |-
+        ## Qualifiers
+
+        بحث بسيط مثل:
+
+        * __romeo juliet__
+
+        مباريات أسماء المستخدمين، معرفات تسجيل الدخول، ورسائل البريد الإلكتروني على كل كلمة. للبحث على أساس سمات محددة، استخدم التصفيات المؤهلة ل، على سبيل المثال:
+
+        * __email: @ example.com__
+
+        سوف ابحث عن المستخدمين مع عناوين البريد الإلكتروني مطابقة'@example.com'
+
+        الجمع بين كل من فوق لتضييق نطاق البحث :
+
+        * __Susan البريد الإلكتروني: @ example.com__
+
+        سوف ابحث عن المستخدمين اسمه سوزان مع address.
+        example.com البريد الإلكتروني
+        أنت يمكن أن تتطابق القيم فارغة باستخدام '[] فارغة':
+
+        * __phone: [فارغ] __
+
+        مجموعة كاملة من التصفيات يمكنك استخدامها على النحو التالي:
+
+        * __name__ name
+        للمستخدم بالكامل * __login__ تسجيل الدخول name
+        للمستخدم * __email__ address
+        البريد الإلكتروني للمستخدم * __phone__ رقم الهاتف الخاص بالمستخدم (لا شرطات أو غيرها من علامات الترقيم)
+        * __group__ membership
+        المجموعة للمستخدم
+        يسمح المباريات الجزئي لجميع qualifiers.
+
+        ## تطابق Phrases
+
+        عبارات بعينها يمكن أن يقابله أرفق العبارة بين علامتي تنصيص مزدوجة:
+
+        * __ "جون سميث" __
+
+        # # جميع الشروط مقابل أي Term
+
+        افتراضيا، كافة الشروط الواردة في البحث يجب أن تكون مطابقة. على سبيل المثال،
+
+        * __john smith__
+
+        مباريات فقط للمستخدمين مع "جون" و "سميث" على حد سواء تظهر باسمهم. استخدام شريط عمودي ( '|') حرف لتتناسب مع العديد من الأسماء:
+
+        * __abdul | خوانيتا | clarice__
+
+        و'| ويمكن أيضا الطابع استخدامها مع التصفيات المؤهلة ل:
+
+        * __email :( john@example.com | patty@foo.com) __
+
+        مباريات المستخدمين مع أي من البريد الإلكتروني أعلاه addresses.
+
+        ## Negation
+
+        يمكنك ينفي ل البحث المؤهلين باستخدام مشغل النفي:
+
+        * __name = سوف Oluwaseun__
+
+        تطابق المستخدمين عدم نشر اسمه "Oluwaseun '!.
+      questions: |-
+        ## Qualifiers
+
+        بحث بسيط مثل:
+
+        * __romeo juliet__
+
+        يبحث في عناوين السؤال لكل كلمة. للبحث بناء على السؤال سمات، استخدم التصفيات المؤهلة ل، على سبيل المثال:
+
+        * __code: سوف BallotBox__
+
+        عرض الأسئلة مع "صندوق أوراق الاقتراع" في code.
+        على
+        الجمع بين كل من فوق لتضييق نطاق البحث:
+
+        * __romeo كود جولييت : BallotBox__
+
+        سوف تظهر الأسئلة مع "صندوق أوراق الاقتراع" في التعليمات البرمجية الخاصة بهم التي عناوين تحتوي أيضا على عبارة "روميو" و "juliet'.
+
+        مجموعة كاملة من التصفيات يمكنك استخدامها على النحو التالي:
+
+        * __title__ عنوان السؤال ( مطابقة الجزئية المسموح به)
+        * __code__ كود السؤال (مطابقة الجزئية سمحت)
+        * __type__ نوع السؤال (٪ {question_types})
+        * __tag__ مقترحة علامات تطبيقها على question
+
+        ## يمكن أن يقابل تطابق Phrases
+        العبارات الدقيقة التي أرفق العبارة بين علامتي تنصيص مزدوجة:
+
+        * __ "المطر في اسبانيا" __
+
+        نقلت مزدوجة العبارات يمكن أن تكون مختلطة مع شروط نقل غير:
+
+        * __apples البرتقال "فاكهة العاطفة" __
+
+        ## جميع الشروط مقابل أي Term
+
+        افتراضيا، كافة الشروط الواردة في البحث يجب أن تكون مطابقة. على سبيل المثال،
+
+        * __alpha ليما peru__
+
+        مباريات الأسئلة فقط مع كل ثلاثة من هذه الكلمات. استخدام شريط عمودي ( '|') حرف لمطابقة عدة كلمات / عبارات:
+
+        * __apples | البرتقال | "العاطفة الفاكهة" __
+
+        و'| ويمكن أيضا الطابع استخدامها مع التصفيات المؤهلة ل:
+
+        * __code :( الأسود | "الدببة وأسماك القرش" | النمور) __
+
+        مباريات الأسئلة مع أي من أعلاه codes.
+
+        ## Negation
+
+        يمكنك ينفي بحث المؤهلين باستخدام مشغل النفي:
+
+        * __code = Widgets__
+
+        سوف تطابق الأسئلة مع أي رمز لا تحتوي على "القطع".
+      sms: |-
+        ## تصفيات ##
+
+        بحث بسيط مثل:
+
+        * __romeo juliet__
+
+        يبحث في محتوى الرسالة، اسم المستخدم، الاسم الكامل المستخدم، ورقم الهاتف لكل word.
+        إلى البحث على أساس السؤال سمات، استخدم التصفيات المؤهلة ل، على سبيل المثال:
+
+        * __type: incoming__
+
+        سوف تظهر الرسائل الواردة only.
+
+        الجمع بين كل من فوق لتضييق نطاق البحث:
+
+        * __romeo جولييت نوع: incoming__
+
+        سوف تظهر الرسائل الواردة التي تحتوي أيضا على "روميو" الكلمات و "juliet'.
+
+        مجموعة كاملة من التصفيات يمكنك استخدامها على النحو التالي:
+
+        * __content__ محتوى الرسالة (مطابقة الجزئية سمحت)
+        * __type__ نوع الرسالة (واردة، وردا على ذلك، أو البث) (مطابقة الجزئية سمحت)  * __username__ اسم المستخدم للمرسل أو المتلقي (مطابقة الجزئية سمحت)  * __name__ الاسم الكامل للمرسل أو المتلقي (مطابقة الجزئية سمحت)
+        * __number__ رقم الهاتف المرسل أو المتلقي (مطابقة الجزئية سمحت)
+        * __date__ التاريخ الذي تم إرسال الرسالة أو تلقيها (مثل 2015/01/29)
+        * __datetime__ تاريخ ووقت تم إرسال الرسالة أو تلقيها (استخدم علامات الاقتباس والوقت على مدار 24 ساعة مثلا: "2015/01/29 14:00")
+
+        ## تطابق جمل ##
+
+        عبارات بعينها يمكن أن يقابل أرفق العبارة بين علامتي تنصيص مزدوجة:
+
+        * __ "المطر في اسبانيا" __
+
+        مزدوجة نقل العبارات يمكن أن تكون مختلطة مع شروط نقل غير:
+
+        * __apples البرتقال "فاكهة العاطفة" __
+
+        ## جميع الشروط مقابل أي Term
+
+        افتراضيا، يجب أن يقابل كل الشروط الواردة في البحث. على سبيل المثال،
+
+        * __alpha ليما peru__
+
+        مباريات الأسئلة فقط مع كل ثلاثة من هذه الكلمات. استخدام شريط عمودي ( '|') حرف لمطابقة عدة كلمات / عبارات:
+
+        * __apples | البرتقال | "العاطفة الفاكهة" __
+
+        و'| ويمكن أيضا الطابع استخدامها مع التصفيات المؤهلة ل:
+
+        * __content :( الأسود | "الدببة وأسماك القرش" | النمور) __
+
+        مباريات الأسئلة مع أي من أعلاه codes.
+
+        ## Negation
+
+        يمكنك ينفي بحث المؤهلين باستخدام مشغل النفي:
+
+        * __type = broadcast__
+
+        سوف تطابق الرسائل التي لا تحتوي على "البث" نوع.
+    invalid_op: "المشغل '٪ {op}' غير صالحة للمؤهل  '٪ {qualifier} ."
+    multiple_terms_not_allowed: "لا يسمح للمصطلحات المتعددة ل '٪ {qualifier} \"عمليات البحث ما لم يستخدم\"أو\"."
+    must_use_qualifier: "يجب استخدام مؤهل لجميع مصطلحات البحث."
+    or_not_allowed_between: "لا يسمح ب\"أو\" بين التعبيرات."
+    invalid_qualifier: "'٪ {chunk}' ليس صالحة لبحث مؤهل."
+    search_error: "خطأ في البحث"
+    unexpected: "استعلام البحث الخاص بك غير مفهوم بسبب وجود نص غير متوقع في '٪ {str}'."
+    unexpected_end: "استعلام البحث الخاص بك غير مفهوم بسبب وجود نص غير متوقع في النهاية."
+  setting:
+    change_sms_password: "تغيير كلمة المرور"
+    change_twilio_auth_token: "تغيير رمز التصريح"
+    change_api_key: "تغيير مفتاح API"
+    override_code_warning: "لاحظ أن رمز التجاوز الجديد لن يعمل مع الاستمارات التي تم تحميلها بالفعل. يجب عليك تسجيل الرمز الموجود إذا كان هذا مشكلة. هل أنت متأكد أنك تريد إنشاء رمز جديد؟"
+    using_incoming_sms_token: "كيف استخدم هذا؟"
+    headings:
+      general: "الإعدادات العامة"
+      sms: "إعدادات الرسالة النصية القصيرة المشتركة"
+      twilio: "إعدادات Twilio"
+      frontlinecloud: "إعدادات FrontlineCloud "
+  sms:
+    extra_recipients_html: "<br/> ... و٪ {count} أكثر"
+    no_valid_adapter: "لا يوجد محول رسالة نصية قصيرة صادرة صالح، الرجاء التحقق من إعدادات."
+    outgoing_provider: "مزود الرسائل النصية القصيرة الصادرة"
+    timestamp_with_diff_html: "٪ {time} <br/> (٪ أرسلت {time_diff} في وقت سابق)"
+  sms_console:
+    back_to_forms: "العودة للاستمارات "
+    no_reply: "لا يوجد رد."
+    submit_error: "كان هناك خطأ في تقديم الاختبار."
+  sms_form:
+    decoding:
+      answer_error_intro: "عفواً، إجابتك '٪ {value}' للسؤال٪ {rank} على الاستمارة '٪ {form_code}"
+      answer_not_date: "لم يكن تاريخ صالح"
+      answer_not_datetime: "لم يكن التاريخ و الوقت صالحين"
+      answer_not_decimal: "لم يكن رقم صالح"
+      answer_not_integer: "لم يكن عدد صحيح صالح"
+      answer_not_time: "لم يكن وقت صالح"
+      answer_not_valid_option: "لم يكن خيار صالح"
+      answer_not_valid_long_option_multi: "يحتوي خيارات متعددة غير صالحة"
+      answer_not_valid_option_multi: "يحتوي على خيار غير صالح '٪ {invalid_options}' "
+      answer_not_valid_options_multi: "يحتوي على خيارات غير صالحة '٪ {invalid_options}' "
+      congrats: "تم استلام ردكم على الاستمارة '٪ {form_id}'. شكرا!"
+      duplicate_answer: "عفواً، يتضمن تقريركم إجابات مكررة للسؤال٪ {rank}."
+      duplicate_submission: "عفواً، ردكم هو نسخة مكررة من رد اخر قدم مؤخرا."
+      first_answer_invalid: "آسف، ولكن٪ {token} ليست إجابة صحيحة. تأكدمن أن تضع نقطة بعد رقم السؤال."
+      form_not_found: "عفواً، لا يوجد أي استمارة مع الرمز '٪ {form_code}'."
+      form_not_permitted: "عفواً، غير مصرح لك بتسليم رد على الاستمارة  '٪ {form_id}'."
+      form_not_published: "عفواً، الاستمارة'٪ {form_code}' غير متوفرة حاليا لتسليم الردود."
+      form_not_smsable: "عفوااً، الاستمارة '٪ {form_code}' غير متوفرة حاليا لتقديم رسائل نصية قصيرة."
+      form_version_outdated: "عفواً، رمز الاستمارة '٪ {form_code}' تشير إلى نسخة نظام قديمة. يرجى الحصول على دليل التقديم المحدث."
+      invalid_form_code: "عفوا، '٪ {form_code}' ليس رمز استمارة صحيح."
+      question_doesnt_exist: "عفواً، السؤال٪ {rank} غير موجود في الاستمارة'٪ {form_id}'."
+      user_not_found: "عفواً، لم يتم العثور عليك في النظام"
+    incoming_numbers:
+      id: "هوية"
+      phone_number: "رقم_هاتف"
+    validation:
+      invalid_answer: "عفواً، الجواب على السؤال٪ {rank}٪ {error}."
+      missing_answer: "عفواً، الإجابة على السؤال المطلوب٪ {ranks} كان مفقود من ردكم على الاستمارة '٪ {form_id}'."
+      missing_answers: "عفواً، الإجابة على السؤال المطلوب٪ {ranks} كان مفقود من ردكم على الاستمارة '٪ {form_id}'."
+  standard:
+    import: "استيراد"
+    import_choose_one:
+      forms: "الرجاء اختيار استمارة واحد على الأقل لكي تستورد."
+      option_sets: "الرجاء اختيار مجموعة خيار واحد على الأقل لكي تستورد."
+      questions: "الرجاء اختيار سؤال واحد على الأقل لكي يستورد."
+    import_errors: "كان هنالك أخطاء."
+    import_instructions:
+      forms: "تحقق من المربعات بجوار الاستمارات التي ترغب في استيرادها. ثم انقر فوق زر \"استيراد\"."
+      option_sets: "تحقق من المربعات بجوار مجموعات الخيار التي ترغب في استيرادها. ثم انقر فوق زر \"استيراد\"."
+      questions: "تحقق من المربعات بجوار الأسئلة التي ترغب في استيرادها. ثم انقر فوق زر \"استيراد\"."
+    import_standard:
+      forms: "استورد استمارات قياسية"
+      option_sets: "استورد مجموعات خيار قياسية"
+      questions: "استورد أسئلة قياسية"
+    import_success:
+      forms:
+        zero: " تم استيراد ٪ {count} استمارات بنجاح."
+        one: " تم استيراد ٪ {count} استمارة بنجاح."
+        other: " تم استيراد ٪ {count} استمارات بنجاح."
+      option_sets:
+        zero: " تم استيراد ٪ {count} مجموعات خيار بنجاح."
+        one: " تم استيراد ٪ {count} مجموعة خيار بنجاح."
+        other: " تم استيراد ٪ {count} مجموعات خيار بنجاح."
+      questions:
+        zero: " تم استيراد ٪ {count} أسئلة بنجاح."
+        one: " تم استيراد ٪ {count} سؤال بنجاح."
+        other: " تم استيراد ٪ {count} أسئلة بنجاح."
+    no_importable:
+      forms: "لا يوجد شيء متوفر للاستيراد. إما لا توجد استمارات قياسية، أو أنها جميعها مستوردة بالفعل."
+      option_sets: "لا يوجد شيء متوفر للاستيراد. إما لا توجد مجموعات خيار قياسية، أو أنها جميعها مستوردة بالفعل."
+      questions: "لا يوجد شيء متوفر للاستيراد. إما لا توجد أسئلة قياسية، أو أنها جميعها مستوردة بالفعل."
+    standard: "قياسية "
+    standard_forms: "استمارات قياسية"
+    there_were_errors:
+      zero: "هناك٪ {count} من الأخطاء."
+      one: "هناك٪ {count} خطأ."
+      other: "هناك٪ {count} من الأخطاء."
+  unauthorized:
+    default: "غير مصرح لك للوصول إلى هذه الصفحة أو العملية."
+    must_login: "عليك تسجيل الدخول للوصول إلى هذه الصفحة."
+  user_batch:
+    instructions_html: |-
+      تحميل جدول بيانات مع مستخدمينك. فقط XLSX جداول البيانات إكسل وملفات CSV ستقبل.
+
+      نموذج جدول بيانات متاح في <a href="٪{xlsx_url}"> XLSX </a> و <a href="٪{csv_url}"> CSV < / أ> صيغ كنقطة بداية.
+  user:
+    add_assignment: "إضافة واجب "
+    api_key:
+      regenerate: "إعادة انتاج"
+    back_to_index: "العودة لقائمة المستخدمين"
+    bulk_destroy: "حذف المستخدمين المتعددين"
+    bulk_destroy_confirm:
+      zero: "هل أنت متأكد من أنك لا تريد حذف أي مستخدم؟"
+      one: "هل أنت متأكد من أنك تريد حذف هذا المستخدم؟"
+      other: "هل أنت متأكد أنك تريد حذف هؤلاء٪ {count} المستخدمين؟"
+    bulk_destroy_deleted:
+      zero: "لم يحذف أي مستخدم بنجاح"
+      one: "٪ {count}مستخدم حذف بنجاح."
+      other: "حذف٪ {count} من المستخدمين بنجاح."
+    bulk_destroy_deactivated:
+      zero: "لم يوقف تفعيل أي مستخدم"
+    bulk_destroy_skipped:
+      zero: "لم يتم تخطي أي مستخدم"
+      one: "تم تخطي٪ {count} مستخدم."
+      other: "تم تخطي٪ {count} مستخدمين."
+    bulk_destroy_skipped_current: "عدم حذف المستخدم الحالي"
+    create_multiple: "إنشاء مستخدمين متعددين"
+    edit_profile: "تعديل الحساب"
+    export_vcard: "تصدير بصيغة vCard"
+    forgot_password: "نسيت كلمة المرور؟"
+    leave_password_alone: "ترك كلمة المرور لوحدها"
+    login_instructions:
+      closing:
+      - Please note the 's' in 'https' in the site URL.
+      - If you'd like to choose a more memorable password, you can change your password using the website.
+      - 'The above credentials will also work on your Android device. To enter your credentials,
+
+        start the ''ODK Collect'' application, press the ''Menu'' button, tap ''Preferences'',
+
+        and then tap each of ''Username'' and ''Password''.'
+      preamble_singular: |-
+        في ما يلي تعليمات الدخول. يرجى طباعة هذه الصفحة الآن تأكد أن يتلقىها المستخدم أدناه.
+        كون كلمة المرور تخزن بطريققة مشفرة، ستكون التعليمات غير قابل للاسترجاع بعد مغادرة هذه الصفحة.
+      preamble_plural: |-
+        في ما يلي تعليمات الدخول. يرجى طباعة هذه الصفحة الآن تأكد أن يتسلمها المستخدمين.
+        كون كلمة المرور تخزن بطريققة مشفرة، ستكون التعليمات غير قابل للاسترجاع بعد مغادرة هذه الصفحة.
+      site_url: "رابط الموقع"
+      title: "تعليمات تسجيل الدخول "
+      welcome: "أهلا بك في٪ {الموقع}. بيانات الاعتماد الخاصة بك هي:"
+    logout_success: "لقد تم تسجيل خروجك بنجاح."
+    profile_updated: "تم تحديث الحساب بنجاح."
+    reset_password_and: "إعادة تعيين كلمة المرور و"
+    reset_password_hint_reset: "اختيار ما إذا كان هذا المستخدم قادر على إعادة تعيين كلمة المرور والكيفية."
+    reset_password_label_choose: "أنشاء كلمة المرور"
+    reset_password_label_reset: "إعادة تعيين كلمة المرور؟"
+    send_email_instructions: "أرسل بريد الكتروني بالتعليمات"
+    set_admin_password: "تعيين كلممة مرور لمسؤل ومعلومات حساب "
+    show_printable_instructions: "عرض تعليمات قابلة للطباعة"
+  user_group:
+    create_prompt: "الرجاء كتابة اسم مجموعتك."
+  welcome:
+    awaiting_review: "**٪ {count} ** بانتظار المراجعة"
+    by_you: "**٪ {count} ** تقديمات بواسطتك"
+    form_count: "**٪ {count} إستمارات**"
+    in_the_past_day: "**٪ {count} ** في اليوم الماضي"
+    in_the_past_hour: "**٪ {count} ** في الساعة الماضية "
+    in_the_past_month: "**٪ {count} ** في الشهر الماضي "
+    in_the_past_week: "**٪ {count} ** في الاسبوع الماضي"
+    in_the_past_year: "**٪ {count} ** في السنة الماضية "
+    no_mission_selected:
+      title: "لم تحدد أي مهمة "
+      choose: "يرجى تحديد مهمة من القائمة المنسدلة في أعلى يمين الشاشة."
+      choose_or_create: "يرجى تحديد مهمة من القائمة المنسدلة في أعلى يمين الشاشة. أو يمكنك"
+      create_link: "إنشاء مهمة جديدة"
+      need_to_create: "لا يوجد حالياً أي مهمة، الرجاء"
+      no_missions: "لا يوجد حاليا أي مهمة في النظام. يرجى الاتصال بالمسؤول."
+    no_recent: "** 0 ** الردود الأخيرة"
+    published_form_count: "**٪ {count} ** استمارة نشرت"
+    select_a_form: "حدد الاستمارة للتقديم"
+    select_a_report: "اختار تقرير لعرضه"
+    total_responses: "**٪ {count} مجموع الردود **"
+    total_users: "**٪ {count} ** مجموع المستخدمين"
+    unpublished_form_count: "**٪ {count} ** استمارات غير منشورة"

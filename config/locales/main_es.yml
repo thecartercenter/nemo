@@ -1,6 +1,5 @@
 es:
-  locale_name: "Español"
-
+  locale_name: "Inglés"
   common:
     accept: "Aceptar"
     active: "Activo"
@@ -237,7 +236,6 @@ es:
       option_set:
         answers: "Respuestas"
         geographic: "¿Es Geográfico?"
-        multilevel: "¿Es Multinivel?"
         options: "Opciones "
         option_levels: "Niveles"
       qing_group:
@@ -294,9 +292,7 @@ es:
         viewed_at: "Última Vista"
       setting:
         allow_unauthenticated_submissions: "¿Permitir entregas no autentificadas?"
-        incoming_sms_numbers_str: "Número entrante"
         preferred_locales_str: "Idiomas Preferidos"
-        default_outgoing_sms_adapter: "Proveedor Saliente"
         override_code: "Código de Control Manual"
         external_sql: "SQL Externo"
         timezone: "Zona Horaria"
@@ -323,11 +319,6 @@ es:
         pref_lang: "Idioma Preferido"
         role: "Papel"
         api_key: "Clave API"
-      user_batch:
-        batch: "Atributos de usuario"
-    errors:
-      messages:
-        invalid_password: "La contraseña debe incluir por lo menos un número, una letra minúscula y una letra mayúscula."
     table_headers:
       response:
         incomplete: "¿Incompleto?"
@@ -387,9 +378,7 @@ es:
       form:
         name: "Un nombre descriptivo para el formulario"
         smsable: "Si el formulario acepta envíos SMS. Esto puede afectar cuando el número de versión sea incrementado."
-        allow_incomplete: "Si se permiten o no envíos incompletos en circunstancias atenuantes cuando información completa no está disponible. Tenga en cuenta que la pregunta \"obligatoria\" debería ser seleccionada como preferida aquí."
         version: "El número de la versión actual y código de letras."
-        access_level: "Público: Cualquier usuario ELMO puede acceder a los datos a través de la API. Protegido: sólo usuarios específicos pueden tener acceso a los datos a través de API. Privada: nadie puede acceder a los datos a través de la API."
       mission:
         name: "Un nombre para esta Misión. Un máximo de 32 caracteres. Debe ser único. Recuerde incluir del año, en caso de que sea una misión en el futuro con el mismo nombre."
         locked: "Si una misión está bloqueadas, las Respuestas y los Formularios no se puede crear o editar y los Usuarios no se pueden agregar o eliminar."
@@ -398,7 +387,6 @@ es:
       option_set:
         geographic: "Si este Conjunto de Opciones representa información geográfica, por ejemplo, un conjunto de provincias o regiones."
         name: "Un nombre que resume este conjunto de opciones. Los usuarios normales no verán este nombre."
-        multilevel: "Si el conjunto de opciones tiene varios niveles de opciones, como país -> estado -> ciudad."
         options:
           editable: "Añadir las opciones existentes, escribiendo y haciendo click en \"Agregar\".  Si no puede ver una opción en la lista desplegable, puede agregar una nueva haciendo click en \"Crear Nueva Opción\"."
           read_only: "Las opciones que aparecerán en las preguntas en las que se utiliza esta opción."
@@ -438,12 +426,6 @@ es:
           * El idioma standard de preferencia para nuevos usuarios
           * El idioma standard para las respuestas por SMS
           * El idioma para las Preguntas y las Opciones
-        override_code: |-
-          Debe enviar este código a los observadores si es necesario que puedan enviar respuestas incompletas. ODK no permitirá que se entreguen respuestas incompletas sin este código.
-
-          Si crea un código nuevo, por favor guarde el código viejo si aún existen formularios anteriores. El nuevo código sólo funcionara con los formularios que hayan sido descargados después de que el nuevo código haya sido creado.
-        incoming_sms_numbers_str: "Introduzca el número de teléfono al que se deberán enviar los SMSes con los formularios SMS. Esto aparecerá en la guía SMS. Sólo es necesario si está enviando a travé de SMS presentación."
-        default_outgoing_sms_adapter: "El adaptador que se utiliza para enviar SMSes salientes. Tenga en cuenta que las respuestas SMS pueden ser enviadas a través de un adaptador diferente, dependiendo del adaptador del que provienen."
         external_sql: "El código SQL utilizado para extraer los datos para su uso en aplicaciones externas. Haga click en \"Seleccionar todo\" y, a continuación, presione Ctrl-C para copiar."
         timezone: "La zona horaria que aparece en todo el sitio web."
       sms/test:
@@ -451,24 +433,12 @@ es:
         body: "Escriba el cuerpo del mensaje."
       user:
         name: "El nombre completo del usuario. Ejemplo: \" John Doe \" o \" Equipo 1.1 '"
-        login: "El nombre de usuario se utilizará para iniciar sesión. Haga click en el botón de sugerir para sugerir un nombre de inicio de sesión."
-        phone: "Número de teléfono deberá incluir el código del país. Ejemplo: +25680344523"
-        phone2: "Número de teléfono deberá incluir el código del país. Ejemplo: +25680344523"
         admin: "Si el usuario es un administrador de todo el sistema o no. Se puede controlar por los permisos para cada misión utilizando los campos que se aparecen a continuación."
         assignments: "Las misiones a las que este usuario ha sido asignado."
         password: "Introduzca una nueva contraseña aquí si desea cambiar su contraseña actual."
         password_confirmation: "Introduzca la nueva contraseña otra vez."
         pref_lang: "El idioma en el que desea utilizar el sistema."
         role: "El papel del usuario en la misión actual, y si están actualmente activos o no. Los usuarios inactivos no pueden acceder a la misión en absoluto."
-        api_key: "Utilice esta tecla para conectar con otras aplicaciones de Elmo."
-      user_batch:
-        batch: |-
-          Entre los nombres, direcciones de correo electrónico y números de teléfono (CON el código del país), uno por línea, separados por comas o justificaciones. Por ejemplo:
-
-          Alice Merrywinkle, alice@winkle.org, +20112313411
-          Chung Li, cli@gmail.com
-          Forgo Niambot, +203300303, +2083748374
-          Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
     errors:
       messages:
         taken: "Introduzca un valor único."
@@ -493,8 +463,6 @@ es:
           required: "Por favor, introduzca un valor."
         assignment:
           blank: "es requerido"
-        broadcast:
-          no_recipients: "Ninguno de estos destinatarios recibiría esta emisión . Por favor, ajuste el medio y vuelva a intentarlo."
         condition:
           all_required: "Todos los campos de con condición son obligatorios."
         form:
@@ -576,12 +544,9 @@ es:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "Se requiere al menos una tarea si el usuario no es un administrador."
-            login:
-              invalid: "Por favor, use sólo letras , números o puntos."
             reset_password_method:
               cant_passwd_email: "No puede %{verb} la contraseña por correo electrónico porque no ha especificado una dirección de correo electrónico."
   layout:
-    about: "A cerca de ELMO"
     actions: "Acciones"
     are_you_sure: "Está seguro/a?"
     change_language: "Cambiar Idioma"
@@ -680,7 +645,6 @@ es:
     error_messages:
       consecutive_failed_logins_limit_exceeded: "Se ha excedido el límite de intentos de inicio de sesión erróneos. Su cuenta ha sido inutilizada."
       email_invalid: "debe parecerse a una dirección de correo electrónico."
-      general_credentials_error: "La combinació de usuario/contraseña que ha introducido no es válida."
       login_blank: "Introduzca un nombre de usuario."
       login_invalid: "Sólo debe usar letras, números, espacios y . -_@"
       login_not_found: "Invalido."
@@ -689,7 +653,6 @@ es:
       not_approved: "Su cuenta no ha sido aprobada."
       not_confirmed: "Su cuenta no ha sido confirmada."
       password_blank: "Por favor introduzca una contraseña."
-      password_invalid: "No es válido."
     models:
       user_session: "Sesión de Usuario"
     attributes:
@@ -760,10 +723,8 @@ es:
       new: "Nueva Pregunta "
       show: "Pregunta: %{code}"
     responses:
-      edit: "Editar Respuesta: #%{id}"
       index: "Respuestas"
       new: "Nueva Respuesta "
-      show: "Respuesta: #%{id}"
     reports:
       index: "Informes"
       new: "Nuevo Informe"
@@ -799,7 +760,6 @@ es:
     this_answer: "Esta Respuesta"
   attrib_fields:
     form: "Formulario"
-    submitter: "Remitente"
     source: "Fuente"
     time_submitted: "Hora de Entrega"
     date_submitted: "Fecha de Entrega"
@@ -869,10 +829,7 @@ es:
     option_in_use_name_change_warning: "Esta opción se utiliza en otros formularios publicados o se hace referencia en las respuestas existentes. Usted debe tener cuidado de no cambiar el significado de la Opción."
     option_standard_copy_name_change_warning: "Esta opción es una copia de una opción estándar. Usted debe asegurarse de mantener el significado original de la Opción de modo que corresponda con el formato estándar."
     published_warnings:
-      form: "Este Formulario ha sido publicado, lo que significa que ya puede estar en las manos de los observadores. Algunos campos, por lo tanto , no se pueden editar y no se pueden añadir, eliminar o reordenar preguntas. Por favor proceda con cuidado si hace algún cambio."
       questioning: "El Formulario relacionado con los siguientes campos ya ha sido publicado, por lo tanto estos campos no se pueden editar."
-      question: "Esta Pregunta aparece en al menos un Formulario publicado, lo cual quiere decir que es posible que ya esté en las manos de los observadores. Por lo tanto, algunos campos no se pueden editar. Por favor, aseguresé de no cambiar el significado de la pregunta."
-      option_set: "Este Conjunto de Opciones aparece en al menos un Formulario publicado, lo que significa que ya puede estar en manos de los observadores, por lo tanto las Opciones no se pueden añadir, eliminar o reordenar. Por favor proceda con precaución si va a editar las Opciones."
       sms: "Tales cambios harán que los usuarios de los formularios SMS reciban un mensaje de error si ententan entregar la versión actual del Formulario."
       odk: "Estos cambios no desactivaran las Respuestas de ODK, pero pueden causar alguna pérdida de datos y/o Respuestas que no son válidas (por ejemplo, faltan respuestas necesarias)."
   form:
@@ -905,10 +862,6 @@ es:
     questions_add_success: "Preguntas añadidas con éxito."
     questions_remove_success: "Preguntas eliminadas con éxito."
     remove_selected: "Eliminar elementos Seleccionados"
-    remove_question_confirm:
-      zero: "¿Está seguro de que desea eliminar ningunas preguntas del formulario?"
-      one: "¿Está seguro de que desea eliminar esta pregunta del formulario?"
-      other: "¿Está seguro de que desea eliminar estas %{count} preguntas del formulario?"
     reqd_sym_definition: "Preguntas obligatorias están marcadas con un"
     save_and_publish: "Guardar y Publicar"
     saving_order: "Guardando la comanda..."
@@ -952,7 +905,6 @@ es:
     edit_option_level: "Editar este Nivel de Opción"
     huge_notice: "Este Conjunto de Opciones es muy largo (%{count} Options) y por lo tanto sólo una pequeña muestra de las Opciones están expuestas debajo. Puede editar el nombre y otras propiedades aquí pero por favor use las caracteríisticas de importación/exportación para editar las Opciones en si."
     leave_page_warning: "Al salir de esta página abandonará los cambios hechos en este Conjunto de Opciones."
-    multilevel_forbidden_notice: "Este Conjunto de Opciones está siendo usado actualmente por al menos una selección de varias preguntas y por lo tanto, no puede ser convertida a un set multi-nivel."
     new_option_level: "Nuevo Nivel de Opción "
     none_found: "No se han encontrado opciones correspondientes"
     searching: "Buscando..."
@@ -966,18 +918,15 @@ es:
   password_reset:
     check_email: "Instrucciones para restablecer la contraseña han sido enviadas por correo electrónico. Por favor mire su correo electrónico."
     enter_new_pass: "%{name}, por favor entre una nueva contraseña para su cuenta."
-    fill_out_form: "Rellene el siguiente formulario y las instrucciones para reestablecer su contraseña le serán enviadas por correo electrónico. Si no hay una dirección de correo electrónico asociada con su cuenta, su contraseña tendrá que ser cambiada por un administrador."
     success: "Contraseña actualizada con éxito."
     token_not_found: |-
       Lo sentimos, pero no hemos podido localizar su cuenta. Si está teniendo problemas intente copiar y pegar el URL
       desde su correo a su buscador or intente reiniciar el proceso de creación de una nueva contraseña.
-    user_not_found: "Ningún usuario fue encontrado con esa dirección de correo electrónico."
   permission_error:
     need_mission: "No se puede ver sin seleccionar una misión"
     need_login: "Debe iniciar sesión para ver la página."
     no_permission: "No tiene permiso para ver esa página."
     processing_error: "Error al procesar permiso."
-    enumerators_cant_change_submitter: "Los observadores no pueden cambiar el remitente de las respuestas."
     must_be_admin: "Debe ser un administrador para ver la página."
     must_be_logged_out: "Debe cerrar sesión para ver la página."
   question:
@@ -1029,9 +978,8 @@ es:
     how_to_display_questions: "¿Cómo se deben mostrar las preguntas?"
     how_to_display_results: "¿Cómo le gustaría mostrar los resultados?"
     how_to_order_questions: "¿Cómo deben organizarse las preguntas?"
-    loading_report: "Cargando..."
+    loading_report: "Cargando Informe..."
     questions_with_option_sets: "Preguntas con estos conjuntos de opciones"
-    missing_enumerators: "Observadores que no presentan Informes"
     mission: "Misión"
     no_match: "No se encontraron estadísticas coincidentes."
     question_selection: "Seleccione Preguntas"
@@ -1047,7 +995,6 @@ es:
     tally: "Recuento"
     tally_type: "¿Qué le gustaría recontar?"
     these_questions: "Estas preguntas específicas"
-    total_rows: "Filas Totales: %{count}"
     view_response: "Repuesta #%{id}"
     what_attrib_col_headers: "¿Qué atributo o pregunta le gustaría para los encabezados de la columna (opcional)?"
     what_attrib_row_headers: "¿Qué atributo o pregunta le gustaría para los encabezados de la fila?"
@@ -1073,11 +1020,6 @@ es:
       list_report: "Un listado inicial de respuestas y los atributos para un conjunto de respuestas."
       standard_form_report: "Un resumen de las respuestas pregunta por pregunta de un formulario específico."
     examples:
-      tally_report:
-      - Número de Muy Buena, Buena, etc. respuestas a la Pregunta General
-      - Porcentaje de Sí y No para todas las preguntas de tipo Sí-No
-      - Número de respuestas por formulario por cada equipo
-      - Porcentaje de Cero y No-Cero respuestas por Estado para la pregunta sobre ObservadoresDomesticos
       list_report:
       - Lista de respuestas a las Quejas y OtherIrreg preguntas junto con el número del centro de votación
       - Lista de todos los números de centros de votación, sin duplicados
@@ -1133,25 +1075,12 @@ es:
     checked_out: "Esta respuesta ha sido revisada por:"
   role:
     role: "Papel"
-    enumerator: "Observador "
     staffer: "Empleado"
     coordinator: "Coordinador"
     admin: "Administrador"
   search:
     blank: "en blanco"
     examples:
-      responses:
-      - '"some phrase"'
-      - submitter:"john smith"
-      - form:polling
-      - reviewed:1
-      - submit-date < 2013-10-15
-      - '{QuestionCode}:(disruption security)'
-      users:
-      - john smith
-      - telefono:+443726458364
-      - login:jsmith
-      - email:jsmith@example.com
       questions:
       - poll workers
       - code:BallotBoxes
@@ -1181,7 +1110,6 @@ es:
     override_code_warning: "Tenga en cuenta que el nuevo código de anulación no funcionará en los formularios ya descargados. Se debe anotar el código existente si esto es un problema. ¿Está seguro de que desea generar el código?"
     headings:
       general: "Configuración General"
-      sms: "Ajustes del SMS"
   sms:
     no_valid_adapter: "No hay ningún adaptador SMS saliente válido. Compruebe los ajustes."
     outgoing_provider: "Proveedor SMS Saliente"
@@ -1211,32 +1139,6 @@ es:
       invalid_form_code: "Lo sentimos, '%{form_code}' no es un código válido para formularios."
       question_doesnt_exist: "Lo sentimos, la pregunta %{rank} no existe en el formulario '%{form_code}'."
       user_not_found: "Lo sentimos, no pudimos encontrarle en el sistema"
-    guide:
-      all_required: "Por favor conteste todas las preguntas"
-      header: "Guía de Composición de SMS para ELMO"
-      not_all_required: "Las preguntas marcadas con un asterisco (*) son obligatorias."
-      pointers:
-        text: "Escriba su respuesta aquí. Abrevie si es necesario."
-        long_text: "Escriba su respuesta aquí . Abrevie si es necesario."
-        integer: "Escriba su respuesta aquí."
-        decimal: "Escriba su respuesta aquí."
-        select_one: "Escriba la letra de su elección aquí.. Escriba sólo una letra."
-        select_multiple: "Escriba la letra para cada elección aquí sin espacios."
-        datetime: "Escriba su respuesta aquí con el formato AAAAMMDD HHMM"
-        date: "Escriba su respuesta aquí, con el formato AAAAMMDD."
-        time: "Escriba su respuesta aquí con el formato HHMM."
-      step1: "Responda todas las preguntas a continuación y siga las instrucciones al final del formulario para enviar sus datos. Puede usar minúsculas o mayúsculas."
-      step2: "Ahora, por favor, haga lo siguiente para enviar sus datos:"
-      step2_substeps:
-      - Con su teléfono, empiece un SMS para %{submit_numbers}.
-      - Entre el contenido de cada línea en el lado derecho de cada página, empezando de arriba hacia abajo.
-      - Asegúrese de entrar cada línea exactamente igual. Cada línea es importante
-      - Note que cada respuesta está separada por un 'SPC'. Entre un espacio cada vez que vea 'SPC'. No añada ningún espacio adicional.
-      - Cuando haya acabado de poner la información, compruebe su mensaje para asegurarse de que corresponde al formulario.
-      - Envíe el mensaje y espere una respuesta con instrucciones adicionales.
-      - Si no recibe una respuesta tras 5 minutos, por favor vuelva a enviar el mensaje.
-      unique_code: "Este es el único código para el formulario"
-      unknown_number: "Número Desconocido"
     validation:
       invalid_answer: "Lo sentimos, la respuesta a la pregunta %{rank} %{error}."
       missing_answer: "Lo sentimos, la respuesta a la pregunta requerida %{ranks} no aparece en su respueta al formulario '%{form_code}'."
@@ -1282,16 +1184,6 @@ es:
   unauthorized:
     default: "No está autorizado a acceder esa página o funcionamiento."
     must_login: "Debe iniciar sesión para acceder a esa página."
-  user_batch:
-    bad_tokens: "No se pueden entender estas piezas: %{tokens}"
-    instructions: |-
-      En el espacio disponible abajo, ponga los nombres, direcciones de correo electrónico y números de teléfono (con el código del país), uno por línea, separados por comas o justificación. Por ejemplo:
-      Alice Merrywinkle, alice@winkle.org, +20112313411
-      Chung Li, cli@gmail.com
-      Forgo Niambot, +203300303, +2083748374
-      Stewbuilder Dennis, chow@yahoo.co.uk, +20923187493
-    error: "Se produjo un error al crear los usuarios. Vea a continuación."
-    success: "Los usuarios fueron creados con éxito."
   user:
     add_assignment: "Añadir Tarea."
     api_key:
@@ -1323,8 +1215,6 @@ es:
     logout_success: "Ha cerrado la sesión con éxito."
     profile_updated: "Perfil actualizado con éxito."
     reset_password_and: "Restablecer contraseña y"
-    reset_password_hint_choose: "Elegir cómo el usuario debe obtener su contraseña."
-    reset_password_hint_ending: "El sistema puede enviarles un correo electrónico con las instrucciones explicando cómo %{verb} la contraseña en línea, o bien puede crear una hoja de instrucciones imprimible que incluye una contraseña generada de forma aleatoria."
     reset_password_hint_reset: "Elegir si pueden y cómo pueden volver a restablecer la contraseña de usuario."
     reset_password_label_choose: "Creación de Contraseña"
     reset_password_label_reset: "¿Restablecer la contraseña?"
