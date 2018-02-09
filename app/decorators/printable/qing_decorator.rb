@@ -3,7 +3,7 @@ module Printable
     delegate_all
 
     def name_and_rank
-      str = "#{full_dotted_rank}. "
+      str = "#{full_dotted_rank}. ".html_safe
       str << h.reqd_sym if required?
       str << (name.presence || code)
     end
