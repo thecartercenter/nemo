@@ -150,8 +150,28 @@ feature "conditions in responses", js: true do
       fill_and_expect_visible(:grp1, "pix", visible -= [[:rpt3, inst: 1], [:rpt3, inst: 2]])
     end
 
-    scenario "condition on qing group should work" do
+    describe "condition on qing group" do
+      let!(:group) { create(:qing_group, form: form) }
+      let!(:qings) do
+        {}.tap do |qings|
+          qings[:text] = create_questioning("text", form)
+          qings[:grp_q1] = create_questioning("text", form, parent: group)
+        end
+      end
 
+      before do
+        group.update_attributes!(display_if: "all_met",
+          display_conditions_attributes: [{ref_qing_id: qings[:text].id, op: "eq", value: "foo"}])
+      end
+
+      scenario "should hide group members until conditions met" do
+        visible = [:text]
+        screenshot_and_open_image
+        fill_and_expect_visible(:text, "no", visible)
+        screenshot_and_open_image
+        fill_and_expect_visible(:text, "foo", visible << :grp_q1)
+        screenshot_and_open_image
+      end
     end
   end
 
