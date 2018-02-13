@@ -104,11 +104,8 @@ feature "conditions in responses", js: true do
     end
 
     scenario "various conditions on questionings should work" do
-      visible = [:long_text, :text2]
+      visible = [:long_text, :text2, :grp1]
       fill_and_expect_visible(:long_text, "fo", visible)
-
-      p qings[:grp1]
-      screenshot_and_open_image
 
       # integer also becomes available here because it depends on text1 not being bar,
       # which it isn't at first, because "" != "bar"
@@ -295,8 +292,11 @@ feature "conditions in responses", js: true do
       # TODO: When we add support for nested groups to this spec, we will have to respect the full
       # instance descriptor, not just a single number.
       (1..inst_count).each do |inst|
-        currently_visible = (visible_fields[qing] || []).include?(inst)
-        expect(page).to have_css(selector_for(qing, inst), visible: currently_visible)
+        if (visible_fields[qing] || []).include?(inst)
+          expect(find(selector_for(qing, inst))).to be_visible
+        else
+          expect(find(selector_for(qing, inst), visible: false)).not_to be_visible
+        end
       end
     end
   end
