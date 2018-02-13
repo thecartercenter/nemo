@@ -3,9 +3,6 @@ require "spec_helper"
 feature "conditions in responses", js: true do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
-  let(:year) { Time.now.year - 2 }
-  let(:group) { create(:qing_group, form: form) }
-  let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
 
   before do
     qings # Ensure these get created before we visit page.
@@ -14,6 +11,9 @@ feature "conditions in responses", js: true do
   end
 
   describe "different question types" do
+    let(:year) { Time.now.year - 2 }
+    let(:group) { create(:qing_group, form: form) }
+    let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
     let!(:qings) do
       {}.tap do |qings|
         qings[:long_text] = create_questioning("long_text", form)
@@ -103,9 +103,12 @@ feature "conditions in responses", js: true do
       end
     end
 
-    scenario "various conditions should work" do
+    scenario "various conditions on questionings should work" do
       visible = [:long_text, :text2]
       fill_and_expect_visible(:long_text, "fo", visible)
+
+      p qings[:grp1]
+      screenshot_and_open_image
 
       # integer also becomes available here because it depends on text1 not being bar,
       # which it isn't at first, because "" != "bar"
@@ -148,6 +151,10 @@ feature "conditions in responses", js: true do
 
       # Changing value in grp1 should make *both* rpt3s disappear.
       fill_and_expect_visible(:grp1, "pix", visible -= [[:rpt3, inst: 1], [:rpt3, inst: 2]])
+    end
+
+    scenario "condition on qing group should work" do
+
     end
   end
 
