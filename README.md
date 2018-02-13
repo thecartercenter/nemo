@@ -107,3 +107,6 @@ You can generate it by running ```rake db:migrate ``` if adding new migrations o
 ## Acknowledgements
 
 Parts of this document are based on the [Discourse Project](http://discourse.org) contribution guide at https://github.com/discourse/discourse/blob/master/CONTRIBUTING.md.
+
+This project is happily tested with BrowserStack!
+[![Tested with BrowserStack](https://www.browserstack.com/images/layout/browserstack-logo-600x315.png)](https://www.browserstack.com)
