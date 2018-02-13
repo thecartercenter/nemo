@@ -20,22 +20,15 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.FormView
 
   recipient_selection_changed: (e) ->
     specific = @form_value('broadcast', 'recipient_selection') == 'specific'
-    @$('.form-field.broadcast_recipient_ids')[if specific then 'show' else 'hide']()
+    @showField('recipient_ids', specific)
 
   medium_changed: (e) ->
     selected = @form_value('broadcast', 'medium')
     sms_possible = selected != 'email_only' && selected != ''
-
-    # Hide/show char limit and subject
-    if sms_possible
-      @$('#char_limit').show()
-      @$('.form-field.broadcast_which_phone').show()
-      @$('.form-field.broadcast_subject').hide()
-      @update_char_limit()
-    else
-      @$('#char_limit').hide()
-      @$('.form-field.broadcast_which_phone').hide()
-      @$('.form-field.broadcast_subject').show()
+    @$('#char_limit').toggle(sms_possible)
+    @showField('which_phone', sms_possible)
+    @showField('subject', !sms_possible)
+    @update_char_limit() if sms_possible
 
   update_char_limit: ->
     div = @$('#char_limit')
