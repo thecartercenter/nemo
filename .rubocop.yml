@@ -1,19 +1,13 @@
 # Disable defaults
 AllCops:
-  DisabledByDefault: true
-  DisplayCopNames: true
   TargetRailsVersion: 4.2
   Exclude:
     - "bin/**/*"
+    - "db/schema.rb"
     - "script/**/*"
-    - "node_modules/**/*"
+    - "tmp/**/*"
+    - "uploads/**/*"
     - "vendor/**/*"
-    - "db/**/*"
-    - "lib/**/*"
-
-# Layout Rules
-Layout:
-  Enabled: true
 
 Layout/AlignParameters:
   EnforcedStyle: with_fixed_indentation
@@ -36,41 +30,21 @@ Layout/MultilineMethodCallIndentation:
 Layout/MultilineOperationIndentation:
   EnforcedStyle: indented
 
-# Metrics Rules
-Metrics:
-  Enabled: false
-
 Metrics/LineLength:
   Enabled: true
-  Max: 115
+  Max: 110
 
-# Style rules
-Style:
-  Enabled: true
+Metrics/AbcSize:
+  Max: 20
 
 Style/AsciiComments:
-  Enabled: false
-
-Style/Documentation:
   Enabled: false
 
 Style/EmptyMethod:
   EnforcedStyle: expanded
 
-Style/MixinGrouping:
-  EnforcedStyle: grouped
-
-Style/PercentLiteralDelimiters:
-  PreferredDelimiters:
-    default: ()
-
 Style/StringLiterals:
   EnforcedStyle: double_quotes
-
-Style/SymbolArray:
-  EnforcedStyle: brackets
-
-# Miscellaneous rules
 
 Bundler:
   Enabled: true
