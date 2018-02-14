@@ -25,7 +25,7 @@ module QuestionsHelper
   end
 
   def questions_index_fields
-    fields = %w(std_icon code name type form_count answer_count)
+    fields = %w(std_icon code name type)
 
     fields << 'published' unless admin_mode?
 
@@ -40,7 +40,6 @@ module QuestionsHelper
     when "std_icon" then std_icon(q)
     when "type" then t(q.qtype_name, :scope => :question_type)
     when "published" then tbool(q.published?)
-    when "answer_count" then number_with_delimiter(q.answer_count)
     when "actions" then table_action_links(q)
     when "name"
       if params[:controller] == 'forms'

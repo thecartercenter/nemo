@@ -59,25 +59,6 @@ class Question < ApplicationRecord
   scope(:with_assoc_counts, -> {
     select("questions.*").
     select("(
-      SELECT COUNT(DISTINCT answers.id)
-        FROM questions inner_questions
-        LEFT OUTER JOIN form_items questionings
-          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
-            AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
-        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = questionings.id
-        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
-    ) AS answer_count_col").
-    select("(
-      SELECT COUNT(DISTINCT forms.id)
-        FROM questions inner_questions
-        LEFT OUTER JOIN form_items questionings
-          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
-            AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
-        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
-    ) AS form_count_col").
-    select("(
       SELECT BOOL_OR(DISTINCT forms.published)
         FROM questions inner_questions
         LEFT OUTER JOIN form_items questionings
@@ -85,25 +66,7 @@ class Question < ApplicationRecord
             AND questionings.type = 'Questioning'
         LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
         WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
-    ) AS form_published_col").
-    select("(
-      SELECT COUNT(DISTINCT copy_answers.id)
-        FROM questions inner_questions
-        LEFT OUTER JOIN form_items questionings
-          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
-            AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
-        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = questionings.id
-        LEFT OUTER JOIN questions copies ON questions.deleted_at IS NULL AND questions.is_standard = true
-          AND questions.id = copies.original_id
-        LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.deleted_at IS NULL
-          AND copy_questionings.question_id = copies.id AND copy_questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms copy_forms ON copy_forms.deleted_at IS NULL
-          AND copy_forms.id = copy_questionings.form_id
-        LEFT OUTER JOIN answers copy_answers ON copy_answers.deleted_at IS NULL
-          AND copy_answers.questioning_id = copy_questionings.id
-        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
-    ) AS copy_answer_count_col")
+    ) AS form_published_col")
   })
 
   translates :name, :hint
@@ -185,6 +148,11 @@ class Question < ApplicationRecord
     Condition.referring_to_question(self).any?
   end
 
+  # determines if a question has answers
+  def has_answers?
+    answers.count > 0
+  end
+
   def geographic?
     location_type? || qtype_name == "select_one" && option_set.geographic?
   end
@@ -192,27 +160,6 @@ class Question < ApplicationRecord
   # DEPRECATED: this method should go away later
   def select_options
     (first_level_options || []).map{ |o| [o.name, o.id] }
-  end
-
-  # gets the number of forms which with this question is directly associated.
-  # uses the form_count/std_form_count eager loaded fields if available
-  def form_count
-    respond_to?(:form_count_col) ? form_count_col : forms.count
-  end
-
-  # gets the number of answers to this question. uses an eager loaded col if available
-  def answer_count
-    if is_standard?
-      respond_to?(:copy_answer_count_col) ? copy_answer_count_col : copies.inject(0){|sum,c| sum += c.answer_count}
-    else
-      respond_to?(:answer_count_col) ? answer_count_col : answers.count
-    end
-  end
-
-  # determins if question has answers
-  # uses the eager-loaded answer_count field if available
-  def has_answers?
-    answer_count > 0
   end
 
   # determines if the question appears on any published forms

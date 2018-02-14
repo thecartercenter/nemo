@@ -8,7 +8,7 @@ module OptionSetsHelper
   end
 
   def option_sets_index_fields
-    %w(std_icon name options questions answers) + (admin_mode? ? [] : ['published']) + ['actions']
+    %w(std_icon name options) + (admin_mode? ? [] : ['published']) + ['actions']
   end
 
   def format_option_sets_field(option_set, field)
