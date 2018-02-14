@@ -162,10 +162,24 @@ class Question < ApplicationRecord
     (first_level_options || []).map{ |o| [o.name, o.id] }
   end
 
+  # gets the number of forms which with this question is directly associated
+  def form_count
+    forms.count
+  end
+
+  # gets the number of answers to this question. uses an eager loaded col if available
+  def answer_count
+    is_standard? ? copies.inject(0){|sum,c| sum += c.answer_count} : answers.count
+  end
+
+  # determines if question has answers
+  def has_answers?
+    answer_count > 0
+  end
+
   # determines if the question appears on any published forms
-  # uses the eager-loaded form_published_col field if available
   def published?
-    is_standard? ? false : (respond_to?(:form_published_col) ? form_published_col == 1 : forms.any?(&:published?))
+    is_standard? ? false : forms.any?(&:published?)
   end
 
   # checks if any associated forms are smsable

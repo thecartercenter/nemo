@@ -26,7 +26,15 @@
 
   <%= elmo_form_for(@form) do |f| %>
     <%= f.base_errors %>
+
     <%= f.field(:name, required: true, read_only: cannot?(:rename, @form)) %>
+
+    <% if admin_mode? %>
+      <ul class="admin-stats">
+        <li><%= t("attributes.copy_count") %>: <%= @form.published_copy_count %></li>
+        <li><%= t("activerecord.attributes.form.copy_responses_count") %>: <%= @form.copy_responses_count %></li>
+      </ul>
+    <% end %>
 
     <% unless admin_mode? %>
       <div class="more-settings"><a href="#"><%= t("common.more_settings") %></a></div>

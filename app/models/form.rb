@@ -126,10 +126,29 @@ class Form < ApplicationRecord
     is_standard? ? false : responses_count > 0
   end
 
-  # Returns whether this form is published, using eager loaded col if available.
+  # returns the number of responses for all copy forms
+  def copy_responses_count
+    if is_standard?
+      copies.inject(0){|sum, c| sum += c.responses_count}
+    else
+      raise "non-standard forms should not request copy_responses_count"
+    end
+  end
+
+  # Returns whether this form is published
   # Standard forms are never published.
   def published?
     is_standard? ? false : read_attribute(:published)
+  end
+
+  # returns number of copies published
+  def published_copy_count
+    copies.find_all(&:published?).size
+  end
+
+  # returns number of questionings on the form
+  def questionings_count
+    questionings.count
   end
 
   def option_sets
