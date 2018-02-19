@@ -1,0 +1,98 @@
+env:
+  es6: true
+parserOptions:
+  ecmaFeatures:
+    jsx: true
+plugins:
+  - react
+extends:
+  - eslint:recommended
+  - plugin:react/all
+globals:
+  React: true
+  ELMO: true
+  $: true
+  I18n: true
+  console: true
+rules:
+  array-bracket-spacing: error
+  arrow-body-style: error
+  arrow-spacing: error
+  block-spacing: error
+  brace-style: error
+  camelcase: error
+  capitalized-comments: error
+  comma-spacing: error
+  comma-style: error
+  computed-property-spacing: error
+  consistent-this:
+    - error
+    - self
+  curly: error
+  eqeqeq: error
+  func-call-spacing: error
+  func-name-matching: error
+  func-style: error
+  function-paren-newline: error
+  implicit-arrow-linebreak: error
+  indent:
+    - error
+    - 2
+  jsx-quotes: error
+  key-spacing: error
+  keyword-spacing: error
+  max-len:
+    - error
+    -
+      code: 110
+  multiline-comment-style: error
+  new-cap: error
+  new-parens: error
+  no-multi-spaces: error
+  no-multiple-empty-lines:
+    - error
+    -
+      max: 1
+  no-unneeded-ternary: error
+  no-unused-vars: off
+  no-var: error
+  no-whitespace-before-property: error
+  object-curly-newline:
+    - error
+    -
+      consistent: true
+  object-curly-spacing: error
+  padded-blocks:
+    - error
+    - never
+  quotes: error
+  react/destructuring-assignment: off
+  react/jsx-closing-bracket-location:
+    - error
+    - after-props
+  react/jsx-indent:
+    - error
+    - 2
+  react/jsx-indent-props:
+    - error
+    - 2
+  react/jsx-no-undef: off
+  react/jsx-wrap-multilines: error
+  react/react-in-jsx-scope: off
+  react/require-optimization: off
+  rest-spread-spacing: error
+  semi: error
+  semi-spacing: error
+  space-before-blocks: error
+  space-before-function-paren:
+    - error
+    - never
+  space-in-parens: error
+  space-infix-ops: error
+  space-unary-ops: error
+  spaced-comment: error
+  switch-colon-spacing: error
+  template-curly-spacing: error
+  template-tag-spacing: error
+  vars-on-top: error
+  yield-star-spacing: error
