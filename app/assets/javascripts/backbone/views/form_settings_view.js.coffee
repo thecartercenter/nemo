@@ -52,6 +52,6 @@ class ELMO.Views.FormSettingsView extends ELMO.Views.ApplicationView
       ajax:
         url: @recipient_options_url
         dataType: 'json'
-        data: (params) -> { term: params.term, page: params.page || 1 }
+        data: (params) -> {term: params.term, page: params.page || 1}
         delay: 250
         cache: true

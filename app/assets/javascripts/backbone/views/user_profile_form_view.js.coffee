@@ -25,7 +25,7 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
   format_suggestions: (item) ->
     if item.id == item.text
       return $('<li><i class="fa fa-fw fa-plus-circle"></i>' + item.text +
-      ' <span class="details create_new">[' + I18n.t('user_group.new_group') + ']</span>' + '</li>');
+      ' <span class="details create_new">[' + I18n.t('user_group.new_group') + ']</span>' + '</li>')
     else
       return item.text
 

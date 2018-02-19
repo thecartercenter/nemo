@@ -14,8 +14,8 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
       @setup_map()
 
   show_offline_notice: ->
-    $('.response_locations').remove();
-    $('.response_locations_offline').show();
+    $('.response_locations').remove()
+    $('.response_locations_offline').show()
 
   setup_map: ->
     # create the map
@@ -38,7 +38,7 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
 
     # if there are stored bounds, use those to center map
     if this.load_bounds(@params.serialization_key)
-      ; # do nothing since the method call does it all
+      true # do nothing since the method call does it all
 
     # else if there are no responses, just center at 0 0
     else if @params.locations.length == 0
@@ -52,10 +52,10 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
         zoomChangeBoundsListener =
           google.maps.event.addListener @map, 'bounds_changed', (event) =>
             if @map.getZoom() > 10 && @map.initialZoom
-              @map.setZoom(10);
-              @map.initialZoom = false;
+              @map.setZoom(10)
+              @map.initialZoom = false
             google.maps.event.removeListener(zoomChangeBoundsListener)
-      @map.initialZoom = true;
+      @map.initialZoom = true
 
       # center/zoom the map
       @map.fitBounds(bounds)
@@ -97,7 +97,9 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
       @info_window.close()
 
     # open the window and show the loading message
-    @info_window = new google.maps.InfoWindow({content: '<div class="info_window"><h3>' + I18n.t('response.loading') + '</h3></div>'})
+    @info_window = new google.maps.InfoWindow(
+      content: '<div class="info_window"><h3>' + I18n.t('response.loading') + '</h3></div>'
+    )
     @info_window.open(@map, marker)
 
     # do the ajax call after the info window is loaded

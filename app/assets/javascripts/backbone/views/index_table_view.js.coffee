@@ -84,10 +84,11 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
 
   # reset the alert element
   reset_alert: ->
-    @alert.stop().hide().removeClass('alert-danger alert-info alert-warning alert-success').removeAttr('opacity')
+    @alert.stop().hide().
+      removeClass('alert-danger alert-info alert-warning alert-success').removeAttr('opacity')
 
   # updates the select all link to reflect the select_all field
-  update_select_all_elements: () ->
+  update_select_all_elements: ->
     label = if @select_all_field.val() then "deselect_all" else "select_all"
     $('#select_all_link').html(I18n.t("layout.#{label}"))
 
@@ -95,7 +96,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
 
     if @pages > 1 and @select_all_field.val()
       msg = if @is_search then 'searched_rows_selected' else 'all_rows_selected'
-      @alert.html(I18n.t("index_table.messages.#{msg}", { count: @entries }))
+      @alert.html(I18n.t("index_table.messages.#{msg}", {count: @entries}))
       @alert.addClass('alert-info').show()
 
   # gets all checkboxes in batch_form
@@ -132,7 +133,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
       @alert.delay(2500).fadeOut('slow', this.reset_alert.bind(this))
 
     # else, show confirm dialog (if requested), and proceed if 'yes' clicked
-    else if not options.confirm or confirm(I18n.t(options.confirm, { count: selected }))
+    else if not options.confirm or confirm(I18n.t(options.confirm, {count: selected}))
 
       # construct a temporary form
       form = $('<form>').attr('action', options.path).attr('method', 'post').attr('style', 'display: none')
@@ -142,7 +143,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
       form.append(@form.find('input.batch_op:checked').clone())
       form.append(@form.find('input[name=select_all]').clone())
 
-      token = $('meta[name="csrf-token"]').attr('content');
+      token = $('meta[name="csrf-token"]').attr('content')
       $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form)
 
       # need to append form to body before submitting

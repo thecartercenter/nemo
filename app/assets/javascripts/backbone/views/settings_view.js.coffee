@@ -29,7 +29,7 @@ class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
     $.ajax
       url: ELMO.app.url_builder.build('settings', 'using_incoming_sms_token_message?missionless=1')
       success: (data) ->
-        new ELMO.Views.UsingIncomingSmsTokenModalView({ html: data.message.replace(/\n/g, "<br/>") })
+        new ELMO.Views.UsingIncomingSmsTokenModalView({html: data.message.replace(/\n/g, "<br/>")})
       complete: ->
         ELMO.app.loading(false)
 
@@ -40,11 +40,11 @@ class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
     $.ajax
       url: ELMO.app.url_builder.build('settings', 'using_incoming_sms_token_message')
       success: (data) ->
-        new ELMO.Views.UsingIncomingSmsTokenModalView({ html: data.message.replace(/\n/g, "<br/>") })
+        new ELMO.Views.UsingIncomingSmsTokenModalView({html: data.message.replace(/\n/g, "<br/>")})
       complete: ->
         ELMO.app.loading(false)
 
-  show_credential_fields_with_errors: () ->
+  show_credential_fields_with_errors: ->
     adapters = $('.field_with_errors:hidden').closest('.adapter_settings')
     $(adapters).find('.credential_fields').show()
     $(adapters).find('a.show_credential_fields').hide()

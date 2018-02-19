@@ -4,7 +4,7 @@ class ELMO.Views.RepeatGroupFormView extends ELMO.Views.ApplicationView
     @next_inst_num = parseInt(@$el.data('inst-count')) + 1
 
   events:
-    'click .add-instance' : 'add_instance'
+    'click .add-instance': 'add_instance'
     'click .remove-instance': 'remove_instance'
 
   add_instance: (event) ->

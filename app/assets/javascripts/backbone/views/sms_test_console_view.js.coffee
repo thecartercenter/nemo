@@ -13,7 +13,7 @@ class ELMO.Views.SmsTestConsoleView extends ELMO.Views.ApplicationView
       @$('.sms_test_from .control').prepend('<div class="form-errors">' + msg + '</div>')
       return
 
-    ELMO.app.loading(true);
+    ELMO.app.loading(true)
     @$('.sms_test_result').hide()
     @$('.form-errors').remove()
 
@@ -24,5 +24,5 @@ class ELMO.Views.SmsTestConsoleView extends ELMO.Views.ApplicationView
       success: (data) => @$('.sms_test_result div').html(data)
       error: => @$('.sms_test_result div').html('<em>' + I18n.t('sms_console.submit_error') + '</em>')
       complete: =>
-        ELMO.app.loading(false);
+        ELMO.app.loading(false)
         @$('.sms_test_result').show()

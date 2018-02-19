@@ -32,7 +32,8 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
       reason = 'invalid_condition'
 
     # Show the reason if applicable.
-    placeholder.html(if reason then '<div>' + I18n.t("form.invalid_drop_location.#{reason}") + '</div>' else '')
+    html = if reason then '<div>' + I18n.t("form.invalid_drop_location.#{reason}") + '</div>' else ''
+    placeholder.html(reason)
 
     !reason
 

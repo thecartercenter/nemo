@@ -9,7 +9,7 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
     'change select[id$="_qtype_name"]': 'toggleFields'
     'change select[id$="_metadata_type"]': 'toggleFields'
     'click #questioning_read_only': 'toggleFields'
-    'keyup #questioning_default' : 'toggleFields'
+    'keyup #questioning_default': 'toggleFields'
 
   toggleFields: ->
     @super.toggleFields.call(this)

@@ -5,7 +5,7 @@ class ELMO.Views.ResponseFormView extends ELMO.Views.ApplicationView
     @$('#response_user_id').select2(@select2Params(params.submitter_url))
     @$('#response_reviewer_id').select2(@select2Params(params.reviewer_url))
 
-    @locationPicker = new ELMO.LocationPicker(@$('#location-picker-modal'));
+    @locationPicker = new ELMO.LocationPicker(@$('#location-picker-modal'))
 
   events:
     'click a.edit_location_link': 'showLocationPicker'
@@ -20,7 +20,7 @@ class ELMO.Views.ResponseFormView extends ELMO.Views.ApplicationView
         page: p.page
       processResults: (data, page) ->
         results: data.possible_users
-        pagination: { more: data.more }
+        pagination: {more: data.more}
       cache: true
 
   showLocationPicker: (e) ->

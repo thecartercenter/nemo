@@ -24,14 +24,14 @@ class ELMO.Views.UserGroupsModalView extends ELMO.Views.ApplicationView
     $(@el).modal("show")
 
   create_group: (e) ->
-    e.preventDefault();
+    e.preventDefault()
     group_name = prompt(I18n.t("user_group.create_prompt"))
     mode = if (@mode == "add" || @mode == "remove") then "user_groups?#{@mode}=true" else "user_groups"
     ELMO.app.loading(true)
     $.ajax
       url: ELMO.app.url_builder.build(mode)
       method: "post"
-      data: { name: group_name }
+      data: {name: group_name}
       success: (html) =>
         @set_body(html)
         ELMO.app.loading(false)
@@ -48,7 +48,7 @@ class ELMO.Views.UserGroupsModalView extends ELMO.Views.ApplicationView
       $.ajax
         url: ELMO.app.url_builder.build("user_groups/#{selected_group}/add_users")
         method: "post"
-        data: { user_ids: user_ids }
+        data: {user_ids: user_ids}
         success: (data) =>
           @$el.modal("hide")
           location.reload()
@@ -65,7 +65,7 @@ class ELMO.Views.UserGroupsModalView extends ELMO.Views.ApplicationView
       $.ajax
         url: ELMO.app.url_builder.build("user_groups/#{selected_group}/remove_users")
         method: "post"
-        data: { user_ids: user_ids }
+        data: {user_ids: user_ids}
         success: (data) =>
           @$el.modal("hide")
           location.reload()
@@ -75,13 +75,13 @@ class ELMO.Views.UserGroupsModalView extends ELMO.Views.ApplicationView
 
 
   update_name: (e) ->
-    e.preventDefault();
+    e.preventDefault()
     target_url = $(e.currentTarget).attr("href")
     target_value = $(e.currentTarget).closest("tr").find("input").val()
     $.ajax
       url: target_url
       method: "patch"
-      data: { name: target_value }
+      data: {name: target_value}
       success: (data) =>
         @$(e.currentTarget).closest("tr").find(".name_col").html("<div>" + data.name + "</div>")
       error: (data) =>

@@ -32,7 +32,7 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
       url: handler
       success: (data) ->
         if (displayEl.length > 0)
-          $(displayEl[0]).data({ value: data.value })
+          $(displayEl[0]).data(value: data.value)
           $(displayEl[0]).text(data.value)
           target.text(I18n.t('common.regenerate'))
         loading_indicator.hide()
