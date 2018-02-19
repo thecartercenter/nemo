@@ -8,5 +8,8 @@ eslint:
 coffeescript:
   enabled: true
   config_file: coffeelint.json
+scss:
+  enabled: true
+  config_file: .scss-lint.yml
 jshint:
   enabled: false
