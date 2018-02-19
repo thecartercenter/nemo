@@ -1,22 +1,23 @@
 class FormField extends React.Component {
   render() {
     if (this.props.type === "select") {
-      return <FormSelect value={this.props.value}
+      return (<FormSelect
+        changeFunc={this.props.changeFunc}
+        id={this.props.id}
         key="input"
         name={this.props.name}
-        id={this.props.id}
         options={this.props.options}
-        changeFunc={this.props.changeFunc} />
+        value={this.props.value} />);
     } else if (this.props.type === "cascading_select") {
-      return <CascadingSelect {...this.props} />
+      return <CascadingSelect {...this.props} />;
     } else {
-      return <input
+      return (<input
         className="text form-control"
-        key="input"
-        type="text"
-        name={this.props.name}
+        defaultValue={this.props.value}
         id={this.props.id}
-        defaultValue={this.props.value} />
+        key="input"
+        name={this.props.name}
+        type="text" />);
     }
   }
 }

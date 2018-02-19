@@ -7,7 +7,7 @@ class DisplayLogicFormField extends React.Component {
 
   displayIfChanged(event) {
     let value = event.target.value;
-    this.setState({display_if: value})
+    this.setState({display_if: value});
   }
 
   render() {
@@ -15,7 +15,11 @@ class DisplayLogicFormField extends React.Component {
     let refable_qings = this.state.refable_qings.slice(0, -1);
 
     if (refable_qings.length == 0) {
-      return <div>{I18n.t("condition.no_refable_qings")}</div>;
+      return (
+        <div>
+          {I18n.t("condition.no_refable_qings")}
+        </div>
+      );
     } else {
       let display_if_props = {
         className: "form-control",
@@ -23,7 +27,7 @@ class DisplayLogicFormField extends React.Component {
         id: "questioning_display_logic",
         value: this.state.display_if,
         onChange: this.displayIfChanged
-      }
+      };
 
       let condition_set_props = {
         conditions: this.state.display_conditions,
@@ -38,9 +42,15 @@ class DisplayLogicFormField extends React.Component {
       return (
         <div>
           <select {...display_if_props}>
-            <option value="always">{I18n.t("form_item.display_if_options.always")}</option>
-            <option value="all_met">{I18n.t("form_item.display_if_options.all_met")}</option>
-            <option value="any_met">{I18n.t("form_item.display_if_options.any_met")}</option>
+            <option value="always">
+              {I18n.t("form_item.display_if_options.always")}
+            </option>
+            <option value="all_met">
+              {I18n.t("form_item.display_if_options.all_met")}
+            </option>
+            <option value="any_met">
+              {I18n.t("form_item.display_if_options.any_met")}
+            </option>
           </select>
           <ConditionSetFormField {...condition_set_props} />
         </div>

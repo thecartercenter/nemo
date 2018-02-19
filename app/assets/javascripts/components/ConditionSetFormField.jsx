@@ -20,22 +20,26 @@ class ConditionSetFormField extends React.Component {
         operator_options: [],
         conditionable_id: this.state.conditionable_id,
         conditionable_type: this.state.conditionable_type
-      }])
-    });
+      }])});
   }
 
   render() {
     return (
-      <div className="condition-set" style={{display: this.props.hide ? 'none' : ''}}>
-        {this.state.conditions.map((props, index) =>
-          <ConditionFormField
-            key={index}
-            index={index}
-            hide={this.props.hide}
-            name_prefix={this.state.name_prefix}
-            {...props}/> )}
-        <a onClick={this.addCondition} tabIndex="0">
-          <i className="fa fa-plus"></i> {I18n.t("form_item.add_condition")}
+      <div
+        className="condition-set"
+        style={{display: this.props.hide ? "none" : ""}}>
+        {this.state.conditions.map((props, index) => (<ConditionFormField
+          hide={this.props.hide}
+          index={index}
+          key={index}
+          name_prefix={this.state.name_prefix}
+          {...props} />))}
+        <a
+          onClick={this.addCondition}
+          tabIndex="0">
+          <i className="fa fa-plus" /> 
+          {" "}
+          {I18n.t("form_item.add_condition")}
         </a>
       </div>
     );

@@ -1,5 +1,4 @@
 class ConditionFormField extends React.Component {
-
   constructor(props) {
     super();
     this.getFieldData = this.getFieldData.bind(this);
@@ -17,40 +16,40 @@ class ConditionFormField extends React.Component {
 
   getFieldData(refQingId) {
     ELMO.app.loading(true);
-    var self = this;
-    var url = this.buildUrl(refQingId);
+    let self = this;
+    let url = this.buildUrl(refQingId);
     $.ajax(url)
       .done(function(response) {
-          // Need to put this before we set state because setting state may trigger a new one.
-          ELMO.app.loading(false);
+        // Need to put this before we set state because setting state may trigger a new one.
+        ELMO.app.loading(false);
 
-          // We set option node ID to null since the new ref_qing may have a new option set.
-          self.setState(Object.assign(response, {option_node_id: null}));
-        })
-        .fail(function(jqXHR, exception) {
-          ELMO.app.loading(false);
-          console.log(exception);
-        });
+        // We set option node ID to null since the new ref_qing may have a new option set.
+        self.setState(Object.assign(response, {option_node_id: null}));
+      })
+      .fail(function(jqXHR, exception) {
+        ELMO.app.loading(false);
+        console.log(exception);
+      });
   }
 
   buildUrl(refQingId) {
-    var url = `${ELMO.app.url_builder.build('form-items', 'condition-form')}?`;
+    let url = `${ELMO.app.url_builder.build("form-items", "condition-form")}?`;
     url += `condition_id=${this.state.id || ""}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`;
     if (this.state.conditionable_id) {
-      url += '&conditionable_id=' + this.state.conditionable_id;
-      url += '&conditionable_type=' + this.state.conditionable_type;
+      url += "&conditionable_id=" + this.state.conditionable_id;
+      url += "&conditionable_type=" + this.state.conditionable_type;
     }
     return url;
   }
 
   formatRefQingOptions(reference_qing_options) {
-    return reference_qing_options.map(function(o){
+    return reference_qing_options.map(function(o) {
       return {id: o.id, name: `${o.full_dotted_rank}. ${o.code}`, key: o.id};
     });
   }
 
   removeCondition() {
-    this.setState({remove: true})
+    this.setState({remove: true});
   }
 
   buildValueProps(name_prefix, id_prefix) {
@@ -58,12 +57,12 @@ class ConditionFormField extends React.Component {
       return {
         type: "cascading_select",
         name_prefix: name_prefix,
-        for: `${id_prefix}_value`, //not a mistake; the for is for value; the others are for selects
+        for: `${id_prefix}_value`, // Not a mistake; the for is for value; the others are for selects
         id: `${id_prefix}_option_node_ids_`,
         key: `${id_prefix}_option_node_ids_`,
         option_set_id: this.state.option_set_id,
         option_node_id: this.state.option_node_id,
-      }
+      };
     } else {
       return {
         type: "text",
@@ -72,13 +71,13 @@ class ConditionFormField extends React.Component {
         id: `${id_prefix}_value`,
         key: `${id_prefix}_value`,
         value: this.state.value ? this.state.value : "",
-      }
+      };
     }
   }
 
   render() {
     let name_prefix = this.state.name_prefix + `[${this.state.index}]`;
-    let id_prefix = name_prefix.replace(/[\[\]]/g, '_');
+    let id_prefix = name_prefix.replace(/[\[\]]/g, "_");
     let id_field_props = {
       type: "hidden",
       name: `${name_prefix}[id]`,
@@ -111,12 +110,14 @@ class ConditionFormField extends React.Component {
       id: `${id_prefix}__destroy`,
       key: `${id_prefix}__destroy`,
       value: this.shouldDestroy() ? "1" : "0",
-    }
+    };
     let value_field_props = this.buildValueProps(name_prefix, id_prefix);
 
     return (
-      <div className="condition-fields" style={{display: this.shouldDestroy() ? "none" : ""}}>
-        <input {...id_field_props}/>
+      <div
+        className="condition-fields"
+        style={{display: this.shouldDestroy() ? "none" : ""}}>
+        <input {...id_field_props} />
         <input {...destroy_field_props} />
         <FormField {...ref_qing_field_props} />
         <FormField {...operator_field_props} />
@@ -124,7 +125,9 @@ class ConditionFormField extends React.Component {
           <FormField {...value_field_props} />
         </div>
         <div className="condition-remove">
-          <a onClick={this.removeCondition}><i className="fa fa-close"></i></a>
+          <a onClick={this.removeCondition}>
+            <i className="fa fa-close" />
+          </a>
         </div>
       </div>
     );
