@@ -155,7 +155,6 @@ group :development do
   # misc
   gem "fix-db-schema-conflicts", "~> 2.0.0"
   gem "letter_opener", "~> 1.4.1"
-  gem "rubocop", "~> 0.52.1", require: false
 end
 
 group :development, :test do
