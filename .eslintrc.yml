@@ -54,7 +54,7 @@ rules:
     -
       max: 1
   no-unneeded-ternary: error
-  no-unused-vars: off
+  no-unused-vars: 0
   no-var: error
   no-whitespace-before-property: error
   object-curly-newline:
@@ -66,7 +66,7 @@ rules:
     - error
     - never
   quotes: error
-  react/destructuring-assignment: off
+  react/destructuring-assignment: 0
   react/jsx-closing-bracket-location:
     - error
     - after-props
@@ -76,10 +76,10 @@ rules:
   react/jsx-indent-props:
     - error
     - 2
-  react/jsx-no-undef: off
+  react/jsx-no-undef: 0
   react/jsx-wrap-multilines: error
-  react/react-in-jsx-scope: off
-  react/require-optimization: off
+  react/react-in-jsx-scope: 0
+  react/require-optimization: 0
   rest-spread-spacing: error
   semi: error
   semi-spacing: error
