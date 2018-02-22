@@ -36,6 +36,51 @@ Note to install the software below we recommend the following package managers:
   - Qt is a cross-platform development kit that is needed by the `capybara-webkit` gem.
   - See [here](https://github.com/thoughtbot/capybara-webkit/wiki/Installing-Qt-and-compiling-capybara-webkit) for some installation instructions.
 
+### Linters
+
+Linters are strongly recommended for checking your code before opening a PR. The CI system will run linters as well and your PR won't be approved until all issues are resolved or cancelled by the reviewer.
+
+#### Setup
+
+Several linters require `npm` to install. We recommend [using `nvm`](https://github.com/creationix/nvm#installation) to manage your Node/npm versions. Note that `nvm` does NOT shim Node executables so `nvm use` is required to load the right Node versions in each new shell session.
+
+The below assume you have installed the Ruby and Node versions specified in `.ruby-version` and `.nvmrc` files, respectively.
+
+Once you have `nvm` and Node installed, the following lines should give you all the required linters:
+
+```
+nvm use
+npm install -g coffeelint@2.1.0
+npm install -g eslint@4.17.0
+npm install -g eslint-plugin-react@7.7.0
+gem install rubocop -v 0.52.0
+gem install scss_lint -v 0.56.0
+```
+
+#### Running
+
+To lint your code, simply run:
+
+```
+bin/lint
+```
+
+This will examine any modified or untracked files in your working copy.
+
+To instead examine any new or modified files in your branch (not including uncommitted changes), run:
+
+```
+bin/lint --branch
+```
+
+The latter should be run before opening a pull request.
+
+As part of an effort to clean up old code, you should try to resolve any linter errors in files you touch, unless there are an overwhelming number of them. At bare minimum, the _lines_ you touch should not have any lint.
+
+#### Tools
+
+Most code editors have plugins for linting. They will identify and let you click directly into problematic lines. You are encouraged to try one out!
+
 ### Running the App
 
 1. **Retrieve project files using Git**
