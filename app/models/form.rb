@@ -135,20 +135,13 @@ class Form < ApplicationRecord
     end
   end
 
-  # Returns whether this form is published
-  # Standard forms are never published.
   def published?
+    # Standard forms are never published
     is_standard? ? false : read_attribute(:published)
   end
 
-  # returns number of copies published
   def published_copy_count
     copies.find_all(&:published?).size
-  end
-
-  # returns number of questionings on the form
-  def questionings_count
-    questionings.count
   end
 
   def option_sets

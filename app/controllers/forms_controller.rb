@@ -27,13 +27,13 @@ class FormsController < ApplicationController
 
         # if requesting the dropdown menu
         if params[:dropdown]
-          @forms = Form.all.published.default_order
+          @forms = @forms.published.default_order
           render(:partial => "dropdown")
 
         # otherwise, it's a normal request
         else
           # add some eager loading stuff, and ordering
-          @forms = Form.all.default_order
+          @forms = @forms.default_order
           load_importable_objs
           render(:index)
         end

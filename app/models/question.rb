@@ -172,7 +172,6 @@ class Question < ApplicationRecord
     is_standard? ? copies.inject(0){|sum,c| sum += c.answer_count} : answers.count
   end
 
-  # determines if question has answers
   def has_answers?
     answer_count > 0
   end

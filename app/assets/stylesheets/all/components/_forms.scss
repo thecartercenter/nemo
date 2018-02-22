@@ -11,15 +11,13 @@ form.form_form {
     list-style: none;
     margin: 5px 0px 0px 0px;
     padding: 0px;
-    
+
     li {
       display: inline-block;
       margin: 0px 5px 0px 0px;
     }
   }
 }
-
-
 
 @media print {
   // The outer title on forms pages should be hidden since we include it separately.

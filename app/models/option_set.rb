@@ -177,8 +177,6 @@ class OptionSet < ApplicationRecord
     @option_ids_with_answers.include?(option_id)
   end
 
-  # checks if this option set appears in any published questionings
-  # uses eager loaded field if available
   def published?
     is_standard? ? false : questionings.any?(&:published?)
   end
@@ -196,12 +194,7 @@ class OptionSet < ApplicationRecord
   # gets total number of questions with which this option set is associated
   # in the case of a std option set, this includes non-standard questions that use copies of this option set
   def ttl_question_count
-    question_count + copy_question_count
-  end
-
-  # gets number of questions in which this option set is directly used
-  def question_count
-    questions.count
+    questions.count + copy_question_count
   end
 
   # gets number of questions by which a copy of this option set is used
@@ -211,7 +204,6 @@ class OptionSet < ApplicationRecord
 
   # checks if this option set has any answers (that is, answers to questions that use this option set)
   # or in the case of a standard option set, answers to questions that use copies of this option set
-  # uses method from special eager loaded scope if available
   def has_answers?
     if is_standard?
       copies.any? { |c| c.questionings.any?(&:has_answers?) }
@@ -228,7 +220,7 @@ class OptionSet < ApplicationRecord
   # or in the case of a standard option set, answers to questions that use copies of this option set
   def answer_count
     if is_standard?
-      copies.inject?(0) { |sum, c| sum += c.answer_count }
+      copies.sum(&:answer_count)
     else
       questionings.inject(0) { |sum, q| sum += q.answers.count }
     end
