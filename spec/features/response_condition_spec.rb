@@ -103,7 +103,7 @@ feature "conditions in responses", js: true do
     end
 
     scenario "various conditions on questionings should work" do
-      visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
+      visit_new_response_page
       visible = [:long_text, :text2, :grp1]
       fill_and_expect_visible(:long_text, "fo", visible)
 
@@ -165,7 +165,7 @@ feature "conditions in responses", js: true do
       end
 
       scenario "should hide group members until conditions met" do
-        visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
+        visit_new_response_page
         puts "group at beginning of test"
         puts group.display_conditionally?
         puts group.display_if
@@ -197,7 +197,7 @@ feature "conditions in responses", js: true do
       let(:display_if) { "all_met" }
 
       scenario "conditions should all need to be met" do
-        visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
+        visit_new_response_page
         visible = [:q1, :q2]
         fill_and_expect_visible(:q1, "10", visible)
         fill_and_expect_visible(:q2, "20", visible)
@@ -218,7 +218,7 @@ feature "conditions in responses", js: true do
       let(:display_if) { "any_met" }
 
       scenario "only one condition should need to be met" do
-        visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
+        visit_new_response_page
         visible = [:q1, :q2]
 
         fill_and_expect_visible(:q1, "10", visible)
@@ -238,6 +238,12 @@ feature "conditions in responses", js: true do
       end
     end
   end
+
+  def  visit_new_response_page
+    visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
+  end
+
+
 
   def fill_and_expect_visible(field, value, visible)
     fill_answer(field: field, value: value)
