@@ -6,14 +6,14 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
     @condition = options.condition
     @inst = options.inst
 
-    @rqRow = @manager.formRow(@condition.ref_qing_id, @inst)
-    @rqType = @rqRow.data('qtype-name')
+    @rqElement = @manager.qingElement(@condition.ref_qing_id, @inst)
+    @rqType = @rqElement.data('qtype-name')
     @result = true
 
-    # These handlers must be set dynamically based on rqRow.
-    @rqRow.find('div.control').find('input, select, textarea').on('change', => @checkAndTell())
-    @rqRow.find("div.control input[type=text]").on('keyup', => @checkAndTell())
-    @rqRow.find("div.control input[type=number]").on('keyup', => @checkAndTell())
+    # These handlers must be set dynamically based on rqElement.
+    @rqElement.find('div.control').find('input, select, textarea').on('change', => @checkAndTell())
+    @rqElement.find("div.control input[type=text]").on('keyup', => @checkAndTell())
+    @rqElement.find("div.control input[type=number]").on('keyup', => @checkAndTell())
     if @rqType == 'long_text' && !@manager.readOnly
       @ckeditorInstance().on('change', => @checkAndTell())
 
@@ -25,7 +25,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
 
   # Evaluates the condition and sets the result.
   eval: ->
-    unless @rqRow.is(':visible')
+    unless @rqElement.is(':visible')
       @result = false
       return
 
@@ -79,7 +79,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
   actual: ->
     # If readonly, use the data-val attrib
     if @manager.readOnly
-      wrapper = @rqRow.find('div.control div.ro-val')
+      wrapper = @rqElement.find('div.control div.ro-val')
       if typeof(wrapper.data('val')) == 'undefined'
         wrapper.text()
       else
@@ -89,34 +89,34 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
         when 'long_text'
           # Use ckeditor if available, else use textarea value (usually just on startup).
           ckeditor = @ckeditorInstance()
-          content = if ckeditor then ckeditor.getData() else @rqRow.find('div.control textarea').val()
+          content = if ckeditor then ckeditor.getData() else @rqElement.find('div.control textarea').val()
 
           # Strip wrapping <p> tag for comparison.
           content.trim().replace(/(^<p>|<\/p>$)/ig, '')
 
         when 'integer', 'decimal', 'counter'
-          parseFloat(@rqRow.find("div.control input[type=number]").val())
+          parseFloat(@rqElement.find("div.control input[type=number]").val())
 
         when 'select_one'
           # Return all selected option_node_ids.
-          @rqRow.find('select').map(->
+          @rqElement.find('select').map(->
             id = $(this).val()
             if id then id else null
           ).get()
 
         when 'select_multiple'
           # Use prev sibling call to get to rails gen'd hidden field that holds the id
-          @rqRow.find('div.control input:checked').map(->
+          @rqElement.find('div.control input:checked').map(->
             # Given a checkbox, get the value of the associated option_node_id hidden field made by rails
             # this field is the nearest prior sibling input with name attribute ending in [option_node_id].
             $(this).prevAll("input[name$='[option_node_id]']").first().val()
           ).get()
 
         when 'datetime', 'date', 'time'
-          (new ELMO.TimeFormField(@rqRow.find('div.control'))).extract_str()
+          (new ELMO.TimeFormField(@rqElement.find('div.control'))).extract_str()
 
         else
-          @rqRow.find("div.control input[type='text']").val()
+          @rqElement.find("div.control input[type='text']").val()
 
   # Gets the expected answer from the condition definition.
   expected: ->
@@ -126,4 +126,4 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
       else @condition.value
 
   ckeditorInstance: ->
-    return CKEDITOR.instances[@rqRow.find("div.control textarea").attr('id')]
+    return CKEDITOR.instances[@rqElement.find("div.control textarea").attr('id')]

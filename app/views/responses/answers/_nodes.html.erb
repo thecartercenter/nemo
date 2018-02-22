@@ -34,8 +34,7 @@
     <%# Note that we need to do this in any form mode, even show. %>
     <% if node.item.display_conditionally? %>
       <%= javascript_doc_ready do %>
-        console.warn("hello");
-        new ELMO.Views.GroupConditionManager(<%=json(
+        new ELMO.Views.ResponseConditionManager(<%=json(
           el: 'form.response_form',
           item: FormItemConditionSerializer.new(node.item), #WHY is this only display_if and conditions?
           # Instance descriptor is the group where this item is located, then instance number.

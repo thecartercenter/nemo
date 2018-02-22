@@ -5,8 +5,11 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
     @item = options.item
     @conditions = @item.display_conditions
     @inst = options.inst
-    @row = @formRow(@conditions[0].conditionable_id, @inst)
-    @readOnly = @row.is('.read-only')
+    if @item.group
+      @element = @groupElement(@item.id)
+    else
+      @element = @qingElement(@item.id, @inst)
+    @readOnly = @element.is('.read-only')
     @result = true
 
     @checkers = @conditions.map (c) =>
@@ -23,11 +26,11 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
     if newResult != @result
       @result = newResult
-      @row[if @result then 'show' else 'hide']()
-      @row.find('input.relevant').val(if @result then 'true' else 'false')
+      @element[if @result then 'show' else 'hide']()
+      @element.find('input.relevant').val(if @result then 'true' else 'false')
 
       # Simulate a change event on the control so that later conditions will be re-evaluated.
-      @row.find('div.control').find('input, select, textarea').first().trigger('change')
+      @element.find('div.control').find('input, select, textarea').first().trigger('change')
 
   evaluate: ->
     # By now we know that display_if must be all_met or any_met.
@@ -39,15 +42,15 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
   # When the form is submitted, clears the answer if the eval_result is false.
   clearOnSubmitIfFalse: ->
     unless @result
-      @row.find("input[type='text'], textarea, select").val('')
-      @row.find("input[type='checkbox']:checked, input[type='radio']:checked").each ->
+      @element.find("input[type='text'], textarea, select").val('')
+      @element.find("input[type='checkbox']:checked, input[type='radio']:checked").each ->
         $(this).removeAttr('checked')
 
   # Finds the row in the response form for the given questioning ID within the instance
   # described by inst. If qingId doesn't exist within inst but some of its ancestors do, it will
   # do a partial match. This is useful for finding referred questioning rows
   # starting from the referring instance.
-  formRow: (qingId, inst) ->
+  qingElement: (qingId, inst) ->
     # We walk down through parent instances, constructing a
     # CSS selector for the appropriate instance at each step.
     # If there are no group parents, we just get an empty array.
@@ -65,6 +68,12 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
     # Now we use the parent selectors to scope the actual form-field lookup.
     @$("#{parentSelectors.join(' ')} div.form-field[data-qing-id=#{qingId}]")
+
+  # This function is used only to find the element that will be hidden or shown.
+  # It gets the entire group container so that all instances of a repeat group are hidden or shown.
+  groupElement: (groupId) ->
+    @$("div.qing-group[data-group-id=#{groupId}]")
+
 
   results: ->
     @checkers.map (c) -> c.result
