@@ -129,7 +129,7 @@ class Form < ApplicationRecord
   # returns the number of responses for all copy forms
   def copy_responses_count
     if is_standard?
-      copies.inject(0){|sum, c| sum += c.responses_count}
+      copies.sum(:responses_count)
     else
       raise "non-standard forms should not request copy_responses_count"
     end

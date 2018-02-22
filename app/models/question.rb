@@ -53,22 +53,6 @@ class Question < ApplicationRecord
     SELECT question_id FROM form_items
       WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id) }
 
-  # Fetches association counts along with the questions.
-  # Accounts for copies with standard questions.
-  # - form_published_col contains true if any associated forms are published, false or nil otherwise
-  scope(:with_assoc_counts, -> {
-    select("questions.*").
-    select("(
-      SELECT BOOL_OR(DISTINCT forms.published)
-        FROM questions inner_questions
-        LEFT OUTER JOIN form_items questionings
-          ON questionings.deleted_at IS NULL AND questionings.question_id = inner_questions.id
-            AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.deleted_at IS NULL AND forms.id = questionings.form_id
-        WHERE inner_questions.deleted_at IS NULL AND inner_questions.id = questions.id
-    ) AS form_published_col")
-  })
-
   translates :name, :hint
 
   delegate :smsable?,
@@ -167,9 +151,8 @@ class Question < ApplicationRecord
     forms.count
   end
 
-  # gets the number of answers to this question. uses an eager loaded col if available
   def answer_count
-    is_standard? ? copies.inject(0){|sum,c| sum += c.answer_count} : answers.count
+    is_standard? ? copies.to_a.sum(&:answer_count) : answers.count
   end
 
   def has_answers?

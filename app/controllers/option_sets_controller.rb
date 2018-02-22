@@ -13,7 +13,7 @@ class OptionSetsController < ApplicationController
     total = @option_sets.count
 
     # add the included assocations and order
-    @option_sets = @option_sets.with_assoc_counts_and_published(current_mission).by_name
+    @option_sets = @option_sets.includes(:root_node).by_name
 
     # paginate all on one page for now. we specify the total entries so that the autogen'd count query isn't huge.
     # we still bother to call pagination so that the table header works

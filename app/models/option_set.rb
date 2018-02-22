@@ -28,8 +28,6 @@ class OptionSet < ApplicationRecord
 
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
-  scope :with_assoc_counts_and_published, ->(mission) {
-    includes(:root_node).select(%{option_sets.*}).group("option_sets.id")}
 
   # replication options
   replicable(
@@ -197,30 +195,21 @@ class OptionSet < ApplicationRecord
     questions.count + copy_question_count
   end
 
-  # gets number of questions by which a copy of this option set is used
   def copy_question_count
-    is_standard? ? copies.inject(0) { |sum, c| sum += c.question_count } : 0
+    is_standard? ? copies.sum(:question_count) : 0
   end
 
-  # checks if this option set has any answers (that is, answers to questions that use this option set)
-  # or in the case of a standard option set, answers to questions that use copies of this option set
   def has_answers?
-    if is_standard?
-      copies.any? { |c| c.questionings.any?(&:has_answers?) }
-    else
-      questionings.any?(&:has_answers?)
-    end
+    is_standard? ? copies.any?(&:has_answers?) : questionings.any?(&:has_answers?)
   end
 
   def has_answers_for_option?(option_id)
     questionings.any? ? Answer.any_for_option_and_questionings?(option_id, questionings.map(&:id)) : false
   end
 
-  # gets the number of answers to questions that use this option set
-  # or in the case of a standard option set, answers to questions that use copies of this option set
   def answer_count
     if is_standard?
-      copies.sum(&:answer_count)
+      copies.to_a.sum(&:answer_count)
     else
       questionings.inject(0) { |sum, q| sum += q.answers.count }
     end
