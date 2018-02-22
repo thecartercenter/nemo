@@ -7,7 +7,6 @@ feature "conditions in responses", js: true do
   before do
     qings # Ensure these get created before we visit page.
     login(user)
-    visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
   end
 
   describe "different question types" do
@@ -104,6 +103,7 @@ feature "conditions in responses", js: true do
     end
 
     scenario "various conditions on questionings should work" do
+      visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
       visible = [:long_text, :text2, :grp1]
       fill_and_expect_visible(:long_text, "fo", visible)
 
@@ -150,27 +150,32 @@ feature "conditions in responses", js: true do
       fill_and_expect_visible(:grp1, "pix", visible -= [[:rpt3, inst: 1], [:rpt3, inst: 2]])
     end
 
-    describe "condition on qing group" do
+    describe "condition on qing group", :dump_log do
       let!(:group) { create(:qing_group, form: form) }
       let!(:qings) do
         {}.tap do |qings|
-          qings[:text] = create_questioning("text", form)
+          qings[:test] = create_questioning("text", form)
           qings[:grp_q1] = create_questioning("text", form, parent: group)
         end
       end
 
       before do
         group.update_attributes!(display_if: "all_met",
-          display_conditions_attributes: [{ref_qing_id: qings[:text].id, op: "eq", value: "foo"}])
+          display_conditions_attributes: [{ref_qing_id: qings[:test].id, op: "eq", value: "foo"}])
       end
 
       scenario "should hide group members until conditions met" do
-        visible = [:text]
-        screenshot_and_open_image
-        fill_and_expect_visible(:text, "no", visible)
-        screenshot_and_open_image
-        fill_and_expect_visible(:text, "foo", visible << :grp_q1)
-        screenshot_and_open_image
+        visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
+        puts "group at beginning of test"
+        puts group.display_conditionally?
+        puts group.display_if
+        puts group.display_conditions
+        visible = [:test]
+        #screenshot_and_open_image
+        fill_and_expect_visible(:test, "no", visible)
+        #screenshot_and_open_image
+        fill_and_expect_visible(:test, "foo", visible << :grp_q1)
+        #screenshot_and_open_image
       end
     end
   end
@@ -192,6 +197,7 @@ feature "conditions in responses", js: true do
       let(:display_if) { "all_met" }
 
       scenario "conditions should all need to be met" do
+        visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
         visible = [:q1, :q2]
         fill_and_expect_visible(:q1, "10", visible)
         fill_and_expect_visible(:q2, "20", visible)
@@ -212,6 +218,7 @@ feature "conditions in responses", js: true do
       let(:display_if) { "any_met" }
 
       scenario "only one condition should need to be met" do
+        visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
         visible = [:q1, :q2]
 
         fill_and_expect_visible(:q1, "10", visible)
@@ -238,7 +245,9 @@ feature "conditions in responses", js: true do
   end
 
   def fill_answer(field:, value:)
+    puts field
     qing = qings[field.is_a?(Symbol) ? field : field[0]]
+    puts qing
     inst = field.is_a?(Symbol) ? 1 : field[1][:inst]
     idx = "#{qing.id}_#{inst}"
     id = "response_answers_attributes_#{idx}_value"
