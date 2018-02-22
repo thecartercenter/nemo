@@ -10,6 +10,7 @@
 // WARNING: THE FIRST BLANK LINE MARKS THE END OF WHAT'S TO BE PROCESSED, ANY BLANK LINE SHOULD
 // GO AFTER THE REQUIRES BELOW.
 
+// Vendor
 //= require core_ext/array
 //= require core_ext/string
 //= require core_ext/object
@@ -20,14 +21,10 @@
 //= require jquery.tokeninput
 //= require jquery.mjs.nestedSortable-2.0
 //= require jquery.spin
-//= require core_ext/jquery_ext
-//= require legacy/common
 //= require underscore
 //= require backbone
 //= require backbone_rails_sync
 //= require backbone_datalink
-//= require backbone/elmo/
-//= require sassafras/utils
 //= require i18n
 //= require i18n/translations
 //= require bootstrap
@@ -38,15 +35,25 @@
 //= require dropzone
 //= require ckeditor/init
 //= require select2
+//= require react
+//= require react_ujs
 
-// some report superclasses need to come first due to inheritance
+// Global
+//= require core_ext/jquery_ext
+//= require legacy/common
+//= require sassafras/utils
+
+// Superclasses that need to come first due to inheritance
 //= require legacy/views/control/control
 //= require legacy/controllers/report/report_controller
 //= require legacy/models/report/object_menu
 //= require legacy/views/report/display
 //= require legacy/views/report/edit_pane
+//= require views/application_view
+//= require views/form_view
 
-//= require react
-//= require react_ujs
+// React components
 //= require components
+
+// Everything else
 //= require_tree .
