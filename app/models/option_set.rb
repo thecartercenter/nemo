@@ -196,7 +196,7 @@ class OptionSet < ApplicationRecord
   end
 
   def copy_question_count
-    is_standard? ? copies.sum(:question_count) : 0
+    is_standard? ? copies.to_a.sum(&:question_count) : 0
   end
 
   def has_answers?
