@@ -4,7 +4,7 @@ module Printable
     # Generates a human readable representation of a skip rule.
 
     def human_readable(prefs = {})
-      "Skip to #{dest_item.code} if #{decorate_conditions}"
+      "Skip to Question #{QingDecorator.new(dest_item).name_and_rank} if #{decorate_conditions}"
     end
 
     def decorate_conditions
