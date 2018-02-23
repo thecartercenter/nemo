@@ -44,12 +44,6 @@ module Replication::Standardizable
     copies << obj unless copies.include?(obj)
   end
 
-  # returns number of copies
-  # uses eager loaded field if available
-  def copy_count
-    respond_to?(:copy_count_col) ? copy_count_col : copies.count
-  end
-
   def scrub_original_link_if_becoming_incompatible
     if restricted_attribs = replicable_opts[:compatibility]
       restricted_attribs.each do |attrib|

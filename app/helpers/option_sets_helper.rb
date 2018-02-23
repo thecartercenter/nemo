@@ -8,7 +8,7 @@ module OptionSetsHelper
   end
 
   def option_sets_index_fields
-    %w(std_icon name options questions answers) + (admin_mode? ? [] : ['published']) + ['actions']
+    %w(std_icon name options) + (admin_mode? ? [] : ['published']) + ['actions']
   end
 
   def format_option_sets_field(option_set, field)
@@ -19,7 +19,7 @@ module OptionSetsHelper
     when "options" then
       # only show the first 3 options as there could be many many
       option_set.options[0...3].collect{|o| o.name}.join(", ") + (option_set.options.size > 3 ? ', ...' : '')
-    when "questions" then option_set.question_count
+    when "questions" then option_set.questions.count
     when "answers" then number_with_delimiter(option_set.answer_count)
     when "actions" then
       # get standard action links

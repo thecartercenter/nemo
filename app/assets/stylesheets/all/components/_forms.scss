@@ -6,6 +6,17 @@ form.form_form {
   .sms-fields, .form_recipients {
     display: none; // Initially hidden
   }
+
+  ul.admin-stats {
+    list-style: none;
+    margin: 5px 0px 0px 0px;
+    padding: 0px;
+
+    li {
+      display: inline-block;
+      margin: 0px 5px 0px 0px;
+    }
+  }
 }
 
 @media print {
@@ -14,7 +25,7 @@ form.form_form {
     h1.title {
       display: none;
     }
-    
+
     #printable_form h1.title {
       display: block;
       margin-bottom: 3px;

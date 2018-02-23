@@ -33,7 +33,7 @@ class FormsController < ApplicationController
         # otherwise, it's a normal request
         else
           # add some eager loading stuff, and ordering
-          @forms = @forms.with_questioning_and_copy_counts.default_order
+          @forms = @forms.default_order
           load_importable_objs
           render(:index)
         end
@@ -176,7 +176,7 @@ class FormsController < ApplicationController
     authorize!(:add_questions, @form)
 
     # get questions for choice list
-    @questions = Question.includes(:tags).with_assoc_counts.by_code.accessible_by(current_ability).not_in_form(@form)
+    @questions = Question.includes(:tags).by_code.accessible_by(current_ability).not_in_form(@form)
 
     # setup new questioning for use with the questioning form
     init_qing(:form_id => @form.id, :ancestry => @form.root_id, :question_attributes => {})

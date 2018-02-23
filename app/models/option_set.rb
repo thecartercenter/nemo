@@ -28,30 +28,6 @@ class OptionSet < ApplicationRecord
 
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
-  scope :with_assoc_counts_and_published, ->(mission) {
-    includes(:root_node).
-      select(%{
-        option_sets.*,
-        COUNT(DISTINCT answers.id) AS answer_count_col,
-        COUNT(DISTINCT questions.id) AS question_count_col,
-        BOOL_OR(forms.published) AS published_col,
-        COUNT(DISTINCT copy_answers.id) AS copy_answer_count_col,
-        COUNT(DISTINCT copy_questions.id) AS copy_question_count_col,
-        BOOL_OR(copy_forms.published) AS copy_published_col
-      }).
-      joins(%{
-        LEFT OUTER JOIN questions ON questions.option_set_id = option_sets.id
-        LEFT OUTER JOIN form_items questionings ON questionings.question_id = questions.id
-          AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms ON forms.id = questionings.form_id
-        LEFT OUTER JOIN answers ON answers.questioning_id = questionings.id
-        LEFT OUTER JOIN option_sets copies ON option_sets.is_standard = true AND copies.original_id = option_sets.id
-        LEFT OUTER JOIN questions copy_questions ON copy_questions.option_set_id = copies.id
-        LEFT OUTER JOIN form_items copy_questionings ON copy_questionings.question_id = copy_questions.id
-          AND questionings.type = 'Questioning'
-        LEFT OUTER JOIN forms copy_forms ON copy_forms.id = copy_questionings.form_id
-        LEFT OUTER JOIN answers copy_answers ON copy_answers.questioning_id = copy_questionings.id
-      }).group("option_sets.id")}
 
   # replication options
   replicable(
@@ -199,10 +175,8 @@ class OptionSet < ApplicationRecord
     @option_ids_with_answers.include?(option_id)
   end
 
-  # checks if this option set appears in any published questionings
-  # uses eager loaded field if available
   def published?
-    is_standard? ? false : (respond_to?(:published_col) ? published_col == 1 : questionings.any?(&:published?))
+    is_standard? ? false : questionings.any?(&:published?)
   end
 
   # checks if this option set is used in at least one question or if any copies are used in at least one question
@@ -218,62 +192,26 @@ class OptionSet < ApplicationRecord
   # gets total number of questions with which this option set is associated
   # in the case of a std option set, this includes non-standard questions that use copies of this option set
   def ttl_question_count
-    question_count + copy_question_count
+    questions.count + copy_question_count
   end
 
-  # gets number of questions in which this option set is directly used
-  def question_count
-    respond_to?(:question_count_col) ? question_count_col || 0 : questions.count
-  end
-
-  # gets number of questions by which a copy of this option set is used
   def copy_question_count
-    if is_standard?
-      if respond_to?(:copy_question_count_col)
-        copy_question_count_col || 0
-      else
-        copies.inject(0) { |sum, c| sum += c.question_count }
-      end
-    else
-      0
-    end
+    is_standard? ? copies.to_a.sum(&:question_count) : 0
   end
 
-  # checks if this option set has any answers (that is, answers to questions that use this option set)
-  # or in the case of a standard option set, answers to questions that use copies of this option set
-  # uses method from special eager loaded scope if available
   def has_answers?
-    if is_standard?
-      if respond_to?(:copy_answer_count_col)
-        (copy_answer_count_col || 0) > 0
-      else
-        copies.any? { |c| c.questionings.any?(&:has_answers?) }
-      end
-    else
-      respond_to?(:answer_count_col) ? (answer_count_col || 0) > 0 : questionings.any?(&:has_answers?)
-    end
+    is_standard? ? copies.any?(&:has_answers?) : questionings.any?(&:has_answers?)
   end
 
   def has_answers_for_option?(option_id)
     questionings.any? ? Answer.any_for_option_and_questionings?(option_id, questionings.map(&:id)) : false
   end
 
-  # gets the number of answers to questions that use this option set
-  # or in the case of a standard option set, answers to questions that use copies of this option set
-  # uses method from special eager loaded scope if available
   def answer_count
     if is_standard?
-      if respond_to?(:copy_answer_count_col)
-        copy_answer_count_col || 0
-      else
-        copies.inject?(0) { |sum, c| sum += c.answer_count }
-      end
+      copies.to_a.sum(&:answer_count)
     else
-      if respond_to?(:answer_count_col)
-        answer_count_col || 0
-      else
-        questionings.inject(0) { |sum, q| sum += q.answers.count }
-      end
+      questionings.to_a.sum { |q| q.answers.count }
     end
   end
 

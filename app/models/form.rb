@@ -31,23 +31,6 @@ class Form < ApplicationRecord
   before_create :init_downloads
 
   scope :published, -> { where(published: true) }
-
-  # this scope adds a count of the questionings on this form and
-  # the number of copies of this form, and of those that are published
-  # if the form is not a standard, these will just be zero
-  scope(:with_questioning_and_copy_counts, -> { select(%{
-      forms.*,
-      COUNT(DISTINCT form_items.id) AS questionings_count_col,
-      COUNT(DISTINCT copies.id) AS copy_count_col,
-      SUM(CASE copies.published WHEN true THEN 1 ELSE 0 END) AS published_copy_count_col,
-      SUM(copies.responses_count) AS copy_responses_count_col
-    })
-    .joins(%{
-      LEFT OUTER JOIN form_items ON forms.id = form_items.form_id AND form_items.type = 'Questioning'
-      LEFT OUTER JOIN forms copies ON forms.id = copies.original_id AND copies.standard_copy = true
-    })
-    .group("forms.id") })
-
   scope(:by_name, -> { order("forms.name") })
   scope(:default_order, -> { by_name })
 
@@ -143,30 +126,22 @@ class Form < ApplicationRecord
     is_standard? ? false : responses_count > 0
   end
 
-  # returns the number of responses for all copy forms. uses eager loaded col if available
+  # returns the number of responses for all copy forms
   def copy_responses_count
     if is_standard?
-      respond_to?(:copy_responses_count_col) ? (copy_responses_count_col || 0).to_i : copies.inject(0){|sum, c| sum += c.responses_count}
+      copies.sum(:responses_count)
     else
       raise "non-standard forms should not request copy_responses_count"
     end
   end
 
-  # Returns whether this form is published, using eager loaded col if available.
-  # Standard forms are never published.
   def published?
+    # Standard forms are never published
     is_standard? ? false : read_attribute(:published)
   end
 
-  # returns number of copies published. uses eager loaded field if available
   def published_copy_count
-    # published_copy_count_col may be nil so be careful
-    respond_to?(:published_copy_count_col) ? (published_copy_count_col || 0).to_i : copies.find_all(&:published?).size
-  end
-
-  # returns number of questionings on the form. uses eager loaded field if available.
-  def questionings_count
-    respond_to?(:questionings_count_col) ? (questionings_count_col || 0).to_i : questionings.count
+    copies.find_all(&:published?).size
   end
 
   def option_sets

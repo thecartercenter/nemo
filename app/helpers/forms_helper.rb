@@ -14,9 +14,9 @@ module FormsHelper
 
   def forms_index_fields
     if admin_mode?
-      %w(std_icon name questions copy_count copy_responses_count updated_at actions)
+      %w(std_icon name updated_at actions)
     else
-      %w(std_icon version name questions published downloads responses smsable allow_incomplete updated_at actions)
+      %w(std_icon version name published downloads responses smsable allow_incomplete updated_at actions)
     end
   end
 
@@ -25,7 +25,7 @@ module FormsHelper
     when "std_icon" then std_icon(form)
     when "version" then form.version
     when "name" then link_to(form.name, form_path(form), title: t("common.view"))
-    when "questions" then form.questionings_count
+    when "questions" then form.questionings.count
     when "updated_at" then l(form.updated_at)
     when "responses"
       form.responses_count == 0 ? 0 :
