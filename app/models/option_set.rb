@@ -211,7 +211,7 @@ class OptionSet < ApplicationRecord
     if is_standard?
       copies.to_a.sum(&:answer_count)
     else
-      questionings.inject(0) { |sum, q| sum += q.answers.count }
+      questionings.to_a.sum { |q| q.answers.count }
     end
   end
 
