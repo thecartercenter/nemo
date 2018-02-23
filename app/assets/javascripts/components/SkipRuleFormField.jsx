@@ -47,9 +47,12 @@ class SkipRuleFormField extends React.Component {
       value: this.state.id || ""
     };
 
-    let destination_props = {value: this.state.dest_item_id_or_end || "",
+    let destination_props = {
+      value: this.state.dest_item_id_or_end || "",
+      prompt: I18n.t("skip_rule.dest_prompt"),
       options: this.formatTargetItemOptions(this.state.later_items),
-      changeFunc: this.destinationOptionChanged};
+      changeFunc: this.destinationOptionChanged
+    };
 
     let skip_if_props = {
       name: `${name_prefix}[skip_if]`,

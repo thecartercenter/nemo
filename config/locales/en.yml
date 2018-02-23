@@ -1170,6 +1170,7 @@ en:
     no_refable_qings: "There are no questions on this form to which a condition could refer."
     op: "Comparison"
     value: "Value"
+    ref_qing_prompt: "Choose question ..."
 
   dashboard:
     close_dashboard: "Close Dashboard"
@@ -1361,7 +1362,9 @@ en:
     none_found: "No matching options found"
     searching: "Searching..."
     type_to_add_new: "Type an option name"
-    choose_level: "Choose %{level}..."
+    option_prompt: "Choose option ..."
+    option_prompt_with_level: "Choose %{level} ..."
+
 
   option_set_import:
     instructions_html: |-
@@ -1948,6 +1951,7 @@ en:
       all_met: "if all of these conditions are met"
       any_met: "if any of these conditions are met"
     skip_to_item: "Skip to %{label}"
+    dest_prompt: "Choose destination ..."
 
   sms:
     extra_recipients_html: "<br/>... and %{count} more"

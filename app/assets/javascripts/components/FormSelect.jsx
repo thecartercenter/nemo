@@ -1,7 +1,7 @@
 class FormSelect extends React.Component {
   render() {
     let options = [];
-    if (this.props.include_blank !== false) {
+    if (this.props.prompt || this.props.include_blank !== false) {
       options.push(<option
         key="blank"
         value="">

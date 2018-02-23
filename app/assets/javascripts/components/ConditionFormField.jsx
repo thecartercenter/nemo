@@ -53,7 +53,7 @@ class ConditionFormField extends React.Component {
   }
 
   buildValueProps(name_prefix, id_prefix) {
-    if (this.state.option_set_id != null) {
+    if (this.state.option_set_id !== null) {
       return {
         type: "cascading_select",
         name_prefix: name_prefix,
@@ -86,23 +86,19 @@ class ConditionFormField extends React.Component {
       value: this.state.id ? this.state.id : ""
     };
     let ref_qing_field_props = {
-      type: "select",
       name: `${name_prefix}[ref_qing_id]`,
-      id: `${id_prefix}_ref_qing_id`,
-      for: `${id_prefix}_ref_qing_id`,
       key: `${id_prefix}_ref_qing_id`,
       value: this.state.ref_qing_id ? this.state.ref_qing_id : "",
       options: this.formatRefQingOptions(this.state.refable_qings),
+      prompt: I18n.t("condition.ref_qing_prompt"),
       changeFunc: this.updateFieldData
     };
     let operator_field_props = {
-      type: "select",
       name: `${name_prefix}[op]`,
-      id: `${id_prefix}_op`,
-      for: `${id_prefix}_op`,
       key: `${id_prefix}_op`,
       value: this.state.op ? this.state.op : "",
-      options: this.state.operator_options
+      options: this.state.operator_options,
+      include_blank: false
     };
     let destroy_field_props = {
       type: "hidden",
@@ -119,8 +115,8 @@ class ConditionFormField extends React.Component {
         style={{display: this.shouldDestroy() ? "none" : ""}}>
         <input {...id_field_props} />
         <input {...destroy_field_props} />
-        <FormField {...ref_qing_field_props} />
-        <FormField {...operator_field_props} />
+        <FormSelect {...ref_qing_field_props} />
+        <FormSelect {...operator_field_props} />
         <div className="condition-value">
           <FormField {...value_field_props} />
         </div>

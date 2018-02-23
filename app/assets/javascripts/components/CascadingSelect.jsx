@@ -55,7 +55,7 @@ class CascadingSelect extends React.Component {
       key: "questioning_display_conditions_attributes_option_node_ids_",
       value: level.selected,
       options: level.options,
-      prompt: I18n.t("option_set.choose_level", {level: level.name}),
+      prompt: this.optionPrompt(level),
       changeFunc: isLastLevel ? null : this.nodeChanged
     };
   }
@@ -79,6 +79,14 @@ class CascadingSelect extends React.Component {
 
   isLastLevel(i) {
     return this.state.levels && this.state.levels.length === (i + 1);
+  }
+
+  optionPrompt(level) {
+    if (level.name) {
+      return I18n.t("option_set.option_prompt_with_level", {level: level.name});
+    } else {
+      return I18n.t("option_set.option_prompt");
+    }
   }
 
   render() {
