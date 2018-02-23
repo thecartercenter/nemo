@@ -9,6 +9,11 @@
     <% unless qing.hint.blank? %>
       <div class="hint"><%= qing.hint %></div>
     <% end %>
+    <div class="skip-rule">
+      <%qing.skip_rules.each do |rule| %>
+        <%= Printable::SkipRuleDecorator.new(rule).human_readable %>
+      <% end%>
+    </div
   </td>
   <td class="answer <%= qing.qtype_name %>_answer">
     <% # print options if necessary %>
@@ -24,4 +29,5 @@
       <div class="answer_box"></div>
     <% end %>
   </td>
+
 </tr>
