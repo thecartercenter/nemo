@@ -10,7 +10,7 @@ feature "conditions in responses", js: true do
   end
 
   describe "different question types" do
-    let(:year) { Time.now.year - 2 }
+    let(:year) { Time.zone.now.year - 2 }
     let(:group) { create(:qing_group, form: form) }
     let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
     let!(:qings) do
@@ -150,7 +150,7 @@ feature "conditions in responses", js: true do
       fill_and_expect_visible(:grp1, "pix", visible -= [[:rpt3, inst: 1], [:rpt3, inst: 2]])
     end
 
-    describe "condition on qing group", :dump_log do
+    describe "condition on qing group" do
       let!(:group) { create(:qing_group, form: form) }
       let!(:qings) do
         {}.tap do |qings|
@@ -161,7 +161,11 @@ feature "conditions in responses", js: true do
 
       before do
         group.update_attributes!(display_if: "all_met",
-          display_conditions_attributes: [{ref_qing_id: qings[:test].id, op: "eq", value: "foo"}])
+          display_conditions_attributes: [{
+            ref_qing_id: qings[:test].id,
+            op: "eq",
+            value: "foo"
+          }])
       end
 
       scenario "should hide group members until conditions met" do
@@ -232,11 +236,14 @@ feature "conditions in responses", js: true do
     end
   end
 
-  def  visit_new_response_page
-    visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
+  def visit_new_response_page
+    visit(new_response_path(
+      locale: "en",
+      mode: "m",
+      mission_name: get_mission.compact_name,
+      form_id: form.id
+    ))
   end
-
-
 
   def fill_and_expect_visible(field, value, visible)
     fill_answer(field: field, value: value)
@@ -315,8 +322,8 @@ feature "conditions in responses", js: true do
       end
 
       # For each instance, check visibility.
-      # TODO: When we add support for nested groups to this spec, we will have to respect the full
-      # instance descriptor, not just a single number.
+      # TODO: When we add support for nested groups to this spec, we will have to
+      # respect the full instance descriptor, not just a single number.
       (1..inst_count).each do |inst|
         if (visible_fields[qing] || []).include?(inst)
           expect(find(selector_for(qing, inst))).to be_visible
