@@ -15,19 +15,20 @@ class ELMO.Views.FormSettingsView extends ELMO.Views.ApplicationView
     @init_recipient_select()
 
   show_setting_fields: (event) ->
-    event.preventDefault()
+    event.preventDefault() if event
     $('.more-settings').hide()
     $('.less-settings').show()
     $('.setting-fields').show()
 
   hide_setting_fields: (event) ->
-    event.preventDefault()
+    event.preventDefault() if event
     $('.more-settings').show()
     $('.less-settings').hide()
     $('.setting-fields').hide()
 
   show_fields_with_errors: ->
-    $('.field_with_errors:hidden').closest('.setting-fields').show()
+    if @$('.setting-fields .form-field.has-errors').length > 0
+      @show_setting_fields()
 
   show_hide_sms_settings: ->
     read_only = @$('#smsable div.ro-val').length > 0
