@@ -3,17 +3,16 @@ require "spec_helper"
 feature "conditions in responses", js: true do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
-  let(:year) { Time.now.year - 2 }
-  let(:group) { create(:qing_group, form: form) }
-  let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
 
   before do
     qings # Ensure these get created before we visit page.
     login(user)
-    visit(new_response_path(locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id))
   end
 
   describe "different question types" do
+    let(:year) { Time.zone.now.year - 2 }
+    let(:group) { create(:qing_group, form: form) }
+    let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
     let!(:qings) do
       {}.tap do |qings|
         qings[:long_text] = create_questioning("long_text", form)
@@ -103,8 +102,9 @@ feature "conditions in responses", js: true do
       end
     end
 
-    scenario "various conditions should work" do
-      visible = [:long_text, :text2]
+    scenario "various conditions on questionings should work" do
+      visit_new_response_page
+      visible = [:long_text, :text2, :grp1]
       fill_and_expect_visible(:long_text, "fo", visible)
 
       # integer also becomes available here because it depends on text1 not being bar,
@@ -149,6 +149,32 @@ feature "conditions in responses", js: true do
       # Changing value in grp1 should make *both* rpt3s disappear.
       fill_and_expect_visible(:grp1, "pix", visible -= [[:rpt3, inst: 1], [:rpt3, inst: 2]])
     end
+
+    describe "condition on qing group" do
+      let!(:group) { create(:qing_group, form: form) }
+      let!(:qings) do
+        {}.tap do |qings|
+          qings[:test] = create_questioning("text", form)
+          qings[:grp_q1] = create_questioning("text", form, parent: group)
+        end
+      end
+
+      before do
+        group.update_attributes!(display_if: "all_met",
+          display_conditions_attributes: [{
+            ref_qing_id: qings[:test].id,
+            op: "eq",
+            value: "foo"
+          }])
+      end
+
+      scenario "should hide group members until conditions met" do
+        visit_new_response_page
+        visible = [:test]
+        fill_and_expect_visible(:test, "no", visible)
+        fill_and_expect_visible(:test, "foo", visible << :grp_q1)
+      end
+    end
   end
 
   describe "display_if logic" do
@@ -168,6 +194,7 @@ feature "conditions in responses", js: true do
       let(:display_if) { "all_met" }
 
       scenario "conditions should all need to be met" do
+        visit_new_response_page
         visible = [:q1, :q2]
         fill_and_expect_visible(:q1, "10", visible)
         fill_and_expect_visible(:q2, "20", visible)
@@ -188,6 +215,7 @@ feature "conditions in responses", js: true do
       let(:display_if) { "any_met" }
 
       scenario "only one condition should need to be met" do
+        visit_new_response_page
         visible = [:q1, :q2]
 
         fill_and_expect_visible(:q1, "10", visible)
@@ -206,6 +234,15 @@ feature "conditions in responses", js: true do
         fill_and_expect_visible(:q2, "20", visible)
       end
     end
+  end
+
+  def visit_new_response_page
+    visit(new_response_path(
+      locale: "en",
+      mode: "m",
+      mission_name: get_mission.compact_name,
+      form_id: form.id
+    ))
   end
 
   def fill_and_expect_visible(field, value, visible)
@@ -285,11 +322,14 @@ feature "conditions in responses", js: true do
       end
 
       # For each instance, check visibility.
-      # TODO: When we add support for nested groups to this spec, we will have to respect the full
-      # instance descriptor, not just a single number.
+      # TODO: When we add support for nested groups to this spec, we will have to
+      # respect the full instance descriptor, not just a single number.
       (1..inst_count).each do |inst|
-        currently_visible = (visible_fields[qing] || []).include?(inst)
-        expect(page).to have_css(selector_for(qing, inst), visible: currently_visible)
+        if (visible_fields[qing] || []).include?(inst)
+          expect(find(selector_for(qing, inst))).to be_visible
+        else
+          expect(find(selector_for(qing, inst), visible: false)).not_to be_visible
+        end
       end
     end
   end
