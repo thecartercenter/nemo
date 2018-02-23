@@ -1159,14 +1159,14 @@ en:
 
   condition:
     operators:
-      eq: "is equal to"
-      lt: "is less than"
-      gt: "is greater than"
-      leq: "is less than or equal to"
-      geq: "is greater than or equal to"
-      neq: "is not equal to"
+      eq: "= equals"
+      lt: "< less than"
+      gt: "> greater than"
+      leq: "≤ less than or equal to"
+      geq: "≥ greater than or equal to"
+      neq: "≠ does not equal"
       inc: "includes"
-      ninc: "does not include"
+      ninc: "excludes"
     no_refable_qings: "There are no questions on this form to which a condition could refer."
     op: "Comparison"
     value: "Value"
