@@ -853,7 +853,7 @@ fr:
     tag: "onglet"
     date: "date"
     datetime: "date-heure"
-    username: "Utilisateur "
+    username: "utilisateur"
     content: "contenu"
     number: "numéro"
     group: "groupe"

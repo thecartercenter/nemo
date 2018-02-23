@@ -1,4 +1,5 @@
-# encoding: utf-8
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe "search qualifiers" do
@@ -29,8 +30,8 @@ describe "search qualifiers" do
           # the user will be using the english qualifier name.
           qual_tr = I18n.t("search_qualifiers.#{qual.name}", locale: locale, default: qual_en)
 
-          unless qual_tr =~ /\A[\p{Word}'\-]+\z/
-            puts "#{klass.capitalize} qualifier '#{qual.name}' (#{qual_tr}) in #{locale} has an invalid format."
+          unless qual_tr.match?(/\A[\p{Word}'\-]+\z/)
+            puts "#{klass} qualifier '#{qual.name}' (#{qual_tr}) in #{locale} has an invalid format."
             errors = true
             next
           end
