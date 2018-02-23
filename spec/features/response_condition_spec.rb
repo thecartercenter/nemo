@@ -166,16 +166,9 @@ feature "conditions in responses", js: true do
 
       scenario "should hide group members until conditions met" do
         visit_new_response_page
-        puts "group at beginning of test"
-        puts group.display_conditionally?
-        puts group.display_if
-        puts group.display_conditions
         visible = [:test]
-        #screenshot_and_open_image
         fill_and_expect_visible(:test, "no", visible)
-        #screenshot_and_open_image
         fill_and_expect_visible(:test, "foo", visible << :grp_q1)
-        #screenshot_and_open_image
       end
     end
   end
@@ -251,9 +244,7 @@ feature "conditions in responses", js: true do
   end
 
   def fill_answer(field:, value:)
-    puts field
     qing = qings[field.is_a?(Symbol) ? field : field[0]]
-    puts qing
     inst = field.is_a?(Symbol) ? 1 : field[1][:inst]
     idx = "#{qing.id}_#{inst}"
     id = "response_answers_attributes_#{idx}_value"
