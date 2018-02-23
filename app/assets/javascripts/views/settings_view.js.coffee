@@ -4,22 +4,22 @@ class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
 
   events:
     'click #external_sql .control a': 'select_external_sql'
-    'click .adapter_settings a': 'show_change_credential_fields'
+    'click .adapter-settings a': 'show_change_credential_fields'
     'click .using-incoming_sms_token': 'show_using_incoming_sms_token_modal'
     'click .using-universal_sms_token': 'show_using_universal_sms_token_modal'
-    'click .credential_fields input[type=checkbox]:checked': 'clear_sms_fields'
+    'click .credential-fields input[type=checkbox]:checked': 'clear_sms_fields'
 
   initialize: (options) ->
     this.need_credentials = options.need_credentials || {}
     this.show_credential_fields_with_errors()
 
   select_external_sql: (event) ->
-    $("form.setting_form #external_sql .control pre").selectText()
+    @$("#external_sql .control pre").selectText()
     return false
 
   show_change_credential_fields: (event) ->
-    $(event.target).hide()
-    $(event.target).closest('.adapter_settings').find(".credential_fields").show()
+    @$(event.target).hide()
+    @$(event.target).closest('.adapter-settings').find(".credential-fields").show()
     return false
 
   show_using_universal_sms_token_modal: (event) ->
@@ -45,10 +45,10 @@ class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
         ELMO.app.loading(false)
 
   show_credential_fields_with_errors: ->
-    adapters = $('.field_with_errors:hidden').closest('.adapter_settings')
-    $(adapters).find('.credential_fields').show()
-    $(adapters).find('a.show_credential_fields').hide()
+    adapters = @$('.form-field.has-errors:hidden').closest('.adapter-settings')
+    @$(adapters).find('.credential-fields').show()
+    @$(adapters).find('a.show-credential-fields').hide()
 
   clear_sms_fields: (event) ->
-    inputs = $(event.target).closest('.adapter_settings').find('input[type=text]')
-    $(inputs).val('')
+    inputs = @$(event.target).closest('.adapter-settings').find('input[type=text]')
+    @$(inputs).val('')
