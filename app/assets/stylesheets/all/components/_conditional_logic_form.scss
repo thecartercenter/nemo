@@ -24,22 +24,22 @@ form {
       margin-top: 10px;
     }
 
+    .skip-rule-add-link-wrapper {
+      border-top: $light-border;
+      padding-top: 10px;
+    }
+
     .skip-rule {
       display: flex;
-      padding: 10px 0;
+      padding-top: 10px;
       border-top: $light-border;
-      margin-bottom: 10px;
-
-      &:last-of-type {
-        border-bottom: $light-border;
-      }
 
       .skip-rule-main {
         flex: auto;
+        padding-bottom: 10px;
       }
 
       .skip-rule-attribs {
-        margin-bottom: 10px;
         display: flex;
 
         select {

@@ -36,13 +36,16 @@ class SkipRuleSetFormField extends React.Component {
           name_prefix={`questioning[skip_rules_attributes][${index}]`}
           refable_qings={this.state.refable_qings}
           {...props} />))}
-        <a
-          onClick={this.addRule}
-          tabIndex="0">
-          <i className="fa fa-plus" />
-          {" "}
-          {I18n.t("form_item.add_rule")}
-        </a>
+        <div
+          className="skip-rule-add-link-wrapper">
+          <a
+            onClick={this.addRule}
+            tabIndex="0">
+            <i className="fa fa-plus" />
+            {" "}
+            {I18n.t("form_item.add_rule")}
+          </a>
+        </div>
       </div>
     );
   }
