@@ -1,10 +1,17 @@
+# frozen_string_literal: true
+
 # Implements the policy about when a form's version should be upgraded.
-# Any form component objects (Option, OptionSet, OptionNode, Question, Questioning) should call this class after updating.
+# Any form component objects (Option, OptionSet, OptionNode, Question, Questioning)
+# should call this class after updating.
 # It will tell the appropriate Forms to upgrade their versions.
+#
+# The goal of this policy is to provide some granularity over when downloading a new form is required.
+# If we add a non-required question to the end of a form, it might not be necessary for everyone to
+# re-download the form, for instance. If we add a required question, on the other hand, it is.
 class FormVersioningPolicy
   # Sets the upgrade_neccessary flag on forms where necessary.
   def notify(obj, action)
-    forms_needing_upgrade(obj, action).reject{ |f| f.is_standard? }.each do |f|
+    forms_needing_upgrade(obj, action).reject(&:is_standard?).each do |f|
       f.reload
       f.flag_for_upgrade!
     end
@@ -15,20 +22,20 @@ class FormVersioningPolicy
   # Returns a list of forms needing upgrade based on the given object and action.
   # If the list is empty, it means that no form's version will have to be updated.
   def forms_needing_upgrade(obj, action)
-    return [] if obj.id_changed? && action == :update # this is a create, not an update
+    return [] if obj.id_changed? && action == :update # This is a create, not an update
 
     case obj.class.name
     when "Option"
       case action
       when :destroy
-        # changing an option is fine, but destroying an option is a trigger
+        # Changing an option is fine, but destroying an option is a trigger
         return obj.forms
       end
 
     when "OptionSet"
       case action
       when :update
-        # changing the option order is a trigger if the form is smsable
+        # Changing the option order is a trigger if the form is smsable
         return obj.forms.select(&:smsable?) if obj.ranks_changed? || obj.sms_guide_formatting_changed?
       end
 
@@ -38,7 +45,7 @@ class FormVersioningPolicy
 
       case action
       when :create
-        # adding an option to an option set is a trigger for smsable forms
+        # Adding an option to an option set is a trigger for smsable forms
         return obj.option_set.forms.select(&:smsable?)
       when :destroy
         # Removing an option from an option set is always trigger.
@@ -48,16 +55,21 @@ class FormVersioningPolicy
     when "Questioning"
       case action
       when :create
-        # creating a new required question is a trigger
+        # Creating a new required question is a trigger
         return [obj.form] if obj.required?
       when :update
-        # if required is changed, it's a trigger
-        # changing question rank is a trigger if form is smsable
-        # changing question visibility is a trigger if changed to visible (not hidden)
-        return [obj.form] if obj.required_changed? || obj.rank_changed? && obj.form.smsable? || obj.hidden_changed? && !obj.hidden?
+        # If required is changed, it's a trigger
+        # Changing question rank is a trigger if form is smsable
+        # Changing question visibility is a trigger if changed to visible (not hidden)
+        if obj.required_changed? || (obj.rank_changed? && obj.form.smsable?) ||
+            (obj.hidden_changed? && !obj.hidden?)
+          return [obj.form]
+        end
       when :destroy
         # If form smsable and the questioning was NOT the last one on the form, it's a trigger.
-        return [obj.form] if obj.form.smsable? && obj.form.last_qing.present? && obj.rank <= obj.form.last_qing.rank
+        if obj.form.smsable? && obj.form.last_qing.present? && obj.rank <= obj.form.last_qing.rank
+          return [obj.form]
+        end
       end
 
     when "Condition"
@@ -66,25 +78,29 @@ class FormVersioningPolicy
       return [] unless obj.conditionable.is_a?(Questioning)
       case action
       when :create
-        # creating a condition is a trigger if question is required
-        return [obj.form] if obj.conditionable.required?
+        # Creating a condition is not a trigger even if question is required because person submitting
+        # old form would still think question is required, which does not lead to loss of data.
+        return []
       when :update
-        # changing condition is a trigger if question is required
+        # Changing condition is a trigger if question is required because person submitting old form
+        # might skip a required question based on an outdated condition. This wouldn't cause an error, but
+        # may lead to undesired data.
         return [obj.form] if obj.changed? && obj.conditionable.required?
       when :destroy
-        # destroying a condition is a trigger if question is required
+        # Destroying a condition is a trigger if question is required because person submitting old form
+        # wouldn't know about lack of condition and might try to omit now-required information.
         return [obj.form] if obj.conditionable.required?
       end
 
     when "Question"
       case action
       when :update
-        # changing question type, option set, constraints
+        # Changing question type, option set, constraints
         return obj.forms if obj.qtype_name_changed? || obj.option_set_id_changed? ||
-          obj.constraint_changed?
+            obj.constraint_changed?
       end
     end
 
-    return []
+    []
   end
 end

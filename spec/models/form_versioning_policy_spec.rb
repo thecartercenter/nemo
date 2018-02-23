@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "spec_helper"
 
 describe FormVersioningPolicy do
   include OptionNodeSupport
@@ -120,13 +120,13 @@ describe FormVersioningPolicy do
 
     save_old_version_codes
 
-    # add a condition in first 2 forms, should cause bump
+    # add a condition in first 2 forms, should not cause bump
     qings2[0...2].each_with_index do |qing, i|
       qing.reload
       qing.display_conditions.build(ref_qing: qings1[i], op: 'eq', value: '1')
       qing.save!
     end
-    publish_and_check_versions(should_change: true)
+    publish_and_check_versions(should_change: false)
 
     save_old_version_codes
 
