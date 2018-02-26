@@ -189,10 +189,14 @@ class OptionSet < ApplicationRecord
     questions.any? { |q| q.qtype_name == "select_multiple" }
   end
 
+  def question_count
+    questions.count
+  end
+
   # gets total number of questions with which this option set is associated
   # in the case of a std option set, this includes non-standard questions that use copies of this option set
   def ttl_question_count
-    questions.count + copy_question_count
+    question_count + copy_question_count
   end
 
   def copy_question_count
