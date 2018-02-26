@@ -1,11 +1,14 @@
+# Represents a condition in a question's display logic or skip logic.
 class Condition < ApplicationRecord
-  include MissionBased, FormVersionable, Replication::Replicable
+  include MissionBased
+  include FormVersionable
+  include Replication::Replicable
 
   acts_as_paranoid
 
   belongs_to :conditionable, polymorphic: true
   belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",
-    inverse_of: :referring_conditions
+                        inverse_of: :referring_conditions
   belongs_to :option_node
 
   before_validation :clear_blanks
@@ -20,20 +23,9 @@ class Condition < ApplicationRecord
   scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
   scope :by_ref_qing_rank, -> { joins(:ref_qing).order("form_items.rank") }
 
-  OPERATORS = [
-    {name: 'eq', types: %w(decimal integer counter text long_text address select_one datetime date time),
-      code: "="},
-    {name: 'lt', types: %w(decimal integer counter datetime date time), code: "<"},
-    {name: 'gt', types: %w(decimal integer counter datetime date time), code: ">"},
-    {name: 'leq', types: %w(decimal integer counter datetime date time), code: "<="},
-    {name: 'geq', types: %w(decimal integer counter datetime date time), code: ">="},
-    {name: 'neq', types: %w(decimal integer counter text long_text address select_one datetime date time),
-      code: "!="},
-    {name: 'inc', types: %w(select_multiple), code: "="},
-    {name: 'ninc', types: %w(select_multiple), code: "!="}
-  ]
+  OPERATOR_CODES = %i[eq lt gt leq geq neq inc ninc].freeze
 
-  replicable dont_copy: [:ref_qing_id, :conditionable_id, :option_node_id], backward_assocs: [
+  replicable dont_copy: %i[ref_qing_id conditionable_id option_node_id], backward_assocs: [
     :conditionable,
     {name: :option_node, skip_obj_if_missing: true},
     # This is a second pass association because the ref_qing may not have been copied yet.
@@ -44,9 +36,8 @@ class Condition < ApplicationRecord
 
   # Deletes any that have become invalid due to changes in the given question
   def self.check_integrity_after_question_change(question)
-    if question.option_set_id_changed? || question.destroyed?
-      referring_to_question(question).destroy_all
-    end
+    return unless question.option_set_id_changed? || question.destroyed?
+    referring_to_question(question).destroy_all
   end
 
   # We accept a list of OptionNode IDs as a way to set the option_node association.
@@ -70,12 +61,15 @@ class Condition < ApplicationRecord
 
   # returns names of all operators that are applicable to this condition based on its referred question
   def applicable_operator_names
-    ref_qing ? OPERATORS.select{|o| o[:types].include?(ref_qing.qtype_name)}.map{|o| o[:name]} : []
-  end
-
-  # Gets the definition of self's operator (self.op).
-  def operator
-    @operator ||= OPERATORS.detect{|o| o[:name] == op}
+    return [] unless ref_qing
+    qtype = ref_qing.qtype
+    OPERATOR_CODES.select do |oc|
+      case oc
+      when :eq, :neq then !qtype.select_multiple?
+      when :lt, :gt, :leq, :geq then qtype.temporal? || qtype.numeric?
+      when :inc, :ninc then qtype.select_multiple?
+      end
+    end
   end
 
   def temporal_ref_question?
