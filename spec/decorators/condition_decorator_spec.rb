@@ -37,7 +37,7 @@ describe ConditionDecorator do
 
       context "negation should work" do
         let(:cond) { Condition.new(ref_qing: sel_q, op: "ninc", option_node: sel_q.option_set.c[1]) }
-        it { is_expected.to eq "Question #1 does not include \"Dog\"" }
+        it { is_expected.to eq "Question #1 excludes \"Dog\"" }
       end
     end
 

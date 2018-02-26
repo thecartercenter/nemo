@@ -13,7 +13,7 @@ class ConditionViewSerializer < ActiveModel::Serializer
   end
 
   def operator_options
-    object.applicable_operator_names.map { |n| {name: I18n.t("condition.operators.#{n}"), id: n} }
+    object.applicable_operator_names.map { |n| {name: I18n.t("condition.operators.select.#{n}"), id: n} }
   end
 
   def value

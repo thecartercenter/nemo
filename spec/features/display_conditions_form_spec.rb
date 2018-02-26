@@ -1,9 +1,14 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 feature "display conditions form", js: true do
   let!(:user) { create(:user) }
-  let!(:form) { create(:form, name: "Foo",
-    question_types: %w(integer multilevel_select_one select_one integer)) }
+  let!(:form) do
+    create(:form,
+      name: "Foo",
+      question_types: %w[integer multilevel_select_one select_one integer])
+  end
 
   before do
     login(user)
@@ -25,7 +30,7 @@ feature "display conditions form", js: true do
     # First condition
     within(all(".condition-fields")[0]) do
       select_question(form.c[0].code)
-      select_operator("is less than")
+      select_operator("< less than")
       fill_in_value("5")
     end
 
@@ -33,7 +38,7 @@ feature "display conditions form", js: true do
     click_add_condition
     within(all(".condition-fields")[1]) do
       select_question(form.c[0].code)
-      select_operator("is greater than")
+      select_operator("> greater than")
       fill_in_value("0")
       click_delete_link
     end
@@ -42,7 +47,7 @@ feature "display conditions form", js: true do
     click_add_condition
     within(all(".condition-fields")[1]) do
       select_question(form.c[1].code)
-      select_operator("is equal to")
+      select_operator("= equals")
       select_values("Plant", "Oak")
     end
 
@@ -59,13 +64,13 @@ feature "display conditions form", js: true do
 
     within(all(".condition-fields")[0]) do
       expect_selected_question(form.c[0])
-      expect_selected_operator("is less than")
+      expect_selected_operator("< less than")
       expect_filled_in_value("5")
     end
 
     within(all(".condition-fields")[1]) do
       expect_selected_question(form.c[1])
-      expect_selected_operator("is equal to")
+      expect_selected_operator("= equals")
       expect_selected_values("Plant", "Oak")
     end
   end
@@ -90,12 +95,12 @@ feature "display conditions form", js: true do
       # Edit existing condition
       within(all(".condition-fields")[0]) do
         select_question(form.c[1].code)
-        select_operator("is equal to")
+        select_operator("= equals")
         select_values("Plant", "Oak")
 
         # Change mind!
         select_question(form.c[0].code)
-        select_operator("is equal to")
+        select_operator("= equals")
         fill_in_value("8")
       end
 
@@ -103,17 +108,17 @@ feature "display conditions form", js: true do
       click_add_condition
       within(all(".condition-fields")[1]) do
         select_question(form.c[0].code)
-        select_operator("is less than")
+        select_operator("< less than")
         fill_in_value("25")
 
         # Change mind!
         select_question(form.c[1].code)
-        select_operator("is equal to")
+        select_operator("= equals")
         select_values("Plant", "Oak")
 
         # Change again!
         select_question(form.c[2].code)
-        select_operator("is equal to")
+        select_operator("= equals")
         select_values("Cat")
       end
 
@@ -121,7 +126,7 @@ feature "display conditions form", js: true do
       click_add_condition
       within(all(".condition-fields")[2]) do
         select_question(form.c[0].code)
-        select_operator("is less than or equal to")
+        select_operator("≤ less than or equal to")
         fill_in_value("99")
         click_delete_link
       end
@@ -137,13 +142,13 @@ feature "display conditions form", js: true do
 
       within(all(".condition-fields")[0]) do
         expect_selected_question(form.c[0])
-        expect_selected_operator("is equal to")
+        expect_selected_operator("= equals")
         expect_filled_in_value("8")
       end
 
       within(all(".condition-fields")[1]) do
         expect_selected_question(form.c[2])
-        expect_selected_operator("is equal to")
+        expect_selected_operator("= equals")
         expect_selected_values("Cat")
       end
     end

@@ -15,11 +15,6 @@ require 'cancan/matchers'
 Capybara.register_driver :selenium_chrome_headless do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
     args: %w[disable-gpu no-sandbox] + (ENV["HEADED"] ? [] : ["headless"]),
-    # This makes logs available, but doesn't cause them to appear
-    # in real time on the console.
-    # Use `page.driver.browser.manage.logs.get(:browser)` to get the log,
-    # or tag your example with :dump_log to print it to the test output.
-    # You MUST use console.warn or console.error for this to work.
     loggingPrefs: {browser: "ALL", client: "ALL", driver: "ALL", server: "ALL"}
   )
 
@@ -90,10 +85,15 @@ RSpec.configure do |config|
     example.run
   end
 
-  config.after(:each, type: :feature, dump_log: true) do
-    puts "------------ BROWSER LOGS -------------"
-    puts page.driver.browser.manage.logs.get(:browser).join("\n")
-    puts "---------------------------------------"
+  # Print browser logs to console if they are non-empty.
+  # You MUST use console.warn or console.error for this to work.
+  config.after(:each, type: :feature, js: true) do
+    logs = page.driver.browser.manage.logs.get(:browser).join("\n")
+    unless logs.strip.empty?
+      puts "------------ BROWSER LOGS -------------"
+      puts logs
+      puts "---------------------------------------"
+    end
   end
 
   # Important that url options are consistent for specs regardless of what's in local config.

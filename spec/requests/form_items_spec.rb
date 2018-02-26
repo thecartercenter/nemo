@@ -2,8 +2,8 @@ require "spec_helper"
 
 describe "form items" do
   let(:user) { create(:user, role_name: "coordinator") }
-  let(:form) { create(:form, question_types: ["text", ["text", "text"]]) }
-  let(:qing) { form.sorted_children.select{ |c| c.type == "Questioning" }.first }
+  let(:form) { create(:form, question_types: ["text", %w[text text]]) }
+  let(:qing) { form.sorted_children.select { |c| c.type == "Questioning" }.first }
   let(:qing_group) { form.sorted_children.select { |c| c.type == "QingGroup" }.first }
 
   before do
@@ -44,7 +44,7 @@ describe "form items" do
   end
 
   describe "condition_form" do
-    let(:form) { create(:form, :published, question_types: %w(integer text select_one integer text)) }
+    let(:form) { create(:form, :published, question_types: %w[integer text select_one integer text]) }
     let(:qing) { form.c[3] }
     let(:expected_ref_qing_options) do
       form.c[0..3].map do |q|
@@ -67,12 +67,11 @@ describe "form items" do
           operator_options: [],
           refable_qings: expected_ref_qing_options
         }.to_json
-        get "/en/m/#{get_mission.compact_name}/form-items/condition-form",{
+        get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
           ref_qing_id: nil,
           form_id: form.id,
           conditionable_id: qing.id,
           conditionable_type: "FormItem"
-        }
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
@@ -81,12 +80,12 @@ describe "form items" do
     context "with ref_qing_id" do
       it "returns json with operator options" do
         expected_operator_options = [
-          {name:"is equal to", id:"eq" },
-          {name:"is less than", id:"lt" },
-          {name:"is greater than", id:"gt" },
-          {name:"is less than or equal to", id:"leq" },
-          {name:"is greater than or equal to", id:"geq" },
-          {name:"is not equal to", id:"neq" }
+          {name: "= equals", id: "eq"},
+          {name: "< less than", id: "lt"},
+          {name: "> greater than", id: "gt"},
+          {name: "≤ less than or equal to", id: "leq"},
+          {name: "≥ greater than or equal to", id: "geq"},
+          {name: "≠ does not equal", id: "neq"}
         ]
         expected = {
           id: nil,
@@ -102,23 +101,21 @@ describe "form items" do
           refable_qings: expected_ref_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
-          {
-            ref_qing_id: form.c[0].id,
-            form_id: form.id,
-            conditionable_id: qing.id,
-            conditionable_type: "FormItem"
-          }
+          ref_qing_id: form.c[0].id,
+          form_id: form.id,
+          conditionable_id: qing.id,
+          conditionable_type: "FormItem"
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
 
-      context " text value exists" do
-        let(:condition) { create(:condition, conditionable: qing, ref_qing: form.c[1], value: "Test") } #ref_qing: form.c[1], op: "eq", value: "Test"}
+      context "text value exists" do
+        let(:condition) { create(:condition, conditionable: qing, ref_qing: form.c[1], value: "Test") }
 
         it "returns text value" do
           expected_operator_options = [
-            {name:"is equal to", id:"eq" },
-            {name:"is not equal to", id:"neq" }
+            {name: "= equals", id: "eq"},
+            {name: "≠ does not equal", id: "neq"}
           ]
           expected = {
             id: condition.id,
@@ -134,13 +131,11 @@ describe "form items" do
             refable_qings: expected_ref_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
-            {
-              condition_id: condition.id,
-              ref_qing_id: form.c[1].id,
-              form_id: form.id,
-              conditionable_id: qing.id,
-              conditionable_type: "FormItem"
-            }
+            condition_id: condition.id,
+            ref_qing_id: form.c[1].id,
+            form_id: form.id,
+            conditionable_id: qing.id,
+            conditionable_type: "FormItem"
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -151,8 +146,8 @@ describe "form items" do
 
         it "returns text value" do
           expected_operator_options = [
-            {name:"is equal to", id:"eq" },
-            {name:"is not equal to", id:"neq" }
+            {name: "= equals", id: "eq"},
+            {name: "≠ does not equal", id: "neq"}
           ]
           expected = {
             id: condition.id,
@@ -168,13 +163,11 @@ describe "form items" do
             refable_qings: expected_ref_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
-            {
-              condition_id: condition.id,
-              ref_qing_id: form.c[2].id,
-              form_id: form.id,
-              conditionable_id: qing.id,
-              conditionable_type: "FormItem"
-            }
+            condition_id: condition.id,
+            ref_qing_id: form.c[2].id,
+            form_id: form.id,
+            conditionable_id: qing.id,
+            conditionable_type: "FormItem"
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end

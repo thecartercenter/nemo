@@ -53,7 +53,7 @@ class ConditionFormField extends React.Component {
   }
 
   buildValueProps(name_prefix, id_prefix) {
-    if (this.state.option_set_id !== null) {
+    if (this.state.option_set_id) {
       return {
         type: "cascading_select",
         name_prefix: name_prefix,

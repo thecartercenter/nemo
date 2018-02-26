@@ -6,7 +6,7 @@ class ConditionDecorator < ApplicationDecorator
   #   May not always be desireable e.g. with printable forms.
   def human_readable(prefs = {})
     if ref_qing_id.blank?
-      '' # need to return something here to avoid nil errors
+      "" # need to return something here to avoid nil errors
     else
       bits = []
       bits << Question.model_name.human
@@ -20,9 +20,9 @@ class ConditionDecorator < ApplicationDecorator
         target = value
       end
 
-      bits << I18n.t("condition.operators.#{op}")
+      bits << I18n.t("condition.operators.human_readable.#{op}")
       bits << (numeric_ref_question? ? target : "\"#{target}\"")
-      bits.join(' ')
+      bits.join(" ")
     end
   end
 end
