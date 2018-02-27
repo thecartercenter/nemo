@@ -498,7 +498,7 @@ en:
         from: "From"
         body: "Body"
       user:
-        admin: "Is Administrator?"
+        admin: "Is Admin?"
         assignments: "Assignments"
         birth_year: "Birth Year"
         nationality: "Nationality"
