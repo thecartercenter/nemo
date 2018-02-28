@@ -14,7 +14,7 @@ class DisplayLogicFormField extends React.Component {
     // Display logic conditions can't reference self, as that doesn't make sense.
     let refableQings = this.state.refableQings.slice(0, -1);
 
-    if (refableQings.length == 0) {
+    if (refableQings.length === 0) {
       return (
         <div>
           {I18n.t("condition.no_refable_qings")}
@@ -35,7 +35,7 @@ class DisplayLogicFormField extends React.Component {
         conditionableType: "FormItem",
         refableQings: refableQings,
         formId: this.state.formId,
-        hide: this.state.displayIf == "always",
+        hide: this.state.displayIf === "always",
         namePrefix: "questioning[display_conditions_attributes]"
       };
 

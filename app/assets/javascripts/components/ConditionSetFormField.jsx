@@ -7,7 +7,7 @@ class ConditionSetFormField extends React.Component {
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
-    if (!newProps.hide && this.props.hide && this.state.conditions.length == 0) {
+    if (!newProps.hide && this.props.hide && this.state.conditions.length === 0) {
       this.addCondition();
     }
   }

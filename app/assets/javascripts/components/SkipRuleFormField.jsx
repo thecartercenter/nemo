@@ -2,7 +2,7 @@ class SkipRuleFormField extends React.Component {
   constructor(props) {
     super();
 
-    let destItemIdOrEnd = props.destination == "end" ? "end" : props.destItemId;
+    let destItemIdOrEnd = props.destination === "end" ? "end" : props.destItemId;
     this.state = Object.assign({}, props, {destItemIdOrEnd: destItemIdOrEnd});
 
     this.destinationOptionChanged = this.destinationOptionChanged.bind(this);
@@ -13,8 +13,8 @@ class SkipRuleFormField extends React.Component {
   destinationOptionChanged(value) {
     this.setState({
       destItemIdOrEnd: value,
-      destination: value == "end" ? "end" : "item",
-      destItemId: value == "end" ? null : value
+      destination: value === "end" ? "end" : "item",
+      destItemId: value === "end" ? null : value
     });
   }
 
@@ -68,7 +68,7 @@ class SkipRuleFormField extends React.Component {
       refableQings: this.state.refableQings,
       namePrefix: `${namePrefix}[conditions_attributes]`,
       formId: this.state.formId,
-      hide: this.state.skipIf == "always"
+      hide: this.state.skipIf === "always"
     };
 
     let destroyFieldProps = {
