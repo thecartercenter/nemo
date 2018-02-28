@@ -118,7 +118,7 @@ class ConditionFormField extends React.Component {
         <FormSelect {...refQingFieldProps} />
         <FormSelect {...operatorFieldProps} />
         <div className="condition-value">
-          <FormField {...valueFieldProps} />
+          <ConditionValueField {...valueFieldProps} />
         </div>
         <div className="condition-remove">
           <a onClick={this.removeCondition}>
@@ -133,3 +133,7 @@ class ConditionFormField extends React.Component {
     return this.state.remove || this.props.hide;
   }
 }
+
+ConditionFormField.propTypes = {
+  hide: React.PropTypes.bool.isRequired
+};

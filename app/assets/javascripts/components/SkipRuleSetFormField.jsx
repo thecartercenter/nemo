@@ -17,7 +17,6 @@ class SkipRuleSetFormField extends React.Component {
     this.setState({skipRules:
       this.state.skipRules.concat([{
         destination: laterItemsExist ? "item" : "end",
-        destItemId: laterItemsExist ? this.state.laterItems[0] : null,
         skipIf: "always",
         conditions: []
       }])});
@@ -50,3 +49,7 @@ class SkipRuleSetFormField extends React.Component {
     );
   }
 }
+
+SkipRuleSetFormField.propTypes = {
+  hide: React.PropTypes.bool.isRequired
+};

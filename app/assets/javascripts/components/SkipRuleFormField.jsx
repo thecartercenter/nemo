@@ -121,3 +121,14 @@ class SkipRuleFormField extends React.Component {
     return this.state.remove || this.props.hide;
   }
 }
+
+SkipRuleFormField.propTypes = {
+  destination:  React.PropTypes.string.isRequired,
+  destItemId: React.PropTypes.string,
+  hide: React.PropTypes.bool.isRequired,
+  namePrefix: React.PropTypes.string.isRequired
+};
+
+SkipRuleFormField.defaultProps = {
+  destItemId: null
+};

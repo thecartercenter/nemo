@@ -34,3 +34,7 @@ class SkipLogicFormField extends React.Component {
     );
   }
 }
+
+SkipLogicFormField.propTypes = {
+  skipRules: React.PropTypes.arrayOf(React.PropTypes.object).isRequired
+};

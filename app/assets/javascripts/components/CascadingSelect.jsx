@@ -99,3 +99,12 @@ class CascadingSelect extends React.Component {
     );
   }
 }
+
+CascadingSelect.propTypes = {
+  optionNodeId: React.PropTypes.string,
+  optionSetId: React.PropTypes.string.isRequired
+};
+
+CascadingSelect.defaultProps = {
+  optionNodeId: null
+};

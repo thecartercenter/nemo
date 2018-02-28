@@ -45,3 +45,7 @@ class ConditionSetFormField extends React.Component {
     );
   }
 }
+
+ConditionSetFormField.propTypes = {
+  hide: React.PropTypes.bool.isRequired
+};
