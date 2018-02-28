@@ -2,7 +2,7 @@ require "spec_helper"
 
 describe Condition do
   describe "any_fields_blank?" do
-    let(:form) { create(:form, question_types: %w(select_one integer)) }
+    let(:form) { create(:form, question_types: %w[select_one integer]) }
     let(:option_node_id) { form.questionings[0].option_set.children.first.id }
 
     it "should be true if missing ref_qing" do
@@ -46,7 +46,7 @@ describe Condition do
   end
 
   describe "clean times" do
-    let(:form) { create(:form, question_types: %w(datetime integer)) }
+    let(:form) { create(:form, question_types: %w[datetime integer]) }
     let(:cond) { Condition.new(ref_qing: form.questionings[0], value: "2013-04-30 2:14:12pm") }
 
     it "should clean time" do
@@ -55,17 +55,53 @@ describe Condition do
     end
   end
 
-  describe "applicable operator names" do
-    let(:form) { create(:form, question_types: %w(select_one integer)) }
+  describe "#applicable_operator_names" do
+    let(:form) { create(:form, question_types: [qtype] << "integer") }
     let(:cond) { Condition.new(ref_qing: form.questionings[0]) }
 
-    it "should be correct" do
-      expect(cond.applicable_operator_names).to eq %w(eq neq)
+    context "for select_one question" do
+      let(:qtype) { "select_one" }
+
+      it "should be correct" do
+        expect(cond.applicable_operator_names).to eq %i[eq neq]
+      end
+    end
+
+    context "for textual question" do
+      let(:qtype) { "barcode" }
+
+      it "should be correct" do
+        expect(cond.applicable_operator_names).to eq %i[eq neq]
+      end
+    end
+
+    context "for numeric question" do
+      let(:qtype) { "decimal" }
+
+      it "should be correct" do
+        expect(cond.applicable_operator_names).to eq %i[eq lt gt leq geq neq]
+      end
+    end
+
+    context "for temporal question" do
+      let(:qtype) { "datetime" }
+
+      it "should be correct" do
+        expect(cond.applicable_operator_names).to eq %i[eq lt gt leq geq neq]
+      end
+    end
+
+    context "for select multiple question" do
+      let(:qtype) { "select_multiple" }
+
+      it "should be correct" do
+        expect(cond.applicable_operator_names).to eq %i[inc ninc]
+      end
     end
   end
 
   describe ".check_integrity_after_question_change" do
-    let(:form) { create(:form, question_types: %w(select_one integer)) }
+    let(:form) { create(:form, question_types: %w[select_one integer]) }
     let(:question) { form.c[0].question }
     let!(:cond) { create(:condition, conditionable: form.c[1], ref_qing: form.c[0]) }
 
