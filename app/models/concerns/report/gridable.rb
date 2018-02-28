@@ -23,7 +23,7 @@ module Report::Gridable
     # extract headers
     @header_set = Report::HeaderSet.new(row: get_row_header, col: get_col_header)
 
-    @data = Report::Data.new(blank_data_table(@db_result))
+    @data = Report::Data.new(**data_table_dimensions)
 
     # extract data
     @db_result.rows.each_with_index do |row, row_idx|
