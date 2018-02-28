@@ -35,9 +35,6 @@ class CascadingSelect extends React.Component {
       .done(function(response) {
         self.setState(response);
       })
-      .fail(function(jqXHR, exception) {
-        console.log(exception);
-      })
       .always(function() {
         ELMO.app.loading(false);
       });

@@ -28,7 +28,6 @@ class ConditionFormField extends React.Component {
       })
       .fail(function(jqXHR, exception) {
         ELMO.app.loading(false);
-        console.log(exception);
       });
   }
 
