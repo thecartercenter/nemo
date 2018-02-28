@@ -121,8 +121,10 @@ class FormItem < ApplicationRecord
   end
 
   # All questionings that can be referred to by a condition if it were defined on this item.
-  def refable_qings
-    all_items = form.preordered_items
+  def refable_qings(eager_load: nil)
+    # Always eager load :question because it's always needed
+    eager_load = eager_load ? [eager_load, :question] : :question
+    all_items = form.preordered_items(eager_load: eager_load)
     all_previous = persisted? ? all_items[0..(all_items.index(self))] : all_items
     all_previous.select(&:refable?)
   end
@@ -135,6 +137,8 @@ class FormItem < ApplicationRecord
   # If item is not persisted, returns empty array.
   def later_items(eager_load: nil)
     return [] unless persisted?
+    # Always eager load :question because it's always needed
+    eager_load = eager_load ? [eager_load, :question] : :question
     all_items = form.preordered_items(eager_load: eager_load)
     all_items[(all_items.index(self) + 1)..-1]
   end
