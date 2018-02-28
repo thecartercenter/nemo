@@ -1,14 +1,14 @@
 class FormSelect extends React.Component {
   render() {
     let options = [];
-    if (this.props.prompt || this.props.include_blank !== false) {
+    if (this.props.prompt || this.props.includeBlank !== false) {
       options.push(<option
         key="blank"
         value="">
         {this.props.prompt || ""}
       </option>);
     }
-    let full_options = options.concat(this.props.options.map((o) => (<option
+    let fullOptions = options.concat(this.props.options.map((o) => (<option
       key={o.id}
       value={o.id}>
       {o.name}
@@ -25,7 +25,7 @@ class FormSelect extends React.Component {
     }
     return (
       <select {...props} >
-        {full_options}
+        {fullOptions}
       </select>
     );
   }

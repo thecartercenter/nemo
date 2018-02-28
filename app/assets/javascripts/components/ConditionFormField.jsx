@@ -23,8 +23,8 @@ class ConditionFormField extends React.Component {
         // Need to put this before we set state because setting state may trigger a new one.
         ELMO.app.loading(false);
 
-        // We set option node ID to null since the new ref_qing may have a new option set.
-        self.setState(Object.assign(response, {option_node_id: null}));
+        // We set option node ID to null since the new refQing may have a new option set.
+        self.setState(Object.assign(response, {optionNodeId: null}));
       })
       .fail(function(jqXHR, exception) {
         ELMO.app.loading(false);
@@ -34,17 +34,17 @@ class ConditionFormField extends React.Component {
 
   buildUrl(refQingId) {
     let url = `${ELMO.app.url_builder.build("form-items", "condition-form")}?`;
-    url += `condition_id=${this.state.id || ""}&ref_qing_id=${refQingId}&form_id=${this.state.form_id}`;
-    if (this.state.conditionable_id) {
-      url += "&conditionable_id=" + this.state.conditionable_id;
-      url += "&conditionable_type=" + this.state.conditionable_type;
+    url += `condition_id=${this.state.id || ""}&ref_qing_id=${refQingId}&form_id=${this.state.formId}`;
+    if (this.state.conditionableId) {
+      url += "&conditionable_id=" + this.state.conditionableId;
+      url += "&conditionable_type=" + this.state.conditionableType;
     }
     return url;
   }
 
-  formatRefQingOptions(reference_qing_options) {
-    return reference_qing_options.map(function(o) {
-      return {id: o.id, name: `${o.full_dotted_rank}. ${o.code}`, key: o.id};
+  formatRefQingOptions(refQingOptions) {
+    return refQingOptions.map(function(o) {
+      return {id: o.id, name: `${o.fullDottedRank}. ${o.code}`, key: o.id};
     });
   }
 
@@ -52,73 +52,73 @@ class ConditionFormField extends React.Component {
     this.setState({remove: true});
   }
 
-  buildValueProps(name_prefix, id_prefix) {
-    if (this.state.option_set_id) {
+  buildValueProps(namePrefix, idPrefix) {
+    if (this.state.optionSetId) {
       return {
         type: "cascading_select",
-        name_prefix: name_prefix,
-        for: `${id_prefix}_value`, // Not a mistake; the for is for value; the others are for selects
-        id: `${id_prefix}_option_node_ids_`,
-        key: `${id_prefix}_option_node_ids_`,
-        option_set_id: this.state.option_set_id,
-        option_node_id: this.state.option_node_id,
+        namePrefix: namePrefix,
+        for: `${idPrefix}_value`, // Not a mistake; the for is for value; the others are for selects
+        id: `${idPrefix}_option_node_ids_`,
+        key: `${idPrefix}_option_node_ids_`,
+        optionSetId: this.state.optionSetId,
+        optionNodeId: this.state.optionNodeId,
       };
     } else {
       return {
         type: "text",
-        name: `${name_prefix}[value]`,
-        for: `${id_prefix}_value`,
-        id: `${id_prefix}_value`,
-        key: `${id_prefix}_value`,
+        name: `${namePrefix}[value]`,
+        for: `${idPrefix}_value`,
+        id: `${idPrefix}_value`,
+        key: `${idPrefix}_value`,
         value: this.state.value ? this.state.value : "",
       };
     }
   }
 
   render() {
-    let name_prefix = this.state.name_prefix + `[${this.state.index}]`;
-    let id_prefix = name_prefix.replace(/[\[\]]/g, "_");
-    let id_field_props = {
+    let namePrefix = this.state.namePrefix + `[${this.state.index}]`;
+    let idPrefix = namePrefix.replace(/[\[\]]/g, "_");
+    let idFieldProps = {
       type: "hidden",
-      name: `${name_prefix}[id]`,
-      id: `${id_prefix}_id`,
-      key: `${id_prefix}_id`,
+      name: `${namePrefix}[id]`,
+      id: `${idPrefix}_id`,
+      key: `${idPrefix}_id`,
       value: this.state.id ? this.state.id : ""
     };
-    let ref_qing_field_props = {
-      name: `${name_prefix}[ref_qing_id]`,
-      key: `${id_prefix}_ref_qing_id`,
-      value: this.state.ref_qing_id ? this.state.ref_qing_id : "",
-      options: this.formatRefQingOptions(this.state.refable_qings),
+    let refQingFieldProps = {
+      name: `${namePrefix}[ref_qing_id]`,
+      key: `${idPrefix}_ref_qing_id`,
+      value: this.state.refQingId ? this.state.refQingId : "",
+      options: this.formatRefQingOptions(this.state.refableQings),
       prompt: I18n.t("condition.ref_qing_prompt"),
       changeFunc: this.updateFieldData
     };
-    let operator_field_props = {
-      name: `${name_prefix}[op]`,
-      key: `${id_prefix}_op`,
+    let operatorFieldProps = {
+      name: `${namePrefix}[op]`,
+      key: `${idPrefix}_op`,
       value: this.state.op ? this.state.op : "",
-      options: this.state.operator_options,
-      include_blank: false
+      options: this.state.operatorOptions,
+      includeBlank: false
     };
-    let destroy_field_props = {
+    let destroyFieldProps = {
       type: "hidden",
-      name: `${name_prefix}[_destroy]`,
-      id: `${id_prefix}__destroy`,
-      key: `${id_prefix}__destroy`,
+      name: `${namePrefix}[_destroy]`,
+      id: `${idPrefix}__destroy`,
+      key: `${idPrefix}__destroy`,
       value: this.shouldDestroy() ? "1" : "0",
     };
-    let value_field_props = this.buildValueProps(name_prefix, id_prefix);
+    let valueFieldProps = this.buildValueProps(namePrefix, idPrefix);
 
     return (
       <div
         className="condition-fields"
         style={{display: this.shouldDestroy() ? "none" : ""}}>
-        <input {...id_field_props} />
-        <input {...destroy_field_props} />
-        <FormSelect {...ref_qing_field_props} />
-        <FormSelect {...operator_field_props} />
+        <input {...idFieldProps} />
+        <input {...destroyFieldProps} />
+        <FormSelect {...refQingFieldProps} />
+        <FormSelect {...operatorFieldProps} />
         <div className="condition-value">
-          <FormField {...value_field_props} />
+          <FormField {...valueFieldProps} />
         </div>
         <div className="condition-remove">
           <a onClick={this.removeCondition}>

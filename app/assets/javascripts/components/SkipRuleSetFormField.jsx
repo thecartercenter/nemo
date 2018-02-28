@@ -7,18 +7,18 @@ class SkipRuleSetFormField extends React.Component {
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
-    if (!newProps.hide && this.props.hide && this.state.skip_rules.length == 0) {
+    if (!newProps.hide && this.props.hide && this.state.skipRules.length == 0) {
       this.addRule();
     }
   }
 
   addRule() {
-    let later_items_exist = this.state.later_items.length > 0;
-    this.setState({skip_rules:
-      this.state.skip_rules.concat([{
-        destination: later_items_exist ? "item" : "end",
-        dest_item_id: later_items_exist ? this.state.later_items[0] : null,
-        skip_if: "always",
+    let laterItemsExist = this.state.laterItems.length > 0;
+    this.setState({skipRules:
+      this.state.skipRules.concat([{
+        destination: laterItemsExist ? "item" : "end",
+        destItemId: laterItemsExist ? this.state.laterItems[0] : null,
+        skipIf: "always",
         conditions: []
       }])});
   }
@@ -28,13 +28,13 @@ class SkipRuleSetFormField extends React.Component {
       <div
         className="skip-rule-set"
         style={{display: this.props.hide ? "none" : ""}}>
-        {this.state.skip_rules.map((props, index) => (<SkipRuleFormField
-          form_id={this.state.form_id}
+        {this.state.skipRules.map((props, index) => (<SkipRuleFormField
+          formId={this.state.formId}
           hide={this.props.hide}
           key={index}
-          later_items={this.state.later_items}
-          name_prefix={`questioning[skip_rules_attributes][${index}]`}
-          refable_qings={this.state.refable_qings}
+          laterItems={this.state.laterItems}
+          namePrefix={`questioning[skip_rules_attributes][${index}]`}
+          refableQings={this.state.refableQings}
           {...props} />))}
         <div
           className="skip-rule-add-link-wrapper">

@@ -15,11 +15,11 @@ class ConditionSetFormField extends React.Component {
   addCondition() {
     this.setState({conditions:
       this.state.conditions.concat([{
-        form_id: this.state.form_id,
-        refable_qings: this.state.refable_qings,
-        operator_options: [],
-        conditionable_id: this.state.conditionable_id,
-        conditionable_type: this.state.conditionable_type
+        formId: this.state.formId,
+        refableQings: this.state.refableQings,
+        operatorOptions: [],
+        conditionableId: this.state.conditionableId,
+        conditionableType: this.state.conditionableType
       }])});
   }
 
@@ -32,12 +32,12 @@ class ConditionSetFormField extends React.Component {
           hide={this.props.hide}
           index={index}
           key={index}
-          name_prefix={this.state.name_prefix}
+          namePrefix={this.state.namePrefix}
           {...props} />))}
         <a
           onClick={this.addCondition}
           tabIndex="0">
-          <i className="fa fa-plus" /> 
+          <i className="fa fa-plus" />
           {" "}
           {I18n.t("form_item.add_condition")}
         </a>
