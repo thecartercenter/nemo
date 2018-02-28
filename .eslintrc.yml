@@ -33,7 +33,9 @@ rules:
   func-call-spacing: error
   func-name-matching: error
   func-style: error
-  function-paren-newline: error
+  function-paren-newline:
+    - error
+    - consistent
   implicit-arrow-linebreak: error
   indent:
     - error

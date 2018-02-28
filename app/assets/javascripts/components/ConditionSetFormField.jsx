@@ -2,26 +2,26 @@ class ConditionSetFormField extends React.Component {
   constructor(props) {
     super();
     this.state = props;
-    this.addCondition = this.addCondition.bind(this);
+    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
     if (!newProps.hide && this.props.hide && this.state.conditions.length === 0) {
-      this.addCondition();
+      this.handleAddClick();
     }
   }
 
-  addCondition() {
-    this.setState({conditions:
-      this.state.conditions.concat([{
+  handleAddClick() {
+    this.setState(curState => ({conditions:
+      curState.conditions.concat([{
         key: Math.round(Math.random() * 100000000),
-        formId: this.state.formId,
-        refableQings: this.state.refableQings,
+        formId: curState.formId,
+        refableQings: curState.refableQings,
         operatorOptions: [],
-        conditionableId: this.state.conditionableId,
-        conditionableType: this.state.conditionableType
-      }])});
+        conditionableId: curState.conditionableId,
+        conditionableType: curState.conditionableType
+      }])}));
   }
 
   render() {
@@ -36,7 +36,7 @@ class ConditionSetFormField extends React.Component {
           namePrefix={this.state.namePrefix}
           {...props} />))}
         <a
-          onClick={this.addCondition}
+          onClick={this.handleAddClick}
           tabIndex="0">
           <i className="fa fa-plus" />
           {" "}

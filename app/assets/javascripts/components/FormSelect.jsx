@@ -3,17 +3,21 @@ class FormSelect extends React.Component {
     let options = this.props.options;
     let optionTags = [];
     if (this.props.prompt || this.props.includeBlank !== false) {
-      optionTags.push(<option
-        key="blank"
-        value="">
-        {this.props.prompt || ""}
-      </option>);
+      optionTags.push(
+        <option
+          key="blank"
+          value="">
+          {this.props.prompt || ""}
+        </option>
+      );
     }
-    options.forEach((o) => optionTags.push(<option
-      key={o.id}
-      value={o.id}>
-      {o.name}
-    </option>));
+    options.forEach((o) => optionTags.push(
+      <option
+        key={o.id}
+        value={o.id}>
+        {o.name}
+      </option>
+    ));
     let props = {
       className: "form-control",
       name: this.props.name,

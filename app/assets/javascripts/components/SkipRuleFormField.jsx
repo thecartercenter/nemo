@@ -7,7 +7,7 @@ class SkipRuleFormField extends React.Component {
 
     this.destinationOptionChanged = this.destinationOptionChanged.bind(this);
     this.skipIfChanged = this.skipIfChanged.bind(this);
-    this.removeRule = this.removeRule.bind(this);
+    this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
   destinationOptionChanged(value) {
@@ -24,7 +24,7 @@ class SkipRuleFormField extends React.Component {
     });
   }
 
-  removeRule() {
+  handleRemoveClick() {
     this.setState({remove: true});
   }
 
@@ -36,6 +36,10 @@ class SkipRuleFormField extends React.Component {
         name: I18n.t("skip_rule.skip_to_item", {label: `${o.fullDottedRank}. ${o.code}`})
       };
     }).concat([{id: "end", name: I18n.t("form_item.end_of_form"), key: "end"}]);
+  }
+
+  shouldDestroy() {
+    return this.state.remove || this.props.hide;
   }
 
   render() {
@@ -109,22 +113,18 @@ class SkipRuleFormField extends React.Component {
             value={this.state.destItemId || ""} />
         </div>
         <div className="skip-rule-remove">
-          <a onClick={this.removeRule}>
+          <a onClick={this.handleRemoveClick}>
             <i className="fa fa-close" />
           </a>
         </div>
       </div>
     );
   }
-
-  shouldDestroy() {
-    return this.state.remove || this.props.hide;
-  }
 }
 
 SkipRuleFormField.propTypes = {
-  destination:  React.PropTypes.string.isRequired,
   destItemId: React.PropTypes.string,
+  destination: React.PropTypes.string.isRequired,
   hide: React.PropTypes.bool.isRequired,
   namePrefix: React.PropTypes.string.isRequired
 };

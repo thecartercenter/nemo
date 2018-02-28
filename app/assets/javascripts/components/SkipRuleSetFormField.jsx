@@ -2,25 +2,25 @@ class SkipRuleSetFormField extends React.Component {
   constructor(props) {
     super();
     this.state = props;
-    this.addRule = this.addRule.bind(this);
+    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
     if (!newProps.hide && this.props.hide && this.state.skipRules.length === 0) {
-      this.addRule();
+      this.handleAddClick();
     }
   }
 
-  addRule() {
+  handleAddClick() {
     let laterItemsExist = this.state.laterItems.length > 0;
-    this.setState({skipRules:
-      this.state.skipRules.concat([{
+    this.setState(curState => ({skipRules:
+      curState.skipRules.concat([{
         key: Math.round(Math.random() * 100000000),
         destination: laterItemsExist ? "item" : "end",
         skipIf: "always",
         conditions: []
-      }])});
+      }])}));
   }
 
   render() {
@@ -39,7 +39,7 @@ class SkipRuleSetFormField extends React.Component {
         <div
           className="skip-rule-add-link-wrapper">
           <a
-            onClick={this.addRule}
+            onClick={this.handleAddClick}
             tabIndex="0">
             <i className="fa fa-plus" />
             {" "}

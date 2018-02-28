@@ -16,7 +16,7 @@ class CascadingSelect extends React.Component {
 
   // Refresh data if the option set is changing.
   componentWillReceiveProps(nextProps) {
-    if (nextProps.optionSetId != this.state.optionSetId) {
+    if (nextProps.optionSetId !== this.state.optionSetId) {
       this.getData(nextProps.optionSetId, nextProps.optionNodeId);
     }
   }

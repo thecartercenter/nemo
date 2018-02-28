@@ -6,7 +6,7 @@ class ConditionFormField extends React.Component {
     this.formatRefQingOptions = this.formatRefQingOptions.bind(this);
     this.buildUrl = this.buildUrl.bind(this);
     this.buildValueProps = this.buildValueProps.bind(this);
-    this.removeCondition = this.removeCondition.bind(this);
+    this.handleRemoveClick = this.handleRemoveClick.bind(this);
     this.state = props;
   }
 
@@ -47,7 +47,7 @@ class ConditionFormField extends React.Component {
     });
   }
 
-  removeCondition() {
+  handleRemoveClick() {
     this.setState({remove: true});
   }
 
@@ -74,9 +74,13 @@ class ConditionFormField extends React.Component {
     }
   }
 
+  shouldDestroy() {
+    return this.state.remove || this.props.hide;
+  }
+
   render() {
     let namePrefix = this.state.namePrefix + `[${this.state.index}]`;
-    let idPrefix = namePrefix.replace(/[\[\]]/g, "_");
+    let idPrefix = namePrefix.replace(/[[\]]/g, "_");
     let idFieldProps = {
       type: "hidden",
       name: `${namePrefix}[id]`,
@@ -120,16 +124,12 @@ class ConditionFormField extends React.Component {
           <ConditionValueField {...valueFieldProps} />
         </div>
         <div className="condition-remove">
-          <a onClick={this.removeCondition}>
+          <a onClick={this.handleRemoveClick}>
             <i className="fa fa-close" />
           </a>
         </div>
       </div>
     );
-  }
-
-  shouldDestroy() {
-    return this.state.remove || this.props.hide;
   }
 }
 
