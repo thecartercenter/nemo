@@ -10,6 +10,17 @@ class SkipLogicFormField extends React.Component {
     this.setState({skip: event.target.value});
   }
 
+  skipOptionTags() {
+    const skipOptions = ["dont_skip", "skip"];
+    return skipOptions.map((option) => (
+      <option
+        key={option}
+        value={option}>
+        {I18n.t(`form_item.skip_logic_options.${option}`)}
+      </option>
+    ));
+  }
+
   render() {
     let selectProps = {
       className: "form-control skip-or-not",
@@ -20,12 +31,7 @@ class SkipLogicFormField extends React.Component {
     return (
       <div>
         <select {...selectProps}>
-          <option value="dont_skip">
-            {I18n.t("form_item.skip_logic_options.dont_skip")}
-          </option>
-          <option value="skip">
-            {I18n.t("form_item.skip_logic_options.skip")}
-          </option>
+          {this.skipOptionTags()}
         </select>
         <SkipRuleSetFormField
           hide={this.state.skip === "dont_skip"}

@@ -10,6 +10,17 @@ class DisplayLogicFormField extends React.Component {
     this.setState({displayIf: value});
   }
 
+  displayIfOptionTags() {
+    const displayIfOptions = ["always", "all_met", "any_met"];
+    return displayIfOptions.map((option) => (
+      <option
+        key={option}
+        value={option}>
+        {I18n.t(`form_item.display_if_options.${option}`)}
+      </option>
+    ));
+  }
+
   render() {
     // Display logic conditions can't reference self, as that doesn't make sense.
     let refableQings = this.state.refableQings.slice(0, -1);
@@ -28,7 +39,6 @@ class DisplayLogicFormField extends React.Component {
         value: this.state.displayIf,
         onChange: this.displayIfChanged
       };
-
       let conditionSetProps = {
         conditions: this.state.displayConditions,
         conditionableId: this.state.id,
@@ -42,15 +52,7 @@ class DisplayLogicFormField extends React.Component {
       return (
         <div>
           <select {...displayIfProps}>
-            <option value="always">
-              {I18n.t("form_item.display_if_options.always")}
-            </option>
-            <option value="all_met">
-              {I18n.t("form_item.display_if_options.all_met")}
-            </option>
-            <option value="any_met">
-              {I18n.t("form_item.display_if_options.any_met")}
-            </option>
+            {this.displayIfOptionTags()}
           </select>
           <ConditionSetFormField {...conditionSetProps} />
         </div>

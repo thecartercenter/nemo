@@ -38,33 +38,40 @@ class SkipRuleFormField extends React.Component {
     }).concat([{id: "end", name: I18n.t("form_item.end_of_form"), key: "end"}]);
   }
 
+  skipIfOptionTags() {
+    const skipIfOptions = ["always", "all_met", "any_met"];
+    return skipIfOptions.map((option) => (
+      <option
+        key={option}
+        value={option}>
+        {I18n.t(`skip_rule.skip_if_options.${option}`)}
+      </option>
+    ));
+  }
+
   shouldDestroy() {
     return this.state.remove || this.props.hide;
   }
 
   render() {
     let namePrefix = this.props.namePrefix;
-
     let idFieldProps = {
       type: "hidden",
       name: `${namePrefix}[id]`,
       value: this.state.id || ""
     };
-
     let destinationProps = {
       value: this.state.destItemIdOrEnd || "",
       prompt: I18n.t("skip_rule.dest_prompt"),
       options: this.formatTargetItemOptions(this.state.laterItems),
       changeFunc: this.destinationOptionChanged
     };
-
     let skipIfProps = {
       name: `${namePrefix}[skip_if]`,
       value: this.state.skipIf,
       className: "form-control",
       onChange: this.skipIfChanged
     };
-
     let conditionSetProps = {
       conditions: this.state.conditions,
       conditionableId: this.state.id,
@@ -74,7 +81,6 @@ class SkipRuleFormField extends React.Component {
       formId: this.state.formId,
       hide: this.state.skipIf === "always"
     };
-
     let destroyFieldProps = {
       type: "hidden",
       name: `${namePrefix}[_destroy]`,
@@ -89,15 +95,7 @@ class SkipRuleFormField extends React.Component {
           <div className="skip-rule-attribs">
             <FormSelect {...destinationProps} />
             <select {...skipIfProps}>
-              <option value="always">
-                {I18n.t("skip_rule.skip_if_options.always")}
-              </option>
-              <option value="all_met">
-                {I18n.t("skip_rule.skip_if_options.all_met")}
-              </option>
-              <option value="any_met">
-                {I18n.t("skip_rule.skip_if_options.any_met")}
-              </option>
+              {this.skipIfOptionTags()}
             </select>
           </div>
           <ConditionSetFormField {...conditionSetProps} />
