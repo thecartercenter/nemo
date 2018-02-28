@@ -15,6 +15,7 @@ class ConditionSetFormField extends React.Component {
   addCondition() {
     this.setState({conditions:
       this.state.conditions.concat([{
+        key: Math.round(Math.random() * 100000000),
         formId: this.state.formId,
         refableQings: this.state.refableQings,
         operatorOptions: [],
@@ -31,7 +32,7 @@ class ConditionSetFormField extends React.Component {
         {this.state.conditions.map((props, index) => (<ConditionFormField
           hide={this.props.hide}
           index={index}
-          key={index}
+          key={props.key || props.id}
           namePrefix={this.state.namePrefix}
           {...props} />))}
         <a

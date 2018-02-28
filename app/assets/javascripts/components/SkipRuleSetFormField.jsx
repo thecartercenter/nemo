@@ -16,6 +16,7 @@ class SkipRuleSetFormField extends React.Component {
     let laterItemsExist = this.state.laterItems.length > 0;
     this.setState({skipRules:
       this.state.skipRules.concat([{
+        key: Math.round(Math.random() * 100000000),
         destination: laterItemsExist ? "item" : "end",
         skipIf: "always",
         conditions: []
@@ -30,7 +31,7 @@ class SkipRuleSetFormField extends React.Component {
         {this.state.skipRules.map((props, index) => (<SkipRuleFormField
           formId={this.state.formId}
           hide={this.props.hide}
-          key={index}
+          key={props.key || props.id}
           laterItems={this.state.laterItems}
           namePrefix={`questioning[skip_rules_attributes][${index}]`}
           refableQings={this.state.refableQings}
