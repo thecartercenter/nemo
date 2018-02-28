@@ -78,6 +78,7 @@ rules:
     - 2
   react/jsx-no-undef: 0
   react/jsx-wrap-multilines: error
+  react/no-set-state: 0
   react/react-in-jsx-scope: 0
   react/require-optimization: 0
   rest-spread-spacing: error
