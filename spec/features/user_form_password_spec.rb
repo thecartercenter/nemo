@@ -102,7 +102,7 @@ feature "user form password field" do
         fill_in("* Username", with: "foo")
         select role, from: "user_assignments_attributes_0_role" unless role.nil?
         fill_in("Email", with: "foo@bar.com") if email
-        check("Is Administrator?") if admin
+        check("Is Admin?") if admin
       end
     end
 

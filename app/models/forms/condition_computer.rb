@@ -1,12 +1,15 @@
-# Computes display conditions that are implied from SkipRules.
+# frozen_string_literal: true
+
 module Forms
+  # Computes display conditions that are implied from SkipRules.
   class ConditionComputer
     attr_accessor :form, :preordered_form_items, :table, :active_rules, :last_item_cache
 
     def initialize(form)
       self.form = form
       self.preordered_form_items = form.preordered_items(
-        eager_load: [:display_conditions, skip_rules: :conditions])
+        eager_load: [:display_conditions, skip_rules: :conditions]
+      )
     end
 
     def condition_group_for(item)
@@ -39,6 +42,9 @@ module Forms
     # Scans through the active rules and adds them to the table for the given item when appropriate.
     def process_active_rules_for_item(item)
       active_rules.each do |rule|
+        # We don't apply skip rules to hidden items because they’re usually auto-populated.
+        # For example, metadata questions are automatically hidden and we don't want to skip those.
+        next if item.hidden?
         next if item.descendants.include?(rule.dest_item)
         next if item_has_been_added_to_ancestor?(rule.condition_group, item)
         add_to_table(item, rule.condition_group)

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Forms::ConditionComputer do
   let(:computer) { Forms::ConditionComputer.new(form) }
 
   context "with no conditions or skip rules" do
-    let(:form) { create(:form, question_types: ["integer", "integer", ["integer", "integer"]]) }
+    let(:form) { create(:form, question_types: ["integer", "integer", %w[integer integer]]) }
 
     it "returns empty group for each question" do
       expect_condition_group(form.c[0], empty: true)
@@ -21,21 +23,26 @@ describe Forms::ConditionComputer do
         "integer",
         "integer",
         "integer",
-        ["integer", "integer", "integer"],
+        %w[integer integer integer],
         "integer",
-        ["integer", "integer", ["integer", "integer"]],
-        "integer"
+        ["integer", "integer", %w[integer integer]],
+        "integer",
+        "integer" # Hidden question
       ])
     end
     let(:form_items) { computer.preordered_form_items }
 
+    before do
+      form.c[7].update!(hidden: true)
+    end
+
     describe "rewrites the conditionable reference on all skip rule conditions" do
       let!(:rule) do
         form.c[1].skip_rules.create!(destination: "item", dest_item: form.c[6], skip_if: "any_met",
-          conditions_attributes: [
-            {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-            {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
-          ])
+                                     conditions_attributes: [
+                                       {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                       {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                     ])
       end
 
       it do
@@ -46,62 +53,55 @@ describe Forms::ConditionComputer do
     end
 
     describe "adds condition groups from the correct skip rules and display conditions" do
-      let(:q3grp) { double(members: [], :"members=" => nil) }
-      let(:q5grp) { double(members: [], :"members=" => nil) }
-      let(:sr1grp) { double(members: [], :"members=" => nil) }
-      let(:sr2grp) { double(members: [], :"members=" => nil) }
-      let(:sr3grp) { double(members: [], :"members=" => nil) }
-      let(:sr4grp) { double(members: [], :"members=" => nil) }
-      let(:sr5grp) { double(members: [], :"members=" => nil) }
-      let(:sr6grp) { double(members: [], :"members=" => nil) }
-      let(:sr7grp) { double(members: [], :"members=" => nil) }
+      let(:q3grp) { double(members: [], "members=": nil) }
+      let(:q5grp) { double(members: [], "members=": nil) }
+      let(:sr1grp) { double(members: [], "members=": nil) }
+      let(:sr2grp) { double(members: [], "members=": nil) }
+      let(:sr3grp) { double(members: [], "members=": nil) }
+      let(:sr4grp) { double(members: [], "members=": nil) }
+      let(:sr5grp) { double(members: [], "members=": nil) }
+      let(:sr6grp) { double(members: [], "members=": nil) }
+      let(:sr7grp) { double(members: [], "members=": nil) }
 
       let(:sr1) do # Root to root
         build_skip_rule(form.c[0],
           destination: "item",
-          dest_item: form.c[6]
-        )
+          dest_item: form.c[6])
       end
 
       let(:sr2) do # Root to group (not questioning)
         build_skip_rule(form.c[0],
           destination: "item",
-          dest_item: form.c[3] # This is a QingGroup
-        )
+          dest_item: form.c[3]) # This is a QingGroup
       end
 
       let(:sr3) do # Root to sub (this is a second SkipRule for form.c[1])
         build_skip_rule(form.c[1],
           destination: "item",
-          dest_item: form.c[3].c[1]
-        )
+          dest_item: form.c[3].c[1])
       end
 
       let(:sr4) do # Sub to same sub
         build_skip_rule(form.c[3].c[0],
           destination: "item",
-          dest_item: form.c[3].c[2]
-        )
+          dest_item: form.c[3].c[2])
       end
 
       let(:sr5) do # Sub to different sub
         build_skip_rule(form.c[3].c[1],
           destination: "item",
-          dest_item: form.c[5].c[2].c[1]
-        )
+          dest_item: form.c[5].c[2].c[1])
       end
 
       let(:sr6) do # Sub to root
         build_skip_rule(form.c[3].c[2],
           destination: "item",
-          dest_item: form.c[6]
-        )
+          dest_item: form.c[6])
       end
 
       let(:sr7) do # Sub to end
         build_skip_rule(form.c[5].c[2].c[0],
-          destination: "end"
-        )
+          destination: "end")
       end
 
       before do
@@ -151,6 +151,7 @@ describe Forms::ConditionComputer do
       #   Q6.3.1                    SR5
       #   Q6.3.2                            SR7
       # Q7                                  SR7
+      # Q8          (nothing because it's a hidden question)
 
       it "returns correct ConditionGroups" do
         expect_condition_group(form.c[0], empty: true)
@@ -168,6 +169,7 @@ describe Forms::ConditionComputer do
         expect_condition_group(form.c[5].c[2].c[0], members: [sr5grp])
         expect_condition_group(form.c[5].c[2].c[1], members: [sr7grp])
         expect_condition_group(form.c[6], members: [sr7grp])
+        expect_condition_group(form.c[7], empty: true)
       end
     end
   end
