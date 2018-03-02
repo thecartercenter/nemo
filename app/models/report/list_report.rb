@@ -18,7 +18,10 @@ class Report::ListReport < Report::Report
     joins = []
     self.questions = []
 
-    rel = rel.select("responses.id AS response_id").order("responses.created_at")
+    # We need to sort by responses.id because rows for each response need to be contiguous in the
+    # result set. If two responses have the exact same created_at, this may not be the case unless
+    # we secondarily sort by ID.
+    rel = rel.select("responses.id AS response_id").order("responses.created_at, responses.id")
 
     # add each calculation
     calculations.each_with_index do |c, idx|
@@ -130,13 +133,10 @@ class Report::ListReport < Report::Report
     true
   end
 
-  def blank_data_table(db_result)
-    # one row per unique response ID
-    rows = db_result.rows.collect{|r| r["response_id"]}.uniq.size
-    cols = @header_set[:col].size
-    tbl = []
-    rows.times{tbl << Array.new(cols)}
-    return tbl
+  def data_table_dimensions
+    # We start out with an empty table and let the Data class auto-grow it.
+    # This prevents index out of bounds errors.
+    {rows: 0, cols: @header_set[:col].size}
   end
 
   def remove_blank_rows

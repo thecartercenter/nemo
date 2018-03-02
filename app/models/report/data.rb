@@ -1,29 +1,36 @@
-# models the data table that results from the report
-class Report::Data
+# frozen_string_literal: true
 
+# Models the data table that results from the report.
+class Report::Data
   attr_accessor :rows
   attr_accessor :truncated
   attr_reader :totals
 
-  def initialize(rows)
-    @rows = rows
+  # Initialize the data grid with the given number of rows and cols.
+  # The grid will auto-expand as needed.
+  def initialize(rows:, cols:)
+    @cols = cols
+    ensure_rows(rows)
     @truncated = false
   end
 
-  # sets the value of the cell given by row, col to value
-  # if options[:append] is true and the cell already has a value, the new value is appended. otherwise it overwrites.
-  # also handles translations
+  # Sets the value of the cell given by row, col to value
+  # if options[:append] is true and the cell already has a value,
+  # the new value is appended. otherwise it overwrites.
+  # Also handles translations.
   def set_cell(row, col, value, options = {})
     # make sure row and col indices are set
     return if row.nil? || col.nil?
 
+    ensure_rows(row + 1)
     value = Report::Formatter.translate(value)
 
-    if !@rows[row][col].blank? && options[:append]
-      @rows[row][col] = "#{@rows[row][col]}, #{value}"
-    else
-      @rows[row][col] = value
-    end
+    @rows[row][col] =
+      if @rows[row][col].present? && options[:append]
+        "#{@rows[row][col]}, #{value}"
+      else
+        value
+      end
   end
 
   def empty?
@@ -31,7 +38,7 @@ class Report::Data
   end
 
   def empty_row?(i)
-    @rows[i].detect{|c| !c.blank?}.nil?
+    @rows[i].all?(&:blank?)
   end
 
   def compute_totals
@@ -39,7 +46,7 @@ class Report::Data
     first_row_size = @rows.first ? @rows.first.size : 0
 
     # make blank totals hash
-    @totals = {:row => Array.new(@rows.size, 0), :col => Array.new(first_row_size, 0), :grand => 0}
+    @totals = {row: Array.new(@rows.size, 0), col: Array.new(first_row_size, 0), grand: 0}
 
     # compute
     @rows.each_with_index do |row, r|
@@ -64,7 +71,15 @@ class Report::Data
     end
   end
 
-  def as_json(options = {})
+  def as_json(_options = {})
     {rows: rows, totals: totals, truncated: truncated}
+  end
+
+  # Ensures there are at least num rows in the table. If not, adds new rows consisting of all nils.
+  def ensure_rows(num)
+    @rows ||= []
+    deficit = num - @rows.size
+    return unless deficit.positive?
+    deficit.times { @rows << Array.new(@cols) }
   end
 end
