@@ -244,7 +244,7 @@ describe FormItem do
     it "passes along eager_load" do
       item = form.c[0]
       expect(item).to receive(:form).and_return(form = double())
-      expect(form).to receive(:preordered_items).with(eager_load: :form).and_return([item])
+      expect(form).to receive(:preordered_items).with(eager_load: %i[form question]).and_return([item])
       item.later_items(eager_load: :form)
     end
   end

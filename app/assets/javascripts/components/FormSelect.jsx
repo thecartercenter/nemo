@@ -1,18 +1,23 @@
 class FormSelect extends React.Component {
   render() {
-    let options = [];
-    if (this.props.prompt || this.props.include_blank !== false) {
-      options.push(<option
-        key="blank"
-        value="">
-        {this.props.prompt || ""}
-      </option>);
+    let options = this.props.options;
+    let optionTags = [];
+    if (this.props.prompt || this.props.includeBlank !== false) {
+      optionTags.push(
+        <option
+          key="blank"
+          value="">
+          {this.props.prompt || ""}
+        </option>
+      );
     }
-    let full_options = options.concat(this.props.options.map((o) => (<option
-      key={o.id}
-      value={o.id}>
-      {o.name}
-    </option>)));
+    options.forEach((o) => optionTags.push(
+      <option
+        key={o.id}
+        value={o.id}>
+        {o.name}
+      </option>
+    ));
     let props = {
       className: "form-control",
       name: this.props.name,
@@ -25,8 +30,30 @@ class FormSelect extends React.Component {
     }
     return (
       <select {...props} >
-        {full_options}
+        {optionTags}
       </select>
     );
   }
 }
+
+FormSelect.propTypes = {
+  changeFunc: React.PropTypes.func,
+  id: React.PropTypes.string,
+  includeBlank: React.PropTypes.bool,
+  name: React.PropTypes.string,
+  options: React.PropTypes.arrayOf(React.PropTypes.shape({
+    id: React.PropTypes.string,
+    name: React.PropTypes.string
+  })).isRequired,
+  prompt: React.PropTypes.string,
+  value: React.PropTypes.node
+};
+
+FormSelect.defaultProps = {
+  changeFunc: null,
+  id: null,
+  includeBlank: true,
+  name: null,
+  prompt: null,
+  value: null
+};

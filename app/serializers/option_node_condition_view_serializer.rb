@@ -1,5 +1,6 @@
 class OptionNodeConditionViewSerializer < ActiveModel::Serializer
   attributes :levels
+  format_keys :lower_camel
 
   def levels
     path = OptionNodePath.new(option_set: object.option_set, target_node: object)

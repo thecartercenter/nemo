@@ -11,19 +11,19 @@ class CascadingSelect extends React.Component {
 
   // Refresh data on mount.
   componentDidMount() {
-    this.getData(this.state.option_set_id, this.state.option_node_id);
+    this.getData(this.state.optionSetId, this.state.optionNodeId);
   }
 
   // Refresh data if the option set is changing.
   componentWillReceiveProps(nextProps) {
-    if (nextProps.option_set_id != this.state.option_set_id) {
-      this.getData(nextProps.option_set_id, nextProps.option_node_id);
+    if (nextProps.optionSetId !== this.state.optionSetId) {
+      this.getData(nextProps.optionSetId, nextProps.optionNodeId);
     }
   }
 
   // Refresh data if the selected node changed.
   nodeChanged(newNodeId) {
-    this.getData(this.state.option_set_id, newNodeId);
+    this.getData(this.state.optionSetId, newNodeId);
   }
 
   // Fetches data to populate the control. nodeId may be null if there is no node selected.
@@ -34,9 +34,6 @@ class CascadingSelect extends React.Component {
     $.ajax(url)
       .done(function(response) {
         self.setState(response);
-      })
-      .fail(function(jqXHR, exception) {
-        console.log(exception);
       })
       .always(function() {
         ELMO.app.loading(false);
@@ -50,7 +47,7 @@ class CascadingSelect extends React.Component {
   buildLevelProps(level, isLastLevel) {
     return {
       type: "select",
-      name: `${this.state.name_prefix}[option_node_ids][]`,
+      name: `${this.state.namePrefix}[option_node_ids][]`,
       id: "questioning_display_conditions_attributes_option_node_ids_",
       key: "questioning_display_conditions_attributes_option_node_ids_",
       value: level.selected,
@@ -99,3 +96,12 @@ class CascadingSelect extends React.Component {
     );
   }
 }
+
+CascadingSelect.propTypes = {
+  optionNodeId: React.PropTypes.string,
+  optionSetId: React.PropTypes.string.isRequired
+};
+
+CascadingSelect.defaultProps = {
+  optionNodeId: null
+};

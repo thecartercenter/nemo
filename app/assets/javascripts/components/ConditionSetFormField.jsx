@@ -2,25 +2,26 @@ class ConditionSetFormField extends React.Component {
   constructor(props) {
     super();
     this.state = props;
-    this.addCondition = this.addCondition.bind(this);
+    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
-    if (!newProps.hide && this.props.hide && this.state.conditions.length == 0) {
-      this.addCondition();
+    if (!newProps.hide && this.props.hide && this.state.conditions.length === 0) {
+      this.handleAddClick();
     }
   }
 
-  addCondition() {
-    this.setState({conditions:
-      this.state.conditions.concat([{
-        form_id: this.state.form_id,
-        refable_qings: this.state.refable_qings,
-        operator_options: [],
-        conditionable_id: this.state.conditionable_id,
-        conditionable_type: this.state.conditionable_type
-      }])});
+  handleAddClick() {
+    this.setState(curState => ({conditions:
+      curState.conditions.concat([{
+        key: Math.round(Math.random() * 100000000),
+        formId: curState.formId,
+        refableQings: curState.refableQings,
+        operatorOptions: [],
+        conditionableId: curState.conditionableId,
+        conditionableType: curState.conditionableType
+      }])}));
   }
 
   render() {
@@ -31,13 +32,13 @@ class ConditionSetFormField extends React.Component {
         {this.state.conditions.map((props, index) => (<ConditionFormField
           hide={this.props.hide}
           index={index}
-          key={index}
-          name_prefix={this.state.name_prefix}
+          key={props.key || props.id}
+          namePrefix={this.state.namePrefix}
           {...props} />))}
         <a
-          onClick={this.addCondition}
+          onClick={this.handleAddClick}
           tabIndex="0">
-          <i className="fa fa-plus" /> 
+          <i className="fa fa-plus" />
           {" "}
           {I18n.t("form_item.add_condition")}
         </a>
@@ -45,3 +46,7 @@ class ConditionSetFormField extends React.Component {
     );
   }
 }
+
+ConditionSetFormField.propTypes = {
+  hide: React.PropTypes.bool.isRequired
+};

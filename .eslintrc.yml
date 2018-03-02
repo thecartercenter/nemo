@@ -33,7 +33,9 @@ rules:
   func-call-spacing: error
   func-name-matching: error
   func-style: error
-  function-paren-newline: error
+  function-paren-newline:
+    - error
+    - consistent
   implicit-arrow-linebreak: error
   indent:
     - error
@@ -78,6 +80,7 @@ rules:
     - 2
   react/jsx-no-undef: 0
   react/jsx-wrap-multilines: error
+  react/no-set-state: 0
   react/react-in-jsx-scope: 0
   react/require-optimization: 0
   rest-spread-spacing: error

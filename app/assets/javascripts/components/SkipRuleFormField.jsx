@@ -2,29 +2,29 @@ class SkipRuleFormField extends React.Component {
   constructor(props) {
     super();
 
-    let dest_item_id_or_end = props.destination == "end" ? "end" : props.dest_item_id;
-    this.state = Object.assign({}, props, {dest_item_id_or_end: dest_item_id_or_end});
+    let destItemIdOrEnd = props.destination === "end" ? "end" : props.destItemId;
+    this.state = Object.assign({}, props, {destItemIdOrEnd: destItemIdOrEnd});
 
     this.destinationOptionChanged = this.destinationOptionChanged.bind(this);
     this.skipIfChanged = this.skipIfChanged.bind(this);
-    this.removeRule = this.removeRule.bind(this);
+    this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
   destinationOptionChanged(value) {
     this.setState({
-      dest_item_id_or_end: value,
-      destination: value == "end" ? "end" : "item",
-      dest_item_id: value == "end" ? null : value
+      destItemIdOrEnd: value,
+      destination: value === "end" ? "end" : "item",
+      destItemId: value === "end" ? null : value
     });
   }
 
   skipIfChanged(event) {
     this.setState({
-      skip_if: event.target.value
+      skipIf: event.target.value
     });
   }
 
-  removeRule() {
+  handleRemoveClick() {
     this.setState({remove: true});
   }
 
@@ -33,47 +33,57 @@ class SkipRuleFormField extends React.Component {
       return {
         id: o.id,
         key: o.id,
-        name: I18n.t("skip_rule.skip_to_item", {label: `${o.full_dotted_rank}. ${o.code}`})
+        name: I18n.t("skip_rule.skip_to_item", {label: `${o.fullDottedRank}. ${o.code}`})
       };
     }).concat([{id: "end", name: I18n.t("form_item.end_of_form"), key: "end"}]);
   }
 
-  render() {
-    let name_prefix = this.props.name_prefix;
+  skipIfOptionTags() {
+    const skipIfOptions = ["always", "all_met", "any_met"];
+    return skipIfOptions.map((option) => (
+      <option
+        key={option}
+        value={option}>
+        {I18n.t(`skip_rule.skip_if_options.${option}`)}
+      </option>
+    ));
+  }
 
-    let id_field_props = {
+  shouldDestroy() {
+    return this.state.remove || this.props.hide;
+  }
+
+  render() {
+    let namePrefix = this.props.namePrefix;
+    let idFieldProps = {
       type: "hidden",
-      name: `${name_prefix}[id]`,
+      name: `${namePrefix}[id]`,
       value: this.state.id || ""
     };
-
-    let destination_props = {
-      value: this.state.dest_item_id_or_end || "",
+    let destinationProps = {
+      value: this.state.destItemIdOrEnd || "",
       prompt: I18n.t("skip_rule.dest_prompt"),
-      options: this.formatTargetItemOptions(this.state.later_items),
+      options: this.formatTargetItemOptions(this.state.laterItems),
       changeFunc: this.destinationOptionChanged
     };
-
-    let skip_if_props = {
-      name: `${name_prefix}[skip_if]`,
-      value: this.state.skip_if,
+    let skipIfProps = {
+      name: `${namePrefix}[skip_if]`,
+      value: this.state.skipIf,
       className: "form-control",
       onChange: this.skipIfChanged
     };
-
-    let condition_set_props = {
+    let conditionSetProps = {
       conditions: this.state.conditions,
-      conditionable_id: this.state.id,
-      conditionable_type: "SkipRule",
-      refable_qings: this.state.refable_qings,
-      name_prefix: `${name_prefix}[conditions_attributes]`,
-      form_id: this.state.form_id,
-      hide: this.state.skip_if == "always"
+      conditionableId: this.state.id,
+      conditionableType: "SkipRule",
+      refableQings: this.state.refableQings,
+      namePrefix: `${namePrefix}[conditions_attributes]`,
+      formId: this.state.formId,
+      hide: this.state.skipIf === "always"
     };
-
-    let destroy_field_props = {
+    let destroyFieldProps = {
       type: "hidden",
-      name: `${name_prefix}[_destroy]`,
+      name: `${namePrefix}[_destroy]`,
       value: this.shouldDestroy() ? "1" : "0"
     };
 
@@ -83,41 +93,40 @@ class SkipRuleFormField extends React.Component {
         style={{display: this.shouldDestroy() ? "none" : ""}}>
         <div className="skip-rule-main">
           <div className="skip-rule-attribs">
-            <FormSelect {...destination_props} />
-            <select {...skip_if_props}>
-              <option value="always">
-                {I18n.t("skip_rule.skip_if_options.always")}
-              </option>
-              <option value="all_met">
-                {I18n.t("skip_rule.skip_if_options.all_met")}
-              </option>
-              <option value="any_met">
-                {I18n.t("skip_rule.skip_if_options.any_met")}
-              </option>
+            <FormSelect {...destinationProps} />
+            <select {...skipIfProps}>
+              {this.skipIfOptionTags()}
             </select>
           </div>
-          <ConditionSetFormField {...condition_set_props} />
-          <input {...id_field_props} />
-          <input {...destroy_field_props} />
+          <ConditionSetFormField {...conditionSetProps} />
+          <input {...idFieldProps} />
+          <input {...destroyFieldProps} />
           <input
-            name={`${name_prefix}[destination]`}
+            name={`${namePrefix}[destination]`}
             type="hidden"
             value={this.state.destination} />
           <input
-            name={`${name_prefix}[dest_item_id]`}
+            name={`${namePrefix}[dest_item_id]`}
             type="hidden"
-            value={this.state.dest_item_id || ""} />
+            value={this.state.destItemId || ""} />
         </div>
         <div className="skip-rule-remove">
-          <a onClick={this.removeRule}>
+          <a onClick={this.handleRemoveClick}>
             <i className="fa fa-close" />
           </a>
         </div>
       </div>
     );
   }
-
-  shouldDestroy() {
-    return this.state.remove || this.props.hide;
-  }
 }
+
+SkipRuleFormField.propTypes = {
+  destItemId: React.PropTypes.string,
+  destination: React.PropTypes.string.isRequired,
+  hide: React.PropTypes.bool.isRequired,
+  namePrefix: React.PropTypes.string.isRequired
+};
+
+SkipRuleFormField.defaultProps = {
+  destItemId: null
+};

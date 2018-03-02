@@ -2,25 +2,25 @@ class SkipRuleSetFormField extends React.Component {
   constructor(props) {
     super();
     this.state = props;
-    this.addRule = this.addRule.bind(this);
+    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
-    if (!newProps.hide && this.props.hide && this.state.skip_rules.length == 0) {
-      this.addRule();
+    if (!newProps.hide && this.props.hide && this.state.skipRules.length === 0) {
+      this.handleAddClick();
     }
   }
 
-  addRule() {
-    let later_items_exist = this.state.later_items.length > 0;
-    this.setState({skip_rules:
-      this.state.skip_rules.concat([{
-        destination: later_items_exist ? "item" : "end",
-        dest_item_id: later_items_exist ? this.state.later_items[0] : null,
-        skip_if: "always",
+  handleAddClick() {
+    let laterItemsExist = this.state.laterItems.length > 0;
+    this.setState(curState => ({skipRules:
+      curState.skipRules.concat([{
+        key: Math.round(Math.random() * 100000000),
+        destination: laterItemsExist ? "item" : "end",
+        skipIf: "always",
         conditions: []
-      }])});
+      }])}));
   }
 
   render() {
@@ -28,18 +28,18 @@ class SkipRuleSetFormField extends React.Component {
       <div
         className="skip-rule-set"
         style={{display: this.props.hide ? "none" : ""}}>
-        {this.state.skip_rules.map((props, index) => (<SkipRuleFormField
-          form_id={this.state.form_id}
+        {this.state.skipRules.map((props, index) => (<SkipRuleFormField
+          formId={this.state.formId}
           hide={this.props.hide}
-          key={index}
-          later_items={this.state.later_items}
-          name_prefix={`questioning[skip_rules_attributes][${index}]`}
-          refable_qings={this.state.refable_qings}
+          key={props.key || props.id}
+          laterItems={this.state.laterItems}
+          namePrefix={`questioning[skip_rules_attributes][${index}]`}
+          refableQings={this.state.refableQings}
           {...props} />))}
         <div
           className="skip-rule-add-link-wrapper">
           <a
-            onClick={this.addRule}
+            onClick={this.handleAddClick}
             tabIndex="0">
             <i className="fa fa-plus" />
             {" "}
@@ -50,3 +50,7 @@ class SkipRuleSetFormField extends React.Component {
     );
   }
 }
+
+SkipRuleSetFormField.propTypes = {
+  hide: React.PropTypes.bool.isRequired
+};
