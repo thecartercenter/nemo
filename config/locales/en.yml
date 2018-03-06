@@ -1316,7 +1316,7 @@ en:
     skip_logic_options:
       dont_skip: "After this question, go to the next question"
       skip: "After this question, skip ..."
-    end_of_form: "Skip to the end of the form"
+      end_of_form: "Skip to the end of the form"
 
   import:
     row_error: "Row %{row}: %{error}"
@@ -1435,7 +1435,6 @@ en:
 
   question:
     answer_only_caps: "ANSWER ONLY IF"
-    skip_rule_instructions: "SKIP TO Question %{name_and_rank} if %{conditions}"
     maxmin:
       gt: "greater than"
       lt: "less than"
@@ -1964,6 +1963,8 @@ en:
       any_met: "if any of these conditions are met"
     skip_to_item: "Skip to %{label}"
     dest_prompt: "Choose destination ..."
+    instructions: "SKIP TO %{destination} if %{conditions}"
+    end_of_form: "end of form"
 
   sms:
     extra_recipients_html: "<br/>... and %{count} more"

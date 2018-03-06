@@ -36,5 +36,17 @@ describe SkipRuleDecorator do
       expected = "SKIP TO #{dest_qing_str} if #{first_cond_str} AND #{second_cond_str}"
       expect(actual).to eq expected
     end
+
+    it "displays correctly when destination is end of the form" do
+      form.c[3].skip_rules.create!(destination: "end", dest_item: nil, skip_if: "all_met",
+                                   conditions_attributes: [
+                                     {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                     {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                   ])
+      skip_rule = form.c[3].skip_rules[0]
+      actual = SkipRuleDecorator.new(skip_rule).human_readable
+      expected = "SKIP TO end of form if #{first_cond_str} AND #{second_cond_str}"
+      expect(actual).to eq expected
+    end
   end
 end
