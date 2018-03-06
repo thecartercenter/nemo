@@ -1,7 +1,12 @@
 <% if read_only || cannot?(:update_core, @questioning) %>
     <dl>
+
       <% @questioning.skip_rules.each do |rule| %>
-        <dt><%= SkipRuleDecorator.new(rule).human_readable  %></dt>
+        <dt><%= SkipRuleDecorator.new(rule).read_only_header %></dt>
+        <% rule.condition_group.members.each do |c| %>
+          <dd><%= c.decorate.human_readable  %></dd>
+        <% end %>
+        <br>
       <% end %>
     </dl>
 <% else %>
