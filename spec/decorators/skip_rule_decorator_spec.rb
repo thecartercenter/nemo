@@ -1,12 +1,16 @@
+# frozen_string_literal: true
 require "spec_helper"
 
 describe SkipRuleDecorator do
   describe "human_readable" do
-
-    let!(:form) do create(:form,
-      name: "Foo",
-      question_types: %w[integer integer integer integer integer])
+    let!(:form) do
+      create(:form,
+        name: "Foo",
+        question_types: %w[integer integer integer integer integer])
     end
+    let(:dest_qing_str) { "Question #{form.c[4].full_dotted_rank}. #{form.c[4].name}" }
+    let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} is equal to 5" }
+    let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} is equal to 10" }
 
     it "should use OR for any_met" do
       form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
@@ -15,7 +19,9 @@ describe SkipRuleDecorator do
                                      {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
                                    ])
       skip_rule = form.c[2].skip_rules[0]
-      expect(SkipRuleDecorator.new(skip_rule).human_readable).to eq "SKIP TO Question #{form.c[4].full_dotted_rank}. #{form.c[4].name} if Question ##{form.c[0].full_dotted_rank} is equal to 5 OR Question ##{form.c[1].full_dotted_rank} is equal to 10"
+      actual = SkipRuleDecorator.new(skip_rule).human_readable
+      expected = "SKIP TO #{dest_qing_str} if #{first_cond_str} OR #{second_cond_str}"
+      expect(actual).to eq expected
     end
 
     it "should use AND for all_met" do
@@ -25,7 +31,9 @@ describe SkipRuleDecorator do
                                      {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
                                    ])
       skip_rule = form.c[3].skip_rules[0]
-      expect(SkipRuleDecorator.new(skip_rule).human_readable).to eq "SKIP TO Question #{form.c[4].full_dotted_rank}. #{form.c[4].name} if Question ##{form.c[0].full_dotted_rank} is equal to 5 AND Question ##{form.c[1].full_dotted_rank} is equal to 10"
+      actual = SkipRuleDecorator.new(skip_rule).human_readable
+      expected = "SKIP TO #{dest_qing_str} if #{first_cond_str} AND #{second_cond_str}"
+      expect(actual).to eq expected
     end
   end
 end
