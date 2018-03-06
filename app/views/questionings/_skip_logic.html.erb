@@ -1,4 +1,9 @@
 <% if read_only || cannot?(:update_core, @questioning) %>
+    <dl>
+      <% @questioning.skip_rules.each do |rule| %>
+        <dt><%= SkipRuleDecorator.new(rule).human_readable  %></dt>
+      <% end %>
+    </dl>
 <% else %>
   <%= react_component("SkipLogicFormField", QuestioningSerializer.new(@questioning)) %>
 <% end %>
