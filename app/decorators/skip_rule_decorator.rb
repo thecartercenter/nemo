@@ -5,8 +5,13 @@ class SkipRuleDecorator < ApplicationDecorator
   delegate_all
 
   def human_readable
-    I18n.t("question.skip_rule_instructions",
-      name_and_rank: QuestioningDecorator.new(dest_item).name_and_rank,
+    if destination == "item"
+      destination_string = "#{I18n.t("activerecord.models.question.one")} #{QuestioningDecorator.new(dest_item).name_and_rank}"
+    else
+      destination_string = I18n.t("skip_rule.end_of_form")
+    end
+    I18n.t("skip_rule.instructions",
+      destination: destination_string,
       conditions: decorate_conditions)
   end
 
