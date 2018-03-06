@@ -1435,6 +1435,7 @@ en:
 
   question:
     answer_only_caps: "ANSWER ONLY IF"
+    skip_rule_instructions: "SKIP TO Question %{name_and_rank} if %{conditions}"
     maxmin:
       gt: "greater than"
       lt: "less than"

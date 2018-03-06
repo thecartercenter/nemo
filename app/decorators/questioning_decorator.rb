@@ -22,6 +22,18 @@ class QuestioningDecorator < ApplicationDecorator
     targets.map { |t| t == :end ? h.t("skip_rule.end") : "##{t.full_dotted_rank}" }
   end
 
+  def name_and_rank
+    str = "#{full_dotted_rank}. ".html_safe
+    str << h.reqd_sym if required?
+    str << (name.presence || code)
+  end
+
+  def selection_instructions
+    content = "#{I18n.t("question_type.#{qtype_name}")}:"
+    str = h.content_tag(:strong, content)
+    str << h.tag(:br)
+  end
+
   private
 
   def decorated_conditions

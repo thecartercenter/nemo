@@ -5,6 +5,6 @@
       <%= render 'form_items/printable', items: subitems %>
     <% end %>
   <% elsif item.printable? %>
-    <%= render 'questionings/printable', qing: Printable::QingDecorator.new(item) %>
+    <%= render 'questionings/printable', qing: QuestioningDecorator.new(item) %>
   <% end %>
 <% end %>
