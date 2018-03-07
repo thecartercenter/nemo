@@ -85,9 +85,7 @@ class Setting < ApplicationRecord
   end
 
   def self.theme_options
-    options = [%w[NEMO nemo], %w[ELMO elmo]]
-    options << [I18n.t("common.custom"), "custom"] if theme_exists?
-    options
+    [%w[NEMO nemo], %w[ELMO elmo], [I18n.t("common.custom"), "custom"]]
   end
 
   def generate_override_code!(size = 6)
