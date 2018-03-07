@@ -14,8 +14,6 @@ class Setting < ApplicationRecord
   # we know we're ready to display the theme.
   THEME_SCSS_PATH = "app/assets/stylesheets/all/themes/_custom.scss"
 
-  scope(:by_mission, ->(m) { where(mission_id: m ? m.id : nil) })
-
   before_validation(:normalize_locales)
   before_validation(:normalize_incoming_sms_numbers)
   before_validation(:nullify_fields_if_these_are_admin_mode_settings)
@@ -36,13 +34,10 @@ class Setting < ApplicationRecord
   # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
   # if the settings can't be found, a default setting is created and saved before being loaded
   def self.load_for_mission(mission)
-    setting = by_mission(mission).first
-
-    if !setting
+    unless (setting = find_by(mission: mission))
       setting = build_default(mission)
       setting.save!
     end
-
     setting.load
     setting
   end
@@ -54,15 +49,25 @@ class Setting < ApplicationRecord
     setting
   end
 
+  # May return nil if it hasn't been created yet.
+  # Admin mode setting gets created via load_for_mission when admin mode first loaded.
+  def self.admin_mode_setting
+    find_by(mission: nil)
+  end
+
   # Builds and returns (but doesn't save) a default Setting object
   # by using defaults specified here and those specified in the local config
   # mission may be nil.
   def self.build_default(mission = nil)
-    setting = by_mission(mission).new
+    setting = new(mission: mission)
     setting.timezone = DEFAULT_TIMEZONE
     setting.preferred_locales = [:en]
     setting.incoming_sms_numbers = []
     setting.generate_incoming_sms_token if mission.present?
+
+    if (admin_mode_theme = admin_mode_setting.try(:theme))
+      setting.theme = admin_mode_theme
+    end
 
     # copy default_settings from configatron
     configatron.default_settings.configatron_keys.each do |k|
