@@ -5,6 +5,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:required] - Whether the field input is required.
   # options[:content] - The content of the field's main area. If nil, the default content for the field type is used.
   # options[:partial] - A partial to be used as the field's main area. Overrides options[:content].
+  # options[:locals] - Local variables to be used in partial. Should only be used when partial present.
   # options[:hint] - The hint to be shown for the field. Overrides the default value retrieved from translation file.
   # options[:read_only] - If true, forces field to be displayed as read only.
   #   If non-true, this is determined by current action.
@@ -107,7 +108,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     if options[:partial]
 
       # add form builder instance and field_name to partial locals
-      options[:locals] = {form: self, method: field_name, read_only: options[:read_only]}
+      options[:locals] ||= {}
+      options[:locals].merge!(form: self, method: field_name, read_only: options[:read_only])
       @template.render(options.slice(:partial, :locals))
 
     # else if read only content was explicitly given and form is read only, use that
