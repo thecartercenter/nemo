@@ -6,7 +6,7 @@ class SkipRuleDecorator < ApplicationDecorator
 
   def human_readable
     I18n.t("skip_rule.instructions",
-      destination: display_destination,
+      destination: display_dest,
       conditions: decorate_conditions)
   end
 
@@ -16,7 +16,7 @@ class SkipRuleDecorator < ApplicationDecorator
     decorated_conditions.map(&:human_readable).join(" #{concatenator} ")
   end
 
-  def display_destination
+  def display_dest
     if destination == "item"
       "#{I18n.t("activerecord.models.question.one")} #{QuestioningDecorator.new(dest_item).name_and_rank}"
     else
@@ -25,6 +25,6 @@ class SkipRuleDecorator < ApplicationDecorator
   end
 
   def read_only_header
-    "#{I18n.t("skip_rule.skip_to_item", label: display_destination)} #{I18n.t("skip_rule.skip_if_options.#{skip_if}")}"
+    "#{I18n.t("skip_rule.skip_to_item", label: display_dest)} #{I18n.t("skip_rule.skip_if_options.#{skip_if}")}"
   end
 end
