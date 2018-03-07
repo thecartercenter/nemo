@@ -19,8 +19,7 @@ feature "adding and editing qing group on form", js: true do
     fill_in("Name (Français):", with: "Fou Groupe")
     fill_in("Hint (Français):", with: "Barre Hinte")
 
-    # Test display conditions
-    screenshot_and_open_image
+    # Test display conditions when creating new group
     select("Display this question if all of these conditions are met", from: "qing_group_display_logic")
     find(".add-condition")
     find('select[name$="[ref_qing_id]"]').select(form.c[0].code)
@@ -44,6 +43,10 @@ feature "adding and editing qing group on form", js: true do
     expect(page).to have_field("qing_group_one_screen", checked: false)
     expect(page).to have_field("qing_group_group_item_name_en", with: "Test Name")
     expect(page).to have_field("qing_group_group_item_name_fr", with: "Nom d'essaie")
+
+    # Test display condition saved. Detailed test is in display_conditions_form_spec
+    expect(page).to have_select("qing_group_display_logic",
+      selected: "Display this question if all of these conditions are met")
 
     fill_in("Name (English):", with: "New Group Name")
     within(".modal") { click_button("Save") }

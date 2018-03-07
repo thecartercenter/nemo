@@ -66,8 +66,9 @@ class QingGroupsController < ApplicationController
   end
 
   def qing_group_params
+    condition_params = [:id, :ref_qing_id, :op, :value, :_destroy, option_node_ids: []]
     translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint, :group_item_name)
-    params.require(:qing_group).permit([:form_id, :repeatable, :one_screen] + translation_keys)
+    params.require(:qing_group).permit([:form_id, :repeatable, :one_screen] + translation_keys, {display_conditions_attributes: condition_params})
   end
 
   def odk_decorator
