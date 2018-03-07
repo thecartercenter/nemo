@@ -1,8 +1,6 @@
 # Site name (shows up in banner and page title)
 configatron.site_name = "ELMO (Longer Name)"
 configatron.site_shortname = "ELMO"
-# configatron.logo_path = "logo-override.png"
-# configatron.logo_dark_path = "logo-dark-override.png"
 # configatron.broadcast_tag = "[ELMO]"
 
 # Offline mode.
