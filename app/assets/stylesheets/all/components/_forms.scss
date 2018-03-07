@@ -19,6 +19,19 @@ form.form_form {
   }
 }
 
+// Override bootstrap on dl's and dt's for read only questioning
+dt {
+  margin-top: 20px;
+}
+
+dt:first-of-type {
+  margin-top: 0px;
+}
+
+dl {
+  margin-bottom: 0px;
+}
+
 @media print {
   // The outer title on forms pages should be hidden since we include it separately.
   .forms_index, .forms_show, .forms_edit {
