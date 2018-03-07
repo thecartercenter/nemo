@@ -1,4 +1,4 @@
 <% if read_only || cannot?(:update_core, form_item) %>
 <% else %>
-  <%= react_component("SkipLogicFormField", QuestioningSerializer.new(form_item)) %>
+  <%= react_component("SkipLogicFormField", FormItemSerializer.new(form_item)) %>
 <% end %>
