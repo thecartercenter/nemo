@@ -48,8 +48,7 @@ class CascadingSelect extends React.Component {
     return {
       type: "select",
       name: `${this.state.namePrefix}[option_node_ids][]`,
-      id: "questioning_display_conditions_attributes_option_node_ids_",
-      key: "questioning_display_conditions_attributes_option_node_ids_",
+      key: "display_conditions_attributes_option_node_ids_",
       value: level.selected,
       options: level.options,
       prompt: this.optionPrompt(level),

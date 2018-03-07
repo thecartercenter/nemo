@@ -34,8 +34,8 @@ class DisplayLogicFormField extends React.Component {
     } else {
       let displayIfProps = {
         className: "form-control",
-        name: "questioning[display_if]",
-        id: "questioning_display_logic",
+        name: `${this.state.type}[display_if]`,
+        id: `${this.state.type}_display_logic`,
         value: this.state.displayIf,
         onChange: this.displayIfChanged
       };
@@ -46,7 +46,7 @@ class DisplayLogicFormField extends React.Component {
         refableQings: refableQings,
         formId: this.state.formId,
         hide: this.state.displayIf === "always",
-        namePrefix: "questioning[display_conditions_attributes]"
+        namePrefix: `${this.state.type}[display_conditions_attributes]`
       };
 
       return (
