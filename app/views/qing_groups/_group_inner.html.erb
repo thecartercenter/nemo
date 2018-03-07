@@ -20,6 +20,18 @@
   </div>
 
   <div class="actions">
+    <%# Ranks of questions to which this group refers to by display conditions.
+        Used to inform the user, and data in data-ref-id used by the drag-drop system for constraint
+        enforcement. %>
+    <% if qing_group.display_conditions.any? %>
+      <div class="refd-qing-links">
+        <i class="fa fa-link"></i>
+        <% qing_group.decorate.refd_qings.each do |q| %>
+          <div class="refd-qing" data-ref-id="<%= q.id %>">#<span><%= q.full_dotted_rank %></span></div>
+        <% end %>
+      </div>
+    <% end %>
+
     <% unless read_only %>
       <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group),
         class: 'action_link edit' %>
