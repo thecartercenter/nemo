@@ -6,9 +6,13 @@ class Setting < ApplicationRecord
     twilio_phone_number twilio_account_sid twilio_auth_token)
 
   # these are the keys that make sense in admin mode
-  ADMIN_MODE_KEYS = %w(timezone preferred_locales universal_sms_token)
+  ADMIN_MODE_KEYS = %w(timezone preferred_locales theme universal_sms_token)
 
   DEFAULT_TIMEZONE = "UTC"
+
+  # The user-provided theme file is copied into this path by the preprocessor. If it's there
+  # we know we're ready to display the theme.
+  THEME_SCSS_PATH = "app/assets/stylesheets/all/themes/_custom.scss"
 
   scope(:by_mission, ->(m) { where(mission_id: m ? m.id : nil) })
 
@@ -66,6 +70,16 @@ class Setting < ApplicationRecord
     end
 
     setting
+  end
+
+  def self.theme_exists?
+    File.exists?(Rails.root.join(THEME_SCSS_PATH))
+  end
+
+  def self.theme_options
+    options = [%w[NEMO nemo], %w[ELMO elmo]]
+    options << [I18n.t("common.custom"), "custom"] if theme_exists?
+    options
   end
 
   def generate_override_code!(size = 6)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_209_161_736) do
+ActiveRecord::Schema.define(version: 20_180_307_154_526) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -539,6 +539,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.integer "old_id"
     t.string "override_code", limit: 255
     t.string "preferred_locales", limit: 255
+    t.string "theme", default: "nemo", null: false
     t.string "timezone", limit: 255
     t.string "twilio_account_sid", limit: 255
     t.string "twilio_auth_token", limit: 255

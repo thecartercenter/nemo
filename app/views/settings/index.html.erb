@@ -3,6 +3,7 @@
 
   <%= f.field(:timezone, type: :timezone, required: true) %>
   <%= f.field(:preferred_locales_str, required: true) %>
+  <%= f.field(:theme, type: :select, options: Setting.theme_options, required: true, prompt: false) %>
   <% if configatron.has_key?(:universal_sms_token) %>
     <%= f.regenerable_field(:universal_sms_token, no_button: true,
       append: link_to(t('setting.using_incoming_sms_token'), '#', class: 'using-universal_sms_token')) %>
