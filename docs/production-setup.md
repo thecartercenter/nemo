@@ -89,20 +89,7 @@ You shouldn't need to edit `database.yml` if you followed the PostgreSQL setup i
 
 Enter sensible values for the settings in the file. Entering a functioning email server is important as ELMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have ELMO running, you can test your email setup by creating a new user for yourself and delivering the login instructions via email or by using the password reset feature.
 
-### Theming ELMO
-
-If you want to change the colors for ELMO's themeable elements, perform the following steps:
-
-    cp app/assets/stylesheets/all/variables/_default_theme.scss app/assets/stylesheets/all/variables/_theme.scss
-    nano app/assets/stylesheets/all/variables/_theme.scss
-
-Enter new color values for the components in the file.
-
-In order to change the logo you must add the file to the folder `app/assets/images/` (we recommend naming it `logo-override.png`) and modify the setting `configatron.logo_path` in `config/initializers/local_config.rb` to `"logo-override.png"` (or the actual name of the new logo file)
-
-Once that's done, proceed with the final config.
-
-### Final config
+### Final Config
 
     # Set Rails environment.
     echo 'export RAILS_ENV=production' >> ~/.bashrc
@@ -119,6 +106,18 @@ Once that's done, proceed with the final config.
     bundle exec bin/delayed_job start
     # Restart server
     sudo service nginx restart
+
+### Custom Theme
+
+You can define a custom theme for the application. In the project root, run:
+
+```
+rake theme:setup
+```
+
+This will create the files `/theme/style.scss`, `/theme/logo-light.png`, and `/theme/logo-dark.png`. Update those files to reflect the desired theme. Ensure your new logos are the same size as the examples.
+
+You will need to run `rake assets:precompile` for the theme to take effect. The compiler will tell you if there are any errors in your `style.scss` file.
 
 ### Generate admin user, login and enjoy!
 
