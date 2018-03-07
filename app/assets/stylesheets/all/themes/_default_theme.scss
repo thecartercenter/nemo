@@ -1,20 +1,9 @@
-/*
- * DEFAULT ELMO THEME
- * -----------------------------------------------------------------
- * These color names, and any others we need to add will, ultimately,
- * be used to define the colors for every themeable component in the ELMO system
- *
- * Unfortunately, identifying and naming every themable component is a big task at present
- * and will need to be taken care of gradually over time
- *
- * When creating new components, or updating existing ones, make an effort to use the colors
- * defined in this file instead of plain color names for your themeable components. Eventually,
- * gradually replacing them should result in a fully themeable ELMO system.
- *
- * This file can be copied to a file in this directory called `_theme.scss` in order to
- * override any of these color definitions.
- */
-$body-background-color: $elmo-blue;
+$theme-red: #d02000;
+$theme-green: #9dc400;
+$theme-main: #879CAA;
+$theme-main-darker: #02648A;
+
+$body-background-color: $theme-main;
 $header-background-color: $body-background-color;
 $header-text-color: inherit;
 

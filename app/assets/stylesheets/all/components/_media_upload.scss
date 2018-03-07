@@ -77,11 +77,11 @@ form.response_form {
       }
 
       .dz-progress .dz-upload {
-        background: $elmo-blue;
+        background: $theme-main;
       }
 
       &.dz-success .dz-progress .dz-upload {
-        background: $elmo-darker-blue;
+        background: $theme-main-darker;
       }
 
       .dz-progress {

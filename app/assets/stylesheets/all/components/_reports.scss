@@ -143,7 +143,7 @@ div.report_body {
 
 .report_loading_icon {
   text-align: center;
-  color: $elmo-blue
+  color: $theme-main
 }
 
 /* report form */
@@ -218,7 +218,7 @@ div.report_edit_pane.report_type {
   h3 {
     font-size: 10pt;
     margin-bottom: 5px;
-    color: $elmo-blue;
+    color: $theme-main;
     font-weight: bold;
   }
 
@@ -261,9 +261,9 @@ div.report_edit_pane.report_type {
 div.report_edit_pane.display_options div.section.display_type input { vertical-align: middle; }
 div.report_edit_pane.display_options div.section.display_type label { margin-right: 15px; }
 div.report_edit_pane.display_options div.section.display_type label > * { vertical-align: middle; }
-div.report_edit_pane.display_options div.section.display_type label > i { font-size: 24pt; color: $elmo-blue; display: inline-block; margin-right: 5px; padding: 0; line-height: 90%; }
+div.report_edit_pane.display_options div.section.display_type label > i { font-size: 24pt; color: $theme-main; display: inline-block; margin-right: 5px; padding: 0; line-height: 90%; }
 /* this icon is a bit bigger than the other one */
-div.report_edit_pane.display_options div.section.display_type label > i.icon-bar-chart { font-size: 22pt; color: $elmo-blue;}
+div.report_edit_pane.display_options div.section.display_type label > i.icon-bar-chart { font-size: 22pt; color: $theme-main;}
 
 div.report_edit_pane.display_options div.section.tally_type {
   label {
