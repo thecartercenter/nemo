@@ -1,12 +1,15 @@
+# frozen_string_literal: true
+
+# Stores and manages settings per-mission and admin mode.
 class Setting < ApplicationRecord
   include MissionBased
 
   # attribs to copy to configatron
-  KEYS_TO_COPY = %w(timezone preferred_locales all_locales incoming_sms_numbers frontlinecloud_api_key
-    twilio_phone_number twilio_account_sid twilio_auth_token)
+  KEYS_TO_COPY = %w[timezone preferred_locales all_locales incoming_sms_numbers frontlinecloud_api_key
+                    twilio_phone_number twilio_account_sid twilio_auth_token].freeze
 
   # these are the keys that make sense in admin mode
-  ADMIN_MODE_KEYS = %w(timezone preferred_locales theme universal_sms_token)
+  ADMIN_MODE_KEYS = %w[timezone preferred_locales theme universal_sms_token].freeze
 
   DEFAULT_TIMEZONE = "UTC"
 
@@ -64,21 +67,21 @@ class Setting < ApplicationRecord
     setting.preferred_locales = [:en]
     setting.incoming_sms_numbers = []
     setting.generate_incoming_sms_token if mission.present?
-
     if (admin_mode_theme = admin_mode_setting.try(:theme))
       setting.theme = admin_mode_theme
     end
-
-    # copy default_settings from configatron
-    configatron.default_settings.configatron_keys.each do |k|
-      setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
-    end
-
+    copy_default_settings_from_configatron_to(setting)
     setting
   end
 
+  def self.copy_default_settings_from_configatron_to(setting)
+    configatron.default_settings.configatron_keys.each do |k|
+      setting.send("#{k}=", configatron.default_settings.send(k)) if setting.respond_to?("#{k}=")
+    end
+  end
+
   def self.theme_exists?
-    File.exists?(Rails.root.join(THEME_SCSS_PATH))
+    File.exist?(Rails.root.join(THEME_SCSS_PATH))
   end
 
   def self.theme_options
@@ -89,21 +92,23 @@ class Setting < ApplicationRecord
 
   def generate_override_code!(size = 6)
     self.override_code = Random.alphanum_no_zero(size)
-    self.save!
+    save!
   end
 
   def universal_sms_token
-    configatron.has_key?(:universal_sms_token) ? configatron.universal_sms_token : nil
+    configatron.key?(:universal_sms_token) ? configatron.universal_sms_token : nil
   end
 
-  def generate_incoming_sms_token(replace=false)
+  def generate_incoming_sms_token(replace = false)
     # Don't replace token unless replace==true
     return unless incoming_sms_token.nil? || replace
 
     # Ensure that the new token is actually different
-    begin
+    new_token = nil
+    loop do
       new_token = SecureRandom.hex
-    end while new_token == incoming_sms_token
+      break unless new_token == incoming_sms_token
+    end
 
     self.incoming_sms_token = new_token
   end
@@ -116,7 +121,7 @@ class Setting < ApplicationRecord
   # copies this setting to configatron
   def load
     # build hash
-    hsh = Hash[*KEYS_TO_COPY.collect { |k| [k.to_sym, send(k)] }.flatten(1)]
+    hsh = Hash[*KEYS_TO_COPY.flat_map { |k| [k.to_sym, send(k)] }]
 
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
@@ -125,7 +130,7 @@ class Setting < ApplicationRecord
       nil
     end
 
-    #set the preferred locale for the mission
+    # set the preferred locale for the mission
     hsh[:preferred_locale] = preferred_locales.first
 
     # set system timezone
@@ -146,7 +151,7 @@ class Setting < ApplicationRecord
 
   # converts preferred locales to symbols on read
   def preferred_locales
-    read_attribute("preferred_locales").map(&:to_sym)
+    self["preferred_locales"].map(&:to_sym)
   end
 
   # union of system locales with the mission's user-defined locales
@@ -175,7 +180,7 @@ class Setting < ApplicationRecord
 
   # gets rid of any junk chars in locales
   def normalize_locales
-    self.preferred_locales = preferred_locales.map { |l| l.to_s.downcase.gsub(/[^a-z]/, "")[0,2] }
+    self.preferred_locales = preferred_locales.map { |l| l.to_s.downcase.gsub(/[^a-z]/, "")[0, 2] }
     true
   end
 
@@ -201,9 +206,9 @@ class Setting < ApplicationRecord
 
   # makes sure at least one of the chosen locales is an available locale
   def one_locale_must_have_translations
-    if (preferred_locales & configatron.full_locales).empty?
-      errors.add(:preferred_locales_str, :one_must_have_translations, locales: configatron.full_locales.join(","))
-    end
+    return unless (preferred_locales & configatron.full_locales).empty?
+    errors.add(:preferred_locales_str, :one_must_have_translations,
+      locales: configatron.full_locales.join(","))
   end
 
   # sms adapter can be blank or must be valid according to the Factory
@@ -228,14 +233,18 @@ class Setting < ApplicationRecord
 
   # checks that the provided credentials are valid
   def sms_credentials_are_valid
-    if should_validate?("Twilio")
-      errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
-      errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
-    end
+    validate_twilio if should_validate?("Twilio")
+    validate_frontline_cloud if should_validate?("FrontlineCloud")
+  end
 
-    if should_validate?("FrontlineCloud")
-      errors.add(:frontlinecloud_api_key1, :blank) if frontlinecloud_api_key.blank? && frontlinecloud_api_key1.blank?
-    end
+  def validate_twilio
+    errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
+    errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
+  end
+
+  def validate_frontline_cloud
+    return unless frontlinecloud_api_key.blank? && frontlinecloud_api_key1.blank?
+    errors.add(:frontlinecloud_api_key1, :blank)
   end
 
   # clear SMS fields if requested
@@ -252,8 +261,8 @@ class Setting < ApplicationRecord
   # if the sms credentials temp fields are set (and they match, which is checked above),
   # copy the value to the real field
   def save_sms_credentials
-    self.twilio_auth_token = twilio_auth_token1 unless twilio_auth_token1.blank?
-    self.frontlinecloud_api_key = frontlinecloud_api_key1 unless frontlinecloud_api_key1.blank?
+    self.twilio_auth_token = twilio_auth_token1 if twilio_auth_token1.present?
+    self.frontlinecloud_api_key = frontlinecloud_api_key1 if frontlinecloud_api_key1.present?
     true
   end
 
@@ -261,8 +270,9 @@ class Setting < ApplicationRecord
   # make sure they are in fact null
   def nullify_fields_if_these_are_admin_mode_settings
     # if mission_id is nil, that means we're in admin mode
-    if mission_id.nil?
-      (attributes.keys - ADMIN_MODE_KEYS - %w(id created_at updated_at mission_id)).each { |a| self.send("#{a}=", nil) }
+    return if mission_id.present?
+    (attributes.keys - ADMIN_MODE_KEYS - %w[id created_at updated_at mission_id]).each do |a|
+      send("#{a}=", nil)
     end
   end
 end
