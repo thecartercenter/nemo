@@ -4,7 +4,7 @@
 class QingGroupDecorator < ApplicationDecorator
   delegate_all
 
-  # Unique, sorted list of questionings to which this group refers to via display conditions
+  # Unique, sorted list of questionings this group refers to via display conditions
   def refd_qings
     qing_group.display_conditions.map(&:ref_qing).uniq.sort_by(&:full_rank)
   end

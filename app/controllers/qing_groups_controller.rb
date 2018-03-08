@@ -15,10 +15,12 @@ class QingGroupsController < ApplicationController
     @form = Form.find(params[:form_id])
     # Adding group requires same permissions as removing questions.
     authorize!(:add_questions, @form)
-    @qing_group = QingGroup.new(form: @form,
+    @qing_group = QingGroup.new(
+      form: @form,
       ancestry: @form.root_id,
       one_screen: true,
-      mission: current_mission)
+      mission: current_mission
+    )
     render(partial: 'modal')
   end
 
@@ -73,8 +75,8 @@ class QingGroupsController < ApplicationController
     translation_keys = permit_translations(params[:qing_group], :group_name, :group_hint, :group_item_name)
     params.require(:qing_group).permit(
       %i[form_id repeatable one_screen] + translation_keys,
-       display_conditions_attributes: condition_params
-     )
+      display_conditions_attributes: condition_params
+    )
   end
 
   def odk_decorator
