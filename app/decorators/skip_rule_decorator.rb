@@ -10,6 +10,14 @@ class SkipRuleDecorator < ApplicationDecorator
       conditions: decorate_conditions)
   end
 
+  def read_only_header
+    destination_directions = I18n.t("skip_rule.skip_to_item", label: display_dest)
+    skip_if_directions =  I18n.t("skip_rule.skip_if_options.#{skip_if}")
+    destination_directions << skip_if_directions
+  end
+
+  private
+
   def decorate_conditions
     decorated_conditions = ConditionDecorator.decorate_collection(condition_group.members)
     concatenator = condition_group.true_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
@@ -24,7 +32,5 @@ class SkipRuleDecorator < ApplicationDecorator
     end
   end
 
-  def read_only_header
-    "#{I18n.t("skip_rule.skip_to_item", label: display_dest)} #{I18n.t("skip_rule.skip_if_options.#{skip_if}")}"
-  end
+
 end

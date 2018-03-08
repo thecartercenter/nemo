@@ -19,7 +19,8 @@ form.form_form {
   }
 }
 
-// Override bootstrap on dl's and dt's for read only questioning
+// dl can be used for non bulleted lists of things in a read only form view.
+// These styles put 20px of space between each dt, but not on either end.
 dt {
   margin-top: 20px;
 }
