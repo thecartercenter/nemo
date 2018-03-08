@@ -1,0 +1,46 @@
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+// This file is preprocessed to generate theme and ltr/rtl combinations.
+// This happens automatically on production.
+// On develop, if you change this file, you should run rake scss:preprocess.
+/////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////
+
+@import "bootstrap";
+@import "font-awesome";
+@import "select2";
+@import "all/variables/basic_colors";
+@import "all/themes/@@@theme@@@";
+@import "all/variables/*";
+
+// Set direction for directional variables
+$dir: @@@direction@@@;
+@import "all/directional";
+
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require_self
+ *= require token-input
+ *= require jquery-ui-1.10.3.custom
+ *= require jquery.fileupload
+ *= require jquery.fileupload-ui
+ *= require dropzone/basic
+ *= require bootstrap-modal-bs3patch
+ *= require bootstrap-modal
+ */
+
+@import "all/components/*";
+@media screen {
+  @import "screen/*"
+}
+@media print {
+  @import "print/*"
+}
