@@ -25,3 +25,10 @@
     <% end %>
   </td>
 </tr>
+<% qing.skip_rules.each do |rule| %>
+  <tr>
+    <td colspan="2" class="skip-rule">
+      <%= SkipRuleDecorator.new(rule).human_readable %>
+    </td>
+  </tr>
+<% end %>

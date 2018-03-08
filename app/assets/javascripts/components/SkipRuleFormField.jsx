@@ -35,7 +35,7 @@ class SkipRuleFormField extends React.Component {
         key: o.id,
         name: I18n.t("skip_rule.skip_to_item", {label: `${o.fullDottedRank}. ${o.code}`})
       };
-    }).concat([{id: "end", name: I18n.t("form_item.end_of_form"), key: "end"}]);
+    }).concat([{id: "end", name: I18n.t("form_item.skip_logic_options.end_of_form"), key: "end"}]);
   }
 
   skipIfOptionTags() {
