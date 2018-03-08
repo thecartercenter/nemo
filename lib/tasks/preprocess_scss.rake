@@ -14,7 +14,7 @@ namespace :scss do
       %w[ltr rtl].each do |direction|
         File.open(File.join(styles_dir, "application_#{theme}_#{direction}.scss"), "w") do |f|
           app_scss = replace_top_comment(File.read(app_scss_file))
-          app_scss.gsub!("@@@theme@@@", theme)
+          app_scss.gsub!("@@@theme@@@", "#{theme}_theme")
           app_scss.gsub!("@@@direction@@@", direction)
           f.write(app_scss)
         end

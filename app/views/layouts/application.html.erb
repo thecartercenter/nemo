@@ -6,7 +6,8 @@
   <title><%= configatron.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
   <% direction = I18n.t('locale_dir', default: 'ltr') %>
-  <%= stylesheet_link_tag "application_#{direction}", media: "all" %>
+  <% theme = configatron.has_key?(:theme) ? configatron.theme : "nemo" %>
+  <%= stylesheet_link_tag "application_#{theme}_#{direction}", media: "all" %>
 
   <%# For Capybara. %>
   <%= stylesheet_link_tag 'disable-transition' if Rails.env.test? %>

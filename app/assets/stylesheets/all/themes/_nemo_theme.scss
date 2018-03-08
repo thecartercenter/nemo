@@ -1,4 +1,9 @@
 // Some of the colors used below are defined in app/assets/stylesheets/all/variables/_basic_colors.scss
+$theme-red: #d02000;
+$theme-green: #9dc400;
+$theme-main: #879CAA;
+$theme-main-darker: #02648A;
+
 $body-background-color: #6C89BC;
 $header-background-color: $body-background-color;
 $header-text-color: inherit;
@@ -23,3 +28,8 @@ $nav-active-background-color: $light-blue;
 $nav-text-color: #777;
 $nav-icon-color: #bdb9b9;
 $nav-border-color: #E7E7E7;
+
+$group-pill-background-color: $light-blue;
+$group-pill-background-hover-color: darken($light-blue, 10%);
+$group-pill-border-color: darken($light-blue, 20%);
+$group-pill-text-color: $body-text-color;
