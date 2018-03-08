@@ -112,7 +112,7 @@ Enter sensible values for the settings in the file. Entering a functioning email
 You can define a custom theme for the application. In the project root, run:
 
 ```
-rake theme:setup
+rake theme:init
 ```
 
 This will create the files `/theme/style.scss`, `/theme/logo-light.png`, and `/theme/logo-dark.png`. Update those files to reflect the desired theme. Ensure your new logos are the same size as the examples.
