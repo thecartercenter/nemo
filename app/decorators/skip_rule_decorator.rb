@@ -13,7 +13,7 @@ class SkipRuleDecorator < ApplicationDecorator
   def read_only_header
     destination_directions = I18n.t("skip_rule.skip_to_item", label: display_dest)
     skip_if_directions =  I18n.t("skip_rule.skip_if_options.#{skip_if}")
-    destination_directions << skip_if_directions
+    destination_directions << " " << skip_if_directions
   end
 
   private
@@ -26,11 +26,11 @@ class SkipRuleDecorator < ApplicationDecorator
 
   def display_dest
     if destination == "item"
-      "#{I18n.t("activerecord.models.question.one")} #{QuestioningDecorator.new(dest_item).name_and_rank}"
+      prefix = I18n.t("activerecord.models.question.one")
+      question_identifier = QuestioningDecorator.new(dest_item).name_and_rank
+      prefix << " " << question_identifier
     else
       I18n.t("skip_rule.end_of_form")
     end
   end
-
-
 end
