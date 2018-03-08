@@ -12,7 +12,7 @@ class SkipRuleDecorator < ApplicationDecorator
 
   def read_only_header
     destination_directions = I18n.t("skip_rule.skip_to_item", label: display_dest)
-    skip_if_directions =  I18n.t("skip_rule.skip_if_options.#{skip_if}")
+    skip_if_directions = I18n.t("skip_rule.skip_if_options.#{skip_if}")
     destination_directions << " " << skip_if_directions
   end
 
