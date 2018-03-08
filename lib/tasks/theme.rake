@@ -5,6 +5,7 @@ require "fileutils"
 namespace :theme do
   desc "Create a custom theme directory with example files."
   task init: :environment do
+    abort("Existing theme directory detected. Aborting.") if File.exist?(Rails.root.join("theme"))
     scss = Rails.root.join("app", "assets", "stylesheets", "all", "themes", "_nemo_theme.scss")
     logo_dir = Rails.root.join("app", "assets", "images", "logos", "nemo")
     light_logo = Rails.root.join(logo_dir, "light.png")
