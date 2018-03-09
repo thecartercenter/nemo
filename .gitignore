@@ -39,6 +39,7 @@ routes.txt
 /app/assets/stylesheets/application_*.scss
 /app/assets/stylesheets/all/themes/_custom_theme.scss
 /app/assets/images/logos/custom
+/config/settings/themes/custom.yml
 /theme
 
 # file uploads

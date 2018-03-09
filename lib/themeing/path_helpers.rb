@@ -33,6 +33,10 @@ module Themeing
       @installed_scss ||= Rails.root.join("app", "assets", "stylesheets", "all", "themes", "_custom_theme.scss")
     end
 
+    def installed_settings
+      @dest_settings ||= Rails.root.join("config", "settings", "themes", "custom.yml")
+    end
+
     def logos_dir
       @logos_dir ||= Rails.root.join("app", "assets", "images", "logos")
     end
@@ -51,6 +55,10 @@ module Themeing
 
     def src_scss
       @src_scss ||= Rails.root.join("theme", "styles.scss")
+    end
+
+    def src_settings
+      @src_settings ||= Rails.root.join("theme", "settings.yml")
     end
 
     def src_logo_dir

@@ -48,6 +48,7 @@ module Themeing
       else
         copy_with_message(default_dark_logo, src_dark_logo)
       end
+      File.open(src_settings, "w") { |f| f.write("site_name: #{configatron.site_name}\n") }
     end
 
     def remove_old_assets

@@ -21,12 +21,14 @@ module Themeing
     def clear_theme
       puts "No theme directory found. Removing any old style assets."
       FileUtils.rm_rf(installed_scss)
+      FileUtils.rm_rf(installed_settings)
       FileUtils.rm_rf(installed_logo_dir)
     end
 
     def install_theme
       FileUtils.mkdir_p(installed_logo_dir)
       copy_with_message(src_scss, installed_scss)
+      copy_with_message(src_settings, installed_settings)
       copy_with_message(src_light_logo, installed_light_logo)
       copy_with_message(src_dark_logo, installed_dark_logo)
     end

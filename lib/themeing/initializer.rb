@@ -12,6 +12,13 @@ module Themeing
       FileUtils.cp(default_scss, src_scss)
       FileUtils.cp(default_light_logo, src_light_logo)
       FileUtils.cp(default_dark_logo, src_dark_logo)
+      File.open(src_settings, "w") { |f| f.write(default_settings) }
+    end
+
+    private
+
+    def default_settings
+      "site_name: NEMO # Should be a short name as it may be used in SMSes\n"
     end
   end
 end
