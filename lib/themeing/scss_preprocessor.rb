@@ -3,10 +3,12 @@
 module Themeing
   # Preprocesses application.scss to create combinations for themes and LTR/RTL
   class ScssPreprocessor
+    include PathHelpers
+
     def run
       clear_current_preprocessed_scss
       %w[nemo elmo custom].each do |theme|
-        next unless File.exist?(themes_dir.join("_#{theme}_theme.scss"))
+        next unless File.exist?(theme_scss_dir.join("_#{theme}_theme.scss"))
         %w[ltr rtl].each do |direction|
           create_file_for(theme, direction)
         end
@@ -40,16 +42,8 @@ module Themeing
         lines.join("\n")
     end
 
-    def styles_dir
-      @styles_dir ||= Rails.root.join("app", "assets", "stylesheets")
-    end
-
     def app_scss_file
       styles_dir.join("application.scss")
-    end
-
-    def themes_dir
-      styles_dir.join("all", "themes")
     end
   end
 end

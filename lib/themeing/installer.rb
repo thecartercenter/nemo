@@ -3,6 +3,8 @@
 module Themeing
   # Copies the user defined themes into appropriate locations.
   class Installer
+    include PathHelpers
+
     def run
       if theme_dir_present?
         check_for_required_files
@@ -16,26 +18,17 @@ module Themeing
 
     private
 
-    def theme_dir_present?
-      Dir.exist?(Rails.root.join("theme"))
-    end
-
     def clear_theme
       puts "No theme directory found. Removing any old style assets."
-      FileUtils.rm_rf(dest_scss)
-      FileUtils.rm_rf(dest_logo_dir)
+      FileUtils.rm_rf(installed_scss)
+      FileUtils.rm_rf(installed_logo_dir)
     end
 
     def install_theme
-      FileUtils.mkdir_p(dest_logo_dir)
-      copy_with_message(src_scss, dest_scss)
-      copy_with_message(src_light_logo, dest_light_logo)
-      copy_with_message(src_dark_logo, dest_dark_logo)
-    end
-
-    def copy_with_message(src, dest)
-      puts "Copying #{src} to #{dest}"
-      FileUtils.cp(src, dest)
+      FileUtils.mkdir_p(installed_logo_dir)
+      copy_with_message(src_scss, installed_scss)
+      copy_with_message(src_light_logo, installed_light_logo)
+      copy_with_message(src_dark_logo, installed_dark_logo)
     end
 
     def check_for_required_files
@@ -46,38 +39,6 @@ module Themeing
       elsif !File.exist?(src_dark_logo)
         abort("You must include a dark-style logo at #{src_dark_logo}")
       end
-    end
-
-    def dest_scss
-      @dest_scss ||= Rails.root.join("app", "assets", "stylesheets", "all", "themes", "_custom_theme.scss")
-    end
-
-    def dest_logo_dir
-      @dest_logo_dir ||= Rails.root.join("app", "assets", "images", "logos", "custom")
-    end
-
-    def dest_light_logo
-      @dest_light_logo ||= Rails.root.join(dest_logo_dir, "light.png")
-    end
-
-    def dest_dark_logo
-      @dest_dark_logo ||= Rails.root.join(dest_logo_dir, "dark.png")
-    end
-
-    def src_scss
-      @src_scss ||= Rails.root.join("theme", "styles.scss")
-    end
-
-    def src_logo_dir
-      @src_logo_dir ||= Rails.root.join("theme", "logos")
-    end
-
-    def src_light_logo
-      @src_light_logo ||= Rails.root.join(src_logo_dir, "light.png")
-    end
-
-    def src_dark_logo
-      @src_dark_logo ||= Rails.root.join(src_logo_dir, "dark.png")
     end
   end
 end

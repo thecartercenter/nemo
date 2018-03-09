@@ -17,4 +17,9 @@ namespace :theme do
   task install: :environment do
     Themeing::Installer.new.run
   end
+
+  desc "Migrates old theme setup to new one."
+  task migrate: :environment do
+    Themeing::Migrator.new.run
+  end
 end
