@@ -72,9 +72,6 @@ module ELMO
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 
-    # site's short name
-    configatron.site_shortname = "ELMO"
-
     # a short tag that starts smses and email subjects for broadcasts
     configatron.broadcast_tag = "[ELMO]"
 
