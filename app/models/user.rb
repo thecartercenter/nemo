@@ -3,7 +3,6 @@ class User < ApplicationRecord
 
   ROLES = %w[enumerator reviewer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
-  SITE = new(name: configatron.site_name) # Dummy user for use in SMS log
   GENDER_OPTIONS = %w[man woman no_answer specify]
   PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
 
@@ -90,6 +89,11 @@ class User < ApplicationRecord
 
   scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
+
+  # Dummy user for use in SMS log
+  def self.site_user
+    new(name: configatron.site_name)
+  end
 
   def self.random_password(size = 12)
     size = 12 if size < 12
