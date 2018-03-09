@@ -34,8 +34,9 @@ class Setting < ApplicationRecord
   # accessors for password/password confirm/clear fields
   attr_accessor :twilio_auth_token1, :frontlinecloud_api_key1, :clear_twilio, :clear_frontlinecloud
 
-  # loads the settings for the given mission (or nil mission/admin mode) into the configatron store
-  # if the settings can't be found, a default setting is created and saved before being loaded
+  # Loads the settings for the given mission (or nil mission/admin mode)
+  # into the configatron & Settings stores.
+  # If the settings can't be found, a default setting is created and saved before being loaded.
   def self.load_for_mission(mission)
     unless (setting = find_by(mission: mission))
       setting = build_default(mission)
@@ -116,7 +117,7 @@ class Setting < ApplicationRecord
     save!
   end
 
-  # copies this setting to configatron
+  # Copies this setting to configatron and Settings stores.
   def load
     # build hash
     hsh = Hash[*KEYS_TO_COPY.flat_map { |k| [k.to_sym, send(k)] }]
@@ -128,14 +129,13 @@ class Setting < ApplicationRecord
       nil
     end
 
-    # set the preferred locale for the mission
     hsh[:preferred_locale] = preferred_locales.first
-
-    # set system timezone
     Time.zone = timezone
 
-    # copy to configatron
+    # Copy to configatron
     configatron.configure_from_hash(hsh)
+
+    load_theme_settings
   end
 
   # converts preferred_locales to a comma delimited string
@@ -272,5 +272,20 @@ class Setting < ApplicationRecord
     (attributes.keys - ADMIN_MODE_KEYS - %w[id created_at updated_at mission_id]).each do |a|
       send("#{a}=", nil)
     end
+  end
+
+  # Inserts theme settings into Settings store.
+  def load_theme_settings
+    theme_settings.each { |k, v| Settings[k] = v }
+  end
+
+  # Loads theme settings from a YML file.
+  def theme_settings
+    theme_settings_dir = Rails.root.join("config", "settings", "themes")
+    [theme, "nemo"].each do |t|
+      file = theme_settings_dir.join("#{t}.yml")
+      return YAML.load_file(file) if File.exist?(file)
+    end
+    {}
   end
 end
