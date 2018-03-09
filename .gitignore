@@ -40,8 +40,9 @@ app/assets/stylesheets/all/variables/_theme.scss
 app/assets/images/logo-override.png
 app/assets/images/logo-dark-override.png
 
-# Pre-processed SCSS
+# Theme-related things
 /app/assets/stylesheets/application_*_*.scss
+/theme
 
 # file uploads
 /uploads
