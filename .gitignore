@@ -35,11 +35,6 @@ docs/readthedocs/_build
 rake_tasks.txt
 routes.txt
 
-# theme variable overrides
-app/assets/stylesheets/all/variables/_theme.scss
-app/assets/images/logo-override.png
-app/assets/images/logo-dark-override.png
-
 # Theme-related things
 /app/assets/stylesheets/application_*_*.scss
 /theme
