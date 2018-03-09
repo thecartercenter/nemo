@@ -144,8 +144,9 @@
     <%= t('layout.loading') %>
   </div>
 
-  <%# Include logo-dark (used for printing) here because for just-in-time ajax loading (e.g. forms) it may not load in time. %>
-  <%= logo_dark_image(class: 'hidden') if controller_name == 'forms' %>
+  <%# Include logo-dark (used for printing) here because for just-in-time ajax loading %>
+  <%# (e.g. forms) it may not load in time. %>
+  <%= logo_image(style: :dark, class: "hidden") if controller_name == "forms" %>
 
   <%# insert any audio objects at the end %>
   <%= yield(:audio) %>
