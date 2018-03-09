@@ -18,7 +18,8 @@ module Themeing
     private
 
     def default_settings
-      "site_name: NEMO # Should be a short name as it may be used in SMSes\n"
+      "site_name: NEMO # Appears in page titles and elsewhere\n"\
+      "broadcast_tag: NEMO # Appears in SMSes and email subjects\n"
     end
   end
 end

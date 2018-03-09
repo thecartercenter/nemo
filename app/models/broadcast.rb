@@ -57,7 +57,7 @@ class Broadcast < ApplicationRecord
     # send smses
     begin
       if sms_possible? && recipient_numbers.present?
-        Sms::Broadcaster.deliver(self, which_phone, "#{configatron.broadcast_tag} #{body}")
+        Sms::Broadcaster.deliver(self, which_phone, "[#{Settings.broadcast_tag}] #{body}")
       end
     rescue Sms::Error
       # one error per line

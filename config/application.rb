@@ -72,9 +72,6 @@ module ELMO
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 
-    # a short tag that starts smses and email subjects for broadcasts
-    configatron.broadcast_tag = "[ELMO]"
-
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
     configatron.full_locales = [:en, :fr, :es, :ar, :ko]
 

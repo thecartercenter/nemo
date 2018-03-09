@@ -1,5 +1,3 @@
-# configatron.broadcast_tag = "[ELMO]"
-
 # Offline mode.
 # If set to true, you can't reset passwords via email or send broadcasts.
 # Email error reports are also not sent.
