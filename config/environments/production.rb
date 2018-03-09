@@ -50,7 +50,7 @@ ELMO::Application.configure do
   config.assets.digest = true
 
   # add special CSS files to compile
-  config.assets.precompile += %w(ckeditor/* preprocessed/*)
+  config.assets.precompile += %w(ckeditor/* application_*)
 
   # Version of your assets, change this if you want to expire all your assets.
   config.assets.version = '1.0'

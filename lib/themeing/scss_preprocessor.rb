@@ -19,14 +19,13 @@ module Themeing
 
     def clear_current_preprocessed_scss
       puts "Removing old preprocessed files" unless Rails.env.test?
-      FileUtils.rm_rf(preprocessed_scss_dir)
+      FileUtils.rm_rf(styles_dir.join("application_*.scss"))
     end
 
     def create_file_for(theme, direction)
       filename = "application_#{theme}_#{direction}.scss"
       puts "Writing #{filename}" unless Rails.env.test?
-      FileUtils.mkdir_p(preprocessed_scss_dir)
-      File.open(preprocessed_scss_dir.join(filename), "w") do |f|
+      File.open(styles_dir.join(filename), "w") do |f|
         out = original_scss.gsub("@@@theme@@@", "#{theme}_theme").gsub!("@@@direction@@@", direction)
         f.write(out)
       end

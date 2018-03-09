@@ -21,10 +21,6 @@ module Themeing
       Rails.root.join("tmp")
     end
 
-    def preprocessed_scss_dir
-      @preprocessed_scss_dir ||= styles_dir.join("preprocessed")
-    end
-
     def styles_dir
       @styles_dir ||= Rails.root.join("app", "assets", "stylesheets")
     end
