@@ -9,7 +9,7 @@ class Notifier < ActionMailer::Base
   def intro(user)
     @user = user
     build_reset_url(user)
-    mail(to: user.email, subject: t("notifier.welcome", site: configatron.site_name))
+    mail(to: user.email, subject: t("notifier.welcome", site: Settings.site_name))
   end
 
   private

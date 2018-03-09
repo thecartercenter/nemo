@@ -92,7 +92,7 @@ class User < ApplicationRecord
 
   # Dummy user for use in SMS log
   def self.site_user
-    new(name: configatron.site_name)
+    new(name: Settings.site_name)
   end
 
   def self.random_password(size = 12)

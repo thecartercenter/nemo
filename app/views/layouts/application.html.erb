@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html dir="<%= t('locale_dir', default: 'ltr') %>">
 <head>
-  <title><%= configatron.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
+  <title><%= Settings.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
   <%= main_stylesheet_tag %>
 
@@ -24,7 +24,7 @@
       default_locale: I18n.default_locale,
       mission_locales: configatron.preferred_locales,
       logged_in: !current_user.nil?,
-      site_name: configatron.site_name,
+      site_name: Settings.site_name,
       session_timeout: User::SESSION_TIMEOUT,
       login_path: login_path
     )%>);
@@ -136,7 +136,7 @@
 
     <%= t("layout.system_version") %>: <%= configatron.system_version %> &nbsp;|&nbsp;
 
-    <%= link_to(t('layout.about', site_name: configatron.site_name), 'http://getelmo.org') %>
+    <%= link_to(t('layout.about', site_name: Settings.site_name), 'http://getelmo.org') %>
   </div>
 
   <div id="glb-load-ind">
