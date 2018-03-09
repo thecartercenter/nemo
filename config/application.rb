@@ -64,6 +64,8 @@ module ELMO
     # CUSTOM SETTINGS
     ####################################
 
+    # NOTE: Don't add anymore configatron settings. Use settings.yml instead.
+
     # read system version from file
     configatron.system_version = File.read("#{Rails.root}/VERSION").strip
 
