@@ -10,14 +10,13 @@ module Themeing
     def run
       return if theme_dir_present?
       return unless old_light_logo_exists?
-      
+
       if File.size(old_light_logo) == OLD_NEMO_LOGO_FILE_SIZE
         handle_nemo_theme
       else
         handle_custom_theme
       end
       remove_old_assets
-      end
     end
 
     private
@@ -32,6 +31,8 @@ module Themeing
       # Custom SCSS is required, else we revert to nemo.
       if File.exist?(old_custom_scss_path)
         copy_old_assets
+        puts "Installing theme."
+        Installer.new.run
         create_temp_theme_flag("custom")
       else
         create_temp_theme_flag("nemo")
