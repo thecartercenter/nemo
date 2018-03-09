@@ -4,6 +4,7 @@ module Themeing
   # Preprocesses application.scss to create combinations for themes and LTR/RTL
   class ScssPreprocessor
     def run
+      clear_current_preprocessed_scss
       %w[nemo elmo custom].each do |theme|
         next unless File.exist?(themes_dir.join("_#{theme}_theme.scss"))
         %w[ltr rtl].each do |direction|
@@ -14,10 +15,15 @@ module Themeing
 
     private
 
+    def clear_current_preprocessed_scss
+      puts "Removing old preprocessed files"
+      Dir.glob(styles_dir.join("application_*_*.scss")).each { |f| File.delete(f) }
+    end
+
     def create_file_for(theme, direction)
       filename = "application_#{theme}_#{direction}.scss"
       puts "Writing #{filename}" unless Rails.env.test?
-      File.open(File.join(styles_dir, filename), "w") do |f|
+      File.open(styles_dir.join(filename), "w") do |f|
         out = original_scss.gsub("@@@theme@@@", "#{theme}_theme").gsub!("@@@direction@@@", direction)
         f.write(out)
       end
