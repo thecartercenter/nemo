@@ -36,7 +36,7 @@ rake_tasks.txt
 routes.txt
 
 # Theme-related things
-/app/assets/stylesheets/application_*_*.scss
+/app/assets/stylesheets/preprocessed
 /app/assets/stylesheets/all/themes/_custom_theme.scss
 /app/assets/images/logos/custom
 /theme
