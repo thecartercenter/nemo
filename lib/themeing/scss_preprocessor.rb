@@ -16,7 +16,7 @@ module Themeing
     private
 
     def clear_current_preprocessed_scss
-      puts "Removing old preprocessed files"
+      puts "Removing old preprocessed files" unless Rails.env.test?
       Dir.glob(styles_dir.join("application_*_*.scss")).each { |f| File.delete(f) }
     end
 
