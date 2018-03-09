@@ -4,6 +4,26 @@ module ApplicationHelper
     :'condition.base' => true
   }
 
+  DEFAULT_THEME = "nemo"
+  DEFAULT_DIRECTION = "ltr"
+
+  # Returns a link tag for the appropriate combination of direction (ltr/rtl) and theme.
+  # If the desired file is missing, returns the default.
+  # If default is missing, raises an error.
+  def main_stylesheet_tag
+    direction = I18n.t("locale_dir", default: "ltr")
+    theme = configatron.key?(:theme) ? configatron.theme : DEFAULT_THEME
+    file = "application_#{theme}_#{direction}"
+    style_dir = Rails.root.join("app", "assets", "stylesheets")
+    unless File.exist?(style_dir.join("#{file}.scss"))
+      file = "application_#{DEFAULT_THEME}_#{DEFAULT_DIRECTION}"
+      unless File.exist?(style_dir.join("#{file}.scss"))
+        raise "Processed SCSS files not found. Did you run the pre-processor? See documentation."
+      end
+    end
+    stylesheet_link_tag(file, media: "all")
+  end
+
   # Builds a URL with the exact given path based on the system's host, protocol, and port.
   def url_for_path(path)
     path = "/#{path}" if path[0] != "/"
