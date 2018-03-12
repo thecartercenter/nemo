@@ -1,14 +1,18 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 feature "offline mode" do
   let(:user) { create(:admin) }
 
+  around do |example|
+    configatron.offline_mode = offline_mode
+    example.run
+    configatron.offline_mode = false
+  end
+
   context "offline mode on" do
-    around do |example|
-      configatron.offline_mode = true
-      example.run
-      configatron.offline_mode = false
-    end
+    let(:offline_mode) { true }
 
     scenario "forgot password link" do
       visit "/"
@@ -25,14 +29,18 @@ feature "offline mode" do
 
     scenario "email not sent" do
       expect { ExceptionNotifier.notify_exception(StandardError.new) }.to(
-        change { ActionMailer::Base.deliveries.size }.by(0))
+        change { ActionMailer::Base.deliveries.size }.by(0)
+      )
     end
   end
 
   context "offline mode off" do
+    let(:offline_mode) { false }
+
     scenario "email sent" do
       expect { ExceptionNotifier.notify_exception(StandardError.new) }.to(
-        change { ActionMailer::Base.deliveries.size }.by(1))
+        change { ActionMailer::Base.deliveries.size }.by(1)
+      )
     end
   end
 end

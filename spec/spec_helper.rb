@@ -73,6 +73,12 @@ RSpec.configure do |config|
   config.include AssertSelectRoot, type: :request
   config.include Paperclip::Shoulda::Matchers
 
+  config.before(:suite) do
+    # In CI environments, the SCSS preprocessor won't have been run because the developer won't have
+    # done it and assets:precompile won't have been run. This could lead to issues with feature specs.
+    Themeing::ScssPreprocessor.new.run
+  end
+
   # We have to use around so that this block runs before arounds and befores in actual specs.
   config.around(:each) do |example|
     # Previous specs might leave locale set to something else, which can cause issues.

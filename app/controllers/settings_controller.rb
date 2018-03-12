@@ -11,8 +11,7 @@ class SettingsController < ApplicationController
 
   def update
     begin
-      # setting is already loaded by application controller
-
+      # Setting is already loaded in app/controllers/concerns/application_controller/settings.rb
       @setting.update_attributes!(setting_params)
 
       set_success_and_redirect(@setting)
@@ -67,6 +66,6 @@ class SettingsController < ApplicationController
     def setting_params
       params.require(:setting).permit(:timezone, :preferred_locales_str, :allow_unauthenticated_submissions,
         :incoming_sms_numbers_str, :default_outgoing_sms_adapter, :twilio_phone_number, :twilio_account_sid,
-        :twilio_auth_token1, :clear_twilio, :frontlinecloud_api_key1, :clear_frontlinecloud)
+        :twilio_auth_token1, :clear_twilio, :frontlinecloud_api_key1, :clear_frontlinecloud, :theme)
     end
 end

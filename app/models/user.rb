@@ -3,7 +3,6 @@ class User < ApplicationRecord
 
   ROLES = %w[enumerator reviewer staffer coordinator]
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
-  SITE = new name: configatron.site_shortname # Dummy user for use in SMS log
   GENDER_OPTIONS = %w[man woman no_answer specify]
   PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
 

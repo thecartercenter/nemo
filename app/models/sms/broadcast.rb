@@ -4,7 +4,7 @@ class Sms::Broadcast < Sms::Message
   delegate :recipient_numbers, to: :broadcast
 
   def sender
-    User::SITE
+    Sms::SiteUser.instance
   end
 
   def recipient_count

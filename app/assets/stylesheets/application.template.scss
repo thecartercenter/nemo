@@ -1,14 +1,20 @@
 /////////////////////////////////////////////////////////////////////////////////////////
-// THIS FILE MUST BE IDENTICAL TO THE OTHER DIRECTION'S FILE EXECPT FOR THE $dir VARIABLE
+/////////////////////////////////////////////////////////////////////////////////////////
+// This file is preprocessed to generate theme and ltr/rtl combinations.
+// This happens automatically on production.
+// On develop, if you change this file, you should run rake scss:preprocess.
+/////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
 
 @import "bootstrap";
 @import "font-awesome";
 @import "select2";
+@import "all/variables/basic_colors";
+@import "all/themes/@@@theme@@@";
 @import "all/variables/*";
 
-//set direction for directional variables
-$dir: ltr;
+// Set direction for directional variables
+$dir: @@@direction@@@;
 @import "all/directional";
 
 /*

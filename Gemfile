@@ -24,7 +24,8 @@ gem "cancancan", "~> 1.10.1"
 # core
 gem "rake", "~> 10.4.2"
 gem "pg", "~> 0.20"
-gem "configatron", "~> 4.5.0"
+gem "configatron", "~> 4.5.0" # Deprecated, prefer `config` gem
+gem "config", "~> 1.7"
 gem "random_data", "~> 1.6.0"
 gem "paperclip", "~> 4.3.2"
 gem "term-ansicolor", "~> 1.3.0"

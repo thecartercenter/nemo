@@ -97,7 +97,7 @@ table.index_table {
 
     /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
     a {
-      color: $elmo-darker-blue;
+      color: $theme-main-darker;
       padding: 5px 0;
     }
   }
@@ -182,8 +182,8 @@ div.paginate-container {
 ul.pagination {
   a { color: $orange; }
   li.active span, li.active span:hover {
-    background-color: $elmo-blue;
-    border-color: $elmo-blue;
+    background-color: $theme-main;
+    border-color: $theme-main;
   }
 }
 

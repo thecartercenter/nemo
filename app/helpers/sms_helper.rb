@@ -35,7 +35,7 @@ module SmsHelper
   def user_with_phone(user, phone)
     output = ''.html_safe
 
-    if user == User::SITE
+    if user == Sms::SiteUser.instance
       output << user.name
       if phone.present?
         output << " "

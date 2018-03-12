@@ -1,5 +1,5 @@
 <div id="printable_form" class="printable">
-  <%= logo_dark_image(class: 'logo') %>
+  <%= logo_image(style: :dark, class: "logo") %>
   <h1 class="title"><%= title(name_only: true) %></h1>
   <div class="mission"><%= current_mission.try(:name) || "[#{t('form.no_mission')}]" %></div>
   <table>

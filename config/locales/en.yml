@@ -24,6 +24,7 @@ en:
     contact: "Contact"
     create: "Create"
     created: "Created"
+    custom: "Custom"
     copy: "Copy"
     data: "Data"
     delete: "Delete"
@@ -672,6 +673,7 @@ en:
         incoming_sms_numbers_str: "Enter the phone number(s) (including country code, separated by commas) to which incoming SMSes for SMS forms should be sent. Only needed if using SMS submissions."
         incoming_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages.
+        theme: "Choose a theme for the application. You may want to check out <a href='https://github.com/thecartercenter/elmo/blob/master/docs/production-setup.md#custom-theme'>instructions for creating a custom theme</a>."
         universal_sms_token: |-
           This token is included in the URL used by the incoming SMS provider to prevent the submission of unauthorized messages. Use this URL if you need to allow multiple missions to submit via the same URL.
         using_incoming_sms_token_title: Using the Incoming SMS Token

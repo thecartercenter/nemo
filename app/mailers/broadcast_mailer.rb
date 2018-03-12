@@ -3,6 +3,6 @@ class BroadcastMailer < ActionMailer::Base
 
   def broadcast(recips, subj, msg)
     @msg = msg
-    mail(to: recips, subject: "#{configatron.broadcast_tag} #{subj}")
+    mail(to: recips, subject: "[#{Settings.broadcast_tag}] #{subj}")
   end
 end

@@ -1,10 +1,3 @@
-# Site name (shows up in banner and page title)
-configatron.site_name = "ELMO (Longer Name)"
-configatron.site_shortname = "ELMO"
-# configatron.logo_path = "logo-override.png"
-# configatron.logo_dark_path = "logo-dark-override.png"
-# configatron.broadcast_tag = "[ELMO]"
-
 # Offline mode.
 # If set to true, you can't reset passwords via email or send broadcasts.
 # Email error reports are also not sent.
@@ -35,7 +28,7 @@ configatron.webmaster_emails = ["someone@somplace.com"]
 # Email address from which ELMO emails will appear to be from. Some mail servers require
 # that this be a real address controlled by the mailserver itself. e.g. if you're using Google Apps
 # for email, use an email address hosted in your Google Apps account.
-configatron.site_email = "\"#{configatron.site_name}\" <someone@someplace.com>"
+configatron.site_email = "\"#{Settings.site_name}\" <someone@someplace.com>"
 
 # Mailer settings
 ActionMailer::Base.smtp_settings = {

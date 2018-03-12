@@ -1,6 +1,6 @@
 <div id="instructions">
-  <h1><%= configatron.site_name %> <%= t("user.login_instructions.title") %></h1>
-  <p><%= t("user.login_instructions.welcome", :site => configatron.site_name) %></p>
+  <h1><%= Settings.site_name %> <%= t("user.login_instructions.title") %></h1>
+  <p><%= t("user.login_instructions.welcome", site: Settings.site_name) %></p>
 
   <table class="form">
     <tr>

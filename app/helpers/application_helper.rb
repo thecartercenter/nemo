@@ -1,5 +1,4 @@
 module ApplicationHelper
-
   ERROR_MESSAGE_KEYS_TO_HIDE = {
     :'condition.base' => true
   }
