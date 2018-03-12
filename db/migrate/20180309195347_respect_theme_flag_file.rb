@@ -6,6 +6,11 @@
 class RespectThemeFlagFile < ActiveRecord::Migration
   def up
     path = Rails.root.join("tmp", "theme_flag")
-    Setting.update_all(theme: File.read(path)) if File.exist?(path)
+
+    # Since the old default theme was elmo, that's what we default to here,
+    # even though the _column_ default is nemo.
+    theme = File.exist?(path) ? File.read(path) : "elmo"
+
+    Setting.update_all(theme: theme)
   end
 end
