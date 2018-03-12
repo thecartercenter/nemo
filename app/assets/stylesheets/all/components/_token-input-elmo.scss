@@ -45,17 +45,17 @@ ul.token-input-list-elmo {
     text-align: center;
 
     &.group {
-      border: 1px solid $group-pill-border-color;
-      background-color: $group-pill-background-color;
+      border: 1px solid $pill-border-color;
+      background-color: $pill-background-color;
       a {
-        color: $group-pill-text-color;
+        color: $pill-text-color;
         &:hover {
           text-decoration: none;
 
         }
       }
       &:hover {
-        background-color: $group-pill-background-hover-color;
+        background-color: $pill-background-hover-color;
       }
     }
 }

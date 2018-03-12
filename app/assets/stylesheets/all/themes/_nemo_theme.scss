@@ -30,7 +30,9 @@ $nav-text-color: #777;
 $nav-icon-color: #bdb9b9;
 $nav-border-color: #E7E7E7;
 
-$group-pill-background-color: $light-blue;
-$group-pill-background-hover-color: darken($light-blue, 10%);
-$group-pill-border-color: darken($light-blue, 20%);
-$group-pill-text-color: $body-text-color;
+// For pills/tokens like user groups or question tags.
+// Not all instances of pills/tokens obey this yet.
+$pill-background-color: $light-blue;
+$pill-background-hover-color: darken($light-blue, 10%);
+$pill-border-color: darken($light-blue, 20%);
+$pill-text-color: $body-text-color;
