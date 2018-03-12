@@ -25,5 +25,19 @@ describe User do
         expect(subject).to contain_exactly(third_user)
       end
     end
+
+    context "searching by role" do
+      it "should return admins with admin role" do
+
+      end
+
+      it "should return coordinators with coordinator role" do
+
+      end
+
+      it "should return observers with observer role" do
+
+      end
+    end
   end
 end
