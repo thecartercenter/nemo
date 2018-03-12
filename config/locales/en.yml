@@ -1310,9 +1310,14 @@ en:
     add_condition: "Add Condition"
     add_rule: "Add Rule"
     display_if_options:
-      always: "Always display this question"
-      all_met: "Display this question if all of these conditions are met"
-      any_met: "Display this question if any of these conditions are met"
+      qing_group:
+        always: "Always display this group"
+        all_met: "Display this group if all of these conditions are met"
+        any_met: "Display this group if any of these conditions are met"
+      questioning:
+        always: "Always display this question"
+        all_met: "Display this question if all of these conditions are met"
+        any_met: "Display this question if any of these conditions are met"
     display_if_operator:
       all_met: "and"
       any_met: "or"

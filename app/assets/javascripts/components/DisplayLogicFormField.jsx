@@ -16,7 +16,7 @@ class DisplayLogicFormField extends React.Component {
       <option
         key={option}
         value={option}>
-        {I18n.t(`form_item.display_if_options.${option}`)}
+        {I18n.t(`form_item.display_if_options.${this.state.type}.${option}`)}
       </option>
     ));
   }
