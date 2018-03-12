@@ -13,20 +13,20 @@ class Setting < ApplicationRecord
 
   DEFAULT_TIMEZONE = "UTC"
 
-  # The user-provided theme file is copied into this path by the preprocessor. If it's there
-  # we know we're ready to display the theme.
-  THEME_SCSS_PATH = "app/assets/stylesheets/all/themes/_custom.scss"
+  scope :by_mission, ->(m) { where(mission: m) }
 
-  before_validation(:normalize_locales)
-  before_validation(:normalize_incoming_sms_numbers)
-  before_validation(:nullify_fields_if_these_are_admin_mode_settings)
-  before_validation(:normalize_twilio_phone_number)
-  before_validation(:clear_sms_fields_if_requested)
-  validate(:locales_are_valid)
-  validate(:one_locale_must_have_translations)
-  validate(:sms_adapter_is_valid)
-  validate(:sms_credentials_are_valid)
-  before_save(:save_sms_credentials)
+  before_validation :normalize_locales
+  before_validation :normalize_incoming_sms_numbers
+  before_validation :nullify_fields_if_these_are_admin_mode_settings
+  before_validation :normalize_twilio_phone_number
+  before_validation :clear_sms_fields_if_requested
+
+  validate :locales_are_valid
+  validate :one_locale_must_have_translations
+  validate :sms_adapter_is_valid
+  validate :sms_credentials_are_valid
+
+  before_save :save_sms_credentials
 
   serialize :preferred_locales, JSON
   serialize :incoming_sms_numbers, JSON
@@ -82,11 +82,15 @@ class Setting < ApplicationRecord
   end
 
   def self.theme_exists?
-    File.exist?(Rails.root.join(THEME_SCSS_PATH))
+    # TODO refactor to get this path from the Themeing system.
+    File.exist?(Rails.root.join("app", "assets", "stylesheets", "all",
+      "themes", "_custom_theme.scss"))
   end
 
   def self.theme_options
-    [%w[NEMO nemo], %w[ELMO elmo], [I18n.t("common.custom"), "custom"]]
+    options = [%w[NEMO nemo], %w[ELMO elmo]]
+    options << [I18n.t("common.custom"), "custom"] if theme_exists?
+    options
   end
 
   def generate_override_code!(size = 6)

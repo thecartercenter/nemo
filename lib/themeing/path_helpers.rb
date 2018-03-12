@@ -30,7 +30,8 @@ module Themeing
     end
 
     def installed_scss
-      @installed_scss ||= Rails.root.join("app", "assets", "stylesheets", "all", "themes", "_custom_theme.scss")
+      @installed_scss ||= Rails.root.join("app", "assets", "stylesheets", "all",
+        "themes", "_custom_theme.scss")
     end
 
     def installed_settings
