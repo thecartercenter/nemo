@@ -5,19 +5,32 @@ class SkipRuleDecorator < ApplicationDecorator
   delegate_all
 
   def human_readable
-    if destination == "item"
-      destination_string = "#{I18n.t("activerecord.models.question.one")} #{QuestioningDecorator.new(dest_item).name_and_rank}"
-    else
-      destination_string = I18n.t("skip_rule.end_of_form")
-    end
     I18n.t("skip_rule.instructions",
-      destination: destination_string,
+      destination: display_dest,
       conditions: decorate_conditions)
   end
+
+  def read_only_header
+    destination_directions = I18n.t("skip_rule.skip_to_item", label: display_dest)
+    skip_if_directions = I18n.t("skip_rule.skip_if_options.#{skip_if}")
+    destination_directions << " " << skip_if_directions
+  end
+
+  private
 
   def decorate_conditions
     decorated_conditions = ConditionDecorator.decorate_collection(condition_group.members)
     concatenator = condition_group.true_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
     decorated_conditions.map(&:human_readable).join(" #{concatenator} ")
+  end
+
+  def display_dest
+    if destination == "item"
+      prefix = I18n.t("activerecord.models.question.one")
+      question_identifier = QuestioningDecorator.new(dest_item).name_and_rank
+      prefix << " " << question_identifier
+    else
+      I18n.t("skip_rule.end_of_form")
+    end
   end
 end

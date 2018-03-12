@@ -19,6 +19,20 @@ form.form_form {
   }
 }
 
+// dl can be used for non bulleted lists of things in a read only form view.
+// These styles put 20px of space between each dt, but not on either end.
+dt {
+  margin-top: 20px;
+}
+
+dt:first-of-type {
+  margin-top: 0;
+}
+
+dl {
+  margin-bottom: 0;
+}
+
 @media print {
   // The outer title on forms pages should be hidden since we include it separately.
   .forms_index, .forms_show, .forms_edit {
