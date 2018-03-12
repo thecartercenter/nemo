@@ -307,7 +307,6 @@ es:
         from: "De"
         body: "Cuerpo"
       user:
-        admin: "¿Es el Administrador?"
         assignments: "Tareas"
         latest_mission: "Última Misión"
         login: "Nombre de usuario "
@@ -403,7 +402,6 @@ es:
         access_level: "Heredar: El mismo nivel de acceso que la clase padre del formulario. Sector privado: No se puede acceder a los datos a través de la API, independientemente del nivel de acceso a la clase padre del formulario."
       questioning:
         hidden: "Si esta pregunta se mostrará o no en este formulario. Utilice esta opción para desactivar una pregunta si no la puede eliminar. Este valor se anulará el estado y parámetros necesarios indicados a continuación."
-        condition: "Una condición que debe cumplirse para que esta pregunta aparezca para el usuario."
         required: "Si esta pregunta debe ser completada o no en este formulario o es opcional. Sólo se ejecutará si la pregunta no oculta la condición especificada anteriormente."
       report/report:
         name: "Un título descriptivo para este informe."
@@ -420,12 +418,12 @@ es:
       setting:
         allow_unauthenticated_submissions: "Si esta casilla está marcada, NADIE podrá envar datos a la misión sin introducir una contraseña. Use con precaución."
         preferred_locales_str: |-
-          Entre el <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>código de dos letras</a>, separado por comas, para el idioma de la misión, en orden de preferencia.
+            Entre el <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>código de dos letras</a>, separado por comas, para el idioma de la misión, en orden de preferencia.
 
-          Esta configuración determina:
-          * El idioma standard de preferencia para nuevos usuarios
-          * El idioma standard para las respuestas por SMS
-          * El idioma para las Preguntas y las Opciones
+            Esta configuración determina:
+            * El idioma standard de preferencia para nuevos usuarios
+            * El idioma standard para las respuestas por SMS
+            * El idioma para las Preguntas y las Opciones
         external_sql: "El código SQL utilizado para extraer los datos para su uso en aplicaciones externas. Haga click en \"Seleccionar todo\" y, a continuación, presione Ctrl-C para copiar."
         timezone: "La zona horaria que aparece en todo el sitio web."
       sms/test:
@@ -795,15 +793,6 @@ es:
       alternate_only: "Sólo teléfono alternativo"
       both: "Ambos teléfonos"
   condition:
-    operators:
-      eq: "es igual a"
-      lt: "es menos que"
-      gt: "es mayor que"
-      leq: "es menos que o igual a"
-      geq: "es mayor que o igual a"
-      neq: "no es igual a"
-      inc: "incluye"
-      ninc: "no incluye"
     no_refable_qings: "No hay preguntas en este formulario a las que una condición sea referida."
     op: "Comparación"
     value: "Valor"
@@ -920,8 +909,8 @@ es:
     enter_new_pass: "%{name}, por favor entre una nueva contraseña para su cuenta."
     success: "Contraseña actualizada con éxito."
     token_not_found: |-
-      Lo sentimos, pero no hemos podido localizar su cuenta. Si está teniendo problemas intente copiar y pegar el URL
-      desde su correo a su buscador or intente reiniciar el proceso de creación de una nueva contraseña.
+        Lo sentimos, pero no hemos podido localizar su cuenta. Si está teniendo problemas intente copiar y pegar el URL
+        desde su correo a su buscador or intente reiniciar el proceso de creación de una nueva contraseña.
   permission_error:
     need_mission: "No se puede ver sin seleccionar una misión"
     need_login: "Debe iniciar sesión para ver la página."
@@ -1204,11 +1193,11 @@ es:
 
         and y después selecciones ''Usuario'' y ''Contraseña''.'
       preamble_singular: |-
-        Las instrucciones de acceso se encuentran aquí debajo. Por favor, imprima esta página ahora y asegúrese de que el usuario indicado las recibe.
-        Ya que la contraseña del usuario esta guardara en un formato codificado, no podrá ser accedida una vez abandone esta página.
+          Las instrucciones de acceso se encuentran aquí debajo. Por favor, imprima esta página ahora y asegúrese de que el usuario indicado las recibe.
+          Ya que la contraseña del usuario esta guardara en un formato codificado, no podrá ser accedida una vez abandone esta página.
       preamble_plural: |-
-        Las instrucciones de acceso se encuentran aquí debajo. Por favor, imprima esta página ahora y asegúrese de que el usuario indicado las recibe.
-        Ya que la contraseña del usuario esta guardara en un formato codificado, no podrá ser accedida una vez abandone esta página.
+          Las instrucciones de acceso se encuentran aquí debajo. Por favor, imprima esta página ahora y asegúrese de que el usuario indicado las recibe.
+          Ya que la contraseña del usuario esta guardara en un formato codificado, no podrá ser accedida una vez abandone esta página.
       site_url: "Página URL"
       title: "Instrucciones de inicio de sesión"
       welcome: "Bienvenido a %{site}. Sus credenciales son las siguientes:"

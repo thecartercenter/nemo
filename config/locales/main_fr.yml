@@ -392,7 +392,6 @@ fr:
         from: "De"
         body: "Corps"
       user:
-        admin: "Administrateur?"
         assignments: "Tâches"
         birth_year: "Année de naissance"
         nationality: "Nationnalité"
@@ -516,7 +515,6 @@ fr:
         access_level: "Héritent: le même niveau d'accès que le formulaire parent. Privé: personne ne peut accéder aux données par l'API."
       questioning:
         hidden: "Quoique cette question sera montrée sur ce formulaire. Utilisez ça pour désactiver une question si vous ne pouvez pas la supprimer. Cette valeur remplace toute condition indiquée ci-dessus."
-        condition: "Pour l'utilisateur de voir cette question, une condition supplémentaire doit être satisfaite."
         required: "Quoique cette question doit être complétée dans ce formulaire ou qu'elle est facultative, Elle est seulement exécutée si la condition indiquée ci-dessus est satisfaite."
       report/report:
         name: "Un titre descriptif pour ce rapport."
@@ -533,22 +531,22 @@ fr:
       setting:
         allow_unauthenticated_submissions: "Si cette boîte est cochée, tous les utilisateurs peuvent soumettre des données à la mission sans un mot de passe. Faire attention. Utilisez avec précautions. "
         preferred_locales_str: |-
-          Entrez le <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>code de deux lettres</a> pour les langues préférées de cette mission. Séparez les langues par des virgules.
+            Entrez le <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php'>code de deux lettres</a> pour les langues préférées de cette mission. Séparez les langues par des virgules.
 
-          Ce code determine:
-          * La langue préférée pour nouveau utilisateurs
-          * La langue préférée pour les réponses SMS
-          * La langue pour les questions et les options
+            Ce code determine:
+            * La langue préférée pour nouveau utilisateurs
+            * La langue préférée pour les réponses SMS
+            * La langue pour les questions et les options
         incoming_sms_numbers_str: "Entrez le numéro(s) de téléphone (inclure chaque indicatif téléphonique du pays, être séparées par virgule(s)) où les SMS entrants pour les formes SMS doivent être envoyés. Il sera affiché sur le guide du SMS."
         incoming_sms_token: |-
-          ce jeton est inclu dans l'URL utilisé par le fournisseur de SMS entrant pour eviter l'envoi des messages non autorisés.
+            ce jeton est inclu dans l'URL utilisé par le fournisseur de SMS entrant pour eviter l'envoi des messages non autorisés.
         universal_sms_token: |-
-          Ce jeton est contenu dans l'URL utilisé par le fournisseur de SMS entrant pour empêcher l'envoi des messages non autorisés. Utilisez ce URL si vous voulez permettre à plusieurs missions d'envoyer des formulaires par la même adresse URL
+            Ce jeton est contenu dans l'URL utilisé par le fournisseur de SMS entrant pour empêcher l'envoi des messages non autorisés. Utilisez ce URL si vous voulez permettre à plusieurs missions d'envoyer des formulaires par la même adresse URL
         using_incoming_sms_token_title: Utilisation du jeton du SMS entrant
         using_incoming_sms_token_body: |-
-          Veuillez enregistrer l'URL du SMS entrant chez votre fournisseur
+            Veuillez enregistrer l'URL du SMS entrant chez votre fournisseur
 
-          %{url}
+            %{url}
         default_outgoing_sms_adapter: "L'adaptateur utilisé pour envoyer les SMSs. Notez que les réponses par SMS peuvent être envoyées a partir de différent adaptateurs, selon l'adaptateur par lequel ils arrivent."
         twilio_phone_number: "Le numéro de téléphone enregistré chez Twilio. Les diffusions SMS sortant ne vont pas s'effectuer si ce numéro n'est pas associé à votre compte Twilio. Ce numéro doit contenir le code pays. Ex: +25680344523"
         twilio_account_sid: "Le \"Account SID\" pour le compte Twilio."
@@ -979,15 +977,6 @@ fr:
       alternate_only: "Seulement téléphone alterné"
       both: "Les deux portables"
   condition:
-    operators:
-      eq: "égal à"
-      lt: "moins que"
-      gt: "plus grand que"
-      leq: "moins que ou égal à"
-      geq: "plus que ou égal à"
-      neq: "n'est pas égal à"
-      inc: "inclure"
-      ninc: "n'est pas inclure"
     no_refable_qings: "Il n'y a pas de questions sur le formulaire à laquelle une condition pourrait se référer."
     op: "Comparaison"
     value: "Valeur"
@@ -1105,7 +1094,7 @@ fr:
   import:
     row_error: "Ligne %{row}: %{error}"
     queued_html: |-
-      %{type} importation en attente. verifiez le paneau de control des opérations <a href="%{url}"> pour plus d'information
+        %{type} importation en attente. verifiez le paneau de control des opérations <a href="%{url}"> pour plus d'information
   incomplete_response:
     missing_answers:
       label: "Sont toutes les réponses obligatoires complètes dans le formulaire?"
@@ -1153,7 +1142,7 @@ fr:
     type_to_add_new: "Tapez un titre d'option."
   option_set_import:
     instructions_html: |-
-      télécharger un classeur contenant votre ensemble d'option. seulement des fichiers XLSX ou CSV sont acceptés
+        télécharger un classeur contenant votre ensemble d'option. seulement des fichiers XLSX ou CSV sont acceptés
   operation:
     clear_confirm: "Etes vous sûr de vouloir supprimer toutes les opérations terminées?"
     server_error: "Erreur serveur. veuillez contacter le support"
@@ -1191,7 +1180,7 @@ fr:
     no_associated_email: "Il n'y a pas d'email associé à ce compte. Veuillez contacter un administrateur pour changer votre mot de passe"
     success: "Mot de passe mis à jour avec succès"
     token_not_found: |-
-      Désolé, le compte n'a pas été trouvé. Si vous avez des problèmes, ressayez  l'URL de votre courriel dans votre navigateur ou recommencer le procès de remettre le mot de passe.
+        Désolé, le compte n'a pas été trouvé. Si vous avez des problèmes, ressayez  l'URL de votre courriel dans votre navigateur ou recommencer le procès de remettre le mot de passe.
     user_not_found: "Aucun utilisateur trouvé avec cet adresse email ou identifiant"
   permission_error:
     need_mission: "Impossible de voir ce sans sélectionner une mission."
@@ -1406,134 +1395,134 @@ fr:
     help_title: "Aide "
     help_text:
       users: |-
-        ##Qualificatif
+          ##Qualificatif
 
-        Une si;ple recherche telle que
+          Une si;ple recherche telle que
 
-        *_romeo juliet_
+          *_romeo juliet_
 
-        correspond au code utilisateur,
+          correspond au code utilisateur,
       questions: |-
-        ## Qualificatifs
+          ## Qualificatifs
 
-        Une simple recherche telle que:
+          Une simple recherche telle que:
 
-        * __Romeo Juliette__
-        Chercher seulement les titres des questions. Pour rechercher sur la base des attributs des question, utiliser un qualificatif, e.g.:
+          * __Romeo Juliette__
+          Chercher seulement les titres des questions. Pour rechercher sur la base des attributs des question, utiliser un qualificatif, e.g.:
 
-        * __code:Urne__
+          * __code:Urne__
 
-        Affichera les questions avec 'Urne' dans leur code.
+          Affichera les questions avec 'Urne' dans leur code.
 
-        Combinez les deux ci-dessus pour limiter votre recherche:
+          Combinez les deux ci-dessus pour limiter votre recherche:
 
-        * __Romeo et Juliette code:Urne__
+          * __Romeo et Juliette code:Urne__
 
-        Affichera les réponses dans les' Widgets' formulaires contenant les mots 'Romeo et Juliette'.
+          Affichera les réponses dans les' Widgets' formulaires contenant les mots 'Romeo et Juliette'.
 
-        L'ensemble des qualificatifs que vous pouvez utilisez est le suivant:
+          L'ensemble des qualificatifs que vous pouvez utilisez est le suivant:
 
-        * __titre__ la question titre (lien partiel autorise)
-        * __code__ La question code (lien partiel autorise)
-        * __type__ La question type (%{question_types})
-        * __onglet__ Recherches d'onglet appliquées a la question
+          * __titre__ la question titre (lien partiel autorise)
+          * __code__ La question code (lien partiel autorise)
+          * __type__ La question type (%{question_types})
+          * __onglet__ Recherches d'onglet appliquées a la question
 
-        ## Phrases exactes
+          ## Phrases exactes
 
-        Les phrase exactes peuvent être liées en incluant la phrase dans une double citation:
+          Les phrase exactes peuvent être liées en incluant la phrase dans une double citation:
 
-        __\"La pluie en Espagne\"__
+          __\"La pluie en Espagne\"__
 
-        Double citations peuvent être combinées avec des termes non-cites:
+          Double citations peuvent être combinées avec des termes non-cites:
 
-        __pommes oranges \"fruit de passion\"__
+          __pommes oranges \"fruit de passion\"__
 
-        ## Tous les termes vs. n importe quel terme
+          ## Tous les termes vs. n importe quel terme
 
-        Par défaut, tous les termes de la recherche doivent être lies. Par exemple,
+          Par défaut, tous les termes de la recherche doivent être lies. Par exemple,
 
-        __alpha lima peru__
+          __alpha lima peru__
 
-        Lie questions avec seulement trois de ces caractères. Utilisez la barre verticale ('I') pour lier plusieurs mots/phrases:
+          Lie questions avec seulement trois de ces caractères. Utilisez la barre verticale ('I') pour lier plusieurs mots/phrases:
 
-        __pommes | oranges | \"fruit de passion\"__
+          __pommes | oranges | \"fruit de passion\"__
 
-        Le caractère '|' peut aussi être utiliser avec des qualificatifs:
+          Le caractère '|' peut aussi être utiliser avec des qualificatifs:
 
-        __code: ( Lions | \"Ours et Requins\" | Tigres )__
+          __code: ( Lions | \"Ours et Requins\" | Tigres )__
 
-        Lie les questions avec n'importe lequel de ces codes ci-dessus.
+          Lie les questions avec n'importe lequel de ces codes ci-dessus.
 
-        ## Négation
+          ## Négation
 
-        Vous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet:
+          Vous pouvez rejeter une recherche qualifiée en utilisant l’opérateur de rejet:
 
-        __code != Widgets__
+          __code != Widgets__
 
-        lieront les questions avec n'importe code ne comportant pas de 'Widgets'.
+          lieront les questions avec n'importe code ne comportant pas de 'Widgets'.
       sms: |-
-        ## Qualificatifs ##
+          ## Qualificatifs ##
 
-        Une simple recherche telle que:
+          Une simple recherche telle que:
 
-        * __Romeo Juliette__
+          * __Romeo Juliette__
 
-        Recherche le contenu des messages, nom d'utilisateur, nom entier de l'utilisateur, et  numéro de téléphone pour chaque mot.
-        utilisez un qualificatif pour rechercher sur la base des attributs des questions, ex.:
+          Recherche le contenu des messages, nom d'utilisateur, nom entier de l'utilisateur, et  numéro de téléphone pour chaque mot.
+          utilisez un qualificatif pour rechercher sur la base des attributs des questions, ex.:
 
-        * __tapez: entrant__
+          * __tapez: entrant__
 
-        montrera les messages entrant seulement.
+          montrera les messages entrant seulement.
 
-        Combinez les deux ci-dessus pour préciser votre recherche:
+          Combinez les deux ci-dessus pour préciser votre recherche:
 
-        * __Romeo Juliette tapez: entrant__
+          * __Romeo Juliette tapez: entrant__
 
-        montrera message entrant contenant aussi les mots 'Romeo' et 'Juliette'.
+          montrera message entrant contenant aussi les mots 'Romeo' et 'Juliette'.
 
-        L'ensemble des qualificatifs pouvant être utilisé est le suivant:
+          L'ensemble des qualificatifs pouvant être utilisé est le suivant:
 
-        * __contenu__ le contenu du message  (correspondance partielle autorisée)
-        * __type__ le type de message (incoming, reply, ou broadcast) (correspondance partielle autorisée)
-        * __identifiant__ Le nom d'utilisateur de l’expéditeur ou du récipiendaire (correspondance partielle autorisée)
-        * __nom__ Le nom entier de l’expéditeur ou du récipiendaire (correspondance autorisée
-        * __numéro__ Le numéro de téléphone de l’expéditeur ou du récipiendaire (correspondance partielle autorisée)
-        * __date__ La date d’expédition ou de réception du message (ex. 2015-01-29)
-        * __date-heure__ La date et l'heure d’expédition ou d'envoi du message (utilisez les guillemets et 24-hr heure: ex. "2015-01-29 14:00")
+          * __contenu__ le contenu du message  (correspondance partielle autorisée)
+          * __type__ le type de message (incoming, reply, ou broadcast) (correspondance partielle autorisée)
+          * __identifiant__ Le nom d'utilisateur de l’expéditeur ou du récipiendaire (correspondance partielle autorisée)
+          * __nom__ Le nom entier de l’expéditeur ou du récipiendaire (correspondance autorisée
+          * __numéro__ Le numéro de téléphone de l’expéditeur ou du récipiendaire (correspondance partielle autorisée)
+          * __date__ La date d’expédition ou de réception du message (ex. 2015-01-29)
+          * __date-heure__ La date et l'heure d’expédition ou d'envoi du message (utilisez les guillemets et 24-hr heure: ex. "2015-01-29 14:00")
 
-        ## Les exactes phrases ##
+          ## Les exactes phrases ##
 
-        Les exactes phrases peuvent être liées en les mettant entre guillemets:
+          Les exactes phrases peuvent être liées en les mettant entre guillemets:
 
-        * __"la pluie en Espagne"__
+          * __"la pluie en Espagne"__
 
-        Les phrases entre guillemets peuvent être mélangées avec les phrases non-entre guillemets.:
+          Les phrases entre guillemets peuvent être mélangées avec les phrases non-entre guillemets.:
 
-        * __pomme oranges "fruit de la passion"__
+          * __pomme oranges "fruit de la passion"__
 
-        ## Tous les Termes vs. Aucun Terme
+          ## Tous les Termes vs. Aucun Terme
 
-        Par défaut, tous les termes dans la recherche peuvent être liées. Par exemple,
+          Par défaut, tous les termes dans la recherche peuvent être liées. Par exemple,
 
-        * __alpha lima pérou__
+          * __alpha lima pérou__
 
-        Lie les questions contenant seulement tous les trois mots combinés. Utilisez la barre verticale ('|') le caractère pour lier plusieurs mots/phrases:
+          Lie les questions contenant seulement tous les trois mots combinés. Utilisez la barre verticale ('|') le caractère pour lier plusieurs mots/phrases:
 
-        * __pommes | oranges | "fruit de la passion"__
+          * __pommes | oranges | "fruit de la passion"__
 
-        Le '|' caractère peut aussi être utilise avec les qualificatifs:
+          Le '|' caractère peut aussi être utilise avec les qualificatifs:
 
-        * __contenu:( Lions | "Ours et Requins" | Tigres )__
+          * __contenu:( Lions | "Ours et Requins" | Tigres )__
 
-        Lie les questions avec chacun de ces codes ci-dessus.
+          Lie les questions avec chacun de ces codes ci-dessus.
 
-        ## Rejet
+          ## Rejet
 
-        Vous pouvez rejeter une recherche qualifiée a l'aide de l’opérateur de rejet:
+          Vous pouvez rejeter une recherche qualifiée a l'aide de l’opérateur de rejet:
 
-        * __type != broadcast__
+          * __type != broadcast__
 
-        Liera les messages 'incoming' et 'reply' seulement.
+          Liera les messages 'incoming' et 'reply' seulement.
     invalid_op: "L'opérateur '%{op}' n'est pas valide pour le qualificatif '%{qualifier}'."
     multiple_terms_not_allowed: "Plusieurs termes ne sont pas permis pour '%{qualifier}' recherches sauf le case où 'OU' est utilisé."
     must_use_qualifier: "Vous devez utiliser un qualificatif pour tous les termes de recherche."
@@ -1643,9 +1632,9 @@ fr:
     must_login: "Vous devez login pour accéder à cette page."
   user_batch:
     instructions_html: |-
-      télécharger un classeur avec contenant les utilisateurs. seuls les fichiers Excel et CSV sont acceptés.
+        télécharger un classeur avec contenant les utilisateurs. seuls les fichiers Excel et CSV sont acceptés.
 
-      Un exemple de classeur est disponible à <a href="%{xlsx_url}">au format XLSX</a> et <a href="%{csv_url}">au format CSV</a>
+        Un exemple de classeur est disponible à <a href="%{xlsx_url}">au format XLSX</a> et <a href="%{csv_url}">au format CSV</a>
   user:
     add_assignment: "Ajouter Une Tâche"
     api_key:
@@ -1687,11 +1676,11 @@ fr:
       - Si vous voudriez un mot de passe mémorable, vous pouvez le changer sur le site.
       - Les identifiants au-dessus fonctionneront aussi dans votre appareil Android. Pour entrer votre identifiants, clickez le 'ODK Collect' application, clickez le 'Menu' bouton, clickez 'Preferences', et puis clickez chaque identifiant et mot de passe.
       preamble_singular: |-
-        Les instructions de connexion se trouvent ci-dessous. Merci d'imprimer cette page et de s'assurer que l'utilisateur reçoive les instructions.
-        Le mot de passe est emmagasiné dans un format encodé, il sera donc irrécupérable après avoir quitté cette page.
+          Les instructions de connexion se trouvent ci-dessous. Merci d'imprimer cette page et de s'assurer que l'utilisateur reçoive les instructions.
+          Le mot de passe est emmagasiné dans un format encodé, il sera donc irrécupérable après avoir quitté cette page.
       preamble_plural: |-
-        Les instructions de connexion se trouvent ci-dessous. Merci de les imprimer et de vous assurer que les utilisateurs reçoivent les instructions.
-        Les mots de passe sont emmagasinés dans un format encodé, ils seront donc irrécupérables après avoir quitté cette page.
+          Les instructions de connexion se trouvent ci-dessous. Merci de les imprimer et de vous assurer que les utilisateurs reçoivent les instructions.
+          Les mots de passe sont emmagasinés dans un format encodé, ils seront donc irrécupérables après avoir quitté cette page.
       site_url: "Adresse URL du site"
       title: "L'instructions détaillées pour se connecter."
       welcome: "Bienvenue à %{site}. Votre titres sont les suivants:"

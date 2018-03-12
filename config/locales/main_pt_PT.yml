@@ -282,5 +282,4 @@ pt:
         from: "de"
         body: "corpo"
       user:
-        admin: "é Administrador?"
         assignments: "Tarefa"
