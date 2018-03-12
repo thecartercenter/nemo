@@ -117,7 +117,7 @@ rake theme:init
 
 This will create the files `/theme/style.scss`, `/theme/logo-light.png`, and `/theme/logo-dark.png`. Update those files to reflect the desired theme. Ensure your new logos are the same size as the examples.
 
-You will need to run `rake assets:precompile` for the theme to take effect. The compiler will tell you if there are any errors in your `style.scss` file.
+You will need to run `rake assets:precompile` (and re-start your server if it's currently running) for the theme to take effect. The compiler will tell you if there are any errors in your `style.scss` file.
 
 ### Generate admin user, login and enjoy!
 
