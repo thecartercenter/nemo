@@ -90,11 +90,6 @@ class User < ApplicationRecord
   scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
 
-  # Dummy user for use in SMS log
-  def self.site_user
-    new(name: Settings.site_name)
-  end
-
   def self.random_password(size = 12)
     size = 12 if size < 12
 
