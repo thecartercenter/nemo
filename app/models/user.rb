@@ -120,7 +120,8 @@ class User < ApplicationRecord
       Search::Qualifier.new(name: "login", col: "users.login", type: :text, default: true),
       Search::Qualifier.new(name: "email", col: "users.email", type: :text, default: true),
       Search::Qualifier.new(name: "phone", col: "users.phone", type: :text),
-      Search::Qualifier.new(name: "group", col: "user_groups.name", type: :text, assoc: :user_groups)
+      Search::Qualifier.new(name: "group", col: "user_groups.name", type: :text, assoc: :user_groups),
+      Search::Qualifier.new(name: "role", col: "assignments.role", type: :text, assoc: :assignments)
     ]
   end
 
