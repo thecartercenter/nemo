@@ -33,7 +33,7 @@ class SkipRuleSetFormField extends React.Component {
           hide={this.props.hide}
           key={props.key || props.id}
           laterItems={this.state.laterItems}
-          namePrefix={`questioning[skip_rules_attributes][${index}]`}
+          namePrefix={`${this.state.type}[skip_rules_attributes][${index}]`}
           refableQings={this.state.refableQings}
           {...props} />))}
         <div

@@ -32,6 +32,9 @@
           <% else %>
             <%= f.field(:one_screen, type: :check_box) %>
           <% end %>
+          <%= f.field(:display_logic,
+                partial: "questionings/display_logic",
+                locals: {form_item: @qing_group}) %>
         <% end %>
       </div>
 

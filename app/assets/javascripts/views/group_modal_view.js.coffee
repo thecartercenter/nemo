@@ -19,6 +19,7 @@ class ELMO.Views.GroupModalView extends ELMO.Views.FormView
 
     this.setElement($('#group-modal')[0])
     this.show()
+    ReactRailsUJS.mountComponents("#group-modal")
 
   serialize: ->
     this.form_data = @$('.qing_group_form').serialize()

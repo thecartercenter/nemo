@@ -414,6 +414,7 @@ en:
         delete: "Are you sure you want to delete the group '%{name}'?"
         repeatable: "Repeatable?"
         one_screen: "Show on One Screen?"
+        display_logic: "Display Logic"
       question:
         base: "" # this is a sort of hack to get error msg to display properly
         code: "Code"

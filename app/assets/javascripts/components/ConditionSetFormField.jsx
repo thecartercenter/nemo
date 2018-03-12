@@ -38,7 +38,7 @@ class ConditionSetFormField extends React.Component {
         <a
           onClick={this.handleAddClick}
           tabIndex="0">
-          <i className="fa fa-plus" />
+          <i className="fa fa-plus add-condition" />
           {" "}
           {I18n.t("form_item.add_condition")}
         </a>
