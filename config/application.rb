@@ -73,7 +73,10 @@ module ELMO
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
-    configatron.full_locales = [:en, :fr, :es, :ar, :ko]
+    configatron.full_locales = %i[en fr es ar ko]
+
+    # Of the locales in full_locales, the ones displayed RTL.
+    configatron.rtl_locales = %i[ar]
 
     # For security.
     config.action_dispatch.default_headers = { "X-Frame-Options" => "DENY" }

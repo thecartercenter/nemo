@@ -10,7 +10,7 @@ module ThemeHelper
   end
 
   def current_direction
-    I18n.t("locale_dir", default: "ltr")
+    configatron.rtl_locales.include?(I18n.locale) ? "rtl" : "ltr"
   end
 
   # Returns a link tag for the appropriate combination of direction (ltr/rtl) and theme.

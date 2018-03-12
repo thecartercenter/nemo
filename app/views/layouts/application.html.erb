@@ -1,7 +1,7 @@
 <% body = yield %>
 <% ctlr_action_name = "#{route_key}_#{controller.action_name.gsub('update', 'edit').gsub('create', 'new')}" %>
 <!DOCTYPE html>
-<html dir="<%= t('locale_dir', default: 'ltr') %>">
+<html dir="<%= current_direction %>">
 <head>
   <title><%= Settings.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
