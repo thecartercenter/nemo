@@ -21,6 +21,10 @@ module Themeing
       Rails.root.join("tmp")
     end
 
+    def theme_trash_dir
+      tmp_dir.join("old-theme")
+    end
+
     def styles_dir
       @styles_dir ||= Rails.root.join("app", "assets", "stylesheets")
     end

@@ -23,12 +23,14 @@ module Themeing
 
     def handle_nemo_theme
       # Don't need to copy these since they're now built into the system.
+      puts "Detected NEMO theme, which is new default. Setting flag and deleting custom assets."
       remove_old_assets
       create_temp_theme_flag("nemo")
     end
 
     def handle_custom_theme
       # Custom SCSS is required, else we revert to nemo.
+      puts "Detected custom theme. Migrating."
       if File.exist?(old_custom_scss_path)
         copy_old_assets
         puts "Installing theme."
@@ -52,10 +54,11 @@ module Themeing
     end
 
     def remove_old_assets
-      puts "Removing any assets from old theme configuration."
-      FileUtils.rm_rf(old_custom_scss_path)
-      FileUtils.rm_rf(old_light_logo)
-      FileUtils.rm_rf(old_dark_logo) if old_dark_logo_exists?
+      puts "Moving any assets from old theme configuration to tmp/old-theme dir."
+      FileUtils.mkdir_p(theme_trash_dir)
+      FileUtils.mv(old_custom_scss_path, theme_trash_dir.join("styles.scss"))
+      FileUtils.mv(old_light_logo, theme_trash_dir.join("light.png"))
+      FileUtils.mv(old_dark_logo, theme_trash_dir.join("dark.png")) if old_dark_logo_exists?
     end
 
     def old_custom_scss_path
