@@ -2,8 +2,8 @@ class QuestioningDecorator < ApplicationDecorator
   delegate_all
 
   def concatenated_conditions
-    concatenator = (display_if == "all_met") ? I18n.t("common.AND") : I18n.t("common.OR")
-    decorated_conditions.map{ |c| c.human_readable}.join(" #{concatenator} ")
+    concatenator = display_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
+    decorated_conditions.map(&:human_readable).join(" #{concatenator} ")
   end
 
   # Unique, sorted list of questionings to which this question actually refers,

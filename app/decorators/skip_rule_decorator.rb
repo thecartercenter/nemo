@@ -5,9 +5,7 @@ class SkipRuleDecorator < ApplicationDecorator
   delegate_all
 
   def human_readable
-    I18n.t("skip_rule.instructions",
-      destination: display_dest,
-      conditions: decorate_conditions)
+    I18n.t("skip_rule.instructions", destination: display_dest, conditions: decorate_conditions)
   end
 
   def read_only_header
@@ -21,14 +19,13 @@ class SkipRuleDecorator < ApplicationDecorator
   def decorate_conditions
     decorated_conditions = ConditionDecorator.decorate_collection(condition_group.members)
     concatenator = condition_group.true_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
-    decorated_conditions.map(&:human_readable).join(" #{concatenator} ")
+    decorated_conditions.map { |c| c.human_readable(include_code: true) }.join(" #{concatenator} ")
   end
 
   def display_dest
     if destination == "item"
       prefix = I18n.t("activerecord.models.question.one")
-      question_identifier = QuestioningDecorator.new(dest_item).name_and_rank
-      prefix << " " << question_identifier
+      prefix << " " << "##{dest_item.full_dotted_rank} #{dest_item.code}"
     else
       I18n.t("skip_rule.end_of_form")
     end

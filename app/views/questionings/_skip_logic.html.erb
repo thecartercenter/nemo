@@ -3,7 +3,7 @@
       <% form_item.skip_rules.each do |rule| %>
         <dt><%= SkipRuleDecorator.new(rule).read_only_header %></dt>
         <% rule.condition_group.members.each do |c| %>
-          <dd><%= c.decorate.human_readable %></dd>
+          <dd><%= c.decorate.human_readable(include_code: true) %></dd>
         <% end %>
       <% end %>
     </dl>
