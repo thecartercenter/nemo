@@ -1,5 +1,7 @@
 # This file MUST come lexically after local_config.rb.
-if Rails.env.production?
+# Also, while it may seem counterintuitive, it's important the middleware be enabled for test mode
+# because there are tests that test its behavior.
+unless Rails.env.development?
   Rails.configuration.middleware.use ExceptionNotification::Rack, email: {
     email_prefix: "[#{configatron.url.host} ERROR] ",
     sender_address: configatron.site_email,
