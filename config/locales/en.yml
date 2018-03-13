@@ -1005,6 +1005,7 @@ en:
     question: "question"
     question_type: "question-type"
     reviewed: "reviewed"
+    role: "role"
     source: "source"
     submit_date: "submit-date"
     submitter: "submitter"

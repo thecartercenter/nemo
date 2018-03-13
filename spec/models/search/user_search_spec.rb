@@ -9,8 +9,10 @@ describe User do
     let!(:second_user) { create(:user_group_assignment, user_group: first_group).user }
     let!(:third_user) { create(:user_group_assignment, user_group: second_group).user }
 
+    #Todo move subject up here with query as a let in each context
+
     context "searching by group" do
-      subject { User.with_groups.do_search(User.with_groups, %[group:"#{group_sought.name}"]).to_a }
+      subject { User.do_search(User, %[group:"#{group_sought.name}"]).to_a }
 
       context "searching for first group" do
         let(:group_sought) { first_group }
@@ -32,8 +34,7 @@ describe User do
     context "searching by role" do
       let!(:fourth_user) { create(:user, role_name: "coordinator") }
 
-
-      subject { User.with_roles(get_mission, %w[enumerator reviewer staffer coordinator]).do_search(User.with_roles(get_mission, %w[enumerator reviewer staffer coordinator]), %[role:"staffer"]).to_a }
+      subject { User.do_search(User, %[role:"staffer"]).to_a }
 
       before(:each) do
         first_user.assignments.create!(mission: get_mission, role: "enumerator")
