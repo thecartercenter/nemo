@@ -8,8 +8,19 @@ module Themeing
     OLD_NEMO_LOGO_FILE_SIZE = 7995
 
     def run
-      return if theme_dir_present?
-      return unless old_light_logo_exists?
+      puts "Checking for old theme setup."
+      if theme_dir_present?
+        puts "theme dir is present, skipping old theme check."
+        return
+      end
+      unless old_light_logo_exists?
+        if old_light_logo.nil?
+          puts "Old logo setting not found, done."
+        else
+          puts "Old logo file not found at #{old_light_logo}, done."
+        end
+        return
+      end
 
       if File.size(old_light_logo) == OLD_NEMO_LOGO_FILE_SIZE
         handle_nemo_theme
@@ -24,7 +35,6 @@ module Themeing
     def handle_nemo_theme
       # Don't need to copy these since they're now built into the system.
       puts "Detected NEMO theme, which is new default. Setting flag and deleting custom assets."
-      remove_old_assets
       create_temp_theme_flag("nemo")
     end
 
@@ -66,7 +76,7 @@ module Themeing
     end
 
     def old_light_logo
-      configatron.key?(:logo_path) ? Rails.root.join(configatron.logo_path) : nil
+      configatron.key?(:logo_path) ? images_dir.join(configatron.logo_path) : nil
     end
 
     def old_light_logo_exists?
@@ -74,7 +84,7 @@ module Themeing
     end
 
     def old_dark_logo
-      configatron.key?(:logo_dark_path) ? Rails.root.join(configatron.logo_dark_path) : nil
+      configatron.key?(:logo_dark_path) ? images_dir.join(configatron.logo_dark_path) : nil
     end
 
     def old_dark_logo_exists?

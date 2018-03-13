@@ -29,6 +29,10 @@ module Themeing
       @styles_dir ||= Rails.root.join("app", "assets", "stylesheets")
     end
 
+    def images_dir
+      @styles_dir ||= Rails.root.join("app", "assets", "images")
+    end
+
     def theme_scss_dir
       styles_dir.join("all", "themes")
     end
@@ -43,7 +47,7 @@ module Themeing
     end
 
     def logos_dir
-      @logos_dir ||= Rails.root.join("app", "assets", "images", "logos")
+      @logos_dir ||= images_dir.join("logos")
     end
 
     def installed_logo_dir

@@ -174,18 +174,21 @@ where `x.y` is the version number you want. Otherwise you should ensure you're o
 
     git checkout master
 
+Then:
+
+    bundle install --without development test --deployment
+    bundle exec whenever -i elmo
+    bundle exec rake assets:precompile
+    bundle exec rake db:migrate
+
 Now be sure to check the [commit history of the local config file](https://github.com/thecartercenter/elmo/commits/develop/config/initializers/local_config.rb.example) and/or run:
 
     diff config/initializers/local_config.rb config/initializers/local_config.rb.example
 
 to see if anything needs to be updated in your local configuration.
 
-Then:
+Finally:
 
-    bundle install --without development test --deployment
-    bundle exec whenever -i elmo
-    bundle exec rake db:migrate
-    bundle exec rake assets:precompile
     bundle exec bin/delayed_job restart
     touch tmp/restart.txt
 
