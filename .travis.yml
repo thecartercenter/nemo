@@ -6,6 +6,10 @@ cache: bundler
 rvm:
   - 2.4.3
 sudo: required
+branches:
+  except:
+  - /^deploy-.*$/ # These are always just reset --hard's to other branches
+  - /^v[\d\.]+$/ # No need to test version tags as they are tested as part of their branch
 before_install:
   - gem update bundler --no-rdoc --no-ri
   - google-chrome-stable --headless --disable-gpu --no-sandbox --remote-debugging-port=9222 http://localhost &
@@ -33,7 +37,6 @@ addons:
     - $(ls /home/travis/build/thecartercenter/elmo/tmp/capybara/*.png | tr "\n" ":")
   postgresql: "9.4"
   chrome: stable
-
 notifications:
   slack:
     secure: N2dcQMxN6oZbCLgmB/fHhqv/+Su9FzAo3ULYbSd0lFz7PQgtUuEB6Hn13eSV7CIiAMPSM1Bfe0AFUJmSKOKYylF2k3kKuSL6jijnuK4AA4b9kNoPHt0wYEO+uAFO27pyvV+Uq21Gov8SWDVvRbQ3799c3Dl3/D3H6UhEAv7vgYY=
