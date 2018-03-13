@@ -37,4 +37,8 @@ app/assets/images/logo-override.png
 app/assets/images/logo-dark-override.png
 
 # file uploads
-/uploads
+/uploads 
+
+app/assets/stylesheets/application_*.scss
+config/settings.local.yml
+
