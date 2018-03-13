@@ -3,6 +3,9 @@
 # (Q2 > 5 || Q3 == 7) && !(Q2 > 9 || Q3 == 1) && !(Q2 > 0 && Q3 == 2) && !(Q2 < 12 || Q3 > 5)
 module Forms
   class ConditionGroup
+    include ActiveModel::SerializerSupport
+    extend ActiveModel::Naming
+
     attr_accessor :members, :true_if, :negate
     alias_method :negate?, :negate
 

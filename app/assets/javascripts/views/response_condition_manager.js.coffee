@@ -3,7 +3,8 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
     @item = options.item
-    @conditions = @item.display_conditions
+    @conditions = @item.display_conditions.members
+    console.log(@conditions)
     @inst = options.inst
     if @item.group
       @element = @groupElement(@item.id)
