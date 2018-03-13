@@ -3,8 +3,8 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
     @item = options.item
-    @conditions = @item.display_conditions.members
-    console.log(@conditions)
+    @base_condition_group = @item.display_conditions
+    console.log(@base_condition_group)
     @inst = options.inst
     if @item.group
       @element = @groupElement(@item.id)
@@ -13,8 +13,10 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
     @readOnly = @element.is('.read-only')
     @result = true
 
-    @checkers = @conditions.map (c) =>
-      new ELMO.Views.ResponseConditionChecker(el: @el, manager: this, condition: c, inst: @inst)
+    #this is gonna have to be replaced with a tree of checkers
+    @base_checker = new ELMO.Views.ResponseConditionGroupChecker(el: @el, manager: this, group: @base_condition_group, inst: @inst)
+    # @checkers = @conditions.map (c) =>
+    #   new ELMO.Views.ResponseConditionChecker(el: @el, manager: this, condition: c, inst: @inst)
 
     @refresh()
 
@@ -34,11 +36,13 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
       @element.find('div.control').find('input, select, textarea').first().trigger('change')
 
   evaluate: ->
+    @base_checker.result
+
     # By now we know that display_if must be all_met or any_met.
-    if @item.display_if == 'all_met'
-      @results().indexOf(false) == -1
-    else # any_met
-      @results().indexOf(true) != -1
+    # if @item.display_if == 'all_met'
+    #   @results().indexOf(false) == -1
+    # else # any_met
+    #   @results().indexOf(true) != -1
 
   # When the form is submitted, clears the answer if the eval_result is false.
   clearOnSubmitIfFalse: ->
