@@ -26,7 +26,7 @@ module ThemeHelper
     to_try.each do |file|
       return stylesheet_link_tag(file, media: "all") if File.exist?(style_dir.join("#{file}.scss"))
     end
-    raise "Processed SCSS files not found. Did you run the pre-processor? See documentation."
+    raise "Processed SCSS files not found. Try: bundle exec rake theme:preprocess"
   end
 
   # Returns an image tag for the logo for the requested style and the current theme.

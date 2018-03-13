@@ -89,8 +89,9 @@ Most code editors have plugins for linting. They will identify and let you click
     - Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
     - Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
     - Setup the UUID postgres extension (must be done as postgres superuser): `sudo -u postgres psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
-    - Load the database schema: `rake db:schema:load`.
-    - Create an admin account: `rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it to be used on your first login).
+    - Load the database schema: `bundle exec rake db:schema:load`.
+    - Pre-process the theme SCSS files: `bundle exec rake theme:preprocess`
+    - Create an admin account: `bundle exec rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it to be used on your first login).
 1. **Run the tests**
     - Run `rspec`.
     - All tests should pass. Running them takes about 10-15 minutes.
@@ -99,7 +100,7 @@ Most code editors have plugins for linting. They will identify and let you click
     - For a development setup, just run `rails s`.
 1. **Login**
     - Navigate to http://localhost:3000
-    - Login with username **admin** and use the random password that was generated when you ran `rake db:create_admin` (make sure to change the password after login).
+    - Login with username **admin** and use the random password that was generated when you ran `bundle exec rake db:create_admin` (make sure to change the password after login).
     - Create a new Mission and get started making forms!
 
 ### Testing with ODK
