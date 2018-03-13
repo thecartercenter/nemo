@@ -5,7 +5,12 @@ class SkipRuleDecorator < ApplicationDecorator
   delegate_all
 
   def human_readable
-    I18n.t("skip_rule.instructions", destination: display_dest, conditions: decorate_conditions)
+    if skip_if == "always"
+      I18n.t("skip_rule.instructions.without_conditions", destination: display_dest)
+    else
+      I18n.t("skip_rule.instructions.with_conditions", destination: display_dest,
+                                                       conditions: human_readable_conditions)
+    end
   end
 
   def read_only_header
@@ -16,7 +21,7 @@ class SkipRuleDecorator < ApplicationDecorator
 
   private
 
-  def decorate_conditions
+  def human_readable_conditions
     decorated_conditions = ConditionDecorator.decorate_collection(condition_group.members)
     concatenator = condition_group.true_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
     decorated_conditions.map { |c| c.human_readable(include_code: true) }.join(" #{concatenator} ")

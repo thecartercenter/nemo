@@ -1971,7 +1971,9 @@ en:
       any_met: "if any of these conditions are met"
     skip_to_item: "Skip to %{label}"
     dest_prompt: "Choose destination ..."
-    instructions: "SKIP TO %{destination} if %{conditions}"
+    instructions:
+      with_conditions: "SKIP TO %{destination} if %{conditions}"
+      without_conditions: "SKIP TO %{destination}"
     end_of_form: "end of form"
 
   sms:

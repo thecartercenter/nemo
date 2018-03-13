@@ -37,6 +37,14 @@ describe SkipRuleDecorator do
       expect(actual).to eq expected
     end
 
+    it "should display properly for skip_if == always" do
+      form.c[3].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "always")
+      skip_rule = form.c[3].skip_rules[0]
+      actual = SkipRuleDecorator.new(skip_rule).human_readable
+      expected = "SKIP TO #{dest_qing_str}"
+      expect(actual).to eq expected
+    end
+
     it "displays correctly when destination is end of the form" do
       form.c[3].skip_rules.create!(destination: "end", dest_item: nil, skip_if: "all_met",
                                    conditions_attributes: [

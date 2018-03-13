@@ -20,9 +20,9 @@ feature "skip rule form", js: true do
         name: "Foo",
         question_types: %w[integer integer integer integer integer])
     end
-    let(:dest_qing_str) { "Question #{form.c[4].full_dotted_rank}. #{form.c[4].name}" }
-    let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} is equal to 5" }
-    let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} is equal to 10" }
+    let(:dest_qing_str) { "Question ##{form.c[4].full_dotted_rank} #{form.c[4].code}" }
+    let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} #{form.c[0].code} is equal to 5" }
+    let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} #{form.c[1].code} is equal to 10" }
 
     scenario "read-only mode" do
       form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
