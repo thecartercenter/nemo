@@ -79,7 +79,7 @@ class Report::Data
   def ensure_rows(num)
     @rows ||= []
     deficit = num - @rows.size
-    return unless deficit.positive?
+    return unless deficit > 0
     deficit.times { @rows << Array.new(@cols) }
   end
 end
