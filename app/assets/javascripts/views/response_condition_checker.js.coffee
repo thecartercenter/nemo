@@ -17,14 +17,17 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
     if @rqType == 'long_text' && !@manager.readOnly
       @ckeditorInstance().on('change', => @checkAndTell())
 
-    @eval()
+    @checkResult()
 
   checkAndTell: ->
-    @eval()
+    @checkResult()
     @manager.refresh()
 
-  # Evaluates the condition and sets the result.
-  eval: ->
+  evaluate: ->
+    @result
+
+  # Checks the result of the condition and sets the result value.
+  checkResult: ->
     unless @rqElement.is(':visible')
       @result = false
       return
