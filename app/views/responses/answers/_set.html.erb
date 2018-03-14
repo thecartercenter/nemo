@@ -37,7 +37,7 @@
   <%= javascript_doc_ready do %>
     new ELMO.Views.ResponseConditionManager(<%=json(
       el: 'form.response_form',
-      item: FormItemDisplayLogicSerializer.new(set.questioning),
+      item: ResponseCondition::FormItemSerializer.new(set.questioning),
       # Newer-style instance descriptor.
       inst: set.depth == 1 ? [] : [{id: set.qing_parent_id.to_s, num: inst_num}]
     ) %>);
