@@ -151,6 +151,15 @@ feature "display conditions form", js: true do
         expect_selected_operator("= equals")
         expect_selected_values("Cat")
       end
+
+      # Display always removes condition fields
+      visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}/edit")
+      select("Always display this question", from: "Display Logic")
+      click_on "Save"
+      visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}/edit")
+      expect(page).to have_select("questioning_display_logic",
+        selected: "Always display this question")
+      expect(page).not_to have_css(".condition-fields")
     end
 
     scenario "read-only mode" do
