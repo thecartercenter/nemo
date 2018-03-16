@@ -61,6 +61,7 @@ class SkipRuleFormField extends React.Component {
       value: this.state.id || ""
     };
     let destinationProps = {
+      name: `${namePrefix}[destination]`,
       value: this.state.destItemIdOrEnd || "",
       prompt: I18n.t("skip_rule.dest_prompt"),
       options: this.formatTargetItemOptions(this.state.laterItems),
@@ -110,7 +111,7 @@ class SkipRuleFormField extends React.Component {
             type="hidden"
             value={this.state.destItemId || ""} />
         </div>
-        <div className="skip-rule-remove">
+        <div className={`skip-rule-remove ${this.props.ruleId}`}>
           <a onClick={this.handleRemoveClick}>
             <i className="fa fa-close" />
           </a>
