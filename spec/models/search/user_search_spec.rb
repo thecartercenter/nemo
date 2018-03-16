@@ -9,10 +9,10 @@ describe User do
     let!(:second_user) { create(:user_group_assignment, user_group: first_group).user }
     let!(:third_user) { create(:user_group_assignment, user_group: second_group).user }
 
-    #Todo move subject up here with query as a let in each context
+    subject { User.do_search(User, query).to_a }
 
     context "searching by group" do
-      subject { User.do_search(User, %[group:"#{group_sought.name}"]).to_a }
+      let(:query) {%[group:"#{group_sought.name}"]}
 
       context "searching for first group" do
         let(:group_sought) { first_group }
@@ -32,29 +32,37 @@ describe User do
     end
 
     context "searching by role" do
-      let!(:fourth_user) { create(:user, role_name: "coordinator") }
+      let(:query) {%[role:"#{role_sought}"]}
 
-      subject { User.do_search(User, %[role:"staffer"]).to_a }
+      let!(:fourth_user) { create(:user, role_name: "coordinator") }
+      let(:other_mission) {create(:mission)}
 
       before(:each) do
         first_user.assignments.create!(mission: get_mission, role: "enumerator")
+        first_user.assignments.create!(mission: other_mission, role: "staffer")
         second_user.assignments.create!(mission: get_mission, role: "coordinator")
         third_user.assignments.create!(mission: get_mission, role: "staffer")
       end
 
-      it "should return admins with staffer role" do
-        expect(subject).to contain_exactly(third_user)
+      context "in mission" do
+
+        context "searching for staffer" do
+          let(:role_sought) {"staffer"}
+
+          it "should return only user with staffer role in current mission" do
+            expect(subject).to contain_exactly(third_user)
+          end
+        end
       end
+      context "admin mode" do
+        context "searching for staffer" do
+          let(:role_sought) {"staffer"}
 
-      it "should return coordinators with coordinator role" do
-
+          it "should return only user with staffer role in current mission" do
+            expect(subject).to contain_exactly(first_user, third_user)
+          end
+        end
       end
-
-      it "should return observers with observer role" do
-
-      end
-
-      #TODO: Admin? should admin be a separate search term? like is_admin: t/f?
     end
   end
 end
