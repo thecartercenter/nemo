@@ -194,6 +194,8 @@ class FormItem < ApplicationRecord
     display_if != "always" && display_conditions.any?
   end
 
+  # This method is used by the condition computer. Note it includes only display conditions . 
+  # To get all conditions on a form item including those from skip rules, use the condition computer.
   def condition_group
     @condition_group ||= Forms::ConditionGroup.new(true_if: display_if, members: display_conditions)
   end

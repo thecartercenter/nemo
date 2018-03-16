@@ -4,8 +4,15 @@ module ResponseCondition
     attributes :id, :group?, :condition_group
     #TODO: format_keys :lower_camel
 
+    attr_accessor :condition_computer
+
+    def initialize(object, condition_computer:)
+      super(object)
+      self.condition_computer = condition_computer
+    end
+
     def condition_group
-      ResponseCondition::ConditionGroupSerializer.new(object.condition_group)
+      ResponseCondition::ConditionGroupSerializer.new(self.condition_computer.condition_group_for(object))
     end
   end
 end

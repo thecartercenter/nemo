@@ -6,9 +6,9 @@ class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationVie
     @conditionGroup = options.group
     @inst = options.inst
     @checkers = @conditionGroup.members.map (m) =>
-      # if m.type == "ConditionGroup"
-      #   new ELMO.Views.ResponseConditionGroupChecker(el: @el, manager: @manager, group: m, inst: @inst)
-      # else
+      if m.type == "ConditionGroup"
+        new ELMO.Views.ResponseConditionGroupChecker(el: @el, manager: @manager, group: m, inst: @inst)
+      else
         new ELMO.Views.ResponseConditionChecker(el: @el, manager: @manager, condition: m, inst: @inst)
     @evaluate()
 

@@ -86,6 +86,7 @@ class ResponsesController < ApplicationController
   end
 
   def new
+    setup_condition_computer
     # render the form template
     prepare_and_render_form
   end
@@ -206,6 +207,11 @@ class ResponsesController < ApplicationController
   end
 
   private
+
+  def setup_condition_computer
+    @condition_computer = Forms::ConditionComputer.new(@response.form)
+  end
+
   # loads the response with its associations
   def load_with_associations
     @response = Response.with_associations.friendly.find(params[:id])

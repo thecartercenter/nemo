@@ -52,14 +52,20 @@ class FormsController < ApplicationController
   end
 
   def new
+    setup_condition_computer
     prepare_and_render_form
   end
 
   def edit
+    setup_condition_computer
     prepare_and_render_form
   end
 
   def show
+    setup_condition_computer
+    puts "CONDITION COMPUTER IN SHOW"
+    puts @condition_computer
+
     respond_to do |format|
       # for html, render the printable style if requested, otherwise render the form
       format.html do
@@ -78,7 +84,6 @@ class FormsController < ApplicationController
 
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || 'odk'
-        setup_condition_computer
         @form = Odk::DecoratorFactory.decorate(@form)
       end
     end
