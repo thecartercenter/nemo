@@ -33,8 +33,6 @@ describe User do
 
     context "searching by role" do
       let(:query) {%[role:"#{role_sought}"]}
-
-      let!(:fourth_user) { create(:user, role_name: "coordinator") }
       let(:other_mission) {create(:mission)}
 
       before(:each) do
@@ -51,6 +49,14 @@ describe User do
 
           it "should return only user with staffer role in current mission" do
             expect(subject).to contain_exactly(third_user)
+          end
+        end
+
+        context "searching for staffer" do
+          let(:role_sought) {"enumerator"}
+
+          it "should return only user with enumerator role in current mission" do
+            expect(subject).to contain_exactly(first_user)
           end
         end
       end

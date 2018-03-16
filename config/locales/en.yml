@@ -1666,6 +1666,7 @@ en:
         - "login:jsmith"
         - "email:jsmith@example.com"
         - group:"The Smiths"
+        - role:"staffer"
       questions:
         - "poll workers"
         - "code:BallotBoxes"
@@ -1711,6 +1712,7 @@ en:
         * __reviewed__ Whether the response has been marked 'reviewed' (1 = yes or 0 = no)
         * __source__ The medium via which the response was submitted ('web', 'odk', or 'sms')
         * __text__ Searches answers to textual questions
+
 
         ## Exact Phrases
 
@@ -1781,11 +1783,13 @@ en:
 
         The full set of qualifiers you can use is as follows:
 
-        * __name__ The user's full name
-        * __login__ The user's login name
         * __email__ The user's email address
-        * __phone__ The user's phone number (no dashes or other punctuation)
         * __group__ The user's group membership
+        * __login__ The user's login name
+        * __name__ The user's full name
+        * __phone__ The user's phone number (no dashes or other punctuation)
+        * __role__ The user's role ('enumerator', 'reviewer', 'staffer', 'coordinator')
+
 
         Partial matches are allowed for all qualifiers.
 
