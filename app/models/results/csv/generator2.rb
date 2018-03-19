@@ -74,7 +74,9 @@ module Results
             CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE parent_groups.rank END AS group1_rank,
             CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE answers.inst_num END AS group1_item_num,
             answers.value AS answer_value,
-            questions.code AS question_code
+            CONCAT(
+              CASE parent_groups.ancestry_depth WHEN 0 THEN '' ELSE
+              CONCAT(#{parent_group_name}, ':') END, questions.code) AS question_code
           FROM responses
             INNER JOIN forms ON responses.form_id = forms.id
             INNER JOIN users ON responses.user_id = users.id
