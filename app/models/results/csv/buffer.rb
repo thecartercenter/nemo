@@ -42,8 +42,8 @@ module Results
       end
 
       def common_header_names
-        @common_header_names ||= %w[response_id form_name user_name submit_time shortcode parent_group_name
-          parent_group_depth group1_rank group1_item_num]
+        @common_header_names ||= %w[response_id form_name user_name submit_time shortcode
+          group1_rank group1_item_num parent_group_name parent_group_depth]
       end
 
       def col_index_for_header(header)
