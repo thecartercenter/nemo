@@ -85,7 +85,8 @@ module Results
             INNER JOIN questions ON qings.question_id = questions.id
             INNER JOIN form_items parent_groups
               ON parent_groups.id = RIGHT(qings.ancestry, #{UUID_LENGTH})::uuid
-          ORDER BY responses.created_at, responses.id, group1_rank NULLS FIRST, group1_item_num NULLS FIRST
+          ORDER BY responses.created_at, responses.id,
+            group1_rank NULLS FIRST, group1_item_num NULLS FIRST, qings.rank
         ", type_map: false)
       end
 
