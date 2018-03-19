@@ -27,7 +27,9 @@ module Results
       end
 
       def headers
-        header_map.keys
+        # Translate the common headers and join to the per-question ones.
+        common_header_names.map { |h| I18n.t("response.csv_headers.#{h}") }.concat(
+          header_map.keys[common_header_names.size..-1])
       end
 
       private
