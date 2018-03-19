@@ -15,14 +15,10 @@ module Results
 
       # Runs the queries and returns the CSV as a string.
       def to_s
-        csv_body
+        csv_body.prepend(csv_headers)
       end
 
       private
-
-      def batch_size
-        1000
-      end
 
       def csv_headers
         CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
@@ -65,6 +61,7 @@ module Results
       end
 
       def query
+        parent_group_name = translation_query("parent_groups.group_name_translations")
         SqlRunner.instance.run("
           SELECT
             responses.id AS response_id,
@@ -72,7 +69,7 @@ module Results
             users.name AS user_name,
             responses.created_at AS submit_time,
             responses.shortcode AS shortcode,
-            parent_groups.group_name_translations AS parent_group_name,
+            #{parent_group_name} AS parent_group_name,
             parent_groups.ancestry_depth AS parent_group_depth,
             CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE parent_groups.rank END AS group1_rank,
             CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE answers.inst_num END AS group1_item_num,
@@ -88,6 +85,13 @@ module Results
               ON parent_groups.id = RIGHT(qings.ancestry, #{UUID_LENGTH})::uuid
           ORDER BY responses.created_at, responses.id, group1_rank NULLS FIRST, group1_item_num NULLS FIRST
         ", type_map: false)
+      end
+
+      def translation_query(column)
+        "COALESCE(
+          #{column}->>'#{I18n.locale}',
+          #{column}->>'#{I18n.default_locale}',
+          #{column}::text)"
       end
     end
   end
