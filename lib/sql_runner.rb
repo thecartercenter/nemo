@@ -2,10 +2,10 @@ class SqlRunner
   include Singleton
 
   # Runs query and returns hash of results. Accepts the usual sanitize argument scheme.
-  def run(*args)
-    connection.execute(sanitize(*args)).tap do |res|
-      res.type_map = type_map
-    end
+  def run(*args, type_map: true)
+    result = connection.execute(sanitize(*args))
+    result.type_map = type_map if type_map
+    result
   end
 
   def sanitize(*args)
