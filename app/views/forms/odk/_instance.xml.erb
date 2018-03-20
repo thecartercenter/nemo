@@ -1,5 +1,5 @@
 <instance>
-  <%# include both form ID and form version sequence number in ODK form ID %>
+  <%# Include both form ID and form version sequence number in ODK form ID %>
   <%= data_tag @form, @style do %>
     <%= @form.default_response_name_instance_tag %>
 
@@ -7,11 +7,14 @@
       <%= render "forms/odk/instance_node", node: node %>
     <% end %>
 
-    <%# incomplete response question nodes %>
+    <%# Incomplete response question nodes %>
     <% if allow_incomplete? %>
       <%= tag(Odk::FormDecorator::IR_QUESTION) %>
       <%= tag(Odk::FormDecorator::IR_CODE) %>
     <% end %>
+
+    <%# Labels for grid-style groups will be bound to this dummy tag. It should be ignored on submit. %>
+    <label-dummy/>
 
     <% if @style == 'commcare' %>
       <username/>

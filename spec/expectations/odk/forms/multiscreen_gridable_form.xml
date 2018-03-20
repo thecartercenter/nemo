@@ -10,6 +10,7 @@
             <*itemcode2*/>
             <*itemcode3*/>
           </*itemcode1*>
+          <label-dummy/>
         </data>
       </instance>
       <itext>

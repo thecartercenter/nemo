@@ -1,7 +1,5 @@
 <%= odk_input_tag(qing, subq, grid_mode, label_row, group, xpath_prefix) do %>
-  <% if label_row %>
-    <label></label>
-  <% else %>
+  <% unless label_row %>
     <label ref="jr:itext('<%= subq.odk_code %>:label')"/>
   <% end %>
 
