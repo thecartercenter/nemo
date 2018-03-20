@@ -70,7 +70,7 @@ module ODKSubmissionSupport
         end
       end
 
-      xml << "</data>"
+      xml << "<label-dummy></label-dummy></data>"
     end
   end
 

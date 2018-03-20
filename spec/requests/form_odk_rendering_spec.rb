@@ -61,6 +61,12 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       )
     end
 
+    before do
+      # We make the questions required since the need for the label-dummy tag comes from required questions.
+      # See the rendering code for more info.
+      form.c[0].c.each { |qing| qing.update_attributes!(required: true) }
+    end
+
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_form.xml", form)

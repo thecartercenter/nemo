@@ -10,6 +10,7 @@
             <*itemcode2*/>
             <*itemcode3*/>
           </*itemcode1*>
+          <label-dummy/>
         </data>
       </instance>
       <itext>
@@ -45,8 +46,8 @@
       </itext>
       <bind nodeset="/data/*itemcode1*"/>
       <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode2*" type="select1"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode3*" type="select1"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode2*" type="select1" required="true()"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode3*" type="select1" required="true()"/>
     </model>
   </h:head>
   <h:body>
@@ -56,8 +57,7 @@
         <input ref="/data/*itemcode1*/*itemcode1*-header">
           <hint ref="jr:itext('*itemcode1*:hint')"/>
         </input>
-        <select1 ref="/data/*itemcode1*/*itemcode2*" appearance="label">
-          <label/>
+        <select1 ref="/data/label-dummy" appearance="label">
           <item>
             <label ref="jr:itext('*optcode1*')"/>
             <value>*optcode1*</value>

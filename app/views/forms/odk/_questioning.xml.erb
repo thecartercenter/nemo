@@ -6,6 +6,6 @@
 <%# This is so they can be wrapped with the appropriate group headers/hint and such. %>
 <% subqings = group.try(:multilevel_fragment?) ? [qing.subqings[group.level - 1]] : qing.subqings %>
 <% subqings.each do |subq| %>
-  <%= render('forms/odk/subqing', qing: qing, grid_mode: grid_mode,
-    label_row: label_row, group: group, subq: subq, xpath_prefix: xpath_prefix) %>
+  <%= render('forms/odk/subqing', qing: qing, grid_mode: grid_mode, label_row: label_row, 
+                                  group: group, subq: subq, xpath_prefix: xpath_prefix) %>
 <% end %>

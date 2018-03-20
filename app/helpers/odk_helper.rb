@@ -3,7 +3,16 @@ module OdkHelper
   # calls the provided block to get the tag content
   def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
     opts ||= {}
-    opts[:ref] = [xpath_prefix, subq.try(:odk_code)].compact.join("/")
+    opts[:ref] =
+      if label_row
+        # We need to bind to a dummy instance node here or, if the question is required,
+        # we won't be allowed to proceed since it won't be possible to fill in the question.
+        # Also, this question will appear again in a regular row so it would be weird
+        # to link it to the same instance node twice.
+        "/data/label-dummy"
+      else
+        [xpath_prefix, subq.try(:odk_code)].compact.join("/")
+      end
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     if !subq.first_rank? && subq.qtype.name == "select_one"
       opts[:query] = multilevel_option_nodeset_ref(qing, subq, group.try(:odk_code), xpath_prefix)
