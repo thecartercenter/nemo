@@ -1,11 +1,11 @@
 ResponseID,Form,Submitter,DateSubmitted,ResponseShortcode,GroupNum1,ItemNum1,GroupName,GroupLevel,IntegerQ1,IntegerQ5,Fruit:TextQ2,Fruit:IntegerQ3,Fruit:SelectMultipleQ4,Vegetable:TextQ6,Vegetable:SelectOneQ7:Country,Vegetable:SelectOneQ7:City,Vegetable:SelectOneQ7:Latitude,Vegetable:SelectOneQ7:Longitude,Vegetable:IntegerQ8
-*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00 CST,*shortcode1*,,,,0,1,2,,,,,,,,,
-*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00 CST,*shortcode1*,2,1,Fruit,1,1,2,Apple,1,Cat;Dog,,,,,,
-*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00 CST,*shortcode1*,2,2,Fruit,1,1,2,Banana,2,Cat,,,,,,
-*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00 CST,*shortcode1*,4,1,Vegetable,1,1,2,,,,Asparagus,Ghana,Accra,5.55,0.2,3
-*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00 CST,*shortcode2*,,,,0,3,4,,,,,,,,,
-*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00 CST,*shortcode2*,2,1,Fruit,1,3,4,Xigua,10,Dog,,,,,,
-*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00 CST,*shortcode2*,2,2,Fruit,1,3,4,Yuzu,9,Cat;Dog,,,,,,
-*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00 CST,*shortcode2*,2,3,Fruit,1,3,4,Ugli,8,Cat,,,,,,
-*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00 CST,*shortcode2*,4,1,Vegetable,1,3,4,,,,Zucchini,Canada,Calgary,51.045,-114.057222,7
-*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00 CST,*shortcode2*,4,2,Vegetable,1,3,4,,,,Yam,Canada,Ottawa,45.429299,-75.629883,6
+*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00-06,*shortcode1*,,,,0,1,2,,,,,,,,,
+*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00-06,*shortcode1*,2,1,Fruit,1,1,2,Apple,1,Cat;Dog,,,,,,
+*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00-06,*shortcode1*,2,2,Fruit,1,1,2,Banana,2,Cat,,,,,,
+*id1*,Sample Form 1,A User 1,2015-11-20 06:30:00-06,*shortcode1*,4,1,Vegetable,1,1,2,,,,Asparagus,Ghana,Accra,5.55,0.2,3
+*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00-06,*shortcode2*,,,,0,3,4,,,,,,,,,
+*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00-06,*shortcode2*,2,1,Fruit,1,3,4,Xigua,10,Dog,,,,,,
+*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00-06,*shortcode2*,2,2,Fruit,1,3,4,Yuzu,9,Cat;Dog,,,,,,
+*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00-06,*shortcode2*,2,3,Fruit,1,3,4,Ugli,8,Cat,,,,,,
+*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00-06,*shortcode2*,4,1,Vegetable,1,3,4,,,,Zucchini,Canada,Calgary,51.045,-114.057222,7
+*id2*,Sample Form 1,A User 2,2015-11-20 06:40:00-06,*shortcode2*,4,2,Vegetable,1,3,4,,,,Yam,Canada,Ottawa,45.429299,-75.629883,6

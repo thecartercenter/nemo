@@ -28,13 +28,14 @@ module Results
 
       def csv_body
         CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
-          result = query
-          result.each do |row|
-            # If path to group has changed, it's time to dump the CSV row and start a new one!
-            buffer.dump_to(csv) if group_path_changed?(row)
-            buffer.process_row(row)
+          set_db_timezone do
+            query.each do |row|
+              # If path to group has changed, it's time to dump the CSV row and start a new one!
+              buffer.dump_to(csv) if group_path_changed?(row)
+              buffer.process_row(row)
+            end
+            buffer.dump_to(csv)
           end
-          buffer.dump_to(csv)
         end
       end
 
@@ -61,13 +62,20 @@ module Results
       end
 
       def query
+        set_db_timezone do
+          # The type map is very slow and we don't need it since we're outputting strings.
+          SqlRunner.instance.run("#{select} #{from} #{order}", use_type_map: false)
+        end
+      end
+
+      def select
         parent_group_name = translation_query("parent_groups.group_name_translations")
-        SqlRunner.instance.run("
+        <<~SQL
           SELECT
             responses.id AS response_id,
             forms.name AS form_name,
             users.name AS user_name,
-            responses.created_at AS submit_time,
+            responses.created_at AT TIME ZONE 'UTC' AS submit_time,
             responses.shortcode AS shortcode,
             #{parent_group_name} AS parent_group_name,
             parent_groups.ancestry_depth AS parent_group_depth,
@@ -77,6 +85,11 @@ module Results
             CONCAT(
               CASE parent_groups.ancestry_depth WHEN 0 THEN '' ELSE
               CONCAT(#{parent_group_name}, ':') END, questions.code) AS question_code
+        SQL
+      end
+
+      def from
+        <<~SQL
           FROM responses
             INNER JOIN forms ON responses.form_id = forms.id
             INNER JOIN users ON responses.user_id = users.id
@@ -85,9 +98,18 @@ module Results
             INNER JOIN questions ON qings.question_id = questions.id
             INNER JOIN form_items parent_groups
               ON parent_groups.id = RIGHT(qings.ancestry, #{UUID_LENGTH})::uuid
-          ORDER BY responses.created_at, responses.id,
-            group1_rank NULLS FIRST, group1_item_num NULLS FIRST, qings.rank
-        ", type_map: false)
+        SQL
+      end
+
+      def order
+        <<~SQL
+          ORDER BY
+            responses.created_at,
+            responses.id,
+            group1_rank NULLS FIRST,
+            group1_item_num NULLS FIRST,
+            qings.rank
+        SQL
       end
 
       def translation_query(column)
@@ -95,6 +117,16 @@ module Results
           #{column}->>'#{I18n.locale}',
           #{column}->>'#{I18n.default_locale}',
           #{column}::text)"
+      end
+
+      # Sets the DB's timezone to the current one so that the response times are shown with a timezone
+      # offset. This is faster than doing it in Ruby.
+      def set_db_timezone
+        SqlRunner.instance.run("SET SESSION TIME ZONE INTERVAL '#{Time.zone.formatted_offset}'")
+        yield
+      ensure
+        # The DB should generally be in UTC zone. Rails handles conversions internally.
+        SqlRunner.instance.run("SET SESSION TIME ZONE 'UTC'")
       end
     end
   end
