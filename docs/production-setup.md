@@ -156,9 +156,29 @@ You should upgrade to v6.11 before moving on to the latest master. Follow the in
 
 #### Upgrading from v6.x to the latest master
 
-1. Make a backup of your database: `pg_dump elmo_production > v6-dump.sql`
-2. `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'`
-3. Follow the 'General Upgrade Instructions' below to upgrade to the latest master. Your data will be migrated to use UUIDs, and this may take awhile. Then you'll be all up to date!
+1. Install Ruby 2.4.3 and Bundler:
+
+        cd "$(rbenv root)"/plugins/ruby-build
+        git pull
+        cd -
+        rbenv install 2.4.3
+        rbenv global 2.4.3
+        gem install bundler
+
+2. Make a backup of your database: `pg_dump elmo_production > v6-dump.sql`
+3. `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'`
+4. Follow the 'General Upgrade Instructions' below to upgrade to the latest master. Your data will be migrated to use UUIDs, and this may take awhile. Then you'll be all up to date!
+
+#### Upgrading from v7.x to the latest master
+
+1. If you don't yet have Ruby 2.4.3, install it and Bundler:
+
+        cd "$(rbenv root)"/plugins/ruby-build
+        git pull
+        cd -
+        rbenv install 2.4.3
+        rbenv global 2.4.3
+        gem install bundler
 
 #### General Upgrade Instructions
 
