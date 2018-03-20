@@ -17,6 +17,8 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
     if @rqType == 'long_text' && !@manager.readOnly
       @ckeditorInstance().on('change', => @checkAndTell())
 
+    # Set result to initial value on page load. Don't tell the manager because the manager calls refresh just
+    # once on page load (if we 'tell' when each checker initializes, the manager would evaluate many times)
     @check()
 
   checkAndTell: ->

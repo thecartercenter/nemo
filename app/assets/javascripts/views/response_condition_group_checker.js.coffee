@@ -10,17 +10,33 @@ class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationVie
         new ELMO.Views.ResponseConditionGroupChecker(el: @el, manager: @manager, group: m, inst: @inst)
       else
         new ELMO.Views.ResponseConditionChecker(el: @el, manager: @manager, condition: m, inst: @inst)
-    @evaluate()
+
+    # Unlike the manager and the leaf node checkers, do NOT do anything to initialize here. The manager takes
+    # care of that by calling refresh in its initialization.
 
 
-  # Evaluates the children and sets the result.
+  # Evaluates the children and returns the result.
   evaluate: ->
-    #handle negation [write spec first]
-    #handle true_if == 'always' [write spec first]
-    if @conditionGroup.true_if == 'all_met'
-      @results().indexOf(false) == -1
+    if @conditionGroup.true_if == 'always'
+      @applyNegation(true)
+    else if @conditionGroup.true_if == 'all_met'
+      @applyNegation(@childrenAllMet())
     else # any_met
-      @results().indexOf(true) != -1
+      @applyNegation(@childrenAnyMet())
+
+  childrenAllMet: ->
+    results = @results()
+    console.log("results for #{@conditionGroup.name}: #{results}")
+    results.indexOf(false) == -1
+
+  childrenAnyMet: ->
+    @results().indexOf(true) != -1
+
+  applyNegation: (bool) ->
+    if @conditionGroup.negate
+      !bool
+    else
+      bool
 
   results: ->
     @checkers.map (c) -> c.evaluate()

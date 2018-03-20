@@ -2,7 +2,7 @@
 
 module ResponseCondition
   class ConditionGroupSerializer < ActiveModel::Serializer
-    attributes :members, :true_if, :negate, :type
+    attributes :members, :true_if, :negate, :type, :name
     #TODO: format_keys :lower_camel
 
     def members

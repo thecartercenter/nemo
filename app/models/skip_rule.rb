@@ -40,7 +40,12 @@ class SkipRule < ActiveRecord::Base
   end
 
   def condition_group
-    @condition_group ||= Forms::ConditionGroup.new(true_if: skip_if, members: conditions, negate: true)
+    @condition_group ||= Forms::ConditionGroup.new(
+      true_if: skip_if,
+      members: conditions,
+      negate: true,
+      name: "Skip for #{source_item.code}"
+    )
   end
 
   # Duck type used for retrieving the main FormItem associated with this object, which is src_item.

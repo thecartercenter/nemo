@@ -35,13 +35,11 @@
 <%# Note that we need to do this in any form mode, even show. %>
 <% puts "CONDITION COMPUTER" %>
 <% puts @condition_computer %>
-<% if set.display_conditionally? %>
-  <%= javascript_doc_ready do %>
-    new ELMO.Views.ResponseConditionManager(<%=json(
-      el: 'form.response_form',
-      item: ResponseCondition::FormItemSerializer.new(set.questioning, condition_computer: @condition_computer),
-      # Newer-style instance descriptor.
-      inst: set.depth == 1 ? [] : [{id: set.qing_parent_id.to_s, num: inst_num}]
-    ) %>);
-  <% end %>
+<%= javascript_doc_ready do %>
+  new ELMO.Views.ResponseConditionManager(<%=json(
+    el: 'form.response_form',
+    item: ResponseCondition::FormItemSerializer.new(set.questioning, condition_computer: @condition_computer),
+    # Newer-style instance descriptor.
+    inst: set.depth == 1 ? [] : [{id: set.qing_parent_id.to_s, num: inst_num}]
+  ) %>);
 <% end %>

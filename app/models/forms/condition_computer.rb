@@ -14,7 +14,7 @@ module Forms
 
     def condition_group_for(item)
       build_table if table.nil?
-      table[item] || empty_group
+      table[item] || empty_root_group
     end
 
     private
@@ -65,7 +65,7 @@ module Forms
     end
 
     def add_to_table(item, condition_group)
-      table[item] ||= empty_group
+      table[item] ||= empty_root_group
       table[item].members << update_conditionables(condition_group, item)
       last_item_cache[condition_group] = item
     end
@@ -83,8 +83,8 @@ module Forms
       new_group
     end
 
-    def empty_group
-      ConditionGroup.new
+    def empty_root_group
+      ConditionGroup.new(name: "Root")
     end
   end
 end

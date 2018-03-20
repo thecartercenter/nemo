@@ -4,7 +4,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @item = options.item
     @root_condition_group = @item.condition_group
-    console.log(@root_condition_group)
+    console.log("Initing for #{@item.full_dotted_rank}: ", @root_condition_group)
     @inst = options.inst
     if @item.group
       @element = @groupElement(@item.id)
@@ -18,6 +18,8 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
     # @checkers = @conditions.map (c) =>
     #   new ELMO.Views.ResponseConditionChecker(el: @el, manager: this, condition: c, inst: @inst)
 
+    # The leaf node checkers have set their results when they were initialized, and now refresh
+    # will call evaluate down the tree to read the leaf node checker results.
     @refresh()
 
   events:
@@ -26,6 +28,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
   # Gathers results from all checkers and shows/hides the field based on them.
   refresh: ->
     newResult = @root_checker.evaluate()
+    console.log("Manager refresh #{@root_condition_group.name} for #{@item.full_dotted_rank}: #{newResult }")
 
     if newResult != @result
       @result = newResult

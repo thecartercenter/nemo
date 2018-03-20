@@ -6,15 +6,16 @@ module Forms
     include ActiveModel::SerializerSupport
     extend ActiveModel::Naming
 
-    attr_accessor :members, :true_if, :negate
+    attr_accessor :members, :true_if, :negate, :name
     alias_method :negate?, :negate
 
     delegate :empty?, to: :members
 
-    def initialize(members: [], true_if: "all_met", negate: false)
+    def initialize(members: [], true_if: "all_met", negate: false, name: "Default")
       self.members = members
       self.true_if = true_if
       self.negate = negate
+      self.name = name
     end
   end
 end

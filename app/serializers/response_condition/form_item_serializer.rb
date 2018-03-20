@@ -1,7 +1,7 @@
 # Serializes data related to the front-end handling of conditional logic for this item.
 module ResponseCondition
   class FormItemSerializer < ActiveModel::Serializer
-    attributes :id, :group?, :condition_group
+    attributes :id, :group?, :condition_group, :full_dotted_rank
     #TODO: format_keys :lower_camel
 
     attr_accessor :condition_computer
