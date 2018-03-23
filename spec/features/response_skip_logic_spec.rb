@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "spec_helper"
 
 feature "skip rules in responses", js: true do
@@ -68,7 +69,9 @@ feature "skip rules in responses", js: true do
       # Skip from text1 to text3 if text1 is Skip2
 
       qings[:text4].display_conditions << Condition.new(
-        {ref_qing_id: qings[:text1].id, op: "neq", value: "B"}
+        ref_qing_id: qings[:text1].id,
+        op: "neq",
+        value: "B"
       )
       qings[:text4].save!
 

@@ -159,11 +159,15 @@ feature "conditions in responses", js: true do
       {}.tap do |qings|
         qings[:q1] = create_questioning("integer", form)
         qings[:q2] = create_questioning("integer", form)
-        qings[:q3] = create_questioning("integer", form, display_if: display_if,
+        qings[:q3] = create_questioning(
+          "integer",
+          form,
+          display_if: display_if,
           display_conditions_attributes: [
             {ref_qing_id: qings[:q1].id, op: "gt", value: "10"},
             {ref_qing_id: qings[:q2].id, op: "gt", value: "20"}
-          ])
+          ]
+        )
       end
     end
 

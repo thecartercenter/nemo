@@ -39,7 +39,7 @@ module ConditionalLogicHelpers
             value.include?(o.name) ? check(id) : uncheck(id)
           end
         when "datetime", "date", "time"
-          t = Time.parse(value)
+          t = Time.zone.parse(value)
           prefix = "response_answers_attributes_#{idx}_#{qing.qtype_name}_value"
           unless qing.qtype_name == "time"
             select(t.strftime("%Y"), from: "#{prefix}_1i")

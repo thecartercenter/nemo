@@ -1,5 +1,6 @@
-# Serializes condition group for response web form display logic
+# frozen_string_literal: true
 
+# Serializes condition group for response web form display logic
 module ResponseCondition
   class ConditionGroupSerializer < ActiveModel::Serializer
     attributes :members, :true_if, :negate, :type, :name
