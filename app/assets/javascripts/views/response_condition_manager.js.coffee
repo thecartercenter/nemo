@@ -16,7 +16,8 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
       el: @el,
       manager: this,
       group: @rootConditionGroup,
-    inst: @inst)
+      inst: @inst
+    )
 
     # The leaf node checkers have set their results when they were initialized, and now refresh
     # will call evaluate down the tree to read the leaf node checker results.
