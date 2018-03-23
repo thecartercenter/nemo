@@ -26,7 +26,8 @@ feature "skip rules in responses", js: true do
 
     scenario "skip to end of form" do
       # Skip to end of form if text2 is equal to B
-      create(:skip_rule,
+      create(
+        :skip_rule,
         source_item: qings[:text2],
         destination: "end",
         conditions_attributes: [{ref_qing_id: qings[:text2].id, op: "eq", value: "B"}]
@@ -42,7 +43,8 @@ feature "skip rules in responses", js: true do
 
     scenario "skip to a later questioning" do
       # Skip from text1 to text3 if text1 is not equal to A
-      create(:skip_rule,
+      create(
+        :skip_rule,
         source_item: qings[:text1],
         destination: "item",
         dest_item_id: qings[:text3].id,
@@ -68,14 +70,16 @@ feature "skip rules in responses", js: true do
       )
       qings[:text4].save!
 
-      create(:skip_rule,
+      create(
+        :skip_rule,
         source_item: qings[:text2],
         destination: "item",
         dest_item_id: qings[:text4].id,
         conditions_attributes: [{ref_qing_id: qings[:text1].id, op: "eq", value: "A"}]
       )
 
-      create(:skip_rule,
+      create(
+        :skip_rule,
         source_item: qings[:text1],
         destination: "item",
         dest_item_id: qings[:text3].id,
@@ -106,14 +110,16 @@ feature "skip rules in responses", js: true do
       )
       qings[:text4].save!
 
-      create(:skip_rule,
+      create(
+        :skip_rule,
         source_item: qings[:text2],
         destination: "item",
         dest_item_id: qings[:text4].id,
         conditions_attributes: [{ref_qing_id: qings[:text1].id, op: "eq", value: "A"}]
       )
 
-      create(:skip_rule,
+      create(
+        :skip_rule,
         source_item: qings[:text1],
         destination: "item",
         dest_item_id: qings[:text3].id,
@@ -159,13 +165,15 @@ feature "skip rules in responses", js: true do
     end
 
     scenario "trigger display condition on form with skip rule" do
-      create(:skip_rule,
+      create(
+        :skip_rule,
         source_item: qings[:text2],
         destination: "end",
         conditions_attributes: [{ref_qing_id: qings[:text2].id, op: "eq", value: "B"}]
       )
 
-      rpt_group.update_attributes!(display_if: "all_met",
+      rpt_group.update_attributes!(
+        display_if: "all_met",
         display_conditions_attributes: [{
           ref_qing_id: qings[:text3].id,
           op: "eq",
@@ -236,7 +244,7 @@ feature "skip rules in responses", js: true do
       else
         # TODO: When we add support for nested groups to this spec, we will need to refine this selector
         # to distinguish between different sets of subinstances within a parent repeat group's instances.
-        page.all(%Q{div.qing-group-instance[data-group-id="#{qing.parent_id}"]}).size
+        page.all(%(div.qing-group-instance[data-group-id="#{qing.parent_id}"])).size
       end
 
       # For each instance, check visibility.
@@ -254,6 +262,6 @@ feature "skip rules in responses", js: true do
 
   # Gets a CSS selector for the answer_field div described by the given qing and instance descriptor.
   def selector_for(qing, inst)
-    %Q{div.answer_field[data-qing-id="#{qing.id}"][data-inst-num="#{inst}"]}
+    %(div.answer_field[data-qing-id="#{qing.id}"][data-inst-num="#{inst}")
   end
 end
