@@ -10,6 +10,7 @@ configatron.offline_mode = false
 ELMO::Application.config.secret_key_base = "secret-token"
 
 # The hostname of your site
+# If offline_mode is set to true, then the hostname is optional
 configatron.url.host = "elmo.example.com"
 
 # Whether to use HTTPS in URLs. This should be "https" if your site uses SSL, and "http" if not.
