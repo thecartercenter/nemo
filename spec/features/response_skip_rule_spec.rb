@@ -143,12 +143,7 @@ feature "skip rules in responses", js: true do
     # Skip to end of form if text2 is equal to B.
     # Display repeat group if text3 is "ShowRepeat"
 
-    let(:rpt_group) { create(
-      :qing_group,
-      form: form,
-      repeatable: true
-      # Display condition added below
-    ) }
+    let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
 
     let!(:qings) do
       {}.tap do |qings|
