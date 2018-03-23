@@ -1,3 +1,4 @@
+ # frozen_string_literal: true
 module ConditionalLogicHelpers
   shared_context "conditional logic helpers" do
     def visit_new_response_page
@@ -92,9 +93,9 @@ module ConditionalLogicHelpers
         # respect the full instance descriptor, not just a single number.
         (1..inst_count).each do |inst|
           if (visible_fields[qing] || []).include?(inst)
-            expect(find(selector_for(qing, inst))).to be_visible
+            expect(find(selector_for(qing, inst))).to be_visible, lambda { "Expected #{qing.full_dotted_rank} #{qing.code} #{qing.qtype_name} to be visible, but is hidden."}
           else
-            expect(find(selector_for(qing, inst), visible: false)).not_to be_visible
+            expect(find(selector_for(qing, inst), visible: false)).not_to be_visible, lambda{"Expected #{qing.full_dotted_rank} #{qing.code} #{qing.qtype_name} to be hidden, but is visible."}
           end
         end
       end

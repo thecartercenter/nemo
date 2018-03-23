@@ -176,11 +176,8 @@ feature "skip rules in responses", js: true do
 
       rpt_group.update_attributes!(
         display_if: "all_met",
-        display_conditions_attributes: [{
-          ref_qing_id: qings[:text3].id,
-          op: "eq",
-          value: "ShowRepeat"
-        }])
+        display_conditions_attributes: [{ref_qing_id: qings[:text3].id, op: "eq", value: "ShowRepeat"}]
+      )
 
       visit_new_response_page
       visible = %i[text1 text2 text3 text4 rptq1]

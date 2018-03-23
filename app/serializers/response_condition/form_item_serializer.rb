@@ -14,7 +14,7 @@ module ResponseCondition
     end
 
     def condition_group
-      ResponseCondition::ConditionGroupSerializer.new(self.response_condition_group)
+      ResponseCondition::ConditionGroupSerializer.new(response_condition_group)
     end
   end
 end
