@@ -1,6 +1,6 @@
-# A set of AnswerNodes corresponding to one repeat instance of a QingGroup.
+# A set of OldAnswerNodes corresponding to one repeat instance of a QingGroup.
 # See AnswerArranger for more documentation.
-class AnswerInstance
+class OldAnswerInstance
   attr_accessor :nodes, :num, :placeholder, :root
   alias_method :placeholder?, :placeholder
   alias_method :root?, :root

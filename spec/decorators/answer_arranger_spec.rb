@@ -36,10 +36,10 @@ describe AnswerArranger do
     end
 
     it "should work" do
-      expect(nodes[0]).to be_a AnswerNode
-      expect(nodes[0].set).to be_a AnswerSet
+      expect(nodes[0]).to be_a OldAnswerNode
+      expect(nodes[0].set).to be_a OldAnswerSet
       expect(nodes[0].set.answers[0]).to be_a Answer
-      expect(nodes[3].instances[0]).to be_a AnswerInstance
+      expect(nodes[3].instances[0]).to be_a OldAnswerInstance
 
       expect(nodes[0].set.answers[0].casted_value).to eq "Cat"
 

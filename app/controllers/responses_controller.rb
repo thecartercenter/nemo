@@ -240,7 +240,7 @@ class ResponsesController < ApplicationController
 
   # prepares objects for and renders the form template
   def prepare_and_render_form
-    # Prepare the AnswerNodes.
+    # Prepare the OldAnswerNodes.
     set_read_only
     @nodes = AnswerArranger.new(@response,
       placeholders: params[:action] == "show" ? :except_repeats : :all,

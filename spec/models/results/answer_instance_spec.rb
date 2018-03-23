@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe AnswerInstance do
+describe OldAnswerInstance do
   describe "normalize" do
     let(:form) { create(:form, question_types: ["integer", ["integer", "integer"]]) }
     let(:response) do

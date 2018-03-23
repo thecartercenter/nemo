@@ -1,4 +1,4 @@
-# Creates AnswerNodes, AnswerInstances, and AnswerSets for a given response.
+# Creates OldAnswerNodes, OldAnswerInstances, and OldAnswerSets for a given response.
 # None of these are persisted to the database. Only Answer is persisted.
 #
 # Options:
@@ -9,14 +9,14 @@
 #
 # Answer object hierarchy:
 #
-# AnswerNode
-# - All answer data for a given FormItem within a specific AnswerInstance
-# - Has many AnswerInstances (if item is QingGroup) or one AnswerSet (if item is Qing)
-# AnswerInstance
-# - A set of AnswerNodes corresponding to one repeat instance of a QingGroup
-# - Has many AnswerNodes (at least one)
-# - Only repeat groups can have more than one AnswerInstance in their AnswerNode.
-# AnswerSet
+# OldAnswerNode
+# - All answer data for a given FormItem within a specific OldAnswerInstance
+# - Has many OldAnswerInstances (if item is QingGroup) or one OldAnswerSet (if item is Qing)
+# OldAnswerInstance
+# - A set of OldAnswerNodes corresponding to one repeat instance of a QingGroup
+# - Has many OldAnswerNodes (at least one)
+# - Only repeat groups can have more than one OldAnswerInstance in their OldAnswerNode.
+# OldAnswerSet
 # - Set of one or more answers for a given question and instance
 # Answer
 # - A single answer
@@ -29,7 +29,7 @@ class AnswerArranger
     options[:dont_load_answers] = false unless options.has_key?(:dont_load_answers)
   end
 
-  # Returns a single AnswerInstance for the root group.
+  # Returns a single OldAnswerInstance for the root group.
   def build
     # Prep
     load_answers
@@ -62,7 +62,7 @@ class AnswerArranger
     end
   end
 
-  # Returns a new AnswerNode for the given FormItem and instance number.
+  # Returns a new OldAnswerNode for the given FormItem and instance number.
   # inst_num required only if item is a Questioning.
   def build_node(item, inst_num)
     if item.is_a?(QingGroup)
@@ -73,7 +73,7 @@ class AnswerArranger
   end
 
   def build_node_for_group(group)
-    AnswerNode.new(item: group).tap do |node|
+    OldAnswerNode.new(item: group).tap do |node|
       nums = instance_nums[group.id] || []
       no_answers_for_group = nums.empty?
 
@@ -89,7 +89,7 @@ class AnswerArranger
 
       # Build instances.
       nums.each do |num|
-        instance = AnswerInstance.new(
+        instance = OldAnswerInstance.new(
           num: num,
           nodes: group.sorted_children.map { |c| build_node(c, num) }.compact
         )
@@ -97,7 +97,7 @@ class AnswerArranger
       end
 
       if group.repeatable? && options[:placeholders] == :all
-        node.placeholder_instance = AnswerInstance.new(
+        node.placeholder_instance = OldAnswerInstance.new(
           nodes: group.sorted_children.map { |c| build_node(c, :placeholder) }.compact,
           placeholder: true
         )
@@ -106,12 +106,12 @@ class AnswerArranger
   end
 
   def build_node_for_questioning(item, inst_num)
-    AnswerNode.new(item: item).tap do |node|
+    OldAnswerNode.new(item: item).tap do |node|
       answers = answers_for(item.id, inst_num)
       if answers.blank? && (item.hidden? || options[:placeholders] == :none)
         return nil
       else
-        node.set = AnswerSet.new(questioning: item, answers: answers)
+        node.set = OldAnswerSet.new(questioning: item, answers: answers)
       end
     end
   end
