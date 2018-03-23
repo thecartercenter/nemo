@@ -6,7 +6,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
     @condition = options.condition
     @inst = options.inst
 
-    @rqElement = @manager.qingElement(@condition.ref_qing_id, @inst)
+    @rqElement = @manager.qingElement(@condition.refQingId, @inst)
     @rqType = @rqElement.data('qtype-name')
     @result = true
 
@@ -127,7 +127,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
   expected: ->
     switch @rqType
       when 'integer', 'decimal', 'counter' then parseFloat(@condition.value)
-      when 'select_one', 'select_multiple' then @condition.option_node_id
+      when 'select_one', 'select_multiple' then @condition.optionNodeId
       else @condition.value
 
   ckeditorInstance: ->

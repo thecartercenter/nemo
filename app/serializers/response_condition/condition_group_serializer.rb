@@ -11,7 +11,7 @@ module ResponseCondition
         if m.is_a? Forms::ConditionGroup
           ResponseCondition::ConditionGroupSerializer.new(m)
         else
-          m
+          ResponseCondition::ConditionSerializer.new(m)
         end
       end
     end
