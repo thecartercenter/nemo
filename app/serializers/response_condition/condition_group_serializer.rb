@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-# Serializes condition group for response web form display logic
 module ResponseCondition
+  # Serializes condition group for response web form display logic
   class ConditionGroupSerializer < ActiveModel::Serializer
     attributes :members, :true_if, :negate, :type, :name
-    #TODO: format_keys :lower_camel
+    format_keys :lower_camel
 
     def members
       object.members.map do |m|

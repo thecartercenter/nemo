@@ -25,7 +25,7 @@ module ConditionalLogicHelpers
           fill_in_ckeditor(id, with: value)
         when "select_one"
           if value.is_a?(Array)
-            value.each_with_index do |o,i|
+            value.each_with_index do |o, i|
               id = "response_answers_attributes_#{idx}_#{i}_option_node_id"
               find("#response_answers_attributes_#{idx}_#{i}_option_node_id option", text: o)
               select(o, from: id)
@@ -34,7 +34,7 @@ module ConditionalLogicHelpers
             select(value, from: "response_answers_attributes_#{idx}_option_node_id")
           end
         when "select_multiple"
-          qing.options.each_with_index do |o,i|
+          qing.options.each_with_index do |o, i|
             id = "response_answers_attributes_#{idx}_choices_attributes_#{i}_checked"
             value.include?(o.name) ? check(id) : uncheck(id)
           end

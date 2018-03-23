@@ -16,9 +16,9 @@ class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationVie
 
   # Evaluates the children and returns the result.
   evaluate: ->
-    if @conditionGroup.true_if == 'always'
+    if @conditionGroup.trueIf == 'always'
       @applyNegation(true)
-    else if @conditionGroup.true_if == 'all_met'
+    else if @conditionGroup.trueIf == 'all_met'
       @applyNegation(@childrenAllMet())
     else # any_met
       @applyNegation(@childrenAnyMet())
