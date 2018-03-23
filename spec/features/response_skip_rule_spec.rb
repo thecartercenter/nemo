@@ -140,9 +140,8 @@ feature "skip rules in responses", js: true do
     let(:rpt_group) { create(
       :qing_group,
       form: form,
-      repeatable: true,
-      display_if: "all_met",
-      display_conditions_attributes: [{ref_qing_id: qings[:text3].id, op: "eq", value: "ShowRepeat"}]
+      repeatable: true
+      # Display condition added below
     ) }
 
     let!(:qings) do
@@ -160,12 +159,18 @@ feature "skip rules in responses", js: true do
     end
 
     scenario "trigger display condition on form with skip rule" do
-    
       create(:skip_rule,
         source_item: qings[:text2],
         destination: "end",
         conditions_attributes: [{ref_qing_id: qings[:text2].id, op: "eq", value: "B"}]
       )
+
+      rpt_group.update_attributes!(display_if: "all_met",
+        display_conditions_attributes: [{
+          ref_qing_id: qings[:text3].id,
+          op: "eq",
+          value: "ShowRepeat"
+        }])
 
       visit_new_response_page
       visible = %i[text1 text2 text3 text4 rptq1]
