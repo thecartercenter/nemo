@@ -1,4 +1,5 @@
- # frozen_string_literal: true
+# frozen_string_literal: true
+
 module ConditionalLogicHelpers
   shared_context "conditional logic helpers" do
     def visit_new_response_page
