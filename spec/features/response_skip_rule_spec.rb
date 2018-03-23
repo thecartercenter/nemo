@@ -174,12 +174,15 @@ feature "skip rules in responses", js: true do
 
       visit_new_response_page
       visible = %i[text1 text2 text3 text4 rptq1]
-      fill_and_expect_visible(:text1, "A", visible - %i[rptq1])
-      fill_and_expect_visible(:text2, "A", visible - %i[rptq1])
+      fill_and_expect_visible(:text1, "No change", visible - %i[rptq1])
+      fill_and_expect_visible(:text2, "No change", visible - %i[rptq1])
       fill_and_expect_visible(:text2, "B", visible - %i[text3 text4 rptq1])
-      fill_and_expect_visible(:text2, "C", visible - %i[rptq1])
-      save_and_open_page
+      fill_and_expect_visible(:text2, "Undo Skip", visible - %i[rptq1])
       fill_and_expect_visible(:text3, "ShowRepeat", visible)
+      fill_and_expect_visible(:rptq1, "Fill Repeat", visible)
+      fill_and_expect_visible(:text2, "B", visible - %i[text3 text4 rptq1])
+      fill_and_expect_visible(:text2, "Undo Skip", visible)
+      fill_and_expect_visible(:text3, "HideRepeat", visible - %i[rptq1])
     end
   end
 
