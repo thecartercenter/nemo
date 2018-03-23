@@ -26,9 +26,11 @@ feature "skip rules in responses", js: true do
 
     scenario "skip to end of form" do
       #add skip rule: end of form if text 2 is equal to B
-      create(:skip_rule, source_item: qings[:text2], destination: "end", conditions_attributes: [
-        {ref_qing_id: qings[:text2].id, op: "eq", value: "B"}
-      ])
+      create(:skip_rule,
+        source_item: qings[:text2],
+        destination: "end",
+        conditions_attributes: [{ref_qing_id: qings[:text2].id, op: "eq", value: "B"}]
+      )
 
       visit_new_response_page
       visible = %i[text1 text2 text3 text4]
@@ -38,7 +40,133 @@ feature "skip rules in responses", js: true do
       fill_and_expect_visible(:text2, "C", visible)
     end
 
+    scenario "skip to a later questioning" do
+      #add skip rule: end of form if text 2 is equal to B
+      create(:skip_rule,
+        source_item: qings[:text1],
+        destination: "item",
+        dest_item_id: qings[:text3].id,
+        conditions_attributes: [{ref_qing_id: qings[:text1].id, op: "neq", value: "A"}]
+      )
 
+      visit_new_response_page
+      visible = %i[text1 text2 text3 text4]
+      expect_visible(visible - %i[text2])
+      fill_and_expect_visible(:text1, "A", visible)
+      fill_and_expect_visible(:text1, "B", visible - %i[text2])
+      fill_and_expect_visible(:text3, "C", visible - %i[text2])
+      fill_and_expect_visible(:text1, "A", visible)
+    end
+
+    scenario "skip rules and condition have same ref qing with one skip triggered first" do
+      #Skip from 2 to 4 if 1 is A, only display 4 if 1 is not equal to B
+      #trigger skip first
+
+      qings[:text4].display_conditions << Condition.new(
+        {ref_qing_id: qings[:text1].id, op: "neq", value: "B"}
+      )
+      qings[:text4].save!
+
+      create(:skip_rule,
+        source_item: qings[:text2],
+        destination: "item",
+        dest_item_id: qings[:text4].id,
+        conditions_attributes: [{ref_qing_id: qings[:text1].id, op: "eq", value: "A"}]
+      )
+
+      create(:skip_rule,
+        source_item: qings[:text1],
+        destination: "item",
+        dest_item_id: qings[:text3].id,
+        conditions_attributes: [{ref_qing_id: qings[:text1].id, op: "eq", value: "Skip2"}]
+      )
+
+      visit_new_response_page
+      visible = %i[text1 text2 text3 text4]
+      expect_visible(visible)
+      fill_and_expect_visible(:text1, "D", visible)
+      fill_and_expect_visible(:text2, "C", visible)
+      fill_and_expect_visible(:text3, "B", visible)
+      fill_and_expect_visible(:text1, "A", visible - %i[text3])
+      fill_and_expect_visible(:text4, "Z", visible - %i[text3])
+      fill_and_expect_visible(:text1, "G", visible)
+      fill_and_expect_visible(:text1, "B", visible - %i[text4])
+      fill_and_expect_visible(:text1, "Skip2", visible - %i[text2])
+      fill_and_expect_visible(:text1, "Z", visible)
+    end
+
+    scenario "skip rule and condition have same ref qing with display cond triggered first" do
+      #Skip from 2 to 4 if 1 is A, only display 4 if 1 is not equal to B
+      #trigger display first
+
+      qings[:text4].display_conditions << Condition.new(
+        {ref_qing_id: qings[:text1].id, op: "neq", value: "B"}
+      )
+      qings[:text4].save!
+
+      create(:skip_rule,
+        source_item: qings[:text2],
+        destination: "item",
+        dest_item_id: qings[:text4].id,
+        conditions_attributes: [{ref_qing_id: qings[:text1].id, op: "eq", value: "A"}]
+      )
+
+      create(:skip_rule,
+        source_item: qings[:text1],
+        destination: "item",
+        dest_item_id: qings[:text3].id,
+        conditions_attributes: [{ref_qing_id: qings[:text1].id, op: "eq", value: "Skip2"}]
+      )
+
+      visit_new_response_page
+      visible = %i[text1 text2 text3 text4]
+      expect_visible(visible)
+      fill_and_expect_visible(:text1, "Z", visible)
+      fill_and_expect_visible(:text1, "B", visible - %i[text4])
+      fill_and_expect_visible(:text2, "C", visible - %i[text4])
+      fill_and_expect_visible(:text3, "A", visible - %i[text4])
+      fill_and_expect_visible(:text1, "Z", visible)
+      fill_and_expect_visible(:text1, "Skip2", visible - %i[text2])
+      fill_and_expect_visible(:text1, "Z", visible)
+    end
+  end
+
+  describe "skip rules with conditions on repeat groups" do
+    #Skip to end of form if text2 is equal to B. Only show repeat group if text3 is "ShowRepeat"
+    let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
+    let!(:qings) do
+      {}.tap do |qings|
+        qings[:text1] = create_questioning("text", form)
+
+        qings[:text2] = create_questioning("text", form)
+
+        qings[:text3] = create_questioning("text", form)
+
+        qings[:text4] = create_questioning("text", form)
+
+        qings[:rptq1] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
+          display_conditions_attributes: [
+            {ref_qing_id: qings[:text3].id, op: "eq", value: "ShowRepeat"} # References top level Q
+        ])
+      end
+    end
+
+    scenario "with skip to end skip rule" do
+      #add skip rule: end of form if text 2 is equal to B
+      create(:skip_rule,
+        source_item: qings[:text2],
+        destination: "end",
+        conditions_attributes: [{ref_qing_id: qings[:text2].id, op: "eq", value: "B"}]
+      )
+
+      visit_new_response_page
+      visible = %i[text1 text2 text3 text4 rptq1]
+      fill_and_expect_visible(:text1, "A", visible - %i[rptq1])
+      fill_and_expect_visible(:text2, "A", visible - %i[rptq1])
+      fill_and_expect_visible(:text2, "B", visible - %i[text3 text4 rptq1])
+      fill_and_expect_visible(:text2, "C", visible - %i[rptq1])
+      fill_and_expect_visible(:text3, "ShowRepeat", visible)
+    end
   end
 
   def visit_new_response_page
