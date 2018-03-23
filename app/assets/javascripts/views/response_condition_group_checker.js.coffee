@@ -14,7 +14,6 @@ class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationVie
     # Unlike the manager and the leaf node checkers, do NOT do anything to initialize here. The manager takes
     # care of that by calling refresh in its initialization.
 
-
   # Evaluates the children and returns the result.
   evaluate: ->
     if @conditionGroup.true_if == 'always'

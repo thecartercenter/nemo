@@ -12,11 +12,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
       @element = @qingElement(@item.id, @inst)
     @readOnly = @element.is('.read-only')
     @result = true
-
-    #this is gonna have to be replaced with a tree of checkers
     @root_checker = new ELMO.Views.ResponseConditionGroupChecker(el: @el, manager: this, group: @root_condition_group, inst: @inst)
-    # @checkers = @conditions.map (c) =>
-    #   new ELMO.Views.ResponseConditionChecker(el: @el, manager: this, condition: c, inst: @inst)
 
     # The leaf node checkers have set their results when they were initialized, and now refresh
     # will call evaluate down the tree to read the leaf node checker results.

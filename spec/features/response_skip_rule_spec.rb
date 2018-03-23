@@ -25,7 +25,7 @@ feature "skip rules in responses", js: true do
     end
 
     scenario "skip to end of form" do
-      #add skip rule: end of form if text 2 is equal to B
+      # Skip to end of form if text2 is equal to B
       create(:skip_rule,
         source_item: qings[:text2],
         destination: "end",
@@ -41,7 +41,7 @@ feature "skip rules in responses", js: true do
     end
 
     scenario "skip to a later questioning" do
-      #add skip rule: end of form if text 2 is equal to B
+      # Skip from text1 to text3 if text1 is not equal to A
       create(:skip_rule,
         source_item: qings[:text1],
         destination: "item",
@@ -58,9 +58,10 @@ feature "skip rules in responses", js: true do
       fill_and_expect_visible(:text1, "A", visible)
     end
 
-    scenario "skip rules and condition have same ref qing with one skip triggered first" do
-      #Skip from 2 to 4 if 1 is A, only display 4 if 1 is not equal to B
-      #trigger skip first
+    scenario "two skip rules and skip rule and condition have same ref qing, skip triggered first" do
+      # Display text4 if text1 is not equal to B
+      # Skip from text2 to text4 if text1 is A
+      # Skip from text1 to text3 if text1 is Skip2
 
       qings[:text4].display_conditions << Condition.new(
         {ref_qing_id: qings[:text1].id, op: "neq", value: "B"}
@@ -95,9 +96,10 @@ feature "skip rules in responses", js: true do
       fill_and_expect_visible(:text1, "Z", visible)
     end
 
-    scenario "skip rule and condition have same ref qing with display cond triggered first" do
-      #Skip from 2 to 4 if 1 is A, only display 4 if 1 is not equal to B
-      #trigger display first
+    scenario "two skip rules, skip rule and condition have same ref qing, display cond triggered first" do
+      # Display text4 if text1 is not equal to B
+      # Skip from text2 to text4 if text1 is A
+      # Skip from text1 to text3 if text1 is Skip2
 
       qings[:text4].display_conditions << Condition.new(
         {ref_qing_id: qings[:text1].id, op: "neq", value: "B"}
@@ -132,8 +134,17 @@ feature "skip rules in responses", js: true do
   end
 
   describe "skip rules with conditions on repeat groups" do
-    #Skip to end of form if text2 is equal to B. Only show repeat group if text3 is "ShowRepeat"
-    let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
+    # Skip to end of form if text2 is equal to B.
+    # Display repeat group if text3 is "ShowRepeat"
+
+    let(:rpt_group) { create(
+      :qing_group,
+      form: form,
+      repeatable: true,
+      display_if: "all_met",
+      display_conditions_attributes: [{ref_qing_id: qings[:text3].id, op: "eq", value: "ShowRepeat"}]
+    ) }
+
     let!(:qings) do
       {}.tap do |qings|
         qings[:text1] = create_questioning("text", form)
@@ -144,15 +155,12 @@ feature "skip rules in responses", js: true do
 
         qings[:text4] = create_questioning("text", form)
 
-        qings[:rptq1] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
-          display_conditions_attributes: [
-            {ref_qing_id: qings[:text3].id, op: "eq", value: "ShowRepeat"} # References top level Q
-        ])
+        qings[:rptq1] = create_questioning("text", form, parent: rpt_group)
       end
     end
 
-    scenario "with skip to end skip rule" do
-      #add skip rule: end of form if text 2 is equal to B
+    scenario "trigger display condition on form with skip rule" do
+    
       create(:skip_rule,
         source_item: qings[:text2],
         destination: "end",
@@ -165,6 +173,7 @@ feature "skip rules in responses", js: true do
       fill_and_expect_visible(:text2, "A", visible - %i[rptq1])
       fill_and_expect_visible(:text2, "B", visible - %i[text3 text4 rptq1])
       fill_and_expect_visible(:text2, "C", visible - %i[rptq1])
+      save_and_open_page
       fill_and_expect_visible(:text3, "ShowRepeat", visible)
     end
   end
