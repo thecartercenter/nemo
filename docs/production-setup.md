@@ -53,6 +53,16 @@ Paste the contents of [this config file](nginx-certbot.conf). Update the `server
 Then follow [instructions at the Certbot site](https://certbot.eff.org/lets-encrypt/ubuntuxenial-nginx).
 The Certbot program should obtain your certificate, add the necessary settings to your nginx configuration file, and restart the server.
 
+To auto-renew your certificate (recommended), add the following to your crontab (type `crontab -e`):
+
+    X * * * * PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin && /root/certbot renew --no-self-upgrade > /root/certbot-cron.log 2>&1
+
+replacing `X` with a minute a few minutes into the future (e.g. if it's 12:19:23 now, enter 20 or 21). Wait for that time to pass, then:
+
+    cat /root/certbot-cron.log
+
+and ensure the command ran smoothly. It should say that no certificates are up for renewal.
+
 #### To use an existing SSL certificate
 
 Obtain or locate your SSL certificate's `.crt` and `.key` files.
