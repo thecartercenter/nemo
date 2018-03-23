@@ -58,7 +58,7 @@ class FormsController < ApplicationController
 
   def edit
     setup_condition_computer
-    prepare_and_render_form
+    prepare_and_render_form 
   end
 
   def show

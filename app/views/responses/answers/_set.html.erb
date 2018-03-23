@@ -33,14 +33,16 @@
 
 <%# Setup condition js. %>
 <%# Note that we need to do this in any form mode, even show. %>
-<% response_condition_group = @condition_computer.condition_group_for(set.questioning) %>
-<% unless response_condition_group.empty? %>
-  <%= javascript_doc_ready do %>
-    new ELMO.Views.ResponseConditionManager(<%=json(
-      el: 'form.response_form',
-      item: ResponseCondition::FormItemSerializer.new(set.questioning, response_condition_group: response_condition_group),
-      # Newer-style instance descriptor.
-      inst: set.depth == 1 ? [] : [{id: set.qing_parent_id.to_s, num: inst_num}]
-    ) %>);
+<% if @condition_computer.present? %>
+  <% response_condition_group = @condition_computer.condition_group_for(set.questioning) %>
+  <% unless response_condition_group.empty? %>
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.ResponseConditionManager(<%=json(
+        el: 'form.response_form',
+        item: ResponseCondition::FormItemSerializer.new(set.questioning, response_condition_group: response_condition_group),
+        # Newer-style instance descriptor.
+        inst: set.depth == 1 ? [] : [{id: set.qing_parent_id.to_s, num: inst_num}]
+      ) %>);
+    <% end %>
   <% end %>
 <% end %>
