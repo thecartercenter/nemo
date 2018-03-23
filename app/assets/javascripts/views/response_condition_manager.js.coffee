@@ -4,7 +4,6 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @item = options.item
     @rootConditionGroup = @item.conditionGroup
-    console.log("Initing for #{@item.fullDottedRank}: ", @rootConditionGroup)
     @inst = options.inst
     if @item.group
       @element = @groupElement(@item.id)
@@ -29,7 +28,6 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
   # Gathers results from all checkers and shows/hides the field based on them.
   refresh: ->
     newResult = @root_checker.evaluate()
-    console.log("Manager refresh #{@rootConditionGroup.name} for #{@item.fullDottedRank}: #{newResult }")
 
     if newResult != @result
       @result = newResult

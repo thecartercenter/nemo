@@ -25,7 +25,6 @@ class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationVie
 
   childrenAllMet: ->
     results = @results()
-    console.log("results for #{@conditionGroup.name}: #{results}")
     results.indexOf(false) == -1
 
   childrenAnyMet: ->
