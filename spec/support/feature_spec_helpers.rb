@@ -100,7 +100,7 @@ module FeatureSpecHelpers
     expect(page).to have_selector(modal_selector, visible: false)
   end
 
-  shared_examples :logic do
+  shared_examples :form_logic do
     def select_question(code)
       find('select[name*="\\[ref_qing_id\\]"]').select(code)
       wait_for_ajax # Changing the question triggers an ajax call (for now)
@@ -148,8 +148,16 @@ module FeatureSpecHelpers
       find("a", text: "Add Condition").click
     end
 
+    def click_add_rule
+      find("a", text: "Add Rule").click
+    end
+
     def click_delete_link
-      find(".fa-close").click
+      find(".fa-close", match: :first).click
+    end
+
+    def click_rule_delete_link
+
     end
   end
 

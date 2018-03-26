@@ -11,7 +11,7 @@ feature "display conditions form", js: true do
       is_standard: is_standard)
   end
 
-  include_examples :logic do
+  include_examples :form_logic do
     subject { form }
   end
 

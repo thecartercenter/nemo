@@ -20,7 +20,7 @@ feature "skip rule form", js: true do
     let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} #{form.c[0].code} is equal to 5" }
     let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} #{form.c[1].code} is equal to 10" }
 
-    include_examples :logic do
+    include_examples :form_logic do
       subject { form }
     end
 
@@ -55,21 +55,31 @@ feature "skip rule form", js: true do
         select "After this question, skip ...", from: "Skip Logic"
 
         # first skip rule
-        select "Skip to the end of the form", from: "questioning[skip_rules_attributes][0][destination]"
-        select "if all of these conditions are met", from: "questioning[skip_rules_attributes][0][skip_if]"
-        select "1. IntegerQ1", from: "questioning[skip_rules_attributes][0][conditions_attributes][0][ref_qing_id]"
-        fill_in "questioning[skip_rules_attributes][0][conditions_attributes][0][value]", with: 3
+        within(all(".skip-rule")[0]) do
+          find('select[name*="\\[skip_if\\]"]').select("if any of these conditions are met")
+
+          within(all(".condition-fields")[0]) do
+            select_question(form.c[0].code)
+            select_operator("< less than")
+            fill_in_value("25")
+          end
+        end
+
+        click_add_rule
 
         # second skip rule
-        select "Skip to the end of the form", from: "questioning[skip_rules_attributes][0][destination]"
-        select "if any of these conditions are met", from: "questioning[skip_rules_attributes][0][skip_if]"
-        select "3. IntegerQ3", from: "questioning[skip_rules_attributes][0][conditions_attributes][0][ref_qing_id]"
-        fill_in "questioning[skip_rules_attributes][0][conditions_attributes][0][value]", with: 2
-
+        within(all(".skip-rule")[1]) do
+          find('select[name*="\\[skip_if\\]"]').select("if any of these conditions are met")
+          within(all(".condition-fields")[0]) do
+            select_question(form.c[0].code)
+            select_operator("< less than")
+            fill_in_value("20")
+          end
+        end
 
         # delete first skip rule
-        within(".skip-rule-remove.rule-1") do
-          page.find(".fa.fa-close").click
+        within(".rule-1") do
+          click_delete_link
         end
 
         click_on "Save"
@@ -80,8 +90,14 @@ feature "skip rule form", js: true do
         # revisit questioning
         visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[5].id}/edit")
 
-        expect(page).to have_select("questioning[skip_rules_attributes][0][conditions_attributes][0][ref_qing_id]",
-          selected: "3. IntegerQ3")
+        # data is persisted
+        expect(all(".condition-fields").size).to eq 1
+
+        within(all(".condition-fields")[0]) do
+          expect_selected_question(form.c[0])
+          expect_selected_operator("< less than")
+          expect_filled_in_value("20")
+        end
       end
     end
   end
