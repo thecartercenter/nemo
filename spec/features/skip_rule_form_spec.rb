@@ -20,6 +20,10 @@ feature "skip rule form", js: true do
     let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} #{form.c[0].code} is equal to 5" }
     let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} #{form.c[1].code} is equal to 10" }
 
+    include_examples :logic do
+      subject { form }
+    end
+
     before do
       form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
         conditions_attributes: [

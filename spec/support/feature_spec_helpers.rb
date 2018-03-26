@@ -100,6 +100,59 @@ module FeatureSpecHelpers
     expect(page).to have_selector(modal_selector, visible: false)
   end
 
+  shared_examples :logic do
+    def select_question(code)
+      find('select[name*="\\[ref_qing_id\\]"]').select(code)
+      wait_for_ajax # Changing the question triggers an ajax call (for now)
+    end
+
+    def expect_selected_question(qing)
+      select = find('select[name*="\\[ref_qing_id\\]"]')
+      expect(page).to have_select(select[:name], selected: "#{qing.full_dotted_rank}. #{qing.code}")
+    end
+
+    def select_operator(op)
+      find('select[name*="\\[op\\]"]').select(op)
+    end
+
+    def expect_selected_operator(op)
+      select = find('select[name*="\\[op\\]"]')
+      expect(page).to have_select(select[:name], selected: op)
+    end
+
+    def select_values(*values)
+      selects = all('select[name*="\\[option_node_ids\\]"]')
+      values.each_with_index do |value, i|
+        selects[i].select(value)
+      end
+    end
+
+    def expect_selected_values(*values)
+      selects = all('select[name*="\\[option_node_ids\\]"]')
+      expect(selects.size).to eq values.size
+      selects.each_with_index do |select, i|
+        expect(page).to have_select(select[:name], selected: values[i])
+      end
+    end
+
+    def fill_in_value(value)
+      find('input[name*="\\[value\\]"]').set(value)
+    end
+
+    def expect_filled_in_value(value)
+      input = find('input[name*="\\[value\\]"]')
+      expect(page).to have_field(input[:name], with: value)
+    end
+
+    def click_add_condition
+      find("a", text: "Add Condition").click
+    end
+
+    def click_delete_link
+      find(".fa-close").click
+    end
+  end
+
   private
 
   def wait_for_ckeditor(locator)
