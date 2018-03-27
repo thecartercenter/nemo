@@ -115,7 +115,7 @@ feature "skip rule form", js: true do
       let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} #{form.c[0].code} is less than 1000" }
       let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} #{form.c[1].code} is equal to 10" }
 
-      scenario do
+      scenario "rules are updated correctly" do
         visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}/edit")
 
         # edit first rule
@@ -141,6 +141,48 @@ feature "skip rule form", js: true do
 
         visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}")
         expect(page).to have_content(rule_2)
+      end
+
+      scenario "delete existing condition if rule is set to always" do
+        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}/edit")
+
+        # confirm that data is available on visit
+        expect(page).to have_css(".condition-fields")
+        expect(page).to have_content("= equals")
+        expect(page).to have_select("questioning_skip_logic",
+          selected: "After this question, skip ...")
+
+        # set skip rule to always
+        within(all(".skip-rule")[0]) do
+          find('select[name*="\\[skip_if\\]"]').select("in all cases")
+
+          # condition fields are hidden for the first skip rule
+          expect(all(".condition-fields").size).to eq 0
+        end
+
+        # condition fields still exist for the second skip rule
+        within(all(".skip-rule")[1]) do
+          expect(all(".condition-fields").size).to eq 2
+        end
+
+      end
+
+      scenario "delete existing rule if skip is set to always" do
+        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}/edit")
+
+        # confirm that data is available on visit
+        expect(page).to have_css(".condition-fields")
+        expect(page).to have_content("= equals")
+        expect(page).to have_select("questioning_skip_logic",
+          selected: "After this question, skip ...")
+
+        # set skip to always
+        select "After this question, go to the next question", from: "questioning_skip_logic"
+
+        expect(page).not_to have_css(".condition-fields")
+        expect(page).not_to have_content("= equals")
+        expect(page).not_to have_select("questioning_skip_logic",
+          selected: "After this question, skip ...")
       end
     end
   end
