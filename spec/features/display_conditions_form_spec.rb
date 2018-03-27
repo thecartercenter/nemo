@@ -37,7 +37,10 @@ feature "display conditions form", js: true do
       end
 
       scenario "edit conditions on an existing question" do
-        when_conditions_are_edited
+        all("a.action_link.edit")[3].click
+
+        when_conditions_are_deleted
+        and_then_edited
 
         # View and check saved properly.
         visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}/edit")
@@ -84,7 +87,10 @@ feature "display conditions form", js: true do
       end
 
       scenario "edit conditions on an existing question" do
-        when_conditions_are_edited
+        all("a.action_link.edit")[3].click
+
+        when_conditions_are_deleted
+        and_then_edited
 
         # View and check saved properly.
         visit("/en/admin/questionings/#{form.c[3].id}/edit")
@@ -178,15 +184,15 @@ feature "display conditions form", js: true do
     ])
   end
 
-  def when_conditions_are_edited
-    all("a.action_link.edit")[3].click
-
+  def when_conditions_are_deleted
     # Delete existing condition
     within(all(".condition-fields")[0]) do
       click_delete_link
       expect(page).not_to have_css(".condition-fields", visible: true)
     end
+  end
 
+  def and_then_edited
     # Edit existing condition
     within(all(".condition-fields")[0]) do
       select_question(form.c[1].code)
