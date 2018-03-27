@@ -125,8 +125,7 @@ SkipRuleFormField.propTypes = {
   destItemId: React.PropTypes.string,
   destination: React.PropTypes.string.isRequired,
   hide: React.PropTypes.bool.isRequired,
-  namePrefix: React.PropTypes.string.isRequired,
-  ruleId: React.PropTypes.number
+  namePrefix: React.PropTypes.string.isRequired
 };
 
 SkipRuleFormField.defaultProps = {
