@@ -155,10 +155,6 @@ module FeatureSpecHelpers
     def click_delete_link
       find(".fa-close", match: :first).click
     end
-
-    def click_rule_delete_link
-
-    end
   end
 
   private
