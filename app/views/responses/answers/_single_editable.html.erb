@@ -20,10 +20,16 @@
       collection: answer.all_choices, class: "form-control") %>
 
   <% when "datetime", "date", "time" %>
+    <% date = answer.datetime_value ? answer.datetime_value : answer.date_value %>
 
-    <%= send("#{type}_select", field_name_prefix, :"#{type}_value",
-      {include_blank: true, include_seconds: true, object: answer, use_short_month: true},
-      class: "form-control", start_year: 1900) %>
+    <% if date < Time.current.year - 250 || date > Time.current.year + 250 %>
+      <%= text_field_tag("#{field_name_prefix}#{type}_value", date, class: "qtype_#{type} form-control") %>
+    <% else %>
+    <%= field_name_prefix %>
+      <%= send("#{type}_select", field_name_prefix, :"#{type}_value",
+          {include_blank: true, include_seconds: true, object: answer, use_short_month: true},
+          class: "form-control", start_year: 1900) %>
+    <% end %>
 
   <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
