@@ -375,7 +375,7 @@ class Answer < ApplicationRecord
 
     begin
       raw_date.present? && raw_date.is_a?(String) && Date.parse(raw_date)
-    rescue
+    rescue ActiveRecord::RecordInvalid
       errors.add(:date_value, :invalid_date)
     end
   end
@@ -385,7 +385,7 @@ class Answer < ApplicationRecord
 
     begin
       raw_date.present? && raw_date.is_a?(String) && Date.parse(raw_date)
-    rescue
+    rescue ActiveRecord::RecordInvalid
       errors.add(:datetime_value, :invalid_datetime)
     end
   end
