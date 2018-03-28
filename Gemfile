@@ -124,16 +124,19 @@ gem "phony", "~> 2.15.26"
 gem "acts_as_paranoid", "~> 0.5.0"
 
 # QR barcode
-gem 'rqrcode', '~> 0.10.1'
+gem "rqrcode", "~> 0.10.1"
 
 # DB triggers
-gem "hairtrigger", '~> 0.2.20'
+gem "hairtrigger", "~> 0.2.20"
 
 # error emails
 gem "exception_notification"
 
-#react
+# react
 gem "react-rails"
+
+# Closure tree for answer heirarchy
+gem "closure_tree"
 
 group :development do
   # generate diagrams with rake db:migrate

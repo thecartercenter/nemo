@@ -181,7 +181,7 @@ class XMLSubmission
     if @existing_response
       Answer.find_or_initialize_by(answer_params)
     else
-      Answer.new(answer_params)
+      Answer.new(answer_params, type: "Answer")
     end
   end
 end

@@ -1,4 +1,6 @@
-# An Answer is a single piece of data in response to a single question or sub-question.
+# frozen_string_literal: true
+
+# TODO: update: An Answer is a single piece of data in response to a single question or sub-question.
 #
 # A note about rank/inst_num attributes
 #
@@ -19,7 +21,7 @@ class Answer < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
-  LOCATION_ATTRIBS = %i(latitude longitude altitude accuracy)
+  LOCATION_ATTRIBS = %i[latitude longitude altitude accuracy]
 
   acts_as_paranoid
 
@@ -30,6 +32,10 @@ class Answer < ApplicationRecord
 
   attr_accessor :location_values_replicated
 
+  has_closure_tree(dependent: :destroy)
+  # TODO: add ordering using rank? or add ordering column that is populated based on form item rank?
+  # TODO: we might want to add touch since the trees aren't very deep
+
   belongs_to :questioning, inverse_of: :answers
   belongs_to :option, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
@@ -38,6 +44,7 @@ class Answer < ApplicationRecord
   has_one :media_object, dependent: :destroy, inverse_of: :answer, autosave: true, class_name: "Media::Object"
 
   before_validation :replicate_location_values
+  before_save :default_answer_type
   before_save :replicate_location_values # Doing this twice on purpose, see below.
   before_save :chop_decimals
   before_save :format_location_value
@@ -285,6 +292,10 @@ class Answer < ApplicationRecord
       self.longitude = choice.longitude
     end
     true
+  end
+
+  def default_answer_type
+    self.type = "Answer" unless self.type.present?
   end
 
   # We sometimes save decimals without validating, so we need to be careful

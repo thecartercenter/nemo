@@ -26,7 +26,7 @@ module ResponseFactoryHelper
     end.flatten
   end
 
-  def self.build_answer(qing, value, inst_num)
+  def self.build_answer(qing, value, inst_num, type="Answer")
     answers = case qing.qtype_name
     when "select_one"
       options_by_name = qing.all_options.index_by(&:name)
@@ -35,7 +35,8 @@ module ResponseFactoryHelper
         Answer.new(
           questioning: qing,
           rank: i + 1,
-          option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'")
+          option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'"),
+          type: type
         )
       end.shuffle
 
@@ -44,17 +45,18 @@ module ResponseFactoryHelper
       options_by_name = qing.options.index_by(&:name)
       raise "expecting array answer value for question #{qing.code}, got #{value.inspect}" unless value.is_a?(Array)
       Answer.new(
+        type: type,
         questioning: qing,
         choices:
           value.map { |c| Choice.new(option: options_by_name[c]) or raise "could not find option with name '#{c}'" }
       )
 
     when "date", "time", "datetime"
-      Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value)
+      Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value, type: type)
     when "image", "annotated_image", "signature", "sketch", "audio", "video"
-      Answer.new(questioning: qing, media_object: value)
+      Answer.new(questioning: qing, media_object: value, type: type)
     else
-      Answer.new(questioning: qing, value: value)
+      Answer.new(questioning: qing, value: value, type: type)
     end
 
     answers = Array.wrap(answers)
