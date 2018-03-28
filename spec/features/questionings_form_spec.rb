@@ -34,6 +34,16 @@ describe "questionings form", js: true  do
         expect_visible("display_logic", true)
         expect_visible("skip_logic", true)
       end
+
+      it "should display default only if question type is defaultable" do
+        visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+        select "Select One", from: "questioning_question_attributes_qtype_name"
+        expect_editable("default", false)
+        select "Text", from: "Type" #text is defaultable
+        expect_editable("default", true)
+        select "Long Text", from: "Type"
+        expect_editable("default", false)
+      end
     end
 
     context "when published" do
