@@ -44,6 +44,17 @@ describe "questionings form", js: true  do
         select "Long Text", from: "Type"
         expect_editable("default", false)
       end
+
+      it "should display readonly only if default is not empty" do
+        visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+        select "Text", from: "Type" # Text is defaultable
+        expect_editable("read_only", false)
+        fill_in "Default Answer", with: "Test"
+        expect_editable("read_only", true)
+        fill_in "Default Answer", with: ""
+        page.execute_script '$("#questioning_default").trigger("keyup")'
+        expect_editable("read_only", false)
+      end
     end
 
     context "when published" do
