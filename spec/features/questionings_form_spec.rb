@@ -53,7 +53,7 @@ describe "questionings form", js: true  do
         visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
         select "Select One", from: "questioning_question_attributes_qtype_name"
         expect_editable("default", false)
-        select "Text", from: "Type" #text is defaultable
+        select "Text", from: "Type" # Text is defaultable
         expect_editable("default", true)
         select "Long Text", from: "Type"
         expect_editable("default", false)
