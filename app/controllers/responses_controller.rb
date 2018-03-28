@@ -299,9 +299,11 @@ class ResponsesController < ApplicationController
     # on the answers.
     permitted_answer_attribs = %w(id value option_id option_node_id questioning_id relevant rank
       time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i) time_value(6i)
+      datetime_value
       datetime_value(1i) datetime_value(2i) datetime_value(3i)
       datetime_value(4i) datetime_value(5i) datetime_value(6i)
-      date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy)
+      date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy
+      date_value)
 
     params[:response][:answers_attributes].each do |idx, attribs|
       permitted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
