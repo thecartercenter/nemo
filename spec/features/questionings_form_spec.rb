@@ -35,6 +35,20 @@ describe "questionings form", js: true  do
         expect_visible("skip_logic", true)
       end
 
+      it "should hide hidden option when metadata field has a value" do
+        visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+        select "Select One", from: "questioning_question_attributes_qtype_name"
+        expect_visible("hidden", true)
+        select "Date/Time", from: "Type"
+        expect_visible("hidden", true)
+        select "Form Start Time", from: "Metadata Type"
+        expect_visible("hidden", false)
+        within(:css, ".question_metadata_type") do
+          select "", from: "Metadata Type"
+        end
+        expect_visible("hidden", true)
+      end
+
       it "should display default only if question type is defaultable" do
         visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
         select "Select One", from: "questioning_question_attributes_qtype_name"
