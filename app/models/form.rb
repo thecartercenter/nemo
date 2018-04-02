@@ -272,15 +272,15 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
-  # efficiently gets the number of answers for the given questioning on this form
+  # efficiently gets the number of response_nodes for the given questioning on this form
   # returns zero if form is standard
   def qing_answer_count(qing)
     return 0 if is_standard?
 
     @answer_counts ||= Questioning.find_by_sql([%{
-      SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
+      SELECT form_items.id, COUNT(DISTINCT response_nodes.id) AS answer_count
       FROM form_items
-        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = form_items.id
+        LEFT OUTER JOIN response_nodes ON response_nodes.deleted_at IS NULL AND response_nodes.questioning_id = form_items.id
           AND form_items.type = 'Questioning'
       WHERE form_items.deleted_at IS NULL AND form_items.form_id = ?
       GROUP BY form_items.id

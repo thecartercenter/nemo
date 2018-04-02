@@ -110,6 +110,6 @@ class Report::AnswerTallyReport < Report::TallyReport
   end
 
   def filter_non_top_level_answers(rel)
-    rel.where('answers.rank IS NULL OR answers.rank = 1')
+    rel.where('response_nodes.rank IS NULL OR response_nodes.rank = 1')
   end
 end

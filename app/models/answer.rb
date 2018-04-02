@@ -21,6 +21,8 @@ class Answer < ApplicationRecord
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
+  self.table_name = "response_nodes"
+
   LOCATION_ATTRIBS = %i[latitude longitude altitude accuracy]
 
   acts_as_paranoid
@@ -93,16 +95,16 @@ class Answer < ApplicationRecord
 
     # return an AR relation
     joins(:response)
-      .joins(%{LEFT JOIN "choices" ON "choices"."answer_id" = "answers"."id"})
+      .joins(%{LEFT JOIN "choices" ON "choices"."response_node_id" = "response_nodes"."id"})
       .where(responses: response_conditions)
       .where(%{
-        ("answers"."latitude" IS NOT NULL AND "answers"."longitude" IS NOT NULL)
+        ("response_nodes"."latitude" IS NOT NULL AND "response_nodes"."longitude" IS NOT NULL)
         OR ("choices"."latitude" IS NOT NULL AND "choices"."longitude" IS NOT NULL)
       })
       .select(:response_id,
-        %{COALESCE("answers"."latitude", "choices"."latitude") AS "latitude",
-          COALESCE("answers"."longitude", "choices"."longitude") AS "longitude"})
-      .order(%{"answers"."response_id" DESC})
+        %{COALESCE("response_nodes"."latitude", "choices"."latitude") AS "latitude",
+          COALESCE("response_nodes"."longitude", "choices"."longitude") AS "longitude"})
+      .order(%{"response_nodes"."response_id" DESC})
       .paginate(page: 1, per_page: 1000)
   end
 
@@ -110,9 +112,9 @@ class Answer < ApplicationRecord
   def self.any_for_option_and_questionings?(option_id, questioning_ids)
     find_by_sql(["
       SELECT COUNT(*) AS count
-      FROM answers a
-        LEFT OUTER JOIN choices c ON c.deleted_at IS NULL AND c.answer_id = a.id
-      WHERE a.deleted_at IS NULL AND (a.option_id = ? OR c.option_id = ?) AND a.questioning_id IN (?)",
+      FROM response_nodes rn
+        LEFT OUTER JOIN choices c ON c.deleted_at IS NULL AND c.response_node_id = rn.id
+      WHERE rn.deleted_at IS NULL AND (rn.option_id = ? OR c.option_id = ?) AND rn.questioning_id IN (?)",
       option_id, option_id, questioning_ids]).first.count > 0
   end
 
@@ -238,7 +240,7 @@ class Answer < ApplicationRecord
     if id.nil?
       self.media_object = nil
     elsif media_object_id != id
-      self.media_object = Media::Object.find_by(id: id, answer_id: nil)
+      self.media_object = Media::Object.find_by(id: id, response_node_id: nil)
     end
   end
 

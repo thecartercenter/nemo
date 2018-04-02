@@ -23,7 +23,7 @@ class AnswerFinder
       where(response_id: responses.map(&:id)).
       where("form_items.question_id" => question.id).
       where("inst_num = 1").
-      where("answers.rank = 1").
+      where("response_nodes.rank = 1"). #TODO also filter by type
       index_by(&:response_id)
   end
 end

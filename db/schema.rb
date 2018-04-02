@@ -11,41 +11,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_309_195_347) do
+ActiveRecord::Schema.define(version: 20_180_330_160_337) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
-
-  create_table "answers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.decimal "accuracy", precision: 9, scale: 3
-    t.decimal "altitude", precision: 9, scale: 3
-    t.datetime "created_at"
-    t.date "date_value"
-    t.datetime "datetime_value"
-    t.datetime "deleted_at"
-    t.boolean "delta", default: true, null: false
-    t.integer "inst_num", default: 1, null: false
-    t.decimal "latitude", precision: 8, scale: 6
-    t.decimal "longitude", precision: 9, scale: 6
-    t.integer "old_id"
-    t.uuid "option_id"
-    t.integer "option_old_id"
-    t.uuid "questioning_id"
-    t.integer "questioning_old_id"
-    t.integer "rank", default: 1, null: false
-    t.uuid "response_id"
-    t.integer "response_old_id"
-    t.time "time_value"
-    t.tsvector "tsv"
-    t.datetime "updated_at"
-    t.text "value"
-  end
-
-  add_index "answers", ["deleted_at"], name: "index_answers_on_deleted_at", using: :btree
-  add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
-  add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
-  add_index "answers", %w[response_id questioning_id inst_num rank deleted_at], name: "answers_full", unique: true, using: :btree
-  add_index "answers", ["response_id"], name: "index_answers_on_response_id", using: :btree
 
   create_table "assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "created_at"
@@ -95,7 +64,6 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
   add_index "broadcasts", ["mission_id"], name: "index_broadcasts_on_mission_id", using: :btree
 
   create_table "choices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid "answer_id"
     t.integer "answer_old_id"
     t.datetime "created_at"
     t.datetime "deleted_at"
@@ -104,12 +72,13 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
     t.integer "old_id"
     t.uuid "option_id"
     t.integer "option_old_id"
+    t.uuid "response_node_id"
     t.datetime "updated_at"
   end
 
-  add_index "choices", ["answer_id"], name: "index_choices_on_answer_id", using: :btree
   add_index "choices", ["deleted_at"], name: "index_choices_on_deleted_at", using: :btree
   add_index "choices", ["option_id"], name: "index_choices_on_option_id", using: :btree
+  add_index "choices", ["response_node_id"], name: "index_choices_on_response_node_id", using: :btree
 
   create_table "conditions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid "conditionable_id", null: false
@@ -252,7 +221,6 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
   add_index "forms", ["root_id"], name: "index_forms_on_root_id", using: :btree
 
   create_table "media_objects", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
-    t.uuid "answer_id"
     t.integer "answer_old_id"
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
@@ -261,12 +229,13 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
     t.integer "item_file_size"
     t.datetime "item_updated_at"
     t.integer "old_id"
+    t.uuid "response_node_id"
     t.string "token", limit: 255
     t.string "type", limit: 255
     t.datetime "updated_at", null: false
   end
 
-  add_index "media_objects", ["answer_id"], name: "index_media_objects_on_answer_id", using: :btree
+  add_index "media_objects", ["response_node_id"], name: "index_media_objects_on_response_node_id", using: :btree
 
   create_table "missions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string "compact_name", limit: 255
@@ -478,6 +447,48 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
   add_index "report_reports", ["form_id"], name: "index_report_reports_on_form_id", using: :btree
   add_index "report_reports", ["mission_id"], name: "index_report_reports_on_mission_id", using: :btree
   add_index "report_reports", ["view_count"], name: "index_report_reports_on_view_count", using: :btree
+
+  create_table "response_node_hierarchies", id: false, force: :cascade do |t|
+    t.uuid "ancestor_id", null: false
+    t.uuid "descendant_id", null: false
+    t.integer "generations", null: false
+  end
+
+  add_index "response_node_hierarchies", %w[ancestor_id descendant_id generations], name: "answer_anc_desc_idx", unique: true, using: :btree
+  add_index "response_node_hierarchies", ["descendant_id"], name: "answer_desc_idx", using: :btree
+
+  create_table "response_nodes", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+    t.decimal "accuracy", precision: 9, scale: 3
+    t.decimal "altitude", precision: 9, scale: 3
+    t.datetime "created_at"
+    t.date "date_value"
+    t.datetime "datetime_value"
+    t.datetime "deleted_at"
+    t.boolean "delta", default: true, null: false
+    t.integer "inst_num", default: 1, null: false
+    t.decimal "latitude", precision: 8, scale: 6
+    t.decimal "longitude", precision: 9, scale: 6
+    t.integer "old_id"
+    t.uuid "option_id"
+    t.integer "option_old_id"
+    t.uuid "parent_id"
+    t.uuid "questioning_id"
+    t.integer "questioning_old_id"
+    t.integer "rank", default: 1, null: false
+    t.uuid "response_id"
+    t.integer "response_old_id"
+    t.time "time_value"
+    t.tsvector "tsv"
+    t.string "type", null: false
+    t.datetime "updated_at"
+    t.text "value"
+  end
+
+  add_index "response_nodes", ["deleted_at"], name: "index_response_nodes_on_deleted_at", using: :btree
+  add_index "response_nodes", ["option_id"], name: "index_response_nodes_on_option_id", using: :btree
+  add_index "response_nodes", ["questioning_id"], name: "index_response_nodes_on_questioning_id", using: :btree
+  add_index "response_nodes", %w[response_id questioning_id inst_num rank deleted_at], name: "answers_full", unique: true, using: :btree
+  add_index "response_nodes", ["response_id"], name: "index_response_nodes_on_response_id", using: :btree
 
   create_table "responses", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "checked_out_at"
@@ -709,15 +720,12 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
   add_index "whitelistings", ["user_id"], name: "index_whitelistings_on_user_id", using: :btree
   add_index "whitelistings", ["whitelistable_id"], name: "index_whitelistings_on_whitelistable_id", using: :btree
 
-  add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "answers", "options", name: "answers_option_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "answers", "responses", name: "answers_response_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "assignments", "missions", name: "assignments_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "assignments", "users", name: "assignments_user_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "broadcast_addressings", "broadcasts", name: "broadcast_addressings_broadcast_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "options", name: "choices_option_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "choices", "response_nodes", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
@@ -730,7 +738,7 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
   add_foreign_key "forms", "form_versions", column: "current_version_id", name: "forms_current_version_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_original_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "media_objects", "answers", name: "media_objects_answer_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "media_objects", "response_nodes", name: "media_objects_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "operations", "users", column: "creator_id", name: "operations_creator_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_original_id_fkey", on_update: :restrict, on_delete: :nullify
@@ -751,6 +759,9 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
   add_foreign_key "report_reports", "forms", name: "report_reports_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "report_reports", "missions", name: "report_reports_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "report_reports", "users", column: "creator_id", name: "report_reports_creator_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "response_nodes", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "response_nodes", "options", name: "answers_option_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "response_nodes", "responses", name: "answers_response_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "responses", "forms", name: "responses_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "responses", "missions", name: "responses_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "responses", "users", column: "checked_out_by_id", name: "responses_checked_out_by_id_fkey", on_update: :restrict, on_delete: :restrict
@@ -771,9 +782,4 @@ ActiveRecord::Schema.define(version: 20_180_309_195_347) do
   add_foreign_key "user_groups", "missions", name: "user_groups_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "users", "missions", column: "last_mission_id", name: "users_last_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "whitelistings", "users", name: "whitelistings_user_id_fkey", on_update: :restrict, on_delete: :restrict
-  create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
-    .on("answers")
-    .before(:insert, :update) do
-    "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
-  end
 end
