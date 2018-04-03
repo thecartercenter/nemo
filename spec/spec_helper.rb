@@ -1,16 +1,18 @@
+# frozen_string_literal: true
+
 # This file is copied to spec/ when you run 'rails generate rspec:install'
-ENV["RAILS_ENV"] ||= 'test'
+ENV["RAILS_ENV"] ||= "test"
 require File.expand_path("../../config/environment", __FILE__)
-require 'rspec/rails'
-require 'rspec/collection_matchers'
+require "rspec/rails"
+require "rspec/collection_matchers"
 
 # Add this to load Capybara integration:
-require 'capybara/rspec'
-require 'capybara/rails'
-require 'selenium-webdriver'
-require 'capybara-screenshot/rspec'
-require 'paperclip/matchers'
-require 'cancan/matchers'
+require "capybara/rspec"
+require "capybara/rails"
+require "selenium-webdriver"
+require "capybara-screenshot/rspec"
+require "paperclip/matchers"
+require "cancan/matchers"
 
 Capybara.register_driver :selenium_chrome_headless do |app|
   options = Selenium::WebDriver::Chrome::Options.new(
@@ -32,7 +34,7 @@ end
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
-Dir[Rails.root.join("spec/support/**/*.rb")].each {|f| require f}
+Dir[Rails.root.join("spec", "support", "**", "*.rb")].each { |f| require f }
 
 RSpec.configure do |config|
   # persist example status
@@ -66,11 +68,9 @@ RSpec.configure do |config|
 
   config.include AssertDifference
   config.include GeneralSpecHelpers
-  config.include MediaSpecHelpers::FileHandling
   config.include ModelSpecHelpers, type: :model
   config.include RequestSpecHelpers, type: :request
   config.include FeatureSpecHelpers, type: :feature
-  config.include AssertSelectRoot, type: :request
   config.include Paperclip::Shoulda::Matchers
 
   config.before(:suite) do

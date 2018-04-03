@@ -1,4 +1,6 @@
-require 'support/media_spec_helpers'
+# frozen_string_literal: true
+
+require "support/helpers/general_spec_helpers"
 
 RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
@@ -9,5 +11,6 @@ RSpec.configure do |config|
 end
 
 if defined? FactoryGirl
-  FactoryGirl::SyntaxRunner.send(:include, MediaSpecHelpers::FileHandling)
+  # Some of these helpers are useful in factories.
+  FactoryGirl::SyntaxRunner.send(:include, GeneralSpecHelpers)
 end

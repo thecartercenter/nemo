@@ -1,4 +1,4 @@
-require File.expand_path("../../../spec/support/option_node_support", __FILE__)
+require File.expand_path("../../../spec/support/contexts/option_node_support", __FILE__)
 
 namespace :db do
   desc "Create fake data for manual testing purposes."

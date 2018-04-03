@@ -1,4 +1,4 @@
-module IncomingSmsSupport
+shared_context "incoming sms" do
   # helper that sets up a new form with the given parameters
   def setup_form(options)
     mission = options[:mission].present? ? options[:mission] : get_mission
@@ -102,7 +102,6 @@ module IncomingSmsSupport
     # do the get/post/whatever request
     send(params[:method], params[:url], req_params, req_env)
   end
-
 
   def expect_no_messages_delivered_through_adapter
     expect(configatron.outgoing_sms_adapter.deliveries.size).to eq(0)

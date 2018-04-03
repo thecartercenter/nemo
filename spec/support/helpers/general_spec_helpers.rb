@@ -13,6 +13,11 @@ module GeneralSpecHelpers
   def expectation_file(filename)
     File.read(Rails.root.join("spec", "expectations", filename))
   end
+  
+  def media_fixture(name)
+    path = Rails.root.join("spec/fixtures/media/#{name}")
+    File.open(path)
+  end
 
   # `substitutions` should be a hash of arrays.
   # For each hash pair, e.g. `grp: groups_ids`, the method substitutes

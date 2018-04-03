@@ -100,63 +100,33 @@ module FeatureSpecHelpers
     expect(page).to have_selector(modal_selector, visible: false)
   end
 
-  shared_examples :form_logic do
-    def select_question(code)
-      find('select[name*="\\[ref_qing_id\\]"]').select(code)
-      wait_for_ajax # Changing the question triggers an ajax call (for now)
-    end
-
-    def expect_selected_question(qing)
-      select = find('select[name*="\\[ref_qing_id\\]"]')
-      expect(page).to have_select(select[:name], selected: "#{qing.full_dotted_rank}. #{qing.code}")
-    end
-
-    def select_operator(op)
-      find('select[name*="\\[op\\]"]').select(op)
-    end
-
-    def expect_selected_operator(op)
-      select = find('select[name*="\\[op\\]"]')
-      expect(page).to have_select(select[:name], selected: op)
-    end
-
-    def select_values(*values)
-      selects = all('select[name*="\\[option_node_ids\\]"]')
-      values.each_with_index do |value, i|
-        selects[i].select(value)
-      end
-    end
-
-    def expect_selected_values(*values)
-      selects = all('select[name*="\\[option_node_ids\\]"]')
-      expect(selects.size).to eq values.size
-      selects.each_with_index do |select, i|
-        expect(page).to have_select(select[:name], selected: values[i])
-      end
-    end
-
-    def fill_in_value(value)
-      find('input[name*="\\[value\\]"]').set(value)
-    end
-
-    def expect_filled_in_value(value)
-      input = find('input[name*="\\[value\\]"]')
-      expect(page).to have_field(input[:name], with: value)
-    end
-
-    def click_add_condition
-      find("a", text: "Add Condition").click
-    end
-
-    def click_add_rule
-      find("a", text: "Add Rule").click
-    end
-
-    def click_delete_link
-      find(".fa-close", match: :first).click
+  def wait_for_ajax
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until finished_all_ajax_requests?
     end
   end
 
+  def finished_all_ajax_requests?
+    page.evaluate_script('jQuery.active').zero?
+  end
+
+  def select2(value, options = {})
+    # invoke the select2 open action via JS
+    execute_script("$('##{options[:from]}').select2('open')")
+
+    # get the $results element from the Select2 data structure
+    results_id = evaluate_script("$('##{options[:from]}').data('select2').$results.attr('id')")
+    expect(results_id).to be_present
+
+    # find the results element
+    results = find_by(id: results_id)
+
+    results.find("li", text: /\A#{value}\z/).click
+
+    # assert that the original select field was updated with the intended value
+    select(value, options)
+  end
+  
   private
 
   def wait_for_ckeditor(locator)

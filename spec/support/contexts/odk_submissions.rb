@@ -1,6 +1,4 @@
-module ODKSubmissionSupport
-  ODK_XML_FILE = "odk_xml_file.xml"
-
+shared_context "odk submissions" do
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)
     if xml.nil?
@@ -11,7 +9,7 @@ module ODKSubmissionSupport
 
     # write xml to file
     require "fileutils"
-    fixture_file = Rails.root.join(Rails.root, "tmp", ODK_XML_FILE)
+    fixture_file = Rails.root.join(Rails.root, "tmp", "odk_xml_file.xml")
     File.open(fixture_file.to_s, "w") { |f| f.write(xml) }
 
     # Upload and do request.

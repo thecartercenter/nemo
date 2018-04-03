@@ -2,7 +2,7 @@ require "spec_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe "odk submissions", :odk, type: :request do
-  include ODKSubmissionSupport
+  include_context "odk submissions"
 
   before do
     allow_forgery_protection true
