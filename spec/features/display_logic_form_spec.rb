@@ -11,108 +11,66 @@ feature "display conditions form", js: true do
       is_standard: is_standard)
   end
 
-  include_examples :form_logic do
-    subject { form }
+  include_context "conditional logic forms"
+
+  shared_examples_for "correct behavior" do
+    before do
+      login(user)
+      visit("#{url_prefix}/forms/#{form.id}/edit")
+      expect(page).to have_content("Edit Form")
+    end
+
+    scenario "add a new question with multiple conditions" do
+      when_new_question_is_created
+      with_multiple_conditions
+      visit("#{url_prefix}/questionings/#{form.c[4].id}/edit")
+      then_conditions_are_persisted
+    end
+
+    context "with existing conditions" do
+      before do
+        add_existing_conditions
+      end
+
+      scenario "edit conditions on an existing question" do
+        all("a.action_link.edit")[3].click
+
+        when_conditions_are_deleted
+        and_then_edited
+
+        # View and check saved properly.
+        visit("#{url_prefix}/questionings/#{form.c[3].id}/edit")
+        then_changes_are_persisted
+
+        # Display always removes condition fields
+        visit("#{url_prefix}/questionings/#{form.c[3].id}/edit")
+        select("Always display this question", from: "Display Logic")
+        click_on "Save"
+        visit("#{url_prefix}/questionings/#{form.c[3].id}/edit")
+        expect(page).to have_select("questioning_display_logic",
+          selected: "Always display this question")
+        expect(page).not_to have_css(".condition-fields")
+      end
+
+      scenario "read-only mode" do
+        visit("#{url_prefix}/questionings/#{form.c[3].id}")
+        expect(page).to have_content("Display this question if any of these conditions are met "\
+        "Question #1 #{form.c[0].code} is greater than or equal to 64 "\
+        "Question #3 #{form.c[2].code} is equal to \"Cat\"")
+      end
+    end
   end
 
   context "regular mode" do
     let(:is_standard) { false }
-
-    before do
-      login(user)
-      visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
-      expect(page).to have_content("Edit Form")
-    end
-
-    scenario "add a new question with multiple conditions" do
-      when_new_question_is_created
-      with_multiple_conditions
-      visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[4].id}/edit")
-      then_conditions_are_persisted
-    end
-
-    context "with existing conditions" do
-      before do
-        add_existing_conditions
-      end
-
-      scenario "edit conditions on an existing question" do
-        all("a.action_link.edit")[3].click
-
-        when_conditions_are_deleted
-        and_then_edited
-
-        # View and check saved properly.
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}/edit")
-        then_changes_are_persisted
-
-        # Display always removes condition fields
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}/edit")
-        select("Always display this question", from: "Display Logic")
-        click_on "Save"
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}/edit")
-        expect(page).to have_select("questioning_display_logic",
-          selected: "Always display this question")
-        expect(page).not_to have_css(".condition-fields")
-      end
-
-      scenario "read-only mode" do
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[3].id}")
-        expect(page).to have_content("Display this question if any of these conditions are met "\
-        "Question #1 #{form.c[0].code} is greater than or equal to 64 "\
-        "Question #3 #{form.c[2].code} is equal to \"Cat\"")
-      end
-    end
+    let(:url_prefix) { "/en/m/#{form.mission.compact_name}" }
+    include_examples "correct behavior"
   end
 
   context "admin mode" do
     let(:is_standard) { true }
-
-    before do
-      login(user)
-      visit(edit_form_path(form, locale: "en", mode: "admin", mission_name: nil))
-      expect(page).to have_content("Edit Form")
-    end
-
-    scenario "add a new question with multiple conditions" do
-      when_new_question_is_created
-      with_multiple_conditions
-      visit("/en/admin/questionings/#{form.c[4].id}/edit")
-      then_conditions_are_persisted
-    end
-
-    context "with existing conditions" do
-      before do
-        add_existing_conditions
-      end
-
-      scenario "edit conditions on an existing question" do
-        all("a.action_link.edit")[3].click
-
-        when_conditions_are_deleted
-        and_then_edited
-
-        # View and check saved properly.
-        visit("/en/admin/questionings/#{form.c[3].id}/edit")
-        then_changes_are_persisted
-
-        # Display always removes condition fields
-        visit("/en/admin/questionings/#{form.c[3].id}/edit")
-        select("Always display this question", from: "Display Logic")
-        click_on "Save"
-        visit("/en/admin/questionings/#{form.c[3].id}/edit")
-        expect(page).to have_select("questioning_display_logic",
-          selected: "Always display this question")
-        expect(page).not_to have_css(".condition-fields")
-      end
-
-      scenario "read-only mode" do
-        visit("/en/admin/questionings/#{form.c[3].id}")
-        expect(page).to have_content("Display this question if any of these conditions are met "\
-        "Question #1 #{form.c[0].code} is greater than or equal to 64 "\
-        "Question #3 #{form.c[2].code} is equal to \"Cat\"")
-      end
-    end
+    let(:url_prefix) { "/en/admin" }
+    include_examples "correct behavior"
   end
 
   def when_new_question_is_created
