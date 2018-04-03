@@ -3,40 +3,34 @@
 require "spec_helper"
 
 feature "skip rule form", js: true do
-  let!(:user) { create(:user) }
+  let!(:user) { create(:admin) }
+  let(:form) do
+    create(:form,
+      name: "Foo",
+      question_types: %w[integer integer integer integer integer],
+      is_standard: is_standard)
+  end
+  let(:dest_qing_str) { dest_qing_str }
+  let(:first_cond_str) { first_cond_str }
+  let(:second_cond_str) { second_cond_str }
+
+  include_context "conditional logic forms"
 
   before do
     login(user)
+    form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
+                                 conditions_attributes: [
+                                   {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                   {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                 ])
+    form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "all_met",
+                                 conditions_attributes: [
+                                   {ref_qing_id: form.c[0].id, op: "eq", value: "25"},
+                                   {ref_qing_id: form.c[1].id, op: "neq", value: "20"}
+                                 ])
   end
 
-  context do
-    let(:form) do
-      create(:form,
-        name: "Foo",
-        question_types: %w[integer integer integer integer integer])
-    end
-
-    let(:dest_qing_str) { dest_qing_str }
-    let(:first_cond_str) { first_cond_str }
-    let(:second_cond_str) { second_cond_str }
-
-    include_examples :form_logic do
-      subject { form }
-    end
-
-    before do
-      form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
-        conditions_attributes: [
-          {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-          {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
-        ])
-      form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "all_met",
-        conditions_attributes: [
-          {ref_qing_id: form.c[0].id, op: "eq", value: "25"},
-          {ref_qing_id: form.c[1].id, op: "neq", value: "20"}
-        ])
-    end
-
+  shared_examples_for "correct behavior" do
     context "with existing skip rule" do
       let(:dest_qing_str) { "Question ##{form.c[4].full_dotted_rank} #{form.c[4].code}" }
       let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} #{form.c[0].code} is equal to 5" }
@@ -44,16 +38,16 @@ feature "skip rule form", js: true do
 
       scenario "read-only mode" do
         expected = "Skip to #{dest_qing_str} if any of these conditions are met "\
-        "#{first_cond_str} "\
-        "#{second_cond_str}"
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}")
+          "#{first_cond_str} "\
+          "#{second_cond_str}"
+        visit("#{url_prefix}/questionings/#{form.c[2].id}")
         expect(page).to have_content(expected)
       end
     end
 
     context "new questioning" do
       scenario "add multiple skip rules" do
-        visit edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name)
+        visit("#{url_prefix}/forms/#{form.id}/edit")
         click_on "Add Questions"
 
         fill_in("Code", with: "QueueMe")
@@ -97,7 +91,7 @@ feature "skip rule form", js: true do
         expect(page).to have_content("Jay's Question")
 
         # revisit questioning
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[5].id}/edit")
+        visit("#{url_prefix}/questionings/#{form.c[5].id}/edit")
 
         # data is persisted
         expect(all(".condition-fields").size).to eq 1
@@ -116,7 +110,7 @@ feature "skip rule form", js: true do
       let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} #{form.c[1].code} is equal to 10" }
 
       scenario "rules are updated correctly" do
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}/edit")
+        visit("#{url_prefix}/questionings/#{form.c[2].id}/edit")
 
         # edit first rule
         within(all(".skip-rule")[0]) do
@@ -135,16 +129,16 @@ feature "skip rule form", js: true do
 
         click_on "Save"
 
-        rule_2 = "Skip to #{dest_qing_str} if all of these conditions are met "\
-        "#{first_cond_str} "\
-        "#{second_cond_str}"
+        rule2 = "Skip to #{dest_qing_str} if all of these conditions are met "\
+          "#{first_cond_str} "\
+          "#{second_cond_str}"
 
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}")
-        expect(page).to have_content(rule_2)
+        visit("#{url_prefix}/questionings/#{form.c[2].id}")
+        expect(page).to have_content(rule2)
       end
 
       scenario "delete existing condition if rule is set to always" do
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}/edit")
+        visit("#{url_prefix}/questionings/#{form.c[2].id}/edit")
 
         # confirm that data is available on visit
         expect(page).to have_css(".condition-fields")
@@ -164,11 +158,10 @@ feature "skip rule form", js: true do
         within(all(".skip-rule")[1]) do
           expect(all(".condition-fields").size).to eq 2
         end
-
       end
 
       scenario "delete existing rule if skip is set to always" do
-        visit("/en/m/#{form.mission.compact_name}/questionings/#{form.c[2].id}/edit")
+        visit("#{url_prefix}/questionings/#{form.c[2].id}/edit")
 
         # confirm that data is available on visit
         expect(page).to have_css(".condition-fields")
@@ -185,5 +178,17 @@ feature "skip rule form", js: true do
           selected: "After this question, skip ...")
       end
     end
+  end
+
+  context "regular mode" do
+    let(:is_standard) { false }
+    let(:url_prefix) { "/en/m/#{form.mission.compact_name}" }
+    include_examples "correct behavior"
+  end
+
+  context "admin mode" do
+    let(:is_standard) { true }
+    let(:url_prefix) { "/en/admin" }
+    include_examples "correct behavior"
   end
 end
