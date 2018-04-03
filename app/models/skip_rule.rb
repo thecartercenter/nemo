@@ -1,12 +1,18 @@
+# frozen_string_literal: true
+
 class SkipRule < ActiveRecord::Base
-  include MissionBased, Replication::Replicable
+  include Replication::Replicable
+  include MissionBased
 
   acts_as_paranoid
+
+  # SkipRule ranks are currently not editable, but they provide a source of deterministic ordering
+  # which is useful in tests and in UI consistency.
   acts_as_list column: :rank, scope: [:source_item_id, deleted_at: nil]
 
   belongs_to :source_item, class_name: "FormItem", inverse_of: :skip_rules
   belongs_to :dest_item, class_name: "FormItem"
-  has_many :conditions, -> { by_ref_qing_rank }, as: :conditionable, dependent: :destroy
+  has_many :conditions, -> { by_rank }, as: :conditionable, dependent: :destroy
 
   before_validation :set_foreign_key_on_conditions
   before_validation :normalize
@@ -15,16 +21,19 @@ class SkipRule < ActiveRecord::Base
   validate :require_dest_item
   validate :collect_condition_errors
 
+  scope :by_rank, -> { order(:rank) }
+
   delegate :form, :form_id, :refable_qings, to: :source_item
 
   accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
-  replicable child_assocs: [:conditions], dont_copy: [:source_item_id, :dest_item_id],
-    backward_assocs: [
-      :source_item,
-      # This is a second pass association because the dest_item won't have been copied yet on the 1st pass.
-      {name: :dest_item, second_pass: true}
-    ]
+  replicable child_assocs: [:conditions], dont_copy: %i[source_item_id dest_item_id],
+             backward_assocs: [
+               :source_item,
+               # This is a second pass association because the
+               # dest_item won't have been copied yet on the 1st pass.
+               {name: :dest_item, second_pass: true}
+             ]
 
   def all_fields_blank?
     destination.blank? && dest_item.blank? && conditions.all?(&:all_fields_blank?)
@@ -59,17 +68,13 @@ class SkipRule < ActiveRecord::Base
   end
 
   def require_dest_item
-    if destination != "end" && dest_item.nil?
-      errors.add(:dest_item_id, :blank_unless_goto_end)
-    end
+    errors.add(:dest_item_id, :blank_unless_goto_end) if destination != "end" && dest_item.nil?
   end
 
   # If there is a validation error on the conditions, we know it has to be due
   # to a missing field. This is easier to catch here instead of React for now.
   def collect_condition_errors
-    if conditions.any?(&:invalid?)
-      errors.add(:base, :all_required)
-    end
+    errors.add(:base, :all_required) if conditions.any?(&:invalid?)
   end
 
   def set_mission
