@@ -71,6 +71,14 @@ As part of an effort to clean up old code, you should try to resolve any linter 
 
 Most code editors have plugins for linting. They will identify and let you click directly into problematic lines. You are encouraged to try one out!
 
+For Atom, install the `linter` package which contains shared stuff, then:
+
+* `linter-eslint`
+    * For this one, set your Global Node Installation Path and check the 'Use global ESLint installtion' box.
+* `linter-coffeelint`
+* `linter-rubocop`
+* `linter-scss-lint`
+
 ### Running the App
 
 1. **Retrieve project files using Git**
