@@ -1,8 +1,7 @@
 require "spec_helper"
-require "support/media_spec_helpers"
 
 describe "odk media submissions", :odk, :reset_factory_sequences, type: :request do
-  include ODKSubmissionSupport
+  include_context "odk submissions"
 
   let(:user) { create(:user, role_name: "enumerator") }
   let(:form) { create(:form, :published, :with_version, question_types: %w(text image)) }

@@ -253,7 +253,11 @@ class FormsController < ApplicationController
     def prepare_and_render_form
       # We need this array only when in mission mode since it's for the API permissions which are not
       # shown in admin mode.
-      @users = User.assigned_to(current_mission).by_name unless admin_mode?
+      if admin_mode?
+        @form.is_standard = true
+      else
+        @users = User.assigned_to(current_mission).by_name
+      end
       render(:form)
     end
 

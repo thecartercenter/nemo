@@ -100,6 +100,33 @@ module FeatureSpecHelpers
     expect(page).to have_selector(modal_selector, visible: false)
   end
 
+  def wait_for_ajax
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until finished_all_ajax_requests?
+    end
+  end
+
+  def finished_all_ajax_requests?
+    page.evaluate_script('jQuery.active').zero?
+  end
+
+  def select2(value, options = {})
+    # invoke the select2 open action via JS
+    execute_script("$('##{options[:from]}').select2('open')")
+
+    # get the $results element from the Select2 data structure
+    results_id = evaluate_script("$('##{options[:from]}').data('select2').$results.attr('id')")
+    expect(results_id).to be_present
+
+    # find the results element
+    results = find("##{results_id}")
+
+    results.find("li", text: /\A#{value}\z/).click
+
+    # assert that the original select field was updated with the intended value
+    select(value, options)
+  end
+
   private
 
   def wait_for_ckeditor(locator)

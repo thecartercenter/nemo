@@ -1,7 +1,12 @@
-class FormItem < ApplicationRecord
-  include MissionBased, FormVersionable, Replication::Replicable, TreeTraverseable
+# frozen_string_literal: true
 
-  DISPLAY_IF_OPTIONS = %i(always all_met any_met)
+class FormItem < ApplicationRecord
+  include TreeTraverseable
+  include Replication::Replicable
+  include FormVersionable
+  include MissionBased
+
+  DISPLAY_IF_OPTIONS = %i[always all_met any_met].freeze
 
   acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
@@ -16,15 +21,13 @@ class FormItem < ApplicationRecord
   belongs_to :form
   has_many :answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
   has_many :standard_form_reports, class_name: "Report::StandardFormReport",
-    foreign_key: :disagg_qing_id, dependent: :nullify
-
-  # These associations have qing in their foreign keys but we have them here in FormItem instead
-  # because we will eventually support conditions on groups.
-  has_many :display_conditions, -> { by_ref_qing_rank }, as: :conditionable,
-    class_name: "Condition", dependent: :destroy
+                                   foreign_key: :disagg_qing_id, dependent: :nullify
+  has_many :display_conditions, -> { by_rank },
+    as: :conditionable, class_name: "Condition", dependent: :destroy
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
-    dependent: :destroy, inverse_of: :ref_qing
-  has_many :skip_rules, foreign_key: :source_item_id, inverse_of: :source_item, dependent: :destroy
+                                  dependent: :destroy, inverse_of: :ref_qing
+  has_many :skip_rules, -> { by_rank },
+    foreign_key: :source_item_id, inverse_of: :source_item, dependent: :destroy
 
   before_validation :normalize
 
@@ -39,8 +42,8 @@ class FormItem < ApplicationRecord
   delegate :condition_computer, to: :form
   delegate :name, to: :form, prefix: true
 
-  replicable child_assocs: [:question, :display_conditions, :skip_rules, :children],
-    backward_assocs: :form, dont_copy: [:hidden, :form_id, :question_id]
+  replicable child_assocs: %i[question display_conditions skip_rules children],
+             backward_assocs: :form, dont_copy: %i[hidden form_id question_id]
 
   accepts_nested_attributes_for :display_conditions, allow_destroy: true
   accepts_nested_attributes_for :skip_rules, allow_destroy: true
@@ -93,7 +96,7 @@ class FormItem < ApplicationRecord
   # * This item itself is not included in the hash.
   # * If an item points to an empty hash, it is a leaf node.
   def arrange_descendants
-    sort = '(case when ancestry is null then 0 else 1 end), ancestry, rank'
+    sort = "(case when ancestry is null then 0 else 1 end), ancestry, rank"
     # We eager load questions and option sets since they are likely to be needed.
     nodes = subtree.includes(question: {option_set: :root_node}).order(sort).to_a
     with_self = self.class.arrange_nodes(nodes)
@@ -151,7 +154,7 @@ class FormItem < ApplicationRecord
 
   # Returns the full rank joined with a period separator, e.g. 2.5.
   def full_dotted_rank
-    @full_dotted_rank ||= full_rank.join('.')
+    @full_dotted_rank ||= full_rank.join(".")
   end
 
   # Moves item to new rank and parent.
@@ -234,12 +237,8 @@ class FormItem < ApplicationRecord
   # If there is a validation error on display logic or skip logic, we know it has to be due
   # to a missing field. This is easier to catch here instead of React for now.
   def collect_conditional_logic_errors
-    if display_conditions.any?(&:invalid?)
-      errors.add(:display_logic, :all_required)
-    end
+    errors.add(:display_logic, :all_required) if display_conditions.any?(&:invalid?)
 
-    if skip_rules.any?(&:invalid?)
-      errors.add(:skip_logic, :all_required)
-    end
+    errors.add(:skip_logic, :all_required) if skip_rules.any?(&:invalid?)
   end
 end

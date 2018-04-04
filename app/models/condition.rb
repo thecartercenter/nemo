@@ -6,6 +6,10 @@ class Condition < ApplicationRecord
 
   acts_as_paranoid
 
+  # Condition ranks are currently not editable, but they provide a source of deterministic ordering
+  # which is useful in tests and in UI consistency.
+  acts_as_list column: :rank, scope: [:conditionable_id, deleted_at: nil]
+
   belongs_to :conditionable, polymorphic: true
   belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",
                         inverse_of: :referring_conditions
@@ -21,7 +25,7 @@ class Condition < ApplicationRecord
   delegate :form, :form_id, :refable_qings, to: :conditionable
 
   scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
-  scope :by_ref_qing_rank, -> { joins(:ref_qing).order("form_items.rank") }
+  scope :by_rank, -> { order(:rank) }
 
   OPERATOR_CODES = %i[eq lt gt leq geq neq inc ninc].freeze
 

@@ -1,7 +1,7 @@
 require "spec_helper"
 
 describe XMLSubmission, :odk do
-  include ODKSubmissionSupport
+  include_context "odk submissions"
 
   let(:xml) { build_odk_submission(form, data: data) }
   let(:files) { {xml_submission_file: StringIO.new(xml)} }

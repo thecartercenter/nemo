@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe 'twilio incoming sms', :sms do
-  include IncomingSmsSupport
+  include_context "incoming sms"
 
   before :all do
     @user = get_user
