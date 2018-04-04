@@ -44,7 +44,7 @@ shared_context "odk submissions" do
           if item.is_a? QingGroup
             # Iterate over repeat instances (if any)
             Array.wrap(data[item] || {}).each do |instance|
-              xml << "<grp#{item.id}>"
+              xml << "<grp#{item.id}><header/>"
               subitems.each do |subitem, _|
                 if instance[subitem]
                   xml << "<#{subitem.question.odk_code}>"
@@ -68,7 +68,7 @@ shared_context "odk submissions" do
         end
       end
 
-      xml << "<label-dummy></label-dummy></data>"
+      xml << "</data>"
     end
   end
 

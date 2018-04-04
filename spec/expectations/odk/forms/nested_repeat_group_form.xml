@@ -6,11 +6,11 @@
       <instance>
         <data id="*form1*" version="*formver1*">
           <*itemcode1* jr:template="">
-            <*itemcode1*-header/>
+            <header/>
             <*itemcode2*/>
             <*itemcode3*/>
             <*itemcode4* jr:template="">
-              <*itemcode4*-header/>
+              <header/>
               <*itemcode5*/>
               <*itemcode6*/>
             </*itemcode4*>
@@ -18,10 +18,9 @@
           </*itemcode1*>
           <*itemcode8*/>
           <*itemcode9* jr:template="">
-            <*itemcode9*-header/>
+            <header/>
             <*itemcode10*/>
           </*itemcode9*>
-          <label-dummy/>
         </data>
       </instance>
       <itext>
@@ -92,17 +91,17 @@
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode4*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode5*" type="int"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode6*" type="string" calculate="concat(../../*itemcode3*,'-',position(..))"/>
       <bind nodeset="/data/*itemcode1*/*itemcode7*" type="string"/>
       <bind nodeset="/data/*itemcode8*" type="string"/>
       <bind nodeset="/data/*itemcode9*"/>
-      <bind nodeset="/data/*itemcode9*/*itemcode9*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode9*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode9*/*itemcode10*" type="string" calculate="concat(indexed-repeat(/data/*itemcode1*/*itemcode3*,/data/*itemcode1*,1),'-',position(..))"/>
     </model>
   </h:head>
@@ -111,7 +110,7 @@
       <label ref="jr:itext('*itemcode1*:label')"/>
       <repeat nodeset="/data/*itemcode1*">
         <group>
-          <input ref="/data/*itemcode1*/*itemcode1*-header">
+          <input ref="/data/*itemcode1*/header">
             <hint ref="jr:itext('*itemcode1*:hint')"/>
           </input>
           <input ref="/data/*itemcode1*/*itemcode2*">
@@ -126,7 +125,7 @@
             <label ref="jr:itext('*itemcode4*:label')"/>
             <repeat nodeset="/data/*itemcode1*/*itemcode4*">
               <group appearance="field-list">
-                <input ref="/data/*itemcode1*/*itemcode4*/*itemcode4*-header">
+                <input ref="/data/*itemcode1*/*itemcode4*/header">
                   <hint ref="jr:itext('*itemcode4*:hint')"/>
                 </input>
                 <input ref="/data/*itemcode1*/*itemcode4*/*itemcode5*">
@@ -155,7 +154,7 @@
       <label ref="jr:itext('*itemcode9*:label')"/>
       <repeat nodeset="/data/*itemcode9*">
         <group appearance="field-list">
-          <input ref="/data/*itemcode9*/*itemcode9*-header">
+          <input ref="/data/*itemcode9*/header">
             <hint ref="jr:itext('*itemcode9*:hint')"/>
           </input>
           <input ref="/data/*itemcode9*/*itemcode10*">

@@ -3,16 +3,18 @@ module OdkHelper
   # calls the provided block to get the tag content
   def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
     opts ||= {}
-    opts[:ref] =
+    suffix =
       if label_row
-        # We need to bind to a dummy instance node here or, if the question is required,
+        # We can't bind to the question's node here or, if the question is required,
         # we won't be allowed to proceed since it won't be possible to fill in the question.
         # Also, this question will appear again in a regular row so it would be weird
         # to link it to the same instance node twice.
-        "/data/label-dummy"
+        # Instead we use the parent group's header node.
+        "header"
       else
-        [xpath_prefix, subq.try(:odk_code)].compact.join("/")
+        subq.try(:odk_code)
       end
+    opts[:ref] = [xpath_prefix, suffix].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     if !subq.first_rank? && subq.qtype.name == "select_one"
       opts[:query] = multilevel_option_nodeset_ref(qing, subq, group.try(:odk_code), xpath_prefix)
@@ -189,7 +191,7 @@ module OdkHelper
     if node.no_hint?
       "".html_safe
     else
-      content_tag(:input, ref: "#{xpath}/#{node.odk_code}-header") do
+      content_tag(:input, ref: "#{xpath}/header") do
         tag(:hint, ref: "jr:itext('#{node.odk_code}:hint')")
       end
     end
