@@ -1,4 +1,6 @@
-shared_context "conditional logic forms" do
+# frozen_string_literal: true
+
+shared_context "form design conditional logic" do
   def select_question(code)
     find('select[name*="\\[ref_qing_id\\]"]').select(code)
     wait_for_ajax # Changing the question triggers an ajax call (for now)

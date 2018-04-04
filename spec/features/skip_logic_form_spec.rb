@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-feature "skip rule form", js: true do
+feature "skip logic form fields", js: true do
   let!(:user) { create(:admin) }
   let(:form) do
     create(:form,
@@ -14,7 +14,7 @@ feature "skip rule form", js: true do
   let(:first_cond_str) { first_cond_str }
   let(:second_cond_str) { second_cond_str }
 
-  include_context "conditional logic forms"
+  include_context "form design conditional logic"
 
   before do
     login(user)

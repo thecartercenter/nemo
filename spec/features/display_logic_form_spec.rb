@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-feature "display conditions form", js: true do
+feature "display logic form fields", js: true do
   let!(:user) { create(:admin) }
   let!(:form) do
     create(:form,
@@ -11,7 +11,7 @@ feature "display conditions form", js: true do
       is_standard: is_standard)
   end
 
-  include_context "conditional logic forms"
+  include_context "form design conditional logic"
 
   shared_examples_for "correct behavior" do
     before do

@@ -66,7 +66,6 @@ RSpec.configure do |config|
   config.infer_spec_type_from_file_location!
 
   config.include AssertDifference
-  config.include AssertSelectRoot, type: :request
   config.include FeatureSpecHelpers, type: :feature
   config.include GeneralSpecHelpers
   config.include ModelSpecHelpers, type: :model
