@@ -1,5 +1,4 @@
 require "spec_helper"
-require "support/media_spec_helpers"
 
 describe "odk media submissions", :odk, :reset_factory_sequences, type: :request do
   include_context "odk submissions"
