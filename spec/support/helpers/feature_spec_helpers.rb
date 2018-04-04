@@ -119,14 +119,14 @@ module FeatureSpecHelpers
     expect(results_id).to be_present
 
     # find the results element
-    results = find_by(id: results_id)
+    results = find("##{results_id}")
 
     results.find("li", text: /\A#{value}\z/).click
 
     # assert that the original select field was updated with the intended value
     select(value, options)
   end
-  
+
   private
 
   def wait_for_ckeditor(locator)
