@@ -160,7 +160,7 @@ feature "skip rule form", js: true do
         end
       end
 
-      scenario "delete existing rule if skip is set to always" do
+      scenario "delete existing rule if question is set to not skip" do
         visit("#{url_prefix}/questionings/#{form.c[2].id}/edit")
 
         # confirm that data is available on visit
@@ -172,10 +172,7 @@ feature "skip rule form", js: true do
         # set skip to always
         select "After this question, go to the next question", from: "questioning_skip_logic"
 
-        expect(page).not_to have_css(".condition-fields")
-        expect(page).not_to have_content("= equals")
-        expect(page).not_to have_select("questioning_skip_logic",
-          selected: "After this question, skip ...")
+        expect(page).not_to have_css(".skip-rule-set")
       end
     end
   end
