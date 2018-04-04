@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 require "spec_helper"
 
-feature "conditions in responses", js: true do
-  include_context "conditional logic helpers"
+feature "response form display logic", js: true do
+  include_context "response form conditional logic"
 
   let(:user) { create(:user) }
   let(:form) { create(:form) }

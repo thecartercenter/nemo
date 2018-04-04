@@ -2,8 +2,8 @@
 
 require "spec_helper"
 
-feature "skip rules in responses", js: true do
-  include_context "conditional logic helpers"
+feature "response form skip logic", js: true do
+  include_context "response form conditional logic"
   let(:user) { create(:user) }
   let(:form) { create(:form) }
 

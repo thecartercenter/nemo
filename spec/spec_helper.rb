@@ -67,7 +67,6 @@ RSpec.configure do |config|
 
   config.include AssertDifference
   config.include AssertSelectRoot, type: :request
-  config.include ConditionalLogicHelpers, type: :feature
   config.include FeatureSpecHelpers, type: :feature
   config.include GeneralSpecHelpers
   config.include ModelSpecHelpers, type: :model
