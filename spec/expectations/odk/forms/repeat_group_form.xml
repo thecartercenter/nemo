@@ -6,22 +6,21 @@
       <instance>
         <data id="*form1*" version="*formver1*">
           <*itemcode1* jr:template="">
-            <*itemcode1*-header/>
+            <header/>
             <*itemcode2*/>
             <*itemcode3*/>
             <*itemcode4*/>
           </*itemcode1*>
           <*itemcode5*>
-            <*itemcode5*-header/>
+            <header/>
             <*itemcode6*/>
             <*itemcode7*/>
           </*itemcode5*>
           <*itemcode8* jr:template="">
-            <*itemcode8*-header/>
+            <header/>
             <*itemcode9*/>
             <*itemcode10*/>
           </*itemcode8*>
-          <label-dummy/>
         </data>
       </instance>
       <itext>
@@ -98,16 +97,16 @@
         </translation>
       </itext>
       <bind nodeset="/data/*itemcode1*"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode1*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode1*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*" type="string"/>
       <bind nodeset="/data/*itemcode5*"/>
-      <bind nodeset="/data/*itemcode5*/*itemcode5*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode5*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode5*/*itemcode6*" type="string"/>
       <bind nodeset="/data/*itemcode5*/*itemcode7*" type="string"/>
       <bind nodeset="/data/*itemcode8*"/>
-      <bind nodeset="/data/*itemcode8*/*itemcode8*-header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode8*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode8*/*itemcode9*" type="string"/>
       <bind nodeset="/data/*itemcode8*/*itemcode10*" type="string"/>
     </model>
@@ -118,7 +117,7 @@
       <repeat nodeset="/data/*itemcode1*">
         <group appearance="field-list">
           <label ref="jr:itext('*itemcode1*:itemname')"/>
-          <input ref="/data/*itemcode1*/*itemcode1*-header">
+          <input ref="/data/*itemcode1*/header">
             <hint ref="jr:itext('*itemcode1*:hint')"/>
           </input>
           <input ref="/data/*itemcode1*/*itemcode2*">
@@ -139,7 +138,7 @@
     <group>
       <label ref="jr:itext('*itemcode5*:label')"/>
       <group appearance="field-list">
-        <input ref="/data/*itemcode5*/*itemcode5*-header">
+        <input ref="/data/*itemcode5*/header">
           <hint ref="jr:itext('*itemcode5*:hint')"/>
         </input>
         <input ref="/data/*itemcode5*/*itemcode6*">
@@ -157,7 +156,7 @@
       <repeat nodeset="/data/*itemcode8*">
         <group>
           <label ref="jr:itext('*itemcode8*:itemname')"/>
-          <input ref="/data/*itemcode8*/*itemcode8*-header">
+          <input ref="/data/*itemcode8*/header">
             <hint ref="jr:itext('*itemcode8*:hint')"/>
           </input>
           <input ref="/data/*itemcode8*/*itemcode9*">

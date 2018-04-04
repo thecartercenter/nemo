@@ -30,7 +30,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       # Include multiple conditions on one question.
       form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
       form.c[6].display_conditions.create!(ref_qing: form.c[5], op: "eq",
-        option_node: form.c[5].option_set.c[0])
+                                           option_node: form.c[5].option_set.c[0])
       form.c[6].update!(display_if: "all_met")
     end
 
@@ -51,28 +51,31 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     end
   end
 
-  context "grid form" do
-    let(:first_question) { create(:question, qtype_name: "select_one") }
-    let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
-    let(:form) do
+  context "grid group with display condition" do
+    let!(:form) do
       create(:form, :published, :with_version,
-        name: "Grid",
-        questions: [[first_question, second_question]]
-      )
+        name: "Grid Group with Condition", question_types: ["text", %w[select_one select_one], "text"])
     end
 
     before do
-      # We make the questions required since the need for the label-dummy tag comes from required questions.
-      # See the rendering code for more info.
-      form.c[0].c.each { |qing| qing.update_attributes!(required: true) }
+      # Make the grid questions required since we need to be careful that the hidden label row
+      # is not marked required.
+      form.c[1].c.each { |qing| qing.update!(required: true) }
+
+      # Ensure both group questions have same option set.
+      form.c[1].c[1].question.update!(option_set_id: form.c[1].c[0].question.option_set_id)
+
+      # Add condition to group.
+      form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
+      form.c[1].update!(display_if: "all_met")
     end
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_group_with_condition.xml", form)
     end
   end
-
+  
   context "gridable form with one_screen set to false" do
     let(:first_question) { create(:question, qtype_name: "select_one") }
     let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
@@ -410,27 +413,6 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("form_with_skip_rule.xml", form)
-    end
-  end
-
-  context "form with single-screen grid-mode group with display condition" do
-    let!(:form) do
-      create(:form, :published, :with_version,
-        name: "Grid Group with Condition", question_types: ["text", %w[select_one select_one], "text"])
-    end
-
-    before do
-      # Ensure both group questions have same option set.
-      form.c[1].c[1].question.update!(option_set_id: form.c[1].c[0].question.option_set_id)
-
-      # Add condition to group.
-      form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
-      form.c[1].update!(display_if: "all_met")
-    end
-
-    it "should render proper xml" do
-      do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_group_with_condition.xml", form)
     end
   end
 

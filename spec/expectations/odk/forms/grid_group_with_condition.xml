@@ -7,12 +7,11 @@
         <data id="*form1*" version="*formver1*">
           <*itemcode1*/>
           <*itemcode2*>
-            <*itemcode2*-header/>
+            <header/>
             <*itemcode3*/>
             <*itemcode4*/>
           </*itemcode2*>
           <*itemcode5*/>
-          <label-dummy/>
         </data>
       </instance>
       <itext>
@@ -60,9 +59,9 @@
       </itext>
       <bind nodeset="/data/*itemcode1*" type="string"/>
       <bind nodeset="/data/*itemcode2*" relevant="((/data/*itemcode1* = 'foo'))"/>
-      <bind nodeset="/data/*itemcode2*/*itemcode2*-header" readonly="true()" type="string" relevant="((/data/*itemcode1* = 'foo'))"/>
-      <bind nodeset="/data/*itemcode2*/*itemcode3*" type="select1"/>
-      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="select1"/>
+      <bind nodeset="/data/*itemcode2*/header" readonly="true()" type="string" relevant="((/data/*itemcode1* = 'foo'))"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode3*" type="select1" required="true()"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="select1" required="true()"/>
       <bind nodeset="/data/*itemcode5*" type="string"/>
     </model>
   </h:head>
@@ -74,10 +73,10 @@
     <group>
       <label ref="jr:itext('*itemcode2*:label')"/>
       <group appearance="field-list">
-        <input ref="/data/*itemcode2*/*itemcode2*-header">
+        <input ref="/data/*itemcode2*/header">
           <hint ref="jr:itext('*itemcode2*:hint')"/>
         </input>
-        <select1 ref="/data/label-dummy" appearance="label">
+        <select1 ref="/data/*itemcode2*/header" appearance="label">
           <item>
             <label ref="jr:itext('*optcode1*')"/>
             <value>*optcode1*</value>

@@ -5,7 +5,7 @@
   <% end %>
 <% else %>
   <%= content_tag(node.odk_code, node.repeatable? ? {"jr:template" => ""} : nil) do %>
-    <%= tag("#{node.odk_code}-header") %>
+    <%= tag(:header) %>
     <% node.sorted_children.each do |child| %>
       <%= render "forms/odk/instance_node", node: child %>
     <% end %>
