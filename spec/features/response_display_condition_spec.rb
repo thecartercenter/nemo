@@ -242,6 +242,4 @@ feature "conditions in responses", js: true do
       end
     end
   end
-
-
 end

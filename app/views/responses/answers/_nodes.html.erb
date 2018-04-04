@@ -38,8 +38,9 @@
         <%= javascript_doc_ready do %>
           new ELMO.Views.ResponseConditionManager(<%=json(
             el: 'form.response_form',
-            item: ResponseCondition::FormItemSerializer.new(node.item, response_condition_group: response_condition_group),
-            # Instance descriptor is the set of groups and instance numbers that are the parents of this group.
+            item: ResponseCondition::FormItemSerializer.new(node.item,
+              response_condition_group: response_condition_group),
+            # Instance descriptor is the set of groups and inst_nums that are the parents of this group.
             # See _set.html.erb for a usage example
             inst: [] # Until there are nested groups, a group must be a child of the root group.
           ) %>);

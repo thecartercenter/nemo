@@ -18,11 +18,8 @@ feature "skip rules in responses", js: true do
     let!(:qings) do
       {}.tap do |qings|
         qings[:text1] = create_questioning("text", form)
-
         qings[:text2] = create_questioning("text", form)
-
         qings[:text3] = create_questioning("text", form)
-
         qings[:text4] = create_questioning("text", form)
       end
     end
@@ -155,13 +152,9 @@ feature "skip rules in responses", js: true do
     let!(:qings) do
       {}.tap do |qings|
         qings[:text1] = create_questioning("text", form)
-
         qings[:text2] = create_questioning("text", form)
-
         qings[:text3] = create_questioning("text", form)
-
         qings[:text4] = create_questioning("text", form)
-
         qings[:rptq1] = create_questioning("text", form, parent: rpt_group)
       end
     end

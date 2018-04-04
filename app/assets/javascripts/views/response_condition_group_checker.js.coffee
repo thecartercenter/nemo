@@ -38,4 +38,3 @@ class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationVie
 
   results: ->
     @checkers.map (c) -> c.evaluate()
-

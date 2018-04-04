@@ -11,7 +11,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
       @element = @qingElement(@item.id, @inst)
     @readOnly = @element.is('.read-only')
     @result = true
-    @root_checker = new ELMO.Views.ResponseConditionGroupChecker(
+    @rootChecker = new ELMO.Views.ResponseConditionGroupChecker(
       el: @el,
       manager: this,
       group: @rootConditionGroup,
@@ -27,7 +27,7 @@ class ELMO.Views.ResponseConditionManager extends ELMO.Views.ApplicationView
 
   # Gathers results from all checkers and shows/hides the field based on them.
   refresh: ->
-    newResult = @root_checker.evaluate()
+    newResult = @rootChecker.evaluate()
 
     if newResult != @result
       @result = newResult
