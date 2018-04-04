@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 feature "SMS Guide", js: true do
@@ -8,7 +10,7 @@ feature "SMS Guide", js: true do
 
   context "with SMSable form" do
     let!(:form) do
-      create(:form, name: "SMS Form", smsable: true, mission: get_mission, question_types: %w(text)).publish!
+      create(:form, name: "SMS Form", smsable: true, mission: get_mission, question_types: %w[text]).publish!
     end
 
     scenario "happy path" do
@@ -24,7 +26,18 @@ feature "SMS Guide", js: true do
         name: "SMS Form",
         smsable: true,
         mission: get_mission,
-        question_types: %w(multilingual_text multilingual_text_with_user_locale) ).publish!
+        question_types: %w[multilingual_text multilingual_text_with_user_locale]).publish!
+    end
+
+    around do |example|
+      bool = Rails.configuration.action_view.raise_on_missing_translations
+      ELMO::Application.configure do
+        config.action_view.raise_on_missing_translations = false
+      end
+      example.run
+      ELMO::Application.configure do
+        config.action_view.raise_on_missing_translations = bool
+      end
     end
 
     scenario "view :fr guide" do
@@ -40,7 +53,7 @@ feature "SMS Guide", js: true do
       click_link "Forms"
       click_link "SMS Guide"
       select("Kinyarwanda", from: "lang")
-      expect(page).to have_content ".instructions.paper"
+      expect(page).to have_content "Paper"
       expect(page).to have_content "rw: Text Question Title"
       expect(page).to have_content "rw: Question Hint"
     end
@@ -65,7 +78,7 @@ feature "SMS Guide", js: true do
         click_link "Formularios"
         click_link "SMS Guide"
         select("Kinyarwanda", from: "lang")
-        expect(page).to have_content ".instructions.paper"
+        expect(page).to have_content "Paper"
         expect(page).to have_content "rw: Text Question Title"
         expect(page).to have_content "rw: Question Hint"
       end
