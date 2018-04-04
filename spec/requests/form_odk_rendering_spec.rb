@@ -75,7 +75,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_group_with_condition.xml", form)
     end
   end
-  
+
   context "gridable form with one_screen set to false" do
     let(:first_question) { create(:question, qtype_name: "select_one") }
     let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
