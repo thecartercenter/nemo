@@ -3,17 +3,14 @@ module OdkHelper
   # calls the provided block to get the tag content
   def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
     opts ||= {}
-    suffix =
-      if label_row
-        # We can't bind to the question's node here or, if the question is required,
-        # we won't be allowed to proceed since it won't be possible to fill in the question.
-        # Also, this question will appear again in a regular row so it would be weird
-        # to link it to the same instance node twice.
-        # Instead we use the parent group's header node.
-        "header"
-      else
-        subq.try(:odk_code)
-      end
+
+    # We can't bind to the question's node here or, if the question is required,
+    # we won't be allowed to proceed since it won't be possible to fill in the question.
+    # Also, this question will appear again in a regular row so it would be weird
+    # to link it to the same instance node twice.
+    # Instead we use the parent group's header node.
+    suffix = label_row ? "header" : subq.try(:odk_code)
+
     opts[:ref] = [xpath_prefix, suffix].compact.join("/")
     opts[:rows] = 5 if subq.qtype_name == "long_text"
     if !subq.first_rank? && subq.qtype.name == "select_one"

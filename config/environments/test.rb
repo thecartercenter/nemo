@@ -37,7 +37,8 @@ ELMO::Application.configure do
   config.serve_static_files = true
   config.static_cache_control = "public, max-age=3600"
 
-  # Raises error for missing translations
+  # Couldn't think of a reason why we'd need this to be true, and it was causing issues
+  # with the SMS guide feature spec.
   config.action_view.raise_on_missing_translations = false
 
   # Sorted order for test cases which are executed.
