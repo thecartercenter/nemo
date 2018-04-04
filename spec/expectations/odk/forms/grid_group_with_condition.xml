@@ -10,8 +10,8 @@
             <*itemcode2*-header/>
             <*itemcode3*/>
             <*itemcode4*/>
-            <*itemcode5*/>
           </*itemcode2*>
+          <*itemcode5*/>
           <label-dummy/>
         </data>
       </instance>
@@ -30,13 +30,13 @@
             <value>Question Hint 1</value>
           </text>
           <text id="*itemcode3*:label">
-            <value>Text Question Title 2</value>
+            <value>Select One Question Title 2</value>
           </text>
           <text id="*itemcode3*:hint">
             <value>Question Hint 2</value>
           </text>
           <text id="*itemcode4*:label">
-            <value>Text Question Title 3</value>
+            <value>Select One Question Title 3</value>
           </text>
           <text id="*itemcode4*:hint">
             <value>Question Hint 3</value>
@@ -47,6 +47,12 @@
           <text id="*itemcode5*:hint">
             <value>Question Hint 4</value>
           </text>
+          <text id="*optcode1*">
+            <value>Cat</value>
+          </text>
+          <text id="*optcode2*">
+            <value>Dog</value>
+          </text>
           <text id="BLANK">
             <value/>
           </text>
@@ -55,9 +61,9 @@
       <bind nodeset="/data/*itemcode1*" type="string"/>
       <bind nodeset="/data/*itemcode2*" relevant="((/data/*itemcode1* = 'foo'))"/>
       <bind nodeset="/data/*itemcode2*/*itemcode2*-header" readonly="true()" type="string" relevant="((/data/*itemcode1* = 'foo'))"/>
-      <bind nodeset="/data/*itemcode2*/*itemcode3*" type="string"/>
-      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="string"/>
-      <bind nodeset="/data/*itemcode2*/*itemcode5*" type="string"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode3*" type="select1"/>
+      <bind nodeset="/data/*itemcode2*/*itemcode4*" type="select1"/>
+      <bind nodeset="/data/*itemcode5*" type="string"/>
     </model>
   </h:head>
   <h:body>
@@ -71,19 +77,43 @@
         <input ref="/data/*itemcode2*/*itemcode2*-header">
           <hint ref="jr:itext('*itemcode2*:hint')"/>
         </input>
-        <input ref="/data/*itemcode2*/*itemcode3*">
+        <select1 ref="/data/label-dummy" appearance="label">
+          <item>
+            <label ref="jr:itext('*optcode1*')"/>
+            <value>*optcode1*</value>
+          </item>
+          <item>
+            <label ref="jr:itext('*optcode2*')"/>
+            <value>*optcode2*</value>
+          </item>
+        </select1>
+        <select1 ref="/data/*itemcode2*/*itemcode3*" appearance="list-nolabel">
           <label ref="jr:itext('*itemcode3*:label')"/>
-          <hint ref="jr:itext('*itemcode3*:hint')"/>
-        </input>
-        <input ref="/data/*itemcode2*/*itemcode4*">
+          <item>
+            <label ref="jr:itext('*optcode1*')"/>
+            <value>*optcode1*</value>
+          </item>
+          <item>
+            <label ref="jr:itext('*optcode2*')"/>
+            <value>*optcode2*</value>
+          </item>
+        </select1>
+        <select1 ref="/data/*itemcode2*/*itemcode4*" appearance="list-nolabel">
           <label ref="jr:itext('*itemcode4*:label')"/>
-          <hint ref="jr:itext('*itemcode4*:hint')"/>
-        </input>
-        <input ref="/data/*itemcode2*/*itemcode5*">
-          <label ref="jr:itext('*itemcode5*:label')"/>
-          <hint ref="jr:itext('*itemcode5*:hint')"/>
-        </input>
+          <item>
+            <label ref="jr:itext('*optcode1*')"/>
+            <value>*optcode1*</value>
+          </item>
+          <item>
+            <label ref="jr:itext('*optcode2*')"/>
+            <value>*optcode2*</value>
+          </item>
+        </select1>
       </group>
     </group>
+    <input ref="/data/*itemcode5*">
+      <label ref="jr:itext('*itemcode5*:label')"/>
+      <hint ref="jr:itext('*itemcode5*:hint')"/>
+    </input>
   </h:body>
 </h:html>

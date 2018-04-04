@@ -16,7 +16,8 @@ module Odk
     end
 
     def note_bind_tag(xpath_prefix: "/data")
-      tag(:bind, nodeset: xpath(xpath_prefix) << "/#{odk_code}-header", readonly: "true()", type: "string")
+      tag(:bind, nodeset: xpath(xpath_prefix) << "/#{odk_code}-header", readonly: "true()",
+                 type: "string", relevant: relevance)
     end
 
     def xpath(prefix = "/data")
