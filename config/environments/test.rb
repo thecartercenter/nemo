@@ -38,7 +38,7 @@ ELMO::Application.configure do
   config.static_cache_control = "public, max-age=3600"
 
   # Raises error for missing translations
-  config.action_view.raise_on_missing_translations = true
+  config.action_view.raise_on_missing_translations = false
 
   # Sorted order for test cases which are executed.
   config.active_support.test_order = :sorted
@@ -51,4 +51,3 @@ ELMO::Application.configure do
   config.middleware.use Rack::Attack
   Rack::Attack.disable!
 end
-
