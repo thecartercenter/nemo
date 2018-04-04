@@ -53,4 +53,10 @@ module RequestSpecHelpers
 
     post(@submission_url, params.slice(:data), headers)
   end
+
+  # Needed for older request specs, maybe related to assert_select.
+  # See http://blog.cynthiakiser.com/blog/page/5/
+  def document_root_element
+    html_document.root
+  end
 end
