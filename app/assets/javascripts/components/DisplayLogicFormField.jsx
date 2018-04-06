@@ -12,7 +12,7 @@ class DisplayLogicFormField extends React.Component {
 
   render() {
     // Display logic conditions can't reference self, as that doesn't make sense.
-    let refable_qings = this.state.refable_qings.slice(0, -1);
+    let refable_qings = this.state.refable_qings.filter(qing => qing.id !== this.state.id);
 
     if (refable_qings.length == 0) {
       return <div>{I18n.t("condition.no_refable_qings")}</div>;
