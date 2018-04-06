@@ -875,7 +875,6 @@ ko:
       not_approved: "계정이 승인되지 않았습니다."
       not_confirmed: "계정이 확인되지 않았습니다."
       password_blank: "비밀번호를 입력하십시오."
-      password_invalid: "유효하지 않습니다. 비밀번호 보안 기준이 최근 업그레이드 되었습니다. 현재 비밀번호가 작동하지 않는다면 비밀번호를 새로 생성하시길 바랍니다. "
     models:
       user_session: "사용자 세션"
     attributes:

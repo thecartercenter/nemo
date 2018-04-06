@@ -508,7 +508,7 @@ ar:
         using_incoming_sms_token_body: |-
             يرجى تسجيل URL  الخاص بالرسائل النصية القصيرة الوارد مع مزود بوابتك:
 
-            ٪ {url}
+            %{url}
         default_outgoing_sms_adapter: "المحول المستخدم لإرسال الرسائل النصية القصيرة. يرجى ملاحظة أن الإجابة على الرسائل القصيرة النصية قد يرسل عبر نفس المحول أو محول آخر إعتماداً على المحول الذي وردة الرسالة الأصلية عليه"
         twilio_phone_number: "رقم الهاتف مسجل في (Twilio ). نشرات الرسائل النصية القصيرة الصادرة لن تعمل مالم يمتلك حساب (Twilio ) هذا الرقم. يجب أن يحتوي الرقم على رمز الدولة . مثل :2568034423+"
         twilio_account_sid: "SID الخاص بحساب Twilio"
@@ -541,26 +541,26 @@ ar:
         not_an_integer: "الرجاء إدخال عدد صحيح صالح."
         did_not_match: " كلمات المرور غير متطابقة."
         too_long:
-          zero: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
-          one: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
-          two: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
-          few: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
-          many: " :) الرجاء ترجمة هذا:Please enter at most %{count} characters "
-          other: "يرجى إدخال ٪ {count} كحد أقصى من الأحرف."
+          zero: "الرجاء إدخال %{count} حرف على الأكثر."
+          one: "الرجاء إدخال حرف واحد على الأكثر."
+          two: "الرجاء إدخال حرفين على الأكثر."
+          few: "الرجاء إدخال %{count} أحرف على الأكثر."
+          many: "الرجاء إدخال %{count} حرفا على الأكثر."
+          other: "الرجاء إدخال %{count} حرفا على الأكثر."
         too_short:
-          zero: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
-          one: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
-          two: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
-          few: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
-          many: " :) الرجاء ترجمة هذا:Please enter at least %{count} characters "
-          other: "يرجى إدخال على الأقل٪ {count} من الأحرف."
+          zero: "الرجاء إدخال على الأقل %{count} حرف."
+          one: "الرجاء إدخال على الأقل حرف واحد."
+          two: "الرجاء إدخال على الأقل حرفين."
+          few: "الرجاء إدخال على الأقل %{count} حرف ."
+          many: "الرجاء إدخال على الأقل %{count} حرفا."
+          other: "الرجاء إدخال على الأقل %{count} حرف."
         wrong_length:
-          zero: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
-          one: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
-          two: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
-          few: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
-          many: " :) الرجاء ترجمة هذا:Please enter exactly %{count} characters "
-          other: "يرجى إدخال ٪ {count} أحرف بالضبط."
+          zero: "الرجاء إدخال %{count} حرف بالضبط.."
+          one: "الرجاء إدخال حرف واحد بالضبط.."
+          two: "الرجاء إدخال حرفين بالضبط.."
+          few: "الرجاء إدخال %{count} أحرف بالضبط.."
+          many: "الرجاء إدخال %{count} حرفا بالضبط.."
+          other: "الرجاء إدخال %{count} حرف بالضبط.."
         must_be_group: "الأصل يجب أن يكون مجموعة"
         invalid_password: "ويجب أن تتضمن كلمة المرور رقم واحد على الأقل، حرف صغير واحد، وحرف كبير واحد."
       models:
@@ -582,7 +582,7 @@ ar:
         mission:
           cant_delete_if_assoc: "لا يمكنك حذف هذه المهمة لأنها ترتبط بإستمارات، ردود، أو أشياء أخرى."
           let_num_spc_only: "الرجاء استخدام احرف وارقام ومسافات فقط."
-          not_unique: "الاسم مشابه كثيرا لمهمة موجودة '٪ {existing }"
+          not_unique: "الاسم مشابه كثيرا لمهمة موجودة '%{existing}'."
           general: "مهمة غير صالحة (انظر أدناه)"
         option:
           cant_delete_if_has_response: "لا يمكنك حذف هذا الخيار لأنه من ضمن رد واحد على الأقل."
@@ -596,7 +596,7 @@ ar:
           cant_delete_if_has_questions: "لا يمكنك حذف مجموعة الخيار هذه لأن سؤال واحد او اكثر مرتبط بها."
           cant_delete_if_has_answers: "لا يمكنك حذف مجموعة الخيار لانها ضمن محتوى جواب واحد على الأقل."
           general: "كانت هنالك مشكلة غي حفظ مجموعة الخيار"
-          wrong_depth: "لديك٪ {levels} مستويات الخيار ولكن شجرة الخيار الخاصة بك هي ٪ {depth} عمق الخيارات."
+          wrong_depth: "لديك %{levels} مستويات خيار ولكن عمق شجرة الخيارات الخاصة بك هي %{depth}."
         option_set_import:
           general: "ايراد مجموعة الخيار غير صالح (انظر ادناه)"
           internal: "حدث خطأ داخلي أثناء معالجة التحميل."
@@ -636,7 +636,7 @@ ar:
               blank: "يجب ان تختار طريق عرض نص الردود."
             type:
               blank: "يجي ان تختار نوع التقرير."
-          no_calc_or_opt_set: "تقرير '٪ {name}' لا يوجد لديه أسئلة أو مجموعات الخيار محددة. يرجى تعديل التقرير لتصحيح هذا الخطأ."
+          no_calc_or_opt_set: "التقرير '%{name}' لا يوجد لديه أسئلة أو مجموعات خيار محددة. يرجى تعديل التقرير لتصحيح هذا الخطأ."
         response:
           general: "رد عير صالح (انظر ادناه)."
           missing_answers: "ليس لكل الأسئلة اجوبة "
@@ -646,11 +646,11 @@ ar:
         setting:
           attributes:
             preferred_locales_str:
-              invalid_code: "رمز اللغة '٪ {code}' غير صالح."
-              one_must_have_translations: "الرجاء اختيار لغة واحدة على الأقل مترجمة (٪ {locales})."
+              invalid_code: "رمز اللغة '%{code}' غير صالح."
+              one_must_have_translations: "الرجاء اختيار لغة واحدة على الأقل مترجمة (%{locales})."
           general: "الإعدادات غير صالحة (انظر ادناه)"
         user:
-          at_least_digits: "الرجاء إدخال ما لا يقل عن٪ {num} أرقام."
+          at_least_digits: "الرجاء إدخال ما لا يقل عن %{num} أرقام."
           cant_delete_if_responses: "لا يمكنك حذف هذا المستخدم لأنه مرتبط بردود."
           duplicate_assignments: "هناك واجبات مكررة."
           no_missions: "لست جزء من اي مهمة."
@@ -662,18 +662,19 @@ ar:
             login:
               invalid: "الرجاء استخدام حروف فقط غير معلمة، وأرقام، فترات، وخط على السطر."
             reset_password_method:
-              cant_passwd_email: "لا يمكنك٪ {verb} كلمة المرور عن طريق البريد الإلكتروني لأنك لم تحدد عنوان بريد إلكتروني."
+              cant_passwd_email: "لا يمكنك %{verb} كلمة المرور عن طريق البريد الإلكتروني لأنك لم تحدد عنوان بريد إلكتروني."
         user_batch:
           general: "حزمة المستخدمين غير صالحة (انظر ادناه)"
           internal: "حدث خطأ داخلي أثناء معالجة التحميل."
           invalid_headers: "جدول البيانات الذي تم تحميله فيه عناوين اعمدة غير صالحة."
-          too_many_errors: "جدول البيانات الذي تم تحميله فيه أخطاء كثيرة جدا. توقفت المعالجة في السطر٪ {row}."
+          too_many_errors: "جدول البيانات الذي تم تحميله فيه أخطاء كثيرة. توقفت المعالجة في السطر %{row}."
   layout:
+    about: "حول %{site_name}"
     actions: "اجراءات"
     are_you_sure: "هل انت متأكد؟"
     change_language: "تغيير اللغة"
     created_by: "أنشئ بواسطة"
-    delete_warning: "هل أنت متأكد أنك تريد حذف بشكل دائم٪ {obj_description}؟"
+    delete_warning: "هل أنت متأكد أنك تريد حذف بشكل دائم %{obj_description}؟"
     deselect_all: "الغاء تحديد الكل"
     loading: "تحميل..."
     locale_change_get_only: "تغيير اللغة من هذه الصفحة قد يؤدي إلى فقدان البيانات. يرجى إكمال أو إلغاء الاستمارة وحاول مرة أخرى."
@@ -681,7 +682,7 @@ ar:
     mission_change_get_only: "تغيير المهمة من هذه الصفحة قد يؤدي إلى فقدان البيانات. يرجى إكمال أو إلغاء الاستمارة وحاول مرة أخرى."
     must_be: "يجب ان"
     no_selection: "لم تحدد اي شيء"
-    reqd_sym_definition: "الحقول الإلزامية مشار إليها ب٪ {reqd_sym}."
+    reqd_sym_definition: "الحقول الإلزامية مشار إليها ب %{reqd_sym}."
     select_all: "تحديد الكل"
     server_contact_error: "خطأ في الاتصال بالخادم"
     system_error: "خطأ بالنظام. قد تم إخطار المسؤول."
@@ -699,73 +700,73 @@ ar:
         single_page_html:
           zero: "لم يتم العثور على نشرات"
           one: "عرض <b> 1 </b> النشرة"
-          other: "عرض <b٪ {count} </ b> نشرات"
-        multi_page_html: "عرض نشرات  <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+          other: "عرض <b> %{count} </b> نشرات"
+        multi_page_html: "عرض نشرات  <b> %{to} - %{from} </b> من <b> %{count} </b> المجموع"
     form:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على استمارة"
           one: "عرض <b> 1 </ b> استمارة"
-          other: "عرض <b٪ {count} </ b> استمارات"
+          other: "عرض <b> %{count} </b> استمارات"
     mission:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على مهمة"
           one: "عرض <b> 1 </ b> مهمة"
-          other: "عرض <b٪ {count}كل </ b> مهمات"
+          other: "عرض <b> %{count} </b> مهمات"
     option:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على خيارات"
           one: "عرض <b> 1 </ b> خيار"
-          other: "عرض <b٪ {count} </ b> الخيارات"
+          other: "عرض <b> %{count} </b> خيارات"
     option_set:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على مجموعة خيار"
           one: "عرض <b> 1 </ B> مجموعة الخيار"
-          other: "عرض <b٪ {count} </ b> مجموعات الخيار "
+          other: "عرض <b> %{count} </b> مجموعات الخيار "
     question:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على أسئلة"
           one: "عرض <b> 1 </b> السؤال"
-          other: "عرض <b٪ {count} </ b> الأسئلة"
-          multi_page_html: "عرض الأسئلة <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+          other: "عرض <b> %{count} </b> أسئلة"
+          multi_page_html: "عرض الأسئلة <b>%{to} - %{from} </b> من <b> %{count} </b> المجموع"
     questioning:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على أسئلة"
           one: "عرض <b> 1 </b> السؤال"
-          other: "عرض <b٪ {count} </ b> الأسئلة"
-          multi_page_html: "عرض الأسئلة <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+          other: "عرض <b> %{count} </b> أسئلة"
+          multi_page_html: "عرض الأسئلة <b>%{to} - %{from} </b> من <b> %{count} </b> المجموع"
     report/report:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على تقرير"
           one: "عرض <b> 1 </b> التقرير"
-          other: "عرض <b٪ {count} </ b> التقارير"
+          other: "عرض <b> %{count} </b> تقارير"
     response:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على ردود"
           one: "عرض <b> 1 </b> الرد"
-          other: "عرض <b٪ {count} </ b> الردود"
-        multi_page_html: "عرض الردود <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+          other: "عرض <b> %{count} </b> ردود"
+        multi_page_html: "عرض الردود <b> %{to} - %{from} </b> من <b> %{count} </b> المجموع"
     sms/message:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على رسائل نصية قصيرة"
           one: "عرض <b> 1 </b> الرسالة النصية القصيرة"
-          other: "عرض <b٪ {count} </ b> الرسائل النصية القصيرة"
-        multi_page_html: "عرض الرسائل النصية القصيرة <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+          other: "عرض <b> %{count} </b> رسائل نصية قصيرة"
+        multi_page_html: "عرض الرسائل النصية القصيرة <b> %{to} - %{from} </b> من <b> %{count} </b> المجموع"
     user:
       page_entries_info:
         single_page_html:
           zero: "لم يتم العثور على مستخدمين"
           one: "عرض <b> 1 </b> المستخدم"
-          other: "عرض <b٪ {count} </ b> المستخدمين"
-        multi_page_html: "عرض المستخدمين <b>٪ {from} -٪ {to} </ b> من <b>٪ {count} </ b> المجموع"
+          other: "عرض <b>  %{count}</b> مستخدمين"
+        multi_page_html: "عرض المستخدمين <b> %{to} - %{from} </b> من <b> %{count} </b> المجموع"
   authlogic:
     error_messages:
       consecutive_failed_logins_limit_exceeded: "لقد تجاوزت الحد الأقصى لمحاولا ت تسجيل الدخول الفاشلة المتوالية. تم تعطيل حسابك."
@@ -778,7 +779,6 @@ ar:
       not_approved: "حسابك غير مصادق عليه."
       not_confirmed: "حسابك غير مؤكد."
       password_blank: "الرجاء إدخال كلمة مرور."
-      password_invalid: "غير صالح. تم مؤخرا تحديث معايير كلمة المرور. إذا كانت كلمة المرور الخاصة بك لا تعمل، يرجى استخدام خيار إعادة تعيين كلمة المرور لاختيار واحدة جديدة."
     models:
       user_session: "جلسة المستخدم."
     attributes:
@@ -827,46 +827,48 @@ ar:
       new_with_users: "إرسال نشرة"
       show: "نشرة"
     forms:
-      choose_questions: "إضافة أسئلة إلى الاستمارة :٪ {name}"
-      edit: "تعديل استمارة:٪ {name}"
+      choose_questions: "إضافة أسئلة إلى الاستمارة : %{name}"
+      edit: "تعديل استمارة: %{name}"
       index: "إستمارات"
       new: "إستمارة جديدة"
-      show: "استمارة:٪ {name}"
+      show: "استمارة: %{name}"
     missions:
-      edit: "تعديل مهمة:٪ {name}"
+      edit: "تعديل مهمة: %{name}"
       index: "مهمات"
       new: "مهمة جديدة"
-      show: "المهمة:٪ {name}"
+      show: "المهمة: %{name}"
     operations:
       index: "عمليات"
-      show: "عملية:٪ {name}"
+      show: "عملية: %{name}"
     option_sets:
-      edit: "تعديل مجموعة الخيار:٪ {name}"
+      edit: "تعديل مجموعة الخيار: %{name}"
       index: "مجموعات الخيار "
       new: "مجموعة خيار جديدة "
-      show: "مجموعة خيار:٪ {name}"
+      show: "مجموعة خيار: %{name}"
     option_set_imports:
       new: "إستيراد مجموعة خيار جديد"
     options:
-      edit: "تعديل الخيار:٪ {name}"
+      edit: "تعديل الخيار: %{name}"
       index: "خيارات"
       new: "خيار جديد"
-      show: " الخيار:٪ {name}"
+      show: " الخيار: %{name}"
     password_resets:
       all: "إعادة ضيط كلمة المرور"
     questions:
-      edit: "تعديل سؤال:٪ {code}"
+      edit: "تعديل سؤال: %{code}"
       index: "أسئلة"
       new: "سؤال جديد"
-      show: "سؤال:٪ {code}"
+      show: "سؤال: %{code}"
     questionings:
-      edit: "تعديل سؤال:٪ {code}"
+      edit: "تعديل سؤال: %{code}"
       index: "أسئلة"
       new: "سؤال جديد"
-      show: "سؤال:٪ {code}"
+      show: "سؤال: %{code}"
     responses:
+      edit: "تعديل الرد: %{id}"
       index: "ردود"
       new: "رد جديدة"
+      show: "رد: %{id}"
     reports:
       index: "تقارير"
       new: "تقرير جديد"
@@ -884,13 +886,13 @@ ar:
       login_confirmation: "تأكيد تسيجيل الدخول "
       logged_out: "تم تسجيل الخروج "
     users:
-      edit: "تعديل المستخدم:٪ {name}"
+      edit: "تعديل المستخدم: %{name}"
       edit_profile: "تعديل الحساب "
-      show_profile: "حساب:٪ {name}"
+      show_profile: "حساب: %{name}"
       index: "مستخدمين"
       login_instructions: "تعليمات تسجيل الدخول "
       new: "مستخدم جديد"
-      show: "مستخدم:٪ {name}"
+      show: "مستخدم: %{name}"
     welcome:
       index: "الرئيسية"
       unauthorized: "غير مخول "
@@ -914,6 +916,13 @@ ar:
       too_many: "رموز كثيرة"
     email_intro: "هذه نشرة رسالة من "
     email_error: "خطأ في البريد الإلكتروني "
+    group_count:
+      zero: "%{count}  مجموعة"
+      one: "مجموعة واحدة"
+      two: "مجموعتان"
+      few: "%{count} مجموعة "
+      many: " %{count} مجموعة"
+      other: "%{count} مجموعة"
     instructions: "لإرسال نشرة، أولا يجب تحديد المستلمين أدناه، ثم انقر فوق \"إرسال النشرة\"."
     may_not_be_enough: "قد يكون هذا غير كافي "
     mediums:
@@ -933,6 +942,13 @@ ar:
     send_success: "تم ارسال النشرة بنجاح"
     send_error: "خطأ في ارسال النشرة (انظر ادناه)"
     sms_error: "خطأ بالرسالة النصية القصيرة"
+    user_count:
+      zero: "%{count} مستخدم "
+      one: "مستخدم واحد"
+      two: "%{count}مستخدمين "
+      few: "%{count}مستخدمين "
+      many: "%{count}مستخدمين "
+      other: "%{count} مستخدمين"
     which_phone_options:
       main_only: "الهاتف الرئيسي فقط"
       alternate_only: "الهاتف البديل فقط"
@@ -950,14 +966,14 @@ ar:
     no_reports: "لم يتم إنشاء تقارير لهذه المهمة بعد."
     recent_responses: "آخر الردود"
     response_locations: "مواقع الردود"
-    response_locations_truncated: "عرض أحدث٪ {shown} من٪ {total} الردود"
+    response_locations_truncated: "عرض أحدث %{shown} من %{total} الردود"
     summary: "خلاصة"
     top_forms: "أفضل الإستمارات"
   data_integrity:
     appears_elsewhere_warnings:
       by_type:
-        question: "يظهر هذا السؤال في الاستمارت التالية: *٪ {related} *. سوف تنعكس أية تغييرات تجريها أدناه على تلك الاستمارات."
-        option_set: "تظهر مجموعة الخيار هذه في الأسئلة التالية: *٪ {related} *. سوف تنعكس أية تغييرات تجريها أدناه على تلك الأسئلة."
+        question: "يظهر هذا السؤال في الاستمارت التالية: *%{related}*. سوف تنعكس أية تغييرات تجريها أدناه على تلك الاستمارات."
+        option_set: "تظهر مجموعة الخيار هذه في الأسئلة التالية: *%{related}*. سوف تنعكس أية تغييرات تجريها أدناه على تلك الأسئلة."
     has_answers_warnings:
       by_type:
         question: "لهذا السؤال اجوبة موجودة، لهذا بعض الحقول لا يمكن تعديلها"
@@ -974,9 +990,9 @@ ar:
     add_selected: "إضافة الأسئلة المختارة للإستمارة"
     back_to_questions: "العودة لقائمة الأسئلة"
     choose_form: "إختار إستمارة"
-    clone_confirm: "هل أنت متأكد أنك تريد أن تنشئ نسخة من الاستمارة '{FORM_NAME}٪'؟"
-    clone_error: "كانت هناك مشكلة في استنساخ الاستمارة (٪ {msg})."
-    clone_success: "الاستمارة  '٪ {FORM_NAME}' أستنسخت بنجاح."
+    clone_confirm: "هل أنت متأكد أنك تريد أن تنشئ نسخة من الاستمارة '%{form_name}'؟"
+    clone_error: "كانت هناك مشكلة في استنساخ الاستمارة (%{msg})."
+    clone_success: "الاستمارة  '%{form_name}' أستنسخت بنجاح."
     no_mission: "لا توجد مهمات"
     no_questions_yet: "لا توجد أسئلة بعد"
     invalid_drop_location:
@@ -988,23 +1004,26 @@ ar:
       title: "نصائح تنسيق الطباعة"
       body: "لضمان طباعة الاستمارة بشكل صحيح، الرجاء تفعيل طباعة ألوان الخلفية والصور في نافذة خيارات الطباعة للنظام الخاص بك. يجب أن تظهر تلك النافذة بمجرد النقر فوق \"موافق\" أدناه."
     publish: "نشر"
-    publish_error: "كانت هناك مشكلة في نشر الاستمارة (٪ {msg})."
+    publish_error: "كانت هناك مشكلة في نشر الاستمارة (%{msg})."
     publish_success: "تم نشر الإستمارة بنجاح"
     publish_form: "نشر الإستمارة"
-    question_remove_error: "كانت هناك مشكلة بحذف الأسئلة (٪ {msg})."
+    question_remove_error: "كانت هناك مشكلة بحذف الأسئلة (%{msg})."
     question_remove_answer_error: "واحد أو أكثر من الأسئلة المختارة لديها إجابات ولا يمكن حذفها."
-    questions_add_error: "كانت هناك مشكلة بإضافة الأسئلة (٪ {msg})."
+    questions_add_error: "كانت هناك مشكلة بإضافة الأسئلة (%{msg})."
     questions_add_success: "تم إضافة أسئلة بنجاح"
     questions_remove_success: "تم إزالة الأسئلة بنجاح"
     remove_selected: "حذف المحدد"
     remove_question_confirm:
       zero: "هل أنت متأكد من عدم حذف أي من الأسئلة في الإستمارة؟"
       one: "هل أنت متأكد من حذف هذا السؤال من الإستمارة؟"
-      other: "هل أنت متأكد أنك تريد حذف هذه٪ {count} من الأسئلة من الاستمارة؟"
+      two: "هل أنت متأكد أنك تريد حذف هذه %{count} من الأسئلة من الاستمارة؟"
+      few: "هل أنت متأكد أنك تريد حذف هذه %{count} أسئلة من الاستمارة؟"
+      many: "هل أنت متأكد أنك تريد حذف هذه %{count} أسئلة من الاستمارة؟"
+      other: "هل أنت متأكد أنك تريد حذف هذه %{count} أسئلة من الاستمارة؟"
     reqd_sym_definition: "الأسئلة المطلوبة مؤشرة بواسطة"
     save_and_publish: "حفظ و نشر"
     saving_order: "ترتيب الحفظ..."
-    unpublish_error: "كانت هناك مشكلة في سحب نشر الاستمارة (٪ {msg})."
+    unpublish_error: "كانت هناك مشكلة في سحب نشر الاستمارة (%{msg})."
     unpublish_success: "الإستمارة لم تنشر بنجاح"
     unpublish: "غير منشور"
     unpublish_form: "إستمارة غير منشورة"
@@ -1043,16 +1062,16 @@ ar:
         1b: "الإجابة أولا على جميع الأسئلة أدناه وملء كل مربع متقطع، على سبيل المثال:"
         phone: "هاتف"
         2a_appendix: "باستخدام هاتفك، إبدء رسالة نصية قصيرة إلى أحد الأرقام الموجودة على الورقة مرفقة."
-        2a_number_html: "بإستخدام هاتفك، إبدء رسالة نصية قصيرة إلى <strong>٪ {number} </ strong>."
+        2a_number_html: "بإستخدام هاتفك، إبدء رسالة نصية قصيرة إلى <strong>%{number} </strong>."
         2b: "أدخل محتويات كل سطر على الجانب الأيمن من الصفحة، والانتقال يكون من أعلى إلى أسفل."
-        2c_html: "يتم ترميز الفترات بواسطة ٪ {period} ويتم ترميز المساحات بواسطة ٪ {SPC}. ومن المهم أن تدخل كل الفترات والمسافات."
+        2c_html: "يتم ترميز النقاط بواسطة %{period} ويتم ترميز الفراغات بواسطة %{spc}. ومن المهم أن تدخل كل النقاط و الفراغات."
         example_sms: "مثال رسالة نصية قصيرة"
       unique_code: "هذا هو الرمز الفريد للاستمارة"
       unknown_number: "[رقم مجهول]"
   import:
-    row_error: "السطر٪ {row}:٪ {error}"
+    row_error: "السطر %{row}: %{error}"
     queued_html: |-
-        ٪ {type} طابور الاستيراد. تحقق من لوحة العمليات <a href="٪{url}"> </a> للحصول على المعلومات.
+        %{type} إستيرادات في الإنتضار . توجه إلا <a href="%{url}"> </a> للحصول على مزيد المعلومات.
   incomplete_response:
     missing_answers:
       label: "هل تفتقد هذه الاستمارة لأي إجابة مطلوبة؟"
@@ -1064,8 +1083,8 @@ ar:
     code_label: "أدخل رمز التجاوز للغير مكتمل"
   index_table:
     messages:
-      all_rows_selected: "لاحظ بأن <strong> كافة </ strong>٪ {count} السطور غير محددة"
-      searched_rows_selected: "لاحظ بأن <strong> كافة </ strong>٪ {count} السطور تتطابق مع البحث المحدد حالياً"
+      all_rows_selected: "لاحظ بأن </strong> كافة <strong> %{count} السطور تم اختيارها الآن"
+      searched_rows_selected: "لاحظ أن </strong>جميع<strong> %{count} الصفوف المطابقة للبحث الحالي محددة الآن"
   location_picker:
     choose_location: "أختار الموقع"
     current_location: "الموقع الحالي"
@@ -1074,28 +1093,30 @@ ar:
   notifier:
     if_link_doesnt_work: "إذا لم يعمل الرابط أعلاه حاول نسخه ولصقه في متصفحك."
     if_you_made_it: "أذا أنت من عمل هذا الطلب فانقر على الرابط أدناه:"
-    login_name: "اسم الدخول الخاص بك هو٪ {login}."
+    login_name: "اسم الدخول الخاص بك هو %{login}."
     to_choose: "لاختيار كلمة المرور، يرجى الذهاب هنا:"
     must_choose: "يجب عليك اختيار كلمة مرور قبل أن تتمكن من استخدام أي من أنظمة مراقبة الانتخابات، بما في ذلك النظم القائمة على الهاتف المحمول."
     password_reset_instructions: "تعليمات إعادة تعيين كلمة المرور "
-    request_made: "قد تم تقديم طلب لإعادة تعيين كلمة المرور للويب ٪ {site} . إذا كنت لم تتقدم بهذا الطلب، ببساطة تجاهل هذا البريد الإلكتروني."
-    welcome: "أهلا بك في٪ {site}!"
+    request_made: "قد تم تقديم طلب لإعادة تعيين كلمة المرور للويب %{site} . إذا كنت لم تتقدم بهذا الطلب، تجاهل هذا البريد الإلكتروني."
+    welcome: "أهلا بك في %{site}!"
   option_set:
     add_level: "إضافة مرحلة"
-    and_n_more: "... و٪ {count} المزيد من الخيارات."
-    clone_confirm: "هل أنت متأكد أنك تريد أن تنشئ نسخة من مجموعة الخيار '{FORM_NAME}٪'؟"
-    clone_error: "كانت هناك مشكلة في استنساخ مجموعة الخيار (٪ {msg})."
-    clone_success: "مجموعة الخيار '٪ {FORM_NAME}' نسخت بنجاح."
+    and_n_more: "... و %{count} المزيد من الخيارات."
+    clone_confirm: "هل أنت متأكد أنك تريد أن تنشئ نسخة من مجموعة الخيار '%{name}'؟"
+    clone_error: "كانت هناك مشكلة في استنساخ مجموعة الخيار (%{msg})."
+    clone_success: "مجموعة الخيار '%{name}' نسخت بنجاح."
     create_new: "[إنشاء خيار جديد]"
+    create_for_question: "إنشاء مجموعة خيارات للسؤال: %{identifier}"
     edit_option: "التعديل الخيار "
     edit_option_level: "تعديل مرحلة الخيار "
-    huge_notice: "مجموعة الخيار هذه كبيرة جدا (٪ {count} Options)، وبالتالي عينة صغيرة من الخيارات معروضة أدناه. تستطيع تعديل الاسم خصائص اخرى هنا ولكن يرجى استخدام خيارات الاستيراد / التصدير لتعديل الخيارات."
+    huge_notice: "مجموعة الخيار هذه كبيرة جدا ( %{count} خيارات )، وبالتالي عينة صغيرة من الخيارات معروضة أدناه. تستطيع تعديل الاسم خصائص اخرى هنا ولكن يرجى استخدام خاصية الاستيراد / التصدير لتعديل الخيارات."
     leave_page_warning: "إن ترك هذه الصفحة سيتخلى عن التغييرات لمجموعة الخيار هذه."
     multilevel_forbidden_notice: "تستخدم مجموعة الخيار هذه حاليا من قبل اختيار متعدد الأسئلة، وبالتالي فإنه لا يمكن تحويلها إلى مجموعة متعددة المستويات."
     new_option_level: "مرحلة خيار جديدة"
     none_found: "لا توجد خيارات مطابقة"
     searching: "جاري البحث..."
     type_to_add_new: "اكتب اسم الخيار"
+    option_prompt_with_level: "اختار %{level} ..."
   option_set_import:
     instructions_html: |-
         تحميل جدول بيانات مع مجموعة الخيار الخاص بك. وتقبل جداول من نوع  XLSX البيانات لإكسل وملفات CSV.
@@ -1103,8 +1124,8 @@ ar:
     clear_confirm: "هل أنت متأكد أنك تريد مسح جميع العمليات المنجزة؟"
     server_error: "خطأ في الخادم. يرجى الاتصال بالدعم."
     description:
-      user_import_operation_job: استيراد المستخدم ل٪ {mission_name} من٪ {file}
-      option_set_import_operation_job: مجموعة الخيار  '٪ {name}' استيراد ل٪ {mission_name}
+      user_import_operation_job: استيراد مستخدم ل%{mission_name} من %{file}
+      option_set_import_operation_job: مجموعة الخيار '%{name}' استيراد ل%{mission_name}
     outcome_link_text: "رابط"
     status:
       completed: "نجاح"
@@ -1113,27 +1134,27 @@ ar:
       running: "جاري التنفيذ"
     summary:
       all_in_progress:
-        zero: "%{count} operations in progress"
-        one: "%{count} operations in progress"
-        two: "%{count} operations in progress"
-        few: "%{count} operations in progress"
-        many: "%{count} operations in progress"
-        other: "٪ {count} عمليات قيد الانجاز"
-      some_completed: "٪ {completed} / {٪ total} عمليات إكتملت"
+        zero: "%{count} عمليات في قيد الانجاز "
+        one: " عملية واحدة في قيد الانجاز"
+        two: "%{count} عمليات في قيد الانجاز"
+        few: "%{count} عمليات في قيد الانجاز "
+        many: "%{count} عمليات في قيد الانجاز "
+        other: "%{count} عمليات في قيد الانجاز "
+      some_completed: "%{completed} / %{total} عمليات إكتملت"
       all_completed:
-        zero: "%{count} operations complete"
-        one: "%{count} operations complete"
-        two: "%{count} operations complete"
-        few: "%{count} operations complete"
-        many: "%{count} operations complete"
-        other: "٪ {count} عمليات انجزت"
+        zero: "%{count} عملية انجزت"
+        one: " عملية واحدة انجزت"
+        two: "%{count} عمليات انجزت"
+        few: "%{count} عملية انجزت"
+        many: "%{count} عملية انجزت"
+        other: "%{count} عملية انجزت"
       with_errors:
         zero: "%{message} (%{count} errors)"
         one: "%{message} (%{count} errors)"
         two: "%{message} (%{count} errors)"
         few: "%{message} (%{count} errors)"
         many: "%{message} (%{count} errors)"
-        other: "٪ {message} (٪ {count} أخطاء)"
+        other: "%{message} (%{count} أخطاء)"
   tag:
     none_found: "لا  توجد إشارات مطابقة"
     searching: "جاري البحث..."
@@ -1142,7 +1163,7 @@ ar:
     click_to_filter: "اضغط للتصفية وفق هذه الإشارة"
   password_reset:
     check_email: "تم إرسال رسالة إلكترونية تحتوي على تعليمات لإعادة تعيين كلمة المرور الخاصة بك. تفقد بريدك الالكتروني من فضلك."
-    enter_new_pass: "٪ {name}، يرجى إدخال كلمة مرور جديدة لحسابك."
+    enter_new_pass: "%{name}، يرجى إدخال كلمة مرور جديدة لحسابك."
     success: "تم تحديث كلمة المرور بنجاح"
     token_not_found: |-
         نحن آسفون، لكن لا يمكن العثور على حسابك. إذا كنت تواجه مشاكل فحاول نسخ ولصق URL
@@ -1215,6 +1236,7 @@ ar:
     how_to_order_questions: "كيف ينبغي أن ترتب الأسئلة؟"
     loading_report: "تحميل تقرير ..."
     questions_with_option_sets: "أسئلة مع مجموعات الخيار"
+    missing_enumerators_total_count: "%{user_count}في المجموع "
     mission: "مهمة"
     no_match: "لم يتم العثور على بيانات مطابقة."
     question_selection: "حدد سؤال"
@@ -1229,14 +1251,14 @@ ar:
       other: "أنظر الأسئلة المتعلقة"
     show_examples: "عرض أمثلة"
     show_text_responses: "عرض نص الردود؟"
-    showing_limited_answers: "عرض فقط أول٪ {count} الإجابات"
-    submitted_by_at: "بواسطة٪ {user} في٪ {datetime}"
-    subset_intro: "بيانات للردود التي كانت الإجابة على '٪ {question}' السؤال  '٪ {disagg_value}"
+    showing_limited_answers: "عرض فقط أول %{count} الإجابات"
+    submitted_by_at: "من قبل %{user} في %{datetime}"
+    subset_intro: "بيانات للردود التي كانت الإجابة على السؤال '%{question}' :  '%{disagg_value}'"
     tally: "إحصاء"
     tally_type: "ما الذي تود إحصائه؟"
     these_questions: "هذه الأسئلة بالتحديد"
-    total_rows: "مجموع السطور:٪ {count} "
-    view_response: "رد #٪ {id}"
+    total_rows: "مجموع السطور: %{count}"
+    view_response: "رد # %{id}"
     what_attrib_col_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس للأعمدة (اختياري)؟"
     what_attrib_row_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس السطور(اختياري)؟"
     what_bar_style: "أي نمط للشريط تريد؟"
@@ -1538,13 +1560,13 @@ ar:
           * __type = broadcast__
 
           سوف تطابق الرسائل التي لا تحتوي على "البث" نوع.
-    invalid_op: "المشغل '٪ {op}' غير صالحة للمؤهل  '٪ {qualifier} ."
-    multiple_terms_not_allowed: "لا يسمح للمصطلحات المتعددة ل '٪ {qualifier} \"عمليات البحث ما لم يستخدم\"أو\"."
+    invalid_op: "المشغل '%{op}' غير صالحة للمؤهل  '%{qualifier}' ."
+    multiple_terms_not_allowed: "لا يُسمح بعدة مصطلحات لـ \"%{qualifier}\" عمليات البحث ما لم يتم استخدام OR."
     must_use_qualifier: "يجب استخدام مؤهل لجميع مصطلحات البحث."
     or_not_allowed_between: "لا يسمح ب\"أو\" بين التعبيرات."
-    invalid_qualifier: "'٪ {chunk}' ليس صالحة لبحث مؤهل."
+    invalid_qualifier: "'%{chunk}' ليس صالحة لبحث مؤهل."
     search_error: "خطأ في البحث"
-    unexpected: "استعلام البحث الخاص بك غير مفهوم بسبب وجود نص غير متوقع في '٪ {str}'."
+    unexpected: "استعلام البحث الخاص بك غير مفهوم بسبب وجود نص غير متوقع في '%{str}'."
     unexpected_end: "استعلام البحث الخاص بك غير مفهوم بسبب وجود نص غير متوقع في النهاية."
   setting:
     change_sms_password: "تغيير كلمة المرور"
@@ -1557,8 +1579,13 @@ ar:
       sms: "إعدادات الرسالة النصية القصيرة المشتركة"
       twilio: "إعدادات Twilio"
       frontlinecloud: "إعدادات FrontlineCloud "
+  skip_rule:
+    skip_to_item: "انتقل إلى %{label}"
+    instructions:
+      with_conditions: "انتقل إلى %{destination}إذا %{conditions} "
+      without_conditions: "انتقل إلى %{destination}"
   sms:
-    extra_recipients_html: "<br/> ... و٪ {count} أكثر"
+    extra_recipients_html: "<br/> ... و %{count} آخرين"
     no_valid_adapter: "لا يوجد محول رسالة نصية قصيرة صادرة صالح، الرجاء التحقق من إعدادات."
     outgoing_provider: "مزود الرسائل النصية القصيرة الصادرة"
     timestamp_with_diff_html: "٪ {time} <br/> (٪ أرسلت {time_diff} في وقت سابق)"
@@ -1568,7 +1595,7 @@ ar:
     submit_error: "كان هناك خطأ في تقديم الاختبار."
   sms_form:
     decoding:
-      answer_error_intro: "عفواً، إجابتك '٪ {value}' للسؤال٪ {rank} على الاستمارة '٪ {form_code}"
+      answer_error_intro: "عفواً، إجابتك '%{value}' للسؤال %{rank} على الاستمارة '%{form_code}'"
       answer_not_date: "لم يكن تاريخ صالح"
       answer_not_datetime: "لم يكن التاريخ و الوقت صالحين"
       answer_not_decimal: "لم يكن رقم صالح"
@@ -1576,27 +1603,27 @@ ar:
       answer_not_time: "لم يكن وقت صالح"
       answer_not_valid_option: "لم يكن خيار صالح"
       answer_not_valid_long_option_multi: "يحتوي خيارات متعددة غير صالحة"
-      answer_not_valid_option_multi: "يحتوي على خيار غير صالح '٪ {invalid_options}' "
-      answer_not_valid_options_multi: "يحتوي على خيارات غير صالحة '٪ {invalid_options}' "
-      congrats: "تم استلام ردكم على الاستمارة '٪ {form_id}'. شكرا!"
-      duplicate_answer: "عفواً، يتضمن تقريركم إجابات مكررة للسؤال٪ {rank}."
+      answer_not_valid_option_multi: "يحتوي على الخيار غير صالح '%{invalid_options}' "
+      answer_not_valid_options_multi: "يحتوي على خيارات غير صالحة '%{invalid_options}' "
+      congrats: "تم استلام ردكم على الاستمارة '%{form_code}'. شكرا!"
+      duplicate_answer: "عفواً، يتضمن تقريركم إجابات مكررة للسؤال %{rank}."
       duplicate_submission: "عفواً، ردكم هو نسخة مكررة من رد اخر قدم مؤخرا."
-      first_answer_invalid: "آسف، ولكن٪ {token} ليست إجابة صحيحة. تأكدمن أن تضع نقطة بعد رقم السؤال."
-      form_not_found: "عفواً، لا يوجد أي استمارة مع الرمز '٪ {form_code}'."
-      form_not_permitted: "عفواً، غير مصرح لك بتسليم رد على الاستمارة  '٪ {form_id}'."
-      form_not_published: "عفواً، الاستمارة'٪ {form_code}' غير متوفرة حاليا لتسليم الردود."
-      form_not_smsable: "عفوااً، الاستمارة '٪ {form_code}' غير متوفرة حاليا لتقديم رسائل نصية قصيرة."
-      form_version_outdated: "عفواً، رمز الاستمارة '٪ {form_code}' تشير إلى نسخة نظام قديمة. يرجى الحصول على دليل التقديم المحدث."
-      invalid_form_code: "عفوا، '٪ {form_code}' ليس رمز استمارة صحيح."
-      question_doesnt_exist: "عفواً، السؤال٪ {rank} غير موجود في الاستمارة'٪ {form_id}'."
+      first_answer_invalid: "آسف، ولكن %{token} ليست إجابة صحيحة. تأكد من أن تضع نقطة بعد رقم السؤال."
+      form_not_found: "عفواً، لا يوجد أي استمارة مع الرمز '%{form_code}'."
+      form_not_permitted: "عفواً، غير مصرح لك بتسليم رد على الاستمارة  '%{form_code}'."
+      form_not_published: "عفواً، الاستمارة '%{form_code}' غير متوفرة حاليا لتسليم الردود."
+      form_not_smsable: "عفوااً، الاستمارة '%{form_code}' غير متوفرة حاليا لتقديم رسائل نصية قصيرة."
+      form_version_outdated: "عفواً، رمز الاستمارة '%{form_code}' تشير إلى نسخة نظام قديمة. يرجى الحصول على دليل التقديم المحدث."
+      invalid_form_code: "عفوا، '%{form_code}' ليس رمز استمارة صحيح."
+      question_doesnt_exist: "عفواً، السؤال %{rank} غير موجود في الاستمارة '%{form_code}'."
       user_not_found: "عفواً، لم يتم العثور عليك في النظام"
     incoming_numbers:
       id: "هوية"
       phone_number: "رقم_هاتف"
     validation:
-      invalid_answer: "عفواً، الجواب على السؤال٪ {rank}٪ {error}."
-      missing_answer: "عفواً، الإجابة على السؤال المطلوب٪ {ranks} كان مفقود من ردكم على الاستمارة '٪ {form_id}'."
-      missing_answers: "عفواً، الإجابة على السؤال المطلوب٪ {ranks} كان مفقود من ردكم على الاستمارة '٪ {form_id}'."
+      invalid_answer: "عفواً، الجواب على السؤال %{rank} %{error}."
+      missing_answer: "عفواً، الإجابة على السؤال المطلوب %{ranks} كان مفقود من ردكم على الاستمارة '%{form_code}'."
+      missing_answers: "عفواً، الإجابة على السؤال المطلوب %{ranks} كان مفقود من ردكم على الاستمارة '%{form_code}'."
   standard:
     import: "استيراد"
     import_choose_one:
@@ -1614,17 +1641,26 @@ ar:
       questions: "استورد أسئلة قياسية"
     import_success:
       forms:
-        zero: " تم استيراد ٪ {count} استمارات بنجاح."
-        one: " تم استيراد ٪ {count} استمارة بنجاح."
-        other: " تم استيراد ٪ {count} استمارات بنجاح."
+        zero: " تم استيراد %{count} استمارات بنجاح."
+        one: " تم استيراد %{count} استمارة بنجاح."
+        two: " تم استيراد %{count} استمارات بنجاح."
+        few: " تم استيراد %{count} استمارات بنجاح."
+        many: " تم استيراد %{count} استمارات بنجاح."
+        other: " تم استيراد %{count} استمارات بنجاح."
       option_sets:
-        zero: " تم استيراد ٪ {count} مجموعات خيار بنجاح."
-        one: " تم استيراد ٪ {count} مجموعة خيار بنجاح."
-        other: " تم استيراد ٪ {count} مجموعات خيار بنجاح."
+        zero: " تم استيراد %{count} مجموعات خيار بنجاح."
+        one: " تم استيراد %{count} مجموعة خيار بنجاح."
+        two: " تم استيراد %{count} مجموعات خيار بنجاح."
+        few: " تم استيراد %{count} مجموعات خيار بنجاح."
+        many: " تم استيراد %{count} مجموعات خيار بنجاح."
+        other: " تم استيراد %{count} مجموعات خيار بنجاح."
       questions:
-        zero: " تم استيراد ٪ {count} أسئلة بنجاح."
-        one: " تم استيراد ٪ {count} سؤال بنجاح."
-        other: " تم استيراد ٪ {count} أسئلة بنجاح."
+        zero: " تم استيراد %{count} أسئلة بنجاح."
+        one: " تم استيراد %{count} سؤال بنجاح."
+        two: " تم استيراد %{count} أسئلة بنجاح."
+        few: " تم استيراد %{count} أسئلة بنجاح."
+        many: " تم استيراد %{count} أسئلة بنجاح."
+        other: " تم استيراد %{count} أسئلة بنجاح."
     no_importable:
       forms: "لا يوجد شيء متوفر للاستيراد. إما لا توجد استمارات قياسية، أو أنها جميعها مستوردة بالفعل."
       option_sets: "لا يوجد شيء متوفر للاستيراد. إما لا توجد مجموعات خيار قياسية، أو أنها جميعها مستوردة بالفعل."
@@ -1632,17 +1668,20 @@ ar:
     standard: "قياسية "
     standard_forms: "استمارات قياسية"
     there_were_errors:
-      zero: "هناك٪ {count} من الأخطاء."
-      one: "هناك٪ {count} خطأ."
-      other: "هناك٪ {count} من الأخطاء."
+      zero: "هناك %{count} من الأخطاء."
+      one: "هناك %{count} خطأ."
+      two: "هناك %{count} من الأخطاء."
+      few: "هناك %{count} من الأخطاء."
+      many: "هناك %{count} من الأخطاء."
+      other: "هناك %{count} من الأخطاء."
   unauthorized:
     default: "غير مصرح لك للوصول إلى هذه الصفحة أو العملية."
     must_login: "عليك تسجيل الدخول للوصول إلى هذه الصفحة."
   user_batch:
     instructions_html: |-
-        تحميل جدول بيانات مع مستخدمينك. فقط XLSX جداول البيانات إكسل وملفات CSV ستقبل.
+        استيراد جدول بيانات مع مستخدمينك. فقط جداول البيانات XLSX  وملفات CSV ستقبل.
 
-        نموذج جدول بيانات متاح في <a href="٪{xlsx_url}"> XLSX </a> و <a href="٪{csv_url}"> CSV < / أ> صيغ كنقطة بداية.
+        نموذج جدول بيانات متاح في <a href="%{xlsx_url}"> XLSX </a> و  <a href="%{csv_url}"> CSV</a> صيغ كنقطة بداية.
   user:
     add_assignment: "إضافة واجب "
     api_key:
@@ -1652,17 +1691,31 @@ ar:
     bulk_destroy_confirm:
       zero: "هل أنت متأكد من أنك لا تريد حذف أي مستخدم؟"
       one: "هل أنت متأكد من أنك تريد حذف هذا المستخدم؟"
-      other: "هل أنت متأكد أنك تريد حذف هؤلاء٪ {count} المستخدمين؟"
+      two: "هل أنت متأكد أنك تريد حذف هؤلاء %{count} المستخدمين؟"
+      few: "هل أنت متأكد أنك تريد حذف هؤلاء %{count} المستخدمين؟"
+      many: "هل أنت متأكد أنك تريد حذف هؤلاء %{count} المستخدمين؟"
+      other: "هل أنت متأكد أنك تريد حذف هؤلاء %{count} المستخدمين؟"
     bulk_destroy_deleted:
       zero: "لم يحذف أي مستخدم بنجاح"
-      one: "٪ {count}مستخدم حذف بنجاح."
-      other: "حذف٪ {count} من المستخدمين بنجاح."
+      one: "%{count} مستخدم حذف بنجاح."
+      two: "حذف %{count} من المستخدمين بنجاح."
+      few: "حذف %{count} من المستخدمين بنجاح."
+      many: "حذف %{count} من المستخدمين بنجاح."
+      other: "حذف %{count} من المستخدمين بنجاح."
     bulk_destroy_deactivated:
       zero: "لم يوقف تفعيل أي مستخدم"
+      one: "لا يمكن حذف %{count} مستخدم ، لذا تم إلغاء تنشيطهم."
+      two: "لا يمكن حذف %{count} مستخدم ، لذا تم إلغاء تنشيطهم."
+      few: "لا يمكن حذف %{count} مستخدم ، لذا تم إلغاء تنشيطهم."
+      many: "لا يمكن حذف %{count} مستخدم ، لذا تم إلغاء تنشيطهم."
+      other: "لا يمكن حذف %{count} مستخدم ، لذا تم إلغاء تنشيطهم."
     bulk_destroy_skipped:
       zero: "لم يتم تخطي أي مستخدم"
-      one: "تم تخطي٪ {count} مستخدم."
-      other: "تم تخطي٪ {count} مستخدمين."
+      one: "تم تخطي %{count} مستخدم."
+      two: "تم تخطي %{count} مستخدمين."
+      few: "تم تخطي %{count} مستخدمين."
+      many: "تم تخطي %{count} مستخدمين."
+      other: "تم تخطي %{count} مستخدمين."
     bulk_destroy_skipped_current: "عدم حذف المستخدم الحالي"
     create_multiple: "إنشاء مستخدمين متعددين"
     edit_profile: "تعديل الحساب"
@@ -1686,7 +1739,7 @@ ar:
           كون كلمة المرور تخزن بطريققة مشفرة، ستكون التعليمات غير قابل للاسترجاع بعد مغادرة هذه الصفحة.
       site_url: "رابط الموقع"
       title: "تعليمات تسجيل الدخول "
-      welcome: "أهلا بك في٪ {الموقع}. بيانات الاعتماد الخاصة بك هي:"
+      welcome: "أهلا بك في %{site}. بيانات الاعتماد الخاصة بك هي:"
     logout_success: "لقد تم تسجيل خروجك بنجاح."
     profile_updated: "تم تحديث الحساب بنجاح."
     reset_password_and: "إعادة تعيين كلمة المرور و"
@@ -1698,15 +1751,17 @@ ar:
     show_printable_instructions: "عرض تعليمات قابلة للطباعة"
   user_group:
     create_prompt: "الرجاء كتابة اسم مجموعتك."
+    add_users_success: "تمت إضافة %{count} مستخدمين إلى المجموعة %{group} بنجاح"
+    remove_users_success: "تمت إزالة %{count} مستخدمين من المجموعة %{group} بنجاح"
   welcome:
-    awaiting_review: "**٪ {count} ** بانتظار المراجعة"
-    by_you: "**٪ {count} ** تقديمات بواسطتك"
-    form_count: "**٪ {count} إستمارات**"
-    in_the_past_day: "**٪ {count} ** في اليوم الماضي"
-    in_the_past_hour: "**٪ {count} ** في الساعة الماضية "
-    in_the_past_month: "**٪ {count} ** في الشهر الماضي "
-    in_the_past_week: "**٪ {count} ** في الاسبوع الماضي"
-    in_the_past_year: "**٪ {count} ** في السنة الماضية "
+    awaiting_review: "**%{count}** بانتظار المراجعة"
+    by_you: "**%{count}** تقديمات بواسطتك"
+    form_count: "**%{count}** إستمارات"
+    in_the_past_day: "**%{count}** في اليوم الماضي"
+    in_the_past_hour: "**%{count}** في الساعة الماضية "
+    in_the_past_month: "**%{count}** في الشهر الماضي "
+    in_the_past_week: "**%{count}** في الاسبوع الماضي"
+    in_the_past_year: "**%{count}** في السنة الماضية"
     no_mission_selected:
       title: "لم تحدد أي مهمة "
       choose: "يرجى تحديد مهمة من القائمة المنسدلة في أعلى يمين الشاشة."
@@ -1715,9 +1770,9 @@ ar:
       need_to_create: "لا يوجد حالياً أي مهمة، الرجاء"
       no_missions: "لا يوجد حاليا أي مهمة في النظام. يرجى الاتصال بالمسؤول."
     no_recent: "** 0 ** الردود الأخيرة"
-    published_form_count: "**٪ {count} ** استمارة نشرت"
+    published_form_count: "**%{count}** استمارة نشرت"
     select_a_form: "حدد الاستمارة للتقديم"
     select_a_report: "اختار تقرير لعرضه"
-    total_responses: "**٪ {count} مجموع الردود **"
-    total_users: "**٪ {count} ** مجموع المستخدمين"
-    unpublished_form_count: "**٪ {count} ** استمارات غير منشورة"
+    total_responses: "**%{count}** مجموع الردود"
+    total_users: "**%{count}** مجموع المستخدمين"
+    unpublished_form_count: "**%{count}** استمارات غير منشورة"

@@ -813,7 +813,6 @@ fr:
       not_approved: "Votre compte n'est pas approuvé."
       not_confirmed: "Votre compte n'est pas confirmée."
       password_blank: "Entrez un mot de passe."
-      password_invalid: "Pas valide. les standards de sécurité du mot de passe ont été mis à jour. Si votre mot de passe ne marche pas, veuillez utiliser le module de reinitialisation du mot de passe pour créer un nouveau."
     models:
       user_session: "Session de l'utilisateur"
     attributes:
