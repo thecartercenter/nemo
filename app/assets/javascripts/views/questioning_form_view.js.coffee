@@ -17,7 +17,8 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
     @showField('read_only', @showReadOnly())
     @showField('required', @showRequired())
     @showField('hidden', @showHidden())
-    @showField('condition', @showCondition())
+    @showField('display_logic', @showDisplayLogic())
+    @showField('skip_logic', @showSkipLogic())
 
   showDefault: ->
     @defaultableTypes.indexOf(@fieldValue('qtype_name')) != -1
@@ -31,5 +32,8 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
   showHidden: ->
     @super.metadataTypeBlank.call(this)
 
-  showCondition: ->
+  showDisplayLogic: ->
+    @super.metadataTypeBlank.call(this)
+
+  showSkipLogic: ->
     @super.metadataTypeBlank.call(this)
