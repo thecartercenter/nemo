@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Create Answer Hierarchy
 class CreateAnswerHierarchies < ActiveRecord::Migration
   def change
     create_table :answer_hierarchies, id: false do |t|
@@ -6,7 +9,7 @@ class CreateAnswerHierarchies < ActiveRecord::Migration
       t.integer :generations, null: false
     end
 
-    add_index :answer_hierarchies, [:ancestor_id, :descendant_id, :generations],
+    add_index :answer_hierarchies, %i[ancestor_id descendant_id generations],
       unique: true,
       name: "answer_anc_desc_idx"
 
