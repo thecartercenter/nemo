@@ -83,7 +83,7 @@ class Form < ApplicationRecord
   end
 
   def preordered_items(eager_load: nil)
-    root_group.preordered_descendants(eager_load: eager_load)
+    root_group.try(:preordered_descendants, eager_load: eager_load) || []
   end
 
   def odk_download_cache_key
