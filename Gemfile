@@ -135,6 +135,9 @@ gem "exception_notification"
 #react
 gem "react-rails"
 
+# Closure tree for answer heirarchy
+gem "closure_tree"
+
 group :development do
   # generate diagrams with rake db:migrate
   gem "rails-erd", "~> 1.4.0"
