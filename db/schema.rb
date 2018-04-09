@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_403_201_140) do
+ActiveRecord::Schema.define(version: 20_180_409_192_840) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "answer_hierarchies", id: false, force: :cascade do |t|
+    t.uuid "ancestor_id", null: false
+    t.uuid "descendant_id", null: false
+    t.integer "generations", null: false
+  end
+
+  add_index "answer_hierarchies", %w[ancestor_id descendant_id generations], name: "answer_anc_desc_idx", unique: true, using: :btree
+  add_index "answer_hierarchies", ["descendant_id"], name: "answer_desc_idx", using: :btree
 
   create_table "answers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.decimal "accuracy", precision: 9, scale: 3
@@ -30,6 +39,7 @@ ActiveRecord::Schema.define(version: 20_180_403_201_140) do
     t.integer "old_id"
     t.uuid "option_id"
     t.integer "option_old_id"
+    t.uuid "parent_id"
     t.uuid "questioning_id"
     t.integer "questioning_old_id"
     t.integer "rank", default: 1, null: false
