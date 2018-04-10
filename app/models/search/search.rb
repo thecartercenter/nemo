@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class Search::Search
   attr_accessor :str, :qualifiers, :expressions
 
   def initialize(attribs = {})
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
     @expressions = []
-    @parser = Search::Parser.new(:search => self)
+    @parser = Search::Parser.new(search: self)
     @parser.parse
   end
 
@@ -14,6 +16,10 @@ class Search::Search
   end
 
   def associations
-    expressions.map{|e| e.qualifier.assoc}.flatten.compact.uniq
+    expressions.map { |e| e.qualifier.assoc }.flatten.compact.uniq
+  end
+
+  def uses_qualifier?(qualifier_name)
+    expressions.any? { |e| e.qualifier.name == qualifier_name }
   end
 end

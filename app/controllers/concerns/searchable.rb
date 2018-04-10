@@ -16,7 +16,7 @@ module Searchable
 
   def apply_search(klass, rel)
     begin
-      return klass.do_search(rel, params[:search])
+      return klass.do_search(rel, params[:search], mission: current_mission)
     rescue Search::ParseError
       flash.now[:error] = $!.to_s
       @search_error = true

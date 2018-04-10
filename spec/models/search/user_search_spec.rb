@@ -9,10 +9,11 @@ describe User do
     let!(:second_user) { create(:user_group_assignment, user_group: first_group).user }
     let!(:third_user) { create(:user_group_assignment, user_group: second_group).user }
 
-    subject { User.do_search(User, query).to_a }
+    subject { User.do_search(User, query, scope).to_a }
 
     context "searching by group" do
       let(:query) {%[group:"#{group_sought.name}"]}
+      let(:scope) { nil }
 
       context "searching for first group" do
         let(:group_sought) { first_group }
@@ -43,9 +44,10 @@ describe User do
       end
 
       context "in mission" do
+        let(:scope) { {mission: get_mission} }
 
         context "searching for staffer" do
-          let(:role_sought)  {  "staffer" }
+          let(:role_sought)  { "staffer" }
 
           it "should return all users with staffer role in current mission only" do
             expect(subject).to contain_exactly(third_user)
@@ -62,6 +64,8 @@ describe User do
       end
 
       context "admin mode" do
+        let(:scope) { {mission: nil} }
+
         context "searching for staffer" do
           let(:role_sought) { "staffer" }
           it "should return all users with staffer role in any mission" do

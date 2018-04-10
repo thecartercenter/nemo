@@ -99,7 +99,8 @@ class Question < ApplicationRecord
 
   # searches for questions
   # based on User.do_search
-  def self.do_search(relation, query)
+  # scope used in User.do_search but not here
+  def self.do_search(relation, query, _scope)
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 

@@ -114,7 +114,7 @@ class User < ApplicationRecord
     (user && user.valid_password?(password)) ? user : nil
   end
 
-  # To make a new search qualifier, 
+  # To make a new search qualifier,
   def self.search_qualifiers
     [
       Search::Qualifier.new(name: "name", col: "users.name", type: :text, default: true),
@@ -129,7 +129,7 @@ class User < ApplicationRecord
   # searches for users
   # relation - a User relation upon which to build the search query
   # query - the search query string (e.g. name:foo)
-  def self.do_search(relation, query)
+  def self.do_search(relation, query, scope)
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
@@ -141,8 +141,16 @@ class User < ApplicationRecord
 
     # apply the conditions
     relation = relation.where(sql)
-  end
 
+    # If scoped by mission, remove rows from other missions
+    # This is used for the role qualifier, where the search should return only users whose role matches
+    # in the current mission
+    if search.uses_qualifier?("role") && scope && scope[:mission]
+      relation.where("assignments.mission_id = ?", scope[:mission].id)
+    else
+      relation
+    end
+  end
 
   # Returns an array of hashes of format {name: "Some User", response_count: 2}
   # of enumerator response counts for the given mission
