@@ -4,5 +4,5 @@
 class ResponseNode < ApplicationRecord
   self.table_name = "answers"
 
-  has_closure_tree(dependent: :destroy, order: :rank)
+  has_closure_tree(dependent: :destroy)
 end
