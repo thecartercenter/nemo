@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Create Answer Hierarchy
+# Create Answers Hierarchy table, which holds the closure tree-supported hierarchy of ResponseNodes
 class CreateAnswerHierarchies < ActiveRecord::Migration
   def change
     create_table :answer_hierarchies, id: false do |t|

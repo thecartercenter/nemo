@@ -15,7 +15,7 @@
 # - Should be 1 for answers to top level questions and questions in non-repeating groups
 # - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
 #
-class Answer < ApplicationRecord
+class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
@@ -29,10 +29,6 @@ class Answer < ApplicationRecord
   end
 
   attr_accessor :location_values_replicated
-
-  has_closure_tree(dependent: :destroy)
-  # TODO: add ordering using rank? or add ordering column that is populated based on form item rank?
-  # TODO: we might want to add touch since the trees aren't very deep
 
   belongs_to :questioning, inverse_of: :answers
   belongs_to :option, inverse_of: :answers
