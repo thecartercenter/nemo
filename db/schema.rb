@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_409_200_749) do
+ActiveRecord::Schema.define(version: 20_180_410_184_115) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(version: 20_180_409_200_749) do
     t.date "date_value"
     t.datetime "datetime_value"
     t.datetime "deleted_at"
-    t.boolean "delta", default: true, null: false
     t.integer "inst_num", default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
