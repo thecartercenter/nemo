@@ -372,21 +372,13 @@ class Answer < ApplicationRecord
 
   def validate_date
     raw_date = read_attribute_before_type_cast("date_value")
-
-    begin
-      raw_date.present? && raw_date.is_a?(String) && Date.parse(raw_date)
-    rescue ActiveRecord::RecordInvalid
-      errors.add(:date_value, :invalid_date)
-    end
+    return if raw_date.blank? || Time.zone.parse(raw_date.to_s).present?
+    errors.add(:date_value, :invalid_date)
   end
 
   def validate_datetime
-    raw_date = read_attribute_before_type_cast("datetime_value")
-
-    begin
-      raw_date.present? && raw_date.is_a?(String) && Date.parse(raw_date)
-    rescue ActiveRecord::RecordInvalid
-      errors.add(:datetime_value, :invalid_datetime)
-    end
+    raw_datetime = read_attribute_before_type_cast("datetime_value")
+    return if raw_datetime.blank? || Time.zone.parse(raw_datetime.to_s).present?
+    errors.add(:datetime_value, :invalid_datetime)
   end
 end
