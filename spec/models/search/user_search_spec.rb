@@ -45,26 +45,26 @@ describe User do
       context "in mission" do
 
         context "searching for staffer" do
-          let(:role_sought) {"staffer"}
+          let(:role_sought)  {  "staffer" }
 
-          it "should return only user with staffer role in current mission" do
+          it "should return all users with staffer role in current mission only" do
             expect(subject).to contain_exactly(third_user)
           end
         end
 
         context "searching for staffer" do
-          let(:role_sought) {"enumerator"}
+          let(:role_sought) { "enumerator" }
 
-          it "should return only user with enumerator role in current mission" do
+          it "should return all users with enumerator role in current mission only" do
             expect(subject).to contain_exactly(first_user)
           end
         end
       end
+
       context "admin mode" do
         context "searching for staffer" do
-          let(:role_sought) {"staffer"}
-
-          it "should return only user with staffer role in current mission" do
+          let(:role_sought) { "staffer" }
+          it "should return all users with staffer role in any mission" do
             expect(subject).to contain_exactly(first_user, third_user)
           end
         end
