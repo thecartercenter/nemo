@@ -37,7 +37,7 @@ class User < ApplicationRecord
     c.logged_in_timeout(SESSION_TIMEOUT)
 
     c.validates_format_of_login_field_options = {with: /\A[a-zA-Z0-9\._]+\z/}
-    c.merge_validates_uniqueness_of_login_field_options(unless: :batch_creation?)
+    c.merge_validates_uniqueness_of_login_field_options(unless: :batch_creation?, scope: :deleted_at)
     c.merge_validates_length_of_password_field_options(minimum: 8, unless: :batch_creation?)
     c.merge_validates_format_of_email_field_options(allow_blank: true)
 
