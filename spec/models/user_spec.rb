@@ -94,6 +94,18 @@ describe User do
       expect(user).to be_valid
       expect(user.login).to eq "foobar"
     end
+
+
+
+    describe "uniqueness" do
+      before { @user = create(:user, login: "jayita") }
+
+      it "can create a user with the same login after deleting" do
+        @user.destroy
+        @user_2 = build(:user, login: "jayita")
+        expect(@user_2).to be_valid
+      end
+    end
   end
 
   it "creating a user with minimal info should produce good defaults", :investigate do
