@@ -95,8 +95,6 @@ describe User do
       expect(user.login).to eq "foobar"
     end
 
-
-
     describe "uniqueness" do
       before { @user = create(:user, login: "jayita") }
 
