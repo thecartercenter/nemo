@@ -100,8 +100,8 @@ describe User do
 
       it "can create a user with the same login after deleting" do
         @user.destroy
-        @user_2 = build(:user, login: "jayita")
-        expect(@user_2).to be_valid
+        @user2 = build(:user, login: "jayita")
+        expect(@user2).to be_valid
       end
     end
   end
