@@ -1,74 +1,96 @@
 # frozen_string_literal: true
 
 module Results
-  # Temporarily holds a set of rows from the CSV output while they are being populated.
   module Csv
+    # Temporarily holds the next row of the CSV output while it is being populated.
+    # Responsible for preparing the row to receive new answer data by copying common data
+    # (response data and parent group data) from the previous row of the CSV output.
+    # Also responsible for dumping rows to the CSV handler when it's time to start a fresh row.
     class Buffer
-      attr_accessor :csv, :cells, :header_map, :empty, :group_path
+      attr_accessor :csv, :cells, :header_map, :empty, :group_path,
+        :common_headers, :max_depth, :column_stack
       alias empty? empty
 
-      def initialize
-        init_header_map
-        self.group_path = GroupPath.new(max_depth: 1)
+      def initialize(max_depth:, common_headers:)
+        self.group_path = GroupPath.new(max_depth: max_depth)
         self.cells = []
         self.empty = true
+        self.max_depth = max_depth
+        self.common_headers = common_headers
+        self.header_map = HeaderMap.new
+        self.column_stack = ColumnStack.new
       end
 
-      # Takes a row from the DB result and sets the appropriate cells in the buffer.
+      # Takes a row from the DB result and prepares the buffer for new data.
+      # Dumps the row when appropriate (i.e. when the group path changes).
       def process_row(row)
         group_path.process_row(row)
 
         # If path to group has changed, it's time to dump the CSV row and start a new one!
+        # (The first time through, the group path will have changed, but the row will be empty,
+        # so nothing will be dumped.)
         dump_row if group_path.changed?
 
-        add_common_cells(row) if empty?
-        header = row["question_code"]
-        cells[col_index_for_header(header)] = row["answer_value"]
+        # Now handle deletions and additions.
+        handle_group_path_deletions if group_path.deletions?
+        handle_group_path_additions(row) if group_path.additions?
+      end
+
+      def write(header, value)
+        self.empty = false
+        idx = header_map.index_for(header)
+        cells[idx] = value
+        column_stack.add(idx)
       end
 
       def finish
         dump_row
       end
 
-      def headers
-        # Translate the common headers and join to the per-question ones.
-        common_header_names.map { |h| I18n.t("response.csv_headers.#{h}") }.concat(
-          header_map.keys[common_header_names.size..-1])
+      private
+
+      def handle_group_path_deletions
+        column_stack.pop(group_path.deletion_count).each do |cols|
+          cols.each { |i| clear_at(i) }
+        end
+        self.empty = column_stack.empty?
       end
 
-      private
+      def handle_group_path_additions(row)
+        group_path.addition_count.times do
+          # If depth is 0, we are pushing the first frame on the stack, so we should write
+          # the common headers to get the row started.
+          # Else we just need to write the group rank and inst_num.
+          depth = column_stack.size
+          column_stack.push_empty_frame
+          if depth.zero?
+            write_common_columns(row)
+          else
+            write_group_info(row, depth)
+          end
+        end
+      end
+
+      def clear_at(idx)
+        cells[idx] = nil
+      end
+
+      def write_group_info(row, depth)
+        copy_from_row(row, "group#{depth}_rank")
+        copy_from_row(row, "group#{depth}_inst_num")
+      end
+
+      def write_common_columns(row)
+        common_headers.each { |h| copy_from_row(row, h) }
+      end
+
+      def copy_from_row(row, header)
+        write(header, row[header])
+      end
 
       def dump_row
         return if empty?
         csv << cells
-        clear
-      end
-
-      def init_header_map
-        self.header_map = ActiveSupport::OrderedHash.new
-        common_header_names.each_with_index do |name, i|
-          header_map[name] = i
-        end
-      end
-
-      def common_header_names
-        @common_header_names ||= %w[response_id form_name user_name submit_time shortcode
-                                    group1_rank group1_item_num parent_group_name parent_group_depth]
-      end
-
-      def col_index_for_header(header)
-        header_map[header] ||= header_map.size
-      end
-
-      # Copies common cells from row into buffer.
-      def add_common_cells(row)
-        self.empty = false
-        common_header_names.each { |name| cells[header_map[name]] = row[name] }
-      end
-
-      def clear
-        cells.size.times { |i| cells[i] = nil }
-        self.empty = true
       end
     end
   end

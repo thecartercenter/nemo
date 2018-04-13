@@ -59,6 +59,22 @@ module Results
         !changes.nil? && (changes[0] != 0 || changes[1] != 0)
       end
 
+      def addition_count
+        changes[1]
+      end
+
+      def deletion_count
+        -changes[0]
+      end
+
+      def additions?
+        addition_count.positive?
+      end
+
+      def deletions?
+        deletion_count.positive?
+      end
+
       private
 
       # Gets keys in row to check for path data
