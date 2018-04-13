@@ -735,6 +735,8 @@ en:
           invalid_longitude: "Longitude is out of range."
           invalid_altitude: "Altitude is out of range."
           invalid_accuracy: "Accuracy is out of range."
+          invalid_date: "Date is invalid."
+          invalid_datetime: "Date/Time is invalid."
           accuracy_negative: "Accuracy can't be negative."
         assignment:
           blank: "is required."

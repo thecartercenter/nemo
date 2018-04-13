@@ -194,4 +194,9 @@ group :development, :test do
 
   # removes "get assets" from logs
   gem "quiet_assets", "~> 1.1.0"
+
+  # debugging
+  gem "pry"
+  gem "pry-nav"
+  gem "pry-rails"
 end

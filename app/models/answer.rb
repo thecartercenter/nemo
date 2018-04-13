@@ -50,6 +50,7 @@ class Answer < ApplicationRecord
   validate :validate_min_max, if: -> { should_validate?(:min_max) }
   validate :validate_required, if: -> { should_validate?(:required) }
   validate :validate_location, if: -> { should_validate?(:location) }
+  validate :validate_date, :validate_datetime
 
   accepts_nested_attributes_for(:choices)
 
@@ -367,5 +368,17 @@ class Answer < ApplicationRecord
   def reset_location_flag
     self.location_values_replicated = false
     true
+  end
+
+  def validate_date
+    raw_date = read_attribute_before_type_cast("date_value")
+    return if raw_date.blank? || Time.zone.parse(raw_date.to_s).present?
+    errors.add(:date_value, :invalid_date)
+  end
+
+  def validate_datetime
+    raw_datetime = read_attribute_before_type_cast("datetime_value")
+    return if raw_datetime.blank? || Time.zone.parse(raw_datetime.to_s).present?
+    errors.add(:datetime_value, :invalid_datetime)
   end
 end
