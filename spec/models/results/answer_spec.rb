@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
-describe Answer, type: :model do
+describe Answer do
   describe "#media_object_id=" do
     context "with existing media object" do
       let(:object) { create(:media_image) }
@@ -36,12 +38,12 @@ describe Answer, type: :model do
 
       it "answer with invalid string for date" do
         expect(junk_date_ans_str).not_to be_valid
-        expect(junk_date_ans_str.errors[:date_value].join).to match /Date is invalid/
+        expect(junk_date_ans_str.errors[:date_value].join).to match(/Date is invalid/)
       end
 
       it "answer with invalid integer for date" do
         expect(junk_date_ans_int).not_to be_valid
-        expect(junk_date_ans_int.errors[:date_value].join).to match /Date is invalid/
+        expect(junk_date_ans_int.errors[:date_value].join).to match(/Date is invalid/)
       end
     end
 
@@ -61,12 +63,12 @@ describe Answer, type: :model do
 
       it "answer with invalid string for datetime" do
         expect(junk_datetime_ans_str).not_to be_valid
-        expect(junk_datetime_ans_str.errors[:datetime_value].join).to match /Date\/Time is invalid/
+        expect(junk_datetime_ans_str.errors[:datetime_value].join).to match(%r{Date/Time is invalid})
       end
 
       it "answer with invalid integer for datetime" do
         expect(junk_datetime_ans_int).not_to be_valid
-        expect(junk_datetime_ans_int.errors[:datetime_value].join).to match /Date\/Time is invalid/
+        expect(junk_datetime_ans_int.errors[:datetime_value].join).to match(%r{Date/Time is invalid})
       end
     end
   end
