@@ -15,7 +15,7 @@
 # - Should be 1 for answers to top level questions and questions in non-repeating groups
 # - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
 #
-class Answer < ApplicationRecord
+class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
