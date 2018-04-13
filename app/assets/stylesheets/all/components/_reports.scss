@@ -149,9 +149,9 @@ div.report_body {
 /* report form */
 #report-edit-modal {
   .report_edit_pane {
-    height: 436px;
     display: none;
     margin-left: 8px;
+    min-height: 436px;
 
     .alert {
       display: none;
