@@ -36,10 +36,13 @@ module Results
         handle_group_path_additions(row) if group_path.additions?
       end
 
-      def write(header, value)
+      # Writes the given value to the cell. If the cell already has something in it, appends.
+      # This is useful for select_multiple. We don't need to worry about old data since
+      # we clear it out in `process_row`.
+      def write(header, value, append: false)
         self.empty = false
         idx = header_map.index_for(header)
-        cells[idx] = value
+        cells[idx] = cells[idx].present? && append ? "#{cells[idx]};#{value}" : value
         column_stack.add(idx)
       end
 
