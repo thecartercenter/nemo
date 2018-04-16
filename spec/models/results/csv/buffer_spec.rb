@@ -247,7 +247,8 @@ describe Results::Csv::Buffer do
     )
     expect(csv_row).to be_nil
 
-    # q99 on form2 only.
+    # q99 on form2 only. Also testing overwrite when append not given.
+    buffer.write("q99", "junk")
     buffer.write("q99", "val13")
 
     # Response ID change.
@@ -279,26 +280,28 @@ describe Results::Csv::Buffer do
       "val13"       # q99
     ])
 
-    buffer.write("q2", "val14")
+    # Appends can happen with select_multiple
+    buffer.write("q2", "val14", append: true)
+    buffer.write("q2", "val15", append: true)
 
     csv_row = finish
 
     # CSV row for response 4 should be dumped.
     expect(csv_row).to eq([
-      "4",          # response_id
-      "form2",      # form_name
-      nil,          # group1_rank
-      nil,          # group1_inst_num
-      nil,          # group2_rank
-      nil,          # group2_inst_num
-      nil,          # q1
-      "val14",      # q2
-      nil,          # q3_1:lat
-      nil,          # q3_1:lng
-      nil,          # q3_2
-      nil,          # q3_1_1
-      nil,          # q3_1_2
-      nil           # q99
+      "4",           # response_id
+      "form2",       # form_name
+      nil,           # group1_rank
+      nil,           # group1_inst_num
+      nil,           # group2_rank
+      nil,           # group2_inst_num
+      nil,           # q1
+      "val14;val15", # q2
+      nil,           # q3_1:lat
+      nil,           # q3_1:lng
+      nil,           # q3_2
+      nil,           # q3_1_1
+      nil,           # q3_1_2
+      nil            # q99
     ])
   end
 
