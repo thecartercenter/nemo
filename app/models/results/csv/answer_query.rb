@@ -27,7 +27,7 @@ module Results
             answers.value AS value,
             answers.time_value,
             answers.date_value,
-            answers.datetime_value,
+            answers.datetime_value AT TIME ZONE 'UTC' AS datetime_value,
             answers.latitude,
             answers.longitude,
             answers.altitude,
@@ -67,7 +67,9 @@ module Results
             responses.id,
             group1_rank NULLS FIRST,
             group1_item_num NULLS FIRST,
-            qings.rank
+            qings.rank,
+            answers.rank,
+            choice_option_name
         SQL
       end
     end
