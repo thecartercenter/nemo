@@ -43,6 +43,7 @@ FactoryGirl.define do
           mission: mission,
           multilevel: use_multilevel_option_set,
           geographic: use_geo_option_set,
+          allow_coordinates: use_geo_option_set,
           large: use_large_option_set,
           is_standard: is_standard
         }
