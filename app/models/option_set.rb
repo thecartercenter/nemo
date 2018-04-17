@@ -33,11 +33,9 @@ class OptionSet < ApplicationRecord
   replicable(
     child_assocs: :root_node,
     backwards_assocs: :questions,
-    uniqueness: { field: :name, style: :sep_words },
+    uniqueness: {field: :name, style: :sep_words},
     dont_copy: :root_node_id
   )
-
-  serialize :level_names, JSON
 
   delegate :ranks_changed?,
     :children,

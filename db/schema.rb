@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_416_144_813) do
+ActiveRecord::Schema.define(version: 20_180_417_140_706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -350,7 +350,7 @@ ActiveRecord::Schema.define(version: 20_180_416_144_813) do
     t.datetime "deleted_at"
     t.boolean "geographic", default: false, null: false
     t.boolean "is_standard", default: false
-    t.text "level_names"
+    t.jsonb "level_names"
     t.uuid "mission_id"
     t.integer "mission_old_id"
     t.string "name", limit: 255
