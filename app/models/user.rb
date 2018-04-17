@@ -134,7 +134,12 @@ class User < ApplicationRecord
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     # add associations
-    relation = relation.joins(search.associations)
+    associations = search.associations
+    # because assignments association is often added by the controller, only add if not already in relation
+    if relation.to_sql.match(/OUTER JOIN "assignments"/).present?
+      associations = associations.delete("assignments")
+    end
+    relation = relation.joins(associations)
 
     # get the sql
     sql = search.sql
