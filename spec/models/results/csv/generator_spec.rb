@@ -4,20 +4,18 @@ require "spec_helper"
 
 describe Results::Csv::Generator, :reset_factory_sequences do
   let(:responses) { Response.with_associations.order(:created_at) }
-  let(:generated_csv) { Results::Csv::Generator2.new(responses).to_s }
   let(:ordered_responses) { Response.with_associations.order(:created_at) }
+  subject(:output) { Results::Csv::Generator2.new(responses).to_s }
 
   around do |example|
     # Use a weird timezone so we know times are handled properly.
-    @old_tz = Time.zone
-    Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
-    example.run
-    Time.zone = @old_tz
+    in_timezone("Saskatchewan") { example.run }
   end
 
   context "with no data" do
-    it "should generate empty string" do
-      expect(generated_csv).to eq ""
+    it "produces correct csv" do
+      is_expected.to eq "ResponseID,Form,Submitter,DateSubmitted,ResponseShortcode,"\
+        "GroupNum1,ItemNum1,GroupName,GroupLevel\r\n"
     end
   end
 
@@ -91,8 +89,8 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       end
     end
 
-    it "should generate correct CSV" do
-      expect(generated_csv).to eq prepare_response_csv_expectation("basic.csv")
+    it "produces correct csv" do
+      is_expected.to eq prepare_response_csv_expectation("basic.csv")
     end
   end
 
@@ -100,10 +98,18 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     let(:repeat_form) do
       create(:form,
         question_types:
-          ["integer",
-           {repeating: {items: %w[text integer select_multiple], name: "Fruit"}},
-           "integer",
-           {repeating: {items: %w[text geo_multilevel_select_one integer], name: "Vegetable"}}])
+          ["integer",                                  # 1
+           {repeating: {name: "Fruit", items: [
+             "text",                                   # 2
+             "integer",                                # 3
+             "select_multiple"                         # 4
+           ]}},
+           "integer",                                  # 5
+           {repeating: {name: "Vegetable", items: [
+             "text",                                   # 6
+             "geo_multilevel_select_one",              # 7
+             "integer"                                 # 8
+           ]}}])
     end
 
     before do
@@ -134,8 +140,8 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       end
     end
 
-    it "should generate a row per repeat item, plus one row per response" do
-      expect(generated_csv).to eq prepare_response_csv_expectation("with_repeat_groups.csv")
+    it "produces correct csv" do
+      is_expected.to eq prepare_response_csv_expectation("with_repeat_groups.csv")
     end
   end
 
