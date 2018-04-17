@@ -11,6 +11,8 @@ module Results
         :common_headers, :max_depth, :column_stack
       alias empty? empty
 
+      delegate :headers, to: :header_map
+
       def initialize(max_depth:, common_headers:)
         self.group_path = GroupPath.new(max_depth: max_depth)
         self.cells = []

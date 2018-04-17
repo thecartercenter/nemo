@@ -6,10 +6,14 @@ module Results
     class Generator2
       UUID_LENGTH = 36 # This should never change.
 
-      attr_accessor :buffer
+      attr_accessor :buffer, :answer_processor
 
       def initialize(responses)
-        self.buffer = Buffer.new
+        self.buffer = Buffer.new(
+          max_depth: 1,
+          common_headers: %w[response_id form_name user_name submit_time shortcode]
+        )
+        self.answer_processor = AnswerProcessor.new(buffer)
       end
 
       # Runs the queries and returns the CSV as a string.
@@ -30,6 +34,7 @@ module Results
           buffer.csv = csv
           query.each do |row|
             buffer.process_row(row)
+            answer_processor.process(row)
           end
           buffer.finish
         end
@@ -44,6 +49,8 @@ module Results
 
       def select
         parent_group_name = translation_query("parent_groups.group_name_translations")
+        answer_option_name = translation_query("answer_options.name_translations")
+        choice_option_name = translation_query("choice_options.name_translations")
         <<~SQL
           SELECT
             responses.id AS response_id,
@@ -55,10 +62,13 @@ module Results
             parent_groups.ancestry_depth AS parent_group_depth,
             CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE parent_groups.rank END AS group1_rank,
             CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE answers.inst_num END AS group1_item_num,
-            answers.value AS answer_value,
-            CONCAT(
-              CASE parent_groups.ancestry_depth WHEN 0 THEN '' ELSE
-              CONCAT(#{parent_group_name}, ':') END, questions.code) AS question_code
+            answers.value AS value,
+            answers.time_value,
+            answers.date_value,
+            answers.datetime_value,
+            #{answer_option_name} AS answer_option_name,
+            #{choice_option_name} AS choice_option_name,
+            questions.code AS question_code
         SQL
       end
 
@@ -72,6 +82,9 @@ module Results
             INNER JOIN questions ON qings.question_id = questions.id
             INNER JOIN form_items parent_groups
               ON parent_groups.id = RIGHT(qings.ancestry, #{UUID_LENGTH})::uuid
+            LEFT OUTER JOIN options answer_options ON answer_options.id = answers.option_id
+            LEFT OUTER JOIN choices ON choices.answer_id = answers.id
+            LEFT OUTER JOIN options choice_options ON choices.option_id = choice_options.id
         SQL
       end
 
@@ -87,10 +100,8 @@ module Results
       end
 
       def translation_query(column)
-        "COALESCE(
-          #{column}->>'#{I18n.locale}',
-          #{column}->>'#{I18n.default_locale}',
-          #{column}::text)"
+        tries = ["#{column}->>'#{I18n.locale}'", "#{column}->>'#{I18n.default_locale}'", "#{column}::text"]
+        "COALESCE(#{tries.uniq.join(', ')})"
       end
 
       # Sets the DB's timezone to the current one so that the response times are shown with a timezone
