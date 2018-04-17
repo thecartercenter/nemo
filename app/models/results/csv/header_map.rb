@@ -47,14 +47,9 @@ module Results
         end
       end
 
-      def add(header, suffix: nil)
-        index_for([header, suffix].compact.join(":"))
-      end
-
-      # Returns the index the given header maps to.
-      # If the header doesn't exist yet, adds it.
+      # Returns the index the given header maps to, or nil if not found.
       def index_for(header)
-        map[header] ||= map.size
+        map[header]
       end
 
       def translated_headers
@@ -91,6 +86,10 @@ module Results
           key = configatron.preferred_locales.detect { |l| level[l.to_s].present? } || level.keys.first
           add(code, suffix: level[key.to_s])
         end
+      end
+
+      def add(header, suffix: nil)
+        map[[header, suffix].compact.join(":")] ||= map.size
       end
     end
   end

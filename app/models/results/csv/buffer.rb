@@ -44,9 +44,11 @@ module Results
       # Writes the given value to the cell. If the cell already has something in it, appends.
       # This is useful for select_multiple. We don't need to worry about old data since
       # we clear it out in `process_row`.
+      # If the given header is not found, ignores.
       def write(header, value, append: false)
-        self.empty = false
         idx = header_map.index_for(header)
+        return if idx.nil?
+        self.empty = false
         cells[idx] = cells[idx].present? && append ? "#{cells[idx]};#{value}" : value
         column_stack.add(idx)
       end
