@@ -103,40 +103,38 @@ describe Results::Csv::Generator, :reset_factory_sequences do
           ["integer",
            {repeating: {items: %w[text integer select_multiple], name: "Fruit"}},
            "integer",
-           {repeating: {items: %w[text geo_multilevel_select_one integer], name: "Vegetable"}}]).tap do |f|
-        f.sorted_children[1].update!(repeatable: true)
-      end
-    end
-    let(:response_a) do
-      create(:response, form: repeat_form, answer_values: [
-        1,
-        [:repeating,
-         ["Apple", 1, %w[Cat Dog]],
-         ["Banana", 2, %w[Cat]]],
-        2,
-        [:repeating,
-         ["Asparagus", %w[Ghana Accra], 3]]
-      ])
-    end
-    let(:response_b) do
-      create(:response, form: repeat_form, answer_values: [
-        3,
-        [:repeating,
-         ["Xigua", 10, %w[Dog]],
-         ["Yuzu", 9, %w[Cat Dog]],
-         ["Ugli", 8, %w[Cat]]],
-        4,
-        [:repeating,
-         ["Zucchini", %w[Canada Calgary], 7],
-         ["Yam", %w[Canada Ottawa], 6]]
-      ])
+           {repeating: {items: %w[text geo_multilevel_select_one integer], name: "Vegetable"}}])
     end
 
-    it "should generate a row per repeat group answer, plus one row per response" do
+    before do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
-        response_a
-        Timecop.freeze(10.minutes) { response_b }
+        create(:response, form: repeat_form, answer_values: [
+          1,
+          [:repeating,
+           ["Apple", 1, %w[Cat Dog]],
+           ["Banana", 2, %w[Cat]]],
+          2,
+          [:repeating,
+           ["Asparagus", %w[Ghana Accra], 3]]
+        ])
+
+        Timecop.freeze(10.minutes) do
+          create(:response, form: repeat_form, answer_values: [
+            3,
+            [:repeating,
+             ["Xigua", 10, %w[Dog]],
+             ["Yuzu", 9, %w[Cat Dog]],
+             ["Ugli", 8, %w[Cat]]],
+            4,
+            [:repeating,
+             ["Zucchini", %w[Canada Calgary], 7],
+             ["Yam", %w[Canada Ottawa], 6]]
+          ])
+        end
       end
+    end
+
+    it "should generate a row per repeat item, plus one row per response" do
       expect(generated_csv).to eq prepare_response_csv_expectation("with_repeat_groups.csv")
     end
   end
