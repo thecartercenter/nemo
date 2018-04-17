@@ -1,4 +1,6 @@
-# tests the search functionality for the user model
+# frozen_string_literal: true
+
+# Tests the search functionality for the user model
 require "spec_helper"
 
 describe User do
@@ -13,7 +15,7 @@ describe User do
     subject { User.do_search(User.all, query, scope).to_a }
 
     context "searching by group" do
-      let(:query) {%[group:"#{group_sought.name}"]}
+      let(:query) { %(group:"#{group_sought.name}") }
       let(:scope) { nil }
 
       context "searching for first group" do
@@ -34,8 +36,8 @@ describe User do
     end
 
     context "searching by role" do
-      let(:query) {%[role:"#{role_sought}"]}
-      let(:other_mission) {create(:mission)}
+      let(:query) { %(role:"#{role_sought}") }
+      let(:other_mission) { create(:mission) }
 
       before(:each) do
         first_user.assignments.create!(mission: get_mission, role: "enumerator")
