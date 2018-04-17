@@ -96,10 +96,16 @@ describe User do
     end
 
     describe "uniqueness" do
-      before { @user = create(:user, login: "jayita") }
+      let!(:user) { create(:user, login: "jayita") }
+
+      it "returns an error when the login is not unique" do
+        @user2 = build(:user, login: "jayita")
+        expect(@user2).not_to be_valid
+        expect(@user2.errors.full_messages.join).to match(/Username: Please enter a unique value/)
+      end
 
       it "can create a user with the same login after deleting" do
-        @user.destroy
+        user.destroy
         @user2 = build(:user, login: "jayita")
         expect(@user2).to be_valid
       end
