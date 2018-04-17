@@ -1,4 +1,4 @@
-# encoding: UTF-8
+
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,10 +11,19 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_209_161_736) do
+ActiveRecord::Schema.define(version: 20_180_417_140_706) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
+
+  create_table "answer_hierarchies", id: false, force: :cascade do |t|
+    t.uuid "ancestor_id", null: false
+    t.uuid "descendant_id", null: false
+    t.integer "generations", null: false
+  end
+
+  add_index "answer_hierarchies", %w[ancestor_id descendant_id generations], name: "answer_anc_desc_idx", unique: true, using: :btree
+  add_index "answer_hierarchies", ["descendant_id"], name: "answer_desc_idx", using: :btree
 
   create_table "answers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.decimal "accuracy", precision: 9, scale: 3
@@ -23,13 +32,13 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.date "date_value"
     t.datetime "datetime_value"
     t.datetime "deleted_at"
-    t.boolean "delta", default: true, null: false
     t.integer "inst_num", default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "old_id"
     t.uuid "option_id"
     t.integer "option_old_id"
+    t.uuid "parent_id"
     t.uuid "questioning_id"
     t.integer "questioning_old_id"
     t.integer "rank", default: 1, null: false
@@ -37,6 +46,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.integer "response_old_id"
     t.time "time_value"
     t.tsvector "tsv"
+    t.string "type", default: "Answer", null: false
     t.datetime "updated_at"
     t.text "value"
   end
@@ -44,8 +54,9 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
   add_index "answers", ["deleted_at"], name: "index_answers_on_deleted_at", using: :btree
   add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
   add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
-  add_index "answers", %w(response_id questioning_id inst_num rank deleted_at), name: "answers_full", unique: true, using: :btree
+  add_index "answers", %w[response_id questioning_id inst_num rank deleted_at], name: "answers_full", unique: true, using: :btree
   add_index "answers", ["response_id"], name: "index_answers_on_response_id", using: :btree
+  add_index "answers", ["type"], name: "index_answers_on_type", using: :btree
 
   create_table "assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "created_at"
@@ -123,6 +134,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.uuid "option_node_id"
     t.integer "option_node_old_id"
     t.integer "questioning_old_id"
+    t.integer "rank", null: false
     t.uuid "ref_qing_id", null: false
     t.integer "ref_qing_old_id"
     t.datetime "updated_at"
@@ -163,7 +175,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.datetime "updated_at", null: false
   end
 
-  add_index "form_forwardings", %w(form_id recipient_id recipient_type), name: "form_forwardings_full", unique: true, using: :btree
+  add_index "form_forwardings", %w[form_id recipient_id recipient_type], name: "form_forwardings_full", unique: true, using: :btree
   add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
   add_index "form_forwardings", ["recipient_id"], name: "index_form_forwardings_on_recipient_id", using: :btree
 
@@ -177,6 +189,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.uuid "form_id"
     t.integer "form_old_id"
     t.jsonb "group_hint_translations", default: {}
+    t.jsonb "group_item_name_translations", default: {}
     t.jsonb "group_name_translations", default: {}
     t.boolean "hidden", default: false, null: false
     t.uuid "mission_id"
@@ -337,7 +350,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.datetime "deleted_at"
     t.boolean "geographic", default: false, null: false
     t.boolean "is_standard", default: false
-    t.text "level_names"
+    t.jsonb "level_names"
     t.uuid "mission_id"
     t.integer "mission_old_id"
     t.string "name", limit: 255
@@ -404,7 +417,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
   end
 
   add_index "questions", ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
-  add_index "questions", %w(mission_id code deleted_at), name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
+  add_index "questions", %w[mission_id code deleted_at], name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
   add_index "questions", ["mission_id"], name: "index_questions_on_mission_id", using: :btree
   add_index "questions", ["option_set_id"], name: "index_questions_on_option_set_id", using: :btree
   add_index "questions", ["original_id"], name: "index_questions_on_original_id", using: :btree
@@ -507,7 +520,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
   add_index "responses", ["checked_out_by_id"], name: "index_responses_on_checked_out_by_id", using: :btree
   add_index "responses", ["created_at"], name: "index_responses_on_created_at", using: :btree
   add_index "responses", ["deleted_at"], name: "index_responses_on_deleted_at", using: :btree
-  add_index "responses", %w(form_id odk_hash deleted_at), name: "index_responses_on_form_id_and_odk_hash", unique: true, using: :btree
+  add_index "responses", %w[form_id odk_hash deleted_at], name: "index_responses_on_form_id_and_odk_hash", unique: true, using: :btree
   add_index "responses", ["form_id"], name: "index_responses_on_form_id", using: :btree
   add_index "responses", ["mission_id"], name: "index_responses_on_mission_id", using: :btree
   add_index "responses", ["reviewed"], name: "index_responses_on_reviewed", using: :btree
@@ -538,6 +551,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
     t.integer "old_id"
     t.string "override_code", limit: 255
     t.string "preferred_locales", limit: 255
+    t.string "theme", default: "nemo", null: false
     t.string "timezone", limit: 255
     t.string "twilio_account_sid", limit: 255
     t.string "twilio_auth_token", limit: 255
@@ -636,7 +650,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
 
   add_index "user_group_assignments", ["deleted_at"], name: "index_user_group_assignments_on_deleted_at", using: :btree
   add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
-  add_index "user_group_assignments", %w(user_id user_group_id deleted_at), name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, using: :btree
+  add_index "user_group_assignments", %w[user_id user_group_id deleted_at], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, using: :btree
   add_index "user_group_assignments", ["user_id"], name: "index_user_group_assignments_on_user_id", using: :btree
 
   create_table "user_groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
@@ -651,7 +665,7 @@ ActiveRecord::Schema.define(version: 20_180_209_161_736) do
 
   add_index "user_groups", ["deleted_at"], name: "index_user_groups_on_deleted_at", using: :btree
   add_index "user_groups", ["mission_id"], name: "index_user_groups_on_mission_id", using: :btree
-  add_index "user_groups", %w(name mission_id deleted_at), name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
+  add_index "user_groups", %w[name mission_id deleted_at], name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
 
   create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.boolean "active", default: true, null: false
