@@ -75,6 +75,7 @@ module Results
           column_stack.push_empty_frame
           if depth.zero?
             write_common_columns(row)
+            write("parent_group_depth", 0) # Will be overwritten if appropriate.
           else
             write_group_info(row, depth)
           end
