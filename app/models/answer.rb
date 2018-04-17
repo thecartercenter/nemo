@@ -86,6 +86,7 @@ class Answer < ResponseNode
     response_conditions[:user_id] = user.id if user.present? && !user.role?(:staffer, mission)
 
     # return an AR relation
+    # QUESTION: since this is AR in the answers class, why won't STI filter by type implicitly?
     joins(:response)
       .joins(%{LEFT JOIN "choices" ON "choices"."answer_id" = "answers"."id"})
       .where(responses: response_conditions)
@@ -107,7 +108,7 @@ class Answer < ResponseNode
       FROM answers a
         LEFT OUTER JOIN choices c ON c.deleted_at IS NULL AND c.answer_id = a.id
       WHERE a.deleted_at IS NULL
-        AND a.type = 'Answer' 
+        AND a.type = 'Answer'
         AND (a.option_id = ? OR c.option_id = ?)
         AND a.questioning_id IN (?)",
       option_id, option_id, questioning_ids]).first.count > 0

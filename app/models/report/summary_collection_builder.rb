@@ -126,7 +126,7 @@ class Report::SummaryCollectionBuilder
     def run_stat_query(stat_qs)
       qing_ids = stat_qs.map(&:id)
 
-      # NOTE TO MEL
+      # NOTE 
       # The SEC_TO_TIME and TIME_TO_SEC below compute average times (not datetimes, see below for that).
       # There is test coverage for this.
       # In postgres an equivalent might be to do
@@ -527,7 +527,7 @@ class Report::SummaryCollectionBuilder
         FROM answers a
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND a.questioning_id IN (?) 
+          WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
           LIMIT #{RAW_ANSWER_LIMIT}
       SQL
