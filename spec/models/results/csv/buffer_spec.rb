@@ -3,10 +3,33 @@
 require "spec_helper"
 
 describe Results::Csv::Buffer do
+  # Column to index mappings for fake header_map. In reality, setting these indices up is more complex, but
+  # we're just stubbing them here.
+  let(:indices) do
+    {
+      "response_id" => 0,
+      "form_name" => 1,
+      "group1_rank" => 2,
+      "group1_inst_num" => 3,
+      "group2_rank" => 4,
+      "group2_inst_num" => 5,
+      "q1" => 6,
+      "q2" => 7,
+      "q3_1:lat" => 8,
+      "q3_1:lng" => 9,
+      "q3_2" => 10,
+      "q3_1_1" => 11,
+      "q3_1_2" => 12,
+      "q99" => 13
+    }
+  end
+  let(:header_map) do
+    double(common_headers: %w[response_id form_name], count: indices.size)
+  end
   let(:buffer) do
     described_class.new(
       max_depth: 2,
-      common_headers: %w[response_id form_name group1_rank group1_inst_num group2_rank group2_inst_num]
+      header_map: header_map
     )
   end
 
@@ -19,6 +42,8 @@ describe Results::Csv::Buffer do
   end
 
   before do
+    allow(header_map).to receive(:index_for) { |h| indices[h] }
+    buffer.prepare
     buffer.csv = DummyCSV.new
   end
 
@@ -74,7 +99,13 @@ describe Results::Csv::Buffer do
       nil,          # group2_rank
       nil,          # group2_inst_num
       "val1",       # q1
-      "val2"        # q2
+      "val2",       # q2
+      nil,          # q3_1:lat
+      nil,          # q3_1:lng
+      nil,          # q3_2
+      nil,          # q3_1_1
+      nil,          # q3_1_2
+      nil           # q99
     ])
 
     buffer.write("q1", "val3")
@@ -113,7 +144,13 @@ describe Results::Csv::Buffer do
       nil,          # group2_rank
       nil,          # group2_inst_num
       "val3",       # q1
-      "val4"        # q2
+      "val4",       # q2
+      nil,          # q3_1:lat
+      nil,          # q3_1:lng
+      nil,          # q3_2
+      nil,          # q3_1_1
+      nil,          # q3_1_2
+      nil           # q99
     ])
 
     buffer.write("q3_1:lat", "val5")
@@ -156,7 +193,10 @@ describe Results::Csv::Buffer do
       "val4",       # q2
       "val5",       # q3_1:lat
       "val6",       # q3_1:lng
-      "val7"        # q3_2
+      "val7",       # q3_2
+      nil,          # q3_1_1
+      nil,          # q3_1_2
+      nil           # q99
     ])
 
     buffer.write("q3_1:lat", "val8")
@@ -185,7 +225,10 @@ describe Results::Csv::Buffer do
       "val4",       # q2
       "val8",       # q3_1:lat
       "val9",       # q3_1:lng
-      nil           # q3_2
+      nil,          # q3_2
+      nil,          # q3_1_1
+      nil,          # q3_1_2
+      nil           # q99
     ])
 
     buffer.write("q3_1_1", "val10")
@@ -229,7 +272,8 @@ describe Results::Csv::Buffer do
       "val9",       # q3_1:lng
       nil,          # q3_2
       "val10",      # q3_1_1
-      "val11"       # q3_1_2
+      "val11",      # q3_1_2
+      nil           # q99
     ])
 
     # q2 shared by both forms
