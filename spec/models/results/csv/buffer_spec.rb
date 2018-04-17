@@ -13,14 +13,16 @@ describe Results::Csv::Buffer do
       "group1_inst_num" => 3,
       "group2_rank" => 4,
       "group2_inst_num" => 5,
-      "q1" => 6,
-      "q2" => 7,
-      "q3_1:lat" => 8,
-      "q3_1:lng" => 9,
-      "q3_2" => 10,
-      "q3_1_1" => 11,
-      "q3_1_2" => 12,
-      "q99" => 13
+      "parent_group_name" => 6,
+      "parent_group_depth" => 7,
+      "q1" => 8,
+      "q2" => 9,
+      "q3_1:lat" => 10,
+      "q3_1:lng" => 11,
+      "q3_2" => 12,
+      "q3_1_1" => 13,
+      "q3_1_2" => 14,
+      "q99" => 15
     }
   end
   let(:header_map) do
@@ -59,7 +61,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => nil,
       "group1_inst_num" => nil,
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => nil,
+      "parent_group_depth" => 0
     )
     expect(csv_row).to be_nil
 
@@ -73,7 +77,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => nil,
       "group1_inst_num" => nil,
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => nil,
+      "parent_group_depth" => 0
     )
     expect(csv_row).to be_nil
 
@@ -87,7 +93,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => nil,
       "group1_inst_num" => nil,
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => nil,
+      "parent_group_depth" => 0
     )
 
     # CSV row for response 1 should be dumped.
@@ -98,6 +106,8 @@ describe Results::Csv::Buffer do
       nil,          # group1_inst_num
       nil,          # group2_rank
       nil,          # group2_inst_num
+      nil,          # parent_group_name
+      0,            # parent_group_depth
       "val1",       # q1
       "val2",       # q2
       nil,          # q3_1:lat
@@ -118,7 +128,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => nil,
       "group1_inst_num" => nil,
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => nil,
+      "parent_group_depth" => 0
     )
     expect(csv_row).to be_nil
 
@@ -132,7 +144,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => "3",
       "group1_inst_num" => "1",
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => "people",
+      "parent_group_depth" => 1
     )
 
     # CSV row for response 2, level 0 should be dumped.
@@ -143,6 +157,8 @@ describe Results::Csv::Buffer do
       nil,          # group1_inst_num
       nil,          # group2_rank
       nil,          # group2_inst_num
+      nil,          # parent_group_name
+      0,            # parent_group_depth
       "val3",       # q1
       "val4",       # q2
       nil,          # q3_1:lat
@@ -164,7 +180,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => "3",
       "group1_inst_num" => "1",
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => "people",
+      "parent_group_depth" => 1
     )
     expect(csv_row).to be_nil
 
@@ -178,7 +196,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => "3",
       "group1_inst_num" => "2",
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => "people",
+      "parent_group_depth" => 1
     )
 
     # CSV row for response 2, group 3, instance 1 should be dumped.
@@ -189,6 +209,8 @@ describe Results::Csv::Buffer do
       "1",          # group1_inst_num
       nil,          # group2_rank
       nil,          # group2_inst_num
+      "people",     # parent_group_name
+      1,            # parent_group_depth
       "val3",       # q1
       "val4",       # q2
       "val5",       # q3_1:lat
@@ -210,7 +232,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => "3",
       "group1_inst_num" => "2",
       "group2_rank" => "4",
-      "group2_inst_num" => "1"
+      "group2_inst_num" => "1",
+      "parent_group_name" => "eyes",
+      "parent_group_depth" => 2
     )
 
     # CSV row for response 2, group 3, instance 2 should be dumped.
@@ -221,6 +245,8 @@ describe Results::Csv::Buffer do
       "2",          # group1_inst_num
       nil,          # group2_rank
       nil,          # group2_inst_num
+      "people",     # parent_group_name
+      1,            # parent_group_depth
       "val3",       # q1
       "val4",       # q2
       "val8",       # q3_1:lat
@@ -241,7 +267,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => "3",
       "group1_inst_num" => "2",
       "group2_rank" => "4",
-      "group2_inst_num" => "1"
+      "group2_inst_num" => "1",
+      "parent_group_name" => "eyes",
+      "parent_group_depth" => 2
     )
     expect(csv_row).to be_nil
 
@@ -255,7 +283,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => nil,
       "group1_inst_num" => nil,
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => nil,
+      "parent_group_depth" => 0
     )
 
     # CSV row for response 2, group 3, instance 2, group 1, instance 1 should be dumped.
@@ -266,6 +296,8 @@ describe Results::Csv::Buffer do
       "2",          # group1_inst_num
       "4",          # group2_rank
       "1",          # group2_inst_num
+      "eyes",       # parent_group_name
+      2,            # parent_group_depth
       "val3",       # q1
       "val4",       # q2
       "val8",       # q3_1:lat
@@ -287,7 +319,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => nil,
       "group1_inst_num" => nil,
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => nil,
+      "parent_group_depth" => 0
     )
     expect(csv_row).to be_nil
 
@@ -303,7 +337,9 @@ describe Results::Csv::Buffer do
       "group1_rank" => nil,
       "group1_inst_num" => nil,
       "group2_rank" => nil,
-      "group2_inst_num" => nil
+      "group2_inst_num" => nil,
+      "parent_group_name" => nil,
+      "parent_group_depth" => 0
     )
 
     # CSV row for response 3 should be dumped.
@@ -314,6 +350,8 @@ describe Results::Csv::Buffer do
       nil,          # group1_inst_num
       nil,          # group2_rank
       nil,          # group2_inst_num
+      nil,          # parent_group_name
+      0,            # parent_group_depth
       nil,          # q1
       "val12",      # q2
       nil,          # q3_1:lat
@@ -338,6 +376,8 @@ describe Results::Csv::Buffer do
       nil,           # group1_inst_num
       nil,           # group2_rank
       nil,           # group2_inst_num
+      nil,           # parent_group_name
+      0,             # parent_group_depth
       nil,           # q1
       "val14;val15", # q2
       nil,           # q3_1:lat
