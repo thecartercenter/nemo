@@ -21,7 +21,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
   end
 
-  context "with some data without repeat groups" do
+  context "with lots of question types and a non-repeat group" do
     let(:form1) do
       create(:form, question_types: ["text",                       # 1
                                      "geo_multilevel_select_one",  # 2

@@ -8,18 +8,15 @@ module Results
     # Also responsible for dumping rows to the CSV handler when it's time to start a fresh row.
     class Buffer
       attr_accessor :csv, :cells, :header_map, :empty, :group_path,
-        :common_headers, :max_depth, :column_stack
+        :max_depth, :column_stack
       alias empty? empty
 
-      delegate :headers, to: :header_map
-
-      def initialize(max_depth:, common_headers:)
+      def initialize(max_depth:, header_map:)
         self.group_path = GroupPath.new(max_depth: max_depth)
         self.cells = []
         self.empty = true
         self.max_depth = max_depth
-        self.common_headers = common_headers
-        self.header_map = HeaderMap.new
+        self.header_map = header_map
         self.column_stack = ColumnStack.new
       end
 
@@ -86,7 +83,7 @@ module Results
       end
 
       def write_common_columns(row)
-        common_headers.each { |h| copy_from_row(row, h) }
+        header_map.common.each { |h| copy_from_row(row, h) }
       end
 
       def copy_from_row(row, header)
