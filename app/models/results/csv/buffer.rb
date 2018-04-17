@@ -12,17 +12,23 @@ module Results
       alias empty? empty
 
       def initialize(max_depth:, header_map:)
-        self.group_path = GroupPath.new(max_depth: max_depth)
-        self.cells = []
-        self.empty = true
         self.max_depth = max_depth
         self.header_map = header_map
         self.column_stack = ColumnStack.new
+        self.group_path = GroupPath.new(max_depth: max_depth)
+        self.empty = true
+      end
+
+      # Sets up the cells array based on the header count. Must be called before process_row.
+      def prepare
+        self.cells = Array.new(header_map.count)
       end
 
       # Takes a row from the DB result and prepares the buffer for new data.
       # Dumps the row when appropriate (i.e. when the group path changes).
       def process_row(row)
+        raise "Call `prepare` first" if cells.nil?
+
         group_path.process_row(row)
 
         # If path to group has changed, it's time to dump the CSV row and start a new one!
@@ -62,7 +68,7 @@ module Results
         group_path.addition_count.times do
           # If depth is 0, we are pushing the first frame on the stack, so we should write
           # the common headers to get the row started.
-          # Else we just need to write the group rank and inst_num.
+          # Else we just need to write the new group's info.
           depth = column_stack.size
           column_stack.push_empty_frame
           if depth.zero?
@@ -80,6 +86,8 @@ module Results
       def write_group_info(row, depth)
         copy_from_row(row, "group#{depth}_rank")
         copy_from_row(row, "group#{depth}_inst_num")
+        copy_from_row(row, "parent_group_name")
+        copy_from_row(row, "parent_group_depth")
       end
 
       def write_common_columns(row)

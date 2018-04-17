@@ -15,6 +15,7 @@ module Results
       # Runs the queries and returns the CSV as a string.
       def to_s
         setup_header_map
+        buffer.prepare
         csv_body.prepend(csv_headers)
       end
 

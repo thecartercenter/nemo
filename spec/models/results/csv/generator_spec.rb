@@ -137,7 +137,6 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         response_a
         Timecop.freeze(10.minutes) { response_b }
       end
-      File.open(Rails.root.join("tmp", "out.csv"), "w") { |f| f.write(generated_csv) }
       expect(generated_csv).to eq prepare_response_csv_expectation("with_repeat_groups.csv")
     end
   end

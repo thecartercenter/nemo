@@ -23,7 +23,7 @@ module Results
             CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
               parent_groups.rank ELSE NULL END AS group1_rank,
             CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
-              answers.inst_num ELSE NULL END AS group1_item_num,
+              answers.inst_num ELSE NULL END AS group1_inst_num,
             answers.value AS value,
             answers.time_value,
             answers.date_value,
@@ -66,7 +66,7 @@ module Results
             responses.created_at,
             responses.id,
             group1_rank NULLS FIRST,
-            group1_item_num NULLS FIRST,
+            group1_inst_num NULLS FIRST,
             qings.rank,
             answers.rank,
             choice_option_name

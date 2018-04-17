@@ -18,11 +18,11 @@ module Results
       def add_group_headers(max_depth)
         self.group_headers = []
         (1..max_depth).to_a.each do |i|
-          group_headers << "group#{i}_rank"
-          group_headers << "group#{i}_inst_num"
-          add("group#{i}_rank")
-          add("group#{i}_inst_num")
+          add_group_header("group#{i}_rank")
+          add_group_header("group#{i}_inst_num")
         end
+        add_group_header("parent_group_name")
+        add_group_header("parent_group_depth")
       end
 
       # Takes an array of hashes with keys: code, qtype_name, level_names, allow_coordinates.
@@ -61,6 +61,10 @@ module Results
         map.keys.map { |h| common_or_group?(h) ? translate(h) : h }
       end
 
+      def count
+        map.size
+      end
+
       private
 
       def common_or_group?(header)
@@ -69,6 +73,11 @@ module Results
 
       def translate(header)
         I18n.t("response.csv_headers.#{header}")
+      end
+
+      def add_group_header(h)
+        group_headers << h
+        add(h)
       end
 
       def add_location_headers(code, lat_lng_only: false)
