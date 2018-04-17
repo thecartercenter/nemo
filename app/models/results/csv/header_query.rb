@@ -33,7 +33,7 @@ module Results
 
       def order
         <<~SQL
-          ORDER BY questions.code
+          ORDER BY LOWER(questions.code)
         SQL
       end
     end
