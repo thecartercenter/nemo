@@ -126,7 +126,7 @@ class Report::SummaryCollectionBuilder
     def run_stat_query(stat_qs)
       qing_ids = stat_qs.map(&:id)
 
-      # NOTE 
+      # NOTE
       # The SEC_TO_TIME and TIME_TO_SEC below compute average times (not datetimes, see below for that).
       # There is test coverage for this.
       # In postgres an equivalent might be to do
