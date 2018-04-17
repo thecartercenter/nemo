@@ -20,8 +20,10 @@ module Results
             responses.shortcode AS shortcode,
             #{parent_group_name} AS parent_group_name,
             parent_groups.ancestry_depth AS parent_group_depth,
-            CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE parent_groups.rank END AS group1_rank,
-            CASE parent_groups.ancestry_depth WHEN 0 THEN NULL ELSE answers.inst_num END AS group1_item_num,
+            CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
+              parent_groups.rank ELSE NULL END AS group1_rank,
+            CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
+              answers.inst_num ELSE NULL END AS group1_item_num,
             answers.value AS value,
             answers.time_value,
             answers.date_value,
