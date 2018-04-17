@@ -83,7 +83,7 @@ module Results
       end
 
       def write_common_columns(row)
-        header_map.common.each { |h| copy_from_row(row, h) }
+        header_map.common_headers.each { |h| copy_from_row(row, h) }
       end
 
       def copy_from_row(row, header)
