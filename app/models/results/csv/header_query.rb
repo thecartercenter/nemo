@@ -13,7 +13,8 @@ module Results
             questions.qtype_name,
             option_sets.level_names,
             option_sets.allow_coordinates,
-            answers.rank
+            answers.rank,
+            LOWER(questions.code)
         SQL
       end
 
