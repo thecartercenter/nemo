@@ -7,13 +7,17 @@ module Results
       attr_accessor :map
 
       def initialize
-        self.map = {}
+        self.map = ActiveSupport::OrderedHash.new
       end
 
       # Returns the index the given header maps to.
       # If the header doesn't exist yet, adds it.
       def index_for(header)
         map[header] ||= map.size
+      end
+
+      def headers
+        map.keys
       end
     end
   end

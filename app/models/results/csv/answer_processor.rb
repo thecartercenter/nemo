@@ -13,6 +13,9 @@ module Results
     # - longitude
     # - altitude
     # - accuracy
+    # - answer_option_name
+    # - choice_option_name
+    # - option_level_name
     class AnswerProcessor
       attr_accessor :buffer, :row
 
@@ -37,7 +40,7 @@ module Results
       end
 
       def select_cols?
-        row["option_name"].present? || row["choice_name"].present?
+        row["answer_option_name"].present? || row["choice_option_name"].present?
       end
 
       def location_cols?
@@ -53,11 +56,11 @@ module Results
       end
 
       def write_select_cells
-        if row["option_name"].present?
+        if row["answer_option_name"].present?
           suffix = (level = row["option_level_name"]) ? ":#{level}" : ""
-          buffer.write("#{code}#{suffix}", row["option_name"])
+          buffer.write("#{code}#{suffix}", row["answer_option_name"])
         else # select multiple
-          buffer.write(code, row["choice_name"], append: true)
+          buffer.write(code, row["choice_option_name"], append: true)
         end
       end
 
