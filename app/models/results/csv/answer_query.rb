@@ -10,6 +10,7 @@ module Results
         parent_group_name = translation_query("parent_groups.group_name_translations")
         answer_option_name = translation_query("answer_options.name_translations")
         choice_option_name = translation_query("choice_options.name_translations")
+        option_level_name = translation_query("option_sets.level_names", arr_index: "answers.rank - 1")
         <<~SQL
           SELECT
             responses.id AS response_id,
@@ -27,7 +28,8 @@ module Results
             answers.datetime_value,
             #{answer_option_name} AS answer_option_name,
             #{choice_option_name} AS choice_option_name,
-            questions.code AS question_code
+            questions.code AS question_code,
+            #{option_level_name} AS option_level_name
         SQL
       end
 
@@ -39,6 +41,7 @@ module Results
             INNER JOIN answers ON answers.response_id = responses.id
             INNER JOIN form_items qings ON answers.questioning_id = qings.id
             INNER JOIN questions ON qings.question_id = questions.id
+            LEFT OUTER JOIN option_sets ON questions.option_set_id = option_sets.id
             INNER JOIN form_items parent_groups
               ON parent_groups.id = RIGHT(qings.ancestry, #{UUID_LENGTH})::uuid
             LEFT OUTER JOIN options answer_options ON answer_options.id = answers.option_id
