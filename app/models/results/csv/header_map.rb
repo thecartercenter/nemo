@@ -4,19 +4,22 @@ module Results
   module Csv
     # Keeps track of what column index each named header is written to.
     class HeaderMap
-      attr_accessor :map, :common
+      attr_accessor :map, :common_headers, :group_headers
 
       def initialize
         self.map = ActiveSupport::OrderedHash.new
       end
 
-      def add_common(common)
-        self.common = common
-        common.each { |h| add(h) }
+      def add_common_headers(common_headers)
+        self.common_headers = common_headers
+        common_headers.each { |h| add(h) }
       end
 
-      def add_group(max_depth)
+      def add_group_headers(max_depth)
+        self.group_headers = []
         (1..max_depth).to_a.each do |i|
+          group_headers << "group#{i}_rank"
+          group_headers << "group#{i}_inst_num"
           add("group#{i}_rank")
           add("group#{i}_inst_num")
         end
@@ -25,7 +28,7 @@ module Results
       # Takes an array of hashes with keys: code, qtype_name, level_names, allow_coordinates.
       # Array is sorted by code.
       # Adds appropriate headers.
-      def add_codes(rows)
+      def add_headers_from_codes(rows)
         rows.each do |row|
           if row["qtype_name"] == "location"
             add_location_headers(row["code"])
@@ -54,18 +57,24 @@ module Results
         map[header] ||= map.size
       end
 
-      def headers
-        map.keys
+      def translated_headers
+        map.keys.map { |h| common_or_group?(h) ? translate(h) : h }
       end
 
       private
 
+      def common_or_group?(header)
+        common_headers.include?(header) || group_headers.include?(header)
+      end
+
+      def translate(header)
+        I18n.t("response.csv_headers.#{header}")
+      end
+
       def add_location_headers(code, lat_lng_only: false)
         to_add = %i[latitude longitude]
         to_add.concat(%i[altitude accuracy].freeze) unless lat_lng_only
-        to_add.each do |c|
-          add(code, suffix: I18n.t("response.csv_headers.#{c}"))
-        end
+        to_add.each { |h| add(code, suffix: translate(h)) }
       end
 
       def add_level_headers(code, level_names)

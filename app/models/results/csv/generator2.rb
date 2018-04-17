@@ -21,9 +21,9 @@ module Results
       private
 
       def setup_header_map
-        header_map.add_common(%w[response_id form_name user_name submit_time shortcode])
-        header_map.add_group(1)
-        header_map.add_codes(HeaderQuery.new.run.to_a.flatten)
+        header_map.add_common_headers(%w[response_id form_name user_name submit_time shortcode])
+        header_map.add_group_headers(1)
+        header_map.add_headers_from_codes(HeaderQuery.new.run.to_a.flatten)
       end
 
       def csv_body
@@ -39,7 +39,7 @@ module Results
 
       def csv_headers
         CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
-          csv << header_map.headers
+          csv << header_map.translated_headers
         end
       end
     end
