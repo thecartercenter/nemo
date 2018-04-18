@@ -1,6 +1,8 @@
 require "spec_helper"
 
 feature "questions flow" do
+  include_context "search"
+
   let!(:mission) { get_mission }
   let!(:question1) { create(:question, name: "How many cheeses?") }
   let!(:question2) { create(:question, name: "How many pies?") }
