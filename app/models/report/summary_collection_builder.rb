@@ -125,19 +125,6 @@ class Report::SummaryCollectionBuilder
     # returns a hash of the form {[disagg_value, qing_id] => {'mean' => x.x, 'min' => x, 'max' => x}, ...}
     def run_stat_query(stat_qs)
       qing_ids = stat_qs.map(&:id)
-
-      # NOTE
-      # The SEC_TO_TIME and TIME_TO_SEC below compute average times (not datetimes, see below for that).
-      # There is test coverage for this.
-      # In postgres an equivalent might be to do
-      #   EXTRACT(hour FROM t)*60*60 + EXTRACT(minutes FROM t)*60 + EXTRACT(seconds FROM t)
-      # and then
-      #   to_char( (9999999 ||' seconds')::interval, 'HH24:MM:SS' )`
-      # This will produce a string instead of a time, but that should be ok.
-      #
-      # FROM_UNIXTIME and UNIX_TIMESTAMP should be easier to replace.
-      # I think to_timestamp and extract(epoch FROM your_datetime_column) should do it.
-
       queries = []
       queries << <<-SQL
         SELECT #{disagg_select_expr} qing.id AS qing_id,
