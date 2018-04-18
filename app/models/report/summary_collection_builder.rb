@@ -125,21 +125,8 @@ class Report::SummaryCollectionBuilder
     # returns a hash of the form {[disagg_value, qing_id] => {'mean' => x.x, 'min' => x, 'max' => x}, ...}
     def run_stat_query(stat_qs)
       qing_ids = stat_qs.map(&:id)
-
-      # NOTE TO MEL
-      # The SEC_TO_TIME and TIME_TO_SEC below compute average times (not datetimes, see below for that).
-      # There is test coverage for this.
-      # In postgres an equivalent might be to do
-      #   EXTRACT(hour FROM t)*60*60 + EXTRACT(minutes FROM t)*60 + EXTRACT(seconds FROM t)
-      # and then
-      #   to_char( (9999999 ||' seconds')::interval, 'HH24:MM:SS' )`
-      # This will produce a string instead of a time, but that should be ok.
-      #
-      # FROM_UNIXTIME and UNIX_TIMESTAMP should be easier to replace.
-      # I think to_timestamp and extract(epoch FROM your_datetime_column) should do it.
-
       queries = []
-      queries << <<-eos
+      queries << <<-SQL
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
           CAST(AVG(CAST(a.value AS INTEGER)) AS TEXT) AS mean,
@@ -151,11 +138,11 @@ class Report::SummaryCollectionBuilder
           INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND (q.qtype_name = 'integer' OR q.qtype_name = 'counter')
+        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND (q.qtype_name = 'integer' OR q.qtype_name = 'counter')
         GROUP BY #{disagg_group_by_expr} qing.id
-      eos
+      SQL
 
-      queries << <<-eos
+      queries << <<-SQL
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
           CAST(AVG(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS mean,
@@ -167,14 +154,14 @@ class Report::SummaryCollectionBuilder
           INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND q.qtype_name = 'decimal'
+        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND q.qtype_name = 'decimal'
         GROUP BY #{disagg_group_by_expr} qing.id
-      eos
+      SQL
 
       time_extracts = "EXTRACT(hour from a.time_value)*60*60 + " \
         "EXTRACT(minutes FROM a.time_value)*60 + " \
         "EXTRACT(seconds FROM a.time_value)"
-      queries << <<-eos
+      queries << <<-SQL
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.time_value IS NULL THEN 1 ELSE 0 END) AS null_count,
           CAST(TO_CHAR((AVG(#{time_extracts}) || ' seconds')::interval, 'HH24:MM:SS') AS TEXT) AS mean,
@@ -185,11 +172,11 @@ class Report::SummaryCollectionBuilder
           INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND q.qtype_name = 'time'
+        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND q.qtype_name = 'time'
         GROUP BY #{disagg_group_by_expr} qing.id
-      eos
+      SQL
 
-      queries << <<-eos
+      queries << <<-SQL
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.datetime_value IS NULL THEN 1 ELSE 0 END) AS null_count,
           to_timestamp(AVG(extract(epoch FROM a.datetime_value))) AS mean,
@@ -200,9 +187,9 @@ class Report::SummaryCollectionBuilder
           INNER JOIN questions q ON q.deleted_at IS NULL AND q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND q.qtype_name = 'datetime'
+        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND q.qtype_name = 'datetime'
         GROUP BY #{disagg_group_by_expr} qing.id
-      eos
+      SQL
 
       # Run queries and build hash
       ActiveSupport::OrderedHash.new.tap do |hash|
@@ -276,11 +263,12 @@ class Report::SummaryCollectionBuilder
     def get_select_question_tallies(qing_ids)
 
       # build and run queries for select_one and _multiple
-      query = <<-eos
+      query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
+          LEFT OUTER JOIN answers a
+            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE qings.deleted_at IS NULL
@@ -289,15 +277,16 @@ class Report::SummaryCollectionBuilder
             AND qings.id IN (?)
             AND (a.rank IS NULL OR a.rank = 1)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
-      eos
+      SQL
 
       sel_one_res = sql_runner.run(query, qing_ids)
 
-      query = <<-eos
+      query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
+          LEFT OUTER JOIN answers a
+            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
           LEFT OUTER JOIN choices c ON a.id = c.answer_id AND c.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
@@ -306,7 +295,7 @@ class Report::SummaryCollectionBuilder
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
-      eos
+      SQL
 
       sel_mult_res = sql_runner.run(query, qing_ids)
 
@@ -331,11 +320,12 @@ class Report::SummaryCollectionBuilder
     # useful in computing percentages
     def get_sel_mult_non_null_tallies(qing_ids)
       # get the non-null answer counts for sel mult questions
-      query = <<-eos
+      query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
+          LEFT OUTER JOIN answers a
+            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
           LEFT OUTER JOIN choices c ON a.id = c.answer_id AND c.deleted_at IS NULL
           #{disagg_join_clause}
           #{current_user_join_clause}
@@ -345,7 +335,7 @@ class Report::SummaryCollectionBuilder
             AND qings.id IN (?)
             AND c.id IS NOT NULL
           GROUP BY #{disagg_group_by_expr} qings.id
-      eos
+      SQL
 
       res = sql_runner.run(query, qing_ids)
 
@@ -414,11 +404,12 @@ class Report::SummaryCollectionBuilder
       qing_ids = date_qs.map(&:id)
 
       # build and run query
-      query = <<-eos
+      query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
-          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.deleted_at IS NULL
+          LEFT OUTER JOIN answers a
+            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE qings.deleted_at IS NULL
@@ -427,7 +418,7 @@ class Report::SummaryCollectionBuilder
             AND qings.type = 'Questioning'
           GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
           ORDER BY disagg_value, qing_id, date
-      eos
+      SQL
 
       res = sql_runner.run(query, qing_ids)
 
@@ -517,16 +508,16 @@ class Report::SummaryCollectionBuilder
       qing_ids = raw_qs.map(&:id)
 
       # build and run query
-      query = <<-eos
+      query = <<-SQL
         SELECT #{disagg_select_expr} a.id AS id, a.questioning_id AS qing_id, a.value AS value,
           a.response_id AS response_id, a.created_at AS created_at
         FROM answers a
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE a.deleted_at IS NULL AND a.questioning_id IN (?)
+          WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
           LIMIT #{RAW_ANSWER_LIMIT}
-      eos
+      SQL
 
       sql_runner.run(query, qing_ids)
     end
@@ -541,13 +532,13 @@ class Report::SummaryCollectionBuilder
       if long_qing_ids.empty?
         {}
       else
-        query = <<-eos
+        query = <<-SQL
           SELECT a.id AS answer_id, u.name AS submitter_name
           FROM answers a
             INNER JOIN responses r ON r.deleted_at IS NULL AND a.response_id = r.id
             INNER JOIN users u ON u.deleted_at IS NULL AND r.user_id = u.id
-          WHERE a.deleted_at IS NULL AND a.questioning_id IN (?)
-        eos
+          WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND a.questioning_id IN (?)
+        SQL
 
         res = sql_runner.run(query, long_qing_ids)
 
@@ -594,20 +585,20 @@ class Report::SummaryCollectionBuilder
     # gets the extra join clause that needs to be added to each query if we're disaggregating
     def disagg_join_clause
       return '' if disagg_qing.nil?
-      <<-eos
+      <<-SQL
         INNER JOIN responses r ON r.deleted_at IS NULL AND a.response_id = r.id
         LEFT OUTER JOIN answers disagg_ans ON disagg_ans.deleted_at IS NULL
           AND r.id = disagg_ans.response_id AND disagg_ans.questioning_id = '#{disagg_qing.id}'
-      eos
+      SQL
     end
 
     # restrict query to responses enumerator has access to. admins and coordinators have access to all responses.
     def current_user_join_clause
       return '' unless @options && @options[:restrict_to_user]
-      <<-eos
+      <<-SQL
         INNER JOIN responses res ON res.deleted_at IS NULL
           AND a.response_id = res.id AND res.user_id = '#{@options[:restrict_to_user].id}'
-      eos
+      SQL
     end
 
     # gets the extra group by expression that needs to be added to each query if we're disaggregating

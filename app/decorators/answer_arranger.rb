@@ -56,9 +56,9 @@ class AnswerArranger
     else
       # We eager load options, choices, and questionings since they are bound to be used.
       # We order the answers so that the answers in answer sets will be in the proper rank order.
-      self.answers = response.answers.
-        includes(:questioning, :option, choices: :option).
-        order(:questioning_id, :inst_num, :rank)
+      self.answers = response.answers
+        .includes(:questioning, :option, choices: :option)
+        .order(:questioning_id, :inst_num, :rank)
     end
   end
 
