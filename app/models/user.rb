@@ -114,7 +114,6 @@ class User < ApplicationRecord
     (user && user.valid_password?(password)) ? user : nil
   end
 
-  # To make a new search qualifier,
   def self.search_qualifiers
     [
       Search::Qualifier.new(name: "name", col: "users.name", type: :text, default: true),
