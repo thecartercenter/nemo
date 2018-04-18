@@ -16,7 +16,7 @@ class Search::Search
   end
 
   def associations
-    expressions.map { |e| e.qualifier.assoc }.flatten.compact.uniq
+    @associations ||= expressions.map { |e| e.qualifier.assoc }.flatten.compact.uniq
   end
 
   def uses_qualifier?(qualifier_name)

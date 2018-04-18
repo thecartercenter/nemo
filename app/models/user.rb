@@ -133,19 +133,10 @@ class User < ApplicationRecord
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
-    # add associations
-    associations = search.associations
     # because assignments association is often added by the controller, only add if not already in relation
-    if relation.to_sql.match(/OUTER JOIN "assignments"/).present?
-      associations = associations.delete("assignments")
-    end
-    relation = relation.joins(associations)
+    search.associations.delete(:assignments) if relation.to_sql.match?(/JOIN "assignments" ON/)
 
-    # get the sql
-    sql = search.sql
-
-    # apply the conditions
-    relation = relation.where(sql)
+    relation = relation.joins(search.associations).where(search.sql)
 
     # If scoped by mission, remove rows from other missions
     # This is used for the role qualifier, where the search should return only users whose role matches
