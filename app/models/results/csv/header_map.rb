@@ -33,11 +33,7 @@ module Results
           if row["qtype_name"] == "location"
             add_location_headers(row["code"])
           else
-            if row["level_names"]
-              add_level_headers(row["code"], row["level_names"])
-            else
-              add(row["code"])
-            end
+            row["level_names"] ? add_level_headers(row["code"], row["level_names"]) : add(row["code"])
 
             # If it's a select question that has coords, add cols for that.
             if row["allow_coordinates"] == "t" && row["qtype_name"] != "select_multiple"
@@ -70,9 +66,9 @@ module Results
         I18n.t("response.csv_headers.#{header}")
       end
 
-      def add_group_header(h)
-        group_headers << h
-        add(h)
+      def add_group_header(header)
+        group_headers << header
+        add(header)
       end
 
       def add_location_headers(code, lat_lng_only: false)

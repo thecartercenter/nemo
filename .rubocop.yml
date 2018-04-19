@@ -43,7 +43,7 @@ Metrics/LineLength:
   Max: 110
 
 Metrics/AbcSize:
-  Max: 20
+  Max: 30
 
 Style/AsciiComments:
   Enabled: false
