@@ -31,7 +31,7 @@ module Results
 
       def translation_query(column, arr_index: nil)
         arr_op = arr_index && "->(#{arr_index})"
-        tries = configatron.preferred_locales.map do |locale|
+        tries = ([I18n.locale] + configatron.preferred_locales).map do |locale|
           "#{column}#{arr_op}->>'#{locale}'"
         end
         "COALESCE(#{tries.uniq.join(', ')})"
