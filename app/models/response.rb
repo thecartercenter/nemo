@@ -27,6 +27,10 @@ class Response < ApplicationRecord
   before_save(:normalize_answers)
   before_create :generate_shortcode
 
+  # rails counter_cache increments on creation but does not decrementing on deletion
+  # since we need the counter cache, we'll manually decrement on deletion
+  after_destroy :update_form_response_count
+
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates(:user, presence: true)
@@ -307,5 +311,9 @@ class Response < ApplicationRecord
 
   def no_missing_answers
     errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
+  end
+
+  def update_form_response_count
+    self.form.responses_count = self.form.responses.count
   end
 end

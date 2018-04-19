@@ -98,7 +98,7 @@ describe Response do
     end
   end
 
-  context "response count" do
+  context "responses count" do
     let!(:user) { create(:user) }
     let!(:form) { create(:form, :published, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
     let!(:response) { create(:response, user: user, form: form, answer_values: [1]) }
@@ -110,7 +110,7 @@ describe Response do
       end
 
       it "on response creation" do
-        new_response = create(:response, user: user, form: form, answer_values: [1])
+        create(:response, user: user, form: form, answer_values: [1])
         expect(form.responses_count).to eq(2)
       end
     end
