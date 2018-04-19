@@ -239,6 +239,31 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
   end
 
+  context "with multilingual group and option names" do
+    let(:form) { create(:form, question_types: [{repeating: {items: ["select_one"]}}]) }
+    let(:group) { form.c[0] }
+    let(:option) { form.c[0].c[0].option_set.c[0].option }
+
+    before do
+      # Avoid missing translation errors for headers. We're not testing those here as
+      # those are picked up with standard I18n.translate. In production this isn't an issue
+      # because fallbacks are enabled.
+      I18n.backend.store_translations(:fr, response: {csv_headers: I18n.t("response.csv_headers")})
+
+      I18n.locale = :fr
+      group.update!(group_name_fr: "Groupe")
+      option.update!(name_fr: "L'option")
+
+      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+        create_response(form: form, answer_values: [[option.name]])
+      end
+    end
+
+    it "uses french names when appropriate" do
+      is_expected.to eq prepare_response_csv_expectation("multilingual.csv")
+    end
+  end
+
   def create_response(params)
     responses << create(:response, params)
   end
