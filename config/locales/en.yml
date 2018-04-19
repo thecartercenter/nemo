@@ -1646,7 +1646,7 @@ en:
       form_name: "Form"
       user_name: "Submitter"
       submit_time: "DateSubmitted"
-      shortcode: "ResponseShortcode"
+      shortcode: "Shortcode"
       latitude: "Latitude"
       longitude: "Longitude"
       altitude: "Altitude"
