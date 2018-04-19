@@ -100,7 +100,7 @@ describe Response do
 
   context "responses count" do
     let!(:user) { create(:user) }
-    let!(:form) { create(:form, question_types: %w(integer)) }
+    let!(:form) { create(:form, question_types: %w[integer]) }
     let!(:response) { create(:response, user: user, form: form, answer_values: [1]) }
 
     describe "updates response count correctly" do
@@ -110,7 +110,7 @@ describe Response do
       end
 
       it "on response creation" do
-        create(:response, user: user, form: form, answer_values: %w(1))
+        create(:response, user: user, form: form, answer_values: %w[1])
         expect(form.responses_count).to eq(2)
       end
     end
