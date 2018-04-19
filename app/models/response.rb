@@ -27,7 +27,7 @@ class Response < ApplicationRecord
   before_save(:normalize_answers)
   before_create :generate_shortcode
 
-  # rails counter_cache increments on creation but does not decrementing on deletion
+  # rails counter_cache increments on creation but does not decrement on deletion
   # since we need the counter cache, we'll manually decrement on deletion
   after_destroy :update_form_response_count
 
