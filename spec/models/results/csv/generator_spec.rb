@@ -5,7 +5,7 @@ require "spec_helper"
 describe Results::Csv::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
-  subject(:output) { Results::Csv::Generator2.new(relation).to_s }
+  subject(:output) { Results::Csv::Generator.new(relation).to_s }
 
   around do |example|
     # Use a weird timezone so we know times are handled properly.
