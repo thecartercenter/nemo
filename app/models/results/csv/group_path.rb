@@ -35,21 +35,7 @@ module Results
         keys_to_check.each do |keys|
           # If chunk is nil in previous and current paths, do nothing.
           next if prev_row[keys[0]].nil? && row[keys[0]].nil?
-
-          # If chunk identical in both paths
-          if prev_row[keys[0]] == row[keys[0]] && prev_row[keys[1]] == row[keys[1]]
-            # If there have been any changes so far, bump both additions and subtractions.
-            if changed?
-              changes[0] += 1
-              changes[1] -= 1
-            end
-          else
-            # From here on we know the chunks are different.
-            # If chunk in new row is present, bump additions.
-            # Also if chunk in old row is present, bump deletions.
-            changes[1] += 1 if row[keys[0]].present?
-            changes[0] -= 1 if prev_row[keys[0]].present?
-          end
+          update_changes(row, keys)
         end
         self.prev_row = row
         changes
@@ -76,6 +62,23 @@ module Results
       end
 
       private
+
+      def update_changes(row, keys)
+        # If chunk identical in both paths
+        if prev_row[keys[0]] == row[keys[0]] && prev_row[keys[1]] == row[keys[1]]
+          # If there have been any changes so far, bump both additions and subtractions.
+          if changed?
+            changes[0] += 1
+            changes[1] -= 1
+          end
+        else
+          # From here on we know the chunks are different.
+          # If chunk in new row is present, bump additions.
+          # Also if chunk in old row is present, bump deletions.
+          changes[1] += 1 if row[keys[0]].present?
+          changes[0] -= 1 if prev_row[keys[0]].present?
+        end
+      end
 
       # Gets keys in row to check for path data
       def keys_to_check
