@@ -28,12 +28,6 @@ module Results
         SQL
       end
 
-      def where
-        <<~SQL
-          WHERE #{answer_type_and_not_deleted}
-        SQL
-      end
-
       def order
         <<~SQL
           ORDER BY LOWER(questions.code)
