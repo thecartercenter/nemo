@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_424_202_221) do
+ActiveRecord::Schema.define(version: 20_180_419_135_452) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -51,11 +51,12 @@ ActiveRecord::Schema.define(version: 20_180_424_202_221) do
     t.text "value"
   end
 
-  add_index "answers", ["deleted_at", "type"], name: "index_answers_on_deleted_at_and_type", using: :btree
+  add_index "answers", ["deleted_at"], name: "index_answers_on_deleted_at", using: :btree
   add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
   add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
   add_index "answers", %w[response_id questioning_id inst_num rank deleted_at], name: "answers_full", unique: true, using: :btree
   add_index "answers", ["response_id"], name: "index_answers_on_response_id", using: :btree
+  add_index "answers", ["type"], name: "index_answers_on_type", using: :btree
 
   create_table "assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "created_at"
@@ -349,7 +350,7 @@ ActiveRecord::Schema.define(version: 20_180_424_202_221) do
     t.datetime "deleted_at"
     t.boolean "geographic", default: false, null: false
     t.boolean "is_standard", default: false
-    t.jsonb "level_names"
+    t.text "level_names"
     t.uuid "mission_id"
     t.integer "mission_old_id"
     t.string "name", limit: 255
@@ -785,15 +786,6 @@ ActiveRecord::Schema.define(version: 20_180_424_202_221) do
   create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
     .on("answers")
     .before(:insert, :update) do
-    <<-SQL_ACTIONS
-new.tsv := TO_TSVECTOR('simple', COALESCE(
-        new.value,
-        (SELECT STRING_AGG(opt_name_translation.value, ' ')
-          FROM options, jsonb_each_text(options.name_translations) opt_name_translation
-          WHERE options.id = new.option_id
-            OR options.id IN (SELECT option_id FROM choices WHERE answer_id = new.id)),
-        ''
-      ));
-    SQL_ACTIONS
+    "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
   end
 end
