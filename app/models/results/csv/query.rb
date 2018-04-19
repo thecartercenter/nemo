@@ -32,6 +32,14 @@ module Results
         # The DB should generally be in UTC zone. Rails handles conversions internally.
         SqlRunner.instance.run("SET SESSION TIME ZONE 'UTC'")
       end
+
+      def answer_type_and_not_deleted
+        <<~SQL
+          responses.deleted_at IS NULL
+          AND answers.deleted_at IS NULL
+          AND answers.type = 'Answer'
+        SQL
+      end
     end
   end
 end
