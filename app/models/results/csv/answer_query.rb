@@ -58,7 +58,7 @@ module Results
 
       def where
         <<~SQL
-          WHERE answers.type = 'Answer'
+          WHERE #{answer_type_and_not_deleted}
         SQL
       end
 

@@ -189,6 +189,32 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
   end
 
+  context "with deleted response and answer" do
+    let(:form1) { create(:form, question_types: %w[text text]) }
+    let(:form2) { create(:form, question_types: %w[text]) }
+
+    before do
+      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+        Timecop.freeze(1.minute) do
+          create(:response, form: form1, answer_values: %w[foo bar])
+        end
+        Timecop.freeze(2.minutes) do
+          # Destroy one of the answers for this response, but not the whole thing.
+          r2 = create(:response, form: form1, answer_values: %w[baz qux])
+          r2.answers.last.destroy
+
+          # form2 has no responses in our set so its headers shouldn't be included either.
+          r3 = create(:response, form: form2, answer_values: ["xuq"])
+          r3.destroy
+        end
+      end
+    end
+
+    it "ignores deleted responses" do
+      is_expected.to eq prepare_response_csv_expectation("with_deleted.csv")
+    end
+  end
+
   def prepare_response_csv_expectation(filename)
     prepare_expectation("response_csv/#{filename}",
       id: responses.map(&:id), shortcode: responses.map(&:shortcode))
