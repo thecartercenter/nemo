@@ -14,7 +14,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
   context "with no data" do
     it "produces correct csv" do
-      is_expected.to eq "ResponseID,Form,Submitter,DateSubmitted,ResponseShortcode,"\
+      is_expected.to eq "ResponseID,Shortcode,Form,Submitter,DateSubmitted,"\
         "GroupNum1,ItemNum1,GroupName,GroupLevel\r\n"
     end
   end
