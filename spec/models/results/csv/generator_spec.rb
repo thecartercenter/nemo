@@ -146,9 +146,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
   end
 
   context "with multiline data, html, quoted strings, and commas" do
-    let(:form1) do
-      create(:form, question_types: ["text"])
-    end
+    let(:form1) { create(:form, question_types: ["text"]) }
 
     before do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
@@ -172,6 +170,22 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
     it "produces correct csv" do
       is_expected.to eq prepare_response_csv_expectation("multiline.csv")
+    end
+  end
+
+  context "with multimedia questions" do
+    let(:form1) { create(:form, question_types: %w[text image]) }
+
+    before do
+      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+        image_obj = Media::Image.create!(item: media_fixture("images/the_swing.jpg"))
+        create(:response, form: form1, answer_values: ["foo", image_obj])
+      end
+    end
+
+    # We don't currrently support attachments in CSV output.
+    it "ignores attached files" do
+      is_expected.to eq prepare_response_csv_expectation("media.csv")
     end
   end
 
