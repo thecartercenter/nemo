@@ -97,4 +97,22 @@ describe Response do
       expect(r_previous.checked_out_by_id).to be_nil
     end
   end
+
+  context "response count" do
+    let!(:user) { create(:user) }
+    let!(:form) { create(:form, :published, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
+    let!(:response) { create(:response, user: user, form: form, answer_values: [1]) }
+
+    describe "updates response count correctly" do
+      it "on response deletion" do
+        response.destroy
+        expect(form.responses_count).to eq(0)
+      end
+
+      it "on response creation" do
+        new_response = create(:response, user: user, form: form, answer_values: [1])
+        expect(form.responses_count).to eq(2)
+      end
+    end
+  end
 end
