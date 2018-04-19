@@ -68,8 +68,43 @@ module Results
       def write_value
         VALUE_COLS.each do |c|
           next if row[c].blank?
+          convert_line_endings(row[c]) if c == "value"
           buffer.write(code, row[c])
           break
+        end
+      end
+
+      def convert_line_endings(str)
+        # We do this with loops instead of regexps b/c regexps are slow.
+        convert_unix_line_endings_to_windows(str)
+        convert_mac_line_endings_to_windows(str)
+      end
+
+      def convert_unix_line_endings_to_windows(str)
+        # Insert \r before any \ns without \rs before
+        offset = 0
+        loop do
+          idx = str.index("\n", offset)
+          break if idx.nil?
+          offset = idx + 1
+          if idx.zero? || str[idx - 1] != "\r"
+            str.insert(idx, "\r")
+            offset += 1
+          end
+        end
+      end
+
+      def convert_mac_line_endings_to_windows(str)
+        # Insert \n after any \rs without \ns after
+        offset = 0
+        loop do
+          idx = str.index("\r", offset)
+          break if idx.nil?
+          offset = idx + 1
+          if str[idx + 1] != "\n"
+            str.insert(idx + 1, "\n")
+            offset += 1
+          end
         end
       end
     end

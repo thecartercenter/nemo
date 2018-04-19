@@ -145,6 +145,36 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
   end
 
+  context "with multiline data, html, quoted strings, and commas" do
+    let(:form1) do
+      create(:form, question_types: ["text"])
+    end
+
+    before do
+      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+        Timecop.freeze(1.minute) do
+          create(:response, form: form1, answer_values: [%(<p>foo</p><p>"bar"<br/>baz, stuff</p>)])
+        end
+        Timecop.freeze(2.minutes) do
+          create(:response, form: form1, answer_values: [%(bar,baz)])
+        end
+        Timecop.freeze(3.minutes) do
+          create(:response, form: form1, answer_values: [%(\r\nwin\r\n\r\nfoo\r\n)]) # Win line endings
+        end
+        Timecop.freeze(4.minutes) do
+          create(:response, form: form1, answer_values: [%(\nunix\n\nfoo\n)]) # Unix line endings
+        end
+        Timecop.freeze(5.minutes) do
+          create(:response, form: form1, answer_values: [%(\rmac\r\rfoo\r)]) # Mac line endings
+        end
+      end
+    end
+
+    it "produces correct csv" do
+      is_expected.to eq prepare_response_csv_expectation("multiline.csv")
+    end
+  end
+
   def prepare_response_csv_expectation(filename)
     prepare_expectation("response_csv/#{filename}",
       id: responses.map(&:id), shortcode: responses.map(&:shortcode))
