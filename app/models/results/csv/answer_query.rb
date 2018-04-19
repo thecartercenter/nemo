@@ -57,7 +57,9 @@ module Results
       end
 
       def where
-        ""
+        <<~SQL
+          WHERE answers.type = 'Answer'
+        SQL
       end
 
       def order
