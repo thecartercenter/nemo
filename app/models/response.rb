@@ -314,6 +314,6 @@ class Response < ApplicationRecord
   end
 
   def update_form_response_count
-    self.form.responses_count = self.form.responses.count
+    form.responses_count = form.responses.count
   end
 end

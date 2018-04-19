@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Update old form response counts
 class CorrectFormResponsesCount < ActiveRecord::Migration
   def up
     execute("UPDATE forms SET responses_count = (
