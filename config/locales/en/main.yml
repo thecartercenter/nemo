@@ -1011,6 +1011,7 @@ en:
     source: "source"
     submit_date: "submit-date"
     submitter: "submitter"
+    group: "group"
     code: "code"
     title: "title"
     type: "type"
@@ -1680,6 +1681,7 @@ en:
       responses:
         - "bed nets"
         - "submitter:\"john smith\""
+        - "group:western"
         - "form:polling"
         - "reviewed:1"
         - "submit-date < 2013-10-15"
@@ -1716,7 +1718,7 @@ en:
 
         * __romeo juliet__
 
-        searches only the answers to textual questions for each word. To search based on response attributes, use a qualifier, e.g.:
+        searches the answers to questions. To search on response attributes, use a qualifier, e.g.:
 
         * __form:Widgets__
 
@@ -1732,11 +1734,10 @@ en:
 
         * __form__ The responses's form
         * __submitter__ The name of the user that submitted the response (partial matches allowed)
+        * __group__ The name of a user group to which the submitting user belongs (partial matches allowed)
         * __submit-date__ The date the response was submitted (e.g. 1985-03-22)
         * __reviewed__ Whether the response has been marked 'reviewed' (1 = yes or 0 = no)
         * __source__ The medium via which the response was submitted ('web', 'odk', or 'sms')
-        * __text__ Searches answers to textual questions
-
 
         ## Exact Phrases
 
@@ -1766,7 +1767,7 @@ en:
 
         will match responses for any form except the 'Widgets' form.
 
-        For text searches, negation works differently:
+        For answer searches, negation works differently:
 
         * __ballot -box__
 
