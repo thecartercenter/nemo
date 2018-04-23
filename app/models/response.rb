@@ -27,6 +27,11 @@ class Response < ApplicationRecord
   before_save(:normalize_answers)
   before_create :generate_shortcode
 
+  # Due to an acts_as_paranoid gem bug, rails counter_cache increments on creation
+  # but does not decrement on deletion since we need the counter cache, we'll manually decrement on deletion
+  # Issue number: https://github.com/ActsAsParanoid/acts_as_paranoid/issues/39
+  after_destroy :update_form_response_count
+
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates(:user, presence: true)
@@ -307,5 +312,9 @@ class Response < ApplicationRecord
 
   def no_missing_answers
     errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
+  end
+
+  def update_form_response_count
+    Form.reset_counters(form_id, :responses)
   end
 end
