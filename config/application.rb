@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require File.expand_path("../boot", __FILE__)
 
 require "rails/all"
@@ -6,6 +8,7 @@ require "coffee_script"
 Bundler.require(*Rails.groups)
 
 module ELMO
+  # Application-wide settings and setup.
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -35,15 +38,15 @@ module ELMO
     config.i18n.enforce_available_locales = false
 
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-    # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
+    config.i18n.load_path += Dir[Rails.root.join("config", "locales", "**", "*.{rb,yml}")]
 
     # Configure the default encoding used in templates for Ruby 1.9.
     config.encoding = "utf-8"
 
     # Configure sensitive parameters which will be filtered from the log file.
-    config.filter_parameters += [:password, :password_confirmation,
-      :twilio_account_sid, :twilio_auth_token, :frontlinecloud_api_key,
-      :session, :warden, :secret, :salt, :cookie, :csrf, :user_credentials, :session_id, :data]
+    config.filter_parameters += %i[password password_confirmation
+                                   twilio_account_sid twilio_auth_token frontlinecloud_api_key
+                                   session warden secret salt cookie csrf user_credentials session_id data]
 
     # Enable the asset pipeline
     config.assets.enabled = true
@@ -67,7 +70,7 @@ module ELMO
     # NOTE: Don't add anymore configatron settings. Use settings.yml instead.
 
     # read system version from file
-    configatron.system_version = File.read("#{Rails.root}/VERSION").strip
+    configatron.system_version = File.read(Rails.root.join("VERSION")).strip
 
     # regular expressions
     configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
@@ -79,7 +82,7 @@ module ELMO
     configatron.rtl_locales = %i[ar]
 
     # For security.
-    config.action_dispatch.default_headers = { "X-Frame-Options" => "DENY" }
+    config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
