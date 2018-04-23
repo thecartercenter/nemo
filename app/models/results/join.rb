@@ -91,7 +91,15 @@ class Results::Join
     users: new(
       name: :users,
       sql: "LEFT JOIN users __users ON responses.user_id = __users.id " \
-        "AND __users.deleted_at IS NULL"
+              "AND __users.deleted_at IS NULL"
+    ),
+    user_groups: new(
+      dependencies: [:users],
+      name: :user_groups,
+      sql: "LEFT JOIN user_group_assignments __user_group_assignments ON " \
+             "__user_group_assignments.user_id = __users.id " \
+           "LEFT JOIN user_groups __user_groups ON " \
+             "__user_group_assignments.user_group_id = __user_groups.id"
     ),
     reviewers: new(
       name: :reviewers,
