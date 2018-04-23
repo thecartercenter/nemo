@@ -109,6 +109,11 @@ describe Response do
         expect(form.responses_count).to eq(0)
       end
 
+      it "on response deletion after form reload" do
+        response.destroy
+        expect(form.reload.responses_count).to eq(0)
+      end
+
       it "on response creation" do
         create(:response, user: user, form: form, answer_values: %w[1])
         expect(form.responses_count).to eq(2)
