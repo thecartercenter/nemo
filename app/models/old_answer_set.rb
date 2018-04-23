@@ -6,7 +6,7 @@ class OldAnswerSet
 
   delegate :qtype, :required?, :question, :condition, :depth,
     :full_dotted_rank, :display_conditionally?, to: :questioning
-  delegate :name, :hint, to: :question, prefix: true
+  delegate :name, :hint, :code, to: :question, prefix: true
   delegate :option_set, to: :question
   delegate :levels, to: :option_set
   delegate :first, to: :answers
