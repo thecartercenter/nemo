@@ -1681,6 +1681,7 @@ en:
       responses:
         - "bed nets"
         - "submitter:\"john smith\""
+        - "group:western"
         - "form:polling"
         - "reviewed:1"
         - "submit-date < 2013-10-15"
@@ -1733,6 +1734,7 @@ en:
 
         * __form__ The responses's form
         * __submitter__ The name of the user that submitted the response (partial matches allowed)
+        * __group__ The name of a user group to which the submitting user belongs (partial matches allowed)
         * __submit-date__ The date the response was submitted (e.g. 1985-03-22)
         * __reviewed__ Whether the response has been marked 'reviewed' (1 = yes or 0 = no)
         * __source__ The medium via which the response was submitted ('web', 'odk', or 'sms')
