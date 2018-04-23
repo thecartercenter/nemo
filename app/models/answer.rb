@@ -25,7 +25,13 @@ class Answer < ResponseNode
 
   # Convert value to tsvector for use in full text search.
   trigger.before(:insert, :update) do
-    "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
+    "new.tsv := TO_TSVECTOR('simple', COALESCE(
+      new.value,
+      (SELECT canonical_name FROM options WHERE new.option_id = options.id),
+      (SELECT STRING_AGG(canonical_name, ' ') FROM choices
+        INNER JOIN options ON choices.option_id = options.id WHERE new.id = choices.answer_id),
+      ''
+    ));"
   end
 
   attr_accessor :location_values_replicated

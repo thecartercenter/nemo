@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_419_203_114) do
+ActiveRecord::Schema.define(version: 20_180_423_205_259) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -785,6 +785,14 @@ ActiveRecord::Schema.define(version: 20_180_419_203_114) do
   create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
     .on("answers")
     .before(:insert, :update) do
-    "new.tsv := to_tsvector('simple', coalesce(new.value, ''));"
+    <<-SQL_ACTIONS
+new.tsv := TO_TSVECTOR('simple', COALESCE(
+        new.value,
+        (SELECT canonical_name FROM options WHERE new.option_id = options.id),
+        (SELECT STRING_AGG(canonical_name, ' ') FROM choices
+          INNER JOIN options ON choices.option_id = options.id WHERE new.id = choices.answer_id),
+        ''
+      ));
+    SQL_ACTIONS
   end
 end
