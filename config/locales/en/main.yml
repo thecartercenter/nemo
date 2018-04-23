@@ -1690,7 +1690,7 @@ en:
         - "login:jsmith"
         - "email:jsmith@example.com"
         - group:"The Smiths"
-        - role:"staffer"
+        - "role:staffer"
       questions:
         - "poll workers"
         - "code:BallotBoxes"
