@@ -1011,6 +1011,7 @@ en:
     source: "source"
     submit_date: "submit-date"
     submitter: "submitter"
+    group: "group"
     code: "code"
     title: "title"
     type: "type"

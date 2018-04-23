@@ -1,19 +1,21 @@
+# frozen_string_literal: true
+
 # Tests the search functionality for the response model
 require "spec_helper"
 
 describe Response do
   describe "search" do
     # Deliberately putting a period in form name here. This used to cause issues.
-    let(:form) { create(:form, name: "foo 1.0", question_types: %w(integer)) }
+    let(:form) { create(:form, name: "foo 1.0", question_types: %w[integer]) }
 
     describe "form qualifier" do
-      let(:form2) { create(:form, name: "bar", question_types: %w(integer)) }
+      let(:form2) { create(:form, name: "bar", question_types: %w[integer]) }
       let!(:r1) { create(:response, form: form) }
       let!(:r2) { create(:response, form: form2) }
       let!(:r3) { create(:response, form: form) }
 
       it "should work" do
-        assert_search(%{form:"foo 1.0"}, r1, r3)
+        assert_search(%(form:"foo 1.0"), r1, r3)
       end
     end
 
@@ -29,8 +31,27 @@ describe Response do
 
         # Verify time stored in UTC (Jan 2), but search matches Jan 1.
         expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq 2
-        assert_search(%{submit-date:2017-01-01}, r1)
-        assert_search(%{submit-date:2017-01-02})
+        assert_search(%(submit-date:2017-01-01), r1)
+        assert_search(%(submit-date:2017-01-02))
+      end
+    end
+
+    describe "group qualifier" do
+      let(:users) { create_list(:user, 3) }
+      let(:group) { create(:user_group, name: "Fun Group") }
+      let(:responses) { users.map { |u| create(:response, form: form, user: u) } }
+
+      before do
+        group.users = users[0..1]
+        group.save!
+      end
+
+      it "should return responses from users in group" do
+        assert_search(%(group:"fun group"), *responses[0..1])
+      end
+
+      it "should return nothing for non-existent group" do
+        assert_search(%(group:norble), nil)
       end
     end
 
@@ -57,7 +78,6 @@ describe Response do
       end
 
       it "should work" do
-
         # Answers qualifier should work with long_text questions
         assert_search("text:brown", r1, r3)
 
@@ -117,12 +137,13 @@ describe Response do
         error_pattern = objs_or_error[0][:error]
         begin
           run_search(query)
-        rescue
-          assert_match(error_pattern, $!.to_s)
+        rescue StandardError
+          assert_match(error_pattern, $ERROR_INFO.to_s)
         else
-          fail("No error was raised.")
+          raise("No error was raised.")
         end
       else
+        objs_or_error.compact!
         expect(run_search(query)).to contain_exactly(*objs_or_error)
       end
     end
@@ -133,7 +154,7 @@ describe Response do
       return "SKIPPING UNTIL WE RE-ENABLE EXCERPTS"
       responses = run_search(query, include_excerpts: true)
       expect(responses.size).to eq(excerpts.size)
-      responses.each_with_index{|r,i| expect(r.excerpts).to eq(excerpts[i])}
+      responses.each_with_index { |r, i| expect(r.excerpts).to eq(excerpts[i]) }
     end
 
     def run_search(query, options = {})

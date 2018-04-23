@@ -9,22 +9,21 @@ class Response < ApplicationRecord
 
   acts_as_paranoid
 
-  belongs_to(:form, inverse_of: :responses, counter_cache: true)
-  belongs_to(:checked_out_by, class_name: "User")
-  belongs_to(:user, inverse_of: :responses)
-  belongs_to(:reviewer, class_name: "User")
+  attr_accessor :modifier, :excerpts, :awaiting_media
 
-  has_many(:answers, -> { order(:inst_num, :rank) }, autosave: true, dependent: :destroy, inverse_of: :response)
-  has_many(:location_answers,
-    -> { where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question) },
-    class_name: "Answer"
-  )
-
-  attr_accessor(:modifier, :excerpts, :awaiting_media)
+  belongs_to :form, inverse_of: :responses, counter_cache: true
+  belongs_to :checked_out_by, class_name: "User"
+  belongs_to :user, inverse_of: :responses
+  belongs_to :reviewer, class_name: "User"
+  has_many :answers, -> { order(:inst_num, :rank) },
+    autosave: true, dependent: :destroy, inverse_of: :response
+  has_many :location_answers, lambda {
+    where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question)
+  }, class_name: "Answer"
 
   friendly_id :shortcode
 
-  before_save(:normalize_answers)
+  before_save :normalize_answers
   before_create :generate_shortcode
 
   # Due to an acts_as_paranoid gem bug, rails counter_cache increments on creation
@@ -34,13 +33,13 @@ class Response < ApplicationRecord
 
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
-  validates(:user, presence: true)
-  validate(:no_missing_answers)
-  validate(:form_in_mission)
+  validates :user, presence: true
+  validate :no_missing_answers
+  validate :form_in_mission
   validates_associated :answers # Forces validation of answers even if they haven't changed
 
-  scope(:unreviewed, -> { where(reviewed: false) })
-  scope(:by, ->(user) { where(user_id: user.id) })
+  scope :unreviewed, -> { where(reviewed: false) }
+  scope :by, ->(user) { where(user_id: user.id) }
   scope :created_after, ->(date) { where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
   scope :latest_first, -> { order(created_at: :desc) }
@@ -60,13 +59,13 @@ class Response < ApplicationRecord
   ) }
 
   # loads basic belongs_to associations
-  scope(:with_basic_assoc, -> { includes(:form, :user) })
+  scope :with_basic_assoc, -> { includes(:form, :user) }
 
   # loads only some answer info
-  scope(:with_basic_answers, -> { includes(answers: {questioning: :question}) })
+  scope :with_basic_answers, -> { includes(answers: {questioning: :question}) }
 
   # loads only answers with location info
-  scope(:with_location_answers, -> { includes(:location_answers) })
+  scope :with_location_answers, -> { includes(:location_answers) }
 
   accepts_nested_attributes_for(:answers, allow_destroy: true)
 
@@ -89,12 +88,12 @@ class Response < ApplicationRecord
       Search::Qualifier.new(name: "exact_form", col: "forms.name", assoc: :forms),
       Search::Qualifier.new(name: "reviewed", col: "responses.reviewed"),
       Search::Qualifier.new(name: "submitter", col: "users.name", assoc: :users, type: :text),
+      Search::Qualifier.new(name: "group", col: "user_groups.name",
+                            assoc: :user_groups, type: :text),
       Search::Qualifier.new(name: "source", col: "responses.source"),
-      Search::Qualifier.new(
-        name: "submit_date",
-        col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)",
-        type: :scale
-      ),
+      Search::Qualifier.new(name: "submit_date", type: :scale,
+                            col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT
+                              TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)"),
 
       # this qualifier matches responses that have answers to questions with the given option set
       Search::Qualifier.new(name: "option_set", col: "option_sets.name", assoc: :option_sets, type: :text),
