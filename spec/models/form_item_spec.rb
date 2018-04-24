@@ -1,31 +1,31 @@
 require "spec_helper"
 
 describe FormItem do
-  before do
-    @user = create(:user, role_name: "coordinator")
-    @form = create(:form, question_types: ["text", ["text", "text"]])
-    @qing = @form.c[0]
-    @qing_group = @form.c[1]
-  end
+  describe "parent must be group" do
+    let(:form) { create(:form, question_types: ["text", %w[text text]]) }
+    let(:qing) { form.c[0] }
+    let(:qing2) { form.c[1].c[0] }
+    let(:qing_group) { form.c[1] }
 
-  describe "parent validation" do
+    it "should save cleanly if parent is group" do
+      qing.parent = qing_group
+      qing.save
+    end
+
     it "should raise error if attempting to set questioning as parent of questioning" do
-      @qing2 = @form.c[1].c[0]
-      @qing2.parent = @qing
-      @qing2.save
-      expect(@qing2.errors.messages.values.flatten).to include "Parent must be a group."
+      qing2.parent = qing
+      expect { qing2.save }.to raise_error(ParentMustBeGroupError)
     end
 
     it "should raise error if attempting to set questioning as parent of group" do
-      @qing_group.parent = @qing
-      @qing_group.save
-      expect(@qing_group.errors.messages.values.flatten).to include "Parent must be a group."
+      qing_group.parent = qing
+      expect { qing_group.save }.to raise_error(ParentMustBeGroupError)
     end
   end
 
   describe "ranks" do
     context "with flat form" do
-      let!(:form) { create(:form, question_types: %w(text text text text)) }
+      let!(:form) { create(:form, question_types: %w[text text text text]) }
       let!(:group) { create(:qing_group, form: form, parent: form.root_group) }
 
       it "should create 4 questionings and one group with correct ranks" do

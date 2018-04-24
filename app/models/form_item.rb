@@ -32,6 +32,7 @@ class FormItem < ApplicationRecord
   before_validation :normalize
 
   before_validation :set_foreign_key_on_conditions
+  before_validation :ensure_parent_is_group
   before_create :set_mission
 
   has_ancestry cache_depth: true
@@ -235,6 +236,10 @@ class FormItem < ApplicationRecord
     display_conditions.each { |c| c.conditionable = self }
   end
 
+  def ensure_parent_is_group
+    raise ParentMustBeGroupError unless parent.nil? || parent.group?
+  end
+
   # If there is a validation error on display logic or skip logic, we know it has to be due
   # to a missing field. This is easier to catch here instead of React for now.
   def collect_conditional_logic_errors
@@ -243,3 +248,5 @@ class FormItem < ApplicationRecord
     errors.add(:skip_logic, :all_required) if skip_rules.any?(&:invalid?)
   end
 end
+
+class ParentMustBeGroupError < StandardError; end
