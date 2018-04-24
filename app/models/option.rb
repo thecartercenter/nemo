@@ -3,13 +3,14 @@ class Option < ApplicationRecord
 
   acts_as_paranoid
 
-  has_many(:option_sets, through: :option_nodes)
-  has_many(:option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true)
-  has_many(:answers, inverse_of: :option)
-  has_many(:choices, inverse_of: :option)
+  has_many :option_sets, through: :option_nodes
+  has_many :option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true
+  has_many :answers, inverse_of: :option
+  has_many :choices, inverse_of: :option
 
-  after_save(:invalidate_cache)
-  after_destroy(:invalidate_cache)
+  after_save :invalidate_cache
+  after_save :touch_answers_choices
+  after_destroy :invalidate_cache
 
   scope :with_questions_and_forms, -> { includes(
     option_sets: [:questionings, {questions: {questionings: :form}}]) }
@@ -95,12 +96,18 @@ class Option < ApplicationRecord
 
   private
 
-    # invalidate the mission option cache after save, destroy
-    def invalidate_cache
-      Rails.cache.delete("mission_options/#{mission_id}")
-    end
+  # invalidate the mission option cache after save, destroy
+  def invalidate_cache
+    Rails.cache.delete("mission_options/#{mission_id}")
+  end
 
-    def check_invalid_coordinates_flag
-      errors.add(:coordinates, :invalid_coordinates) if @_invalid_coordinates_flag
-    end
+  # Touch these objects so the search index is updated.
+  def touch_answers_choices
+    answers.each(&:touch)
+    choices.each(&:touch)
+  end
+
+  def check_invalid_coordinates_flag
+    errors.add(:coordinates, :invalid_coordinates) if @_invalid_coordinates_flag
+  end
 end
