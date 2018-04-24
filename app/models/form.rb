@@ -73,7 +73,10 @@ class Form < ApplicationRecord
 
   def add_questions_to_top_level(questions)
     Array.wrap(questions).each_with_index do |q, i|
-      Questioning.create!(mission: mission, form: self, question: q, parent: root_group)
+      # We don't validate because there is no opportunity to present the error to the user,
+      # and if there is an error, it's not due to something the user just did since all they did was
+      # choose a question to add.
+      Questioning.new(mission: mission, form: self, question: q, parent: root_group).save(validate: false)
     end
   end
 

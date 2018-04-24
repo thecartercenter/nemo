@@ -36,7 +36,6 @@ class FormItem < ApplicationRecord
 
   has_ancestry cache_depth: true
 
-  validate :parent_must_be_group
   validate :collect_conditional_logic_errors
 
   delegate :condition_computer, to: :form
@@ -234,10 +233,6 @@ class FormItem < ApplicationRecord
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
   def set_foreign_key_on_conditions
     display_conditions.each { |c| c.conditionable = self }
-  end
-
-  def parent_must_be_group
-    errors.add(:parent, :must_be_group) unless parent.nil? || parent.is_a?(QingGroup)
   end
 
   # If there is a validation error on display logic or skip logic, we know it has to be due
