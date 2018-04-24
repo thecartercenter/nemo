@@ -44,7 +44,6 @@ describe Response do
         create(:question, qtype_name: "select_multiple", code: "Brown",
                           option_names: %w[hammer wrench screwdriver], add_to_form: form)
       end
-
       let!(:r1) do
         create(:response, form: form, reviewed: false, answer_values:
           [1, "the quick brown", "alpha", "apple bear cat", "dog earwax ipswitch", "Cat", ["hammer"]])
@@ -58,10 +57,17 @@ describe Response do
           [1, "over bravo the lazy brown quick dog", "contour", "joker lumpy", "meal nexttime", "Cat", []])
       end
 
+      before do
+        # Add option names a different languages
+        q5.option_set.c[0].option.update!(name_fr: "chat")
+        q6.option_set.c[0].option.update!(name_fr: "marteau")
+      end
+
       it "should work" do
         assert_search("text:brown", r1, r3)
         assert_search("text:bravo", r2, r3)
         assert_search("cat", r1, r3)
+        assert_search("chat", r1, r3)
         assert_search("wrench", r2)
 
         # Answers qualifier should be the default
@@ -78,8 +84,11 @@ describe Response do
         assert_search("text:apple", r1, r2)
         assert_search("{blue}:apple", r1)
         assert_search("{Green}:apple", r2)
+
+        # Searching for option names should work in any language
         assert_search("{Pink}:dog", r2)
         assert_search("{Brown}:hammer", r1, r2)
+        assert_search("{Brown}:marteau", r1, r2)
         assert_search("{Brown}:wrench", r2)
 
         # Invalid question codes should raise error

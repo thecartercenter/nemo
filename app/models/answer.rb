@@ -27,9 +27,10 @@ class Answer < ResponseNode
   trigger.before(:insert, :update) do
     "new.tsv := TO_TSVECTOR('simple', COALESCE(
       new.value,
-      (SELECT canonical_name FROM options WHERE new.option_id = options.id),
-      (SELECT STRING_AGG(canonical_name, ' ') FROM choices
-        INNER JOIN options ON choices.option_id = options.id WHERE new.id = choices.answer_id),
+      (SELECT STRING_AGG(opt_name_translation.value, ' ')
+        FROM options, jsonb_each_text(options.name_translations) opt_name_translation
+        WHERE options.id = new.option_id
+          OR options.id IN (SELECT option_id FROM choices WHERE answer_id = new.id)),
       ''
     ));"
   end
