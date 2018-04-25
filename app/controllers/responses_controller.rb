@@ -32,7 +32,8 @@ class ResponsesController < ApplicationController
         # do search, including excerpts, if applicable
         if params[:search].present?
           begin
-            @responses = Response.do_search(@responses, params[:search], {mission: current_mission}, include_excerpts: true)
+            @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
+              include_excerpts: true)
           rescue Search::ParseError
             flash.now[:error] = $!.to_s
             @search_error = true
@@ -53,7 +54,8 @@ class ResponsesController < ApplicationController
         # do search, excluding excerpts
         if params[:search].present?
           begin
-            @responses = Response.do_search(@responses, params[:search], {mission: current_mission}, include_excerpts: false)
+            @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
+              include_excerpts: false)
           rescue Search::ParseError
             flash.now[:error] = $!.to_s
             return
@@ -75,8 +77,8 @@ class ResponsesController < ApplicationController
     # so that we get highlighted excerpts
     if params[:search]
       # we pass a relation matching only one respoonse, so there should be at most one match
-      matches = Response.do_search(Response.where(id: @response.id), params[:search], {mission: current_mission},
-        include_excerpts: true, dont_truncate_excerpts: true)
+      matches = Response.do_search(Response.where(id: @response.id), params[:search],
+        {mission: current_mission}, include_excerpts: true, dont_truncate_excerpts: true)
 
       # if we get a match, then we use that object instead, since it contains excerpts
       @response = matches.first if matches.first
@@ -163,7 +165,7 @@ class ResponsesController < ApplicationController
     # do search if applicable
     if params[:search].present?
       begin
-        @possible_submitters = User.do_search(@possible_submitters, params[:search])
+        @possible_submitters = User.do_search(@possible_submitters, params[:search], mission: current_mission)
       rescue Search::ParseError
         flash.now[:error] = $!.to_s
         @search_error = true
@@ -191,7 +193,7 @@ class ResponsesController < ApplicationController
     # do search if applicable
     if params[:search].present?
       begin
-        @possible_users = User.do_search(@possible_users, params[:search])
+        @possible_users = User.do_search(@possible_users, params[:search], mission: current_mission)
       rescue Search::ParseError
         flash.now[:error] = $!.to_s
         @search_error = true
