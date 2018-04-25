@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# MarkersController
 class MarkersController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
@@ -7,11 +10,10 @@ class MarkersController < ApplicationController
     image_url = Marker.generate(params[:color])
 
     # set content types for direct image download
-    response.headers['Content-Type'] = 'image/png'
-    response.headers['Content-Disposition'] = 'inline'
+    response.headers["Content-Type"] = "image/png"
+    response.headers["Content-Disposition"] = "inline"
 
     # render the binary contents of the image
-    render :text => open(image_url).read
+    render text: open(image_url).read
   end
-
 end

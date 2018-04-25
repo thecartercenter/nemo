@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# OperationsController
 class OperationsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource

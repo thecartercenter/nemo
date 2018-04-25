@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Broadcast Controller
 class BroadcastsController < ApplicationController
   include Searchable # Searches users
 
@@ -8,11 +11,11 @@ class BroadcastsController < ApplicationController
   skip_load_and_authorize_resource only: :new_with_users
 
   def index
-    @broadcasts = @broadcasts.
-      manual_only.
-      includes(:broadcast_addressings).
-      paginate(page: params[:page], per_page: 50).
-      order(created_at: :desc)
+    @broadcasts = @broadcasts
+      .manual_only
+      .includes(:broadcast_addressings)
+      .paginate(page: params[:page], per_page: 50)
+      .order(created_at: :desc)
   end
 
   def new
@@ -100,18 +103,21 @@ class BroadcastsController < ApplicationController
       set.each { |u| @recipients << Recipient.new(object: u) }
     end
 
-
     render json: {
       results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: RecipientSerializer),
-      pagination: { more: (users_fetched || groups_fetched) }
+      pagination: {more: (users_fetched || groups_fetched)}
     }
   end
 
   private
 
   def prep_form_vars
-    @medium_options = configatron.to_h[:outgoing_sms_adapter] ?
-      Broadcast::MEDIUM_OPTIONS : Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
+    @medium_options =
+      if configatron.to_h[:outgoing_sms_adapter]
+        Broadcast::MEDIUM_OPTIONS
+      else
+        Broadcast::MEDIUM_OPTIONS_WITHOUT_SMS
+      end
     @users = User.accessible_by(current_ability).all
   end
 

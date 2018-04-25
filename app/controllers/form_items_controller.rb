@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# FormItemsController
 class FormItemsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
@@ -15,21 +18,23 @@ class FormItemsController < ApplicationController
   # Responds to ajax request with json containing data needed for condition form.
   def condition_form
     if params[:conditionable_id].present?
-      if params[:conditionable_type] == "FormItem"
-        @conditionable = FormItem.find(params[:conditionable_id])
-      else
-        @conditionable = SkipRule.find(params[:conditionable_id])
-      end
+      @conditionable =
+        if params[:conditionable_type] == "FormItem"
+          FormItem.find(params[:conditionable_id])
+        else
+          SkipRule.find(params[:conditionable_id])
+        end
     else
       # Create a dummy conditionable with the given form
       # so that the condition can look up the refable qings, etc.
       form = Form.find(params[:form_id])
       item = FormItem.new(form: form, mission: form.mission)
-      if params[:conditionable_type] == "FormItem"
-        @conditionable = item
-      else
-        @conditionable = SkipRule.new(source_item: item, mission: form.mission)
-      end
+      @conditionable =
+        if params[:conditionable_type] == "FormItem"
+          item
+        else
+          SkipRule.new(source_item: item, mission: form.mission)
+        end
     end
 
     authorize! :condition_form, @conditionable

@@ -13,8 +13,18 @@ class OptionSetImportsController < ApplicationController
 
         operation = current_user.operations.build(
           job_class: TabularImportOperationJob,
-          description: t("operation.description.option_set_import_operation_job", name: @option_set_import.name, mission_name: mission_name))
-        operation.begin!(@option_set_import.mission, @option_set_import.name, stored_path, @option_set_import.class.to_s)
+          description: t(
+            "operation.description.option_set_import_operation_job",
+            name: @option_set_import.name,
+            mission_name: mission_name
+          )
+        )
+        operation.begin!(
+          @option_set_import.mission,
+          @option_set_import.name,
+          stored_path,
+          @option_set_import.class.to_s
+        )
 
         flash[:html_safe] = true
         flash[:notice] = t("import.queued_html", type: OptionSet.model_name.human, url: operations_path)
