@@ -240,9 +240,15 @@ class UserBatch
   end
 
   def coerce_user_groups(user_group_names)
-    return [] unless user_group_names.present?
-    user_group = UserGroup.find_by(name: user_group_names)
-    [user_group]
+    ugs = []
+    return ugs unless user_group_names.present?
+
+    group_names = user_group_names.split(";")
+    group_names.each do |gn|
+      user_group = UserGroup.find_by(name: gn)
+      ugs << user_group
+    end
+    ugs
   end
 
   def error_is_on_persistence_token?(user)
