@@ -1086,7 +1086,7 @@ en:
     sms_tests:
       all: "SMS Test Console"
     user_batches:
-      all: "Create Multiple Users"
+      all: "Import Users"
     user_sessions:
       new: "Login"
       login_confirmation: "Confirm Login"
@@ -2146,7 +2146,7 @@ en:
       many: "%{count} users skipped."
       other: "%{count} users skipped."
     bulk_destroy_skipped_current: "Not deleting the current user."
-    create_multiple: "Create Multiple Users"
+    create_multiple: "Import Users"
     edit_profile: "Edit Profile"
     export_vcard: "Export as vCard"
     forgot_password: "Forgot Password?"
