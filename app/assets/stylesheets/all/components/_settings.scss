@@ -3,6 +3,10 @@ form.setting_form {
     display: none;
   }
 
+  .setting_generic_sms_config_str textarea {
+    font-family: monospace;
+  }
+
   #external_sql .control {
     pre {
       width: 415px;

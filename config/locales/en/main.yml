@@ -489,6 +489,7 @@ en:
         twilio_auth_token1: "Auth Token"
         twilio_phone_number: "Outgoing Number"
         frontlinecloud_api_key1: "API Key"
+        generic_sms_config_str: "Configuration"
       sms/message:
         adapter_name: "Adapter"
         body: "Body"
@@ -688,6 +689,7 @@ en:
         frontlinecloud_api_key1: "The API Key for the FrontlineCloud activity."
         external_sql: "The SQL code used to extract data for use in external applications. Click 'Select All' and then press Ctrl-C to copy."
         timezone: "The time zone in which times are displayed throughout the site."
+        generic_sms_config_str: "A JSON formatted configuration string for the generic adapter. Example: <pre>{&quot;params&quot;:{&quot;from&quot;:&quot;num&quot;,&quot;body&quot;:&quot;msg&quot;}, &quot;response&quot;:&quot;&lt;message&gt;%{reply}&lt;/message&gt;&quot;}</pre>"
       sms/test:
         from: "Enter the phone number from which this SMS should appear to originate. This number must include the country code (e.g. +1 404 555 1212, +23476543212)."
         body: "Enter the body of the message."
@@ -819,9 +821,10 @@ en:
           form_unavailable: "The specified form does not exist in this mission."
         setting:
           attributes:
-            generic_sms_config:
+            generic_sms_config_str:
               invalid_keys: "Valid keys are params, response, and matchHeaders."
               missing_keys: "Configuration must include params.from, params.body, and response keys."
+              invalid_json: "JSON error: %{msg}"
             preferred_locales_str:
               invalid_code: "The language code '%{code}' is invalid."
               one_must_have_translations: "Please choose at least one language that has translations (%{locales})."
@@ -1992,6 +1995,7 @@ en:
     using_incoming_sms_token: "How do I use this?"
     headings:
       general: "General Settings"
+      generic: "Generic SMS Adapter Settings"
       sms: "Shared SMS Settings"
       twilio: "Twilio Settings"
       frontlinecloud: "FrontlineCloud Settings"
