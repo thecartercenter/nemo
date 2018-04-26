@@ -50,7 +50,7 @@ module Sms
       end
 
       def response_body(reply)
-        reply.body
+        format(self.class.config["response"].to_s, reply: reply.body)
       end
     end
   end
