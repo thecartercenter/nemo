@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_424_202_221) do
+ActiveRecord::Schema.define(version: 20_180_426_183_417) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -543,6 +543,7 @@ ActiveRecord::Schema.define(version: 20_180_424_202_221) do
     t.datetime "created_at"
     t.string "default_outgoing_sms_adapter", limit: 255
     t.string "frontlinecloud_api_key", limit: 255
+    t.jsonb "generic_sms_config"
     t.text "incoming_sms_numbers"
     t.string "incoming_sms_token", limit: 255
     t.uuid "mission_id"

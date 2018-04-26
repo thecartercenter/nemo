@@ -819,6 +819,9 @@ en:
           form_unavailable: "The specified form does not exist in this mission."
         setting:
           attributes:
+            generic_sms_config:
+              invalid_keys: "Valid keys are params, response, and matchHeaders."
+              missing_keys: "Configuration must include params.from, params.body, and response keys."
             preferred_locales_str:
               invalid_code: "The language code '%{code}' is invalid."
               one_must_have_translations: "Please choose at least one language that has translations (%{locales})."

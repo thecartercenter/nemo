@@ -25,6 +25,8 @@ class Setting < ApplicationRecord
   validate :one_locale_must_have_translations
   validate :sms_adapter_is_valid
   validate :sms_credentials_are_valid
+  validate :generic_sms_valid_keys
+  validate :generic_sms_required_keys
 
   before_save :save_sms_credentials
 
@@ -242,6 +244,21 @@ class Setting < ApplicationRecord
   def validate_twilio
     errors.add(:twilio_account_sid, :blank) if twilio_account_sid.blank?
     errors.add(:twilio_auth_token1, :blank) if twilio_auth_token.blank? && twilio_auth_token1.blank?
+  end
+
+  def generic_sms_valid_keys
+    return if generic_sms_config.nil?
+    return if (generic_sms_config.keys - Sms::Adapters::GenericSmsAdapter::VALID_KEYS).empty?
+    errors.add(:generic_sms_config, :invalid_keys)
+  end
+
+  def generic_sms_required_keys
+    Sms::Adapters::GenericSmsAdapter::REQUIRED_KEYS.each do |full_key|
+      value = full_key.split(".").inject(generic_sms_config) do |memo, key|
+        memo.is_a?(Hash) ? memo[key] : nil
+      end
+      errors.add(:generic_sms_config, :missing_keys) && break if value.nil?
+    end
   end
 
   def validate_frontline_cloud

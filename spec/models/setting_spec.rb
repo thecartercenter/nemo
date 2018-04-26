@@ -110,5 +110,40 @@ describe Setting do
         end
       end
     end
+
+    describe "validation" do
+      describe "generic_sms_config" do
+        it "should error if invalid keys" do
+          setting = build(:setting,
+            mission_id: get_mission.id,
+            generic_sms_config: {params: {from: "x", body: "y"}, response: "x", foo: "y"})
+          expect(setting).to be_invalid
+          expect(setting.errors[:generic_sms_config].join).to match(/Valid keys are params/)
+        end
+
+        it "should error if missing top-level key" do
+          setting = build(:setting,
+            mission: get_mission,
+            generic_sms_config: {params: {from: "x", body: "y"}})
+          expect(setting).to be_invalid
+          expect(setting.errors[:generic_sms_config].join).to match(/Configuration must include/)
+        end
+
+        it "should error if missing second-level key" do
+          setting = build(:setting,
+            mission: get_mission,
+            generic_sms_config: {params: {from: "x"}, response: "x"})
+          expect(setting).to be_invalid
+          expect(setting.errors[:generic_sms_config].join).to match(/Configuration must include/)
+        end
+
+        it "should not error if required keys present" do
+          setting = build(:setting,
+            mission: get_mission,
+            generic_sms_config: {params: {from: "x", body: "y"}, response: "x"})
+          expect(setting).to be_valid
+        end
+      end
+    end
   end
 end
