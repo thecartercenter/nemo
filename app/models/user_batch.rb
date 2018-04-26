@@ -93,7 +93,7 @@ class UserBatch
 
   def parse_headers(row)
     # building map of translated field names to symbolic field names
-    expected_headers = Hash[*%i{login name phone phone2 email birth_year gender nationality notes}.map do |field|
+    expected_headers = Hash[*%i{login name phone phone2 email birth_year gender nationality notes groups}.map do |field|
       [User.human_attribute_name(field), field]
     end.flatten]
 
