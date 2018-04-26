@@ -30,7 +30,7 @@ describe UserBatch, :slow do
   # This spec was running very slowly since it was creating 2500 users!
   # Should be refactored to stub the BATCH_SIZE constant.
   # it "creates more than users in different batches" do
-  #   ub = create_user_batch("user_batch_2500.xlsx")
+  #   ub = create_user_batch("batch_of_2500.xlsx")
   #   expect(ub).to be_succeeded
   #
   #   expect(User.count).to eq 2499
@@ -38,7 +38,7 @@ describe UserBatch, :slow do
   # end
 
   it "creates users from csv" do
-    ub = create_user_batch("user_batch_3.csv")
+    ub = create_user_batch("batch_of_3.csv")
     expect(ub).to be_succeeded
 
     expect(User.count).to eq 3
