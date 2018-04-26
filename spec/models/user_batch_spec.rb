@@ -49,7 +49,7 @@ describe UserBatch, :slow do
     let!(:group1) { create(:user_group, name: "New Mexico dragons") }
     let!(:group2) { create(:user_group, name: "Delaware whales") }
 
-    describe "single user with single group" do
+    describe "single group" do
       it "creates users from csv" do
         ub = create_user_batch("single_group.csv")
         expect(ub).to be_succeeded
@@ -57,22 +57,31 @@ describe UserBatch, :slow do
       end
     end
 
-    describe "single user with multiple groups" do
+    describe "multiple existing groups" do
       it "creates users from csv" do
         ub = create_user_batch("multiple_groups.csv")
         expect(ub).to be_succeeded
-        assert_user_attribs(ub.users[0], login: "user0", user_groups: [group1])
         assert_user_attribs(ub.users[1], login: "user1", user_groups: [group2, group1])
       end
     end
 
-    describe "single user with multiple, non-existing group" do
+    describe "existing and non-existing groups" do
       it "creates users from csv" do
         ub = create_user_batch("multiple_groups.csv")
         ian = UserGroup.find_by(name: "I am new")
         expect(ub).to be_succeeded
-        assert_user_attribs(ub.users[0], login: "user0", user_groups: [group1])
-        assert_user_attribs(ub.users[1], login: "user1", user_groups: [group2, group1, ian])
+        assert_user_attribs(ub.users[2], login: "user2", user_groups: [group2, group1, ian])
+      end
+    end
+
+    # for posterity
+    describe "multiple non-existing groups" do
+      it "creates users from csv" do
+        ub = create_user_batch("multiple_groups.csv")
+        ano = UserGroup.find_by(name: "A new one")
+        hno = UserGroup.find_by(name: "Halla new one")
+        expect(ub).to be_succeeded
+        assert_user_attribs(ub.users[3], login: "user3", user_groups: [ano, hno])
       end
     end
   end
