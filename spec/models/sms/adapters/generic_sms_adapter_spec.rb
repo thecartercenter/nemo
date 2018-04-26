@@ -1,57 +1,100 @@
-require 'spec_helper'
+# frozen_string_literal: true
 
-describe Sms::Adapters::GenericSmsAdapter, :sms do
-  before :all do
-    @adapter = Sms::Adapters::Factory.instance.create('Generic')
+require "spec_helper"
+
+describe Sms::Adapters::GenericAdapter, :sms do
+  let(:adapter) { Sms::Adapters::Factory.instance.create("Generic") }
+
+  it "should be created by factory" do
+    expect(adapter).to_not be_nil
   end
 
-  it 'should be created by factory' do
-    expect(@adapter).to_not be_nil
+  it "should have correct service name" do
+    expect(adapter.service_name).to eq "Generic"
   end
 
-  it 'should have correct service name' do
-    expect(@adapter.service_name).to eq 'FrontlineSms'
+  it "should raise exception on deliver" do
+    expect { adapter.deliver(nil) }.to raise_error(NotImplementedError)
   end
 
-  it 'should raise exception on deliver' do
-    expect{@adapter.deliver(nil)}.to raise_error(NotImplementedError)
-  end
+  describe ".recognize_receive_request" do
+    context "with no configuration" do
+      before do
+        configatron.generic_sms_config = nil
+      end
 
-  it 'should recognize an incoming request with the proper params' do
-    request = double(params: {'frontline' => '1', 'from' => '1', 'text' => '1'})
-    expect(@adapter.class.recognize_receive_request?(request)).to be_truthy
-  end
+      it "should return false" do
+        request = double(params: {"num" => "1", "msg" => "1", "foo" => "1"})
+        expect(adapter.class.recognize_receive_request?(request)).to be false
+      end
+    end
 
-  it 'should not recognize an incoming request without the special frontline param' do
-    request = double(params: {'from' => '1', 'text' => '1'})
-    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
-  end
+    context "with params-only configuration" do
+      before do
+        configatron.generic_sms_config = {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
+      end
 
-  it 'should not recognize an incoming request without the other params' do
-    request = double(params: {'frontline' => '1'})
-    expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
-  end
+      it "should match request with matching params" do
+        request = double(params: {"num" => "1", "msg" => "1", "foo" => "1"})
+        expect(adapter.class.recognize_receive_request?(request)).to be true
+      end
 
-  it 'should correctly parse a frontline-style request' do
-    Time.zone = ActiveSupport::TimeZone['Saskatchewan']
+      it "should not match request with missing param" do
+        request = double(params: {"num" => "1", "foo" => "1"})
+        expect(adapter.class.recognize_receive_request?(request)).to be false
+      end
+    end
 
-    request = double(params: {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489'})
-    msg = @adapter.receive(request)
-    expect(msg).to be_a Sms::Incoming
-    expect(msg.to).to be_nil
-    expect(msg.from).to eq '+2348036801489'
-    expect(msg.body).to eq 'foo'
-    expect(msg.adapter_name).to eq 'FrontlineSms'
-    expect((msg.sent_at - Time.now).abs).to be <= 5
-    expect(msg.sent_at.zone).not_to eq 'UTC'
-    expect(msg.mission).to be_nil # This gets set in controller.
-  end
+    context "with params and matchHeaders configuration" do
+      before do
+        configatron.generic_sms_config = {
+          "params" => {"from" => "num", "body" => "msg"},
+          "response" => "x",
+          "matchHeaders" => {"Header1" => "foo", "Header2" => "bar"}
+        }
+      end
 
-  it 'should correctly parse a frontline-style request even if incoming_sms_numbers is empty' do
-    configatron.incoming_sms_numbers = []
-    request = double(params: {'frontline' => '1', 'text' => 'foo', 'from' => '+2348036801489'})
-    msg = @adapter.receive(request)
-    expect(msg.body).to eq 'foo'
-    expect(msg.to).to be_nil
+      it "should match request with matching params and headers" do
+        request = double(
+          params: {"num" => "1", "msg" => "1", "foo" => "1"},
+          headers: {"Header1" => "foo", "Header2" => "bar"}
+        )
+        expect(adapter.class.recognize_receive_request?(request)).to be true
+      end
+
+      it "should not match request with matching params but missing header" do
+        request = double(
+          params: {"num" => "1", "msg" => "1", "foo" => "1"},
+          headers: {"Header1" => "foo"}
+        )
+        expect(adapter.class.recognize_receive_request?(request)).to be false
+      end
+
+      it "should not match request with missing param but matching headers" do
+        request = double(
+          params: {"num" => "1", "foo" => "1"},
+          headers: {"Header1" => "foo", "Header2" => "bar"}
+        )
+        expect(adapter.class.recognize_receive_request?(request)).to be false
+      end
+    end
+
+    context "with invalid matchHeaders configuration" do
+      before do
+        configatron.generic_sms_config = {
+          "params" => {"from" => "num", "body" => "msg"},
+          "response" => "x",
+          "matchHeaders" => "x"
+        }
+      end
+
+      it "should match request with matching params and ignore headers" do
+        request = double(
+          params: {"num" => "1", "msg" => "1", "foo" => "1"},
+          headers: {"Header1" => "foo", "Header2" => "bar"}
+        )
+        expect(adapter.class.recognize_receive_request?(request)).to be true
+      end
+    end
   end
 end
