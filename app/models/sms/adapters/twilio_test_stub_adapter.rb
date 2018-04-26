@@ -17,4 +17,8 @@ class Sms::Adapters::TwilioTestStubAdapter < Sms::Adapters::TwilioAdapter
 
   def validate(request)
   end
+
+  def response_body(reply)
+    reply.body
+  end
 end

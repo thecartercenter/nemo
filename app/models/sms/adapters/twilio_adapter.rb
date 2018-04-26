@@ -60,6 +60,10 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     :via_response
   end
 
+  def response_body(reply)
+    reply.body
+  end
+
   private
 
   def send_message_for_each_recipient(message, client)

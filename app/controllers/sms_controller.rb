@@ -78,8 +78,7 @@ class SmsController < ApplicationController
         incoming_adapter.prepare_message_for_delivery(reply)
       end
 
-      render partial: "#{incoming_adapter.service_name.downcase}_response",
-        formats: [:html, :text], locals: {reply: reply}
+      render incoming_adapter.response_format => incoming_adapter.response_body(reply)
     else
       render text: "", status: 204 # No Content
     end

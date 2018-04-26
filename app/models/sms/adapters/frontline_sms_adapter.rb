@@ -28,4 +28,8 @@ class Sms::Adapters::FrontlineSmsAdapter < Sms::Adapters::Adapter
 
   def validate(request)
   end
+
+  def response_body(reply)
+    reply.body
+  end
 end
