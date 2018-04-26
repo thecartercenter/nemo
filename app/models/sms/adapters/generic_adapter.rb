@@ -36,12 +36,12 @@ module Sms
       end
 
       def receive(request)
-        params = request.params
+        # By now we know that the request has the from and body params.
         Sms::Incoming.new(
-          from: params["from"],
-          to: nil, # Frontline doesn't provide this.
-          body: params["text"],
-          sent_at: Time.zone.now, # Frontline doesn't supply this
+          from: request.params[self.class.config["params"]["from"]],
+          to: nil,
+          body: request.params[self.class.config["params"]["body"]],
+          sent_at: Time.zone.now,
           adapter_name: service_name
         )
       end

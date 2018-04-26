@@ -97,4 +97,25 @@ describe Sms::Adapters::GenericAdapter, :sms do
       end
     end
   end
+
+  describe "#receive" do
+    context "with valid config" do
+      before do
+        configatron.generic_sms_config = {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
+      end
+
+      it "should correctly parse a request" do
+        request = double(params: {"msg" => "foo", "num" => "+2348036801489"})
+        msg = adapter.receive(request)
+        expect(msg).to be_a Sms::Incoming
+        expect(msg.to).to be_nil
+        expect(msg.from).to eq "+2348036801489"
+        expect(msg.body).to eq "foo"
+        expect(msg.adapter_name).to eq "Generic"
+        expect((msg.sent_at - Time.current).abs).to be <= 5
+        expect(msg.sent_at.zone).not_to eq "UTC"
+        expect(msg.mission).to be_nil # This gets set in controller.
+      end
+    end
+  end
 end
