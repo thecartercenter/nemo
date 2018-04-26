@@ -245,7 +245,7 @@ class UserBatch
 
     group_names = user_group_names.split(";")
     group_names.each do |gn|
-      user_group = UserGroup.find_by(name: gn)
+      user_group = UserGroup.find_or_create_by(name: gn)
       ugs << user_group
     end
     ugs
