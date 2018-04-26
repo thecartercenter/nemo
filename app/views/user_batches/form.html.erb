@@ -1,7 +1,7 @@
-<%= elmo_form_for(@user_batch, :html => {:multipart => true}) do |f| %>
+<%= elmo_form_for(@user_batch, html: {multipart: true}) do |f| %>
   <p class="instructions"><%= formatted_instructions %></p>
-  <%= f.field(:file, :type => :file, :accept => '.xlsx,.csv', :required => true) %>
+  <%= f.field(:file, type: :file, accept: '.xlsx,.csv', required: true) %>
   <div class="submit-buttons">
-    <%= f.submit(t('common.import'), :class => "btn btn-primary") %>
+    <%= f.submit(t('common.import'), class: "btn btn-primary") %>
   </div>
 <% end %>
