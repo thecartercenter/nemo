@@ -47,6 +47,7 @@ describe UserBatch, :slow do
 
   context "groups" do
     let!(:group1) { create(:user_group, name: "New Mexico dragons") }
+    let!(:group2) { create(:user_group, name: "Delaware whales") }
 
     describe "single user with single group" do
       it "creates users from csv" do
@@ -57,13 +58,21 @@ describe UserBatch, :slow do
     end
 
     describe "single user with multiple groups" do
-      let!(:group2) { create(:user_group, name: "Delaware whales") }
-
       it "creates users from csv" do
         ub = create_user_batch("multiple_groups.csv")
         expect(ub).to be_succeeded
         assert_user_attribs(ub.users[0], login: "user0", user_groups: [group1])
         assert_user_attribs(ub.users[1], login: "user1", user_groups: [group2, group1])
+      end
+    end
+
+    describe "single user with multiple, non-existing group" do
+      it "creates users from csv" do
+        ub = create_user_batch("multiple_groups.csv")
+        ian = UserGroup.find_by(name: "I am new")
+        expect(ub).to be_succeeded
+        assert_user_attribs(ub.users[0], login: "user0", user_groups: [group1])
+        assert_user_attribs(ub.users[1], login: "user1", user_groups: [group2, group1, ian])
       end
     end
   end
