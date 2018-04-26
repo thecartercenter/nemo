@@ -45,6 +45,16 @@ describe UserBatch, :slow do
     expect(Assignment.count).to eq 3
   end
 
+  context "single groups" do
+    let!(:group1) { create(:user_group, name: "New Mexico dragons") }
+
+    it "creates users from csv" do
+      ub = create_user_batch("single_group.csv")
+      expect(ub).to be_succeeded
+      assert_user_attribs(ub.users[0], login: "user0", user_groups: [group1])
+    end
+  end
+
   it "ignores blank lines" do
     ub = create_user_batch("blank_lines.xlsx")
     expect(ub).to be_succeeded

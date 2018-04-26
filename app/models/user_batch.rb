@@ -5,7 +5,7 @@ class UserBatch
 
   IMPORT_ERROR_CUTOFF = 50
   BATCH_SIZE = 1000
-  PERMITTED_ATTRIBS = %i(login name phone phone2 email birth_year gender gender_custom nationality notes)
+  PERMITTED_ATTRIBS = %i(login name phone phone2 email birth_year gender gender_custom nationality notes user_groups)
 
   attr_accessor :file, :mission_id, :name
   attr_reader :users
@@ -93,7 +93,7 @@ class UserBatch
 
   def parse_headers(row)
     # building map of translated field names to symbolic field names
-    expected_headers = Hash[*%i{login name phone phone2 email birth_year gender nationality notes groups}.map do |field|
+    expected_headers = Hash[*%i{login name phone phone2 email birth_year gender nationality notes user_groups}.map do |field|
       [User.human_attribute_name(field), field]
     end.flatten]
 
@@ -137,6 +137,7 @@ class UserBatch
 
       attributes[:gender], attributes[:gender_custom] = coerce_gender(attributes[:gender])
       attributes[:nationality] = coerce_nationality(attributes[:nationality])
+      attributes[:user_groups] = coerce_user_groups(attributes[:user_groups])
 
       user_batch_attributes << attributes
     end
@@ -236,6 +237,12 @@ class UserBatch
     nationality_selection = nationality_options.find { |k, v| nationality_string == v }
     nationality = nationality_selection.try(:first)
     nationality.to_s
+  end
+
+  def coerce_user_groups(user_group_names)
+    return [] unless user_group_names.present?
+    user_group = UserGroup.find_by(name: user_group_names)
+    [user_group]
   end
 
   def error_is_on_persistence_token?(user)
