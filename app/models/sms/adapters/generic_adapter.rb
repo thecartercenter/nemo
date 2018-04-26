@@ -12,7 +12,7 @@ module Sms
         params_match = config["params"].values - request.params.keys == []
         headers_match =
           if config["matchHeaders"] && config["matchHeaders"].is_a?(Hash)
-            request.headers.slice(*config["matchHeaders"].keys) == config["matchHeaders"]
+            config["matchHeaders"].all? { |k, v| request.headers[k] == v }
           else
             true
           end

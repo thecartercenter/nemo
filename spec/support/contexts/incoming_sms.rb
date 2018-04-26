@@ -95,6 +95,14 @@ shared_context "incoming sms" do
       req_env = {
         "X-Twilio-Signature" => "1"
       }
+    when "Generic"
+      req_params = {
+        "num" => params[:from],
+        "msg" => params[:incoming][:body]
+      }
+      req_env = {
+        "UserAgent" => "FooBar"
+      }
     else
       raise "Incoming adapter not recognized. Can't build test request"
     end
