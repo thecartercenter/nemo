@@ -10,7 +10,12 @@ feature "sms settings form", :sms do
 
   context "twilio" do
     context "with no prior settings" do
-      let(:setting){ build(:setting, twilio_phone_number: nil, twilio_account_sid: nil, twilio_auth_token: nil) }
+      let(:setting) do
+        build(:setting,
+          twilio_phone_number: nil,
+          twilio_account_sid: nil,
+          twilio_auth_token: nil)
+      end
 
       scenario "filling in account sid only should error" do
         visit("/en/m/#{mission.compact_name}/settings")
@@ -39,6 +44,25 @@ feature "sms settings form", :sms do
         expect(find('#setting_twilio_account_sid').value).to eq "abc"
         expect(find('#setting_twilio_auth_token1').value).to eq nil
       end
+    end
+  end
+
+  context "generic sms" do
+    let(:setting) { build(:setting) }
+
+    scenario "filling in sms settings should catch errors and work" do
+      visit("/en/m/#{mission.compact_name}/settings")
+      fill_in("setting_generic_sms_config_str", with: "{")
+      click_button("Save")
+
+      expect(page).to have_content("JSON error:")
+      fill_in("setting_generic_sms_config_str", with: '{"params":{"body":"msg","from":"tel"},
+        "response": "x", "matchHeaders": {"User-Agent": "Thing"}}')
+      click_button("Save")
+
+      # Ensure save was successful.
+      expect(page).to have_content("Settings updated successfully")
+      expect(find("#setting_generic_sms_config_str").value).to match(/"params":/)
     end
   end
 end
