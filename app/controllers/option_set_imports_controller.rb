@@ -30,8 +30,8 @@ class OptionSetImportsController < ApplicationController
     end
   end
 
-  def example_spreadsheet
-    # TODO: example spreadsheet
+  def template
+    # TODO: make template
     NotImplementedError
   end
 

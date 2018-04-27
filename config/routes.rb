@@ -128,7 +128,7 @@ ELMO::Application.routes.draw do
     end
     resources :user_batches, path: "user-batches" do
       collection do
-        get "example_spreadsheet", path: "example-user-batch", defaults: { format: "xslx" }
+        get "template", path: "users-template", defaults: { format: "xslx" }
       end
     end
 
@@ -157,7 +157,7 @@ ELMO::Application.routes.draw do
 
     resource :option_set_imports, path: "option-set-imports", only: [:new, :create] do
       collection do
-        get "example_spreadsheet", path: "example-option-set", defaults: { format: "xlsx" }
+        get "template", path: "option-sets-template", defaults: { format: "xlsx" }
       end
     end
 

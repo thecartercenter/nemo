@@ -1,5 +1,5 @@
 <%= elmo_form_for(@option_set_import, :html => {:multipart => true}) do |f| %>
-  <p class="instructions"><%= simple_format(t('option_set_import.instructions_html', url: example_spreadsheet_option_set_imports_path(format: 'xlsx')), { }, :sanitize => false) %></p>
+  <p class="instructions"><%= simple_format(t('option_set_import.instructions_html', url: template_option_set_imports_path(format: 'xlsx')), { }, :sanitize => false) %></p>
   <%= f.field(:name, :required => true) %>
   <%= f.field(:file, :type => :file, :accept => '.csv,.xlsx', :required => true) %>
   <div class="submit-buttons">
