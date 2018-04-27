@@ -104,6 +104,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
   describe "#receive" do
     before do
       Settings.generic_sms_config = {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
+      Time.zone = ActiveSupport::TimeZone["Saskatchewan"]
     end
 
     it "should correctly parse a request" do
