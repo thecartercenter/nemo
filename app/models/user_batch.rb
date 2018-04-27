@@ -5,7 +5,9 @@ class UserBatch
 
   IMPORT_ERROR_CUTOFF = 50
   BATCH_SIZE = 1000
-  PERMITTED_ATTRIBS = %i(login name phone phone2 email birth_year gender gender_custom nationality notes user_groups)
+  PERMITTED_ATTRIBS = %i[login name phone phone2 email birth_year gender
+    gender_custom nationality notes user_groups]
+  EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups]
 
   attr_accessor :file, :mission_id, :name
   attr_reader :users
@@ -93,7 +95,7 @@ class UserBatch
 
   def parse_headers(row)
     # building map of translated field names to symbolic field names
-    expected_headers = Hash[*%i{login name phone phone2 email birth_year gender nationality notes user_groups}.map do |field|
+    expected_headers = Hash[*EXPECTED_HEADERS.map do |field|
       [User.human_attribute_name(field), field]
     end.flatten]
 
@@ -241,7 +243,7 @@ class UserBatch
 
   def coerce_user_groups(user_group_names)
     ugs = []
-    return ugs unless user_group_names.present?
+    return ugs if user_group_names.blank?
 
     group_names = user_group_names.split(";")
     group_names.each do |gn|
