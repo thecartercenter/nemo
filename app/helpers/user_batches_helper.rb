@@ -9,6 +9,6 @@ module UserBatchesHelper
   def formatted_instructions
     xlsx_url = template_user_batches_path(format: "xlsx")
     csv_url = template_user_batches_path(format: "csv")
-    simple_format(t("user_batch.instructions_html", xlsx_url: xlsx_url, csv_url: csv_url), {}, sanitize: false)
+    tmd("user_batch.instructions_html", xlsx_url: xlsx_url, csv_url: csv_url)
   end
 end
