@@ -267,13 +267,13 @@ class Setting < ApplicationRecord
 
   def generic_sms_valid_keys
     return if generic_sms_config.nil?
-    return if (generic_sms_config.keys - Sms::Adapters::GenericSmsAdapter::VALID_KEYS).empty?
+    return if (generic_sms_config.keys - Sms::Adapters::GenericAdapter::VALID_KEYS).empty?
     errors.add(:generic_sms_config_str, :invalid_keys)
   end
 
   def generic_sms_required_keys
     return if generic_sms_config.nil?
-    Sms::Adapters::GenericSmsAdapter::REQUIRED_KEYS.each do |full_key|
+    Sms::Adapters::GenericAdapter::REQUIRED_KEYS.each do |full_key|
       value = full_key.split(".").inject(generic_sms_config) do |memo, key|
         memo.is_a?(Hash) ? memo[key] : nil
       end
