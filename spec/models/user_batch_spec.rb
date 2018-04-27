@@ -45,44 +45,35 @@ describe UserBatch, :slow do
     expect(Assignment.count).to eq 3
   end
 
-  context "groups" do
+  describe "groups" do
     let!(:group1) { create(:user_group, name: "New Mexico dragons") }
     let!(:group2) { create(:user_group, name: "Delaware whales") }
 
-    describe "single group" do
-      it "creates users from csv" do
-        ub = create_user_batch("single_group.csv")
-        expect(ub).to be_succeeded
-        assert_user_attribs(ub.users[0], login: "user0", user_groups: [group1])
-      end
+    it "works with single group" do
+      ub = create_user_batch("single_group.csv")
+      expect(ub).to be_succeeded
+      assert_user_attribs(ub.users[0], login: "user0", user_groups: [group1])
     end
 
-    describe "multiple existing groups" do
-      it "creates users from csv" do
-        ub = create_user_batch("multiple_groups.csv")
-        expect(ub).to be_succeeded
-        assert_user_attribs(ub.users[1], login: "user1", user_groups: [group2, group1])
-      end
+    it "works with multiple existing groups" do
+      ub = create_user_batch("multiple_groups.csv")
+      expect(ub).to be_succeeded
+      assert_user_attribs(ub.users[1], login: "user1", user_groups: [group2, group1])
     end
 
-    describe "existing and non-existing groups" do
-      it "creates users from csv" do
-        ub = create_user_batch("multiple_groups.csv")
-        ian = UserGroup.find_by(name: "I am new")
-        expect(ub).to be_succeeded
-        assert_user_attribs(ub.users[2], login: "user2", user_groups: [group2, group1, ian])
-      end
+    it "works with existing and non-existing groups" do
+      ub = create_user_batch("multiple_groups.csv")
+      ian = UserGroup.find_by(name: "I am new")
+      expect(ub).to be_succeeded
+      assert_user_attribs(ub.users[2], login: "user2", user_groups: [group2, group1, ian])
     end
 
-    # for posterity
-    describe "multiple non-existing groups" do
-      it "creates users from csv" do
-        ub = create_user_batch("multiple_groups.csv")
-        ano = UserGroup.find_by(name: "A new one")
-        hno = UserGroup.find_by(name: "Halla new one")
-        expect(ub).to be_succeeded
-        assert_user_attribs(ub.users[3], login: "user3", user_groups: [ano, hno])
-      end
+    it "works with multiple non-existing groups" do
+      ub = create_user_batch("multiple_groups.csv")
+      ano = UserGroup.find_by(name: "A new one")
+      hno = UserGroup.find_by(name: "Halla new one")
+      expect(ub).to be_succeeded
+      assert_user_attribs(ub.users[3], login: "user3", user_groups: [ano, hno])
     end
   end
 
