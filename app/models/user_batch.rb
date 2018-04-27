@@ -226,7 +226,7 @@ class UserBatch
   # Takes a happy, uncoerced gender and stuffs it into a recognized box
   def coerce_gender(gender_string)
     return nil unless gender_string.present?
-    gender_options = I18n.t("user.gender_options")
+    gender_options = GENDER_OPTIONS.map { |g| [g, I18n.t("user.gender_options.#{g}")] }.to_h
     gender_selection = gender_options.find { |k, v| gender_string == v }
     gender = gender_selection.try(:first) || :specify
     gender_custom = gender_string if gender == :specify
@@ -234,7 +234,7 @@ class UserBatch
   end
 
   def coerce_nationality(nationality_string)
-    return nil unless nationality_string.present?
+    return nil if nationality_string.blank?
     nationality_options = I18n.t("countries")
     nationality_selection = nationality_options.find { |k, v| nationality_string == v }
     nationality = nationality_selection.try(:first)

@@ -38,11 +38,8 @@ class UserBatchesController < ApplicationController
 
   def template
     authorize!(:create, UserBatch)
-
     @sheet_name = User.model_name.human(count: 0)
-    @headers = %i{login name phone phone2 email birth_year gender nationality notes}.map do |field|
-      User.human_attribute_name(field)
-    end
+    @headers = UserBatch::EXPECTED_HEADERS.map { |f| User.human_attribute_name(f) }
   end
 
   private
