@@ -1,7 +1,7 @@
 class UserBatchesController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
-  skip_authorize_resource only: [:example_spreadsheet]
+  skip_authorize_resource only: [:template]
 
   # ensure a recent login for all actions
   before_action :require_recent_login
@@ -36,7 +36,7 @@ class UserBatchesController < ApplicationController
     end
   end
 
-  def example_spreadsheet
+  def template
     authorize!(:create, UserBatch)
 
     @sheet_name = User.model_name.human(count: 0)
