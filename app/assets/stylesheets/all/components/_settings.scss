@@ -4,12 +4,12 @@ form.setting_form {
   }
 
   .setting_generic_sms_config_str textarea {
-    font-family: monospace;
+    font-family: $font-family-monospace;
+    font-size: 8pt;
   }
 
   #external_sql .control {
     pre {
-      width: 415px;
       height: 100px;
       overflow: auto;
       border: 1px solid #ccc;

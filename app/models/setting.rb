@@ -178,8 +178,14 @@ class Setting < ApplicationRecord
     self.incoming_sms_numbers = (nums || "").split(",").map { |n| PhoneNormalizer.normalize(n) }.compact
   end
 
+  # This method converts the hash in the database for display in the browser.
   def generic_sms_config_str
-    @generic_sms_config_str || generic_sms_config.presence.try(:to_json) || ""
+    @generic_sms_config_str ||
+      if generic_sms_config.present?
+        JSON.pretty_generate(generic_sms_config)
+      else
+        ""
+      end
   end
 
   # Determines if this setting is read only due to mission being locked.
@@ -267,7 +273,8 @@ class Setting < ApplicationRecord
 
   def generic_sms_valid_keys
     return if generic_sms_config.nil?
-    return if (generic_sms_config.keys - Sms::Adapters::GenericAdapter::VALID_KEYS).empty?
+    return if generic_sms_config.is_a?(Hash) &&
+        (generic_sms_config.keys - Sms::Adapters::GenericAdapter::VALID_KEYS).empty?
     errors.add(:generic_sms_config_str, :invalid_keys)
   end
 
