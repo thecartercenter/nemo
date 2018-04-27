@@ -242,15 +242,9 @@ class UserBatch
   end
 
   def coerce_user_groups(user_group_names)
-    ugs = []
-    return ugs if user_group_names.blank?
-
-    group_names = user_group_names.split(";")
-    group_names.each do |gn|
-      user_group = UserGroup.find_or_create_by(name: gn)
-      ugs << user_group
+    (user_group_names || "").strip.split(";").map do |gn|
+      UserGroup.find_or_create_by(name: gn.strip)
     end
-    ugs
   end
 
   def error_is_on_persistence_token?(user)
