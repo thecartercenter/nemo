@@ -6,8 +6,8 @@ class UserBatch
   IMPORT_ERROR_CUTOFF = 50
   BATCH_SIZE = 1000
   PERMITTED_ATTRIBS = %i[login name phone phone2 email birth_year gender
-    gender_custom nationality notes user_groups]
-  EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups]
+                        gender_custom nationality notes user_groups]
+  EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups].freeze
 
   attr_accessor :file, :mission_id, :name
   attr_reader :users
