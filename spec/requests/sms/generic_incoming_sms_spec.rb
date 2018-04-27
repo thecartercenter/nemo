@@ -8,11 +8,11 @@ describe "generic incoming sms", :sms do
   before do
     @user = get_user
     setup_form(questions: %w[integer integer], required: true)
-    configatron.generic_sms_config = {
+    get_mission.setting.update!(generic_sms_config: {
       "params" => {"from" => "num", "body" => "msg"},
       "response" => "<msg>%{reply}</msg>",
       "matchHeaders" => {"UserAgent" => "FooBar"}
-    }
+    })
   end
 
   it "sets correct reply body" do
