@@ -20,7 +20,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
   describe ".recognize_receive_request" do
     context "with no configuration" do
       before do
-        configatron.generic_sms_config = nil
+        Settings.generic_sms_config = nil
       end
 
       it "should return false" do
@@ -31,7 +31,10 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
     context "with params-only configuration" do
       before do
-        configatron.generic_sms_config = {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
+        Settings.generic_sms_config = {
+          "params" => {"from" => "num", "body" => "msg"},
+          "response" => "x"
+        }
       end
 
       it "should match request with matching params" do
@@ -47,7 +50,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
     context "with params and matchHeaders configuration" do
       before do
-        configatron.generic_sms_config = {
+        Settings.generic_sms_config = {
           "params" => {"from" => "num", "body" => "msg"},
           "response" => "x",
           "matchHeaders" => {"Header1" => "foo", "Header2" => "bar"}
@@ -81,7 +84,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
     context "with invalid matchHeaders configuration" do
       before do
-        configatron.generic_sms_config = {
+        Settings.generic_sms_config = {
           "params" => {"from" => "num", "body" => "msg"},
           "response" => "x",
           "matchHeaders" => "x"
@@ -100,7 +103,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
   describe "#receive" do
     before do
-      configatron.generic_sms_config = {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
+      Settings.generic_sms_config = {"params" => {"from" => "num", "body" => "msg"}, "response" => "x"}
     end
 
     it "should correctly parse a request" do
@@ -119,7 +122,7 @@ describe Sms::Adapters::GenericAdapter, :sms do
 
   describe "#response_body" do
     before do
-      configatron.generic_sms_config = {
+      Settings.generic_sms_config = {
         "params" => {"from" => "num", "body" => "msg"},
         "response" => "<msg>%{reply}</msg>"
       }

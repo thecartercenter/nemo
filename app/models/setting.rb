@@ -6,7 +6,7 @@ class Setting < ApplicationRecord
 
   # Attribs to copy to configatron
   KEYS_TO_COPY = %w[timezone preferred_locales all_locales incoming_sms_numbers frontlinecloud_api_key
-                    twilio_phone_number twilio_account_sid twilio_auth_token theme generic_sms_config].freeze
+                    twilio_phone_number twilio_account_sid twilio_auth_token theme].freeze
 
   # These are the keys that make sense in admin mode
   ADMIN_MODE_KEYS = %w[timezone preferred_locales theme universal_sms_token].freeze
@@ -145,6 +145,7 @@ class Setting < ApplicationRecord
     configatron.configure_from_hash(hsh)
 
     load_theme_settings
+    load_generic_sms_settings
   end
 
   # converts preferred_locales to a comma delimited string
@@ -335,5 +336,9 @@ class Setting < ApplicationRecord
       return YAML.load_file(file) if File.exist?(file)
     end
     {}
+  end
+
+  def load_generic_sms_settings
+    Settings.generic_sms_config = generic_sms_config
   end
 end

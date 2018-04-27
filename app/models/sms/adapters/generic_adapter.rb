@@ -24,7 +24,7 @@ module Sms
       end
 
       def self.config
-        configatron.generic_sms_config&.to_h&.deep_stringify_keys || {"params" => {}, "response" => ""}
+        Settings.generic_sms_config&.deep_stringify_keys || {"params" => {}, "response" => ""}
       end
 
       def reply_style
