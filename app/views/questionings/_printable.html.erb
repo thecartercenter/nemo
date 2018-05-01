@@ -1,4 +1,4 @@
-<tr class="question <%= "depth-#{qing.depth}" %><%= qing.display_conditionally? ? ' conditional' : '' %>">
+<tr class="question depth <%= "depth-#{qing.depth}" %><%= qing.display_conditionally? ? ' conditional' : '' %>">
   <td class="name">
     <% if qing.display_conditionally?%>
       <div class="condition">
@@ -26,8 +26,8 @@
   </td>
 </tr>
 <% qing.skip_rules.each do |rule| %>
-  <tr>
-    <td colspan="2" class="skip-rule">
+  <tr class="depth <%= "depth-#{qing.depth}" %>">
+    <td colspan="2" class="skip-rule name">
       <%= SkipRuleDecorator.new(rule).human_readable %>
     </td>
   </tr>
