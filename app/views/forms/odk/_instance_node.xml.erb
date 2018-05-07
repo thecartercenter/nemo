@@ -4,7 +4,9 @@
     <%= tag(subq.odk_code) %>
   <% end %>
 <% else %>
-  <%= content_tag(node.odk_code, node.repeatable? ? {"jr:template" => ""} : nil) do %>
+  <%# ODK throws a null object reference error if we put jr:template on an
+      instance element with no children (other than <header/>). %>
+  <%= content_tag(node.odk_code, node.repeatable? && node.children? ? {"jr:template" => ""} : nil) do %>
     <%= tag(:header) %>
     <% node.sorted_children.each do |child| %>
       <%= render "forms/odk/instance_node", node: child %>

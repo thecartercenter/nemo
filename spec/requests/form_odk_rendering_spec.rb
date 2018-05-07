@@ -75,7 +75,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_group_with_condition.xml", form)
     end
   end
-  
+
   context "gridable form with one_screen set to false" do
     let(:first_question) { create(:question, qtype_name: "select_one") }
     let(:second_question) { create(:question, qtype_name: "select_one", option_set: first_question.option_set) }
@@ -260,6 +260,19 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq prepare_odk_expectation("nested_repeat_group_form.xml", form)
+    end
+  end
+
+  context "empty repeat group" do
+    let!(:form) do
+      create(:form, :published, :with_version,
+        name: "Empty Repeat Group",
+        question_types: ["text", {repeating: {name: "Repeat Group 1", items: []}}])
+    end
+
+    it "should render proper xml" do
+      do_request_and_expect_success
+      expect(tidyxml(response.body)).to eq prepare_odk_expectation("empty_repeat_group_form.xml", form)
     end
   end
 
