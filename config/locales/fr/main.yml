@@ -409,8 +409,6 @@ fr:
         api_key: "La clé d'API"
         sms_auth_code: "Code d'authentification du SMS"
         user_group_ids: "Groupes"
-      user_batch:
-        file: "Fichier"
     table_headers:
       response:
         incomplete: "Incomplet?"
@@ -912,8 +910,6 @@ fr:
       index: "Journal de bord de SMS"
     sms_tests:
       all: "Console de contrôle de SMS"
-    user_batches:
-      all: "Créer plusieurs utilisateurs"
     user_sessions:
       new: "Connexion"
       login_confirmation: "confirmer la connexion"
@@ -1370,12 +1366,6 @@ fr:
   search:
     blank: "vide"
     examples:
-      users:
-      - john smith
-      - téléphone:+443726458364
-      - login:jsmith
-      - email:jsmith@example.com
-      - group:"The Smiths"
       questions:
       - Travailleurs des bureaux de vote
       - code:Urnes
@@ -1393,14 +1383,6 @@ fr:
     help_link: "Aide"
     help_title: "Aide "
     help_text:
-      users: |-
-          ##Qualificatif
-
-          Une si;ple recherche telle que
-
-          *_romeo juliet_
-
-          correspond au code utilisateur,
       questions: |-
           ## Qualificatifs
 
@@ -1629,11 +1611,6 @@ fr:
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
-  user_batch:
-    instructions_html: |-
-        télécharger un classeur avec contenant les utilisateurs. seuls les fichiers Excel et CSV sont acceptés.
-
-        Un exemple de classeur est disponible à <a href="%{xlsx_url}">au format XLSX</a> et <a href="%{csv_url}">au format CSV</a>
   user:
     add_assignment: "Ajouter Une Tâche"
     api_key:
@@ -1657,7 +1634,6 @@ fr:
       two: "%{count} utilisateurs sautés"
       other: "%{count} utilisateurs sautés"
     bulk_destroy_skipped_current: "Ne peut supprimer l'utilisateur en cours"
-    create_multiple: "Créer plusieurs utilisateurs"
     edit_profile: "Modifier le profil"
     export_vcard: "Exporter comme vCard"
     forgot_password: "Vous avez oublié votre mot de passe?"

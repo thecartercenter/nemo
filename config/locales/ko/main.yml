@@ -474,8 +474,6 @@ ko:
         api_key: "API 키"
         sms_auth_code: "SMS 본인 확인 암호"
         user_group_ids: "그룹"
-      user_batch:
-        file: "파일"
     table_headers:
       response:
         incomplete: "미완성입니까?"
@@ -975,8 +973,6 @@ ko:
       index: "SMS 기록"
     sms_tests:
       all: "SMS 테스팅"
-    user_batches:
-      all: "다수의 사용자 생성하기"
     user_sessions:
       new: "로그인"
       login_confirmation: "로그인 승인"
@@ -1435,12 +1431,6 @@ ko:
   search:
     blank: "빈 칸"
     examples:
-      users:
-      - john smith
-      - phone:+443726458364
-      - login:jsmith
-      - email:jsmith@example.com
-      - group:"The Smiths"
       questions:
       - poll workers
       - code:BallotBoxes
@@ -1570,11 +1560,6 @@ ko:
   unauthorized:
     default: "해당 페이지 혹은 작동에 대한 권한이 없습니다."
     must_login: "로그인 후 페이지를 볼 수 있습니다."
-  user_batch:
-    instructions_html: |-
-        스프레드시트를 업로드 하십시오. XLSX 형식의 엑셀파일이나 CSV 파일만 가능합니다.
-
-        스프레드시트 예시 파일을 참조하십시오. <a href="%{xlsx_url}">XLSX</a> 그리고 <a href="%{csv_url}">CSV</a>
   user:
     add_assignment: "배정될 미션 추가"
     api_key:
@@ -1605,7 +1590,6 @@ ko:
       many: "%{count}명의 사용자가 건너뛰어졌습니다."
       other: "%{count}명의 사용자가 생략되었습니다."
     bulk_destroy_skipped_current: "현재 사용자를 삭제하지 않습니다."
-    create_multiple: "다수 사용자 생성하기"
     edit_profile: "프로필 수정하기"
     export_vcard: "vCard로 내보내기"
     forgot_password: "비밀번호를 잊어버리셨습니까?"

@@ -733,8 +733,6 @@ es:
       index: "Registro de SMS"
     sms_tests:
       all: "Consola de texto SMS"
-    user_batches:
-      all: "Crear Varios Usuarios"
     user_sessions:
       new: "Iniciar sesión"
       logged_out: "Cerrar Sesión"
@@ -1178,7 +1176,6 @@ es:
     api_key:
       regenerate: "Regenerar"
     back_to_index: "Volver a Lista de Usuarios"
-    create_multiple: "Crear Varios Usuarios"
     edit_profile: "Editar Perfil "
     export_vcard: "Exportar como vCard"
     forgot_password: "¿Ha olvidado su contraseña?"
