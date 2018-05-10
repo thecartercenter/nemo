@@ -5,7 +5,7 @@
 <head>
   <title><%= Settings.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
-  <%= main_stylesheet_tag %>
+  <%= main_stylesheet_tag(params) %>
 
   <%# For Capybara. %>
   <%= stylesheet_link_tag 'disable-transition' if Rails.env.test? %>

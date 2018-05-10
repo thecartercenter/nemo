@@ -7,5 +7,5 @@
     <p><%= link_to(t("user.back_to_index"), users_path) %></p>
   </div>
 
-  <%= render("login_instruction_box", :user => @user, :password => flash[:password]) %>
+  <%= render("login_instruction_box", :user => @user, :password => (params[:password] || flash[:password])) %>
 </div>

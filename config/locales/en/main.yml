@@ -2177,11 +2177,13 @@ en:
     login_instructions:
       closing:
         - "Please note the 's' in 'https' in the site URL."
-        - "If you'd like to choose a more memorable password, you can change your password using the website."
+        - |-
+          If you'd like to choose a more memorable password, you can change your password by visiting
+          the URL above, logging in, and clicking your username in the top-right corner.
         - |-
           The above credentials will also work on your Android device. To enter your credentials,
-          start the 'ODK Collect' application, press the 'Menu' button, tap 'Preferences',
-          and then tap each of 'Username' and 'Password'.
+          open 'ODK Collect', tap the ⋮ button > Admin Settings > Import/Export Settings, and then
+          scan the barcode above.
       preamble_singular: |-
         Login instructions are shown below. Please print this page now and ensure the user below receives it.
         Since the user's password is stored in encrypted format, it will be irretrievable after you leave this page.
