@@ -26,10 +26,10 @@ feature "user form password field" do
       context "normal mode" do
         scenario "setting enumerator password via email should work" do
           visit "/en/m/#{mission.compact_name}/users/new"
-          expect(page).to have_content("Send email instructions")
-          expect(page).to have_content("Show printable instructions")
+          expect(page).to have_content("Send password reset instructions via email")
+          expect(page).to have_content("Generate a new password and show printable login instructions")
           fill_out_form
-          choose("Send email instructions")
+          select("Send password reset instructions via email", from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("User created successfully")
         end
@@ -37,7 +37,7 @@ feature "user form password field" do
         scenario "setting enumerator password via email without email should fail" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form(email: false)
-          choose("Send email instructions")
+          select("Send password reset instructions via email", from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("you didn't specify an email")
         end
@@ -45,7 +45,7 @@ feature "user form password field" do
         scenario "setting enumerator password via printable should work" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form
-          choose("Show printable instructions")
+          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
@@ -53,15 +53,15 @@ feature "user form password field" do
         scenario "setting coordinator password via printable should error" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form(role: "Coordinator")
-          choose("Show printable instructions")
+          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Printed instructions are only available to enumerators.")
         end
 
         scenario "setting enumerator password via printable should be unavailable in admin mode" do
           visit "/en/admin/users/new"
-          expect(page).to have_content("Send email instructions")
-          expect(page).not_to have_content("Show printable instructions")
+          expect(page).to have_content("Send password reset instructions via email")
+          expect(page).not_to have_content("Generate a new password and show printable login instructions")
         end
       end
 
@@ -74,24 +74,24 @@ feature "user form password field" do
 
         scenario "setting enumerator password via email should be unavailable" do
           visit "/en/m/#{mission.compact_name}/users/new"
-          expect(page).to have_content("Show printable instructions")
-          expect(page).not_to have_content("Send email instructions")
+          expect(page).to have_content("Generate a new password and show printable login instructions")
+          expect(page).not_to have_content("Send password reset instructions via email")
         end
 
         scenario "setting coordinator password via printable should work" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form(role: "Coordinator")
-          choose("Show printable instructions")
+          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
 
         scenario "setting enumerator password via printable should work in admin mode" do
           visit "/en/admin/users/new"
-          expect(page).to have_content("Show printable instructions")
-          expect(page).not_to have_content("Send email instructions")
+          expect(page).to have_content("Generate a new password and show printable login instructions")
+          expect(page).not_to have_content("Send password reset instructions via email")
           fill_out_form(role: nil, admin: true)
-          choose("Show printable instructions")
+          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
@@ -112,24 +112,24 @@ feature "user form password field" do
 
       scenario "resetting enumerator password via email should work" do
         visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/edit"
-        expect(page).to have_content("Reset password and send email instructions")
-        expect(page).to have_content("Reset password and show printable instructions")
-        choose("Reset password and send email instructions")
+        expect(page).to have_content("Send password reset instructions via email")
+        expect(page).to have_content("Generate a new password and show printable login instructions")
+        select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
         click_button("Save")
         expect(page).to have_content("User updated successfully")
       end
 
       scenario "resetting enumerator password via printable should work" do
         visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/edit"
-        choose("Reset password and show printable instructions")
+        select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
         click_button("Save")
         expect(page).to have_content("Login Instructions")
       end
 
       scenario "resetting coordinator password via printable should not be available" do
         visit "/en/m/#{mission.compact_name}/users/#{coordinator.id}/edit"
-        expect(page).to have_content("Reset password and send email instructions")
-        expect(page).not_to have_content("Reset password and show printable instructions")
+        expect(page).to have_content("Send password reset instructions via email")
+        expect(page).not_to have_content("Generate a new password and show printable login instructions")
       end
     end
   end

@@ -207,6 +207,12 @@ class UsersController < ApplicationController
     user_group_ids = permitted_params.delete(:user_group_ids)
     @user.user_groups = process_user_groups(user_group_ids)
 
+    reset_password_method = permitted_params[:reset_password_method]
+    if reset_password_method.present? && reset_password_method != "enter"
+      permitted_params.delete(:password)
+      permitted_params.delete(:password_confirmation)
+    end
+
     @user.assign_attributes(permitted_params)
   end
 

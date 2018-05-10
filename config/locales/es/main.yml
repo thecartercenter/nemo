@@ -1179,7 +1179,6 @@ es:
     edit_profile: "Editar Perfil "
     export_vcard: "Exportar como vCard"
     forgot_password: "¿Ha olvidado su contraseña?"
-    leave_password_alone: "Dejar contraseña"
     login_instructions:
       closing:
       - Por favor note la 's' en 'https' en la página URL.
@@ -1200,13 +1199,10 @@ es:
       welcome: "Bienvenido a %{site}. Sus credenciales son las siguientes:"
     logout_success: "Ha cerrado la sesión con éxito."
     profile_updated: "Perfil actualizado con éxito."
-    reset_password_and: "Restablecer contraseña y"
     reset_password_hint_reset: "Elegir si pueden y cómo pueden volver a restablecer la contraseña de usuario."
     reset_password_label_choose: "Creación de Contraseña"
     reset_password_label_reset: "¿Restablecer la contraseña?"
-    send_email_instructions: "Enviar correo electrónico con instrucciones"
     set_admin_password: "Establecer la contraseña de administrador y la información de perfil"
-    show_printable_instructions: "Mostrar instrucciones imprimibles"
   welcome:
     awaiting_review: "**%{count}** Esperando Revisión"
     by_you: "**%{count}** Entregas hechas por ti"

@@ -2167,7 +2167,6 @@ en:
     edit_profile: "Edit Profile"
     export_vcard: "Export as vCard"
     forgot_password: "Forgot Password?"
-    leave_password_alone: "Leave password alone"
     gender_options:
       man: "Man"
       woman: "Woman"
@@ -2195,14 +2194,17 @@ en:
       welcome: "Welcome to %{site}. Your credentials are as follows:"
     logout_success: "You have logged out successfully."
     profile_updated: "Profile updated successfully."
-    reset_password_and: "Reset password and"
     reset_password_hint_choose: "Select how this user should get their password."
     reset_password_hint_reset: "Choose whether and how to reset this user's password."
     reset_password_label_choose: "Password Creation"
-    reset_password_label_reset: "Reset Password?"
-    send_email_instructions: "send email instructions"
-    set_admin_password: "Set your admin password and profile information"
-    show_printable_instructions: "show printable instructions"
+    set_admin_password: "Set your admin password and profile nformation"
+    reset_password_label_reset: "Password"
+    password_options:
+      no_change: "No change"
+      send_email_instructions: "Send password reset instructions via email"
+      generate_new: "Generate a new password and show printable login instructions"
+      enter_new_password: "Enter a new password"
+      enter_new_password_show_printable_instructions: "Enter a new password and show printable login instructions"
 
   user_group:
     create_prompt: "Please enter the name of your group."

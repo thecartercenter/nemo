@@ -1593,7 +1593,6 @@ ko:
     edit_profile: "프로필 수정하기"
     export_vcard: "vCard로 내보내기"
     forgot_password: "비밀번호를 잊어버리셨습니까?"
-    leave_password_alone: "비밀번호 바꾸지 않기"
     gender_options:
       man: "남성"
       woman: "여성"
@@ -1617,14 +1616,11 @@ ko:
       welcome: "%{site}에 오신 것을 환영합니다. 당신의 역할은 다음과 같습니다:"
     logout_success: "성공적으로 로그아웃 되었습니다."
     profile_updated: "프로필이 성공적으로 갱신되었습니다."
-    reset_password_and: "비밀번호 리셋하고"
     reset_password_hint_choose: "사용자의 비밀번호 접근 방법을 선택하십시오."
     reset_password_hint_reset: "이 사용자의 비밀번호를 어떻게 리셋할지 선택하십시오."
     reset_password_label_choose: "비밀번호 생성하기"
     reset_password_label_reset: "비밀번호를 리셋하시겠습니까?"
-    send_email_instructions: "이메일 가이드 보내기"
     set_admin_password: "당신의 관리자 비밀번호와 프로필 정보를 설정하십시오"
-    show_printable_instructions: "인쇄 가능한 가이드 보기"
   user_group:
     create_prompt: "그룹의 이름을 입력하십시오."
     add_users_success: "성공적으로 %{count}명의 사용자를 그룹 %{group}에 추가했습니다"
