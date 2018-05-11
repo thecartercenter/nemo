@@ -60,6 +60,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
     # Else if it references a question with a multilevel option set, find/create AnswerSet.
     elsif row["type"] == "Answer" && form_item["level_names"].present?
       parent_row = row.slice("questioning_id", "inst_num", "response_id").merge("type" => "AnswerSet")
+      row["new_rank"] = row["rank"]
     # Else just find/create its parent AnswerGroup.
     else
       qing_group_id = form_item["ancestry"].split("/").last
