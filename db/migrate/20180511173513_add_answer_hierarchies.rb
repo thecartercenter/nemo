@@ -5,12 +5,10 @@ class AddAnswerHierarchies < ActiveRecord::Migration
   def up
     remove_index "answer_hierarchies", name: "answer_anc_desc_idx"
     remove_index "answer_hierarchies", name: "answer_desc_idx"
-    add_index "answers", "parent_id"
 
     execute("DELETE FROM answer_hierarchies")
     add_for([])
 
-    remove_index "answers", "parent_id"
     add_index "answer_hierarchies", %w[ancestor_id descendant_id generations], name: "answer_anc_desc_idx", unique: true, using: :btree
     add_index "answer_hierarchies", ["descendant_id"], name: "answer_desc_idx", using: :btree
   end
