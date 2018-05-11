@@ -10,6 +10,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
   # - Exactly one AnswerGroupSet per repeat group and response_id
   # - Old inst_num is the same for all Answers in an AnswerGroup
   # - Contiguous, non-duplicate, 1-based ranks per parent_id
+  # - All answers with rank > 1 have AnswerSet parents
 
   def up
     # First delete all existing non-Answer-type rows, making this script idempotent, since it only
