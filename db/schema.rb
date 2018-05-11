@@ -35,6 +35,7 @@ ActiveRecord::Schema.define(version: 20_180_511_162_734) do
     t.integer "inst_num", default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
+    t.integer "new_rank", null: false
     t.integer "old_id"
     t.uuid "option_id"
     t.integer "option_old_id"
@@ -52,6 +53,7 @@ ActiveRecord::Schema.define(version: 20_180_511_162_734) do
   end
 
   add_index "answers", ["deleted_at", "type"], name: "index_answers_on_deleted_at_and_type", using: :btree
+  add_index "answers", ["new_rank"], name: "index_answers_on_new_rank", using: :btree
   add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
   add_index "answers", ["parent_id"], name: "index_answers_on_parent_id", using: :btree
   add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
