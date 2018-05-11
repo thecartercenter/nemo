@@ -26,7 +26,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
 
     result = execute("SELECT id, response_id, questioning_id, inst_num, rank, type
       FROM #{ANSWER_TBL_NAME}
-      WHERE response_id = '149d525d-1c79-4c71-8204-5b5aac9be9c8'")
+      WHERE response_id = '77a70b5c-887d-4044-976b-173af8c93bc8'")
 
     result.each do |row|
       find_or_create_parent_row(row)

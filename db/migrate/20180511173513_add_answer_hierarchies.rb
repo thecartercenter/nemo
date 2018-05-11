@@ -20,9 +20,9 @@ class AddAnswerHierarchies < ActiveRecord::Migration
     (ancestor_ids + [:self]).reverse.each_with_index do |aid, i|
       aid_expr = aid == :self ? "id" : "'#{aid}'"
       execute("INSERT INTO answer_hierarchies(ancestor_id, descendant_id, generations)
-        SELECT #{aid_expr}, id, #{i} FROM answers WHERE parent_id #{parent_where_expr} AND response_id = '149d525d-1c79-4c71-8204-5b5aac9be9c8'")
+        SELECT #{aid_expr}, id, #{i} FROM answers WHERE parent_id #{parent_where_expr} AND response_id = '77a70b5c-887d-4044-976b-173af8c93bc8'")
     end
-    execute("SELECT id FROM answers WHERE parent_id #{parent_where_expr} AND response_id = '149d525d-1c79-4c71-8204-5b5aac9be9c8'").each do |row|
+    execute("SELECT id FROM answers WHERE parent_id #{parent_where_expr} AND response_id = '77a70b5c-887d-4044-976b-173af8c93bc8'").each do |row|
       add_for(ancestor_ids + [row["id"]])
     end
   end
