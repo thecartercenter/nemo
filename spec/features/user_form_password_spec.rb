@@ -30,7 +30,7 @@ feature "user form password field" do
           expect(page).to have_content("Generate a new password and show printable login instructions")
           fill_out_form
           select("Send password reset instructions via email", from: "user_reset_password_method")
-          click_button("Save")
+          expect { click_button("Save") }.to change { ActionMailer::Base.deliveries.count }.by 1
           expect(page).to have_content("User created successfully")
         end
 
@@ -107,29 +107,122 @@ feature "user form password field" do
     end
 
     context "editing user" do
-      let(:enumerator) { create(:user, role_name: :enumerator, mission: mission) }
-      let(:coordinator) { create(:user, role_name: :coordinator, mission: mission) }
+      before { visit "/en/m/#{mission.compact_name}/users/#{user.id}/edit" }
 
-      scenario "resetting enumerator password via email should work" do
-        visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/edit"
-        expect(page).to have_content("Send password reset instructions via email")
-        expect(page).to have_content("Generate a new password and show printable login instructions")
-        select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
-        click_button("Save")
-        expect(page).to have_content("User updated successfully")
+      shared_examples "leaving password unchanged" do
+        scenario "leaving password unchanged should work" do
+          expect(page).to have_content("No change")
+          select("No change", from: "user_reset_password_method")
+          click_button("Save")
+          expect(page).to have_content("updated successfully")
+        end
       end
 
-      scenario "resetting enumerator password via printable should work" do
-        visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/edit"
-        select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
-        click_button("Save")
-        expect(page).to have_content("Login Instructions")
+      shared_examples "sending password instructions via email" do
+        scenario "sending password reset instructions via email should work" do
+          expect(page).to have_content("Send password reset instructions via email")
+          select("Send password reset instructions via email", from: "user_reset_password_method")
+          expect { click_button("Save") }.to change { ActionMailer::Base.deliveries.count }.by 1
+          expect(page).to have_content("updated successfully")
+        end
       end
 
-      scenario "resetting coordinator password via printable should not be available" do
-        visit "/en/m/#{mission.compact_name}/users/#{coordinator.id}/edit"
-        expect(page).to have_content("Send password reset instructions via email")
-        expect(page).not_to have_content("Generate a new password and show printable login instructions")
+      shared_examples "generating new password" do
+        scenario "generating new password should work" do
+          expect(page).to have_content("Generate a new password and show printable login  instructions")
+          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
+          click_button("Save")
+          expect(page).to have_content("Login Instructions")
+        end
+      end
+
+      shared_examples "entering new password with login instructions" do
+        scenario "entering new password with login instructions should work" do
+          expect(page).to have_content("Enter a new password and show printable login instructions")
+          select("Enter a new password and show printable login instructions", from: "user_reset_password_method")
+          click_button("Save")
+          expect(page).to have_content("Login Instructions")
+        end
+      end
+
+      shared_examples "entering new password" do
+        scenario "entering new password should work" do
+          expect(page).to have_content("Enter a new password")
+          select("Enter a new password", from: "user_reset_password_method")
+          click_button("Save")
+          expect(page).to have_content("updated successfully")
+        end
+
+        context "invalid password" do
+          scenario "entering invalid password shows validation errors" do
+            select("Enter a new password", from: "user_reset_password_method")
+            fill_in("Password", with: "n3wP*ssword", match: :prefer_exact)
+            fill_in("Retype Password", with: "", match: :prefer_exact)
+            click_button("Save")
+            expect(page).to have_content("User is invalid")
+            expect(page).to have_content("doesn't match Password")
+          end
+        end
+      end
+
+      shared_examples "offline" do
+        around do |example|
+          configatron.offline_mode = true
+          example.run
+          configatron.offline_mode = false
+        end
+
+        it { expect(page).to_not have_content("Send password reset instructions via email") }
+      end
+
+      context "self" do
+        let(:user) { actor }
+
+        include_examples("leaving password unchanged")
+        include_examples("sending password instructions via email")
+        include_examples("entering new password")
+
+        context "offline" do
+          include_examples("offline")
+          include_examples("leaving password unchanged")
+          include_examples("entering new password")
+        end
+      end
+
+      context "enumerator" do
+        let(:user) { create(:user, role_name: :enumerator, mission: mission) }
+
+        include_examples("leaving password unchanged")
+        include_examples("sending password instructions via email")
+        include_examples("generating new password")
+        include_examples("entering new password with login instructions")
+
+        context "offline" do
+          include_examples("offline")
+          include_examples("leaving password unchanged")
+          include_examples("generating new password")
+          include_examples("entering new password")
+        end
+      end
+
+      context "coordinator" do
+        let(:user) { create(:user, role_name: :coordinator, mission: mission) }
+
+        include_examples("leaving password unchanged")
+        include_examples("sending password instructions via email")
+        include_examples("entering new password")
+
+        context "offline" do
+          include_examples("offline")
+          include_examples("leaving password unchanged")
+          include_examples("generating new password")
+          include_examples("entering new password")
+        end
+
+        scenario "resetting password via printable should not be available" do
+          expect(page).to have_content("Send password reset instructions via email")
+          expect(page).not_to have_content("Generate a new password and show printable login instructions")
+        end
       end
     end
   end

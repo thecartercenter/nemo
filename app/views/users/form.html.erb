@@ -36,17 +36,11 @@
   <%= f.field(:notes, type: :textarea) %>
 
   <% unless read_only %>
-    <% if @user == current_user %>
-      <%# Change password in profile %>
-      <%= f.field(:password, type: :password) %>
-      <%= f.field(:password_confirmation, type: :password) %>
-    <% else %>
-      <%# Password reset %>
-      <% verb = @user.new_record? ? "choose" : "reset" %>
-      <% label = t("user.reset_password_label_#{verb}") %>
-      <% hint = t("user.reset_password_hint_#{verb}") %>
-      <%= f.field(:reset_password_method, label: label, hint: hint, partial: "reset_password_method") %>
-    <% end %>
+    <%# Password reset %>
+    <% verb = @user.new_record? ? "choose" : "reset" %>
+    <% label = t("user.reset_password_label_#{verb}") %>
+    <% hint = t("user.reset_password_hint_#{verb}") %>
+    <%= f.field(:reset_password_method, label: label, hint: hint, partial: "reset_password_method") %>
   <% end %>
   <%= f.regenerable_field(:api_key) if !@user.new_record? && can?(:regenerate_api_key, @user) %>
   <%= f.regenerable_field(:sms_auth_code) if !@user.new_record? && can?(:regenerate_sms_auth_code, @user) %>

@@ -60,16 +60,15 @@ class UsersController < ApplicationController
     pref_lang_changed = @user.pref_lang_changed?
 
     if @user.save
+      # if the user's password was reset, do it, and show instructions if requested
+      @user.reset_password_if_requested
+      
       if @user == current_user
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
         flash[:success] = t("user.profile_updated")
         redirect_to(action: :edit)
       else
         set_success(@user)
-
-        # if the user's password was reset, do it, and show instructions if requested
-        @user.reset_password_if_requested
-
         handle_printable_instructions
       end
     # if save failed, render the form again
@@ -155,7 +154,7 @@ class UsersController < ApplicationController
 
   # if we need to print instructions, redirects to the instructions action. otherwise redirects to index.
   def handle_printable_instructions
-    if @user.reset_password_method == "print"
+    if @user.reset_password_method == "print" || (@user.reset_password_method == "enter" && !admin_mode?)
       # save the password in the flash since we won't be able to get it once it's crypted
       flash[:password] = @user.password
       redirect_to(action: :login_instructions, id: @user.id)
