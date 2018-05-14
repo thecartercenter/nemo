@@ -62,7 +62,7 @@ class UsersController < ApplicationController
     if @user.save
       # if the user's password was reset, do it, and show instructions if requested
       @user.reset_password_if_requested
-      
+
       if @user == current_user
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
         flash[:success] = t("user.profile_updated")

@@ -45,7 +45,8 @@ feature "user form password field" do
         scenario "setting enumerator password via printable should work" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form
-          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
+          select("Generate a new password and show printable login instructions",
+            from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
@@ -53,7 +54,8 @@ feature "user form password field" do
         scenario "setting coordinator password via printable should error" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form(role: "Coordinator")
-          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
+          select("Generate a new password and show printable login instructions",
+            from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Printed instructions are only available to enumerators.")
         end
@@ -81,7 +83,8 @@ feature "user form password field" do
         scenario "setting coordinator password via printable should work" do
           visit "/en/m/#{mission.compact_name}/users/new"
           fill_out_form(role: "Coordinator")
-          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
+          select("Generate a new password and show printable login instructions",
+            from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
@@ -91,7 +94,8 @@ feature "user form password field" do
           expect(page).to have_content("Generate a new password and show printable login instructions")
           expect(page).not_to have_content("Send password reset instructions via email")
           fill_out_form(role: nil, admin: true)
-          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
+          select("Generate a new password and show printable login instructions",
+            from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
@@ -130,7 +134,8 @@ feature "user form password field" do
       shared_examples "generating new password" do
         scenario "generating new password should work" do
           expect(page).to have_content("Generate a new password and show printable login  instructions")
-          select("Generate a new password and show printable login instructions", from: "user_reset_password_method")
+          select("Generate a new password and show printable login instructions",
+            from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
@@ -139,7 +144,8 @@ feature "user form password field" do
       shared_examples "entering new password with login instructions" do
         scenario "entering new password with login instructions should work" do
           expect(page).to have_content("Enter a new password and show printable login instructions")
-          select("Enter a new password and show printable login instructions", from: "user_reset_password_method")
+          select("Enter a new password and show printable login instructions",
+            from: "user_reset_password_method")
           click_button("Save")
           expect(page).to have_content("Login Instructions")
         end
@@ -238,7 +244,8 @@ feature "login instructions" do
   end
 
   scenario "printable instructions do not mask password", js: true do
-    visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/login-instructions?password=testpass&medium=print"
+    query = "password=testpass&medium=print"
+    visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/login-instructions?#{query}"
     expect(page).to have_content("Login Instructions")
     expect(page).to have_content("testpass")
     expect(evaluate_script("$('.unmasked').is(':visible')")).to eq true

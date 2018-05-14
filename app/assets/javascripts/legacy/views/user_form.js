@@ -23,14 +23,14 @@
       e.preventDefault();
     })
 
-    function togglePasswordFields() {
-      var option = $(this).val()
-      $('.password-fields').toggleClass('hide', option !== 'enter')
-    }
+    const togglePasswordFields = function() {
+      const option = $(this).val();
+      $(".password-fields").toggleClass("hide", option !== "enter");
+    };
 
-    var passwordSelect = $('#user_reset_password_method')
-    passwordSelect.on('change', togglePasswordFields)
-    togglePasswordFields.call(passwordSelect)
+    const passwordSelect = $("#user_reset_password_method");
+    passwordSelect.on("change", togglePasswordFields);
+    togglePasswordFields.call(passwordSelect);
   }
 
   klass.prototype.build_assignment_form = function() { var self = this;
