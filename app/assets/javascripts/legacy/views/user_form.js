@@ -30,7 +30,7 @@
 
     var passwordSelect = $('#user_reset_password_method')
     passwordSelect.on('change', togglePasswordFields)
-    //togglePasswordFields.call(passwordSelect)
+    togglePasswordFields.call(passwordSelect)
   }
 
   klass.prototype.build_assignment_form = function() { var self = this;
