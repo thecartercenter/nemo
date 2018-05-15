@@ -59,7 +59,18 @@ ActiveRecord::Schema.define(version: 20180924213302) do
     t.index ["response_id"], name: "index_answers_on_response_id"
   end
 
+<<<<<<< HEAD
   create_table "assignments", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+=======
+  add_index "answers", ["deleted_at", "type"], name: "index_answers_on_deleted_at_and_type", using: :btree
+  add_index "answers", ["new_rank"], name: "index_answers_on_new_rank", using: :btree
+  add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
+  add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
+  add_index "answers", %w[response_id questioning_id inst_num rank deleted_at], name: "answers_full", unique: true, using: :btree
+  add_index "answers", ["response_id"], name: "index_answers_on_response_id", using: :btree
+
+  create_table "assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+>>>>>>> 8125: Reduced number of selects
     t.datetime "created_at"
     t.datetime "deleted_at"
     t.uuid "mission_id"

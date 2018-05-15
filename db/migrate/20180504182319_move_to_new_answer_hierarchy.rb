@@ -17,19 +17,23 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
     # creates this type of rows.
     execute("DELETE FROM #{ANSWER_TBL_NAME} WHERE type != 'Answer'")
 
-    @form_item_parents = {}
+    @new_rows = {}
 
     # The basic idea here is, for each existing answer, to recursively find or create its parents
     # and then 1. set the parent_id on the row and 2. create the appropriate rows in the hierarchies table.
-    total = execute("SELECT COUNT(*) FROM #{ANSWER_TBL_NAME}").to_a.first["count"].to_i
+    total = execute("SELECT COUNT(*) FROM #{ANSWER_TBL_NAME} WHERE deleted_at IS NULL")
+      .to_a.first["count"].to_i
     count = 0
 
     result = execute("SELECT id, response_id, questioning_id, inst_num, rank, type
-      FROM #{ANSWER_TBL_NAME}")
+      FROM #{ANSWER_TBL_NAME} WHERE deleted_at IS NULL")
 
     result.each do |row|
       find_or_create_parent_row(row)
       count += 1
+      if count % 100 == 0
+        File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}") }
+      end
     end
   end
 
@@ -41,10 +45,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
   # the root node for the response.
   # Returns the ID of the found/created row.
   def find_or_create_parent_row(row, inst_num: nil)
-    form_item = execute("SELECT ancestry, ancestry_depth, repeatable, level_names, rank FROM form_items fi
-      LEFT OUTER JOIN questions q ON fi.question_id = q.id
-      LEFT OUTER JOIN option_sets os ON os.id = q.option_set_id
-      WHERE fi.id = '#{row['questioning_id']}'").to_a.first
+    form_item = form_items_by_id[row["questioning_id"]]
 
     # Terminate the recursion if we reach the root.
     if form_item["ancestry"].nil?
@@ -54,7 +55,8 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
 
     # If given row is an AnswerGroup that references a repeatable QingGroup, find/create AnswerGroupSet.
     if row["type"] == "AnswerGroup" && form_item["repeatable"] == "t"
-      parent_row = row.slice("questioning_id", "response_id").merge("type" => "AnswerGroupSet")
+      parent_row = row.slice("questioning_id", "response_id")
+        .merge("type" => "AnswerGroupSet", "inst_num" => "1")
       row["new_rank"] = inst_num
     # Else if it references a question with a multilevel option set, find/create AnswerSet.
     elsif row["type"] == "Answer" && form_item["level_names"].present?
@@ -62,12 +64,10 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
       row["new_rank"] = row["rank"]
     # Else just find/create its parent AnswerGroup.
     else
-      qing_group_id = form_item["ancestry"].split("/").last
-      parent_row = row.slice("inst_num", "response_id")
-        .merge(
-          "type" => "AnswerGroup",
-          "questioning_id" => qing_group_id
-        )
+      parent_row = row.slice("inst_num", "response_id").merge(
+        "type" => "AnswerGroup",
+        "questioning_id" => form_item["ancestry"].split("/").last
+      )
     end
 
     # We can set the new_rank on the row here since the recursion happens before the insertion.
@@ -90,16 +90,34 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
     parent_id
   end
 
+  def form_items_by_id
+    @form_items_by_id ||= execute("SELECT fi.id, ancestry, ancestry_depth, repeatable, level_names, rank
+      FROM form_items fi
+      LEFT OUTER JOIN questions q ON fi.question_id = q.id
+      LEFT OUTER JOIN option_sets os ON os.id = q.option_set_id
+      WHERE fi.deleted_at IS NULL AND q.deleted_at IS NULL AND os.deleted_at IS NULL")
+      .to_a.index_by { |r| r["id"] }
+  end
+
   def find_or_insert_hash(hash)
-    where = hash.map { |k, v| v.nil? ? "#{k} IS NULL" : "#{k} = '#{v}'" }.join(" AND ")
-    result = execute("SELECT id, parent_id FROM #{ANSWER_TBL_NAME} WHERE #{where}").to_a
-    if result.any?
-      result.first["id"]
-    else
-      hash.reject! { |_, v| v.nil? }
-      keys = hash.keys.join(",")
-      values = hash.values.map { |v| "'#{v}'" }.join(",")
-      insert("INSERT INTO #{ANSWER_TBL_NAME}(#{keys}) VALUES (#{values})")
+    unless (hash.keys - %w[questioning_id response_id type inst_num new_rank parent_id]).empty?
+      raise "Invalid keys: #{hash.keys.to_s}"
     end
+
+    if (found = @new_rows[hash])
+      found
+    else
+      id = SecureRandom.uuid
+      @new_rows[hash] = id
+      add_to_batch(hash.merge("id" => id))
+      id
+    end
+  end
+
+  def add_to_batch(hash)
+    hash.reject! { |_, v| v.nil? }
+    keys = hash.keys.join(",")
+    values = hash.values.map { |v| "'#{v}'" }.join(",")
+    insert("INSERT INTO #{ANSWER_TBL_NAME}(#{keys}) VALUES (#{values})")
   end
 end
