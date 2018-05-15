@@ -86,6 +86,8 @@ en:
     review: "Review"
     run: "Run"
     save: "Save"
+    save_and_add_another: "Save and Add Another"
+    save_and_close: "Save and Close"
     search: "Search"
     send: "Send"
     showing: "Showing"
@@ -1376,6 +1378,7 @@ en:
 
   option_set:
     add_level: "Add Level"
+    add_option: "Add Option"
     and_n_more: "... and %{count} more options."
     clone_confirm: "Are you sure you want to make a copy of the Option Set '%{name}'?"
     clone_error: "There was a problem cloning the Option Set (%{msg})."
@@ -1383,6 +1386,7 @@ en:
     create_new: "[Create New Option]"
     create_for_question: "Create Option Set for Question: %{identifier}"
     create_for_new_question: "Create Option Set for New Question"
+    new_option: "New Option"
     edit_option: "Edit Option"
     edit_option_level: "Edit Option Level"
     huge_notice: "This Option Set is very large (%{count} Options) and thus only a small sample of its Options are displayed below. You may edit its name and other properties here but please use the import/export features to edit the Options themselves."

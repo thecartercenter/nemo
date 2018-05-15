@@ -33,14 +33,13 @@
       edit_link: self.params.edit_link,
       remove_link: self.params.remove_link
     })
-
     // find the allow_coordinates field
     self.allow_coordinates_field = $(".form-field[data-field-name=allow_coordinates]")
 
-    // add option button click event
-    $("div.add_options input[type=button]").on("click", function() {
-      self.add_options()
-    })
+    $(".add-options a.add-option").on("click", function(e) {
+      self.options_field.add();
+      e.preventDefault();
+    });
 
     // add option level link click event
     $(".option_set_option_levels a.add-link").on("click", function(e) {
@@ -74,30 +73,6 @@
       self.enable_multilevel_checkbox()
     })
     self.enable_multilevel_checkbox()
-
-    // setup the tokenInput control
-    $("input.add_options_box").tokenInput(params.suggest_path, {
-      theme: "elmo",
-      hintText: I18n.t("option_set.type_to_add_new"),
-      noResultsText: I18n.t("option_set.none_found"),
-      searchingText: I18n.t("option_set.searching"),
-      resultsFormatter: self.format_token_result,
-      preventDuplicates: true,
-      tokenValue: "name",
-      onResult: function(results) {
-        return self.process_token_results(results)
-      },
-      onAdd: function(item) {
-        return self.token_added(item)
-      },
-      // this event hook is custom, added by tomsmyth. see the tokenInput source code.
-      onEnter: function() {
-        self.add_options()
-      }
-    })
-
-    // Set maxlength on the inner token input box to enforce option name length on creation.
-    $("#token-input-").attr("maxlength", self.params.max_option_name_length)
 
     // hookup form submit
     $("form.option_set_form").on("submit", function() {
@@ -169,55 +144,6 @@
 
     // enable/disable nested options
     self.options_field.list.allow_nesting(checked)
-  }
-
-  // returns the html to insert in the token input result list
-  klass.prototype.format_token_result = function(item) {
-    var self = this
-    var details,
-      css = "details"
-    // if this is the new placeholder, add a string about that
-    if (item.id == null) {
-      details = I18n.t("option_set.create_new")
-      css = "details create_new"
-      // otherwise if no option sets were returned, use the none string
-    } else if (item.set_names == "") details = "[" + I18n.t("common.none") + "]"
-    else
-      // otherwise just use item.sets verbatim
-      details = item.set_names
-
-    return "<li>" + item.name + '<div class="' + css + '">' + details + "</div></li>"
-  }
-
-  // strips duplicates from token results
-  // this doesn't work if the result is cached
-  klass.prototype.process_token_results = function(results) {
-    var self = this
-    return results.filter(function(r) {
-      return !self.options_field.list.has_with_name(r.name)
-    })
-  }
-
-  // if the added token is a duplicate, delete it!
-  klass.prototype.token_added = function(item) {
-    var self = this
-    if (self.options_field.list.has_with_name(item.name))
-      $("input.add_options_box").tokenInput("remove", { name: item.name })
-  }
-
-  // adds options from the token input control to the view and data model
-  klass.prototype.add_options = function() {
-    var self = this
-    var chosen = $("input.add_options_box").tokenInput("get")
-    var ol = $("div#options-wrapper > ol")
-
-    // loop over chosen options
-    chosen.forEach(function(option_attribs) {
-      self.options_field.add(option_attribs)
-    })
-
-    // clear out the add box
-    $("input.add_options_box").tokenInput("clear")
   }
 
   // prepares the form to be submitted by setting up the right fields
@@ -293,7 +219,9 @@
       // include IDs if available
       if (node.item.id) prepared.id = node.item.id
 
-      if (node.item.option.id) prepared.option_attribs.id = node.item.option.id
+      if (node.item.option && node.item.option.id) {
+        prepared.option_attribs.id = node.item.option.id;
+      }
 
       // include latitude and longitude if allow_coordinates is set
       if ($("#option_set_allow_coordinates").is(":checked")) {

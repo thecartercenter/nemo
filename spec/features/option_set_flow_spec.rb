@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-feature 'option suggestion dropdown' do
+feature "option set" do
   before do
     @user = create(:user, role_name: 'coordinator')
     login(@user)
@@ -97,9 +97,12 @@ feature 'option suggestion dropdown' do
   end
 
   def add_options(names)
-    names.each do |name|
-      fill_in_token_input("", with: name)
+    click_link("Add Option")
+    names[0...-1].each do |name|
+      fill_in("English", with: name)
+      click_button("Save and Add Another")
     end
-    click_button('Add')
+    fill_in("English", with: names.last)
+    click_button("Save and Close")
   end
 end
