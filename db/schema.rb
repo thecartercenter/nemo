@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_504_182_310) do
+ActiveRecord::Schema.define(version: 20_180_511_185_333) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 20_180_504_182_310) do
   add_index "answers", ["deleted_at", "type"], name: "index_answers_on_deleted_at_and_type", using: :btree
   add_index "answers", ["new_rank"], name: "index_answers_on_new_rank", using: :btree
   add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
+  add_index "answers", ["parent_id"], name: "index_answers_on_parent_id", using: :btree
   add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
   add_index "answers", %w[response_id questioning_id inst_num rank deleted_at], name: "answers_full", unique: true, using: :btree
   add_index "answers", ["response_id"], name: "index_answers_on_response_id", using: :btree
