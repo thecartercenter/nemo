@@ -2,8 +2,6 @@
 
 # Major migration to create hierarchy of answer objects.
 class MoveToNewAnswerHierarchy < ActiveRecord::Migration
-  ANSWER_TBL_NAME = "answers"
-
   # Helpful assertions to be considered for migrated data (not currently implemented):
   # - Exactly one root AnswerGroup per response_id
   # - Exactly one AnswerGroup per non-repeat group and response_id
@@ -15,18 +13,20 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
   def up
     # First delete all existing non-Answer-type rows, making this script idempotent, since it only
     # creates this type of rows.
-    execute("DELETE FROM #{ANSWER_TBL_NAME} WHERE type != 'Answer'")
+    execute("DELETE FROM answers WHERE type != 'Answer'")
 
     @new_rows = {}
+    @inserts = []
+    @updates = []
 
     # The basic idea here is, for each existing answer, to recursively find or create its parents
     # and then 1. set the parent_id on the row and 2. create the appropriate rows in the hierarchies table.
-    total = execute("SELECT COUNT(*) FROM #{ANSWER_TBL_NAME} WHERE deleted_at IS NULL")
+    total = execute("SELECT COUNT(*) FROM answers WHERE deleted_at IS NULL")
       .to_a.first["count"].to_i
     count = 0
 
     result = execute("SELECT id, response_id, questioning_id, inst_num, rank, type
-      FROM #{ANSWER_TBL_NAME} WHERE deleted_at IS NULL")
+      FROM answers WHERE deleted_at IS NULL")
 
     result.each do |row|
       find_or_create_parent_row(row)
@@ -35,6 +35,9 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
         File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}") }
       end
     end
+
+    do_inserts
+    do_updates
   end
 
   private
@@ -82,10 +85,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
 
     # Answer rows are preexisting so we need to update them with parent_id and rank instead of
     # setting them on creation.
-    if row["type"] == "Answer"
-      execute("UPDATE #{ANSWER_TBL_NAME} SET
-        parent_id = '#{parent_id}', new_rank = #{row['new_rank']} WHERE id = '#{row['id']}'")
-    end
+    update_answer(row["id"], parent_id, row["new_rank"]) if row["type"] == "Answer"
 
     parent_id
   end
@@ -101,7 +101,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
 
   def find_or_insert_hash(hash)
     unless (hash.keys - %w[questioning_id response_id type inst_num new_rank parent_id]).empty?
-      raise "Invalid keys: #{hash.keys.to_s}"
+      raise "Invalid keys: #{hash.keys}"
     end
 
     if (found = @new_rows[hash])
@@ -109,15 +109,39 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
     else
       id = SecureRandom.uuid
       @new_rows[hash] = id
-      add_to_batch(hash.merge("id" => id))
+      insert_answer_parent(id, hash)
       id
     end
   end
 
-  def add_to_batch(hash)
-    hash.reject! { |_, v| v.nil? }
-    keys = hash.keys.join(",")
-    values = hash.values.map { |v| "'#{v}'" }.join(",")
-    insert("INSERT INTO #{ANSWER_TBL_NAME}(#{keys}) VALUES (#{values})")
+  def update_answer(id, parent_id, new_rank)
+    @updates << "('#{id}', #{id_str(parent_id)}, '#{new_rank}')"
+  end
+
+  def insert_answer_parent(id, hash)
+    @inserts << "('#{id}','#{hash['questioning_id']}','#{hash['response_id']}','#{hash['type']}',"\
+      "'#{hash['inst_num']}','#{hash['new_rank']}',#{id_str(hash['parent_id'])})"
+  end
+
+  def id_str(val)
+    val.nil? ? "NULL" : "'#{val}'"
+  end
+
+  def do_inserts
+    batched_insert("answers", "id,questioning_id,response_id,type,inst_num,new_rank,parent_id", @inserts)
+  end
+
+  def do_updates
+    execute("CREATE TEMPORARY TABLE ansupdates (id uuid primary key, parent_id uuid, new_rank integer)")
+    batched_insert("ansupdates", "id,parent_id,new_rank", @updates)
+    execute("UPDATE answers AS a SET parent_id = u.parent_id, new_rank = u.new_rank
+      FROM ansupdates u WHERE a.id = u.id")
+  end
+
+  def batched_insert(tbl, cols, rows)
+    rows.each_slice(1000) do |slice|
+      execute("INSERT INTO #{tbl} (#{cols})
+        VALUES #{slice.join(',')}")
+    end
   end
 end
