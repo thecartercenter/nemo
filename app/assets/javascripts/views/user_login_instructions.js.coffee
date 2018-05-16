@@ -1,14 +1,16 @@
 class ELMO.Views.UserLoginInstructionsView extends ELMO.Views.ApplicationView
   events:
-    "click .masked a.toggle-mask": "unmask_password"
-    "click .unmasked a.toggle-mask": "mask_password"
+    "click .masked a.toggle-mask": "unmask"
+    "click .unmasked a.toggle-mask": "mask"
 
-  unmask_password: (event) ->
+  unmask: (event) ->
     event.preventDefault()
-    this.$('.masked').addClass('hide')
-    this.$('.unmasked').removeClass('hide')
+    container = $(event.target).closest('.mask-container')
+    container.find('.masked').addClass('hide')
+    container.find('.unmasked').removeClass('hide')
 
-  mask_password: (event) ->
+  mask: (event) ->
     event.preventDefault()
-    this.$('.unmasked').addClass('hide')
-    this.$('.masked').removeClass('hide')
+    container = $(event.target).closest('.mask-container')
+    container.find('.unmasked').addClass('hide')
+    container.find('.masked').removeClass('hide')

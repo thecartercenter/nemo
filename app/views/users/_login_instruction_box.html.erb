@@ -17,26 +17,14 @@
     <tr>
       <td class="name"><%= User.human_attribute_name("password") %></td>
       <td class="value">
-        <% if password %>
-          <span class="hide unmasked">
-            <%= password %>
-            <a href="#" class="toggle-mask">
-              <%= icon_tag("eye-slash") %>
-            </a>
-          </span>
-
-          <span class="masked">
-            <%= password.split('').map { |char| '∙' }.join %>
-            <a href="#" class="toggle-mask">
-              <%= icon_tag(:eye) %>
-            </a>
-          </span>
-        <% end %>
+        <%= render("masked_value", value: password) %>
       </td>
     </tr>
     <tr>
       <td class="name"><%= User.human_attribute_name("sms_auth_code") %></td>
-      <td class="value"><%= user.sms_auth_code %></td>
+      <td class="value">
+        <%= render("masked_value", value: user.sms_auth_code) %>
+      </td>
     </tr>
     <% unless admin_mode? %>
       <tr>
