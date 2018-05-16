@@ -318,13 +318,15 @@
     if (self.params.modal_mode) data.modal_mode = 1
 
     // show loading
-    $("form.option_set_form .loading_indicator img").show()
+    ELMO.app.loading(true);
 
     $.ajax({
       url: $("form.option_set_form").attr("action"),
       type: "POST",
       data: data,
       success: function(data, status, jqxhr) {
+        // stop loading
+        ELMO.app.loading(false);
         // if content type was json, that means success
         if (jqxhr.getResponseHeader("Content-Type").match("application/json")) {
           // if we're in modal mode, we need to do different stuff
@@ -347,6 +349,8 @@
       error: function(jqxhr) {
         // if we get an HTTP error, it's some server thing so just display a generic message
         $("div.option_set_form").replaceWith("Server Error")
+        // stop loading
+        ELMO.app.loading(false);
       }
     })
   }
