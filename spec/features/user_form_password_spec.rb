@@ -39,7 +39,7 @@ feature "user form password field" do
           fill_out_form(email: false)
           select("Send password reset instructions via email", from: "user_reset_password_method")
           click_button("Save")
-          expect(page).to have_content("you didn't specify an email")
+          expect(page).to have_content("Not allowed unless an email address is provided")
         end
 
         scenario "setting enumerator password via printable should work" do
