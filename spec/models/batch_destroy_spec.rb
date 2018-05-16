@@ -12,7 +12,7 @@ describe BatchDestroy, type: :model do
       users << current_user
       destroyer.destroy!
 
-      # current user and user with a mission
+      # current user
       expect(User.count).to eq(1)
       expect(current_user.active).to be_truthy
     end

@@ -1,29 +1,31 @@
 # destroy objects in batches
 class BatchDestroy
-  attr_reader :batch, :current_user, :ability
+  attr_reader :batch, :user, :ability
 
-  def initialize(batch, current_user, ability)
+  def initialize(batch, user, ability)
     @batch = batch
-    @current_user = current_user
+    @user = user
     @ability = ability
   end
 
   def destroy!
-    skipped_current = batch.reject! { |u| u.id == current_user.id }
-    begin
-      skipped_users = []
-      skipped_users << current_user if skipped_current
+    skipped_users = []
+    destroyed_users = []
+    deactivated_users = []
 
-      destroyed_users = []
-      deactivated_users = []
+    current_user = batch.find { |u| u.id == user.id }
+    begin
+      skipped_users << current_user if current_user
+
       User.transaction do
         batch.each do |u|
+          next if u == current_user
           begin
             raise DeletionError unless ability.can?(:destroy, u)
 
             u.destroy
             destroyed_users << u
-          rescue DeletionError => e
+          rescue DeletionError
             if u.active?
               u.activate!(false)
               deactivated_users << u
@@ -34,10 +36,11 @@ class BatchDestroy
         end
       end
     end
+
     # return counts for destroyed, skipped and deactivated users
-    {destroyed_count: destroyed_users.count,
-     skipped_count: skipped_users.count,
-     skipped_current: (true if skipped_users.include?(current_user)),
-     deactivated_count: deactivated_users.count}
+    {destroyed: destroyed_users.count,
+     skipped: skipped_users.count,
+     skipped_current: skipped_users.count == 1,
+     deactivated: deactivated_users.count}
   end
 end
