@@ -542,8 +542,6 @@ es:
           attributes:
             assignments:
               cant_be_empty_if_not_admin: "Se requiere al menos una tarea si el usuario no es un administrador."
-            reset_password_method:
-              cant_passwd_email: "No puede %{verb} la contraseña por correo electrónico porque no ha especificado una dirección de correo electrónico."
   layout:
     actions: "Acciones"
     are_you_sure: "Está seguro/a?"

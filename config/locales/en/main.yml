@@ -847,7 +847,7 @@ en:
             login:
               invalid: "Please use only unaccented letters, numbers, periods, and underscores."
             reset_password_method:
-              cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
+              cant_passwd_email: "Not allowed unless an email address is provided."
         user_batch:
           general: "User batch is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."

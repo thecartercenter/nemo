@@ -688,8 +688,6 @@ fr:
               cant_be_empty_if_not_admin: "Au moins une tâche est obligatoire pour l'utilisateurs non-administratifs."
             login:
               invalid: "Utilisez seulement des lettres sans accent, des chiffres et des espaces."
-            reset_password_method:
-              cant_passwd_email: "Impossible de %{verb} le mot de passe par e-mail parce-que vous n'avez pas choisi une addresse e-mail."
         user_batch:
           general: "le lot utilisateur est invalide (voir ci dessous)"
           internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."

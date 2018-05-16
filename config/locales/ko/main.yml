@@ -750,8 +750,6 @@ ko:
               cant_be_empty_if_not_admin: "조정자가 아닌 사용자는 적어도 하나 이상의 미션에 배정되어야 합니다."
             login:
               invalid: "조음부호 없는 영문자, 숫자, 마침표, 밑줄만 사용할 수 있습니다."
-            reset_password_method:
-              cant_passwd_email: "이메일 주소를 입력해야 이메일로 비밀번호를 %{verb}할 수 있습니다."
         user_batch:
           general: "사용자 집단이 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
           internal: "업로드 중 내부 에러가 발생했습니다."

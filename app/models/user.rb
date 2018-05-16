@@ -411,10 +411,8 @@ class User < ApplicationRecord
     end
 
     def password_reset_cant_be_email_if_no_email
-      if reset_password_method == "email" && email.blank?
-        verb = new_record? ? "send" : "reset"
-        errors.add(:reset_password_method, :cant_passwd_email, verb: verb)
-      end
+      sending_email = reset_password_method == "email"
+      errors.add(:reset_password_method, :cant_passwd_email) if sending_email && email.blank?
     end
 
     def no_duplicate_assignments
