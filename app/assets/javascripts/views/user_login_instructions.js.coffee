@@ -1,7 +1,7 @@
 class ELMO.Views.UserLoginInstructionsView extends ELMO.Views.ApplicationView
   events:
-    "click .masked a.toggle_mask": "unmask_password"
-    "click .unmasked a.toggle_mask": "mask_password"
+    "click .masked a.toggle-mask": "unmask_password"
+    "click .unmasked a.toggle-mask": "mask_password"
 
   unmask_password: (event) ->
     event.preventDefault()

@@ -848,7 +848,6 @@ en:
               invalid: "Please use only unaccented letters, numbers, periods, and underscores."
             reset_password_method:
               cant_passwd_email: "You can't %{verb} password by email because you didn't specify an email address."
-              print_password_reset_only_for_enumerator: "Printed instructions are only available to enumerators. "
         user_batch:
           general: "User batch is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
@@ -2202,11 +2201,11 @@ en:
     set_admin_password: "Set your admin password and profile nformation"
     reset_password_label_reset: "Password"
     password_options:
-      no_change: "No change"
-      send_email_instructions: "Send password reset instructions via email"
-      generate_new: "Generate a new password and show printable login instructions"
-      enter_new_password: "Enter a new password"
-      enter_new_password_show_printable_instructions: "Enter a new password and show printable login instructions"
+      dont: "No change"
+      email: "Send password reset instructions via email"
+      print: "Generate a new password and show printable login instructions"
+      enter: "Enter a new password"
+      enter_and_show: "Enter a new password and show printable login instructions"
 
   user_group:
     create_prompt: "Please enter the name of your group."

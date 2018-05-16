@@ -60,8 +60,8 @@ class User < ApplicationRecord
   validates(:pref_lang, presence: true)
   validate(:phone_length_or_empty)
   validate(:must_have_password_reset_on_create)
+  validate(:must_have_password_on_enter)
   validate(:password_reset_cant_be_email_if_no_email)
-  validate(:print_password_reset_only_for_enumerator)
   validate(:no_duplicate_assignments)
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
@@ -405,16 +405,15 @@ class User < ApplicationRecord
       end
     end
 
+    def must_have_password_on_enter
+      entering_password = %w[enter enter_and_show].include?(reset_password_method)
+      errors.add(:password, :blank) if entering_password && password.blank?
+    end
+
     def password_reset_cant_be_email_if_no_email
       if reset_password_method == "email" && email.blank?
         verb = new_record? ? "send" : "reset"
         errors.add(:reset_password_method, :cant_passwd_email, verb: verb)
-      end
-    end
-
-    def print_password_reset_only_for_enumerator
-      if reset_password_method == "print" && !enumerator_only? && !configatron.offline_mode
-        errors.add(:reset_password_method, :print_password_reset_only_for_enumerator)
       end
     end
 

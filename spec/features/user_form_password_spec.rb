@@ -51,15 +51,6 @@ feature "user form password field" do
           expect(page).to have_content("Login Instructions")
         end
 
-        scenario "setting coordinator password via printable should error" do
-          visit "/en/m/#{mission.compact_name}/users/new"
-          fill_out_form(role: "Coordinator")
-          select("Generate a new password and show printable login instructions",
-            from: "user_reset_password_method")
-          click_button("Save")
-          expect(page).to have_content("Printed instructions are only available to enumerators.")
-        end
-
         scenario "setting enumerator password via printable should be unavailable in admin mode" do
           visit "/en/admin/users/new"
           expect(page).to have_content("Send password reset instructions via email")
@@ -141,20 +132,12 @@ feature "user form password field" do
         end
       end
 
-      shared_examples "entering new password with login instructions" do
-        scenario "entering new password with login instructions should work" do
-          expect(page).to have_content("Enter a new password and show printable login instructions")
-          select("Enter a new password and show printable login instructions",
-            from: "user_reset_password_method")
-          click_button("Save")
-          expect(page).to have_content("Login Instructions")
-        end
-      end
-
       shared_examples "entering new password" do
         scenario "entering new password should work" do
           expect(page).to have_content("Enter a new password")
           select("Enter a new password", from: "user_reset_password_method")
+          fill_in("Password", with: "n3wP*ssword", match: :prefer_exact)
+          fill_in("Retype Password", with: "n3wP*ssword", match: :prefer_exact)
           click_button("Save")
           expect(page).to have_content("updated successfully")
         end
@@ -162,6 +145,30 @@ feature "user form password field" do
         context "invalid password" do
           scenario "entering invalid password shows validation errors" do
             select("Enter a new password", from: "user_reset_password_method")
+            fill_in("Password", with: "n3wP*ssword", match: :prefer_exact)
+            fill_in("Retype Password", with: "", match: :prefer_exact)
+            click_button("Save")
+            expect(page).to have_content("User is invalid")
+            expect(page).to have_content("doesn't match Password")
+          end
+        end
+      end
+
+      shared_examples "entering new password with login instructions" do
+        scenario "entering new password with instructions should work" do
+          expect(page).to have_content("Enter a new password and show printable login instructions")
+          select("Enter a new password and show printable login instructions",
+            from: "user_reset_password_method")
+          fill_in("Password", with: "n3wP*ssword", match: :prefer_exact)
+          fill_in("Retype Password", with: "n3wP*ssword", match: :prefer_exact)
+          click_button("Save")
+          expect(page).to have_content("Login Instructions")
+        end
+
+        context "invalid password" do
+          scenario "entering invalid password shows validation errors" do
+            select("Enter a new password and show printable login instructions",
+              from: "user_reset_password_method")
             fill_in("Password", with: "n3wP*ssword", match: :prefer_exact)
             fill_in("Retype Password", with: "", match: :prefer_exact)
             click_button("Save")
@@ -187,11 +194,13 @@ feature "user form password field" do
         include_examples("leaving password unchanged")
         include_examples("sending password instructions via email")
         include_examples("entering new password")
+        include_examples("entering new password with login instructions")
 
         context "offline" do
           include_examples("offline")
           include_examples("leaving password unchanged")
           include_examples("entering new password")
+          include_examples("entering new password with login instructions")
         end
       end
 
@@ -223,11 +232,6 @@ feature "user form password field" do
           include_examples("leaving password unchanged")
           include_examples("generating new password")
           include_examples("entering new password")
-        end
-
-        scenario "resetting password via printable should not be available" do
-          expect(page).to have_content("Send password reset instructions via email")
-          expect(page).not_to have_content("Generate a new password and show printable login instructions")
         end
       end
     end

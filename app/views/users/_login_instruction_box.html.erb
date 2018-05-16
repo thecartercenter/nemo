@@ -20,15 +20,15 @@
         <% if password %>
           <span class="hide unmasked">
             <%= password %>
-            <a href="#" class="toggle_mask">
-              <i class="fa fa-eye-slash"></i>
+            <a href="#" class="toggle-mask">
+              <%= icon_tag("eye-slash") %>
             </a>
           </span>
 
           <span class="masked">
             <%= password.split('').map { |char| '∙' }.join %>
-            <a href="#" class="toggle_mask">
-              <i class="fa fa-eye"></i>
+            <a href="#" class="toggle-mask">
+              <%= icon_tag(:eye) %>
             </a>
           </span>
         <% end %>

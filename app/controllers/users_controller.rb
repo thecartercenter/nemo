@@ -11,6 +11,8 @@ class UsersController < ApplicationController
 
   before_action :require_recent_login, except: [:export, :index, :login_instructions]
 
+  helper_method :reset_password_options
+
   def index
     # sort and eager load
     @users = @users.with_assoc.by_name
@@ -42,7 +44,7 @@ class UsersController < ApplicationController
       set_success(@user)
 
       # render printable instructions if requested
-      handle_printable_instructions
+      handle_printable_instructions || redirect_to(index_url_with_context)
 
     # if create failed, render the form again
     else
@@ -66,11 +68,12 @@ class UsersController < ApplicationController
       if @user == current_user
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
         flash[:success] = t("user.profile_updated")
-        redirect_to(action: :edit)
       else
         set_success(@user)
-        handle_printable_instructions
       end
+
+      handle_printable_instructions || redirect_to(action: :edit)
+
     # if save failed, render the form again
     else
       flash.now[:error] = I18n.t("activerecord.errors.models.user.general")
@@ -152,14 +155,24 @@ class UsersController < ApplicationController
 
   private
 
+  def reset_password_options(user)
+    options = []
+    options << :dont unless user.new_record?
+    options << :email unless configatron.offline_mode
+    options << :print if configatron.offline_mode || !admin_mode?
+    options << (admin_mode? ? :enter : :enter_and_show)
+    options
+  end
+
   # if we need to print instructions, redirects to the instructions action. otherwise redirects to index.
   def handle_printable_instructions
-    if @user.reset_password_method == "print" || (@user.reset_password_method == "enter" && !admin_mode?)
+    if %w[print enter_and_show].include?(@user.reset_password_method)
       # save the password in the flash since we won't be able to get it once it's crypted
       flash[:password] = @user.password
       redirect_to(action: :login_instructions, id: @user.id)
+      true
     else
-      redirect_to(index_url_with_context)
+      false
     end
   end
 
@@ -207,7 +220,7 @@ class UsersController < ApplicationController
     @user.user_groups = process_user_groups(user_group_ids)
 
     reset_password_method = permitted_params[:reset_password_method]
-    if reset_password_method.present? && reset_password_method != "enter"
+    if reset_password_method.present? && !%w[enter enter_and_show].include?(reset_password_method)
       permitted_params.delete(:password)
       permitted_params.delete(:password_confirmation)
     end
