@@ -114,7 +114,11 @@ ELMO::Application.routes.draw do
       end
     end
     resources :markers
-    resources :questions
+    resources :questions do
+      collection do
+        post "bulk_destroy", path: "bulk-destroy"
+      end
+    end
     resources :questionings
     resources :qing_groups, path: "qing-groups", except: :index
     resources :settings do
