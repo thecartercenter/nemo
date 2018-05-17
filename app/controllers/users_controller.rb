@@ -99,7 +99,7 @@ class UsersController < ApplicationController
       success <<  t("user.bulk_destroy_skipped", count: batch_destroy[:skipped]) unless batch_destroy[:skipped] < 1
       flash[:success] = success.join(" ") unless success.empty?
 
-      flash[:error] =  t("user.bulk_destroy_skipped_current") if batch_destroy[:skipped_current]
+      flash[:error] =  t("user.bulk_destroy_skipped_current") if batch_destroy[:skipped] == 1
     rescue
       flash[:error] =  t("user.#{$!}")
     end
