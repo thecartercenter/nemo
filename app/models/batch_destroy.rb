@@ -1,36 +1,42 @@
 # destroy objects in batches
 class BatchDestroy
-  attr_reader :batch, :user, :ability
+  attr_reader :batch, :klass, :ability
 
-  def initialize(batch, user, ability)
+  def initialize(batch, klass, ability)
     @batch = batch
-    @user = user
+    @klass = klass
     @ability = ability
   end
 
   def destroy!
-    skipped_users = []
-    destroyed_users = []
-    deactivated_users = []
+    skipped = []
+    deactivated = []
+    destroyed = []
 
-    current_user = batch.find { |u| u.id == user.id }
+    # this batch destroyer is currently being used in User and Question indexes
+    # the current user doesn't matter for question delete so this will only run if it is User bulk destroy
+    if klass.is_a?(User)
+      current_user = batch.find { |u| u.id == klass.id }
+      skipped << current_user if current_user
+    end
+
     begin
-      skipped_users << current_user if current_user
-
       User.transaction do
-        batch.each do |u|
-          next if u == current_user
-          begin
-            raise DeletionError unless ability.can?(:destroy, u)
+        batch.each do |object|
+          # if it is a user bulk destroy, it will be the first value in the skipped array
+          next if object == skipped.first
 
-            u.destroy
-            destroyed_users << u
+          begin
+            raise DeletionError unless ability.can?(:destroy, object)
+
+            object.destroy
+            destroyed << object
           rescue DeletionError
-            if u.active?
-              u.activate!(false)
-              deactivated_users << u
+            if object.try(:active?)
+              object.activate!(false)
+              deactivated << object
             else
-              skipped_users << u
+              skipped << object
             end
           end
         end
@@ -38,9 +44,8 @@ class BatchDestroy
     end
 
     # return counts for destroyed, skipped and deactivated users
-    {destroyed: destroyed_users.count,
-     skipped: skipped_users.count,
-     skipped_current: skipped_users.count == 1,
-     deactivated: deactivated_users.count}
+    {destroyed: destroyed.count,
+     skipped: skipped.count,
+     deactivated: deactivated.count}
   end
 end
