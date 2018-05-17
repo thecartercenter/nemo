@@ -43,7 +43,7 @@ class BatchDestroy
       end
     end
 
-    # return counts for destroyed, skipped and deactivated users
+    # return counts for destroyed, skipped and deactivated objects
     {destroyed: destroyed.count,
      skipped: skipped.count,
      deactivated: deactivated.count}
