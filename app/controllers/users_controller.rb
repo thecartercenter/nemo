@@ -1,5 +1,7 @@
 class UsersController < ApplicationController
-  include BatchProcessable, Searchable
+  include BatchProcessable
+  include Searchable
+  include PasswordResettable
 
   # These filters need to be before load_and_authorize_resource because they preemptively setup @user
   # before load_and_authorize_resource because if left to its own devices, load_and_authorize_resource
@@ -39,8 +41,7 @@ class UsersController < ApplicationController
 
   def create
     if @user.save
-      @user.reset_password_if_requested
-
+      reset_password_if_requested(@user)
       set_success(@user)
 
       # render printable instructions if requested
@@ -63,7 +64,7 @@ class UsersController < ApplicationController
 
     if @user.save
       # if the user's password was reset, do it, and show instructions if requested
-      @user.reset_password_if_requested
+      reset_password_if_requested(@user)
 
       if @user == current_user
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
