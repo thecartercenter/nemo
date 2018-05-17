@@ -317,7 +317,7 @@
     var data = self.prepare_data()
     if (self.params.modal_mode) data.modal_mode = 1
 
-    // show loading
+    // Show loading
     ELMO.app.loading(true);
 
     $.ajax({
@@ -325,7 +325,7 @@
       type: "POST",
       data: data,
       success: function(data, status, jqxhr) {
-        // stop loading
+        // Stop loading
         ELMO.app.loading(false);
         // if content type was json, that means success
         if (jqxhr.getResponseHeader("Content-Type").match("application/json")) {
@@ -349,7 +349,7 @@
       error: function(jqxhr) {
         // if we get an HTTP error, it's some server thing so just display a generic message
         $("div.option_set_form").replaceWith("Server Error")
-        // stop loading
+        // Stop loading
         ELMO.app.loading(false);
       }
     })
