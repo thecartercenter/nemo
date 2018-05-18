@@ -33,7 +33,7 @@
     self.list.new_item();
   };
 
-  // Don"t allow options that are not removable to change parents.
+  // Don't allow options that are not removable to change parents.
   klass.prototype.parent_change_allowed = function (item) {
     return item["removable?"];
   }
