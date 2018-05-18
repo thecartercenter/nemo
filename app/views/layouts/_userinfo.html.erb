@@ -3,12 +3,15 @@
     <div class="mission-operations-container">
       <% unless admin_mode? %>
         <% if @accessible_missions.any? %>
-          <form id="change_mission">
+          <form>
             <%# Changing missions when on a post or put request doesn't make sense, so we disable with message in that case. %>
-            <%= select_tag('change_mission',
+            <%= select_tag("change_mission",
               options_from_collection_for_select(@accessible_missions, 'compact_name', 'name', current_mission.try(:compact_name)),
-              class: 'form-control', prompt: "[#{I18n.t('common.none')}]",
-              disabled: !request.get?, title: request.get? ? '' : I18n.t('layout.mission_change_get_only')) %>
+              id: "change-mission",
+              class: 'form-control',
+              prompt: "[#{I18n.t('common.none')}]",
+              disabled: !request.get?,
+              title: request.get? ? '' : I18n.t('layout.mission_change_get_only')) %>
           </form>
         <% end %>
       <% end %>

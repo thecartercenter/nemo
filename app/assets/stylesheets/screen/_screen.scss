@@ -68,15 +68,13 @@ body {
     }
   }
 
-  form#change_mission {
-    select {
-      font-size: 9pt;
-      vertical-align: top;
-      display: inline-block;
-      width: 190px;
-      height: 31px;
-      margin-right: 10px;
-    }
+  #change-mission {
+    font-size: 9pt;
+    vertical-align: top;
+    display: inline-block;
+    width: 190px;
+    height: 31px;
+    margin-right: 10px;
   }
 }
 
