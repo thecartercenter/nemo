@@ -40,7 +40,8 @@
     <% verb = @user.new_record? ? "choose" : "reset" %>
     <% label = t("user.reset_password_label_#{verb}") %>
     <% hint = t("user.reset_password_hint_#{verb}") %>
-    <%= f.field(:reset_password_method, label: label, hint: hint, type: :select, options: translate_options(reset_password_options(@user), [:user, :password_options])) %>
+    <%= f.field(:reset_password_method, label: label, hint: hint, type: :select, prompt: false,
+      options: translate_options(reset_password_options(@user), [:user, :password_options])) %>
 
     <div class="hide password-fields">
       <%= f.field(:password, type: :password) %>
