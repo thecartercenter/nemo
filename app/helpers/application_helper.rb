@@ -49,12 +49,11 @@ module ApplicationHelper
   end
 
   # renders a loading indicator image wrapped in a wrapper
-  def loading_indicator(options = {})
-    floating = options[:floating] ? "_floating" : "_inline"
-    content_tag("div", class: "loading_indicator loading_indicator#{floating}", id: options[:id]) do
+  def inline_load_ind(options = {})
+    content_tag("div", class: "inline-load-ind", id: options[:id]) do
       body = image_tag("load-ind-small#{options[:header] ? '-header' : ''}.gif",
         style: "display: none",
-        id: "loading_indicator" + (options[:id] ? "_#{options[:id]}" : ""))
+        id: "inline_load_ind" + (options[:id] ? "_#{options[:id]}" : ""))
 
       if options[:success_failure]
         body += content_tag("i", "", class: "success fa fa-fw fa-check-circle", style: "display: none")

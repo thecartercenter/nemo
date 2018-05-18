@@ -85,11 +85,11 @@
       if (link.next('ul').is(':hidden')) link.dropdown('toggle');
 
       // show loading ind
-      link.next('ul').find('div.loading_indicator img').show();
+      link.next('ul').find('div.inline-load-ind img').show();
 
       link.next('ul').load(self.url_builder.build('forms') + '?dropdown=1', function() {
         // hide loading ind
-        link.next('ul').find('div.loading_indicator img').hide();
+        link.next('ul').find('div.inline-load-ind img').hide();
       });
 
     }
