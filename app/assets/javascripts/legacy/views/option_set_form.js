@@ -325,12 +325,12 @@
       type: "POST",
       data: data,
       success: function(data, status, jqxhr) {
-        // Stop loading
-        ELMO.app.loading(false);
         // if content type was json, that means success
         if (jqxhr.getResponseHeader("Content-Type").match("application/json")) {
           // if we're in modal mode, we need to do different stuff
           if (self.params.modal_mode) {
+            ELMO.app.loading(false);
+
             // the data holds the new option set's ID
             self.params.option_set.id = data
 

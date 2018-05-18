@@ -102,8 +102,7 @@
 
   // shows the create option set form and sets up a callback to receive the result
   klass.prototype.show_option_set_form = function() { var self = this;
-    // show the loading indicator
-    $('div.question_fields #option_set_id .loading_indicator img').show();
+    ELMO.app.loading(true);
 
     var question_type_param = '?adding_to_question_type=' + self.field_value('qtype_name'),
         loadUrl = self.params.new_option_set_path + question_type_param;
@@ -126,7 +125,7 @@
     // populate and show the modal
     $('#create-option-set .modal-body.option-set').load(loadUrl, function(){
       $('#create-option-set').modal('show');
-      $('div.question_fields #option_set_id .loading_indicator img').hide();
+      ELMO.app.loading(false);
     });
   }
 
