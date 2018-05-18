@@ -29,7 +29,6 @@
     <%= f.field(:option_levels, :partial => "option_levels") %>
     <%= f.field(:options, :required => true, :partial => "options") %>
     <div class="submit-buttons">
-      <%= loading_indicator %>&nbsp;
       <%= f.submit(:class => "btn btn-primary") unless params[:modal_mode] %>
     </div>
   <% end %>

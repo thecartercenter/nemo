@@ -60,9 +60,6 @@ module FormsHelper
         if form.smsable? && form.published? && !admin_mode?
           links << action_link("sms", sms_guide_form_path(form), title: "SMS Guide")
         end
-
-        # add a loading indicator
-        links << loading_indicator(id: form.id, floating: true)
       end
     else form.send(field)
     end
