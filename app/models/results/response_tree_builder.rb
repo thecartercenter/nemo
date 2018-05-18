@@ -1,19 +1,22 @@
-class Results::ResponseTreeBuilder
+# frozen_string_literal: true
 
-  def initialize(form)
-    @form = form
-  end
+module Results
+  # Builds a response tree from a form object
+  class ResponseTreeBuilder
+    def initialize(form)
+      @form = form
+    end
 
-  def build
-    @rn = ResponseNode.new
-    add_children
-    @rn
-  end
+    def build
+      @rn = AnswerGroup.new
+      add_children
+      @rn
+    end
 
-  def add_children
-    @form.sorted_children.count.times do
-      @rn.children << Answer.new
+    def add_children
+      @form.sorted_children.each do |q|
+        @rn.children << Answer.new(questioning_id: q.id, new_rank: q.rank)
+      end
     end
   end
-
 end
