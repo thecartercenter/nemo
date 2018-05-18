@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_511_162_734) do
+ActiveRecord::Schema.define(version: 20_180_518_203_355) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(version: 20_180_511_162_734) do
     t.integer "inst_num", default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
-    t.integer "new_rank", null: false
+    t.integer "new_rank"
     t.integer "old_id"
     t.uuid "option_id"
     t.integer "option_old_id"
