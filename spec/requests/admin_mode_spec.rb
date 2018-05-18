@@ -56,10 +56,10 @@ describe 'AdminMode' do
 
   it "mission dropdown should not be visible in admin mode" do
     login(@admin)
-    assert_select('form#change_mission')
+    assert_select('select#change-mission')
     get_s('/en/admin')
 
-    assert_select('form#change_mission', false)
+    assert_select('select#change-mission', false)
 
     # exit admin mode link should be visible instead
     assert_select('a.exit-admin-mode')

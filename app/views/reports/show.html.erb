@@ -7,7 +7,6 @@
       <%= link_to(icon_tag(:export) + t("report/report.export_to_csv"),
         report_path(@report, :format => :csv), :class => 'export-link') %>
     <% end %>
-    <%= loading_indicator(:id => "report_load_ind") %>
   <% end %>
 </div>
 <div class="report_view">
