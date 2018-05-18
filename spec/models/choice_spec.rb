@@ -1,15 +1,18 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe Choice do
   describe "#replicate_location_values" do
     context "when choice is for a location option" do
-      let(:form) { create(:form, question_types: %w(select_multiple)) }
-      let(:questioning) { form.questionings.first }
-      let(:option_one) { questioning.options.first }
-      let(:option_two) { questioning.options.second }
-      let(:answer) { create(:answer, questioning: questioning) }
-      let(:choice_location) { create(:choice, answer: answer, option: option_one) }
-      let(:choice_other_type) { create(:choice, answer: answer, option: option_two) }
+      let(:form) { create(:form, question_types: %w[select_multiple]) }
+      let(:questioning) { form.c[0] }
+      let(:option_one) { questioning.options[0] }
+      let(:option_two) { questioning.options[1] }
+      let(:response) { create(:response, form: form, answer_values: [[option_one.name, option_two.name]]) }
+      let(:answer) { response.answers[0] }
+      let(:choice_location) { answer.choices.detect { |c| c.option == option_one } }
+      let(:choice_other_type) { answer.choices.detect { |c| c.option == option_two } }
 
       it "copies the coordinates from the option to the choice lat/long fields" do
         questioning.option_set.update!(geographic: true, allow_coordinates: true)

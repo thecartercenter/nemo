@@ -14,10 +14,11 @@ module ModelSpecHelpers
     report
   end
 
-  def expect_location_answer(params)
-    # Note that we test this with validate: false since we don't always run answer
-    # validations, but we should be doing this anyway.
-    answer.save(validate: false)
+  def expect_location_answer(answer, params)
+    answer.save
+    # If the answer is invalid there is no need to check if values were copied correctly.
+    return if answer.invalid?
+
     answer.reload
     expect(answer.value).to eq params[:val]
     {lat: :latitude, lng: :longitude, alt: :altitude, acc: :accuracy}.each do |k, v|

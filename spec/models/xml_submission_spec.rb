@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 describe XMLSubmission, :odk do
@@ -15,7 +17,7 @@ describe XMLSubmission, :odk do
   end
 
   context "with a repeat group and instances" do
-    let(:form) { create(:form, question_types: ["integer", ["integer", "integer"]]) }
+    let(:form) { create(:form, question_types: ["integer", %w[integer integer]]) }
     let(:data) do
       {
         form.c[0] => "123",
@@ -23,9 +25,9 @@ describe XMLSubmission, :odk do
           {
             form.c[1].c[0] => "456",
             form.c[1].c[1] => "789"
-          },{
+          }, {
             form.c[1].c[1] => "34"
-          },{
+          }, {
             form.c[1].c[0] => "56",
             form.c[1].c[1] => "78"
           }
@@ -53,8 +55,10 @@ describe XMLSubmission, :odk do
   end
 
   context "with complex selects" do
-    let(:form) { create(:form, question_types: %w(select_one multilevel_select_one
-      select_multiple integer multilevel_select_one)) }
+    let(:form) do
+      create(:form, question_types: %w[select_one multilevel_select_one
+                                       select_multiple integer multilevel_select_one])
+    end
     let(:cat) { form.c[0].option_set.sorted_children[0] }
     let(:plant) { form.c[1].option_set.sorted_children[0] }
     let(:oak) { form.c[1].option_set.sorted_children[1] }
@@ -94,15 +98,15 @@ describe XMLSubmission, :odk do
   end
 
   context "with location type" do
-    let(:form) { create(:form, question_types: %w(location)) }
+    let(:form) { create(:form, question_types: %w[location]) }
     let(:answer) { nodes[0].set.answers[0] }
 
     context "with just lat/lng" do
       let(:data) { {form.c[0] => "12.3456 -76.99388"} }
 
       it "processes correct values" do
-        expect_location_answer(val: "12.345600 -76.993880",
-          lat: 12.3456, lng: -76.99388, alt: nil, acc: nil)
+        expect_location_answer(answer, val: "12.345600 -76.993880",
+                                       lat: 12.3456, lng: -76.99388, alt: nil, acc: nil)
       end
     end
 
@@ -110,15 +114,15 @@ describe XMLSubmission, :odk do
       let(:data) { {form.c[0] => "12.3456 -76.99388 123.456 20.0"} }
 
       it "processes correct values" do
-        expect_location_answer(val: "12.345600 -76.993880 123.456 20.000",
-          lat: 12.3456, lng: -76.99388, alt: 123.456, acc: 20.0)
+        expect_location_answer(answer, val: "12.345600 -76.993880 123.456 20.000",
+                                       lat: 12.3456, lng: -76.99388, alt: 123.456, acc: 20.0)
       end
     end
   end
 
   # We submit temporal data from a phone in +03 to a server in -06.
   context "with date/time types" do
-    let(:form) { create(:form, question_types: %w(datetime date time)) }
+    let(:form) { create(:form, question_types: %w[datetime date time]) }
     let(:data) do
       {
         form.c[0] => "2017-07-12T16:40:00.000+03",
@@ -142,7 +146,7 @@ describe XMLSubmission, :odk do
   end
 
   context "with prefilled timestamps" do
-    let(:form) { create(:form, question_types: %w(formstart formend)) }
+    let(:form) { create(:form, question_types: %w[formstart formend]) }
     let(:data) do
       {
         form.c[0] => "2017-07-12T16:40:12.000-06",
@@ -161,7 +165,7 @@ describe XMLSubmission, :odk do
   end
 
   context "with other question types" do
-    let(:form) { create(:form, question_types: %w(text long_text decimal)) }
+    let(:form) { create(:form, question_types: %w[text long_text decimal]) }
     let(:data) do
       {
         form.c[0] => "Quick",
