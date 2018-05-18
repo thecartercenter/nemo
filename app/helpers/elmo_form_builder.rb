@@ -74,7 +74,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           class: "regenerate btn btn-default btn-xs", data: data, type: "button")
 
         # Loading indicator
-        body += @template.loading_indicator(success_failure: true)
+        body += @template.inline_load_ind(success_failure: true)
 
         # Backbone view
         body += @template.content_tag(:script,

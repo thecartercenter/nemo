@@ -138,7 +138,7 @@ table.index_table th, table.form th { text-align: $left; color: #444; background
     font-size: 90%; padding: 3px 10px 3px 3px; }
 
 
-div.loading_indicator {
+div.inline-load-ind {
   .success {
     color: $theme-green;
   }
@@ -147,16 +147,8 @@ div.loading_indicator {
     color: $theme-red;
   }
 
-  div.loading_indicator_inline {
-    width: 16px;
-    display: inline-block;
-    vertical-align: top;
-  }
-
-  div.loading_indicator_floating {
-    width: 16px;
-    float: $left;
-  }
+  width: 20px;
+  display: inline-block;
 }
 
 i.fa-certificate {
@@ -222,8 +214,9 @@ div.regenerable-field {
     margin-left: 2em;
   }
 
-  div.loading_indicator {
+  div.inline-load-ind {
     margin-left: 0.5em;
+    display: inline-block;
   }
 }
 

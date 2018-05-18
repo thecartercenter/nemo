@@ -29,7 +29,7 @@
       login_path: login_path
     )%>);
     ELMO.index_table_views = {}
-    new ELMO.Views.MissionChangeDropdown({el: '#change_mission select'});
+    new ELMO.Views.MissionChangeDropdown({el: 'select#change-mission'});
   <% end %>
 
   <%= yield(:per_page_js) %>
@@ -72,7 +72,7 @@
                   </a>
                   <%# empty until ajax call %>
                   <ul class="dropdown-menu" role="menu">
-                    <li><%= loading_indicator %></li>
+                    <li><%= inline_load_ind %></li>
                   </ul>
                 </li>
               <%# else mission is locked %>

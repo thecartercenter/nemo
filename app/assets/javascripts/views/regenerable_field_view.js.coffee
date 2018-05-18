@@ -12,7 +12,7 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
 
     container = target.closest('.regenerable-field')
     displayEl = container.find('span[data-value]')
-    loading_indicator = container.find('div.loading_indicator img')
+    inline_load_ind = container.find('div.inline-load-ind img')
     success_indicator = container.find('.success')
     error_indicator = container.find('.failure')
 
@@ -25,7 +25,7 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
     target.attr('disabled', 'disabled')
     success_indicator.hide()
     error_indicator.hide()
-    loading_indicator.show()
+    inline_load_ind.show()
 
     $.ajax
       method: 'post'
@@ -35,10 +35,10 @@ class ELMO.Views.RegenerableFieldView extends ELMO.Views.ApplicationView
           $(displayEl[0]).data(value: data.value)
           $(displayEl[0]).text(data.value)
           target.text(I18n.t('common.regenerate'))
-        loading_indicator.hide()
+        inline_load_ind.hide()
         success_indicator.show()
       error: ->
-        loading_indicator.hide()
+        inline_load_ind.hide()
         error_indicator.show()
       complete: ->
         target.removeAttr('disabled')

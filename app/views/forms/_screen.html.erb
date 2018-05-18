@@ -18,7 +18,6 @@
       <%# This link should be last because it has loading ind after it. %>
       <%= link_to(icon_tag(:print) + t("form.print_form"), "#", class: "print-link",
         "data-form-id": @form.id) %>
-      <%= loading_indicator(id: @form.id) %>
     <% end %>
   <% end %>
 
