@@ -1,0 +1,17 @@
+<% if value %>
+  <span class="mask-container">
+    <span class="hide unmasked">
+      <%= value %>
+      <a href="#" class="toggle-mask">
+        <%= icon_tag("eye-slash") %>
+      </a>
+    </span>
+
+    <span class="masked">
+      <%= value.split('').map { |char| '∙' }.join %>
+      <a href="#" class="toggle-mask">
+        <%= icon_tag(:eye) %>
+      </a>
+    </span>
+  </span>
+<% end %>

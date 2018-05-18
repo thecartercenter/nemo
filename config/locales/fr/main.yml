@@ -688,8 +688,6 @@ fr:
               cant_be_empty_if_not_admin: "Au moins une tâche est obligatoire pour l'utilisateurs non-administratifs."
             login:
               invalid: "Utilisez seulement des lettres sans accent, des chiffres et des espaces."
-            reset_password_method:
-              cant_passwd_email: "Impossible de %{verb} le mot de passe par e-mail parce-que vous n'avez pas choisi une addresse e-mail."
         user_batch:
           general: "le lot utilisateur est invalide (voir ci dessous)"
           internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."
@@ -1637,7 +1635,6 @@ fr:
     edit_profile: "Modifier le profil"
     export_vcard: "Exporter comme vCard"
     forgot_password: "Vous avez oublié votre mot de passe?"
-    leave_password_alone: "Laisser le mot de passe"
     gender_options:
       man: "Homme"
       woman: "Femme"
@@ -1661,13 +1658,10 @@ fr:
       welcome: "Bienvenue à %{site}. Votre titres sont les suivants:"
     logout_success: "Vous avez déconnecté avec succès."
     profile_updated: "Profil modifié avec succès."
-    reset_password_and: "Réinstaliser mot de passe et"
     reset_password_hint_reset: "Choisissez si et comment réinitialiser votre mot de passe."
     reset_password_label_choose: "Créer mot de passe"
     reset_password_label_reset: "Réinitialiser le mot de passe ?"
-    send_email_instructions: "Envoyer les instructions par email"
     set_admin_password: "Initialiser votre mot de passe administrateur et votre profil"
-    show_printable_instructions: "Montrer instructions imprimable"
   user_group:
     create_prompt: "Veuillez saisir le nom de votre groupe"
     add_users_success: "%{count} utilisateurs ajoutés avec succès au groupe %{group}"

@@ -23,6 +23,14 @@
       e.preventDefault();
     })
 
+    const togglePasswordFields = function() {
+      const option = $(this).val();
+      $(".password-fields").toggleClass("hide", (option !== "enter" && option !== "enter_and_show"));
+    };
+
+    const passwordSelect = $("#user_reset_password_method");
+    passwordSelect.on("change", togglePasswordFields);
+    togglePasswordFields.call(passwordSelect);
   }
 
   klass.prototype.build_assignment_form = function() { var self = this;

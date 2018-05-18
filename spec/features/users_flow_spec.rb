@@ -14,7 +14,7 @@ feature "users flow" do
     fill_in "Username", with: "foobar"
     fill_in "Email", with: "foo@bar.com"
     select "Enumerator", from: "user_assignments_attributes_0_role"
-    choose "Send email instructions"
+    select "Send password reset instructions via email", from: "user_reset_password_method"
     click_button "Save"
     expect(page).to have_content("Success: User created successfully")
 

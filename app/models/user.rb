@@ -59,9 +59,8 @@ class User < ApplicationRecord
   validates(:name, presence: true)
   validates(:pref_lang, presence: true)
   validate(:phone_length_or_empty)
-  validate(:must_have_password_reset_on_create)
+  validate(:must_have_password_on_enter)
   validate(:password_reset_cant_be_email_if_no_email)
-  validate(:print_password_reset_only_for_enumerator)
   validate(:no_duplicate_assignments)
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
@@ -219,17 +218,6 @@ class User < ApplicationRecord
     self.password = self.password_confirmation = self.class.random_password
   end
 
-  def deliver_intro!
-    reset_perishable_token!
-    Notifier.intro(self).deliver_now
-  end
-
-  # sends password reset instructions to the user's email
-  def deliver_password_reset_instructions!
-    reset_perishable_token!
-    Notifier.password_reset_instructions(self).deliver_now
-  end
-
   def full_name
     name
   end
@@ -248,16 +236,6 @@ class User < ApplicationRecord
 
   def reset_password_method
     @reset_password_method.nil? ? "dont" : @reset_password_method
-  end
-
-  def reset_password_if_requested
-    if %w[email print].include?(reset_password_method)
-      reset_password and save
-    end
-    if reset_password_method == "email"
-      # only send intro if he/she has never logged in
-      (login_count || 0) > 0 ? deliver_password_reset_instructions! : deliver_intro!
-    end
   end
 
   def to_vcf
@@ -399,23 +377,14 @@ class User < ApplicationRecord
       raise DeletionError.new(:cant_delete_if_sms_messages) unless Sms::Message.where(user_id: id).empty?
     end
 
-    def must_have_password_reset_on_create
-      if new_record? && reset_password_method == "dont"
-        errors.add(:reset_password_method, :blank)
-      end
+    def must_have_password_on_enter
+      entering_password = %w[enter enter_and_show].include?(reset_password_method)
+      errors.add(:password, :blank) if entering_password && password.blank?
     end
 
     def password_reset_cant_be_email_if_no_email
-      if reset_password_method == "email" && email.blank?
-        verb = new_record? ? "send" : "reset"
-        errors.add(:reset_password_method, :cant_passwd_email, verb: verb)
-      end
-    end
-
-    def print_password_reset_only_for_enumerator
-      if reset_password_method == "print" && !enumerator_only? && !configatron.offline_mode
-        errors.add(:reset_password_method, :print_password_reset_only_for_enumerator)
-      end
+      sending_email = reset_password_method == "email"
+      errors.add(:reset_password_method, :cant_passwd_email) if sending_email && email.blank?
     end
 
     def no_duplicate_assignments

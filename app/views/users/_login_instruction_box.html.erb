@@ -16,11 +16,15 @@
     </tr>
     <tr>
       <td class="name"><%= User.human_attribute_name("password") %></td>
-      <td class="value"><%= password %></td>
+      <td class="value">
+        <%= render("masked_value", value: password) %>
+      </td>
     </tr>
     <tr>
       <td class="name"><%= User.human_attribute_name("sms_auth_code") %></td>
-      <td class="value"><%= user.sms_auth_code %></td>
+      <td class="value">
+        <%= render("masked_value", value: user.sms_auth_code) %>
+      </td>
     </tr>
     <% unless admin_mode? %>
       <tr>
@@ -38,3 +42,9 @@
     <p><%= para %></p>
   <% end %>
 </div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.UserLoginInstructionsView({
+    el: $('#instructions')
+  })
+<% end %>

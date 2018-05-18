@@ -1,4 +1,6 @@
 class PasswordResetsController < ApplicationController
+  include PasswordResettable
+
   # Don't need to authorize for any of these because they're for logged out users
   skip_authorization_check
 
@@ -25,7 +27,7 @@ class PasswordResetsController < ApplicationController
         flash.now[:error] = t("password_reset.no_associated_email")
         render :new
       else
-        user.deliver_password_reset_instructions!
+        deliver_password_reset_instructions(user)
         flash[:success] = t("password_reset.check_email")
         redirect_to(login_url)
       end

@@ -13,6 +13,18 @@
   #instructions {
     page-break-after: always;
   }
+
+  .masked {
+    display: none;
+  }
+
+  .unmasked {
+    display: inline !important;
+  }
+
+  a.toggle-mask {
+    display: none;
+  }
 }
 
 /* hide screen-only things */

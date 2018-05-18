@@ -659,8 +659,6 @@ ar:
               cant_be_empty_if_not_admin: "مطلوب واجب واحد على الاقل اذا كان المستخدم ليس بمسؤول."
             login:
               invalid: "الرجاء استخدام حروف فقط غير معلمة، وأرقام، فترات، وخط على السطر."
-            reset_password_method:
-              cant_passwd_email: "لا يمكنك %{verb} كلمة المرور عن طريق البريد الإلكتروني لأنك لم تحدد عنوان بريد إلكتروني."
         user_batch:
           general: "حزمة المستخدمين غير صالحة (انظر ادناه)"
           internal: "حدث خطأ داخلي أثناء معالجة التحميل."
@@ -1643,7 +1641,6 @@ ar:
     edit_profile: "تعديل الحساب"
     export_vcard: "تصدير بصيغة vCard"
     forgot_password: "نسيت كلمة المرور؟"
-    leave_password_alone: "ترك كلمة المرور لوحدها"
     login_instructions:
       closing:
       - Please note the 's' in 'https' in the site URL.
@@ -1664,13 +1661,10 @@ ar:
       welcome: "أهلا بك في %{site}. بيانات الاعتماد الخاصة بك هي:"
     logout_success: "لقد تم تسجيل خروجك بنجاح."
     profile_updated: "تم تحديث الحساب بنجاح."
-    reset_password_and: "إعادة تعيين كلمة المرور و"
     reset_password_hint_reset: "اختيار ما إذا كان هذا المستخدم قادر على إعادة تعيين كلمة المرور والكيفية."
     reset_password_label_choose: "أنشاء كلمة المرور"
     reset_password_label_reset: "إعادة تعيين كلمة المرور؟"
-    send_email_instructions: "أرسل بريد الكتروني بالتعليمات"
     set_admin_password: "تعيين كلممة مرور لمسؤل ومعلومات حساب "
-    show_printable_instructions: "عرض تعليمات قابلة للطباعة"
   user_group:
     create_prompt: "الرجاء كتابة اسم مجموعتك."
     add_users_success: "تمت إضافة %{count} مستخدمين إلى المجموعة %{group} بنجاح"
