@@ -1,5 +1,13 @@
 .draggable-list-wrapper {
 
+  + .action {
+    color: $orange;
+
+    a {
+      color: $orange;
+    }
+  }
+
   /* these styles only apply to the outer ol */
   > ol {
     margin: 0 0 5px -15px;

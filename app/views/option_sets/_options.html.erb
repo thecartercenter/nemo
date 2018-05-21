@@ -1,13 +1,13 @@
 <%# form for drag and drop and option dialog %>
-<% if !read_only && !@option_set.huge? && can?(:add_options, @option_set) %>
-  <div class="add_options">
-    <input type="text" class="add_options_box form-control">
-    <input type="button" class="btn_secondary btn btn-default" value="<%= t('common.add') %>" />
-  </div>
-<% end %>
-
 <div id="options-wrapper" class="draggable-list-wrapper" style="display: none">
 </div>
+
+<% if !read_only && !@option_set.huge? && can?(:add_options, @option_set) %>
+  <span class="add-options action">
+    <%= icon_tag(:plus) %>
+    <%= link_to(t('option_set.add_option'), '#', class: 'add-option') if can?(:add_options, @option_set) %>
+  </span>
+<% end %>
 
 <% if @option_set.huge? %>
   <strong class="and-n-more"><%= t('option_set.and_n_more', count: number_with_delimiter(@option_set.options_not_serialized)) %></strong>
@@ -58,7 +58,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
-          <button type="button" class="btn btn-primary"><%= I18n.t("common.save") %></button>
+          <button type="button" class="btn btn-primary buttons-default"><%= I18n.t("common.save") %></button>
+          <button type="button" class="btn btn-default buttons-new" data-action="close"><%= I18n.t("common.save_and_close") %></button>
+          <button type="button" class="btn btn-primary buttons-new" data-action="another"><%= I18n.t("common.save_and_add_another") %></button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

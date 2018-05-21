@@ -5,8 +5,7 @@
 
   // constructor
   ns.OptionNode = klass = function(attribs) { var self = this;
-    // copy attribs
-    for (var key in attribs) self[key] = attribs[key];
+    ns.NamedItem.call(self, attribs);
 
     if (self.option) {
       // also translations from option. these are the ones we'll actually use.
@@ -16,6 +15,10 @@
       // copy coordinates
       self.latitude = self.option.latitude;
       self.longitude = self.option.longitude;
+
+      // Alias in_use with no question mark
+      // Note this is a property of option
+      self.inUse = self.option['in_use?'];
     }
 
     // names are editable if the node is not a new record
@@ -25,14 +28,10 @@
     // alias removable with no question mark
     // note this is a property of option node
     self.removable = self['removable?'];
-
-    // alias in_use with no question mark
-    // note this is a property of option
-    self.in_use = self.option['in_use?'];
   };
 
   // inherit from NamedItem
-  klass.prototype = new ns.NamedItem();
+  klass.prototype = Object.create(ns.NamedItem.prototype);
   klass.prototype.constructor = klass;
   klass.prototype.parent = ns.NamedItem.prototype;
 

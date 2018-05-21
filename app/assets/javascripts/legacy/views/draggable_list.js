@@ -32,7 +32,11 @@
     });
 
     // hookup save and cancel buttons on modal
-    self.modal.find('button.btn-primary').on('click', function(){ self.save_item(); return false; });
+    self.modal.find("button.btn-primary, button[data-action]").on("click", function() {
+      const action = $(this).data("action");
+      self.saveItem(action || "close");
+      return false;
+    });
     self.modal.find('button.btn-default').on('click', function(){ self.cancel_edit(); });
 
     // show/hide save button when translations change
@@ -41,7 +45,7 @@
     // Catch modal form submission.
     self.modal.on('keypress', function(e) {
       if (e.keyCode == 13) {
-        var btn = self.modal.find('.btn-primary');
+        const btn = self.modal.find(".btn-primary").last();
         if (btn.is(':visible')) btn.trigger('click');
       }
     })
@@ -92,7 +96,14 @@
   klass.prototype.toggle_save_button = function() { var self = this;
     // if all translation boxes in this modal are blank, hide the 'save' button
     var show = self.validate_modal() == true;
-    self.modal.find('.btn-primary')[show ? 'show' : 'hide']();
+
+    if (self.modal_mode === "new") {
+      self.modal.find(".buttons-default").hide();
+      self.modal.find(".buttons-new").toggle(show);
+    } else {
+      self.modal.find(".buttons-new").hide();
+      self.modal.find(".buttons-default").toggle(show);
+    }
   };
 
   // turns nestability on and off
@@ -194,7 +205,13 @@
       inner.append($('<i>').attr('class', 'fa fa-sort'));
 
     // add name (add nbsp to make sure div doesn't collapse if name is blank)
-    inner.append(item.translation() + '&nbsp;');
+    const text = item.translation();
+    if (text === "") {
+      inner.append("&nbsp;");
+    } else {
+      const el = $("<span />").text(text);
+      inner.append(el);
+    }
 
     // add edit/remove unless in show mode
     if (!self.options_levels_read_only) {
@@ -296,7 +313,9 @@
     self.modal.modal('show');
 
     // show the in_use warning if appopriate
-    if (self.active_item.in_use) self.modal.find('div[id$=in_use_name_change_warning]').show();
+    if (self.active_item.inUse) {
+      self.modal.find("div[id$=in_use_name_change_warning]").show();
+    }
 
     self.modal.on('shown.bs.modal', function() {
       self.modal.find('input[type=text]')[0].focus();
@@ -322,7 +341,9 @@
   };
 
   // saves entered translations to data model
-  klass.prototype.save_item = function() { var self = this;
+  klass.prototype.saveItem = function(action) {
+    const self = this;
+
     self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});
     });
@@ -347,7 +368,11 @@
     // done with this item
     self.active_item = null;
 
-    self.modal.modal('hide');
+    if (action === "another") {
+      self.new_item();
+    } else {
+      self.modal.modal("hide");
+    }
   };
 
   // cancels the new/edit operation
@@ -439,4 +464,3 @@
   };
 
 })(ELMO.Views);
-

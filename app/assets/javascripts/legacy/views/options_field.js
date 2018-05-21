@@ -22,19 +22,20 @@
       remove_link: self.params.remove_link,
       parent_change_allowed: self.parent_change_allowed,
       modal_titles: {
-        // we only need the edit title for this field
-        edit: I18n.t('option_set.edit_option')
+        new: I18n.t("option_set.new_option"),
+        edit: I18n.t("option_set.edit_option")
       }
     });
   };
 
-  klass.prototype.add = function(option_attribs) { var self = this;
-    self.list.add_item({id: null, 'removable?': true, option: option_attribs});
+  klass.prototype.add = function() {
+    const self = this;
+    self.list.new_item();
   };
 
   // Don't allow options that are not removable to change parents.
   klass.prototype.parent_change_allowed = function (item) {
-    return item['removable?'];
+    return item["removable?"];
   }
 
 })(ELMO.Views);
