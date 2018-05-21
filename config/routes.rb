@@ -167,7 +167,6 @@ ELMO::Application.routes.draw do
     end
 
     # special routes for tokeninput suggestions
-    get "/options/suggest" => "options#suggest", as: :suggest_options
     get "/tags/suggest" => "tags#suggest", as: :suggest_tags
   end
 

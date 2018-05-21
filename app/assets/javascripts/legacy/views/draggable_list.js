@@ -32,7 +32,7 @@
     });
 
     // hookup save and cancel buttons on modal
-    self.modal.find("button.btn-primary").on("click", function() {
+    self.modal.find("button.btn-primary, button[data-action]").on("click", function() {
       const action = $(this).data("action");
       self.saveItem(action || "close");
       return false;
@@ -98,11 +98,11 @@
     var show = self.validate_modal() == true;
 
     if (self.modal_mode === "new") {
-      self.modal.find(".buttons-default .btn-primary").hide();
-      self.modal.find(".buttons-new .btn-primary")[show ? "show" : "hide"]();
+      self.modal.find(".buttons-default").hide();
+      self.modal.find(".buttons-new").toggle(show);
     } else {
-      self.modal.find(".buttons-new .btn-primary").hide();
-      self.modal.find(".buttons-default .btn-primary")[show ? "show" : "hide"]();
+      self.modal.find(".buttons-new").hide();
+      self.modal.find(".buttons-default").toggle(show);
     }
   };
 

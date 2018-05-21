@@ -58,14 +58,9 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
-          <span class="buttons-default">
-            <button type="button" class="btn btn-primary"><%= I18n.t("common.save") %></button>
-          </span>
-
-          <span class="buttons-new">
-            <button type="button" class="btn btn-primary" data-action="close"><%= I18n.t("common.save_and_close") %></button>
-            <button type="button" class="btn btn-primary" data-action="another"><%= I18n.t("common.save_and_add_another") %></button>
-          </span>
+          <button type="button" class="btn btn-primary buttons-default"><%= I18n.t("common.save") %></button>
+          <button type="button" class="btn btn-default buttons-new" data-action="close"><%= I18n.t("common.save_and_close") %></button>
+          <button type="button" class="btn btn-primary buttons-new" data-action="another"><%= I18n.t("common.save_and_add_another") %></button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
