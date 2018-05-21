@@ -1222,7 +1222,7 @@ en:
       by_type:
         question: "This Question has existing Answers. Some fields are thus not editable."
     option_in_use_name_change_warning: "This Option is in use in other published Forms or is referenced in existing Responses. You should be careful not to change the meaning of the Option in your edits."
-    option_standard_copy_name_change_warning: "This Option is a copy of a standard Option. You should be sure to preserve the original meaning of the Option so that it agrees with the standard."
+    option_standard_copy_name_change_warning: "This Option is part of a standard-derived Option Set. When editing, you may want to maintain the original meaning of the Option."
     published_warnings:
       form: "This Form is published, meaning it may already be in the hands of enumerators. Some fields are thus not-editable, and questions cannot be added, removed, or re-ordered. Please proceed with caution when making any changes."
       questioning: "The Form to which the below fields apply is published and thus they cannot be edited."

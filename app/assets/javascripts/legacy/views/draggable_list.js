@@ -290,8 +290,8 @@
     // clear the text boxes
     self.modal.find('input[type=text], input[type=number]').val("");
 
-    // hide the in_use warning
     self.modal.find('div[id$=in_use_name_change_warning]').hide();
+    self.modal.find('div[id$=standard_copy_name_change_warning]').hide();
 
     // then populate text boxes
     self.active_item.locales().forEach(function(l){
@@ -312,9 +312,12 @@
     // show the modal
     self.modal.modal('show');
 
-    // show the in_use warning if appopriate
+    // show/hide warnings as appopriate
     if (self.active_item.inUse) {
       self.modal.find("div[id$=in_use_name_change_warning]").show();
+    }
+    if (options.mode != "new") {
+      self.modal.find('div[id$=standard_copy_name_change_warning]').show();
     }
 
     self.modal.on('shown.bs.modal', function() {
