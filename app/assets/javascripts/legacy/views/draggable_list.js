@@ -213,6 +213,11 @@
       inner.append(el);
     }
 
+    if (item.value) {
+      const value = $('<span>').addClass("value").text("(" + item.value + ")");
+      inner.append(value);
+    }
+
     // add edit/remove unless in show mode
     if (!self.options_levels_read_only) {
       var links = $('<div>').attr('class', 'links')
@@ -309,6 +314,9 @@
       self.modal.find('.coordinate input').attr('disabled', true);
     }
 
+    // populate value
+    self.modal.find("#option_value").val(self.active_item.value);
+
     // show the modal
     self.modal.modal('show');
 
@@ -351,6 +359,9 @@
     self.modal.find('.coordinate input').each(function(){
       self.active_item.update_coordinate({field: $(this).data('field'), value: $(this).val()});
     });
+
+    const value = self.modal.find("#option_value");
+    self.active_item[$(value).data('field')] = $(value).val();
 
     self.wrapper.show();
 

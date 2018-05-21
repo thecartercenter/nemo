@@ -17,6 +17,9 @@ class Option < ApplicationRecord
   scope :by_canonical_name, ->(name) { where("LOWER(canonical_name) = ?", name.downcase) }
   translates :name
 
+  before_validation :normalize
+
+  validates :value, numericality: { only_integer: true, allow_nil: true }
   validate :check_invalid_coordinates_flag
   with_options if: :has_coordinates? do |geographic|
     geographic.validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
@@ -88,13 +91,24 @@ class Option < ApplicationRecord
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(only: [:id, :latitude, :longitude, :name_translations], methods: [:name, :set_names, :in_use?])
+      super(only: [:id, :latitude, :longitude, :name_translations, :value], methods: [:name, :set_names, :in_use?])
     else
       super(options)
     end
   end
 
   private
+
+  def normalize
+    if self.value.is_a?(String)
+      value = self.value.strip
+      if value.blank?
+        self.value = nil
+      else
+        self.value = value.to_i
+      end
+    end
+  end
 
   # invalidate the mission option cache after save, destroy
   def invalidate_cache
