@@ -1599,10 +1599,6 @@ ko:
     add_to_group: "다수의 사용자 그룹 추가하기"
     remove_from_group: "다수의 사용자 그룹 제거하기"
     login_instructions:
-      closing:
-      - 사이트 URL의 'https'에서 's'를 생략하지 마십시오.
-      - 더 기억하기 쉬운 비밀번호를 선택하고 싶다면 웹사이트에서 비밀번호를 변경할 수 있습니다.
-      - 위의 자격은 안드로이드 기기에서도 작동합니다. 자격을 입력하고 'ODK Collect'앱을 시작하려면 'Menu' 버튼을 누르고 'Preferences'을 선택후 각 사용자의 '사용자이름'과 '비밀번호'를 선택하십시오.
       preamble_singular: |-
           로그인 가이드가 아래에 보여집니다. 이 페이지를 인쇄해 아래의 사용자들에게 나누어 주십시오.
           사용자의 비밀번호는 암호화되어 저장되어있기 때문에 이 페이지를 떠나면 다시 볼 수 없습니다.
@@ -1617,8 +1613,6 @@ ko:
     reset_password_hint_choose: "사용자의 비밀번호 접근 방법을 선택하십시오."
     reset_password_hint_reset: "이 사용자의 비밀번호를 어떻게 리셋할지 선택하십시오."
     reset_password_label_choose: "비밀번호 생성하기"
-    reset_password_label_reset: "비밀번호를 리셋하시겠습니까?"
-    set_admin_password: "당신의 관리자 비밀번호와 프로필 정보를 설정하십시오"
   user_group:
     create_prompt: "그룹의 이름을 입력하십시오."
     add_users_success: "성공적으로 %{count}명의 사용자를 그룹 %{group}에 추가했습니다"

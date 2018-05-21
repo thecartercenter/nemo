@@ -1178,14 +1178,6 @@ es:
     export_vcard: "Exportar como vCard"
     forgot_password: "¿Ha olvidado su contraseña?"
     login_instructions:
-      closing:
-      - Por favor note la 's' en 'https' en la página URL.
-      - Si quiere elegir una contraseña más fácil de recordar, puede cambiar su contraseña usando la página web.
-      - 'Estas credenciales también funcionan en su Android. Para poner sus credenciales,
-
-        start la aplicación de ''ODK Collect'', entre en el ''Menu'', luego ''Preferencias'',
-
-        and y después selecciones ''Usuario'' y ''Contraseña''.'
       preamble_singular: |-
           Las instrucciones de acceso se encuentran aquí debajo. Por favor, imprima esta página ahora y asegúrese de que el usuario indicado las recibe.
           Ya que la contraseña del usuario esta guardara en un formato codificado, no podrá ser accedida una vez abandone esta página.
@@ -1199,8 +1191,6 @@ es:
     profile_updated: "Perfil actualizado con éxito."
     reset_password_hint_reset: "Elegir si pueden y cómo pueden volver a restablecer la contraseña de usuario."
     reset_password_label_choose: "Creación de Contraseña"
-    reset_password_label_reset: "¿Restablecer la contraseña?"
-    set_admin_password: "Establecer la contraseña de administrador y la información de perfil"
   welcome:
     awaiting_review: "**%{count}** Esperando Revisión"
     by_you: "**%{count}** Entregas hechas por ti"

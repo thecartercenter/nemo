@@ -1643,10 +1643,6 @@ fr:
     add_to_group: "Ajouter utilisateurs de groupe multiple"
     remove_from_group: "Supprimer utilisateurs de groupe multiple"
     login_instructions:
-      closing:
-      - Si vous plait (SVP) notez le 's' en 'https' sur le URL.
-      - Si vous voudriez un mot de passe mémorable, vous pouvez le changer sur le site.
-      - Les identifiants au-dessus fonctionneront aussi dans votre appareil Android. Pour entrer votre identifiants, clickez le 'ODK Collect' application, clickez le 'Menu' bouton, clickez 'Preferences', et puis clickez chaque identifiant et mot de passe.
       preamble_singular: |-
           Les instructions de connexion se trouvent ci-dessous. Merci d'imprimer cette page et de s'assurer que l'utilisateur reçoive les instructions.
           Le mot de passe est emmagasiné dans un format encodé, il sera donc irrécupérable après avoir quitté cette page.
@@ -1660,8 +1656,6 @@ fr:
     profile_updated: "Profil modifié avec succès."
     reset_password_hint_reset: "Choisissez si et comment réinitialiser votre mot de passe."
     reset_password_label_choose: "Créer mot de passe"
-    reset_password_label_reset: "Réinitialiser le mot de passe ?"
-    set_admin_password: "Initialiser votre mot de passe administrateur et votre profil"
   user_group:
     create_prompt: "Veuillez saisir le nom de votre groupe"
     add_users_success: "%{count} utilisateurs ajoutés avec succès au groupe %{group}"

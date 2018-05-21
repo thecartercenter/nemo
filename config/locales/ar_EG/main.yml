@@ -1603,6 +1603,11 @@ ar:
   unauthorized:
     default: "غير مصرح لك للوصول إلى هذه الصفحة أو العملية."
     must_login: "عليك تسجيل الدخول للوصول إلى هذه الصفحة."
+  user_batch:
+    instructions_html: |-
+        استيراد جدول بيانات مع مستخدمينك. فقط جداول البيانات XLSX  وملفات CSV ستقبل.
+
+        نموذج جدول بيانات متاح في <a href="%{xlsx_url}"> XLSX </a> و  <a href="%{csv_url}"> CSV</a> صيغ كنقطة بداية.
   user:
     add_assignment: "إضافة واجب "
     api_key:
@@ -1642,14 +1647,6 @@ ar:
     export_vcard: "تصدير بصيغة vCard"
     forgot_password: "نسيت كلمة المرور؟"
     login_instructions:
-      closing:
-      - Please note the 's' in 'https' in the site URL.
-      - If you'd like to choose a more memorable password, you can change your password using the website.
-      - 'The above credentials will also work on your Android device. To enter your credentials,
-
-        start the ''ODK Collect'' application, press the ''Menu'' button, tap ''Preferences'',
-
-        and then tap each of ''Username'' and ''Password''.'
       preamble_singular: |-
           في ما يلي تعليمات الدخول. يرجى طباعة هذه الصفحة الآن تأكد أن يتلقىها المستخدم أدناه.
           كون كلمة المرور تخزن بطريققة مشفرة، ستكون التعليمات غير قابل للاسترجاع بعد مغادرة هذه الصفحة.
@@ -1663,8 +1660,6 @@ ar:
     profile_updated: "تم تحديث الحساب بنجاح."
     reset_password_hint_reset: "اختيار ما إذا كان هذا المستخدم قادر على إعادة تعيين كلمة المرور والكيفية."
     reset_password_label_choose: "أنشاء كلمة المرور"
-    reset_password_label_reset: "إعادة تعيين كلمة المرور؟"
-    set_admin_password: "تعيين كلممة مرور لمسؤل ومعلومات حساب "
   user_group:
     create_prompt: "الرجاء كتابة اسم مجموعتك."
     add_users_success: "تمت إضافة %{count} مستخدمين إلى المجموعة %{group} بنجاح"
