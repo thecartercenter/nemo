@@ -25,7 +25,7 @@ describe "response tree" do
   end
 
   context "forms with groups" do
-    let(:form2) { create(:form, question_types: ["text", %w[select_one text], "multilevel_select_one"]) }
+    let(:form2) { create(:form, question_types: ["text", %w[select_one text], "text"]) }
 
     it "should produce the correct tree" do
       response_tree = Results::ResponseTreeBuilder.new(form2).build
@@ -48,5 +48,24 @@ describe "response tree" do
       # expect appropriate number of children in the group
       expect(response_tree.children.descendants.length).to eq 2
     end
+  end
+
+  context "multilevel answer forms" do
+    let(:form3) { create(:form, question_types: %w[text multilevel_select_one]) }
+
+    it "should create the appropriate multilevel answer tree" do
+      response_tree = Results::ResponseTreeBuilder.new(form3).build
+
+      expect(response_tree.children[0].class).to eq AnswerSet
+      expect(response_tree.children[1].class).to eq Answer
+
+      expect(response_tree.children[0].children[0].class).to eq Answer
+      expect(response_tree.children[0].children[1].class).to eq Answer
+      expect(response_tree.children[0].children.length).to eq 2
+    end
+  end
+
+  context "repeat group forms" do
+    let(:form3) { create(:form, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
   end
 end
