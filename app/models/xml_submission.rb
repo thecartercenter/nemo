@@ -1,21 +1,14 @@
 class XMLSubmission
   attr_accessor :response, :data
 
-  def initialize(response: nil, files: nil, source: nil, data: nil)
+  def initialize(response: nil, files: nil)
     @response = response
-    @response.source = source
     @awaiting_media = @response.awaiting_media
-    case source
-    when "odk"
-      # We allow passing data via string in case we need to reprocess xml.
-      @data = data || files.delete(:xml_submission_file).read
-      @files = files
-      populate_from_odk(@data)
-    when "j2me"
-      @data = data
-      @files = files
-      populate_from_j2me(@data)
-    end
+    # We allow passing data via string in case we need to reprocess xml.
+    @data = files.delete(:xml_submission_file).read
+    @files = files
+    @response.source = "odk" # only kind of source we expect and can process
+    populate_from_odk(@data)
   end
 
   def save
