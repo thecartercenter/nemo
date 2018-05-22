@@ -214,12 +214,6 @@ ActiveRecord::Schema.define(version: 20_180_518_203_355) do
   add_index "form_items", ["mission_id"], name: "index_form_items_on_mission_id", using: :btree
   add_index "form_items", ["question_id"], name: "index_form_items_on_question_id", using: :btree
 
-  create_table "form_types", force: :cascade do |t|
-    t.datetime "created_at"
-    t.string "name"
-    t.datetime "updated_at"
-  end
-
   create_table "form_versions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string "code", limit: 255
     t.datetime "created_at", null: false
@@ -270,24 +264,6 @@ ActiveRecord::Schema.define(version: 20_180_518_203_355) do
   add_index "forms", ["mission_id"], name: "index_forms_on_mission_id", using: :btree
   add_index "forms", ["original_id"], name: "index_forms_on_original_id", using: :btree
   add_index "forms", ["root_id"], name: "index_forms_on_root_id", using: :btree
-
-  create_table "google_geolocations", force: :cascade do |t|
-    t.datetime "created_at"
-    t.string "formatted_addr"
-    t.string "full_name"
-    t.text "json"
-    t.decimal "latitude", precision: 20, scale: 15
-    t.decimal "longitude", precision: 20, scale: 15
-    t.integer "place_type_id"
-    t.datetime "updated_at"
-  end
-
-  create_table "languages", force: :cascade do |t|
-    t.string "code"
-    t.datetime "created_at"
-    t.boolean "is_active"
-    t.datetime "updated_at"
-  end
 
   create_table "media_objects", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.uuid "answer_id"
@@ -396,13 +372,6 @@ ActiveRecord::Schema.define(version: 20_180_518_203_355) do
   add_index "option_sets", ["original_id"], name: "index_option_sets_on_original_id", using: :btree
   add_index "option_sets", ["root_node_id"], name: "index_option_sets_on_root_node_id", using: :btree
 
-  create_table "option_settings", force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "option_id"
-    t.integer "option_set_id"
-    t.datetime "updated_at"
-  end
-
   create_table "options", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string "canonical_name", limit: 255, null: false
     t.datetime "created_at"
@@ -419,61 +388,6 @@ ActiveRecord::Schema.define(version: 20_180_518_203_355) do
   add_index "options", ["canonical_name"], name: "index_options_on_canonical_name", using: :btree
   add_index "options", ["deleted_at"], name: "index_options_on_deleted_at", using: :btree
   add_index "options", ["mission_id"], name: "index_options_on_mission_id", using: :btree
-
-  create_table "place_lookups", force: :cascade do |t|
-    t.datetime "created_at"
-    t.string "query"
-    t.string "sugg_id"
-    t.datetime "updated_at"
-  end
-
-  create_table "place_suggs", force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "google_geolocation_id"
-    t.integer "place_id"
-    t.integer "place_lookup_id"
-    t.datetime "updated_at"
-  end
-
-  create_table "place_types", force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "level"
-    t.string "name"
-    t.datetime "updated_at"
-  end
-
-  create_table "places", force: :cascade do |t|
-    t.integer "container_id"
-    t.datetime "created_at"
-    t.string "full_name"
-    t.boolean "is_incomplete"
-    t.decimal "latitude", precision: 20, scale: 15
-    t.string "long_name"
-    t.decimal "longitude", precision: 20, scale: 15
-    t.integer "place_type_id"
-    t.string "short_name"
-    t.datetime "updated_at"
-  end
-
-  create_table "question_types", force: :cascade do |t|
-    t.datetime "created_at"
-    t.string "name"
-    t.string "odk_name"
-    t.string "odk_preload"
-    t.string "odk_preload_params"
-    t.string "odk_tag"
-    t.datetime "updated_at"
-  end
-
-  create_table "questionings", force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "form_id"
-    t.boolean "hidden"
-    t.integer "question_id"
-    t.integer "rank"
-    t.boolean "required"
-    t.datetime "updated_at"
-  end
 
   create_table "questions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string "access_level", limit: 255, default: "inherit", null: false
@@ -618,28 +532,6 @@ ActiveRecord::Schema.define(version: 20_180_518_203_355) do
   add_index "responses", ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id", using: :btree
   add_index "responses", ["user_id"], name: "index_responses_on_user_id", using: :btree
 
-  create_table "reviews", force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "response_id"
-    t.datetime "updated_at"
-    t.integer "user_id"
-  end
-
-  create_table "roles", force: :cascade do |t|
-    t.datetime "created_at"
-    t.integer "level"
-    t.boolean "location_required"
-    t.string "name"
-    t.datetime "updated_at"
-  end
-
-  create_table "searches", force: :cascade do |t|
-    t.string "class_name"
-    t.datetime "created_at"
-    t.string "query"
-    t.datetime "updated_at"
-  end
-
   create_table "sessions", force: :cascade do |t|
     t.datetime "created_at"
     t.text "data"
@@ -747,16 +639,6 @@ ActiveRecord::Schema.define(version: 20_180_518_203_355) do
   add_index "tags", ["deleted_at"], name: "index_tags_on_deleted_at", using: :btree
   add_index "tags", ["mission_id"], name: "index_tags_on_mission_id", using: :btree
   add_index "tags", ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", using: :btree
-
-  create_table "translations", force: :cascade do |t|
-    t.string "class_name"
-    t.datetime "created_at"
-    t.string "fld"
-    t.integer "language_id"
-    t.integer "object_id"
-    t.text "str"
-    t.datetime "updated_at"
-  end
 
   create_table "user_group_assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.datetime "created_at", null: false
