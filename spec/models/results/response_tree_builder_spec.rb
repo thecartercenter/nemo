@@ -66,6 +66,17 @@ describe "response tree" do
   end
 
   context "repeat group forms" do
-    let(:form3) { create(:form, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
+    let(:form4) { create(:form, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
+
+    it "should create the appropriate repeating group tree" do
+      response_tree = Results::ResponseTreeBuilder.new(form4).build
+
+      expect(response_tree.children[0].class).to eq AnswerGroupSet
+      expect(response_tree.children[0].children[0].class).to eq AnswerGroup
+      expect(response_tree.children[0].children.length).to eq 2
+      expect(response_tree.children[0].children[0].children.length).to eq 2
+      expect(response_tree.children[0].children[0].children[0].class).to eq Answer
+      expect(response_tree.children[0].children[0].children[1].class).to eq Answer
+    end
   end
 end
