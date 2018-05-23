@@ -167,8 +167,8 @@ class FormsController < ApplicationController
     begin
       @form.send("#{verb}!")
       flash[:success] = t("form.#{verb}_success")
-    rescue
-      flash[:error] = t("form.#{verb}_error", msg: $!.to_s)
+    rescue StandardError => e
+      flash[:error] = t("form.#{verb}_error", msg: e.to_s)
     end
 
     # redirect to index or edit
@@ -215,8 +215,8 @@ class FormsController < ApplicationController
     begin
       @form.destroy_questionings(qings)
       flash[:success] = t("form.questions_remove_success")
-    rescue
-      flash[:error] = t("form.#{$!}")
+    rescue StandardError => e
+      flash[:error] = t("form.#{e}")
     end
     # redirect to form edit
     redirect_to(edit_form_url(@form))
@@ -231,8 +231,8 @@ class FormsController < ApplicationController
       flash[:modified_obj_id] = cloned.id
 
       flash[:success] = t("form.clone_success", form_name: @form.name)
-    rescue
-      flash[:error] = t("form.clone_error", msg: $!.to_s)
+    rescue StandardError => e
+      flash[:error] = t("form.clone_error", msg: e.to_s)
     end
     redirect_to(index_url_with_context)
   end
