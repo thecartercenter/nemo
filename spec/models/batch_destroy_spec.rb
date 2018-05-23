@@ -3,13 +3,13 @@ require "spec_helper"
 describe BatchDestroy, type: :model do
   let(:current_user) { create(:user, email: "current@user.com") }
   let(:ability) { Ability.new(user: current_user, mission: get_mission) }
-  let(:destroyer) { BatchDestroy.new(klass, current_user, ability) }
+  let(:destroyer) { BatchDestroy.new(batch, current_user, ability) }
 
   describe "#destroy!" do
     describe "user" do
       let(:users) { create_list(:user, 3) }
       let(:user) { create(:user, mission: create(:mission)) }
-      let(:klass) { users }
+      let(:batch) { users }
 
       it "deletes everyone but the current user" do
         users << current_user
@@ -41,9 +41,10 @@ describe BatchDestroy, type: :model do
       let(:question) { create(:question) }
       let(:questioning) { create(:questioning, question: question) }
       let!(:answer) { create(:answer, questioning: questioning) }
-      let(:klass) { questions }
+      let(:batch) { questions }
 
       it "deletes all but the one that has an answer" do
+
         questions << question
         destroyer.destroy!
 

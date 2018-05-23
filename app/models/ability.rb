@@ -194,10 +194,6 @@ class Ability
               other_user.assignments.count == 1 && other_user.assignments.first.mission_id == mission.id
             end
 
-            can :bulk_destroy, Question do |question|
-              question.published? || question.has_answers?
-            end
-
             # coord can manage these classes for the current mission
             [Form, OptionSet, OptionSetImport, Question, Questioning, FormItem, SkipRule,
               QingGroup, Option, Tag, Tagging].each do |klass|
@@ -279,7 +275,7 @@ class Ability
       q.standard_copy?
     end
 
-    cannot :destroy, Question do |q|
+    cannot [:destroy, :bulk_destroy], Question do |q|
       q.published? || q.has_answers?
     end
 
