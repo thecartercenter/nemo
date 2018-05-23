@@ -214,7 +214,7 @@
     }
 
     if (item.value) {
-      const value = $('<span>').addClass("value").text("(" + item.value + ")");
+      const value = $('<span>').addClass("value").text(" (" + item.value + ")");
       inner.append(value);
     }
 

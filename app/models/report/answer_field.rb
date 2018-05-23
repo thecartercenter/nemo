@@ -7,9 +7,12 @@ class Report::AnswerField < Report::Field
     {:sql_tplt => "__TBL_PFX__ao.name_translations", :name => "select_one_name", :clause => :select, :join => :options},
     {:sql_tplt => "__TBL_PFX__co.name_translations", :name => "select_multiple_name", :clause => :select, :join => :choices},
 
+    # for single select questions we may use the optionally present value
+    {:sql_tplt => "__TBL_PFX__ao.value", :name => "select_one_value", :clause => :select, :join => :options},
+
     # for select questions, we use the option rank as its value
-    {:sql_tplt => "__TBL_PFX__ans_opt_nodes.rank", :name => "select_one_value", :clause => :select, :join => :options},
-    {:sql_tplt => "__TBL_PFX__ch_opt_nodes.rank", :name => "select_multiple_value", :clause => :select, :join => :choices},
+    {:sql_tplt => "__TBL_PFX__ans_opt_nodes.rank", :name => "select_one_rank", :clause => :select, :join => :options},
+    {:sql_tplt => "__TBL_PFX__ch_opt_nodes.rank", :name => "select_multiple_rank", :clause => :select, :join => :choices},
 
     # these question types have their own value columns
     {:sql_tplt => "__TBL_PFX__answers.datetime_value", :name => "datetime_value", :clause => :select, :join => :answers},
@@ -44,10 +47,11 @@ class Report::AnswerField < Report::Field
     @question = question
   end
 
-  def name_expr(chunks)
-    @name_expr ||= case data_type
+  def name_expr(chunks, prefer_value = false)
+    case data_type
     when "select_one", "select_multiple"
-      self.class.expression(:name => "#{data_type}_name", :chunks => chunks)
+      name = prefer_value ? "#{data_type}_value" : "#{data_type}_name"
+      self.class.expression(name: name, chunks: chunks)
     else
       value_expr(chunks)
     end
@@ -56,7 +60,9 @@ class Report::AnswerField < Report::Field
   def value_expr(chunks)
     @value_expr ||= case data_type
     # for these types, there is a special value expression
-    when "select_one", "select_multiple", "datetime", "date", "time"
+    when "select_one", "select_multiple"
+      self.class.expression(:name => "#{data_type}_rank", :chunks => chunks)
+    when "datetime", "date", "time"
       self.class.expression(:name => "#{data_type}_value", :chunks => chunks)
     # else it's just the straight up value column
     else

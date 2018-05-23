@@ -53,7 +53,7 @@ class ReportsController < ApplicationController
       format.csv do
         authorize!(:export, @report)
         # run the report
-        run_or_fetch_and_handle_errors
+        run_or_fetch_and_handle_errors(prefer_values: true)
         raise "reports of this type are not exportable" unless @report.exportable?
         render_csv(@report.name.downcase)
       end

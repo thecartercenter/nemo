@@ -14,7 +14,7 @@ class Report::AttribField < Report::Field
     @@ATTRIBS[attrib_name.to_sym].each { |k,v| self.send("#{k}=", v) }
   end
 
-  def name_expr(chunks)
+  def name_expr(chunks, prefer_value = false)
     @name_expr ||= Report::Expression.new(
       name_expr_params.merge(chunks: chunks.merge(current_timezone: Time.zone.tzinfo.name)))
   end

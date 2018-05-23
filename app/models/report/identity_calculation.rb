@@ -1,7 +1,7 @@
 # A calculation that just returns the referenced argument with no modification
 class Report::IdentityCalculation < Report::Calculation
-  def name_expr
-    arg1.name_expr(:tbl_pfx => table_prefix)
+  def name_expr(prefer_value = false)
+    arg1.name_expr({ tbl_pfx: table_prefix }, prefer_value)
   end
 
   def value_expr
