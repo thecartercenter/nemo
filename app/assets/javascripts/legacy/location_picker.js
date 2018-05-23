@@ -118,7 +118,7 @@
     ELMO.app.loading(false);
 
     if (self.location) {
-      if (!self.marker)
+      if (!self.marker) // Question: is this affected by removing markers from server?
         self.marker = new google.maps.Marker({map: self.map});
 
       // move the marker

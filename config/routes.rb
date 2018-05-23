@@ -113,7 +113,6 @@ ELMO::Application.routes.draw do
         get "sms_guide", path: "sms-guide"
       end
     end
-    resources :markers
     resources :questions
     resources :questionings
     resources :qing_groups, path: "qing-groups", except: :index
