@@ -1,10 +1,10 @@
 # destroy objects in batches
 class BatchDestroy
-  attr_reader :batch, :klass, :ability
+  attr_reader :batch, :user, :ability
 
-  def initialize(batch, klass, ability)
+  def initialize(batch, user, ability)
     @batch = batch
-    @klass = klass
+    @user = user
     @ability = ability
   end
 
@@ -13,10 +13,10 @@ class BatchDestroy
     deactivated = []
     destroyed = []
 
-    # this batch destroyer is currently being used in User and Question indexes
+    # this batch destroyer is currently being used in User and Question index pages
     # the current user doesn't matter for question delete so this will only run if it is User bulk destroy
-    if klass.is_a?(User)
-      current_user = batch.find { |u| u.id == klass.id }
+    if batch.first.is_a?(User)
+      current_user = batch.find { |u| u.id == user.id }
       skipped << current_user if current_user
     end
 
