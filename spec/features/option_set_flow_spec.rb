@@ -54,11 +54,11 @@ feature "option set" do
     expect(page).to have_selector('td.options_col div', text: 'Banana, Apple, Pear')
   end
 
-  scenario 'creating, showing, and editing options with values', js: true do
-    click_link('Option Sets')
+  scenario "creating, showing, and editing options with values", js: true do
+    click_link("Option Sets")
 
-    click_link('Create New Option Set')
-    fill_in('Name', with: 'Foo')
+    click_link("Create New Option Set")
+    fill_in("Name", with: "Foo")
 
     click_link("Add Option")
     wait_modal_to_be_visible
@@ -68,25 +68,25 @@ feature "option set" do
     fill_in("English", with: "Banana")
     fill_in("Value", with: "2")
     click_button("Save and Close")
-    click_button('Save')
+    click_button("Save")
 
-    expect(page).to have_selector('td.name_col a', text: 'Foo')
+    expect(page).to have_selector("td.name_col a", text: "Foo")
 
-    click_link('Foo')
-    expect(page).to have_selector('#options-wrapper div', text: 'Apple (1)')
-    expect(page).to have_selector('#options-wrapper div', text: 'Banana (2)')
+    click_link("Foo")
+    expect(page).to have_selector("#options-wrapper div", text: "Apple (1)")
+    expect(page).to have_selector("#options-wrapper div", text: "Banana (2)")
 
-    click_link('Edit Option Set')
-    find('#options a.action_link_edit', match: :first).click # Click first pencil link.
+    click_link("Edit Option Set")
+    find("#options a.action_link_edit", match: :first).click # Click first pencil link.
     wait_modal_to_be_visible
 
     fill_in("Value", with: "3")
     click_modal_save_button
     click_button("Save")
 
-    click_link('Foo')
-    expect(page).to have_selector('#options-wrapper div', text: 'Apple (3)')
-    expect(page).to have_selector('#options-wrapper div', text: 'Banana (2)')
+    click_link("Foo")
+    expect(page).to have_selector("#options-wrapper div", text: "Apple (3)")
+    expect(page).to have_selector("#options-wrapper div", text: "Banana (2)")
   end
 
   scenario 'importing, editing, and showing standard', js: true do

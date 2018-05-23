@@ -16,7 +16,7 @@
       self.latitude = self.option.latitude;
       self.longitude = self.option.longitude;
 
-      // copy value
+      // Copy value
       self.value = self.option.value;
 
       // Alias in_use with no question mark

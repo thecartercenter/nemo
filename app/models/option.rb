@@ -19,7 +19,7 @@ class Option < ApplicationRecord
 
   before_validation :normalize
 
-  validates :value, numericality: { only_integer: true, allow_nil: true }
+  validates :value, numericality: {only_integer: true, allow_nil: true}
   validate :check_invalid_coordinates_flag
   with_options if: :has_coordinates? do |geographic|
     geographic.validates :latitude, numericality: { greater_than_or_equal_to: -90, less_than_or_equal_to: 90 }
@@ -91,7 +91,9 @@ class Option < ApplicationRecord
 
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(only: [:id, :latitude, :longitude, :name_translations, :value], methods: [:name, :set_names, :in_use?])
+      super(
+        only: %i[id latitude longitude name_translations value],
+        methods: %i[name set_names in_use])
     else
       super(options)
     end
@@ -100,14 +102,14 @@ class Option < ApplicationRecord
   private
 
   def normalize
-    if self.value.is_a?(String)
-      value = self.value.strip
-      if value.blank?
-        self.value = nil
-      else
-        self.value = value.to_i
-      end
-    end
+    return unless value.is_a?(String)
+
+    value = self.value.strip
+    self.value = if value.blank?
+                   nil
+                 else
+                   value.to_i
+                 end
   end
 
   # invalidate the mission option cache after save, destroy

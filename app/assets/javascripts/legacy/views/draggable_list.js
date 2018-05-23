@@ -214,7 +214,7 @@
     }
 
     if (item.value) {
-      const value = $('<span>').addClass("value").text(" (" + item.value + ")");
+      const value = $("<span>").addClass("value").text(" (" + item.value + ")");
       inner.append(value);
     }
 
@@ -314,7 +314,7 @@
       self.modal.find('.coordinate input').attr('disabled', true);
     }
 
-    // populate value
+    // Populate value
     self.modal.find("#option_value").val(self.active_item.value);
 
     // show the modal
@@ -361,7 +361,7 @@
     });
 
     const value = self.modal.find("#option_value");
-    self.active_item[$(value).data('field')] = $(value).val();
+    self.active_item[$(value).data("field")] = $(value).val();
 
     self.wrapper.show();
 

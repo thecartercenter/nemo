@@ -58,10 +58,7 @@ module Results
       def write_select_cells
         if row["answer_option_name"].present?
           suffix = (level = row["option_level_name"]) ? ":#{level}" : ""
-          value = row["answer_option_name"]
-          unless row["answer_option_value"].nil?
-            value = row["answer_option_value"]
-          end
+          value = row["answer_option_value"] || row["answer_option_name"]
           buffer.write("#{code}#{suffix}", value)
         else # select multiple
           buffer.write(code, row["choice_option_name"], append: true)
