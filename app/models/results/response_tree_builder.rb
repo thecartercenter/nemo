@@ -9,38 +9,46 @@ module Results
 
     def build
       @rn = AnswerGroup.new
-      add_children(@form.root_group.children, @rn)
+      add_level(@form.root_group.children, @rn)
       @rn
     end
 
-    def add_children(form_node, response_node)
-      form_node.each do |q|
-        if q.class == QingGroup && q.repeatable?
-          response_node.children << AnswerGroupSet.new(questioning_id: q.id, new_rank: q.rank)
-          add_repeat_groups(q, response_node.children.last)
-        elsif q.class == QingGroup
-          response_node.children << AnswerGroup.new(questioning_id: q.id, new_rank: q.rank)
-          add_children(q.children, response_node.children.last) if q.children.present?
-        elsif q.multilevel?
-          add_multilevel(q, response_node)
+    private
+
+    def add_level(form_nodes, response_node)
+      form_nodes.each do |form_node|
+        if form_node.class == QingGroup && form_node.repeatable?
+          add_repeat_group(form_node, response_node)
+        elsif form_node.class == QingGroup
+          add_group(response_node, form_node)
+        elsif form_node.multilevel?
+          add_multilevel(form_node, response_node)
         else
-          response_node.children << Answer.new(questioning_id: q.id, new_rank: q.rank)
+          add_child(Answer, response_node, form_node)
         end
       end
     end
 
-    def add_repeat_groups(qing_group, response_node)
-      2.times do |i|
-        response_node.children << AnswerGroup.new(questioning_id: qing_group.id, new_rank: i)
-        add_children(qing_group.children, response_node.children.last) if qing_group.children.present?
-      end
+    def add_child(type, response_node, form_node)
+      response_node.children << type.new(questioning_id: form_node.id, new_rank: form_node.rank)
     end
 
-    def add_multilevel(questioning, response_node)
-      response_node.children << AnswerSet.new(questioning_id: questioning.id, new_rank: questioning.rank)
-      questioning.levels.each_with_index do |_level, index|
+    def add_group(response_node, form_node)
+      add_child(AnswerGroup, response_node, form_node)
+      add_level(form_node.children, response_node.children.last) if form_node.children.present?
+    end
+
+    def add_repeat_group(form_node, response_node)
+      add_child(AnswerGroupSet, response_node, form_node)
+      response_node.children.last.children << AnswerGroup.new(questioning_id: form_node.id, new_rank: 1)
+      add_level(form_node.children, response_node.children[0].children[0]) if form_node.children.present?
+    end
+
+    def add_multilevel(form_node, response_node)
+      add_child(AnswerSet, response_node, form_node)
+      form_node.levels.each_with_index do |_level, index|
         response_node.children.last.children << Answer.new(
-          questioning_id: questioning.id,
+          questioning_id: form_node.id,
           new_rank: index
         )
       end

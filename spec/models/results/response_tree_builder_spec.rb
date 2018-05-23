@@ -30,7 +30,6 @@ describe "response tree" do
     it "should produce the correct tree" do
       response_tree = Results::ResponseTreeBuilder.new(form2).build
 
-      puts response_tree.children.inspect
       # same number of children at the root
       expect(response_tree.children.length).to eq form2.root_group.children.length
 
@@ -62,6 +61,8 @@ describe "response tree" do
       expect(response_tree.children[0].children[0].class).to eq Answer
       expect(response_tree.children[0].children[1].class).to eq Answer
       expect(response_tree.children[0].children.length).to eq 2
+
+      # test rank and questioning id, takes a node, array (types), array (qing_ids)
     end
   end
 
@@ -73,7 +74,7 @@ describe "response tree" do
 
       expect(response_tree.children[0].class).to eq AnswerGroupSet
       expect(response_tree.children[0].children[0].class).to eq AnswerGroup
-      expect(response_tree.children[0].children.length).to eq 2
+      expect(response_tree.children[0].children.length).to eq 1
       expect(response_tree.children[0].children[0].children.length).to eq 2
       expect(response_tree.children[0].children[0].children[0].class).to eq Answer
       expect(response_tree.children[0].children[0].children[1].class).to eq Answer
