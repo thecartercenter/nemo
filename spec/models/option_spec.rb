@@ -30,18 +30,10 @@ describe Option do
         before { option.value = "   \t\n" }
         it { expect(subject).to eq nil }
       end
-    end
-  end
 
-  describe "validations" do
-    subject { create(:option) }
-
-    context "with value" do
-      before { subject.value = 123 }
-
-      it "validates numericality of value" do
-        subject.value = "abc"
-        expect(subject).to_not be_valid
+      context "non-numeric string" do
+        before { option.value = "  notanumber123  " }
+        it { expect(subject).to eq nil }
       end
     end
   end

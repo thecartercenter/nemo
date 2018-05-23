@@ -30,10 +30,7 @@ describe "report CSV output", :csv do
 
   it "should use option value if present" do
     form = create(:form, question_types: ["select_one"])
-
-    option = Option.find_by(canonical_name: "Cat")
-    option.value = 123
-    option.save!
+    form.c[0].option_set.c[0].option.update!(value: 123)
 
     create(:response, form: form, answer_values: ["Cat"])
     create(:response, form: form, answer_values: ["Dog"])

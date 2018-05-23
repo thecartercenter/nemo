@@ -85,7 +85,20 @@ describe "responses", type: :request do
       expect(response.headers["Content-Disposition"]).to match(
         /attachment; filename="elmo-#{get_mission.compact_name}-responses-\d{4}-\d\d-\d\d-\d{4}.csv"/)
       result = CSV.parse(response.body)
-      expect(result.size).to eq 3 # 3 response rows, 1 header row
+      expect(result.size).to eq 3 # 2 response rows, 1 header row
+      expect(result[1][10]).to eq "Animal"
+      expect(result[2][10]).to eq "Plant"
+    end
+
+    context "with numeric option value" do
+      before { option_set.options.first.update!(value: 123) }
+
+      it "should include option value instead of name" do
+        get_s(responses_path(mode: "m", mission_name: get_mission.compact_name, format: :csv))
+        result = CSV.parse(response.body)
+        expect(result[1][10]).to eq "123"
+        expect(result[2][10]).to eq "Plant"
+      end
     end
   end
 end
