@@ -15,13 +15,13 @@ class BatchDestroy
 
     # this batch destroyer is currently being used in User and Question index pages
     # the current user doesn't matter for question delete so this will only run if it is User bulk destroy
-    if batch.first.is_a?(User)
+    if batch[0].is_a?(User)
       current_user = batch.find { |u| u.id == user.id }
       skipped << current_user if current_user
     end
 
     begin
-      User.transaction do
+      ActiveRecord::Base.transaction do
         batch.each do |object|
           # if it is a user bulk destroy, it will be the first value in the skipped array
           next if object == skipped.first

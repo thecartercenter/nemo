@@ -36,20 +36,46 @@ describe BatchDestroy, type: :model do
     end
 
     describe "question" do
-      let(:form) { create(:form, :published, question_types: %w[integer]) }
       let(:questions) { create_list(:question, 3) }
-      let(:question) { create(:question) }
-      let(:questioning) { create(:questioning, question: question) }
-      let!(:answer) { create(:answer, questioning: questioning) }
       let(:batch) { questions }
 
-      it "deletes all but the one that has an answer" do
+      describe "published forms" do
+        before do
+          allow(questions.first).to receive(:published?) { true }
+          allow(questions.second).to receive(:published?) { true }
+          allow(questions.third).to receive(:published?) { false }
+        end
 
-        questions << question
-        destroyer.destroy!
+        it "skips questions that are on published forms" do
+          destroyer.destroy!
+          expect(Question.count).to eq(2)
+        end
+      end
 
-        # the only question with an answer
-        expect(Question.count).to eq(1)
+      describe "answers" do
+        before do
+          allow(questions.first).to receive(:has_answers?) { false }
+          allow(questions.second).to receive(:has_answers?) { false }
+          allow(questions.third).to receive(:has_answers?) { true }
+        end
+
+        it "skips questions that have answers" do
+          destroyer.destroy!
+          expect(Question.count).to eq(1)
+        end
+      end
+
+      describe "no answers and no published forms" do
+        before do
+          allow(questions.first).to receive(:has_answers?) { false }
+          allow(questions.second).to receive(:has_answers?) { false }
+          allow(questions.third).to receive(:published?) { false }
+        end
+
+        it "skips questions that have answers" do
+          destroyer.destroy!
+          expect(Question.count).to eq(0)
+        end
       end
     end
   end
