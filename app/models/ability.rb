@@ -224,6 +224,9 @@ class Ability
 
       end # End if mission
 
+      # Current user can bulk destroy questions
+      can :bulk_destroy, Question
+
       # Can't change own assignments unless admin
       cannot :change_assignments, User, id: user.id unless user.admin?
 
@@ -275,7 +278,7 @@ class Ability
       q.standard_copy?
     end
 
-    cannot [:destroy, :bulk_destroy], Question do |q|
+    cannot :destroy, Question do |q|
       q.published? || q.has_answers?
     end
 
