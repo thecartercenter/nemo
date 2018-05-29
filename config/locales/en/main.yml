@@ -1397,6 +1397,9 @@ en:
     type_to_add_new: "Type an option name"
     option_prompt: "Choose option ..."
     option_prompt_with_level: "Choose %{level} ..."
+    latitude: "Latitude"
+    longitude: "Longitude"
+    value: "Numeric Value"
 
 
   option_set_import:

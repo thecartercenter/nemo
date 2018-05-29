@@ -27,4 +27,17 @@ describe "report CSV output", :csv do
     expect(response).to be_success
     expect(response.body).to match_csv %Q{#{qs[0].name},#{qs[1].name}\r\nFoo,\"Some **long**\r\n\r\n1. text\r\n2. stuff&stuff\"\r\n}
   end
+
+  it "should use option value if present" do
+    form = create(:form, question_types: ["select_one"])
+    form.c[0].option_set.c[0].option.update!(value: 123)
+
+    create(:response, form: form, answer_values: ["Cat"])
+    create(:response, form: form, answer_values: ["Dog"])
+
+    report = create(:list_report, _calculations: form.questions)
+    get("/en/m/#{form.mission.compact_name}/reports/#{report.id}.csv")
+    expect(response).to be_success
+    expect(response.body).to match_csv "#{form.questions[0].name}\r\n123\r\nDog\r\n"
+  end
 end

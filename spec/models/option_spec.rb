@@ -5,6 +5,39 @@ describe Option do
     create(:option, name: "Foo")
   end
 
+  describe "normalization" do
+    let(:option) { create(:option) }
+
+    describe "value" do
+      subject { option.value }
+
+      context "integer" do
+        before { option.value = 123 }
+        it { expect(subject).to eq 123 }
+      end
+
+      context "integer string" do
+        before { option.value = "123" }
+        it { expect(subject).to eq 123 }
+
+        context "leading and trailing whitespace" do
+          before { option.value = "\t  123  \n" }
+          it { expect(subject).to eq 123 }
+        end
+      end
+
+      context "blank string" do
+        before { option.value = "   \t\n" }
+        it { expect(subject).to eq nil }
+      end
+
+      context "non-numeric string" do
+        before { option.value = "  notanumber123  " }
+        it { expect(subject).to eq nil }
+      end
+    end
+  end
+
   context "with coordinates" do
     it "should require both latitude and longitude if either are present" do
       # check each field with the other missing

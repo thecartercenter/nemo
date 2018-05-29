@@ -229,6 +229,10 @@
         prepared.option_attribs.longitude = node.item.longitude
       }
 
+      if (node.item.value) {
+        prepared.option_attribs.value = node.item.value;
+      }
+
       // recurse
       prepared.children_attribs =
         node.children && node.children.length ? self.prepare_option_tree(node.children) : "NONE"

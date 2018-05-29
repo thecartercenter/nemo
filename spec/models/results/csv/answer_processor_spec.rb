@@ -46,6 +46,16 @@ describe Results::Csv::AnswerProcessor do
     processor.process("question_code" => "Q1", "option_level_name" => nil, "answer_option_name" => "Cat")
   end
 
+  it "handles select_one data with numeric value" do
+    expect(buffer).to receive(:write).with("Q1", 123)
+    processor.process(
+      "question_code" => "Q1",
+      "option_level_name" => nil,
+      "answer_option_name" => "Cat",
+      "answer_option_value" => 123
+    )
+  end
+
   it "handles multilevel select_one data" do
     expect(buffer).to receive(:write).with("Q1:Kingdom", "Animal")
     expect(buffer).to receive(:write).with("Q1:Species", "Cat")

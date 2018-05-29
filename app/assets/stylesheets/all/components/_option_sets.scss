@@ -42,6 +42,10 @@ form.option_set_form {
       width: 421px;
     }
   }
+
+  .value {
+    color: $light-gray;
+  }
 }
 
 div.modal#edit-option, div.modal#edit-option-level {

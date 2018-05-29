@@ -34,10 +34,10 @@ module ReportEmbeddable
   # calls run on the existing @report
   #
   # returns true if no errors, false otherwise
-  def run_or_fetch_and_handle_errors
+  def run_or_fetch_and_handle_errors(options = {})
     begin
       @report = Rails.cache.fetch(cache_key_with_responses) do
-        @report.run(current_ability)
+        @report.run(current_ability, options)
         @report
       end
 

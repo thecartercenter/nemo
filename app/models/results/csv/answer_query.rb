@@ -33,6 +33,7 @@ module Results
             answers.altitude,
             answers.accuracy,
             #{answer_option_name} AS answer_option_name,
+            answer_options.value AS answer_option_value,
             #{choice_option_name} AS choice_option_name,
             questions.code AS question_code,
             #{option_level_name} AS option_level_name

@@ -9,7 +9,9 @@ module Report::Gridable
   end
 
   # @param [current_ability] user ability to access Response object as defined by CanCan
-  def run(current_ability = nil)
+  def run(current_ability = nil, options = {})
+    @options = options
+
     # prep the relation and add a filter clause
     build_query = Response.for_mission(mission)
     if current_ability
