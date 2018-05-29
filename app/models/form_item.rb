@@ -120,7 +120,7 @@ class FormItem < ApplicationRecord
   end
 
   def sorted_children
-    sorted = children.order(:rank)
+    children.order(:rank)
   end
 
   # All questionings that can be referred to by a condition if it were defined on this item.

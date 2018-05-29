@@ -17,4 +17,13 @@ class ResponseNode < ApplicationRecord
     chunks << "(FI: #{form_item.type} #{form_item.rank})"
     "\n#{chunks.join}#{child_tree}"
   end
+
+  # This method should eventually not be needed since closure_tree supports deterministic ordering.
+  # However, enabling it currently causes performance issues so we're holding off.
+  def sorted_children
+    children.sort_by(&:new_rank)
+  end
+
+  # Should eventually be changed to just point to children once closure_tree's ordering is turned on.
+  alias c sorted_children
 end
