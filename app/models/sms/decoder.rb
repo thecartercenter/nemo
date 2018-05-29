@@ -55,14 +55,22 @@ class Sms::Decoder
     parser = Sms::AnswerParser.new(@tokens[1..-1])
     parser.each do |answer|
       qing = find_qing(answer.rank)
+
       begin
         if qing
           qing_group = qing.parent
+
           answer_group = answer_groups[qing_group.id]
           if answer_group.nil?
             parent_answer_group = answer_groups[qing_group.parent.try(:id)]
             answer_group = qing_group.build_answer_group(parent_answer_group)
             answer_groups[qing_group.id] = answer_group
+          end
+
+          if qing.multilevel?
+            answer_set = AnswerSet.new(form_item: qing)
+            answer_group.children << answer_set
+            answer_group = answer_set
           end
 
           results = answer.parse(qing)

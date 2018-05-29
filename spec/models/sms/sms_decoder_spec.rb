@@ -532,11 +532,11 @@ describe Sms::Decoder, :sms do
   end
 
   describe "nested groups" do
-    let(:form) { create_form(questions: %w(integer integer)) }
+    let(:form) { create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true) }
 
     # QingGroup
     #   Questioning
-    #   Questioning
+    #   Questioning (multilevel)
     #   QingGroup
     #     Questioning
     #     Questioning
@@ -547,20 +547,47 @@ describe Sms::Decoder, :sms do
       qing_group.save!
     end
 
+    # AnswerGroup
+    #   Answer
+    #   AnswerSet
+    #     Answer
+    #     Answer
+    #   AnswerGroup
+    #     Answer
+    #     Answer
     it "builds corresponding answer hierarchy" do
-      response = create_response(body: "#{form.code} 1.1 2.2 3.3 4.4")
+      response = create_response(body: "#{form.code} 1.1 2.tulip 3.3 4.4")
+
       answer_group = response.root_node
       expect(answer_group).to be_a(AnswerGroup)
       expect(answer_group.children.count).to eq 3
-      expect(answer_group.children[0]).to be_a(Answer)
-      expect(answer_group.children[0].value).to eq "1"
-      expect(answer_group.children[1]).to be_a(Answer)
-      expect(answer_group.children[1].value).to eq "2"
-      expect(answer_group.children[2]).to be_a(AnswerGroup)
-      expect(answer_group.children[2].children[0]).to be_a(Answer)
-      expect(answer_group.children[2].children[0].value).to eq "3"
-      expect(answer_group.children[2].children[1]).to be_a(Answer)
-      expect(answer_group.children[2].children[1].value).to eq "4"
+
+      answer = answer_group.children[0]
+      expect(answer).to be_a(Answer)
+      expect(answer.value).to eq "1"
+
+      answer_set = answer_group.children[1]
+      expect(answer_set).to be_a(AnswerSet)
+      expect(answer_set.children.count).to eq 2
+
+      answer = answer_set.children[0]
+      expect(answer).to be_a(Answer)
+      expect(answer.option.name_en).to eq "Plant"
+
+      answer = answer_set.children[1]
+      expect(answer).to be_a(Answer)
+      expect(answer.option.name_en).to eq "Tulip"
+
+      answer_group = answer_group.children[2]
+      expect(answer_group).to be_a(AnswerGroup)
+
+      answer = answer_group.children[0]
+      expect(answer).to be_a(Answer)
+      expect(answer.value).to eq "3"
+
+      answer = answer_group.children[1]
+      expect(answer).to be_a(Answer)
+      expect(answer.value).to eq "4"
     end
   end
 
