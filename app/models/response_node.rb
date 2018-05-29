@@ -17,8 +17,4 @@ class ResponseNode < ApplicationRecord
     chunks << "(FI: #{form_item.type} #{form_item.rank})"
     "\n#{chunks.join}#{child_tree}"
   end
-
-  def root_answers
-    children.reject { |n| n.is_a?(AnswerGroup) }
-  end
 end

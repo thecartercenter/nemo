@@ -8,9 +8,9 @@ module Results
     end
 
     def build
-      @rn = AnswerGroup.new
-      add_level(@form.root_group.children, @rn)
-      @rn
+      @root = AnswerGroup.new
+      add_level(@form.root_group.children, @root)
+      @root
     end
 
     private
@@ -30,26 +30,28 @@ module Results
     end
 
     def add_child(type, response_node, form_node)
-      response_node.children << type.new(questioning_id: form_node.id, new_rank: form_node.rank)
+      child = type.new(questioning_id: form_node.id, new_rank: form_node.rank)
+      response_node.children << child
+      child
     end
 
     def add_group(response_node, form_node)
-      add_child(AnswerGroup, response_node, form_node)
-      add_level(form_node.children, response_node.children.last) if form_node.children.present?
+      child = add_child(AnswerGroup, response_node, form_node)
+      add_level(form_node.children, child) if form_node.children.present?
     end
 
     def add_repeat_group(form_node, response_node)
-      add_child(AnswerGroupSet, response_node, form_node)
-      response_node.children.last.children << AnswerGroup.new(questioning_id: form_node.id, new_rank: 1)
-      add_level(form_node.children, response_node.children[0].children[0]) if form_node.children.present?
+      child = add_child(AnswerGroupSet, response_node, form_node)
+      child.children << AnswerGroup.new(questioning_id: form_node.id, new_rank: 1)
+      add_level(form_node.children, child.children[0]) if form_node.children.present?
     end
 
     def add_multilevel(form_node, response_node)
-      add_child(AnswerSet, response_node, form_node)
+      child = add_child(AnswerSet, response_node, form_node)
       form_node.levels.each_with_index do |_level, index|
-        response_node.children.last.children << Answer.new(
+        child.children << Answer.new(
           questioning_id: form_node.id,
-          new_rank: index+1
+          new_rank: index + 1
         )
       end
     end
