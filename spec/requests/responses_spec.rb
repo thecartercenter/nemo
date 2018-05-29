@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe "responses", type: :request do
-  let!(:form) { create(:form, :published, question_types: %w(integer multilevel_select_one)) }
+  let!(:form) { create(:form, :published, question_types: %w[integer multilevel_select_one]) }
   let!(:option_set) { OptionSet.first }
   let!(:plants) { option_set.root_node.children.detect { |c| c.option_name == "Plant" } }
   let!(:plant) { plants.option }
@@ -19,7 +21,7 @@ describe "responses", type: :request do
         "0" => {
           questioning_id: integer_qing.id,
           relevant: "1",
-          value: "42",
+          value: "42"
         },
         "1" => {
           questioning_id: select_qing.id,
@@ -43,62 +45,52 @@ describe "responses", type: :request do
 
   describe "create" do
     it "should work" do
-      post(responses_path(mode: "m", mission_name: get_mission.compact_name), response: response_attrs )
-      @obj = Response.first
+      post(responses_path(mode: "m", mission_name: get_mission.compact_name), response: response_attrs)
+      resp = Response.first
       expect(response).to redirect_to responses_path
-      expect(@obj.user).to eq user
-      expect(@obj.form).to eq form
-      expect(@obj.answers.size).to eq 3
+      expect(resp.user).to eq user
+      expect(resp.form).to eq form
+      expect(resp.answers.size).to eq 3
     end
   end
 
   describe "update" do
-    let(:obj) { Response.create(response_attrs.merge(mission: get_mission)) }
+    let(:resp) { Response.create(response_attrs.merge(mission: get_mission)) }
 
     it "should work" do
-      put(url_for(obj), response: response_attrs.merge(
+      put(url_for(resp), response: response_attrs.merge(
         answers_attributes: {
           "2" => {
-            id: obj.answers[2].id,
+            id: resp.answers[2].id,
             relevant: "1",
             option_id: tulip.id,
             rank: 2
           }
         }
       ))
-      expect(response).to redirect_to responses_path(mission_name: get_mission.compact_name)
+      expect(response).to redirect_to(responses_path(mission_name: get_mission.compact_name))
       expect(Response.count).to eq 1
-      @obj = Response.first
-      expect(@obj.answers.size).to eq 3
-      expect(@obj.answers.last.option.name).to eq "Tulip"
+      resp = Response.first
+      expect(resp.answers.size).to eq 3
+      expect(resp.answers.last.option.name).to eq "Tulip"
     end
   end
 
   describe "csv", :csv do
     before do
-      create(:response, form: form, answer_values: %w(2 Animal))
-      create(:response, form: form, answer_values: %w(15 Plant))
+      create(:response, form: form, answer_values: %w[2 Animal])
+      create(:response, form: form, answer_values: %w[15 Plant])
     end
 
     it "should produce valid CSV" do
       get_s(responses_path(mode: "m", mission_name: get_mission.compact_name, format: :csv))
       expect(response.headers["Content-Disposition"]).to match(
-        /attachment; filename="elmo-#{get_mission.compact_name}-responses-\d{4}-\d\d-\d\d-\d{4}.csv"/)
+        /attachment; filename="elmo-#{get_mission.compact_name}-responses-\d{4}-\d\d-\d\d-\d{4}.csv"/
+      )
       result = CSV.parse(response.body)
       expect(result.size).to eq 3 # 2 response rows, 1 header row
       expect(result[1][10]).to eq "Animal"
       expect(result[2][10]).to eq "Plant"
-    end
-
-    context "with numeric option value" do
-      before { option_set.options.first.update!(value: 123) }
-
-      it "should include option value instead of name" do
-        get_s(responses_path(mode: "m", mission_name: get_mission.compact_name, format: :csv))
-        result = CSV.parse(response.body)
-        expect(result[1][10]).to eq "123"
-        expect(result[2][10]).to eq "Plant"
-      end
     end
   end
 end
