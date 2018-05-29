@@ -111,7 +111,7 @@ class Report::ListReport < Report::Report
         col = @header_set[:col].find_key_idx(cur_calc)
 
         # get the name and type values and do formatting
-        name = db_row["answer_#{cur_calc.name_expr.name}"]
+        name = extract_name_from_row(db_row, cur_calc)
         type = db_row["answer_#{cur_calc.data_type_expr.name}"]
         cell = Report::Formatter.format(name, type, :cell)
 
@@ -122,6 +122,17 @@ class Report::ListReport < Report::Report
 
     # save the previous response id
     @last_response_id = db_row["response_id"]
+  end
+
+  def extract_name_from_row(db_row, calc)
+    result_name = db_row["answer_#{calc.name_expr(false).name}"]
+    result_value = db_row["answer_#{calc.name_expr(true).name}"]
+
+    if @options[:prefer_values]
+      (result_value.present? && result_value) || result_name
+    else
+      result_name
+    end
   end
 
   # totaling is not appropriate

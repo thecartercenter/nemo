@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_518_203_355) do
+ActiveRecord::Schema.define(version: 20_180_521_134_833) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -383,6 +383,7 @@ ActiveRecord::Schema.define(version: 20_180_518_203_355) do
     t.jsonb "name_translations", default: {}
     t.integer "old_id"
     t.datetime "updated_at"
+    t.integer "value"
   end
 
   add_index "options", ["canonical_name"], name: "index_options_on_canonical_name", using: :btree

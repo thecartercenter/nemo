@@ -86,15 +86,34 @@ class Option < ApplicationRecord
     end
   end
 
+  def value=(value)
+    super(normalize(value))
+  end
+
   def as_json(options = {})
     if options[:for_option_set_form]
-      super(only: [:id, :latitude, :longitude, :name_translations], methods: [:name, :set_names, :in_use?])
+      super(
+        only: %i[id latitude longitude name_translations value],
+        methods: %i[name set_names in_use])
     else
       super(options)
     end
   end
 
   private
+
+  def normalize(value)
+    return value unless value.is_a?(String)
+    value = value.strip
+    numeric?(value) ? value.to_i : nil
+  end
+
+  def numeric?(str)
+    Float(str)
+    true
+  rescue ArgumentError
+    false
+  end
 
   # invalidate the mission option cache after save, destroy
   def invalidate_cache
