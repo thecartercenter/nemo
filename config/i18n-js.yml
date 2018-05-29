@@ -36,6 +36,7 @@ translations:
       "*.option_set.*",
       "*.operation.*",
       "*.page_titles.*",
+      "*.question.bulk_destroy_confirm.*",
       "*.report/report.*",
       "*.response.*",
       "*.role.*",
