@@ -8,6 +8,7 @@ class Option < ApplicationRecord
   has_many :answers, inverse_of: :option
   has_many :choices, inverse_of: :option
 
+  before_validation :normalize
   after_save :invalidate_cache
   after_save :touch_answers_choices
   after_destroy :invalidate_cache
@@ -86,10 +87,6 @@ class Option < ApplicationRecord
     end
   end
 
-  def value=(value)
-    super(normalize(value))
-  end
-
   def as_json(options = {})
     if options[:for_option_set_form]
       super(
@@ -102,10 +99,10 @@ class Option < ApplicationRecord
 
   private
 
-  def normalize(value)
-    return value unless value.is_a?(String)
-    value = value.strip
-    numeric?(value) ? value.to_i : nil
+  def normalize
+    return unless value.is_a?(String)
+    value.strip!
+    self.value = numeric?(value) ? value.to_i : nil
   end
 
   def numeric?(str)

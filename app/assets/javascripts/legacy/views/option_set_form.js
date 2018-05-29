@@ -214,7 +214,12 @@
     var self = this
     return nodes.map(function(node) {
       // in this case, the item will be an Optioning, which is also a NamedItem
-      var prepared = { option_attribs: { name_translations: node.item.name_translations } }
+      var prepared = {
+        option_attribs: {
+          name_translations: node.item.name_translations,
+          value: node.item.value
+        }
+      };
 
       // include IDs if available
       if (node.item.id) prepared.id = node.item.id
@@ -227,10 +232,6 @@
       if ($("#option_set_allow_coordinates").is(":checked")) {
         prepared.option_attribs.latitude = node.item.latitude
         prepared.option_attribs.longitude = node.item.longitude
-      }
-
-      if (node.item.value) {
-        prepared.option_attribs.value = node.item.value;
       }
 
       // recurse
