@@ -51,6 +51,7 @@ class Sms::Decoder
 
     # mapping from qing group ID -> answer group
     answer_groups = {}
+    answer_hierarchy = Sms::AnswerHierarchy.new
 
     parser = Sms::AnswerParser.new(@tokens[1..-1])
     parser.each do |answer|
@@ -58,20 +59,7 @@ class Sms::Decoder
 
       begin
         if qing
-          qing_group = qing.parent
-
-          answer_group = answer_groups[qing_group.id]
-          if answer_group.nil?
-            parent_answer_group = answer_groups[qing_group.parent.try(:id)]
-            answer_group = qing_group.build_answer_group(parent_answer_group)
-            answer_groups[qing_group.id] = answer_group
-          end
-
-          if qing.multilevel?
-            answer_set = AnswerSet.new(form_item: qing)
-            answer_group.children << answer_set
-            answer_group = answer_set
-          end
+          answer_group = answer_hierarchy.answer_group_for(qing)
 
           results = answer.parse(qing)
           results.each do |result|
@@ -83,7 +71,7 @@ class Sms::Decoder
       end
     end
 
-    @response.root_node = answer_groups[@form.root_group.id]
+    @response.root_node = answer_hierarchy.lookup(@form.root_group)
 
     # if we get to this point everything went nicely, so we can return the response
     @response
