@@ -49,7 +49,7 @@ module Results
       form_node.levels.each_with_index do |_level, index|
         response_node.children.last.children << Answer.new(
           questioning_id: form_node.id,
-          new_rank: index
+          new_rank: index+1
         )
       end
     end

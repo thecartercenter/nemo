@@ -2,7 +2,7 @@
 
 require "spec_helper"
 
-describe "response tree" do
+describe Results::ResponseTreeBuilder do
   context "simple form" do
     let(:form) { create(:form, question_types: %w[text text text]) }
 
@@ -30,7 +30,8 @@ describe "response tree" do
       response_tree = Results::ResponseTreeBuilder.new(form).build
 
       expect_children(response_tree, %w[AnswerSet Answer], form.children.map(&:id))
-      expect_children(response_tree.children[0], %w[Answer Answer], form.children[0].children.map(&:id))
+      puts form.children[1].children.inspect
+      expect_children(response_tree.children[0], %w[Answer Answer], [form.children[0].id, form.children[0].id])
     end
   end
 

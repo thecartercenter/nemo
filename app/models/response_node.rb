@@ -18,7 +18,7 @@ class ResponseNode < ApplicationRecord
     "\n#{chunks.join}#{child_tree}"
   end
 
-  def root_answers(reload = false)
-    children.reject{|n| n.is_a?(AnswerGroup)}
+  def root_answers
+    children.reject { |n| n.is_a?(AnswerGroup) }
   end
 end
