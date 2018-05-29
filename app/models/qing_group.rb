@@ -34,4 +34,10 @@ class QingGroup < FormItem
     self.group_item_name_translations = {} unless repeatable?
     true
   end
+
+  def build_answer_group(parent_group)
+    group = AnswerGroup.new(form_item: self)
+    parent_group.children << group unless parent_group.nil?
+    group
+  end
 end

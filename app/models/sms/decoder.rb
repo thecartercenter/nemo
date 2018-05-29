@@ -49,20 +49,33 @@ class Sms::Decoder
     # create a blank response
     @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
 
+    # mapping from qing group ID -> answer group
+    answer_groups = {}
+
     parser = Sms::AnswerParser.new(@tokens[1..-1])
     parser.each do |answer|
       qing = find_qing(answer.rank)
       begin
         if qing
+          qing_group = qing.parent
+          answer_group = answer_groups[qing_group.id]
+          if answer_group.nil?
+            parent_answer_group = answer_groups[qing_group.parent.try(:id)]
+            answer_group = qing_group.build_answer_group(parent_answer_group)
+            answer_groups[qing_group.id] = answer_group
+          end
+
           results = answer.parse(qing)
           results.each do |result|
-            @response.answers.build(result)
+            answer_group.children << @response.answers.build(result)
           end
         end
       rescue Sms::AnswerParser::ParseError => err
         raise_answer_error(err.type, answer.rank, answer.value, err.params)
       end
     end
+
+    @response.root_node = answer_groups[@form.root_group.id]
 
     # if we get to this point everything went nicely, so we can return the response
     @response

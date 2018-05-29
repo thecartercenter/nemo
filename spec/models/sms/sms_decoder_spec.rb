@@ -531,6 +531,39 @@ describe Sms::Decoder, :sms do
     end
   end
 
+  describe "nested groups" do
+    let(:form) { create_form(questions: %w(integer integer)) }
+
+    # QingGroup
+    #   Questioning
+    #   Questioning
+    #   QingGroup
+    #     Questioning
+    #     Questioning
+    before do
+      qing_group = create_form(questions: %w(integer integer)).root_group
+      qing_group.parent = form.root_group
+      qing_group.rank = 3
+      qing_group.save!
+    end
+
+    it "builds corresponding answer hierarchy" do
+      response = create_response(body: "#{form.code} 1.1 2.2 3.3 4.4")
+      answer_group = response.root_node
+      expect(answer_group).to be_a(AnswerGroup)
+      expect(answer_group.children.count).to eq 3
+      expect(answer_group.children[0]).to be_a(Answer)
+      expect(answer_group.children[0].value).to eq "1"
+      expect(answer_group.children[1]).to be_a(Answer)
+      expect(answer_group.children[1].value).to eq "2"
+      expect(answer_group.children[2]).to be_a(AnswerGroup)
+      expect(answer_group.children[2].children[0]).to be_a(Answer)
+      expect(answer_group.children[2].children[0].value).to eq "3"
+      expect(answer_group.children[2].children[1]).to be_a(Answer)
+      expect(answer_group.children[2].children[1].value).to eq "4"
+    end
+  end
+
   private
 
   def create_form(options)
@@ -544,8 +577,7 @@ describe Sms::Decoder, :sms do
     @form.reload
   end
 
-  # tests that a decoding was successful
-  def assert_decoding(options)
+  def create_response(options)
     options[:user] ||= user
     options[:mission] = get_mission unless options.has_key?(:mission)
     options[:from] ||= options[:user].phone
@@ -556,6 +588,13 @@ describe Sms::Decoder, :sms do
     # perform the decoding
     @response = Sms::Decoder.new(@msg).decode
     @response.save!
+
+    @response
+  end
+
+  # tests that a decoding was successful
+  def assert_decoding(options)
+    create_response(options)
 
     # if we get this far and were expecting a failure, we didn't get one, so just return
     return if options[:expecting_fail]
