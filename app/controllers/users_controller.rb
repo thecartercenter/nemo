@@ -99,7 +99,7 @@ class UsersController < ApplicationController
     success <<  t("user.bulk_destroy_skipped", count: results[:skipped]) if results[:skipped].positive?
 
     flash[:success] = success.join(" ") unless success.empty?
-    flash[:error] =  t("user.bulk_destroy_skipped_current") if results[:skipped] == 1
+    flash[:error] = t("user.bulk_destroy_skipped_current") if results[:skipped] == 1
 
     redirect_to(index_url_with_context)
   end
