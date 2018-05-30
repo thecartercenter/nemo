@@ -30,7 +30,6 @@ describe BatchDestroy, type: :model do
         end
 
         # current user and user with a mission
-        expect(User.count).to eq(2)
         expect(User.all.to_a).to contain_exactly(current_user, user)
       end
     end
