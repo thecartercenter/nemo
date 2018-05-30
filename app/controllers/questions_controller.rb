@@ -66,11 +66,11 @@ class QuestionsController < ApplicationController
   def bulk_destroy
     @questions = load_selected_objects(Question)
     destroyer = BatchDestroy.new(@questions, current_user, current_ability)
-    results = destroyer.destroy!
+    out = destroyer.destroy!
 
     success = []
-    success << t("question.bulk_destroy_deleted", count: results[:destroyed]) if results[:destroyed].positive?
-    success << t("question.bulk_destroy_skipped", count: results[:skipped]) if results[:skipped].positive?
+    success << t("question.bulk_destroy_deleted", count: out[:destroyed]) if out[:destroyed].positive?
+    success << t("question.bulk_destroy_skipped", count: out[:skipped]) if out[:skipped].positive?
 
     flash[:success] = success.join(" ") unless success.empty?
 
