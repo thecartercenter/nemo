@@ -1,6 +1,6 @@
 require "spec_helper"
 
-feature "questions flow" do
+feature "question tags" do
   include_context "search"
 
   let!(:mission) { get_mission }
