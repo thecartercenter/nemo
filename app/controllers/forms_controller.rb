@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# FormController
 class FormsController < ApplicationController
   include StandardImportable
   include BatchProcessable
@@ -14,7 +17,7 @@ class FormsController < ApplicationController
   load_and_authorize_resource
 
   # We manually authorize these against :download.
-  skip_authorize_resource only: [:odk_manifest, :odk_itemsets]
+  skip_authorize_resource only: %i[odk_manifest odk_itemsets]
 
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
@@ -24,11 +27,10 @@ class FormsController < ApplicationController
     respond_to do |format|
       # render normally if html
       format.html do
-
         # if requesting the dropdown menu
         if params[:dropdown]
           @forms = @forms.published.default_order
-          render(:partial => "dropdown")
+          render(partial: "dropdown")
 
         # otherwise, it's a normal request
         else
@@ -67,7 +69,7 @@ class FormsController < ApplicationController
       # for html, render the printable style if requested, otherwise render the form
       format.html do
         if params[:print] && request.xhr?
-          render(:form, :layout => false)
+          render(:form, layout: false)
         # otherwise just normal!
         else
           prepare_and_render_form
@@ -80,7 +82,7 @@ class FormsController < ApplicationController
         @form.add_download
 
         # xml style defaults to odk but can be specified via query string
-        @style = params[:style] || 'odk'
+        @style = params[:style] || "odk"
         @form = Odk::DecoratorFactory.decorate(@form)
       end
     end
@@ -115,14 +117,14 @@ class FormsController < ApplicationController
 
   def create
     set_api_users
-    @form.is_standard = true if current_mode == 'admin'
+    @form.is_standard = true if current_mode == "admin"
 
     if @form.save
       @form.create_root_group!(mission: @form.mission, form: @form)
       @form.save!
-      set_success_and_redirect(@form, :to => edit_form_path(@form))
+      set_success_and_redirect(@form, to: edit_form_path(@form))
     else
-      flash.now[:error] = I18n.t('activerecord.errors.models.form.general')
+      flash.now[:error] = I18n.t("activerecord.errors.models.form.general")
       prepare_and_render_form
     end
   end
@@ -143,9 +145,9 @@ class FormsController < ApplicationController
         # publish if requested
         if params[:save_and_publish].present?
           @form.publish!
-          set_success_and_redirect(@form, :to => forms_path)
+          set_success_and_redirect(@form, to: forms_path)
         else
-          set_success_and_redirect(@form, :to => edit_form_path(@form))
+          set_success_and_redirect(@form, to: edit_form_path(@form))
         end
       end
     # handle other validation errors
@@ -165,8 +167,8 @@ class FormsController < ApplicationController
     begin
       @form.send("#{verb}!")
       flash[:success] = t("form.#{verb}_success")
-    rescue
-      flash[:error] = t("form.#{verb}_error", :msg => $!.to_s)
+    rescue StandardError => e
+      flash[:error] = t("form.#{verb}_error", msg: e.to_s)
     end
 
     # redirect to index or edit
@@ -181,7 +183,7 @@ class FormsController < ApplicationController
     @questions = Question.includes(:tags).by_code.accessible_by(current_ability).not_in_form(@form)
 
     # setup new questioning for use with the questioning form
-    init_qing(:form_id => @form.id, :ancestry => @form.root_id, :question_attributes => {})
+    init_qing(form_id: @form.id, ancestry: @form.root_id, question_attributes: {})
     setup_qing_form_support_objs
   end
 
@@ -198,7 +200,7 @@ class FormsController < ApplicationController
     if @form.save
       flash[:success] = t("form.questions_add_success")
     else
-      flash[:error] = t("form.questions_add_error", :msg => @form.errors.full_messages.join(';'))
+      flash[:error] = t("form.questions_add_error", msg: @form.errors.full_messages.join(";"))
     end
 
     # redirect to form edit
@@ -213,8 +215,8 @@ class FormsController < ApplicationController
     begin
       @form.destroy_questionings(qings)
       flash[:success] = t("form.questions_remove_success")
-    rescue
-      flash[:error] = t("form.#{$!}")
+    rescue StandardError => e
+      flash[:error] = t("form.#{e}")
     end
     # redirect to form edit
     redirect_to(edit_form_url(@form))
@@ -223,52 +225,52 @@ class FormsController < ApplicationController
   # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
-      cloned = @form.replicate(:mode => :clone)
+      cloned = @form.replicate(mode: clone)
 
       # save the cloned obj id so that it will flash
       flash[:modified_obj_id] = cloned.id
 
-      flash[:success] = t("form.clone_success", :form_name => @form.name)
-    rescue
-      flash[:error] = t("form.clone_error", :msg => $!.to_s)
+      flash[:success] = t("form.clone_success", form_name: @form.name)
+    rescue StandardError => e
+      flash[:error] = t("form.clone_error", msg: e.to_s)
     end
     redirect_to(index_url_with_context)
   end
 
   private
 
-    def setup_condition_computer
-      @condition_computer = Forms::ConditionComputer.new(@form)
+  def setup_condition_computer
+    @condition_computer = Forms::ConditionComputer.new(@form)
+  end
+
+  def set_api_users
+    return unless params[:form][:access_level] == "protected"
+
+    @form.whitelistings.destroy_all if action_name == "update"
+
+    (params[:whitelistings] || []).each do |api_user|
+      @form.whitelistings.new(user_id: api_user)
     end
+  end
 
-    def set_api_users
-      return unless params[:form][:access_level] == 'protected'
-
-      @form.whitelistings.destroy_all if action_name == 'update'
-
-      (params[:whitelistings] || []).each do |api_user|
-        @form.whitelistings.new(user_id: api_user)
-      end
+  # prepares objects and renders the form template
+  def prepare_and_render_form
+    if admin_mode?
+      @form.is_standard = true
+    else
+      # We need this array only when in mission mode since it's for the API permissions which are not
+      # shown in admin mode.
+      @users = User.assigned_to(current_mission).by_name
     end
+    render(:form)
+  end
 
-    # prepares objects and renders the form template
-    def prepare_and_render_form
-      if admin_mode?
-        @form.is_standard = true
-      else
-        # We need this array only when in mission mode since it's for the API permissions which are not
-        # shown in admin mode.
-        @users = User.assigned_to(current_mission).by_name
-      end
-      render(:form)
-    end
+  def load_form
+    @form = Form.find(params[:id])
+  end
 
-    def load_form
-      @form = Form.find(params[:id])
-    end
-
-    def form_params
-      params.require(:form).permit(:name, :smsable, :allow_incomplete, :default_response_name,
-        :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
-    end
+  def form_params
+    params.require(:form).permit(:name, :smsable, :allow_incomplete, :default_response_name,
+      :authenticate_sms, :sms_relay, :access_level, recipient_ids: [])
+  end
 end

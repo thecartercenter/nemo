@@ -118,7 +118,7 @@
     ELMO.app.loading(false);
 
     if (self.location) {
-      if (!self.marker)
+      if (!self.marker) 
         self.marker = new google.maps.Marker({map: self.map});
 
       // move the marker

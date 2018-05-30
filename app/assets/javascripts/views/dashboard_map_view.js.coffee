@@ -73,7 +73,7 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
     lat = parseFloat(latitude)
     lng = parseFloat(longitude)
 
-    # create marker
+    # create marker - Question: is this affected by removing markers from server?
     p = new google.maps.LatLng(lat, lng)
     m = new google.maps.Marker({
       map: @map,
@@ -91,7 +91,7 @@ class ELMO.Views.DashboardMapView extends ELMO.Views.ApplicationView
 
     return m
 
-  show_info_window: (marker) ->
+  show_info_window: (marker) -> # Question: is this affected by removing marker controller and model?
     # close any existing window
     if @info_window
       @info_window.close()

@@ -37,9 +37,6 @@ class Ability
       # anybody can show/edit self
       can [:show, :update], User, id: user.id
 
-      # anybody can generate map markers
-      can :read, Marker
-
       # anybody can confirm their login
       can :confirm_login, UserSession
 
