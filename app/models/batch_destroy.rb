@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # destroy objects in batches
 class BatchDestroy
   attr_reader :batch, :user, :ability
@@ -44,8 +46,6 @@ class BatchDestroy
     end
 
     # return counts for destroyed, skipped and deactivated objects
-    {destroyed: destroyed.count,
-     skipped: skipped.count,
-     deactivated: deactivated.count}
+    {destroyed: destroyed.count, skipped: skipped.count, deactivated: deactivated.count}
   end
 end
