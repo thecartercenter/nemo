@@ -26,7 +26,15 @@ module SmsHelper
     when "from" then
       user_with_phone(sms.sender, sms.from)
     else
-      sms.send(field)
+      if field == "body"
+        "<span>
+          #{sms.send(field)}
+          <br/>
+          <h6 class='bold'>Error: <span class='error_msg'>I am the error message</span></h6>
+        </span>".html_safe
+      else
+        sms.send(field)
+      end
     end
   end
 
