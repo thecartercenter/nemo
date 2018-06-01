@@ -9,7 +9,7 @@ class Response < ApplicationRecord
 
   acts_as_paranoid
 
-  attr_accessor :modifier, :excerpts, :awaiting_media
+  attr_accessor :modifier, :excerpts, :awaiting_media, :answer_hierarchy
 
   belongs_to :form, inverse_of: :responses, counter_cache: true
   belongs_to :checked_out_by, class_name: "User"
@@ -36,9 +36,9 @@ class Response < ApplicationRecord
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates :user, presence: true
-  validate :no_missing_answers
+  #validate :no_missing_answers
   validate :form_in_mission
-  validates_associated :answers # Forces validation of answers even if they haven't changed
+  #validates_associated :answers # Forces validation of answers even if they haven't changed
 
   scope :unreviewed, -> { where(reviewed: false) }
   scope :by, ->(user) { where(user_id: user.id) }

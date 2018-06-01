@@ -534,12 +534,15 @@ describe Sms::Decoder, :sms do
   describe "nested groups" do
     let(:form) { create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true) }
 
-    # QingGroup
+    # QingGroup (root)
     #   Questioning
     #   Questioning (multilevel)
     #   QingGroup
     #     Questioning
     #     Questioning
+    # TODO: add another nested group
+    #     QingGroup
+    #       Questioning
     before do
       qing_group = create_form(questions: %w(integer integer)).root_group
       qing_group.parent = form.root_group
@@ -557,6 +560,7 @@ describe Sms::Decoder, :sms do
     #     Answer
     it "builds corresponding answer hierarchy" do
       response = create_response(body: "#{form.code} 1.1 2.tulip 3.3 4.4")
+      response.answer_hierarchy.try(:save, response)
 
       answer_group = response.root_node
       expect(answer_group).to be_a(AnswerGroup)
@@ -625,6 +629,8 @@ describe Sms::Decoder, :sms do
 
     # if we get this far and were expecting a failure, we didn't get one, so just return
     return if options[:expecting_fail]
+
+    @response.answer_hierarchy.try(:save, @response)
 
     # ensure the form is correct
     expect(@response.form_id).to eq(@form.id)

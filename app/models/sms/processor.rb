@@ -23,9 +23,10 @@ class Sms::Processor
   # Finalizes the process, should be called after all checks have passed.
   # No objects are persisted before this point.
   def finalize
-    # Validations have already been run by this point so the response may be invalid.
-    # So we don't use validate: false or save! We just want to save it if it's valid.
-    elmo_response.save if elmo_response
+    if elmo_response
+      elmo_response.save!
+      elmo_response.answer_hierarchy.try(:save, elmo_response)
+    end
   end
 
   private
@@ -51,10 +52,23 @@ class Sms::Processor
 
     # if there is a decoding error, respond accordingly
     rescue Sms::DecodingError
-
+      case $!.type
       # If it's an automated sender, send no reply at all
-      if $!.type == "automated_sender"
+      when "automated_sender"
         nil
+      when "missing_answers"
+        # if it's the missing_answers error, we need to include which answers are missing
+        # get the ranks
+        params = $!.params
+        missing_answers = params[:missing_answers]
+        params[:ranks] = missing_answers.map(&:rank).sort.join(",")
+
+        # pluralize the translation key if appropriate
+        key = "sms_form.validation.missing_answer"
+        key += "s" if missing_answers.size > 1
+
+        # translate
+        t_sms_msg(key, params)
       else
         msg = t_sms_msg("sms_form.decoding.#{$!.type}", $!.params)
 
@@ -64,41 +78,6 @@ class Sms::Processor
         else
           msg
         end
-      end
-
-    # if there is a validation error, respond accordingly
-    rescue ActiveRecord::RecordInvalid
-      # we only need to handle the first error
-      field, error_msgs = elmo_response.errors.messages.first
-      error_msg = error_msgs.first
-
-      # get the orignal error key by inverting the dictionary
-      # we use the system-wide locale since that's what the model would have used when generating the error
-      dict = I18n.t("activerecord.errors.models.response")
-      key = dict ? dict.invert[error_msg] : nil
-
-      case key
-      when :missing_answers
-        # if it's the missing_answers error, we need to include which answers are missing
-        # get the ranks
-        ranks = elmo_response.missing_answers.map(&:rank).sort.join(",")
-
-        # pluralize the translation key if appropriate
-        key = "sms_form.validation.missing_answer"
-        key += "s" if elmo_response.missing_answers.size > 1
-
-        # translate
-        t_sms_msg(key, ranks: ranks)
-
-      when :invalid_answers
-        # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
-        invalid_answer = elmo_response.answers.detect { |a| a.errors && a.errors.messages.size > 0 }
-        t_sms_msg("sms_form.validation.invalid_answer", rank: invalid_answer.questioning.rank,
-          error: invalid_answer.errors.messages.values.join(", "))
-
-      else
-        # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.
-        error_msg
       end
     end
   end

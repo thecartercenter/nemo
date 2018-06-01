@@ -164,7 +164,7 @@ describe "incoming sms", :sms do
     form.publish!
 
     # check that it works
-    assert_sms_response(incoming: "#{form_code} 1.21 2.21", outgoing: /Must be less than or equal to 20/)
+    assert_sms_response(incoming: "#{form_code} 1.21 2.21", outgoing: /was not less than or equal to 20/)
   end
 
   context "duplicate response" do
@@ -248,14 +248,14 @@ describe "incoming sms", :sms do
       it_behaves_like "sends forwards"
     end
 
-    context "with validation error on form" do
+    context "with answer error" do
       let(:integer_q) { create(:question, qtype_name: "integer", minimum: 20) }
       let(:text_q) { create(:question, qtype_name: "text") }
       let(:form) { setup_form(questions: [integer_q, text_q], forward_recipients: recipients) }
 
       it "does not send forwards" do
         incoming_body = "#{form_code} 1.15 2.something"
-        assert_sms_response(incoming: incoming_body, outgoing: /Must be greater than or equal to 20/)
+        assert_sms_response(incoming: incoming_body, outgoing: /was not greater than or equal to 20/)
         expect(sms_forward).to be_nil
         expect(Broadcast.count).to eq 0
       end
@@ -265,9 +265,9 @@ describe "incoming sms", :sms do
       let(:form) { setup_form(questions: %w(integer text), forward_recipients: recipients, authenticate_sms: true) }
 
       it "strips auth code from forward" do
-        incoming_body = "#{auth_code} #{form_code} 1.29 2.something"
+        incoming_body = "#{auth_code} #{form_code} 1.20 2.something"
         assert_sms_response(incoming: incoming_body, outgoing: /#{form_code}.+thank you/i)
-        expect(sms_forward.body).to eq "#{form_code} 1.29 2.something"
+        expect(sms_forward.body).to eq "#{form_code} 1.20 2.something"
       end
     end
 

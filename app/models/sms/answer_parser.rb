@@ -20,6 +20,16 @@ class Sms::AnswerParser
         # for integer question, make sure the value looks like a number
         raise_parse_error("answer_not_integer") unless value =~ /\A\d+\z/
 
+        # number must be in range
+        val_f = value.to_f
+        question = qing.question
+        if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum)
+          raise_parse_error("answer_too_large", { maximum: question.maximum })
+        end
+        if question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+          raise_parse_error("answer_too_small", { minumum: question.minimum })
+        end
+
         # add to response
         build_answer(qing, value: value)
 

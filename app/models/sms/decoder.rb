@@ -49,9 +49,8 @@ class Sms::Decoder
     # create a blank response
     @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
 
-    # mapping from qing group ID -> answer group
-    answer_groups = {}
     answer_hierarchy = Sms::AnswerHierarchy.new
+    answers = []
 
     parser = Sms::AnswerParser.new(@tokens[1..-1])
     parser.each do |answer|
@@ -63,7 +62,9 @@ class Sms::Decoder
 
           results = answer.parse(qing)
           results.each do |result|
-            answer_group.children << @response.answers.build(result)
+            answer = Answer.new(result)
+            answer_group.children << answer
+            answers << answer
           end
         end
       rescue Sms::AnswerParser::ParseError => err
@@ -71,7 +72,13 @@ class Sms::Decoder
       end
     end
 
-    @response.root_node = answer_hierarchy.lookup(@form.root_group)
+    answers_by_qing = answers.index_by(&:questioning)
+    missing_answers = @form.questionings.select { |q| q.required? && q.visible? && answers_by_qing[q].nil? }
+    if missing_answers.present?
+      raise_decoding_error("missing_answers", { missing_answers: missing_answers })
+    end
+
+    @response.answer_hierarchy = answer_hierarchy
 
     # if we get to this point everything went nicely, so we can return the response
     @response

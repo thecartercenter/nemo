@@ -21,6 +21,12 @@ class Sms::AnswerHierarchy
     answer_group
   end
 
+  def save(response)
+    @answer_groups.each { |id, node| assign_response(node, response) }
+    response.root_node = lookup(response.form.root_group)
+    response.save!
+  end
+
   private
 
   def build_answer_group(qing_group)
@@ -36,6 +42,13 @@ class Sms::AnswerHierarchy
     unless qing_group.parent.nil?
       parent_answer_group = lookup(qing_group.parent)
       parent_answer_group.children << answer_group
+    end
+  end
+
+  def assign_response(node, response)
+    node.response_id = response.id
+    node.children.each do |child|
+      assign_response(child, response)
     end
   end
 end

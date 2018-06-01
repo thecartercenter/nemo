@@ -5,6 +5,7 @@ class ResponseNode < ApplicationRecord
   self.table_name = "answers"
 
   belongs_to :form_item, inverse_of: :answers, foreign_key: "questioning_id"
+  belongs_to :response
   has_closure_tree dependent: :destroy
 
   def debug_tree(indent: 0)

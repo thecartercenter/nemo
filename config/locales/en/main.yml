@@ -2061,6 +2061,8 @@ en:
       answer_not_datetime: "was not a valid datetime"
       answer_not_decimal: "was not a valid number"
       answer_not_integer: "was not a valid integer number"
+      answer_too_large: "was not less than or equal to %{maximum}"
+      answer_too_small: "was not greater than or equal to %{minumum}"
       answer_not_time: "was not a valid time"
       answer_not_valid_option: "was not a valid option"
       answer_not_valid_long_option_multi: "contained multiple invalid options"
