@@ -812,7 +812,6 @@ es:
       by_type:
         question: "Esta pregunta tiene respuestas existentes. Por lo tanto algunos campos no se pueden editar."
     option_in_use_name_change_warning: "Esta opción se utiliza en otros formularios publicados o se hace referencia en las respuestas existentes. Usted debe tener cuidado de no cambiar el significado de la Opción."
-    option_standard_copy_name_change_warning: "Esta opción es una copia de una opción estándar. Usted debe asegurarse de mantener el significado original de la Opción de modo que corresponda con el formato estándar."
     published_warnings:
       questioning: "El Formulario relacionado con los siguientes campos ya ha sido publicado, por lo tanto estos campos no se pueden editar."
       sms: "Tales cambios harán que los usuarios de los formularios SMS reciban un mensaje de error si ententan entregar la versión actual del Formulario."

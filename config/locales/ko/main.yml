@@ -1064,7 +1064,6 @@ ko:
       by_type:
         question: "이 질문에 이미 응답한 응답지가 있습니다. 일부 항목은 수정이 불가능합니다."
     option_in_use_name_change_warning: "이 선택항목은 게재된 질문지에 쓰였거나 제출된 응답지에 참조되었습니다. 수정시 선택항목의 뜻을 바꾸지 않도록 주의하십시오."
-    option_standard_copy_name_change_warning: "이 선택항목은 표준 선택항목의 복사 버전입니다. 선택항목의 의미가 원래의 표준 버전과 일치하도록 주의하십시오."
     published_warnings:
       questioning: "아래의 항목들에 해당되는 질문지는 게재되었으므로 수정할 수 없습니다. "
       sms: "이러한 변화는 사용자들이 현재 버전의 질문지에 SMS으로 응답할 시 오류를 가져올 수 있습니다. "

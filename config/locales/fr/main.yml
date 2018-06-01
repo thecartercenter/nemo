@@ -996,7 +996,6 @@ fr:
       by_type:
         question: "Des réponses à cette question existent déjà. Certains champs ne sont pas modifiables."
     option_in_use_name_change_warning: "Une autre formulaire publiée utilise cet option ou il y a une référence à cet option dans réponses existantes.  Ne changez pas le sens de l'option avec un modification."
-    option_standard_copy_name_change_warning: "Cet option est une copie d'une option standardisé.  Preservez le sens original de l'option."
     published_warnings:
       questioning: "Le formulaire dont les champs apparaissent ci-dessous ne peut pas être modifié car il a déjà été publié. "
       sms: "Ces changements entraîneront une erreur pour utilisateurs de SMS si ils essaient de soumettre la version actuelle de le formulaire."
