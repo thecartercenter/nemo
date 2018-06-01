@@ -9,11 +9,12 @@ module GeneralSpecHelpers
     JSON.parse(body, symbolize_names: true)
   end
 
-  # reads a file from spec/expectations
-  def expectation_file(filename)
-    File.read(Rails.root.join("spec", "expectations", filename))
+  # reads a file from spec/fixtures
+  def fixture_file(filename)
+    File.read(Rails.root.join("spec", "fixtures", filename))
   end
-  
+
+  # opens media fixture
   def media_fixture(name)
     path = Rails.root.join("spec/fixtures/media/#{name}")
     File.open(path)
@@ -22,8 +23,8 @@ module GeneralSpecHelpers
   # `substitutions` should be a hash of arrays.
   # For each hash pair, e.g. `grp: groups_ids`, the method substitutes
   # e.g. `*grp8*` in the file with `groups_ids[7]`.
-  def prepare_expectation(filename, substitutions)
-    expectation_file(filename).tap do |contents|
+  def prepare_fixture(filename, substitutions)
+    fixture_file(filename).tap do |contents|
       substitutions.each do |key, values|
         values.each_with_index do |value, i|
           contents.gsub!("*#{key}#{i + 1}*", value.to_s)
