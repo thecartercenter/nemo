@@ -117,7 +117,7 @@ class ResponsesController < ApplicationController
         end
 
         @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-        @submission = XMLSubmission.new response: @response, files: files, source: "odk"
+        @submission = XMLSubmission.new response: @response, files: files
 
         # ensure response's user can submit to the form
         authorize!(:submit_to, @submission.response.form)

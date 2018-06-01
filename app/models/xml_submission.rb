@@ -71,15 +71,6 @@ class XMLSubmission
     populate_from_hash(hash)
   end
 
-  def populate_from_j2me(data)
-    lookup_and_check_form(id: data.delete("id"), version: data.delete("version"))
-
-    # Get rid of other unneeded keys.
-    data = data.except(*%w(uiVersion name xmlns xmlns:jrm))
-
-    populate_from_hash(data)
-  end
-
   # Populates response given a hash of odk-style question codes (e.g. q5, q7_1) to string values.
   def populate_from_hash(hash)
     # Response mission should already be set
