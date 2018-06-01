@@ -550,47 +550,55 @@ describe Sms::Decoder, :sms do
       qing_group.save!
     end
 
-    # AnswerGroup
-    #   Answer
-    #   AnswerSet
-    #     Answer
-    #     Answer
-    #   AnswerGroup
-    #     Answer
-    #     Answer
+    # 1. AnswerGroup
+    #   1. Answer
+    #   2. AnswerSet
+    #     1. Answer
+    #     2. Answer
+    #   3. AnswerGroup
+    #     1. Answer
+    #     2. Answer
     it "builds corresponding answer hierarchy" do
       response = create_response(body: "#{form.code} 1.1 2.tulip 3.3 4.4")
       response.answer_hierarchy.try(:save, response)
 
       answer_group = response.root_node
       expect(answer_group).to be_a(AnswerGroup)
+      expect(answer_group.new_rank).to eq 1
       expect(answer_group.children.count).to eq 3
 
       answer = answer_group.children[0]
       expect(answer).to be_a(Answer)
       expect(answer.value).to eq "1"
+      expect(answer.new_rank).to eq 1
 
       answer_set = answer_group.children[1]
       expect(answer_set).to be_a(AnswerSet)
+      expect(answer_set.new_rank).to eq 2
       expect(answer_set.children.count).to eq 2
 
       answer = answer_set.children[0]
       expect(answer).to be_a(Answer)
+      expect(answer.new_rank).to eq 1
       expect(answer.option.name_en).to eq "Plant"
 
       answer = answer_set.children[1]
       expect(answer).to be_a(Answer)
+      expect(answer.new_rank).to eq 2
       expect(answer.option.name_en).to eq "Tulip"
 
       answer_group = answer_group.children[2]
       expect(answer_group).to be_a(AnswerGroup)
+      expect(answer_group.new_rank).to eq 3
 
       answer = answer_group.children[0]
       expect(answer).to be_a(Answer)
+      expect(answer.new_rank).to eq 1
       expect(answer.value).to eq "3"
 
       answer = answer_group.children[1]
       expect(answer).to be_a(Answer)
+      expect(answer.new_rank).to eq 2
       expect(answer.value).to eq "4"
     end
   end

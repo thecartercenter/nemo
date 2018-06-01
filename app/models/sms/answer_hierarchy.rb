@@ -15,10 +15,17 @@ class Sms::AnswerHierarchy
     if qing.multilevel?
       answer_set = AnswerSet.new(form_item: qing)
       answer_group.children << answer_set
+      answer_set.new_rank = answer_group.children.length
       answer_group = answer_set
     end
 
     answer_group
+  end
+
+  def add_answer(answer_group, answer)
+    answer_group.children << answer
+    answer.new_rank = answer_group.children.length
+    answer
   end
 
   def save(response)
@@ -39,9 +46,12 @@ class Sms::AnswerHierarchy
   def link(answer_group)
     qing_group = answer_group.form_item
 
-    unless qing_group.parent.nil?
+    if qing_group.parent.nil?
+      answer_group.new_rank = 1
+    else
       parent_answer_group = lookup(qing_group.parent)
       parent_answer_group.children << answer_group
+      answer_group.new_rank = parent_answer_group.children.length
     end
   end
 

@@ -63,7 +63,7 @@ class Sms::Decoder
           results = answer.parse(qing)
           results.each do |result|
             answer = Answer.new(result)
-            answer_group.children << answer
+            answer_hierarchy.add_answer(answer_group, answer)
             answers << answer
           end
         end
