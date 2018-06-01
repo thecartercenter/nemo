@@ -161,10 +161,6 @@ feature "responses form", js: true do
       visit new_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
 
-      fill_in(control_id_for(questionings[:integer]), with: "9")
-      click_button("Save")
-      expect(page).to have_content "greater than or equal to 10"
-
       fill_in(control_id_for(questionings[:integer]), with: "11")
       click_button("Save")
       expect(page).to have_content "Response created successfully"
