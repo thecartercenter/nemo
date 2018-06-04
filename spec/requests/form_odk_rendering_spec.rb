@@ -7,7 +7,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk_test_forms`.
   # Then use `adb push tmp/odk_test_forms /sdcard/odk/forms` or similar to load them into ODK for testing.
-  let(:save_expectations) { true }
+  let(:save_fixtures) { true }
 
   before do
     login(user)
@@ -133,7 +133,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
         name: "Basic Group",
         question_types: ["text", ["text", "text", "text"]]
       )
-    end
+    endp
 
     before do
       # Test conditions on groups.
@@ -434,6 +434,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     expect(response).to be_success
   end
 
+  # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
   def prepare_odk_fixture(filename, form)
     items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
@@ -446,7 +447,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
       optcode: nodes.map(&:odk_code),
       optsetid: items.map(&:option_set_id).compact.uniq
     )
-    if save_expectations
+    if save_fixtures
       dir = Rails.root.join("tmp", "odk_test_forms")
       FileUtils.mkdir_p(dir)
       File.open(dir.join(filename), "w") { |f| f.write(xml) }
