@@ -532,7 +532,12 @@ describe Sms::Decoder, :sms do
   end
 
   describe "nested groups" do
-    let(:form) { create_form(questions: %w(integer multilevel_select_one_as_text_for_sms), default_option_names: true) }
+    let(:form) do
+      create_form(
+        questions: %w[integer multilevel_select_one_as_text_for_sms],
+        default_option_names: true
+      )
+    end
 
     # QingGroup (root)
     #   Questioning
@@ -544,7 +549,7 @@ describe Sms::Decoder, :sms do
     #     QingGroup
     #       Questioning
     before do
-      qing_group = create_form(questions: %w(integer integer)).root_group
+      qing_group = create_form(questions: %w[integer integer]).root_group
       qing_group.parent = form.root_group
       qing_group.rank = 3
       qing_group.save!

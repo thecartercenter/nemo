@@ -44,12 +44,14 @@ class Sms::AnswerParser
         if qing.sms_formatting_as_text?
           option = qing.option_set.all_options.by_canonical_name(value).first
           raise_parse_error("answer_not_valid_option") unless option
-          build_answer(qing, qing.option_set.path_to_option(option).map { |o| {option: o} }, multilevel: qing.multilevel?)
+          attribs_set = qing.option_set.path_to_option(option).map { |o| {option: o} }
+          build_answer(qing, attribs_set, multilevel: qing.multilevel?)
 
         elsif qing.sms_formatting_as_appendix?
           option = qing.option_set.fetch_by_shortcode(value.downcase).try(:option)
           raise_parse_error("answer_not_valid_option") unless option
-          build_answer(qing, qing.option_set.path_to_option(option).map { |o| {option: o} }, multilevel: qing.multilevel?)
+          attribs_set = qing.option_set.path_to_option(option).map { |o| {option: o} }
+          build_answer(qing, attribs_set, multilevel: qing.multilevel?)
 
         else
           # make sure the value is a letter(s)
@@ -62,12 +64,12 @@ class Sms::AnswerParser
           raise_parse_error("answer_not_valid_option") if idx > qing.question.options.size
 
           # if we get to here, we're good, so add
-          build_answer(qing, option: qing.question.options[idx-1])
+          build_answer(qing, option: qing.question.options[idx - 1])
         end
 
       when "select_multiple"
         # case insensitive
-        self.value.downcase!
+        value.downcase!
 
         # hopefully this stays empty!
         invalid = []
@@ -83,52 +85,55 @@ class Sms::AnswerParser
           split_options = value.split(/\s*,\s*/)
         end
 
-        if qing.option_set.sms_formatting == "appendix"
-          # fetch each option by shortcode
-          idxs = split_options.map do |l|
-            option = qing.option_set.fetch_by_shortcode(l).try(:option)
-            # make sure an option was found
-            if option.present?
-              # convert to an index
-              option_to_index(option, qing)
-            # otherwise add to invalid and return nonsense index
-            else
-              invalid << l unless option.present?
-              -1
-            end
-          end
-        else
-          # deal with each option, accumulating a list of indices
-          idxs = split_options.map do |l|
+        idxs = if qing.option_set.sms_formatting == "appendix"
+                 # fetch each option by shortcode
+                 split_options.map do |l|
+                   option = qing.option_set.fetch_by_shortcode(l).try(:option)
+                   # make sure an option was found
+                   if option.present?
+                     # convert to an index
+                     option_to_index(option, qing)
+                   # otherwise add to invalid and return nonsense index
+                   else
+                     invalid << l unless option.present?
+                     -1
+                   end
+                 end
+               else
+                 # deal with each option, accumulating a list of indices
+                 split_options.map do |l|
+                   # make sure it's a letter
+                   if l =~ /\A[a-z]\z/i
 
-            # make sure it's a letter
-            if l =~ /\A[a-z]\z/i
+                     # convert to an index
+                     idx = letters_to_index(l)
 
-              # convert to an index
-              idx = letters_to_index(l)
+                     # make sure this index makes sense for the option set
+                     invalid << l if idx > qing.question.options.size
 
-              # make sure this index makes sense for the option set
-              invalid << l if idx > qing.question.options.size
+                     idx
 
-              idx
-
-            # otherwise add to invalid and return a nonsense index
-            else
-              invalid << l
-              -1
-            end
-          end
-        end
+                   # otherwise add to invalid and return a nonsense index
+                   else
+                     invalid << l
+                     -1
+                   end
+                 end
+               end
 
         # raise appropriate error if we found invalid answer(s)
         if invalid.size > 1
-          raise_parse_error("answer_not_valid_options_multi", value: value, invalid_options: invalid.join(", "))
+          raise_parse_error("answer_not_valid_options_multi",
+            value: value,
+            invalid_options: invalid.join(", "))
         elsif invalid.size == 1
-          raise_parse_error("answer_not_valid_option_multi", value: value, invalid_options: invalid.first)
+          raise_parse_error("answer_not_valid_option_multi",
+            value: value,
+            invalid_options: invalid.first)
         end
 
         # if we get to here, we're good, so add
-        build_answer(qing, choices: idxs.map { |idx| Choice.new(option: qing.question.options[idx-1]) })
+        build_answer(qing, choices: idxs.map { |i| Choice.new(option: qing.question.options[i - 1]) })
 
       when "text", "long_text"
         build_answer(qing, value: value)
@@ -155,7 +160,9 @@ class Sms::AnswerParser
         # try to parse time
         begin
           # add a colon before the last two digits (if needed) and add UTC so timezone doesn't mess things up
-          with_colon = value.gsub(/(\d{1,2})[\.,]?(\d{2})/) { "#{$1}:#{$2}" }
+          with_colon = value.gsub(/(\d{1,2})[\.,]?(\d{2})/) do
+            "#{$1}:#{$2}"
+          end
           self.value = Time.parse(with_colon + " UTC")
         rescue ArgumentError
           raise_parse_error("answer_not_time", value: value)
@@ -177,7 +184,9 @@ class Sms::AnswerParser
           else
             # otherwise add a colon before the last two digits of the time (if needed) to help with parsing
             # also replace any .'s or ,'s or ;'s as they don't work so well
-            to_parse = value.gsub(/(\d{1,2})[\.,;]?(\d{2})[a-z\s]*$/) { "#{$1}:#{$2}" }
+            to_parse = value.gsub(/(\d{1,2})[\.,;]?(\d{2})[a-z\s]*$/) do
+              "#{$1}:#{$2}"
+            end
           end
           self.value = Time.zone.parse(to_parse)
         rescue ArgumentError
@@ -195,7 +204,7 @@ class Sms::AnswerParser
     def letters_to_index(letters)
       sum = 0
       letters.split("").each_with_index do |letter, i|
-        sum += (letter.ord - 96) * (26 ** (letters.size - i - 1))
+        sum += (letter.ord - 96) * (26**(letters.size - i - 1))
       end
       sum
     end
@@ -209,7 +218,8 @@ class Sms::AnswerParser
       Array.wrap(attribs_set).each_with_index.map do |attribs, idx|
         attribs.merge(
           rank: options[:multilevel] ? idx + 1 : 1,
-          questioning_id: qing.id)
+          questioning_id: qing.id
+        )
       end
     end
 
@@ -226,18 +236,13 @@ class Sms::AnswerParser
     @answers = []
 
     rank = nil
-    value = ''
+    value = ""
 
     tokens.each_with_index do |tok, index|
-      # if this looks like the start of an answer, treat it as such
-      if tok =~ /\A(\d+)\.(.*)\z/
-        # save the rank and values to temporary variables for a moment
-        r, v = $1.to_i, $2
-
-        @answers << Answer.new(rank, value) unless value.blank?
-
-        rank, value = r, v
-      elsif index == 0 # if this is the first answer token, raise error
+      match = handle_answer(tok, rank, value)
+      if match
+        rank, value = match
+      elsif index.zero? # if this is the first answer token, raise error
         raise ParseError.new("first_answer_invalid", token: tok)
       else # otherwise, we add the token to the value variable and proceed
         value = value.blank? ? tok : value + " #{tok}"
@@ -245,5 +250,24 @@ class Sms::AnswerParser
     end
 
     @answers << Answer.new(rank, value) unless value.blank?
+  end
+
+  private
+
+  def handle_answer(token, rank, value)
+    match = token.match(/\A(\d+)\.(.*)\z/)
+
+    # if this looks like the start of an answer, treat it as such
+    append_answer(match, rank, value) if match
+  end
+
+  def append_answer(match, rank, value)
+    # save the rank and values to temporary variables for a moment
+    r = match[1].to_i
+    v = match[2]
+
+    @answers << Answer.new(rank, value) if value.present?
+
+    [r, v]
   end
 end

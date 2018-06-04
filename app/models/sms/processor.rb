@@ -51,15 +51,15 @@ class Sms::Processor
       t_sms_msg("sms_form.decoding.congrats")
 
     # if there is a decoding error, respond accordingly
-    rescue Sms::DecodingError
-      case $!.type
+    rescue Sms::DecodingError => err
+      case err.type
       # If it's an automated sender, send no reply at all
       when "automated_sender"
         nil
       when "missing_answers"
         # if it's the missing_answers error, we need to include which answers are missing
         # get the ranks
-        params = $!.params
+        params = err.params
         missing_answers = params[:missing_answers]
         params[:ranks] = missing_answers.map(&:rank).sort.join(",")
 
@@ -70,11 +70,11 @@ class Sms::Processor
         # translate
         t_sms_msg(key, params)
       else
-        msg = t_sms_msg("sms_form.decoding.#{$!.type}", $!.params)
+        msg = t_sms_msg("sms_form.decoding.#{err.type}", err.params)
 
         # if this is an answer format error, add an intro to the beginning and add a period
-        if $!.type =~ /^answer_not_/
-          t_sms_msg("sms_form.decoding.answer_error_intro", $!.params) + " " + msg + "."
+        if err.type =~ /^answer_not_/
+          t_sms_msg("sms_form.decoding.answer_error_intro", err.params) + " " + msg + "."
         else
           msg
         end
