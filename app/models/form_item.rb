@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Note: set new_rank when making a form item, ignore rank on answer but set rank on response.
 class FormItem < ApplicationRecord
   include TreeTraverseable
   include Replication::Replicable

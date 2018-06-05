@@ -18,6 +18,7 @@ class ResponseNode < ApplicationRecord
     chunks << " "
     chunks << self.class.name.ljust(15)
     chunks << "(FI: #{form_item.type} #{form_item.rank})"
+    chunks << " Value: #{value}" if value.present?
     "\n#{chunks.join}#{child_tree}"
   end
 

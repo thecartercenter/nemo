@@ -7,7 +7,7 @@ describe Odk::ResponseParser do
 
   context "simple form" do
 
-    xit "should produce a simple tree from a form with three children" do
+    it "should produce a simple tree from a form with three children" do
       #TODO: move to let statements
       filename = "simple_form_response.xml"
       form = create(:form, :published, :with_version, question_types: %w[text text text])
@@ -15,13 +15,15 @@ describe Odk::ResponseParser do
       xml = prepare_odk_fixture(filename, form, values)
       files =  {xml_submission_file: StringIO.new(xml)}
       response = Response.new(form: form, mission: form.mission, user: create(:user))
-      answer_tree = Odk::ResponseParser.new(response: response, files: files).build_answers
+      Odk::ResponseParser.new(response: response, files: files).populate_response
+      answer_tree = response.root_node
       expect_children(answer_tree, %w[Answer Answer Answer], form.c.map(&:id), values)
     end
   end
 
   def expect_children(node, types, qing_ids, values)
-    children = node.children.sort_by(&:new_rank)
+    puts node.debug_tree
+    children = node.children.sort_by(&:new_rank) #
     expect(children.map(&:type)).to eq types
     expect(children.map(&:questioning_id)).to eq qing_ids
     expect(children.map(&:new_rank)).to eq((1..children.size).to_a)

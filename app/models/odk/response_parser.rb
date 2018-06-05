@@ -1,6 +1,7 @@
 module Odk
   # Takes a response and odk data. Parses odk data into answer tree for response.
   class ResponseParser
+    attr_accessor :response, :raw_odk_xml
 
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil)
@@ -9,8 +10,13 @@ module Odk
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
       @response.source = "odk"
-      build_answers(@raw_odk_xml)
     end
+
+    def populate_response
+      build_answers(raw_odk_xml)
+    end
+
+    private
 
     def build_answers(raw_odk_xml)
       data = Nokogiri::XML(raw_odk_xml).root
@@ -19,24 +25,40 @@ module Odk
       # TODO: handle awaiting_media
 
       # Response mission should already be set - TODO: consider moving to constructor or lookup_and_check_form
-      raise "Submissions must have a mission" if @response.mission.nil?
-      build_answer_tree(data, @response.form)
+      raise "Submissions must have a mission" if response.mission.nil?
+      build_answer_tree(data, response.form)
     end
 
-    private
+
 
     def build_answer_tree(data, form)
-      @response.root_node = AnswerGroup.new
-      add_level(data, form, @response.root_node)
+      response.root_node = AnswerGroup.new(
+        questioning_id: response.form.root_id,
+        response_id: response.id
+      )
+      add_level(data, form, response.root_node)
     end
 
     def add_level(xml_node, form_node, response_node)
-      xml_node.elements.each do |child|
+      xml_node.elements.each_with_index do |child, index|
         name = child.name
         content = child.content
-        answer = Answer.new(qing: Questioning.find_by(odk_code: name).id, value: content)
+        qing_id = form_item_id_from_tag(name)
+        answer = Answer.new(
+          questioning_id: qing_id,
+          value: content,
+          new_rank: index + 1
+        )
         response_node.children << answer
+        response_node.debug_tree
       end
+    end
+
+    #TODO: refactor mapping to one shared place
+    def form_item_id_from_tag(tag)
+      prefix = tag.slice! "qing"
+      id = tag
+      id
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct
@@ -47,8 +69,8 @@ module Odk
 
       # try to load form (will raise activerecord error if not found)
       # if the response already has a form, don't fetch it again
-      @response.form = Form.find(params[:id]) unless @response.form.present?
-      form = @response.form
+      response.form = Form.find(params[:id]) unless response.form.present?
+      form = response.form
 
       # if form has no version, error
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
@@ -60,7 +82,7 @@ module Odk
     def check_for_existing_response
       response = Response.find_by(odk_hash: odk_hash, form_id: @response.form_id)
       @existing_response = response.present?
-      @response = response if @existing_response
+      response = response if @existing_response
     end
 
     # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
