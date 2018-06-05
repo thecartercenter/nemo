@@ -4,7 +4,7 @@ module Odk
 
     def odk_code
       @odk_code = super
-      @odk_code ||= "q#{object.question.id}"
+      @odk_code ||= "qing#{object.id}"
     end
 
     def bind_tag(form, subq, group: nil, xpath_prefix: "/data")

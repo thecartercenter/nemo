@@ -47,23 +47,23 @@ shared_context "odk submissions" do
               xml << "<grp#{item.id}><header/>"
               subitems.each do |subitem, _|
                 if instance[subitem]
-                  xml << "<#{subitem.question.odk_code}>"
+                  xml << "<#{Odk::DecoratorFactory.decorate(subitem).odk_code}>"
                   xml << instance[subitem]
-                  xml << "</#{subitem.question.odk_code}>"
+                  xml << "</#{Odk::DecoratorFactory.decorate(subitem).odk_code}>"
                 end
               end
               xml << "</grp#{item.id}>"
             end
           elsif item.multilevel?
             item.level_count.times do |level|
-              xml << "<#{item.question.odk_code}_#{level + 1}>"
+              xml << "<#{Odk::DecoratorFactory.decorate(item).odk_code}_#{level + 1}>"
               xml << (data[item].try(:[], level) || rand(100).to_s)
-              xml << "</#{item.question.odk_code}_#{level + 1}>"
+              xml << "</#{Odk::DecoratorFactory.decorate(item).odk_code}_#{level + 1}>"
             end
           else
-            xml << "<#{item.question.odk_code}>"
+            xml << "<#{Odk::DecoratorFactory.decorate(item).odk_code}>"
             xml << (data[item] || rand(100).to_s)
-            xml << "</#{item.question.odk_code}>"
+            xml << "</#{Odk::DecoratorFactory.decorate(item).odk_code}>"
           end
         end
       end
