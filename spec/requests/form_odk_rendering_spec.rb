@@ -133,7 +133,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
         name: "Basic Group",
         question_types: ["text", ["text", "text", "text"]]
       )
-    endp
+    end
 
     before do
       # Test conditions on groups.

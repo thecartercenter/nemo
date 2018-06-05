@@ -5,7 +5,7 @@ module Odk
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil)
       @response = response
-      # what is awaiting_media for?
+      # TODO: what is awaiting_media for?
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
       @response.source = "odk"
@@ -16,8 +16,9 @@ module Odk
       data = Nokogiri::XML(raw_odk_xml).root
       lookup_and_check_form(id: data["id"], version: data["version"])
       check_for_existing_response
+      # TODO: handle awaiting_media
 
-      # Response mission should already be set
+      # Response mission should already be set - TODO: consider moving to constructor or lookup_and_check_form
       raise "Submissions must have a mission" if @response.mission.nil?
       build_answer_tree(data, @response.form)
     end
