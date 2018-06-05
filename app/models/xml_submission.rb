@@ -93,6 +93,7 @@ class XMLSubmission
   def add_answers_for_qing(qing, hash, inst_num)
     qing.subqings.each do |subq|
       value = hash[subq.odk_code]
+      # QUESTION: why is answer reassigned? it tries both? why?
       answer = fetch_or_build_answer(questioning: qing.object, rank: subq.rank, inst_num: inst_num)
       answer = populate_from_string(answer, value)
       @response.answers << answer if answer

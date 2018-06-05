@@ -1,28 +1,28 @@
 module Odk
   # Takes a response and odk data. Parses odk data into answer tree for response.
-  class SubmissionParser
+  class ResponseParser
 
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil)
       @response = response
       # what is awaiting_media for?
-      @xml = files.delete(:xml_submission_file).read
+      @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
       @response.source = "odk"
-      populate_answer_tree(@xml)
+      build_answers(@raw_odk_xml)
     end
 
-    private
-
-    def populate_answer_tree(xml)
-      data = Nokogiri::XML(xml).root
+    def build_answers(raw_odk_xml)
+      data = Nokogiri::XML(raw_odk_xml).root
       lookup_and_check_form(id: data["id"], version: data["version"])
-      #check_for_existing_response
+      check_for_existing_response
 
       # Response mission should already be set
       raise "Submissions must have a mission" if @response.mission.nil?
       build_answer_tree(data, @response.form)
     end
+
+    private
 
     def build_answer_tree(data, form)
       @response.root_node = AnswerGroup.new
@@ -52,8 +52,6 @@ module Odk
       # if form has no version, error
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
-      puts params[:version]
-      puts form.current_version.code
       # if form version is outdated, error
       raise FormVersionError.new("form version is outdated") if form.current_version.code != params[:version]
     end
@@ -63,5 +61,12 @@ module Odk
       @existing_response = response.present?
       @response = response if @existing_response
     end
+
+    # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
+    # can be uniquely identified and handled
+    def odk_hash
+      @odk_hash ||= Digest::SHA256.base64digest @raw_odk_xml
+    end
+
   end
 end
