@@ -46,8 +46,7 @@ module Odk
         content = child.content
         puts "Name: #{name} content: #{content}"
         unless node_is_odk_header(child)
-          form_item_id = form_item_id_from_tag(name)
-          form_item = (form_item(form_item_id))
+          form_item = form_item(name)
           if form_item.class == QingGroup
             add_group(child, form_item, response_node)
           else
@@ -79,9 +78,8 @@ module Odk
       /\S*header/.match(node.name).present?
     end
 
-
-
-    def form_item(form_item_id)
+    def form_item(name)
+      form_item_id = form_item_id_from_tag(name)
       unless FormItem.exists?(form_item_id)
         raise SubmissionError.new("Submission contains unidentifiable group or question.")
       end
