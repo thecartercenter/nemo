@@ -37,12 +37,28 @@ describe Odk::ResponseParser do
       let(:other_form) {create(:form, :published, :with_version, question_types: %w[text])}
 
       it "should error" do
-        xml #create xml before updating form's second question to have a different form id. 
+        xml #create xml before updating form's second question to have a different form id.
         form.c[1].update_attribute(:form_id,  other_form.id)
         expect {
           Odk::ResponseParser.new(response: response, files: files).populate_response
         }.to raise_error(SubmissionError, "Submission contains group or question not found in form.")
       end
+    end
+  end
+
+  context "forms with a group" do
+    let(:form) { create(:form, :published, :with_version, question_types: ["text", %w[select_one text], "text"]) }
+    let(:filename) { "group_form_response.xml" }
+    let(:values) { %w[A B C D] }
+    let(:files) { {xml_submission_file: StringIO.new(xml)} }
+    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+    let(:xml) { prepare_odk_fixture(filename, form, {values: values}) }
+
+    it "should produce the correct tree" do
+      Odk::ResponseParser.new(response: response, files: files).populate_response
+      puts response.root_node.debug_tree
+      expect_children(response.root_node, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
+      expect_children(response.root_node.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
     end
   end
 

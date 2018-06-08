@@ -40,22 +40,48 @@ module Odk
     end
 
     def add_level(xml_node, form_node, response_node)
+      puts "add level: #{xml_node.name}, num children: #{xml_node.elements.count}"
       xml_node.elements.each_with_index do |child, index|
         name = child.name
         content = child.content
-        form_item_id = form_item_id_from_tag(name)
-        check_form_item_valid(form_item_id)
-        answer = Answer.new(
-          questioning_id: form_item_id,
-          value: content,
-          new_rank: index + 1
-        )
-        response_node.children << answer
-        response_node.debug_tree
+        puts "Name: #{name} content: #{content}"
+        unless node_is_odk_header(child)
+          form_item_id = form_item_id_from_tag(name)
+          form_item = (form_item(form_item_id))
+          if form_item.class == QingGroup
+            add_group(child, form_item, response_node)
+          else
+            add_answer(content, form_item, response_node)
+          end
+        end
       end
     end
 
-    def check_form_item_valid(form_item_id)
+    def add_group(xml_node, form_item, parent)
+      group = AnswerGroup.new(
+        questioning_id: form_item.id,
+        new_rank: form_item.rank
+      )
+      parent.children << group
+      add_level(xml_node, form_item, group)
+    end
+
+    def add_answer(content, form_item, parent)
+      answer = Answer.new(
+        questioning_id: form_item.id,
+        value: content,
+        new_rank: form_item.rank
+      )
+      parent.children << answer
+    end
+
+    def node_is_odk_header(node)
+      /\S*header/.match(node.name).present?
+    end
+
+
+
+    def form_item(form_item_id)
       unless FormItem.exists?(form_item_id)
         raise SubmissionError.new("Submission contains unidentifiable group or question.")
       end
@@ -63,13 +89,17 @@ module Odk
       unless form_item.form_id == response.form.id
         raise SubmissionError.new("Submission contains group or question not found in form.")
       end
+      form_item
     end
 
-    #TODO: refactor mapping to one shared place
+    #TODO: refactor mapping to one shared place accessible here and from odk decorators
     def form_item_id_from_tag(tag)
-      prefix = tag.slice! "qing"
-      id = tag
-      id
+      prefixes = %w[qing grp]
+      prefixes.each do |p|
+        if /#{Regexp.quote(p)}\S*/.match?(tag)
+          return tag.remove p
+        end
+      end
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct
