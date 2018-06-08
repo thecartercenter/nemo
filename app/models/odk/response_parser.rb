@@ -43,14 +43,25 @@ module Odk
       xml_node.elements.each_with_index do |child, index|
         name = child.name
         content = child.content
-        qing_id = form_item_id_from_tag(name)
+        form_item_id = form_item_id_from_tag(name)
+        check_form_item_valid(form_item_id)
         answer = Answer.new(
-          questioning_id: qing_id,
+          questioning_id: form_item_id,
           value: content,
           new_rank: index + 1
         )
         response_node.children << answer
         response_node.debug_tree
+      end
+    end
+
+    def check_form_item_valid(form_item_id)
+      unless FormItem.exists?(form_item_id)
+        raise SubmissionError.new("Submission contains unidentifiable group or question.")
+      end
+      form_item = FormItem.find(form_item_id)
+      unless form_item.form_id == response.form.id
+        raise SubmissionError.new("Submission contains group or question not found in form.")
       end
     end
 
@@ -76,7 +87,7 @@ module Odk
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
       # if form version is outdated, error
-      raise FormVersionError.new("form version is outdated") if form.current_version.code != params[:version]
+      raise FormVersionError.new("Form version is outdated") if form.current_version.code != params[:version]
     end
 
     def check_for_existing_response
