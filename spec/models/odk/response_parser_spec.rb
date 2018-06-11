@@ -62,6 +62,24 @@ describe Odk::ResponseParser do
     end
   end
 
+  context "repeat group forms" do
+    let(:form) { create(:form, :published, :with_version, question_types: ["text", {repeating: {items: %w[text text]}}]) }
+    let(:filename) { "repeat_group_form_response.xml" }
+    let(:values) { %w[A B C D E] }
+    let(:files) { {xml_submission_file: StringIO.new(xml)} }
+    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+    let(:xml) { prepare_odk_fixture(filename, form, {values: values}) }
+
+
+    it "should create the appropriate repeating group tree" do
+      Odk::ResponseParser.new(response: response, files: files).populate_response
+      expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+      expect_children(response.root_node.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id], [nil, nil])
+      expect_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+      expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
+    end
+  end
+
   def expect_children(node, types, qing_ids, values)
     children = node.children.sort_by(&:new_rank)
     expect(children.map(&:type)).to eq types
