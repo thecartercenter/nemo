@@ -28,4 +28,13 @@ class ResponseNode < ApplicationRecord
       child.associate_response(response)
     end
   end
+
+  # Answer.rb implements casted_value for answers.Duck type method for non-Answer response nodes.
+  def casted_value
+    nil
+  end
+
+  # Should eventually be changed to just point to children once closure_tree's ordering is turned on.
+  alias c sorted_children
+
 end

@@ -47,7 +47,7 @@ describe Odk::ResponseParser do
   end
 
   context "forms with a group" do
-    let(:form) { create(:form, :published, :with_version, question_types: ["text", %w[select_one text], "text"]) }
+    let(:form) { create(:form, :published, :with_version, question_types: ["text", %w[text text], "text"]) }
     let(:filename) { "group_form_response.xml" }
     let(:values) { %w[A B C D] }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
@@ -70,7 +70,6 @@ describe Odk::ResponseParser do
     let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
     let(:xml) { prepare_odk_fixture(filename, form, {values: values}) }
 
-
     it "should create the appropriate repeating group tree" do
       Odk::ResponseParser.new(response: response, files: files).populate_response
       expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
@@ -80,13 +79,48 @@ describe Odk::ResponseParser do
     end
   end
 
+  context "form with multilevel answer" do
+    let(:form) do
+      create(
+        :form,
+        :published,
+        :with_version,
+        question_types: %w[text multilevel_select_one text]
+      )
+    end
+    let(:level1_opt) { form.c[1].option_set.sorted_children[1] }
+    let(:level2_opt) { form.c[1].option_set.sorted_children[1].sorted_children[0] }
+    let(:filename) { "multilevel_response.xml" }
+    let(:xml_values) { ["A", "on#{level1_opt.id}", "on#{level2_opt.id}", "D"] }
+    let(:expected_values) { ["A", level1_opt.option.name, level2_opt.option.name, "D"] }
+    let(:files) { {xml_submission_file: StringIO.new(xml)} }
+    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
+
+    it "should create the appropriate multilevel answer tree" do
+      Odk::ResponseParser.new(response: response, files: files).populate_response
+      expect_children(
+        response.root_node,
+        %w[Answer AnswerSet Answer],
+        form.c.map(&:id),
+        [expected_values.first, nil, expected_values.last]
+      )
+      expect_children(
+        response.root_node.c[1],
+        %w[Answer Answer],
+        [form.c[1].id, form.c[1].id],
+        expected_values[1, 2]
+      )
+    end
+  end
+
   def expect_children(node, types, qing_ids, values)
     children = node.children.sort_by(&:new_rank)
     expect(children.map(&:type)).to eq types
     expect(children.map(&:questioning_id)).to eq qing_ids
     expect(children.map(&:new_rank)).to eq((1..children.size).to_a)
     if values.present? #QUESTION: this is not a guard clause. format ok?
-      expect(children.map(&:value)).to eq values
+      expect(children.map(&:casted_value)).to eq values
     end
   end
 

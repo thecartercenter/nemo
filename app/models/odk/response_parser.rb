@@ -29,8 +29,6 @@ module Odk
       build_answer_tree(data, response.form)
     end
 
-
-
     def build_answer_tree(data, form)
       response.root_node = AnswerGroup.new(
         questioning_id: response.form.root_id,
@@ -53,11 +51,29 @@ module Odk
             add_repeat_group(child, form_item, response_node)
           elsif form_item.class == QingGroup
             add_group(child, form_item, response_node)
+          elsif form_item.multilevel?
+            add_answer_set_member(child, form_item, response_node)
           else
             add_answer(content, form_item, response_node)
           end
         end
       end
+    end
+
+    def add_answer_set_member(xml_node, form_item, parent)
+      answer_set = find_or_create_answer_set(form_item, parent)
+      add_answer(xml_node.content, form_item, answer_set)
+    end
+
+    def find_or_create_answer_set(form_item, parent)
+      answer_set = parent.c.find do |c|
+        c.questioning_id == form_item.id && c.class == AnswerSet
+      end
+      if answer_set.nil?
+        answer_set = AnswerSet.new(questioning_id: form_item.id, new_rank: form_item.rank)
+        parent.children << answer_set
+      end
+      answer_set
     end
 
     def add_repeat_group(xml_node, form_item, parent)
@@ -92,14 +108,39 @@ module Odk
       puts "add answer: #{content}"
       answer = Answer.new(
         questioning_id: form_item.id,
-        value: content,
+        #value: content,
         new_rank: parent.c.count + 1 #QUESTION THIS SEEMS DICEY!
       )
+
+      populate_answer_value(answer, content, form_item)
       parent.children << answer
+
     end
 
     def node_is_odk_header(node)
       /\S*header/.match(node.name).present?
+    end
+
+    # finds the appropriate Option instance for an ODK submission
+    def option_id_for_submission(option_node_str)
+      if option_node_str =~ /\Aon([\w\-]+)\z/
+        # look up inputs of the form "on####" as option node ids
+        node_id = option_node_str.remove("on")
+        OptionNode.id_to_option_id(node_id)
+      else
+        #TODO: test and failure mode?
+        # look up other inputs as option ids
+        Option.where(id: id_or_str).pluck(:id).first
+      end
+    end
+
+    def populate_answer_value(answer, content, form_item)
+      case form_item.qtype.name
+      when "select_one"
+        answer.option_id = option_id_for_submission(content) unless content == "none"
+      else
+        answer.value = content
+      end
     end
 
     def form_item(name)
@@ -117,11 +158,19 @@ module Odk
     #TODO: refactor mapping to one shared place accessible here and from odk decorators
     def form_item_id_from_tag(tag)
       prefixes = %w[qing grp]
+      form_item_id = nil
+      tag_without_prefix = nil
       prefixes.each do |p|
         if /#{Regexp.quote(p)}\S*/.match?(tag)
-          return tag.remove p
+          tag_without_prefix = tag.remove p
         end
       end
+      if /\S*_\d*/.match?(tag)
+        form_item_id = tag_without_prefix.split("_").first
+      else
+        form_item_id = tag_without_prefix
+      end
+      form_item_id
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct

@@ -8,6 +8,7 @@ describe XMLSubmission, :odk do
   let(:xml) { build_odk_submission(form, data: data) }
   let(:files) { {xml_submission_file: StringIO.new(xml)} }
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+  #
   let(:submission) { XMLSubmission.new(response: response, files: files) }
   let(:nodes) { AnswerArranger.new(response).build.nodes }
 
@@ -76,6 +77,7 @@ describe XMLSubmission, :odk do
     end
 
     it "processes correct values" do
+      puts xml
       expect(nodes[0].set.answers[0].option).to eq cat.option
       expect(nodes[0].set.answers[0].rank).to eq 1
 
