@@ -9,7 +9,7 @@ class Response < ApplicationRecord
 
   acts_as_paranoid
 
-  attr_accessor :modifier, :excerpts, :awaiting_media, :answer_hierarchy
+  attr_accessor :modifier, :excerpts, :awaiting_media
 
   belongs_to :form, inverse_of: :responses, counter_cache: true
   belongs_to :checked_out_by, class_name: "User"

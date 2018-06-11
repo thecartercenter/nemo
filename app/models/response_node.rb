@@ -9,7 +9,7 @@ class ResponseNode < ApplicationRecord
   has_closure_tree dependent: :destroy
 
   def debug_tree(indent: 0)
-    child_tree = children.sort_by(&:new_rank).map { |c| c.debug_tree(indent: indent + 1) }.join
+    child_tree = sorted_children.map { |c| c.debug_tree(indent: indent + 1) }.join
     chunks = []
     chunks << " " * (indent * 2)
     chunks << new_rank.to_s.rjust(2)
@@ -27,4 +27,12 @@ class ResponseNode < ApplicationRecord
 
   # Should eventually be changed to just point to children once closure_tree's ordering is turned on.
   alias c sorted_children
+
+  def associate_response(response)
+    self.response = response
+
+    children.each do |child|
+      child.associate_response(response)
+    end
+  end
 end

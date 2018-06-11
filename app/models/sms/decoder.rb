@@ -4,6 +4,10 @@ class Sms::Decoder
   DUPLICATE_WINDOW = 12.hours
   AUTH_CODE_FORMAT = /[a-z0-9]{4}/i
 
+  attr_reader :response, :answer_hierarchy
+
+  delegate :form, to: :response
+
   # sets up a decoder
   # sms - an Sms::Message object
   def initialize(msg)
@@ -46,44 +50,42 @@ class Sms::Decoder
     authenticate_user
     check_permission
 
-    # create a blank response
-    @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
-
     answer_hierarchy = Sms::AnswerHierarchy.new
     answers = []
 
-    parser = Sms::AnswerParser.new(@tokens[1..-1])
-    parser.each do |answer|
-      qing = find_qing(answer.rank)
+    pairs = Sms::Parser::AnswerParser.new(@tokens[1..-1])
+    pairs.each do |pair|
+      qing = find_qing(pair.rank)
 
       begin
         if qing
           answer_group = answer_hierarchy.answer_group_for(qing)
 
-          results = answer.parse(qing)
+          results = pair.parse(qing)
           results.each do |result|
             answer = Answer.new(result)
             answer_hierarchy.add_answer(answer_group, answer)
             answers << answer
           end
         end
-      rescue Sms::AnswerParser::ParseError => err
-        raise_answer_error(err.type, answer.rank, answer.value, err.params)
+      rescue Sms::Parser::Error => err
+        raise_answer_error(err.type, pair.rank, pair.value, err.params)
       end
     end
 
     answers_by_qing = answers.index_by(&:questioning)
     missing_answers = @form.questionings.select { |q| q.required? && q.visible? && answers_by_qing[q].nil? }
-    if missing_answers.present?
-      raise_decoding_error("missing_answers", { missing_answers: missing_answers })
-    end
+    raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.present?
 
-    @response.answer_hierarchy = answer_hierarchy
-
-    # if we get to this point everything went nicely, so we can return the response
-    @response
-  rescue Sms::AnswerParser::ParseError => err
+    # if we get to this point everything went nicely, so we can set the response
+    @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
+    @answer_hierarchy = answer_hierarchy
+  rescue Sms::Parser::Error => err
     raise_decoding_error(err.type, err.params)
+  end
+
+  def has_response?
+    response.present?
   end
 
   private

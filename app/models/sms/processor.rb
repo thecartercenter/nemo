@@ -3,7 +3,7 @@
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Processor
 
-  attr_accessor :incoming_msg, :elmo_response, :reply, :forward, :all_incoming_numbers
+  attr_accessor :incoming_msg, :reply, :forward, :all_incoming_numbers
 
   def initialize(incoming_msg)
     @incoming_msg = incoming_msg
@@ -23,10 +23,10 @@ class Sms::Processor
   # Finalizes the process, should be called after all checks have passed.
   # No objects are persisted before this point.
   def finalize
-    if elmo_response
-      elmo_response.save!
-      elmo_response.answer_hierarchy.try(:save, elmo_response)
-    end
+    return unless decoder.has_response?
+
+    decoder.response.save!
+    decoder.answer_hierarchy.try(:save, decoder.response)
   end
 
   private
@@ -45,9 +45,8 @@ class Sms::Processor
 
   def reply_body
     @reply_body ||= begin
-      # Decode, validate, and send congrats.
-      self.elmo_response = Sms::Decoder.new(incoming_msg).decode
-      raise ActiveRecord::RecordInvalid.new(elmo_response) unless elmo_response.valid?
+      # Decode and send congrats.
+      decoder.decode
       t_sms_msg("sms_form.decoding.congrats")
 
     # if there is a decoding error, respond accordingly
@@ -85,8 +84,8 @@ class Sms::Processor
   # Decides if an SMS forward is called for, and builds and returns the Sms::Forward object if so.
   # Returns nil if no forward is called for, or if an error is encountered in constructing the message.
   def handle_forward
-    return unless elmo_response && elmo_response.valid?
-    form = elmo_response.try(:form)
+    return unless decoder.has_response?
+    form = decoder.form
 
     if form && form.sms_relay?
       broadcast = ::Broadcast.new(
@@ -112,8 +111,8 @@ class Sms::Processor
   # translates a message for the sms reply using the appropriate locale
   def t_sms_msg(key, options = {})
     # Get some options from Response (if available) unless they're explicitly given
-    if elmo_response
-      %i(user form mission).each { |a| options[a] = elmo_response.send(a) unless options.has_key?(a) }
+    if decoder.has_response?
+      %i(user form mission).each { |a| options[a] = decoder.response.send(a) unless options.has_key?(a) }
     end
 
     # throw in the form_code if it's not there already and we have the form
@@ -130,5 +129,9 @@ class Sms::Processor
     split_message = message.split(" ")
     split_message.shift if form.authenticate_sms?
     joined_message = split_message.join(" ")
+  end
+
+  def decoder
+    @decoder ||= Sms::Decoder.new(incoming_msg)
   end
 end
