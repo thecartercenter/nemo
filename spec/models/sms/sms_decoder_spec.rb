@@ -511,6 +511,42 @@ describe Sms::Decoder, :sms do
         answers: [3, "coffee and bagels", Date.new(2015, 12, 25), Date.new(2016, 01, 01)]
       )
     end
+
+    it "answer too large should error" do
+      question = create(:question, qtype_name: "integer", maximum: 20)
+      create_form(questions: [question])
+      expect_decoding_fail(
+        body: "#{@form.code} 1. 21",
+        error: "answer_too_large",
+        value: "21")
+    end
+
+    it "answer strictly too large should fail" do
+      question = create(:question, qtype_name: "integer", maximum: 20, maxstrictly: true)
+      create_form(questions: [question])
+      expect_decoding_fail(
+        body: "#{@form.code} 1. 20",
+        error: "answer_too_large_strict",
+        value: "20")
+    end
+
+    it "answer too small should error" do
+      question = create(:question, qtype_name: "integer", minimum: 20)
+      create_form(questions: [question])
+      expect_decoding_fail(
+        body: "#{@form.code} 1. 19",
+        error: "answer_too_small",
+        value: "19")
+    end
+
+    it "answer strictly too small should fail" do
+      question = create(:question, qtype_name: "integer", minimum: 20, minstrictly: true)
+      create_form(questions: [question])
+      expect_decoding_fail(
+        body: "#{@form.code} 1. 20",
+        error: "answer_too_small_strict",
+        value: "20")
+    end
   end
 
   describe "duplicate checking" do

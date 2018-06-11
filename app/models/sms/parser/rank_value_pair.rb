@@ -10,11 +10,20 @@ module Sms
           # number must be in range
           val_f = value.to_f
           question = qing.question
-          if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum)
-            raise_parse_error("answer_too_large", maximum: question.maximum)
+          if question.maximum
+            if question.maxstrictly && val_f >= question.maximum
+              raise_parse_error("answer_too_large_strict", maximum: question.maximum)
+            elsif val_f > question.maximum
+              raise_parse_error("answer_too_large", maximum: question.maximum)
+            end
           end
+
           if question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
-            raise_parse_error("answer_too_small", minumum: question.minimum)
+            if question.minstrictly && val_f <= question.minimum
+              raise_parse_error("answer_too_small_strict", minumum: question.minimum)
+            elsif val_f < question.minimum
+              raise_parse_error("answer_too_small", minumum: question.minimum)
+            end
           end
 
           # add to response
