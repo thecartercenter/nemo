@@ -61,38 +61,23 @@ module Odk
     end
 
     def add_repeat_group(xml_node, form_item, parent)
-      puts "Add repeat group: #{xml_node.name}, content: #{xml_node.content}"
-      puts parent.root? ? parent.debug_tree : parent.root.debug_tree
-
       group_set = find_or_create_group_set(form_item, parent)
-      #puts "in add_repeat_group: num_children: #{group_set.c.count} #{group_set.debug_tree}"
       add_group(xml_node, form_item, group_set)
     end
 
     def find_or_create_group_set(form_item, parent)
-
       group_set = parent.c.find do |c|
         c.questioning_id == form_item.id && c.class == AnswerGroupSet
       end
       if group_set.nil?
-        puts "add group set"
-        puts "======= before group set: ========"
-        puts parent.root? ? parent.debug_tree : parent.root.debug_tree
         group_set = AnswerGroupSet.new(questioning_id: form_item.id, new_rank: form_item.rank)
         parent.children << group_set
-        puts "======= after adding group set: ========"
-        puts  parent.root? ? parent.debug_tree : parent.root.debug_tree
-      else
-        puts "group set already exists: num_children: #{group_set.c.count} #{group_set.debug_tree}"
       end
-
       group_set
     end
 
     def add_group(xml_node, form_item, parent)
-      puts "parent children count: #{parent.c.count}"
       puts "add group: #{xml_node.name}, content: #{xml_node.content}, rank: #{parent.c.count + 1}"
-      puts  parent.debug_tree
       unless node_is_odk_header(xml_node)
         group = AnswerGroup.new(
           questioning_id: form_item.id,
@@ -105,7 +90,6 @@ module Odk
 
     def add_answer(content, form_item, parent)
       puts "add answer: #{content}"
-      puts parent.ancestry_path
       answer = Answer.new(
         questioning_id: form_item.id,
         value: content,
