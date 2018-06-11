@@ -36,9 +36,9 @@ class Response < ApplicationRecord
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates :user, presence: true
-  #validate :no_missing_answers
+  validate :no_missing_answers
   validate :form_in_mission
-  #validates_associated :answers # Forces validation of answers even if they haven't changed
+  validates_associated :answers # Forces validation of answers even if they haven't changed
 
   scope :unreviewed, -> { where(reviewed: false) }
   scope :by, ->(user) { where(user_id: user.id) }

@@ -25,7 +25,9 @@ class Sms::Processor
   def finalize
     return unless decoder.has_response?
 
-    decoder.response.save!
+    # TODO: We can remove the `validate: false` once various validations are
+    # removed from the response model
+    decoder.response.save!(validate: false)
     decoder.answer_hierarchy.try(:save, decoder.response)
   end
 

@@ -33,7 +33,10 @@ class Sms::AnswerHierarchy
     root_node.associate_response(response)
 
     response.root_node = root_node
-    response.save!
+
+    # TODO: We can remove the `validate: false` once various validations are
+    # removed from the response model
+    response.save!(validate: false)
   end
 
   private
