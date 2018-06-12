@@ -13,6 +13,7 @@ feature "user form" do
   scenario "create should work" do
     visit("/en/m/#{mission.compact_name}/users/new")
 
+    # check for placeholders since they have not yet been overwritten
     expect(page).to have_field("Main Phone", placeholder: "+17123241235")
     expect(page).to have_field("Alternate Phone", placeholder: "+2348123456789")
 
