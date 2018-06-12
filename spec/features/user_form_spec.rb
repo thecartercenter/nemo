@@ -12,9 +12,16 @@ feature "user form" do
 
   scenario "create should work" do
     visit("/en/m/#{mission.compact_name}/users/new")
+
+    # check for placeholders since they have not yet been overwritten
+    expect(page).to have_field("Main Phone", placeholder: "+17123241235")
+    expect(page).to have_field("Alternate Phone", placeholder: "+2348123456789")
+
     fill_in("Full Name", with: "Foo Bar")
     fill_in("Username", with: "foobar")
     fill_in("Email", with: "foo@bar.com")
+    fill_in("Main Phone", with: "+17094554098")
+    fill_in("Alternate Phone", with: "+2347033772211")
     select("Enumerator", from: "user_assignments_attributes_0_role")
     select("Send password reset instructions via email", from: "user_reset_password_method")
     click_button("Save")
