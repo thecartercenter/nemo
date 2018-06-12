@@ -114,6 +114,35 @@ describe Odk::ResponseParser do
     end
   end
 
+  context "response with select multiple" do
+    let(:form) do
+      create(
+        :form,
+        :published,
+        :with_version,
+        question_types: %w[select_multiple select_multiple]
+      )
+    end
+    let(:opt1) {form.c[0].option_set.sorted_children[0]}
+    let(:opt2) {form.c[0].option_set.sorted_children[1]}
+    let(:filename) { "select_multiple_response.xml" }
+    let(:xml_values) { ["on#{opt1.id} on#{opt2.id}", "none"] }
+    let(:expected_values) { ["#{opt1.option.name};#{opt2.option.name}", nil] }
+    let(:files) { {xml_submission_file: StringIO.new(xml)} }
+    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
+
+    it "should create the appropriate multilevel answer tree" do
+      Odk::ResponseParser.new(response: response, files: files).populate_response
+      expect_children(
+        response.root_node,
+        %w[Answer Answer],
+        form.c.map(&:id),
+        expected_values
+      )
+    end
+  end
+
   def expect_children(node, types, qing_ids, values)
     children = node.children.sort_by(&:new_rank)
     expect(children.map(&:type)).to eq types

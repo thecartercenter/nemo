@@ -105,7 +105,7 @@ module Odk
     end
 
     def add_answer(content, form_item, parent)
-      puts "add answer: #{content}"
+
       answer = Answer.new(
         questioning_id: form_item.id,
         #value: content,
@@ -114,7 +114,7 @@ module Odk
 
       populate_answer_value(answer, content, form_item)
       parent.children << answer
-
+      puts "added answer: #{answer.casted_value}"
     end
 
     def node_is_odk_header(node)
@@ -123,6 +123,7 @@ module Odk
 
     # finds the appropriate Option instance for an ODK submission
     def option_id_for_submission(option_node_str)
+      puts option_node_str
       if option_node_str =~ /\Aon([\w\-]+)\z/
         # look up inputs of the form "on####" as option node ids
         node_id = option_node_str.remove("on")
@@ -130,7 +131,7 @@ module Odk
       else
         #TODO: test and failure mode?
         # look up other inputs as option ids
-        Option.where(id: id_or_str).pluck(:id).first
+        Option.where(id: option_node_str).pluck(:id).first
       end
     end
 
@@ -138,9 +139,12 @@ module Odk
       case form_item.qtype.name
       when "select_one"
         answer.option_id = option_id_for_submission(content) unless content == "none"
+      when "select_multiple"
+        content.split(" ").each { |oid| answer.choices.build(option_id: option_id_for_submission(oid)) } unless content == "none"
       else
         answer.value = content
       end
+      answer
     end
 
     def form_item(name)
