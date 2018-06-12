@@ -518,7 +518,8 @@ describe Sms::Decoder, :sms do
       expect_decoding_fail(
         body: "#{@form.code} 1. 21",
         error: "answer_too_large",
-        value: "21")
+        value: "21"
+      )
     end
 
     it "answer strictly too large should fail" do
@@ -527,7 +528,8 @@ describe Sms::Decoder, :sms do
       expect_decoding_fail(
         body: "#{@form.code} 1. 20",
         error: "answer_too_large_strict",
-        value: "20")
+        value: "20"
+      )
     end
 
     it "answer too small should error" do
@@ -536,7 +538,8 @@ describe Sms::Decoder, :sms do
       expect_decoding_fail(
         body: "#{@form.code} 1. 19",
         error: "answer_too_small",
-        value: "19")
+        value: "19"
+      )
     end
 
     it "answer strictly too small should fail" do
@@ -545,7 +548,8 @@ describe Sms::Decoder, :sms do
       expect_decoding_fail(
         body: "#{@form.code} 1. 20",
         error: "answer_too_small_strict",
-        value: "20")
+        value: "20"
+      )
     end
   end
 
@@ -617,11 +621,40 @@ describe Sms::Decoder, :sms do
       expect(root_node).to be_a(AnswerGroup)
       expect(root_node.new_rank).to eq 1
 
-      expect_children(root_node, %w[AnswerGroup Answer AnswerSet AnswerGroup], form.c.map(&:id), [nil, 2, nil, nil])
-      expect_children(root_node.c[0], %w[Answer], form.c[0].c.map(&:id), [1])
-      expect_children(root_node.c[2], %w[Answer Answer], [form.c[2].id] * 2, ["Plant", "Tulip"])
-      expect_children(root_node.c[3], %w[Answer Answer AnswerGroup], form.c[3].c.map(&:id), [4, 5, nil])
-      expect_children(root_node.c[3].c[2], %w[Answer], form.c[3].c[2].c.map(&:id), [6])
+      expect_children(
+        root_node,
+        %w[AnswerGroup Answer AnswerSet AnswerGroup],
+        form.c.map(&:id),
+        [nil, 2, nil, nil]
+      )
+
+      expect_children(
+        root_node.c[0],
+        %w[Answer],
+        form.c[0].c.map(&:id),
+        [1]
+      )
+
+      expect_children(
+        root_node.c[2],
+        %w[Answer Answer],
+        [form.c[2].id] * 2,
+        %w[Plant Tulip]
+      )
+
+      expect_children(
+        root_node.c[3],
+        %w[Answer Answer AnswerGroup],
+        form.c[3].c.map(&:id),
+        [4, 5, nil]
+      )
+
+      expect_children(
+        root_node.c[3].c[2],
+        %w[Answer],
+        form.c[3].c[2].c.map(&:id),
+        [6]
+      )
     end
   end
 

@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Error encountered while parsing an incoming SMS message
 module Sms
   module Parser
     class Error < Sms::Error

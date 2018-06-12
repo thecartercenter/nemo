@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# Parses a single rank/value pair as part of an
+# incoming SMS message
 module Sms
   module Parser
     class RankValuePair < Struct.new(:rank, :value)

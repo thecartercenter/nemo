@@ -1,3 +1,7 @@
+# frozen_string_literal: true
+
+# Parses an incoming SMS message into an ordered
+# list of rank/value pairs.
 module Sms
   module Parser
     class AnswerParser
