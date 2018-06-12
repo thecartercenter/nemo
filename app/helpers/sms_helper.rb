@@ -26,11 +26,12 @@ module SmsHelper
     when "from" then
       user_with_phone(sms.sender, sms.from)
     when "body" then
-      content_tag(:span) do
-        "".html_safe <<
-          sms.body <<
-          content_tag(:div, "#{I18n.t('sms.error')}: #{sms.error_message}", class: "error-msg")
+      output = []
+      output << content_tag(:span, sms.body)
+      if sms.error_message
+        output << content_tag(:div, "#{I18n.t('sms.error')}: #{sms.error_message}", class: "error-msg")
       end
+      safe_join(output)
     else
       sms.send(field)
     end
