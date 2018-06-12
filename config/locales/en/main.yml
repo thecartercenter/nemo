@@ -535,6 +535,9 @@ en:
     placeholders:
       question:
         code: "MyQuestion"
+      user:
+        phone: "+17123241235"
+        phone2: "+2348123456789"
 
     action_links:
       broadcast:

@@ -12,6 +12,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:options] - The set of option tags to be used for a select control.
   # options[:prompt] - The text for the prompt/nil option to be provided in a select control.
   # options[:maxlength] - The maxlength attribute of a text field
+
+  # The placeholder attribute is handled using I18n. See placeholder code below
+
   def field(field_name, options = {})
     return hidden_field(field_name, options) if options[:type] == :hidden
 
