@@ -2022,6 +2022,7 @@ en:
 
   sms:
     extra_recipients_html: "<br/>... and %{count} more"
+    error: "Error"
     no_valid_adapter: "There is no valid outgoing SMS adapter. Please check the settings."
     outgoing_provider: "Outgoing SMS Provider"
     timestamp_with_diff_html: "%{time}<br/>(sent %{time_diff} earlier)"

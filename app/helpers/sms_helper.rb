@@ -25,16 +25,14 @@ module SmsHelper
       recips
     when "from" then
       user_with_phone(sms.sender, sms.from)
-    else
-      if field == "body"
-        "<span>
-          #{sms.send(field)}
-          <br/>
-          <h6 class='bold'>Error: <span class='error_msg'>I am the error message</span></h6>
-        </span>".html_safe
-      else
-        sms.send(field)
+    when "body" then
+      content_tag(:span) do
+        "".html_safe <<
+          sms.body <<
+          content_tag(:div,"#{I18n.t('sms.error')}: #{sms.error_message}", class: "error-msg")
       end
+    else
+      sms.send(field)
     end
   end
 
