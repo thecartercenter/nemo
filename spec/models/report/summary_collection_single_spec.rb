@@ -88,10 +88,10 @@ describe "summary collection with single subset" do
     end
 
     it "should be able to handle large values" do
-      val = 9999999999999.999999
-      prepare_form_and_collection('decimal', [val])
+      val = 9_999_999_999_999.999_999
+      prepare_form_and_collection("decimal", [val])
       prepare_collection
-      expect(headers_and_items(:stat, :stat)).to eq({mean: val, max: val, min: val})
+      expect(headers_and_items(:stat, :stat)).to eq(mean: val, max: val, min: val)
     end
   end
 
