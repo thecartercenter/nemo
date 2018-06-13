@@ -16,7 +16,7 @@ class Report::Formatter
     when "long_text"
       sanitize(context == :header ? truncate(value, length: 96) : value)
     else
-      sanitize(value)
+      value.is_a?(String) ? sanitize(value) : value
     end
   end
 
