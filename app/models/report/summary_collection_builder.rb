@@ -145,9 +145,9 @@ class Report::SummaryCollectionBuilder
       queries << <<-SQL
         SELECT #{disagg_select_expr} qing.id AS qing_id,
           SUM(CASE WHEN a.value IS NULL OR a.value = '' THEN 1 ELSE 0 END) AS null_count,
-          CAST(AVG(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS mean,
-          CAST(MIN(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS min,
-          CAST(MAX(CAST(a.value AS DECIMAL(9,6))) AS TEXT) AS max
+          CAST(AVG(CAST(a.value AS DECIMAL(20,6))) AS TEXT) AS mean,
+          CAST(MIN(CAST(a.value AS DECIMAL(20,6))) AS TEXT) AS min,
+          CAST(MAX(CAST(a.value AS DECIMAL(20,6))) AS TEXT) AS max
         FROM answers a INNER JOIN form_items qing
           ON qing.deleted_at IS NULL AND qing.type='Questioning'
             AND a.questioning_id = qing.id AND qing.id IN (?)
