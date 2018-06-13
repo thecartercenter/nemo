@@ -42,4 +42,12 @@ module GeneralSpecHelpers
   def tidyxml(str)
     Nokogiri::XML(str) { |config| config.noblanks }.to_s
   end
+
+  # assigns ENV vars
+  def with_env(vars)
+    vars.each_pair { |k, v| ENV[k] = v }
+    yield
+  ensure
+    vars.each_pair { |k, _| ENV.delete(k) }
+  end
 end
