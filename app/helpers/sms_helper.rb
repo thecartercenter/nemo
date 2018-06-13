@@ -29,7 +29,11 @@ module SmsHelper
       output = []
       output << content_tag(:span, sms.body)
       if sms.error_message
-        output << content_tag(:div, "#{I18n.t('sms.error')}: #{sms.error_message}", class: "error-msg")
+        output << content_tag(
+          :div,
+          "#{I18n.t('sms.error')}: #{I18n.t('sms.when_sending_reply')}: #{sms.error_message}",
+          class: "error-msg"
+        )
       end
       safe_join(output)
     else
