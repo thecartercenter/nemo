@@ -156,11 +156,13 @@ describe Report::ListReport, :reports do
         user = create(:user, name: "Foo")
         questions = [create(:question, code: "Test", qtype_name: "text")]
         form = create(:form, questions: questions)
-        create(:response, form: form, user: user, source: "odk", answer_values: ["<script>alert('hello');</script>"])
+        create(:response,
+          form: form, user: user, source: "odk",
+          answer_values: ["<script>alert('hello');</script>"])
 
         report = create_report("List", calculations_attributes: [
           {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
-          {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
+          {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id}
         ])
 
         expect(report).to have_data_grid(

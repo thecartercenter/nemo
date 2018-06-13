@@ -14,7 +14,7 @@ class Report::Formatter
     when "decimal"
       "%.2f" % value
     when "long_text"
-      sanitize(context == :header ? truncate(value, :length => 96) : value)
+      sanitize(context == :header ? truncate(value, length: 96) : value)
     else
       sanitize(value)
     end
@@ -28,8 +28,6 @@ class Report::Formatter
       value
     end
   end
-
-  private
 
   def self.sanitize(value)
     ActionController::Base.helpers.sanitize(value)
