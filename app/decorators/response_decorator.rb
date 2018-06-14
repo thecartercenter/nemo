@@ -2,7 +2,7 @@ class ResponseDecorator < ApplicationDecorator
   delegate_all
 
   def id
-    model.shortcode.try(:upcase)
+    model.id
   end
 
   def shortcode
