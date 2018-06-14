@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
-# Class for building answer hierarchy to mirror
-# question hierarchy
 module Sms
+  # Class for building answer hierarchy to mirror question hierarchy
   class AnswerHierarchy
+    attr_reader :answer_groups
+
     def initialize
       # mapping from qing group ID -> answer group
       @answer_groups = {}
@@ -46,10 +47,6 @@ module Sms
 
     private
 
-    def answer_groups
-      @answer_groups
-    end
-
     def build_answer_group(qing_group)
       answer_group = AnswerGroup.new(form_item: qing_group)
       link(answer_group)
@@ -57,9 +54,8 @@ module Sms
       answer_group
     end
 
-    # Link the given answer group to its parent
-    # This method will create all necessary ancestor
-    # groups that do not already exist
+    # Link the given answer group to its parent.
+    # This method will create all necessary ancestor groups that do not already exist.
     def link(answer_group)
       qing_group = answer_group.form_item
 

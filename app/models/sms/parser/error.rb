@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-# Error encountered while parsing an incoming SMS message
 module Sms
   module Parser
+    # Error encountered while parsing an incoming SMS message
     class Error < Sms::Error
       attr_reader :type, :params
 
@@ -13,7 +13,7 @@ module Sms
       end
 
       def to_s
-        super + " #{@params.inspect}"
+        super + " #{params.inspect}"
       end
     end
   end

@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
-# Parses an incoming SMS message into an ordered
-# list of rank/value pairs.
 module Sms
   module Parser
+    # Parses an incoming SMS message into an ordered list of rank/value pairs.
     class AnswerParser
       include Enumerable
 
@@ -33,22 +32,16 @@ module Sms
       private
 
       def handle_answer(token, rank, value)
-        match = token.match(/\A(\d+)\.(.*)\z/)
-
-        # if this looks like the start of an answer, treat it as such
-        if match
-          # save the rank and values to temporary variables for a moment
-          r = match[1].to_i
-          v = match[2]
-
-          append_pair(rank, value)
-
-          [r, v]
-        end
+        return unless (match = token.match(/\A(\d+)\.(.*)\z/))
+        # Save the rank and values to temporary variables for a moment
+        r = match[1].to_i
+        v = match[2]
+        append_pair(rank, value)
+        [r, v]
       end
 
       def append_pair(rank, value)
-        @pairs << RankValuePair.new(rank, value) if value.present?
+        pairs << RankValuePair.new(rank, value) if value.present?
       end
     end
   end

@@ -1,10 +1,11 @@
 # frozen_string_literal: true
 
-# Parses a single rank/value pair as part of an
-# incoming SMS message
 module Sms
   module Parser
+    # Parses a single rank/value pair as part of an incoming SMS message.
     class RankValuePair < Struct.new(:rank, :value)
+      # Generates an Answer object from the rank and value in the context of the given qing.
+      # Raises an error if parsing failed.
       def parse(qing)
         case qing.question.qtype.name
         when "integer", "counter"
