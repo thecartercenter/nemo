@@ -122,7 +122,9 @@ class XMLSubmission
       # We also make sure elsewhere in the app to not tz-shift time answers when we display them.
       # (Rails by default keeps time columns as UTC and does not shift them to the system's timezone.)
       if answer.qtype.name == "time"
+        puts str
         str = str.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC"
+        puts str
       end
       answer.send("#{question_type.name}_value=", Time.zone.parse(str))
     when "image", "annotated_image", "sketch", "signature"

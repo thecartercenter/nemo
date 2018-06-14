@@ -107,6 +107,7 @@ describe XMLSubmission, :odk do
       let(:data) { {form.c[0] => "12.3456 -76.99388"} }
 
       it "processes correct values" do
+        puts xml
         expect_location_answer(answer, val: "12.345600 -76.993880",
                                        lat: 12.3456, lng: -76.99388, alt: nil, acc: nil)
       end
@@ -139,7 +140,9 @@ describe XMLSubmission, :odk do
 
     it "retains timezone information for datetime but not time" do
       expect(nodes[0].set.answers[0].datetime_value.to_s).to eq "2017-07-12 07:40:00 -0600"
+      #puts nodes[1].set.answers[0].date_value.to_s
       expect(nodes[1].set.answers[0].date_value.to_s).to eq "2017-07-01"
+      puts nodes[2].set.answers[0].time_value.to_s
       expect(nodes[2].set.answers[0].time_value.to_s).to eq "2000-01-01 14:30:00 UTC"
       expect(nodes[0].set.answers[0].value).to be_nil
       expect(nodes[1].set.answers[0].value).to be_nil

@@ -141,6 +141,21 @@ module Odk
         answer.option_id = option_id_for_submission(content) unless content == "none"
       when "select_multiple"
         content.split(" ").each { |oid| answer.choices.build(option_id: option_id_for_submission(oid)) } unless content == "none"
+      when "date", "datetime", "time"
+        # Time answers arrive with timezone info (e.g. 18:30:00.000-04), but we treat a time question
+        # as having no timezone, useful for things like 'what time of day does the doctor usually arrive'
+        # as opposed to 'what exact date/time did the doctor last arrive'.
+        # If the latter information is desired, a datetime question should be used.
+        # Also, since Rails treats time data as always on 2000-01-01, using the timezone
+        # information could lead to DST issues. So we discard the timezone information for time questions only.
+        # We also make sure elsewhere in the app to not tz-shift time answers when we display them.
+        # (Rails by default keeps time columns as UTC and does not shift them to the system's timezone.)
+        if answer.qtype.name == "time"
+          puts content
+          content = content.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC"
+          puts content
+        end
+        answer.send("#{answer.qtype.name}_value=", Time.zone.parse(content))
       else
         answer.value = content
       end
