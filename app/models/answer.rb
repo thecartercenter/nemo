@@ -53,6 +53,8 @@ class Answer < ResponseNode
   before_save :remove_unchecked_choices
   after_save :reset_location_flag
 
+  validates :value, numericality: true, if: -> { should_validate?(:numericality) }
+  validate :validate_min_max, if: -> { should_validate?(:min_max) }
   validate :validate_required, if: -> { should_validate?(:required) }
   validate :validate_location, if: -> { should_validate?(:location) }
   validate :validate_date, :validate_datetime
@@ -264,6 +266,8 @@ class Answer < ResponseNode
     when :required
       # don't validate requiredness if response says no
       !(response && response.incomplete?)
+    when :min_max
+      value.present?
     when :location
       qtype.name == "location"
     else
@@ -338,6 +342,14 @@ class Answer < ResponseNode
 
   def validate_required
     errors.add(:value, :required) if required_but_empty?
+  end
+
+  def validate_min_max
+    val_f = value.to_f
+    if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
+      question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+      errors.add(:value, question.min_max_error_msg)
+    end
   end
 
   def validate_location
