@@ -48,23 +48,29 @@ module Sms
     private
 
     def build_answer_group(qing_group)
-      answer_group = AnswerGroup.new(form_item: qing_group)
-      link(answer_group)
-      answer_groups[qing_group.id] = answer_group
-      answer_group
+      group = AnswerGroup.new(form_item: qing_group)
+      if qing_group.repeatable?
+        set = AnswerGroupSet.new(form_item: qing_group)
+        set.children << group
+        group.new_rank = 1
+        add_to_parent(set)
+      else
+        add_to_parent(group)
+      end
+      answer_groups[qing_group.id] = group
+      group
     end
 
-    # Link the given answer group to its parent.
+    # Link the given answer group or set to its parent.
     # This method will create all necessary ancestor groups that do not already exist.
-    def link(answer_group)
-      qing_group = answer_group.form_item
-
+    def add_to_parent(node)
+      qing_group = node.form_item
       if qing_group.parent.nil?
-        answer_group.new_rank = 1
+        node.new_rank = 1
       else
-        parent_answer_group = lookup(qing_group.parent) || build_answer_group(qing_group.parent)
-        parent_answer_group.children << answer_group
-        answer_group.new_rank = parent_answer_group.children.length
+        parent = lookup(qing_group.parent) || build_answer_group(qing_group.parent)
+        parent.children << node
+        node.new_rank = parent.children.length
       end
     end
   end

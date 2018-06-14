@@ -571,7 +571,7 @@ describe Sms::Decoder, :sms do
     end
   end
 
-  describe "nested groups" do
+  describe "nested groups with repeat" do
     include_context "answer hierarchy"
 
     let(:form) do
@@ -580,7 +580,7 @@ describe Sms::Decoder, :sms do
       #     Questioning
       #   Questioning
       #   Questioning (multilevel)
-      #   QingGroup
+      #   QingGroup (repeating)
       #     Questioning
       #     Questioning
       #     QingGroup
@@ -590,11 +590,7 @@ describe Sms::Decoder, :sms do
           %w[integer],
           "integer",
           "multilevel_select_one_as_text_for_sms",
-          [
-            "integer",
-            "integer",
-            %w[integer]
-          ]
+          {repeating: {items: ["integer", "integer", %w[integer]]}}
         ],
         default_option_names: true
       )
@@ -607,11 +603,12 @@ describe Sms::Decoder, :sms do
     #   3. AnswerSet
     #     1. Answer
     #     2. Answer
-    #   4. AnswerGroup
-    #     1. Answer
-    #     2. Answer
-    #     3. AnswerGroup
+    #   4. AnswerGroupSet
+    #     1. AnswerGroup
     #       1. Answer
+    #       2. Answer
+    #       3. AnswerGroup
+    #         1. Answer
     it "builds corresponding answer hierarchy" do
       create_response(body: "#{form.code} 1.1 2.2 3.tulip 4.4 5.5 6.6")
       @decoder.answer_hierarchy.save(@response)
@@ -623,7 +620,7 @@ describe Sms::Decoder, :sms do
 
       expect_children(
         root_node,
-        %w[AnswerGroup Answer AnswerSet AnswerGroup],
+        %w[AnswerGroup Answer AnswerSet AnswerGroupSet],
         form.c.map(&:id),
         [nil, 2, nil, nil]
       )
@@ -644,13 +641,20 @@ describe Sms::Decoder, :sms do
 
       expect_children(
         root_node.c[3],
+        %w[AnswerGroup],
+        [form.c[3].id],
+        [nil]
+      )
+
+      expect_children(
+        root_node.c[3].c[0],
         %w[Answer Answer AnswerGroup],
         form.c[3].c.map(&:id),
         [4, 5, nil]
       )
 
       expect_children(
-        root_node.c[3].c[2],
+        root_node.c[3].c[0].c[2],
         %w[Answer],
         form.c[3].c[2].c.map(&:id),
         [6]
