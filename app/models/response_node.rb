@@ -8,7 +8,6 @@ class ResponseNode < ApplicationRecord
   belongs_to :response
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
-  # Should eventually be changed to just point to children once closure_tree's ordering is turned on.
   alias c children
 
   def debug_tree(indent: 0)
