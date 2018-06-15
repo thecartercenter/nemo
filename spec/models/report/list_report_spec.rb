@@ -152,13 +152,13 @@ describe Report::ListReport, :reports do
     end
 
     context "with HTML response value" do
-      it "sanitizes text" do
+      it "sanitizes harmful tags" do
         user = create(:user, name: "Foo")
         questions = [create(:question, code: "Test", qtype_name: "text")]
         form = create(:form, questions: questions)
         create(:response,
           form: form, user: user, source: "odk",
-          answer_values: ["<script>alert('hello');</script>"])
+          answer_values: ["<script>alert('hello');</script><b>There</b>"])
 
         report = create_report("List", calculations_attributes: [
           {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
@@ -167,7 +167,7 @@ describe Report::ListReport, :reports do
 
         expect(report).to have_data_grid(
           ["Submitter Name", "Test"],
-          ["Foo", "alert('hello');"]
+          ["Foo", "alert('hello');<b>There</b>"]
         )
       end
     end
