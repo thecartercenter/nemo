@@ -25,12 +25,13 @@ module Sms
       # tokenize the message by spaces
       @tokens = @msg.body.split(" ")
 
-      # looks ahead to set the mission based on the form unless the message already has a mission
-      set_mission if @msg.mission.blank?
-
-      # attempts to determine whether the message was automated,
-      # in which case we do not wish to respond to it
+      # Attempts to determine whether the message was automated, in which case we do not wish to
+      # respond to it. We can do this before setting the mission/locale because it won't generate a reply.
       check_for_automated_sender
+
+      # Looks ahead to set the mission based on the form unless the message already has a mission
+      # We do this early on because the mission will be used to determine the locale in which to reply.
+      set_mission if @msg.mission.blank?
 
       # assigns the user to the message if not already present
       # we do this first because it tells us what language to send errors in (if any)
