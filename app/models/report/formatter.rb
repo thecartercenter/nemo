@@ -1,5 +1,6 @@
 class Report::Formatter
   extend ActionView::Helpers::TextHelper
+
   def self.format(value, type, context)
     return nil if value.nil?
     value = translate(value)
@@ -13,9 +14,9 @@ class Report::Formatter
     when "decimal"
       "%.2f" % value
     when "long_text"
-      context == :header ? truncate(value, :length => 96) : value
+      sanitize(context == :header ? truncate(value, length: 96) : value)
     else
-      value
+      value.is_a?(String) ? sanitize(value) : value
     end
   end
 
@@ -26,5 +27,9 @@ class Report::Formatter
     else
       value
     end
+  end
+
+  def self.sanitize(value)
+    ActionController::Base.helpers.sanitize(value)
   end
 end
