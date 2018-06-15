@@ -42,11 +42,18 @@ Metrics/LineLength:
   Enabled: true
   Max: 110
 
+Metrics/MethodLength:
+  Max: 12
+
 Metrics/AbcSize:
   Max: 30
 
 Style/AsciiComments:
   Enabled: false
+
+Style/Documentation:
+  Exclude:
+    - db/migrate/*
 
 Style/EmptyMethod:
   EnforcedStyle: expanded

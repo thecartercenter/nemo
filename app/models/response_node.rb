@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-# Parent class for nodes in the answer hierarchy
+# Parent class for nodes in the response tree
 class ResponseNode < ApplicationRecord
   self.table_name = "answers"
 
   belongs_to :form_item, inverse_of: :answers, foreign_key: "questioning_id"
   belongs_to :response
-  has_closure_tree dependent: :destroy
+  has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
+
+  alias c children
 
   def debug_tree(indent: 0)
     child_tree = sorted_children.map { |c| c.debug_tree(indent: indent + 1) }.join
@@ -19,18 +21,8 @@ class ResponseNode < ApplicationRecord
     "\n#{chunks.join}#{child_tree}"
   end
 
-  # This method should eventually not be needed since closure_tree supports deterministic ordering.
-  # However, enabling it currently causes performance issues so we're holding off.
-  def sorted_children
-    children.sort_by(&:new_rank)
-  end
-
-  # Should eventually be changed to just point to children once closure_tree's ordering is turned on.
-  alias c sorted_children
-
   def associate_response(response)
     self.response = response
-
     children.each do |child|
       child.associate_response(response)
     end

@@ -3,7 +3,7 @@
 require "spec_helper"
 
 describe Sms::Decoder, :sms do
-  include_context "answer hierarchy"
+  include_context "response tree"
 
   let(:user) { get_user }
 
@@ -591,7 +591,7 @@ describe Sms::Decoder, :sms do
   end
 
   describe "complex hierarchy construction" do
-    it "builds answer hierarchy for nested groups with repeat" do
+    it "builds response tree for nested groups with repeat" do
       # QingGroup (root)
       #   QingGroup
       #     Questioning
@@ -716,8 +716,7 @@ describe Sms::Decoder, :sms do
   end
 
   def expect_response_basics(response, form)
-    expect(response.root_node).to be_a(AnswerGroup)
-    expect(response.root_node.new_rank).to eq 1
+    expect_root(response.root_node, form)
     expect(response.form_id).to eq(form.id)
   end
 
