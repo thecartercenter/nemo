@@ -134,6 +134,7 @@ gem "exception_notification"
 
 #react
 gem "react-rails"
+gem 'webpacker', '~> 3.5'
 
 # Closure tree for answer heirarchy
 gem "closure_tree", git: "https://github.com/ClosureTree/closure_tree"
