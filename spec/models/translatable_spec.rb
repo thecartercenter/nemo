@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 opts = configatron.translatable.default_options
 configatron.translatable.default_options = nil

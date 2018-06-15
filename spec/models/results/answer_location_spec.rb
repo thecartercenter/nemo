@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe "answer location data" do
   let(:form) { create(:form, question_types: question_types) }

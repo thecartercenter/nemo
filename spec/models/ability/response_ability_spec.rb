@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Response do
   let(:user) { create(:user, role_name: "enumerator") }

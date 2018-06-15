@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "redirect on mission change" do
 
@@ -90,7 +90,7 @@ describe "redirect on mission change" do
 
     # Then do a request for the same path but different mission
     # and make sure the redirect afterward is correct.
-    get(params[:from].gsub("mission1", "mission2"), missionchange: 1)
+    get(params[:from].gsub("mission1", "mission2"), params: {missionchange: 1})
 
     expect(flash[:error]).to be_nil, "Should be no error message for mission change redirects"
 

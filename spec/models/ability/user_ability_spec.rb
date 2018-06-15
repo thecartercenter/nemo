@@ -4,7 +4,7 @@
 # Only tests admins vs. regular users (coordinators) currently.
 # This distinction seems to be the trickiest.
 # Observer and staffer abilities are not currently tested.
-require "spec_helper"
+require "rails_helper"
 
 describe "abilities for users" do
   shared_examples_for "admin abilities in mission mode" do

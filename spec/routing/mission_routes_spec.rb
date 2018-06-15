@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "router" do
   it "routes broadcasts with locale and prefix" do

@@ -3,7 +3,7 @@ class ReportsController < ApplicationController
   include CsvRenderable
 
   # need to do special load for new/create/update because CanCan won't work with the STI hack in report.rb
-  before_filter :custom_load, :only => [:create]
+  before_action :custom_load, :only => [:create]
 
   # authorization via cancan
   load_and_authorize_resource :class => 'Report::Report'

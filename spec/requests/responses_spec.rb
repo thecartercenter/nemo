@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe "responses", type: :request do
@@ -45,7 +45,7 @@ describe "responses", type: :request do
 
   describe "create" do
     it "should work" do
-      post(responses_path(mode: "m", mission_name: get_mission.compact_name), response: response_attrs)
+      post(responses_path(mode: "m", mission_name: get_mission.compact_name), params: {response: response_attrs})
       resp = Response.first
       expect(response).to redirect_to responses_path
       expect(resp.user).to eq user
@@ -58,16 +58,18 @@ describe "responses", type: :request do
     let(:resp) { Response.create(response_attrs.merge(mission: get_mission)) }
 
     it "should work" do
-      put(url_for(resp), response: response_attrs.merge(
-        answers_attributes: {
-          "2" => {
-            id: resp.answers[2].id,
-            relevant: "1",
-            option_id: tulip.id,
-            rank: 2
+      put(url_for(resp), params: {
+        response: response_attrs.merge(
+          answers_attributes: {
+            "2" => {
+              id: resp.answers[2].id,
+              relevant: "1",
+              option_id: tulip.id,
+              rank: 2
+            }
           }
-        }
-      ))
+        )
+      })
       expect(response).to redirect_to(responses_path(mission_name: get_mission.compact_name))
       expect(Response.count).to eq 1
       resp = Response.first

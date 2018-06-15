@@ -1,5 +1,5 @@
 # There are many more form replication tests in test/unit/standardizable
-require "spec_helper"
+require "rails_helper"
 
 describe Form do
   let(:mission1) { create(:mission) }

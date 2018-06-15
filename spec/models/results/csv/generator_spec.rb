@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe Results::Csv::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }

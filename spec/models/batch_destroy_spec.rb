@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe BatchDestroy, type: :model do
   let(:current_user) { create(:user, email: "current@user.com") }

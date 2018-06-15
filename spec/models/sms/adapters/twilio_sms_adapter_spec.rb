@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Sms::Adapters::TwilioAdapter, :sms do
   before :all do

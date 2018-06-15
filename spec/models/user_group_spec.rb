@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe UserGroup do
   let(:user_group) { create(:user_group) }

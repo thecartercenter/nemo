@@ -1,5 +1,5 @@
 # There are more report tests in test/unit/report.
-require 'spec_helper'
+require 'rails_helper'
 
 # This spec covers behavior common to all gridable report types.
 describe Report::Gridable do

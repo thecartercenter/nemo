@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 feature "responses form", js: true do
   let(:user) { create(:user) }

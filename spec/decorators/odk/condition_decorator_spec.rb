@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Odk::ConditionDecorator do
   describe "to_odk", :odk do

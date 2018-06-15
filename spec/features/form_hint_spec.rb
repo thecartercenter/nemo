@@ -1,5 +1,5 @@
 # Tests the hint popovers in regular forms and modal forms.
-require 'spec_helper'
+require 'rails_helper'
 
 feature 'form hints', js: true do
   let(:form) { create(:form, question_types: %w(integer image image)) }

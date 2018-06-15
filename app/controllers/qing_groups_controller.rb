@@ -7,8 +7,8 @@ class QingGroupsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
-  before_filter :prepare_qing_group, only: [:create]
-  before_filter :validate_destroy, only: [:destroy]
+  before_action :prepare_qing_group, only: [:create]
+  before_action :validate_destroy, only: [:destroy]
   after_action :check_rank_fail
 
   def new
@@ -51,7 +51,7 @@ class QingGroupsController < ApplicationController
     # Removing group requires same permissions as removing questions.
     authorize!(:remove_questions, @qing_group.form)
     @qing_group.destroy
-    render nothing: true, status: 204
+    render body: nil, status: 204
   end
 
   private

@@ -100,7 +100,7 @@ class ResponsesController < ApplicationController
 
   def create
     # if this is a non-web submission
-    if request.format == Mime::XML
+    if request.format == Mime[:xml]
       begin
         @response.user_id = current_user.id
         # If it looks like a J2ME submission, process accordingly
@@ -129,7 +129,7 @@ class ResponsesController < ApplicationController
 
         @submission.save
 
-        render(nothing: true, status: 201)
+        render(body: nil, status: 201)
       rescue CanCan::AccessDenied
         render_xml_submission_failure($!, 403)
       rescue ActiveRecord::RecordNotFound
@@ -260,7 +260,7 @@ class ResponsesController < ApplicationController
 
   def render_xml_submission_failure(exception, code)
     Rails.logger.info("XML submission failed: '#{exception.to_s}'")
-    render(nothing: true, status: code)
+    render(body: nil, status: code)
   end
 
   # get the form specified in the params and error if it's not there

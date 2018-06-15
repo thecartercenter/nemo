@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "authentication" do
   it "should be logged out immediately if user is set to inactive" do

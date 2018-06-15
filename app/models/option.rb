@@ -91,7 +91,7 @@ class Option < ApplicationRecord
     if options[:for_option_set_form]
       super(
         only: %i[id latitude longitude name_translations value],
-        methods: %i[name set_names in_use])
+        methods: %i[name set_names in_use?])
     else
       super(options)
     end

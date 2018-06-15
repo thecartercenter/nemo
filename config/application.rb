@@ -63,6 +63,8 @@ module ELMO
       g.orm :active_record, primary_key_type: :uuid
     end
 
+    config.active_record.time_zone_aware_types = [:datetime]
+
     ####################################
     # CUSTOM SETTINGS
     ####################################

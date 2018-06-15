@@ -1,5 +1,5 @@
 #Spec for GTRI 5-1 security requirement
-require 'spec_helper'
+require 'rails_helper'
 
 describe "sanitizing responses" do
   let (:user) { create(:user) }

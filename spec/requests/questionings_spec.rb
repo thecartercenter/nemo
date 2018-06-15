@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe "questionings", type: :request do
@@ -15,10 +15,12 @@ describe "questionings", type: :request do
 
       it "changing name should succeed" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          "questioning" => {
-            "question_attributes" => {
-              "id" => qing.question_id,
-              "name_en" => "Foo"
+          params: {
+            "questioning" => {
+              "question_attributes" => {
+                "id" => qing.question_id,
+                "name_en" => "Foo"
+              }
             }
           }
         )
@@ -28,24 +30,26 @@ describe "questionings", type: :request do
 
       it "changing required flag should be unauthorized" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          "questioning" => {"required" => "1"})
+          params: {"questioning" => {"required" => "1"}})
         expect(response).to redirect_to(unauthorized_path)
       end
 
       it "changing hidden flag should be unauthorized" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          "questioning" => {"hidden" => "1"})
+          params: {"questioning" => {"hidden" => "1"}})
         expect(response).to redirect_to(unauthorized_path)
       end
 
       it "changing condition should be unauthorized" do
         put(questioning_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          "questioning" => {
-            "display_conditions_attributes" => [{
-              "ref_qing_id" => form.c[0].id,
-              "op" => "eq",
-              "value" => "foo"
-            }]
+          params: {
+            "questioning" => {
+              "display_conditions_attributes" => [{
+                "ref_qing_id" => form.c[0].id,
+                "op" => "eq",
+                "value" => "foo"
+              }]
+            }
           }
         )
         expect(response).to redirect_to(unauthorized_path)

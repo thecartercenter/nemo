@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe FormItem do
   describe "parent must be group" do

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "qing groups", type: :request do
   let(:user) { create(:user, role_name: "coordinator") }
@@ -12,7 +12,7 @@ describe "qing groups", type: :request do
 
   describe "create" do
     before(:each) do
-      post(qing_groups_path(mode: "m", mission_name: get_mission.compact_name), qing_group: { form_id: form.id })
+      post(qing_groups_path(mode: "m", mission_name: get_mission.compact_name), params: {qing_group: { form_id: form.id }})
     end
 
     it "should be successful" do
@@ -35,7 +35,7 @@ describe "qing groups", type: :request do
   describe "update" do
     before(:each) do
       put(qing_group_path(qing_group, mode: "m", mission_name: get_mission.compact_name),
-        "qing_group" => { "group_name_en" => "New Group Name", "group_name_fr" => "New Groupe Name" })
+        params: {"qing_group" => { "group_name_en" => "New Group Name", "group_name_fr" => "New Groupe Name" }})
     end
 
     it "should be successful" do

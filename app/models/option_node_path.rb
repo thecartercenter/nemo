@@ -36,7 +36,7 @@ class OptionNodePath
   # Ensures there are either OptionNode objects or nils for each level in the OptionSet (including root).
   # If target_node is nil, still includes the root node in the array.
   def ensure_nodes_for_all_levels
-    self.nodes ||= target_node ? target_node.ancestors << target_node : [option_set.root_node]
+    self.nodes ||= target_node ? target_node.ancestors.to_a << target_node : [option_set.root_node]
     level_count.times.each { |i| nodes[i + 1] ||= nil }
   end
 end

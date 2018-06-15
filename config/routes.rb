@@ -55,18 +55,18 @@ ELMO::Application.routes.draw do
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
     resources(:broadcasts) do
       collection do
-        get "possible_recipients", path: "possible-recipients"
-        post "new_with_users", path: "new-with-users"
+        get "possible-recipients", as: "possible_recipients", action: "possible_recipients"
+        post "new-with-users", as: "new_with_users", action: "new_with_users"
       end
     end
     resources :responses do
       %i(new member).each do |type|
-        get "possible_users", path: "possible-users", on: type
+        get "possible-users", as: "possible_users", action: "possible_users", on: type
       end
     end
     resources :sms, only: [:index] do
       collection do
-        get "incoming_numbers", path: "incoming-numbers", defaults: { format: "csv" }
+        get "incoming-numbers", as: "incoming_numbers", action: "incoming_numbers", defaults: { format: "csv" }
       end
     end
 
@@ -105,17 +105,17 @@ ELMO::Application.routes.draw do
     # the rest of these routes can have admin mode or not
     resources :forms, constraints: -> (req) { req.format == :html } do
       member do
-        post "add_questions", path: "add-questions"
-        post "remove_questions", path: "remove-questions"
+        post "add-questions", as: "add_questions", action: "add_questions"
+        post "remove-questions", as: "remove_questions", action: "remove_questions"
         put "clone"
         put "publish"
-        get "choose_questions", path: "choose-questions"
-        get "sms_guide", path: "sms-guide"
+        get "choose-questions", as: "choose_questions", action: "choose_questions"
+        get "sms-guide", as: "sms_guide", action: "sms_guide"
       end
     end
     resources :questions do
       collection do
-        post "bulk_destroy", path: "bulk-destroy"
+        post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
       end
     end
     resources :questionings
@@ -131,7 +131,7 @@ ELMO::Application.routes.draw do
     end
     resources :user_batches, path: "user-batches" do
       collection do
-        get "template", path: "users-template", defaults: { format: "xslx" }
+        get "users-template", as: "template", action: "template", defaults: { format: "xslx" }
       end
     end
 
@@ -139,28 +139,28 @@ ELMO::Application.routes.draw do
       post "add_users"
       post "remove_users"
       collection do
-        get "possible_groups", path: "possible-groups"
+        get "possible-groups", as: "possible_groups", action: "possible_groups"
       end
     end
 
     resources :form_items, path: "form-items", only: [:update] do
       collection do
-        get "condition_form", path: "condition-form"
+        get "condition-form", as: "condition_form", action: "condition_form"
       end
     end
 
     resources :option_sets, path: "option-sets" do
       member do
-        get "child_nodes", path: "child-nodes"
+        get "child-nodes", as: "child-nodes", action: "child_nodes"
         put "clone"
         get "export", defaults: { format: "xlsx" }
-        get "condition_form_view", path: "condition-form-view"
+        get "condition-form-view", as: "condition_form_view", action: "condition_form_view"
       end
     end
 
     resource :option_set_imports, path: "option-set-imports", only: [:new, :create] do
       collection do
-        get "template", path: "option-sets-template", defaults: { format: "xlsx" }
+        get "option-sets-template", as: "template", action: "template", defaults: { format: "xlsx" }
       end
     end
 
@@ -178,13 +178,13 @@ ELMO::Application.routes.draw do
   scope ":locale(/:mode)(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/, mission_name: /[a-z][a-z0-9]*/ do
     resources :users do
       member do
-        get "login_instructions", path: "login-instructions"
+        get "login-instructions", as: "login_instructions", action: "login_instructions"
         post "regenerate_api_key"
         post "regenerate_sms_auth_code"
       end
       collection do
         post "export"
-        post "bulk_destroy", path: "bulk-destroy"
+        post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
       end
     end
   end
