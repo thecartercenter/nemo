@@ -2,10 +2,10 @@ require "spec_helper"
 
 describe Odk::ResponseParser do
   let(:save_fixtures) { true }
+  let(:form) { create(:form, :published, :with_version, question_types: question_types) }
 
   context "simple form" do
     let(:filename) { "simple_response.xml" }
-    let(:form) { create(:form, :published, :with_version, question_types: question_types) }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
     let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
     let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
@@ -57,6 +57,66 @@ describe Odk::ResponseParser do
         expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
       end
     end
+
+    context "response with select multiple" do
+      let(:question_types) { %w[select_multiple select_multiple text] }
+      let(:opt1) {form.c[0].option_set.sorted_children[0]}
+      let(:opt2) {form.c[0].option_set.sorted_children[1]}
+      let(:xml_values) { ["on#{opt1.id} on#{opt2.id}", "none", "A"] }
+      let(:expected_values) { ["#{opt1.option.name};#{opt2.option.name}", nil, "A"] }
+
+      it "should create the appropriate multilevel answer tree" do
+        Odk::ResponseParser.new(response: response, files: files).populate_response
+        expect_children(
+          response.root_node,
+          %w[Answer Answer Answer],
+          form.c.map(&:id),
+          expected_values
+        )
+      end
+    end
+
+    # Don't really need this spec; the hard work is in answer.rb and needs test coverage
+    context "with location type" do
+      let(:question_types) { %w[location location text] }
+      let(:xml_values) { ["12.345600 -76.993880", "12.3456 -76.99388 123.456 20.0", "A"] }
+      let(:expected_values) {xml_values}
+
+      it "parses location answers correctly" do
+        Odk::ResponseParser.new(response: response, files: files).populate_response
+        expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+      end
+    end
+
+    context "with date, time, and datetime types" do
+      let(:question_types) { %w[datetime date time] }
+      let(:xml_values) { ["2017-07-12T16:40:00.000+03", "2017-07-01", "14:30:00.000+03"] }
+      let(:expected_values) { ["2017-07-12 07:40:00 -0600", "2017-07-01", "2000-01-01 14:30:00 UTC"] }
+
+      around do |example|
+        in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
+      end
+
+      it "retains timezone information for datetime but not time" do
+        Odk::ResponseParser.new(response: response, files: files).populate_response
+        expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+      end
+    end
+
+    context "with prefilled timestamps" do
+      let(:question_types) { %w[formstart text formend] }
+      let(:xml_values) { ["2017-07-12T16:40:12.000-06", "A", "2017-07-12T16:42:43.000-06"] }
+      let(:expected_values) { ["2017-07-12 16:40:12 -06", "A", "2017-07-12 16:42:43 -06"] }
+
+      around do |example|
+        in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
+      end
+
+      it "accepts data normally" do
+        Odk::ResponseParser.new(response: response, files: files).populate_response
+        expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+      end
+    end
   end
 
   context "forms with a group" do
@@ -76,7 +136,7 @@ describe Odk::ResponseParser do
   end
 
   context "repeat group forms" do
-    let(:form) { create(:form, :published, :with_version, question_types: ["text", {repeating: {items: %w[text text]}}]) }
+    let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
     let(:filename) { "repeat_group_form_response.xml" }
     let(:values) { %w[A B C D E] }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
@@ -91,16 +151,9 @@ describe Odk::ResponseParser do
       expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
     end
   end
-
+  
   context "form with multilevel answer" do
-    let(:form) do
-      create(
-        :form,
-        :published,
-        :with_version,
-        question_types: %w[text multilevel_select_one multilevel_select_one multilevel_select_one]
-      )
-    end
+    let(:question_types) { %w[text multilevel_select_one multilevel_select_one multilevel_select_one] }
     let(:level1_opt) { form.c[1].option_set.sorted_children[1] }
     let(:level2_opt) { form.c[1].option_set.sorted_children[1].sorted_children[0] }
     let(:filename) { "multilevel_response.xml" }
@@ -146,112 +199,6 @@ describe Odk::ResponseParser do
       )
     end
   end
-
-  context "response with select multiple" do
-    let(:form) do
-      create(
-        :form,
-        :published,
-        :with_version,
-        question_types: %w[select_multiple select_multiple text]
-      )
-    end
-    let(:opt1) {form.c[0].option_set.sorted_children[0]}
-    let(:opt2) {form.c[0].option_set.sorted_children[1]}
-    let(:filename) { "simple_response.xml" }
-    let(:xml_values) { ["on#{opt1.id} on#{opt2.id}", "none", "A"] }
-    let(:expected_values) { ["#{opt1.option.name};#{opt2.option.name}", nil, "A"] }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
-
-    it "should create the appropriate multilevel answer tree" do
-      Odk::ResponseParser.new(response: response, files: files).populate_response
-      expect_children(
-        response.root_node,
-        %w[Answer Answer Answer],
-        form.c.map(&:id),
-        expected_values
-      )
-    end
-  end
-
-  # Don't really need this spec; the hard work is in answer.rb and needs test coverage
-  context "with location type" do
-    let(:form) do
-      create(
-        :form,
-        :published,
-        :with_version,
-        question_types: %w[location location text]
-      )
-    end
-    let(:filename) { "simple_response.xml" }
-    let(:values) { ["12.345600 -76.993880", "12.3456 -76.99388 123.456 20.0", "A"] }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: values) }
-
-    it "parses location answers correctly" do
-      Odk::ResponseParser.new(response: response, files: files).populate_response
-      expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), values)
-    end
-  end
-
-  context "with date, time, and datetime types" do
-    let(:form) do
-      create(
-        :form,
-        :published,
-        :with_version,
-        question_types: %w[datetime date time]
-      )
-    end
-    let(:filename) { "simple_response.xml" }
-    let(:xml_values) { ["2017-07-12T16:40:00.000+03", "2017-07-01", "14:30:00.000+03"] }
-    let(:expected_values) { ["2017-07-12 07:40:00 -0600", "2017-07-01", "2000-01-01 14:30:00 UTC"] }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
-
-    around do |example|
-      in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
-    end
-
-    it "retains timezone information for datetime but not time" do
-      Odk::ResponseParser.new(response: response, files: files).populate_response
-      expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
-    end
-  end
-
-  context "with prefilled timestamps" do
-    let(:form) do
-      create(
-        :form,
-        :published,
-        :with_version,
-        question_types: %w[formstart text formend]
-      )
-    end
-
-    let(:filename) { "simple_response.xml" }
-    let(:xml_values) { ["2017-07-12T16:40:12.000-06", "A", "2017-07-12T16:42:43.000-06"] }
-    let(:expected_values) { ["2017-07-12 16:40:12 -06", "A", "2017-07-12 16:42:43 -06"] }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
-
-    around do |example|
-      in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
-    end
-
-    it "accepts data normally" do
-      Odk::ResponseParser.new(response: response, files: files).populate_response
-      expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
-    end
-  end
-
-
 
   def expect_children(node, types, qing_ids, values)
     children = node.children.sort_by(&:new_rank)
