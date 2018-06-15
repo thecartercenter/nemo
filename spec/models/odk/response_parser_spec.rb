@@ -1,47 +1,60 @@
 require "spec_helper"
 
 describe Odk::ResponseParser do
-  #move XML submission specs over here one by one. For each one, change to use new answer hierarchy and expect_children. Then get it passing.
-
   let(:save_fixtures) { true }
 
   context "simple form" do
     let(:filename) { "simple_response.xml" }
-    let(:form) { create(:form, :published, :with_version, question_types: %w[text text text]) }
-    let(:values) { %w[A B C] }
+    let(:form) { create(:form, :published, :with_version, question_types: question_types) }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
     let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
 
-    context "valid input" do
-      let(:xml) { prepare_odk_fixture(filename, form, {values: values}) }
+    context "text questions only" do
+      let(:xml_values) { %w[A B C] }
+      let(:expected_values) { xml_values }
+      let(:question_types) { %w[text text text] }
 
-      it "should produce a simple tree from a form with three children" do
+      context "valid input" do
+        it "should produce a simple tree from a form with three children" do
+          Odk::ResponseParser.new(response: response, files: files).populate_response
+
+          expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+        end
+      end
+
+      context "outdated form" do
+        let(:xml) { prepare_odk_fixture(filename, form, values: xml_values, formver: "wrong") }
+
+        it "should error" do
+          expect do
+            Odk::ResponseParser.new(response: response, files: files).populate_response
+          end.to raise_error(FormVersionError, "Form version is outdated")
+        end
+      end
+
+      context "response contains form item not in form" do
+        let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
+        let(:other_form) { create(:form) }
+
+        it "should error" do
+          xml # create xml before updating form's second question to have a different form id.
+          form.c[1].update_attribute(:form_id, other_form.id) # skip validations with update_attribute
+          expect do
+            Odk::ResponseParser.new(response: response, files: files).populate_response
+          end.to raise_error(SubmissionError, "Submission contains group or question not found in form.")
+        end
+      end
+    end
+
+    context "with other question types" do
+      let(:xml_values) { ["Quick", "The quick brown fox jumps over the lazy dog", 9.6] }
+      let(:expected_values) { xml_values }
+      let(:question_types) { %w[text long_text decimal] }
+
+      it "processes values correctly" do
         Odk::ResponseParser.new(response: response, files: files).populate_response
-
-        expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), values)
-      end
-    end
-
-    context "outdated form" do
-      let(:xml) { prepare_odk_fixture(filename, form, {values: values, formver: "wrong"}) }
-
-      it "should error" do
-        expect {
-          Odk::ResponseParser.new(response: response, files: files).populate_response
-        }.to raise_error(FormVersionError, "Form version is outdated")
-      end
-    end
-
-    context "response contains form item not in form" do
-      let(:xml) { prepare_odk_fixture(filename, form, {values: values}) }
-      let(:other_form) {create(:form, :published, :with_version, question_types: %w[text])}
-
-      it "should error" do
-        xml #create xml before updating form's second question to have a different form id.
-        form.c[1].update_attribute(:form_id,  other_form.id)
-        expect {
-          Odk::ResponseParser.new(response: response, files: files).populate_response
-        }.to raise_error(SubmissionError, "Submission contains group or question not found in form.")
+        expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
       end
     end
   end
@@ -52,7 +65,7 @@ describe Odk::ResponseParser do
     let(:values) { %w[A B C D] }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
     let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, {values: values}) }
+    let(:xml) { prepare_odk_fixture(filename, form, values: values) }
 
     it "should produce the correct tree" do
       Odk::ResponseParser.new(response: response, files: files).populate_response
@@ -237,31 +250,6 @@ describe Odk::ResponseParser do
       expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
     end
   end
-
-  context "with other question types" do
-    let(:form) do
-      create(
-        :form,
-        :published,
-        :with_version,
-        question_types: %w[text long_text decimal]
-      )
-    end
-
-    let(:filename) { "simple_response.xml" }
-    let(:values) { ["Quick", "The quick brown fox jumps over the lazy dog", 9.6] }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: values) }
-
-    it "processes values correctly" do
-      Odk::ResponseParser.new(response: response, files: files).populate_response
-      expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), values)
-    end
-  end
-
-
-
 
 
 
