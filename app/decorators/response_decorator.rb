@@ -1,9 +1,7 @@
+# frozen_string_literal: true
+
 class ResponseDecorator < ApplicationDecorator
   delegate_all
-
-  def id
-    model.shortcode.try(:upcase)
-  end
 
   def shortcode
     model.shortcode.try(:upcase)
