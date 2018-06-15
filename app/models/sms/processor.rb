@@ -4,6 +4,7 @@
 class Sms::Processor
 
   attr_accessor :incoming_msg, :reply, :forward, :all_incoming_numbers
+  delegate :finalize, to: :decoder
 
   def initialize(incoming_msg)
     @incoming_msg = incoming_msg
@@ -18,17 +19,6 @@ class Sms::Processor
 
     self.reply = handle_reply
     self.forward = handle_forward
-  end
-
-  # Finalizes the process, should be called after all checks have passed.
-  # No objects are persisted before this point.
-  def finalize
-    return unless decoder.response_built?
-
-    # TODO: We can remove the `validate: false` once various validations are
-    # removed from the response model
-    decoder.response.save!(validate: false)
-    decoder.answer_hierarchy.try(:save, decoder.response)
   end
 
   private

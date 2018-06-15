@@ -86,6 +86,17 @@ module Sms
       response.present?
     end
 
+    # Finalizes the process, should be called after all checks have passed.
+    # No objects are persisted before this point.
+    def finalize
+      return unless response_built?
+
+      # TODO: We can remove the `validate: false` once various validations are
+      # removed from the response model
+      response.save(validate: false)
+      answer_hierarchy.save(response)
+    end
+
     private
 
     # attempts to find the form matching the code in the message
