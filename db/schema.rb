@@ -53,6 +53,7 @@ ActiveRecord::Schema.define(version: 20_180_529_200_651) do
   end
 
   add_index "answers", ["deleted_at", "type"], name: "index_answers_on_deleted_at_and_type", using: :btree
+  add_index "answers", ["new_rank"], name: "index_answers_on_new_rank", using: :btree
   add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
   add_index "answers", ["parent_id"], name: "index_answers_on_parent_id", using: :btree
   add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
