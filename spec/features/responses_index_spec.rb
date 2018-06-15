@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
 feature "responses index" do
-  context 'general index page display' do
+  context "general index page display" do
     let(:user) { create(:user) }
     let(:form) { create(:form, :published, name: "TheForm") }
     let(:response_link) { Response.first.decorate.shortcode }
@@ -23,20 +25,22 @@ feature "responses index" do
     end
   end
 
-  context 'multiple entries and data check' do
-    let!(:admin) { create(:admin) }
-    let(:user_1) { create(:user) }
-    let(:user_2) { create(:user) }
-    let(:form) { create(:form, :published, question_types: %w(integer)) }
-    let!(:response_1) { create(:response, user: user_1, form: form, answer_values: [1]) }
-    let!(:response_2) { create(:response, user: user_2, form: form, answer_values: [2]) }
-    let(:response_link) { Response.first.decorate.shortcode }
+  context "with key question" do
+    let(:user) { create(:user) }
+    let(:form) { create(:form, :published, question_types: %w[text]) }
+    let!(:response1) { create(:response, user: user, form: form, answer_values: ["pants"]) }
+    let!(:response2) { create(:response, user: user, form: form, answer_values: ["sweater"]) }
 
-    scenario 'display all responses with values' do
-      login(admin)
+    before do
+      form.c[0].question.update!(key: true)
+    end
+
+    scenario "key question values are shown in index" do
+      login(user)
       click_link("Responses")
-      expect(page).to have_content(response_1.answers.first.value)
-      expect(page).to have_content(response_2.answers.first.value)
+      expect(page).to have_content(form.c[0].code)
+      expect(page).to have_content("pants")
+      expect(page).to have_content("sweater")
     end
   end
 end
