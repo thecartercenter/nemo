@@ -3,7 +3,8 @@
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Processor
 
-  attr_accessor :incoming_msg, :elmo_response, :reply, :forward, :all_incoming_numbers
+  attr_accessor :incoming_msg, :reply, :forward, :all_incoming_numbers
+  delegate :finalize, to: :decoder
 
   def initialize(incoming_msg)
     @incoming_msg = incoming_msg
@@ -18,14 +19,6 @@ class Sms::Processor
 
     self.reply = handle_reply
     self.forward = handle_forward
-  end
-
-  # Finalizes the process, should be called after all checks have passed.
-  # No objects are persisted before this point.
-  def finalize
-    # Validations have already been run by this point so the response may be invalid.
-    # So we don't use validate: false or save! We just want to save it if it's valid.
-    elmo_response.save if elmo_response
   end
 
   private
@@ -44,61 +37,38 @@ class Sms::Processor
 
   def reply_body
     @reply_body ||= begin
-      # Decode, validate, and send congrats.
-      self.elmo_response = Sms::Decoder.new(incoming_msg).decode
-      raise ActiveRecord::RecordInvalid.new(elmo_response) unless elmo_response.valid?
+      # Decode and send congrats.
+      decoder.decode
       t_sms_msg("sms_form.decoding.congrats")
 
     # if there is a decoding error, respond accordingly
-    rescue Sms::DecodingError
-
+    rescue Sms::DecodingError => err
+      case err.type
       # If it's an automated sender, send no reply at all
-      if $!.type == "automated_sender"
+      when "automated_sender"
         nil
-      else
-        msg = t_sms_msg("sms_form.decoding.#{$!.type}", $!.params)
-
-        # if this is an answer format error, add an intro to the beginning and add a period
-        if $!.type =~ /^answer_not_/
-          t_sms_msg("sms_form.decoding.answer_error_intro", $!.params) + " " + msg + "."
-        else
-          msg
-        end
-      end
-
-    # if there is a validation error, respond accordingly
-    rescue ActiveRecord::RecordInvalid
-      # we only need to handle the first error
-      field, error_msgs = elmo_response.errors.messages.first
-      error_msg = error_msgs.first
-
-      # get the orignal error key by inverting the dictionary
-      # we use the system-wide locale since that's what the model would have used when generating the error
-      dict = I18n.t("activerecord.errors.models.response")
-      key = dict ? dict.invert[error_msg] : nil
-
-      case key
-      when :missing_answers
+      when "missing_answers"
         # if it's the missing_answers error, we need to include which answers are missing
         # get the ranks
-        ranks = elmo_response.missing_answers.map(&:rank).sort.join(",")
+        params = err.params
+        missing_answers = params[:missing_answers]
+        params[:ranks] = missing_answers.map(&:rank).sort.join(",")
 
         # pluralize the translation key if appropriate
         key = "sms_form.validation.missing_answer"
-        key += "s" if elmo_response.missing_answers.size > 1
+        key += "s" if missing_answers.size > 1
 
         # translate
-        t_sms_msg(key, ranks: ranks)
-
-      when :invalid_answers
-        # if it's the invalid_answers error, we need to find the first answer that's invalid and report its error
-        invalid_answer = elmo_response.answers.detect { |a| a.errors && a.errors.messages.size > 0 }
-        t_sms_msg("sms_form.validation.invalid_answer", rank: invalid_answer.questioning.rank,
-          error: invalid_answer.errors.messages.values.join(", "))
-
+        t_sms_msg(key, params)
       else
-        # if we don't recognize the key, just use the regular message. it may not be pretty but it's better than nothing.
-        error_msg
+        msg = t_sms_msg("sms_form.decoding.#{err.type}", err.params)
+
+        # if this is an answer format error, add an intro to the beginning and add a period
+        if err.type =~ /^answer_not_/
+          t_sms_msg("sms_form.decoding.answer_error_intro", err.params) + " " + msg + "."
+        else
+          msg
+        end
       end
     end
   end
@@ -106,8 +76,8 @@ class Sms::Processor
   # Decides if an SMS forward is called for, and builds and returns the Sms::Forward object if so.
   # Returns nil if no forward is called for, or if an error is encountered in constructing the message.
   def handle_forward
-    return unless elmo_response && elmo_response.valid?
-    form = elmo_response.try(:form)
+    return unless decoder.response_built?
+    form = decoder.form
 
     if form && form.sms_relay?
       broadcast = ::Broadcast.new(
@@ -133,8 +103,8 @@ class Sms::Processor
   # translates a message for the sms reply using the appropriate locale
   def t_sms_msg(key, options = {})
     # Get some options from Response (if available) unless they're explicitly given
-    if elmo_response
-      %i(user form mission).each { |a| options[a] = elmo_response.send(a) unless options.has_key?(a) }
+    if decoder.response_built?
+      %i(user form mission).each { |a| options[a] = decoder.response.send(a) unless options.has_key?(a) }
     end
 
     # throw in the form_code if it's not there already and we have the form
@@ -151,5 +121,9 @@ class Sms::Processor
     split_message = message.split(" ")
     split_message.shift if form.authenticate_sms?
     joined_message = split_message.join(" ")
+  end
+
+  def decoder
+    @decoder ||= Sms::Decoder.new(incoming_msg)
   end
 end

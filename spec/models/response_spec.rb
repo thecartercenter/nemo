@@ -51,18 +51,6 @@ describe Response do
     expect{ create(:response, user: user, form: form, incomplete: true) }.not_to raise_error
   end
 
-  it "incomplete responses should not disable constraints" do
-    form = create(:form, question_types: %w(integer))
-    form.root_questionings.first.required = true
-    form.root_questionings.first.question.update_attribute(:minimum, 10)
-    form.publish!
-    form.reload
-
-    r1 = build(:response, form: form, incomplete: true, answer_values: %w(9))
-    expect(r1.valid?).to eq(false)
-    assert_match(/greater than/, r1.answers.first.errors.full_messages.join)
-  end
-
   it "a user can checkout a response" do
     user = create(:user)
     response = build(:response)

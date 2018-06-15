@@ -347,7 +347,7 @@ class Answer < ResponseNode
   def validate_min_max
     val_f = value.to_f
     if question.maximum && (val_f > question.maximum || question.maxstrictly && val_f == question.maximum) ||
-        question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
+      question.minimum && (val_f < question.minimum || question.minstrictly && val_f == question.minimum)
       errors.add(:value, question.min_max_error_msg)
     end
   end
