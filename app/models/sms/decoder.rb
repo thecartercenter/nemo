@@ -7,7 +7,7 @@ module Sms
     DUPLICATE_WINDOW = 12.hours
     AUTH_CODE_FORMAT = /[a-z0-9]{4}/i
 
-    attr_reader :response, :answer_hierarchy
+    attr_reader :response, :response_tree
 
     delegate :form, to: :response
 
@@ -52,7 +52,7 @@ module Sms
       authenticate_user
       check_permission
 
-      answer_hierarchy = Sms::AnswerHierarchy.new
+      response_tree = Sms::ResponseTreeBuilder.new
       answers = []
 
       pairs = Sms::Parser::AnswerParser.new(@tokens[1..-1])
@@ -60,10 +60,10 @@ module Sms
         next unless (qing = find_qing(pair.rank))
 
         begin
-          answer_group = answer_hierarchy.answer_group_for(qing)
+          answer_group = response_tree.answer_group_for(qing)
           pair.parse(qing).each do |result|
             answer = Answer.new(result)
-            answer_hierarchy.add_answer(answer_group, answer)
+            response_tree.add_answer(answer_group, answer)
             answers << answer
           end
         rescue Sms::Parser::Error => err
@@ -77,7 +77,7 @@ module Sms
 
       # if we get to this point everything went nicely, so we can set the response
       @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
-      @answer_hierarchy = answer_hierarchy
+      @response_tree = response_tree
     rescue Sms::Parser::Error => err
       raise_decoding_error(err.type, err.params)
     end
@@ -94,7 +94,7 @@ module Sms
       # TODO: We can remove the `validate: false` once various validations are
       # removed from the response model
       response.save(validate: false)
-      answer_hierarchy.save(response)
+      response_tree.save(response)
     end
 
     private

@@ -99,7 +99,11 @@ FactoryGirl.define do
     # - select_multiple questions
     # - QingGroups
     answers do
-      ResponseFactoryHelper.build_answers(form.root_group, answer_values).flatten.compact
+      if answer_values.nil?
+        []
+      else
+        ResponseFactoryHelper.build_answers(form.root_group, answer_values).flatten.compact
+      end
     end
   end
 end
