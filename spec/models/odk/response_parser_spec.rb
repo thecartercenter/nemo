@@ -3,17 +3,17 @@ require "spec_helper"
 describe Odk::ResponseParser do
   let(:save_fixtures) { true }
   let(:form) { create(:form, :published, :with_version, question_types: question_types) }
+  let(:files) { {xml_submission_file: StringIO.new(xml)} }
+  let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+  let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
 
   context "simple form" do
     let(:filename) { "simple_response.xml" }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
 
     context "text questions only" do
+      let(:question_types) { %w[text text text] }
       let(:xml_values) { %w[A B C] }
       let(:expected_values) { xml_values }
-      let(:question_types) { %w[text text text] }
 
       context "valid input" do
         it "should produce a simple tree from a form with three children" do
@@ -34,7 +34,6 @@ describe Odk::ResponseParser do
       end
 
       context "response contains form item not in form" do
-        let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
         let(:other_form) { create(:form) }
 
         it "should error" do
@@ -92,7 +91,7 @@ describe Odk::ResponseParser do
       around do |example|
         in_timezone("Saskatchewan") { example.run } # Saskatchewan is -06
       end
-      
+
       context "with date, time, and datetime types" do
         let(:question_types) { %w[datetime date time] }
         let(:xml_values) { ["2017-07-12T16:40:00.000+03", "2017-07-01", "14:30:00.000+03"] }
@@ -118,16 +117,12 @@ describe Odk::ResponseParser do
   end
 
   context "forms with a group" do
-    let(:form) { create(:form, :published, :with_version, question_types: ["text", %w[text text], "text"]) }
+    let(:question_types) { ["text", %w[text text], "text"] }
     let(:filename) { "group_form_response.xml" }
-    let(:values) { %w[A B C D] }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: values) }
+    let(:xml_values) { %w[A B C D] }
 
     it "should produce the correct tree" do
       Odk::ResponseParser.new(response: response, files: files).populate_response
-      puts response.root_node.debug_tree
       expect_children(response.root_node, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
       expect_children(response.root_node.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
     end
@@ -136,15 +131,15 @@ describe Odk::ResponseParser do
   context "repeat group forms" do
     let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
     let(:filename) { "repeat_group_form_response.xml" }
-    let(:values) { %w[A B C D E] }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, {values: values}) }
+    let(:xml_values) { %w[A B C D E] }
 
     it "should create the appropriate repeating group tree" do
       Odk::ResponseParser.new(response: response, files: files).populate_response
       expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-      expect_children(response.root_node.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id], [nil, nil])
+      expect_children(response.root_node.c[1],
+        %w[AnswerGroup AnswerGroup],
+        [form.c[1].id, form.c[1].id],
+        [nil, nil])
       expect_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
       expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
     end
@@ -155,7 +150,15 @@ describe Odk::ResponseParser do
     let(:level1_opt) { form.c[1].option_set.sorted_children[1] }
     let(:level2_opt) { form.c[1].option_set.sorted_children[1].sorted_children[0] }
     let(:filename) { "multilevel_response.xml" }
-    let(:xml_values) { ["A", "on#{level1_opt.id}", "on#{level2_opt.id}", "none", "none", "on#{level1_opt.id}", "none"] }
+    let(:xml_values) do
+      ["A",
+       "on#{level1_opt.id}",
+       "on#{level2_opt.id}",
+       "none",
+       "none",
+       "on#{level1_opt.id}",
+       "none"]
+    end
     let(:expected_values) do
       ["A",
        level1_opt.option.name,
@@ -165,9 +168,6 @@ describe Odk::ResponseParser do
        level1_opt.option.name,
        nil]
     end
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
 
     it "should create the appropriate multilevel answer tree" do
       Odk::ResponseParser.new(response: response, files: files).populate_response
