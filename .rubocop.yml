@@ -51,6 +51,10 @@ Metrics/AbcSize:
 Style/AsciiComments:
   Enabled: false
 
+Style/Documentation:
+  Exclude:
+    - db/migrate/*
+
 Style/EmptyMethod:
   EnforcedStyle: expanded
 
