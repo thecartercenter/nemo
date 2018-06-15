@@ -1,4 +1,12 @@
 GIT
+  remote: https://github.com/ClosureTree/closure_tree
+  revision: 5d44d22023b8c1537cbe559354c6be3694a07102
+  specs:
+    closure_tree (6.6.0)
+      activerecord (>= 4.1.0)
+      with_advisory_lock (>= 3.0.0)
+
+GIT
   remote: https://github.com/codebrew/backbone-rails.git
   revision: 231090bd690cd365a9486c17b00eec1e73ec37ec
   specs:
@@ -141,9 +149,6 @@ GEM
       cocaine
       orm_adapter (~> 0.5.0)
     climate_control (0.2.0)
-    closure_tree (6.6.0)
-      activerecord (>= 4.1.0)
-      with_advisory_lock (>= 3.0.0)
     cocaine (0.6.0)
       terrapin (= 0.6.0)
     coderay (1.1.1)
@@ -532,7 +537,7 @@ DEPENDENCIES
   capybara (~> 2.17)
   capybara-screenshot (~> 1.0.11)
   ckeditor (~> 4.1.0)
-  closure_tree
+  closure_tree!
   config (~> 1.7)
   configatron (~> 4.5.0)
   daemons (~> 1.2.1)

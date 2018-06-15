@@ -136,7 +136,7 @@ gem "exception_notification"
 gem "react-rails"
 
 # Closure tree for answer heirarchy
-gem "closure_tree"
+gem "closure_tree", git: "https://github.com/ClosureTree/closure_tree"
 
 group :development do
   # generate diagrams with rake db:migrate

@@ -6,7 +6,7 @@ class ResponseNode < ApplicationRecord
 
   belongs_to :form_item, inverse_of: :answers, foreign_key: "questioning_id"
   belongs_to :response
-  has_closure_tree dependent: :destroy
+  has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
   def debug_tree(indent: 0)
     child_tree = sorted_children.map { |c| c.debug_tree(indent: indent + 1) }.join
