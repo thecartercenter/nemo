@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Email notifier, to send various emails
 class Notifier < ActionMailer::Base
   default(from: configatron.site_email)
 
@@ -15,7 +18,8 @@ class Notifier < ActionMailer::Base
   private
 
   def reply_to(user)
-    user.missions.map { |mission| User.with_roles(mission, 'coordinator').pluck(:email) }.flatten if user.missions.present?
+    role = "coordinator"
+    user.missions.map { |msn| User.with_roles(msn, role).pluck(:email) }.flatten if user.missions.present?
   end
 
   def build_reset_url(user)
