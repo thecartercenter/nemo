@@ -99,7 +99,7 @@ describe Report::ListReport, :reports do
     let!(:response1) { create(:response, form: form, answer_values: [%w[Animal Cat], 5, %w[Animal Dog]]) }
     let!(:response2) { create(:response, form: form, answer_values: [["Animal"], 10, %w[Plant Oak]]) }
     let!(:response3) { create(:response, form: form, answer_values: [nil, 15, ["Plant"]]) }
-    let(:report) { create(:list_report, _calculations: form.questions + ["response_id"]) }
+    let(:report) { create(:list_report, _calculations: form.questions + ["response_id"], run: true) }
 
     it "should have answer values in correct order" do
       expect(report).to have_data_grid(
@@ -114,7 +114,7 @@ describe Report::ListReport, :reports do
   context "with non-english locale" do
     let(:form) { create(:form, question_types: %w[integer integer]) }
     let(:response) { create(:response, form: form, answer_values: [5, 10]) }
-    let(:report) { create(:list_report, _calculations: form.questions + ["form"]) }
+    let(:report) { create(:list_report, _calculations: form.questions + ["form"], run: true) }
 
     before do
       I18n.locale = :fr
@@ -144,10 +144,8 @@ describe Report::ListReport, :reports do
       ]
     end
     let(:report) do
-      create(:list_report,
-        filter: %{exact-form:("SampleForm")},
-        _calculations: ["form"] + questions,
-        question_labels: "code")
+      create(:list_report, filter: %{exact-form:("SampleForm")}, _calculations: ["form"] + questions,
+                           question_labels: "code", run: true)
     end
 
     it "only includes the exact matching form" do
@@ -167,7 +165,7 @@ describe Report::ListReport, :reports do
         form: form, user: user, source: "odk",
         answer_values: ["<script>alert('hello');</script><b>There</b>"])
 
-      report = create_report("List", calculations_attributes: [
+      report = create(:list_report, run: true, question_labels: "code", calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
         {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id}
       ])
@@ -183,7 +181,7 @@ describe Report::ListReport, :reports do
     let(:form) { create(:form, question_types: %w[integer]) }
     let!(:response) { create(:response, form: form, answer_values: ["123"]) }
     let(:report) do
-      create_report("List", calculations_attributes: [
+      create(:list_report, run: true, calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "date_submitted"}
       ])
     end
@@ -202,8 +200,6 @@ describe Report::ListReport, :reports do
     it "should convert fetched dates to current timezone" do
       # Timestamps and datetime_values are stored in UTC (note that the created_at day has jumped to Jan 2)
       expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq 2
-
-      report.run
 
       # date_submitted should be converted to right timezone
       expect(report.data.rows[0][0]).to eq "Jan 01 2017"

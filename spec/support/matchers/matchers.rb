@@ -16,10 +16,6 @@ end
 # Compares gridable report with expected data given as array of arrays representing grid.
 RSpec::Matchers.define :have_data_grid do |*expected|
   match do |report|
-    # Reload the report so we know it's saving properly
-    report.reload
-    report.run
-
     raise "Report errors: " + report.errors.full_messages.join(", ") unless report.errors.empty?
 
     # if nil is expected, compute the right expected value

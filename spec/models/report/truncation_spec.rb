@@ -31,7 +31,7 @@ describe "report truncation" do
   describe Report::ListReport, :reports do
     let(:form) { create(:form, question_types: %w(integer integer)) }
     let(:report) do
-      create_report("List", calculations_attributes: [
+      create(:list_report, calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
         {rank: 2, type: "Report::IdentityCalculation", question1_id: form.questions[0].id},
         {rank: 3, type: "Report::IdentityCalculation", question1_id: form.questions[1].id}
@@ -45,7 +45,7 @@ describe "report truncation" do
   describe Report::ResponseTallyReport, :reports do
     let(:form) { create(:form, question_types: %w(integer)) }
     let(:report) do
-      create_report("ResponseTally", calculations_attributes: [
+      create(:response_tally_report, calculations_attributes: [
         {rank: 1, type: "Report::IdentityCalculation", question1_id: form.questions[0].id}
       ])
     end
