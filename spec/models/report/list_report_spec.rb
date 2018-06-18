@@ -19,7 +19,7 @@ describe Report::ListReport, :reports do
     decoy = create(:response, form: form, user: user, source: "web", answer_values: %w[5 al])
     decoy.destroy
 
-    report = create_report("List", calculations_attributes: [
+    report = create(:list_report, run: true, question_labels: "code", calculations_attributes: [
       {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
       {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
       {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
@@ -34,36 +34,45 @@ describe Report::ListReport, :reports do
     )
   end
 
-  it "list with select one" do
-    user = create(:user, name: "Foo")
-    yes_no = create(:option_set, option_names: %w[Yes No])
-    questions = []
-    questions << create(:question, code: "Inty", qtype_name: "integer")
-    questions << create(:question, code: "State", qtype_name: "text")
-    questions << create(:question, code: "Happy", qtype_name: "select_one", option_set: yes_no)
-    form = create(:form, questions: questions)
-    create(:response, form: form, user: user, source: "odk", answer_values: %w[10 ga Yes])
-    create(:response, :is_reviewed, form: form, user: user, source: "web",
-                                    answer_values: %w[3 ga No], reviewer_name: "Reviewer")
-    create(:response, :is_reviewed, form: form, user: user, source: "web",
-                                    answer_values: %w[5 al No], reviewer_name: "Michelle")
+  context "with various question types" do
+    let(:user) { create(:user, name: "Foo") }
+    let(:yes_no) { create(:option_set, option_names: %w[Yes No]) }
+    let(:questions) do
+      [
+        create(:question, code: "Inty", qtype_name: "integer"),
+        create(:question, code: "State", qtype_name: "text"),
+        create(:question, code: "Happy", qtype_name: "select_one", option_set: yes_no)
+      ]
+    end
+    let(:form) { create(:form, questions: questions) }
+    subject(:report) do
+      create(:list_report, run: true, question_labels: "code", calculations_attributes: [
+        {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
+        {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
+        {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
+        {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"},
+        {rank: 5, type: "Report::IdentityCalculation", attrib1_name: "reviewed"},
+        {rank: 6, type: "Report::IdentityCalculation", attrib1_name: "reviewer"},
+        {rank: 7, type: "Report::IdentityCalculation", question1_id: questions[2].id}
+      ])
+    end
 
-    report = create_report("List", calculations_attributes: [
-      {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
-      {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
-      {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
-      {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"},
-      {rank: 5, type: "Report::IdentityCalculation", attrib1_name: "reviewed"},
-      {rank: 6, type: "Report::IdentityCalculation", attrib1_name: "reviewer"},
-      {rank: 7, type: "Report::IdentityCalculation", question1_id: questions[2].id}
-    ])
+    before do
+      create(:response, form: form, user: user, source: "odk", answer_values: %w[10 ga Yes])
+      create(:response, :is_reviewed, form: form, user: user, source: "web",
+                                      answer_values: %w[3 ga No], reviewer_name: "Reviewer")
+      create(:response, :is_reviewed, form: form, user: user, source: "web",
+                                      answer_values: %w[5 al No], reviewer_name: "Michelle")
+    end
 
-    expect(report).to have_data_grid(
-      ["Submitter Name"] + %w[Inty State Source Reviewed Reviewer Happy],
-      %w[Foo 10 ga odk No _ Yes],
-      %w[Foo 3 ga web Yes Reviewer No],
-      %w[Foo 5 al web Yes Michelle No]
-    )
+    it do
+      is_expected.to have_data_grid(
+        ["Submitter Name"] + %w[Inty State Source Reviewed Reviewer Happy],
+        %w[Foo 10 ga odk No _ Yes],
+        %w[Foo 3 ga web Yes Reviewer No],
+        %w[Foo 5 al web Yes Michelle No]
+      )
+    end
   end
 
   it "response and list reports using same attrib" do
@@ -73,7 +82,7 @@ describe Report::ListReport, :reports do
     create(:response, form: form, user: user, answer_values: %w[10])
     create(:response, form: form, user: user, answer_values: %w[3])
 
-    report = create_report("List", calculations_attributes: [
+    report = create(:list_report, run: true, calculations_attributes: [
       {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"}
     ])
 
@@ -83,7 +92,7 @@ describe Report::ListReport, :reports do
       %w[Foo]
     )
 
-    report = create_report("ResponseTally", calculations_attributes: [
+    report = create(:response_tally_report, run: true, calculations_attributes: [
       {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"}
     ])
 
