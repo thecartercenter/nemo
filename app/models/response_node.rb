@@ -11,7 +11,7 @@ class ResponseNode < ApplicationRecord
   alias c children
 
   def debug_tree(indent: 0)
-    child_tree = sorted_children.map { |c| c.debug_tree(indent: indent + 1) }.join
+    child_tree = children.map { |c| c.debug_tree(indent: indent + 1) }.join
     chunks = []
     chunks << " " * (indent * 2)
     chunks << new_rank.to_s.rjust(2)
@@ -34,7 +34,5 @@ class ResponseNode < ApplicationRecord
     nil
   end
 
-  # Should eventually be changed to just point to children once closure_tree's ordering is turned on.
-  alias c sorted_children
-
+  alias c children
 end
