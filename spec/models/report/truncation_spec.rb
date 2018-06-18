@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe "report truncation" do
+  include_context "reports"
+
   shared_examples_for "a truncatable report" do
     before do
       stub_const("Report::Gridable::RESPONSES_QUANTITY_LIMIT", 3)

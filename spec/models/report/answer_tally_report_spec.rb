@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Report::AnswerTallyReport do
+  include_context "reports"
+
   shared_examples_for 'basic stuff' do
     describe 'destroy' do
       before do
