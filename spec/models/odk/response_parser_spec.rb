@@ -1,6 +1,8 @@
 require "spec_helper"
 
 describe Odk::ResponseParser do
+  include_context "response tree"
+
   let(:save_fixtures) { true }
   let(:form) { create(:form, :published, :with_version, question_types: question_types) }
   let(:files) { {xml_submission_file: StringIO.new(xml)} }
@@ -20,6 +22,12 @@ describe Odk::ResponseParser do
           Odk::ResponseParser.new(response: response, files: files).populate_response
 
           expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+        end
+      end
+
+      context "with earlier odk code style for questionings" do
+        xit "should parse the response" do
+
         end
       end
 
@@ -195,16 +203,6 @@ describe Odk::ResponseParser do
         [form.c[3].id, form.c[3].id],
         expected_values[5, 6]
       )
-    end
-  end
-
-  def expect_children(node, types, qing_ids, values)
-    children = node.children.sort_by(&:new_rank)
-    expect(children.map(&:type)).to eq types
-    expect(children.map(&:questioning_id)).to eq qing_ids
-    expect(children.map(&:new_rank)).to eq((1..children.size).to_a)
-    if values.present? #QUESTION: this is not a guard clause. format ok?
-      expect(children.map(&:casted_value)).to eq values
     end
   end
 
