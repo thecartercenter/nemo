@@ -32,20 +32,18 @@ module Odk
     def build_answer_tree(data, form)
       response.root_node = AnswerGroup.new(
         questioning_id: response.form.root_id,
-        response_id: response.id
+        response_id: response.id,
+        new_rank: 0
       )
       add_level(data, form, response.root_node)
-      puts "********end of build_answer_tree:**********"
       puts response.root_node.debug_tree
     end
 
     def add_level(xml_node, form_node, response_node)
-      puts "Add level: #{xml_node.name}, content: #{xml_node.content}"
       xml_node.elements.each_with_index do |child, index|
         name = child.name
         content = child.content
         unless node_is_odk_header(child)
-          puts "Add sibling: #{name} #{content}"
           form_item = form_item(name)
           if form_item.class == QingGroup && form_item.repeatable?
             add_repeat_group(child, form_item, response_node)
@@ -60,6 +58,10 @@ module Odk
       end
     end
 
+    def make_node(type, form_item, parent)
+      type.new(questioning_id: form_item.id, new_rank: parent.children.length, response_id: response.id)
+    end
+
     def add_answer_set_member(xml_node, form_item, parent)
       answer_set = find_or_create_answer_set(form_item, parent)
       add_answer(xml_node.content, form_item, answer_set)
@@ -70,7 +72,7 @@ module Odk
         c.questioning_id == form_item.id && c.class == AnswerSet
       end
       if answer_set.nil?
-        answer_set = AnswerSet.new(questioning_id: form_item.id, new_rank: parent.children.length)
+        answer_set = make_node(AnswerSet, form_item, parent)
         parent.children << answer_set
       end
       answer_set
@@ -86,34 +88,24 @@ module Odk
         c.questioning_id == form_item.id && c.class == AnswerGroupSet
       end
       if group_set.nil?
-        group_set = AnswerGroupSet.new(questioning_id: form_item.id, new_rank: parent.children.length)
+        group_set = make_node(AnswerGroupSet, form_item, parent)
         parent.children << group_set
       end
       group_set
     end
 
     def add_group(xml_node, form_item, parent)
-      puts "add group: #{xml_node.name}, content: #{xml_node.content}, rank: #{parent.children.length}"
       unless node_is_odk_header(xml_node)
-        group = AnswerGroup.new(
-          questioning_id: form_item.id,
-          new_rank: parent.children.length
-        )
+        group = make_node(AnswerGroup, form_item, parent)
         parent.children << group
         add_level(xml_node, form_item, group)
       end
     end
 
     def add_answer(content, form_item, parent)
-      answer = Answer.new(
-        questioning_id: form_item.id,
-        #value: content,
-        new_rank: parent.children.length
-      )
-
+      answer = make_node(Answer, form_item, parent)
       populate_answer_value(answer, content, form_item)
       parent.children << answer
-      puts "added answer: #{answer.casted_value}"
     end
 
     def node_is_odk_header(node)
@@ -122,7 +114,6 @@ module Odk
 
     # finds the appropriate Option instance for an ODK submission
     def option_id_for_submission(option_node_str)
-      puts option_node_str
       if option_node_str =~ /\Aon([\w\-]+)\z/
         # look up inputs of the form "on####" as option node ids
         node_id = option_node_str.remove("on")
