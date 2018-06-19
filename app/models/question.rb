@@ -63,6 +63,7 @@ class Question < ApplicationRecord
            :multimedia?,
            :odk_tag,
            :odk_name,
+           :select_multiple?,
            to: :qtype
 
   delegate :options,

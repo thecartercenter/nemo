@@ -36,42 +36,65 @@ describe Report::ListReport, :reports do
 
   context "with various question types" do
     let(:user) { create(:user, name: "Foo") }
-    let(:yes_no) { create(:option_set, option_names: %w[Yes No]) }
+    let(:yes_no) { create(:option_set, option_names: %w[Yes No], option_values: [1, 2]) }
+    let(:colors) { create(:option_set, option_names: %w[Red Blue Green], option_values: [10, 11, 12]) }
     let(:questions) do
       [
         create(:question, code: "Inty", qtype_name: "integer"),
         create(:question, code: "State", qtype_name: "text"),
-        create(:question, code: "Happy", qtype_name: "select_one", option_set: yes_no)
+        create(:question, code: "Happy", qtype_name: "select_one", option_set: yes_no),
+        create(:question, code: "Color", qtype_name: "select_multiple", option_set: colors)
       ]
     end
     let(:form) { create(:form, questions: questions) }
     subject(:report) do
-      create(:list_report, run: true, question_labels: "code", calculations_attributes: [
-        {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
-        {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
-        {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
-        {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"},
-        {rank: 5, type: "Report::IdentityCalculation", attrib1_name: "reviewed"},
-        {rank: 6, type: "Report::IdentityCalculation", attrib1_name: "reviewer"},
-        {rank: 7, type: "Report::IdentityCalculation", question1_id: questions[2].id}
-      ])
+      create(:list_report,
+        run: {prefer_values: prefer_values},
+        question_labels: "code",
+        calculations_attributes: [
+          {rank: 1, type: "Report::IdentityCalculation", attrib1_name: "submitter"},
+          {rank: 2, type: "Report::IdentityCalculation", question1_id: questions[0].id},
+          {rank: 3, type: "Report::IdentityCalculation", question1_id: questions[1].id},
+          {rank: 4, type: "Report::IdentityCalculation", attrib1_name: "source"},
+          {rank: 5, type: "Report::IdentityCalculation", attrib1_name: "reviewed"},
+          {rank: 6, type: "Report::IdentityCalculation", attrib1_name: "reviewer"},
+          {rank: 7, type: "Report::IdentityCalculation", question1_id: questions[2].id},
+          {rank: 8, type: "Report::IdentityCalculation", question1_id: questions[3].id}
+        ])
     end
 
     before do
       create(:response, form: form, user: user, source: "odk", answer_values: %w[10 ga Yes])
-      create(:response, :is_reviewed, form: form, user: user, source: "web",
-                                      answer_values: %w[3 ga No], reviewer_name: "Reviewer")
-      create(:response, :is_reviewed, form: form, user: user, source: "web",
-                                      answer_values: %w[5 al No], reviewer_name: "Michelle")
+      create(:response, :is_reviewed, form: form, user: user, source: "web", reviewer_name: "Reviewer",
+                                      answer_values: ["3", "ga", "No", %w[Blue Green]])
+      create(:response, :is_reviewed, form: form, user: user, source: "web", reviewer_name: "Michelle",
+                                      answer_values: ["5", "al", "No", %w[Blue Red]])
     end
 
-    it do
-      is_expected.to have_data_grid(
-        ["Submitter Name"] + %w[Inty State Source Reviewed Reviewer Happy],
-        %w[Foo 10 ga odk No _ Yes],
-        %w[Foo 3 ga web Yes Reviewer No],
-        %w[Foo 5 al web Yes Michelle No]
-      )
+    context "with option names preferred" do
+      let(:prefer_values) { false }
+
+      it do
+        is_expected.to have_data_grid(
+          ["Submitter Name"] + %w[Inty State Source Reviewed Reviewer Happy Color],
+          %w[Foo 10 ga odk No _ Yes _],
+          %w[Foo 3 ga web Yes Reviewer No] << "Blue, Green",
+          %w[Foo 5 al web Yes Michelle No] << "Red, Blue"
+        )
+      end
+    end
+
+    context "with option values preferred" do
+      let(:prefer_values) { true }
+
+      it do
+        is_expected.to have_data_grid(
+          ["Submitter Name"] + %w[Inty State Source Reviewed Reviewer Happy Color],
+          %w[Foo 10 ga odk No _ 1 _],
+          %w[Foo 3 ga web Yes Reviewer 2] << "11, 12",
+          %w[Foo 5 al web Yes Michelle 2] << "10, 11"
+        )
+      end
     end
   end
 

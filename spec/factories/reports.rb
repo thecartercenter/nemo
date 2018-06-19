@@ -8,7 +8,8 @@ FactoryGirl.define do
     sequence(:name) { |n| "Report #{n}" }
 
     after(:create) do |report, evaluator|
-      report.reload.run if evaluator.run
+      options = evaluator.run == true ? {} : evaluator.run
+      report.reload.run(nil, options) if options
     end
 
     factory :gridable_report do
