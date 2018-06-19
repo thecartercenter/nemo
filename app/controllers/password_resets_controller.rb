@@ -69,6 +69,6 @@ class PasswordResetsController < ApplicationController
   end
 
   def password_reset_params
-    params.require(:password_reset).permit(:identifier).symbolize_keys
+    params.require(:password_reset).permit(:identifier).to_h.symbolize_keys
   end
 end

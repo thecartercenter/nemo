@@ -97,6 +97,7 @@ class OptionNode < ApplicationRecord
   end
 
   def option_attribs=(attribs)
+    attribs = attribs.to_h
     attribs.symbolize_keys! if attribs.respond_to?(:symbolize_keys!)
     if attribs[:id]
       self.option = Option.find(attribs[:id])

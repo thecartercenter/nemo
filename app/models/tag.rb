@@ -20,7 +20,7 @@ class Tag < ApplicationRecord
     query = query[0...MAX_NAME_LENGTH]
 
     exact_match = tags.find_by_name(query)
-    matches = tags.where('name like ?', "%#{query}%").order(:name).limit(MAX_SUGGESTIONS)
+    matches = tags.where('name like ?', "%#{query}%").order(:name).limit(MAX_SUGGESTIONS).to_a
 
     if exact_match
       # if there was an exact match, put it at the top

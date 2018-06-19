@@ -47,7 +47,6 @@ class Report::Report < ApplicationRecord
 
       new_without_cast(*a, &b)
     end
-    alias_method_chain :new, :cast
   end
 
   # remove report sub-relationship of objects

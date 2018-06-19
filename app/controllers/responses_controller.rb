@@ -288,19 +288,21 @@ class ResponsesController < ApplicationController
         []
       end
 
-      params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |permitted|
-        # In some rare cases, create or update can occur without answers_attributes. Not sure how.
-        # Also need to respect the modify_answers permission here.
-        if params[:response][:answers_attributes] &&
-          (action_name != "update" || can?(:modify_answers, @response))
-          permit_answer_attributes(permitted)
-        end
+      permitted = params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only)
+
+      # In some rare cases, create or update can occur without answers_attributes. Not sure how.
+      # Also need to respect the modify_answers permission here.
+      if params[:response][:answers_attributes] &&
+        (action_name != "update" || can?(:modify_answers, @response))
+        permitted = permitted.merge(params.require(:response).permit(permitted_answer_attributes))
       end
+
+      permitted
     end
   end
 
-  def permit_answer_attributes(permitted)
-    permitted[:answers_attributes] = {}
+  def permitted_answer_attributes
+    permit = {answers_attributes: {}}
 
     # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
     # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
@@ -314,16 +316,18 @@ class ResponsesController < ApplicationController
       date_value)
 
     params[:response][:answers_attributes].each do |idx, attribs|
-      permitted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
+      permit[:answers_attributes][idx] = permitted_answer_attribs
       # Handle choices, which are nested under answers.
       if attribs[:choices_attributes]
-        permitted[:answers_attributes][idx][:choices_attributes] = {}
+        choice_attributes = {}
         attribs[:choices_attributes].each do |idx2, attribs2|
-          permitted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(
-            :id, :option_id, :option_node_id, :checked)
+          choice_attributes[idx2] = [:id, :option_id, :option_node_id, :checked]
         end
+        permit[:answers_attributes][idx] << choice_attributes
       end
     end
+
+    permit
   end
 
   def check_form_exists_in_mission

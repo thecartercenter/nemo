@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "~> 5.0.0"
+gem "rails", "~> 5.1"
 
 # Assets / Javascript
 gem "sass-rails", "~> 5.0.7"
@@ -15,7 +15,7 @@ gem "phantomjs_polyfill-rails", "~> 1.0.0"
 
 # Authentication
 gem "activerecord-session_store", "~> 1.1.1"
-gem "authlogic", "~> 3.5.0"
+gem "authlogic", "~> 3.7.0"
 gem "scrypt", "~> 1.2.0"
 
 # authorization
@@ -32,7 +32,7 @@ gem "term-ansicolor", "~> 1.3.0"
 gem "therubyracer", "~> 0.12.2", platforms: :ruby
 gem "draper", "~> 3.0.1"
 gem "attribute_normalizer", "~> 1.2.0"
-gem "responders", "~> 2.3.0"
+gem "responders", "~> 2.4.0"
 gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove version constraint when fixed.
 gem "friendly_id", "~> 5.1.0"
 
@@ -121,7 +121,7 @@ gem "twilio-ruby", "~> 4.1.0"
 gem "phony", "~> 2.15.26"
 
 # Soft delete
-gem "acts_as_paranoid", "~> 0.5.0"
+gem "acts_as_paranoid", "~> 0.6.0"
 
 # QR barcode
 gem 'rqrcode', '~> 0.10.1'
@@ -150,7 +150,6 @@ group :development do
   gem "thin", "~> 1.7.0"
 
   # speed up development mode
-  gem "rails-dev-tweaks", "~> 1.2.0"
   gem "spring", "~> 1.3.3"
 
   # Better error pages
@@ -180,7 +179,7 @@ group :development, :test do
   gem "selenium-webdriver", "~> 3.9"
 
   # cleans database for testing
-  gem "database_cleaner", "~> 1.4.1"
+  gem "database_cleaner", "~> 1.7.0"
 
    # sets time for testing
   gem "timecop", "~> 0.7.3"

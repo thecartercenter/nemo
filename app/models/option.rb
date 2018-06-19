@@ -3,8 +3,8 @@ class Option < ApplicationRecord
 
   acts_as_paranoid
 
-  has_many :option_sets, through: :option_nodes
   has_many :option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true
+  has_many :option_sets, through: :option_nodes
   has_many :answers, inverse_of: :option
   has_many :choices, inverse_of: :option
 
