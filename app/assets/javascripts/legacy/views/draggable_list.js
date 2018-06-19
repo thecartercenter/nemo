@@ -213,7 +213,7 @@
       inner.append(el);
     }
 
-    if (item.value) {
+    if (item.value !== null) {
       const value = $("<span>").addClass("value").text(" (" + item.value + ")");
       inner.append(value);
     }
