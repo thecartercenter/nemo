@@ -20,6 +20,27 @@ module GeneralSpecHelpers
     File.open(path)
   end
 
+  # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
+  def prepare_odk_fixture(filename, path, form, options={})
+    items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
+    nodes = items.map(&:preordered_option_nodes).uniq.flatten
+    xml = prepare_fixture(path,
+      formname: [form.name],
+      form: [form.id],
+      formver: options[:formver].present? ? [options[:formver]] : [form.code],
+      itemcode: items.map(&:odk_code),
+      itemqcode: items.map(&:code),
+      optcode: nodes.map(&:odk_code),
+      optsetid: items.map(&:option_set_id).compact.uniq,
+      value: options[:values].present? ? options[:values] : [])
+    if save_fixtures
+      dir = Rails.root.join("tmp", path)
+      FileUtils.mkdir_p(dir)
+      File.open(dir.join(filename), "w") { |f| f.write(xml) }
+    end
+    xml
+  end
+
   # `substitutions` should be a hash of arrays.
   # For each hash pair, e.g. `grp: groups_ids`, the method substitutes
   # e.g. `*grp8*` in the file with `groups_ids[7]`.

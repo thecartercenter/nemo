@@ -7,7 +7,7 @@ describe Odk::ResponseParser do
   let(:form) { create(:form, :published, :with_version, question_types: question_types) }
   let(:files) { {xml_submission_file: StringIO.new(xml)} }
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-  let(:xml) { prepare_odk_fixture(filename, form, values: xml_values) }
+  let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
 
   context "simple form" do
     let(:filename) { "simple_response.xml" }
@@ -32,7 +32,7 @@ describe Odk::ResponseParser do
       end
 
       context "outdated form" do
-        let(:xml) { prepare_odk_fixture(filename, form, values: xml_values, formver: "wrong") }
+        let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values, formver: "wrong") }
 
         it "should error" do
           expect do
@@ -206,25 +206,8 @@ describe Odk::ResponseParser do
     end
   end
 
-  # TODO merge in helper w/ form_odk_rendering spec verson.
-  # Accepts a fixture filename and form, and values array provided by a spec, and creates xml mimicking odk
-  def prepare_odk_fixture(filename, form, options)
-    items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
-    nodes = items.map(&:preordered_option_nodes).uniq.flatten
-    xml = prepare_fixture("odk/responses/#{filename}",
-      formname: [form.name],
-      form: [form.id],
-      formver: options[:formver].present? ? [options[:formver]] : [form.code],
-      itemcode: items.map(&:odk_code),
-      itemqcode: items.map(&:code),
-      optcode: nodes.map(&:odk_code),
-      optsetid: items.map(&:option_set_id).compact.uniq,
-      value: options[:values])
-    if save_fixtures
-      dir = Rails.root.join("tmp", "odk_test_responses")
-      FileUtils.mkdir_p(dir)
-      File.open(dir.join(filename), "w") { |f| f.write(xml) }
-    end
-    xml
+  def prepare_odk_response_fixture(filename, form, options = {})
+    path = "odk/responses/#{filename}"
+    prepare_odk_fixture(filename, path, form, options)
   end
 end

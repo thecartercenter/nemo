@@ -41,10 +41,8 @@ module Odk
 
     def add_level(xml_node, form_node, response_node)
       xml_node.elements.each_with_index do |child, index|
-        name = child.name
-        content = child.content
         unless node_is_odk_header(child)
-          form_item = form_item(name)
+          form_item = form_item(child.name)
           if form_item.class == QingGroup && form_item.repeatable?
             add_repeat_group(child, form_item, response_node)
           elsif form_item.class == QingGroup
@@ -52,7 +50,7 @@ module Odk
           elsif form_item.multilevel?
             add_answer_set_member(child, form_item, response_node)
           else
-            add_answer(content, form_item, response_node)
+            add_answer(child.content, form_item, response_node)
           end
         end
       end
