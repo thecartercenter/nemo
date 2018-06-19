@@ -164,9 +164,20 @@ describe Sms::Decoder, :sms do
     end
 
     context "with no mission pre-specified" do
-      it "succeeds and sets correct mission on message" do
-        expect_decoding(form, data: "1.15", answers: [15], mission: nil)
-        expect(Sms::Incoming.first.mission).to eq(form.mission)
+      context "with valid input" do
+        it "succeeds and sets correct mission on message" do
+          expect_decoding(form, data: "1.15", answers: [15], mission: nil)
+          expect(Sms::Incoming.first.mission).to eq(form.mission)
+        end
+      end
+
+      context "from automated sender" do
+        it "raises appropriate error" do
+          form = create_form(questions: %w[integer])
+          # Deliberately use a 4 letter word to start message because it looks like an auth code.
+          expect_decoding_fail(form, body: "good deal 4 u", from: "VODACOM",
+                                     mission: nil, error: "automated_sender")
+        end
       end
     end
   end

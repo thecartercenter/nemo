@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Report::AnswerTallyReport do
+  include_context "reports"
+
   shared_examples_for 'basic stuff' do
     describe 'destroy' do
       before do
@@ -19,7 +21,7 @@ describe Report::AnswerTallyReport do
   context 'with specific questions' do
     before do
       @form = create(:form, question_types: %w(select_one))
-      @report = create(:answer_tally_report, _calculations: [@form.questions[0]])
+      @report = create(:answer_tally_report, _calculations: [@form.questions[0]], run: true)
     end
 
     it_behaves_like 'basic stuff'
@@ -29,7 +31,7 @@ describe Report::AnswerTallyReport do
     before do
       @option_set1 = create(:option_set)
       @option_set2 = create(:option_set)
-      @report = create(:answer_tally_report, option_sets: [@option_set1, @option_set2])
+      @report = create(:answer_tally_report, option_sets: [@option_set1, @option_set2], run: true)
     end
 
     it_behaves_like 'basic stuff'
@@ -64,7 +66,7 @@ describe Report::AnswerTallyReport do
       create(:response, form: @form, answer_values: [['Animal', 'Dog']])
       create(:response, form: @form, answer_values: [['Animal']])
       create(:response, form: @form, answer_values: [['Plant', 'Oak']])
-      @report = create(:answer_tally_report, option_sets: [@form.questions[0].option_set])
+      @report = create(:answer_tally_report, option_sets: [@form.questions[0].option_set], run: true)
     end
 
     it 'should count only top-level answers' do

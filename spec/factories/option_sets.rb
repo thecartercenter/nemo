@@ -4,6 +4,9 @@ FactoryGirl.define do
       # First level option names.
       option_names %w(Cat Dog)
 
+      # First level option values. Only works with default or manually specified option names.
+      option_values []
+
       multilevel false
       super_multilevel false
       large false
@@ -26,7 +29,9 @@ FactoryGirl.define do
       elsif large
         OptionNodeSupport::LARGE_SINGLE_LEVEL_ATTRIBS
       else
-        option_names.map{ |n| { "option_attribs" => { "name_translations" => {"en" => n} } } }
+        option_names.each_with_index.map do |n, i|
+          {"option_attribs" => {"name_translations" => {"en" => n}, "value" => option_values[i]}}
+        end
       end
     end
 

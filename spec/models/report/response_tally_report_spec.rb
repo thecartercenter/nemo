@@ -2,6 +2,8 @@
 require 'spec_helper'
 
 describe Report::ResponseTallyReport do
+  include_context "reports"
+
   context 'with multilevel option set' do
     before do
       @form = create(:form, question_types: %w(multilevel_select_one))
@@ -9,7 +11,7 @@ describe Report::ResponseTallyReport do
       create(:response, form: @form, answer_values: [['Animal', 'Dog']], source: 'web')
       create(:response, form: @form, answer_values: [['Animal']], source: 'odk')
       create(:response, form: @form, answer_values: [['Plant', 'Oak']], source: 'odk')
-      @report = create(:response_tally_report, _calculations: [@form.questions[0], 'source'])
+      @report = create(:response_tally_report, _calculations: [@form.questions[0], 'source'], run: true)
     end
 
     it 'should count only top-level answers' do

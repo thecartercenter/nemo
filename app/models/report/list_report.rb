@@ -50,14 +50,15 @@ class Report::ListReport < Report::Report
 
       # Add order by answer rank to accommodate multilevel answers.
       rel = rel.order("answers.rank")
+
+      # For select multiples, also need to sort the choices within the answer.
+      rel = rel.order("answer_select_multiple_sort") if questions.any?(&:select_multiple?)
     end
 
     rel = rel.limit(response_limit)
 
     # apply filter
-    rel = apply_filter(rel)
-
-    return rel
+    apply_filter(rel)
   end
 
   def header_title(which)
@@ -127,12 +128,7 @@ class Report::ListReport < Report::Report
   def extract_name_from_row(db_row, calc)
     result_name = db_row["answer_#{calc.name_expr(false).name}"]
     result_value = db_row["answer_#{calc.name_expr(true).name}"]
-
-    if @options[:prefer_values]
-      (result_value.present? && result_value) || result_name
-    else
-      result_name
-    end
+    @options[:prefer_values] && result_value.present? ? result_value : result_name
   end
 
   # totaling is not appropriate
