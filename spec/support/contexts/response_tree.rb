@@ -17,8 +17,10 @@ shared_context "response tree" do
     expect(children.map(&:new_rank)).to eq((0...children.size).to_a)
 
     # This expectation can be removed when we remove the old inst_num and rank columns.
-    expect(children.map(&:inst_num)).to eq([node.rank] * children.size) if node.parent.is_a?(AnswerGroupSet)
-
+    # If child's grandparent is an AnswerGroupSet, it's in a rpt grp. inst num should match parent's rank + 1
+    if node.parent.is_a?(AnswerGroupSet)
+      expect(children.map(&:inst_num)).to eq(Array.new(children.size, node.new_rank + 1))
+    end
     return if values.nil?
 
     child_values = children.map { |child| child.is_a?(Answer) ? child.casted_value : nil }

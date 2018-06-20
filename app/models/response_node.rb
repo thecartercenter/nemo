@@ -19,14 +19,9 @@ class ResponseNode < ApplicationRecord
     chunks << self.class.name.ljust(15)
     chunks << "(FI: #{form_item.type} #{form_item.rank})"
     chunks << " Value: #{casted_value}" if casted_value.present?
+    chunks << " InstNum: #{inst_num}"
+    chunks << " NewRank: #{new_rank}"
     "\n#{chunks.join}#{child_tree}"
-  end
-
-  def associate_response(response)
-    self.response = response
-    children.each do |child|
-      child.associate_response(response)
-    end
   end
 
   # Answer.rb implements casted_value for answers.Duck type method for non-Answer response nodes.

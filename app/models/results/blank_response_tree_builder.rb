@@ -14,8 +14,8 @@ module Results
     def build
       root = AnswerGroup.create!(form_item: form.root_group, response: response)
       add_level(form.root_group.sorted_children, root)
-      root.associate_response(response)
-      response.root_node = root
+      response.associate_tree(root)
+
       # TODO: We can remove the `validate: false` once various validations are
       # removed from the response model
       response.save(validate: false)

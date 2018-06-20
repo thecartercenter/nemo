@@ -27,6 +27,8 @@ module Odk
       # Response mission should already be set - TODO: consider moving to constructor or lookup_and_check_form
       raise "Submissions must have a mission" if response.mission.nil?
       build_answer_tree(data, response.form)
+      response.associate_tree(response.root_node)
+      response.save(validate: false)
     end
 
     def build_answer_tree(data, form)
@@ -57,7 +59,12 @@ module Odk
     end
 
     def make_node(type, form_item, parent)
-      type.new(questioning_id: form_item.id, new_rank: parent.children.length, response_id: response.id)
+      type.new(
+        questioning_id: form_item.id,
+        new_rank: parent.children.length,
+        inst_num: parent.new_rank + 1,
+        response_id: response.id
+      )
     end
 
     def add_answer_set_member(xml_node, form_item, parent)

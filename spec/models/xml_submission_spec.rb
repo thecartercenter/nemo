@@ -8,13 +8,15 @@ describe XMLSubmission, :odk do
   let(:xml) { build_odk_submission(form, data: data) }
   let(:files) { {xml_submission_file: StringIO.new(xml)} }
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-  #
-  let(:submission) { XMLSubmission.new(response: response, files: files) }
+
+  #let(:submission) { XMLSubmission.new(response: response, files: files) }
+
   let(:nodes) { AnswerArranger.new(response).build.nodes }
 
   before do
     form.publish!
-    submission.save
+    Odk::ResponseParser.new(response: response, files: files).populate_response
+    response.save(validate: false)
   end
 
   context "with a repeat group and instances" do
