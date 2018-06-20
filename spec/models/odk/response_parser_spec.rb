@@ -153,6 +153,63 @@ describe Odk::ResponseParser do
     end
   end
 
+  context "form with nexted groups" do
+    let(:question_types) do
+      [
+        "integer",
+        {repeating:
+          {items: [
+            "integer",
+            {repeating: {items: %w[integer integer]}}
+          ]}}
+      ]
+    end
+    let(:filename) { "nested_group_form_response.xml" }
+    let(:xml_values) { [*1..9] }
+
+    it "should create nested tree" do
+      Odk::ResponseParser.new(response: response, files: files).populate_response
+      expect_children(response.root_node,  %w[Answer AnswerGroupSet], form.c.map(&:id), [1, nil])
+      expect_children(response.root_node.c[1],
+        %w[AnswerGroup AnswerGroup],
+        [form.c[1].id, form.c[1].id]
+      )
+      parent_group_set = response.root_node.c[1]
+      child_group_set_1 = parent_group_set.c[0].c[1]
+      expect_children(parent_group_set.c[0],
+        %w[Answer AnswerGroupSet],
+        form.c[1].c.map(&:id),
+        [2, nil]
+      )
+      expect_children(child_group_set_1.c[0],
+        %w[Answer Answer],
+        form.c[1].c[1].c.map(&:id),
+        [3, 4]
+      )
+      expect_children(child_group_set_1.c[1],
+        %w[Answer Answer],
+        form.c[1].c[1].c.map(&:id),
+        [5, 6]
+      )
+      expect_children(child_group_set_1.c[1],
+        %w[Answer Answer],
+        form.c[1].c[1].c.map(&:id),
+        [5, 6]
+      )
+      child_group_set_2 = parent_group_set.c[1].c[1]
+      expect_children(parent_group_set.c[1],
+        %w[Answer AnswerGroupSet],
+        form.c[1].c.map(&:id),
+        [7, nil]
+      )
+      expect_children(child_group_set_2.c[0],
+        %w[Answer Answer],
+        form.c[1].c[1].c.map(&:id),
+        [8, 9]
+      )
+    end
+  end
+
   context "form with multilevel answer" do
     let(:question_types) { %w[text multilevel_select_one multilevel_select_one multilevel_select_one] }
     let(:level1_opt) { form.c[1].option_set.sorted_children[1] }
