@@ -26,8 +26,8 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
       client = Twilio::REST::Client.new(config.twilio_account_sid, config.twilio_auth_token)
 
       send_message_for_each_recipient(message, client)
-    rescue Twilio::REST::RequestError
-      raise Sms::Error.new("can not send to invalid number")
+    rescue Twilio::REST::RequestError => e
+      raise Sms::Error.new(e)
     end
 
     true

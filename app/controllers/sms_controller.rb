@@ -78,7 +78,7 @@ class SmsController < ApplicationController
           outgoing_adapter.deliver(reply)
         rescue Sms::Error => e
           reply.error_message = e
-          reply.save
+          reply.save!
         end
       else # reply via response
         incoming_adapter.prepare_message_for_delivery(reply)
