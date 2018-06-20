@@ -106,6 +106,17 @@ describe "incoming sms", :sms do
     assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end
 
+  it "should save error message if there is an error in reply" do
+    with_env("STUB_REPLY_ERROR" => "I am the reply error") do
+      assert_sms_response(
+        incoming: {body: "#{form_code} 1.15 2.20", adapter: "FrontlineCloud"},
+        outgoing: {body: "Your response to form '#{form_code}' was received. Thank you!"}
+      )
+      expect(Sms::Reply.count).to eq(1)
+      expect(Sms::Reply.first.error_message).to eq("I am the reply error")
+    end
+  end
+
   it "GET submissions should be possible" do
     assert_sms_response(method: :get, incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end

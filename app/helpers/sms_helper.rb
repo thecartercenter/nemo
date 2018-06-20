@@ -25,6 +25,17 @@ module SmsHelper
       recips
     when "from" then
       user_with_phone(sms.sender, sms.from)
+    when "body" then
+      output = []
+      output << content_tag(:span, sms.body)
+      if sms.error_message
+        output << content_tag(
+          :div,
+          "#{I18n.t('sms.error')}: #{I18n.t('sms.when_sending_reply')}: #{sms.error_message}",
+          class: "error-msg"
+        )
+      end
+      safe_join(output)
     else
       sms.send(field)
     end

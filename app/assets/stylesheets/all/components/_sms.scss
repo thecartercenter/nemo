@@ -21,4 +21,13 @@
     max-width: 400px;
     word-wrap: break-word;
   }
+
+  .bold {
+    font-weight: bold;
+  }
+
+  .error-msg {
+    color: $theme-red;
+    font-weight: bold;
+  }
 }
