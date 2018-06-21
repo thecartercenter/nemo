@@ -106,6 +106,17 @@ describe "incoming sms", :sms do
     assert_sms_response(incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end
 
+  it "should save error message if there is an error in reply" do
+    with_env("STUB_REPLY_ERROR" => "I am the reply error") do
+      assert_sms_response(
+        incoming: {body: "#{form_code} 1.15 2.20", adapter: "FrontlineCloud"},
+        outgoing: {body: "Your response to form '#{form_code}' was received. Thank you!"}
+      )
+      expect(Sms::Reply.count).to eq(1)
+      expect(Sms::Reply.first.error_message).to eq("I am the reply error")
+    end
+  end
+
   it "GET submissions should be possible" do
     assert_sms_response(method: :get, incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
   end
@@ -339,7 +350,7 @@ describe "incoming sms", :sms do
 
         it "should send reply via default adapter if form not found" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
-            outgoing: {body: /there is no form with code/, adapter: "Twilio"}, mission: nil)
+                              outgoing: {body: /there is no form with code/, adapter: "Twilio"}, mission: nil)
         end
       end
 
@@ -348,10 +359,10 @@ describe "incoming sms", :sms do
           configatron.default_settings.outgoing_sms_adapter = ""
         end
 
-        it "should raise error if form not found" do
-          expect do
-            assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"})
-          end.to raise_error(Sms::Error)
+        it "should save error on reply message" do
+          assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
+                              outgoing: {body: /there is no form with code/}, mission: nil)
+          expect(Sms::Reply.first.error_message).to match(/No adapter configured for outgoing response/)
         end
       end
     end

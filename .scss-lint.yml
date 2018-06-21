@@ -159,8 +159,7 @@ linters:
     allow_element_with_id: false
 
   SelectorDepth:
-    enabled: true
-    max_depth: 2
+    enabled: false
 
   SelectorFormat:
     enabled: true

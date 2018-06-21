@@ -48,7 +48,7 @@ class Sms::Adapters::Adapter
     raise NotImplementedError
   end
 
-  # recieves one sms messages
+  # receives one sms messages
   # returns an Sms::Message object
   def receive(request)
     raise NotImplementedError
