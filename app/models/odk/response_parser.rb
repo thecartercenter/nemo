@@ -6,6 +6,7 @@ module Odk
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil)
       @response = response
+      puts "first response id: #{response.id}"
       # TODO: what is awaiting_media for?
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
@@ -18,10 +19,24 @@ module Odk
 
     private
 
+    # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
+    # can be uniquely identified and handled
+    def odk_hash
+      @odk_hash ||= Digest::SHA256.base64digest @data
+    end
+
     def build_answers(raw_odk_xml)
       data = Nokogiri::XML(raw_odk_xml).root
       lookup_and_check_form(id: data["id"], version: data["version"])
+      puts "form id: #{response.form_id}"
       check_for_existing_response
+      puts " response id after check for existing response: #{response.id}"
+      if response.awaiting_media
+        puts "awaiting media"
+        response.odk_hash = odk_hash
+      else
+        response.odk_hash = nil
+      end
       # TODO: handle awaiting_media
 
       # Response mission should already be set - TODO: consider moving to constructor or lookup_and_check_form
@@ -140,7 +155,8 @@ module Odk
     end
 
     def populate_answer_value(answer, content, form_item)
-      case form_item.qtype.name
+      question_type =  form_item.qtype.name
+      case question_type
       when "select_one"
         answer.option_id = option_id_for_submission(content) unless content == "none"
       when "select_multiple"
@@ -160,9 +176,17 @@ module Odk
           puts content
         end
         answer.send("#{answer.qtype.name}_value=", Time.zone.parse(content))
+      when "image", "annotated_image", "sketch", "signature"
+        answer.media_object = Media::Image.create(item: @files[content].open) if @files[content]
+      when "audio"
+        answer.media_object = Media::Audio.create(item: @files[content].open) if @files[content]
+      when "video"
+        answer.media_object = Media::Video.create(item: @files[content].open) if @files[content]
       else
         answer.value = content
       end
+      # nullify answers if string suggests multimedia answer but no file present to make multi-chunk submissions work
+      answer.value = nil if (form_item.multimedia? && answer.media_object.blank?)
       answer
     end
 
@@ -217,6 +241,7 @@ module Odk
     def check_for_existing_response
       response = Response.find_by(odk_hash: odk_hash, form_id: @response.form_id)
       @existing_response = response.present?
+      puts "response exists: #{@existing_response}"
       response = response if @existing_response
     end
 

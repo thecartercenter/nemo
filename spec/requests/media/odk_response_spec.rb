@@ -53,9 +53,15 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
 
       expect(response).to have_http_status 201
+      Response.all.each do |r|
+        puts r.form_id
+        puts r.odk_hash
+        puts r.answers.count
+        puts "========"
+      end
       expect(Response.count).to eq 1
 
-      form_response = Response.last
+      form_response = Response.first
       expect(form_response.odk_hash).to_not be_present
 
       expect(form_response.form).to eq form
