@@ -117,12 +117,12 @@ class ResponsesController < ApplicationController
         end
 
         @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-        @submission = XMLSubmission.new response: @response, files: files
+        Odk::ResponseParser.new(response: @response, files: files).populate_response
 
         # ensure response's user can submit to the form
-        authorize!(:submit_to, @submission.response.form)
+        authorize!(:submit_to, @response.form)
 
-        @submission.save
+        @response.save(validate: false)
 
         render(nothing: true, status: 201)
       rescue CanCan::AccessDenied

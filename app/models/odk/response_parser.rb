@@ -43,7 +43,7 @@ module Odk
 
     def add_level(xml_node, form_node, response_node)
       xml_node.elements.each_with_index do |child, index|
-        unless node_is_odk_header(child)
+        if node_is_form_item(child)
           form_item = form_item(child.name)
           if form_item.class == QingGroup && form_item.repeatable?
             add_repeat_group(child, form_item, response_node)
@@ -58,7 +58,7 @@ module Odk
       end
     end
 
-    def make_node(type, form_item, parent)
+    def new_node(type, form_item, parent)
       type.new(
         questioning_id: form_item.id,
         new_rank: parent.children.length,
@@ -77,7 +77,7 @@ module Odk
         c.questioning_id == form_item.id && c.class == AnswerSet
       end
       if answer_set.nil?
-        answer_set = make_node(AnswerSet, form_item, parent)
+        answer_set = new_node(AnswerSet, form_item, parent)
         parent.children << answer_set
       end
       answer_set
@@ -93,7 +93,7 @@ module Odk
         c.questioning_id == form_item.id && c.class == AnswerGroupSet
       end
       if group_set.nil?
-        group_set = make_node(AnswerGroupSet, form_item, parent)
+        group_set = new_node(AnswerGroupSet, form_item, parent)
         parent.children << group_set
       end
       group_set
@@ -101,16 +101,25 @@ module Odk
 
     def add_group(xml_node, form_item, parent)
       unless node_is_odk_header(xml_node)
-        group = make_node(AnswerGroup, form_item, parent)
+        group = new_node(AnswerGroup, form_item, parent)
         parent.children << group
         add_level(xml_node, form_item, group)
       end
     end
 
     def add_answer(content, form_item, parent)
-      answer = make_node(Answer, form_item, parent)
+      answer = new_node(Answer, form_item, parent)
       populate_answer_value(answer, content, form_item)
       parent.children << answer
+    end
+
+    def node_is_form_item(node)
+      return false if node_is_odk_header(node)
+      if node.name == Odk::FormDecorator::IR_QUESTION
+        response.incomplete = node.content == "yes"
+        return false
+      end
+      true
     end
 
     def node_is_odk_header(node)
