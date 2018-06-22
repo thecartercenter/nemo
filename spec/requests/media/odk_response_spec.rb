@@ -54,9 +54,9 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
 
       expect(response).to have_http_status 201
       Response.all.each do |r|
-        puts r.form_id
-        puts r.odk_hash
-        puts r.answers.count
+        puts "form id: #{r.form_id}"
+        puts "odk hash #{r.odk_hash}"
+        puts "answer count: #{r.answers.count}"
         puts "========"
       end
       expect(Response.count).to eq 1

@@ -6,7 +6,7 @@ module Odk
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil)
       @response = response
-      puts "first response id: #{response.id}"
+      puts "first response id: #{@response.id}"
       # TODO: what is awaiting_media for?
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
@@ -49,7 +49,6 @@ module Odk
     def build_answer_tree(data, form)
       response.root_node = AnswerGroup.new(
         questioning_id: response.form.root_id,
-        response_id: response.id,
         new_rank: 0
       )
       add_level(data, form, response.root_node)
@@ -239,10 +238,9 @@ module Odk
     end
 
     def check_for_existing_response
-      response = Response.find_by(odk_hash: odk_hash, form_id: @response.form_id)
-      @existing_response = response.present?
-      puts "response exists: #{@existing_response}"
-      response = response if @existing_response
+      existing_response = Response.find_by(odk_hash: odk_hash, form_id: @response.form_id)
+      self.response = existing_response if existing_response.present?
+      puts "response id at end of check_for_existing_response: #{response.id}"
     end
 
     # Generates and saves a hash of the complete XML so that multi-chunk media form submissions

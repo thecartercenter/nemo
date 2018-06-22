@@ -86,7 +86,7 @@ describe Odk::ResponseParser do
     # Don't really need this spec; the hard work is in answer.rb and needs test coverage
     context "with location type" do
       let(:question_types) { %w[location location text] }
-      let(:xml_values) { ["12.345600 -76.993880", "12.3456 -76.99388 123.456 20.0", "A"] }
+      let(:xml_values) { ["12.345600 -76.993880", "12.345600 -76.993880 123.456 20.000", "A"] }
       let(:expected_values) { xml_values }
 
       it "parses location answers correctly" do
@@ -102,10 +102,19 @@ describe Odk::ResponseParser do
 
       context "with date, time, and datetime types" do
         let(:question_types) { %w[datetime date time] }
-        let(:xml_values) { ["2017-07-12T16:40:00.000+03", "2017-07-01", "14:30:00.000+03"] }
-        let(:expected_values) { ["2017-07-12 07:40:00 -0600", "2017-07-01", "2000-01-01 14:30:00 UTC"] }
+        let(:datetime_str) { "2017-07-12T16:40:00.000+03" }
+        let(:date_str) { "2017-07-01" }
+        let(:time_str) { "14:30:00.000+03" }
+        let(:xml_values) { [datetime_str, date_str, time_str] }
 
         it "retains timezone information for datetime but not time" do
+          expected_values = [
+            Time.zone.parse(datetime_str),
+            Date.parse(date_str),
+            # Do not retain timezone and just use UTC for time questions, since they represent time of day
+            # Times without a date are 2000-01-01
+            Time.zone.parse("2000-01-01 14:30:00 UTC")
+          ]
           Odk::ResponseParser.new(response: response, files: files).populate_response
           expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
         end

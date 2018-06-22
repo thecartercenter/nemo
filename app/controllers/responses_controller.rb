@@ -99,6 +99,7 @@ class ResponsesController < ApplicationController
   end
 
   def create
+    puts "CREATE RESPONSE"
     # if this is a non-web submission
     if request.format == Mime::XML
       begin
