@@ -15,7 +15,7 @@ class UserSessionsController < ApplicationController
     # reset the session for security purposes
     reset_session_preserving_return_to
 
-    @user_session = UserSession.new(user_session_params)
+    @user_session = UserSession.new(user_session_params.to_h)
 
     # if the save is successful, the user is logged in automatically
     if allow_login && @user_session.save

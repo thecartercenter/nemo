@@ -309,6 +309,10 @@ class OptionNode < ApplicationRecord
     # errors on children and options will cascade up.
     (children_attribs || []).each_with_index do |attribs, i|
 
+      if attribs.is_a?(Array)
+        attribs = attribs.last
+      end
+
       # If there is a matching (by id) existing child.
       if attribs[:id] && matching = children_by_id[attribs[:id]]
         self.ranks_changed = true if matching.rank != i + 1

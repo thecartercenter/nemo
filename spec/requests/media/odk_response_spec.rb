@@ -33,6 +33,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       image2 = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
+      submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
       # Submit first part
       post submission_path(mission),
@@ -53,7 +54,7 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       # Submit second part
       post submission_path(mission),
         params: {
-          xml_submission_file: submission_file,
+          xml_submission_file: submission_file2,
           "another_swing.jpg" => image2
         },
         headers: {

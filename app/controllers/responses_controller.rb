@@ -121,7 +121,7 @@ class ResponsesController < ApplicationController
           end
 
           @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-          @submission = XMLSubmission.new response: @response, files: files, source: "odk"
+          @submission = XMLSubmission.new response: @response, files: files.to_unsafe_h.with_indifferent_access, source: "odk"
         end
 
         # ensure response's user can submit to the form
@@ -302,8 +302,6 @@ class ResponsesController < ApplicationController
   end
 
   def permitted_answer_attributes
-    permit = {answers_attributes: {}}
-
     # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
     # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
     # on the answers.
@@ -315,19 +313,12 @@ class ResponsesController < ApplicationController
       date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy
       date_value)
 
-    params[:response][:answers_attributes].each do |idx, attribs|
-      permit[:answers_attributes][idx] = permitted_answer_attribs
-      # Handle choices, which are nested under answers.
-      if attribs[:choices_attributes]
-        choice_attributes = {}
-        attribs[:choices_attributes].each do |idx2, attribs2|
-          choice_attributes[idx2] = [:id, :option_id, :option_node_id, :checked]
-        end
-        permit[:answers_attributes][idx] << choice_attributes
-      end
-    end
-
-    permit
+    {
+      answers_attributes: [
+        *permitted_answer_attribs,
+        choices_attributes: [:id, :option_id, :option_node_id, :checked]
+      ]
+    }
   end
 
   def check_form_exists_in_mission
