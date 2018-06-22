@@ -85,7 +85,7 @@ class Report::Report < ApplicationRecord
   end
 
   # Should be overridden by children.
-  def run(current_ability = nil)
+  def run(current_ability = nil, _options = {})
     raise NotImplementedError
   end
 

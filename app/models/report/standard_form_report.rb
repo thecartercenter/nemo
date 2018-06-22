@@ -78,7 +78,7 @@ class Report::StandardFormReport < Report::Report
   end
 
   # current_ability - the ability under which the report should be run
-  def run(current_ability)
+  def run(current_ability, _options = {})
     # make sure the disagg_qing is still on this form (unlikely to be an error)
     raise Report::ReportError.new("disaggregation question is not on this form") unless disagg_qing.nil? || disagg_qing.form_id == form_id
 
