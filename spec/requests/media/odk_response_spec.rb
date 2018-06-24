@@ -44,7 +44,6 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       expect(Response.count).to eq 1
 
       form_response = Response.last
-      expect(form_response.odk_hash).to be_present
 
       # Submit second part
       post submission_path(mission), {
@@ -53,16 +52,9 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
         "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
 
       expect(response).to have_http_status 201
-      Response.all.each do |r|
-        puts "form id: #{r.form_id}"
-        puts "odk hash #{r.odk_hash}"
-        puts "answer count: #{r.answers.count}"
-        puts "========"
-      end
       expect(Response.count).to eq 1
 
       form_response = Response.first
-      expect(form_response.odk_hash).to_not be_present
 
       expect(form_response.form).to eq form
       expect(form_response.answers.count).to eq 3

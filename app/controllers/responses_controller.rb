@@ -118,11 +118,10 @@ class ResponsesController < ApplicationController
         end
 
         @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-        Odk::ResponseParser.new(response: @response, files: files).populate_response
+        @response = Odk::ResponseParser.new(response: @response, files: files).populate_response
 
         # ensure response's user can submit to the form
         authorize!(:submit_to, @response.form)
-
         @response.save(validate: false)
 
         render(nothing: true, status: 201)

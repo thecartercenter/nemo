@@ -1,12 +1,14 @@
 module Odk
   # Takes a response and odk data. Parses odk data into answer tree for response.
+  # Returns the response because in the case of multimedia, the parser may replace
+  # the response object the controller passes in with an
+  # existing response from the database.
   class ResponseParser
     attr_accessor :response, :raw_odk_xml
 
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil)
       @response = response
-      puts "first response id: #{@response.id}"
       # TODO: what is awaiting_media for?
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
@@ -15,6 +17,7 @@ module Odk
 
     def populate_response
       build_answers(raw_odk_xml)
+      response
     end
 
     private
@@ -26,24 +29,45 @@ module Odk
     end
 
     def build_answers(raw_odk_xml)
+      puts "build answers - num responses in db: #{Response.count}"
       data = Nokogiri::XML(raw_odk_xml).root
       lookup_and_check_form(id: data["id"], version: data["version"])
       puts "form id: #{response.form_id}"
-      check_for_existing_response
-      puts " response id after check for existing response: #{response.id}"
-      if response.awaiting_media
-        puts "awaiting media"
-        response.odk_hash = odk_hash
+      if existing_response
+        # Response mission should already be set - TODO: consider moving to constructor or lookup_and_check_form
+        raise "Submissions must have a mission" if response.mission.nil?
+        add_media_to_existing_response
+        puts " response id after check for existing response: #{response.id}"
       else
-        response.odk_hash = nil
+        raise "Submissions must have a mission" if response.mission.nil?
+        if response.awaiting_media
+          response.odk_hash = odk_hash
+        else
+          response.odk_hash = nil
+        end
+        build_answer_tree(data, response.form)
+        response.associate_tree(response.root_node)
       end
-      # TODO: handle awaiting_media
-
-      # Response mission should already be set - TODO: consider moving to constructor or lookup_and_check_form
-      raise "Submissions must have a mission" if response.mission.nil?
-      build_answer_tree(data, response.form)
-      response.associate_tree(response.root_node)
+      puts "response id just before save: #{response.id}"
       response.save(validate: false)
+    end
+
+    def add_media_to_existing_response
+      puts "add_media_to_existing_response - num responses in db: #{Response.count}"
+      candidate_answers = response.answers.select{|a| a.pending_file_name.present?}
+      candidate_answers.each do |a|
+        file = @files[a.pending_file_name]
+        if file.present?
+          case a.qtype.name
+          when "image", "annotated_image", "sketch", "signature"
+            a.media_object = Media::Image.create(item: file.open)
+          when "audio"
+            a.media_object = Media::Audio.create(item: file.open)
+          when "video"
+            a.media_object = Media::Video.create(item: file.open)
+          end
+        end
+      end
     end
 
     def build_answer_tree(data, form)
@@ -155,6 +179,9 @@ module Odk
 
     def populate_answer_value(answer, content, form_item)
       question_type =  form_item.qtype.name
+      if form_item.qtype.multimedia?
+        answer.pending_file_name = content
+      end
       case question_type
       when "select_one"
         answer.option_id = option_id_for_submission(content) unless content == "none"
@@ -237,10 +264,16 @@ module Odk
       raise FormVersionError.new("Form version is outdated") if form.current_version.code != params[:version]
     end
 
-    def check_for_existing_response
-      existing_response = Response.find_by(odk_hash: odk_hash, form_id: @response.form_id)
-      self.response = existing_response if existing_response.present?
-      puts "response id at end of check_for_existing_response: #{response.id}"
+    def existing_response
+      puts "initial response id: #{response.id}"
+      existing_response = Response.find_by(odk_hash: odk_hash, form_id: response.form_id)
+      if existing_response.present?
+        self.response = existing_response
+        puts "existing response id: #{response.id}"
+        true
+      else
+        false
+      end
     end
 
     # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
