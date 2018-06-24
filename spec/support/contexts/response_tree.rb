@@ -15,6 +15,9 @@ shared_context "response tree" do
     expect(children.map(&:type)).to eq types
     expect(children.map(&:questioning_id)).to eq qing_ids
     expect(children.map(&:new_rank)).to eq((0...children.size).to_a)
+    if node.is_a? AnswerSet
+      expect(children.map(&:rank)).to eq ((1...(children.size + 1)).to_a)
+    end
 
     # This expectation can be removed when we remove the old inst_num and rank columns.
     # If child's grandparent is an AnswerGroupSet, it's in a rpt grp. inst num should match parent's rank + 1

@@ -96,6 +96,7 @@ module Odk
         questioning_id: form_item.id,
         new_rank: parent.children.length,
         inst_num: parent.new_rank + 1,
+        rank: parent.children.length + 1, # for multilevel
         response_id: response.id
       )
     end
