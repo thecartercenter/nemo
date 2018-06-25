@@ -36,7 +36,7 @@ class FormVersioningPolicy
       case action
       when :update
         # Changing the option order is a trigger if the form is smsable
-        return obj.forms.select(&:smsable?) if obj.saved_change_to_attribute?(:ranks) || obj.saved_change_to_attribute?(:sms_guide_formatting)
+        return obj.forms.select(&:smsable?) if obj.ranks_changed? || obj.saved_change_to_attribute?(:sms_guide_formatting)
       end
 
     when "OptionNode"
