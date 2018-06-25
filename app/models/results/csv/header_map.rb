@@ -36,7 +36,7 @@ module Results
             row["level_names"] ? add_level_headers(row["code"], row["level_names"]) : add(row["code"])
 
             # If it's a select question that has coords, add cols for that.
-            if row["allow_coordinates"] == "t" && row["qtype_name"] != "select_multiple"
+            if row["allow_coordinates"] && row["qtype_name"] != "select_multiple"
               add_location_headers(row["code"], lat_lng_only: true)
             end
           end
