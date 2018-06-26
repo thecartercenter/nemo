@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_530_174_404) do
+ActiveRecord::Schema.define(version: 20_180_626_162_616) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -392,6 +392,10 @@ ActiveRecord::Schema.define(version: 20_180_530_174_404) do
 
   create_table "questions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
     t.string "access_level", limit: 255, default: "inherit", null: false
+    t.string "audio_prompt_content_type"
+    t.string "audio_prompt_file_name"
+    t.integer "audio_prompt_file_size"
+    t.datetime "audio_prompt_updated_at"
     t.boolean "auto_increment", default: false, null: false
     t.text "canonical_name", null: false
     t.string "code", limit: 255
