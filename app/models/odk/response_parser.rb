@@ -50,20 +50,12 @@ module Odk
     end
 
     def add_media_to_existing_response
-      #binding.pry
       candidate_answers = response.answers.select{|a| a.pending_file_name.present?}
       candidate_answers.each do |a|
-        file = @files[a.pending_file_name]
-        if file.present?
-          case a.qtype.name
-          when "image", "annotated_image", "sketch", "signature"
-            a.media_object = Media::Image.create(item: file)
-          when "audio"
-            a.media_object = Media::Audio.create(item: file)
-          when "video"
-            a.media_object = Media::Video.create(item: file)
-          end
-        end
+        #file = @files[a.pending_file_name]
+        #if file.present?
+          populate_multimedia_answer(a, a.pending_file_name, a.questioning.qtype_name )
+        #end
       end
     end
 
@@ -174,11 +166,28 @@ module Odk
       end
     end
 
+    def populate_multimedia_answer(answer, pending_file_name, question_type)
+      if @files[pending_file_name].present?
+        answer.pending_file_name = nil
+        case question_type
+        when "image", "annotated_image", "sketch", "signature"
+          answer.media_object = Media::Image.create(item: @files[pending_file_name])
+        when "audio"
+          answer.media_object = Media::Audio.create(item: @files[pending_file_name])
+        when "video"
+          answer.media_object = Media::Video.create(item: @files[pending_file_name])
+        end
+      else
+        answer.value = nil
+        answer.pending_file_name = pending_file_name
+      end
+      answer
+    end
+
     def populate_answer_value(answer, content, form_item)
       question_type =  form_item.qtype.name
-      if form_item.qtype.multimedia?
-        answer.pending_file_name = content
-      end
+      return populate_multimedia_answer(answer, content, question_type) if form_item.qtype.multimedia?
+
       case question_type
       when "select_one"
         answer.option_id = option_id_for_submission(content) unless content == "none"
@@ -197,17 +206,9 @@ module Odk
           content = content.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC"
         end
         answer.send("#{answer.qtype.name}_value=", Time.zone.parse(content))
-      when "image", "annotated_image", "sketch", "signature"
-        answer.media_object = Media::Image.create(item: @files[content]) if @files[content]
-      when "audio"
-        answer.media_object = Media::Audio.create(item: @files[content]) if @files[content]
-      when "video"
-        answer.media_object = Media::Video.create(item: @files[content]) if @files[content]
       else
         answer.value = content
       end
-      # nullify answers if string suggests multimedia answer but no file present to make multi-chunk submissions work
-      answer.value = nil if (form_item.multimedia? && answer.media_object.blank?)
       answer
     end
 

@@ -275,7 +275,6 @@ describe Odk::ResponseParser do
     end
   end
 
-
   context "responses with media" do
     let(:filename) { "simple_response.xml" }
     let(:form) { create(:form, :published, :with_version, question_types: question_types) }
@@ -297,7 +296,6 @@ describe Odk::ResponseParser do
     end
 
     context "multipart media" do
-      #TODO: leave as request spec - involves processign files coming in from http etc
       let(:media_file_name_1) { "the_swing.jpg"}
       let(:media_file_name_2) { "another_swing.jpg"}
       let(:image_1) { media_fixture("images/#{media_file_name_1}") }
@@ -310,17 +308,12 @@ describe Odk::ResponseParser do
       it "creates response tree with media object for media answer" do
         Odk::ResponseParser.new(response: response, files: files_1, awaiting_media: true).populate_response
         expect(Response.count).to eq 1
-        pp response
-        pp response.root_node
-        pp response.root_node.c
-        pp response.root_node.errors
-        pp response.root_node.c.map(&:errors)
         image_answer_1 = response.root_node.c[1]
         image_answer_2 = response.root_node.c[2]
         expect(response.root_node.c.count).to eq 3
         expect(response.answers.count).to eq 3
 
-        expect(image_answer_1.pending_file_name).to eq media_file_name_1
+        expect(image_answer_1.pending_file_name).to be_nil
         expect(image_answer_1.media_object).to be_present
         expect(image_answer_1.media_object.item_file_name).to include media_file_name_1
         expect(image_answer_2.pending_file_name).to eq media_file_name_2
