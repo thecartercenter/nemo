@@ -52,10 +52,7 @@ module Odk
     def add_media_to_existing_response
       candidate_answers = response.answers.select{|a| a.pending_file_name.present?}
       candidate_answers.each do |a|
-        #file = @files[a.pending_file_name]
-        #if file.present?
           populate_multimedia_answer(a, a.pending_file_name, a.questioning.qtype_name )
-        #end
       end
     end
 

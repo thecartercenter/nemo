@@ -60,7 +60,8 @@ module Results
       child = type.new(
         questioning_id: form_node.id,
         response: response,
-        new_rank: response_node.children.size
+        new_rank: response_node.children.size,
+        rank: response_node.children.size + 1
       )
       # We can't validate yet because there's no value.
       child.save(validate: false)
