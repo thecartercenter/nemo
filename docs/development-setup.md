@@ -117,13 +117,14 @@ git checkout develop
 
 #### Run the tests
 
+1. Run `nvm use` to ensure you have the right version of Node.js loaded. Do this once per console session.
 1. Run `rspec`.
 1. All tests should pass. Running them takes about 10-15 minutes.
 1. If you have trouble debugging a feature spec, you can run it headed (so you can watch the browser go through the spec) by doing `HEADED=1 bundle exec rspec spec/features/your_spec.rb`.
 
 #### Start the server
 
-For a development setup, just run `rails s`.
+For a development setup, run `nvm use && rails s`.
 
 #### Login
 
