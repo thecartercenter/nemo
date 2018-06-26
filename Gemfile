@@ -21,6 +21,9 @@ gem "scrypt", "~> 1.2.0"
 # authorization
 gem "cancancan", "~> 1.15.0"
 
+# Fix for compatibility issue
+gem "draper-cancancan", "~> 1.1"
+
 # core
 gem "rake", "~> 10.4.2"
 gem "pg", "~> 0.20"
