@@ -7,12 +7,12 @@ module Odk
     attr_accessor :response, :raw_odk_xml
 
     #initialize in a similar way to xml submission
-    def initialize(response: nil, files: nil)
+    def initialize(response: nil, files: nil, awaiting_media: false)
       @response = response
-      # TODO: what is awaiting_media for?
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
       @response.source = "odk"
+      @awaiting_media = awaiting_media
     end
 
     def populate_response
@@ -37,7 +37,7 @@ module Odk
         add_media_to_existing_response
       else
         raise "Submissions must have a mission" if response.mission.nil?
-        if response.awaiting_media
+        if @awaiting_media
           response.odk_hash = odk_hash
         else
           response.odk_hash = nil
@@ -45,21 +45,23 @@ module Odk
         build_answer_tree(data, response.form)
         response.associate_tree(response.root_node)
       end
+
       response.save(validate: false)
     end
 
     def add_media_to_existing_response
+      #binding.pry
       candidate_answers = response.answers.select{|a| a.pending_file_name.present?}
       candidate_answers.each do |a|
         file = @files[a.pending_file_name]
         if file.present?
           case a.qtype.name
           when "image", "annotated_image", "sketch", "signature"
-            a.media_object = Media::Image.create(item: file.open)
+            a.media_object = Media::Image.create(item: file)
           when "audio"
-            a.media_object = Media::Audio.create(item: file.open)
+            a.media_object = Media::Audio.create(item: file)
           when "video"
-            a.media_object = Media::Video.create(item: file.open)
+            a.media_object = Media::Video.create(item: file)
           end
         end
       end
@@ -71,7 +73,6 @@ module Odk
         new_rank: 0
       )
       add_level(data, form, response.root_node)
-      puts response.root_node.debug_tree
     end
 
     def add_level(xml_node, form_node, response_node)
@@ -193,17 +194,15 @@ module Odk
         # We also make sure elsewhere in the app to not tz-shift time answers when we display them.
         # (Rails by default keeps time columns as UTC and does not shift them to the system's timezone.)
         if answer.qtype.name == "time"
-          puts content
           content = content.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC"
-          puts content
         end
         answer.send("#{answer.qtype.name}_value=", Time.zone.parse(content))
       when "image", "annotated_image", "sketch", "signature"
-        answer.media_object = Media::Image.create(item: @files[content].open) if @files[content]
+        answer.media_object = Media::Image.create(item: @files[content]) if @files[content]
       when "audio"
-        answer.media_object = Media::Audio.create(item: @files[content].open) if @files[content]
+        answer.media_object = Media::Audio.create(item: @files[content]) if @files[content]
       when "video"
-        answer.media_object = Media::Video.create(item: @files[content].open) if @files[content]
+        answer.media_object = Media::Video.create(item: @files[content]) if @files[content]
       else
         answer.value = content
       end
@@ -261,11 +260,9 @@ module Odk
     end
 
     def existing_response
-      puts "initial response id: #{response.id}"
       existing_response = Response.find_by(odk_hash: odk_hash, form_id: response.form_id)
       if existing_response.present?
         self.response = existing_response
-        puts "existing response id: #{response.id}"
         true
       else
         false

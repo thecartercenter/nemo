@@ -110,15 +110,21 @@ class ResponsesController < ApplicationController
         UploadSaver.new.save_file(params[:xml_submission_file])
 
         files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
-        files.each { |k, v| files[k] = v.tempfile }
+        files.each { |k, v| files[k] = v.tempfile.open }
+
+        pp files
 
         unless upfile
           render_xml_submission_failure("No XML file attached.", 422)
           return false
         end
 
-        @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-        @response = Odk::ResponseParser.new(response: @response, files: files).populate_response
+        awaiting_media = params["*isIncomplete*"] == "yes"
+        @response = Odk::ResponseParser.new(
+          response: @response,
+          files: files,
+          awaiting_media: awaiting_media
+        ).populate_response
 
         # ensure response's user can submit to the form
         authorize!(:submit_to, @response.form)

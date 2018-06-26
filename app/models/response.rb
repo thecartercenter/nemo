@@ -303,10 +303,7 @@ class Response < ApplicationRecord
   end
 
   def associate_tree(root)
-    root.response = self
-    root.children.each do |child|
-      associate_node_and_descendants(child)
-    end
+    associate_node_and_descendants(root)
     self.root_node = root
   end
 
