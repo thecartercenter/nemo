@@ -61,13 +61,10 @@ describe "question form" do
     attach_file("Audio Prompt", fixture("powerup.mp3"))
     click_on "Save"
 
-    visit edit_question_path(locale: "en", mode: "m",
+    visit question_path(locale: "en", mode: "m",
       mission_name: mission.compact_name, id: Question.last.id)
 
-    # on edit, paperclip does not show the audio file on the page even if it exists
-    # but we are certain that it gets saved
-    # perhaps this should be a model spec?
-    expect(Question.last.audio_prompt_file_name).to eq("powerup.mp3")
+    expect(page).to have_content("powerup.mp3")
   end
 
   private
