@@ -58,7 +58,7 @@ describe "question form" do
     fill_in "Title", with: "Jay's"
     select "Text", from: "Type"
 
-    attach_file("Audio Prompt", File.absolute_path("spec/fixtures/media/audio/powerup.mp3"))
+    attach_file("Audio Prompt", fixture("powerup.mp3"))
     click_on "Save"
 
     visit edit_question_path(locale: "en", mode: "m",
@@ -68,5 +68,11 @@ describe "question form" do
     # but we are certain that it gets saved
     # perhaps this should be a model spec?
     expect(Question.last.audio_prompt_file_name).to eq("powerup.mp3")
+  end
+
+  private
+
+  def fixture(name)
+    File.expand_path("../../fixtures/media/audio/#{name}", __FILE__)
   end
 end
