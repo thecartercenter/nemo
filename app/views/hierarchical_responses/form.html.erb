@@ -58,7 +58,7 @@
 
     <% end %>
 
-    <%= render("responses/answers/nodes", nodes: @nodes, inst_num: 1, read_only: f.read_only?) %>
+    <%= render("hierarchical_responses/answers/nodes", node: f.object.root_node, read_only: f.read_only?) %>
 
     <%# Incomplete checkbox %>
     <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>

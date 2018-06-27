@@ -1,8 +1,8 @@
-<% nodes.each do |node| %>
+<% node.children.each do |node| %>
   <%# Single answer set %>
   <% if node.set %>
 
-    <%= render("responses/answers/set", set: node.set, inst_num: inst_num, read_only: read_only) %>
+    <%= render("hierarchical_responses/answers/set", set: node.set, inst_num: inst_num, read_only: read_only) %>
 
   <%# Group with one or more instances %>
   <% else %>
@@ -10,7 +10,7 @@
     <div class="qing-group" data-group-id="<%= node.item.id %>" data-inst-count="<%= node.instances.size %>">
       <div class="qing-group-instances">
         <% node.instances.each do |instance| %>
-          <%= render("responses/answers/instance", node: node, instance: instance) %>
+          <%= render("hierarchical_responses/answers/instance", node: node, instance: instance) %>
         <% end %>
       </div>
       <% if node.repeatable? && !read_only %>
@@ -24,7 +24,7 @@
       <%= javascript_doc_ready do %>
         new ELMO.Views.RepeatGroupFormView({
           el: <%=json ".qing-group[data-group-id=#{node.item.id}]" %>,
-          tmpl: <%=json render("responses/answers/instance",
+          tmpl: <%=json render("hierarchical_responses/answers/instance",
             node: node, instance: node.placeholder_instance) %>
         })
       <% end %>

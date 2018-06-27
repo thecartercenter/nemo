@@ -249,13 +249,7 @@ class HierarchicalResponsesController < ApplicationController
 
   # prepares objects for and renders the form template
   def prepare_and_render_form
-    # Prepare the OldAnswerNodes.
     set_read_only
-    @nodes = AnswerArranger.new(@response,
-      placeholders: params[:action] == "show" ? :except_repeats : :all,
-      # Must preserve submitted answers when in create/update action.
-      dont_load_answers: %w(create update).include?(params[:action])
-    ).build.nodes
     render(:form)
   end
 

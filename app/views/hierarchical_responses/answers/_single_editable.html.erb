@@ -16,7 +16,7 @@
   <% when "select_multiple" %>
 
     <%# render a checkbox for each possible choice %>
-    <%= render(partial: "responses/answers/choice", locals: {prefix: field_name_prefix},
+    <%= render(partial: "hierarchical_responses/answers/choice", locals: {prefix: field_name_prefix},
       collection: answer.all_choices, class: "form-control") %>
 
   <% when "datetime", "date", "time" %>
@@ -32,7 +32,7 @@
 
   <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
-    <%= render("responses/answers/media_editable", answer: answer, index: index, prefix: field_name_prefix) %>
+    <%= render("hierarchical_responses/answers/media_editable", answer: answer, index: index, prefix: field_name_prefix) %>
 
   <% when "long_text" %>
 
@@ -60,4 +60,4 @@
   <% end %>
 </div>
 
-<%= render('responses/answers/hidden_fields', answer: answer, index: index, inst_num: inst_num) %>
+<%= render('hierarchical_responses/answers/hidden_fields', answer: answer, index: index, inst_num: inst_num) %>
