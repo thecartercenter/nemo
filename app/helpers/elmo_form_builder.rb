@@ -1,7 +1,7 @@
 class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
   # options[:type] - The type of field to display
-  #   (:text (default), :check_box, :radio_butons, :textarea, :password, :select, :timezone)
+  #   (:text (default), :check_box, :radio_butons, :textarea, :password, :select, :timezone, :file)
   # options[:required] - Whether the field input is required.
   # options[:content] - The content of the field's main area. If nil, the default content for the field type is used.
   # options[:partial] - A partial to be used as the field's main area. Overrides options[:content].
