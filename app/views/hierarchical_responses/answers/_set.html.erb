@@ -1,0 +1,50 @@
+<% mode = read_only ? "read_only" : "editable" %>
+<div class="form-field answer_field qtype_<%= set.qtype.name %>
+  <%= read_only ? "read-only" : "editable" %> <%= set.lengthy? ? "lengthy" : "" %>"
+  data-qtype-name="<%= set.qtype.name %>"
+  data-qing-id="<%= set.questioning_id %>"
+  data-inst-num="<%= inst_num %>">
+  <% if form_mode %>
+    <%# This appears first here but is usually moved to the end using flex box %>
+    <%# We do it this way so we can move the control to its own line when printing a long text answer. %>
+    <% question_hint = set.question_hint.try(:chomp, ".").try(:<<, ".") %>
+    <% drop_hint = I18n.t("response.drop_hint.#{set.qtype.name}", default: "").presence %>
+    <%= hint_popover([question_hint, drop_hint].compact.join(" ")) %>
+  <% end %>
+  <label class="main">
+    <%= reqd_sym if set.required? %>
+    <%= set.full_dotted_rank %>.
+    <%= "[#{set.question_code}]" unless @response.new_record? %>
+    <%= set.question_name || "[#{t('answer.no_name')}]" %>
+  </label>
+  <div class="control">
+    <% if set.multilevel? %>
+      <%= render("responses/answers/cascading_#{mode}",
+            answer_set: set,
+            index: "#{set.questioning_id}_#{inst_num}",
+            inst_num: inst_num) %>
+    <% else %>
+      <%= render("responses/answers/single_#{mode}",
+            answer: set.answers.first,
+            index: "#{set.questioning_id}_#{inst_num}",
+            inst_num: inst_num) %>
+    <% end %>
+  </div>
+</div>
+
+<%# Setup condition js. %>
+<%# Note that we need to do this in any form mode, even show. %>
+<% if @condition_computer.present? %>
+  <% response_condition_group = @condition_computer.condition_group_for(set.questioning) %>
+  <% unless response_condition_group.empty? %>
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.ResponseConditionManager(<%=json(
+        el: 'form.response_form',
+        item: ResponseCondition::FormItemSerializer.new(set.questioning,
+          response_condition_group: response_condition_group),
+        # Newer-style instance descriptor.
+        inst: set.depth == 1 ? [] : [{id: set.qing_parent_id.to_s, num: inst_num}]
+      ) %>);
+    <% end %>
+  <% end %>
+<% end %>
