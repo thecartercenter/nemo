@@ -101,8 +101,11 @@ header {
       }
 
       ul.dropdown-menu {
-        top: 78%;
-        left: 24px;
+        top: auto;
+        left: auto;
+        margin-top: 5px;
+        text-align: $left;
+        
         li {
           font-weight: normal;
           font-family: $sans-serif;
