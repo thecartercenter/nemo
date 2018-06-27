@@ -1,7 +1,7 @@
 class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
   # options[:type] - The type of field to display
-  #   (:text (default), :check_box, :radio_butons, :textarea, :password, :select, :timezone, :file)
+  #   (:text (default), :check_box, :radio_buttons, :textarea, :password, :select, :timezone, :file)
   # options[:required] - Whether the field input is required.
   # options[:content] - The content of the field's main area. If nil, the default content for the field type is used.
   # options[:partial] - A partial to be used as the field's main area. Overrides options[:content].
@@ -132,7 +132,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       if options[:read_only]
 
         # get field value
-        val = @object.send(field_name)
+        # audio_prompt is the audio file being set by paperclip
+        # to access the file name, we have to target the original_filename method
+        val = field_name == :audio_prompt ? @object.audio_prompt.original_filename : @object.send(field_name)
 
         # get a human readable version of the value
         human_val = case options[:type]
