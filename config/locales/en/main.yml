@@ -122,6 +122,7 @@ en:
     title: "Title"
     type: "Type"
     value: "Value"
+    audio_prompt: "Audio Prompt"
 
   access_levels:
     public: "Public"

@@ -28,6 +28,10 @@
     <% end %>
   </div>
 
+  <div>
+    <%= f.field(:audio_prompt, type: :file) %>
+  </div>
+
   <div class="minmax">
     <%= f.field(:casted_minimum, :partial => 'questions/min_max_condition') %>
     <%= f.field(:casted_maximum, :partial => 'questions/min_max_condition') %>
