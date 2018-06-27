@@ -134,7 +134,11 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         # get field value
         # audio_prompt is the audio file being set by paperclip
         # to access the file name, we have to target the original_filename method
-        val = field_name == :audio_prompt ? @object.audio_prompt.original_filename : @object.send(field_name)
+        val = if field_name == :audio_prompt && @object.audio_prompt
+                @object.audio_prompt.original_filename
+              else
+                @object.send(field_name)
+              end
 
         # get a human readable version of the value
         human_val = case options[:type]
