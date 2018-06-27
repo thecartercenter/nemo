@@ -65,7 +65,7 @@
     .inner {
       display: table;
       width: 100%;
-      padding: 2px 5px 5px 2px;
+      padding: 2px 5px;
       position: relative; // Needed so we can make action icons pop up over curtain.
 
       > * {
@@ -79,6 +79,7 @@
 
       i.fa {
         margin-left: 5px;
+        margin-right: 5px;
         color: $theme-main;
       }
     }
@@ -99,14 +100,8 @@
     }
 
     .actions {
-      text-align: right;
+      text-align: $right;
       white-space: nowrap;
-
-      // We need this to be in front of than the hidden curtain else not clickable.
-      position: absolute;
-      z-index: 3;
-      top: 7px;
-      right: 5px;
 
       .refd-qing-links,
       .skip-rule-links {
