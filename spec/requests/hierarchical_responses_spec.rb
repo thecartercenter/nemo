@@ -4,7 +4,7 @@ require "spec_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe "responses", type: :request do
-  let!(:form) { create(:form, :published, question_types: %w[integer multilevel_select_one]) }
+  let!(:form) { create(:form, :published, question_types: [%w[integer], "multilevel_select_one"]) }
   let!(:option_set) { OptionSet.first }
   let!(:plants) { option_set.root_node.children.detect { |c| c.option_name == "Plant" } }
   let!(:plant) { plants.option }
@@ -78,8 +78,8 @@ describe "responses", type: :request do
 
   describe "csv", :csv do
     before do
-      create(:response, form: form, answer_values: %w[2 Animal])
-      create(:response, form: form, answer_values: %w[15 Plant])
+      create(:response, form: form, answer_values: [[2], "Animal"])
+      create(:response, form: form, answer_values: [[15], "Plant"])
     end
 
     it "should produce valid CSV" do
