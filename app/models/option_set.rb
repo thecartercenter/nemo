@@ -122,6 +122,10 @@ class OptionSet < ApplicationRecord
     self.level_names = ls.map { |l| l.name_translations }
   end
 
+  def level_names=(names)
+    self[:level_names] = names.is_a?(Hash) ? names.values : names
+  end
+
   def level_count
     levels.try(:size) || 1
   end
