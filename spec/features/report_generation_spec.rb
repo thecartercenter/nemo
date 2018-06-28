@@ -3,13 +3,14 @@ require 'rails_helper'
 feature 'report generation', js: true do
   before do
     @user = create(:user)
-    login(@user)
 
     @form = create(:form, question_types: %w(integer select_one text))
     @qs = @form.questions
     create(:response, form: @form, answer_values: %w(1 Cat Foo))
     create(:response, form: @form, answer_values: %w(2 Dog Bar))
     create(:response, form: @form, answer_values: %w(3 Dog Blah))
+
+    login(@user)
   end
 
   # NONE OF THESE REPORTS ARE WORKING PROPERLY

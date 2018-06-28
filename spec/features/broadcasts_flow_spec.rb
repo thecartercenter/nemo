@@ -4,7 +4,9 @@ feature 'broadcasts flow', :sms, js: true do
   let!(:user) { create(:user, role_name: "staffer") }
   let!(:user2) { create(:user) }
 
-  before { login(user) }
+  before do
+    login(user)
+  end
 
   scenario "happy path" do
     click_link("Broadcasts")

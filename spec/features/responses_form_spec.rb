@@ -42,7 +42,7 @@ feature "responses form", js: true do
     let(:reviewer) { create(:user) }
 
     # TODO: find a better way to share this data for show/edit
-    before(:each) do
+    before do
       login(user)
       visit new_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
@@ -131,9 +131,9 @@ feature "responses form", js: true do
           question: create(:question, qtype_name: "text"), form: form, hidden: true, required: true)
       }
     end
-    before { login(user) }
 
     scenario "should be properly ignored" do
+      login(user)
       visit new_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
 
@@ -151,13 +151,13 @@ feature "responses form", js: true do
   describe "integer constraints" do
     let!(:questionings) do
       {
-        integer: create(:questioning, form: form, question: create(:question, qtype_name: "integer", minimum: 10))
+        integer: create(:questioning, form: form,
+                                      question: create(:question, qtype_name: "integer", minimum: 10))
       }
     end
 
-    before { login(user) }
-
     scenario "should be enforced if appropriate" do
+      login(user)
       visit new_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
 
@@ -175,15 +175,10 @@ feature "responses form", js: true do
   end
 
   describe "location answers" do
-    before { login(user) }
-
-    let!(:questionings) do
-      {
-        location: create_questioning("location", form),
-      }
-    end
+    let!(:questionings) { {location: create_questioning("location", form)} }
 
     scenario "should be handled properly" do
+      login(user)
       visit new_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
 
@@ -237,9 +232,8 @@ feature "responses form", js: true do
       }
     end
 
-    before { login(user) }
-
     scenario "should let you add two instances" do
+      login(user)
       visit new_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
 
