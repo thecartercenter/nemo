@@ -16,8 +16,8 @@ ELMO::Application.routes.draw do
   scope ":locale", locale: /[a-z]{2}/, defaults: {mode: nil, mission_name: nil} do
 
     # Routes requiring no user.
-    resources :password_resets, path: "password-resets"
-    resource :user_session, path: "user-session"
+    resources :password_resets, path: "password-resets", only: %i[new edit create update]
+    resource :user_session, path: "user-session", only: %i[new create destroy]
     get "/logged-out" => "user_sessions#logged_out", as: :logged_out
     get "/login" => "user_sessions#new", as: :login
 
@@ -29,7 +29,7 @@ ELMO::Application.routes.draw do
     get "/confirm-login" => "user_sessions#login_confirmation", defaults: { confirm: true }, as: :new_login_confirmation
     post "/confirm-login" => "user_sessions#process_login_confirmation", defaults: { confirm: true }, as: :login_confirmation
 
-    resources :operations, only: %i(index show destroy) do
+    resources :operations, only: %i[index show destroy] do
       collection do
         post "clear"
       end
@@ -53,7 +53,7 @@ ELMO::Application.routes.draw do
   #####################################
   # Mission-mode-only routes
   scope ":locale/m/:mission_name", locale: /[a-z]{2}/, mission_name: /[a-z][a-z0-9]*/, defaults: {mode: "m"} do
-    resources(:broadcasts) do
+    resources :broadcasts, only: %i[index show new create] do
       collection do
         get "possible-recipients", as: "possible_recipients", action: "possible_recipients"
         post "new-with-users", as: "new_with_users", action: "new_with_users"
@@ -70,7 +70,7 @@ ELMO::Application.routes.draw do
       end
     end
 
-    resources :sms_tests, path: "sms-tests"
+    resources :sms_tests, path: "sms-tests", only: %i[new create]
 
     resources :reports do
       member do
@@ -118,9 +118,9 @@ ELMO::Application.routes.draw do
         post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
       end
     end
-    resources :questionings
-    resources :qing_groups, path: "qing-groups", except: :index
-    resources :settings do
+    resources :questionings, only: %i[show edit create update destroy]
+    resources :qing_groups, path: "qing-groups", only: %i[new edit create update destroy]
+    resources :settings, only: %i[index update] do
       member do
         post "regenerate_override_code"
         post "regenerate_incoming_sms_token"
@@ -129,13 +129,13 @@ ELMO::Application.routes.draw do
         get "using_incoming_sms_token_message"
       end
     end
-    resources :user_batches, path: "user-batches" do
+    resources :user_batches, path: "user-batches", only: %i[new create] do
       collection do
         get "users-template", as: "template", action: "template", defaults: { format: "xslx" }
       end
     end
 
-    resources :user_groups do
+    resources :user_groups, only: %i[index edit update create destroy] do
       post "add_users"
       post "remove_users"
       collection do
