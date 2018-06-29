@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe FormVersion do
   it "form version code generated on initialize" do

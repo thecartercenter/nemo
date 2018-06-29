@@ -2,7 +2,7 @@ class OptionSetsController < ApplicationController
   include StandardImportable
   include Parameters
 
-  before_filter :arrayify_attribs, only: [:create, :update]
+  before_action :arrayify_attribs, only: [:create, :update]
 
   # authorization via cancan
   load_and_authorize_resource

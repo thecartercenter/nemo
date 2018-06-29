@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'DataIntegrity' do
   include PathHelper
@@ -81,7 +81,7 @@ describe 'DataIntegrity' do
       expect(response).to be_success
       assert_select("input##{singular}_#{field}")
       new_val = "new val #{rand(100000000)}"
-      put(send("#{singular}_path", obj), singular => {field => new_val})
+      put(send("#{singular}_path", obj), params: {singular => {field => new_val}})
       follow_redirect!
       expect(obj.reload.send(field)).to eq(new_val)
     end

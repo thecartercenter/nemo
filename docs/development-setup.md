@@ -13,6 +13,13 @@ Note to install the software below we recommend the following package managers:
     - Use of [rbenv](https://github.com/rbenv/rbenv) is recommended.
     - Running `rbenv install` in the project root will install the version you need.
     - If not using `rbenv`, see the `.ruby-version` file in the project root to get the required version number.
+    - Bundler is expected to be available.  Run `gem install bundler` to install it.
+1. Node
+    - Use of [nvm](https://github.com/creationix/nvm#installation) is recommended.
+    - Running `nvm install` in the project root will install the version you need.
+    - Note that `nvm` does NOT shim Node executables so `nvm use` is required to load the right Node versions in each new shell session.
+    - If not using `nvm`, see the `.nvmrc` file in the project root to get the required version number.
+    - The `yarn` Node module is expected to be installed globally.  Run `npm install -g yarn` to install it.
 1. Memcached 1.4+
     - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it.
     - In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
@@ -35,8 +42,6 @@ Note to install the software below we recommend the following package managers:
 Linters are strongly recommended for checking your code before opening a PR. The CI system will run linters as well and your PR won't be approved until all issues are resolved or cancelled by the reviewer.
 
 #### Setup
-
-Several linters require `npm` to install. We recommend [using `nvm`](https://github.com/creationix/nvm#installation) to manage your Node/npm versions. Note that `nvm` does NOT shim Node executables so `nvm use` is required to load the right Node versions in each new shell session.
 
 The below assume you have installed the Ruby and Node versions specified in `.ruby-version` and `.nvmrc` files, respectively.
 
@@ -101,6 +106,7 @@ git checkout develop
 #### Bundle, configure, and load schema
 
 1. Install the required gems by running `bundle install` in the project directory.
+1. Install the required Node modules by running `yarn install` in the project directory.
 1. Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
 1. Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
 1. Setup the UUID postgres extension (must be done as postgres superuser): `sudo -u postgres psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
@@ -111,13 +117,14 @@ git checkout develop
 
 #### Run the tests
 
+1. Run `nvm use` to ensure you have the right version of Node.js loaded. Do this once per console session.
 1. Run `rspec`.
 1. All tests should pass. Running them takes about 10-15 minutes.
 1. If you have trouble debugging a feature spec, you can run it headed (so you can watch the browser go through the spec) by doing `HEADED=1 bundle exec rspec spec/features/your_spec.rb`.
 
 #### Start the server
 
-For a development setup, just run `rails s`.
+For a development setup, run `nvm use && rails s`.
 
 #### Login
 

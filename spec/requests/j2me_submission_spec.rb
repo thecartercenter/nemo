@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 require "fileutils"
 
 describe "j2me submissions", :odk do

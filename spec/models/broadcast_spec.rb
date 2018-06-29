@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Broadcast do
   let!(:user1) { create(:user, phone: "+17345550001", role_name: "enumerator") }

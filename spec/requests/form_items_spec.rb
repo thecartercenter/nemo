@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "form items" do
   let(:user) { create(:user, role_name: "coordinator") }
@@ -14,7 +14,7 @@ describe "form items" do
     context "when valid ancestry" do
       before(:each) do
         put(form_item_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          "rank" => 3, "parent_id" => qing_group.id)
+          params: {"rank" => 3, "parent_id" => qing_group.id})
       end
 
       it "should be successful" do
@@ -25,20 +25,6 @@ describe "form items" do
         params = controller.params
         expect(params[:rank]).to eq "3"
         expect(params[:parent_id]).to eq qing_group.id.to_s
-      end
-    end
-  end
-
-  describe "normalization" do
-    describe "skip_rules" do
-      it "should be discarded if totally empty" do
-        qing = create(:questioning, skip_rules_attributes: [
-          {destination: "end", skip_if: "always"},
-          {destination: "", skip_if: "", conditions_attributes: []},
-          {destination: "", skip_if: "", conditions_attributes: [{ref_qing_id: "", op: "", value: ""}]}
-        ])
-        expect(qing.skip_rules.count).to eq 1
-        expect(qing.skip_rules[0].destination).to eq "end"
       end
     end
   end
@@ -68,10 +54,12 @@ describe "form items" do
           refableQings: expected_ref_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
-          ref_qing_id: nil,
-          form_id: form.id,
-          conditionable_id: qing.id,
-          conditionable_type: "FormItem"
+          params: {
+            ref_qing_id: nil,
+            form_id: form.id,
+            conditionable_id: qing.id,
+            conditionable_type: "FormItem"
+          }
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
@@ -101,10 +89,12 @@ describe "form items" do
           refableQings: expected_ref_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
-          ref_qing_id: form.c[0].id,
-          form_id: form.id,
-          conditionable_id: qing.id,
-          conditionable_type: "FormItem"
+          params: {
+            ref_qing_id: form.c[0].id,
+            form_id: form.id,
+            conditionable_id: qing.id,
+            conditionable_type: "FormItem"
+          }
         expect(response).to have_http_status(200)
         expect(response.body).to eq expected
       end
@@ -131,11 +121,13 @@ describe "form items" do
             refableQings: expected_ref_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
-            condition_id: condition.id,
-            ref_qing_id: form.c[1].id,
-            form_id: form.id,
-            conditionable_id: qing.id,
-            conditionable_type: "FormItem"
+            params: {
+              condition_id: condition.id,
+              ref_qing_id: form.c[1].id,
+              form_id: form.id,
+              conditionable_id: qing.id,
+              conditionable_type: "FormItem"
+            }
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end
@@ -163,11 +155,13 @@ describe "form items" do
             refableQings: expected_ref_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
-            condition_id: condition.id,
-            ref_qing_id: form.c[2].id,
-            form_id: form.id,
-            conditionable_id: qing.id,
-            conditionable_type: "FormItem"
+            params: {
+              condition_id: condition.id,
+              ref_qing_id: form.c[2].id,
+              form_id: form.id,
+              conditionable_id: qing.id,
+              conditionable_type: "FormItem"
+            }
           expect(response).to have_http_status(200)
           expect(response.body).to eq expected
         end

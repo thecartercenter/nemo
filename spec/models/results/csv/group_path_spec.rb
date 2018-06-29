@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe Results::Csv::GroupPath do
   let(:path) { described_class.new(max_depth: depth) }

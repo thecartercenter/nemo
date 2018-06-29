@@ -22,7 +22,7 @@ class FormVersioningPolicy
   # Returns a list of forms needing upgrade based on the given object and action.
   # If the list is empty, it means that no form's version will have to be updated.
   def forms_needing_upgrade(obj, action)
-    return [] if obj.id_changed? && action == :update # This is a create, not an update
+    return [] if obj.saved_change_to_attribute?(:id) && action == :update # This is a create, not an update
 
     case obj.class.name
     when "Option"
@@ -36,7 +36,7 @@ class FormVersioningPolicy
       case action
       when :update
         # Changing the option order is a trigger if the form is smsable
-        return obj.forms.select(&:smsable?) if obj.ranks_changed? || obj.sms_guide_formatting_changed?
+        return obj.forms.select(&:smsable?) if obj.ranks_changed? || obj.saved_change_to_attribute?(:sms_guide_formatting)
       end
 
     when "OptionNode"
@@ -61,8 +61,8 @@ class FormVersioningPolicy
         # If required is changed, it's a trigger
         # Changing question rank is a trigger if form is smsable
         # Changing question visibility is a trigger if changed to visible (not hidden)
-        if obj.required_changed? || (obj.rank_changed? && obj.form.smsable?) ||
-            (obj.hidden_changed? && !obj.hidden?)
+        if obj.saved_change_to_attribute?(:required) || (obj.saved_change_to_attribute?(:rank) && obj.form.smsable?) ||
+            (obj.saved_change_to_attribute?(:hidden) && !obj.hidden?)
           return [obj.form]
         end
       when :destroy
@@ -96,8 +96,8 @@ class FormVersioningPolicy
       case action
       when :update
         # Changing question type, option set, constraints
-        return obj.forms if obj.qtype_name_changed? || obj.option_set_id_changed? ||
-            obj.constraint_changed?
+        return obj.forms if obj.saved_change_to_attribute?(:qtype_name) || obj.saved_change_to_attribute?(:option_set_id) ||
+            obj.saved_change_to_attribute?(:constraint)
       end
     end
 

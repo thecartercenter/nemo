@@ -1,3 +1,8 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+import FormSelect from "./FormSelect";
+
 class CascadingSelect extends React.Component {
   constructor(props) {
     super();
@@ -97,10 +102,12 @@ class CascadingSelect extends React.Component {
 }
 
 CascadingSelect.propTypes = {
-  optionNodeId: React.PropTypes.string,
-  optionSetId: React.PropTypes.string.isRequired
+  optionNodeId: PropTypes.string,
+  optionSetId: PropTypes.string.isRequired
 };
 
 CascadingSelect.defaultProps = {
   optionNodeId: null
 };
+
+export default CascadingSelect;

@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Questioning do
   it "mission should get copied from question on creation" do

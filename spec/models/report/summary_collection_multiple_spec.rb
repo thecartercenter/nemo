@@ -2,7 +2,7 @@
 # makes sure that the data is disaggregated properly
 # tests for the singleton case, where there is only one subset in the collection, are currently in SummaryCollectionSingleTest
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe "summary collection with multiple subsets" do
  it "collection should have proper disagg values" do

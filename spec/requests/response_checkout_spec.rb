@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'response checkout' do
   it "user should get a notice when response is locked by another user" do

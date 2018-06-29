@@ -1,3 +1,9 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+import ConditionValueField from "./ConditionValueField";
+import FormSelect from "./FormSelect";
+
 class ConditionFormField extends React.Component {
   constructor(props) {
     super();
@@ -134,5 +140,7 @@ class ConditionFormField extends React.Component {
 }
 
 ConditionFormField.propTypes = {
-  hide: React.PropTypes.bool.isRequired
+  hide: PropTypes.bool.isRequired
 };
+
+export default ConditionFormField;

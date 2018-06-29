@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe "option_sets", type: :request do

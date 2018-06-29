@@ -2,6 +2,10 @@
 class Ability
   include CanCan::Ability
 
+  # Fix compatibility issue.
+  # See https://github.com/GoodMeasuresLLC/draper-cancancan
+  prepend Draper::CanCanCan
+
   attr_reader :user, :mission, :mode
 
   CRUD = [:new, :show, :edit, :create, :update, :destroy]
