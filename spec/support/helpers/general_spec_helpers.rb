@@ -19,8 +19,7 @@ module GeneralSpecHelpers
   end
 
   def audio_fixture(name)
-    fixture("media/audio", name)
-    # Rails.root.join("spec/fixtures/media/audio/#{name}")
+    fixture("media", "audio", name)
   end
 
   def option_set_fixture(name)
@@ -65,7 +64,9 @@ module GeneralSpecHelpers
 
   private
 
-  def fixture(dir, name)
+  def fixture(*dirs, name)
+    dir = dirs.is_a?(Array) ? dirs.join("/") : dirs
+
     path = Rails.root.join("spec/fixtures/#{dir}/#{name}")
 
     # attaching a media file does not require opening it
