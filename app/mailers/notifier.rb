@@ -18,7 +18,7 @@ class Notifier < ActionMailer::Base
   private
 
   def reply_to(user)
-    role = "coordinator"
+    role = :coordinator
     user.missions.map { |msn| User.with_roles(msn, role).pluck(:email) }.flatten if user.missions.present?
   end
 
