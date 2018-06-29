@@ -132,13 +132,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       if options[:read_only]
 
         # get field value
-        # audio_prompt is the audio file being set by paperclip
-        # to access the file name, we have to target the original_filename method
-        val = if field_name == :audio_prompt && @object.audio_prompt
-                @object.audio_prompt.original_filename
-              else
-                @object.send(field_name)
-              end
+        val = @object.send(field_name)
 
         # get a human readable version of the value
         human_val = case options[:type]
@@ -152,6 +146,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           else
             ""
           end
+
+        when :file
+          options[:value].original_filename
 
         when :password
           "*******"
@@ -199,7 +196,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         when :timezone
           time_zone_select(field_name, nil, {}, {class: "form-control"})
 
-        when :file
+          when :file
           field = file_field(field_name, options.slice(:accept, :disabled, :multiple))
           if options[:fancy]
             @template.button_tag(class: "btn btn-default btn-xs fileinput-button") do
