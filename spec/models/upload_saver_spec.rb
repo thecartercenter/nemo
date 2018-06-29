@@ -7,7 +7,7 @@ describe UploadSaver do
   end
 
   describe "save_file" do
-    let(:uploaded) { Rack::Test::UploadedFile.new(Rails.root.join("spec/fixtures/file.txt"), "text/plain") }
+    let(:uploaded) { Rack::Test::UploadedFile.new(fixture("", "file.txt"), "text/plain") }
     let(:saved_path) { UploadSaver.new.save_file(uploaded) }
 
     it "saves file" do

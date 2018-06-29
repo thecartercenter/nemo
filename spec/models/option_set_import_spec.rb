@@ -10,7 +10,7 @@ describe OptionSetImport do
   it 'should be able to import a simple option set' do
     name = "Simple"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: fixture("simple.xlsx"))
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("simple.xlsx"))
 
     succeeded = import.create_option_set
     expect(succeeded).to be_truthy
@@ -23,7 +23,7 @@ describe OptionSetImport do
   it 'should be able to import an option set in admin mode' do
     name = "Simple Standard"
 
-    import = OptionSetImport.new(mission_id: nil, name: name, file: fixture("simple.xlsx"))
+    import = OptionSetImport.new(mission_id: nil, name: name, file: option_set_fixture("simple.xlsx"))
 
     succeeded = import.create_option_set
     expect(succeeded).to be_truthy
@@ -36,7 +36,7 @@ describe OptionSetImport do
   it 'should be able to import a multi-level geographic option set' do
     name = "Multilevel Geographic"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: fixture("multilevel_geographic.xlsx"))
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("multilevel_geographic.xlsx"))
 
     succeeded = import.create_option_set
     expect(succeeded).to be_truthy
@@ -73,7 +73,7 @@ describe OptionSetImport do
   it 'should correctly report errors for invalid coordinate values' do
     name = "Invalid Geographic"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: fixture("invalid_geographic.xlsx"))
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("invalid_geographic.xlsx"))
 
     succeeded = import.create_option_set
     expect(succeeded).to be_falsy
@@ -82,7 +82,7 @@ describe OptionSetImport do
   it 'should successfully import csv option set' do
     name = "CSV Set"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: fixture("simple.csv"))
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("simple.csv"))
 
     succeeded = import.create_option_set
     expect(succeeded).to be_truthy
@@ -93,10 +93,6 @@ describe OptionSetImport do
   end
 
   private
-
-  def fixture(name)
-    File.expand_path("../../fixtures/option_set_imports/#{name}", __FILE__)
-  end
 
   def expect_simple_option_set(option_set, name: "Simple", standard: false)
     expect(option_set).to have_attributes(

@@ -13,10 +13,22 @@ module GeneralSpecHelpers
   def expectation_file(filename)
     File.read(Rails.root.join("spec", "expectations", filename))
   end
-  
+
   def media_fixture(name)
-    path = Rails.root.join("spec/fixtures/media/#{name}")
-    File.open(path)
+    fixture("media", name)
+  end
+
+  def audio_fixture(name)
+    fixture("media/audio", name)
+    # Rails.root.join("spec/fixtures/media/audio/#{name}")
+  end
+
+  def option_set_fixture(name)
+    fixture("option_set_imports", name)
+  end
+
+  def user_batch_fixture(name)
+    fixture("user_batches", name)
   end
 
   # `substitutions` should be a hash of arrays.
@@ -49,5 +61,14 @@ module GeneralSpecHelpers
     yield
   ensure
     vars.each_pair { |k, _| ENV.delete(k) }
+  end
+
+  private
+
+  def fixture(dir, name)
+    path = Rails.root.join("spec/fixtures/#{dir}/#{name}")
+
+    # attaching a media file does not require opening it
+    dir == "media/audio" ? path : File.open(path)
   end
 end

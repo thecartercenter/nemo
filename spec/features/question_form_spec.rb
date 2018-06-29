@@ -58,18 +58,12 @@ describe "question form" do
     fill_in "Title", with: "Jay's"
     select "Text", from: "Type"
 
-    attach_file("Audio Prompt", fixture("powerup.mp3"))
+    attach_file("Audio Prompt", audio_fixture("powerup.mp3"))
     click_on "Save"
 
     visit question_path(locale: "en", mode: "m",
       mission_name: mission.compact_name, id: Question.last.id)
 
     expect(page).to have_content("powerup.mp3")
-  end
-
-  private
-
-  def fixture(name)
-    File.expand_path("../../fixtures/media/audio/#{name}", __FILE__)
   end
 end
