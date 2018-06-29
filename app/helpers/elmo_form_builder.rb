@@ -148,7 +148,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           end
 
         when :file
-          options[:value].original_filename
+          val.original_filename
 
         when :password
           "*******"
