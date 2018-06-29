@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 feature "question search" do
   include_context "search"
@@ -10,11 +10,8 @@ feature "question search" do
   let!(:question2) { create(:question, name: "How many pies?") }
   let!(:user) { create(:user, role_name: "coordinator", admin: true) }
 
-  before do
-    login(user)
-  end
-
   scenario "search" do
+    login(user)
     visit "/en/m/#{mission.compact_name}/questions"
     expect(page).to have_content("Displaying all 2 Questions")
     expect(page).to have_content(question1.code)

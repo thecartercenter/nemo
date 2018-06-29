@@ -35,8 +35,6 @@
 //= require dropzone
 //= require ckeditor/init
 //= require select2
-//= require react
-//= require react_ujs
 
 // Global
 //= require core_ext/jquery_ext
@@ -52,8 +50,5 @@
 //= require views/application_view
 //= require views/form_view
 
-// React components
-//= require components
-
 // Everything else
-//= require_tree .
+//= require_tree ./

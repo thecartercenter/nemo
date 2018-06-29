@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe FormsController, :odk, type: :request do
@@ -19,7 +19,7 @@ describe FormsController, :odk, type: :request do
   context "for regular mission" do
     describe "listing forms" do
       it "should succeed" do
-        get("/en/m/#{mission.compact_name}/formList", format: :xml)
+        get("/en/m/#{mission.compact_name}/formList", params: {format: :xml})
         expect(response).to be_success
 
         # Only form_multiselect should have a manifest.
@@ -32,7 +32,7 @@ describe FormsController, :odk, type: :request do
       end
 
       it "should succeed with no locale" do
-        get("/m/#{mission.compact_name}/formList", format: :xml)
+        get("/m/#{mission.compact_name}/formList", params: {format: :xml})
         expect(response).to be_success
       end
     end
@@ -40,12 +40,12 @@ describe FormsController, :odk, type: :request do
     describe "showing forms" do
       it "should succeed" do
         # XML rendering details are tested elsewhere.
-        get("/en/m/#{mission.compact_name}/forms/#{form_multiselect.id}", format: :xml)
+        get("/en/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml})
         expect(response).to be_success
       end
 
       it "should succeed with no locale" do
-        get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}", format: :xml)
+        get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml})
         expect(response).to be_success
       end
     end
@@ -108,13 +108,13 @@ describe FormsController, :odk, type: :request do
     let!(:mission) { create(:mission, locked: true) }
 
     it "listing forms should return 403" do
-      get("/en/m/#{mission.compact_name}/formList", format: :xml)
+      get("/en/m/#{mission.compact_name}/formList", params: {format: :xml})
       expect(response.status).to eq 403
       expect(response.body.strip).to be_empty
     end
 
     it "showing form with format xml should return 403" do
-      get("/m/#{mission.compact_name}/forms/#{form.id}", format: :xml)
+      get("/m/#{mission.compact_name}/forms/#{form.id}", params: {format: :xml})
       expect(response.status).to eq 403
       expect(response.body.strip).to be_empty
     end

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 feature "adding and editing qing group on form", js: true do
   let!(:user) { create(:user) }

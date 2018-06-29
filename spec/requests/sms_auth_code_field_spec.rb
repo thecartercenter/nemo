@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "sms auth code field", :sms, database_cleaner: :all do
 

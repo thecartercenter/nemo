@@ -1,3 +1,8 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+import CascadingSelect from "./CascadingSelect";
+
 class ConditionValueField extends React.Component {
   render() {
     if (this.props.type === "cascading_select") {
@@ -15,10 +20,10 @@ class ConditionValueField extends React.Component {
 }
 
 ConditionValueField.propTypes = {
-  id: React.PropTypes.string.isRequired,
-  name: React.PropTypes.string,
-  type: React.PropTypes.string.isRequired,
-  value: React.PropTypes.string
+  id: PropTypes.string.isRequired,
+  name: PropTypes.string,
+  type: PropTypes.string.isRequired,
+  value: PropTypes.string
 };
 
 // These are not needed for CascadingSelect
@@ -26,3 +31,5 @@ ConditionValueField.defaultProps = {
   name: null,
   value: null
 };
+
+export default ConditionValueField;

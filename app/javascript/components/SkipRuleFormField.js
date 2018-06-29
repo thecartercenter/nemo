@@ -1,3 +1,9 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+import ConditionSetFormField from "./ConditionSetFormField";
+import FormSelect from "./FormSelect";
+
 class SkipRuleFormField extends React.Component {
   constructor(props) {
     super();
@@ -122,13 +128,15 @@ class SkipRuleFormField extends React.Component {
 }
 
 SkipRuleFormField.propTypes = {
-  destItemId: React.PropTypes.string,
-  destination: React.PropTypes.string.isRequired,
-  hide: React.PropTypes.bool.isRequired,
-  namePrefix: React.PropTypes.string.isRequired,
-  ruleId: React.PropTypes.string.isRequired
+  destItemId: PropTypes.string,
+  destination: PropTypes.string.isRequired,
+  hide: PropTypes.bool.isRequired,
+  namePrefix: PropTypes.string.isRequired,
+  ruleId: PropTypes.string.isRequired
 };
 
 SkipRuleFormField.defaultProps = {
   destItemId: null
 };
+
+export default SkipRuleFormField;

@@ -45,7 +45,7 @@ module Concerns::ApplicationController::Authentication
 
         return request_http_basic_authentication unless @current_user
 
-        return render text: 'USER_INACTIVE', status: :unauthorized unless @current_user.active?
+        return render plain: 'USER_INACTIVE', status: :unauthorized unless @current_user.active?
       end
 
     else
@@ -59,28 +59,28 @@ module Concerns::ApplicationController::Authentication
 
     # Check the override setting (must use explicit true due to configatron weirdness)
     if configatron.allow_unauthenticated_submissions != true
-      return render :nothing => true, :status => 404
+      return render :body => nil, :status => 404
     end
 
     unless current_mission
-      return render_noauth_submission_failure :text => 'MISSION_MUST_BE_SPECIFIED', :status => :unauthorized
+      return render_noauth_submission_failure :plain => 'MISSION_MUST_BE_SPECIFIED', :status => :unauthorized
     end
 
     unless current_mission.allow_unauthenticated_submissions?
-      return render_noauth_submission_failure :text => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
+      return render_noauth_submission_failure :plain => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
     end
 
     unless params[:data] && params[:data][:username]
-      return render_noauth_submission_failure :text => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
+      return render_noauth_submission_failure :plain => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
     end
 
     unless @current_user = User.where(:login => params[:data][:username]).first
-      return render_noauth_submission_failure :text => 'USER_NOT_FOUND', :status => :unauthorized
+      return render_noauth_submission_failure :plain => 'USER_NOT_FOUND', :status => :unauthorized
     end
 
     # if user can't access the mission, reject
     if current_ability.cannot?(:switch_to, current_mission)
-      return render_noauth_submission_failure :text => 'USER_CANT_ACCESS_MISSION', :status => :unauthorized
+      return render_noauth_submission_failure :plain => 'USER_CANT_ACCESS_MISSION', :status => :unauthorized
     end
   end
 
@@ -102,7 +102,7 @@ module Concerns::ApplicationController::Authentication
   end
 
   def render_noauth_submission_failure(params)
-    Rails.logger.info("Unauthenticated submission failed: '#{params[:text]}'")
+    Rails.logger.info("Unauthenticated submission failed: '#{params[:plain]}'")
     render(params)
   end
 end

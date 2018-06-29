@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "error handling" do
   let(:user) { create(:user, admin: true) }

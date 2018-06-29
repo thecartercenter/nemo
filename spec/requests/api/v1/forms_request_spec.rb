@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "forms API requests" do
   include_context "api"
@@ -13,7 +13,7 @@ describe "forms API requests" do
     end
 
     it "should return a list of forms the user can see" do
-      get "/api/v1/m/mission1/forms", {}, headers
+      get "/api/v1/m/mission1/forms", headers: headers
       expect(response).to have_http_status(200)
       expect(json.size).to eq 2
       expect(json.first.keys.sort).to eq %w(id name responses_count)
@@ -21,7 +21,7 @@ describe "forms API requests" do
     end
 
     it "should result in 401 if wrong api token" do
-      get "/api/v1/m/mission1/forms", {}, bad_headers
+      get "/api/v1/m/mission1/forms", headers: bad_headers
       expect(response).to have_http_status(401)
       expect(json["errors"]).to eq %w(invalid_api_token)
     end
@@ -32,7 +32,7 @@ describe "forms API requests" do
       question_types: %w(integer integer)) }
 
     it "should return appropriate json" do
-      get "/api/v1/m/mission1/forms/#{form.id}", {}, headers
+      get "/api/v1/m/mission1/forms/#{form.id}", headers: headers
       expect(response).to have_http_status(200)
       expect(json.keys.sort).to eq %w(id name questions responses_count)
       expect(json["questions"].size).to eq 2

@@ -85,7 +85,7 @@ class SmsController < ApplicationController
       end
       render incoming_adapter.response_format => incoming_adapter.response_body(reply)
     else
-      render text: "", status: 204 # No Content
+      render plain: "", status: 204 # No Content
     end
   end
 

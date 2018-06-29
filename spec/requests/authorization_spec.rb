@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'authorization' do
 
@@ -47,7 +47,7 @@ describe 'authorization' do
   it "enumerator can update own name" do
     user = create(:user, role_name: :enumerator, name: 'foo')
     login(user)
-    put(user_path(user), user: {name: 'bar'})
+    put(user_path(user), params: {user: {name: 'bar'}})
     assert_response(302) # redirected
     expect(user.reload.name).to eq('bar')
   end
@@ -56,7 +56,7 @@ describe 'authorization' do
     user = create(:user, role_name: :enumerator)
     login(user)
     assignments_attributes = user.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
-    put(user_path(user), user: {assignments_attributes: [assignments_attributes]})
+    put(user_path(user), params: {user: {assignments_attributes: [assignments_attributes]}})
     expect(assigns(:access_denied)).to eq(true)
     expect(user.reload.assignments.first.role).to eq('enumerator')
   end
@@ -69,7 +69,7 @@ describe 'authorization' do
     # Get attributes for request to change enumerator role to staffer.
     assignments_attributes = obs.assignments.first.attributes.slice(*%w(id mission_id)).merge('role' => 'staffer')
 
-    put(user_path(obs), user: {assignments_attributes: [assignments_attributes]})
+    put(user_path(obs), params: {user: {assignments_attributes: [assignments_attributes]}})
     expect(assigns(:access_denied)).to be_nil
     expect(obs.reload.assignments.first.role).to eq('staffer')
   end
@@ -96,7 +96,7 @@ describe 'authorization' do
       let(:admin_new_name) { 'New name' }
 
       it 'still can update self' do
-        put(user_path(admin), user: {name: admin_new_name, assignments_attributes: [empty_assignment_attributes]})
+        put(user_path(admin), params: {user: {name: admin_new_name, assignments_attributes: [empty_assignment_attributes]}})
 
         assert_response(302) # redirected
         expect(admin.reload.name).to eq admin_new_name

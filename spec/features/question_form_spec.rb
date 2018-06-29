@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "question form" do
   let!(:mission) { get_mission }

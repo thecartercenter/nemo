@@ -3,7 +3,7 @@ class API::V1::BaseController < ApplicationController
 
   rescue_from Exception, with: :handle_error
 
-  before_filter :authenticate
+  before_action :authenticate
 
   serialization_scope :view_context
 
@@ -21,7 +21,7 @@ class API::V1::BaseController < ApplicationController
 
   protected
 
-  def request_http_token_authentication(realm = "Application")
+  def request_http_token_authentication(realm = "Application", message = nil)
     self.headers["WWW-Authenticate"] = %(Token realm="#{realm.gsub(/"/, "")}")
     render json: { errors: ["invalid_api_token"] }, status: :unauthorized
   end

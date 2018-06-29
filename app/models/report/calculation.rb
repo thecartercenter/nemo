@@ -26,7 +26,8 @@ module Report
 
         new_without_cast(*a, &b)
       end
-      alias_method_chain :new, :cast
+      alias_method :new_without_cast, :new
+      alias_method :new, :new_with_cast
     end
 
     # Called when related Question is destroyed.

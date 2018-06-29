@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe QingGroup do
   let(:form) { create(:form, question_types: [["text", "text", "text"]]) }

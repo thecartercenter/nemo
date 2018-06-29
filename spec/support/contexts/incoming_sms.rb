@@ -108,7 +108,7 @@ shared_context "incoming sms" do
     end
 
     # do the get/post/whatever request
-    send(params[:method], params[:url], req_params, req_env)
+    send(params[:method], params[:url], params: req_params, headers: req_env)
   end
 
   def expect_no_messages_delivered_through_adapter

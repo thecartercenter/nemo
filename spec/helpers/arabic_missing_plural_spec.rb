@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "arabic missing plurals" do
   context "with all plurals given" do

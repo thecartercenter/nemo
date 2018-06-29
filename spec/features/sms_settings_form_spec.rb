@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 feature "sms settings form", :sms do
   let(:mission){ create(:mission, setting: setting) }

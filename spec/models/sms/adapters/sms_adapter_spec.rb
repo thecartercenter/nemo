@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # Tests methods common to all adapters.
 describe Sms::Adapters::Adapter, :sms do

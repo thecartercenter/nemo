@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe "generic incoming sms", :sms do
   include_context "incoming sms"

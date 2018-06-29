@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 feature "display logic form fields", js: true do
   let!(:user) { create(:admin) }

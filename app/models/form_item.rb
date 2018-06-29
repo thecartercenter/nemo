@@ -211,18 +211,13 @@ class FormItem < ApplicationRecord
   private
 
   def normalize
-    display_conditions.each do |cond|
-      display_conditions.destroy(cond) if cond.all_fields_blank?
-    end
+    display_conditions.destroy(display_conditions.select(&:all_fields_blank?))
+    skip_rules.destroy(skip_rules.select(&:all_fields_blank?))
 
     if display_conditions.reject(&:marked_for_destruction?).none?
       self.display_if = "always"
     elsif display_if == "always"
       self.display_if = "all_met"
-    end
-
-    skip_rules.each do |rule|
-      skip_rules.destroy(rule) if rule.all_fields_blank?
     end
   end
 

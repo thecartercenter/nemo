@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Media::Object do
   let(:media_file) { create(:media_image) }

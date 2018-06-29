@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 feature "user form password field" do
   let(:mission) { get_mission }
