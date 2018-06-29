@@ -24,6 +24,10 @@ shared_context "response tree" do
     if node.parent.is_a?(AnswerGroupSet)
       expect(children.map(&:inst_num)).to eq(Array.new(children.size, node.new_rank + 1))
     end
+    if node.is_a?(AnswerSet)
+      expect(children.map(&:inst_num)).to eq(Array.new(children.size, node.inst_num))
+    end
+
     return if values.nil?
 
     child_values = children.map { |child| child.is_a?(Answer) ? child.casted_value : nil }
