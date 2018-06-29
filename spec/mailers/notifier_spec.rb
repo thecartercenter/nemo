@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe Notifier do
   let!(:mission_1) { create(:mission, name: "Test Mission") }
