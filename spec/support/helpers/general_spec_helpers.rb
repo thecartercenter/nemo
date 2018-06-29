@@ -15,7 +15,7 @@ module GeneralSpecHelpers
   end
 
   def media_fixture(name)
-    fixture("media", name)
+    File.open(fixture("media", name))
   end
 
   def audio_fixture(name)
@@ -23,11 +23,11 @@ module GeneralSpecHelpers
   end
 
   def option_set_fixture(name)
-    fixture("option_set_imports", name)
+    File.open(fixture("option_set_imports", name))
   end
 
   def user_batch_fixture(name)
-    fixture("user_batches", name)
+    File.open(fixture("user_batches", name))
   end
 
   # `substitutions` should be a hash of arrays.
@@ -68,8 +68,5 @@ module GeneralSpecHelpers
     dir = dirs.is_a?(Array) ? dirs.join("/") : dirs
 
     path = Rails.root.join("spec/fixtures/#{dir}/#{name}")
-
-    # attaching a media file does not require opening it
-    dir == "media/audio" ? path : File.open(path)
   end
 end
