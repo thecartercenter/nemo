@@ -196,18 +196,18 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         when :timezone
           time_zone_select(field_name, nil, {}, {class: "form-control"})
 
-          when :file
-          field = file_field(field_name, options.slice(:accept, :disabled, :multiple))
-          if options[:fancy]
-            @template.button_tag(class: "btn btn-default btn-xs fileinput-button") do
-              "".html_safe.tap do |body|
-                body << @template.t("common.choose_file", count: options[:multiple] ? 2 : 1)
-                body << field
-              end
+        when :file
+        field = file_field(field_name, options.slice(:accept, :disabled, :multiple))
+        if options[:fancy]
+          @template.button_tag(class: "btn btn-default btn-xs fileinput-button") do
+            "".html_safe.tap do |body|
+              body << @template.t("common.choose_file", count: options[:multiple] ? 2 : 1)
+              body << field
             end
-          else
-            field
           end
+        else
+          field
+        end
 
         # text is the default type
         else
