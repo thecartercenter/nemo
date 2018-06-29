@@ -15,7 +15,7 @@ module GeneralSpecHelpers
   end
 
   def media_fixture(name)
-    File.open(fixture("media", name))
+    fixture("media", name)
   end
 
   def audio_fixture(name)
@@ -23,11 +23,11 @@ module GeneralSpecHelpers
   end
 
   def option_set_fixture(name)
-    File.open(fixture("option_set_imports", name))
+    fixture("option_set_imports", name)
   end
 
   def user_batch_fixture(name)
-    File.open(fixture("user_batches", name))
+    fixture("user_batches", name)
   end
 
   # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
@@ -89,5 +89,6 @@ module GeneralSpecHelpers
     dir = dirs.is_a?(Array) ? dirs.join("/") : dirs
 
     path = Rails.root.join("spec/fixtures/#{dir}/#{name}")
+    File.open(path)
   end
 end

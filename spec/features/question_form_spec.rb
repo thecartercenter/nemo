@@ -58,11 +58,15 @@ describe "question form" do
     fill_in "Title", with: "Jay's"
     select "Text", from: "Type"
 
-    attach_file("Audio Prompt", audio_fixture("powerup.mp3"))
+    attach_file("Audio Prompt", audio_fixture("powerup.mp3").path)
     click_on "Save"
 
-    visit question_path(locale: "en", mode: "m",
-      mission_name: mission.compact_name, id: Question.last.id)
+    visit question_path(
+      locale: "en",
+      mode: "m",
+      mission_name: mission.compact_name,
+      id: Question.last.id
+    )
 
     expect(page).to have_content("powerup.mp3")
   end
