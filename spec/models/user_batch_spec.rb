@@ -172,12 +172,8 @@ describe UserBatch, :slow do
     expect(user).to have_attributes(attribs)
   end
 
-  def fixture(name)
-    File.expand_path("../../fixtures/user_batches/#{name}", __FILE__)
-  end
-
   def create_user_batch(fixture_file)
-    ub = UserBatch.new(file: fixture(fixture_file))
+    ub = UserBatch.new(file: user_batch_fixture(fixture_file))
     ub.create_users(mission)
     ub
   end
