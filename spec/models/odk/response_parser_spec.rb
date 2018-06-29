@@ -74,7 +74,7 @@ describe Odk::ResponseParser do
         let(:xml_values) { ["on#{opt1.id} on#{opt2.id}", "none", "A"] }
         let(:expected_values) { ["#{opt1.option.name};#{opt2.option.name}", nil, "A"] }
 
-        it "should create the appropriate multilevel answer tree" do
+        it "should create the appropriate answer tree" do
           Odk::ResponseParser.new(response: response, files: files).populate_response
           expect_children(
             response.root_node,
@@ -135,6 +135,74 @@ describe Odk::ResponseParser do
       end
     end
 
+    context "forms with complex selects" do
+      context "with complex selects" do
+        let(:filename) { "complex_select_response.xml" }
+        let(:question_types) { %w[select_one multilevel_select_one select_multiple] }
+        let(:cat) { form.c[0].option_set.sorted_children[0] }
+        let(:plant) { form.c[1].option_set.sorted_children[0] }
+        let(:oak) { form.c[1].option_set.sorted_children[1] }
+        let(:cat2) { form.c[2].option_set.sorted_children[0] }
+        let(:dog2) { form.c[2].option_set.sorted_children[1] }
+        let(:xml_values) { ["on#{cat.id}", "on#{plant.id}", "on#{oak.id}", "on#{cat2.id} on#{dog2.id}"] }
+
+        it "parses answers" do
+          Odk::ResponseParser.new(response: response, files: files).populate_response
+          expect_children(
+            response.root_node,
+            %w[Answer AnswerSet Answer],
+            form.c.map(&:id),
+            [cat.option.name, nil, "#{cat2.option.name};#{dog2.option.name}"]
+           )
+          expect_children(
+            response.root_node.c[1],
+            %w[Answer Answer],
+            [form.c[1].id, form.c[1].id],
+            [plant.option.name, oak.option.name]
+          )
+        end
+      end
+    end
+
+    context "forms with complex selects in a repeat group" do
+      context "with complex selects" do
+        let(:filename) { "repeat_and_complex_select_response.xml" }
+        let(:question_types) { [{repeating: {items: %w[select_one multilevel_select_one select_multiple] }}] }
+        let(:cat) { form.c[0].c[0].option_set.sorted_children[0] }
+        let(:plant) { form.c[0].c[1].option_set.sorted_children[1] }
+        let(:oak) { form.c[0].c[1].option_set.sorted_children[1].sorted_children[1] }
+        let(:cat2) { form.c[0].c[2].option_set.sorted_children[0] }
+        let(:dog2) { form.c[0].c[2].option_set.sorted_children[1] }
+        let(:xml_values) { ["on#{cat.id}", "on#{plant.id}", "on#{oak.id}", "on#{cat2.id} on#{dog2.id}"] }
+
+        it "parses answers" do
+          Odk::ResponseParser.new(response: response, files: files).populate_response
+          expect_children(
+            response.root_node,
+            %w[AnswerGroupSet],
+            [form.c[0].id]
+          )
+          expect_children(
+            response.root_node.c[0], #AnswerGroupSet
+            %w[AnswerGroup],
+            [form.c[0].id]
+          )
+          expect_children(
+            response.root_node.c[0].c[0], #AnswerGroup
+            %w[Answer AnswerSet Answer],
+            form.c[0].c.map(&:id),
+            [cat.option.name, nil, "#{cat2.option.name};#{dog2.option.name}"]
+          )
+          expect_children(
+            response.root_node.c[0].c[0].c[1], #AnswerSet
+            %w[Answer Answer],
+            [form.c[0].c[1].id, form.c[0].c[1].id],
+            [plant.option.name, oak.option.name]
+          )
+        end
+      end
+    end
+
     context "forms with a group" do
       let(:question_types) { ["text", %w[text text], "text"] }
       let(:filename) { "group_form_response.xml" }
@@ -148,20 +216,21 @@ describe Odk::ResponseParser do
     end
 
     context "repeat group forms" do
-      let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
       let(:filename) { "repeat_group_form_response.xml" }
-      let(:xml_values) { %w[A B C D E] }
+      context "with text questions"
+        let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
+        let(:xml_values) { %w[A B C D E] }
 
-      it "should create the appropriate repeating group tree" do
-        Odk::ResponseParser.new(response: response, files: files).populate_response
-        expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-        expect_children(response.root_node.c[1],
-          %w[AnswerGroup AnswerGroup],
-          [form.c[1].id, form.c[1].id],
-          [nil, nil])
-        expect_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
-        expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
-      end
+        it "should create the appropriate repeating group tree" do
+          Odk::ResponseParser.new(response: response, files: files).populate_response
+          expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+          expect_children(response.root_node.c[1],
+            %w[AnswerGroup AnswerGroup],
+            [form.c[1].id, form.c[1].id],
+            [nil, nil])
+          expect_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+          expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
+        end
     end
 
     context "form with nexted groups" do
@@ -230,10 +299,10 @@ describe Odk::ResponseParser do
         ["A",
          "on#{level1_opt.id}",
          "on#{level2_opt.id}",
-         "none",
-         "none",
+         "",
+         "",
          "on#{level1_opt.id}",
-         "none"]
+         ""]
       end
       let(:expected_values) do
         ["A",

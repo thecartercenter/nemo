@@ -29,6 +29,7 @@ describe XMLSubmission, :odk do
             form.c[1].c[0] => "456",
             form.c[1].c[1] => "789"
           }, {
+            form.c[1].c[0] => "",
             form.c[1].c[1] => "34"
           }, {
             form.c[1].c[0] => "56",
