@@ -1,4 +1,4 @@
-class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration
+class SetOptionRanksAndRemoveOrderingAndValueColumns < ActiveRecord::Migration[4.2]
   def up
     rank_assignment_succeeded = false
 

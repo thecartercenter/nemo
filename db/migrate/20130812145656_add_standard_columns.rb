@@ -1,4 +1,4 @@
-class AddStandardColumns < ActiveRecord::Migration
+class AddStandardColumns < ActiveRecord::Migration[4.2]
   def up
     %w(forms form_versions questions questionings conditions option_sets options optionings).each do |t|
       t = t.to_sym

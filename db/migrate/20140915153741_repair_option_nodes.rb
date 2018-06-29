@@ -1,4 +1,4 @@
-class RepairOptionNodes < ActiveRecord::Migration
+class RepairOptionNodes < ActiveRecord::Migration[4.2]
   def up
     # Delete any option nodes that have invalid ancestries.
     execute("delete c from option_nodes c left outer join option_nodes p on p.id = substring_index(c.ancestry, '/', 1)

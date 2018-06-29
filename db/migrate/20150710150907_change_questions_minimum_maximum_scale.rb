@@ -1,4 +1,4 @@
-class ChangeQuestionsMinimumMaximumScale < ActiveRecord::Migration
+class ChangeQuestionsMinimumMaximumScale < ActiveRecord::Migration[4.2]
   def up
     change_table :questions do |t|
       t.change :minimum, :decimal, precision: 15, scale: 8

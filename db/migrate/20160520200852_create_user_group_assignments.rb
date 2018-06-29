@@ -1,4 +1,4 @@
-class CreateUserGroupAssignments < ActiveRecord::Migration
+class CreateUserGroupAssignments < ActiveRecord::Migration[4.2]
   def change
     create_table :user_group_assignments do |t|
       t.references :user, index: true, foreign_key: true, null: false

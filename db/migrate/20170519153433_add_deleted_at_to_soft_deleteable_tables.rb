@@ -1,4 +1,4 @@
-class AddDeletedAtToSoftDeleteableTables < ActiveRecord::Migration
+class AddDeletedAtToSoftDeleteableTables < ActiveRecord::Migration[4.2]
   TABLES = %i(answers assignments choices conditions form_items form_versions forms media_objects missions
     option_nodes option_sets options questions report_calculations report_option_set_choices
     report_reports responses taggings tags user_group_assignments user_groups users)

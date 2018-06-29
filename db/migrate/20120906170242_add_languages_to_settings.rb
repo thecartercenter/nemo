@@ -1,4 +1,4 @@
-class AddLanguagesToSettings < ActiveRecord::Migration
+class AddLanguagesToSettings < ActiveRecord::Migration[4.2]
   def up
     add_column :settings, :languages, :string
 

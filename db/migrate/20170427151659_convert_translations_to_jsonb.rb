@@ -1,4 +1,4 @@
-class ConvertTranslationsToJsonb < ActiveRecord::Migration
+class ConvertTranslationsToJsonb < ActiveRecord::Migration[4.2]
   def up
     [
       %w(questions name),

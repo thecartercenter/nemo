@@ -1,4 +1,4 @@
-class CreateSettables < ActiveRecord::Migration
+class CreateSettables < ActiveRecord::Migration[4.2]
   def self.up
     create_table :settables do |t|
       t.string :key

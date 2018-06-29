@@ -1,4 +1,4 @@
-class FixZeroTimeValues < ActiveRecord::Migration
+class FixZeroTimeValues < ActiveRecord::Migration[4.2]
   def up
     tables = %w(
       answers

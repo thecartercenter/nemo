@@ -1,4 +1,4 @@
-class ChangeQuestioningsToFormItems < ActiveRecord::Migration
+class ChangeQuestioningsToFormItems < ActiveRecord::Migration[4.2]
   def change 
     rename_table :questionings, :form_items
     add_column :form_items, :type, :string

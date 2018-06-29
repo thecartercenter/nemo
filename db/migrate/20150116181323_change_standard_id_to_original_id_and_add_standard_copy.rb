@@ -1,4 +1,4 @@
-class ChangeStandardIdToOriginalIdAndAddStandardCopy < ActiveRecord::Migration
+class ChangeStandardIdToOriginalIdAndAddStandardCopy < ActiveRecord::Migration[4.2]
   def up
     [Form, Question, OptionSet].each do |klass|
       table = klass.table_name

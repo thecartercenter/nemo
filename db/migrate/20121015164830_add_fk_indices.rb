@@ -1,4 +1,4 @@
-class AddFkIndices < ActiveRecord::Migration
+class AddFkIndices < ActiveRecord::Migration[4.2]
   def up
     add_index :answers, :response_id
     add_index :answers, :option_id

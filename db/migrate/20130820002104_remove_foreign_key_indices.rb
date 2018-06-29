@@ -1,4 +1,4 @@
-class RemoveForeignKeyIndices < ActiveRecord::Migration
+class RemoveForeignKeyIndices < ActiveRecord::Migration[4.2]
   def up
   	remove_index "answers", ["option_id"]
 	  remove_index "answers", ["questioning_id"]

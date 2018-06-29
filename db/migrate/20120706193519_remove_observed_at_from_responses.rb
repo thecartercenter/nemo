@@ -1,4 +1,4 @@
-class RemoveObservedAtFromResponses < ActiveRecord::Migration
+class RemoveObservedAtFromResponses < ActiveRecord::Migration[4.2]
   def up
     # wrap this part in a transaction in case it fails for some reason
     transaction do

@@ -1,4 +1,4 @@
-class AddIndexInitialFormItemType < ActiveRecord::Migration
+class AddIndexInitialFormItemType < ActiveRecord::Migration[4.2]
   def up
     add_index :form_items, :ancestry
     FormItem.update_all(type: "Questioning")

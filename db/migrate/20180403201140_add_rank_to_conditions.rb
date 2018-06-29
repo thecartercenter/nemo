@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Adds rank column to conditions table and initializes the values.
-class AddRankToConditions < ActiveRecord::Migration
+class AddRankToConditions < ActiveRecord::Migration[4.2]
   def up
     add_column :conditions, :rank, :integer
     FormItem.find_each { |form_item| update_ranks(form_item.display_conditions) }

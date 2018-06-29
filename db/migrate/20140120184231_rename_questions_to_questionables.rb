@@ -1,4 +1,4 @@
-class RenameQuestionsToQuestionables < ActiveRecord::Migration
+class RenameQuestionsToQuestionables < ActiveRecord::Migration[4.2]
   def up
     rename_table :questions, :questionables
     add_column :questionables, :type, :string, :null => false

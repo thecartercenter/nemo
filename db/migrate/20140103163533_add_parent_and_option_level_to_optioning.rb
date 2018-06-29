@@ -1,4 +1,4 @@
-class AddParentAndOptionLevelToOptioning < ActiveRecord::Migration
+class AddParentAndOptionLevelToOptioning < ActiveRecord::Migration[4.2]
   def change
     add_column :optionings, :parent_id, :integer
     add_column :optionings, :option_level_id, :integer

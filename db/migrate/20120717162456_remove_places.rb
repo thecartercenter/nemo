@@ -1,4 +1,4 @@
-class RemovePlaces < ActiveRecord::Migration
+class RemovePlaces < ActiveRecord::Migration[4.2]
   def up
     # this is now obsolete
     # transaction do

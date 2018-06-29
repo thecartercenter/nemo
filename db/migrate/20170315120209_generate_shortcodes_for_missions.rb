@@ -7,7 +7,7 @@ class Mission < ActiveRecord::Base
   end
 end
 
-class GenerateShortcodesForMissions < ActiveRecord::Migration
+class GenerateShortcodesForMissions < ActiveRecord::Migration[4.2]
   def up
     Mission.find_each do |mission|
       mission.generate_shortcode

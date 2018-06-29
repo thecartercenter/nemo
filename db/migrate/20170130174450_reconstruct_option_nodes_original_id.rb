@@ -8,7 +8,7 @@ class OptionNode < ActiveRecord::Base
 end
 class Option < ActiveRecord::Base; end
 
-class ReconstructOptionNodesOriginalId < ActiveRecord::Migration
+class ReconstructOptionNodesOriginalId < ActiveRecord::Migration[4.2]
   def up
     transaction do
       # Process all option sets with originals

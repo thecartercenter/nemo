@@ -1,4 +1,4 @@
-class AddMissionIdStandardIdKeys < ActiveRecord::Migration
+class AddMissionIdStandardIdKeys < ActiveRecord::Migration[4.2]
   def up
     # these indices enforce that you can only have one copy of a standard object per mission
     add_index(:forms, [:mission_id, :standard_id], :unique => true)

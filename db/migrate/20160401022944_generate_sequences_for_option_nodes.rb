@@ -1,4 +1,4 @@
-class GenerateSequencesForOptionNodes < ActiveRecord::Migration
+class GenerateSequencesForOptionNodes < ActiveRecord::Migration[4.2]
   def up
     OptionSet.find_each do |option_set|
       option_set.descendants.find_each.with_index do |option_node, i|

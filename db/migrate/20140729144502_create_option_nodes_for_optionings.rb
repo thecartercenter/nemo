@@ -1,7 +1,7 @@
 class OptionSet < ActiveRecord::Base; end
 class OptionNode < ActiveRecord::Base; has_ancestry; end
 
-class CreateOptionNodesForOptionings < ActiveRecord::Migration
+class CreateOptionNodesForOptionings < ActiveRecord::Migration[4.2]
   require 'pp'
 
   def up

@@ -1,4 +1,4 @@
-class ConvertAnswersToMyIsam < ActiveRecord::Migration
+class ConvertAnswersToMyIsam < ActiveRecord::Migration[4.2]
   def up
     # have to delete all the foreign keys as myisam doesn't support them
     %w(answers_option_id_fk answers_questioning_id_fk answers_response_id_fk).each{|fk| execute("ALTER TABLE answers DROP FOREIGN KEY #{fk}")}

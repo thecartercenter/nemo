@@ -1,4 +1,4 @@
-class AddFullIndexForAnswers < ActiveRecord::Migration
+class AddFullIndexForAnswers < ActiveRecord::Migration[4.2]
   def up
     # Remove previous indices
     begin

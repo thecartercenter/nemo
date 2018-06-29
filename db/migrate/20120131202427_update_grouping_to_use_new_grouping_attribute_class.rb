@@ -1,4 +1,4 @@
-class UpdateGroupingToUseNewGroupingAttributeClass < ActiveRecord::Migration
+class UpdateGroupingToUseNewGroupingAttributeClass < ActiveRecord::Migration[4.2]
   def up
     remove_column :report_groupings, :name
     remove_column :report_groupings, :code

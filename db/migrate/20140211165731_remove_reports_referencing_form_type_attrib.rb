@@ -1,4 +1,4 @@
-class RemoveReportsReferencingFormTypeAttrib < ActiveRecord::Migration
+class RemoveReportsReferencingFormTypeAttrib < ActiveRecord::Migration[4.2]
   def up
     # this attrib was never really used so these are likely dummy reports anyway
     # I checked and there are not very many

@@ -1,4 +1,4 @@
-class CreatePlaces < ActiveRecord::Migration
+class CreatePlaces < ActiveRecord::Migration[4.2]
   def self.up
     create_table :places do |t|
       t.string :long_name

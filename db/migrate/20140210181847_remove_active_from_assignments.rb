@@ -1,4 +1,4 @@
-class RemoveActiveFromAssignments < ActiveRecord::Migration
+class RemoveActiveFromAssignments < ActiveRecord::Migration[4.2]
   def up
     remove_column :assignments, :active
   end

@@ -1,4 +1,4 @@
-class CreateSearches < ActiveRecord::Migration
+class CreateSearches < ActiveRecord::Migration[4.2]
   def self.up
     create_table :searches do |t|
       t.string :query

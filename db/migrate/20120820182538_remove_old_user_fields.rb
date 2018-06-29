@@ -1,4 +1,4 @@
-class RemoveOldUserFields < ActiveRecord::Migration
+class RemoveOldUserFields < ActiveRecord::Migration[4.2]
   def up
     remove_column(:users, :role_id)
     remove_column(:users, :active)

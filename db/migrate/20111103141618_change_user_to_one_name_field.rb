@@ -1,4 +1,4 @@
-class ChangeUserToOneNameField < ActiveRecord::Migration
+class ChangeUserToOneNameField < ActiveRecord::Migration[4.2]
   def self.up
     add_column :users, :name, :string
     User.all.each{|u| u.name = "#{u.first_name} #{u.last_name}"; u.save(:validate => false)}

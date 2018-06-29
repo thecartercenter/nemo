@@ -1,4 +1,4 @@
-class AddIncomingSmsTokenToSettings < ActiveRecord::Migration
+class AddIncomingSmsTokenToSettings < ActiveRecord::Migration[4.2]
   def change
     add_column :settings, :incoming_sms_token, :string
 

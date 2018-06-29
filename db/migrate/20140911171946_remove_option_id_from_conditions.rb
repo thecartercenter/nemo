@@ -1,4 +1,4 @@
-class RemoveOptionIdFromConditions < ActiveRecord::Migration
+class RemoveOptionIdFromConditions < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :conditions, :option
     remove_column :conditions, :option_id

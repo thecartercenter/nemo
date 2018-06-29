@@ -1,4 +1,4 @@
-class AddMissionIdToModels < ActiveRecord::Migration
+class AddMissionIdToModels < ActiveRecord::Migration[4.2]
   def change
     tables = [:responses, :forms, :report_reports, :options, :option_sets, :questions, :form_types, :broadcasts, :languages, :settings]
 

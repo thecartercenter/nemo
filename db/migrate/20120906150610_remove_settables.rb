@@ -1,4 +1,4 @@
-class RemoveSettables < ActiveRecord::Migration
+class RemoveSettables < ActiveRecord::Migration[4.2]
   def up
     # add 'key' column to settings
     add_column(:settings, :key, :string)

@@ -1,4 +1,4 @@
-class AddDownloadsToForms < ActiveRecord::Migration
+class AddDownloadsToForms < ActiveRecord::Migration[4.2]
   def self.up
     add_column :forms, :downloads, :integer
   end

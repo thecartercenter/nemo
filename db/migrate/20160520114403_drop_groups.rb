@@ -1,4 +1,4 @@
-class DropGroups < ActiveRecord::Migration
+class DropGroups < ActiveRecord::Migration[4.2]
   def change
     drop_table :groups
   end

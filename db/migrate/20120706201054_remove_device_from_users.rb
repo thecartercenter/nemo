@@ -1,4 +1,4 @@
-class RemoveDeviceFromUsers < ActiveRecord::Migration
+class RemoveDeviceFromUsers < ActiveRecord::Migration[4.2]
   def up
     remove_column :users, :device
   end

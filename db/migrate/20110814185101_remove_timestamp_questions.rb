@@ -1,4 +1,4 @@
-class RemoveTimestampQuestions < ActiveRecord::Migration
+class RemoveTimestampQuestions < ActiveRecord::Migration[4.2]
   def self.up
     # Now obsolete
     # if @qt = QuestionType.where(:name => "start_timestamp").first

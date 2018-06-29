@@ -1,4 +1,4 @@
-class AddUniqueIndexToAnswersAndRemoveDuplicates < ActiveRecord::Migration
+class AddUniqueIndexToAnswersAndRemoveDuplicates < ActiveRecord::Migration[4.2]
   def change
     ids = execute("SELECT GROUP_CONCAT(id) FROM answers
       GROUP BY response_id, questioning_id, rank HAVING COUNT(*) > 1").to_a

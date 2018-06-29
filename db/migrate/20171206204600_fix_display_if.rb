@@ -1,4 +1,4 @@
-class FixDisplayIf < ActiveRecord::Migration
+class FixDisplayIf < ActiveRecord::Migration[4.2]
   def up
     execute("UPDATE form_items SET display_if = 'always'")
     execute("UPDATE form_items SET display_if = 'all_met' WHERE EXISTS (

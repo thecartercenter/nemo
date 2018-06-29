@@ -1,4 +1,4 @@
-class CreateSkipRules < ActiveRecord::Migration
+class CreateSkipRules < ActiveRecord::Migration[4.2]
   def change
     create_table :skip_rules do |t|
       t.uuid :source_item_id, null: false

@@ -1,4 +1,4 @@
-class RemoveLanguages < ActiveRecord::Migration
+class RemoveLanguages < ActiveRecord::Migration[4.2]
   def up
     drop_table :languages
   end

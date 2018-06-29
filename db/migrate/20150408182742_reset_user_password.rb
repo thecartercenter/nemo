@@ -1,4 +1,4 @@
-class ResetUserPassword < ActiveRecord::Migration
+class ResetUserPassword < ActiveRecord::Migration[4.2]
   def change
     # Standards have increased so we need to reset everyone's password.
     User.all.each do |user|

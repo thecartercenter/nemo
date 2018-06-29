@@ -1,4 +1,4 @@
-class FixCurrentVersionForeignKeyConstraint < ActiveRecord::Migration
+class FixCurrentVersionForeignKeyConstraint < ActiveRecord::Migration[4.2]
   def up
     # this should have been a nullify constraint
     remove_foreign_key(:forms, :name => 'forms_current_version_id_fk')

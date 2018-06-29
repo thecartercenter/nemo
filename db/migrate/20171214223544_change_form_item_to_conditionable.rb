@@ -1,4 +1,4 @@
-class ChangeFormItemToConditionable < ActiveRecord::Migration
+class ChangeFormItemToConditionable < ActiveRecord::Migration[4.2]
   def up
     rename_column :conditions, :questioning_id, :conditionable_id
     add_column :conditions, :conditionable_type, :string

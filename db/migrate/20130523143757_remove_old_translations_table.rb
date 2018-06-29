@@ -1,4 +1,4 @@
-class RemoveOldTranslationsTable < ActiveRecord::Migration
+class RemoveOldTranslationsTable < ActiveRecord::Migration[4.2]
   def up
     # Now obsolete
     #

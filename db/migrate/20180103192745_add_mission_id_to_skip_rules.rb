@@ -1,4 +1,4 @@
-class AddMissionIdToSkipRules < ActiveRecord::Migration
+class AddMissionIdToSkipRules < ActiveRecord::Migration[4.2]
   def change
     add_column :skip_rules, :mission_id, :uuid, index: true
     execute("UPDATE skip_rules SET mission_id =

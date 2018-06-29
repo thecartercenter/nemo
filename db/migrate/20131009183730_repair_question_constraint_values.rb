@@ -1,4 +1,4 @@
-class RepairQuestionConstraintValues < ActiveRecord::Migration
+class RepairQuestionConstraintValues < ActiveRecord::Migration[4.2]
   def up
     # Now obsolete
     #

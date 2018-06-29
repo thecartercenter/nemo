@@ -1,4 +1,4 @@
-class AddIsmsParamsToSettings < ActiveRecord::Migration
+class AddIsmsParamsToSettings < ActiveRecord::Migration[4.2]
   def change
     rename_column :settings, :outgoing_sms_username, :intellisms_username
     rename_column :settings, :outgoing_sms_password, :intellisms_password

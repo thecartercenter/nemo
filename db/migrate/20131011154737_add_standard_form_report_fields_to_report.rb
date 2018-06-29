@@ -1,4 +1,4 @@
-class AddStandardFormReportFieldsToReport < ActiveRecord::Migration
+class AddStandardFormReportFieldsToReport < ActiveRecord::Migration[4.2]
   def change
     add_column :report_reports, :form_id, :integer, :null => true
     add_column :report_reports, :question_order, :string, :null => false, :default => 'number'

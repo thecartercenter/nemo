@@ -1,4 +1,4 @@
-class ConvertSkipRuleToUuid < ActiveRecord::Migration
+class ConvertSkipRuleToUuid < ActiveRecord::Migration[4.2]
   def up
     drop_table "skip_rules"
 

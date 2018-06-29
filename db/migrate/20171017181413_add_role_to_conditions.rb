@@ -1,4 +1,4 @@
-class AddRoleToConditions < ActiveRecord::Migration
+class AddRoleToConditions < ActiveRecord::Migration[4.2]
   def up
     add_column :conditions, :role, :string
     execute("UPDATE conditions SET role = 'display'")

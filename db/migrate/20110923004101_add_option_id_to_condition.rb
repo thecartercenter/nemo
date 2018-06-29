@@ -1,4 +1,4 @@
-class AddOptionIdToCondition < ActiveRecord::Migration
+class AddOptionIdToCondition < ActiveRecord::Migration[4.2]
   def self.up
     add_column :conditions, :option_id, :integer
     Condition.all.each do |cond|

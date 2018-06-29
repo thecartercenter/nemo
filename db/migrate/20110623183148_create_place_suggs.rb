@@ -1,4 +1,4 @@
-class CreatePlaceSuggs < ActiveRecord::Migration
+class CreatePlaceSuggs < ActiveRecord::Migration[4.2]
   def self.up
     create_table :place_suggs do |t|
       t.integer :place_lookup_id

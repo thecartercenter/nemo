@@ -1,4 +1,4 @@
-class CreatePlaceCreators < ActiveRecord::Migration
+class CreatePlaceCreators < ActiveRecord::Migration[4.2]
   def self.up
     create_table :place_creators do |t|
       t.integer :place_id

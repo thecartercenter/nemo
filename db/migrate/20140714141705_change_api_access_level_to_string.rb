@@ -1,4 +1,4 @@
-class ChangeAPIAccessLevelToString < ActiveRecord::Migration
+class ChangeAPIAccessLevelToString < ActiveRecord::Migration[4.2]
   def up
     # First set all nulls to private/inherit
     execute("UPDATE forms SET access_level = 1 WHERE access_level IS NULL")

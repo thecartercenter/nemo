@@ -1,4 +1,4 @@
-class CreateReportOptionSetChoices < ActiveRecord::Migration
+class CreateReportOptionSetChoices < ActiveRecord::Migration[4.2]
   def change
     create_table :report_option_set_choices do |t|
       t.column :report_report_id, :integer

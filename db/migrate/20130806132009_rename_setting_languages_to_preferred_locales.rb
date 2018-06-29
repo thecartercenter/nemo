@@ -1,4 +1,4 @@
-class RenameSettingLanguagesToPreferredLocales < ActiveRecord::Migration
+class RenameSettingLanguagesToPreferredLocales < ActiveRecord::Migration[4.2]
   def up
     add_column :settings, :preferred_locales, :string
 

@@ -1,4 +1,4 @@
-class MoveUsersToDefaultMission < ActiveRecord::Migration
+class MoveUsersToDefaultMission < ActiveRecord::Migration[4.2]
   def up
     transaction do
       # get default mission

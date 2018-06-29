@@ -1,4 +1,4 @@
-class AddRedundantLinksToPlaces < ActiveRecord::Migration
+class AddRedundantLinksToPlaces < ActiveRecord::Migration[4.2]
   def self.up
     add_column(:places, :point_id, :integer)
     add_column(:places, :address_id, :integer)

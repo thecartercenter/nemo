@@ -1,4 +1,4 @@
-class CreateGoogleGeolocations < ActiveRecord::Migration
+class CreateGoogleGeolocations < ActiveRecord::Migration[4.2]
   def self.up
     create_table :google_geolocations do |t|
       t.string :full_name

@@ -1,4 +1,4 @@
-class StandardizeBooleanNames < ActiveRecord::Migration
+class StandardizeBooleanNames < ActiveRecord::Migration[4.2]
   def self.up
     rename_column(:forms, :is_published, :published)
     rename_column(:languages, :is_active, :active)

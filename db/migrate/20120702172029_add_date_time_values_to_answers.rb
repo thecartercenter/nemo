@@ -1,4 +1,4 @@
-class AddDateTimeValuesToAnswers < ActiveRecord::Migration
+class AddDateTimeValuesToAnswers < ActiveRecord::Migration[4.2]
   def change
     add_column :answers, :time_value, :time
     add_column :answers, :date_value, :date

@@ -1,4 +1,4 @@
-class RepairConditionOptionNodeForeignKeys < ActiveRecord::Migration
+class RepairConditionOptionNodeForeignKeys < ActiveRecord::Migration[4.2]
   def up
     transaction do
       puts "Repairing condition -> option node links"

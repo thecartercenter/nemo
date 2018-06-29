@@ -1,4 +1,4 @@
-class GenerateSmsAuthCodes < ActiveRecord::Migration
+class GenerateSmsAuthCodes < ActiveRecord::Migration[4.2]
   def up
     User.find_each do |user|
       auth_code = Random.alphanum(4)

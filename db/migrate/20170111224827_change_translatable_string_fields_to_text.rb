@@ -1,4 +1,4 @@
-class ChangeTranslatableStringFieldsToText < ActiveRecord::Migration
+class ChangeTranslatableStringFieldsToText < ActiveRecord::Migration[4.2]
   def up
     change_column :form_items, :group_name_translations, :text
     change_column :form_items, :group_hint_translations, :text

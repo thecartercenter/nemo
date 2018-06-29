@@ -1,4 +1,4 @@
-class ClearSessions < ActiveRecord::Migration
+class ClearSessions < ActiveRecord::Migration[4.2]
   def self.up
     execute("DELETE FROM sessions")
   end

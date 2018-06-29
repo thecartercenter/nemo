@@ -1,4 +1,4 @@
-class AddQuestionableIdToAnswers < ActiveRecord::Migration
+class AddQuestionableIdToAnswers < ActiveRecord::Migration[4.2]
   def change
     add_column :answers, :questionable_id, :integer, :null => false
 
