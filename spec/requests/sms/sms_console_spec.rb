@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "sms console", :sms do
   let(:user) { get_user }
@@ -17,7 +17,7 @@ describe "sms console", :sms do
     end
 
     it "submitting a test sms should succeed" do
-      post("/en/m/#{mission_name}/sms-tests", sms_test: {from: user.phone, body: "#{form.code} 1.123"})
+      post("/en/m/#{mission_name}/sms-tests", params: {sms_test: {from: user.phone, body: "#{form.code} 1.123"}})
       expect(response.body).to match /\AYour response to form '.+' was received. Thank you!\z/
     end
   end
@@ -31,7 +31,7 @@ describe "sms console", :sms do
 
     it "submitting a test sms should store the date in the right timezone" do
       post("/en/m/#{mission_name}/sms-tests",
-        sms_test: {from: user.phone, body: "#{form.code} 1.201701011230"})
+        params: {sms_test: {from: user.phone, body: "#{form.code} 1.201701011230"}})
       expect(Answer.first.datetime_value.to_s).to eq "2017-01-01 12:30:00 -0600"
     end
   end

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe PhoneNormalizer do
   describe '#is_shortcode?' do

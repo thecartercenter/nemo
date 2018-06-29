@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "odk media submissions", :odk, :reset_factory_sequences, type: :request do
   include_context "odk submissions"
@@ -13,8 +13,8 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("single_part_media.xml")
 
-      post submission_path(mission), { xml_submission_file: submission_file, "the_swing.jpg" => image },
-        "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
+      post submission_path(mission), params: { xml_submission_file: submission_file, "the_swing.jpg" => image },
+        headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)}
       expect(response).to have_http_status 201
 
       form_response = Response.last
@@ -33,23 +33,32 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
       image = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       image2 = fixture_file_upload(media_fixture("images/the_swing.jpg"), "image/jpeg")
       submission_file = prepare_and_upload_submission_file("multiple_part_media.xml")
+      submission_file2 = prepare_and_upload_submission_file("multiple_part_media.xml")
 
       # Submit first part
-      post submission_path(mission), {
-        xml_submission_file: submission_file,
-        "the_swing.jpg" => image,
-        "*isIncomplete*" => "yes"},
-        "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
+      post submission_path(mission),
+        params: {
+          xml_submission_file: submission_file,
+          "the_swing.jpg" => image,
+          "*isIncomplete*" => "yes"
+        },
+        headers: {
+          "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
+        }
       expect(response).to have_http_status 201
       expect(Response.count).to eq 1
 
       form_response = Response.last
 
       # Submit second part
-      post submission_path(mission), {
-        xml_submission_file: submission_file,
-        "another_swing.jpg" => image2 },
-        "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
+      post submission_path(mission),
+        params: {
+          xml_submission_file: submission_file2,
+          "another_swing.jpg" => image2
+        },
+        headers: {
+          "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)
+        }
 
       expect(response).to have_http_status 201
       expect(Response.count).to eq 1

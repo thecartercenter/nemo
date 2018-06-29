@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 module Odk
   describe FormItemDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do

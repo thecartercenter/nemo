@@ -17,7 +17,7 @@ class OptionSet < ApplicationRecord
   has_many :option_nodes, -> { order(:rank) }, dependent: :destroy
   has_many :report_option_set_choices, class_name: "Report::OptionSetChoice"
 
-  belongs_to :root_node, -> { where(option_id: nil) }, class_name: OptionNode, dependent: :destroy
+  belongs_to :root_node, -> { where(option_id: nil) }, class_name: "OptionNode", dependent: :destroy
 
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields
@@ -120,6 +120,10 @@ class OptionSet < ApplicationRecord
 
   def levels=(ls)
     self.level_names = ls.map { |l| l.name_translations }
+  end
+
+  def level_names=(names)
+    self[:level_names] = names.is_a?(Hash) ? names.values : names
   end
 
   def level_count

@@ -1,7 +1,7 @@
 # tests the singleton case of summary collections, where there is only one subset in the collection
 # tests for the multiple case, where there are multiple subsets in the collection, are currently in SummaryCollectionMultipleTest
 
-require 'spec_helper'
+require 'rails_helper'
 
 describe "summary collection with single subset" do
   it "summary should contain question type" do

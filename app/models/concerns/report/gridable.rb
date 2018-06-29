@@ -89,7 +89,10 @@ module Report::Gridable
   # Ensures calculation ranks start at 1 and are sequential.
   def fix_calculation_ranks
     # Need to reload calculations because otherwise the array may still contained destroyed ones.
-    calculations(true).sort_by(&:rank).each_with_index{ |c,i| c.rank = i + 1 }
+    calculations
+      .select { |c| !c.destroyed? }
+      .sort_by(&:rank)
+      .each_with_index { |c,i| c.rank = i + 1 }
   end
 
   # Whether this kind of report should be clipped at RESPONSES_QUANTITY_LIMIT rows.

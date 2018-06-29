@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe SkipRule do
   let(:form) { create(:form, question_types: %w(integer integer integer)) }

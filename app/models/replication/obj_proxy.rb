@@ -266,7 +266,7 @@ class Replication::ObjProxy
     select_chunks = concat(mappings.map { |s| s.is_a?(Array) ? s[1] : s })
 
     sql = "INSERT INTO #{klass.table_name} (#{insert_cols})
-      SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = '#{id}' RETURNING id"
+      SELECT #{select_chunks} FROM #{klass.table_name} WHERE id = '#{id}'"
 
     db.insert(sql)
   end

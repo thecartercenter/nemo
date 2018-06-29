@@ -116,7 +116,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.vcf do
         @users = load_selected_objects(User)
-        render(text: @users.collect { |u| u.to_vcf }.join("\n"))
+        render(plain: @users.collect { |u| u.to_vcf }.join("\n"))
       end
     end
   end

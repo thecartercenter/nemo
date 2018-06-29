@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "delete counter cache" do
   describe "Deleting responses" do

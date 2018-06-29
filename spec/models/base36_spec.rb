@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Base36 do
   describe ".digits_needed" do

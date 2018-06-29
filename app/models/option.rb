@@ -3,8 +3,8 @@ class Option < ApplicationRecord
 
   acts_as_paranoid
 
-  has_many :option_sets, through: :option_nodes
   has_many :option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true
+  has_many :option_sets, through: :option_nodes
   has_many :answers, inverse_of: :option
   has_many :choices, inverse_of: :option
 
@@ -91,7 +91,7 @@ class Option < ApplicationRecord
     if options[:for_option_set_form]
       super(
         only: %i[id latitude longitude name_translations value],
-        methods: %i[name set_names in_use])
+        methods: %i[name set_names in_use?])
     else
       super(options)
     end

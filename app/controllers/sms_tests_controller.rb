@@ -19,7 +19,7 @@ class SmsTestsController < ApplicationController
     processor = Sms::Processor.new(incoming_msg)
     processor.process
     processor.finalize
-    
+
     # Send both the reply and forward (if exist) via the TestConsoleAdapter.
     # This really just saves them and sets the adapter name.
     adapter = Sms::Adapters::Factory.instance.create("TestConsole")
@@ -27,7 +27,7 @@ class SmsTestsController < ApplicationController
     adapter.deliver(processor.forward) if processor.forward
 
     # Render the body of the reply.
-    render text: processor.reply.try(:body) || content_tag(:em, t('sms_console.no_reply'))
+    render plain: processor.reply.try(:body) || content_tag(:em, t('sms_console.no_reply'))
   end
 
   protected

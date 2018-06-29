@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # Rests maintenance of settings across key actions.
 # Rimezone is used as a key test vector.
@@ -36,7 +36,7 @@ describe 'settings' do
       expect(Time.zone.name).to eq("Brisbane")
 
       # create a new mission and ensure that a new setting object was created with the default timezone
-      post(missions_path, mission: {name: "Foo"})
+      post(missions_path, params: {mission: {name: "Foo"}})
       follow_redirect!
       expect(response).to be_success
       expect(Mission.find_by_name("Foo").setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
@@ -66,7 +66,7 @@ describe 'settings' do
   private
 
   def update_timezone_for_setting(setting, timezone)
-    put(setting_path(setting, mode: "m", mission_name: setting.mission.compact_name), setting: {timezone: timezone})
+    put(setting_path(setting, mode: "m", mission_name: setting.mission.compact_name), params: {setting: {timezone: timezone}})
     follow_redirect!
     expect(response).to be_success
   end

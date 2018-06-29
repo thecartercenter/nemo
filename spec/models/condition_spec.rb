@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Condition do
   describe "any_fields_blank?" do

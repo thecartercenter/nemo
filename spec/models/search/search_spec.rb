@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 # Tests the search system independent of any actual class.
 describe Search::Search do

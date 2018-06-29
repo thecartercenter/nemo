@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "throttling for xml requests" do
   let(:limit) { configatron.direct_auth_request_limit }
@@ -57,7 +57,7 @@ describe "throttling for xml requests" do
 
     it "should not apply" do
       (limit * 2).times do |i|
-        get "/m/#{get_mission.compact_name}/formList", nil, { REMOTE_ADDR: remote_addrs[i] }
+        get "/m/#{get_mission.compact_name}/formList", headers: { REMOTE_ADDR: remote_addrs[i] }
         assert_response :unauthorized
       end
     end
@@ -67,7 +67,7 @@ describe "throttling for xml requests" do
     it "should not apply" do
       (limit + 1).times do |i|
         post "/m/#{get_mission.compact_name}/sms/submit/#{get_mission.setting.incoming_sms_token}",
-          { from: 14045551212, body: "test", sent_at: Time.zone.now.strftime("%Q"), frontlinecloud: 1 }
+          params: { from: 14045551212, body: "test", sent_at: Time.zone.now.strftime("%Q"), frontlinecloud: 1 }
         assert_response :ok
       end
     end

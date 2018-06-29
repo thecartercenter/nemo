@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "frontlinecloud incoming sms", :sms do
   include_context "incoming sms"

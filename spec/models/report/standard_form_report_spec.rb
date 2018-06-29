@@ -1,5 +1,5 @@
 # There are more report tests in test/unit/report.
-require "spec_helper"
+require "rails_helper"
 
 describe Report::StandardFormReport do
   context "basic" do

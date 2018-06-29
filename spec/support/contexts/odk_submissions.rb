@@ -14,8 +14,8 @@ shared_context "odk submissions" do
 
     # Upload and do request.
     uploaded = fixture_file_upload(fixture_file, "text/xml")
-    post(path, {xml_submission_file: uploaded, format: "xml"},
-      "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password))
+    post(path, params: {xml_submission_file: uploaded, format: "xml"},
+      headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)})
     assigns(:response)
   end
 

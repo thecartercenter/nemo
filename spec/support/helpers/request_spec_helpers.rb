@@ -8,7 +8,7 @@ module RequestSpecHelpers
   end
 
   def login_without_redirect(user)
-    post("/en/user-session", user_session: {login: user.login, password: test_password})
+    post("/en/user-session", {params: {user_session: {login: user.login, password: test_password}}})
   end
 
   def logout
@@ -24,16 +24,24 @@ module RequestSpecHelpers
     path_args.unshift(params[:obj]) if params[:obj]
     path = send("api_v1_#{endpoint}_path", *path_args)
 
-    get path, params[:params], {"HTTP_AUTHORIZATION" => "Token token=#{params[:user].api_key}"}
+    get path, {params: params[:params], headers: {"HTTP_AUTHORIZATION" => "Token token=#{params[:user].api_key}"}}
   end
 
-  def get_s(*args)
-    get *args
+  def get_s(path, opts = {})
+    if opts.empty?
+      get path
+    else
+      get path, opts
+    end
     assert_response(:success)
   end
 
-  def post_s(*args)
-    post *args
+  def post_s(path, opts = {})
+    if opts.empty?
+      post path
+    else
+      post path, opts
+    end
     assert_response(:success)
   end
 

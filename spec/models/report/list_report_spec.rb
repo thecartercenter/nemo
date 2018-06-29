@@ -1,6 +1,4 @@
-# frozen_string_literal: true
-
-require "spec_helper"
+require "rails_helper"
 
 describe Report::ListReport, :reports do
   include_context "reports"

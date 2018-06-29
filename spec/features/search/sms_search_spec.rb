@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 feature "sms search", :sms do
   include_context "search"
@@ -11,11 +11,8 @@ feature "sms search", :sms do
   let!(:sms3) { create(:sms_reply, mission: mission, body: "Our chief element is surprise and fear.") }
   let!(:user) { create(:user, role_name: "coordinator", admin: true) }
 
-  before do
-    login(user)
-  end
-
   scenario "search" do
+    login(user)
     visit sms_path(mission_name: mission.compact_name, locale: "en")
     expect(page).to have_content(/Displaying all \d+ SMSes/)
     expect(page).to have_content(sms1.body)

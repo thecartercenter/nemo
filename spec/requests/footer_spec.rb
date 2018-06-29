@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'footer' do
   describe 'sms adapter', :sms do

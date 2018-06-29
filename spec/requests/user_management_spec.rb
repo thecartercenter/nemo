@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe "user management" do
 
@@ -57,12 +57,15 @@ describe "user management" do
 
   def test_create_user(mission)
     # submission should work
-    post("/en/m/#{mission.compact_name}/users", user: {
-      name: "Alan Bob",
-      login: "abob",
-      assignments_attributes: {"1" => {"mission_id" => mission.id, "role" => "enumerator"}},
-      reset_password_method: "print"
-    })
+    post("/en/m/#{mission.compact_name}/users",
+      params: {
+        user: {
+          name: "Alan Bob",
+          login: "abob",
+          assignments_attributes: {"1" => {"mission_id" => mission.id, "role" => "enumerator"}},
+          reset_password_method: "print"
+        }
+      })
 
     new_u = assigns(:user)
     follow_redirect!
@@ -73,7 +76,7 @@ describe "user management" do
 
   def test_adminify_user(user: create(:user), mission: get_mission, result: false)
     expect(user.admin).to be false
-    put(user_path(user, mode: "m", mission: mission), user: { admin: true })
+    put(user_path(user, mode: "m", mission: mission), params: {user: { admin: true }})
     follow_redirect!
     expect(response).to be_success
     expect(user.reload.admin).to be result

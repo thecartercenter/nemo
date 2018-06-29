@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe QuestioningDecorator do
   describe "display_if" do
