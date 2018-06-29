@@ -36,7 +36,11 @@ describe OptionSetImport do
   it 'should be able to import a multi-level geographic option set' do
     name = "Multilevel Geographic"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("multilevel_geographic.xlsx"))
+    import = OptionSetImport.new(
+      mission_id: mission.id,
+      name: name,
+      file: option_set_fixture("multilevel_geographic.xlsx")
+    )
 
     succeeded = import.create_option_set
     expect(succeeded).to be_truthy
@@ -73,7 +77,11 @@ describe OptionSetImport do
   it 'should correctly report errors for invalid coordinate values' do
     name = "Invalid Geographic"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("invalid_geographic.xlsx"))
+    import = OptionSetImport.new(
+      mission_id: mission.id,
+      name: name,
+      file: option_set_fixture("invalid_geographic.xlsx")
+    )
 
     succeeded = import.create_option_set
     expect(succeeded).to be_falsy
