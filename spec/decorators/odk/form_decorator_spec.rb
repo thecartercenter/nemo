@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
 require "spec_helper"
 
+# Form decorator spec
 module Odk
   describe FormDecorator, :odk, :reset_factory_sequences do
     describe "needs_manifest?", :odk do
@@ -11,7 +14,7 @@ module Odk
         end
       end
       context "for form with multi level option set" do
-        before { @form = create(:form, question_types: %w(select_one multilevel_select_one)) }
+        before { @form = create(:form, question_types: %w[select_one multilevel_select_one]) }
         it "should return true" do
           decorated_form = decorate(@form)
           expect(decorated_form.needs_manifest?).to be true
