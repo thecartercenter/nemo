@@ -4,10 +4,11 @@ module Odk
   # the response object the controller passes in with an
   # existing response from the database.
   class ResponseParser
-    attr_accessor :response, :raw_odk_xml
+    attr_accessor :response, :raw_odk_xml, :files, :awaiting_media
 
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil, awaiting_media: false)
+      raise "Submissions must have a mission" if response.mission.nil?
       @response = response
       @raw_odk_xml = files.delete(:xml_submission_file).read
       @files = files
@@ -15,8 +16,9 @@ module Odk
       @awaiting_media = awaiting_media
     end
 
+    # populates response tree and saves
     def populate_response
-      build_answers(raw_odk_xml)
+      process_xml(raw_odk_xml)
       response
     end
 
@@ -25,28 +27,19 @@ module Odk
     # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
     # can be uniquely identified and handled
     def odk_hash
-      @odk_hash ||= Digest::SHA256.base64digest @data
+      @odk_hash ||= Digest::SHA256.base64digest raw_odk_xml
     end
 
-    def build_answers(raw_odk_xml)
+    def process_xml(raw_odk_xml)
       data = Nokogiri::XML(raw_odk_xml).root
       lookup_and_check_form(id: data["id"], version: data["version"])
       if existing_response
-        # Response mission should already be set - TODO: consider moving to constructor or lookup_and_check_form
-        raise "Submissions must have a mission" if response.mission.nil?
         add_media_to_existing_response
       else
-        raise "Submissions must have a mission" if response.mission.nil?
-        if @awaiting_media
-          response.odk_hash = odk_hash
-        else
-          response.odk_hash = nil
-        end
+        response.odk_hash = awaiting_media ? odk_hash : nil
         build_answer_tree(data, response.form)
         response.associate_tree(response.root_node)
       end
-
-      response.save(validate: false)
     end
 
     def add_media_to_existing_response
@@ -86,9 +79,14 @@ module Odk
         questioning_id: form_item.id,
         new_rank: parent.children.length,
         inst_num: inst_num(type, form_item, parent),
-        rank: parent.children.length + 1, # for multilevel
+        rank: rank(parent),
         response_id: response.id
       )
+    end
+
+    # Rank will go away at end of answer refactor
+    def rank(parent)
+      parent.is_a?(AnswerSet) ? parent.children.length + 1 : 1
     end
 
     # Inst num will go away at end of answer refactor; this makes it work with answer arranger
@@ -175,15 +173,15 @@ module Odk
     end
 
     def populate_multimedia_answer(answer, pending_file_name, question_type)
-      if @files[pending_file_name].present?
+      if files[pending_file_name].present?
         answer.pending_file_name = nil
         case question_type
         when "image", "annotated_image", "sketch", "signature"
-          answer.media_object = Media::Image.create(item: @files[pending_file_name])
+          answer.media_object = Media::Image.create(item: files[pending_file_name])
         when "audio"
-          answer.media_object = Media::Audio.create(item: @files[pending_file_name])
+          answer.media_object = Media::Audio.create(item: files[pending_file_name])
         when "video"
-          answer.media_object = Media::Video.create(item: @files[pending_file_name])
+          answer.media_object = Media::Video.create(item: files[pending_file_name])
         end
       else
         answer.value = nil

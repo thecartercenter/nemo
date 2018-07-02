@@ -99,6 +99,10 @@ class ResponsesController < ApplicationController
   end
 
   def create
+<<<<<<< faaca32fd1a532abfa17c34c1fa1c40fc38a0f0a
+=======
+    # if this is a non-web submission
+>>>>>>> 6441: improve style
     if request.format == Mime[:xml]
       handle_odk_submission
     else

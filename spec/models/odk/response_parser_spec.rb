@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Odk::ResponseParser do
   include_context "response tree"
@@ -117,7 +117,8 @@ describe Odk::ResponseParser do
               # Times without a date are 2000-01-01
               Time.zone.parse("2000-01-01 14:30:00 UTC")
             ]
-            Odk::ResponseParser.new(response: response, files: files).populate_response
+            populated_response = Odk::ResponseParser.new(response: response, files: files).populate_response
+            populated_response.save(validate: false)
             expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
           end
         end
@@ -375,7 +376,8 @@ describe Odk::ResponseParser do
       let(:xml_values) { ["A", media_file_name_1, media_file_name_2] }
 
       it "creates response tree with media object for media answer" do
-        Odk::ResponseParser.new(response: response, files: files_1, awaiting_media: true).populate_response
+        populated_response = Odk::ResponseParser.new(response: response, files: files_1, awaiting_media: true).populate_response
+        populated_response.save(validate: false)
         expect(Response.count).to eq 1
         image_answer_1 = response.root_node.c[1]
         image_answer_2 = response.root_node.c[2]
@@ -389,7 +391,8 @@ describe Odk::ResponseParser do
         expect(image_answer_2.media_object).to be_nil
 
         new_response = Response.new(form: form, mission: form.mission, user: create(:user))
-        Odk::ResponseParser.new(response: new_response, files: files_2, awaiting_media: false).populate_response
+        populated_response = Odk::ResponseParser.new(response: new_response, files: files_2, awaiting_media: false).populate_response
+        populated_response.save(validate: false)
         expect(Response.count).to eq 1
         image_answer_2 = response.reload.root_node.c[2]
         expect(image_answer_2.media_object).to be_present
