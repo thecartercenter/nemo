@@ -90,6 +90,7 @@ class HierarchicalResponsesController < ApplicationController
 
   def new
     setup_condition_computer
+    Results::BlankResponseTreeBuilder.new(@response).build
     # render the form template
     prepare_and_render_form
   end

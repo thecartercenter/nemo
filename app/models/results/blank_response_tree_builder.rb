@@ -3,16 +3,18 @@
 module Results
   # Builds and saves response tree, with all blank answers, from a form object.
   class BlankResponseTreeBuilder
-    attr_accessor :response
+    attr_accessor :response, :options
 
     delegate :form, to: :response
 
-    def initialize(response)
+    def initialize(response, options = {})
       self.response = response
+      self.options = options
     end
 
     def build
-      root = AnswerGroup.create!(form_item: form.root_group, response: response)
+      root = AnswerGroup.new(form_item: form.root_group, response: response)
+      root.save! if options[:save]
       add_level(form.root_group.sorted_children, root)
       response.associate_tree(root)
 
@@ -64,7 +66,7 @@ module Results
         rank: response_node.children.size + 1
       )
       # We can't validate yet because there's no value.
-      child.save(validate: false)
+      child.save(validate: false) if options[:save]
       response_node.children << child
       child
     end

@@ -6,7 +6,7 @@ describe Results::BlankResponseTreeBuilder do
   include_context "response tree"
 
   let(:response) { create(:response, form: form, answer_values: nil) }
-  let(:response_tree) { Results::BlankResponseTreeBuilder.new(response).build }
+  let(:response_tree) { Results::BlankResponseTreeBuilder.new(response, save: true).build }
 
   context "simple form" do
     let(:form) { create(:form, question_types: %w[text text text]) }
