@@ -49,21 +49,6 @@ describe Form do
     end
   end
 
-  describe "needs_odk_manifest?", :odk do
-    context "for form with single level option sets only" do
-      before { @form = create(:form, question_types: %w(select_one)) }
-      it "should return false" do
-        expect(@form.needs_odk_manifest?).to be false
-      end
-    end
-    context "for form with multi level option set" do
-      before { @form = create(:form, question_types: %w(select_one multilevel_select_one)) }
-      it "should return true" do
-        expect(@form.needs_odk_manifest?).to be true
-      end
-    end
-  end
-
   describe "odk_download_cache_key", :odk do
     before do
       @form = create(:form)
