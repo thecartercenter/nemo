@@ -84,9 +84,5 @@ module Odk
         end
       end
     end
-
-    def decorate(obj)
-      Odk::DecoratorFactory.decorate(obj)
-    end
   end
 end
