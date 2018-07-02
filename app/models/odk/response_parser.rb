@@ -4,7 +4,7 @@ module Odk
   # the response object the controller passes in with an
   # existing response from the database.
   class ResponseParser
-    attr_accessor :response, :raw_odk_xml, :files, :awaiting_media
+    attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash
 
     #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil, awaiting_media: false)
@@ -27,7 +27,7 @@ module Odk
     # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
     # can be uniquely identified and handled
     def odk_hash
-      @odk_hash ||= Digest::SHA256.base64digest raw_odk_xml
+      odk_hash ||= Digest::SHA256.base64digest raw_odk_xml
     end
 
     def process_xml(raw_odk_xml)
@@ -281,7 +281,7 @@ module Odk
     # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
     # can be uniquely identified and handled
     def odk_hash
-      @odk_hash ||= Digest::SHA256.base64digest @raw_odk_xml
+      odk_hash ||= Digest::SHA256.base64digest raw_odk_xml
     end
 
   end
