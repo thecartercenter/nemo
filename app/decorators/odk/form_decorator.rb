@@ -46,5 +46,11 @@ module Odk
         constraint: ". = '#{override_code}'",
         type: "string")
     end
+
+    # Whether this form needs an accompanying manifest for odk.
+    def needs_manifest?
+      # For now this is IFF there are any multilevel option sets
+      @needs_manifest ||= option_sets.any?(&:multilevel?)
+    end
   end
 end
