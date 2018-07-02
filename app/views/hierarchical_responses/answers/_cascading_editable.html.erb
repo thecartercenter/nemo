@@ -7,6 +7,6 @@
 
 <%# We also need the hidden fields for each answer. %>
 <% answer_set.answers.each_with_index do |a,i| %>
-  <%= render('hierarchical_responses/answers/hidden_fields', answer: a, index: "#{index}_#{i}", inst_num: inst_num) %>
+  <%= render('hierarchical_responses/answers/hidden_fields', answer: a, index: "#{index}_#{i}") %>
   <%= hidden_field_tag("response[answers_attributes][#{index}_#{i}][rank]", a.rank) %>
 <% end %>
