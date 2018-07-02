@@ -241,11 +241,10 @@ module Odk
         end
       end
       if /\S*_\d*/.match?(tag)
-        form_item_id = tag_without_prefix.split("_").first
+        tag_without_prefix.split("_").first
       else
-        form_item_id = tag_without_prefix
+        tag_without_prefix
       end
-      form_item_id
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct
