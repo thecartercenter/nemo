@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Odk
   # Takes a response and odk data. Parses odk data into answer tree for response.
   # Returns the response because in the case of multimedia, the parser may replace
@@ -6,7 +8,6 @@ module Odk
   class ResponseParser
     attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash
 
-    #initialize in a similar way to xml submission
     def initialize(response: nil, files: nil, awaiting_media: false)
       raise "Submissions must have a mission" if response.mission.nil?
       @response = response
@@ -26,8 +27,8 @@ module Odk
 
     # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
     # can be uniquely identified and handled
-    def odk_hash
-      odk_hash ||= Digest::SHA256.base64digest raw_odk_xml
+    def calculate_odk_hash
+      odk_hash || Digest::SHA256.base64digest(raw_odk_xml)
     end
 
     def process_xml(raw_odk_xml)
@@ -36,16 +37,16 @@ module Odk
       if existing_response
         add_media_to_existing_response
       else
-        response.odk_hash = awaiting_media ? odk_hash : nil
+        response.odk_hash = awaiting_media ? calculate_odk_hash : nil
         build_answer_tree(data, response.form)
         response.associate_tree(response.root_node)
       end
     end
 
     def add_media_to_existing_response
-      candidate_answers = response.answers.select{|a| a.pending_file_name.present?}
+      candidate_answers = response.answers.select { |a| a.pending_file_name.present? }
       candidate_answers.each do |a|
-          populate_multimedia_answer(a, a.pending_file_name, a.questioning.qtype_name )
+        populate_multimedia_answer(a, a.pending_file_name, a.questioning.qtype_name)
       end
     end
 
@@ -59,12 +60,12 @@ module Odk
 
     def add_level(xml_node, form_node, response_node)
       xml_node.elements.each_with_index do |child, index|
-        if node_is_odk_header?(child)
-          next
-        elsif node_is_ir_question?(child)
-          response.incomplete = node.content == "yes"
-        else
-          add_response_node(child, response_node)
+        unless node_is_odk_header?(child)
+          if node_is_ir_question?(child)
+            response.incomplete = node.content == "yes"
+          else
+            add_response_node(child, response_node)
+          end
         end
       end
     end
@@ -194,21 +195,25 @@ module Odk
     end
 
     def populate_answer_value(answer, content, form_item)
-      question_type =  form_item.qtype.name
+      question_type = form_item.qtype.name
       return populate_multimedia_answer(answer, content, question_type) if form_item.qtype.multimedia?
 
       case question_type
       when "select_one"
-        answer.option_id = option_id_for_submission(content) unless content == "none"
+        answer.option_id = option_id_for_submission(content)
       when "select_multiple"
-        content.split(" ").each { |oid| answer.choices.build(option_id: option_id_for_submission(oid)) } unless content == "none"
+        unless content == "none"
+          content.split(" ").each do |oid|
+            answer.choices.build(option_id: option_id_for_submission(oid))
+          end
+        end
       when "date", "datetime", "time"
         # Time answers arrive with timezone info (e.g. 18:30:00.000-04), but we treat a time question
         # as having no timezone, useful for things like 'what time of day does the doctor usually arrive'
         # as opposed to 'what exact date/time did the doctor last arrive'.
         # If the latter information is desired, a datetime question should be used.
         # Also, since Rails treats time data as always on 2000-01-01, using the timezone
-        # information could lead to DST issues. So we discard the timezone information for time questions only.
+        # information could lead to DST issues. So we discard the timezone information for time questions only
         # We also make sure elsewhere in the app to not tz-shift time answers when we display them.
         # (Rails by default keeps time columns as UTC and does not shift them to the system's timezone.)
         if answer.qtype.name == "time"
@@ -224,11 +229,11 @@ module Odk
     def form_item(name)
       form_item_id = form_item_id_from_tag(name)
       unless FormItem.exists?(form_item_id)
-        raise SubmissionError.new("Submission contains unidentifiable group or question.")
+        raise SubmissionError, "Submission contains unidentifiable group or question."
       end
       form_item = FormItem.find(form_item_id)
       unless form_item.form_id == response.form.id
-        raise SubmissionError.new("Submission contains group or question not found in form.")
+        raise SubmissionError, "Submission contains group or question not found in form."
       end
       form_item
     end
@@ -236,12 +241,9 @@ module Odk
     #TODO: refactor mapping to one shared place accessible here and from odk decorators
     def form_item_id_from_tag(tag)
       prefixes = %w[qing grp]
-      form_item_id = nil
       tag_without_prefix = nil
       prefixes.each do |p|
-        if /#{Regexp.quote(p)}\S*/.match?(tag)
-          tag_without_prefix = tag.remove p
-        end
+        tag_without_prefix = tag.remove p if /#{Regexp.quote(p)}\S*/.match?(tag)
       end
       if /\S*_\d*/.match?(tag)
         tag_without_prefix.split("_").first
@@ -253,8 +255,8 @@ module Odk
     # Checks if form ID and version were given, if form exists, and if version is correct
     def lookup_and_check_form(params)
       # if either of these is nil or not an integer, error
-      raise SubmissionError.new("no form id was given") if params[:id].nil?
-      raise FormVersionError.new("form version must be specified") if params[:version].nil?
+      raise SubmissionError, "no form id was given" if params[:id].nil?
+      raise FormVersionError, "form version must be specified" if params[:version].nil?
 
       # try to load form (will raise activerecord error if not found)
       # if the response already has a form, don't fetch it again
@@ -265,11 +267,11 @@ module Odk
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
       # if form version is outdated, error
-      raise FormVersionError.new("Form version is outdated") if form.current_version.code != params[:version]
+      raise FormVersionError, "Form version is outdated" if form.current_version.code != params[:version]
     end
 
     def existing_response
-      existing_response = Response.find_by(odk_hash: odk_hash, form_id: response.form_id)
+      existing_response = Response.find_by(odk_hash: calculate_odk_hash, form_id: response.form_id)
       if existing_response.present?
         self.response = existing_response
         true
@@ -277,12 +279,5 @@ module Odk
         false
       end
     end
-
-    # Generates and saves a hash of the complete XML so that multi-chunk media form submissions
-    # can be uniquely identified and handled
-    def odk_hash
-      odk_hash ||= Digest::SHA256.base64digest raw_odk_xml
-    end
-
   end
 end
