@@ -59,19 +59,35 @@ module Odk
 
     def add_level(xml_node, form_node, response_node)
       xml_node.elements.each_with_index do |child, index|
-        if node_is_form_item(child)
-          form_item = form_item(child.name)
-          if form_item.class == QingGroup && form_item.repeatable?
-            add_repeat_group(child, form_item, response_node)
-          elsif form_item.class == QingGroup
-            add_group(child, form_item, response_node)
-          elsif form_item.multilevel?
-            add_answer_set_member(child, form_item, response_node)
-          else
-            add_answer(child.content, form_item, response_node)
-          end
+        if node_is_odk_header?(child)
+          next
+        elsif node_is_ir_question?(child)
+          response.incomplete = node.content == "yes"
+        else
+          add_response_node(child, response_node)
         end
       end
+    end
+
+    def add_response_node(node, response_node)
+      form_item = form_item(node.name)
+      if form_item.class == QingGroup && form_item.repeatable?
+        add_repeat_group(node, form_item, response_node)
+      elsif form_item.class == QingGroup
+        add_group(node, form_item, response_node)
+      elsif form_item.multilevel?
+        add_answer_set_member(node, form_item, response_node)
+      else
+        add_answer(node.content, form_item, response_node)
+      end
+    end
+
+    def node_is_ir_question?(node)
+      node.name == Odk::FormDecorator::IR_QUESTION
+    end
+
+    def node_is_odk_header?(node)
+      /\S*header/.match(node.name).present?
     end
 
     def new_node(type, form_item, parent)
@@ -133,7 +149,7 @@ module Odk
     end
 
     def add_group(xml_node, form_item, parent)
-      unless node_is_odk_header(xml_node)
+      unless node_is_odk_header?(xml_node)
         group = new_node(AnswerGroup, form_item, parent)
         parent.children << group
         add_level(xml_node, form_item, group)
@@ -144,19 +160,6 @@ module Odk
       answer = new_node(Answer, form_item, parent)
       populate_answer_value(answer, content, form_item)
       parent.children << answer
-    end
-
-    def node_is_form_item(node)
-      return false if node_is_odk_header(node)
-      if node.name == Odk::FormDecorator::IR_QUESTION
-        response.incomplete = node.content == "yes"
-        return false
-      end
-      true
-    end
-
-    def node_is_odk_header(node)
-      /\S*header/.match(node.name).present?
     end
 
     # finds the appropriate Option instance for an ODK submission
