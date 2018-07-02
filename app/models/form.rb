@@ -192,12 +192,6 @@ class Form < ApplicationRecord
     children.where(type: 'Questioning').order(:rank).last
   end
 
-  # Whether this form needs an accompanying manifest for odk.
-  def needs_odk_manifest?
-    # For now this is IFF there are any multilevel option sets
-    @needs_odk_manifest ||= option_sets.any?(&:multilevel?)
-  end
-
   def destroy_questionings(qings)
     qings = Array.wrap(qings)
     transaction do
