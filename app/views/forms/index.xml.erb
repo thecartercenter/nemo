@@ -6,7 +6,7 @@
         <name><%= f.full_name %></name>
         <majorMinorVersion><%= f.version %></majorMinorVersion>
         <downloadUrl><%= odk_form_url(mission_name: f.mission.compact_name, id: f.id, locale: nil) %></downloadUrl>
-        <% if f.needs_odk_manifest? %>
+        <% if Odk::DecoratorFactory.decorate(f).needs_manifest? %>
           <manifestUrl><%= odk_form_manifest_url(mission_name: f.mission.compact_name, id: f.id, locale: nil) %></manifestUrl>
         <% end %>
       </xform>
