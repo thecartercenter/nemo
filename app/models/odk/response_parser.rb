@@ -55,10 +55,10 @@ module Odk
         questioning_id: response.form.root_id,
         new_rank: 0
       )
-      add_level(data, form, response.root_node)
+      add_level(data, response.root_node)
     end
 
-    def add_level(xml_node, form_node, response_node)
+    def add_level(xml_node, response_node)
       xml_node.elements.each_with_index do |child, index|
         unless node_is_odk_header?(child)
           if node_is_ir_question?(child)
@@ -153,7 +153,7 @@ module Odk
       unless node_is_odk_header?(xml_node)
         group = new_node(AnswerGroup, form_item, parent)
         parent.children << group
-        add_level(xml_node, form_item, group)
+        add_level(xml_node, group)
       end
     end
 
