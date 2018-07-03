@@ -4,6 +4,8 @@ require "spec_helper"
 
 # Form decorator spec
 describe Odk::FormDecorator, :odk, :reset_factory_sequences do
+  include_context "odk rendering"
+
   describe "needs_manifest?" do
     let(:decorated_form) { decorate(form) }
 
