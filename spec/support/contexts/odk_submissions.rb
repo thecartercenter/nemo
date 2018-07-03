@@ -41,29 +41,31 @@ shared_context "odk submissions" do
         descendants = form.arrange_descendants
 
         descendants.each do |item, subitems|
+          decorated_item = Odk::DecoratorFactory.decorate(item)
           if item.is_a? QingGroup
             # Iterate over repeat instances (if any)
             Array.wrap(data[item] || {}).each do |instance|
               xml << "<grp#{item.id}><header/>"
               subitems.each do |subitem, _|
                 if instance[subitem]
-                  xml << "<#{Odk::DecoratorFactory.decorate(subitem).odk_code}>"
+                  decorated_subitem = Odk::DecoratorFactory.decorate(subitem)
+                  xml << "<#{decorated_subitem.odk_code}>"
                   xml << instance[subitem]
-                  xml << "</#{Odk::DecoratorFactory.decorate(subitem).odk_code}>"
+                  xml << "</#{decorated_subitem.odk_code}>"
                 end
               end
               xml << "</grp#{item.id}>"
             end
           elsif item.multilevel?
             item.level_count.times do |level|
-              xml << "<#{Odk::DecoratorFactory.decorate(item).odk_code}_#{level + 1}>"
+              xml << "<#{decorated_item.odk_code}_#{level + 1}>"
               xml << (data[item].try(:[], level) || rand(100).to_s)
-              xml << "</#{Odk::DecoratorFactory.decorate(item).odk_code}_#{level + 1}>"
+              xml << "</#{decorated_item.odk_code}_#{level + 1}>"
             end
           else
-            xml << "<#{Odk::DecoratorFactory.decorate(item).odk_code}>"
+            xml << "<#{decorated_item.odk_code}>"
             xml << (data[item] || rand(100).to_s)
-            xml << "</#{Odk::DecoratorFactory.decorate(item).odk_code}>"
+            xml << "</#{decorated_item.odk_code}>"
           end
         end
       end
