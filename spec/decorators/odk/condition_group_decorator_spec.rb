@@ -2,6 +2,8 @@ require "spec_helper"
 
 module Odk
   describe ConditionGroupDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
+    include_context "odk rendering"
+
     let(:result) { decorate(condition_group).to_odk }
 
     context "empty, non-negated condition group" do

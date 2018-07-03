@@ -62,11 +62,6 @@ module GeneralSpecHelpers
     vars.each_pair { |k, _| ENV.delete(k) }
   end
 
-  # decorate objects
-  def decorate(obj)
-    Odk::DecoratorFactory.decorate(obj)
-  end
-
   private
 
   def fixture(*dirs, name)

@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe Odk::ConditionDecorator do
+  include_context "odk rendering"
+
   describe "to_odk", :odk do
     let(:qing) { decorate(form.questionings.first) }
     let(:opt_set) { qing.option_set }
