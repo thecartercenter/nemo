@@ -1,7 +1,6 @@
-# odk rendering helper
-shared_context "odk rendering" do
+# frozen_string_literal: true
 
-  # decorate objects
+shared_context "odk rendering" do
   def decorate(obj)
     Odk::DecoratorFactory.decorate(obj)
   end
