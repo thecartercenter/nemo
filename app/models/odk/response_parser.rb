@@ -62,7 +62,7 @@ module Odk
       xml_node.elements.each_with_index do |child, index|
         unless node_is_odk_header?(child)
           if node_is_ir_question?(child)
-            response.incomplete = node.content == "yes"
+            response.incomplete = child.content == "yes"
           else
             add_response_node(child, response_node)
           end

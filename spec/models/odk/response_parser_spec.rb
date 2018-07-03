@@ -115,10 +115,9 @@ describe Odk::ResponseParser do
               Date.parse(date_str),
               # Do not retain timezone and just use UTC for time questions, since they represent time of day
               # Times without a date are 2000-01-01
-              Time.zone.parse("2000-01-01 14:30:00 UTC")
+              Time.zone.parse("14:30:00 UTC")
             ]
             populated_response = Odk::ResponseParser.new(response: response, files: files).populate_response
-            populated_response.save(validate: false)
             expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
           end
         end
