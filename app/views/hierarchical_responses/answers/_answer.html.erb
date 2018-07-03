@@ -2,7 +2,9 @@
 <div class="form-field answer_field qtype_<%= answer.qtype.name %>
   <%= read_only ? "read-only" : "editable" %> <%= answer.lengthy? ? "lengthy" : "" %>"
   data-qtype-name="<%= answer.qtype.name %>"
-  data-qing-id="<%= answer.questioning_id %>">
+  data-qing-id="<%= answer.questioning_id %>"
+  data-new-rank="<%= answer.new_rank %>"
+  <% if answer.marked_for_destruction? %>style="display: none"<% end %>>
   <% if form_mode %>
     <%# This appears first here but is usually moved to the end using flex box %>
     <%# We do it this way so we can move the control to its own line when printing a long text answer. %>

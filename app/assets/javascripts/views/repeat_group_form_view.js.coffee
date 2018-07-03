@@ -1,7 +1,7 @@
 class ELMO.Views.RepeatGroupFormView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @tmpl = options.tmpl
-    @next_inst_num = parseInt(@$el.data('inst-count')) + 1
+    @next_new_rank = parseInt(@$el.data('new-rank'))
 
   events:
     'click .add-instance': 'add_instance'
@@ -9,12 +9,12 @@ class ELMO.Views.RepeatGroupFormView extends ELMO.Views.ApplicationView
 
   add_instance: (event) ->
     event.preventDefault()
-    qing_group = $(event.target).closest('.qing-group')
-    qing_group.find('.qing-group-instances').append(@tmpl.replace(/__INST_NUM__/g, @next_inst_num))
-    @next_inst_num++
+    group = $(event.target).closest('.answer-group-set')
+    group.find('> .children').append(@tmpl.replace(/__NEW_RANK__/g, @next_new_rank))
+    @next_new_rank++
 
   remove_instance: (event) ->
     event.preventDefault()
-    instance = $(event.target.closest('.qing-group-instance'))
-    instance.hide()
-    instance.find("[id$=_destroy]").val("1")
+    node = $(event.target.closest('.answer-group-set .children'))
+    node.hide()
+    node.find("[id$=_destroy]").val("1")

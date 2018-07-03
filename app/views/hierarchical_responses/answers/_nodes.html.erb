@@ -6,6 +6,6 @@
   <% elsif node.is_a?(Answer) %>
     <%= render("hierarchical_responses/answers/answer", answer: node, read_only: read_only) %>
   <% elsif node.is_a?(AnswerGroupSet) %>
-    <%= render("hierarchical_responses/answers/nodes", nodes: node.c) %>
+    <%= render("hierarchical_responses/answers/group_set", group_set: node, read_only: read_only) %>
   <% end %>
 <% end %>

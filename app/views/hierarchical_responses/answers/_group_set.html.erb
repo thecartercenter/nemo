@@ -1,0 +1,20 @@
+<div class="answer-group-set" data-group-set-id="<%= group_set.id %>" data-new-rank="<%= group_set.c.count %>">
+  <div class="children">
+    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.c) %>
+  </div>
+
+  <% if !read_only %>
+    <a href="#" class="add-instance">
+      <i class="fa fa-plus"></i>
+    </a>
+
+    <a href="#" class="remove-instance"><i class="fa fa-close"></i></a>
+
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.RepeatGroupFormView({
+        el: <%= json ".answer-group-set[data-group-set-id='#{group_set.id}']" %>,
+        tmpl: <%= json render("hierarchical_responses/answers/nodes", nodes: [group_set.c.first]) %>
+      })
+    <% end %>
+  <% end %>
+</div>

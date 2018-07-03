@@ -2,29 +2,12 @@
   <h2>
     <%= group.questioning.full_dotted_rank %>.
     <%= group.questioning.group_name %>
-    <% if group.parent.is_a?(AnswerSet) && !read_only %>
-      <a href="#" class="remove-instance"><i class="fa fa-close"></i></a>
-    <% end %>
     <%= hint_popover(group.questioning.group_hint) %>
   </h2>
 
-  <%= render("hierarchical_responses/answers/nodes", nodes: group.children) %>
-
-  <% if false && node.repeatable? && !read_only %>
-    <a href="#" class="add-instance">
-      <i class="fa fa-plus"></i> <%= node.group_name %>
-    </a>
-  <% end %>
-
-  <% if false && node.repeatable? && !read_only %>
-    <%= javascript_doc_ready do %>
-      new ELMO.Views.RepeatGroupFormView({
-        el: <%=json ".qing-group[data-group-id=#{node.item.id}]" %>,
-        tmpl: <%=json render("hierarchical_responses/answers/instance",
-          node: node, instance: node.placeholder_instance) %>
-      })
-    <% end %>
-  <% end %>
+  <div class="children">
+    <%= render("hierarchical_responses/answers/nodes", nodes: group.children) %>
+  </div>
 
   <%# Setup condition js. %>
   <%# Note that we need to do this in any form mode, even show. %>

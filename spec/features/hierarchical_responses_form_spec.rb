@@ -184,7 +184,7 @@ feature "responses form", js: true do
     end
 
     scenario "should be handled properly" do
-      visit new_hierarhical_response_path(response_path_params)
+      visit new_hierarchical_response_path(response_path_params)
       select2(user.name, from: "response_user_id")
 
       fill_in(control_id_for(questionings[:location]), with: "12.3 45.6")
@@ -245,13 +245,13 @@ feature "responses form", js: true do
 
       control_for(questionings[:select_one]).select("Cat")
       find("a.add-instance").click
-      fill_in control_id_for(questionings[:group_integer], instance_num: 2), with: 10
+      fill_in control_id_for(questionings[:group_integer], new_rank: 2), with: 10
     end
   end
 
-  def control_for(questioning, subfield: nil, visible: true, instance_num: nil)
-    instance_prefix = "[data-inst-num='#{instance_num}']" if instance_num
-    prefix = "div[data-qing-id='#{questioning.id}']#{instance_prefix} .control"
+  def control_for(questioning, subfield: nil, visible: true, new_rank: nil)
+    new_rank_prefix = "[data-new-rank='#{new_rank}']" if new_rank
+    prefix = "div[data-qing-id='#{questioning.id}']#{new_rank_prefix} .control"
 
     if questioning.qtype_name == "select_multiple"
       find("#{prefix} .widget", visible: visible)
@@ -264,8 +264,8 @@ feature "responses form", js: true do
     end
   end
 
-  def control_id_for(questioning, subfield: nil, visible: true, instance_num: nil)
-    control_for(questioning, subfield: subfield, visible: visible, instance_num: instance_num)["id"]
+  def control_id_for(questioning, subfield: nil, visible: true)
+    control_for(questioning, subfield: subfield, visible: visible)["id"]
   end
 
   def temporal_mapping

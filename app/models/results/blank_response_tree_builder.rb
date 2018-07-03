@@ -20,7 +20,7 @@ module Results
 
       # TODO: We can remove the `validate: false` once various validations are
       # removed from the response model
-      response.save(validate: false)
+      response.save(validate: false) if options[:save]
       root
     end
 
