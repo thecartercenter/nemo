@@ -32,6 +32,10 @@ describe Odk::FormDecorator, :odk do
 
           it { is_expected.to be true }
         end
+
+        describe "for form without audio prompt in question" do
+          it { is_expected.to be false }
+        end
       end
     end
   end
