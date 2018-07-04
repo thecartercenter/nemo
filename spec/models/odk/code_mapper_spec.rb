@@ -48,9 +48,10 @@ describe Odk::CodeMapper do
     end
 
     it "errors when code has unknown format" do
+      code = "group123"
       expect do
-        Odk::CodeMapper.new.item_id_for_code("group123", form)
-      end.to raise_error(SubmissionError, "Submission contains unknown code format.")
+        Odk::CodeMapper.new.item_id_for_code(code, form)
+      end.to raise_error(SubmissionError, "Code format unknown: #{code}.")
     end
   end
 end

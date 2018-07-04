@@ -236,18 +236,8 @@ module Odk
       form_item
     end
 
-    # TODO: refactor mapping to one shared place accessible here and from odk decorators
     def form_item_id_from_tag(tag)
-      prefixes = %w[qing grp]
-      tag_without_prefix = nil
-      prefixes.each do |p|
-        tag_without_prefix = tag.remove p if /#{Regexp.quote(p)}\S*/.match?(tag)
-      end
-      if /\S*_\d*/.match?(tag)
-        tag_without_prefix.split("_").first
-      else
-        tag_without_prefix
-      end
+      Odk::CodeMapper.new.item_id_for_code(tag, response.form)
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct

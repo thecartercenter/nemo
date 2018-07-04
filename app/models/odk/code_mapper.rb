@@ -20,20 +20,21 @@ module Odk
       end
     end
 
-    # do fall back here
+    # Form passed in because used for fall-back to older qing odk code
+    # format that was q#{questioning.question.id}
     def item_id_for_code(code, form)
-      code = code.split("_").first   if /\S*_\d/.match? code
-      if /qing\S*/.match? code
-        qing_id = code.remove("qing")
+      clean_code = code.split("_").first # remove suffix for multilevel subqings.
+      if /qing\S*/.match? clean_code
+        qing_id = clean_code.remove("qing")
         Questioning.where(id: qing_id).pluck(:id).first
-      elsif /grp\S*/.match? code
-        grp_id = code.remove("grp")
+      elsif /grp\S*/.match? clean_code
+        grp_id = clean_code.remove("grp")
         FormItem.where(id: grp_id).pluck(:id).first
-      elsif /q\S*/.match? code
-        question_id = code.remove "q"
+      elsif /q\S*/.match? clean_code # fallback for older style qing odk code
+        question_id = clean_code.remove "q"
         Questioning.where(question_id: question_id, form_id: form.id).pluck(:id).first
       else
-        raise SubmissionError, "Submission contains unknown code format."
+        raise SubmissionError, "Code format unknown: #{code}."
       end
     end
   end
