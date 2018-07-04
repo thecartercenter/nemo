@@ -49,13 +49,13 @@ module Odk
     # Whether this form needs an accompanying manifest for odk.
     def needs_manifest?
       # For now this is IFF there are any multilevel option sets or questions with audio prompts
-      @needs_manifest ||= option_sets.any?(&:multilevel?) || has_audio_prompt?
+      @needs_manifest ||= option_sets.any?(&:multilevel?) || has_audio_prompt_content?
     end
 
     private
 
-    def has_audio_prompt?
-      smsable_questionings.values.any? { |qing| qing.audio_prompt }
+    def has_audio_prompt_content?
+      smsable_questionings.values.any? { |qing| qing.audio_prompt_content_type }
     end
   end
 end
