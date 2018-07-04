@@ -218,7 +218,7 @@ class ResponsesController < ApplicationController
       @response = odk_response_parser.populate_response
       authorize!(:submit_to, @response.form)
       @response.save(validate: false)
-      render(body: nil, status: 201)
+      render(body: nil, status: :created)
     rescue CanCan::AccessDenied => e
       render_xml_submission_failure(e, 403)
     rescue ActiveRecord::RecordNotFound => e

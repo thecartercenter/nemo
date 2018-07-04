@@ -308,7 +308,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq(
-        prepare_odk_form_fixture("multiscreen_group_form_with_multilevel.xml", form))
+        prepare_odk_form_fixture("multiscreen_group_form_with_multilevel.xml", form)
+      )
     end
   end
 
@@ -363,7 +364,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq(
-        prepare_odk_form_fixture("nested_group_form_with_multilevel.xml", form))
+        prepare_odk_form_fixture("nested_group_form_with_multilevel.xml", form)
+      )
     end
   end
 
