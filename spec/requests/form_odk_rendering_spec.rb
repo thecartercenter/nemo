@@ -15,7 +15,10 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   context "sample form" do
     let!(:form) do
-      create(:form, :published, :with_version, name: "Sample",
+      create(:form,
+        :published,
+        :with_version,
+        name: "Sample",
         question_types: %w(text long_text integer decimal location select_one
           multilevel_select_one select_multiple text datetime date time formstart formend barcode))
     end
@@ -323,7 +326,10 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("repeat_group_form_with_multilevel.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture(
+        "repeat_group_form_with_multilevel.xml",
+        form
+      )
     end
   end
 

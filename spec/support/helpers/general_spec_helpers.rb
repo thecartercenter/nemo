@@ -21,7 +21,7 @@ module GeneralSpecHelpers
   end
 
   # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
-  def prepare_odk_fixture(filename, path, form, options={})
+  def prepare_odk_fixture(filename, path, form, options = {})
     items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
     xml = prepare_fixture(path,
@@ -32,7 +32,7 @@ module GeneralSpecHelpers
       itemqcode: items.map(&:code),
       optcode: nodes.map(&:odk_code),
       optsetid: items.map(&:option_set_id).compact.uniq,
-      value: options[:values].present? ? options[:values] : [])
+      value: options[:values].presence || [])
     if save_fixtures
       dir = Rails.root.join("tmp", path)
       FileUtils.mkdir_p(dir)

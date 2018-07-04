@@ -31,9 +31,6 @@ shared_context "odk submissions" do
     "".tap do |xml|
       xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.code}\">"
 
-      # Add an instance name to ensure it's properly ignored.
-      #xml << "<meta><instanceName>foo</instanceName></meta>"
-
       if no_data
         xml << "<#{Odk::FormDecorator::IR_QUESTION}>yes</#{Odk::FormDecorator::IR_QUESTION}>" if form.allow_incomplete?
       else

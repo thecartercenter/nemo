@@ -28,6 +28,4 @@ class ResponseNode < ApplicationRecord
   def casted_value
     nil
   end
-
-  alias c children
 end

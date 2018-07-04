@@ -214,9 +214,7 @@ module Odk
         # information could lead to DST issues. So we discard the timezone information for time questions only
         # We also make sure elsewhere in the app to not tz-shift time answers when we display them.
         # (Rails by default keeps time columns as UTC and does not shift them to the system's timezone.)
-        if answer.qtype.name == "time"
-          content = content.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC"
-        end
+        content = content.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC" if answer.qtype.name == "time"
         answer.send("#{answer.qtype.name}_value=", Time.zone.parse(content))
       else
         answer.value = content

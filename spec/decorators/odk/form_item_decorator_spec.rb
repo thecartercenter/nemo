@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 module Odk
@@ -5,21 +7,21 @@ module Odk
     describe "xpath methods" do
       let!(:form) do
         create(:form, question_types: [ # root (grp1)
-        "text",         # sc[0] (q1)
-        [               # sc[1] (grp3)
-          "text",       # --> sc[0] (q2)
-          "text",       # --> sc[1] (q3)
-          [             # --> sc[2] (grp6)
-            "integer",  # --> --> sc[0] (q4)
+          "text",         # sc[0] (q1)
+          [               # sc[1] (grp3)
+            "text",       # --> sc[0] (q2)
+            "text",       # --> sc[1] (q3)
+            [             # --> sc[2] (grp6)
+              "integer",  # --> --> sc[0] (q4)
             ],
-          [             # --> sc[3] (grp8)
-            "text",     # --> --> sc[0] (q5)
-            [           # --> --> sc[1] (grp10)
-              "text"    # --> --> --> sc[0] (q6)
+            [             # --> sc[3] (grp8)
+              "text",     # --> --> sc[0] (q5)
+              [           # --> --> sc[1] (grp10)
+                "text"    # --> --> --> sc[0] (q6)
               ]
             ]
           ],
-        "text"          # sc[2] (q7)
+          "text" # sc[2] (q7)
         ])
       end
 
@@ -61,13 +63,16 @@ module Odk
         end
 
         it "uses indexed-repeat when going down into a subgroup" do
-          expect(q5.xpath_to(q6)).to eq "indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}/qing#{q6.id},"\
-            "/data/grp#{grp3.id},position(../..),/data/grp#{grp3.id}/grp#{grp8.id},position(..),/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)"
+          expect(q5.xpath_to(q6)).to eq "indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}"\
+          "/qing#{q6.id},/data/grp#{grp3.id},position(../..),/data/grp#{grp3.id}/grp#{grp8.id},position(..),"\
+          "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)"
         end
 
         it "uses indexed-repeat when going from group to group" do
-          expect(q4.xpath_to(q6)).to eq "indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}/qing#{q6.id},"\
-            "/data/grp#{grp3.id},position(../..),/data/grp#{grp3.id}/grp#{grp8.id},1,/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)"
+          expect(q4.xpath_to(q6)).to eq "indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}"\
+          "/grp#{grp10.id}/qing#{q6.id},"\
+          "/data/grp#{grp3.id},position(../..),/data/grp#{grp3.id}/grp#{grp8.id},1,/data/grp#{grp3.id}"\
+          "/grp#{grp8.id}/grp#{grp10.id},1)"
         end
 
         it "uses indexed-repeat when going from top-level to group" do
@@ -76,7 +81,8 @@ module Odk
         end
 
         it "handles root to subitem properly" do
-          expect(root.xpath_to(q2)).to eq "indexed-repeat(/data/grp#{grp3.id}/qing#{q2.id},/data/grp#{grp3.id},1)"
+          expect(root.xpath_to(q2)).to eq "indexed-repeat(/data/grp#{grp3.id}/qing#{q2.id},"\
+          "/data/grp#{grp3.id},1)"
         end
 
         it "handles root to top-level item properly" do

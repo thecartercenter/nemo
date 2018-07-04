@@ -94,7 +94,9 @@ class ResponsesController < ApplicationController
   end
 
   def edit
-    flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}" if @response.checked_out_by_others?(current_user)
+    if @response.checked_out_by_others?(current_user)
+      flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
+    end
     prepare_and_render_form
   end
 
@@ -125,8 +127,8 @@ class ResponsesController < ApplicationController
     if params[:search].present?
       begin
         @possible_submitters = User.do_search(@possible_submitters, params[:search], mission: current_mission)
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
+      rescue Search::ParseError => e
+        flash.now[:error] = e.to_s
         @search_error = true
       end
     end
@@ -146,15 +148,15 @@ class ResponsesController < ApplicationController
     when "submitters"
       @possible_users = User.assigned_to_or_submitter(current_mission, @response).by_name
     when "reviewers"
-      @possible_users = User.with_roles(current_mission, %w(coordinator staffer reviewer)).by_name
+      @possible_users = User.with_roles(current_mission, %w[coordinator staffer reviewer]).by_name
     end
 
     # do search if applicable
     if params[:search].present?
       begin
         @possible_users = User.do_search(@possible_users, params[:search], mission: current_mission)
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
+      rescue Search::ParseError => e
+        flash.now[:error] = e.to_s
         @search_error = true
       end
     end
@@ -217,16 +219,16 @@ class ResponsesController < ApplicationController
       authorize!(:submit_to, @response.form)
       @response.save(validate: false)
       render(body: nil, status: 201)
-    rescue CanCan::AccessDenied
-      render_xml_submission_failure($!, 403)
-    rescue ActiveRecord::RecordNotFound
-      render_xml_submission_failure($!, 404)
-    rescue FormVersionError
+    rescue CanCan::AccessDenied => e
+      render_xml_submission_failure(e, 403)
+    rescue ActiveRecord::RecordNotFound => e
+      render_xml_submission_failure(e, 404)
+    rescue FormVersionError => e
       # 426 - upgrade needed
       # We use this because ODK can't display custom failure messages so this provides a little more info.
-      render_xml_submission_failure($!, 426)
-    rescue SubmissionError
-      render_xml_submission_failure($!, 422)
+      render_xml_submission_failure(e, 426)
+    rescue SubmissionError => e
+      render_xml_submission_failure(e, 422)
     end
   end
 
@@ -240,7 +242,7 @@ class ResponsesController < ApplicationController
 
   # Returns a hash of param keys to open tempfiles for uploaded file parameters.
   def open_file_params
-    file_params = params.select { |k, v| v.is_a?(ActionDispatch::Http::UploadedFile) }.to_unsafe_h
+    file_params = params.select { |_k, v| v.is_a?(ActionDispatch::Http::UploadedFile) }.to_unsafe_h
     file_params.map { |k, v| [k, v.tempfile.open] }.to_h.with_indifferent_access
   end
 
@@ -253,16 +255,17 @@ class ResponsesController < ApplicationController
   def prepare_and_render_form
     # Prepare the OldAnswerNodes.
     set_read_only
-    @nodes = AnswerArranger.new(@response,
+    @nodes = AnswerArranger.new(
+      @response,
       placeholders: params[:action] == "show" ? :except_repeats : :all,
       # Must preserve submitted answers when in create/update action.
-      dont_load_answers: %w(create update).include?(params[:action])
+      dont_load_answers: %w[create update].include?(params[:action])
     ).build.nodes
     render(:form)
   end
 
   def render_xml_submission_failure(exception, code)
-    Rails.logger.info("XML submission failed: '#{exception.to_s}'")
+    Rails.logger.info("XML submission failed: '#{exception}'")
     render(body: nil, status: code)
   end
 
