@@ -2,8 +2,8 @@ module Odk
   class FormItemDecorator < BaseDecorator
     delegate_all
 
-    def odk_code
-      return "/data" if object.is_root?
+    def odk_code(options = {})
+      CodeMapper.new.code_for_item(object, options)
     end
 
     def absolute_xpath
