@@ -1,18 +1,18 @@
 # frozen_string_literal: true
 
 module Odk
+  # CodeMapper maps odk codes to form item. Used by odk decorators and odk response parser
   class CodeMapper
-
     def initialize
     end
 
     def code_for_item(item)
       return "/data" if item.is_root?
       case item
-        when Questioning
-          "qing#{item.id}"
-        when QingGroup
-          "grp#{item.id}"
+      when Questioning
+        "qing#{item.id}"
+      when QingGroup
+        "grp#{item.id}"
       end
     end
 
