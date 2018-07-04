@@ -11,12 +11,12 @@ describe Odk::FormDecorator, :odk do
 
     context "for form with single level option sets only" do
       let(:form) { create(:form, question_types: %w[select_one]) }
-      it { is_expected.to be_falsey }
+      it { is_expected.to be false }
     end
 
     context "for form with multi level option set" do
       let(:form) { create(:form, question_types: %w[select_one multilevel_select_one]) }
-      it { is_expected.to be_truthy }
+      it { is_expected.to be true }
     end
   end
 end
