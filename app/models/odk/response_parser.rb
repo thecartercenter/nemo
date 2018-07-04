@@ -38,7 +38,7 @@ module Odk
         add_media_to_existing_response
       else
         response.odk_hash = awaiting_media ? calculate_odk_hash : nil
-        build_answer_tree(data, response.form)
+        build_answer_tree(data)
         response.associate_tree(response.root_node)
       end
     end
@@ -50,7 +50,7 @@ module Odk
       end
     end
 
-    def build_answer_tree(data, form)
+    def build_answer_tree(data)
       response.root_node = AnswerGroup.new(
         questioning_id: response.form.root_id,
         new_rank: 0
@@ -59,7 +59,7 @@ module Odk
     end
 
     def add_level(xml_node, response_node)
-      xml_node.elements.each_with_index do |child, index|
+      xml_node.elements.each do |child|
         unless node_is_odk_header?(child)
           if node_is_ir_question?(child)
             response.incomplete = child.content == "yes"
@@ -95,7 +95,7 @@ module Odk
       type.new(
         questioning_id: form_item.id,
         new_rank: parent.children.length,
-        inst_num: inst_num(type, form_item, parent),
+        inst_num: inst_num(type, parent),
         rank: rank(parent),
         response_id: response.id
       )
@@ -107,10 +107,10 @@ module Odk
     end
 
     # Inst num will go away at end of answer refactor; this makes it work with answer arranger
-    def inst_num(type, form_item, parent)
-      if parent.is_a?(AnswerGroupSet) #repeat group
+    def inst_num(type, parent)
+      if parent.is_a?(AnswerGroupSet) # repeat group
         parent.children.length + 1
-      elsif type == Answer || type == AnswerSet || type == AnswerGroupSet
+      elsif [Answer, AnswerSet, AnswerGroupSet].include? type
         parent.inst_num
       else
         1
@@ -150,11 +150,10 @@ module Odk
     end
 
     def add_group(xml_node, form_item, parent)
-      unless node_is_odk_header?(xml_node)
-        group = new_node(AnswerGroup, form_item, parent)
-        parent.children << group
-        add_level(xml_node, group)
-      end
+      return if node_is_odk_header?(xml_node)
+      group = new_node(AnswerGroup, form_item, parent)
+      parent.children << group
+      add_level(xml_node, group)
     end
 
     def add_answer(content, form_item, parent)
@@ -165,13 +164,12 @@ module Odk
 
     # finds the appropriate Option instance for an ODK submission
     def option_id_for_submission(option_node_str)
-      if option_node_str =~ /\Aon([\w\-]+)\z/
+      if /\Aon([\w\-]+)\z/.match? option_node_str
         # look up inputs of the form "on####" as option node ids
         node_id = option_node_str.remove("on")
         OptionNode.id_to_option_id(node_id)
       else
-        #TODO: test and failure mode?
-        # look up other inputs as option ids
+        # fallback by looking up other inputs as option ids
         Option.where(id: option_node_str).pluck(:id).first
       end
     end
@@ -238,7 +236,7 @@ module Odk
       form_item
     end
 
-    #TODO: refactor mapping to one shared place accessible here and from odk decorators
+    # TODO: refactor mapping to one shared place accessible here and from odk decorators
     def form_item_id_from_tag(tag)
       prefixes = %w[qing grp]
       tag_without_prefix = nil
@@ -260,7 +258,7 @@ module Odk
 
       # try to load form (will raise activerecord error if not found)
       # if the response already has a form, don't fetch it again
-      response.form = Form.find(params[:id]) unless response.form.present?
+      response.form = Form.find(params[:id]) if response.form.blank?
       form = response.form
 
       # if form has no version, error

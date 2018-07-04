@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Odk::ResponseParser do
@@ -29,7 +31,6 @@ describe Odk::ResponseParser do
 
         context "with earlier odk code style for questionings" do
           xit "should parse the response" do
-
           end
         end
 
@@ -117,7 +118,7 @@ describe Odk::ResponseParser do
               # Times without a date are 2000-01-01
               Time.zone.parse("14:30:00 UTC")
             ]
-            populated_response = Odk::ResponseParser.new(response: response, files: files).populate_response
+            Odk::ResponseParser.new(response: response, files: files).populate_response
             expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
           end
         end
@@ -153,7 +154,7 @@ describe Odk::ResponseParser do
             %w[Answer AnswerSet Answer],
             form.c.map(&:id),
             [cat.option.name, nil, "#{cat2.option.name};#{dog2.option.name}"]
-           )
+          )
           expect_children(
             response.root_node.c[1],
             %w[Answer Answer],
@@ -167,7 +168,7 @@ describe Odk::ResponseParser do
     context "forms with complex selects in a repeat group" do
       context "with complex selects" do
         let(:filename) { "repeat_and_complex_select_response.xml" }
-        let(:question_types) { [{repeating: {items: %w[select_one multilevel_select_one select_multiple] }}] }
+        let(:question_types) { [{repeating: {items: %w[select_one multilevel_select_one select_multiple]}}] }
         let(:cat) { form.c[0].c[0].option_set.sorted_children[0] }
         let(:plant) { form.c[0].c[1].option_set.sorted_children[1] }
         let(:oak) { form.c[0].c[1].option_set.sorted_children[1].sorted_children[1] }
@@ -183,18 +184,18 @@ describe Odk::ResponseParser do
             [form.c[0].id]
           )
           expect_children(
-            response.root_node.c[0], #AnswerGroupSet
+            response.root_node.c[0], # AnswerGroupSet
             %w[AnswerGroup],
             [form.c[0].id]
           )
           expect_children(
-            response.root_node.c[0].c[0], #AnswerGroup
+            response.root_node.c[0].c[0], # AnswerGroup
             %w[Answer AnswerSet Answer],
             form.c[0].c.map(&:id),
             [cat.option.name, nil, "#{cat2.option.name};#{dog2.option.name}"]
           )
           expect_children(
-            response.root_node.c[0].c[0].c[1], #AnswerSet
+            response.root_node.c[0].c[0].c[1], # AnswerSet
             %w[Answer Answer],
             [form.c[0].c[1].id, form.c[0].c[1].id],
             [plant.option.name, oak.option.name]
@@ -217,20 +218,19 @@ describe Odk::ResponseParser do
 
     context "repeat group forms" do
       let(:filename) { "repeat_group_form_response.xml" }
-      context "with text questions"
-        let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
-        let(:xml_values) { %w[A B C D E] }
+      let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
+      let(:xml_values) { %w[A B C D E] }
 
-        it "should create the appropriate repeating group tree" do
-          Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-          expect_children(response.root_node.c[1],
-            %w[AnswerGroup AnswerGroup],
-            [form.c[1].id, form.c[1].id],
-            [nil, nil])
-          expect_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
-          expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
-        end
+      it "should create the appropriate repeating group tree" do
+        Odk::ResponseParser.new(response: response, files: files).populate_response
+        expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+        expect_children(response.root_node.c[1],
+          %w[AnswerGroup AnswerGroup],
+          [form.c[1].id, form.c[1].id],
+          [nil, nil])
+        expect_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+        expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
+      end
     end
 
     context "form with nexted groups" do
@@ -249,44 +249,37 @@ describe Odk::ResponseParser do
 
       it "should create nested tree" do
         Odk::ResponseParser.new(response: response, files: files).populate_response
-        expect_children(response.root_node,  %w[Answer AnswerGroupSet], form.c.map(&:id), [1, nil])
+        expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), [1, nil])
         expect_children(response.root_node.c[1],
           %w[AnswerGroup AnswerGroup],
-          [form.c[1].id, form.c[1].id]
-        )
+          [form.c[1].id, form.c[1].id])
         parent_group_set = response.root_node.c[1]
-        child_group_set_1 = parent_group_set.c[0].c[1]
+        child_group_set1 = parent_group_set.c[0].c[1]
         expect_children(parent_group_set.c[0],
           %w[Answer AnswerGroupSet],
           form.c[1].c.map(&:id),
-          [2, nil]
-        )
-        expect_children(child_group_set_1.c[0],
+          [2, nil])
+        expect_children(child_group_set1.c[0],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
-          [3, 4]
-        )
-        expect_children(child_group_set_1.c[1],
+          [3, 4])
+        expect_children(child_group_set1.c[1],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
-          [5, 6]
-        )
-        expect_children(child_group_set_1.c[1],
+          [5, 6])
+        expect_children(child_group_set1.c[1],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
-          [5, 6]
-        )
-        child_group_set_2 = parent_group_set.c[1].c[1]
+          [5, 6])
+        child_group_set2 = parent_group_set.c[1].c[1]
         expect_children(parent_group_set.c[1],
           %w[Answer AnswerGroupSet],
           form.c[1].c.map(&:id),
-          [7, nil]
-        )
-        expect_children(child_group_set_2.c[0],
+          [7, nil])
+        expect_children(child_group_set2.c[0],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
-          [8, 9]
-        )
+          [8, 9])
       end
     end
 
@@ -351,7 +344,7 @@ describe Odk::ResponseParser do
     let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
 
     context "single part media" do
-      let(:media_file_name) { "the_swing.jpg"}
+      let(:media_file_name) { "the_swing.jpg" }
       let(:image) { fixture_file_upload(media_fixture("images/#{media_file_name}"), "image/jpeg") }
       let(:question_types) { %w[text text image] }
       let(:files) { {xml_submission_file: StringIO.new(xml), media_file_name => image} }
@@ -365,8 +358,8 @@ describe Odk::ResponseParser do
     end
 
     context "multipart media" do
-      let(:media_file_name_1) { "the_swing.jpg"}
-      let(:media_file_name_2) { "another_swing.jpg"}
+      let(:media_file_name_1) { "the_swing.jpg" }
+      let(:media_file_name_2) { "another_swing.jpg" }
       let(:image_1) { media_fixture("images/#{media_file_name_1}") }
       let(:image_2) { media_fixture("images/#{media_file_name_2}") }
       let(:question_types) { %w[text image image] }
@@ -375,27 +368,35 @@ describe Odk::ResponseParser do
       let(:xml_values) { ["A", media_file_name_1, media_file_name_2] }
 
       it "creates response tree with media object for media answer" do
-        populated_response = Odk::ResponseParser.new(response: response, files: files_1, awaiting_media: true).populate_response
+        populated_response = Odk::ResponseParser.new(
+          response: response,
+          files: files_1,
+          awaiting_media: true
+        ).populate_response
         populated_response.save(validate: false)
         expect(Response.count).to eq 1
-        image_answer_1 = response.root_node.c[1]
-        image_answer_2 = response.root_node.c[2]
+        image_answer1 = response.root_node.c[1]
+        image_answer2 = response.root_node.c[2]
         expect(response.root_node.c.count).to eq 3
         expect(response.answers.count).to eq 3
 
-        expect(image_answer_1.pending_file_name).to be_nil
-        expect(image_answer_1.media_object).to be_present
-        expect(image_answer_1.media_object.item_file_name).to include media_file_name_1
-        expect(image_answer_2.pending_file_name).to eq media_file_name_2
-        expect(image_answer_2.media_object).to be_nil
+        expect(image_answer1.pending_file_name).to be_nil
+        expect(image_answer1.media_object).to be_present
+        expect(image_answer1.media_object.item_file_name).to include media_file_name_1
+        expect(image_answer2.pending_file_name).to eq media_file_name_2
+        expect(image_answer2.media_object).to be_nil
 
         new_response = Response.new(form: form, mission: form.mission, user: create(:user))
-        populated_response = Odk::ResponseParser.new(response: new_response, files: files_2, awaiting_media: false).populate_response
+        populated_response = Odk::ResponseParser.new(
+          response: new_response,
+          files: files_2,
+          awaiting_media: false
+        ).populate_response
         populated_response.save(validate: false)
         expect(Response.count).to eq 1
-        image_answer_2 = response.reload.root_node.c[2]
-        expect(image_answer_2.media_object).to be_present
-        expect(image_answer_2.media_object.item_file_name).to include media_file_name_2
+        image_answer2 = response.reload.root_node.c[2]
+        expect(image_answer2.media_object).to be_present
+        expect(image_answer2.media_object.item_file_name).to include media_file_name_2
       end
     end
   end
