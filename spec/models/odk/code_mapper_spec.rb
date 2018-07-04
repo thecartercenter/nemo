@@ -8,7 +8,6 @@ describe Odk::CodeMapper do
   context "item_id_for_code" do
     it "retrieves group for group code" do
       group = form.c[1]
-
       code = "grp#{group.id}"
       expected = group.id
       actual = Odk::CodeMapper.new.item_id_for_code(code, form)
@@ -17,7 +16,6 @@ describe Odk::CodeMapper do
 
     it "retrieves questioning for questioning with code starting with qing" do
       form_item = form.c[0]
-
       code = "qing#{form_item.id}"
       expected = form_item.id
       actual = Odk::CodeMapper.new.item_id_for_code(code, form)
@@ -29,7 +27,6 @@ describe Odk::CodeMapper do
       other_form.c[0].update_attribute(:question_id, form.c[0].question_id)
       assert form.c[0].question_id == other_form.c[0].question_id
       form_item = form.c[0]
-
       code = "q#{form_item.question.id}"
       expected = form_item.id
       actual = Odk::CodeMapper.new.item_id_for_code(code, form)
