@@ -24,29 +24,26 @@ describe Odk::FormDecorator, :odk do
     context "audio prompts" do
       let(:form) { create(:form, question_types: %w[text]) }
 
-      context "visible questions" do
-        describe "for form with audio prompt in question" do
-          before do
-            form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
-          end
+      context "with audio prompt question" do
+        before do
+          form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
+        end
 
+        describe "when question is visible" do
           it { is_expected.to be true }
         end
 
-        describe "for form without audio prompt in question" do
-          it { is_expected.to be false }
-        end
-      end
-
-      context "hidden questions" do
-        describe "for form without audio prompt in question" do
+        describe "when question is invisible" do
           before do
-            form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
             form.c[0].update!(hidden: true)
           end
 
           it { is_expected.to be false }
         end
+      end
+
+      context "without audio prompt question" do
+        it { is_expected.to be false }
       end
     end
   end
