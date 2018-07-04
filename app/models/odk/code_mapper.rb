@@ -6,17 +6,13 @@ module Odk
     def initialize
     end
 
-    def code_for_item(item, options = {})
-      # puts "get code for #{item.class}: "
-      # puts item.id
+    def code_for_item(item)
       return "/data" if item.is_root?
       case item
         when Questioning
           "qing#{item.id}"
         when QingGroup
           "grp#{item.id}"
-        # when OptionNode
-        #   "on#{item.id}"
       end
     end
 
