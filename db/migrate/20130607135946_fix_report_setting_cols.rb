@@ -1,4 +1,4 @@
-class FixReportSettingCols < ActiveRecord::Migration
+class FixReportSettingCols < ActiveRecord::Migration[4.2]
   def up
     Report::Report.all.each do |r|
       # convert values in the report display_type, bar_style, question_labels, and percent_type columns to be underscored values, which work as i18n keys

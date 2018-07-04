@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 module Odk
   describe QingGroupPartitioner, :odk do

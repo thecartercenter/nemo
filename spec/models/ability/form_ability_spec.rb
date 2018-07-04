@@ -1,5 +1,5 @@
 # Tests for abilities related to Form object.
-require "spec_helper"
+require "rails_helper"
 
 describe "abilities for forms" do
   context "for admin" do

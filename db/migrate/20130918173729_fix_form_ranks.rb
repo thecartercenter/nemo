@@ -1,4 +1,4 @@
-class FixFormRanks < ActiveRecord::Migration
+class FixFormRanks < ActiveRecord::Migration[4.2]
   def up
     Form.all.each do |f|
       if f.respond_to?(:fix_ranks)

@@ -1,4 +1,4 @@
-class RenameNameAndHintFields < ActiveRecord::Migration
+class RenameNameAndHintFields < ActiveRecord::Migration[4.2]
   def change
     rename_column :options, :name, :_name
     rename_column :options, :hint, :_hint

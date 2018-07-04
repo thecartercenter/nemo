@@ -1,4 +1,4 @@
-class CreateReportGroupingAttributes < ActiveRecord::Migration
+class CreateReportGroupingAttributes < ActiveRecord::Migration[4.2]
   def change
     create_table :report_grouping_attributes do |t|
       t.string :name

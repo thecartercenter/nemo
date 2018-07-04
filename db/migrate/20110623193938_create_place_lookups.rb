@@ -1,4 +1,4 @@
-class CreatePlaceLookups < ActiveRecord::Migration
+class CreatePlaceLookups < ActiveRecord::Migration[4.2]
   def self.up
     create_table :place_lookups do |t|
       t.string :query

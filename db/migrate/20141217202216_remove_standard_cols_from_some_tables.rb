@@ -1,4 +1,4 @@
-class RemoveStandardColsFromSomeTables < ActiveRecord::Migration
+class RemoveStandardColsFromSomeTables < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key(:questionings, :standard)
     remove_foreign_key(:conditions, :standard)

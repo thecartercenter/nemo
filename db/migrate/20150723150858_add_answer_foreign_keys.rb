@@ -1,4 +1,4 @@
-class AddAnswerForeignKeys < ActiveRecord::Migration
+class AddAnswerForeignKeys < ActiveRecord::Migration[4.2]
   def change
     add_foreign_key("answers", "responses")
     add_foreign_key("answers", "options")

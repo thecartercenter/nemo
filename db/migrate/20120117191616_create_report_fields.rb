@@ -1,4 +1,4 @@
-class CreateReportFields < ActiveRecord::Migration
+class CreateReportFields < ActiveRecord::Migration[4.2]
   def self.up
     create_table :report_fields do |t|
       t.integer :report_report_id

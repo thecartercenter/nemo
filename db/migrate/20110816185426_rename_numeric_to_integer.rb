@@ -1,4 +1,4 @@
-class RenameNumericToInteger < ActiveRecord::Migration
+class RenameNumericToInteger < ActiveRecord::Migration[4.2]
   def self.up
     execute("update question_types set name = 'integer', long_name = 'Integer' where name = 'numeric'")
     # this is now obsolete

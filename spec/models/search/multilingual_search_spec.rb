@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe "search qualifiers" do
   let(:mission) { get_mission }

@@ -37,7 +37,7 @@ class Media::ObjectsController < ApplicationController
 
   def delete
     @media_object.destroy
-    render nothing: true, status: 204
+    render body: nil, status: 204
   end
 
   private

@@ -1,4 +1,4 @@
-class AddFkConstraintsForStandards < ActiveRecord::Migration
+class AddFkConstraintsForStandards < ActiveRecord::Migration[4.2]
   def up
     %w(forms questionings questions conditions option_sets optionings options).each do |t|
       # first we have to nullify any standard_id columns that reference non existing objects

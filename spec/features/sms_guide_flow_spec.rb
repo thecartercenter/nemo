@@ -1,12 +1,14 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 feature "SMS Guide", js: true do
   let!(:user) { create(:user) }
   let!(:mission) { get_mission.setting.update_attributes!(preferred_locales_str: "en,fr,rw") }
 
-  before { login(user) }
+  before do
+    login(user)
+  end
 
   context "with SMSable form" do
     let!(:form) do

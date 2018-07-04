@@ -3,7 +3,7 @@
 # This migration was auto-generated via `rake db:generate_trigger_migration'.
 # While you can edit this file, any changes you make to the definitions here
 # will be undone by the next auto-generated trigger migration.
-class CreateTriggerAnswersInsertUpdate1 < ActiveRecord::Migration
+class CreateTriggerAnswersInsertUpdate1 < ActiveRecord::Migration[4.2]
   def up
     drop_trigger("answers_before_insert_update_row_tr", "answers", generated: true)
 

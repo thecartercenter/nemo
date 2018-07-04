@@ -1,4 +1,4 @@
-class DropOldReportTables < ActiveRecord::Migration
+class DropOldReportTables < ActiveRecord::Migration[4.2]
   def up
     drop_table :report_aggregations
     drop_table :report_calculations

@@ -1,4 +1,4 @@
-class CreateTranslations < ActiveRecord::Migration
+class CreateTranslations < ActiveRecord::Migration[4.2]
   def self.up
     create_table :translations do |t|
       t.integer :language_id

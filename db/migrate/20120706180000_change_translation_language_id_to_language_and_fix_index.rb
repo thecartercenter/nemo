@@ -1,4 +1,4 @@
-class ChangeTranslationLanguageIdToLanguageAndFixIndex < ActiveRecord::Migration
+class ChangeTranslationLanguageIdToLanguageAndFixIndex < ActiveRecord::Migration[4.2]
   def up
     # remove old index
     remove_index(:translations, :name => "translation_master")

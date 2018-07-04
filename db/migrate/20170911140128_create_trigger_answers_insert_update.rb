@@ -2,7 +2,7 @@
 # While you can edit this file, any changes you make to the definitions here
 # will be undone by the next auto-generated trigger migration.
 
-class CreateTriggerAnswersInsertUpdate < ActiveRecord::Migration
+class CreateTriggerAnswersInsertUpdate < ActiveRecord::Migration[4.2]
   def up
     create_trigger("answers_before_insert_update_row_tr", :generated => true, :compatibility => 1).
         on("answers").

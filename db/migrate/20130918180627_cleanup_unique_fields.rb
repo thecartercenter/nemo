@@ -1,4 +1,4 @@
-class CleanupUniqueFields < ActiveRecord::Migration
+class CleanupUniqueFields < ActiveRecord::Migration[4.2]
   def up
     # Now obsolete
     #

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class SetQuestioningIdResponseIdNullFalseOnAnswers < ActiveRecord::Migration
+class SetQuestioningIdResponseIdNullFalseOnAnswers < ActiveRecord::Migration[4.2]
   def up
     execute("UPDATE answers
       SET questioning_id = (SELECT id FROM form_items WHERE form_items.old_id = questioning_old_id)

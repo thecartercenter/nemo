@@ -63,6 +63,8 @@ module ELMO
       g.orm :active_record, primary_key_type: :uuid
     end
 
+    config.active_record.time_zone_aware_types = [:datetime]
+
     ####################################
     # CUSTOM SETTINGS
     ####################################
@@ -83,9 +85,6 @@ module ELMO
 
     # For security.
     config.action_dispatch.default_headers = {"X-Frame-Options" => "DENY"}
-
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
 
     # requests-per-minute limit for ODK Collect endpoints
     configatron.direct_auth_request_limit = 30

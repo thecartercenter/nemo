@@ -17,7 +17,7 @@ class OptionNode < ActiveRecord::Base
   has_ancestry cache_depth: true
 end
 
-class PopulateConditionOptionNodeReference < ActiveRecord::Migration
+class PopulateConditionOptionNodeReference < ActiveRecord::Migration[4.2]
   def up
     check_failed = false
 

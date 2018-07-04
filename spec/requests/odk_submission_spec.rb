@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe "odk submissions", :odk, type: :request do
@@ -19,11 +19,11 @@ describe "odk submissions", :odk, type: :request do
 
     describe "get and head requests" do
       it "should return 204 and no content" do
-        head(submission_path, {format: "xml"}, "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password))
+        head(submission_path, params: {format: "xml"}, headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)})
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
 
-        get(submission_path, {format: "xml"}, "HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password))
+        get(submission_path, params: {format: "xml"}, headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)})
         expect(response.response_code).to eq 204
         expect(response.body).to be_empty
       end

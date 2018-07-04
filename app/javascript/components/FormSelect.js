@@ -1,3 +1,6 @@
+import React from "react";
+import PropTypes from "prop-types";
+
 class FormSelect extends React.Component {
   render() {
     let options = this.props.options;
@@ -37,16 +40,16 @@ class FormSelect extends React.Component {
 }
 
 FormSelect.propTypes = {
-  changeFunc: React.PropTypes.func,
-  id: React.PropTypes.string,
-  includeBlank: React.PropTypes.bool,
-  name: React.PropTypes.string,
-  options: React.PropTypes.arrayOf(React.PropTypes.shape({
-    id: React.PropTypes.string,
-    name: React.PropTypes.string
+  changeFunc: PropTypes.func,
+  id: PropTypes.string,
+  includeBlank: PropTypes.bool,
+  name: PropTypes.string,
+  options: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string
   })).isRequired,
-  prompt: React.PropTypes.string,
-  value: React.PropTypes.node
+  prompt: PropTypes.string,
+  value: PropTypes.node
 };
 
 FormSelect.defaultProps = {
@@ -57,3 +60,5 @@ FormSelect.defaultProps = {
   prompt: null,
   value: null
 };
+
+export default FormSelect;

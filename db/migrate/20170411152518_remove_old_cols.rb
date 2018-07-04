@@ -1,4 +1,4 @@
-class RemoveOldCols < ActiveRecord::Migration
+class RemoveOldCols < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key_if_exists(:conditions, :original_id)
     remove_foreign_key_if_exists(:form_items, :original_id)

@@ -15,7 +15,7 @@ class Response < ActiveRecord::Base
   end
 end
 
-class GenerateShortcodesForResponses < ActiveRecord::Migration
+class GenerateShortcodesForResponses < ActiveRecord::Migration[4.2]
   def up
     Response.includes(:form, :mission).find_each do |response|
       response.generate_shortcode

@@ -1,4 +1,4 @@
-class AddBooleanDefaults < ActiveRecord::Migration
+class AddBooleanDefaults < ActiveRecord::Migration[4.2]
   def self.up
     bools = [
       {:table => "forms", :col => "is_published"},

@@ -13,7 +13,7 @@ class Form < ActiveRecord::Base
   belongs_to(:mission)
 end
 
-class MoveFormQuestioningsToRootGroup < ActiveRecord::Migration
+class MoveFormQuestioningsToRootGroup < ActiveRecord::Migration[4.2]
   def up
     Form.all.each do |form|
       group = QingGroup.create(form_id: form.id, mission_id: form.mission_id)

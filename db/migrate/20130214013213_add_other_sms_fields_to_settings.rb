@@ -1,4 +1,4 @@
-class AddOtherSmsFieldsToSettings < ActiveRecord::Migration
+class AddOtherSmsFieldsToSettings < ActiveRecord::Migration[4.2]
   def change
     add_column :settings, :outgoing_sms_username, :string
     add_column :settings, :outgoing_sms_password, :string

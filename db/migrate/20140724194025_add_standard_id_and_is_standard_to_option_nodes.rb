@@ -1,4 +1,4 @@
-class AddStandardIdAndIsStandardToOptionNodes < ActiveRecord::Migration
+class AddStandardIdAndIsStandardToOptionNodes < ActiveRecord::Migration[4.2]
   def change
     add_column :option_nodes, :standard_id, :integer
     add_column :option_nodes, :is_standard, :boolean, :null => false, :default => false

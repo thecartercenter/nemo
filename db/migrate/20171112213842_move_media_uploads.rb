@@ -1,4 +1,4 @@
-class MoveMediaUploads < ActiveRecord::Migration
+class MoveMediaUploads < ActiveRecord::Migration[4.2]
   TABLES = [Media::Object, Media::Image, Media::Audio, Media::Video]
 
   def up

@@ -1,4 +1,4 @@
-class NormalizeUserFields < ActiveRecord::Migration
+class NormalizeUserFields < ActiveRecord::Migration[4.2]
   def up
     # set null falses
     change_column(:users, :login, :string, :null => false)

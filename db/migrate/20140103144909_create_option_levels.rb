@@ -1,4 +1,4 @@
-class CreateOptionLevels < ActiveRecord::Migration
+class CreateOptionLevels < ActiveRecord::Migration[4.2]
   def change
     create_table :option_levels do |t|
       t.integer :option_set_id, :null => false

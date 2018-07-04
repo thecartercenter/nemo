@@ -1,4 +1,4 @@
-class AddNewTranslationFields < ActiveRecord::Migration
+class AddNewTranslationFields < ActiveRecord::Migration[4.2]
   def change
     add_column :questions, :name, :text
     add_column :questions, :hint, :text

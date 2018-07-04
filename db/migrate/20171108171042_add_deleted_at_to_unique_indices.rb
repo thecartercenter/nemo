@@ -1,4 +1,4 @@
-class AddDeletedAtToUniqueIndices < ActiveRecord::Migration
+class AddDeletedAtToUniqueIndices < ActiveRecord::Migration[4.2]
   def up
     remove_index "answers", name: "answers_full"
     remove_index "form_forwardings", name: "form_forwardings_full"

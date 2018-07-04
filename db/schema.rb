@@ -1,4 +1,3 @@
-
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20_180_626_162_616) do
+ActiveRecord::Schema.define(version: 20180626162616) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -20,12 +20,11 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.uuid "ancestor_id", null: false
     t.uuid "descendant_id", null: false
     t.integer "generations", null: false
+    t.index ["ancestor_id", "descendant_id", "generations"], name: "answer_anc_desc_idx", unique: true
+    t.index ["descendant_id"], name: "answer_desc_idx"
   end
 
-  add_index "answer_hierarchies", %w[ancestor_id descendant_id generations], name: "answer_anc_desc_idx", unique: true, using: :btree
-  add_index "answer_hierarchies", ["descendant_id"], name: "answer_desc_idx", using: :btree
-
-  create_table "answers", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "answers", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.decimal "accuracy", precision: 9, scale: 3
     t.decimal "altitude", precision: 9, scale: 3
     t.datetime "created_at"
@@ -50,17 +49,16 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "type", default: "Answer", null: false
     t.datetime "updated_at"
     t.text "value"
+    t.index ["deleted_at", "type"], name: "index_answers_on_deleted_at_and_type"
+    t.index ["new_rank"], name: "index_answers_on_new_rank"
+    t.index ["option_id"], name: "index_answers_on_option_id"
+    t.index ["parent_id"], name: "index_answers_on_parent_id"
+    t.index ["questioning_id"], name: "index_answers_on_questioning_id"
+    t.index ["response_id", "questioning_id", "inst_num", "rank", "deleted_at"], name: "answers_full", unique: true
+    t.index ["response_id"], name: "index_answers_on_response_id"
   end
 
-  add_index "answers", ["deleted_at", "type"], name: "index_answers_on_deleted_at_and_type", using: :btree
-  add_index "answers", ["new_rank"], name: "index_answers_on_new_rank", using: :btree
-  add_index "answers", ["option_id"], name: "index_answers_on_option_id", using: :btree
-  add_index "answers", ["parent_id"], name: "index_answers_on_parent_id", using: :btree
-  add_index "answers", ["questioning_id"], name: "index_answers_on_questioning_id", using: :btree
-  add_index "answers", %w[response_id questioning_id inst_num rank deleted_at], name: "answers_full", unique: true, using: :btree
-  add_index "answers", ["response_id"], name: "index_answers_on_response_id", using: :btree
-
-  create_table "assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "assignments", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at"
     t.datetime "deleted_at"
     t.uuid "mission_id"
@@ -70,13 +68,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.datetime "updated_at"
     t.uuid "user_id"
     t.integer "user_old_id"
+    t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
+    t.index ["mission_id"], name: "index_assignments_on_mission_id"
+    t.index ["user_id"], name: "index_assignments_on_user_id"
   end
 
-  add_index "assignments", ["deleted_at"], name: "index_assignments_on_deleted_at", using: :btree
-  add_index "assignments", ["mission_id"], name: "index_assignments_on_mission_id", using: :btree
-  add_index "assignments", ["user_id"], name: "index_assignments_on_user_id", using: :btree
-
-  create_table "broadcast_addressings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "broadcast_addressings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "addressee_id"
     t.integer "addressee_old_id"
     t.string "addressee_type", limit: 255, null: false
@@ -85,12 +82,11 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.datetime "created_at"
     t.integer "old_id"
     t.datetime "updated_at"
+    t.index ["addressee_id"], name: "index_broadcast_addressings_on_addressee_id"
+    t.index ["broadcast_id"], name: "index_broadcast_addressings_on_broadcast_id"
   end
 
-  add_index "broadcast_addressings", ["addressee_id"], name: "index_broadcast_addressings_on_addressee_id", using: :btree
-  add_index "broadcast_addressings", ["broadcast_id"], name: "index_broadcast_addressings_on_broadcast_id", using: :btree
-
-  create_table "broadcasts", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "broadcasts", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.text "body"
     t.datetime "created_at"
     t.string "medium", limit: 255
@@ -103,11 +99,10 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "subject", limit: 255
     t.datetime "updated_at"
     t.string "which_phone", limit: 255
+    t.index ["mission_id"], name: "index_broadcasts_on_mission_id"
   end
 
-  add_index "broadcasts", ["mission_id"], name: "index_broadcasts_on_mission_id", using: :btree
-
-  create_table "choices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "choices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "answer_id"
     t.integer "answer_old_id"
     t.datetime "created_at"
@@ -118,13 +113,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.uuid "option_id"
     t.integer "option_old_id"
     t.datetime "updated_at"
+    t.index ["answer_id"], name: "index_choices_on_answer_id"
+    t.index ["deleted_at"], name: "index_choices_on_deleted_at"
+    t.index ["option_id"], name: "index_choices_on_option_id"
   end
 
-  add_index "choices", ["answer_id"], name: "index_choices_on_answer_id", using: :btree
-  add_index "choices", ["deleted_at"], name: "index_choices_on_deleted_at", using: :btree
-  add_index "choices", ["option_id"], name: "index_choices_on_option_id", using: :btree
-
-  create_table "conditions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "conditions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "conditionable_id", null: false
     t.string "conditionable_type"
     t.datetime "created_at"
@@ -141,16 +135,15 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "ref_qing_old_id"
     t.datetime "updated_at"
     t.string "value", limit: 255
+    t.index ["conditionable_id"], name: "index_conditions_on_conditionable_id"
+    t.index ["conditionable_type", "conditionable_id"], name: "index_conditions_on_conditionable_type_and_conditionable_id"
+    t.index ["deleted_at"], name: "index_conditions_on_deleted_at"
+    t.index ["mission_id"], name: "index_conditions_on_mission_id"
+    t.index ["option_node_id"], name: "index_conditions_on_option_node_id"
+    t.index ["ref_qing_id"], name: "index_conditions_on_ref_qing_id"
   end
 
-  add_index "conditions", ["conditionable_id"], name: "index_conditions_on_conditionable_id", using: :btree
-  add_index "conditions", ["conditionable_type", "conditionable_id"], name: "index_conditions_on_conditionable_type_and_conditionable_id", using: :btree
-  add_index "conditions", ["deleted_at"], name: "index_conditions_on_deleted_at", using: :btree
-  add_index "conditions", ["mission_id"], name: "index_conditions_on_mission_id", using: :btree
-  add_index "conditions", ["option_node_id"], name: "index_conditions_on_option_node_id", using: :btree
-  add_index "conditions", ["ref_qing_id"], name: "index_conditions_on_ref_qing_id", using: :btree
-
-  create_table "delayed_jobs", force: :cascade do |t|
+  create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "attempts", default: 0, null: false
     t.datetime "created_at"
     t.datetime "failed_at"
@@ -162,11 +155,10 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "queue", limit: 255
     t.datetime "run_at"
     t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
   end
 
-  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
-
-  create_table "form_forwardings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "form_forwardings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.uuid "form_id"
     t.integer "form_old_id"
@@ -175,13 +167,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "recipient_old_id"
     t.string "recipient_type", limit: 255
     t.datetime "updated_at", null: false
+    t.index ["form_id", "recipient_id", "recipient_type"], name: "form_forwardings_full", unique: true
+    t.index ["form_id"], name: "index_form_forwardings_on_form_id"
+    t.index ["recipient_id"], name: "index_form_forwardings_on_recipient_id"
   end
 
-  add_index "form_forwardings", %w[form_id recipient_id recipient_type], name: "form_forwardings_full", unique: true, using: :btree
-  add_index "form_forwardings", ["form_id"], name: "index_form_forwardings_on_form_id", using: :btree
-  add_index "form_forwardings", ["recipient_id"], name: "index_form_forwardings_on_recipient_id", using: :btree
-
-  create_table "form_items", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "form_items", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.text "ancestry"
     t.integer "ancestry_depth", null: false
     t.datetime "created_at"
@@ -206,15 +197,14 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.boolean "required", default: false, null: false
     t.string "type", limit: 255, null: false
     t.datetime "updated_at"
+    t.index ["ancestry"], name: "index_form_items_on_ancestry"
+    t.index ["deleted_at"], name: "index_form_items_on_deleted_at"
+    t.index ["form_id"], name: "index_form_items_on_form_id"
+    t.index ["mission_id"], name: "index_form_items_on_mission_id"
+    t.index ["question_id"], name: "index_form_items_on_question_id"
   end
 
-  add_index "form_items", ["ancestry"], name: "index_form_items_on_ancestry", using: :btree
-  add_index "form_items", ["deleted_at"], name: "index_form_items_on_deleted_at", using: :btree
-  add_index "form_items", ["form_id"], name: "index_form_items_on_form_id", using: :btree
-  add_index "form_items", ["mission_id"], name: "index_form_items_on_mission_id", using: :btree
-  add_index "form_items", ["question_id"], name: "index_form_items_on_question_id", using: :btree
-
-  create_table "form_versions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "form_versions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "code", limit: 255
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
@@ -224,13 +214,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "old_id"
     t.integer "sequence", default: 1
     t.datetime "updated_at", null: false
+    t.index ["code", "deleted_at"], name: "index_form_versions_on_code", unique: true
+    t.index ["deleted_at"], name: "index_form_versions_on_deleted_at"
+    t.index ["form_id"], name: "index_form_versions_on_form_id"
   end
 
-  add_index "form_versions", ["code", "deleted_at"], name: "index_form_versions_on_code", unique: true, using: :btree
-  add_index "form_versions", ["deleted_at"], name: "index_form_versions_on_deleted_at", using: :btree
-  add_index "form_versions", ["form_id"], name: "index_form_versions_on_form_id", using: :btree
-
-  create_table "forms", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "forms", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "access_level", limit: 255, default: "private", null: false
     t.boolean "allow_incomplete", default: false, null: false
     t.boolean "authenticate_sms", default: true
@@ -257,15 +246,14 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
     t.boolean "upgrade_needed", default: false
+    t.index ["current_version_id"], name: "index_forms_on_current_version_id"
+    t.index ["deleted_at"], name: "index_forms_on_deleted_at"
+    t.index ["mission_id"], name: "index_forms_on_mission_id"
+    t.index ["original_id"], name: "index_forms_on_original_id"
+    t.index ["root_id"], name: "index_forms_on_root_id"
   end
 
-  add_index "forms", ["current_version_id"], name: "index_forms_on_current_version_id", using: :btree
-  add_index "forms", ["deleted_at"], name: "index_forms_on_deleted_at", using: :btree
-  add_index "forms", ["mission_id"], name: "index_forms_on_mission_id", using: :btree
-  add_index "forms", ["original_id"], name: "index_forms_on_original_id", using: :btree
-  add_index "forms", ["root_id"], name: "index_forms_on_root_id", using: :btree
-
-  create_table "media_objects", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "media_objects", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "answer_id"
     t.integer "answer_old_id"
     t.datetime "created_at", null: false
@@ -278,11 +266,10 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "token", limit: 255
     t.string "type", limit: 255
     t.datetime "updated_at", null: false
+    t.index ["answer_id"], name: "index_media_objects_on_answer_id"
   end
 
-  add_index "media_objects", ["answer_id"], name: "index_media_objects_on_answer_id", using: :btree
-
-  create_table "missions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "missions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "compact_name", limit: 255
     t.datetime "created_at"
     t.datetime "deleted_at"
@@ -291,13 +278,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "old_id"
     t.string "shortcode", limit: 255, null: false
     t.datetime "updated_at"
+    t.index ["compact_name"], name: "index_missions_on_compact_name"
+    t.index ["deleted_at"], name: "index_missions_on_deleted_at"
+    t.index ["shortcode", "deleted_at"], name: "index_missions_on_shortcode", unique: true
   end
 
-  add_index "missions", ["compact_name"], name: "index_missions_on_compact_name", using: :btree
-  add_index "missions", ["deleted_at"], name: "index_missions_on_deleted_at", using: :btree
-  add_index "missions", ["shortcode", "deleted_at"], name: "index_missions_on_shortcode", unique: true, using: :btree
-
-  create_table "operations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.uuid "creator_id"
     t.integer "creator_old_id"
@@ -312,12 +298,11 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "old_id"
     t.string "provider_job_id", limit: 255
     t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_operations_on_created_at"
+    t.index ["creator_id"], name: "index_operations_on_creator_id"
   end
 
-  add_index "operations", ["created_at"], name: "index_operations_on_created_at", using: :btree
-  add_index "operations", ["creator_id"], name: "index_operations_on_creator_id", using: :btree
-
-  create_table "option_nodes", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "option_nodes", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.text "ancestry"
     t.integer "ancestry_depth", default: 0
     t.datetime "created_at", null: false
@@ -336,17 +321,16 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "sequence"
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at", null: false
+    t.index ["ancestry"], name: "index_option_nodes_on_ancestry"
+    t.index ["deleted_at"], name: "index_option_nodes_on_deleted_at"
+    t.index ["mission_id"], name: "index_option_nodes_on_mission_id"
+    t.index ["option_id"], name: "index_option_nodes_on_option_id"
+    t.index ["option_set_id"], name: "index_option_nodes_on_option_set_id"
+    t.index ["original_id"], name: "index_option_nodes_on_original_id"
+    t.index ["rank"], name: "index_option_nodes_on_rank"
   end
 
-  add_index "option_nodes", ["ancestry"], name: "index_option_nodes_on_ancestry", using: :btree
-  add_index "option_nodes", ["deleted_at"], name: "index_option_nodes_on_deleted_at", using: :btree
-  add_index "option_nodes", ["mission_id"], name: "index_option_nodes_on_mission_id", using: :btree
-  add_index "option_nodes", ["option_id"], name: "index_option_nodes_on_option_id", using: :btree
-  add_index "option_nodes", ["option_set_id"], name: "index_option_nodes_on_option_set_id", using: :btree
-  add_index "option_nodes", ["original_id"], name: "index_option_nodes_on_original_id", using: :btree
-  add_index "option_nodes", ["rank"], name: "index_option_nodes_on_rank", using: :btree
-
-  create_table "option_sets", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "option_sets", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.boolean "allow_coordinates", default: false, null: false
     t.datetime "created_at"
     t.datetime "deleted_at"
@@ -364,15 +348,14 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "sms_guide_formatting", limit: 255, default: "auto", null: false
     t.boolean "standard_copy", default: false, null: false
     t.datetime "updated_at"
+    t.index ["deleted_at"], name: "index_option_sets_on_deleted_at"
+    t.index ["geographic"], name: "index_option_sets_on_geographic"
+    t.index ["mission_id"], name: "index_option_sets_on_mission_id"
+    t.index ["original_id"], name: "index_option_sets_on_original_id"
+    t.index ["root_node_id"], name: "index_option_sets_on_root_node_id"
   end
 
-  add_index "option_sets", ["deleted_at"], name: "index_option_sets_on_deleted_at", using: :btree
-  add_index "option_sets", ["geographic"], name: "index_option_sets_on_geographic", using: :btree
-  add_index "option_sets", ["mission_id"], name: "index_option_sets_on_mission_id", using: :btree
-  add_index "option_sets", ["original_id"], name: "index_option_sets_on_original_id", using: :btree
-  add_index "option_sets", ["root_node_id"], name: "index_option_sets_on_root_node_id", using: :btree
-
-  create_table "options", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "options", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "canonical_name", limit: 255, null: false
     t.datetime "created_at"
     t.datetime "deleted_at"
@@ -384,13 +367,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "old_id"
     t.datetime "updated_at"
     t.integer "value"
+    t.index ["canonical_name"], name: "index_options_on_canonical_name"
+    t.index ["deleted_at"], name: "index_options_on_deleted_at"
+    t.index ["mission_id"], name: "index_options_on_mission_id"
   end
 
-  add_index "options", ["canonical_name"], name: "index_options_on_canonical_name", using: :btree
-  add_index "options", ["deleted_at"], name: "index_options_on_deleted_at", using: :btree
-  add_index "options", ["mission_id"], name: "index_options_on_mission_id", using: :btree
-
-  create_table "questions", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "questions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "access_level", limit: 255, default: "inherit", null: false
     t.string "audio_prompt_content_type"
     t.string "audio_prompt_file_name"
@@ -421,16 +403,15 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.boolean "standard_copy", default: false, null: false
     t.boolean "text_type_for_sms", default: false, null: false
     t.datetime "updated_at"
+    t.index ["deleted_at"], name: "index_questions_on_deleted_at"
+    t.index ["mission_id", "code", "deleted_at"], name: "index_questions_on_mission_id_and_code", unique: true
+    t.index ["mission_id"], name: "index_questions_on_mission_id"
+    t.index ["option_set_id"], name: "index_questions_on_option_set_id"
+    t.index ["original_id"], name: "index_questions_on_original_id"
+    t.index ["qtype_name"], name: "index_questions_on_qtype_name"
   end
 
-  add_index "questions", ["deleted_at"], name: "index_questions_on_deleted_at", using: :btree
-  add_index "questions", %w[mission_id code deleted_at], name: "index_questions_on_mission_id_and_code", unique: true, using: :btree
-  add_index "questions", ["mission_id"], name: "index_questions_on_mission_id", using: :btree
-  add_index "questions", ["option_set_id"], name: "index_questions_on_option_set_id", using: :btree
-  add_index "questions", ["original_id"], name: "index_questions_on_original_id", using: :btree
-  add_index "questions", ["qtype_name"], name: "index_questions_on_qtype_name", using: :btree
-
-  create_table "report_calculations", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "report_calculations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "attrib1_name", limit: 255
     t.datetime "created_at"
     t.datetime "deleted_at"
@@ -442,26 +423,24 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "report_report_old_id"
     t.string "type", limit: 255
     t.datetime "updated_at"
+    t.index ["deleted_at"], name: "index_report_calculations_on_deleted_at"
+    t.index ["question1_id"], name: "index_report_calculations_on_question1_id"
+    t.index ["report_report_id"], name: "index_report_calculations_on_report_report_id"
   end
 
-  add_index "report_calculations", ["deleted_at"], name: "index_report_calculations_on_deleted_at", using: :btree
-  add_index "report_calculations", ["question1_id"], name: "index_report_calculations_on_question1_id", using: :btree
-  add_index "report_calculations", ["report_report_id"], name: "index_report_calculations_on_report_report_id", using: :btree
-
-  create_table "report_option_set_choices", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "report_option_set_choices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "deleted_at"
     t.integer "old_id"
     t.uuid "option_set_id"
     t.integer "option_set_old_id"
     t.uuid "report_report_id"
     t.integer "report_report_old_id"
+    t.index ["deleted_at"], name: "index_report_option_set_choices_on_deleted_at"
+    t.index ["option_set_id"], name: "index_report_option_set_choices_on_option_set_id"
+    t.index ["report_report_id"], name: "index_report_option_set_choices_on_report_report_id"
   end
 
-  add_index "report_option_set_choices", ["deleted_at"], name: "index_report_option_set_choices_on_deleted_at", using: :btree
-  add_index "report_option_set_choices", ["option_set_id"], name: "index_report_option_set_choices_on_option_set_id", using: :btree
-  add_index "report_option_set_choices", ["report_report_id"], name: "index_report_option_set_choices_on_report_report_id", using: :btree
-
-  create_table "report_reports", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "report_reports", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "aggregation_name", limit: 255
     t.string "bar_style", limit: 255, default: "side_by_side"
     t.datetime "created_at"
@@ -489,16 +468,15 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.datetime "updated_at"
     t.integer "view_count", default: 0
     t.datetime "viewed_at"
+    t.index ["creator_id"], name: "index_report_reports_on_creator_id"
+    t.index ["deleted_at"], name: "index_report_reports_on_deleted_at"
+    t.index ["disagg_qing_id"], name: "index_report_reports_on_disagg_qing_id"
+    t.index ["form_id"], name: "index_report_reports_on_form_id"
+    t.index ["mission_id"], name: "index_report_reports_on_mission_id"
+    t.index ["view_count"], name: "index_report_reports_on_view_count"
   end
 
-  add_index "report_reports", ["creator_id"], name: "index_report_reports_on_creator_id", using: :btree
-  add_index "report_reports", ["deleted_at"], name: "index_report_reports_on_deleted_at", using: :btree
-  add_index "report_reports", ["disagg_qing_id"], name: "index_report_reports_on_disagg_qing_id", using: :btree
-  add_index "report_reports", ["form_id"], name: "index_report_reports_on_form_id", using: :btree
-  add_index "report_reports", ["mission_id"], name: "index_report_reports_on_mission_id", using: :btree
-  add_index "report_reports", ["view_count"], name: "index_report_reports_on_view_count", using: :btree
-
-  create_table "responses", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "responses", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "checked_out_at"
     t.uuid "checked_out_by_id"
     t.integer "checked_out_by_old_id"
@@ -521,32 +499,30 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.datetime "updated_at"
     t.uuid "user_id"
     t.integer "user_old_id"
+    t.index ["checked_out_at"], name: "index_responses_on_checked_out_at"
+    t.index ["checked_out_by_id"], name: "index_responses_on_checked_out_by_id"
+    t.index ["created_at"], name: "index_responses_on_created_at"
+    t.index ["deleted_at"], name: "index_responses_on_deleted_at"
+    t.index ["form_id", "odk_hash", "deleted_at"], name: "index_responses_on_form_id_and_odk_hash", unique: true
+    t.index ["form_id"], name: "index_responses_on_form_id"
+    t.index ["mission_id"], name: "index_responses_on_mission_id"
+    t.index ["reviewed"], name: "index_responses_on_reviewed"
+    t.index ["reviewer_id"], name: "index_responses_on_reviewer_id"
+    t.index ["shortcode", "deleted_at"], name: "index_responses_on_shortcode", unique: true
+    t.index ["updated_at"], name: "index_responses_on_updated_at"
+    t.index ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id"
+    t.index ["user_id"], name: "index_responses_on_user_id"
   end
 
-  add_index "responses", ["checked_out_at"], name: "index_responses_on_checked_out_at", using: :btree
-  add_index "responses", ["checked_out_by_id"], name: "index_responses_on_checked_out_by_id", using: :btree
-  add_index "responses", ["created_at"], name: "index_responses_on_created_at", using: :btree
-  add_index "responses", ["deleted_at"], name: "index_responses_on_deleted_at", using: :btree
-  add_index "responses", %w[form_id odk_hash deleted_at], name: "index_responses_on_form_id_and_odk_hash", unique: true, using: :btree
-  add_index "responses", ["form_id"], name: "index_responses_on_form_id", using: :btree
-  add_index "responses", ["mission_id"], name: "index_responses_on_mission_id", using: :btree
-  add_index "responses", ["reviewed"], name: "index_responses_on_reviewed", using: :btree
-  add_index "responses", ["reviewer_id"], name: "index_responses_on_reviewer_id", using: :btree
-  add_index "responses", ["shortcode", "deleted_at"], name: "index_responses_on_shortcode", unique: true, using: :btree
-  add_index "responses", ["updated_at"], name: "index_responses_on_updated_at", using: :btree
-  add_index "responses", ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id", using: :btree
-  add_index "responses", ["user_id"], name: "index_responses_on_user_id", using: :btree
-
-  create_table "sessions", force: :cascade do |t|
+  create_table "sessions", id: :serial, force: :cascade do |t|
     t.datetime "created_at"
     t.text "data"
     t.string "session_id", limit: 255, null: false
     t.datetime "updated_at"
+    t.index ["updated_at"], name: "index_sessions_on_updated_at"
   end
 
-  add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
-
-  create_table "settings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "settings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.boolean "allow_unauthenticated_submissions", default: false
     t.datetime "created_at"
     t.string "default_outgoing_sms_adapter", limit: 255
@@ -565,11 +541,10 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "twilio_auth_token", limit: 255
     t.string "twilio_phone_number", limit: 255
     t.datetime "updated_at"
+    t.index ["mission_id"], name: "index_settings_on_mission_id"
   end
 
-  add_index "settings", ["mission_id"], name: "index_settings_on_mission_id", using: :btree
-
-  create_table "skip_rules", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "skip_rules", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.uuid "dest_item_id"
@@ -579,13 +554,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "skip_if", null: false
     t.uuid "source_item_id", null: false
     t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_skip_rules_on_deleted_at"
+    t.index ["dest_item_id"], name: "index_skip_rules_on_dest_item_id"
+    t.index ["source_item_id"], name: "index_skip_rules_on_source_item_id"
   end
 
-  add_index "skip_rules", ["deleted_at"], name: "index_skip_rules_on_deleted_at", using: :btree
-  add_index "skip_rules", ["dest_item_id"], name: "index_skip_rules_on_dest_item_id", using: :btree
-  add_index "skip_rules", ["source_item_id"], name: "index_skip_rules_on_source_item_id", using: :btree
-
-  create_table "sms_messages", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "sms_messages", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "adapter_name", limit: 255
     t.boolean "auth_failed", default: false, null: false
     t.text "body"
@@ -605,19 +579,18 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.datetime "updated_at", null: false
     t.uuid "user_id"
     t.integer "user_old_id"
+    t.index ["body"], name: "index_sms_messages_on_body"
+    t.index ["broadcast_id"], name: "index_sms_messages_on_broadcast_id"
+    t.index ["created_at"], name: "index_sms_messages_on_created_at"
+    t.index ["from"], name: "index_sms_messages_on_from"
+    t.index ["mission_id"], name: "index_sms_messages_on_mission_id"
+    t.index ["reply_to_id"], name: "index_sms_messages_on_reply_to_id"
+    t.index ["to"], name: "index_sms_messages_on_to"
+    t.index ["type"], name: "index_sms_messages_on_type"
+    t.index ["user_id"], name: "index_sms_messages_on_user_id"
   end
 
-  add_index "sms_messages", ["body"], name: "index_sms_messages_on_body", using: :btree
-  add_index "sms_messages", ["broadcast_id"], name: "index_sms_messages_on_broadcast_id", using: :btree
-  add_index "sms_messages", ["created_at"], name: "index_sms_messages_on_created_at", using: :btree
-  add_index "sms_messages", ["from"], name: "index_sms_messages_on_from", using: :btree
-  add_index "sms_messages", ["mission_id"], name: "index_sms_messages_on_mission_id", using: :btree
-  add_index "sms_messages", ["reply_to_id"], name: "index_sms_messages_on_reply_to_id", using: :btree
-  add_index "sms_messages", ["to"], name: "index_sms_messages_on_to", using: :btree
-  add_index "sms_messages", ["type"], name: "index_sms_messages_on_type", using: :btree
-  add_index "sms_messages", ["user_id"], name: "index_sms_messages_on_user_id", using: :btree
-
-  create_table "taggings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "taggings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.integer "old_id"
@@ -626,13 +599,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.uuid "tag_id"
     t.integer "tag_old_id"
     t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_taggings_on_deleted_at"
+    t.index ["question_id"], name: "index_taggings_on_question_id"
+    t.index ["tag_id"], name: "index_taggings_on_tag_id"
   end
 
-  add_index "taggings", ["deleted_at"], name: "index_taggings_on_deleted_at", using: :btree
-  add_index "taggings", ["question_id"], name: "index_taggings_on_question_id", using: :btree
-  add_index "taggings", ["tag_id"], name: "index_taggings_on_tag_id", using: :btree
-
-  create_table "tags", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "tags", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.uuid "mission_id"
@@ -640,13 +612,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "name", limit: 64, null: false
     t.integer "old_id"
     t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_tags_on_deleted_at"
+    t.index ["mission_id"], name: "index_tags_on_mission_id"
+    t.index ["name", "mission_id"], name: "index_tags_on_name_and_mission_id"
   end
 
-  add_index "tags", ["deleted_at"], name: "index_tags_on_deleted_at", using: :btree
-  add_index "tags", ["mission_id"], name: "index_tags_on_mission_id", using: :btree
-  add_index "tags", ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", using: :btree
-
-  create_table "user_group_assignments", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "user_group_assignments", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.integer "old_id"
@@ -655,14 +626,13 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.integer "user_group_old_id"
     t.uuid "user_id"
     t.integer "user_old_id"
+    t.index ["deleted_at"], name: "index_user_group_assignments_on_deleted_at"
+    t.index ["user_group_id"], name: "index_user_group_assignments_on_user_group_id"
+    t.index ["user_id", "user_group_id", "deleted_at"], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true
+    t.index ["user_id"], name: "index_user_group_assignments_on_user_id"
   end
 
-  add_index "user_group_assignments", ["deleted_at"], name: "index_user_group_assignments_on_deleted_at", using: :btree
-  add_index "user_group_assignments", ["user_group_id"], name: "index_user_group_assignments_on_user_group_id", using: :btree
-  add_index "user_group_assignments", %w[user_id user_group_id deleted_at], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, using: :btree
-  add_index "user_group_assignments", ["user_id"], name: "index_user_group_assignments_on_user_id", using: :btree
-
-  create_table "user_groups", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "user_groups", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "deleted_at"
     t.uuid "mission_id"
@@ -670,13 +640,12 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "name", limit: 255, null: false
     t.integer "old_id"
     t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_user_groups_on_deleted_at"
+    t.index ["mission_id"], name: "index_user_groups_on_mission_id"
+    t.index ["name", "mission_id", "deleted_at"], name: "index_user_groups_on_name_and_mission_id", unique: true
   end
 
-  add_index "user_groups", ["deleted_at"], name: "index_user_groups_on_deleted_at", using: :btree
-  add_index "user_groups", ["mission_id"], name: "index_user_groups_on_mission_id", using: :btree
-  add_index "user_groups", %w[name mission_id deleted_at], name: "index_user_groups_on_name_and_mission_id", unique: true, using: :btree
-
-  create_table "users", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.boolean "admin", default: false, null: false
     t.string "api_key", limit: 255
@@ -707,16 +676,15 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.string "pref_lang", limit: 255, null: false
     t.string "sms_auth_code", limit: 255
     t.datetime "updated_at", null: false
+    t.index ["deleted_at"], name: "index_users_on_deleted_at"
+    t.index ["email"], name: "index_users_on_email"
+    t.index ["last_mission_id"], name: "index_users_on_last_mission_id"
+    t.index ["login", "deleted_at"], name: "index_users_on_login", unique: true
+    t.index ["name"], name: "index_users_on_name"
+    t.index ["sms_auth_code", "deleted_at"], name: "index_users_on_sms_auth_code", unique: true
   end
 
-  add_index "users", ["deleted_at"], name: "index_users_on_deleted_at", using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", using: :btree
-  add_index "users", ["last_mission_id"], name: "index_users_on_last_mission_id", using: :btree
-  add_index "users", ["login", "deleted_at"], name: "index_users_on_login", unique: true, using: :btree
-  add_index "users", ["name"], name: "index_users_on_name", using: :btree
-  add_index "users", ["sms_auth_code", "deleted_at"], name: "index_users_on_sms_auth_code", unique: true, using: :btree
-
-  create_table "whitelistings", id: :uuid, default: "uuid_generate_v4()", force: :cascade do |t|
+  create_table "whitelistings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "old_id"
     t.datetime "updated_at", null: false
@@ -725,10 +693,9 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
     t.uuid "whitelistable_id"
     t.integer "whitelistable_old_id"
     t.string "whitelistable_type", limit: 255
+    t.index ["user_id"], name: "index_whitelistings_on_user_id"
+    t.index ["whitelistable_id"], name: "index_whitelistings_on_whitelistable_id"
   end
-
-  add_index "whitelistings", ["user_id"], name: "index_whitelistings_on_user_id", using: :btree
-  add_index "whitelistings", ["whitelistable_id"], name: "index_whitelistings_on_whitelistable_id", using: :btree
 
   add_foreign_key "answers", "form_items", column: "questioning_id", name: "answers_questioning_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "answers", "options", name: "answers_option_id_fkey", on_update: :restrict, on_delete: :restrict
@@ -792,9 +759,9 @@ ActiveRecord::Schema.define(version: 20_180_626_162_616) do
   add_foreign_key "user_groups", "missions", name: "user_groups_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "users", "missions", column: "last_mission_id", name: "users_last_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "whitelistings", "users", name: "whitelistings_user_id_fkey", on_update: :restrict, on_delete: :restrict
-  create_trigger("answers_before_insert_update_row_tr", generated: true, compatibility: 1)
-    .on("answers")
-    .before(:insert, :update) do
+  create_trigger("answers_before_insert_update_row_tr", :generated => true, :compatibility => 1).
+      on("answers").
+      before(:insert, :update) do
     <<-SQL_ACTIONS
 new.tsv := TO_TSVECTOR('simple', COALESCE(
         new.value,
@@ -806,4 +773,5 @@ new.tsv := TO_TSVECTOR('simple', COALESCE(
       ));
     SQL_ACTIONS
   end
+
 end

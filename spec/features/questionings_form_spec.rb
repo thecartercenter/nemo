@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe "questionings form", js: true  do
   let(:user) { create(:user, role_name: "coordinator") }

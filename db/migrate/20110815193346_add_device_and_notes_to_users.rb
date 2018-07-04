@@ -1,4 +1,4 @@
-class AddDeviceAndNotesToUsers < ActiveRecord::Migration
+class AddDeviceAndNotesToUsers < ActiveRecord::Migration[4.2]
   def self.up
     add_column :users, :device, :string
     add_column :users, :notes, :text

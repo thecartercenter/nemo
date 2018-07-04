@@ -1,4 +1,4 @@
-class RenameQuestionablesToQuestions < ActiveRecord::Migration
+class RenameQuestionablesToQuestions < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :questionables, :option_level
     remove_foreign_key :questionables, :parent

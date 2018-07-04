@@ -36,7 +36,7 @@ module Concerns::ApplicationController::Authorization
 
     # else if this is not an html request, render an empty 403 (forbidden).
     elsif !request.format.html?
-      render(:nothing => true, :status => 403)
+      render(:body => nil, :status => 403)
 
     # else redirect to welcome page with error
     else

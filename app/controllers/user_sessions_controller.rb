@@ -5,7 +5,7 @@ class UserSessionsController < ApplicationController
   # don't need to authorize here (except for destroy action) because anyone can see log in page
   skip_authorization_check
 
-  before_filter(:ensure_logged_out, :only => [:new, :destroy, :logged_out])
+  before_action(:ensure_logged_out, :only => [:new, :destroy, :logged_out])
 
   def new
     @user_session = UserSession.new
@@ -15,7 +15,7 @@ class UserSessionsController < ApplicationController
     # reset the session for security purposes
     reset_session_preserving_return_to
 
-    @user_session = UserSession.new(user_session_params)
+    @user_session = UserSession.new(user_session_params.to_h)
 
     # if the save is successful, the user is logged in automatically
     if allow_login && @user_session.save
@@ -59,7 +59,7 @@ class UserSessionsController < ApplicationController
 
   # Special route, test only, used by feature specs to simulate user login.
   def test_login
-    return render text: 'TEST MODE ONLY', status: 403 unless Rails.env.test?
+    return render plain: 'TEST MODE ONLY', status: 403 unless Rails.env.test?
     @user = User.find(params[:user_id])
     UserSession.create(@user)
     post_login_housekeeping(dont_redirect: true)

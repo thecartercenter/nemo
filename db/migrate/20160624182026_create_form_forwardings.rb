@@ -1,4 +1,4 @@
-class CreateFormForwardings < ActiveRecord::Migration
+class CreateFormForwardings < ActiveRecord::Migration[4.2]
   def change
     create_table :form_forwardings do |t|
       t.references :form, index: true, foreign_key: true

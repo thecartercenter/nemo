@@ -1,4 +1,4 @@
-class CreateFormVersions < ActiveRecord::Migration
+class CreateFormVersions < ActiveRecord::Migration[4.2]
   def change
     create_table :form_versions do |t|
       t.integer :form_id

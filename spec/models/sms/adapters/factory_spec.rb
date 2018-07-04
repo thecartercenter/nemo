@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Sms::Adapters::Factory, :sms do
   it "create should error for non-existent adapters" do

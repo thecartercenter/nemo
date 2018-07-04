@@ -1,4 +1,4 @@
-class AddGroupSupportToBroadcastAddressings < ActiveRecord::Migration
+class AddGroupSupportToBroadcastAddressings < ActiveRecord::Migration[4.2]
   def up
     # Might as well do this, should have been done before.
     execute("DELETE FROM broadcast_addressings WHERE user_id IS NULL OR broadcast_id IS NULL")

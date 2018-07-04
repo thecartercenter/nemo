@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe Results::Csv::Buffer do
   # Column to index mappings for fake header_map. In reality, setting these indices up is more complex, but

@@ -1,4 +1,4 @@
-class CreateNewReportReports < ActiveRecord::Migration
+class CreateNewReportReports < ActiveRecord::Migration[4.2]
   def up
     create_table :report_reports do |t|
       t.integer  "mission_id"

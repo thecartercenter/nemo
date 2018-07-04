@@ -21,12 +21,14 @@ module Parameters
     key = options[:key]
     permitted = options[:permitted]
     if params[key].present?
-      params[key].map do |child|
-        if child[key].present? && child[key] != 'NONE'
-          permitted + [{ key => permit_children(child, options) }]
-        else
-          permitted + [key]
-        end
+      children = []
+      params[key].each { |i, child| children << child }
+      child = children.find { |child| child[key].present? && child[key] != 'NONE' }
+
+      if child
+        permitted + [{ key => permit_children(child, options) }]
+      else
+        permitted + [key]
       end
     end
   end

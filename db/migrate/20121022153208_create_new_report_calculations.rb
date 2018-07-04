@@ -1,4 +1,4 @@
-class CreateNewReportCalculations < ActiveRecord::Migration
+class CreateNewReportCalculations < ActiveRecord::Migration[4.2]
   def change
     create_table :report_calculations do |t|
       t.string :type

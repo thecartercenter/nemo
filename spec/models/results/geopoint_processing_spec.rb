@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe "geopoint processing" do
   let(:form) { create(:form, question_types: %w[location]) }

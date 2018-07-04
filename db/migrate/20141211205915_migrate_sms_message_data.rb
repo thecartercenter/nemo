@@ -1,4 +1,4 @@
-class MigrateSmsMessageData < ActiveRecord::Migration
+class MigrateSmsMessageData < ActiveRecord::Migration[4.2]
   def up
     execute <<-SQL
       UPDATE sms_messages

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe Sms::Decoder, :sms do
   include_context "response tree"
@@ -32,7 +32,7 @@ describe Sms::Decoder, :sms do
       end
 
       it "should not lock account if threshold is not reached" do
-        safe_interval = (Sms::BRUTE_FORCE_CHECK_WINDOW / Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD) + 1
+        safe_interval = (Sms::BRUTE_FORCE_CHECK_WINDOW.seconds / Sms::BRUTE_FORCE_LOCKOUT_THRESHOLD) + 1
         Timecop.freeze
 
         3.times do

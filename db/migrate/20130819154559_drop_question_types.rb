@@ -1,4 +1,4 @@
-class DropQuestionTypes < ActiveRecord::Migration
+class DropQuestionTypes < ActiveRecord::Migration[4.2]
   def up
   	drop_table :question_types
   end

@@ -1,4 +1,4 @@
-class RemoveOptionSetIdFromReportReports < ActiveRecord::Migration
+class RemoveOptionSetIdFromReportReports < ActiveRecord::Migration[4.2]
   def up
     remove_column :report_reports, :option_set_id
   end

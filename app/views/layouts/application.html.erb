@@ -11,6 +11,7 @@
   <%= stylesheet_link_tag 'disable-transition' if Rails.env.test? %>
 
   <%= javascript_include_tag "application" %>
+  <%= javascript_pack_tag "application" %>
   <%= csrf_meta_tags %>
 
   <%= javascript_doc_ready do %>

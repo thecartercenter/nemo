@@ -1,5 +1,5 @@
 # Tests for abilities related to Question object.
-require "spec_helper"
+require "rails_helper"
 
 describe "abilities for questions" do
   context "for coordinator role" do

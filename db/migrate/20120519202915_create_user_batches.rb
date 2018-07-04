@@ -1,4 +1,4 @@
-class CreateUserBatches < ActiveRecord::Migration
+class CreateUserBatches < ActiveRecord::Migration[4.2]
   def change
     create_table :user_batches do |t|
       t.text :users

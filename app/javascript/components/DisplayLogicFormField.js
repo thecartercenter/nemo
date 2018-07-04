@@ -1,3 +1,7 @@
+import React from "react";
+
+import ConditionSetFormField from "./ConditionSetFormField";
+
 class DisplayLogicFormField extends React.Component {
   constructor(props) {
     super();
@@ -60,3 +64,5 @@ class DisplayLogicFormField extends React.Component {
     }
   }
 }
+
+export default DisplayLogicFormField;

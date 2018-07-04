@@ -1,4 +1,4 @@
-class ChangeTranslationsToPolymorphic < ActiveRecord::Migration
+class ChangeTranslationsToPolymorphic < ActiveRecord::Migration[4.2]
   def self.up
     add_column(:translations, :class_name, :string)
     add_column(:translations, :object_id, :integer)

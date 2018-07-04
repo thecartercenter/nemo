@@ -1,5 +1,5 @@
 # encoding: utf-8
-require 'spec_helper'
+require 'rails_helper'
 
 feature 'locale change', js: true do
   before do

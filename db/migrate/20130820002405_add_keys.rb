@@ -1,4 +1,4 @@
-class AddKeys < ActiveRecord::Migration
+class AddKeys < ActiveRecord::Migration[4.2]
   def change
     add_foreign_key "answers", "options", :name => "answers_option_id_fk"
     add_foreign_key "answers", "questionings", :name => "answers_questioning_id_fk"

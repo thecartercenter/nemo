@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Question do
   describe ".not_in_form" do

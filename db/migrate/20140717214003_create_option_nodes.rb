@@ -1,4 +1,4 @@
-class CreateOptionNodes < ActiveRecord::Migration
+class CreateOptionNodes < ActiveRecord::Migration[4.2]
   def change
     create_table :option_nodes do |t|
       t.string :ancestry

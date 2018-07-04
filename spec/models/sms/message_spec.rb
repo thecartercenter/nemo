@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Sms::Message, :sms do
   it "creating a message should work" do

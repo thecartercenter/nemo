@@ -1,4 +1,4 @@
-class AddQuestioningCountAndResponseCountToForm < ActiveRecord::Migration
+class AddQuestioningCountAndResponseCountToForm < ActiveRecord::Migration[4.2]
   def up
     add_column :forms, :questionings_count, :integer, :default => 0
     add_column :forms, :responses_count, :integer, :default => 0

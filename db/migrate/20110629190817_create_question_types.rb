@@ -1,4 +1,4 @@
-class CreateQuestionTypes < ActiveRecord::Migration
+class CreateQuestionTypes < ActiveRecord::Migration[4.2]
   def self.up
     create_table :question_types do |t|
       t.string :name

@@ -1,4 +1,4 @@
-class CreateReportReports < ActiveRecord::Migration
+class CreateReportReports < ActiveRecord::Migration[4.2]
   def self.up
     create_table :report_reports do |t|
       t.string :type

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Tests the search functionality for the response model
-require "spec_helper"
+require "rails_helper"
 
 describe Response do
   describe "search" do

@@ -1,4 +1,4 @@
-class CreateQuestionings < ActiveRecord::Migration
+class CreateQuestionings < ActiveRecord::Migration[4.2]
   def self.up
     create_table :questionings do |t|
       t.integer :question_id

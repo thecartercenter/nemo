@@ -1,4 +1,4 @@
-class CopyMissionToJoinClasses < ActiveRecord::Migration
+class CopyMissionToJoinClasses < ActiveRecord::Migration[4.2]
   def up
     execute("UPDATE questionings qing SET qing.mission_id = (SELECT mission_id FROM questions q WHERE qing.question_id = q.id)")
     execute("UPDATE conditions c SET c.mission_id = (SELECT mission_id FROM questionings qing WHERE c.questioning_id = qing.id)")

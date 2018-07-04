@@ -1,4 +1,4 @@
-class NewIndices < ActiveRecord::Migration
+class NewIndices < ActiveRecord::Migration[4.2]
   def up
     # Obviously important.
     add_index :option_nodes, :ancestry

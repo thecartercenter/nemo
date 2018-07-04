@@ -1,4 +1,4 @@
-class CreateResponses < ActiveRecord::Migration
+class CreateResponses < ActiveRecord::Migration[4.2]
   def self.up
     create_table :responses do |t|
       t.integer :form_id

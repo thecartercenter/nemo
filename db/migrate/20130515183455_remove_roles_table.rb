@@ -1,4 +1,4 @@
-class RemoveRolesTable < ActiveRecord::Migration
+class RemoveRolesTable < ActiveRecord::Migration[4.2]
   def up
     # add a new column for the fk replacement
     add_column :assignments, :role, :string

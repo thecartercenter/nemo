@@ -1,4 +1,4 @@
-class CreateReportGroupings < ActiveRecord::Migration
+class CreateReportGroupings < ActiveRecord::Migration[4.2]
   def self.up
     create_table :report_groupings do |t|
       t.string :type

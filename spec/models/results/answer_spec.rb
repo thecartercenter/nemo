@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe Answer do
   describe "#media_object_id=" do

@@ -1,4 +1,4 @@
-class WhitelistPolymorphicTable < ActiveRecord::Migration
+class WhitelistPolymorphicTable < ActiveRecord::Migration[4.2]
   def up
     create_table :whitelists do |t|
       t.integer :user_id

@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 require "fileutils"
 
 describe "form rendering for odk",:odk, :reset_factory_sequences do

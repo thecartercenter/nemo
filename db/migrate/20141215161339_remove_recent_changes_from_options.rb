@@ -1,4 +1,4 @@
-class RemoveRecentChangesFromOptions < ActiveRecord::Migration
+class RemoveRecentChangesFromOptions < ActiveRecord::Migration[4.2]
   def up
     remove_column :options, :recent_changes
   end

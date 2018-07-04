@@ -1,4 +1,4 @@
-class CreateOptionSets < ActiveRecord::Migration
+class CreateOptionSets < ActiveRecord::Migration[4.2]
   def self.up
     create_table :option_sets do |t|
       t.string :name

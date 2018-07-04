@@ -1,4 +1,4 @@
-class CreateChoices < ActiveRecord::Migration
+class CreateChoices < ActiveRecord::Migration[4.2]
   def self.up
     create_table :choices do |t|
       t.integer :answer_id

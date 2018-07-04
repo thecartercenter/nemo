@@ -1,4 +1,4 @@
-class CreateForms < ActiveRecord::Migration
+class CreateForms < ActiveRecord::Migration[4.2]
   def self.up
     create_table :forms do |t|
       t.string :name

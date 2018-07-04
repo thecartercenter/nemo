@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe Odk::NamePatternParser do
   let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }

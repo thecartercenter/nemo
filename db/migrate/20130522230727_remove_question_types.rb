@@ -1,4 +1,4 @@
-class RemoveQuestionTypes < ActiveRecord::Migration
+class RemoveQuestionTypes < ActiveRecord::Migration[4.2]
   def up
     # add a qtype_name column to the questions table
     add_column :questions, :qtype_name, :string

@@ -1,4 +1,4 @@
-class MoveReportFiltersIntoReportsTable < ActiveRecord::Migration
+class MoveReportFiltersIntoReportsTable < ActiveRecord::Migration[4.2]
   def up
     add_column :report_reports, :filter, :string
 

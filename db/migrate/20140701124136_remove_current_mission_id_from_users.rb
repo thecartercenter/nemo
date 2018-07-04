@@ -1,4 +1,4 @@
-class RemoveCurrentMissionIdFromUsers < ActiveRecord::Migration
+class RemoveCurrentMissionIdFromUsers < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key(:users, :current_mission)
     remove_column :users, :current_mission_id

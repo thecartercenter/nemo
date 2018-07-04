@@ -1,4 +1,4 @@
-class AddMissionIdToJoinClasses < ActiveRecord::Migration
+class AddMissionIdToJoinClasses < ActiveRecord::Migration[4.2]
   def change
     add_column(:optionings, :mission_id, :integer)
     add_column(:questionings, :mission_id, :integer)

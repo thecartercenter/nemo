@@ -1,4 +1,4 @@
-class RemoveFulltextAnswerIndex < ActiveRecord::Migration
+class RemoveFulltextAnswerIndex < ActiveRecord::Migration[4.2]
   def up
     begin
       remove_index :answers, :name => :fulltext_answers

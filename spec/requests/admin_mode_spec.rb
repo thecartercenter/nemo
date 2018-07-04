@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe 'AdminMode' do
 
@@ -67,8 +67,9 @@ describe 'AdminMode' do
 
   it "creating a form in admin mode should create a standard form" do
     login(@admin)
-    post_via_redirect(forms_path(mode: 'admin', mission_name: nil),
-      {form: {name: 'Foo', smsable: false}})
+    post(forms_path(mode: 'admin', mission_name: nil),
+      params: {form: {name: 'Foo', smsable: false}})
+    follow_redirect!
     f = assigns(:form)
     expect(f.mission).to be_nil
     expect(f.is_standard?).to be_truthy, 'new form should be standard'
@@ -76,8 +77,9 @@ describe 'AdminMode' do
 
   it "creating a question in admin mode should create a standard question" do
     login(@admin)
-    post_via_redirect(questions_path(mode: 'admin', mission_name: nil),
-      {question: {code: 'Foo', qtype_name: 'integer', name_en: 'Stuff'}})
+    post(questions_path(mode: 'admin', mission_name: nil),
+      params: {question: {code: 'Foo', qtype_name: 'integer', name_en: 'Stuff'}})
+    follow_redirect!
     q = Question.order('created_at').last
     expect(q.mission).to be_nil
     expect(q.is_standard?).to be_truthy, 'new question should be standard'
@@ -88,7 +90,8 @@ describe 'AdminMode' do
     login(@admin)
 
     assert_difference('Mission.count', -1) do
-      delete_via_redirect(mission_path(@mission.id, mode: 'admin'))
+      delete(mission_path(@mission.id, mode: 'admin'))
+      follow_redirect!
     end
   end
 end

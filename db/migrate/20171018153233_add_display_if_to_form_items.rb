@@ -1,4 +1,4 @@
-class AddDisplayIfToFormItems < ActiveRecord::Migration
+class AddDisplayIfToFormItems < ActiveRecord::Migration[4.2]
   def up
     add_column :form_items, :display_if, :string, default: 'always', null: false
     execute("UPDATE form_items SET display_if = 'all_met' WHERE

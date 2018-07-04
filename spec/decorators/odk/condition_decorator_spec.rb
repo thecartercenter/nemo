@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe Odk::ConditionDecorator do
   include_context "odk rendering"

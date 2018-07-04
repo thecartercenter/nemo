@@ -1,4 +1,4 @@
-class DenormalizeGeographicAnswerData < ActiveRecord::Migration
+class DenormalizeGeographicAnswerData < ActiveRecord::Migration[4.2]
   def up
     create_new_columns
     copy_location_info_to_new_columns

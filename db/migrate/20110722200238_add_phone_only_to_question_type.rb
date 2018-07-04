@@ -1,4 +1,4 @@
-class AddPhoneOnlyToQuestionType < ActiveRecord::Migration
+class AddPhoneOnlyToQuestionType < ActiveRecord::Migration[4.2]
   def self.up
     add_column :question_types, :phone_only, :boolean
   end

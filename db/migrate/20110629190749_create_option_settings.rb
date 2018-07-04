@@ -1,4 +1,4 @@
-class CreateOptionSettings < ActiveRecord::Migration
+class CreateOptionSettings < ActiveRecord::Migration[4.2]
   def self.up
     create_table :option_settings do |t|
       t.integer :option_id

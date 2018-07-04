@@ -1,4 +1,4 @@
-class AddNullifyToOriginalIdFks < ActiveRecord::Migration
+class AddNullifyToOriginalIdFks < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key "forms", column: "original_id", name: "forms_standard_id_fk" rescue 'No fk to remove...'
     add_foreign_key "forms", "forms", column: "original_id", name: "forms_standard_id_fk", on_delete: :nullify

@@ -1,4 +1,4 @@
-class AddOriginalIdToOptionNode < ActiveRecord::Migration
+class AddOriginalIdToOptionNode < ActiveRecord::Migration[4.2]
   def up
     unless OptionNode.column_names.include?("original_id")
       add_column :option_nodes, :original_id, :integer, index: true

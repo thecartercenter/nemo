@@ -1,4 +1,4 @@
-require 'spec_helper'
+require 'rails_helper'
 
 describe OptionSetImport do
   let(:mission) { get_mission }

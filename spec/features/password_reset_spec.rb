@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 feature "password reset"  do
   let(:user) { create(:user) }

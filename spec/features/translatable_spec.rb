@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 feature "translatable strings" do
   let(:user) { create(:user, admin: true) }
