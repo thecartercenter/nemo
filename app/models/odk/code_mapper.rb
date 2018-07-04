@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Odk
   class CodeMapper
 
@@ -19,21 +21,20 @@ module Odk
     end
 
     # do fall back here
-    def item_id_for_code(code)
-      prefixes = %w[qing grp]
-      form_item_id = nil
-      code_without_prefix = nil
-      prefixes.each do |p|
-        if /#{Regexp.quote(p)}\S*/.match?(code)
-          code_without_prefix = code.remove p
-        end
-      end
-      if /\S*_\d*/.match?(code)
-        form_item_id = code_without_prefix.split("_").first
+    def item_id_for_code(code, form)
+      code = code.split("_").first   if /\S*_\d/.match? code
+      if /qing\S*/.match? code
+        qing_id = code.remove("qing")
+        Questioning.where(id: qing_id).pluck(:id).first
+      elsif /grp\S*/.match? code
+        grp_id = code.remove("grp")
+        FormItem.where(id: grp_id).pluck(:id).first
+      elsif /q\S*/.match? code
+        question_id = code.remove "q"
+        Questioning.where(question_id: question_id, form_id: form.id).pluck(:id).first
       else
-        form_item_id = code_without_prefix
+        raise SubmissionError, "Submission contains unknown code format."
       end
-      form_item_id
     end
   end
 end
