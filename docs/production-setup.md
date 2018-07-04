@@ -16,7 +16,7 @@ This will be the (unprivileged) user under which the app runs.
 ### Install dependencies
 
     sudo apt-get update && sudo apt-get -y upgrade
-    sudo apt-get -y install nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev libmysqlclient-dev python-software-properties nodejs memcached imagemagick
+    sudo apt-get -y install nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev libmysqlclient-dev python-software-properties memcached imagemagick
 
 ### Install Nginx and Passenger
 
@@ -90,7 +90,7 @@ will need to troubleshoot. Otherwise, you can continue.
 ### Switch to the `deploy` user
 
 The commands in the next few sections will be run as the `deploy` user.
-All app-specific commands like `bundle` and `rake` should always be run as the `deploy` user.
+All app-specific commands like `bundle`, `yarn`, and `rake` should always be run as the `deploy` user.
 To switch to the `deploy` user, do:
 
     sudo su - deploy
@@ -114,6 +114,13 @@ To switch to the `deploy` user, do:
     gem install bundler
     exec $SHELL
 
+### Install nvm, Node.js, and Yarn
+
+    wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+    exec $SHELL
+    nvm install
+    npm install -g yarn
+
 ### Configure ELMO
 
     cp config/database.yml.example config/database.yml
@@ -132,9 +139,11 @@ Entering a functioning email server is important as ELMO relies on email to send
     # Set Rails environment.
     echo 'export RAILS_ENV=production' >> ~/.bashrc
     exec $SHELL
+    nvm use
 
-    # Install gems
+    # Install gems and yarn packages.
     bundle install --without development test --deployment
+    yarn install
 
     # Setup cron jobs
     bundle exec whenever -i elmo
@@ -187,7 +196,7 @@ You can define a custom theme for the application. In the project root, run:
 This will create the files `/theme/style.scss`, `/theme/logo-light.png`, and `/theme/logo-dark.png`.
 Update those files to reflect the desired theme. Ensure your new logos are the same size as the examples.
 
-You will need to run `bundle exec rake assets:precompile` (and re-start your server if it's currently running) for the theme to take effect.
+You will need to run `nvm use && bundle exec rake assets:precompile` (and re-start your server if it's currently running) for the theme to take effect.
 The compiler will tell you if there are any errors in your `style.scss` file.
 
 ### Upgrading
@@ -244,6 +253,7 @@ ssh to your server as the same root/privileged user used above. Then:
 
     sudo su - deploy
     cd elmo
+    nvm use
     git pull
 
 If you want to upgrade to a particular version of ELMO, then try:
@@ -257,6 +267,7 @@ where `x.y` is the version number you want. Otherwise you should ensure you're o
 Then:
 
     bundle install --without development test --deployment
+    yarn install
     bundle exec whenever -i elmo
     bundle exec rake assets:precompile
     bundle exec rake db:migrate
