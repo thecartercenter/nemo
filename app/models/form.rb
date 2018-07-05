@@ -162,6 +162,10 @@ class Form < ApplicationRecord
     root_group.present? ? root_group.descendant_questionings.flatten : []
   end
 
+  def visible_questionings
+    questionings.reject(&:hidden?)
+  end
+
   def questions(reload = false)
     questionings.map(&:question)
   end
