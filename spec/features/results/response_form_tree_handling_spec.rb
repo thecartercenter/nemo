@@ -71,6 +71,8 @@ feature "response form tree handling", js: true do
       scenario "renders show page with hierarchical structure" do
         visit hierarchical_response_path(params.merge(id: response.shortcode))
 
+        # These nodes are not visible since the answers have no value
+
         expect_path([".answer-group", ".answer-group", ".answer .ro-val"], visible: false)
         expect_path([".answer-group", ".answer .ro-val"], visible: false)
         expect_path([".answer-group", ".ro-val .cascading-selects"], visible: false)

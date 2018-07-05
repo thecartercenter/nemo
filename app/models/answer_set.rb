@@ -6,10 +6,6 @@ class AnswerSet < ResponseNode
 
   alias_method :answers, :c
 
-  def option_node_ids
-    answers.map(&:option_node_id)
-  end
-
   def option_node_path
     OptionNodePath.new(option_set: questioning.option_set, target_node: lowest_non_nil_answer.try(:option_node))
   end
