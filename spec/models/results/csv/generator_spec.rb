@@ -269,7 +269,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
   end
 
   def prepare_response_csv_expectation(filename)
-    prepare_expectation("response_csv/#{filename}",
+    prepare_fixture("response_csv/#{filename}",
       id: responses.map(&:id), shortcode: responses.map(&:shortcode))
   end
 end
