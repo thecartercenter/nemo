@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Odk
-  # CodeMapper maps odk codes to form item. Used by odk decorators and odk response parser
+  # CodeMapper maps between odk codes and form item. Used by odk decorators and odk response parser
   class CodeMapper
     def initialize
     end
