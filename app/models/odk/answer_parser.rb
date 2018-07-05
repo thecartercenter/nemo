@@ -16,11 +16,11 @@ module Odk
 
       case question_type
       when "select_one"
-        answer.option_id = option_id_for_submission(content)
+        answer.option_id = Odk::CodeMapper.new.option_id_for_code(content)
       when "select_multiple"
         unless content == "none"
           content.split(" ").each do |oid|
-            answer.choices.build(option_id: option_id_for_submission(oid))
+            answer.choices.build(option_id: Odk::CodeMapper.new.option_id_for_code(oid))
           end
         end
       when "date", "datetime", "time"
@@ -63,18 +63,6 @@ module Odk
         answer.pending_file_name = pending_file_name
       end
       answer
-    end
-
-    # finds the appropriate Option instance for an ODK submission
-    def option_id_for_submission(option_node_str)
-      if /\Aon([\w\-]+)\z/.match? option_node_str
-        # look up inputs of the form "on####" as option node ids
-        node_id = option_node_str.remove("on")
-        OptionNode.id_to_option_id(node_id)
-      else
-        # fallback by looking up other inputs as option ids
-        Option.where(id: option_node_str).pluck(:id).first
-      end
     end
   end
 end

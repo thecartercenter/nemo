@@ -31,6 +31,16 @@ module Odk
       raise SubmissionError, "Code format unknown: #{code}."
     end
 
+    def option_id_for_code(code)
+      node_id = remove_prefix_if_matches(code, "on")
+      if node_id
+        OptionNode.id_to_option_id(node_id)
+      else
+        # fallback by looking up other inputs as option ids
+        Option.where(id: code).pluck(:id).first
+      end
+    end
+
     private
 
     def remove_prefix_if_matches(string, prefix)
