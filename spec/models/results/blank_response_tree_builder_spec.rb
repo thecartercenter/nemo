@@ -5,6 +5,8 @@ require "rails_helper"
 describe Results::BlankResponseTreeBuilder do
   include_context "response tree"
 
+  # TODO: include a hidden question in the form and assert it is not visible in the tree
+
   let(:response) { create(:response, form: form, answer_values: nil) }
   let(:response_tree) { Results::BlankResponseTreeBuilder.new(response, save: true).build }
 

@@ -1,6 +1,6 @@
 <% nodes.each do |node| %>
   <% if node.is_a?(AnswerSet) %>
-    <%= render("hierarchical_responses/answers/set", set: node, read_only: read_only) %>
+    <%= render("hierarchical_responses/answers/answer_set", set: node, read_only: read_only) %>
   <% elsif node.is_a?(AnswerGroup) %>
     <%= render("hierarchical_responses/answers/group", group: node, read_only: read_only) %>
   <% elsif node.is_a?(Answer) %>

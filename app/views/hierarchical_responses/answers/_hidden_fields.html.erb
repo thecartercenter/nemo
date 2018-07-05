@@ -1,5 +1,0 @@
-<% prefix = "response[answers_attributes][#{index}]" %>
-<%= hidden_field_tag("#{prefix}[id]", answer.id) unless answer.new_record? %>
-<%= hidden_field_tag("#{prefix}[questioning_id]", answer.questioning_id) if answer.new_record? %>
-<%= hidden_field_tag("#{prefix}[relevant]", answer.relevant, class: "relevant") %>
-<%= hidden_field_tag("#{prefix}[_destroy]", answer.marked_for_destruction? ? 1 : "") %>
