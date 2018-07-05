@@ -70,6 +70,8 @@ module Odk
       end
     end
 
+    # We use the form item to determine the node type because ODK XML does not
+    # tell us what type a node is. 
     def add_response_node(node, response_node)
       form_item = form_item(node.name)
       if form_item.class == QingGroup && form_item.repeatable?
