@@ -1,7 +1,7 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  delegate :all_options, :audio_prompt_content_type, :auto_increment?, :code, :code=, :first_leaf_option_node,
+  delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node,
     :first_leaf_option, :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels,
     :min_max_error_msg, :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name,
     :option_set_id, :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes,
