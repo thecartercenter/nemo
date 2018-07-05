@@ -56,7 +56,7 @@ module Odk
     private
 
     def audio_prompt_content?
-      smsable_questionings.values.any?(&:audio_prompt_content_type)
+      visible_questionings.map(&:question).any? { |q| q.audio_prompt.exists? }
     end
   end
 end
