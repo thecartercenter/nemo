@@ -4,22 +4,24 @@
 class Notifier < ActionMailer::Base
   default(from: configatron.site_email)
 
-  def password_reset_instructions(user)
+  def password_reset_instructions(user, mission: nil)
     build_reset_url(user)
-    mail(to: user.email, reply_to: reply_to(user), subject: t("notifier.password_reset_instructions"))
+    mail(to: user.email, reply_to: reply_to(mission),
+         subject: t("notifier.password_reset_instructions"))
   end
 
-  def intro(user)
+  def intro(user, mission: nil)
     @user = user
     build_reset_url(user)
-    mail(to: user.email, reply_to: reply_to(user), subject: t("notifier.welcome", site: Settings.site_name))
+    mail(to: user.email, reply_to: reply_to(mission),
+         subject: t("notifier.welcome", site: Settings.site_name))
   end
 
   private
 
-  def reply_to(user)
-    role = :coordinator
-    user.missions.map { |msn| User.with_roles(msn, role).pluck(:email) }.flatten if user.missions.present?
+  def reply_to(mission)
+    return [] if mission.nil?
+    User.with_roles(mission, :coordinator).pluck(:email).uniq[0, 10] # Max of 10 reply to, should be rare.
   end
 
   def build_reset_url(user)

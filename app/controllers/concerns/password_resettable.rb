@@ -4,29 +4,18 @@
 module PasswordResettable
   extend ActiveSupport::Concern
 
-  def reset_password_if_requested(user)
-    user.reset_password && user.save if %w[email print].include?(user.reset_password_method)
-    deliver_email(user) if user.reset_password_method == "email"
-  end
+  # Resets password. Sends appropriate email depending on notify_method.
+  def reset_password(user, mission: nil, notify_method: nil)
+    return unless %w[email print].include?(notify_method)
+    user.reset_password && user.save(validate: false)
+    return unless notify_method == "email"
 
-  def deliver_password_reset_instructions(user)
+    # Only send intro if user has never logged in. Else send password reset email.
     user.reset_perishable_token!
-    Notifier.password_reset_instructions(user).deliver_now
-  end
-
-  def deliver_user_intro(user)
-    user.reset_perishable_token!
-    Notifier.intro(user).deliver_now
-  end
-
-  private
-
-  def deliver_email(user)
-    # only send intro if he/she has never logged in
     if (user.login_count || 0).positive?
-      deliver_password_reset_instructions(user)
+      Notifier.password_reset_instructions(user, mission: mission).deliver_now
     else
-      deliver_user_intro(user)
+      Notifier.intro(user, mission: mission).deliver_now
     end
   end
 end

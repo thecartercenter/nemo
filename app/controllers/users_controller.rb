@@ -41,7 +41,7 @@ class UsersController < ApplicationController
 
   def create
     if @user.save
-      reset_password_if_requested(@user)
+      reset_password(@user, mission: current_mission, notify_method: @user.reset_password_method)
       set_success(@user)
 
       # render printable instructions if requested
@@ -64,7 +64,7 @@ class UsersController < ApplicationController
 
     if @user.save
       # if the user's password was reset, do it, and show instructions if requested
-      reset_password_if_requested(@user)
+      reset_password(@user, mission: current_mission, notify_method: @user.reset_password_method)
 
       if @user == current_user
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
