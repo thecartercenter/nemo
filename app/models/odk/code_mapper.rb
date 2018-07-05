@@ -31,6 +31,10 @@ module Odk
       raise SubmissionError, "Code format unknown: #{code}."
     end
 
+    def code_for_option_node_id(node_id)
+      "on#{node_id}"
+    end
+
     def option_id_for_code(code)
       node_id = remove_prefix_if_matches(code, "on")
       if node_id
