@@ -17,7 +17,7 @@ class ResponseNode < ApplicationRecord
     chunks << new_rank.to_s.rjust(2)
     chunks << " "
     chunks << self.class.name.ljust(15)
-    chunks << "(FI: #{form_item.type} #{form_item.rank})"
+    chunks << "(FI: #{form_item.type} #{form_item.rank})" if form_item.present?
     chunks << " Value: #{casted_value}" if casted_value.present?
     chunks << " InstNum: #{inst_num}"
     chunks << " NewRank: #{new_rank}"
