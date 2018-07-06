@@ -13,9 +13,11 @@ module Results
 
     def add_children(children, parent_node)
       children.each do |k, v|
-        child = new_node(v,k)
-        parent_node.children << child
-        add_children(v[:children], child) if v[:children]
+        if v[:relevant]
+          child = new_node(v, parent_node.children.length)
+          parent_node.children << child
+          add_children(v[:children], child) if v[:children]
+        end
       end
       parent_node
     end
