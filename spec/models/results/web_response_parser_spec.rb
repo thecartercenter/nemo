@@ -59,6 +59,17 @@ describe Results::WebResponseParser do
         expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id ], %w[A C])
       end
     end
+
+    context "with one destroyed answer" do
+      it "builds tree with two answers" do
+        data_with_irrelevant = data
+        data_with_irrelevant[:root][:children]["1"][:_destroy] = true
+        input = ActionController::Parameters.new(data)
+        tree = Results::WebResponseParser.new.parse(input)
+        expect_root(tree, form)
+        expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id ], %w[A C])
+      end
+    end
   end
 
   context "response with a group" do

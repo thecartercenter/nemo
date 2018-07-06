@@ -12,12 +12,11 @@ module Results
     end
 
     def add_children(children, parent_node)
-      children.each do |k, v|
-        if v[:relevant]
-          child = new_node(v, parent_node.children.length)
-          parent_node.children << child
-          add_children(v[:children], child) if v[:children]
-        end
+      children.each_pair do |_k, v|
+        next if ignore_node?(v)
+        child = new_node(v, parent_node.children.length)
+        parent_node.children << child
+        add_children(v[:children], child) if v[:children]
       end
       parent_node
     end
@@ -30,6 +29,10 @@ module Results
       }
       attrs[:value] = data_node[:value] if type == Answer
       type.new(attrs)
+    end
+
+    def ignore_node?(data_node)
+      !data_node[:relevant] || data_node[:_destroy]
     end
   end
 end
