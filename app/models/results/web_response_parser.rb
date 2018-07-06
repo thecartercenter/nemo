@@ -4,7 +4,6 @@ module Results
   # Builds and saves response tree, with all blank answers, from a form object.
   class WebResponseParser
     def initialize
-
     end
 
     def parse(data)
@@ -14,7 +13,9 @@ module Results
 
     def add_children(children, parent_node)
       children.each do |k, v|
-        parent_node.children << new_node(v, k)
+        child = new_node(v,k)
+        parent_node.children << child
+        add_children(v[:children], child) if v[:children]
       end
       parent_node
     end
