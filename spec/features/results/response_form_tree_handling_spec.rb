@@ -10,7 +10,7 @@ feature "response form tree handling", js: true do
       create(:form,
         question_types: [
           %w[integer],
-          "integer",
+          "image",
           "multilevel_select_one",
           {
             repeating: {
