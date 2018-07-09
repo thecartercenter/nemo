@@ -30,7 +30,7 @@ shared_context "response tree" do
     expect(child_values).to eq values
   end
 
-  def answer_hash(q_id, value, relevant: true, destroy: nil)
+  def web_answer_hash(q_id, value, relevant: true, destroy: nil)
     hash = {
       id: "",
       type: "Answer",

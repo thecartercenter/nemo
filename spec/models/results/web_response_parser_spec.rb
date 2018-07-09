@@ -21,9 +21,9 @@ describe Results::WebResponseParser do
     context "all relevant, none destroyed" do
       let(:answers) do
         {
-          "0" => answer_hash(form.c[0].id, "A"),
-          "1" => answer_hash(form.c[1].id, "B"),
-          "2" => answer_hash(form.c[2].id, "C")
+          "0" => web_answer_hash(form.c[0].id, "A"),
+          "1" => web_answer_hash(form.c[1].id, "B"),
+          "2" => web_answer_hash(form.c[2].id, "C")
         }
       end
 
@@ -38,9 +38,9 @@ describe Results::WebResponseParser do
     context "with one irrelevant answer" do
       let(:answers) do
         {
-          "0" => answer_hash(form.c[0].id, "A"),
-          "1" => answer_hash(form.c[1].id, "B", relevant: false),
-          "2" => answer_hash(form.c[2].id, "C")
+          "0" => web_answer_hash(form.c[0].id, "A"),
+          "1" => web_answer_hash(form.c[1].id, "B", relevant: false),
+          "2" => web_answer_hash(form.c[2].id, "C")
         }
       end
 
@@ -55,9 +55,9 @@ describe Results::WebResponseParser do
     context "with one destroyed answer" do
       let(:answers) do
         {
-          "0" => answer_hash(form.c[0].id, "A"),
-          "1" => answer_hash(form.c[1].id, "B", destroy: true),
-          "2" => answer_hash(form.c[2].id, "C")
+          "0" => web_answer_hash(form.c[0].id, "A"),
+          "1" => web_answer_hash(form.c[1].id, "B", destroy: true),
+          "2" => web_answer_hash(form.c[2].id, "C")
         }
       end
 
@@ -81,42 +81,18 @@ describe Results::WebResponseParser do
           questioning_id: form.root_group.id,
           relevant: "true",
           children: {
-            "0" => {
-              id: "",
-              type: "Answer",
-              questioning_id: form.c[0].id,
-              relevant: "true",
-              value: "A"
-            },
+            "0" => web_answer_hash(form.c[0].id, "A"),
             "1" => {
               id: "",
               type: "AnswerGroup",
               questioning_id: form.c[1].id,
               relevant: "true",
               children:  {
-                "0" => {
-                  id: "",
-                  type: "Answer",
-                  questioning_id: form.c[1].c[0].id,
-                  relevant: "true",
-                  value: "B"
-                },
-                "1" => {
-                  id: "",
-                  type: "Answer",
-                  questioning_id: form.c[1].c[1].id,
-                  relevant: "true",
-                  value: "C"
-                }
+                "0" => web_answer_hash(form.c[1].c[0].id, "B"),
+                "1" => web_answer_hash(form.c[1].c[1].id, "C")
               }
             },
-            "2" => {
-              id: "",
-              type: "Answer",
-              questioning_id: form.c[2].id,
-              relevant: "true",
-              value: "D"
-            }
+            "2" => web_answer_hash(form.c[2].id, "D")
           }
         }
       )
