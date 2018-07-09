@@ -39,7 +39,7 @@ describe Results::WebResponseParser do
       let(:answers) do
         {
           "0" => web_answer_hash(form.c[0].id, "A"),
-          "1" => web_answer_hash(form.c[1].id, "B", relevant: false),
+          "1" => web_answer_hash(form.c[1].id, "B", relevant: "false"),
           "2" => web_answer_hash(form.c[2].id, "C")
         }
       end
