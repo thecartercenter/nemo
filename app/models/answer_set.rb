@@ -4,10 +4,13 @@
 class AnswerSet < ResponseNode
   belongs_to :questioning
 
-  alias_method :answers, :c
+  alias answers c
 
   def option_node_path
-    OptionNodePath.new(option_set: questioning.option_set, target_node: lowest_non_nil_answer.try(:option_node))
+    OptionNodePath.new(
+      option_set: questioning.option_set,
+      target_node: lowest_non_nil_answer.try(:option_node)
+    )
   end
 
   private
