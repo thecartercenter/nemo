@@ -32,7 +32,7 @@ module Results
     end
 
     def ignore_node?(data_node)
-      !data_node[:relevant] || data_node[:_destroy]
+      data_node[:relevant] == "false" || data_node[:_destroy] == "true"
     end
   end
 end

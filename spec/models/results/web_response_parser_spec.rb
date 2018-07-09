@@ -56,7 +56,7 @@ describe Results::WebResponseParser do
       let(:answers) do
         {
           "0" => web_answer_hash(form.c[0].id, "A"),
-          "1" => web_answer_hash(form.c[1].id, "B", destroy: true),
+          "1" => web_answer_hash(form.c[1].id, "B", destroy: "true"),
           "2" => web_answer_hash(form.c[2].id, "C")
         }
       end
@@ -70,8 +70,15 @@ describe Results::WebResponseParser do
     end
   end
 
+  context "response with an answer set" do
+    it "builds tree with answer set" do
+    end
+  end
+
   context "response with a group" do
     let(:form) { create(:form, question_types: ["text", %w[text text], "text"]) }
+
+
 
     it "should produce the correct tree" do
       input = ActionController::Parameters.new(
@@ -100,11 +107,6 @@ describe Results::WebResponseParser do
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
       expect_children(tree.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
-    end
-  end
-
-  context "response with an answer set" do
-    it "builds tree with answer set" do
     end
   end
 
