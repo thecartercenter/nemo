@@ -5,8 +5,6 @@ require "rails_helper"
 describe Results::BlankResponseTreeBuilder do
   include_context "response tree"
 
-  # TODO: include a hidden question in the form and assert it is not visible in the tree
-
   let(:response) { create(:response, form: form, answer_values: nil) }
   let(:response_tree) { Results::BlankResponseTreeBuilder.new(response, save: true).build }
 
@@ -47,6 +45,20 @@ describe Results::BlankResponseTreeBuilder do
       expect_children(response_tree, %w[Answer AnswerGroupSet], form.c.map(&:id))
       expect_children(response_tree.c[1], %w[AnswerGroup], [form.c[1].id])
       expect_children(response_tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id))
+    end
+  end
+
+  context "hidden question" do
+    let(:form) { create(:form, question_types: %w[text text text]) }
+
+    before do
+      questioning = form.questionings.last
+      questioning.update!(hidden: true)
+    end
+
+    it "does not include hidden question in the tree" do
+      expect_root(response_tree, form)
+      expect_children(response_tree, %w[Answer Answer], form.c.map(&:id)[0...-1])
     end
   end
 end

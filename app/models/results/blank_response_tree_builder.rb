@@ -28,14 +28,16 @@ module Results
 
     def add_level(form_nodes, response_node)
       form_nodes.each do |form_node|
-        if form_node.class == QingGroup && form_node.repeatable?
-          add_repeat_group(form_node, response_node)
-        elsif form_node.class == QingGroup
-          add_non_repeat_group(response_node, form_node)
-        elsif form_node.multilevel?
-          add_multilevel(form_node, response_node)
-        else
-          add_child(Answer, response_node, form_node)
+        unless form_node.hidden
+          if form_node.class == QingGroup && form_node.repeatable?
+            add_repeat_group(form_node, response_node)
+          elsif form_node.class == QingGroup
+            add_non_repeat_group(response_node, form_node)
+          elsif form_node.multilevel?
+            add_multilevel(form_node, response_node)
+          else
+            add_child(Answer, response_node, form_node)
+          end
         end
       end
     end
