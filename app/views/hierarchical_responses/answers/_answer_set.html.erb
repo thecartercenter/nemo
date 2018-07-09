@@ -2,26 +2,11 @@
 <div class="form-field answer_field qtype_<%= set.questioning.qtype.name %>
   <%= read_only ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
 
-  <% if form_mode %>
-    <%# This appears first here but is usually moved to the end using flex box %>
-    <%# We do it this way so we can move the control to its own line when printing a long text answer. %>
-    <% question_hint = set.questioning.hint.try(:chomp, ".").try(:<<, ".") %>
-    <% drop_hint = I18n.t("response.drop_hint.#{set.questioning.qtype.name}", default: "").presence %>
-    <%= hint_popover([question_hint, drop_hint].compact.join(" ")) %>
-  <% end %>
-
-  <label class="main">
-    <%= reqd_sym if set.questioning.required? %>
-    <%= set.new_rank %>.
-    <%= "[#{set.questioning.code}]" unless @response.new_record? %>
-    <%= set.questioning.name || "[#{t('answer.no_name')}]" %>
-  </label>
+  <%= render("hierarchical_responses/answers/answer_info", node: set) %>
 
   <div class="control">
     <%= render("hierarchical_responses/answers/cascading_#{mode}",
           answer_set: set,
           index: "#{set.questioning_id}") %>
   </div>
-
-  <% # TODO: combine answer and answer set partial %>
 </div>
