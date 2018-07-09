@@ -58,7 +58,7 @@ describe Results::BlankResponseTreeBuilder do
 
     it "does not include hidden question in the tree" do
       expect_root(response_tree, form)
-      expect_children(response_tree, %w[Answer Answer], form.c.map(&:id)[0...-1])
+      expect_children(response_tree, %w[Answer Answer], form.c.reject(&:hidden).map(&:id))
     end
   end
 end
