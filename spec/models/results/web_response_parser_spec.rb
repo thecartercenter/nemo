@@ -13,34 +13,20 @@ describe Results::WebResponseParser do
           type: "AnswerGroup",
           questioning_id: form.root_group.id,
           relevant: "true",
-          children: {
-            "0" => {
-              id: "",
-              type: "Answer",
-              questioning_id: form.c[0].id,
-              relevant: "true",
-              value: "A"
-            },
-            "1" => {
-              id: "",
-              type: "Answer",
-              questioning_id: form.c[1].id,
-              relevant: "true",
-              value: "B"
-            },
-            "2" => {
-              id: "",
-              type: "Answer",
-              questioning_id: form.c[2].id,
-              relevant: "true",
-              value: "C"
-            }
-          }
+          children: answers
         }
       }
     end
 
     context "all relevant, none destroyed" do
+      let(:answers) do
+        {
+          "0" => answer_hash(form.c[0].id, "A"),
+          "1" => answer_hash(form.c[1].id, "B"),
+          "2" => answer_hash(form.c[2].id, "C")
+        }
+      end
+
       it "builds tree with three answers" do
         input = ActionController::Parameters.new(data)
         tree = Results::WebResponseParser.new.parse(input)
@@ -50,24 +36,36 @@ describe Results::WebResponseParser do
     end
 
     context "with one irrelevant answer" do
+      let(:answers) do
+        {
+          "0" => answer_hash(form.c[0].id, "A"),
+          "1" => answer_hash(form.c[1].id, "B", relevant: false),
+          "2" => answer_hash(form.c[2].id, "C")
+        }
+      end
+
       it "builds tree with two answers" do
-        data_with_irrelevant = data
-        data_with_irrelevant[:root][:children]["1"][:relevant] = false
         input = ActionController::Parameters.new(data)
         tree = Results::WebResponseParser.new.parse(input)
         expect_root(tree, form)
-        expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id ], %w[A C])
+        expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
       end
     end
 
     context "with one destroyed answer" do
+      let(:answers) do
+        {
+          "0" => answer_hash(form.c[0].id, "A"),
+          "1" => answer_hash(form.c[1].id, "B", destroy: true),
+          "2" => answer_hash(form.c[2].id, "C")
+        }
+      end
+
       it "builds tree with two answers" do
-        data_with_irrelevant = data
-        data_with_irrelevant[:root][:children]["1"][:_destroy] = true
         input = ActionController::Parameters.new(data)
         tree = Results::WebResponseParser.new.parse(input)
         expect_root(tree, form)
-        expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id ], %w[A C])
+        expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
       end
     end
   end
@@ -126,6 +124,16 @@ describe Results::WebResponseParser do
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
       expect_children(tree.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+    end
+  end
+
+  context "response with an answer set" do
+    it "builds tree with answer set" do
+    end
+  end
+
+  context "response with an answer group set" do
+    it "builds tree with answer group set" do
     end
   end
 end

@@ -29,4 +29,16 @@ shared_context "response tree" do
     child_values = children.map { |child| child.is_a?(Answer) ? child.casted_value : nil }
     expect(child_values).to eq values
   end
+
+  def answer_hash(q_id, value, relevant: true, destroy: nil)
+    hash = {
+      id: "",
+      type: "Answer",
+      questioning_id: q_id,
+      relevant: relevant,
+      value: value
+    }
+    hash[:_destroy] = destroy unless destroy.nil?
+    hash
+  end
 end
