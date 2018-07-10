@@ -71,6 +71,11 @@ describe Odk::ResponsePatternParser do
           let(:pattern) { "hai-$!RepeatNum-thar" }
           it { is_expected.to eq("concat('hai-',position(..),'-thar')") }
         end
+
+        context "with invalid code" do
+          let(:pattern) { "hai $Junk foo" }
+          it { is_expected.to eq("concat('hai ',' foo')") }
+        end
       end
     end
 
@@ -115,6 +120,11 @@ describe Odk::ResponsePatternParser do
     context "with quoted string containing $" do
       let(:pattern) { "calc(concat((5 + 12) / $Q1, ' (($money cash'))" }
       it { is_expected.to eq("concat((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')") }
+    end
+
+    context "with invalid code" do
+      let(:pattern) { "calc($Junk + 7)" }
+      it { is_expected.to eq("'' + 7") }
     end
   end
 end

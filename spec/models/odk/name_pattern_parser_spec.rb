@@ -36,6 +36,11 @@ describe Odk::NamePatternParser do
             %(<output value="/data/#{g2.odk_code}/#{q22.odk_code}"/>))
         end
       end
+
+      context "with invalid code" do
+        let(:pattern) { "hai $Junk foo" }
+        it { is_expected.to eq("hai  foo") }
+      end
     end
 
     context "with select questions" do
@@ -79,6 +84,11 @@ describe Odk::NamePatternParser do
       it do
         is_expected.to eq(%{<output value="concat((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')"/>})
       end
+    end
+
+    context "with invalid code" do
+      let(:pattern) { "calc($Junk + 7)" }
+      it { is_expected.to eq(%(<output value="'' + 7"/>)) }
     end
   end
 end
