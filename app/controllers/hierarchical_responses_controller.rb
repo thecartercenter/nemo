@@ -96,54 +96,15 @@ class HierarchicalResponsesController < ApplicationController
   end
 
   def edit
-    flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}" if @response.checked_out_by_others?(current_user)
+    if @response.checked_out_by_others?(current_user)
+      flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
+    end
     prepare_and_render_form
   end
 
   def create
-    # if this is a non-web submission
-    if request.format == Mime::XML
-      begin
-        @response.user_id = current_user.id
-        # If it looks like a J2ME submission, process accordingly
-        if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
-          @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
-        else # Otherwise treat it like an ODK submission
-          upfile = params[:xml_submission_file]
-
-          # Store file for debugging purposes.
-          UploadSaver.new.save_file(params[:xml_submission_file])
-
-          files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
-          files.each { |k, v| files[k] = v.tempfile }
-
-          unless upfile
-            render_xml_submission_failure("No XML file attached.", 422)
-            return false
-          end
-
-          @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-          @submission = XMLSubmission.new response: @response, files: files, source: "odk"
-        end
-
-        # ensure response's user can submit to the form
-        authorize!(:submit_to, @submission.response.form)
-
-        @submission.save
-
-        render(nothing: true, status: 201)
-      rescue CanCan::AccessDenied
-        render_xml_submission_failure($!, 403)
-      rescue ActiveRecord::RecordNotFound
-        render_xml_submission_failure($!, 404)
-      rescue FormVersionError
-        # 426 - upgrade needed
-        # We use this because ODK can't display custom failure messages so this provides a little more info.
-        render_xml_submission_failure($!, 426)
-      rescue SubmissionError
-        render_xml_submission_failure($!, 422)
-      end
-    # for HTML format just use the method below
+    if request.format == Mime[:xml]
+      handle_odk_submission
     else
       web_create_or_update
     end
@@ -168,8 +129,8 @@ class HierarchicalResponsesController < ApplicationController
     if params[:search].present?
       begin
         @possible_submitters = User.do_search(@possible_submitters, params[:search], mission: current_mission)
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
+      rescue Search::ParseError => e
+        flash.now[:error] = e.to_s
         @search_error = true
       end
     end
@@ -189,15 +150,15 @@ class HierarchicalResponsesController < ApplicationController
     when "submitters"
       @possible_users = User.assigned_to_or_submitter(current_mission, @response).by_name
     when "reviewers"
-      @possible_users = User.with_roles(current_mission, %w(coordinator staffer reviewer)).by_name
+      @possible_users = User.with_roles(current_mission, %w[coordinator staffer reviewer]).by_name
     end
 
     # do search if applicable
     if params[:search].present?
       begin
         @possible_users = User.do_search(@possible_users, params[:search], mission: current_mission)
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
+      rescue Search::ParseError => e
+        flash.now[:error] = e.to_s
         @search_error = true
       end
     end
@@ -248,15 +209,66 @@ class HierarchicalResponsesController < ApplicationController
     end
   end
 
+  def handle_odk_submission
+    return render_xml_submission_failure("No XML file attached.", 422) unless params[:xml_submission_file]
+
+    # Store main XML file for debugging purposes.
+    UploadSaver.new.save_file(params[:xml_submission_file])
+
+    begin
+      @response.user_id = current_user.id
+      @response = odk_response_parser.populate_response
+      authorize!(:submit_to, @response.form)
+      @response.save(validate: false)
+      render(body: nil, status: :created)
+    rescue CanCan::AccessDenied => e
+      render_xml_submission_failure(e, 403)
+    rescue ActiveRecord::RecordNotFound => e
+      render_xml_submission_failure(e, 404)
+    rescue FormVersionError => e
+      # 426 - upgrade needed
+      # We use this because ODK can't display custom failure messages so this provides a little more info.
+      render_xml_submission_failure(e, 426)
+    rescue SubmissionError => e
+      render_xml_submission_failure(e, 422)
+    end
+  end
+
+  def odk_response_parser
+    Odk::ResponseParser.new(
+      response: @response,
+      files: open_file_params,
+      awaiting_media: odk_awaiting_media?
+    )
+  end
+
+  # Returns a hash of param keys to open tempfiles for uploaded file parameters.
+  def open_file_params
+    file_params = params.select { |_k, v| v.is_a?(ActionDispatch::Http::UploadedFile) }.to_unsafe_h
+    file_params.map { |k, v| [k, v.tempfile.open] }.to_h.with_indifferent_access
+  end
+
+  # Returns whether the ODK submission request params indicate that not all attachments are included.
+  def odk_awaiting_media?
+    params["*isIncomplete*"] == "yes"
+  end
+
   # prepares objects for and renders the form template
   def prepare_and_render_form
+    # Prepare the OldAnswerNodes.
     set_read_only
+    @nodes = AnswerArranger.new(
+      @response,
+      placeholders: params[:action] == "show" ? :except_repeats : :all,
+      # Must preserve submitted answers when in create/update action.
+      dont_load_answers: %w[create update].include?(params[:action])
+    ).build.nodes
     render(:form)
   end
 
   def render_xml_submission_failure(exception, code)
-    Rails.logger.info("XML submission failed: '#{exception.to_s}'")
-    render(nothing: true, status: code)
+    Rails.logger.info("XML submission failed: '#{exception}'")
+    render(body: nil, status: code)
   end
 
   def alias_response
@@ -283,48 +295,39 @@ class HierarchicalResponsesController < ApplicationController
 
   def response_params
     if params[:response]
-      reviewer_only = if @response.present? && can?(:review, @response)
-        [:reviewed, :reviewer_notes, :reviewer_id]
-      else
-        []
+      to_permit = [:form_id, :user_id, :incomplete]
+
+      if @response.present? && can?(:review, @response)
+        to_permit << [:reviewed, :reviewer_notes, :reviewer_id]
       end
 
-      params.require(:response).permit(:form_id, :user_id, :incomplete, *reviewer_only).tap do |permitted|
-        # In some rare cases, create or update can occur without answers_attributes. Not sure how.
-        # Also need to respect the modify_answers permission here.
-        if params[:response][:answers_attributes] &&
+      # In some rare cases, create or update can occur without answers_attributes. Not sure how.
+      # Also need to respect the modify_answers permission here.
+      if (ans_attribs = params[:response][:answers_attributes]) &&
           (action_name != "update" || can?(:modify_answers, @response))
-          permit_answer_attributes(permitted)
-        end
+
+        # We need to permit each possible answer attribute key for each given hash key in answers_attributes.
+        # See https://stackoverflow.com/a/36779535/2066866.
+        to_permit << {
+          answers_attributes: ans_attribs.keys.map { |k| [k, permitted_answer_attributes] }.to_h
+        }
       end
+
+      params.require(:response).permit(to_permit)
     end
   end
 
-  def permit_answer_attributes(permitted)
-    permitted[:answers_attributes] = {}
-
-    # The answers_attributes hash might look like {'2746' => { ... }, '2731' => { ... }, ... }
-    # The keys are irrelevant so we permit all of them, but we only want to permit certain attribs
-    # on the answers.
-    permitted_answer_attribs = %w(id value option_id option_node_id questioning_id relevant rank
+  # Returns the permitted keys for an answer and its choices.
+  def permitted_answer_attributes
+    @permitted_answer_attributes ||= %w(
+      id value option_id option_node_id questioning_id relevant rank
       time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i) time_value(6i)
       datetime_value
       datetime_value(1i) datetime_value(2i) datetime_value(3i)
       datetime_value(4i) datetime_value(5i) datetime_value(6i)
       date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy
-      date_value)
-
-    params[:response][:answers_attributes].each do |idx, attribs|
-      permitted[:answers_attributes][idx] = attribs.permit(*permitted_answer_attribs)
-      # Handle choices, which are nested under answers.
-      if attribs[:choices_attributes]
-        permitted[:answers_attributes][idx][:choices_attributes] = {}
-        attribs[:choices_attributes].each do |idx2, attribs2|
-          permitted[:answers_attributes][idx][:choices_attributes][idx2] = attribs2.permit(
-            :id, :option_id, :option_node_id, :checked)
-        end
-      end
-    end
+      date_value
+    ) << {choices_attributes: %i[id option_id option_node_id checked]}
   end
 
   def check_form_exists_in_mission
