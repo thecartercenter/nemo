@@ -49,7 +49,7 @@ module Odk
       self.calculated = true
     end
 
-    # Converts the given $-style code to the appropriate output fragment.
+    # Converts the given $-style code to the appropriate output fragment. Returns nil if code not valid.
     # Caches results in a hash.
     def process_code(code)
       codes_to_outputs[code] ||=
@@ -57,8 +57,10 @@ module Odk
           reserved_codes[code]
         elsif (qing = form.questioning_with_code(code[1..-1]))
           build_output(Odk::QingDecorator.decorate(qing))
-        else
-          code
+        elsif calculated?
+          # We don't want to return nil in calculated expressions because it might result in
+          # invalid XPath. Better to return an empty string and hope that it doesn't break the form.
+          "''"
         end
     end
 
