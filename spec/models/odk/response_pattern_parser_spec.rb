@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Odk::ResponsePatternParser do
-  subject { described_class.new(pattern, src_item: src_item).to_odk }
+  subject(:output) { described_class.new(pattern, src_item: src_item).to_odk }
 
   describe "xpath route handling" do
     let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
@@ -20,15 +22,17 @@ describe Odk::ResponsePatternParser do
     end
 
     context "with all text questions" do
-      let(:form) { create(:form, question_types: ["text", ["text", "text"], ["text"]]) }
+      let(:form) { create(:form, question_types: ["text", %w[text text], ["text"]]) }
 
       context "for root src_item" do
         let(:src_item) { form.root_group }
 
         context "with RepeatNum" do
           let(:pattern) { "Num $!RepeatNum $Q31" }
-          it { is_expected.to eq "concat('Num ',' ',"\
-            "indexed-repeat(/data/#{g3.odk_code}/#{q31.odk_code},/data/#{g3.odk_code},1))" }
+          it do
+            is_expected.to eq("concat('Num ',' ',"\
+              "indexed-repeat(/data/#{g3.odk_code}/#{q31.odk_code},/data/#{g3.odk_code},1))")
+          end
         end
       end
 
@@ -37,7 +41,7 @@ describe Odk::ResponsePatternParser do
 
         context "with RepeatNum" do
           let(:pattern) { "Num $!RepeatNum" }
-          it { is_expected.to eq "'Num '" }
+          it { is_expected.to eq("'Num '") }
         end
       end
 
@@ -46,44 +50,71 @@ describe Odk::ResponsePatternParser do
 
         context "with no codes" do
           let(:pattern) { "hai" }
-          it { is_expected.to eq "'hai'" }
+          it { is_expected.to eq("'hai'") }
         end
 
         context "with local code" do
           let(:pattern) { "hai-$Q21-thar" }
-          it { is_expected.to eq "concat('hai-',../#{q21.odk_code},'-thar')" }
+          it { is_expected.to eq("concat('hai-',../#{q21.odk_code},'-thar')") }
         end
 
         context "with code referencing question in other group" do
           let(:pattern) { "hai-$Q31-thar" }
 
-          it { is_expected.to eq("concat('hai-',"\
-            "indexed-repeat(/data/#{g3.odk_code}/#{q31.odk_code},/data/#{g3.odk_code},1),'-thar')") }
+          it do
+            is_expected.to eq("concat('hai-',"\
+              "indexed-repeat(/data/#{g3.odk_code}/#{q31.odk_code},/data/#{g3.odk_code},1),'-thar')")
+          end
         end
 
         context "with repeat num" do
           let(:pattern) { "hai-$!RepeatNum-thar" }
-          it { is_expected.to eq "concat('hai-',position(..),'-thar')" }
+          it { is_expected.to eq("concat('hai-',position(..),'-thar')") }
         end
       end
     end
 
     context "with select questions" do
-      let(:form) { create(:form, question_types: ["text", ["select_one", "text"], ["multilevel_select_one"]]) }
+      let(:form) { create(:form, question_types: ["text", %w[select_one text], ["multilevel_select_one"]]) }
 
       context "with code referencing regular select" do
         let(:src_item) { q1 }
         let(:pattern) { "hai-$Q21-x" }
-        it { is_expected.to eq "concat('hai-',"\
-          "jr:itext(indexed-repeat(/data/#{g2.odk_code}/#{q21.odk_code},/data/#{g2.odk_code},1)),'-x')" }
+        it do
+          is_expected.to eq("concat('hai-',"\
+            "jr:itext(indexed-repeat(/data/#{g2.odk_code}/#{q21.odk_code},/data/#{g2.odk_code},1)),'-x')")
+        end
       end
 
       context "with code referencing multilevel select" do
         let(:src_item) { q1 }
         let(:pattern) { "hai-$Q31-x" }
-        it { is_expected.to eq "concat('hai-',"\
-          "jr:itext(indexed-repeat(/data/#{g3.odk_code}/#{q31a.odk_code},/data/#{g3.odk_code},1)),'-x')" }
+        it do
+          is_expected.to eq("concat('hai-',"\
+            "jr:itext(indexed-repeat(/data/#{g3.odk_code}/#{q31a.odk_code},/data/#{g3.odk_code},1)),'-x')")
+        end
       end
+    end
+  end
+
+  describe "calc()" do
+    let(:form) { create(:form, question_types: %w[integer integer]) }
+    let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
+    let(:q2) { Odk::QingDecorator.decorate(form.sorted_children[1]) }
+    let(:src_item) { q2 }
+
+    before do
+      q1.update!(code: "Q1")
+    end
+
+    context "with simple expression" do
+      let(:pattern) { "calc($Q1 + 2)" }
+      it { is_expected.to eq("/data/#{q1.odk_code} + 2") }
+    end
+
+    context "with quoted string containing $" do
+      let(:pattern) { "calc(concat((5 + 12) / $Q1, ' (($money cash'))" }
+      it { is_expected.to eq("concat((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')") }
     end
   end
 end
