@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 feature "reviewer notes", js: true do
   let(:reviewer) { create(:user) }
