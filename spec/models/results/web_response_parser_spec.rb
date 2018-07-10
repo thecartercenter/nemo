@@ -21,9 +21,9 @@ describe Results::WebResponseParser do
     context "all relevant, none destroyed" do
       let(:answers) do
         {
-          "0" => web_answer_hash(form.c[0].id, "A"),
-          "1" => web_answer_hash(form.c[1].id, "B"),
-          "2" => web_answer_hash(form.c[2].id, "C")
+          "0" => web_answer_hash(form.c[0].id, value: "A"),
+          "1" => web_answer_hash(form.c[1].id, value: "B"),
+          "2" => web_answer_hash(form.c[2].id, value: "C")
         }
       end
 
@@ -38,9 +38,9 @@ describe Results::WebResponseParser do
     context "with one irrelevant answer" do
       let(:answers) do
         {
-          "0" => web_answer_hash(form.c[0].id, "A"),
-          "1" => web_answer_hash(form.c[1].id, "B", relevant: "false"),
-          "2" => web_answer_hash(form.c[2].id, "C")
+          "0" => web_answer_hash(form.c[0].id, value: "A"),
+          "1" => web_answer_hash(form.c[1].id, {value: "B"}, relevant: "false"),
+          "2" => web_answer_hash(form.c[2].id, value: "C")
         }
       end
 
@@ -55,9 +55,9 @@ describe Results::WebResponseParser do
     context "with one destroyed answer" do
       let(:answers) do
         {
-          "0" => web_answer_hash(form.c[0].id, "A"),
-          "1" => web_answer_hash(form.c[1].id, "B", destroy: "true"),
-          "2" => web_answer_hash(form.c[2].id, "C")
+          "0" => web_answer_hash(form.c[0].id, value: "A"),
+          "1" => web_answer_hash(form.c[1].id, {value: "B"}, destroy: "true"),
+          "2" => web_answer_hash(form.c[2].id, value: "C")
         }
       end
 
@@ -71,14 +71,46 @@ describe Results::WebResponseParser do
   end
 
   context "response with an answer set" do
+    let(:form) { create(:form, question_types: %w[text multilevel_select_one text]) }
+    let(:input) do
+      {
+        root: {
+          id: "",
+          type: "AnswerGroup",
+          questioning_id: form.root_group.id,
+          relevant: "true",
+          children: answers
+        }
+      }
+    end
+    let(:oak) { form.c[1].option_set.sorted_children[1].sorted_children[1].id }
+    let(:answers) do
+      {
+        "0" => web_answer_hash(form.c[0].id, value: "A"),
+        "1" => {
+          id: "",
+          type: "AnswerSet",
+          questioning_id: form.c[1].id,
+          relevant: "true",
+          children: {
+            "0" => web_answer_hash(form.c[1].id, {option_node_id: oak})
+          }
+        },
+        "2" => web_answer_hash(form.c[2].id, value: "D")
+      }
+    end
+
     it "builds tree with answer set" do
+      puts "oak: #{oak}"
+      tree = Results::WebResponseParser.new.parse(ActionController::Parameters.new(input))
+      expect_root(tree, form)
+      expect_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
+      expect_children(tree.c[1], %w[Answer], [form.c[1].id], %w[Oak])
     end
   end
 
   context "response with a group" do
     let(:form) { create(:form, question_types: ["text", %w[text text], "text"]) }
-
-
 
     it "should produce the correct tree" do
       input = ActionController::Parameters.new(
@@ -88,18 +120,18 @@ describe Results::WebResponseParser do
           questioning_id: form.root_group.id,
           relevant: "true",
           children: {
-            "0" => web_answer_hash(form.c[0].id, "A"),
+            "0" => web_answer_hash(form.c[0].id, value: "A"),
             "1" => {
               id: "",
               type: "AnswerGroup",
               questioning_id: form.c[1].id,
               relevant: "true",
               children:  {
-                "0" => web_answer_hash(form.c[1].c[0].id, "B"),
-                "1" => web_answer_hash(form.c[1].c[1].id, "C")
+                "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
+                "1" => web_answer_hash(form.c[1].c[1].id, value: "C")
               }
             },
-            "2" => web_answer_hash(form.c[2].id, "D")
+            "2" => web_answer_hash(form.c[2].id, value: "D")
           }
         }
       )
