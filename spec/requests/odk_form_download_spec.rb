@@ -4,11 +4,11 @@ require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
 describe FormsController, :odk, type: :request do
-  let!(:mission) { create(:mission) }
-  let!(:user) { create(:user, role_name: :coordinator, mission: mission) }
-  let!(:form) { create(:form, :published, mission: mission, question_types: %w[integer integer]) }
-  let!(:form_select) { create(:form, :published, mission: mission, question_types: %w[integer select_one]) }
-  let!(:form_multiselect) do
+  let(:mission) { create(:mission) }
+  let(:user) { create(:user, role_name: :coordinator, mission: mission) }
+  let(:form_simple) { create(:form, :published, mission: mission, question_types: %w[integer integer]) }
+  let(:form_select) { create(:form, :published, mission: mission, question_types: %w[integer select_one]) }
+  let(:form_multiselect) do
     create(:form, :published, mission: mission, question_types: %w[integer multilevel_select_one])
   end
 
@@ -18,6 +18,8 @@ describe FormsController, :odk, type: :request do
 
   context "for regular mission" do
     describe "listing forms" do
+      let!(:forms) { [form_simple, form_select, form_multiselect] }
+
       it "should succeed" do
         get("/en/m/#{mission.compact_name}/formList", params: {format: :xml})
         expect(response).to be_success
@@ -53,7 +55,7 @@ describe FormsController, :odk, type: :request do
     describe "odk manifest" do
       context "for form with no option sets" do
         it "should render empty manifest tag" do
-          get("/en/m/#{mission.compact_name}/forms/#{form.id}/manifest")
+          get("/en/m/#{mission.compact_name}/forms/#{form_simple.id}/manifest")
           expect(response).to be_success
           assert_select("manifest", count: 1)
           assert_select("mediaFile", count: 0)
@@ -105,7 +107,7 @@ describe FormsController, :odk, type: :request do
   end
 
   context "for locked mission" do
-    let!(:mission) { create(:mission, locked: true) }
+    let(:mission) { create(:mission, locked: true) }
 
     it "listing forms should return 403" do
       get("/en/m/#{mission.compact_name}/formList", params: {format: :xml})
@@ -114,7 +116,7 @@ describe FormsController, :odk, type: :request do
     end
 
     it "showing form with format xml should return 403" do
-      get("/m/#{mission.compact_name}/forms/#{form.id}", params: {format: :xml})
+      get("/m/#{mission.compact_name}/forms/#{form_simple.id}", params: {format: :xml})
       expect(response.status).to eq 403
       expect(response.body.strip).to be_empty
     end
