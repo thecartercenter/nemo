@@ -25,7 +25,7 @@ module Odk
 
     # Returns the desired output fragment for the given token from the input text.
     def process_token(token)
-      odk_mapping.has_key?(token) ? odk_mapping[token] : "'#{token}'"
+      code_to_output_map.has_key?(token) ? code_to_output_map[token] : "'#{token}'"
     end
 
     # Returns a hash of reserved $!XYZ style codes that have special meanings.

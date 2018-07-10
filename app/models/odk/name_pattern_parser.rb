@@ -39,8 +39,8 @@ module Odk
 
     # Returns the desired output fragment for the given token from the input text.
     def process_token(token)
-      if odk_mapping.has_key?(token)
-        odk_mapping[token]
+      if code_to_output_map.has_key?(token)
+        code_to_output_map[token]
       elsif token =~ /\A\s+\z/ #this token is only whitespace between two $ phrases in pattern
         "&#160;" #odk ignores plain whitespace between output tags. This is a non-breaking space xml character
       else

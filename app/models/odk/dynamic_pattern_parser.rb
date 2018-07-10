@@ -7,46 +7,36 @@ module Odk
       @pattern = pattern
       @form = src_item.form
       @src_item = Odk::DecoratorFactory.decorate(src_item)
-      @odk_mapping = {}
     end
 
     def to_odk
-      # Map expression codes to relative paths
-      code_mapping.each do |code, other_qing|
-        other_qing = Odk::QingDecorator.decorate(other_qing)
-
-        if reserved_codes.keys.include?(code)
-          odk_mapping[code] = reserved_codes[code]
-        else
-          odk_mapping[code] = build_output(other_qing)
-        end
-      end
-
-      tokens = pattern.split(CODE_PATTERN).reject(&:empty?)
-      tokens.map! { |t| process_token(t) }
-      tokens.compact!
+      tokens = pattern.split(CODE_PATTERN).reject(&:empty?).map { |t| process_token(t) }.compact
       join_tokens(tokens)
     end
 
     protected
 
-    attr_reader :pattern, :src_item, :form, :odk_mapping
+    attr_reader :pattern, :src_item, :form
 
     private
 
-    def extract_codes
-      @extracted_codes ||= pattern.scan(CODE_PATTERN).flatten
+    # Returns a map of $ABC style codes to the appropriate output fragment for each code.
+    def code_to_output_map
+      # Map expression codes to relative paths
+      @code_to_output_map ||= extract_codes.map do |code|
+        output =
+          if reserved_codes.keys.include?(code)
+            reserved_codes[code]
+          elsif (qing = form.questioning_with_code(code[1..-1]))
+            build_output(Odk::QingDecorator.decorate(qing))
+          end
+        [code, output]
+      end.to_h
     end
 
-    def code_mapping
-      return @mapping if @mapping.present?
-      @mapping = {}
-      extract_codes.each do |code|
-        questioning = form.questioning_with_code(code[1..-1])
-        @mapping[code] = questioning if questioning.present?
-        @mapping[code] = code if reserved_codes.keys.include?(code)
-      end
-      @mapping
+    # Returns an array of $ABC style codes detected in the pattern.
+    def extract_codes
+      @extracted_codes ||= pattern.scan(CODE_PATTERN).flatten
     end
   end
 end
