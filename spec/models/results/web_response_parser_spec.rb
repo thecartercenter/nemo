@@ -178,7 +178,65 @@ describe Results::WebResponseParser do
   end
 
   context "response with an answer group set" do
+    let(:form) { create(:form, question_types: ["text", {repeating: {items: %w[text text]}}]) }
+    let(:input) do
+      ActionController::Parameters.new(
+        root: {
+          id: "",
+          type: "AnswerGroup",
+          questioning_id: form.root_group.id,
+          relevant: "true",
+          children: {
+            "0" => web_answer_hash(form.c[0].id, value: "A"),
+            "1" => {
+              id: "",
+              type: "AnswerGroupSet",
+              questioning_id: form.c[1].id,
+              relevant: "true",
+              children: answer_groups
+            }
+          }
+        }
+      )
+    end
+    let(:answer_groups) do
+      {
+        "0" => {
+          id: "",
+          type: "AnswerGroup",
+          questioning_id: form.c[1].id,
+          relevant: "true",
+          children: answers1
+        },
+        "1" => {
+          id: "",
+          type: "AnswerGroup",
+          questioning_id: form.c[1].id,
+          relevant: "true",
+          children: answers2
+        }
+      }
+    end
+    let(:answers1) do
+      {
+        "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
+        "1" => web_answer_hash(form.c[1].c[1].id, value: "C")
+      }
+    end
+    let(:answers2) do
+      {
+        "0" => web_answer_hash(form.c[1].c[0].id, value: "D"),
+        "1" => web_answer_hash(form.c[1].c[1].id, value: "E")
+      }
+    end
+
     it "builds tree with answer group set" do
+      tree = Results::WebResponseParser.new.parse(input)
+      expect_root(tree, form)
+      expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+      expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+      expect_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+      expect_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
     end
   end
 end

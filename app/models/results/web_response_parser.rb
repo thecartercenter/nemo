@@ -56,7 +56,7 @@ module Results
       clean_params = data_node.slice(*TOP_LEVEL_PARAMS).permit(
         [].concat(PERMITTED_PARAMS)
       )
-      rank_attributes = rank_attributes(parent)
+      rank_attributes = rank_attributes(type, parent)
       all_attrs = clean_params.merge(rank_attributes)
       type.new(all_attrs)
     end
@@ -65,12 +65,24 @@ module Results
       data_node[:relevant] == "false" || data_node[:_destroy] == "true"
     end
 
-    # Rank will go away at end of answer refactor
-    def rank_attributes(parent)
+    # Rank and inst_num will go away at end of answer refactor
+    def rank_attributes(type, parent)
       {
         new_rank: parent.present? ? parent.children.length : 0,
-        rank: parent.is_a?(AnswerSet) ? parent.children.length + 1 : 1
+        rank: parent.is_a?(AnswerSet) ? parent.children.length + 1 : 1,
+        inst_num: inst_num(type, parent)
       }
+    end
+
+    # Inst num will go away at end of answer refactor; this makes it work with answer arranger
+    def inst_num(type, parent)
+      if parent.is_a?(AnswerGroupSet) # repeat group
+        parent.children.length + 1
+      elsif [Answer, AnswerSet, AnswerGroupSet].include? type
+        parent.inst_num
+      else
+        1
+      end
     end
   end
 end
