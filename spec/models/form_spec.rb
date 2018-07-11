@@ -21,6 +21,18 @@ describe Form do
     end
   end
 
+  describe "validation" do
+    # Detailed testing of this validator is in own file.
+    describe "DynamicPatternValidator" do
+      let(:form) { build(:form, default_response_name: "Item: calc($Foo + 4) ") }
+
+      it "is hooked up properly" do
+        expect(form).to be_invalid
+        expect(form.errors[:default_response_name].join).to match(/must surround/)
+      end
+    end
+  end
+
   describe "pub_changed_at" do
     before do
       @form = create(:form)
