@@ -758,6 +758,9 @@ en:
           cant_edit_published: "A published Form can't be edited."
           ranks_break_conditions: "The new rankings invalidate one or more conditions."
           general: "Form is invalid (see below)."
+          attributes:
+            default_response_name:
+              calc_must_wrap_all: "calc(...) must surround the entire name."
         media/object:
           invalid_format: "The uploaded file was not an accepted format."
           generic: "There was an error uploading the file."
@@ -797,6 +800,8 @@ en:
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
+            default:
+              calc_must_wrap_all: "calc(...) must surround the entire default answer."
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
           invalid_condition: "Condition is invalid (see below)."
           question: "Question"
