@@ -13,6 +13,9 @@ describe Odk::NamePatternParser do
     let(:g3) { Odk::QingGroupDecorator.decorate(form.sorted_children[2]) }
     let(:q31) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]) }
     let(:q31a) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]).subqings.first }
+    let(:q21path) { "/data/#{g2.odk_code}/#{q21.odk_code}" }
+    let(:q22path) { "/data/#{g2.odk_code}/#{q22.odk_code}" }
+    let(:q31apath) { "/data/#{g3.odk_code}/#{q31a.odk_code}" }
 
     before do
       q1.update!(code: "Q1")
@@ -26,14 +29,13 @@ describe Odk::NamePatternParser do
 
       context "$ phrase with question code" do
         let(:pattern) { "Person: $Q22" }
-        it { is_expected.to eq(%(Person: <output value="/data/#{g2.odk_code}/#{q22.odk_code}" />)) }
+        it { is_expected.to eq(%(Person: <output value="#{q22path}" />)) }
       end
 
       context "two $'s separated by only whitespace" do
         let(:pattern) { "Person: $Q21 $Q22" }
         it "replaces with &#160;" do
-          is_expected.to eq(+%(Person: <output value="/data/#{g2.odk_code}/#{q21.odk_code}" />&#160;) <<
-            %(<output value="/data/#{g2.odk_code}/#{q22.odk_code}" />))
+          is_expected.to eq(%(Person: <output value="#{q21path}" />&#160;<output value="#{q22path}" />))
         end
       end
 
@@ -44,7 +46,7 @@ describe Odk::NamePatternParser do
 
       context "with double quotes in pattern" do
         let(:pattern) { %(hai $Q21 "foo") }
-        it { is_expected.to eq(%(hai <output value="/data/#{g2.odk_code}/#{q21.odk_code}" /> "foo")) }
+        it { is_expected.to eq(%(hai <output value="#{q21path}" /> "foo")) }
       end
     end
 
@@ -55,8 +57,7 @@ describe Odk::NamePatternParser do
         let(:pattern) { "Ice Cream: $Q21" }
 
         it "uses the option name and coalesce" do
-          is_expected.to eq(+%(Ice Cream: <output value=) <<
-            %("jr:itext(coalesce(/data/#{g2.odk_code}/#{q21.odk_code},'blank'))" />))
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q21path},'blank'))" />))
         end
       end
 
@@ -64,8 +65,7 @@ describe Odk::NamePatternParser do
         let(:pattern) { "Ice Cream: $Q31" }
 
         it "uses the option name and coalesce" do
-          is_expected.to eq(+%(Ice Cream: <output value=) <<
-            %("jr:itext(coalesce(/data/#{g3.odk_code}/#{q31a.odk_code},'blank'))" />))
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q31apath},'blank'))" />))
         end
       end
     end
@@ -74,6 +74,7 @@ describe Odk::NamePatternParser do
   describe "calc()" do
     let(:form) { create(:form, question_types: %w[integer integer]) }
     let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
+    let(:q1path) { "/data/#{q1.odk_code}" }
 
     before do
       q1.update!(code: "Q1")
@@ -81,14 +82,12 @@ describe Odk::NamePatternParser do
 
     context "with simple expression" do
       let(:pattern) { "calc($Q1 + 2)" }
-      it { is_expected.to eq(%(<output value="(/data/#{q1.odk_code}) + 2" />)) }
+      it { is_expected.to eq(%(<output value="(#{q1path}) + 2" />)) }
     end
 
     context "with quoted string containing $" do
       let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
-      it do
-        is_expected.to eq(%{<output value="myfunc((5 + 12) / (/data/#{q1.odk_code}), ' (($money cash')" />})
-      end
+      it { is_expected.to eq(%{<output value="myfunc((5 + 12) / (#{q1path}), ' (($money cash')" />}) }
     end
 
     context "with invalid code" do
@@ -98,10 +97,7 @@ describe Odk::NamePatternParser do
 
     context "with double quotes in pattern" do
       let(:pattern) { %{calc(myfunc($Q1,'"foo"'))} }
-      it do
-        is_expected.to eq(+%(<output value=") <<
-          %{myfunc((/data/#{q1.odk_code}),'&quot;foo&quot;')" />})
-      end
+      it { is_expected.to eq(%(<output value="myfunc((#{q1path}),'&quot;foo&quot;')" />)) }
     end
   end
 end
