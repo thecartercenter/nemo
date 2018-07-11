@@ -105,6 +105,7 @@ class FormsController < ApplicationController
     authorize!(:download, @form)
     @cache_key = @form.odk_download_cache_key
     unless fragment_exist?(@cache_key)
+      @questions = @form.visible_questionings.collect(&:question)
       @ifa = ItemsetsFormAttachment.new(form: @form)
       @ifa.ensure_generated
     end
