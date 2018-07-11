@@ -83,6 +83,7 @@ describe Results::WebResponseParser do
         }
       }
     end
+    let(:plant) { form.c[1].option_set.sorted_children[1].id }
     let(:oak) { form.c[1].option_set.sorted_children[1].sorted_children[1].id }
     let(:answers) do
       {
@@ -93,7 +94,8 @@ describe Results::WebResponseParser do
           questioning_id: form.c[1].id,
           relevant: "true",
           children: {
-            "0" => web_answer_hash(form.c[1].id, {option_node_id: oak})
+            "0" => web_answer_hash(form.c[1].id, option_node_id: plant),
+            "1" => web_answer_hash(form.c[1].id, option_node_id: oak)
           }
         },
         "2" => web_answer_hash(form.c[2].id, value: "D")
@@ -101,11 +103,44 @@ describe Results::WebResponseParser do
     end
 
     it "builds tree with answer set" do
-      puts "oak: #{oak}"
       tree = Results::WebResponseParser.new.parse(ActionController::Parameters.new(input))
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
-      expect_children(tree.c[1], %w[Answer], [form.c[1].id], %w[Oak])
+      expect_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
+    end
+  end
+
+  context "builds tree for response with select multiple answer" do
+    let(:form) { create(:form, question_types: %w[text select_multiple text]) }
+    let(:input) do
+      {
+        root: {
+          id: "",
+          type: "AnswerGroup",
+          questioning_id: form.root_group.id,
+          relevant: "true",
+          children: answers
+        }
+      }
+    end
+    let(:dog) { form.c[1].option_set.sorted_children[0].id }
+    let(:cat) { form.c[1].option_set.sorted_children[1].id }
+    let(:answers) do
+      {
+        "0" => web_answer_hash(form.c[0].id, value: "A"),
+        "1" => web_answer_hash(form.c[1].id,
+          choices_attributes: {
+            "0" => {option_node_id: dog, checked: "1"},
+            "1" => {option_node_id: cat, checked: "1"}
+          }),
+        "2" => web_answer_hash(form.c[2].id, value: "D")
+      }
+    end
+
+    it "builds tree with answer set" do
+      tree = Results::WebResponseParser.new.parse(ActionController::Parameters.new(input))
+      expect_root(tree, form)
+      expect_children(tree, %w[Answer Answer Answer], form.c.map(&:id), ["A", "Cat;Dog", "D"])
     end
   end
 
