@@ -26,20 +26,25 @@ describe Odk::NamePatternParser do
 
       context "$ phrase with question code" do
         let(:pattern) { "Person: $Q22" }
-        it { is_expected.to eq(%(Person: <output value="/data/#{g2.odk_code}/#{q22.odk_code}"/>)) }
+        it { is_expected.to eq(%(Person: <output value="/data/#{g2.odk_code}/#{q22.odk_code}" />)) }
       end
 
       context "two $'s separated by only whitespace" do
         let(:pattern) { "Person: $Q21 $Q22" }
         it "replaces with &#160;" do
-          is_expected.to eq(+%(Person: <output value="/data/#{g2.odk_code}/#{q21.odk_code}"/>&#160;) <<
-            %(<output value="/data/#{g2.odk_code}/#{q22.odk_code}"/>))
+          is_expected.to eq(+%(Person: <output value="/data/#{g2.odk_code}/#{q21.odk_code}" />&#160;) <<
+            %(<output value="/data/#{g2.odk_code}/#{q22.odk_code}" />))
         end
       end
 
       context "with invalid code" do
         let(:pattern) { "hai $Junk foo" }
         it { is_expected.to eq("hai  foo") }
+      end
+
+      context "with double quotes in pattern" do
+        let(:pattern) { %(hai $Q21 "foo") }
+        it { is_expected.to eq(%(hai <output value="/data/#{g2.odk_code}/#{q21.odk_code}" /> "foo")) }
       end
     end
 
@@ -51,7 +56,7 @@ describe Odk::NamePatternParser do
 
         it "uses the option name and coalesce" do
           is_expected.to eq(+%(Ice Cream: <output value=) <<
-            %("jr:itext(coalesce(/data/#{g2.odk_code}/#{q21.odk_code},'blank'))"/>))
+            %("jr:itext(coalesce(/data/#{g2.odk_code}/#{q21.odk_code},'blank'))" />))
         end
       end
 
@@ -60,7 +65,7 @@ describe Odk::NamePatternParser do
 
         it "uses the option name and coalesce" do
           is_expected.to eq(+%(Ice Cream: <output value=) <<
-            %("jr:itext(coalesce(/data/#{g3.odk_code}/#{q31a.odk_code},'blank'))"/>))
+            %("jr:itext(coalesce(/data/#{g3.odk_code}/#{q31a.odk_code},'blank'))" />))
         end
       end
     end
@@ -76,19 +81,27 @@ describe Odk::NamePatternParser do
 
     context "with simple expression" do
       let(:pattern) { "calc($Q1 + 2)" }
-      it { is_expected.to eq(%(<output value="/data/#{q1.odk_code} + 2"/>)) }
+      it { is_expected.to eq(%(<output value="/data/#{q1.odk_code} + 2" />)) }
     end
 
     context "with quoted string containing $" do
       let(:pattern) { "calc(concat((5 + 12) / $Q1, ' (($money cash'))" }
       it do
-        is_expected.to eq(%{<output value="concat((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')"/>})
+        is_expected.to eq(%{<output value="concat((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')" />})
       end
     end
 
     context "with invalid code" do
       let(:pattern) { "calc($Junk + 7)" }
-      it { is_expected.to eq(%(<output value="'' + 7"/>)) }
+      it { is_expected.to eq(%(<output value="'' + 7" />)) }
+    end
+
+    context "with double quotes in pattern" do
+      let(:pattern) { %{calc(concat($Q1,'"foo"'))} }
+      it do
+        is_expected.to eq(+%(<output value=") <<
+          %{concat(/data/#{q1.odk_code},'&quot;foo&quot;')" />})
+      end
     end
   end
 end

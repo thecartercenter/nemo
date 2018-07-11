@@ -64,9 +64,10 @@ module Odk
 
     private
 
-    # We don't use the `tag` helper because that escapes HTMLentities when we don't want it to.
     def output_tag(str)
-      %(<output value="#{str}"/>)
+      # `tag` encodes html entities which is fine except for single quotes, which are used heavily
+      # in XPath expressions and it's not clear if they'd work in encoded form.
+      tag(:output, value: str).gsub("&#39;", "'")
     end
   end
 end
