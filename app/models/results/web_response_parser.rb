@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Results
-  # Builds and saves response tree, with all blank answers, from a form object.
+  # Builds (does not save) an answer tree based on answer data in a web response.
   class WebResponseParser
     TOP_LEVEL_PARAMS = %i[
       id
@@ -52,7 +52,6 @@ module Results
 
     def new_node(data_node, parent)
       type = data_node[:type].constantize
-
       clean_params = data_node.slice(*TOP_LEVEL_PARAMS).permit(
         [].concat(PERMITTED_PARAMS)
       )
