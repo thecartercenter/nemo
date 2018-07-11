@@ -3,9 +3,12 @@ require "rails_helper"
 describe Results::WebResponseParser do
   include_context "response tree"
 
+  let(:input) { ActionController::Parameters.new(data) }
+  let(:form) { create(:form, question_types: question_types) }
+
   context "simple response with three answers" do
     # form item ids have to actually exist
-    let(:form) { create(:form, question_types: %w[text text text]) }
+    let(:question_types) { %w[text text text] }
     let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
 
     context "all relevant, none destroyed" do
@@ -61,8 +64,8 @@ describe Results::WebResponseParser do
   end
 
   context "response with an answer set" do
-    let(:form) { create(:form, question_types: %w[text multilevel_select_one text]) }
-    let(:input) { {root: web_answer_group_hash(form.root_group.id, answers)} }
+    let(:question_types) { %w[text multilevel_select_one text] }
+    let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
     let(:plant) { form.c[1].option_set.sorted_children[1].id }
     let(:oak) { form.c[1].option_set.sorted_children[1].sorted_children[1].id }
     let(:answers) do
@@ -83,7 +86,7 @@ describe Results::WebResponseParser do
     end
 
     it "builds tree with answer set" do
-      tree = Results::WebResponseParser.new.parse(ActionController::Parameters.new(input))
+      tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
       expect_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
@@ -91,8 +94,8 @@ describe Results::WebResponseParser do
   end
 
   context "builds tree for response with select multiple answer" do
-    let(:form) { create(:form, question_types: %w[text select_multiple text]) }
-    let(:input) { {root: web_answer_group_hash(form.root_group.id, answers)} }
+    let(:question_types) { %w[text select_multiple text] }
+    let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
     let(:dog) { form.c[1].option_set.sorted_children[0].id }
     let(:cat) { form.c[1].option_set.sorted_children[1].id }
     let(:answers) do
@@ -108,24 +111,24 @@ describe Results::WebResponseParser do
     end
 
     it "builds tree with answer set" do
-      tree = Results::WebResponseParser.new.parse(ActionController::Parameters.new(input))
+      tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
       expect_children(tree, %w[Answer Answer Answer], form.c.map(&:id), ["A", "Cat;Dog", "D"])
     end
   end
 
   context "response with a group" do
-    let(:form) { create(:form, question_types: ["text", %w[text text], "text"]) }
+    let(:question_types) { ["text", %w[text text], "text"] }
+    let(:data) do
+      {root: web_answer_group_hash(form.root_group.id,
+        "0" => web_answer_hash(form.c[0].id, value: "A"),
+        "1" => web_answer_group_hash(form.c[1].id,
+          "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
+          "1" => web_answer_hash(form.c[1].c[1].id, value: "C")),
+        "2" => web_answer_hash(form.c[2].id, value: "D"))}
+    end
 
     it "should produce the correct tree" do
-      input = ActionController::Parameters.new(
-        root: web_answer_group_hash(form.root_group.id,
-          "0" => web_answer_hash(form.c[0].id, value: "A"),
-          "1" => web_answer_group_hash(form.c[1].id,
-            "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
-            "1" => web_answer_hash(form.c[1].c[1].id, value: "C")),
-          "2" => web_answer_hash(form.c[2].id, value: "D"))
-      )
       tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
@@ -134,22 +137,20 @@ describe Results::WebResponseParser do
   end
 
   context "response with an answer group set" do
-    let(:form) { create(:form, question_types: ["text", {repeating: {items: %w[text text]}}]) }
-    let(:input) do
-      ActionController::Parameters.new(
-        root: web_answer_group_hash(form.root_group.id,
-          "0" => web_answer_hash(form.c[0].id, value: "A"),
-          "1" => {
-            id: "",
-            type: "AnswerGroupSet",
-            questioning_id: form.c[1].id,
-            relevant: "true",
-            children: {
-              "0" => web_answer_group_hash(form.c[1].id, answers1),
-              "1" => web_answer_group_hash(form.c[1].id, answers2)
-            }
-          })
-      )
+    let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
+    let(:data) do
+      {root: web_answer_group_hash(form.root_group.id,
+        "0" => web_answer_hash(form.c[0].id, value: "A"),
+        "1" => {
+          id: "",
+          type: "AnswerGroupSet",
+          questioning_id: form.c[1].id,
+          relevant: "true",
+          children: {
+            "0" => web_answer_group_hash(form.c[1].id, answers1),
+            "1" => web_answer_group_hash(form.c[1].id, answers2)
+          }
+        })}
     end
     let(:answers1) do
       {
