@@ -4,6 +4,8 @@ module Odk
   # Parses $-style patterns involving responses, like default answer and default form instance name.
   # Returns output in xpath format using `concat`.
   class ResponsePatternParser < DynamicPatternParser
+    include ERB::Util
+
     protected
 
     def join_tokens(tokens)
@@ -30,9 +32,12 @@ module Odk
       if token_is_code?(token)
         process_code(token)
       elsif calculated?
-        token
+        # This token is going to end up inside an XML tag attribute so we need to encode it.
+        # Except we don't want to encode single quotes because they are used heavily in calculate
+        # expressions and it's not clear if they'd work encoded.
+        html_escape(token).gsub("&#39;", "'")
       else
-        "'#{token}'"
+        "'#{html_escape(token)}'"
       end
     end
 

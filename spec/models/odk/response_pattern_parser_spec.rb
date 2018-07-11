@@ -76,6 +76,11 @@ describe Odk::ResponsePatternParser do
           let(:pattern) { "hai $Junk foo" }
           it { is_expected.to eq("concat('hai ',' foo')") }
         end
+
+        context "with single and double quotes" do
+          let(:pattern) { %("hai" $Q1 'foo') }
+          it { is_expected.to eq("concat('&quot;hai&quot; ',/data/#{q1.odk_code},' &#39;foo&#39;')") }
+        end
       end
     end
 
@@ -118,13 +123,18 @@ describe Odk::ResponsePatternParser do
     end
 
     context "with quoted string containing $" do
-      let(:pattern) { "calc(concat((5 + 12) / $Q1, ' (($money cash'))" }
-      it { is_expected.to eq("concat((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')") }
+      let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
+      it { is_expected.to eq("myfunc((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')") }
     end
 
     context "with invalid code" do
       let(:pattern) { "calc($Junk + 7)" }
       it { is_expected.to eq("'' + 7") }
+    end
+
+    context "with single and double quotes" do
+      let(:pattern) { %{calc(myfunc('"hai"', $Q1, "foo"))} }
+      it { is_expected.to eq("myfunc('&quot;hai&quot;', /data/#{q1.odk_code}, &quot;foo&quot;)") }
     end
   end
 end
