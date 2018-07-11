@@ -52,7 +52,8 @@ module Odk
     # Converts the given $-style code to the appropriate output fragment. Returns nil if code not valid.
     # Caches results in a hash.
     def process_code(code)
-      codes_to_outputs[code] ||=
+      return codes_to_outputs[code] if codes_to_outputs[code]
+      unwrapped =
         if reserved_codes.key?(code)
           reserved_codes[code]
         elsif (qing = form.questioning_with_code(code[1..-1]))
@@ -62,6 +63,7 @@ module Odk
           # invalid XPath. Better to return an empty string and hope that it doesn't break the form.
           "''"
         end
+      codes_to_outputs[code] = calculated? ? "(#{unwrapped})" : unwrapped
     end
 
     # Returns the regular expression by which the input pattern should be split into tokens.

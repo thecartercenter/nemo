@@ -81,26 +81,26 @@ describe Odk::NamePatternParser do
 
     context "with simple expression" do
       let(:pattern) { "calc($Q1 + 2)" }
-      it { is_expected.to eq(%(<output value="/data/#{q1.odk_code} + 2" />)) }
+      it { is_expected.to eq(%(<output value="(/data/#{q1.odk_code}) + 2" />)) }
     end
 
     context "with quoted string containing $" do
       let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
       it do
-        is_expected.to eq(%{<output value="myfunc((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')" />})
+        is_expected.to eq(%{<output value="myfunc((5 + 12) / (/data/#{q1.odk_code}), ' (($money cash')" />})
       end
     end
 
     context "with invalid code" do
       let(:pattern) { "calc($Junk + 7)" }
-      it { is_expected.to eq(%(<output value="'' + 7" />)) }
+      it { is_expected.to eq(%(<output value="('') + 7" />)) }
     end
 
     context "with double quotes in pattern" do
       let(:pattern) { %{calc(myfunc($Q1,'"foo"'))} }
       it do
         is_expected.to eq(+%(<output value=") <<
-          %{myfunc(/data/#{q1.odk_code},'&quot;foo&quot;')" />})
+          %{myfunc((/data/#{q1.odk_code}),'&quot;foo&quot;')" />})
       end
     end
   end
