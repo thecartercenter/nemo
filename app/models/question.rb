@@ -248,6 +248,12 @@ class Question < ApplicationRecord
     tags.order(:name)
   end
 
+  # Make audio prompt file name unique to curb collisions and duplications
+  def scramble_audio_prompt_filename
+    names = audio_prompt_file_name.split(".")
+    names.first + "_#{id.first(5)}.#{names.last}"
+  end
+
   private
 
   def code_unique_per_mission
