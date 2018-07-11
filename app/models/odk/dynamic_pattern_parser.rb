@@ -36,6 +36,14 @@ module Odk
     attr_accessor :pattern, :src_item, :form, :calculated, :codes_to_outputs
     alias calculated? calculated
 
+    def process_token(_token)
+      raise NotImplementedError
+    end
+
+    def join_tokens(_tokens)
+      raise NotImplementedError
+    end
+
     private
 
     def token_is_code?(token)
