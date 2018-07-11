@@ -88,7 +88,7 @@ describe FormsController, :odk, type: :request do
         end
       end
 
-      context "" do
+      context "for forms with audio prompts" do
         let(:form) { create(:form, :published, mission: mission, question_types: %w[text integer]) }
 
         before do
@@ -96,7 +96,7 @@ describe FormsController, :odk, type: :request do
           form.c[1].question.update!(audio_prompt: audio_fixture("powerup.wav"))
         end
 
-        it do
+        it "should render manifest tags correctly" do
           get("/m/#{mission.compact_name}/forms/#{form.id}/manifest")
           expect(response).to be_success
           assert_select("mediaFile", count: 2)
