@@ -5,7 +5,12 @@
     <%= hint_popover(group.questioning.group_hint) %>
   </h2>
 
+  <% unless read_only %>
+    <%= hidden_field_tag input_name(path + ["id"]), group.id %>
+    <%= hidden_field_tag input_name(path + ["type"]), "AnswerGroup" %>
+  <% end %>
+
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes", nodes: group.children) %>
+    <%= render("hierarchical_responses/answers/nodes", nodes: group.children, path: path + ["children"]) %>
   </div>
 </div>

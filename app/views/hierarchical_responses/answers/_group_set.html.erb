@@ -1,5 +1,9 @@
 <div class="answer-group-set">
+  <% unless read_only %>
+    <%= input_name(path) %>
+  <% end %>
+
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.c) %>
+    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.c, path: path + ["children"]) %>
   </div>
 </div>
