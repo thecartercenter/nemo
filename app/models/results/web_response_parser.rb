@@ -29,7 +29,7 @@ module Results
 
     # replace choices_attributes top level param with a hash representing nested attributes
     PERMITTED_PARAMS = (TOP_LEVEL_PARAMS.dup - [:choices_attributes])
-      .append(choices_attributes: %w[option_node_id checked])
+      .append(choices_attributes: %w[option_node_id checked]).freeze
 
     def initialize
     end
