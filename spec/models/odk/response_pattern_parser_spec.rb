@@ -13,6 +13,11 @@ describe Odk::ResponsePatternParser do
     let(:g3) { Odk::QingGroupDecorator.decorate(form.sorted_children[2]) }
     let(:q31) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]) }
     let(:q31a) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]).subqings.first }
+    let(:g2path) { "/data/#{g2.odk_code}" }
+    let(:q21path) { "/data/#{g2.odk_code}/#{q21.odk_code}" }
+    let(:g3path) { "/data/#{g3.odk_code}" }
+    let(:q31path) { "/data/#{g3.odk_code}/#{q31.odk_code}" }
+    let(:q31apath) { "/data/#{g3.odk_code}/#{q31a.odk_code}" }
 
     before do
       q1.update!(code: "Q1")
@@ -29,10 +34,7 @@ describe Odk::ResponsePatternParser do
 
         context "with RepeatNum" do
           let(:pattern) { "Num $!RepeatNum $Q31" }
-          it do
-            is_expected.to eq("concat('Num ',' ',"\
-              "indexed-repeat(/data/#{g3.odk_code}/#{q31.odk_code},/data/#{g3.odk_code},1))")
-          end
+          it { is_expected.to eq("concat('Num ',' ',indexed-repeat(#{q31path},#{g3path},1))") }
         end
       end
 
@@ -61,10 +63,7 @@ describe Odk::ResponsePatternParser do
         context "with code referencing question in other group" do
           let(:pattern) { "hai-$Q31-thar" }
 
-          it do
-            is_expected.to eq("concat('hai-',"\
-              "indexed-repeat(/data/#{g3.odk_code}/#{q31.odk_code},/data/#{g3.odk_code},1),'-thar')")
-          end
+          it { is_expected.to eq("concat('hai-',indexed-repeat(#{q31path},#{g3path},1),'-thar')") }
         end
 
         context "with repeat num" do
@@ -90,19 +89,13 @@ describe Odk::ResponsePatternParser do
       context "with code referencing regular select" do
         let(:src_item) { q1 }
         let(:pattern) { "hai-$Q21-x" }
-        it do
-          is_expected.to eq("concat('hai-',"\
-            "jr:itext(indexed-repeat(/data/#{g2.odk_code}/#{q21.odk_code},/data/#{g2.odk_code},1)),'-x')")
-        end
+        it { is_expected.to eq("concat('hai-',jr:itext(indexed-repeat(#{q21path},#{g2path},1)),'-x')") }
       end
 
       context "with code referencing multilevel select" do
         let(:src_item) { q1 }
         let(:pattern) { "hai-$Q31-x" }
-        it do
-          is_expected.to eq("concat('hai-',"\
-            "jr:itext(indexed-repeat(/data/#{g3.odk_code}/#{q31a.odk_code},/data/#{g3.odk_code},1)),'-x')")
-        end
+        it { is_expected.to eq("concat('hai-',jr:itext(indexed-repeat(#{q31apath},#{g3path},1)),'-x')") }
       end
     end
   end
