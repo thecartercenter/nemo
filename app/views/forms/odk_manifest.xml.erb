@@ -7,5 +7,13 @@
         <downloadUrl><%= url_for_path(@ifa.path) %></downloadUrl>
       </mediaFile>
     <% end %>
+
+    <% @questions.each do |q| %>
+      <mediaFile>
+        <filename><%= q.audio_prompt_content_type %>.csv</filename>
+        <hash><%= Digest::MD5.file(q.audio_prompt.path).hexdigest %></hash>
+        <downloadUrl>some path</downloadUrl>
+      </mediaFile>
+    <% end %>
   </manifest>
 <% end %>
