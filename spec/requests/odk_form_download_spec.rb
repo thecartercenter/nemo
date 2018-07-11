@@ -89,7 +89,7 @@ describe FormsController, :odk, type: :request do
       end
 
       context "" do
-        let(:form) { create(:form, :published, mission: mission, question_types: %w(text integer)) }
+        let(:form) { create(:form, :published, mission: mission, question_types: %w[text integer]) }
 
         before do
           form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
@@ -100,6 +100,18 @@ describe FormsController, :odk, type: :request do
           get("/m/#{mission.compact_name}/forms/#{form.id}/manifest")
           expect(response).to be_success
           assert_select("mediaFile", count: 2)
+
+          assert_select "manifest" do |elements|
+            elements.each do |element|
+              assert_select(element, "filename", text: "powerup.mp3.csv")
+              assert_select(element, "filename", text: "powerup.wav.csv")
+
+              assert_select(element, "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
+              assert_select(element, "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
+
+              assert_select(element, "downloadUrl", text: "some path")
+            end
+          end
         end
       end
     end
