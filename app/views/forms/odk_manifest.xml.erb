@@ -10,7 +10,7 @@
 
     <% @questions.each do |q| %>
       <mediaFile>
-        <filename><%= q.audio_prompt_file_name %>.csv</filename>
+        <filename><%= q.audio_prompt_file_name %></filename>
         <hash><%= Digest::MD5.file(q.audio_prompt.path).hexdigest %></hash>
         <downloadUrl>some path</downloadUrl>
       </mediaFile>
