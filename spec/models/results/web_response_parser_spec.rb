@@ -5,11 +5,10 @@ require "rails_helper"
 describe Results::WebResponseParser do
   include_context "response tree"
 
+  let(:form) { create(:form, question_types: question_types) } # form item ids have to actually exist
   let(:input) { ActionController::Parameters.new(data) }
-  let(:form) { create(:form, question_types: question_types) }
 
   context "simple response with three answers" do
-    # form item ids have to actually exist
     let(:question_types) { %w[text text text] }
     let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
 
