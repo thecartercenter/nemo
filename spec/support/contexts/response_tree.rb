@@ -40,4 +40,16 @@ shared_context "response tree" do
     hash[:_destroy] = destroy unless destroy.nil?
     hash
   end
+
+  def web_answer_group_hash(q_id, children, relevant: "true", destroy: nil)
+    hash = {
+      id: "",
+      type: "AnswerGroup",
+      questioning_id: q_id,
+      relevant: relevant,
+      children: children
+    }
+    hash[:_destroy] = destroy unless destroy.nil?
+    hash
+  end
 end

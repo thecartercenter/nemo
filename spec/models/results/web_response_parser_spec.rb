@@ -6,17 +6,7 @@ describe Results::WebResponseParser do
   context "simple response with three answers" do
     # form item ids have to actually exist
     let(:form) { create(:form, question_types: %w[text text text]) }
-    let(:data) do
-      {
-        root: {
-          id: "",
-          type: "AnswerGroup",
-          questioning_id: form.root_group.id,
-          relevant: "true",
-          children: answers
-        }
-      }
-    end
+    let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
 
     context "all relevant, none destroyed" do
       let(:answers) do
@@ -72,17 +62,7 @@ describe Results::WebResponseParser do
 
   context "response with an answer set" do
     let(:form) { create(:form, question_types: %w[text multilevel_select_one text]) }
-    let(:input) do
-      {
-        root: {
-          id: "",
-          type: "AnswerGroup",
-          questioning_id: form.root_group.id,
-          relevant: "true",
-          children: answers
-        }
-      }
-    end
+    let(:input) { {root: web_answer_group_hash(form.root_group.id, answers)} }
     let(:plant) { form.c[1].option_set.sorted_children[1].id }
     let(:oak) { form.c[1].option_set.sorted_children[1].sorted_children[1].id }
     let(:answers) do
@@ -112,17 +92,7 @@ describe Results::WebResponseParser do
 
   context "builds tree for response with select multiple answer" do
     let(:form) { create(:form, question_types: %w[text select_multiple text]) }
-    let(:input) do
-      {
-        root: {
-          id: "",
-          type: "AnswerGroup",
-          questioning_id: form.root_group.id,
-          relevant: "true",
-          children: answers
-        }
-      }
-    end
+    let(:input) { {root: web_answer_group_hash(form.root_group.id, answers)} }
     let(:dog) { form.c[1].option_set.sorted_children[0].id }
     let(:cat) { form.c[1].option_set.sorted_children[1].id }
     let(:answers) do
@@ -149,26 +119,12 @@ describe Results::WebResponseParser do
 
     it "should produce the correct tree" do
       input = ActionController::Parameters.new(
-        root: {
-          id: "",
-          type: "AnswerGroup",
-          questioning_id: form.root_group.id,
-          relevant: "true",
-          children: {
-            "0" => web_answer_hash(form.c[0].id, value: "A"),
-            "1" => {
-              id: "",
-              type: "AnswerGroup",
-              questioning_id: form.c[1].id,
-              relevant: "true",
-              children:  {
-                "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
-                "1" => web_answer_hash(form.c[1].c[1].id, value: "C")
-              }
-            },
-            "2" => web_answer_hash(form.c[2].id, value: "D")
-          }
-        }
+        root: web_answer_group_hash(form.root_group.id,
+          "0" => web_answer_hash(form.c[0].id, value: "A"),
+          "1" => web_answer_group_hash(form.c[1].id,
+            "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
+            "1" => web_answer_hash(form.c[1].c[1].id, value: "C")),
+          "2" => web_answer_hash(form.c[2].id, value: "D"))
       )
       tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
@@ -181,41 +137,19 @@ describe Results::WebResponseParser do
     let(:form) { create(:form, question_types: ["text", {repeating: {items: %w[text text]}}]) }
     let(:input) do
       ActionController::Parameters.new(
-        root: {
-          id: "",
-          type: "AnswerGroup",
-          questioning_id: form.root_group.id,
-          relevant: "true",
-          children: {
-            "0" => web_answer_hash(form.c[0].id, value: "A"),
-            "1" => {
-              id: "",
-              type: "AnswerGroupSet",
-              questioning_id: form.c[1].id,
-              relevant: "true",
-              children: answer_groups
+        root: web_answer_group_hash(form.root_group.id,
+          "0" => web_answer_hash(form.c[0].id, value: "A"),
+          "1" => {
+            id: "",
+            type: "AnswerGroupSet",
+            questioning_id: form.c[1].id,
+            relevant: "true",
+            children: {
+              "0" => web_answer_group_hash(form.c[1].id, answers1),
+              "1" => web_answer_group_hash(form.c[1].id, answers2)
             }
-          }
-        }
+          })
       )
-    end
-    let(:answer_groups) do
-      {
-        "0" => {
-          id: "",
-          type: "AnswerGroup",
-          questioning_id: form.c[1].id,
-          relevant: "true",
-          children: answers1
-        },
-        "1" => {
-          id: "",
-          type: "AnswerGroup",
-          questioning_id: form.c[1].id,
-          relevant: "true",
-          children: answers2
-        }
-      }
     end
     let(:answers1) do
       {
