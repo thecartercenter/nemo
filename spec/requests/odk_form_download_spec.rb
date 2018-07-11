@@ -103,8 +103,8 @@ describe FormsController, :odk, type: :request do
 
           assert_select "manifest" do |elements|
             elements.each do |element|
-              assert_select(element, "filename", text: "powerup_0.mp3")
-              assert_select(element, "filename", text: "powerup_1.wav")
+              assert_select(element, "filename", text: "powerup_#{form.c[0].question.id.first(5)}.mp3")
+              assert_select(element, "filename", text: "powerup_#{form.c[1].question.id.first(5)}.wav")
 
               assert_select(element, "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
               assert_select(element, "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
