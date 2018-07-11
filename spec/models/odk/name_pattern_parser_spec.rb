@@ -85,9 +85,9 @@ describe Odk::NamePatternParser do
     end
 
     context "with quoted string containing $" do
-      let(:pattern) { "calc(concat((5 + 12) / $Q1, ' (($money cash'))" }
+      let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
       it do
-        is_expected.to eq(%{<output value="concat((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')" />})
+        is_expected.to eq(%{<output value="myfunc((5 + 12) / /data/#{q1.odk_code}, ' (($money cash')" />})
       end
     end
 
@@ -97,10 +97,10 @@ describe Odk::NamePatternParser do
     end
 
     context "with double quotes in pattern" do
-      let(:pattern) { %{calc(concat($Q1,'"foo"'))} }
+      let(:pattern) { %{calc(myfunc($Q1,'"foo"'))} }
       it do
         is_expected.to eq(+%(<output value=") <<
-          %{concat(/data/#{q1.odk_code},'&quot;foo&quot;')" />})
+          %{myfunc(/data/#{q1.odk_code},'&quot;foo&quot;')" />})
       end
     end
   end
