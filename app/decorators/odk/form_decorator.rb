@@ -56,5 +56,9 @@ module Odk
     def unique_audio_prompt_filename(question)
       "#{question.id}_audio_prompt#{File.extname(question.audio_prompt_file_name)}"
     end
+
+    def audio_prompt_md5(question)
+      Digest::MD5.file(question.audio_prompt.path).hexdigest
+    end
   end
 end
