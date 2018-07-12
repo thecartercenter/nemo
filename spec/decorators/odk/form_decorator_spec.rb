@@ -9,13 +9,13 @@ describe Odk::FormDecorator, :odk do
     let(:decorated_form) { decorate(form) }
     subject(:needs_manifest?) { decorated_form.needs_manifest? }
 
-    context "multilevel option sets" do
-      describe "for form with single level option sets only" do
+    describe "multilevel option sets" do
+      context "for form with single level option sets only" do
         let(:form) { create(:form, question_types: %w[select_one]) }
         it { is_expected.to be false }
       end
 
-      describe "for form with multi level option set" do
+      context "for form with multi level option set" do
         let(:form) { create(:form, question_types: %w[select_one multilevel_select_one]) }
         it { is_expected.to be true }
       end
