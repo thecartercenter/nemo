@@ -52,14 +52,5 @@ module Odk
       # For now this is IFF there are any multilevel option sets or questions with audio prompts
       visible_questionings.any? { |q| q.multilevel? || q.audio_prompt.exists? }
     end
-
-    # Make audio prompt file name unique to curb collisions and duplications
-    def unique_audio_prompt_filename(q)
-      "#{q.id}_audio_prompt#{File.extname(q.audio_prompt_file_name)}" if q.audio_prompt_file_name
-    end
-
-    def audio_prompt_md5(q)
-      Digest::MD5.file(q.audio_prompt.path).hexdigest if q.audio_prompt_file_name
-    end
   end
 end
