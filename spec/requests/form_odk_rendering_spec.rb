@@ -7,7 +7,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk_test_forms`.
   # Then use `adb push tmp/odk_test_forms /sdcard/odk/forms` or similar to load them into ODK for testing.
-  let(:save_expectations) { true }
+  let(:save_fixtures) { true }
 
   before do
     login(user)
@@ -15,7 +15,10 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
   context "sample form" do
     let!(:form) do
-      create(:form, :published, :with_version, name: "Sample",
+      create(:form,
+        :published,
+        :with_version,
+        name: "Sample",
         question_types: %w(text long_text integer decimal location select_one
           multilevel_select_one select_multiple text datetime date time formstart formend barcode))
     end
@@ -36,7 +39,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("sample_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("sample_form.xml", form)
     end
   end
 
@@ -47,7 +50,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("counter_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("counter_form.xml", form)
     end
   end
 
@@ -72,7 +75,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("grid_group_with_condition.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("grid_group_with_condition.xml", form)
     end
   end
 
@@ -92,7 +95,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should not render with grid format" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("multiscreen_gridable_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("multiscreen_gridable_form.xml", form)
     end
   end
 
@@ -123,7 +126,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("media_question_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("media_question_form.xml", form)
     end
   end
 
@@ -143,7 +146,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("group_form.xml", form)
     end
   end
 
@@ -166,7 +169,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should not render on single page due to condition" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form_with_condition.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("group_form_with_condition.xml", form)
     end
   end
 
@@ -184,7 +187,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("multiscreen_group_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("multiscreen_group_form.xml", form)
     end
   end
 
@@ -214,7 +217,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("repeat_group_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("repeat_group_form.xml", form)
     end
   end
 
@@ -259,7 +262,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("nested_repeat_group_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("nested_repeat_group_form.xml", form)
     end
   end
 
@@ -272,7 +275,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("empty_repeat_group_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("empty_repeat_group_form.xml", form)
     end
   end
 
@@ -286,7 +289,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("group_form_with_multilevel.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("group_form_with_multilevel.xml", form)
     end
   end
 
@@ -305,7 +308,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq(
-        prepare_odk_expectation("multiscreen_group_form_with_multilevel.xml", form))
+        prepare_odk_form_fixture("multiscreen_group_form_with_multilevel.xml", form)
+      )
     end
   end
 
@@ -323,7 +327,10 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("repeat_group_form_with_multilevel.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture(
+        "repeat_group_form_with_multilevel.xml",
+        form
+      )
     end
   end
 
@@ -357,7 +364,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     it "should render proper xml" do
       do_request_and_expect_success
       expect(tidyxml(response.body)).to eq(
-        prepare_odk_expectation("nested_group_form_with_multilevel.xml", form))
+        prepare_odk_form_fixture("nested_group_form_with_multilevel.xml", form)
+      )
     end
   end
 
@@ -378,7 +386,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("default_pattern_form.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("default_pattern_form.xml", form)
     end
   end
 
@@ -395,7 +403,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("allows_incomplete.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("allows_incomplete.xml", form)
     end
   end
 
@@ -425,7 +433,7 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
 
     it "should render proper xml" do
       do_request_and_expect_success
-      expect(tidyxml(response.body)).to eq prepare_odk_expectation("form_with_skip_rule.xml", form)
+      expect(tidyxml(response.body)).to eq prepare_odk_form_fixture("form_with_skip_rule.xml", form)
     end
   end
 
@@ -434,23 +442,8 @@ describe "form rendering for odk",:odk, :reset_factory_sequences do
     expect(response).to be_success
   end
 
-  def prepare_odk_expectation(filename, form)
-    items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
-    nodes = items.map(&:preordered_option_nodes).uniq.flatten
-    xml = prepare_expectation("odk/forms/#{filename}",
-      formname: [form.name],
-      form: [form.id],
-      formver: [form.code],
-      itemcode: items.map(&:odk_code),
-      itemqcode: items.map(&:code),
-      optcode: nodes.map(&:odk_code),
-      optsetid: items.map(&:option_set_id).compact.uniq
-    )
-    if save_expectations
-      dir = Rails.root.join("tmp", "odk_test_forms")
-      FileUtils.mkdir_p(dir)
-      File.open(dir.join(filename), "w") { |f| f.write(xml) }
-    end
-    xml
+  def prepare_odk_form_fixture(filename, form, options = {})
+    path = "odk/forms/#{filename}"
+    prepare_odk_fixture(filename, path, form, options)
   end
 end

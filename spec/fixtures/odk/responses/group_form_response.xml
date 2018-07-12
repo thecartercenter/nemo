@@ -1,0 +1,9 @@
+<?xml version='1.0' ?>
+<data id="*form1*" version="*formver1*" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa">
+  <*itemcode1*>*value1*</*itemcode1*>
+  <*itemcode2*><header/>
+    <*itemcode3*>*value2*</*itemcode3*>
+    <*itemcode4*>*value3*</*itemcode4*>
+  </*itemcode2*>
+  <*itemcode5*>*value4*</*itemcode5*>
+</data>

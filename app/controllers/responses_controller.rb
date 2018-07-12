@@ -94,54 +94,15 @@ class ResponsesController < ApplicationController
   end
 
   def edit
-    flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}" if @response.checked_out_by_others?(current_user)
+    if @response.checked_out_by_others?(current_user)
+      flash.now[:notice] = "#{t('response.checked_out')} #{@response.checked_out_by_name}"
+    end
     prepare_and_render_form
   end
 
   def create
-    # if this is a non-web submission
     if request.format == Mime[:xml]
-      begin
-        @response.user_id = current_user.id
-        # If it looks like a J2ME submission, process accordingly
-        if params[:data] && params[:data][:'xmlns:jrm'] == "http://dev.commcarehq.org/jr/xforms"
-          @submission = XMLSubmission.new response: @response, data: params[:data], source: "j2me"
-        else # Otherwise treat it like an ODK submission
-          upfile = params[:xml_submission_file]
-
-          # Store file for debugging purposes.
-          UploadSaver.new.save_file(params[:xml_submission_file])
-
-          files = params.select { |k, v| v.is_a? ActionDispatch::Http::UploadedFile }
-          files.each { |k, v| files[k] = v.tempfile }
-
-          unless upfile
-            render_xml_submission_failure("No XML file attached.", 422)
-            return false
-          end
-
-          @response.awaiting_media = true if params["*isIncomplete*"] == "yes"
-          @submission = XMLSubmission.new response: @response, files: files.to_unsafe_h.with_indifferent_access, source: "odk"
-        end
-
-        # ensure response's user can submit to the form
-        authorize!(:submit_to, @submission.response.form)
-
-        @submission.save
-
-        render(body: nil, status: 201)
-      rescue CanCan::AccessDenied
-        render_xml_submission_failure($!, 403)
-      rescue ActiveRecord::RecordNotFound
-        render_xml_submission_failure($!, 404)
-      rescue FormVersionError
-        # 426 - upgrade needed
-        # We use this because ODK can't display custom failure messages so this provides a little more info.
-        render_xml_submission_failure($!, 426)
-      rescue SubmissionError
-        render_xml_submission_failure($!, 422)
-      end
-    # for HTML format just use the method below
+      handle_odk_submission
     else
       web_create_or_update
     end
@@ -166,8 +127,8 @@ class ResponsesController < ApplicationController
     if params[:search].present?
       begin
         @possible_submitters = User.do_search(@possible_submitters, params[:search], mission: current_mission)
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
+      rescue Search::ParseError => e
+        flash.now[:error] = e.to_s
         @search_error = true
       end
     end
@@ -187,15 +148,15 @@ class ResponsesController < ApplicationController
     when "submitters"
       @possible_users = User.assigned_to_or_submitter(current_mission, @response).by_name
     when "reviewers"
-      @possible_users = User.with_roles(current_mission, %w(coordinator staffer reviewer)).by_name
+      @possible_users = User.with_roles(current_mission, %w[coordinator staffer reviewer]).by_name
     end
 
     # do search if applicable
     if params[:search].present?
       begin
         @possible_users = User.do_search(@possible_users, params[:search], mission: current_mission)
-      rescue Search::ParseError
-        flash.now[:error] = $!.to_s
+      rescue Search::ParseError => e
+        flash.now[:error] = e.to_s
         @search_error = true
       end
     end
@@ -246,20 +207,65 @@ class ResponsesController < ApplicationController
     end
   end
 
+  def handle_odk_submission
+    return render_xml_submission_failure("No XML file attached.", 422) unless params[:xml_submission_file]
+
+    # Store main XML file for debugging purposes.
+    UploadSaver.new.save_file(params[:xml_submission_file])
+
+    begin
+      @response.user_id = current_user.id
+      @response = odk_response_parser.populate_response
+      authorize!(:submit_to, @response.form)
+      @response.save(validate: false)
+      render(body: nil, status: :created)
+    rescue CanCan::AccessDenied => e
+      render_xml_submission_failure(e, 403)
+    rescue ActiveRecord::RecordNotFound => e
+      render_xml_submission_failure(e, 404)
+    rescue FormVersionError => e
+      # 426 - upgrade needed
+      # We use this because ODK can't display custom failure messages so this provides a little more info.
+      render_xml_submission_failure(e, 426)
+    rescue SubmissionError => e
+      render_xml_submission_failure(e, 422)
+    end
+  end
+
+  def odk_response_parser
+    Odk::ResponseParser.new(
+      response: @response,
+      files: open_file_params,
+      awaiting_media: odk_awaiting_media?
+    )
+  end
+
+  # Returns a hash of param keys to open tempfiles for uploaded file parameters.
+  def open_file_params
+    file_params = params.select { |_k, v| v.is_a?(ActionDispatch::Http::UploadedFile) }.to_unsafe_h
+    file_params.map { |k, v| [k, v.tempfile.open] }.to_h.with_indifferent_access
+  end
+
+  # Returns whether the ODK submission request params indicate that not all attachments are included.
+  def odk_awaiting_media?
+    params["*isIncomplete*"] == "yes"
+  end
+
   # prepares objects for and renders the form template
   def prepare_and_render_form
     # Prepare the OldAnswerNodes.
     set_read_only
-    @nodes = AnswerArranger.new(@response,
+    @nodes = AnswerArranger.new(
+      @response,
       placeholders: params[:action] == "show" ? :except_repeats : :all,
       # Must preserve submitted answers when in create/update action.
-      dont_load_answers: %w(create update).include?(params[:action])
+      dont_load_answers: %w[create update].include?(params[:action])
     ).build.nodes
     render(:form)
   end
 
   def render_xml_submission_failure(exception, code)
-    Rails.logger.info("XML submission failed: '#{exception.to_s}'")
+    Rails.logger.info("XML submission failed: '#{exception}'")
     render(body: nil, status: code)
   end
 

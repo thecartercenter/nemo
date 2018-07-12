@@ -11,13 +11,13 @@ module Sms
       @answer_groups = {}
     end
 
-    def lookup(qing_group)
+    def response_node_for(qing_group)
       answer_groups[qing_group.id]
     end
 
     def answer_group_for(qing)
       qing_group = qing.parent
-      answer_group = lookup(qing_group) || build_answer_group(qing_group)
+      answer_group = response_node_for(qing_group) || build_answer_group(qing_group)
 
       if qing.multilevel?
         answer_set = AnswerSet.new(form_item: qing)
@@ -36,10 +36,8 @@ module Sms
     end
 
     def save(response)
-      root = lookup(response.form.root_group)
-      root.associate_response(response)
-      response.root_node = root
-
+      root = response_node_for(response.form.root_group)
+      response.associate_tree(root)
       # TODO: We can remove the `validate: false` once various validations are
       # removed from the response model
       response.save(validate: false)
@@ -68,7 +66,7 @@ module Sms
       if qing_group.parent.nil?
         node.new_rank = 0
       else
-        parent = lookup(qing_group.parent) || build_answer_group(qing_group.parent)
+        parent = response_node_for(qing_group.parent) || build_answer_group(qing_group.parent)
         parent.children << node
         node.new_rank = parent.children.length
       end

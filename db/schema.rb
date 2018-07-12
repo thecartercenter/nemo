@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20180626162616) do
     t.uuid "option_id"
     t.integer "option_old_id"
     t.uuid "parent_id"
+    t.string "pending_file_name"
     t.uuid "questioning_id", null: false
     t.integer "questioning_old_id"
     t.integer "rank", default: 1, null: false

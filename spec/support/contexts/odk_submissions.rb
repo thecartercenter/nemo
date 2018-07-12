@@ -31,9 +31,6 @@ shared_context "odk submissions" do
     "".tap do |xml|
       xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.code}\">"
 
-      # Add an instance name to ensure it's properly ignored.
-      xml << "<meta><instanceName>foo</instanceName></meta>"
-
       if no_data
         xml << "<#{Odk::FormDecorator::IR_QUESTION}>yes</#{Odk::FormDecorator::IR_QUESTION}>" if form.allow_incomplete?
       else
@@ -41,29 +38,31 @@ shared_context "odk submissions" do
         descendants = form.arrange_descendants
 
         descendants.each do |item, subitems|
+          decorated_item = Odk::DecoratorFactory.decorate(item)
           if item.is_a? QingGroup
             # Iterate over repeat instances (if any)
             Array.wrap(data[item] || {}).each do |instance|
               xml << "<grp#{item.id}><header/>"
               subitems.each do |subitem, _|
                 if instance[subitem]
-                  xml << "<#{subitem.question.odk_code}>"
+                  decorated_subitem = Odk::DecoratorFactory.decorate(subitem)
+                  xml << "<#{decorated_subitem.odk_code}>"
                   xml << instance[subitem]
-                  xml << "</#{subitem.question.odk_code}>"
+                  xml << "</#{decorated_subitem.odk_code}>"
                 end
               end
               xml << "</grp#{item.id}>"
             end
           elsif item.multilevel?
             item.level_count.times do |level|
-              xml << "<#{item.question.odk_code}_#{level + 1}>"
+              xml << "<#{decorated_item.odk_code}_#{level + 1}>"
               xml << (data[item].try(:[], level) || rand(100).to_s)
-              xml << "</#{item.question.odk_code}_#{level + 1}>"
+              xml << "</#{decorated_item.odk_code}_#{level + 1}>"
             end
           else
-            xml << "<#{item.question.odk_code}>"
+            xml << "<#{decorated_item.odk_code}>"
             xml << (data[item] || rand(100).to_s)
-            xml << "</#{item.question.odk_code}>"
+            xml << "</#{decorated_item.odk_code}>"
           end
         end
       end
