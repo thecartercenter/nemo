@@ -248,11 +248,6 @@ class Question < ApplicationRecord
     tags.order(:name)
   end
 
-  # Make audio prompt file name unique to curb collisions and duplications
-  def unique_audio_prompt_filename
-    "#{id}_audio_prompt#{File.extname(audio_prompt_file_name)}"
-  end
-
   private
 
   def code_unique_per_mission

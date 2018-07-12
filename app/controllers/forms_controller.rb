@@ -104,6 +104,7 @@ class FormsController < ApplicationController
   def odk_manifest
     authorize!(:download, @form)
     @cache_key = @form.odk_download_cache_key
+    @decorated_form = Odk::DecoratorFactory.decorate(@form)
     unless fragment_exist?(@cache_key)
       @questions = @form.visible_questionings.collect(&:question)
       @ifa = ItemsetsFormAttachment.new(form: @form)
