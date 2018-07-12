@@ -10,9 +10,10 @@
 
     <% unless @questions.empty? %>
       <% @questions.each do |q| %>
+        <% decorated_question = QuestionDecorator.decorate(q) %>
         <mediaFile>
-          <filename><%= QuestionDecorator.decorate(q).unique_audio_prompt_filename %></filename>
-          <hash><%= QuestionDecorator.decorate(q).audio_prompt_md5 %></hash>
+          <filename><%= decorated_question.unique_audio_prompt_filename %></filename>
+          <hash><%= decorated_question.audio_prompt_md5 %></hash>
           <downloadUrl>some path</downloadUrl>
         </mediaFile>
       <% end %>
