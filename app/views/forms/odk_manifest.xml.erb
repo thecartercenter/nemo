@@ -8,12 +8,14 @@
       </mediaFile>
     <% end %>
 
-    <% @questions.each do |q| %>
-      <mediaFile>
-        <filename><%= @decorated_form.unique_audio_prompt_filename(q) %></filename>
-        <hash><%= @decorated_form.audio_prompt_md5(q) %></hash>
-        <downloadUrl>some path</downloadUrl>
-      </mediaFile>
+    <% unless @questions.empty? %>
+      <% @questions.each do |q| %>
+        <mediaFile>
+          <filename><%= @decorated_form.unique_audio_prompt_filename(q) %></filename>
+          <hash><%= @decorated_form.audio_prompt_md5(q) %></hash>
+          <downloadUrl>some path</downloadUrl>
+        </mediaFile>
+      <% end %>
     <% end %>
   </manifest>
 <% end %>
