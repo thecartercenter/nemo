@@ -6,7 +6,7 @@ require "rails_helper"
 describe FormsController, :odk, type: :request do
   let(:mission) { create(:mission) }
   let(:user) { create(:user, role_name: :coordinator, mission: mission) }
-  let(:form_simple) { create(:form, :published, mission: mission, question_types: %w[integer integer]) }
+  let(:form_simple) { create(:form, :published, mission: mission) }
   let(:form_select) { create(:form, :published, mission: mission, question_types: %w[integer select_one]) }
   let(:form_multiselect) do
     create(:form, :published, mission: mission, question_types: %w[integer multilevel_select_one])
@@ -101,16 +101,14 @@ describe FormsController, :odk, type: :request do
           expect(response).to be_success
           assert_select("mediaFile", count: 2)
 
-          assert_select "manifest" do |elements|
-            elements.each do |element|
-              assert_select(element, "filename", text: "#{form.c[0].question.id}_audio_prompt.mp3")
-              assert_select(element, "filename", text: "#{form.c[1].question.id}_audio_prompt.wav")
+          assert_select "mediaFile" do |elements|
+            assert_select(elements[0], "filename", text: "#{form.c[0].question.id}_audio_prompt.mp3")
+            assert_select(elements[0], "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
+            assert_select(elements[0], "downloadUrl", text: "some path")
 
-              assert_select(element, "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
-              assert_select(element, "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
-
-              assert_select(element, "downloadUrl", text: "some path")
-            end
+            assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_audio_prompt.wav")
+            assert_select(elements[1], "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
+            assert_select(elements[1], "downloadUrl", text: "some path")
           end
         end
       end

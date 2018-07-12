@@ -53,12 +53,12 @@ module Odk
     end
 
     # Make audio prompt file name unique to curb collisions and duplications
-    def unique_audio_prompt_filename(question)
-      "#{question.id}_audio_prompt#{File.extname(question.audio_prompt_file_name)}"
+    def unique_audio_prompt_filename(q)
+      "#{q.id}_audio_prompt#{File.extname(q.audio_prompt_file_name)}" if q.audio_prompt_file_name
     end
 
-    def audio_prompt_md5(question)
-      Digest::MD5.file(question.audio_prompt.path).hexdigest
+    def audio_prompt_md5(q)
+      Digest::MD5.file(q.audio_prompt.path).hexdigest if q.audio_prompt_file_name
     end
   end
 end
