@@ -8,12 +8,11 @@
       </mediaFile>
     <% end %>
 
-    <% unless @questions.empty? %>
-      <% @questions.each do |q| %>
-        <% decorated_question = QuestionDecorator.decorate(q) %>
+    <% unless @decorated_questions.empty? %>
+      <% @decorated_questions.each do |question| %>
         <mediaFile>
-          <filename><%= decorated_question.unique_audio_prompt_filename %></filename>
-          <hash><%= decorated_question.audio_prompt_md5 %></hash>
+          <filename><%= question.unique_audio_prompt_filename %></filename>
+          <hash><%= question.audio_prompt_md5 %></hash>
           <downloadUrl>some path</downloadUrl>
         </mediaFile>
       <% end %>
