@@ -10,7 +10,7 @@
 
     <% @questions.each do |q| %>
       <mediaFile>
-        <filename><%= q.scramble_audio_prompt_filename %></filename>
+        <filename><%= q.unique_audio_prompt_filename %></filename>
         <hash><%= Digest::MD5.file(q.audio_prompt.path).hexdigest %></hash>
         <downloadUrl>some path</downloadUrl>
       </mediaFile>
