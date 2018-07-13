@@ -43,12 +43,5 @@ module Odk
       when "on" then return OptionNode.id_to_option_id(id)
       end
     end
-
-    private
-
-    def remove_prefix_if_matches(string, prefix)
-      md =  string.match(/\A#{Regexp.quote(prefix)}(.+)\z/)
-      md.present? && md.length == 2 ? md[1] : nil
-    end
   end
 end
