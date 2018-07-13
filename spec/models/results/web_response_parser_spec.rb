@@ -168,4 +168,76 @@ describe Results::WebResponseParser do
       expect_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
     end
   end
+
+  context "response with nested group sets" do
+    let(:question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text"]}}]}}] }
+    let(:outer_form_grp) { form.c[1] }
+    let(:inner_form_grp) { outer_form_grp.c[1] }
+    let(:answers) do
+      {
+        "0" => web_answer_hash(form.c[0].id, value: "A"),
+        "1" => {
+          id: "",
+          type: "AnswerGroupSet",
+          questioning_id: form.c[1].id,
+          relevant: "true",
+          children: {
+            "0" => web_answer_group_hash(outer_form_grp.id, instance_one_answers),
+            "1" => web_answer_group_hash(outer_form_grp.id, instance_two_answers)
+          }
+        }
+      }
+    end
+    let(:instance_one_answers) do
+      {
+        "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
+        "1" => {
+          id: "",
+          type: "AnswerGroupSet",
+          questioning_id: form.c[1].c[1].id,
+          relevant: "true",
+          children: {
+            "0" => web_answer_group_hash(inner_form_grp.id, answers_one_one),
+            "1" => web_answer_group_hash(inner_form_grp.id, answers_one_two)
+          }
+        }
+      }
+    end
+    let(:instance_two_answers) do
+      {
+        "0" => web_answer_hash(outer_form_grp.c[0].id, value: "E"),
+        "1" => {
+          id: "",
+          type: "AnswerGroupSet",
+          questioning_id: form.c[1].c[1].id,
+          relevant: "true",
+          children: {
+            "0" => web_answer_group_hash(inner_form_grp.id, answers_two_one),
+            "1" => web_answer_group_hash(inner_form_grp.id, answers_two_two)
+          }
+        }
+      }
+    end
+    let(:answers_one_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "C")} }
+    let(:answers_one_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "D")} }
+    let(:answers_two_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "F")} }
+    let(:answers_two_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "G")} }
+
+    it "builds tree with answer group set" do
+      expect_root(tree, form)
+      expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+      expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+      answer_grp_one = tree.c[1].c[0]
+      answer_grp_two = tree.c[1].c[1]
+
+      expect_children(answer_grp_one, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["B", nil])
+      expect_children(answer_grp_one.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_form_grp.id))
+      expect_children(answer_grp_one.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[C])
+      expect_children(answer_grp_one.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[D])
+      expect_children(answer_grp_two, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["E", nil])
+      expect_children(answer_grp_two.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_form_grp.id))
+      expect_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[F])
+      expect_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[G])
+    end
+  end
 end
