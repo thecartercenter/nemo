@@ -6,7 +6,7 @@ module Odk
   # the response object the controller passes in with an
   # existing response from the database.
   class ResponseParser
-    attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash, :answer_parser
+    attr_accessor :response, :raw_odk_xml, :files, :awaiting_media, :odk_hash
 
     def initialize(response: nil, files: nil, awaiting_media: false)
       raise "Submissions must have a mission" if response.mission.nil?
@@ -36,13 +36,16 @@ module Odk
       data = Nokogiri::XML(raw_odk_xml).root
       lookup_and_check_form(id: data["id"], version: data["version"])
       if existing_response
-        Odk::AnswerParser.new(response, files).add_media_to_existing_response
+        answer_parser.add_media_to_existing_response
       else
-        @answer_parser = Odk::AnswerParser.new(response, files)
         response.odk_hash = awaiting_media ? calculate_odk_hash : nil
         build_answer_tree(data)
         response.associate_tree(response.root_node)
       end
+    end
+
+    def answer_parser
+      @answer_parser ||= Odk::AnswerParser.new(response, files)
     end
 
     def build_answer_tree(data)
