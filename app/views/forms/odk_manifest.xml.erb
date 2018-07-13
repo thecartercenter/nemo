@@ -10,13 +10,11 @@
 
     <% unless @decorated_questions.empty? %>
       <% @decorated_questions.each do |question| %>
-        <% if question&.audio_prompt_file_name %>
-          <mediaFile>
-            <filename><%= question.unique_audio_prompt_filename %></filename>
-            <hash><%= question.audio_prompt_md5 %></hash>
-            <downloadUrl><%= url_for_path(question.audio_prompt.path) %></downloadUrl>
-          </mediaFile>
-        <% end %>
+        <mediaFile>
+          <filename><%= question.unique_audio_prompt_filename %></filename>
+          <hash><%= question.audio_prompt_md5 %></hash>
+          <downloadUrl><%= url_for_path(question.audio_prompt.path) %></downloadUrl>
+        </mediaFile>
       <% end %>
     <% end %>
   </manifest>
