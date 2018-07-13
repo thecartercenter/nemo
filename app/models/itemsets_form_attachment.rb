@@ -94,7 +94,7 @@ class ItemsetsFormAttachment
 
     # Generates a CSV row for a normal node.
     def option_row(node)
-      row = ["os#{node.option_set_id}", node.odk_code]
+      row = [option_set_code(node), node.odk_code]
       row += configatron.preferred_locales.map{ |l| node.option.name(l) } # Names
       row << (node.depth > 1 ? node.parent_odk_code : nil) # Node ID and parent node ID (unless parent is root)
       row
@@ -103,9 +103,13 @@ class ItemsetsFormAttachment
     # Generates a 'none' CSV row for uneven option sets.
     # options[:type] - Whether this is a child or (great)grandchild of the last non-None node.
     def none_row(node, options)
-      row = ["os#{node.option_set_id}", 'none']
+      row = [option_set_code(node), 'none']
       row += configatron.preferred_locales.map{ |l| "[#{I18n.t('common.blank', locale: l)}]" }
       row << (options[:type] == :child ? node.odk_code : 'none')
       row
     end
-  end
+
+    def option_set_code(node)
+      Odk::CodeMapper.instance.code_for_item(node.option_set)
+    end
+end

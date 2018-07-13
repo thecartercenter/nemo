@@ -108,7 +108,7 @@ module OdkHelper
       path = [xpath_prefix, code].compact.join("/")
       "[parent_id=#{path}]"
     end
-    "instance('os#{qing.option_set_id}')/root/item#{filter}"
+    "instance('#{Odk::CodeMapper.instance.code_for_item(qing.option_set)}')/root/item#{filter}"
   end
 
   # Returns <text> tags for all first-level options.

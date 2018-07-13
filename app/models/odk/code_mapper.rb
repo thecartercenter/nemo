@@ -11,14 +11,12 @@ module Odk
     end
 
     def code_for_item(item)
-      return "/data" if item.is_root?
+      return "/data" if item.is_a?(FormItem) && item.is_root?
       case item
-      when Questioning
-        "qing#{item.id}"
-      when QingGroup
-        "grp#{item.id}"
-      when OptionNode
-        "on#{item.id}"
+      when Questioning then "qing#{item.id}"
+      when QingGroup then "grp#{item.id}"
+      when OptionNode then "on#{item.id}"
+      when OptionSet then "os#{item.id}"
       end
     end
 
