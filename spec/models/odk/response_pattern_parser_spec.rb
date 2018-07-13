@@ -77,8 +77,8 @@ describe Odk::ResponsePatternParser do
         end
 
         context "with single and double quotes" do
-          let(:pattern) { %("hai" $Q1 'foo') }
-          it { is_expected.to eq("concat('&quot;hai&quot; ',/data/#{q1.odk_code},' &#39;foo&#39;')") }
+          let(:pattern) { %("hai" $Q1 b'y) }
+          it { is_expected.to eq(%{concat('"hai" ',/data/#{q1.odk_code},' b’y')}) }
         end
       end
     end
@@ -126,8 +126,8 @@ describe Odk::ResponsePatternParser do
     end
 
     context "with single and double quotes" do
-      let(:pattern) { %{calc(myfunc('"hai"', $Q1, "foo"))} }
-      it { is_expected.to eq("myfunc('&quot;hai&quot;', (/data/#{q1.odk_code}), &quot;foo&quot;)") }
+      let(:pattern) { %{calc(myfunc('"hai"', $Q1, "'foo’s'"))} }
+      it { is_expected.to eq(%{myfunc('"hai"', (/data/#{q1.odk_code}), "'foo’s'")}) }
     end
   end
 end

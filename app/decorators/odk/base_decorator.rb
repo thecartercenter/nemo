@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Odk
   class BaseDecorator < ::ApplicationDecorator
     delegate_all
@@ -8,7 +10,7 @@ module Odk
       # Rails automatically sets some attribs like required to "required", regardless of what you pass.
       # The below fixes this by changing the keys to e.g. _required, rendering the tag, and then
       # changing them back.
-      to_fix = %i(required readonly)
+      to_fix = %i[required readonly]
       fixed_attribs = ActiveSupport::OrderedHash.new
       attribs.each do |key, val|
         fixed_key = to_fix.include?(key) ? :"_#{key}" : key

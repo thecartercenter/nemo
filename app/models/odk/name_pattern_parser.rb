@@ -13,6 +13,12 @@ module Odk
       super(pattern, src_item: src_item.root)
     end
 
+    # Returns XML containing <output> tags that interpolate the desired patterns.
+    # In the case of a calculated field, returns a single <output> tag.
+    def to_odk
+      super
+    end
+
     protected
 
     def join_tokens(tokens)
@@ -27,8 +33,10 @@ module Odk
       elsif !calculated? && token =~ /\A\s+\z/
         # ODK ignores plain whitespace between output tags. This is a non-breaking space xml character.
         "&#160;"
-      else
+      elsif calculated?
         token
+      else
+        token.tr("'", "’") # Replace ' with ’ because ' is used to wrap the tokens.
       end
     end
 
@@ -65,9 +73,7 @@ module Odk
     private
 
     def output_tag(str)
-      # `tag` encodes html entities which is fine except for single quotes, which are used heavily
-      # in XPath expressions and it's not clear if they'd work in encoded form.
-      tag(:output, value: str).gsub("&#39;", "'")
+      tag(:output, value: str)
     end
   end
 end

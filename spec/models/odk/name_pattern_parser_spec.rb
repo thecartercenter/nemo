@@ -44,9 +44,9 @@ describe Odk::NamePatternParser do
         it { is_expected.to eq("hai  foo") }
       end
 
-      context "with double quotes in pattern" do
-        let(:pattern) { %(hai $Q21 "foo") }
-        it { is_expected.to eq(%(hai <output value="#{q21path}" /> "foo")) }
+      context "with single and double quotes in pattern" do
+        let(:pattern) { %(hai $Q21 "foo's") }
+        it { is_expected.to eq(%(hai <output value="#{q21path}" /> "foo’s")) }
       end
     end
 
@@ -57,7 +57,7 @@ describe Odk::NamePatternParser do
         let(:pattern) { "Ice Cream: $Q21" }
 
         it "uses the option name and coalesce" do
-          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q21path},'blank'))" />))
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q21path},&#39;blank&#39;))" />))
         end
       end
 
@@ -65,7 +65,7 @@ describe Odk::NamePatternParser do
         let(:pattern) { "Ice Cream: $Q31" }
 
         it "uses the option name and coalesce" do
-          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q31apath},'blank'))" />))
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q31apath},&#39;blank&#39;))" />))
         end
       end
     end
@@ -87,17 +87,17 @@ describe Odk::NamePatternParser do
 
     context "with quoted string containing $" do
       let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
-      it { is_expected.to eq(%{<output value="myfunc((5 + 12) / (#{q1path}), ' (($money cash')" />}) }
+      it { is_expected.to eq(%{<output value="myfunc((5 + 12) / (#{q1path}), &#39; (($money cash&#39;)" />}) }
     end
 
     context "with invalid code" do
       let(:pattern) { "calc($Junk + 7)" }
-      it { is_expected.to eq(%(<output value="('') + 7" />)) }
+      it { is_expected.to eq(%(<output value="(&#39;&#39;) + 7" />)) }
     end
 
-    context "with double quotes in pattern" do
-      let(:pattern) { %{calc(myfunc($Q1,'"foo"'))} }
-      it { is_expected.to eq(%(<output value="myfunc((#{q1path}),'&quot;foo&quot;')" />)) }
+    context "with single and double quotes in pattern" do
+      let(:pattern) { %{calc(myfunc($Q1,'"foo’s"'))} }
+      it { is_expected.to eq(%(<output value="myfunc((#{q1path}),&#39;&quot;foo’s&quot;&#39;)" />)) }
     end
   end
 end
