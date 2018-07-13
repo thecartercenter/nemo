@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OdkHelper
   # given a Subqing object, builds an odk <input> tag
   # calls the provided block to get the tag content
@@ -77,10 +79,10 @@ module OdkHelper
         {
           "xmlns:jrm" => "http://dev.commcarehq.org/jr/xforms",
           "xmlns" => "http://openrosa.org/formdesigner/#{form.id}",
-          "id" => "#{form.id}",
+          "id" => form.id.to_s,
           "uiVersion" => "1",
-          "version" => "#{form.current_version.code}",
-          "name" => "#{form.full_name}"
+          "version" => form.current_version.code.to_s,
+          "name" => form.full_name.to_s
         },
         &block
       )
@@ -88,8 +90,8 @@ module OdkHelper
       content_tag(
         "data",
         {
-          "id" => "#{form.id}",
-          "version" => "#{form.current_version.code}"
+          "id" => form.id.to_s,
+          "version" => form.current_version.code.to_s
         },
         &block
       )
@@ -100,13 +102,13 @@ module OdkHelper
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
   #      instance('os16')/root/item[parent_id=/data/q2_2]
-  def multilevel_option_nodeset_ref(qing, cur_subq, group_code = nil, xpath_prefix)
+  def multilevel_option_nodeset_ref(qing, cur_subq, _group_code = nil, xpath_prefix)
     filter = if cur_subq.first_rank?
-      ""
-    else
-      code = cur_subq.odk_code(previous: true)
-      path = [xpath_prefix, code].compact.join("/")
-      "[parent_id=#{path}]"
+               ""
+             else
+               code = cur_subq.odk_code(previous: true)
+               path = [xpath_prefix, code].compact.join("/")
+               "[parent_id=#{path}]"
     end
     "instance('#{Odk::CodeMapper.instance.code_for_item(qing.option_set)}')/root/item#{filter}"
   end
@@ -197,7 +199,7 @@ module OdkHelper
     end
   end
 
-  def odk_group_item_name(node, xpath)
+  def odk_group_item_name(node, _xpath)
     # Group item name should only be present for repeatable qing groups.
     if node.respond_to?(:group_item_name) && node.group_item_name && !node.group_item_name.empty?
       tag(:label, ref: "jr:itext('#{node.odk_code}:itemname')")
