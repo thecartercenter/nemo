@@ -8,13 +8,7 @@ module Odk
     # If options[:previous] is true, returns the code for the
     # immediately previous subqing (multilevel only).
     def odk_code(options = {})
-      base = decorated_questioning.odk_code
-      if multilevel?
-        r = options[:previous] ? rank - 1 : rank
-        "#{base}_#{r}"
-      else
-        base
-      end
+      CodeMapper.instance.code_for_item(object, options)
     end
 
     def absolute_xpath

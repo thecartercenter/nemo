@@ -106,7 +106,7 @@ module OdkHelper
     filter = if cur_subq.first_rank?
                ""
              else
-               code = cur_subq.odk_code(previous: true)
+               code = cur_subq.odk_code(options: {previous: true})
                path = [xpath_prefix, code].compact.join("/")
                "[parent_id=#{path}]"
     end

@@ -10,11 +10,19 @@ module Odk
     def initialize
     end
 
-    def code_for_item(item)
+    def code_for_item(item, options: {})
       return "/data" if item.is_a?(FormItem) && item.is_root?
       case item
       when Questioning then "qing#{item.id}"
       when QingGroup then "grp#{item.id}"
+      when Subqing
+        base = code_for_item(item.questioning)
+        if item.multilevel?
+          r = options[:previous] ? item.rank - 1 : item.rank
+          "#{base}_#{r}"
+        else
+          base
+        end
       when OptionNode then "on#{item.id}"
       when OptionSet then "os#{item.id}"
       end
