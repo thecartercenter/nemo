@@ -117,6 +117,10 @@ ELMO::Application.routes.draw do
       collection do
         post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
       end
+
+      member do
+        get "audio_prompt"
+      end
     end
     resources :questionings, only: %i[show edit create update destroy]
     resources :qing_groups, path: "qing-groups", only: %i[new edit create update destroy]
