@@ -62,7 +62,7 @@ module GeneralSpecHelpers
   end
 
   def tidyxml(str)
-    Nokogiri::XML(str) { |config| config.noblanks }.to_s
+    Nokogiri::XML(str, &:noblanks).to_s
   end
 
   # assigns ENV vars

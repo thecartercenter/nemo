@@ -65,6 +65,7 @@ def build_item(item, form, parent, evaluator)
       form: form,
       group_name_en: item[:name],
       group_hint_en: item[:name],
+      group_item_name: item[:item_name],
       repeatable: true
     )
     item[:items].each { |c| build_item(c, form, group, evaluator) }

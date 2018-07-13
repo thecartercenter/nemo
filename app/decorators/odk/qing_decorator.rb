@@ -9,17 +9,16 @@ module Odk
 
     def bind_tag(form, subq, group: nil, xpath_prefix: "/data")
       tag(:bind,
-        nodeset: [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
-        type: binding_type_attrib(subq),
-        required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
-        readonly: has_default? && read_only? ? "true()" : nil,
-        relevant: relevance,
-        constraint: subq.odk_constraint,
-        "jr:constraintMsg": subq.min_max_error_msg,
-        calculate: calculate,
-        "jr:preload": jr_preload,
-        "jr:preloadParams": jr_preload_params
-      )
+          nodeset: [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
+          type: binding_type_attrib(subq),
+          required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
+          readonly: has_default? && read_only? ? "true()" : nil,
+          relevant: relevance,
+          constraint: subq.odk_constraint,
+          "jr:constraintMsg": subq.min_max_error_msg,
+          calculate: calculate,
+          "jr:preload": jr_preload,
+          "jr:preloadParams": jr_preload_params)
     end
 
     def subqings
