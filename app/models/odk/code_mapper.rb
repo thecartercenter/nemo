@@ -17,6 +17,8 @@ module Odk
         "qing#{item.id}"
       when QingGroup
         "grp#{item.id}"
+      when OptionNode
+        "on#{item.id}"
       end
     end
 
@@ -32,20 +34,7 @@ module Odk
       when "grp", "qing" then return FormItem.where(id: id).pluck(:id).first
       # when prefix is q, fallback for older style qing odk code
       when "q" then return Questioning.where(question_id: id, form_id: form.id).pluck(:id).first
-      end
-    end
-
-    def code_for_option_node_id(node_id)
-      "on#{node_id}"
-    end
-
-    def option_id_for_code(code)
-      node_id = remove_prefix_if_matches(code, "on")
-      if node_id
-        OptionNode.id_to_option_id(node_id)
-      else
-        # fallback by looking up other inputs as option ids
-        Option.where(id: code).pluck(:id).first
+      when "on" then return OptionNode.id_to_option_id(id)
       end
     end
 

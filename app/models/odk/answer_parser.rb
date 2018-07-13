@@ -13,14 +13,13 @@ module Odk
     def populate_answer_value(answer, content, form_item)
       question_type = form_item.qtype.name
       return populate_multimedia_answer(answer, content, question_type) if form_item.qtype.multimedia?
-
       case question_type
       when "select_one"
-        answer.option_id = Odk::CodeMapper.instance.option_id_for_code(content)
+        answer.option_id = option_id_for_option_node_code(content) # assume content has option node code ("on#{option_node.id}")
       when "select_multiple"
         unless content == "none"
-          content.split(" ").each do |oid|
-            answer.choices.build(option_id: Odk::CodeMapper.instance.option_id_for_code(oid))
+          content.split(" ").each do |option_node_id|
+            answer.choices.build(option_id: option_id_for_option_node_code(option_node_id))
           end
         end
       when "date", "datetime", "time"
@@ -38,6 +37,12 @@ module Odk
         answer.value = content
       end
       answer
+    end
+
+    def option_id_for_option_node_code(option_node_id)
+      Odk::CodeMapper.instance.item_id_for_code(option_node_id, response.form)
+    rescue SubmissionError
+      nil
     end
 
     def add_media_to_existing_response
