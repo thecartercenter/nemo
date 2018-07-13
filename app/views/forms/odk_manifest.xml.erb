@@ -13,7 +13,7 @@
         <mediaFile>
           <filename><%= question.unique_audio_prompt_filename %></filename>
           <hash><%= question.audio_prompt_md5 %></hash>
-          <downloadUrl><%= url_for_path(question.audio_prompt.path) %></downloadUrl>
+          <downloadUrl><%= url_for_path(audio_prompt_question_path(question)) %></downloadUrl>
         </mediaFile>
       <% end %>
     <% end %>

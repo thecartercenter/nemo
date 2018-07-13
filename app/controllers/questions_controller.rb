@@ -77,6 +77,15 @@ class QuestionsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
+  def audio_prompt
+    authorize! :show, @question
+
+    send_file @question.audio_prompt.path,
+      type: @question.audio_prompt_content_type,
+      disposition: "attachment",
+      filename: @question.unique_audio_prompt_filename
+  end
+
   private
 
   # creates/updates the question
