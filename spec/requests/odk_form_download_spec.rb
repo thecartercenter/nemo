@@ -99,18 +99,32 @@ describe FormsController, :odk, type: :request do
         it "should render manifest tags correctly" do
           get("/m/#{mission.compact_name}/forms/#{form.id}/manifest")
           expect(response).to be_success
-          assert_select("mediaFile", count: 2)
 
-          assert_select "mediaFile" do |elements|
+          download_url = "http://www.example.com/en/m/#{mission.compact_name}/questions"
+
+          assert_select("mediaFile", count: 2) do |elements|
             assert_select(elements[0], "filename", text: "#{form.c[0].question.id}_audio_prompt.mp3")
             assert_select(elements[0], "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
-            assert_select(elements[0], "downloadUrl", text: "some path")
+            assert_select(
+              elements[0],
+              "downloadUrl",
+              text: "#{download_url}/#{form.c[0].question.id}/audio_prompt"
+            )
+            # /en/m/guitar/questions/audio_prompts/01293a49412942531/original
 
             assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_audio_prompt.wav")
             assert_select(elements[1], "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
-            assert_select(elements[1], "downloadUrl", text: "some path")
+            assert_select(
+              elements[1],
+              "downloadUrl",
+              text: "#{download_url}/#{form.c[1].question.id}/audio_prompt"
+            )
           end
         end
+
+      # paperclip url generation
+      # test new route downloads
+      #   compare the body of the file to the actual file
       end
     end
 
