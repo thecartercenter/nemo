@@ -18,7 +18,10 @@ module Forms
 
     def calc_must_wrap_all_of_default_response_name(record)
       return if record[field_name].blank?
-      return unless record[field_name].match?(/[^\s].*calc\(|\).*[^\s].*\z/)
+      return unless record[field_name].include?("calc(")
+
+      # Only barf if calc is not at start OR doesn't end with )
+      return unless record[field_name].match?(/[^\s].*calc\(|[^)]\z/)
       record.errors.add(field_name, :calc_must_wrap_all)
     end
   end

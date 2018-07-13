@@ -28,6 +28,11 @@ describe Forms::DynamicPatternValidator do
       it_behaves_like "valid"
     end
 
+    context "with inner parens" do
+      let(:form) { build(:form, default_response_name: "calc(if($Foo > 5, 'a', 'b'))") }
+      it_behaves_like "valid"
+    end
+
     context "with properly spaces around calc" do
       let(:form) { build(:form, default_response_name: " calc($Foo + 4)  ") }
       it_behaves_like "valid"
