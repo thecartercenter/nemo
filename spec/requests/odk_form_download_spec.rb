@@ -110,7 +110,6 @@ describe FormsController, :odk, type: :request do
               "downloadUrl",
               text: "#{download_url}/#{form.c[0].question.id}/audio_prompt"
             )
-            # /en/m/guitar/questions/audio_prompts/01293a49412942531/original
 
             assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_audio_prompt.wav")
             assert_select(elements[1], "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
@@ -122,9 +121,19 @@ describe FormsController, :odk, type: :request do
           end
         end
 
-      # paperclip url generation
-      # test new route downloads
-      #   compare the body of the file to the actual file
+        describe "should download successfully" do
+          it do
+            get("/#{audio_prompt_question_path(form.c[0].question)}")
+            expect(response).to be_success
+            expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)
+          end
+
+          it do
+            get("/#{audio_prompt_question_path(form.c[1].question)}")
+            expect(response).to be_success
+            expect(response.header["Content-Disposition"]).to include(form.c[1].question.id)
+          end
+        end
       end
     end
 

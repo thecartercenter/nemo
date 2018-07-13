@@ -78,12 +78,14 @@ class QuestionsController < ApplicationController
   end
 
   def audio_prompt
-    authorize! :show, @question
+    decorated_question = QuestionDecorator.decorate(@question)
 
-    send_file @question.audio_prompt.path,
-      type: @question.audio_prompt_content_type,
+    authorize! :show, decorated_question
+
+    send_file decorated_question.audio_prompt.path,
+      type: decorated_question.audio_prompt_content_type,
       disposition: "attachment",
-      filename: @question.unique_audio_prompt_filename
+      filename: decorated_question.unique_audio_prompt_filename
   end
 
   private
