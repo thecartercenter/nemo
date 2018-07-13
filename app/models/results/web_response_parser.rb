@@ -28,17 +28,16 @@ module Results
     ].freeze
 
     # replace choices_attributes top level param with a hash representing nested attributes
-    PERMITTED_PARAMS = (TOP_LEVEL_PARAMS.dup - [:choices_attributes])
+    PERMITTED_PARAMS = TOP_LEVEL_PARAMS.without(:choices_attributes)
       .append(choices_attributes: %w[option_node_id checked]).freeze
-
-    def initialize
-    end
 
     # Expects ActionController::Parameters instance without required or permitted set
     def parse(data)
       root = new_node(data[:root], nil)
       add_children(data[:root][:children], root)
     end
+
+    private
 
     def add_children(children, parent_node)
       children.each_pair do |_k, v|
@@ -52,11 +51,8 @@ module Results
 
     def new_node(data_node, parent)
       type = data_node[:type].constantize
-      clean_params = data_node.slice(*TOP_LEVEL_PARAMS).permit(
-        [].concat(PERMITTED_PARAMS)
-      )
-      rank_attributes = rank_attributes(type, parent)
-      all_attrs = clean_params.merge(rank_attributes)
+      clean_params = data_node.slice(*TOP_LEVEL_PARAMS).permit(PERMITTED_PARAMS)
+      all_attrs = clean_params.merge(rank_attributes(type, parent))
       type.new(all_attrs)
     end
 
@@ -77,7 +73,7 @@ module Results
     def inst_num(type, parent)
       if parent.is_a?(AnswerGroupSet) # repeat group
         parent.children.length + 1
-      elsif [Answer, AnswerSet, AnswerGroupSet].include? type
+      elsif [Answer, AnswerSet, AnswerGroupSet].include?(type)
         parent.inst_num
       else
         1

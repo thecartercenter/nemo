@@ -7,10 +7,11 @@ describe Results::WebResponseParser do
 
   let(:form) { create(:form, question_types: question_types) } # form item ids have to actually exist
   let(:input) { ActionController::Parameters.new(data) }
+  let(:tree) { Results::WebResponseParser.new.parse(input) }
+  let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
 
   context "simple response with three answers" do
     let(:question_types) { %w[text text text] }
-    let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
 
     context "all relevant, none destroyed" do
       let(:answers) do
@@ -22,8 +23,6 @@ describe Results::WebResponseParser do
       end
 
       it "builds tree with three answers" do
-        input = ActionController::Parameters.new(data)
-        tree = Results::WebResponseParser.new.parse(input)
         expect_root(tree, form)
         expect_children(tree, %w[Answer Answer Answer], form.c.map(&:id), %w[A B C])
       end
@@ -39,8 +38,6 @@ describe Results::WebResponseParser do
       end
 
       it "builds tree with two answers" do
-        input = ActionController::Parameters.new(data)
-        tree = Results::WebResponseParser.new.parse(input)
         expect_root(tree, form)
         expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
       end
@@ -56,8 +53,6 @@ describe Results::WebResponseParser do
       end
 
       it "builds tree with two answers" do
-        input = ActionController::Parameters.new(data)
-        tree = Results::WebResponseParser.new.parse(input)
         expect_root(tree, form)
         expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
       end
@@ -87,14 +82,13 @@ describe Results::WebResponseParser do
     end
 
     it "builds tree with answer set" do
-      tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
       expect_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
     end
   end
 
-  context "builds tree for response with select multiple answer" do
+  context "response with select multiple answer" do
     let(:question_types) { %w[text select_multiple text] }
     let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
     let(:dog) { form.c[1].option_set.sorted_children[0].id }
@@ -112,7 +106,6 @@ describe Results::WebResponseParser do
     end
 
     it "builds tree with answer set" do
-      tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
       expect_children(tree, %w[Answer Answer Answer], form.c.map(&:id), ["A", "Cat;Dog", "D"])
     end
@@ -120,17 +113,17 @@ describe Results::WebResponseParser do
 
   context "response with a group" do
     let(:question_types) { ["text", %w[text text], "text"] }
-    let(:data) do
-      {root: web_answer_group_hash(form.root_group.id,
+    let(:answers) do
+      {
         "0" => web_answer_hash(form.c[0].id, value: "A"),
         "1" => web_answer_group_hash(form.c[1].id,
           "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
           "1" => web_answer_hash(form.c[1].c[1].id, value: "C")),
-        "2" => web_answer_hash(form.c[2].id, value: "D"))}
+        "2" => web_answer_hash(form.c[2].id, value: "D")
+      }
     end
 
     it "should produce the correct tree" do
-      tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
       expect_children(tree.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
@@ -139,8 +132,8 @@ describe Results::WebResponseParser do
 
   context "response with an answer group set" do
     let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
-    let(:data) do
-      {root: web_answer_group_hash(form.root_group.id,
+    let(:answers) do
+      {
         "0" => web_answer_hash(form.c[0].id, value: "A"),
         "1" => {
           id: "",
@@ -148,18 +141,19 @@ describe Results::WebResponseParser do
           questioning_id: form.c[1].id,
           relevant: "true",
           children: {
-            "0" => web_answer_group_hash(form.c[1].id, answers1),
-            "1" => web_answer_group_hash(form.c[1].id, answers2)
+            "0" => web_answer_group_hash(form.c[1].id, instance_one_answers),
+            "1" => web_answer_group_hash(form.c[1].id, instance_two_answers)
           }
-        })}
+        }
+      }
     end
-    let(:answers1) do
+    let(:instance_one_answers) do
       {
         "0" => web_answer_hash(form.c[1].c[0].id, value: "B"),
         "1" => web_answer_hash(form.c[1].c[1].id, value: "C")
       }
     end
-    let(:answers2) do
+    let(:instance_two_answers) do
       {
         "0" => web_answer_hash(form.c[1].c[0].id, value: "D"),
         "1" => web_answer_hash(form.c[1].c[1].id, value: "E")
@@ -167,7 +161,6 @@ describe Results::WebResponseParser do
     end
 
     it "builds tree with answer group set" do
-      tree = Results::WebResponseParser.new.parse(input)
       expect_root(tree, form)
       expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
       expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
