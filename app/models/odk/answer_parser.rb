@@ -16,11 +16,11 @@ module Odk
 
       case question_type
       when "select_one"
-        answer.option_id = Odk::CodeMapper.new.option_id_for_code(content)
+        answer.option_id = Odk::CodeMapper.instance.option_id_for_code(content)
       when "select_multiple"
         unless content == "none"
           content.split(" ").each do |oid|
-            answer.choices.build(option_id: Odk::CodeMapper.new.option_id_for_code(oid))
+            answer.choices.build(option_id: Odk::CodeMapper.instance.option_id_for_code(oid))
           end
         end
       when "date", "datetime", "time"

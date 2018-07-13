@@ -3,7 +3,7 @@ module Odk
     delegate_all
 
     def odk_code
-      CodeMapper.new.code_for_item(object)
+      CodeMapper.instance.code_for_item(object)
     end
 
     def absolute_xpath

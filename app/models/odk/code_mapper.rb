@@ -1,8 +1,12 @@
 # frozen_string_literal: true
 
+require "singleton"
+
 module Odk
   # CodeMapper maps between odk codes and form item. Used by odk decorators and odk response parser
   class CodeMapper
+    include Singleton
+
     def initialize
     end
 
