@@ -89,4 +89,16 @@ describe Questioning do
       end
     end
   end
+
+  describe "validation" do
+    # Detailed testing of this validator is in own file.
+    describe "DynamicPatternValidator" do
+      let(:questioning) { build(:questioning, default: "Item: calc($Foo + 4) ") }
+
+      it "is hooked up properly" do
+        expect(questioning).to be_invalid
+        expect(questioning.errors[:default].join).to match(/must surround/)
+      end
+    end
+  end
 end

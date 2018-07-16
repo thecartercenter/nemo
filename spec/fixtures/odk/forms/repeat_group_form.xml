@@ -26,13 +26,13 @@
       <itext>
         <translation lang="English">
           <text id="*itemcode1*:label">
-            <value>Repeat Group 1</value>
+            <value>Grp1</value>
           </text>
           <text id="*itemcode1*:hint">
-            <value>Repeat Group 1</value>
+            <value>Grp1</value>
           </text>
           <text id="*itemcode1*:itemname">
-            <value>1st Item Name <output value="/data/*itemcode1*/*itemcode2*"/></value>
+            <value>Hi’ "<output value="/data/*itemcode1*/*itemcode2*"/>"</value>
           </text>
           <text id="*itemcode5*:label">
             <value>Group Name</value>
@@ -41,13 +41,15 @@
             <value>Group Hint</value>
           </text>
           <text id="*itemcode8*:label">
-            <value>Repeat Group 2</value>
+            <value>Grp2</value>
           </text>
           <text id="*itemcode8*:hint">
-            <value>Repeat Group 2</value>
+            <value>Grp2</value>
           </text>
           <text id="*itemcode8*:itemname">
-            <value>2nd Item Name <output value="/data/*itemcode8*/*itemcode9*"/></value>
+            <value>
+              <output value="if((/data/*itemcode8*/*itemcode9*) &gt; 18, 'A’&quot;yeah&quot;', 'C')"/>
+            </value>
           </text>
           <text id="*itemcode2*:label">
             <value>Text Question Title 1</value>
@@ -80,7 +82,7 @@
             <value>Question Hint 5</value>
           </text>
           <text id="*itemcode9*:label">
-            <value>Text Question Title 6</value>
+            <value>Integer Question Title 6</value>
           </text>
           <text id="*itemcode9*:hint">
             <value>Question Hint 6</value>
@@ -107,7 +109,7 @@
       <bind nodeset="/data/*itemcode5*/*itemcode7*" type="string"/>
       <bind nodeset="/data/*itemcode8*"/>
       <bind nodeset="/data/*itemcode8*/header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode8*/*itemcode9*" type="string"/>
+      <bind nodeset="/data/*itemcode8*/*itemcode9*" type="int"/>
       <bind nodeset="/data/*itemcode8*/*itemcode10*" type="string"/>
     </model>
   </h:head>

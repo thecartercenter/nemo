@@ -14,6 +14,8 @@ class Questioning < FormItem
 
   scope :visible, -> { where(hidden: false) }
 
+  validates_with Forms::DynamicPatternValidator, field_name: :default
+
   accepts_nested_attributes_for :question
 
   # checks if this form has any answers

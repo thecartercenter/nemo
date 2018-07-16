@@ -1,22 +1,29 @@
-# Parses $-style patterns involving responses, like default answer and default form instance name.
-# Returns output in xpath format using `concat`.
+# frozen_string_literal: true
+
 module Odk
+  # Parses $-style patterns involving responses, like default answer and default form instance name.
   class ResponsePatternParser < DynamicPatternParser
+    # Returns output in xpath format using `concat`, or in the case of a calculated field,
+    # returns an arbitrary xpath expression.
+    def to_odk
+      super
+    end
 
     protected
 
     def join_tokens(tokens)
-      tokens.size > 1 ? "concat(#{tokens.join(',')})" : tokens.first
+      !calculated? && tokens.size > 1 ? "concat(#{tokens.join(',')})" : tokens.join
     end
 
     # Returns the output fragment for the given target questioning.
     def build_output(other_qing)
       if other_qing.has_options?
-        if other_qing.multilevel?
-          xpath = src_item.xpath_to(other_qing.subqings.first)
-        else
-          xpath = src_item.xpath_to(other_qing)
-        end
+        xpath =
+          if other_qing.multilevel?
+            src_item.xpath_to(other_qing.subqings.first)
+          else
+            src_item.xpath_to(other_qing)
+          end
         "jr:itext(#{xpath})"
       else
         src_item.xpath_to(other_qing)
@@ -25,7 +32,15 @@ module Odk
 
     # Returns the desired output fragment for the given token from the input text.
     def process_token(token)
-      odk_mapping.has_key?(token) ? odk_mapping[token] : "'#{token}'"
+      if token_is_code?(token)
+        process_code(token)
+      elsif calculated?
+        token
+      else
+        # Replace ' with ’ because ' is used to wrap the tokens.
+        token = token.tr("'", "’")
+        "'#{token}'"
+      end
     end
 
     # Returns a hash of reserved $!XYZ style codes that have special meanings.
@@ -38,9 +53,7 @@ module Odk
 
       # We can't use repeat num if src_item is root because root or top level
       # because can't be in a repeat group.
-      if src_item.depth < 2
-        @reserved_codes["$!RepeatNum"] = nil
-      end
+      @reserved_codes["$!RepeatNum"] = nil if src_item.depth < 2
 
       @reserved_codes
     end

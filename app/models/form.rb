@@ -27,6 +27,7 @@ class Form < ApplicationRecord
 
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
+  validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 
   before_create :init_downloads
 
