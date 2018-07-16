@@ -80,7 +80,7 @@ class QuestionsController < ApplicationController
   def audio_prompt
     authorize! :show, @question
 
-    decorated_question = QuestionDecorator.decorate(@question)
+    decorated_question = Odk::QuestionDecorator.decorate(@question)
 
     send_file decorated_question.audio_prompt.path,
       type: decorated_question.audio_prompt_content_type,
