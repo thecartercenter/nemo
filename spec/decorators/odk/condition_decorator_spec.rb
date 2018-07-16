@@ -78,7 +78,7 @@ describe Odk::ConditionDecorator do
       let(:int_q) { decorate(form.questionings[0]) }
       let(:text_q) { decorate(form.questionings[1]) }
       let(:date_q) { decorate(form.questionings[2]) }
-      let(:time_q) { decorate( form.questionings[3]) }
+      let(:time_q) { decorate(form.questionings[3]) }
       let(:datetime_q) { decorate(form.questionings[4]) }
 
       context "with eq operator and int question" do
