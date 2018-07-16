@@ -106,7 +106,7 @@ class FormsController < ApplicationController
     @cache_key = @form.odk_download_cache_key
     unless fragment_exist?(@cache_key)
       questions = @form.visible_questionings.map(&:question).select(&:audio_prompt_file_name)
-      @decorated_questions = QuestionDecorator.decorate_collection(questions)
+      @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
       @ifa = ItemsetsFormAttachment.new(form: @form)
       @ifa.ensure_generated
     end

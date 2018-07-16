@@ -17,6 +17,8 @@ module Odk
         FormDecorator.new(obj, context: context)
       when "QingGroup"
         QingGroupDecorator.new(obj, context: context)
+      when "Question"
+        QuestionDecorator.new(obj, context: context)
       when "Questioning"
         QingDecorator.new(obj, context: context)
       when "Condition"
