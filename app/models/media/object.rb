@@ -3,7 +3,7 @@ class Media::Object < ApplicationRecord
 
   belongs_to :answer
 
-  has_attached_file :item, url: "/:locale/m/:mission/:class/:id/:style"
+  has_attached_file :item
   validates_attachment_presence :item
 
   delegate :mission, to: :answer
