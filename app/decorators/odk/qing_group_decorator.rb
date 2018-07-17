@@ -2,11 +2,6 @@ module Odk
   class QingGroupDecorator < FormItemDecorator
     delegate_all
 
-    def odk_code
-      @odk_code = super
-      @odk_code ||= "grp#{object.id}"
-    end
-
     def sorted_children
       decorate_collection(object.sorted_children, context: context)
     end

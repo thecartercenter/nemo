@@ -3,7 +3,7 @@ module Odk
     delegate_all
 
     def odk_code
-      return "/data" if object.is_root?
+      CodeMapper.instance.code_for_item(object)
     end
 
     def absolute_xpath

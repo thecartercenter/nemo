@@ -146,12 +146,12 @@ class OptionNode < ApplicationRecord
 
   # an odk-friendly unique code
   def odk_code
-    "on#{id}"
+    Odk::CodeMapper.instance.code_for_item(self)
   end
 
   # an odk-friendly unique code for this node's parent
   def parent_odk_code
-    "on#{parent_id}"
+    Odk::CodeMapper.instance.code_for_item(parent)
   end
 
   # Serializes all descendants. Meant to be called on root.

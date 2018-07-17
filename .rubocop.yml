@@ -73,3 +73,6 @@ Bundler:
 
 Rails:
   Enabled: true
+
+Rails/SkipsModelValidations:
+  Enabled: false

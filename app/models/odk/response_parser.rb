@@ -15,6 +15,7 @@ module Odk
       @files = files
       @response.source = "odk"
       @awaiting_media = awaiting_media
+      @answer_parser = nil
     end
 
     # populates response tree and saves
@@ -35,7 +36,7 @@ module Odk
       data = Nokogiri::XML(raw_odk_xml).root
       lookup_and_check_form(id: data["id"], version: data["version"])
       if existing_response
-        add_media_to_existing_response
+        answer_parser.add_media_to_existing_response
       else
         response.odk_hash = awaiting_media ? calculate_odk_hash : nil
         build_answer_tree(data)
@@ -43,11 +44,8 @@ module Odk
       end
     end
 
-    def add_media_to_existing_response
-      candidate_answers = response.answers.select { |a| a.pending_file_name.present? }
-      candidate_answers.each do |a|
-        populate_multimedia_answer(a, a.pending_file_name, a.questioning.qtype_name)
-      end
+    def answer_parser
+      @answer_parser ||= Odk::AnswerParser.new(response, files)
     end
 
     def build_answer_tree(data)
@@ -71,7 +69,7 @@ module Odk
     end
 
     # We use the form item to determine the node type because ODK XML does not
-    # tell us what type a node is. 
+    # tell us what type a node is.
     def add_response_node(node, response_node)
       form_item = form_item(node.name)
       if form_item.class == QingGroup && form_item.repeatable?
@@ -160,68 +158,8 @@ module Odk
 
     def add_answer(content, form_item, parent)
       answer = new_node(Answer, form_item, parent)
-      populate_answer_value(answer, content, form_item)
+      answer_parser.populate_answer_value(answer, content, form_item)
       parent.children << answer
-    end
-
-    # finds the appropriate Option instance for an ODK submission
-    def option_id_for_submission(option_node_str)
-      if /\Aon([\w\-]+)\z/.match? option_node_str
-        # look up inputs of the form "on####" as option node ids
-        node_id = option_node_str.remove("on")
-        OptionNode.id_to_option_id(node_id)
-      else
-        # fallback by looking up other inputs as option ids
-        Option.where(id: option_node_str).pluck(:id).first
-      end
-    end
-
-    def populate_multimedia_answer(answer, pending_file_name, question_type)
-      if files[pending_file_name].present?
-        answer.pending_file_name = nil
-        case question_type
-        when "image", "annotated_image", "sketch", "signature"
-          answer.media_object = Media::Image.create(item: files[pending_file_name])
-        when "audio"
-          answer.media_object = Media::Audio.create(item: files[pending_file_name])
-        when "video"
-          answer.media_object = Media::Video.create(item: files[pending_file_name])
-        end
-      else
-        answer.value = nil
-        answer.pending_file_name = pending_file_name
-      end
-      answer
-    end
-
-    def populate_answer_value(answer, content, form_item)
-      question_type = form_item.qtype.name
-      return populate_multimedia_answer(answer, content, question_type) if form_item.qtype.multimedia?
-
-      case question_type
-      when "select_one"
-        answer.option_id = option_id_for_submission(content)
-      when "select_multiple"
-        unless content == "none"
-          content.split(" ").each do |oid|
-            answer.choices.build(option_id: option_id_for_submission(oid))
-          end
-        end
-      when "date", "datetime", "time"
-        # Time answers arrive with timezone info (e.g. 18:30:00.000-04), but we treat a time question
-        # as having no timezone, useful for things like 'what time of day does the doctor usually arrive'
-        # as opposed to 'what exact date/time did the doctor last arrive'.
-        # If the latter information is desired, a datetime question should be used.
-        # Also, since Rails treats time data as always on 2000-01-01, using the timezone
-        # information could lead to DST issues. So we discard the timezone information for time questions only
-        # We also make sure elsewhere in the app to not tz-shift time answers when we display them.
-        # (Rails by default keeps time columns as UTC and does not shift them to the system's timezone.)
-        content = content.gsub(/(Z|[+\-]\d+(:\d+)?)$/, "") << " UTC" if answer.qtype.name == "time"
-        answer.send("#{answer.qtype.name}_value=", Time.zone.parse(content))
-      else
-        answer.value = content
-      end
-      answer
     end
 
     def form_item(name)
@@ -236,18 +174,8 @@ module Odk
       form_item
     end
 
-    # TODO: refactor mapping to one shared place accessible here and from odk decorators
     def form_item_id_from_tag(tag)
-      prefixes = %w[qing grp]
-      tag_without_prefix = nil
-      prefixes.each do |p|
-        tag_without_prefix = tag.remove p if /#{Regexp.quote(p)}\S*/.match?(tag)
-      end
-      if /\S*_\d*/.match?(tag)
-        tag_without_prefix.split("_").first
-      else
-        tag_without_prefix
-      end
+      Odk::CodeMapper.instance.item_id_for_code(tag, response.form)
     end
 
     # Checks if form ID and version were given, if form exists, and if version is correct
