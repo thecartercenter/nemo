@@ -51,8 +51,8 @@ describe Odk::ResponsePatternParser do
         let(:src_item) { q22 }
 
         context "with no codes" do
-          let(:pattern) { "hai" }
-          it { is_expected.to eq("'hai'") }
+          let(:pattern) { "hai there" }
+          it { is_expected.to eq("'hai there'") }
         end
 
         context "with local code" do
@@ -100,34 +100,65 @@ describe Odk::ResponsePatternParser do
     end
   end
 
-  describe "calc()" do
-    let(:form) { create(:form, question_types: %w[integer integer]) }
+  describe "numeric literal handling" do
+    let(:form) { create(:form, question_types: %w[integer decimal]) }
     let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
     let(:q2) { Odk::QingDecorator.decorate(form.sorted_children[1]) }
-    let(:src_item) { q2 }
+
+    context "for integer question" do
+      let(:src_item) { q1 }
+      let(:pattern) { "-123" }
+      it { is_expected.to eq("-123") }
+    end
+
+    context "for decimal question" do
+      let(:src_item) { q2 }
+      let(:pattern) { "-12.34" }
+      it { is_expected.to eq("-12.34") }
+    end
+  end
+
+  describe "calc()" do
+    let(:form) { create(:form, question_types: %w[integer text integer]) }
+    let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
+    let(:q2) { Odk::QingDecorator.decorate(form.sorted_children[1]) }
+    let(:q3) { Odk::QingDecorator.decorate(form.sorted_children[2]) }
 
     before do
       q1.update!(code: "Q1")
     end
 
-    context "with simple expression" do
-      let(:pattern) { "calc($Q1 + 2)" }
-      it { is_expected.to eq("(/data/#{q1.odk_code}) + 2") }
+    context "with text src question" do
+      let(:src_item) { q2 }
+
+      context "with simple expression" do
+        let(:pattern) { "calc($Q1 + 2)" }
+        it { is_expected.to eq("(/data/#{q1.odk_code}) + 2") }
+      end
+
+      context "with quoted string containing $" do
+        let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
+        it { is_expected.to eq("myfunc((5 + 12) / (/data/#{q1.odk_code}), ' (($money cash')") }
+      end
+
+      context "with invalid code" do
+        let(:pattern) { "calc($Junk + 7)" }
+        it { is_expected.to eq("('') + 7") }
+      end
+
+      context "with single and double quotes" do
+        let(:pattern) { %{calc(myfunc('"hai"', $Q1, "'foo’s'"))} }
+        it { is_expected.to eq(%{myfunc('"hai"', (/data/#{q1.odk_code}), "'foo’s'")}) }
+      end
     end
 
-    context "with quoted string containing $" do
-      let(:pattern) { "calc(myfunc((5 + 12) / $Q1, ' (($money cash'))" }
-      it { is_expected.to eq("myfunc((5 + 12) / (/data/#{q1.odk_code}), ' (($money cash')") }
-    end
+    context "with numeric src question" do
+      let(:src_item) { q3 }
 
-    context "with invalid code" do
-      let(:pattern) { "calc($Junk + 7)" }
-      it { is_expected.to eq("('') + 7") }
-    end
-
-    context "with single and double quotes" do
-      let(:pattern) { %{calc(myfunc('"hai"', $Q1, "'foo’s'"))} }
-      it { is_expected.to eq(%{myfunc('"hai"', (/data/#{q1.odk_code}), "'foo’s'")}) }
+      context "with simple expression" do
+        let(:pattern) { "calc($Q1 + 2)" }
+        it { is_expected.to eq("(/data/#{q1.odk_code}) + 2") }
+      end
     end
   end
 end

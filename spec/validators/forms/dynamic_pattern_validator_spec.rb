@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-# This spec uses the Form model which uses this validator
 describe Forms::DynamicPatternValidator do
+  # This spec uses the Form model which uses this validator
   describe "calc_must_wrap_all_of_default_response_name" do
     shared_examples_for "valid" do
       it "is valid" do
@@ -46,6 +46,37 @@ describe Forms::DynamicPatternValidator do
     context "with calc not at start" do
       let(:form) { build(:form, default_response_name: "Item: calc($Foo + 4) ") }
       it_behaves_like "invalid"
+    end
+  end
+
+  # This spec uses the Questioning model which sets force_calc_if: :numeric?
+  describe "force_calc_for_dollar_refs_if" do
+    context "with text question and non-calc pattern" do
+      subject(:questioning) { build(:questioning, qtype_name: "text", default: "Hello $Foo") }
+      it { is_expected.to be_valid }
+    end
+
+    context "with text question and calc pattern" do
+      subject(:questioning) { build(:questioning, qtype_name: "text", default: "calc($Foo + 5)") }
+      it { is_expected.to be_valid }
+    end
+
+    context "with int question and calc pattern" do
+      subject(:questioning) { build(:questioning, qtype_name: "integer", default: "calc($Foo + 5)") }
+      it { is_expected.to be_valid }
+    end
+
+    context "with int question and no dollar ref" do
+      subject(:questioning) { build(:questioning, qtype_name: "integer", default: "-123") }
+      it { is_expected.to be_valid }
+    end
+
+    context "with int question and non-calc pattern" do
+      subject(:questioning) { build(:questioning, qtype_name: "integer", default: "Hello $Foo") }
+      it do
+        expect(questioning).not_to be_valid
+        expect(questioning.errors[:default].join).to match(/must use the calc/)
+      end
     end
   end
 end

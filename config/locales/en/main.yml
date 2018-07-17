@@ -802,6 +802,7 @@ en:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
             default:
               calc_must_wrap_all: "calc(...) must surround the entire default answer."
+              must_use_calc: "You must use the calc(...) wrapper for this question type if using $ references."
           cant_delete_if_has_answers: "You can't remove this Question because it has one or more answers for this Form."
           invalid_condition: "Condition is invalid (see below)."
           question: "Question"

@@ -34,7 +34,10 @@ module Odk
     def process_token(token)
       if token_is_code?(token)
         process_code(token)
-      elsif calculated?
+      elsif calculated? || (src_item.is_a?(Questioning) && src_item.numeric?)
+        # calculated expressions are passed on without modification.
+        # Also, numeric source questions can't use the concat style so they either have to be calc
+        # or have simple literals. If we're at this point, it's a simple literal, so don't quote it.
         token
       else
         # Replace ' with ’ because ' is used to wrap the tokens.

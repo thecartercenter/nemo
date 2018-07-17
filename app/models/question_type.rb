@@ -10,7 +10,7 @@ class QuestionType
   }, {
     name: "long_text",
     odk_name: "string",
-    properties: %w[printable smsable textual refable]
+    properties: %w[printable smsable textual refable defaultable]
   }, {
     name: "barcode",
     odk_name: "barcode",
@@ -18,15 +18,15 @@ class QuestionType
   }, {
     name: "integer",
     odk_name: "int",
-    properties: %w[printable smsable numeric headerable refable]
+    properties: %w[printable smsable numeric headerable refable defaultable]
   }, {
     name: "counter",
     odk_name: "int",
-    properties: %w[printable smsable numeric headerable refable]
+    properties: %w[printable smsable numeric headerable refable defaultable]
   }, {
     name: "decimal",
     odk_name: "decimal",
-    properties: %w[printable smsable numeric headerable refable]
+    properties: %w[printable smsable numeric headerable refable defaultable]
   }, {
     name: "location",
     odk_name: "geopoint",
@@ -42,15 +42,15 @@ class QuestionType
   }, {
     name: "datetime",
     odk_name: "dateTime",
-    properties: %w[printable temporal has_timezone smsable headerable refable]
+    properties: %w[printable temporal has_timezone smsable headerable refable defaultable]
   }, {
     name: "date",
     odk_name: "date",
-    properties: %w[printable temporal smsable headerable refable]
+    properties: %w[printable temporal smsable headerable refable defaultable]
   }, {
     name: "time",
     odk_name: "time",
-    properties: %w[printable temporal smsable headerable refable]
+    properties: %w[printable temporal smsable headerable refable defaultable]
   }, {
     name: "image",
     odk_name: "binary",
