@@ -55,7 +55,7 @@ describe "questionings form", js: true  do
         expect_editable("default", false)
         select "Text", from: "Type" # Text is defaultable
         expect_editable("default", true)
-        select "Long Text", from: "Type"
+        select "Select One", from: "Type"
         expect_editable("default", false)
       end
 

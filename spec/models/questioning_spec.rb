@@ -80,7 +80,7 @@ describe Questioning do
         end
       end
 
-      context  "add a metadata_type with no existing conditions" do
+      context "add a metadata_type with no existing conditions" do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: "formstart"} }
         let(:submitted) { {display_conditions: []} }
         it "should not change the display conditions" do
