@@ -69,5 +69,9 @@ describe "question form" do
     )
 
     expect(page).to have_content("powerup.mp3")
+
+    # edit view shows file name
+    click_on "Edit Question"
+    expect(page).to have_content("powerup.mp3")
   end
 end
