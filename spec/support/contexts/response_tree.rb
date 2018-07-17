@@ -29,4 +29,29 @@ shared_context "response tree" do
     child_values = children.map { |child| child.is_a?(Answer) ? child.casted_value : nil }
     expect(child_values).to eq values
   end
+
+  # Builds a hash for an answer node in a web response's hash representation of an answer heirarchy
+  def web_answer_hash(q_id, values, relevant: "true", destroy: nil)
+    hash = {
+      id: "",
+      type: "Answer",
+      questioning_id: q_id,
+      relevant: relevant
+    }.merge(values)
+    hash[:_destroy] = destroy unless destroy.nil?
+    hash
+  end
+
+  # Builds a hash for an answer group node in a web response's hash representation of an answer heirarchy
+  def web_answer_group_hash(q_id, children, relevant: "true", destroy: nil)
+    hash = {
+      id: "",
+      type: "AnswerGroup",
+      questioning_id: q_id,
+      relevant: relevant,
+      children: children
+    }
+    hash[:_destroy] = destroy unless destroy.nil?
+    hash
+  end
 end
