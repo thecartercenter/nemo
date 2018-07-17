@@ -73,5 +73,8 @@ describe "question form" do
     # edit view shows file name
     click_on "Edit Question"
     expect(page).to have_content("powerup.mp3")
+
+    # and still allows you change the audio prompt file
+    expect(page).to have_css("input#question_audio_prompt")
   end
 end
