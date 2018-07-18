@@ -34,9 +34,9 @@ module Results
     # Expects ActionController::Parameters instance without required or permitted set, which is
     # a hash representing the structure of an answer heirarchy that comes with a web response.
     # Returns an unsaved answer tree object based on the hash
-    def parse(web_answer_hash)
-      tree_root = new_tree_node(web_answer_hash[:root], nil)
-      add_children(web_answer_hash[:root][:children], tree_root)
+    def parse(web_answer_hash, response = nil)
+      tree_root = response.present? ? response.root_node : new_tree_node(web_answer_hash[:root], nil)
+      parse_children(web_answer_hash[:root][:children], tree_root)
     end
 
     private
@@ -48,14 +48,30 @@ module Results
       type.new(all_attrs)
     end
 
-    def add_children(web_hash_children, tree_parent)
+    def parse_children(web_hash_children, tree_parent)
       web_hash_children.each_pair do |_k, v|
         next if ignore_node?(v)
-        child = new_tree_node(v, tree_parent)
-        tree_parent.children << child
+        update_or_add_node(v, tree_parent)
         add_children(v[:children], child) if v[:children]
       end
       tree_parent
+    end
+
+    def update_or_add_node(web_hash_node, tree_parent)
+      id = web_hash_node[:id]
+      if id.blank?
+        child = new_tree_node(v, tree_parent)
+        tree_parent.children << child
+      else
+        type = web_hash_node[:type].constantize
+        if type == Answer
+          existing_node = ResponseNode.find(id)
+          #TODO make submission error avaialble
+          #raise StandardError "Invalid answer node with id: #{id}" if existing_node.nil? || existing_node.type != type
+          updatable_params = web_hash_node.slice(:value).permit(PERMITTED_PARAMS)
+          existing_node.update_attributes(updatable_params)
+        end
+      end
     end
 
     def ignore_node?(web_hash_node)
