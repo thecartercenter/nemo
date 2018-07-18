@@ -29,13 +29,13 @@
   </div>
 
   <div>
-    <%= f.field(:audio_prompt, type: :file, read_only: @question&.audio_prompt_file_name) %>
+    <%= f.field(:audio_prompt, type: :file) %>
   </div>
 
   <div class="minmax">
     <%= f.field(:casted_minimum, :partial => 'questions/min_max_condition') %>
     <%= f.field(:casted_maximum, :partial => 'questions/min_max_condition') %>
-  </div>
+  </div >
 
   <%= f.field(:auto_increment, type: :check_box) %>
   <%= f.field(:metadata_type, type: :select,
