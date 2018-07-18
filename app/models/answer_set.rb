@@ -4,7 +4,7 @@
 class AnswerSet < ResponseNode
   belongs_to :questioning
 
-  alias answers c
+  alias answers children
 
   def option_node_path
     OptionNodePath.new(

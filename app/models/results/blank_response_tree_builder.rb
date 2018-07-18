@@ -7,20 +7,14 @@ module Results
 
     delegate :form, to: :response
 
-    def initialize(response, options = {})
+    def initialize(response)
       self.response = response
-      self.options = options
     end
 
     def build
-      root = AnswerGroup.new(form_item: form.root_group, response: response)
-      root.save! if options[:save]
+      root = AnswerGroup.new(form_item: form.root_group, response: response, new_rank: 0)
       add_level(form.root_group.sorted_children, root)
       response.associate_tree(root)
-
-      # TODO: We can remove the `validate: false` once various validations are
-      # removed from the response model
-      response.save(validate: false) if options[:save]
       root
     end
 
@@ -67,8 +61,6 @@ module Results
         new_rank: response_node.children.size,
         rank: response_node.children.size + 1
       )
-      # We can't validate yet because there's no value.
-      child.save(validate: false) if options[:save]
       response_node.children << child
       child
     end

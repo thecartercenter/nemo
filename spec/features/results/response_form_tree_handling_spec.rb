@@ -50,7 +50,7 @@ feature "response form tree handling", js: true do
     context "with response" do
       let!(:response) { Response.create!(form: form, mission: get_mission, user: user) }
 
-      before { Results::BlankResponseTreeBuilder.new(response, save: true).build }
+      before { Results::BlankResponseTreeBuilder.new(response).build }
 
       scenario "renders edit form with hierarchical structure" do
         visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
