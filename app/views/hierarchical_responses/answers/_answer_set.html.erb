@@ -3,9 +3,10 @@
   <%= read_only ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
 
   <% unless read_only %>
-    <%= hidden_field_tag input_name(path + ["id"]), set.id %>
-    <%= hidden_field_tag input_name(path + ["type"]), "AnswerSet" %>
-    <%= hidden_field_tag input_name(path + ["questioning_id"]), set.questioning_id %>
+
+    <%= hidden_field_tag context.add(:id).input_name, set.id %>
+    <%= hidden_field_tag context.add(:type).input_name, "AnswerSet" %>
+    <%= hidden_field_tag context.add(:questioning_id).input_name, set.questioning_id %>
   <% end %>
 
   <%= render("hierarchical_responses/answers/answer_info", node: set) %>
@@ -14,7 +15,7 @@
     <div class="control">
       <%= render("hierarchical_responses/answers/cascading_#{mode}",
             answer_set: set,
-            path: path + ["children"]) %>
+            context: context.add(:children)) %>
     </div>
   </div>
 </div>

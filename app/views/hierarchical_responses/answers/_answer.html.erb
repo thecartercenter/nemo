@@ -3,14 +3,14 @@
   <%= read_only ? "read-only" : "editable" %> <%= answer.lengthy? ? "lengthy" : "" %>">
 
   <% unless read_only %>
-    <%= hidden_field_tag input_name(path + ["id"]), answer.id %>
-    <%= hidden_field_tag input_name(path + ["type"]), "Answer" %>
-    <%= hidden_field_tag input_name(path + ["questioning_id"]), answer.questioning_id %>
+    <%= hidden_field_tag context.add(:id).input_name, answer.id %>
+    <%= hidden_field_tag context.add(:type).input_name, "Answer" %>
+    <%= hidden_field_tag context.add(:questioning_id).input_name, answer.questioning_id %>
   <% end %>
 
   <%= render("hierarchical_responses/answers/answer_info", node: answer) %>
 
   <div class="control">
-    <%= render("hierarchical_responses/answers/single_#{mode}", answer: answer, path: path) %>
+    <%= render("hierarchical_responses/answers/single_#{mode}", answer: answer, context: context) %>
   </div>
 </div>

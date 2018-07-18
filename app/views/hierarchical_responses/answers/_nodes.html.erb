@@ -1,5 +1,5 @@
 <% nodes.each_with_index do |node, index| %>
-  <% params = {read_only: read_only, path: node.parent.present? ? path + [index] : []} %>
+  <% params = {read_only: read_only, context: node.parent.present? ? context.add(index) : context} %>
 
   <% if node.is_a?(AnswerSet) %>
     <%= render("hierarchical_responses/answers/answer_set", params.merge(set: node)) %>
