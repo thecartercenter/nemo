@@ -3,14 +3,32 @@ module ResponseFactoryHelper
   def self.build_answers(response, answer_values)
     root = AnswerGroup.new(questioning_id: response.form.root_group.id)
     add_level(response.form.sorted_children, answer_values, root)
-    response.associate_tree(root)
     root
   end
 
   def self.add_level(form_items, answer_values, parent)
     form_items.each_with_index do |item, i|
-      parent.children << Answer.new(questioning_id: item.id, value: answer_values[i], new_rank: item.rank)
+      case item
+      when Questioning
+        parent.children << new_answer(item, answer_values[i], i)
+      when QingGroup
+        parent.children << new_group(item, answer_values[i], i) #not repeating
+      end
     end
+  end
+
+  def self.new_group(form_group, answer_values, new_rank)
+    group = AnswerGroup.new(
+      questioning_id: form_group.id,
+      new_rank: new_rank,
+      inst_num: new_rank,
+      rank: new_rank + 1
+    )
+    add_level(form_group.c, answer_values, group)
+  end
+
+  def self.new_answer(questioning, value, new_rank)
+    build_answer(questioning, value, new_rank)
   end
   # Returns a potentially nested array of answers.
   # def self.build_answers(parent, values, inst_num = 1)
@@ -53,41 +71,54 @@ module ResponseFactoryHelper
   #   end
   # end
   #
-  # def self.build_answer(qing, value, inst_num)
-  #   answers = case qing.qtype_name
-  #   when "select_one"
-  #     options_by_name = qing.all_options.index_by(&:name)
-  #     values = value.nil? ? [nil] : Array.wrap(value)
-  #     values.each_with_index.map do |v,i|
-  #       Answer.new(
-  #         questioning: qing,
-  #         rank: i + 1,
-  #         option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'")
-  #       )
-  #     end.shuffle
-  #
-  #   # in this case, a should be an array of choice names
-  #   when "select_multiple"
-  #     options_by_name = qing.options.index_by(&:name)
-  #     raise "expecting array answer value for question #{qing.code}, got #{value.inspect}" unless value.is_a?(Array)
-  #     Answer.new(
-  #       questioning: qing,
-  #       choices:
-  #         value.map { |c| Choice.new(option: options_by_name[c]) or raise "could not find option with name '#{c}'" }
-  #     )
-  #
-  #   when "date", "time", "datetime"
-  #     Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value)
-  #   when "image", "annotated_image", "signature", "sketch", "audio", "video"
-  #     Answer.new(questioning: qing, media_object: value)
-  #   else
-  #     Answer.new(questioning: qing, value: value)
-  #   end
-  #
-  #   answers = Array.wrap(answers)
-  #   answers.each { |a| a.inst_num = inst_num }
-  #   answers
-  # end
+  def self.build_answer(qing, value, new_rank)
+    a = nil
+    case qing.qtype_name
+    when "select_one"
+      pp qing.all_options
+      pp value
+      pp value.class
+      option = qing.all_options.select{ |o| o.canonical_name == value }.first
+      option_id = option.id
+      a = Answer.new(
+        questioning: qing,
+        option_id: option_id
+      )
+    # when "select_one"
+    #   options_by_name = qing.all_options.index_by(&:name)
+    #   values = value.nil? ? [nil] : Array.wrap(value)
+    #   values.each_with_index.map do |v,i|
+    #     Answer.new(
+    #       questioning: qing,
+    #       rank: i + 1,
+    #       option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'"),
+    #       new_rank: new_rank
+    #     )
+    #   end.shuffle
+
+    # in this case, a should be an array of choice names
+    when "select_multiple"
+      options_by_name = qing.options.index_by(&:name)
+      raise "expecting array answer value for question #{qing.code}, got #{value.inspect}" unless value.is_a?(Array)
+      a = Answer.new(
+        questioning: qing,
+        choices:
+          value.map { |c| Choice.new(option: options_by_name[c]) or raise "could not find option with name '#{c}'" }
+      )
+
+    when "date", "time", "datetime"
+      a = Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value)
+    when "image", "annotated_image", "signature", "sketch", "audio", "video"
+      a = Answer.new(questioning: qing, media_object: value)
+    else
+      puts "make a regular answer:"
+      a = Answer.new(questioning: qing, value: value)
+    end
+    a.new_rank = new_rank
+    a.inst_num = 1
+    a.rank = 1# new_rank + 1
+    a
+  end
 end
 
 FactoryGirl.define do
@@ -111,13 +142,15 @@ FactoryGirl.define do
     end
 
     # Ensure unpublished form associations have been published at least once
-    after(:build) do |response, evaluator|
+    after(:create) do |response, evaluator|
       form = response.form
       unless form.published? && form.current_version.present?
         form.publish!
         form.unpublish!
       end
-      response.root_node = ResponseFactoryHelper.build_answers(response, evaluator.answer_values)
+      answer_tree = ResponseFactoryHelper.build_answers(response, evaluator.answer_values)
+      response.associate_tree(answer_tree)
+      response.reload
     end
 
     # Build answer objects from answer_values array

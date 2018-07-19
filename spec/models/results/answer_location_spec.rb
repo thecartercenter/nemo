@@ -27,7 +27,7 @@ describe "answer location data" do
       form.publish!
 
       create(:response, form: form, answer_values:
-        ["12.34 -56.78", [select_one_option.name], [option_one.name, option_two.name], "Non geo answer", 12])
+        ["12.34 -56.78", select_one_option.name, [option_one.name, option_two.name], "Non geo answer", 12])
     end
 
     it "returns all answers for locations on a certain mission" do

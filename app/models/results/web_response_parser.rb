@@ -59,10 +59,11 @@ module Results
 
     def update_or_add_node(web_hash_node, tree_parent)
       id = web_hash_node[:id]
+      # add
       if id.blank?
         child = new_tree_node(v, tree_parent)
         tree_parent.children << child
-      else
+      else # update
         type = web_hash_node[:type].constantize
         if type == Answer
           existing_node = ResponseNode.find(id)

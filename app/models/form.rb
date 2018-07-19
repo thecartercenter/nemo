@@ -44,7 +44,7 @@ class Form < ApplicationRecord
     :child_groups,
     to: :root_group
 
-  delegate :code, to: :current_version
+  delegate :code, to: :current_version, allow_nil: true
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
     dont_copy: [:published, :pub_changed_at, :downloads, :responses_count, :upgrade_needed,
