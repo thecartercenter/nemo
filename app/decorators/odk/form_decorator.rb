@@ -52,11 +52,5 @@ module Odk
       # For now this is IFF there are any multilevel option sets or questions with audio prompts
       visible_questionings.any? { |q| q.multilevel? || q.audio_prompt.exists? }
     end
-
-    # Whether this form needs an accompanying manifest for odk.
-    def needs_manifest?
-      # For now this is IFF there are any multilevel option sets or questions with audio prompts
-      visible_questionings.any? { |q| q.multilevel? || q.audio_prompt.exists? }
-    end
   end
 end
