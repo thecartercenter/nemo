@@ -12,7 +12,7 @@
         <translation lang="English">
           <text id="*itemcode1*:label">
             <value>Integer Question Title 1</value>
-            <value form="audio">jr://audio/powerup.mp3</value>
+            <value form="audio">jr://audio/*itemcode1*_audio_prompt.mp3</value>
           </text>
           <text id="*itemcode1*:hint">
             <value>Question Hint 1</value>

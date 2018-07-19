@@ -13,7 +13,8 @@ module Odk
     def code_for_item(item, options: {})
       return "/data" if item.is_a?(FormItem) && item.is_root?
       case item
-      when Questioning then "qing#{item.id}"
+      when Questioning
+        item.audio_prompt.exists? ? item.question.id : "qing#{item.id}"
       when QingGroup then "grp#{item.id}"
       when Subqing
         base = code_for_item(item.questioning)
