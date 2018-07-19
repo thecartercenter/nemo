@@ -11,6 +11,9 @@
       <% qing.subqings.each do |subq| %>
         <text id="<%= subq.odk_code %>:label">
           <value><%= subq.name(lang, :strict => false) %></value>
+          <% if subq.audio_prompt.exists? %>
+            <value form="audio">jr://audio/<%= subq.audio_prompt.original_filename %></value>
+          <% end %>
         </text>
         <% unless @style == "commcare" %>
           <text id="<%= subq.odk_code %>:hint">
