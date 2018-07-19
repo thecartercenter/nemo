@@ -7,7 +7,8 @@ describe Results::WebResponseParser do
 
   let(:form) { create(:form, question_types: question_types) } # form item ids have to actually exist
   let(:input) { ActionController::Parameters.new(data) }
-  let(:tree) { Results::WebResponseParser.new.parse(input, response) }
+  let(:root_node) { response.nil? ? nil : response.root_node }
+  let(:tree) { Results::WebResponseParser.new.parse(input, root_node) }
 
   context "new response" do
     let(:response) { nil }
