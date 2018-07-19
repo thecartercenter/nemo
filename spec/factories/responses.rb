@@ -7,12 +7,14 @@ module ResponseFactoryHelper
   end
 
   def self.add_level(form_items, answer_values, parent)
-    form_items.each_with_index do |item, i|
-      case item
-      when Questioning
-        parent.children << new_answer(item, answer_values[i], i)
-      when QingGroup
-        parent.children << new_group(item, answer_values[i], i) #not repeating
+    unless answer_values.blank?
+      form_items.each_with_index do |item, i|
+        case item
+        when Questioning
+          parent.children << new_answer(item, answer_values[i], i)
+        when QingGroup
+          parent.children << new_group(item, answer_values[i], i) #not repeating
+        end
       end
     end
   end
