@@ -403,7 +403,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   end
 
   context "form with audio prompts" do
-    let(:form) { create(:form, :published, question_types: %w[text integer]) }
+    let(:form) { create(:form, :published, question_types: %w[integer]) }
 
     before do
       form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
