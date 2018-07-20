@@ -9,6 +9,9 @@ configatron.offline_mode = false
 # And copy and paste into this file in place of `secret-token`.
 ELMO::Application.config.secret_key_base = "secret-token"
 
+# raise error if host or protocol is not set
+raise "URL protocol or host is not set" if (%i[protocol host] - configatron.url.keys).any?
+
 # The hostname of your site
 # If offline_mode is set to true, then the hostname is optional
 configatron.url.host = "elmo.example.com"
