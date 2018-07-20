@@ -42,6 +42,7 @@ module GeneralSpecHelpers
       itemqcode: items.map(&:code),
       optcode: nodes.map(&:odk_code),
       optsetid: items.map(&:option_set_id).compact.uniq,
+      questionid: items.map { |i| i.question&.id },
       value: options[:values].presence || [])
     if save_fixtures
       dir = Rails.root.join("tmp", path)

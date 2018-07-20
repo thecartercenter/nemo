@@ -13,7 +13,7 @@
           <text id="*itemcode1*:label">
             <value>Integer Question Title 1</value>
             <value form="audio">
-              jr://audio/*itemcode1*_audio_prompt.mp3
+              jr://audio/*questionid1*_audio_prompt.mp3
             </value>
           </text>
           <text id="*itemcode1*:hint">
