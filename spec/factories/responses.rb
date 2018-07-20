@@ -1,6 +1,7 @@
 module ResponseFactoryHelper
 
   def self.build_answers(response, answer_values)
+    puts "answer values: #{answer_values}"
     root = AnswerGroup.new(questioning_id: response.form.root_group.id)
     add_level(response.form.sorted_children, answer_values, root)
     root
@@ -9,14 +10,18 @@ module ResponseFactoryHelper
   def self.add_level(form_items, answer_values, parent)
     unless answer_values.blank?
       form_items.each_with_index do |item, i|
-        case item
-        when Questioning
-          parent.children << new_answer(item, answer_values[i], i)
-        when QingGroup
-          parent.children << new_group(item, answer_values[i], i) #not repeating
+        answer_data = answer_values[i]
+        unless answer_data.nil?
+          case item
+          when Questioning
+            parent.children << new_answer(item, answer_values[i], i)
+          when QingGroup
+            parent.children << new_group(item, answer_values[i], i) #not repeating
+          end
         end
       end
     end
+    parent
   end
 
   def self.new_group(form_group, answer_values, new_rank)
@@ -75,17 +80,35 @@ module ResponseFactoryHelper
   #
   def self.build_answer(qing, value, new_rank)
     a = nil
+    puts qing.qtype_name
     case qing.qtype_name
     when "select_one"
-      pp qing.all_options
-      pp value
-      pp value.class
-      option = qing.all_options.select{ |o| o.canonical_name == value }.first
-      option_id = option.id
-      a = Answer.new(
-        questioning: qing,
-        option_id: option_id
-      )
+      if qing.multilevel?
+        set = AnswerSet.new(questioning_id: qing.id, new_rank: new_rank, inst_num: new_rank, rank: new_rank + 1)
+        unless value.blank?
+          options_by_name = qing.all_options.index_by(&:name)
+          value.each do |v|
+            option = qing.all_options.select { |o| o.canonical_name == v }.first
+            option_id = option.present? ? option.id : nil
+            set.children << Answer.new(
+              questioning: qing,
+              option_id: option_id,
+              new_rank: new_rank,
+              inst_num: new_rank,
+              rank: new_rank + 1
+            )
+          end
+        end
+        set.debug_tree
+        return set
+      else
+        option = qing.all_options.select{ |o| o.canonical_name == value }.first
+        a = Answer.new(
+          questioning: qing,
+          option_id: option.id
+        )
+      end
+
     # when "select_one"
     #   options_by_name = qing.all_options.index_by(&:name)
     #   values = value.nil? ? [nil] : Array.wrap(value)
@@ -145,6 +168,7 @@ FactoryGirl.define do
 
     # Ensure unpublished form associations have been published at least once
     after(:create) do |response, evaluator|
+      puts "after create"
       form = response.form
       unless form.published? && form.current_version.present?
         form.publish!
