@@ -12,7 +12,9 @@
         <text id="<%= subq.odk_code %>:label">
           <value><%= subq.name(lang, :strict => false) %></value>
           <% if subq.audio_prompt.exists? %>
-            <value form="audio">jr://audio/<%= Odk::DecoratorFactory.decorate(subq.question).unique_audio_prompt_filename %></value>
+            <value form="audio">
+              jr://audio/<%= Odk::DecoratorFactory.decorate(subq.question).unique_audio_prompt_filename %>
+            </value>
           <% end %>
         </text>
         <% unless @style == "commcare" %>
