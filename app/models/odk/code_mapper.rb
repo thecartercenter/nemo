@@ -7,6 +7,8 @@ module Odk
   class CodeMapper
     include Singleton
 
+    ITEM_CODE_REGEX = /\A(grp|qing|q|os|on)([a-f0-9\-]+)/
+
     def initialize
     end
 
@@ -32,7 +34,7 @@ module Odk
     # format that was q#{questioning.question.id}
     def item_id_for_code(code, form)
       # look for prefix and id, and remove "_#{rank}" suffix for multilevel subqings.
-      md = code.match(/\A(grp|qing|q|os|on)([a-f0-9\-]+)/)
+      md = code.match(ITEM_CODE_REGEX)
       raise SubmissionError, "Code format unknown: #{code}." if md.blank? || md.length != 3
       prefix = md[1]
       id = md[2]
@@ -42,6 +44,10 @@ module Odk
       when "q" then return Questioning.where(question_id: id, form_id: form.id).pluck(:id).first
       when "on" then return OptionNode.id_to_option_id(id)
       end
+    end
+
+    def item_code?(code)
+      code.match?(ITEM_CODE_REGEX)
     end
   end
 end

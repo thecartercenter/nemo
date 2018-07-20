@@ -61,7 +61,7 @@ module Odk
         unless node_is_odk_header?(child)
           if node_is_ir_question?(child)
             response.incomplete = child.content == "yes"
-          else
+          elsif CodeMapper.instance.item_code?(child.name)
             add_response_node(child, response_node)
           end
         end
