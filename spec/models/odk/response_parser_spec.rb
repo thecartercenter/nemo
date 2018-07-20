@@ -22,15 +22,10 @@ describe Odk::ResponseParser do
         let(:expected_values) { xml_values }
 
         context "valid input" do
-          it "should produce a simple tree from a form with three children" do
+          it "should produce a simple tree from a form with three children and ignore meta tag" do
             Odk::ResponseParser.new(response: response, files: files).populate_response
 
             expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
-          end
-        end
-
-        context "with earlier odk code style for questionings" do
-          xit "should parse the response" do
           end
         end
 
