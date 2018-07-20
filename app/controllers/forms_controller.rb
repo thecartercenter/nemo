@@ -103,7 +103,7 @@ class FormsController < ApplicationController
   # Format is always :xml
   def odk_manifest
     authorize!(:download, @form)
-    @cache_key = @form.odk_download_cache_key
+    @cache_key = "#{@form.odk_download_cache_key}/manifest"
     unless fragment_exist?(@cache_key)
       questions = @form.visible_questionings.map(&:question).select(&:audio_prompt_file_name)
       @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)

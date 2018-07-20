@@ -1,4 +1,4 @@
-<% cache("#{@form.odk_download_cache_key}/#{@style}") do %><?xml version='1.0' encoding='UTF-8' ?>
+<% cache(@cache_key) do %><?xml version='1.0' encoding='UTF-8' ?>
   <manifest xmlns="http://openrosa.org/xforms/xformsManifest">
     <% unless @ifa.empty? %>
       <mediaFile>
