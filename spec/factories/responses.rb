@@ -8,7 +8,7 @@ module ResponseFactoryHelper
   end
 
   def self.add_level(form_items, answer_values, parent)
-    unless answer_values.blank?
+    unless answer_values.nil?
       form_items.each_with_index do |item, i|
         answer_data = answer_values[i]
         unless answer_data.nil?

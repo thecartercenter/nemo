@@ -23,13 +23,13 @@ describe "summary collection with single subset" do
       enumerator = create(:user, :role_name => :enumerator)
       [10, 7, 6, 1, 1].each{|a| create(:response, :form => @form, :answer_values => [a], :user => enumerator)}
 
-      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, nil, :restrict_to_user => enumerator).build
+      @collection = Report::SummaryCollectionBuilder.new(@form.questionings, '', :restrict_to_user => enumerator).build
 
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 5.0, :max => 10, :min => 1})
     end
 
-    it "should not include nil or blank values" do
-      prepare_form_and_collection('integer', [5, nil, '', 2])
+    it "should not include blank values" do
+      prepare_form_and_collection('integer', [5, '', '', 2])
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 3.5, :max => 5, :min => 2})
     end
 
@@ -42,7 +42,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('integer', [5, nil, '', 2])
+      prepare_form_and_collection('integer', [5, '', '', 2])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -52,7 +52,7 @@ describe "summary collection with single subset" do
     end
 
     it "should be correct with no non-blank values" do
-      prepare_form_and_collection('integer', [nil, ''])
+      prepare_form_and_collection('integer', ['', ''])
       expect(first_summary.items).to eq([])
     end
   end
@@ -113,7 +113,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('select_one', ['Yes', nil, 'No', nil])
+      prepare_form_and_collection('select_one', ['Yes', '', 'No', ''])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -160,7 +160,7 @@ describe "summary collection with single subset" do
     end
 
     it "should work with null values" do
-      prepare_form_and_collection('date', ['20131027', nil])
+      prepare_form_and_collection('date', ['20131027', ''])
       expect(headers_and_items(:date, :count)).to eq({Date.parse('20131027') => 1})
     end
 
@@ -170,7 +170,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct for" do
-      prepare_form_and_collection('date', [nil, '20131027', nil])
+      prepare_form_and_collection('date', ['', '20131027', ''])
       expect(first_summary.null_count).to eq(2)
     end
   end
@@ -184,7 +184,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('time', ['9:30', nil, nil])
+      prepare_form_and_collection('time', ['9:30', '', ''])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -208,7 +208,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('datetime', ['2013-10-26 9:30', nil, nil])
+      prepare_form_and_collection('datetime', ['2013-10-26 9:30', '', ''])
       expect(first_summary.null_count).to eq(2)
     end
   end
@@ -222,7 +222,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should work" do
-      prepare_form_and_collection('text', ['foo', nil, 'bar', ''])
+      prepare_form_and_collection('text', ['foo', '', 'bar', ''])
       expect(first_summary.null_count).to eq(2)
     end
 

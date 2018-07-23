@@ -5,7 +5,7 @@ require "rails_helper"
 describe "geopoint processing" do
   let(:form) { create(:form, question_types: %w[location]) }
   let(:questioning) { form.questionings.first }
-  let(:response) { build(:response, form: form, answer_values: [value]) }
+  let(:response) { create(:response, form: form, answer_values: [value]) }
   let(:answer) { response.answers[0] }
 
   context "with no value" do
@@ -153,7 +153,7 @@ describe "geopoint processing" do
     let(:value) { "-4.366030 -22.039825 33.9 1000007.5" }
 
     it "should process properly" do
-      expect_location_answer(answer, val: "-4.366030 -22.039825 33.900 0.000",
+      ≈(answer, val: "-4.366030 -22.039825 33.900 0.000",
                                      lat: -4.366030, lng: -22.039825, alt: 33.9, acc: 0.0)
     end
 
