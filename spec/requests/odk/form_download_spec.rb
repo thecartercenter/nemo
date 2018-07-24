@@ -11,17 +11,14 @@ describe FormsController, :odk, type: :request do
   let(:form_multiselect) do
     create(:form, :published, mission: mission, question_types: %w[integer multilevel_select_one])
   end
-
-  before do
-    login(user)
-  end
+  let(:basic_auth) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
 
   context "for regular mission" do
     describe "listing forms" do
       let!(:forms) { [form_simple, form_select, form_multiselect] }
 
       it "should succeed" do
-        get("/en/m/#{mission.compact_name}/formList", params: {format: :xml})
+        get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
         expect(response).to be_success
 
         # Only form_multiselect should have a manifest.
@@ -34,7 +31,7 @@ describe FormsController, :odk, type: :request do
       end
 
       it "should succeed with no locale" do
-        get("/m/#{mission.compact_name}/formList", params: {format: :xml})
+        get("/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
         expect(response).to be_success
       end
     end
@@ -42,12 +39,12 @@ describe FormsController, :odk, type: :request do
     describe "showing forms" do
       it "should succeed" do
         # XML rendering details are tested elsewhere.
-        get("/en/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml})
+        get("/en/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml}, headers: basic_auth)
         expect(response).to be_success
       end
 
       it "should succeed with no locale" do
-        get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml})
+        get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml}, headers: basic_auth)
         expect(response).to be_success
       end
     end
@@ -55,7 +52,7 @@ describe FormsController, :odk, type: :request do
     describe "odk manifest" do
       context "for form with no option sets" do
         it "should render empty manifest tag" do
-          get("/en/m/#{mission.compact_name}/forms/#{form_simple.id}/manifest")
+          get("/en/m/#{mission.compact_name}/forms/#{form_simple.id}/manifest", headers: basic_auth)
           expect(response).to be_success
           assert_select("manifest", count: 1)
           assert_select("mediaFile", count: 0)
@@ -66,7 +63,7 @@ describe FormsController, :odk, type: :request do
         let(:ifa) { ItemsetsFormAttachment.new(form: form_multiselect) }
 
         it "should render regular manifest tag" do
-          get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}/manifest")
+          get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}/manifest", headers: basic_auth)
           expect(response).to be_success
           assert_select("filename", text: "itemsets.csv")
           assert_select("hash", text: ifa.md5)
@@ -81,7 +78,7 @@ describe FormsController, :odk, type: :request do
           end
 
           it "should use https in URL" do
-            get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}/manifest")
+            get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}/manifest", headers: basic_auth)
             expect(response).to be_success
             assert_select("downloadUrl", text: "https://www.example.com/#{ifa.path}")
           end
@@ -97,7 +94,7 @@ describe FormsController, :odk, type: :request do
         end
 
         it "should render manifest tags correctly" do
-          get("/m/#{mission.compact_name}/forms/#{form.id}/manifest")
+          get("/m/#{mission.compact_name}/forms/#{form.id}/manifest", headers: basic_auth)
           expect(response).to be_success
 
           download_url = "http://www.example.com/en/m/#{mission.compact_name}/questions"
@@ -122,14 +119,16 @@ describe FormsController, :odk, type: :request do
         end
 
         describe "should download successfully" do
+          let(:url_prefix) { "/en/m/#{mission.compact_name}/questions" }
+
           it do
-            get("/#{audio_prompt_question_path(form.c[0].question)}")
+            get("#{url_prefix}/#{form.c[0].question_id}/audio_prompt", headers: basic_auth)
             expect(response).to be_success
             expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)
           end
 
           it do
-            get("/#{audio_prompt_question_path(form.c[1].question)}")
+            get("#{url_prefix}/#{form.c[1].question_id}/audio_prompt", headers: basic_auth)
             expect(response).to be_success
             expect(response.header["Content-Disposition"]).to include(form.c[1].question.id)
           end
@@ -146,7 +145,7 @@ describe FormsController, :odk, type: :request do
         end
 
         it "should succeed" do
-          get("/#{ifa.path}")
+          get("/#{ifa.path}", headers: basic_auth)
           expect(response).to be_success
           expect(response.body).to match(/,Cat/)
         end
@@ -158,13 +157,13 @@ describe FormsController, :odk, type: :request do
     let(:mission) { create(:mission, locked: true) }
 
     it "listing forms should return 403" do
-      get("/en/m/#{mission.compact_name}/formList", params: {format: :xml})
+      get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
       expect(response.status).to eq 403
       expect(response.body.strip).to be_empty
     end
 
     it "showing form with format xml should return 403" do
-      get("/m/#{mission.compact_name}/forms/#{form_simple.id}", params: {format: :xml})
+      get("/m/#{mission.compact_name}/forms/#{form_simple.id}", params: {format: :xml}, headers: basic_auth)
       expect(response.status).to eq 403
       expect(response.body.strip).to be_empty
     end

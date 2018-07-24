@@ -119,7 +119,8 @@ ELMO::Application.routes.draw do
       end
 
       member do
-        get "audio_prompt"
+        # odk needs to be able to download audio prompts
+        get "audio_prompt", defaults: {direct_auth: "basic"}
       end
     end
     resources :questionings, only: %i[show edit create update destroy]
@@ -202,7 +203,7 @@ ELMO::Application.routes.draw do
   end
   sms_submission_route(as: :missionless_sms_submission)
 
-  # Special ODK routes. No locale. They are down here so that forms_path doesn"t return the ODK variant.
+  # Special ODK routes. No locale. They are down here so that forms_path doesn't return the ODK variant.
   #
   # NOTE: Brute-force login protection happens in the rack-attack middleware,
   # which executes before routing. Be sure that all paths marked with
