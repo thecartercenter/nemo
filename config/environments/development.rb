@@ -10,7 +10,7 @@ ELMO::Application.configure do
   config.eager_load = false
 
   # Show full error reports
-  config.consider_all_requests_local       = true
+  config.consider_all_requests_local = true
 
   # Caching may need to be turned on when testing caching itself. If so, please use
   # config/initializers/local_config.rb to override this value,

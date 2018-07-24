@@ -74,7 +74,19 @@ describe "question form" do
     click_on "Edit Question"
     expect(page).to have_content("powerup.mp3")
 
+    # editing an audio prompt works
+    attach_file("Audio Prompt", audio_fixture("powerup.wav").path)
+    click_on "Save"
+
     # and still allows you change the audio prompt file
+    visit edit_question_path(
+      Question.last.id,
+      locale: "en",
+      mode: "m",
+      mission_name: get_mission.compact_name
+    )
     expect(page).to have_css("input#question_audio_prompt")
+    expect(page).to have_content("powerup.wav")
+    expect(page).not_to have_content("powerup.mp3")
   end
 end
