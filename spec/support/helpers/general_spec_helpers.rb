@@ -88,7 +88,6 @@ module GeneralSpecHelpers
 
   def fixture(*dirs, name)
     dir = dirs.is_a?(Array) ? dirs.join("/") : dirs
-
     path = Rails.root.join("spec/fixtures/#{dir}/#{name}")
     File.open(path)
   end
