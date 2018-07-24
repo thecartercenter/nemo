@@ -1,5 +1,5 @@
 <% @title_args = {code: @question.code, standardized: @question.standardized?} %>
-<%= elmo_form_for(@question) do |f| %>
+<%= elmo_form_for(@question, html: {multipart: true}) do |f| %>
   <%= top_action_links(@question) %>
   <%# Fields are contained in a partial because they are also used in the questioning form. %>
   <%= render("fields", f: f) %>
