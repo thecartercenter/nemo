@@ -39,12 +39,20 @@ describe FormsController, :odk, type: :request do
     describe "showing forms" do
       it "should succeed" do
         # XML rendering details are tested elsewhere.
-        get("/en/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml}, headers: basic_auth)
+        get(
+          "/en/m/#{mission.compact_name}/forms/#{form_multiselect.id}",
+          params: {format: :xml},
+          headers: basic_auth
+        )
         expect(response).to be_success
       end
 
       it "should succeed with no locale" do
-        get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}", params: {format: :xml}, headers: basic_auth)
+        get(
+          "/m/#{mission.compact_name}/forms/#{form_multiselect.id}",
+          params: {format: :xml},
+          headers: basic_auth
+        )
         expect(response).to be_success
       end
     end
