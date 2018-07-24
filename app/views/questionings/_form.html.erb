@@ -1,4 +1,4 @@
-<%= elmo_form_for(@questioning) do |f| %>
+<%= elmo_form_for(@questioning, html: {multipart: true}) do |f| %>
   <%= f.field(:form_id, type: :hidden) %>
 
   <%= elmo_fields_for("questioning[question_attributes]", @questioning.question) do |qf| %>

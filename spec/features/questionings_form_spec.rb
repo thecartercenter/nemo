@@ -69,6 +69,13 @@ describe "questionings form", js: true  do
         page.execute_script '$("#questioning_default").trigger("keyup")'
         expect_editable("read_only", false)
       end
+
+      it "should be able to add audio prompt to through questioning form" do
+        visit(edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+        attach_file("Audio Prompt", audio_fixture("powerup.mp3").path)
+        click_on "Save"
+        expect(page).to have_content("Question updated successfully.")
+      end
     end
 
     context "when published" do
