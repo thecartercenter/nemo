@@ -39,6 +39,7 @@ class Response < ApplicationRecord
   validate :no_missing_answers
   validate :form_in_mission
   validates_associated :answers # Forces validation of answers even if they haven't changed
+  validates_associated :root_node
 
   scope :unreviewed, -> { where(reviewed: false) }
   scope :by, ->(user) { where(user_id: user.id) }
