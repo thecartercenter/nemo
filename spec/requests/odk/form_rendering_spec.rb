@@ -402,6 +402,18 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
+  context "form with audio prompts" do
+    let(:form) { create(:form, :published, question_types: %w[integer]) }
+
+    before do
+      form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
+    end
+
+    it "should render proper xml" do
+      expect_xml(form, "form_with_audio_prompt.xml")
+    end
+  end
+
   def expect_xml(form, filename)
     do_request_and_expect_success
     expect(tidyxml(response.body)).to eq prepare_odk_form_fixture(filename, form)

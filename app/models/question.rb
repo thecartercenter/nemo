@@ -21,6 +21,10 @@ class Question < ApplicationRecord
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
 
+  has_attached_file :audio_prompt
+  validates_attachment_content_type :audio_prompt, content_type: [%r{\Aaudio/.*\Z}, "video/ogg"]
+  validates_attachment_file_name :audio_prompt, matches: /\.(mp3|ogg|wav)\Z/i
+
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
   before_validation :normalize

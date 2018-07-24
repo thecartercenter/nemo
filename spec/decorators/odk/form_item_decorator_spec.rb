@@ -4,6 +4,8 @@ require "rails_helper"
 
 module Odk
   describe FormItemDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
+    include_context "odk rendering"
+
     describe "xpath methods" do
       let!(:form) do
         create(:form, question_types: [ # root (grp1)
@@ -89,10 +91,6 @@ module Odk
           expect(root.xpath_to(q7)).to eq "/data/qing#{q7.id}"
         end
       end
-    end
-
-    def decorate(obj)
-      Odk::DecoratorFactory.decorate(obj)
     end
   end
 end

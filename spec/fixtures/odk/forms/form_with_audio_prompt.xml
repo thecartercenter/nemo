@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>*formname1*</h:title>
+    <model>
+      <instance>
+        <data id="*form1*" version="*formver1*">
+          <*itemcode1*/>
+        </data>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="*itemcode1*:label">
+            <value>Integer Question Title 1</value>
+            <value form="audio">
+              jr://audio/*questionid1*_audio_prompt.mp3
+            </value>
+          </text>
+          <text id="*itemcode1*:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="BLANK">
+            <value/>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/*itemcode1*" type="int"/>
+    </model>
+  </h:head>
+  <h:body>
+    <input ref="/data/*itemcode1*">
+      <label ref="jr:itext('*itemcode1*:label')"/>
+      <hint ref="jr:itext('*itemcode1*:hint')"/>
+    </input>
+  </h:body>
+</h:html>

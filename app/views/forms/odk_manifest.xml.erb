@@ -1,4 +1,4 @@
-<% cache("#{@form.odk_download_cache_key}/#{@style}") do %><?xml version='1.0' encoding='UTF-8' ?>
+<% cache(@cache_key) do %><?xml version='1.0' encoding='UTF-8' ?>
   <manifest xmlns="http://openrosa.org/xforms/xformsManifest">
     <% unless @ifa.empty? %>
       <mediaFile>
@@ -6,6 +6,16 @@
         <hash><%= @ifa.md5 %></hash>
         <downloadUrl><%= url_for_path(@ifa.path) %></downloadUrl>
       </mediaFile>
+    <% end %>
+
+    <% unless @decorated_questions.empty? %>
+      <% @decorated_questions.each do |question| %>
+        <mediaFile>
+          <filename><%= question.unique_audio_prompt_filename %></filename>
+          <hash><%= question.audio_prompt_md5 %></hash>
+          <downloadUrl><%= audio_prompt_question_url(question) %></downloadUrl>
+        </mediaFile>
+      <% end %>
     <% end %>
   </manifest>
 <% end %>

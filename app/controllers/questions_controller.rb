@@ -77,6 +77,17 @@ class QuestionsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
+  def audio_prompt
+    authorize! :show, @question
+
+    decorated_question = Odk::QuestionDecorator.decorate(@question)
+
+    send_file decorated_question.audio_prompt.path,
+      type: decorated_question.audio_prompt_content_type,
+      disposition: "attachment",
+      filename: decorated_question.unique_audio_prompt_filename
+  end
+
   private
 
   # creates/updates the question

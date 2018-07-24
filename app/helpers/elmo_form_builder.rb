@@ -1,7 +1,7 @@
 class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
   # options[:type] - The type of field to display
-  #   (:text (default), :check_box, :radio_butons, :textarea, :password, :select, :timezone)
+  #   (:text (default), :check_box, :radio_buttons, :textarea, :password, :select, :timezone, :file)
   # options[:required] - Whether the field input is required.
   # options[:content] - The content of the field's main area. If nil, the default content for the field type is used.
   # options[:partial] - A partial to be used as the field's main area. Overrides options[:content].
@@ -127,12 +127,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
     # otherwise generate field based on type
     else
+      val = @object.send(field_name)
 
       # if field is read only, just show the value
       if options[:read_only]
-
-        # get field value
-        val = @object.send(field_name)
 
         # get a human readable version of the value
         human_val = case options[:type]
@@ -146,6 +144,9 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           else
             ""
           end
+
+        when :file
+          val&.original_filename
 
         when :password
           "*******"
@@ -194,17 +195,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           time_zone_select(field_name, nil, {}, {class: "form-control"})
 
         when :file
-          field = file_field(field_name, options.slice(:accept, :disabled, :multiple))
-          if options[:fancy]
-            @template.button_tag(class: "btn btn-default btn-xs fileinput-button") do
-              "".html_safe.tap do |body|
-                body << @template.t("common.choose_file", count: options[:multiple] ? 2 : 1)
-                body << field
-              end
-            end
-          else
-            field
-          end
+          file_field(field_name, options.slice(:accept, :disabled, :multiple)) << val&.original_filename
 
         # text is the default type
         else

@@ -1,12 +1,14 @@
 require 'rails_helper'
 
 describe Odk::ConditionDecorator do
+  include_context "odk rendering"
+
   describe "to_odk", :odk do
-    let(:qing) { Odk::DecoratorFactory.decorate(form.questionings.first) }
+    let(:qing) { decorate(form.questionings.first) }
     let(:opt_set) { qing.option_set }
     let(:option_node) { qing.option_set.c[0] }
-    let(:xpath) { Odk::DecoratorFactory.decorate(condition).to_odk }
-    let(:hostq) { Odk::DecoratorFactory.decorate(form.questionings.last) }
+    let(:xpath) { decorate(condition).to_odk }
+    let(:hostq) { decorate(form.questionings.last) }
     let(:condition) { Condition.new({conditionable: hostq.object}.merge(params)) }
 
     context "for single level select one question" do
@@ -31,8 +33,8 @@ describe Odk::ConditionDecorator do
 
     context "for multilevel select one question" do
       let(:form) { create(:form, question_types: %w(multilevel_select_one)) }
-      let(:subqing1) { Odk::DecoratorFactory.decorate(qing.subqings[0]) }
-      let(:subqing2) { Odk::DecoratorFactory.decorate(qing.subqings[1]) }
+      let(:subqing1) { decorate(qing.subqings[0]) }
+      let(:subqing2) { decorate(qing.subqings[1]) }
 
       context "for first level" do
         let(:params) { {ref_qing: qing.object, op: "eq", option_node: opt_set.c[0]} }
@@ -73,11 +75,11 @@ describe Odk::ConditionDecorator do
 
     context "for non-select question" do
       let(:form) { form = create(:form, question_types: %w(integer text date time datetime text)) }
-      let(:int_q) { Odk::DecoratorFactory.decorate(form.questionings[0]) }
-      let(:text_q) { Odk::DecoratorFactory.decorate(form.questionings[1]) }
-      let(:date_q) { Odk::DecoratorFactory.decorate(form.questionings[2]) }
-      let(:time_q) { Odk::DecoratorFactory.decorate( form.questionings[3]) }
-      let(:datetime_q) { Odk::DecoratorFactory.decorate(form.questionings[4]) }
+      let(:int_q) { decorate(form.questionings[0]) }
+      let(:text_q) { decorate(form.questionings[1]) }
+      let(:date_q) { decorate(form.questionings[2]) }
+      let(:time_q) { decorate(form.questionings[3]) }
+      let(:datetime_q) { decorate(form.questionings[4]) }
 
       context "with eq operator and int question" do
         let(:params) { {ref_qing: int_q.object, op: "eq", value: "5"} }
@@ -122,8 +124,8 @@ describe Odk::ConditionDecorator do
 
     context "for intra-group reference" do
       let(:form) { create(:form, question_types: [["multilevel_select_one", "text", "text"]]) }
-      let(:q1) { Odk::DecoratorFactory.decorate(form.sorted_children[0].sorted_children[0]) }
-      let(:q2) { Odk::DecoratorFactory.decorate(form.sorted_children[0].sorted_children[1]) }
+      let(:q1) { decorate(form.sorted_children[0].sorted_children[0]) }
+      let(:q2) { decorate(form.sorted_children[0].sorted_children[1]) }
 
       context "for regular ref qing" do
         let(:params) { {ref_qing: q2.object, op: "eq", value: "foo"} }

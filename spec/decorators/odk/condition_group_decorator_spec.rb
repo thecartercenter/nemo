@@ -2,7 +2,9 @@ require "rails_helper"
 
 module Odk
   describe ConditionGroupDecorator, :odk, :reset_factory_sequences, database_cleaner: :truncate do
-    let(:result) { Odk::DecoratorFactory.decorate(condition_group).to_odk }
+    include_context "odk rendering"
+
+    let(:result) { decorate(condition_group).to_odk }
 
     context "empty, non-negated condition group" do
       let(:condition_group) { Forms::ConditionGroup.new(true_if: "always", negate: false, members: [])}

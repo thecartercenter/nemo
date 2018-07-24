@@ -1,11 +1,11 @@
 class Questioning < FormItem
   include Replication::Replicable
 
-  delegate :all_options, :auto_increment?, :code, :code=, :first_leaf_option_node, :first_leaf_option,
-    :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels, :min_max_error_msg,
-    :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name, :option_set_id,
-    :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes, :printable?,
-    :qtype_name, :qtype_name=, :qtype, :select_options, :sms_formatting_as_appendix?,
+  delegate :all_options, :audio_prompt, :auto_increment?, :code, :code=, :first_leaf_option_node,
+    :first_leaf_option, :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels,
+    :min_max_error_msg, :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name,
+    :option_set_id, :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes,
+    :printable?, :qtype_name, :qtype_name=, :qtype, :select_options, :sms_formatting_as_appendix?,
     :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, :metadata_type,
     to: :question
   delegate :published?, to: :form
