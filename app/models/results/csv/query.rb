@@ -15,13 +15,17 @@ module Results
           # The type map is very slow and we don't need it since we're outputting strings.
           # We also are not passing any sanitize arguments and it can raise 'malformed string error' in
           # some cases with complex queries.
-          SqlRunner.instance.run("#{select} #{from} #{where} #{order}", use_type_map: false, sanitize: false)
+          SqlRunner.instance.run(sql, use_type_map: false, sanitize: false)
         end
       end
 
       protected
 
       attr_accessor :response_scope
+
+      def sql
+        "#{select} #{from} #{where} #{order}"
+      end
 
       def where
         <<~SQL

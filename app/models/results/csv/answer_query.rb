@@ -19,11 +19,12 @@ module Results
             responses.created_at AT TIME ZONE 'UTC' AS submit_time,
             responses.shortcode AS shortcode,
             #{parent_group_name} AS parent_group_name,
-            parent_groups.ancestry_depth AS parent_group_depth,
-            CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
-              parent_groups.rank ELSE NULL END AS group1_rank,
-            CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
-              answers.inst_num ELSE NULL END AS group1_inst_num,
+            (SELECT ARRAY_AGG(anc.type ORDER BY ah.generations DESC)
+              FROM answer_hierarchies ah INNER JOIN answers anc ON ah.ancestor_id = anc.id
+              WHERE answers.id = ah.descendant_id) AS ancestry,
+            (SELECT ARRAY_AGG(anc.new_rank ORDER BY ah.generations DESC)
+              FROM answer_hierarchies ah INNER JOIN answers anc ON ah.ancestor_id = anc.id
+              WHERE answers.id = ah.descendant_id) AS ranks,
             answers.value AS value,
             answers.time_value,
             answers.date_value,
@@ -48,9 +49,12 @@ module Results
             INNER JOIN answers ON answers.response_id = responses.id
             INNER JOIN form_items qings ON answers.questioning_id = qings.id
             INNER JOIN questions ON qings.question_id = questions.id
+            INNER JOIN answer_hierarchies anc1s ON answers.id = anc1s.descendant_id AND anc1s.generations = 1
+            INNER JOIN answers parent1s ON anc1s.ancestor_id = parent1s.id
+            INNER JOIN form_items parent_groups ON parent_groups.id = parent1s.questioning_id
+            LEFT OUTER JOIN answer_hierarchies anc2s ON answers.id = anc2s.descendant_id AND anc2s.generations = 1
+            LEFT OUTER JOIN answers parent2s ON anc2s.ancestor_id = parent2s.id
             LEFT OUTER JOIN option_sets ON questions.option_set_id = option_sets.id
-            INNER JOIN form_items parent_groups
-              ON parent_groups.id = RIGHT(qings.ancestry, #{UUID_LENGTH})::uuid
             LEFT OUTER JOIN options answer_options ON answer_options.id = answers.option_id
             LEFT OUTER JOIN choices ON choices.answer_id = answers.id
             LEFT OUTER JOIN options choice_options ON choices.option_id = choice_options.id
@@ -62,10 +66,9 @@ module Results
           ORDER BY
             responses.created_at,
             responses.id,
-            group1_rank NULLS FIRST,
-            group1_inst_num NULLS FIRST,
-            qings.rank,
-            answers.rank,
+            (SELECT ARRAY_AGG(anc.new_rank ORDER BY ah.generations DESC)
+              FROM answer_hierarchies ah INNER JOIN answers anc ON ah.ancestor_id = anc.id
+              WHERE answers.id = ah.descendant_id),
             choice_option_name
         SQL
       end
