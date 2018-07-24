@@ -1,0 +1,45 @@
+<%# render the answer value based on question type. we include machine readable value in
+    data-val so that conditions can still be eval'd in JS %>
+<% case type = answer.qtype.name
+   when 'select_one' %>
+
+  <%= render('hierarchical_responses/answers/map', answer: answer) if answer.has_coordinates? %>
+
+  <%= content_tag(:div, answer.option.try(:name), class: 'ro-val', data: {val: [answer.option_node_id]}) %>
+
+<% when 'select_multiple' %>
+
+  <%= render('hierarchical_responses/answers/map', answer: answer) if answer.has_coordinates? %>
+
+  <%= content_tag(:div, safe_join(answer.choices.map(&:option_name), tag(:br)),
+        class: 'ro-val',
+        data: {val: answer.choices.map(&:option_node_id).to_json}) %>
+
+<% when 'datetime', 'date', 'time' %>
+
+  <% format = type == "time" ? :time_only : :default %>
+  <% val = answer.send("#{type}_value") %>
+
+  <%# output time value in human readable and machine readable formats %>
+  <%= content_tag(:div, val.nil? ? '' : l(val, format: format), class: 'ro-val', :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
+
+<% when 'integer', 'decimal', 'counter' %>
+
+  <%= content_tag(:div, answer.value, class: 'ro-val', :'data-val' => answer.value) %>
+
+<% when 'text', 'long_text' %>
+
+  <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
+  <%# no need to output data-val here since same as human readable %>
+  <%= content_tag(:div, excerpt_if_exists(@response, answer), class: 'ro-val') %>
+
+<% when 'image', 'annotated_image', 'signature', 'sketch', 'audio', 'video' %>
+
+  <%= media_link answer.media_object %>
+
+<% else %>
+
+  <%# no need to output data-val here since same as human readable %>
+  <%= content_tag(:div, answer.value, class: 'ro-val') %>
+
+<% end %>

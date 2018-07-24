@@ -1,0 +1,14 @@
+<%= render("searches/form", :search => @search) %>
+
+<%= index_table %>
+
+<script type="text/javascript">
+  // set id of latest response
+  var responses_latest_id = <%= (f = @responses.first) ? %{"#{f.id}"}.html_safe : "null" %>;
+  var responses_submit_times = {};
+  var responses_per_page = <%= Response.per_page %>;
+  <% @responses.each do |r| %>
+    responses_submit_times["<%= r.id %>"] = "<%= r.created_at %>";
+  <% end %>
+  responses_setup_periodic_update();
+</script>

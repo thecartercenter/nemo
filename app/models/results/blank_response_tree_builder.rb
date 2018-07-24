@@ -3,7 +3,7 @@
 module Results
   # Builds and saves response tree, with all blank answers, from a form object.
   class BlankResponseTreeBuilder
-    attr_accessor :response
+    attr_accessor :response, :options
 
     delegate :form, to: :response
 
@@ -12,13 +12,9 @@ module Results
     end
 
     def build
-      root = AnswerGroup.create!(form_item: form.root_group, response: response)
+      root = AnswerGroup.new(form_item: form.root_group, response: response, new_rank: 0)
       add_level(form.root_group.sorted_children, root)
       response.associate_tree(root)
-
-      # TODO: We can remove the `validate: false` once various validations are
-      # removed from the response model
-      response.save(validate: false)
       root
     end
 
@@ -26,14 +22,16 @@ module Results
 
     def add_level(form_nodes, response_node)
       form_nodes.each do |form_node|
-        if form_node.class == QingGroup && form_node.repeatable?
-          add_repeat_group(form_node, response_node)
-        elsif form_node.class == QingGroup
-          add_non_repeat_group(response_node, form_node)
-        elsif form_node.multilevel?
-          add_multilevel(form_node, response_node)
-        else
-          add_child(Answer, response_node, form_node)
+        unless form_node.hidden
+          if form_node.class == QingGroup && form_node.repeatable?
+            add_repeat_group(form_node, response_node)
+          elsif form_node.class == QingGroup
+            add_non_repeat_group(response_node, form_node)
+          elsif form_node.multilevel?
+            add_multilevel(form_node, response_node)
+          else
+            add_child(Answer, response_node, form_node)
+          end
         end
       end
     end
@@ -63,8 +61,6 @@ module Results
         new_rank: response_node.children.size,
         rank: response_node.children.size + 1
       )
-      # We can't validate yet because there's no value.
-      child.save(validate: false)
       response_node.children << child
       child
     end

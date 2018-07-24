@@ -64,6 +64,7 @@ ELMO::Application.routes.draw do
         get "possible-users", as: "possible_users", action: "possible_users", on: type
       end
     end
+    resources :hierarchical_responses
     resources :sms, only: [:index] do
       collection do
         get "incoming-numbers", as: "incoming_numbers", action: "incoming_numbers", defaults: { format: "csv" }

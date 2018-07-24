@@ -1,0 +1,12 @@
+<% mode = read_only ? "read_only" : "editable" %>
+<div class="form-field answer_field qtype_<%= set.questioning.qtype.name %>
+  <%= read_only ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
+
+  <%= render("hierarchical_responses/answers/answer_info", node: set) %>
+
+  <div class="control">
+    <%= render("hierarchical_responses/answers/cascading_#{mode}",
+          answer_set: set,
+          index: "#{set.questioning_id}") %>
+  </div>
+</div>

@@ -1,0 +1,11 @@
+<div class="answer-group">
+  <h2>
+    <%= group.qing_group.full_dotted_rank %>.
+    <%= group.qing_group.group_name %>
+    <%= hint_popover(group.qing_group.group_hint) %>
+  </h2>
+
+  <div class="children">
+    <%= render("hierarchical_responses/answers/nodes", nodes: group.children) %>
+  </div>
+</div>
