@@ -1,11 +1,13 @@
-<% nodes.each do |node| %>
+<% nodes.each_with_index do |node, index| %>
+  <% params = {read_only: read_only, context: node.parent.present? ? context.add(index) : context} %>
+
   <% if node.is_a?(AnswerSet) %>
-    <%= render("hierarchical_responses/answers/answer_set", set: node, read_only: read_only) %>
+    <%= render("hierarchical_responses/answers/answer_set", params.merge(set: node)) %>
   <% elsif node.is_a?(AnswerGroup) %>
-    <%= render("hierarchical_responses/answers/group", group: node, read_only: read_only) %>
+    <%= render("hierarchical_responses/answers/group", params.merge(group: node)) %>
   <% elsif node.is_a?(Answer) %>
-    <%= render("hierarchical_responses/answers/answer", answer: node, read_only: read_only) %>
+    <%= render("hierarchical_responses/answers/answer", params.merge(answer: node)) %>
   <% elsif node.is_a?(AnswerGroupSet) %>
-    <%= render("hierarchical_responses/answers/group_set", group_set: node, read_only: read_only) %>
+    <%= render("hierarchical_responses/answers/group_set", params.merge(group_set: node)) %>
   <% end %>
 <% end %>

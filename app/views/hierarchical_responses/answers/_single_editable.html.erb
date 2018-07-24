@@ -1,5 +1,3 @@
-<% field_name_prefix = "response[root_group][#{index}]" %>
-
 <%# show the error messages without keys %>
 <%= content_tag(:div, answer.errors.to_hash.values.join(', '), class: 'form-errors') unless answer.errors.empty? %>
 
@@ -7,23 +5,25 @@
   <% case type = answer.qtype.name
      when "select_one" %>
 
-    <%= select_tag("#{field_name_prefix}[option_node_id]",
+    <%= select_tag(context.add(:option_node_id).input_name,
           options_from_collection_for_select(answer.first_level_option_nodes,
-            'id', 'option_name', answer.option_node_id),
+          'id', 'option_name', answer.option_node_id),
           include_blank: true,
           class: 'form-control') %>
 
   <% when "select_multiple" %>
 
     <%# render a checkbox for each possible choice %>
-    <%= render(partial: "hierarchical_responses/answers/choice", locals: {prefix: field_name_prefix},
-      collection: answer.all_choices, class: "form-control") %>
+    <%= render(partial: "hierarchical_responses/answers/choice",
+      locals: {path: path},
+      collection: answer.all_choices,
+      class: "form-control") %>
 
   <% when "datetime", "date", "time" %>
     <% date = answer.datetime_value ? answer.datetime_value : answer.date_value %>
 
     <% if date && (date.year < Time.current.year - 125 || date.year > Time.current.year + 125) %>
-      <%= text_field_tag("#{field_name_prefix}#{type}_value", date, class: "qtype_#{type} form-control") %>
+      <%= text_field_tag(context.add("#{type}_value").input_name, date, class: "qtype_#{type} form-control") %>
     <% else %>
       <%= send("#{type}_select", field_name_prefix, :"#{type}_value",
           {include_blank: true, include_seconds: true, object: answer, use_short_month: true},
@@ -32,26 +32,26 @@
 
   <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
-    <%= render("hierarchical_responses/answers/media_editable", answer: answer, index: index, prefix: field_name_prefix) %>
+    <%= render("hierarchical_responses/answers/media_editable", answer: answer, context: context) %>
 
   <% when "long_text" %>
 
-    <%= text_area_tag("#{field_name_prefix}[value]", answer.value, class: "qtype_long_text form-control") %>
+    <%= text_area_tag(context.add(:value).input_name, answer.value, class: "qtype_long_text form-control") %>
 
     <%# Initialize ckeditor on doc ready. %>
     <%= javascript_doc_ready do %>
-      CKEDITOR.replace('response_answers_attributes_<%= index %>_value');
+      CKEDITOR.replace('response_answers_attributes_value');
     <% end %>
 
   <% when "integer", "decimal", "counter" %>
 
-    <%= number_field_tag("#{field_name_prefix}[value]", answer.value,
+    <%= number_field_tag(context.add(:value).input_name, answer.value,
           class: "qtype_#{type} form-control",
           step: type == "decimal" ? "any" : nil) %>
 
   <% else %>
 
-    <%= text_field_tag("#{field_name_prefix}[value]", answer.value, class: "qtype_#{type} form-control") %>
+    <%= text_field_tag(context.add(:value).input_name, answer.value, class: "qtype_#{type} form-control") %>
 
     <% if type == 'location' %>
       &nbsp;<%= action_link("edit", "#", class: "edit_location_link") if form_mode != :show %>

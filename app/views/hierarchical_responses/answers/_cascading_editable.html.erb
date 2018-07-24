@@ -1,6 +1,32 @@
-<%# Show the error messages without keys %>
+<% # Show the error messages without keys %>
 <%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), class: 'form-errors') unless answer_set.errors.empty? %>
 
-<%# This renders the select tags. %>
-<%= render('option_sets/cascading_selects', index: index, option_node_path: answer_set.option_node_path,
-  input_name_template: "response[answers_attributes][#{index}_###][option_node_id]") %>
+<div class="cascading-selects" id="cascading-selects-<%= context.input_name %>">
+  <% answer_set.children.each_with_index do |answer, index| %>
+    <%= hidden_field_tag context.add(index, :id).input_name, answer.id %>
+    <%= hidden_field_tag context.add(index, :type).input_name, "Answer" %>
+    <%= hidden_field_tag context.add(index, :questioning_id).input_name, answer.questioning_id %>
+
+    <div class="level">
+      <label>
+        <%= answer.option_set.level_name_for_depth(index + 1) %>
+        <%= select_tag(context.add(index, :option_node_id).input_name,
+              options_from_collection_for_select(
+                answer_set.option_node_path.nodes_for_depth(index + 1),
+                'id',
+                'option_name',
+                answer.try(:option_node_id)
+              ),
+              include_blank: true,
+              class: 'form-control') %>
+      </label>
+    </div>
+  <% end %>
+</div>
+
+<%= javascript_doc_ready do %>
+  new ELMO.Views.CascadingSelectsView({
+    el: $('#cascading-selects-<%= context.input_name %>'),
+    option_set_id: <%=json answer_set.option_node_path.option_set.id %>
+  });
+<% end %>

@@ -1,5 +1,5 @@
 <div class="answer-group-set">
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.c) %>
+    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.c, context: context.add(:children)) %>
   </div>
 </div>

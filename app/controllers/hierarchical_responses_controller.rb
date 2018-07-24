@@ -263,6 +263,7 @@ class HierarchicalResponsesController < ApplicationController
       # Must preserve submitted answers when in create/update action.
       dont_load_answers: %w[create update].include?(params[:action])
     ).build.nodes
+    @context = Results::ResponseFormContext.new
     render(:form)
   end
 
