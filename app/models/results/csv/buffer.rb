@@ -75,9 +75,8 @@ module Results
           column_stack.push_empty_frame
           if depth.zero?
             write_common_columns(row)
-            write("parent_group_depth", 0) # Will be overwritten if appropriate.
           else
-            write_group_info(row, depth)
+            write_group_columns(row)
           end
         end
       end
@@ -86,15 +85,12 @@ module Results
         cells[idx] = nil
       end
 
-      def write_group_info(row, depth)
-        copy_from_row(row, "group#{depth}_rank")
-        copy_from_row(row, "group#{depth}_inst_num")
-        copy_from_row(row, "parent_group_name")
-        copy_from_row(row, "parent_group_depth")
-      end
-
       def write_common_columns(row)
         header_map.common_headers.each { |h| copy_from_row(row, h) }
+      end
+
+      def write_group_columns(row)
+        header_map.group_headers.each { |h| copy_from_row(row, h) }
       end
 
       def copy_from_row(row, header)
