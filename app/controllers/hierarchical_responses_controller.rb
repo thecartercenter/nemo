@@ -264,6 +264,8 @@ class HierarchicalResponsesController < ApplicationController
       dont_load_answers: %w[create update].include?(params[:action])
     ).build.nodes
     @context = Results::ResponseFormContext.new
+    @blank_response = Response.new(form: @response.form)
+    Results::BlankResponseTreeBuilder.new(@blank_response).build
     render(:form)
   end
 

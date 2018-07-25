@@ -6,6 +6,7 @@
     <%= hidden_field_tag context.add(index, :id).input_name, answer.id %>
     <%= hidden_field_tag context.add(index, :type).input_name, "Answer" %>
     <%= hidden_field_tag context.add(index, :questioning_id).input_name, answer.questioning_id %>
+    <%= hidden_field_tag context.add(:_destroy).input_name, "false" %>
 
     <div class="level">
       <label>

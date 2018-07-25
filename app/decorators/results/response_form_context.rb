@@ -16,5 +16,30 @@ module Results
     def input_name
       "response[root]" + path.map { |item| "[#{item}]" }.join
     end
+
+    def id
+      "response-root-" + path.join("-")
+    end
+
+    def indices
+      path.reject { |item| item == :children }
+    end
+
+    # Find this context's path in the given response
+    # Returns an answer node
+    def find(response)
+      find_node(response.root_node, indices)
+    end
+
+    private
+
+    def find_node(node, indices)
+      if indices.empty?
+        node
+      else
+        index = indices.shift
+        find_node(node.children[index], indices)
+      end
+    end
   end
 end

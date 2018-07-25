@@ -3,10 +3,10 @@
   <%= read_only ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
 
   <% unless read_only %>
-
     <%= hidden_field_tag context.add(:id).input_name, set.id %>
     <%= hidden_field_tag context.add(:type).input_name, "AnswerSet" %>
     <%= hidden_field_tag context.add(:questioning_id).input_name, set.questioning_id %>
+    <%= hidden_field_tag context.add(:_destroy).input_name, "false" %>
   <% end %>
 
   <%= render("hierarchical_responses/answers/answer_info", node: set) %>

@@ -1,13 +1,26 @@
 <% nodes.each_with_index do |node, index| %>
-  <% params = {read_only: read_only, context: node.parent.present? ? context.add(index) : context} %>
+  <%
+    params = {
+      read_only: read_only,
+      context: node.parent.present? ?
+        context.add(defined?(placeholder) ? placeholder : index) :
+        context
+    }
+  %>
 
-  <% if node.is_a?(AnswerSet) %>
-    <%= render("hierarchical_responses/answers/answer_set", params.merge(set: node)) %>
-  <% elsif node.is_a?(AnswerGroup) %>
-    <%= render("hierarchical_responses/answers/group", params.merge(group: node)) %>
-  <% elsif node.is_a?(Answer) %>
-    <%= render("hierarchical_responses/answers/answer", params.merge(answer: node)) %>
-  <% elsif node.is_a?(AnswerGroupSet) %>
-    <%= render("hierarchical_responses/answers/group_set", params.merge(group_set: node)) %>
-  <% end %>
+  <div class="node">
+    <% if node.is_a?(AnswerSet) %>
+      <%= render("hierarchical_responses/answers/answer_set", params.merge(set: node)) %>
+    <% elsif node.is_a?(AnswerGroup) %>
+      <%= render("hierarchical_responses/answers/group", params.merge(group: node)) %>
+    <% elsif node.is_a?(Answer) %>
+      <%= render("hierarchical_responses/answers/answer", params.merge(answer: node)) %>
+    <% elsif node.is_a?(AnswerGroupSet) %>
+      <%= render("hierarchical_responses/answers/group_set", params.merge(group_set: node)) %>
+    <% end %>
+
+    <% if defined?(removable) && removable %>
+      <a href="#" class="remove-repeat">Remove</a>
+    <% end %>
+  </div>
 <% end %>
