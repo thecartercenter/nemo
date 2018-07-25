@@ -5,14 +5,16 @@ class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
     @tmpl = options.tmpl
+    @placeholder = options.placeholder
     @next_index = options.next_index
 
   children: ->
-    this.$el.find("> .children")
+    @$el.find("> .children")
 
   add_repeat: (event) ->
     event.preventDefault()
-    this.children().append(@tmpl.replace(/__PLACEHOLDER__/g, @next_index))
+    regex = new RegExp(@placeholder, "g")
+    @children().append(@tmpl.replace(regex, @next_index))
     @next_index++
 
   remove_repeat: (event) ->

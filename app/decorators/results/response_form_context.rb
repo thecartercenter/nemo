@@ -5,12 +5,22 @@ module Results
   class ResponseFormContext
     attr_reader :path
 
-    def initialize(path = [])
+    def initialize(path = [], placeholder = false)
       @path = path
+      @placeholder = placeholder
     end
 
     def add(*items)
-      self.class.new(path + items)
+      self.class.new(path + items, @placeholder)
+    end
+
+    def placeholder
+      @placeholder = true
+      self
+    end
+
+    def placeholder?
+      @placeholder == true
     end
 
     def input_name
