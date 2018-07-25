@@ -1,28 +1,20 @@
 class ELMO.Views.RepeatGroupFormView extends ELMO.Views.ApplicationView
-  events:
-    'click .add-repeat': 'add_repeat'
-    'click .remove-repeat': 'remove_repeat'
-
   initialize: (options) ->
     @tmpl = options.tmpl
-    @next_index = options.next_index
+    @next_inst_num = parseInt(@$el.data('inst-count')) + 1
 
-  children: ->
-    this.$el.find("> .children")
+  events:
+    'click .add-instance': 'add_instance'
+    'click .remove-instance': 'remove_instance'
 
-  add_repeat: (event) ->
+  add_instance: (event) ->
     event.preventDefault()
-    this.children().append(@tmpl.replace(/__PLACEHOLDER__/g, @next_index))
-    @next_index++
+    qing_group = $(event.target).closest('.qing-group')
+    qing_group.find('.qing-group-instances').append(@tmpl.replace(/__INST_NUM__/g, @next_inst_num))
+    @next_inst_num++
 
-  remove_repeat: (event) ->
+  remove_instance: (event) ->
     event.preventDefault()
-    node = $(event.target).closest(".node")
-    node.hide();
-
-    id = node.find('input[name$="[id]"]').first().val()
-    if id == ""
-      node.remove()
-    else
-      node.hide()
-      node.find('input[name$="[_destroy]"]').first().val("true")
+    instance = $(event.target.closest('.qing-group-instance'))
+    instance.hide()
+    instance.find("[id$=_destroy]").val("1")

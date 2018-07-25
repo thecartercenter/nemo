@@ -7,7 +7,7 @@
     <a class="add-repeat">Add</a>
 
     <%= javascript_doc_ready do %>
-      new ELMO.Views.RepeatGroupFormView({
+      new ELMO.Views.ResponseFormRepeatView({
         el: $('#<%= context.id %>'),
         next_index: <%= group_set.c.count %>,
         tmpl: <%= json render("hierarchical_responses/answers/nodes",
