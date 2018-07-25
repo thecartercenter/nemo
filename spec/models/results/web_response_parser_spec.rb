@@ -8,10 +8,10 @@ describe Results::WebResponseParser do
   let(:form) { create(:form, question_types: question_types) } # form item ids have to actually exist
   let(:input) { ActionController::Parameters.new(data) }
   let(:root_node) { response.nil? ? nil : response.root_node }
-  let(:tree) { Results::WebResponseParser.new.parse(input, root_node) }
+  let(:tree) { Results::WebResponseParser.new.parse(input, response) }
 
   context "new response" do
-    let(:response) { nil }
+    let(:response) { create(:response, form: form) }
     let(:data) { {root: web_answer_group_hash(form.root_group.id, answers)} }
 
     context "simple response with three answers" do
