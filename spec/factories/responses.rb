@@ -1,29 +1,32 @@
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
-  def self.build_answers(parent, values, inst_num = 1)
-    parent.sorted_children.each_with_index.map do |item, i|
-      if i < values.size
-        value = values[i]
-        if item.is_a?(QingGroup)
-          next if value.nil?
-          unless value.is_a?(Array)
-            raise "expecting array of answer values for #{item.group_name}, got #{value.inspect}"
-          end
+  def self.build_answers(response, answer_values)
+    puts "response class: #{response.class}"
+    root = response.build_root_node(type: "AnswerGroup", form_item: response.form.root_group, new_rank: 0, rank: 1, inst_num: 1)
+    add_level(response.form.sorted_children, answer_values, root)
+    root
+  end
 
-          # If first element of array is :repeating, remove it, leaving an array of answer groups.
-          # Otherwise, wrap value in array to get an array of answer groups, but with only one element.
-          answer_groups = if value.first == :repeating
-            value[1..-1]
-          else
-            [value]
+  def self.add_level(form_items, answer_values, parent)
+    unless answer_values.nil?
+      form_items.each_with_index do |item, i|
+        answer_data = answer_values[i]
+        unless answer_data.nil?
+          case item
+          when Questioning
+            add_answer(parent, item, answer_values[i], i)
+          #when QingGroup
+            #add_group(parent, item, answer_values[i], i) # not repeating
           end
-
-          answer_groups.each_with_index.map { |answer_group, i| build_answers(item, answer_group, i + 1) }
-        else
-          build_answer(item, value, inst_num)
         end
       end
-    end.flatten
+    end
+    parent
+  end
+
+  def self.add_answer(parent, questioning, value, new_rank)
+    parent.children.build(type: "Answer", form_item: questioning, value: value, new_rank: new_rank, rank: new_rank + 1, inst_num: parent.inst_num)
+
   end
 
   def self.build_answer(qing, value, inst_num)
@@ -84,26 +87,20 @@ FactoryGirl.define do
     end
 
     # Ensure unpublished form associations have been published at least once
-    after(:build) do |response|
+    after(:build) do |response, evaluator|
+      puts "response class in after build: #{response.class}"
       form = response.form
       unless form.published? && form.current_version.present?
         form.publish!
         form.unpublish!
       end
-    end
-
-    # Build answer objects from answer_values array
-    # Array may contain nils, which should result in answers with nil values.
-    # Array may also contain recursively nested sub-arrays. Sub arrays may be given for:
-    # - select_one questions with multilevel option sets
-    # - select_multiple questions
-    # - QingGroups
-    answers do
-      if answer_values.nil?
-        []
-      else
-        ResponseFactoryHelper.build_answers(form.root_group, answer_values).flatten.compact
-      end
+      # Build answer objects from answer_values array
+      # Array may contain nils, which should result in answers with nil values.
+      # Array may also contain recursively nested sub-arrays. Sub arrays may be given for:
+      # - select_one questions with multilevel option sets
+      # - select_multiple questions
+      # - QingGroups
+      ResponseFactoryHelper.build_answers(response, evaluator.answer_values)
     end
   end
 end
