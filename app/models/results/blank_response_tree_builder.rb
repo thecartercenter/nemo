@@ -12,10 +12,9 @@ module Results
     end
 
     def build
-      root = AnswerGroup.new(form_item: form.root_group, response: response, new_rank: 0)
+      root = response.build_root_node(type: "AnswerGroup", form_item: form.root_group, response: response, new_rank: 0)
       add_level(form.root_group.sorted_children, root)
-      response.associate_tree(root)
-      root
+      response.root_node
     end
 
     private
@@ -30,39 +29,38 @@ module Results
           elsif form_node.multilevel?
             add_multilevel(form_node, response_node)
           else
-            add_child(Answer, response_node, form_node)
+            add_child("Answer", response_node, form_node)
           end
         end
       end
     end
 
     def add_repeat_group(form_node, response_node)
-      group_set = add_child(AnswerGroupSet, response_node, form_node)
-      group = add_child(AnswerGroup, group_set, form_node)
+      group_set = add_child("AnswerGroupSet", response_node, form_node)
+      group = add_child("AnswerGroup", group_set, form_node)
       add_level(form_node.sorted_children, group) if form_node.children?
     end
 
     def add_non_repeat_group(response_node, form_node)
-      group = add_child(AnswerGroup, response_node, form_node)
+      group = add_child("AnswerGroup", response_node, form_node)
       add_level(form_node.sorted_children, group) if form_node.children?
     end
 
     def add_multilevel(form_node, response_node)
-      set = add_child(AnswerSet, response_node, form_node)
+      set = add_child("AnswerSet", response_node, form_node)
       form_node.levels.each do
-        add_child(Answer, set, form_node)
+        add_child("Answer", set, form_node)
       end
     end
 
     def add_child(type, response_node, form_node)
-      child = type.new(
+      response_node.children.build(
+        type: type,
         questioning_id: form_node.id,
         response: response,
         new_rank: response_node.children.size,
         rank: response_node.children.size + 1
       )
-      response_node.children << child
-      child
     end
   end
 end

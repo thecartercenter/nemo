@@ -267,8 +267,6 @@ describe Results::WebResponseParser do
       end
 
       it "updates value appropriately" do
-        pp "tree: "
-        pp response.root_node.debug_tree
         expect_root(tree, form)
         expect_children(tree.reload, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B Z])
       end

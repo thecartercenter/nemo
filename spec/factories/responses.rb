@@ -26,7 +26,6 @@ module ResponseFactoryHelper
 
   def self.add_answer(parent, questioning, value, new_rank)
     parent.children.build(type: "Answer", form_item: questioning, value: value, new_rank: new_rank, rank: new_rank + 1, inst_num: parent.inst_num)
-
   end
 
   def self.build_answer(qing, value, inst_num)
@@ -100,7 +99,9 @@ FactoryGirl.define do
       # - select_one questions with multilevel option sets
       # - select_multiple questions
       # - QingGroups
-      ResponseFactoryHelper.build_answers(response, evaluator.answer_values)
+      if evaluator.answer_values
+        ResponseFactoryHelper.build_answers(response, evaluator.answer_values)
+      end
     end
   end
 end
