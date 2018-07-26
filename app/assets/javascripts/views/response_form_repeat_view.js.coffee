@@ -1,20 +1,19 @@
 class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
   events:
-    'click .add-repeat': 'add_repeat'
+    'click > .add-repeat': 'add_repeat'
     'click .remove-repeat': 'remove_repeat'
 
   initialize: (options) ->
     @tmpl = options.tmpl
-    @placeholder = options.placeholder
     @next_index = options.next_index
+    @$el.attr('id', Math.random())
 
   children: ->
     @$el.find("> .children")
 
   add_repeat: (event) ->
     event.preventDefault()
-    regex = new RegExp(@placeholder, "g")
-    @children().append(@tmpl.replace(regex, @next_index))
+    @children().append(@tmpl.replace(/__PLACEHOLDER__/g, @next_index))
     @next_index++
 
   remove_repeat: (event) ->

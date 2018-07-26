@@ -1,27 +1,23 @@
-<div class="answer-group-set" id="<%= context.id %>">
+<% id = rand(9e9) %>
+<div class="answer-group-set" id="<%= id %>">
   <div class="children">
     <%= render("hierarchical_responses/answers/nodes", nodes: group_set.c, context: context.add(:children), removable: true) %>
   </div>
 
   <% if !read_only %>
-    <a class="add-repeat">Add</a>
+    <a href="#" class="add-repeat">Add</a>
 
-    <% placeholder = "__PLACEHOLDER_#{rand(9e9)}__" %>
-
-    <% unless context.placeholder? %>
-      <%= javascript_doc_ready do %>
-        new ELMO.Views.ResponseFormRepeatView({
-          el: $('#<%= context.id %>'),
-          placeholder: <%= json placeholder %>,
-          next_index: <%= group_set.c.count %>,
-          tmpl: <%= json render("hierarchical_responses/answers/nodes",
-            nodes: context.find(@blank_response).children,
-            read_only: read_only,
-            placeholder: placeholder,
-            removable: true,
-            context: context.placeholder.add(:children)) %>
-        })
-      <% end %>
+    <%= javascript_doc_ready do %>
+      new ELMO.Views.ResponseFormRepeatView({
+        el: $('#<%= id %>'),
+        next_index: <%= group_set.c.count %>,
+        tmpl: <%= json render("hierarchical_responses/answers/nodes",
+          nodes: context.find(@blank_response).children,
+          read_only: read_only,
+          placeholder: '__PLACEHOLDER__',
+          removable: true,
+          context: context.add(:children)) %>
+      })
     <% end %>
   <% end %>
 </div>

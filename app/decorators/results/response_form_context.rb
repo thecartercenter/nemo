@@ -5,22 +5,12 @@ module Results
   class ResponseFormContext
     attr_reader :path
 
-    def initialize(path = [], placeholder = false)
+    def initialize(path = [])
       @path = path
-      @placeholder = placeholder
     end
 
     def add(*items)
-      self.class.new(path + items, @placeholder)
-    end
-
-    def placeholder
-      @placeholder = true
-      self
-    end
-
-    def placeholder?
-      @placeholder == true
+      self.class.new(path + items)
     end
 
     def input_name
@@ -48,6 +38,9 @@ module Results
         node
       else
         index = indices.shift
+        if index == '__PLACEHOLDER__'
+          index = 0
+        end
         find_node(node.children[index], indices)
       end
     end
