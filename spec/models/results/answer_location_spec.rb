@@ -6,6 +6,7 @@ describe "answer location data" do
   let(:form) { create(:form, question_types: question_types) }
   let(:questioning) { form.questionings.first }
   let(:response) { create(:response, form: form, answer_values: [answer_value]) }
+  let(:answer) { response.root_node.c[0] } # works when form has one question
 
   describe ".location_answers_for_mission" do
     let(:question_types) { %w[location select_one select_multiple text integer] }
@@ -27,7 +28,7 @@ describe "answer location data" do
       form.publish!
 
       create(:response, form: form, answer_values:
-        ["12.34 -56.78", [select_one_option.name], [option_one.name, option_two.name], "Non geo answer", 12])
+        ["12.34 -56.78", select_one_option.name, [option_one.name, option_two.name], "Non geo answer", 12])
     end
 
     it "returns all answers for locations on a certain mission" do
@@ -43,7 +44,7 @@ describe "answer location data" do
       let(:question_types) { %w[location] }
 
       it "returns true" do
-        expect(response.answers[0].location_type_with_value?).to be true
+        expect(answer.location_type_with_value?).to be true
       end
     end
 
@@ -51,7 +52,7 @@ describe "answer location data" do
       let(:question_types) { %w[text] }
 
       it "returns false" do
-        expect(response.answers[0].location_type_with_value?).to be false
+        expect(answer.location_type_with_value?).to be false
       end
     end
   end
@@ -63,13 +64,13 @@ describe "answer location data" do
       let(:answer_value) { option.name }
 
       it "should return false if the selected option does not have coordinates" do
-        expect(response.answers[0]).not_to have_coordinates
+        expect(answer).not_to have_coordinates
       end
 
       it "should return true if the selected option has coordinates" do
         questioning.option_set.update!(geographic: true, allow_coordinates: true)
         option.update!(latitude: 0, longitude: 0)
-        expect(response.answers[0]).to have_coordinates
+        expect(answer).to have_coordinates
       end
     end
 
@@ -83,7 +84,7 @@ describe "answer location data" do
         let(:choices) { [] }
 
         it "should return false if no options were selected" do
-          expect(response.answers[0]).not_to have_coordinates
+          expect(answer).not_to have_coordinates
         end
       end
 
@@ -95,18 +96,18 @@ describe "answer location data" do
         end
 
         it "should return false if the selected options do not have coordinates" do
-          expect(response.answers[0]).not_to have_coordinates
+          expect(answer).not_to have_coordinates
         end
 
         it "should return true if all of the selected options have coordinates" do
           option_one.update!(latitude: 0, longitude: 0)
           option_two.update!(latitude: 0, longitude: 0)
-          expect(response.answers[0]).to have_coordinates
+          expect(answer).to have_coordinates
         end
 
         it "should return true if any of the selected options have coordinates" do
           option_one.update!(latitude: 0, longitude: 0)
-          expect(response.answers[0]).to have_coordinates
+          expect(answer).to have_coordinates
         end
       end
     end
@@ -118,7 +119,7 @@ describe "answer location data" do
         let(:answer_value) { "12.3 45.6" }
 
         it "should return true" do
-          expect(response.answers[0]).to have_coordinates
+          expect(answer).to have_coordinates
         end
       end
 
@@ -126,7 +127,7 @@ describe "answer location data" do
         let(:answer_value) { "" }
 
         it "should return false" do
-          expect(response.answers[0]).not_to have_coordinates
+          expect(answer).not_to have_coordinates
         end
       end
     end
@@ -137,9 +138,9 @@ describe "answer location data" do
       let(:question_types) { %w[location] }
       let(:answer_value) { "12.34 -56.78" }
       it "copies the coordinates from value to the lat/long fields" do
-        expect(response.answers[0]).to be_location_type_with_value
-        expect(response.answers[0].latitude).to eq(12.34)
-        expect(response.answers[0].longitude).to eq(-56.78)
+        expect(answer).to be_location_type_with_value
+        expect(answer.latitude).to eq(12.34)
+        expect(answer.longitude).to eq(-56.78)
       end
     end
 
@@ -152,8 +153,8 @@ describe "answer location data" do
       it "copies the coordinates from the option to the answer lat/long columns" do
         questioning.option_set.update!(geographic: true, allow_coordinates: true)
         option.update!(latitude: 12.34, longitude: -56.78)
-        expect(response.answers[0].latitude).to eq(12.34)
-        expect(response.answers[0].longitude).to eq(-56.78)
+        expect(answer.latitude).to eq(12.34)
+        expect(answer.longitude).to eq(-56.78)
       end
     end
   end

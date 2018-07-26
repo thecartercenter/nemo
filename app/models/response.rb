@@ -15,6 +15,8 @@ class Response < ApplicationRecord
   belongs_to :checked_out_by, class_name: "User"
   belongs_to :user, inverse_of: :responses
   belongs_to :reviewer, class_name: "User"
+
+  # response.answers is deprecated in favor of traversing the response tree via response.root_node.c
   has_many :answers, -> { order(:inst_num, :rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
   has_many :location_answers, lambda {

@@ -1,7 +1,8 @@
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
   def self.build_answers(response, answer_values)
-    root = response.build_root_node(type: "AnswerGroup", form_item: response.form.root_group, new_rank: 0, rank: 1, inst_num: 1)
+    root = response.build_root_node({type: "AnswerGroup", form_item: response.form.root_group}
+      .merge(rank_attributes("AnswerGroup", nil)))
     add_level(response.form.sorted_children, answer_values, root)
     root
   end
@@ -10,13 +11,15 @@ module ResponseFactoryHelper
     unless answer_values.nil?
       form_items.each_with_index do |item, i|
         answer_data = answer_values[i]
-        unless answer_data.nil?
-          case item
-          when Questioning
-            add_answer(parent, item, answer_values[i], i)
-          when QingGroup
-            add_group(parent, item, answer_values[i], i)
-          # TODO handle repeating
+        next if answer_data.nil?
+        case item
+        when Questioning
+          add_answer(parent, item, answer_values[i])
+        when QingGroup
+          if item.repeatable?
+            add_group_set(parent, item, answer_values[i])
+          else
+            add_group(parent, item, answer_values[i])
           end
         end
       end
@@ -24,46 +27,52 @@ module ResponseFactoryHelper
     parent
   end
 
-  def self.add_answer(parent, questioning, value, new_rank)
-    if questioning.multilevel?
-      build_answer_set(parent, questioning, value, new_rank)
-    else
-      parent.children.build(build_answer_attrs(parent, questioning, value, new_rank))
+  def self.add_group_set(parent, form_group, values)
+    values = values.drop(1) # first element of array is :repeating symbol
+    group_set = parent.children.build({
+      type: "AnswerGroupSet",
+      form_item: form_group
+    }.merge(rank_attributes("AnswerGroupSet", parent)))
+    values.each do |group_instance_values|
+      add_group(group_set, form_group, group_instance_values)
     end
   end
 
-  def self.add_group(parent, form_group, answer_values, new_rank)
-    answer_group = parent.children.build(
-      type: "AnswerGroup",
-      form_item: form_group,
-      new_rank: new_rank,
-      inst_num: new_rank,
-      rank: new_rank + 1
-    )
+  def self.add_answer(parent, questioning, value)
+    if questioning.multilevel?
+      build_answer_set(parent, questioning, value)
+    else
+      parent.children.build(build_answer_attrs(parent, questioning, value))
+    end
+  end
+
+  def self.add_group(parent, form_group, answer_values)
+    answer_group = parent.children.build({type: "AnswerGroup", form_item: form_group}
+      .merge(rank_attributes("AnswerGroup", parent)))
     add_level(form_group.c, answer_values, answer_group)
   end
 
-  def self.build_answer_set(parent, qing, values, new_rank)
-    set = parent.children.build(type: "AnswerSet", form_item: qing, new_rank: new_rank, inst_num: new_rank, rank: new_rank + 1)
-    unless values.blank?
+  def self.build_answer_set(parent, qing, values)
+    set = parent.children.build({type: "AnswerSet", form_item: qing}
+      .merge(rank_attributes("AnswerSet", parent)))
+    if values.present?
       options_by_name = qing.all_options.index_by(&:name)
       values.each do |v|
         option = qing.all_options.select { |o| o.canonical_name == v }.first
         option_id = option.present? ? option.id : nil
         set.children.build(
-          type: "Answer",
-          questioning: qing,
-          option_id: option_id,
-          new_rank: new_rank,
-          inst_num: inst_num("Answer", parent),
-          rank: new_rank + 1
+          {
+            type: "Answer",
+            questioning: qing,
+            option_id: option_id
+          }.merge(rank_attributes("Answer", set))
         )
       end
     end
     set
   end
 
-  def self.build_answer_attrs(parent, qing, value, new_rank)
+  def self.build_answer_attrs(parent, qing, value)
     attrs = {
       type: "Answer",
       form_item: qing
@@ -107,42 +116,6 @@ module ResponseFactoryHelper
     else
       1
     end
-  end
-
-  def self.build_answer(qing, value, new_rank)
-    answers = case qing.qtype_name
-    when "select_one"
-      options_by_name = qing.all_options.index_by(&:name)
-      values = value.nil? ? [nil] : Array.wrap(value)
-      values.each_with_index.map do |v,i|
-        Answer.new(
-          questioning: qing,
-          rank: i + 1,
-          option: v.nil? ? nil : (options_by_name[v] or raise "could not find option with name '#{v}'")
-        )
-      end.shuffle
-
-    # in this case, a should be an array of choice names
-    when "select_multiple"
-      options_by_name = qing.options.index_by(&:name)
-      raise "expecting array answer value for question #{qing.code}, got #{value.inspect}" unless value.is_a?(Array)
-      Answer.new(
-        questioning: qing,
-        choices:
-          value.map { |c| Choice.new(option: options_by_name[c]) or raise "could not find option with name '#{c}'" }
-      )
-
-    when "date", "time", "datetime"
-      Answer.new(questioning: qing, :"#{qing.qtype_name}_value" => value)
-    when "image", "annotated_image", "signature", "sketch", "audio", "video"
-      Answer.new(questioning: qing, media_object: value)
-    else
-      Answer.new(questioning: qing, value: value)
-    end
-
-    answers = Array.wrap(answers)
-    answers.each { |a| a.inst_num = inst_num }
-    answers
   end
 end
 

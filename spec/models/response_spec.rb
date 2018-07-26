@@ -17,7 +17,7 @@ describe Response do
 
     # edit
     Timecop.travel(10.seconds) do
-      r2.answers.first.update_attributes(value: 2)
+      r2.root_node.c.first.update_attributes(value: 2)
       key3 = Response.per_mission_cache_key(get_mission)
       expect(key3).not_to eq(key2)
     end

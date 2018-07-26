@@ -208,6 +208,19 @@ class FormItem < ApplicationRecord
     false
   end
 
+  def debug_tree(indent: 0)
+    child_tree = sorted_children.map { |c| c.debug_tree(indent: indent + 1) }.join
+    chunks = []
+    chunks << " " * (indent * 2)
+    chunks << rank.to_s.rjust(2)
+    chunks << " "
+    chunks << self.class.name.ljust(15)
+    chunks << " Type: #{qtype_name}," if qtype_name.present?
+    chunks << " Code: #{code}"
+    chunks << " Repeatable" if repeatable?
+    "\n#{chunks.join}#{child_tree}"
+  end
+
   private
 
   def normalize

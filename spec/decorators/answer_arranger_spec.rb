@@ -16,8 +16,6 @@ describe AnswerArranger do
         ["select_one", "select_multiple"],
         "decimal"
       ])
-      # Make the first group repeatable.
-      _form.sorted_children[4].update_attribute(:repeatable, true)
       _form
     end
 
