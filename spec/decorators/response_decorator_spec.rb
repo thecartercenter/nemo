@@ -15,7 +15,7 @@ describe ResponseDecorator do
   end
 
   it "should return answer to the valid question" do
-    expect(decorator.answer_for(form.questions.first)).to eq response.answers.first
+    expect(decorator.answer_for(form.questions.first)).to eq response.root_node.c[0]
     expect(decorator.answer_for(other_question)).to be_nil
   end
 end
