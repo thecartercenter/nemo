@@ -54,7 +54,7 @@ describe "report truncation" do
     # computed report.
     before do
       response_count.times do |i|
-        create(:response, form: form, answer_values: [(i*100).to_s])
+        create(:response, form: form, answer_values: [(i * 100).to_s])
       end
     end
 

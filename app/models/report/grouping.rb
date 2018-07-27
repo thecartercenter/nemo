@@ -34,10 +34,10 @@ class Report::Grouping
     rel = filter_non_top_level_answers(rel, prefix) if @calculation.question1
 
     return rel
-  end
+  end 
 
   def filter_non_top_level_answers(rel, prefix)
-    return unless @calculation.joins.include?(:options)
+    return rel unless @calculation.joins.include?(:options)
     rel.where("#{prefix}_ans_opt_nodes.ancestry_depth IS NULL OR #{prefix}_ans_opt_nodes.ancestry_depth <= 1")
   end
 
