@@ -19,7 +19,7 @@ class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
   remove_repeat: (event) ->
     event.preventDefault()
     node = $(event.target).closest(".node")
-    node.hide();
+    node.hide()
 
     id = node.find('input[name$="[id]"]').first().val()
     if id == ""

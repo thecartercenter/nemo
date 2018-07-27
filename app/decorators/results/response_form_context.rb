@@ -38,9 +38,7 @@ module Results
         node
       else
         index = indices.shift
-        if index == '__PLACEHOLDER__'
-          index = 0
-        end
+        index = 0 if index == '__PLACEHOLDER__'
         find_node(node.children[index], indices)
       end
     end
