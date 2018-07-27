@@ -68,6 +68,33 @@ feature "response form tree handling", js: true do
         ])
       end
 
+      scenario "allows dynamic add/remove of nested repeat groups", js: true do
+        visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+
+        # 1 "Add" and "Remove" button per repeat group
+        expect(page).to have_content("Add", count: 2)
+        expect(page).to have_content("Remove", count: 2)
+
+        # Add new inner repeat
+        all(:link, "Add").first.click
+
+        # New "Remove" button present for the inner repeat
+        expect(page).to have_content("Remove", count: 3)
+
+        # Add new outer repeat
+        all(:link, "Add").last.click
+
+        # 1 new "Add" for the inner repeat, 2 new "Removes" (1 innner, 1 outer)
+        expect(page).to have_content("Add", count: 3)
+        expect(page).to have_content("Remove", count: 5)
+
+        # Remove outer repeat
+        all(:link, "Remove").last.click
+
+        expect(page).to have_content("Add", count: 2)
+        expect(page).to have_content("Remove", count: 3)
+      end
+
       scenario "renders show page with hierarchical structure" do
         visit hierarchical_response_path(params.merge(id: response.shortcode))
 
