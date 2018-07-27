@@ -1,11 +1,11 @@
-<div id="media-uploader-<%= context.input_name %>" class="media-uploader">
+<div id="media-uploader-<%= context.id %>" class="media-uploader">
   <% if answer.has_media_object? %>
     <div class="existing">
       <%= media_link(answer.media_object, show_delete: true) %>
     </div>
   <% end %>
 
-  <div id="dropzone-<%= context.input_name %>" class="dropzone"
+  <div id="dropzone-<%= context.id %>" class="dropzone"
     <%= answer.has_media_object? ? 'style="display: none"'.html_safe : '' %>>
     <%= hidden_field_tag(context.add(:media_object_id).input_name, answer.media_object_id) %>
     <div class="dz-message">
@@ -18,8 +18,8 @@
 <%= javascript_doc_ready do %>
   <% media_type = answer.qtype.media_type.pluralize %>
   new ELMO.Views.MediaUploaderView(<%=json(
-    el: "#media-uploader-#{context.input_name}",
-    zone_id: "#dropzone-#{context.input_name}",
+    el: "#media-uploader-#{context.id}",
+    zone_id: "#dropzone-#{context.id}",
     generic_thumb_path: image_path("media/#{answer.qtype.media_type}.png"),
     post_path: media_create_path(type: media_type),
     delete_path: answer.media_object ? media_delete_path(answer.media_object, type: media_type) : nil
