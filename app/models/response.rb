@@ -30,6 +30,8 @@ class Response < ApplicationRecord
   before_save :normalize_answers
   before_create :generate_shortcode
 
+  before_destroy :destroy_answer_tree
+
   # Due to an acts_as_paranoid gem bug, rails counter_cache increments on creation
   # but does not decrement on deletion since we need the counter cache, we'll manually decrement on deletion
   # Issue number: https://github.com/ActsAsParanoid/acts_as_paranoid/issues/39
@@ -77,6 +79,10 @@ class Response < ApplicationRecord
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
   delegate :c, to: :root_node
+
+  def destroy_answer_tree
+    root_node.destroy
+  end
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)

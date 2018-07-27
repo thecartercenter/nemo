@@ -42,7 +42,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('integer', [5, nil, '', 2])
+      prepare_form_and_collection('integer', [5, '', '', 2])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -113,7 +113,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('select_one', ['Yes', nil, 'No', nil])
+      prepare_form_and_collection('select_one', ['Yes', '', 'No', ''])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -170,7 +170,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct for" do
-      prepare_form_and_collection('date', [nil, '20131027', nil])
+      prepare_form_and_collection('date', ['', '20131027', ''])
       expect(first_summary.null_count).to eq(2)
     end
   end
@@ -184,7 +184,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('time', ['9:30', nil, nil])
+      prepare_form_and_collection('time', ['9:30', '', ''])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -208,7 +208,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('datetime', ['2013-10-26 9:30', nil, nil])
+      prepare_form_and_collection('datetime', ['2013-10-26 9:30', '', ''])
       expect(first_summary.null_count).to eq(2)
     end
   end
@@ -222,7 +222,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should work" do
-      prepare_form_and_collection('text', ['foo', nil, 'bar', ''])
+      prepare_form_and_collection('text', ['foo', '', 'bar', ''])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -241,8 +241,8 @@ describe "summary collection with single subset" do
       responses = prepare_form('text', ['foo', 'bar', 'baz'])
 
       # change response dates
-      responses[1].answers[0].update_attributes!(created_at: Time.now + 1.hour)
-      responses[2].answers[0].update_attributes!(created_at: Time.now - 1.hour)
+      responses[1].root_node.c[0].update_attributes!(created_at: Time.now + 1.hour)
+      responses[2].root_node.c[0].update_attributes!(created_at: Time.now - 1.hour)
       @form.reload
 
       prepare_collection

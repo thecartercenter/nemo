@@ -58,15 +58,17 @@ module ResponseFactoryHelper
     if values.present?
       options_by_name = qing.all_options.index_by(&:name)
       values.each do |v|
-        option = qing.all_options.select { |o| o.canonical_name == v }.first
-        option_id = option.present? ? option.id : nil
-        set.children.build(
-          {
-            type: "Answer",
-            questioning: qing,
-            option_id: option_id
-          }.merge(rank_attributes("Answer", set))
-        )
+        unless v.blank?
+          option = qing.all_options.select { |o| o.canonical_name == v }.first
+          option_id = option.present? ? option.id : nil
+          set.children.build(
+            {
+              type: "Answer",
+              questioning: qing,
+              option_id: option_id
+            }.merge(rank_attributes("Answer", set))
+          )
+        end
       end
     end
     set
@@ -80,8 +82,10 @@ module ResponseFactoryHelper
     attrs.merge!(rank_attributes("Answer", parent))
     case qing.qtype_name
     when "select_one" # not multilevel
-      option = qing.all_options.select { |o| o.canonical_name == value }.first
-      attrs[:option_id] = option.id
+      unless value.blank?
+        option = qing.all_options.select { |o| o.canonical_name == value }.first
+        attrs[:option_id] = option.id
+      end
     when "select_multiple"
       options_by_name = qing.options.index_by(&:name)
       choices = value.map do |c|
