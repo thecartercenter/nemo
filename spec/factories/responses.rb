@@ -1,3 +1,25 @@
+# An non repeat answer group is an array of answer values or answer groups
+# A repeat answer group is a hash with the key :repeating whose value is an array of answer group instances
+#Example answer_values with nested repeat groups:
+# root:               [
+# AnswerGroup          [
+# Answer                1
+#                      ],
+# Answer               create(:media_image),
+# Answer               %w[Plant Oak],
+# Outer repeat grp    {repeating: [
+# Outer grp instance1   [
+# Answer                 2,
+# Inner rpt grp          {repeating: [
+# Inner rpt grp instance1 [
+# Answer                   3
+#                         ]
+#                        ]}
+#                       ]
+#                     ]}
+#                    ]
+
+
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
   def self.build_answers(response, answer_values)

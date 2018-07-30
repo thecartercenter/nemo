@@ -12,8 +12,8 @@ describe AnswerArranger do
         "select_one",
         "integer",
         "multilevel_select_one",
-        {repeating: {items: ["text", "multilevel_select_one", "integer"], name: "Repeat Group"}},
-        ["select_one", "select_multiple"],
+        {repeating: {items: %w[text multilevel_select_one integer], name: "Repeat Group"}},
+        %w[select_one select_multiple],
         "decimal"
       ])
       _form
@@ -23,12 +23,12 @@ describe AnswerArranger do
       create(:response, form: form, answer_values: [
         "Cat",
         12,
-        %w(Plant Tulip),
-        [:repeating,
-          ["stuff", %w(Animal Dog), 88],
-          ["blah", %w(Animal Cat), 38]
-        ],
-        ["Dog", %w(Cat Dog)],
+        %w[Plant Tulip],
+        {repeating: [
+          ["stuff", %w[Animal Dog], 88],
+          ["blah", %w[Animal Cat], 38]
+        ]},
+        ["Dog", %w[Cat Dog]],
         3.2
       ])
     end
@@ -151,10 +151,10 @@ describe AnswerArranger do
     let(:response) do
       create(:response, form: form, answer_values: [
         123,
-        [:repeating,
+        {repeating: [
           [456, 789],
           [111, 222]
-        ],
+        ]},
         333
       ])
     end

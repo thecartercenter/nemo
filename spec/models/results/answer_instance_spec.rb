@@ -7,11 +7,11 @@ describe OldAnswerInstance do
     let(:response) do
       create(:response, form: form, answer_values: [
         111,
-        [:repeating,
+        {repeating: [
           [222, 333],
           [444, 555],
           [777, 888]
-        ]
+        ]}
       ])
     end
     let(:root_instance) do

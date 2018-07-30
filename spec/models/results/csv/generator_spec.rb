@@ -118,25 +118,29 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
         create_response(form: repeat_form, answer_values: [
           1,
-          [:repeating,
-           ["Apple", 1, %w[Cat Dog]],
-           ["Banana", 2, %w[Cat]]],
+          {repeating: [
+            ["Apple", 1, %w[Cat Dog]],
+            ["Banana", 2, %w[Cat]]
+          ]},
           2,
-          [:repeating,
-           ["Asparagus", %w[Ghana Accra], 3]]
+          {repeating: [
+            ["Asparagus", %w[Ghana Accra], 3]
+          ]}
         ])
 
         Timecop.freeze(10.minutes) do
           create_response(form: repeat_form, answer_values: [
             3,
-            [:repeating,
-             ["Xigua", 10, %w[Dog]],
-             ["Yuzu", 9, %w[Cat Dog]],
-             ["Ugli", 8, %w[Cat]]],
+            {repeating: [
+              ["Xigua", 10, %w[Dog]],
+              ["Yuzu", 9, %w[Cat Dog]],
+              ["Ugli", 8, %w[Cat]]
+            ]},
             4,
-            [:repeating,
-             ["Zucchini", %w[Canada Calgary], 7],
-             ["Yam", %w[Canada Ottawa], 6]]
+            {repeating: [
+              ["Zucchini", %w[Canada Calgary], 7],
+              ["Yam", %w[Canada Ottawa], 6]
+            ]}
           ])
         end
       end
@@ -203,7 +207,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         Timecop.freeze(2.minutes) do
           # Destroy one of the answers for this response, but not the whole thing.
           create_response(form: form1, answer_values: %w[baz qux])
-          responses.last.answers.last.destroy
+          responses.last.root_node.c[1].destroy
 
           # form2 has no responses in our set so its headers shouldn't be included either.
           create_response(form: form2, answer_values: ["xuq"])
