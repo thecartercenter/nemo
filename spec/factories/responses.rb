@@ -5,7 +5,7 @@
 # All other answer types are represented by an integer, string, or object as appropriate
 # A non repeat answer group of answers is an array of answer values
 # A repeat group is a hash with the key :repeating whose value is an array of answer group arrays
-#   e.g. {repeating: [ [1, "A"], [2, "B"] ] } where the group has an integer answer and a text answer
+#   e.g. {repeating: [ [1, "A"], [2, "B"] ] } where the group has an integer question and a text question
 #
 # Example answer_values with nested repeat groups:
 # root:               [
@@ -48,16 +48,13 @@ module ResponseFactoryHelper
         next if answer_data.nil?
         case item
         when Questioning
-          add_answer(parent, item, answer_data)
+          add_answer(item, answer_data, parent)
         when QingGroup
-          puts "answer data: #{answer_data}"
-          puts "repeatable? #{item.repeatable?}"
-          puts "answer_data is a #{answer_data.class}"
-          puts "is a hash: #{answer_data.is_a?(Hash)}"
-          puts "has key repeating: #{answer_data.key?(:repeating)}" if answer_data.is_a?(Hash)
+          # :repeating key is only present when answer group set has not been built yet
           if item.repeatable? && answer_data.is_a?(Hash) && answer_data.key?(:repeating)
             add_group_set(item, answer_data, parent)
           else
+            # group is not repeating, or parent is answer group set for repeat group.
             add_group(item, answer_data, parent)
           end
         end
@@ -66,61 +63,62 @@ module ResponseFactoryHelper
     parent
   end
 
-  def self.add_group_set(form_group, values, parent)
-    pp form_group
-    puts "add group set: #{values}"
-    values = values[:repeating]
+  # Form group must be repeating
+  # value_data is in shape of: {repeating: [[1, "A", "Hi"], [2, "B", "Bye"]]}
+  # Parent must be an AnswerGroup
+  def self.add_group_set(form_group, value_data, parent)
+    group_instances = value_data[:repeating]
     group_set = parent.children.build({
       type: "AnswerGroupSet",
       form_item: form_group
     }.merge(rank_attributes("AnswerGroupSet", parent)))
-    puts "values: #{values}"
-    values.each do |group_instance_values| # each array represents one group
-      puts "value: #{group_instance_values}"
-      add_group(form_group, group_instance_values, group_set)
+    group_instances.each do |group_instance_answer_values| # each array represents one group
+      add_group(form_group, group_instance_answer_values, group_set)
     end
   end
 
-  def self.add_answer(parent, questioning, value)
-    puts "add answer: #{value}"
-    if questioning.multilevel?
-      build_answer_set(parent, questioning, value)
-    else
-      parent.children.build(build_answer_attrs(parent, questioning, value))
-    end
-  end
-
+  # Form group may or may not be repeating
+  # Answer_values is an array of answers or groups in this group
+  # Parent must be an AnswerGroup (if form item not repeating) or AnswerGroupSet (if form item is repeating)
   def self.add_group(form_group, answer_values, parent)
-    puts "add group: #{answer_values}"
     answer_group = parent.children.build({type: "AnswerGroup", form_item: form_group}
       .merge(rank_attributes("AnswerGroup", parent)))
     add_level(form_group.c, answer_values, answer_group)
   end
 
-  def self.build_answer_set(parent, qing, values)
-    "build answer set: #{values}"
+  # Value may be integer, string, object, or (for select one or multilevel only) an array of strings
+  # Parent must be an AnswerGroup or AnswerSet
+  def self.add_answer(questioning, value, parent)
+    if questioning.multilevel? # only answers to multilevel questions need AnswerSets.
+      build_answer_set(questioning, value, parent)
+    else
+      parent.children.build(build_answer_attrs(questioning, value, parent))
+    end
+  end
+
+  # Values is an array of strings, which should match an option or be ''
+  # Parent must be an AnswerGroup
+  def self.build_answer_set(qing, values, parent)
     set = parent.children.build({type: "AnswerSet", form_item: qing}
       .merge(rank_attributes("AnswerSet", parent)))
     if values.present?
-      options_by_name = qing.all_options.index_by(&:name)
       values.each do |v|
-        unless v.blank?
-          option = qing.all_options.select { |o| o.canonical_name == v }.first
-          option_id = option.present? ? option.id : nil
-          set.children.build(
-            {
-              type: "Answer",
-              questioning: qing,
-              option_id: option_id
-            }.merge(rank_attributes("Answer", set))
-          )
-        end
+        next if v.blank?
+        option = qing.all_options.select { |o| o.canonical_name == v }.first
+        option_id = option.present? ? option.id : nil
+        set.children.build(
+          {
+            type: "Answer",
+            questioning: qing,
+            option_id: option_id
+          }.merge(rank_attributes("Answer", set))
+        )
       end
     end
     set
   end
 
-  def self.build_answer_attrs(parent, qing, value)
+  def self.build_answer_attrs(qing, value, parent)
     attrs = {
       type: "Answer",
       form_item: qing
@@ -128,7 +126,7 @@ module ResponseFactoryHelper
     attrs.merge!(rank_attributes("Answer", parent))
     case qing.qtype_name
     when "select_one" # not multilevel
-      unless value.blank?
+      if value.present?
         option = qing.all_options.select { |o| o.canonical_name == value }.first
         attrs[:option_id] = option.id
       end
