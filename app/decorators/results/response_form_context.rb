@@ -16,7 +16,7 @@ module Results
     end
 
     def read_only?
-      !!options[:read_only]
+      options[:read_only] == true
     end
 
     def add(*items)
@@ -48,7 +48,7 @@ module Results
         node
       else
         index = indices.shift
-        index = 0 if index == '__INDEX__'
+        index = 0 if index == "__INDEX__"
         find_node(node.children[index], indices)
       end
     end
