@@ -3,15 +3,15 @@
 
 <div class="cascading-selects" id="cascading-selects-<%= context.id %>">
   <% answer_set.children.each_with_index do |answer, index| %>
-    <%= hidden_field_tag context.add(index, :id).input_name, answer.id %>
-    <%= hidden_field_tag context.add(index, :type).input_name, "Answer" %>
-    <%= hidden_field_tag context.add(index, :questioning_id).input_name, answer.questioning_id %>
-    <%= hidden_field_tag context.add(:_destroy).input_name, "false" %>
+    <%= hidden_field_tag context.add(index).input_name(:id), answer.id %>
+    <%= hidden_field_tag context.add(index).input_name(:type), "Answer" %>
+    <%= hidden_field_tag context.add(index).input_name(:questioning_id), answer.questioning_id %>
+    <%= hidden_field_tag context.add(index).input_name(:_destroy), "false" %>
 
     <div class="level">
       <label>
         <%= answer.option_set.level_name_for_depth(index + 1) %>
-        <%= select_tag(context.add(index, :option_node_id).input_name,
+        <%= select_tag(context.add(index).input_name(:option_node_id),
               options_from_collection_for_select(
                 answer_set.option_node_path.nodes_for_depth(index + 1),
                 'id',

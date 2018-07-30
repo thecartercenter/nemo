@@ -23,8 +23,12 @@ module Results
       self.class.new(path + items, options)
     end
 
-    def input_name
-      items = path.zip(["children"] * (path.length - 1)).flatten.compact
+    def input_name(*names)
+      items = if path.present?
+        path.zip(["children"] * (path.length - 1)).flatten.compact + names
+      else
+        names
+      end
       "response[root]" + items.map { |item| "[#{item}]" }.join
     end
 

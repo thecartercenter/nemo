@@ -7,7 +7,7 @@
 
   <div id="dropzone-<%= context.id %>" class="dropzone"
     <%= answer.has_media_object? ? 'style="display: none"'.html_safe : '' %>>
-    <%= hidden_field_tag(context.add(:media_object_id).input_name, answer.media_object_id) %>
+    <%= hidden_field_tag(context.input_name(:media_object_id), answer.media_object_id) %>
     <div class="dz-message">
       <span class="message"><%= t("response.drop_message") %>&nbsp;</span>
     </div>

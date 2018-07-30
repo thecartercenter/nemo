@@ -1,12 +1,12 @@
 <% mode = read_only ? "read_only" : "editable" %>
 <div class="form-field answer_field qtype_<%= set.questioning.qtype.name %>
-  <%= context.read_only? ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
+            <%= context.read_only? ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
 
   <% unless context.read_only? %>
-    <%= hidden_field_tag context.add(:id).input_name, set.id %>
-    <%= hidden_field_tag context.add(:type).input_name, "AnswerSet" %>
-    <%= hidden_field_tag context.add(:questioning_id).input_name, set.questioning_id %>
-    <%= hidden_field_tag context.add(:_destroy).input_name, "false" %>
+    <%= hidden_field_tag context.input_name(:id), set.id %>
+    <%= hidden_field_tag context.input_name(:type), "AnswerSet" %>
+    <%= hidden_field_tag context.input_name(:questioning_id), set.questioning_id %>
+    <%= hidden_field_tag context.input_name(:_destroy), "false" %>
   <% end %>
 
   <%= render("hierarchical_responses/answers/answer_info", node: set) %>

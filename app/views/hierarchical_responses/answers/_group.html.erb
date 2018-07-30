@@ -6,9 +6,9 @@
   </h2>
 
   <% unless context.read_only? %>
-    <%= hidden_field_tag context.add(:id).input_name, group.id %>
-    <%= hidden_field_tag context.add(:type).input_name, "AnswerGroup" %>
-    <%= hidden_field_tag context.add(:_destroy).input_name, "false" %>
+    <%= hidden_field_tag context.input_name(:id), group.id %>
+    <%= hidden_field_tag context.input_name(:type), "AnswerGroup" %>
+    <%= hidden_field_tag context.input_name(:_destroy), "false" %>
   <% end %>
 
   <div class="children">
