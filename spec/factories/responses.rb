@@ -1,6 +1,13 @@
-# An non repeat answer group is an array of answer values or answer groups
-# A repeat answer group is a hash with the key :repeating whose value is an array of answer group instances
-#Example answer_values with nested repeat groups:
+# The Response Factory builds a response tree based on answer_values
+# About the answer_values format:
+# The value of a select multiple or multilevel select answer is an array.
+#   For example, %w[Dog Cat] or %w[Cat] or %w[Plant Oak] or %w[Plant]
+# All other answer types are represented by an integer, string, or object as appropriate
+# A non repeat answer group of answers is an array of answer values
+# A repeat group is a hash with the key :repeating whose value is an array of answer group arrays
+#   e.g. {repeating: [ [1, "A"], [2, "B"] ] } where the group has an integer answer and a text answer
+#
+# Example answer_values with nested repeat groups:
 # root:               [
 # AnswerGroup          [
 # Answer                1
@@ -11,9 +18,14 @@
 # Outer grp instance1   [
 # Answer                 2,
 # Inner rpt grp          {repeating: [
-# Inner rpt grp instance1 [
-# Answer                   3
-#                         ]
+# Inner rpt grp instance1   [
+# Answer                      "a",
+# Answer                      10
+#                           ],
+# Inner rpt grp instance2   [
+# Answer                      "b",
+# Answer                      11
+#                           ]
 #                        ]}
 #                       ]
 #                     ]}
