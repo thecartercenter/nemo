@@ -25,10 +25,10 @@ module Results
 
     def input_name(*names)
       items = if path.present?
-        path.zip(["children"] * (path.length - 1)).flatten.compact + names
-      else
-        names
-      end
+                path.zip(["children"] * (path.length - 1)).flatten.compact + names
+              else
+                names
+              end
       "response[root]" + items.map { |item| "[#{item}]" }.join
     end
 
