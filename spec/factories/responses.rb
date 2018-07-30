@@ -14,12 +14,17 @@ module ResponseFactoryHelper
         next if answer_data.nil?
         case item
         when Questioning
-          add_answer(parent, item, answer_values[i])
+          add_answer(parent, item, answer_data)
         when QingGroup
-          if item.repeatable?
-            add_group_set(parent, item, answer_values[i])
+          puts "answer data: #{answer_data}"
+          puts "repeatable? #{item.repeatable?}"
+          puts "answer_data is a #{answer_data.class}"
+          puts "is a hash: #{answer_data.is_a?(Hash)}"
+          puts "has key repeating: #{answer_data.key?(:repeating)}" if answer_data.is_a?(Hash)
+          if item.repeatable? && answer_data.is_a?(Hash) && answer_data.key?(:repeating)
+            add_group_set(item, answer_data, parent)
           else
-            add_group(parent, item, answer_values[i])
+            add_group(item, answer_data, parent)
           end
         end
       end
@@ -27,18 +32,23 @@ module ResponseFactoryHelper
     parent
   end
 
-  def self.add_group_set(parent, form_group, values)
-    values = values.drop(1) # first element of array is :repeating symbol
+  def self.add_group_set(form_group, values, parent)
+    pp form_group
+    puts "add group set: #{values}"
+    values = values[:repeating]
     group_set = parent.children.build({
       type: "AnswerGroupSet",
       form_item: form_group
     }.merge(rank_attributes("AnswerGroupSet", parent)))
-    values.each do |group_instance_values|
-      add_group(group_set, form_group, group_instance_values)
+    puts "values: #{values}"
+    values.each do |group_instance_values| # each array represents one group
+      puts "value: #{group_instance_values}"
+      add_group(form_group, group_instance_values, group_set)
     end
   end
 
   def self.add_answer(parent, questioning, value)
+    puts "add answer: #{value}"
     if questioning.multilevel?
       build_answer_set(parent, questioning, value)
     else
@@ -46,13 +56,15 @@ module ResponseFactoryHelper
     end
   end
 
-  def self.add_group(parent, form_group, answer_values)
+  def self.add_group(form_group, answer_values, parent)
+    puts "add group: #{answer_values}"
     answer_group = parent.children.build({type: "AnswerGroup", form_item: form_group}
       .merge(rank_attributes("AnswerGroup", parent)))
     add_level(form_group.c, answer_values, answer_group)
   end
 
   def self.build_answer_set(parent, qing, values)
+    "build answer set: #{values}"
     set = parent.children.build({type: "AnswerSet", form_item: qing}
       .merge(rank_attributes("AnswerSet", parent)))
     if values.present?

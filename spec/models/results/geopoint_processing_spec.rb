@@ -13,8 +13,6 @@ describe "geopoint processing" do
 
     it "should process properly" do
       pp response
-      puts response.root_node.debug_tree
-      puts "rsponse answers: #{response.answers[0]}"
       expect_location_answer(response, answer, val: nil, lat: nil, lng: nil, alt: nil, acc: nil)
     end
 

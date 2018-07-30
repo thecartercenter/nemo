@@ -25,7 +25,7 @@ feature "response form tree handling", js: true do
         ])
     end
 
-    before { form.publish! }
+    before { puts form.root_group.debug_tree; form.publish! }
 
     let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
@@ -48,11 +48,19 @@ feature "response form tree handling", js: true do
     end
 
     context "with response" do
-      let!(:response) { Response.create!(form: form, mission: get_mission, user: user) }
+      let!(:response) { create(:response, form: form, mission: get_mission, user: user,
+        answer_values: [
+          [1],
+          create(:media_image),
+          %w[Plant Oak],
+          {repeating: [[2, {repeating: [[3]]}]]}
+        ]
 
-      before { Results::BlankResponseTreeBuilder.new(response).build }
+      ) }
 
       scenario "renders edit form with hierarchical structure" do
+        puts form.root_group.debug_tree
+        puts response.root_node.debug_tree
         visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
         expect_path([".answer-group", ".answer-group", ".answer input"])

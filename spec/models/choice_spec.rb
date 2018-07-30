@@ -10,7 +10,7 @@ describe Choice do
       let(:option_one) { questioning.options[0] }
       let(:option_two) { questioning.options[1] }
       let(:response) { create(:response, form: form, answer_values: [[option_one.name, option_two.name]]) }
-      let(:answer) { response.answers[0] }
+      let(:answer) { response.root_node.c[0] }
       let(:choice_location) { answer.choices.detect { |c| c.option == option_one } }
       let(:choice_other_type) { answer.choices.detect { |c| c.option == option_two } }
 
