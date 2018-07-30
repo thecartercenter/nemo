@@ -256,16 +256,20 @@ class HierarchicalResponsesController < ApplicationController
   # prepares objects for and renders the form template
   def prepare_and_render_form
     # Prepare the OldAnswerNodes.
-    set_read_only
     @nodes = AnswerArranger.new(
       @response,
       placeholders: params[:action] == "show" ? :except_repeats : :all,
       # Must preserve submitted answers when in create/update action.
       dont_load_answers: %w[create update].include?(params[:action])
     ).build.nodes
+
     @context = Results::ResponseFormContext.new
+    @context.read_only if read_only?
+
+    # The blank response is used for rendering placeholders for repeat groups
     @blank_response = Response.new(form: @response.form)
     Results::BlankResponseTreeBuilder.new(@blank_response).build
+
     render(:form)
   end
 
@@ -287,12 +291,12 @@ class HierarchicalResponsesController < ApplicationController
     return redirect_to(index_url_with_context)
   end
 
-  def set_read_only
+  def read_only?
     case action_name
     when "show"
-      @read_only = true
+      true
     else
-      @read_only = cannot?(:modify_answers, @response)
+      cannot?(:modify_answers, @response)
     end
   end
 

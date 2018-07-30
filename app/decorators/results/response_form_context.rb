@@ -3,32 +3,42 @@
 module Results
   # View methods for rendering hierarchical response form
   class ResponseFormContext
-    attr_reader :path
+    attr_reader :path, :options
 
-    def initialize(path = [])
+    def initialize(path = [], options = {})
       @path = path
+      @options = options
+    end
+
+    def read_only
+      options[:read_only] = true
+      self
+    end
+
+    def read_only?
+      !!options[:read_only]
     end
 
     def add(*items)
-      self.class.new(path + items)
+      self.class.new(path + items, options)
     end
 
     def input_name
-      "response[root]" + path.map { |item| "[#{item}]" }.join
+      items = path.zip(["children"] * (path.length - 1)).flatten.compact
+      "response[root]" + items.map { |item| "[#{item}]" }.join
     end
 
+    # This is used for uniquely identifying DOM elements
+    # It is similar to the input name (except does not use
+    # square brackets)
     def id
       "response-root-" + path.join("-")
-    end
-
-    def indices
-      path.reject { |item| item == :children }
     end
 
     # Find this context's path in the given response
     # Returns an answer node
     def find(response)
-      find_node(response.root_node, indices)
+      find_node(response.root_node, path.dup)
     end
 
     private
@@ -38,7 +48,7 @@ module Results
         node
       else
         index = indices.shift
-        index = 0 if index == '__PLACEHOLDER__'
+        index = 0 if index == '__INDEX__'
         find_node(node.children[index], indices)
       end
     end

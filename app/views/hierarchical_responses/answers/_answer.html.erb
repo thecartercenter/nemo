@@ -1,8 +1,8 @@
 <% mode = read_only ? "read_only" : "editable" %>
 <div class="answer form-field answer_field qtype_<%= answer.qtype.name %>
-            <%= read_only ? "read-only" : "editable" %> <%= answer.lengthy? ? "lengthy" : "" %>">
+            <%= context.read_only? ? "read-only" : "editable" %> <%= answer.lengthy? ? "lengthy" : "" %>">
 
-  <% unless read_only %>
+  <% unless context.read_only? %>
     <%= hidden_field_tag context.add(:id).input_name, answer.id %>
     <%= hidden_field_tag context.add(:type).input_name, "Answer" %>
     <%= hidden_field_tag context.add(:questioning_id).input_name, answer.questioning_id %>

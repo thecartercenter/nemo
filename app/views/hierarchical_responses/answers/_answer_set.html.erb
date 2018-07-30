@@ -1,8 +1,8 @@
 <% mode = read_only ? "read_only" : "editable" %>
 <div class="form-field answer_field qtype_<%= set.questioning.qtype.name %>
-  <%= read_only ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
+  <%= context.read_only? ? "read-only" : "editable" %> <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
 
-  <% unless read_only %>
+  <% unless context.read_only? %>
     <%= hidden_field_tag context.add(:id).input_name, set.id %>
     <%= hidden_field_tag context.add(:type).input_name, "AnswerSet" %>
     <%= hidden_field_tag context.add(:questioning_id).input_name, set.questioning_id %>
@@ -15,7 +15,7 @@
     <div class="control">
       <%= render("hierarchical_responses/answers/cascading_#{mode}",
             answer_set: set,
-            context: context.add(:children)) %>
+            context: context) %>
     </div>
   </div>
 </div>

@@ -1,25 +1,28 @@
 class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
   events:
-    'click > .add-repeat': 'add_repeat'
-    'click .remove-repeat': 'remove_repeat'
+    'click > .add-repeat': 'addRepeat'
+    'click .remove-repeat': 'removeRepeat'
 
   initialize: (options) ->
     @tmpl = options.tmpl
     @next_index = options.next_index
-    @$el.attr('id', Math.random())
+
+    # If this ID remains in the DOM and a new copy of the template is inserted,
+    # the Backbone view instance for the newly inserted one won't know which of
+    # them to bind to
+    @$el.removeAttr("id")
 
   children: ->
-    @$el.find("> .children")
+    @$("> .children")
 
-  add_repeat: (event) ->
+  addRepeat: (event) ->
     event.preventDefault()
-    @children().append(@tmpl.replace(/__PLACEHOLDER__/g, @next_index))
+    @children().append(@tmpl.replace(/__INDEX__/g, @next_index))
     @next_index++
 
-  remove_repeat: (event) ->
+  removeRepeat: (event) ->
     event.preventDefault()
     node = $(event.target).closest(".node")
-    node.hide()
 
     id = node.find('input[name$="[id]"]').first().val()
     if id == ""
