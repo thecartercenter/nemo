@@ -53,7 +53,7 @@ feature "option set" do
     click_button("Save")
     expect(page).to have_selector("td.options_col div", text: "Banana, Apple, Pear")
 
-    # Test export
+    # Test export page does not error out
     click_on "Foo"
     click_link("Edit Option Set")
     click_on "Export Option Set"
