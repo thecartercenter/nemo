@@ -46,7 +46,8 @@ describe Results::SqlGenerator do
       FROM \"responses\"
         LEFT JOIN users users ON responses.user_id = users.id AND users.deleted_at IS NULL
         INNER JOIN forms forms ON responses.form_id = forms.id AND forms.deleted_at IS NULL
-        LEFT JOIN answers answers ON answers.response_id = responses.id AND answers.deleted_at IS NULL AND answers.type = 'Answer'
+        LEFT JOIN answers answers ON answers.response_id = responses.id AND answers.deleted_at IS NULL
+          AND answers.type = 'Answer'
         INNER JOIN form_items questionings ON answers.questioning_id = questionings.id
           AND questionings.deleted_at IS NULL
         INNER JOIN questions questions ON questionings.question_id = questions.id

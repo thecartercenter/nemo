@@ -37,7 +37,15 @@ describe "geopoint processing" do
     let(:value) { "-2.366030 -0.039825 100.235" }
 
     it "should process properly" do
-      expect_location_answer(response, answer, val: value, lat: -2.366030, lng: -0.039825, alt: 100.235, acc: nil)
+      expect_location_answer(
+        response,
+        answer,
+        val: value,
+        lat: -2.366030,
+        lng: -0.039825,
+        alt: 100.235,
+        acc: nil
+      )
     end
 
     it "should be valid" do
@@ -49,7 +57,15 @@ describe "geopoint processing" do
     let(:value) { "-2.366030 -0.039825 100.235 20.000" }
 
     it "should process properly" do
-      expect_location_answer(response, answer, val: value, lat: -2.366030, lng: -0.039825, alt: 100.235, acc: 20.0)
+      expect_location_answer(
+        response,
+        answer,
+        val: value,
+        lat: -2.366030,
+        lng: -0.039825,
+        alt: 100.235,
+        acc: 20.0
+      )
     end
 
     it "should be valid" do
@@ -74,7 +90,15 @@ describe "geopoint processing" do
     let(:value) { "-92.366030 -0.039825" }
 
     it "should process properly" do
-      expect_location_answer(response, answer, val: value, lat: -92.366030, lng: -0.039825, alt: nil, acc: nil)
+      expect_location_answer(
+        response,
+        answer,
+        val: value,
+        lat: -92.366030,
+        lng: -0.039825,
+        alt: nil,
+        acc: nil
+      )
     end
 
     it "should be invalid" do
@@ -87,7 +111,15 @@ describe "geopoint processing" do
     let(:value) { "-4000000000000000.366030 -29.039825" }
 
     it "should process properly" do
-      expect_location_answer(response, answer, val: "0.000000 -29.039825", lat: 0, lng: -29.039825, alt: nil, acc: nil)
+      expect_location_answer(
+        response,
+        answer,
+        val: "0.000000 -29.039825",
+        lat: 0,
+        lng: -29.039825,
+        alt: nil,
+        acc: nil
+      )
     end
 
     it "should be invalid" do
@@ -100,7 +132,15 @@ describe "geopoint processing" do
     let(:value) { "-4.366030 -181.039825" }
 
     it "should process properly" do
-      expect_location_answer(response, answer, val: value, lat: -4.366030, lng: -181.039825, alt: nil, acc: nil)
+      expect_location_answer(
+        response,
+        answer,
+        val: value,
+        lat: -4.366030,
+        lng: -181.039825,
+        alt: nil,
+        acc: nil
+      )
     end
 
     it "should be invalid" do

@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Response do
   it "cache key" do
     user = create(:user)
-    form = create(:form, question_types:%w[integer])
+    form = create(:form, question_types: %w[integer])
     form.publish!
 
     # ensure key changes on edits, creates, and deletes
@@ -30,7 +30,7 @@ describe Response do
 
   it "incomplete response will not save if it is not marked as incomplete" do
     user = create(:user)
-    form = create(:form, question_types:%w[integer])
+    form = create(:form, question_types: %w[integer])
     form.root_questionings.first.update_attribute(:required, true)
     form.publish!
     form.reload
@@ -44,7 +44,7 @@ describe Response do
 
   it "incomplete response will save if it is marked as incomplete" do
     user = create(:user)
-    form = create(:form, question_types:%w[integer])
+    form = create(:form, question_types: %w[integer])
     form.root_questionings.first.required = true
     form.publish!
     form.reload

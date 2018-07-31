@@ -1,7 +1,7 @@
 # tests the singleton case of summary collections, where there is only one subset in the collection
 # tests for the multiple case, where there are multiple subsets in the collection, are currently in SummaryCollectionMultipleTest
 
-require 'rails_helper'
+require "rails_helper"
 
 describe "summary collection with single subset" do
   it "summary should contain question type" do
@@ -59,7 +59,7 @@ describe "summary collection with single subset" do
 
   describe "counter summary" do
     it "should work like integer" do
-      prepare_form('counter', [10, 7, 6, 1, 1])
+      prepare_form("counter", [10, 7, 6, 1, 1])
       @responses.last.destroy
       prepare_collection
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.0, :max => 10, :min => 1})
@@ -68,19 +68,19 @@ describe "summary collection with single subset" do
 
   describe "decimal summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('decimal', [10.0, 7.2, 6.7, 1.1, 11.5])
+      prepare_form("decimal", [10.0, 7.2, 6.7, 1.1, 11.5])
       @responses.last.destroy
       prepare_collection
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.25, :max => 10, :min => 1.1})
     end
 
     it "should be correct with no non-blank values" do
-      prepare_form_and_collection('decimal', [nil, ""])
+      prepare_form_and_collection("decimal", [nil, ""])
       expect(first_summary.items).to eq([])
     end
 
     it "values should be correct type" do
-      prepare_form_and_collection('decimal', [1])
+      prepare_form_and_collection("decimal", [1])
       items = first_summary.items
       expect(items[0].stat.class).to eq(Float) # mean
       expect(items[1].stat.class).to eq(Float) # min
@@ -97,7 +97,7 @@ describe "summary collection with single subset" do
 
   describe "select_one summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('select_one', %w(Yes No No No Yes))
+      prepare_form("select_one", %w(Yes No No No Yes))
       @responses.last.destroy
       prepare_collection
       options = @form.questions[0].option_set.options
@@ -106,19 +106,19 @@ describe "summary collection with single subset" do
     end
 
     it "should be correct with multilevel option set" do
-      prepare_form_and_collection('multilevel_select_one', [%w(Animal Dog), %w(Animal), %w(Animal Cat), %w(Plant Tulip)])
+      prepare_form_and_collection("multilevel_select_one", [%w(Animal Dog), %w(Animal), %w(Animal Cat), %w(Plant Tulip)])
       animal, plant = @form.questions[0].option_set.options # Top level options
       expect(headers_and_items(:option, :count)).to eq({animal => 3, plant => 1})
       expect(headers_and_items(:option, :pct)).to eq({animal => 75.0, plant => 25.0})
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('select_one', ['Yes', "", 'No', ""])
+      prepare_form_and_collection("select_one", ["Yes", "", "No", ""])
       expect(first_summary.null_count).to eq(2)
     end
 
     it "should still have items if no values" do
-      prepare_form_and_collection('select_one', [nil, nil])
+      prepare_form_and_collection("select_one", [nil, nil])
       options = @form.questions[0].option_set.options
       expect(headers_and_items(:option, :count)).to eq({options[0] => 0, options[1] => 0})
       expect(headers_and_items(:option, :pct)).to eq({options[0] => 0, options[1] => 0})
@@ -127,7 +127,7 @@ describe "summary collection with single subset" do
 
   describe "select_multiple summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('select_multiple', [%w(A), %w(B C), %w(A C), %w(C), %w(A)], option_names: %w(A B C))
+      prepare_form("select_multiple", [%w(A), %w(B C), %w(A C), %w(C), %w(A)], option_names: %w(A B C))
       @responses.last.destroy
       prepare_collection
       options = @form.questions[0].option_set.options
@@ -138,7 +138,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should always be zero" do
-      prepare_form_and_collection('select_multiple', [%w(A)], :option_names => %w(A B C))
+      prepare_form_and_collection("select_multiple", [%w(A)], :option_names => %w(A B C))
       expect(first_summary.null_count).to eq(0)
     end
   end
