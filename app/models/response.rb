@@ -311,6 +311,8 @@ class Response < ApplicationRecord
     end while Response.exists?(shortcode: self.shortcode)
   end
 
+  # TODO: remove in favor of build syntax. SMS parsing needs to be refactored
+  # to not rely on this function
   def associate_tree(root)
     associate_node_and_descendants(root)
     self.root_node = root

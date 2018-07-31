@@ -40,7 +40,6 @@ module Odk
       else
         response.odk_hash = awaiting_media ? calculate_odk_hash : nil
         build_answer_tree(data)
-        response.associate_tree(response.root_node)
       end
     end
 
