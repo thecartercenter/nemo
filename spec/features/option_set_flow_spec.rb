@@ -52,6 +52,11 @@ feature "option set" do
     add_options(%w[Pear])
     click_button("Save")
     expect(page).to have_selector("td.options_col div", text: "Banana, Apple, Pear")
+
+    # Test export
+    click_on "Foo"
+    click_link("Edit Option Set")
+    click_on "Export Option Set"
   end
 
   scenario "creating, showing, and editing options with values", js: true do
