@@ -5,7 +5,7 @@ require "rails_helper"
 feature "option set" do
   let(:user) { create(:user, role_name: "coordinator") }
 
-  scenario "creating, showing, and editing", js: true do
+  scenario "creating, showing, editing and exporting", js: true do
     login(user)
     click_link("Option Sets")
 
