@@ -3,7 +3,7 @@ require 'rails_helper'
 describe Response do
   it "cache key" do
     user = create(:user)
-    form = create(:form, question_types: %w(integer))
+    form = create(:form, question_types:%w[integer])
     form.publish!
 
     # ensure key changes on edits, creates, and deletes
@@ -17,7 +17,7 @@ describe Response do
 
     # edit
     Timecop.travel(10.seconds) do
-      r2.root_node.c.first.update_attributes(value: 2)
+      r2.root_node.c.first.update(value: 2)
       key3 = Response.per_mission_cache_key(get_mission)
       expect(key3).not_to eq(key2)
     end
@@ -30,21 +30,21 @@ describe Response do
 
   it "incomplete response will not save if it is not marked as incomplete" do
     user = create(:user)
-    form = create(:form, question_types: %w(integer))
+    form = create(:form, question_types:%w[integer])
     form.root_questionings.first.update_attribute(:required, true)
     form.publish!
     form.reload
 
     # Submit answer with first (and only) answer empty
     # This should show up as a missing response.
-    invalid_response = build(:response, user: user, form: form, answer_values: [''])
+    invalid_response = build(:response, user: user, form: form, answer_values: [""])
     expect(invalid_response.valid?).to eq(false)
     expect{ invalid_response.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "incomplete response will save if it is marked as incomplete" do
     user = create(:user)
-    form = create(:form, question_types: %w(integer))
+    form = create(:form, question_types:%w[integer])
     form.root_questionings.first.required = true
     form.publish!
     form.reload
