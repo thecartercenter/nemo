@@ -12,7 +12,12 @@ module Results
     end
 
     def build
-      root = response.build_root_node(type: "AnswerGroup", form_item: form.root_group, response: response, new_rank: 0)
+      root = response.build_root_node(
+        type: "AnswerGroup",
+        form_item: form.root_group,
+        response: response,
+        new_rank: 0
+      )
       add_level(form.root_group.sorted_children, root)
       response.root_node
     end

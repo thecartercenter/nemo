@@ -5,20 +5,20 @@ require 'rails_helper'
 
 describe "summary collection with single subset" do
   it "summary should contain question type" do
-    prepare_form_and_collection('integer', [0])
-    expect(first_summary.qtype.name).to eq('integer')
+    prepare_form_and_collection("integer", [0])
+    expect(first_summary.qtype.name).to eq("integer")
   end
 
   describe "integer summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('integer', [10, 7, 6, 1, 1])
+      prepare_form("integer", [10, 7, 6, 1, 1])
       @responses.last.destroy
       prepare_collection
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.0, :max => 10, :min => 1})
     end
 
     it "should be correct for enumerator" do
-      prepare_form('integer', [10, 7, 6, 1, 1])
+      prepare_form("integer", [10, 7, 6, 1, 1])
 
       enumerator = create(:user, :role_name => :enumerator)
       [10, 7, 6, 1, 1].each{|a| create(:response, :form => @form, :answer_values => [a], :user => enumerator)}
@@ -29,12 +29,12 @@ describe "summary collection with single subset" do
     end
 
     it "should not include nil or blank values" do
-      prepare_form_and_collection('integer', [5, nil, '', 2])
+      prepare_form_and_collection("integer", [5, nil, "", 2])
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 3.5, :max => 5, :min => 2})
     end
 
     it "values should be correct type" do
-      prepare_form_and_collection('integer', [1])
+      prepare_form_and_collection("integer", [1])
       items = first_summary.items
       expect(items[0].stat.class).to eq(Float) # mean
       expect(items[1].stat.class).to eq(Integer) # min
@@ -42,17 +42,17 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('integer', [5, '', '', 2])
+      prepare_form_and_collection("integer", [5, "", "", 2])
       expect(first_summary.null_count).to eq(2)
     end
 
     it "should be correct with no values" do
-      prepare_form_and_collection('integer', [])
+      prepare_form_and_collection("integer", [])
       expect(first_summary.items).to eq([])
     end
 
     it "should be correct with no non-blank values" do
-      prepare_form_and_collection('integer', [nil, ''])
+      prepare_form_and_collection("integer", [nil, ""])
       expect(first_summary.items).to eq([])
     end
   end
@@ -75,7 +75,7 @@ describe "summary collection with single subset" do
     end
 
     it "should be correct with no non-blank values" do
-      prepare_form_and_collection('decimal', [nil, ''])
+      prepare_form_and_collection('decimal', [nil, ""])
       expect(first_summary.items).to eq([])
     end
 
@@ -113,7 +113,7 @@ describe "summary collection with single subset" do
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('select_one', ['Yes', '', 'No', ''])
+      prepare_form_and_collection('select_one', ['Yes', "", 'No', ""])
       expect(first_summary.null_count).to eq(2)
     end
 
@@ -145,110 +145,113 @@ describe "summary collection with single subset" do
 
   describe "date summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('date', %w(20131026 20131027 20131027 20131028 20131026))
+      prepare_form("date", %w[20131026 20131027 20131027 20131028 20131026])
       @responses.last.destroy
       prepare_collection
       expect(headers_and_items(:date, :count)).to eq(
-        {Date.parse('20131026') => 1, Date.parse('20131027') => 2, Date.parse('20131028') => 1})
+        Date.parse("20131026") => 1, Date.parse("20131027") => 2, Date.parse("20131028") => 1
+      )
       expect(headers_and_items(:date, :pct)).to eq(
-        {Date.parse('20131026') => 25.0, Date.parse('20131027') => 50.0, Date.parse('20131028') => 25.0})
+        Date.parse("20131026") => 25.0, Date.parse("20131027") => 50.0, Date.parse("20131028") => 25.0
+      )
     end
 
     it "headers should be sorted properly" do
-      prepare_form_and_collection('date', %w(20131027 20131027 20131026 20131028))
-      expect(first_summary.headers.map{|h| h[:date]}).to eq(%w(20131026 20131027 20131028).map{|d| Date.parse(d)})
+      prepare_form_and_collection("date", %w[20131027 20131027 20131026 20131028])
+      expect(first_summary.headers.map { |h| h[:date] })
+        .to eq(%w[20131026 20131027 20131028].map { |d| Date.parse(d) })
     end
 
     it "should work with null values" do
-      prepare_form_and_collection('date', ['20131027', nil])
-      expect(headers_and_items(:date, :count)).to eq({Date.parse('20131027') => 1})
+      prepare_form_and_collection("date", ["20131027", nil])
+      expect(headers_and_items(:date, :count)).to eq(Date.parse("20131027") => 1)
     end
 
     it "should work with no responses" do
-      prepare_form_and_collection('date', [])
+      prepare_form_and_collection("date", [])
       expect(headers_and_items(:date, :count)).to eq({})
     end
 
     it "null_count should be correct for" do
-      prepare_form_and_collection('date', ['', '20131027', ''])
+      prepare_form_and_collection("date", ["", "20131027", ""])
       expect(first_summary.null_count).to eq(2)
     end
   end
 
   describe "time summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('time', %w(9:30 10:15 22:15 12:59))
+      prepare_form("time", %w[9:30 10:15 22:15 12:59])
       @responses.last.destroy
       prepare_collection
-      expect(headers_and_items(:stat, :stat)).to eq({mean: '14:00:00', min: '09:30:00', max: '22:15:00'})
+      expect(headers_and_items(:stat, :stat)).to eq(mean: "14:00:00", min: "09:30:00", max: "22:15:00")
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('time', ['9:30', '', ''])
+      prepare_form_and_collection("time", ["9:30", "", ""])
       expect(first_summary.null_count).to eq(2)
     end
 
     it "should be correct with no values" do
-      prepare_form_and_collection('time', [])
+      prepare_form_and_collection("time", [])
       expect(first_summary.items).to eq([])
     end
   end
 
   describe "datetime summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('datetime',
-        ['2013-10-26 18:45', '2013-10-26 10:15', '2013-10-27 19:00', '2013-10-27 20:00'])
+      prepare_form("datetime",
+        ["2013-10-26 18:45", "2013-10-26 10:15", "2013-10-27 19:00", "2013-10-27 20:00"])
       @responses.last.destroy
       prepare_collection
       expect(headers_and_items(:stat, :stat)).to eq(
-        mean: 'Oct 27 2013 00:00:00',
-        min: 'Oct 26 2013 10:15:00',
-        max: 'Oct 27 2013 19:00:00'
+        mean: "Oct 27 2013 00:00:00",
+        min: "Oct 26 2013 10:15:00",
+        max: "Oct 27 2013 19:00:00"
       )
     end
 
     it "null_count should be correct" do
-      prepare_form_and_collection('datetime', ['2013-10-26 9:30', '', ''])
+      prepare_form_and_collection("datetime", ["2013-10-26 9:30", "", ""])
       expect(first_summary.null_count).to eq(2)
     end
   end
 
   describe "text summary" do
     it "should be correct and ignore deleted values" do
-      prepare_form('text', ['foo', 'bar', 'baz'])
+      prepare_form("text", %w[foo bar baz])
       @responses.last.destroy
       prepare_collection
-      expect(first_summary.items.map(&:text)).to eq(['foo', 'bar'])
+      expect(first_summary.items.map(&:text)).to eq(%w[foo bar])
     end
 
     it "null_count should work" do
-      prepare_form_and_collection('text', ['foo', '', 'bar', ''])
+      prepare_form_and_collection("text", ["foo", "", "bar", ""])
       expect(first_summary.null_count).to eq(2)
     end
 
     it "should work with no values" do
-      prepare_form_and_collection('text', [])
+      prepare_form_and_collection("text", [])
       expect(first_summary.items).to eq([])
       expect(first_summary.null_count).to eq(0)
     end
 
     it "should include response_id in long_text only" do
-      prepare_form_and_collection('long_text', ['foo', 'bar'])
+      prepare_form_and_collection("long_text", %w[foo bar])
       expect(first_summary.items.map(&:response_id).sort).to eq(@form.responses.map(&:id).sort)
     end
 
     it "items should be in chronological order" do
-      responses = prepare_form('text', ['foo', 'bar', 'baz'])
+      responses = prepare_form("text", %w[foo bar baz])
 
       # change response dates
-      responses[1].root_node.c[0].update_attributes!(created_at: Time.now + 1.hour)
-      responses[2].root_node.c[0].update_attributes!(created_at: Time.now - 1.hour)
+      responses[1].root_node.c[0].update!(created_at: Time.zone.now + 1.hour)
+      responses[2].root_node.c[0].update!(created_at: Time.zone.now - 1.hour)
       @form.reload
 
       prepare_collection
 
       # check for correct order
-      expect(first_summary.items.map(&:text)).to eq(%w(baz foo bar))
+      expect(first_summary.items.map(&:text)).to eq(%w[baz foo bar])
     end
   end
 
@@ -258,8 +261,8 @@ describe "summary collection with single subset" do
   end
 
   def prepare_form(qtype, answers, options = {})
-    @form = create(:form, {:question_types => [qtype], :option_names => %w(Yes No)}.merge(options))
-    @responses = answers.map { |a| create(:response, :form => @form, :answer_values => [a]) }
+    @form = create(:form, {question_types: [qtype], option_names: %w[Yes No]}.merge(options))
+    @responses = answers.map { |a| create(:response, form: @form, answer_values: [a]) }
   end
 
   def prepare_collection

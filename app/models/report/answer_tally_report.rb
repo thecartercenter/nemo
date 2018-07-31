@@ -110,6 +110,6 @@ class Report::AnswerTallyReport < Report::TallyReport
   end
 
   def filter_non_top_level_answers(rel)
-    rel.where('ans_opt_nodes.ancestry_depth IS NULL OR ans_opt_nodes.ancestry_depth <= 1')
+    rel.where("ans_opt_nodes.ancestry_depth IS NULL OR ans_opt_nodes.ancestry_depth <= 1")
   end
 end

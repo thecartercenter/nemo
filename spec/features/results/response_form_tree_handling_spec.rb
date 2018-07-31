@@ -25,7 +25,7 @@ feature "response form tree handling", js: true do
         ])
     end
 
-    before { puts form.root_group.debug_tree; form.publish! }
+    before { form.publish! }
 
     let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
@@ -59,8 +59,6 @@ feature "response form tree handling", js: true do
       ) }
 
       scenario "renders edit form with hierarchical structure" do
-        puts form.root_group.debug_tree
-        puts response.root_node.debug_tree
         visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
         expect_path([".answer-group", ".answer-group", ".answer input"])

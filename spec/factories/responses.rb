@@ -1,4 +1,6 @@
-# The Response Factory builds a response tree based on answer_values
+# frozen_string_literal: true
+
+# ResponseFactoryHelper builds a response tree based on answer_values
 # About the answer_values format:
 # The value of a select multiple or multilevel select answer is an array.
 #   For example, %w[Dog Cat] or %w[Cat] or %w[Plant Oak] or %w[Plant]
@@ -8,13 +10,13 @@
 #   e.g. {repeating: [ [1, "A"], [2, "B"] ] } where the group has an integer question and a text question
 #
 # Example answer_values with nested repeat groups:
-# root:               [
+# root AnswerGroup    [
 # AnswerGroup          [
 # Answer                1
 #                      ],
 # Answer               create(:media_image),
 # Answer               %w[Plant Oak],
-# Outer repeat grp    {repeating: [
+# Outer rpt grp       {repeating: [
 # Outer grp instance1   [
 # Answer                 2,
 # Inner rpt grp          {repeating: [
@@ -30,8 +32,6 @@
 #                       ]
 #                     ]}
 #                    ]
-
-
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
   def self.build_answers(response, answer_values)
@@ -63,9 +63,9 @@ module ResponseFactoryHelper
     parent
   end
 
-  # Form group must be repeating
+  # form_group must be repeating
   # value_data is in shape of: {repeating: [[1, "A", "Hi"], [2, "B", "Bye"]]}
-  # Parent must be an AnswerGroup
+  # parent must be an AnswerGroup
   def self.add_group_set(form_group, value_data, parent)
     group_instances = value_data[:repeating]
     group_set = parent.children.build({
@@ -77,17 +77,17 @@ module ResponseFactoryHelper
     end
   end
 
-  # Form group may or may not be repeating
-  # Answer_values is an array of answers or groups in this group
-  # Parent must be an AnswerGroup (if form item not repeating) or AnswerGroupSet (if form item is repeating)
+  # form_group may or may not be repeating
+  # answer_values is an array of answers or groups in this group
+  # parent must be an AnswerGroup (if form item not repeating) or AnswerGroupSet (if form item is repeating)
   def self.add_group(form_group, answer_values, parent)
     answer_group = parent.children.build({type: "AnswerGroup", form_item: form_group}
       .merge(rank_attributes("AnswerGroup", parent)))
     add_level(form_group.c, answer_values, answer_group)
   end
 
-  # Value may be integer, string, object, or (for select one or multilevel only) an array of strings
-  # Parent must be an AnswerGroup or AnswerSet
+  # value may be integer, string, object, or (for select one or multilevel only) an array of strings
+  # parent must be an AnswerGroup or AnswerSet
   def self.add_answer(questioning, value, parent)
     if questioning.multilevel? # only answers to multilevel questions need AnswerSets.
       build_answer_set(questioning, value, parent)
@@ -96,8 +96,8 @@ module ResponseFactoryHelper
     end
   end
 
-  # Values is an array of strings, which should match an option or be ''
-  # Parent must be an AnswerGroup
+  # values is an array of strings, which should match an option or be ''
+  # parent must be an AnswerGroup
   def self.build_answer_set(qing, values, parent)
     set = parent.children.build({type: "AnswerSet", form_item: qing}
       .merge(rank_attributes("AnswerSet", parent)))
@@ -195,14 +195,7 @@ FactoryGirl.define do
         form.unpublish!
       end
       # Build answer objects from answer_values array
-      # Array may contain nils, which should result in answers with nil values.
-      # Array may also contain recursively nested sub-arrays. Sub arrays may be given for:
-      # - select_one questions with multilevel option sets
-      # - select_multiple questions
-      # - QingGroups
-      if evaluator.answer_values
-        ResponseFactoryHelper.build_answers(response, evaluator.answer_values)
-      end
+      ResponseFactoryHelper.build_answers(response, evaluator.answer_values) if evaluator.answer_values
     end
   end
 end
