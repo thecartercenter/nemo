@@ -60,9 +60,17 @@ module Results
       else # update
         type = web_hash_node[:type]
         if type == "Answer"
-          existing_node = ResponseNode.find(id)
-          updatable_params = web_hash_node.slice(:value).permit(PERMITTED_PARAMS)
+          existing_node = tree_parent.children.select {|c| c.id == id}.first
+          permitted_params = [:relevant] + PERMITTED_PARAMS
+          updatable_params = web_hash_node.slice(:value, :relevant).permit(permitted_params)
           existing_node.update(updatable_params)
+          if web_hash_node[:relevant] == "false"
+            existing_node.relevant = false
+          end
+          if web_hash_node[:_destroy] == "true"
+            puts "setting destroy to true"
+            existing_node._destroy = true
+          end
           existing_node
         end
       end
@@ -75,7 +83,7 @@ module Results
     end
 
     def ignore_node?(web_hash_node)
-      web_hash_node[:relevant] == "false" || web_hash_node[:_destroy] == "true"
+      web_hash_node[:id].blank? && (web_hash_node[:relevant] == "false" || web_hash_node[:_destroy] == "true")
     end
 
     # Rank and inst_num will go away at end of answer refactor

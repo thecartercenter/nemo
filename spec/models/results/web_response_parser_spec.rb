@@ -248,27 +248,110 @@ describe Results::WebResponseParser do
 
   context "updating response" do
     let(:response) { create(:response, form: form, answer_values: answer_values) }
+    let(:data) { {root: web_answer_group_hash(form.root_group.id, answers, id: response.root_node.id)} }
 
     context "simple form" do
       let(:question_types) { %w[text text text] }
       let(:answer_values) { %w[A B C] }
-      let(:data) do
-        {root: {
-          id: response.root_node.id,
-          type: "Answer",
-          questioning_id: form.root_group.id,
-          relevant: "true",
-          children: {
+
+      context "new value" do
+        let(:answers) do
+          {
             "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
             "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id),
             "2" => web_answer_hash(form.c[2].id, value: "Z", id: response.root_node.c[2].id)
           }
-        }}
+        end
+
+        it "updates value appropriately" do
+          expect_root(tree, form)
+          expect_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B Z])
+        end
       end
 
-      it "updates value appropriately" do
-        expect_root(tree, form)
-        expect_children(tree.reload, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B Z])
+      context "destroy flag set to true" do
+        let(:answers) do
+          {
+            "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
+            "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id, _destroy: "true"),
+            "2" => web_answer_hash(form.c[2].id, value: "C", id: response.root_node.c[2].id)
+          }
+        end
+
+        it "updates destroy appropriately in in-memory tree" do
+          expect_root(tree, form)
+          expect_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
+          expect(tree.c[1]._destroy).to be true
+        end
+      end
+
+      context "relevant set to false" do
+        let(:answers) do
+          {
+            "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
+            "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id, relevant: "false"),
+            "2" => web_answer_hash(form.c[2].id, value: "C", id: response.root_node.c[2].id)
+          }
+        end
+
+        it "updates relevant appropriately in in-memory tree" do
+          expect_root(tree, form)
+          expect_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
+          puts "node object id in spec #{tree.children[1]}"
+          expect(tree.children[1].relevant).to eq false
+        end
+      end
+    end
+
+    context "repeat groups" do
+      let(:question_types)  { ["text", {repeating: {items: %w[text text]}}] }
+      let(:answer_values) { ["A", {repeating: [%w[B C], %w[D E]]}] }
+
+      context "adding a group instance" do
+        let(:answers) do
+          {
+            "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
+            "1" => {
+              id: response.root_node.c[1].id,
+              type: "AnswerGroupSet",
+              questioning_id: form.c[1].id,
+              relevant: "true",
+              children: {
+                "0" => web_answer_group_hash(form.c[1].id, instance_one_answers, id: response.root_node.c[1].c[0].id),
+                "1" => web_answer_group_hash(form.c[1].id, instance_two_answers, id: response.root_node.c[1].c[1].id),
+                "2" => web_answer_group_hash(form.c[1].id, new_instance_answers)
+              }
+            }
+          }
+        end
+        let(:instance_one_answers) do
+          {
+            "0" => web_answer_hash(form.c[1].c[0].id, value: "B", id: response.root_node.c[1].c[0].c[0].id),
+            "1" => web_answer_hash(form.c[1].c[1].id, value: "C", id: response.root_node.c[1].c[0].c[1].id)
+          }
+        end
+        let(:instance_two_answers) do
+          {
+            "0" => web_answer_hash(form.c[1].c[0].id, value: "D", id: response.root_node.c[1].c[1].c[0].id),
+            "1" => web_answer_hash(form.c[1].c[1].id, value: "E", id: response.root_node.c[1].c[1].c[1].id)
+          }
+        end
+        let(:new_instance_answers) do
+          {
+            "0" => web_answer_hash(form.c[1].c[0].id, value: "F"),
+            "1" => web_answer_hash(form.c[1].c[1].id, value: "G")
+          }
+        end
+
+        it "adds new answer group instance" do
+          puts tree.debug_tree
+          expect_root(tree, form)
+          expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+          expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+          expect_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+          expect_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
+          expect_children(tree.c[1].c[2], %w[Answer Answer], form.c[1].c.map(&:id), %w[F G])
+        end
       end
     end
   end

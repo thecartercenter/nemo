@@ -32,4 +32,15 @@ class ResponseNode < ApplicationRecord
   def casted_value
     nil
   end
+
+  #_destroy defaults to false unless set otherwise
+  def _destroy
+    @destroy.nil? ? false : @destroy
+  end
+
+  # A flag indicating whether this node should be destroyed before save.
+  # convert string 'true'/'false' to boolean
+  def _destroy=(d)
+    @destroy = d.is_a?(String) ? d == "true" : d
+  end
 end
