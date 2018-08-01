@@ -347,7 +347,7 @@ describe Results::WebResponseParser do
           puts tree.debug_tree
           expect_root(tree, form)
           expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-          expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+          expect_children(tree.c[1], %w[AnswerGroup AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id, form.c[1].id])
           expect_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
           expect_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
           expect_children(tree.c[1].c[2], %w[Answer Answer], form.c[1].c.map(&:id), %w[F G])
