@@ -248,14 +248,14 @@ describe Results::WebResponseParser do
 
   context "updating response" do
     let(:response) { create(:response, form: form, answer_values: answer_values) }
-    let(:data) { {root: web_answer_group_hash(form.root_group.id, answers, id: response.root_node.id)} }
+    let(:data) { {root: web_answer_group_hash(form.root_group.id, new_answers, id: response.root_node.id)} }
 
     context "simple form" do
       let(:question_types) { %w[text text text] }
       let(:answer_values) { %w[A B C] }
 
       context "new value" do
-        let(:answers) do
+        let(:new_answers) do
           {
             "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
             "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id),
@@ -270,7 +270,7 @@ describe Results::WebResponseParser do
       end
 
       context "destroy flag set to true" do
-        let(:answers) do
+        let(:new_answers) do
           {
             "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
             "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id, _destroy: "true"),
@@ -286,7 +286,7 @@ describe Results::WebResponseParser do
       end
 
       context "relevant set to false" do
-        let(:answers) do
+        let(:new_answers) do
           {
             "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
             "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id, relevant: "false"),
@@ -308,7 +308,7 @@ describe Results::WebResponseParser do
       let(:answer_values) { ["A", {repeating: [%w[B C], %w[D E]]}] }
 
       context "adding a group instance" do
-        let(:answers) do
+        let(:new_answers) do
           {
             "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
             "1" => {
@@ -344,14 +344,105 @@ describe Results::WebResponseParser do
         end
 
         it "adds new answer group instance" do
-          puts tree.debug_tree
           expect_root(tree, form)
           expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-          expect_children(tree.c[1], %w[AnswerGroup AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id, form.c[1].id])
+          expect_children(tree.c[1], %w[AnswerGroup AnswerGroup AnswerGroup], Array.new(3, form.c[1].id))
           expect_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
           expect_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
           expect_children(tree.c[1].c[2], %w[Answer Answer], form.c[1].c.map(&:id), %w[F G])
         end
+      end
+    end
+
+    context "nested repeat groups" do
+      let(:question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text"]}}]}}] }
+      let(:outer_form_grp) { form.c[1] }
+      let(:inner_form_grp) { outer_form_grp.c[1] }
+      let(:answer_values) do # for original response
+        [
+          "A",
+          {repeating: [
+            [
+              "B",
+              {repeating: [["C"], ["D"]]}
+            ],
+            [
+              "E",
+              {repeating: [["F"], ["G"]]}
+            ]
+          ]}
+        ]
+      end
+      let(:new_answers) do #for incoming data updating the response
+        {
+          "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
+          "1" => {
+            id: response.root_node.c[1].id,
+            type: "AnswerGroupSet",
+            questioning_id: form.c[1].id,
+            relevant: "true",
+            children: {
+              "0" => web_answer_group_hash(outer_form_grp.id, instance_one_answers, id: response.root_node.c[1].c[0].id),
+              "1" => web_answer_group_hash(outer_form_grp.id, instance_two_answers, id: response.root_node.c[1].c[1].id)
+            }
+          }
+        }
+      end
+      let(:instance_one_answers) do
+        {
+          "0" => web_answer_hash(form.c[1].c[0].id, value: "B", id: response.root_node.c[1].c[0].c[0].id),
+          "1" => {
+            id: response.root_node.c[1].c[0].c[1].id,
+            type: "AnswerGroupSet",
+            questioning_id: form.c[1].c[1].id,
+            relevant: "true",
+            children: {
+              "0" => web_answer_group_hash(inner_form_grp.id, answers_one_one, id: res_inr_grp_set_1.c[0].id),
+              "1" => web_answer_group_hash(inner_form_grp.id, answers_one_two, id: res_inr_grp_set_1.c[1].id)
+            }
+          }
+        }
+      end
+      let(:instance_two_answers) do
+        {
+          "0" => web_answer_hash(outer_form_grp.c[0].id, value: "E", id: response.root_node.c[1].c[1].c[0].id),
+          "1" => {
+            id: response.root_node.c[1].c[1].c[1].id,
+            type: "AnswerGroupSet",
+            questioning_id: form.c[1].c[1].id,
+            relevant: "true",
+            children: {
+              "0" => web_answer_group_hash(inner_form_grp.id, answers_two_one, id: res_inr_grp_set_2.c[0].id),
+              "1" => web_answer_group_hash(inner_form_grp.id, answers_two_two, id: res_inr_grp_set_2.c[1].id),
+              "2" => web_answer_group_hash(inner_form_grp.id, answers_two_three)
+            }
+          }
+        }
+      end
+      let(:answers_one_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "C", id: res_inr_grp_set_1.c[0].c[0].id)} }
+      let(:answers_one_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "D", id: res_inr_grp_set_1.c[1].c[0].id)} }
+      let(:answers_two_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "F", id: res_inr_grp_set_2.c[0].c[0].id)} }
+      let(:answers_two_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "G", id: res_inr_grp_set_2.c[1].c[0].id)} }
+      let(:answers_two_three) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "H")} }
+      let(:res_otr_grp_set) { response.root_node.c[1] }
+      let(:res_inr_grp_set_1) { response.root_node.c[1].c[0].c[1] }
+      let(:res_inr_grp_set_2) { response.root_node.c[1].c[1].c[1] }
+      it "adds new answer group instance" do
+        expect_root(tree, form)
+        expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+        expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+        answer_grp_one = tree.c[1].c[0]
+        answer_grp_two = tree.c[1].c[1]
+
+        expect_children(answer_grp_one, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["B", nil])
+        expect_children(answer_grp_one.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_form_grp.id))
+        expect_children(answer_grp_one.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[C])
+        expect_children(answer_grp_one.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[D])
+        expect_children(answer_grp_two, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["E", nil])
+        expect_children(answer_grp_two.c[1], %w[AnswerGroup AnswerGroup AnswerGroup], Array.new(3, inner_form_grp.id))
+        expect_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[F])
+        expect_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[G])
+        expect_children(answer_grp_two.c[1].c[2], %w[Answer], [inner_form_grp.c[0].id], %w[H])
       end
     end
   end
