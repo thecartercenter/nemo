@@ -397,9 +397,9 @@ describe Results::WebResponseParser do
             questioning_id: form.c[1].c[1].id,
             relevant: "true",
             children: {
-              "0" => web_answer_group_hash(inner_form_grp.id, answers_one_one, id: res_inr_grp_set_1.c[0].id),
+              "0" => web_answer_group_hash(inner_form_grp.id, answers_one_one, id: res_inr_grp_set_1.c[0].id, destroy: "true"),
               "1" => web_answer_group_hash(inner_form_grp.id, answers_one_two, id: res_inr_grp_set_1.c[1].id)
-            }
+            },
           }
         }
       end
@@ -421,13 +421,13 @@ describe Results::WebResponseParser do
       end
       let(:answers_one_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "C", id: res_inr_grp_set_1.c[0].c[0].id)} }
       let(:answers_one_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "D", id: res_inr_grp_set_1.c[1].c[0].id)} }
-      let(:answers_two_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "F", id: res_inr_grp_set_2.c[0].c[0].id)} }
+      let(:answers_two_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "F", id: res_inr_grp_set_2.c[0].c[0].id, relevant: "false")} }
       let(:answers_two_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "G", id: res_inr_grp_set_2.c[1].c[0].id)} }
       let(:answers_two_three) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "H")} }
       let(:res_otr_grp_set) { response.root_node.c[1] }
       let(:res_inr_grp_set_1) { response.root_node.c[1].c[0].c[1] }
       let(:res_inr_grp_set_2) { response.root_node.c[1].c[1].c[1] }
-      it "adds new answer group instance" do
+      it "adds new answer group instance and marks nodes with relevant: false and destroy: true as needed" do
         expect_root(tree, form)
         expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
         expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
@@ -443,6 +443,8 @@ describe Results::WebResponseParser do
         expect_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[F])
         expect_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[G])
         expect_children(answer_grp_two.c[1].c[2], %w[Answer], [inner_form_grp.c[0].id], %w[H])
+        expect(res_inr_grp_set_1.c[0]._destroy).to be true # group with answer C
+        expect(res_inr_grp_set_2.c[0].c[0].relevant).to be false # answer with value F
       end
     end
   end
