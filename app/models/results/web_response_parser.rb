@@ -61,7 +61,6 @@ module Results
         existing_node = tree_parent.children.select { |c| c.id == id }.first
         updatable_params = web_hash_node.slice(:value).permit(PERMITTED_PARAMS)
         existing_node.update(updatable_params)
-        # TODO: include in params?
         existing_node.relevant = false if web_hash_node[:relevant] == "false"
         existing_node._destroy = true if web_hash_node[:_destroy] == "true"
         existing_node

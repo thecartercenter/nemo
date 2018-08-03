@@ -1,7 +1,7 @@
 module ModelSpecHelpers
   def expect_location_answer(response, answer, params)
     response.save
-    answer.save # questionable??
+    answer.save
 
     # If the answer is invalid there is no need to check if values were copied correctly.
     return if response.invalid?

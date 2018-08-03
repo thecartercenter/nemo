@@ -16,10 +16,10 @@
 #                      ],
 # Answer               create(:media_image),
 # Answer               %w[Plant Oak],
-# Outer rpt grp       {repeating: [
+# Outer rpt grp set   {repeating: [
 # Outer grp instance1   [
 # Answer                 2,
-# Inner rpt grp          {repeating: [
+# Inner rpt grp set       {repeating: [
 # Inner rpt grp instance1   [
 # Answer                      "a",
 # Answer                      10
