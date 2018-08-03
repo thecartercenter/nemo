@@ -9,7 +9,7 @@
     <%= hidden_field_tag context.input_name(:_destroy), "false" %>
   <% end %>
 
-  <%= render("hierarchical_responses/answers/answer_info", node: answer) %>
+  <%= render("hierarchical_responses/answers/answer_info", node: answer, context: context) %>
 
   <div class="control">
     <%= render("hierarchical_responses/answers/single_#{mode}", answer: answer, context: context) %>

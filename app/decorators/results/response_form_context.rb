@@ -23,13 +23,20 @@ module Results
       self.class.new(path + items, options)
     end
 
+    def full_path
+      if path.present?
+        path.zip(["children"] * (path.length - 1)).flatten.compact
+      else
+        []
+      end
+    end
+
     def input_name(*names)
-      items = if path.present?
-                path.zip(["children"] * (path.length - 1)).flatten.compact + names
-              else
-                names
-              end
-      "response[root]" + items.map { |item| "[#{item}]" }.join
+      "response[root]" + (full_path + names).map { |item| "[#{item}]" }.join
+    end
+
+    def input_id(*names)
+      "response_root_" + (full_path + names).join("_")
     end
 
     # This is used for uniquely identifying DOM elements
