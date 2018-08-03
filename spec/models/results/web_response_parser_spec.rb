@@ -354,6 +354,36 @@ describe Results::WebResponseParser do
       end
     end
 
+    context "response with answer set" do
+      let(:question_types) { %w[text multilevel_select_one text] }
+      let(:answer_values) { ["A", %w[Plant], "D"]}
+      let(:data) { {root: web_answer_group_hash(form.root_group.id, new_answers)} }
+      let(:plant) { form.c[1].option_set.sorted_children[1].id }
+      let(:oak) { form.c[1].option_set.sorted_children[1].sorted_children[1].id }
+      let(:new_answers) do
+        {
+          "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
+          "1" => {
+            id: response.root_node.c[1].id,
+            type: "AnswerSet",
+            questioning_id: form.c[1].id,
+            relevant: "true",
+            children: {
+              "0" => web_answer_hash(form.c[1].id, option_node_id: plant, id: response.root_node.c[1].c[0].id),
+              "1" => web_answer_hash(form.c[1].id, option_node_id: oak)
+            }
+          },
+          "2" => web_answer_hash(form.c[2].id, value: "D", id: response.root_node.c[2].id)
+        }
+      end
+
+      it "builds tree with answer set" do
+        expect_root(tree, form)
+        expect_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
+        expect_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
+      end
+    end
+
     context "nested repeat groups" do
       let(:question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text"]}}]}}] }
       let(:outer_form_grp) { form.c[1] }
