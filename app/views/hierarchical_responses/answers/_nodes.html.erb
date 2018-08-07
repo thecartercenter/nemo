@@ -13,7 +13,7 @@
       <% if removable %>
         <a href="#" class="remove-repeat">Remove</a>
       <% end %>
-    <% elsif node.is_a?(Answer) %>t
+    <% elsif node.is_a?(Answer) %>
       <%= render("hierarchical_responses/answers/answer", answer: node, context: new_context) %>
     <% elsif node.is_a?(AnswerGroupSet) %>
       <%= render("hierarchical_responses/answers/group_set", group_set: node, context: new_context) %>
