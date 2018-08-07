@@ -51,7 +51,7 @@ module Concerns::ApplicationController::LoginLogistics
   def redirect_to_login
     if request.xhr?
       flash[:error] = nil
-      render(:text => "LOGIN_REQUIRED", :status => 401)
+      render(plain: "LOGIN_REQUIRED", status: :unauthorized)
     else
       store_location
       redirect_to(login_url)

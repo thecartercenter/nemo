@@ -21,10 +21,6 @@ describe 'router' do
     expect(:delete => '/en/logout').to route_to(:controller => 'user_sessions', :action => 'destroy', :locale => 'en', :mode => nil, :mission_name => nil)
   end
 
-  it 'routes proxy requests without locale' do
-    expect(:get => '/proxies/geocoder').to route_to(:controller => 'proxies', :action => 'geocoder')
-  end
-
   it 'routes edit profile' do
     expect(:get => '/en/users/1/edit').to route_to(:controller => 'users', :action => 'edit',
       :locale => 'en', :id => '1')

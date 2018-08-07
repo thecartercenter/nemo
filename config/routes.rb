@@ -2,9 +2,6 @@ ELMO::Application.routes.draw do
 
   mount JasmineRails::Engine => "/specs" if defined?(JasmineRails)
 
-  # proxies for ajax same-origin
-  get "proxies/:action", controller: "proxies"
-
   # Special shortcut for simulating login in feature specs.
   get "test-login" => "user_sessions#test_login" if Rails.env.test?
 
