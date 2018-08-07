@@ -24,7 +24,7 @@ class UserGroupsController < ApplicationController
       render json: { name: @user_group.name }
     else
       flash[:error] = @user_group.errors.full_messages.join(", ")
-      render nothing: true, status: 422
+      head(422)
     end
   end
 
@@ -35,7 +35,7 @@ class UserGroupsController < ApplicationController
       render(partial: "index_table") if request.xhr?
     else
       flash[:error] = @user_group.errors.full_messages.join(", ")
-      render nothing: true, status: 422
+      head(422)
     end
   end
 
@@ -51,7 +51,7 @@ class UserGroupsController < ApplicationController
     @user_group.save
     flash[:success] = I18n.t("user_group.add_users_success", count: users.count, group: @user_group.name)
     flash.keep(:success)
-    render nothing: true
+    head(:ok)
   end
 
   def remove_users
@@ -60,7 +60,7 @@ class UserGroupsController < ApplicationController
     @user_group.save
     flash[:success] = I18n.t("user_group.remove_users_success", count: users.count, group: @user_group.name)
     flash.keep(:success)
-    render nothing: true
+    head(:ok)
   end
 
   def possible_groups

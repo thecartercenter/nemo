@@ -60,7 +60,7 @@ class QuestioningsController < ApplicationController
   # Only called via AJAX
   def destroy
     @questioning.destroy
-    render nothing: true, status: 204
+    head(204)
   end
 
   private
