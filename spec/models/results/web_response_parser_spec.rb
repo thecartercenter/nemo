@@ -273,7 +273,12 @@ describe Results::WebResponseParser do
         let(:new_answers) do
           {
             "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
-            "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id, _destroy: "true"),
+            "1" => web_answer_hash(
+              form.c[1].id,
+              value: "B",
+              id: response.root_node.c[1].id,
+              _destroy: "true"
+            ),
             "2" => web_answer_hash(form.c[2].id, value: "C", id: response.root_node.c[2].id)
           }
         end
@@ -289,7 +294,12 @@ describe Results::WebResponseParser do
         let(:new_answers) do
           {
             "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
-            "1" => web_answer_hash(form.c[1].id, value: "B", id: response.root_node.c[1].id, relevant: "false"),
+            "1" => web_answer_hash(
+              form.c[1].id,
+              value: "B",
+              id: response.root_node.c[1].id,
+              relevant: "false"
+            ),
             "2" => web_answer_hash(form.c[2].id, value: "C", id: response.root_node.c[2].id)
           }
         end
@@ -317,8 +327,16 @@ describe Results::WebResponseParser do
               questioning_id: form.c[1].id,
               relevant: "true",
               children: {
-                "0" => web_answer_group_hash(form.c[1].id, instance_one_answers, id: response.root_node.c[1].c[0].id),
-                "1" => web_answer_group_hash(form.c[1].id, instance_two_answers, id: response.root_node.c[1].c[1].id),
+                "0" => web_answer_group_hash(
+                  form.c[1].id,
+                  instance_one_answers,
+                  id: response.root_node.c[1].c[0].id
+                ),
+                "1" => web_answer_group_hash(
+                  form.c[1].id,
+                  instance_two_answers,
+                  id: response.root_node.c[1].c[1].id
+                ),
                 "2" => web_answer_group_hash(form.c[1].id, new_instance_answers)
               }
             }
@@ -356,7 +374,7 @@ describe Results::WebResponseParser do
 
     context "response with answer set" do
       let(:question_types) { %w[text multilevel_select_one text] }
-      let(:answer_values) { ["A", %w[Plant], "D"]}
+      let(:answer_values) { ["A", %w[Plant], "D"] }
       let(:data) { {root: web_answer_group_hash(form.root_group.id, new_answers)} }
       let(:plant) { form.c[1].option_set.sorted_children[1].id }
       let(:oak) { form.c[1].option_set.sorted_children[1].sorted_children[1].id }
@@ -369,7 +387,11 @@ describe Results::WebResponseParser do
             questioning_id: form.c[1].id,
             relevant: "true",
             children: {
-              "0" => web_answer_hash(form.c[1].id, option_node_id: plant, id: response.root_node.c[1].c[0].id),
+              "0" => web_answer_hash(
+                form.c[1].id,
+                option_node_id: plant,
+                id: response.root_node.c[1].c[0].id
+              ),
               "1" => web_answer_hash(form.c[1].id, option_node_id: oak)
             }
           },
@@ -403,7 +425,7 @@ describe Results::WebResponseParser do
           ]}
         ]
       end
-      let(:new_answers) do #for incoming data updating the response
+      let(:new_answers) do # for incoming data updating the response
         {
           "0" => web_answer_hash(form.c[0].id, value: "A", id: response.root_node.c[0].id),
           "1" => {
@@ -412,8 +434,16 @@ describe Results::WebResponseParser do
             questioning_id: form.c[1].id,
             relevant: "true",
             children: {
-              "0" => web_answer_group_hash(outer_form_grp.id, instance_one_answers, id: response.root_node.c[1].c[0].id),
-              "1" => web_answer_group_hash(outer_form_grp.id, instance_two_answers, id: response.root_node.c[1].c[1].id)
+              "0" => web_answer_group_hash(
+                outer_form_grp.id,
+                instance_one_answers,
+                id: response.root_node.c[1].c[0].id
+              ),
+              "1" => web_answer_group_hash(
+                outer_form_grp.id,
+                instance_two_answers,
+                id: response.root_node.c[1].c[1].id
+              )
             }
           }
         }
@@ -427,15 +457,24 @@ describe Results::WebResponseParser do
             questioning_id: form.c[1].c[1].id,
             relevant: "true",
             children: {
-              "0" => web_answer_group_hash(inner_form_grp.id, answers_one_one, id: res_inr_grp_set_1.c[0].id, destroy: "true"),
+              "0" => web_answer_group_hash(
+                inner_form_grp.id,
+                answers_one_one,
+                id: res_inr_grp_set_1.c[0].id,
+                destroy: "true"
+              ),
               "1" => web_answer_group_hash(inner_form_grp.id, answers_one_two, id: res_inr_grp_set_1.c[1].id)
-            },
+            }
           }
         }
       end
       let(:instance_two_answers) do
         {
-          "0" => web_answer_hash(outer_form_grp.c[0].id, value: "E", id: response.root_node.c[1].c[1].c[0].id),
+          "0" => web_answer_hash(
+            outer_form_grp.c[0].id,
+            value: "E",
+            id: response.root_node.c[1].c[1].c[0].id
+          ),
           "1" => {
             id: response.root_node.c[1].c[1].c[1].id,
             type: "AnswerGroupSet",
@@ -449,10 +488,23 @@ describe Results::WebResponseParser do
           }
         }
       end
-      let(:answers_one_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "C", id: res_inr_grp_set_1.c[0].c[0].id)} }
-      let(:answers_one_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "D", id: res_inr_grp_set_1.c[1].c[0].id)} }
-      let(:answers_two_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "F", id: res_inr_grp_set_2.c[0].c[0].id, relevant: "false")} }
-      let(:answers_two_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "G", id: res_inr_grp_set_2.c[1].c[0].id)} }
+      let(:answers_one_one) do
+        {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "C", id: res_inr_grp_set_1.c[0].c[0].id)}
+      end
+      let(:answers_one_two) do
+        {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "D", id: res_inr_grp_set_1.c[1].c[0].id)}
+      end
+      let(:answers_two_one) do
+        {"0" => web_answer_hash(
+          inner_form_grp.c[0].id,
+          value: "F",
+          id: res_inr_grp_set_2.c[0].c[0].id,
+          relevant: "false"
+        )}
+      end
+      let(:answers_two_two) do
+        {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "G", id: res_inr_grp_set_2.c[1].c[0].id)}
+      end
       let(:answers_two_three) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "H")} }
       let(:res_otr_grp_set) { response.root_node.c[1] }
       let(:res_inr_grp_set_1) { response.root_node.c[1].c[0].c[1] }
@@ -469,7 +521,7 @@ describe Results::WebResponseParser do
         expect_children(answer_grp_one.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[C])
         expect_children(answer_grp_one.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[D])
         expect_children(answer_grp_two, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["E", nil])
-        expect_children(answer_grp_two.c[1], %w[AnswerGroup AnswerGroup AnswerGroup], Array.new(3, inner_form_grp.id))
+        expect_children(answer_grp_two.c[1], Array.new(3, "AnswerGroup"), Array.new(3, inner_form_grp.id))
         expect_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[F])
         expect_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[G])
         expect_children(answer_grp_two.c[1].c[2], %w[Answer], [inner_form_grp.c[0].id], %w[H])
