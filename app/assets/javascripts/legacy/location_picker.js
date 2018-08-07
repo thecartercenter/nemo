@@ -10,7 +10,9 @@
   klass.prototype.show = function(field) { var self = this;
     self.el.modal("show");
     self.location_field = field;
-    self.set_location(self.parse_lat_lng(self.location_field.val()));
+
+    if (self.location_field.val())
+      self.set_location(self.parse_lat_lng(self.location_field.val()));
 
     if (self.map_ready)
       self.mark_location({pan: true});
@@ -34,7 +36,7 @@
 
     // Hook up events.
     google.maps.event.addListener(self.map, 'click', function(event) {self.map_click(event)});
-    self.el.find("button.accept-link").click(function() {self.close(true); return false;});
+    self.el.find("button.btn-primary").click(function() {self.close(true); return false;});
     self.el.find("form.location-search input.query").focus(function() {self.search_focus(true);});
     self.el.find("form.location-search input.query").blur(function() {self.search_focus(false);});
     self.el.find("form.location-search").submit(function() {self.search_submit(); return false;});
@@ -80,33 +82,25 @@
 
     ELMO.app.loading(true);
 
-    // submit, giving callback method
-    new ELMO.GoogleGeocoder(query, function(r){self.show_search_results(r)});
-  }
+    (new google.maps.Geocoder()).geocode({address: query}, function(results, status) {
+      ELMO.app.loading(false);
+      var results_div = self.el.find("form.location-search div.results").empty();
+      if (status == 'OK') {
+        // create links
+        for (var i = 0; i < results.length; i++)
+          results_div.append($("<a>").
+            attr("href", "#").addClass("result-link").
+            attr("title", results[i].geometry.location.lat() + ", " + results[i].geometry.location.lng()).
+            text(results[i].formatted_address));
 
-  // displays the search results and hooks up the links
-  klass.prototype.show_search_results = function(results) { var self = this;
-    ELMO.app.loading(false);
-
-    // get ref to div and empty it
-    var results_div = self.el.find("form.location-search div.results").empty();
-
-    // show error if there is one
-    if (typeof(results) == "string")
-      results_div.text(results);
-    else {
-      // create links
-      for (var i = 0; i < results.length; i++)
-        results_div.append($("<a>").
-          attr("href", "#").addClass("result-link").
-          attr("title", results[i].geometry.location.lat + "," + results[i].geometry.location.lng).
-          text(results[i].formatted_address));
-
-      self.el.find("a.result-link").click(function(e){
-        self.set_location(self.parse_lat_lng(e.target.title));
-        self.mark_location({pan: true});
-      });
-    }
+        self.el.find("a.result-link").click(function(e){
+          self.set_location(self.parse_lat_lng(e.target.title));
+          self.mark_location({pan: true});
+        });
+      } else {
+        alert('Search Error');
+      }
+    });
   }
 
   klass.prototype.set_location = function(val) { var self = this;
@@ -118,7 +112,7 @@
     ELMO.app.loading(false);
 
     if (self.location) {
-      if (!self.marker) 
+      if (!self.marker)
         self.marker = new google.maps.Marker({map: self.map});
 
       // move the marker
