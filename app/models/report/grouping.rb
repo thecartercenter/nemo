@@ -34,7 +34,7 @@ class Report::Grouping
     rel = filter_non_top_level_answers(rel, prefix) if @calculation.question1
 
     return rel
-  end 
+  end
 
   def filter_non_top_level_answers(rel, prefix)
     return rel unless @calculation.joins.include?(:options)
