@@ -23,7 +23,7 @@ class Response < ApplicationRecord
     where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question)
   }, class_name: "Answer"
 
-  has_closure_tree_root :root_node, class_name: "ResponseNode"
+  has_closure_tree_root :root_node, class_name: "ResponseNode", autosave: true
 
   friendly_id :shortcode
 
