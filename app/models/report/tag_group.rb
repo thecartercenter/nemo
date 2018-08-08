@@ -16,7 +16,7 @@ class Report::TagGroup
       end
 
       # Sort by key (tag) and put untagged at the end
-      tag_groups = Hash[tag_groups.sort]
+      tag_groups = Hash[tag_groups.sort_by { |k, _| k.name }]
       tag_groups[:untagged] = untagged
 
       tag_groups.map do |tag, sums|
