@@ -263,8 +263,9 @@ class HierarchicalResponsesController < ApplicationController
       dont_load_answers: %w[create update].include?(params[:action])
     ).build.nodes
 
-    @context = Results::ResponseFormContext.new
-    @context.read_only if read_only?
+    @context = Results::ResponseFormContext.new(
+      read_only: action_name == "show" || cannot?(:modify_answers, @response)
+    )
 
     # The blank response is used for rendering placeholders for repeat groups
     @blank_response = Response.new(form: @response.form)
@@ -289,15 +290,6 @@ class HierarchicalResponsesController < ApplicationController
     check_form_exists_in_mission
   rescue ActiveRecord::RecordNotFound
     return redirect_to(index_url_with_context)
-  end
-
-  def read_only?
-    case action_name
-    when "show"
-      true
-    else
-      cannot?(:modify_answers, @response)
-    end
   end
 
   def response_params

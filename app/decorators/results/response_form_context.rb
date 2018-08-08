@@ -5,14 +5,9 @@ module Results
   class ResponseFormContext
     attr_reader :path, :options
 
-    def initialize(path = [], options = {})
+    def initialize(path: [], **options)
       @path = path
       @options = options
-    end
-
-    def read_only
-      options[:read_only] = true
-      self
     end
 
     def read_only?
@@ -20,7 +15,7 @@ module Results
     end
 
     def add(*items)
-      self.class.new(path + items, options)
+      self.class.new(path: path + items, **options)
     end
 
     def full_path
