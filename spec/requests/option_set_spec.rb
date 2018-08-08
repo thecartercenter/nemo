@@ -183,11 +183,6 @@ describe "option_sets", type: :request do
     end
   end
 
-  it "exports successfully" do
-    get "/en/m/#{get_mission.compact_name}/option-sets/#{option_set.id}/export"
-    expect(response).to be_success
-  end
-
   def get_node(option_set, name)
     option_set.option_nodes.select { |n| n.option && n.option.canonical_name == name }[0]
   end
