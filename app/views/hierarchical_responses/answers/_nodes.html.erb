@@ -1,13 +1,22 @@
-<% nodes.each_with_index do |node, index| %>
-  <% params = {read_only: read_only, context: node.parent.present? ? context.add(index) : context} %>
+<% index_placeholder = local_assigns[:index_placeholder] %>
+<% removable = local_assigns[:removable] %>
 
-  <% if node.is_a?(AnswerSet) %>
-    <%= render("hierarchical_responses/answers/answer_set", params.merge(set: node)) %>
-  <% elsif node.is_a?(AnswerGroup) %>
-    <%= render("hierarchical_responses/answers/group", params.merge(group: node)) %>
-  <% elsif node.is_a?(Answer) %>
-    <%= render("hierarchical_responses/answers/answer", params.merge(answer: node)) %>
-  <% elsif node.is_a?(AnswerGroupSet) %>
-    <%= render("hierarchical_responses/answers/group_set", params.merge(group_set: node)) %>
-  <% end %>
+<% nodes.each_with_index do |node, index| %>
+  <% new_context = node.parent.present? ? context.add(index_placeholder ? "__INDEX__" : index) : context %>
+
+  <div class="node">
+    <% if node.is_a?(AnswerSet) %>
+      <%= render("hierarchical_responses/answers/answer_set", set: node, context: new_context) %>
+    <% elsif node.is_a?(AnswerGroup) %>
+      <%= render("hierarchical_responses/answers/group", group: node, context: new_context) %>
+
+      <% if removable %>
+        <a href="#" class="remove-repeat">Remove</a>
+      <% end %>
+    <% elsif node.is_a?(Answer) %>
+      <%= render("hierarchical_responses/answers/answer", answer: node, context: new_context) %>
+    <% elsif node.is_a?(AnswerGroupSet) %>
+      <%= render("hierarchical_responses/answers/group_set", group_set: node, context: new_context) %>
+    <% end %>
+  </div>
 <% end %>

@@ -5,7 +5,7 @@
   <% case type = answer.qtype.name
      when "select_one" %>
 
-    <%= select_tag(context.add(:option_node_id).input_name,
+    <%= select_tag(context.input_name(:option_node_id),
           options_from_collection_for_select(answer.first_level_option_nodes,
           'id', 'option_name', answer.option_node_id),
           include_blank: true,
@@ -15,7 +15,7 @@
 
     <%# render a checkbox for each possible choice %>
     <%= render(partial: "hierarchical_responses/answers/choice",
-      locals: {path: path},
+      context: context,
       collection: answer.all_choices,
       class: "form-control") %>
 
@@ -23,7 +23,7 @@
     <% date = answer.datetime_value ? answer.datetime_value : answer.date_value %>
 
     <% if date && (date.year < Time.current.year - 125 || date.year > Time.current.year + 125) %>
-      <%= text_field_tag(context.add("#{type}_value").input_name, date, class: "qtype_#{type} form-control") %>
+      <%= text_field_tag(context.input_name("#{type}_value"), date, class: "qtype_#{type} form-control") %>
     <% else %>
       <%= send("#{type}_select", field_name_prefix, :"#{type}_value",
           {include_blank: true, include_seconds: true, object: answer, use_short_month: true},
@@ -36,7 +36,7 @@
 
   <% when "long_text" %>
 
-    <%= text_area_tag(context.add(:value).input_name, answer.value, class: "qtype_long_text form-control") %>
+    <%= text_area_tag(context.input_name(:value), answer.value, class: "qtype_long_text form-control") %>
 
     <%# Initialize ckeditor on doc ready. %>
     <%= javascript_doc_ready do %>
@@ -45,13 +45,13 @@
 
   <% when "integer", "decimal", "counter" %>
 
-    <%= number_field_tag(context.add(:value).input_name, answer.value,
+    <%= number_field_tag(context.input_name(:value), answer.value,
           class: "qtype_#{type} form-control",
           step: type == "decimal" ? "any" : nil) %>
 
   <% else %>
 
-    <%= text_field_tag(context.add(:value).input_name, answer.value, class: "qtype_#{type} form-control") %>
+    <%= text_field_tag(context.input_name(:value), answer.value, class: "qtype_#{type} form-control") %>
 
     <% if type == 'location' %>
       &nbsp;<%= action_link("edit", "#", class: "edit_location_link") if form_mode != :show %>

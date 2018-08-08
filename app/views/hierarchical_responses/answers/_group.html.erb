@@ -5,12 +5,13 @@
     <%= hint_popover(group.qing_group.group_hint) %>
   </h2>
 
-  <% unless read_only %>
-    <%= hidden_field_tag context.add(:id).input_name, group.id %>
-    <%= hidden_field_tag context.add(:type).input_name, "AnswerGroup" %>
+  <% unless context.read_only? %>
+    <%= hidden_field_tag context.input_name(:id), group.id %>
+    <%= hidden_field_tag context.input_name(:type), "AnswerGroup" %>
+    <%= hidden_field_tag context.input_name(:_destroy), "false" %>
   <% end %>
 
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes", nodes: group.children, context: context.add(:children)) %>
+    <%= render("hierarchical_responses/answers/nodes", nodes: group.children, context: context) %>
   </div>
 </div>
