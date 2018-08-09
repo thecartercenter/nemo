@@ -5,6 +5,7 @@ class AnswerSet < ResponseNode
   belongs_to :questioning
 
   alias answers children
+  alias form_item questioning
 
   def option_node_path
     OptionNodePath.new(

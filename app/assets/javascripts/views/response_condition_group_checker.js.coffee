@@ -4,12 +4,11 @@ class ELMO.Views.ResponseConditionGroupChecker extends ELMO.Views.ApplicationVie
   initialize: (options) ->
     @manager = options.manager
     @conditionGroup = options.group
-    @inst = options.inst
     @checkers = @conditionGroup.members.map (m) =>
       if m.type == "ConditionGroup"
-        new ELMO.Views.ResponseConditionGroupChecker(el: @el, manager: @manager, group: m, inst: @inst)
+        new ELMO.Views.ResponseConditionGroupChecker(el: @el, manager: @manager, group: m)
       else
-        new ELMO.Views.ResponseConditionChecker(el: @el, manager: @manager, condition: m, inst: @inst)
+        new ELMO.Views.ResponseConditionChecker(el: @el, manager: @manager, condition: m)
 
     # Unlike the manager and the leaf node checkers, do NOT do anything to initialize here. The manager takes
     # care of that by calling refresh in its initialization.
