@@ -1,8 +1,9 @@
 module ModelSpecHelpers
-  def expect_location_answer(answer, params)
-    answer.save
+  def expect_location_answer(response, answer, params)
+    response.save
+
     # If the answer is invalid there is no need to check if values were copied correctly.
-    return if answer.invalid?
+    return if response.invalid?
 
     answer.reload
     expect(answer.value).to eq params[:val]

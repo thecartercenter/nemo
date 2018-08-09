@@ -15,6 +15,8 @@ class Response < ApplicationRecord
   belongs_to :checked_out_by, class_name: "User"
   belongs_to :user, inverse_of: :responses
   belongs_to :reviewer, class_name: "User"
+
+  # response.answers is deprecated in favor of traversing the response tree via response.root_node.children
   has_many :answers, -> { order(:inst_num, :rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
   has_many :location_answers, lambda {
@@ -26,7 +28,10 @@ class Response < ApplicationRecord
   friendly_id :shortcode
 
   before_save :normalize_answers
+  after_save { root_node.save if root_node.present? }
   before_create :generate_shortcode
+
+  before_destroy :destroy_answer_tree
 
   # Due to an acts_as_paranoid gem bug, rails counter_cache increments on creation
   # but does not decrement on deletion since we need the counter cache, we'll manually decrement on deletion
@@ -39,6 +44,7 @@ class Response < ApplicationRecord
   validate :no_missing_answers
   validate :form_in_mission
   validates_associated :answers # Forces validation of answers even if they haven't changed
+  validates_associated :root_node
 
   scope :unreviewed, -> { where(reviewed: false) }
   scope :by, ->(user) { where(user_id: user.id) }
@@ -74,6 +80,10 @@ class Response < ApplicationRecord
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
   delegate :c, to: :root_node
+
+  def destroy_answer_tree
+    root_node.destroy
+  end
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
@@ -302,6 +312,8 @@ class Response < ApplicationRecord
     end while Response.exists?(shortcode: self.shortcode)
   end
 
+  # TODO: remove in favor of build syntax. SMS parsing needs to be refactored
+  # to not rely on this function
   def associate_tree(root)
     associate_node_and_descendants(root)
     self.root_node = root

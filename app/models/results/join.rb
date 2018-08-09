@@ -39,7 +39,7 @@ class Results::Join
     answers: new(
       name: :answers,
       sql: "LEFT JOIN answers __answers ON __answers.response_id = responses.id " \
-        "AND __answers.deleted_at IS NULL"
+        "AND __answers.deleted_at IS NULL AND __answers.type = 'Answer'"
     ),
     questionings: new(
       dependencies: :answers,

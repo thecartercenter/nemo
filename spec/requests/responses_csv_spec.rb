@@ -4,8 +4,8 @@ require "rails_helper"
 
 describe "responses csv", :csv, type: :request do
   let(:form) { create(:form, :published, question_types: %w[integer multilevel_select_one]) }
-  let!(:response1) { create(:response, form: form, answer_values: %w[2 Animal]) }
-  let!(:response2) { create(:response, form: form, answer_values: %w[15 Plant]) }
+  let!(:response1) { create(:response, form: form, answer_values: [2, %w[Animal]]) }
+  let!(:response2) { create(:response, form: form, answer_values: [15, %w[Plant]]) }
   let(:user) { create(:user) }
   let(:result) { CSV.parse(response.body) }
 

@@ -8,6 +8,14 @@ class ResponseNode < ApplicationRecord
   belongs_to :response
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
+  before_save do
+    children.each { |c| c.response_id = response_id }
+  end
+
+  after_save { self.children.each {|c| c.save} }
+
+  validates_associated :children
+
   alias c children
 
   def debug_tree(indent: 0)
@@ -27,5 +35,16 @@ class ResponseNode < ApplicationRecord
   # Answer.rb implements casted_value for answers.Duck type method for non-Answer response nodes.
   def casted_value
     nil
+  end
+
+  #_destroy defaults to false unless set otherwise
+  def _destroy
+    @destroy.nil? ? false : @destroy
+  end
+
+  # A flag indicating whether this node should be destroyed before save.
+  # convert string 'true'/'false' to boolean
+  def _destroy=(d)
+    @destroy = d.is_a?(String) ? d == "true" : d
   end
 end

@@ -37,7 +37,8 @@ class Report::Grouping
   end
 
   def filter_non_top_level_answers(rel, prefix)
-    rel.where("#{prefix}_answers.rank IS NULL OR #{prefix}_answers.rank = 1")
+    return rel unless @calculation.joins.include?(:options)
+    rel.where("#{prefix}_ans_opt_nodes.ancestry_depth IS NULL OR #{prefix}_ans_opt_nodes.ancestry_depth <= 1")
   end
 
   def header_title

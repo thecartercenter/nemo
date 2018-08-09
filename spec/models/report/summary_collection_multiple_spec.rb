@@ -54,7 +54,7 @@ describe "summary collection with multiple subsets" do
 
  it "collections with text questions should have correct summaries" do
     prepare_form_and_collection('text', 'select_one',
-      {'a' => %w(foo bar baz), 'b' => %w(bing bop) + [nil]}, :dont_shuffle => true)
+      {'a' => %w(foo bar baz), 'b' => %w(bing bop) + [""]}, :dont_shuffle => true)
 
     # check that items are correct
     expect(items_for_disagg_value('a', :text)).to eq(%w(foo bar baz))

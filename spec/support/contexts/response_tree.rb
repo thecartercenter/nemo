@@ -31,9 +31,9 @@ shared_context "response tree" do
   end
 
   # Builds a hash for an answer node in a web response's hash representation of an answer heirarchy
-  def web_answer_hash(q_id, values, relevant: "true", destroy: nil)
+  def web_answer_hash(q_id, values, relevant: "true", destroy: nil, id: "")
     hash = {
-      id: "",
+      id: id,
       type: "Answer",
       questioning_id: q_id,
       relevant: relevant
@@ -43,9 +43,9 @@ shared_context "response tree" do
   end
 
   # Builds a hash for an answer group node in a web response's hash representation of an answer heirarchy
-  def web_answer_group_hash(q_id, children, relevant: "true", destroy: nil)
+  def web_answer_group_hash(q_id, children, relevant: "true", destroy: nil, id: "")
     hash = {
-      id: "",
+      id: id,
       type: "AnswerGroup",
       questioning_id: q_id,
       relevant: relevant,

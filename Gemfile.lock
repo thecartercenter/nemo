@@ -1,12 +1,4 @@
 GIT
-  remote: https://github.com/ClosureTree/closure_tree
-  revision: 5d44d22023b8c1537cbe559354c6be3694a07102
-  specs:
-    closure_tree (6.6.0)
-      activerecord (>= 4.1.0)
-      with_advisory_lock (>= 3.0.0)
-
-GIT
   remote: https://github.com/codebrew/backbone-rails.git
   revision: 231090bd690cd365a9486c17b00eec1e73ec37ec
   specs:
@@ -47,6 +39,15 @@ GIT
   specs:
     rack-attack (4.3.0)
       rack
+
+GIT
+  remote: https://github.com/smoyth/closure_tree
+  revision: 46deebdcc7c712b8393c1690bc39d4328efc0ffa
+  branch: patch-1
+  specs:
+    closure_tree (6.6.0)
+      activerecord (>= 4.1.0)
+      with_advisory_lock (>= 3.0.0)
 
 GEM
   remote: http://rubygems.org/
@@ -536,8 +537,8 @@ GEM
     will_paginate (3.0.12)
     will_paginate-bootstrap (1.0.1)
       will_paginate (>= 3.0.3)
-    with_advisory_lock (3.2.0)
-      activerecord (>= 3.2)
+    with_advisory_lock (4.0.0)
+      activerecord (>= 4.2)
     xpath (3.1.0)
       nokogiri (~> 1.8)
     yard (0.9.14)

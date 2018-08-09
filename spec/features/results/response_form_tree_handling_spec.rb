@@ -48,9 +48,20 @@ feature "response form tree handling", js: true do
     end
 
     context "with response" do
-      let!(:response) { Response.create!(form: form, mission: get_mission, user: user) }
-
-      before { Results::BlankResponseTreeBuilder.new(response).build }
+      let!(:response) do
+        create(
+          :response,
+          form: form,
+          mission: get_mission,
+          user: user,
+          answer_values: [
+            [1],
+            create(:media_image),
+            %w[Plant Oak],
+            {repeating: [[2, {repeating: [[3]]}]]}
+          ]
+        )
+      end
 
       scenario "renders edit form with hierarchical structure" do
         visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
