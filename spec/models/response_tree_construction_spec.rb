@@ -32,6 +32,23 @@ describe Response do
       expect_children(saved_response.root_node, %w[AnswerGroup Answer], form.c.map(&:id), [nil, "A"])
       expect_children(saved_response.root_node.c[0], %w[Answer], [form.c[0].c[0].id], [1])
     end
+
+    it "updates an updated node when response is saved" do
+      response.save!
+      saved_response = Response.find(response.id) # ensure all data is fresh from db
+      expect_root(saved_response.root_node, form)
+      expect_children(saved_response.root_node, %w[AnswerGroup Answer], form.c.map(&:id), [nil, "A"])
+      expect_children(saved_response.root_node.c[0], %w[Answer], [form.c[0].c[0].id], [1])
+      node_to_update = saved_response.root_node.c[0].c[0]
+      node_to_update.value = 3
+      puts "value after update:"
+      puts saved_response.root_node.c[0].c[0].value
+      saved_response.save!
+      saved_response = Response.find(response.id) # ensure all data is fresh from db
+      expect_root(saved_response.root_node, form)
+      expect_children(saved_response.root_node, %w[AnswerGroup Answer], form.c.map(&:id), [nil, "A"])
+      expect_children(saved_response.root_node.c[0], %w[Answer], [form.c[0].c[0].id], [3])
+    end
   end
 
   context "tree includes invalid node" do

@@ -8,7 +8,11 @@ class ResponseNode < ApplicationRecord
   belongs_to :response
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
-  before_save { children.each { |c| c.response_id = response_id } }
+  before_save do
+    children.each { |c| c.response_id = response_id }
+  end
+
+  after_save { self.children.each {|c| c.save} }
 
   validates_associated :children
 
