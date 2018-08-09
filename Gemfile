@@ -115,7 +115,7 @@ gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
 
 # XLS support
 gem "axlsx", "~> 2.1.1", git: "https://github.com/sassafrastech/axlsx.git", branch: "stable"
-gem "axlsx_rails", "~> 0.3.0"
+gem "axlsx_rails", "~> 0.5.0"
 gem "roo", "~> 2.1.1"
 
 # Twilio SMS integration

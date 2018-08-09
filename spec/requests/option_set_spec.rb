@@ -3,6 +3,8 @@ require "rails_helper"
 # Using request spec b/c Authlogic won't work with controller spec
 describe "option_sets", type: :request do
   let(:user) { create(:user, role_name: "coordinator") }
+  let(:option_set) { create(:option_set, super_multilevel: multilevel) }
+  let(:multilevel) { true }
 
   before do
     login(user)
@@ -10,8 +12,6 @@ describe "option_sets", type: :request do
 
   describe "get_condition_view" do
     context "multilevel" do
-      let(:option_set) { create(:option_set, super_multilevel: true) }
-
       context "nothing selected" do
         it "should return json with options for first level only" do
           get "/en/m/#{get_mission.compact_name}/option-sets/#{option_set.id}/condition-form-view?node_id=null"
@@ -140,7 +140,7 @@ describe "option_sets", type: :request do
     end
 
     context "select one" do
-      let(:option_set) { create(:option_set) }
+      let(:multilevel) { false }
 
       context "option selected" do
         it "should return json of with the selected option" do

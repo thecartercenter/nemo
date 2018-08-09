@@ -5,7 +5,7 @@ require "rails_helper"
 feature "option set" do
   let(:user) { create(:user, role_name: "coordinator") }
 
-  scenario "creating, showing, and editing", js: true do
+  scenario "creating, showing, editing and exporting", js: true do
     login(user)
     click_link("Option Sets")
 
@@ -52,6 +52,11 @@ feature "option set" do
     add_options(%w[Pear])
     click_button("Save")
     expect(page).to have_selector("td.options_col div", text: "Banana, Apple, Pear")
+
+    # Test export page does not error out
+    click_on "Foo"
+    click_link("Edit Option Set")
+    click_on "Export Option Set"
   end
 
   scenario "creating, showing, and editing options with values", js: true do
