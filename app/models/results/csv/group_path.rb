@@ -24,6 +24,7 @@ module Results
           changes[0] -= 1 unless prev_row.empty?
           changes[1] += 1
         end
+
         self.prev_row = row
       end
 
@@ -51,20 +52,45 @@ module Results
 
       attr_accessor :prev_row
 
+      # Scans through the two ancestry strings and looks for salient differences.
       def check_for_changes_in_ancestry(*strs)
         diff = false
         strs[0] ||= "{AnswerGroup0}"
         pos = [1, 1]
+        tokens = [nil, nil]
         loop do
+          prev_tokens = tokens
           tokens = [next_token(strs[0], pos[0]), next_token(strs[1], pos[1])]
+
+          # If no tokens left in either string, we're done.
+          break if tokens[0].nil? && tokens[1].nil?
+
+          # Advance scan positions on both strings
           pos[0] += tokens[0].size + 1 if tokens[0]
           pos[1] += tokens[1].size + 1 if tokens[1]
-          break if tokens[0].nil? && tokens[1].nil?
+
+          # If we haven't found any differences yet and these two tokens are the same,
+          # we can proceed to next tokens.
           next if !diff && tokens[0] == tokens[1]
+
+          # Otherwise we know we've encountered a difference.
           diff = true
-          changes[0] -= 1 if tokens[0]&.start_with?("AnswerGroup") && !tokens[0].start_with?("AnswerGroupSet")
-          changes[1] += 1 if tokens[1]&.start_with?("AnswerGroup") && !tokens[1].start_with?("AnswerGroupSet")
+
+          # Additions and subtractions to the path amount to the number of differing repeat AnswerGroups
+          # in the two strings.
+          changes[0] -= 1 if group_in_set?(tokens[0], prev_tokens[0])
+          changes[1] += 1 if group_in_set?(tokens[1], prev_tokens[1])
         end
+      end
+
+      # Checks if the given token, assuming the given previous token, represents an AnswerGroup inside
+      # an AnswerGroupSet.
+      def group_in_set?(token, prev_token)
+        return false if token.nil? || prev_token.nil?
+        # If the new token is a group (not a group set) AND the previous token was a group set,
+        # this is a group inside a repeat group.
+        token.start_with?("AnswerGroup") && !token.start_with?("AnswerGroupSet") &&
+          prev_token.start_with?("AnswerGroupSet")
       end
 
       # Gets the next comma delimited token from the given string, starting from the given offset.

@@ -27,6 +27,14 @@ describe Results::Csv::GroupPath do
     expect(path.changes).to eq([-2, 0])
     expect(path.changed?).to be true
 
+    # Next answer is in non-repeat group (no change).
+    path.process_row(
+      "response_id" => "1",
+      "ancestry" => "{AnswerGroup0,AnswerGroup2,Answer0}"
+    )
+    expect(path.changes).to eq([0, 0])
+    expect(path.changed?).to be false
+
     # Down to first level of repeat group on new response.
     path.process_row(
       "response_id" => "2",
@@ -57,19 +65,19 @@ describe Results::Csv::GroupPath do
     )
     expect(path.changes).to eq([0, 1])
 
-    # Into first level of later, non-repeat group.
+    # Into first level of later, non-repeat group (non-repeat groups don't count as path changes).
     path.process_row(
       "response_id" => "2",
       "ancestry" => "{AnswerGroup0,AnswerGroup1,Answer0}"
     )
-    expect(path.changes).to eq([-2, 1])
+    expect(path.changes).to eq([-2, 0])
 
     # Back to root.
     path.process_row(
       "response_id" => "2",
       "ancestry" => "{AnswerGroup0,Answer2}"
     )
-    expect(path.changes).to eq([-1, 0])
+    expect(path.changes).to eq([0, 0])
   end
 
   it "should work with single depth group" do
