@@ -7,10 +7,9 @@ class DeleteAssignmentsWithDuplicateMissionAndUser < ActiveRecord::Migration[5.1
 
     dup_attrs.each do |dup|
       dup_assignments = Assignment.where(mission_id: dup.mission_id, user_id: dup.user_id)
-      duplicates << dup_assignments.first
+      duplicates << dup_assignments[1..-1]
+      duplicates.flatten.each(&:destroy)
     end
-
-    duplicates.map(&:destroy)
   end
 
   def down
