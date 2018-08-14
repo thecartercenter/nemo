@@ -22,6 +22,7 @@ class ResponseNode < ApplicationRecord
 
   validates_associated :children
 
+  delegate :code, to: :form_item
   alias c children
   alias destroy? _destroy
 

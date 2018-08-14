@@ -1,10 +1,12 @@
 <div class="answer-group">
-  <h2>
-    <%= group.qing_group.full_dotted_rank %>.
-    <%= group.qing_group.group_name %>
-    <%= hint_popover(group.qing_group.group_hint) %>
-  </h2>
-
+  <% unless group.root? %>
+    <h2>
+      <%= group.qing_group.full_dotted_rank %>.
+      <%= group.qing_group.group_name %>
+      <%= hint_popover(group.qing_group.group_hint) %>
+    </h2>
+  <% end %>
+  
   <% unless context.read_only? %>
     <%= hidden_field_tag context.input_name(:id), group.id %>
     <%= hidden_field_tag context.input_name(:type), "AnswerGroup" %>

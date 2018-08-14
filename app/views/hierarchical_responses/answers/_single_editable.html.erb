@@ -15,9 +15,9 @@
 
     <%# render a checkbox for each possible choice %>
     <%= render(partial: "hierarchical_responses/answers/choice",
-      locals: {context: context},
-      collection: answer.all_choices,
-      class: "form-control") %>
+               locals: {context: context},
+               collection: answer.all_choices,
+               class: "form-control") %>
 
   <% when "datetime", "date", "time" %>
     <% date = answer.datetime_value ? answer.datetime_value : answer.date_value %>
