@@ -1,0 +1,148 @@
+.responses_show {
+  // Text responses with paragraphs in show mode
+  .form-field.qtype_long_text, .form-field.qtype_text {
+
+    .control {
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .answer-map {
+    display: none;
+    width: 160px;
+    height: 80px;
+    float: right;
+    margin-bottom: 10px;
+  }
+}
+
+.responses_new, .responses_edit {
+  form.response_form {
+    $label-width: 300px;
+    $group-indent: 10px;
+
+    // Response forms are more complex, so a bit more width is nice.
+    max-width: 950px;
+
+    // Question titles can be rather long.
+    label.main {
+      flex: 0 0 $label-width;
+
+      .code {
+        font-weight: normal;
+        color: $light-gray;
+        margin-top: 2px;
+        margin-bottom: -5px;
+      }
+    }
+
+    div.no-value {
+      color: $light-gray;
+    }
+
+    // Need to compete with specificity in main form style.
+    .form-field.qtype_location .control .widget {
+      input {
+        width: 300px;
+        display: inline-block;
+      }
+
+      a.edit_location_link img {
+        vertical-align: bottom;
+      }
+    }
+
+    .form-field.qtype_date, .form-field.qtype_time, .form-field.qtype_datetime {
+      .control .widget select {
+        width: 75px;
+        display: inline-block;
+      }
+    }
+
+    .form-field.qtype_select_multiple .control .widget {
+      vertical-align: top !important;
+    }
+
+    // Long text qs in read-only mode marked .lengthy should use the whole column for their value.
+    // This looks nicer and prints better when the text is super long.
+    .form-field.qtype_long_text.read-only.lengthy {
+      display: block;
+
+      label.main {
+        text-align: $left;
+      }
+
+      .hint-wrapper {
+        float: $right;
+      }
+    }
+
+    div.qing-group {
+      div.qing-group-instances {
+        background-color: lighten($gray-blue, 10%);
+        border-left: 10px solid $gray-blue;
+      }
+
+      h2 {
+        margin: 0;
+        padding: 5px 0 10px 2px;
+        background-color: $gray-blue;
+
+        .hint-wrapper {
+          display: inline-block;
+        }
+
+        a.hint {
+          font-size: 9pt;
+
+          i.hint {
+            color: $white !important;
+            font-size: 17px;
+          }
+        }
+
+        a.remove-instance {
+          display: inline-block;
+          float: right;
+          margin: 0 10px;
+        }
+
+        div.popover {
+          color: $body-text-color;
+        }
+      }
+
+      a.add-instance {
+        display: inline-block;
+        margin: 5px 0 10px 0;
+
+        &, & i {
+          color: #aaa !important;
+        }
+      }
+
+      /* Indented groups */
+      .form-field {
+        $nested-block-padding: 10px;
+
+        label.main {
+          width: $label-width - $group-indent;
+
+          // Since there is now a left border, having the text right up against it looks bad.
+          padding-#{$left}: $nested-block-padding;
+        }
+
+        // For long text qs in read-only mode, the control is on its own line, so it needs some padding.
+        &.qtype_long_text.read-only.lengthy .control {
+          padding: 0 $nested-block-padding;
+        }
+      }
+    }
+  }
+}
