@@ -68,14 +68,6 @@ module ResponsesHelper
     end
   end
 
-  # builds a small inline form consisting of a dropdown for choosing a Form to which to submit a new response
-  def new_response_mini_form(visible = true)
-    form_tag(new_response_path, method: :get, id: "form_chooser", style: visible ? "" : "display: none") do
-      select_tag(:form_id, sel_opts_from_objs(@pubd_forms, name_method: :full_name, tags: true),
-        prompt: t("form.choose_form"), onchange: "this.form.submit()")
-    end
-  end
-
   # takes a recent count (e.g. [5, "week"]) and translates it
   def translate_recent_responses(count)
     if count.nil?
