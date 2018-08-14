@@ -9,7 +9,8 @@
     class="node"
     id="<%= node_id %>"
     data-qing-id="<%= node.form_item.id %>"
-    data-qtype-name="<%= node.form_item.qtype_name %>">
+    data-qtype-name="<%= node.form_item.qtype_name %>"
+    data-path="<%= new_context.path.join("-") %>">
 
     <% if node.is_a?(AnswerSet) %>
       <%= render("hierarchical_responses/answers/answer_set", set: node, context: new_context) %>
