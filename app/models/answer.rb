@@ -175,20 +175,9 @@ class Answer < ResponseNode
     value.present? && value.size >= 1000
   end
 
-  # relevant defaults to true until set otherwise
-  def relevant?
-    @relevant.nil? ? true : @relevant
-  end
-  alias_method :relevant, :relevant?
-
-  # A flag indicating whether the answer is relevant and should thus be validated.
-  # convert string 'true'/'false' to boolean
-  def relevant=(r)
-    @relevant = r.is_a?(String) ? r == "true" : r
-  end
-
   # Checks if answer must be non-empty to be valid.
-  # Non-first-rank answers are currently not required even if their questioning is required (i.e. partial answers allowed).
+  # Non-first-rank answers are currently not required even if their questioning is required
+  # (i.e. partial answers allowed).
   def required_and_relevant?
     required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
   end

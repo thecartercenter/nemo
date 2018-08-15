@@ -4,15 +4,35 @@
 class ResponseNode < ApplicationRecord
   self.table_name = "answers"
 
+  attr_accessor :relevant
+
   belongs_to :form_item, inverse_of: :answers, foreign_key: "questioning_id"
   belongs_to :response
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
   before_save do
-    children.each { |c| c.response_id = response_id }
+    children.each do |c|
+      if !c.relevant? || c._destroy
+        c.destroy
+      else
+        c.response_id = response_id
+      end
+    end
+    # update inst_nums. inst_num and this block will go away with answer_arranger
+    children.reject(&:destroyed?).sort_by(&:new_rank).each_with_index do |c, i|
+      new_inst_num =
+        if c.parent.is_a?(AnswerGroupSet) # repeat group
+          i + 1
+        elsif %w[Answer AnswerSet AnswerGroupSet].include?(type)
+          c.parent.inst_num
+        else
+          1
+        end
+      c.inst_num = new_inst_num
+    end
   end
 
-  after_save { self.children.each {|c| c.save} }
+  after_save { children.each(&:save) }
 
   validates_associated :children
 
@@ -30,6 +50,11 @@ class ResponseNode < ApplicationRecord
     chunks << " InstNum: #{inst_num}"
     chunks << " NewRank: #{new_rank}"
     "\n#{chunks.join}#{child_tree}"
+  end
+
+  # relevant defaults to true until set otherwise
+  def relevant?
+    relevant.nil? ? true : relevant
   end
 
   # Answer.rb implements casted_value for answers.Duck type method for non-Answer response nodes.
