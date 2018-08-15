@@ -41,14 +41,31 @@
 
   .answer-group {
     background-color: rgba(0, 0, 0, 0.05);
-    padding: 20px;
     margin-bottom: 20px;
     margin-top: 20px;
+    padding: 20px;
+  }
+
+  .group-header {
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    margin: -20px -20px 20px;
+    padding: 10px 20px;
 
     h2 {
-      background-color: $light-gray;
-      margin: -20px -20px 0;
-      padding: 10px 20px;
+      flex-grow: 1;
+      margin: 0;
     }
+
+    a.remove-repeat {
+      color: $mid-gray;
+      font-size: 11pt;
+    }
+  }
+
+  a.add-repeat {
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-top: -15px;
   }
 }

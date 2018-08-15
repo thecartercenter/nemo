@@ -1716,6 +1716,7 @@ en:
       group4_inst_num: "ItemNum4"
       group5_rank: "GroupNum5"
       group5_inst_num: "ItemNum5"
+    add_to_group: "Add To '%{group_name}'"
 
   role:
     role: "Role"

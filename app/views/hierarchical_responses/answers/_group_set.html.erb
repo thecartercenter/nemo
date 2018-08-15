@@ -1,14 +1,15 @@
 <% id = rand(9e9) %>
 <div class="answer-group-set" id="<%= id %>">
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes",
-               nodes: group_set.children,
-               context: context,
-               removable: true) %>
+    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.children,
+                                                       context: context, removable: true) %>
   </div>
 
   <% unless context.read_only? %>
-    <a href="#" class="add-repeat">Add</a>
+    <a href="#" class="add-repeat">
+      <%= icon_tag("plus") %>
+      <%= t("response.add_to_group", group_name: group_set.name) %>
+    </a>
 
     <%
     # Below we render a template based on the blank response tree
