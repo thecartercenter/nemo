@@ -105,7 +105,9 @@ describe Response do
   end
 
   context "destroying a response" do
-    let(:question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text", "select_multiple", "image"]}}]}}] }
+    let(:question_types) do
+      ["text", {repeating: {items: ["text", {repeating: {items: %w[text select_multiple image]}}]}}]
+    end
     let(:outer_form_grp) { form.c[1] }
     let(:inner_form_grp) { outer_form_grp.c[1] }
     let(:answer_values) do # for original response
