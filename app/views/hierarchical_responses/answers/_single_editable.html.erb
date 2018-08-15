@@ -1,5 +1,7 @@
 <%# show the error messages without keys %>
-<%= content_tag(:div, answer.errors.to_hash.values.join(', '), class: 'form-errors') unless answer.errors.empty? %>
+<% unless answer.errors.empty? %>
+  <%= content_tag(:div, answer.errors.to_hash.values.join(", "), class: "form-errors") %>
+<% end %>
 
 <div class="widget">
   <% case type = answer.qtype.name
@@ -7,9 +9,9 @@
 
     <%= select_tag(context.input_name(:option_node_id),
           options_from_collection_for_select(answer.first_level_option_nodes,
-          'id', 'option_name', answer.option_node_id),
+          "id", "option_name", answer.option_node_id),
           include_blank: true,
-          class: 'form-control') %>
+          class: "form-control") %>
 
   <% when "select_multiple" %>
 
@@ -53,7 +55,7 @@
 
     <%= text_field_tag(context.input_name(:value), answer.value, class: "qtype_#{type} form-control") %>
 
-    <% if type == 'location' %>
+    <% if type == "location" %>
       &nbsp;<%= action_link("edit", "#", class: "edit_location_link") if form_mode != :show %>
     <% end %>
 
