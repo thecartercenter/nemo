@@ -20,7 +20,10 @@
     <%= f.field(:form_id, type: :hidden) %>
 
     <%= render("metadata", f: f) %>
-    <%= render("hierarchical_responses/answers/nodes", nodes: [f.object.root_node], context: @context) %>
+
+    <div class="nodes">
+      <%= render("hierarchical_responses/answers/nodes", nodes: f.object.children, context: @context) %>
+    </div>
 
     <%= f.field(:incomplete, type: :check_box) if can?(:submit_incomplete, @response) %>
 

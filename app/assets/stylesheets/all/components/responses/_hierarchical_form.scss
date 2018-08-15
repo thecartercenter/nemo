@@ -38,4 +38,17 @@
     margin-bottom: 10px;
     width: 160px;
   }
+
+  .answer-group {
+    background-color: rgba(0, 0, 0, 0.05);
+    padding: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+
+    h2 {
+      background-color: $light-gray;
+      margin: -20px -20px 0;
+      padding: 10px 20px;
+    }
+  }
 }

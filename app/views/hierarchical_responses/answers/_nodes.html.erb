@@ -16,10 +16,7 @@
       <%= render("hierarchical_responses/answers/answer_set", set: node, context: new_context) %>
     <% elsif node.is_a?(AnswerGroup) %>
       <%= render("hierarchical_responses/answers/group", group: node, context: new_context) %>
-
-      <% if removable %>
-        <a href="#" class="remove-repeat">Remove</a>
-      <% end %>
+      <%= link_to(t("common.remove"), "#", class: "remove-repeat") if removable %>
     <% elsif node.is_a?(Answer) %>
       <%= render("hierarchical_responses/answers/answer", answer: node, context: new_context) %>
     <% elsif node.is_a?(AnswerGroupSet) %>
