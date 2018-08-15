@@ -1,9 +1,15 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Form do
-  let(:mission) { create(:mission) }
+  let(:missions) { create_list(:mission, 2) }
+  let(:mission) { missions.first }
+  let(:mission2) { missions.last }
   let(:user) { create(:user) }
-  let(:form) { create(:form) }
+  let(:forms) { create_list(:form, 2) }
+  let(:form) { forms.first }
+  let(:form2) { forms.last }
 
   context "API User" do
     before do
@@ -22,7 +28,6 @@ describe Form do
   end
 
   describe "validation" do
-    # Detailed testing of this validator is in own file.
     describe "DynamicPatternValidator" do
       let(:form) { build(:form, default_response_name: "Item: calc($Foo + 4) ") }
 
@@ -34,8 +39,6 @@ describe Form do
   end
 
   describe "pub_changed_at" do
-    let(:form) { create(:form) }
-
     it "should be nil on create" do
       expect(form.pub_changed_at).to be_nil
     end
@@ -60,8 +63,6 @@ describe Form do
   end
 
   describe "odk_download_cache_key", :odk do
-    let(:form) { create(:form) }
-
     before { publish_and_reset_pub_changed_at }
 
     it "should be correct" do
@@ -70,9 +71,6 @@ describe Form do
   end
 
   describe "odk_index_cache_key", :odk do
-    let(:form) { create(:form) }
-    let(:form2) { create(:form) }
-
     before do
       publish_and_reset_pub_changed_at(save: true)
       publish_and_reset_pub_changed_at(form: form2, diff: 30.minutes, save: true)
@@ -85,8 +83,6 @@ describe Form do
     end
 
     context "for mission with no forms" do
-      let(:mission2) { create(:mission) }
-
       before do
         create(:form, mission: mission2) # Unpublished
       end
