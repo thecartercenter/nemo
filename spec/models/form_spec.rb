@@ -147,7 +147,6 @@ describe Form do
     end
   end
 
-
   describe "destroy_questionings" do
     it "should work" do
       f = create(:form, question_types: %w[integer decimal decimal integer])
