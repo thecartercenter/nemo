@@ -83,9 +83,7 @@ describe Form do
     end
 
     context "for mission with no forms" do
-      before do
-        create(:form, mission: mission2) # Unpublished
-      end
+      before { create(:form, mission: mission2) }
 
       it "should be correct" do
         expect(Form.odk_index_cache_key(mission: mission2)).to eq "odk-form-list/mission-#{mission2.id}/no-pubd-forms"
@@ -93,60 +91,58 @@ describe Form do
     end
   end
 
-  describe "root_group" do
-    let(:mission) { create(:mission) }
-
-    it "has a root group when created from factory" do
-      form = create(:form, mission: mission, question_types: ["integer", ["text", "text"], "text"])
-      expect(form.root_group).to_not be_nil
-    end
-  end
-
-  describe "ancestry" do
-    let(:mission) { create(:mission) }
+  context "multiple question types" do
     let(:form) { create(:form, mission: mission, question_types: ["integer", ["text", "text"], "text"]) }
 
-    it "has 3 children" do
-      expect(form.root_group.sorted_children.count).to eq 3
+    describe "root_group" do
+      it "has a root group when created from factory" do
+        expect(form.root_group).to_not be_nil
+      end
     end
 
-    it "has one subgroup with two children" do
-      expect(form.root_group.sorted_children[1].sorted_children.count).to eq 2
+    describe "ancestry" do
+      it "has 3 children" do
+        expect(form.root_group.sorted_children.count).to eq 3
+      end
+
+      it "has one subgroup with two children" do
+        expect(form.root_group.sorted_children[1].sorted_children.count).to eq 2
+      end
     end
-  end
 
-  describe "destroy" do
-    let(:form) { create(:form, mission: mission, question_types: ["integer", ["text", "text"], "text"]) }
-    let(:qing_group) { form.c[1] }
-    let(:qing1) { form.c[0] }
-    let(:qing2) { form.c[2] }
+    describe "destroy" do
+      let(:qing_group) { form.c[1] }
+      let(:qing1) { form.c[0] }
+      let(:qing2) { form.c[2] }
 
-    context "forms with associations" do
-      before do
-        create(:skip_rule, source_item: qing_group, conditions_attributes: [
-          {ref_qing_id: qing1.id, op: "eq", value: "5"},
-          {ref_qing_id: qing2.id, op: "eq", value: "fish"}
-        ])
-        form.reload
+      context "forms with associations" do
+        before do
+          create(:skip_rule, source_item: qing_group, conditions_attributes: [
+            {ref_qing_id: qing1.id, op: "eq", value: "5"},
+            {ref_qing_id: qing2.id, op: "eq", value: "fish"}
+          ])
+          form.reload
+        end
+
+        it "should work" do
+          form.destroy
+          expect([Form.count, FormItem.count, SkipRule.count]).to eq [0, 0, 0]
+        end
       end
 
       it "should work" do
         form.destroy
-        expect([Form.count, FormItem.count, SkipRule.count]).to eq [0, 0, 0]
+        expect([Form.count, FormItem.count]).to eq [0, 0]
+      end
+
+      it "should work with an smsable form" do
+        form.update_attributes(smsable: true)
+        form.destroy
+        expect([Form.count, FormItem.count]).to eq [0, 0]
       end
     end
-
-    it "should work" do
-      form.destroy
-      expect([Form.count, FormItem.count]).to eq [0, 0]
-    end
-
-    it "should work with an smsable form" do
-      form.update_attributes(smsable: true)
-      form.destroy
-      expect([Form.count, FormItem.count]).to eq [0, 0]
-    end
   end
+
 
   describe "destroy_questionings" do
     it "should work" do
