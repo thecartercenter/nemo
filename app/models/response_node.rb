@@ -23,7 +23,7 @@ class ResponseNode < ApplicationRecord
       new_inst_num =
         if c.parent.is_a?(AnswerGroupSet) # repeat group
           i + 1
-        elsif %w[Answer AnswerSet AnswerGroupSet].include?(type)
+        elsif %w[Answer AnswerSet AnswerGroupSet].include?(c.type)
           c.parent.inst_num
         else
           1
