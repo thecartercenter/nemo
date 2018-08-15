@@ -5,6 +5,4 @@
 # Its children can be Answers, AnswerSets, AnswerGroups, or AnswerGroupSets.
 class AnswerGroup < ResponseNode
   belongs_to :qing_group, foreign_key: :questioning_id
-
-  alias form_item qing_group
 end
