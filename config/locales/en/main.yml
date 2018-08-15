@@ -1093,6 +1093,11 @@ en:
       index: "Responses"
       new: "New Response"
       show: "Response: %{id}"
+    hierarchical_responses:
+      edit: "Edit Response: %{id}"
+      index: "Responses"
+      new: "New Response"
+      show: "Response: %{id}"
     reports:
       index: "Reports"
       new: "New Report"
