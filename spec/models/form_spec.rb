@@ -3,13 +3,9 @@
 require "rails_helper"
 
 describe Form do
-  let(:missions) { create_list(:mission, 2) }
-  let(:mission) { missions.first }
-  let(:mission2) { missions.last }
+  let(:mission) { create(:mission) }
   let(:user) { create(:user) }
-  let(:forms) { create_list(:form, 2) }
-  let(:form) { forms.first }
-  let(:form2) { forms.last }
+  let(:form) { create(:form) }
 
   context "API User" do
     before do
@@ -71,6 +67,8 @@ describe Form do
   end
 
   describe "odk_index_cache_key", :odk do
+    let(:form2) { create(:form) }
+
     before do
       publish_and_reset_pub_changed_at(save: true)
       publish_and_reset_pub_changed_at(form: form2, diff: 30.minutes, save: true)
@@ -78,21 +76,27 @@ describe Form do
 
     context "for mission with forms" do
       it "should be correct" do
-        expect(Form.odk_index_cache_key(mission: get_mission)).to eq "odk-form-list/mission-#{get_mission.id}/#{form2.pub_changed_at.utc.to_s(:cache_datetime)}"
+        expect(
+          Form.odk_index_cache_key(mission: get_mission)
+        ).to eq "odk-form-list/mission-#{get_mission.id}/#{form2.pub_changed_at.utc.to_s(:cache_datetime)}"
       end
     end
 
     context "for mission with no forms" do
+      let(:mission2) { create(:mission) }
+
       before { create(:form, mission: mission2) }
 
       it "should be correct" do
-        expect(Form.odk_index_cache_key(mission: mission2)).to eq "odk-form-list/mission-#{mission2.id}/no-pubd-forms"
+        expect(
+          Form.odk_index_cache_key(mission: mission2)
+        ).to eq("odk-form-list/mission-#{mission2.id}/no-pubd-forms")
       end
     end
   end
 
   context "multiple question types" do
-    let(:form) { create(:form, mission: mission, question_types: ["integer", ["text", "text"], "text"]) }
+    let(:form) { create(:form, mission: mission, question_types: ["integer", %w[text text], "text"]) }
 
     describe "root_group" do
       it "has a root group when created from factory" do
@@ -110,7 +114,7 @@ describe Form do
       end
     end
 
-    describe "destroy" do
+    describe "destroy form" do
       let(:qing_group) { form.c[1] }
       let(:qing1) { form.c[0] }
       let(:qing2) { form.c[2] }
@@ -136,7 +140,7 @@ describe Form do
       end
 
       it "should work with an smsable form" do
-        form.update_attributes(smsable: true)
+        form.update(smsable: true)
         form.destroy
         expect([Form.count, FormItem.count]).to eq [0, 0]
       end
@@ -146,27 +150,25 @@ describe Form do
 
   describe "destroy_questionings" do
     it "should work" do
-      f = create(:form, question_types: %w(integer decimal decimal integer))
+      f = create(:form, question_types: %w[integer decimal decimal integer])
       f.destroy_questionings(f.root_questionings[1..2])
       f.reload
 
       # make sure they're gone and ranks are ok
       expect(f.root_questionings.count).to eq(2)
-      expect(f.root_questionings.map(&:rank)).to eq([1,2])
+      expect(f.root_questionings.map(&:rank)).to eq([1, 2])
     end
   end
 
   describe "has_repeat_group?" do
     context "for empty form" do
-      let(:form) { create(:form) }
-
       it "should be false" do
         expect(form.has_repeat_group?).to be false
       end
     end
 
     context "for form with non-repeat group" do
-      let(:form) { create(:form, question_types: ["text", ["text", "text"]]) }
+      let(:form) { create(:form, question_types: ["text", %w[text text]]) }
 
       it "should be false" do
         expect(form.has_repeat_group?).to be false
@@ -174,7 +176,7 @@ describe Form do
     end
 
     context "for form with repeat group" do
-      let(:form) { create(:form, question_types: ["text", {repeating: {items: ["text", "text"]}}]) }
+      let(:form) { create(:form, question_types: ["text", {repeating: {items: %w[text text]}}]) }
 
       it "should be true" do
         expect(form.has_repeat_group?).to be true
