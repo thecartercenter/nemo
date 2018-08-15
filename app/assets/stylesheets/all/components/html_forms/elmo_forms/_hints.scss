@@ -1,0 +1,22 @@
+.elmo-form .hint-wrapper {
+  flex: 0 0 30px;
+  order: 10; // Move it to the end of the line.
+  text-align: center;
+
+  a.hint {
+    display: inline-block;
+    margin-top: 6px;
+    white-space: nowrap;
+
+    i.hint {
+      color: $theme-main;
+      display: inline-block;
+      font-size: 1.5em;
+
+      // Right padding is so things look ok when there is a bg color.
+      padding: 0 3px;
+
+      vertical-align: middle;
+    }
+  }
+}

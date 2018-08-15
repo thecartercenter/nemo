@@ -1,0 +1,20 @@
+// Informational blocks like the data integrity warnings.
+.form-warning {
+  margin: 10px 0;
+
+  i {
+    display: block;
+    float: $left;
+    font-size: 14px;
+    margin-top: 1px;
+  }
+
+  & > div {
+    margin-#{$left}: 20px;
+  }
+}
+
+// Let integirty warnings have standard width in modals, else they overflow.
+.modal .form-warning {
+  width: inherit;
+}

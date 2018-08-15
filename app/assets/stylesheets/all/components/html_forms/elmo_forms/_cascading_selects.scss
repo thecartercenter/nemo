@@ -1,0 +1,36 @@
+div.cascading-selects {
+  .level {
+    margin-bottom: 3px;
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  label, .option-level {
+    display: block !important;
+    font-size: 8pt;
+    margin-bottom: 3px;
+    color: #888888;
+    padding: 0;
+  }
+}
+
+.read-only div.cascading-selects {
+  label, .option-level {
+    margin-bottom: 0px;
+  }
+
+  .option-name {
+    margin-bottom: 5px;
+
+    i { // For blank values
+      font-style: normal;
+      color: $lighter-gray;
+    }
+  }
+
+  > div:last-child .option-name {
+    margin-bottom: 0;
+  }
+}
