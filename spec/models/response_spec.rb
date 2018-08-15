@@ -103,4 +103,41 @@ describe Response do
       end
     end
   end
+
+  context "destroying a response" do
+    let(:question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text", "select_multiple", "image"]}}]}}] }
+    let(:outer_form_grp) { form.c[1] }
+    let(:inner_form_grp) { outer_form_grp.c[1] }
+    let(:answer_values) do # for original response
+      [
+        "A",
+        {repeating: [
+          [
+            "B",
+            {repeating: [["C", %w[Dog], create(:media_image)]]}
+          ],
+          [
+            "D",
+            {repeating: [["E", %w[Cat Dog], create(:media_image)], ["F", %w[Cat], create(:media_image)]]}
+          ]
+        ]}
+      ]
+    end
+    let(:user) { create(:user) }
+    let(:form) { create(:form, question_types: question_types) }
+    let(:response) { create(:response, user: user, form: form, answer_values: answer_values) }
+
+    it "destroys nested response tree nodes, media, choices" do
+      expect(Choice.all.count).to eq 0
+      expect(Media::Image.all.count).to eq 0
+      response # create response
+      expect(Choice.all.count).to be > 0
+      expect(Media::Image.all.count).to be > 0
+      expect(Answer.where(response_id: response.id, type: "Answer").count).to eq 12
+      response.destroy
+      expect(Answer.where(response_id: response.id).count).to eq 0
+      expect(Choice.all.count).to eq 0
+      expect(Media::Image.all.count).to eq 0
+    end
+  end
 end
