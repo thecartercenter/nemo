@@ -6,6 +6,7 @@
     <%= hidden_field_tag context.input_name(:id), set.id %>
     <%= hidden_field_tag context.input_name(:type), "AnswerSet" %>
     <%= hidden_field_tag context.input_name(:questioning_id), set.questioning_id %>
+    <%= hidden_field_tag context.input_name(:_relevant), "true", class: "relevant" %>
     <%= hidden_field_tag context.input_name(:_destroy), "false" %>
   <% end %>
 

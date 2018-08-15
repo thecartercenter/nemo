@@ -15,7 +15,7 @@
 
     <%# render a checkbox for each possible choice %>
     <%= render(partial: "hierarchical_responses/answers/choice",
-      locals: { context: context },
+      locals: {context: context},
       collection: answer.all_choices,
       class: "form-control") %>
 

@@ -8,6 +8,7 @@
   <% unless context.read_only? %>
     <%= hidden_field_tag context.input_name(:id), group.id %>
     <%= hidden_field_tag context.input_name(:type), "AnswerGroup" %>
+    <%= hidden_field_tag context.input_name(:_relevant), "true", class: "relevant" %>
     <%= hidden_field_tag context.input_name(:_destroy), "false" %>
   <% end %>
 
