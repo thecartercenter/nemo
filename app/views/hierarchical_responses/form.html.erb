@@ -15,7 +15,7 @@
 <% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <div id="response-form-wrapper">
-  <%= elmo_form_for(@response, read_only: @read_only) do |f| %>
+  <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form") do |f| %>
 
     <%= top_action_links(@response, :except => :new) %>
 
