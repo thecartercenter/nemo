@@ -29,7 +29,7 @@ feature "hierarhcical response form display logic", js: true do
       idx = qings.keys.index(field[0])
       path = [idx] + field[1]
       parts = path.zip(["children"] * (path.length - 1)).flatten.compact
-      id = "response_root_#{parts.join("_")}_value"
+      id = "response_root_#{parts.join('_')}_value"
     end
     within(selector_for(qing, path)) do
       case qing.qtype_name
@@ -105,9 +105,11 @@ feature "hierarhcical response form display logic", js: true do
       # respect the full instance descriptor, not just a single number.
       (1..inst_count).each do |inst|
         if (visible_fields[qing] || []).include?(inst)
-          expect(find(selector_for(qing))).to be_visible, lambda { "Expected #{qing.full_dotted_rank} #{qing.code} #{qing.qtype_name} to be visible, but is hidden."}
+          msg = "Expected #{qing.full_dotted_rank} #{qing.code} #{qing.qtype_name} to be visible, but is hidden."
+          expect(find(selector_for(qing))).to be_visible, -> { msg }
         else
-          expect(find(selector_for(qing), visible: false)).not_to be_visible, lambda{"Expected #{qing.full_dotted_rank} #{qing.code} #{qing.qtype_name} to be hidden, but is visible."}
+          msg = "Expected #{qing.full_dotted_rank} #{qing.code} #{qing.qtype_name} to be hidden, but is visible."
+          expect(find(selector_for(qing), visible: false)).not_to be_visible, -> { msg }
         end
       end
     end
@@ -139,94 +141,112 @@ feature "hierarhcical response form display logic", js: true do
       {}.tap do |qings|
         qings[:long_text] = create_questioning("long_text", form)
 
-        qings[:text1] = create_questioning("text", form, display_if: "all_met",
+        qings[:text1] = create_questioning("text", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:long_text].id, op: "eq", value: "foo"}
-        ])
+          ])
 
-        qings[:integer] = create_questioning("integer", form, display_if: "all_met",
+        qings[:integer] = create_questioning("integer", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:text1].id, op: "neq", value: "bar"}
-        ])
+          ])
 
-        qings[:counter] = create_questioning("counter", form, display_if: "all_met",
+        qings[:counter] = create_questioning("counter", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:integer].id, op: "gt", value: "10"}
-        ])
+          ])
 
         qings[:text2] = create_questioning("text", form)
 
-        qings[:decimal] = create_questioning("decimal", form, display_if: "all_met",
+        qings[:decimal] = create_questioning("decimal", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:counter].id, op: "gt", value: "5"}
-        ])
+          ])
 
-        qings[:select_one] = create_questioning("select_one", form, display_if: "all_met",
+        qings[:select_one] = create_questioning("select_one", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:decimal].id, op: "eq", value: "21.72"}
-        ])
+          ])
 
         oset = qings[:select_one].option_set
-        qings[:mlev_sel_one] = create_questioning("multilevel_select_one", form, display_if: "all_met",
+        qings[:mlev_sel_one] = create_questioning("multilevel_select_one", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:select_one].id, op: "eq", option_node_id: oset.node("Dog").id}
-        ])
+          ])
 
         oset = qings[:mlev_sel_one].option_set
-        qings[:geo_sel_one] = create_questioning("geo_multilevel_select_one", form, display_if: "all_met",
+        qings[:geo_sel_one] = create_questioning("geo_multilevel_select_one", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:mlev_sel_one].id, op: "eq", option_node_id: oset.node("Plant", "Tulip").id}
-        ])
+          ])
 
         oset = qings[:geo_sel_one].option_set
-        qings[:select_multiple] = create_questioning("select_multiple", form, display_if: "all_met",
+        qings[:select_multiple] = create_questioning("select_multiple", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:geo_sel_one].id, op: "eq", option_node_id: oset.node("Canada").id}
-        ])
+          ])
 
         oset = qings[:select_multiple].option_set
-        qings[:datetime] = create_questioning("datetime", form, display_if: "all_met",
+        qings[:datetime] = create_questioning("datetime", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:select_multiple].id, op: "inc", option_node_id: oset.node("Cat").id}
-        ])
+          ])
 
-        qings[:date] = create_questioning("date", form, display_if: "all_met",
+        qings[:date] = create_questioning("date", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:datetime].id, op: "lt", value: "#{year}-01-01 5:00:21"}
-        ])
+          ])
 
-        qings[:time] = create_questioning("time", form, display_if: "all_met",
+        qings[:time] = create_questioning("time", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:date].id, op: "eq", value: "#{year}-03-22"}
-        ])
+          ])
 
-        qings[:text3] = create_questioning("text", form, display_if: "all_met",
+        qings[:text3] = create_questioning("text", form,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:time].id, op: "geq", value: "3:00pm"}
-        ])
+          ])
 
         qings[:grp1] = create_questioning("text", form, parent: group)
 
-        qings[:rpt1] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
+        qings[:rpt1] = create_questioning("text", form,
+          parent: rpt_group,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:text3].id, op: "eq", value: "baz"} # References top level Q
-        ])
+          ])
 
-        qings[:rpt2] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
+        qings[:rpt2] = create_questioning("text", form,
+          parent: rpt_group,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:rpt1].id, op: "eq", value: "qux"} # References same group Q
-        ])
+          ])
 
-        qings[:rpt3] = create_questioning("text", form, parent: rpt_group, display_if: "all_met",
+        qings[:rpt3] = create_questioning("text", form,
+          parent: rpt_group,
+          display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:grp1].id, op: "eq", value: "nix"} # References Q from sibling group
-        ])
+          ])
       end
     end
 
     scenario "various conditions on questionings should work" do
       visit_new_hierarchical_response_page
-      visible = [:long_text, :text2, :grp1]
+      visible = %i[long_text text2 grp1]
       fill_and_expect_visible(:long_text, "fo", visible)
 
       # integer also becomes available here because it depends on text1 not being bar,
@@ -243,14 +263,14 @@ feature "hierarhcical response form display logic", js: true do
       fill_and_expect_visible(:decimal, "21.72", visible << :select_one)
       fill_and_expect_visible(:select_one, "Cat", visible)
       fill_and_expect_visible(:select_one, "Dog", visible << :mlev_sel_one)
-      fill_and_expect_visible(:mlev_sel_one, ["Plant"], visible)
-      fill_and_expect_visible(:mlev_sel_one, ["Plant", "Oak"], visible)
-      fill_and_expect_visible(:mlev_sel_one, ["Plant", "Tulip"], visible << :geo_sel_one)
-      fill_and_expect_visible(:geo_sel_one, ["Ghana"], visible)
-      fill_and_expect_visible(:geo_sel_one, ["Canada"], visible << :select_multiple)
-      fill_and_expect_visible(:geo_sel_one, ["Canada", "Ottawa"], visible)
-      fill_and_expect_visible(:select_multiple, ["Dog"], visible)
-      fill_and_expect_visible(:select_multiple, ["Dog", "Cat"], visible << :datetime)
+      fill_and_expect_visible(:mlev_sel_one, %w[Plant], visible)
+      fill_and_expect_visible(:mlev_sel_one, %w[Plant Oak], visible)
+      fill_and_expect_visible(:mlev_sel_one, %w[Plant Tulip], visible << :geo_sel_one)
+      fill_and_expect_visible(:geo_sel_one, %w[Ghana], visible)
+      fill_and_expect_visible(:geo_sel_one, %w[Canada], visible << :select_multiple)
+      fill_and_expect_visible(:geo_sel_one, %w[Canada Ottawa], visible)
+      fill_and_expect_visible(:select_multiple, %w[Dog], visible)
+      fill_and_expect_visible(:select_multiple, %w[Dog Cat], visible << :datetime)
       fill_and_expect_visible(:datetime, "#{year}-01-01 5:00:21", visible)
       fill_and_expect_visible(:datetime, "#{year}-01-01 5:00:20", visible << :date)
       fill_and_expect_visible(:date, "#{year}-03-21", visible)
@@ -269,7 +289,7 @@ feature "hierarhcical response form display logic", js: true do
       fill_and_expect_visible([:rpt1, [1, 0]], "qux", visible << [:rpt2, [1]])
 
       # Changing value in grp1 should make *both* rpt3s disappear.
-      fill_and_expect_visible([:grp1, [0]], "pix", visible -= [[:rpt3, [0]], [:rpt3, [1]]])
+      fill_and_expect_visible([:grp1, [0]], "pix", visible - [[:rpt3, [0]], [:rpt3, [1]]])
     end
   end
 
@@ -300,12 +320,14 @@ feature "hierarhcical response form display logic", js: true do
       end
 
       before do
-        group.update_attributes!(display_if: "all_met",
+        group.update!(
+          display_if: "all_met",
           display_conditions_attributes: [{
             ref_qing_id: qings[:test].id,
             op: "eq",
             value: "foo"
-          }])
+          }]
+        )
       end
 
       scenario "should hide group members until conditions met" do
@@ -321,7 +343,7 @@ feature "hierarhcical response form display logic", js: true do
 
       scenario "conditions should all need to be met" do
         visit_new_hierarchical_response_page
-        visible = [:q1, :q2]
+        visible = %i[q1 q2]
         fill_and_expect_visible(:q1, "10", visible)
         fill_and_expect_visible(:q2, "20", visible)
 
@@ -342,7 +364,7 @@ feature "hierarhcical response form display logic", js: true do
 
       scenario "only one condition should need to be met" do
         visit_new_hierarchical_response_page
-        visible = [:q1, :q2]
+        visible = %i[q1 q2]
 
         fill_and_expect_visible(:q1, "10", visible)
         fill_and_expect_visible(:q2, "20", visible)
