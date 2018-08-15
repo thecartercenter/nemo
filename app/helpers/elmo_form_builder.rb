@@ -210,7 +210,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # generates html for a field label
   def elmo_field_label(field_name, options)
     label_str = options[:label] || @object.class.human_attribute_name(field_name)
-    label_html = "".html_safe << (options[:required] ? @template.reqd_sym << " " : "") << label_str << ":"
+    label_html = "".html_safe << (options[:required] ? @template.reqd_sym << " " : "") << label_str
     label(field_name, label_html, class: "main")
   end
 
