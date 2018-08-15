@@ -2,18 +2,17 @@ require "rails_helper"
 
 describe Form do
   let(:mission) { create(:mission) }
+  let(:user) { create(:user) }
+  let(:form) { create(:form) }
 
   context "API User" do
-    let(:api_user) { create(:user) }
-    let(:mission) { create(:mission, name: "test mission") }
-    let(:form) { create(:form, mission: mission, name: "something", access_level: "protected") }
-
     before do
-      form.whitelistings.create(user_id: api_user.id)
+      form.access_level = "protected"
+      form.whitelistings.create(user_id: user.id)
     end
 
     it "should return true for user in whitelist" do
-      expect(form.api_user_id_can_see?(api_user.id)).to be_truthy
+      expect(form.api_user_id_can_see?(user.id)).to be_truthy
     end
 
     it "should return false for user not in whitelist" do
