@@ -110,7 +110,7 @@ div.form-field {
       white-space: nowrap;
 
       i.hint {
-        display: inline-block;
+        display: inline-block !important;
         color: $theme-main;
         font-size: 1.5em;
         vertical-align: middle;
