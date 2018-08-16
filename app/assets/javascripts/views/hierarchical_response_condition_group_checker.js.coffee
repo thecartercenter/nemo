@@ -2,13 +2,12 @@
 class ELMO.Views.HierarchicalResponseConditionGroupChecker extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
-    @manager = options.manager
     @conditionGroup = options.group
     @checkers = @conditionGroup.members.map (m) =>
       if m.type == "ConditionGroup"
-        new ELMO.Views.HierarchicalResponseConditionGroupChecker(el: @el, manager: @manager, group: m)
+        new ELMO.Views.HierarchicalResponseConditionGroupChecker(el: @el, refresh: options.refresh, group: m)
       else
-        new ELMO.Views.HierarchicalResponseConditionChecker(el: @el, manager: @manager, condition: m)
+        new ELMO.Views.HierarchicalResponseConditionChecker(el: @el, refresh: options.refresh, condition: m)
 
     # Unlike the manager and the leaf node checkers, do NOT do anything to initialize here. The manager takes
     # care of that by calling refresh in its initialization.

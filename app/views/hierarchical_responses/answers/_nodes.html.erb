@@ -27,8 +27,7 @@
     <% end %>
   </div>
 
-  <%# Setup condition js. %>
-  <%# Note that we need to do this in any form mode, even show. %>
+  <%# Setup conditional logic %>
   <% if @condition_computer.present? %>
     <% response_condition_group = @condition_computer.condition_group_for(node.form_item) %>
     <% unless response_condition_group.empty? %>
