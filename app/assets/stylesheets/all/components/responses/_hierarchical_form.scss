@@ -39,6 +39,10 @@
     width: 160px;
   }
 
+  .answer-group-set {
+    counter-reset: item;
+  }
+
   .answer-group {
     background-color: rgba(0, 0, 0, 0.05);
     margin-bottom: 20px;
@@ -60,6 +64,13 @@
     a.remove-repeat {
       color: $mid-gray;
       font-size: 11pt;
+    }
+  }
+
+  .answer-group.repeat-item > .group-header {
+    h2::after {
+      counter-increment: item;
+      content: " (" counter(item) ")";
     }
   }
 
