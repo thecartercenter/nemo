@@ -1,0 +1,63 @@
+.response-form {
+  $darkening-gray: rgba(0, 0, 0, 0.05);
+
+  max-width: 1000px;
+
+  .answer-group {
+    background-color: $darkening-gray;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    padding: 20px;
+  }
+
+  .group-header {
+    background-color: $darkening-gray;
+    display: flex;
+    margin: -20px -20px 20px;
+    padding: 10px 20px;
+
+    h2 {
+      flex-grow: 1;
+      margin: 0;
+    }
+
+    a.remove-repeat {
+      color: $mid-gray;
+      font-size: 11pt;
+    }
+  }
+
+  .hint {
+    color: $mid-gray;
+    font-style: italic;
+  }
+
+  label {
+    display: flex;
+
+    .title {
+      flex-grow: 1;
+    }
+
+    .reqd-sym {
+      color: $orange;
+      display: inline;
+      font-size: 125%;
+      font-weight: bold;
+      line-height: 5px;
+      vertical-align: middle;
+    }
+
+    .code {
+      color: $mid-gray;
+      display: inline-block;
+      font-weight: normal;
+    }
+  }
+
+  a.add-repeat {
+    display: inline-block;
+    margin-bottom: 20px;
+    margin-top: -15px;
+  }
+}

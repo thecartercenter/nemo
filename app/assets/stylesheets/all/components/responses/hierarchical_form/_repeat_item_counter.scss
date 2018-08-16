@@ -1,0 +1,12 @@
+.response-form {
+  .answer-group-set {
+    counter-reset: item;
+  }
+
+  .answer-group.repeat-item > .group-header {
+    h2::after {
+      counter-increment: item;
+      content: " (" counter(item) ")";
+    }
+  }
+}

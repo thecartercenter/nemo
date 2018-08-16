@@ -1,0 +1,20 @@
+.response-form {
+  .answer-map {
+    display: none;
+    float: $right;
+    height: 80px;
+    margin-bottom: 10px;
+    width: 160px;
+  }
+
+  .form-field {
+    &.qtype-date,
+    &.qtype-time,
+    &.qtype-datetime {
+      .control .widget select {
+        display: inline-block;
+        width: 75px;
+      }
+    }
+  }
+}
