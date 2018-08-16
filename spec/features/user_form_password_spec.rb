@@ -218,6 +218,12 @@ feature "user form password field" do
           include_examples("generating new password")
           include_examples("entering new password")
         end
+
+        context "enumerator can see login instructions after he resets his password" do
+          let(:actor) { create(:user, role_name: :enumerator, mission: mission) }
+
+          include_examples("generating new password")
+        end
       end
 
       context "coordinator" do
