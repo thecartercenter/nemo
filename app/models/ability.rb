@@ -110,7 +110,7 @@ class Ability
           end
 
           # Enumerators can edit themselves in mission mode even if they're not currently assigned.
-          can [:update, :login_instructions, :change_assignments], User, id: user.id
+          can :login_instructions, User, id: user.id
 
           # only need these abilities if not also a staffer
           unless role_in_mission?(:staffer)
