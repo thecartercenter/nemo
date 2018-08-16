@@ -82,6 +82,16 @@
     }
   }
 
+  .form-field {
+    &.qtype-date,
+    &.qtype-time,
+    &.qtype-datetime {
+      .control .widget select {
+        display: inline-block;
+        width: 75px;
+      }
+    }
+  }
 
   a.add-repeat {
     display: inline-block;

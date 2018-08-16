@@ -1,5 +1,5 @@
 <% answer = Results::AnswerDecorator.new(answer) %>
-<div class="answer form-field answer_field qtype_<%= answer.qtype.name %>
+<div class="answer form-field answer-field qtype-<%= answer.qtype.name %>
             <%= context.read_only? ? "read-only" : "editable" %>
             <%= answer.lengthy? ? "lengthy" : "" %>">
 
