@@ -1,3 +1,4 @@
+<% answer = Results::AnswerDecorator.new(answer) %>
 <div class="answer form-field answer_field qtype_<%= answer.qtype.name %>
             <%= context.read_only? ? "read-only" : "editable" %>
             <%= answer.lengthy? ? "lengthy" : "" %>">
@@ -11,6 +12,7 @@
   <% end %>
 
   <%= render("hierarchical_responses/answers/answer_info", node: answer, context: context) %>
+  <%= content_tag(:div, answer.hint, class: "hint") %>
 
   <div class="control">
     <% partial = context.read_only? ? "single_read_only" : "single_editable" %>

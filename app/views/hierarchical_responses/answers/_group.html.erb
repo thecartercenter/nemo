@@ -1,15 +1,18 @@
+<% group = Results::AnswerGroupDecorator.new(group) %>
 <div class="answer-group">
+  <% unless context.read_only? %>
+    <%= hidden_field_tag(context.input_name(:id), group.id) %>
+    <%= hidden_field_tag(context.input_name(:type), "AnswerGroup") %>
+    <%= hidden_field_tag(context.input_name(:_destroy), "false") %>
+    <%= hidden_field_tag(context.input_name(:_relevant), "true", class: "relevant") %>
+  <% end %>
+
   <div class="group-header">
     <h2><%= group.qing_group.group_name %></h2>
     <%= link_to(icon_tag("close"), "#", class: "remove-repeat") if removable %>
   </div>
 
-  <% unless context.read_only? %>
-    <%= hidden_field_tag(context.input_name(:id), group.id) %>
-    <%= hidden_field_tag(context.input_name(:type), "AnswerGroup") %>
-    <%= hidden_field_tag(context.input_name(:_relevant), "true", class: "relevant") %>
-    <%= hidden_field_tag(context.input_name(:_destroy), "false") %>
-  <% end %>
+  <%= content_tag(:div, group.hint, class: "hint") %>
 
   <div class="children">
     <%= render("hierarchical_responses/answers/nodes", nodes: group.children, context: context) %>

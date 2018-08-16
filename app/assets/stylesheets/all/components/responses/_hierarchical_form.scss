@@ -33,7 +33,7 @@
 
   .answer-map {
     display: none;
-    float: right;
+    float: $right;
     height: 80px;
     margin-bottom: 10px;
     width: 160px;
@@ -62,6 +62,26 @@
       font-size: 11pt;
     }
   }
+
+  .hint {
+    color: $mid-gray;
+    font-style: italic;
+  }
+
+  label {
+    display: flex;
+
+    .title {
+      flex-grow: 1;
+    }
+
+    .code {
+      display: inline-block;
+      color: $mid-gray;
+      font-weight: normal;
+    }
+  }
+
 
   a.add-repeat {
     display: inline-block;
