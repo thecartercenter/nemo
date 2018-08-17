@@ -3,7 +3,7 @@
 
   max-width: 1000px;
 
-  .answer-group {
+  .answer-group, .answer-set, .answer {
     background-color: $darkening-gray;
     padding: 20px;
   }
@@ -15,12 +15,13 @@
     padding: 10px 20px;
 
     h2 {
+      color: $gray-text;
       flex-grow: 1;
       margin: 0;
     }
 
     a.remove-repeat {
-      color: $mid-gray;
+      color: $gray-text;
       font-size: 11pt;
     }
   }
@@ -34,7 +35,7 @@
   }
 
   .hint {
-    color: $mid-gray;
+    color: $gray-text;
     font-style: italic;
   }
 
@@ -63,7 +64,7 @@
     }
 
     .code {
-      color: $mid-gray;
+      color: $gray-text;
       display: inline-block;
       font-weight: normal;
     }

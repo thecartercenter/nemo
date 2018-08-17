@@ -1,6 +1,5 @@
-form.response_form {
-
-  // TODO: Reduce duplication between thumbnail and dz-preview
+.response-form {
+    // TODO: Reduce duplication between thumbnail and dz-preview
   .media-thumbnail {
     margin: 0;
     width: inherit;
@@ -28,7 +27,7 @@ form.response_form {
   .dropzone {
     cursor: pointer;
     min-height: 50px;
-    border: 1px dashed #ccc;
+    border: 1px dashed $mid-gray;
     padding: 5px;
 
     &.dz-max-files-reached {
@@ -41,7 +40,7 @@ form.response_form {
     }
 
     &.dz-drag-hover {
-      background: $super-light-gray;
+      background: $light-gray;
     }
 
     .dz-preview {
@@ -69,7 +68,7 @@ form.response_form {
       }
 
       .dz-size {
-        color: $light-gray;
+        color: $gray-text;
 
         strong {
           font-weight: normal;
@@ -90,7 +89,7 @@ form.response_form {
     }
 
     a.hint, span.message {
-      color: $light-gray;
+      color: $gray-text;
     }
 
     a.hint {

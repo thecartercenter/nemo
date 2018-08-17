@@ -1,29 +1,30 @@
 .responses_show {
-  // Text responses with paragraphs in show mode
-  .form-field.qtype_long_text, .form-field.qtype_text {
+  .elmo-form {
+    // Text responses with paragraphs in show mode
+    .form-field.qtype_long_text, .form-field.qtype_text {
+      .control {
+        p:first-child {
+          margin-top: 0;
+        }
 
-    .control {
-      p:first-child {
-        margin-top: 0;
-      }
-
-      p:last-child {
-        margin-bottom: 0;
+        p:last-child {
+          margin-bottom: 0;
+        }
       }
     }
-  }
 
-  .answer-map {
-    display: none;
-    width: 160px;
-    height: 80px;
-    float: right;
-    margin-bottom: 10px;
+    .answer-map {
+      display: none;
+      width: 160px;
+      height: 80px;
+      float: right;
+      margin-bottom: 10px;
+    }
   }
 }
 
 .responses_new, .responses_edit {
-  form.response_form {
+  form.elmo-form.response_form {
     $label-width: 300px;
     $group-indent: 10px;
 
@@ -143,6 +144,115 @@
           padding: 0 $nested-block-padding;
         }
       }
+    }
+
+    // TODO: Reduce duplication between thumbnail and dz-preview
+    .media-thumbnail {
+      margin: 0;
+      width: inherit;
+      display: block;
+      height: 100px;
+
+      i.fa {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 16px;
+      }
+
+      img {
+        display: block;
+        float: left;
+        width: 100px;
+        height: 100px;
+      }
+
+      .links {
+        margin-left: 105px;
+      }
+    }
+
+    .dropzone {
+      cursor: pointer;
+      min-height: 50px;
+      border: 1px dashed #ccc;
+      padding: 5px;
+
+      &.dz-max-files-reached {
+        cursor: default;
+      }
+
+      &.dz-started {
+        border: none;
+        padding: 0;
+      }
+
+      &.dz-drag-hover {
+        background: $super-light-gray;
+      }
+
+      .dz-preview {
+        margin: 0;
+        width: inherit;
+        display: block;
+        height: 100px;
+
+        img {
+          display: block;
+          float: left;
+          width: 100px;
+          height: 100px;
+          margin-right: 5px;
+        }
+
+        i.fa {
+          display: block;
+          margin-bottom: 5px;
+          font-size: 16px;
+        }
+
+        .dz-details {
+          margin-left: 105px;
+        }
+
+        .dz-size {
+          color: $light-gray;
+
+          strong {
+            font-weight: normal;
+          }
+        }
+
+        .dz-progress .dz-upload {
+          background: $theme-main;
+        }
+
+        &.dz-success .dz-progress .dz-upload {
+          background: $theme-main-darker;
+        }
+
+        .dz-progress {
+          margin: 5px 0;
+        }
+      }
+
+      a.hint, span.message {
+        color: $light-gray;
+      }
+
+      a.hint {
+        text-decoration: underline;
+      }
+
+      div.error-msg {
+        display: none;
+        color: $theme-red;
+        margin-top: 5px;
+      }
+    }
+
+    #upload-progress-notice {
+      display: none;
+      font-style: italic;
     }
   }
 }
