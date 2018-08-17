@@ -4,6 +4,7 @@ module IconHelper
     broadcast: "bullhorn",
     clone: "copy",
     destroy: "trash-o",
+    drop_pin: "map-marker",
     edit: "pencil",
     export: "download",
     import: "upload",

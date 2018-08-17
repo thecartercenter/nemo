@@ -45,11 +45,13 @@
 
     input {
       flex-grow: 1;
+      max-width: 500px;
     }
 
     a {
       margin-#{$left}: 5px;
-      line-height: 30px;
+      font-size: 20px;
+      line-height: 32px;
     }
   }
 
