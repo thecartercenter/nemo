@@ -5,7 +5,7 @@ class ELMO.Views.HierarchicalResponseConditionChecker extends ELMO.Views.Applica
     @refresh = options.refresh
     @condition = options.condition
 
-    @rqElement = @qingElement(@condition.refQingId)
+    @rqElement = @refQingElement(@$el, @condition.refQingId)
     @rqType = @rqElement.data('qtype-name')
     @result = true
 
@@ -56,11 +56,8 @@ class ELMO.Views.HierarchicalResponseConditionChecker extends ELMO.Views.Applica
       when 'ninc' then actual.indexOf(expected) == -1
       else false
 
-  qingElement: (qingId) ->
-    @refQingElement(@$el, qingId)
-
-  # We walk up the node tree until a child node contains the given qing ID
-  # Once found we return the first matching child
+  # We walk up the node tree until a descendant node contains the given qing ID.
+  # Once found we return the first matching child.
   refQingElement: (srcElement, refQingId) ->
     parent = srcElement.parent().closest(".node")
     return null unless parent.length > 0
