@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 module Results
-  class AnswerDecorator < ApplicationDecorator
-    delegate_all
+  class AnswerDecorator < ResponseNodeDecorator
+    def classes
+      "answer form-field qtype-#{qtype_name.dasherize} #{mode_class}"
+    end
 
     def hint
       question_hint = questioning.hint&.chomp(".")&.concat(".")

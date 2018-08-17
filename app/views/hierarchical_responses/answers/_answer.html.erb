@@ -1,7 +1,5 @@
-<% answer = Results::AnswerDecorator.new(answer) %>
-<div class="answer form-field answer-field qtype-<%= answer.qtype.name %>
-            <%= context.read_only? ? "read-only" : "editable" %>
-            <%= answer.lengthy? ? "lengthy" : "" %>">
+<% answer = Results::AnswerDecorator.new(answer, context) %>
+<div class="<%= answer.classes %>">
 
   <% unless context.read_only? %>
     <%= hidden_field_tag context.input_name(:id), answer.id %>

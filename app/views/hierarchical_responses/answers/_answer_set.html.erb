@@ -1,6 +1,5 @@
-<div class="form-field answer-field qtype-<%= set.questioning.qtype.name %>
-            <%= context.read_only? ? "read-only" : "editable" %>
-            <%= set.children.any?(&:lengthy?) ? "lengthy" : "" %>">
+<% set = Results::AnswerSetDecorator.new(set, context) %>
+<div class="<%= set.classes %>">
 
   <% unless context.read_only? %>
     <%= hidden_field_tag context.input_name(:id), set.id %>

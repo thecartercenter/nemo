@@ -60,7 +60,7 @@ class Answer < ResponseNode
 
   accepts_nested_attributes_for(:choices)
 
-  delegate :question, :qtype, :required?, :hidden?, :multimedia?,
+  delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
     :option_set, :options, :first_level_option_nodes, :condition, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
