@@ -11,25 +11,9 @@ class ResponseNode < ApplicationRecord
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
   before_save do
-    children.each do |c|
-      if !c.relevant? || c._destroy
-        c.destroy
-      else
-        c.response_id = response_id
-      end
-    end
-    # update inst_nums. inst_num and this block will go away with answer_arranger
-    children.reject(&:destroyed?).sort_by(&:new_rank).each_with_index do |c, i|
-      new_inst_num =
-        if c.parent.is_a?(AnswerGroupSet) # repeat group
-          i + 1
-        elsif %w[Answer AnswerSet AnswerGroupSet].include?(c.type)
-          c.parent.inst_num
-        else
-          1
-        end
-      c.inst_num = new_inst_num
-    end
+    destroy_obsolete_children
+    propogate_response_id
+    update_inst_nums
   end
 
   after_save { children.each(&:save) }
@@ -37,6 +21,7 @@ class ResponseNode < ApplicationRecord
   validates_associated :children
 
   alias c children
+  alias destroy? _destroy
 
   def debug_tree(indent: 0)
     child_tree = children.map { |c| c.debug_tree(indent: indent + 1) }.join
@@ -71,5 +56,34 @@ class ResponseNode < ApplicationRecord
   # convert string 'true'/'false' to boolean
   def _destroy=(d)
     @destroy = d.is_a?(String) ? d == "true" : d
+  end
+
+  def propogate_response_id
+    children.reject(&:destroyed?).each do |c|
+      c.response_id = response_id
+    end
+  end
+
+  def destroy_obsolete_children
+    children.each do |c|
+      if !c.relevant? || c._destroy
+        c.destroy
+      end
+    end
+  end
+
+  # TODO: remove. inst_num and this block will go away with answer_arranger
+  def update_inst_nums
+    children.reject(&:destroyed?).sort_by(&:new_rank).each_with_index do |c, i|
+      new_inst_num =
+        if c.parent.is_a?(AnswerGroupSet) # repeat group
+          i + 1
+        elsif %w[Answer AnswerSet AnswerGroupSet].include?(c.type)
+          c.parent.inst_num
+        else
+          1
+        end
+      c.inst_num = new_inst_num
+    end
   end
 end
