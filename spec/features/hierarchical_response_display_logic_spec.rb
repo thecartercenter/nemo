@@ -17,6 +17,7 @@ feature "hierarhcical response form display logic", js: true do
     let(:year) { Time.zone.now.year - 2 }
     let(:group) { create(:qing_group, form: form) }
     let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
+    let(:nested_group) { create(:qing_group, form: form, repeatable: true, parent: rpt_group) }
     let!(:qings) do
       {}.tap do |qings|
         qings[:long_text] = create_questioning("long_text", form)
@@ -121,6 +122,13 @@ feature "hierarhcical response form display logic", js: true do
           display_conditions_attributes: [
             {ref_qing_id: qings[:grp1].id, op: "eq", value: "nix"} # References Q from sibling group
           ])
+
+        qings[:rpt4] = create_questioning("integer", form,
+          parent: nested_group,
+          display_if: "all_met",
+          display_conditions_attributes: [
+            {ref_qing_id: qings[:grp1].id, op: "geq", value: 5}
+          ])
       end
     end
 
@@ -159,9 +167,20 @@ feature "hierarhcical response form display logic", js: true do
       fill_and_expect_visible(:time, "15:00:00", visible << :text3)
       fill_and_expect_visible(:text3, "baz", visible << [:rpt1, inst: [0]])
       fill_and_expect_visible([:rpt1, [0, 0]], "qux", visible << [:rpt2, [0]])
-      fill_and_expect_visible([:grp1, [0]], "nix", visible << [:rpt3, inst: [0]])
+      fill_and_expect_visible([:grp1, [0]], "nix", visible << [:rpt3, [0]])
+      fill_and_expect_visible([:rpt1, [0, 0]], "4", visible - [:rpt4, [0]])
+      fill_and_expect_visible([:rpt1, [0, 0]], "5", visible << [:rpt4, [0]])
 
-      find("a.add-repeat").click
+      all(:css, "a.add-repeat").last.click # top-level repeat
+
+      # first instance of rpt4 should still be visible
+      expect_visible(visible << [:rpt4, [0]])
+
+      # second instance of rpt4 not visible since second instance of rpt1 is blank
+      expect_visible(visible - [:rpt4, [1]])
+
+      # after filling in second instance of rpt1 with proper value, second instance of rpt4 becomes visible
+      fill_and_expect_visible([:rpt1, [1, 0]], "5", visible << [:rpt4, [0]] << [:rpt4, [1]])
 
       # rpt1 and rpt3 depend on q's outside of the repeat group so their visibility should match instance 1
       expect_visible(visible << [:rpt1, [1]] << [:rpt3, [1]])
