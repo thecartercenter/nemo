@@ -35,6 +35,11 @@
 //= require dropzone
 //= require ckeditor/init
 //= require select2
+//= require trumbowyg/trumbowyg
+//= require trumbowyg/langs/ar.min
+//= require trumbowyg/langs/es.min
+//= require trumbowyg/langs/fr.min
+//= require trumbowyg/langs/ko.min
 
 // Global
 //= require core_ext/jquery_ext

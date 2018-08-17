@@ -7,6 +7,22 @@
     width: 160px;
   }
 
+  .qtype-long-text {
+    .textarea-wrapper {
+      // Ensure background of WYSIWYG editor is white.
+      background-color: $white;
+    }
+
+    .trumbowyg-box {
+      margin: 0;
+    }
+
+    .trumbowyg-box,
+    .trumbowyg-editor {
+      min-height: 150px; // Overriding 300px in plugin SCSS.
+    }
+  }
+
   .qtype-date,
   .qtype-time,
   .qtype-datetime {
