@@ -5,8 +5,6 @@
 
   .answer-group {
     background-color: $darkening-gray;
-    margin-bottom: 20px;
-    margin-top: 20px;
     padding: 20px;
   }
 
@@ -27,9 +25,25 @@
     }
   }
 
+  .node {
+    margin-bottom: 20px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
   .hint {
     color: $mid-gray;
     font-style: italic;
+  }
+
+  .answer-group > .hint {
+    margin-bottom: 20px;
+  }
+
+  .answer > .hint {
+    margin-bottom: 5px;
   }
 
   label {
@@ -44,8 +58,8 @@
       display: inline;
       font-size: 125%;
       font-weight: bold;
-      line-height: 5px;
-      vertical-align: middle;
+      line-height: 16px;
+      margin-#{$right}: 5px;
     }
 
     .code {
@@ -57,7 +71,6 @@
 
   a.add-repeat {
     display: inline-block;
-    margin-bottom: 20px;
-    margin-top: -15px;
+    margin-top: 5px;
   }
 }
