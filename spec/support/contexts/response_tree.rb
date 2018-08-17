@@ -36,7 +36,7 @@ shared_context "response tree" do
       id: id,
       type: "Answer",
       questioning_id: q_id,
-      relevant: relevant
+      _relevant: relevant
     }.merge(values)
     hash[:_destroy] = destroy unless destroy.nil?
     hash
@@ -44,11 +44,12 @@ shared_context "response tree" do
 
   # Builds a hash for an answer group node in a web response's hash representation of an answer heirarchy
   def web_answer_group_hash(q_id, children, relevant: "true", destroy: nil, id: "")
+
     hash = {
       id: id,
       type: "AnswerGroup",
       questioning_id: q_id,
-      relevant: relevant,
+      _relevant: relevant,
       children: children
     }
     hash[:_destroy] = destroy unless destroy.nil?
