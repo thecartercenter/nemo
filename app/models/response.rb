@@ -82,7 +82,7 @@ class Response < ApplicationRecord
   delegate :c, to: :root_node
 
   def destroy_answer_tree
-    root_node.destroy
+    root_node.destroy if root_node.present?
   end
 
   # remove previous checkouts by a user
