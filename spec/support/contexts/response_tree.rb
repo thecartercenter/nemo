@@ -44,7 +44,6 @@ shared_context "response tree" do
 
   # Builds a hash for an answer group node in a web response's hash representation of an answer heirarchy
   def web_answer_group_hash(q_id, children, relevant: "true", destroy: nil, id: "")
-
     hash = {
       id: id,
       type: "AnswerGroup",

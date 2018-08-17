@@ -74,7 +74,8 @@ module Results
     end
 
     def ignore_node?(web_hash_node)
-      web_hash_node[:id].blank? && (web_hash_node[:_relevant] == "false" || web_hash_node[:_destroy] == "true")
+      web_hash_node[:id].blank? &&
+        (web_hash_node[:_relevant] == "false" || web_hash_node[:_destroy] == "true")
     end
 
     # Rank and inst_num will go away at end of answer refactor
