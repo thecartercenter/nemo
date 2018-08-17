@@ -65,11 +65,7 @@ class ResponseNode < ApplicationRecord
   end
 
   def destroy_obsolete_children
-    children.each do |c|
-      if !c.relevant? || c._destroy
-        c.destroy
-      end
-    end
+    children.destroy(children.select(&:irrelevant_or_marked_destroy?))
   end
 
   # TODO: remove. inst_num and this block will go away with answer_arranger
@@ -85,5 +81,9 @@ class ResponseNode < ApplicationRecord
         end
       c.inst_num = new_inst_num
     end
+  end
+
+  def irrelevant_or_marked_destroy?
+    !relevant? || destroy?
   end
 end
