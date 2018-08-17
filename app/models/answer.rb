@@ -21,7 +21,6 @@ class Answer < ResponseNode
 
   LOCATION_ATTRIBS = %i(latitude longitude altitude accuracy)
 
-  acts_as_paranoid
 
   # Convert value to tsvector for use in full text search.
   trigger.before(:insert, :update) do

@@ -131,7 +131,6 @@ describe Response do
 
     it "destroys nested response tree nodes, media, choices" do
       expect(ResponseNode.count).to eq 0
-      expect(Answer.count).to eq 0
       expect(Choice.all.count).to eq 0
       expect(Media::Image.all.count).to eq 0
       response # create response
@@ -143,8 +142,7 @@ describe Response do
       expect(Media::Image.count).to be > 0
 
       response.destroy
-      expect(ResponseNode.count).to eq 12
-      expect(Answer.count).to eq 0
+      expect(ResponseNode.count).to eq 0
       expect(Choice.count).to eq 0
       expect(Media::Image.count).to eq 0
     end

@@ -4,6 +4,8 @@
 class ResponseNode < ApplicationRecord
   self.table_name = "answers"
 
+  acts_as_paranoid
+
   attr_accessor :relevant
 
   belongs_to :form_item, inverse_of: :answers, foreign_key: "questioning_id"
@@ -84,6 +86,6 @@ class ResponseNode < ApplicationRecord
   end
 
   def irrelevant_or_marked_destroy?
-    !relevant? || destroy?
+    !relevant? || _destroy
   end
 end
