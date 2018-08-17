@@ -11,8 +11,14 @@ module Results
       super(object)
     end
 
+    private
+
     def mode_class
       form_context.read_only? ? "read-only" : "editable"
+    end
+
+    def error_class
+      "with-error" if invalid?
     end
   end
 end

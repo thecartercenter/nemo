@@ -3,7 +3,7 @@
 module Results
   class AnswerDecorator < ResponseNodeDecorator
     def classes
-      "answer form-field qtype-#{qtype_name.dasherize} #{mode_class}"
+      ["answer", "form-field", "qtype-#{qtype_name.dasherize}", mode_class, error_class].compact.join(" ")
     end
 
     def hint

@@ -1,0 +1,17 @@
+.response-form {
+  $error-bg-color: #ffdddd;
+
+  .with-error {
+    &.answer,
+    &.answer-set {
+      background-color: $error-bg-color;
+    }
+  }
+
+  .form-errors {
+    color: $theme-red;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: 5px;
+  }
+}

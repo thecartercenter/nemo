@@ -1,0 +1,14 @@
+.response-form {
+  .hint {
+    color: $gray-text;
+    font-style: italic;
+  }
+
+  .answer-group > .hint {
+    margin-bottom: 20px;
+  }
+
+  .answer > .hint {
+    margin-bottom: 5px;
+  }
+}

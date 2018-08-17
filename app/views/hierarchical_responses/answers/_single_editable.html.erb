@@ -1,5 +1,5 @@
 <%# show the error messages without keys %>
-<% unless answer.errors.empty? %>
+<% if answer.invalid? %>
   <%= content_tag(:div, answer.errors.to_hash.values.join(", "), class: "form-errors") %>
 <% end %>
 

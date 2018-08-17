@@ -1,5 +1,7 @@
 <% # Show the error messages without keys %>
-<%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), class: 'form-errors') unless answer_set.errors.empty? %>
+<% if answer_set.invalid? %>
+  <%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), class: "form-errors") %>
+<% end %>
 
 <div class="cascading-selects" id="cascading-selects-<%= context.input_id %>">
   <% answer_set.children.each_with_index do |answer, index| %>
@@ -14,13 +16,8 @@
         <%= answer.option_set.level_name_for_depth(index + 1) %>
         <%= select_tag(context.add(index).input_name(:option_node_id),
               options_from_collection_for_select(
-                answer_set.option_node_path.nodes_for_depth(index + 1),
-                'id',
-                'option_name',
-                answer.try(:option_node_id)
-              ),
-              include_blank: true,
-              class: 'form-control') %>
+                answer_set.option_node_path.nodes_for_depth(index + 1), "id", "option_name",
+                  answer.try(:option_node_id)), include_blank: true, class: "form-control") %>
       </label>
     </div>
   <% end %>
