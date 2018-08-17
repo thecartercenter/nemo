@@ -130,16 +130,23 @@ describe Response do
     let(:response) { create(:response, user: user, form: form, answer_values: answer_values) }
 
     it "destroys nested response tree nodes, media, choices" do
+      expect(ResponseNode.count).to eq 0
+      expect(Answer.count).to eq 0
       expect(Choice.all.count).to eq 0
       expect(Media::Image.all.count).to eq 0
       response # create response
-      expect(Choice.all.count).to be > 0
-      expect(Media::Image.all.count).to be > 0
-      expect(Answer.where(response_id: response.id, type: "Answer").count).to eq 12
+      # 21 response nodes comes from:
+      # 12 answers, 3 inner grps, 2 inner grp sets, 2 outer grp, 1 outer  grp set, 1 root grp
+      expect(ResponseNode.count).to eq 21
+      expect(Answer.count).to eq 12
+      expect(Choice.count).to be > 0
+      expect(Media::Image.count).to be > 0
+
       response.destroy
-      expect(Answer.where(response_id: response.id).count).to eq 0
-      expect(Choice.all.count).to eq 0
-      expect(Media::Image.all.count).to eq 0
+      expect(ResponseNode.count).to eq 12
+      expect(Answer.count).to eq 0
+      expect(Choice.count).to eq 0
+      expect(Media::Image.count).to eq 0
     end
   end
 end
