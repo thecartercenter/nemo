@@ -1,6 +1,15 @@
 form {
   .select2-container--default.select2-container--focus .select2-selection--multiple,
-  .select2-container--default .select2-selection--multiple {
-    border-color: #ccc;
+  .select2-container--default .select2-selection--multiple,
+  .select2-container--default .select2-selection--single {
+    border-color: $input-border;
+    border-radius: $input-border-radius;
+    font-size: $font-size-base;
+  }
+
+  .select2-container--default .select2-selection--single {
+    color: $input-color;
+    height: $input-height-base;
+    padding: 2px;
   }
 }
