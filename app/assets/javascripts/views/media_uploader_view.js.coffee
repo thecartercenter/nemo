@@ -5,7 +5,7 @@ class ELMO.Views.MediaUploaderView extends ELMO.Views.ApplicationView
     @delete_path = options.delete_path
     @generic_thumb_path = options.generic_thumb_path
     @id_field = @$('input')
-    @manager = ELMO.media_uploader_manager
+    @manager = ELMO.mediaUploaderManager
 
     @dropzone = new Dropzone(@zone_id, {
       url: @post_path

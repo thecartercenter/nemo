@@ -1,18 +1,13 @@
-<%# load the mapping API %>
-<% content_for(:per_page_js){ javascript_google_maps } %>
-
-<%# title includes ID if defined %>
+<% content_for(:per_page_js, javascript_google_maps) %>
 <% @title_args = {id: @response.decorate.shortcode} %>
 
 <%# This needs to be up here so it runs before the MediaUploaderViews are initialized. %>
 <%= javascript_doc_ready do %>
-  ELMO.media_uploader_manager = new ELMO.Views.MediaUploaderManager(<%=json(
+  ELMO.mediaUploaderManager = new ELMO.Views.MediaUploaderManager(<%=json(
     el: ".response_form",
     preview_template: render("responses/answers/dropzone_preview")
   )%>);
 <% end %>
-
-<% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
 
 <div id="response-form-wrapper">
   <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form") do |f| %>
@@ -22,7 +17,7 @@
     <%= render("metadata", f: f) %>
 
     <div class="nodes">
-      <%= render("hierarchical_responses/answers/nodes", nodes: f.object.children, context: @context) %>
+      <%= render("hierarchical_responses/answers/nodes", nodes: @response.children, context: @context) %>
     </div>
 
     <%= f.field(:incomplete, type: :check_box) if can?(:submit_incomplete, @response) %>
@@ -30,7 +25,8 @@
     <div class="submit-buttons">
       <%= f.submit(class: "btn btn-primary") %>
       <% if form_mode == :edit && can?(:review, @response) %>
-        <%= f.submit(t("response.save_and_mark_reviewed"), class: "btn btn-primary", name: "commit_and_mark_reviewed", read_only: false) %>
+        <%= f.submit(t("response.save_and_mark_reviewed"),
+              class: "btn btn-primary", name: "commit_and_mark_reviewed", read_only: false) %>
       <% end %>
       <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
         <%= image_tag("load-ind-small.gif") %>

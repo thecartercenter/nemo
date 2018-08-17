@@ -6,7 +6,7 @@
 
 <%# This needs to be up here so it runs before the MediaUploaderViews are initialized. %>
 <%= javascript_doc_ready do %>
-  ELMO.media_uploader_manager = new ELMO.Views.MediaUploaderManager(<%=json(
+  ELMO.mediaUploaderManager = new ELMO.Views.MediaUploaderManager(<%=json(
     el: ".response_form",
     preview_template: render("responses/answers/dropzone_preview")
   )%>);
