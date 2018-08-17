@@ -34,20 +34,19 @@
     }
   }
 
+  .reqd-sym {
+    color: $orange;
+    display: inline;
+    font-size: 125%;
+    font-weight: bold;
+    line-height: 16px;
+  }
+
   label.question-label { // As opposed to e.g. a choice
     display: flex;
 
     .title {
       flex-grow: 1;
-    }
-
-    .reqd-sym {
-      color: $orange;
-      display: inline;
-      font-size: 125%;
-      font-weight: bold;
-      line-height: 16px;
-      margin-#{$right}: 5px;
     }
 
     .code {
