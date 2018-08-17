@@ -32,6 +32,11 @@
 #                       ]
 #                     ]}
 #                    ]
+#
+# If an answer value is nil, no answer node is created. If the answer value is "" an answer node is
+# created with no value. Nil implies that an answer is irrelevant (the factory treats answers with nil value
+# the way parsers treat irrelevant answers.) Use "" as the value for answers that are relevant but blank.
+
 module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
   def self.build_answers(response, answer_values)
