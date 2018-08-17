@@ -56,7 +56,7 @@
     <%= text_field_tag(context.input_name(:value), answer.value, class: "qtype_#{type} form-control") %>
 
     <% if type == "location" %>
-      &nbsp;<%= action_link("edit", "#", class: "edit_location_link") if form_mode != :show %>
+      <%= action_link("edit", "#", class: "edit_location_link") %>
     <% end %>
 
   <% end %>

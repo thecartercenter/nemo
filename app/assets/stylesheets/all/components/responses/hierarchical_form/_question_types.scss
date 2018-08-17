@@ -7,13 +7,43 @@
     width: 160px;
   }
 
-  .form-field {
-    &.qtype-date,
-    &.qtype-time,
-    &.qtype-datetime {
-      .control .widget select {
-        display: inline-block;
-        width: 75px;
+  .qtype-date,
+  .qtype-time,
+  .qtype-datetime {
+    select {
+      display: inline-block;
+      width: 75px;
+    }
+  }
+
+  .qtype-integer,
+  .qtype-decimal,
+  .qtype-counter {
+    input {
+      max-width: 300px;
+    }
+  }
+
+  .qtype-location .widget {
+    display: flex;
+
+    input {
+      flex-grow: 1;
+    }
+
+    a {
+      margin-#{$left}: 5px;
+      line-height: 30px;
+    }
+  }
+
+  .qtype-select-multiple {
+    .choice {
+      margin-bottom: 5px;
+
+      label {
+        font-weight: normal;
+        margin-bottom: 0;
       }
     }
   }

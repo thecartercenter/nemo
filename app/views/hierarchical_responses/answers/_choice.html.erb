@@ -9,5 +9,9 @@
 <%# Need to set id: nil or there would be a duplicate ID %>
 <%= hidden_field_tag(context.input_name(:choices_attributes, :checked), 0, id: nil) %>
 
-<%= check_box_tag(context.input_name(:choices_attributes, :checked), 1, choice.checked?) %>
-<%= label_tag(context.input_name(:choices_attributes, :checked), choice.option_name) %><br/>
+<div class="choice">
+  <label>
+    <%= check_box_tag(context.input_name(:choices_attributes, :checked), 1, choice.checked?) %>
+    <%= choice.option_name %>
+  </label>
+</div>

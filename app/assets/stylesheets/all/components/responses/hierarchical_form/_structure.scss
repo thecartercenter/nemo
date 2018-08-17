@@ -46,7 +46,7 @@
     margin-bottom: 5px;
   }
 
-  label {
+  label.question-label { // As opposed to e.g. a choice
     display: flex;
 
     .title {
