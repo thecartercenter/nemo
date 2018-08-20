@@ -20,17 +20,22 @@
       <%= render("hierarchical_responses/answers/nodes", nodes: @response.children, context: @context) %>
     </div>
 
-    <%= f.field(:incomplete, type: :check_box) if can?(:submit_incomplete, @response) %>
-
-    <div class="submit-buttons">
-      <%= f.submit(class: "btn btn-primary") %>
-      <% if form_mode == :edit && can?(:review, @response) %>
-        <%= f.submit(t("response.save_and_mark_reviewed"),
-              class: "btn btn-primary", name: "commit_and_mark_reviewed", read_only: false) %>
-      <% end %>
-      <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
-        <%= image_tag("load-ind-small.gif") %>
-        <%= t("response.upload_progress_notice") %>
+    <div class="row">
+      <div class="col-sm-8">
+        <%= f.field(:incomplete, type: :check_box) if can?(:submit_incomplete, @response) %>
+      </div>
+      <div class="col-sm-4">
+        <div class="submit-buttons">
+          <%= f.submit(class: "btn btn-primary") %>
+          <% if form_mode == :edit && can?(:review, @response) %>
+            <%= f.submit(t("response.save_and_mark_reviewed"),
+                  class: "btn btn-primary", name: "commit_and_mark_reviewed", read_only: false) %>
+          <% end %>
+          <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
+            <%= image_tag("load-ind-small.gif") %>
+            <%= t("response.upload_progress_notice") %>
+          </div>
+        </div>
       </div>
     </div>
   <% end %>

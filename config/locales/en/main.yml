@@ -461,7 +461,7 @@ en:
         shortcode: "Response ID"
         source: "Source"
         user_id: "User/Team"
-        incomplete: "Are there missing required answers?"
+        incomplete: "This is an incomplete response"
       report/report:
         aggregation: "Operation"
         aggregation_id: "Operation"
