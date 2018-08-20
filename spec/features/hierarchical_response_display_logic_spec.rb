@@ -17,7 +17,7 @@ feature "hierarhcical response form display logic", js: true do
     let(:year) { Time.zone.now.year - 2 }
     let(:group) { create(:qing_group, form: form) }
     let(:rpt_group) { create(:qing_group, form: form, repeatable: true) }
-    let(:nested_group) { create(:qing_group, form: form, repeatable: true, parent: rpt_group) }
+
     let!(:qings) do
       {}.tap do |qings|
         qings[:long_text] = create_questioning("long_text", form)
@@ -123,12 +123,17 @@ feature "hierarhcical response form display logic", js: true do
             {ref_qing_id: qings[:grp1].id, op: "eq", value: "nix"} # References Q from sibling group
           ])
 
-        qings[:rpt4] = create_questioning("integer", form,
-          parent: nested_group,
+        nested_group = create(:qing_group,
+          form: form,
+          repeatable: true,
+          parent: rpt_group,
           display_if: "all_met",
           display_conditions_attributes: [
             {ref_qing_id: qings[:grp1].id, op: "geq", value: 5}
           ])
+
+        qings[:rpt4] = create_questioning("integer", form,
+          parent: nested_group)
       end
     end
 
