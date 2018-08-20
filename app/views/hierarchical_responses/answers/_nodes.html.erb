@@ -2,7 +2,9 @@
 <% removable = local_assigns[:removable] %>
 
 <% nodes.each_with_index do |node, index| %>
-  <% new_context = node.parent.present? ? context.add(index_placeholder ? "__INDEX__" : index) : context %>
+  <% node = Results::ResponseNodeDecorator.decorate(node, context) %>
+  <% path_element = index_placeholder ? "__INDEX__" : index %>
+  <% new_context = context.add(path_element, visible: !node.object.is_a?(AnswerGroupSet)) %>
   <% node_id = "node-#{rand(99999999)}" %>
 
   <div
@@ -10,6 +12,7 @@
     id="<%= node_id %>"
     data-qing-id="<%= node.form_item.id %>"
     data-qtype-name="<%= node.form_item.qtype_name %>"
+    data-visible-depth="<%= new_context.visible_depth %>"
     data-path="<%= new_context.path.join("-") %>">
 
     <% if node.is_a?(AnswerSet) %>

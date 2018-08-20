@@ -3,24 +3,29 @@
 module Results
   # View methods for rendering hierarchical response form
   class ResponseFormContext
-    attr_reader :path, :options
+    attr_reader :path, :options, :visible_depth
 
-    def initialize(path: [], **options)
+    def initialize(path: [], visible_depth: 0, **options)
       @path = path
       @options = options
+      @visible_depth = visible_depth
     end
 
     def read_only?
       options[:read_only] == true
     end
 
-    def add(*items)
-      self.class.new(path: path + items, **options)
+    def add(item, visible: true)
+      self.class.new(path: path + [item], visible_depth: visible_depth + (visible ? 1 : 0), **options)
+    end
+
+    def depth
+      path.size
     end
 
     def full_path
       if path.present?
-        path.zip(["children"] * (path.length - 1)).flatten.compact
+        path.zip(["children"] * (depth - 1)).flatten.compact
       else
         []
       end

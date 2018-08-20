@@ -6,6 +6,10 @@ module Results
 
     attr_accessor :form_context
 
+    def self.decorate(node, context)
+      "::Results::#{node.class}Decorator".constantize.new(node, context)
+    end
+
     def initialize(object, form_context)
       self.form_context = form_context
       super(object)

@@ -1,4 +1,3 @@
-<% group = Results::AnswerGroupDecorator.new(group, context) %>
 <div class="answer-group <%= "repeat-item" if group.repeatable? %>">
   <% unless context.read_only? %>
     <%= hidden_field_tag(context.input_name(:id), group.id) %>

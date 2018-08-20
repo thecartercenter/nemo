@@ -1,5 +1,7 @@
 .response-form {
-  $darkening-gray: rgba(0, 0, 0, 0.05);
+  $gray1: #f3f3f3;
+  $gray2: #e7e7e7;
+  $gray3: #dbdbdb;
 
   // For some reason there is about 10px of whitespace between the title-container and form.
   // Could not figure out why! Doesn't happen on other pages!
@@ -7,15 +9,45 @@
 
   max-width: 1000px;
 
+  .node[data-visible-depth="1"],
+  .node[data-visible-depth="3"],
+  .node[data-visible-depth="5"],
+  .node[data-visible-depth="7"],
+  .node[data-visible-depth="9"] {
+    > .answer-group,
+    > .answer-set,
+    > .answer {
+      background-color: $gray1;
+    }
+
+    > .answer-group > .group-header {
+      background-color: $gray2;
+    }
+  }
+
+  .node[data-visible-depth="2"],
+  .node[data-visible-depth="4"],
+  .node[data-visible-depth="6"],
+  .node[data-visible-depth="8"],
+  .node[data-visible-depth="10"] {
+    > .answer-group,
+    > .answer-set,
+    > .answer {
+      background-color: $gray2;
+    }
+
+    > .answer-group > .group-header {
+      background-color: $gray3;
+    }
+  }
+
   .answer-group,
   .answer-set,
   .answer {
-    background-color: $darkening-gray;
     padding: 20px;
   }
 
   .group-header {
-    background-color: $darkening-gray;
     display: flex;
     margin: -20px -20px 20px;
     padding: 10px 20px;
