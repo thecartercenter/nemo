@@ -5,15 +5,13 @@
   <% node = Results::ResponseNodeDecorator.decorate(node, context) %>
   <% path_element = index_placeholder ? "__INDEX__" : index %>
   <% new_context = context.add(path_element, visible: !node.object.is_a?(AnswerGroupSet)) %>
-  <% node_id = "node-#{rand(99999999)}" %>
 
   <div
     class="node"
-    id="<%= node_id %>"
     data-qing-id="<%= node.form_item.id %>"
     data-qtype-name="<%= node.form_item.qtype_name %>"
     data-visible-depth="<%= new_context.visible_depth %>"
-    data-path="<%= new_context.path.join("-") %>">
+    data-path="<%= new_context.path_str %>">
 
     <% if node.is_a?(AnswerSet) %>
       <%= render("hierarchical_responses/answers/answer_set", set: node, context: new_context) %>
@@ -33,7 +31,7 @@
     <% unless response_condition_group.empty? %>
       <%= javascript_doc_ready do %>
         new ELMO.Views.HierarchicalResponseConditionManager(<%=json(
-          el: "##{node_id}",
+          el: "[data-path='#{new_context.path_str}']",
           item: ResponseCondition::FormItemSerializer.new(
             node.form_item,
             response_condition_group: response_condition_group),

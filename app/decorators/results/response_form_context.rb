@@ -41,7 +41,7 @@ module Results
 
     # Dash separated list of indices leading to this node, e.g. "0-2-1-1-0"
     # Used for uniquely identifying DOM elements.
-    def id
+    def path_str
       path.join("-")
     end
 
