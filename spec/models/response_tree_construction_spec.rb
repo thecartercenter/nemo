@@ -41,13 +41,59 @@ describe Response do
       expect_children(saved_response.root_node.c[0], %w[Answer], [form.c[0].c[0].id], [1])
       node_to_update = saved_response.root_node.c[0].c[0]
       node_to_update.value = 3
-      puts "value after update:"
-      puts saved_response.root_node.c[0].c[0].value
       saved_response.save!
       saved_response = Response.find(response.id) # ensure all data is fresh from db
       expect_root(saved_response.root_node, form)
       expect_children(saved_response.root_node, %w[AnswerGroup Answer], form.c.map(&:id), [nil, "A"])
       expect_children(saved_response.root_node.c[0], %w[Answer], [form.c[0].c[0].id], [3])
+    end
+
+    context "nested form" do
+      let(:nested_question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text"]}}]}}] }
+      let(:nested_form) { create(:form, question_types: nested_question_types) }
+      let(:nested_response) { build(:response, form: nested_form, answer_values: nested_answer_values) }
+      let(:nested_answer_values) do
+        [
+          "A",
+          {repeating: [
+            [ # to be marked destroy
+              "B",
+              {repeating: [["C"], ["D"]]}
+            ],
+            [
+              "E", # to be marked irrelevant
+              {repeating: [["F"], ["G"]]}
+            ]
+          ]}
+        ]
+      end
+
+      it "removes irrelevant nodes and nodes marked destroy before save" do
+        node_to_destroy = nested_response.root_node.c[1].c[0]
+        node_to_destroy._destroy = true
+        expect(node_to_destroy.type).to eq "AnswerGroup"
+        expect(node_to_destroy._destroy).to be true
+
+        irrelevant_node = nested_response.root_node.c[1].c[1].c[0]
+        irrelevant_node.relevant = false
+        expect(irrelevant_node.value).to eq "E"
+        expect(irrelevant_node.relevant).to be false
+
+        nested_response.save!
+        saved_response = Response.find(nested_response.id)
+
+        expect_children( # check destroyed node removed
+          saved_response.root_node.c[1],
+          ["AnswerGroup"],
+          [nested_form.root_group.c[1].id]
+        )
+
+        expect_children( # check irrelevant node removed
+          saved_response.root_node.c[1].c[0],
+          ["AnswerGroupSet"],
+          [nested_form.root_group.c[1].c[1].id]
+        )
+      end
     end
   end
 
