@@ -1,22 +1,22 @@
 .response-form {
     // TODO: Reduce duplication between thumbnail and dz-preview
   .media-thumbnail {
-    margin: 0;
-    width: inherit;
     display: block;
     height: 100px;
+    margin: 0;
+    width: inherit;
 
     i.fa {
       display: block;
-      margin-bottom: 5px;
       font-size: 16px;
+      margin-bottom: 5px;
     }
 
     img {
       display: block;
       float: left;
-      width: 100px;
       height: 100px;
+      width: 100px;
     }
 
     .links {
@@ -25,9 +25,10 @@
   }
 
   .dropzone {
+    background-color: $white;
+    border: 1px dashed $mid-gray;
     cursor: pointer;
     min-height: 50px;
-    border: 1px dashed $mid-gray;
     padding: 5px;
 
     &.dz-max-files-reached {
@@ -35,60 +36,61 @@
     }
 
     &.dz-started {
-      border: none;
+      background-color: inherit;
+      border: 0;
       padding: 0;
     }
 
     &.dz-drag-hover {
       background: $light-gray;
     }
+  }
 
-    .dz-preview {
-      margin: 0;
-      width: inherit;
+  .dz-preview {
+    display: block;
+    height: 100px;
+    margin: 0;
+    width: inherit;
+
+    &.dz-success .dz-progress .dz-upload {
+      background: $theme-main-darker;
+    }
+
+    img {
       display: block;
+      float: left;
       height: 100px;
+      margin-right: 5px;
+      width: 100px;
+    }
 
-      img {
-        display: block;
-        float: left;
-        width: 100px;
-        height: 100px;
-        margin-right: 5px;
-      }
+    i.fa {
+      font-size: 16px;
+      margin-bottom: 5px;
+    }
 
-      i.fa {
-        display: block;
-        margin-bottom: 5px;
-        font-size: 16px;
-      }
+    .dz-details {
+      margin-left: 105px;
+    }
 
-      .dz-details {
-        margin-left: 105px;
-      }
+    .dz-size {
+      color: $gray-text;
 
-      .dz-size {
-        color: $gray-text;
-
-        strong {
-          font-weight: normal;
-        }
-      }
-
-      .dz-progress .dz-upload {
-        background: $theme-main;
-      }
-
-      &.dz-success .dz-progress .dz-upload {
-        background: $theme-main-darker;
-      }
-
-      .dz-progress {
-        margin: 5px 0;
+      strong {
+        font-weight: normal;
       }
     }
 
-    a.hint, span.message {
+    .dz-progress {
+      margin: 5px 0;
+
+      .dz-upload {
+        background: $theme-main;
+      }
+    }
+
+    a.hint,
+    span.message {
       color: $gray-text;
     }
 
@@ -97,8 +99,8 @@
     }
 
     div.error-msg {
-      display: none;
       color: $theme-red;
+      display: none;
       margin-top: 5px;
     }
   }
