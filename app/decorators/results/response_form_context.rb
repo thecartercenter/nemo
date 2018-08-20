@@ -34,11 +34,10 @@ module Results
       "response_root_" + (full_path + names).join("_")
     end
 
-    # This is used for uniquely identifying DOM elements
-    # It is similar to the input name (except does not use
-    # square brackets)
+    # Dash separated list of indices leading to this node, e.g. "0-2-1-1-0"
+    # Used for uniquely identifying DOM elements.
     def id
-      "response-root-" + path.join("-")
+      path.join("-")
     end
 
     # Find this context's path in the given response
