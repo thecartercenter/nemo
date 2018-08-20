@@ -19,6 +19,10 @@ module Results
       self.class.new(path: path + [item], visible_depth: visible_depth + (visible ? 1 : 0), **options)
     end
 
+    def index
+      path.last
+    end
+
     def depth
       path.size
     end

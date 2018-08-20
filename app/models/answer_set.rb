@@ -6,6 +6,8 @@ class AnswerSet < ResponseNode
 
   alias answers children
 
+  delegate :option_set, to: :questioning
+
   def option_node_path
     OptionNodePath.new(
       option_set: questioning.option_set,

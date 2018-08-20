@@ -5,20 +5,18 @@
 
 <div class="cascading-selects" id="cascading-selects-<%= context.input_id %>">
   <% answer_set.children.each_with_index do |answer, index| %>
+    <% level_context = context.add(index) %>
     <div class="level">
-      <%= hidden_field_tag context.add(index).input_name(:id), answer.id %>
-      <%= hidden_field_tag context.add(index).input_name(:type), "Answer" %>
-      <%= hidden_field_tag context.add(index).input_name(:questioning_id), answer.questioning_id %>
-      <%= hidden_field_tag context.add(index).input_name(:_relevant), "true" %>
-      <%= hidden_field_tag context.add(index).input_name(:_destroy), "false" %>
+      <%= hidden_field_tag(level_context.input_name(:id), answer.id) %>
+      <%= hidden_field_tag(level_context.input_name(:type), "Answer") %>
+      <%= hidden_field_tag(level_context.input_name(:questioning_id), answer.questioning_id) %>
+      <%= hidden_field_tag(level_context.input_name(:_relevant), "true") %>
+      <%= hidden_field_tag(level_context.input_name(:_destroy), "false") %>
 
-      <label>
-        <%= answer.option_set.level_name_for_depth(index + 1) %>
-        <%= select_tag(context.add(index).input_name(:option_node_id),
-              options_from_collection_for_select(
-                answer_set.option_node_path.nodes_for_depth(index + 1), "id", "option_name",
-                  answer.try(:option_node_id)), include_blank: true, class: "form-control") %>
+      <label for="<%= level_context.input_id(:option_node_id) %>">
+        <%= answer_set.level_name(level_context) %>
       </label>
+      <%= answer_set.select_tag(answer, level_context) %>
     </div>
   <% end %>
 </div>
