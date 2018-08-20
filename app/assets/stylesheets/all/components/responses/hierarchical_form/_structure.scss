@@ -1,9 +1,15 @@
 .response-form {
   $darkening-gray: rgba(0, 0, 0, 0.05);
 
+  // For some reason there is about 10px of whitespace between the title-container and form.
+  // Could not figure out why! Doesn't happen on other pages!
+  margin-top: -10px;
+
   max-width: 1000px;
 
-  .answer-group, .answer-set, .answer {
+  .answer-group,
+  .answer-set,
+  .answer {
     background-color: $darkening-gray;
     padding: 20px;
   }
@@ -15,8 +21,9 @@
     padding: 10px 20px;
 
     h2 {
-      color: $gray-text;
+      color: $body-text-color;
       flex-grow: 1;
+      font-weight: bold;
       margin: 0;
     }
 
