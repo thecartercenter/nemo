@@ -28,8 +28,9 @@
       <%= text_field_tag(context.input_name("#{type}_value"), date, class: "form-control") %>
     <% else %>
       <%= send("#{type}_select", context.input_name, :"#{type}_value",
-          {include_blank: true, include_seconds: true, object: answer, use_short_month: true},
-          class: "form-control", start_year: Time.current.year - 125, end_year: Time.current.year + 125) %>
+          {include_blank: true, include_seconds: true, object: answer, use_short_month: true,
+            start_year: Time.current.year - 125, end_year: Time.current.year + 125},
+          class: "form-control") %>
     <% end %>
 
   <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
