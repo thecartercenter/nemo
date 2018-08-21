@@ -32,7 +32,7 @@ shared_context "hierarchical response form conditional logic" do
     within(selector_for(qing, path)) do
       case qing.qtype_name
       when "long_text"
-        fill_in_ckeditor(id, with: value)
+        fill_in_trumbowyg("##{id}", with: value)
       when "select_one"
         if value.is_a?(Array)
           value.each_with_index do |o, i|
