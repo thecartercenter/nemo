@@ -109,7 +109,7 @@ class Ability
             u == user
           end
 
-          # Enumerators can edit themselves in mission mode even if they're not currently assigned.
+          # Enumerators can see their login instructions
           can :login_instructions, User, id: user.id
 
           # only need these abilities if not also a staffer
