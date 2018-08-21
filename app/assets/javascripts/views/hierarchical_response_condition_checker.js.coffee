@@ -111,7 +111,7 @@ class ELMO.Views.HierarchicalResponseConditionChecker extends ELMO.Views.Applica
         @rqElement.find('div.control input:checked').map(->
           # Given a checkbox, get the value of the associated option_node_id hidden field made by rails
           # this field is the nearest prior sibling input with name attribute ending in [option_node_id].
-          $(this).prevAll("input[name$='[option_node_id]']").first().val()
+          $(this).closest('.choice').find("input[name$='[option_node_id]']").first().val()
         ).get()
 
       when 'datetime', 'date', 'time'
