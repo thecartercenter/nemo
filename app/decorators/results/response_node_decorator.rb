@@ -15,6 +15,14 @@ module Results
       super(object)
     end
 
+    def child_context(index)
+      if root?
+        form_context
+      else
+        form_context.add(index, visible: !object.is_a?(AnswerGroupSet))
+      end
+    end
+
     private
 
     def mode_class

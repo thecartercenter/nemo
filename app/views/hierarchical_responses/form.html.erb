@@ -15,10 +15,7 @@
     <%= f.field(:form_id, type: :hidden) %>
 
     <%= render("metadata", f: f) %>
-
-    <div class="nodes">
-      <%= render("hierarchical_responses/answers/nodes", nodes: @response.children, context: @context) %>
-    </div>
+    <%= render("hierarchical_responses/answers/nodes", nodes: [@response.root_node], context: @context) %>
 
     <div class="row">
       <div class="col-sm-8">

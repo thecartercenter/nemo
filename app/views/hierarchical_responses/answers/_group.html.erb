@@ -1,4 +1,4 @@
-<div class="answer-group <%= "repeat-item" if group.repeatable? %>">
+<div class="<%= group.classes %>">
   <% unless context.read_only? %>
     <%= hidden_field_tag(context.input_name(:id), group.id) %>
     <%= hidden_field_tag(context.input_name(:type), "AnswerGroup") %>

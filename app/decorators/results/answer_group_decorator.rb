@@ -5,5 +5,12 @@ module Results
     def hint
       group_hint
     end
+
+    def classes
+      list = []
+      list << (root? ? "root-group" : "answer-group")
+      list << "repeat-item" if repeatable?
+      list.join(" ")
+    end
   end
 end
