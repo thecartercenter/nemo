@@ -60,7 +60,7 @@ class Response < ApplicationRecord
         {choices: :option},
         :option,
         :media_object,
-        { questioning: [:display_conditions, { question: :option_set } ] }
+        {form_item: [:display_conditions, {question: :option_set}]}
       ]
     },
     :user
@@ -180,8 +180,8 @@ class Response < ApplicationRecord
       end
 
       # Run the full text search and get the matching answer IDs
-      answer_ids = Answer.joins(:response, :questioning).where(attribs).
-        search_by_value(expression.values).pluck(:id)
+      answer_ids = Answer.joins(:response, :form_item).where(attribs)
+        .search_by_value(expression.values).pluck(:id)
 
       # turn into an sql fragment
       fragment = if answer_ids.present?

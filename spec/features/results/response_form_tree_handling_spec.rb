@@ -34,16 +34,9 @@ feature "response form tree handling", js: true do
     scenario "renders new form with hierarchical structure" do
       visit new_hierarchical_response_path(params)
 
-      expect_path([".answer-group", ".answer-group", ".answer input"])
-      expect_path([".answer-group", ".answer input"])
-      expect_path([".answer-group", ".cascading-selects select"])
+      expect_path([".cascading-selects select"])
       expect_path([
-        ".answer-group", ".answer-group-set",
-        ".answer-group", ".answer-group", ".answer input"
-      ])
-      expect_path([
-        ".answer-group", ".answer-group-set",
-        ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
+        ".answer-group-set", ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
       ])
     end
 
@@ -66,16 +59,9 @@ feature "response form tree handling", js: true do
       scenario "renders edit form with hierarchical structure" do
         visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
-        expect_path([".answer-group", ".answer-group", ".answer input"])
-        expect_path([".answer-group", ".answer input"])
-        expect_path([".answer-group", ".cascading-selects select"])
+        expect_path([".cascading-selects select"])
         expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group", ".answer input"
-        ])
-        expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
+          ".answer-group-set", ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
         ])
       end
 
@@ -104,24 +90,6 @@ feature "response form tree handling", js: true do
 
         expect(page).to have_content("Add", count: 2)
         expect(page).to have_content("Remove", count: 3)
-      end
-
-      scenario "renders show page with hierarchical structure" do
-        visit hierarchical_response_path(params.merge(id: response.shortcode))
-
-        # These nodes are not visible since the answers have no value
-
-        expect_path([".answer-group", ".answer-group", ".answer .ro-val"], visible: false)
-        expect_path([".answer-group", ".answer .ro-val"], visible: false)
-        expect_path([".answer-group", ".ro-val .cascading-selects"], visible: false)
-        expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group", ".answer .ro-val"
-        ], visible: false)
-        expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group-set", ".answer-group", ".answer .ro-val"
-        ], visible: false)
       end
     end
   end
