@@ -47,7 +47,7 @@ feature "question tags" do
 
   def tag_add_remove_test(options = {})
     visit options[:edit_path]
-    expect(page).to have_content "Tags:"
+    expect(page).to have_content "Tags"
 
     # Mission tags
     fill_in_token_input options[:input_id], with: "a", dont_pick: true
