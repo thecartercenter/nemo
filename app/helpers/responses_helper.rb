@@ -17,7 +17,9 @@ module ResponsesHelper
   def format_responses_field(resp, field)
     # handle special case where field is hash
     if field.is_a?(Hash)
-      format_answer(resp.answer_for(field[:question]), :table_cell)
+      if (answer = resp.answer_for(field[:question]))
+        Results::ResponseNodeDecorator.decorate(answer).formatted
+      end
     else
       case field
       when "shortcode" then link_to(resp.shortcode, path_for_with_search(resp), title: t("common.view"))

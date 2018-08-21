@@ -11,5 +11,24 @@ module Results
       drop_hint = h.t("response.drop_hint.#{qtype.name}", default: "").presence
       [question_hint, drop_hint].join(" ")
     end
+
+    def formatted
+      case qtype_name
+      when "select_one"
+        option_name
+      when "select_multiple"
+        choices.map(&:option_name).join(", ")
+      when "datetime", "date"
+        casted_value.present? ? h.l(casted_value) : nil
+      when "time"
+        time_value.present? ? h.l(time_value, format: :time_only) : nil
+      when "decimal"
+        value.present? ? format("%.2f", value.to_f) : nil
+      when "text", "long_text", "barcode"
+        h.truncate(h.sanitize(value), length: 32, escape: false)
+      when "integer", "counter", "location"
+        value
+      end
+    end
   end
 end
