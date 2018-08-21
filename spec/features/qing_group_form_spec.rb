@@ -14,10 +14,10 @@ feature "adding and editing qing group on form", js: true do
     visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
 
     click_link("Add Group")
-    fill_in("Name (English):", with: "Foo Group")
-    fill_in("Hint (English):", with: "Bar Hint")
-    fill_in("Name (Français):", with: "Fou Groupe")
-    fill_in("Hint (Français):", with: "Barre Hinte")
+    fill_in("Name (English)", with: "Foo Group")
+    fill_in("Hint (English)", with: "Bar Hint")
+    fill_in("Name (Français)", with: "Fou Groupe")
+    fill_in("Hint (Français)", with: "Barre Hinte")
 
     # Test display conditions when creating new group
     select("Display this group if all of these conditions are met", from: "qing_group_display_logic")
@@ -28,8 +28,8 @@ feature "adding and editing qing group on form", js: true do
 
     expect(page).not_to have_content("Item Name (English)")
     check("qing_group_repeatable")
-    fill_in("Item Name (English):", with: "Test Name")
-    fill_in("Item Name (Français):", with: "Nom d'essaie")
+    fill_in("Item Name (English)", with: "Test Name")
+    fill_in("Item Name (Français)", with: "Nom d'essaie")
     uncheck("qing_group_one_screen")
     within(".modal") { click_button("Save") }
 
@@ -48,7 +48,7 @@ feature "adding and editing qing group on form", js: true do
     expect(page).to have_select("qing_group_display_logic",
       selected: "Display this group if all of these conditions are met")
 
-    fill_in("Name (English):", with: "New Group Name")
+    fill_in("Name (English)", with: "New Group Name")
     within(".modal") { click_button("Save") }
     within(".form-items") { expect(page).to have_content("New Group Name") }
   end

@@ -70,7 +70,7 @@ class Response < ApplicationRecord
   scope :with_basic_assoc, -> { includes(:form, :user) }
 
   # loads only some answer info
-  scope :with_basic_answers, -> { includes(answers: {questioning: :question}) }
+  scope :with_basic_answers, -> { includes(answers: {form_item: :question}) }
 
   # loads only answers with location info
   scope :with_location_answers, -> { includes(:location_answers) }

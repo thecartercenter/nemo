@@ -13,7 +13,7 @@ class Question < ApplicationRecord
 
   belongs_to :option_set, inverse_of: :questions, autosave: true
   has_many :questionings, dependent: :destroy, autosave: true, inverse_of: :question
-  has_many :answers, through: :questionings
+  has_many :response_nodes, through: :questionings
   has_many :referring_conditions, through: :questionings
   has_many :forms, through: :questionings
   has_many :calculations, class_name: 'Report::Calculation',
@@ -137,11 +137,6 @@ class Question < ApplicationRecord
     Condition.referring_to_question(self).any?
   end
 
-  # determines if a question has answers
-  def has_answers?
-    answers.count > 0
-  end
-
   def geographic?
     location_type? || qtype_name == "select_one" && option_set.geographic?
   end
@@ -157,11 +152,11 @@ class Question < ApplicationRecord
   end
 
   def answer_count
-    is_standard? ? copies.to_a.sum(&:answer_count) : answers.count
+    is_standard? ? copies.to_a.sum(&:answer_count) : response_nodes.count
   end
 
   def has_answers?
-    answer_count > 0
+    answer_count.positive?
   end
 
   # determines if the question appears on any published forms
