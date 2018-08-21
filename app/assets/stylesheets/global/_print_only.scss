@@ -1,0 +1,23 @@
+// General layout styling for printing.
+@media print {
+  #userinfo,
+  #title,
+  #footer,
+  .top-action-links,
+  .screen,
+  nav {
+    display: none;
+  }
+
+  body,
+  #content {
+    background-color: unset;
+    margin: 0;
+    padding: 0;
+  }
+
+  @page {
+    /* print margins */
+    margin: 15mm 15mm 15mm 15mm;
+  }
+}

@@ -1,0 +1,65 @@
+#login_instructions {
+  #preamble {
+    width: 600px;
+    margin-bottom: 20px;
+  }
+
+  #instructions {
+    width: 600px;
+    border: 1px solid #888888;
+    padding: 10px;
+  }
+
+  table {
+    margin-bottom: 10px;
+  }
+
+  td {
+    font-size: 15px;
+  }
+
+  td.name {
+    width: 150px;
+    padding-bottom:8px;
+  }
+
+  td.value {
+    font-weight: bold;
+    font-family: monospace;
+    width: 300px;
+    padding-bottom: 8px;
+  }
+
+  i {
+    font-size: 16px;
+  }
+}
+
+@media print {
+  // Hide main page title.
+  .user_batches_show h1.title {
+    display: none;
+  }
+
+  #login_instructions {
+    #preamble {
+      display: none;
+    }
+
+    #instructions {
+      page-break-after: always;
+    }
+
+    .masked {
+      display: none;
+    }
+
+    .unmasked {
+      display: inline !important;
+    }
+
+    a.toggle-mask {
+      display: none;
+    }
+  }
+}

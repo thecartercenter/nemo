@@ -1,0 +1,134 @@
+@media print {
+  // The outer title on forms pages should be hidden since we include it separately.
+  .forms_index, .forms_show, .forms_edit {
+    h1.title {
+      display: none;
+    }
+  }
+
+  #printable_form {
+    h1.title {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    img.logo {
+      float: right;
+      height: .3in;
+    }
+
+    div.mission {
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      page-break-after: auto;
+
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+
+        &.conditional td {
+          color: #999;
+        }
+      }
+
+      td {
+        padding: 0 0 0 0;
+        margin-bottom: 3px;
+        /* Fractional border widths don't work on some browsers */
+        border-top: 1px solid #aaa !important;
+        font-size: 8pt;
+        line-height: 12pt;
+
+        &.name {
+          width: 50%;
+        }
+        &.answer {
+          width: 50%;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    tr.qing-group {
+      td {
+        background-color: #ddd !important;
+      }
+    }
+
+    tr.depth {
+      &.depth-2 td.name {
+        border-left: 20px solid $light-border-color;
+      }
+
+      &.depth-3 td.name {
+        border-left: 40px solid $light-border-color;
+      }
+
+      &.depth-4 td.name {
+        border-left: 60px solid $light-border-color;
+      }
+    }
+
+    div.condition {
+      font-weight: bold;
+    }
+
+    .skip-rule {
+      font-weight: bold;
+    }
+
+    div#reqd_message {
+      float: right;
+    }
+
+    div.reqd-sym {
+      display: inline-block;
+      font-weight: bold;
+      font-size: 125%;
+      line-height: 5px;
+      vertical-align: middle;
+    }
+
+    .option {
+      float: left;
+      margin-right: 20px;
+    }
+
+    .option_box, .answer_box {
+      background-color: #ccc !important;
+    }
+
+    .option_box {
+      float: left;
+      width: 0.15in;
+      height: 0.15in;
+      margin-right: 2px;
+    }
+
+    .answer_box {
+      height: 0.2in;
+    }
+
+    td.integer_answer, td.decimal_answer {
+      .answer_box {
+        width: 1.5in;
+      }
+    }
+
+    td.signature_answer .answer_box {
+      height: 0.3in;
+    }
+
+    td.sketch_answer .answer_box {
+      height: 1in;
+    }
+
+    .hint {
+      font-style: italic;
+      color: #888888;
+    }
+  }
+}

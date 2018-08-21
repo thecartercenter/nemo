@@ -312,5 +312,11 @@ div.report_edit_pane.fields {
   }
 }
 
-
 button.prev { display: none; }
+
+@media print {
+  div.report_edit_dialog,
+  div.report_edit_pane {
+    display: none !important;
+  }
+}
