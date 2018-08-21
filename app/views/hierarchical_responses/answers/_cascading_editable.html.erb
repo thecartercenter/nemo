@@ -1,14 +1,15 @@
 <% # Show the error messages without keys %>
 <%= content_tag(:div, answer_set.errors.to_hash.values.join(', '), class: 'form-errors') unless answer_set.errors.empty? %>
 
-<div class="cascading-selects" id="cascading-selects-<%= context.id %>">
+<div class="cascading-selects" id="cascading-selects-<%= context.input_id %>">
   <% answer_set.children.each_with_index do |answer, index| %>
-    <%= hidden_field_tag context.add(index).input_name(:id), answer.id %>
-    <%= hidden_field_tag context.add(index).input_name(:type), "Answer" %>
-    <%= hidden_field_tag context.add(index).input_name(:questioning_id), answer.questioning_id %>
-    <%= hidden_field_tag context.add(index).input_name(:_destroy), "false" %>
-
     <div class="level">
+      <%= hidden_field_tag context.add(index).input_name(:id), answer.id %>
+      <%= hidden_field_tag context.add(index).input_name(:type), "Answer" %>
+      <%= hidden_field_tag context.add(index).input_name(:questioning_id), answer.questioning_id %>
+      <%= hidden_field_tag context.add(index).input_name(:_relevant), "true" %>
+      <%= hidden_field_tag context.add(index).input_name(:_destroy), "false" %>
+
       <label>
         <%= answer.option_set.level_name_for_depth(index + 1) %>
         <%= select_tag(context.add(index).input_name(:option_node_id),
@@ -27,7 +28,7 @@
 
 <%= javascript_doc_ready do %>
   new ELMO.Views.CascadingSelectsView({
-    el: $('#cascading-selects-<%= context.id %>'),
+    el: $('#cascading-selects-<%= context.input_id %>'),
     option_set_id: <%=json answer_set.option_node_path.option_set.id %>
   });
 <% end %>

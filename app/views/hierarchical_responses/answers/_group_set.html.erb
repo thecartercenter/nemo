@@ -19,7 +19,7 @@
     <%= javascript_doc_ready do %>
       new ELMO.Views.ResponseFormRepeatView({
         el: $('#<%= id %>'),
-        next_index: <%= group_set.children.count %>,
+        next_index: <%= group_set.children.length %>,
         tmpl: <%= json(render("hierarchical_responses/answers/nodes",
           nodes: context.find(@blank_response).children,
           index_placeholder: true,
