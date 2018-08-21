@@ -2,8 +2,7 @@
 
 # Corresponds with a multilevel questioning. An AnswerSet's parent is an AnswerGroup. Its children are Answers
 class AnswerSet < ResponseNode
-  belongs_to :questioning
-
+  alias questioning form_item
   alias answers children
 
   delegate :option_set, to: :questioning

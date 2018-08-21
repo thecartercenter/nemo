@@ -22,7 +22,7 @@ describe OldAnswerInstance do
       before do
         # Add blank instance
         form.sorted_children[1].sorted_children.each_with_index do |qing, i|
-          response.answers.build(inst_num: 5, questioning: qing, response: response, value: "")
+          response.answers.build(inst_num: 5, form_item: qing, response: response, value: "")
         end
       end
 

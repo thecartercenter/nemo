@@ -4,7 +4,9 @@
 # An AnswerGroupSet's parent is an AnswerGroup.
 # Its children are AnswerGroups.
 class AnswerGroupSet < ResponseNode
+  alias qing_group form_item
+
   def name
-    form_item.group_name
+    qing_group.group_name
   end
 end
