@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 feature "translatable strings" do
@@ -9,7 +11,7 @@ feature "translatable strings" do
 
     # Simulate switching mission to French-only.
     # Question above with only English translation should show as blank.
-    question.mission.setting.update_attributes!(preferred_locales_str: "fr")
+    question.mission.setting.update!(preferred_locales_str: "fr")
   end
 
   scenario "should only fallback to other locales if in preferred_locales" do
@@ -28,7 +30,7 @@ feature "translatable strings" do
 
     # Enable English
     click_link("Settings")
-    fill_in("Preferred Languages:", with: "en,fr")
+    fill_in("Preferred Languages", with: "en,fr")
     click_on("Save")
 
     click_link("Questions")
