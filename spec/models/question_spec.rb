@@ -93,6 +93,24 @@ describe Question do
   end
 
   describe "validations" do
+    describe "reference url" do
+      let(:question) { build(:question, reference: ref) }
+
+      context "with valid reference" do
+        let(:ref) { "https://eos.cartercenter.org/parts/6" }
+        it "has a valid reference" do
+          expect(question).to be_valid
+        end
+      end
+
+      context "with invalid reference" do
+        let(:ref) { "www.blah" }
+        it "has an invalid reference" do
+          expect(question).not_to be_valid
+        end
+      end
+    end
+
     describe "code format" do
       let(:question) { build(:question, code: code) }
 

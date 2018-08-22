@@ -799,6 +799,7 @@ en:
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
           cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
           general: "Question is invalid (see below)."
+          valid_reference_url: "Your reference link must begin with https or http"
         questioning:
           attributes:
             code:

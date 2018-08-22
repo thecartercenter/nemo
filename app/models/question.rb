@@ -280,6 +280,6 @@ class Question < ApplicationRecord
 
   def valid_reference_url
     url = URI.parse(reference)
-    url.is_a?(URI::HTTP) || url.is_a?(URI::HTTPS)
+    errors.add(:base, :valid_reference_url) unless url.is_a?(URI::HTTP) || url.is_a?(URI::HTTPS)
   end
 end
