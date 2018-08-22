@@ -1,3 +1,5 @@
+<% context = context.add(choice_counter) %>
+
 <%= hidden_field_tag(context.input_name(:choices_attributes, :id), choice.id) unless choice.new_record? %>
 
 <%# Always include this so Condition JS can find it. %>

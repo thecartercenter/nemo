@@ -36,7 +36,7 @@ shared_context "response tree" do
       id: id,
       type: "Answer",
       questioning_id: q_id,
-      relevant: relevant
+      _relevant: relevant
     }.merge(values)
     hash[:_destroy] = destroy unless destroy.nil?
     hash
@@ -48,7 +48,7 @@ shared_context "response tree" do
       id: id,
       type: "AnswerGroup",
       questioning_id: q_id,
-      relevant: relevant,
+      _relevant: relevant,
       children: children
     }
     hash[:_destroy] = destroy unless destroy.nil?

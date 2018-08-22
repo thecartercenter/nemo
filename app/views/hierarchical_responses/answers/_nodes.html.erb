@@ -3,8 +3,15 @@
 
 <% nodes.each_with_index do |node, index| %>
   <% new_context = node.parent.present? ? context.add(index_placeholder ? "__INDEX__" : index) : context %>
+  <% node_id = "node-#{rand(99999999)}" %>
 
-  <div class="node">
+  <div
+    class="node"
+    id="<%= node_id %>"
+    data-qing-id="<%= node.form_item.id %>"
+    data-qtype-name="<%= node.form_item.qtype_name %>"
+    data-path="<%= new_context.path.join("-") %>">
+
     <% if node.is_a?(AnswerSet) %>
       <%= render("hierarchical_responses/answers/answer_set", set: node, context: new_context) %>
     <% elsif node.is_a?(AnswerGroup) %>
@@ -19,4 +26,19 @@
       <%= render("hierarchical_responses/answers/group_set", group_set: node, context: new_context) %>
     <% end %>
   </div>
+
+  <%# Setup conditional logic %>
+  <% if @condition_computer.present? %>
+    <% response_condition_group = @condition_computer.condition_group_for(node.form_item) %>
+    <% unless response_condition_group.empty? %>
+      <%= javascript_doc_ready do %>
+        new ELMO.Views.HierarchicalResponseConditionManager(<%=json(
+          el: "##{node_id}",
+          item: ResponseCondition::FormItemSerializer.new(
+            node.form_item,
+            response_condition_group: response_condition_group),
+        ) %>);
+      <% end %>
+    <% end %>
+  <% end %>
 <% end %>

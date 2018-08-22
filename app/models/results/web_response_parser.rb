@@ -61,7 +61,7 @@ module Results
         existing_node = tree_parent.children.select { |c| c.id == id }.first
         updatable_params = web_hash_node.slice(:value).permit(PERMITTED_PARAMS)
         existing_node.update(updatable_params)
-        existing_node.relevant = false if web_hash_node[:relevant] == "false"
+        existing_node.relevant = false if web_hash_node[:_relevant] == "false"
         existing_node._destroy = true if web_hash_node[:_destroy] == "true"
         existing_node
       end
@@ -74,7 +74,8 @@ module Results
     end
 
     def ignore_node?(web_hash_node)
-      web_hash_node[:id].blank? && (web_hash_node[:relevant] == "false" || web_hash_node[:_destroy] == "true")
+      web_hash_node[:id].blank? &&
+        (web_hash_node[:_relevant] == "false" || web_hash_node[:_destroy] == "true")
     end
 
     # Rank and inst_num will go away at end of answer refactor

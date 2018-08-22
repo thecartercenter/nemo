@@ -10,7 +10,8 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180626162616) do
+ActiveRecord::Schema.define(version: 20180810170823) do
+
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
@@ -68,6 +69,7 @@ ActiveRecord::Schema.define(version: 20180626162616) do
     t.datetime "updated_at"
     t.uuid "user_id"
     t.integer "user_old_id"
+    t.index ["deleted_at", "mission_id", "user_id"], name: "index_assignments_on_deleted_at_and_mission_id_and_user_id", unique: true
     t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
     t.index ["mission_id"], name: "index_assignments_on_mission_id"
     t.index ["user_id"], name: "index_assignments_on_user_id"

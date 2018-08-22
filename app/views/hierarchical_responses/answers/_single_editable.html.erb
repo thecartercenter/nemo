@@ -15,7 +15,7 @@
 
     <%# render a checkbox for each possible choice %>
     <%= render(partial: "hierarchical_responses/answers/choice",
-      context: context,
+      locals: {context: context},
       collection: answer.all_choices,
       class: "form-control") %>
 
@@ -25,7 +25,7 @@
     <% if date && (date.year < Time.current.year - 125 || date.year > Time.current.year + 125) %>
       <%= text_field_tag(context.input_name("#{type}_value"), date, class: "qtype_#{type} form-control") %>
     <% else %>
-      <%= send("#{type}_select", field_name_prefix, :"#{type}_value",
+      <%= send("#{type}_select", context.input_name, :"#{type}_value",
           {include_blank: true, include_seconds: true, object: answer, use_short_month: true},
           class: "form-control", start_year: Time.current.year - 125, end_year: Time.current.year + 125) %>
     <% end %>
@@ -40,7 +40,7 @@
 
     <%# Initialize ckeditor on doc ready. %>
     <%= javascript_doc_ready do %>
-      CKEDITOR.replace('response_answers_attributes_value');
+      CKEDITOR.replace("<%= context.input_id(:value) %>");
     <% end %>
 
   <% when "integer", "decimal", "counter" %>
