@@ -4,7 +4,7 @@ class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
 
   events:
     'click #external_sql .control a': 'select_external_sql'
-    'click .adapter-settings a': 'show_change_credential_fields'
+    'click .adapter-settings a.show-credential-fields': 'show_change_credential_fields'
     'click .using-incoming_sms_token': 'show_using_incoming_sms_token_modal'
     'click .using-universal_sms_token': 'show_using_universal_sms_token_modal'
     'click .credential-fields input[type=checkbox]:checked': 'clear_sms_fields'
