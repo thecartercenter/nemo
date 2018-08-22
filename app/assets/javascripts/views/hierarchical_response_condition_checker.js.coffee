@@ -11,10 +11,9 @@ class ELMO.Views.HierarchicalResponseConditionChecker extends ELMO.Views.Applica
 
     # These handlers must be set dynamically based on rqElement.
     @rqElement.find('div.control').find('input, select, textarea').on('change', => @checkAndTell())
-    @rqElement.find("div.control input[type=text]").on('keyup', => @checkAndTell())
-    @rqElement.find("div.control input[type=number]").on('keyup', => @checkAndTell())
-    if @rqType == 'long_text'
-      @ckeditorInstance().on('change', => @checkAndTell())
+    @rqElement.find('div.control input[type=text]').on('keyup', => @checkAndTell())
+    @rqElement.find('div.control input[type=number]').on('keyup', => @checkAndTell())
+    @textarea().on('tbwchange', => @checkAndTell()) if @rqType == 'long_text'
 
     # Set result to initial value on page load. Don't refresh because the manager calls refresh just
     # once on page load (if we 'tell' when each checker initializes, the manager would evaluate many times)
@@ -94,12 +93,8 @@ class ELMO.Views.HierarchicalResponseConditionChecker extends ELMO.Views.Applica
   actual: ->
     switch @rqType
       when 'long_text'
-        # Use ckeditor if available, else use textarea value (usually just on startup).
-        ckeditor = @ckeditorInstance()
-        content = if ckeditor then ckeditor.getData() else @rqElement.find('div.control textarea').val()
-
         # Strip wrapping <p> tag for comparison.
-        content.trim().replace(/(^<p>|<\/p>$)/ig, '')
+        @longTextContent().trim().replace(/(^<p>|<\/p>$)/ig, '')
 
       when 'integer', 'decimal', 'counter'
         parseFloat(@rqElement.find("div.control input[type=number]").val())
@@ -116,7 +111,7 @@ class ELMO.Views.HierarchicalResponseConditionChecker extends ELMO.Views.Applica
         @rqElement.find('div.control input:checked').map(->
           # Given a checkbox, get the value of the associated option_node_id hidden field made by rails
           # this field is the nearest prior sibling input with name attribute ending in [option_node_id].
-          $(this).prevAll("input[name$='[option_node_id]']").first().val()
+          $(this).closest('.choice').find("input[name$='[option_node_id]']").first().val()
         ).get()
 
       when 'datetime', 'date', 'time'
@@ -132,5 +127,12 @@ class ELMO.Views.HierarchicalResponseConditionChecker extends ELMO.Views.Applica
       when 'select_one', 'select_multiple' then @condition.optionNodeId
       else @condition.value
 
-  ckeditorInstance: ->
-    return CKEDITOR.instances[@rqElement.find("div.control textarea").attr('id')]
+  longTextContent: ->
+    # Use wysiwyg editor if available, else use textarea value (usually just on startup).
+    if @textarea().trumbowyg
+      @textarea().trumbowyg('html')
+    else
+      @textarea().val()
+
+  textarea: ->
+    @rqElement.find('div.control textarea')

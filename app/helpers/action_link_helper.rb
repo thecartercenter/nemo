@@ -93,7 +93,7 @@ module ActionLinkHelper
     t("layout.delete_warning", :obj_description => description)
   end
 
-  # returns the html for an action icon using font awesome and the mappings defined above
+  # returns the html for an action icon using font awesome and the mappings defined in IconHelper
   def action_link(action, href, html_options = {})
     # join passed html class (if any) with the default class
     html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")

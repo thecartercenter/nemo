@@ -1,0 +1,31 @@
+.responses_index .index_table {
+  td.form_id_col {
+    width: 200px;
+  }
+
+  td.user_id_col {
+    width: 150px;
+  }
+
+  // Search excerpt
+  tr.second_row td {
+    border-top: none !important;
+    padding-top: 0;
+    color: #aaa;
+
+    p {
+      margin-top: 0;
+      margin-bottom: 3px;
+    }
+
+    p:last-child {
+      margin: 0;
+    }
+  }
+}
+
+// Highlighted search match
+em.match {
+  background-color: $light-yellow;
+  font-style: normal;
+}

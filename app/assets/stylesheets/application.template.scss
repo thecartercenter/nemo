@@ -9,13 +9,14 @@
 @import "bootstrap";
 @import "font-awesome";
 @import "select2";
-@import "all/variables/basic_colors";
-@import "all/themes/@@@theme@@@";
-@import "all/variables/*";
+@import "trumbowyg";
+@import "variables/basic_colors";
+@import "themes/@@@theme@@@";
+@import "variables/**/*";
 
 // Set direction for directional variables
 $dir: @@@direction@@@;
-@import "all/directional";
+@import "directional";
 
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files
@@ -37,10 +38,5 @@ $dir: @@@direction@@@;
  *= require bootstrap-modal
  */
 
-@import "all/components/*";
-@media screen {
-  @import "screen/*"
-}
-@media print {
-  @import "print/*"
-}
+@import "global/**/*";
+@import "local/**/*";

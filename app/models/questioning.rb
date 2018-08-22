@@ -1,6 +1,8 @@
 class Questioning < FormItem
   include Replication::Replicable
 
+  alias answers response_nodes
+
   delegate :all_options, :audio_prompt, :auto_increment?, :code, :code=, :first_leaf_option_node,
     :first_leaf_option, :first_level_option_nodes, :has_options?, :hint, :level_count, :level, :levels,
     :min_max_error_msg, :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name,
@@ -23,6 +25,10 @@ class Questioning < FormItem
   # to fetch the counts for all qings on the form at once
   def has_answers?
     form.qing_answer_count(self) > 0
+  end
+
+  def answer_count
+    answers.count
   end
 
   def conditions_changed?

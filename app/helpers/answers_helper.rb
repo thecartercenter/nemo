@@ -1,30 +1,4 @@
 module AnswersHelper
-  def format_answer(answer, context)
-    return '' if answer.nil?
-
-    case answer.qtype.name
-    when "select_one"
-      answer.option.try(:name)
-    when "select_multiple"
-      answer.choices && answer.choices.map{|c| c.option.name}.join(', ')
-    when "datetime", "date"
-      answer.casted_value.present? ? I18n.l(answer.casted_value) : ''
-    when "time"
-      answer.time_value.present? ? I18n.l(answer.time_value, :format => :time_only) : ''
-    when "decimal"
-      answer.value.present? ? "%.2f" % answer.value.to_f : ''
-    when "long_text"
-      if answer.value.present?
-        value = sanitize(answer.value)
-        context == :table_cell ? truncate(value, length: 32, escape: false) : value
-      else
-        ''
-      end
-    else
-      answer.value
-    end
-  end
-
   # assuming excerpts are enclosed with {{{ ... }}}, safely converts to <em> tags and returns html_safe string
   def excerpt_to_html(str)
     html_escape(str).gsub('{{{', '<em class="match">').gsub('}}}', '</em>').html_safe

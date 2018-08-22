@@ -1,6 +1,4 @@
-<% mode = read_only ? "read_only" : "editable" %>
-<div class="answer form-field answer_field qtype_<%= answer.qtype.name %>
-            <%= context.read_only? ? "read-only" : "editable" %> <%= answer.lengthy? ? "lengthy" : "" %>">
+<div class="<%= answer.classes %>">
 
   <% unless context.read_only? %>
     <%= hidden_field_tag context.input_name(:id), answer.id %>
@@ -11,8 +9,10 @@
   <% end %>
 
   <%= render("hierarchical_responses/answers/answer_info", node: answer, context: context) %>
+  <%= content_tag(:div, answer.hint, class: "hint") %>
 
   <div class="control">
-    <%= render("hierarchical_responses/answers/single_#{mode}", answer: answer, context: context) %>
+    <% partial = context.read_only? ? "single_read_only" : "single_editable" %>
+    <%= render("hierarchical_responses/answers/#{partial}", answer: answer, context: context) %>
   </div>
 </div>

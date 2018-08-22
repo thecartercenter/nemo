@@ -17,7 +17,9 @@ module ResponsesHelper
   def format_responses_field(resp, field)
     # handle special case where field is hash
     if field.is_a?(Hash)
-      format_answer(resp.answer_for(field[:question]), :table_cell)
+      if (answer = resp.answer_for(field[:question]))
+        Results::ResponseNodeDecorator.decorate(answer).formatted
+      end
     else
       case field
       when "shortcode" then link_to(resp.shortcode, path_for_with_search(resp), title: t("common.view"))
@@ -65,14 +67,6 @@ module ResponsesHelper
         html = excerpt_to_html(e[:text])
         content_tag(:p, content_tag(:b, "[#{e[:code]}]:") << " " << html)
       end.reduce(:<<)
-    end
-  end
-
-  # builds a small inline form consisting of a dropdown for choosing a Form to which to submit a new response
-  def new_response_mini_form(visible = true)
-    form_tag(new_response_path, method: :get, id: "form_chooser", style: visible ? "" : "display: none") do
-      select_tag(:form_id, sel_opts_from_objs(@pubd_forms, name_method: :full_name, tags: true),
-        prompt: t("form.choose_form"), onchange: "this.form.submit()")
     end
   end
 

@@ -1,0 +1,12 @@
+// Style adjustments for ELMO forms in modals.
+.modal form.elmo-form {
+  // Modals typically have a limited width anyway,
+  // so it's nice to have the form fit snugly into the modal.
+  max-width: 100%;
+
+  div.form-field {
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+}

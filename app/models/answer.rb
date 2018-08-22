@@ -35,8 +35,8 @@ class Answer < ResponseNode
   end
 
   attr_accessor :location_values_replicated
+  alias questioning form_item
 
-  belongs_to :questioning, inverse_of: :answers
   belongs_to :option, inverse_of: :answers
   belongs_to :response, inverse_of: :answers, touch: true
   has_many :choices, -> { order(:created_at) }, dependent: :destroy, inverse_of: :answer, autosave: true
@@ -60,14 +60,14 @@ class Answer < ResponseNode
 
   accepts_nested_attributes_for(:choices)
 
-  delegate :question, :qtype, :required?, :hidden?, :multimedia?,
-    :option_set, :options, :first_level_option_nodes, :condition, to: :questioning
+  delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
+    :option_set, :options, :first_level_option_nodes, :condition, :parent_group_name, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
+  delegate :name, to: :option, prefix: true, allow_nil: true
   delegate :mission, to: :response
-  delegate :parent_group_name, to: :questioning
 
-  scope :public_access, -> { joins(questioning: :question).
+  scope :public_access, -> { joins(form_item: :question).
     where("questions.access_level = 'inherit'").order("form_items.rank") }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }

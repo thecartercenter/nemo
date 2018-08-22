@@ -12,12 +12,15 @@ class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
     # them to bind to
     @$el.removeAttr("id")
 
+    @toggleEmptyNotice()
+
   children: ->
     @$("> .children")
 
   addRepeat: (event) ->
     event.preventDefault()
     @children().append(@tmpl.replace(/__INDEX__/g, @next_index))
+    @toggleEmptyNotice()
     @next_index++
 
   removeRepeat: (event) ->
@@ -30,3 +33,8 @@ class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
     else
       node.hide()
       node.find('input[name$="[_destroy]"]').first().val("true")
+
+    @toggleEmptyNotice()
+
+  toggleEmptyNotice: ->
+    @$(".empty-notice").toggle(@children().find(":visible").length == 0)

@@ -1,0 +1,134 @@
+.response-form {
+  $gray1: #f3f3f3;
+  $gray2: #e7e7e7;
+  $gray3: #dbdbdb;
+
+  // For some reason there is about 10px of whitespace between the title-container and form.
+  // Could not figure out why! Doesn't happen on other pages!
+  margin-top: -10px;
+
+  max-width: 1000px;
+
+  .node[data-visible-depth="1"],
+  .node[data-visible-depth="3"],
+  .node[data-visible-depth="5"],
+  .node[data-visible-depth="7"],
+  .node[data-visible-depth="9"] {
+    > .answer-group,
+    > .answer-set,
+    > .answer {
+      background-color: $gray1;
+    }
+
+    > .answer-group > .group-header {
+      background-color: $gray2;
+    }
+
+    > .answer-group-set > .empty-notice {
+      background-color: $gray2;
+
+      > .group-header {
+        background-color: $gray3;
+      }
+    }
+  }
+
+  .node[data-visible-depth="0"],
+  .node[data-visible-depth="2"],
+  .node[data-visible-depth="4"],
+  .node[data-visible-depth="6"],
+  .node[data-visible-depth="8"],
+  .node[data-visible-depth="10"] {
+    > .answer-group,
+    > .answer-set,
+    > .answer,
+    > .empty-notice {
+      background-color: $gray2;
+    }
+
+    > .answer-group > .group-header {
+      background-color: $gray3;
+    }
+
+    > .answer-group-set > .empty-notice {
+      background-color: $gray1;
+
+      > .group-header {
+        background-color: $gray2;
+      }
+    }
+  }
+
+  .node {
+    margin-bottom: 20px;
+
+    &.root-node {
+      margin-bottom: 0;
+    }
+
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+
+  .root-group {
+    margin-top: -40px;
+  }
+
+  .answer-group,
+  .answer-set,
+  .answer,
+  .empty-notice {
+    padding: 20px;
+  }
+
+  .group-header {
+    display: flex;
+    margin: -20px -20px 20px;
+    padding: 10px 20px;
+
+    h2 {
+      color: $body-text-color;
+      flex-grow: 1;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    a.remove-repeat {
+      color: $gray-text;
+      font-size: 11pt;
+    }
+  }
+
+  .empty-notice p {
+    font-style: italic;
+    margin: 0;
+  }
+
+  .reqd-sym {
+    color: $orange;
+    display: inline;
+    font-size: 125%;
+    font-weight: bold;
+    line-height: 16px;
+  }
+
+  label.question-label { // As opposed to e.g. a choice
+    display: flex;
+
+    .title {
+      flex-grow: 1;
+    }
+
+    .code {
+      color: $gray-text;
+      display: inline-block;
+      font-weight: normal;
+    }
+  }
+
+  a.add-repeat {
+    display: inline-block;
+    margin-top: 5px;
+  }
+}

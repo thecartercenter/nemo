@@ -1,0 +1,16 @@
+.response-form {
+  @mixin group-question-hint {
+    color: $gray-text;
+    font-style: italic;
+  }
+
+  .answer-group > .hint {
+    @include group-question-hint;
+    margin-bottom: 20px;
+  }
+
+  .answer > .hint {
+    @include group-question-hint;
+    margin-bottom: 5px;
+  }
+}

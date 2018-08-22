@@ -114,7 +114,7 @@ module ResponseFactoryHelper
         set.children.build(
           {
             type: "Answer",
-            questioning: qing,
+            form_item: qing,
             option_id: option_id
           }.merge(rank_attributes("Answer", set))
         )

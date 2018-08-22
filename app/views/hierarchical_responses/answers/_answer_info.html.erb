@@ -1,16 +1,10 @@
-<% if form_mode %>
-  <%# This appears first here but is usually moved to the end using flex box %>
-  <%# We do it this way so we can move the control to its own line when printing a long text answer. %>
-  <% question_hint = node.questioning.hint.try(:chomp, ".").try(:<<, ".") %>
-  <% drop_hint = I18n.t("response.drop_hint.#{node.questioning.qtype.name}", default: "").presence %>
-  <%= hint_popover([question_hint, drop_hint].compact.join(" ")) %>
-<% end %>
-
 <% context = local_assigns[:context] %>
-
-<label class="main" for="<%= context && context.input_id(:value) %>">
-  <%= reqd_sym if node.questioning.required? %>
-  <%= node.questioning.full_dotted_rank %>.
-  <%= "[#{node.questioning.code}]" unless @response.new_record? %>
-  <%= node.questioning.name || "[#{t('answer.no_name')}]" %>
+<label class="question-label" for="<%= context && context.input_id(:value) %>">
+  <div class="title">
+    <%= reqd_sym if node.questioning.required? %>
+    <%= node.questioning.name || "[#{t('answer.no_name')}]" %>
+  </div>
+  <div class="code">
+    <%= "[#{node.questioning.code}]" %>
+  </div>
 </label>

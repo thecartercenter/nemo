@@ -8,7 +8,7 @@ class ResponseNode < ApplicationRecord
 
   attr_accessor :relevant
 
-  belongs_to :form_item, inverse_of: :answers, foreign_key: "questioning_id"
+  belongs_to :form_item, inverse_of: :response_nodes, foreign_key: "questioning_id"
   belongs_to :response
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
@@ -22,6 +22,7 @@ class ResponseNode < ApplicationRecord
 
   validates_associated :children
 
+  delegate :code, to: :form_item
   alias c children
   alias destroy? _destroy
 

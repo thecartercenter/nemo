@@ -1,0 +1,34 @@
+form.form_form {
+  div#index_table {
+    margin-top: 10px;
+  }
+
+  .sms-fields, .form_recipients {
+    display: none; // Initially hidden
+  }
+
+  ul.admin-stats {
+    list-style: none;
+    margin: 5px 0px 0px 0px;
+    padding: 0px;
+
+    li {
+      display: inline-block;
+      margin: 0px 5px 0px 0px;
+    }
+  }
+}
+
+// dl can be used for non bulleted lists of things in a read only form view.
+// These styles put 20px of space between each dt, but not on either end.
+dt {
+  margin-top: 20px;
+}
+
+dt:first-of-type {
+  margin-top: 0;
+}
+
+dl {
+  margin-bottom: 0;
+}

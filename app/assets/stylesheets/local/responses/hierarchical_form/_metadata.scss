@@ -1,0 +1,16 @@
+.response-form .metadata {
+  margin-bottom: 20px;
+  max-width: 500px;
+
+  .form-field {
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  label {
+    margin-bottom: 0;
+  }
+}

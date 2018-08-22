@@ -1,0 +1,15 @@
+// For things like API tokens.
+div.regenerable-field {
+  span[data-value] {
+    font-family: monospace;
+  }
+
+  button.regenerate {
+    margin-left: 2em;
+  }
+
+  div.inline-load-ind {
+    display: inline-block;
+    margin-left: 0.5em;
+  }
+}

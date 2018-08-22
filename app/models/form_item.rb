@@ -19,7 +19,7 @@ class FormItem < ApplicationRecord
   belongs_to :question, autosave: true, inverse_of: :questionings
 
   belongs_to :form
-  has_many :answers, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :questioning
+  has_many :response_nodes, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :form_item
   has_many :standard_form_reports, class_name: "Report::StandardFormReport",
                                    foreign_key: :disagg_qing_id, dependent: :nullify
   has_many :display_conditions, -> { by_rank },

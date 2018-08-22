@@ -34,16 +34,9 @@ feature "response form tree handling", js: true do
     scenario "renders new form with hierarchical structure" do
       visit new_hierarchical_response_path(params)
 
-      expect_path([".answer-group", ".answer-group", ".answer input"])
-      expect_path([".answer-group", ".answer input"])
-      expect_path([".answer-group", ".cascading-selects select"])
+      expect_path([".cascading-selects select"])
       expect_path([
-        ".answer-group", ".answer-group-set",
-        ".answer-group", ".answer-group", ".answer input"
-      ])
-      expect_path([
-        ".answer-group", ".answer-group-set",
-        ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
+        ".answer-group-set", ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
       ])
     end
 
@@ -66,16 +59,9 @@ feature "response form tree handling", js: true do
       scenario "renders edit form with hierarchical structure" do
         visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
-        expect_path([".answer-group", ".answer-group", ".answer input"])
-        expect_path([".answer-group", ".answer input"])
-        expect_path([".answer-group", ".cascading-selects select"])
+        expect_path([".cascading-selects select"])
         expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group", ".answer input"
-        ])
-        expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
+          ".answer-group-set", ".answer-group", ".answer-group-set", ".answer-group", ".answer input"
         ])
       end
 
@@ -83,45 +69,27 @@ feature "response form tree handling", js: true do
         visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
         # 1 "Add" and "Remove" button per repeat group
-        expect(page).to have_content("Add", count: 2)
-        expect(page).to have_content("Remove", count: 2)
+        expect(page).to have_css("a.add-repeat", count: 2)
+        expect(page).to have_css("a.remove-repeat", count: 2)
 
         # Add new inner repeat
-        all(:link, "Add").first.click
+        all(:css, "a.add-repeat").first.click
 
         # New "Remove" button present for the inner repeat
-        expect(page).to have_content("Remove", count: 3)
+        expect(page).to have_css("a.remove-repeat", count: 3)
 
         # Add new outer repeat
-        all(:link, "Add").last.click
+        all(:css, "a.add-repeat").last.click
 
         # 1 new "Add" for the inner repeat, 2 new "Removes" (1 innner, 1 outer)
-        expect(page).to have_content("Add", count: 3)
-        expect(page).to have_content("Remove", count: 5)
+        expect(page).to have_css("a.add-repeat", count: 3)
+        expect(page).to have_css("a.remove-repeat", count: 5)
 
-        # Remove outer repeat
-        all(:link, "Remove").last.click
+        # Remove outer repeat (should be the 4th x link on the page)
+        all(:css, "a.remove-repeat")[3].click
 
-        expect(page).to have_content("Add", count: 2)
-        expect(page).to have_content("Remove", count: 3)
-      end
-
-      scenario "renders show page with hierarchical structure" do
-        visit hierarchical_response_path(params.merge(id: response.shortcode))
-
-        # These nodes are not visible since the answers have no value
-
-        expect_path([".answer-group", ".answer-group", ".answer .ro-val"], visible: false)
-        expect_path([".answer-group", ".answer .ro-val"], visible: false)
-        expect_path([".answer-group", ".ro-val .cascading-selects"], visible: false)
-        expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group", ".answer .ro-val"
-        ], visible: false)
-        expect_path([
-          ".answer-group", ".answer-group-set",
-          ".answer-group", ".answer-group-set", ".answer-group", ".answer .ro-val"
-        ], visible: false)
+        expect(page).to have_css("a.add-repeat", count: 2)
+        expect(page).to have_css("a.remove-repeat", count: 3)
       end
     end
   end

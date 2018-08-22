@@ -2,24 +2,21 @@
 <% removable = local_assigns[:removable] %>
 
 <% nodes.each_with_index do |node, index| %>
-  <% new_context = node.parent.present? ? context.add(index_placeholder ? "__INDEX__" : index) : context %>
-  <% node_id = "node-#{rand(99999999)}" %>
+  <% node = Results::ResponseNodeDecorator.decorate(node, context) %>
+  <% new_context = node.child_context(index_placeholder ? "__INDEX__" : index) %>
 
   <div
-    class="node"
-    id="<%= node_id %>"
+    class="node <%= "root-node" if node.root? %>"
     data-qing-id="<%= node.form_item.id %>"
     data-qtype-name="<%= node.form_item.qtype_name %>"
-    data-path="<%= new_context.path.join("-") %>">
+    data-visible-depth="<%= new_context.visible_depth %>"
+    data-path="<%= new_context.path_str %>">
 
     <% if node.is_a?(AnswerSet) %>
       <%= render("hierarchical_responses/answers/answer_set", set: node, context: new_context) %>
     <% elsif node.is_a?(AnswerGroup) %>
-      <%= render("hierarchical_responses/answers/group", group: node, context: new_context) %>
-
-      <% if removable %>
-        <a href="#" class="remove-repeat">Remove</a>
-      <% end %>
+      <%= render("hierarchical_responses/answers/group", group: node, context: new_context,
+                                                         removable: removable) %>
     <% elsif node.is_a?(Answer) %>
       <%= render("hierarchical_responses/answers/answer", answer: node, context: new_context) %>
     <% elsif node.is_a?(AnswerGroupSet) %>
@@ -33,7 +30,7 @@
     <% unless response_condition_group.empty? %>
       <%= javascript_doc_ready do %>
         new ELMO.Views.HierarchicalResponseConditionManager(<%=json(
-          el: "##{node_id}",
+          el: "[data-path='#{new_context.path_str}']",
           item: ResponseCondition::FormItemSerializer.new(
             node.form_item,
             response_condition_group: response_condition_group),

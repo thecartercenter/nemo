@@ -61,7 +61,7 @@ class OldAnswerSet
     self.answers ||= []
     (questioning.level_count || 1).times.each do |i|
       rank = (questioning.level_count || 1) > 1 ? i + 1 : nil
-      answers[i] ||= Answer.new(questioning: questioning, rank: rank)
+      answers[i] ||= Answer.new(form_item: questioning, rank: rank)
     end
   end
 

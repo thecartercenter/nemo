@@ -1,0 +1,87 @@
+.users_index {
+  tr.inactive {
+    td, a {
+      color: #ccc;
+    }
+  }
+}
+
+.qrcode {
+  table {
+    border-width: 0;
+    border-style: none;
+    border-color: #0000ff;
+    border-collapse: collapse;
+  }
+
+  td {
+    border-left: solid 3px #000;
+    padding: 0;
+    padding-bottom: 0px;
+    margin: 0;
+    width: 0px;
+    height: 3px;
+  }
+
+  td.black { border-color: #000; }
+  td.white { border-color: #fff; }
+}
+
+/* user edit */
+form.user_form {
+
+  textarea#user_notes {
+    height: 100px;
+  }
+
+  div.form-field#assignments {
+
+    div.item {
+      padding: 2px 0;
+    }
+
+    div.assignment, div.assignment_header {
+      display: inline-block;
+      min-height: 20px;
+
+      > div {
+        display: inline-block;
+        padding-right: 10px;
+      }
+
+      div.mission {
+        width: 150px;
+
+        select {
+          width: 145px;
+        }
+      }
+
+      div.role {
+        width: 120px;
+
+        select {
+          width: 115px;
+        }
+      }
+
+      div.active {
+        width: 75px;
+      }
+    }
+
+    div.assignment_header {
+      font-size: 11px;
+      color: #aaa;
+    }
+  }
+
+  div.user_gender_custom {
+    display: none; // initially hidden
+  }
+
+  div.user_api_key .widget > div {
+    display: inline-block;
+    margin-right: 5px;
+  }
+}

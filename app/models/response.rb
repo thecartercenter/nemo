@@ -60,7 +60,7 @@ class Response < ApplicationRecord
         {choices: :option},
         :option,
         :media_object,
-        { questioning: [:display_conditions, { question: :option_set } ] }
+        {form_item: [:display_conditions, {question: :option_set}]}
       ]
     },
     :user
@@ -70,7 +70,7 @@ class Response < ApplicationRecord
   scope :with_basic_assoc, -> { includes(:form, :user) }
 
   # loads only some answer info
-  scope :with_basic_answers, -> { includes(answers: {questioning: :question}) }
+  scope :with_basic_answers, -> { includes(answers: {form_item: :question}) }
 
   # loads only answers with location info
   scope :with_location_answers, -> { includes(:location_answers) }
@@ -79,7 +79,7 @@ class Response < ApplicationRecord
 
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
-  delegate :c, to: :root_node
+  delegate :c, :children, to: :root_node
 
   def destroy_answer_tree
     root_node.destroy if root_node.present?
@@ -180,8 +180,8 @@ class Response < ApplicationRecord
       end
 
       # Run the full text search and get the matching answer IDs
-      answer_ids = Answer.joins(:response, :questioning).where(attribs).
-        search_by_value(expression.values).pluck(:id)
+      answer_ids = Answer.joins(:response, :form_item).where(attribs)
+        .search_by_value(expression.values).pluck(:id)
 
       # turn into an sql fragment
       fragment = if answer_ids.present?

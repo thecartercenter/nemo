@@ -1,14 +1,22 @@
-<% id = rand(9e9) %>
-<div class="answer-group-set" id="<%= id %>">
+<div class="answer-group-set" id="answer-group-set-<%= context.path_str %>">
+
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes",
-               nodes: group_set.children,
-               context: context,
-               removable: true) %>
+    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.children,
+                                                       context: context, removable: true) %>
   </div>
 
   <% unless context.read_only? %>
-    <a href="#" class="add-repeat">Add</a>
+    <div class="empty-notice">
+      <div class="group-header">
+        <h2><%= group_set.qing_group.group_name %></h2>
+      </div>
+      <p><%= t("response.empty_group_notice") %></p>
+    </div>
+
+    <a href="#" class="add-repeat">
+      <%= icon_tag("plus") %>
+      <%= t("response.add_to_group", group_name: group_set.name) %>
+    </a>
 
     <%
     # Below we render a template based on the blank response tree
@@ -18,7 +26,7 @@
     %>
     <%= javascript_doc_ready do %>
       new ELMO.Views.ResponseFormRepeatView({
-        el: $('#<%= id %>'),
+        el: $("#answer-group-set-<%= context.path_str %>"),
         next_index: <%= group_set.children.length %>,
         tmpl: <%= json(render("hierarchical_responses/answers/nodes",
           nodes: context.find(@blank_response).children,

@@ -461,7 +461,7 @@ en:
         shortcode: "Response ID"
         source: "Source"
         user_id: "User/Team"
-        incomplete: "Are there missing required answers?"
+        incomplete: "This is an incomplete response"
       report/report:
         aggregation: "Operation"
         aggregation_id: "Operation"
@@ -1093,6 +1093,11 @@ en:
       index: "Responses"
       new: "New Response"
       show: "Response: %{id}"
+    hierarchical_responses:
+      edit: "Edit Response: %{id}"
+      index: "Responses"
+      new: "New Response"
+      show: "Response: %{id}"
     reports:
       index: "Reports"
       new: "New Report"
@@ -1711,6 +1716,8 @@ en:
       group4_inst_num: "ItemNum4"
       group5_rank: "GroupNum5"
       group5_inst_num: "ItemNum5"
+    add_to_group: "Add to '%{group_name}'"
+    empty_group_notice: "This group is empty"
 
   role:
     role: "Role"

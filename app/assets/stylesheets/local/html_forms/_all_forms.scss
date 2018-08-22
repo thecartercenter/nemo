@@ -1,0 +1,19 @@
+// Styles for all HTML forms, whether they're "elmo forms" or special ones with different styles.
+form {
+  margin: 0;
+
+  .submit-buttons {
+    margin-top: 20px;
+    text-align: $right;
+  }
+
+  input.btn-primary {
+    padding: 6px 35px;
+  }
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  border: 0;
+  background-color: transparent;
+}

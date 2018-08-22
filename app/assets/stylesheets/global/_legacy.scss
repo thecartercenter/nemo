@@ -1,0 +1,343 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// THIS FILE IS DEPRECATED AND NEEDS TO BE SPLIT INTO MANAGEABLE CHUNKS
+// IF YOU WORK ON ANY OF THESE STYLES, PLEASE MOVE THEM OUT OF HERE
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* tag redefinitions */
+html,body { margin: 0; padding: 0 }
+body, td, textarea { font-family: 'Open Sans', Helvetica, sans-serif; font-size: 9pt; color: $body-text-color; }
+body { line-height: 1.3; height: 100%; }
+a { color: $link-text-color; }
+h1, h2, h3 { color: $body-text-color; font-family: 'Open Sans', Helvetica, sans-serif; }
+h1 { margin: 0 0 10px 0; font-size: 17pt; }
+
+h1.title {
+  color: #777;
+  font-weight: bold;
+  margin-bottom: 20px;
+  margin-#{$right}: 10px;
+
+  i {
+    color: $light-gray;
+    margin-#{$right}: 5px;
+  }
+}
+
+div#title_container {
+  overflow: auto;
+  clear: both;
+
+  span.label {
+    display: inline-block;
+    font-size: 10px;
+    margin: .25em .5em;
+    padding: .5em .8em;
+    vertical-align: middle;
+  }
+
+  h1.title {
+    margin-#{$left}: 0px;
+  }
+}
+
+
+/* std seal in title */
+h1.title img { width: 16px; height: 16px; }
+
+h2 { font-size: 11pt; color: #888888; }
+h3 { font-size: 12pt; margin: 0; color: #444; }
+ul { margin-top: 0; padding-left: 20px; }
+li { margin-bottom: 5px; }
+table { border-collapse: collapse; }
+td { vertical-align: top; }
+
+/* multi-purpose */
+div.subtitle { margin: -10px 0 10px 0; color: #888888; }
+div.tip { margin-bottom: 10px; width: 800px; }
+div.important { font-weight: bold; color: Black; }
+div.dialog { position: absolute; background-color: $white; border: 1px solid #555; padding: 10px; }
+div.dialog h2 { margin: 0 0 10px 0; }
+.translation_missing { color: $theme-red; }
+
+/* loading indicator */
+div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
+
+/* action links/icons */
+a.action_link { font-size: 14px; text-decoration: none; display: inline-block; margin-right: 3px; }
+table a.action_link { margin: -2px 10px -2px 0; }
+
+div.popover {
+  top: -2.5px;
+  width: 300px;
+}
+
+div.inline-load-ind {
+  .success {
+    color: $theme-green;
+  }
+
+  .failure {
+    color: $theme-red;
+  }
+
+  width: 20px;
+  display: inline-block;
+}
+
+i.fa-certificate {
+  color: $gold;
+}
+
+/* set of links */
+.link_set {
+  margin-bottom: 10px;
+
+  a, input[type='submit'] {
+    display: inline-block;
+    padding-right: 10px;
+  }
+}
+
+/* pagination */
+div.paginate-container {
+  width: 100%;
+  text-align: right;
+}
+
+ul.pagination {
+  a { color: $orange; }
+  li.active span, li.active span:hover {
+    background-color: $theme-main;
+    border-color: $theme-main;
+  }
+}
+
+/* form index */
+.forms_index .name_col { min-width: 200px; }
+
+/* option edit */
+.options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
+
+/* option set index */
+.option_sets_index td.options_col { width: 400px; }
+
+/* option set new/edit/show */
+.option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
+
+/* broadcasts */
+textarea#broadcast_body { height: 170px; }
+.broadcasts_show #send_errors div.control { color: $theme-red; font-weight: bold; }
+.broadcasts_show #send_errors div.control p { margin: 0; }
+
+/* form edit */
+.forms_edit td.name_col, .forms_show td.name_col { width: 500px; }
+.forms_edit td.rank_col input { width: 25px; }
+.forms_edit #save_ranks_button { margin-top: -15px; }
+
+/* form choose questions */
+.forms_choose_questions div.question_form { display: none; }
+
+/* missions */
+.missions_index .name_col { width: 225px; }
+
+/* sms log */
+.sms_index {
+  td.to_col { width: 225px; }
+  td.from_col { width: 125px; }
+  td.direction_col { width: 50px; }
+  td.received_at_col { width: 130px }
+  td.sent_at_col { width: 130px }
+  td.adapter_name_col { width: 100px; }
+  td.body_col > div { width: auto; overflow: hidden; }
+}
+
+/* action links */
+#content div.top-action-links {
+  @include action-links;
+}
+
+/* general layout styles */
+body {
+  background-color: $body-background-color;
+}
+
+.alert-compact {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+/* Make link color same as text color in alert-info box */
+.alert-info a {
+  color: #31708f;
+  text-decoration: underline;
+}
+
+.users_edit .ro-val {
+  font-family: monospace;
+}
+
+#userinfo {
+  color: $white;
+  text-align: right;
+  padding-#{$right}: 5px;
+  margin-top: 19px;
+  height: 25px;
+  float: $right;
+
+  a {
+    color: $white;
+  }
+
+  a.login {
+    color: $gray;
+    margin: side-values(10px 22px 0 0);
+  }
+
+  .icon-btn {
+    display: inline-block;
+    min-width: 60px;
+    max-width: 90px;
+    margin: 0 5px 0 5px;
+    text-align: center;
+    vertical-align: top;
+
+    a:hover {
+      color: $light-blue;
+      text-decoration: none;
+    }
+
+    .admin-mode {
+      color: $light-yellow;
+    }
+  }
+
+  div, span {
+    display: inline-block;
+  }
+
+  div.operations {
+    display: block;
+    text-align: left;
+    margin: 5px;
+
+    .icon-operation {
+      margin-right: 0.5em;
+    }
+  }
+
+  #change-mission {
+    font-size: 9pt;
+    vertical-align: top;
+    display: inline-block;
+    width: 190px;
+    height: 31px;
+    margin-right: 10px;
+  }
+}
+
+#title {
+  color: $white;
+  margin: side-values(10px 0 10px 15px);
+  display: inline-block;
+
+  > div {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  img {
+    display: inline-block;
+    margin: 12px 0 12px 12px;
+    height: 54px;  /* explicit height to prevent shifting during load */
+    vertical-align: bottom;
+  }
+
+  a { color: $white; text-decoration: none; }
+  h1 { font-size: 40px; color: $white; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
+  h2 {
+    font-size: 24px;
+    font-family: "Raleway", sans-serif;
+    font-weight: bold;
+    width: 300px;
+    margin: 0;
+    color: $light-blue;
+    display: inline-block;
+    text-transform: lowercase;
+    vertical-align: bottom;
+    line-height: 24px;
+    padding-bottom: 12px;
+
+    /* trophy icon */
+    i {
+      font-size: 22px;
+    }
+  }
+}
+
+#content {
+  padding: 20px 25px 30px 25px;
+  min-height: 400px;
+  background-color: $white;
+  .index_table a i.fa { color: $primary-icon-color; }
+  .index_table a i.fa:hover { color: darken($primary-icon-color, 20%) }
+}
+
+#footer {
+  padding-top: 108px;
+  vertical-align: middle;
+  background-color: $footer-background-color;
+  color: $footer-text-color;
+  text-align: center;
+  height: 300px;
+
+  a {
+    color: $link-text-color;
+  }
+
+  //workaround for arabic display order issue
+  #locale_form_link {
+    display: inline-block;
+  }
+
+  #locale_form {
+    display: none;
+  }
+
+  div.site_by {
+    margin-top: 10px;
+    padding: 3px;
+    text-align: right;
+  }
+}
+
+body.reports {
+  div.report_view {
+    display: table-row;
+  }
+
+  div.report_main {
+    display: table-cell;
+    vertical-align: top;
+  }
+}
+
+#api-users {
+  display: none;
+
+  #api-users-scrollbox {
+    border: $light-border;
+    padding: 4px;
+    overflow-y: scroll;
+    height: 150px;
+    width: 420px;
+
+    label {
+      display: block;
+    }
+  }
+}
