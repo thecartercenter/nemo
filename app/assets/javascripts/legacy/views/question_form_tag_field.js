@@ -34,19 +34,20 @@
   klass.prototype.add_tag = function(item, mission_id) {
     var form, input_name_prefix, selector;
     // Which form are we on?
+    var rand = Math.floor(Math.random() * 999999999);
     if ($('.question_form').length) {
       form = $('.question_form');
-      input_name_prefix = 'question[tags_attributes][]';
+      input_name_prefix = 'question[tags_attributes]['+rand+']';
     } else if ($('.questioning_form').length) {
       form = $('.questioning_form');
-      input_name_prefix = 'questioning[question_attributes][tags_attributes][]';
+      input_name_prefix = 'questioning[question_attributes][tags_attributes]['+rand+']';
     }
     selector = 'input[name="'+input_name_prefix+'[name]"][value="'+item.name+'"]';
     // if new item (null id) and hasn't already been added to this page
     if (item.id == null && $(selector).length == 0) {
       form.append(
-        '<input type="hidden" name="'+input_name_prefix+'[name]" value="'+item.name+'">' +
-        '<input type="hidden" name="'+input_name_prefix+'[mission_id]" value="'+mission_id+'">'
+        '<input type="hidden" data-new-tag="'+item.name+'" name="'+input_name_prefix+'[name]" value="'+item.name+'">' +
+        '<input type="hidden" data-new-tag="'+item.name+'" name="'+input_name_prefix+'[mission_id]" value="'+mission_id+'">'
       );
     }
   };
@@ -54,7 +55,7 @@
   // If previously added new tag input, remove it
   klass.prototype.remove_tag = function(item) {
     if (item.id == null && $.inArray(item, $("input.form-control[id$='_tag_ids']").tokenInput('get')) == -1) {
-      $("input[name$='[tags_attributes][][name]'][value='"+item.name+"']").remove();
+      $('input[data-new-tag="'+item.name+'"]').remove();
     }
   };
 

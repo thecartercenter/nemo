@@ -32,6 +32,6 @@ module QuestionFormable
     permit_translations(submitted, :name, :hint) + [
       :id, :code, :qtype_name, :option_set_id, :casted_minimum, :audio_prompt,
       :minstrictly, :casted_maximum, :maxstrictly, :auto_increment, :tag_ids, :metadata_type, :key,
-      :access_level, { tags_attributes: [:name, :mission_id] }]
+      :access_level, {tags_attributes: [:name, :mission_id]}]
   end
 end
