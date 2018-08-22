@@ -1716,7 +1716,8 @@ en:
       group4_inst_num: "ItemNum4"
       group5_rank: "GroupNum5"
       group5_inst_num: "ItemNum5"
-    add_to_group: "Add To '%{group_name}'"
+    add_to_group: "Add to '%{group_name}'"
+    empty_group_notice: "This group is empty"
 
   role:
     role: "Role"
