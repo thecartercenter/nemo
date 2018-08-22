@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180810170823) do
+ActiveRecord::Schema.define(version: 20180822145730) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -402,6 +402,7 @@ ActiveRecord::Schema.define(version: 20180810170823) do
     t.uuid "original_id"
     t.integer "original_old_id"
     t.string "qtype_name", limit: 255
+    t.string "reference"
     t.boolean "standard_copy", default: false, null: false
     t.boolean "text_type_for_sms", default: false, null: false
     t.datetime "updated_at"
