@@ -46,6 +46,7 @@ class Question < ApplicationRecord
   end
   validate :code_unique_per_mission
   validate :at_least_one_name
+  validate :valid_reference_url
 
   scope :by_code, -> { order('questions.code') }
   scope :with_code, ->(c) { where("LOWER(code) = ?", c.downcase) }
@@ -275,5 +276,10 @@ class Question < ApplicationRecord
 
   def check_condition_integrity
     Condition.check_integrity_after_question_change(self)
+  end
+
+  def valid_reference_url
+    url = URI.parse(reference)
+    url.is_a?(URI::HTTP) || url.is_a?(URI::HTTPS)
   end
 end
