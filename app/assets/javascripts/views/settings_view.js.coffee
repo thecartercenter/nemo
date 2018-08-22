@@ -18,6 +18,7 @@ class ELMO.Views.SettingsView extends ELMO.Views.ApplicationView
     return false
 
   show_change_credential_fields: (event) ->
+    @$(event.target).closest('.show-credential-fields').hide()
     @$(event.target).closest('.adapter-settings').find(".credential-fields").show()
     return false
 
