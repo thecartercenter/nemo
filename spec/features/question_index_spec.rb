@@ -5,17 +5,17 @@ require "rails_helper"
 feature "question index", js: true do
   let(:admin) { create(:admin) }
   let(:mission) { get_mission }
-  let!(:questions) { create_list(:question, 3, canonical_name: "duplicated", mission: mission) }
 
   before do
     login(admin)
+    create_list(:question, 3, canonical_name: "duplicated", mission: mission)
   end
 
   describe "batch delete" do
+    before { visit("/en/m/#{mission.compact_name}/questions") }
+
     scenario "works" do
-      visit("/en/m/#{mission.compact_name}/questions")
-      all("input.batch_op").each { |b| b.set(true) }
-      accept_confirm { click_on("Delete Multiple Questions") }
+      perform_batch_delete
       expect(page).to have_content("3 questions deleted successfully")
     end
 
@@ -30,11 +30,15 @@ feature "question index", js: true do
       click_on "Clear"
 
       # perform a batch delete
-      all("input.batch_op").each { |b| b.set(true) }
-      accept_confirm { click_on("Delete Multiple Questions") }
+      perform_batch_delete
 
       # page redirects without query string
       expect(page).to have_current_path("/en/m/mission1/questions")
     end
+  end
+
+  def perform_batch_delete
+    all("input.batch_op").each { |b| b.set(true) }
+    accept_confirm { click_on("Delete Multiple Questions") }
   end
 end
