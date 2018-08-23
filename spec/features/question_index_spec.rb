@@ -33,7 +33,7 @@ feature "question index", js: true do
       perform_batch_delete
 
       # page redirects without query string
-      expect(page).to have_current_path("/en/m/mission1/questions")
+      expect(page).to have_current_path("/en/m/#{mission.compact_name}/questions")
     end
   end
 
