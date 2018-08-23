@@ -2,35 +2,41 @@
 
 require "rails_helper"
 
-feature "response form tree handling", js: true do
+feature "response form tree handling", js: true, database_cleaner: :all do
   let(:user) { create(:user) }
 
-  describe "form rendering", database_cleaner: :all do
-    let!(:form) do
-      create(:form,
-        question_types: [
-          %w[integer],
-          "image",
-          "multilevel_select_one",
-          {
-            repeating: {
-              items: [
-                %w[integer],
-                repeating: {
-                  items: %w[integer]
-                }
-              ]
-            }
+  let!(:form) do
+    create(:form,
+      question_types: [
+        %w[integer],
+        "image",
+        "multilevel_select_one",
+        {
+          repeating: {
+            items: [
+              %w[integer],
+              repeating: {
+                items: %w[integer]
+              }
+            ]
           }
-        ])
-    end
+        }
+      ])
+  end
 
-    before { form.publish! }
+  let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
-    let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
+  before do
+    question = form.root_group.c[0].c[0].question
+    question.minimum = 123
+    question.save!
 
-    before(:each) { login(user) }
+    form.publish!
+  end
 
+  before(:each) { login(user) }
+
+  describe "form rendering" do
     scenario "renders new form with hierarchical structure" do
       visit new_hierarchical_response_path(params)
 
@@ -48,7 +54,7 @@ feature "response form tree handling", js: true do
           mission: get_mission,
           user: user,
           answer_values: [
-            [1],
+            [123],
             create(:media_image),
             %w[Plant Oak],
             {repeating: [[2, {repeating: [[3]]}]]}
@@ -91,6 +97,28 @@ feature "response form tree handling", js: true do
         expect(page).to have_css("a.add-repeat", count: 2)
         expect(page).to have_css("a.remove-repeat", count: 3)
       end
+    end
+  end
+
+  describe "form submission" do
+    it "renders errors for invalid form fields" do
+      visit new_hierarchical_response_path(params)
+
+      select2(user.name, from: "response_user_id")
+      fill_in("response_root_children_0_children_0_value", with: "100")
+      drop_in_dropzone(Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg"))
+      select("Animal")
+      select("Dog")
+      fill_in("response_root_children_3_children_0_children_0_children_0_value", with: "456")
+      fill_in("response_root_children_3_children_0_children_1_children_0_children_0_value", with: "789")
+      click_button("Save")
+
+      expect(page).to have_content("Response is invalid")
+
+      fill_in("response_root_children_0_children_0_value", with: "123")
+      click_button("Save")
+
+      expect(page).to_not have_content("Response is invalid")
     end
   end
 

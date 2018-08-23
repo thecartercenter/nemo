@@ -10,7 +10,7 @@
 <% end %>
 
 <div id="response-form-wrapper">
-  <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form") do |f| %>
+  <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form", url: hierarchical_responses_path) do |f| %>
     <%= f.base_errors %>
     <%= f.field(:form_id, type: :hidden) %>
 

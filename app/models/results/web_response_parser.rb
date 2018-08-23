@@ -32,10 +32,16 @@ module Results
     PERMITTED_PARAMS = TOP_LEVEL_PARAMS.without(:choices_attributes)
       .append(choices_attributes: %w[option_node_id checked]).freeze
 
+    attr_reader :response
+
+    def initialize(response)
+      @response = response
+    end
+
     # Expects ActionController::Parameters instance without required or permitted set, which is
     # a hash representing the structure of an answer heirarchy that comes with a web response.
     # Returns an unsaved answer tree object based on the hash
-    def parse(web_answer_hash, response)
+    def parse(web_answer_hash)
       root = response.root_node || response.build_root_node(new_tree_node_attrs(web_answer_hash[:root], nil))
       parse_children(web_answer_hash[:root][:children], root)
       root
@@ -47,6 +53,7 @@ module Results
       web_hash_children.each_pair do |_k, v|
         next if ignore_node?(v)
         child = update_or_add_node(v, tree_parent)
+        child.response = response
         parse_children(v[:children], child) if v[:children]
       end
       tree_parent

@@ -29,7 +29,7 @@ module Results
 
     def full_path
       if path.present?
-        path.zip(["children"] * (depth - 1)).flatten.compact
+        ["children"] + path.zip(["children"] * (depth - 1)).flatten.compact
       else
         []
       end
