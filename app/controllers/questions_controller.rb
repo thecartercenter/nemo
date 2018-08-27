@@ -74,7 +74,7 @@ class QuestionsController < ApplicationController
 
     flash[:success] = success.join(" ") unless success.empty?
 
-    redirect_to(index_url_with_context)
+    redirect_to questions_path
   end
 
   def audio_prompt
