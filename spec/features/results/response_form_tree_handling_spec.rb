@@ -101,7 +101,7 @@ feature "response form tree handling", js: true, database_cleaner: :all do
   end
 
   describe "form submission" do
-    it "renders errors for invalid form fields" do
+    scenario "submitting response" do
       visit new_hierarchical_response_path(params)
 
       select2(user.name, from: "response_user_id")
@@ -114,16 +114,32 @@ feature "response form tree handling", js: true, database_cleaner: :all do
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
+      expect_value("#response_root_children_3_children_0_children_0_children_0_value", "456")
+      expect_value("#response_root_children_3_children_0_children_1_children_0_children_0_value", "789")
 
       fill_in("response_root_children_0_children_0_value", with: "123")
       click_button("Save")
 
       expect(page).to_not have_content("Response is invalid")
+
+      response = Response.last
+      visit hierarchical_response_path(params.merge(id: response.shortcode))
+
+      expect(page).to have_content("123")
+      expect(page).to have_selector("[data-qtype-name=image] .media-thumbnail img")
+      expect(page).to have_content("Animal")
+      expect(page).to have_content("Dog")
+      expect(page).to have_content("456")
+      expect(page).to have_content("789")
     end
   end
 
   def expect_path(path, options = {})
     selector = path.join(" .children ")
     expect(page).to have_selector(selector, options)
+  end
+
+  def expect_value(selector, value)
+    expect(page.find(selector).value).to eq value
   end
 end
