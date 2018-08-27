@@ -9,32 +9,31 @@
 
   <%= f.base_errors %>
 
-  <%= f.field(:code, :required => true, :maxlength => 20, :read_only => cannot?(:update_code, @question)) %>
+  <%= f.field(:code, required: true, maxlength: 20, read_only: cannot?(:update_code, @question)) %>
 
   <%# core fields should not be editable if don't have update_core permission %>
   <% cant_update_core = cannot?(:update_core, @question) %>
 
-  <%= f.field(:qtype_name, :type => :select, :required => true, :read_only => cant_update_core,
-        :options => translate_options(@question_types.map(&:name), :question_type)) %>
+  <%= f.field(:qtype_name, type: :select, required: true, read_only: cant_update_core,
+        options: translate_options(@question_types.map(&:name), :question_type)) %>
 
   <%# this is a partial because it contains more complex controls %>
   <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
-  <%= f.field(:option_set_id, :partial => 'questions/option_set_select', :read_only => cant_update_core) %>
+  <%= f.field(:option_set_id, partial: "questions/option_set_select", read_only: cant_update_core) %>
 
   <%# title and hint boxes, one for each language %>
   <div class="names_hints">
     <% configatron.preferred_locales.each_with_index do |lang, rank| %>
-      <%= render("questions/title_and_hint", :f => f, :lang => lang, :rank => rank) %>
+      <%= render("questions/title_and_hint", f: f, lang: lang, rank: rank) %>
     <% end %>
   </div>
 
-  <div>
-    <%= f.field(:audio_prompt, type: :file) %>
-  </div>
+  <%= f.field(:reference, type: :text) %>
+  <%= f.field(:audio_prompt, type: :file) %>
 
   <div class="minmax">
-    <%= f.field(:casted_minimum, :partial => 'questions/min_max_condition') %>
-    <%= f.field(:casted_maximum, :partial => 'questions/min_max_condition') %>
+    <%= f.field(:casted_minimum, partial: "questions/min_max_condition") %>
+    <%= f.field(:casted_maximum, partial: "questions/min_max_condition") %>
   </div>
 
   <%= f.field(:auto_increment, type: :check_box) %>
@@ -47,26 +46,7 @@
   <% end %>
   <%= f.field(:tag_ids, partial: "questions/tags") %>
 
-  <%# new option set modal %>
-  <% if form_mode != :show && can?(:create, OptionSet) %>
-    <div class="new_option_set_form_wrapper" title="<%= I18n.t('activerecord.action_links.option_set.new') %>">
-      <div class="modal fade" id="create-option-set" tabindex="-1" role="dialog" aria-labelledby="createOptionSet" aria-hidden="true">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-              <h4 class="modal-title"><%= t('activerecord.action_links.option_set.new') %></h4>
-            </div>
-            <div class="modal-body option-set"><%# to be loaded on request %></div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.close") %></button>
-              <button type="button" class="btn btn-primary"><%= I18n.t("common.save") %></button>
-            </div>
-          </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-      </div><!-- /.modal -->
-    </div>
-  <% end %>
+  <%= render partial: "option_set_modal" %>
 </div>
 
 <%= javascript_doc_ready do %>
@@ -79,6 +59,6 @@
     suggest_tags_path: suggest_tags_path,
     # Using sort_by instead of order because order nukes non-saved records.
     question_tags: @question.tags.sort_by(&:name),
-    mission_id: @current_mission.try(:id) || '',
+    mission_id: @current_mission.try(:id) || "",
   )%>);
 <% end %>
