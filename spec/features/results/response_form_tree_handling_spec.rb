@@ -105,17 +105,22 @@ feature "response form tree handling", js: true, database_cleaner: :all do
       visit new_hierarchical_response_path(params)
 
       select2(user.name, from: "response_user_id")
-      fill_in("response_root_children_0_children_0_value", with: "100")
+      fill_in("response_root_children_0_children_0_value", with: "1")
       drop_in_dropzone(Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg"))
       select("Animal")
       select("Dog")
-      fill_in("response_root_children_3_children_0_children_0_children_0_value", with: "456")
-      fill_in("response_root_children_3_children_0_children_1_children_0_children_0_value", with: "789")
+      fill_in("response_root_children_3_children_0_children_0_children_0_value", with: "4561")
+      fill_in("response_root_children_3_children_0_children_1_children_0_children_0_value", with: "7891")
+      all("a.add-repeat").last.click
+      fill_in("response_root_children_3_children_1_children_0_children_0_value", with: "4562")
+      fill_in("response_root_children_3_children_1_children_1_children_0_children_0_value", with: "7892")
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
-      expect_value("#response_root_children_3_children_0_children_0_children_0_value", "456")
-      expect_value("#response_root_children_3_children_0_children_1_children_0_children_0_value", "789")
+      expect_value("#response_root_children_3_children_0_children_0_children_0_value", "4561")
+      expect_value("#response_root_children_3_children_0_children_1_children_0_children_0_value", "7891")
+      expect_value("#response_root_children_3_children_1_children_0_children_0_value", "4562")
+      expect_value("#response_root_children_3_children_1_children_1_children_0_children_0_value", "7892")
 
       fill_in("response_root_children_0_children_0_value", with: "123")
       click_button("Save")
@@ -129,8 +134,10 @@ feature "response form tree handling", js: true, database_cleaner: :all do
       expect(page).to have_selector("[data-qtype-name=image] .media-thumbnail img")
       expect(page).to have_content("Animal")
       expect(page).to have_content("Dog")
-      expect(page).to have_content("456")
-      expect(page).to have_content("789")
+      expect(page).to have_content("4561")
+      expect(page).to have_content("7891")
+      expect(page).to have_content("4562")
+      expect(page).to have_content("7892")
     end
   end
 
