@@ -19,7 +19,7 @@
 
   <%# this is a partial because it contains more complex controls %>
   <%# the partial path is fully qualified because THIS partial might be included in several different contexts %>
-  <%= f.field(:option_set_id, partial: 'questions/option_set_select', read_only: cant_update_core) %>
+  <%= f.field(:option_set_id, partial: "questions/option_set_select", read_only: cant_update_core) %>
 
   <%# title and hint boxes, one for each language %>
   <div class="names_hints">
@@ -32,8 +32,8 @@
   <%= f.field(:audio_prompt, type: :file) %>
 
   <div class="minmax">
-    <%= f.field(:casted_minimum, partial: 'questions/min_max_condition') %>
-    <%= f.field(:casted_maximum, partial: 'questions/min_max_condition') %>
+    <%= f.field(:casted_minimum, partial: "questions/min_max_condition") %>
+    <%= f.field(:casted_maximum, partial: "questions/min_max_condition") %>
   </div>
 
   <%= f.field(:auto_increment, type: :check_box) %>
@@ -59,6 +59,6 @@
     suggest_tags_path: suggest_tags_path,
     # Using sort_by instead of order because order nukes non-saved records.
     question_tags: @question.tags.sort_by(&:name),
-    mission_id: @current_mission.try(:id) || '',
+    mission_id: @current_mission.try(:id) || "",
   )%>);
 <% end %>

@@ -103,10 +103,18 @@ describe Question do
         end
       end
 
+      context "with valid reference" do
+        let(:ref) { "http://eos.cartercenter.org/parts/6" }
+        it "has a valid reference" do
+          expect(question).to be_valid
+        end
+      end
+
       context "with invalid reference" do
         let(:ref) { "www.blah" }
         it "has an invalid reference" do
           expect(question).not_to be_valid
+          expect(question.errors[:reference].join).to match(/A URL that supports the question/)
         end
       end
     end
