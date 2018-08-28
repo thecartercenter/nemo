@@ -153,6 +153,10 @@ module FeatureSpecHelpers
     # If we don't wait for the upload to finish and another request is processed
     # in the meantime, it can lead to weird failures.
     wait_for_dropzone_upload
+
+    page.execute_script <<-JS
+      fakeFileInput.remove();
+    JS
   end
 
   private

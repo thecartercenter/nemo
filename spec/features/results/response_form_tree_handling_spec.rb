@@ -106,6 +106,8 @@ feature "response form tree handling", js: true, database_cleaner: :all do
 
       select2(user.name, from: "response_user_id")
       fill_in("response_root_children_0_children_0_value", with: "1")
+      drop_in_dropzone(Rails.root.join("spec", "fixtures", "media", "audio", "powerup.mp3"))
+      expect(page).to have_content("The uploaded file was not an accepted format.")
       drop_in_dropzone(Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg"))
       select("Animal")
       select("Dog")
