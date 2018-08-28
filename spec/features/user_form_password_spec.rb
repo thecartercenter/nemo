@@ -3,14 +3,13 @@ require "rails_helper"
 feature "user form password field" do
   let(:mission) { get_mission }
 
-  before do
-    login(actor)
-  end
+  before { login(actor) }
 
-  context "user editing profile" do
-    let(:actor) { create(:user) }
+  shared_examples "profile updates successfully" do
+    let(:user) { create(:user) }
+    let(:actor) { user }
 
-    scenario "typing password while editing profile" do
+    scenario "typing password while editing" do
       visit "/en/users/#{actor.id}/edit"
       fill_in("Password", with: "n3wP*ssword", match: :prefer_exact)
       fill_in("Retype Password", with: "n3wP*ssword", match: :prefer_exact)
@@ -191,6 +190,7 @@ feature "user form password field" do
       context "self" do
         let(:user) { actor }
 
+        include_examples("profile updates successfully")
         include_examples("leaving password unchanged")
         include_examples("sending password instructions via email")
         include_examples("entering new password")
@@ -198,6 +198,7 @@ feature "user form password field" do
 
         context "offline" do
           include_examples("offline")
+          include_examples("profile updates successfully")
           include_examples("leaving password unchanged")
           include_examples("entering new password")
           include_examples("entering new password with login instructions")
@@ -207,6 +208,7 @@ feature "user form password field" do
       context "enumerator" do
         let(:user) { create(:user, role_name: :enumerator, mission: mission) }
 
+        include_examples("profile updates successfully")
         include_examples("leaving password unchanged")
         include_examples("sending password instructions via email")
         include_examples("generating new password")
@@ -218,11 +220,28 @@ feature "user form password field" do
           include_examples("generating new password")
           include_examples("entering new password")
         end
+
+        context "login instructions are visible after he resets his password" do
+          include_examples("generating new password")
+          include_examples("entering new password with login instructions")
+        end
+      end
+
+      context "staffer" do
+        let(:user) { create(:user, role_name: :staffer, mission: mission) }
+
+        include_examples("profile updates successfully")
+
+        context "login instructions are visible" do
+          include_examples("generating new password")
+          include_examples("entering new password with login instructions")
+        end
       end
 
       context "coordinator" do
         let(:user) { create(:user, role_name: :coordinator, mission: mission) }
 
+        include_examples("profile updates successfully")
         include_examples("leaving password unchanged")
         include_examples("sending password instructions via email")
         include_examples("entering new password")

@@ -56,13 +56,12 @@ class Ability
 
           # standard objects, missions, settings, and all users are available in no-mission (admin) mode
           [Form, Questioning, FormItem, SkipRule, QingGroup, Condition, Question, OptionSet,
-            OptionNode, Option, OptionSetImport, Tag, Tagging].each do |k|
+            OptionNode, Option, OptionSetImport, Setting, Tag, Tagging].each do |k|
             can :manage, k, mission_id: nil
           end
           can :manage, Mission
           can :manage, User
           can :manage, Assignment
-          can :manage, Setting, mission_id: nil
 
         when "mission"
 
@@ -85,7 +84,7 @@ class Ability
       end
 
       # anybody can access missions to which assigned (but don't need this permission if admin)
-      if !user.admin?
+      unless user.admin?
         can :switch_to, Mission, user.missions do |m|
           user.assignments.detect { |a| a.mission == m }
         end
@@ -109,6 +108,9 @@ class Ability
           can :regenerate_sms_auth_code, User do |u|
             u == user
           end
+
+          # Enumerators can see their login instructions
+          can :login_instructions, User, id: user.id
 
           # only need these abilities if not also a staffer
           unless role_in_mission?(:staffer)
