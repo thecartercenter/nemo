@@ -794,12 +794,13 @@ en:
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
+            reference:
+              invalid: "Your reference link must begin with https or http."
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
           cant_change_if_responses: "You can't change the Type or Option Set because there are already Responses for this Question."
           cant_delete_if_has_answers: "You can't delete this Question because it is referred to in at least one Answer."
           cant_delete_if_published: "You can't delete this Question because it appears on at least one published Form."
           general: "Question is invalid (see below)."
-          valid_reference_url: "Your reference link must begin with https or http."
         questioning:
           attributes:
             code:

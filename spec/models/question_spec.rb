@@ -89,7 +89,6 @@ describe Question do
         it { is_expected.to eq(qtype_name: "date", metadata_type: nil) }
       end
     end
-
   end
 
   describe "validations" do
@@ -114,7 +113,7 @@ describe Question do
         let(:ref) { "www.blah" }
         it "has an invalid reference" do
           expect(question).not_to be_valid
-          expect(question.errors[:reference].join).to match(/A URL that supports the question/)
+          expect(question.errors[:reference].join).to match(/must begin with https/)
         end
       end
     end
