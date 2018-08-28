@@ -415,7 +415,6 @@ ko:
         shortcode: "응답자 ID"
         source: "소스"
         user_id: "사용자/팀"
-        incomplete: "작성하지 않은 필수 응답 항목이 있습니까?"
       report/report:
         aggregation: "작동"
         aggregation_id: "작동"

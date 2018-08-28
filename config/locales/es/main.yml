@@ -273,7 +273,6 @@ es:
         reviewed: "¿Revisado?"
         source: "Fuente"
         user_id: "Usuario/Equipo"
-        incomplete: "¿Faltan respuestas obligatorias?"
       report/report:
         aggregation: "Operación"
         aggregation_id: "Operación"

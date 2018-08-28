@@ -324,7 +324,6 @@ ar:
         reviewer_notes: "ملاحظات المُراجع"
         source: "مصدر"
         user_id: "مستخدم/ فريق"
-        incomplete: "هل هنالك اجابات مطلوبة غير موجودة؟"
       report/report:
         aggregation: "عملية"
         aggregation_id: "عملية"

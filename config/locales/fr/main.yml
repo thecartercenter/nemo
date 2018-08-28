@@ -350,7 +350,6 @@ fr:
         shortcode: "Numéro de la réponse"
         source: "Origine"
         user_id: "Utilisateur/Nom de l'équipe"
-        incomplete: "Y-a-t'il  des réponses obligatoire manquantes?"
       report/report:
         aggregation: "Méthodologie"
         aggregation_id: "Méthodologie"

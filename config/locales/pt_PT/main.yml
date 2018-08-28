@@ -248,7 +248,6 @@ pt:
         reviewed: "revisado?"
         source: "fonte"
         user_id: "usuário/equipe"
-        incomplete: "Há falta respostas necessárias?"
       report/report:
         aggregation: "operação"
         aggregation_id: "operação"
