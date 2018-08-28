@@ -46,7 +46,7 @@
   <% end %>
   <%= f.field(:tag_ids, partial: "questions/tags") %>
 
-  <%= render partial: "option_set_modal" %>
+  <%= render(partial: "questions/option_set_modal") %>
 </div>
 
 <%= javascript_doc_ready do %>
