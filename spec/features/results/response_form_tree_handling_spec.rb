@@ -139,6 +139,43 @@ feature "response form tree handling", js: true, database_cleaner: :all do
       expect(page).to have_content("4562")
       expect(page).to have_content("7892")
     end
+
+    context "with conditional logic" do
+      before do
+        ref_qing = form.root_group.c[0].c[0]
+
+        questioning = form.root_group.c[2]
+        questioning.display_if = "all_met"
+        questioning.display_conditions_attributes = [
+          {ref_qing_id: ref_qing.id, op: "eq", value: "123"}
+        ]
+        questioning.save!
+      end
+
+      scenario "submitting response" do
+        visit new_hierarchical_response_path(params)
+
+        select2(user.name, from: "response_user_id")
+
+        # makes select boxes visible
+        fill_in("response_root_children_0_children_0_value", with: "123")
+
+        select("Animal")
+        select("Dog")
+
+        # hides select boxes, they are now irrelevant
+        fill_in("response_root_children_0_children_0_value", with: "124")
+
+        click_button("Save")
+
+        response = Response.last
+        visit hierarchical_response_path(params.merge(id: response.shortcode))
+
+        expect(page).to have_content("124")
+        expect(page).to_not have_content("Animal")
+        expect(page).to_not have_content("Dog")
+      end
+    end
   end
 
   def expect_path(path, options = {})
