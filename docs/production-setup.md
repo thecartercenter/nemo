@@ -201,13 +201,14 @@ The compiler will tell you if there are any errors in your `style.scss` file.
 
 ### Upgrading
 
-#### Upgrading from v5.x to v5.16
+Upgrading should be done in stages. Start with the stage closest to your current version.
 
-You should upgrade to v5.16 before moving on to v6.11. Follow the 'General Upgrade Instructions' below to upgrade to **v5.16** before moving to v6.x.
+#### Upgrading to v5.16.2
 
-#### Upgrading from v5.16 to v6.11
+1. Follow the 'General Upgrade Instructions' below to upgrade to **v5.16.2**.
+2. If you encounter a 'mismatched superclass' error when migrating, try running the migrate command again.
 
-You should upgrade to v6.11 before moving on to the latest master. Follow the instructions below to do so:
+#### Upgrading to v6.11
 
 1. Install PostgreSQL (see above).
 1. As `deploy` user, in elmo directory on server, `cp config/mysql2postgres.yml.example config/mysql2postgres.yml`
@@ -220,9 +221,9 @@ You should upgrade to v6.11 before moving on to the latest master. Follow the in
 1. Ignore the `no COPY in progress` message.
 1. Update `config/database.yml` to point to Postgres. Use [this file](https://raw.githubusercontent.com/thecartercenter/elmo/v6.11/config/database.yml.example) as a guide. The `test` and `development` blocks are not needed.
 1. If you are using a regular DB backup dump command via cron, be sure to update it to use `pg_dump` instead of `mysqldump`.
-1. You should now follow the 'General Upgrade Instructions' below to upgrade to **v6.11** before moving to the latest master.
+1. You should now follow the 'General Upgrade Instructions' below to upgrade to **v6.11**.
 
-#### Upgrading from v6.x to the latest master
+#### Upgrading to v7.2
 
 1. Install Ruby 2.4.3 and Bundler:
 
@@ -232,20 +233,24 @@ You should upgrade to v6.11 before moving on to the latest master. Follow the in
         rbenv install 2.4.3
         rbenv global 2.4.3
         gem install bundler
-2. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > v6-dump.sql`
-3. As root/privileged user: `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'`
-4. Follow the 'General Upgrade Instructions' below to upgrade to the latest master. Your data will be migrated to use UUIDs, and this may take awhile. Then you'll be all up to date!
+2. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/v6-dump.sql`
+3. `ls -l tmp` and ensure the `v6-dump.sql` file is non-zero size.
+4. As root/privileged user: `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'`
+5. Follow the 'General Upgrade Instructions' below to upgrade to **v7.2**. Your data will be migrated to use UUIDs, and this may take awhile. Then you'll be all up to date!
 
-#### Upgrading from v7.x to the latest master
+#### Upgrading to v8.12
 
-1. If you don't yet have Ruby 2.4.3, install it and Bundler:
+1. Install nvm, the appropriate node version, and yarn:
 
-        cd "$(rbenv root)"/plugins/ruby-build
-        git pull
-        cd -
-        rbenv install 2.4.3
-        rbenv global 2.4.3
-        gem install bundler
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+        exec $SHELL
+        nvm install 8.9.4
+        npm install -g yarn
+3. Follow the 'General Upgrade Instructions' below to upgrade to **v8.12**.
+
+#### Upgrading to lastest master
+
+1. Follow the 'General Upgrade Instructions' below.
 
 #### General Upgrade Instructions
 
@@ -253,28 +258,31 @@ ssh to your server as the same root/privileged user used above. Then:
 
     sudo su - deploy
     cd elmo
-    nvm use
+    nvm use # v8.12 or higher only
     git pull
 
 If you want to upgrade to a particular version of ELMO, then try:
 
-    git checkout release-x.y
+    git checkout vX.Y
 
-where `x.y` is the version number you want. Otherwise you should ensure you're on the master branch:
+where `X.Y` (or `X.Y.Z`) is the version number you want. Otherwise you should ensure you're on the master branch:
 
     git checkout master
+
+If you get an error that `Your local changes to the following files would be overwritten by checkout`, you can usually
+fix it by doing `git reset --hard`. This will wipe out any local changes to the code, which shouldn't be a problem
+unless you changed it on purpose for some reason.
 
 Then:
 
     bundle install --without development test --deployment
-    yarn install
     bundle exec whenever -i elmo
     bundle exec rake assets:precompile
     bundle exec rake db:migrate
 
 Now be sure to check the [commit history of the local config file](https://github.com/thecartercenter/elmo/commits/develop/config/initializers/local_config.rb.example) and/or run:
 
-    diff config/initializers/local_config.rb config/initializers/local_config.rb.example
+    diff config/initializers/local_config.rb.example config/initializers/local_config.rb
 
 to see if anything needs to be updated in your local configuration.
 
