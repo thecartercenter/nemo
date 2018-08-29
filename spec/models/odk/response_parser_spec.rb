@@ -75,7 +75,7 @@ describe Odk::ResponseParser do
             form.c[1].update_attribute(:form_id, other_form.id) # skip validations with update_attribute
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
-            end.to raise_error(SubmissionError, "Submission contains group or question not found in form.")
+            end.to raise_error(SubmissionError, /Submission contains group or question/)
           end
         end
       end
