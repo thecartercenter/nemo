@@ -43,4 +43,39 @@ feature "responses index" do
       expect(page).to have_content("sweater")
     end
   end
+
+  # Response match
+    # Permitted
+      # Response#edit
+    # Not permitted
+      # Response#show
+  context "search" do
+    let(:user) { create(:user) }
+    let(:user2) { create(:user) }
+    let(:form) { create(:form, :published, question_types: %w[text]) }
+    let!(:response1) { create(:response, user: user, form: form, answer_values: ["pants"]) }
+    let!(:response2) { create(:response, user: user2, form: form, answer_values: ["sweater"]) }
+
+    describe "with short code" do
+      scenario "user is permitted to see response" do
+        # when the owner of a response is logged in
+        login(user)
+
+        visit responses_path(
+          locale: "en",
+          mode: "m",
+          mission_name: get_mission.compact_name,
+          form_id: form.id
+        )
+
+        # and searches with the response shortcode
+        fill_in "search_str", with: response1.shortcode
+        click_on "Search"
+
+        # the response edit page shows
+        expect(page).to have_content("Edit Response")
+        expect(current_url).to end_with("responses/#{response1.id}")
+      end
+    end
+  end
 end
