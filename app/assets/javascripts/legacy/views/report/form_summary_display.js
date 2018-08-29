@@ -12,7 +12,7 @@
   klass.prototype.parent = ns.Display.prototype;
 
   klass.prototype.render = function() { var self = this;
-    $('.report_body').empty().append(this.report.attribs.erb_view);
+    $(".report_body").empty().append(this.report.attribs.html);
   }
 
 }(ELMO.Report));
