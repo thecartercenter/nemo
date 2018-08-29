@@ -52,6 +52,11 @@ class OptionNode < ApplicationRecord
     where(id: id).pluck(:option_id).first
   end
 
+  # Efficiently gets an option id from an option node old_id. id may be a string or integer.
+  def self.old_id_to_option_id(id)
+    where(old_id: id).pluck(:option_id).first
+  end
+
   # Overriding this to avoid error from ancestry.
   alias_method :_children, :children
   def children

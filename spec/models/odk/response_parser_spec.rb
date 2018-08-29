@@ -21,12 +21,24 @@ describe Odk::ResponseParser do
         let(:xml_values) { %w[A B C] }
         let(:expected_values) { xml_values }
 
-        context "valid input" do
+        shared_examples "successful submission" do
           it "should produce a simple tree from a form with three children and ignore meta tag" do
             Odk::ResponseParser.new(response: response, files: files).populate_response
-
             expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
           end
+        end
+
+        context "valid input" do
+          it_behaves_like "successful submission"
+        end
+
+        context "form matching on old_id" do
+          before do
+            form.update!(old_id: "123")
+            xml.gsub!(%(id="#{form.id}"), %(id="123"))
+          end
+
+          it_behaves_like "successful submission"
         end
 
         context "outdated form" do
@@ -36,6 +48,22 @@ describe Odk::ResponseParser do
             expect do
               Odk::ResponseParser.new(response: response, files: files).populate_response
             end.to raise_error(FormVersionError, "Form version is outdated")
+          end
+        end
+
+        context "missing form" do
+          let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
+
+          before do
+            xml
+            form.destroy
+            response.form = nil
+          end
+
+          it "should error" do
+            expect do
+              Odk::ResponseParser.new(response: response, files: files).populate_response
+            end.to raise_error(ActiveRecord::RecordNotFound)
           end
         end
 

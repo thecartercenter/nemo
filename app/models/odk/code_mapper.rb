@@ -7,7 +7,8 @@ module Odk
   class CodeMapper
     include Singleton
 
-    ITEM_CODE_REGEX = /\A(grp|qing|q|os|on)([a-f0-9\-]+)/
+    # Old style group codes had a - after grp. This can go away once all 5.x servers are gone.
+    ITEM_CODE_REGEX = /\A(grp|qing|q|os|on)-?([a-f0-9\-]+)/
 
     def initialize
     end
@@ -39,15 +40,29 @@ module Odk
       prefix = md[1]
       id = md[2]
       case prefix
-      when "grp", "qing" then return FormItem.where(id: id).pluck(:id).first
+      when "grp", "qing" then find(:form_item, id)
       # when prefix is q, fallback for older style qing odk code
-      when "q" then return Questioning.where(question_id: id, form_id: form.id).pluck(:id).first
-      when "on" then return OptionNode.id_to_option_id(id)
+      when "q" then find(:question, id, form: form)
+      when "on" then find(:option_node, id)
       end
     end
 
     def item_code?(code)
       code.match?(ITEM_CODE_REGEX)
+    end
+
+    private
+
+    def find(type, id, form: nil)
+      case type
+      when :form_item
+        FormItem.where(id: id).pluck(:id).first || FormItem.where(old_id: id).pluck(:id).first
+      when :question
+        Questioning.where(question_id: id, form_id: form.id).pluck(:id).first ||
+          Questioning.where(question_old_id: id, form_old_id: form.old_id).pluck(:id).first
+      when :option_node
+        OptionNode.id_to_option_id(id) || OptionNode.old_id_to_option_id(id)
+      end
     end
   end
 end
