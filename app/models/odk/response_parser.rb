@@ -164,11 +164,11 @@ module Odk
     def form_item(name)
       form_item_id = form_item_id_from_tag(name)
       unless FormItem.exists?(form_item_id)
-        raise SubmissionError, "Submission contains unidentifiable group or question."
+        raise SubmissionError, "Submission contains unidentifiable group or question '#{name}'."
       end
       form_item = FormItem.find(form_item_id)
       unless form_item.form_id == response.form.id
-        raise SubmissionError, "Submission contains group or question not found in form."
+        raise SubmissionError, "Submission contains group or question '#{name}' not found in form."
       end
       form_item
     end
@@ -183,16 +183,24 @@ module Odk
       raise SubmissionError, "no form id was given" if params[:id].nil?
       raise FormVersionError, "form version must be specified" if params[:version].nil?
 
-      # try to load form (will raise activerecord error if not found)
-      # if the response already has a form, don't fetch it again
-      response.form = Form.find(params[:id]) if response.form.blank?
-      form = response.form
+      form = lookup_form(params)
 
       # if form has no version, error
       raise "xml submissions must be to versioned forms" if form.current_version.nil?
 
       # if form version is outdated, error
-      raise FormVersionError, "Form version is outdated" if form.current_version.code != params[:version]
+      if form.current_version.code != params[:version] &&
+          form.current_version.sequence.to_s != params[:version]
+        raise FormVersionError, "Form version is outdated"
+      end
+    end
+
+    # Tries to load form (will raise ActiveRecord::RecordNotFound if not found).
+    def lookup_form(params)
+      # If the response already has a form, don't fetch it again
+      response.form ||= Form.find_by(id: params[:id]) || Form.find_by(old_id: params[:id])
+      return response.form unless response.form.nil?
+      raise ActiveRecord::RecordNotFound
     end
 
     def existing_response
