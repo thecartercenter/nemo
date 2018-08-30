@@ -44,6 +44,9 @@ feature "responses index" do
     end
   end
 
+  # Add happy path spec for regular search
+  # Do file refactor
+
   # Response match
     # Permitted
       # Response#edit

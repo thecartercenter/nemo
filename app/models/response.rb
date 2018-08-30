@@ -143,6 +143,7 @@ class Response < ApplicationRecord
   # options[:dont_truncate_excerpts] - if true, excerpt length limit is very high,
   #   so full answer is returned with matches highlighted
   def self.do_search(relation, query, scope, options = {})
+    binding.pry
     options[:include_excerpts] ||= false
 
     # create a search object and generate qualifiers
