@@ -56,14 +56,13 @@ feature "responses index" do
       # Response#show
       # Test for shortcode being in a string/text
   context "search" do
-    let(:user) { create(:user) }
-    let(:reviewer) { create(:user, role_name: :reviewer) }
+    let(:user) { create(:user, role_name: :coordinator) }
+    let(:enumerator) { create(:user, role_name: :enumerator) }
     let(:form) { create(:form, :published, question_types: %w[text]) }
-    let!(:response) { create(:response, user: user, form: form, answer_values: ["pants"]) }
+    let(:response) { create(:response, user: enumerator, form: form, reviewed: true, answer_values: ["pants"]) }
 
     describe "with short code" do
       scenario "user is permitted to see response" do
-        # when the owner of a response is logged in
         login(user)
 
         visit responses_path(
@@ -83,8 +82,7 @@ feature "responses index" do
       end
 
       scenario "user is not permitted to see response" do
-        # when a reviewer is logged in
-        login(reviewer)
+        login(enumerator)
 
         visit responses_path(
           locale: "en",
