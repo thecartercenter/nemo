@@ -3,13 +3,15 @@
 require "rails_helper"
 
 feature "responses index" do
+  let(:user) { create(:user) }
+  let(:form) { create(:form, :published, name: "TheForm", question_types: %w[text]) }
+
+  before { login(user) }
+
   context "general index page display" do
-    let(:user) { create(:user) }
-    let(:form) { create(:form, :published, name: "TheForm") }
     let(:response_link) { Response.first.decorate.shortcode }
 
     scenario "returning to index after response loaded via ajax", js: true do
-      login(user)
       click_link("Responses")
       expect(page).not_to have_content("TheForm")
 
@@ -26,17 +28,12 @@ feature "responses index" do
   end
 
   context "with key question" do
-    let(:user) { create(:user) }
-    let(:form) { create(:form, :published, question_types: %w[text]) }
     let!(:response1) { create(:response, user: user, form: form, answer_values: ["pants"]) }
     let!(:response2) { create(:response, user: user, form: form, answer_values: ["sweater"]) }
 
-    before do
-      form.c[0].question.update!(key: true)
-    end
+    before { form.c[0].question.update!(key: true) }
 
     scenario "key question values are shown in index" do
-      login(user)
       click_link("Responses")
       expect(page).to have_content(form.c[0].code)
       expect(page).to have_content("pants")
@@ -45,12 +42,10 @@ feature "responses index" do
   end
 
   context "search" do
-    let(:user) { create(:user, role_name: :coordinator) }
-    let(:enumerator) { create(:user, role_name: :enumerator) }
     let(:form) { create(:form, :published, question_types: %w[text]) }
     let(:response) do
       create(:response,
-        user: enumerator,
+        user: user,
         form: form,
         reviewed: true,
         answer_values: ["pants in i-am-a-banana"]
@@ -59,8 +54,6 @@ feature "responses index" do
 
     describe "with answer text" do
       scenario "works" do
-        login(user)
-
         visit responses_path(
           locale: "en",
           mode: "m",
@@ -83,8 +76,6 @@ feature "responses index" do
       before { response.update(shortcode: "i-am-a-banana") }
 
       scenario "user is permitted to edit response" do
-        login(user)
-
         visit responses_path(
           locale: "en",
           mode: "m",
@@ -101,23 +92,25 @@ feature "responses index" do
         expect(current_url).to end_with("responses/#{response.shortcode}/edit")
       end
 
-      scenario "user is not permitted to edit response" do
-        login(enumerator)
+      describe "enumerator" do
+        let(:user) { create(:user, role_name: :enumerator) }
 
-        visit responses_path(
-          locale: "en",
-          mode: "m",
-          mission_name: get_mission.compact_name,
-          form_id: form.id
-        )
+        scenario "user is not permitted to edit response" do
+          visit responses_path(
+            locale: "en",
+            mode: "m",
+            mission_name: get_mission.compact_name,
+            form_id: form.id
+          )
 
-        # and searches with the response shortcode
-        fill_in "search_str", with: response.shortcode
-        click_on "Search"
+          # and searches with the response shortcode
+          fill_in "search_str", with: response.shortcode
+          click_on "Search"
 
-        # the response show page shows
-        expect(page).to have_content("Response: #{response.shortcode.upcase}")
-        expect(current_url).to end_with("responses/#{response.shortcode}")
+          # the response show page shows
+          expect(page).to have_content("Response: #{response.shortcode.upcase}")
+          expect(current_url).to end_with("responses/#{response.shortcode}")
+        end
       end
     end
   end
