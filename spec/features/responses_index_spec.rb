@@ -59,9 +59,19 @@ feature "responses index" do
     let(:user) { create(:user, role_name: :coordinator) }
     let(:enumerator) { create(:user, role_name: :enumerator) }
     let(:form) { create(:form, :published, question_types: %w[text]) }
-    let(:response) { create(:response, user: enumerator, form: form, reviewed: true, answer_values: ["pants"]) }
+    let(:response) do
+      create(:response,
+        user: enumerator,
+        form: form,
+        reviewed: true,
+        answer_values: ["pants in i-am-a-banana"]
+      )
+    end
 
     describe "with short code" do
+
+      before { response.update(shortcode: "i-am-a-banana") }
+
       scenario "user is permitted to edit response" do
         login(user)
 
