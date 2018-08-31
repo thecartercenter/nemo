@@ -59,8 +59,7 @@ feature "responses index" do
     let(:user) { create(:user) }
     let(:reviewer) { create(:user, role_name: :reviewer) }
     let(:form) { create(:form, :published, question_types: %w[text]) }
-    let!(:response1) { create(:response, user: user, form: form, answer_values: ["pants"]) }
-    let!(:response2) { create(:response, user: reviewer, form: form, answer_values: ["sweater"]) }
+    let!(:response) { create(:response, user: user, form: form, answer_values: ["pants"]) }
 
     describe "with short code" do
       scenario "user is permitted to see response" do
@@ -75,12 +74,32 @@ feature "responses index" do
         )
 
         # and searches with the response shortcode
-        fill_in "search_str", with: response1.shortcode
+        fill_in "search_str", with: response.shortcode
         click_on "Search"
 
         # the response edit page shows
         expect(page).to have_content("Edit Response")
-        expect(current_url).to end_with("responses/#{response1.shortcode}/edit")
+        expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+      end
+
+      scenario "user is not permitted to see response" do
+        # when a reviewer is logged in
+        login(reviewer)
+
+        visit responses_path(
+          locale: "en",
+          mode: "m",
+          mission_name: get_mission.compact_name,
+          form_id: form.id
+        )
+
+        # and searches with the response shortcode
+        fill_in "search_str", with: response.shortcode
+        click_on "Search"
+
+        # the response show page shows
+        expect(page).to have_content("Response: #{response.shortcode.upcase}")
+        expect(current_url).to end_with("responses/#{response.shortcode}")
       end
     end
   end
