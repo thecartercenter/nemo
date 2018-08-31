@@ -6,13 +6,15 @@ feature "responses index" do
   let(:user) { create(:user) }
   let(:form) { create(:form, :published, name: "TheForm", question_types: %w[text]) }
 
-  before { login(user) }
+  before do
+    login(user)
+    click_on "Responses"
+  end
 
   context "general index page display" do
     let(:response_link) { Response.first.decorate.shortcode }
 
     scenario "returning to index after response loaded via ajax", js: true do
-      click_link("Responses")
       expect(page).not_to have_content("TheForm")
 
       # Create response and make it show up via AJAX
@@ -54,13 +56,6 @@ feature "responses index" do
 
     describe "with answer text" do
       scenario "works" do
-        visit responses_path(
-          locale: "en",
-          mode: "m",
-          mission_name: get_mission.compact_name,
-          form_id: form.id
-        )
-
         # and searches with the response shortcode
         fill_in "search_str", with: "pants"
         click_on "Search"
@@ -76,13 +71,6 @@ feature "responses index" do
       before { response.update(shortcode: "i-am-a-banana") }
 
       scenario "user is permitted to edit response" do
-        visit responses_path(
-          locale: "en",
-          mode: "m",
-          mission_name: get_mission.compact_name,
-          form_id: form.id
-        )
-
         # and searches with the response shortcode
         fill_in "search_str", with: response.shortcode
         click_on "Search"
@@ -96,13 +84,6 @@ feature "responses index" do
         let(:user) { create(:user, role_name: :enumerator) }
 
         scenario "user is not permitted to edit response" do
-          visit responses_path(
-            locale: "en",
-            mode: "m",
-            mission_name: get_mission.compact_name,
-            form_id: form.id
-          )
-
           # and searches with the response shortcode
           fill_in "search_str", with: response.shortcode
           click_on "Search"
