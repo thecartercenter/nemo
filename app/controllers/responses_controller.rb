@@ -34,6 +34,10 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
               include_excerpts: true)
+
+            if resp = Response.find_by(shortcode: params[:search])
+              redirect_to edit_response_path(resp)
+            end
           rescue Search::ParseError
             flash.now[:error] = $!.to_s
             @search_error = true

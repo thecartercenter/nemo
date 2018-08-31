@@ -121,6 +121,7 @@ class Response < ApplicationRecord
 
       # this qualifier inserts a placeholder that we replace later
       Search::Qualifier.new(name: "text", col: "responses.id", type: :indexed, default: true),
+      Search::Qualifier.new(name: "shortcode", col: "responses.shortcode", default: true),
 
       # support {foobar}:stuff style searches, where foobar is a question code
       Search::Qualifier.new(
@@ -143,7 +144,6 @@ class Response < ApplicationRecord
   # options[:dont_truncate_excerpts] - if true, excerpt length limit is very high,
   #   so full answer is returned with matches highlighted
   def self.do_search(relation, query, scope, options = {})
-    binding.pry
     options[:include_excerpts] ||= false
 
     # create a search object and generate qualifiers
@@ -154,8 +154,6 @@ class Response < ApplicationRecord
 
     # get the sql
     sql = search.sql
-
-    fulltext_param_sets = []
 
     # replace any fulltext search placeholders
     sql = sql.gsub(/###(\d+)###/) do
@@ -195,7 +193,7 @@ class Response < ApplicationRecord
     end
 
     # apply the conditions
-    relation = relation.where(sql)
+    relation.where(sql)
   end
 
   # returns a count how many responses have arrived recently
@@ -280,7 +278,7 @@ class Response < ApplicationRecord
   def check_out!(user = nil)
     raise ArgumentError, "A user is required to checkout a response" unless user
 
-    if !checked_out_by_others?(user)
+    unless checked_out_by_others?(user)
       transaction do
         Response.remove_previous_checkouts_by(user)
 

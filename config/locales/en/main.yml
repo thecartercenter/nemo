@@ -1030,6 +1030,7 @@ en:
     question_type: "question-type"
     reviewed: "reviewed"
     role: "role"
+    shortcode: "shortcode"
     source: "source"
     submit_date: "submit-date"
     submitter: "submitter"

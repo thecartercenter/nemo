@@ -57,10 +57,10 @@ feature "responses index" do
       # Test for shortcode being in a string/text
   context "search" do
     let(:user) { create(:user) }
-    let(:user2) { create(:user) }
+    let(:reviewer) { create(:user, role_name: :reviewer) }
     let(:form) { create(:form, :published, question_types: %w[text]) }
     let!(:response1) { create(:response, user: user, form: form, answer_values: ["pants"]) }
-    let!(:response2) { create(:response, user: user2, form: form, answer_values: ["sweater"]) }
+    let!(:response2) { create(:response, user: reviewer, form: form, answer_values: ["sweater"]) }
 
     describe "with short code" do
       scenario "user is permitted to see response" do
