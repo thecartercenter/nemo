@@ -121,7 +121,7 @@ class Response < ApplicationRecord
 
       # this qualifier inserts a placeholder that we replace later
       Search::Qualifier.new(name: "text", col: "responses.id", type: :indexed, default: true),
-      Search::Qualifier.new(name: "shortcode", col: "responses.shortcode", default: true),
+      Search::Qualifier.new(name: "shortcode", col: "responses.shortcode", type: :indexed, default: true),
 
       # support {foobar}:stuff style searches, where foobar is a question code
       Search::Qualifier.new(

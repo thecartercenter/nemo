@@ -74,7 +74,7 @@ describe Response do
           [1, "fox heaven jumps", "bravo", "fuzzy gusher", "apple heaven ipswitch", "Dog", %w[hammer wrench]])
       end
       let!(:r3) do
-        create(:response, form: form, reviewed: true, answer_values:
+        create(:response, form: form, reviewed: false, answer_values:
           [1, "over bravo the lazy brown quick dog", "contour", "joker lumpy", "meal nexttime", "Cat", []])
       end
 
@@ -95,7 +95,7 @@ describe Response do
         assert_search("quick brown", r1, r3)
 
         # Exact phrase matching should work
-        assert_search(%{text:(quick brown)}, r1, r3) # Parenths don't force exact phrase matching
+        assert_search(%{text:(quick brown)}, r1, r3) # Parents don't force exact phrase matching
 
         # TODO: FIX EXACT PHRASE MATCHING
         # assert_search(%{text:"quick brown"}, r1)
