@@ -29,24 +29,10 @@ feature "responses index" do
     end
   end
 
-  context "with key question" do
-    let!(:response1) { create(:response, user: user, form: form, answer_values: ["pants"]) }
-    let!(:response2) { create(:response, user: user, form: form, answer_values: ["sweater"]) }
-
-    before { form.c[0].question.update!(key: true) }
-
-    scenario "key question values are shown in index" do
-      click_link("Responses")
-      expect(page).to have_content(form.c[0].code)
-      expect(page).to have_content("pants")
-      expect(page).to have_content("sweater")
-    end
-  end
-
-  context "search" do
-    let(:form) { create(:form, :published, question_types: %w[text]) }
-    let(:response) do
-      create(:response,
+  describe "responses" do
+    let!(:response) do
+      create(
+        :response,
         user: user,
         form: form,
         reviewed: true,
@@ -54,45 +40,58 @@ feature "responses index" do
       )
     end
 
-    describe "with answer text" do
-      scenario "works" do
-        # and searches with the response shortcode
-        fill_in "search_str", with: "pants"
-        click_on "Search"
+    context "with key question" do
+      before { form.c[0].question.update!(key: true) }
 
-        # a scoped responses index page shows
+      scenario "key question values are shown in index" do
+        click_link("Responses")
+        expect(page).to have_content(form.c[0].code)
+        expect(page).to have_content("pants")
         expect(page).to have_content("Responses")
-        expect(current_url).to end_with("/responses?search=pants")
       end
     end
 
-    describe "with short code" do
+    context "search" do
+      describe "with answer text" do
+        scenario "works" do
+          # and searches with the response shortcode
+          fill_in "search_str", with: "pants"
+          click_on "Search"
 
-      before { response.update(shortcode: "i-am-a-banana") }
-
-      scenario "user is permitted to edit response" do
-        # and searches with the response shortcode
-        fill_in "search_str", with: response.shortcode
-        click_on "Search"
-
-        # the response edit page shows
-        expect(page).to have_content("Edit Response")
-        expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+          # a scoped responses index page shows
+          expect(page).to have_content("Responses")
+          expect(current_url).to end_with("/responses?search=pants")
+        end
       end
 
-      describe "enumerator" do
-        let(:user) { create(:user, role_name: :enumerator) }
+      describe "with short code" do
+        before { response.update(shortcode: "i-am-a-banana") }
 
-        scenario "user is not permitted to edit response" do
+        scenario "user is permitted to edit response" do
           # and searches with the response shortcode
           fill_in "search_str", with: response.shortcode
           click_on "Search"
 
-          # the response show page shows
-          expect(page).to have_content("Response: #{response.shortcode.upcase}")
-          expect(current_url).to end_with("responses/#{response.shortcode}")
+          # the response edit page shows
+          expect(page).to have_content("Edit Response")
+          expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+        end
+
+        describe "enumerator" do
+          let(:user) { create(:user, role_name: :enumerator) }
+
+          scenario "user is not permitted to edit response" do
+            # and searches with the response shortcode
+            fill_in "search_str", with: response.shortcode
+            click_on "Search"
+
+            # the response show page shows
+            expect(page).to have_content("Response: #{response.shortcode.upcase}")
+            expect(current_url).to end_with("responses/#{response.shortcode}")
+          end
         end
       end
     end
   end
+
 end
