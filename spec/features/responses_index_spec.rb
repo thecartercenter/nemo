@@ -62,7 +62,7 @@ feature "responses index" do
     let(:response) { create(:response, user: enumerator, form: form, reviewed: true, answer_values: ["pants"]) }
 
     describe "with short code" do
-      scenario "user is permitted to see response" do
+      scenario "user is permitted to edit response" do
         login(user)
 
         visit responses_path(
@@ -81,7 +81,7 @@ feature "responses index" do
         expect(current_url).to end_with("responses/#{response.shortcode}/edit")
       end
 
-      scenario "user is not permitted to see response" do
+      scenario "user is not permitted to edit response" do
         login(enumerator)
 
         visit responses_path(
