@@ -44,17 +44,6 @@ feature "responses index" do
     end
   end
 
-  # Do the check for if it's a short code in the controller
-  # Add happy path spec for regular search
-  # Do file refactor
-
-  # Response match
-    # Permitted
-      # Response#edit
-      # Test for shortcode being in a string/text
-    # Not permitted
-      # Response#show
-      # Test for shortcode being in a string/text
   context "search" do
     let(:user) { create(:user, role_name: :coordinator) }
     let(:enumerator) { create(:user, role_name: :enumerator) }
@@ -66,6 +55,27 @@ feature "responses index" do
         reviewed: true,
         answer_values: ["pants in i-am-a-banana"]
       )
+    end
+
+    describe "with answer text" do
+      scenario "works" do
+        login(user)
+
+        visit responses_path(
+          locale: "en",
+          mode: "m",
+          mission_name: get_mission.compact_name,
+          form_id: form.id
+        )
+
+        # and searches with the response shortcode
+        fill_in "search_str", with: "pants"
+        click_on "Search"
+
+        # a scoped responses index page shows
+        expect(page).to have_content("Responses")
+        expect(current_url).to end_with("/responses?search=pants")
+      end
     end
 
     describe "with short code" do
