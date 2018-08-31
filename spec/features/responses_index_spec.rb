@@ -29,7 +29,7 @@ feature "responses index" do
     end
   end
 
-  describe "responses" do
+  describe "existing responses" do
     let!(:response) do
       create(
         :response,
@@ -54,12 +54,12 @@ feature "responses index" do
     context "search" do
       describe "with answer text" do
         scenario "works" do
-          # and searches with the response shortcode
           fill_in "search_str", with: "pants"
           click_on "Search"
 
           # a scoped responses index page shows
           expect(page).to have_content("Responses")
+          expect(page).to have_content(response.shortcode.upcase)
           expect(current_url).to end_with("/responses?search=pants")
         end
       end
@@ -67,8 +67,7 @@ feature "responses index" do
       describe "with short code" do
         before { response.update(shortcode: "i-am-a-banana") }
 
-        scenario "user is permitted to edit response" do
-          # and searches with the response shortcode
+        scenario "for user that can edit response" do
           fill_in "search_str", with: response.shortcode
           click_on "Search"
 
@@ -80,8 +79,7 @@ feature "responses index" do
         describe "enumerator" do
           let(:user) { create(:user, role_name: :enumerator) }
 
-          scenario "user is not permitted to edit response" do
-            # and searches with the response shortcode
+          scenario "for user that can not edit response" do
             fill_in "search_str", with: response.shortcode
             click_on "Search"
 
@@ -93,5 +91,4 @@ feature "responses index" do
       end
     end
   end
-
 end
