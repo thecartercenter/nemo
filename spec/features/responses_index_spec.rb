@@ -44,14 +44,17 @@ feature "responses index" do
     end
   end
 
+  # Do the check for if it's a short code in the controller
   # Add happy path spec for regular search
   # Do file refactor
 
   # Response match
     # Permitted
       # Response#edit
+      # Test for shortcode being in a string/text
     # Not permitted
       # Response#show
+      # Test for shortcode being in a string/text
   context "search" do
     let(:user) { create(:user) }
     let(:user2) { create(:user) }
@@ -77,7 +80,7 @@ feature "responses index" do
 
         # the response edit page shows
         expect(page).to have_content("Edit Response")
-        expect(current_url).to end_with("responses/#{response1.id}")
+        expect(current_url).to end_with("responses/#{response1.shortcode}/edit")
       end
     end
   end
