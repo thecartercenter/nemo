@@ -27,6 +27,8 @@ module ReportEmbeddable
 
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
     @report_data[:report][:user_can_edit] = can?(:update, @report)
+    @report_data[:report][:html] =
+      render_to_string(partial: "reports/#{@report.model_name.singular_route_key.remove(/^report_/)}")
   end
 
   # Looks for a cached, populated report object matching @report.
