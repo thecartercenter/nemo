@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_context "trumbowyg" do
   def fill_in_trumbowyg(selector, opts)
     wait_for_trumbowyg(selector)

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 shared_context "dropzone" do
   def drop_in_dropzone(file_path)
     # Generate a fake input selector

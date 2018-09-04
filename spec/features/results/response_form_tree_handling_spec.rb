@@ -196,13 +196,14 @@ feature "response form tree handling", js: true do
   end
 
   def expect_value(path, expected_value)
-    actual_value = case qing(path).qtype_name
-    when "select_one"
-      el = page.find("#" + path_selector(path, "option_node_id"))
-      OptionNode.find(el.value).option_name if el.value
-    else
-      page.find("#" + path_selector(path, "value")).value
-    end
+    actual_value =
+      case qing(path).qtype_name
+      when "select_one"
+        el = page.find("#" + path_selector(path, "option_node_id"))
+        OptionNode.find(el.value).option_name if el.value
+      else
+        page.find("#" + path_selector(path, "value")).value
+      end
 
     expect(actual_value).to eq expected_value
   end
