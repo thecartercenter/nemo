@@ -2,7 +2,9 @@
 
 require "rails_helper"
 
-feature "response form tree handling", js: true, database_cleaner: :all do
+feature "response form tree handling", js: true do
+  include_context "dropzone"
+
   let(:user) { create(:user) }
 
   let!(:form) do
@@ -105,41 +107,39 @@ feature "response form tree handling", js: true, database_cleaner: :all do
       visit new_hierarchical_response_path(params)
 
       select2(user.name, from: "response_user_id")
-      fill_in("response_root_children_0_children_0_value", with: "1")
-      drop_in_dropzone(Rails.root.join("spec", "fixtures", "media", "audio", "powerup.mp3"))
-      expect(page).to have_content("The uploaded file was not an accepted format.")
+      fill_in_question([0, 0], with: "1")
       drop_in_dropzone(Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg"))
       select("Animal")
       select("Dog")
-      fill_in("response_root_children_3_children_0_children_0_children_0_value", with: "4561")
-      fill_in("response_root_children_3_children_0_children_1_children_0_children_0_value", with: "7891")
+      fill_in_question([3, 0, 0, 0], with: "4561")
+      fill_in_question([3, 0, 1, 0, 0], with: "7891")
       all("a.add-repeat").last.click
-      fill_in("response_root_children_3_children_1_children_0_children_0_value", with: "4562")
-      fill_in("response_root_children_3_children_1_children_1_children_0_children_0_value", with: "7892")
+      fill_in_question([3, 1, 0, 0], with: "4562")
+      fill_in_question([3, 1, 1, 0, 0], with: "7892")
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
-      expect_value("#response_root_children_3_children_0_children_0_children_0_value", "4561")
-      expect_value("#response_root_children_3_children_0_children_1_children_0_children_0_value", "7891")
-      expect_value("#response_root_children_3_children_1_children_0_children_0_value", "4562")
-      expect_value("#response_root_children_3_children_1_children_1_children_0_children_0_value", "7892")
+      expect_value([3, 0, 0, 0], "4561")
+      expect_value([3, 0, 1, 0, 0], "7891")
+      expect_value([3, 1, 0, 0], "4562")
+      expect_value([3, 1, 1, 0, 0], "7892")
 
-      fill_in("response_root_children_0_children_0_value", with: "123")
+      fill_in_question([0, 0], with: "123")
       click_button("Save")
 
       expect(page).to_not have_content("Response is invalid")
 
       response = Response.last
-      visit hierarchical_response_path(params.merge(id: response.shortcode))
+      visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
-      expect(page).to have_content("123")
+      expect_value([0, 0], "123")
       expect(page).to have_selector("[data-qtype-name=image] .media-thumbnail img")
-      expect(page).to have_content("Animal")
-      expect(page).to have_content("Dog")
-      expect(page).to have_content("4561")
-      expect(page).to have_content("7891")
-      expect(page).to have_content("4562")
-      expect(page).to have_content("7892")
+      expect_value([2, 0], "Animal")
+      expect_value([2, 1], "Dog")
+      expect_value([3, 0, 0, 0], "4561")
+      expect_value([3, 0, 1, 0, 0], "7891")
+      expect_value([3, 1, 0, 0], "4562")
+      expect_value([3, 1, 1, 0, 0], "7892")
     end
 
     context "with conditional logic" do
@@ -160,24 +160,34 @@ feature "response form tree handling", js: true, database_cleaner: :all do
         select2(user.name, from: "response_user_id")
 
         # makes select boxes visible
-        fill_in("response_root_children_0_children_0_value", with: "123")
+        fill_in_question([0, 0], with: "123")
 
         select("Animal")
         select("Dog")
 
         # hides select boxes, they are now irrelevant
-        fill_in("response_root_children_0_children_0_value", with: "124")
+        fill_in_question([0, 0], with: "124")
 
         click_button("Save")
 
         response = Response.last
-        visit hierarchical_response_path(params.merge(id: response.shortcode))
+        visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
-        expect(page).to have_content("124")
-        expect(page).to_not have_content("Animal")
-        expect(page).to_not have_content("Dog")
+        expect_value([0, 0], "124")
+
+        # select answers not persisted
+        expect_not_persisted(form.root_group.c[2].id)
       end
     end
+  end
+
+  def path_selector(indices, suffix = "value")
+    path = ["children"] + indices.zip(["children"] * (indices.length - 1)).flatten.compact
+    "response_root_#{path.join('_')}_#{suffix}"
+  end
+
+  def fill_in_question(path, opts)
+    fill_in(path_selector(path, "value"), opts)
   end
 
   def expect_path(path, options = {})
@@ -185,7 +195,25 @@ feature "response form tree handling", js: true, database_cleaner: :all do
     expect(page).to have_selector(selector, options)
   end
 
-  def expect_value(selector, value)
-    expect(page.find(selector).value).to eq value
+  def expect_value(path, expected_value)
+    actual_value = case qing(path).qtype_name
+    when "select_one"
+      el = page.find("#" + path_selector(path, "option_node_id"))
+      OptionNode.find(el.value).option_name if el.value
+    else
+      page.find("#" + path_selector(path, "value")).value
+    end
+
+    expect(actual_value).to eq expected_value
+  end
+
+  def qing(path)
+    selector = "#" + path_selector(path, "questioning_id")
+    qing_id = page.find(selector, visible: :all).value
+    FormItem.find(qing_id)
+  end
+
+  def expect_not_persisted(qing_id)
+    expect(page).to_not have_selector("[data-qing-id='#{qing_id}']")
   end
 end

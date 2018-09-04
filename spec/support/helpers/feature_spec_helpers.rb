@@ -17,14 +17,6 @@ module FeatureSpecHelpers
     SCRIPT
   end
 
-  def fill_in_trumbowyg(selector, opts)
-    wait_for_trumbowyg(selector)
-    content = opts.fetch(:with).to_json
-    page.execute_script <<-SCRIPT
-      $('#{selector}').trumbowyg('html', #{content});
-    SCRIPT
-  end
-
   # Fills in a token input *JS MUST BE ENABLED
   # EX: fill_in_token_input 'custodian_id', with: 'M', pick: 'Market'
   # EX: fill_in_token_input 'custodian_id', with: 'A', pick: 1
@@ -135,30 +127,6 @@ module FeatureSpecHelpers
     select(value, options)
   end
 
-  def drop_in_dropzone(file_path)
-    # Generate a fake input selector
-    page.execute_script <<-JS
-      fakeFileInput = window.$('<input/>').attr(
-        {id: 'fakeFileInput', type:'file'}
-      ).appendTo('body');
-    JS
-    # Attach the file to the fake input selector with Capybara
-    attach_file("fakeFileInput", file_path)
-    # Trigger the fake drop event
-    page.execute_script <<-JS
-      var e = jQuery.Event('drop', { dataTransfer : { files : [fakeFileInput.get(0).files[0]] } });
-      $('.dropzone')[0].dropzone.listeners[0].events.drop(e);
-    JS
-
-    # If we don't wait for the upload to finish and another request is processed
-    # in the meantime, it can lead to weird failures.
-    wait_for_dropzone_upload
-
-    page.execute_script <<-JS
-      fakeFileInput.remove();
-    JS
-  end
-
   private
 
   def wait_for_ckeditor(locator)
@@ -169,25 +137,5 @@ module FeatureSpecHelpers
 
   def ckeditor_ready?(locator)
     page.evaluate_script "CKEDITOR.instances['#{locator}'].instanceReady;"
-  end
-
-  def wait_for_trumbowyg(selector)
-    Timeout.timeout(Capybara.default_max_wait_time) do
-      loop until trumbowyg_ready?(selector)
-    end
-  end
-
-  def trumbowyg_ready?(selector)
-    page.evaluate_script("$('#{selector}').trumbowyg('html') !== false")
-  end
-
-  def wait_for_dropzone_upload
-    Timeout.timeout(Capybara.default_max_wait_time) do
-      loop until dropzone_ready?
-    end
-  end
-
-  def dropzone_ready?
-    page.evaluate_script("ELMO.mediaUploaderManager.is_uploading()")
   end
 end

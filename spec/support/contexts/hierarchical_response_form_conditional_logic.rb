@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 shared_context "hierarchical response form conditional logic" do
+  include_context "trumbowyg"
+
   def visit_new_hierarchical_response_page
     visit(new_hierarchical_response_path(
       locale: "en",

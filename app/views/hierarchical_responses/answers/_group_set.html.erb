@@ -36,7 +36,7 @@
         el: $("#answer-group-set-<%= context.path_str %>"),
         next_index: <%= group_set.children.length %>,
         tmpl: <%= json(render("hierarchical_responses/answers/nodes",
-          nodes: context.find(@blank_response).children,
+          nodes: context.find(@blank_response).try(:children) || [],
           index_placeholder: true,
           removable: true,
           context: context)) %>
