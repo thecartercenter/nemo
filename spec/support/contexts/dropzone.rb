@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 shared_context "dropzone" do
-  def drop_in_dropzone(file_path)
+  def drop_in_dropzone(file_path, index = 0)
     # Generate a fake input selector
     page.execute_script <<-JS
       fakeFileInput = window.$('<input/>').attr(
@@ -13,7 +13,7 @@ shared_context "dropzone" do
     # Trigger the fake drop event
     page.execute_script <<-JS
       var e = jQuery.Event('drop', { dataTransfer : { files : [fakeFileInput.get(0).files[0]] } });
-      $('.dropzone')[0].dropzone.listeners[0].events.drop(e);
+      $('.dropzone')[#{index}].dropzone.listeners[0].events.drop(e);
     JS
 
     # If we don't wait for the upload to finish and another request is processed

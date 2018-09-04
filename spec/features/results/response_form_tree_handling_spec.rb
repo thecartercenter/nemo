@@ -4,6 +4,7 @@ require "rails_helper"
 
 feature "response form tree handling", js: true do
   include_context "dropzone"
+  include_context "trumbowyg"
 
   let(:user) { create(:user) }
 
@@ -17,9 +18,13 @@ feature "response form tree handling", js: true do
           repeating: {
             items: [
               %w[integer],
-              repeating: {
-                items: %w[integer]
-              }
+              {
+                repeating: {
+                  items: %w[integer]
+                }
+              },
+              "image",
+              "long_text"
             ]
           }
         }
@@ -103,26 +108,45 @@ feature "response form tree handling", js: true do
   end
 
   describe "form submission" do
+    let(:image) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg") }
+
     scenario "submitting response" do
       visit new_hierarchical_response_path(params)
 
       select2(user.name, from: "response_user_id")
       fill_in_question([0, 0], with: "1")
-      drop_in_dropzone(Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg"))
+      drop_in_dropzone(image, 0)
       select("Animal")
       select("Dog")
       fill_in_question([3, 0, 0, 0], with: "4561")
       fill_in_question([3, 0, 1, 0, 0], with: "7891")
+      drop_in_dropzone(image, 1)
+      fill_in_question([3, 0, 3], with: "some text")
+
+      # create new inner repeat
+      all("a.add-repeat").first.click
+      fill_in_question([3, 0, 1, 1, 0], with: "78911")
+
+      # create new outer repeat
+      # second outer group will not have an inner repeat
       all("a.add-repeat").last.click
       fill_in_question([3, 1, 0, 0], with: "4562")
       fill_in_question([3, 1, 1, 0, 0], with: "7892")
+      drop_in_dropzone(image, 2)
+      fill_in_question([3, 1, 3], with: "some other text")
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
+      expect_image([1], form.root_group.c[1].id)
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
+      expect_value([3, 0, 1, 1, 0], "78911")
+      expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
+      expect_value([3, 0, 3], "some text")
       expect_value([3, 1, 0, 0], "4562")
       expect_value([3, 1, 1, 0, 0], "7892")
+      expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
+      expect_value([3, 1, 3], "some other text")
 
       fill_in_question([0, 0], with: "123")
       click_button("Save")
@@ -133,13 +157,18 @@ feature "response form tree handling", js: true do
       visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
 
       expect_value([0, 0], "123")
-      expect(page).to have_selector("[data-qtype-name=image] .media-thumbnail img")
+      expect_image([1], form.root_group.c[1].id)
       expect_value([2, 0], "Animal")
       expect_value([2, 1], "Dog")
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
+      expect_value([3, 0, 1, 1, 0], "78911")
+      expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
+      expect_value([3, 0, 3], "some text")
       expect_value([3, 1, 0, 0], "4562")
       expect_value([3, 1, 1, 0, 0], "7892")
+      expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
+      expect_value([3, 1, 3], "some other text")
     end
 
     context "with conditional logic" do
@@ -187,7 +216,14 @@ feature "response form tree handling", js: true do
   end
 
   def fill_in_question(path, opts)
-    fill_in(path_selector(path, "value"), opts)
+    selector = path_selector(path, "value")
+
+    case qing(path).qtype_name
+    when "long_text"
+      fill_in_trumbowyg("#" + selector, opts)
+    else
+      fill_in(selector, opts)
+    end
   end
 
   def expect_path(path, options = {})
@@ -199,10 +235,10 @@ feature "response form tree handling", js: true do
     actual_value =
       case qing(path).qtype_name
       when "select_one"
-        el = page.find("#" + path_selector(path, "option_node_id"))
+        el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
         OptionNode.find(el.value).option_name if el.value
       else
-        page.find("#" + path_selector(path, "value")).value
+        page.find("#" + path_selector(path, "value"), visible: :all).value
       end
 
     expect(actual_value).to eq expected_value
@@ -216,5 +252,12 @@ feature "response form tree handling", js: true do
 
   def expect_not_persisted(qing_id)
     expect(page).to_not have_selector("[data-qing-id='#{qing_id}']")
+  end
+
+  def expect_image(path, qing_id)
+    path_selector = "[data-path='#{path.join('-')}']"
+    qing_selector = "[data-qing-id='#{qing_id}']"
+    image_selector = "#{path_selector}#{qing_selector}[data-qtype-name=image]"
+    expect(page).to have_selector("#{image_selector} .media-thumbnail img")
   end
 end
