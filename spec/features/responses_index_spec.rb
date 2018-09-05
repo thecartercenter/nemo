@@ -31,13 +31,7 @@ feature "responses index" do
 
   describe "existing responses" do
     let!(:response) do
-      create(
-        :response,
-        user: user,
-        form: form,
-        reviewed: true,
-        answer_values: ["pants in i-am-a-banana"]
-      )
+      create(:response, user: user, form: form, reviewed: true, answer_values: ["pants in i-am-a-banana"])
     end
 
     context "with key question" do
