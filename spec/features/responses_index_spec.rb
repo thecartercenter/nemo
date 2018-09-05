@@ -54,8 +54,8 @@ feature "responses index" do
     context "search" do
       describe "with answer text" do
         scenario "works" do
-          fill_in "search_str", with: "pants"
-          click_on "Search"
+          fill_in("search_str", with: "pants")
+          click_on("Search")
 
           # a scoped responses index page shows
           expect(page).to have_content("Responses")
@@ -65,12 +65,14 @@ feature "responses index" do
       end
 
       describe "with short code" do
-        before { response.update(shortcode: "i-am-a-banana") }
+        before do
+          response.update!(shortcode: "i-am-a-banana")
+
+          fill_in("search_str", with: response.shortcode)
+          click_on("Search")
+        end
 
         scenario "for user that can edit response" do
-          fill_in "search_str", with: response.shortcode
-          click_on "Search"
-
           # the response edit page shows
           expect(page).to have_content("Edit Response")
           expect(current_url).to end_with("responses/#{response.shortcode}/edit")
@@ -80,9 +82,6 @@ feature "responses index" do
           let(:user) { create(:user, role_name: :enumerator) }
 
           scenario "for user that can not edit response" do
-            fill_in "search_str", with: response.shortcode
-            click_on "Search"
-
             # the response show page shows
             expect(page).to have_content("Response: #{response.shortcode.upcase}")
             expect(current_url).to end_with("responses/#{response.shortcode}")

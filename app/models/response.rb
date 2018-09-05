@@ -278,7 +278,7 @@ class Response < ApplicationRecord
   def check_out!(user = nil)
     raise ArgumentError, "A user is required to checkout a response" unless user
 
-    unless checked_out_by_others?(user)
+    if !checked_out_by_others?(user)
       transaction do
         Response.remove_previous_checkouts_by(user)
 
