@@ -148,6 +148,9 @@ feature "response form tree handling", js: true do
       expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
 
+      # remove second inner repeat
+      all("a.remove-repeat")[2].click
+
       fill_in_question([0, 0], with: "123")
       click_button("Save")
 
@@ -162,13 +165,32 @@ feature "response form tree handling", js: true do
       expect_value([2, 1], "Dog")
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
-      expect_value([3, 0, 1, 1, 0], "78911")
       expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 0, 3], "some text")
       expect_value([3, 1, 0, 0], "4562")
       expect_value([3, 1, 1, 0, 0], "7892")
       expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
+
+      # update a value
+      fill_in_question([0, 0], with: "1234")
+
+      # remove second outer repeat
+      all("a.remove-repeat").last.click
+
+      click_button("Save")
+      expect(page).to_not have_content("Response is invalid")
+
+      visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+
+      expect_value([0, 0], "1234")
+      expect_image([1], form.root_group.c[1].id)
+      expect_value([2, 0], "Animal")
+      expect_value([2, 1], "Dog")
+      expect_value([3, 0, 0, 0], "4561")
+      expect_value([3, 0, 1, 0, 0], "7891")
+      expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
+      expect_value([3, 0, 3], "some text")
     end
 
     context "with conditional logic" do

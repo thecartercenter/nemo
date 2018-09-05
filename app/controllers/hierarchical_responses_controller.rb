@@ -203,7 +203,7 @@ class HierarchicalResponsesController < ApplicationController
     @response.reviewed = true if params[:commit_and_mark_reviewed]
     @response.check_in if params[:action] == "update"
 
-    if action_name != "update" || can?(:modify_answers, @response)
+    if can?(:modify_answers, @response)
       parser = Results::WebResponseParser.new(@response)
       parser.parse(params.require(:response))
     end
