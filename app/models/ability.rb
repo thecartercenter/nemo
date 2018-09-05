@@ -99,7 +99,7 @@ class Ability
       if mission
 
         # enumerator abilities
-        if role_in_mission?(:enumerator)
+        if user_has_this_or_higher_role_in_mission?(:enumerator)
           # can view and export users in same mission
           can [:index, :read, :show, :export], User, assignments: { mission_id: mission.id }
 
@@ -113,7 +113,7 @@ class Ability
           can :login_instructions, User, id: user.id
 
           # only need these abilities if not also a staffer
-          unless role_in_mission?(:staffer)
+          unless user_has_this_or_higher_role_in_mission?(:staffer)
             # can only see own responses
             can [:index, :read], Response, user_id: user.id, mission_id: mission.id
 
@@ -131,22 +131,22 @@ class Ability
 
           # can read published forms for the mission
           # only need this ability if not also a coordinator
-          unless role_in_mission?(:coordinator)
+          unless user_has_this_or_higher_role_in_mission?(:coordinator)
             can [:index, :read, :download], Form, mission_id: mission.id, published: true
           end
 
         end
 
         # reviewer abilities
-        if role_in_mission?(:reviewer)
+        if user_has_this_or_higher_role_in_mission?(:reviewer)
           # only need these abilities if not also a staffer
-          unless role_in_mission?(:staffer)
+          unless user_has_this_or_higher_role_in_mission?(:staffer)
             can [:index, :review, :show, :edit, :update], Response, mission_id: mission.id
           end
         end
 
         # staffer abilities
-        if role_in_mission?(:staffer)
+        if user_has_this_or_higher_role_in_mission?(:staffer)
           # can send broadcasts for the current mission
           can :manage, Broadcast, mission_id: mission.id
 
@@ -171,7 +171,7 @@ class Ability
         end
 
         # coordinator abilities
-        if role_in_mission?(:coordinator)
+        if user_has_this_or_higher_role_in_mission?(:coordinator)
 
           can :manage, Report::Report, mission_id: mission.id
 
@@ -318,7 +318,7 @@ class Ability
 
   private
 
-  def role_in_mission?(role_name)
+  def user_has_this_or_higher_role_in_mission?(role_name)
     user.role?(role_name, mission)
   end
 

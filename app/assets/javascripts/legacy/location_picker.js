@@ -94,6 +94,7 @@
             text(results[i].formatted_address));
 
         self.el.find("a.result-link").click(function(e){
+          e.preventDefault();
           self.set_location(self.parse_lat_lng(e.target.title));
           self.mark_location({pan: true});
         });

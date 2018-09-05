@@ -236,6 +236,7 @@ class ResponsesController < ApplicationController
       # We use this because ODK can't display custom failure messages so this provides a little more info.
       render_xml_submission_failure(e, 426)
     rescue SubmissionError => e
+      Rails.logger.debug(e)
       render_xml_submission_failure(e, 422)
     end
   end
