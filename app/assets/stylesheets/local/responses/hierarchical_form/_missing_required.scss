@@ -1,24 +1,7 @@
 // The "Are there missing required answers?" checkbox at the bottom of the form.
 .response-form {
   [data-field-name=incomplete] {
-    display: flex;
-    line-height: 20px;
+    @include left-checkbox;
     margin-top: 20px;
-
-    .control {
-      margin-#{$right}: 5px;
-      order: -2;
-    }
-
-    label {
-      margin-#{$right}: 10px;
-      order: -1;
-    }
-
-    .hint-wrapper i {
-      color: $gray-text;
-      font-size: 16px;
-      vertical-align: text-bottom;
-    }
   }
 }

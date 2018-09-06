@@ -6,17 +6,22 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////
 
+// Set direction for directional variables
+// These are set super early as they may be used in later variables files.
+$dir: @@@direction@@@;
+@import "directional";
+
+// These need to be loaded in a specific order so that earlier variables can be reused in later files.
+@import "variables/base";
+@import "variables/mixins";
+@import "themes/@@@theme@@@";
+@import "variables/bootstrap";
+
+// Vendor
 @import "bootstrap";
 @import "font-awesome";
 @import "select2";
 @import "trumbowyg";
-@import "variables/basic_colors";
-@import "themes/@@@theme@@@";
-@import "variables/**/*";
-
-// Set direction for directional variables
-$dir: @@@direction@@@;
-@import "directional";
 
 /*
  * This is a manifest file that'll be compiled into application.css, which will include all the files

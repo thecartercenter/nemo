@@ -1,5 +1,4 @@
-// Some of the colors used below are defined in app/assets/stylesheets/all/variables/_basic_colors.scss
-// You can override them in this file if you so desire.
+// See _base.scss for variables you can override.
 $theme-red: #d02000;
 $theme-green: #9dc400;
 $theme-main: #879CAA;
@@ -8,6 +7,7 @@ $theme-main-darker: #02648A;
 $body-background-color: #6C89BC;
 $header-background-color: $body-background-color;
 $header-text-color: inherit;
+$light-background-color: #eef2f7;
 
 $footer-background-color: #AFCDEF;
 $footer-text-color: gray;

@@ -1,7 +1,7 @@
 .response-form {
-  $gray1: #f3f3f3;
-  $gray2: #e7e7e7;
-  $gray3: #dbdbdb;
+  $gray1: $light-background-color;
+  $gray2: darken($gray1, 3%);
+  $gray3: darken($gray2, 3%);
 
   // For some reason there is about 10px of whitespace between the title-container and form.
   // Could not figure out why! Doesn't happen on other pages!

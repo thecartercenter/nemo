@@ -1,6 +1,7 @@
 .response-form .metadata {
+  background-color: $super-light-gray;
   margin-bottom: 20px;
-  max-width: 500px;
+  padding: 20px;
 
   .form-field {
     margin-bottom: 10px;
@@ -12,5 +13,13 @@
 
   label {
     margin-bottom: 0;
+  }
+
+  [data-field-name=reviewed] {
+    @include left-checkbox;
+
+    @media screen and (max-width: $screen-xs-max) {
+      margin-top: 20px;
+    }
   }
 }

@@ -105,10 +105,10 @@ header {
         left: auto;
         margin-top: 5px;
         text-align: $left;
-        
+
         li {
           font-weight: normal;
-          font-family: $sans-serif;
+          font-family: $font-family-sans-serif;
           padding: 4px 9px 6px 15px;
 
           &:hover, &:focus {
@@ -116,7 +116,7 @@ header {
           }
           a {
             font-weight: normal;
-            font-family: $sans-serif;
+            font-family: $font-family-sans-serif;
             font-size: 10pt;
             display: block;
 

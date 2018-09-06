@@ -100,7 +100,7 @@ feature "responses form", js: true do
       control_for(questionings[:select_multiple]).uncheck("Cat")
       control_for(questionings[:select_multiple]).check("Dog")
 
-      click_button("Save and Mark as Reviewed")
+      click_button("Save & Mark Reviewed")
 
       click_link(response_link)
 

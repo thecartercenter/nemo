@@ -1,12 +1,30 @@
-// WARNING: If a new variable is added here or in the nemo theme, it should also be added to the
-// _base.scss file. Otherwise, folks with custom themes in the wild will get an
+// WARNING: All theme variables should appear here and optionally be also overridden in theme files.
+// If a new color is added to a theme and not here, folks with custom themes in the wild will get an
 // undefined variable error when they upgrade.
+$body-text-color: #222;
+$tag-color: #eae175;
+$gold: #e4bb54;
+$gray: #3f3e3e;
+$gray-blue: #d4dce1;
+$light-blue: #d9ecf7;
+$light-yellow: #f7f6d9;
+$mid-gray: #888888;
+$light-gray: #bdb9b9;
+$lighter-gray: #cccccc;
+$orange: #f77d48;
+$faint-gray: #eee;
+$super-light-gray: #f0f0f0;
+$light-background-color: $super-light-gray;
+$white: #ffffff;
+$gray-text: #777;
+$deemphasized-link-color: #ccc;
+$light-border-color: #ddd;
+$light-border: 1px solid $light-border-color;
 
-// See _base.scss for variables you can override.
 $theme-red: #d02000;
 $theme-green: #9dc400;
-$theme-main: #879CAA;
-$theme-main-darker: #02648A;
+$theme-main: #879caa;
+$theme-main-darker: #02648a;
 
 $body-background-color: $theme-main;
 $header-background-color: $body-background-color;
@@ -14,7 +32,7 @@ $header-text-color: inherit;
 $light-background-color: #eef2f7;
 
 $footer-background-color: $gray-blue;
-$footer-text-color: gray;
+$footer-text-color: #808080;
 
 $body-text-color: $body-text-color;
 $link-text-color: $orange;
@@ -23,16 +41,16 @@ $primary-icon-color: $body-background-color;
 $primary-icon-hover-color: darken($primary-icon-color, 20%);
 
 $primary-btn-background-color: $link-text-color;
-$primary-btn-text-color: white;
+$primary-btn-text-color: #ffffff;
 
 $primary-btn-hover-background-color: darken($primary-btn-background-color, 10%);
-$primary-btn-hover-text-color: white;
+$primary-btn-hover-text-color: #ffffff;
 
-$nav-background-color: #F8F8F8;
+$nav-background-color: #f8f8f8;
 $nav-active-background-color: $light-blue;
 $nav-text-color: #777;
 $nav-icon-color: #bdb9b9;
-$nav-border-color: #E7E7E7;
+$nav-border-color: #e7e7e7;
 
 // For pills/tokens like user groups or question tags.
 // Not all instances of pills/tokens obey this yet.
