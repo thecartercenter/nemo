@@ -1683,7 +1683,7 @@ en:
     export_to_csv: "Export to CSV Format"
     loading: "Loading Response..."
     observation_time: "Observation Time"
-    save_and_mark_reviewed: "Save and Mark as Reviewed"
+    save_and_mark_reviewed: "Save & Mark Reviewed"
     view_response: "View Response"
     checked_out: "This response has been checked out by:"
     remove_media_object_confirm:
