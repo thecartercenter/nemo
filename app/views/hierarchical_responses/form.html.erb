@@ -10,6 +10,7 @@
 <% end %>
 
 <div id="response-form-wrapper">
+  <% # TODO: this can be removed once `hierarchical_responses` is renamed to `responses` %>
   <% url = @response.new_record? ? hierarchical_responses_path : hierarchical_response_path(@response) %>
   <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form", url: url) do |f| %>
     <%= f.base_errors %>

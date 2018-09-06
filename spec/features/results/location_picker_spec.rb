@@ -6,11 +6,10 @@ feature "response form location picker", js: true do
   include_context "response tree"
 
   let(:user) { create(:user) }
-  let!(:form) { create(:form, question_types: %w[location]) }
+  let!(:form) { create(:form, :published, question_types: %w[location]) }
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
-  before { form.publish! }
-  before(:each) { login(user) }
+  before { login(user) }
 
   scenario "picking a location" do
     visit new_hierarchical_response_path(params)

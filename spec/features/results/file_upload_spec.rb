@@ -7,11 +7,10 @@ feature "response form file upload", js: true do
   include_context "dropzone"
 
   let(:user) { create(:user) }
-  let!(:form) { create(:form, question_types: %w[image video]) }
+  let!(:form) { create(:form, :published, question_types: %w[image video]) }
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
-  before { form.publish! }
-  before(:each) { login(user) }
+  before { login(user) }
 
   let(:image) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg") }
   let(:image2) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.png") }

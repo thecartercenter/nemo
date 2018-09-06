@@ -1,12 +1,6 @@
 <div class="<%= set.classes %>">
-
-  <% unless context.read_only? %>
-    <%= hidden_field_tag context.input_name(:id), set.id %>
-    <%= hidden_field_tag context.input_name(:type), "AnswerSet" %>
-    <%= hidden_field_tag context.input_name(:questioning_id), set.questioning_id %>
-    <%= hidden_field_tag context.input_name(:_relevant), "true", class: "relevant" %>
-    <%= hidden_field_tag context.input_name(:_destroy), "false" %>
-  <% end %>
+  <%= render("hierarchical_responses/answers/hidden_fields", node: set,
+                                                             context: context) %>
 
   <%= render("hierarchical_responses/answers/answer_info", node: set) %>
 

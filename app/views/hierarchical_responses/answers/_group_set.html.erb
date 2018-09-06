@@ -1,11 +1,6 @@
 <div class="answer-group-set" id="answer-group-set-<%= context.path_str %>">
-  <% unless context.read_only? %>
-    <%= hidden_field_tag context.input_name(:id), group_set.id %>
-    <%= hidden_field_tag context.input_name(:type), "AnswerGroupSet" %>
-    <%= hidden_field_tag context.input_name(:questioning_id), group_set.questioning_id %>
-    <%= hidden_field_tag context.input_name(:_relevant), "true", class: "relevant" %>
-    <%= hidden_field_tag context.input_name(:_destroy), "false" %>
-  <% end %>
+  <%= render("hierarchical_responses/answers/hidden_fields", node: group_set,
+                                                             context: context) %>
 
   <div class="children">
     <%= render("hierarchical_responses/answers/nodes", nodes: group_set.children,
@@ -36,7 +31,7 @@
         el: $("#answer-group-set-<%= context.path_str %>"),
         next_index: <%= group_set.children.length %>,
         tmpl: <%= json(render("hierarchical_responses/answers/nodes",
-          nodes: context.find(@blank_response).try(:children) || [],
+          nodes: context.find(@blank_response)&.children || [],
           index_placeholder: true,
           removable: true,
           context: context)) %>

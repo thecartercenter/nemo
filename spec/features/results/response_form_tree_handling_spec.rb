@@ -10,7 +10,7 @@ feature "response form tree handling", js: true do
   let(:user) { create(:user) }
 
   let!(:form) do
-    create(:form,
+    create(:form, :published,
       question_types: [
         %w[integer],
         "image",
@@ -35,14 +35,9 @@ feature "response form tree handling", js: true do
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
   before do
-    question = form.root_group.c[0].c[0].question
-    question.minimum = 123
-    question.save!
-
-    form.publish!
+    form.root_group.c[0].c[0].question.update!(minimum: 123)
+    login(user)
   end
-
-  before(:each) { login(user) }
 
   describe "form rendering" do
     scenario "renders new form with hierarchical structure" do
