@@ -23,7 +23,7 @@ module Results
       # Takes an array of hashes with keys: code, qtype_name, level_names, allow_coordinates.
       # Array is sorted by code.
       # Adds appropriate headers.
-      def add_from_codes(rows)
+      def add_from_qcodes(rows)
         rows.each do |row|
           if row["qtype_name"] == "location"
             add_location_headers(row["code"])
@@ -44,7 +44,7 @@ module Results
       end
 
       def translated_headers
-        map.keys.map { |h| common?(h) ? translate(h) : h }
+        map.keys.map { |h| common_or_group?(h) ? translate(h) : h }
       end
 
       def count
@@ -55,8 +55,8 @@ module Results
 
       attr_accessor :map
 
-      def common?(header)
-        common_headers.include?(header)
+      def common_or_group?(header)
+        common_headers.include?(header) || group_headers.include?(header)
       end
 
       def translate(header)
