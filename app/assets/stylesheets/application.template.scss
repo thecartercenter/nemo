@@ -10,9 +10,8 @@
 @import "font-awesome";
 @import "select2";
 @import "trumbowyg";
-@import "variables/basic_colors";
-@import "themes/@@@theme@@@";
 @import "variables/**/*";
+@import "themes/@@@theme@@@";
 
 // Set direction for directional variables
 $dir: @@@direction@@@;

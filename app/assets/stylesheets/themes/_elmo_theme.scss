@@ -8,6 +8,7 @@ $theme-main-darker: #02648A;
 $body-background-color: $theme-main;
 $header-background-color: $body-background-color;
 $header-text-color: inherit;
+$light-background-color: #eef2f7;
 
 $footer-background-color: $gray-blue;
 $footer-text-color: gray;
@@ -30,7 +31,7 @@ $nav-text-color: #777;
 $nav-icon-color: #bdb9b9;
 $nav-border-color: #E7E7E7;
 
-// For pills/tokens like user groups or question tags. 
+// For pills/tokens like user groups or question tags.
 // Not all instances of pills/tokens obey this yet.
 $pill-background-color: $light-blue;
 $pill-background-hover-color: darken($light-blue, 10%);
