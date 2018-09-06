@@ -1,0 +1,21 @@
+// If applied to a .form-field, makes the checkbox show up on the left.
+@mixin left-checkbox {
+  display: flex;
+  line-height: 20px;
+
+  .control {
+    margin-#{$right}: 5px;
+    order: -2;
+  }
+
+  label {
+    margin-#{$right}: 10px;
+    order: -1;
+  }
+
+  .hint-wrapper i {
+    color: $gray-text;
+    font-size: 16px;
+    vertical-align: text-bottom;
+  }
+}

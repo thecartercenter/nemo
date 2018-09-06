@@ -12,4 +12,8 @@ form {
     height: $input-height-base;
     padding: 2px;
   }
+
+  .select2-container {
+    width: 100% !important;
+  }
 }
