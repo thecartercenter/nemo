@@ -1,8 +1,26 @@
-// WARNING: If a new variable is added here or in the nemo theme, it should also be added to the
-// _base.scss file. Otherwise, folks with custom themes in the wild will get an
+// WARNING: All theme variables should appear here and optionally be also overridden in theme files.
+// If a new color is added to a theme and not here, folks with custom themes in the wild will get an
 // undefined variable error when they upgrade.
+$body-text-color: #222;
+$tag-color: #EAE175;
+$gold: #E4BB54;
+$gray: #3F3E3E;
+$gray-blue: #D4DCE1;
+$light-blue: #D9ECF7;
+$light-yellow: #F7F6D9;
+$mid-gray: #888888;
+$light-gray: #BDB9B9;
+$lighter-gray: #CCCCCC;
+$orange: #F77D48;
+$faint-gray: #eee;
+$super-light-gray: #F0F0F0;
+$light-background-color: $super-light-gray;
+$white: white;
+$gray-text: #777;
+$deemphasized-link-color: #ccc;
+$light-border-color: #ddd;
+$light-border: 1px solid $light-border-color;
 
-// See _base.scss for variables you can override.
 $theme-red: #d02000;
 $theme-green: #9dc400;
 $theme-main: #879CAA;

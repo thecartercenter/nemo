@@ -12,7 +12,7 @@ $dir: @@@direction@@@;
 @import "directional";
 
 // These need to be loaded in a specific order so that earlier variables can be reused in later files.
-@import "variables/basic_colors";
+@import "variables/base";
 @import "variables/mixins";
 @import "themes/@@@theme@@@";
 @import "variables/bootstrap";
