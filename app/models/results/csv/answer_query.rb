@@ -19,12 +19,9 @@ module Results
             responses.created_at AT TIME ZONE 'UTC' AS submit_time,
             responses.shortcode AS shortcode,
             #{parent_group_name} AS parent_group_name,
-            (SELECT ARRAY_AGG(anc.type ORDER BY ah.generations DESC)
+            (SELECT ARRAY_AGG(anc.type || anc.new_rank ORDER BY ah.generations DESC)
               FROM answer_hierarchies ah INNER JOIN answers anc ON ah.ancestor_id = anc.id
               WHERE answers.id = ah.descendant_id) AS ancestry,
-            (SELECT ARRAY_AGG(anc.new_rank ORDER BY ah.generations DESC)
-              FROM answer_hierarchies ah INNER JOIN answers anc ON ah.ancestor_id = anc.id
-              WHERE answers.id = ah.descendant_id) AS ranks,
             answers.value AS value,
             answers.time_value,
             answers.date_value,
