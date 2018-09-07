@@ -1,17 +1,15 @@
-<% context = context.add(choice_counter) %>
-
 <div class="choice">
-  <%= hidden_field_tag(context.input_name(:choices_attributes, :id), choice.id) unless choice.new_record? %>
+  <%= hidden_field_tag(context.input_name(:choices_attributes, choice_counter, :id), choice.id) unless choice.new_record? %>
 
   <%# Always include this so Condition JS can find it. %>
-  <%= hidden_field_tag(context.input_name(:choices_attributes, :option_node_id), choice.option_node_id) %>
+  <%= hidden_field_tag(context.input_name(:choices_attributes, choice_counter, :option_node_id), choice.option_node_id) %>
 
   <%# Ensures 0 gets passed if box not checked %>
   <%# Need to set id: nil or there would be a duplicate ID %>
-  <%= hidden_field_tag(context.input_name(:choices_attributes, :checked), 0, id: nil) %>
+  <%= hidden_field_tag(context.input_name(:choices_attributes, choice_counter, :checked), 0, id: nil) %>
 
   <label>
-    <%= check_box_tag(context.input_name(:choices_attributes, :checked), 1, choice.checked?) %>
+    <%= check_box_tag(context.input_name(:choices_attributes, choice_counter, :checked), 1, choice.checked?) %>
     <%= choice.option_name %>
   </label>
 </div>

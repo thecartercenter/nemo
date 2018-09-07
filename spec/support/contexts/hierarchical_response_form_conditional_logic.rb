@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 shared_context "hierarchical response form conditional logic" do
+  include_context "trumbowyg"
+
   def visit_new_hierarchical_response_page
     visit(new_hierarchical_response_path(
       locale: "en",
@@ -22,12 +24,12 @@ shared_context "hierarchical response form conditional logic" do
     path = nil
     if field.is_a?(Symbol)
       idx = qings.keys.index(field)
-      id = "response_root_#{idx}_value"
+      id = "response_root_children_#{idx}_value"
     else
       idx = qings.keys.index(field[0])
       path = [idx] + field[1]
       parts = path.zip(["children"] * (path.length - 1)).flatten.compact
-      id = "response_root_#{parts.join('_')}_value"
+      id = "response_root_children_#{parts.join('_')}_value"
     end
     within(selector_for(qing, path)) do
       case qing.qtype_name
@@ -36,22 +38,22 @@ shared_context "hierarchical response form conditional logic" do
       when "select_one"
         if value.is_a?(Array)
           value.each_with_index do |o, i|
-            id = "response_root_#{idx}_children_#{i}_option_node_id"
+            id = "response_root_children_#{idx}_children_#{i}_option_node_id"
             find("##{id} option", text: o)
             select(o, from: id)
           end
         else
-          id = "response_root_#{idx}_option_node_id"
+          id = "response_root_children_#{idx}_option_node_id"
           select(value, from: id)
         end
       when "select_multiple"
         qing.options.each_with_index do |o, i|
-          id = "response_root_#{idx}_children_#{i}_choices_attributes_checked"
+          id = "response_root_children_#{idx}_choices_attributes_#{i}_checked"
           value.include?(o.name) ? check(id) : uncheck(id)
         end
       when "datetime", "date", "time"
         t = Time.zone.parse(value)
-        prefix = "response_root_#{idx}_#{qing.qtype_name}_value"
+        prefix = "response_root_children_#{idx}_#{qing.qtype_name}_value"
         unless qing.qtype_name == "time"
           select(t.strftime("%Y"), from: "#{prefix}_1i")
           select(t.strftime("%b"), from: "#{prefix}_2i")

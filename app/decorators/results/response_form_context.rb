@@ -29,7 +29,7 @@ module Results
 
     def full_path
       if path.present?
-        path.zip(["children"] * (depth - 1)).flatten.compact
+        ["children"] + path.zip(["children"] * (depth - 1)).flatten.compact
       else
         []
       end
@@ -63,7 +63,15 @@ module Results
       else
         index = indices.shift
         index = 0 if index == "__INDEX__"
-        find_node(node.children[index], indices)
+        child = node.children[index]
+
+        # It's possible that this context's path refers to a repeat item
+        # which may not exist in the given node tree.  If that's the case,
+        # we return the first sibling instead.  This happens when finding
+        # a repeat template node in the blank response tree.
+        child = node.children[0] if child.nil?
+
+        find_node(child, indices)
       end
     end
   end

@@ -54,4 +54,55 @@ shared_context "response tree" do
     hash[:_destroy] = destroy unless destroy.nil?
     hash
   end
+
+  def path_selector(indices, suffix = "value")
+    path = ["children"] + indices.zip(["children"] * (indices.length - 1)).flatten.compact
+    "response_root_#{path.join('_')}_#{suffix}"
+  end
+
+  def fill_in_question(path, opts)
+    selector = path_selector(path, "value")
+
+    case qing(path).qtype_name
+    when "long_text"
+      fill_in_trumbowyg("#" + selector, opts)
+    else
+      fill_in(selector, opts)
+    end
+  end
+
+  def expect_path(path, options = {})
+    selector = path.join(" .children ")
+    expect(page).to have_selector(selector, options)
+  end
+
+  def expect_value(path, expected_value)
+    actual_value =
+      case qing(path).qtype_name
+      when "select_one"
+        el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
+        OptionNode.find(el.value).option_name if el.value
+      else
+        page.find("#" + path_selector(path, "value"), visible: :all).value
+      end
+
+    expect(actual_value).to eq expected_value
+  end
+
+  def qing(path)
+    selector = "#" + path_selector(path, "questioning_id")
+    qing_id = page.find(selector, visible: :all).value
+    FormItem.find(qing_id)
+  end
+
+  def expect_not_persisted(qing_id)
+    expect(page).to_not have_selector("[data-qing-id='#{qing_id}']")
+  end
+
+  def expect_image(path, qing_id)
+    path_selector = "[data-path='#{path.join('-')}']"
+    qing_selector = "[data-qing-id='#{qing_id}']"
+    image_selector = "#{path_selector}#{qing_selector}[data-qtype-name=image]"
+    expect(page).to have_selector("#{image_selector} .media-thumbnail img")
+  end
 end

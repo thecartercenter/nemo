@@ -7,6 +7,9 @@ class ELMO.Views.MediaUploaderManager extends ELMO.Views.ApplicationView
   events:
     'submit': 'form_submitted'
 
+  is_uploading: ->
+    @uploads_in_progress > 0
+
   form_submitted: (event) ->
     if @uploads_in_progress != 0
       event.preventDefault()
