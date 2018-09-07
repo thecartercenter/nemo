@@ -59,26 +59,51 @@ feature "responses index" do
       end
 
       describe "with short code" do
-        before do
-          response.update!(shortcode: "i-am-a-banana")
+        before { response.update!(shortcode: "i-am-a-banana") }
 
-          fill_in("search_str", with: response.shortcode)
-          click_on("Search")
+        context "lowercase" do
+          before do
+            fill_in("search_str", with: response.shortcode)
+            click_on("Search")
+          end
+
+          scenario "for user that can edit response" do
+            # the response edit page shows
+            expect(page).to have_content("Edit Response")
+            expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+          end
+
+          describe "enumerator" do
+            let(:user) { create(:user, role_name: :enumerator) }
+
+            scenario "for user that can not edit response" do
+              # the response show page shows
+              expect(page).to have_content("Response: #{response.shortcode.upcase}")
+              expect(current_url).to end_with("responses/#{response.shortcode}")
+            end
+          end
         end
 
-        scenario "for user that can edit response" do
-          # the response edit page shows
-          expect(page).to have_content("Edit Response")
-          expect(current_url).to end_with("responses/#{response.shortcode}/edit")
-        end
+        context "uppercase" do
+          before do
+            fill_in("search_str", with: response.shortcode.upcase)
+            click_on("Search")
+          end
 
-        describe "enumerator" do
-          let(:user) { create(:user, role_name: :enumerator) }
+          scenario "for user that can edit response" do
+            # the response edit page shows
+            expect(page).to have_content("Edit Response")
+            expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+          end
 
-          scenario "for user that can not edit response" do
-            # the response show page shows
-            expect(page).to have_content("Response: #{response.shortcode.upcase}")
-            expect(current_url).to end_with("responses/#{response.shortcode}")
+          describe "enumerator" do
+            let(:user) { create(:user, role_name: :enumerator) }
+
+            scenario "for user that can not edit response" do
+              # the response show page shows
+              expect(page).to have_content("Response: #{response.shortcode.upcase}")
+              expect(current_url).to end_with("responses/#{response.shortcode}")
+            end
           end
         end
       end
