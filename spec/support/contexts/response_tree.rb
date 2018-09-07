@@ -60,6 +60,10 @@ shared_context "response tree" do
     "response_root_#{path.join('_')}_#{suffix}"
   end
 
+  # TODO: this can be combined with the similar helper in `response_form_conditional_logic`
+  # once the conditional logic specs are refactored to handle form items hierarchically.
+  # This helper addresses questions by path, whereas the old helper addresses questions
+  # by type
   def fill_in_question(path, opts)
     selector = path_selector(path, "value")
 
