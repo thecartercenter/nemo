@@ -23,7 +23,7 @@ describe "arabic missing plurals" do
     end
   end
 
-  context "with only english-style plurals given" do
+  context "with only germanic-style plurals given" do
     before do
       setup_pluralizations(
         one: "one",
@@ -38,6 +38,19 @@ describe "arabic missing plurals" do
       expect(I18n.translate("pltest", locale: :ar, count: 3)).to eq("other")
       expect(I18n.translate("pltest", locale: :ar, count: 99)).to eq("other")
       expect(I18n.translate("pltest", locale: :ar, count: 100)).to eq("other")
+    end
+  end
+
+  context "with missing germanic-style plural" do
+    let(:error_class) { I18n::InvalidPluralizationData }
+
+    before do
+      setup_pluralizations(one: "one") # `other` is missing
+    end
+
+    it "should raise error" do
+      expect(I18n.translate("pltest", locale: :ar, count: 1)).to eq("one")
+      expect { I18n.translate("pltest", locale: :ar, count: 2) }.to raise_error(error_class)
     end
   end
 
