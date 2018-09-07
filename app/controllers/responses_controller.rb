@@ -32,7 +32,7 @@ class ResponsesController < ApplicationController
         # do search, including excerpts, if applicable
         if params[:search].present?
           begin
-            if resp = Response.find_by(shortcode: params[:search])
+            if resp = Response.find_by(shortcode: params[:search].downcase)
               can_update = can?(:update, resp)
               can_update ? (redirect_to edit_response_path(resp)) : (redirect_to response_path(resp))
             end
