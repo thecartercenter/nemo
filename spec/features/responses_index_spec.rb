@@ -67,19 +67,15 @@ feature "responses index" do
             click_on("Search")
           end
 
-          scenario "for user that can edit response" do
-            # the response edit page shows
-            expect(page).to have_content("Edit Response")
-            expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+          scenario "redirects correctly" do
+            owner_can_see_edit_page
           end
 
           describe "enumerator" do
             let(:user) { create(:user, role_name: :enumerator) }
 
             scenario "for user that can not edit response" do
-              # the response show page shows
-              expect(page).to have_content("Response: #{response.shortcode.upcase}")
-              expect(current_url).to end_with("responses/#{response.shortcode}")
+              unauthorized_person_can_see_show_page
             end
           end
         end
@@ -92,21 +88,29 @@ feature "responses index" do
 
           scenario "for user that can edit response" do
             # the response edit page shows
-            expect(page).to have_content("Edit Response")
-            expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+            owner_can_see_edit_page
           end
 
           describe "enumerator" do
             let(:user) { create(:user, role_name: :enumerator) }
 
-            scenario "for user that can not edit response" do
+            scenario "redirects correctly" do
               # the response show page shows
-              expect(page).to have_content("Response: #{response.shortcode.upcase}")
-              expect(current_url).to end_with("responses/#{response.shortcode}")
+              unauthorized_person_can_see_show_page
             end
           end
         end
       end
     end
+  end
+
+  def owner_can_see_edit_page
+    expect(page).to have_content("Edit Response")
+    expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+  end
+
+  def unauthorized_person_can_see_show_page
+    expect(page).to have_content("Response: #{response.shortcode.upcase}")
+    expect(current_url).to end_with("responses/#{response.shortcode}")
   end
 end
