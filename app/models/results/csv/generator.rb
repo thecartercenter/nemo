@@ -9,14 +9,13 @@ module Results
       def initialize(response_scope)
         self.response_scope = response_scope
         self.header_map = HeaderMap.new
-        self.buffer = Buffer.new(max_depth: 1, header_map: header_map)
+        self.buffer = Buffer.new(header_map: header_map)
         self.answer_processor = AnswerProcessor.new(buffer)
       end
 
       # Runs the queries and returns the CSV as a string.
       def to_s
         setup_header_map
-        buffer.prepare
         csv_body.prepend(csv_headers)
       end
 
