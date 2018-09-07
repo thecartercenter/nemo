@@ -53,4 +53,51 @@ feature "adding and editing qing group on form", js: true do
     within(".form-items") { expect(page).to have_content("New Group Name") }
   end
 
+  scenario "add nested groups to a form" do
+    visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+
+    click_link("Add Group")
+    fill_in("Name (English)", with: "Outer Group")
+    check("qing_group_repeatable")
+    within(".modal") { click_button("Save") }
+
+    click_link("Add Group")
+    fill_in("Name (English)", with: "Middle Group")
+    check("qing_group_repeatable")
+    within(".modal") { click_button("Save") }
+
+    click_link("Add Group")
+    fill_in("Name (English)", with: "Inner Group")
+    check("qing_group_repeatable")
+    within(".modal") { click_button("Save") }
+
+    click_button("Save") #save form
+    #find new parent group's li
+    # append an <ol class="item-list ui-sortable">
+    # get child li
+    # append child li to new ol
+    # trigger drop_happened on child li with null event
+    execute_script("
+      var new_parent = $('li:contains(\"Outer Group\")')[0];
+      var new_ol = $('<ol class=\"item-list ui-sortable\"></ol>');
+      $(new_parent).append(new_ol);
+      var child_to_move = $('li:contains(\"Middle Group\")');
+      child_to_move.detach().appendTo(new_ol);
+      ELMO.formItemsView.draggable.drop_happened(null, {item: child_to_move});
+
+      var new_parent_2 = $('ol li ol li:contains(\"Middle Group\")')[0];
+      var new_ol_2 = $('<ol class=\"item-list ui-sortable\"></ol>');
+      $(new_parent_2).append(new_ol_2);
+      var child_to_move_2 = $('li:contains(\"Inner Group\")');
+      child_to_move_2.detach().appendTo(new_ol_2);
+      ELMO.formItemsView.draggable.drop_happened(null, {item: child_to_move_2});
+      ")
+    #click_button("Save")
+    outer_css = ".draggable-list-wrapper ol li"
+    middle_css = ".draggable-list-wrapper ol li ol li"
+    inner_css = ".draggable-list-wrapper ol li ol li ol li"
+    within(".form-items") { expect(page).to have_css(outer_css, text: "Outer Group") }
+    within(".form-items") { expect(page).to have_css(middle_css, text: "Middle Group") }
+    within(".form-items") { expect(page).to have_css(inner_css, text: "Inner Group") }
+  end
 end

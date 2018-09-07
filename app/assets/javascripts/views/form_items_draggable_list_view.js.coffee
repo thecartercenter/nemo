@@ -72,7 +72,7 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
 
   check_depth: (placeholder, item) ->
     depth = this.get_depth(placeholder)
-    depth == 1 || item.hasClass('form-item-question') && depth <= 2
+    depth == 1 || item.hasClass('form-item-question') && depth <= 2 || item.hasClass('form-item-group')
 
   # Checks if the given position (indicated by placeholder) for the given item, or any of its children,
   # would invalidate any conditions.
