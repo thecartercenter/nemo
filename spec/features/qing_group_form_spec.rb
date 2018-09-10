@@ -57,22 +57,11 @@ feature "adding and editing qing group on form", js: true do
     outer_name = "Outer Group"
     middle_name = "Middle Group"
     inner_name = "Inner Group"
+
     visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
-
-    click_link("Add Group")
-    fill_in("Name (English)", with: outer_name)
-    check("qing_group_repeatable")
-    within(".modal") { click_button("Save") }
-
-    click_link("Add Group")
-    fill_in("Name (English)", with: middle_name)
-    check("qing_group_repeatable")
-    within(".modal") { click_button("Save") }
-
-    click_link("Add Group")
-    fill_in("Name (English)", with: inner_name)
-    check("qing_group_repeatable")
-    within(".modal") { click_button("Save") }
+    create_group(outer_name)
+    create_group(middle_name)
+    create_group(inner_name)
 
     click_button("Save") # save form
 
@@ -102,5 +91,12 @@ feature "adding and editing qing group on form", js: true do
     within(".form-items") { expect(page).to have_css(outer_css, text: outer_name) }
     within(".form-items") { expect(page).to have_css(middle_css, text: middle_name) }
     within(".form-items") { expect(page).to have_css(inner_css, text: inner_name) }
+  end
+
+  def create_group(name)
+    click_link("Add Group")
+    fill_in("Name (English)", with: name)
+    check("qing_group_repeatable")
+    within(".modal") { click_button("Save") }
   end
 end
