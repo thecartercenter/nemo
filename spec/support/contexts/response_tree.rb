@@ -3,7 +3,7 @@
 # Provides spec helper methods for dealing with hierarchy of response nodes
 shared_context "response tree" do
   include_context "trumbowyg"
-  
+
   # Checks that the given node is a valid root node for the given form.
   def expect_root(node, form)
     expect(node).to be_a(AnswerGroup)
