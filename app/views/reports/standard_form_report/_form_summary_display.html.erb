@@ -20,14 +20,12 @@
 
 <div class="std_form_report_results">
   <% # print message if report has no data %>
-  <% Rails.logger.debug("SUBSET") %>
-  <% Rails.logger.debug(@report.inspect) %>
-  <% if @report.no_data %>
+  <% if @report.no_data? %>
     <em><%= t("report/report.no_match") %></em>
   <% else %>
     <% # render each report subset %>
     <% @report.subsets.each do |s| %>
-      <%= render partial: "subset", locals: {subset: s, max_result_cols: max_result_cols} %>
+      <%= render(partial: "reports/standard_form_report/subset", locals: {subset: s, max_result_cols: 8}) %>
     <% end %>
 
   <% end %>
