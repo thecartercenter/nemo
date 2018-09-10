@@ -25,10 +25,13 @@ module ReportEmbeddable
       }
     end
 
+    Rails.logger.debug("****** REPORT TYPE ******")
+    Rails.logger.debug(@report.type)
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
     @report_data[:report][:user_can_edit] = can?(:update, @report)
+    @form_type = @report.model_name.singular_route_key.remove(/^report_/)
     @report_data[:report][:html] =
-      render_to_string(partial: "reports/#{@report.model_name.singular_route_key.remove(/^report_/)}")
+      render_to_string(partial: "reports/#{@form_type}/form_summary_display")
   end
 
   # Looks for a cached, populated report object matching @report.

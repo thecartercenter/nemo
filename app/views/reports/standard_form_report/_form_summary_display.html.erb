@@ -1,0 +1,34 @@
+<% # render the report metadata %>
+<table class="report_meta">
+  <tr>
+    <td><%= t('report/report.mission') %></td>
+    <td><%= @report.mission.name %></td>
+  </tr>
+  <tr>
+    <td><%= t('report/report.form') %></td>
+    <td><%= @report.form.name %></td>
+  </tr>
+  <tr>
+    <td><%= t('report/report.response_count') %></td>
+    <td><%= @report.response_count %></td>
+  </tr>
+  <tr>
+    <td><%= t('report/report.missing_enumerators') %></td>
+    <td><%= @report.enumerators_without_responses %></td>
+  </tr>
+</table>
+
+<div class="std_form_report_results">
+  <% # print message if report has no data %>
+  <% Rails.logger.debug("SUBSET") %>
+  <% Rails.logger.debug(@report.inspect) %>
+  <% if @report.no_data %>
+    <em><%= t("report/report.no_match") %></em>
+  <% else %>
+    <% # render each report subset %>
+    <% @report.subsets.each do |s| %>
+      <%= render partial: "subset", locals: {subset: s, max_result_cols: max_result_cols} %>
+    <% end %>
+
+  <% end %>
+</div>
