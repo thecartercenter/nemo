@@ -2,6 +2,8 @@
 
 # Provides spec helper methods for dealing with hierarchy of response nodes
 shared_context "response tree" do
+  include_context "trumbowyg"
+  
   # Checks that the given node is a valid root node for the given form.
   def expect_root(node, form)
     expect(node).to be_a(AnswerGroup)
@@ -66,10 +68,40 @@ shared_context "response tree" do
   # by type
   def fill_in_question(path, opts)
     selector = path_selector(path, "value")
+    value = opts[:with]
 
     case qing(path).qtype_name
     when "long_text"
       fill_in_trumbowyg("#" + selector, opts)
+    when "select_one"
+      if value.is_a?(Array)
+        value.each_with_index do |text, i|
+          id = path_selector(path + [i], "option_node_id")
+          find("##{id} option", text: text)
+          select(text, from: id)
+        end
+      else
+        select(value, from: path_selector(path, "option_node_id"))
+      end
+    when "select_multiple"
+      qing(path).options.each_with_index do |o, i|
+        id = path_selector(path, "choices_attributes_#{i}_checked")
+        value.include?(o.name) ? check(id) : uncheck(id)
+      end
+    when "datetime", "date", "time"
+      t = Time.zone.parse(value)
+      qtype_name = qing(path).qtype_name
+      prefix = path_selector(path, "#{qtype_name}_value")
+      unless qtype_name == "time"
+        select(t.strftime("%Y"), from: "#{prefix}_1i")
+        select(t.strftime("%b"), from: "#{prefix}_2i")
+        select(t.day.to_s, from: "#{prefix}_3i")
+      end
+      unless qtype_name == "date"
+        select(t.strftime("%H"), from: "#{prefix}_4i")
+        select(t.strftime("%M"), from: "#{prefix}_5i")
+        select(t.strftime("%S"), from: "#{prefix}_6i")
+      end
     else
       fill_in(selector, opts)
     end
@@ -108,5 +140,29 @@ shared_context "response tree" do
     qing_selector = "[data-qing-id='#{qing_id}']"
     image_selector = "#{path_selector}#{qing_selector}[data-qtype-name=image]"
     expect(page).to have_selector("#{image_selector} .media-thumbnail img")
+  end
+
+  def visit_new_hierarchical_response_page
+    visit(new_hierarchical_response_path(
+      locale: "en",
+      mode: "m",
+      mission_name: get_mission.compact_name,
+      form_id: form.id
+    ))
+  end
+
+  def fill_and_expect_visible(path, value, visible)
+    fill_in_question(path, with: value)
+    expect_visible(visible)
+  end
+
+  # visible_fields should be an array of node paths
+  def expect_visible(visible_fields)
+    visible_fields.each do |path|
+      path_selector = path.join("-")
+      node_selector = %(.node[data-path="#{path_selector}"])
+      msg = "Expected #{path.join('-')} to be visible, but is hidden."
+      expect(find(node_selector)).to be_visible, -> { msg }
+    end
   end
 end
