@@ -16,13 +16,11 @@
   <% else %>
 
     <% subset.tag_groups.each do |tag_group| %>
-      <% Rails.logger.debug("TAG GROUP *******") %>
-      <% Rails.logger.debug(tag_group.tag) %>
 
       <% # print tag header if grouped by tag %>
       <% if subset.group_by_tag %>
         <div class="tag-header">
-          <% if tag_group.tag == "untagged" %>
+          <% if tag_group.tag == :untagged %>
             <h3 class="untagged">Untagged questions</h3>
           <% else %>
             <h3>Questions tagged <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
@@ -36,30 +34,32 @@
         <% result_cols = [8, group.max_header_count].min %>
 
         <% # show group header unless there is only one big group %>
-        <% if group.type_set != "all" %>
+        <% if group.type_set != :all %>
           <h3><%= t("report/report.standard_form_report.type_sets.#{group.type_set}") %></h3>
         <% end %>
 
         <table class="subset result_cols_<%= result_cols %>">
 
           <% group.clusters.each do |cluster|%>
+            <% Rails.logger.debug("Cluster #{cluster.display_type}") %>
 
             <% # do cluster header row %>
             <tr class="cluster_header">
               <td></td>
 
               <% # if full width display type with responses, header cell must be extra wide %>
-              <td <%= cluster.display_type == "full_width" ? "colspan='#{result_cols + 1}'" : ""%>
+              <td <%= cluster.display_type == :full_width ? "colspan='#{result_cols + 1}'" : ""%>
                 &nbsp;
               </td>
 
               <% # do rest of header cells if necessary %>
-              <% if cluster.display_type == "flow" || cluster.display_type == "structured" && cluster.headers.length > result_cols %>
+              <% if cluster.display_type == :flow || cluster.display_type == :structured && cluster.headers.length > result_cols %>
                 <td colspan="<%= result_cols %>"><%= cluster.overall_header %></td>
 
-              <% elsif cluster.display_type == "structured" %>
+              <% elsif cluster.display_type == :structured %>
                 <% # print out each header cell %>
                 <% cluster.headers.each do |header| %>
+                  <% Rails.logger.debug("header #{header.inspect}") %>
                   <td class="structured"><%= render(partial: "reports/standard_form_report/form_summary_header", locals: {header: header}) %></td>
                 <% end %>
 
@@ -73,8 +73,12 @@
             <% # do summary rows %>
             <% cluster.summaries.each do |summary| %>
 
+              <% Rails.logger.debug("Starting Summary *******") %>
+              <% Rails.logger.debug(summary.inspect) %>
+
               <% # if this is a full_width summary, it gets multiple rows, one item per row %>
-              <% if cluster.display_type == "full_width" %>
+              <% if cluster.display_type == :full_width %>
+                <% Rails.logger.debug("Full width") %>
 
                 <tr class="summary full_width_subhead">
                   <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
@@ -85,6 +89,7 @@
 
                 <%# if no items, show the 'no data' message %>
                 <% if summary.items.length == 0 %>
+                  <% Rails.logger.debug("no items") %>
 
                   <tr class="summary">
                     <td colspan="<%= result_cols + 2 %>">
@@ -94,8 +99,11 @@
 
                 <%# otherwise, loop over each item (answer) and make a row for it %>
                 <% else %>
+                  <% Rails.logger.debug("Looping ****") %>
+
 
                   <% summary.items.each do |item| %>
+                    <% Rails.logger.debug("ITEM *** #{item.inspect}") %>
                     <tr class="summary">
                       <td colspan="<%= result_cols + 2 %>">
                         <%= render(partial: "reports/standard_form_report/form_summary_item", locals: {item: item}) %>
@@ -106,6 +114,9 @@
                 <% end %>
 
               <% else %>
+                <% Rails.logger.debug("else not full width?") %>
+                <% Rails.logger.debug("cluster.headers.length #{cluster.headers.length}") %>
+                <% Rails.logger.debug("result_cols #{result_cols}") %>
 
                 <tr class="summary">
                   <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
@@ -115,6 +126,7 @@
 
                   <% # if flow type, or if any other type and items are empty, just print the responses sep'd by commas %>
                   <% if cluster.display_type == 'flow' || summary.items.length == 0 %>
+                    <% Rails.logger.debug("cluster flow") %>
 
                     <td colspan="<%= result_cols %>">
                       <% if summary.items.length == 0 %>
@@ -125,7 +137,8 @@
                     </td>
 
                   <% # if structured type with less than result_cols, do separate cells %>
-                  <% elsif cluster.display_type == 'structured' && cluster.headers.length <= result_cols %>
+                  <% elsif cluster.display_type == :structured && cluster.headers.length <= result_cols %>
+                    <% Rails.logger.debug("structured") %>
 
                     <% summary.items.each do |item| %>
                       <td class="structured"><%= render(partial: "reports/standard_form_report/form_summary_item", locals: {item: item}) %></td>
@@ -137,7 +150,8 @@
                     <% end %>
 
                   <% # if structured type with more than result_cols, do one big cell %>
-                  <% elsif cluster.display_type == "structured" && cluster.headers.length > result_cols %>
+                  <% elsif cluster.display_type == :structured && cluster.headers.length > result_cols %>
+                    <% Rails.logger.debug("structured and more result cols") %>
 
                     <td colspan="<%= result_cols %>">
                       <%= summary.items.each_with_index.map{|item, idx| render(partial: "reports/standard_form_report/form_summary_item_with_header", locals: {item: item, header: cluster.headers[idx]}) }.join(", ") %>
