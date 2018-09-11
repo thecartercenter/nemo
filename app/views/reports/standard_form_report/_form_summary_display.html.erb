@@ -24,8 +24,9 @@
     <em><%= t("report/report.no_match") %></em>
   <% else %>
     <% # render each report subset %>
+    <% max_result_cols = @report.question_labels == 'title' ? 5 : 8 %>
     <% @report.subsets.each do |s| %>
-      <%= render(partial: "reports/standard_form_report/subset", locals: {subset: s, max_result_cols: 8}) %>
+      <%= render(partial: "reports/standard_form_report/subset", locals: {subset: s, max_result_cols: max_result_cols}) %>
     <% end %>
 
   <% end %>

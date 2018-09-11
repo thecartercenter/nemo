@@ -25,8 +25,6 @@ module ReportEmbeddable
       }
     end
 
-    Rails.logger.debug("****** REPORT TYPE ******")
-    Rails.logger.debug(@report.type)
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
     @report_data[:report][:user_can_edit] = can?(:update, @report)
     @form_type = @report.model_name.singular_route_key.remove(/^report_/)
