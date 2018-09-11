@@ -320,8 +320,6 @@ ar:
         id: "هوية الرد"
         created_at: "وقت التقديم"
         form_id: "استمارة"
-        reviewed: "تم المراجعة؟"
-        reviewer_notes: "ملاحظات المُراجع"
         source: "مصدر"
         user_id: "مستخدم/ فريق"
       report/report:
@@ -1325,7 +1323,6 @@ ar:
     export_to_csv: "تصدير بصيغة CSV"
     loading: "تحميل الرد..."
     observation_time: "وقت المراقبة "
-    save_and_mark_reviewed: "حفظ و تؤشر بأن تمت المراجعة"
     view_response: "عرض الرد"
     checked_out: "تم فحص هذا الرد بواسطة:"
     remove_media_object_confirm:

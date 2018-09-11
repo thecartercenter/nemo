@@ -409,8 +409,6 @@ ko:
         id: "응답 ID"
         created_at: "제출 시기"
         form_id: "질문지"
-        reviewed: "검토 되었습니까?"
-        reviewer_notes: "검토자 노트"
         reviewer_id: "검토자"
         shortcode: "응답자 ID"
         source: "소스"
@@ -1404,7 +1402,6 @@ ko:
     export_to_csv: "CSV 형식으로 내보내기"
     loading: "응답지 로딩중"
     observation_time: "관찰 시간"
-    save_and_mark_reviewed: "'검토 됨'으로 표시하고 저장하기"
     view_response: "응답지 보기"
     checked_out: "이 응답지는 다음 사용자에 의해 검토되었습니다:"
     remove_media_object_confirm:

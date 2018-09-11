@@ -245,7 +245,6 @@ pt:
         id: "ID de resposta"
         created_at: "tempo de apresentação"
         form_id: "formulário"
-        reviewed: "revisado?"
         source: "fonte"
         user_id: "usuário/equipe"
       report/report:

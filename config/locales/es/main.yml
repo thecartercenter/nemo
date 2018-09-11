@@ -270,7 +270,6 @@ es:
         id: "Identificación de la Respuesta"
         created_at: "Hora de Envío"
         form_id: "Formulario"
-        reviewed: "¿Revisado?"
         source: "Fuente"
         user_id: "Usuario/Equipo"
       report/report:
@@ -1053,7 +1052,6 @@ es:
     export_to_csv: "Exportación a formato CSV"
     loading: "Cargando Respuesta..."
     observation_time: "Hora de Observación"
-    save_and_mark_reviewed: "Guardar y Marcar como Revisado"
     view_response: "Ver Respuesta"
     checked_out: "Esta respuesta ha sido revisada por:"
   role:

@@ -344,8 +344,6 @@ fr:
         id: "Numero de la réponse"
         created_at: "Date de remise"
         form_id: "Formulaire"
-        reviewed: "Revu?"
-        reviewer_notes: "Note de l examinateur"
         reviewer_id: "Examinateur"
         shortcode: "Numéro de la réponse"
         source: "Origine"
@@ -1338,7 +1336,6 @@ fr:
     export_to_csv: "Exporter à format CSV"
     loading: "Chargement Réponse..."
     observation_time: "Le temps d'Observation"
-    save_and_mark_reviewed: "Enregistrer et Marquer comme Examiné"
     view_response: "Voir Réponse"
     checked_out: "Cette réponse a été examiné par:"
     remove_media_object_confirm:
