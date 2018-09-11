@@ -16,11 +16,11 @@
   <% else %>
 
     <% subset.tag_groups.each do |tag_group| %>
-
+      <% Rails.logger.debug(tag_group.tag.inspect) %>
       <% # print tag header if grouped by tag %>
       <% if subset.group_by_tag %>
         <div class="tag-header">
-          <% if tag_group.tag == :untagged %>
+          <% if tag_group.tag.class != Tag %>
             <h3 class="untagged">Untagged questions</h3>
           <% else %>
             <h3>Questions tagged <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
@@ -141,8 +141,12 @@
                     <% Rails.logger.debug("structured") %>
 
                     <% summary.items.each do |item| %>
+                      <% Rails.logger.debug(item.inspect) %>
                       <td class="structured"><%= render(partial: "reports/standard_form_report/form_summary_item", locals: {item: item}) %></td>
                     <% end %>
+
+                      <% Rails.logger.debug("after summary items") %>
+
 
                     <% # print out blank cell to fill up to max %>
                     <% if result_cols > cluster.headers.length %>
