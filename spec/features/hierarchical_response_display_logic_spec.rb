@@ -15,30 +15,30 @@ feature "hierarhcical response form display logic", js: true do
     let!(:form) do
       create(:form, :published,
         question_types: [
-          "long_text",
-          "text",
-          "integer",
-          "counter",
-          "text",
-          "decimal",
-          "select_one",
-          "multilevel_select_one",
-          "geo_multilevel_select_one",
-          "select_multiple",
-          "datetime",
-          "date",
-          "time",
-          "text",
-          %w[text],
+          "long_text",                 # 0
+          "text",                      # 1
+          "integer",                   # 2
+          "counter",                   # 3
+          "text",                      # 4
+          "decimal",                   # 5
+          "select_one",                # 6
+          "multilevel_select_one",     # 7
+          "geo_multilevel_select_one", # 8
+          "select_multiple",           # 9
+          "datetime",                  # 10
+          "date",                      # 11
+          "time",                      # 12
+          "text",                      # 13
+          %w[text],                    # 14.0
           {
             repeating: {
               items: [
-                "text",
-                "text",
-                "text",
+                "text",                # 15.0
+                "text",                # 15.1
+                "text",                # 15.2
                 {
                   repeating: {
-                    items: %w[integer]
+                    items: %w[integer] # 15.3.0
                   }
                 }
               ]
@@ -234,11 +234,11 @@ feature "hierarhcical response form display logic", js: true do
     let!(:form) do
       create(:form, :published,
         question_types: [
-          "integer",
-          "integer",
-          "integer",
-          "text",
-          %w[text]
+          "integer", # 0
+          "integer", # 1
+          "integer", # 2
+          "text",    # 3
+          %w[text]   # 4.0
         ])
     end
 
