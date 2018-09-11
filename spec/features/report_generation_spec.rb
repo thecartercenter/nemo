@@ -15,15 +15,13 @@ feature "report generation", js: true do
       # Generate list report with two cols.
       login(user)
       visit(new_report_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
-      choose("List Report")
+      click_radio_button("report_type", "Report::ListReport")
       click_button("Next")
 
-      # Advance though modal with expects to ensure buttons are visible
+      # Advance though next two screens with expects to ensure we don't go too fast.
       expect(page).to have_content("New Report: Options")
       click_button("Next")
       expect(page).to have_content("New Report: Select Forms")
-      expect(page).to have_content("Next")
-
       click_button("Next")
       expect(page).to have_content("New Report: Fields")
 
@@ -60,7 +58,7 @@ feature "report generation", js: true do
 
       # Generate standard form report
       visit(new_report_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
-      choose("Standard Form Report")
+      click_radio_button("report_type", "Report::StandardFormReport")
       click_button("Next")
       fill_in("report_title", with: "SFR Test")
 

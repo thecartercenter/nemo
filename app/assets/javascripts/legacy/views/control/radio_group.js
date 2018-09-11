@@ -32,7 +32,6 @@
   }
 
   klass.prototype.change = function(func) {
-    this.change_handler = func;
     for (var i = 0; i < this.inputs.length; i++)
       $(this.inputs[i]).on("change", func);
   }
