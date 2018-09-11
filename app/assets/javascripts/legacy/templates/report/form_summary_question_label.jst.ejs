@@ -1,8 +1,0 @@
-<div>
-  <%- report.question_labels == 'title' ? summary.questioning.name : summary.questioning.code %>
-
-  <!-- Show message to indicate that not all text answers are being shown -->
-  <% if (summary.items.length > 0 && summary.items.length == report.raw_answer_limit && summary.items[0].text) { %>
-    (<%- I18n.t('report/report.showing_limited_answers', {count: summary.items.length}) %>)
-  <% } %>
-</div>
