@@ -65,26 +65,25 @@ feature "adding and editing qing group on form", js: true do
 
     click_button("Save") # save form
 
-    # find new parent group's li
-    # append an <ol class="item-list ui-sortable"> to parent
-    # get child li
-    # append child li to new ol
-    # trigger drop_happened on child li with null event
-    execute_script("
-      var new_parent = $('li:contains(\"#{outer_name}\")')[0];
-      var new_ol = $('<ol class=\"item-list ui-sortable\"></ol>');
-      $(new_parent).append(new_ol);
-      var child_to_move = $('li:contains(\"#{middle_name}\")');
-      child_to_move.detach().appendTo(new_ol);
-      ELMO.formItemsView.draggable.drop_happened(null, {item: child_to_move});
+    # Uses DOM manipulation to simulate moving items in the draggable list.
+    # Actually using drag_to doesn't work.
+    move_items_js = <<~SCRIPT
+      function itemLi(name) {
+        return $('li .inner:contains(' + name + ')').parent();
+      }
+      function moveItem(itemName, newParentName) {
+        var newParent = itemLi(newParentName);
+        var newOl = $('<ol class=\"item-list ui-sortable\"></ol>');
+        newParent.append(newOl);
+        var item = itemLi(itemName);
+        item.detach().appendTo(newOl);
+        ELMO.formItemsView.draggable.drop_happened(null, {item: item});
+      }
+      moveItem('#{middle_name}', '#{outer_name}');
+      moveItem('#{inner_name}', '#{middle_name}');
+    SCRIPT
+    execute_script(move_items_js)
 
-      var new_parent_2 = $('ol li ol li:contains(\"#{middle_name}\")')[0];
-      var new_ol_2 = $('<ol class=\"item-list ui-sortable\"></ol>');
-      $(new_parent_2).append(new_ol_2);
-      var child_to_move_2 = $('li:contains(\"#{inner_name}\")');
-      child_to_move_2.detach().appendTo(new_ol_2);
-      ELMO.formItemsView.draggable.drop_happened(null, {item: child_to_move_2});
-      ")
     outer_css = ".draggable-list-wrapper ol li"
     middle_css = ".draggable-list-wrapper ol li ol li"
     inner_css = ".draggable-list-wrapper ol li ol li ol li"
