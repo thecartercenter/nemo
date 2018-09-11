@@ -16,7 +16,6 @@
   <% else %>
 
     <% subset.tag_groups.each do |tag_group| %>
-      <% Rails.logger.debug(tag_group.tag.inspect) %>
       <% # print tag header if grouped by tag %>
       <% if subset.group_by_tag %>
         <div class="tag-header">
@@ -34,7 +33,7 @@
         <% result_cols = [8, group.max_header_count].min %>
 
         <% # show group header unless there is only one big group %>
-        <% if group.type_set != :all %>
+        <% if group.type_set != "all" %>
           <h3><%= t("report/report.standard_form_report.type_sets.#{group.type_set}") %></h3>
         <% end %>
 
@@ -59,7 +58,6 @@
               <% elsif cluster.display_type == :structured %>
                 <% # print out each header cell %>
                 <% cluster.headers.each do |header| %>
-                  <% Rails.logger.debug("header #{header.inspect}") %>
                   <td class="structured"><%= render(partial: "reports/standard_form_report/form_summary_header", locals: {header: header}) %></td>
                 <% end %>
 
@@ -99,9 +97,6 @@
 
                 <%# otherwise, loop over each item (answer) and make a row for it %>
                 <% else %>
-                  <% Rails.logger.debug("Looping ****") %>
-
-
                   <% summary.items.each do |item| %>
                     <% Rails.logger.debug("ITEM *** #{item.inspect}") %>
                     <tr class="summary">
@@ -125,7 +120,7 @@
                   </td>
 
                   <% # if flow type, or if any other type and items are empty, just print the responses sep'd by commas %>
-                  <% if cluster.display_type == 'flow' || summary.items.length == 0 %>
+                  <% if cluster.display_type == :flow || summary.items.length == 0 %>
                     <% Rails.logger.debug("cluster flow") %>
 
                     <td colspan="<%= result_cols %>">
