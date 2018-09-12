@@ -98,12 +98,12 @@ describe Search::Search do
     assert_search(str: "source = v1 v2", sql: "((t.source = 'v1')) AND ((t1.f1 = 'v2'))")
   end
 
-  it "AND should not be allowed for regular default qualifiers" do
-    assert_search(str: "v1 v2", error: /Multiple terms aren't allowed for 'form' searches/)
+  it "AND should be allowed for regular default qualifiers even though it doesn't return any result" do
+    assert_search(str: "v1 v2", sql: "((t1.f1 = 'v1') AND (t1.f1 = 'v2'))")
   end
 
-  it "AND should not be allowed for regular qualifiers" do
-    assert_search(str: "source: (v1 v2)", error: /Multiple terms aren't allowed for 'source' searches/)
+  it "AND should be allowed for regular qualifiers even though it doesn't return any result" do
+    assert_search(str: "source: (v1 v2)", sql: "((t.source = 'v1') AND (t.source = 'v2'))")
   end
 
   it "parentheses shouldnt be allowed in unqualified terms" do
@@ -155,8 +155,8 @@ describe Search::Search do
     assert_search(str: "submit-date > 5 6", sql: "((t.subdate > '5')) AND ((t1.f1 = '6'))")
   end
 
-  it "AND should not be allowed for scale qualifiers" do
-    assert_search(str: "submit-date > (5 6)", error: /Multiple terms aren't allowed for 'submit-date' searches unless OR is used./)
+  it "AND should be allowed for scale qualifiers" do
+    assert_search(str: "submit-date > (5 6)", sql: "((t.subdate > '5') AND (t.subdate > '6'))")
   end
 
   it "scale qualifier should work with regular qualifier" do

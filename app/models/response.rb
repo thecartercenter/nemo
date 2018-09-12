@@ -121,6 +121,7 @@ class Response < ApplicationRecord
 
       # this qualifier inserts a placeholder that we replace later
       Search::Qualifier.new(name: "text", col: "responses.id", type: :indexed, default: true),
+      Search::Qualifier.new(name: "shortcode", col: "responses.shortcode", default: true),
 
       # support {foobar}:stuff style searches, where foobar is a question code
       Search::Qualifier.new(
@@ -153,8 +154,6 @@ class Response < ApplicationRecord
 
     # get the sql
     sql = search.sql
-
-    fulltext_param_sets = []
 
     # replace any fulltext search placeholders
     sql = sql.gsub(/###(\d+)###/) do
@@ -194,7 +193,7 @@ class Response < ApplicationRecord
     end
 
     # apply the conditions
-    relation = relation.where(sql)
+    relation.where(sql)
   end
 
   # returns a count how many responses have arrived recently
