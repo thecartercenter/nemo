@@ -76,12 +76,8 @@ class Search::Token
 
           # if the previous token was also a value token, need to insert the implicit AND (if allowed)
           if previous && previous.parent.is?(:value)
-            if qual.and_allowed?
-              sql += " AND "
-              expr.values += " "
-            else
-              raise_error_with_qualifier('multiple_terms_not_allowed', qual_name)
-            end
+            sql += " AND "
+            expr.values += " "
           end
 
           if qual.has_more_than_one_column?

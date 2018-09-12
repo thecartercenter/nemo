@@ -2,8 +2,6 @@ class Search::Qualifier
 
   attr_reader :name, :col, :type, :pattern, :default, :validator, :assoc, :preprocessor
 
-  ANDABLE_TYPES = %w(text indexed translated)
-
   # Looks up the qualifier for the given chunk in the given set.
   # Raises an error if not found.
   def self.find_in_set(set, chunk)
@@ -80,11 +78,6 @@ class Search::Qualifier
     # do a regexp match and save match data
     # then check the validator if given
     (md = pattern.match(chunk)) && (validator.nil? || validator.call(md))
-  end
-
-  # whether multiple ANDed terms are allowed for this qualifier
-  def and_allowed?
-    ANDABLE_TYPES.include?(type.to_s)
   end
 
   def default?
