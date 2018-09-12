@@ -74,7 +74,7 @@ class Search::Token
         # if this is a value token descendant
         if lex_tok.parent.is?(:value)
 
-          # if the previous token was also a value token, need to insert the implicit AND (if allowed)
+          # if the previous token was also a value token, need to insert the implicit AND
           if previous && previous.parent.is?(:value)
             sql += " AND "
             expr.values += " "

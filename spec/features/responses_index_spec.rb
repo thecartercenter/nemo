@@ -8,7 +8,7 @@ feature "responses index" do
 
   before do
     login(user)
-    click_on "Responses"
+    click_on("Responses")
   end
 
   context "general index page display" do
