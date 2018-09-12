@@ -33,8 +33,7 @@ class ResponsesController < ApplicationController
         if params[:search].present?
           begin
             if resp = Response.find_by(shortcode: params[:search].downcase)
-              can_update = can?(:update, resp)
-              can_update ? (redirect_to edit_response_path(resp)) : (redirect_to response_path(resp))
+              redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
             end
 
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
