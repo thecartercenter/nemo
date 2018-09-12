@@ -20,9 +20,9 @@
       <% if subset.group_by_tag %>
         <div class="tag-header">
           <% if tag_group.tag.class != Tag %>
-            <h3 class="untagged">Untagged questions</h3>
+            <h3 class="untagged"><%= t("report/report.untagged") %></h3>
           <% else %>
-            <h3>Questions tagged <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
+            <h3><%= t("report/report.questions_tagged") %> <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
           <% end %>
         </div>
       <% end %>
@@ -56,7 +56,7 @@
               <% elsif cluster.display_type == :structured %>
                 <% # print out each header cell %>
                 <% cluster.headers.each do |header| %>
-                  <td class="structured"><%= render(partial: "reports/standard_form_report/form_summary_header", locals: {header: header}) %></td>
+                  <td class="structured"><%= render("reports/standard_form_report/form_summary_header", header: header) %></td>
                 <% end %>
 
                 <% # print out blank cell to fill up to max %>
@@ -75,7 +75,7 @@
                 <tr class="summary full_width_subhead">
                   <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
                   <td colspan="<%= result_cols + 2 %>">
-                    <%= render(partial: "reports/standard_form_report/form_summary_question_label", locals: {summary: summary}) %>
+                    <%= render("reports/standard_form_report/form_summary_question_label", summary: summary) %>
                   </td>
                 </tr>
 
@@ -92,7 +92,7 @@
                   <% summary.items.each do |item| %>
                     <tr class="summary">
                       <td colspan="<%= result_cols + 2 %>">
-                        <%= render(partial: "reports/standard_form_report/form_summary_item", locals: {item: item}) %>
+                        <%= render("reports/standard_form_report/form_summary_item", item: item) %>
                       </td>
                     </tr>
                   <% end %>
@@ -103,7 +103,7 @@
                 <tr class="summary">
                   <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
                   <td class="qname">
-                    <%= render(partial: "reports/standard_form_report/form_summary_question_label", locals: {summary: summary}) %>
+                    <%= render("reports/standard_form_report/form_summary_question_label", summary: summary) %>
                   </td>
 
                   <% # if flow type, or if any other type and items are empty, just print the responses sep'd by commas %>
@@ -119,7 +119,7 @@
                   <% # if structured type with less than result_cols, do separate cells %>
                   <% elsif cluster.display_type == :structured && cluster.headers.length <= result_cols %>
                     <% summary.items.each do |item| %>
-                      <td class="structured"><%= render(partial: "reports/standard_form_report/form_summary_item", locals: {item: item}) %></td>
+                      <td class="structured"><%= render("reports/standard_form_report/form_summary_item", item: item) %></td>
                     <% end %>
 
                     <% # print out blank cell to fill up to max %>
@@ -131,7 +131,7 @@
                   <% elsif cluster.display_type == :structured && cluster.headers.length > result_cols %>
 
                     <td colspan="<%= result_cols %>">
-                      <%= summary.items.each_with_index.map{|item, idx| render(partial: "reports/standard_form_report/form_summary_item_with_header", locals: {item: item, header: cluster.headers[idx]}) }.join(", ") %>
+                      <%= summary.items.each_with_index.map{|item, idx| render("reports/standard_form_report/form_summary_item_with_header", item: item, header: cluster.headers[idx]) }.join(", ") %>
                     </td>
 
                     <% # print out blank cell to fill up to max %>

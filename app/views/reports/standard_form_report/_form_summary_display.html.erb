@@ -1,33 +1,33 @@
 <% # render the report metadata %>
 <table class="report_meta">
   <tr>
-    <td><%= t('report/report.mission') %></td>
+    <td><%= t("report/report.mission") %></td>
     <td><%= @report.mission.name %></td>
   </tr>
   <tr>
-    <td><%= t('report/report.form') %></td>
+    <td><%= t("report/report.form") %></td>
     <td><%= @report.form.name %></td>
   </tr>
   <tr>
-    <td><%= t('report/report.response_count') %></td>
+    <td><%= t("report/report.response_count") %></td>
     <td><%= @report.response_count %></td>
   </tr>
   <tr>
-    <td><%= t('report/report.missing_enumerators') %></td>
+    <td><%= t("report/report.missing_enumerators") %></td>
     <td><%= @report.enumerators_without_responses %></td>
   </tr>
 </table>
 
-<div class="std_form_report_results">
+<div class="std-form-report-results">
   <% # print message if report has no data %>
   <% if @report.no_data? %>
     <em><%= t("report/report.no_match") %></em>
   <% else %>
     <% # render each report subset %>
-    <% max_result_cols = @report.question_labels == 'title' ? 5 : 8 %>
+    <% max_result_cols = @report.question_labels == "title" ? 5 : 8 %>
     <% @report.subsets.each do |s| %>
-      <%= render(partial: "reports/standard_form_report/subset", locals: {subset: s, max_result_cols: max_result_cols}) %>
+      <%= render("reports/standard_form_report/form_summary_subset",
+        {subset: s, max_result_cols: max_result_cols}) %>
     <% end %>
-
   <% end %>
 </div>

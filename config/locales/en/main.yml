@@ -1588,6 +1588,7 @@ en:
     question_selection: "Select Questions"
     report_type: "Report Type"
     response_count: "Total Submissions"
+    questions_tagged: "Questions tagged"
     show_examples: "Show Examples"
     see_dependent_questions:
       one: "See dependent question"
@@ -1601,6 +1602,7 @@ en:
     tally_type: "What would you like to tally?"
     these_questions: "These specific questions"
     total_rows: "Total Rows: %{count}"
+    untagged: "Untagged questions"
     view_response: "Response #%{id}"
     what_attrib_col_headers: "What attribute or question would you like for the column headers (optional)?"
     what_attrib_row_headers: "What attribute or question would you like for the row headers?"
