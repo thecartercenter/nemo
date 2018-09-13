@@ -24,10 +24,6 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
     if parent && !parent.hasClass('form-item-group')
       reason = 'parent_must_be_group'
 
-    # If group, must be depth 1, else must be depth 1 or 2.
-    else if !this.check_depth(placeholder, item)
-      reason = 'max_depth'
-
     else if !this.check_condition_order(placeholder, item)
       reason = 'invalid_condition'
 
@@ -57,9 +53,6 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
     ranks = path.map -> $(this).prevAll('li.form-item, li.placeholder').length + 1
     ranks.get()
 
-  get_depth: (li) ->
-    li.parents('li.form-item').length + 1
-
   # Updates any condition cross-references after a drop or delete.
   update_condition_refs: ->
     @$(".condition").each (i, cond) =>
@@ -69,10 +62,6 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
         cond.find('span').html(this.get_full_rank(refd).join('.'))
       else
         cond.remove()
-
-  check_depth: (placeholder, item) ->
-    depth = this.get_depth(placeholder)
-    depth == 1 || item.hasClass('form-item-question') && depth <= 2 || item.hasClass('form-item-group')
 
   # Checks if the given position (indicated by placeholder) for the given item, or any of its children,
   # would invalidate any conditions.
