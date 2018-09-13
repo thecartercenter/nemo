@@ -57,6 +57,7 @@ feature "adding and editing qing group on form", js: true do
     outer_name = "Outer Group"
     middle_name = "Middle Group"
     inner_name = "Inner Group"
+    question_name = "[IntegerQ1] Integer Question Title 1"
 
     visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
     create_group(outer_name)
@@ -66,30 +67,35 @@ feature "adding and editing qing group on form", js: true do
     click_button("Save") # save form
 
     # Uses DOM manipulation to simulate moving items in the draggable list.
-    # Actually using drag_to doesn't work.
-    move_items_js = <<~SCRIPT
+    # Capybara's drag_to doesn't work because the 'droppable' el isn't available
+    # until the draggable item is clicked.
+
+    nest_groups = <<~SCRIPT
       function itemLi(name) {
         return $('li .inner:contains(' + name + ')').parent();
       }
-      function moveItem(itemName, newParentName) {
+      function moveChildToParent(childName, newParentName) {
         var newParent = itemLi(newParentName);
         var newOl = $('<ol class=\"item-list ui-sortable\"></ol>');
         newParent.append(newOl);
-        var item = itemLi(itemName);
+        var item = itemLi(childName);
         item.detach().appendTo(newOl);
         ELMO.formItemsView.draggable.drop_happened(null, {item: item});
       }
-      moveItem('#{middle_name}', '#{outer_name}');
-      moveItem('#{inner_name}', '#{middle_name}');
+      moveChildToParent('#{middle_name}', '#{outer_name}');
+      setTimeout(function() {moveChildToParent('#{inner_name}', '#{middle_name}');}, 100)
+      setTimeout(function() {moveChildToParent('#{question_name}', '#{inner_name}');}, 100)
     SCRIPT
-    execute_script(move_items_js)
-
+    execute_script(nest_groups)
+    click_button("Save") # save form
     outer_css = ".draggable-list-wrapper ol li"
     middle_css = ".draggable-list-wrapper ol li ol li"
     inner_css = ".draggable-list-wrapper ol li ol li ol li"
+    question_css = ".draggable-list-wrapper ol li ol li ol li ol li"
     within(".form-items") { expect(page).to have_css(outer_css, text: outer_name) }
     within(".form-items") { expect(page).to have_css(middle_css, text: middle_name) }
     within(".form-items") { expect(page).to have_css(inner_css, text: inner_name) }
+    within(".form-items") { expect(page).to have_css(question_css, text: question_name) }
   end
 
   def create_group(name)
