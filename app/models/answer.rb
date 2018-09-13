@@ -58,8 +58,6 @@ class Answer < ResponseNode
   validate :validate_location, if: -> { should_validate?(:location) }
   validate :validate_date, :validate_datetime
 
-  accepts_nested_attributes_for(:choices)
-
   delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
     :option_set, :options, :first_level_option_nodes, :condition, :parent_group_name, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
@@ -218,12 +216,10 @@ class Answer < ResponseNode
     choices.map(&:option).map(&:canonical_name).join(", ") if choices
   end
 
-  # Used with nested attribs
   def media_object_id
     media_object.try(:id)
   end
 
-  # Used with nested attribs
   # Attempts to find unassociated media object with given ID and assoicate with this answer.
   # Fails silently if not found.
   def media_object_id=(id)
