@@ -104,13 +104,16 @@ describe Results::Csv::Generator, :reset_factory_sequences do
            {repeating: {name: "Fruit", items: [
              "text",                                   # 2
              "integer",                                # 3
-             "select_multiple"                         # 4
+             "select_multiple",                        # 4
+             {repeating: {name: "Slice", items: [
+               "decimal"                               # 5
+             ]}}
            ]}},
-           "integer",                                  # 5
+           "integer",                                  # 6
            {repeating: {name: "Vegetable", items: [
-             "text",                                   # 6
-             "geo_multilevel_select_one",              # 7
-             "integer"                                 # 8
+             "text",                                   # 7
+             "geo_multilevel_select_one",              # 8
+             "integer"                                 # 9
            ]}}])
     end
 
@@ -119,8 +122,8 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         create_response(form: repeat_form, answer_values: [
           1,
           {repeating: [
-            ["Apple", 1, %w[Cat Dog]],
-            ["Banana", 2, %w[Cat]]
+            ["Apple", 1, %w[Cat Dog], {repeating: [[1.65], [1.3]]}],
+            ["Banana", 2, %w[Cat], {repeating: [[1.27], [1.77]]}]
           ]},
           2,
           {repeating: [
@@ -133,7 +136,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
             3,
             {repeating: [
               ["Xigua", 10, %w[Dog]],
-              ["Yuzu", 9, %w[Cat Dog]],
+              ["Yuzu", 9, %w[Cat Dog], {repeating: [[1.52]]}],
               ["Ugli", 8, %w[Cat]]
             ]},
             4,
