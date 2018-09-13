@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 feature "forms flow", js: true do
   let!(:user) { create(:user) }
-  let!(:form) { create(:form, name: "Foo",
-    question_types: %w(integer multilevel_select_one select_one integer)) }
+  let!(:form) do
+    create(:form, name: "Foo", question_types: %w[integer multilevel_select_one select_one integer])
+  end
   let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
 
   before do
@@ -15,8 +18,8 @@ feature "forms flow", js: true do
       visit(forms_path)
 
       # First time printing should show tips.
-      find('a.print-link').click
-      expect(page).to have_css('h4', text: 'Print Format Tips')
+      find("a.print-link").click
+      expect(page).to have_css("h4", text: "Print Format Tips")
     end
 
     # Couldn't get this spec to work on headless chrome. Maybe it will work later.
@@ -68,7 +71,7 @@ feature "forms flow", js: true do
       setTimeout(function() {moveChildToParent('#{question_name}', '#{inner_name}');}, 100)
     SCRIPT
     execute_script(nest_groups)
-    click_button("Save") # save form
+    click_button("Save")
     outer_css = ".draggable-list-wrapper ol li"
     middle_css = ".draggable-list-wrapper ol li ol li"
     inner_css = ".draggable-list-wrapper ol li ol li ol li"
