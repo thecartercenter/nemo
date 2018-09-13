@@ -46,11 +46,8 @@ module Results
             INNER JOIN answers ON answers.response_id = responses.id
             INNER JOIN form_items qings ON answers.questioning_id = qings.id
             INNER JOIN questions ON qings.question_id = questions.id
-            INNER JOIN answer_hierarchies anc1s ON answers.id = anc1s.descendant_id AND anc1s.generations = 1
-            INNER JOIN answers parent1s ON anc1s.ancestor_id = parent1s.id
-            INNER JOIN form_items parent_groups ON parent_groups.id = parent1s.questioning_id
-            LEFT OUTER JOIN answer_hierarchies anc2s ON answers.id = anc2s.descendant_id AND anc2s.generations = 1
-            LEFT OUTER JOIN answers parent2s ON anc2s.ancestor_id = parent2s.id
+            INNER JOIN answers parents ON answers.parent_id = parents.id
+            INNER JOIN form_items parent_groups ON parent_groups.id = parents.questioning_id
             LEFT OUTER JOIN option_sets ON questions.option_set_id = option_sets.id
             LEFT OUTER JOIN options answer_options ON answer_options.id = answers.option_id
             LEFT OUTER JOIN choices ON choices.answer_id = answers.id

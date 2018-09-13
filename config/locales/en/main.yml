@@ -1708,6 +1708,7 @@ en:
       altitude: "Altitude"
       accuracy: "Accuracy"
       parent_group_name: "GroupName"
+      parent_group_depth: "GroupLevel"
     add_to_group: "Add to '%{group_name}'"
     empty_group_notice: "This group is empty"
 

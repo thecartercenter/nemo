@@ -15,7 +15,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
   context "with no data" do
     it "produces correct csv" do
       is_expected.to eq "ResponseID,Shortcode,Form,Submitter,DateSubmitted,"\
-        "GroupNum1,ItemNum1,GroupName,GroupLevel\r\n"
+        "GroupName,GroupLevel\r\n"
     end
   end
 
@@ -259,7 +259,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       option.update!(name_fr: "L'option")
 
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
-        create_response(form: form, answer_values: [[option.name]])
+        create_response(form: form, answer_values: [{repeating: [[option.name]]}])
       end
     end
 

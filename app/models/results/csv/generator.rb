@@ -23,7 +23,7 @@ module Results
 
       def setup_header_map
         header_map.add_common(%w[response_id shortcode form_name user_name submit_time])
-        header_map.add_group(%w[parent_group_name])
+        header_map.add_group(%w[parent_group_name parent_group_depth])
         header_map.add_from_qcodes(HeaderQuery.new(response_scope: response_scope).run.to_a.flatten)
       end
 
