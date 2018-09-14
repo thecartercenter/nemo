@@ -43,7 +43,7 @@ module Results
     # Returns an unsaved answer tree object based on the hash
     def parse(web_answer_hash)
       children = web_answer_hash.fetch(:root, {}).fetch(:children, nil)
-      return unless children.present?
+      return if children.blank?
       root = response.root_node || response.build_root_node(new_tree_node_attrs(web_answer_hash[:root], nil))
       parse_children(web_answer_hash[:root][:children], root)
       root
