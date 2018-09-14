@@ -1,6 +1,6 @@
 <% items.each do |item, subitems| %>
   <% if item.is_a?(QingGroup) %>
-    <% if !subitems.empty? %>
+    <% if subitems.present? %>
       <%= render "qing_groups/printable", qing_group: item %>
       <%= render "form_items/printable", items: subitems %>
     <% end %>

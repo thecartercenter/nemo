@@ -103,6 +103,11 @@ class FormItem < ApplicationRecord
     with_self.values[0]
   end
 
+  def visible_descendants
+    nodes = descendants.includes(question: {option_set: :root_node}).order(:rank).select(&:visible?)
+    self.class.arrange_nodes(nodes)
+  end
+
   # Gets a nested array of all Questionings in the subtree headed by this item. For example,
   # (corresponding to the above example for arrange_descendants):
   # [Qing, Qing, [Qing, Qing], Qing, Qing, Qing, ...]
