@@ -104,6 +104,8 @@ class FormItem < ApplicationRecord
   end
 
   def visible_descendants
+    # eager loading questions and option sets in case they are needed
+    # using 'descendants' because it returns direct and indirect children
     nodes = descendants.includes(question: {option_set: :root_node}).order(:rank).select(&:visible?)
     self.class.arrange_nodes(nodes)
   end
