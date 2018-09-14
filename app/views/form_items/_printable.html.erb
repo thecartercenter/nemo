@@ -1,10 +1,10 @@
-<% items.each do |item, subitems| %>
-  <% if item.is_a?(QingGroup) %>
-    <% if subitems.present? %>
-      <%= render "qing_groups/printable", qing_group: item %>
-      <%= render "form_items/printable", items: subitems %>
+<% items.each do |item| %>
+  <% if item.is_a?(Questioning) %>
+    <%= render "questionings/printable", qing: item.decorate %>
+  <% elsif item.is_a?(QingGroup) %>
+    <%= render "qing_groups/printable", qing_group: item %>
+    <% if item.children? %>
+      <%= render "form_items/printable", items: item.visible_children %>
     <% end %>
-  <% elsif item.printable? %>
-    <%= render "questionings/printable", qing: QuestioningDecorator.new(item) %>
   <% end %>
 <% end %>

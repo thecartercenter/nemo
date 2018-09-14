@@ -37,8 +37,8 @@ class Form < ApplicationRecord
 
   delegate :arrange_descendants,
     :children,
-    :visible_descendants,
     :sorted_children,
+    :visible_children,
     :c,
     :sc,
     :descendants,

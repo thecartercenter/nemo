@@ -103,11 +103,8 @@ class FormItem < ApplicationRecord
     with_self.values[0]
   end
 
-  def visible_descendants
-    # eager loading questions and option sets in case they are needed
-    # using 'descendants' because it returns direct and indirect children
-    nodes = descendants.includes(question: {option_set: :root_node}).order(:rank).select(&:visible?)
-    self.class.arrange_nodes(nodes)
+  def visible_children
+    sorted_children.select(&:visible?)
   end
 
   # Gets a nested array of all Questionings in the subtree headed by this item. For example,
