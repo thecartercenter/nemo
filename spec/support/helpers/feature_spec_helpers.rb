@@ -4,12 +4,6 @@ module FeatureSpecHelpers
     expect(page).to have_content("Profile:")
   end
 
-  # Capybara's `choose` was intermittently failing to actually click the radio button in a report spec.
-  # This seems to work better.
-  def click_radio_button(name, value)
-    execute_script(%($('input[type=radio][name="#{name}"][value="#{value}"]').click()))
-  end
-
   def fill_in_ckeditor(locator, opts)
     wait_for_ckeditor(locator)
 
