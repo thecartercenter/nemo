@@ -8,25 +8,60 @@ feature "reviewer notes", js: true do
   let(:form) { create(:form, :published, question_types: %w[integer]) }
   let(:response) { create(:response, :is_reviewed, form: form, answer_values: [0], user: enumerator) }
   let(:notes) { response.reviewer_notes }
+  let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name} }
 
-  scenario "should not be visible to normal users" do
-    login(enumerator)
-    visit(hierarchical_response_path(response,
-      locale: "en", mode: "m", mission_name: get_mission.compact_name))
-    expect(page).not_to have_content(notes)
+  context "normal users" do
+    before { login(enumerator) }
+
+    scenario "should not be visible" do
+      visit(hierarchical_response_path(response, params))
+      expect(page).not_to have_content(notes)
+    end
   end
 
-  scenario "should be visible to admin" do
-    login(create(:user, admin: true))
-    visit(hierarchical_response_path(response,
-      locale: "en", mode: "m", mission_name: get_mission.compact_name))
-    expect(page).to have_content(notes)
+  context "admin user" do
+    before { login(create(:user, admin: true)) }
+
+    scenario "should be visible" do
+      visit(hierarchical_response_path(response, params))
+      expect(page).to have_content(notes)
+    end
+
+    scenario "can submit notes" do
+      visit(hierarchical_response_path(response, params))
+      fill_in("Notes", with: "testing")
+      click_button("Save")
+      expect(page)
+
+      expect(response.reload.reviewer_notes).to eq "testing"
+    end
+
+    scenario "can not submit answers" do
+      visit(hierarchical_response_path(response, params))
+      expect(page).to_not have_selector("[data-path='0'] input")
+    end
   end
 
-  scenario "should be visible to staffer" do
-    login(create(:user, role_name: :staffer))
-    visit(hierarchical_response_path(response,
-      locale: "en", mode: "m", mission_name: get_mission.compact_name))
-    expect(page).to have_content(notes)
+  context "staffer user" do
+    before { login(create(:user, role_name: :staffer)) }
+
+    scenario "should be visible" do
+      visit(hierarchical_response_path(response, params))
+      expect(page).to have_content(notes)
+    end
+
+    scenario "can submit notes" do
+      visit(hierarchical_response_path(response, params))
+      fill_in("Notes", with: "testing")
+      click_button("Save")
+      expect(page)
+
+      expect(response.reload.reviewer_notes).to eq "testing"
+    end
+
+    scenario "can not submit answers" do
+      visit(hierarchical_response_path(response, params))
+      expect(page).to_not have_selector("[data-path='0'] input")
+    end
   end
 end
