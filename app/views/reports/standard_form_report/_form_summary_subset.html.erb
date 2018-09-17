@@ -39,7 +39,7 @@
 
         <table class="subset result_cols_<%= result_cols %>">
 
-          <% group.clusters.each do |cluster|%>
+          <% group.clusters.each do |cluster| %>
             <% # do cluster header row %>
             <tr class="cluster_header">
               <td></td>
@@ -80,7 +80,7 @@
                 </tr>
 
                 <%# if no items, show the 'no data' message %>
-                <% if summary.items.length == 0 %>
+                <% if summary.items.empty? %>
                   <tr class="summary">
                     <td colspan="<%= result_cols + 2 %>">
                       <em class="no_match"><%= I18n.t('report/report.no_match') %></em>
@@ -131,7 +131,7 @@
                   <% elsif cluster.display_type == :structured && cluster.headers.length > result_cols %>
 
                     <td colspan="<%= result_cols %>">
-                      <%= summary.items.each_with_index.map{|item, idx| render("reports/standard_form_report/form_summary_item_with_header", item: item, header: cluster.headers[idx]) }.join(", ") %>
+                      <%= summary.items.each_with_index.map{|item, idx| render("reports/standard_form_report/form_summary_item_with_header", item: item, header: cluster.headers[idx]) }.safe_join(", ") %>
                     </td>
 
                     <% # print out blank cell to fill up to max %>

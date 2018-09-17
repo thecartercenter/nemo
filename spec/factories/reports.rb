@@ -39,7 +39,7 @@ FactoryGirl.define do
 
     factory :standard_form_report, class: "Report::StandardFormReport" do
       form
-      group_by_tag true
+      group_by_tag false
     end
   end
 end

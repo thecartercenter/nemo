@@ -49,13 +49,15 @@ feature "report generation", js: true do
     let(:tag1) { build(:tag) }
     let(:tag2) { build(:tag) }
     let(:tag3) { build(:tag) }
-    let!(:standard_report) { create(:standard_form_report, form: form) }
+    let!(:standard_report) { create(:standard_form_report, form: form, group_by_tag: true) }
 
-    scenario "should work" do
+    before do
       qs[0].tags = [tag1]
       qs[1].tags = [tag2]
       qs[2].tags = [tag3, tag1]
+    end
 
+    scenario "should work" do
       login(user)
       visit(reports_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       click_link(standard_report.name)

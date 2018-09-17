@@ -19,5 +19,9 @@
 
 <% # statistical items %>
 <% elsif item.stat.present? %>
-  <%= (item.qtype_name == "datetime" || item.qtype_name == "time") ? item.stat : number_with_precision(item.stat, precision: 1) %>
+  <% if item.qtype_name == "datetime" || item.qtype_name == "time" %>
+    <%= item.stat %>
+  <% else %>
+    <%= number_with_precision(item.stat, precision: 1) %>
+  <% end %>
 <% end %>
