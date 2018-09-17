@@ -95,7 +95,7 @@ describe Response do
         assert_search("quick brown", r1, r3)
 
         # Exact phrase matching should work
-        assert_search(%{text:(quick brown)}, r1, r3) # Parenths don't force exact phrase matching
+        assert_search(%{text:(quick brown)}, r1, r3) # Parenthesis don't force exact phrase matching
 
         # TODO: FIX EXACT PHRASE MATCHING
         # assert_search(%{text:"quick brown"}, r1)
