@@ -166,7 +166,7 @@ shared_context "response tree" do
     end
   end
 
-  def expect_ro_value(path, value)
+  def expect_read_only_value(path, value)
     el = page.find("[data-path='#{path.join('-')}']")
     expect(el).to have_content(value)
   end

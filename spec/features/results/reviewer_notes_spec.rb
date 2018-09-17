@@ -54,14 +54,10 @@ feature "reviewer notes", js: true do
       visit(hierarchical_response_path(response, params))
       fill_in("Notes", with: "testing")
       click_button("Save")
-      expect(page)
 
-      expect(response.reload.reviewer_notes).to eq "testing"
-    end
-
-    scenario "can not submit answers" do
       visit(hierarchical_response_path(response, params))
-      expect(page).to_not have_selector("[data-path='0'] input")
+      input = find("#response_reviewer_notes")
+      expect(input.value).to eq "testing"
     end
   end
 end
