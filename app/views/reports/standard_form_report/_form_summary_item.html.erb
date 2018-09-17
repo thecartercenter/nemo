@@ -20,4 +20,8 @@
 <% # statistical items %>
 <% elsif item.stat.present? %>
   <%= (item.qtype_name == "datetime" || item.qtype_name == "time") ? item.stat : number_with_precision(item.stat, precision: 1) %>
+
+<% # reference item %>
+<% elsif item.reference.present? %>
+  <i class="fa fa-book"></i>jill
 <% end %>

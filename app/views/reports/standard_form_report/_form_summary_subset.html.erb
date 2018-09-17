@@ -2,7 +2,7 @@
 <% if subset.disagg_value != :all %>
   <% value_str = subset.disagg_value ? subset.disagg_value.name : "[#{t('common.blank')}]" %>
   <h2><%= "#{@report.disagg_qing.question.code}: #{value_str}"%></h2>
-  <small><%= t("report/report.subset_intro", {disagg_value: value_str, question: @report.disagg_qing.question.code}) %></small>
+  <small><%= t("report/report.subset_intro", disagg_value: value_str, question: @report.disagg_qing.question.code) %></small>
 <% end %>
 
 <div class="subset <%= subset.disagg_value == "all" ? "" : "disaggregated" %> <%= subset.group_by_tag ? "group_by_tag" : "" %>">
@@ -119,6 +119,9 @@
                   <% # if structured type with less than result_cols, do separate cells %>
                   <% elsif cluster.display_type == :structured && cluster.headers.length <= result_cols %>
                     <% summary.items.each do |item| %>
+                      <% Rails.logger.debug("What item is this?") %>
+                      <% Rails.logger.debug(item.inspect) %>
+                      <% Rails.logger.debug(item.reference) %>
                       <td class="structured"><%= render("reports/standard_form_report/form_summary_item", item: item) %></td>
                     <% end %>
 
