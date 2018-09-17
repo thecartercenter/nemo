@@ -1,0 +1,27 @@
+<% # text items %>
+<% if item.text.present? %>
+  <% # include submitter name and add link to response if appropriate %>
+  <% if item.submitter_name.present? %>
+    <div class="by-at">
+      <%= t("report/report.submitted_by_at", user: item.submitter_name, datetime: item.created_at) %>,
+      <a href="<%= responses_path(item.response_id) %>">
+        <%= t("report/report.view_response", id: item.response_id) %>
+      </a>
+    </div>
+  <% end %>
+
+  <%= item.text %>
+
+<% # tally items %>
+<% elsif item.count.present? %>
+  <%= number_with_precision(item.pct, precision: 1) %>%
+  (<%= number_with_precision(item.count, precision: 0) %>)
+
+<% # statistical items %>
+<% elsif item.stat.present? %>
+  <% if item.qtype_name == "datetime" || item.qtype_name == "time" %>
+    <%= item.stat %>
+  <% else %>
+    <%= number_with_precision(item.stat, precision: 1) %>
+  <% end %>
+<% end %>
