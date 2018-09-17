@@ -28,7 +28,7 @@ module ReportEmbeddable
     @report_data[:report][:generated_at] = I18n.l(Time.zone.now)
     @report_data[:report][:user_can_edit] = can?(:update, @report)
     @form_type = @report.model_name.singular_route_key.remove(/^report_/)
-    return unless @report.type.present? && @report.type == "Report::StandardFormReport"
+    return unless @report.type == "Report::StandardFormReport"
     @report_data[:report][:html] =
       render_to_string(partial: "reports/#{@form_type}/form_summary_display")
   end
