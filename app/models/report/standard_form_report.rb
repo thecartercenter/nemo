@@ -176,5 +176,4 @@ class Report::StandardFormReport < Report::Report
   def references?
     form.questionings.detect { |qing| qing.reference.present? }
   end
-
 end
