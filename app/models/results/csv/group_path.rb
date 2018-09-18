@@ -9,7 +9,7 @@ module Results
     # - Item #1 of Group 2
     # - Item #2 of Group 2.4
     class GroupPath
-      attr_accessor :changes
+      attr_accessor :changes, :parent_repeat_group_id
 
       def initialize
         self.prev_row = {}
@@ -54,8 +54,9 @@ module Results
 
       # Scans through the two ancestry strings and looks for salient differences.
       def check_for_changes_in_ancestry(*strs)
+        self.parent_repeat_group_id = nil
         diff = false
-        strs[0] ||= "{AnswerGroup0}"
+        strs[0] ||= "{AnswerGroup:0:00000000-0000-0000-0000-000000000000}"
         pos = [1, 1]
         tokens = [nil, nil]
         loop do
@@ -68,6 +69,10 @@ module Results
           # Advance scan positions on both strings
           pos[0] += tokens[0].size + 1 if tokens[0]
           pos[1] += tokens[1].size + 1 if tokens[1]
+
+          if tokens[1]&.starts_with?("AnswerGroupSet")
+            self.parent_repeat_group_id = tokens[1][-36..-1]
+          end
 
           # If we haven't found any differences yet and these two tokens are the same,
           # we can proceed to next tokens.
