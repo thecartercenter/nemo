@@ -1,0 +1,9 @@
+<% if subset.group_by_tag %>
+  <div class="tag-header">
+    <% if tag_group.tag.class != Tag %>
+      <h3 class="untagged"><%= t("report/report.untagged") %></h3>
+    <% else %>
+      <h3><%= t("report/report.questions_tagged") %> <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
+    <% end %>
+  </div>
+<% end %>

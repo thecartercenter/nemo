@@ -1,5 +1,7 @@
 <% # text items %>
 <% if item.text.present? %>
+  <%= sanitize(item.text) %>
+
   <% # include submitter name and add link to response if appropriate %>
   <% if item.submitter_name.present? %>
     <div class="by-at">
@@ -9,8 +11,6 @@
       </a>
     </div>
   <% end %>
-
-  <%= item.text %>
 
 <% # tally items %>
 <% elsif item.count.present? %>

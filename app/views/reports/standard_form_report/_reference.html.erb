@@ -1,0 +1,7 @@
+<% if @report.references? %>
+  <td class="reference">
+    <% if summary.reference.present? %>
+      <a href="<%= summary.reference %>" target="_blank"><i class="fa fa-book"></i></a>
+    <% end %>
+  </td>
+<% end %>

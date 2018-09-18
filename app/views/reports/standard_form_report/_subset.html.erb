@@ -1,0 +1,41 @@
+<% # print a header unless there is no disaggregation %>
+<% if subset.disagg_value != :all %>
+  <% value_str = subset.disagg_value ? subset.disagg_value.name : "[#{t('common.blank')}]" %>
+  <h2><%= "#{@report.disagg_qing.question.code}: #{value_str}"%></h2>
+  <small><%= t("report/report.subset_intro", disagg_value: value_str, question: @report.disagg_qing.question.code) %></small>
+<% end %>
+
+<div class="subset <%= subset.disagg_value == "all" ? "" : "disaggregated" %> <%= subset.group_by_tag ? "group-by-tag" : "" %>">
+  <% if subset.no_data? %>
+    <em><%= t("report/report.no_match") %></em>
+  <% else %>
+    <% subset.tag_groups.each do |tag_group| %>
+      <%= render("reports/standard_form_report/tag_header", tag_group: tag_group, subset: subset) %>
+
+      <% tag_group.type_groups.each do |group| %>
+        <% result_cols = [max_result_cols, group.max_header_count].min %>
+
+        <% # show group header unless there is only one big group %>
+        <% if group.type_set != "all" %>
+          <h3><%= t("report/report.standard_form_report.type_sets.#{group.type_set}") %></h3>
+        <% end %>
+
+        <table class="subset result-cols-<%= result_cols %>">
+          <% group.clusters.each do |cluster| %>
+            <%= render("reports/standard_form_report/table_headers", cluster: cluster,
+              result_cols: result_cols) %>
+            <% cluster.summaries.each do |summary| %>
+              <% if cluster.display_type == :full_width %>
+                <%= render("reports/standard_form_report/full_width_summary_row.html.erb",
+                  cluster: cluster, summary: summary, result_cols: result_cols) %>
+              <% else %>
+                <%= render("reports/standard_form_report/summary_row.html.erb",
+                  cluster: cluster, summary: summary, result_cols: result_cols) %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </table>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
