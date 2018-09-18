@@ -31,9 +31,9 @@ feature "reviewer notes", js: true do
       visit(hierarchical_response_path(response, params))
       fill_in("Notes", with: "testing")
       click_button("Save")
-      expect(page)
 
       expect(response.reload.reviewer_notes).to eq "testing"
+      expect(response.reload.reviewed).to eq true
     end
 
     scenario "can not submit answers" do

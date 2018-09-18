@@ -28,6 +28,7 @@ class Response < ApplicationRecord
   friendly_id :shortcode
 
   before_save :normalize_answers
+  before_validation :normalize_reviewed
   after_save { root_node.save if root_node.present? }
   before_create :generate_shortcode
 
@@ -329,6 +330,10 @@ class Response < ApplicationRecord
 
   def normalize_answers
     AnswerArranger.new(self, placeholders: :none, dont_load_answers: true).build.normalize
+  end
+
+  def normalize_reviewed
+    self.reviewed = true if reviewer_id.present? || reviewer_notes.present?
   end
 
   def form_in_mission

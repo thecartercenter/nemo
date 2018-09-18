@@ -2,21 +2,32 @@
 <div class="metadata">
   <div class="row">
     <div class="col-sm-6">
-      <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>
-      <%= f.field(:form_id, content: link_to(@response.form.name, @response.form)) %>
-      <%= f.field(:source, read_only: true) unless form_mode == :new %>
-      <%= f.field(:user_id, type: :select, required: true, options: sel_opts_from_objs(@response.user),
-                            read_only: cannot?(:manage, @response),
-                            # Some users are not linkable currently if they're not assigned to the mission.
-                            # If we give nil read_only_content then it will revert to the default.
-                            read_only_content: can?(:read, @response.user) ?
-                              link_to(@response.user.try(:name), @response.user) : nil) %>
+      <% if context.read_only? %>
+        <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>
+        <%= f.field(:form_id, content: link_to(@response.form.name, @response.form), read_only: true) %>
+        <%= f.field(:source, content: @response.source, read_only: true) %>
+        <%= f.field(:user_id, content: link_to(@response.user.full_name, @response.user), read_only: true) %>
+      <% else %>
+        <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>
+        <%= f.field(:form_id, content: link_to(@response.form.name, @response.form)) %>
+        <%= f.field(:source, read_only: true) unless form_mode == :new %>
+        <%= f.field(:user_id, type: :select, required: true, options: sel_opts_from_objs(@response.user),
+                              read_only: cannot?(:manage, @response),
+                              # Some users are not linkable currently if they're not assigned to the mission.
+                              # If we give nil read_only_content then it will revert to the default.
+                              read_only_content: can?(:read, @response.user) ?
+                                link_to(@response.user.try(:name), @response.user) : nil) %>
+      <% end %>
     </div>
     <% if @response.persisted? && can?(:review, @response) %>
       <div class="col-sm-6">
         <%= f.field(:reviewed, type: :check_box) %>
         <%= f.field(:reviewer_id, type: :select, options: sel_opts_from_objs(@response.reviewer)) %>
         <%= f.field(:reviewer_notes, type: :textarea) %>
+
+        <% if context.read_only? %>
+          <%= f.submit(class: "btn btn-primary pull-right") %>
+        <% end %>
       </div>
     <% end %>
   </div>
