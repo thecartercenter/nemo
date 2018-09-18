@@ -61,7 +61,7 @@ module Results
 
     def update_or_add_node(web_hash_node, tree_parent)
       id = web_hash_node[:id]
-      raise SubmissionError, "Form item id invalid." if invalid?(web_hash_node[:questioning_id])
+      raise SubmissionError, "Form item id invalid." unless item_in_mission?(web_hash_node[:questioning_id])
       # add
       if id.blank?
         tree_parent.children.build(new_tree_node_attrs(web_hash_node, tree_parent))
@@ -106,8 +106,12 @@ module Results
       end
     end
 
-    def invalid?(questioning_id)
-      FormItem.find(questioning_id).mission_id != @response.mission_id
+    def item_in_mission?(questioning_id)
+      form_items_in_mission[questioning_id].present?
+    end
+
+    def form_items_in_mission
+      @form_items_in_mission || FormItem.where(mission_id: @response.mission_id).pluck(:id).index_by(&:itself)
     end
   end
 end
