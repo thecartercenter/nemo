@@ -1,5 +1,7 @@
 <% # text items %>
 <% if item.text.present? %>
+  <%= sanitize item.text %>
+
   <% # include submitter name and add link to response if appropriate %>
   <% if item.submitter_name.present? %>
     <div class="by-at">
@@ -10,8 +12,6 @@
     </div>
   <% end %>
 
-  <%= item.text %>
-
 <% # tally items %>
 <% elsif item.count.present? %>
   <%= number_with_precision(item.pct, precision: 1) %>%
@@ -19,17 +19,9 @@
 
 <% # statistical items %>
 <% elsif item.stat.present? %>
-<<<<<<< HEAD
-  <%= (item.qtype_name == "datetime" || item.qtype_name == "time") ? item.stat : number_with_precision(item.stat, precision: 1) %>
-
-<% # reference item %>
-<% elsif item.reference.present? %>
-  <i class="fa fa-book"></i>jill
-=======
   <% if item.qtype_name == "datetime" || item.qtype_name == "time" %>
     <%= item.stat %>
   <% else %>
     <%= number_with_precision(item.stat, precision: 1) %>
   <% end %>
->>>>>>> develop
 <% end %>

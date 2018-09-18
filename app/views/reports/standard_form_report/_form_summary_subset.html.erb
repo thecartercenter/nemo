@@ -6,30 +6,13 @@
 <% end %>
 
 <div class="subset <%= subset.disagg_value == "all" ? "" : "disaggregated" %> <%= subset.group_by_tag ? "group_by_tag" : "" %>">
-
-  <% # if no data, then print a notice %>
-
   <% if subset.no_data? %>
-
     <em><%= t("report/report.no_match") %></em>
-
   <% else %>
-
     <% subset.tag_groups.each do |tag_group| %>
-      <% # print tag header if grouped by tag %>
-      <% if subset.group_by_tag %>
-        <div class="tag-header">
-          <% if tag_group.tag.class != Tag %>
-            <h3 class="untagged"><%= t("report/report.untagged") %></h3>
-          <% else %>
-            <h3><%= t("report/report.questions_tagged") %> <span class="token-input-token-elmo"><%= tag_group.tag.name %></span></h3>
-          <% end %>
-        </div>
-      <% end %>
+      <%= render("reports/standard_form_report/subset/tags", tag_group: tag_group, subset: subset) %>
 
       <% tag_group.type_groups.each do |group| %>
-
-        <% # determine the number of result columns in the table %>
         <% result_cols = [8, group.max_header_count].min %>
 
         <% # show group header unless there is only one big group %>
@@ -38,112 +21,13 @@
         <% end %>
 
         <table class="subset result_cols_<%= result_cols %>">
-
           <% group.clusters.each do |cluster| %>
-            <% # do cluster header row %>
-            <tr class="cluster_header">
-              <td></td>
-
-              <% # if full width display type with responses, header cell must be extra wide %>
-              <td <%= cluster.display_type == :full_width ? "colspan='#{result_cols + 1}'" : ""%>
-                &nbsp;
-              </td>
-
-              <% # do rest of header cells if necessary %>
-              <% if cluster.display_type == :flow || cluster.display_type == :structured && cluster.headers.length > result_cols %>
-                <td colspan="<%= result_cols %>"><%= cluster.overall_header %></td>
-
-              <% elsif cluster.display_type == :structured %>
-                <% # print out each header cell %>
-                <% cluster.headers.each do |header| %>
-                  <td class="structured"><%= header[:name] %></td>
-                <% end %>
-
-                <% # print out blank cell to fill up to max %>
-                <% if result_cols > cluster.headers.length %>
-                  <td colspan="<%= result_cols - cluster.headers.length %>"></td>
-                <% end %>
-              <% end %>
-            </tr>
-
-            <% # do summary rows %>
+            <%= render("reports/standard_form_report/subset/table_headers", cluster: cluster, result_cols: result_cols) %>
             <% cluster.summaries.each do |summary| %>
-
-              <% # if this is a full_width summary, it gets multiple rows, one item per row %>
               <% if cluster.display_type == :full_width %>
-
-                <tr class="summary full_width_subhead">
-                  <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
-                  <td colspan="<%= result_cols + 2 %>">
-                    <%= render("reports/standard_form_report/form_summary_question_label", summary: summary) %>
-                  </td>
-                </tr>
-
-                <%# if no items, show the 'no data' message %>
-                <% if summary.items.empty? %>
-                  <tr class="summary">
-                    <td colspan="<%= result_cols + 2 %>">
-                      <em class="no_match"><%= I18n.t('report/report.no_match') %></em>
-                    </td>
-                  </tr>
-
-                <%# otherwise, loop over each item (answer) and make a row for it %>
-                <% else %>
-                  <% summary.items.each do |item| %>
-                    <tr class="summary">
-                      <td colspan="<%= result_cols + 2 %>">
-                        <%= render("reports/standard_form_report/form_summary_item", item: item) %>
-                      </td>
-                    </tr>
-                  <% end %>
-
-                <% end %>
-
+                <%= render("reports/standard_form_report/subset/full_width_summary_row.html.erb", cluster: cluster, summary: summary, result_cols: result_cols) %>
               <% else %>
-                <tr class="summary">
-                  <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
-                  <td class="qname">
-                    <%= render("reports/standard_form_report/form_summary_question_label", summary: summary) %>
-                  </td>
-
-                  <% # if flow type, or if any other type and items are empty, just print the responses sep'd by commas %>
-                  <% if cluster.display_type == :flow || summary.items.length == 0 %>
-                    <td colspan="<%= result_cols %>">
-                      <% if summary.items.length == 0 %>
-                        <em class="no_match"><%= t("report/report.no_match") %></em>
-                      <% end %>
-
-                      <%= summary.items.map { |item| "#{item.text}" }.join(", ") %>
-                    </td>
-
-                  <% # if structured type with less than result_cols, do separate cells %>
-                  <% elsif cluster.display_type == :structured && cluster.headers.length <= result_cols %>
-                    <% summary.items.each do |item| %>
-                      <% Rails.logger.debug("What item is this?") %>
-                      <% Rails.logger.debug(item.inspect) %>
-                      <% Rails.logger.debug(item.reference) %>
-                      <td class="structured"><%= render("reports/standard_form_report/form_summary_item", item: item) %></td>
-                    <% end %>
-
-                    <% # print out blank cell to fill up to max %>
-                    <% if result_cols > cluster.headers.length %>
-                      <td colspan="<%= result_cols - cluster.headers.length %>"></td>
-                    <% end %>
-
-                  <% # if structured type with more than result_cols, do one big cell %>
-                  <% elsif cluster.display_type == :structured && cluster.headers.length > result_cols %>
-
-                    <td colspan="<%= result_cols %>">
-                      <%= summary.items.each_with_index.map { |item, idx| render("reports/standard_form_report/form_summary_item_with_header", item: item, header: cluster.headers[idx]) }.safe_join(", ") %>
-                    </td>
-
-                    <% # print out blank cell to fill up to max %>
-                    <% if result_cols > cluster.headers.length %>
-                      <td colspan="<%= result_cols - cluster.headers.length %>"></td>
-                    <% end %>
-
-                  <% end %>
-                </tr>
+                <%= render("reports/standard_form_report/subset/summary_row.html.erb", cluster: cluster, summary: summary, result_cols: result_cols) %>
               <% end %>
             <% end %>
           <% end %>

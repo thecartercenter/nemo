@@ -1,0 +1,33 @@
+<% # do cluster header row %>
+<tr class="cluster_header">
+  <td></td>
+
+  <% # if full width display type with responses, header cell must be extra wide %>
+  <% if cluster.display_type == :full_width %>
+    <td <%= @report.references? ? "colspan=#{result_cols + 1}" : "colspan=#{result_cols + 2}" %> >
+      &nbsp;
+    </td>
+  <% else %>
+    <td>&nbsp;</td>
+  <% end %>
+
+  <% # do rest of header cells if necessary %>
+  <% if cluster.display_type == :flow || cluster.display_type == :structured && cluster.headers.length > result_cols %>
+    <td colspan="<%= result_cols %>"><%= cluster.overall_header %></td>
+
+  <% elsif cluster.display_type == :structured %>
+    <% # print out each header cell %>
+    <% cluster.headers.each do |header| %>
+      <td class="structured"><%= header[:name] %></td>
+    <% end %>
+
+    <% # print out blank cell to fill up to max %>
+    <% if result_cols > cluster.headers.length %>
+      <td colspan="<%= result_cols - cluster.headers.length %>"></td>
+    <% end %>
+  <% end %>
+
+  <% if @report.references? %>
+    <td><%= t("report/report.reference") %></td>
+  <% end %>
+</tr>
