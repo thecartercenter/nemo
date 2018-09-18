@@ -1,10 +1,8 @@
 <% items.each do |item| %>
   <% if item.is_a?(Questioning) %>
     <%= render "questionings/printable", qing: item.decorate %>
-  <% elsif item.is_a?(QingGroup) %>
+  <% elsif item.is_a?(QingGroup) && item.children? %>
     <%= render "qing_groups/printable", qing_group: item %>
-    <% if item.children? %>
-      <%= render "form_items/printable", items: item.visible_children %>
-    <% end %>
+    <%= render "form_items/printable", items: item.visible_children %>
   <% end %>
 <% end %>
