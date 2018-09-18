@@ -1,27 +1,23 @@
-<tr class="summary full_width_subhead">
+<tr class="summary full-width-subhead">
   <td class="num">#<%= summary.questioning.full_dotted_rank %></td>
   <td colspan="<%= result_cols + 2 %>">
-    <%= render("reports/standard_form_report/form_summary_question_label", summary: summary) %>
+    <%= render("reports/standard_form_report/question_label", summary: summary) %>
   </td>
 </tr>
 
-<%# if no items, show the 'no data' message %>
 <% if summary.items.empty? %>
   <tr class="summary">
     <td colspan="<%= result_cols + 2 %>">
       <em class="no_match"><%= I18n.t('report/report.no_match') %></em>
     </td>
   </tr>
-
-<%# otherwise, loop over each item (answer) and make a row for it %>
 <% else %>
   <% summary.items.each do |item| %>
     <tr class="summary">
       <td colspan="<%= result_cols + 2 %>">
-        <%= render("reports/standard_form_report/form_summary_item", item: item) %>
+        <%= render("reports/standard_form_report/item", item: item) %>
       </td>
-      <%= render("reports/standard_form_report/subset/reference", summary: summary) %>
+      <%= render("reports/standard_form_report/reference", summary: summary) %>
     </tr>
   <% end %>
-
 <% end %>

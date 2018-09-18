@@ -30,7 +30,7 @@ module ReportEmbeddable
     @form_type = @report.model_name.singular_route_key.remove(/^report_/)
     return unless @report.type == "Report::StandardFormReport"
     @report_data[:report][:html] =
-      render_to_string(partial: "reports/#{@form_type}/form_summary_display")
+      render_to_string(partial: "reports/#{@form_type}/display")
   end
 
   # Looks for a cached, populated report object matching @report.

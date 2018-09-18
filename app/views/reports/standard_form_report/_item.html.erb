@@ -1,6 +1,6 @@
 <% # text items %>
 <% if item.text.present? %>
-  <%= sanitize item.text %>
+  <%= sanitize(item.text) %>
 
   <% # include submitter name and add link to response if appropriate %>
   <% if item.submitter_name.present? %>

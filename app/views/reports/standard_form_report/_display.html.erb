@@ -26,7 +26,7 @@
     <% # render each report subset %>
     <% max_result_cols = @report.question_labels == "title" ? 5 : 8 %>
     <% @report.subsets.each do |s| %>
-      <%= render("reports/standard_form_report/form_summary_subset",
+      <%= render("reports/standard_form_report/subset",
         subset: s, max_result_cols: max_result_cols) %>
     <% end %>
   <% end %>
