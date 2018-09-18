@@ -26,7 +26,9 @@
         <%= f.field(:reviewer_notes, type: :textarea) %>
 
         <% if context.read_only? %>
-          <%= f.submit(class: "btn btn-primary pull-right") %>
+          <div class="submit-buttons">
+            <%= f.submit(class: "btn btn-primary") %>
+          </div>
         <% end %>
       </div>
     <% end %>
