@@ -8,7 +8,8 @@ class Questioning < FormItem
     :min_max_error_msg, :multilevel?, :multimedia?, :name, :numeric?, :odk_constraint, :odk_name,
     :option_set_id, :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes,
     :printable?, :qtype_name, :qtype_name=, :qtype, :select_options, :sms_formatting_as_appendix?,
-    :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, :metadata_type, :reference,
+    :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, :metadata_type,
+    :reference,
     to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
