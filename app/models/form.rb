@@ -35,8 +35,7 @@ class Form < ApplicationRecord
   scope(:by_name, -> { order("forms.name") })
   scope(:default_order, -> { by_name })
 
-  delegate :arrange_descendants,
-    :children,
+  delegate :children,
     :sorted_children,
     :visible_children,
     :c,
