@@ -7,12 +7,14 @@ module Results
     # (response data and parent group data) from the previous row of the CSV output.
     # Also responsible for dumping rows to the CSV handler when it's time to start a fresh row.
     class Buffer
-      attr_accessor :csv, :output_rows, :header_map, :empty, :group_path, :applicable_rows_stack
+      attr_accessor :csv, :output_rows, :header_map, :empty, :group_path,
+        :applicable_rows_stack, :group_names
       delegate :empty?, to: :output_rows
 
       def initialize(header_map:)
         self.header_map = header_map
         self.group_path = GroupPath.new
+        self.group_names = {}
         self.empty = true
 
         # Holds the rows we are currently collecting information for and waiting to write out to CSV.
@@ -33,7 +35,7 @@ module Results
         group_path.process_row(input_row)
         handle_group_path_deletions if group_path.deletions?
         handle_group_path_additions(input_row) if group_path.additions?
-        write_group_name(input_row)
+        write_group_name
       end
 
       # Writes the given value to the applicable rows in the buffer.
@@ -80,8 +82,8 @@ module Results
         header_map.common_headers.each { |h| write(h, input_row[h]) }
       end
 
-      def write_group_name(input_row)
-        write_cell(row_for_current_level, "parent_group_name", input_row["parent_group_name"])
+      def write_group_name
+        write_cell(row_for_current_level, "parent_group_name", current_group_name)
       end
 
       # Adds a row to the buffer by cloning the parent row, or if empty, adding a new blank row.
@@ -123,6 +125,12 @@ module Results
           csv << row
         end
         output_rows.clear
+      end
+
+      def current_group_name
+        group_id = group_path.parent_repeat_group_id
+        return nil if group_id.nil?
+        group_names[group_id] ||= (QingGroup.find_by(id: group_id)&.group_name || "?")
       end
     end
   end

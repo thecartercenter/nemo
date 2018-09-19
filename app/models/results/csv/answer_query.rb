@@ -7,7 +7,6 @@ module Results
       protected
 
       def select
-        parent_group_name = translation_query("parent_groups.group_name_translations")
         answer_option_name = translation_query("answer_options.name_translations")
         choice_option_name = translation_query("choice_options.name_translations")
         option_level_name = translation_query("option_sets.level_names", arr_index: "answers.rank - 1")
@@ -18,8 +17,9 @@ module Results
             users.name AS user_name,
             responses.created_at AT TIME ZONE 'UTC' AS submit_time,
             responses.shortcode AS shortcode,
-            #{parent_group_name} AS parent_group_name,
-            (SELECT ARRAY_AGG(anc.type || anc.new_rank ORDER BY ah.generations DESC)
+            (SELECT
+              ARRAY_AGG(anc.type || ':' || anc.new_rank || ':' || anc.questioning_id
+                ORDER BY ah.generations DESC)
               FROM answer_hierarchies ah INNER JOIN answers anc ON ah.ancestor_id = anc.id
               WHERE answers.id = ah.descendant_id) AS ancestry,
             answers.value AS value,
@@ -46,8 +46,6 @@ module Results
             INNER JOIN answers ON answers.response_id = responses.id
             INNER JOIN form_items qings ON answers.questioning_id = qings.id
             INNER JOIN questions ON qings.question_id = questions.id
-            INNER JOIN answers parents ON answers.parent_id = parents.id
-            INNER JOIN form_items parent_groups ON parent_groups.id = parents.questioning_id
             LEFT OUTER JOIN option_sets ON questions.option_set_id = option_sets.id
             LEFT OUTER JOIN options answer_options ON answer_options.id = answers.option_id
             LEFT OUTER JOIN choices ON choices.answer_id = answers.id
