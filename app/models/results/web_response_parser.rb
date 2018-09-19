@@ -111,7 +111,8 @@ module Results
     end
 
     def form_items_in_mission
-      @form_items_in_mission || FormItem.where(mission_id: @response.mission_id).pluck(:id).index_by(&:itself)
+      @form_items_in_mission ||=
+        FormItem.where(mission_id: @response.mission_id).pluck(:id).index_by(&:itself)
     end
   end
 end
