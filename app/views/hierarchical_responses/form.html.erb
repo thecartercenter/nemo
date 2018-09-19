@@ -16,12 +16,27 @@
     <%= f.base_errors %>
     <%= f.field(:form_id, type: :hidden) %>
 
-    <%= render("metadata", f: f) %>
+    <%= render("metadata", f: f, context: @context) %>
     <%= render("hierarchical_responses/answers/nodes", nodes: [@response.root_node], context: @context) %>
 
     <div class="row">
       <div class="col-sm-6">
-        <%= f.field(:incomplete, type: :check_box) if can?(:submit_incomplete, @response) %>
+        <% if @context.read_only? %>
+          <% if @response.incomplete %>
+            <div class="answer">
+              <div data-field-name="incomplete">
+                <div class="hint-wrapper">
+                  <div class="hint">
+                    <em>This is an incomplete response</em>
+                    <i class="hint fa fa-2x fa-info-circle"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <%= f.field(:incomplete, type: :check_box) if can?(:submit_incomplete, @response) %>
+        <% end %>
       </div>
       <div class="col-sm-6">
         <div class="submit-buttons">
@@ -29,7 +44,9 @@
             <%= f.submit(t("response.save_and_mark_reviewed"),
                   class: "btn btn-default", name: "commit_and_mark_reviewed", read_only: false) %>
           <% end %>
-          <%= f.submit(class: "btn btn-primary") %>
+          <% unless @context.read_only? %>
+            <%= f.submit(class: "btn btn-primary") %>
+          <% end %>
           <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
             <%= image_tag("load-ind-small.gif") %>
             <%= t("response.upload_progress_notice") %>

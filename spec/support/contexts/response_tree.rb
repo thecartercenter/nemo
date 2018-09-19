@@ -165,4 +165,9 @@ shared_context "response tree" do
       expect(find(node_selector)).to be_visible, -> { msg }
     end
   end
+
+  def expect_read_only_value(path, value)
+    el = page.find("[data-path='#{path.join('-')}']")
+    expect(el).to have_content(value)
+  end
 end
