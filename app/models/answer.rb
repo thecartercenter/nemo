@@ -58,6 +58,8 @@ class Answer < ResponseNode
   validate :validate_location, if: -> { should_validate?(:location) }
   validate :validate_date, :validate_datetime
 
+  accepts_nested_attributes_for(:choices)
+
   delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
     :option_set, :options, :first_level_option_nodes, :condition, :parent_group_name, to: :questioning
   delegate :name, :hint, to: :question, prefix: true
