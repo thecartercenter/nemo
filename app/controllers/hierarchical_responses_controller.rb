@@ -1,9 +1,6 @@
 class HierarchicalResponsesController < ApplicationController
   include CsvRenderable, ResponseIndexable, OdkHeaderable
 
-  # need to load with associations for show and edit
-  before_action :load_with_associations, only: [:show, :edit]
-
   before_action :fix_nil_time_values, only: [:update, :create]
 
   # authorization via CanCan
@@ -179,11 +176,6 @@ class HierarchicalResponsesController < ApplicationController
 
   def setup_condition_computer
     @condition_computer = Forms::ConditionComputer.new(@response.form)
-  end
-
-  # loads the response with its associations
-  def load_with_associations
-    @response = Response.with_associations.friendly.find(params[:id])
   end
 
   # when editing a response, set timestamp to show it is being worked on

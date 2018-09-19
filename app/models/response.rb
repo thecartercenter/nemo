@@ -53,20 +53,6 @@ class Response < ApplicationRecord
   scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
   scope :latest_first, -> { order(created_at: :desc) }
 
-  # loads all the associations required for show, edit, etc.
-  scope :with_associations, -> { includes(
-    :form,
-    {
-      answers: [
-        {choices: :option},
-        :option,
-        :media_object,
-        {form_item: [:display_conditions, {question: :option_set}]}
-      ]
-    },
-    :user
-  ) }
-
   # loads basic belongs_to associations
   scope :with_basic_assoc, -> { includes(:form, :user) }
 

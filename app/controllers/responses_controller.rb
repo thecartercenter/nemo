@@ -6,10 +6,14 @@ class ResponsesController < ApplicationController
   include ResponseIndexable
   include CsvRenderable
 
+<<<<<<< aa03d6b3e903bea85b9990bf93ca1ae10e9fbd25
   # need to load with associations for show and edit
   before_action :load_with_associations, only: %i[show edit]
 
   before_action :fix_nil_time_values, only: %i[update create]
+=======
+  before_action :fix_nil_time_values, only: [:update, :create]
+>>>>>>> 8665: remove with_associations scope from responses. Add hierarchical response checkout spec
 
   # authorization via CanCan
   load_and_authorize_resource find_by: :shortcode
