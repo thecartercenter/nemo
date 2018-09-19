@@ -35,7 +35,7 @@ shared_context "odk submissions" do
         xml << "<#{Odk::FormDecorator::IR_QUESTION}>yes</#{Odk::FormDecorator::IR_QUESTION}>" if form.allow_incomplete?
       else
         i = 1
-        descendants = form.arrange_descendants
+        descendants = arrange_descendants(form)
 
         descendants.each do |item, subitems|
           decorated_item = Odk::DecoratorFactory.decorate(item)

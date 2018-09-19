@@ -77,44 +77,8 @@ class FormItem < ApplicationRecord
     self
   end
 
-  # Gets an OrderedHash of the following form for the descendants of this FormItem.
-  # Uses only a constant number of database queries to do so.
-  # {
-  #   Qing => {},
-  #   Qing => {},
-  #   QingGroup => {
-  #     Qing => {},
-  #     Qing => {}
-  #   },
-  #   Qing => {},
-  #   QingGroup => {},
-  #   Qing => {},
-  #   Qing => {},
-  #   ...
-  # }
-  # Some facts about the hash:
-  # * This item itself is not included in the hash.
-  # * If an item points to an empty hash, it is a leaf node.
-  def arrange_descendants
-    sort = "(case when ancestry is null then 0 else 1 end), ancestry, rank"
-    # We eager load questions and option sets since they are likely to be needed.
-    nodes = subtree.includes(question: {option_set: :root_node}).order(sort).to_a
-    with_self = self.class.arrange_nodes(nodes)
-    with_self.values[0]
-  end
-
   def visible_children
     sorted_children.select(&:visible?)
-  end
-
-  # Gets a nested array of all Questionings in the subtree headed by this item. For example,
-  # (corresponding to the above example for arrange_descendants):
-  # [Qing, Qing, [Qing, Qing], Qing, Qing, Qing, ...]
-  def descendant_questionings(nodes = nil)
-    nodes ||= arrange_descendants
-    nodes.map do |form_item, children|
-      form_item.is_a?(Questioning) ? form_item : descendant_questionings(children)
-    end
   end
 
   def preordered_descendants(eager_load: nil, type: nil)
