@@ -257,12 +257,13 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       # because fallbacks are enabled.
       I18n.backend.store_translations(:fr, response: {csv_headers: I18n.t("response.csv_headers")})
 
+      configatron.preferred_locales = %i[en fr]
       I18n.locale = :fr
       group.update!(group_name_fr: "Groupe")
       option.update!(name_fr: "L'option")
 
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
-        create_response(form: form, answer_values: [{repeating: [[option.name]]}])
+        create_response(form: form, answer_values: [{repeating: [[option.name_en]]}])
       end
     end
 
