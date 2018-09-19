@@ -29,15 +29,7 @@ module Concerns::ApplicationController::Authentication
     # expect the request to provide its own authentication using e.g. basic
     # auth, or no auth.
     elsif params[:direct_auth]
-
-      # Special unauthenticated request.
-      if params[:direct_auth] == 'none'
-
-        process_noauth
-
       # HTTP Basic authenticated request.
-      else
-
         @current_user = authenticate_with_http_basic do |login, password|
           # Use eager loading.
           User.includes(:assignments).find_by_credentials(login, password)
@@ -46,41 +38,9 @@ module Concerns::ApplicationController::Authentication
         return request_http_basic_authentication unless @current_user
 
         return render plain: 'USER_INACTIVE', status: :unauthorized unless @current_user.active?
-      end
-
     else
       # If we get here, nothing worked!
       @current_user = nil
-    end
-  end
-
-  def process_noauth
-    user = nil
-
-    # Check the override setting (must use explicit true due to configatron weirdness)
-    if configatron.allow_unauthenticated_submissions != true
-      return render :body => nil, :status => 404
-    end
-
-    unless current_mission
-      return render_noauth_submission_failure :plain => 'MISSION_MUST_BE_SPECIFIED', :status => :unauthorized
-    end
-
-    unless current_mission.allow_unauthenticated_submissions?
-      return render_noauth_submission_failure :plain => 'UNAUTHENTICATED_SUBMISSIONS_NOT_ALLOWED', :status => :unauthorized
-    end
-
-    unless params[:data] && params[:data][:username]
-      return render_noauth_submission_failure :plain => 'USERNAME_NOT_SPECIFIED', :status => :unauthorized
-    end
-
-    unless @current_user = User.where(:login => params[:data][:username]).first
-      return render_noauth_submission_failure :plain => 'USER_NOT_FOUND', :status => :unauthorized
-    end
-
-    # if user can't access the mission, reject
-    if current_ability.cannot?(:switch_to, current_mission)
-      return render_noauth_submission_failure :plain => 'USER_CANT_ACCESS_MISSION', :status => :unauthorized
     end
   end
 
@@ -99,10 +59,5 @@ module Concerns::ApplicationController::Authentication
   # (This is an override for a method defined by AuthLogic)
   def last_request_update_allowed?
     params[:auto].nil?
-  end
-
-  def render_noauth_submission_failure(params)
-    Rails.logger.info("Unauthenticated submission failed: '#{params[:plain]}'")
-    render(params)
   end
 end

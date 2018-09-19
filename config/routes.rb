@@ -218,10 +218,6 @@ ELMO::Application.routes.draw do
 
     match "/submission" => "responses#odk_headers", via: [:head, :get], defaults: { format: "xml" }
     post "/submission" => "responses#create", defaults: { format: "xml" }
-
-    # Unauthenticated submissions
-    match "/noauth/submission" => "responses#odk_headers", via: [:head, :get], defaults: { format: "xml", direct_auth: "none" }
-    post "/noauth/submission" => "responses#create", defaults: { format: "xml", direct_auth: "none" }
   end
 
   # API routes.
