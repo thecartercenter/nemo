@@ -16,7 +16,6 @@ class Response < ApplicationRecord
   belongs_to :user, inverse_of: :responses
   belongs_to :reviewer, class_name: "User"
 
-  # response.answers is deprecated in favor of traversing the response tree via response.root_node.children
   has_many :answers, -> { order(:inst_num, :rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
   has_many :location_answers, lambda {
@@ -27,8 +26,8 @@ class Response < ApplicationRecord
 
   friendly_id :shortcode
 
-  before_save :normalize_answers
   before_validation :normalize_reviewed
+
   after_save { root_node.save if root_node.present? }
   before_create :generate_shortcode
 
@@ -311,10 +310,6 @@ class Response < ApplicationRecord
   end
 
   private
-
-  def normalize_answers
-    AnswerArranger.new(self, placeholders: :none, dont_load_answers: true).build.normalize
-  end
 
   def normalize_reviewed
     self.reviewed = true if reviewer_id.present? || reviewer_notes.present?
