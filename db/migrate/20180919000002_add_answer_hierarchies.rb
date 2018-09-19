@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Iterates over the answers table and inserts the appropriate entries into the answer_hierarchies table.
-class AddAnswerHierarchies < ActiveRecord::Migration
+class AddAnswerHierarchies < ActiveRecord::Migration[4.2]
   def up
     remove_index "answer_hierarchies", name: "answer_anc_desc_idx"
     remove_index "answer_hierarchies", name: "answer_desc_idx"

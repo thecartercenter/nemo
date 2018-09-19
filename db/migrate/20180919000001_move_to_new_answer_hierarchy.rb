@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Major migration to create hierarchy of answer objects.
-class MoveToNewAnswerHierarchy < ActiveRecord::Migration
+class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
   # Helpful assertions to be considered for migrated data (not currently implemented):
   # - Exactly one root AnswerGroup per response_id
   # - Exactly one AnswerGroup per non-repeat group and response_id
@@ -32,7 +32,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
       find_or_create_parent_row(row)
       count += 1
       if count % 100 == 0
-        File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}") }
+        File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}\n") }
       end
     end
 
@@ -57,7 +57,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration
     end
 
     # If given row is an AnswerGroup that references a repeatable QingGroup, find/create AnswerGroupSet.
-    if row["type"] == "AnswerGroup" && form_item["repeatable"] == "t"
+    if row["type"] == "AnswerGroup" && (form_item["repeatable"] == "t" || form_item["repeatable"] == true)
       parent_row = row.slice("questioning_id", "response_id")
         .merge("type" => "AnswerGroupSet", "inst_num" => "1")
       row["new_rank"] = inst_num
