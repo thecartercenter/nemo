@@ -62,8 +62,6 @@ class Response < ApplicationRecord
   # loads only answers with location info
   scope :with_location_answers, -> { includes(:location_answers) }
 
-  accepts_nested_attributes_for(:answers, allow_destroy: true)
-
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
   delegate :c, :children, to: :root_node
