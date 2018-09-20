@@ -41,7 +41,7 @@ feature "response form tree handling", js: true do
 
   describe "form rendering" do
     scenario "renders new form with hierarchical structure" do
-      visit new_hierarchical_response_path(params)
+      visit new_response_path(params)
 
       expect_path([".cascading-selects select"])
       expect_path([
@@ -66,7 +66,7 @@ feature "response form tree handling", js: true do
       end
 
       scenario "renders edit form with hierarchical structure" do
-        visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+        visit edit_response_path(params.merge(id: response.shortcode))
 
         expect_path([".cascading-selects select"])
         expect_path([
@@ -75,7 +75,7 @@ feature "response form tree handling", js: true do
       end
 
       scenario "allows dynamic add/remove of nested repeat groups", js: true do
-        visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+        visit edit_response_path(params.merge(id: response.shortcode))
 
         # 1 "Add" and "Remove" button per repeat group
         expect(page).to have_css("a.add-repeat", count: 2)
@@ -107,7 +107,7 @@ feature "response form tree handling", js: true do
     let(:image) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg") }
 
     scenario "submitting response" do
-      visit new_hierarchical_response_path(params)
+      visit new_response_path(params)
 
       select2(user.name, from: "response_user_id")
       fill_in_question([0, 0], with: "1")
@@ -153,7 +153,7 @@ feature "response form tree handling", js: true do
       expect(page).to_not have_content("Response is invalid")
 
       response = Response.last
-      visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+      visit edit_response_path(params.merge(id: response.shortcode))
 
       expect_value([0, 0], "123")
       expect_image([1], form.root_group.c[1].id)
@@ -177,7 +177,7 @@ feature "response form tree handling", js: true do
       click_button("Save")
       expect(page).to_not have_content("Response is invalid")
 
-      visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+      visit edit_response_path(params.merge(id: response.shortcode))
 
       expect_value([0, 0], "1234")
       expect_image([1], form.root_group.c[1].id)
@@ -202,7 +202,7 @@ feature "response form tree handling", js: true do
       end
 
       scenario "submitting response" do
-        visit new_hierarchical_response_path(params)
+        visit new_response_path(params)
 
         select2(user.name, from: "response_user_id")
 
@@ -218,7 +218,7 @@ feature "response form tree handling", js: true do
         click_button("Save")
 
         response = Response.last
-        visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+        visit edit_response_path(params.merge(id: response.shortcode))
 
         expect_value([0, 0], "124")
 

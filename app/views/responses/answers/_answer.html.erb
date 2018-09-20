@@ -1,12 +1,12 @@
 <div class="<%= answer.classes %>">
-  <%= render("hierarchical_responses/answers/hidden_fields", node: answer,
+  <%= render("responses/answers/hidden_fields", node: answer,
                                                              context: context) %>
 
-  <%= render("hierarchical_responses/answers/answer_info", node: answer, context: context) %>
+  <%= render("responses/answers/answer_info", node: answer, context: context) %>
   <%= content_tag(:div, answer.hint, class: "hint") %>
 
   <div class="control">
     <% partial = context.read_only? ? "single_read_only" : "single_editable" %>
-    <%= render("hierarchical_responses/answers/#{partial}", answer: answer, context: context) %>
+    <%= render("responses/answers/#{partial}", answer: answer, context: context) %>
   </div>
 </div>

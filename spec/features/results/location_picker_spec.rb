@@ -12,7 +12,7 @@ feature "response form location picker", js: true do
   before { login(user) }
 
   scenario "picking a location" do
-    visit new_hierarchical_response_path(params)
+    visit new_response_path(params)
 
     # open the location picker
     find(".action_link_drop_pin").click

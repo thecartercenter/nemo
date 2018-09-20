@@ -1,7 +1,0 @@
-<% unless context.read_only? %>
-  <%= hidden_field_tag context.input_name(:id), node.id %>
-  <%= hidden_field_tag context.input_name(:type), node.object.type %>
-  <%= hidden_field_tag context.input_name(:questioning_id), node.questioning_id %>
-  <%= hidden_field_tag context.input_name(:_relevant), "true", class: "relevant" %>
-  <%= hidden_field_tag context.input_name(:_destroy), "false" %>
-<% end %>

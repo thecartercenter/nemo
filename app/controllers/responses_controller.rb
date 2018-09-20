@@ -6,17 +6,11 @@ class ResponsesController < ApplicationController
   include ResponseIndexable
   include CsvRenderable
 
-<<<<<<< aa03d6b3e903bea85b9990bf93ca1ae10e9fbd25
-  # need to load with associations for show and edit
-  before_action :load_with_associations, only: %i[show edit]
-
-  before_action :fix_nil_time_values, only: %i[update create]
-=======
   before_action :fix_nil_time_values, only: [:update, :create]
->>>>>>> 8665: remove with_associations scope from responses. Add hierarchical response checkout spec
 
   # authorization via CanCan
   load_and_authorize_resource find_by: :shortcode
+  #before_action :alias_response
   before_action :assign_form, only: [:new]
 
   before_action :mark_response_as_checked_out, only: [:edit]
@@ -41,10 +35,6 @@ class ResponsesController < ApplicationController
         # do search, including excerpts, if applicable
         if params[:search].present?
           begin
-            if resp = Response.find_by(shortcode: params[:search].downcase)
-              redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
-            end
-
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
               include_excerpts: true)
           rescue Search::ParseError => error
@@ -102,6 +92,7 @@ class ResponsesController < ApplicationController
 
   def new
     setup_condition_computer
+    Results::BlankResponseTreeBuilder.new(@response).build
     # render the form template
     prepare_and_render_form
   end
@@ -200,8 +191,9 @@ class ResponsesController < ApplicationController
 
   # loads the response with its associations
   def load_with_associations
-    @response = Response.with_associations.friendly.find(params[:id])
+    @response = Response.with_basic_assoc.friendly.find(params[:id])
   end
+
 
   # when editing a response, set timestamp to show it is being worked on
   def mark_response_as_checked_out
@@ -220,6 +212,11 @@ class ResponsesController < ApplicationController
     @response.reviewed = true if params[:commit_and_mark_reviewed]
     @response.check_in if params[:action] == "update"
 
+    if can?(:modify_answers, @response)
+      parser = Results::WebResponseParser.new(@response)
+      parser.parse(params.require(:response))
+    end
+
     # try to save
     begin
       @response.save!
@@ -235,7 +232,7 @@ class ResponsesController < ApplicationController
 
     # Store main XML file for debugging purposes.
     UploadSaver.new.save_file(params[:xml_submission_file])
-
+    puts @response.class
     begin
       @response.user_id = current_user.id
       @response = odk_response_parser.populate_response
@@ -251,7 +248,6 @@ class ResponsesController < ApplicationController
       # We use this because ODK can't display custom failure messages so this provides a little more info.
       render_xml_submission_failure(e, 426)
     rescue SubmissionError => e
-      Rails.logger.debug(e)
       render_xml_submission_failure(e, 422)
     end
   end
@@ -278,19 +274,32 @@ class ResponsesController < ApplicationController
   # prepares objects for and renders the form template
   def prepare_and_render_form
     # Prepare the OldAnswerNodes.
-    set_read_only
-    @nodes = AnswerArranger.new(
-      @response,
-      placeholders: params[:action] == "show" ? :except_repeats : :all,
-      # Must preserve submitted answers when in create/update action.
-      dont_load_answers: %w[create update].include?(params[:action])
-    ).build.nodes
+    # @nodes = AnswerArranger.new(
+    #   @response,
+    #   placeholders: params[:action] == "show" ? :except_repeats : :all,
+    #   # Must preserve submitted answers when in create/update action.
+    #   dont_load_answers: %w[create update].include?(params[:action])
+    # ).build.nodes
+
+    @context = Results::ResponseFormContext.new(
+      read_only: action_name == "show" || cannot?(:modify_answers, @response)
+    )
+
+    # The blank response is used for rendering placeholders for repeat groups
+    @blank_response = Response.new(form: @response.form)
+    Results::BlankResponseTreeBuilder.new(@blank_response).build
+
     render(:form)
   end
 
   def render_xml_submission_failure(exception, code)
     Rails.logger.info("XML submission failed: '#{exception}'")
     render(body: nil, status: code)
+  end
+
+  def alias_response
+    # CanCanCan loads resource into @_response
+    @response = @_response
   end
 
   # get the form specified in the params and error if it's not there
@@ -301,6 +310,7 @@ class ResponsesController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
+<<<<<<< 0a2936d78a850ccce27971154114306deb1dba10
   def set_read_only
     @read_only = case action_name
                  when "show"
@@ -310,39 +320,16 @@ class ResponsesController < ApplicationController
                  end
   end
 
+=======
+>>>>>>> 8665: remove old response files, rename hierarchical response to response
   def response_params
     if params[:response]
       to_permit = %i[form_id user_id incomplete]
 
       to_permit << %i[reviewed reviewer_notes reviewer_id] if @response.present? && can?(:review, @response)
 
-      # In some rare cases, create or update can occur without answers_attributes. Not sure how.
-      # Also need to respect the modify_answers permission here.
-      if (ans_attribs = params[:response][:answers_attributes]) &&
-          (action_name != "update" || can?(:modify_answers, @response))
-
-        # We need to permit each possible answer attribute key for each given hash key in answers_attributes.
-        # See https://stackoverflow.com/a/36779535/2066866.
-        to_permit << {
-          answers_attributes: ans_attribs.keys.map { |k| [k, permitted_answer_attributes] }.to_h
-        }
-      end
-
       params.require(:response).permit(to_permit)
     end
-  end
-
-  # Returns the permitted keys for an answer and its choices.
-  def permitted_answer_attributes
-    @permitted_answer_attributes ||= %w(
-      id value option_id option_node_id questioning_id relevant rank
-      time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i) time_value(6i)
-      datetime_value
-      datetime_value(1i) datetime_value(2i) datetime_value(3i)
-      datetime_value(4i) datetime_value(5i) datetime_value(6i)
-      date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy
-      date_value
-    ) << {choices_attributes: %i[id option_id option_node_id checked]}
   end
 
   def check_form_exists_in_mission

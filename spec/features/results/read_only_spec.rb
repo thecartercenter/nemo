@@ -46,7 +46,7 @@ feature "response form read only mode", js: true do
               [234],
               {repeating: [[456]]},
               create(:media_image),
-              "testing"
+              "testing <script>Hi</script>"
             ]
           ]
         }
@@ -59,7 +59,7 @@ feature "response form read only mode", js: true do
   before { login(user) }
 
   scenario "renders response with hierarchical structure" do
-    visit hierarchical_response_path(response, params)
+    visit response_path(response, params)
 
     expect_read_only_value([0, 0], "123")
     expect_image([1], form.root_group.c[1].id)
@@ -68,6 +68,6 @@ feature "response form read only mode", js: true do
     expect_read_only_value([3, 0, 0], "234")
     expect_read_only_value([3, 0, 1, 0], "456")
     expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
-    expect_read_only_value([3, 0, 3], "testing")
+    expect_read_only_value([3, 0, 3], "testing Hi")
   end
 end

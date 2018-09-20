@@ -142,8 +142,8 @@ shared_context "response tree" do
     expect(page).to have_selector("#{image_selector} .media-thumbnail img")
   end
 
-  def visit_new_hierarchical_response_page
-    visit(new_hierarchical_response_path(
+  def visit_new_response_page
+    visit(new_response_path(
       locale: "en",
       mode: "m",
       mission_name: get_mission.compact_name,

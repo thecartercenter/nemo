@@ -8,7 +8,7 @@ class ELMO.Views.ResponseFormView extends ELMO.Views.ApplicationView
     @locationPicker = new ELMO.LocationPicker(@$('#location-picker-modal'))
 
   events:
-    'click a.edit_location_link': 'showLocationPicker'
+    'click .qtype-location .widget a': 'showLocationPicker'
 
   select2Params: (url) ->
     ajax:
@@ -24,5 +24,6 @@ class ELMO.Views.ResponseFormView extends ELMO.Views.ApplicationView
       cache: true
 
   showLocationPicker: (e) ->
-    field = @$(e.target).parents('div.control').find('input.qtype_location')
+    e.preventDefault()
+    field = @$(e.target).closest('.widget').find('input[type=text]')
     @locationPicker.show(field)

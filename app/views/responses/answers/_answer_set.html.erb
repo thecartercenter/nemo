@@ -1,13 +1,13 @@
 <div class="<%= set.classes %>">
-  <%= render("hierarchical_responses/answers/hidden_fields", node: set,
+  <%= render("responses/answers/hidden_fields", node: set,
                                                              context: context) %>
 
-  <%= render("hierarchical_responses/answers/answer_info", node: set) %>
+  <%= render("responses/answers/answer_info", node: set) %>
 
   <div class="children">
     <div class="control">
       <% partial = context.read_only? ? "cascading_read_only" : "cascading_editable" %>
-      <%= render("hierarchical_responses/answers/#{partial}", answer_set: set, context: context) %>
+      <%= render("responses/answers/#{partial}", answer_set: set, context: context) %>
     </div>
   </div>
 </div>

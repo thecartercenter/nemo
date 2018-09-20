@@ -1095,7 +1095,7 @@ en:
       index: "Responses"
       new: "New Response"
       show: "Response: %{id}"
-    hierarchical_responses:
+    responses:
       edit: "Edit Response: %{id}"
       index: "Responses"
       new: "New Response"

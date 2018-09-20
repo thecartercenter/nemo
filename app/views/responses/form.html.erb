@@ -1,7 +1,4 @@
-<%# load the mapping API %>
-<% content_for(:per_page_js){ javascript_google_maps } %>
-
-<%# title includes ID if defined %>
+<% content_for(:per_page_js, javascript_google_maps) %>
 <% @title_args = {id: @response.decorate.shortcode} %>
 
 <%# This needs to be up here so it runs before the MediaUploaderViews are initialized. %>
@@ -12,69 +9,49 @@
   )%>);
 <% end %>
 
-<% @response.answers.collect{|a| a.errors.full_messages.join(", ")}.join(" ") %>
-
 <div id="response-form-wrapper">
-  <%= elmo_form_for(@response, read_only: @read_only) do |f| %>
-
-    <%= top_action_links(@response, :except => :new) %>
-
+  <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form") do |f| %>
     <%= f.base_errors %>
+    <%= f.field(:form_id, type: :hidden) %>
 
-    <%= f.field(:form_id, :type => :hidden) %>
+    <%= render("metadata", f: f, context: @context) %>
+    <%= render("responses/answers/nodes", nodes: [@response.root_node], context: @context) %>
 
-    <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>
-
-    <%# form name %>
-    <%= f.field(:form_id, :content => link_to(@response.form.name, @response.form)) %>
-
-    <%# if the user can't manage the response, then don't show the submitter box as a dropdown %>
-    <%= f.field(:user_id, :type => :select, :required => true, :options => sel_opts_from_objs(@response.user),
-      :read_only => cannot?(:manage, @response),
-
-      # some users are not linkable currently if they're not assigned to the mission
-      # if we give nil read_only_content then it will revert to the default read only content
-      :read_only_content => can?(:read, @response.user) ? link_to(@response.user.try(:name), @response.user) : nil) %>
-
-    <%# don't show source or reviewed if new obj %>
-    <% unless form_mode == :new %>
-
-      <%= f.field(:source) if read_only %>
-
-      <%# only show the reviewer select as editable if the user can review the response %>
-      <%= f.field(:reviewer_id, type: :select, options: sel_opts_from_objs(@response.reviewer),
-        read_only: cannot?(:review, @response),
-
-        read_only_content: can?(:read, @response.reviewer) ? link_to(@response.reviewer.try(:name), @response.reviewer) : nil) %>
-
-      <%# only show the reviewed checkbox as editable if the user can review the response %>
-      <%= f.field(:reviewed, :type => :check_box, :read_only => cannot?(:review, @response)) %>
-
-      <%# only show the reviewer notes to reviewers %>
-      <%= f.field(:reviewer_notes,
-        type: :textarea,
-        read_only: cannot?(:review, @response),
-        read_only_content: simple_format(@response.reviewer_notes)) if can?(:review, @response) %>
-
-    <% end %>
-
-    <%= render("responses/answers/nodes", nodes: @nodes, inst_num: 1, read_only: f.read_only?) %>
-
-    <%# Incomplete checkbox %>
-    <%= f.field(:incomplete, :type => :check_box) if can?(:submit_incomplete, @response) %>
-
-    <% unless form_mode == :show %>
-      <div class="submit-buttons">
-        <%= f.submit(:class => "btn btn-primary") %>
-        <% if form_mode == :edit && can?(:review, @response) %>
-          <%= f.submit(t('response.save_and_mark_reviewed'), :class => "btn btn-primary", :name => 'commit_and_mark_reviewed', read_only: false) %>
+    <div class="row">
+      <div class="col-sm-6">
+        <% if @context.read_only? %>
+          <% if @response.incomplete %>
+            <div class="answer">
+              <div data-field-name="incomplete">
+                <div class="hint-wrapper">
+                  <div class="hint">
+                    <em>This is an incomplete response</em>
+                    <i class="hint fa fa-2x fa-info-circle"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        <% else %>
+          <%= f.field(:incomplete, type: :check_box) if can?(:submit_incomplete, @response) %>
         <% end %>
-        <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
-          <%= image_tag("load-ind-small.gif") %>
-          <%= t("response.upload_progress_notice") %>
+      </div>
+      <div class="col-sm-6">
+        <div class="submit-buttons">
+          <% if form_mode == :edit && can?(:review, @response) %>
+            <%= f.submit(t("response.save_and_mark_reviewed"),
+                  class: "btn btn-default", name: "commit_and_mark_reviewed", read_only: false) %>
+          <% end %>
+          <% unless @context.read_only? %>
+            <%= f.submit(class: "btn btn-primary") %>
+          <% end %>
+          <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
+            <%= image_tag("load-ind-small.gif") %>
+            <%= t("response.upload_progress_notice") %>
+          </div>
         </div>
       </div>
-    <% end %>
+    </div>
   <% end %>
 
   <%= render("layouts/location_picker") %>
