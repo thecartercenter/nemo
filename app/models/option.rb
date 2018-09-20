@@ -27,7 +27,7 @@ class Option < ApplicationRecord
   # Options are not standardizable so we don't track the original_id (that would be overkill).
   replicable reuse_if_match: :canonical_name
 
-  MAX_NAME_LENGTH = 45
+  MAX_NAME_LENGTH = 255
 
   def published?
     option_sets.any?(&:published?)
