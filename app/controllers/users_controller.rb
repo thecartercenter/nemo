@@ -89,18 +89,13 @@ class UsersController < ApplicationController
 
   def bulk_destroy
     @users = load_selected_objects(User)
-
-    destroyer = BatchDestroy.new(@users, current_user, current_ability)
-    out = destroyer.destroy!
-
+    result = BatchDestroy.new(@users, current_user, current_ability).destroy!
     success = []
-    success << t("user.bulk_destroy_deleted", count: out[:destroyed]) if out[:destroyed].positive?
-    success << t("user.bulk_destroy_deactivated", count: out[:deactivated]) if out[:deactivated].positive?
-    success << t("user.bulk_destroy_skipped", count: out[:skipped]) if out[:skipped].positive?
-
+    success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
+    success << t("user.bulk_destroy_deactivated", count: result[:deactivated]) if result[:deactivated].positive?
+    success << t("user.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
     flash[:success] = success.join(" ") unless success.empty?
-    flash[:alert] = t("user.bulk_destroy_skipped_current") if out[:skipped] == 1
-
+    flash[:alert] = t("user.bulk_destroy_skipped_current") if result[:skipped] == 1
     redirect_to(index_url_with_context)
   end
 

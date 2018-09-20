@@ -100,17 +100,34 @@ feature "responses index" do
             end
           end
         end
+
+        def owner_can_see_edit_page
+          expect(page).to have_content("Edit Response")
+          expect(current_url).to end_with("responses/#{response.shortcode}/edit")
+        end
+
+        def unauthorized_person_can_see_show_page
+          expect(page).to have_content("Response: #{response.shortcode.upcase}")
+          expect(current_url).to end_with("responses/#{response.shortcode}")
+        end
       end
     end
   end
 
-  def owner_can_see_edit_page
-    expect(page).to have_content("Edit Response")
-    expect(current_url).to end_with("responses/#{response.shortcode}/edit")
-  end
+  describe "batch delete", js: true do
+    let(:admin) { create(:admin) }
+    let(:mission) { get_mission }
+    let!(:responses) { create_list(:response, 3, mission: mission) }
 
-  def unauthorized_person_can_see_show_page
-    expect(page).to have_content("Response: #{response.shortcode.upcase}")
-    expect(current_url).to end_with("responses/#{response.shortcode}")
+    before do
+      login(admin)
+    end
+
+    scenario "works" do
+      visit("/en/m/#{mission.compact_name}/responses")
+      all("input.batch_op").each { |b| b.set(true) }
+      accept_confirm { click_on("Delete Selected") }
+      expect(page).to have_content("3 responses deleted successfully")
+    end
   end
 end

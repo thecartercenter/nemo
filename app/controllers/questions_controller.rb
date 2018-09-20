@@ -65,16 +65,12 @@ class QuestionsController < ApplicationController
 
   def bulk_destroy
     @questions = load_selected_objects(Question)
-    destroyer = BatchDestroy.new(@questions, current_user, current_ability)
-    out = destroyer.destroy!
-
+    result = BatchDestroy.new(@questions, current_user, current_ability).destroy!
     success = []
-    success << t("question.bulk_destroy_deleted", count: out[:destroyed]) if out[:destroyed].positive?
-    success << t("question.bulk_destroy_skipped", count: out[:skipped]) if out[:skipped].positive?
-
+    success << t("question.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
+    success << t("question.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
     flash[:success] = success.join(" ") unless success.empty?
-
-    redirect_to questions_path
+    redirect_to(questions_path)
   end
 
   def audio_prompt

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# destroy objects in batches
+# Destroy objects in batches
 class BatchDestroy
   attr_reader :batch, :user, :ability
 
@@ -15,8 +15,7 @@ class BatchDestroy
     deactivated = []
     destroyed = []
 
-    # this batch destroyer is currently being used in User and Question index pages
-    # the current user doesn't matter for question delete so this will only run if it is User bulk destroy
+    # Special case for User deletion because we can't delete the current user!
     if batch[0].is_a?(User)
       current_user = batch.find { |u| u.id == user.id }
       skipped << current_user if current_user
