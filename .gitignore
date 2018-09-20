@@ -42,6 +42,10 @@ routes.txt
 /config/settings/themes/custom.yml
 /theme
 
+/node_modules
+/public/packs
+/public/packs-test
+
 # file uploads
 /uploads
 
