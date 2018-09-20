@@ -4,19 +4,6 @@ module FeatureSpecHelpers
     expect(page).to have_content("Profile:")
   end
 
-  # def fill_in_ckeditor(locator, opts)
-  #   wait_for_ckeditor(locator)
-  #
-  #   content = opts.fetch(:with).to_json
-  #   page.execute_script <<-SCRIPT
-  #     CKEDITOR.instances['#{locator}'].setData(#{content});
-  #     $('textarea##{locator}').text(#{content});
-  #
-  #     // Need to fire this manually for poltergeist for some reason.
-  #     CKEDITOR.instances['#{locator}'].fire('change');
-  #   SCRIPT
-  # end
-
   # Fills in a token input *JS MUST BE ENABLED
   # EX: fill_in_token_input 'custodian_id', with: 'M', pick: 'Market'
   # EX: fill_in_token_input 'custodian_id', with: 'A', pick: 1
@@ -126,16 +113,4 @@ module FeatureSpecHelpers
     # assert that the original select field was updated with the intended value
     select(value, options)
   end
-
-  private
-
-  # def wait_for_ckeditor(locator)
-  #   Timeout.timeout(Capybara.default_max_wait_time) do
-  #     loop until ckeditor_ready? locator
-  #   end
-  # end
-
-  # def ckeditor_ready?(locator)
-  #   page.evaluate_script "CKEDITOR.instances['#{locator}'].instanceReady;"
-  # end
 end

@@ -76,12 +76,6 @@ gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe"
 # icons
 gem "font-awesome-rails", "~> 4.7"
 
-# Rich text editor
-# Version 4.2.2 seems to have a bug with asset paths.
-# See https://github.com/galetahub/ckeditor/issues/712#issuecomment-278740179
-# So using latest master branch until that's fixed.
-gem "ckeditor", git: "https://github.com/galetahub/ckeditor"
-
 # Select box on steriods
 gem "select2-rails", "~> 4.0"
 

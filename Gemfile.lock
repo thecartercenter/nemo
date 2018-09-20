@@ -9,14 +9,6 @@ GIT
       railties
 
 GIT
-  remote: https://github.com/galetahub/ckeditor
-  revision: dc2cef2c2c3358124ebd86ca2ef2335cc898b41f
-  specs:
-    ckeditor (4.2.4)
-      orm_adapter (~> 0.5.0)
-      terrapin
-
-GIT
   remote: https://github.com/sassafrastech/acts_as_list.git
   revision: 20fa19384f53b81f02c7165bb6e0b2356aef2f1b
   specs:
@@ -322,7 +314,6 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.3)
       mini_portile2 (~> 2.3.0)
-    orm_adapter (0.5.0)
     paperclip (6.0.0)
       activemodel (>= 4.2.0)
       activesupport (>= 4.2.0)
@@ -569,7 +560,6 @@ DEPENDENCIES
   cancancan (~> 1.15.0)
   capybara (~> 2.17)
   capybara-screenshot (~> 1.0.11)
-  ckeditor!
   closure_tree!
   config (~> 1.7)
   configatron (~> 4.5.0)
