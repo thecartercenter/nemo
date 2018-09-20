@@ -3,13 +3,13 @@
 <% case type = answer.qtype.name
    when 'select_one' %>
 
-  <%= render('hierarchical_responses/answers/map', answer: answer) if answer.has_coordinates? %>
+  <%= render('hierarchical_responses/answers/map', answer: answer) if answer.coordinates? %>
 
   <%= content_tag(:div, answer.option.try(:name), class: 'ro-val', data: {val: [answer.option_node_id]}) %>
 
 <% when 'select_multiple' %>
 
-  <%= render('hierarchical_responses/answers/map', answer: answer) if answer.has_coordinates? %>
+  <%= render('hierarchical_responses/answers/map', answer: answer) if answer.coordinates? %>
 
   <%= content_tag(:div, safe_join(answer.choices.map(&:option_name), tag(:br)),
         class: 'ro-val',

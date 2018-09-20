@@ -44,7 +44,7 @@ describe "answer location data" do
       let(:question_types) { %w[location] }
 
       it "returns true" do
-        expect(answer.location_type_with_value?).to be true
+        expect(answer.location_type_with_value?).to be(true)
       end
     end
 
@@ -52,25 +52,25 @@ describe "answer location data" do
       let(:question_types) { %w[text] }
 
       it "returns false" do
-        expect(answer.location_type_with_value?).to be false
+        expect(answer.location_type_with_value?).to be(false)
       end
     end
   end
 
-  describe "#has_coordinates?" do
+  describe "#coordinates?" do
     context "with a select_one question" do
       let(:question_types) { %w[select_one] }
       let(:option) { questioning.options.first }
       let(:answer_value) { option.name }
 
       it "should return false if the selected option does not have coordinates" do
-        expect(answer).not_to have_coordinates
+        expect(answer.coordinates?).to be(false)
       end
 
       it "should return true if the selected option has coordinates" do
         questioning.option_set.update!(geographic: true, allow_coordinates: true)
         option.update!(latitude: 0, longitude: 0)
-        expect(answer).to have_coordinates
+        expect(answer.coordinates?).to be(true)
       end
     end
 
@@ -84,7 +84,7 @@ describe "answer location data" do
         let(:choices) { [] }
 
         it "should return false if no options were selected" do
-          expect(answer).not_to have_coordinates
+          expect(answer.coordinates?).to be(false)
         end
       end
 
@@ -96,18 +96,18 @@ describe "answer location data" do
         end
 
         it "should return false if the selected options do not have coordinates" do
-          expect(answer).not_to have_coordinates
+          expect(answer.coordinates?).to be(false)
         end
 
         it "should return true if all of the selected options have coordinates" do
           option_one.update!(latitude: 0, longitude: 0)
           option_two.update!(latitude: 0, longitude: 0)
-          expect(answer).to have_coordinates
+          expect(answer.coordinates?).to be(true)
         end
 
         it "should return true if any of the selected options have coordinates" do
           option_one.update!(latitude: 0, longitude: 0)
-          expect(answer).to have_coordinates
+          expect(answer.coordinates?).to be(true)
         end
       end
     end
@@ -119,7 +119,7 @@ describe "answer location data" do
         let(:answer_value) { "12.3 45.6" }
 
         it "should return true" do
-          expect(answer).to have_coordinates
+          expect(answer.coordinates?).to be(true)
         end
       end
 
@@ -127,7 +127,7 @@ describe "answer location data" do
         let(:answer_value) { "" }
 
         it "should return false" do
-          expect(answer).not_to have_coordinates
+          expect(answer.coordinates?).to be(false)
         end
       end
     end

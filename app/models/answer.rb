@@ -202,7 +202,7 @@ class Answer < ResponseNode
     qtype.name == "location" && value.present?
   end
 
-  def has_coordinates?
+  def coordinates?
     latitude.present? && longitude.present?
   end
 
@@ -276,10 +276,10 @@ class Answer < ResponseNode
       LOCATION_ATTRIBS.each_with_index do |a, i|
         self[a] = tokens[i] ? BigDecimal.new(tokens[i]) : nil
       end
-    elsif option.present? && option.has_coordinates?
+    elsif option.present? && option.coordinates?
       self.latitude = option.latitude
       self.longitude = option.longitude
-    elsif choice = choices.detect(&:has_coordinates?)
+    elsif choice = choices.detect(&:coordinates?)
       self.latitude = choice.latitude
       self.longitude = choice.longitude
     end
@@ -301,7 +301,7 @@ class Answer < ResponseNode
   end
 
   def format_location_value
-    if has_coordinates?
+    if coordinates?
       self.value = sprintf("%.6f %.6f", latitude, longitude)
       if altitude.present?
         self.value << sprintf(" %.3f", altitude)

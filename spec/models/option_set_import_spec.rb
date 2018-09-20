@@ -65,7 +65,7 @@ describe OptionSetImport do
     # make sure that the non-leaf options have no coordinates
     option_set.preordered_option_nodes.each do |node|
       if node.child_options.present?
-        expect(node).to have_attributes(option: have_attributes(has_coordinates?: false))
+        expect(node).to have_attributes(option: have_attributes(coordinates?: false))
       end
     end
 

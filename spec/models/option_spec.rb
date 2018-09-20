@@ -41,6 +41,31 @@ describe Option do
     end
   end
 
+  describe "#coordinates=" do
+    let(:option) { create(:option, coordinates: str) }
+    subject(:coordinates) { option.coordinates }
+
+    context do
+      let(:str) { "12.3,4.56" }
+      it { is_expected.to eq("12.3, 4.56") }
+    end
+
+    context do
+      let(:str) { "-12.3 :  4.56" }
+      it { is_expected.to eq("-12.3, 4.56") }
+    end
+
+    context do
+      let(:str) { "-12.33875295723;-4.56294385279484" }
+      it { is_expected.to eq("-12.338752, -4.562943") }
+    end
+
+    context do
+      let(:str) { "12 4" }
+      it { is_expected.to eq("12.0, 4.0") }
+    end
+  end
+
   context "with coordinates" do
     it "should require both latitude and longitude if either are present" do
       # check each field with the other missing
@@ -69,20 +94,20 @@ describe Option do
     end
   end
 
-  context "has_coordinates?" do
+  context "coordinates?" do
     it "should return true if there are full coordinates" do
       option = build(:option, latitude: 0, longitude: 0)
-      expect(option.has_coordinates?).to be_truthy
+      expect(option.coordinates?).to be(true)
     end
 
     it "should return true if there are partial coordinates" do
       option = build(:option, latitude: 0)
-      expect(option.has_coordinates?).to be_truthy
+      expect(option.coordinates?).to be(true)
     end
 
     it "should return false if there are no coordinates" do
       option = build(:option)
-      expect(option.has_coordinates?).to be_falsy
+      expect(option.coordinates?).to be(false)
     end
   end
 end

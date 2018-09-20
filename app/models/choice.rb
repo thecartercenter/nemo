@@ -5,7 +5,7 @@ class Choice < ApplicationRecord
   belongs_to :option, inverse_of: :choices
 
   delegate :name, to: :option, prefix: true
-  delegate :has_coordinates?, to: :option
+  delegate :coordinates?, to: :option
 
   before_save :replicate_location_values
 
@@ -44,7 +44,7 @@ class Choice < ApplicationRecord
 
   # This may get called twice during an answer save but who cares.
   def replicate_location_values
-    if has_coordinates?
+    if coordinates?
       self.latitude = option.latitude
       self.longitude = option.longitude
     end
