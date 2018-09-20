@@ -57,6 +57,9 @@ ELMO::Application.routes.draw do
       end
     end
     resources :responses do
+      collection do
+        post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
+      end
       %i(new member).each do |type|
         get "possible-users", as: "possible_users", action: "possible_users", on: type
       end
