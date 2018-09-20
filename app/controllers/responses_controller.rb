@@ -35,6 +35,10 @@ class ResponsesController < ApplicationController
         # do search, including excerpts, if applicable
         if params[:search].present?
           begin
+            if resp = Response.find_by(shortcode: params[:search].downcase)
+              redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
+            end
+
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
               include_excerpts: true)
           rescue Search::ParseError => error
@@ -232,7 +236,6 @@ class ResponsesController < ApplicationController
 
     # Store main XML file for debugging purposes.
     UploadSaver.new.save_file(params[:xml_submission_file])
-    puts @response.class
     begin
       @response.user_id = current_user.id
       @response = odk_response_parser.populate_response

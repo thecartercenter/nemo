@@ -11,6 +11,7 @@
 
 <div id="response-form-wrapper">
   <%= elmo_form_for(@response, read_only: @read_only, override_class: "response-form") do |f| %>
+    <%= top_action_links(@response, :except => :new) %>
     <%= f.base_errors %>
     <%= f.field(:form_id, type: :hidden) %>
 
