@@ -1642,6 +1642,7 @@ en:
     save_and_mark_reviewed: "Save and Mark as Reviewed"
     view_response: "View Response"
     checked_out: "This response has been checked out by:"
+    bulk_destroy: "Delete Selected"
     remove_media_object_confirm:
       image: "Are you sure you want to delete this image?"
       audio: "Are you sure you want to delete this audio?"
@@ -1675,6 +1676,29 @@ en:
       group4_inst_num: "ItemNum4"
       group5_rank: "GroupNum5"
       group5_inst_num: "ItemNum5"
+    add_to_group: "Add to '%{group_name}'"
+    empty_group_notice: "This group is empty"
+    bulk_destroy_confirm:
+      zero: "Are you sure you want to delete zero responses?"
+      one: "Are you sure you want to delete this response?"
+      two: "Are you sure you want to delete these %{count} responses?"
+      few: "Are you sure you want to delete these %{count} responses?"
+      many: "Are you sure you want to delete these %{count} responses?"
+      other: "Are you sure you want to delete these %{count} responses?"
+    bulk_destroy_deleted:
+      zero: "No responses deleted successfully."
+      one: "%{count} response deleted successfully."
+      two: "%{count} responses deleted successfully."
+      few: "%{count} responses deleted successfully."
+      many: "%{count} responses deleted successfully."
+      other: "%{count} responses deleted successfully."
+    bulk_destroy_skipped:
+      zero: "No response skipped."
+      one: "%{count} response skipped."
+      two: "%{count} responses skipped."
+      few: "%{count} responses skipped."
+      many: "%{count} responses skipped."
+      other: "%{count} responses skipped."
 
   role:
     role: "Role"

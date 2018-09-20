@@ -53,6 +53,12 @@ module ResponsesHelper
       links << link_to(t("response.export_to_csv"), responses_path(format: :csv, search: params[:search]))
     end
 
+    links << batch_op_link(
+      name: t("response.bulk_destroy"),
+      path: bulk_destroy_responses_path,
+      confirm: "response.bulk_destroy_confirm"
+    )
+
     # return the assembled list of links
     links
   end

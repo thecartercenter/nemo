@@ -1,10 +1,15 @@
+# frozen_string_literal: true
+
 class ResponsesController < ApplicationController
-  include CsvRenderable, ResponseIndexable, OdkHeaderable
+  include BatchProcessable
+  include OdkHeaderable
+  include ResponseIndexable
+  include CsvRenderable
 
   # need to load with associations for show and edit
-  before_action :load_with_associations, only: [:show, :edit]
+  before_action :load_with_associations, only: %i[show edit]
 
-  before_action :fix_nil_time_values, only: [:update, :create]
+  before_action :fix_nil_time_values, only: %i[update create]
 
   # authorization via CanCan
   load_and_authorize_resource find_by: :shortcode
@@ -34,8 +39,8 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
               include_excerpts: true)
-          rescue Search::ParseError
-            flash.now[:error] = $!.to_s
+          rescue Search::ParseError => error
+            flash.now[:error] = error.to_s
             @search_error = true
           end
         end
@@ -56,8 +61,8 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
               include_excerpts: false)
-          rescue Search::ParseError
-            flash.now[:error] = $!.to_s
+          rescue Search::ParseError => error
+            flash.now[:error] = error.to_s
             return
           end
         end
@@ -152,6 +157,16 @@ class ResponsesController < ApplicationController
     web_create_or_update
   end
 
+  def bulk_destroy
+    @responses = load_selected_objects(Response)
+    result = BatchDestroy.new(@responses, current_user, current_ability).destroy!
+    success = []
+    success << t("response.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
+    success << t("response.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
+    flash[:success] = success.join(" ") unless success.empty?
+    redirect_to(responses_path)
+  end
+
   def destroy
     destroy_and_handle_errors(@response)
     redirect_to(index_url_with_context)
@@ -174,10 +189,10 @@ class ResponsesController < ApplicationController
 
     @possible_submitters = @possible_submitters.paginate(page: params[:page], per_page: 20)
 
-    render json: {
+    render(json: {
       possible_submitters: ActiveModel::ArraySerializer.new(@possible_submitters),
       more: @possible_submitters.next_page.present?
-    }, select2: true
+    }, select2: true)
   end
 
   def possible_users
@@ -202,10 +217,10 @@ class ResponsesController < ApplicationController
 
     @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
 
-    render json: {
+    render(json: {
       possible_users: ActiveModel::ArraySerializer.new(@possible_users),
       more: @possible_users.next_page.present?
-    }, select2: true
+    }, select2: true)
   end
 
   private
@@ -268,16 +283,16 @@ class ResponsesController < ApplicationController
     @response.form = Form.find(params[:form_id])
     check_form_exists_in_mission
   rescue ActiveRecord::RecordNotFound
-    return redirect_to(index_url_with_context)
+    redirect_to(index_url_with_context)
   end
 
   def set_read_only
-    case action_name
-    when "show"
-      @read_only = true
-    else
-      @read_only = cannot?(:modify_answers, @response)
-    end
+    @read_only = case action_name
+                 when "show"
+                   true
+                 else
+                   cannot?(:modify_answers, @response)
+                 end
   end
 
   def response_params
@@ -341,7 +356,7 @@ class ResponsesController < ApplicationController
     if params[:response] && params[:response][:answers_attributes]
       params[:response][:answers_attributes].each do |key, attribs|
         if attribs["time_value(4i)"].blank? && attribs["time_value(5i)"].blank?
-          %w(1 2 3).each { |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = "" }
+          %w[1 2 3].each { |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = "" }
         end
       end
     end
