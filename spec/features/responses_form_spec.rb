@@ -5,7 +5,7 @@ feature "responses form", js: true do
   let!(:form) { create(:form, :published) }
   let(:form_questionings) { form.questionings }
   let(:response) { Response.first }
-  let(:response_link) { response.decorate.shortcode.to_s }
+  let(:response_link) { response.decorate.shortcode.to_s.downcase }
   let(:response_path_params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
   describe "general", database_cleaner: :all, order: :defined do
