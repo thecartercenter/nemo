@@ -1,26 +1,15 @@
+# frozen_string_literal: true
 # An Answer is a single piece of data in response to a single question or sub-question.
-#
-# A note about rank/inst_num attributes
+# It is always a leaf in a response tree.
 #
 # rank:
-# - The rank of the answer within a given set of answers for a multilevel select question.
-# - Starts at 1 (top level) and increases
-# - Should be 1 for non-multilevel questions
-#
-# inst_num:
-# - The number of the set of answers in which this answer belongs
-# - Starts at 1 (first instance) and increases
-# - e.g. if a response has three instances of a given group, values will be 1, 2, 3, and
-#   there will be N answers in instance 1, N in instance 2, etc., where N is the number of Q's in the group
-# - Should be 1 for answers to top level questions and questions in non-repeating groups
-# - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
-#
+# - The new_rank of the answer within a given set of answers for a multilevel select question.
+
 class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
   LOCATION_ATTRIBS = %i(latitude longitude altitude accuracy)
-
 
   # Convert value to tsvector for use in full text search.
   trigger.before(:insert, :update) do
