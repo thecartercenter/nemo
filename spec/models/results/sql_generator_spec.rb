@@ -33,7 +33,6 @@ describe Results::SqlGenerator do
         questions.qtype_name AS question_type,
         users.name AS submitter_name,
         answers.id AS answer_id,
-        answers.inst_num AS instance_num,
         answers.rank AS rank,
         answers.value AS value,
         answers.datetime_value AS datetime_value,
