@@ -94,7 +94,6 @@ module Odk
       type.new(
         questioning_id: form_item.id,
         new_rank: parent.children.length,
-        inst_num: inst_num(type, parent),
         rank: rank(parent),
         response_id: response.id
       )
@@ -103,17 +102,6 @@ module Odk
     # Rank will go away at end of answer refactor
     def rank(parent)
       parent.is_a?(AnswerSet) ? parent.children.length + 1 : 1
-    end
-
-    # Inst num will go away at end of answer refactor; this makes it work with answer arranger
-    def inst_num(type, parent)
-      if parent.is_a?(AnswerGroupSet) # repeat group
-        parent.children.length + 1
-      elsif [Answer, AnswerSet, AnswerGroupSet].include? type
-        parent.inst_num
-      else
-        1
-      end
     end
 
     def add_answer_set_member(xml_node, form_item, parent)

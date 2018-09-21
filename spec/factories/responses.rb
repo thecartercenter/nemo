@@ -151,24 +151,12 @@ module ResponseFactoryHelper
     attrs
   end
 
-  # Rank and inst_num will go away at end of answer refactor
+  # TODO: Rank will go away at end of answer refactor
   def self.rank_attributes(type, tree_parent)
     {
       new_rank: tree_parent.present? ? tree_parent.children.length : 0,
       rank: tree_parent.is_a?(AnswerSet) ? tree_parent.children.length + 1 : 1,
-      inst_num: inst_num(type, tree_parent)
     }
-  end
-
-  # Inst num will go away at end of answer refactor; this makes it work with answer arranger
-  def self.inst_num(type, tree_parent)
-    if tree_parent.is_a?(AnswerGroupSet) # repeat group
-      tree_parent.children.length + 1
-    elsif %w[Answer AnswerSet AnswerGroupSet].include?(type)
-      tree_parent.inst_num
-    else
-      1
-    end
   end
 end
 
