@@ -18,7 +18,7 @@ module Results
         response: response,
         new_rank: 0
       )
-      add_level(form.root_group.sorted_children, root)
+      add_level(form.root_group.sorted_children.includes(question: {option_set: :root_node}), root)
       response.root_node
     end
 
@@ -43,12 +43,12 @@ module Results
     def add_repeat_group(form_node, response_node)
       group_set = add_child("AnswerGroupSet", response_node, form_node)
       group = add_child("AnswerGroup", group_set, form_node)
-      add_level(form_node.sorted_children, group) if form_node.children?
+      add_level(form_node.sorted_children.includes(question: {option_set: :root_node}), group) if form_node.children?
     end
 
     def add_non_repeat_group(response_node, form_node)
       group = add_child("AnswerGroup", response_node, form_node)
-      add_level(form_node.sorted_children, group) if form_node.children?
+      add_level(form_node.sorted_children.includes(question: {option_set: :root_node}), group) if form_node.children?
     end
 
     def add_multilevel(form_node, response_node)

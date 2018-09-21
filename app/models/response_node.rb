@@ -12,6 +12,13 @@ class ResponseNode < ApplicationRecord
   belongs_to :response
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
 
+  # These are Answer relations moved to this class so we can preload them
+  # when loading the entire tree of response nodes
+  belongs_to :option
+  has_many :choices, foreign_key: :answer_id
+  has_many :options, through: :choices
+  has_one :media_object, class_name: "Media::Object", foreign_key: :answer_id
+
   before_save do
     destroy_obsolete_children
     propogate_response_id

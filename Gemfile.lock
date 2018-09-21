@@ -145,9 +145,9 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     builder (3.2.3)
-    bullet (4.14.10)
+    bullet (5.7.6)
       activesupport (>= 3.0.0)
-      uniform_notifier (~> 1.9.0)
+      uniform_notifier (~> 1.11.0)
     cancancan (1.15.0)
     capybara (2.18.0)
       addressable
@@ -520,7 +520,7 @@ GEM
     unf_ext (0.0.7.5)
     unicode-display_width (1.4.0)
     unicode_utils (1.4.0)
-    uniform_notifier (1.9.0)
+    uniform_notifier (1.11.0)
     versionist (1.4.1)
       activesupport (>= 3)
       railties (>= 3)
@@ -565,7 +565,7 @@ DEPENDENCIES
   bluecloth (~> 2.2.0)
   bootstrap-modal-rails (~> 2.2.5)
   bootstrap-sass (~> 3.3.4)
-  bullet (~> 4.14.4)
+  bullet (~> 5.7.6)
   cancancan (~> 1.15.0)
   capybara (~> 2.17)
   capybara-screenshot (~> 1.0.11)
@@ -646,4 +646,4 @@ DEPENDENCIES
   will_paginate-bootstrap (~> 1.0.1)
 
 BUNDLED WITH
-   1.16.2
+   1.16.3

@@ -148,7 +148,7 @@ group :development do
   gem "rails-erd", "~> 1.4.0"
 
   # query optimization
-  gem "bullet", "~> 4.14.4"
+  gem "bullet", "~> 5.7.6"
 
   # development web server
   gem "thin", "~> 1.7.0"

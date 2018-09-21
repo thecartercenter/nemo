@@ -17,7 +17,7 @@
     <%= f.field(:form_id, type: :hidden) %>
 
     <%= render("metadata", f: f, context: @context) %>
-    <%= render("hierarchical_responses/answers/nodes", nodes: [@response.root_node], context: @context) %>
+    <%= render("hierarchical_responses/answers/nodes", nodes: [@response.root_node_including_tree(:form_item, :option, :response, options: {option_nodes: :option})], context: @context) %>
 
     <div class="row">
       <div class="col-sm-6">
