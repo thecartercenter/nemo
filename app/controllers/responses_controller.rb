@@ -47,6 +47,8 @@ class ResponsesController < ApplicationController
 
         decorate_responses
 
+        @selected_ids = params[:sel]
+
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
       end

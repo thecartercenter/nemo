@@ -8,9 +8,17 @@ function responses_fetch() {
   // get current list of IDs
   responses_old_ids = responses_get_ids();
 
+  var url = Utils.add_url_param(window.location.href, "auto=1");
+
+  ELMO.index_table_views.response_decorator.get_selected_items().each(
+    function() { url = Utils.add_url_param(url, "sel[]=" + $(this).data('response-id')); }
+  );
+
+  ELMO.app.loading(true);
+
   // run the ajax request
   $.ajax({
-    url: Utils.add_url_param(window.location.href, "auto=1"),
+    url: url,
     method: "get",
     success: responses_update
   });
@@ -27,6 +35,7 @@ function responses_get_ids() {
 }
 
 function responses_update(data) {
+  ELMO.app.loading(false);
   $('#index_table').html(data);
   var new_ids = responses_get_ids();
   for (var i = 0; i < new_ids.length; i++) {
