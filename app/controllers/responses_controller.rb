@@ -313,7 +313,6 @@ class ResponsesController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
-<<<<<<< 0a2936d78a850ccce27971154114306deb1dba10
   def set_read_only
     @read_only = case action_name
                  when "show"
@@ -323,8 +322,6 @@ class ResponsesController < ApplicationController
                  end
   end
 
-=======
->>>>>>> 8665: remove old response files, rename hierarchical response to response
   def response_params
     if params[:response]
       to_permit = %i[form_id user_id incomplete]
