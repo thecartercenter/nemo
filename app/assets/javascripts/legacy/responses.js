@@ -10,9 +10,10 @@ function responses_fetch() {
 
   var url = Utils.add_url_param(window.location.href, "auto=1");
 
-  ELMO.index_table_views.response_decorator.get_selected_items().each(
-    function() { url = Utils.add_url_param(url, "sel[]=" + $(this).data('response-id')); }
-  );
+  if (ELMO.index_table_views.response_decorator)
+    ELMO.index_table_views.response_decorator.get_selected_items().each(
+      function() { url = Utils.add_url_param(url, "sel[]=" + $(this).data('response-id')); }
+    );
 
   ELMO.app.loading(true);
 
