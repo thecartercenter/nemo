@@ -125,12 +125,15 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
-    @responses = load_selected_objects(Response)
-    result = BatchDestroy.new(@responses, current_user, current_ability).destroy!
-    success = []
-    success << t("response.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
-    success << t("response.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
-    flash[:success] = success.join(" ") unless success.empty?
+    scope = Response.accessible_by(current_ability)
+    scope = if params[:select_all] == "1"
+              scope.where(mission: current_mission)
+            else
+              scope.where(id: params[:selected].keys)
+            end
+    ids = scope.pluck(:id)
+    Results::ResponseDeleter.instance.delete(ids)
+    flash[:success] = t("response.bulk_destroy_deleted", count: ids.size)
     redirect_to(responses_path)
   end
 
