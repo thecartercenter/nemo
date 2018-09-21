@@ -54,7 +54,8 @@
 
             <% if batch_ops %>
               <td class="cb_col">
-                <%= check_box_tag("selected[#{o.id}]", 1, false, :class => 'batch_op', :data => { "#{klass.model_name.singular_route_key}-id" => o.id }) %>
+                <%= check_box_tag("selected[#{o.id}]", 1, @selected_ids&.include?(o.id),
+                      :class => 'batch_op', :data => { "#{klass.model_name.singular_route_key}-id" => o.id }) %>
               </td>
             <% end %>
             <% fields.each do |f| %>
