@@ -62,7 +62,7 @@ class Answer < ResponseNode
 
   delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
     :option_set, :options, :first_level_option_nodes, :condition, :parent_group_name, to: :questioning
-  delegate :name, :hint, to: :question, prefix: true
+  delegate :name, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :name, to: :option, prefix: true, allow_nil: true
   delegate :mission, to: :response
