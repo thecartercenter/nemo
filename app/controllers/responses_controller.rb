@@ -127,11 +127,21 @@ class ResponsesController < ApplicationController
 
   def bulk_destroy
     scope = Response.accessible_by(current_ability)
-    scope = if params[:select_all] == "1"
-              scope.where(mission: current_mission)
-            else
-              scope.where(id: params[:selected].keys)
-            end
+    if params[:select_all] == "1"
+      if params[:search].present?
+        begin
+          scope = Response.do_search(scope, params[:search], {mission: current_mission}, include_excerpts: false)
+        rescue Search::ParseError => error
+          flash.now[:error] = error.to_s
+          return
+        end
+      else
+        scope = scope.where(mission: current_mission)
+      end
+    else
+      scope.where(id: params[:selected].keys)
+    end
+
     ids = scope.pluck(:id)
     Results::ResponseDeleter.instance.delete(ids)
     flash[:success] = t("response.bulk_destroy_deleted", count: ids.size)
