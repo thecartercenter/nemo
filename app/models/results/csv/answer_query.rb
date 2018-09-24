@@ -18,11 +18,20 @@ module Results
             users.name AS user_name,
             responses.created_at AT TIME ZONE 'UTC' AS submit_time,
             responses.shortcode AS shortcode,
+<<<<<<< c28b9b2606f0ef6097490bff6286bebd9b5d18db
             (SELECT
               ARRAY_AGG(anc.type || ':' || anc.new_rank || ':' || anc.questioning_id
                 ORDER BY ah.generations DESC)
               FROM answer_hierarchies ah INNER JOIN answers anc ON ah.ancestor_id = anc.id
               WHERE answers.id = ah.descendant_id) AS ancestry,
+=======
+            #{parent_group_name} AS parent_group_name,
+            parent_groups.ancestry_depth AS parent_group_depth,
+            CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
+              parent_groups.rank ELSE NULL END AS group1_rank,
+            CASE WHEN parent_groups.ancestry_depth > 0 AND parent_groups.repeatable THEN
+              answers.old_inst_num ELSE NULL END AS group1_inst_num,
+>>>>>>> 8665: rename inst_num to old_inst_num
             answers.value AS value,
             answers.time_value,
             answers.date_value,
