@@ -10,7 +10,6 @@ class ResponsesController < ApplicationController
 
   # authorization via CanCan
   load_and_authorize_resource find_by: :shortcode
-  #before_action :alias_response
   before_action :assign_form, only: [:new]
 
   before_action :mark_response_as_checked_out, only: [:edit]
@@ -197,7 +196,6 @@ class ResponsesController < ApplicationController
   def load_with_associations
     @response = Response.with_basic_assoc.friendly.find(params[:id])
   end
-
 
   # when editing a response, set timestamp to show it is being worked on
   def mark_response_as_checked_out

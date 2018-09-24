@@ -56,7 +56,7 @@ ELMO::Application.routes.draw do
         post "new-with-users", as: "new_with_users", action: "new_with_users"
       end
     end
-    
+
     resources :responses do
       collection do
         post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"

@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 require "rails_helper"
 feature "response form skip logic", js: true do
   include_context "response tree"

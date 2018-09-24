@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-
 module Results
   class AnswerDecorator < ResponseNodeDecorator
     def classes
@@ -12,7 +11,7 @@ module Results
       drop_hint = h.t("response.drop_hint.#{qtype.name}", default: "").presence
       [question_hint, drop_hint].join(" ")
     end
-    
+
     def shortened
       case qtype_name
       when "select_one"
