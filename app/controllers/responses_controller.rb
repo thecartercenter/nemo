@@ -174,7 +174,7 @@ class ResponsesController < ApplicationController
         scope = scope.where(mission: current_mission)
       end
     else
-      scope.where(id: params[:selected].keys)
+      scope = scope.where(id: params[:selected].keys)
     end
 
     ids = scope.pluck(:id)
