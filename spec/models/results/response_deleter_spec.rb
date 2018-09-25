@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require "spec_helper"
+require "rails_helper"
 
 describe Results::ResponseDeleter do
   let(:form) { create(:form, question_types: %w[select_one select_multiple image]) }
