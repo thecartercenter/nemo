@@ -13,10 +13,7 @@ module Results
             questions.qtype_name,
             option_sets.level_names,
             option_sets.allow_coordinates,
-<<<<<<< 11e998f205d844c61d9661534fb7555b33b031d8
-=======
             answers.old_rank,
->>>>>>> 8665: rename answers.rank to old_rank
             LOWER(questions.code)
         SQL
       end

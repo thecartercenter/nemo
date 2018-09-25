@@ -10,7 +10,7 @@ module Results
         answer_option_name = translation_query("answer_options.name_translations")
         choice_option_name = translation_query("choice_options.name_translations")
         option_level_name = translation_query("option_sets.level_names",
-          arr_index: "CASE WHEN parents.type = 'AnswerSet' THEN answers.rank - 1 ELSE 0 END")
+          arr_index: "CASE WHEN parents.type = 'AnswerSet' THEN answers.old_rank - 1 ELSE 0 END")
         <<~SQL
           SELECT
             responses.id AS response_id,
