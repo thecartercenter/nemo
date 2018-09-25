@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "response form tree handling", js: true do
+feature "response form rendering and submission", js: true do
   include_context "response tree"
   include_context "dropzone"
   include_context "trumbowyg"

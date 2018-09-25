@@ -1,18 +1,23 @@
 # frozen_string_literal: true
 
 require "rails_helper"
+
 feature "response form skip logic", js: true do
   include_context "response tree"
+
   let(:user) { create(:user) }
   let(:qings) { form.questionings }
+
   before do
     login(user)
   end
+
   describe "with skip rules" do
     let(:form) do
       create(:form, :published, question_types:
         ["text", "text", "text", "text", repeating: {items: ["text"]}])
     end
+
     scenario "skip to end of form" do
       # Skip to end of form if [1] is equal to B
       create(
@@ -28,6 +33,7 @@ feature "response form skip logic", js: true do
       fill_and_expect_visible([1], "B", visible - [[2], [3]])
       fill_and_expect_visible([1], "C", visible)
     end
+
     scenario "skip to a later questioning" do
       # Skip from [0] to [2] if [0] is not equal to A
       create(
@@ -45,6 +51,7 @@ feature "response form skip logic", js: true do
       fill_and_expect_visible([2], "C", visible - [[1]])
       fill_and_expect_visible([0], "A", visible)
     end
+
     scenario "two skip rules and skip rule and condition have same ref qing, skip triggered first" do
       # Display [3] if [0] is not equal to B
       # Skip from [1] to [3] if [0] is A
@@ -82,6 +89,7 @@ feature "response form skip logic", js: true do
       fill_and_expect_visible([0], "Skip2", visible - [[1]])
       fill_and_expect_visible([0], "Z", visible)
     end
+
     scenario "two skip rules, skip rule and condition have same ref qing, display cond triggered first" do
       # Display [3] if [0] is not equal to B
       # Skip from [1] to [3] if [0] is A
@@ -118,6 +126,7 @@ feature "response form skip logic", js: true do
       fill_and_expect_visible([0], "Z", visible)
     end
   end
+
   describe "skip rules with conditions on repeat groups" do
     # Skip to end of form if [1] is equal to B.
     # Display repeat group if [2] is "ShowRepeat"
@@ -125,6 +134,7 @@ feature "response form skip logic", js: true do
       create(:form, :published, question_types:
         ["text", "text", "text", "text", repeating: {items: ["text"]}])
     end
+    
     scenario "trigger display condition on form with skip rule" do
       create(
         :skip_rule,

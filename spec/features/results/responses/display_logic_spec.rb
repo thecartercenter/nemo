@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "hierarchical response form display logic", js: true do
+feature "response form display logic", js: true do
   include_context "response tree"
 
   before { login(create(:user)) }

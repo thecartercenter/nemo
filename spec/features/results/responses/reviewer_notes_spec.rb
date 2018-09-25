@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "reviewer notes", js: true do
+feature "response form reviewer notes", js: true do
   let(:reviewer) { create(:user) }
   let(:enumerator) { create(:user, role_name: :enumerator) }
   let(:form) { create(:form, :published, question_types: %w[integer]) }
