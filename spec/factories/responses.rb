@@ -41,7 +41,7 @@ module ResponseFactoryHelper
   # Returns a potentially nested array of answers.
   def self.build_answers(response, answer_values)
     root = response.build_root_node({type: "AnswerGroup", form_item: response.form.root_group}
-      .merge(rank_attributes("AnswerGroup", nil)))
+      .merge(rank_attributes(nil)))
     add_level(response.form.sorted_children, answer_values, root)
     root
   end
@@ -76,7 +76,7 @@ module ResponseFactoryHelper
     group_set = parent.children.build({
       type: "AnswerGroupSet",
       form_item: form_group
-    }.merge(rank_attributes("AnswerGroupSet", parent)))
+    }.merge(rank_attributes(parent)))
     group_instances.each do |group_instance_answer_values| # each array represents one group
       add_group(form_group, group_instance_answer_values, group_set)
     end
@@ -87,7 +87,7 @@ module ResponseFactoryHelper
   # parent must be an AnswerGroup (if form item not repeating) or AnswerGroupSet (if form item is repeating)
   def self.add_group(form_group, answer_values, parent)
     answer_group = parent.children.build({type: "AnswerGroup", form_item: form_group}
-      .merge(rank_attributes("AnswerGroup", parent)))
+      .merge(rank_attributes(parent)))
     add_level(form_group.c, answer_values, answer_group)
   end
 
@@ -105,7 +105,7 @@ module ResponseFactoryHelper
   # parent must be an AnswerGroup
   def self.build_answer_set(qing, values, parent)
     set = parent.children.build({type: "AnswerSet", form_item: qing}
-      .merge(rank_attributes("AnswerSet", parent)))
+      .merge(rank_attributes(parent)))
     if values.present?
       values.each do |v|
         next if v.blank?
@@ -116,7 +116,7 @@ module ResponseFactoryHelper
             type: "Answer",
             form_item: qing,
             option_id: option_id
-          }.merge(rank_attributes("Answer", set))
+          }.merge(rank_attributes(set))
         )
       end
     end
@@ -128,7 +128,7 @@ module ResponseFactoryHelper
       type: "Answer",
       form_item: qing
     }
-    attrs.merge!(rank_attributes("Answer", parent))
+    attrs.merge!(rank_attributes(parent))
     case qing.qtype_name
     when "select_one" # not multilevel
       if value.present?
@@ -151,25 +151,8 @@ module ResponseFactoryHelper
     attrs
   end
 
-  # TODO: Rank will go away at end of answer refactor
-  def self.rank_attributes(type, tree_parent)
-    {
-      new_rank: tree_parent.present? ? tree_parent.children.length : 0,
-      #old_rank: tree_parent.is_a?(AnswerSet) ? tree_parent.children.length + 1 : 1,
-      # TODO: remove after csv works with nested groups
-      old_inst_num: old_inst_num(type, tree_parent)
-    }
-  end
-
-  # TODO: remove after csv works with nested groups
-  def self.old_inst_num(type, tree_parent)
-    if tree_parent.is_a?(AnswerGroupSet) # repeat group
-      tree_parent.children.length + 1
-    elsif %w[Answer AnswerSet AnswerGroupSet].include?(type)
-      tree_parent.old_inst_num
-    else
-      1
-    end
+  def self.rank_attributes(tree_parent)
+    {new_rank: tree_parent.present? ? tree_parent.children.length : 0}
   end
 end
 
