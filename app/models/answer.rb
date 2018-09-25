@@ -171,10 +171,9 @@ class Answer < ResponseNode
     required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
   end
 
-  #TODO: remove usage of first_rank
   # Whether this Answer is the first in its set (i.e. rank is nil or 1)
   def first_rank?
-    old_rank.nil? || old_rank == 1
+    new_rank.nil? || new_rank == 0
   end
 
   # check various fields for blankness
