@@ -31,7 +31,10 @@ class OptionNode < ApplicationRecord
   alias_method :options_removed?, :options_removed
 
   replicable child_assocs: [:children, :option], backward_assocs: :option_set,
-    dont_copy: [:option_set_id, :option_id]
+    dont_copy: [:option_set_id, :option_id],
+    # If the source of the clone is an option set, we need to replicate all nodes.
+    # Otherwise they are reusable just like the OptionSet itself.
+    reusable_in_clone: ->(replicator) { !replicator.source.is_a?(OptionSet) }
 
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :option, prefix: true

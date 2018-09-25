@@ -29,13 +29,8 @@ class OptionSet < ApplicationRecord
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
 
-  # replication options
-  replicable(
-    child_assocs: :root_node,
-    backwards_assocs: :questions,
-    uniqueness: {field: :name, style: :sep_words},
-    dont_copy: :root_node_id
-  )
+  replicable child_assocs: :root_node, backwards_assocs: :questions, dont_copy: :root_node_id, 
+             uniqueness: {field: :name, style: :sep_words}, reusable_in_clone: true
 
   delegate :ranks_changed?,
     :children,

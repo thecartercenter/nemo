@@ -246,11 +246,11 @@ describe Form do
         @copy.reload
       end
 
-      it "should reuse only standardizable objects", :implicit_ordering do
+      it "should reuse only reusable objects", :implicit_ordering do
         expect(@orig).not_to eq @copy
         expect(@orig.root_group).not_to eq @copy.root_group
         expect(@orig.c[0]).not_to eq @copy.c[0]
-        expect(@orig.c[0].question).to eq @copy.c[0].question # Standardizable
+        expect(@orig.c[0].question).to eq @copy.c[0].question  # reusable
         expect(@orig.c[1].c[0]).not_to eq @copy.c[1].c[0]
       end
 
@@ -324,7 +324,6 @@ describe Form do
         it "should produce distinct child objects" do
           expect(std_questionings[:integer]).not_to eq copy_questionings[:integer]
           expect(std_condition).not_to eq copy_condition
-
           # These two should be equal because they're referencing the same option set.
           expect(std_questionings[:multilevel].options.sort[0]).to eq copy_opt_set.options.sort[0]
           expect(std_questionings[:integer].display_conditions[0].option_node).
