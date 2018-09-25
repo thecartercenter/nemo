@@ -275,7 +275,7 @@ class Report::SummaryCollectionBuilder
             AND q.qtype_name = 'select_one'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
-            AND (a.old_rank IS NULL OR a.old_rank = 1)
+            AND (a.new_rank IS NULL OR a.new_rank = 0)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       SQL
 

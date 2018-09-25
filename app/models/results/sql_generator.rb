@@ -23,7 +23,7 @@ class Results::SqlGenerator
       select("questions.qtype_name AS question_type").
       select("users.name AS submitter_name").
       select("answers.id AS answer_id").
-      select("answers.old_rank AS rank").
+      select("answers.new_rank AS rank").
       select("answers.value AS value").
       select("answers.datetime_value AS datetime_value").
       select("answers.date_value AS date_value").

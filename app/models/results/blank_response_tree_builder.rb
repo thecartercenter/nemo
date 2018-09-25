@@ -63,8 +63,7 @@ module Results
         type: type,
         questioning_id: form_node.id,
         response: response,
-        new_rank: response_node.children.size,
-        old_rank: response_node.children.size + 1
+        new_rank: response_node.children.size
       )
     end
   end

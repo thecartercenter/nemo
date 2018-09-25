@@ -30,14 +30,14 @@ module Concerns::ApplicationController::Authentication
     # auth, or no auth.
     elsif params[:direct_auth]
       # HTTP Basic authenticated request.
-        @current_user = authenticate_with_http_basic do |login, password|
-          # Use eager loading.
-          User.includes(:assignments).find_by_credentials(login, password)
-        end
+      @current_user = authenticate_with_http_basic do |login, password|
+        # Use eager loading.
+        User.includes(:assignments).find_by_credentials(login, password)
+      end
 
-        return request_http_basic_authentication unless @current_user
+      return request_http_basic_authentication unless @current_user
 
-        return render plain: 'USER_INACTIVE', status: :unauthorized unless @current_user.active?
+      return render plain: 'USER_INACTIVE', status: :unauthorized unless @current_user.active?
     else
       # If we get here, nothing worked!
       @current_user = nil

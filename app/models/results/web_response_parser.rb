@@ -80,7 +80,7 @@ module Results
     def new_tree_node_attrs(web_hash_node, tree_parent)
       type = web_hash_node[:type]
       clean_params = web_hash_node.slice(*TOP_LEVEL_PARAMS).permit(PERMITTED_PARAMS)
-      clean_params.merge(rank_attributes(type, tree_parent))
+      clean_params.merge(rank_attributes(tree_parent))
     end
 
     def ignore_node?(web_hash_node)
@@ -88,12 +88,8 @@ module Results
         (web_hash_node[:_relevant] == "false" || web_hash_node[:_destroy] == "true")
     end
 
-    # TODO: Rank will go away at end of answer refactor
-    def rank_attributes(type, tree_parent)
-      {
-        new_rank: tree_parent.present? ? tree_parent.children.length : 0,
-        old_rank: tree_parent.is_a?(AnswerSet) ? tree_parent.children.length + 1 : 1
-      }
+    def rank_attributes(tree_parent)
+      {new_rank: tree_parent.present? ? tree_parent.children.length : 0}
     end
 
     def item_in_mission?(questioning_id)

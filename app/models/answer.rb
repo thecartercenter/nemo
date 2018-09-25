@@ -2,9 +2,6 @@
 
 # An Answer is a single piece of data in response to a single question or sub-question.
 # It is always a leaf in a response tree.
-#
-# rank:
-# - The new_rank of the answer within a given set of answers for a multilevel select question.
 
 class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper

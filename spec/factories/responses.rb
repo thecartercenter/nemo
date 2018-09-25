@@ -155,7 +155,7 @@ module ResponseFactoryHelper
   def self.rank_attributes(type, tree_parent)
     {
       new_rank: tree_parent.present? ? tree_parent.children.length : 0,
-      old_rank: tree_parent.is_a?(AnswerSet) ? tree_parent.children.length + 1 : 1,
+      #old_rank: tree_parent.is_a?(AnswerSet) ? tree_parent.children.length + 1 : 1,
       # TODO: remove after csv works with nested groups
       old_inst_num: old_inst_num(type, tree_parent)
     }
