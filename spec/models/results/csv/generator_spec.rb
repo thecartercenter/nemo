@@ -15,7 +15,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
   context "with no data" do
     it "produces correct csv" do
       is_expected.to eq "ResponseID,Shortcode,Form,Submitter,DateSubmitted,"\
-        "GroupNum1,ItemNum1,GroupName,GroupLevel\r\n"
+        "GroupName,GroupLevel\r\n"
     end
   end
 
@@ -104,13 +104,16 @@ describe Results::Csv::Generator, :reset_factory_sequences do
            {repeating: {name: "Fruit", items: [
              "text",                                   # 2
              "integer",                                # 3
-             "select_multiple"                         # 4
+             "select_multiple",                        # 4
+             {repeating: {name: "Slice", items: [
+               "decimal"                               # 5
+             ]}}
            ]}},
-           "integer",                                  # 5
+           "integer",                                  # 6
            {repeating: {name: "Vegetable", items: [
-             "text",                                   # 6
-             "geo_multilevel_select_one",              # 7
-             "integer"                                 # 8
+             "text",                                   # 7
+             "geo_multilevel_select_one",              # 8
+             "integer"                                 # 9
            ]}}])
     end
 
@@ -119,8 +122,8 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         create_response(form: repeat_form, answer_values: [
           1,
           {repeating: [
-            ["Apple", 1, %w[Cat Dog]],
-            ["Banana", 2, %w[Cat]]
+            ["Apple", 1, %w[Cat Dog], {repeating: [[1.65], [1.3]]}],
+            ["Banana", 2, %w[Cat], {repeating: [[1.27], [1.77]]}]
           ]},
           2,
           {repeating: [
@@ -133,7 +136,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
             3,
             {repeating: [
               ["Xigua", 10, %w[Dog]],
-              ["Yuzu", 9, %w[Cat Dog]],
+              ["Yuzu", 9, %w[Cat Dog], {repeating: [[1.52]]}],
               ["Ugli", 8, %w[Cat]]
             ]},
             4,
@@ -254,12 +257,13 @@ describe Results::Csv::Generator, :reset_factory_sequences do
       # because fallbacks are enabled.
       I18n.backend.store_translations(:fr, response: {csv_headers: I18n.t("response.csv_headers")})
 
+      configatron.preferred_locales = %i[en fr]
       I18n.locale = :fr
       group.update!(group_name_fr: "Groupe")
       option.update!(name_fr: "L'option")
 
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
-        create_response(form: form, answer_values: [[option.name]])
+        create_response(form: form, answer_values: [{repeating: [[option.name_en]]}])
       end
     end
 
