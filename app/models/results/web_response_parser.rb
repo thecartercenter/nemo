@@ -92,7 +92,7 @@ module Results
     def rank_attributes(type, tree_parent)
       {
         new_rank: tree_parent.present? ? tree_parent.children.length : 0,
-        rank: tree_parent.is_a?(AnswerSet) ? tree_parent.children.length + 1 : 1,
+        old_rank: tree_parent.is_a?(AnswerSet) ? tree_parent.children.length + 1 : 1,
       }
     end
 

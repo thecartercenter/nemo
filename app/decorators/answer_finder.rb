@@ -24,7 +24,7 @@ class AnswerFinder
       .joins(:form_item)
       .where(response_id: responses.map(&:id))
       .where("form_items.question_id" => question.id)
-      .where("answers.rank = 1")
+      .where("answers.old_rank = 1")
       .index_by(&:response_id)
   end
 end

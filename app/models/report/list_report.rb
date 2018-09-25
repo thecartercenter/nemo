@@ -49,7 +49,7 @@ class Report::ListReport < Report::Report
       rel = rel.where("questionings.id IN (#{qing_ids})") unless qing_ids.empty?
 
       # Add order by answer rank to accommodate multilevel answers.
-      rel = rel.order("answers.rank")
+      rel = rel.order("answers.old_rank")
 
       # For select multiples, also need to sort the choices within the answer.
       rel = rel.order("answer_select_multiple_sort") if questions.any?(&:select_multiple?)

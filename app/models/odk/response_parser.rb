@@ -94,7 +94,7 @@ module Odk
       type.new(
         questioning_id: form_item.id,
         new_rank: parent.children.length,
-        rank: rank(parent),
+        old_rank: rank(parent),
         response_id: response.id
       )
     end
