@@ -44,7 +44,6 @@
       </thead>
       <tbody class="index_table_body">
         <% objects.each do |o| %>
-          <% o = o.object if o.is_a?(ApplicationDecorator) # This is throwaway code, fixed properly in later release. %>
           <%# include the path for the current object in the tr tag so that we can support clicking anywhere on the row (may be nil) %>
           <% path = path_for_with_search(o) %>
           <%= content_tag(:tr,
