@@ -173,7 +173,7 @@ class Answer < ResponseNode
 
   # Whether this Answer is the first in its set (i.e. rank is nil or 1)
   def first_rank?
-    new_rank.nil? || new_rank == 0
+    new_rank.nil? || new_rank.zero?
   end
 
   # check various fields for blankness
