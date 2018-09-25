@@ -30,6 +30,8 @@ describe Results::Csv::Buffer do
   end
   let(:buffer) { described_class.new(header_map: header_map) }
   let(:group_path) { Results::Csv::GroupPath.new }
+  let!(:people) { create(:qing_group, group_name: "People", repeatable: true) }
+  let!(:pets) { create(:qing_group, group_name: "Pets", repeatable: true) }
 
   # Simple dummy that saves rows that get passed to it.
   class DummyCSV
@@ -54,22 +56,22 @@ describe Results::Csv::Buffer do
   # See the comments below for more details.
   it "should process nested groups properly" do
     # Initial call, assuming top level answer.
-    stub_group_path_changes(0, 1)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(0, 1, parent_group: nil)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q1", "val1")
 
     # No group path change.
-    stub_group_path_changes(0, 0)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(0, 0, parent_group: nil)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q2", "val2")
 
     # Response ID change.
-    stub_group_path_changes(-1, 1)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(-1, 1, parent_group: nil)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
 
     # CSV row for response 1 should be dumped.
     expect(output_rows).to eq([[
@@ -91,30 +93,30 @@ describe Results::Csv::Buffer do
     buffer.write("q1", "val3")
 
     # No group path change.
-    stub_group_path_changes(0, 0)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(0, 0, parent_group: nil)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q2", "val4")
 
     # Enter 1st level group
-    stub_group_path_changes(0, 1)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => "People")
+    stub_group_path_changes(0, 1, parent_group: people)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1:lat", "val5")
     buffer.write("q3_1:lng", "val6")
 
     # No group path change.
-    stub_group_path_changes(0, 0)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => "People")
+    stub_group_path_changes(0, 0, parent_group: people)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_2", "val7")
 
     # New instance of 1st level group.
-    stub_group_path_changes(-1, 1)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => "People")
+    stub_group_path_changes(-1, 1, parent_group: people)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1:lat", "val8")
@@ -123,29 +125,29 @@ describe Results::Csv::Buffer do
     # We deliberately don't write to q3_2 in this instance. It should be blank in the output.
 
     # Enter 2nd level group
-    stub_group_path_changes(0, 1)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => "Pets")
+    stub_group_path_changes(0, 1, parent_group: pets)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1_1", "val10")
 
     # No group path change.
-    stub_group_path_changes(0, 0)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => "Pets")
+    stub_group_path_changes(0, 0, parent_group: pets)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1_2", "val11")
 
     # Back to top level (2 level jump, important to test this)
-    stub_group_path_changes(-2, 0)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(-2, 0, parent_group: nil)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q4", "val12")
 
     # Response ID and form change.
-    stub_group_path_changes(-1, 1)
-    output_rows = process_row("source" => "odk", "form_name" => "form2", "parent_group_name" => nil)
+    stub_group_path_changes(-1, 1, parent_group: nil)
+    output_rows = process_row("source" => "odk", "form_name" => "form2")
 
     # Four rows should now be dumped, and val12 should be included in all dumped rows.
     expect(output_rows).to eq([[
@@ -214,8 +216,8 @@ describe Results::Csv::Buffer do
     buffer.write("q2", "val13")
 
     # No group path change.
-    stub_group_path_changes(0, 0)
-    output_rows = process_row("source" => "odk", "form_name" => "form2", "parent_group_name" => nil)
+    stub_group_path_changes(0, 0, parent_group: nil)
+    output_rows = process_row("source" => "odk", "form_name" => "form2")
     expect(output_rows).to be_empty
 
     # q99 on form2 only. Also testing overwrite when append not given.
@@ -223,8 +225,8 @@ describe Results::Csv::Buffer do
     buffer.write("q99", "val14")
 
     # Response ID change.
-    stub_group_path_changes(-1, 1)
-    output_rows = process_row("source" => "sms", "form_name" => "form2", "parent_group_name" => nil)
+    stub_group_path_changes(-1, 1, parent_group: nil)
+    output_rows = process_row("source" => "sms", "form_name" => "form2")
 
     # CSV row for response 3 should be dumped.
     expect(output_rows).to eq([[
@@ -269,50 +271,50 @@ describe Results::Csv::Buffer do
 
   it "should process properly when the first row is an answer from a nested group" do
     # Initial call, assuming nested answer.
-    stub_group_path_changes(0, 3)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => "Pets")
+    stub_group_path_changes(0, 3, parent_group: pets)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1_1", "val1")
 
     # No group path change.
-    stub_group_path_changes(0, 0)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => "Pets")
+    stub_group_path_changes(0, 0, parent_group: pets)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1_2", "val2")
 
     # New instance of 2nd level group.
-    stub_group_path_changes(-1, 1)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => "Pets")
+    stub_group_path_changes(-1, 1, parent_group: pets)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1_1", "val3")
 
     # No group path change.
-    stub_group_path_changes(0, 0)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => "Pets")
+    stub_group_path_changes(0, 0, parent_group: pets)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1_2", "val4")
 
     # Down to first level of nesting.
-    stub_group_path_changes(-1, 0)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => "People")
+    stub_group_path_changes(-1, 0, parent_group: people)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_2", "val5")
 
     # Back to top level.
-    stub_group_path_changes(-1, 0)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(-1, 0, parent_group: nil)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q4", "val6")
 
     # Response ID change.
-    stub_group_path_changes(-1, 1)
-    output_rows = process_row("source" => "sms", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(-1, 1, parent_group: nil)
+    output_rows = process_row("source" => "sms", "form_name" => "form1")
 
     # Should be 1 row for top level, 1 row for People, 2 rows for Pets
     expect(output_rows).to eq([[
@@ -397,15 +399,15 @@ describe Results::Csv::Buffer do
 
   it "should process properly when there is no data from 1st level" do
     # Initial call, assuming nested answer.
-    stub_group_path_changes(0, 3)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => "Pets")
+    stub_group_path_changes(0, 3, parent_group: pets)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q3_1_1", "val1")
 
     # Back to top level.
-    stub_group_path_changes(-2, 0)
-    output_rows = process_row("source" => "web", "form_name" => "form1", "parent_group_name" => nil)
+    stub_group_path_changes(-2, 0, parent_group: nil)
+    output_rows = process_row("source" => "web", "form_name" => "form1")
     expect(output_rows).to be_empty
 
     buffer.write("q4", "val5")
@@ -460,7 +462,8 @@ describe Results::Csv::Buffer do
     buffer.csv.rows
   end
 
-  def stub_group_path_changes(deletions, additions)
+  def stub_group_path_changes(deletions, additions, parent_group:)
     allow(group_path).to receive(:changes).and_return([deletions, additions])
+    allow(group_path).to receive(:parent_repeat_group_id).and_return(parent_group&.id)
   end
 end
