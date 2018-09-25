@@ -9,7 +9,8 @@ module Results
       def select
         answer_option_name = translation_query("answer_options.name_translations")
         choice_option_name = translation_query("choice_options.name_translations")
-        option_level_name = translation_query("option_sets.level_names", arr_index: "answers.rank - 1")
+        option_level_name = translation_query("option_sets.level_names",
+          arr_index: "CASE WHEN parents.type = 'AnswerSet' THEN answers.rank - 1 ELSE 0 END")
         <<~SQL
           SELECT
             responses.id AS response_id,
@@ -44,6 +45,7 @@ module Results
             INNER JOIN forms ON responses.form_id = forms.id
             INNER JOIN users ON responses.user_id = users.id
             INNER JOIN answers ON answers.response_id = responses.id
+            INNER JOIN answers parents ON parents.id = answers.parent_id
             INNER JOIN form_items qings ON answers.questioning_id = qings.id
             INNER JOIN questions ON qings.question_id = questions.id
             LEFT OUTER JOIN option_sets ON questions.option_set_id = option_sets.id

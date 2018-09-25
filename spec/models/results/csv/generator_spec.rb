@@ -14,8 +14,8 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
   context "with no data" do
     it "produces correct csv" do
-      is_expected.to eq "ResponseID,Shortcode,Form,Submitter,DateSubmitted,"\
-        "GroupName,GroupLevel\r\n"
+      is_expected.to eq("ResponseID,Shortcode,Form,Submitter,DateSubmitted,"\
+        "GroupName,GroupLevel\r\n")
     end
   end
 
@@ -92,7 +92,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     it "produces correct csv" do
-      is_expected.to eq prepare_response_csv_expectation("basic.csv")
+      is_expected.to eq(prepare_response_csv_expectation("basic.csv"))
     end
   end
 
@@ -150,7 +150,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     it "produces correct csv" do
-      is_expected.to eq prepare_response_csv_expectation("with_repeat_groups.csv")
+      is_expected.to eq(prepare_response_csv_expectation("with_repeat_groups.csv"))
     end
   end
 
@@ -178,7 +178,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     it "produces correct csv" do
-      is_expected.to eq prepare_response_csv_expectation("multiline.csv")
+      is_expected.to eq(prepare_response_csv_expectation("multiline.csv"))
     end
   end
 
@@ -194,7 +194,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
     # We don't currrently support attachments in CSV output.
     it "ignores attached files" do
-      is_expected.to eq prepare_response_csv_expectation("media.csv")
+      is_expected.to eq(prepare_response_csv_expectation("media.csv"))
     end
   end
 
@@ -220,7 +220,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     it "ignores deleted responses" do
-      is_expected.to eq prepare_response_csv_expectation("with_deleted.csv")
+      is_expected.to eq(prepare_response_csv_expectation("with_deleted.csv"))
     end
   end
 
@@ -242,7 +242,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     it "ignores form2 since it's from other mission" do
-      is_expected.to eq prepare_response_csv_expectation("scoped_relation.csv")
+      is_expected.to eq(prepare_response_csv_expectation("scoped_relation.csv"))
     end
   end
 
@@ -268,7 +268,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     it "uses french names when appropriate" do
-      is_expected.to eq prepare_response_csv_expectation("multilingual.csv")
+      is_expected.to eq(prepare_response_csv_expectation("multilingual.csv"))
     end
   end
 
