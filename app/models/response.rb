@@ -16,7 +16,6 @@ class Response < ApplicationRecord
   belongs_to :user, inverse_of: :responses
   belongs_to :reviewer, class_name: "User"
 
-  # TODO: remove inst_num from order after csv ready for nested groups
   has_many :answers, -> { order(:new_rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
   has_many :location_answers, lambda {

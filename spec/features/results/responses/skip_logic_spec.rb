@@ -134,7 +134,7 @@ feature "response form skip logic", js: true do
       create(:form, :published, question_types:
         ["text", "text", "text", "text", repeating: {items: ["text"]}])
     end
-    
+
     scenario "trigger display condition on form with skip rule" do
       create(
         :skip_rule,
