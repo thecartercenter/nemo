@@ -7,12 +7,7 @@
   <% answer_set.children.each_with_index do |answer, index| %>
     <% level_context = context.add(index) %>
     <div class="level">
-      <%= hidden_field_tag(level_context.input_name(:id), answer.id) %>
-      <%= hidden_field_tag(level_context.input_name(:type), "Answer") %>
-      <%= hidden_field_tag(level_context.input_name(:questioning_id), answer.questioning_id) %>
-      <%= hidden_field_tag(level_context.input_name(:_relevant), "true") %>
-      <%= hidden_field_tag(level_context.input_name(:_destroy), "false") %>
-
+      <%= render("responses/answers/hidden_fields", node: answer, context: level_context) %>
       <label for="<%= level_context.input_id(:option_node_id) %>">
         <%= answer_set.level_name(level_context) %>
       </label>
