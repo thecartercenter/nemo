@@ -263,19 +263,21 @@ class Report::SummaryCollectionBuilder
     def get_select_question_tallies(qing_ids)
 
       # build and run queries for select_one and _multiple
+      # Re:  "AND (parents.type != 'AnswerSet' OR a.new_rank = 0)" - exclude answers in answer sets except top level one
       query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
         FROM form_items qings
           INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
           LEFT OUTER JOIN answers a
             ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
+          INNER JOIN answers parents ON parents.id = a.parent_id
           #{disagg_join_clause}
           #{current_user_join_clause}
           WHERE qings.deleted_at IS NULL
             AND q.qtype_name = 'select_one'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
-            AND (a.new_rank IS NULL OR a.new_rank = 0)
+            AND (parents.type != 'AnswerSet' OR a.new_rank = 0)
           GROUP BY #{disagg_group_by_expr} qings.id, a.option_id
       SQL
 

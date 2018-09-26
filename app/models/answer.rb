@@ -54,11 +54,17 @@ class Answer < ResponseNode
   delegate :name, to: :option, prefix: true, allow_nil: true
   delegate :mission, to: :response
 
-  scope :public_access, -> { joins(form_item: :question).
-    where("questions.access_level = 'inherit'").order("form_items.rank") }
+  scope :public_access, lambda {
+    joins(form_item: :question)
+      .where("questions.access_level = 'inherit'").order("form_items.rank")
+  }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
   scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }
+  scope :first_level_only, lambda { # exclude answers from answer sets that are not first level
+    joins("INNER JOIN answers parents ON answers.parent_id = parents.id")
+      .where("parents.type != 'AnswerSet' OR answers.new_rank = 0")
+  }
 
   pg_search_scope :search_by_value,
     against: :value,
