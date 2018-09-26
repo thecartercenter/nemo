@@ -6,7 +6,7 @@ class ResponsesController < ApplicationController
   include ResponseIndexable
   include CsvRenderable
 
-  before_action :fix_nil_time_values, only: [:update, :create]
+  before_action :fix_nil_time_values, only: %i[update create]
 
   # authorization via CanCan
   load_and_authorize_resource find_by: :shortcode

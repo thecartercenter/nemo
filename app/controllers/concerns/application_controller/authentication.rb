@@ -37,7 +37,7 @@ module Concerns::ApplicationController::Authentication
 
       return request_http_basic_authentication unless @current_user
 
-      return render plain: 'USER_INACTIVE', status: :unauthorized unless @current_user.active?
+      return render(plain: "USER_INACTIVE", status: :unauthorized) unless @current_user.active?
     else
       # If we get here, nothing worked!
       @current_user = nil

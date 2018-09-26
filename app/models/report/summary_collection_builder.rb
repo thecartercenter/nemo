@@ -263,7 +263,8 @@ class Report::SummaryCollectionBuilder
     def get_select_question_tallies(qing_ids)
 
       # build and run queries for select_one and _multiple
-      # Re:  "AND (parents.type != 'AnswerSet' OR a.new_rank = 0)" - exclude answers in answer sets except top level one
+      # Re:  "AND (parents.type != 'AnswerSet' OR a.new_rank = 0)" - exclude answers in answer sets except
+      # top level ones
       query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
         FROM form_items qings
