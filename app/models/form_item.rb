@@ -77,14 +77,31 @@ class FormItem < ApplicationRecord
     self
   end
 
+  def arrange_descendants
+    sort = "(case when ancestry is null then 0 else 1 end), ancestry, rank"
+    # We eager load questions and option sets since they are likely to be needed.
+    nodes = subtree.includes(question: {option_set: :root_node}).order(sort).to_a
+    with_self = self.class.arrange_nodes(nodes)
+    with_self.values[0]
+  end
+
   def visible_children
     sorted_children.select(&:visible?)
   end
 
+  def descendant_questionings(nodes = nil)
+    nodes ||= arrange_descendants
+    nodes.map do |form_item, children|
+      form_item.is_a?(Questioning) ? form_item : descendant_questionings(children)
+    end
+  end
+
   def preordered_descendants(eager_load: nil, type: nil)
-    items = descendants.order(:rank)
-    items = items.where(type: type) if type
-    items = items.includes(eager_load) if eager_load
+    items = descendants.order(:rank).includes(eager_load).where(type: type)
+    # items = items.where(type: type) if type
+    # items = items if eager_load
+    # items = items if type
+    pp items.count
     self.class.sort_by_ancestry(items) { |a, b| a.rank <=> b.rank }
   end
 
