@@ -51,6 +51,9 @@ class ResponsesController < ApplicationController
 
         decorate_responses
 
+        @selected_ids = params[:sel]
+        @selected_all = params[:select_all]
+
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
       end
@@ -123,12 +126,25 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
-    @responses = load_selected_objects(Response)
-    result = BatchDestroy.new(@responses, current_user, current_ability).destroy!
-    success = []
-    success << t("response.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
-    success << t("response.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
-    flash[:success] = success.join(" ") unless success.empty?
+    scope = Response.accessible_by(current_ability)
+    if params[:select_all] == "1"
+      if params[:search].present?
+        begin
+          scope = Response.do_search(scope, params[:search], {mission: current_mission}, include_excerpts: false)
+        rescue Search::ParseError => error
+          flash.now[:error] = error.to_s
+          return
+        end
+      else
+        scope = scope.where(mission: current_mission)
+      end
+    else
+      scope = scope.where(id: params[:selected].keys)
+    end
+
+    ids = scope.pluck(:id)
+    Results::ResponseDeleter.instance.delete(ids)
+    flash[:success] = t("response.bulk_destroy_deleted", count: ids.size)
     redirect_to(responses_path)
   end
 

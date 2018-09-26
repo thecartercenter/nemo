@@ -23,7 +23,7 @@
       <%= form_tag %>
     <% end %>
 
-    <input type="hidden" name="select_all">
+    <input type="hidden" name="select_all" value="<%= @selected_all %>">
 
     <table class="index_table <%= options[:table_css_classes] %>">
       <thead>
@@ -53,7 +53,8 @@
 
             <% if batch_ops %>
               <td class="cb_col">
-                <%= check_box_tag("selected[#{o.id}]", 1, false, :class => 'batch_op', :data => { "#{klass.model_name.singular_route_key}-id" => o.id }) %>
+                <%= check_box_tag("selected[#{o.id}]", 1, @selected_ids&.include?(o.id),
+                      :class => 'batch_op', :data => { "#{klass.model_name.singular_route_key}-id" => o.id }) %>
               </td>
             <% end %>
             <% fields.each do |f| %>
@@ -87,6 +88,10 @@
 
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
+      // Clear previous event handlers in case reloading.
+      if (ELMO.index_table_views['<%= objects.first.class.name.underscore %>'])
+        ELMO.index_table_views['<%= objects.first.class.name.underscore %>'].undelegateEvents();
+
       ELMO.index_table_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.IndexTableView(<%=json(
         class_name: objects[0].class.name.underscore,
         modified_obj_id: flash[:modified_obj_id],

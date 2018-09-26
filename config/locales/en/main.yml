@@ -1729,13 +1729,6 @@ en:
       few: "%{count} responses deleted successfully."
       many: "%{count} responses deleted successfully."
       other: "%{count} responses deleted successfully."
-    bulk_destroy_skipped:
-      zero: "No response skipped."
-      one: "%{count} response skipped."
-      two: "%{count} responses skipped."
-      few: "%{count} responses skipped."
-      many: "%{count} responses skipped."
-      other: "%{count} responses skipped."
 
   role:
     role: "Role"
