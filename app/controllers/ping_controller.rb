@@ -6,6 +6,7 @@ class PingController < ApplicationController
     @tests = {}
     @tests[:dj_running] = pid_from_file_is_running("tmp/pids/delayed_job.pid")
     @ok = @tests.values.all?
+    @version = configatron.system_version
     render layout: nil, formats: :text, status: @ok ? 200 : 503
   end
 
