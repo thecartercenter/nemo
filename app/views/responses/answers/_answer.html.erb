@@ -1,6 +1,5 @@
 <div class="<%= answer.classes %>">
-  <%= render("responses/answers/hidden_fields", node: answer,
-                                                             context: context) %>
+  <%= render("responses/answers/hidden_fields", node: answer, context: context) %>
 
   <%= render("responses/answers/answer_info", node: answer, context: context) %>
   <%= content_tag(:div, answer.hint, class: "hint") %>

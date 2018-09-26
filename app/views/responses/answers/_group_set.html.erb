@@ -1,10 +1,8 @@
 <div class="answer-group-set" id="answer-group-set-<%= context.path_str %>">
-  <%= render("responses/answers/hidden_fields", node: group_set,
-                                                             context: context) %>
+  <%= render("responses/answers/hidden_fields", node: group_set, context: context) %>
 
   <div class="children">
-    <%= render("responses/answers/nodes", nodes: group_set.children,
-                                                       context: context, removable: true) %>
+    <%= render("responses/answers/nodes", nodes: group_set.children, context: context, removable: true) %>
   </div>
 
   <% unless context.read_only? %>
