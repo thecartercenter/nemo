@@ -15,7 +15,6 @@ class ResponseNode < ApplicationRecord
   before_save do
     destroy_obsolete_children
     propogate_response_id
-    update_inst_nums
   end
 
   after_save { children.each(&:save) }
@@ -35,7 +34,6 @@ class ResponseNode < ApplicationRecord
     chunks << self.class.name.ljust(15)
     chunks << "(FI: #{form_item.type} #{form_item.rank})" if form_item.present?
     chunks << " Value: #{casted_value}" if casted_value.present?
-    chunks << " InstNum: #{inst_num}"
     chunks << " NewRank: #{new_rank}"
     "\n#{chunks.join}#{child_tree}"
   end
@@ -69,21 +67,6 @@ class ResponseNode < ApplicationRecord
 
   def destroy_obsolete_children
     children.destroy(children.select(&:irrelevant_or_marked_destroy?))
-  end
-
-  # TODO: remove. inst_num and this block will go away with answer_arranger
-  def update_inst_nums
-    children.reject(&:destroyed?).sort_by(&:new_rank).each_with_index do |c, i|
-      new_inst_num =
-        if c.parent.is_a?(AnswerGroupSet) # repeat group
-          i + 1
-        elsif %w[Answer AnswerSet AnswerGroupSet].include?(c.type)
-          c.parent.inst_num
-        else
-          1
-        end
-      c.inst_num = new_inst_num
-    end
   end
 
   def irrelevant_or_marked_destroy?

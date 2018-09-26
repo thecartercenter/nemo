@@ -18,7 +18,7 @@ module ResponsesHelper
     # handle special case where field is hash
     if field.is_a?(Hash)
       if (answer = resp.answer_for(field[:question]))
-        Results::ResponseNodeDecorator.decorate(answer).formatted
+        Results::ResponseNodeDecorator.decorate(answer).shortened
       end
     else
       case field

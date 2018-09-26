@@ -1,10 +1,8 @@
 <div class="answer-group-set" id="answer-group-set-<%= context.path_str %>">
-  <%= render("hierarchical_responses/answers/hidden_fields", node: group_set,
-                                                             context: context) %>
+  <%= render("responses/answers/hidden_fields", node: group_set, context: context) %>
 
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes", nodes: group_set.children,
-                                                       context: context, removable: true) %>
+    <%= render("responses/answers/nodes", nodes: group_set.children, context: context, removable: true) %>
   </div>
 
   <% unless context.read_only? %>
@@ -30,7 +28,7 @@
       new ELMO.Views.ResponseFormRepeatView({
         el: $("#answer-group-set-<%= context.path_str %>"),
         next_index: <%= group_set.children.length %>,
-        tmpl: <%= json(render("hierarchical_responses/answers/nodes",
+        tmpl: <%= json(render("responses/answers/nodes",
           nodes: context.find(@blank_response)&.children || [],
           index_placeholder: true,
           removable: true,

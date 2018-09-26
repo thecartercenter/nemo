@@ -1,26 +1,13 @@
+# frozen_string_literal: true
+
 # An Answer is a single piece of data in response to a single question or sub-question.
-#
-# A note about rank/inst_num attributes
-#
-# rank:
-# - The rank of the answer within a given set of answers for a multilevel select question.
-# - Starts at 1 (top level) and increases
-# - Should be 1 for non-multilevel questions
-#
-# inst_num:
-# - The number of the set of answers in which this answer belongs
-# - Starts at 1 (first instance) and increases
-# - e.g. if a response has three instances of a given group, values will be 1, 2, 3, and
-#   there will be N answers in instance 1, N in instance 2, etc., where N is the number of Q's in the group
-# - Should be 1 for answers to top level questions and questions in non-repeating groups
-# - Questions with answers with inst_nums higher than 1 shouldn't be allowed to be moved.
-#
+# It is always a leaf in a response tree.
+
 class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
   LOCATION_ATTRIBS = %i(latitude longitude altitude accuracy)
-
 
   # Convert value to tsvector for use in full text search.
   trigger.before(:insert, :update) do
@@ -62,16 +49,22 @@ class Answer < ResponseNode
 
   delegate :question, :qtype, :qtype_name, :required?, :hidden?, :multimedia?,
     :option_set, :options, :first_level_option_nodes, :condition, :parent_group_name, to: :questioning
-  delegate :name, :hint, to: :question, prefix: true
+  delegate :name, to: :question, prefix: true
   delegate :name, to: :level, prefix: true, allow_nil: true
   delegate :name, to: :option, prefix: true, allow_nil: true
   delegate :mission, to: :response
 
-  scope :public_access, -> { joins(form_item: :question).
-    where("questions.access_level = 'inherit'").order("form_items.rank") }
+  scope :public_access, lambda {
+    joins(form_item: :question)
+      .where("questions.access_level = 'inherit'").order("form_items.rank")
+  }
   scope :created_after, ->(date) { includes(:response).where("responses.created_at >= ?", date) }
   scope :created_before, ->(date) { includes(:response).where("responses.created_at <= ?", date) }
   scope :newest_first, -> { includes(:response).order("responses.created_at DESC") }
+  scope :first_level_only, lambda { # exclude answers from answer sets that are not first level
+    joins("INNER JOIN answers parents ON answers.parent_id = parents.id")
+      .where("parents.type != 'AnswerSet' OR answers.new_rank = 0")
+  }
 
   pg_search_scope :search_by_value,
     against: :value,
@@ -183,7 +176,7 @@ class Answer < ResponseNode
 
   # Whether this Answer is the first in its set (i.e. rank is nil or 1)
   def first_rank?
-    rank.nil? || rank == 1
+    new_rank.nil? || new_rank.zero?
   end
 
   # check various fields for blankness
@@ -218,12 +211,10 @@ class Answer < ResponseNode
     choices.map(&:option).map(&:canonical_name).join(", ") if choices
   end
 
-  # Used with nested attribs
   def media_object_id
     media_object.try(:id)
   end
 
-  # Used with nested attribs
   # Attempts to find unassociated media object with given ID and assoicate with this answer.
   # Fails silently if not found.
   def media_object_id=(id)

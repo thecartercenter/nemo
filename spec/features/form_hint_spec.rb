@@ -36,25 +36,6 @@ feature 'form hints', js: true do
     )
   end
 
-  scenario "response form" do
-    form.c[0].question.update!(hint: "A fun hint.")
-    form.c[2].question.update!(hint: "An image hint")
-    # Response form code is distinct from regular form code in some areas.
-    visit(new_response_path(mode: "m", mission_name: mission_name, locale: "en", form_id: form.id))
-    expect_hint_to_show_and_hide(
-      selector: "div[data-qing-id=\"#{form.c[0].id}\"] a.hint",
-      text: "A fun hint"
-    )
-    expect_hint_to_show_and_hide(
-      selector: "div[data-qing-id=\"#{form.c[1].id}\"] a.hint",
-      text: "Accepted formats are: jpg,"
-    )
-    expect_hint_to_show_and_hide(
-      selector: "div[data-qing-id=\"#{form.c[2].id}\"] a.hint",
-      text: "An image hint. The image should be"
-    )
-  end
-
   def expect_hint_to_show_and_hide(selector:, text:)
     find(selector).click
     expect(page).to have_content(text)

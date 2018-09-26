@@ -5,7 +5,7 @@ feature "remember context", js: true do
   let!(:other_user) { create(:user) }
   let!(:form) { create(:form) }
   let!(:responses) { create_list(:response, 1, form: form, user: other_user) }
-  let!(:user_repsonses) { create_list(:response, 22, form: form, user: user) }
+  let!(:user_responses) { create_list(:response, 22, form: form, user: user) }
 
   scenario "remembers search and last page" do
     login(user)

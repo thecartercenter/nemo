@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "hierarhcical response form display logic", js: true do
+feature "response form display logic", js: true do
   include_context "response tree"
 
   before { login(create(:user)) }
@@ -168,7 +168,7 @@ feature "hierarhcical response form display logic", js: true do
     end
 
     scenario "various conditions on questionings should work" do
-      visit_new_hierarchical_response_page
+      visit_new_response_page
 
       visible = [[0], [4], [14]]
 
@@ -255,7 +255,7 @@ feature "hierarhcical response form display logic", js: true do
       end
 
       scenario "should hide group members until conditions met" do
-        visit_new_hierarchical_response_page
+        visit_new_response_page
         visible = [[3]]
         fill_and_expect_visible([3], "no", visible)
         fill_and_expect_visible([3], "foo", visible << [4, 0])
@@ -277,7 +277,7 @@ feature "hierarhcical response form display logic", js: true do
         let(:display_if) { "all_met" }
 
         scenario "conditions should all need to be met" do
-          visit_new_hierarchical_response_page
+          visit_new_response_page
           visible = [[0], [1]]
           fill_and_expect_visible([0], "10", visible)
           fill_and_expect_visible([1], "20", visible)
@@ -298,7 +298,7 @@ feature "hierarhcical response form display logic", js: true do
         let(:display_if) { "any_met" }
 
         scenario "only one condition should need to be met" do
-          visit_new_hierarchical_response_page
+          visit_new_response_page
           visible = [[0], [1]]
 
           fill_and_expect_visible([0], "10", visible)

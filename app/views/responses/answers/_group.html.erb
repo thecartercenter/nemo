@@ -1,6 +1,5 @@
 <div class="<%= group.classes %>">
-  <%= render("hierarchical_responses/answers/hidden_fields", node: group,
-                                                             context: context) %>
+  <%= render("responses/answers/hidden_fields", node: group, context: context) %>
 
   <div class="group-header">
     <h2><%= group.qing_group.group_name %></h2>
@@ -10,6 +9,6 @@
   <%= content_tag(:div, group.hint, class: "hint") %>
 
   <div class="children">
-    <%= render("hierarchical_responses/answers/nodes", nodes: group.children, context: context) %>
+    <%= render("responses/answers/nodes", nodes: group.children, context: context) %>
   </div>
 </div>

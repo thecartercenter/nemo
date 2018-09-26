@@ -18,7 +18,7 @@ feature "response form file upload", js: true do
   let(:video2) { Rails.root.join("spec", "fixtures", "media", "video", "jupiter.avi") }
 
   scenario "uploading files" do
-    visit new_hierarchical_response_path(params)
+    visit new_response_path(params)
 
     image_node = find("[data-path='0']")
     video_node = find("[data-path='1']")
@@ -63,7 +63,7 @@ feature "response form file upload", js: true do
     expect(page).to_not have_content("Response is invalid")
 
     response = Response.last
-    visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+    visit edit_response_path(params.merge(id: response.shortcode))
 
     image_node = find("[data-path='0']")
     video_node = find("[data-path='1']")
@@ -79,7 +79,7 @@ feature "response form file upload", js: true do
     click_button("Save")
     expect(page).to_not have_content("Response is invalid")
 
-    visit edit_hierarchical_response_path(params.merge(id: response.shortcode))
+    visit edit_response_path(params.merge(id: response.shortcode))
 
     image_node = find("[data-path='0']")
     video_node = find("[data-path='1']")

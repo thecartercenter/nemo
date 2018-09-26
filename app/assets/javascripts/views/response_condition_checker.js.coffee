@@ -2,28 +2,26 @@
 class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
-    @manager = options.manager
+    @refresh = options.refresh
     @condition = options.condition
-    @inst = options.inst
 
-    @rqElement = @manager.qingElement(@condition.refQingId, @inst)
+    @rqElement = @refQingElement(@$el, @condition.refQingId)
     @rqType = @rqElement.data('qtype-name')
     @result = true
 
     # These handlers must be set dynamically based on rqElement.
     @rqElement.find('div.control').find('input, select, textarea').on('change', => @checkAndTell())
-    @rqElement.find("div.control input[type=text]").on('keyup', => @checkAndTell())
-    @rqElement.find("div.control input[type=number]").on('keyup', => @checkAndTell())
-    if @rqType == 'long_text' && !@manager.readOnly
-      @ckeditorInstance().on('change', => @checkAndTell())
+    @rqElement.find('div.control input[type=text]').on('keyup', => @checkAndTell())
+    @rqElement.find('div.control input[type=number]').on('keyup', => @checkAndTell())
+    @textarea().on('tbwchange', => @checkAndTell()) if @rqType == 'long_text'
 
-    # Set result to initial value on page load. Don't tell the manager because the manager calls refresh just
+    # Set result to initial value on page load. Don't refresh because the manager calls refresh just
     # once on page load (if we 'tell' when each checker initializes, the manager would evaluate many times)
     @check()
 
   checkAndTell: ->
     @check()
-    @manager.refresh()
+    @refresh()
 
   evaluate: ->
     @result
@@ -57,6 +55,17 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
       when 'ninc' then actual.indexOf(expected) == -1
       else false
 
+  # We walk up the node tree until a descendant node contains the given qing ID.
+  # Once found we return the first matching child.
+  refQingElement: (srcElement, refQingId) ->
+    parent = srcElement.parent().closest(".node")
+    return null unless parent.length > 0
+    children = parent.find(".node[data-qing-id=#{refQingId}]")
+    if children.length > 0
+      return children.first()
+    else
+      return @refQingElement(parent, refQingId)
+
   # Uses a special array comparison method if appropriate.
   testEquality: (a, b) ->
     if $.isArray(a) && $.isArray(b)
@@ -82,46 +91,34 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
 
   # Gets the actual answer for the referred question.
   actual: ->
-    # If readonly, use the data-val attrib
-    if @manager.readOnly
-      wrapper = @rqElement.find('div.control div.ro-val')
-      if typeof(wrapper.data('val')) == 'undefined'
-        wrapper.text()
+    switch @rqType
+      when 'long_text'
+        # Strip wrapping <p> tag for comparison.
+        @longTextContent().trim().replace(/(^<p>|<\/p>$)/ig, '')
+
+      when 'integer', 'decimal', 'counter'
+        parseFloat(@rqElement.find("div.control input[type=number]").val())
+
+      when 'select_one'
+        # Return all selected option_node_ids.
+        @rqElement.find('select').map(->
+          id = $(this).val()
+          if id then id else null
+        ).get()
+
+      when 'select_multiple'
+        # Use prev sibling call to get to rails gen'd hidden field that holds the id
+        @rqElement.find('div.control input:checked').map(->
+          # Given a checkbox, get the value of the associated option_node_id hidden field made by rails
+          # this field is the nearest prior sibling input with name attribute ending in [option_node_id].
+          $(this).closest('.choice').find("input[name$='[option_node_id]']").first().val()
+        ).get()
+
+      when 'datetime', 'date', 'time'
+        (new ELMO.TimeFormField(@rqElement.find('div.control'))).extract_str()
+
       else
-        wrapper.data('val')
-    else
-      switch @rqType
-        when 'long_text'
-          # Use ckeditor if available, else use textarea value (usually just on startup).
-          ckeditor = @ckeditorInstance()
-          content = if ckeditor then ckeditor.getData() else @rqElement.find('div.control textarea').val()
-
-          # Strip wrapping <p> tag for comparison.
-          content.trim().replace(/(^<p>|<\/p>$)/ig, '')
-
-        when 'integer', 'decimal', 'counter'
-          parseFloat(@rqElement.find("div.control input[type=number]").val())
-
-        when 'select_one'
-          # Return all selected option_node_ids.
-          @rqElement.find('select').map(->
-            id = $(this).val()
-            if id then id else null
-          ).get()
-
-        when 'select_multiple'
-          # Use prev sibling call to get to rails gen'd hidden field that holds the id
-          @rqElement.find('div.control input:checked').map(->
-            # Given a checkbox, get the value of the associated option_node_id hidden field made by rails
-            # this field is the nearest prior sibling input with name attribute ending in [option_node_id].
-            $(this).prevAll("input[name$='[option_node_id]']").first().val()
-          ).get()
-
-        when 'datetime', 'date', 'time'
-          (new ELMO.TimeFormField(@rqElement.find('div.control'))).extract_str()
-
-        else
-          @rqElement.find("div.control input[type='text']").val()
+        @rqElement.find("div.control input[type='text']").val()
 
   # Gets the expected answer from the condition definition.
   expected: ->
@@ -130,5 +127,12 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
       when 'select_one', 'select_multiple' then @condition.optionNodeId
       else @condition.value
 
-  ckeditorInstance: ->
-    return CKEDITOR.instances[@rqElement.find("div.control textarea").attr('id')]
+  longTextContent: ->
+    # Use wysiwyg editor if available, else use textarea value (usually just on startup).
+    if @textarea().trumbowyg
+      @textarea().trumbowyg('html')
+    else
+      @textarea().val()
+
+  textarea: ->
+    @rqElement.find('div.control textarea')

@@ -35,7 +35,7 @@ class Mission < ApplicationRecord
   scope :sorted_by_name, -> { order("LOWER(name)") }
   scope :sorted_recent_first, -> { order(created_at: :desc) }
 
-  delegate(:override_code, :allow_unauthenticated_submissions?, :default_locale, to: :setting)
+  delegate(:override_code, :default_locale, to: :setting)
 
   # Raises ActiveRecord::RecordNotFound if not found.
   def self.with_compact_name(name)
