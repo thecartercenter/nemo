@@ -1,20 +1,33 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-// {missions: [34:"liberia", 99:"new guinea"], assignments: [34:3, 22:1], roles: ["whatever", "blargh"]}
-
 class UserAssignmentFormField extends React.Component {
   constructor(props) {
     super();
-    console.log("in user assignment form field");
-    console.log(props);
-    this.state = props;
+  }
+
+  missionField() {
+    let missionSelectProps = {
+      className: "mission",
+      defaultValue: this.props.mission,
+      name: `user[assignments_attributes][${this.props.index}][mission_id]`
+    };
+
+    if (this.props.new) {
+      return (
+        <select {...missionSelectProps}>
+          {this.missionOptionTags()}
+        </select>
+      );
+    } else {
+      return (
+        <div>{this.props.name}</div>
+      );
+    }
   }
 
   missionOptionTags() {
-    console.log("Missions");
-    console.log(this.state.missions);
-    return this.state.missions.map((mission) => (
+    return this.props.missions.map((mission) => (
       <option
         key={mission.id}
         value={mission.id}>
@@ -24,7 +37,7 @@ class UserAssignmentFormField extends React.Component {
   }
 
   roleOptionTags() {
-    return this.state.roles.map((option) => (
+    return this.props.roles.map((option) => (
       <option
         key={option}
         value={option}>
@@ -33,34 +46,37 @@ class UserAssignmentFormField extends React.Component {
     ));
   }
 
+  deleteInput() {
+    return (
+      <div>
+        <input type="hidden" name={`user[assignments_attributes][${this.props.index}][_destroy]`} value="1"/>
+      </div>
+    );
+  }
 
-  render() {
-    let missionSelectProps = {
-      className: "mission",
-      defaultValue: this.state.mission,
-      name: `user[assignments_attributes][${this.state.index}][mission_id]`
-    };
-
+  missionRoleFields() {
     let roleSelectProps = {
       className: "role",
-      defaultValue: this.state.role,
-      name: `user[assignments_attributes][${this.state.index}][role]`
+      defaultValue: this.props.role,
+      name: `user[assignments_attributes][${this.props.index}][role]`
     };
-
     return (
       <div>
         <div className="mission">
-          <select {...missionSelectProps}>
-            {this.missionOptionTags()}
-          </select>
+          {this.missionField()}
         </div>
         <div className="role">
           <select {...roleSelectProps}>
             {this.roleOptionTags()}
           </select>
         </div>
+        <a value={this.props.mission} onClick={() => this.props.deleteClick(this.props.mission)}><i className="fa fa-trash"></i></a>
       </div>
-    );
+    )
+  }
+
+  render() {
+    return this.props.destroy ? this.deleteInput() : this.missionRoleFields();
   }
 }
 

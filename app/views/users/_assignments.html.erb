@@ -3,7 +3,7 @@
   <%# special error output %>
   <%= content_tag(:div, assignment_errors.join(' '), :class => 'form-errors') unless assignment_errors.empty? %>
 
-  <%= react_component("UserAssignmentForm", {missions: [{id:"c2e77821-7bf8-458e-8088-32c9660ea8d7", name: "EOS Test"}, {id:"c4a214e8-6466-460f-a202-381fe6f7e81c", name: "Jill"}], roles: ["enumerator", "reviewer", "staffer", "coordinator"], assignments: [{role: "staffer", mission: "c2e77821-7bf8-458e-8088-32c9660ea8d7"}]}) %>
+  <%= react_component("UserAssignmentForm", {missions: [{id:"c2e77821-7bf8-458e-8088-32c9660ea8d7", name: "EOS Test"}, {id:"c4a214e8-6466-460f-a202-381fe6f7e81c", name: "Jill"}], roles: ["enumerator", "reviewer", "staffer", "coordinator"], assignments: [{role: "staffer", mission: "c2e77821-7bf8-458e-8088-32c9660ea8d7", new: false, name: "EOS mission", destroy: false}]}) %>
 
   <div class="assignment_header">
     <div class="mission"><%= translate_model(Mission) %></div>
