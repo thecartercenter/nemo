@@ -186,18 +186,9 @@ describe Form do
   describe "questioning" do
     let(:form) { create(:form, mission: mission, question_types: [%w[text long_text], "integer", "decimal"]) }
 
-    it do
-      pp 'icecream'
-      qing = form.questionings
-      pp 'done calling qing'
-
-      # number of questionings;
-      #   expected no of qing - variable
-      #   questionings.count
-      # type in order - an flat array of expected types; actual form.questionings.map(&:type)
-
-      # expect(form.questionings.count).to eq(4)
-      expect(qing.map(&:qtype_name)).to eq(%w[text long_text integer decimal])
+    it "has the questionings in the right order" do
+      expect(form.questionings.count).to eq(4)
+      expect(form.questionings.map(&:qtype_name)).to eq(%w[text long_text integer decimal])
     end
   end
 

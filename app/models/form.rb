@@ -36,9 +36,7 @@ class Form < ApplicationRecord
   scope(:default_order, -> { by_name })
 
   delegate :children,
-    :arrange_descendants,
     :preordered_descendants,
-    :descendant_questionings,
     :sorted_children,
     :visible_children,
     :c,
@@ -162,12 +160,6 @@ class Form < ApplicationRecord
   # Returns all descendant questionings in one flat array, sorted in pre-order traversal and rank order.
   # Uses FormItem.preordered_descendants which eager loads questions and option sets.
   def questionings
-    pp "I am a qing"
-    # pp root_group.debug_tree
-    # pp root_group.descendant_questionings.flatten
-    # pp "-----------------------"
-    # pp root_group.preordered_descendants(eager_load: {question: {option_set: :root_node}}, type: "Questioning")
-    # root_group ? root_group.descendant_questionings.flatten : []
     root_group&.preordered_descendants(
       eager_load: {question: {option_set: :root_node}}, type: "Questioning") || []
   end
