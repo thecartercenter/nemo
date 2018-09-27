@@ -90,9 +90,9 @@ describe "questionings form", js: true  do
 
       context "errors" do
         it "should render error properly when there is no type" do
-          visit "/en/m/#{get_mission.compact_name}/forms/#{form.id}/choose-questions"
+          visit("/en/m/#{get_mission.compact_name}/forms/#{form.id}/choose-questions")
           fill_in "Code", with: "foodie"
-          click_on "Save"
+          click_on("Save")
           expect(page).to have_content("Question is invalid")
         end
       end
