@@ -69,7 +69,7 @@ class Question < ApplicationRecord
            :odk_tag,
            :odk_name,
            :select_multiple?,
-           to: :qtype
+           to: :qtype, allow_nil: true
 
   delegate :options,
            :first_level_option_nodes,
