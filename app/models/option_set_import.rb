@@ -3,9 +3,6 @@ class OptionSetImport
   include ActiveModel::Conversion
   include ActiveModel::AttributeAssignment
 
-  MAX_LEVEL_LENGTH = 20
-  MAX_OPTION_LENGTH = 45
-
   attr_accessor :mission_id, :name, :file
   attr_reader :option_set
 
@@ -163,9 +160,6 @@ class OptionSetImport
         end
       end
 
-      # Enforce maximum length limitation on headers
-      headers.map!{ |h| h[0...MAX_LEVEL_LENGTH] }
-
       # Load and clean full set as array of arrays.
       rows = []
       (2..sheet.last_row).each do |r|
@@ -177,7 +171,7 @@ class OptionSetImport
         attribs.merge!(Hash[*special_columns.keys.reverse.map { |i| [special_columns[i], row.delete_at(i)] }.flatten])
 
         next if row.all?(&:blank?)
-        row.map!{ |c| c.blank? ? nil : c.to_s.strip[0...MAX_OPTION_LENGTH] }
+        row.map! { |c| c.blank? ? nil : c.to_s.strip[0...Option::MAX_NAME_LENGTH] }
 
         # Can't be any blank interior cells.
         if blank_interior_cell?(row)
