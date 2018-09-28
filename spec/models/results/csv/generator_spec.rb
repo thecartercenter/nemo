@@ -88,9 +88,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         Timecop.freeze(20.minutes) do
           # Response from second form
           create_response(form: form2,
-                          answer_values: ["foo", "bar", "Funton", %w[Ghana Accra]],
-          reviewed: true
-          )
+                          answer_values: ["foo", "bar", "Funton", %w[Ghana Accra]], reviewed: true)
         end
       end
     end
@@ -164,13 +162,21 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     before do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
         Timecop.freeze(1.minute) do
-          create_response(form: form1, reviewed: true, answer_values: [%(<p>foo</p><p>"bar"<br/>baz, stuff</p>)])
+          create_response(
+            form: form1,
+            reviewed: true,
+            answer_values: [%(<p>foo</p><p>"bar"<br/>baz, stuff</p>)]
+          )
         end
         Timecop.freeze(2.minutes) do
           create_response(form: form1, answer_values: [%(bar,baz)])
         end
         Timecop.freeze(3.minutes) do
-          create_response(form: form1, reviewed: true, answer_values: [%(\r\nwin\r\n\r\nfoo\r\n)]) # Win line endings
+          create_response(
+            form: form1,
+            reviewed: true,
+            answer_values: [%(\r\nwin\r\n\r\nfoo\r\n)]
+          ) # Win line endings
         end
         Timecop.freeze(4.minutes) do
           create_response(form: form1, answer_values: [%(\nunix\n\nfoo\n)]) # Unix line endings
