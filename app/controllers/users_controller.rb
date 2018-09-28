@@ -68,7 +68,7 @@ class UsersController < ApplicationController
 
       if @user == current_user
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
-        flash[:success] = t("user.profile_updated")
+        return redirect_to(mission_root_url(mission_name: @user.best_mission.compact_name), success: t("user.profile_updated"))
       else
         set_success(@user)
       end
