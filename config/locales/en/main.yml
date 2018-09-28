@@ -1701,6 +1701,7 @@ en:
       audio: "The audio should be at most 10 MB in size. Accepted formats are: mp3, ogg, webm, wav."
     csv_headers:
       response_id: "ResponseID"
+      reviewed: "Reviewed"
       form_name: "Form"
       user_name: "Submitter"
       submit_time: "DateSubmitted"

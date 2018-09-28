@@ -18,6 +18,7 @@ module Results
             users.name AS user_name,
             responses.created_at AT TIME ZONE 'UTC' AS submit_time,
             responses.shortcode AS shortcode,
+            responses.reviewed AS reviewed,
             (SELECT
               ARRAY_AGG(anc.type || ':' || anc.new_rank || ':' || anc.questioning_id
                 ORDER BY ah.generations DESC)
