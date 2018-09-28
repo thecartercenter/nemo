@@ -3,8 +3,8 @@
 require "rails_helper"
 
 feature "user", js: true do
-  let(:admin) { create(:admin) }
-  let(:mission_name) { get_mission.compact_name }
+  let(:mission) { get_mission }
+  let(:admin) { create(:admin, mission: mission) }
 
   before { login(admin) }
 
@@ -18,18 +18,25 @@ feature "user", js: true do
     fill_in("Password", with: "Xxxxxxxx1")
     fill_in("Retype Password", with: "Xxxxxxxx1")
     check("Is Admin?")
+    find(".add_assignment").click
+    select(mission.name, from: "user[assignments_attributes][0][mission_id]")
+    select("Coordinator", from: "user[assignments_attributes][0][role]")
     click_on "Save"
 
     # logged in admin user signs out
     find("i.fa-sign-out").click
 
     # newly created admin logs in
-    visit root_path
+    visit(root_path)
     within("form#new_user_session") do
       fill_in("Username", with: "foodie")
       fill_in("Password", with: "Xxxxxxxx1")
       click_on "Login"
     end
+
+    # on the edit page
+    expect(page).to have_content("Edit Profile")
+    click_on "Save"
 
     # newly created admin is redirected to root page on successful save
     expect(page).to have_content("Option Sets")
