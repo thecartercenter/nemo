@@ -16,7 +16,7 @@ describe "responses csv", :csv, type: :request do
       /attachment; filename="elmo-#{get_mission.compact_name}-responses-\d{4}-\d\d-\d\d-\d{4}.csv"/
     )
     expect(result.size).to eq 3 # 2 response rows, 1 header row
-    expect(result[1][8]).to eq "Animal"
-    expect(result[2][8]).to eq "Plant"
+    expect(result[1][9]).to eq "Animal"
+    expect(result[2][9]).to eq "Plant"
   end
 end
