@@ -27,18 +27,33 @@ feature "user", js: true do
     find("i.fa-sign-out").click
 
     # newly created admin logs in
+    fill_login_form
+
+    # on the edit page
+    expect(page).to have_content("Edit Profile")
+    click_on "Save"
+
+    # newly created admin is redirected to root page on successful profile save
+    user_is_on_root_page
+
+    # newly created logs out
+    find("i.fa-sign-out").click
+
+    # newly created admin is redirected straight to the root page on login
+    fill_login_form
+    user_is_on_root_page
+  end
+
+  def fill_login_form
     visit(root_path)
     within("form#new_user_session") do
       fill_in("Username", with: "foodie")
       fill_in("Password", with: "Xxxxxxxx1")
       click_on "Login"
     end
+  end
 
-    # on the edit page
-    expect(page).to have_content("Edit Profile")
-    click_on "Save"
-
-    # newly created admin is redirected to root page on successful save
+  def user_is_on_root_page
     expect(page).to have_content("Option Sets")
     expect(page).not_to have_content("Edit Profile")
   end
