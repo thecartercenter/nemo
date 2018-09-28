@@ -28,7 +28,10 @@ feature "response form rendering and submission", js: true do
               "long_text"
             ]
           }
-        }
+        },
+        "decimal",
+        "counter",
+        "barcode"
       ])
   end
 
@@ -60,7 +63,10 @@ feature "response form rendering and submission", js: true do
             [123],
             create(:media_image),
             %w[Plant Oak],
-            {repeating: [[2, {repeating: [[3]]}]]}
+            {repeating: [[2, {repeating: [[3]]}]]},
+            1.2,
+            3,
+            "barcode answer"
           ]
         )
       end
@@ -130,6 +136,9 @@ feature "response form rendering and submission", js: true do
       fill_in_question([3, 1, 1, 0, 0], with: "7892")
       drop_in_dropzone(image, 2)
       fill_in_question([3, 1, 3], with: "some other text")
+      fill_in_question([4], with: "1.2")
+      fill_in_question([5], with: "3")
+      fill_in_question([6], with: "barcode answer")
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
@@ -143,6 +152,9 @@ feature "response form rendering and submission", js: true do
       expect_value([3, 1, 1, 0, 0], "7892")
       expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
+      expect_value([4], "1.2")
+      expect_value([5], "3")
+      expect_value([6], "barcode answer")
 
       # remove second inner repeat
       all("a.remove-repeat")[2].click
@@ -167,6 +179,9 @@ feature "response form rendering and submission", js: true do
       expect_value([3, 1, 1, 0, 0], "7892")
       expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
+      expect_value([4], "1.2")
+      expect_value([5], "3")
+      expect_value([6], "barcode answer")
 
       # update a value
       fill_in_question([0, 0], with: "1234")
@@ -187,6 +202,9 @@ feature "response form rendering and submission", js: true do
       expect_value([3, 0, 1, 0, 0], "7891")
       expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 0, 3], "some text")
+      expect_value([4], "1.2")
+      expect_value([5], "3")
+      expect_value([6], "barcode answer")
     end
 
     context "with conditional logic" do
