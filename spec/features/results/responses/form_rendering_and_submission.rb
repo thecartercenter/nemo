@@ -31,7 +31,9 @@ feature "response form rendering and submission", js: true do
         },
         "decimal",
         "counter",
-        "barcode"
+        "barcode",
+        "select_one",
+        "select_multiple"
       ])
   end
 
@@ -66,7 +68,9 @@ feature "response form rendering and submission", js: true do
             {repeating: [[2, {repeating: [[3]]}]]},
             1.2,
             3,
-            "barcode answer"
+            "barcode answer",
+            "Dog",
+            %w[Dog Cat]
           ]
         )
       end
@@ -118,8 +122,10 @@ feature "response form rendering and submission", js: true do
       select2(user.name, from: "response_user_id")
       fill_in_question([0, 0], with: "1")
       drop_in_dropzone(image, 0)
-      select("Animal")
-      select("Dog")
+      within(%(div.node[data-qing-id="#{form.root_group.c[2].id}"])) {
+        select("Animal")
+        select("Dog")
+      }
       fill_in_question([3, 0, 0, 0], with: "4561")
       fill_in_question([3, 0, 1, 0, 0], with: "7891")
       drop_in_dropzone(image, 1)
@@ -139,6 +145,11 @@ feature "response form rendering and submission", js: true do
       fill_in_question([4], with: "1.2")
       fill_in_question([5], with: "3")
       fill_in_question([6], with: "barcode answer")
+      fill_in_question([7], with: "Dog")
+      within(%(div.node[data-qing-id="#{form.root_group.c[8].id}"])) {
+        check("Dog")
+        check("Cat")
+      }
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
@@ -155,6 +166,8 @@ feature "response form rendering and submission", js: true do
       expect_value([4], "1.2")
       expect_value([5], "3")
       expect_value([6], "barcode answer")
+      expect_value([7], "Dog")
+      expect_value([8], %w[Dog Cat])
 
       # remove second inner repeat
       all("a.remove-repeat")[2].click
@@ -182,6 +195,8 @@ feature "response form rendering and submission", js: true do
       expect_value([4], "1.2")
       expect_value([5], "3")
       expect_value([6], "barcode answer")
+      expect_value([7], "Dog")
+      expect_value([8], "Dog Cat")
 
       # update a value
       fill_in_question([0, 0], with: "1234")
@@ -205,6 +220,8 @@ feature "response form rendering and submission", js: true do
       expect_value([4], "1.2")
       expect_value([5], "3")
       expect_value([6], "barcode answer")
+      expect_value([7], "Dog")
+      expect_value([8], "Dog Cat")
     end
 
     context "with conditional logic" do

@@ -105,16 +105,25 @@ shared_context "response tree" do
   end
 
   def expect_value(path, expected_value)
-    actual_value =
-      case qing(path).qtype_name
-      when "select_one"
-        el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
-        OptionNode.find(el.value).option_name if el.value
-      else
-        page.find("#" + path_selector(path, "value"), visible: :all).value
+    if qing(path).qtype_name == "select_multiple"
+      qing(path).options.each_with_index do |o, i|
+        if expected_value.include?(o.name)
+          find(%(##{path_selector(path, "choices_attributes_#{i}_checked")}))
+        else
+          find(%(##{path_selector(path, "choices_attributes_#{i}_unchecked")}))
+        end
       end
-
-    expect(actual_value).to eq expected_value
+    else
+      actual_value =
+        case qing(path).qtype_name
+        when "select_one"
+          el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
+          OptionNode.find(el.value).option_name if el.value
+        else
+          page.find("#" + path_selector(path, "value"), visible: :all).value
+        end
+      expect(actual_value).to eq(expected_value)
+    end
   end
 
   def qing(path)
