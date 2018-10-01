@@ -2,14 +2,6 @@
 
 # Major migration to create hierarchy of answer objects.
 class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
-  # Helpful assertions to be considered for migrated data (not currently implemented):
-  # - Exactly one root AnswerGroup per response_id
-  # - Exactly one AnswerGroup per non-repeat group and response_id
-  # - Exactly one AnswerGroupSet per repeat group and response_id
-  # - Old inst_num is the same for all Answers in an AnswerGroup
-  # - Contiguous, non-duplicate, 1-based ranks per parent_id
-  # - All answers with rank > 1 have AnswerSet parents
-
   def up
     # First delete all existing non-Answer-type rows, making this script idempotent, since it only
     # creates this type of rows.
@@ -59,7 +51,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     # If given row is an AnswerGroup that references a repeatable QingGroup, find/create AnswerGroupSet.
     if row["type"] == "AnswerGroup" && (form_item["repeatable"] == "t" || form_item["repeatable"] == true)
       parent_row = row.slice("questioning_id", "response_id")
-        .merge("type" => "AnswerGroupSet", "inst_num" => "1")
+        .merge("type" => "AnswerGroupSet", "inst_num" => 1)
       row["new_rank"] = inst_num
     # Else if it references a question with a multilevel option set, find/create AnswerSet.
     elsif row["type"] == "Answer" && form_item["level_names"].present?
