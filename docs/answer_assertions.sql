@@ -24,7 +24,7 @@ select response_id, questioning_id, count(a.id)
 -- Contiguous new_rank
 SELECT a1.id, a1.new_rank
   FROM answers a1
-  WHERE a1.new_rank > 1 AND a1.deleted_at IS NULL AND NOT EXISTS (
+  WHERE a1.new_rank > 0 AND a1.deleted_at IS NULL AND NOT EXISTS (
     SELECT id
       FROM answers a2
       WHERE a2.deleted_at IS NULL AND a2.parent_id = a1.parent_id AND a2.new_rank = a1.new_rank - 1
@@ -37,10 +37,10 @@ SELECT parent_id, new_rank, COUNT(id)
   GROUP BY parent_id, new_rank
   HAVING COUNT(id) > 1;
 
--- Roots have new_rank 1.
+-- Roots have new_rank 0.
 SELECT a1.id, a1.new_rank
   FROM answers a1
-  WHERE a1.new_rank != 1 AND a1.parent_id IS NULL AND a1.deleted_at IS NULL;
+  WHERE a1.new_rank != 0 AND a1.parent_id IS NULL AND a1.deleted_at IS NULL;
 
 -- Old inst_num is the same for all Answers in an AnswerGroup
 SELECT parent_id, COUNT(DISTINCT inst_num)
@@ -49,7 +49,7 @@ SELECT parent_id, COUNT(DISTINCT inst_num)
   GROUP BY parent_id
   HAVING COUNT(DISTINCT inst_num) > 1;
 
--- Answers with old_rank != 1 should have AnswerSet as parent
+-- Answers with old_rank > 1 should have AnswerSet as parent
 SELECT answers.id
   FROM answers INNER JOIN answers parents ON answers.parent_id = parents.id
   WHERE answers.old_rank IS NOT NULL

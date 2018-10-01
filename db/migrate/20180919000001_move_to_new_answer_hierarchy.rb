@@ -52,7 +52,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
 
     # Terminate the recursion if we reach the root.
     if form_item["ancestry"].nil?
-      row["new_rank"] = 1
+      row["new_rank"] = 0
       return nil
     end
 
