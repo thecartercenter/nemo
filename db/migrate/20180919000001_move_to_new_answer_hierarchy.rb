@@ -21,14 +21,21 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     result = execute("SELECT id, response_id, questioning_id, inst_num, rank, type
       FROM answers WHERE deleted_at IS NULL")
 
+    puts "Building trees in memory"
     result.each do |row|
       find_or_create_parent_row(row)
       count += 1
       File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}\n") } if (count % 100).zero?
     end
 
+    puts "Inserting new ResponseNodes"
     do_inserts
+
+    puts "Updating existing Answers"
     do_updates
+
+    puts "Fixing ranks"
+    fix_ranks
   end
 
   private
@@ -146,5 +153,24 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
       execute("INSERT INTO #{tbl} (#{cols})
         VALUES #{slice.join(',')}")
     end
+  end
+
+  def fix_ranks
+    execute("SELECT id FROM answers WHERE type != 'Answer' AND deleted_at IS NULL").each do |row|
+      execute(rank_fix_sql(row["id"]))
+    end
+  end
+
+  def rank_fix_sql(parent_id)
+    <<~SQL
+      UPDATE answers
+        SET new_rank = t.seq
+        FROM (
+          SELECT id, row_number() OVER(ORDER BY new_rank) AS seq
+          FROM answers
+          WHERE parent_id = '#{parent_id}' AND deleted_at IS NULL
+        ) AS t
+        WHERE answers.id = t.id AND answers.new_rank != t.seq;
+    SQL
   end
 end
