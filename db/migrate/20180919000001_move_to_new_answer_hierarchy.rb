@@ -8,6 +8,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     execute("DELETE FROM answers WHERE type != 'Answer'")
 
     @new_rows = {}
+    @parent_rows = {}
     @inserts = []
     @updates = []
 
@@ -23,9 +24,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     result.each do |row|
       find_or_create_parent_row(row)
       count += 1
-      if count % 100 == 0
-        File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}\n") }
-      end
+      File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}\n") } if (count % 100).zero?
     end
 
     do_inserts
@@ -40,6 +39,8 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
   # the root node for the response.
   # Returns the ID of the found/created row.
   def find_or_create_parent_row(row, inst_num: nil)
+    orig_row = row.dup
+
     form_item = form_items_by_id[row["questioning_id"]]
 
     # Terminate the recursion if we reach the root.
@@ -69,6 +70,11 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     # Another way to do this would be to load the parent form_item in the previous call and set it there.
     row["new_rank"] ||= form_item["rank"]
 
+    # Short circuit if we've seen this arg before.
+    if (pid = @parent_rows[[orig_row, inst_num]])
+      return pid
+    end
+
     # Recursive call.
     parent_row["parent_id"] = find_or_create_parent_row(parent_row, inst_num: row["inst_num"])
 
@@ -79,7 +85,8 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     # setting them on creation.
     update_answer(row["id"], parent_id, row["new_rank"]) if row["type"] == "Answer"
 
-    parent_id
+    # Save in hash for faster lookup and return
+    @parent_rows[[orig_row, inst_num]] = parent_id
   end
 
   def form_items_by_id
@@ -112,7 +119,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
 
   def insert_answer_parent(id, hash)
     @inserts << "('#{id}','#{hash['questioning_id']}','#{hash['response_id']}','#{hash['type']}',"\
-      "'#{hash['inst_num']}','#{hash['new_rank']}',#{id_str(hash['parent_id'])})"
+      "'#{hash['inst_num']}','#{hash['new_rank']}',#{id_str(hash['parent_id'])},NOW(),NOW())"
   end
 
   def id_str(val)
@@ -120,7 +127,11 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
   end
 
   def do_inserts
-    batched_insert("answers", "id,questioning_id,response_id,type,inst_num,new_rank,parent_id", @inserts)
+    batched_insert(
+      "answers",
+      "id,questioning_id,response_id,type,inst_num,new_rank,parent_id,created_at,updated_at",
+      @inserts
+    )
   end
 
   def do_updates
