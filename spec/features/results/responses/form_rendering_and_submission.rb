@@ -157,25 +157,12 @@ feature "response form rendering and submission", js: true do
         check("Dog")
         check("Cat")
       }
-      control_for_temporal([9], "datetime", :year).select(Time.zone.now.year)
-      control_for_temporal([9], "datetime", :month).select("Mar")
-      control_for_temporal([9], "datetime", :day).select("12")
-      control_for_temporal([9], "datetime", :hour).select("18")
-      control_for_temporal([9], "datetime", :minute).select("32")
-      control_for_temporal([9], "datetime", :second).select("44")
-      control_for_temporal([10], "date", :year).select(Time.zone.now.year)
-      control_for_temporal([10], "date", :month).select("Oct")
-      control_for_temporal([10], "date", :day).select("26")
-      control_for_temporal([11], "time", :hour).select("03")
-      control_for_temporal([11], "time", :minute).select("08")
-      control_for_temporal([11], "time", :second).select("23")
-
-
+      fill_in_question([9], with: "Mar 12 #{Time.zone.now.year} 18:32:44")
+      fill_in_question([10], with: "Oct 26 #{Time.zone.now.year}")
+      fill_in_question([11], with: "03:08:23")
       click_button("Save")
 
-
       expect(page).to have_content("Response is invalid")
-
       expect_image([1], form.root_group.c[1].id)
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
@@ -191,6 +178,9 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
+      expect_value([9], "Mar 12 #{Time.zone.now.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.zone.now.year}")
+      expect_value([11], "03:08:23")
 
       # remove second inner repeat
       all("a.remove-repeat")[2].click
@@ -198,8 +188,7 @@ feature "response form rendering and submission", js: true do
       fill_in_question([0, 0], with: "123")
       click_button("Save")
 
-      expect(page).to_not have_content("Response is invalid")
-
+      expect(page).to_not(have_content("Response is invalid"))
       response = Response.last
       visit edit_response_path(params.merge(id: response.shortcode))
 
@@ -220,7 +209,9 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], "Dog Cat")
-
+      expect_value([9], "Mar 12 #{Time.zone.now.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.zone.now.year}")
+      expect_value([11], "03:08:23")
       # update a value
       fill_in_question([0, 0], with: "1234")
 
@@ -245,6 +236,9 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], "Dog Cat")
+      expect_value([9], "Mar 12 #{Time.zone.now.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.zone.now.year}")
+      expect_value([11], "03:08:23")
     end
 
     context "with conditional logic" do

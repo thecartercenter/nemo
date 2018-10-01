@@ -83,16 +83,15 @@ shared_context "response tree" do
     when "datetime", "date", "time"
       t = Time.zone.parse(value)
       qtype_name = qing(path).qtype_name
-      prefix = path_selector(path, "#{qtype_name}_value")
       unless qtype_name == "time"
-        select(t.strftime("%Y"), from: "#{prefix}_1i")
-        select(t.strftime("%b"), from: "#{prefix}_2i")
-        select(t.day.to_s, from: "#{prefix}_3i")
+        control_for_temporal(path, qtype_name, :year).select(t.strftime("%Y"))
+        control_for_temporal(path, qtype_name, :month).select(t.strftime("%b"))
+        control_for_temporal(path, qtype_name, :day).select(t.day.to_s)
       end
       unless qtype_name == "date"
-        select(t.strftime("%H"), from: "#{prefix}_4i")
-        select(t.strftime("%M"), from: "#{prefix}_5i")
-        select(t.strftime("%S"), from: "#{prefix}_6i")
+        control_for_temporal(path, qtype_name, :hour).select(t.strftime("%H"))
+        control_for_temporal(path, qtype_name, :minute).select(t.strftime("%M"))
+        control_for_temporal(path, qtype_name, :second).select(t.strftime("%S"))
       end
     else
       fill_in(selector, opts)
@@ -115,8 +114,19 @@ shared_context "response tree" do
         end
       end
     when "datetime", "date", "time"
-      type = qing(path).qtype_name
-
+      qtype_name = qing(path).qtype_name
+      t = Time.zone.parse(expected_value)
+      unless qtype_name == "time"
+        expect(control_for_temporal(path, qtype_name, :year).value).to eq(t.strftime("%Y"))
+        expect(control_for_temporal(path, qtype_name, :month)
+          .find("option[selected]").text).to eq(t.strftime("%b"))
+        expect(control_for_temporal(path, qtype_name, :day).value).to eq(t.day.to_s)
+      end
+      unless qtype_name == "date"
+        expect(control_for_temporal(path, qtype_name, :hour).value).to eq(t.strftime("%H"))
+        expect(control_for_temporal(path, qtype_name, :minute).value).to eq(t.strftime("%M"))
+        expect(control_for_temporal(path, qtype_name, :second).value).to eq(t.strftime("%S"))
+      end
     else
       actual_value =
         case qing(path).qtype_name
@@ -180,6 +190,7 @@ shared_context "response tree" do
     {year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i"}
   end
 
+  # Currently works only for paths of depth 1 (children of root)
   def control_for_temporal(path, type, subfield)
     find("#response_root_children_#{path[0]}_#{type}_value_#{temporal_mapping[subfield]}")
   end
