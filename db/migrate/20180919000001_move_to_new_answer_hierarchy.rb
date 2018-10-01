@@ -166,7 +166,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
       UPDATE answers
         SET new_rank = t.seq
         FROM (
-          SELECT id, row_number() OVER(ORDER BY new_rank) AS seq
+          SELECT id, row_number() OVER(ORDER BY new_rank) - 1 AS seq
           FROM answers
           WHERE parent_id = '#{parent_id}' AND deleted_at IS NULL
         ) AS t
