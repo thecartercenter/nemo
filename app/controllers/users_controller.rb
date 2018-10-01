@@ -66,12 +66,12 @@ class UsersController < ApplicationController
       # if the user's password was reset, do it, and show instructions if requested
       reset_password(@user, mission: current_mission, notify_method: @user.reset_password_method)
 
-      if @user == current_user
+      if @user != current_user || @user.login_count > 1
+        set_success(@user)
+      else
         I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
         return redirect_to(mission_root_url(mission_name: @user.best_mission.compact_name),
           success: t("user.profile_updated"))
-      else
-        set_success(@user)
       end
 
       handle_printable_instructions || redirect_to(action: :edit)
