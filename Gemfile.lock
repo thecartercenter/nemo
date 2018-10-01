@@ -26,20 +26,20 @@ GIT
       rubyzip (~> 1.1)
 
 GIT
+  remote: https://github.com/sassafrastech/closure_tree
+  revision: b34d380a70dfb4838e238b62bf7bf3686e875a0f
+  branch: soft_delete_hack
+  specs:
+    closure_tree (7.0.0)
+      activerecord (>= 4.2.10)
+      with_advisory_lock (>= 4.0.0)
+
+GIT
   remote: https://github.com/sassafrastech/rack-attack.git
   revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
   specs:
     rack-attack (4.3.0)
       rack
-
-GIT
-  remote: https://github.com/smoyth/closure_tree
-  revision: 46deebdcc7c712b8393c1690bc39d4328efc0ffa
-  branch: patch-1
-  specs:
-    closure_tree (6.6.0)
-      activerecord (>= 4.1.0)
-      with_advisory_lock (>= 3.0.0)
 
 GEM
   remote: http://rubygems.org/
