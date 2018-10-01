@@ -33,7 +33,10 @@ feature "response form rendering and submission", js: true do
         "counter",
         "barcode",
         "select_one",
-        "select_multiple"
+        "select_multiple",
+        "datetime",
+        "date",
+        "time"
       ])
   end
 
@@ -70,7 +73,10 @@ feature "response form rendering and submission", js: true do
             3,
             "barcode answer",
             "Dog",
-            %w[Dog Cat]
+            %w[Dog Cat],
+            "Mar 12 #{Time.zone.now.year} 18:32:44",
+            "Oct 26 #{Time.zone.now.year}",
+            "03:08:23"
           ]
         )
       end
@@ -146,13 +152,30 @@ feature "response form rendering and submission", js: true do
       fill_in_question([5], with: "3")
       fill_in_question([6], with: "barcode answer")
       fill_in_question([7], with: "Dog")
+      # question 8
       within(%(div.node[data-qing-id="#{form.root_group.c[8].id}"])) {
         check("Dog")
         check("Cat")
       }
+      control_for_temporal([9], "datetime", :year).select(Time.zone.now.year)
+      control_for_temporal([9], "datetime", :month).select("Mar")
+      control_for_temporal([9], "datetime", :day).select("12")
+      control_for_temporal([9], "datetime", :hour).select("18")
+      control_for_temporal([9], "datetime", :minute).select("32")
+      control_for_temporal([9], "datetime", :second).select("44")
+      control_for_temporal([10], "date", :year).select(Time.zone.now.year)
+      control_for_temporal([10], "date", :month).select("Oct")
+      control_for_temporal([10], "date", :day).select("26")
+      control_for_temporal([11], "time", :hour).select("03")
+      control_for_temporal([11], "time", :minute).select("08")
+      control_for_temporal([11], "time", :second).select("23")
+
+
       click_button("Save")
 
+
       expect(page).to have_content("Response is invalid")
+
       expect_image([1], form.root_group.c[1].id)
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")

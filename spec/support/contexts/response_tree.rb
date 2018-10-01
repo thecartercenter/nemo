@@ -105,7 +105,8 @@ shared_context "response tree" do
   end
 
   def expect_value(path, expected_value)
-    if qing(path).qtype_name == "select_multiple"
+    case qing(path).qtype_name
+    when "select_multiple"
       qing(path).options.each_with_index do |o, i|
         if expected_value.include?(o.name)
           find(%(##{path_selector(path, "choices_attributes_#{i}_checked")}))
@@ -113,6 +114,9 @@ shared_context "response tree" do
           find(%(##{path_selector(path, "choices_attributes_#{i}_unchecked")}))
         end
       end
+    when "datetime", "date", "time"
+      type = qing(path).qtype_name
+
     else
       actual_value =
         case qing(path).qtype_name
@@ -170,5 +174,13 @@ shared_context "response tree" do
   def expect_read_only_value(path, value)
     el = page.find("[data-path='#{path.join('-')}']")
     expect(el).to have_content(value)
+  end
+
+  def temporal_mapping
+    {year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i"}
+  end
+
+  def control_for_temporal(path, type, subfield)
+    find("#response_root_children_#{path[0]}_#{type}_value_#{temporal_mapping[subfield]}")
   end
 end
