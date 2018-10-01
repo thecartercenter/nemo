@@ -1,25 +1,25 @@
 -- Execute these queries by pasting into PSQL console. All should return no rows.
 
 -- Exactly one root AnswerGroup per response_id
-select response_id, count(*)
-  from answers
-  where parent_id is null and deleted_at is null
-  group by response_id
-  having count(*) > 1;
+SELECT response_id, COUNT(*)
+  FROM answers
+  WHERE parent_id IS NULL AND deleted_at IS NULL
+  GROUP BY response_id
+  HAVING COUNT(*) > 1;
 
 -- Exactly one AnswerGroup per non-repeat group and response_id
-select response_id, questioning_id, count(a.id)
-  from answers a inner join form_items f on f.id = a.questioning_id
-  where a.type = 'AnswerGroup' and f.repeatable = 'f'
-  group by questioning_id, response_id
-  having count(a.id) > 1;
+SELECT response_id, questioning_id, COUNT(a.id)
+  FROM answers a INNER JOIN form_items f ON f.id = a.questioning_id
+  WHERE a.type = 'AnswerGroup' AND f.repeatable = 'f'
+  GROUP BY questioning_id, response_id
+  HAVING COUNT(a.id) > 1;
 
 -- Exactly one AnswerGroupSet per repeat group and response_id
-select response_id, questioning_id, count(a.id)
-  from answers a inner join form_items f on f.id = a.questioning_id
-  where a.type = 'AnswerGroupSet' and f.repeatable = 't'
-  group by questioning_id, response_id
-  having count(a.id) > 1;
+SELECT response_id, questioning_id, COUNT(a.id)
+  FROM answers a INNER JOIN form_items f ON f.id = a.questioning_id
+  WHERE a.type = 'AnswerGroupSet' AND f.repeatable = 't'
+  GROUP BY questioning_id, response_id
+  HAVING COUNT(a.id) > 1;
 
 -- Contiguous new_rank
 SELECT a1.id, a1.new_rank
