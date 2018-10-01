@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 require "./lib/task_helpers/option_set_clone"
 

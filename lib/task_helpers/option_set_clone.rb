@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OptionSetClone
   def run
     Rails.logger.debug("finding option sets with duplicate root nodes")
