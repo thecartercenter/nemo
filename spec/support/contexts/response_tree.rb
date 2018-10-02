@@ -123,15 +123,11 @@ shared_context "response tree" do
         expect(control_for_temporal(path, qtype_name, :minute).value).to eq(t.strftime("%M"))
         expect(control_for_temporal(path, qtype_name, :second).value).to eq(t.strftime("%S"))
       end
+    when "select_one"
+      el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
+      OptionNode.find(el.value).option_name if el.value
     else
-      actual_value =
-        case qing(path).qtype_name
-        when "select_one"
-          el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
-          OptionNode.find(el.value).option_name if el.value
-        else
-          page.find("#" + path_selector(path, "value"), visible: :all).value
-        end
+      actual_value = page.find("#" + path_selector(path, "value"), visible: :all).value
       expect(actual_value).to eq(expected_value)
     end
   end

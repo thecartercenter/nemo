@@ -128,11 +128,7 @@ feature "response form rendering and submission", js: true do
       select2(user.name, from: "response_user_id")
       fill_in_question([0, 0], with: "1")
       drop_in_dropzone(image, 0)
-      # question 2
-      within(%(div.node[data-qing-id="#{form.root_group.c[2].id}"])) {
-        select("Animal")
-        select("Dog")
-      }
+      fill_in_question([2], with: %w[Animal Dog])
       fill_in_question([3, 0, 0, 0], with: "4561")
       fill_in_question([3, 0, 1, 0, 0], with: "7891")
       drop_in_dropzone(image, 1)
@@ -153,7 +149,6 @@ feature "response form rendering and submission", js: true do
       fill_in_question([5], with: "3")
       fill_in_question([6], with: "barcode answer")
       fill_in_question([7], with: "Dog")
-      # question 8
       fill_in_question([8], with: %w[Dog Cat])
       fill_in_question([9], with: "Mar 12 #{Time.current.year} 18:32:44")
       fill_in_question([10], with: "Oct 26 #{Time.current.year}")
@@ -161,7 +156,6 @@ feature "response form rendering and submission", js: true do
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
-      save_and_open_page
       expect_image([1], form.root_group.c[1].id)
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
