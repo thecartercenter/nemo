@@ -128,6 +128,7 @@ feature "response form rendering and submission", js: true do
       select2(user.name, from: "response_user_id")
       fill_in_question([0, 0], with: "1")
       drop_in_dropzone(image, 0)
+      # question 2
       within(%(div.node[data-qing-id="#{form.root_group.c[2].id}"])) {
         select("Animal")
         select("Dog")
