@@ -54,10 +54,6 @@ shared_context "response tree" do
     "response_root_#{path.join('_')}_#{suffix}"
   end
 
-  # TODO: this can be combined with the similar helper in `response_form_conditional_logic`
-  # once the conditional logic specs are refactored to handle form items hierarchically.
-  # This helper addresses questions by path, whereas the old helper addresses questions
-  # by type
   def fill_in_question(path, opts)
     selector = path_selector(path, "value")
     value = opts[:with]
@@ -106,11 +102,11 @@ shared_context "response tree" do
   def expect_value(path, expected_value)
     case qing(path).qtype_name
     when "select_multiple"
-      qing(path).options.each_with_index do |o, i|
+      qing(path).options.each do |o|
         if expected_value.include?(o.name)
-          find(%(##{path_selector(path, "choices_attributes_#{i}_checked")}))
+          expect(page.has_checked_field?(o.name)).to eq(true), "Expected #{o.name} to be checked"
         else
-          find(%(##{path_selector(path, "choices_attributes_#{i}_unchecked")}))
+          expect(page.has_unchecked_field?(o.name)).to eq(true), "Expected #{o.name} to NOT be checked"
         end
       end
     when "datetime", "date", "time"
@@ -190,8 +186,7 @@ shared_context "response tree" do
     {year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i"}
   end
 
-  # Currently works only for paths of depth 1 (children of root)
   def control_for_temporal(path, type, subfield)
-    find("#response_root_children_#{path[0]}_#{type}_value_#{temporal_mapping[subfield]}")
+    find("##{path_selector(path, "#{type}_value_#{temporal_mapping[subfield]}")}")
   end
 end

@@ -154,16 +154,14 @@ feature "response form rendering and submission", js: true do
       fill_in_question([6], with: "barcode answer")
       fill_in_question([7], with: "Dog")
       # question 8
-      within(%(div.node[data-qing-id="#{form.root_group.c[8].id}"])) {
-        check("Dog")
-        check("Cat")
-      }
+      fill_in_question([8], with: %w[Dog Cat])
       fill_in_question([9], with: "Mar 12 #{Time.current.year} 18:32:44")
       fill_in_question([10], with: "Oct 26 #{Time.current.year}")
       fill_in_question([11], with: "03:08:23")
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
+      save_and_open_page
       expect_image([1], form.root_group.c[1].id)
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
