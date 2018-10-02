@@ -74,8 +74,8 @@ feature "response form rendering and submission", js: true do
             "barcode answer",
             "Dog",
             %w[Dog Cat],
-            "Mar 12 #{Time.zone.now.year} 18:32:44",
-            "Oct 26 #{Time.zone.now.year}",
+            "Mar 12 #{Time.current.year} 18:32:44",
+            "Oct 26 #{Time.current.year}",
             "03:08:23"
           ]
         )
@@ -158,8 +158,8 @@ feature "response form rendering and submission", js: true do
         check("Dog")
         check("Cat")
       }
-      fill_in_question([9], with: "Mar 12 #{Time.zone.now.year} 18:32:44")
-      fill_in_question([10], with: "Oct 26 #{Time.zone.now.year}")
+      fill_in_question([9], with: "Mar 12 #{Time.current.year} 18:32:44")
+      fill_in_question([10], with: "Oct 26 #{Time.current.year}")
       fill_in_question([11], with: "03:08:23")
       click_button("Save")
 
@@ -179,8 +179,8 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
-      expect_value([9], "Mar 12 #{Time.zone.now.year} 18:32:44")
-      expect_value([10], "Oct 26 #{Time.zone.now.year}")
+      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.current.year}")
       expect_value([11], "03:08:23")
 
       # remove second inner repeat
@@ -210,8 +210,8 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], "Dog Cat")
-      expect_value([9], "Mar 12 #{Time.zone.now.year} 18:32:44")
-      expect_value([10], "Oct 26 #{Time.zone.now.year}")
+      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.current.year}")
       expect_value([11], "03:08:23")
       # update a value
       fill_in_question([0, 0], with: "1234")
@@ -237,8 +237,8 @@ feature "response form rendering and submission", js: true do
       expect_value([6], "barcode answer")
       expect_value([7], "Dog")
       expect_value([8], "Dog Cat")
-      expect_value([9], "Mar 12 #{Time.zone.now.year} 18:32:44")
-      expect_value([10], "Oct 26 #{Time.zone.now.year}")
+      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.current.year}")
       expect_value([11], "03:08:23")
     end
 
