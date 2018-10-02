@@ -14,14 +14,14 @@ shared_context "response tree" do
 
   def expect_children(node, types, qing_ids, values = nil)
     children = node.children.sort_by(&:new_rank)
-    expect(children.map(&:type)).to eq types
-    expect(children.map(&:questioning_id)).to eq qing_ids
+    expect(children.map(&:type)).to eq(types)
+    expect(children.map(&:questioning_id)).to eq(qing_ids)
     expect(children.map(&:new_rank)).to eq((0...children.size).to_a)
 
     return if values.nil?
 
     child_values = children.map { |child| child.is_a?(Answer) ? child.casted_value : nil }
-    expect(child_values).to eq values
+    expect(child_values).to eq(values)
   end
 
   # Builds a hash for an answer node in a web response's hash representation of an answer heirarchy
@@ -139,7 +139,7 @@ shared_context "response tree" do
   end
 
   def expect_not_persisted(qing_id)
-    expect(page).to_not have_selector("[data-qing-id='#{qing_id}']")
+    expect(page).to_not(have_selector("[data-qing-id='#{qing_id}']"))
   end
 
   def expect_image(path, qing_id)
