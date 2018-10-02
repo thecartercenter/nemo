@@ -13,10 +13,19 @@ module Results
         self.answer_processor = AnswerProcessor.new(buffer)
       end
 
-      # Runs the queries and returns the CSV as a string.
-      def to_s
+      # Runs the queries and writes the CSV to a temp file
+      # Returns temp file path
+      def export
         setup_header_map
-        csv_body.prepend(csv_headers)
+
+        tempfile = Tempfile.new
+
+        CSV.open(tempfile.path, "wb", row_sep: configatron.csv_row_separator) do |csv|
+          write_header(csv)
+          write_body(csv)
+        end
+
+        tempfile.path
       end
 
       private
@@ -27,21 +36,17 @@ module Results
         header_map.add_from_qcodes(HeaderQuery.new(response_scope: response_scope).run.to_a.flatten)
       end
 
-      def csv_body
-        CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
-          buffer.csv = csv
-          AnswerQuery.new(response_scope: response_scope).run.each do |row|
-            buffer.process_row(row)
-            answer_processor.process(row)
-          end
-          buffer.finish
-        end
+      def write_header(csv)
+        csv << header_map.translated_headers
       end
 
-      def csv_headers
-        CSV.generate(row_sep: configatron.csv_row_separator) do |csv|
-          csv << header_map.translated_headers
+      def write_body(csv)
+        buffer.csv = csv
+        AnswerQuery.new(response_scope: response_scope).run.each do |row|
+          buffer.process_row(row)
+          answer_processor.process(row)
         end
+        buffer.finish
       end
     end
   end

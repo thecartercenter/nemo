@@ -5,7 +5,9 @@ require "rails_helper"
 describe Results::Csv::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
-  subject(:output) { Results::Csv::Generator.new(relation).to_s }
+  let(:generator) { Results::Csv::Generator.new(relation) }
+
+  subject(:output) { IO.read(generator.export) }
 
   around do |example|
     # Use a weird timezone so we know times are handled properly.
