@@ -50,6 +50,8 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
 
     form_item = form_items_by_id[row["questioning_id"]]
 
+    raise "No FormItem found with ID #{row['questioning_id']}" if form_item.nil?
+
     # Terminate the recursion if we reach the root.
     if form_item["ancestry"].nil?
       row["new_rank"] = 0
@@ -100,8 +102,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     @form_items_by_id ||= execute("SELECT fi.id, ancestry, ancestry_depth, repeatable, level_names, rank
       FROM form_items fi
       LEFT OUTER JOIN questions q ON fi.question_id = q.id
-      LEFT OUTER JOIN option_sets os ON os.id = q.option_set_id
-      WHERE fi.deleted_at IS NULL AND q.deleted_at IS NULL AND os.deleted_at IS NULL")
+      LEFT OUTER JOIN option_sets os ON os.id = q.option_set_id")
       .to_a.index_by { |r| r["id"] }
   end
 
