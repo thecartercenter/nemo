@@ -4,6 +4,7 @@ class OperationJob < ApplicationJob
   rescue_from StandardError, with: :operation_raised_error
 
   before_perform :operation_started, if: :operation
+  before_perform :load_settings, if: :operation
   after_perform :operation_completed, if: :operation
 
   protected
@@ -14,8 +15,22 @@ class OperationJob < ApplicationJob
     arguments.first
   end
 
+  def mission
+    # The `Mission` instance is currently passed as the second arg
+    # to all `OperationJob`s.
+    # TODO: once an operation is associated with a mission this should
+    # be changed to `operation.mission` and operation job argument lists
+    # should be updated to omit the mission
+    arguments.second
+  end
+
   def operation_started
     operation.update_attribute(:job_started_at, Time.now)
+  end
+
+  def load_settings
+    # load the mission's settings into configatron
+    Setting.load_for_mission(mission)
   end
 
   def operation_succeeded(attachment = nil)

@@ -1,8 +1,5 @@
 class ResponseCsvExportOperationJob < OperationJob
   def perform(operation, mission, search = nil)
-    # load the mission's settings into configatron
-    Setting.load_for_mission(mission)
-
     ability = Ability.new(user: operation.creator, mission: mission)
     responses = Response.accessible_by(ability, :export)
 
@@ -24,7 +21,6 @@ class ResponseCsvExportOperationJob < OperationJob
     result = csv.export
     operation_succeeded(File.open(result))
   rescue Search::ParseError => error
-    puts "HERE", error.to_s
     operation_failed(error.to_s)
   end
 end
