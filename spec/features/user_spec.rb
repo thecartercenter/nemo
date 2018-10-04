@@ -26,7 +26,7 @@ feature "user", js: true do
     # logged in admin user signs out
     find("i.fa-sign-out").click
 
-    # newly created admin logs in
+    # newly created admin logs in for the first time
     fill_login_form
 
     # on the edit page
@@ -40,6 +40,13 @@ feature "user", js: true do
     find("i.fa-sign-out").click
 
     # newly created admin is redirected straight to the root page on login
+    fill_login_form
+    user_is_on_root_page
+
+    # newly created admin signs out
+    find("i.fa-sign-out").click
+
+    # newly created admin logs in for the second time and is redirected straight to the root page on login
     fill_login_form
     user_is_on_root_page
   end
