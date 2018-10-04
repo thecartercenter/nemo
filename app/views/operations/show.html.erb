@@ -11,8 +11,8 @@
   <% elsif @operation.completed? %>
     <%= f.field :job_completed_at %>
   <% end %>
-  <% if @operation.job_outcome_url.present? %>
-    <%= f.field :job_outcome_url, read_only_content: link_to(t('operation.outcome_link_text'), @operation.job_outcome_url) %>
+  <% if @operation.attachment.present? %>
+    <%= f.field :attachment, read_only_content: link_to(t('operation.attachment_link_text'), @operation.attachment.path) %>
   <% end %>
   <% if @operation.job_error_report.present? %>
     <%= f.field :job_error_report, read_only_content: BlueCloth.new(@operation.job_error_report).to_html.html_safe %>

@@ -7,6 +7,7 @@ class Operation < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
   has_attached_file :attachment
+  do_not_validate_attachment_file_type :attachment
 
   def name
     "##{id}"

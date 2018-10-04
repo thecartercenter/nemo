@@ -4,7 +4,7 @@ class OperationJob < ApplicationJob
   rescue_from StandardError, with: :operation_raised_error
 
   before_perform :operation_started, if: :operation
-  after_perform :operaation_completed, if: :operation
+  after_perform :operation_completed, if: :operation
 
   protected
 
@@ -18,8 +18,8 @@ class OperationJob < ApplicationJob
     operation.update_attribute(:job_started_at, Time.now)
   end
 
-  def operation_succeeded(outcome_url=nil)
-    operation.update_attribute(:job_outcome_url, outcome_url) if outcome_url.present?
+  def operation_succeeded(attachment = nil)
+    operation.update_attribute(:attachment, attachment) if attachment.present?
   end
 
   def operation_failed(report)

@@ -28,12 +28,6 @@ module OperationsHelper
 
         body << link_to(t("operation.status.#{status}"), operation_path(operation))
 
-        if operation.job_outcome_url.present?
-          body << ' ('.html_safe
-          body << content_tag(:a, t('operation.outcome_link_text'), href: operation.job_outcome_url)
-          body << ')'.html_safe
-        end
-
         body
       end
     when 'actions'
