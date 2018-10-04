@@ -18,8 +18,12 @@ class ResponseCsvExportOperationJob < OperationJob
     responses = responses.order(:created_at)
 
     csv = Results::Csv::Generator.new(responses)
-    result = csv.export
-    operation_succeeded(File.open(result))
+
+    attachment = File.open(csv.export)
+    timestamp = Time.zone.now.to_s(:filename_datetime)
+    attachment_filename = "elmo-#{mission.compact_name}-responses-#{timestamp}.csv"
+
+    operation_succeeded(attachment: attachment, attachment_filename: attachment_filename)
   rescue Search::ParseError => error
     operation_failed(error.to_s)
   end

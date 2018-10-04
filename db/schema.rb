@@ -289,6 +289,7 @@ ActiveRecord::Schema.define(version: 20181004181337) do
     t.string "attachment_content_type"
     t.string "attachment_file_name"
     t.integer "attachment_file_size"
+    t.string "attachment_filename"
     t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.uuid "creator_id"

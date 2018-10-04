@@ -16,6 +16,15 @@ class OperationsController < ApplicationController
   def show
   end
 
+  def download
+    unless @operation.attachment.present?
+      flash[:error] = t("operation.no_attachment")
+      redirect_to operation_path(@operation)
+    end
+
+    send_file(@operation.attachment.path, filename: @operation.attachment_filename)
+  end
+
   def destroy
     destroy_and_handle_errors(@operation)
     redirect_to(index_url_with_context)
