@@ -5,16 +5,15 @@ require "rails_helper"
 feature "question index", js: true do
   let(:admin) { create(:admin) }
   let(:mission) { get_mission }
+  let!(:questions) { create_list(:question, 3, canonical_name: "duplicated", mission: mission) }
 
   before do
     login(admin)
-    create_list(:question, 3, canonical_name: "duplicated", mission: mission)
   end
 
   describe "batch delete" do
-    before { visit("/en/m/#{mission.compact_name}/questions") }
-
     scenario "works" do
+      visit("/en/m/#{mission.compact_name}/questions")
       perform_batch_delete
       expect(page).to have_content("3 questions deleted successfully")
     end

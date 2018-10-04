@@ -61,6 +61,22 @@ describe Results::WebResponseParser do
           expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
         end
       end
+
+      context "with form item that is not in this mission" do
+        let(:other_mission) { create(:mission) }
+        let(:other_form) { create(:form, mission: other_mission, question_types: %w[text]) }
+        let(:answers) do
+          {
+            "0" => web_answer_hash(other_form.c[0].id, value: "A"),
+            "1" => web_answer_hash(form.c[1].id, {value: "B"}, destroy: "true"),
+            "2" => web_answer_hash(form.c[2].id, value: "C")
+          }
+        end
+
+        it "errors" do
+          expect { described_class.new(response).parse(input) }.to raise_error(SubmissionError)
+        end
+      end
     end
 
     context "response with an answer set" do

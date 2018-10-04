@@ -3,10 +3,10 @@
 require "rails_helper"
 
 describe Results::AnswerDecorator do
-  describe "#formatted" do
+  describe "#shortened" do
     let(:form) { create(:form, question_types: [qtype]) }
     let(:answer) { build(:answer, answer_attribs.merge(form_item: form.c[0])) }
-    subject(:formatted) { described_class.new(answer).formatted }
+    subject(:shortened) { described_class.new(answer).shortened }
 
     context "decimal value" do
       let(:qtype) { "decimal" }

@@ -18,7 +18,7 @@ module ResponsesHelper
     # handle special case where field is hash
     if field.is_a?(Hash)
       if (answer = resp.answer_for(field[:question]))
-        Results::ResponseNodeDecorator.decorate(answer).formatted
+        Results::ResponseNodeDecorator.decorate(answer).shortened
       end
     else
       case field
@@ -54,6 +54,12 @@ module ResponsesHelper
     if !responses.empty? && can?(:export, Response)
       links << link_to(t("response.export_to_csv"), responses_path(format: :csv, search: params[:search]))
     end
+
+    links << batch_op_link(
+      name: t("response.bulk_destroy"),
+      path: bulk_destroy_responses_path(search: params[:search]),
+      confirm: "response.bulk_destroy_confirm"
+    )
 
     # return the assembled list of links
     links

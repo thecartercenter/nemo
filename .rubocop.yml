@@ -61,9 +61,11 @@ Style/EmptyMethod:
 Style/MethodCallWithArgsParentheses:
   Enabled: true
   IgnoredMethods:
-    - []
     - to
     - not_to
+    - require
+    - raise
+    - validates # Sometimes this is called in a with_options block, confusing the cop.
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

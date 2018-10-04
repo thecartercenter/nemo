@@ -173,4 +173,7 @@ class Report::StandardFormReport < Report::Report
     qing.nil? || DISAGGABLE_TYPES.include?(qing.question.qtype_name)
   end
 
+  def references?
+    form.visible_questionings.any? { |qing| qing.reference.present? }
+  end
 end

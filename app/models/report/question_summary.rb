@@ -15,6 +15,8 @@ class Report::QuestionSummary
   attr_reader :display_type
   attr_reader :overall_header
 
+  delegate :reference, to: :questioning
+
   def initialize(attribs)
     # save attribs
     attribs.each{|k,v| instance_variable_set("@#{k}", v)}

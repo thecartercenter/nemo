@@ -13,10 +13,6 @@
   <% unless admin_mode? %>
     <%= f.regenerable_field(:override_code, confirm: t('setting.override_code_warning')) %>
 
-    <% if configatron.allow_unauthenticated_submissions? %>
-      <%= f.field(:allow_unauthenticated_submissions, type: :check_box) %>
-    <% end %>
-
     <h2><%= t("setting.headings.sms") %></h2>
 
     <%= f.field(:incoming_sms_numbers_str, type: :textarea) %>

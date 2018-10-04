@@ -33,7 +33,6 @@
 //= require phantomjs_object_assign_polyfill
 //= require phantomjs_polyfill-rails/bind-polyfill
 //= require dropzone
-//= require ckeditor/init
 //= require select2
 //= require trumbowyg/trumbowyg
 //= require trumbowyg/langs/ar.min

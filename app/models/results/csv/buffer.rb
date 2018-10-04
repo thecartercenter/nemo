@@ -7,103 +7,130 @@ module Results
     # (response data and parent group data) from the previous row of the CSV output.
     # Also responsible for dumping rows to the CSV handler when it's time to start a fresh row.
     class Buffer
-      attr_accessor :csv, :cells, :header_map, :empty, :group_path,
-        :max_depth, :column_stack
-      alias empty? empty
+      attr_accessor :csv, :output_rows, :header_map, :empty, :group_path,
+        :applicable_rows_stack, :group_names
+      delegate :empty?, to: :output_rows
 
-      def initialize(max_depth:, header_map:)
-        self.max_depth = max_depth
+      def initialize(header_map:)
         self.header_map = header_map
-        self.column_stack = ColumnStack.new
-        self.group_path = GroupPath.new(max_depth: max_depth)
+        self.group_path = GroupPath.new
+        self.group_names = {}
         self.empty = true
-      end
 
-      # Sets up the cells array based on the header count. Must be called before process_row.
-      def prepare
-        self.cells = Array.new(header_map.count)
+        # Holds the rows we are currently collecting information for and waiting to write out to CSV.
+        # These are all due to a single response. We dump the buffer each time we change responses.
+        self.output_rows = []
+
+        # A stack of frames (arrays) of indices of rows in the buffer.
+        # Each frame represents a level of nesting.
+        # The indices in the top-most frame on the stack correspond to rows that should be
+        # written to when `write` is called.
+        # It might look like [[0, 1, 2, 3], [2, 3], [3]] if we are in a doubly nested group.
+        self.applicable_rows_stack = []
       end
 
       # Takes a row from the DB result and prepares the buffer for new data.
       # Dumps the row when appropriate (i.e. when the group path changes).
-      def process_row(row)
-        raise "Call `prepare` first" if cells.nil?
-
-        group_path.process_row(row)
-
-        # If path to group has changed, it's time to dump the CSV row and start a new one!
-        # (The first time through, the group path will have changed, but the row will be empty,
-        # so nothing will be dumped.)
-        dump_row if group_path.changed?
-
-        # Now handle deletions and additions.
+      def process_row(input_row)
+        group_path.process_row(input_row)
         handle_group_path_deletions if group_path.deletions?
-        handle_group_path_additions(row) if group_path.additions?
+        handle_group_path_additions(input_row) if group_path.additions?
+        write_group_name
       end
 
-      # Writes the given value to the cell. If the cell already has something in it, appends.
-      # This is useful for select_multiple. We don't need to worry about old data since
-      # we clear it out in `process_row`.
+      # Writes the given value to the applicable rows in the buffer.
+      # If a cell already has something in it and `append` is true, it appends (useful for select_multiple).
       # If the given header is not found, ignores.
       def write(header, value, append: false)
-        idx = header_map.index_for(header)
-        return if idx.nil?
-        self.empty = false
-        cells[idx] = cells[idx].present? && append ? "#{cells[idx]};#{value}" : value
-        column_stack.add(idx)
+        col_idx = header_map.index_for(header)
+        return if col_idx.nil?
+        applicable_rows_stack.last.each do |row_idx|
+          output_rows[row_idx][col_idx] =
+            if (current = output_rows[row_idx][col_idx]).present? && append
+              "#{current};#{value}"
+            else
+              value
+            end
+        end
       end
 
       def finish
-        dump_row
+        dump_rows
       end
 
       private
 
       def handle_group_path_deletions
-        column_stack.pop(group_path.deletion_count).each do |cols|
-          cols.each { |i| clear_at(i) }
-        end
-        self.empty = column_stack.empty?
+        applicable_rows_stack.pop(group_path.deletion_count)
+        dump_rows if applicable_rows_stack.empty?
       end
 
-      def handle_group_path_additions(row)
+      def handle_group_path_additions(input_row)
         group_path.addition_count.times do
-          # If depth is 0, we are pushing the first frame on the stack, so we should write
-          # the common headers to get the row started.
-          # Else we just need to write the new group's info.
-          depth = column_stack.size
-          column_stack.push_empty_frame
-          if depth.zero?
-            write_common_columns(row)
-            write("parent_group_depth", 0) # Will be overwritten if appropriate.
-          else
-            write_group_info(row, depth)
-          end
+          add_row
+          applicable_rows_stack.push([])
+          # The new row we just added carries information from all levels currently represented
+          # in the stack. So we write the row index to each frame in the stack.
+          applicable_rows_stack.each { |r| r << output_rows.size - 1 }
+          # If we just added the first row, we should write the common columns to get it started.
+          # Subsequent output_rows will be cloned from this one so we only need to do it once.
+          write_common_columns(input_row) if output_rows.size == 1
         end
       end
 
-      def clear_at(idx)
-        cells[idx] = nil
+      def write_common_columns(input_row)
+        header_map.common_headers.each { |h| write(h, input_row[h]) }
       end
 
-      def write_group_info(row, depth)
-        copy_from_row(row, "group#{depth}_rank")
-        copy_from_row(row, "group#{depth}_inst_num")
-        copy_from_row(row, "parent_group_name")
-        copy_from_row(row, "parent_group_depth")
+      def write_group_name
+        write_cell(row_for_current_level, "parent_group_name", current_group_name)
       end
 
-      def write_common_columns(row)
-        header_map.common_headers.each { |h| copy_from_row(row, h) }
+      # Adds a row to the buffer by cloning the parent row, or if empty, adding a new blank row.
+      def add_row
+        new_row =
+          if output_rows.any?
+            row_for_current_level.dup
+          else
+            Array.new(header_map.count)
+          end
+        # We need to reset the group columns because they change each time. The rest of the columns
+        # should be inherited from the parent column.
+        write_cell(new_row, "parent_group_name", nil)
+        write_cell(new_row, "parent_group_depth", applicable_rows_stack.size)
+        output_rows << new_row
       end
 
-      def copy_from_row(row, header)
-        write(header, row[header])
+      def row_for_current_level
+        # The current row is the first index in the current stack frame. The rest of the indices in
+        # the current stack frame come from rows for child levels.
+        current_row_idx = applicable_rows_stack.last.first
+        output_rows[current_row_idx]
       end
 
-      def dump_row
-        return if empty?
-        csv << cells
+      def read_cell(row, col_name)
+        row[header_map.index_for(col_name)]
+      end
+
+      def write_cell(row, col_name, value)
+        return if row.nil?
+        row[header_map.index_for(col_name)] = value
+      end
+
+      def dump_rows
+        output_rows.each do |row|
+          # No need to write rows that don't have any answers for their level, except we always
+          # write a row for the top level of the response even if it has no answer data of its own.
+          next if read_cell(row, "parent_group_depth").positive? && read_cell(row, "parent_group_name").nil?
+          csv << row
+        end
+        output_rows.clear
+      end
+
+      def current_group_name
+        group_id = group_path.parent_repeat_group_id
+        return nil if group_id.nil?
+        group_names[group_id] ||= (QingGroup.find_by(id: group_id)&.group_name || "?")
       end
     end
   end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180822145730) do
+ActiveRecord::Schema.define(version: 20180924213302) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,18 +31,18 @@ ActiveRecord::Schema.define(version: 20180822145730) do
     t.date "date_value"
     t.datetime "datetime_value"
     t.datetime "deleted_at"
-    t.integer "inst_num", default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "new_rank", default: 0, null: false
     t.integer "old_id"
+    t.integer "old_inst_num", default: 1, null: false
+    t.integer "old_rank", default: 1, null: false
     t.uuid "option_id"
     t.integer "option_old_id"
     t.uuid "parent_id"
     t.string "pending_file_name"
     t.uuid "questioning_id", null: false
     t.integer "questioning_old_id"
-    t.integer "rank", default: 1, null: false
     t.uuid "response_id", null: false
     t.integer "response_old_id"
     t.time "time_value"
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20180822145730) do
     t.index ["option_id"], name: "index_answers_on_option_id"
     t.index ["parent_id"], name: "index_answers_on_parent_id"
     t.index ["questioning_id"], name: "index_answers_on_questioning_id"
-    t.index ["response_id", "questioning_id", "inst_num", "rank", "deleted_at"], name: "answers_full", unique: true
+    t.index ["response_id", "questioning_id", "old_inst_num", "old_rank", "deleted_at"], name: "answers_full", unique: true
     t.index ["response_id"], name: "index_answers_on_response_id"
   end
 
@@ -526,7 +526,6 @@ ActiveRecord::Schema.define(version: 20180822145730) do
   end
 
   create_table "settings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.boolean "allow_unauthenticated_submissions", default: false
     t.datetime "created_at"
     t.string "default_outgoing_sms_adapter", limit: 255
     t.string "frontlinecloud_api_key", limit: 255

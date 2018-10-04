@@ -1,0 +1,8 @@
+<div>
+  <%= @report.question_labels == "title" ? summary.questioning.name : summary.questioning.code %>
+
+  <% # Show message to indicate that not all text answers are being shown %>
+  <% if summary.items.length == Report::SummaryCollectionBuilder::RAW_ANSWER_LIMIT && summary.items[0].text  %>
+    (<%= t("report/report.showing_limited_answers", count: summary.items.length) %>)
+  <% end %>
+</div>

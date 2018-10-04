@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 class ResponsesController < ApplicationController
-  include CsvRenderable, ResponseIndexable, OdkHeaderable
+  include BatchProcessable
+  include OdkHeaderable
+  include ResponseIndexable
+  include CsvRenderable
 
-  # need to load with associations for show and edit
-  before_action :load_with_associations, only: [:show, :edit]
-
-  before_action :fix_nil_time_values, only: [:update, :create]
+  before_action :fix_nil_time_values, only: %i[update create]
 
   # authorization via CanCan
   load_and_authorize_resource find_by: :shortcode
@@ -38,13 +40,16 @@ class ResponsesController < ApplicationController
 
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
               include_excerpts: true)
-          rescue Search::ParseError
-            flash.now[:error] = $!.to_s
+          rescue Search::ParseError => error
+            flash.now[:error] = error.to_s
             @search_error = true
           end
         end
 
         decorate_responses
+
+        @selected_ids = params[:sel]
+        @selected_all = params[:select_all]
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
@@ -60,8 +65,8 @@ class ResponsesController < ApplicationController
           begin
             @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
               include_excerpts: false)
-          rescue Search::ParseError
-            flash.now[:error] = $!.to_s
+          rescue Search::ParseError => error
+            flash.now[:error] = error.to_s
             return
           end
         end
@@ -93,6 +98,7 @@ class ResponsesController < ApplicationController
 
   def new
     setup_condition_computer
+    Results::BlankResponseTreeBuilder.new(@response).build
     # render the form template
     prepare_and_render_form
   end
@@ -117,6 +123,29 @@ class ResponsesController < ApplicationController
     web_create_or_update
   end
 
+  def bulk_destroy
+    scope = Response.accessible_by(current_ability)
+    if params[:select_all] == "1"
+      if params[:search].present?
+        begin
+          scope = Response.do_search(scope, params[:search], {mission: current_mission}, include_excerpts: false)
+        rescue Search::ParseError => error
+          flash.now[:error] = error.to_s
+          return
+        end
+      else
+        scope = scope.where(mission: current_mission)
+      end
+    else
+      scope = scope.where(id: params[:selected].keys)
+    end
+
+    ids = scope.pluck(:id)
+    Results::ResponseDeleter.instance.delete(ids)
+    flash[:success] = t("response.bulk_destroy_deleted", count: ids.size)
+    redirect_to(responses_path)
+  end
+
   def destroy
     destroy_and_handle_errors(@response)
     redirect_to(index_url_with_context)
@@ -139,10 +168,10 @@ class ResponsesController < ApplicationController
 
     @possible_submitters = @possible_submitters.paginate(page: params[:page], per_page: 20)
 
-    render json: {
+    render(json: {
       possible_submitters: ActiveModel::ArraySerializer.new(@possible_submitters),
       more: @possible_submitters.next_page.present?
-    }, select2: true
+    }, select2: true)
   end
 
   def possible_users
@@ -167,10 +196,10 @@ class ResponsesController < ApplicationController
 
     @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
 
-    render json: {
+    render(json: {
       possible_users: ActiveModel::ArraySerializer.new(@possible_users),
       more: @possible_users.next_page.present?
-    }, select2: true
+    }, select2: true)
   end
 
   private
@@ -181,7 +210,7 @@ class ResponsesController < ApplicationController
 
   # loads the response with its associations
   def load_with_associations
-    @response = Response.with_associations.friendly.find(params[:id])
+    @response = Response.with_basic_assoc.friendly.find(params[:id])
   end
 
   # when editing a response, set timestamp to show it is being worked on
@@ -201,6 +230,11 @@ class ResponsesController < ApplicationController
     @response.reviewed = true if params[:commit_and_mark_reviewed]
     @response.check_in if params[:action] == "update"
 
+    if can?(:modify_answers, @response)
+      parser = Results::WebResponseParser.new(@response)
+      parser.parse(params.require(:response))
+    end
+
     # try to save
     begin
       @response.save!
@@ -216,7 +250,6 @@ class ResponsesController < ApplicationController
 
     # Store main XML file for debugging purposes.
     UploadSaver.new.save_file(params[:xml_submission_file])
-
     begin
       @response.user_id = current_user.id
       @response = odk_response_parser.populate_response
@@ -232,7 +265,6 @@ class ResponsesController < ApplicationController
       # We use this because ODK can't display custom failure messages so this provides a little more info.
       render_xml_submission_failure(e, 426)
     rescue SubmissionError => e
-      Rails.logger.debug(e)
       render_xml_submission_failure(e, 422)
     end
   end
@@ -258,14 +290,14 @@ class ResponsesController < ApplicationController
 
   # prepares objects for and renders the form template
   def prepare_and_render_form
-    # Prepare the OldAnswerNodes.
-    set_read_only
-    @nodes = AnswerArranger.new(
-      @response,
-      placeholders: params[:action] == "show" ? :except_repeats : :all,
-      # Must preserve submitted answers when in create/update action.
-      dont_load_answers: %w[create update].include?(params[:action])
-    ).build.nodes
+    @context = Results::ResponseFormContext.new(
+      read_only: action_name == "show" || cannot?(:modify_answers, @response)
+    )
+
+    # The blank response is used for rendering placeholders for repeat groups
+    @blank_response = Response.new(form: @response.form)
+    Results::BlankResponseTreeBuilder.new(@blank_response).build
+
     render(:form)
   end
 
@@ -274,58 +306,36 @@ class ResponsesController < ApplicationController
     render(body: nil, status: code)
   end
 
+  def alias_response
+    # CanCanCan loads resource into @_response
+    @response = @_response
+  end
+
   # get the form specified in the params and error if it's not there
   def assign_form
     @response.form = Form.find(params[:form_id])
     check_form_exists_in_mission
   rescue ActiveRecord::RecordNotFound
-    return redirect_to(index_url_with_context)
+    redirect_to(index_url_with_context)
   end
 
   def set_read_only
-    case action_name
-    when "show"
-      @read_only = true
-    else
-      @read_only = cannot?(:modify_answers, @response)
-    end
+    @read_only = case action_name
+                 when "show"
+                   true
+                 else
+                   cannot?(:modify_answers, @response)
+                 end
   end
 
   def response_params
     if params[:response]
-      to_permit = [:form_id, :user_id, :incomplete]
+      to_permit = %i[form_id user_id incomplete]
 
-      if @response.present? && can?(:review, @response)
-        to_permit << [:reviewed, :reviewer_notes, :reviewer_id]
-      end
-
-      # In some rare cases, create or update can occur without answers_attributes. Not sure how.
-      # Also need to respect the modify_answers permission here.
-      if (ans_attribs = params[:response][:answers_attributes]) &&
-          (action_name != "update" || can?(:modify_answers, @response))
-
-        # We need to permit each possible answer attribute key for each given hash key in answers_attributes.
-        # See https://stackoverflow.com/a/36779535/2066866.
-        to_permit << {
-          answers_attributes: ans_attribs.keys.map { |k| [k, permitted_answer_attributes] }.to_h
-        }
-      end
+      to_permit << %i[reviewed reviewer_notes reviewer_id] if @response.present? && can?(:review, @response)
 
       params.require(:response).permit(to_permit)
     end
-  end
-
-  # Returns the permitted keys for an answer and its choices.
-  def permitted_answer_attributes
-    @permitted_answer_attributes ||= %w(
-      id value option_id option_node_id questioning_id relevant rank
-      time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i) time_value(6i)
-      datetime_value
-      datetime_value(1i) datetime_value(2i) datetime_value(3i)
-      datetime_value(4i) datetime_value(5i) datetime_value(6i)
-      date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy
-      date_value
-    ) << {choices_attributes: %i[id option_id option_node_id checked]}
   end
 
   def check_form_exists_in_mission
@@ -343,7 +353,7 @@ class ResponsesController < ApplicationController
     if params[:response] && params[:response][:answers_attributes]
       params[:response][:answers_attributes].each do |key, attribs|
         if attribs["time_value(4i)"].blank? && attribs["time_value(5i)"].blank?
-          %w(1 2 3).each { |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = "" }
+          %w[1 2 3].each { |i| params[:response][:answers_attributes][key]["time_value(#{i}i)"] = "" }
         end
       end
     end

@@ -495,7 +495,7 @@ describe Sms::Decoder, :sms do
 
       # make sure time gets saved properly and zone doesn't mess up
       response.reload
-      expect(response.answers.last.time_value.hour).to eq(12)
+      expect(response.c[1].time_value.hour).to eq(12)
 
       # check other formats
       expect_decoding(form, data: "1.4 2.12:30", answers: [4, utc.parse("2000-01-01 12:30")])
@@ -527,10 +527,10 @@ describe Sms::Decoder, :sms do
 
       # make sure time gets saved properly and zone doesn't mess up
       response.reload
-      expect(response.answers.last.datetime_value.hour).to eq(12)
+      expect(response.c[1].datetime_value.hour).to eq(12)
 
       # make sure timezone gets set properly (Saskatchewan is CST)
-      expect(response.answers.last.datetime_value.zone.to_s).to eq("CST")
+      expect(response.c[1].datetime_value.zone.to_s).to eq("CST")
 
       # check other formats
       expect_decoding(form, data: "1.4 2.20120229 230",

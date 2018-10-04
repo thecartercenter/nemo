@@ -74,9 +74,6 @@ module ELMO
     # read system version from file
     configatron.system_version = File.read(Rails.root.join("VERSION")).strip
 
-    # regular expressions
-    configatron.lat_lng_regexp = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
-
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
     configatron.full_locales = %i[en fr es ar ko]
 

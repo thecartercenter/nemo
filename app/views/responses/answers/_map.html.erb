@@ -4,7 +4,7 @@
     [answer.option]
   else
     # select_multiple
-    answer.choices.select(&:has_coordinates?).map(&:option)
+    answer.choices.select(&:coordinates?).map(&:option)
   end
 %>
 

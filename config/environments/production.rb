@@ -49,9 +49,6 @@ ELMO::Application.configure do
   # Generate digests for assets URLs
   config.assets.digest = true
 
-  # add special CSS files to compile
-  config.assets.precompile += %w(ckeditor/* application_* .svg)
-
   # Version of your assets, change this if you want to expire all your assets.
   config.assets.version = '1.0'
 

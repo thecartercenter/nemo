@@ -1,3 +1,6 @@
+#######################################################################################################
+# This context is DEPRECATED. Use newer methods of building XML fixtures instead. See ODK parser specs.
+#######################################################################################################
 shared_context "odk submissions" do
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)

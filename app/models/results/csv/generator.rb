@@ -9,23 +9,22 @@ module Results
       def initialize(response_scope)
         self.response_scope = response_scope
         self.header_map = HeaderMap.new
-        self.buffer = Buffer.new(max_depth: 1, header_map: header_map)
+        self.buffer = Buffer.new(header_map: header_map)
         self.answer_processor = AnswerProcessor.new(buffer)
       end
 
       # Runs the queries and returns the CSV as a string.
       def to_s
         setup_header_map
-        buffer.prepare
         csv_body.prepend(csv_headers)
       end
 
       private
 
       def setup_header_map
-        header_map.add_common_headers(%w[response_id shortcode form_name user_name submit_time])
-        header_map.add_group_headers(1)
-        header_map.add_headers_from_codes(HeaderQuery.new(response_scope: response_scope).run.to_a.flatten)
+        header_map.add_common(%w[response_id shortcode form_name user_name submit_time])
+        header_map.add_group(%w[parent_group_name parent_group_depth])
+        header_map.add_from_qcodes(HeaderQuery.new(response_scope: response_scope).run.to_a.flatten)
       end
 
       def csv_body

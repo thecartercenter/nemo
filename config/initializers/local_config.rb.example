@@ -79,9 +79,3 @@ end
 # Google API Console project name: PROJECT-NAME
 # Google Accounts with access to project: EMAIL-ADDRESS
 configatron.google_maps_api_key = ENV["ELMO_GOOGLE_MAPS_KEY"] || "your-key-here"
-
-# Allows submissions without password via the /noauth/submission route.
-# This setting overrides the per-mission setting.
-# Also, if not true, the per-mission setting will not be available in UI.
-# Enable only if you really know what you are doing!
-configatron.allow_unauthenticated_submissions = false

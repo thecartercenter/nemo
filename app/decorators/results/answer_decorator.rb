@@ -12,7 +12,7 @@ module Results
       [question_hint, drop_hint].join(" ")
     end
 
-    def formatted
+    def shortened
       case qtype_name
       when "select_one"
         option_name

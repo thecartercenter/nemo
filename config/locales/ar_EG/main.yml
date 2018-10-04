@@ -339,7 +339,6 @@ ar:
         view_count: "مراجعات"
         viewed_at: "آخر مراجعة"
       setting:
-        allow_unauthenticated_submissions: "السماح بتسليم غير مصرح به"
         incoming_sms_numbers_str: "الأرقام الواردة"
         incoming_sms_token: "رمز  الرسائل النصية القصيرة الواردة "
         preferred_locales_str: "اللغة المفضلة"
