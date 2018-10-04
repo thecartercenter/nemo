@@ -6,6 +6,8 @@ class Operation < ApplicationRecord
   include MissionBased
   belongs_to :creator, class_name: 'User'
 
+  has_attached_file :attachment
+
   def name
     "##{id}"
   end

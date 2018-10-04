@@ -286,6 +286,10 @@ ActiveRecord::Schema.define(version: 20181004181337) do
   end
 
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string "attachment_content_type"
+    t.string "attachment_file_name"
+    t.integer "attachment_file_size"
+    t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.uuid "creator_id"
     t.string "details", limit: 255, null: false
@@ -294,7 +298,6 @@ ActiveRecord::Schema.define(version: 20181004181337) do
     t.text "job_error_report"
     t.datetime "job_failed_at"
     t.string "job_id", limit: 255
-    t.string "job_outcome_url", limit: 255
     t.datetime "job_started_at"
     t.uuid "mission_id"
     t.string "provider_job_id", limit: 255
