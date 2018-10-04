@@ -11,7 +11,7 @@ module Forms
 
     def validate(record)
       calc_must_wrap_all_of_default_response_name(record)
-      force_calc_for_dollar_refs(record) if force_calc_if.present? && force_calc_if.call(record)
+      force_calc_for_dollar_refs(record) if force_calc_if&.call(record)
     end
 
     private
