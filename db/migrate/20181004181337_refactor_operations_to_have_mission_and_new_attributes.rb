@@ -10,7 +10,8 @@ class RefactorOperationsToHaveMissionAndNewAttributes < ActiveRecord::Migration[
     add_column(:operations, :unread, :boolean, default: true, null: false)
   end
 
-  def down # can't un-delete
+  # up and down instead of change because can't un-delete
+  def down
     add_column(:operations, :creator_old_id, :integer)
     add_column(:operations, :creator_old_id, :integer)
     rename_column(:operations, :details, :description)
