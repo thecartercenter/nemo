@@ -51,6 +51,13 @@ feature "user", js: true do
     user_is_on_root_page
   end
 
+  scenario "self edit action after login redirects properly" do
+    visit("/en/m/#{mission.compact_name}/users/#{admin.id}/edit")
+    click_on("Save")
+    expect(page).to have_content("Edit Profile")
+    expect(page).to have_content("updated successfully")
+  end
+
   def fill_login_form
     visit(root_path)
     within("form#new_user_session") do
