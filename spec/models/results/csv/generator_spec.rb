@@ -51,8 +51,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
           answer_values: ["foo✓", %w[Canada Calgary],
                           "alpha", 100, -123.50,
                           "15.937378 44.36453", "Cat", %w[Dog Cat], %w[Dog Cat],
-                          "2015-10-12 18:15:12 UTC", "2014-11-09", "23:15"],
-          reviewed: true
+                          "2015-10-12 18:15:12 UTC", "2014-11-09", "23:15"]
         )
 
         # We put this one out of order to ensure sorting works.
@@ -80,15 +79,14 @@ describe Results::Csv::Generator, :reset_factory_sequences do
             form: form1,
             answer_values: ["foo", %w[Ghana], "bar", 100, -123.50,
                             "15.937378 44.36453 123.45 20.4", "Cat", %w[Dog Cat], %w[Dog Cat],
-                            "2015-10-12 18:15 UTC", "2014-11-09", "23:15:19"],
-            reviewed: true
+                            "2015-10-12 18:15 UTC", "2014-11-09", "23:15:19"]
           )
         end
 
         Timecop.freeze(20.minutes) do
           # Response from second form
           create_response(form: form2,
-                          answer_values: ["foo", "bar", "Funton", %w[Ghana Accra]], reviewed: true)
+                          answer_values: ["foo", "bar", "Funton", %w[Ghana Accra]])
         end
       end
     end
@@ -131,7 +129,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
           {repeating: [
             ["Asparagus", %w[Ghana Accra], 3]
           ]}
-        ], reviewed: true)
+        ])
 
         Timecop.freeze(10.minutes) do
           create_response(form: repeat_form, answer_values: [
@@ -164,7 +162,6 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         Timecop.freeze(1.minute) do
           create_response(
             form: form1,
-            reviewed: true,
             answer_values: [%(<p>foo</p><p>"bar"<br/>baz, stuff</p>)]
           )
         end
@@ -174,7 +171,6 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         Timecop.freeze(3.minutes) do
           create_response(
             form: form1,
-            reviewed: true,
             answer_values: [%(\r\nwin\r\n\r\nfoo\r\n)]
           ) # Win line endings
         end
@@ -182,7 +178,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
           create_response(form: form1, answer_values: [%(\nunix\n\nfoo\n)]) # Unix line endings
         end
         Timecop.freeze(5.minutes) do
-          create_response(form: form1, reviewed: true, answer_values: [%(\rmac\r\rfoo\r)]) # Mac line endings
+          create_response(form: form1, answer_values: [%(\rmac\r\rfoo\r)]) # Mac line endings
         end
       end
     end
@@ -198,7 +194,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     before do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
         image_obj = Media::Image.create!(item: media_fixture("images/the_swing.jpg"))
-        create_response(form: form1, answer_values: ["foo", image_obj])
+        create_response(form: form1, reviewed: true, answer_values: ["foo", image_obj])
       end
     end
 
@@ -219,7 +215,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         end
         Timecop.freeze(2.minutes) do
           # Destroy one of the answers for this response, but not the whole thing.
-          create_response(form: form1, answer_values: %w[baz qux], reviewed: true)
+          create_response(form: form1, answer_values: %w[baz qux])
           responses.last.root_node.c[1].destroy
 
           # form2 has no responses in our set so its headers shouldn't be included either.
@@ -246,7 +242,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
 
     before do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
-        create_response(form: form1, mission: missions[0], answer_values: ["foo"], reviewed: true)
+        create_response(form: form1, mission: missions[0], answer_values: ["foo"])
         create_response(form: form2, mission: missions[1], answer_values: ["bar"])
       end
     end
