@@ -1,6 +1,9 @@
 require "rails_helper"
 
 # Using request spec b/c Authlogic won't work with controller spec
+#
+# NOTE: This spec file is the only one that uses the "odk submissions" context, which is deprecated.
+# Future work on this file should switch it to using the newer method of building XML fixtures.
 describe "odk submissions", :odk, type: :request do
   include_context "odk submissions"
 

@@ -63,7 +63,7 @@ class Response < ApplicationRecord
 
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
-  delegate :c, :children, to: :root_node
+  delegate :c, :children, :debug_tree, to: :root_node
 
   def destroy_answer_tree
     root_node.destroy if root_node.present?
