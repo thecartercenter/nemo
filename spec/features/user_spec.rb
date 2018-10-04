@@ -5,6 +5,7 @@ require "rails_helper"
 feature "user", js: true do
   let(:mission) { get_mission }
   let(:admin) { create(:admin, mission: mission) }
+  let(:user)  { create(:admin) }
 
   before { login(admin) }
 
@@ -55,6 +56,13 @@ feature "user", js: true do
     visit("/en/m/#{mission.compact_name}/users/#{admin.id}/edit")
     click_on("Save")
     expect(page).to have_content("Edit Profile")
+    expect(page).to have_content("updated successfully")
+  end
+
+  scenario "editing a different user redirects properly" do
+    visit("/en/m/#{mission.compact_name}/users/#{user.id}/edit")
+    click_on("Save")
+    expect(page).to have_content("Edit User")
     expect(page).to have_content("updated successfully")
   end
 
