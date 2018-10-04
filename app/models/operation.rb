@@ -3,7 +3,7 @@ class Operation < ApplicationRecord
 
   validates :job_class, presence: true
   validates :creator, presence: true
-  validates :description, presence: true
+  validates :details, presence: true
 
   def name
     "##{id}"

@@ -2,7 +2,6 @@
 
 class RefactorOperationsToHaveMissionAndNewAttributes < ActiveRecord::Migration[5.1]
   def up
-    # soft delete? Operation.all.each{|o| o.delete}
     execute("DELETE FROM operations")
     remove_column(:operations, :creator_old_id)
     remove_column(:operations, :old_id)
@@ -11,7 +10,7 @@ class RefactorOperationsToHaveMissionAndNewAttributes < ActiveRecord::Migration[
     add_column(:operations, :unread, :boolean, default: true, null: false)
   end
 
-  def down
+  def down # can't un-delete
     add_column(:operations, :creator_old_id, :integer)
     add_column(:operations, :creator_old_id, :integer)
     rename_column(:operations, :details, :description)

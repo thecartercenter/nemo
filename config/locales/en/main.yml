@@ -388,7 +388,7 @@ en:
       operation:
         created_at: "Time Started"
         creator: "Started By"
-        description: "Description"
+        details: "Details"
         job_started_at: "Started At"
         job_failed_at: "Failed At"
         job_completed_at: "Completed At"
@@ -1427,7 +1427,7 @@ en:
   operation:
     clear_confirm: "Are you sure you want to clear all completed operations?"
     server_error: "Server error. Please contact support."
-    description:
+    details:
       user_import_operation_job: User import for %{mission_name} from %{file}
       option_set_import_operation_job: Option Set '%{name}' import for %{mission_name}
     outcome_link_text: "link"
