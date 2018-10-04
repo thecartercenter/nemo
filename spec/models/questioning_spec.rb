@@ -91,14 +91,19 @@ describe Questioning do
   end
 
   describe "validation" do
+    let(:questioning) { build(:questioning, default: "Item: calc($Foo + 4) ") }
+
     # Detailed testing of this validator is in own file.
     describe "DynamicPatternValidator" do
-      let(:questioning) { build(:questioning, default: "Item: calc($Foo + 4) ") }
-
       it "is hooked up properly" do
         expect(questioning).to be_invalid
         expect(questioning.errors[:default].join).to match(/must surround/)
       end
+    end
+
+    it "should fail properly when there is no qtype" do
+      questioning.qtype_name = nil
+      expect { questioning.save }.not_to raise_error
     end
   end
 end

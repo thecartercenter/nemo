@@ -87,15 +87,6 @@ describe "questionings form", js: true  do
         visit edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name)
         expect(page).to have_content("powerup.mp3")
       end
-
-      context "errors" do
-        it "should render error properly when there is no type" do
-          visit("/en/m/#{get_mission.compact_name}/forms/#{form.id}/choose-questions")
-          fill_in "Code", with: "foodie"
-          click_on("Save")
-          expect(page).to have_content("Question is invalid")
-        end
-      end
     end
 
     context "when published" do
