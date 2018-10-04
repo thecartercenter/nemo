@@ -17,7 +17,7 @@ class Questioning < FormItem
 
   scope :visible, -> { where(hidden: false) }
 
-  validates_with Forms::DynamicPatternValidator, field_name: :default, force_calc_if: :numeric?
+  validates_with Forms::DynamicPatternValidator, field_name: :default, force_calc_if: ->(qing) { qing.qtype&.numeric? }
 
   accepts_nested_attributes_for :question
 
