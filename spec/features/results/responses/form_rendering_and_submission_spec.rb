@@ -28,7 +28,15 @@ feature "response form rendering and submission", js: true do
               "long_text"
             ]
           }
-        }
+        },
+        "decimal",
+        "counter",
+        "barcode",
+        "select_one",
+        "select_multiple",
+        "datetime",
+        "date",
+        "time"
       ])
   end
 
@@ -60,7 +68,15 @@ feature "response form rendering and submission", js: true do
             [123],
             create(:media_image),
             %w[Plant Oak],
-            {repeating: [[2, {repeating: [[3]]}]]}
+            {repeating: [[2, {repeating: [[3]]}]]},
+            1.2,
+            3,
+            "barcode answer",
+            "Dog",
+            %w[Dog Cat],
+            "Mar 12 #{Time.current.year} 18:32:44",
+            "Oct 26 #{Time.current.year}",
+            "03:08:23"
           ]
         )
       end
@@ -112,8 +128,7 @@ feature "response form rendering and submission", js: true do
       select2(user.name, from: "response_user_id")
       fill_in_question([0, 0], with: "1")
       drop_in_dropzone(image, 0)
-      select("Animal")
-      select("Dog")
+      fill_in_question([2], with: %w[Animal Dog])
       fill_in_question([3, 0, 0, 0], with: "4561")
       fill_in_question([3, 0, 1, 0, 0], with: "7891")
       drop_in_dropzone(image, 1)
@@ -130,6 +145,14 @@ feature "response form rendering and submission", js: true do
       fill_in_question([3, 1, 1, 0, 0], with: "7892")
       drop_in_dropzone(image, 2)
       fill_in_question([3, 1, 3], with: "some other text")
+      fill_in_question([4], with: "1.2")
+      fill_in_question([5], with: "3")
+      fill_in_question([6], with: "barcode answer")
+      fill_in_question([7], with: "Dog")
+      fill_in_question([8], with: %w[Dog Cat])
+      fill_in_question([9], with: "Mar 12 #{Time.current.year} 18:32:44")
+      fill_in_question([10], with: "Oct 26 #{Time.current.year}")
+      fill_in_question([11], with: "03:08:23")
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
@@ -143,6 +166,14 @@ feature "response form rendering and submission", js: true do
       expect_value([3, 1, 1, 0, 0], "7892")
       expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
+      expect_value([4], "1.2")
+      expect_value([5], "3")
+      expect_value([6], "barcode answer")
+      expect_value([7], "Dog")
+      expect_value([8], %w[Dog Cat])
+      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.current.year}")
+      expect_value([11], "03:08:23")
 
       # remove second inner repeat
       all("a.remove-repeat")[2].click
@@ -150,8 +181,7 @@ feature "response form rendering and submission", js: true do
       fill_in_question([0, 0], with: "123")
       click_button("Save")
 
-      expect(page).to_not have_content("Response is invalid")
-
+      expect(page).to_not(have_content("Response is invalid"))
       response = Response.last
       visit edit_response_path(params.merge(id: response.shortcode))
 
@@ -167,7 +197,14 @@ feature "response form rendering and submission", js: true do
       expect_value([3, 1, 1, 0, 0], "7892")
       expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
-
+      expect_value([4], "1.2")
+      expect_value([5], "3")
+      expect_value([6], "barcode answer")
+      expect_value([7], "Dog")
+      expect_value([8], %w[Dog Cat])
+      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.current.year}")
+      expect_value([11], "03:08:23")
       # update a value
       fill_in_question([0, 0], with: "1234")
 
@@ -187,6 +224,14 @@ feature "response form rendering and submission", js: true do
       expect_value([3, 0, 1, 0, 0], "7891")
       expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
       expect_value([3, 0, 3], "some text")
+      expect_value([4], "1.2")
+      expect_value([5], "3")
+      expect_value([6], "barcode answer")
+      expect_value([7], "Dog")
+      expect_value([8], %w[Dog Cat])
+      expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
+      expect_value([10], "Oct 26 #{Time.current.year}")
+      expect_value([11], "03:08:23")
     end
 
     context "with conditional logic" do

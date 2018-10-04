@@ -49,7 +49,7 @@ module SmsGuideHelper
   end
 
   # Returns an example answer based on the question type, to be used in the sms guide
-  def sms_example_for_questioning(qing, locale: configatron.default_locale)
+  def sms_example_for_questioning(qing, locale:)
     content = case qing.qtype_name
     when "integer", "counter" then "3"
     when "decimal" then "12.5"
@@ -111,11 +111,11 @@ module SmsGuideHelper
     content_tag("strong", numbers)
   end
 
-  def sms_guide_hint(qing, locale: configatron.default_locale)
+  def sms_guide_hint(qing, locale:)
     hint = "".html_safe << (qing.question.hint(locale, strict: false) || "")
     hint << "." unless hint =~ /\.\z/ || hint.empty?
     hint << " " << t(".pointers.#{pointer_type(qing)}", locale: locale)
-    hint << " " << sms_example_for_questioning(qing)
+    hint << " " << sms_example_for_questioning(qing, locale: locale)
   end
 
   def appendix_alert

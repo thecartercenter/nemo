@@ -218,6 +218,7 @@ class FormItem < ApplicationRecord
     chunks << " Type: #{qtype_name}," if qtype_name.present?
     chunks << " Code: #{code}"
     chunks << " Repeatable" if repeatable?
+    chunks << " Id: #{id}"
     "\n#{chunks.join}#{child_tree}"
   end
 

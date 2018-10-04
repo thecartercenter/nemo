@@ -8,7 +8,7 @@
     <form>
       <input type="hidden" name="sms_guide" value="1">
       <%= t("common.language") %>:
-      <%= language_select(locale: @locale) %>
+      <%= language_select(current_locale: @locale) %>
     </form>
 
     <%= link_to(t("page_titles.sms_tests.all"), new_sms_test_path) if can?(:create, Sms::Test) %>
