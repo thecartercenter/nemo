@@ -14,14 +14,14 @@ shared_context "response tree" do
 
   def expect_children(node, types, qing_ids, values = nil)
     children = node.children.sort_by(&:new_rank)
-    expect(children.map(&:type)).to eq types
-    expect(children.map(&:questioning_id)).to eq qing_ids
+    expect(children.map(&:type)).to eq(types)
+    expect(children.map(&:questioning_id)).to eq(qing_ids)
     expect(children.map(&:new_rank)).to eq((0...children.size).to_a)
 
     return if values.nil?
 
     child_values = children.map { |child| child.is_a?(Answer) ? child.casted_value : nil }
-    expect(child_values).to eq values
+    expect(child_values).to eq(values)
   end
 
   # Builds a hash for an answer node in a web response's hash representation of an answer heirarchy
@@ -54,10 +54,6 @@ shared_context "response tree" do
     "response_root_#{path.join('_')}_#{suffix}"
   end
 
-  # TODO: this can be combined with the similar helper in `response_form_conditional_logic`
-  # once the conditional logic specs are refactored to handle form items hierarchically.
-  # This helper addresses questions by path, whereas the old helper addresses questions
-  # by type
   def fill_in_question(path, opts)
     selector = path_selector(path, "value")
     value = opts[:with]
@@ -83,16 +79,15 @@ shared_context "response tree" do
     when "datetime", "date", "time"
       t = Time.zone.parse(value)
       qtype_name = qing(path).qtype_name
-      prefix = path_selector(path, "#{qtype_name}_value")
       unless qtype_name == "time"
-        select(t.strftime("%Y"), from: "#{prefix}_1i")
-        select(t.strftime("%b"), from: "#{prefix}_2i")
-        select(t.day.to_s, from: "#{prefix}_3i")
+        control_for_temporal(path, qtype_name, :year).select(t.strftime("%Y"))
+        control_for_temporal(path, qtype_name, :month).select(t.strftime("%b"))
+        control_for_temporal(path, qtype_name, :day).select(t.day.to_s)
       end
       unless qtype_name == "date"
-        select(t.strftime("%H"), from: "#{prefix}_4i")
-        select(t.strftime("%M"), from: "#{prefix}_5i")
-        select(t.strftime("%S"), from: "#{prefix}_6i")
+        control_for_temporal(path, qtype_name, :hour).select(t.strftime("%H"))
+        control_for_temporal(path, qtype_name, :minute).select(t.strftime("%M"))
+        control_for_temporal(path, qtype_name, :second).select(t.strftime("%S"))
       end
     else
       fill_in(selector, opts)
@@ -105,16 +100,36 @@ shared_context "response tree" do
   end
 
   def expect_value(path, expected_value)
-    actual_value =
-      case qing(path).qtype_name
-      when "select_one"
-        el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
-        OptionNode.find(el.value).option_name if el.value
-      else
-        page.find("#" + path_selector(path, "value"), visible: :all).value
+    case qing(path).qtype_name
+    when "select_multiple"
+      qing(path).options.each do |o|
+        if expected_value.include?(o.name)
+          expect(page.has_checked_field?(o.name)).to eq(true), "Expected #{o.name} to be checked"
+        else
+          expect(page.has_unchecked_field?(o.name)).to eq(true), "Expected #{o.name} to NOT be checked"
+        end
       end
-
-    expect(actual_value).to eq expected_value
+    when "datetime", "date", "time"
+      qtype_name = qing(path).qtype_name
+      t = Time.zone.parse(expected_value)
+      unless qtype_name == "time"
+        expect(control_for_temporal(path, qtype_name, :year).value).to eq(t.strftime("%Y"))
+        expect(control_for_temporal(path, qtype_name, :month)
+          .find("option[selected]").text).to eq(t.strftime("%b"))
+        expect(control_for_temporal(path, qtype_name, :day).value).to eq(t.day.to_s)
+      end
+      unless qtype_name == "date"
+        expect(control_for_temporal(path, qtype_name, :hour).value).to eq(t.strftime("%H"))
+        expect(control_for_temporal(path, qtype_name, :minute).value).to eq(t.strftime("%M"))
+        expect(control_for_temporal(path, qtype_name, :second).value).to eq(t.strftime("%S"))
+      end
+    when "select_one"
+      el = page.find("#" + path_selector(path, "option_node_id"), visible: :all)
+      OptionNode.find(el.value).option_name if el.value
+    else
+      actual_value = page.find("#" + path_selector(path, "value"), visible: :all).value
+      expect(actual_value).to eq(expected_value)
+    end
   end
 
   def qing(path)
@@ -124,7 +139,7 @@ shared_context "response tree" do
   end
 
   def expect_not_persisted(qing_id)
-    expect(page).to_not have_selector("[data-qing-id='#{qing_id}']")
+    expect(page).to_not(have_selector("[data-qing-id='#{qing_id}']"))
   end
 
   def expect_image(path, qing_id)
@@ -161,5 +176,13 @@ shared_context "response tree" do
   def expect_read_only_value(path, value)
     el = page.find("[data-path='#{path.join('-')}']")
     expect(el).to have_content(value)
+  end
+
+  def temporal_mapping
+    {year: "1i", month: "2i", day: "3i", hour: "4i", minute: "5i", second: "6i"}
+  end
+
+  def control_for_temporal(path, type, subfield)
+    find("##{path_selector(path, "#{type}_value_#{temporal_mapping[subfield]}")}")
   end
 end

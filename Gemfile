@@ -135,7 +135,7 @@ gem "react-rails"
 gem 'webpacker', '~> 3.5'
 
 # Closure tree for answer heirarchy
-gem "closure_tree", git: "https://github.com/smoyth/closure_tree", branch: "patch-1"
+gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree", branch: "soft_delete_hack"
 
 group :development do
   # generate diagrams with rake db:migrate

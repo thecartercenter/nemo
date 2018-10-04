@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "SMS Guide", js: true do
   let!(:user) { create(:user) }
-  let!(:mission) { get_mission.setting.update_attributes!(preferred_locales_str: "en,fr,rw") }
+  let!(:mission) { get_mission.setting.update!(preferred_locales_str: "en,fr,rw") }
 
   before do
     login(user)
@@ -18,7 +18,7 @@ feature "SMS Guide", js: true do
     scenario "happy path" do
       click_link "Forms"
       click_link "SMS Guide"
-      expect(page).to have_content "Text Question Title"
+      expect(page).to have_content("Text Question Title")
     end
   end
 
@@ -46,18 +46,18 @@ feature "SMS Guide", js: true do
       click_link "Forms"
       click_link "SMS Guide"
       select("Français", from: "lang")
-      expect(page).to have_content "Formulaire"
-      expect(page).to have_content "fr: Text Question Title"
-      expect(page).to have_content "fr: Question Hint"
+      expect(page).to have_content("Formulaire")
+      expect(page).to have_content("fr: Text Question Title")
+      expect(page).to have_content("fr: Question Hint")
     end
 
     scenario "view :rw guide" do
       click_link "Forms"
       click_link "SMS Guide"
       select("Kinyarwanda", from: "lang")
-      expect(page).to have_content "Paper"
-      expect(page).to have_content "rw: Text Question Title"
-      expect(page).to have_content "rw: Question Hint"
+      expect(page).to have_content("Paper")
+      expect(page).to have_content("rw: Text Question Title")
+      expect(page).to have_content("rw: Question Hint")
     end
 
     context "where current locale is different from preferred locale" do
@@ -65,24 +65,24 @@ feature "SMS Guide", js: true do
 
       scenario "view :fr guide" do
         visit user_path(user, mode: "m", mission_name: get_mission.compact_name, locale: I18n.locale)
-        expect(page).to have_content "Entregar"
+        expect(page).to have_content("Entregar")
         click_link "Formularios"
         click_link "SMS Guide"
         select("Français", from: "lang")
-        expect(page).to have_content "Formulaire"
-        expect(page).to have_content "fr: Text Question Title"
-        expect(page).to have_content "fr: Question Hint"
+        expect(page).to have_content("Formulaire")
+        expect(page).to have_content("fr: Text Question Title")
+        expect(page).to have_content("fr: Question Hint")
       end
 
       scenario "view :rw guide" do
         visit user_path(user, mode: "m", mission_name: get_mission.compact_name, locale: I18n.locale)
-        expect(page).to have_content "Entregar"
+        expect(page).to have_content("Entregar")
         click_link "Formularios"
         click_link "SMS Guide"
         select("Kinyarwanda", from: "lang")
-        expect(page).to have_content "Paper"
-        expect(page).to have_content "rw: Text Question Title"
-        expect(page).to have_content "rw: Question Hint"
+        expect(page).to have_content("Paper")
+        expect(page).to have_content("rw: Text Question Title")
+        expect(page).to have_content("rw: Question Hint")
       end
     end
   end
