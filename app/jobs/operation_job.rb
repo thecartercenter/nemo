@@ -3,23 +3,15 @@ class OperationJob < ApplicationJob
 
   rescue_from StandardError, with: :operation_raised_error
 
-  before_perform { |job| job.operation_started }
-
-  after_perform { |job| job.operation_completed }
+  before_perform :operation_started, if: :operation
+  after_perform :operaation_completed, if: :operation
 
   protected
 
   def operation
-    arguments.first.tap do |operation|
-      if operation.nil?
-        Rails.logger.warn "Unable to update failed operation for job: #{self.inspect}"
-        break
-      end
-
-      unless operation.is_a?(Operation)
-        raise ArgumentError, "unexpected type for operation: #{operation.inspect}"
-      end
-    end
+    # The `Operation` instance tracking this job is always passed as
+    # the first argument to `perform`
+    arguments.first
   end
 
   def operation_started

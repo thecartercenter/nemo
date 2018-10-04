@@ -10,29 +10,27 @@ describe OperationJob do
 
 
   describe "#perform" do
-    context "no errors" do
-      subject do
-        Class.new(described_class) do
-          def perform
-          end
+    subject do
+      Class.new(described_class) do
+        def perform(operation, *args)
         end
       end
+    end
 
-      it "marks operation as started" do
-        subject.perform_now(operation)
-        expect(operation.reload.job_started_at).to_not be_nil
-      end
+    it "marks operation as started" do
+      subject.perform_now(operation)
+      expect(operation.reload.job_started_at).to_not be_nil
+    end
 
-      it "marks operation as completed" do
-        subject.perform_now(operation)
-        expect(operation.reload.job_completed_at).to_not be_nil
-      end
+    it "marks operation as completed" do
+      subject.perform_now(operation)
+      expect(operation.reload.job_completed_at).to_not be_nil
     end
 
     context "raises error" do
       subject do
         Class.new(described_class) do
-          def perform
+          def perform(operation, *args)
             raise StandardError
           end
         end
