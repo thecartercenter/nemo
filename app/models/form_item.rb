@@ -84,6 +84,9 @@ class FormItem < ApplicationRecord
   def preordered_descendants(eager_load: nil, type: nil)
     items = eager_load ? descendants.includes(eager_load) : descendants
     sorted_items = self.class.sort_by_ancestry(items) { |a, b| a.rank <=> b.rank }
+
+    # the items are filtered after the sort because we need to have all
+    # FormItem types (Questioning and QingGroup) to be available for the sort to work properly
     type ? sorted_items.select { |i| i.type == type } : sorted_items
   end
 
