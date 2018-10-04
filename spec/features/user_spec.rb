@@ -41,29 +41,23 @@ feature "user", js: true do
     find("i.fa-sign-out").click
 
     # newly created admin is redirected straight to the root page on login
-    fill_login_form
-    user_is_on_root_page
+    login_and_redirect_to_root_page
 
     # newly created admin signs out
     find("i.fa-sign-out").click
 
     # newly created admin logs in for the second time and is redirected straight to the root page on login
-    fill_login_form
-    user_is_on_root_page
+    login_and_redirect_to_root_page
   end
 
   scenario "self edit action after login redirects properly" do
     visit("/en/m/#{mission.compact_name}/users/#{admin.id}/edit")
-    click_on("Save")
-    expect(page).to have_content("Edit Profile")
-    expect(page).to have_content("updated successfully")
+    save_and_redirect_to_edit_page
   end
 
   scenario "editing a different user redirects properly" do
     visit("/en/m/#{mission.compact_name}/users/#{user.id}/edit")
-    click_on("Save")
-    expect(page).to have_content("Edit User")
-    expect(page).to have_content("updated successfully")
+    save_and_redirect_to_edit_page
   end
 
   def fill_login_form
@@ -73,6 +67,17 @@ feature "user", js: true do
       fill_in("Password", with: "Xxxxxxxx1")
       click_on "Login"
     end
+  end
+
+  def login_and_redirect_to_root_page
+    fill_login_form
+    user_is_on_root_page
+  end
+
+  def save_and_redirect_to_edit_page
+    click_on("Save")
+    expect(page).to have_content("Edit")
+    expect(page).to have_content("updated successfully")
   end
 
   def user_is_on_root_page

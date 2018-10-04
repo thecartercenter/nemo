@@ -60,8 +60,6 @@ class UsersController < ApplicationController
     authorize!(:change_assignments, @user) if params[:user].has_key?(:assignments_attributes)
     authorize!(:activate, @user) if params[:user].has_key?(:active)
 
-    pref_lang_changed = @user.pref_lang_changed?
-
     if @user.save
       # if the user's password was reset, do it, and show instructions if requested
       reset_password(@user, mission: current_mission, notify_method: @user.reset_password_method)
@@ -69,7 +67,7 @@ class UsersController < ApplicationController
       if @user != current_user || @user.login_count > 1
         set_success(@user)
       else
-        I18n.locale = @user.pref_lang.to_sym if pref_lang_changed
+        I18n.locale = @user.pref_lang.to_sym if @user.pref_lang_changed?
         return redirect_to(mission_root_url(mission_name: @user.best_mission.compact_name),
           success: t("user.profile_updated"))
       end
