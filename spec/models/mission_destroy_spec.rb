@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "mission destroy" do
@@ -12,10 +14,10 @@ describe "mission destroy" do
       "Form": 2,
       "Mission": 1,
       "Option": 10,
-      "OptionNode": 26,
-      "OptionSet": 6,
+      "OptionNode": 20,
+      "OptionSet": 4,
       "QingGroup": 4,
-      "Question": 11,
+      "Question": 6,
       "Questioning": 10,
       "Report::Report": 1,
       "Response": 1,
@@ -25,12 +27,12 @@ describe "mission destroy" do
       "UserGroupAssignment": 3
     }
   end
-  let(:deleted_counts) { expected_counts.map { |k, v| [k, 0] }.to_h }
+  let(:deleted_counts) { expected_counts.map { |k, _| [k, 0] }.to_h }
 
   it "should delete all objects in mission" do
-    expect(actual_counts).to eq expected_counts
+    expect(actual_counts).to eq(expected_counts)
     mission.destroy
-    expect(actual_counts).to eq deleted_counts
+    expect(actual_counts).to eq(deleted_counts)
   end
 
   def actual_counts
