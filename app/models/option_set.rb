@@ -1,10 +1,17 @@
+# frozen_string_literal: true
+
+# A collection of options for a select one or select multiple question. May be flat or multi-level.
 class OptionSet < ApplicationRecord
   # We use this instead of autosave since autosave doesn't work right for belongs_to.
   # It is up here because it should happen early, e.g., before form version callbacks.
   after_save :save_root_node
 
-  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
-  SMS_GUIDE_FORMATTING_OPTIONS = %w(auto inline appendix treat_as_text)
+  include Replication::Replicable
+  include Replication::Standardizable
+  include FormVersionable
+  include MissionBased
+
+  SMS_GUIDE_FORMATTING_OPTIONS = %w[auto inline appendix treat_as_text].freeze
 
   acts_as_paranoid
 
@@ -12,11 +19,11 @@ class OptionSet < ApplicationRecord
   before_destroy :check_associations
   before_destroy :nullify_root_node
 
-  has_many :questions, inverse_of: :option_set
+  has_many :questions, inverse_of: :option_set, dependent: :nullify
   has_many :questionings, through: :questions
-  has_many :option_nodes, -> { order(:rank) }, dependent: :destroy
-  has_many :report_option_set_choices, class_name: "Report::OptionSetChoice"
-
+  has_many :option_nodes, -> { order(:rank) }, dependent: :destroy, inverse_of: :option_set
+  has_many :report_option_set_choices, class_name: "Report::OptionSetChoice", inverse_of: :option_set,
+                                       dependent: :destroy
   belongs_to :root_node, -> { where(option_id: nil) }, class_name: "OptionNode", dependent: :destroy
 
   before_validation :copy_attribs_to_root_node
@@ -29,25 +36,12 @@ class OptionSet < ApplicationRecord
   scope :by_name, -> { order("option_sets.name") }
   scope :default_order, -> { by_name }
 
-  replicable child_assocs: :root_node, backwards_assocs: :questions, dont_copy: :root_node_id, 
+  replicable child_assocs: :root_node, backwards_assocs: :questions, dont_copy: :root_node_id,
              uniqueness: {field: :name, style: :sep_words}, reusable_in_clone: true
 
-  delegate :ranks_changed?,
-    :children,
-    :c,
-    :ranks_changed?,
-    :options_added?,
-    :options_removed?,
-    :total_options,
-    :descendants,
-    :all_options,
-    :max_depth,
-    :options_not_serialized,
-    :arrange_as_rows,
-    :arrange_with_options,
-    :sorted_children,
-    :first_leaf_option,
-    :first_leaf_option_node,
+  delegate :ranks_changed?, :children, :c, :ranks_changed?, :options_added?, :options_removed?,
+    :total_options, :descendants, :all_options, :max_depth, :options_not_serialized, :arrange_as_rows,
+    :arrange_with_options, :sorted_children, :first_leaf_option, :first_leaf_option_node,
     to: :root_node
 
   # These methods are for the form.
@@ -74,7 +68,7 @@ class OptionSet < ApplicationRecord
   def self.all_options_for_sets(set_ids)
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).all.map(&:root_node_id)
-    where_clause = root_node_ids.map { |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(" OR ")
+    where_clause = +root_node_ids.map { |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(" OR ")
     where_clause << " AND deleted_at IS NULL"
     Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{where_clause})").to_a
   end
@@ -97,7 +91,7 @@ class OptionSet < ApplicationRecord
   # Given an Option, returns the path down the tree of Options in this set to that Option.
   # Returns nil if option not found in set.
   def path_to_option(option)
-    node = OptionNode.where(option_set: self, option: option).first
+    node = OptionNode.find_by(option_set: self, option: option)
     return nil if node.nil?
 
     # Trim the root node and map to options.
@@ -110,11 +104,11 @@ class OptionSet < ApplicationRecord
   end
 
   def levels
-    @levels ||= multilevel? ? level_names.map{ |n| OptionLevel.new(name_translations: n) } : nil
+    @levels ||= multilevel? ? level_names.map { |n| OptionLevel.new(name_translations: n) } : nil
   end
 
-  def levels=(ls)
-    self.level_names = ls.map { |l| l.name_translations }
+  def levels=(levels)
+    self.level_names = levels.map(&:name_translations)
   end
 
   def level_names=(names)
@@ -126,21 +120,21 @@ class OptionSet < ApplicationRecord
   end
 
   def level_name_for_depth(depth)
-    levels[depth-1].name
+    levels[depth - 1].name
   end
 
   def multilevel?
     return @multilevel if defined?(@multilevel)
-    @multilevel = !!root_node.try(:has_grandchildren?)
+    @multilevel = root_node&.has_grandchildren? == true
   end
-  alias_method :multilevel, :multilevel?
+  alias multilevel multilevel?
 
   def huge?
     root_node.present? ? root_node.huge? : false
   end
 
   def can_be_multilevel?
-    !(has_select_multiple_questions? || huge? || !question_type_supports_multilevel?)
+    !(select_multiple_questions? || huge? || !question_type_supports_multilevel?)
   end
 
   def question_type_supports_multilevel?
@@ -154,7 +148,7 @@ class OptionSet < ApplicationRecord
   def first_level_options
     root_node.child_options
   end
-  alias_method :options, :first_level_options
+  alias options first_level_options
 
   # checks if this option set appears in any smsable questionings
   def form_smsable?
@@ -166,7 +160,7 @@ class OptionSet < ApplicationRecord
     @option_ids_with_answers ||= Answer.where(
       questioning_id: questionings.map(&:id),
       option_id: descendants.map(&:option_id)
-      ).pluck("DISTINCT option_id")
+    ).pluck("DISTINCT option_id")
 
     # Respond to particular request.
     @option_ids_with_answers.include?(option_id)
@@ -176,13 +170,14 @@ class OptionSet < ApplicationRecord
     is_standard? ? false : questionings.any?(&:published?)
   end
 
-  # checks if this option set is used in at least one question or if any copies are used in at least one question
-  def has_questions?
-    ttl_question_count > 0
+  # Checks if this option set is used in at least one question
+  # or if any copies are used in at least one question.
+  def any_questions?
+    ttl_question_count.positive?
   end
 
   # Checks if option set is used in at least one select_multiple question.
-  def has_select_multiple_questions?
+  def select_multiple_questions?
     questions.any? { |q| q.qtype_name == "select_multiple" }
   end
 
@@ -204,8 +199,8 @@ class OptionSet < ApplicationRecord
     is_standard? ? copies.any?(&:has_answers?) : questionings.any?(&:has_answers?)
   end
 
-  def has_answers_for_option?(option_id)
-    questionings.any? ? Answer.any_for_option_and_questionings?(option_id, questionings.map(&:id)) : false
+  def answers_for_option?(option_id)
+    questionings.any? && Answer.any_for_option_and_questionings?(option_id, questionings.map(&:id))
   end
 
   def answer_count
@@ -257,7 +252,7 @@ class OptionSet < ApplicationRecord
   def sms_formatting
     case sms_guide_formatting
     when "auto"
-      (descendants.count <= 26) ? "inline" : "appendix"
+      descendants.count <= 26 ? "inline" : "appendix"
     else
       sms_guide_formatting
     end
@@ -287,20 +282,16 @@ class OptionSet < ApplicationRecord
   end
 
   def worksheet_name
-    name = self.name
-    name = name.truncate(31) if self.name.size > 31
-    name = name.gsub(
-      %r{[\[\]\*\\?\:\/]}, {
-        "[" => "(",
-        "]" => ")",
-        "*" => "∗",
-        "?" => "",
-        ":" => "-",
-        "\\" => "-",
-        "/" => "-"
-      }
+    (name.size > 31 ? name.truncate(31) : name).gsub(
+      %r{[\[\]\*\\?\:\/]},
+      "[" => "(",
+      "]" => ")",
+      "*" => "∗",
+      "?" => "",
+      ":" => "-",
+      "\\" => "-",
+      "/" => "-"
     )
-    name
   end
 
   def shortcode_length
@@ -327,7 +318,7 @@ class OptionSet < ApplicationRecord
     def node(*names)
       names.reduce(self) do |match, name|
         match = match.children.detect { |c| c.option_name == name }
-        raise ArgumentError.new("Could find option with name #{name} in set #{set}") if match.nil?
+        raise ArgumentError, "Could find option with name #{name} in set #{set}" if match.nil?
         match
       end
     end
@@ -347,15 +338,15 @@ class OptionSet < ApplicationRecord
 
   def check_associations
     # make sure not associated with any questions
-    raise DeletionError.new(:cant_delete_if_has_questions) if has_questions?
+    raise DeletionError, :cant_delete_if_has_questions if any_questions?
 
     # make sure not associated with any answers
-    raise DeletionError.new(:cant_delete_if_has_answers) if has_answers?
+    raise DeletionError, :cant_delete_if_has_answers if has_answers?
   end
 
   def normalize_fields
     self.name = name.strip
-    self.allow_coordinates = false unless self.geographic?
+    self.allow_coordinates = false unless geographic?
     true
   end
 
@@ -364,11 +355,10 @@ class OptionSet < ApplicationRecord
   end
 
   def save_root_node
-    if root_node
-      # Need to copy this here instead of copy_attribs_to_root_node because the ID may not exist yet
-      # in the latter.
-      root_node.option_set_id = id
-      root_node.save!
-    end
+    return unless root_node
+    # Need to copy this here instead of copy_attribs_to_root_node because the ID may not exist yet
+    # in the latter.
+    root_node.option_set_id = id
+    root_node.save!
   end
 end

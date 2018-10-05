@@ -118,7 +118,7 @@ class Form < ApplicationRecord
     current_version.try(:code) || ""
   end
 
-  def has_questions?
+  def any_questions?
     questionings.any?
   end
 

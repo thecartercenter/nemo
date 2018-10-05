@@ -371,7 +371,7 @@ class OptionNode < ApplicationRecord
 
   def has_answers?
     # option_set may not be present when node first getting built
-    !is_root? && option_set.present? && option_set.has_answers_for_option?(option_id)
+    !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
   end
 
   def ensure_no_answers_or_choices
