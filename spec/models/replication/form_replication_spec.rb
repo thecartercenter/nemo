@@ -241,14 +241,25 @@ describe Form do
   describe "clone" do
     context "basic" do
       let(:orig) { create(:form, question_types: ["integer", %w[select_one integer]], is_standard: true) }
-      let(:copy) { orig.replicate(mode: :clone).reload }
+      let(:copy) { orig.replicate(mode: :clone) }
+
+      before do
+        orig.reload
+      end
 
       it "should reuse only reusable objects" do
         expect(orig).not_to eq(copy)
         expect(orig.root_group).not_to eq(copy.root_group)
         expect(orig.c[0]).not_to eq(copy.c[0])
-        expect(orig.c[0].question).to eq(copy.c[0].question) # reusable
-        expect(orig.c[1].c[0]).not_to eq(copy.c[1].c[0])
+        expect(orig.c[0].question).to eq(copy.c[0].question) # Questions reusable
+        expect(orig.c[1].c[0]).not_to eq(copy.c[1].c[0]) # Questionings not reusable
+        expect(orig.c[1].c[0].option_set).to eq(copy.c[1].c[0].option_set) # OptionSets reusable
+        expect(orig.c[1].c[0].option_set.preordered_option_nodes).to eq(
+          copy.c[1].c[0].option_set.preordered_option_nodes # OptionNodes reusable
+        )
+        expect(orig.c[1].c[0].option_set.first_level_options).to eq(
+          copy.c[1].c[0].option_set.first_level_options # Options reusable
+        )
       end
 
       it "should produce correct form references" do

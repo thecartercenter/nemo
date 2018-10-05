@@ -86,10 +86,12 @@ describe Question do
     let(:orig) { create(:question, qtype_name: "select_one", key: true, code: code) }
     let(:copy) { orig.replicate(mode: :clone) }
 
-    it "should not replicate key field or option set" do
+    it "should not replicate key field, option set, option nodes, or options" do
       expect(copy).not_to eq(orig)
       expect(copy.key).to be(false)
       expect(copy.option_set).to eq(orig.option_set)
+      expect(copy.option_set.preordered_option_nodes).to eq(orig.option_set.preordered_option_nodes)
+      expect(copy.option_set.first_level_options).to eq(orig.option_set.first_level_options)
     end
 
     context "with code ending in 0" do
