@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 feature "responses csv export" do
   include ActiveJob::TestHelper
@@ -13,7 +15,7 @@ feature "responses csv export" do
     {
       locale: "en",
       mode: "m",
-      mission_name: get_mission.compact_name,
+      mission_name: get_mission.compact_name
     }
   end
 

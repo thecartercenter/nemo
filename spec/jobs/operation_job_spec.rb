@@ -1,13 +1,15 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe OperationJob do
-
-  let(:operation) { create(:operation,
-                           job_class: subject,
-                           job_id: nil,
-                           job_started_at: nil,
-                           job_completed_at: nil) }
-
+  let(:operation) do
+    create(:operation,
+      job_class: subject,
+      job_id: nil,
+      job_started_at: nil,
+      job_completed_at: nil)
+  end
 
   describe "#perform" do
     subject do
