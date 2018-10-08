@@ -183,6 +183,15 @@ describe Form do
     end
   end
 
+  describe "questioning" do
+    let(:form) { create(:form, mission: mission, question_types: [%w[text long_text], "integer", "decimal"]) }
+
+    it "has the questionings in the right order" do
+      expect(form.questionings.count).to eq(4)
+      expect(form.questionings.map(&:qtype_name)).to eq(%w[text long_text integer decimal])
+    end
+  end
+
   def publish_and_reset_pub_changed_at(options = {})
     f = options[:form] || form
     f.publish!

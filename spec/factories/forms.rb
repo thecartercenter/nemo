@@ -52,9 +52,7 @@ def create_questioning(qtype_name_or_question, form, attribs = {})
   attribs[:mission] = form.mission
   attribs[:form] = form
   attribs[:question] = question
-  questioning = create(:questioning, attribs)
-  form.questionings << questioning
-  questioning
+  create(:questioning, attribs)
 end
 
 def build_item(item, form, parent, evaluator)
