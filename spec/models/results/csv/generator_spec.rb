@@ -63,9 +63,10 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         end
 
         # Response with multilevel geo partial answer with node (Canada) with no coordinates
+        # Also testing reviewed column true here.
         Timecop.freeze(10.minutes) do
           create_response(
-            form: form1,
+            form: form1, reviewed: true,
             answer_values: ["foo", %w[Canada], "bar", 100, -123.50,
                             "15.937378 44.36453", "Cat", %w[Dog Cat], %w[Dog Cat],
                             "2015-10-12 18:15 UTC", "2014-11-09", "23:15:19"]
@@ -194,7 +195,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     before do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
         image_obj = Media::Image.create!(item: media_fixture("images/the_swing.jpg"))
-        create_response(form: form1, reviewed: true, answer_values: ["foo", image_obj])
+        create_response(form: form1, answer_values: ["foo", image_obj])
       end
     end
 
@@ -237,7 +238,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     let(:relation) do
       # Simulate some conditions like we'd get from a search.
       Response.for_mission(get_mission).joins(:form)
-        .where("(((responses.reviewed = 'n')) OR ((forms.name ILIKE '%Sample%')))")
+        .where("(((responses.reviewed = 'n')) AND ((forms.name ILIKE '%Sample%')))")
     end
 
     before do
