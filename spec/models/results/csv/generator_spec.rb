@@ -15,7 +15,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
   context "with no data" do
     it "produces correct csv" do
       is_expected.to eq("ResponseID,Shortcode,Form,Submitter,DateSubmitted,"\
-        "GroupName,GroupLevel\r\n")
+        "Reviewed,GroupName,GroupLevel\r\n")
     end
   end
 
@@ -63,9 +63,10 @@ describe Results::Csv::Generator, :reset_factory_sequences do
         end
 
         # Response with multilevel geo partial answer with node (Canada) with no coordinates
+        # Also testing reviewed column true here.
         Timecop.freeze(10.minutes) do
           create_response(
-            form: form1,
+            form: form1, reviewed: true,
             answer_values: ["foo", %w[Canada], "bar", 100, -123.50,
                             "15.937378 44.36453", "Cat", %w[Dog Cat], %w[Dog Cat],
                             "2015-10-12 18:15 UTC", "2014-11-09", "23:15:19"]
@@ -160,13 +161,19 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     before do
       Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
         Timecop.freeze(1.minute) do
-          create_response(form: form1, answer_values: [%(<p>foo</p><p>"bar"<br/>baz, stuff</p>)])
+          create_response(
+            form: form1,
+            answer_values: [%(<p>foo</p><p>"bar"<br/>baz, stuff</p>)]
+          )
         end
         Timecop.freeze(2.minutes) do
           create_response(form: form1, answer_values: [%(bar,baz)])
         end
         Timecop.freeze(3.minutes) do
-          create_response(form: form1, answer_values: [%(\r\nwin\r\n\r\nfoo\r\n)]) # Win line endings
+          create_response(
+            form: form1,
+            answer_values: [%(\r\nwin\r\n\r\nfoo\r\n)]
+          ) # Win line endings
         end
         Timecop.freeze(4.minutes) do
           create_response(form: form1, answer_values: [%(\nunix\n\nfoo\n)]) # Unix line endings

@@ -1,2 +1,2 @@
-ResponseID,Shortcode,Form,Submitter,DateSubmitted,GroupName,GroupLevel,ImageQ2,TextQ1
-*id1*,*shortcode1*,Sample Form 1,A User 1,2015-11-20 06:30:00-06,,0,,foo
+ResponseID,Shortcode,Form,Submitter,DateSubmitted,Reviewed,GroupName,GroupLevel,ImageQ2,TextQ1
+*id1*,*shortcode1*,Sample Form 1,A User 1,2015-11-20 06:30:00-06,false,,0,,foo
