@@ -1,4 +1,5 @@
 class Operation < ApplicationRecord
+  include MissionBased
   belongs_to :creator, class_name: 'User'
 
   validates :job_class, presence: true

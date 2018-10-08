@@ -6,7 +6,11 @@ class OperationsController < ApplicationController
   load_and_authorize_resource
 
   def index
-    @operations = @operations.order(created_at: :desc)
+    @operations = if current_mission.present?
+                    @operations.for_mission(current_mission).order(created_at: :desc)
+                  else
+                    @operations.order(created_at: :desc) # Display ALL operations on server
+                  end
   end
 
   def show
