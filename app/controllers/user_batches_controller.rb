@@ -19,7 +19,9 @@ class UserBatchesController < ApplicationController
           job_class: TabularImportOperationJob,
           details: t("operation.details.user_import_operation_job",
             file: @user_batch.file.original_filename,
-            mission_name: current_mission.name))
+            mission_name: current_mission.name),
+          mission_id: current_mission.try(:id)
+        )
         operation.begin!(current_mission, nil, stored_path, @user_batch.class.to_s)
 
         flash[:html_safe] = true

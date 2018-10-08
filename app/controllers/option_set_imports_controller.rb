@@ -17,7 +17,8 @@ class OptionSetImportsController < ApplicationController
             "operation.details.option_set_import_operation_job",
             name: @option_set_import.name,
             mission_name: mission_name
-          )
+          ),
+          mission_id: current_mission.try(:id)
         )
         operation.begin!(
           @option_set_import.mission,
