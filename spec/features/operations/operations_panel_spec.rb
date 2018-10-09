@@ -32,7 +32,7 @@ feature "operations panel" do
     before(:each) do
       stub = double
       allow(stub).to receive(:running?).and_return(result)
-      allow(DelayedJobChecker.to(receive(:new).and_return(stub)))
+      allow(DelayedJobChecker).to(receive(:new).and_return(stub))
     end
     let(:error_message) { "Background processes for operations are stopped. Please contact administrator." }
 
