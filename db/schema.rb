@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180924213302) do
+ActiveRecord::Schema.define(version: 20181004181337) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -288,8 +288,7 @@ ActiveRecord::Schema.define(version: 20180924213302) do
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.uuid "creator_id"
-    t.integer "creator_old_id"
-    t.string "description", limit: 255, null: false
+    t.string "details", limit: 255, null: false
     t.string "job_class", limit: 255, null: false
     t.datetime "job_completed_at"
     t.text "job_error_report"
@@ -297,8 +296,9 @@ ActiveRecord::Schema.define(version: 20180924213302) do
     t.string "job_id", limit: 255
     t.string "job_outcome_url", limit: 255
     t.datetime "job_started_at"
-    t.integer "old_id"
+    t.uuid "mission_id"
     t.string "provider_job_id", limit: 255
+    t.boolean "unread", default: true, null: false
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_operations_on_created_at"
     t.index ["creator_id"], name: "index_operations_on_creator_id"

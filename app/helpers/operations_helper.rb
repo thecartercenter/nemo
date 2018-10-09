@@ -16,7 +16,7 @@ module OperationsHelper
   def format_operations_field(operation, field)
     case field
     when 'description'
-      link_to(operation.description, operation_path(operation))
+      link_to(operation.details, operation_path(operation))
     when 'creator'
       link_to(operation.creator.name, user_path(operation.creator))
     when 'created_at'

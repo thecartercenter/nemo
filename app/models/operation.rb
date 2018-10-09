@@ -1,9 +1,10 @@
 class Operation < ApplicationRecord
+  include MissionBased
   belongs_to :creator, class_name: 'User'
 
   validates :job_class, presence: true
   validates :creator, presence: true
-  validates :description, presence: true
+  validates :details, presence: true
 
   def name
     "##{id}"
