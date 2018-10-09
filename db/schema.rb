@@ -302,6 +302,7 @@ ActiveRecord::Schema.define(version: 20181004181337) do
     t.datetime "updated_at", null: false
     t.index ["created_at"], name: "index_operations_on_created_at"
     t.index ["creator_id"], name: "index_operations_on_creator_id"
+    t.index ["mission_id"], name: "index_operations_on_mission_id"
   end
 
   create_table "option_nodes", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -721,6 +722,7 @@ ActiveRecord::Schema.define(version: 20181004181337) do
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_original_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "media_objects", "answers", name: "media_objects_answer_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "operations", "missions"
   add_foreign_key "operations", "users", column: "creator_id", name: "operations_creator_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_original_id_fkey", on_update: :restrict, on_delete: :nullify

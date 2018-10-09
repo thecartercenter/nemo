@@ -1,10 +1,6 @@
 class Operation < ApplicationRecord
   belongs_to :creator, class_name: 'User'
 
-  validates :job_class, presence: true
-  validates :creator, presence: true
-  validates :details, presence: true
-
   def name
     "##{id}"
   end
