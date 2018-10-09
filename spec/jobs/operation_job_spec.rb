@@ -3,13 +3,7 @@
 require "rails_helper"
 
 describe OperationJob do
-  let(:operation) do
-    create(:operation,
-      job_class: subject,
-      job_id: nil,
-      job_started_at: nil,
-      job_completed_at: nil)
-  end
+  let(:operation) { create(:operation, job_class: subject) }
 
   describe "#perform" do
     subject(:operation_job) do
