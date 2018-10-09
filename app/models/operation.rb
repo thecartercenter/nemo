@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # An operation represents work to be performed in the background.
 # This model stores the state of the background job but does not
 # actually perform any of the work itself and should not be subclassed

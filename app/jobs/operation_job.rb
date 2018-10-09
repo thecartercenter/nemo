@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # An operation job is an ActiveJob with an associated `Operation`
 # context to manage its state.  By convention, the job's `Operation` is
 # passed as the first argument to the `perform` method.
@@ -31,7 +33,7 @@ class OperationJob < ApplicationJob
   end
 
   def operation_started
-    operation.update_attribute(:job_started_at, Time.now)
+    operation.update!(job_started_at: Time.current)
   end
 
   def load_settings
@@ -41,7 +43,7 @@ class OperationJob < ApplicationJob
   end
 
   def operation_succeeded(attributes = nil)
-    operation.update_attributes(attributes) if attributes.present?
+    operation.update!(attributes) if attributes.present?
   end
 
   def operation_failed(report)
@@ -54,7 +56,7 @@ class OperationJob < ApplicationJob
   end
 
   def operation_completed
-    operation.update_attribute(:job_completed_at, Time.current)
+    operation.update!(job_completed_at: Time.current)
   end
 
   private

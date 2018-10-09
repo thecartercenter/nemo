@@ -1,28 +1,40 @@
+# frozen_string_literal: true
+
 class ResponseCsvExportOperationJob < OperationJob
   def perform(operation, mission, search = nil)
     ability = Ability.new(user: operation.creator, mission: mission)
-    responses = Response.accessible_by(ability, :export)
+    result = generate_csv(responses(ability, search), mission)
+    operation_succeeded(result)
+  rescue Search::ParseError => error
+    operation_failed(error.to_s)
+  end
 
-    # do search, excluding excerpts
-    if search.present?
-      responses = Response.do_search(
-        responses,
-        search,
-        {mission: mission},
-        include_excerpts: false
-      )
-    end
+  private
+
+  def responses(ability, search)
+    responses = Response.accessible_by(ability, :export)
+    responses = search(responses, search, ability.mission) if search.present?
 
     # Get the response, for export, but not paginated.
     # We deliberately don't eager load as that is handled in the Results::Csv::Generator class.
-    responses = responses.order(:created_at)
+    responses.order(:created_at)
+  end
 
+  def search(responses, search, mission)
+    # do search, excluding excerpts
+    Response.do_search(
+      responses,
+      search,
+      {mission: mission},
+      include_excerpts: false
+    )
+  end
+
+  def generate_csv(responses, mission)
     attachment = Results::Csv::Generator.new(responses).export
     timestamp = Time.zone.now.to_s(:filename_datetime)
     attachment_download_name = "elmo-#{mission.compact_name}-responses-#{timestamp}.csv"
 
-    operation_succeeded(attachment: attachment, attachment_download_name: attachment_download_name)
-  rescue Search::ParseError => error
-    operation_failed(error.to_s)
+    {attachment: attachment, attachment_download_name: attachment_download_name}
   end
 end
