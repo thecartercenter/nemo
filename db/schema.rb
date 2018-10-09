@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181009155745) do
+ActiveRecord::Schema.define(version: 20181009160102) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -115,6 +115,7 @@ ActiveRecord::Schema.define(version: 20181009155745) do
     t.uuid "option_id", null: false
     t.integer "option_old_id"
     t.datetime "updated_at"
+    t.index ["answer_id", "option_id"], name: "index_choices_on_answer_id_and_option_id", unique: true
     t.index ["answer_id"], name: "index_choices_on_answer_id"
     t.index ["deleted_at"], name: "index_choices_on_deleted_at"
     t.index ["option_id"], name: "index_choices_on_option_id"
