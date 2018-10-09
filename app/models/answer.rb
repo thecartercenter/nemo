@@ -360,14 +360,27 @@ class Answer < ResponseNode
   end
 
   def validate_date
-    raw_date = read_attribute_before_type_cast("date_value")
-    return if raw_date.blank? || Time.zone.parse(raw_date.to_s).present?
+    # The date_value before typecast may be a string or a hash (in the case of a multiparam attrib
+    # submission like date_value(1i), date_value(2i), etc.) If it is an invalid string, Rails silently
+    # coerces it to nil without setting a validation error or raises an error. We want to show a validation
+    # error instead.
+    return if raw_date_value_ok?("date_value")
     errors.add(:date_value, :invalid_date)
   end
 
   def validate_datetime
-    raw_datetime = read_attribute_before_type_cast("datetime_value")
-    return if raw_datetime.blank? || Time.zone.parse(raw_datetime.to_s).present?
+    # See comment for the validate_date method above. The same applies here.
+    return if raw_date_value_ok?("datetime_value")
     errors.add(:datetime_value, :invalid_datetime)
+  end
+
+  def raw_date_value_ok?(attrib_name)
+    raw = read_attribute_before_type_cast(attrib_name)
+    return true if raw.blank? || raw.is_a?(Hash)
+    begin
+      Time.zone.parse(raw.to_s) && true
+    rescue ArgumentError
+      false
+    end
   end
 end
