@@ -151,7 +151,7 @@ feature "response form rendering and submission", js: true do
       fill_in_question([7], with: "Dog")
       fill_in_question([8], with: %w[Dog Cat])
       fill_in_question([9], with: "Mar 12 #{Time.current.year} 18:32:44")
-      fill_in_question([10], with: "Oct 26 #{Time.current.year}")
+      fill_in_question([10], with: "Apr 4 #{Time.current.year}")
       fill_in_question([11], with: "03:08:23")
       click_button("Save")
 
@@ -172,7 +172,7 @@ feature "response form rendering and submission", js: true do
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
       expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
-      expect_value([10], "Oct 26 #{Time.current.year}")
+      expect_value([10], "Apr 4 #{Time.current.year}")
       expect_value([11], "03:08:23")
 
       # remove second inner repeat
@@ -203,7 +203,7 @@ feature "response form rendering and submission", js: true do
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
       expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
-      expect_value([10], "Oct 26 #{Time.current.year}")
+      expect_value([10], "Apr 4 #{Time.current.year}")
       expect_value([11], "03:08:23")
       # update a value
       fill_in_question([0, 0], with: "1234")
@@ -212,7 +212,7 @@ feature "response form rendering and submission", js: true do
       all("a.remove-repeat").last.click
 
       click_button("Save")
-      expect(page).to_not have_content("Response is invalid")
+      expect(page).not_to have_content("Response is invalid")
 
       visit edit_response_path(params.merge(id: response.shortcode))
 
@@ -230,7 +230,7 @@ feature "response form rendering and submission", js: true do
       expect_value([7], "Dog")
       expect_value([8], %w[Dog Cat])
       expect_value([9], "Mar 12 #{Time.current.year} 18:32:44")
-      expect_value([10], "Oct 26 #{Time.current.year}")
+      expect_value([10], "Apr 4 #{Time.current.year}")
       expect_value([11], "03:08:23")
     end
 
