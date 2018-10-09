@@ -50,19 +50,19 @@ module OperationsHelper
       label =
         if status.in_progress?
           if status.completed?
-            t('operation.summary.some_completed', completed: status.completed, total: status.total)
+            t("operation.summary.some_completed", completed: status.completed, total: status.total)
           else
-            t('operation.summary.all_in_progress', count: status.in_progress)
+            t("operation.summary.all_in_progress", count: status.in_progress)
           end
         else
-          t('operation.summary.all_completed', count: status.completed)
+          t("operation.summary.all_completed", count: status.completed)
         end
 
-      label = t('operation.summary.with_errors', message: label, count: status.failed) if status.failed?
+      label = t("operation.summary.with_errors", message: label, count: status.failed) if status.failed?
 
       link_to(icon_tag(:operation) + label, operations_path)
     else
-      link_to(icon_tag(:operation) + t('operation.operations_panel'), operations_path)
+      link_to(icon_tag(:operation) + t("operation.operations_panel"), operations_path)
     end
   end
 end
