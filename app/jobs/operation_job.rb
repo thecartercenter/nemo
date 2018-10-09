@@ -38,7 +38,7 @@ class OperationJob < ApplicationJob
     def operation_raised_error(exception)
       return unless operation.present?
       ExceptionNotifier.notify_exception(exception)
-      save_failure(I18n.t("operation.server_error"))
+      save_failure(I18n.t("operation.errors.server_error"))
     end
 
     def operation_completed

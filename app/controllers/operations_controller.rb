@@ -6,6 +6,7 @@ class OperationsController < ApplicationController
   load_and_authorize_resource
 
   def index
+    flash.now[:error] = I18n.t("operation.errors.delayed_job_stopped") unless DelayedJobChecker.new.running?
     @operations = if current_mission.present?
                     @operations.for_mission(current_mission).order(created_at: :desc)
                   else

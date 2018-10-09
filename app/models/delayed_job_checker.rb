@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Checks if DelayedJob is running. Used in ping and operations controllers.
 class DelayedJobChecker
   def running?
     pid_from_file_is_running("tmp/pids/delayed_job.pid")
