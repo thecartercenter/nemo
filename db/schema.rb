@@ -287,9 +287,9 @@ ActiveRecord::Schema.define(version: 20181004181337) do
 
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "attachment_content_type"
+    t.string "attachment_download_name"
     t.string "attachment_file_name"
     t.integer "attachment_file_size"
-    t.string "attachment_filename"
     t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.uuid "creator_id"

@@ -59,20 +59,7 @@ class ResponsesController < ApplicationController
       format.csv do
         authorize!(:export, Response)
 
-        operation = Operation.new(
-          creator: current_user,
-          job_class: ResponseCsvExportOperationJob,
-          description: t(
-            "operation.description.response_csv_export_operation_job",
-            user_email: current_user.email,
-            mission_name: current_mission.name
-          )
-        )
-
-        operation.begin!(
-          current_mission,
-          params[:search]
-        )
+        enqueue_csv_export
 
         flash[:html_safe] = true
         flash[:notice] = t("export.queued_html", type: "Response CSV", url: operations_path)
@@ -358,5 +345,19 @@ class ResponsesController < ApplicationController
         end
       end
     end
+  end
+
+  def enqueue_csv_export
+    operation = Operation.new(
+      creator: current_user,
+      job_class: ResponseCsvExportOperationJob,
+      description: t(
+        "operation.description.response_csv_export_operation_job",
+        user_email: current_user.email,
+        mission_name: current_mission.name
+      )
+    )
+
+    operation.begin!(current_mission, params[:search])
   end
 end

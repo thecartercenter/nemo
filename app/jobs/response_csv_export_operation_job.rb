@@ -17,13 +17,11 @@ class ResponseCsvExportOperationJob < OperationJob
     # We deliberately don't eager load as that is handled in the Results::Csv::Generator class.
     responses = responses.order(:created_at)
 
-    csv = Results::Csv::Generator.new(responses)
-
-    attachment = File.open(csv.export)
+    attachment = Results::Csv::Generator.new(responses).export
     timestamp = Time.zone.now.to_s(:filename_datetime)
-    attachment_filename = "elmo-#{mission.compact_name}-responses-#{timestamp}.csv"
+    attachment_download_name = "elmo-#{mission.compact_name}-responses-#{timestamp}.csv"
 
-    operation_succeeded(attachment: attachment, attachment_filename: attachment_filename)
+    operation_succeeded(attachment: attachment, attachment_download_name: attachment_download_name)
   rescue Search::ParseError => error
     operation_failed(error.to_s)
   end

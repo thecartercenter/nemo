@@ -14,7 +14,7 @@ module Results
       end
 
       # Runs the queries and writes the CSV to a temp file
-      # Returns temp file path
+      # Returns temp file
       def export
         setup_header_map
 
@@ -25,7 +25,7 @@ module Results
           write_body(csv)
         end
 
-        tempfile.path
+        tempfile
       end
 
       private

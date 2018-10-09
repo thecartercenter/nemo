@@ -1,7 +1,9 @@
-# This class only maintains the state of an operation and should
-# not be subclassed directly.  To implement a new type of operation,
-# subclass `OperationJob` and implement the `perfom(operation, *args)`
-# method.
+# An operation represents work to be performed in the background.
+# This model stores the state of the background job but does not
+# actually perform any of the work itself and should not be subclassed
+# when creating a new type of operation.
+# To implement a new type of operation, subclass `OperationJob` and
+# implement the `perfom(operation, *args)` method.
 class Operation < ApplicationRecord
   include MissionBased
   belongs_to :creator, class_name: 'User'

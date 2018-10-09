@@ -1,3 +1,4 @@
+# coding: utf-8
 # frozen_string_literal: true
 
 require "rails_helper"
@@ -6,8 +7,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
   let(:relation) { Response.all }
   let(:responses) { [] }
   let(:generator) { Results::Csv::Generator.new(relation) }
-
-  subject(:output) { IO.read(generator.export) }
+  subject(:output) { generator.export.read }
 
   around do |example|
     # Use a weird timezone so we know times are handled properly.
