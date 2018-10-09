@@ -1430,6 +1430,7 @@ en:
     description:
       user_import_operation_job: User import for %{mission_name} from %{file}
       option_set_import_operation_job: Option Set '%{name}' import for %{mission_name}
+    operations_panel: "Operations Panel"
     outcome_link_text: "link"
     status:
       completed: "Success"
