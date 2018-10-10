@@ -37,7 +37,7 @@ feature "responses csv export" do
 
     result = CSV.parse(page.body)
     expect(result.size).to(eq(3)) # 2 response rows, 1 header row
-    expect(result[1][8]).to(eq("Animal"))
-    expect(result[2][8]).to(eq("Plant"))
+    expect(result[1][9]).to(eq("Animal"))
+    expect(result[2][9]).to(eq("Plant"))
   end
 end
