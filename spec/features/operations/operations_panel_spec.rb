@@ -15,10 +15,10 @@ feature "operations panel" do
   scenario "in mission mode, displays only operations that belong to mission" do
     visit("/en/m/#{mission.compact_name}/operations")
     expect(page).to have_selector("#operation_#{mission_operation.id}")
-    expect(page).to_not(have_selector("#operation_#{non_mission_operation.id}"))
+    expect(page).not_to(have_selector("#operation_#{non_mission_operation.id}"))
   end
 
-  scenario "in admin mode, displays all operations " do
+  scenario "in admin mode, displays all operations" do
     visit("/en/admin/operations")
     expect(page).to have_selector("#operation_#{mission_operation.id}")
     expect(page).to have_selector("#operation_#{non_mission_operation.id}")
