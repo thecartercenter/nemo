@@ -17,7 +17,7 @@ class UserBatchesController < ApplicationController
 
         operation = current_user.operations.build(
           job_class: TabularImportOperationJob,
-          description: t("operation.description.user_import_operation_job",
+          details: t("operation.details.user_import_operation_job",
             file: @user_batch.file.original_filename,
             mission_name: current_mission.name))
         operation.begin!(current_mission, nil, stored_path, @user_batch.class.to_s)

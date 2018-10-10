@@ -13,8 +13,8 @@ class OptionSetImportsController < ApplicationController
 
         operation = current_user.operations.build(
           job_class: TabularImportOperationJob,
-          description: t(
-            "operation.description.option_set_import_operation_job",
+          details: t(
+            "operation.details.option_set_import_operation_job",
             name: @option_set_import.name,
             mission_name: mission_name
           )
