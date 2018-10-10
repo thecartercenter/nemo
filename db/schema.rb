@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181004181337) do
+ActiveRecord::Schema.define(version: 20181010174613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -304,6 +304,7 @@ ActiveRecord::Schema.define(version: 20181004181337) do
     t.string "provider_job_id", limit: 255
     t.boolean "unread", default: true, null: false
     t.datetime "updated_at", null: false
+    t.string "url"
     t.index ["created_at"], name: "index_operations_on_created_at"
     t.index ["creator_id"], name: "index_operations_on_creator_id"
     t.index ["mission_id"], name: "index_operations_on_mission_id"
