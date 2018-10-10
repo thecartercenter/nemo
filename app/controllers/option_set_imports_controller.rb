@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# For importing OptionSets from CSV/spreadsheet.
 class OptionSetImportsController < ApplicationController
   load_and_authorize_resource
 
@@ -7,33 +10,7 @@ class OptionSetImportsController < ApplicationController
 
   def create
     if @option_set_import.valid?
-      begin
-        stored_path = UploadSaver.new.save_file(@option_set_import.file)
-        mission_name = current_mission.try(:name) || t("standard.standard")
-
-        operation = current_user.operations.build(
-          job_class: TabularImportOperationJob,
-          details: t(
-            "operation.details.option_set_import_operation_job",
-            name: @option_set_import.name,
-            mission_name: mission_name
-          ),
-          mission_id: current_mission.try(:id)
-        )
-        operation.begin!(
-          @option_set_import.name,
-          stored_path,
-          @option_set_import.class.to_s
-        )
-
-        flash[:html_safe] = true
-        flash[:notice] = t("import.queued_html", type: OptionSet.model_name.human, url: operations_path)
-        redirect_to(option_sets_url)
-      rescue => e
-        Rails.logger.error(e)
-        flash.now[:error] = I18n.t("activerecord.errors.models.option_set_import.internal")
-        render("form")
-      end
+      do_import
     else
       flash.now[:error] = I18n.t("activerecord.errors.models.option_set_import.general")
       render("form")
@@ -46,6 +23,34 @@ class OptionSetImportsController < ApplicationController
   end
 
   protected
+
+  def do_import
+    stored_path = UploadSaver.new.save_file(@option_set_import.file)
+    # TODO: It seems odd to pass one set of attribs to Operation.new and then a second set to begin!
+    # Maybe refactor to include these as an ephemeral job_params hash attribute in the constructor and
+    # use it in begin!. then we can put the explanation for the split (serialization, etc.) in Operation.
+    operation.begin!(@option_set_import.name, stored_path, @option_set_import.class.to_s)
+    flash[:html_safe] = true
+    flash[:notice] = t("import.queued_html", type: OptionSet.model_name.human, url: operations_path)
+    redirect_to(option_sets_url)
+  rescue StandardError => e
+    Rails.logger.error(e)
+    flash.now[:error] = I18n.t("activerecord.errors.models.option_set_import.internal")
+    render("form")
+  end
+
+  def operation
+    Operation.new(
+      creator: current_user,
+      job_class: TabularImportOperationJob,
+      mission: current_mission,
+      details: t(
+        "operation.details.option_set_import_operation_job",
+        name: @option_set_import.name,
+        mission_name: current_mission&.name || t("standard.standard")
+      )
+    )
+  end
 
   def option_set_import_params
     params.require(:option_set_import).permit(:name, :file) do |whitelisted|
