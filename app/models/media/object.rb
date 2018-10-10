@@ -2,6 +2,7 @@
 
 module Media
   # Abstract class for Answer attachments.
+  # Need to use ::Media prefix or things break :(
   class ::Media::Object < ApplicationRecord
     acts_as_paranoid
 
