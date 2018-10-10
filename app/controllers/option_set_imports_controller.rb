@@ -21,7 +21,6 @@ class OptionSetImportsController < ApplicationController
           mission_id: current_mission.try(:id)
         )
         operation.begin!(
-          @option_set_import.mission,
           @option_set_import.name,
           stored_path,
           @option_set_import.class.to_s

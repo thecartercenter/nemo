@@ -15,21 +15,14 @@ class OperationJob < ApplicationJob
   before_perform :load_settings, if: :operation
   after_perform :operation_completed, if: :operation
 
+  delegate :mission, to: :operation
+
   protected
 
   def operation
     # The `Operation` instance tracking this job is always passed as
     # the first argument to `perform`
     arguments.first
-  end
-
-  def mission
-    # The `Mission` instance is currently passed as the second arg
-    # to all `OperationJob`s.
-    # TODO: once an operation is associated with a mission this should
-    # be changed to `operation.mission` and operation job argument lists
-    # should be updated to omit the mission
-    arguments.second
   end
 
   def operation_started

@@ -22,7 +22,7 @@ class UserBatchesController < ApplicationController
             mission_name: current_mission.name),
           mission_id: current_mission.try(:id)
         )
-        operation.begin!(current_mission, nil, stored_path, @user_batch.class.to_s)
+        operation.begin!(nil, stored_path, @user_batch.class.to_s)
 
         flash[:html_safe] = true
         flash[:notice] = t("import.queued_html", type: UserBatch.model_name.human, url: operations_path)

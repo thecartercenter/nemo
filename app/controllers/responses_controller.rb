@@ -350,6 +350,7 @@ class ResponsesController < ApplicationController
   def enqueue_csv_export
     operation = Operation.new(
       creator: current_user,
+      mission: current_mission,
       job_class: ResponseCsvExportOperationJob,
       details: t(
         "operation.details.response_csv_export_operation_job",
@@ -358,6 +359,6 @@ class ResponsesController < ApplicationController
       )
     )
 
-    operation.begin!(current_mission, params[:search])
+    operation.begin!(params[:search])
   end
 end
