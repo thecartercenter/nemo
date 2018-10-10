@@ -15,12 +15,12 @@ describe OperationJob do
 
     it "marks operation as started" do
       subject.perform_now(operation)
-      expect(operation.reload.job_started_at).to_not(be_nil)
+      expect(operation.reload.job_started_at).not_to be_nil
     end
 
     it "marks operation as completed" do
       subject.perform_now(operation)
-      expect(operation.reload.job_completed_at).to_not(be_nil)
+      expect(operation.reload.job_completed_at).not_to be_nil
     end
 
     context "when error is raised" do
@@ -36,13 +36,13 @@ describe OperationJob do
 
       it "marks operation as started" do
         subject.perform_now(operation)
-        expect(operation.reload.job_started_at).to_not(be_nil)
+        expect(operation.reload.job_started_at).not_to be_nil
       end
 
       it "marks operation as failed" do
         subject.perform_now(operation)
-        expect(operation.reload.job_failed_at).to_not(be_nil)
-        expect(operation.reload.job_error_report).to_not(be_nil)
+        expect(operation.reload.job_failed_at).not_to be_nil
+        expect(operation.reload.job_error_report).not_to be_nil
       end
 
       it "calls exception notifier" do

@@ -351,8 +351,8 @@ class ResponsesController < ApplicationController
     operation = Operation.new(
       creator: current_user,
       job_class: ResponseCsvExportOperationJob,
-      description: t(
-        "operation.description.response_csv_export_operation_job",
+      details: t(
+        "operation.details.response_csv_export_operation_job",
         user_email: current_user.email,
         mission_name: current_mission.name
       )
