@@ -16,7 +16,7 @@
 //= require core_ext/object
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui-1.10.3.custom
+//= require jquery-ui-1.12.1-custom
 //= require jquery-fileupload/basic-plus
 //= require jquery.tokeninput
 //= require jquery.mjs.nestedSortable-2.0
