@@ -66,26 +66,28 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     @client ||= Twilio::REST::Client.new(config.twilio_account_sid, config.twilio_auth_token)
   end
 
+  def send_message(to, body)
+    client.messages.create(
+      from: config.twilio_phone_number,
+      to: to,
+      body: body
+    )
+  end
+
   def send_message_for_each_recipient(message)
     errors = []
 
     message.recipient_numbers.each_with_index do |number, index|
       begin
-        client.messages.create(
-          from: config.twilio_phone_number,
-          to: number,
-          body: message.body)
+        send_message(number, message.body)
       rescue Twilio::REST::RequestError => e
         errors << e
-        if errors.length == 3 && index == 2
-          # creating the first 3 messages all failed
-          raise Sms::Errors::FatalError.new(e)
-        end
+
+        # creating the first 3 messages all failed
+        raise Sms::Errors::FatalError, e if errors.length == 3 && index == 2
       end
     end
 
-    if errors.length > 0
-      raise Sms::Errors::PartialError.new(errors)
-    end
+    raise Sms::Errors::PartialError, errors if errors.empty?
   end
 end

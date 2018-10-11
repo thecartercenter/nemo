@@ -14,13 +14,17 @@ describe Sms::Adapters::Adapter, :sms do
 
   it "delivering a message with no recipients should raise an error" do
     each_adapter(can_deliver?: true) do |adapter|
-      expect{ adapter.deliver(Sms::Reply.new(to: nil, body: "foo")) }.to raise_error(Sms::Errors::Error)
+      expect do
+        adapter.deliver(Sms::Reply.new(to: nil, body: "foo"))
+      end.to raise_error(Sms::Errors::Error)
     end
   end
 
   it "deliering a message with no body should raise an error" do
     each_adapter(can_deliver?: true) do |adapter|
-      expect{ adapter.deliver(Sms::Reply.new(to: "+15556667777", body: "")) }.to raise_error(Sms::Errors::Error)
+      expect do
+        adapter.deliver(Sms::Reply.new(to: "+15556667777", body: ""))
+      end.to raise_error(Sms::Errors::Error)
     end
   end
 

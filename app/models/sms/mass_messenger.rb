@@ -14,6 +14,8 @@ class Sms::MassMessenger
 
   # checks for a valid adapter and raises an error it there is none
   def self.ensure_adapter
-    raise Sms::Errors::Error.new(I18n.t("sms.no_valid_adapter")) unless configatron.to_h[:outgoing_sms_adapter]
+    unless configatron.to_h[:outgoing_sms_adapter]
+      raise Sms::Errors::Error, I18n.t("sms.no_valid_adapter")
+    end
   end
 end

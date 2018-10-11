@@ -60,7 +60,7 @@ class SmsController < ApplicationController
 
   # Builds and saves the incoming SMS message based on the request.
   def incoming_msg
-    raise Sms::Errors::Error.new("No adapters recognized this receive request") if incoming_adapter.nil?
+    raise Sms::Errors::Error, "No adapters recognized this receive request" if incoming_adapter.nil?
 
     # Create and save the message
     @incoming_msg ||= incoming_adapter.receive(request).tap do |msg|
@@ -74,7 +74,9 @@ class SmsController < ApplicationController
     if reply
       if incoming_adapter.reply_style == :via_adapter
         begin
-          raise Sms::Errors::Error, ENV["STUB_REPLY_ERROR"] if Rails.env.test? && ENV["STUB_REPLY_ERROR"].present?
+          if Rails.env.test? && ENV["STUB_REPLY_ERROR"].present?
+            raise Sms::Errors::Error, ENV["STUB_REPLY_ERROR"]
+          end
           outgoing_adapter.deliver(reply)
         rescue Sms::Errors::Error => e
           reply.error_message = e
@@ -106,7 +108,7 @@ class SmsController < ApplicationController
     elsif (default_adapter_name = configatron.default_settings.outgoing_sms_adapter).present?
       Sms::Adapters::Factory.instance.create(default_adapter_name, config: configatron.default_settings)
     else
-      raise Sms::Errors::Error.new("No adapter configured for outgoing response")
+      raise Sms::Errors::Error, "No adapter configured for outgoing response"
     end
   end
 

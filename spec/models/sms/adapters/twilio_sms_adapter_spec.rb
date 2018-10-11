@@ -67,7 +67,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
     context "3 non-consecutive failures" do
       before do
         allow(messages).to receive(:create) do |params|
-          raise Twilio::REST::RequestError.new("error") unless params[:to] == "+34"
+          raise Twilio::REST::RequestError.new, "error" unless params[:to] == "+34"
         end
       end
 
@@ -80,7 +80,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
     context "3 consecutive failures" do
       before do
         allow(messages).to receive(:create) do |params|
-          raise Twilio::REST::RequestError.new("error") unless params[:to] == "+78"
+          raise Twilio::REST::RequestError, "error" unless params[:to] == "+78"
         end
       end
 
