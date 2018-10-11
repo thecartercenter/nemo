@@ -27,10 +27,6 @@
     // names are editable if the node is not a new record
     //   OR both the option AND node are new records
     self.editable = true;
-
-    // alias removable with no question mark
-    // note this is a property of option node
-    self.removable = self['removable?'];
   };
 
   // inherit from NamedItem
