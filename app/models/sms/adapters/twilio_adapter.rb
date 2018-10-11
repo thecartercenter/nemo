@@ -14,21 +14,17 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     true
   end
 
-  def deliver(message)
+  def deliver(message, dry_run = nil)
+    dry_run = Rails.env.test? if dry_run.nil?
+
     prepare_message_for_delivery(message)
 
     params = { from: message.from, to: message.to, body: message.body }
     Rails.logger.info("Sending Twilio message: #{params}")
 
-    return true if Rails.env.test?
+    return true if dry_run
 
-    begin
-      client = Twilio::REST::Client.new(config.twilio_account_sid, config.twilio_auth_token)
-
-      send_message_for_each_recipient(message, client)
-    rescue Twilio::REST::RequestError => e
-      raise Sms::Error.new(e)
-    end
+    send_message_for_each_recipient(message)
 
     true
   end
@@ -66,12 +62,30 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
   private
 
-  def send_message_for_each_recipient(message, client)
-    message.recipient_numbers.each do |number|
-      client.messages.create(
-        from: config.twilio_phone_number,
-        to: number,
-        body: message.body)
+  def client
+    @client ||= Twilio::REST::Client.new(config.twilio_account_sid, config.twilio_auth_token)
+  end
+
+  def send_message_for_each_recipient(message)
+    errors = []
+
+    message.recipient_numbers.each_with_index do |number, index|
+      begin
+        client.messages.create(
+          from: config.twilio_phone_number,
+          to: number,
+          body: message.body)
+      rescue Twilio::REST::RequestError => e
+        errors << e
+        if errors.length == 3 && index == 2
+          # creating the first 3 messages all failed
+          raise Sms::Errors::FatalError.new(e)
+        end
+      end
+    end
+
+    if errors.length > 0
+      raise Sms::Errors::PartialError.new(errors)
     end
   end
 end

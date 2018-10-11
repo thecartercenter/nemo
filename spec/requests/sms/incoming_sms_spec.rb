@@ -113,7 +113,7 @@ describe "incoming sms", :sms do
         outgoing: {body: "Your response to form '#{form_code}' was received. Thank you!"}
       )
       expect(Sms::Reply.count).to eq(1)
-      expect(Sms::Reply.first.error_message).to eq("I am the reply error")
+      expect(Sms::Reply.first.reply_error_message).to eq("I am the reply error")
     end
   end
 
@@ -225,7 +225,7 @@ describe "incoming sms", :sms do
     let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio") }
 
     before do
-      expect(twilio_adapter).to receive(:validate).and_raise(Sms::Error)
+      expect(twilio_adapter).to receive(:validate).and_raise(Sms::Errors::Error)
       expect(Sms::Adapters::Factory.instance).to receive(:create_for_request).and_return(twilio_adapter)
     end
 
@@ -233,7 +233,7 @@ describe "incoming sms", :sms do
       expect do
         do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{get_mission.setting.incoming_sms_token}",
           from: @user.phone, incoming: {body: "#{form_code} 1.15 2.20", adapter: "TwilioSms"})
-      end.to raise_error(Sms::Error)
+      end.to raise_error(Sms::Errors::Error)
     end
   end
 
@@ -362,7 +362,7 @@ describe "incoming sms", :sms do
         it "should save error on reply message" do
           assert_sms_response(incoming: {body: "#{wrong_code} 1.15 2.20", adapter: "FrontlineCloud"},
                               outgoing: {body: /there is no form with code/}, mission: nil)
-          expect(Sms::Reply.first.error_message).to match(/No adapter configured for outgoing response/)
+          expect(Sms::Reply.first.reply_error_message).to match(/No adapter configured for outgoing response/)
         end
       end
     end

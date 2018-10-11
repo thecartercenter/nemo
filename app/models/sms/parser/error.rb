@@ -3,7 +3,7 @@
 module Sms
   module Parser
     # Error encountered while parsing an incoming SMS message
-    class Error < Sms::Error
+    class Error < Sms::Errors::Error
       attr_reader :type, :params
 
       def initialize(type, params = {})

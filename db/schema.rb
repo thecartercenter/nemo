@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181010174613) do
+ActiveRecord::Schema.define(version: 20181011153415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -574,11 +574,11 @@ ActiveRecord::Schema.define(version: 20181010174613) do
     t.uuid "broadcast_id"
     t.integer "broadcast_old_id"
     t.datetime "created_at", null: false
-    t.string "error_message"
     t.string "from", limit: 255
     t.uuid "mission_id"
     t.integer "mission_old_id"
     t.integer "old_id"
+    t.string "reply_error_message"
     t.uuid "reply_to_id"
     t.integer "reply_to_old_id"
     t.datetime "sent_at"

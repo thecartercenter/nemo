@@ -54,6 +54,43 @@ describe Sms::Adapters::TwilioAdapter, :sms do
     expect(msg.to).to be_nil
   end
 
+  context "broadcast message" do
+    let(:msg) { create(:sms_broadcast) }
+    let(:messages) { double(:twilio_messages, create: true) }
+    let(:client) { double(:twilio_client, messages: messages) }
+
+    before do
+      allow(msg).to receive(:recipient_numbers) { ["+12", "+34", "+56", "+78"] }
+      allow(@adapter).to receive(:client) { client }
+    end
+
+    context "3 non-consecutive failures" do
+      before do
+        allow(messages).to receive(:create) do |params|
+          raise Twilio::REST::RequestError.new("error") unless params[:to] == "+34"
+        end
+      end
+
+      it "has at least one success and raises Sms::Errors::PartialError" do
+        expect(messages).to receive(:create).with(hash_including(to: "+34"))
+        expect { @adapter.deliver(msg, false) }.to raise_error(Sms::Errors::PartialError)
+      end
+    end
+
+    context "3 consecutive failures" do
+      before do
+        allow(messages).to receive(:create) do |params|
+          raise Twilio::REST::RequestError.new("error") unless params[:to] == "+78"
+        end
+      end
+
+      it "raises Sms::Errors::FatalError" do
+        expect(messages).not_to receive(:create).with(hash_including(to: "+78"))
+        expect { @adapter.deliver(msg, false) }.to raise_error(Sms::Errors::FatalError)
+      end
+    end
+  end
+
   private
 
     def twilio_request(options={})
