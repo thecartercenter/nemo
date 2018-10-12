@@ -1,7 +1,7 @@
 <% content_for(:per_page_js, javascript_google_maps) %>
 <% @title_args = {id: @response.decorate.shortcode} %>
 
-<%# This needs to be up here so it runs before the MediaUploaderViews are initialized. %>
+<%# This needs to be up here so it runs before the FileUploaderViews are initialized. %>
 <%= javascript_doc_ready do %>
   ELMO.mediaUploaderManager = new ELMO.Views.MediaUploaderManager(<%=json(
     el: ".response_form",

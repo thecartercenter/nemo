@@ -16,7 +16,7 @@
 
 <%= javascript_doc_ready do %>
   <% media_type = answer.qtype.media_type.pluralize %>
-  new ELMO.Views.MediaUploaderView(<%=json(
+  new ELMO.Views.FileUploaderView(<%=json(
     el: "#media-uploader-#{context.path_str}",
     zone_id: "#dropzone-#{context.path_str}",
     generic_thumb_path: image_path("media/#{answer.qtype.media_type}.png"),

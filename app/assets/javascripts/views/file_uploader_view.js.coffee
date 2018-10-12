@@ -1,4 +1,4 @@
-class ELMO.Views.MediaUploaderView extends ELMO.Views.ApplicationView
+class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @zone_id = options.zone_id
     @post_path = options.post_path
@@ -56,4 +56,3 @@ class ELMO.Views.MediaUploaderView extends ELMO.Views.ApplicationView
 
   upload_finished: ->
     @manager.upload_finished()
-
