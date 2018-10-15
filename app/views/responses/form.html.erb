@@ -5,7 +5,7 @@
 <%= javascript_doc_ready do %>
   ELMO.mediaUploaderManager = new ELMO.Views.MediaUploaderManager(<%=json(
     el: ".response_form",
-    preview_template: render("responses/answers/dropzone_preview")
+    preview_template: render("layouts/dropzone_preview")
   )%>);
 <% end %>
 
