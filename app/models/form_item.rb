@@ -77,46 +77,17 @@ class FormItem < ApplicationRecord
     self
   end
 
-  # Gets an OrderedHash of the following form for the descendants of this FormItem.
-  # Uses only a constant number of database queries to do so.
-  # {
-  #   Qing => {},
-  #   Qing => {},
-  #   QingGroup => {
-  #     Qing => {},
-  #     Qing => {}
-  #   },
-  #   Qing => {},
-  #   QingGroup => {},
-  #   Qing => {},
-  #   Qing => {},
-  #   ...
-  # }
-  # Some facts about the hash:
-  # * This item itself is not included in the hash.
-  # * If an item points to an empty hash, it is a leaf node.
-  def arrange_descendants
-    sort = "(case when ancestry is null then 0 else 1 end), ancestry, rank"
-    # We eager load questions and option sets since they are likely to be needed.
-    nodes = subtree.includes(question: {option_set: :root_node}).order(sort).to_a
-    with_self = self.class.arrange_nodes(nodes)
-    with_self.values[0]
+  def visible_children
+    sorted_children.select(&:visible?)
   end
 
-  # Gets a nested array of all Questionings in the subtree headed by this item. For example,
-  # (corresponding to the above example for arrange_descendants):
-  # [Qing, Qing, [Qing, Qing], Qing, Qing, Qing, ...]
-  def descendant_questionings(nodes = nil)
-    nodes ||= arrange_descendants
-    nodes.map do |form_item, children|
-      form_item.is_a?(Questioning) ? form_item : descendant_questionings(children)
-    end
-  end
+  def preordered_descendants(eager_load: nil, type: nil)
+    items = eager_load ? descendants.includes(eager_load) : descendants
+    sorted_items = self.class.sort_by_ancestry(items) { |a, b| a.rank <=> b.rank }
 
-  def preordered_descendants(eager_load: nil)
-    items = descendants.order(:rank)
-    items = items.includes(eager_load) if eager_load
-    self.class.sort_by_ancestry(items) { |a, b| a.rank <=> b.rank }
+    # the items are filtered after the sort because we need to have all
+    # FormItem types (Questioning and QingGroup) to be available for the sort to work properly
+    type ? sorted_items.select { |i| i.type == type } : sorted_items
   end
 
   def sorted_children
@@ -218,6 +189,7 @@ class FormItem < ApplicationRecord
     chunks << " Type: #{qtype_name}," if qtype_name.present?
     chunks << " Code: #{code}"
     chunks << " Repeatable" if repeatable?
+    chunks << " Id: #{id}"
     "\n#{chunks.join}#{child_tree}"
   end
 

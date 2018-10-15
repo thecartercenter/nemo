@@ -9,14 +9,6 @@ GIT
       railties
 
 GIT
-  remote: https://github.com/galetahub/ckeditor
-  revision: dc2cef2c2c3358124ebd86ca2ef2335cc898b41f
-  specs:
-    ckeditor (4.2.4)
-      orm_adapter (~> 0.5.0)
-      terrapin
-
-GIT
   remote: https://github.com/sassafrastech/acts_as_list.git
   revision: 20fa19384f53b81f02c7165bb6e0b2356aef2f1b
   specs:
@@ -34,20 +26,20 @@ GIT
       rubyzip (~> 1.1)
 
 GIT
+  remote: https://github.com/sassafrastech/closure_tree
+  revision: b34d380a70dfb4838e238b62bf7bf3686e875a0f
+  branch: soft_delete_hack
+  specs:
+    closure_tree (7.0.0)
+      activerecord (>= 4.2.10)
+      with_advisory_lock (>= 4.0.0)
+
+GIT
   remote: https://github.com/sassafrastech/rack-attack.git
   revision: 97e37abd881ba290034cbb15e92aabedd264ad6b
   specs:
     rack-attack (4.3.0)
       rack
-
-GIT
-  remote: https://github.com/smoyth/closure_tree
-  revision: 46deebdcc7c712b8393c1690bc39d4328efc0ffa
-  branch: patch-1
-  specs:
-    closure_tree (6.6.0)
-      activerecord (>= 4.1.0)
-      with_advisory_lock (>= 3.0.0)
 
 GEM
   remote: http://rubygems.org/
@@ -250,7 +242,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    fix-db-schema-conflicts (2.0.1)
+    fix-db-schema-conflicts (3.0.2)
       rubocop (>= 0.38.0)
     font-awesome-rails (4.7.0.4)
       railties (>= 3.2, < 6.0)
@@ -322,7 +314,6 @@ GEM
     nio4r (2.3.1)
     nokogiri (1.8.3)
       mini_portile2 (~> 2.3.0)
-    orm_adapter (0.5.0)
     paperclip (6.0.0)
       activemodel (>= 4.2.0)
       activesupport (>= 4.2.0)
@@ -330,7 +321,7 @@ GEM
       mimemagic (~> 0.3.0)
       terrapin (~> 0.6.0)
     parallel (1.12.1)
-    parser (2.5.1.0)
+    parser (2.5.1.2)
       ast (~> 2.4.0)
     pg (0.21.0)
     pg_search (2.1.2)
@@ -440,10 +431,10 @@ GEM
       rspec-mocks (~> 3.7.0)
       rspec-support (~> 3.7.0)
     rspec-support (3.7.1)
-    rubocop (0.57.2)
+    rubocop (0.59.2)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
-      parser (>= 2.5)
+      parser (>= 2.5, != 2.5.1.1)
       powerpack (~> 0.1)
       rainbow (>= 2.2.2, < 4.0)
       ruby-progressbar (~> 1.7)
@@ -452,7 +443,7 @@ GEM
     ruby-jmeter (2.13.10)
       nokogiri
       rest-client
-    ruby-progressbar (1.9.0)
+    ruby-progressbar (1.10.0)
     ruby2ruby (2.4.1)
       ruby_parser (~> 3.1)
       sexp_processor (~> 4.6)
@@ -569,7 +560,6 @@ DEPENDENCIES
   cancancan (~> 1.15.0)
   capybara (~> 2.17)
   capybara-screenshot (~> 1.0.11)
-  ckeditor!
   closure_tree!
   config (~> 1.7)
   configatron (~> 4.5.0)
@@ -585,7 +575,7 @@ DEPENDENCIES
   exception_notification
   factory_girl_rails (~> 4.5.0)
   faker (~> 1.6)
-  fix-db-schema-conflicts (~> 2.0.0)
+  fix-db-schema-conflicts (~> 3.0)
   font-awesome-rails (~> 4.7)
   friendly_id (~> 5.1.0)
   hairtrigger (~> 0.2.20)

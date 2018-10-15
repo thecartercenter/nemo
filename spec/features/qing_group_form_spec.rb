@@ -52,5 +52,4 @@ feature "adding and editing qing group on form", js: true do
     within(".modal") { click_button("Save") }
     within(".form-items") { expect(page).to have_content("New Group Name") }
   end
-
 end

@@ -388,7 +388,7 @@ en:
       operation:
         created_at: "Time Started"
         creator: "Started By"
-        description: "Description"
+        details: "Details"
         job_started_at: "Started At"
         job_failed_at: "Failed At"
         job_completed_at: "Completed At"
@@ -479,7 +479,6 @@ en:
         view_count: "Views"
         viewed_at: "Last Viewed"
       setting:
-        allow_unauthenticated_submissions: "Allow Unauthenticated Submissions?"
         incoming_sms_numbers_str: "Incoming Number(s)"
         incoming_sms_token: "Incoming SMS Token"
         universal_sms_token: "Universal SMS Token"
@@ -668,7 +667,6 @@ en:
       response:
         incomplete: "Check this box if there are required questions for which you can't provide answers. You will then be able to save this response without answering those questions and this response will be marked as 'incomplete'."
       setting:
-        allow_unauthenticated_submissions: "If this box is checked, ANYBODY will be allowed to submit data to the mission without entering a password. Use with caution."
         preferred_locales_str: |-
           Enter the <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>two-letter codes</a>, separated by commas, for the languages for this mission, in order of preference.
 
@@ -1097,7 +1095,7 @@ en:
       index: "Responses"
       new: "New Response"
       show: "Response: %{id}"
-    hierarchical_responses:
+    responses:
       edit: "Edit Response: %{id}"
       index: "Responses"
       new: "New Response"
@@ -1363,6 +1361,10 @@ en:
     queued_html: |-
       %{type} import queued. Check the <a href="%{url}">operations panel</a> for info.
 
+  export:
+    queued_html: |-
+      %{type} export queued. Check the <a href="%{url}">operations panel</a> for info.
+
   incomplete_response:
     missing_answers:
       label: "Is this form missing any required answers?"
@@ -1429,10 +1431,11 @@ en:
   operation:
     clear_confirm: "Are you sure you want to clear all completed operations?"
     server_error: "Server error. Please contact support."
-    description:
-      user_import_operation_job: User import for %{mission_name} from %{file}
-      option_set_import_operation_job: Option Set '%{name}' import for %{mission_name}
-    outcome_link_text: "link"
+    details:
+      user_import_operation_job: "User import for %{mission_name} from %{file}"
+      option_set_import_operation_job: "Option Set '%{name}' import for %{mission_name}"
+      response_csv_export_operation_job: "Response CSV export for %{user_email} in %{mission_name}"
+    attachment_link_text: "download"
     status:
       completed: "Success"
       failed: "Failed"
@@ -1703,6 +1706,7 @@ en:
       audio: "The audio should be at most 10 MB in size. Accepted formats are: mp3, ogg, webm, wav."
     csv_headers:
       response_id: "ResponseID"
+      reviewed: "Reviewed"
       form_name: "Form"
       user_name: "Submitter"
       submit_time: "DateSubmitted"
@@ -1713,16 +1717,6 @@ en:
       accuracy: "Accuracy"
       parent_group_name: "GroupName"
       parent_group_depth: "GroupLevel"
-      group1_rank: "GroupNum1"
-      group1_inst_num: "ItemNum1"
-      group2_rank: "GroupNum2"
-      group2_inst_num: "ItemNum2"
-      group3_rank: "GroupNum3"
-      group3_inst_num: "ItemNum3"
-      group4_rank: "GroupNum4"
-      group4_inst_num: "ItemNum4"
-      group5_rank: "GroupNum5"
-      group5_inst_num: "ItemNum5"
     add_to_group: "Add to '%{group_name}'"
     empty_group_notice: "This group is empty"
     bulk_destroy_confirm:
@@ -1739,13 +1733,6 @@ en:
       few: "%{count} responses deleted successfully."
       many: "%{count} responses deleted successfully."
       other: "%{count} responses deleted successfully."
-    bulk_destroy_skipped:
-      zero: "No response skipped."
-      one: "%{count} response skipped."
-      two: "%{count} responses skipped."
-      few: "%{count} responses skipped."
-      many: "%{count} responses skipped."
-      other: "%{count} responses skipped."
 
   role:
     role: "Role"

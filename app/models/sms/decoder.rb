@@ -63,6 +63,8 @@ module Sms
         begin
           answer_group = tree_builder.answer_group_for(qing)
           pair.parse(qing).each do |result|
+            result[:new_rank] = result[:rank]
+            result.delete(:rank)
             answer = Answer.new(result)
             tree_builder.add_answer(answer_group, answer)
             answers << answer

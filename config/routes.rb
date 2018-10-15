@@ -30,6 +30,10 @@ ELMO::Application.routes.draw do
       collection do
         post "clear"
       end
+
+      member do
+        get "download"
+      end
     end
 
     # Routes with user or no user.
@@ -56,6 +60,7 @@ ELMO::Application.routes.draw do
         post "new-with-users", as: "new_with_users", action: "new_with_users"
       end
     end
+
     resources :responses do
       collection do
         post "bulk-destroy", as: "bulk_destroy", action: "bulk_destroy"
@@ -64,7 +69,7 @@ ELMO::Application.routes.draw do
         get "possible-users", as: "possible_users", action: "possible_users", on: type
       end
     end
-    resources :hierarchical_responses
+
     resources :sms, only: [:index] do
       collection do
         get "incoming-numbers", as: "incoming_numbers", action: "incoming_numbers", defaults: { format: "csv" }
@@ -112,6 +117,11 @@ ELMO::Application.routes.draw do
         put "publish"
         get "choose-questions", as: "choose_questions", action: "choose_questions"
         get "sms-guide", as: "sms_guide", action: "sms_guide"
+      end
+    end
+    resources :operations, only: %i[index show destroy] do
+      collection do
+        post "clear"
       end
     end
     resources :questions do
@@ -218,10 +228,6 @@ ELMO::Application.routes.draw do
 
     match "/submission" => "responses#odk_headers", via: [:head, :get], defaults: { format: "xml" }
     post "/submission" => "responses#create", defaults: { format: "xml" }
-
-    # Unauthenticated submissions
-    match "/noauth/submission" => "responses#odk_headers", via: [:head, :get], defaults: { format: "xml", direct_auth: "none" }
-    post "/noauth/submission" => "responses#create", defaults: { format: "xml", direct_auth: "none" }
   end
 
   # API routes.

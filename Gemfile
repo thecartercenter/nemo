@@ -76,12 +76,6 @@ gem "descriptive_statistics", "~> 2.5.1", require: "descriptive_statistics/safe"
 # icons
 gem "font-awesome-rails", "~> 4.7"
 
-# Rich text editor
-# Version 4.2.2 seems to have a bug with asset paths.
-# See https://github.com/galetahub/ckeditor/issues/712#issuecomment-278740179
-# So using latest master branch until that's fixed.
-gem "ckeditor", git: "https://github.com/galetahub/ckeditor"
-
 # Select box on steriods
 gem "select2-rails", "~> 4.0"
 
@@ -141,7 +135,7 @@ gem "react-rails"
 gem 'webpacker', '~> 3.5'
 
 # Closure tree for answer heirarchy
-gem "closure_tree", git: "https://github.com/smoyth/closure_tree", branch: "patch-1"
+gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree", branch: "soft_delete_hack"
 
 group :development do
   # generate diagrams with rake db:migrate
@@ -161,7 +155,7 @@ group :development do
   gem "binding_of_caller", "~> 0.7.2"
 
   # misc
-  gem "fix-db-schema-conflicts", "~> 2.0.0"
+  gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4.1"
 end
 

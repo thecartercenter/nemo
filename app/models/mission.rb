@@ -16,6 +16,7 @@ class Mission < ApplicationRecord
   has_many :qing_groups, inverse_of: :mission
   has_many :form_items, inverse_of: :mission
   has_many :conditions, inverse_of: :mission
+  has_many :operations, inverse_of: :mission, dependent: :destroy
   has_many :options, inverse_of: :mission, dependent: :destroy
   has_many :option_sets, inverse_of: :mission, dependent: :destroy
   has_many :option_nodes, inverse_of: :mission, dependent: :destroy
@@ -35,7 +36,7 @@ class Mission < ApplicationRecord
   scope :sorted_by_name, -> { order("LOWER(name)") }
   scope :sorted_recent_first, -> { order(created_at: :desc) }
 
-  delegate(:override_code, :allow_unauthenticated_submissions?, :default_locale, to: :setting)
+  delegate(:override_code, :default_locale, to: :setting)
 
   # Raises ActiveRecord::RecordNotFound if not found.
   def self.with_compact_name(name)

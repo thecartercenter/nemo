@@ -16,7 +16,7 @@ module OperationsHelper
   def format_operations_field(operation, field)
     case field
     when 'description'
-      link_to(operation.description, operation_path(operation))
+      link_to(operation.details, operation_path(operation))
     when 'creator'
       link_to(operation.creator.name, user_path(operation.creator))
     when 'created_at'
@@ -27,12 +27,6 @@ module OperationsHelper
         body = ''.html_safe
 
         body << link_to(t("operation.status.#{status}"), operation_path(operation))
-
-        if operation.job_outcome_url.present?
-          body << ' ('.html_safe
-          body << content_tag(:a, t('operation.outcome_link_text'), href: operation.job_outcome_url)
-          body << ')'.html_safe
-        end
 
         body
       end

@@ -1,55 +1,62 @@
+# frozen_string_literal: true
+
+# An operation job is an ActiveJob with an associated `Operation`
+# context to manage its state.  By convention, the job's `Operation` is
+# passed as the first argument to the `perform` method.
 class OperationJob < ApplicationJob
   queue_as :default
 
   rescue_from StandardError, with: :operation_raised_error
 
-  before_perform { |job| job.operation_started }
+  # These callbacks are conditional on the operation record being present
+  # in the database.  While unlikely, it's possible that the job was pending
+  # in the queue and, meanwhile, the operation record was deleted.
+  before_perform :operation_started, if: :operation
+  before_perform :load_settings, if: :operation
+  after_perform :operation_completed, if: :operation
 
-  after_perform { |job| job.operation_completed }
+  delegate :mission, to: :operation
 
   protected
 
-    def operation
-      arguments.first.tap do |operation|
-        if operation.nil?
-          Rails.logger.warn "Unable to update failed operation for job: #{self.inspect}"
-          break
-        end
+  def operation
+    # The `Operation` instance tracking this job is always passed as
+    # the first argument to `perform`
+    arguments.first
+  end
 
-        unless operation.is_a?(Operation)
-          raise ArgumentError, "unexpected type for operation: #{operation.inspect}"
-        end
-      end
-    end
+  def operation_started
+    operation.update!(job_started_at: Time.current)
+  end
 
-    def operation_started
-      operation.present? && operation.update_attribute(:job_started_at, Time.now)
-    end
+  def load_settings
+    # load the mission's settings into configatron
+    # if mission is nil, the admin mode settings will be loaded
+    Setting.load_for_mission(mission)
+  end
 
-    def operation_succeeded(outcome_url=nil)
-      operation.present? && operation.update_attribute(:job_outcome_url, outcome_url) if outcome_url.present?
-    end
+  def operation_succeeded(attributes = nil)
+    operation.update!(attributes) if attributes.present?
+  end
 
-    def operation_failed(report)
-      return unless operation.present?
-      save_failure(report)
-    end
+  def operation_failed(report)
+    save_failure(report)
+  end
 
-    def operation_raised_error(exception)
-      return unless operation.present?
-      ExceptionNotifier.notify_exception(exception)
-      save_failure(I18n.t("operation.server_error"))
-    end
+  def operation_raised_error(exception)
+    ExceptionNotifier.notify_exception(exception)
+    save_failure(I18n.t("operation.server_error"))
+  end
 
-    def operation_completed
-      operation.present? && operation.update_attribute(:job_completed_at, Time.now)
-    end
+  def operation_completed
+    operation.update!(job_completed_at: Time.current)
+  end
 
   private
 
-    def save_failure(msg)
-      attributes = { job_failed_at: Time.now, job_error_report: msg }
-      attributes[:job_completed_at] = Time.now unless operation.completed?
-      operation.update_attributes(attributes)
-    end
+  def save_failure(msg)
+    attributes = {job_failed_at: Time.current, job_error_report: msg}
+    attributes[:job_completed_at] = Time.current unless operation.completed?
+    operation.update!(attributes)
+  end
 end

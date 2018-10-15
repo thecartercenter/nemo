@@ -76,7 +76,8 @@
     )%>);
   <% end %>
   new ELMO.Views.PrintFormView();
-  new ELMO.Views.FormItemsView(<%=json(
+  // Assigning view to variable for testing form items
+  ELMO.formItemsView = new ELMO.Views.FormItemsView(<%=json(
     form_id: @form.id,
     can_reorder: !read_only && can?(:reorder_questions, @form)
   )%>);

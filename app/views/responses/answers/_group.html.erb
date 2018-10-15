@@ -1,0 +1,14 @@
+<div class="<%= group.classes %>">
+  <%= render("responses/answers/hidden_fields", node: group, context: context) %>
+
+  <div class="group-header">
+    <h2><%= group.qing_group.group_name %></h2>
+    <%= link_to(icon_tag("close"), "#", class: "remove-repeat") if removable && !context.read_only? %>
+  </div>
+
+  <%= content_tag(:div, group.hint, class: "hint") %>
+
+  <div class="children">
+    <%= render("responses/answers/nodes", nodes: group.children, context: context) %>
+  </div>
+</div>

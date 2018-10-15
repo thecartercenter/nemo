@@ -1,3 +1,6 @@
+#######################################################################################################
+# This context is DEPRECATED. Use newer methods of building XML fixtures instead. See ODK parser specs.
+#######################################################################################################
 shared_context "odk submissions" do
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)
@@ -35,7 +38,7 @@ shared_context "odk submissions" do
         xml << "<#{Odk::FormDecorator::IR_QUESTION}>yes</#{Odk::FormDecorator::IR_QUESTION}>" if form.allow_incomplete?
       else
         i = 1
-        descendants = form.arrange_descendants
+        descendants = arrange_descendants(form)
 
         descendants.each do |item, subitems|
           decorated_item = Odk::DecoratorFactory.decorate(item)
@@ -78,5 +81,41 @@ shared_context "odk submissions" do
 
   def allow_forgery_protection(allow)
     ActionController::Base.allow_forgery_protection = allow
+  end
+
+  ###############################################################################
+  # These last two methods should be removed when the spec is refactored to use
+  # the newer method of constructing XML fixtures. See ODK parser specs.
+  ###############################################################################
+
+  # Gets an OrderedHash of the following form for the descendants of a form.
+  def arrange_descendants(form)
+    sort = "(case when ancestry is null then 0 else 1 end), ancestry, rank"
+    # We eager load questions and option sets since they are likely to be needed.
+    nodes = form.descendants.includes(question: {option_set: :root_node}).order(sort).to_a
+    with_self = Questioning.arrange_nodes(nodes)
+    with_self.keys
+  end
+
+  # Arrange array of nodes into a nested hash of the form
+  # {node => children}, where children = {} if the node has no children
+  def arrange_nodes(nodes)
+    arranged = ActiveSupport::OrderedHash.new
+    min_depth = Float::INFINITY
+    index = Hash.new { |h, k| h[k] = ActiveSupport::OrderedHash.new }
+
+    nodes.each do |node|
+      children = index[node.id]
+      index[node.parent_id][node] = children
+
+      depth = node.depth
+      if depth < min_depth
+        min_depth = depth
+        arranged.clear
+      end
+      arranged[node] = children if depth == min_depth
+    end
+
+    arranged
   end
 end

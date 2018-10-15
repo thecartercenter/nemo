@@ -16,7 +16,7 @@
 //= require core_ext/object
 //= require jquery
 //= require jquery_ujs
-//= require jquery-ui-1.10.3.custom
+//= require jquery-ui-1.12.1-custom
 //= require jquery-fileupload/basic-plus
 //= require jquery.tokeninput
 //= require jquery.mjs.nestedSortable-2.0
@@ -33,7 +33,6 @@
 //= require phantomjs_object_assign_polyfill
 //= require phantomjs_polyfill-rails/bind-polyfill
 //= require dropzone
-//= require ckeditor/init
 //= require select2
 //= require trumbowyg/trumbowyg
 //= require trumbowyg/langs/ar.min

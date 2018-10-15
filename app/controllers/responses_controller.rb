@@ -6,9 +6,6 @@ class ResponsesController < ApplicationController
   include ResponseIndexable
   include CsvRenderable
 
-  # need to load with associations for show and edit
-  before_action :load_with_associations, only: %i[show edit]
-
   before_action :fix_nil_time_values, only: %i[update create]
 
   # authorization via CanCan
@@ -51,6 +48,9 @@ class ResponsesController < ApplicationController
 
         decorate_responses
 
+        @selected_ids = params[:sel]
+        @selected_all = params[:select_all]
+
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
       end
@@ -58,25 +58,13 @@ class ResponsesController < ApplicationController
       # csv output is for exporting responses
       format.csv do
         authorize!(:export, Response)
-        @responses = @responses.accessible_by(current_ability, :export)
 
-        # do search, excluding excerpts
-        if params[:search].present?
-          begin
-            @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
-              include_excerpts: false)
-          rescue Search::ParseError => error
-            flash.now[:error] = error.to_s
-            return
-          end
-        end
+        enqueue_csv_export
 
-        # Get the response, for export, but not paginated.
-        # We deliberately don't eager load as that is handled in the Results::Csv::Generator class.
-        @responses = @responses.order(:created_at)
+        flash[:html_safe] = true
+        flash[:notice] = t("export.queued_html", type: "Response CSV", url: operations_path)
 
-        @csv = Results::Csv::Generator.new(@responses)
-        render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")
+        redirect_to(responses_path)
       end
     end
   end
@@ -98,6 +86,7 @@ class ResponsesController < ApplicationController
 
   def new
     setup_condition_computer
+    Results::BlankResponseTreeBuilder.new(@response).build
     # render the form template
     prepare_and_render_form
   end
@@ -123,12 +112,25 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
-    @responses = load_selected_objects(Response)
-    result = BatchDestroy.new(@responses, current_user, current_ability).destroy!
-    success = []
-    success << t("response.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
-    success << t("response.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?
-    flash[:success] = success.join(" ") unless success.empty?
+    scope = Response.accessible_by(current_ability)
+    if params[:select_all] == "1"
+      if params[:search].present?
+        begin
+          scope = Response.do_search(scope, params[:search], {mission: current_mission}, include_excerpts: false)
+        rescue Search::ParseError => error
+          flash.now[:error] = error.to_s
+          return
+        end
+      else
+        scope = scope.where(mission: current_mission)
+      end
+    else
+      scope = scope.where(id: params[:selected].keys)
+    end
+
+    ids = scope.pluck(:id)
+    Results::ResponseDeleter.instance.delete(ids)
+    flash[:success] = t("response.bulk_destroy_deleted", count: ids.size)
     redirect_to(responses_path)
   end
 
@@ -196,7 +198,7 @@ class ResponsesController < ApplicationController
 
   # loads the response with its associations
   def load_with_associations
-    @response = Response.with_associations.friendly.find(params[:id])
+    @response = Response.with_basic_assoc.friendly.find(params[:id])
   end
 
   # when editing a response, set timestamp to show it is being worked on
@@ -216,6 +218,11 @@ class ResponsesController < ApplicationController
     @response.reviewed = true if params[:commit_and_mark_reviewed]
     @response.check_in if params[:action] == "update"
 
+    if can?(:modify_answers, @response)
+      parser = Results::WebResponseParser.new(@response)
+      parser.parse(params.require(:response))
+    end
+
     # try to save
     begin
       @response.save!
@@ -231,7 +238,6 @@ class ResponsesController < ApplicationController
 
     # Store main XML file for debugging purposes.
     UploadSaver.new.save_file(params[:xml_submission_file])
-
     begin
       @response.user_id = current_user.id
       @response = odk_response_parser.populate_response
@@ -247,7 +253,6 @@ class ResponsesController < ApplicationController
       # We use this because ODK can't display custom failure messages so this provides a little more info.
       render_xml_submission_failure(e, 426)
     rescue SubmissionError => e
-      Rails.logger.debug(e)
       render_xml_submission_failure(e, 422)
     end
   end
@@ -273,20 +278,25 @@ class ResponsesController < ApplicationController
 
   # prepares objects for and renders the form template
   def prepare_and_render_form
-    # Prepare the OldAnswerNodes.
-    set_read_only
-    @nodes = AnswerArranger.new(
-      @response,
-      placeholders: params[:action] == "show" ? :except_repeats : :all,
-      # Must preserve submitted answers when in create/update action.
-      dont_load_answers: %w[create update].include?(params[:action])
-    ).build.nodes
+    @context = Results::ResponseFormContext.new(
+      read_only: action_name == "show" || cannot?(:modify_answers, @response)
+    )
+
+    # The blank response is used for rendering placeholders for repeat groups
+    @blank_response = Response.new(form: @response.form)
+    Results::BlankResponseTreeBuilder.new(@blank_response).build
+
     render(:form)
   end
 
   def render_xml_submission_failure(exception, code)
     Rails.logger.info("XML submission failed: '#{exception}'")
     render(body: nil, status: code)
+  end
+
+  def alias_response
+    # CanCanCan loads resource into @_response
+    @response = @_response
   end
 
   # get the form specified in the params and error if it's not there
@@ -312,33 +322,8 @@ class ResponsesController < ApplicationController
 
       to_permit << %i[reviewed reviewer_notes reviewer_id] if @response.present? && can?(:review, @response)
 
-      # In some rare cases, create or update can occur without answers_attributes. Not sure how.
-      # Also need to respect the modify_answers permission here.
-      if (ans_attribs = params[:response][:answers_attributes]) &&
-          (action_name != "update" || can?(:modify_answers, @response))
-
-        # We need to permit each possible answer attribute key for each given hash key in answers_attributes.
-        # See https://stackoverflow.com/a/36779535/2066866.
-        to_permit << {
-          answers_attributes: ans_attribs.keys.map { |k| [k, permitted_answer_attributes] }.to_h
-        }
-      end
-
       params.require(:response).permit(to_permit)
     end
-  end
-
-  # Returns the permitted keys for an answer and its choices.
-  def permitted_answer_attributes
-    @permitted_answer_attributes ||= %w(
-      id value option_id option_node_id questioning_id relevant rank
-      time_value(1i) time_value(2i) time_value(3i) time_value(4i) time_value(5i) time_value(6i)
-      datetime_value
-      datetime_value(1i) datetime_value(2i) datetime_value(3i)
-      datetime_value(4i) datetime_value(5i) datetime_value(6i)
-      date_value(1i) date_value(2i) date_value(3i) inst_num media_object_id _destroy
-      date_value
-    ) << {choices_attributes: %i[id option_id option_node_id checked]}
   end
 
   def check_form_exists_in_mission
@@ -360,5 +345,20 @@ class ResponsesController < ApplicationController
         end
       end
     end
+  end
+
+  def enqueue_csv_export
+    operation = Operation.new(
+      creator: current_user,
+      mission: current_mission,
+      job_class: ResponseCsvExportOperationJob,
+      details: t(
+        "operation.details.response_csv_export_operation_job",
+        user_email: current_user.email,
+        mission_name: current_mission.name
+      )
+    )
+
+    operation.begin!(params[:search])
   end
 end

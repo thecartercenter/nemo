@@ -16,8 +16,7 @@ class Response < ApplicationRecord
   belongs_to :user, inverse_of: :responses
   belongs_to :reviewer, class_name: "User"
 
-  # response.answers is deprecated in favor of traversing the response tree via response.root_node.children
-  has_many :answers, -> { order(:inst_num, :rank) },
+  has_many :answers, -> { order(:new_rank) },
     autosave: true, dependent: :destroy, inverse_of: :response
   has_many :location_answers, lambda {
     where("questions.qtype_name = 'location'").order("form_items.rank").includes(questioning: :question)
@@ -27,8 +26,8 @@ class Response < ApplicationRecord
 
   friendly_id :shortcode
 
-  before_save :normalize_answers
   before_validation :normalize_reviewed
+
   after_save { root_node.save if root_node.present? }
   before_create :generate_shortcode
 
@@ -53,20 +52,6 @@ class Response < ApplicationRecord
   scope :created_before, ->(date) { where("responses.created_at <= ?", date) }
   scope :latest_first, -> { order(created_at: :desc) }
 
-  # loads all the associations required for show, edit, etc.
-  scope :with_associations, -> { includes(
-    :form,
-    {
-      answers: [
-        {choices: :option},
-        :option,
-        :media_object,
-        {form_item: [:display_conditions, {question: :option_set}]}
-      ]
-    },
-    :user
-  ) }
-
   # loads basic belongs_to associations
   scope :with_basic_assoc, -> { includes(:form, :user) }
 
@@ -76,11 +61,9 @@ class Response < ApplicationRecord
   # loads only answers with location info
   scope :with_location_answers, -> { includes(:location_answers) }
 
-  accepts_nested_attributes_for(:answers, allow_destroy: true)
-
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
-  delegate :c, :children, to: :root_node
+  delegate :c, :children, :debug_tree, to: :root_node
 
   def destroy_answer_tree
     root_node.destroy if root_node.present?
@@ -327,10 +310,6 @@ class Response < ApplicationRecord
   end
 
   private
-
-  def normalize_answers
-    AnswerArranger.new(self, placeholders: :none, dont_load_answers: true).build.normalize
-  end
 
   def normalize_reviewed
     self.reviewed = true if reviewer_id.present? || reviewer_notes.present?

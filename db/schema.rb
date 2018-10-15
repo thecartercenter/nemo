@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180918154928) do
+ActiveRecord::Schema.define(version: 20181010174613) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -31,18 +31,18 @@ ActiveRecord::Schema.define(version: 20180918154928) do
     t.date "date_value"
     t.datetime "datetime_value"
     t.datetime "deleted_at"
-    t.integer "inst_num", default: 1, null: false
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "new_rank", default: 0, null: false
     t.integer "old_id"
+    t.integer "old_inst_num", default: 1, null: false
+    t.integer "old_rank", default: 1, null: false
     t.uuid "option_id"
     t.integer "option_old_id"
     t.uuid "parent_id"
     t.string "pending_file_name"
     t.uuid "questioning_id", null: false
     t.integer "questioning_old_id"
-    t.integer "rank", default: 1, null: false
     t.uuid "response_id", null: false
     t.integer "response_old_id"
     t.time "time_value"
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20180918154928) do
     t.index ["option_id"], name: "index_answers_on_option_id"
     t.index ["parent_id"], name: "index_answers_on_parent_id"
     t.index ["questioning_id"], name: "index_answers_on_questioning_id"
-    t.index ["response_id", "questioning_id", "inst_num", "rank", "deleted_at"], name: "answers_full", unique: true
+    t.index ["response_id", "questioning_id", "old_inst_num", "old_rank", "deleted_at"], name: "answers_full", unique: true
     t.index ["response_id"], name: "index_answers_on_response_id"
   end
 
@@ -286,22 +286,28 @@ ActiveRecord::Schema.define(version: 20180918154928) do
   end
 
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.string "attachment_content_type"
+    t.string "attachment_download_name"
+    t.string "attachment_file_name"
+    t.integer "attachment_file_size"
+    t.datetime "attachment_updated_at"
     t.datetime "created_at", null: false
     t.uuid "creator_id"
-    t.integer "creator_old_id"
-    t.string "description", limit: 255, null: false
+    t.string "details", limit: 255, null: false
     t.string "job_class", limit: 255, null: false
     t.datetime "job_completed_at"
     t.text "job_error_report"
     t.datetime "job_failed_at"
     t.string "job_id", limit: 255
-    t.string "job_outcome_url", limit: 255
     t.datetime "job_started_at"
-    t.integer "old_id"
+    t.uuid "mission_id"
     t.string "provider_job_id", limit: 255
+    t.boolean "unread", default: true, null: false
     t.datetime "updated_at", null: false
+    t.string "url"
     t.index ["created_at"], name: "index_operations_on_created_at"
     t.index ["creator_id"], name: "index_operations_on_creator_id"
+    t.index ["mission_id"], name: "index_operations_on_mission_id"
   end
 
   create_table "option_nodes", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -526,7 +532,6 @@ ActiveRecord::Schema.define(version: 20180918154928) do
   end
 
   create_table "settings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.boolean "allow_unauthenticated_submissions", default: false
     t.datetime "created_at"
     t.string "default_outgoing_sms_adapter", limit: 255
     t.string "frontlinecloud_api_key", limit: 255
@@ -722,6 +727,7 @@ ActiveRecord::Schema.define(version: 20180918154928) do
   add_foreign_key "forms", "forms", column: "original_id", name: "forms_original_id_fkey", on_update: :restrict, on_delete: :nullify
   add_foreign_key "forms", "missions", name: "forms_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "media_objects", "answers", name: "media_objects_answer_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "operations", "missions"
   add_foreign_key "operations", "users", column: "creator_id", name: "operations_creator_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "option_nodes", "missions", name: "option_nodes_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "option_nodes", "option_nodes", column: "original_id", name: "option_nodes_original_id_fkey", on_update: :restrict, on_delete: :nullify

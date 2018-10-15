@@ -64,7 +64,7 @@ class SettingsController < ApplicationController
     end
 
     def setting_params
-      params.require(:setting).permit(:timezone, :preferred_locales_str, :allow_unauthenticated_submissions,
+      params.require(:setting).permit(:timezone, :preferred_locales_str,
         :incoming_sms_numbers_str, :default_outgoing_sms_adapter, :twilio_phone_number, :twilio_account_sid,
         :twilio_auth_token1, :clear_twilio, :frontlinecloud_api_key1, :clear_frontlinecloud,
         :generic_sms_config_str, :theme)
