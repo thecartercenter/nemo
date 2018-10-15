@@ -5,7 +5,6 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @delete_path = options.delete_path
     @generic_thumb_path = options.generic_thumb_path
     @id_field = @$('input')
-    @manager = ELMO.mediaUploaderManager
     @preview_template = options.preview_template
     @paramName = options.param_name
 
@@ -27,6 +26,9 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
 
   events:
     'click .existing a.delete': 'delete_existing'
+
+  set_listener: (listener) ->
+    @listener = listener
 
   delete_existing: (event) ->
     event.preventDefault()
@@ -52,10 +54,12 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @id_field.val('')
 
   upload_starting: ->
-    @manager.upload_starting()
+    if @listener
+      @listener.upload_starting()
     @$('img')[0].src = @generic_thumb_path
     @$('.dz-message').hide()
     @$('.error-msg').hide()
 
   upload_finished: ->
-    @manager.upload_finished()
+    if @listener
+      @listener.upload_finished()
