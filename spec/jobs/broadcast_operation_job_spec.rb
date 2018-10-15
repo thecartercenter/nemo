@@ -10,6 +10,11 @@ describe BroadcastOperationJob do
       described_class.perform_now(operation, broadcast)
     end
 
+    it "saves sent time" do
+      described_class.perform_now(operation, broadcast)
+      expect(broadcast.reload.sent_time).not_to be_nil
+    end
+
     context "when Sms::Errors::PartialError is raised" do
       before do
         allow(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Errors::PartialError)
