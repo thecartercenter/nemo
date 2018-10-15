@@ -132,7 +132,7 @@ class BroadcastsController < ApplicationController
       job_class: BroadcastOperationJob,
       details: t(
         "operation.details.broadcast_operation_job",
-          message: @broadcast.body.truncate(32)
+        message: @broadcast.body.truncate(32)
       )
     )
 

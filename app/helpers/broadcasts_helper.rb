@@ -8,7 +8,7 @@ module BroadcastsHelper
   end
 
   def broadcasts_index_fields
-    %w(recipients medium sent_time errors body)
+    %w[recipients medium sent_time errors body]
   end
 
   def format_broadcasts_field(broadcast, field)
