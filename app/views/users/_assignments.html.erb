@@ -3,16 +3,13 @@
   <%# special error output %>
   <%= content_tag(:div, assignment_errors.join(' '), :class => 'form-errors') unless assignment_errors.empty? %>
 
-  <%= react_component("UserAssignmentForm", {missions: [{id:"c2e77821-7bf8-458e-8088-32c9660ea8d7", name: "EOS Test"}, {id:"c4a214e8-6466-460f-a202-381fe6f7e81c", name: "Jill"}], roles: ["enumerator", "reviewer", "staffer", "coordinator"], assignments: [{role: "staffer", mission: "c2e77821-7bf8-458e-8088-32c9660ea8d7", new: false, name: "EOS mission", destroy: false}]}) %>
 
   <div class="assignment_header">
     <div class="mission"><%= translate_model(Mission) %></div>
     <div class="role"><%= t('role.role') %></div>
   </div>
 
-  <div class="assignments"></div>
-
-  <%= link_to(t('user.add_assignment'), '#', :class => 'add_assignment') unless read_only %>
+  <%= react_component("UserAssignmentForm", assignment_data) %>
 
 <% else %>
 
@@ -22,9 +19,6 @@
     <%= @current_assignment.role ? t(@current_assignment.role, :scope => :role) : t('common.none') %>
 
   <% else %>
-  <% # {missions: [34:"liberia", 99:"new guinea"], assignments: [34:3, 22:1], roles: ["whatever", "blargh"]} %>
-
-
 
     <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment) do |af| %>
       <%= af.hidden_field(:id) %>

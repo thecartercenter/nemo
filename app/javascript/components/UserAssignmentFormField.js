@@ -13,7 +13,7 @@ class UserAssignmentFormField extends React.Component {
       name: `user[assignments_attributes][${this.props.index}][mission_id]`
     };
 
-    if (this.props.new) {
+    if (this.props.new_assignment) {
       return (
         <select {...missionSelectProps}>
           {this.missionOptionTags()}
@@ -21,7 +21,10 @@ class UserAssignmentFormField extends React.Component {
       );
     } else {
       return (
-        <div>{this.props.name}</div>
+        <div>
+          {this.props.name}
+          <input type="hidden" name={`user[assignments_attributes][${this.props.index}][id]`} value={this.props.id}/>
+        </div>
       );
     }
   }

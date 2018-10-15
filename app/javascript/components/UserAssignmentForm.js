@@ -7,6 +7,7 @@ class UserAssignmentForm extends React.Component {
   constructor(props) {
     super();
     this.state = props;
+    console.log(this.state);
     this.handleAddClick = this.handleAddClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
   }
@@ -17,11 +18,11 @@ class UserAssignmentForm extends React.Component {
 
   handleAddClick() {
     let assignments = this.state.assignments;
-    assignments.push({role: "", mission: this.randomUUID(), new: true});
+    assignments.push({role: "", mission: this.randomUUID(), new_assignment: true});
     this.setState({assignments: assignments});
   }
 
-  handleDeleteClick(event){
+  handleDeleteClick(event) {
     let assignments = this.state.assignments;
     let idx = assignments.findIndex((e) => { return e.mission == event; });
     assignments[idx].new ? assignments.splice(idx, 1) : assignments[idx]["destroy"] = true
