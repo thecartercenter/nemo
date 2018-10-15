@@ -7,10 +7,11 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @id_field = @$('input')
     @manager = ELMO.mediaUploaderManager
     @preview_template = options.preview_template
+    @paramName = options.param_name
 
     @dropzone = new Dropzone(@zone_id, {
       url: @post_path
-      paramName: "upload" # The name that will be used to transfer the file
+      paramName: @paramName # The name that will be used to transfer the file
       maxFiles: 1
       uploadMultiple: false
       previewTemplate: @preview_template,
@@ -35,6 +36,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       @id_field.val('')
 
   file_uploaded: (response_data) ->
+    console.log(I18n.t('errors.file_upload')) #TODO: ensure this available then remove
     @id_field.val(response_data.id)
 
   upload_errored: (file, response_data) ->
@@ -42,7 +44,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     errors = if response_data.errors
       response_data.errors.join("<br/>")
     else
-      I18n.t("activerecord.errors.models.media/object.generic")
+      I18n.t('errors.file_upload')
     @$('.error-msg').show().html(errors)
 
   file_removed: ->
