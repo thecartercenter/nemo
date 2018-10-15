@@ -21,6 +21,7 @@
     zone_id: "#dropzone-#{context.path_str}",
     generic_thumb_path: image_path("media/#{answer.qtype.media_type}.png"),
     post_path: media_create_path(type: media_type),
-    delete_path: answer.media_object ? media_delete_path(answer.media_object, type: media_type) : nil
+    delete_path: answer.media_object ? media_delete_path(answer.media_object, type: media_type) : nil,
+    preview_template: render("layouts/dropzone_preview")
   )%>);
 <% end %>

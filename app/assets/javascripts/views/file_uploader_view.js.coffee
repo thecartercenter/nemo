@@ -6,13 +6,14 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @generic_thumb_path = options.generic_thumb_path
     @id_field = @$('input')
     @manager = ELMO.mediaUploaderManager
+    @preview_template = options.preview_template
 
     @dropzone = new Dropzone(@zone_id, {
       url: @post_path
       paramName: "upload" # The name that will be used to transfer the file
       maxFiles: 1
       uploadMultiple: false
-      previewTemplate: @manager.preview_template,
+      previewTemplate: @preview_template,
       thumbnailWidth: 100,
       thumbnailHeight: 100
     })
