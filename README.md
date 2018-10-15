@@ -15,24 +15,6 @@ Consider ELMO if you need:
 To learn more about the history and goals of the project, [visit the ELMO project site](http://getelmo.org).
 You can also learn more about The Carter Center's Election Standards [here](http://cartercenter.org).
 
-## Supported Releases
-
-These release lines are currently receiving backports of all bug fixes.
-
-| Number | Original Release Date | Major Features Since Previous Version |
-|---|---|---|
-| v7.x | 2017-11-22 | UUIDs, barcode question type |
-| v8.x | 2018-01-25 | Multiple conditions, skip logic |
-
-Each time a patch is backported to one of these releases, the new release will have its micro version number incremented. e.g. if v7.0.3 was the latest release in the 7.0 line, the new release will be given the number v7.0.4.
-
-Generally, a new release line will be added to this list when some important new functionality is added to the system.
-
-Release lines will be removed from this list when it is determined that:
-
-1. a newer release line is adequately stable for production environments
-2. any groups that may be using the release line are prepared to upgrade to the newer line and to perform any user training that may be necessary
-
 ## Production Setup
 
 For production scenarios, [Sassafras Tech Collective](http://sassafras.coop) offers managed production instances. Contact them for details. Or you can follow the [production setup guide](docs/production-setup.md) to setup an instance on an Ubuntu server.
