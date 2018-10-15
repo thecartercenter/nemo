@@ -1437,6 +1437,7 @@ en:
       user_import_operation_job: "User import for %{mission_name} from %{file}"
       option_set_import_operation_job: "Option Set '%{name}' import for %{mission_name}"
       response_csv_export_operation_job: "Response CSV export for %{user_email} in %{mission_name}"
+      broadcast_operation_job: "Broadcast: '%{message}'"
     attachment_link_text: "download"
     operations_panel: "Operations Panel"
     status:
@@ -1455,6 +1456,12 @@ en:
       with_errors:
         one: "%{message} (1 error)"
         other: "%{message} (%{count} errors)"
+    errors:
+      broadcast_partial: |-
+        There were errors delivering some messages.
+        See the <a href="%{url}">broadcast page</a> for more information.
+      broadcast_fatal: |-
+        See the <a href="%{url}">broadcast page</a> for more information.
 
   tag:
     none_found: "No matching tags found"

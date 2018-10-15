@@ -52,7 +52,7 @@ class OperationJob < ApplicationJob
     operation.update!(job_completed_at: Time.current)
   end
 
-  private
+  protected
 
   def save_failure(msg)
     attributes = {job_failed_at: Time.current, job_error_report: msg}
