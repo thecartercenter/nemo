@@ -1427,7 +1427,7 @@ en:
   operation:
     clear_confirm: "Are you sure you want to clear all completed operations?"
     errors:
-      delayed_job_stopped: "Background processes for operations are stopped. Please contact administrator."
+      delayed_job_stopped: "Operations are currently not running. Please contact administrator"
       server_error: "Server error. Please contact support."
     details:
       user_import_operation_job: User import for %{mission_name} from %{file}

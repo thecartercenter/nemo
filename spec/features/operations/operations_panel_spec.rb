@@ -29,9 +29,8 @@ feature "operations panel" do
   end
 
   context "delayed job" do
-    before(:each) do
-      stub = double
-      allow(stub).to receive(:running?).and_return(result)
+    before do
+      stub = double("running?": result)
       allow(DelayedJobChecker).to(receive(:new).and_return(stub))
     end
     let(:error_message) { "Background processes for operations are stopped. Please contact administrator." }
@@ -48,7 +47,7 @@ feature "operations panel" do
       let(:result) { true }
       scenario "displays no error when running" do
         visit("/en/admin/operations")
-        expect(page).to_not(have_content(error_message))
+        expect(page).not_to have_content(error_message)
       end
     end
   end
