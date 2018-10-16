@@ -35,42 +35,21 @@ form.user_form {
   }
 
   div.form-field#assignments {
-
-    div.item {
-      padding: 2px 0;
-    }
-
-    div.assignment, div.assignment_header {
+    .mission, .role {
       display: inline-block;
-      min-height: 20px;
+      width: 150px;
+      margin-right: 10px;
+    }
 
-      > div {
+    .assignment-row {
+      height: 50px;
+      i {
         display: inline-block;
-        padding-right: 10px;
-      }
-
-      div.mission {
-        width: 150px;
-
-        select {
-          width: 145px;
-        }
-      }
-
-      div.role {
-        width: 120px;
-
-        select {
-          width: 115px;
-        }
-      }
-
-      div.active {
-        width: 75px;
       }
     }
 
-    div.assignment_header {
+    .assignment-header {
+      min-height: 20px;
       font-size: 11px;
       color: #aaa;
     }

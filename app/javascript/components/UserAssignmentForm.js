@@ -31,7 +31,7 @@ class UserAssignmentForm extends React.Component {
 
   render() {
     return (
-      <div>
+      <div className="assignments">
         <div>
           {this.state.assignments.map(
             (props, index) =>

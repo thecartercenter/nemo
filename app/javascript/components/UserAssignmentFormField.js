@@ -64,7 +64,7 @@ class UserAssignmentFormField extends React.Component {
       name: `user[assignments_attributes][${this.props.index}][role]`
     };
     return (
-      <div>
+      <div className="assignment-row" key={this.props.index}>
         <div className="mission">
           {this.missionField()}
         </div>
