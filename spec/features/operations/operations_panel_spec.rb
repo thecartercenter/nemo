@@ -33,7 +33,7 @@ feature "operations panel" do
       stub = double("running?": result)
       allow(DelayedJobChecker).to(receive(:new).and_return(stub))
     end
-    let(:error_message) { "Background processes for operations are stopped. Please contact administrator." }
+    let(:error_message) { "Operations are currently not running. Please contact administrator" }
 
     context "not running" do
       let(:result) { false }
