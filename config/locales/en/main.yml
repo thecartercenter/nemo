@@ -1436,6 +1436,7 @@ en:
       option_set_import_operation_job: "Option Set '%{name}' import for %{mission_name}"
       response_csv_export_operation_job: "Response CSV export for %{user_email} in %{mission_name}"
     attachment_link_text: "download"
+    operations_panel: "Operations Panel"
     status:
       completed: "Success"
       failed: "Failed"
