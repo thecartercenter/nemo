@@ -105,16 +105,17 @@ ActiveRecord::Schema.define(version: 20181010174613) do
   end
 
   create_table "choices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid "answer_id"
+    t.uuid "answer_id", null: false
     t.integer "answer_old_id"
     t.datetime "created_at"
     t.datetime "deleted_at"
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "old_id"
-    t.uuid "option_id"
+    t.uuid "option_id", null: false
     t.integer "option_old_id"
     t.datetime "updated_at"
+    t.index ["answer_id", "option_id"], name: "index_choices_on_answer_id_and_option_id", unique: true
     t.index ["answer_id"], name: "index_choices_on_answer_id"
     t.index ["deleted_at"], name: "index_choices_on_deleted_at"
     t.index ["option_id"], name: "index_choices_on_option_id"
