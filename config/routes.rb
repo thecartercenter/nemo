@@ -30,6 +30,10 @@ ELMO::Application.routes.draw do
       collection do
         post "clear"
       end
+
+      member do
+        get "download"
+      end
     end
 
     # Routes with user or no user.
@@ -113,6 +117,11 @@ ELMO::Application.routes.draw do
         put "publish"
         get "choose-questions", as: "choose_questions", action: "choose_questions"
         get "sms-guide", as: "sms_guide", action: "sms_guide"
+      end
+    end
+    resources :operations, only: %i[index show destroy] do
+      collection do
+        post "clear"
       end
     end
     resources :questions do

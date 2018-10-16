@@ -58,25 +58,13 @@ class ResponsesController < ApplicationController
       # csv output is for exporting responses
       format.csv do
         authorize!(:export, Response)
-        @responses = @responses.accessible_by(current_ability, :export)
 
-        # do search, excluding excerpts
-        if params[:search].present?
-          begin
-            @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
-              include_excerpts: false)
-          rescue Search::ParseError => error
-            flash.now[:error] = error.to_s
-            return
-          end
-        end
+        enqueue_csv_export
 
-        # Get the response, for export, but not paginated.
-        # We deliberately don't eager load as that is handled in the Results::Csv::Generator class.
-        @responses = @responses.order(:created_at)
+        flash[:html_safe] = true
+        flash[:notice] = t("export.queued_html", type: "Response CSV", url: operations_path)
 
-        @csv = Results::Csv::Generator.new(@responses)
-        render_csv("elmo-#{current_mission.compact_name}-responses-#{Time.zone.now.to_s(:filename_datetime)}")
+        redirect_to(responses_path)
       end
     end
   end
@@ -357,5 +345,20 @@ class ResponsesController < ApplicationController
         end
       end
     end
+  end
+
+  def enqueue_csv_export
+    operation = Operation.new(
+      creator: current_user,
+      mission: current_mission,
+      job_class: ResponseCsvExportOperationJob,
+      details: t(
+        "operation.details.response_csv_export_operation_job",
+        user_email: current_user.email,
+        mission_name: current_mission.name
+      )
+    )
+
+    operation.begin!(params[:search])
   end
 end

@@ -30,4 +30,11 @@ module Concerns::ApplicationController::ErrorHandling
       ExceptionNotifier.notify_exception(StandardError.new("Last request introduced rank issues. DB dumped."))
     end
   end
+
+  def render_not_found
+    respond_to do |format|
+      format.html { render file: Rails.root.join("public", "404"), layout: false, status: :not_found }
+      format.any { head :not_found }
+    end
+  end
 end

@@ -213,7 +213,7 @@
       inner.append(el);
     }
 
-    if (item.value !== null) {
+    if (item.value || item.value === 0) {
       const value = $("<span>").addClass("value").text(" (" + item.value + ")");
       inner.append(value);
     }
@@ -354,6 +354,13 @@
   // saves entered translations to data model
   klass.prototype.saveItem = function(action) {
     const self = this;
+
+    // If the item is blank, do nothing. We are encountering an issue (part of #8977) that seems
+    // to be caused by a second blank item getting added to the list each time a regular item is added.
+    // Could be due to a double click issue. So we're adding a check here to ensure we aren't adding
+    // blank items. We should never normally be able to get into this function if everything is blank
+    // because the save button won't be visible.
+    if (!self.validate_modal()) return;
 
     self.modal.find('.translation input').each(function(){
       self.active_item.update_translation({field: 'name', locale: $(this).data('locale'), value: $(this).val()});

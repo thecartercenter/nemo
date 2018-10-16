@@ -198,7 +198,7 @@ class OptionNode < ApplicationRecord
         # And option_has_answers? kicks off a big SQL query for a huge set.
         # Conditions association should be eager loaded.
         unless huge?
-          branch[:removable?] = !option_set.option_has_answers?(node.option_id) && node.conditions.empty?
+          branch[:removable] = !option_set.option_has_answers?(node.option_id) && node.conditions.empty?
         end
 
         # Recursive step.
