@@ -155,7 +155,7 @@ group :development do
   gem "binding_of_caller", "~> 0.7.2"
 
   # misc
-  gem "fix-db-schema-conflicts", "~> 2.0.0"
+  gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4.1"
 end
 

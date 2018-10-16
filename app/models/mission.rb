@@ -16,6 +16,7 @@ class Mission < ApplicationRecord
   has_many :qing_groups, inverse_of: :mission
   has_many :form_items, inverse_of: :mission
   has_many :conditions, inverse_of: :mission
+  has_many :operations, inverse_of: :mission, dependent: :destroy
   has_many :options, inverse_of: :mission, dependent: :destroy
   has_many :option_sets, inverse_of: :mission, dependent: :destroy
   has_many :option_nodes, inverse_of: :mission, dependent: :destroy

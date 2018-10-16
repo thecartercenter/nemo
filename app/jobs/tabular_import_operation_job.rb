@@ -1,11 +1,8 @@
 class TabularImportOperationJob < OperationJob
-  def perform(operation, current_mission, name, path, import_class)
-    # load the current mission's settings into configatron
-    Setting.load_for_mission(current_mission)
-
+  def perform(operation, name, path, import_class)
     if import_class
-      import = import_class.constantize.new(mission_id: current_mission.try(:id), name: name, file: path)
-      succeeded = import.run(current_mission)
+      import = import_class.constantize.new(mission_id: mission.try(:id), name: name, file: path)
+      succeeded = import.run(mission)
     end
 
     operation_failed(format_error_report(import.try(:errors))) unless succeeded

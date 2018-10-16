@@ -35,7 +35,7 @@
 
   // Don't allow options that are not removable to change parents.
   klass.prototype.parent_change_allowed = function (item) {
-    return item["removable?"];
+    return item.removable;
   }
 
 })(ELMO.Views);
