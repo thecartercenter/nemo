@@ -38,7 +38,6 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       @id_field.val('')
 
   file_uploaded: (response_data) ->
-    console.log(I18n.t('errors.file_upload')) #TODO: ensure this available then remove
     @id_field.val(response_data.id)
 
   upload_errored: (file, response_data) ->
