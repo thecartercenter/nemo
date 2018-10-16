@@ -30,7 +30,7 @@ module Results
 
     # replace choices_attributes top level param with a hash representing nested attributes
     PERMITTED_PARAMS = TOP_LEVEL_PARAMS.without(:choices_attributes)
-      .append(choices_attributes: %w[option_node_id checked]).freeze
+      .append(choices_attributes: %w[id option_node_id checked]).freeze
 
     attr_reader :response
 
@@ -78,7 +78,6 @@ module Results
     end
 
     def new_tree_node_attrs(web_hash_node, tree_parent)
-      type = web_hash_node[:type]
       clean_params = web_hash_node.slice(*TOP_LEVEL_PARAMS).permit(PERMITTED_PARAMS)
       clean_params.merge(rank_attributes(tree_parent))
     end

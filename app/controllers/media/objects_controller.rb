@@ -1,43 +1,46 @@
+# frozen_string_literal: true
+
 class Media::ObjectsController < ApplicationController
-  before_action :set_media_object, only: [:show, :edit, :update, :delete]
+  before_action :set_media_object, only: %i[show delete]
   skip_authorization_check
 
   def show
     style = params[:style]
     @answer = @media_object.answer
     @response = @answer.try(:response)
-    disposition = (params[:dl] == "1") ? "attachment" : "inline"
+    disposition = params[:dl] == "1" ? "attachment" : "inline"
 
     if @response
-      authorize! :show, @response
-    else
-      raise CanCan::AccessDenied.new("Not authorized", :view, :media_object) unless @media_object.token == params[:token]
+      authorize!(:show, @response)
+    elsif @media_object.token != params[:token]
+      raise CanCan::AccessDenied.new("Not authorized", :view, :media_object)
     end
 
-    send_file @media_object.item.path(style),
+    send_file(@media_object.item.path(style),
       type: @media_object.item_content_type,
       disposition: disposition,
-      filename: media_filename
+      filename: media_filename)
   end
 
   def create
     media = media_class(params[:type]).new(item: params[:upload])
-    # answer_id can be blank because creation is asynchronous and will be assigned when the response is submitted
+    # answer_id can be blank because creation is asynchronous and
+    # will be assigned when the response is submitted
     media.answer = Answer.find(params[:answer_id]) if params[:answer_id]
 
     if media.save
-      render json: { id: media.id }, status: 201
+      render(json: {id: media.id}, status: :created)
     else
       # Currently there is only one type of validation failure: incorrect type.
       # The default paperclip error messages are heinous, which is why we're doing this.
       msg = I18n.t("activerecord.errors.models.media/object.invalid_format")
-      render json: { errors: [msg] }, status: 422
+      render(json: {errors: [msg]}, status: :unprocessable_entity)
     end
   end
 
   def delete
     @media_object.destroy
-    render body: nil, status: 204
+    render(body: nil, status: :no_content)
   end
 
   private
@@ -62,11 +65,11 @@ class Media::ObjectsController < ApplicationController
   def media_class(type)
     case type
     when "audios"
-      return Media::Audio
+      Media::Audio
     when "videos"
-      return Media::Video
+      Media::Video
     when "images"
-      return Media::Image
+      Media::Image
     else
       raise "A valid media type must be specified"
     end

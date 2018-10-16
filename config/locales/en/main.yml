@@ -1361,6 +1361,10 @@ en:
     queued_html: |-
       %{type} import queued. Check the <a href="%{url}">operations panel</a> for info.
 
+  export:
+    queued_html: |-
+      %{type} export queued. Check the <a href="%{url}">operations panel</a> for info.
+
   incomplete_response:
     missing_answers:
       label: "Is this form missing any required answers?"
@@ -1430,9 +1434,11 @@ en:
       delayed_job_stopped: "Operations are currently not running. Please contact administrator"
       server_error: "Server error. Please contact support."
     details:
-      user_import_operation_job: User import for %{mission_name} from %{file}
-      option_set_import_operation_job: Option Set '%{name}' import for %{mission_name}
-    outcome_link_text: "link"
+      user_import_operation_job: "User import for %{mission_name} from %{file}"
+      option_set_import_operation_job: "Option Set '%{name}' import for %{mission_name}"
+      response_csv_export_operation_job: "Response CSV export for %{user_email} in %{mission_name}"
+    attachment_link_text: "download"
+    operations_panel: "Operations Panel"
     status:
       completed: "Success"
       failed: "Failed"

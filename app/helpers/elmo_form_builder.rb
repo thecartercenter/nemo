@@ -153,7 +153,11 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         # show plain field value by default
         else
-          val
+          if val.present? && options[:link]
+            @template.link_to(val, options[:link])
+          else
+            val
+          end
         end
 
         # fall back to "[None]" if we have no value to show

@@ -9,8 +9,8 @@ describe Answer do
       let(:answer) { Answer.new(media_object_id: object.id) }
 
       it "should find and associate with media object" do
-        expect(answer.media_object).to eq object
-        expect(answer.media_object_id).to eq object.id
+        expect(answer.media_object).to eq(object)
+        expect(answer.media_object_id).to eq(object.id)
       end
     end
 
@@ -22,53 +22,128 @@ describe Answer do
   end
 
   describe "validations" do
-    describe "date" do
-      let(:no_date_ans) { build(:answer, date_value: nil) }
-      let(:right_date_ans) { build(:answer, date_value: "2018-01-01") }
-      let(:junk_date_ans_str) { build(:answer, date_value: "dog pants") }
-      let(:junk_date_ans_int) { build(:answer, date_value: 5) }
+    # We need to build the Answer using `new` instead of the factory because the factory chokes
+    # on multiparam attribs like "date_value(1i)".
+    subject(:answer) { Answer.new(build(:answer).attributes.merge(attribs)) }
 
-      it "answer with no date" do
-        expect(no_date_ans).to be_valid
-      end
-
-      it "answer with valid date" do
-        expect(right_date_ans).to be_valid
-      end
-
-      it "answer with invalid string for date" do
-        expect(junk_date_ans_str).not_to be_valid
-        expect(junk_date_ans_str.errors[:date_value].join).to match(/Date is invalid/)
-      end
-
-      it "answer with invalid integer for date" do
-        expect(junk_date_ans_int).not_to be_valid
-        expect(junk_date_ans_int.errors[:date_value].join).to match(/Date is invalid/)
+    shared_examples_for "invalid" do
+      it do
+        expect(answer).not_to be_valid
+        expect(answer.errors[attrib].join).to match(/is invalid/)
+        expect(answer[attrib]).to be_nil
       end
     end
 
-    describe "date time" do
-      let(:no_datetime_ans) { build(:answer, datetime_value: nil) }
-      let(:right_datetime_ans) { build(:answer, datetime_value: "2018-01-01 12:00") }
-      let(:junk_datetime_ans_str) { build(:answer, datetime_value: "dog pants") }
-      let(:junk_datetime_ans_int) { build(:answer, datetime_value: 5) }
+    describe "date" do
+      let(:attrib) { :date_value }
 
-      it "answer with no datetime" do
-        expect(no_datetime_ans).to be_valid
+      context "with no date" do
+        let(:attribs) { {date_value: nil} }
+        it { is_expected.to be_valid }
       end
 
-      it "answer with valid datetime" do
-        expect(right_datetime_ans).to be_valid
+      context "with valid date" do
+        let(:attribs) { {date_value: "2018-01-01"} }
+        it { is_expected.to be_valid }
       end
 
-      it "answer with invalid string for datetime" do
-        expect(junk_datetime_ans_str).not_to be_valid
-        expect(junk_datetime_ans_str.errors[:datetime_value].join).to match(%r{Date/Time is invalid})
+      context "with valid date via multiparam attribs" do
+        let(:attribs) { {"date_value(1i)" => "1985", "date_value(2i)" => "4", "date_value(3i)" => "3"} }
+        it { is_expected.to be_valid }
       end
 
-      it "answer with invalid integer for datetime" do
-        expect(junk_datetime_ans_int).not_to be_valid
-        expect(junk_datetime_ans_int.errors[:datetime_value].join).to match(%r{Date/Time is invalid})
+      context "with off by one date via multiparam attribs" do
+        let(:attribs) { {"date_value(1i)" => "1985", "date_value(2i)" => "4", "date_value(3i)" => "31"} }
+        it do
+          expect(answer).to be_valid
+          expect(answer.date_value.strftime("%Y%m%d")).to eq("19850501")
+        end
+      end
+
+      context "with formatted but invalid date string" do
+        let(:attribs) { {date_value: "2018-01-90"} }
+        it_behaves_like("invalid")
+      end
+
+      context "with totally invalid date string" do
+        let(:attribs) { {date_value: "dog pants"} }
+        it_behaves_like("invalid")
+      end
+
+      # This one errors and is not handled, but that's ok because the select boxes shouldn't let it happen.
+      context "with invalid date via multiparam attribs" do
+        let(:attribs) { {"date_value(1i)" => "1985", "date_value(2i)" => "4", "date_value(3i)" => "32"} }
+        it { expect { answer }.to raise_error(ActiveRecord::MultiparameterAssignmentErrors) }
+      end
+    end
+
+    describe "datetime" do
+      let(:attrib) { :datetime_value }
+
+      context "with no datetime" do
+        let(:attribs) { {datetime_value: nil} }
+        it { is_expected.to be_valid }
+      end
+
+      context "with valid datetime" do
+        let(:attribs) { {datetime_value: "1985-04-03 10:15:55"} }
+        it { is_expected.to be_valid }
+      end
+
+      context "with valid datetime via multiparam attribs" do
+        let(:attribs) do
+          {
+            "datetime_value(1i)" => "1985",
+            "datetime_value(2i)" => "4",
+            "datetime_value(3i)" => "3",
+            "datetime_value(4i)" => "12",
+            "datetime_value(5i)" => "9",
+            "datetime_value(6i)" => "1"
+          }
+        end
+        it { is_expected.to be_valid }
+      end
+
+      context "with day-off-by-one datetime via multiparam attribs" do
+        let(:attribs) do
+          {
+            "datetime_value(1i)" => "1985",
+            "datetime_value(2i)" => "4",
+            "datetime_value(3i)" => "31",
+            "datetime_value(4i)" => "10",
+            "datetime_value(5i)" => "10",
+            "datetime_value(6i)" => "10"
+          }
+        end
+        it do
+          expect(answer).to be_valid
+          expect(answer.datetime_value.strftime("%Y%m%d%H%M%S")).to eq("19850501101010")
+        end
+      end
+
+      context "with formatted but invalid datetime string" do
+        let(:attribs) { {datetime_value: "2018-01-90 10:90:22"} }
+        it_behaves_like("invalid")
+      end
+
+      context "with totally invalid datetime string" do
+        let(:attribs) { {datetime_value: "dog pants"} }
+        it_behaves_like("invalid")
+      end
+
+      # This one errors and is not handled, but that's ok because the select boxes shouldn't let it happen.
+      context "with invalid datetime via multiparam attribs" do
+        let(:attribs) do
+          {
+            "datetime_value(1i)" => "1985",
+            "datetime_value(2i)" => "4",
+            "datetime_value(3i)" => "30",
+            "datetime_value(4i)" => "25",
+            "datetime_value(5i)" => "10",
+            "datetime_value(6i)" => "10"
+          }
+        end
+        it { expect { answer }.to raise_error(ActiveRecord::MultiparameterAssignmentErrors) }
       end
     end
   end

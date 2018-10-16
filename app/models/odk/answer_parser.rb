@@ -11,11 +11,13 @@ module Odk
     end
 
     def populate_answer_value(answer, content, form_item)
-      question_type = form_item.qtype.name
-      return populate_multimedia_answer(answer, content, question_type) if form_item.qtype.multimedia?
-      case question_type
+      qtype = form_item.qtype
+      return populate_multimedia_answer(answer, content, qtype.name) if qtype.multimedia?
+
+      case qtype.name
       when "select_one"
-        answer.option_id = option_id_for_option_node_code(content) # assume content has option node code ("on#{option_node.id}")
+        # assume content has option node code ("on#{option_node.id}")
+        answer.option_id = option_id_for_option_node_code(content)
       when "select_multiple"
         unless content == "none"
           content.split(" ").each do |option_node_id|
@@ -55,19 +57,36 @@ module Odk
     def populate_multimedia_answer(answer, pending_file_name, question_type)
       if files[pending_file_name].present?
         answer.pending_file_name = nil
-        case question_type
-        when "image", "annotated_image", "sketch", "signature"
-          answer.media_object = Media::Image.create(item: files[pending_file_name])
-        when "audio"
-          answer.media_object = Media::Audio.create(item: files[pending_file_name])
-        when "video"
-          answer.media_object = Media::Video.create(item: files[pending_file_name])
-        end
+        answer.media_object = create_media_object(pending_file_name, question_type)
       else
         answer.value = nil
         answer.pending_file_name = pending_file_name
       end
       answer
+    end
+
+    # Creates a media object for the given file and question type. If the object doesn't pass
+    # validation, discards it and returns nil.
+    def create_media_object(pending_file_name, question_type)
+      klass = media_class(question_type)
+      raise "media class not found for question type #{question_type}" unless klass
+
+      begin
+        klass.create!(item: files[pending_file_name])
+      rescue ActiveRecord::RecordInvalid => e
+        Rails.logger.info("Media object failed validation on ODK upload, skipping (message: '#{e.to_s}', "\
+          "filename: '#{pending_file_name}')")
+        nil
+      end
+    end
+
+    # May return nil if no match.
+    def media_class(qtype_name)
+      case qtype_name
+      when "image", "annotated_image", "sketch", "signature" then Media::Image
+      when "audio" then Media::Audio
+      when "video" then Media::Video
+      end
     end
   end
 end
