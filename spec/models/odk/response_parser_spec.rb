@@ -6,12 +6,13 @@ describe Odk::ResponseParser do
   include_context "response tree"
   include ActionDispatch::TestProcess
   let(:save_fixtures) { true }
+  let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+  let(:response2) { Response.new(form: form, mission: form.mission, user: create(:user)) }
+  let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
 
   context "responses without media" do
     let(:form) { create(:form, :published, :with_version, question_types: question_types) }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
 
     context "simple form" do
       let(:filename) { "simple_response.xml" }
@@ -363,63 +364,66 @@ describe Odk::ResponseParser do
   context "responses with media" do
     let(:filename) { "simple_response.xml" }
     let(:form) { create(:form, :published, :with_version, question_types: question_types) }
-    let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-    let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
 
     context "single part media" do
       let(:media_file_name) { "the_swing.jpg" }
       let(:image) { fixture_file_upload(media_fixture("images/#{media_file_name}"), "image/jpeg") }
-      let(:question_types) { %w[text text image] }
+      let(:question_types) { %w[text text text image] }
       let(:files) { {xml_submission_file: StringIO.new(xml), media_file_name => image} }
-      let(:xml_values) { ["A", "B", media_file_name] }
+      let(:xml_values) { ["A", "B", "C", media_file_name] }
 
       it "creates response tree with media object for media answer" do
         Odk::ResponseParser.new(response: response, files: files).populate_response
-        image_answer = response.root_node.c[2]
-        expect(image_answer.media_object.item_file_name).to include media_file_name
+        expect(response.root_node.c[3].media_object.item_file_name).to include(media_file_name)
       end
     end
 
-    context "multipart media" do
+    context "multipart media with one mixture of valid and invalid file types" do
       let(:media_file_name_1) { "the_swing.jpg" }
       let(:media_file_name_2) { "another_swing.jpg" }
+      let(:media_file_name_3) { "not_an_image.ogg" }
       let(:image_1) { media_fixture("images/#{media_file_name_1}") }
       let(:image_2) { media_fixture("images/#{media_file_name_2}") }
-      let(:question_types) { %w[text image image] }
-      let(:files_1) { {xml_submission_file: StringIO.new(xml), media_file_name_1 => image_1} }
-      let(:files_2) { {xml_submission_file: StringIO.new(xml), media_file_name_2 => image_2} }
-      let(:xml_values) { ["A", media_file_name_1, media_file_name_2] }
+      let(:image_3) { media_fixture("images/#{media_file_name_3}") }
+      let(:question_types) { %w[text image image image] }
+      let(:request1_files) do
+        {
+          xml_submission_file: StringIO.new(xml),
+          media_file_name_1 => image_1
+        }
+      end
+      let(:request2_files) do
+        {
+          xml_submission_file: StringIO.new(xml),
+          media_file_name_2 => image_2,
+          media_file_name_3 => image_3
+        }
+      end
+      let(:xml_values) { ["A", media_file_name_1, media_file_name_2, media_file_name_3] }
 
-      it "creates response tree with media object for media answer" do
-        populated_response = Odk::ResponseParser.new(
-          response: response,
-          files: files_1,
-          awaiting_media: true
-        ).populate_response
-        populated_response.save(validate: false)
-        expect(Response.count).to eq 1
-        image_answer1 = response.root_node.c[1]
-        image_answer2 = response.root_node.c[2]
-        expect(response.root_node.c.count).to eq 3
-        expect(response.answers.count).to eq 3
+      it "creates response tree with media object for media answer and discards file with invalid type" do
+        # First request
+        populated = Odk::ResponseParser.new(response: response, files: request1_files,
+                                            awaiting_media: true).populate_response
+        populated.save!
+        expect(Response.count).to eq(1)
+        expect(populated.root_node.c.count).to eq(4)
+        expect(populated.root_node.c[1].pending_file_name).to be_nil
+        expect(populated.root_node.c[1].media_object.item_file_name).to include(media_file_name_1)
+        expect(populated.root_node.c[2].pending_file_name).to eq(media_file_name_2)
+        expect(populated.root_node.c[2].media_object).to be_nil
 
-        expect(image_answer1.pending_file_name).to be_nil
-        expect(image_answer1.media_object).to be_present
-        expect(image_answer1.media_object.item_file_name).to include media_file_name_1
-        expect(image_answer2.pending_file_name).to eq media_file_name_2
-        expect(image_answer2.media_object).to be_nil
-
-        new_response = Response.new(form: form, mission: form.mission, user: create(:user))
-        populated_response = Odk::ResponseParser.new(
-          response: new_response,
-          files: files_2,
-          awaiting_media: false
-        ).populate_response
-        populated_response.save(validate: false)
-        expect(Response.count).to eq 1
-        image_answer2 = response.reload.root_node.c[2]
-        expect(image_answer2.media_object).to be_present
-        expect(image_answer2.media_object.item_file_name).to include media_file_name_2
+        # Second request
+        # Use a different response object (response2) to simulate what would happen
+        # in the controller in a separate request.
+        # Note that in this case ResponseParser returns a different response object than what it receives.
+        populated = Odk::ResponseParser.new(response: response2, files: request2_files,
+                                            awaiting_media: false).populate_response
+        populated.save!
+        expect(Response.count).to eq(1)
+        populated.reload
+        expect(populated.root_node.c[2].media_object.item_file_name).to include(media_file_name_2)
+        expect(populated.root_node.c[3].media_object).to be_nil
       end
     end
   end
