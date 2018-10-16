@@ -7,6 +7,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @id_field = @$('input')
     @preview_template = options.preview_template
     @paramName = options.param_name
+    @listener = options.listener
 
     @dropzone = new Dropzone(@zone_id, {
       url: @post_path
@@ -26,9 +27,6 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
 
   events:
     'click .existing a.delete': 'delete_existing'
-
-  set_listener: (listener) ->
-    @listener = listener
 
   delete_existing: (event) ->
     event.preventDefault()
@@ -53,12 +51,10 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @id_field.val('')
 
   upload_starting: ->
-    if @listener
-      @listener.upload_starting()
+    @listener.upload_starting()
     @$('img')[0].src = @generic_thumb_path
     @$('.dz-message').hide()
     @$('.error-msg').hide()
 
   upload_finished: ->
-    if @listener
-      @listener.upload_finished()
+    @listener.upload_finished()
