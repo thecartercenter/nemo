@@ -35,23 +35,27 @@ form.user_form {
   }
 
   div.form-field#assignments {
-    .mission, .role {
+    .mission,
+    .role {
       display: inline-block;
-      width: 150px;
       margin-right: 10px;
+      width: 150px;
     }
 
     .assignment-row {
       height: 50px;
+
       i {
         display: inline-block;
       }
     }
 
     .assignment-header {
-      min-height: 20px;
-      font-size: 11px;
       color: #aaa;
+      font-size: 11px;
+      min-height: 20px;
+
+
     }
   }
 

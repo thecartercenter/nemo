@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "user form", js: true do
   let(:admin) { create(:admin) }
-  let!(:mission) { Mission.first }
+  let!(:mission) { create(:mission) }
 
   before do
     login(admin)
@@ -27,7 +27,6 @@ feature "user form", js: true do
       select("Send password reset instructions via email", from: "user_reset_password_method")
       click_button("Save")
       expect(page).to have_content("Success: User created successfully")
-      u = User.last
 
       # Make sure password email url is correct and no missing translations
       email = ActionMailer::Base.deliveries.last
@@ -74,5 +73,4 @@ feature "user form", js: true do
       expect(page).to have_content("Reviewer")
     end
   end
-
 end
