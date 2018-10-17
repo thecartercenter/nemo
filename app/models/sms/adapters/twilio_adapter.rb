@@ -71,11 +71,7 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   end
 
   def send_message(to, body)
-    client.messages.create(
-      from: config.twilio_phone_number,
-      to: to,
-      body: body
-    )
+    client.messages.create(from: config.twilio_phone_number, to: to, body: body)
   end
 
   def send_message_for_each_recipient(message)
