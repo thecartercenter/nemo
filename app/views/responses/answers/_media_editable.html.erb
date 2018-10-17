@@ -18,12 +18,11 @@
   <% media_type = answer.qtype.media_type.pluralize %>
   options = <%=json(
     el: "#media-uploader-#{context.path_str}",
-    zone_id: "#dropzone-#{context.path_str}",
-    generic_thumb_path: image_path("media/#{answer.qtype.media_type}.png"),
-    post_path: media_create_path(type: media_type),
-    delete_path: answer.media_object ? media_delete_path(answer.media_object, type: media_type) : nil,
-    preview_template: render("layouts/dropzone_preview"),
-    param_name: "upload"
+    zoneId: "#dropzone-#{context.path_str}",
+    genericThumbPath: image_path("media/#{answer.qtype.media_type}.png"),
+    postPath: media_create_path(type: media_type),
+    previewTemplate: render("layouts/dropzone_preview"),
+    paramName: "upload"
   )%>
   options.listener = ELMO.mediaUploaderManager;
   new ELMO.Views.FileUploaderView(options);

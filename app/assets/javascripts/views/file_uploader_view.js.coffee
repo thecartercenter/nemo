@@ -6,63 +6,62 @@
 
 class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
   initialize: (options) ->
-    @zone_id = options.zone_id
-    @post_path = options.post_path
-    @delete_path = options.delete_path
-    @generic_thumb_path = options.generic_thumb_path
-    @id_field = @$('input')
-    @preview_template = options.preview_template
-    @paramName = options.param_name
+    @zoneId = options.zoneId
+    @postPath = options.postPath
+    @genericThumbPath = options.genericThumbPath
+    @idField = @$('input')
+    @previewTemplate = options.previewTemplate
+    @paramName = options.paramName
     @listener = options.listener
 
-    @dropzone = new Dropzone(@zone_id, {
-      url: @post_path
+    @dropzone = new Dropzone(@zoneId, {
+      url: @postPath
       paramName: @paramName # The name that will be used to transfer the file
       maxFiles: 1
       uploadMultiple: false
-      previewTemplate: @preview_template,
+      previewTemplate: @previewTemplate,
       thumbnailWidth: 100,
       thumbnailHeight: 100
     })
 
-    @dropzone.on 'removedfile', => @file_removed()
-    @dropzone.on 'sending', => @upload_starting()
-    @dropzone.on 'success', (_, response_data) => @file_uploaded(response_data)
-    @dropzone.on 'error', (file, msg) => @upload_errored(file, msg)
-    @dropzone.on 'complete', => @upload_finished()
+    @dropzone.on 'removedfile', => @fileRemoved()
+    @dropzone.on 'sending', => @uploadStarting()
+    @dropzone.on 'success', (_, responseData) => @fileUploaded(responseData)
+    @dropzone.on 'error', (file, msg) => @uploadErrored(file, msg)
+    @dropzone.on 'complete', => @uploadFinished()
 
   events:
-    'click .existing a.delete': 'delete_existing'
+    'click .existing a.delete': 'deleteExisting'
 
-  delete_existing: (event) ->
+  deleteExisting: (event) ->
     event.preventDefault()
     if confirm($(event.currentTarget).data('confirm-msg'))
       @$('.existing').remove()
       @$('.dropzone').show()
-      @id_field.val('')
+      @idField.val('')
 
-  file_uploaded: (response_data) ->
-    @id_field.val(response_data.id)
+  fileUploaded: (responseData) ->
+    @idField.val(responseData.id)
 
-  upload_errored: (file, response_data) ->
+  uploadErrored: (file, responseData) ->
     @dropzone.removeFile(file)
-    errors = if response_data.errors
-      response_data.errors.join("<br/>")
+    errors = if responseData.errors
+      responseData.errors.join("<br/>")
     else
       I18n.t('errors.file_upload')
     @$('.error-msg').show().html(errors)
 
-  file_removed: ->
+  fileRemoved: ->
     @$('.dz-message').show()
-    @id_field.val('')
+    @idField.val('')
 
-  upload_starting: ->
+  uploadStarting: ->
     if @listener
-      @listener.upload_starting()
-    @$('img')[0].src = @generic_thumb_path
+      @listener.uploadStarting()
+    @$('img')[0].src = @genericThumbPath
     @$('.dz-message').hide()
     @$('.error-msg').hide()
 
-  upload_finished: ->
+  uploadFinished: ->
     if @listener
-      @listener.upload_finished()
+      @listener.uploadFinished()
