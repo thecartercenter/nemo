@@ -56,12 +56,12 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @idField.val('')
 
   uploadStarting: ->
-    if @listener
+    if @listener?
       @listener.uploadStarting()
     @$('img')[0].src = @genericThumbPath
     @$('.dz-message').hide()
     @$('.error-msg').hide()
 
   uploadFinished: ->
-    if @listener
+    if @listener?
       @listener.uploadFinished()
