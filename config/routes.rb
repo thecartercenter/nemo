@@ -108,6 +108,8 @@ ELMO::Application.routes.draw do
   # Admin mode OR mission mode routes
   scope ":locale/:mode(/:mission_name)", locale: /[a-z]{2}/, mode: /m|admin/, mission_name: /[a-z][a-z0-9]*/ do
 
+    #post 'user-batches/upload', to: 'user_batches#upload'
+
     # the rest of these routes can have admin mode or not
     resources :forms, constraints: -> (req) { req.format == :html } do
       member do
@@ -145,9 +147,11 @@ ELMO::Application.routes.draw do
         get "using_incoming_sms_token_message"
       end
     end
+
     resources :user_batches, path: "user-batches", only: %i[new create] do
       collection do
-        get "users-template", as: "template", action: "template", defaults: { format: "xslx" }
+        post :upload
+        get "users-template", as: "template", action: "template", defaults: {format: "xslx"}
       end
     end
 

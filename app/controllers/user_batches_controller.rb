@@ -2,8 +2,9 @@
 
 # For importing users from CSV/spreadsheet.
 class UserBatchesController < ApplicationController
-  load_and_authorize_resource
-  skip_authorize_resource only: [:template]
+  skip_authorization_check only: :upload
+  load_and_authorize_resource except: :upload
+  skip_authorize_resource only: [:template, :upload]
 
   # ensure a recent login for all actions
   before_action :require_recent_login
@@ -12,13 +13,26 @@ class UserBatchesController < ApplicationController
     render("form")
   end
 
+  def upload
+    temp_file_path = UploadSaver.new.save_file(params[:userbatch])
+    render(json: {tempFilePath: temp_file_path})
+    # puts "UPLOAD ENDPOINT"
+    # if @user_batch.valid?
+    #   (@user_batch.file)
+    #
+    #  else
+    #   flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.general")
+    #   render("form")
+    # end
+  end
+
   def create
-    if @user_batch.valid?
+    #if #temp upload path valid
       do_import
-    else
-      flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.general")
-      render("form")
-    end
+    # else
+    #   flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.general")
+    #   render("form")
+    # end
   end
 
   def template
@@ -30,8 +44,8 @@ class UserBatchesController < ApplicationController
   private
 
   def do_import
-    stored_path = UploadSaver.new.save_file(@user_batch.file)
-    operation.begin!(nil, stored_path, @user_batch.class.to_s)
+    # parse temp_upload_path from params
+    operation.begin!(nil, temp_file_path, @user_batch.class.to_s)
     flash[:html_safe] = true
     flash[:notice] = t("import.queued_html", type: UserBatch.model_name.human, url: operations_path)
     redirect_to(users_url)

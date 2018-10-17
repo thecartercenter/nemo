@@ -9,7 +9,7 @@ class UserBatch
                         gender_custom nationality notes user_groups]
   EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups].freeze
 
-  attr_accessor :file, :mission_id, :name
+  attr_accessor :file, :mission_id, :name, :temp_file_path
   attr_reader :users
 
   validates :file, presence: true
