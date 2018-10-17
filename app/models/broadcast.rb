@@ -59,7 +59,7 @@ class Broadcast < ApplicationRecord
       if sms_possible? && recipient_numbers.present?
         Sms::Broadcaster.deliver(self, which_phone, "[#{Settings.broadcast_tag}] #{body}")
       end
-    rescue Sms::Errors::Error
+    rescue Sms::GenericError
       # one error per line
       $!.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
     end

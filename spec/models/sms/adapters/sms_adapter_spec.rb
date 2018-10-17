@@ -16,7 +16,7 @@ describe Sms::Adapters::Adapter, :sms do
     each_adapter(can_deliver?: true) do |adapter|
       expect do
         adapter.deliver(Sms::Reply.new(to: nil, body: "foo"))
-      end.to raise_error(Sms::Errors::Error)
+      end.to raise_error(Sms::GenericError)
     end
   end
 
@@ -24,7 +24,7 @@ describe Sms::Adapters::Adapter, :sms do
     each_adapter(can_deliver?: true) do |adapter|
       expect do
         adapter.deliver(Sms::Reply.new(to: "+15556667777", body: ""))
-      end.to raise_error(Sms::Errors::Error)
+      end.to raise_error(Sms::GenericError)
     end
   end
 

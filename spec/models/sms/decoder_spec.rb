@@ -681,7 +681,7 @@ describe Sms::Decoder, :sms do
     it "duplicate sent within timeframe should error" do
       form = create_form(questions: %w[integer])
       expect_decoding(form, data: "1.4", answers: [4])
-      Timecop.travel(Sms::Decoder::DUPLICATE_WINDOW - 1.minute) do
+      Timecop.travel(Sms::Decoder::Decoder::DUPLICATE_WINDOW - 1.minute) do
         expect_decoding_fail(form, data: "1.4", error: "duplicate_submission")
       end
     end
@@ -689,7 +689,7 @@ describe Sms::Decoder, :sms do
     it "duplicate sent outside timeframe should not error" do
       form = create_form(questions: %w[integer])
       expect_decoding(form, data: "1.4", answers: [4])
-      Timecop.travel(Sms::Decoder::DUPLICATE_WINDOW + 1.minute) do
+      Timecop.travel(Sms::Decoder::Decoder::DUPLICATE_WINDOW + 1.minute) do
         expect_decoding(form, data: "1.4", answers: [4])
       end
     end
@@ -717,7 +717,7 @@ describe Sms::Decoder, :sms do
     options[:from] ||= options[:user].phone
     options[:body] ||= "#{form.code} #{options[:data]}"
     msg = Sms::Incoming.create(options.slice(:from, :body, :mission))
-    decoder = Sms::Decoder.new(msg)
+    decoder = Sms::Decoder::Decoder.new(msg)
     decoder.decode
     decoder.finalize
 
@@ -754,7 +754,7 @@ describe Sms::Decoder, :sms do
     error = nil
     begin
       expect_decoding(form, options.merge(expecting_fail: true))
-    rescue Sms::DecodingError
+    rescue Sms::Decoder::DecodingError
       error = $ERROR_INFO
     end
 

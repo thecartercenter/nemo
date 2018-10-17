@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sms
-  module Parser
+  module Decoder
     # Parses an incoming SMS message into an ordered list of rank/value pairs.
     class AnswerParser
       include Enumerable
@@ -20,7 +20,7 @@ module Sms
           if match
             rank, value = match
           elsif index.zero? # if this is the first answer token, raise error
-            raise Sms::Parser::Error.new("first_answer_invalid", token: tok)
+            raise Sms::Decoder::ParseError.new("first_answer_invalid", token: tok)
           else # otherwise, we add the token to the value variable and proceed
             value = value.blank? ? tok : value + " #{tok}"
           end

@@ -14,7 +14,13 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     true
   end
 
-  def deliver(message, dry_run = nil)
+  # If dry_run is not specified, it will default to true in test mode,
+  # false otherwise. This is needed for some older specs that assume
+  # adapters won't actually send messages. This assumption should be
+  # deprecated, and newer specs should either mock the client (model
+  # specs, see twilio_sms_adapter_spec.rb) or use the ENV stubbing
+  # functionality (feature specs) to disable sending.
+  def deliver(message, dry_run: nil)
     dry_run = Rails.env.test? if dry_run.nil?
 
     prepare_message_for_delivery(message)
@@ -44,10 +50,8 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
   def validate(request)
     params = request.request_parameters.merge(request.query_parameters)
     validator = Twilio::Util::RequestValidator.new(config.twilio_auth_token)
-    unless Rails.env.test?
-      unless validator.validate(request.original_url, params, request.headers['X-Twilio-Signature'])
-        raise Sms::Error.new("Could not validate incoming Twilio message from #{params[:From]}")
-      end
+    unless validator.validate(request.original_url, params, request.headers['X-Twilio-Signature'])
+      raise Sms::Error.new("Could not validate incoming Twilio message from #{params[:From]}")
     end
   end
 
@@ -84,10 +88,10 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
         errors << e
 
         # creating the first 3 messages all failed
-        raise Sms::Errors::FatalError, e if errors.length == 3 && index == 2
+        raise Sms::Adapters::FatalSendError, e if errors.length == 3 && index == 2
       end
     end
 
-    raise Sms::Errors::PartialError, errors if errors.empty?
+    raise Sms::Adapters::PartialSendError, errors unless errors.empty?
   end
 end
