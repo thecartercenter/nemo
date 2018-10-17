@@ -17,8 +17,6 @@ class OperationJob < ApplicationJob
 
   delegate :mission, to: :operation
 
-  protected
-
   def operation
     # The `Operation` instance tracking this job is always passed as
     # the first argument to `perform`
@@ -52,7 +50,7 @@ class OperationJob < ApplicationJob
     operation.update!(job_completed_at: Time.current)
   end
 
-  protected
+  private
 
   def save_failure(msg)
     attributes = {job_failed_at: Time.current, job_error_report: msg}
