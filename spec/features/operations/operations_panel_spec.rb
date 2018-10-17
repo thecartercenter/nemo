@@ -12,15 +12,43 @@ feature "operations panel" do
     login(admin)
   end
 
-  scenario "in mission mode, displays only operations that belong to mission" do
-    visit("/en/m/#{mission.compact_name}/operations")
-    expect(page).to have_selector("#operation_#{mission_operation.id}")
-    expect(page).not_to(have_selector("#operation_#{non_mission_operation.id}"))
+  context "mission mode" do
+    scenario "displays only operations that belong to mission" do
+      visit("/en/m/#{mission.compact_name}/operations")
+      expect(page).to have_selector("#operation_#{mission_operation.id}")
+      expect(page).to_not(have_selector("#operation_#{non_mission_operation.id}"))
+    end
   end
 
-  scenario "in admin mode, displays all operations" do
-    visit("/en/admin/operations")
-    expect(page).to have_selector("#operation_#{mission_operation.id}")
-    expect(page).to have_selector("#operation_#{non_mission_operation.id}")
+  context "admin mode" do
+    scenario "displays all operations " do
+      visit("/en/admin/operations")
+      expect(page).to have_selector("#operation_#{mission_operation.id}")
+      expect(page).to have_selector("#operation_#{non_mission_operation.id}")
+    end
+  end
+
+  context "delayed job" do
+    before do
+      stub = double("running?": result)
+      allow(DelayedJobChecker).to(receive(:new).and_return(stub))
+    end
+    let(:error_message) { "Operations are currently not running. Please contact administrator" }
+
+    context "not running" do
+      let(:result) { false }
+      scenario "displays error when not running" do
+        visit("/en/admin/operations")
+        expect(page).to have_content(error_message)
+      end
+    end
+
+    context "running" do
+      let(:result) { true }
+      scenario "displays no error when running" do
+        visit("/en/admin/operations")
+        expect(page).not_to have_content(error_message)
+      end
+    end
   end
 end
