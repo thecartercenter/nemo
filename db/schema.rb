@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181015154427) do
+ActiveRecord::Schema.define(version: 20181011153415) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,7 +101,6 @@ ActiveRecord::Schema.define(version: 20181015154427) do
     t.string "subject", limit: 255
     t.datetime "updated_at"
     t.string "which_phone", limit: 255
-    t.datetime "sent_time"
     t.index ["mission_id"], name: "index_broadcasts_on_mission_id"
   end
 
@@ -576,11 +575,11 @@ ActiveRecord::Schema.define(version: 20181015154427) do
     t.uuid "broadcast_id"
     t.integer "broadcast_old_id"
     t.datetime "created_at", null: false
-    t.string "reply_error_message"
     t.string "from", limit: 255
     t.uuid "mission_id"
     t.integer "mission_old_id"
     t.integer "old_id"
+    t.string "reply_error_message"
     t.uuid "reply_to_id"
     t.integer "reply_to_old_id"
     t.datetime "sent_at"
