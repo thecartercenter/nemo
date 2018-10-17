@@ -25,7 +25,7 @@ feature "broadcasts flow", :sms, js: true do
     select("Main phone only", from: "Which Phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")
-    expect(page).to have_content("Broadcast sent successfully")
+    expect(page).to have_content("Broadcast queued")
     expect(page).to have_content(user2.name)
   end
 
@@ -37,7 +37,7 @@ feature "broadcasts flow", :sms, js: true do
     select("Main phone only", from: "Which Phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")
-    expect(page).to have_content("Broadcast sent successfully")
+    expect(page).to have_content("Broadcast queued")
     expect(page).to have_content("All users in mission")
   end
 
@@ -50,7 +50,7 @@ feature "broadcasts flow", :sms, js: true do
     select("Main phone only", from: "broadcast_which_phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")
-    expect(page).to have_content("Broadcast sent successfully")
+    expect(page).to have_text("Broadcast queued")
     expect(page).to have_content(user.name)
     expect(page).to have_content(user2.name)
   end

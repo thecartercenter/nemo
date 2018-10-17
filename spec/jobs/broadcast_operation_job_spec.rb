@@ -19,7 +19,7 @@ describe BroadcastOperationJob do
 
     context "when Sms::Errors::PartialError is raised" do
       before do
-        allow(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Errors::PartialError)
+        allow(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Adapters::PartialSendError)
       end
 
       it "marks operation as completed" do
@@ -35,7 +35,7 @@ describe BroadcastOperationJob do
 
     context "when Sms::Errors::FatalError is raised" do
       before do
-        allow(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Errors::FatalError)
+        allow(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Adapters::FatalSendError)
       end
 
       it "marks operation as failed" do

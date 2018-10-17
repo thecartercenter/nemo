@@ -1363,7 +1363,7 @@ en:
 
   export:
     queued_html: |-
-      %{type} export queued. Check the <a href="%{url}">operations panel</a> for info.
+      %{type} queued. Check the <a href="%{url}">operations panel</a> for info.
 
   incomplete_response:
     missing_answers:

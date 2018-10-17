@@ -62,7 +62,7 @@ class ResponsesController < ApplicationController
         enqueue_csv_export
 
         flash[:html_safe] = true
-        flash[:notice] = t("export.queued_html", type: "Response CSV", url: operations_path)
+        flash[:notice] = t("export.queued_html", type: "Response CSV export", url: operations_path)
 
         redirect_to(responses_path)
       end
