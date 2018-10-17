@@ -34,6 +34,6 @@ shared_context "dropzone" do
   end
 
   def dropzone_ready?
-    page.evaluate_script("ELMO.mediaUploaderManager.is_uploading()")
+    page.evaluate_script("ELMO.mediaUploaderManager.isUploading()")
   end
 end
