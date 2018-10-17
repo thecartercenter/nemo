@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe Util::DelayedJobChecker do
+describe Utils::DelayedJobChecker do
   subject(:ok) { described_class.instance.ok? }
 
   context "with no jobs" do

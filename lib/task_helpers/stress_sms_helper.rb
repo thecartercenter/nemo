@@ -18,7 +18,7 @@ class StressSmsHelper
   end
 
   def self.signature_for_params(url, params, auth_token)
-    validator = Twilio::Util::RequestValidator.new auth_token
+    validator = Twilio::Utils::RequestValidator.new auth_token
     validator.build_signature_for url, params
   end
 

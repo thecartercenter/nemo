@@ -96,7 +96,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
     params = (options[:params] || {}).with_indifferent_access
 
     signature = options[:signature] || begin
-      validator = Twilio::Util::RequestValidator.new(configatron.twilio_auth_token)
+      validator = Twilio::Utils::RequestValidator.new(configatron.twilio_auth_token)
       validator.build_signature_for(url, params)
     end
 
