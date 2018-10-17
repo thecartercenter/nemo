@@ -12,9 +12,9 @@ describe BroadcastOperationJob do
       described_class.perform_now(operation, broadcast)
     end
 
-    it "saves sent time" do
+    it "saves sent_at time" do
       described_class.perform_now(operation, broadcast)
-      expect(broadcast.reload.sent_time).not_to be_nil
+      expect(broadcast.reload.sent_at).not_to be_nil
     end
 
     context "when Sms::Errors::PartialError is raised" do

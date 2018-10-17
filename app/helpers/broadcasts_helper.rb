@@ -8,7 +8,7 @@ module BroadcastsHelper
   end
 
   def broadcasts_index_fields
-    %w[recipients medium sent_time errors body]
+    %w[recipients medium sent_at errors body]
   end
 
   def format_broadcasts_field(broadcast, field)
@@ -25,9 +25,9 @@ module BroadcastsHelper
       t("broadcast.mediums.names." + broadcast.medium)
     when "body"
       link_to(truncate(broadcast.body, :length => 100), broadcast_path(broadcast), :title => t("common.view"))
-    when "sent_time"
-      if broadcast.sent_time.present?
-        l(broadcast.sent_time)
+    when "sent_at"
+      if broadcast.sent_at.present?
+        l(broadcast.sent_at)
       else
         t("common.pending")
       end

@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20181011153415) do
     t.integer "old_id"
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors"
+    t.datetime "sent_at"
     t.string "source", limit: 255, default: "manual", null: false
     t.string "subject", limit: 255
     t.datetime "updated_at"
