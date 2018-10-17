@@ -9,10 +9,12 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @zoneId = options.zoneId
     @postPath = options.postPath
     @genericThumbPath = options.genericThumbPath
-    @idField = @$('input')
+    @metaField = @$('input')
+    @metaFieldResponseAttr = options.metaFieldResponseAttr
     @previewTemplate = options.previewTemplate
     @paramName = options.paramName
     @listener = options.listener
+
 
     @dropzone = new Dropzone(@zoneId, {
       url: @postPath
@@ -38,10 +40,10 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     if confirm($(event.currentTarget).data('confirm-msg'))
       @$('.existing').remove()
       @$('.dropzone').show()
-      @idField.val('')
+      @metaField.val('')
 
   fileUploaded: (responseData) ->
-    @idField.val(responseData.id)
+    @metaField.val(responseData[@metaFieldResponseAttr])
 
   uploadErrored: (file, responseData) ->
     @dropzone.removeFile(file)
@@ -53,7 +55,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
 
   fileRemoved: ->
     @$('.dz-message').show()
-    @idField.val('')
+    @metaField.val('')
 
   uploadStarting: ->
     if @listener?

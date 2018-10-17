@@ -22,7 +22,8 @@
     genericThumbPath: image_path("media/#{answer.qtype.media_type}.png"),
     postPath: media_create_path(type: media_type),
     previewTemplate: render("layouts/dropzone_preview"),
-    paramName: "upload"
+    paramName: "upload",
+    metaFieldResponseAttr: "id"
   )%>
   options.listener = ELMO.mediaUploaderManager;
   new ELMO.Views.FileUploaderView(options);
