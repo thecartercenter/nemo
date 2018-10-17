@@ -1,7 +1,7 @@
 # The FileUploaderView wraps provides a dropzone file upload interface for uploading one file.
 # The zone id is the id of the html element that is the 'dropzone'
 # The post path is where the file upload will be posted to.
-# The preview template controls what dropzone looks like and it typically dropzone_preview.html (found in /layouts)
+# The preview template controls what dropzone looks like(typically dropzone_preview.html found in /layouts)
 # The paramName is the key to the file in the http request dropzone posts.
 
 class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView

@@ -25,6 +25,6 @@
     preview_template: render("layouts/dropzone_preview"),
     param_name: "upload"
   )%>
-  options.listener = ELMO.mediaUploaderManager
+  options.listener = ELMO.mediaUploaderManager;
   new ELMO.Views.FileUploaderView(options);
 <% end %>
