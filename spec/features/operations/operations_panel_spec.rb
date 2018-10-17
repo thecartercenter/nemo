@@ -29,11 +29,12 @@ feature "operations panel" do
   end
 
   context "delayed job" do
-    before do
-      stub = double("running?": result)
-      allow(DelayedJobChecker).to(receive(:new).and_return(stub))
-    end
     let(:error_message) { "Operations are currently not running. Please contact administrator" }
+
+    before do
+      stub = double("ok?": result)
+      allow(Util::DelayedJobChecker).to(receive(:instance).and_return(stub))
+    end
 
     context "not running" do
       let(:result) { false }
