@@ -30,8 +30,8 @@ class ApplicationController < ActionController::Base
   before_action :check_route
   before_action :remove_missionchange_flag
   before_action :set_locale
-  before_action :load_mission
-  before_action :load_user
+  before_action :load_current_mission
+  before_action :load_current_user
   before_action :prepare_exception_notifier
   before_action :protect_admin_mode
   before_action :remember_mission

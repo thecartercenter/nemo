@@ -6,7 +6,7 @@ module Concerns::ApplicationController::Authentication
 
   attr_reader :current_user, :current_mission
 
-  def load_mission
+  def load_current_mission
     # If we're in admin mode, the current mission is nil and
     # we need to set the user's current mission to nil also
     if mission_mode? && params[:mission_name].present?
@@ -24,7 +24,7 @@ module Concerns::ApplicationController::Authentication
   end
 
   # Determines the user and saves in the @current_user var.
-  def load_user
+  def load_current_user
     # If user already logged in via Authlogic, we are done.
     if (user_session = UserSession.find) && user_session.user
 
