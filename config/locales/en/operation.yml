@@ -1,10 +1,6 @@
-#Test comment
 en:
   operation:
     clear_confirm: "Are you sure you want to clear all completed operations?"
-    errors:
-      delayed_job_stopped: "Operations are currently not running. Please contact administrator."
-      server_error: "Server error. Please contact support."
     details:
       user_import: "User import from %{file}"
       option_set_import: "Option Set '%{name}' import"
@@ -28,6 +24,8 @@ en:
         one: "%{message} (1 error)"
         other: "%{message} (%{count} errors)"
     errors:
+      delayed_job_stopped: "Operations are currently not running. Please contact administrator."
+      server_error: "Server error. Please contact support."
       broadcast:
         partial_send: "There were errors delivering some messages. See the <a href='%{url}'>broadcast page</a> for more information."
         fatal_send: "Sending failed. See the <a href='%{url}'>broadcast page</a> for more information."
