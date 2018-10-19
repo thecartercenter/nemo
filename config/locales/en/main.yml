@@ -1448,11 +1448,13 @@ en:
         one: "%{message} (1 error)"
         other: "%{message} (%{count} errors)"
     errors:
-      broadcast_partial: |-
-        There were errors delivering some messages.
-        See the <a href="%{url}">broadcast page</a> for more information.
-      broadcast_fatal: |-
-        See the <a href="%{url}">broadcast page</a> for more information.
+      broadcast:
+        partial_send: |-
+          There were errors delivering some messages.
+          See the <a href="%{url}">broadcast page</a> for more information.
+        fatal_send: |-
+          See the <a href="%{url}">broadcast page</a> for more information.
+        not_found: "Broadcast object not found"
     row_error: "Row %{row}: %{error}"
     op_panel_more_info_link_html: "Check the <a href='%{url}'>operations panel</a> for info."
     queued_msg:
