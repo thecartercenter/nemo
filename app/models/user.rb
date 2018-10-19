@@ -78,7 +78,7 @@ class User < ApplicationRecord
     includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
   })
   scope(:with_groups, -> { joins(:user_groups) })
-  scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+  scope :name_matching, ->(q) { where("name ILIKE ?", "%#{q}%") }
   scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).
     where(assignments: { mission: m.try(:id), role: roles }) }
 

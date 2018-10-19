@@ -12,7 +12,7 @@ class UserGroup < ApplicationRecord
   validates :name, uniqueness: {scope: %i[deleted_at mission_id]}
 
   scope :by_name, -> { order(:name) }
-  scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+  scope :name_matching, ->(q) { where("name ILIKE ?", "%#{q}%") }
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(group_ids)
