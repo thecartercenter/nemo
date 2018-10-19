@@ -9,7 +9,7 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.FormView
       ajax:
         url: options.recipient_options_url
         dataType: 'json'
-        data: (params) -> {term: params.term, page: params.page || 1}
+        data: (params) -> {q: params.term, page: params.page || 1}
         delay: 250
         cache: true
 
