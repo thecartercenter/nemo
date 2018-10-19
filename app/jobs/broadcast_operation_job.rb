@@ -10,9 +10,8 @@ class BroadcastOperationJob < OperationJob
     save_failure(I18n.t("operation.errors.broadcast.not_found"))
   rescue Sms::Adapters::PartialSendError
     # This is considered a success but we'd still like to show there were some errors
-    operation.update!(
-      job_error_report: I18n.t("operation.errors.broadcast.partial_send", url: error_url(broadcast))
-    )
+    report = I18n.t("operation.errors.broadcast.partial_send", url: error_url(broadcast))
+    operation.update!(job_error_report: report)
     broadcast.update!(sent_at: Time.current)
   rescue Sms::Error
     # It is considered a full operation failure when we get the explicit FatalSendError (meaning
@@ -24,10 +23,6 @@ class BroadcastOperationJob < OperationJob
   private
 
   def error_url(broadcast)
-    broadcast_path(
-      broadcast,
-      mission_name: operation.mission.compact_name,
-      locale: I18n.locale
-    )
+    broadcast_path(broadcast, mission_name: operation.mission.compact_name, locale: I18n.locale)
   end
 end
