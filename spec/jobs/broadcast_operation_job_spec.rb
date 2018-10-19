@@ -17,7 +17,7 @@ describe BroadcastOperationJob do
       expect(broadcast.reload.sent_at).not_to be_nil
     end
 
-    context "when Sms::Errors::PartialError is raised" do
+    context "when PartialError is raised" do
       before do
         allow(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Adapters::PartialSendError)
       end
@@ -33,7 +33,7 @@ describe BroadcastOperationJob do
       end
     end
 
-    context "when Sms::Errors::FatalError is raised" do
+    context "when FatalError is raised" do
       before do
         allow(Sms::Broadcaster).to receive(:deliver).and_raise(Sms::Adapters::FatalSendError)
       end

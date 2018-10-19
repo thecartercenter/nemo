@@ -9,13 +9,15 @@ class BroadcastOperationJob < OperationJob
   rescue ActiveRecord::RecordNotFound
     save_failure(I18n.t("operation.errors.broadcast.not_found"))
   rescue Sms::Adapters::PartialSendError
-    # this is considered a success but we'd still like to show there were some errors
+    # This is considered a success but we'd still like to show there were some errors
     operation.update!(
       job_error_report: I18n.t("operation.errors.broadcast.partial_send", url: error_url(broadcast))
     )
     broadcast.update!(sent_at: Time.current)
-  rescue Sms::Adapters::FatalSendError
-    # this is considered an full operation failure
+  rescue Sms::GenericError
+    # It is considered a full operation failure when we get the explicit FatalSendError (meaning
+    # sending failed N times in a row) or a plain Error, which could have come up in various points
+    # in the process. In the either case, the Broadcast will have more information about the failure.
     save_failure(I18n.t("operation.errors.broadcast.fatal_send", url: error_url(broadcast)))
   end
 
