@@ -128,8 +128,9 @@ class BroadcastsController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: BroadcastOperationJob,
-      details: t("operation.details.broadcast", message: @broadcast.body.truncate(32))
+      details: t("operation.details.broadcast", message: @broadcast.body.truncate(32)),
+      job_params: {broadcast_id: @broadcast.id}
     )
-    operation.enqueue(@broadcast.id)
+    operation.enqueue
   end
 end

@@ -350,8 +350,9 @@ class ResponsesController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: ResponseCsvExportOperationJob,
-      details: t("operation.details.response_csv_export")
+      details: t("operation.details.response_csv_export"),
+      job_params: {search: params[:search]}
     )
-    operation.enqueue(params[:search])
+    operation.enqueue
   end
 end

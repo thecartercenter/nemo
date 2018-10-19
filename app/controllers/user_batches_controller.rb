@@ -32,8 +32,8 @@ class UserBatchesController < ApplicationController
   private
 
   def do_import
-    stored_path = UploadSaver.new.save_file(@user_batch.file)
-    operation.enqueue(nil, stored_path, @user_batch.class.to_s)
+    @stored_path = UploadSaver.new.save_file(@user_batch.file)
+    operation.enqueue
     prep_operation_queued_flash(:user_import)
     redirect_to(users_url)
   rescue StandardError => e
@@ -47,7 +47,11 @@ class UserBatchesController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.user_import", file: @user_batch.file.original_filename)
+      details: t("operation.details.user_import", file: @user_batch.file.original_filename),
+      job_params: {
+        upload_path: @stored_path,
+        import_class: @user_batch.class.to_s
+      }
     )
   end
 

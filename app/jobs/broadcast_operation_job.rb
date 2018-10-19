@@ -2,7 +2,7 @@
 
 # Delivers a broadcast in the context of a background operation
 class BroadcastOperationJob < OperationJob
-  def perform(operation, broadcast_id)
+  def perform(operation, broadcast_id:)
     broadcast = Broadcast.find(broadcast_id)
     broadcast.deliver
     broadcast.update!(sent_at: Time.current)

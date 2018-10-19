@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# Operation for exporting response CSV.
 class ResponseCsvExportOperationJob < OperationJob
-  def perform(operation, search = nil)
+  def perform(operation, search: nil)
     ability = Ability.new(user: operation.creator, mission: mission)
     result = generate_csv(responses(ability, search))
     operation_succeeded(result)

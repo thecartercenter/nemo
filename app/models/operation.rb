@@ -9,6 +9,10 @@
 class Operation < ApplicationRecord
   include MissionBased
 
+  # This is an ephemeral attribute that gets passed to the job when it is enqueued.
+  # Anything stored in here should be small and serializable.
+  attr_accessor :job_params
+
   belongs_to :creator, class_name: "User"
 
   has_attached_file :attachment
@@ -24,9 +28,12 @@ class Operation < ApplicationRecord
   end
 
   # Enqueues the appropriate OperationJob to be run later.
-  def enqueue(*args)
+  # Passes self and the contents of the job_params attrib (with double splat) to the perform_later method.
+  # Since job_params is ephemeral, enqueue should be called right after the operation is created, not
+  # on an operation object retrieved from the DB.
+  def enqueue
     save! unless persisted?
-    job = job_class.constantize.perform_later(self, *args)
+    job = job_class.constantize.perform_later(self, **job_params)
     update!(job_id: job.job_id, provider_job_id: job.provider_job_id)
   end
 

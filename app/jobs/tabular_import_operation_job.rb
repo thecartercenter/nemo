@@ -1,7 +1,10 @@
+# frozen_string_literal: true
+
+# Job for importing tabular data like users and option sets.
 class TabularImportOperationJob < OperationJob
-  def perform(operation, name, path, import_class)
+  def perform(_operation, name: nil, upload_path:, import_class:)
     if import_class
-      import = import_class.constantize.new(mission_id: mission.try(:id), name: name, file: path)
+      import = import_class.constantize.new(mission_id: mission.try(:id), name: name, file: upload_path)
       succeeded = import.run(mission)
     end
 
