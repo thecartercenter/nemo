@@ -2,7 +2,8 @@ require 'rails_helper'
 
 feature 'broadcasts flow', :sms, js: true do
   let!(:user) { create(:user, role_name: "staffer") }
-  let!(:user2) { create(:user) }
+  let!(:users) { create_list(:user, 10) }
+  let!(:user2) { create(:user, name: "Zied") }
 
   before do
     login(user)
@@ -13,7 +14,7 @@ feature 'broadcasts flow', :sms, js: true do
     click_link("Send Broadcast")
     select("Both SMS and email", from: "Medium")
     select("Specific users", from: "Recipients")
-    select2("User: #{user2.name}", from: "broadcast_recipient_ids")
+    select2("User: #{user2.name}", from: "broadcast_recipient_ids", search: "z")
     select("Main phone only", from: "Which Phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")

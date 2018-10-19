@@ -101,6 +101,15 @@ module FeatureSpecHelpers
     # invoke the select2 open action via JS
     execute_script("$('##{options[:from]}').select2('open')")
 
+    search = options.delete(:search)
+    if search.present?
+      execute_script %Q[
+        var el = $('##{options[:from]} + span input')
+        el.val('#{search}')
+        el.trigger('keyup')
+      ]
+    end
+
     # get the $results element from the Select2 data structure
     results_id = evaluate_script("$('##{options[:from]}').data('select2').$results.attr('id')")
     expect(results_id).to be_present
