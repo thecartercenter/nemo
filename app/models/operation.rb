@@ -17,6 +17,11 @@ class Operation < ApplicationRecord
     "##{id}"
   end
 
+  # Returns an underscored version of the job class name minus the OperationJob suffix.
+  def kind
+    job_class.underscore.sub(/_operation_job$/, "")
+  end
+
   def begin!(*args)
     save! unless persisted?
 
