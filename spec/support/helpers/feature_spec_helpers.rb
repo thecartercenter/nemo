@@ -103,11 +103,11 @@ module FeatureSpecHelpers
 
     search = options.delete(:search)
     if search.present?
-      execute_script %Q[
+      execute_script(%[
         var el = $('##{options[:from]} + span input')
         el.val('#{search}')
         el.trigger('keyup')
-      ]
+      ])
     end
 
     # get the $results element from the Select2 data structure
