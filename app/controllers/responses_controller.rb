@@ -5,6 +5,7 @@ class ResponsesController < ApplicationController
   include OdkHeaderable
   include ResponseIndexable
   include CsvRenderable
+  include OperationQueueable
 
   before_action :fix_nil_time_values, only: %i[update create]
 
@@ -60,10 +61,7 @@ class ResponsesController < ApplicationController
         authorize!(:export, Response)
 
         enqueue_csv_export
-
-        flash[:html_safe] = true
-        flash[:notice] = t("export.queued_html", type: "Response CSV", url: operations_path)
-
+        prep_operation_queued_flash(:response_csv_export)
         redirect_to(responses_path)
       end
     end
@@ -352,13 +350,9 @@ class ResponsesController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: ResponseCsvExportOperationJob,
-      details: t(
-        "operation.details.response_csv_export_operation_job",
-        user_email: current_user.email,
-        mission_name: current_mission.name
-      )
+      details: t("operation.details.response_csv_export"),
+      job_params: {search: params[:search]}
     )
-
-    operation.begin!(params[:search])
+    operation.enqueue
   end
 end

@@ -17,8 +17,6 @@ class OperationJob < ApplicationJob
 
   delegate :mission, to: :operation
 
-  protected
-
   def operation
     # The `Operation` instance tracking this job is always passed as
     # the first argument to `perform`

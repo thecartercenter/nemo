@@ -1,9 +1,9 @@
 module OperationsHelper
   def operations_index_fields
     [].tap do |fields|
-      fields.concat %w(description created_at)
+      fields.concat %w(details created_at)
       fields << 'creator' if can?(:manage, Operation)
-      fields.concat %w(status actions)
+      fields.concat %w(status result actions)
     end
   end
 
@@ -15,20 +15,22 @@ module OperationsHelper
 
   def format_operations_field(operation, field)
     case field
-    when 'description'
+    when 'details'
       link_to(operation.details, operation_path(operation))
     when 'creator'
       link_to(operation.creator.name, user_path(operation.creator))
     when 'created_at'
       t('layout.time_ago', time: time_ago_in_words(operation.created_at))
     when 'status'
-      status = operation.status
-      content_tag(:span, class: "operation-status-#{status}") do
-        body = ''.html_safe
-
-        body << link_to(t("operation.status.#{status}"), operation_path(operation))
-
-        body
+      link_to(t("operation.status.#{operation.status}"), operation_path(operation))
+    when 'result'
+      case operation.status
+      when :failed
+        link_to(t("operation.see_error_report"), operation_path(operation))
+      when :completed
+        if operation.attachment.present?
+          link_to(t("operation.result_link_text.#{operation.kind}"), download_operation_path(operation))
+        end
       end
     when 'actions'
       table_action_links(operation)
@@ -38,6 +40,8 @@ module OperationsHelper
   end
 
   def operations_status
+    return if basic_mode? # There is no ops panel in basic mode.
+
     status = OperationStatus.new(Operation.accessible_by(current_ability).where(creator: current_user))
 
     if status.total?

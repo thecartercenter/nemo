@@ -2,7 +2,8 @@
 
 # Broadcast Controller
 class BroadcastsController < ApplicationController
-  include Searchable # Searches users
+  include Searchable
+  include OperationQueueable
 
   # authorization via cancan
   load_and_authorize_resource
@@ -66,12 +67,8 @@ class BroadcastsController < ApplicationController
 
   def create
     if @broadcast.save
-      @broadcast.deliver
-      if @broadcast.send_errors
-        flash[:error] = t("broadcast.send_error")
-      else
-        flash[:success] = t("broadcast.send_success")
-      end
+      enqueue_broadcast_operation
+      prep_operation_queued_flash(:broadcast)
       redirect_to(broadcast_url(@broadcast))
     else
       prep_form_vars
@@ -124,5 +121,16 @@ class BroadcastsController < ApplicationController
   def broadcast_params
     params.require(:broadcast).permit(:subject, :body, :medium, :send_errors, :which_phone,
       :mission_id, :recipient_selection, recipient_ids: [])
+  end
+
+  def enqueue_broadcast_operation
+    operation = Operation.new(
+      creator: current_user,
+      mission: current_mission,
+      job_class: BroadcastOperationJob,
+      details: t("operation.details.broadcast", message: @broadcast.body.truncate(32)),
+      job_params: {broadcast_id: @broadcast.id}
+    )
+    operation.enqueue
   end
 end
