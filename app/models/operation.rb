@@ -8,7 +8,8 @@
 # implement the `perfom(operation, *args)` method.
 class Operation < ApplicationRecord
   include MissionBased
-  belongs_to :creator, class_name: 'User'
+
+  belongs_to :creator, class_name: "User"
 
   has_attached_file :attachment
   do_not_validate_attachment_file_type :attachment
@@ -22,13 +23,11 @@ class Operation < ApplicationRecord
     job_class.underscore.sub(/_operation_job$/, "")
   end
 
-  def begin!(*args)
+  # Enqueues the appropriate OperationJob to be run later.
+  def enqueue(*args)
     save! unless persisted?
-
-    # enqueue the job to be performed async
     job = job_class.constantize.perform_later(self, *args)
-
-    update_attributes(job_id: job.job_id, provider_job_id: job.provider_job_id)
+    update!(job_id: job.job_id, provider_job_id: job.provider_job_id)
   end
 
   def pending?

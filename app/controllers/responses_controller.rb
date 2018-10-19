@@ -352,6 +352,6 @@ class ResponsesController < ApplicationController
       job_class: ResponseCsvExportOperationJob,
       details: t("operation.details.response_csv_export")
     )
-    operation.begin!(params[:search])
+    operation.enqueue(params[:search])
   end
 end

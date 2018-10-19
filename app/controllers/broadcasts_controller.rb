@@ -130,6 +130,6 @@ class BroadcastsController < ApplicationController
       job_class: BroadcastOperationJob,
       details: t("operation.details.broadcast", message: @broadcast.body.truncate(32))
     )
-    operation.begin!(@broadcast)
+    operation.enqueue(@broadcast)
   end
 end

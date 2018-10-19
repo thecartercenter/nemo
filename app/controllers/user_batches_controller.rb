@@ -33,7 +33,7 @@ class UserBatchesController < ApplicationController
 
   def do_import
     stored_path = UploadSaver.new.save_file(@user_batch.file)
-    operation.begin!(nil, stored_path, @user_batch.class.to_s)
+    operation.enqueue(nil, stored_path, @user_batch.class.to_s)
     prep_operation_queued_flash(:user_import)
     redirect_to(users_url)
   rescue StandardError => e
