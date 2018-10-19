@@ -14,7 +14,7 @@ class BroadcastOperationJob < OperationJob
       job_error_report: I18n.t("operation.errors.broadcast.partial_send", url: error_url(broadcast))
     )
     broadcast.update!(sent_at: Time.current)
-  rescue Sms::GenericError
+  rescue Sms::Error
     # It is considered a full operation failure when we get the explicit FatalSendError (meaning
     # sending failed N times in a row) or a plain Error, which could have come up in various points
     # in the process. In the either case, the Broadcast will have more information about the failure.

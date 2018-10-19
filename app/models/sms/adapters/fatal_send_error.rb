@@ -3,7 +3,7 @@
 module Sms
   module Adapters
     # error indicating that the entire operation was not able to succeed
-    class FatalSendError < Sms::GenericError
+    class FatalSendError < Sms::Error
     end
   end
 end

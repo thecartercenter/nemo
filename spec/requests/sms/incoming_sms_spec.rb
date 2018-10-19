@@ -225,7 +225,7 @@ describe "incoming sms", :sms do
     let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio") }
 
     before do
-      expect(twilio_adapter).to receive(:validate).and_raise(Sms::GenericError)
+      expect(twilio_adapter).to receive(:validate).and_raise(Sms::Error)
       expect(Sms::Adapters::Factory.instance).to receive(:create_for_request).and_return(twilio_adapter)
     end
 
@@ -233,7 +233,7 @@ describe "incoming sms", :sms do
       expect do
         do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{get_mission.setting.incoming_sms_token}",
           from: @user.phone, incoming: {body: "#{form_code} 1.15 2.20", adapter: "TwilioSms"})
-      end.to raise_error(Sms::GenericError)
+      end.to raise_error(Sms::Error)
     end
   end
 

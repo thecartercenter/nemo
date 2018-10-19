@@ -3,7 +3,7 @@
 module Sms
   module Adapters
     # some of the operation succeeded but included some errors
-    class PartialSendError < Sms::GenericError
+    class PartialSendError < Sms::Error
     end
   end
 end
