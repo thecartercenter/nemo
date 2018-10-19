@@ -28,12 +28,9 @@ en:
         other: "%{message} (%{count} errors)"
     errors:
       broadcast:
-        partial_send: |-
-          There were errors delivering some messages.
-          See the <a href="%{url}">broadcast page</a> for more information.
-        fatal_send: |-
-          See the <a href="%{url}">broadcast page</a> for more information.
-        not_found: "Broadcast object not found"
+        partial_send: "There were errors delivering some messages. See the <a href='%{url}'>broadcast page</a> for more information."
+        fatal_send: "Sending failed. See the <a href='%{url}'>broadcast page</a> for more information."
+        not_found: "Broadcast object not found."
     row_error: "Row %{row}: %{error}"
     op_panel_more_info_link_html: "Check the <a href='%{url}'>operations panel</a> for info."
     queued_msg:
