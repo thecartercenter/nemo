@@ -2,9 +2,8 @@
 host = https://www.transifex.com
 
 [elmo.main]
-file_filter = config/locales/<lang>/main.yml
+file_filter = config/locales/<lang>.yml
 minimum_perc = 0
-source_file = config/locales/en/main.yml
+source_file = tmp/combined.en.yml
 source_lang = en
 type = YML
-

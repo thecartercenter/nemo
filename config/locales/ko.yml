@@ -354,7 +354,6 @@ ko:
       operation:
         created_at: "시작 시간"
         creator: "시작한 사용자"
-        description: "설명"
         job_started_at: "시작 시점"
         job_failed_at: "실패 시점"
         job_completed_at: "완료 시점"
@@ -430,7 +429,6 @@ ko:
         view_count: "보기"
         viewed_at: "마지막으로 본 시각"
       setting:
-        allow_unauthenticated_submissions: "본인 확인되지 않은 제출을 허용 하시겠습니까?"
         incoming_sms_numbers_str: "수신 번호"
         incoming_sms_token: "수신 SMS 암호"
         universal_sms_token: "공통 SMS 암호"
@@ -589,7 +587,6 @@ ko:
       response:
         incomplete: "응답 불가능한 필수 질문이 있다면 이 박스에 체크하십시오. 박스가 체크되면, 해당 질문에 응답하지 않고 질문지를 저장할 수 있습니다. 저장된 질문지는 '미완성'으로 표시됩니다."
       setting:
-        allow_unauthenticated_submissions: "이 박스가 체크되면 누구라도 비밀번호 입력 없이 이 미션에 데이터를 제출할 수 있으니, 사용시 주의하십시오."
         preferred_locales_str: |-
             이 미션에 사용되길 선호하는 언어들을 <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>두글자 코드</a>와,  쉼표로 구분하여 입력하십시오.
 
@@ -664,7 +661,6 @@ ko:
           general: "이 질문지는 유효하지 않습니다. (아래의 항목을 체크하십시오)"
         media/object:
           invalid_format: "업로드 된 파일이 허용된 형식이 아닙니다."
-          generic: "파일 업로드 시 오류가 발생했습니다."
         mission:
           cant_delete_if_assoc: "질문지, 응답지, 혹은 다른 항목들과 연관된 미션은 삭제할 수 없습니다."
           let_num_spc_only: "오직 영문자, 숫자, 공백만 사용할 수 있습니다."
@@ -1147,10 +1143,6 @@ ko:
         example_sms_body: 1.c 2.c,f 3.27 4.d 5.문이 잠겨있었다 6.20160401 7.c
       unique_code: "이것은 이 질문지의 고유 암호입니다."
       unknown_number: "[알수 없는 번호]"
-  import:
-    row_error: "줄 %{row}: %{error}"
-    queued_html: |-
-        %{type} 들여오기가 대기중입니다. <a href="%{url}">작동 패널</a>을 체크하십시오.
   incomplete_response:
     missing_answers:
       label: "질문지에서 응답하지 않은 필수 질문이 있습니까?"
@@ -1199,26 +1191,6 @@ ko:
   option_set_import:
     instructions_html: |-
         선택항목이 기록된 스프레드시트를 들여오십시오. XLSX타입의 엑셀 스프레드시트나 CSV만 들여올 수 있습니다.
-  operation:
-    clear_confirm: "정말로 모든 수행완료된 작동 기록을 지우시겠습니까? "
-    server_error: "서버 오류 발생. 지원팀에 연락하십시오."
-    description:
-      user_import_operation_job: '%{file}로 부터 %{mission_name} 들여오기'
-      option_set_import_operation_job: '%{mission_name}로 선택지 ''%{name}'' 들여오기'
-    outcome_link_text: "링크"
-    status:
-      completed: "성공"
-      failed: "실패"
-      pending: "대기중"
-      running: "실행"
-    summary:
-      all_in_progress:
-        other: "%{count}개의 작동이 진행중입니다."
-      some_completed: "%{completed}/%{total} 의 작동이 수행 완료 되었습니다."
-      all_completed:
-        other: "%{count}개의 작동이 수행 완료 되었습니다."
-      with_errors:
-        other: "%{message} (%{count}개의 오류)"
   tag:
     none_found: "해당되는 태그를 찾지 못했습니다."
     searching: "검색중"
