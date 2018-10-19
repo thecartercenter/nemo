@@ -40,6 +40,8 @@ module OperationsHelper
   end
 
   def operations_status
+    return if basic_mode? # There is no ops panel in basic mode.
+
     status = OperationStatus.new(Operation.accessible_by(current_ability).where(creator: current_user))
 
     if status.total?
