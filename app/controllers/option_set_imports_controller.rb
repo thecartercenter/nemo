@@ -45,11 +45,7 @@ class OptionSetImportsController < ApplicationController
       creator: current_user,
       job_class: TabularImportOperationJob,
       mission: current_mission,
-      details: t(
-        "operation.details.option_set_import_operation_job",
-        name: @option_set_import.name,
-        mission_name: current_mission&.name || t("standard.standard")
-      )
+      details: t("operation.details.option_set_import", name: @option_set_import.name)
     )
   end
 

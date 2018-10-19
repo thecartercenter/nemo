@@ -350,13 +350,8 @@ class ResponsesController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: ResponseCsvExportOperationJob,
-      details: t(
-        "operation.details.response_csv_export_operation_job",
-        user_email: current_user.email,
-        mission_name: current_mission.name
-      )
+      details: t("operation.details.response_csv_export")
     )
-
     operation.begin!(params[:search])
   end
 end

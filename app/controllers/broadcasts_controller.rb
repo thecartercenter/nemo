@@ -128,12 +128,8 @@ class BroadcastsController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: BroadcastOperationJob,
-      details: t(
-        "operation.details.broadcast_operation_job",
-        message: @broadcast.body.truncate(32)
-      )
+      details: t("operation.details.broadcast", message: @broadcast.body.truncate(32))
     )
-
     operation.begin!(@broadcast)
   end
 end

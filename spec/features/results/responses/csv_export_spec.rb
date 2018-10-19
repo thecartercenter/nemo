@@ -29,10 +29,10 @@ feature "responses csv export" do
 
     expect(page).to(have_content("Response CSV export queued"))
     click_link("operations panel")
-    expect(page).to(have_content("Response CSV export for #{user.email} in #{get_mission.name}"))
+    expect(page).to(have_content("Response CSV export"))
     expect(page).to(have_content("Success"))
 
-    click_link("Response CSV export for #{user.email} in #{get_mission.name}")
+    click_link("Response CSV export")
     click_link("download")
 
     result = CSV.parse(page.body)

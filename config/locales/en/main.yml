@@ -1425,10 +1425,10 @@ en:
       delayed_job_stopped: "Operations are currently not running. Please contact administrator."
       server_error: "Server error. Please contact support."
     details:
-      user_import_operation_job: "User import for %{mission_name} from %{file}"
-      option_set_import_operation_job: "Option Set '%{name}' import for %{mission_name}"
-      response_csv_export_operation_job: "Response CSV export for %{user_email} in %{mission_name}"
-      broadcast_operation_job: "Broadcast: '%{message}'"
+      user_import: "User import from %{file}"
+      option_set_import: "Option Set '%{name}' import"
+      response_csv_export: "Response CSV export"
+      broadcast: "Broadcast '%{message}'"
     attachment_link_text: "download"
     operations_panel: "Operations Panel"
     status:

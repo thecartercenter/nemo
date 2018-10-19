@@ -47,9 +47,7 @@ class UserBatchesController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.user_import_operation_job",
-        file: @user_batch.file.original_filename,
-        mission_name: current_mission&.name)
+      details: t("operation.details.user_import", file: @user_batch.file.original_filename)
     )
   end
 
