@@ -1,8 +1,11 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-feature 'broadcasts flow', :sms, js: true do
+require "rails_helper"
+
+feature "broadcasts flow", :sms, js: true do
+  let(:max_user_dropdown_results) { 25 }
   let!(:user) { create(:user, role_name: "staffer") }
-  let!(:users) { create_list(:user, 10) }
+  let!(:users) { create_list(:user, max_user_dropdown_results) }
   let!(:user2) { create(:user, name: "Zied") }
 
   before do
@@ -14,11 +17,16 @@ feature 'broadcasts flow', :sms, js: true do
     click_link("Send Broadcast")
     select("Both SMS and email", from: "Medium")
     select("Specific users", from: "Recipients")
-    select2("User: #{user2.name}", from: "broadcast_recipient_ids", search: "z")
+
+    # Because there are more users in the DB than shown in the list, and we know Zied will be at the
+    # end, if we search for him and we can actually click him, we know the search works.
+    select2("User: #{user2.name}", from: "broadcast_recipient_ids", search: "zie")
+
     select("Main phone only", from: "Which Phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")
     expect(page).to have_content("Broadcast sent successfully")
+    expect(page).to have_content(user2.name)
   end
 
   scenario "happy path via users list" do
@@ -42,7 +50,7 @@ feature 'broadcasts flow', :sms, js: true do
     select("Main phone only", from: "broadcast_which_phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")
-    expect(page).to have_text "Broadcast sent successfully"
+    expect(page).to have_content("Broadcast sent successfully")
     expect(page).to have_content(user.name)
     expect(page).to have_content(user2.name)
   end
