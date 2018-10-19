@@ -2,6 +2,8 @@
 
 # For importing users from CSV/spreadsheet.
 class UserBatchesController < ApplicationController
+  include OperationQueueable
+
   load_and_authorize_resource
   skip_authorize_resource only: [:template]
 
@@ -32,8 +34,7 @@ class UserBatchesController < ApplicationController
   def do_import
     stored_path = UploadSaver.new.save_file(@user_batch.file)
     operation.begin!(nil, stored_path, @user_batch.class.to_s)
-    flash[:html_safe] = true
-    flash[:notice] = t("import.queued_html", type: UserBatch.model_name.human, url: operations_path)
+    prep_operation_queued_flash(:user_import)
     redirect_to(users_url)
   rescue StandardError => e
     Rails.logger.error(e)
@@ -44,8 +45,8 @@ class UserBatchesController < ApplicationController
   def operation
     Operation.new(
       creator: current_user,
-      job_class: TabularImportOperationJob,
       mission: current_mission,
+      job_class: TabularImportOperationJob,
       details: t("operation.details.user_import_operation_job",
         file: @user_batch.file.original_filename,
         mission_name: current_mission&.name)

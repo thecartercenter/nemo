@@ -2,6 +2,8 @@
 
 # For importing OptionSets from CSV/spreadsheet.
 class OptionSetImportsController < ApplicationController
+  include OperationQueueable
+
   load_and_authorize_resource
 
   def new
@@ -30,8 +32,7 @@ class OptionSetImportsController < ApplicationController
     # Maybe refactor to include these as an ephemeral job_params hash attribute in the constructor and
     # use it in begin!. then we can put the explanation for the split (serialization, etc.) in Operation.
     operation.begin!(@option_set_import.name, stored_path, @option_set_import.class.to_s)
-    flash[:html_safe] = true
-    flash[:notice] = t("import.queued_html", type: OptionSet.model_name.human, url: operations_path)
+    prep_operation_queued_flash(:option_set_import)
     redirect_to(option_sets_url)
   rescue StandardError => e
     Rails.logger.error(e)

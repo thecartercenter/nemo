@@ -5,6 +5,7 @@ class ResponsesController < ApplicationController
   include OdkHeaderable
   include ResponseIndexable
   include CsvRenderable
+  include OperationQueueable
 
   before_action :fix_nil_time_values, only: %i[update create]
 
@@ -60,10 +61,7 @@ class ResponsesController < ApplicationController
         authorize!(:export, Response)
 
         enqueue_csv_export
-
-        flash[:html_safe] = true
-        flash[:notice] = t("export.queued_html", type: "Response CSV export", url: operations_path)
-
+        prep_operation_queued_flash(:response_csv_export)
         redirect_to(responses_path)
       end
     end

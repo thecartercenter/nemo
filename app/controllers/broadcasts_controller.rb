@@ -2,7 +2,8 @@
 
 # Broadcast Controller
 class BroadcastsController < ApplicationController
-  include Searchable # Searches users
+  include Searchable
+  include OperationQueueable
 
   # authorization via cancan
   load_and_authorize_resource
@@ -67,10 +68,7 @@ class BroadcastsController < ApplicationController
   def create
     if @broadcast.save
       enqueue_broadcast_operation
-
-      flash[:html_safe] = true
-      flash[:notice] = t("export.queued_html", type: "Broadcast", url: operations_path)
-
+      prep_operation_queued_flash(:broadcast)
       redirect_to(broadcast_url(@broadcast))
     else
       prep_form_vars
