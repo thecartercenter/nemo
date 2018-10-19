@@ -108,7 +108,7 @@ class User < ApplicationRecord
     (alpha_component + upper_component + num_component + symbol_component).shuffle.join
   end
 
-  def self.find_by_credentials(login, password)
+  def self.find_with_credentials(login, password)
     user = find_by_login(login)
     (user && user.valid_password?(password)) ? user : nil
   end

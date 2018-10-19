@@ -1,14 +1,19 @@
+# frozen_string_literal: true
+
+# ApplicationController methods related to authentication
 module Concerns::ApplicationController::Authentication
   extend ActiveSupport::Concern
 
   attr_reader :current_user, :current_mission
 
-  def get_mission
-    # if we're in admin mode, the current mission is nil and we need to set the user's current mission to nil also
+  def load_mission
+    # If we're in admin mode, the current mission is nil and
+    # we need to set the user's current mission to nil also
     if mission_mode? && params[:mission_name].present?
       # Look up the current mission based on the mission_id.
       # This will return 404 immediately if the mission was specified but isn't found.
-      # This helps out people typing in the URL (esp. ODK users) by letting them know permission is not an issue.
+      # This helps out people typing in the URL (esp. ODK users)
+      # by letting them know permission is not an issue.
       @current_mission = Mission.with_compact_name(params[:mission_name])
 
       # save the current mission in the session so we can remember it if the user goes into admin mode
@@ -19,7 +24,7 @@ module Concerns::ApplicationController::Authentication
   end
 
   # Determines the user and saves in the @current_user var.
-  def get_user
+  def load_user
     # If user already logged in via Authlogic, we are done.
     if (user_session = UserSession.find) && user_session.user
 
@@ -32,7 +37,7 @@ module Concerns::ApplicationController::Authentication
       # HTTP Basic authenticated request.
       @current_user = authenticate_with_http_basic do |login, password|
         # Use eager loading.
-        User.includes(:assignments).find_by_credentials(login, password)
+        User.includes(:assignments).find_with_credentials(login, password)
       end
 
       return request_http_basic_authentication unless @current_user
@@ -46,7 +51,7 @@ module Concerns::ApplicationController::Authentication
 
   # get the current user's ability. not cached because it's volatile!
   def current_ability
-    Ability.new(:user => current_user, :mode => current_mode, :mission => current_mission)
+    Ability.new(user: current_user, mode: current_mode, mission: current_mission)
   end
 
   # Loads missions accessible to the current ability, or [] if no current user, for use in the view.
