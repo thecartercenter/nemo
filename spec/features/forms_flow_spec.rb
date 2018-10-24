@@ -8,6 +8,7 @@ feature "forms flow", js: true do
     create(:form, name: "Foo", question_types: %w[integer multilevel_select_one select_one integer])
   end
   let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
+  let(:qings) { form.root_group.c }
 
   before do
     login(user)
@@ -79,6 +80,64 @@ feature "forms flow", js: true do
   #     expect(page).to have_nested_item(depth: 4, name: question_name)
   #   end
   # end
+
+  scenario "dragging form elements" do
+    visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+
+    form_items = all("li.form-item")
+
+    first = form_items.first
+    first_id = first["data-id"]
+    last = form_items.last
+
+    # drag first item to the bottom
+    first.drag_to(last)
+
+    form_items = all("li.form-item")
+    last_id = form_items.last["data-id"]
+
+    expect(last_id).to eq(first_id)
+  end
+
+  context "with conditions" do
+    before do
+      qings[1].update!(
+        display_if: "all_met",
+        display_conditions_attributes: [
+          {ref_qing_id: qings[0].id, op: "eq", value: 123}
+        ]
+      )
+    end
+
+    scenario "dragging form elements" do
+      visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+
+      form_items = all("li.form-item")
+      first_id = form_items[0]["data-id"]
+      conditional_id = form_items[1]["data-id"]
+
+      # try dragging conditional item above the question on which it depends
+      form_items[1].drag_to(form_items[0])
+
+      # not allowed
+      form_items = all("li.form-item")
+      expect(form_items[0]["data-id"]).to eq(first_id)
+
+      # try dragging dependent item below conditional question
+      form_items[0].drag_to(form_items[2])
+
+      # not allowed
+      form_items = all("li.form-item")
+      expect(form_items[0]["data-id"]).to eq(first_id)
+
+      # try dragging conditional item further down the list
+      form_items[1].drag_to(form_items[2])
+
+      # allowed
+      form_items = all("li.form-item")
+      expect(form_items[2]["data-id"]).to eq(conditional_id)
+    end
+  end
 
   def have_nested_item(depth:, name:)
     have_css((%w[ol li] * depth).join(" > "), text: name)
