@@ -17,11 +17,11 @@ describe OptionSetReclone do
 
     # Make the condition on the form point to the cloned option set.
     form.c[0].question.update!(option_set: clone)
-    form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", option_node: clone.c[0].c[0])
+    form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", option_node: clone.c[0].c[1])
   end
 
   describe "#run" do
-    it do
+    it "reclones properly" do
       orig.reload
       clone.reload
       form.reload
@@ -30,9 +30,9 @@ describe OptionSetReclone do
       expect(orig.root_node_id).to eq(clone.root_node_id)
       expect(orig.root_node.option_set_id).to eq(orig.id)
       expect(form.c[0].question.option_set).to eq(clone)
-      expect(form.c[1].display_conditions[0].option_node_id).to eq(orig.c[0].c[0].id)
+      expect(form.c[1].display_conditions[0].option_node_id).to eq(orig.c[0].c[1].id)
 
-      new_clone = subject.run[0]
+      new_clone = recloner.run[0]
 
       # Ensure previous refs to the old clone are updated.
       expect(new_clone).not_to eq(clone)
@@ -44,6 +44,9 @@ describe OptionSetReclone do
 
       # Ensure question previously pointing at clone is updated to new_clone.
       expect(form.c[0].question.reload.option_set_id).to eq(new_clone.id)
+
+      # Ensure condition updated to equivalent node in new set.
+      expect(form.c[1].reload.display_conditions[0].option_node_id).to eq(new_clone.c[0].c[1].id)
     end
   end
 end

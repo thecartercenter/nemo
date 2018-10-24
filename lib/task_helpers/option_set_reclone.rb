@@ -17,6 +17,8 @@ class OptionSetReclone
         recloned << copy
         Rails.logger.debug("re-cloned to #{copy.id}")
 
+        update_conditions(old_clone_id: option_set.id, new_clone_id: copy.id)
+
         # update all references to the old option set
         referencing_models = [
           Question,
@@ -36,5 +38,21 @@ class OptionSetReclone
     end
 
     recloned
+  end
+
+  private
+
+  # Finds all conditons that reference questions that referenced the improper clone.
+  # Updates them to point to the equivalent node in the new set.
+  def update_conditions(old_clone_id:, new_clone_id:)
+    conditions = Condition
+      .joins(ref_qing: :question)
+      .where("questions.option_set_id" => old_clone_id)
+      .where("option_node_id IS NOT NULL")
+
+    conditions.each do |cond|
+      new_node = OptionNode.find_by(option_set_id: new_clone_id, original_id: cond.option_node_id)
+      cond.update!(option_node_id: new_node.id) unless new_node.nil?
+    end
   end
 end
