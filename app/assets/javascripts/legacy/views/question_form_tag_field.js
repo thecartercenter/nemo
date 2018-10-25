@@ -6,14 +6,12 @@
   // constructor
   ns.QuestionFormTagField = klass = function(params) { var self = this;
     self.params = params;
-
-    // Add hidden inputs for any unsaved tags.
-    params.question_tags.forEach(function(t){
-      if (!t.id) self.add_tag(t, params.mission_id);
-    });
+    self.items = [];
+    self.silent = false;
+    self.input = $("input[id$='_tag_ids']");
 
     // Using an ends with selector because the id is different on question and questioning forms
-    $("input[id$='_tag_ids']").tokenInput(params.suggest_tags_path + '.json', {
+    self.input.tokenInput(params.suggest_tags_path + '.json', {
       theme: 'elmo',
       jsonContainer: 'tags',
       hintText: I18n.t('tag.type_to_add_new'),
@@ -22,17 +20,34 @@
       resultsFormatter: self.format_token_result,
       tokenFormatter: self.format_token,
       prePopulate: params.question_tags,
-      onAdd: function(item) { self.add_tag(item, params.mission_id) },
-      onDelete: self.remove_tag,
+      onAdd: function(item) {
+        if (!self.silent) {
+          self.add_tag(item, params.mission_id);
+        }
+      },
+      onDelete: function(item) {
+        if (!self.silent) {
+          self.remove_tag(item);
+        }
+      },
 
       // Prevent enter press from submitting form.
       onEnter: function() { return false; }
+    });
+
+    // Add hidden inputs for any unsaved tags.
+    params.question_tags.forEach(function(t){
+      if (!t.id) {
+        self.add_tag(t, params.mission_id);
+      } else {
+        self.items.push(t);
+      }
     });
   };
 
   // If tag doesn't already exist, append hidden inputs to add it via nested attributes
   klass.prototype.add_tag = function(item, mission_id) {
-    var form, input_name_prefix, selector;
+    var form, input_name_prefix;
     // Which form are we on?
     var rand = Math.floor(Math.random() * 999999999);
     if ($('.question_form').length) {
@@ -42,18 +57,54 @@
       form = $('.questioning_form');
       input_name_prefix = 'questioning[question_attributes][tags_attributes]['+rand+']';
     }
-    selector = 'input[name="'+input_name_prefix+'[name]"][value="'+item.name+'"]';
-    // if new item (null id) and hasn't already been added to this page
-    if (item.id == null && $(selector).length == 0) {
+
+    if (item.id === null) {
+      // strip trailing whitespace
+      this.silent = true;
+      this.input.tokenInput("remove", item);
+      item.name = item.name.trim();
+      this.input.tokenInput("add", item);
+      this.silent = false;
+    }
+
+    var exists = _.find(this.items, function(tag) {
+      if (item.id) {
+        return item.id === tag.id;
+      } else {
+        return item.name.trim() === tag.name;
+      }
+    });
+
+    if (exists) {
+      // de-duplicate
+      this.silent = true;
+      this.input.tokenInput("remove", item);
+      this.input.tokenInput("add", item);
+      this.silent = false;
+      return;
+    }
+
+    // if new item (null id)
+    if (item.id === null) {
       form.append(
         '<input type="hidden" data-new-tag="'+item.name+'" name="'+input_name_prefix+'[name]" value="'+item.name+'">' +
         '<input type="hidden" data-new-tag="'+item.name+'" name="'+input_name_prefix+'[mission_id]" value="'+mission_id+'">'
       );
     }
+
+    this.items.push(item);
   };
 
   // If previously added new tag input, remove it
   klass.prototype.remove_tag = function(item) {
+    var index = _.findIndex(this.items, function(tag) {
+      return tag.id === item.id || tag.name === item.name;
+    });
+
+    if (index !== -1) {
+      this.items.splice(index, 1);
+    }
+
     if (item.id == null && $.inArray(item, $("input.form-control[id$='_tag_ids']").tokenInput('get')) == -1) {
       $('input[data-new-tag="'+item.name+'"]').remove();
     }
