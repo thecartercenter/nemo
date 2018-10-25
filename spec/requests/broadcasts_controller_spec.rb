@@ -23,6 +23,8 @@ describe "broadcasts" do
   end
 
   context 'for regular users' do
+    include ActiveJob::TestHelper
+
     before do
       @user2, @user3 = create(:user), create(:user)
     end
@@ -47,9 +49,9 @@ describe "broadcasts" do
           }
         })
 
-      expect(configatron.outgoing_sms_adapter.deliveries.size).to eq 1
+      expect(enqueued_jobs.size).to eq(1)
       expect(response.status).to redirect_to(broadcast_path(assigns(:broadcast)))
-      expect(flash[:success]).not_to be_nil
+      expect(flash[:notice]).not_to be_nil
       follow_redirect!
       expect(response).to be_success
     end

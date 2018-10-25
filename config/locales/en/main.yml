@@ -144,7 +144,7 @@ en:
   errors:
     # our messages are all complete sentences so we use the colon
     format: "%{attribute}: %{message}"
-
+    file_upload: "There was an error uploading the file."
     messages:
       deleted_successfully: "deleted successfully"
       generic_delete_error: "Error during deletion."
@@ -395,6 +395,7 @@ en:
         job_outcome_url: "Outcome URL"
         job_error_report: "Error Report"
         status: "Status"
+        result: "Result"
       option:
         base: "" # this is a sort of hack to get error msg to display properly
         coordinates: "Coordinates"
@@ -764,7 +765,6 @@ en:
               calc_must_wrap_all: "calc(...) must surround the entire name."
         media/object:
           invalid_format: "The uploaded file was not an accepted format."
-          generic: "There was an error uploading the file."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "Please use only letters, numbers, and spaces."
@@ -897,6 +897,7 @@ en:
     time_zone: "Time Zone"
     updated_at: "Updated at"
     no_published_forms: "No published forms"
+
 
 
   # pagination translations
@@ -1356,15 +1357,6 @@ en:
       skip: "After this question, skip ..."
       end_of_form: "Skip to the end of the form"
 
-  import:
-    row_error: "Row %{row}: %{error}"
-    queued_html: |-
-      %{type} import queued. Check the <a href="%{url}">operations panel</a> for info.
-
-  export:
-    queued_html: |-
-      %{type} export queued. Check the <a href="%{url}">operations panel</a> for info.
-
   incomplete_response:
     missing_answers:
       label: "Is this form missing any required answers?"
@@ -1427,31 +1419,6 @@ en:
   option_set_import:
     instructions_html: |-
       Upload a spreadsheet with your option set. Only XLSX-type Excel spreadsheets and CSV files are accepted.
-
-  operation:
-    clear_confirm: "Are you sure you want to clear all completed operations?"
-    server_error: "Server error. Please contact support."
-    details:
-      user_import_operation_job: "User import for %{mission_name} from %{file}"
-      option_set_import_operation_job: "Option Set '%{name}' import for %{mission_name}"
-      response_csv_export_operation_job: "Response CSV export for %{user_email} in %{mission_name}"
-    attachment_link_text: "download"
-    status:
-      completed: "Success"
-      failed: "Failed"
-      pending: "Pending"
-      running: "Running"
-    summary:
-      all_in_progress:
-        one: "1 operation in progress"
-        other: "%{count} operations in progress"
-      some_completed: "%{completed}/%{total} operations complete"
-      all_completed:
-        one: "1 operation complete"
-        other: "%{count} operations complete"
-      with_errors:
-        one: "%{message} (1 error)"
-        other: "%{message} (%{count} errors)"
 
   tag:
     none_found: "No matching tags found"

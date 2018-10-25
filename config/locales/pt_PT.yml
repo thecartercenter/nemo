@@ -264,7 +264,6 @@ pt:
         view_count: "visualizações"
         viewed_at: "última vista"
       setting:
-        allow_unauthenticated_submissions: "Permitir submissões não autenticadas?"
         preferred_locales_str: "idiomas preferidos"
         override_code: "codigo de anulação"
         external_sql: "SQL externo"

@@ -12,9 +12,13 @@
     <%= f.field :job_completed_at %>
   <% end %>
   <% if @operation.attachment.present? %>
-    <%= f.field :attachment, read_only_content: link_to(t('operation.attachment_link_text'), download_operation_path(@operation)) %>
+    <%# This code is duplicated from the operations_helper but the plan is for this show page to go away. %>
+    <%= f.field :attachment,
+          read_only_content: link_to(t("operation.result_link_text.#{@operation.kind}"),
+            download_operation_path(@operation)) %>
   <% end %>
   <% if @operation.job_error_report.present? %>
-    <%= f.field :job_error_report, read_only_content: BlueCloth.new(@operation.job_error_report).to_html.html_safe %>
+    <%= f.field :job_error_report,
+          read_only_content: BlueCloth.new(@operation.job_error_report).to_html.html_safe %>
   <% end %>
 <% end %>

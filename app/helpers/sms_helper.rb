@@ -28,7 +28,7 @@ module SmsHelper
     when "body" then
       output = []
       output << content_tag(:span, sms.body)
-      if sms.error_message
+      if sms.reply_error_message
         output << content_tag(
           :div,
           "#{I18n.t('sms.error')}: #{I18n.t('sms.when_sending_reply')}: #{sms.error_message}",

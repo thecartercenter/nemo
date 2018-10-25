@@ -1,25 +1,13 @@
 # frozen_string_literal: true
 
 shared_context "media helpers" do
-  shared_examples "accepts file extensions" do |extensions|
-    extensions.each do |extension|
-      context "with #{extension}" do
-        let(:media_file) { build(factory_name(described_class), extension.to_sym) }
+  shared_examples "accepts file types" do |file_types|
+    file_types.each do |type|
+      context "with #{type} file" do
+        let(:media_file) { build(factory_name(described_class), item: file_for_type(type)) }
 
         it "is valid" do
           expect(media_file).to be_valid
-        end
-      end
-    end
-  end
-
-  shared_examples "rejects file extensions" do |extensions|
-    extensions.each do |extension|
-      context "with #{extension}" do
-        let(:media_file) { build(factory_name(described_class), extension.to_sym) }
-
-        it "is invalid" do
-          expect(media_file).to have(1).error_on(:item_file_name)
         end
       end
     end
@@ -32,7 +20,6 @@ shared_context "media helpers" do
 
         it "is invalid" do
           expect(media_file).to have(1).error_on(:item_content_type)
-          expect(media_file).to have(1).error_on(:item_file_name)
           expect(media_file).to be_invalid
         end
       end

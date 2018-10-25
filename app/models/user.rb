@@ -78,7 +78,7 @@ class User < ApplicationRecord
     includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
   })
   scope(:with_groups, -> { joins(:user_groups) })
-  scope :name_matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+  scope :name_matching, ->(q) { where("name ILIKE ?", "%#{q}%") }
   scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).
     where(assignments: { mission: m.try(:id), role: roles }) }
 
@@ -108,7 +108,7 @@ class User < ApplicationRecord
     (alpha_component + upper_component + num_component + symbol_component).shuffle.join
   end
 
-  def self.find_by_credentials(login, password)
+  def self.find_with_credentials(login, password)
     user = find_by_login(login)
     (user && user.valid_password?(password)) ? user : nil
   end

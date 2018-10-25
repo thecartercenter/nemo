@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181010174613) do
+ActiveRecord::Schema.define(version: 20181015154427) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 20181010174613) do
     t.integer "old_id"
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors"
+    t.datetime "sent_at"
     t.string "source", limit: 255, default: "manual", null: false
     t.string "subject", limit: 255
     t.datetime "updated_at"
@@ -105,16 +106,17 @@ ActiveRecord::Schema.define(version: 20181010174613) do
   end
 
   create_table "choices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.uuid "answer_id"
+    t.uuid "answer_id", null: false
     t.integer "answer_old_id"
     t.datetime "created_at"
     t.datetime "deleted_at"
     t.decimal "latitude", precision: 8, scale: 6
     t.decimal "longitude", precision: 9, scale: 6
     t.integer "old_id"
-    t.uuid "option_id"
+    t.uuid "option_id", null: false
     t.integer "option_old_id"
     t.datetime "updated_at"
+    t.index ["answer_id", "option_id"], name: "index_choices_on_answer_id_and_option_id", unique: true
     t.index ["answer_id"], name: "index_choices_on_answer_id"
     t.index ["deleted_at"], name: "index_choices_on_deleted_at"
     t.index ["option_id"], name: "index_choices_on_option_id"
@@ -574,11 +576,11 @@ ActiveRecord::Schema.define(version: 20181010174613) do
     t.uuid "broadcast_id"
     t.integer "broadcast_old_id"
     t.datetime "created_at", null: false
-    t.string "error_message"
     t.string "from", limit: 255
     t.uuid "mission_id"
     t.integer "mission_old_id"
     t.integer "old_id"
+    t.string "reply_error_message"
     t.uuid "reply_to_id"
     t.integer "reply_to_old_id"
     t.datetime "sent_at"

@@ -19,15 +19,15 @@ feature "response form location picker", js: true do
     expect(page).to have_content("Choose Location")
 
     # search for a location
-    find(".location-search input").set("Ithaca").send_keys(:return)
+    find(".location-search input").set("Joe Batt's Arm").send_keys(:return)
 
     # select a result
-    click_link("Ithaca, NY, USA")
+    click_link("Joe Batt's Arm")
 
     click_button("Accept")
-    expect(page).to_not have_content("Choose Location")
+    expect(page).not_to have_content("Choose Location")
 
-    expect_value([0], "42.443961 -76.501881")
+    expect_value([0], "49.726683 -54.173526")
 
     fill_in_question([0], with: "12 34")
     find(".action_link_drop_pin").click

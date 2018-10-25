@@ -30,8 +30,8 @@ class ApplicationController < ActionController::Base
   before_action :check_route
   before_action :remove_missionchange_flag
   before_action :set_locale
-  before_action :get_mission
-  before_action :get_user
+  before_action :load_current_mission
+  before_action :load_current_user
   before_action :prepare_exception_notifier
   before_action :protect_admin_mode
   before_action :remember_mission
@@ -39,6 +39,6 @@ class ApplicationController < ActionController::Base
   before_action :load_settings_for_mission_into_config
   before_action :load_accessible_missions
 
-  helper_method :current_mode, :current_user, :current_mission, :current_root_path, :admin_mode?,
-    :admin_mode_exit_path, :offline_mode?
+  helper_method :current_mode, :current_user, :current_mission, :current_root_path,
+    :admin_mode?, :basic_mode?, :mission_mode?, :admin_mode_exit_path, :offline_mode?
 end

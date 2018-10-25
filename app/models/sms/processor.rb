@@ -42,7 +42,7 @@ class Sms::Processor
       t_sms_msg("sms_form.decoding.congrats")
 
     # if there is a decoding error, respond accordingly
-    rescue Sms::DecodingError => err
+    rescue Sms::Decoder::DecodingError => err
       case err.type
       # If it's an automated sender, send no reply at all
       when "automated_sender"
@@ -124,6 +124,6 @@ class Sms::Processor
   end
 
   def decoder
-    @decoder ||= Sms::Decoder.new(incoming_msg)
+    @decoder ||= Sms::Decoder::Decoder.new(incoming_msg)
   end
 end

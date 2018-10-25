@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
+# Operation for exporting response CSV.
 class ResponseCsvExportOperationJob < OperationJob
-  def perform(operation, search = nil)
+  def perform(operation, search: nil)
     ability = Ability.new(user: operation.creator, mission: mission)
     result = generate_csv(responses(ability, search))
     operation_succeeded(result)
@@ -32,7 +33,7 @@ class ResponseCsvExportOperationJob < OperationJob
 
   def generate_csv(responses)
     attachment = Results::Csv::Generator.new(responses).export
-    timestamp = Time.zone.now.to_s(:filename_datetime)
+    timestamp = Time.current.to_s(:filename_datetime)
     attachment_download_name = "elmo-#{mission.compact_name}-responses-#{timestamp}.csv"
 
     {attachment: attachment, attachment_download_name: attachment_download_name}
