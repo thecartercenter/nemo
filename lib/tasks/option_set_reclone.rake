@@ -1,4 +1,4 @@
-require "./lib/task_helpers/option_set_clone"
+require "./lib/task_helpers/option_set_reclone"
 
 task option_set_reclone: :environment do
   Rails.logger = Logger.new(STDOUT)
