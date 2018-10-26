@@ -233,7 +233,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
         rbenv install 2.4.3
         rbenv global 2.4.3
         gem install bundler
-2. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/v6-dump.sql`
+2. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/pre-v7.2-dump.sql`
 3. `ls -l tmp` and ensure the `v6-dump.sql` file is non-zero size.
 4. As root/privileged user: `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'`
 5. Follow the 'General Upgrade Instructions' below to upgrade to **v7.2**. Your data will be migrated to use UUIDs, and this may take awhile. Then you'll be all up to date!
@@ -247,6 +247,19 @@ Upgrading should be done in stages. Start with the stage closest to your current
         nvm install 8.9.4
         npm install -g yarn
 3. Follow the 'General Upgrade Instructions' below to upgrade to **v8.12**.
+
+#### Upgrading to v9.0
+
+1. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/pre-v9.0-dump.sql`
+2. The data migrations in this upgrade may take some time if you have a lot of data. To protect your data, stop your server and DelayedJob, as privileged user: `sudo systemctl stop nginx && sudo systemctl stop delayed-job`
+3. Follow the 'General Upgrade Instructions' below to upgrade to **v9.0**.
+4. Start your server and DelayedJob: `sudo systemctl start nginx && sudo systemctl start delayed-job`
+
+#### Upgrading to v9.1
+
+1. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/pre-v9.1-dump.sql`
+2. Follow the 'General Upgrade Instructions' below to upgrade to **v9.1**.
+3. Run `bundle exec rake option_set_reclone` to repair option set references that may exist in your database due to a bug in a previous version.
 
 #### Upgrading to lastest master
 

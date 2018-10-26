@@ -1,6 +1,6 @@
 <div class="screen">
   <%= top_action_links(@form) do %>
-    <% if @form.has_questions? %>
+    <% if @form.any_questions? %>
       <% if can?(:publish, @form) %>
         <% lbl = t("form.#{@form.verb}_form") %>
         <%= link_to(icon_tag(@form.verb) + lbl, publish_form_path(@form), "data-method": "put") %>
