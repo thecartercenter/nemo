@@ -1,7 +1,9 @@
 <%= elmo_form_for(@user_batch, html: {multipart: true}) do |f| %>
   <p class="instructions"><%= formatted_instructions %></p>
-  <%=hidden_field_tag(:temp_file_path, id: "temp_file_path")%>
+
   <div id="file-uploader">
+    <%=hidden_field_tag(:temp_file_path, '', id: "temp_file_path")%>
+    <%=hidden_field_tag(:original_filename, '', id: "original_filename")%>
     <div id="dropzone-file-uploader" class="dropzone">
     </div>
   </div>
@@ -19,7 +21,10 @@
     postPath: "#{user_batches_path}/upload",
     previewTemplate: render("layouts/dropzone_preview"),
     paramName: "userbatch",
-    metaFieldResponseAttr: "tempFilePath"
+    metaFields: {
+      "tempFilePath" => "input#temp_file_path",
+      "originalFilename" => "input#original_filename"
+    }
   )%>
   options.listener = ELMO.fileUploaderManager;
   new ELMO.Views.FileUploaderView(options);

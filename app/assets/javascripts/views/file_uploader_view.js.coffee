@@ -3,14 +3,14 @@
 # The post path is where the file upload will be posted to.
 # The preview template controls what dropzone looks like(typically dropzone_preview.html found in /layouts)
 # The paramName is the key to the file in the http request dropzone posts.
+# metaFields is a map of json keys in responseData to css selectors the json values should go in
 
 class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @zoneId = options.zoneId
     @postPath = options.postPath
     @genericThumbPath = options.genericThumbPath
-    @metaField = @$('input')
-    @metaFieldResponseAttr = options.metaFieldResponseAttr
+    @metaFields = options.metaFields
     @previewTemplate = options.previewTemplate
     @paramName = options.paramName
     @listener = options.listener
@@ -40,10 +40,11 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     if confirm($(event.currentTarget).data('confirm-msg'))
       @$('.existing').remove()
       @$('.dropzone').show()
-      @metaField.val('')
+      @clearMetaFields()
 
   fileUploaded: (responseData) ->
-    @metaField.val(responseData[@metaFieldResponseAttr])
+    for responseAttr, selector of @metaFields
+      @$(selector).val(responseData[responseAttr])
 
   uploadErrored: (file, responseData) ->
     @dropzone.removeFile(file)
@@ -55,15 +56,20 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
 
   fileRemoved: ->
     @$('.dz-message').show()
-    @metaField.val('')
+    @clearMetaFields()
 
   uploadStarting: ->
     if @listener?
       @listener.uploadStarting()
-    @$('img')[0].src = @genericThumbPath
+    if @genericThumbPath?
+      @$('img')[0].src = @genericThumbPath
     @$('.dz-message').hide()
     @$('.error-msg').hide()
 
   uploadFinished: ->
     if @listener?
       @listener.uploadFinished()
+
+  clearMetaFields: ->
+    for responseAttr, selector of @metaFields
+      @$(selector).val('')

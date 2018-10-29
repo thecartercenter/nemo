@@ -14,8 +14,9 @@ class UserBatchesController < ApplicationController
   end
 
   def upload
+    original_file_name = params[:userbatch].original_filename
     temp_file_path = UploadSaver.new.save_file(params[:userbatch])
-    render(json: {tempFilePath: temp_file_path})
+    render(json: {tempFilePath: temp_file_path, originalFilename: original_file_name})
     # puts "UPLOAD ENDPOINT"
     # if @user_batch.valid?
     #   (@user_batch.file)
@@ -44,8 +45,9 @@ class UserBatchesController < ApplicationController
   private
 
   def do_import
-    # parse temp_upload_path from params
-    operation.begin!(nil, temp_file_path, @user_batch.class.to_s)
+    temp_upload_path = params[:temp_file_path]
+    original_filename = params[:original_filename]
+    operation.begin!(nil, temp_file_path, @user_batch.class.to_s, original_filename)
     flash[:html_safe] = true
     flash[:notice] = t("import.queued_html", type: UserBatch.model_name.human, url: operations_path)
     redirect_to(users_url)
