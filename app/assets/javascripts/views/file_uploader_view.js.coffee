@@ -24,6 +24,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       previewTemplate: @previewTemplate,
       thumbnailWidth: 100,
       thumbnailHeight: 100
+      #maxFilesize: 100000
     })
 
     @dropzone.on 'removedfile', => @fileRemoved()
