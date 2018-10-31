@@ -8,7 +8,7 @@ class UserAssignmentFormField extends React.Component {
 
   missionField() {
     let missionSelectProps = {
-      className: "mission",
+      className: "mission form-control",
       defaultValue: this.props.mission,
       name: `user[assignments_attributes][${this.props.index}][mission_id]`
     };
@@ -60,7 +60,7 @@ class UserAssignmentFormField extends React.Component {
 
   missionRoleFields() {
     let roleSelectProps = {
-      className: "role",
+      className: "role form-control",
       defaultValue: this.props.role,
       name: `user[assignments_attributes][${this.props.index}][role]`
     };
@@ -70,11 +70,13 @@ class UserAssignmentFormField extends React.Component {
           {this.missionField()}
         </div>
         <div className="role">
-          <select {...roleSelectProps}>
+          <select className="form-control" {...roleSelectProps}>
             {this.roleOptionTags()}
           </select>
         </div>
-        <a onClick={(e) => this.props.deleteClick(this.props.mission_id, e)}><i className="fa fa-trash"></i></a>
+        <a className="trash" onClick={(e) => this.props.deleteClick(this.props.mission_id, e)}>
+          <i className="fa fa-trash"></i>
+        </a>
       </div>
     )
   }

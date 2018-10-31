@@ -54,8 +54,10 @@ form.user_form {
       color: #aaa;
       font-size: 11px;
       min-height: 20px;
+    }
 
-
+    a.add-assignment, a.trash {
+      cursor: pointer;
     }
   }
 
