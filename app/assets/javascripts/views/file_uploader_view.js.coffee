@@ -25,7 +25,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       previewTemplate: @previewTemplate,
       thumbnailWidth: 100,
       thumbnailHeight: 100,
-      acceptedFiles: @acceptedFileFormats
+      acceptedFiles: @acceptedFileFormats,
       maxFilesize: 80000 #kb, fits a maximum row xlsx file
     })
 
