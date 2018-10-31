@@ -45,7 +45,7 @@ class UserAssignmentForm extends React.Component {
         </div>
         <div>
           <a onClick={this.handleAddClick} className="add-assignment">
-            <i className="fa fa-plus"></i> Add Assignment
+            <i className="fa fa-plus"></i>{I18n.t("user.add_assignment")}
           </a>
         </div>
       </div>

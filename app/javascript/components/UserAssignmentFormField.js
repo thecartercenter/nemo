@@ -44,7 +44,7 @@ class UserAssignmentFormField extends React.Component {
       <option
         key={option}
         value={option}>
-        {option}
+        {I18n.t(`role.${option}`)}
       </option>
     ));
   }
