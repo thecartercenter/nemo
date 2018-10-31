@@ -102,7 +102,7 @@ describe "question form" do
 
     # token was added
     tokens = all("li.token-input-token-elmo")
-    expect(tokens.size).to eq 1
+    expect(tokens.size).to eq(1)
     expect(tokens.first).to have_content("foo")
 
     fill_in("token-input-question_tag_ids", with: "foo")
@@ -114,7 +114,7 @@ describe "question form" do
 
     # no new token was added
     tokens = all("li.token-input-token-elmo")
-    expect(tokens.size).to eq 1
+    expect(tokens.size).to eq(1)
     expect(tokens.first).to have_content("foo")
   end
 end

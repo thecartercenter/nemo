@@ -11,7 +11,7 @@
     self.input = $("input[id$='_tag_ids']");
 
     // Using an ends with selector because the id is different on question and questioning forms
-    self.input.tokenInput(params.suggest_tags_path + '.json', {
+    self.input.tokenInput(params.suggest_tags_path + ".json", {
       theme: 'elmo',
       jsonContainer: 'tags',
       hintText: I18n.t('tag.type_to_add_new'),
@@ -36,7 +36,7 @@
     });
 
     // Add hidden inputs for any unsaved tags.
-    params.question_tags.forEach(function(t){
+    params.question_tags.forEach(function(t) {
       if (!t.id) {
         self.add_tag(t, params.mission_id);
       } else {
@@ -46,20 +46,21 @@
   };
 
   // If tag doesn't already exist, append hidden inputs to add it via nested attributes
-  klass.prototype.add_tag = function(item, mission_id) {
-    var form, input_name_prefix;
+  klass.prototype.add_tag = function(item, missionId) {
+    var form, inputNamePrefix;
+
     // Which form are we on?
     var rand = Math.floor(Math.random() * 999999999);
     if ($('.question_form').length) {
       form = $('.question_form');
-      input_name_prefix = 'question[tags_attributes]['+rand+']';
+      inputNamePrefix = "question[tags_attributes][" + rand + "]";
     } else if ($('.questioning_form').length) {
       form = $('.questioning_form');
-      input_name_prefix = 'questioning[question_attributes][tags_attributes]['+rand+']';
+      inputNamePrefix = "questioning[question_attributes][tags_attributes][" + rand + "]";
     }
 
     if (item.id === null) {
-      // strip trailing whitespace
+      // Strip trailing whitespace
       this.silent = true;
       this.input.tokenInput("remove", item);
       item.name = item.name.trim();
@@ -76,7 +77,7 @@
     });
 
     if (exists) {
-      // de-duplicate
+      // De-duplicate
       this.silent = true;
       this.input.tokenInput("remove", item);
       this.input.tokenInput("add", item);
@@ -84,11 +85,13 @@
       return;
     }
 
-    // if new item (null id)
+    // If new item (null id)
     if (item.id === null) {
       form.append(
-        '<input type="hidden" data-new-tag="'+item.name+'" name="'+input_name_prefix+'[name]" value="'+item.name+'">' +
-        '<input type="hidden" data-new-tag="'+item.name+'" name="'+input_name_prefix+'[mission_id]" value="'+mission_id+'">'
+        '<input type="hidden" data-new-tag="' + item.name + '" name="' + inputNamePrefix +
+          '[name]" value="' + item.name + '">' +
+          '<input type="hidden" data-new-tag="' + item.name + '" name="' + inputNamePrefix +
+          '[mission_id]" value="' + missionId + '">'
       );
     }
 
@@ -97,7 +100,7 @@
 
   // If previously added new tag input, remove it
   klass.prototype.remove_tag = function(item) {
-    var index = _.findIndex(this.items, function(tag) {
+    const index = _.findIndex(this.items, function(tag) {
       return tag.id === item.id || tag.name === item.name;
     });
 
