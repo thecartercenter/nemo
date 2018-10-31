@@ -1,5 +1,5 @@
 module Sms
-  class UnverifiedTokenError < Error
+  class UnverifiedTokenError < Sms::Error
     def initialize(message=nil)
       message ||= 'Could not verify incoming SMS token'
       super

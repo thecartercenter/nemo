@@ -2,6 +2,7 @@
 
 # For importing users from CSV/spreadsheet.
 class UserBatchesController < ApplicationController
+  include OperationQueueable
   skip_authorization_check only: :upload
   load_and_authorize_resource except: :upload
   skip_authorize_resource only: [:template, :upload]
@@ -22,10 +23,10 @@ class UserBatchesController < ApplicationController
   end
 
   def create
-    temp_upload_path = params[:temp_file_path]
+    temp_file_path = params[:temp_file_path]
     original_filename = params[:original_filename]
-    if temp_upload_path.present? and original_filename.present?
-      do_import
+    if temp_file_path.present? && original_filename.present?
+      do_import(temp_file_path, original_filename)
     else
       flash.now[:error] = I18n.t("errors.file_upload.file_missing")
       render("form")
@@ -40,10 +41,9 @@ class UserBatchesController < ApplicationController
 
   private
 
-  def do_import(temp_upload_path, original_filename)
-    operation.begin!(nil, temp_file_path, @user_batch.class.to_s, original_filename)
-    flash[:html_safe] = true
-    flash[:notice] = t("import.queued_html", type: UserBatch.model_name.human, url: operations_path)
+  def do_import(temp_file_path, original_filename)
+    operation(temp_file_path, original_filename).enqueue
+    prep_operation_queued_flash(:user_import)
     redirect_to(users_url)
   rescue StandardError => e
     Rails.logger.error(e)
@@ -51,14 +51,16 @@ class UserBatchesController < ApplicationController
     render("form")
   end
 
-  def operation
+  def operation(temp_file_path, original_filename)
     Operation.new(
       creator: current_user,
-      job_class: TabularImportOperationJob,
       mission: current_mission,
-      details: t("operation.details.user_import_operation_job",
-        file: @user_batch.file.original_filename,
-        mission_name: current_mission&.name)
+      job_class: TabularImportOperationJob,
+      details: t("operation.details.user_import", file: temp_file_path),
+      job_params: {
+        upload_path: temp_file_path,
+        import_class: @user_batch.class.to_s
+      }
     )
   end
 

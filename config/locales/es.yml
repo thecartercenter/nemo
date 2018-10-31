@@ -289,7 +289,6 @@ es:
         view_count: "Vistas"
         viewed_at: "Última Vista"
       setting:
-        allow_unauthenticated_submissions: "¿Permitir entregas no autentificadas?"
         preferred_locales_str: "Idiomas Preferidos"
         override_code: "Código de Control Manual"
         external_sql: "SQL Externo"
@@ -414,7 +413,6 @@ es:
       response:
         incomplete: "Marque esta casilla si hay preguntas necesarias a las que no puede responder. A continuación, podrá guardar esta respuesta sin responder a estas preguntas y la respuesta será marcada como \"incompleta\"."
       setting:
-        allow_unauthenticated_submissions: "Si esta casilla está marcada, NADIE podrá envar datos a la misión sin introducir una contraseña. Use con precaución."
         preferred_locales_str: |-
             Entre el <a href='http://www.loc.gov/standards/iso639-2/php/code_list.php' target='_blank'>código de dos letras</a>, separado por comas, para el idioma de la misión, en orden de preferencia.
 

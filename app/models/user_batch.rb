@@ -252,7 +252,7 @@ class UserBatch
   end
 
   def add_error(error, attribute, row_number)
-    row_error = I18n.t("import.row_error", row: row_number, error: error)
+    row_error = I18n.t("operation.row_error", row: row_number, error: error)
     errors.add("users[#{row_number}].#{attribute}", row_error)
   end
 

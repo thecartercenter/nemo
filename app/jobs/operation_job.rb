@@ -17,8 +17,6 @@ class OperationJob < ApplicationJob
 
   delegate :mission, to: :operation
 
-  protected
-
   def operation
     # The `Operation` instance tracking this job is always passed as
     # the first argument to `perform`
@@ -45,7 +43,7 @@ class OperationJob < ApplicationJob
 
   def operation_raised_error(exception)
     ExceptionNotifier.notify_exception(exception)
-    save_failure(I18n.t("operation.server_error"))
+    save_failure(I18n.t("operation.errors.server_error"))
   end
 
   def operation_completed

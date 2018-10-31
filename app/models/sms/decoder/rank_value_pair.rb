@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Sms
-  module Parser
+  module Decoder
     # Parses a single rank/value pair as part of an incoming SMS message.
     class RankValuePair < Struct.new(:rank, :value)
       # Generates an Answer object from the rank and value in the context of the given qing.
@@ -225,7 +225,7 @@ module Sms
       end
 
       def raise_parse_error(type, options = {})
-        raise Sms::Parser::Error.new(type, options)
+        raise Sms::Decoder::ParseError.new(type, options)
       end
     end
   end

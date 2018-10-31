@@ -26,16 +26,6 @@ ELMO::Application.routes.draw do
     get "/confirm-login" => "user_sessions#login_confirmation", defaults: { confirm: true }, as: :new_login_confirmation
     post "/confirm-login" => "user_sessions#process_login_confirmation", defaults: { confirm: true }, as: :login_confirmation
 
-    resources :operations, only: %i[index show destroy] do
-      collection do
-        post "clear"
-      end
-
-      member do
-        get "download"
-      end
-    end
-
     # Routes with user or no user.
     root to: "welcome#index", as: :basic_root
   end
@@ -124,6 +114,9 @@ ELMO::Application.routes.draw do
     resources :operations, only: %i[index show destroy] do
       collection do
         post "clear"
+      end
+      member do
+        get "download"
       end
     end
     resources :questions do

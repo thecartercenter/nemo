@@ -155,7 +155,7 @@ describe Report::ListReport, :reports do
     it "should have proper headers" do
       expect(form.questions[0].name_fr).to match(/Question/) # Ensure question created with french name.
       expect(report).to have_data_grid(
-        form.questions.map(&:name_fr) + ["Fiche"],
+        form.questions.map(&:name_fr) + ["Formulaire"],
         %w[5 10] + [form.name]
       )
     end

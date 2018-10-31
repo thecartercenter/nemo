@@ -38,9 +38,9 @@ SELECT parent_id, new_rank, COUNT(id)
   HAVING COUNT(id) > 1;
 
 -- Roots have new_rank 0.
-SELECT a1.id, a1.new_rank
-  FROM answers a1
-  WHERE a1.new_rank != 0 AND a1.parent_id IS NULL AND a1.deleted_at IS NULL;
+SELECT id, new_rank
+  FROM answers
+  WHERE new_rank != 0 AND parent_id IS NULL AND deleted_at IS NULL;
 
 -- Old inst_num is the same for all Answers in an AnswerGroup
 SELECT parent_id, COUNT(DISTINCT inst_num)
