@@ -302,7 +302,7 @@ to see if anything needs to be updated in your local configuration.
 Finally:
 
     exit # Back to privileged/root user
-    sudo systemctl restart delayed-job-elmo.service
+    sudo systemctl restart delayed-job
     sudo systemctl restart nginx
 
 Then load the site in your browser. You should see the new version number in the page footer.
