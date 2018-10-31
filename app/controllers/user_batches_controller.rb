@@ -57,7 +57,7 @@ class UserBatchesController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.user_import", file: temp_file_path),
+      details: t("operation.details.user_import", file: original_filename),
       job_params: {
         upload_path: temp_file_path,
         import_class: @user_batch.class.to_s
