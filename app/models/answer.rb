@@ -265,7 +265,7 @@ class Answer < ResponseNode
     if location_type_with_value?
       tokens = self.value.split(" ")
       LOCATION_ATTRIBS.each_with_index do |a, i|
-        self[a] = tokens[i] ? (BigDecimal.new(tokens[i]) rescue nil) : nil
+        self[a] = tokens[i] ? (BigDecimal(tokens[i]) rescue nil) : nil
       end
     elsif option.present? && option.coordinates?
       self.latitude = option.latitude
