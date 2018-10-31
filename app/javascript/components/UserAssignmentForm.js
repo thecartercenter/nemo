@@ -36,7 +36,7 @@ class UserAssignmentForm extends React.Component {
             (props, index) =>
               <UserAssignmentFormField
                 index={index}
-                key={props.mission}
+                key={index}
                 missions={this.state.missions}
                 roles={this.state.roles}
                 deleteClick={this.handleDeleteClick}
@@ -45,7 +45,7 @@ class UserAssignmentForm extends React.Component {
         </div>
         <div>
           <a onClick={this.handleAddClick} className="add-assignment">
-            <i className="fa fa-plus"></i>{I18n.t("user.add_assignment")}
+            <i className="fa fa-plus"></i> {I18n.t("user.add_assignment")}
           </a>
         </div>
       </div>
