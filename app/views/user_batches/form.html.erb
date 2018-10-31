@@ -22,6 +22,7 @@
     postPath: "#{user_batches_path}/upload",
     previewTemplate: render("layouts/dropzone_preview"),
     paramName: "userbatch",
+    acceptedFileFormats: ".xlsx, .csv",
     metaFields: {
       "tempFilePath" => "input#temp_file_path",
       "originalFilename" => "input#original_filename"

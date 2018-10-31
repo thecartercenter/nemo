@@ -13,6 +13,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     @metaFields = options.metaFields
     @previewTemplate = options.previewTemplate
     @paramName = options.paramName
+    @acceptedFileFormats = options.acceptedFileFormats
     @listener = options.listener
 
 
@@ -23,7 +24,8 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       uploadMultiple: false
       previewTemplate: @previewTemplate,
       thumbnailWidth: 100,
-      thumbnailHeight: 100
+      thumbnailHeight: 100,
+      acceptedFiles: @acceptedFileFormats
       #maxFilesize: 100000
     })
 
