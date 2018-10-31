@@ -26,7 +26,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       thumbnailWidth: 100,
       thumbnailHeight: 100,
       acceptedFiles: @acceptedFileFormats
-      maxFilesize: 80000 #fits a maximum row xlsx file
+      maxFilesize: 80000 #kb, fits a maximum row xlsx file
     })
 
     @dropzone.on 'removedfile', => @fileRemoved()
