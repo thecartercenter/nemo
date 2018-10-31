@@ -144,7 +144,9 @@ en:
   errors:
     # our messages are all complete sentences so we use the colon
     format: "%{attribute}: %{message}"
-    file_upload: "There was an error uploading the file."
+    file_upload:
+      error: "There was an error uploading the file."
+      file_missing: "No file selected for import."
     messages:
       deleted_successfully: "deleted successfully"
       generic_delete_error: "Error during deletion."

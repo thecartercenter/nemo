@@ -74,10 +74,10 @@
   a.hint {
     text-decoration: underline;
   }
+}
 
-  div.error-msg {
-    color: $theme-red;
-    display: none;
-    margin-top: 5px;
-  }
+div.dz-error-msg {
+  color: $theme-red;
+  display: none;
+  margin-top: 5px;
 }

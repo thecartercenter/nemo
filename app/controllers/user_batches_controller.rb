@@ -17,23 +17,19 @@ class UserBatchesController < ApplicationController
     original_file_name = params[:userbatch].original_filename
     temp_file_path = UploadSaver.new.save_file(params[:userbatch])
     render(json: {tempFilePath: temp_file_path, originalFilename: original_file_name})
-    # puts "UPLOAD ENDPOINT"
-    # if @user_batch.valid?
-    #   (@user_batch.file)
-    #
-    #  else
-    #   flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.general")
-    #   render("form")
-    # end
+  rescue StandardError => e
+    render(errors: [I18n.t("activerecord.errors.models.user_batch.internal")])
   end
 
   def create
-    #if #temp upload path valid
+    temp_upload_path = params[:temp_file_path]
+    original_filename = params[:original_filename]
+    if temp_upload_path.present? and original_filename.present?
       do_import
-    # else
-    #   flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.general")
-    #   render("form")
-    # end
+    else
+      flash.now[:error] = I18n.t("errors.file_upload.file_missing")
+      render("form")
+    end
   end
 
   def template
@@ -44,9 +40,7 @@ class UserBatchesController < ApplicationController
 
   private
 
-  def do_import
-    temp_upload_path = params[:temp_file_path]
-    original_filename = params[:original_filename]
+  def do_import(temp_upload_path, original_filename)
     operation.begin!(nil, temp_file_path, @user_batch.class.to_s, original_filename)
     flash[:html_safe] = true
     flash[:notice] = t("import.queued_html", type: UserBatch.model_name.human, url: operations_path)

@@ -52,8 +52,8 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     errors = if responseData.errors
       responseData.errors.join("<br/>")
     else
-      I18n.t('errors.file_upload')
-    @$('.error-msg').show().html(errors)
+      I18n.t('errors.file_upload.error')
+    @$('.dz-error-msg').show().html(errors)
 
   fileRemoved: ->
     @$('.dz-message').show()
@@ -65,7 +65,7 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
     if @genericThumbPath?
       @$('img')[0].src = @genericThumbPath
     @$('.dz-message').hide()
-    @$('.error-msg').hide()
+    @$('.dz-error-msg').hide()
 
   uploadFinished: ->
     if @listener?

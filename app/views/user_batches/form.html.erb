@@ -6,6 +6,7 @@
     <%=hidden_field_tag(:original_filename, '', id: "original_filename")%>
     <div id="dropzone-file-uploader" class="dropzone">
     </div>
+    <div class="dz-error-msg"></div>
   </div>
   <div class="submit-buttons">
     <%= f.submit(t("common.import"), class: "btn btn-primary") %>
