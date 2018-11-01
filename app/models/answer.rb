@@ -254,6 +254,16 @@ class Answer < ResponseNode
     end
   end
 
+  def parse_token(token)
+    BigDecimal(token)
+  rescue ArgumentError
+    # token was not parsable
+    nil
+  rescue TypeError
+    # token was not a parsable type
+    nil
+  end
+
   def replicate_location_values
     # This method is run before_validation and before_save in case validations are skipped.
     # We use this flag to not duplicate effort.
@@ -265,7 +275,7 @@ class Answer < ResponseNode
     if location_type_with_value?
       tokens = self.value.split(" ")
       LOCATION_ATTRIBS.each_with_index do |a, i|
-        self[a] = tokens[i] ? (BigDecimal(tokens[i]) rescue nil) : nil
+        self[a] = parse_token(tokens[i])
       end
     elsif option.present? && option.coordinates?
       self.latitude = option.latitude
