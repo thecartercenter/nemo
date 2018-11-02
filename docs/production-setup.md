@@ -240,7 +240,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 #### Upgrading to v8.12
 
-1. Install nvm, the appropriate node version, and yarn:
+1. As the `deploy` user, install nvm, the appropriate node version, and yarn:
 
         curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
         exec $SHELL
@@ -250,8 +250,8 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 #### Upgrading to v9.0
 
-1. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/pre-v9.0-dump.sql`
-2. The data migrations in this upgrade may take some time if you have a lot of data. To protect your data, stop your server and DelayedJob, as privileged user: `sudo systemctl stop nginx && sudo systemctl stop delayed-job`
+1. The data migrations in this upgrade may take some time if you have a lot of data. To protect your data, stop your server and DelayedJob, as privileged user: `sudo systemctl stop nginx && sudo systemctl stop delayed-job`
+2. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/pre-v9.0-dump.sql`
 3. Follow the 'General Upgrade Instructions' below to upgrade to **v9.0**.
 4. Start your server and DelayedJob: `sudo systemctl start nginx && sudo systemctl start delayed-job`
 

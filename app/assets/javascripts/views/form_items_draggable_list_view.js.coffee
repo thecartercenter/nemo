@@ -68,7 +68,7 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
   # Returns false if invalid.
   check_condition_order: (placeholder, item) ->
     # If item or any children refer to questions, the placeholder must be after all the referred questions.
-    for c in item.find('.condition')
+    for c in item.find('.refd-qing')
       refd = @$("li.form-item[data-id=#{$(c).data('ref-id')}]")
       return false unless this.compare_ranks(placeholder, refd) == 1
 
