@@ -4,7 +4,7 @@
 class OptionSetReclone
   def run
     Rails.logger.debug("finding option sets with duplicate root nodes")
-    duplicate_root_node_ids = OptionSet.all.group(:root_node_id).count.select { |id, count| count > 1 }.keys
+    duplicate_root_node_ids = OptionSet.all.group(:root_node_id).count.select { |_id, count| count > 1 }.keys
     Rails.logger.debug("#{duplicate_root_node_ids.count} found")
 
     recloned = []

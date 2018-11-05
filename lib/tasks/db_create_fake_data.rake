@@ -78,7 +78,7 @@ namespace :db do
           Faker::Time.backward(365), # datetime
           Faker::Date.birthday, # date
           Faker::Time.between(1.year.ago, Date.today, :evening), # time
-          Media::Image.create(item: Faker::Avatar.image(Faker::Internet.domain_word)), # image
+          Media::Image.create(item: File.open(image_path)), # image
           FactoryGirl.build(:media_image, item: File.open(image_path)), # annotated image
           FactoryGirl.build(:media_image, item: File.open(image_path)), # signature
           FactoryGirl.build(:media_image, item: File.open(image_path)), # sketch

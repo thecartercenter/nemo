@@ -1,0 +1,100 @@
+#upload-progress-notice {
+  display: none;
+  font-style: italic;
+}
+
+.dropzone {
+  background-color: $white;
+  border: 1px dashed $mid-gray;
+  cursor: pointer;
+  min-height: 50px;
+  padding: 5px;
+
+  //hide thumbnail
+  &.no-thumb {
+    img {
+      display: none;
+    }
+
+    .dz-details {
+      margin: 0;
+    }
+  }
+
+  &.dz-max-files-reached {
+    cursor: default;
+  }
+
+  &.dz-started {
+    background-color: inherit;
+    border: 0;
+    padding: 0;
+  }
+
+  &.dz-drag-hover {
+    background: $light-gray;
+  }
+}
+
+.dz-preview {
+  display: block;
+  height: 100px;
+  margin: 0;
+  width: inherit;
+
+  &.dz-success .dz-progress .dz-upload {
+    background: $theme-main-darker;
+  }
+
+  img {
+    display: block;
+    float: left;
+    height: 100px;
+    margin-right: 5px;
+    width: 100px;
+  }
+
+  i.fa {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+
+  .dz-details {
+    margin-left: 105px;
+  }
+
+  .dz-size {
+    color: $gray-text;
+
+    strong {
+      font-weight: normal;
+    }
+  }
+
+  .dz-progress {
+    background: $lighter-gray;
+    height: 5px;
+    width: 100%;
+
+    .dz-upload {
+      background: $theme-main-darker;
+      display: block;
+      height: 5px;
+    }
+  }
+
+  a.hint,
+  span.message {
+    color: $gray-text;
+  }
+
+  a.hint {
+    text-decoration: underline;
+  }
+}
+
+div.dz-error-msg {
+  color: $theme-red;
+  display: none;
+  margin-top: 5px;
+}

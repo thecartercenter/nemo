@@ -87,7 +87,7 @@ class Question < ApplicationRecord
 
   replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
     uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
-    compatibility: [:qtype_name, :option_set_id], reusable_in_clone: true
+    compatibility: %i[qtype_name option_set_id], reusable_in_clone: true
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)

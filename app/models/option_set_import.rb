@@ -128,7 +128,7 @@ class OptionSetImport
       errors.keys.each do |attribute|
         errors.full_messages_for(attribute).each do |error|
           self.errors.add("option_sets[#{row_number}].#{attribute}",
-            I18n.t('operation.row_error', row: row_number, error: error))
+            I18n.t("operation.row_error", row: row_number, error: error))
         end
       end
     end
