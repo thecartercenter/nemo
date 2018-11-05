@@ -67,9 +67,6 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       @listener.uploadStarting()
     if @genericThumbPath?
       @$('img')[0].src = @genericThumbPath
-    else
-      @$('img').hide()
-      @$('.dz-details').css('margin', '0px')
     @$('.dz-message').hide()
     @$('.dz-error-msg').hide()
 

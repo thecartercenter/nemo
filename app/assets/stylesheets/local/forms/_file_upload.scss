@@ -10,6 +10,17 @@
   min-height: 50px;
   padding: 5px;
 
+  //hide thumbnail
+  &.no-thumb {
+    img {
+      display: none;
+    }
+
+    .dz-details {
+      margin: 0px;
+    }
+  }
+
   &.dz-max-files-reached {
     cursor: default;
   }
