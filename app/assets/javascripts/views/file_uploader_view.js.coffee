@@ -3,7 +3,7 @@
 # The post path is where the file upload will be posted to.
 # The preview template controls what dropzone looks like(typically dropzone_preview.html found in /layouts)
 # The paramName is the key to the file in the http request dropzone posts.
-# fileUploaded will iterate over keys in successful json response data from the postPath. Where there 
+# fileUploaded will iterate over keys in successful json response data from the postPath. Where there
 # is a hidden input element with a name containing
 # the json key, that element's value is set to the json value
 
@@ -19,15 +19,15 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
 
 
     @dropzone = new Dropzone(@zoneId, {
-      url: @postPath
-      paramName: @paramName # The name that will be used to transfer the file
-      maxFiles: 1
-      uploadMultiple: false
+      url: @postPath,
+      paramName: @paramName, # The name that will be used to transfer the file
+      maxFiles: 1,
+      uploadMultiple: false,
       previewTemplate: @previewTemplate,
       thumbnailWidth: 100,
       thumbnailHeight: 100,
       acceptedFiles: @acceptedFileFormats,
-      maxFilesize: 80000 #kb, fits a maximum row xlsx file
+      maxFilesize: 50 #MB, fits a maximum row xlsx file. Note dz docs wrong, look at source.
     })
 
     @dropzone.on 'removedfile', => @fileRemoved()
@@ -67,6 +67,9 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       @listener.uploadStarting()
     if @genericThumbPath?
       @$('img')[0].src = @genericThumbPath
+    else
+      @$('img').hide()
+      @$('.dz-details').css('margin', '0px')
     @$('.dz-message').hide()
     @$('.dz-error-msg').hide()
 
