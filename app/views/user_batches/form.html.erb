@@ -20,7 +20,7 @@
 <% end %>
 
 <%= javascript_doc_ready do %>
-  ELMO.fileUploaderManager = new ELMO.Views.MediaUploaderManager({el: "#new_user_batch"});
+  ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: "#new_user_batch"});
   options = <%=json(
     el: "#file-uploader",
     zoneId: "#dropzone-file-uploader",

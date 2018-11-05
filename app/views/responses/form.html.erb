@@ -3,7 +3,7 @@
 
 <%# This needs to be up here so it runs before the FileUploaderViews are initialized. %>
 <%= javascript_doc_ready do %>
-  ELMO.mediaUploaderManager = new ELMO.Views.MediaUploaderManager({el: ".response-form"});
+  ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: ".response-form"});
 <% end %>
 
 <div id="response-form-wrapper">
