@@ -78,5 +78,5 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       @listener.uploadFinished()
 
   clearMetaFields: ->
-    @$('input:hidden').each (index, e) =>
+    @$('input:hidden').each (index, e) ->
       $(e).val('')
