@@ -4,7 +4,7 @@ class OptionSetImport
   include ActiveModel::AttributeAssignment
 
   MAX_LEVEL_LENGTH = 20
-  MAX_OPTION_LENGTH = 45
+  MAX_OPTION_LENGTH = 255
 
   attr_accessor :mission_id, :name, :file
   attr_reader :option_set
