@@ -28,10 +28,6 @@
     previewTemplate: render("layouts/dropzone_preview"),
     paramName: "userbatch",
     acceptedFileFormats: ".xlsx, .csv",
-    metaFields: {
-      "tempFilePath" => "input#temp_file_path",
-      "originalFilename" => "input#original_filename"
-    }
   )%>
   options.listener = ELMO.fileUploaderManager;
   new ELMO.Views.FileUploaderView(options);

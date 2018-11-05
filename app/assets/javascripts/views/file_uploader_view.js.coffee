@@ -3,14 +3,15 @@
 # The post path is where the file upload will be posted to.
 # The preview template controls what dropzone looks like(typically dropzone_preview.html found in /layouts)
 # The paramName is the key to the file in the http request dropzone posts.
-# metaFields is a map of json keys in responseData to css selectors the json values should go in
+# fileUploaded will iterate over keys in successful json response data from the postPath. Where there 
+# is a hidden input element with a name containing
+# the json key, that element's value is set to the json value
 
 class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
   initialize: (options) ->
     @zoneId = options.zoneId
     @postPath = options.postPath
     @genericThumbPath = options.genericThumbPath
-    @metaFields = options.metaFields
     @previewTemplate = options.previewTemplate
     @paramName = options.paramName
     @acceptedFileFormats = options.acceptedFileFormats
@@ -46,8 +47,8 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       @clearMetaFields()
 
   fileUploaded: (responseData) ->
-    for responseAttr, selector of @metaFields
-      @$(selector).val(responseData[responseAttr])
+    for k, v of responseData
+      @$("input:hidden[name*=#{k}]").val(v)
 
   uploadErrored: (file, responseData) ->
     @dropzone.removeFile(file)
@@ -74,5 +75,5 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       @listener.uploadFinished()
 
   clearMetaFields: ->
-    for responseAttr, selector of @metaFields
-      @$(selector).val('')
+    @$('input:hidden').each (index, e) =>
+      $(e).val('')

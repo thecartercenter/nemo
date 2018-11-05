@@ -18,7 +18,7 @@ class UserBatchesController < ApplicationController
     authorize!(:create, UserBatch)
     original_file_name = params[:userbatch].original_filename
     temp_file_path = UploadSaver.new.save_file(params[:userbatch])
-    render(json: {tempFilePath: temp_file_path, originalFilename: original_file_name})
+    render(json: {temp_file_path: temp_file_path, original_filename: original_file_name})
   end
 
   def create

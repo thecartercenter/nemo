@@ -23,9 +23,6 @@
     postPath: media_create_path(type: media_type),
     previewTemplate: render("layouts/dropzone_preview"),
     paramName: "upload",
-    metaFields: {
-      "id" => "input"
-    }
   )%>
   options.listener = ELMO.mediaUploaderManager;
   new ELMO.Views.FileUploaderView(options);
