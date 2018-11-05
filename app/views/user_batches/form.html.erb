@@ -14,7 +14,7 @@
   </div>
   <div class="submit-buttons">
     <%= f.submit(t("common.import"), class: "btn btn-primary") %>
-    <%= render("file_upload/upload_progress") %>
+    <%= render("file_upload/upload_in_progress_button", single_file: true) %>
   </div>
 
 <% end %>

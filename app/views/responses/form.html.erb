@@ -43,7 +43,7 @@
           <% unless @context.read_only? %>
             <%= f.submit(class: "btn btn-primary") %>
           <% end %>
-          <%= render("file_upload/upload_progress") %>
+          <%= render("file_upload/upload_in_progress_button", single_file: false) %>
         </div>
       </div>
     </div>

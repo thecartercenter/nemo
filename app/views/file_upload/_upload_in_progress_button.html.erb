@@ -1,4 +1,4 @@
 <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
   <%= image_tag("load-ind-small.gif") %>
-  <%= t("response.upload_progress_notice") %>
+  <%= t("common.upload_progress_notice.#{single_file ? "one" : "other"}") %>
 </div>
