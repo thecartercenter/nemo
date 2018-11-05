@@ -56,13 +56,14 @@
   }
 
   .dz-progress {
-    background-color: $theme-main;
     height: 5px;
-    margin: 5px 0;
     width: 100%;
+    background: $lighter-gray;
 
     .dz-upload {
-      background: $theme-main;
+      height: 5px;
+      display: block;
+      background: $theme-main-darker;
     }
   }
 
