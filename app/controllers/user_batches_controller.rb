@@ -15,12 +15,10 @@ class UserBatchesController < ApplicationController
   end
 
   def upload
+    authorize!(:create, UserBatch)
     original_file_name = params[:userbatch].original_filename
     temp_file_path = UploadSaver.new.save_file(params[:userbatch])
     render(json: {tempFilePath: temp_file_path, originalFilename: original_file_name})
-  rescue StandardError => e
-    Rails.logger.error(e)
-    render(errors: [I18n.t("activerecord.errors.models.user_batch.internal")])
   end
 
   def create

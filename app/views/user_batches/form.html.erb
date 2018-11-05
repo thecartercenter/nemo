@@ -1,10 +1,15 @@
+    breakthis
 <%= elmo_form_for(@user_batch, html: {multipart: true}) do |f| %>
   <p class="instructions"><%= formatted_instructions %></p>
 
   <div id="file-uploader">
     <%=hidden_field_tag(:temp_file_path, '', id: "temp_file_path")%>
     <%=hidden_field_tag(:original_filename, '', id: "original_filename")%>
+
     <div id="dropzone-file-uploader" class="dropzone">
+      <div class="dz-message">
+        <span class="message"><%= t("common.file_drop_message") %>&nbsp;</span>
+      </div>
     </div>
     <div class="dz-error-msg"></div>
   </div>

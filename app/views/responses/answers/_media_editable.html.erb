@@ -8,7 +8,7 @@
   <div id="dropzone-<%= context.path_str %>" class="dropzone <%= "collapse" if answer.has_media_object? %>">
     <%= hidden_field_tag(context.input_name(:media_object_id), answer.media_object_id) %>
     <div class="dz-message">
-      <span class="message"><%= t("response.drop_message") %>&nbsp;</span>
+      <span class="message"><%= t("common.file_drop_message") %>&nbsp;</span>
     </div>
   </div>
   <div class="dz-error-msg"></div>

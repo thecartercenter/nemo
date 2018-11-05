@@ -45,6 +45,7 @@ en:
       many: "Examples"
       other: "Examples"
     example_abbr: "e.g."
+    file_drop_message: "Click or drop file here"
     found: "Found"
     generate: "Generate"
     group: "Group"
@@ -1667,7 +1668,6 @@ en:
       audio: "Are you sure you want to delete this audio?"
       video: "Are you sure you want to delete this video?"
     upload_progress_notice: "Upload(s) in progress..."
-    drop_message: "Click or drop file here"
     drop_more_info: "More info"
     drop_hint:
       image: "The image should be at most 5 MB in size. Accepted formats are: jpg, png."
