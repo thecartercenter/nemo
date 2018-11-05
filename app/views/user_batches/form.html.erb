@@ -1,4 +1,3 @@
-    breakthis
 <%= elmo_form_for(@user_batch, html: {multipart: true}) do |f| %>
   <p class="instructions"><%= formatted_instructions %></p>
 
@@ -15,17 +14,19 @@
   </div>
   <div class="submit-buttons">
     <%= f.submit(t("common.import"), class: "btn btn-primary") %>
+    <%= render("file_upload/upload_progress") %>
   </div>
+
 <% end %>
 
 <%= javascript_doc_ready do %>
-  ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: "#new_user_batch"});
+  ELMO.fileUploaderManager = new ELMO.Views.MediaUploaderManager({el: "#new_user_batch"});
   options = <%=json(
     el: "#file-uploader",
     zoneId: "#dropzone-file-uploader",
     genericThumbPath: nil,
     postPath: "#{user_batches_path}/upload",
-    previewTemplate: render("layouts/dropzone_preview"),
+    previewTemplate: render("file_upload/dropzone_preview"),
     paramName: "userbatch",
     acceptedFileFormats: ".xlsx, .csv",
   )%>

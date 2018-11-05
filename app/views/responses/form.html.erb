@@ -43,10 +43,7 @@
           <% unless @context.read_only? %>
             <%= f.submit(class: "btn btn-primary") %>
           <% end %>
-          <div id="upload-progress-notice" class="btn btn-default" disabled="disabled">
-            <%= image_tag("load-ind-small.gif") %>
-            <%= t("response.upload_progress_notice") %>
-          </div>
+          <%= render("file_upload/upload_progress") %>
         </div>
       </div>
     </div>

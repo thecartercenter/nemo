@@ -21,7 +21,7 @@
     zoneId: "#dropzone-#{context.path_str}",
     genericThumbPath: image_path("media/#{answer.qtype.media_type}.png"),
     postPath: media_create_path(type: media_type),
-    previewTemplate: render("layouts/dropzone_preview"),
+    previewTemplate: render("file_upload/dropzone_preview"),
     paramName: "upload",
   )%>
   options.listener = ELMO.mediaUploaderManager;

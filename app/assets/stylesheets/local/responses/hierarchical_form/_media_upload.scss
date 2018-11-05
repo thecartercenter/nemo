@@ -1,5 +1,4 @@
 .response-form {
-    // TODO: Reduce duplication between thumbnail and dz-preview
   .media-thumbnail {
     display: block;
     height: 100px;
@@ -22,11 +21,5 @@
     .links {
       margin-left: 105px;
     }
-  }
-
-
-  #upload-progress-notice {
-    display: none;
-    font-style: italic;
   }
 }
