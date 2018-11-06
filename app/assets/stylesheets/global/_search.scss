@@ -2,20 +2,85 @@
 form.search_form {
   margin-bottom: 10px;
 
-  input#search_str {
-    width: 500px;
-    margin-right: 5px;
-    padding: 3px;
-  }
+  .search-container{
+    clear: both;
+    margin: 0px;
 
-  input.form-control, input.btn {
-    height: 28px;
-  }
+    &-label{
+      padding: 5px 5px 5px 0px;
+      font-size: 10pt;
+    }
+    div[class^="col"]{
+      padding: 0px 5px;
 
-  input.btn {
-    background-color: $gray-blue;
-    padding: 4px 12px;
+      &:first-of-type{
+        padding-left: 0px;
+      }
+    }
+    .row{
+      padding-bottom: 5px;
+      margin: 0px;
+    }
+    .date-icon{
+      font-size: 14pt;
+      position: absolute;
+      right: 10px;
+      top: 6px;
+    }
+    .add-question{
+      line-height: 28px;
+    }
+    .form-control{
+      height: 28px
+    }
+    .select2-selection--single{
+      height: 28px;
+    }
+    .select2-selection__rendered{
+      line-height: 22px;
+    }
+    input.btn {
+      background-color: $gray-blue;
+      padding: 4px 4%;
+    }
+
+    @media (max-width: 767px){
+
+      position: relative;
+      margin-bottom: 35px;
+
+      div[class^="col"]{
+        margin-bottom: 5px;
+        padding: 0px;
+      }
+      .row{
+        padding-bottom: 0px;
+      }
+
+      .desktop{
+        display: none;
+      }
+
+      .search-button{
+        position: absolute;
+        width: 100%;
+        bottom: -35px;
+
+        input.btn {
+          width: 49%;
+          margin-bottom: 0px;
+          &:first-of-type{
+            margin-right:2%;
+          }
+          &:only-child {
+              width: 100%;
+              margin-right: 0px;
+          }
+        }
+      }
+    }
   }
+  
 
   div.search-footer {
 

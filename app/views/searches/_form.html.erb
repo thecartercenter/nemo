@@ -1,15 +1,83 @@
-<form class="search_form form-inline">
-  <input type="text" class="form-control" name="search"
-    value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
-  <input type="submit" value="<%= t("common.search") %>" class="btn">
-  <% if params[:search].present? %>
-    <input type="button" value="<%= t("common.clear") %>" class="btn btn-clear">
-  <% end %>
-  <br/>
-  <div class="search-footer">
+<form class="search_form">
+  <div class="search-container">
+    <div class="row">
+      <div class="col-sm-1">
+        <label class="search-container-label">Filter by: </label>
+      </div>
+      <div class="col-sm-2">
+        <select id="s1" class="search-container-select">
+          <option default>Form Name</option>
+          <option>form 1</option>
+          <option>form 2</option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <input type="text" class="form-control" placeholder="Min Date">
+        <i class="fa fa-calendar icon-option_set date-icon"></i>
+      </div>
+      <div class="col-sm-2">
+        <input type="text" class="form-control" placeholder="Max Date">
+        <i class="fa fa-calendar icon-option_set date-icon"></i>
+      </div>
+      <div class="col-sm-3">
+        <input type="text" class="form-control" name="search" value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
+      </div>
+      <div class="col-sm-2 search-button">
+      <input type="submit" value="<%= t("common.search") %>" class="btn"><!--
+        --><% if params[:search].present? %><!--
+          --><input type="button" value="<%= t("common.clear") %>" class="btn btn-clear">
+          <% end %>
+      </div>
+    </div>
+
+    <div class="row hidden" id="question-row">
+      <div class="col-sm-1 desktop">        
+      </div>
+      <div class="col-sm-2">
+        <select id="s2" class="search-container-select">
+          <option default>Filter by Question</option>
+          <option>user 1</option>
+          <option>user 2</option>
+        </select>
+      </div>
+      <div class="col-sm-1">
+        <select id="s3" class="search-container-select">
+          <option default></option>
+          <option>= equals</option>
+          <option>≠ does not equal</option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <select id="s4" class="search-container-select">
+          <option default></option>
+        </select>
+      </div>
+      <div class="col-sm-2">
+        <a href="" class="add-question">
+          <i class="fa fa-plus"></i>
+          Add Question
+        </a>        
+      </div>
+    </div>   
+  </div>
+
+
+<script type="text/javascript">
+  $("#s1").select2();
+  $("#s2").select2();
+  $("#s3").select2();
+  $("#s4").select2();
+
+  $('#s1').one('change', function (e) {
+      $("#question-row").removeClass("hidden");
+  });
+</script>
+
+<!--   <div class="search-footer" style="display: none;">
     <%= search_examples %>
     <a href="#"><%= t('search.help_link') %></a>
-  </div>
+  </div> -->
+
 </form>
 
 <%# help search modal %>
