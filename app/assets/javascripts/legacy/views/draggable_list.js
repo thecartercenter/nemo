@@ -147,6 +147,7 @@
         // wait to see if it gets reverted, but there doesn't seem to be a way.
         revert: function(){
           self.trigger('change');
+          return false;
         },
 
         // Respect the parent_change_allowed callback.
