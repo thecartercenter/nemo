@@ -1570,8 +1570,6 @@ fr:
       image: "Etes vous sûr de vouloir supprimer cette image?"
       audio: "Etes vous sûr de vouloir supprimer ce son?"
       video: "Etes vous sûr de vouloir supprimer cette vidéo?"
-    upload_progress_notice: "Téléchargement(s) en cours"
-    drop_message: "cliquez ou deplacer un fichier ici"
     drop_more_info: "Plus d'info"
     drop_hint:
       image: "L'image doit avoir au plus 5Mb de taille. les formats acceptés sont jpg, png."
@@ -2124,9 +2122,9 @@ fr:
     in_the_past_week: "**%{count}** Pendant la semaine passé"
     in_the_past_year: "**%{count}** Pendant l'année passé"
     no_mission_selected:
-      title: "Mission n'est pas choisie"
-      choose: "Choisissez une mission de la menu déroulant dans le coin supérieur droit de l'écran."
-      choose_or_create: "Choisissez une mission de la menu déroulant dans le coin supérieur droit de l'écran, ou vous pouvez..."
+      title: "Aucune mission sélectionnée"
+      choose: "Veuillez sélectionner une mission dans le menu déroulant en haut à droite de l'écran."
+      choose_or_create: "Veuillez sélectionner une mission dans le menu déroulant en haut à droite de l'écran ou bien"
       create_link: "Créer une Nouvelle Mission."
       need_to_create: "Il n'y a pas de missions."
       no_missions: "Il n'y a pas de missions dans la systeme.  Contactez un administrateur."
