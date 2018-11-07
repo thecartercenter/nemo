@@ -97,11 +97,11 @@ ActiveRecord::Schema.define(version: 20181109141200) do
     t.integer "old_id"
     t.string "recipient_selection", limit: 255, null: false
     t.text "send_errors"
-    t.datetime "sent_at"
     t.string "source", limit: 255, default: "manual", null: false
     t.string "subject", limit: 255
     t.datetime "updated_at"
     t.string "which_phone", limit: 255
+    t.datetime "sent_at"
     t.index ["mission_id"], name: "index_broadcasts_on_mission_id"
   end
 
@@ -525,6 +525,15 @@ ActiveRecord::Schema.define(version: 20181109141200) do
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
 
+  create_table "saved_uploads", force: :cascade do |t|
+    t.string "file_file_name"
+    t.string "file_content_type"
+    t.integer "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "sessions", id: :serial, force: :cascade do |t|
     t.datetime "created_at"
     t.text "data"
@@ -576,11 +585,11 @@ ActiveRecord::Schema.define(version: 20181109141200) do
     t.uuid "broadcast_id"
     t.integer "broadcast_old_id"
     t.datetime "created_at", null: false
+    t.string "reply_error_message"
     t.string "from", limit: 255
     t.uuid "mission_id"
     t.integer "mission_old_id"
     t.integer "old_id"
-    t.string "reply_error_message"
     t.uuid "reply_to_id"
     t.integer "reply_to_old_id"
     t.datetime "sent_at"
