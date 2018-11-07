@@ -76,8 +76,10 @@ module UsersHelper
   end
 
   def assignment_data
-    { missions: Mission.all.map { |m| MissionSerializer.new(m) },
+    {
+      missions: Mission.all.map { |m| MissionSerializer.new(m) },
       roles: User::ROLES.map { |r| r },
-      assignments: @user.assignments.map { |a| AssignmentSerializer.new(a) } }
+      assignments: @user.assignments.map { |a| AssignmentSerializer.new(a) }
+    }
   end
 end
