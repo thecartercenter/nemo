@@ -12,22 +12,10 @@ module Media
     validates_attachment_presence :item
 
     delegate :mission, to: :answer
-    delegate :url, to: :item, allow_nil: true
 
     before_save :generate_token
 
     scope :expired, -> { where(answer_id: nil).where("created_at < ?", 12.hours.ago) }
-
-    def download_url
-      dl_url = url
-      separator = /\?/.match?(dl_url) ? "&" : "?"
-      "#{dl_url}#{separator}token=#{token}&dl=1"
-    end
-
-    def token_url(style: nil)
-      separator = /\?/.match?(url) ? "&" : "?"
-      "#{url(style)}#{separator}token=#{token}"
-    end
 
     private
 

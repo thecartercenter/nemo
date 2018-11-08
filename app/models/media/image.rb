@@ -15,7 +15,7 @@ module Media
     validates_attachment_content_type :item, content_type: %r{\Aimage/.*\Z}
 
     def thumb_path
-      token_url(style: :thumb)
+      nil
     end
 
     def kind

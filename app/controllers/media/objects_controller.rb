@@ -1,20 +1,16 @@
 # frozen_string_literal: true
 
 class Media::ObjectsController < ApplicationController
-  before_action :set_media_object, only: %i[show delete]
+  before_action :set_media_object, only: %i[show destroy]
   skip_authorization_check
 
   def show
-    style = params[:style]
+    style = params[:style] || "original"
     @answer = @media_object.answer
     @response = @answer.try(:response)
     disposition = params[:dl] == "1" ? "attachment" : "inline"
 
-    if @response
-      authorize!(:show, @response)
-    elsif @media_object.token != params[:token]
-      raise CanCan::AccessDenied.new("Not authorized", :view, :media_object)
-    end
+    authorize!(:show, @response) if @response
 
     send_file(@media_object.item.path(style),
       type: @media_object.item_content_type,
@@ -40,7 +36,7 @@ class Media::ObjectsController < ApplicationController
     end
   end
 
-  def delete
+  def destroy
     @media_object.destroy
     render(body: nil, status: :no_content)
   end

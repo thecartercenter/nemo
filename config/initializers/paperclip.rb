@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
 Paperclip::Attachment.default_options.merge!(
-  path: ":rails_root/uploads/:class/:attachment/:id_partition/:style/:filename",
-  url: "/:locale/m/:mission/:class/:id/:style"
+  path: ":rails_root/uploads/:class/:attachment/:id_partition/:style/:filename"
 )
 
 Paperclip.options[:content_type_mappings] = {
