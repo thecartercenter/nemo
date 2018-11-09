@@ -76,5 +76,10 @@ Bundler:
 Rails:
   Enabled: true
 
+Rails/Output:
+  Enabled: true
+  Exclude:
+    - db/migrate/**/*
+
 Rails/SkipsModelValidations:
   Enabled: false
