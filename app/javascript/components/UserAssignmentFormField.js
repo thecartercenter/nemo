@@ -75,7 +75,7 @@ class UserAssignmentFormField extends React.Component {
           </select>
         </div>
         <a className="trash" onClick={(e) => this.props.deleteClick(this.props.mission_id, e)}>
-          <i className="fa fa-trash"></i>
+          <i className="fa fa-close"></i>
         </a>
       </div>
     )
