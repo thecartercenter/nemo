@@ -1,44 +1,49 @@
 # frozen_string_literal: true
 
+require 'benchmark'
+
 # Major migration to create hierarchy of answer objects.
 class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
+  SLICE_SIZE = 10_000
+
   def up
-    # First delete all existing non-Answer-type rows, making this script idempotent, since it only
-    # creates this type of rows.
-    execute("DELETE FROM answers WHERE type != 'Answer'")
+    ActiveRecord::Migration.suppress_messages do
+      # First delete all existing non-Answer-type rows, making this script idempotent, since it only
+      # creates this type of rows.
+      puts("Deleting any old non-leaf nodes")
+      execute("DELETE FROM answers WHERE type != 'Answer'")
 
-    @new_rows = {}
-    @parent_rows = {}
-    @inserts = []
-    @updates = []
+      @new_rows = {}
+      @parent_rows = {}
 
-    # The basic idea here is, for each existing answer, to recursively find or create its parents
-    # and then 1. set the parent_id on the row and 2. create the appropriate rows in the hierarchies table.
-    total = execute("SELECT COUNT(*) FROM answers WHERE deleted_at IS NULL")
-      .to_a.first["count"].to_i
-    count = 0
-
-    result = execute("SELECT id, response_id, questioning_id, inst_num, rank, type
-      FROM answers WHERE deleted_at IS NULL")
-
-    puts "Building trees in memory"
-    result.each do |row|
-      find_or_create_parent_row(row)
-      count += 1
-      File.open("tmp/progress", "w") { |f| f.write("#{count}/#{total}\n") } if (count % 100).zero?
+      create_hierarchy_nodes
+      fix_ranks
     end
-
-    puts "Inserting new ResponseNodes"
-    do_inserts
-
-    puts "Updating existing Answers"
-    do_updates
-
-    puts "Fixing ranks"
-    fix_ranks
   end
 
   private
+
+  # Creates the nodes required to represent the new hierarchy system.
+  def create_hierarchy_nodes
+    # The basic idea here is, for each existing answer, to recursively find or create its parents
+    # and then 1. set the parent_id on the row and 2. create the appropriate rows in the hierarchies table.
+    # We do in batches of 10,000 so we can report progress.
+    puts "Running main SELECT query"
+    result = execute("SELECT id, response_id, questioning_id, inst_num, rank, type
+      FROM answers WHERE deleted_at IS NULL")
+    total_slices = (leaf_node_count.to_f / SLICE_SIZE).ceil
+    result.each_slice(SLICE_SIZE).with_index do |slice, i|
+      @inserts = []
+      @updates = []
+      puts("Slice #{i + 1}/#{total_slices}")
+      puts("-- Building trees in memory")
+      run_and_print_time { slice.each { |row| find_or_create_parent_row(row) } }
+      puts("-- Inserting new ResponseNodes")
+      run_and_print_time { do_inserts }
+      puts("-- Updating existing Answers")
+      run_and_print_time { do_updates }
+    end
+  end
 
   # Finds or creates the parent row for the given row.
   # Associates the given row with it.
@@ -143,7 +148,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
   end
 
   def do_updates
-    execute("CREATE TEMPORARY TABLE ansupdates (id uuid primary key, parent_id uuid, new_rank integer)")
+    ensure_empty_tmp_table
     batched_insert("ansupdates", "id,parent_id,new_rank", @updates)
     execute("UPDATE answers AS a SET parent_id = u.parent_id, new_rank = u.new_rank
       FROM ansupdates u WHERE a.id = u.id")
@@ -157,6 +162,7 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
   end
 
   def fix_ranks
+    puts("Fixing ranks")
     execute("SELECT id FROM answers WHERE type != 'Answer' AND deleted_at IS NULL").each do |row|
       execute(rank_fix_sql(row["id"]))
     end
@@ -173,5 +179,23 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
         ) AS t
         WHERE answers.id = t.id AND answers.new_rank != t.seq;
     SQL
+  end
+
+  def leaf_node_count
+    @leaf_node_count ||= execute("SELECT COUNT(*) FROM answers WHERE deleted_at IS NULL")
+      .to_a.first["count"].to_i
+  end
+
+  def run_and_print_time(&block)
+    t = Benchmark.realtime(&block)
+    puts("-- Took #{format('%.3f', t)}s")
+  end
+
+  def ensure_empty_tmp_table
+    unless @tmp_created
+      execute("CREATE TEMPORARY TABLE ansupdates (id uuid primary key, parent_id uuid, new_rank integer)")
+      @tmp_created = true
+    end
+    execute("TRUNCATE ansupdates")
   end
 end
