@@ -7,8 +7,8 @@
 
   <% if form_mode == :edit %>
     <%= published_warning(@option_set) if @option_set.published? %>
-    <%= appears_elsewhere_warning(@option_set) if @option_set.has_questions? %>
-    <%= multilevel_forbidden_notice if @option_set.has_select_multiple_questions? %>
+    <%= appears_elsewhere_warning(@option_set) if @option_set.any_questions? %>
+    <%= multilevel_forbidden_notice if @option_set.select_multiple_questions? %>
     <%= huge_notice if @option_set.huge? %>
   <% end %>
 

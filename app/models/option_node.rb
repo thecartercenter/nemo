@@ -1,5 +1,10 @@
+# frozen_string_literal: true
+
 class OptionNode < ApplicationRecord
-  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
+  include Replication::Replicable
+  include Replication::Standardizable
+  include FormVersionable
+  include MissionBased
 
   # Number of descendants that make a 'huge' node.
   HUGE_CUTOFF = 100
@@ -14,7 +19,7 @@ class OptionNode < ApplicationRecord
   has_many :conditions
   has_ancestry cache_depth: true
 
-  before_validation { self.ancestry = nil if self.ancestry.blank? }
+  before_validation { self.ancestry = nil if ancestry.blank? }
   before_destroy :ensure_no_answers_or_choices
   after_save :update_children
 
@@ -26,12 +31,15 @@ class OptionNode < ApplicationRecord
   # and the update causes their ranks to change.
   attr_accessor :ranks_changed, :options_added, :options_removed
   attr_writer :child_options
-  alias_method :ranks_changed?, :ranks_changed
-  alias_method :options_added?, :options_added
-  alias_method :options_removed?, :options_removed
+  alias ranks_changed? ranks_changed
+  alias options_added? options_added
+  alias options_removed? options_removed
 
-  replicable child_assocs: [:children, :option], backward_assocs: :option_set,
-    dont_copy: [:option_set_id, :option_id]
+  replicable child_assocs: %i[children option], backward_assocs: :option_set,
+             dont_copy: %i[option_set_id option_id],
+             # If the source of the clone is an option set, we need to replicate all nodes.
+             # Otherwise they are reusable just like the OptionSet itself.
+             reusable_in_clone: ->(replicator) { !replicator.source.is_a?(OptionSet) }
 
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :option, prefix: true
@@ -40,10 +48,10 @@ class OptionNode < ApplicationRecord
   # Given a set of nodes, preloads child_options for all in constant number of queries.
   def self.preload_child_options(roots)
     ancestries = roots.map { |r| "'#{r.id}'" }.join(",")
-    nodes_by_root_id = OptionNode.includes(:option).
-      where("ancestry IN (#{ancestries})").
-      order("rank").
-      group_by { |n| n.ancestry }
+    nodes_by_root_id = OptionNode.includes(:option)
+      .where("ancestry IN (#{ancestries})")
+      .order("rank")
+      .group_by(&:ancestry)
     roots.each { |r| r.child_options = (nodes_by_root_id[r.id] || []).map(&:option) }
   end
 
@@ -58,7 +66,7 @@ class OptionNode < ApplicationRecord
   end
 
   # Overriding this to avoid error from ancestry.
-  alias_method :_children, :children
+  alias _children children
   def children
     new_record? ? [] : _children
   end
@@ -128,10 +136,10 @@ class OptionNode < ApplicationRecord
   def sorted_children
     children.order(:rank).includes(:option)
   end
-  alias_method :c, :sorted_children
+  alias c sorted_children
 
   def first_leaf_option
-    (sc = sorted_children).any? ? sc.first.first_leaf_option : self.option
+    (sc = sorted_children).any? ? sc.first.first_leaf_option : option
   end
 
   def first_leaf_option_node
@@ -170,17 +178,17 @@ class OptionNode < ApplicationRecord
   def arrange_with_options(options = {})
     # If node has huge number of children just return the first 10.
     nodes = if huge? && options[:truncate_if_huge]
-      first_n_descendants(TO_SERIALIZE_IF_HUGE)
-    else
-      descendants.ordered_by_ancestry_and("rank")
-    end
+              first_n_descendants(TO_SERIALIZE_IF_HUGE)
+            else
+              descendants.ordered_by_ancestry_and("rank")
+            end
 
     # Manually eager load options.
     opt_hash = options_by_id(nodes, options)
     nodes.each { |n| n.option = opt_hash[n.option_id] }
 
     # arrange_nodes is an Ancestry gem function that takes a set of nodes and arranges them in the hash structure.
-    hash = self.class.arrange_nodes(nodes)
+    self.class.arrange_nodes(nodes)
   end
 
   def arrange_as_json(hash = nil)
@@ -191,7 +199,7 @@ class OptionNode < ApplicationRecord
 
     hash.map do |node, children|
       {}.tap do |branch|
-        %w(id rank).each { |k| branch[k.to_sym] = node[k] }
+        %w[id rank].each { |k| branch[k.to_sym] = node[k] }
         branch[:option] = node.option.as_json(for_option_set_form: true)
 
         # Don't need to look up this property if huge, since not editable.
@@ -213,7 +221,7 @@ class OptionNode < ApplicationRecord
   def arrange_as_rows(hash = nil, parent_path = [])
     hash = arrange_with_options(eager_load_option_assocs: false) if hash.nil?
 
-    hash.each_with_object([]) do |(node,children),rows|
+    hash.each_with_object([]) do |(node, children), rows|
       path = parent_path + [node.option]
 
       # output a row if we've hit a leaf node or a parent node with coordinates
@@ -251,7 +259,7 @@ class OptionNode < ApplicationRecord
   def to_s
     "Option Node: ID #{id}  Option ID: " +
       (is_root? ? "[ROOT]" : option_id || "[No option]").to_s +
-      " Option: #{option.try(:name)}" +
+      " Option: #{option.try(:name)}" \
       "  System ID: #{object_id}"
   end
 
@@ -261,18 +269,17 @@ class OptionNode < ApplicationRecord
     options[:space] ||= 0
 
     # indentation
-    (" " * options[:space]) +
+    +(" " * options[:space]) <<
 
       # option level name, option name
-      ["(#{level.try(:name)})", "#{rank}. #{option.try(:name) || '[Root]'} [#{id}]"].compact.join(" ") +
+      ["(#{level.try(:name)})", "#{rank}. #{option.try(:name) || '[Root]'} [#{id}]"].compact.join(" ") <<
 
       # parent, mission
-      " (mission: #{mission.try(:name) || '[None]'}, " +
-      "option-mission: #{option ? option.mission.try(:name) || '[None]' : '[N/A]'}, " +
-      "option-set: #{option_set.try(:name) || '[None]'} " +
-      "sequence: #{self.try(:sequence) || '[None]'})" +
-
-      "\n" + sorted_children.map { |c| c.to_s_indented(space: options[:space] + 2) }.join
+      " (mission: #{mission.try(:name) || '[None]'}, " \
+      "option-mission: #{option ? option.mission.try(:name) || '[None]' : '[N/A]'}, " \
+      "option-set: #{option_set.try(:name) || '[None]'} " \
+      "sequence: #{try(:sequence) || '[None]'})" \
+      "\n" << sorted_children.map { |c| c.to_s_indented(space: options[:space] + 2) }.join
   end
 
   def shortcode
@@ -313,19 +320,16 @@ class OptionNode < ApplicationRecord
     # We use the ! variant of update and create below so that validation
     # errors on children and options will cascade up.
     (children_attribs || []).each_with_index do |attribs, i|
-
-      if attribs.is_a?(Array)
-        attribs = attribs.last
-      end
+      attribs = attribs.last if attribs.is_a?(Array)
 
       # If there is a matching (by id) existing child.
-      if attribs[:id] && matching = children_by_id[attribs[:id]]
+      if attribs[:id] && (matching = children_by_id[attribs[:id]])
         self.ranks_changed = true if matching.rank != i + 1
 
         # Not sure why this is needed, temporary hack.
         attribs[:children_attribs] = "NONE" if attribs[:children_attribs].nil?
 
-        matching.update_attributes!(attribs.merge(rank: i + 1))
+        matching.update!(attribs.merge(rank: i + 1))
         copy_flags_from_subnode(matching)
 
         # Remove from hash so that we'll know later which ones weren't updated.
@@ -341,7 +345,7 @@ class OptionNode < ApplicationRecord
 
     # Destroy existing children that were not mentioned in the update.
     self.options_removed = true unless children_by_id.empty?
-    children_by_id.values.each { |c| c.destroy }
+    children_by_id.values.each(&:destroy)
 
     # Don't need this anymore. Nullify to prevent duplication on future saves.
     self.children_attribs = nil
@@ -360,17 +364,17 @@ class OptionNode < ApplicationRecord
   # 2. The given hash's subhash at key :option_attribs, if present.
   # Returns the modified hash.
   def copy_denormalized_attribs_to_attrib_hash(hash)
-    %w(mission_id option_set_id is_standard standard_copy).each { |k| hash[k.to_sym] = send(k) }
-    %w(mission_id).each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
+    %w[mission_id option_set_id is_standard standard_copy].each { |k| hash[k.to_sym] = send(k) }
+    %w[mission_id].each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
     hash
   end
 
   def has_answers?
     # option_set may not be present when node first getting built
-    !is_root? && option_set.present? && option_set.has_answers_for_option?(option_id)
+    !is_root? && option_set.present? && option_set.answers_for_option?(option_id)
   end
 
   def ensure_no_answers_or_choices
-    raise DeletionError.new(:cant_delete_if_has_response) if has_answers?
+    raise DeletionError, :cant_delete_if_has_response if has_answers?
   end
 end

@@ -1,4 +1,4 @@
-class ELMO.Views.MediaUploaderManager extends ELMO.Views.ApplicationView
+class ELMO.Views.FileUploaderManager extends ELMO.Views.ApplicationView
   initialize: (options) ->
     Dropzone.autoDiscover = false
     @uploadsInProgress = 0

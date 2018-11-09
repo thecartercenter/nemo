@@ -159,30 +159,6 @@ describe Form do
     end
   end
 
-  describe "has_repeat_group?" do
-    context "for empty form" do
-      it "should be false" do
-        expect(form.has_repeat_group?).to be false
-      end
-    end
-
-    context "for form with non-repeat group" do
-      let(:form) { create(:form, question_types: ["text", %w[text text]]) }
-
-      it "should be false" do
-        expect(form.has_repeat_group?).to be false
-      end
-    end
-
-    context "for form with repeat group" do
-      let(:form) { create(:form, question_types: ["text", {repeating: {items: %w[text text]}}]) }
-
-      it "should be true" do
-        expect(form.has_repeat_group?).to be true
-      end
-    end
-  end
-
   describe "questioning" do
     let(:form) { create(:form, mission: mission, question_types: [%w[text long_text], "integer", "decimal"]) }
 

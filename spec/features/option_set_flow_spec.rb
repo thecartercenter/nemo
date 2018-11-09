@@ -104,8 +104,7 @@ feature "option set" do
 
       # Import
       click_link("Import Standard Option Sets")
-      wait_modal_to_be_visible
-      check("Gold")
+      find('input[name="objs_to_import[]"]').set(true)
       click_button("Import")
       wait_modal_to_hide
       wait_for_ajax

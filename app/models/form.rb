@@ -1,17 +1,24 @@
+# frozen_string_literal: true
+
+# A survey or checklist.
 class Form < ApplicationRecord
-  include MissionBased, FormVersionable, Replication::Standardizable, Replication::Replicable
+  include Replication::Replicable
+  include Replication::Standardizable
+  include FormVersionable
+  include MissionBased
 
   def self.receivable_association
     {name: :form_forwardings, fk: :recipient}
   end
   include Receivable
 
-  API_ACCESS_LEVELS = %w(private public)
+  API_ACCESS_LEVELS = %w[private public].freeze
 
   acts_as_paranoid
 
-  has_many :responses, inverse_of: :form
-  has_many :versions, -> { order(:sequence) }, class_name: "FormVersion", inverse_of: :form, dependent: :destroy
+  has_many :responses, inverse_of: :form, dependent: :destroy
+  has_many :versions, -> { order(:sequence) }, class_name: "FormVersion", inverse_of: :form,
+                                               dependent: :destroy
   has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
@@ -47,9 +54,8 @@ class Form < ApplicationRecord
   delegate :code, to: :current_version
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-    dont_copy: [:published, :pub_changed_at, :downloads, :responses_count, :upgrade_needed,
-      :smsable, :current_version_id, :allow_incomplete, :access_level, :root_id]
-
+             dont_copy: %i[published pub_changed_at downloads responses_count upgrade_needed
+                           smsable current_version_id allow_incomplete access_level root_id]
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
@@ -59,12 +65,13 @@ class Form < ApplicationRecord
 
   # Gets a cache key based on the mission and the max (latest) pub_changed_at value.
   def self.odk_index_cache_key(options)
-    # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load, which is fine as long as it's consistent.
+    # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load,
+    # which is fine as long as it's consistent.
     max_pub_changed_at = if for_mission(options[:mission]).published.any?
-      for_mission(options[:mission]).maximum(:pub_changed_at).utc.to_s(:cache_datetime)
-    else
-      'no-pubd-forms'
-    end
+                           for_mission(options[:mission]).maximum(:pub_changed_at).utc.to_s(:cache_datetime)
+                         else
+                           "no-pubd-forms"
+                         end
     "odk-form-list/mission-#{options[:mission].id}/#{max_pub_changed_at}"
   end
 
@@ -73,7 +80,7 @@ class Form < ApplicationRecord
   end
 
   def add_questions_to_top_level(questions)
-    Array.wrap(questions).each_with_index do |q, i|
+    Array.wrap(questions).each_with_index do |q, _i|
       # We don't validate because there is no opportunity to present the error to the user,
       # and if there is an error, it's not due to something the user just did since all they did was
       # choose a question to add.
@@ -81,9 +88,9 @@ class Form < ApplicationRecord
     end
   end
 
-  def root_questionings(reload = false)
+  def root_questionings(_reload = false)
     # Not memoizing this because it causes all sorts of problems.
-    root_group ? root_group.sorted_children.reject{ |q| q.is_a?(QingGroup) } : []
+    root_group ? root_group.sorted_children.reject { |q| q.is_a?(QingGroup) } : []
   end
 
   def preordered_items(eager_load: nil)
@@ -100,18 +107,18 @@ class Form < ApplicationRecord
   end
 
   def api_visible_questions
-    questions.select{ |q| q.access_level == "inherit" }
+    questions.select { |q| q.access_level == "inherit" }
   end
 
   def temp_response_id
-    "#{name}_#{ActiveSupport::SecureRandom.random_number(899999999) + 100000000}"
+    "#{name}_#{ActiveSupport::SecureRandom.random_number(899_999_999) + 100_000_000}"
   end
 
   def version
     current_version.try(:code) || ""
   end
 
-  def has_questions?
+  def any_questions?
     questionings.any?
   end
 
@@ -121,9 +128,7 @@ class Form < ApplicationRecord
   end
 
   # current override code for incomplete responses
-  def override_code
-    mission.override_code
-  end
+  delegate :override_code, to: :mission
 
   # returns whether this form has responses; standard forms never have responses
   def has_responses?
@@ -132,16 +137,13 @@ class Form < ApplicationRecord
 
   # returns the number of responses for all copy forms
   def copy_responses_count
-    if is_standard?
-      copies.sum(:responses_count)
-    else
-      raise "non-standard forms should not request copy_responses_count"
-    end
+    raise "non-standard forms should not request copy_responses_count" unless is_standard?
+    copies.sum(:responses_count)
   end
 
   def published?
     # Standard forms are never published
-    is_standard? ? false : read_attribute(:published)
+    is_standard? ? false : self[:published]
   end
 
   def published_copy_count
@@ -167,7 +169,7 @@ class Form < ApplicationRecord
     questionings.reject(&:hidden?)
   end
 
-  def questions(reload = false)
+  def questions(_reload = false)
     questionings.map(&:question)
   end
 
@@ -178,7 +180,7 @@ class Form < ApplicationRecord
   end
 
   def questioning_with_code(c)
-    questionings.detect{ |q| q.code == c }
+    questionings.detect { |q| q.code == c }
   end
 
   # Loads all options used on the form in a constant number of queries.
@@ -193,22 +195,19 @@ class Form < ApplicationRecord
 
   # Gets the last Questioning on the form, ignoring the group structure.
   def last_qing
-    children.where(type: 'Questioning').order(:rank).last
+    children.where(type: "Questioning").order(:rank).last
   end
 
   def destroy_questionings(qings)
     qings = Array.wrap(qings)
     transaction do
       # delete the qings, last first, to avoid version bump if possible.
-      qings.sort_by(&:rank).reverse.each do |qing|
-
+      qings.sort_by(&:rank).reverse_each do |qing|
         # if this qing has a non-zero answer count, raise an error
         # this is necessary due to bulk deletion operations
-        raise DeletionError.new('question_remove_answer_error') if qing_answer_count(qing) > 0
-
+        raise DeletionError, "question_remove_answer_error" if qing_answer_count(qing).positive?
         qing.destroy
       end
-
       save
     end
   end
@@ -233,7 +232,7 @@ class Form < ApplicationRecord
   end
 
   def verb
-    published? ? 'unpublish' : 'publish'
+    published? ? "unpublish" : "publish"
   end
 
   # increments the download counter
@@ -292,15 +291,6 @@ class Form < ApplicationRecord
     @answer_counts[qing.id].try(:answer_count) || 0
   end
 
-  def has_white_listed_user?(user_id)
-    whitelistings.where(user_id: user_id).exists?
-  end
-
-  # Efficiently tests if the form has at least one repeat group in it.
-  def has_repeat_group?
-    @has_repeat_group ||= FormItem.where(form_id: id, repeatable: true).any?
-  end
-
   private
 
   def init_downloads
@@ -319,7 +309,7 @@ class Form < ApplicationRecord
   end
 
   def update_pub_changed_at
-    self.pub_changed_at = Time.now if published_changed?
+    self.pub_changed_at = Time.current if published_changed?
     true
   end
 end

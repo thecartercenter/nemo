@@ -106,12 +106,11 @@ class Replication::ObjProxy
 
   protected
 
-  # If replication mode is clone and object is standardizable, we can reuse this object.
-  # This is because we always want to reuse standardizable
-  # objects when cloning, since clone is shallow operation.
-  # The only standardizable object we don't want to reuse is the one at the top of the tree (root).
+  # If replication mode is clone and class is marked as first_class, we can reuse this object.
+  # This is because we always want to reuse first class objects when cloning since clone is shallow operation.
+  # The only first class object we don't want to reuse is the one at the top of the tree (root).
   def reusable?
-    !replication_root? && replicator.mode == :clone && klass.standardizable?
+    !replication_root? && replicator.mode == :clone && klass.reusable_in_clone?(replicator)
   end
 
   private

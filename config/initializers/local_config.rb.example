@@ -1,13 +1,16 @@
+##################################
+# General Settings
+
 # Offline mode.
 # If set to true, you can't reset passwords via email or send broadcasts.
 # Email error reports are also not sent.
 # This should be set to true if the server doesn't have an internet connection.
 configatron.offline_mode = false
 
-# Generate your secret key with this command:
-#   ruby -e "require 'securerandom'; puts SecureRandom.hex(128)"
-# And copy and paste into this file in place of `secret-token`.
-ELMO::Application.config.secret_key_base = "secret-token"
+# Base secret token for app. Extremely crucial for security. Knowledge of this token allows
+# impersonation of any user.
+# Generate with: ruby -e "require 'securerandom'; puts SecureRandom.hex(64)"
+ELMO::Application.config.secret_key_base = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 # The hostname of your site
 # If offline_mode is set to true, then the hostname is optional
@@ -19,28 +22,28 @@ configatron.url.protocol = "https"
 # The port your site runs on (optional).
 #configatron.url.port = 80
 
+
 ##################################
 # Email Settings
 # You can leave these unchanged for offline setups.
 
 # Address(es) where webmaster notifications (e.g. for system errors) will be sent.
-configatron.webmaster_emails = ["someone@somplace.com"]
+configatron.webmaster_emails = ["someone@example.com"]
 
 # Email address from which ELMO emails will appear to be from. Some mail servers require
 # that this be a real address controlled by the mailserver itself. e.g. if you're using Google Apps
 # for email, use an email address hosted in your Google Apps account.
-configatron.site_email = "\"#{Settings.site_name}\" <someone@someplace.com>"
+configatron.site_email = "\"#{Settings.site_name}\" <someone@example.com>"
 
 # Mailer settings
 ActionMailer::Base.smtp_settings = {
-  :address        => "smtp.example.com",
-  :port           => 587,
-  :domain         => "example.com",
-  :authentication => :plain,
-  :user_name      => "who@example.com",
-  :password       => "password"
+  address: "smtp.example.com",
+  port: 587,
+  domain: "example.com",
+  authentication: :plain,
+  user_name: "someone@example.com",
+  password: "XXXXXXXXXXXXXXXX"
 }
-
 
 
 ##################################
@@ -53,29 +56,34 @@ ActionMailer::Base.smtp_settings = {
 # incoming adapter's reply style is `via_adapter`.
 # ** Twilio **
 # configatron.default_settings.outgoing_sms_adapter = "Twilio"
-# configatron.default_settings.twilio_account_sid = "xxx"
-# configatron.default_settings.twilio_auth_token = "xxx"
+# configatron.default_settings.twilio_account_sid = "XXXXXXXXXXXXXXXXXX"
+# configatron.default_settings.twilio_auth_token = "XXXXXXXXXXXXXXXXXX"
 # configatron.default_settings.twilio_phone_number = "+15555551212"
 # ** FrontlineCloud **
 # configatron.default_settings.outgoing_sms_adapter = "FrontlineCloud"
-# configatron.default_settings.frontlinecloud_api_key = "xxx"
+# configatron.default_settings.frontlinecloud_api_key = "XXXXXXXXXXXXXXXXXX"
 
 # Sets a universal SMS token so that multiple missions can submit to the same URL
-# configatron.universal_sms_token = "50b488c71be4e9cd0ba34a7bf0b7053f"
+# Generate with: ruby -e "require 'securerandom'; puts SecureRandom.hex(16)"
+# configatron.universal_sms_token = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
+
+##################################
+# Other Online-Dependent Settings
+# You can leave these unchanged for offline setups.
 
 # reCAPTCHA for brute-force login protection
 # Keys may be obtained from https://www.google.com/recaptcha/admin
 # Can be left unchanged in offline setups.
 Recaptcha.configure do |config|
-  config.public_key = "xxx"
-  config.private_key = "xxx"
+  config.public_key = "XXXXXXXXXXXXXXXXXX"
+  config.private_key = "XXXXXXXXXXXXXXXXXX"
 end
 
 # Google Maps API Key (Requires Google Maps Javascript and Geocoding APIs)
 # Can be left unchanged in offline setups.
 # Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
 # Note the below values for easy access to Google API Console later
-# Google API Console project name: PROJECT-NAME
-# Google Accounts with access to project: EMAIL-ADDRESS
-configatron.google_maps_api_key = ENV["ELMO_GOOGLE_MAPS_KEY"] || "your-key-here"
+# Google API Console project name: XXXXXXXXXXXXXXXXXX
+# Google Accounts with access to project: someone@gmail.com, someoneelse@gmail.com
+configatron.google_maps_api_key = ENV["ELMO_GOOGLE_MAPS_KEY"] || "XXXXXXXXXXXXXXXXXX"

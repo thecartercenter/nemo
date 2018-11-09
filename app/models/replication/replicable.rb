@@ -27,7 +27,7 @@ module Replication::Replicable
     end
 
     def self.child_assocs
-      memoize_class_var(:child_assocs,  build_assoc_wrappers(:child))
+      memoize_class_var(:child_assocs, build_assoc_wrappers(:child))
     end
 
     def self.backward_assocs
@@ -40,6 +40,11 @@ module Replication::Replicable
 
     def self.build_assoc_wrappers(type)
       replicable_opts[:"#{type}_assocs"].map{ |a| Replication::AssocProxy.get(self, a) }.compact
+    end
+
+    def self.reusable_in_clone?(replicator)
+      reusable = replicable_opts[:reusable_in_clone]
+      reusable == true || reusable.is_a?(Proc) && reusable.call(replicator)
     end
 
     def self.has_ancestry?
@@ -56,7 +61,7 @@ module Replication::Replicable
     end
   end
 
-  # There are three replication modes passed via the mode parameter:
+  # There are three replicator modes passed via the mode parameter:
   # * :clone      Make a copy of the object and its decendants in the same mission (or admin mode).
   # * :to_mission Copy/update a standard object and its decendants to a particular different mission.
   #               requires dest_mission parameter

@@ -138,9 +138,11 @@ ELMO::Application.routes.draw do
         get "using_incoming_sms_token_message"
       end
     end
+
     resources :user_batches, path: "user-batches", only: %i[new create] do
       collection do
-        get "users-template", as: "template", action: "template", defaults: { format: "xslx" }
+        post :upload
+        get "users-template", as: "template", action: "template", defaults: {format: "xslx"}
       end
     end
 

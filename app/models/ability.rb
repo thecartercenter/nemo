@@ -294,7 +294,7 @@ class Ability
     end
 
     cannot :destroy, OptionSet do |o|
-      o.has_answers? || o.has_questions? || o.published?
+      o.has_answers? || o.any_questions? || o.published?
     end
 
     # nobody can update an operation

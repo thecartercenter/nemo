@@ -3,9 +3,9 @@
 # For importing users from CSV/spreadsheet.
 class UserBatchesController < ApplicationController
   include OperationQueueable
-
-  load_and_authorize_resource
-  skip_authorize_resource only: [:template]
+  skip_authorization_check only: :upload
+  load_and_authorize_resource except: :upload
+  skip_authorize_resource only: %i[template upload]
 
   # ensure a recent login for all actions
   before_action :require_recent_login
@@ -14,11 +14,22 @@ class UserBatchesController < ApplicationController
     render("form")
   end
 
+  def upload
+    authorize!(:create, UserBatch)
+    original_file_name = params[:userbatch].original_filename
+    temp_file_path = UploadSaver.new.save_file(params[:userbatch])
+    # Json keys match hidden input names that contain the key in dropzone form.
+    # See ELMO.Views.FileUploaderView for more info.
+    render(json: {temp_file_path: temp_file_path, original_filename: original_file_name})
+  end
+
   def create
-    if @user_batch.valid?
-      do_import
+    temp_file_path = params[:temp_file_path]
+    original_filename = params[:original_filename]
+    if temp_file_path.present? && original_filename.present?
+      do_import(temp_file_path, original_filename)
     else
-      flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.general")
+      flash.now[:error] = I18n.t("errors.file_upload.file_missing")
       render("form")
     end
   end
@@ -31,9 +42,8 @@ class UserBatchesController < ApplicationController
 
   private
 
-  def do_import
-    @stored_path = UploadSaver.new.save_file(@user_batch.file)
-    operation.enqueue
+  def do_import(temp_file_path, original_filename)
+    operation(temp_file_path, original_filename).enqueue
     prep_operation_queued_flash(:user_import)
     redirect_to(users_url)
   rescue StandardError => e
@@ -42,14 +52,14 @@ class UserBatchesController < ApplicationController
     render("form")
   end
 
-  def operation
+  def operation(temp_file_path, original_filename)
     Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.user_import", file: @user_batch.file.original_filename),
+      details: t("operation.details.user_import", file: original_filename),
       job_params: {
-        upload_path: @stored_path,
+        upload_path: temp_file_path,
         import_class: @user_batch.class.to_s
       }
     )
