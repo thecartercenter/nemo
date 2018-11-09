@@ -45,7 +45,13 @@ feature "response form file upload", js: true do
 
     # thumbnails are still present
     expect(image_node).to have_selector(".media-thumbnail img")
+    expect_image(image_node.find(".media-thumbnail img"))
     expect(video_node).to have_selector(".media-thumbnail img")
+    expect_image(video_node.find(".media-thumbnail img"), placeholder: true)
+
+    # media can be downloaded
+    expect_download(image_node.find(".media-thumbnail .download")["href"])
+    expect_download(video_node.find(".media-thumbnail .download")["href"])
 
     # upload different image
     delete_file(image_node)
@@ -101,5 +107,20 @@ feature "response form file upload", js: true do
   def delete_file(node)
     node.find(".delete").click
     page.driver.browser.switch_to.alert.accept
+  end
+
+  def expect_download(url)
+    res = Net::HTTP.get_response(URI(url))
+    expect(res.code).to eq "200"
+  end
+
+  def expect_image(img, placeholder: false)
+    expect_download(img["src"])
+
+    if placeholder
+      expect(img["src"]).to match(/assets/)
+    else
+      expect(img["src"]).not_to match(/assets/)
+    end
   end
 end
