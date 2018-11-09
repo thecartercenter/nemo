@@ -153,14 +153,13 @@ class UsersController < ApplicationController
   def prepare_and_render_form
 
     if admin_mode?
-
-      # get assignable missons and roles for this user
-      @assignments = @user.assignments.as_json(include: :mission, methods: :new_record?)
-      @assignment_permissions = @user.assignments.map { |a| can?(:update, a) }
-      @assignable_missions = Mission.accessible_by(current_ability, :assign_to).sorted_by_name.as_json(
-        only: [:id, :name])
-      @assignable_roles = Ability.assignable_roles(current_user)
-
+      @assignment_data =
+        {
+          missions: Mission.accessible_by(current_ability, :assign_to)
+            .sorted_by_name.map { |m| MissionSerializer.new(m) },
+          roles: Ability.assignable_roles(current_user),
+          assignments: @user.assignments.map { |a| AssignmentSerializer.new(a) }
+        }
     else
 
       @current_assignment = @user.assignments_by_mission[current_mission] ||
