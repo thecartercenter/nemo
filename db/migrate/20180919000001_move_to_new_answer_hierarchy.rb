@@ -4,18 +4,11 @@ require 'benchmark'
 
 # Major migration to create hierarchy of answer objects.
 class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
-  SLICE_SIZE = 10_000
-
   def up
     ActiveRecord::Migration.suppress_messages do
-      # First delete all existing non-Answer-type rows, making this script idempotent, since it only
-      # creates this type of rows.
-      puts("Deleting any old non-leaf nodes")
-      execute("DELETE FROM answers WHERE type != 'Answer'")
-
       @new_rows = {}
       @parent_rows = {}
-
+      delete_leaf_nodes
       create_hierarchy_nodes
       fix_ranks
     end
@@ -23,25 +16,35 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
 
   private
 
+  def delete_leaf_nodes
+    # Delete all existing non-Answer-type rows, making this script idempotent, since it only
+    # creates this type of rows.
+    puts("Deleting any old non-leaf nodes")
+    execute("DELETE FROM answers WHERE type != 'Answer'")
+  end
+
   # Creates the nodes required to represent the new hierarchy system.
   def create_hierarchy_nodes
     # The basic idea here is, for each existing answer, to recursively find or create its parents
     # and then 1. set the parent_id on the row and 2. create the appropriate rows in the hierarchies table.
     # We do in batches of 10,000 so we can report progress.
-    puts "Running main SELECT query"
+    puts "Creating hierarchy nodes"
+    puts "  Running main SELECT query"
     result = execute("SELECT id, response_id, questioning_id, inst_num, rank, type
       FROM answers WHERE deleted_at IS NULL")
-    total_slices = (leaf_node_count.to_f / SLICE_SIZE).ceil
-    result.each_slice(SLICE_SIZE).with_index do |slice, i|
+    total_slices = (leaf_node_count.to_f / 10_000).ceil
+    result.each_slice(10_000).with_index do |slice, i|
       @inserts = []
       @updates = []
-      puts("Slice #{i + 1}/#{total_slices}")
-      puts("-- Building trees in memory")
-      run_and_print_time { slice.each { |row| find_or_create_parent_row(row) } }
-      puts("-- Inserting new ResponseNodes")
-      run_and_print_time { do_inserts }
-      puts("-- Updating existing Answers")
-      run_and_print_time { do_updates }
+      puts("  Processing slice #{i + 1}/#{total_slices}")
+      run_and_print_time(2) do
+        puts("    Building trees in memory")
+        run_and_print_time(4) { slice.each { |row| find_or_create_parent_row(row) } }
+        puts("    Inserting new ResponseNodes")
+        run_and_print_time(4) { do_inserts }
+        puts("    Updating existing Answers")
+        run_and_print_time(4) { do_updates }
+      end
     end
   end
 
@@ -163,8 +166,14 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
 
   def fix_ranks
     puts("Fixing ranks")
-    execute("SELECT id FROM answers WHERE type != 'Answer' AND deleted_at IS NULL").each do |row|
-      execute(rank_fix_sql(row["id"]))
+    puts("  Non-leaf node count: #{non_leaf_node_count}")
+    result = execute("SELECT id FROM answers WHERE type != 'Answer' AND deleted_at IS NULL")
+    total_slices = (non_leaf_node_count.to_f / 1_000).ceil
+    result.each_slice(1_000).with_index do |slice, i|
+      puts("  Processing slice #{i + 1}/#{total_slices}")
+      run_and_print_time(2) do
+        slice.each { |row| execute(rank_fix_sql(row["id"])) }
+      end
     end
   end
 
@@ -186,9 +195,14 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
       .to_a.first["count"].to_i
   end
 
-  def run_and_print_time(&block)
+  def non_leaf_node_count
+    @non_leaf_node_count ||= execute("SELECT COUNT(*) FROM answers WHERE type != "\
+      "'Answer' AND deleted_at IS NULL").to_a.first["count"].to_i
+  end
+
+  def run_and_print_time(indent, &block)
     t = Benchmark.realtime(&block)
-    puts("-- Took #{format('%.3f', t)}s")
+    puts("#{' ' * indent}Took #{format('%.3f', t)}s")
   end
 
   def ensure_empty_tmp_table
