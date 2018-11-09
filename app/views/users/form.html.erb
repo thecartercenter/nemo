@@ -57,7 +57,6 @@
 <% end %>
 
 <%= javascript_doc_ready do %>
-  new ELMO.Views.UserForm();
   <% unless current_mode == 'basic' %>
     new ELMO.Views.UserProfileFormView(
       <%= json(user_group_options_url: possible_groups_user_groups_path) %>

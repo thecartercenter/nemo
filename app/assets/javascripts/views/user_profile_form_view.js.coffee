@@ -2,7 +2,8 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
   el: "form.user_form"
 
   events:
-    "change select#user_gender": "toggle_custom_gender_visibility"
+    "change select#user_gender": "toggle_custom_gender_visibility",
+    "change select#user_reset_password_method": "toggle_password_fields"
 
   initialize: (params) ->
     @params = params
@@ -36,3 +37,7 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
     else
       @$("input#user_gender_custom").val("")
       @$("div.user_gender_custom").hide()
+
+  toggle_password_fields: (event) ->
+    select_value = @$("select#user_reset_password_method").val()
+    @$(".password-fields").toggleClass("hide", select_value != "enter" && select_value != "enter_and_show")
