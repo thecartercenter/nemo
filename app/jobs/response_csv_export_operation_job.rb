@@ -14,28 +14,21 @@ class ResponseCsvExportOperationJob < OperationJob
 
   def responses(ability, search)
     responses = Response.accessible_by(ability, :export)
-    responses = search(responses, search, mission) if search.present?
+    responses = apply_search_scope(responses, search, mission) if search.present?
 
     # Get the response, for export, but not paginated.
     # We deliberately don't eager load as that is handled in the Results::Csv::Generator class.
     responses.order(:created_at)
   end
 
-  def search(responses, search)
-    # do search, excluding excerpts
-    Response.do_search(
-      responses,
-      search,
-      {mission: mission},
-      include_excerpts: false
-    )
+  def apply_search_scope(responses, search, mission)
+    Response.do_search(responses, search, {mission: mission}, include_excerpts: false)
   end
 
   def generate_csv(responses)
     attachment = Results::Csv::Generator.new(responses).export
     timestamp = Time.current.to_s(:filename_datetime)
     attachment_download_name = "elmo-#{mission.compact_name}-responses-#{timestamp}.csv"
-
     {attachment: attachment, attachment_download_name: attachment_download_name}
   end
 end

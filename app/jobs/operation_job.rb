@@ -41,9 +41,13 @@ class OperationJob < ApplicationJob
     save_failure(report)
   end
 
+  # Handles unexpected errors. Expected errors should be handled explicitly in subclasses
+  # and displayed nicely. Sends an exception notification email in production/dev mode,
+  # but re-raises in test mode so we can see the backtrace and be aware something is failing weirdly.
   def operation_raised_error(exception)
-    ExceptionNotifier.notify_exception(exception)
     save_failure(I18n.t("operation.errors.server_error"))
+    raise exception if Rails.env.test?
+    ExceptionNotifier.notify_exception(exception)
   end
 
   def operation_completed
