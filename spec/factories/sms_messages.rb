@@ -16,6 +16,6 @@ FactoryGirl.define do
   end
 
   factory :sms_broadcast, class: "Sms::Broadcast", parent: :sms_message do
-    broadcast
+    association :broadcast, :with_recipient_users
   end
 end

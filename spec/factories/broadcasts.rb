@@ -8,6 +8,9 @@ FactoryGirl.define do
     subject "test broadcast"
     which_phone "main_only"
     body "This is the Body of a Broadcast"
-    recipients { [create(:user), create(:user)] }
+
+    trait :with_recipient_users do
+      recipients { [create(:user), create(:user)] }
+    end
   end
 end
