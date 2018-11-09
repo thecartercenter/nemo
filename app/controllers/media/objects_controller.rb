@@ -12,10 +12,14 @@ class Media::ObjectsController < ApplicationController
 
     authorize!(:show, @response) if @response
 
-    send_file(@media_object.item.path(style),
-      type: @media_object.item_content_type,
-      disposition: disposition,
-      filename: media_filename)
+    if @media_object.item.options[:storage] == "fog"
+      redirect_to @media_object.item.expiring_url
+    else
+      send_file(@media_object.item.path(style),
+        type: @media_object.item_content_type,
+        disposition: disposition,
+        filename: media_filename)
+    end
   end
 
   def create

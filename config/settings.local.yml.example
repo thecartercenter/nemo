@@ -1,0 +1,10 @@
+paperclip:
+  storage: file
+  #storage: fog
+
+aws:
+  # These are only required when using Paperclip Fog storage
+  access_key_id: ""
+  secret_access_key: ""
+  region: ""
+  bucket: ""

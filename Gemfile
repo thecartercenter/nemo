@@ -31,6 +31,7 @@ gem "configatron", "~> 4.5.0" # Deprecated, prefer `config` gem
 gem "config", "~> 1.7"
 gem "random_data", "~> 1.6.0"
 gem "paperclip", "~> 6.0"
+gem "fog-aws", "~> 3.3.0"
 gem "term-ansicolor", "~> 1.3.0"
 gem "therubyracer", "~> 0.12.2", platforms: :ruby
 gem "draper", "~> 3.0.1"

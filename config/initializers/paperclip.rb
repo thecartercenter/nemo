@@ -1,8 +1,28 @@
 # frozen_string_literal: true
 
-Paperclip::Attachment.default_options.merge!(
-  path: ":rails_root/uploads/:class/:attachment/:id_partition/:style/:filename"
-)
+upload_path = "uploads/:class/:attachment/:id_partition/:style/:filename"
+
+if Settings.paperclip.storage == "fog"
+  Paperclip::Attachment.default_options.merge!(
+    path: upload_path,
+    storage: Settings.paperclip.storage,
+    fog_credentials: {
+      provider: "AWS",
+      aws_access_key_id: Settings.aws.access_key_id,
+      aws_secret_access_key: Settings.aws.secret_access_key,
+      region: Settings.aws.region,
+      scheme: "https"
+    },
+    fog_directory: Settings.aws.bucket,
+    fog_options: { multipart_chunk_size: 10.megabytes },
+    fog_host: nil,
+    fog_public: false
+  )
+else
+  Paperclip::Attachment.default_options.merge!(
+    path: ":rails_root/#{upload_path}"
+  )
+end
 
 Paperclip.options[:content_type_mappings] = {
   wmv: "application/vnd.ms-asf",
