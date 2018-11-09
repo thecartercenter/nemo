@@ -8,13 +8,22 @@ class MoveToNewAnswerHierarchy < ActiveRecord::Migration[4.2]
     ActiveRecord::Migration.suppress_messages do
       @new_rows = {}
       @parent_rows = {}
-      delete_leaf_nodes
-      create_hierarchy_nodes
-      fix_ranks
+
+      without_trigger do
+        delete_leaf_nodes
+        create_hierarchy_nodes
+        fix_ranks
+      end
     end
   end
 
   private
+
+  def without_trigger
+    execute("ALTER TABLE answers DISABLE TRIGGER answers_before_insert_update_row_tr")
+    yield
+    execute("ALTER TABLE answers ENABLE TRIGGER answers_before_insert_update_row_tr")
+  end
 
   def delete_leaf_nodes
     # Delete all existing non-Answer-type rows, making this script idempotent, since it only
