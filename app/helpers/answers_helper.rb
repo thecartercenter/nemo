@@ -32,7 +32,8 @@ module AnswersHelper
         concat(link_to(image_tag(thumb_path(object)), media_path(object), target: "_blank"))
 
         concat(content_tag(:div, class: "links") do
-          concat(link_to(content_tag(:i, "", class: 'fa fa-download'), media_path(object, dl: "1"), class: "download"))
+          concat(link_to(content_tag(:i, "", class: "fa fa-download"),
+            media_path(object, dl: "1"), class: "download"))
 
           if show_delete
             concat(link_to(content_tag(:i, "", class: 'fa fa-trash-o'), "#", class: 'delete',

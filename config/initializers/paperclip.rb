@@ -14,14 +14,12 @@ if Settings.paperclip.storage == "fog"
       scheme: "https"
     },
     fog_directory: Settings.aws.bucket,
-    fog_options: { multipart_chunk_size: 10.megabytes },
+    fog_options: {multipart_chunk_size: 10.megabytes},
     fog_host: nil,
     fog_public: false
   )
 else
-  Paperclip::Attachment.default_options.merge!(
-    path: ":rails_root/#{upload_path}"
-  )
+  Paperclip::Attachment.default_options[:path] = ":rails_root/#{upload_path}"
 end
 
 Paperclip.options[:content_type_mappings] = {

@@ -75,7 +75,7 @@ ELMO::Application.routes.draw do
     end
 
     namespace :media, type: /audios|images|videos/ do
-      resources :objects, path: ":type", only: [:show, :create, :destroy]
+      resources :objects, path: ":type", only: %i[show create destroy]
     end
 
     # need to list these all separately b/c rails is dumb sometimes

@@ -111,7 +111,7 @@ feature "response form file upload", js: true do
 
   def expect_download(url)
     res = Net::HTTP.get_response(URI(url))
-    expect(res.code).to eq "200"
+    expect(res.code).to eq("200")
   end
 
   def expect_image(img, placeholder: false)
