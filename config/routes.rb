@@ -171,6 +171,7 @@ ELMO::Application.routes.draw do
 
     resource :option_set_imports, path: "option-set-imports", only: [:new, :create] do
       collection do
+        post :upload
         get "option-sets-template", as: "template", action: "template", defaults: { format: "xlsx" }
       end
     end

@@ -9,6 +9,7 @@ class OptionSetImport
   attr_accessor :mission_id, :name, :file
   attr_reader :option_set
 
+  #TODO: reconsider if we need these at end of 8933
   validates(:name, presence: true)
   validates(:file, presence: true)
 

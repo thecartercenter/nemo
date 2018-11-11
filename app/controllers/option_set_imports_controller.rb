@@ -10,11 +10,22 @@ class OptionSetImportsController < ApplicationController
     render("form")
   end
 
+  def upload
+    authorize!(:create, OptionSetImport)
+    original_file_name = params[:userbatch].original_filename
+    temp_file_path = UploadSaver.new.save_file(params[:file_import])
+    # Json keys match hidden input names that contain the key in dropzone form.
+    # See ELMO.Views.FileUploaderView for more info.
+    render(json: {temp_file_path: temp_file_path, original_filename: original_file_name})
+  end
+
   def create
-    if @option_set_import.valid?
-      do_import
+    temp_file_path = params[:temp_file_path]
+    original_filename = params[:original_filename]
+    if temp_file_path.present? && original_filename.present?
+      do_import(temp_file_path, original_filename)
     else
-      flash.now[:error] = I18n.t("activerecord.errors.models.option_set_import.general")
+      flash.now[:error] = I18n.t("errors.file_upload.file_missing")
       render("form")
     end
   end
@@ -26,8 +37,8 @@ class OptionSetImportsController < ApplicationController
 
   protected
 
-  def do_import
-    @stored_path = UploadSaver.new.save_file(@option_set_import.file)
+  def do_import(temp_file_path, original_filename)
+    operation(temp_file_path, original_filename).enqueue
     operation.enqueue
     prep_operation_queued_flash(:option_set_import)
     redirect_to(option_sets_url)
@@ -40,8 +51,8 @@ class OptionSetImportsController < ApplicationController
   def operation
     Operation.new(
       creator: current_user,
-      job_class: TabularImportOperationJob,
       mission: current_mission,
+      job_class: TabularImportOperationJob,
       details: t("operation.details.option_set_import", name: @option_set_import.name),
       job_params: {
         name: @option_set_import.name,
