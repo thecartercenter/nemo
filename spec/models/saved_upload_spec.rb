@@ -13,12 +13,12 @@ describe SavedUpload do
 
   describe "#cleanup_old_uploads" do
     let!(:saved_upload1) { SavedUpload.create!(file: uploaded, created_at: 32.days.ago) }
-    let!(:saved_upload2) { SavedUpload.create!(file: uploaded, created_at: 28.days.ago) }
+    let!(:saved_upload2) { SavedUpload.create!(file: uploaded, created_at: 31.days.ago) }
+    let!(:saved_upload3) { SavedUpload.create!(file: uploaded, created_at: 28.days.ago) }
 
     it "deletes old uploads only" do
       described_class.cleanup_old_uploads
-      expect(described_class.where(id: saved_upload1.id)).to be_empty
-      expect(described_class.where(id: saved_upload2.id)).to include(saved_upload2)
+      expect(described_class.all.to_a).to eq([saved_upload3])
     end
   end
 end
