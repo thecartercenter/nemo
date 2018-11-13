@@ -2,10 +2,10 @@
 
 upload_path = "uploads/:class/:attachment/:id_partition/:style/:filename"
 
-if Settings.paperclip.storage == "fog"
+if Settings.paperclip.storage == "cloud"
   Paperclip::Attachment.default_options.merge!(
     path: upload_path,
-    storage: Settings.paperclip.storage,
+    storage: "fog",
     fog_credentials: {
       provider: "AWS",
       aws_access_key_id: Settings.aws.access_key_id,
