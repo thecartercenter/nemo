@@ -23,7 +23,8 @@ class UserAssignmentFormField extends React.Component {
       return (
         <div>
           {this.props.name}
-          <input type="hidden" name={`user[assignments_attributes][${this.props.index}][id]`} value={this.props.id}/>
+          <input type="hidden" name={`user[assignments_attributes][${this.props.index}][id]`}
+            value={this.props.id == null ? "" : this.props.id}/>
         </div>
       );
     }
@@ -74,7 +75,7 @@ class UserAssignmentFormField extends React.Component {
             {this.roleOptionTags()}
           </select>
         </div>
-        <a className="trash" onClick={(e) => this.props.deleteClick(this.props.mission_id, e)}>
+        <a className="trash" onClick={(e) => this.props.deleteClick(this.props.index)}>
           <i className="fa fa-close"></i>
         </a>
       </div>

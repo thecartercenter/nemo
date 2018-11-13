@@ -6,24 +6,25 @@ import UserAssignmentFormField from "./UserAssignmentFormField";
 class UserAssignmentForm extends React.Component {
   constructor(props) {
     super();
+    // need to delete ids of duplicates, since active seralizer doesnt wanna do it
+    props.assignments.map(a => a.id == null ? delete a.id : "");
     this.state = props;
     this.handleAddClick = this.handleAddClick.bind(this);
     this.handleDeleteClick = this.handleDeleteClick.bind(this);
   }
 
-  randomUUID() {
+  tempMissionId() {
     return "new-mission-"+ Math.floor(Math.random() * Math.floor(9000));
   }
 
   handleAddClick() {
     let assignments = this.state.assignments;
-    assignments.push({role: "", mission: this.randomUUID(), new_assignment: true});
+    assignments.push({role: "", mission: this.tempMissionId(), new_assignment: true});
     this.setState({assignments: assignments});
   }
 
-  handleDeleteClick(mission, e) {
+  handleDeleteClick(idx) {
     let assignments = this.state.assignments;
-    let idx = assignments.findIndex((a) => { return a.mission_id == mission; });
     assignments[idx].new ? assignments.splice(idx, 1) : assignments[idx]["destroy"] = true
     this.setState({assignments: assignments});
   }
