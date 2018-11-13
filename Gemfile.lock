@@ -348,7 +348,6 @@ GEM
       activesupport (>= 4.2)
       arel (>= 6)
     phantomjs (2.1.1.0)
-    phantomjs_polyfill-rails (1.0.0)
     phony (2.15.49)
     powerpack (0.1.2)
     pry (0.10.4)
@@ -591,7 +590,7 @@ DEPENDENCIES
   draper-cancancan (~> 1.1)
   dropzonejs-rails (~> 0.7.3)
   ejs (~> 1.1.1)
-  exception_notification
+  exception_notification (~> 4.2)
   factory_girl_rails (~> 4.5.0)
   faker (~> 1.6)
   fix-db-schema-conflicts (~> 3.0)
@@ -612,12 +611,11 @@ DEPENDENCIES
   mocha (~> 1.1.0)
   paperclip (~> 6.0)
   pg (~> 0.20)
-  pg_search
-  phantomjs_polyfill-rails (~> 1.0.0)
+  pg_search (~> 2.1)
   phony (~> 2.15.26)
-  pry
-  pry-nav
-  pry-rails
+  pry (~> 0.10)
+  pry-nav (~> 0.2)
+  pry-rails (~> 0.3)
   rack-attack!
   rails (~> 5.1.0)
   rails-backbone!
@@ -627,7 +625,7 @@ DEPENDENCIES
   rake (~> 10.4.2)
   random_data (~> 1.6.0)
   rdiscount (~> 2.1.8)
-  react-rails
+  react-rails (~> 2.4)
   recaptcha (~> 0.4.0)
   responders (~> 2.4.0)
   reverse_markdown (~> 1.0.3)
@@ -656,4 +654,4 @@ DEPENDENCIES
   will_paginate-bootstrap (~> 1.0.1)
 
 BUNDLED WITH
-   1.16.3
+   1.17.1
