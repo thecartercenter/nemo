@@ -2,7 +2,7 @@
 
 upload_path = "uploads/:class/:attachment/:id_partition/:style/:filename"
 
-if Settings.paperclip.storage == "cloud"
+if Settings.key?(:paperclip) && Settings.paperclip.storage == "cloud"
   Paperclip::Attachment.default_options.merge!(
     path: upload_path,
     storage: "fog",
