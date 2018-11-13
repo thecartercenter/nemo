@@ -11,7 +11,7 @@ class UserAssignmentForm extends React.Component {
   constructor(props) {
     super();
     // need to delete ids of duplicates, since active seralizer doesnt wanna do it
-    props.assignments.map(a => a.id == null ? delete a.id : "");
+    // props.assignments.map(a => a.id == null ? delete a.id : "");
     this.state = props;
     this.onAddClick = this.onAddClick.bind(this);
     this.onDeleteClick = this.onDeleteClick.bind(this);
@@ -23,13 +23,13 @@ class UserAssignmentForm extends React.Component {
 
   onAddClick() {
     let assignments = this.state.assignments;
-    assignments.push({role: "", mission: this.tempMissionId(), new_assignment: true});
+    assignments.push({role: "", mission: this.tempMissionId(), new_record: true});
     this.setState({assignments: assignments});
   }
 
   onDeleteClick(idx) {
     let assignments = this.state.assignments;
-    assignments[idx].new ? assignments.splice(idx, 1) : assignments[idx]["destroy"] = true
+    assignments[idx].new ? assignments.splice(idx, 1) : assignments[idx]["_destroy"] = true
     this.setState({assignments: assignments});
   }
 

@@ -16,7 +16,7 @@ class UserAssignmentFormField extends React.Component {
       name: `user[assignments_attributes][${this.props.index}][mission_id]`
     };
 
-    if (this.props.new_assignment) {
+    if (this.props.new_record) {
       return (
         <select {...missionSelectProps}>
           {this.missionOptionTags()}
@@ -98,7 +98,7 @@ class UserAssignmentFormField extends React.Component {
   }
 
   render() {
-    return this.props.destroy ? this.deleteInput() : this.missionRoleFields();
+    return this.props._destroy ? this.deleteInput() : this.missionRoleFields();
   }
 }
 
