@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "~> 5.1"
+gem "rails", "~> 5.1.0"
 
 # Assets / Javascript
 gem "sass-rails", "~> 5.0.7"
@@ -130,7 +130,7 @@ gem "hairtrigger", '~> 0.2.20'
 # error emails
 gem "exception_notification"
 
-#react
+# react
 gem "react-rails"
 gem 'webpacker', '~> 3.5'
 

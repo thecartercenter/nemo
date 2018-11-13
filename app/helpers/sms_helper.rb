@@ -31,7 +31,7 @@ module SmsHelper
       if sms.reply_error_message
         output << content_tag(
           :div,
-          "#{I18n.t('sms.error')}: #{I18n.t('sms.when_sending_reply')}: #{sms.error_message}",
+          "#{I18n.t('sms.error')}: #{I18n.t('sms.when_sending_reply')}: #{sms.reply_error_message}",
           class: "error-msg"
         )
       end

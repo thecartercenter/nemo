@@ -3,19 +3,26 @@
 # Iterates over the answers table and inserts the appropriate entries into the answer_hierarchies table.
 class AddAnswerHierarchies < ActiveRecord::Migration[4.2]
   def up
-    remove_index "answer_hierarchies", name: "answer_anc_desc_idx"
-    remove_index "answer_hierarchies", name: "answer_desc_idx"
+    ActiveRecord::Migration.suppress_messages do
+      puts("Disabling indices")
+      remove_index("answer_hierarchies", name: "answer_anc_desc_idx")
+      remove_index("answer_hierarchies", name: "answer_desc_idx")
 
-    execute("DELETE FROM answer_hierarchies")
+      puts("Deleting existing hierarchies")
+      execute("DELETE FROM answer_hierarchies")
 
-    @inserts = []
-    add_for([])
+      @inserts = []
 
-    do_inserts
+      puts("Calculating hierarchies")
+      add_for([])
 
-    add_index "answer_hierarchies", %w[ancestor_id descendant_id generations],
-      name: "answer_anc_desc_idx", unique: true, using: :btree
-    add_index "answer_hierarchies", ["descendant_id"], name: "answer_desc_idx", using: :btree
+      do_inserts
+
+      puts("Re-enabling indices")
+      add_index("answer_hierarchies", %w[ancestor_id descendant_id generations],
+        name: "answer_anc_desc_idx", unique: true, using: :btree)
+      add_index("answer_hierarchies", ["descendant_id"], name: "answer_desc_idx", using: :btree)
+    end
   end
 
   private
@@ -23,6 +30,7 @@ class AddAnswerHierarchies < ActiveRecord::Migration[4.2]
   def add_for(ancestor_ids)
     answers = answers_by_parent_id[ancestor_ids.last]
     return if answers.blank?
+
     (ancestor_ids + [:self]).reverse.each_with_index do |aid, i|
       answers.each do |answer|
         aid_str = aid == :self ? answer["id"] : aid
@@ -33,7 +41,10 @@ class AddAnswerHierarchies < ActiveRecord::Migration[4.2]
   end
 
   def answers_by_parent_id
-    @answers_by_parent_id ||= execute("SELECT id, parent_id FROM answers WHERE deleted_at IS NULL")
+    return @answers_by_parent_id if @answers_by_parent_id
+
+    puts("Fetching all answers and grouping by parent_id")
+    @answers_by_parent_id = execute("SELECT id, parent_id FROM answers WHERE deleted_at IS NULL")
       .to_a.group_by { |r| r["parent_id"] }
   end
 
@@ -42,9 +53,12 @@ class AddAnswerHierarchies < ActiveRecord::Migration[4.2]
   end
 
   def batched_insert(tbl, cols, rows)
-    rows.each_slice(1000) do |slice|
-      execute("INSERT INTO #{tbl} (#{cols})
-        VALUES #{slice.join(',')}")
+    puts("Inserting rows")
+    puts("  Rows to be inserted: #{rows.size}")
+    total_slices = (rows.size.to_f / 10_000).ceil
+    rows.each_slice(10_000).with_index do |slice, i|
+      puts("  Inserting slice #{i + 1}/#{total_slices}")
+      execute("INSERT INTO #{tbl} (#{cols}) VALUES #{slice.join(',')}")
     end
   end
 end

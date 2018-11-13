@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181015154427) do
+ActiveRecord::Schema.define(version: 20181109141200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -774,14 +774,16 @@ ActiveRecord::Schema.define(version: 20181015154427) do
       on("answers").
       before(:insert, :update) do
     <<-SQL_ACTIONS
-new.tsv := TO_TSVECTOR('simple', COALESCE(
-        new.value,
-        (SELECT STRING_AGG(opt_name_translation.value, ' ')
-          FROM options, jsonb_each_text(options.name_translations) opt_name_translation
-          WHERE options.id = new.option_id
-            OR options.id IN (SELECT option_id FROM choices WHERE answer_id = new.id)),
-        ''
-      ));
+          IF NEW.type = 'Answer' THEN
+            NEW.tsv := TO_TSVECTOR('simple', COALESCE(
+              NEW.value,
+              (SELECT STRING_AGG(opt_name_translation.value, ' ')
+                FROM options, jsonb_each_text(options.name_translations) opt_name_translation
+                WHERE options.id = NEW.option_id
+                  OR options.id IN (SELECT option_id FROM choices WHERE answer_id = NEW.id)),
+              ''
+            ));
+          END IF;
     SQL_ACTIONS
   end
 
