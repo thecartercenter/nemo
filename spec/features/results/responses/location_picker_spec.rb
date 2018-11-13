@@ -11,6 +11,17 @@ feature "response form location picker", js: true do
 
   before { login(user) }
 
+  scenario "manually entering invalid location" do
+    visit new_response_path(params)
+
+    fill_in("Location Question Title 1", with: "invalid")
+    click_button("Save")
+
+    expect(page).to have_content("Response is invalid")
+    expect(page).to have_content("Latitude is out of range")
+    expect(page).to have_content("Longitude is out of range")
+  end
+
   scenario "picking a location" do
     visit new_response_path(params)
 
