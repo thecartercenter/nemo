@@ -1,6 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+/**
+ * Models each row of User Assignments consisting of a mission and a role.
+ */
 class UserAssignmentFormField extends React.Component {
   constructor(props) {
     super();
@@ -23,8 +26,10 @@ class UserAssignmentFormField extends React.Component {
       return (
         <div>
           {this.props.name}
-          <input type="hidden" name={`user[assignments_attributes][${this.props.index}][id]`}
-            value={this.props.id == null ? "" : this.props.id}/>
+          <input
+            name={`user[assignments_attributes][${this.props.index}][id]`}
+            type="hidden"
+            value={this.props.id === null ? "" : this.props.id} />
         </div>
       );
     }
@@ -53,8 +58,16 @@ class UserAssignmentFormField extends React.Component {
   deleteInput() {
     return (
       <div>
-        <input type="hidden" name={`user[assignments_attributes][${this.props.index}][_destroy]`} defaultValue={true}/>
-        <input type="hidden" name={`user[assignments_attributes][${this.props.index}][id]`} defaultValue={this.props.id}/>
+        <input
+          defaultValue={true}
+          name={`user[assignments_attributes][${this.props.index}][_destroy]`}
+          type="hidden"
+        />
+        <input
+          defaultValue={this.props.id}
+          name={`user[assignments_attributes][${this.props.index}][id]`}
+          type="hidden"
+        />
       </div>
     );
   }
@@ -71,15 +84,17 @@ class UserAssignmentFormField extends React.Component {
           {this.missionField()}
         </div>
         <div className="role">
-          <select className="form-control" {...roleSelectProps}>
+          <select className="form-control"
+            {...roleSelectProps}>
             {this.roleOptionTags()}
           </select>
         </div>
-        <a className="trash" onClick={(e) => this.props.deleteClick(this.props.index)}>
-          <i className="fa fa-close"></i>
+        <a className="trash"
+          onClick={(e) => this.props.onDeleteClick(this.props.index)}>
+          <i className="fa fa-close"/>
         </a>
       </div>
-    )
+    );
   }
 
   render() {

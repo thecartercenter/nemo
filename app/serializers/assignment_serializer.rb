@@ -14,5 +14,4 @@ class AssignmentSerializer < ActiveModel::Serializer
   def destroy
     false
   end
-
 end
