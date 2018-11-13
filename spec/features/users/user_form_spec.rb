@@ -56,7 +56,7 @@ feature "user form", js: true do
       fill_in("Username", with: "ellab")
       fill_in("Email", with: "ella@baker.com")
       find("a", text: "Add Assignment").click
-      select("staffer", from: "user[assignments_attributes][0][role]")
+      select("Staffer", from: "user[assignments_attributes][0][role]")
       click_on("Save")
       expect(page).to have_content("Success: User created successfully")
 
@@ -66,7 +66,7 @@ feature "user form", js: true do
 
       # Edit user and change assignment, verify in show
       click_link("Edit User")
-      select("reviewer", from: "user[assignments_attributes][0][role]")
+      select("Reviewer", from: "user[assignments_attributes][0][role]")
       click_on("Save")
       expect(page).to have_content("Success: User updated successfully")
       click_on("View User")
