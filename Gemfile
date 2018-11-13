@@ -79,9 +79,6 @@ gem "font-awesome-rails", "~> 4.7"
 # Select box on steriods
 gem "select2-rails", "~> 4.0"
 
-# underscore templates
-gem "ejs", "~> 1.1.1"
-
 # background job support
 gem "daemons", "~> 1.2.1"
 gem "delayed_job_active_record", "~> 4.1.3"

@@ -571,7 +571,6 @@ DEPENDENCIES
   draper (~> 3.0.1)
   draper-cancancan (~> 1.1)
   dropzonejs-rails (~> 0.7.3)
-  ejs (~> 1.1.1)
   exception_notification
   factory_girl_rails (~> 4.5.0)
   faker (~> 1.6)
