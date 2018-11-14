@@ -3,6 +3,8 @@
 upload_path = "uploads/:class/:attachment/:id_partition/:style/:filename"
 
 if Settings.key?(:paperclip) && Settings.paperclip.storage == "cloud"
+  raise "AWS must be provided if storage set to 'cloud'" unless Settings.key?(:aws)
+
   Paperclip::Attachment.default_options.merge!(
     path: upload_path,
     storage: "fog",
