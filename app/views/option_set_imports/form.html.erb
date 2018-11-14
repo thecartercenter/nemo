@@ -25,8 +25,7 @@
     genericThumbPath: nil,
     postPath: "#{option_set_imports_path}/upload",
     previewTemplate: render("file_upload/dropzone_preview"),
-    paramName: "file_import",
-    acceptedFileFormats: ".xlsx, .csv",
+    paramName: "file_import"
   )%>
   options.listener = ELMO.fileUploaderManager;
   new ELMO.Views.FileUploaderView(options);

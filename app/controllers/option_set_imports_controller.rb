@@ -12,11 +12,16 @@ class OptionSetImportsController < ApplicationController
 
   def upload
     authorize!(:create, OptionSetImport)
-    original_file_name = params[:userbatch].original_filename
-    temp_file_path = UploadSaver.new.save_file(params[:file_import])
-    # Json keys match hidden input names that contain the key in dropzone form.
-    # See ELMO.Views.FileUploaderView for more info.
-    render(json: {temp_file_path: temp_file_path, original_filename: original_file_name})
+    original_file_name = params[:file_import].original_filename
+    unless [".csv", ".xlsx"].include? File.extname(original_file_name)
+      msg = I18n.t("errors.file_upload.invalid_format")
+      render(json: {errors: [msg]}, status: :unprocessable_entity)
+    else
+      temp_file_path = UploadSaver.new.save_file(params[:file_import])
+      # Json keys match hidden input names that contain the key in dropzone form.
+      # See ELMO.Views.FileUploaderView for more info.
+      render(json: {temp_file_path: temp_file_path, original_filename: original_file_name})
+    end
   end
 
   def create
@@ -39,7 +44,6 @@ class OptionSetImportsController < ApplicationController
 
   def do_import(temp_file_path, original_filename)
     operation(temp_file_path, original_filename).enqueue
-    operation.enqueue
     prep_operation_queued_flash(:option_set_import)
     redirect_to(option_sets_url)
   rescue StandardError => e
@@ -48,23 +52,23 @@ class OptionSetImportsController < ApplicationController
     render("form")
   end
 
-  def operation
+  def operation(temp_file_path, original_filename)
     Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.option_set_import", name: @option_set_import.name),
+      details: t("operation.details.option_set_import", name: original_filename),
       job_params: {
-        name: @option_set_import.name,
-        upload_path: @stored_path,
+        name: original_filename,
+        upload_path: temp_file_path,
         import_class: @option_set_import.class.to_s
       }
     )
   end
 
-  def option_set_import_params
-    params.require(:option_set_import).permit(:name, :file) do |whitelisted|
-      whitelisted[:mission_id] = current_mission.id
-    end
-  end
+  # def option_set_import_params
+  #   params.require([:original_file_name, :temp_file_path] ) do |whitelisted|
+  #     #whitelisted[:mission_id] = current_mission.id
+  #   end
+  # end
 end
