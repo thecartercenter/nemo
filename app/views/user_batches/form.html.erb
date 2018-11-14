@@ -19,15 +19,14 @@
 <% end %>
 
 <%= javascript_doc_ready do %>
-  ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: "#new_user_batch"});
+  ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: ".user_batches_new"});
   options = <%=json(
     el: "#file-uploader",
     zoneId: "#dropzone-file-uploader",
     genericThumbPath: nil,
     postPath: "#{user_batches_path}/upload",
     previewTemplate: render("file_upload/dropzone_preview"),
-    paramName: "userbatch",
-    acceptedFileFormats: ".xlsx, .csv",
+    paramName: "userbatch"
   )%>
   options.listener = ELMO.fileUploaderManager;
   new ELMO.Views.FileUploaderView(options);
