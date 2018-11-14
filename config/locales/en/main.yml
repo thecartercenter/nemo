@@ -2019,6 +2019,7 @@ en:
     search_error: "Search Error"
     unexpected: "Your search query could not be understood due to unexpected text near '%{str}'."
     unexpected_end: "Your search query could not be understood due to unexpected text near the end."
+    boolean_error: "The qualifier '%{qualifier}' must have a boolean value."
 
   setting:
     change_sms_password: "Change Password"
