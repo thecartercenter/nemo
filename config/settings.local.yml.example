@@ -4,7 +4,7 @@
 # For instance, the AWS access_key_id can be set with NEMO__AWS__ACCESS_KEY_ID.
 
 paperclip:
-  # Change to 'cloud' to use cloud storage with AWS.
+  # Set to 'cloud' to use cloud storage with AWS. Set to 'local' to store files locally.
   storage: local
 
 aws:
