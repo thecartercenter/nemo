@@ -151,6 +151,7 @@ en:
     file_upload:
       error: "There was an error uploading the file."
       file_missing: "No file selected for import."
+      invalid_format: "The uploaded file was not an accepted format."
     messages:
       deleted_successfully: "deleted successfully"
       generic_delete_error: "Error during deletion."
@@ -769,8 +770,6 @@ en:
           attributes:
             default_response_name:
               calc_must_wrap_all: "calc(...) must surround the entire name."
-        media/object:
-          invalid_format: "The uploaded file was not an accepted format."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "Please use only letters, numbers, and spaces."
