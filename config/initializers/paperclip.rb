@@ -30,16 +30,8 @@ Paperclip.options[:content_type_mappings] = {
   opus: "audio/x-opus+ogg"
 }
 
-Paperclip.interpolates(:mission) do |attachment, _style|
-  attachment.instance.mission.compact_name
-end
-
-Paperclip.interpolates(:locale) do |_attachment, _style|
-  I18n.locale
-end
-
 module Paperclip
-  # Paperclip spoof detection currently, as a result of idiosyncracies with the `file` command,
+  # Paperclip's spoof detection currently, as a result of idiosyncracies with the `file` command,
   # reports false positives for a variety of different media types and must be disabled.
   # TODO: Find a better workaround, or wait for paperclip to update
   class MediaTypeSpoofDetector
