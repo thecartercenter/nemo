@@ -524,7 +524,7 @@ ActiveRecord::Schema.define(version: 20181109154424) do
     t.index ["user_id"], name: "index_responses_on_user_id"
   end
 
-  create_table "saved_uploads", force: :cascade do |t|
+  create_table "saved_uploads", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "file_content_type"
     t.string "file_file_name"
