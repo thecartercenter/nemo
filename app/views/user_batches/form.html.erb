@@ -1,33 +1,4 @@
 <%= elmo_form_for(@user_batch, html: {multipart: true}) do |f| %>
   <p class="instructions"><%= formatted_instructions %></p>
-
-  <div id="file-uploader">
-    <%= hidden_field_tag(:temp_file_path, "", id: "temp_file_path") %>
-    <%= hidden_field_tag(:original_filename, "", id: "original_filename") %>
-
-    <div id="dropzone-file-uploader" class="dropzone no-thumb">
-      <div class="dz-message">
-        <span class="message"><%= t("common.file_drop_message") %>&nbsp;</span>
-      </div>
-    </div>
-    <div class="dz-error-msg"></div>
-  </div>
-  <div class="submit-buttons">
-    <%= f.submit(t("common.import"), class: "btn btn-primary") %>
-    <%= render("file_upload/upload_in_progress_button", single_file: true) %>
-  </div>
-<% end %>
-
-<%= javascript_doc_ready do %>
-  ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: ".user_batches_new"});
-  options = <%=json(
-    el: "#file-uploader",
-    zoneId: "#dropzone-file-uploader",
-    genericThumbPath: nil,
-    postPath: "#{user_batches_path}/upload",
-    previewTemplate: render("file_upload/dropzone_preview"),
-    paramName: "userbatch"
-  )%>
-  options.listener = ELMO.fileUploaderManager;
-  new ELMO.Views.FileUploaderView(options);
+  <%= render("file_upload/operation_file_uploader", form: f, operation_type_prefix: "user_batches", post_path: user_batches_path) %>
 <% end %>

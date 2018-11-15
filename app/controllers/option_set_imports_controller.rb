@@ -65,10 +65,4 @@ class OptionSetImportsController < ApplicationController
       }
     )
   end
-
-  # def option_set_import_params
-  #   params.require([:original_file_name, :temp_file_path] ) do |whitelisted|
-  #     #whitelisted[:mission_id] = current_mission.id
-  #   end
-  # end
 end

@@ -1,0 +1,30 @@
+<div id="file-uploader">
+  <%= hidden_field_tag(:temp_file_path, "", id: "temp_file_path") %>
+  <%= hidden_field_tag(:original_filename, "", id: "original_filename") %>
+
+  <div id="dropzone-file-uploader" class="dropzone no-thumb">
+    <div class="dz-message">
+      <span class="message"><%= t("common.file_drop_message") %>&nbsp;</span>
+    </div>
+  </div>
+  <div class="dz-error-msg"></div>
+</div>
+<div class="submit-buttons">
+  <%= form.submit(t("common.import"), class: "btn btn-primary") %>
+  <%= render("file_upload/upload_in_progress_button", single_file: true) %>
+</div>
+
+<%= javascript_doc_ready do %>
+  ELMO.file_uploader_el_selector = "<%= ".#{operation_type_prefix}_new"%>"
+  ELMO.fileUploaderManager = new ELMO.Views.FileUploaderManager({el: ELMO.file_uploader_el_selector});
+  options = <%=json(
+    el: "#file-uploader",
+    zoneId: "#dropzone-file-uploader",
+    genericThumbPath: nil,
+    postPath: "#{user_batches_path}/upload",
+    previewTemplate: render("file_upload/dropzone_preview"),
+    paramName: "file_import"
+  )%>
+  options.listener = ELMO.fileUploaderManager;
+  new ELMO.Views.FileUploaderView(options);
+<% end %>
