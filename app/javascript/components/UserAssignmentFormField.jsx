@@ -7,29 +7,28 @@ import PropTypes from "prop-types";
 class UserAssignmentFormField extends React.Component {
   constructor(props) {
     super();
+    this.state = {destroy: props.destroy};
+    this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
   missionField() {
-    let missionSelectProps = {
-      className: "mission form-control",
-      defaultValue: this.props.missionId,
-      name: `user[assignments_attributes][${this.props.index}][mission_id]`
-    };
-
     if (this.props.newRecord) {
       return (
-        <select {...missionSelectProps}>
+        <select
+          className="mission form-control"
+          defaultValue={this.props.missionId}
+          name={`user[assignments_attributes][${this.props.index}][mission_id]`}>
           {this.missionOptionTags()}
         </select>
       );
     } else {
       return (
         <div>
-          {this.props.name}
+          {this.props.missionName}
           <input
             name={`user[assignments_attributes][${this.props.index}][id]`}
             type="hidden"
-            value={this.props.id === null ? "" : this.props.id} />
+            value={this.props.id || ""} />
         </div>
       );
     }
@@ -55,27 +54,7 @@ class UserAssignmentFormField extends React.Component {
     ));
   }
 
-  deleteInput() {
-    return (
-      <div>
-        <input
-          defaultValue
-          name={`user[assignments_attributes][${this.props.index}][_destroy]`}
-          type="hidden" />
-        <input
-          defaultValue={this.props.id}
-          name={`user[assignments_attributes][${this.props.index}][id]`}
-          type="hidden" />
-      </div>
-    );
-  }
-
   missionRoleFields() {
-    let roleSelectProps = {
-      className: "role form-control",
-      defaultValue: this.props.role,
-      name: `user[assignments_attributes][${this.props.index}][role]`
-    };
     return (
       <div className="assignment-row">
         <div className="mission">
@@ -84,41 +63,60 @@ class UserAssignmentFormField extends React.Component {
         <div className="role">
           <select
             className="form-control"
-            {...roleSelectProps}>
+            defaultValue={this.props.role}
+            name={`user[assignments_attributes][${this.props.index}][role]`}>
             {this.roleOptionTags()}
           </select>
         </div>
         <a
-          className="trash"
-          onClick={this.props.handleDeleteClick(this.props.index)}>
+          className="remove"
+          onClick={this.handleRemoveClick}>
           <i className="fa fa-close" />
         </a>
       </div>
     );
   }
 
+  handleRemoveClick() {
+    this.setState({destroy: true});
+  }
+
   render() {
-    return this.props._destroy ? this.deleteInput() : this.missionRoleFields();
+    return (
+      <div>
+        {this.state.destroy ? "" : this.missionRoleFields()}
+        <input
+          name={`user[assignments_attributes][${this.props.index}][_destroy]`}
+          type="hidden"
+          value={this.state.destroy} />
+        <input
+          name={`user[assignments_attributes][${this.props.index}][id]`}
+          type="hidden"
+          value={this.props.id || ""} />
+      </div>
+    );
   }
 }
 
 UserAssignmentFormField.propTypes = {
-  _destroy: PropTypes.bool,
-  handleDeleteClick: PropTypes.func.isRequired,
+  destroy: PropTypes.bool,
   id: PropTypes.string,
   index: PropTypes.number.isRequired,
-  missionId: PropTypes.string.isRequired,
+  missionId: PropTypes.string,
+  missionName: PropTypes.string,
   missions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  name: PropTypes.string.isRequired,
   newRecord: PropTypes.bool,
-  role: PropTypes.string.isRequired,
+  role: PropTypes.string,
   roles: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 UserAssignmentFormField.defaultProps = {
-  _destroy: null,
+  destroy: false,
   id: null,
-  newRecord: false
+  missionId: null,
+  missionName: null,
+  newRecord: false,
+  role: null
 };
 
 export default UserAssignmentFormField;

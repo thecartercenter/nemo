@@ -10,25 +10,15 @@ import UserAssignmentFormField from "./UserAssignmentFormField";
 class UserAssignmentForm extends React.Component {
   constructor(props) {
     super();
-    this.state = props;
+    this.state = {assignments: props.assignments};
     this.handleAddClick = this.handleAddClick.bind(this);
-    this.handleDeleteClick = this.handleDeleteClick.bind(this);
-  }
-
-  tempMissionId() {
-    return "new-mission-" + Math.floor(Math.random() * Math.floor(9000));
   }
 
   handleAddClick() {
-    let assignments = this.state.assignments;
-    assignments.push({role: "", missionId: this.tempMissionId(), newRecord: true});
-    this.setState({assignments: assignments});
-  }
-
-  handleDeleteClick(idx) {
-    let assignments = this.state.assignments;
-    assignments[idx].new ? assignments.splice(idx, 1) : assignments[idx]["_destroy"] = true
-    this.setState({assignments: assignments});
+    this.setState(curState => {
+      let newAssignments = [{key: Math.round(Math.random() * 100000000), newRecord: true}];
+      return {assignments: curState.assignments.concat(newAssignments)};
+    });
   }
 
   render() {
@@ -36,13 +26,13 @@ class UserAssignmentForm extends React.Component {
       <div className="assignments">
         <div>
           {this.state.assignments.map(
-            (props, idx) => (<UserAssignmentFormField
-              handleDeleteClick={this.handleDeleteClick}
-              index={idx}
-              key={idx}
-              missions={this.state.missions}
-              roles={this.state.roles}
-              {...props} />)
+            (assignment, idx) => (
+              <UserAssignmentFormField
+                {...assignment}
+                index={idx}
+                key={assignment.key || assignment.id}
+                missions={this.props.missions}
+                roles={this.props.roles} />)
           )}
         </div>
         <div>
@@ -58,5 +48,11 @@ class UserAssignmentForm extends React.Component {
     );
   }
 }
+
+UserAssignmentForm.propTypes = {
+  assignments: PropTypes.arrayOf(PropTypes.object).isRequired,
+  missions: PropTypes.arrayOf(PropTypes.object).isRequired,
+  roles: PropTypes.arrayOf(PropTypes.string).isRequired,
+};
 
 export default UserAssignmentForm;
