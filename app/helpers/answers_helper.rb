@@ -20,7 +20,11 @@ module AnswersHelper
   end
 
   def thumb_path(object, params = {})
-    object.thumb_path || media_path(object, params.merge(style: :thumb))
+    if object.dynamic_thumb?
+      media_path(object, params.merge(style: :thumb))
+    else
+      object.static_thumb_path
+    end
   end
 
   # Creates a media thumbnail link

@@ -2,6 +2,8 @@
 
 # OperationsController
 class OperationsController < ApplicationController
+  include Storage
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -22,7 +24,10 @@ class OperationsController < ApplicationController
 
   def download
     if @operation.attachment.present?
-      send_file(@operation.attachment.path, filename: @operation.attachment_download_name)
+      send_attachment(
+        @operation.attachment,
+        filename: @operation.attachment_download_name
+      )
     else
       render_not_found
     end

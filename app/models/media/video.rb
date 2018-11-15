@@ -11,7 +11,7 @@ module Media
     # provides some security but is less restrictive and less superficial.
     validates_attachment_content_type :item, content_type: [%r{\Avideo/.*\Z}, "application/vnd.ms-asf"]
 
-    def thumb_path
+    def static_thumb_path
       "media/video.png"
     end
 

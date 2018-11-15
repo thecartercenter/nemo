@@ -14,8 +14,8 @@ module Media
     # provides some security but is less restrictive and less superficial.
     validates_attachment_content_type :item, content_type: %r{\Aimage/.*\Z}
 
-    def thumb_path
-      nil
+    def dynamic_thumb?
+      true
     end
 
     def kind

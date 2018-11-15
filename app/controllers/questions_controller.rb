@@ -2,6 +2,7 @@ class QuestionsController < ApplicationController
   include StandardImportable, Searchable, BatchProcessable
 
   include Parameters
+  include Storage
 
   # this Concern includes routines for building question/ing forms
   include QuestionFormable
@@ -78,10 +79,11 @@ class QuestionsController < ApplicationController
 
     decorated_question = Odk::QuestionDecorator.decorate(@question)
 
-    send_file decorated_question.audio_prompt.path,
-      type: decorated_question.audio_prompt_content_type,
+    send_attachment(
+      decorated_question.audio_prompt,
       disposition: "attachment",
       filename: decorated_question.unique_audio_prompt_filename
+    )
   end
 
   private

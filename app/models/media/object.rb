@@ -14,5 +14,9 @@ module Media
     delegate :mission, to: :answer
 
     scope :expired, -> { where(answer_id: nil).where("created_at < ?", 12.hours.ago) }
+
+    def dynamic_thumb?
+      false
+    end
   end
 end

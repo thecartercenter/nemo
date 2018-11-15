@@ -3,7 +3,7 @@
 module Media
   # Creating, getting, and deleting media attached to responses.
   class ObjectsController < ApplicationController
-    URL_EXPIRE_TIME = 1.hour
+    include Storage
 
     before_action :set_media_object, only: %i[show destroy]
     skip_authorization_check
@@ -16,12 +16,13 @@ module Media
 
       authorize!(:show, @response) if @response
 
-      if @media_object.item.options[:storage] == "fog"
-        redirect_to(@media_object.item.expiring_url(URL_EXPIRE_TIME, style))
-      else
-        send_file(@media_object.item.path(style), type: @media_object.item_content_type,
-                                                  disposition: disposition, filename: media_filename)
-      end
+      send_attachment(
+        @media_object.item,
+        style: style,
+        type: @media_object.item_content_type,
+        disposition: disposition,
+        filename: media_filename
+      )
     end
 
     def create
