@@ -12,11 +12,11 @@ class UserAssignmentFormField extends React.Component {
   missionField() {
     let missionSelectProps = {
       className: "mission form-control",
-      defaultValue: this.props.mission,
+      defaultValue: this.props.missionId,
       name: `user[assignments_attributes][${this.props.index}][mission_id]`
     };
 
-    if (this.props.new_record) {
+    if (this.props.newRecord) {
       return (
         <select {...missionSelectProps}>
           {this.missionOptionTags()}
@@ -103,22 +103,22 @@ class UserAssignmentFormField extends React.Component {
 }
 
 UserAssignmentFormField.propTypes = {
-  _destroy: PropTypes.string,
+  _destroy: PropTypes.bool,
   handleDeleteClick: PropTypes.func.isRequired,
   id: PropTypes.string,
-  index: PropTypes.string.isRequired,
-  mission: PropTypes.string.isRequired,
+  index: PropTypes.number.isRequired,
+  missionId: PropTypes.string.isRequired,
   missions: PropTypes.arrayOf(PropTypes.object).isRequired,
   name: PropTypes.string.isRequired,
-  new_record: PropTypes.bool,
+  newRecord: PropTypes.bool,
   role: PropTypes.string.isRequired,
-  roles: PropTypes.arrayOf(PropTypes.object).isRequired
+  roles: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 UserAssignmentFormField.defaultProps = {
   _destroy: null,
   id: null,
-  new_record: false
+  newRecord: false
 };
 
 export default UserAssignmentFormField;

@@ -21,7 +21,7 @@ class UserAssignmentForm extends React.Component {
 
   handleAddClick() {
     let assignments = this.state.assignments;
-    assignments.push({role: "", mission: this.tempMissionId(), new_record: true});
+    assignments.push({role: "", missionId: this.tempMissionId(), newRecord: true});
     this.setState({assignments: assignments});
   }
 
@@ -37,7 +37,7 @@ class UserAssignmentForm extends React.Component {
         <div>
           {this.state.assignments.map(
             (props, idx) => (<UserAssignmentFormField
-              hadDeleteClick={this.onDeleteClick}
+              handleDeleteClick={this.handleDeleteClick}
               index={idx}
               key={idx}
               missions={this.state.missions}
