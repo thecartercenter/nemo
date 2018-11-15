@@ -13,14 +13,14 @@ class OptionSetImportsController < ApplicationController
   def upload
     authorize!(:create, OptionSetImport)
     original_file_name = params[:file_import].original_filename
-    unless [".csv", ".xlsx"].include? File.extname(original_file_name)
-      msg = I18n.t("errors.file_upload.invalid_format")
-      render(json: {errors: [msg]}, status: :unprocessable_entity)
-    else
+    if [".csv", ".xlsx"].include? File.extname(original_file_name)
       temp_file_path = UploadSaver.new.save_file(params[:file_import])
       # Json keys match hidden input names that contain the key in dropzone form.
       # See ELMO.Views.FileUploaderView for more info.
       render(json: {temp_file_path: temp_file_path, original_filename: original_file_name})
+    else
+      msg = I18n.t("errors.file_upload.invalid_format")
+      render(json: {errors: [msg]}, status: :unprocessable_entity)
     end
   end
 

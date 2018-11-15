@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 feature "user batch file upload", js: true do
   include_context "dropzone"
 
-  let(:mission){ create(:mission) }
+  let(:mission) { create(:mission) }
   let(:admin) { create(:user, role_name: "coordinator", admin: true) }
   let(:user_batch) { Rails.root.join("spec", "fixtures", "user_batches", "batch_of_3.csv") }
   let(:option_set_import) { Rails.root.join("spec", "fixtures", "option_set_imports", "simple.csv") }
