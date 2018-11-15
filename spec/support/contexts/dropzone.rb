@@ -27,11 +27,11 @@ shared_context "dropzone" do
 
   def expect_preview(node)
     expect(node).to have_selector(".dz-preview")
-    expect(node).to_not have_content("The uploaded file was not an accepted format.")
+    expect(node).not_to have_content("The uploaded file was not an accepted format.")
   end
 
   def expect_no_preview(node)
-    expect(node).to_not have_selector(".dz-preview")
+    expect(node).not_to have_selector(".dz-preview")
   end
 
   def delete_file(node)

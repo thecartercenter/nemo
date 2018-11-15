@@ -60,7 +60,7 @@ feature "response form file upload", js: true do
     # save w/ user
     select2(user.name, from: "response_user_id")
     click_button("Save")
-    expect(page).to_not have_content("Response is invalid")
+    expect(page).not_to have_content("Response is invalid")
 
     response = Response.last
     visit edit_response_path(params.merge(id: response.shortcode))
@@ -77,7 +77,7 @@ feature "response form file upload", js: true do
     expect_preview(video_node)
 
     click_button("Save")
-    expect(page).to_not have_content("Response is invalid")
+    expect(page).not_to have_content("Response is invalid")
 
     visit edit_response_path(params.merge(id: response.shortcode))
 
@@ -85,17 +85,17 @@ feature "response form file upload", js: true do
     video_node = find("[data-path='1']")
 
     # no image thumbnail, video thumbnail present
-    expect(image_node).to_not have_selector(".media-thumbnail img")
+    expect(image_node).not_to have_selector(".media-thumbnail img")
     expect(video_node).to have_selector(".media-thumbnail img")
   end
 
   def expect_preview(node)
     expect(node).to have_selector(".dz-preview")
-    expect(node).to_not have_content("The uploaded file was not an accepted format.")
+    expect(node).not_to have_content("The uploaded file was not an accepted format.")
   end
 
   def expect_no_preview(node)
-    expect(node).to_not have_selector(".dz-preview")
+    expect(node).not_to have_selector(".dz-preview")
   end
 
   def delete_file(node)
