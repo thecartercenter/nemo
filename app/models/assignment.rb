@@ -13,6 +13,8 @@ class Assignment < ApplicationRecord
 
   scope(:sorted_recent_first, -> { order("created_at DESC") })
 
+  delegate :name, to: :mission, prefix: true
+
   # checks if there are any duplicates in the given set of assignments
   def self.duplicates?(assignments)
     # uniq! returns nil if there are no duplicates

@@ -1,16 +1,6 @@
 <% if admin_mode? %>
 
-  <%# special error output %>
-  <%= content_tag(:div, assignment_errors.join(' '), :class => 'form-errors') unless assignment_errors.empty? %>
-
-  <div class="assignment_header">
-    <div class="mission"><%= translate_model(Mission) %></div>
-    <div class="role"><%= t('role.role') %></div>
-  </div>
-
-  <div class="assignments"></div>
-
-  <%= link_to(t('user.add_assignment'), '#', :class => 'add_assignment') unless read_only %>
+  <%= render "users/admin_assignments" %>
 
 <% else %>
 

@@ -132,8 +132,8 @@ class UsersController < ApplicationController
     options = []
     options << :dont unless user.new_record?
     options << :email unless configatron.offline_mode
-    options << :print if configatron.offline_mode || !admin_mode?
-    options << (admin_mode? ? :enter : :enter_and_show)
+    options << :print if admin_mode? && configatron.offline_mode || mission_mode?
+    options << (mission_mode? ? :enter_and_show : :enter)
     options
   end
 
@@ -151,24 +151,19 @@ class UsersController < ApplicationController
 
   # prepares objects and renders the form template
   def prepare_and_render_form
-
     if admin_mode?
-
-      # get assignable missons and roles for this user
-      @assignments = @user.assignments.as_json(include: :mission, methods: :new_record?)
-      @assignment_permissions = @user.assignments.map { |a| can?(:update, a) }
-      @assignable_missions = Mission.accessible_by(current_ability, :assign_to).sorted_by_name.as_json(
-        only: [:id, :name])
-      @assignable_roles = Ability.assignable_roles(current_user)
-
+      @assignment_data = {missions: accessible_missions.map { |m| MissionSerializer.new(m) },
+                          assignments: @user.assignments.map { |a| AssignmentSerializer.new(a) },
+                          roles: Ability.assignable_roles(current_user)}
     else
-
       @current_assignment = @user.assignments_by_mission[current_mission] ||
         @user.assignments.build(mission: current_mission)
-
     end
-
     render(:form)
+  end
+
+  def accessible_missions
+    Mission.accessible_by(current_ability, :assign_to).sorted_by_name
   end
 
   # Builds a user with an appropriate mission assignment if the current_user

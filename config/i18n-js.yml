@@ -46,5 +46,6 @@ translations:
       "*.standard.*",
       "*.tag.*",
       "*.user.bulk_destroy_confirm.*",
+      "*.user.add_assignment",
       "*.user_group.*"
     ]

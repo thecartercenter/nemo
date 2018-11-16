@@ -1,0 +1,21 @@
+<%# special error output %>
+<%= content_tag(:div, assignment_errors.join(" "), class: "form-errors") unless assignment_errors.empty? %>
+
+<div class="assignment-header">
+  <div class="mission"><%= translate_model(Mission) %></div>
+  <div class="role"><%= t('role.role') %></div>
+</div>
+
+<% if read_only %>
+
+  <% @user.assignments.each do |a| %>
+    <div class="mission"><%= a.mission.name %></div>
+    <div class="role"><%= t("role.#{a.role}") %></div>
+    <br/>
+  <% end %>
+
+<% else %>
+
+  <%= react_component("UserAssignmentForm", @assignment_data) %>
+
+<% end %>
