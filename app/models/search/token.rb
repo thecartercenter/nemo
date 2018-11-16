@@ -70,7 +70,6 @@ class Search::Token
       expr.values = ""
       leaves = rhs_or_values.expand
       leaves.each do |lex_tok|
-
         # if this is a value token descendant
         if lex_tok.parent.is?(:value)
 
@@ -137,6 +136,21 @@ class Search::Token
 
         elsif qualifier.type == :translated
           sanitize("#{column} ->> ? ILIKE ?#{and_not_null}", I18n.locale, "%#{value_sql}%")
+
+        elsif qualifier.type == :boolean
+          truthy = ["1", I18n.t("common._yes").downcase]
+          falsy = ["0", I18n.t("common._no").downcase]
+
+          input_value = value_sql.downcase
+          bool_value = if truthy.include?(input_value)
+                         "t"
+                       elsif falsy.include?(input_value)
+                         "f"
+                       else
+                         raise_error_with_qualifier("boolean_error", qualifier.name)
+                       end
+
+          sanitize("#{column} = ?", bool_value)
 
         # if partial matches are allowed, change to LIKE
         elsif qualifier.type == :text

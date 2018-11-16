@@ -64,9 +64,9 @@ class Sms::Adapters::Adapter
     raise NotImplementedError
   end
 
-  # The format to be rendered when responding to an incoming message request.
-  def response_format
-    :plain
+  # The content type to be rendered when responding to an incoming message request.
+  def response_content_type
+    "text/plain"
   end
 
   # The body to be rendered when responding to an incoming message request.

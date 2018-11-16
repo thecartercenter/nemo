@@ -235,7 +235,8 @@ class ResponsesController < ApplicationController
     return render_xml_submission_failure("No XML file attached.", 422) unless params[:xml_submission_file]
 
     # Store main XML file for debugging purposes.
-    UploadSaver.new.save_file(params[:xml_submission_file])
+    SavedUpload.create!(file: params[:xml_submission_file])
+
     begin
       @response.user_id = current_user.id
       @response = odk_response_parser.populate_response

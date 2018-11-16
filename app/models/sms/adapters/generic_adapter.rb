@@ -4,7 +4,7 @@ module Sms
   module Adapters
     # Generic adapter configurable to match many gateways.
     class GenericAdapter < Adapter
-      VALID_KEYS = %w[params response matchHeaders].freeze
+      VALID_KEYS = %w[params response responseType matchHeaders].freeze
       REQUIRED_KEYS = %w[params.from params.body response].freeze
 
       def self.recognize_receive_request?(request)
@@ -50,7 +50,26 @@ module Sms
       end
 
       def response_body(reply)
-        format(self.class.config["response"].to_s, reply: reply.body)
+        escaped =
+          case response_type_mime_symbol
+          when :xml then CGI.escapeHTML(reply.body)
+          when :json then reply.body.to_json
+          else reply.body
+          end
+        format(self.class.config["response"].to_s, reply: escaped)
+      end
+
+      def response_content_type
+        self.class.config["responseType"] || super
+      end
+
+      private
+
+      # Gets the symbol associated with the responseType config per the Mime::Type library.
+      # nil if none found.
+      def response_type_mime_symbol
+        return nil if self.class.config["responseType"].blank?
+        Mime::Type.lookup(self.class.config["responseType"])&.symbol
       end
     end
   end

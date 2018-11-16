@@ -56,7 +56,7 @@ shared_context "incoming sms" do
   # builds and sends the HTTP POST request to mimic incoming adapter
   def do_incoming_request(params)
     req_params = {}
-    req_env = {}
+    req_headers = params[:headers] || {}
 
     url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
 
@@ -92,7 +92,7 @@ shared_context "incoming sms" do
         "To" => "+1234567890",
         "Body" => params[:incoming][:body]
       }
-      req_env = {
+      req_headers = {
         "X-Twilio-Signature" => "1"
       }
     when "Generic"
@@ -100,15 +100,12 @@ shared_context "incoming sms" do
         "num" => params[:from],
         "msg" => params[:incoming][:body]
       }
-      req_env = {
-        "UserAgent" => "FooBar"
-      }
     else
       raise "Incoming adapter not recognized. Can't build test request"
     end
 
     # do the get/post/whatever request
-    send(params[:method], params[:url], params: req_params, headers: req_env)
+    send(params[:method], params[:url], params: req_params, headers: req_headers)
   end
 
   def expect_no_messages_delivered_through_adapter

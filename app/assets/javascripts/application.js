@@ -30,8 +30,6 @@
 //= require bootstrap
 //= require bootstrap-modal
 //= require bootstrap-modalmanager
-//= require phantomjs_object_assign_polyfill
-//= require phantomjs_polyfill-rails/bind-polyfill
 //= require dropzone
 //= require select2
 //= require trumbowyg/trumbowyg
