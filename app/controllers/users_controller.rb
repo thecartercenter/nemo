@@ -132,8 +132,8 @@ class UsersController < ApplicationController
     options = []
     options << :dont unless user.new_record?
     options << :email unless configatron.offline_mode
-    options << :print if configatron.offline_mode || !admin_mode?
-    options << (admin_mode? ? :enter : :enter_and_show)
+    options << :print if admin_mode? && configatron.offline_mode || mission_mode?
+    options << (mission_mode? ? :enter_and_show : :enter)
     options
   end
 
