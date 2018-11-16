@@ -57,9 +57,7 @@
 <% end %>
 
 <%= javascript_doc_ready do %>
-  <% unless current_mode == 'basic' %>
-    new ELMO.Views.UserProfileFormView(
-      <%= json(user_group_options_url: possible_groups_user_groups_path) %>
-    );
-  <% end %>
+  new ELMO.Views.UserProfileFormView(
+    <%= json(user_group_options_url: possible_groups_user_groups_path) if mission_mode? %>
+  );
 <% end %>
