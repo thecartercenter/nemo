@@ -14,6 +14,6 @@ class CleanupJob < ApplicationJob
   end
 
   def cleanup_stored_uploads
-    UploadSaver.new.cleanup_old_files
+    SavedUploads.cleanup_old_uploads
   end
 end

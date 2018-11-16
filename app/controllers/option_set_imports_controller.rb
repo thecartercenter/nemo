@@ -27,8 +27,8 @@ class OptionSetImportsController < ApplicationController
   protected
 
   def do_import
-    @stored_path = UploadSaver.new.save_file(@option_set_import.file)
-    operation.enqueue
+    saved_upload = SavedUpload.create!(file: @option_set_import.file)
+    operation(saved_upload).enqueue
     prep_operation_queued_flash(:option_set_import)
     redirect_to(option_sets_url)
   rescue StandardError => e
@@ -37,7 +37,7 @@ class OptionSetImportsController < ApplicationController
     render("form")
   end
 
-  def operation
+  def operation(saved_upload)
     Operation.new(
       creator: current_user,
       job_class: TabularImportOperationJob,
@@ -45,7 +45,7 @@ class OptionSetImportsController < ApplicationController
       details: t("operation.details.option_set_import", name: @option_set_import.name),
       job_params: {
         name: @option_set_import.name,
-        upload_path: @stored_path,
+        saved_upload_id: saved_upload.id,
         import_class: @option_set_import.class.to_s
       }
     )

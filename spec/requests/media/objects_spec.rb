@@ -13,7 +13,7 @@ describe "media object requests" do
 
       it "uploads audio files" do
         file = fixture_file_upload("spec/fixtures/media/audio/powerup.mp3", "audio/mpeg")
-        post(media_create_path(mission_name: mission.compact_name, type: "audios"), params: {upload: file})
+        post(media_objects_path(mission_name: mission.compact_name, type: "audios"), params: {upload: file})
         expect(response).to have_http_status(201)
       end
     end
@@ -23,7 +23,7 @@ describe "media object requests" do
 
       it "uploads video files" do
         file = fixture_file_upload("spec/fixtures/media/video/jupiter.avi", "video/x-msvideo")
-        post(media_create_path(mission_name: mission.compact_name, type: "videos"), params: {upload: file})
+        post(media_objects_path(mission_name: mission.compact_name, type: "videos"), params: {upload: file})
         expect(response).to have_http_status(201)
       end
     end
@@ -33,7 +33,7 @@ describe "media object requests" do
 
       it "uploads image files" do
         file = fixture_file_upload("spec/fixtures/media/images/the_swing.jpg", "image/jpeg")
-        post(media_create_path(mission_name: mission.compact_name, type: "images"), params: {upload: file})
+        post(media_objects_path(mission_name: mission.compact_name, type: "images"), params: {upload: file})
         expect(response).to have_http_status(201)
       end
     end
@@ -43,7 +43,7 @@ describe "media object requests" do
 
       it "returns 422 on failure" do
         file = fixture_file_upload("spec/fixtures/media/audio/powerup.mp3")
-        post(media_create_path(mission_name: mission.compact_name, type: "images"), params: {upload: file})
+        post(media_objects_path(mission_name: mission.compact_name, type: "images"), params: {upload: file})
         expect(response).to have_http_status(422)
       end
     end
@@ -53,7 +53,7 @@ describe "media object requests" do
     let(:media_file) { create(:media_image) }
 
     it "returns empty 204 on success" do
-      delete(media_delete_path(media_file, mission_name: mission.compact_name, type: "images"))
+      delete(media_object_path(media_file, mission_name: mission.compact_name, type: "images"))
       expect(response).to have_http_status(204)
     end
   end
