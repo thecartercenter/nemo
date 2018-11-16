@@ -85,7 +85,8 @@ class SmsController < ApplicationController
       else # reply via response
         incoming_adapter.prepare_message_for_delivery(reply)
       end
-      render incoming_adapter.response_format => incoming_adapter.response_body(reply)
+      render plain: incoming_adapter.response_body(reply),
+             content_type: incoming_adapter.response_content_type
     else
       render plain: "", status: 204 # No Content
     end
