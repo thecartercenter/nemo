@@ -83,7 +83,7 @@ describe "generic incoming sms", :sms do
 
       it "sets correct reply body and type" do
         do_request
-        expect(response.body).to eq("<msg>Sorry, we couldn't find you in the system.</msg>")
+        expect(response.body).to eq("<msg>Sorry, we couldn&#39;t find you in the system.</msg>")
         expect(response.content_type).to eq("text/xml")
       end
     end
