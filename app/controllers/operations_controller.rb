@@ -24,10 +24,7 @@ class OperationsController < ApplicationController
 
   def download
     if @operation.attachment.present?
-      send_attachment(
-        @operation.attachment,
-        filename: @operation.attachment_download_name
-      )
+      send_attachment(@operation.attachment, filename: @operation.attachment_download_name)
     else
       render_not_found
     end

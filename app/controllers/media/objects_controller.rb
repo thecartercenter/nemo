@@ -16,13 +16,8 @@ module Media
 
       authorize!(:show, @response) if @response
 
-      send_attachment(
-        @media_object.item,
-        style: style,
-        type: @media_object.item_content_type,
-        disposition: disposition,
-        filename: media_filename
-      )
+      send_attachment(@media_object.item,
+        style: style, disposition: disposition, filename: media_filename)
     end
 
     def create

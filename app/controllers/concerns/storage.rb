@@ -13,6 +13,8 @@ module Storage
       redirect_to(attachment.expiring_url(URL_EXPIRE_TIME, style))
     else
       params[:type] ||= attachment.content_type
+      params[:disposition] ||= "attachment"
+
       if style
         send_file(attachment.path(style), params)
       else

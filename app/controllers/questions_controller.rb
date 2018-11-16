@@ -79,11 +79,8 @@ class QuestionsController < ApplicationController
 
     decorated_question = Odk::QuestionDecorator.decorate(@question)
 
-    send_attachment(
-      decorated_question.audio_prompt,
-      disposition: "attachment",
-      filename: decorated_question.unique_audio_prompt_filename
-    )
+    send_attachment(decorated_question.audio_prompt,
+      filename: decorated_question.unique_audio_prompt_filename)
   end
 
   private
