@@ -122,16 +122,48 @@ describe Sms::Adapters::GenericAdapter, :sms do
   end
 
   describe "#response_body" do
-    before do
-      Settings.generic_sms_config = {
-        "params" => {"from" => "num", "body" => "msg"},
-        "response" => "<msg>%{reply}</msg>"
-      }
+    context "default type" do
+      before do
+        Settings.generic_sms_config = {
+          "params" => {"from" => "num", "body" => "msg"},
+          "response" => "Reply: %{reply}"
+        }
+      end
+
+      it "interpolates" do
+        reply = double(body: "hallo!")
+        expect(adapter.response_body(reply)).to eq("Reply: hallo!")
+      end
     end
 
-    it "should return correct response" do
-      reply = double(body: "hallo!")
-      expect(adapter.response_body(reply)).to eq("<msg>hallo!</msg>")
+    context "xml type" do
+      before do
+        Settings.generic_sms_config = {
+          "params" => {"from" => "num", "body" => "msg"},
+          "response" => "<msg>%{reply}</msg>",
+          "responseType" => "application/xml"
+        }
+      end
+
+      it "escapes properly" do
+        reply = double(body: "ten < twenty")
+        expect(adapter.response_body(reply)).to eq("<msg>ten &lt; twenty</msg>")
+      end
+    end
+
+    context "json type" do
+      before do
+        Settings.generic_sms_config = {
+          "params" => {"from" => "num", "body" => "msg"},
+          "response" => %({"foo":"bar","msg":%{reply}}),
+          "responseType" => "application/json"
+        }
+      end
+
+      it "escapes properly" do
+        reply = double(body: %(I said "Hey!"))
+        expect(adapter.response_body(reply)).to eq(%({"foo":"bar","msg":"I said \\"Hey!\\""}))
+      end
     end
   end
 
