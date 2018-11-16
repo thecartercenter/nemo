@@ -66,7 +66,7 @@ class Search::Qualifier
 
   def op_valid?(op)
     case type
-    when :regular, :text, :translated then %w(= !=).include?(op)
+    when :regular, :text, :translated, :boolean then %w[= !=].include?(op)
     when :indexed then op == '='
     else true
     end
