@@ -2020,6 +2020,7 @@ en:
     unexpected: "Your search query could not be understood due to unexpected text near '%{str}'."
     unexpected_end: "Your search query could not be understood due to unexpected text near the end."
     boolean_error: "The qualifier '%{qualifier}' must be set to 'yes' or 'no' ('1' and '0' are also accepted)."
+    invalid_date: "'%{value}' is not a valid date."
 
   setting:
     change_sms_password: "Change Password"

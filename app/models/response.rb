@@ -88,7 +88,7 @@ class Response < ApplicationRecord
       Search::Qualifier.new(name: "group", col: "user_groups.name",
                             assoc: :user_groups, type: :text),
       Search::Qualifier.new(name: "source", col: "responses.source"),
-      Search::Qualifier.new(name: "submit_date", type: :scale,
+      Search::Qualifier.new(name: "submit_date", type: :date,
                             col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT
                               TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)"),
 
