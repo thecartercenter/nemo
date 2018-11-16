@@ -307,6 +307,8 @@ describe Search::Search do
     assert_search(str: "reviewed:true", error: error)
     assert_search(str: "reviewed:false", error: error)
     assert_search(str: "reviewed:Jimmy", error: error)
+
+    assert_search(str: "reviewed < 1", error: /The operator '<' is not valid for the qualifier 'reviewed'./)
   end
 
   private
