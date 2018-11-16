@@ -4,7 +4,7 @@ module Sms
   module Adapters
     # Generic adapter configurable to match many gateways.
     class GenericAdapter < Adapter
-      VALID_KEYS = %w[params response matchHeaders].freeze
+      VALID_KEYS = %w[params response responseType matchHeaders].freeze
       REQUIRED_KEYS = %w[params.from params.body response].freeze
 
       def self.recognize_receive_request?(request)
@@ -51,6 +51,10 @@ module Sms
 
       def response_body(reply)
         format(self.class.config["response"].to_s, reply: reply.body)
+      end
+
+      def response_content_type
+        self.class.config["responseType"] || super
       end
     end
   end
