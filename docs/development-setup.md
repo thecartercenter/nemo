@@ -83,7 +83,7 @@ Most code editors have plugins for linting. They will identify and let you click
 For Atom, install the `linter` package which contains shared stuff, then:
 
 * `linter-eslint`
-    * For this one, set your Global Node Installation Path and check the 'Use global ESLint installtion' box.
+    * For this one, set your Global Node Installation Path and check the 'Use global ESLint installation' box.
 * `linter-coffeelint`
 * `linter-rubocop`
 * `linter-scss-lint`
@@ -108,7 +108,8 @@ git checkout develop
 1. Install the required gems by running `bundle install` in the project directory.
 1. Install the required Node modules by running `yarn install` in the project directory.
 1. Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
-1. Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust any settings. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
+1. Copy `config/settings.local.yml.example` to `config/settings.local.yml` and adjust settings as appropriate.
+1. Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
 1. Setup the UUID postgres extension (must be done as postgres superuser): `sudo -u postgres psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
 1. Load the database schema: `bundle exec rake db:schema:load`.
 1. Pre-process the theme SCSS files: `bundle exec rake theme:preprocess`

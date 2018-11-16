@@ -16,27 +16,20 @@ class UserBatchesController < ApplicationController
 
   def upload
     authorize!(:create, UserBatch)
-    original_file_name = params[:file_import].original_filename
-    if [".csv", ".xlsx"].include?(File.extname(original_file_name))
-      temp_file_path = UploadSaver.new.save_file(params[:file_import])
-      # Json keys match hidden input names that contain the key in dropzone form.
-      # See ELMO.Views.FileUploaderView for more info.
-      render(json: {temp_file_path: temp_file_path, original_filename: original_file_name})
-    else
-      msg = I18n.t("errors.file_upload.invalid_format")
-      render(json: {errors: [msg]}, status: :unprocessable_entity)
-    end
+
+    saved_upload = SavedUpload.create!(file: params[:userbatch])
+
+    # Json keys match hidden input names that contain the key in dropzone form.
+    # See ELMO.Views.FileUploaderView for more info.
+    render(json: {saved_upload_id: saved_upload.id})
   end
 
   def create
-    temp_file_path = params[:temp_file_path]
-    original_filename = params[:original_filename]
-    if temp_file_path.present? && original_filename.present?
-      do_import(temp_file_path, original_filename)
-    else
-      flash.now[:error] = I18n.t("errors.file_upload.file_missing")
-      render("form")
-    end
+    saved_upload = SavedUpload.find(params[:saved_upload_id])
+    do_import(saved_upload)
+  rescue ActiveRecord::RecordNotFound
+    flash.now[:error] = I18n.t("errors.file_upload.file_missing")
+    render("form")
   end
 
   def template
@@ -47,8 +40,8 @@ class UserBatchesController < ApplicationController
 
   private
 
-  def do_import(temp_file_path, original_filename)
-    operation(temp_file_path, original_filename).enqueue
+  def do_import(saved_upload)
+    operation(saved_upload).enqueue
     prep_operation_queued_flash(:user_import)
     redirect_to(users_url)
   rescue StandardError => e
@@ -57,20 +50,20 @@ class UserBatchesController < ApplicationController
     render("form")
   end
 
-  def operation(temp_file_path, original_filename)
+  def operation(saved_upload)
     Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.user_import", file: original_filename),
+      details: t("operation.details.user_import", file: saved_upload.file.original_filename),
       job_params: {
-        upload_path: temp_file_path,
+        saved_upload_id: saved_upload.id,
         import_class: @user_batch.class.to_s
       }
     )
   end
 
   def user_batch_params
-    params.require(:user_batch).permit(:file) if params[:user_batch]
+    params.require(:user_batch).permit(:file) if params[:file_import]
   end
 end

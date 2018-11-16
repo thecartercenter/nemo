@@ -2,9 +2,14 @@
 
 # Job for importing tabular data like users and option sets.
 class TabularImportOperationJob < OperationJob
-  def perform(_operation, name: nil, upload_path:, import_class:)
+  def perform(_operation, name: nil, saved_upload_id:, import_class:)
     if import_class
-      import = import_class.constantize.new(mission_id: mission.try(:id), name: name, file: upload_path)
+      saved_upload = SavedUpload.find(saved_upload_id)
+      import = import_class.constantize.new(
+        mission_id: mission.try(:id),
+        name: name,
+        file: open_file(saved_upload.file)
+      )
       succeeded = import.run(mission)
     end
 
@@ -18,5 +23,19 @@ class TabularImportOperationJob < OperationJob
     return if errors.empty?
 
     errors.values.flatten.map { |error| "* #{error}" }.join("\n")
+  end
+
+  def open_file(file)
+    if file.options[:storage] == "fog"
+      # Preserve the file extension (Roo, for example, requires this in order to parse)
+      pathname = Pathname.new(file.path)
+      tmp = Tempfile.new(["tabular_import", pathname.basename.to_s])
+      tmp.binmode
+      URI.parse(file.expiring_url).open { |io| tmp.write(io.read) }
+      tmp.rewind
+      tmp
+    else
+      file
+    end
   end
 end

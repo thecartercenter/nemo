@@ -1,25 +1,37 @@
 # frozen_string_literal: true
 
-Paperclip::Attachment.default_options.merge!(
-  path: ":rails_root/uploads/:class/:attachment/:id_partition/:style/:filename",
-  url: "/:locale/m/:mission/:class/:id/:style"
-)
+upload_path = "uploads/:class/:attachment/:id_partition/:style/:filename"
+
+# We always do local storage in testing for speed and so that we don't rely on external services.
+if !Rails.env.test? && Settings.key?(:paperclip) && Settings.paperclip.storage == "cloud"
+  raise "AWS must be provided if storage set to 'cloud'" unless Settings.key?(:aws)
+
+  Paperclip::Attachment.default_options.merge!(
+    path: upload_path,
+    storage: "fog",
+    fog_credentials: {
+      provider: "AWS",
+      aws_access_key_id: Settings.aws.access_key_id,
+      aws_secret_access_key: Settings.aws.secret_access_key,
+      region: Settings.aws.region,
+      scheme: "https"
+    },
+    fog_directory: Settings.aws.bucket,
+    fog_options: {multipart_chunk_size: 10.megabytes},
+    fog_host: nil,
+    fog_public: false
+  )
+else
+  Paperclip::Attachment.default_options[:path] = ":rails_root/#{upload_path}"
+end
 
 Paperclip.options[:content_type_mappings] = {
   wmv: "application/vnd.ms-asf",
   opus: "audio/x-opus+ogg"
 }
 
-Paperclip.interpolates(:mission) do |attachment, _style|
-  attachment.instance.mission.compact_name
-end
-
-Paperclip.interpolates(:locale) do |_attachment, _style|
-  I18n.locale
-end
-
 module Paperclip
-  # Paperclip spoof detection currently, as a result of idiosyncracies with the `file` command,
+  # Paperclip's spoof detection currently, as a result of idiosyncracies with the `file` command,
   # reports false positives for a variety of different media types and must be disabled.
   # TODO: Find a better workaround, or wait for paperclip to update
   class MediaTypeSpoofDetector

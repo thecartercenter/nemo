@@ -121,7 +121,7 @@ To switch to the `deploy` user, do:
     nvm install
     npm install -g yarn
 
-### Configure ELMO
+### Configure the App
 
     cp config/database.yml.example config/database.yml
 
@@ -130,7 +130,12 @@ You shouldn't need to edit `database.yml` if you followed the PostgreSQL setup i
     cp config/initializers/local_config.rb.example config/initializers/local_config.rb
     nano config/initializers/local_config.rb
 
-Read the comments in the file and enter sensible values for the settings.
+Read the comments in the file and enter sensible values for the settings. Then:
+
+    cp config/settings.local.yml.example config/settings.local.yml
+    nano config/settings.local.yml
+
+Similarly, read the comments in the file and enter sensible values for the settings.
 
 Entering a functioning email server is important as ELMO relies on email to send broadcasts, and registration info, and password reset requests. Once you have ELMO running, you can test your email setup by creating a new user for yourself and delivering the login instructions via email or by using the password reset feature.
 
@@ -260,6 +265,11 @@ Upgrading should be done in stages. Start with the stage closest to your current
 1. Make a backup of your database, as `deploy` user: `pg_dump elmo_production > tmp/pre-v9.1-dump.sql`
 2. Follow the 'General Upgrade Instructions' below to upgrade to **v9.1**.
 3. Run `bundle exec rake option_set_reclone` to repair option set references that may exist in your database due to a bug in a previous version.
+
+#### Upgrading to v9.2
+
+1. Follow the 'General Upgrade Instructions' below to upgrade to **v9.2**.
+2. Follow the instructions above under 'Configure the App' to setup your settings.local.yml file.
 
 #### Upgrading to lastest master
 

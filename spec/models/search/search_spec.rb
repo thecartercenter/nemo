@@ -16,7 +16,10 @@ describe Search::Search do
     Search::Qualifier.new(name: "submit_date", col: "t.subdate", type: :scale),
 
     # This qualifier supportes translated fields.
-    Search::Qualifier.new(name: "name", col: "t.name", type: :translated)
+    Search::Qualifier.new(name: "name", col: "t.name", type: :translated),
+
+    # This qualifier supports boolean fields
+    Search::Qualifier.new(name: "reviewed", col: "t.reviewed", type: :boolean)
   ]
 
   NO_DEFAULTS = [
@@ -290,6 +293,22 @@ describe Search::Search do
   it "supports multiple columns to generate a sql" do
     assert_search(str: 'number:987', sql: "((msg.to ILIKE '%987%') OR (msg.from ILIKE '%987%'))", qualifiers: INDEXED)
     assert_search(str: 'date:date', sql: "((msg.created_at = 'date') OR (msg.updated_at = 'date'))", qualifiers: INDEXED)
+  end
+
+  it "boolean qualifier should match correctly" do
+    assert_search(str: "reviewed:1", sql: "((t.reviewed = 't'))")
+    assert_search(str: "reviewed:0", sql: "((t.reviewed = 'f'))")
+    assert_search(str: "reviewed:yes", sql: "((t.reviewed = 't'))")
+    assert_search(str: "reviewed:no", sql: "((t.reviewed = 'f'))")
+    assert_search(str: "reviewed:YES", sql: "((t.reviewed = 't'))")
+    assert_search(str: "reviewed:NO", sql: "((t.reviewed = 'f'))")
+
+    error = /The qualifier 'reviewed' must be set to 'yes' or 'no'/
+    assert_search(str: "reviewed:true", error: error)
+    assert_search(str: "reviewed:false", error: error)
+    assert_search(str: "reviewed:Jimmy", error: error)
+
+    assert_search(str: "reviewed < 1", error: /The operator '<' is not valid for the qualifier 'reviewed'./)
   end
 
   private

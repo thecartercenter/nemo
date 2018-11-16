@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181109141200) do
+ActiveRecord::Schema.define(version: 20181109154424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -267,7 +267,6 @@ ActiveRecord::Schema.define(version: 20181109141200) do
     t.integer "item_file_size"
     t.datetime "item_updated_at"
     t.integer "old_id"
-    t.string "token", limit: 255
     t.string "type", limit: 255
     t.datetime "updated_at", null: false
     t.index ["answer_id"], name: "index_media_objects_on_answer_id"
@@ -523,6 +522,15 @@ ActiveRecord::Schema.define(version: 20181109141200) do
     t.index ["updated_at"], name: "index_responses_on_updated_at"
     t.index ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
+  end
+
+  create_table "saved_uploads", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "file_content_type"
+    t.string "file_file_name"
+    t.integer "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "updated_at", null: false
   end
 
   create_table "sessions", id: :serial, force: :cascade do |t|

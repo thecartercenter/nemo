@@ -57,20 +57,7 @@
 <% end %>
 
 <%= javascript_doc_ready do %>
-  new ELMO.Views.UserForm(
-    <% if admin_mode? %>
-      <%=json(
-        form_mode: form_mode,
-        assignments: @assignments,
-        assignment_permissions: @assignment_permissions,
-        assignable_missions: @assignable_missions,
-        assignable_roles: @assignable_roles
-      )%>
-    <% end %>
+  new ELMO.Views.UserProfileFormView(
+    <%= json(user_group_options_url: possible_groups_user_groups_path) if mission_mode? %>
   );
-  <% unless current_mode == 'basic' %>
-    new ELMO.Views.UserProfileFormView(
-      <%= json(user_group_options_url: possible_groups_user_groups_path) %>
-    );
-  <% end %>
 <% end %>

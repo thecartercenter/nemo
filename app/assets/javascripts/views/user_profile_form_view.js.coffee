@@ -3,20 +3,19 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
 
   events:
     "change select#user_gender": "toggle_custom_gender_visibility"
+    "change select#user_reset_password_method": "toggle_password_fields"
 
   initialize: (params) ->
-    @params = params
-    @user_group_options_url = params.user_group_options_url
-    @user_group_select = @$("#user_user_group_ids")
+    @params = params || {}
     @init_user_group_select()
     @toggle_custom_gender_visibility()
 
   init_user_group_select: ->
-    @user_group_select.select2
+    @$("#user_user_group_ids").select2
       tags: true
       templateResult: @format_suggestions
       ajax:
-        url: @user_group_options_url
+        url: @params.user_group_options_url
         dataType: "json"
         delay: 250
         cache: true
@@ -36,3 +35,7 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
     else
       @$("input#user_gender_custom").val("")
       @$("div.user_gender_custom").hide()
+
+  toggle_password_fields: (event) ->
+    select_value = @$("select#user_reset_password_method").val()
+    @$(".password-fields").toggleClass("hide", select_value != "enter" && select_value != "enter_and_show")

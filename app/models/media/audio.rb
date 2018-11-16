@@ -13,7 +13,7 @@ module Media
     # For some reason, the mime-magic gem returns video/ogg for audio OGG files. Same for WEBM.
     validates_attachment_content_type :item, content_type: [%r{\Aaudio/.*\Z}, "video/ogg", "video/webm"]
 
-    def thumb_path
+    def static_thumb_path
       "media/audio.png"
     end
 

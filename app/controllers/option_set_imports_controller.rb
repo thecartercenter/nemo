@@ -25,14 +25,11 @@ class OptionSetImportsController < ApplicationController
   end
 
   def create
-    temp_file_path = params[:temp_file_path]
-    original_filename = params[:original_filename]
-    if temp_file_path.present? && original_filename.present?
-      do_import(temp_file_path, original_filename)
-    else
-      flash.now[:error] = I18n.t("errors.file_upload.file_missing")
-      render("form")
-    end
+    saved_upload = SavedUpload.find(params[:saved_upload_id])
+    do_import(saved_upload)
+  rescue ActiveRecord::RecordNotFound
+    flash.now[:error] = I18n.t("errors.file_upload.file_missing")
+    render("form")
   end
 
   def template
@@ -42,25 +39,25 @@ class OptionSetImportsController < ApplicationController
 
   protected
 
-  def do_import(temp_file_path, original_filename)
-    operation(temp_file_path, original_filename).enqueue
-    prep_operation_queued_flash(:option_set_import)
-    redirect_to(option_sets_url)
+  def do_import(saved_upload)
+    operation(saved_upload).enqueue
+    prep_operation_queued_flash(:user_import)
+    redirect_to(users_url)
   rescue StandardError => e
     Rails.logger.error(e)
-    flash.now[:error] = I18n.t("activerecord.errors.models.option_set_import.internal")
+    flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.internal")
     render("form")
   end
 
-  def operation(temp_file_path, original_filename)
+  def operation(saved_upload)
     Operation.new(
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
       details: t("operation.details.option_set_import", name: original_filename),
       job_params: {
-        name: original_filename,
-        upload_path: temp_file_path,
+        name: @option_set_import.name,
+        saved_upload_id: saved_upload.id,
         import_class: @option_set_import.class.to_s
       }
     )
