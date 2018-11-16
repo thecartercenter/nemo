@@ -6,12 +6,9 @@
   <title><%= Settings.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
   <%= main_stylesheet_tag(params) %>
-
-  <%# For Capybara. %>
-  <%= stylesheet_link_tag 'disable-transition' if Rails.env.test? %>
-
-  <%= javascript_include_tag "application" %>
-  <%= javascript_pack_tag "application" %>
+  <%= stylesheet_link_tag("disable_bootstrap_modal_transitions") if Rails.env.test? %>
+  <%= javascript_include_tag("application") %>
+  <%= javascript_pack_tag("application") %>
   <%= csrf_meta_tags %>
 
   <%= javascript_doc_ready do %>

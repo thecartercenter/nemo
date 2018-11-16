@@ -1,0 +1,14 @@
+/* We reduce the transition times to be versy small
+   so that Capybara doesn't have to wait for these and get tripped up. */
+.modal.fade .modal-dialog {
+  -webkit-transition: -webkit-transform 0.001s ease-out;
+  -moz-transition: -moz-transform 0.001s ease-out;
+  -o-transition: -o-transform 0.001s ease-out;
+  transition: transform 0.001s ease-out;
+}
+
+.fade {
+  -webkit-transition: opacity 0.001s linear;
+  -o-transition: opacity 0.001s linear;
+  transition: opacity 0.001s linear;
+}
