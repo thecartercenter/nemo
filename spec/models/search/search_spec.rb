@@ -303,7 +303,7 @@ describe Search::Search do
     assert_search(str: "reviewed:YES", sql: "((t.reviewed = 't'))")
     assert_search(str: "reviewed:NO", sql: "((t.reviewed = 'f'))")
 
-    error = /The qualifier 'reviewed' must have a boolean value./
+    error = /The qualifier 'reviewed' must be set to 'yes' or 'no'/
     assert_search(str: "reviewed:true", error: error)
     assert_search(str: "reviewed:false", error: error)
     assert_search(str: "reviewed:Jimmy", error: error)
