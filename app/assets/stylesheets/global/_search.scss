@@ -42,6 +42,13 @@ form.search_form {
     input.btn {
       background-color: $gray-blue;
       padding: 4px 4%;
+      &:first-of-type{
+        margin-right: 3px;
+      }
+    }
+
+    .question-row{
+      margin-left: 20px;
     }
 
     @media (max-width: 767px){
