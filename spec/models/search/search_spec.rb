@@ -151,24 +151,21 @@ describe Search::Search do
   end
 
   it "gt operator should work with scale-type qualifier" do
-    assert_search(str: "submit-date > 2020-1-5", sql: "((t.subdate > '2020-1-5'))")
-    assert_search(str: "submit-date > 1-5-2020", sql: "((t.subdate > '1-5-2020'))")
-    assert_search(str: "submit-date > 2020/1/5", sql: "((t.subdate > '2020/1/5'))")
-    assert_search(str: "submit-date > 1.5.2020", sql: "((t.subdate > '1.5.2020'))")
+    assert_search(str: "submit-date > 2020-1-5", sql: "((t.subdate > '2020-01-05 00:00:00'))")
   end
 
   it "second number should not get taken into gt operator expression" do
-    assert_search(str: "submit-date > 2020-1-5 6", sql: "((t.subdate > '2020-1-5')) AND ((t1.f1 = '6'))")
+    assert_search(str: "submit-date > 2020-1-5 6", sql: "((t.subdate > '2020-01-05 00:00:00')) AND ((t1.f1 = '6'))")
   end
 
   it "AND should be allowed for scale qualifiers" do
     assert_search(str: "submit-date > (2020-1-5 2020-1-6)",
-                  sql: "((t.subdate > '2020-1-5') AND (t.subdate > '2020-1-6'))")
+                  sql: "((t.subdate > '2020-01-05 00:00:00') AND (t.subdate > '2020-01-06 00:00:00'))")
   end
 
   it "scale qualifier should work with regular qualifier" do
     assert_search(str: "submit-date <= 2020-1-5 source: bar",
-                  sql: "((t.subdate <= '2020-1-5')) AND ((t.source = 'bar'))")
+                  sql: "((t.subdate <= '2020-01-05 00:00:00')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier should work" do
@@ -298,7 +295,7 @@ describe Search::Search do
   it "supports multiple columns to generate a sql" do
     assert_search(str: 'number:987', sql: "((msg.to ILIKE '%987%') OR (msg.from ILIKE '%987%'))", qualifiers: INDEXED)
     assert_search(str: "date:2020-1-1", qualifiers: INDEXED,
-                  sql: "((msg.created_at = '2020-1-1') OR (msg.updated_at = '2020-1-1'))")
+                  sql: "((msg.created_at = '2020-01-01 00:00:00') OR (msg.updated_at = '2020-01-01 00:00:00'))")
   end
 
   it "raises error on invalid date" do

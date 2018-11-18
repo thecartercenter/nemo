@@ -130,7 +130,8 @@ class Search::Token
 
       if qualifier.type == :date
         begin
-          Date.parse(value_sql)
+          time = Time.zone.parse(value_sql)
+          value_sql = time.strftime("%Y-%m-%d %H:%M:%S")
         rescue ArgumentError
           raise_error_with_qualifier("invalid_date", qualifier, value: value_sql)
         end
