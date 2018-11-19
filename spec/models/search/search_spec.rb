@@ -13,7 +13,7 @@ describe Search::Search do
     Search::Qualifier.new(name: "submitter", col: "t3.f3", type: :text),
 
     # this qualifier supports scale-type comparison operators
-    Search::Qualifier.new(name: "submit_date", col: "t.subdate", type: :scale),
+    Search::Qualifier.new(name: "submit_date", col: "t.subdate", type: :date),
 
     # This qualifier supportes translated fields.
     Search::Qualifier.new(name: "name", col: "t.name", type: :translated),
@@ -46,7 +46,7 @@ describe Search::Search do
 
     # Qualifiers with multiple columns
     Search::Qualifier.new(name: "number", col: ["msg.to", "msg.from"], type: :text),
-    Search::Qualifier.new(name: "date", col: ["msg.created_at", "msg.updated_at"], type: :scale)
+    Search::Qualifier.new(name: "date", col: ["msg.created_at", "msg.updated_at"], type: :date)
   ]
 
   it "no defaults" do
@@ -151,19 +151,21 @@ describe Search::Search do
   end
 
   it "gt operator should work with scale-type qualifier" do
-    assert_search(str: "submit-date > 5", sql: "((t.subdate > '5'))")
+    assert_search(str: "submit-date > 2020-1-5", sql: "((t.subdate > '2020-01-05 00:00:00'))")
   end
 
   it "second number should not get taken into gt operator expression" do
-    assert_search(str: "submit-date > 5 6", sql: "((t.subdate > '5')) AND ((t1.f1 = '6'))")
+    assert_search(str: "submit-date > 2020-1-5 6", sql: "((t.subdate > '2020-01-05 00:00:00')) AND ((t1.f1 = '6'))")
   end
 
   it "AND should be allowed for scale qualifiers" do
-    assert_search(str: "submit-date > (5 6)", sql: "((t.subdate > '5') AND (t.subdate > '6'))")
+    assert_search(str: "submit-date > (2020-1-5 2020-1-6)",
+                  sql: "((t.subdate > '2020-01-05 00:00:00') AND (t.subdate > '2020-01-06 00:00:00'))")
   end
 
   it "scale qualifier should work with regular qualifier" do
-    assert_search(str: "submit-date <= 5 source: bar", sql: "((t.subdate <= '5')) AND ((t.source = 'bar'))")
+    assert_search(str: "submit-date <= 2020-1-5 source: bar",
+                  sql: "((t.subdate <= '2020-01-05 00:00:00')) AND ((t.source = 'bar'))")
   end
 
   it "text qualifier should work" do
@@ -292,7 +294,12 @@ describe Search::Search do
 
   it "supports multiple columns to generate a sql" do
     assert_search(str: 'number:987', sql: "((msg.to ILIKE '%987%') OR (msg.from ILIKE '%987%'))", qualifiers: INDEXED)
-    assert_search(str: 'date:date', sql: "((msg.created_at = 'date') OR (msg.updated_at = 'date'))", qualifiers: INDEXED)
+    assert_search(str: "date:2020-1-1", qualifiers: INDEXED,
+                  sql: "((msg.created_at = '2020-01-01 00:00:00') OR (msg.updated_at = '2020-01-01 00:00:00'))")
+  end
+
+  it "raises error on invalid date" do
+    assert_search(str: "submit-date < 2018-20-09", error: /'2018-20-09' is not a valid date./)
   end
 
   it "boolean qualifier should match correctly" do
