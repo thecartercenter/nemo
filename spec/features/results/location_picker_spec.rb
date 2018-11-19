@@ -14,7 +14,7 @@ feature "response form location picker", js: true do
   scenario "manually entering invalid location" do
     visit new_response_path(params)
 
-    fill_in("Location Question Title 1", with: "invalid")
+    fill_in("Location Question Title", with: "invalid")
     click_button("Save")
 
     expect(page).to have_content("Response is invalid")
