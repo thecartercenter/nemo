@@ -3,7 +3,7 @@ en:
     clear_confirm: "Are you sure you want to clear all completed operations?"
     details:
       user_import: "User import from %{file}"
-      option_set_import: "Option Set '%{name}' import"
+      option_set_import: "Option Set '%{file}' import"
       response_csv_export: "Response CSV export"
       broadcast: "Broadcast '%{message}'"
     operations_panel: "Operations Panel"
