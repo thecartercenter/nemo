@@ -120,6 +120,8 @@ class Broadcast < ApplicationRecord
       mission.users
     when "all_enumerators"
       mission.users.where("assignments.role" => "enumerator")
+    when "", nil
+      []
     else
       raise "invalid recipient_selection"
     end
