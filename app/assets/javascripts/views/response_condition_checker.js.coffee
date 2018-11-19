@@ -115,7 +115,21 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
         ).get()
 
       when 'datetime', 'date', 'time'
-        (new ELMO.TimeFormField(@rqElement.find('div.control'))).extract_str()
+        selects = @rqElement.find('div.control select')
+        if selects.map(-> $(this).val() == "").get().indexOf(true) != -1
+          null
+        else
+          # Figure out if this is a datetime, date, or time field
+          # this is based on the known ID naming scheme for the rails date controls
+          type = selects.attr("id").match(/([a-z]+)_value_\di$/)[1]
+
+          # Get array of select values and pad any single digit values with a zero
+          vals = selects.map(-> $(this).val().lpad("0", 2)).get()
+
+          str_bits = []
+          str_bits.push(vals.slice(0, 3).join("-")) if type == "datetime" || type == "date"
+          str_bits.push(vals.slice(-3).join(":")) if type == "datetime" || type == "time"
+          str_bits.join(" ")
 
       else
         @rqElement.find("div.control input[type='text']").val()
