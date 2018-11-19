@@ -53,7 +53,7 @@ class OptionSetImportsController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.option_set_import", name: original_filename),
+      details: t("operation.details.option_set_import", name: saved_upload.file.original_filename),
       job_params: {
         name: @option_set_import.name,
         saved_upload_id: saved_upload.id,
