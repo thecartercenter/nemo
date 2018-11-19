@@ -13,8 +13,8 @@ class TabularImportsController < ApplicationController
     saved_upload = SavedTabularUpload.new(file: params[:file_import])
 
     if saved_upload.save
-    # Json keys match hidden input names that contain the key in dropzone form.
-    # See ELMO.Views.FileUploaderView for more info.
+      # Json keys match hidden input names that contain the key in dropzone form.
+      # See ELMO.Views.FileUploaderView for more info.
       render(json: {saved_upload_id: saved_upload.id})
     else
       msg = I18n.t("errors.file_upload.invalid_format")
@@ -47,7 +47,7 @@ class TabularImportsController < ApplicationController
       creator: current_user,
       mission: current_mission,
       job_class: TabularImportOperationJob,
-      details: t("operation.details.#{tabular_type_symbol.to_s}", file: saved_upload.file.original_filename),
+      details: t("operation.details.#{tabular_type_symbol}", file: saved_upload.file.original_filename),
       job_params: {
         saved_upload_id: saved_upload.id,
         import_class: tabular_class.to_s
