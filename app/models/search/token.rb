@@ -128,6 +128,15 @@ class Search::Token
       # Need to use this or negations don't work as expected.
       and_not_null = op.kind == :noteq ? " AND #{column} IS NOT NULL" : ""
 
+      if qualifier.type == :date
+        begin
+          time = Time.zone.parse(value_sql)
+          value_sql = time.to_s(:std_datetime)
+        rescue ArgumentError
+          raise_error_with_qualifier("invalid_date", qualifier, value: value_sql)
+        end
+      end
+
       # if rhs is [blank], act accordingly
       inner =
         if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
