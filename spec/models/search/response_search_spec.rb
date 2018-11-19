@@ -20,19 +20,37 @@ describe Response do
     end
 
     describe "submit_date qualifier" do
-      let(:r1) { create(:response, form: form, created_at: "2017-01-01 22:00") }
+      context "with tricky timezone" do
+        let(:r1) { create(:response, form: form, created_at: "2017-01-01 22:00") }
 
-      around do |example|
-        in_timezone("Saskatchewan") { example.run }
+        around do |example|
+          in_timezone("Saskatchewan") do
+            r1 # Ensure this gets built inside correct timezone now, not before the `around` executes.
+            example.run
+          end
+        end
+
+        it "should match dates in local timezone" do
+          # Verify time stored in UTC (Jan 2), but search matches Jan 1.
+          expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq(2)
+          assert_search(%(submit-date:2017-01-01), r1)
+          assert_search(%(submit-date:2017-01-02))
+        end
       end
 
-      it "should match dates in local timezone" do
-        r1 # Ensure this gets built inside correct timezone now, not before the `around` executes.
+      context "with inequality operator" do
+        let!(:responses) do
+          [
+            create(:response, form: form, created_at: "2017-01-01 22:00"),
+            create(:response, form: form, created_at: "2017-01-01 22:00"),
+            create(:response, form: form, created_at: "2017-01-08 22:00")
+          ]
+        end
 
-        # Verify time stored in UTC (Jan 2), but search matches Jan 1.
-        expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq 2
-        assert_search(%(submit-date:2017-01-01), r1)
-        assert_search(%(submit-date:2017-01-02))
+        it do
+          assert_search(%(submit-date < 2017-01-04), *responses[0..1])
+          assert_search(%(submit-date > 2017-01-04), responses[2])
+        end
       end
     end
 
