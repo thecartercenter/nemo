@@ -15,6 +15,12 @@ feature "broadcasts flow", :sms, js: true do
   scenario "happy path" do
     click_link("Broadcasts")
     click_link("Send Broadcast")
+
+    # Validation should kick in if form empty.
+    click_button("Send")
+    expect(page).to have_content("This field is required. Nobody would receive this broadcast.")
+
+    # Fill out form this time.
     select("Both SMS and email", from: "Medium")
     select("Specific users", from: "Recipients")
 
