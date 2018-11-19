@@ -16,12 +16,16 @@ class UserBatchesController < ApplicationController
 
   def upload
     authorize!(:create, UserBatch)
+    saved_upload = SavedTabularUpload.new(file: params[:file_import])
 
-    saved_upload = SavedUpload.create!(file: params[:file_import])
-
+    if saved_upload.save
     # Json keys match hidden input names that contain the key in dropzone form.
     # See ELMO.Views.FileUploaderView for more info.
-    render(json: {saved_upload_id: saved_upload.id})
+      render(json: {saved_upload_id: saved_upload.id})
+    else
+      msg = I18n.t("errors.file_upload.invalid_format")
+      render(json: {errors: [msg]}, status: :unprocessable_entity)
+    end
   end
 
   def create
