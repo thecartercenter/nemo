@@ -26,15 +26,16 @@ module Media
       # will be assigned when the response is submitted
       media.answer = Answer.find(params[:answer_id]) if params[:answer_id]
 
-    if media.save
-      # Json keys match hidden input names that contain the key in dropzone form.
-      # See ELMO.Views.FileUploaderView for more info.
-      render(json: {media_object_id: media.id}, status: :created)
-    else
-      # Currently there is only one type of validation failure: incorrect type.
-      # The default paperclip error messages are heinous, which is why we're doing this.
-      msg = I18n.t("errors.file_upload.invalid_format")
-      render(json: {errors: [msg]}, status: :unprocessable_entity)
+      if media.save
+        # Json keys match hidden input names that contain the key in dropzone form.
+        # See ELMO.Views.FileUploaderView for more info.
+        render(json: {media_object_id: media.id}, status: :created)
+      else
+        # Currently there is only one type of validation failure: incorrect type.
+        # The default paperclip error messages are heinous, which is why we're doing this.
+        msg = I18n.t("errors.file_upload.invalid_format")
+        render(json: {errors: [msg]}, status: :unprocessable_entity)
+      end
     end
 
     def destroy

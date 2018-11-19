@@ -17,7 +17,7 @@ class UserBatchesController < ApplicationController
   def upload
     authorize!(:create, UserBatch)
 
-    saved_upload = SavedUpload.create!(file: params[:userbatch])
+    saved_upload = SavedUpload.create!(file: params[:file_import])
 
     # Json keys match hidden input names that contain the key in dropzone form.
     # See ELMO.Views.FileUploaderView for more info.
