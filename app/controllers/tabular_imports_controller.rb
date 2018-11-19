@@ -50,7 +50,7 @@ class TabularImportsController < ApplicationController
       details: t("operation.details.#{tabular_type_symbol.to_s}", file: saved_upload.file.original_filename),
       job_params: {
         saved_upload_id: saved_upload.id,
-        import_class: @user_batch.class.to_s
+        import_class: tabular_class.to_s
       }
     )
   end

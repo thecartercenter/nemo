@@ -791,7 +791,6 @@ en:
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         option_set_import:
           general: "Option Set import is invalid (see below)."
-
           wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
         question:
           at_least_one_name: "You must enter a title in at least one language."

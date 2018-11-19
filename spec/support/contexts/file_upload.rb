@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-shared_context "dropzone" do
+shared_context "file upload" do
   def drop_in_dropzone(file_path, index = 0)
     # Generate a fake input selector
     page.execute_script <<-JS

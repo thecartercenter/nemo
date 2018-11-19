@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "response form file upload", js: true do
   include_context "response tree"
-  include_context "dropzone"
+  include_context "file upload"
 
   let(:user) { create(:user) }
   let!(:form) { create(:form, :published, question_types: %w[image video]) }
@@ -87,19 +87,5 @@ feature "response form file upload", js: true do
     # no image thumbnail, video thumbnail present
     expect(image_node).not_to have_selector(".media-thumbnail img")
     expect(video_node).to have_selector(".media-thumbnail img")
-  end
-
-  def expect_preview(node)
-    expect(node).to have_selector(".dz-preview")
-    expect(node).not_to have_content("The uploaded file was not an accepted format.")
-  end
-
-  def expect_no_preview(node)
-    expect(node).not_to have_selector(".dz-preview")
-  end
-
-  def delete_file(node)
-    node.find(".delete").click
-    page.driver.browser.switch_to.alert.accept
   end
 end

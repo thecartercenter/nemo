@@ -3,7 +3,7 @@
 require "rails_helper"
 
 feature "user batch file upload", js: true do
-  include_context "dropzone"
+  include_context "file upload"
 
   let(:mission) { create(:mission) }
   let(:admin) { create(:user, role_name: "coordinator", admin: true) }
