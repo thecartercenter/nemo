@@ -1,0 +1,38 @@
+2018-10-17 15:32:41,153 INFO o.a.j.u.JMeterUtils: Setting Locale to en_EN
+2018-10-17 15:32:41,185 INFO o.a.j.JMeter: Loading user properties from: /usr/local/Cellar/jmeter/5.0/libexec/bin/user.properties
+2018-10-17 15:32:41,185 INFO o.a.j.JMeter: Loading system properties from: /usr/local/Cellar/jmeter/5.0/libexec/bin/system.properties
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: Copyright (c) 1998-2018 The Apache Software Foundation
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: Version 5.0 r1840935
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: java.version=1.8.0_74
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: java.vm.name=Java HotSpot(TM) 64-Bit Server VM
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: os.name=Mac OS X
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: os.arch=x86_64
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: os.version=10.13.1
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: file.encoding=UTF-8
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: Max memory     =1073741824
+2018-10-17 15:32:41,198 INFO o.a.j.JMeter: Available Processors =4
+2018-10-17 15:32:41,205 INFO o.a.j.JMeter: Default Locale=English (EN)
+2018-10-17 15:32:41,206 INFO o.a.j.JMeter: JMeter  Locale=English (EN)
+2018-10-17 15:32:41,207 INFO o.a.j.JMeter: JMeterHome=/usr/local/Cellar/jmeter/5.0/libexec
+2018-10-17 15:32:41,207 INFO o.a.j.JMeter: user.dir  =/Users/tomsmyth/code/nemo
+2018-10-17 15:32:41,208 INFO o.a.j.JMeter: PWD       =/Users/tomsmyth/code/nemo
+2018-10-17 15:32:41,212 INFO o.a.j.JMeter: IP: 10.1.10.229 Name: Sassafras3-10.local FullName: 10.1.10.229
+2018-10-17 15:32:45,989 INFO o.a.j.g.a.LookAndFeelCommand: Installing Darcula LAF
+2018-10-17 15:32:46,028 INFO o.a.j.g.a.LookAndFeelCommand: Using look and feel: com.bulenkov.darcula.DarculaLaf [Darcula]
+2018-10-17 15:32:46,028 INFO o.a.j.JMeter: Setting LAF to: com.bulenkov.darcula.DarculaLaf
+2018-10-17 15:32:46,147 INFO o.a.j.JMeter: Loaded icon properties from org/apache/jmeter/images/icon.properties
+2018-10-17 15:32:46,883 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must contain the string: '.functions.'
+2018-10-17 15:32:46,883 INFO o.a.j.e.u.CompoundVariable: Note: Function class names must not contain the string: '.gui.'
+2018-10-17 15:32:49,755 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/html is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-10-17 15:32:49,756 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xhtml+xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-10-17 15:32:49,756 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for application/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-10-17 15:32:49,756 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/xml is org.apache.jmeter.protocol.http.parser.LagartoBasedHtmlParser
+2018-10-17 15:32:49,756 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/vnd.wap.wml is org.apache.jmeter.protocol.http.parser.RegexpHTMLParser
+2018-10-17 15:32:49,756 INFO o.a.j.p.h.s.HTTPSamplerBase: Parser for text/css is org.apache.jmeter.protocol.http.parser.CssParser
+2018-10-17 15:32:50,484 INFO o.a.j.e.KeyToolUtils: keytool found at 'keytool'
+2018-10-17 15:32:50,485 INFO o.a.j.p.h.p.ProxyControl: HTTP(S) Test Script Recorder SSL Proxy will use keys that support embedded 3rd party resources in file /usr/local/Cellar/jmeter/5.0/libexec/bin/proxyserver.jks
+2018-10-17 15:32:50,747 INFO o.a.j.s.FileServer: Default base='/Users/tomsmyth/code/nemo'
+2018-10-17 15:32:51,350 INFO o.a.j.s.SampleResult: Note: Sample TimeStamps are START times
+2018-10-17 15:32:51,351 INFO o.a.j.s.SampleResult: sampleresult.default.encoding is set to ISO-8859-1
+2018-10-17 15:32:51,354 INFO o.a.j.s.SampleResult: sampleresult.useNanoTime=true
+2018-10-17 15:32:51,354 INFO o.a.j.s.SampleResult: sampleresult.nanoThreadSleep=5000
