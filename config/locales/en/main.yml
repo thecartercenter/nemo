@@ -1390,7 +1390,7 @@ en:
     if_you_made_it: "If you did make this request just click the link below:"
     login_name: "Your login name is %{login}."
     to_choose: "To choose a password, please go here:"
-    must_choose: "You MUST choose a password before you can use any election monitoring systems, including mobile phone based systems."
+    must_choose: "You MUST choose a password before you can use any systems, including mobile phone based systems."
     password_reset_instructions: "Password Reset Instructions"
     request_made: "A request to reset your %{site} password has been made. If you did not make this request, simply ignore this email."
     welcome: "Welcome to %{site}!"
