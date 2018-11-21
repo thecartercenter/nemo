@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "response form file upload", js: true do
   include_context "response tree"
-  include_context "dropzone"
+  include_context "file upload"
 
   let(:user) { create(:user) }
   let!(:form) { create(:form, :published, question_types: %w[image video]) }
@@ -45,9 +45,9 @@ feature "response form file upload", js: true do
 
     # thumbnails are still present
     expect(image_node).to have_selector(".media-thumbnail img")
-    expect_image(image_node.find(".media-thumbnail img"))
+    expect_thumbnail(image_node)
     expect(video_node).to have_selector(".media-thumbnail img")
-    expect_image(video_node.find(".media-thumbnail img"), placeholder: true)
+    expect_thumbnail(video_node, placeholder: true)
 
     # media can be downloaded
     expect_download(image_node.find(".media-thumbnail .download")["href"])
@@ -95,18 +95,13 @@ feature "response form file upload", js: true do
     expect(video_node).to have_selector(".media-thumbnail img")
   end
 
-
-  def delete_file(node)
-    node.find(".delete").click
-    page.driver.browser.switch_to.alert.accept
-  end
-
   def expect_download(url)
     res = Net::HTTP.get_response(URI(url))
     expect(res.code).to eq("200")
   end
 
-  def expect_image(img, placeholder: false)
+  def expect_thumbnail(node, placeholder: false)
+    img = node.find(".media-thumbnail img")
     expect_download(img["src"])
 
     if placeholder
