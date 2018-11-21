@@ -1,16 +1,10 @@
 <% if admin_mode? %>
-
   <%= render "users/admin_assignments" %>
-
 <% else %>
-
   <% if read_only || cannot?(:change_assignments, @user) %>
-
     <%# in show mode, just show the role the current mission's assignment %>
-    <%= @current_assignment.role ? t(@current_assignment.role, :scope => :role) : t('common.none') %>
-
+    <%= @current_assignment.role ? t(@current_assignment.role, scope: :role) : t("common.none") %>
   <% else %>
-
     <%= elmo_fields_for("user[assignments_attributes][0]", @current_assignment) do |af| %>
       <%= af.hidden_field(:id) %>
 
@@ -18,12 +12,12 @@
       <%= af.hidden_field(:mission_id) %>
 
       <%# special error output %>
-      <%= content_tag(:div, @user.errors[:'assignments.role'].join, :class => 'form-errors') unless @user.errors[:'assignments.role'].empty? %>
+      <% unless @user.errors[:"assignments.role"].empty? %>
+        <%= content_tag(:div, @user.errors[:"assignments.role"].join, class: "form-errors") %>
+      <% end %>
 
-      <%= af.select(:role, User::ROLES.map{|r| [t(r, :scope => :role), r]}, {:prompt => "[#{t('role.blank')}]"},
-        :class => "form-control") %>
+      <%= af.select(:role, User::ROLES.map { |r| [t(r, scope: :role), r] },
+                    {prompt: "[#{t("role.blank")}]"}, class: "form-control") %>
     <% end %>
-
   <% end %>
-
 <% end %>
