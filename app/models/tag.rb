@@ -1,5 +1,7 @@
 class Tag < ApplicationRecord
-  include MissionBased, Comparable
+  include MissionBased
+  include Comparable
+  include Replication::Replicable
 
   acts_as_paranoid
 
@@ -8,6 +10,8 @@ class Tag < ApplicationRecord
   has_many :questions, through: :taggings
 
   before_save { |tag| tag.name.downcase! }
+
+  replicable backwards_assoc: :taggings, reusable_in_clone: true, reuse_if_match: :name
 
   MAX_SUGGESTIONS = 5 # The max number of suggestion matches to return
   MAX_NAME_LENGTH = 64

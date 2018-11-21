@@ -180,7 +180,9 @@ class Replication::ObjProxy
       mappings << "mission_id"
       mappings << "is_standard" if klass.standardizable?
     when :to_mission
-      mappings << ["mission_id", quote_or_null(replicator.target_mission_id)]
+      if klass_has_mission
+        mappings << ["mission_id", quote_or_null(replicator.target_mission_id)]
+      end
       mappings << ["standard_copy", true] if klass.standardizable? && replicator.source_is_standard?
     end
     mappings << ["original_id", "id"] if klass.standardizable?
@@ -282,5 +284,9 @@ class Replication::ObjProxy
 
   def quote_or_null(id)
     id.nil? ? "NULL" : "'#{id}'"
+  end
+
+  def klass_has_mission
+    klass.has_attribute?(:mission)
   end
 end

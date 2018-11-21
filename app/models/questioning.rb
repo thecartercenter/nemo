@@ -1,6 +1,4 @@
 class Questioning < FormItem
-  include Replication::Replicable
-
   alias answers response_nodes
 
   delegate :all_options, :audio_prompt, :auto_increment?, :code, :code=, :first_leaf_option_node,

@@ -1,5 +1,5 @@
 class Tagging < ApplicationRecord
-  include MissionBased
+  include Replication::Replicable
 
   acts_as_paranoid
 
@@ -7,4 +7,6 @@ class Tagging < ApplicationRecord
   belongs_to :tag
 
   delegate :mission_id, to: :question
+
+  replicable child_assocs: :tag, dont_copy: [:question_id, :tag_id]
 end

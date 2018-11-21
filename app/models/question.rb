@@ -85,7 +85,7 @@ class Question < ApplicationRecord
            :sms_formatting_as_appendix?,
            to: :option_set, allow_nil: true
 
-  replicable child_assocs: :option_set, backwards_assocs: :questioning, sync: :code,
+  replicable child_assocs: [:option_set, :taggings], backwards_assocs: :questioning, sync: :code,
     uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
     compatibility: %i[qtype_name option_set_id], reusable_in_clone: true
 
