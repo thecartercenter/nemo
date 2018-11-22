@@ -243,7 +243,12 @@ class UserBatch
 
   def coerce_user_groups(user_group_names)
     (user_group_names || "").strip.split(";").map do |gn|
-      UserGroup.find_or_create_by(name: gn.strip)
+      user_group = UserGroup.find_by("LOWER(name) = :name AND mission_id = :mission_id",
+        name: gn.strip.downcase,
+        mission_id: @mission_id
+      )
+      user_group = UserGroup.create(name: gn.strip, mission_id: @mission_id) unless user_group.present?
+      user_group
     end
   end
 

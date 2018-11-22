@@ -46,8 +46,8 @@ describe UserBatch, :slow do
   end
 
   describe "groups" do
-    let!(:group1) { create(:user_group, name: "New Mexico dragons") }
-    let!(:group2) { create(:user_group, name: "Delaware whales") }
+    let!(:group1) { create(:user_group, name: "New Mexico dragons", mission: get_mission) }
+    let!(:group2) { create(:user_group, name: "Delaware whales", mission: get_mission) }
 
     it "works with single group" do
       ub = create_user_batch("single_group.csv")
@@ -73,6 +73,8 @@ describe UserBatch, :slow do
       ano = UserGroup.find_by(name: "A new one")
       hno = UserGroup.find_by(name: "Halla new one")
       expect(ub).to be_succeeded
+      expect(ano.mission_id).not_to be_blank
+      expect(hno.mission_id).not_to be_blank
       assert_user_attribs(ub.users[3], login: "user3", user_groups: [ano, hno])
     end
   end
@@ -173,7 +175,7 @@ describe UserBatch, :slow do
   end
 
   def create_user_batch(fixture_file)
-    ub = UserBatch.new(file: user_batch_fixture(fixture_file))
+    ub = UserBatch.new(file: user_batch_fixture(fixture_file), mission_id: mission.id)
     ub.create_users(mission)
     ub
   end
