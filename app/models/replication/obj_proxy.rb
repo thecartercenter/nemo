@@ -287,7 +287,6 @@ class Replication::ObjProxy
   end
 
   def klass_has_mission_id
-    puts "#{klass} has mission: #{klass.has_attribute?(:mission_id)}"
     klass.has_attribute?(:mission_id)
   end
 end
