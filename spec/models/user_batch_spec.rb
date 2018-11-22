@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe UserBatch, :slow do
@@ -23,8 +25,8 @@ describe UserBatch, :slow do
       login: "clo", name: "Cha Lo", phone: "+983755482", phone2: "+9837494434",
       birth_year: nil, gender: nil, gender_custom: nil, email: "ch@lo.com", nationality: nil)
 
-    expect(User.count).to eq 5
-    expect(Assignment.count).to eq 5
+    expect(User.count).to eq(5)
+    expect(Assignment.count).to eq(5)
   end
 
   # This spec was running very slowly since it was creating 2500 users!
@@ -40,9 +42,22 @@ describe UserBatch, :slow do
   it "creates users from csv" do
     ub = create_user_batch("batch_of_3.csv")
     expect(ub).to be_succeeded
+    expect(User.count).to eq(3)
+    expect(Assignment.count).to eq(3)
+  end
 
-    expect(User.count).to eq 3
-    expect(Assignment.count).to eq 3
+  it "in French" do
+    in_locale(:fr) do
+      ub = create_user_batch("french.csv")
+      expect(ub).to be_succeeded
+      expect(User.count).to eq(3)
+      assert_user_attribs(ub.users[0], login: "user0", name: "User0", phone: "+17098885555",
+                                       phone2: "+17098885556", gender: "man", email: "email0@email.com",
+                                       birth_year: 1981, nationality: "CA", notes: "note_0")
+      expect(ub.users[0].user_groups[0].name).to eq("Les habitants")
+      assert_user_attribs(ub.users[1], login: "user1")
+      assert_user_attribs(ub.users[2], login: "user2")
+    end
   end
 
   describe "groups" do
@@ -99,14 +114,14 @@ describe UserBatch, :slow do
     # This file was causing users to get created with passwords.
     ub = create_user_batch("no_passwords.xlsx")
     expect(ub).to be_succeeded
-    expect(User.count).to eq 29
-    expect(User.all.map(&:crypted_password).any?(&:nil?)).to be false
+    expect(User.count).to eq(29)
+    expect(User.all.map(&:crypted_password).any?(&:nil?)).to be(false)
   end
 
   it "works with one row" do
     ub = create_user_batch("one_row.xlsx")
     expect(ub).to be_succeeded
-    expect(User.count).to eq 1
+    expect(User.count).to eq(1)
   end
 
   it "gracefully handles missing header row with a number in it" do
@@ -131,11 +146,11 @@ describe UserBatch, :slow do
       expect(ub).not_to be_succeeded
 
       error_messages = ub.errors.messages.values
-      expect(error_messages.length).to eq 4
-      expect(error_messages[0]).to eq ["Row 2: Main Phone: Please enter a unique value."]
-      expect(error_messages[1]).to eq ["Row 4: Main Phone: Please enter a unique value."]
-      expect(error_messages[2]).to eq ["Row 5: Alternate Phone: Please enter a unique value."]
-      expect(error_messages[3]).to eq ["Row 5: Main Phone: Please enter a unique value."]
+      expect(error_messages.length).to eq(4)
+      expect(error_messages[0]).to eq(["Row 2: Main Phone: Please enter a unique value."])
+      expect(error_messages[1]).to eq(["Row 4: Main Phone: Please enter a unique value."])
+      expect(error_messages[2]).to eq(["Row 5: Alternate Phone: Please enter a unique value."])
+      expect(error_messages[3]).to eq(["Row 5: Main Phone: Please enter a unique value."])
     end
 
     it "does not check for email uniqueness" do
@@ -156,11 +171,11 @@ describe UserBatch, :slow do
       expect(ub).not_to be_succeeded
       error_messages = ub.errors.messages.values
 
-      expect(error_messages.length).to eq 4
-      expect(error_messages[0]).to eq ["Row 2: Username: Please enter a unique value."]
-      expect(error_messages[1]).to eq ["Row 2: Main Phone: Please enter a unique value."]
-      expect(error_messages[2]).to eq ["Row 6: Alternate Phone: Please enter a unique value."]
-      expect(error_messages[3]).to eq ["Row 6: Main Phone: Please enter a unique value."]
+      expect(error_messages.length).to eq(4)
+      expect(error_messages[0]).to eq(["Row 2: Username: Please enter a unique value."])
+      expect(error_messages[1]).to eq(["Row 2: Main Phone: Please enter a unique value."])
+      expect(error_messages[2]).to eq(["Row 6: Alternate Phone: Please enter a unique value."])
+      expect(error_messages[3]).to eq(["Row 6: Main Phone: Please enter a unique value."])
     end
   end
 

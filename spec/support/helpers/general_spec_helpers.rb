@@ -72,6 +72,13 @@ module GeneralSpecHelpers
     Time.zone = old_tz
   end
 
+  def in_locale(locale)
+    old_locale = I18n.locale
+    I18n.locale = locale
+    yield
+    I18n.locale = old_locale
+  end
+
   def tidyxml(str)
     Nokogiri::XML(str, &:noblanks).to_s
   end
