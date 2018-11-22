@@ -11,7 +11,7 @@ class Tag < ApplicationRecord
 
   before_save { |tag| tag.name.downcase! }
 
-  replicable backwards_assoc: :taggings, reusable_in_clone: true, reuse_if_match: :name
+  replicable backwards_assoc: :taggings#, reusable_in_clone: true, reuse_if_match: [:name. :mission]
 
   MAX_SUGGESTIONS = 5 # The max number of suggestion matches to return
   MAX_NAME_LENGTH = 64
