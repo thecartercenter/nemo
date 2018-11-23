@@ -137,7 +137,7 @@ ELMO::Application.routes.draw do
       end
     end
 
-    resources :user_batches, path: "user-batches", only: %i[new create] do
+    resources :user_imports, path: "user-imports", only: %i[new create] do
       collection do
         post :upload
         get "users-template", as: "template", action: "template", defaults: {format: "xslx"}

@@ -529,7 +529,7 @@ en:
         sms_auth_code: "SMS Auth Code"
         user_group_ids: "Groups"
         user_groups: "Groups"
-      user_batch:
+      user_import:
         file: "File to Import"
 
     # these strings override the attribute strings above in table headers only
@@ -868,10 +868,12 @@ en:
               invalid: "Please use only unaccented letters, numbers, periods, and underscores."
             reset_password_method:
               cant_passwd_email: "Not allowed unless an email address is provided."
-        user_batch:
-          general: "User batch is invalid (see below)."
+        user_import:
+          general: "User import batch is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
-          invalid_headers: "The uploaded spreadsheet has invalid headers."
+          invalid_headers:
+            one: "The following column header was not recognized: %{headers}."
+            other: "The following column headers were not recognized: %{headers}."
           too_many_errors: "The uploaded spreadsheet has too many errors. Processing stopped at row %{row}."
         user_group:
           general: "User group is invalid."
@@ -1117,7 +1119,7 @@ en:
       index: "SMS Log"
     sms_tests:
       all: "SMS Test Console"
-    user_batches:
+    user_imports:
       all: "Import Users"
     user_sessions:
       new: "Login"
@@ -2153,7 +2155,7 @@ en:
     default: "You are not authorized to access that page or operation."
     must_login: "You must login to access that page."
 
-  user_batch:
+  user_import:
     instructions_html: |-
       Upload a spreadsheet with your users. Only XLSX-type Excel spreadsheets and CSV files are accepted.
 

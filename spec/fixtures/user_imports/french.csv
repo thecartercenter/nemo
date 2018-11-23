@@ -1,0 +1,4 @@
+IDENTIFIANT,nom complet,numéro de téléphone principal,Autre numéro de téléphone,E-mail,Année de naissance,Genre,Nationnalité,Observations,Groupes
+user0,User0,17098885555,17098885556,email0@email.com,1981,Homme,Canada,note_0,Les habitants
+user1,User1,,,email1@email.com,,,,note_1,
+user2,User2,,,email2@email.com,,,,note_2,

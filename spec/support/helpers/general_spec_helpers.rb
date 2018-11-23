@@ -26,8 +26,8 @@ module GeneralSpecHelpers
     fixture("option_set_imports", name)
   end
 
-  def user_batch_fixture(name)
-    fixture("user_batches", name)
+  def user_import_fixture(name)
+    fixture("user_imports", name)
   end
 
   # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
@@ -70,6 +70,13 @@ module GeneralSpecHelpers
     Time.zone = tz
     yield
     Time.zone = old_tz
+  end
+
+  def in_locale(locale)
+    old_locale = I18n.locale
+    I18n.locale = locale
+    yield
+    I18n.locale = old_locale
   end
 
   def tidyxml(str)

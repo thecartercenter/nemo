@@ -15,6 +15,9 @@ Layout/AlignParameters:
 Layout/CaseIndentation:
   EnforcedStyle: end
 
+Layout/EmptyLineAfterGuardClause:
+  Enabled: false
+
 Layout/FirstParameterIndentation:
   EnforcedStyle: consistent
 

@@ -509,7 +509,7 @@ ar:
         sms_auth_code: "رمز تصريح الرسالة النصية القصيرة"
         user_group_ids: "المجموعات"
         user_groups: "المجموعات"
-      user_batch:
+      user_import:
         file: "ملف لاستيراد"
     table_headers:
       response:
@@ -848,7 +848,7 @@ ar:
               invalid: "الرجاء استخدام حروف فقط غير معلمة، وأرقام، فترات، وخط على السطر."
             reset_password_method:
               cant_passwd_email: "غير مسموح بها ما لم يتم تقديم عنوان بريد إلكتروني."
-        user_batch:
+        user_import:
           general: "حزمة المستخدمين غير صالحة (انظر ادناه)"
           internal: "حدث خطأ داخلي أثناء معالجة التحميل."
           invalid_headers: "جدول البيانات الذي تم تحميله فيه عناوين اعمدة غير صالحة."
@@ -1074,7 +1074,7 @@ ar:
       index: "سجل الرسائل"
     sms_tests:
       all: "وحدة تحكم اختبار الرسائل النصية القصيرة"
-    user_batches:
+    user_imports:
       all: "استيراد المستخدمين"
     user_sessions:
       new: "تسيجل الدخول"
@@ -2053,7 +2053,7 @@ ar:
   unauthorized:
     default: "غير مصرح لك للوصول إلى هذه الصفحة أو العملية."
     must_login: "عليك تسجيل الدخول للوصول إلى هذه الصفحة."
-  user_batch:
+  user_import:
     instructions_html: |-
         استيراد جدول بيانات مع مستخدمينك. فقط جداول البيانات XLSX  وملفات CSV ستقبل.
 
