@@ -47,7 +47,7 @@ class OperationJob < ApplicationJob
   def operation_raised_error(exception)
     save_failure(I18n.t("operation.errors.server_error"))
     ExceptionNotifier.notify_exception(exception)
-    raise exception
+    raise exception if Rails.env.test?
   end
 
   def operation_completed
