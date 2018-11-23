@@ -183,6 +183,9 @@ describe UserBatch do
   def expect_user_count(count)
     expect(User.count).to eq(count)
     expect(Assignment.count).to eq(count)
+
+    # Ensure assignments are correct
+    expect(User.all.map { |u| u.missions.to_a }.uniq).to eq([[mission]])
   end
 
   def expect_user_attribs(index, attribs)
