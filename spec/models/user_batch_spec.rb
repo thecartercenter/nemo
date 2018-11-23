@@ -197,12 +197,13 @@ describe UserBatch do
     return if groups.nil?
 
     # If strings passed as groups, look them up and check them.
-    (groups || []).each_with_index do |group, i|
-      next unless group.is_a?(String)
-      groups[i] = UserGroup.name_matching(group).first
-      raise "Group #{group} not found" if groups[i].nil?
-      expect(groups[i].mission).not_to be_nil
+    groups = (groups || []).map do |group_or_name|
+      next(group_or_name) unless group_or_name.is_a?(String)
+      group = UserGroup.where(name: group_or_name).first
+      raise "Group #{group_or_name} not found" if group.nil?
+      expect(group.mission).not_to be_nil # Check group created properly.
+      group
     end
-    expect(created_users[index].user_groups.to_a).to match_array(groups)
+    expect(created_users[index].user_groups.map(&:id)).to match_array(groups.map(&:id))
   end
 end
