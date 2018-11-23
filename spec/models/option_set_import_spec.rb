@@ -11,9 +11,8 @@ describe OptionSetImport do
     name = "Simple"
 
     import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("simple.xlsx"))
-
-    succeeded = import.create_option_set
-    expect(succeeded).to be_truthy
+    import.run
+    expect(import).to be_succeeded
 
     option_set = import.option_set
 
@@ -24,9 +23,8 @@ describe OptionSetImport do
     name = "Simple Standard"
 
     import = OptionSetImport.new(mission_id: nil, name: name, file: option_set_fixture("simple.xlsx"))
-
-    succeeded = import.create_option_set
-    expect(succeeded).to be_truthy
+    import.run
+    expect(import).to be_succeeded
 
     option_set = import.option_set
 
@@ -41,9 +39,8 @@ describe OptionSetImport do
       name: name,
       file: option_set_fixture("multilevel_geographic.xlsx")
     )
-
-    succeeded = import.create_option_set
-    expect(succeeded).to be_truthy
+    import.run
+    expect(import).to be_succeeded
 
     option_set = import.option_set
 
@@ -82,18 +79,16 @@ describe OptionSetImport do
       name: name,
       file: option_set_fixture("invalid_geographic.xlsx")
     )
-
-    succeeded = import.create_option_set
-    expect(succeeded).to be_falsy
+    import.run
+    expect(import).not_to be_succeeded
   end
 
   it 'should successfully import csv option set' do
     name = "CSV Set"
 
     import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("simple.csv"))
-
-    succeeded = import.create_option_set
-    expect(succeeded).to be_truthy
+    import.run
+    expect(import).to be_succeeded
 
     option_set = import.option_set
 
