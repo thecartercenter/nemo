@@ -142,7 +142,7 @@ describe UserBatch do
   end
 
   context "with simple validation error" do
-    let(:filename) { "validation_errors.xlsx" }
+    let(:filename) { "single_error.xlsx" }
 
     it "handles error" do
       expect(import).not_to be_succeeded
@@ -158,10 +158,11 @@ describe UserBatch do
     end
   end
 
-  context "with duplicate usernames and phones" do
-    let(:filename) { "varying_info.xlsx" }
+  context "with duplicate usernames, phones, and too many errors" do
+    let(:filename) { "multiple_errors.xlsx" }
 
     before do
+      stub_const("UserBatch::IMPORT_ERROR_CUTOFF", 3)
       # a@bc.com also exists in fixure but we don't care about email uniqueness
       create(:user, login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil, email: "a@bc.com")
       create(:user, phone: "+9837494434", phone2: "+983755482")
@@ -170,11 +171,12 @@ describe UserBatch do
 
     it "returns appropriate errors and ignores deleted data" do
       expect(import).not_to be_succeeded
-      expect(error_messages.length).to eq(4)
       expect(error_messages[0]).to eq("Row 2: Username: Please enter a unique value.")
       expect(error_messages[1]).to eq("Row 2: Main Phone: Please enter a unique value.")
       expect(error_messages[2]).to eq("Row 6: Main Phone: Please enter a unique value.")
       expect(error_messages[3]).to eq("Row 6: Alternate Phone: Please enter a unique value.")
+      expect(error_messages[4]).to eq("The uploaded spreadsheet has too many errors. Processing stopped at row 6.")
+      expect(error_messages.size).to eq(5) # Row 7 shouldn't be processed.
     end
   end
 
