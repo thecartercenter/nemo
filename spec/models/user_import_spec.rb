@@ -2,11 +2,11 @@
 
 require "rails_helper"
 
-describe UserBatch do
+describe UserImport do
   let(:mission) { get_mission }
   let(:error_messages) { import.errors.messages[:base] }
   let(:import) do
-    UserBatch.new(file: user_batch_fixture(filename), mission: mission).tap(&:run)
+    UserImport.new(file: user_import_fixture(filename), mission_id: mission.id, name: "").tap(&:run)
   end
   let(:created_users) { User.order(:login).to_a }
 
@@ -162,7 +162,7 @@ describe UserBatch do
     let(:filename) { "multiple_errors.xlsx" }
 
     before do
-      stub_const("UserBatch::IMPORT_ERROR_CUTOFF", 3)
+      stub_const("UserImport::IMPORT_ERROR_CUTOFF", 3)
       # a@bc.com also exists in fixure but we don't care about email uniqueness
       create(:user, login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil, email: "a@bc.com")
       create(:user, phone: "+9837494434", phone2: "+983755482")

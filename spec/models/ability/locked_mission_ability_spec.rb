@@ -20,8 +20,8 @@ describe "abilities for locked missions" do
     @locked.save
   end
 
-  it "user cannot manage UserBatch for a locked mission" do
-    expect(admin_ability.can?(:manage, UserBatch)).to eq(false)
+  it "user cannot manage UserImport for a locked mission" do
+    expect(admin_ability.can?(:manage, UserImport)).to eq(false)
   end
 
   it "user shouldnt be able to update users for a locked mission" do

@@ -188,10 +188,7 @@ class Ability
             # special change_assignments permission is given so that users cannot update their own assignments via edit profile
             can [:create, :update, :login_instructions, :change_assignments, :activate], User, assignments: { mission_id: mission.id }
 
-            # can create user batches
-            can :manage, UserBatch
-
-            # can manage user groups
+            can :manage, UserImport
             can :manage, UserGroup, mission_id: mission.id
             can :manage, UserGroupAssignment
 

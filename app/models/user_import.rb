@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Imports users from CSV or XLSX.
-class UserBatch
+class UserImport
   include ActiveModel::Validations
   include ActiveModel::Conversion
   extend ActiveModel::Naming
@@ -11,14 +11,14 @@ class UserBatch
                          gender_custom nationality notes user_groups].freeze
   EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups].freeze
 
-  attr_accessor :file, :mission, :col_idx_to_attr_map
+  attr_accessor :file, :mission_id, :col_idx_to_attr_map
   attr_reader :users
 
   validates :file, presence: true
 
-  def initialize(file:, mission:)
+  def initialize(file: nil, mission_id: nil, name: nil)
     self.file = file
-    self.mission = mission
+    self.mission_id = mission_id
   end
 
   def persisted?
@@ -35,7 +35,7 @@ class UserBatch
 
     User.transaction do
       parse_rows(data).each_with_index do |row, index|
-        row[:assignments] = [Assignment.new(mission: mission, role: User::ROLES.first)]
+        row[:assignments] = [Assignment.new(mission_id: mission_id, role: User::ROLES.first)]
         user = User.create(row)
         add_validation_error_messages(user, index + 2) if user.invalid?
         add_too_many_errors(index + 2) && break if errors.count >= IMPORT_ERROR_CUTOFF
@@ -115,8 +115,8 @@ class UserBatch
     (user_group_names || "").strip.split(";").map do |gn|
       user_group = UserGroup.find_by("LOWER(name) = :name AND mission_id = :mission_id",
         name: gn.strip.downcase,
-        mission_id: mission.id)
-      user_group || UserGroup.create!(name: gn.strip, mission_id: mission.id)
+        mission_id: mission_id)
+      user_group || UserGroup.create!(name: gn.strip, mission_id: mission_id)
     end
   end
 

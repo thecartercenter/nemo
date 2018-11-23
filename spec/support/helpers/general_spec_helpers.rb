@@ -26,8 +26,8 @@ module GeneralSpecHelpers
     fixture("option_set_imports", name)
   end
 
-  def user_batch_fixture(name)
-    fixture("user_batches", name)
+  def user_import_fixture(name)
+    fixture("user_imports", name)
   end
 
   # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk

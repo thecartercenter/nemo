@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # For importing users from CSV/spreadsheet.
-class UserBatchesController < ApplicationController
+class UserImportsController < ApplicationController
   include OperationQueueable
   skip_authorization_check only: :upload
   load_and_authorize_resource except: :upload
@@ -15,9 +15,8 @@ class UserBatchesController < ApplicationController
   end
 
   def upload
-    authorize!(:create, UserBatch)
-
-    saved_upload = SavedUpload.create!(file: params[:userbatch])
+    authorize!(:create, UserImport)
+    saved_upload = SavedUpload.create!(file: params[:file])
 
     # Json keys match hidden input names that contain the key in dropzone form.
     # See ELMO.Views.FileUploaderView for more info.
@@ -33,9 +32,9 @@ class UserBatchesController < ApplicationController
   end
 
   def template
-    authorize!(:create, UserBatch)
+    authorize!(:create, UserImport)
     @sheet_name = User.model_name.human(count: 0)
-    @headers = UserBatch::EXPECTED_HEADERS.map { |f| User.human_attribute_name(f) }
+    @headers = UserImport::EXPECTED_HEADERS.map { |f| User.human_attribute_name(f) }
   end
 
   private
@@ -46,7 +45,7 @@ class UserBatchesController < ApplicationController
     redirect_to(users_url)
   rescue StandardError => e
     Rails.logger.error(e)
-    flash.now[:error] = I18n.t("activerecord.errors.models.user_batch.internal")
+    flash.now[:error] = I18n.t("activerecord.errors.models.user_import.internal")
     render("form")
   end
 
@@ -58,12 +57,12 @@ class UserBatchesController < ApplicationController
       details: t("operation.details.user_import", file: saved_upload.file.original_filename),
       job_params: {
         saved_upload_id: saved_upload.id,
-        import_class: @user_batch.class.to_s
+        import_class: @user_import.class.to_s
       }
     )
   end
 
-  def user_batch_params
-    params.require(:user_batch).permit(:file) if params[:user_batch]
+  def user_import_params
+    params.require(:user_import).permit(:file).merge(mission: current_mission) if params[:user_import]
   end
 end

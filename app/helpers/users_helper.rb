@@ -19,7 +19,7 @@ module UsersHelper
     links << create_link(User) if can?(:create, User)
 
     # Can't batch create users in admin mode since there is no mission to assign them to.
-    links << link_to(t("user.create_multiple"), new_user_batch_path) if can?(:create, UserBatch)
+    links << link_to(t("user.create_multiple"), new_user_import_path) if can?(:create, UserImport)
 
     # links << link_to(t("user.list_groups"), "#user-group-modal", class: "list-groups") if can?(:view, UserGroup)
     links << link_to(t("user.add_to_group"), "#user-group-modal", class: "add-to-group") if can?(:view, UserGroup)
