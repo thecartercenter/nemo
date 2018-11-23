@@ -60,7 +60,7 @@ class User < ApplicationRecord
   validate(:must_have_password_on_enter)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
-  validate :phone_uniqueness
+
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
   # which can be an issue if they will be being re-assigned
@@ -358,15 +358,6 @@ class User < ApplicationRecord
   def phone_length_or_empty
     errors.add(:phone, :at_least_digits, num: 9) unless phone.blank? || phone.size >= 10
     errors.add(:phone2, :at_least_digits, num: 9) unless phone2.blank? || phone2.size >= 10
-  end
-
-  def phone_uniqueness
-    errors.add(:phone, :taken) if phone_taken?(phone)
-    errors.add(:phone2, :taken) if phone_taken?(phone2)
-  end
-
-  def phone_taken?(phone)
-    User.where("phone = ? OR phone2 = ?", phone, phone).not_self(self).any?
   end
 
   def check_assoc

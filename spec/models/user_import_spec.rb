@@ -158,25 +158,27 @@ describe UserImport do
     end
   end
 
-  context "with duplicate usernames, phones, and too many errors" do
+  context "with duplicate usernames and too many errors" do
     let(:filename) { "multiple_errors.xlsx" }
 
     before do
       stub_const("UserImport::IMPORT_ERROR_CUTOFF", 3)
       # a@bc.com also exists in fixure but we don't care about email uniqueness
-      create(:user, login: "a.bob", name: "A Bob", phone: "+2279182137", phone2: nil, email: "a@bc.com")
-      create(:user, phone: "+9837494434", phone2: "+983755482")
-      create(:user, :deleted, phone: "+123456789")
+      create(:user, login: "a.bob", email: "a@bc.com")
+      create(:user, login: "bcod")
+      create(:user, login: "shobo")
+      create(:user, login: "clo")
+      create(:user, :deleted, login: "flim.flo")
     end
 
     it "returns appropriate errors and ignores deleted data" do
       expect(import).not_to be_succeeded
       expect(error_messages[0]).to eq("Row 2: Username: Please enter a unique value.")
-      expect(error_messages[1]).to eq("Row 2: Main Phone: Please enter a unique value.")
-      expect(error_messages[2]).to eq("Row 6: Main Phone: Please enter a unique value.")
-      expect(error_messages[3]).to eq("Row 6: Alternate Phone: Please enter a unique value.")
-      expect(error_messages[4]).to eq("The uploaded spreadsheet has too many errors. Processing stopped at row 6.")
-      expect(error_messages.size).to eq(5) # Row 7 shouldn't be processed.
+      expect(error_messages[1]).to eq("Row 3: Username: Please enter a unique value.")
+      expect(error_messages[2]).to eq("Row 5: Username: Please enter a unique value.")
+      expect(error_messages[3]).to eq("The uploaded spreadsheet has too many errors. "\
+        "Processing stopped at row 5.")
+      expect(error_messages.size).to eq(4) # Row 6 shouldn't be processed.
     end
   end
 
