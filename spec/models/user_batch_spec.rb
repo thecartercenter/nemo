@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe UserBatch do
   let(:mission) { get_mission }
-  let(:error_messages) { import.errors.messages.values }
+  let(:error_messages) { import.errors.messages[:base] }
   let(:import) do
     UserBatch.new(file: user_batch_fixture(filename), mission: mission).tap(&:run)
   end
@@ -43,7 +43,7 @@ describe UserBatch do
     end
   end
 
-  context "with other locale" do
+  context "with other locale and case-variant headers" do
     let(:filename) { "french.csv" }
 
     it "succeeds" do
@@ -134,9 +134,10 @@ describe UserBatch do
   context "with missing header row with a number in it" do
     let(:filename) { "missing_headers.xlsx" }
 
-    it "gracefully handles" do
+    it "reports unrecognized headers and handles numeric type" do
       expect(import).not_to be_succeeded
-      expect(error_messages[0]).to eq(["The uploaded spreadsheet has invalid headers."])
+      expect(error_messages[0]).to eq("The following column headers were not recognized: 'leonobs1', "\
+        "'DAVID JOHNSON', 'dj3349883@gmail.com', 'CAPE MOUNT DISTRICT 1', '21655555555.0'.")
     end
   end
 
@@ -145,7 +146,7 @@ describe UserBatch do
 
     it "handles error" do
       expect(import).not_to be_succeeded
-      expect(error_messages[0]).to eq(["Row 2: Main Phone: Please enter at least 9 digits."])
+      expect(error_messages[0]).to eq("Row 2: Main Phone: Please enter at least 9 digits.")
     end
   end
 
@@ -170,10 +171,10 @@ describe UserBatch do
     it "returns appropriate errors and ignores deleted data" do
       expect(import).not_to be_succeeded
       expect(error_messages.length).to eq(4)
-      expect(error_messages[0]).to eq(["Row 2: Username: Please enter a unique value."])
-      expect(error_messages[1]).to eq(["Row 2: Main Phone: Please enter a unique value."])
-      expect(error_messages[2]).to eq(["Row 6: Main Phone: Please enter a unique value."])
-      expect(error_messages[3]).to eq(["Row 6: Alternate Phone: Please enter a unique value."])
+      expect(error_messages[0]).to eq("Row 2: Username: Please enter a unique value.")
+      expect(error_messages[1]).to eq("Row 2: Main Phone: Please enter a unique value.")
+      expect(error_messages[2]).to eq("Row 6: Main Phone: Please enter a unique value.")
+      expect(error_messages[3]).to eq("Row 6: Alternate Phone: Please enter a unique value.")
     end
   end
 

@@ -10,9 +10,9 @@ class TabularImportOperationJob < OperationJob
         name: name,
         file: open_file(saved_upload.file)
       )
-      succeeded = import.run(mission)
+      import.run(mission)
     end
-    operation_failed(format_error_report(import.try(:errors))) unless succeeded
+    operation_failed(format_error_report(import.try(:errors))) unless import.succeeded?
   end
 
   private

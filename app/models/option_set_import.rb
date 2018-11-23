@@ -117,7 +117,9 @@ class OptionSetImport
 
       raise ActiveRecord::Rollback if errors.present?
     end
+  end
 
+  def succeeded?
     errors.blank?
   end
 

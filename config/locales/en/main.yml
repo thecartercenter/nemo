@@ -871,7 +871,9 @@ en:
         user_batch:
           general: "User batch is invalid (see below)."
           internal: "An internal error occurred while proccessing your upload."
-          invalid_headers: "The uploaded spreadsheet has invalid headers."
+          invalid_headers:
+            one: "The following column header was not recognized: %{headers}."
+            other: "The following column headers were not recognized: %{headers}."
           too_many_errors: "The uploaded spreadsheet has too many errors. Processing stopped at row %{row}."
         user_group:
           general: "User group is invalid."
