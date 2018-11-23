@@ -6,10 +6,10 @@ class UserBatch
   IMPORT_ERROR_CUTOFF = 50
   BATCH_SIZE = 1000
   PERMITTED_ATTRIBS = %i[login name phone phone2 email birth_year gender
-                        gender_custom nationality notes user_groups]
+                         gender_custom nationality notes user_groups]
   EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups].freeze
 
-  attr_accessor :file, :mission_id, :name
+  attr_accessor :file, :mission, :name
   attr_reader :users
 
   validates :file, presence: true
@@ -25,70 +25,25 @@ class UserBatch
   end
 
   def succeeded?
-    !@validation_error
+    !@error
   end
 
-  def run(mission)
-    create_users(mission)
-  end
-
-  # creates users based on the data submitted via the users attribute
-  def create_users(mission)
-    # assume no errors to start with
-    @validation_error = false
-
-    # run UserBatch validations
-    if invalid?
-      @validation_error = true
-      return succeeded?
-    end
-
-    # parse the input file as a spreadsheet
+  def run
+    @error = false
     @data = Roo::Spreadsheet.open(file).parse
-
     parse_headers(@data.shift)
 
-    unless @validation_error
-
-      # create the users in a transaction in case of validation error
-      User.transaction do
-
-        @import_num = (User.maximum(:import_num) || 0) + 1
-        user_batch_attributes = parse_rows
-
-        (0...number_of_iterations).each do |i|
-          current_attributes_batch = user_batch_attributes[i * BATCH_SIZE, BATCH_SIZE]
-
-          users_batch = create_users_instances(current_attributes_batch, mission)
-          create_hash_table_with_fields_and_indexes(users_batch)
-
-          validate_users_batch(users_batch)
-
-          check_uniqueness_on_objects(users_batch, ["login"])
-          check_uniqueness_on_objects(users_batch, ["phone", "phone2"])
-          check_uniqueness_on_db(users_batch, ["login"])
-          check_uniqueness_on_db(users_batch, ["phone", "phone2"])
-
-          check_validation_errors(users_batch, i * BATCH_SIZE + 1)
-
-          break if errors_reached_limit
-
-          # No point doing the insert if it's going to be rolled back anyway.
-          unless @validation_error
-            @inserter.insert(users_batch)
-            insert_assignments(users_batch)
-          end
-
-          users.concat users_batch
-        end
-
-        # now if there was a validation error with any user, rollback the transaction
-        raise ActiveRecord::Rollback if @validation_error
-
-      end # transaction
+    # create the users in a transaction in case of validation error
+    User.transaction do
+      parse_rows.each_with_index do |row, index|
+        row[:assignments] = [Assignment.new(mission: mission, role: User::ROLES.first)]
+        user = User.create(row)
+        add_validation_error_messages(user, index + 2) if user.invalid?
+        break if errors_reached_limit
+      end
+      raise ActiveRecord::Rollback if @error
     end
-
-    succeeded?
+    !@error
   end
 
   private
@@ -109,9 +64,9 @@ class UserBatch
 
     # validate headers
     if @fields.values.any?(&:nil?)
-      @validation_error = true
+      @error = true
       errors.add(:file, :invalid_headers)
-      return succeeded?
+      return false
     end
   end
 
@@ -149,9 +104,8 @@ class UserBatch
 
   def turn_row_into_attribute_hash(row)
     Hash[*row.map.with_index do |cell, i|
-      field = @fields[i]
-      [field, cell.presence]
-    end.flatten]
+      @fields[i].nil? ? nil : [@fields[i], cell.presence]
+    end.compact.flatten]
   end
 
   def create_users_instances(attribs, mission)
@@ -204,7 +158,6 @@ class UserBatch
                reset_password_method: "print",
                admin: false,
                assignments: [Assignment.new(mission: mission, role: User::ROLES.first)],
-               batch_creation: true,
                import_num: @import_num))
   end
 
@@ -219,7 +172,7 @@ class UserBatch
           add_error(error, attribute, row_number)
         end
       end
-      @validation_error = true
+      @error = true
     end
   end
 
@@ -245,9 +198,9 @@ class UserBatch
     (user_group_names || "").strip.split(";").map do |gn|
       user_group = UserGroup.find_by("LOWER(name) = :name AND mission_id = :mission_id",
         name: gn.strip.downcase,
-        mission_id: @mission_id
+        mission_id: mission.id
       )
-      user_group = UserGroup.create(name: gn.strip, mission_id: @mission_id) unless user_group.present?
+      user_group = UserGroup.create!(name: gn.strip, mission_id: mission.id) unless user_group.present?
       user_group
     end
   end

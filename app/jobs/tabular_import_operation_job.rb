@@ -12,7 +12,6 @@ class TabularImportOperationJob < OperationJob
       )
       succeeded = import.run(mission)
     end
-
     operation_failed(format_error_report(import.try(:errors))) unless succeeded
   end
 
