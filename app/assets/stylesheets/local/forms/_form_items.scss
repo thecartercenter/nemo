@@ -32,7 +32,8 @@
       display: none;
     }
 
-    &.form-item-question .inner, &.form-item-group .inner {
+    &.form-item-question .inner,
+      &.form-item-group .inner {
       cursor: pointer;
     }
 
