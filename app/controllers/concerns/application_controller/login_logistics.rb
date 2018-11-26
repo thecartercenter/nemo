@@ -28,7 +28,8 @@ module Concerns::ApplicationController::LoginLogistics
 
     # Redirect to most relevant mission
     best_mission = @user_session.user.best_mission
-    redirect_back_or_default best_mission ? mission_root_path(mission_name: best_mission.compact_name) : basic_root_path
+    redirect_back_or_default(best_mission ?
+      mission_root_path(mission_name: best_mission.compact_name) : basic_root_path)
   end
 
   # resets the Rails session but preserves the :return_to key
