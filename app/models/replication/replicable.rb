@@ -9,6 +9,7 @@ module Replication::Replicable
     after_save(:sync_chosen_attributes)
 
     # dsl-style method for setting options from base class
+    # backward_assocs denotes a fk to an object copied before this one in the replication process
     def self.replicable(options = {})
       options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:backward_assocs] = Array.wrap(options[:backward_assocs])
