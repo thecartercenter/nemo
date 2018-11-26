@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 # Behaviors that handle replicating creation and updates to copies of core objects (forms, questions, etc.) within and across missions.
 module Replication::Replicable
   extend ActiveSupport::Concern
 
   # A basic list of attributes that we don't want to copy from the src_obj to the dest_obj.
-  ATTRIBS_NOT_TO_COPY = %w(id created_at updated_at mission_id is_standard standard_copy original_id ancestry)
+  ATTRIBS_NOT_TO_COPY = %w[id created_at updated_at mission_id is_standard standard_copy original_id ancestry].freeze
 
   included do
     after_save(:sync_chosen_attributes)
@@ -14,7 +16,7 @@ module Replication::Replicable
       options[:child_assocs] = Array.wrap(options[:child_assocs])
       options[:backward_assocs] = Array.wrap(options[:backward_assocs])
       options[:dont_copy] = Array.wrap(options[:dont_copy]).map(&:to_s)
-      class_variable_set('@@replicable_opts', options)
+      class_variable_set("@@replicable_opts", options)
     end
 
     # cleaner accessor for replication options
@@ -40,7 +42,7 @@ module Replication::Replicable
     end
 
     def self.build_assoc_wrappers(type)
-      replicable_opts[:"#{type}_assocs"].map{ |a| Replication::AssocProxy.get(self, a) }.compact
+      replicable_opts[:"#{type}_assocs"].map { |a| Replication::AssocProxy.get(self, a) }.compact
     end
 
     def self.reusable_in_clone?(replicator)
@@ -72,9 +74,9 @@ module Replication::Replicable
   # obj.replicate(mode: :to_mission, dest_mission: m)
   # obj.replicate(mode: :promote)
   def replicate(options = nil)
-    raise 'replication mode is required' unless options[:mode]
-    raise 'dest_mission must be given for to_mission mode' if options[:mode] == :to_mission && !options[:dest_mission]
-    raise 'dest_mission only valid for to_mission mode' if options[:mode] != :to_mission && options[:dest_mission]
+    raise "replication mode is required" unless options[:mode]
+    raise "dest_mission must be given for to_mission mode" if options[:mode] == :to_mission && !options[:dest_mission]
+    raise "dest_mission only valid for to_mission mode" if options[:mode] != :to_mission && options[:dest_mission]
 
     result = Replication::Replicator.new(options.merge(source: self)).replicate
     do_standard_assertions
@@ -97,10 +99,11 @@ module Replication::Replicable
   # can be investigated.
   def do_standard_assertions
     return unless standardizable?
+
     tbl = self.class.table_name
     assert_no_results("SELECT id FROM #{tbl} WHERE #{tbl}.deleted_at IS NULL
       AND mission_id IS NOT NULL AND is_standard = TRUE",
-      'mission based objects should not standard')
+      "mission based objects should not standard")
   end
 
   # Raises an error if the given sql returns any results.
@@ -111,13 +114,14 @@ module Replication::Replicable
   # Syncs attributes chosen for syncing with copies via the ":sync' option in the replicable declaration.
   def sync_chosen_attributes
     return unless standardizable? && is_standard?
-    copies.where(is_standard: false).each do |c|
+
+    copies.where(is_standard: false).find_each do |c|
       Array.wrap(replicable_opts[:sync]).each do |a|
         sync_attribute_with_copy(a, c)
       end
       c.save(validate: false)
     end
-    return true
+    true
   end
 
   # Sync the given attribut with the given copy, avoiding naming conflicts
@@ -125,10 +129,10 @@ module Replication::Replicable
     # Ensure uniqueness if appropriate.
     uniqueness = replicable_opts[:uniqueness] || {}
     val = if uniqueness[:field] == attrib_name
-      Replication::UniqueFieldGenerator.new(klass: self.class, orig_id: id, exclude_id: copy.id,
-        mission_id: copy.mission_id, field: attrib_name, style: uniqueness[:style]).generate
-    else
-      send(attrib_name)
+            Replication::UniqueFieldGenerator.new(klass: self.class, orig_id: id, exclude_id: copy.id,
+                                                  mission_id: copy.mission_id, field: attrib_name, style: uniqueness[:style]).generate
+          else
+            send(attrib_name)
     end
     copy.send("#{attrib_name}=", val)
   end

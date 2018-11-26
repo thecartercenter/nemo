@@ -1,14 +1,17 @@
+# frozen_string_literal: true
+
 # Wraps an object in a replication operation. Not the full object, just its ID and class.
 class Replication::ObjProxy
   attr_accessor :klass, :id, :ancestry, :replicator, :replication_root
-  alias_method :replication_root?, :replication_root
+  alias replication_root? replication_root
 
   delegate :child_assocs, to: :klass
 
   def initialize(attribs)
     raise "No ID given" unless attribs[:id] || attribs["id"]
     raise "No klass given" unless attribs[:klass] || attribs["klass"]
-    attribs.each { |k,v| instance_variable_set("@#{k}", v) }
+
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
   end
 
   def inspect
@@ -32,13 +35,13 @@ class Replication::ObjProxy
   def children(assoc)
     # Retrieve the id (and ancestry, if applicable) of the orig children objects.
     attribs = if assoc.belongs_to?
-      fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
-      fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
-    elsif assoc.ancestry?
-      child_ancestry = [ancestry, id].compact.join("/")
-      build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class, order: "ORDER BY rank")
-    else # has_one or has_many
-      build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
+                fk_id = klass.where(id: id).pluck(assoc.foreign_key).first
+                fk_id ? [self.class.new(id: fk_id, klass: assoc.target_class, replicator: replicator)] : []
+              elsif assoc.ancestry?
+                child_ancestry = [ancestry, id].compact.join("/")
+                build_from_sql("ancestry = '#{child_ancestry}'", target_klass: assoc.target_class, order: "ORDER BY rank")
+              else # has_one or has_many
+                build_from_sql("#{assoc.foreign_key} = '#{id}'", target_klass: assoc.target_class)
     end
   end
 
@@ -48,6 +51,8 @@ class Replication::ObjProxy
     if reusable?
       self
     # If reuse_if_match option is set, we check for a matching item in the dest mission using that column.
+    # It differs from reuse_in_clone because it only looks at the specified column, and it applies to all
+    # kinds of replication.
     # reuse_col should obviously be indexed.
     elsif reuse_col = klass.replicable_opts[:reuse_if_match]
       build_from_sql("#{eql_sql(:mission_id, replicator.target_mission_id)}
@@ -109,6 +114,7 @@ class Replication::ObjProxy
   # If replication mode is clone and class is marked as first_class, we can reuse this object.
   # This is because we always want to reuse first class objects when cloning since clone is shallow operation.
   # The only first class object we don't want to reuse is the one at the top of the tree (root).
+  # reusable_in_clone differs from reuse_if_match because it expects all relevant fields to match.
   def reusable?
     !replication_root? && replicator.mode == :clone && klass.reusable_in_clone?(replicator)
   end
@@ -156,22 +162,24 @@ class Replication::ObjProxy
     else
       # We combine the copy parent's own ancestry (which may be nil) plus its ID.
       joined = [context[:copy_parent].ancestry, context[:copy_parent].id].compact.join("/")
-      joined.blank? ? nil : joined
+      joined.presence
     end
   end
 
-  def date_col_mappings(replicator, context)
+  def date_col_mappings(_replicator, _context)
     [["created_at", "NOW()"], ["updated_at", "NOW()"]]
   end
 
-  def unique_col_mappings(replicator, context)
+  def unique_col_mappings(replicator, _context)
     return [] unless uniq_spec = klass.replicable_opts[:uniqueness]
+
     generator = Replication::UniqueFieldGenerator.new(
-      uniq_spec.merge(klass: klass, orig_id: id, mission_id: replicator.target_mission_id))
+      uniq_spec.merge(klass: klass, orig_id: id, mission_id: replicator.target_mission_id)
+    )
     [[uniq_spec[:field], ApplicationRecord.connection.quote(generator.generate)]]
   end
 
-  def standardizable_col_mappings(replicator, context)
+  def standardizable_col_mappings(replicator, _context)
     mappings = []
     case replicator.mode
     when :promote
@@ -180,12 +188,10 @@ class Replication::ObjProxy
       mappings << "mission_id"
       mappings << "is_standard" if klass.standardizable?
     when :to_mission
-      if klass_has_mission_id
-        mappings << ["mission_id", quote_or_null(replicator.target_mission_id)]
-      end
+      mappings << ["mission_id", quote_or_null(replicator.target_mission_id)] if klass_has_mission_id
       mappings << ["standard_copy", true] if klass.standardizable? && replicator.source_is_standard?
     end
-    mappings << ["original_id", "id"] if klass.standardizable?
+    mappings << %w[original_id id] if klass.standardizable?
     mappings
   end
 
@@ -199,8 +205,8 @@ class Replication::ObjProxy
         [assoc.foreign_key, quote_or_null(backward_assoc_id(replicator, context, assoc))]
       rescue Replication::BackwardAssocError
         # If we have explicit instructions to delete the object if an association is missing, make a note of it.
-        $!.ok_to_skip = assoc.skip_obj_if_missing
-        raise $! # Then we send on up the chain.
+        $ERROR_INFO.ok_to_skip = assoc.skip_obj_if_missing
+        raise $ERROR_INFO # Then we send on up the chain.
       end
     end
   end
@@ -229,13 +235,13 @@ class Replication::ObjProxy
       end
     else
       target_class = if assoc.polymorphic?
-        klass.where(id: id).pluck(assoc.foreign_type).first.constantize
-      else
-        assoc.target_class
+                       klass.where(id: id).pluck(assoc.foreign_type).first.constantize
+                     else
+                       assoc.target_class
       end
       get_copy_id(target_class, orig_foreign_id) ||
-        (raise Replication::BackwardAssocError.new("
-          Couldn't find copy of #{target_class.name} ##{orig_foreign_id}"))
+        (raise Replication::BackwardAssocError, "
+          Couldn't find copy of #{target_class.name} ##{orig_foreign_id}")
     end
   end
 
@@ -257,8 +263,6 @@ class Replication::ObjProxy
     elsif target_class.standardizable?
       copies_in_mission = target_class.where(mission_id: replicator.target_mission_id, original_id: orig_id)
       copies_in_mission.any? ? copies_in_mission.first.id : nil
-    else
-      nil
     end
   end
 

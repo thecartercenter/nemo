@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Tagging associates questions with tags
 class Tagging < ApplicationRecord
   include Replication::Replicable
 
@@ -8,5 +11,5 @@ class Tagging < ApplicationRecord
 
   delegate :mission_id, to: :question
 
-  replicable child_assocs: :tag, backward_assocs: :question, dont_copy: [:question_id, :tag_id]
+  replicable child_assocs: :tag, backward_assocs: :question, dont_copy: %i[question_id tag_id]
 end

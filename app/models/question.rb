@@ -1,6 +1,12 @@
+# frozen_string_literal: true
+
 # a question on a form
 class Question < ApplicationRecord
-  include MissionBased, Replication::Standardizable, Replication::Replicable, FormVersionable, Translatable
+  include Translatable
+  include FormVersionable
+  include Replication::Replicable
+  include Replication::Standardizable
+  include MissionBased
 
   acts_as_paranoid
 
@@ -8,16 +14,16 @@ class Question < ApplicationRecord
   # The user is told that the max is 20.
   # This is because we need to leave room for additional digits at the end during replication to maintain uniqueness.
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,21}"
-  API_ACCESS_LEVELS = %w(inherit private)
-  METADATA_TYPES = %w(formstart formend)
+  API_ACCESS_LEVELS = %w[inherit private].freeze
+  METADATA_TYPES = %w[formstart formend].freeze
 
   belongs_to :option_set, inverse_of: :questions, autosave: true
   has_many :questionings, dependent: :destroy, autosave: true, inverse_of: :question
   has_many :response_nodes, through: :questionings
   has_many :referring_conditions, through: :questionings
   has_many :forms, through: :questionings
-  has_many :calculations, class_name: 'Report::Calculation',
-    foreign_key: 'question1_id', inverse_of: :question1
+  has_many :calculations, class_name: "Report::Calculation",
+                          foreign_key: "question1_id", inverse_of: :question1
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
 
@@ -40,66 +46,68 @@ class Question < ApplicationRecord
   validates :code, format: {with: /\A#{CODE_FORMAT}\z/}, unless: -> { code.blank? }
   validates :qtype_name, presence: true
   validates :option_set, presence: true, if: -> { qtype && has_options? }
-  %w(minimum maximum).each do |field|
+  %w[minimum maximum].each do |field|
     # Numeric limits are due to column floating point restrictions
-    validates :"casted_#{field}", numericality: { allow_blank: true, greater_than: -1e7, less_than: 1e7 }
+    validates :"casted_#{field}", numericality: {allow_blank: true, greater_than: -1e7, less_than: 1e7}
   end
   validate :code_unique_per_mission
   validate :at_least_one_name
   validate :valid_reference_url
 
-  scope :by_code, -> { order('questions.code') }
+  scope :by_code, -> { order("questions.code") }
   scope :with_code, ->(c) { where("LOWER(code) = ?", c.downcase) }
   scope :default_order, -> { by_code }
-  scope :select_types, -> { where(:qtype_name => %w(select_one select_multiple)) }
+  scope :select_types, -> { where(qtype_name: %w[select_one select_multiple]) }
   scope :with_forms, -> { includes(:forms) }
-  scope :reportable, -> { where.not(qtype_name: %w(image annotated_image signature sketch audio video)) }
-  scope :not_in_form, ->(form) { where("(questions.id NOT IN (
-    SELECT question_id FROM form_items
-      WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id) }
+  scope :reportable, -> { where.not(qtype_name: %w[image annotated_image signature sketch audio video]) }
+  scope :not_in_form, ->(form) {
+                        where("(questions.id NOT IN (
+                          SELECT question_id FROM form_items
+                            WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id)
+                      }
 
   translates :name, :hint
 
   delegate :smsable?,
-           :has_options?,
-           :temporal?,
-           :numeric?,
-           :printable?,
-           :multimedia?,
-           :odk_tag,
-           :odk_name,
-           :select_multiple?,
-           to: :qtype
+    :has_options?,
+    :temporal?,
+    :numeric?,
+    :printable?,
+    :multimedia?,
+    :odk_tag,
+    :odk_name,
+    :select_multiple?,
+    to: :qtype
 
   delegate :options,
-           :first_level_option_nodes,
-           :all_options,
-           :first_leaf_option,
-           :first_leaf_option_node,
-           :first_level_options,
-           :multilevel?,
-           :level_count,
-           :level,
-           :levels,
-           :sms_formatting_as_text?,
-           :sms_formatting_as_appendix?,
-           to: :option_set, allow_nil: true
+    :first_level_option_nodes,
+    :all_options,
+    :first_leaf_option,
+    :first_leaf_option_node,
+    :first_level_options,
+    :multilevel?,
+    :level_count,
+    :level,
+    :levels,
+    :sms_formatting_as_text?,
+    :sms_formatting_as_appendix?,
+    to: :option_set, allow_nil: true
 
-  replicable child_assocs: [:option_set, :taggings], backwards_assocs: :questioning, sync: :code,
-    uniqueness: {field: :code, style: :camel_case}, dont_copy: [:key, :access_level, :option_set_id],
-    compatibility: %i[qtype_name option_set_id], reusable_in_clone: true
+  replicable child_assocs: %i[option_set taggings], backwards_assocs: :questioning, sync: :code,
+             uniqueness: {field: :code, style: :camel_case}, dont_copy: %i[key access_level option_set_id],
+             compatibility: %i[qtype_name option_set_id], reusable_in_clone: true
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
   def self.key(n)
-    where(:key => true).all.sort_by{|q| q.questionings.size}[0...n]
+    where(key: true).all.sort_by { |q| q.questionings.size }[0...n]
   end
 
   def self.search_qualifiers
     [
       Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
       Search::Qualifier.new(name: "title", col: "questions.name_translations", type: :translated, default: true),
-      Search::Qualifier.new(name: "type", col: "questions.qtype_name", preprocessor: ->(s){ s.gsub(/[\-]/, '_') }),
-      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags, :type => :text),
+      Search::Qualifier.new(name: "type", col: "questions.qtype_name", preprocessor: ->(s) { s.gsub(/[\-]/, "_") }),
+      Search::Qualifier.new(name: "tag", col: "tags.name", assoc: :tags, type: :text)
     ]
   end
 
@@ -144,7 +152,7 @@ class Question < ApplicationRecord
 
   # DEPRECATED: this method should go away later
   def select_options
-    (first_level_options || []).map{ |o| [o.name, o.id] }
+    (first_level_options || []).map { |o| [o.name, o.id] }
   end
 
   # gets the number of forms which with this question is directly associated
@@ -190,11 +198,11 @@ class Question < ApplicationRecord
 
   # convert value stored as decimal to integer if integer question type
   def casted_minimum
-    minimum.blank? ? nil : (qtype_name == 'decimal' ? minimum : minimum.to_i)
+    minimum.blank? ? nil : (qtype_name == "decimal" ? minimum : minimum.to_i)
   end
 
   def casted_maximum
-    maximum.blank? ? nil : (qtype_name == 'decimal' ? maximum : maximum.to_i)
+    maximum.blank? ? nil : (qtype_name == "decimal" ? maximum : maximum.to_i)
   end
 
   def casted_minimum=(m)
@@ -209,24 +217,25 @@ class Question < ApplicationRecord
 
   def min_max_error_msg
     return nil unless minimum || maximum
+
     clauses = []
-    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + casted_minimum.to_s if minimum
-    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " " ) + casted_maximum.to_s if maximum
+    clauses << I18n.t("question.maxmin.gt") + " " + (minstrictly ? "" : I18n.t("question.maxmin.or_eq") + " ") + casted_minimum.to_s if minimum
+    clauses << I18n.t("question.maxmin.lt") + " " + (maxstrictly ? "" : I18n.t("question.maxmin.or_eq") + " ") + casted_maximum.to_s if maximum
     I18n.t("layout.must_be") + " " + clauses.join(" " + I18n.t("common.and") + " ")
   end
 
   # returns sorted list of form ids related to this form
   def form_ids
-    forms.collect{|f| f.id}.sort
+    forms.collect(&:id).sort
   end
 
   # gets a comma separated list of all related forms names
   def form_names
-    forms.map(&:name).join(', ')
+    forms.map(&:name).join(", ")
   end
 
   def constraint_changed?
-    %w(minimum maximum minstrictly maxstrictly).any? { |f| send("#{f}_changed?") }
+    %w[minimum maximum minstrictly maxstrictly].any? { |f| send("#{f}_changed?") }
   end
 
   # checks if any core fields (type, option set, constraints) changed
@@ -280,6 +289,7 @@ class Question < ApplicationRecord
 
   def valid_reference_url
     return if reference.blank?
+
     url = URI.parse(reference)
     errors.add(:reference, :invalid) unless url.is_a?(URI::HTTP) || url.is_a?(URI::HTTPS)
   end
