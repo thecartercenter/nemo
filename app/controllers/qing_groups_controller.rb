@@ -21,7 +21,7 @@ class QingGroupsController < ApplicationController
       one_screen: true,
       mission: current_mission
     )
-    render(partial: 'modal')
+    render(partial: "modal")
   end
 
   def edit
@@ -31,7 +31,7 @@ class QingGroupsController < ApplicationController
     # set to true. If so, we should disable the checkbox.
     @one_screen_disabled = true unless odk_decorator.one_screen_allowed?
 
-    render(partial: 'modal')
+    render(partial: "modal")
   end
 
   def create
@@ -39,17 +39,17 @@ class QingGroupsController < ApplicationController
     authorize!(:add_questions, @qing_group.form)
     @qing_group.parent = @qing_group.form.root_group
     @qing_group.save!
-    render partial: 'group', locals: {qing_group: @qing_group}
+    render partial: "group", locals: {qing_group: @qing_group}
   end
 
   def show
     @qing_group = QingGroup.find(params[:id])
-    render(partial: 'modal')
+    render(partial: "modal")
   end
 
   def update
     @qing_group.update_attributes!(qing_group_params)
-    render partial: 'group_inner', locals: {qing_group: @qing_group}
+    render partial: "group_inner", locals: {qing_group: @qing_group}
   end
 
   def destroy
