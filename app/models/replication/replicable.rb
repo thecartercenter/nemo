@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
-# Behaviors that handle replicating creation and updates to copies of core objects (forms, questions, etc.) within and across missions.
+# Behaviors that handle replicating creation and updates to copies of core objects (forms, questions, etc.)
+# within and across missions.
 module Replication::Replicable
   extend ActiveSupport::Concern
 

@@ -12,7 +12,8 @@ class Question < ApplicationRecord
 
   # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)
   # The user is told that the max is 20.
-  # This is because we need to leave room for additional digits at the end during replication to maintain uniqueness.
+  # This is because we need to leave room for additional digits at the end during replication to
+  # maintain uniqueness.
   CODE_FORMAT = "[a-zA-Z][a-zA-Z0-9]{1,21}"
   API_ACCESS_LEVELS = %w[inherit private].freeze
   METADATA_TYPES = %w[formstart formend].freeze
@@ -60,7 +61,7 @@ class Question < ApplicationRecord
   scope :select_types, -> { where(qtype_name: %w[select_one select_multiple]) }
   scope :with_forms, -> { includes(:forms) }
   scope :reportable, -> { where.not(qtype_name: %w[image annotated_image signature sketch audio video]) }
-  scope :not_in_form, ->(form) {
+  scope :not_in_form, -> (form) {
                         where("(questions.id NOT IN (
                           SELECT question_id FROM form_items
                             WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id)

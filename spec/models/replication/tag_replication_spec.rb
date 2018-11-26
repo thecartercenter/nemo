@@ -11,6 +11,7 @@ describe "replicating questions with tags" do
     # add a second tag to question
     let(:orig_q) { create(:question, qtype_name: "text", is_standard: true, tags: [orig_tag1, orig_tag2]) }
     let(:copy_q) { orig_q.replicate(mode: :to_mission, dest_mission: mission) }
+    let(:new_tag) { find_tag_by_name(copy_q, "b") }
 
     context "basic" do
       it "should replicate tag when replicates a standard library question to a mission" do
@@ -18,7 +19,7 @@ describe "replicating questions with tags" do
         expect(orig_q.id).not_to eq(copy_q.id)
         expect(copy_q.tags.count).to eq(2)
         [orig_tag1, orig_tag2].each_with_index do |orig_tag, _i|
-          new_tag = copy_q.tags.detect { |new_t| new_t.name == orig_tag.name }
+          new_tag = find_tag_by_name(copy_q, orig_tag.name)
           expect(new_tag.id).not_to eq(orig_tag.id)
           expect(new_tag.name).to eq(orig_tag.name)
           expect(new_tag.mission).to eq(mission)
@@ -28,16 +29,16 @@ describe "replicating questions with tags" do
 
     context "conflicting tag exists in mission" do
       let!(:pre_existing_tag) { Tag.create!(name: "a", mission: mission) }
+      let(:a_tag_for_copy) { find_tag_by_name(copy_q, "a") }
+      let(:b_tag_for_copy) { find_tag_by_name(copy_q, "b") }
 
       it "should use the existing tag" do
         expect(orig_q.id).not_to eq(copy_q.id)
         expect(Tag.count).to eq(4) # 2 original ones, pre-existing_tag, new 'b' tag made in replication
         expect(copy_q.tags.count).to eq(2)
 
-        a_tag_for_copy = copy_q.tags.detect { |t| t.name == "a" }
         expect(a_tag_for_copy.id).to eq(pre_existing_tag.id)
 
-        b_tag_for_copy = copy_q.tags.detect { |t| t.name == "b" }
         expect(b_tag_for_copy.id).not_to eq(orig_tag2.id)
         expect(b_tag_for_copy.name).to eq(orig_tag2.name)
         expect(b_tag_for_copy.mission).to eq(mission)
@@ -46,5 +47,9 @@ describe "replicating questions with tags" do
   end
 
   describe "clone" do
+  end
+
+  def find_tag_by_name(question, name)
+    question.tags.detect { |t| t.name == name }
   end
 end
