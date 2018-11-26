@@ -126,7 +126,7 @@ ELMO::Application.routes.draw do
       end
     end
     resources :questionings, only: %i[show edit create update destroy]
-    resources :qing_groups, path: "qing-groups", only: %i[new edit create update destroy]
+    resources :qing_groups, path: "qing-groups", only: %i[new edit create show update destroy]
     resources :settings, only: %i[index update] do
       member do
         post "regenerate_override_code"

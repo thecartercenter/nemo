@@ -42,6 +42,11 @@ class QingGroupsController < ApplicationController
     render partial: 'group', locals: {qing_group: @qing_group}
   end
 
+  def show
+    @qing_group = QingGroup.find(params[:id])
+    render(partial: 'modal')
+  end
+
   def update
     @qing_group.update_attributes!(qing_group_params)
     render partial: 'group_inner', locals: {qing_group: @qing_group}
