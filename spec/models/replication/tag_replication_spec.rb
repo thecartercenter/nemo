@@ -18,8 +18,6 @@ describe "replicating questions with tags" do
     let(:orig_mission) { nil }
     let(:copy_q) { orig_q.replicate(mode: :to_mission, dest_mission: mission) }
 
-
-
     context "basic" do
       it "should replicate tag when replicates a standard library question to a mission" do
         orig_q.reload
