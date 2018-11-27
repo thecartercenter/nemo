@@ -89,6 +89,24 @@ describe "replicating questions with tags" do
   end
 
   describe "clone" do
+    let(:orig_tag1) { create(:tag, name: "a", mission: mission) }
+    let(:orig_tag2) { create(:tag, name: "b", mission: mission) }
+    let(:orig_q) do
+      create(:question, mission: mission, qtype_name: "text", tags: [orig_tag1, orig_tag2])
+    end
+    let(:copy_q) { orig_q.replicate(mode: :clone) }
+
+    it "should use the existing tag in the mission" do
+      orig_q.reload
+      expect(orig_q.id).not_to eq(copy_q.id)
+      expect(copy_q.tags.count).to eq(2)
+      [orig_tag1, orig_tag2].each_with_index do |orig_tag, _i|
+        new_tag = find_tag_by_name(copy_q, orig_tag.name)
+        expect(new_tag.id).to eq(orig_tag.id)
+        expect(new_tag.name).to eq(orig_tag.name)
+        expect(new_tag.mission).to eq(mission)
+      end
+    end
   end
 
   def find_tag_by_name(question, name)
