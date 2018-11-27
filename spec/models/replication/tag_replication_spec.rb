@@ -99,6 +99,7 @@ describe "replicating questions with tags" do
     it "should use the existing tag in the mission" do
       orig_q.reload
       expect(orig_q.id).not_to eq(copy_q.id)
+      expect(Tag.count).to eq(2) # only the two original ones, to be reused in copy_q
       expect(copy_q.tags.count).to eq(2)
       [orig_tag1, orig_tag2].each_with_index do |orig_tag, _i|
         new_tag = find_tag_by_name(copy_q, orig_tag.name)
