@@ -70,10 +70,8 @@ module Utils
         when "time"
           n = Faker::Number.number(3).to_i
           n.days.ago.to_s.split(" ")[1]
-        when "select_one"
-          question.options.rand.id
-        when "select_multiple"
-          # FIXME
+        when "select_one", "select_multiple"
+          "on#{question.options.rand.option_nodes.first.id}"
         when "barcode"
           Faker::Code.ean
         when "location"
