@@ -16,12 +16,10 @@ module Utils
           http_header_manager name: "X-CSRF-Token", value: "${csrf-token}"
 
           submit("/en/user-session",
-            {
-              fill_in: {
-                "${csrf-param}" => "${__urlencode(${csrf-token})}",
-                "user_session[login]" => username,
-                "user_session[password]" => password
-              }
+            fill_in: {
+              "${csrf-param}" => "${__urlencode(${csrf-token})}",
+              "user_session[login]" => username,
+              "user_session[password]" => password
             })
         end
       end

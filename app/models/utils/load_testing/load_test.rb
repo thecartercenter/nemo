@@ -21,7 +21,7 @@ module Utils
       end
 
       def path
-        dir = "#{name}_#{timestamp.strftime("%Y%m%d%H%M%S")}"
+        dir = "#{name}_#{timestamp.strftime('%Y%m%d%H%M%S')}"
         Rails.root.join("tmp", "load_tests", dir)
       end
 
@@ -38,8 +38,8 @@ module Utils
           defaults(
             domain: configatron.url.host,
             port: configatron.url.port.to_i,
-            protocol: configatron.url.protocol)
-
+            protocol: configatron.url.protocol
+          )
 
           threads(count: options[:thread_count], duration: options[:duration]) do
             instance_eval(&block)

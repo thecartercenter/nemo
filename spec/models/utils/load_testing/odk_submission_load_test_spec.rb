@@ -1,22 +1,24 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Utils::LoadTesting::OdkSubmissionLoadTest do
   let(:mission) { FactoryGirl.create(:mission, name: "ODK Submission Load Test Mission") }
   let(:form) do
-    FactoryGirl.create(:form, mission: mission, question_types: [
-        "text",
-        "long_text",
-        "integer",
-        "counter",
-        "decimal",
-        "location",
-        "select_one",
-        "select_multiple",
-        "datetime",
-        "date",
-        "time",
-        "barcode"
-      ])
+    FactoryGirl.create(:form, mission: mission, question_types: %w[
+      text
+      long_text
+      integer
+      counter
+      decimal
+      location
+      select_one
+      select_multiple
+      datetime
+      date
+      time
+      barcode
+    ])
   end
 
   let(:username) { "admin" }

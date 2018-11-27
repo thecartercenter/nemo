@@ -44,9 +44,7 @@ module Utils
             basic_auth(username, password)
 
             submit("/en/m/#{mission_name}/submission",
-              {
-                files: [{path: SUBMISSION_FILENAME, paramname: "xml_submission_file", mimetype: "text/xml"}]
-              })
+              files: [{path: SUBMISSION_FILENAME, paramname: "xml_submission_file", mimetype: "text/xml"}])
           end
         end
       end
@@ -85,7 +83,7 @@ module Utils
         end
       end
 
-      def odk_submission(form, values: [])
+      def odk_submission(form)
         items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
 
         data = items.map do |item|
