@@ -13,7 +13,8 @@ class Tag < ApplicationRecord
 
   before_save { |tag| tag.name.downcase! }
 
-  replicable reuse_if_match: :name # , reusable_in_clone: true,
+  # since reuse_if_match covers all cases where the name is the same, we do not need reuse_in_clone
+  replicable reuse_if_match: :name
 
   MAX_SUGGESTIONS = 5 # The max number of suggestion matches to return
   MAX_NAME_LENGTH = 64

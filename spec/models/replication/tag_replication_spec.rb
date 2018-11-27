@@ -10,7 +10,6 @@ describe "replicating questions with tags" do
     let(:orig_tag2) { create(:tag, name: "b", mission: nil) }
     let(:orig_q) { create(:question, qtype_name: "text", is_standard: true, tags: [orig_tag1, orig_tag2]) }
     let(:copy_q) { orig_q.replicate(mode: :to_mission, dest_mission: mission) }
-    let(:new_tag) { find_tag_by_name(copy_q, "b") }
 
     context "basic" do
       it "should replicate tag when replicates a standard library question to a mission" do
