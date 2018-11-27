@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Util
+module Utils
   # Checks if DelayedJob is running. Used in ping and operations controllers.
   class DelayedJobChecker
     include Singleton
