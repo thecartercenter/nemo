@@ -68,7 +68,22 @@ describe "replicating questions with tags" do
     end
 
     context "conflicting standard tag exists" do
+      let!(:pre_existing_tag) { Tag.create!(name: "a", mission: nil) }
+      let(:a_tag_for_std) { find_tag_by_name(std, "a") }
+      let(:b_tag_for_std) { find_tag_by_name(std, "b") }
+
       it "should use the existing tag" do
+        orig_q.reload
+        expect(orig_q.id).not_to eq(std.id)
+        expect(Tag.count).to eq(4) # 2 original ones, pre-existing_tag, new 'b' tag made in promotion
+
+        expect(std.tags.count).to eq(2)
+
+        expect(a_tag_for_std.id).to eq(pre_existing_tag.id)
+
+        expect(b_tag_for_std.id).not_to eq(orig_tag2.id)
+        expect(b_tag_for_std.name).to eq(orig_tag2.name)
+        expect(b_tag_for_std.mission).to be_nil
       end
     end
   end
