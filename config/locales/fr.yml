@@ -501,7 +501,7 @@ fr:
         sms_auth_code: "Code d'authentification du SMS"
         user_group_ids: "Groupes"
         user_groups: "Groupes"
-      user_batch:
+      user_import:
         file: "Fichier à  importer"
     table_headers:
       response:
@@ -828,7 +828,7 @@ fr:
               invalid: "Utilisez seulement des lettres sans accent, des chiffres et des espaces."
             reset_password_method:
               cant_passwd_email: "Non autorisé sauf si une adresse email est fournie."
-        user_batch:
+        user_import:
           general: "le lot utilisateur est invalide (voir ci dessous)"
           internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."
           invalid_headers: "le classeur téléchargé contient des entete invalides"
@@ -1054,7 +1054,7 @@ fr:
       index: "Journal de bord de SMS"
     sms_tests:
       all: "Console de test SMS"
-    user_batches:
+    user_imports:
       all: "Importer des utilisateurs"
     user_sessions:
       new: "Connexion"
@@ -2019,7 +2019,7 @@ fr:
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
-  user_batch:
+  user_import:
     instructions_html: |-
         Téléchargez une feuille de calcul avec vos utilisateurs. Seuls les feuilles de calcul Excel de type XLSX et les fichiers CSV sont acceptés.
 

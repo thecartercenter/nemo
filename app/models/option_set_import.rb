@@ -29,11 +29,7 @@ class OptionSetImport
     @mission = mission
   end
 
-  def run(_options)
-    create_option_set
-  end
-
-  def create_option_set
+  def run
     # check validity before processing spreadsheet
     validate
 
@@ -117,13 +113,15 @@ class OptionSetImport
 
       raise ActiveRecord::Rollback if errors.present?
     end
+  end
 
+  def succeeded?
     errors.blank?
   end
 
   protected
 
-    # TODO: Share code with UserBatch
+    # TODO: Share code with UserImport
     def add_errors_for_row(row_number, errors)
       errors.keys.each do |attribute|
         errors.full_messages_for(attribute).each do |error|

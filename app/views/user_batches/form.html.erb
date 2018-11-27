@@ -1,4 +1,0 @@
-<%= elmo_form_for(@user_batch, html: {multipart: true}) do |f| %>
-  <p class="instructions"><%= formatted_instructions %></p>
-  <%= render("file_upload/operation_file_uploader", form: f, operation_type_prefix: "user_batches", post_path: user_batches_path) %>
-<% end %>

@@ -1,7 +1,8 @@
 # frozen_string_literal: true
 
 # For importing users from CSV/spreadsheet.
-class UserBatchesController < TabularImportsController
+class UserImportsController < TabularImportsController
+  include OperationQueueable
   skip_authorization_check only: :upload
   load_and_authorize_resource except: :upload
   skip_authorize_resource only: %i[template upload]
@@ -10,7 +11,7 @@ class UserBatchesController < TabularImportsController
   before_action :require_recent_login
 
   def tabular_class
-    UserBatch
+    UserImport
   end
 
   def tabular_type_symbol
@@ -22,14 +23,14 @@ class UserBatchesController < TabularImportsController
   end
 
   def template
-    authorize!(:create, UserBatch)
+    authorize!(:create, UserImport)
     @sheet_name = User.model_name.human(count: 0)
-    @headers = UserBatch::EXPECTED_HEADERS.map { |f| User.human_attribute_name(f) }
+    @headers = UserImport::EXPECTED_HEADERS.map { |f| User.human_attribute_name(f) }
   end
 
   private
 
-  def user_batch_params
-    params.require(:user_batch).permit(:file) if params[:file_import]
+  def user_import_params
+    params.require(:file_import).permit(:file).merge(mission: current_mission) if params[:file_import]
   end
 end

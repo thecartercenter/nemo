@@ -9,8 +9,6 @@ class User < ApplicationRecord
   acts_as_paranoid
 
   attr_writer(:reset_password_method)
-  attr_accessor(:batch_creation)
-  alias :batch_creation? :batch_creation
 
   has_many :responses, inverse_of: :user
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
@@ -36,8 +34,8 @@ class User < ApplicationRecord
     c.logged_in_timeout(SESSION_TIMEOUT)
 
     c.validates_format_of_login_field_options = {with: /\A[a-zA-Z0-9\._]+\z/}
-    c.merge_validates_uniqueness_of_login_field_options(unless: :batch_creation?, scope: :deleted_at)
-    c.merge_validates_length_of_password_field_options(minimum: 8, unless: :batch_creation?)
+    c.merge_validates_uniqueness_of_login_field_options(scope: :deleted_at)
+    c.merge_validates_length_of_password_field_options(minimum: 8)
     c.merge_validates_format_of_email_field_options(allow_blank: true)
 
     # Email does not have to be unique.
@@ -47,7 +45,7 @@ class User < ApplicationRecord
   after_initialize(:set_default_pref_lang)
   before_validation(:normalize_fields)
   before_validation(:generate_password_if_none)
-  after_create(:regenerate_api_key, unless: :batch_creation?)
+  after_create(:regenerate_api_key)
   after_create(:regenerate_sms_auth_code)
   # call before_destroy before dependent: :destroy associations
   # cf. https://github.com/rails/rails/issues/3458
@@ -62,13 +60,13 @@ class User < ApplicationRecord
   validate(:must_have_password_on_enter)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
+
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
   # which can be an issue if they will be being re-assigned
   # validate(:must_have_assignments_if_not_admin)
   validates :password, format: { with: PASSWORD_FORMAT,
                                  if: :require_password?,
-                                 unless: :batch_creation?,
                                  message: :invalid_password }
 
   scope(:by_name, -> { order("users.name") })
@@ -88,6 +86,7 @@ class User < ApplicationRecord
 
   scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
+  scope(:not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all })
 
   def self.random_password(size = 12)
     size = 12 if size < 12
@@ -346,72 +345,64 @@ class User < ApplicationRecord
     save validate: false
   end
 
-  # OVERRIDE AUTHLOGIC METHOD.
-  # This is to avoid unnecessary queries to the database if we want to skip
-  # certain validations.
-  #
-  # Resets the persistence_token field to a random hex value.
-  def reset_persistence_token
-    super unless batch_creation?
+  private
+
+  def normalize_fields
+    %w(phone phone2 name email).each{|f| self.send("#{f}").try(:strip!)}
+    self.email = nil if email.blank?
+    self.phone = PhoneNormalizer.normalize(phone)
+    self.phone2 = PhoneNormalizer.normalize(phone2)
+    return true
   end
 
-  private
-    def normalize_fields
-      %w(phone phone2 name email).each{|f| self.send("#{f}").try(:strip!)}
-      self.email = nil if email.blank?
-      self.phone = PhoneNormalizer.normalize(phone)
-      self.phone2 = PhoneNormalizer.normalize(phone2)
-      return true
+  def phone_length_or_empty
+    errors.add(:phone, :at_least_digits, num: 9) unless phone.blank? || phone.size >= 10
+    errors.add(:phone2, :at_least_digits, num: 9) unless phone2.blank? || phone2.size >= 10
+  end
+
+  def check_assoc
+    # can't delete users with related responses.
+    raise DeletionError.new(:cant_delete_if_responses) unless responses.empty?
+
+    # can't delete users with related sms messages.
+    raise DeletionError.new(:cant_delete_if_sms_messages) unless Sms::Message.where(user_id: id).empty?
+  end
+
+  def must_have_password_on_enter
+    entering_password = %w[enter enter_and_show].include?(reset_password_method)
+    errors.add(:password, :blank) if entering_password && password.blank?
+  end
+
+  def password_reset_cant_be_email_if_no_email
+    sending_email = reset_password_method == "email"
+    errors.add(:reset_password_method, :cant_passwd_email) if sending_email && email.blank?
+  end
+
+  def no_duplicate_assignments
+    errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
+  end
+
+  def must_have_assignments_if_not_admin
+    if !admin? && assignments.reject{|a| a.marked_for_destruction?}.empty?
+      errors.add(:assignments, :cant_be_empty_if_not_admin)
     end
+  end
 
-    def phone_length_or_empty
-      errors.add(:phone, :at_least_digits, num: 9) unless phone.blank? || phone.size >= 10
-      errors.add(:phone2, :at_least_digits, num: 9) unless phone2.blank? || phone2.size >= 10
+  def clear_assignments_without_roles
+    assignments.delete(assignments.select(&:no_role?))
+  end
+
+  # generates a random password before validation if this is a new record, unless one is already set
+  def generate_password_if_none
+    reset_password if new_record? && password.blank? && password_confirmation.blank?
+  end
+
+  # sets the user's preferred language to the mission default
+  def set_default_pref_lang
+    begin
+      self.pref_lang ||= configatron.has_key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : 'en'
+    rescue ActiveModel::MissingAttributeError
+      # we rescue this error in case find_by_sql is being used
     end
-
-    def check_assoc
-      # can't delete users with related responses.
-      raise DeletionError.new(:cant_delete_if_responses) unless responses.empty?
-
-      # can't delete users with related sms messages.
-      raise DeletionError.new(:cant_delete_if_sms_messages) unless Sms::Message.where(user_id: id).empty?
-    end
-
-    def must_have_password_on_enter
-      entering_password = %w[enter enter_and_show].include?(reset_password_method)
-      errors.add(:password, :blank) if entering_password && password.blank?
-    end
-
-    def password_reset_cant_be_email_if_no_email
-      sending_email = reset_password_method == "email"
-      errors.add(:reset_password_method, :cant_passwd_email) if sending_email && email.blank?
-    end
-
-    def no_duplicate_assignments
-      errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
-    end
-
-    def must_have_assignments_if_not_admin
-      if !admin? && assignments.reject{|a| a.marked_for_destruction?}.empty?
-        errors.add(:assignments, :cant_be_empty_if_not_admin)
-      end
-    end
-
-    def clear_assignments_without_roles
-      assignments.delete(assignments.select(&:no_role?))
-    end
-
-    # generates a random password before validation if this is a new record, unless one is already set
-    def generate_password_if_none
-      reset_password if new_record? && password.blank? && password_confirmation.blank?
-    end
-
-    # sets the user's preferred language to the mission default
-    def set_default_pref_lang
-      begin
-        self.pref_lang ||= configatron.has_key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : 'en'
-      rescue ActiveModel::MissingAttributeError
-        # we rescue this error in case find_by_sql is being used
-      end
     end
 end

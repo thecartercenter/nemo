@@ -21,25 +21,21 @@ describe Response do
 
     describe "submit_date qualifier" do
       context "with tricky timezone" do
-        let(:r1) { create(:response, form: form, created_at: "2017-01-01 22:00") }
-
-        around do |example|
-          in_timezone("Saskatchewan") do
-            r1 # Ensure this gets built inside correct timezone now, not before the `around` executes.
-            example.run
-          end
-        end
+        let(:response) { create(:response, form: form, created_at: "2017-01-01 22:00") }
 
         it "should match dates in local timezone" do
-          # Verify time stored in UTC (Jan 2), but search matches Jan 1.
-          expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq(2)
-          assert_search(%(submit-date:2017-01-01), r1)
-          assert_search(%(submit-date:2017-01-02))
+          in_timezone("Saskatchewan") do
+            response # Build response inside correct timezone.
+            # Verify time stored in UTC (Jan 2), but search matches Jan 1.
+            expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq(2)
+            assert_search(%(submit-date:2017-01-01), response)
+            assert_search(%(submit-date:2017-01-02))
+          end
         end
       end
 
       context "with inequality operator" do
-        let!(:responses) do
+        let(:responses) do
           [
             create(:response, form: form, created_at: "2017-01-01 22:00"),
             create(:response, form: form, created_at: "2017-01-01 22:00"),
@@ -47,7 +43,7 @@ describe Response do
           ]
         end
 
-        it do
+        it "should match correctly" do
           assert_search(%(submit-date < 2017-01-04), *responses[0..1])
           assert_search(%(submit-date > 2017-01-04), responses[2])
         end
@@ -165,11 +161,10 @@ describe Response do
 
     def assert_search(query, *objs_or_error)
       if objs_or_error[0].is_a?(Hash)
-        error_pattern = objs_or_error[0][:error]
         begin
           run_search(query)
         rescue StandardError
-          assert_match(error_pattern, $ERROR_INFO.to_s)
+          assert_match(objs_or_error[0][:error], $ERROR_INFO.to_s)
         else
           raise("No error was raised.")
         end

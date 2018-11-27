@@ -7,7 +7,7 @@ feature "user batch file upload", js: true do
 
   let(:mission) { create(:mission) }
   let(:admin) { create(:user, role_name: "coordinator", admin: true) }
-  let(:user_batch) { Rails.root.join("spec", "fixtures", "user_batches", "batch_of_3.csv") }
+  let(:user_import) { Rails.root.join("spec", "fixtures", "user_imports", "batch_of_3.csv") }
   let(:option_set_import) { Rails.root.join("spec", "fixtures", "option_set_imports", "simple.csv") }
   let(:invalid_file) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg") }
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name} }
@@ -15,9 +15,9 @@ feature "user batch file upload", js: true do
   before { login(admin) }
 
   scenario "uploading user batch" do
-    visit new_user_batch_path(params)
-    node = find(".user_batch_form")
-    run_scenario(node, user_batch, "batch_of_3.csv")
+    visit new_user_import_path(params)
+    node = find(".user_import_form")
+    run_scenario(node, user_import, "batch_of_3.csv")
   end
 
   scenario "uploading option set import" do
