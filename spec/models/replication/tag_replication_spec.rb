@@ -4,12 +4,21 @@ require "rails_helper"
 
 describe "replicating questions with tags" do
   let(:mission) { create(:mission) }
+  let(:orig_tag1) { create(:tag, name: "a", mission: orig_mission) }
+  let(:orig_tag2) { create(:tag, name: "b", mission: orig_mission) }
+  let(:orig_is_standard) { orig_mission.nil? }
+  let(:orig_q) do
+    create(
+      :question,
+      mission: orig_mission, qtype_name: "text", is_standard: orig_is_standard, tags: [orig_tag1, orig_tag2]
+    )
+  end
 
   describe "to_mission" do
-    let(:orig_tag1) { create(:tag, name: "a", mission: nil) }
-    let(:orig_tag2) { create(:tag, name: "b", mission: nil) }
-    let(:orig_q) { create(:question, qtype_name: "text", is_standard: true, tags: [orig_tag1, orig_tag2]) }
+    let(:orig_mission) { nil }
     let(:copy_q) { orig_q.replicate(mode: :to_mission, dest_mission: mission) }
+
+
 
     context "basic" do
       it "should replicate tag when replicates a standard library question to a mission" do
@@ -45,11 +54,7 @@ describe "replicating questions with tags" do
   end
 
   describe "promote" do
-    let(:orig_tag1) { create(:tag, name: "a", mission: mission) }
-    let(:orig_tag2) { create(:tag, name: "b", mission: mission) }
-    let(:orig_q) do
-      create(:question, mission: mission, qtype_name: "text", tags: [orig_tag1, orig_tag2])
-    end
+    let(:orig_mission) { mission }
     let(:std) { orig_q.replicate(mode: :promote) }
 
     context "basic" do
@@ -88,11 +93,7 @@ describe "replicating questions with tags" do
   end
 
   describe "clone" do
-    let(:orig_tag1) { create(:tag, name: "a", mission: mission) }
-    let(:orig_tag2) { create(:tag, name: "b", mission: mission) }
-    let(:orig_q) do
-      create(:question, mission: mission, qtype_name: "text", tags: [orig_tag1, orig_tag2])
-    end
+    let(:orig_mission) { mission }
     let(:copy_q) { orig_q.replicate(mode: :clone) }
 
     it "should use the existing tag in the mission" do
