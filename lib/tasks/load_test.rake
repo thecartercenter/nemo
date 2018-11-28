@@ -6,7 +6,6 @@ namespace :load_test do
     generate_test(Utils::LoadTesting::OdkSubmissionLoadTest,
       username: ENV["USERNAME"],
       password: ENV["PASSWORD"],
-      mission_name: ENV["MISSION_NAME"],
       form_id: ENV["FORM_ID"])
   end
 
@@ -17,6 +16,6 @@ namespace :load_test do
     params[:duration] ||= ENV["DURATION"]
 
     test = klass.new(params)
-    test.generate
+    test.generate_plan
   end
 end

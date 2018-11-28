@@ -6,18 +6,8 @@ describe Utils::LoadTesting::OdkSubmissionLoadTest do
   let(:mission) { FactoryGirl.create(:mission, name: "ODK Submission Load Test Mission") }
   let(:form) do
     FactoryGirl.create(:form, mission: mission, question_types: %w[
-      text
-      long_text
-      integer
-      counter
-      decimal
-      location
-      select_one
-      select_multiple
-      datetime
-      date
-      time
-      barcode
+      text long_text integer counter decimal location
+      select_one select_multiple datetime date time barcode
     ])
   end
 
@@ -34,11 +24,10 @@ describe Utils::LoadTesting::OdkSubmissionLoadTest do
       duration: duration,
       username: username,
       password: password,
-      mission_name: mission.compact_name,
       form_id: form.id
     )
 
-    path = test.generate
+    path = test.generate_plan
     actual_content = File.read(path.join("testplan.jmx"))
     expected_content = fixture_file("test_plans/odk_submission.jmx")
 

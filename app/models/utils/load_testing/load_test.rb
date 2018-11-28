@@ -16,6 +16,24 @@ module Utils
         options[:duration] ||= 1
       end
 
+      def generate_test_data
+        # To be implemented in subclasses
+      end
+
+      # This outputs the test plan (and supporting files) to tmp/test_plans/<name>_<timestamp>/
+      # The test plan can be run by copying those files to the test machine and running
+      #   jmeter -n -t testplan.jmx
+      def generate_plan
+        @timestamp = Time.current
+        FileUtils.mkdir_p(path)
+
+        generate_test_data
+        plan.jmx(file: path.join("testplan.jmx"))
+        path
+      end
+
+      protected
+
       def name
         self.class.name.demodulize.underscore.gsub(/_load_test/, "")
       end
@@ -35,6 +53,11 @@ module Utils
 
       def test(&block)
         RubyJmeter.dsl_eval(dsl) do
+          # Normally the given `block` is evaluated in this context.
+          # Since the following is common across all load tests we can capture
+          # the block and evaluate it inside the `threads` block (below).
+          # This alleviates needing to duplicate the following code in each test.
+
           defaults(
             domain: configatron.url.host,
             port: configatron.url.port.to_i,
@@ -45,18 +68,6 @@ module Utils
             instance_eval(&block)
           end
         end
-      end
-
-      # This outputs the test plan (and supporting files) to tmp/test_plans/<name>_<timestamp>/
-      # The test plan can be run by copying those files to the test machine and running
-      #   jmeter -n -t testplan.jmx
-      def generate
-        @timestamp = Time.zone.now
-        FileUtils.mkdir_p(path)
-
-        generate_test_data
-        plan.jmx(file: path.join("testplan.jmx"))
-        path
       end
     end
   end

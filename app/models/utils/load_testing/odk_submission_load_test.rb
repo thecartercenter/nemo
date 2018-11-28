@@ -9,13 +9,12 @@ module Utils
     # data (i.e. the XML for the ODK submission) for the test.
     #
     # The actual JMeter test will be run on a different server that does not have NEMO installed.
-    # It wil just know how to make a bunch of HTTP requests based on the options and data we give it.
+    # It will just know how to make a bunch of HTTP requests based on the options and data we give it.
     class OdkSubmissionLoadTest < LoadTest
       # Required `options`:
       #   username: User doing the submitting
       #   password: User's password
       #   form_id: The ID of the form being submitted to.
-      #   mission_name: The name of the mission in which the form is being submitted
       #
       # The test currently knows how to handle the following question types:
       #   text, long_text, barcode, integer, counter, decimal, location, select_one,
@@ -23,9 +22,8 @@ module Utils
 
       SUBMISSION_FILENAME = "submission.xml"
 
-      # Generates a bunch of test data to be used to make the test requests and store it in a CSV file.
+      # Generates a bunch of test data to be used to make the test requests and stores it in a CSV file.
       def generate_test_data
-        form = Form.find(options[:form_id])
         data = odk_submission(form)
         write_file(SUBMISSION_FILENAME, data)
       end
@@ -37,7 +35,7 @@ module Utils
       def plan
         username = options[:username]
         password = options[:password]
-        mission_name = options[:mission_name]
+        mission_name = form.mission.compact_name
 
         test do
           transaction("post_odk_response") do
@@ -50,6 +48,10 @@ module Utils
       end
 
       private
+
+      def form
+        Form.find(options[:form_id])
+      end
 
       def test_value(question)
         case question.qtype_name
