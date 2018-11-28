@@ -20,12 +20,12 @@ class QingGroupsController < ApplicationController
       ancestry: @form.root_id,
       one_screen: true,
       mission: current_mission
-    )
+    ).decorate
     render(partial: "modal")
   end
 
   def edit
-    @qing_group = QingGroup.find(params[:id])
+    @qing_group = QingGroup.find(params[:id]).decorate
 
     # The QingGroupDecorator might declare this group can't do one-screen even if the property is
     # set to true. If so, we should disable the checkbox.
@@ -39,17 +39,17 @@ class QingGroupsController < ApplicationController
     authorize!(:add_questions, @qing_group.form)
     @qing_group.parent = @qing_group.form.root_group
     @qing_group.save!
-    render(partial: "group", locals: {qing_group: @qing_group})
+    render(partial: "group", locals: {qing_group: @qing_group.decorate})
   end
 
   def show
-    @qing_group = QingGroup.find(params[:id])
+    @qing_group = QingGroup.find(params[:id]).decorate
     render(partial: "modal")
   end
 
   def update
     @qing_group.update_attributes!(qing_group_params)
-    render(partial: "group_inner", locals: {qing_group: @qing_group})
+    render(partial: "group_inner", locals: {qing_group: @qing_group.decorate})
   end
 
   def destroy
@@ -85,6 +85,6 @@ class QingGroupsController < ApplicationController
   end
 
   def odk_decorator
-    Odk::DecoratorFactory.decorate(@qing_group)
+    Odk::DecoratorFactory.decorate(@qing_group.object)
   end
 end

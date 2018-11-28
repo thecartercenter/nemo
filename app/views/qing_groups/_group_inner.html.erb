@@ -1,4 +1,4 @@
-<div class="inner" href="<%= read_only ? qing_group_path(qing_group) : edit_qing_group_path(qing_group) %>">
+<div class="inner" href="<%= qing_group.group_link %>">
 
   <%# Spacing placeholder for styling purposes %>
   <div class="standardized"></div>
@@ -11,7 +11,7 @@
       <% if qing_group.repeatable? %>
         <%= icon_tag("repeat", title: t("qing_group.tooltips.repeatable")) %>
       <% end %>
-      <% if Odk::DecoratorFactory.decorate(qing_group).one_screen_appropriate? %>
+      <% if Odk::DecoratorFactory.decorate(qing_group.object).one_screen_appropriate? %>
         <%= icon_tag("file-o", title: t("qing_group.tooltips.one_screen")) %>
       <% else %>
         <%= icon_tag("files-o", title: t("qing_group.tooltips.multi_screen")) %>
@@ -26,7 +26,7 @@
     <% if qing_group.display_conditions.any? %>
       <div class="refd-qing-links">
         <i class="fa fa-link"></i>
-        <% qing_group.decorate.refd_qings.each do |q| %>
+        <% qing_group.refd_qings.each do |q| %>
           <div class="refd-qing" data-ref-id="<%= q.id %>">#<span><%= q.full_dotted_rank %></span></div>
         <% end %>
       </div>
