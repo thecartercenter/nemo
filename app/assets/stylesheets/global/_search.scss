@@ -11,7 +11,7 @@ form.search_form {
       font-size: 10pt;
     }
     div[class^="col"]{
-      padding: 0px 5px;
+      padding: 0px 5px 0px 0px;
 
       &:first-of-type{
         padding-left: 0px;
@@ -20,6 +20,9 @@ form.search_form {
     .row{
       padding-bottom: 5px;
       margin: 0px;
+    }
+    .mobile-only{
+      display: none;
     }
     .date-icon{
       font-size: 14pt;
@@ -31,17 +34,20 @@ form.search_form {
       line-height: 28px;
     }
     .form-control{
-      height: 28px
+      height: 28px;
+      padding: 6px 2px;
     }
     .select2-selection--single{
       height: 28px;
     }
     .select2-selection__rendered{
       line-height: 22px;
+      padding-left: 0px;
+      padding-right: 10px;
     }
     input.btn {
       background-color: $gray-blue;
-      padding: 4px 4%;
+      padding: 3px 4%;
       &:first-of-type{
         margin-right: 3px;
       }
@@ -49,6 +55,11 @@ form.search_form {
 
     .question-row{
       margin-left: 20px;
+    }
+
+    .search-help{
+      color: #f77d48;
+      position: absolute;
     }
 
     @media (max-width: 767px){
@@ -64,8 +75,20 @@ form.search_form {
         padding-bottom: 0px;
       }
 
-      .desktop{
+      .desktop-only{
         display: none;
+      }
+
+      .mobile-only{
+        display: block;
+      }
+
+      .add-filters{
+        text-align: right;
+      }
+
+      .search-help{
+        position: relative;
       }
 
       .search-button{

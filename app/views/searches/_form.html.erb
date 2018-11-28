@@ -2,25 +2,43 @@
   <div class="search-container">
     <div class="row">
       <div class="col-sm-1">
-        <label class="search-container-label">Filter by: </label>
-      </div>
-      <div class="col-sm-2">
         <select id="s1" class="search-container-select">
-          <option default>Form Name</option>
+          <option default>Form</option>
           <option>form 1</option>
           <option>form 2</option>
         </select>
       </div>
       <div class="col-sm-2">
-        <input type="text" class="form-control" placeholder="Min Date">
+        <select id="s22" class="search-container-select">
+          <option default>User/Group</option>
+          <option>user 1</option>
+          <option>user 2</option>
+        </select>
+      </div>
+      <div class="col-sm-1 desktop-only">
+        <select id="s24" class="search-container-select">
+          <option default>Reviewed</option>
+          <option>Yes</option>
+          <option>No</option>
+        </select>
+      </div>
+      <div class="col-sm-2 desktop-only">
+        <input type="text" class="form-control" placeholder="Min-Date">
+        <i class="fa fa-calendar icon-option_set date-icon"></i>
+      </div>
+      <div class="col-sm-2 desktop-only">
+        <input type="text" class="form-control" placeholder="Max-Date">
         <i class="fa fa-calendar icon-option_set date-icon"></i>
       </div>
       <div class="col-sm-2">
-        <input type="text" class="form-control" placeholder="Max Date">
-        <i class="fa fa-calendar icon-option_set date-icon"></i>
-      </div>
-      <div class="col-sm-3">
         <input type="text" class="form-control" name="search" value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
+        <a class="search-help" href="#"><%= t('search.help_link') %></a>
+      </div>
+      <div class="col-sm mobile-only add-filters">
+        <a href="" id="add-filters">
+          <i class="fa fa-angle-double-down"></i>
+          Show more filters
+        </a> 
       </div>
       <div class="col-sm-2 search-button">
       <input type="submit" value="<%= t("common.search") %>" class="btn"><!--
@@ -31,8 +49,6 @@
     </div>
 
     <div class="row hidden question-row" id="question-row">
-      <div class="col-sm-1 desktop">        
-      </div>
       <div class="col-sm-2">
         <select id="s2" class="search-container-select">
           <option default>Filter by Question</option>
@@ -53,7 +69,7 @@
         </select>
       </div>
       <div class="col-sm-2">
-        <a href="" class="add-question">
+        <a href="" id="add-question" class="add-question">
           <i class="fa fa-plus"></i>
           Add Question
         </a>        
@@ -64,12 +80,20 @@
 
 <script type="text/javascript">
   $("#s1").select2();
+  $("#s22").select2();
+  $("#s24").select2();
   $("#s2").select2();
   $("#s3").select2();
   $("#s4").select2();
 
   $('#s1').one('change', function (e) {
       $("#question-row").removeClass("hidden");
+  });
+
+  $('#add-filters').click(function(e){
+    e.preventDefault();
+    $(this).remove();
+    $(".search-container .desktop-only").removeClass("desktop-only");
   });
 </script>
 
