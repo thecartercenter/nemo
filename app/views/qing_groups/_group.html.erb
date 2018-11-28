@@ -1,5 +1,5 @@
 <li class="form-item form-item-group" data-id="<%= qing_group.id %>">
-  <%= render('qing_groups/group_inner', qing_group: qing_group) %>
+  <%= render('qing_groups/group_inner', qing_group: qing_group.decorate) %>
 
   <ol class="item-list">
     <% if qing_group.has_children? %>

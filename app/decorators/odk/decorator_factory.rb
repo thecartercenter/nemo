@@ -14,19 +14,19 @@ module Odk
     def decorate(obj, context: {})
       case obj.class.name
       when "Form"
-        FormDecorator.new(obj, context: context)
+        Odk::FormDecorator.new(obj, context: context)
       when "QingGroup"
-        QingGroupDecorator.new(obj, context: context)
+        Odk::QingGroupDecorator.new(obj, context: context)
       when "Question"
-        QuestionDecorator.new(obj, context: context)
+        Odk::QuestionDecorator.new(obj, context: context)
       when "Questioning"
-        QingDecorator.new(obj, context: context)
+        Odk::QingDecorator.new(obj, context: context)
       when "Condition"
-        ConditionDecorator.new(obj, context: context)
+        Odk::ConditionDecorator.new(obj, context: context)
       when "Subqing"
-        SubqingDecorator.new(obj, context: context)
+        Odk::SubqingDecorator.new(obj, context: context)
       when "Forms::ConditionGroup"
-        ConditionGroupDecorator.new(obj, context: context)
+        Odk::ConditionGroupDecorator.new(obj, context: context)
       else
         obj
       end

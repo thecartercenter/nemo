@@ -4,13 +4,7 @@
       <div class="modal-header">
         <button type="button" class="close group-cancel" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title">
-          <% if @qing_group.group_name && action_name == "edit" %>
-            <%= I18n.t("activerecord.attributes.qing_group.edit") %>
-          <% elsif @qing_group.new_record? %>
-            <%= I18n.t("activerecord.attributes.qing_group.add") %>
-          <% elsif action_name == "show" %>
-            <%= I18n.t("activerecord.attributes.qing_group.show", name: @qing_group.group_name) %>
-          <% end %>
+          <%= @qing_group.modal_title %>
         </h4>
       </div>
 
