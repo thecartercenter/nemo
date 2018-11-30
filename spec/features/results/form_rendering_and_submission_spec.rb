@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "response form rendering and submission", js: true do
   include_context "response tree"
-  include_context "file upload"
+  include_context "file import"
   include_context "trumbowyg"
 
   let(:user) { create(:user) }

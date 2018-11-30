@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "response form file upload", js: true do
   include_context "response tree"
-  include_context "file upload"
+  include_context "file import"
 
   let(:user) { create(:user) }
   let!(:form) { create(:form, :published, question_types: %w[image video]) }

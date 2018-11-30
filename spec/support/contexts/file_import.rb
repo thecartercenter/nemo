@@ -1,9 +1,26 @@
 # frozen_string_literal: true
 
-shared_context "file upload" do
+shared_context "file import" do
+  def run_scenario(node, correct_file, correct_file_name)
+    # try hitting submit with no file, expect error
+    click_button("Import")
+    expect(page).to have_content("No file selected for import.")
+
+    # invalid file
+    drop_in_dropzone(invalid_file, 0)
+    expect_no_preview(node)
+    expect(page).to have_content("The uploaded file was not an accepted format.")
+    expect(page).to have_button("Import")
+
+    # try uploading valid file
+    drop_in_dropzone(correct_file, 0)
+    expect_preview(node)
+    expect(page).to have_content(correct_file_name)
+  end
+
   def drop_in_dropzone(file_path, index = 0)
     # Generate a fake input selector
-    page.execute_script <<-JS
+    page.execute_script(<<-JS)
       fakeFileInput = window.$('<input/>').attr(
         {id: 'fakeFileInput', type:'file'}
       ).appendTo('body');
@@ -11,7 +28,7 @@ shared_context "file upload" do
     # Attach the file to the fake input selector with Capybara
     attach_file("fakeFileInput", file_path)
     # Trigger the fake drop event
-    page.execute_script <<-JS
+    page.execute_script(<<-JS)
       var e = jQuery.Event('drop', { dataTransfer : { files : [fakeFileInput.get(0).files[0]] } });
       $('.dropzone')[#{index}].dropzone.listeners[0].events.drop(e);
     JS
@@ -20,7 +37,7 @@ shared_context "file upload" do
     # in the meantime, it can lead to weird failures.
     wait_for_dropzone_upload
 
-    page.execute_script <<-JS
+    page.execute_script(<<-JS)
       fakeFileInput.remove();
     JS
   end

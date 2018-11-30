@@ -3,7 +3,7 @@
 require "rails_helper"
 
 feature "user import", js: true do
-  include_context "dropzone"
+  include_context "file import"
 
   let(:admin) { create(:admin) }
   let(:mission) { get_mission }

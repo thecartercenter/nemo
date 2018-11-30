@@ -3,7 +3,7 @@
 require "rails_helper"
 
 feature "user batch file upload", js: true do
-  include_context "file upload"
+  include_context "file import"
 
   let(:mission) { create(:mission) }
   let(:admin) { create(:user, role_name: "coordinator", admin: true) }
@@ -26,20 +26,5 @@ feature "user batch file upload", js: true do
     run_scenario(node, option_set_import, "simple.csv")
   end
 
-  def run_scenario(node, correct_file, correct_file_name)
-    # try hitting submit with no file, expect error
-    click_button("Import")
-    expect(page).to have_content("No file selected for import.")
 
-    # invalid file
-    drop_in_dropzone(invalid_file, 0)
-    expect_no_preview(node)
-    expect(page).to have_content("The uploaded file was not an accepted format.")
-    expect(page).to have_button("Import")
-
-    # try uploading valid file
-    drop_in_dropzone(correct_file, 0)
-    expect_preview(node)
-    expect(page).to have_content(correct_file_name)
-  end
 end
