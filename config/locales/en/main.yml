@@ -422,11 +422,12 @@ en:
         group_name: "Name"
         group_hint: "Hint"
         group_item_name: "Repeat Item Name"
-        add: "Add Group"
+        new: "Add Group"
         edit: "Edit Group"
         delete: "Are you sure you want to delete the group '%{name}'?"
         repeatable: "Repeatable?"
         one_screen: "Show on One Screen?"
+        show: "Group: %{name}"
         display_logic: "Display Logic"
       question:
         base: "" # this is a sort of hack to get error msg to display properly

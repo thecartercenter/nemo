@@ -8,4 +8,12 @@ class QingGroupDecorator < ApplicationDecorator
   def refd_qings
     qing_group.display_conditions.map(&:ref_qing).uniq.sort_by(&:full_rank)
   end
+
+  def group_link
+    h.read_only ? h.qing_group_path(object) : h.edit_qing_group_path(object)
+  end
+
+  def modal_title
+    I18n.t("activerecord.attributes.qing_group.#{h.action_name}", name: group_name)
+  end
 end

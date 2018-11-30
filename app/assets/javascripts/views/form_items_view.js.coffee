@@ -6,6 +6,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
   events:
     'click .add-group': 'show_new_group_modal'
     'click .form-item-group > .inner .edit': 'show_edit_group_modal'
+    'click .form-item-group > .inner': 'show_edit_group_modal'
     'click .form-item-group > .inner .delete': 'delete_item'
     'click .form-item-question > .inner .delete': 'delete_item'
     'click .form-item-question': 'go_to_question'
@@ -31,7 +32,6 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
     event.preventDefault()
     $link = $(event.currentTarget)
     @form_item_being_edited = $link.closest('.form-item')
-
     url = $link.attr("href")
     edit_link = url.replace('/edit', '')
 
