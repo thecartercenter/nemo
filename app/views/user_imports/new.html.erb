@@ -2,7 +2,7 @@
   <%= tmd("user_import.instructions_html", xlsx_url: template_user_imports_path(format: "xlsx"),
                                            csv_url: template_user_imports_path(format: "csv"),
                                            strip_outer_p_tags: false) %>
-  <%= f.field(:file, partial: "file_upload/operation_file_uploader",
+  <%= f.field(:file, required: true, partial: "file_upload/operation_file_uploader",
                      locals: {operation_type_prefix: "user_imports"}) %>
   <div class="submit-buttons">
     <%= f.submit(class: "btn btn-primary") %>
