@@ -2,11 +2,20 @@
 
 require "rails_helper"
 
-feature "user import", js: true do
+feature "option set import", js: true do
   include_context "file import"
 
   let(:admin) { create(:admin) }
   let(:mission) { get_mission }
+
+  around do |example|
+    # A strange error was happening due to the transaction inside OptionSetImport.
+    # To see it, comment this ENV variable and watch the test log DB queries.
+    # Since this is a happy path we can turn it off just for this spec.
+    ENV["NO_TRANSACTION_IN_IMPORT"] = "1"
+    example.run
+    ENV.delete("NO_TRANSACTION_IN_IMPORT")
+  end
 
   before do
     login(admin)

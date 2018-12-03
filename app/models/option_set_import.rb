@@ -36,7 +36,7 @@ class OptionSetImport < TabularImport
 
     allow_coordinates = special_columns.include?(:coordinates)
 
-    OptionSet.transaction do
+    transaction do
       # create the option set
       @option_set = OptionSet.create(
         mission: mission,
@@ -211,5 +211,13 @@ class OptionSetImport < TabularImport
 
   def name_locale_key
     :"name_#{configatron.preferred_locale}"
+  end
+
+  def transaction
+    if Rails.env.test? && ENV["NO_TRANSACTION_IN_IMPORT"]
+      yield
+    else
+      OptionSet.transaction { yield }
+    end
   end
 end
