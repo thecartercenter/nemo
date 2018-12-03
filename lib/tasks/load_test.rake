@@ -9,6 +9,13 @@ namespace :load_test do
       form_id: ENV["FORM_ID"])
   end
 
+  desc "Generate load test plan for SMS submission"
+  task sms: :environment do
+    generate_test(Utils::LoadTesting::SmsSubmissionLoadTest,
+      user_id: ENV["USER_ID"],
+      form_id: ENV["FORM_ID"])
+  end
+
   private
 
   def generate_test(klass, params = {})
