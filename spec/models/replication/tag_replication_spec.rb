@@ -23,7 +23,7 @@ describe "replicating questions with tags" do
         orig_q.reload
         expect(orig_q.id).not_to eq(copy_q.id)
         expect(copy_q.tags.count).to eq(2)
-        [orig_tag1, orig_tag2].each_with_index do |orig_tag, _i|
+        [orig_tag1, orig_tag2].each do |orig_tag|
           new_tag = find_tag_by_name(copy_q, orig_tag.name)
           expect(new_tag.id).not_to eq(orig_tag.id)
           expect(new_tag.name).to eq(orig_tag.name)
@@ -60,7 +60,7 @@ describe "replicating questions with tags" do
         orig_q.reload
         expect(orig_q.id).not_to eq(std.id)
         expect(std.tags.count).to eq(2)
-        [orig_tag1, orig_tag2].each_with_index do |orig_tag, _i|
+        [orig_tag1, orig_tag2].each do |orig_tag|
           new_tag = find_tag_by_name(std, orig_tag.name)
           expect(new_tag.id).not_to eq(orig_tag.id)
           expect(new_tag.name).to eq(orig_tag.name)
