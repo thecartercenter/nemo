@@ -1,11 +1,18 @@
 -- Execute these queries by pasting into PSQL console. All should return no rows.
 
--- Exactly one root OptionNode per option_set_id
+-- Exactly one root node per set.
+SELECT id FROM option_sets WHERE (
+  SELECT COUNT(*)
+    FROM option_nodes
+    WHERE option_set_id = option_sets.id AND ancestry IS NULL AND deleted_at IS NULL
+) != 1 AND deleted_at IS NULL;
+
+-- Exactly one root node per set (other direction).
 SELECT option_set_id, COUNT(*)
   FROM option_nodes
   WHERE ancestry IS NULL AND deleted_at IS NULL
   GROUP BY option_set_id
-  HAVING COUNT(*) > 1;
+  HAVING COUNT(*) != 1;
 
 -- Contiguous rank
 SELECT on1.id, on1.rank
