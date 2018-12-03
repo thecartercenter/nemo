@@ -47,15 +47,14 @@ module Utils
         username = options[:username]
         password = options[:password]
         mission_name = form.mission.compact_name
+        files = [{path: "${submission_filename}", paramname: "xml_submission_file", mimetype: "text/xml"}]
 
         test do
           csv_data_set_config(filename: CSV_FILENAME, variableNames: "submission_filename")
 
           transaction("post_odk_response") do
             basic_auth(username, password)
-
-            submit("/en/m/#{mission_name}/submission",
-              files: [{path: "${submission_filename}", paramname: "xml_submission_file", mimetype: "text/xml"}])
+            submit("/en/m/#{mission_name}/submission", files: files)
           end
         end
       end
