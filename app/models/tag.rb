@@ -1,5 +1,9 @@
+# frozen_string_literal: true
+
 class Tag < ApplicationRecord
-  include MissionBased, Comparable
+  include MissionBased
+  include Comparable
+  include Replication::Replicable
 
   acts_as_paranoid
 
@@ -8,6 +12,9 @@ class Tag < ApplicationRecord
   has_many :questions, through: :taggings
 
   before_save { |tag| tag.name.downcase! }
+
+  # since reuse_if_match covers all cases where the name is the same, we do not need reuse_in_clone
+  replicable reuse_if_match: :name
 
   MAX_SUGGESTIONS = 5 # The max number of suggestion matches to return
   MAX_NAME_LENGTH = 64
@@ -19,8 +26,8 @@ class Tag < ApplicationRecord
     # Trim query to maximum length.
     query = query[0...MAX_NAME_LENGTH]
 
-    exact_match = tags.find_by_name(query)
-    matches = tags.where('name like ?', "%#{query}%").order(:name).limit(MAX_SUGGESTIONS).to_a
+    exact_match = tags.find_by(name: query)
+    matches = tags.where("name like ?", "%#{query}%").order(:name).limit(MAX_SUGGESTIONS).to_a
 
     if exact_match
       # if there was an exact match, put it at the top
@@ -36,23 +43,20 @@ class Tag < ApplicationRecord
   # Tags that should show at the top of question index page
   def self.mission_tags(mission)
     # In admin mode, return all standard tags
-    if mission.nil?
-      return where(mission_id: nil).order(:name)
-    end
+    return where(mission_id: nil).order(:name) if mission.nil?
 
     # In mission, show all tags for mission
     question_ids = Question.for_mission(mission).pluck(:id)
-    mission_id = mission.try(:id) || 'null'
+    mission_id = mission.try(:id) || "null"
     includes(:taggings).where(mission_id: mission_id).order(:name)
   end
 
   # Sorting
-  def <=> (other_tag)
+  def <=>(other_tag)
     name <=> other_tag.name
   end
 
-  def as_json(options = {})
-    super(only: [:id, :name])
+  def as_json(_options = {})
+    super(only: %i[id name])
   end
-
 end
