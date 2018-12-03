@@ -18,7 +18,7 @@ class UserImportsController < TabularImportsController
     :user_import
   end
 
-  def tabular_type_url
+  def after_create_redirect_url
     users_url
   end
 

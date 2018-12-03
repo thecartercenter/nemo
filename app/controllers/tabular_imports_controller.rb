@@ -35,7 +35,7 @@ class TabularImportsController < ApplicationController
   def do_import(saved_upload)
     operation(saved_upload).enqueue
     prep_operation_queued_flash(tabular_type_symbol)
-    redirect_to(users_url)
+    redirect_to(after_create_redirect_url)
   rescue StandardError => e
     Rails.logger.error(e)
     flash.now[:error] = I18n.t("errors.file_upload.internal")

@@ -13,7 +13,7 @@ class OptionSetImportsController < TabularImportsController
     :option_set_import
   end
 
-  def tabular_type_url
+  def after_create_redirect_url
     option_set_url
   end
 
