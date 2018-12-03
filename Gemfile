@@ -126,6 +126,8 @@ group :development, :test do
   gem "pry-nav", "~> 0.2"
   gem "pry-rails", "~> 0.3"
 
+  # gem "i18n-debug", "~> 1.1" # Great for debugging i18n paths. Uncomment temporarily when neeeded.
+
   # Misc
   gem "assert_difference", "~> 1.0.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6.1"

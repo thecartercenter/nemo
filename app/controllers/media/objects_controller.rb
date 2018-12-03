@@ -33,7 +33,7 @@ module Media
       else
         # Currently there is only one type of validation failure: incorrect type.
         # The default paperclip error messages are heinous, which is why we're doing this.
-        msg = I18n.t("activerecord.errors.models.media/object.invalid_format")
+        msg = I18n.t("errors.file_upload.invalid_format")
         render(json: {errors: [msg]}, status: :unprocessable_entity)
       end
     end

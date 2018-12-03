@@ -10,7 +10,7 @@ describe OptionSetImport do
   it 'should be able to import a simple option set' do
     name = "Simple"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("simple.xlsx"))
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_import_fixture("simple.xlsx"))
     import.run
     expect(import).to be_succeeded
 
@@ -22,7 +22,7 @@ describe OptionSetImport do
   it 'should be able to import an option set in admin mode' do
     name = "Simple Standard"
 
-    import = OptionSetImport.new(mission_id: nil, name: name, file: option_set_fixture("simple.xlsx"))
+    import = OptionSetImport.new(mission_id: nil, name: name, file: option_set_import_fixture("simple.xlsx"))
     import.run
     expect(import).to be_succeeded
 
@@ -37,7 +37,7 @@ describe OptionSetImport do
     import = OptionSetImport.new(
       mission_id: mission.id,
       name: name,
-      file: option_set_fixture("multilevel_geographic.xlsx")
+      file: option_set_import_fixture("multilevel_geographic.xlsx")
     )
     import.run
     expect(import).to be_succeeded
@@ -77,7 +77,7 @@ describe OptionSetImport do
     import = OptionSetImport.new(
       mission_id: mission.id,
       name: name,
-      file: option_set_fixture("invalid_geographic.xlsx")
+      file: option_set_import_fixture("invalid_geographic.xlsx")
     )
     import.run
     expect(import).not_to be_succeeded
@@ -86,7 +86,7 @@ describe OptionSetImport do
   it 'should successfully import csv option set' do
     name = "CSV Set"
 
-    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_fixture("simple.csv"))
+    import = OptionSetImport.new(mission_id: mission.id, name: name, file: option_set_import_fixture("simple.csv"))
     import.run
     expect(import).to be_succeeded
 

@@ -3,7 +3,7 @@
 require "rails_helper"
 
 feature "user import", js: true do
-  include_context "dropzone"
+  include_context "file import"
 
   let(:admin) { create(:admin) }
   let(:mission) { get_mission }
@@ -14,8 +14,7 @@ feature "user import", js: true do
 
   scenario "happy path" do
     visit("/en/m/#{mission.compact_name}/user-imports/new")
-    drop_in_dropzone(user_import_fixture("varying_info.xlsx").path)
-    click_button("Import")
+    try_invalid_uploads_and_then(user_import_fixture("varying_info.xlsx").path)
     expect(page).to have_content("User import queued")
     Delayed::Worker.new.work_off
     click_link("operations panel")

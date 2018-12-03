@@ -4,7 +4,7 @@
 class TabularImportOperationJob < OperationJob
   def perform(_operation, name: nil, saved_upload_id:, import_class:)
     if import_class
-      saved_upload = SavedUpload.find(saved_upload_id)
+      saved_upload = SavedTabularUpload.find(saved_upload_id)
       import = import_class.constantize.new(
         mission_id: mission.try(:id),
         name: name,

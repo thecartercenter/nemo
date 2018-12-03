@@ -151,6 +151,8 @@ en:
     file_upload:
       error: "There was an error uploading the file."
       file_missing: "No file selected for import."
+      invalid_format: "The uploaded file was not an accepted format."
+      internal: "An internal error occurred while processing your upload."
     messages:
       deleted_successfully: "deleted successfully"
       generic_delete_error: "Error during deletion."
@@ -159,6 +161,10 @@ en:
     submit:
       create: "Save"
       update: "Save"
+      option_set_import:
+        create: "Import"
+      user_import:
+        create: "Import"
 
   flash_message_types:
     success: "Success"
@@ -414,6 +420,9 @@ en:
         options: "Options"
         option_levels: "Levels"
         sms_guide_formatting: "SMS Guide Formatting"
+      option_set_import:
+        name: "Option Set Name"
+        file: "File to Import"
       password_reset:
         identifier: "Email or Username"
       qing_group:
@@ -770,8 +779,6 @@ en:
           attributes:
             default_response_name:
               calc_must_wrap_all: "calc(...) must surround the entire name."
-        media/object:
-          invalid_format: "The uploaded file was not an accepted format."
         mission:
           cant_delete_if_assoc: "You can't delete this Mission because it has associated Forms, Responses, or other objects."
           let_num_spc_only: "Please use only letters, numbers, and spaces."
@@ -792,7 +799,6 @@ en:
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
         option_set_import:
           general: "Option Set import is invalid (see below)."
-          internal: "An internal error occurred while proccessing your upload."
           wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
         question:
           at_least_one_name: "You must enter a title in at least one language."

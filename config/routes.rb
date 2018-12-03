@@ -139,8 +139,8 @@ ELMO::Application.routes.draw do
 
     resources :user_imports, path: "user-imports", only: %i[new create] do
       collection do
+        get :template
         post :upload
-        get "users-template", as: "template", action: "template", defaults: {format: "xslx"}
       end
     end
 
@@ -169,7 +169,8 @@ ELMO::Application.routes.draw do
 
     resource :option_set_imports, path: "option-set-imports", only: [:new, :create] do
       collection do
-        get "option-sets-template", as: "template", action: "template", defaults: { format: "xlsx" }
+        get :template
+        post :upload
       end
     end
 
