@@ -33,7 +33,7 @@ feature "operations panel" do
 
     before do
       stub = double("ok?": result)
-      allow(Util::DelayedJobChecker).to(receive(:instance).and_return(stub))
+      allow(Utils::DelayedJobChecker).to(receive(:instance).and_return(stub))
     end
 
     context "not running" do

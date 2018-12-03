@@ -7,7 +7,7 @@ class PingController < ApplicationController
   # Used by uptime checker
   def show
     @tests = {}
-    @tests[:dj_running] = Util::DelayedJobChecker.instance.ok?
+    @tests[:dj_running] = Utils::DelayedJobChecker.instance.ok?
     @ok = @tests.values.all?
     @version = configatron.system_version
     render(layout: nil, formats: :text, status: @ok ? 200 : 503)
