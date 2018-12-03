@@ -16,7 +16,7 @@
     el: "#file-uploader",
     zoneId: "#dropzone-file-uploader",
     genericThumbPath: nil,
-    postPath: "#{post_path}/upload",
+    postPath: "#{send("#{operation_type_prefix}_path")}/upload",
     previewTemplate: render("file_upload/dropzone_preview"),
     paramName: "file_import"
   )%>
