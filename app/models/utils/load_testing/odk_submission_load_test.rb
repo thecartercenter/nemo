@@ -20,12 +20,23 @@ module Utils
       #   text, long_text, barcode, integer, counter, decimal, location, select_one,
       #   select_multiple, datetime, date, time
 
-      SUBMISSION_FILENAME = "submission.xml"
+      CSV_FILENAME = "submissions.csv"
 
       # Generates a bunch of test data to be used to make the test requests and stores it in a CSV file.
       def generate_test_data
-        data = odk_submission(form)
-        write_file(SUBMISSION_FILENAME, data)
+        CSV.open(path.join(CSV_FILENAME), "wb") do |csv|
+          csv << ["submission_filename"]
+
+          submissions_path = path.join("submissions")
+          FileUtils.mkdir_p(submissions_path)
+
+          100.times do |i|
+            data = odk_submission(form)
+            submission_filename = "submissions/#{i + 1}.xml"
+            write_file(submission_filename, data)
+            csv << [submission_filename]
+          end
+        end
       end
 
       # The endpoint we're POSTing to expects the following:
@@ -38,11 +49,13 @@ module Utils
         mission_name = form.mission.compact_name
 
         test do
+          csv_data_set_config(filename: CSV_FILENAME, variableNames: "submission_filename")
+
           transaction("post_odk_response") do
             basic_auth(username, password)
 
             submit("/en/m/#{mission_name}/submission",
-              files: [{path: SUBMISSION_FILENAME, paramname: "xml_submission_file", mimetype: "text/xml"}])
+              files: [{path: "${submission_filename}", paramname: "xml_submission_file", mimetype: "text/xml"}])
           end
         end
       end
