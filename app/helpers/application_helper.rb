@@ -191,7 +191,7 @@ module ApplicationHelper
   # Translates and interprets markdown style translations.
   # Escapes HTML in any arguments.
   # options[:strip_outer_p_tags] - Whether to strip outer p tags if they exist. Defaults to true for now.
-  def tmd(key, strip_outer_p_tags:, **options)
+  def tmd(key, strip_outer_p_tags: true, **options)
     options.keys.each do |k|
       options[k] = html_escape(options[k]).to_s unless %w[default scope].include?(k.to_s)
     end

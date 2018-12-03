@@ -2,23 +2,22 @@
 
 # For importing OptionSets from CSV/spreadsheet.
 class OptionSetImportsController < TabularImportsController
+  def template
+    # TODO: make template
+    NotImplementedError
+  end
 
-  load_and_authorize_resource
+  protected
+
+  def option_set_import_params
+    params.require(:option_set_import).permit(:name)
+  end
 
   def tabular_class
     OptionSetImport
   end
 
-  def tabular_type_symbol
-    :option_set_import
-  end
-
   def after_create_redirect_url
-    option_set_url
-  end
-
-  def template
-    # TODO: make template
-    NotImplementedError
+    option_sets_url
   end
 end

@@ -1,11 +1,7 @@
 # frozen_string_literal: true
 
 # Imports users from CSV or XLSX.
-class UserImport
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
-  extend ActiveModel::Naming
-
+class UserImport < TabularImport
   IMPORT_ERROR_CUTOFF = 50
   PERMITTED_ATTRIBS = %i[login name phone phone2 email birth_year gender
                          gender_custom nationality notes user_groups].freeze

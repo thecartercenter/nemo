@@ -2,8 +2,8 @@
   <%= tmd("option_set_import.instructions_html", url: template_option_set_imports_path(format: "xlsx"),
                                                  strip_outer_p_tags: false) %>
   <%= f.field(:name, required: true) %>
-  <%= f.field(:file_import, partial: "file_upload/operation_file_uploader",
-                            locals: {operation_type_prefix: "option_set_imports"}) %>
+  <%= f.field(:file, partial: "file_upload/operation_file_uploader",
+                     locals: {operation_type_prefix: "option_set_imports"}) %>
   <div class="submit-buttons">
     <%= f.submit(class: "btn btn-primary") %>
     <%= render("file_upload/upload_in_progress_button", single_file: true) %>
