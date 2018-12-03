@@ -3,7 +3,7 @@
 require "rails_helper"
 
 describe Utils::LoadTesting::SmsSubmissionLoadTest do
-  let(:setting) { FactoryGirl.build(:setting, incoming_sms_token: 'token') }
+  let(:setting) { FactoryGirl.build(:setting, incoming_sms_token: "token") }
   let(:mission) { FactoryGirl.create(:mission, name: "SMS Submission Load Test Mission", setting: setting) }
   let(:form) do
     FactoryGirl.create(:form, mission: mission, question_types: %w[

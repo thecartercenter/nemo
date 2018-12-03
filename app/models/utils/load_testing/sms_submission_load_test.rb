@@ -29,7 +29,7 @@ module Utils
         CSV.open(path.join(CSV_FILENAME), "wb") do |csv|
           csv << ["message_body"]
 
-          100.times do |i|
+          100.times do
             message_body = sms_submission(form)
             csv << [message_body]
           end
@@ -41,10 +41,9 @@ module Utils
       # - `To`: Twilio receiving phone number
       # - `Body`: SMS message body
       def plan
-        from_number = user.phone
         mission_name = form.mission.compact_name
         url_token = form.mission.setting.incoming_sms_token
-        params = {"From" => "#{from_number}", "To" => "+1234567890", "Body" => "${message_body}"}
+        params = {"From" => user.phone, "To" => "+1234567890", "Body" => "${message_body}"}
 
         test do
           csv_data_set_config(filename: CSV_FILENAME, variableNames: "message_body")
@@ -71,7 +70,7 @@ module Utils
       def test_value(question)
         case question.qtype_name
         when "text", "long_text"
-          Faker::Lorem.sentence.gsub(/\./, "")
+          Faker::Lorem.sentence
         when "integer", "counter"
           Faker::Number.number(3)
         when "decimal"
