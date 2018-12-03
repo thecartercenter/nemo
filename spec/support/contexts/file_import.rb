@@ -1,6 +1,26 @@
 # frozen_string_literal: true
 
 shared_context "file import" do
+  def try_invalid_uploads_and_then(valid_upload_path, &block)
+    # Try hitting submit with no file, expect error
+    block.call
+    click_button("Import")
+    expect(page).to have_content("No file selected for import.")
+
+    # Invalid file
+    block.call
+    drop_in_dropzone(media_fixture("images/the_swing.jpg").path)
+    expect_no_preview
+    expect(page).to have_content("The uploaded file was not an accepted format.")
+    expect(page).to have_button("Import")
+
+    block.call
+    drop_in_dropzone(valid_upload_path)
+    expect_preview
+    click_button("Import")
+  end
+
+
   def run_scenario(node, correct_file, correct_file_name)
     # try hitting submit with no file, expect error
     click_button("Import")
@@ -42,12 +62,12 @@ shared_context "file import" do
     JS
   end
 
-  def expect_preview(node)
+  def expect_preview(node = page)
     expect(node).to have_selector(".dz-preview")
     expect(node).not_to have_content("The uploaded file was not an accepted format.")
   end
 
-  def expect_no_preview(node)
+  def expect_no_preview(node = page)
     expect(node).not_to have_selector(".dz-preview")
   end
 

@@ -13,12 +13,14 @@ feature "user import", js: true do
   end
 
   scenario "happy path" do
-    visit("/en/m/#{mission.compact_name}/user-imports/new")
-    try_invalid_uploads_and_then(user_import_fixture("varying_info.xlsx").path)
-    expect(page).to have_content("User import queued")
+    visit("/en/m/#{mission.compact_name}/option-set-imports/new")
+    try_invalid_uploads_and_then(option_set_import_fixture("simple.csv").path) do
+      fill_in("Option Set Name", with: "New Opt Set")
+    end
+    expect(page).to have_content("Option Set import queued")
     Delayed::Worker.new.work_off
     click_link("operations panel")
-    click_on("User import from varying_info.xlsx")
+    click_on("Option Set 'simple.csv' import")
     expect(page).to have_content("Status Success")
   end
 end
