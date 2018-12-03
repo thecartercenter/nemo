@@ -1,20 +1,20 @@
 # frozen_string_literal: true
 
 shared_context "file import" do
-  def try_invalid_uploads_and_then(valid_upload_path, &block)
+  def try_invalid_uploads_and_then(valid_upload_path)
     # Try hitting submit with no file, expect error
-    block.call
+    yield
     click_button("Import")
     expect(page).to have_content("No file selected for import.")
 
     # Invalid file
-    block.call
+    yield
     drop_in_dropzone(media_fixture("images/the_swing.jpg").path)
     expect_no_preview
     expect(page).to have_content("The uploaded file was not an accepted format.")
     expect(page).to have_button("Import")
 
-    block.call
+    yield
     drop_in_dropzone(valid_upload_path)
     expect_preview
     click_button("Import")
