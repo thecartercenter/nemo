@@ -8,10 +8,6 @@
   </div>
   <div class="dz-error-msg"></div>
 </div>
-<div class="submit-buttons">
-  <%= form.submit(t("common.import"), class: "btn btn-primary") %>
-  <%= render("file_upload/upload_in_progress_button", single_file: true) %>
-</div>
 
 <%= javascript_doc_ready do %>
   ELMO.file_uploader_el_selector = "<%= ".#{operation_type_prefix}_new"%>"

@@ -34,7 +34,8 @@ module IconHelper
     standard: "certificate",
     submit: "share-square-o",
     unpublish: "arrow-down",
-    user: "users"
+    user: "users",
+    userimport: "users"
   }
 
   # Returns the Font Awesome icon tag for the given object type or action.

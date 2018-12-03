@@ -190,13 +190,16 @@ module ApplicationHelper
 
   # Translates and interprets markdown style translations.
   # Escapes HTML in any arguments.
-  def tmd(key, options = {})
-    options.keys.each { |k| options[k] = html_escape(options[k]).to_s unless %w(default scope).include?(k.to_s) }
+  # options[:strip_outer_p_tags] - Whether to strip outer p tags if they exist. Defaults to true for now.
+  def tmd(key, strip_outer_p_tags:, **options)
+    options.keys.each do |k|
+      options[k] = html_escape(options[k]).to_s unless %w[default scope].include?(k.to_s)
+    end
 
     html = BlueCloth.new(t(key, options)).to_html
 
-    # Remove surrounding <p> tags if present.
-    html = html[3..-5] if html[0,3] == "<p>" && html[-4,4] == "</p>"
+    # Remove surrounding <p> tags if present and requested.
+    html = html[3..-5] if strip_outer_p_tags != false && html[0, 3] == "<p>" && html[-4, 4] == "</p>"
 
     # We can safely do this because we control what's in the translation file
     # and we've escaped the options.

@@ -161,6 +161,10 @@ en:
     submit:
       create: "Save"
       update: "Save"
+      option_set_import:
+        create: "Import"
+      user_import:
+        create: "Import"
 
   flash_message_types:
     success: "Success"
@@ -416,6 +420,9 @@ en:
         options: "Options"
         option_levels: "Levels"
         sms_guide_formatting: "SMS Guide Formatting"
+      option_set_import:
+        name: "Option Set Name"
+        file_import: "File to Import"
       password_reset:
         identifier: "Email or Username"
       qing_group:
@@ -533,7 +540,7 @@ en:
         user_group_ids: "Groups"
         user_groups: "Groups"
       user_import:
-        file: "File to Import"
+        file_import: "File to Import"
 
     # these strings override the attribute strings above in table headers only
     table_headers:
