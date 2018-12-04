@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.uuid "ancestor_id", null: false
     t.uuid "descendant_id", null: false
     t.integer "generations", null: false
-    t.index ["ancestor_id", "descendant_id", "generations"], name: "answer_anc_desc_idx", unique: true
+    t.index ["ancestor_id", "descendant_id"], name: "index_answer_hierarchies_on_ancestor_id_and_descendant_id", unique: true
     t.index ["descendant_id"], name: "answer_desc_idx"
   end
 
