@@ -112,10 +112,10 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
 
   def manual(index, id_groups)
     id_groups.each do |ids|
-      print_status_message(index, ids, "***** NEEDS MANUAL RESOLUTION *****", show_id_list: false)
+      print_status_message(ids, "***** NEEDS MANUAL RESOLUTION *****", show_id_list: false)
       puts("  Affected rows:")
       id_list = ids.map { |id| "'#{id}'" }.join(",")
-      query = "SELECT id, #{index[:new_cols].join(", ")} FROM #{index[:table]} WHERE id IN (#{id_list})"
+      query = "SELECT id, #{index[:new_cols].join(', ')} FROM #{index[:table]} WHERE id IN (#{id_list})"
       execute(query).to_a.each do |row|
         puts("  - #{row.inspect}")
       end
@@ -124,7 +124,7 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
 
   def delete_extra(index, id_groups)
     id_groups.each do |ids|
-      print_status_message(index, ids, "Deleting extra records.")
+      print_status_message(ids, "Deleting extra records.")
       id_list = ids[1..-1].map { |id| "'#{id}'" }.join(",")
       execute("DELETE FROM #{index[:table]} WHERE id IN (#{id_list})")
     end
@@ -132,13 +132,13 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
 
   def highest_role(index, id_groups)
     id_groups.each do |ids|
-      print_status_message(index, ids, "Taking highest role.")
+      print_status_message(ids, "Taking highest role.")
       id_list = ids.map { |id| "'#{id}'" }.join(",")
       rows = execute("SELECT id, role FROM #{index[:table]} WHERE id IN (#{id_list})").to_a
       rows.sort_by { |row| User::ROLES.index(row["role"]) }
       puts(+"  Roles found: " << rows.map { |row| row["role"] }.join(", "))
       ids_to_delete = rows[1..-1].map { |row| "'#{row['id']}'" }.join(",")
-      puts("  Deleting ids #{ids_to_delete}".gsub("'", ""))
+      puts("  Deleting ids #{ids_to_delete}".delete("'"))
       execute("DELETE FROM assignments WHERE id IN (#{ids_to_delete})")
     end
   end
@@ -146,12 +146,12 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
   def num_suffix(index, id_groups)
     col = index[:col_for_suffix]
     id_groups.each do |ids|
-      print_status_message(index, ids, "Adding numeric suffixes.")
+      print_status_message(ids, "Adding numeric suffixes.")
       value = execute("SELECT #{col} FROM #{index[:table]} WHERE id = '#{ids.first}'").to_a[0][col.to_s]
       puts("  Duplicate value: #{value}")
       suffix = 2
 
-      ids[1..-1].each_with_index do |id|
+      ids[1..-1].each do |id|
         while execute("SELECT id FROM #{index[:table]} WHERE #{col} = '#{value}#{suffix}'").to_a.any?
           suffix += 1
         end
@@ -162,7 +162,7 @@ class FixUniqueConstraints < ActiveRecord::Migration[5.1]
     end
   end
 
-  def print_status_message(index, ids, msg, show_id_list: true)
+  def print_status_message(ids, msg, show_id_list: true)
     puts("  Duplicates detected.")
     if show_id_list
       id_list = ids.map { |id| "    #{id}" }.join("\n")
