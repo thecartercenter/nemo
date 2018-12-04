@@ -55,7 +55,6 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.index ["option_id"], name: "index_answers_on_option_id"
     t.index ["parent_id"], name: "index_answers_on_parent_id"
     t.index ["questioning_id"], name: "index_answers_on_questioning_id"
-    t.index ["response_id", "questioning_id", "old_inst_num", "old_rank", "deleted_at"], name: "answers_full", unique: true
     t.index ["response_id"], name: "index_answers_on_response_id"
   end
 
