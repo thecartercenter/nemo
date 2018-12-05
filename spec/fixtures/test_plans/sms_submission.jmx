@@ -56,15 +56,6 @@
           <stringProp name="variableNames">message_body</stringProp>
         </CSVDataSet>
         <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HttpHeaderManager" enabled="true">
-          <collectionProp name="HeaderManager.headers">
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">X-Twilio-Signature</stringProp>
-              <stringProp name="Header.value">1</stringProp>
-            </elementProp>
-          </collectionProp>
-        </HeaderManager>
-        <hashTree/>
         <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="post_sms_response" enabled="true">
           <boolProp name="TransactionController.parent">false</boolProp>
           <boolProp name="TransactionController.includeTimers">false</boolProp>
@@ -73,26 +64,33 @@
           <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="/m/smssubmissionloadtestmission/sms/submit/token" enabled="true">
             <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="/m/smssubmissionloadtestmission/sms/submit/token" enabled="true">
               <collectionProp name="Arguments.arguments">
-                <elementProp name="From" elementType="HTTPArgument">
+                <elementProp name="from" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.value">+1234567890</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">From</stringProp>
+                  <stringProp name="Argument.name">from</stringProp>
                 </elementProp>
-                <elementProp name="To" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
-                  <stringProp name="Argument.value">+1234567890</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">To</stringProp>
-                </elementProp>
-                <elementProp name="Body" elementType="HTTPArgument">
+                <elementProp name="body" elementType="HTTPArgument">
                   <boolProp name="HTTPArgument.always_encode">true</boolProp>
                   <stringProp name="Argument.value">${message_body}</stringProp>
                   <stringProp name="Argument.metadata">=</stringProp>
                   <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                  <stringProp name="Argument.name">Body</stringProp>
+                  <stringProp name="Argument.name">body</stringProp>
+                </elementProp>
+                <elementProp name="sent_at" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">1543968000</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">sent_at</stringProp>
+                </elementProp>
+                <elementProp name="frontlinecloud" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                  <stringProp name="Argument.value">1</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                  <boolProp name="HTTPArgument.use_equals">true</boolProp>
+                  <stringProp name="Argument.name">frontlinecloud</stringProp>
                 </elementProp>
               </collectionProp>
             </elementProp>

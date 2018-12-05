@@ -13,7 +13,8 @@ namespace :load_test do
   task sms: :environment do
     generate_test(Utils::LoadTesting::SmsSubmissionLoadTest,
       user_id: ENV["USER_ID"],
-      form_id: ENV["FORM_ID"])
+      form_id: ENV["FORM_ID"],
+      test_rows: ENV["TEST_ROWS"])
   end
 
   private

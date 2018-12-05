@@ -3,9 +3,11 @@
 require "rails_helper"
 
 describe Utils::LoadTesting::OdkSubmissionLoadTest do
-  let(:mission) { FactoryGirl.create(:mission, name: "ODK Submission Load Test Mission") }
+  include_context "load_testing"
+
+  let(:mission) { create(:mission, name: "ODK Submission Load Test Mission") }
   let(:form) do
-    FactoryGirl.create(:form, mission: mission, question_types: %w[
+    create(:form, mission: mission, question_types: %w[
       text long_text integer counter decimal location
       select_one select_multiple datetime date time barcode
     ])
@@ -32,9 +34,5 @@ describe Utils::LoadTesting::OdkSubmissionLoadTest do
     expected_content = fixture_file("test_plans/odk_submission.jmx")
 
     expect(without_timestamps(actual_content)).to eq(without_timestamps(expected_content))
-  end
-
-  def without_timestamps(content)
-    content.gsub(/^.+start_time.+$/, "").gsub(/^.+end_time.+$/, "")
   end
 end

@@ -15,21 +15,25 @@ module Utils
       #   user_id: User doing the submitting
       #   form_id: The ID of the form being submitted to.
       #
+      # Optional `options`:
+      #   test_rows: the number of test data rows to generate (default 100)
+      #
       # The test currently knows how to handle the following question types:
       #   text, long_text, integer, counter, decimal, select_one,
       #   select_multiple, datetime, date, time
       #
-      # * The submitting user must have a phone number and SMS auth code
-      # * The Twilio adapter must be configured appropriately on the target
+      # The submitting user must have a phone number and SMS auth code
 
       CSV_FILENAME = "submissions.csv"
 
       # Generates a bunch of test data to be used to make the test requests and stores it in a CSV file.
       def generate_test_data
+        test_rows = options[:test_rows] || 100
+
         CSV.open(path.join(CSV_FILENAME), "wb") do |csv|
           csv << ["message_body"]
 
-          100.times do
+          test_rows.times do
             message_body = sms_submission(form)
             csv << [message_body]
           end
@@ -43,28 +47,34 @@ module Utils
       def plan
         mission_name = form.mission.compact_name
         url_token = form.mission.setting.incoming_sms_token
-        params = {"From" => user.phone, "To" => "+1234567890", "Body" => "${message_body}"}
+        params = submit_params
 
         test do
           csv_data_set_config(filename: CSV_FILENAME, variableNames: "message_body")
-          header([{name: "X-Twilio-Signature", value: "1"}])
 
           transaction("post_sms_response") do
-            submit("/m/#{mission_name}/sms/submit/#{url_token}",
-              always_encode: true,
-              fill_in: params)
+            submit("/m/#{mission_name}/sms/submit/#{url_token}", always_encode: true, fill_in: params)
           end
         end
       end
 
       private
 
+      def submit_params
+        {
+          "from" => user.phone,
+          "body" => "${message_body}",
+          "sent_at" => Time.current.strftime("%s"),
+          "frontlinecloud" => "1"
+        }
+      end
+
       def form
-        Form.find(options[:form_id])
+        @form ||= Form.find(options[:form_id])
       end
 
       def user
-        User.find(options[:user_id])
+        @user ||= User.find(options[:user_id])
       end
 
       def test_value(question)
@@ -94,9 +104,9 @@ module Utils
       end
 
       def sms_submission(form)
-        items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
+        items = form.preordered_items.select(&:smsable?)
 
-        values = items.select(&:smsable?).each_with_index.map do |item, i|
+        values = items.each_with_index.map do |item, i|
           value = test_value(item.question)
           "#{i + 1}.#{value}"
         end.join(" ")
