@@ -13,7 +13,7 @@ describe "abilities for locked missions" do
     @coord = create(:user, mission: @locked, role_name: :coordinator)
 
     # also add the coordinator to a non-locked mission
-    @coord.assignments.create!(mission: get_mission, role: 'coordinator')
+    @coord.assignments.first.update!(role: 'coordinator')
 
     # Can't set it to locked until now because otherwise we encounter issues creating the above.
     @locked.locked = true

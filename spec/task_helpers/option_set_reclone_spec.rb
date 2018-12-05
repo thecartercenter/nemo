@@ -10,6 +10,11 @@ describe OptionSetReclone do
   subject(:recloner) { described_class.new }
 
   before do
+    # This index now prevents the situation we're fixing here from ever happening.
+    # So we need to disable it while we test this thing.
+    # It will be restored when the transaction is rolled back by DatabaseCleaner
+    ActiveRecord::Base.connection.execute("DROP INDEX index_option_sets_on_root_node_id")
+
     clone.update_column(:root_node_id, orig.root_node_id)
 
     # Clear out the option nodes that wouldn't have been there before this bug was fixed.
