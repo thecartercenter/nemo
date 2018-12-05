@@ -376,7 +376,6 @@ ko:
       qing_group:
         group_name: "이름"
         group_hint: "힌트"
-        add: "그룹 생성"
         edit: "그룹 수정"
         delete: "정말 그룹 '%{name}'을 지우시겠습니까?"
         repeatable: "반복 가능 합니까?"
@@ -659,8 +658,6 @@ ko:
           cant_edit_published: "게재된 질문지는 편집할 수 없습니다."
           ranks_break_conditions: "새 랭킹이 하나 이상의 조건을 무효화합니다."
           general: "이 질문지는 유효하지 않습니다. (아래의 항목을 체크하십시오)"
-        media/object:
-          invalid_format: "업로드 된 파일이 허용된 형식이 아닙니다."
         mission:
           cant_delete_if_assoc: "질문지, 응답지, 혹은 다른 항목들과 연관된 미션은 삭제할 수 없습니다."
           let_num_spc_only: "오직 영문자, 숫자, 공백만 사용할 수 있습니다."
@@ -681,7 +678,6 @@ ko:
           wrong_depth: "%{levels}개의 층이 설정되었기에 선택 항목들 간에 %{depth}개의 층이 생성될 수 없습니다."
         option_set_import:
           general: "선택지를 가져올 수 없습니다. (아래의 항목을 체크하십시오.)"
-          internal: "업로드시 내부 오류가 발생했습니다."
           wrong_type: "업로드 될 파일은 반드시 유효한 XLSX 형식의 엑셀파일이어야 합니다."
         question:
           at_least_one_name: "적어도 하나의 언어를 사용하여 제목을 입력하십시오. "
@@ -743,11 +739,6 @@ ko:
               cant_be_empty_if_not_admin: "조정자가 아닌 사용자는 적어도 하나 이상의 미션에 배정되어야 합니다."
             login:
               invalid: "조음부호 없는 영문자, 숫자, 마침표, 밑줄만 사용할 수 있습니다."
-        user_import:
-          general: "사용자 집단이 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
-          internal: "업로드 중 내부 에러가 발생했습니다."
-          invalid_headers: "업로드된 엑셀파일의 헤더가 유효하지 않습니다."
-          too_many_errors: "업로드된 엑셀파일에 다수의 오류가 발생했습니다.  처리 과정이 %{row}에서 멈췄습니다. "
         user_group:
           general: "사용자 그룹이 유효하지 않습니다. "
           attributes:
@@ -1166,7 +1157,6 @@ ko:
     if_you_made_it: "정말로 요청하신 사항이 맞다면 아래의 링크를 선택하십시오."
     login_name: "로그인 이름: %{login}"
     to_choose: "비밀번호를 선택하려면 다음의 링크로 가십시오:"
-    must_choose: "모바일 시스템 및 선거 감독 서버를 이용하기 전에 반드시 비밀번호를 선택해야 합니다. "
     password_reset_instructions: "비밀번호 초기화 가이드"
     request_made: "%{site} 비밀번호 초기화 요청이 접수되었습니다. 만약 요청하신 적이 없다면 이 이메일에 응답하실 필요 없습니다. "
     welcome: "%{site}에 오신것을 환영합니다!"

@@ -240,7 +240,6 @@ es:
         option_levels: "Niveles"
       qing_group:
         group_name: "Nombre"
-        add: "Añadir Grupo"
         edit: "Editar Grupo"
         delete: "¿Está seguro de que desea eliminar el grupo '%{name}'?"
       question:
@@ -870,7 +869,6 @@ es:
     if_you_made_it: "Si usted hizo esta petición, sólo haga click en el enlace que aparece a continuación:"
     login_name: "Su nombre de usuario es %{login}."
     to_choose: "Para elegir una contraseña, por favor haga click aquí:"
-    must_choose: "Usted DEBE elegir una contraseña antes poder utilizar cualquier sistema de monitorización electoral, incluyendo sistemas basados en el teléfono móvil."
     password_reset_instructions: "Instrucciones de reestablecimiento de contraseña"
     request_made: "Una solicitud para cambiar su %{site} contraseña ha sido creada. Si usted no hizo esta solicitud, ignore este correo electrónico."
     welcome: "¡Bienvenido a %{site}!"

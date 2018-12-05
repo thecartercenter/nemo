@@ -1,4 +1,44 @@
 fr:
+  operation:
+    clear_confirm: "Etes vous sûr de vouloir supprimer toutes les opérations terminées?"
+    details:
+      user_import: "Importation d'utilisateur à partir de %{file}"
+      response_csv_export: "Export des réponses au format CSV"
+      broadcast: "Diffusion '%{message}'"
+    operations_panel: "Panneau des opérations"
+    status:
+      completed: "Succès"
+      failed: "Echec"
+      pending: "En attente"
+      running: "En cours"
+    summary:
+      all_in_progress:
+        one: "1 opération en cours"
+        other: "%{count} opérations en cours"
+      some_completed: "%{completed}/%{total}  opérations terminées"
+      all_completed:
+        one: "1 opération terminée"
+        other: "%{count} opérations terminées"
+      with_errors:
+        one: "%{message} (1 erreur)"
+        other: "%{message} (%{count} erreurs)"
+    errors:
+      delayed_job_stopped: "Les opérations ne sont pas fonctionnelles pour le moment. Veuillez contacter l'administrateur."
+      server_error: "Erreur serveur. veuillez contacter le support"
+      broadcast:
+        partial_send: "Il y a eu des erreurs lors de l'envoi de certains messages. Voir <a href='%{url}'>la page des diffusions </a>pour plus de détails."
+        fatal_send: "Échec de l'envoi. Voir <a href='%{url}'>la page des diffusions </a>pour plus d'informations."
+        not_found: "L'objet de la diffusion n'a pas été trouvé."
+    row_error: "Ligne %{row}: %{error}"
+    op_panel_more_info_link_html: "Voir le <a href='%{url}'> Panneau des opérations </a> pour plus d'informations."
+    queued_msg:
+      broadcast: "Diffusion en attente."
+      option_set_import: "Importation d'ensembles d'options en file d'attente."
+      response_csv_export: "Export de réponses CSV en attente."
+      user_import: "Import d'utilisateur en attente."
+    see_error_report: "Voir le rapport d'erreur"
+    result_link_text:
+      response_csv_export: "Télécharger CSV"
   locale_name: "Français"
   common:
     accept: "Accepter"
@@ -42,6 +82,7 @@ fr:
       many: "Exemples"
       other: "Exemples"
     example_abbr: "ex."
+    file_drop_message: "Cliquez ou déposez le fichier ici"
     found: "Trouvé"
     generate: "Générer"
     group: "Groupe"
@@ -100,6 +141,9 @@ fr:
     total: "Total"
     try_again: "Réessayer"
     updated: "Mis à jour"
+    upload_progress_notice:
+      one: "Téléchargement en cours"
+      other: "Téléchargement(s) en cours..."
     view: "Afficher"
     _yes: "Oui"
   attributes:
@@ -132,6 +176,9 @@ fr:
     treat_as_text: considerer comme texte
   errors:
     format: "%{attribute}: %{message}"
+    file_upload:
+      error: "Il y a eu une erreur lors du téléchargement du fichier."
+      file_missing: "Aucun fichier sélectionné pour l'import."
     messages:
       deleted_successfully: "supprimé avec succès"
       generic_delete_error: "erreur lors de l'opération."
@@ -161,12 +208,12 @@ fr:
         many: "affectations"
         other: "Tâches"
       broadcast:
-        zero: "Emissions"
+        zero: "Diffusions"
         one: "Diffusion"
         two: "Diffusions"
         few: "diffusions"
         many: "diffusions"
-        other: "Emissions"
+        other: "Diffusions"
       choice:
         zero: "Choix"
         one: "Choix"
@@ -370,12 +417,14 @@ fr:
       operation:
         created_at: "Date de début"
         creator: "Commencé par"
+        details: "Détails"
         job_started_at: "commencé à"
         job_failed_at: "echoué à"
         job_completed_at: "terminé à"
         job_outcome_url: "URL du resultat"
         job_error_report: "Rapport d'Erreurs"
         status: "État "
+        result: "Résultat"
       option:
         coordinates: "Les coordonnées "
         shortcode: "code court"
@@ -393,7 +442,6 @@ fr:
         group_name: "Nom"
         group_hint: "Indice"
         group_item_name: "Répéter le nom de l'objet"
-        add: "Ajouter groupe"
         edit: "Modifier groupe"
         delete: "Êtes-vous certain de vouloir supprimer le goupe '%{name}'?"
         repeatable: "Répétable"
@@ -501,8 +549,6 @@ fr:
         sms_auth_code: "Code d'authentification du SMS"
         user_group_ids: "Groupes"
         user_groups: "Groupes"
-      user_import:
-        file: "Fichier à  importer"
     table_headers:
       response:
         incomplete: "Incomplet?"
@@ -516,7 +562,7 @@ fr:
         phone2: "+2348123456789"
     action_links:
       broadcast:
-        index: "Lister les émissions"
+        index: "Lister les diffusions"
       form:
         new: "Créer un Nouveau Formulaire"
         index: "Lister les formulaires"
@@ -632,7 +678,7 @@ fr:
         unreviewed: "Si les réponses non révisées devraient être inclus dans le rapport."
         unique_rows: "Si les rangées en double devraient être omis du rapport."
         pri_grouping: "Un attribut ou une question par lequel le nombre de réponses devraient être grouper (par ex. état, note globale)."
-        percent_type: "Si et comment les pourcentages devraient être calculés pour la rapport."
+        percent_type: "Si et comment les pourcentages devraient être calculés pour le rapport."
         bar_style: "Si les bandes doivent être empilés ou côte-à-côte."
       response:
         incomplete: "Cochez cette boîte s'il-y-a des réponses obligatoires manquantes. Il sera quand même possible d'enregistrer votre formulaire. La réponse sera simplement marquée comme étant \"incomplète\"."
@@ -729,8 +775,6 @@ fr:
           attributes:
             default_response_name:
               calc_must_wrap_all: "calc(...) doit entourer le nom entier."
-        media/object:
-          invalid_format: "Le fichier téléchargé n'était pas au format accepté"
         mission:
           cant_delete_if_assoc: "Impossible de supprimer cette mission parce qu'elle est associée à formulaires, réponses, ou plus d'objets."
           let_num_spc_only: "Utilisez seulement des lettres, des chiffres et des espaces."
@@ -751,7 +795,6 @@ fr:
           wrong_depth: "Vous avez %{levels} niveaux d'options mais votre arbre d'options est %{depth} options profonde."
         option_set_import:
           general: "Importation d'Ensemble d'options est invalide (voir ci-dessous)."
-          internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."
           wrong_type: "Le fichier telechargé doit avoir un format valide de fichier excel Xlsx"
         question:
           at_least_one_name: "Il faut entrer un titre dans au moins une langue. "
@@ -828,11 +871,6 @@ fr:
               invalid: "Utilisez seulement des lettres sans accent, des chiffres et des espaces."
             reset_password_method:
               cant_passwd_email: "Non autorisé sauf si une adresse email est fournie."
-        user_import:
-          general: "le lot utilisateur est invalide (voir ci dessous)"
-          internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."
-          invalid_headers: "le classeur téléchargé contient des entete invalides"
-          too_many_errors: "le classeur téléchargé contient beaucoup d'erreur. le traitement s'est arrété à la ligne %{row}"
         user_group:
           general: "Groupe d'utilisateurs invalide"
           attributes:
@@ -868,10 +906,10 @@ fr:
     broadcast:
       page_entries_info:
         single_page_html:
-          zero: "Il n'y avait pas d'émissions trouvées."
-          one: "<b>1</b> émission affichée"
-          other: "<b>Affichage de %{count}</b> émissions"
-        multi_page_html: "Affichages des émissions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
+          zero: "Aucune diffusion trouvée"
+          one: "<b>1</b> diffustion affichée"
+          other: "<b>Affichage de %{count}</b> diffusions"
+        multi_page_html: "Affichages des diffusions <b>%{from} - %{to}</b> de <b>%{count}</b> au total"
     form:
       page_entries_info:
         single_page_html:
@@ -982,6 +1020,7 @@ fr:
     question_type: "type-de-question"
     reviewed: "revu"
     role: "rôle"
+    shortcode: "code-court"
     source: "source"
     submit_date: "date"
     submitter: "émetteur"
@@ -1054,8 +1093,6 @@ fr:
       index: "Journal de bord de SMS"
     sms_tests:
       all: "Console de test SMS"
-    user_imports:
-      all: "Importer des utilisateurs"
     user_sessions:
       new: "Connexion"
       login_confirmation: "confirmer la connexion"
@@ -1097,7 +1134,7 @@ fr:
     group_count:
       one: "1 groupe"
       other: "%{count} groupes"
-    instructions: "Pour diffuser un message, sélectionnez d'abord les destinataires ci-dessous, puis cliquez sur 'Diffuser une émission'."
+    instructions: "Pour diffuser un message, sélectionnez d'abord les destinataires ci-dessous, puis cliquez sur 'Envoyer une diffusion'."
     may_not_be_enough: "Cela n'est pas être suffisant"
     mediums:
       names:
@@ -1116,9 +1153,9 @@ fr:
       all_users: "Tous les utilisateurs dans la mission"
       all_enumerators: "Tous les observateurs dans la mission"
       specific: "Groupe ou utilisateur spécifique dans la mission"
-    send_broadcast: "Diffuser une émission "
-    send_success: "L'émission envoyé avec succès."
-    send_error: "Erreur en envoyant l'émission (voir dessous)."
+    send_broadcast: "Envoyer une diffusion"
+    send_success: "Diffusion envoyée avec succès."
+    send_error: "Erreur d'envoi de la diffusion (voir ci-dessous)."
     sms_error: "Erreur de SMS"
     user_count:
       one: "1 utilisateur"
@@ -1207,11 +1244,11 @@ fr:
     publish_success: "Formulaire publié avec succès."
     publish_form: "Publier le formulaire"
     question_remove_error: "Il y avait une problème enlevant les questions (%{msg})."
-    question_remove_answer_error: "Au moins une question sélectionnée a des résultats et ne peut pas être enlevée."
+    question_remove_answer_error: "Au moins une question sélectionnée a des résultats et ne peut pas être supprimée."
     questions_add_error: "Il y avait une problème ajoutant les questions (%{msg})."
     questions_add_success: "Questions ajouté avec succès."
     questions_remove_success: "Questions retiré avec succès."
-    remove_selected: "Enlevez sélectionné"
+    remove_selected: "Supprimer les éléments sélectionnés"
     remove_question_confirm:
       zero: "Etes vous sûr de vouloir supprimer zero questions du formulaires?"
       one: "Etes vous sûr de vouloir supprimer cette question du formulaire?"
@@ -1308,7 +1345,6 @@ fr:
     if_you_made_it: "Cliquez le lien au-dessus si vous avez fait cette sollicitation:"
     login_name: "Votre identifiant est %{login}."
     to_choose: "Pour choisir un mot de passe, cliquez:"
-    must_choose: "C'est obligatoire de choisir un mot de passe avant l'utilisation le système de surveillance pour les elections, notamment les systèmes basé sur le mobile."
     password_reset_instructions: "Instructions pour rerégler le mot de passe"
     request_made: "Une sollicitation pour remettre votre %{site} mot de passe a été fait. Si vous n'avez pas faites cette sollicitation, ignorez cette courriel."
     welcome: "Bienvenue à %{site}!"
@@ -1470,6 +1506,7 @@ fr:
     question_selection: "Selecter les Questions"
     report_type: "Type de rapport"
     response_count: "Nombre de Réponses"
+    questions_tagged: "Questions tagué  "
     see_dependent_questions:
       one: "Voir la question dépendante"
       other: "Voir les questions dépendantes"
@@ -1482,6 +1519,7 @@ fr:
     tally_type: "Que voulez vous compter ?"
     these_questions: "Ces questions spécifique"
     total_rows: "total des lignes :%{count}"
+    untagged: "Questions non tagué"
     view_response: "Réponse #%{id}"
     what_attrib_col_headers: "Quel attribut ou question voudriez-vous utiliser pour les titre des colonnes (optional)?"
     what_attrib_row_headers: "Quel attribut ou question voudriez-vous utiliser pour les titres des rangées?"
@@ -1566,6 +1604,7 @@ fr:
     save_and_mark_reviewed: "Enregistrer et Marquer comme Revu"
     view_response: "Voir Réponse"
     checked_out: "Cette réponse a été examiné par:"
+    bulk_destroy: "Supprimer les éléments sélectionnés"
     remove_media_object_confirm:
       image: "Etes vous sûr de vouloir supprimer cette image?"
       audio: "Etes vous sûr de vouloir supprimer ce son?"
@@ -1577,6 +1616,7 @@ fr:
       audio: "l'audio doit avoir au plus 10Mb, les formats acceptés sont: mp3, ogg, webm, wav"
     csv_headers:
       response_id: "NumeroReponse"
+      reviewed: "Revu"
       form_name: "Formulaire"
       user_name: "Emetteur"
       submit_time: "DateSoumission"
@@ -1589,6 +1629,20 @@ fr:
       parent_group_depth: "NiveauGroupe"
     add_to_group: "Ajouter à '%{group_name}'"
     empty_group_notice: "Ce groupe est vide"
+    bulk_destroy_confirm:
+      zero: "Êtes-vous sûr de vouloir supprimer zéro réponses?"
+      one: "Êtes-vous sûr de vouloir supprimer cette réponse?"
+      two: "Êtes-vous sûr de vouloir supprimer ces %{count} réponses?"
+      few: "Êtes-vous sûr de vouloir supprimer ces %{count} réponses?"
+      many: "Êtes-vous sûr de vouloir supprimer ces %{count} réponses?"
+      other: "Êtes-vous sûr de vouloir supprimer ces %{count} réponses?"
+    bulk_destroy_deleted:
+      zero: "Aucune réponses n'a été supprimée."
+      one: "%{count} réponse supprimée avec succès."
+      two: "%{count} réponses supprimée avec succès."
+      few: "%{count} réponses supprimée avec succès."
+      many: "%{count} réponses supprimée avec succès."
+      other: "%{count} réponses supprimée avec succès."
   role:
     role: "Rôle"
     enumerator: "Observateur"
@@ -2019,20 +2073,6 @@ fr:
   unauthorized:
     default: "Vous n'avez pas l'authorisation pour accéder à cette page."
     must_login: "Vous devez login pour accéder à cette page."
-  user_import:
-    instructions_html: |-
-        Téléchargez une feuille de calcul avec vos utilisateurs. Seuls les feuilles de calcul Excel de type XLSX et les fichiers CSV sont acceptés.
-
-        Un modèle de feuille de calcul est disponible au format <a href="%{xlsx_url}">XLSX</a> et <a href="%{csv_url}">CSV</a> comme point de départ.
-
-        Notes:
-
-        * Ne modifiez en aucun cas la ligne supérieure de la feuille de calcul..
-        * Les numéros de téléphone doivent inclure le code de pays (par exemple +17095551212).
-        * Le genre peut être un 'Homme', une 'Femme', 'Refus de répondre' ou toute autre valeur.
-        * La nationalité doit être le nom d'un pays tel que «Canada» ou «Bangladesh».
-        * Plusieurs noms de groupes d'utilisateurs doivent être séparés par un point-virgule.
-        * Si un groupe d'utilisateurs nommé n'existe pas, il sera créé.
   user:
     add_assignment: "Ajouter Une Tâche"
     api_key:
@@ -2127,7 +2167,7 @@ fr:
       choose_or_create: "Veuillez sélectionner une mission dans le menu déroulant en haut à droite de l'écran ou bien"
       create_link: "Créer une Nouvelle Mission."
       need_to_create: "Il n'y a pas de missions."
-      no_missions: "Il n'y a pas de missions dans la systeme.  Contactez un administrateur."
+      no_missions: "Il n'y a aucune mission dans le système.  Contactez un administrateur."
     no_recent: "**0** Réponses Récentes"
     published_form_count: "**%{count}** Formulaires publiés"
     select_a_form: "Choisir un formulaire pour envoyer"

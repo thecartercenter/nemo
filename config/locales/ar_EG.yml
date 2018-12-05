@@ -1,4 +1,56 @@
 ar:
+  operation:
+    clear_confirm: "هل أنت متأكد من أنك تريد حذف جميع العمليات المكتملة؟"
+    details:
+      user_import: "استيراد المستخدم من %{file}"
+      response_csv_export: "الردود المصدرة الى CSV"
+      broadcast: "نشرة '%{message}'"
+    operations_panel: "لوحة العمليات"
+    status:
+      completed: "نجاح"
+      failed: "فشل"
+      pending: "معلق"
+      running: "جاري التنفيذ"
+    summary:
+      all_in_progress:
+        zero: "0 عملية في قيد الانجاز "
+        one: "عملية واحدة في قيد الانجاز "
+        two: "%{count} عمليات في قيد الانجاز "
+        few: "%{count} عمليات في قيد الانجاز "
+        many: "%{count} عملية في قيد الانجاز "
+        other: "%{count} عملية في قيد الانجاز "
+      some_completed: "%{completed} / %{total} عمليات إكتملت"
+      all_completed:
+        zero: "0 عملية انجزت"
+        one: "عملية واحدة انجزت"
+        two: "%{count} عمليات انجزت"
+        few: "%{count} عمليات انجزت"
+        many: "%{count} عملية انجزت"
+        other: "%{count} عملية انجزت"
+      with_errors:
+        zero: "%{message} (0 خطأ)"
+        one: "%{message} (خطأ 1)"
+        two: "%{message} (%{count} أخطاء)"
+        few: "%{message} (%{count} أخطاء)"
+        many: "%{message} (%{count} خطأ)"
+        other: "%{message} (%{count} خطأ)"
+    errors:
+      delayed_job_stopped: "العمليات لا تعمل حاليا. يرجى الاتصال بالمسؤول."
+      server_error: "خطأ في الخادم. يرجى الاتصال بالدعم."
+      broadcast:
+        partial_send: "كانت هناك أخطاء في توصيل بعض الرسائل. اذهب إلى <a href='%{url}'>صفحة النشرات</a>للمزيد من المعلومات. "
+        fatal_send: "لقد تعذر الارسال. اذهب إلى <a href='%{url}'>صفحة النشرات</a> للمزيد من المعلومات."
+        not_found: "كائن النشرة غير موجود."
+    row_error: "السطر %{row}: %{error}"
+    op_panel_more_info_link_html: "انظر إلى <a href='%{url}'>لوحة العمليات</a> للحصول على مزيد المعلومات."
+    queued_msg:
+      broadcast: "النشرة في قائمة الانتظار."
+      option_set_import: "استيراد مجموعة خيار في قائمة الانتظار."
+      response_csv_export: "تصدير الردود الى CSV في قائمة الانتظار."
+      user_import: "استيراد المستخدمين في قائمة الانتظار."
+    see_error_report: "انظر تقرير الخطأ"
+    result_link_text:
+      response_csv_export: "تنزيل ملف CSV"
   locale_name: "العربية"
   common:
     accept: "قبول"
@@ -46,6 +98,7 @@ ar:
       many: "أمثلة"
       other: "مثال"
     example_abbr: "على سبيل المثال"
+    file_drop_message: "انقر أو إجلب الملف هنا"
     found: "وجد"
     generate: "إنتاج"
     group: "مجموعة"
@@ -108,6 +161,13 @@ ar:
     total: "مجموع"
     try_again: "عاود المحاولة"
     updated: "تحديث"
+    upload_progress_notice:
+      zero: "التحميل قيد التنفيذ..."
+      one: "التحميل قيد التنفيذ..."
+      two: "التحميل قيد التنفيذ..."
+      few: "التحميل قيد التنفيذ..."
+      many: "التحميل قيد التنفيذ..."
+      other: "التحميل قيد التنفيذ..."
     view: "عرض"
     _yes: "نعم"
   attributes:
@@ -140,6 +200,9 @@ ar:
     treat_as_text: معاملة كنص
   errors:
     format: "%{attribute}: %{message}"
+    file_upload:
+      error: "حصل خطأ أثناء تحميل الملف"
+      file_missing: "لم يتم تحديد ملف للاستيراد."
     messages:
       deleted_successfully: "تم الحذف بنجاح"
       generic_delete_error: "حصل خطأ اثناء الحذف"
@@ -378,12 +441,14 @@ ar:
       operation:
         created_at: "وقت البداية"
         creator: "بدء بواسطة"
+        details: "تفاصيل"
         job_started_at: "بدء عند"
         job_failed_at: "فشل في"
         job_completed_at: "إكتمل عند"
         job_outcome_url: "URL النتائج"
         job_error_report: "خطأ في التقرير"
         status: "حالة"
+        result: "نتيجة"
       option:
         coordinates: "إحداثيات"
         shortcode: "رمز قصير"
@@ -401,7 +466,6 @@ ar:
         group_name: "اسم"
         group_hint: "تلميح"
         group_item_name: "اسم العنصر المكرر"
-        add: "إضافة مجموعة"
         edit: "تعديل المجموعة"
         delete: " هل أنت متأكد بأنك تريد حذف مجموعة '%{name}'؟ "
         repeatable: "قابل للتكرار؟"
@@ -509,8 +573,6 @@ ar:
         sms_auth_code: "رمز تصريح الرسالة النصية القصيرة"
         user_group_ids: "المجموعات"
         user_groups: "المجموعات"
-      user_import:
-        file: "ملف لاستيراد"
     table_headers:
       response:
         incomplete: "غير مكتمل"
@@ -749,8 +811,6 @@ ar:
           attributes:
             default_response_name:
               calc_must_wrap_all: "يجب أن تحيط (...)calc الاسم بالكامل."
-        media/object:
-          invalid_format: "الملف الذي تم تحميله ليس بصيغة مقبولة"
         mission:
           cant_delete_if_assoc: "لا يمكنك حذف هذه المهمة لأنها ترتبط بإستمارات، ردود، أو أشياء أخرى."
           let_num_spc_only: "الرجاء استخدام احرف وارقام ومسافات فقط."
@@ -771,7 +831,6 @@ ar:
           wrong_depth: "لديك %{levels} مستويات خيار ولكن عمق شجرة الخيارات الخاصة بك هي %{depth}."
         option_set_import:
           general: "ايراد مجموعة الخيار غير صالح (انظر ادناه)"
-          internal: "حدث خطأ داخلي أثناء معالجة التحميل."
           wrong_type: "يجب أن يكون الملف الذي تم تحميله صالح ومن نوع XLSX  وملف Excel ."
         question:
           at_least_one_name: "يجب إدخال عنوان بلغة واحدة على الأقل."
@@ -848,11 +907,6 @@ ar:
               invalid: "الرجاء استخدام حروف فقط غير معلمة، وأرقام، فترات، وخط على السطر."
             reset_password_method:
               cant_passwd_email: "غير مسموح بها ما لم يتم تقديم عنوان بريد إلكتروني."
-        user_import:
-          general: "حزمة المستخدمين غير صالحة (انظر ادناه)"
-          internal: "حدث خطأ داخلي أثناء معالجة التحميل."
-          invalid_headers: "جدول البيانات الذي تم تحميله فيه عناوين اعمدة غير صالحة."
-          too_many_errors: "جدول البيانات الذي تم تحميله فيه أخطاء كثيرة. توقفت المعالجة في السطر %{row}."
         user_group:
           general: "مجموعة المستخدم غير صالحة."
           attributes:
@@ -1002,6 +1056,7 @@ ar:
     question_type: "نوع-السؤال"
     reviewed: "تمت-المراجعة"
     role: "دور"
+    shortcode: "رمزقصير"
     source: "مصدر"
     submit_date: "وقت-التقديم"
     submitter: "المرسل"
@@ -1074,8 +1129,6 @@ ar:
       index: "سجل الرسائل"
     sms_tests:
       all: "وحدة تحكم اختبار الرسائل النصية القصيرة"
-    user_imports:
-      all: "استيراد المستخدمين"
     user_sessions:
       new: "تسيجل الدخول"
       login_confirmation: "تأكيد تسيجيل الدخول "
@@ -1340,7 +1393,6 @@ ar:
     if_you_made_it: "أذا أنت من عمل هذا الطلب فانقر على الرابط أدناه:"
     login_name: "اسم الدخول الخاص بك هو %{login}."
     to_choose: "لاختيار كلمة المرور، يرجى الذهاب هنا:"
-    must_choose: "يجب عليك اختيار كلمة مرور قبل أن تتمكن من استخدام أي من أنظمة مراقبة الانتخابات، بما في ذلك النظم القائمة على الهاتف المحمول."
     password_reset_instructions: "تعليمات إعادة تعيين كلمة المرور "
     request_made: "قد تم تقديم طلب لإعادة تعيين كلمة المرور للويب %{site} . إذا كنت لم تتقدم بهذا الطلب، تجاهل هذا البريد الإلكتروني."
     welcome: "أهلا بك في %{site}!"
@@ -1503,6 +1555,7 @@ ar:
     question_selection: "حدد سؤال"
     report_type: "نوع التقرير"
     response_count: "مجموع التسليمات"
+    questions_tagged: "أسئلة بالإشارة"
     see_dependent_questions:
       zero: "See dependent questions"
       one: "See dependent questions"
@@ -1519,6 +1572,7 @@ ar:
     tally_type: "ما الذي تود إحصائه؟"
     these_questions: "هذه الأسئلة بالتحديد"
     total_rows: "مجموع السطور: %{count}"
+    untagged: "أسئلة بدون إشارة"
     view_response: "رد # %{id}"
     what_attrib_col_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس للأعمدة (اختياري)؟"
     what_attrib_row_headers: "ما السمة أو السؤال التي تريدها ان تكون عنواناً لرؤوس السطور(اختياري)؟"
@@ -1603,6 +1657,7 @@ ar:
     save_and_mark_reviewed: "حفظ ووضع علامة تمت المراجعة"
     view_response: "عرض الرد"
     checked_out: "تم فحص هذا الرد من طرف:"
+    bulk_destroy: "حذف المحدد"
     remove_media_object_confirm:
       image: "هل انت متأكد من أنك تريد حذف الصورة؟"
       audio: "هل أنت متأكد من أنك تريد حذف هذا الصوت؟"
@@ -1614,6 +1669,7 @@ ar:
       audio: "ينبغي أن يكون حج الملف الصوتي على الأكثر 10 ميغابايت. الصيغ المقبولة هي: MP3، OGG، webm، wav."
     csv_headers:
       response_id: "معرف الرد"
+      reviewed: "تمت المراجعة"
       form_name: "إستمارة"
       user_name: "المرسل"
       submit_time: "تاريخ التقديم"
@@ -1626,6 +1682,20 @@ ar:
       parent_group_depth: "مستوى المجموعة"
     add_to_group: "أضف إلى '%{group_name}'"
     empty_group_notice: "هذه المجموعة فارغة"
+    bulk_destroy_confirm:
+      zero: "هل أنت متأكد من أنك لا تريد حذف أي رد ؟"
+      one: "هل أنت متأكد أنك تريد حذف هذا الرد؟"
+      two: "هل أنت متأكد من أنك تريد حذف هذه الردود %{count}؟"
+      few: "هل أنت متأكد من أنك تريد حذف هذه الردود %{count}؟"
+      many: "هل أنت متأكد من أنك تريد حذف هذه الردود %{count}؟"
+      other: "هل أنت متأكد من أنك تريد حذف هذه الردود %{count}؟"
+    bulk_destroy_deleted:
+      zero: "لم يحذف أي رد بنجاح"
+      one: "تم حذف %{count} رد بنجاح."
+      two: "تم حذف %{count} ردود بنجاح."
+      few: "تم حذف %{count} ردود بنجاح."
+      many: "تم حذف %{count} ردود بنجاح."
+      other: "تم حذف %{count} ردود بنجاح."
   role:
     role: "دور"
     enumerator: "مراقب"
@@ -2053,11 +2123,6 @@ ar:
   unauthorized:
     default: "غير مصرح لك للوصول إلى هذه الصفحة أو العملية."
     must_login: "عليك تسجيل الدخول للوصول إلى هذه الصفحة."
-  user_import:
-    instructions_html: |-
-        استيراد جدول بيانات مع مستخدمينك. فقط جداول البيانات XLSX  وملفات CSV ستقبل.
-
-        نموذج جدول بيانات متاح في <a href="%{xlsx_url}"> XLSX </a> و  <a href="%{csv_url}"> CSV</a> صيغ كنقطة بداية.
   user:
     add_assignment: "إضافة واجب "
     api_key:
