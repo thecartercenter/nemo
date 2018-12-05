@@ -92,6 +92,9 @@ gem "i18n_country_select", "~> 1.1.7"
 gem "iso-639", "~> 0.2.5"
 gem "rails-i18n", "~> 5.1"
 
+# Used for building load test plans. Needed in prod because test plans are built on prod instances.
+gem "ruby-jmeter", "~> 2.13.4"
+
 group :development do
   gem "better_errors", "~> 2.1.1"
   gem "binding_of_caller", "~> 0.7.2"
@@ -132,6 +135,5 @@ group :development, :test do
   gem "assert_difference", "~> 1.0.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6.1"
   gem "database_cleaner", "~> 1.7.0"
-  gem "ruby-jmeter", "~> 2.13.4"
   gem "timecop", "~> 0.7.3"
 end
