@@ -28,7 +28,7 @@ describe Utils::LoadTesting::SmsSubmissionLoadTest do
       form_id: form.id
     )
 
-    Timecop.freeze(DateTime.new(2018, 12, 5, 0, 0, 0)) do
+    Timecop.freeze(Time.zone.local(2018, 12, 5, 0, 0, 0)) do
       path = test.generate_plan
       actual_content = File.read(path.join("testplan.jmx"))
       expected_content = fixture_file("test_plans/sms_submission.jmx")

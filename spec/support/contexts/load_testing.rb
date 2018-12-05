@@ -1,4 +1,4 @@
-# fronzen_string_literal: true
+# frozen_string_literal: true
 
 shared_context "load_testing" do
   def without_timestamps(content)
