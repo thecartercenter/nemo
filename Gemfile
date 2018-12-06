@@ -92,7 +92,10 @@ gem "i18n_country_select", "~> 1.1.7"
 gem "iso-639", "~> 0.2.5"
 gem "rails-i18n", "~> 5.1"
 
-# Used for building load test plans. Needed in prod because test plans are built on prod instances.
+# The below are used for building load test plans.
+# Needed in prod because test plans are built on prod instances.
+# Faker is also used in specs.
+gem "faker", "~> 1.6"
 gem "ruby-jmeter", "~> 2.13.4"
 
 group :development do
@@ -115,7 +118,6 @@ group :development, :test do
 
   # Mocking/stubbing/factories
   gem "factory_girl_rails", "~> 4.5.0"
-  gem "faker", "~> 1.6"
   gem "mocha", "~> 1.1.0"
 
   # Feature specs

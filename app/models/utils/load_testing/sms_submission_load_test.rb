@@ -33,9 +33,9 @@ module Utils
         CSV.open(path.join(CSV_FILENAME), "wb") do |csv|
           csv << ["message_body"]
 
-          test_rows.times do
-            message_body = sms_submission(form)
-            csv << [message_body]
+          test_rows.times do |i|
+            puts "Generating batch #{(i / 1000).to_i + 1} of #{(test_rows / 1000).ceil}" if i % 1000 == 0
+            csv << [sms_submission]
           end
         end
       end
@@ -103,15 +103,21 @@ module Utils
         end
       end
 
-      def sms_submission(form)
-        items = form.preordered_items.select(&:smsable?)
-
-        values = items.each_with_index.map do |item, i|
+      def sms_submission
+        values = form_items.each_with_index.map do |item, i|
           value = test_value(item.question)
           "#{i + 1}.#{value}"
         end.join(" ")
 
-        "#{user.sms_auth_code} #{form.code} #{values}"
+        "#{user.sms_auth_code} #{form_code} #{values}"
+      end
+
+      def form_items
+        @form_items ||= form.preordered_items.select(&:smsable?)
+      end
+
+      def form_code
+        @form_code ||= form.code
       end
     end
   end

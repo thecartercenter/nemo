@@ -96,14 +96,20 @@ module Utils
       end
 
       def odk_submission(form)
-        items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
-
-        data = items.map do |item|
+        data = form_items.map do |item|
           value = test_value(item.question)
           "<#{item.odk_code}>#{value}</#{item.odk_code}>"
         end.join("\n")
 
-        "<?xml version='1.0' ?><data id='#{form.id}' version='#{form.code}'>\n#{data}\n</data>"
+        "<?xml version='1.0' ?><data id='#{form.id}' version='#{form_code}'>\n#{data}\n</data>"
+      end
+
+      def form_items
+        @form_items ||= form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
+      end
+
+      def form_code
+        @form_code ||= form.code
       end
     end
   end
