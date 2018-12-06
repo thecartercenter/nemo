@@ -21,8 +21,8 @@
 
 1. `sudo -u deploy crontab -r` to delete the whenever-created crontab, no longer needed.
 1. `sudo systemctl stop nginx && sudo systemctl disable nginx`
-1. `sudo vi /etc/postgresql/9.4/main/postgresql.conf` and set `listen_addresses = '*'`
-1. `sudo vi /etc/postgresql/9.4/main/pg_hba.conf` and add these lines:
+1. `sudo vi /etc/postgresql/10/main/postgresql.conf` and set `listen_addresses = '*'`
+1. `sudo vi /etc/postgresql/10/main/pg_hba.conf` and add these lines:
 
         # IPv4 remote connections:
         host    all             all             0.0.0.0/0               md5
