@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181109154424) do
+ActiveRecord::Schema.define(version: 20181207173641) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -632,7 +632,8 @@ ActiveRecord::Schema.define(version: 20181109154424) do
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_tags_on_deleted_at"
     t.index ["mission_id"], name: "index_tags_on_mission_id"
-    t.index ["name", "mission_id"], name: "index_tags_on_name_and_mission_id"
+    t.index ["name", "mission_id"], name: "index_tags_on_name_and_mission_id", unique: true, where: "(deleted_at IS NULL)"
+    t.index ["name"], name: "index_tags_on_name_where_mission_id_null", unique: true, where: "((deleted_at IS NULL) AND (mission_id IS NULL))"
   end
 
   create_table "user_group_assignments", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
