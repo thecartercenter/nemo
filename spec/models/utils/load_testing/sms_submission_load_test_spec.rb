@@ -3,8 +3,6 @@
 require "rails_helper"
 
 describe Utils::LoadTesting::SmsSubmissionLoadTest do
-  include_context "load_testing"
-
   let(:setting) { build(:setting, incoming_sms_token: "token") }
   let(:mission) { create(:mission, name: "SMS Submission Load Test Mission", setting: setting) }
   let(:form) do
@@ -28,12 +26,9 @@ describe Utils::LoadTesting::SmsSubmissionLoadTest do
       form_id: form.id
     )
 
-    Timecop.freeze(Time.zone.local(2018, 12, 5, 0, 0, 0)) do
-      path = test.generate_plan
-      actual_content = File.read(path.join("testplan.jmx"))
-      expected_content = fixture_file("test_plans/sms_submission.jmx")
+    path = test.generate_plan
+    jmx = File.read(path.join("testplan.jmx"))
 
-      expect(without_timestamps(actual_content)).to eq(without_timestamps(expected_content))
-    end
+    expect(jmx).to include("/m/smssubmissionloadtestmission/sms/submit/token")
   end
 end

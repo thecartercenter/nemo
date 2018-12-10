@@ -9,7 +9,11 @@ module PasswordResettable
     return unless %w[email print].include?(notify_method)
     user.reset_password && user.save(validate: false)
     return unless notify_method == "email"
+    send_reset_password_instructions(user, mission: mission)
+  end
 
+  # Sends appropriate password reset email.
+  def send_reset_password_instructions(user, mission: nil)
     # Only send intro if user has never logged in. Else send password reset email.
     user.reset_perishable_token!
     if (user.login_count || 0).positive?

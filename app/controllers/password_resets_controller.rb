@@ -27,7 +27,7 @@ class PasswordResetsController < ApplicationController
         flash.now[:error] = t("password_reset.no_associated_email")
         render :new
       else
-        reset_password(user, notify_method: "email")
+        send_reset_password_instructions(user)
         flash[:success] = t("password_reset.check_email")
         redirect_to(login_url)
       end

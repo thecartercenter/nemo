@@ -18,6 +18,12 @@ feature "password reset"  do
       expect(old_tok).not_to eq user.reload.perishable_token
     end
 
+    it "should not automatically reset password" do
+      crypted_password = user.crypted_password
+      request_password_reset(user.email)
+      expect(user.reload.crypted_password).to eq(crypted_password)
+    end
+
     context "with user with email address" do
       it "should work when using login instead of email" do
         assert_difference("ActionMailer::Base.deliveries.size", +1) do
