@@ -43,6 +43,10 @@ module Sms
       response.save(validate: false)
     end
 
+    def answers?
+      answer_groups.present?
+    end
+
     private
 
     def build_answer_group(qing_group)
