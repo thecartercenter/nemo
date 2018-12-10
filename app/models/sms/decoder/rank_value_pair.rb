@@ -134,7 +134,7 @@ module Sms
           end
 
           # if we get to here, we're good, so add
-          build_answer(qing, choices: idxs.map { |i| Choice.new(option: qing.question.options[i - 1]) })
+          build_answer(qing, choices: idxs.uniq.map { |i| Choice.new(option: qing.question.options[i - 1]) })
 
         when "text", "long_text"
           build_answer(qing, value: value)
