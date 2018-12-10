@@ -324,6 +324,11 @@ describe Sms::Decoder, :sms do
       expect_decoding(form, data: "1.15 2.bd", answers: [15, "Banana;Durian"])
     end
 
+    it "select_multiple question with duplicate options should work" do
+      form = create_form(questions: %w[integer select_multiple])
+      expect_decoding(form, data: "1.15 2.b,d,b", answers: [15, "Banana;Durian"])
+    end
+
     it "select_multiple question with one numeric option should error" do
       form = create_form(questions: %w[integer select_multiple])
       expect_decoding_fail(form,
