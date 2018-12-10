@@ -78,6 +78,7 @@ module Sms
         answers_by_qing = answers.index_by(&:questioning)
         missing_answers = @form.questionings.select { |q| q.required? && q.visible? && answers_by_qing[q].nil? }
         raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.present?
+        raise_decoding_error("no_answers") unless tree_builder.answers?
 
         # if we get to this point everything went nicely, so we can set the response
         @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)

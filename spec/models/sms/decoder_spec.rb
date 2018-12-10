@@ -183,6 +183,11 @@ describe Sms::Decoder, :sms do
   end
 
   describe "answer parsing" do
+    it "should raise an error if no answers are given" do
+      form = create_form(questions: %w[text integer])
+      expect_decoding_fail(form, data: "", error: "no_answers")
+    end
+
     it "form with text question should work" do
       form = create_form(questions: %w[text integer])
       expect_decoding(form, data: "1.weather is very cold 2.234",
