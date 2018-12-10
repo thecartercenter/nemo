@@ -2099,6 +2099,7 @@ en:
       invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."
       question_doesnt_exist: "Sorry, question %{rank} doesn't exist on form '%{form_code}'."
       user_not_found: "Sorry, we couldn't find you in the system."
+      no_answers: "Sorry, you must provide at least one answer."
     incoming_numbers:
       id: "id"
       phone_number: "phone_number"
