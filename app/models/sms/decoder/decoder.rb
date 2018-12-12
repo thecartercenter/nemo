@@ -95,10 +95,10 @@ module Sms
       def finalize
         return unless response_built?
 
-        # TODO: We can remove the `validate: false` once various validations are
-        # removed from the response model
-        response.save(validate: false)
-        tree_builder.save(response)
+        ActiveRecord::Base.transaction do
+          response.save(validate: false)
+          tree_builder.save(response)
+        end
       end
 
       private
