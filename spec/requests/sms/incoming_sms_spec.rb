@@ -415,4 +415,25 @@ describe "incoming sms", :sms do
       expect(user.id).to eq oldest_user.id
     end
   end
+
+  it "performs processing in a transaction" do
+    count = 0
+    original_save = Response.instance_method(:save)
+
+    allow_any_instance_of(Response).to receive(:save) do
+      count += 1
+
+      # Let the first save succeed, the rest will fail
+      if count == 1
+        original_save.bind(response).call(arg)
+      else
+        raise StandardError, "simulated database error"
+      end
+    end
+
+    expect do
+      do_incoming_request(from: @user.phone, incoming: {body: "#{form_code} 1.123 2.456"})
+    rescue StandardError
+    end.to change { Response.count }.by(0)
+  end
 end
