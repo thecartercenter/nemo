@@ -4,9 +4,9 @@
 
    when 'select_one' %>
 
-  <%= render('responses/answers/map', answer: answer) if answer.coordinates? %>
-
   <%= content_tag(:div, answer.option.try(:name), data: {val: [answer.option_node_id]}) %>
+
+  <%= render('responses/answers/map', answer: answer) if answer.coordinates? %>
 
 <% when 'select_multiple' %>
 
