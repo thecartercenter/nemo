@@ -46,7 +46,7 @@ class UserSessionsController < ApplicationController
 
     params[:user_session][:login] = current_user.login
 
-    @user_session = UserSession.new(user_session_params)
+    @user_session = UserSession.new(user_session_params.to_h)
 
     # if the save is successful, the user is logged in automatically
     if allow_login && @user_session.save
