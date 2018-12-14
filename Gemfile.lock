@@ -9,13 +9,6 @@ GIT
       railties
 
 GIT
-  remote: https://github.com/sassafrastech/acts_as_list.git
-  revision: 20fa19384f53b81f02c7165bb6e0b2356aef2f1b
-  specs:
-    acts_as_list (0.9.8)
-      activerecord (>= 3.0)
-
-GIT
   remote: https://github.com/sassafrastech/axlsx.git
   revision: fe90f05dd4f85ecd4af9823a70084355049831ef
   branch: stable
@@ -100,6 +93,8 @@ GEM
       i18n (>= 0.7, < 2)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    acts_as_list (0.9.17)
+      activerecord (>= 3.0)
     acts_as_paranoid (0.6.0)
       activerecord (>= 4.2, < 6.0)
       activesupport (>= 4.2, < 6.0)
@@ -566,7 +561,7 @@ DEPENDENCIES
   actionpack-page_caching (~> 1.1.0)
   active_model_serializers (~> 0.9.3)
   activerecord-session_store (~> 1.1.1)
-  acts_as_list!
+  acts_as_list
   acts_as_paranoid (~> 0.6.0)
   ancestry (~> 3.0.0)
   api-pagination (~> 4.1.1)

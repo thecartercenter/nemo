@@ -82,8 +82,7 @@ gem "ancestry", "~> 3.0.0"
 gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree", branch: "soft_delete_hack"
 
 # Auto rank maintenance for sorted lists.
-# Using fork due to conflict with acts_as_paranoid (see https://github.com/swanandp/acts_as_list/pull/286).
-gem "acts_as_list", git: "https://github.com/sassafrastech/acts_as_list.git"
+gem "acts_as_list"
 
 # I18n
 gem "i18n-country-translations", "~> 1.2.3"
