@@ -85,7 +85,7 @@ class FormVersioningPolicy
         # Changing condition is a trigger if question is required because person submitting old form
         # might skip a required question based on an outdated condition. This wouldn't cause an error, but
         # may lead to undesired data.
-        return [obj.form] if obj.changed? && obj.conditionable.required?
+        return [obj.form] if obj.previous_changes.present? && obj.conditionable.required?
       when :destroy
         # Destroying a condition is a trigger if question is required because person submitting old form
         # wouldn't know about lack of condition and might try to omit now-required information.
