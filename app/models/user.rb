@@ -9,6 +9,7 @@ class User < ApplicationRecord
   acts_as_paranoid
 
   attr_writer(:reset_password_method)
+  attr_accessor(:password_confirmation)
 
   has_many :responses, inverse_of: :user
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
@@ -33,13 +34,12 @@ class User < ApplicationRecord
     c.perishable_token_valid_for = 1.week
     c.logged_in_timeout(SESSION_TIMEOUT)
 
-    c.validates_format_of_login_field_options = {with: /\A[a-zA-Z0-9\._]+\z/}
-    c.merge_validates_uniqueness_of_login_field_options(scope: :deleted_at)
-    c.merge_validates_length_of_password_field_options(minimum: 8)
-    c.merge_validates_format_of_email_field_options(allow_blank: true)
-
-    # Email does not have to be unique.
-    c.merge_validates_uniqueness_of_email_field_options(if: -> { false })
+    # Authlogic model validation is deprecated in 4.4.0
+    # Will be removed entirely from 5.0.0
+    # These fields are manually validated below
+    c.validate_email_field = false
+    c.validate_login_field = false
+    c.validate_password_field = false
   end
 
   after_initialize(:set_default_pref_lang)
@@ -60,14 +60,18 @@ class User < ApplicationRecord
   validate(:must_have_password_on_enter)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
+  validates(:login, format: {with: /\A[a-zA-Z0-9\._]+\z/}, uniqueness: {scope: :deleted_at})
+  validates(:email, format: {with: /@/}, length: {maximum: 100}, allow_blank: true)
 
   # This validation causes issues when deleting missions,
   # orphaned users can no longer change their profile or password
   # which can be an issue if they will be being re-assigned
   # validate(:must_have_assignments_if_not_admin)
-  validates :password, format: { with: PASSWORD_FORMAT,
-                                 if: :require_password?,
-                                 message: :invalid_password }
+  validates(:password,
+    confirmation: {if: :require_password?},
+    format: {with: PASSWORD_FORMAT, if: :require_password?, message: :invalid_password},
+    length: {minimum: 8, if: :require_password?})
+  validates(:password_confirmation, length: {minimum: 8}, if: :require_password?)
 
   scope(:by_name, -> { order("users.name") })
   scope(:assigned_to, ->(m) { where("users.id IN (
