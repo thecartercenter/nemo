@@ -42,7 +42,7 @@ class Report::SummaryCollectionBuilder
   def build
     # split questionings by type
     grouped = {'stat' => [], 'select' => [], 'date' => [], 'raw' => []}
-    questionings.each{|qing| grouped[QTYPE_TO_SUMMARY_GROUP[qing.qtype_name.to_sym]] << qing}
+    questionings.each { |qing| grouped[QTYPE_TO_SUMMARY_GROUP[qing.qtype_name.to_sym]] << qing }
 
     # generate summary collections for each group
     collections = grouped.keys.map{|g| grouped[g].empty? ? nil : send("collection_for_#{g}_questionings", grouped[g])}.compact.flatten
