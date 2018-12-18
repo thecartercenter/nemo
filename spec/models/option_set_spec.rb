@@ -105,7 +105,7 @@ describe OptionSet do
     context "with missing option node" do
       before do
         option_set.root_node.c[1].children.destroy_all
-        expect_node([["Animal", ["Cat", "Dog"]], ["Plant", []]], option_set.root_node)
+        expect_node([["Animal", %w[Cat Dog]], ["Plant", []]], option_set.root_node)
         option_set.reload
       end
 
