@@ -11,28 +11,23 @@ module Sms
       @answer_groups = {}
     end
 
-    def response_node_for(qing_group)
-      answer_groups[qing_group.id]
+    def add_answer(parent, attribs)
+      attribs[:new_rank] = parent.children.size
+      parent.children.build(attribs)
     end
 
-    def answer_group_for(qing)
+    def build_or_find_parent_node_for(qing)
       qing_group = qing.parent
-      answer_group = response_node_for(qing_group) || build_answer_group(qing_group)
+      node = response_node_for(qing_group) || build_answer_group(qing_group)
 
       if qing.multilevel?
         answer_set = AnswerSet.new(form_item: qing)
-        answer_set.new_rank = answer_group.children.length
-        answer_group.children << answer_set
-        answer_group = answer_set
+        answer_set.new_rank = node.children.length
+        node.children << answer_set
+        node = answer_set
       end
 
-      answer_group
-    end
-
-    def add_answer(answer_group, answer)
-      answer.new_rank = answer_group.children.length
-      answer_group.children << answer
-      answer
+      node
     end
 
     def save(response)
@@ -48,6 +43,10 @@ module Sms
     end
 
     private
+
+    def response_node_for(qing_group)
+      answer_groups[qing_group.id]
+    end
 
     def build_answer_group(qing_group)
       group = AnswerGroup.new(form_item: qing_group)

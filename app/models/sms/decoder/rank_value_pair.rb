@@ -4,7 +4,7 @@ module Sms
   module Decoder
     # Parses a single rank/value pair as part of an incoming SMS message.
     class RankValuePair < Struct.new(:rank, :value)
-      # Generates an Answer object from the rank and value in the context of the given qing.
+      # Generates a hash of Answer attributes from the rank and value in the context of the given qing.
       # Raises an error if parsing failed.
       def parse(qing)
         case qing.question.qtype.name
@@ -46,13 +46,13 @@ module Sms
             option = qing.option_set.all_options.by_canonical_name(value).first
             raise_parse_error("answer_not_valid_option") unless option
             attribs_set = qing.option_set.path_to_option(option).map { |o| {option: o} }
-            build_answer(qing, attribs_set, multilevel: qing.multilevel?)
+            build_answer(qing, attribs_set)
 
           elsif qing.sms_formatting_as_appendix?
             option = qing.option_set.fetch_by_shortcode(value.downcase).try(:option)
             raise_parse_error("answer_not_valid_option") unless option
             attribs_set = qing.option_set.path_to_option(option).map { |o| {option: o} }
-            build_answer(qing, attribs_set, multilevel: qing.multilevel?)
+            build_answer(qing, attribs_set)
 
           else
             # make sure the value is a letter(s)
@@ -215,12 +215,9 @@ module Sms
         qing.question.options.index { |o| o.id == option.id } + 1
       end
 
-      def build_answer(qing, attribs_set, options = {})
-        Array.wrap(attribs_set).each_with_index.map do |attribs, idx|
-          attribs.merge(
-            rank: options[:multilevel] ? idx + 1 : 1,
-            questioning_id: qing.id
-          )
+      def build_answer(qing, attribs_set)
+        Array.wrap(attribs_set).map do |attribs|
+          attribs.merge(questioning_id: qing.id)
         end
       end
 
