@@ -18,20 +18,16 @@ module Sms
 
     def build_or_find_parent_node_for(qing)
       qing_group = qing.parent
-      node = response_node_for(qing_group) || build_answer_group(qing_group)
-
+      answer_group = answer_group_for(qing_group) || build_answer_group(qing_group)
       if qing.multilevel?
-        answer_set = AnswerSet.new(form_item: qing)
-        answer_set.new_rank = node.children.length
-        node.children << answer_set
-        node = answer_set
+        answer_group.children.build(type: "AnswerSet", form_item: qing, new_rank: answer_group.children.size)
+      else
+        answer_group
       end
-
-      node
     end
 
     def save(response)
-      root = response_node_for(response.form.root_group)
+      root = answer_group_for(response.form.root_group)
       response.associate_tree(root)
       # TODO: We can remove the `validate: false` once various validations are
       # removed from the response model
@@ -44,7 +40,7 @@ module Sms
 
     private
 
-    def response_node_for(qing_group)
+    def answer_group_for(qing_group)
       answer_groups[qing_group.id]
     end
 
@@ -66,10 +62,10 @@ module Sms
     # This method will create all necessary ancestor groups that do not already exist.
     def add_to_parent(node)
       qing_group = node.form_item
-      if qing_group.parent.nil?
+      if qing_group.root?
         node.new_rank = 0
       else
-        parent = response_node_for(qing_group.parent) || build_answer_group(qing_group.parent)
+        parent = answer_group_for(qing_group.parent) || build_answer_group(qing_group.parent)
         parent.children << node
         node.new_rank = parent.children.length
       end
