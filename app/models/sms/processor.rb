@@ -76,7 +76,7 @@ class Sms::Processor
   # Decides if an SMS forward is called for, and builds and returns the Sms::Forward object if so.
   # Returns nil if no forward is called for, or if an error is encountered in constructing the message.
   def handle_forward
-    return unless decoder.response_built?
+    return unless decoder.decoding_succeeded?
     form = decoder.form
 
     if form && form.sms_relay?
@@ -103,7 +103,7 @@ class Sms::Processor
   # translates a message for the sms reply using the appropriate locale
   def t_sms_msg(key, options = {})
     # Get some options from Response (if available) unless they're explicitly given
-    if decoder.response_built?
+    if decoder.decoding_succeeded?
       %i(user form mission).each { |a| options[a] = decoder.response.send(a) unless options.has_key?(a) }
     end
 

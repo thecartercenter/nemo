@@ -8,7 +8,8 @@ module Sms
       DUPLICATE_WINDOW = 12.hours
       AUTH_CODE_FORMAT = /[a-z0-9]{4}/i
 
-      attr_reader :response, :tree_builder
+      attr_accessor :response, :decoding_succeeded
+      alias decoding_succeeded? decoding_succeeded
 
       delegate :form, to: :response
 
@@ -54,7 +55,8 @@ module Sms
         authenticate_user
         check_permission
 
-        tree_builder = Sms::ResponseTreeBuilder.new
+        self.response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
+        tree_builder = Sms::ResponseTreeBuilder.new(response)
         answers = []
 
         pairs = Sms::Decoder::AnswerParser.new(@tokens[1..-1])
@@ -76,25 +78,19 @@ module Sms
         raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.present?
         raise_decoding_error("no_answers") unless tree_builder.answers?
 
-        # if we get to this point everything went nicely, so we can set the response
-        @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
-        @tree_builder = tree_builder
+        self.decoding_succeeded = true
+
       rescue Sms::Decoder::ParseError => err
         raise_decoding_error(err.type, err.params)
-      end
-
-      def response_built?
-        response.present?
       end
 
       # Finalizes the process, should be called after all checks have passed.
       # No objects are persisted before this point.
       def finalize
-        return unless response_built?
+        return unless decoding_succeeded?
 
         ActiveRecord::Base.transaction do
           response.save(validate: false)
-          tree_builder.save(response)
         end
       end
 

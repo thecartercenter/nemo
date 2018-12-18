@@ -290,20 +290,6 @@ class Response < ApplicationRecord
     end while Response.exists?(shortcode: self.shortcode)
   end
 
-  # TODO: remove in favor of build syntax. SMS parsing needs to be refactored
-  # to not rely on this function
-  def associate_tree(root)
-    associate_node_and_descendants(root)
-    self.root_node = root
-  end
-
-  def associate_node_and_descendants(node)
-    node.response = self
-    node.children.each do |child|
-      associate_node_and_descendants(child)
-    end
-  end
-
   private
 
   def normalize_reviewed
