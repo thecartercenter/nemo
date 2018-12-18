@@ -26,9 +26,8 @@ GIT
       rubyzip (~> 1.1)
 
 GIT
-  remote: https://github.com/sassafrastech/closure_tree
-  revision: b34d380a70dfb4838e238b62bf7bf3686e875a0f
-  branch: soft_delete_hack
+  remote: https://github.com/sassafrastech/closure_tree.git
+  revision: a9c4f2fb9a65c4579ee6058049c3953038113a24
   specs:
     closure_tree (7.0.0)
       activerecord (>= 4.2.10)
