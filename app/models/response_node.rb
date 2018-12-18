@@ -29,6 +29,11 @@ class ResponseNode < ApplicationRecord
   alias c children
   alias destroy? _destroy
 
+  def skip_sort_order_maintenance_for_tree_on_save
+    _ct_skip_sort_order_maintenance!
+    children.each { |c| c.skip_sort_order_maintenance_for_tree_on_save }
+  end
+
   def debug_tree(indent: 0)
     child_tree = children.map { |c| c.debug_tree(indent: indent + 1) }.join
     chunks = []
