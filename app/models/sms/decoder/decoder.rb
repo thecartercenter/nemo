@@ -20,9 +20,9 @@ module Sms
         @qings_seen = {}
       end
 
-      # main method called to do the decoding
-      # returns an unsaved Response object on success
+      # Main method called to do the decoding
       # raises an Sms::Decoder::DecodingError on error
+      # Builds an unsaved response accessible via `response` accessor.
       def decode
         Rails.logger.debug("BEGIN DECODE ************************************")
         # tokenize the message by spaces
@@ -83,19 +83,6 @@ module Sms
 
       rescue Sms::Decoder::ParseError => err
         raise_decoding_error(err.type, err.params)
-      end
-
-      # Finalizes the process, should be called after all checks have passed.
-      # No objects are persisted before this point.
-      def finalize
-        return unless decoding_succeeded?
-        Rails.logger.debug("BEGIN SAVE ************************************")
-
-        ActiveRecord::Base.transaction do
-          response.save(validate: false)
-        end
-
-        Rails.logger.debug("END SAVE ************************************")
       end
 
       private
