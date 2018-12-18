@@ -12,22 +12,20 @@ module Sms
     end
 
     def add_answer(parent, attribs)
-      attribs[:new_rank] = parent.children.size
-      parent.children.build(attribs)
+      build_child(parent, "Answer", **attribs)
     end
 
-    def build_or_find_parent_node_for(qing)
-      qing_group = qing.parent
-      answer_group = answer_group_for(qing_group) || build_answer_group(qing_group)
+    def build_or_find_parent_node_for_qing(qing)
+      parent_node = build_or_find_parent_node_for_qing_group(qing.parent)
       if qing.multilevel?
-        answer_group.children.build(type: "AnswerSet", form_item: qing, new_rank: answer_group.children.size)
+        build_child(parent_node, "AnswerSet", form_item: qing)
       else
-        answer_group
+        parent_node
       end
     end
 
     def save(response)
-      root = answer_group_for(response.form.root_group)
+      root = build_or_find_parent_node_for_qing_group(response.form.root_group)
       response.associate_tree(root)
       # TODO: We can remove the `validate: false` once various validations are
       # removed from the response model
@@ -40,30 +38,23 @@ module Sms
 
     private
 
-    def answer_group_for(qing_group)
-      answer_groups[qing_group.id]
-    end
-
-    def build_answer_group(qing_group)
-      answer_group =
+    def build_or_find_parent_node_for_qing_group(qing_group)
+      answer_groups[qing_group.id] ||=
         if qing_group.root?
           AnswerGroup.new(form_item: qing_group, new_rank: 0)
         else
-          parent_response_node = answer_group_for(qing_group.parent) || build_answer_group(qing_group.parent)
-          child_count = parent_response_node.children.size
-
+          parent_node = build_or_find_parent_node_for_qing_group(qing_group.parent)
           if qing_group.repeatable?
-            parent_response_node = parent_response_node.children.build(
-              type: "AnswerGroupSet", form_item: qing_group, new_rank: child_count
-            )
-            child_count = 0
+            parent_node = build_child(parent_node, "AnswerGroupSet", form_item: qing_group)
           end
-
-          parent_response_node.children.build(
-            type: "AnswerGroup", form_item: qing_group, new_rank: child_count
-          )
+          build_child(parent_node, "AnswerGroup", form_item: qing_group)
         end
-      answer_groups[qing_group.id] = answer_group
+    end
+
+    def build_child(response_node, type, **attribs)
+      attribs[:new_rank] = response_node.children.size
+      attribs[:type] = type
+      response_node.children.build(attribs)
     end
   end
 end

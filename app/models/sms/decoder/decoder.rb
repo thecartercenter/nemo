@@ -62,7 +62,7 @@ module Sms
           next unless (qing = find_qing(pair.rank))
 
           begin
-            parent = tree_builder.build_or_find_parent_node_for(qing)
+            parent = tree_builder.build_or_find_parent_node_for_qing(qing)
             pair.parse(qing).each do |attribs|
               answers << tree_builder.add_answer(parent, attribs)
             end
