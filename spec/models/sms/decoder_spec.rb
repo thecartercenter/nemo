@@ -729,9 +729,7 @@ describe Sms::Decoder, :sms do
     msg = Sms::Incoming.create(options.slice(:from, :body, :mission))
     decoder = Sms::Decoder::Decoder.new(msg)
     decoder.decode
-    Rails.logger.debug("BEGIN SAVE ************************************")
-    decoder.response.save(validate: false)
-    Rails.logger.debug("END SAVE ************************************")
+    decoder.finalize
 
     # Reload the response before testing to ensure everything is actually stored as we expect it.
     response = Response.find(decoder.response.id)

@@ -85,6 +85,13 @@ module Sms
         raise_decoding_error(err.type, err.params)
       end
 
+      # Finalizes the decoding process by persisting the built response.
+      def finalize
+        Rails.logger.debug("BEGIN SAVE ************************************")
+        response.save(validate: false)
+        Rails.logger.debug("END SAVE ************************************")
+      end
+
       private
 
       # attempts to find the form matching the code in the message

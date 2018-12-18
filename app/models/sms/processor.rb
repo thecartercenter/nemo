@@ -3,6 +3,7 @@
 # Defers to Sms::Decoder for intricacies of decoding.
 class Sms::Processor
   attr_accessor :incoming_msg, :reply, :forward, :all_incoming_numbers
+  delegate :finalize, to: :decoder
 
   def initialize(incoming_msg)
     @incoming_msg = incoming_msg
@@ -17,10 +18,6 @@ class Sms::Processor
 
     self.reply = handle_reply
     self.forward = handle_forward
-  end
-
-  def finalize
-    decoder.response.save(validate: false)
   end
 
   private
