@@ -27,7 +27,7 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/closure_tree.git
-  revision: a9c4f2fb9a65c4579ee6058049c3953038113a24
+  revision: 2639ba3cc8f6e9dd0ccbb4f9a626ba65533f8ddf
   specs:
     closure_tree (7.0.0)
       activerecord (>= 4.2.10)
@@ -164,7 +164,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.3)
+    concurrent-ruby (1.1.4)
     config (1.7.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.2.1)
