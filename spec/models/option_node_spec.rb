@@ -307,7 +307,7 @@ describe OptionNode do
   end
 
   describe "preferred_name_translations" do
-    let(:option_node) { create(:option_node, option_attribs: {name_translations: {en: nil, fr: "Foo" }}) }
+    let(:option_node) { create(:option_node, option_attribs: {name_translations: {en: nil, fr: "Foo"}}) }
 
     it "returns first non-nil translation" do
       preferred_locales = configatron.preferred_locales
