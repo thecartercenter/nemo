@@ -17,6 +17,10 @@ shared_context "response tree" do
     expect(children.map(&:type)).to eq(types)
     expect(children.map(&:questioning_id)).to eq(qing_ids)
     expect(children.map(&:new_rank)).to eq((0...children.size).to_a)
+    expect(children.map(&:parent_id).uniq).to eq([node.id])
+
+    # This check exercises the hierarchy data whereas the above only exercise parent_id.
+    expect(children.first.ancestor_ids.first).to eq(node.id) if children.any?
 
     return if values.nil?
 
