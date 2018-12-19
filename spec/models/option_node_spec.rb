@@ -305,4 +305,16 @@ describe OptionNode do
       expect(node.child_options.map(&:name)).to eq %w(Animal Plant)
     end
   end
+
+  describe "preferred_name_translations" do
+    let(:option_node) { create(:option_node, option_attribs: {name_translations: {en: nil, fr: "Foo" }}) }
+
+    it "returns first non-nil translation" do
+      preferred_locales = configatron.preferred_locales
+      configatron.preferred_locales = %i[en fr]
+      results = option_node.preferred_name_translations([option_node.option])
+      configatron.preferred_locales = preferred_locales
+      expect(results).to eq(%w[Foo])
+    end
+  end
 end
