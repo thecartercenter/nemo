@@ -116,6 +116,17 @@ describe "odk submissions", :odk, type: :request do
         expect(resp.incomplete).to be no_data
       end
     end
+
+    it "should NOT fail if answer is invalid per web validations" do
+      form = create(:form, question_types: %w[integer])
+      form.c[0].question.update!(minimum: 10)
+      form.reload.publish!
+
+      xml = build_odk_submission(form, data: {form.c[0] => "5"})
+      do_submission(submission_path(get_mission), xml)
+      expect(response).to be_success
+      expect(Answer.where(questioning_id: form.c[0].id).first.value).to eq("5")
+    end
   end
 
   context "to locked mission" do

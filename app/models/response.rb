@@ -221,8 +221,8 @@ class Response < ApplicationRecord
 
   # whether the answers should validate themselves
   def validate_answers?
-    # dont validate if this is an ODK submission as we don't want to lose data
-    modifier != "odk"
+    # ODK and SMS do their own validation
+    %w[odk web].include?(modifier)
   end
 
   # Returns an array of required questionings for which answers are missing.

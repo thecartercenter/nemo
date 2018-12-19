@@ -236,6 +236,10 @@ class Answer < ResponseNode
   private
 
   def should_validate?(field)
+    # TODO: This line seems to trigger an unnecessary query if response is assigned before it is saved.
+    # That is the current theory anyway. A workaround might be to have an ephemeral skip_validation flag
+    # when building the object, and call that from the decoder and ODK parser.
+    # As it is, the query should be cached, so performance hit shouldn't be too bad.
     return false if response && !response.validate_answers?
     return false if marked_for_destruction?
 

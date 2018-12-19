@@ -35,7 +35,8 @@ module Sms
     def build_or_find_parent_node_for_qing_group(qing_group)
       answer_groups[qing_group.id] ||=
         if qing_group.root?
-          response.build_root_node(type: "AnswerGroup", form_item: qing_group, new_rank: 0)
+          response.build_root_node(response: response, type: "AnswerGroup",
+                                   form_item: qing_group, new_rank: 0)
         else
           parent_node = build_or_find_parent_node_for_qing_group(parent_for(qing_group))
           if qing_group.repeatable?
@@ -48,6 +49,7 @@ module Sms
     def build_child(response_node, type, **attribs)
       attribs[:new_rank] = response_node.children.size
       attribs[:type] = type
+      attribs[:response] = response
       response_node.children.build(attribs)
     end
 
