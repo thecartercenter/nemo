@@ -21,6 +21,8 @@ class ResponseNode < ApplicationRecord
     propogate_response_id
   end
 
+  # TODO: This appears to be mostly unnecessary, at least on create. Only two specs fail if it is removed.
+  # Not sure if it's creating any unnecessary queries.
   after_save { children.each(&:save) }
 
   validates_associated :children
