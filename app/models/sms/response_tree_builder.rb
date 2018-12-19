@@ -18,7 +18,7 @@ module Sms
     end
 
     def build_or_find_parent_node_for_qing(qing)
-      parent_node = build_or_find_parent_node_for_qing_group(qing.parent)
+      parent_node = build_or_find_parent_node_for_qing_group(parent_for(qing))
       if qing.multilevel?
         build_child(parent_node, "AnswerSet", form_item: qing)
       else
@@ -37,7 +37,7 @@ module Sms
         if qing_group.root?
           response.build_root_node(type: "AnswerGroup", form_item: qing_group, new_rank: 0)
         else
-          parent_node = build_or_find_parent_node_for_qing_group(qing_group.parent)
+          parent_node = build_or_find_parent_node_for_qing_group(parent_for(qing_group))
           if qing_group.repeatable?
             parent_node = build_child(parent_node, "AnswerGroupSet", form_item: qing_group)
           end
@@ -49,6 +49,15 @@ module Sms
       attribs[:new_rank] = response_node.children.size
       attribs[:type] = type
       response_node.children.build(attribs)
+    end
+
+    def parent_for(form_item)
+      qing_groups_by_id[form_item.parent_id]
+    end
+
+    # Load parents efficiently.
+    def qing_groups_by_id
+      @qing_groups_by_id ||= QingGroup.where(form_id: response.form_id).index_by(&:id)
     end
   end
 end
