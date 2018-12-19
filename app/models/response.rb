@@ -28,7 +28,7 @@ class Response < ApplicationRecord
 
   before_validation :normalize_reviewed
 
-  after_save { root_node.save if root_node.present? }
+  after_update { root_node.save if root_node.present? }
   before_create :generate_shortcode
   before_destroy { root_node.destroy if root_node.present? }
 
