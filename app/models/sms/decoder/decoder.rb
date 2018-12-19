@@ -88,8 +88,10 @@ module Sms
       def finalize
         return unless decoding_succeeded?
 
-        response.root_node._ct_fast_insert!
-        response.save(validate: false)
+        ActiveRecord::Base.transaction do
+          response.root_node._ct_fast_insert!
+          response.save(validate: false)
+        end
       end
 
       private
