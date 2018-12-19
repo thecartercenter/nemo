@@ -28,7 +28,7 @@ describe Results::WebResponseParser do
 
         it "builds tree with three answers" do
           expect_root(tree, form)
-          expect_children(tree, %w[Answer Answer Answer], form.c.map(&:id), %w[A B C])
+          expect_built_children(tree, %w[Answer Answer Answer], form.c.map(&:id), %w[A B C])
         end
       end
 
@@ -43,7 +43,7 @@ describe Results::WebResponseParser do
 
         it "builds tree with two answers" do
           expect_root(tree, form)
-          expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
+          expect_built_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
         end
       end
 
@@ -58,7 +58,7 @@ describe Results::WebResponseParser do
 
         it "builds tree with two answers" do
           expect_root(tree, form)
-          expect_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
+          expect_built_children(tree, %w[Answer Answer], [form.c[0].id, form.c[2].id], %w[A C])
         end
       end
 
@@ -103,8 +103,8 @@ describe Results::WebResponseParser do
 
       it "builds tree with answer set" do
         expect_root(tree, form)
-        expect_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
-        expect_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
+        expect_built_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
+        expect_built_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
       end
     end
 
@@ -127,7 +127,7 @@ describe Results::WebResponseParser do
 
       it "builds tree with answer set" do
         expect_root(tree, form)
-        expect_children(tree, %w[Answer Answer Answer], form.c.map(&:id), ["A", "Cat;Dog", "D"])
+        expect_built_children(tree, %w[Answer Answer Answer], form.c.map(&:id), ["A", "Cat;Dog", "D"])
       end
     end
 
@@ -145,8 +145,8 @@ describe Results::WebResponseParser do
 
       it "should produce the correct tree" do
         expect_root(tree, form)
-        expect_children(tree, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
-        expect_children(tree.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+        expect_built_children(tree, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
+        expect_built_children(tree.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
       end
     end
 
@@ -182,17 +182,17 @@ describe Results::WebResponseParser do
 
       it "builds tree with answer group set" do
         expect_root(tree, form)
-        expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-        expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
-        expect_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
-        expect_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
+        expect_built_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+        expect_built_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+        expect_built_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+        expect_built_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
       end
     end
 
     context "response with nested group sets" do
       let(:question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text"]}}]}}] }
-      let(:outer_form_grp) { form.c[1] }
-      let(:inner_form_grp) { outer_form_grp.c[1] }
+      let(:outer_q_grp) { form.c[1] }
+      let(:inner_q_grp) { outer_q_grp.c[1] }
       let(:answers) do
         {
           "0" => web_answer_hash(form.c[0].id, value: "A"),
@@ -202,8 +202,8 @@ describe Results::WebResponseParser do
             questioning_id: form.c[1].id,
             _relevant: "true",
             children: {
-              "0" => web_answer_group_hash(outer_form_grp.id, instance_one_answers),
-              "1" => web_answer_group_hash(outer_form_grp.id, instance_two_answers)
+              "0" => web_answer_group_hash(outer_q_grp.id, instance_one_answers),
+              "1" => web_answer_group_hash(outer_q_grp.id, instance_two_answers)
             }
           }
         }
@@ -217,47 +217,47 @@ describe Results::WebResponseParser do
             questioning_id: form.c[1].c[1].id,
             _relevant: "true",
             children: {
-              "0" => web_answer_group_hash(inner_form_grp.id, answers_one_one),
-              "1" => web_answer_group_hash(inner_form_grp.id, answers_one_two)
+              "0" => web_answer_group_hash(inner_q_grp.id, answers_one_one),
+              "1" => web_answer_group_hash(inner_q_grp.id, answers_one_two)
             }
           }
         }
       end
       let(:instance_two_answers) do
         {
-          "0" => web_answer_hash(outer_form_grp.c[0].id, value: "E"),
+          "0" => web_answer_hash(outer_q_grp.c[0].id, value: "E"),
           "1" => {
             id: "",
             type: "AnswerGroupSet",
             questioning_id: form.c[1].c[1].id,
             _relevant: "true",
             children: {
-              "0" => web_answer_group_hash(inner_form_grp.id, answers_two_one),
-              "1" => web_answer_group_hash(inner_form_grp.id, answers_two_two)
+              "0" => web_answer_group_hash(inner_q_grp.id, answers_two_one),
+              "1" => web_answer_group_hash(inner_q_grp.id, answers_two_two)
             }
           }
         }
       end
-      let(:answers_one_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "C")} }
-      let(:answers_one_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "D")} }
-      let(:answers_two_one) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "F")} }
-      let(:answers_two_two) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "G")} }
+      let(:answers_one_one) { {"0" => web_answer_hash(inner_q_grp.c[0].id, value: "C")} }
+      let(:answers_one_two) { {"0" => web_answer_hash(inner_q_grp.c[0].id, value: "D")} }
+      let(:answers_two_one) { {"0" => web_answer_hash(inner_q_grp.c[0].id, value: "F")} }
+      let(:answers_two_two) { {"0" => web_answer_hash(inner_q_grp.c[0].id, value: "G")} }
 
       it "builds tree with answer group set" do
         expect_root(tree, form)
-        expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-        expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+        expect_built_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+        expect_built_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
         answer_grp_one = tree.c[1].c[0]
         answer_grp_two = tree.c[1].c[1]
 
-        expect_children(answer_grp_one, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["B", nil])
-        expect_children(answer_grp_one.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_form_grp.id))
-        expect_children(answer_grp_one.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[C])
-        expect_children(answer_grp_one.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[D])
-        expect_children(answer_grp_two, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["E", nil])
-        expect_children(answer_grp_two.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_form_grp.id))
-        expect_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[F])
-        expect_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[G])
+        expect_built_children(answer_grp_one, %w[Answer AnswerGroupSet], outer_q_grp.c.map(&:id), ["B", nil])
+        expect_built_children(answer_grp_one.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_q_grp.id))
+        expect_built_children(answer_grp_one.c[1].c[0], %w[Answer], [inner_q_grp.c[0].id], %w[C])
+        expect_built_children(answer_grp_one.c[1].c[1], %w[Answer], [inner_q_grp.c[0].id], %w[D])
+        expect_built_children(answer_grp_two, %w[Answer AnswerGroupSet], outer_q_grp.c.map(&:id), ["E", nil])
+        expect_built_children(answer_grp_two.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_q_grp.id))
+        expect_built_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_q_grp.c[0].id], %w[F])
+        expect_built_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_q_grp.c[0].id], %w[G])
       end
     end
   end
@@ -281,7 +281,7 @@ describe Results::WebResponseParser do
 
         it "updates value appropriately" do
           expect_root(tree, form)
-          expect_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B Z])
+          expect_built_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B Z])
         end
       end
 
@@ -301,7 +301,7 @@ describe Results::WebResponseParser do
 
         it "updates destroy appropriately in in-memory tree" do
           expect_root(tree, form)
-          expect_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
+          expect_built_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
           expect(tree.c[1]._destroy).to be true
         end
       end
@@ -322,7 +322,7 @@ describe Results::WebResponseParser do
 
         it "updates relevant appropriately in in-memory tree" do
           expect_root(tree, form)
-          expect_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
+          expect_built_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
           expect(tree.children[1].relevant).to eq false
         end
       end
@@ -378,11 +378,11 @@ describe Results::WebResponseParser do
 
         it "adds new answer group instance" do
           expect_root(tree, form)
-          expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-          expect_children(tree.c[1], %w[AnswerGroup AnswerGroup AnswerGroup], Array.new(3, form.c[1].id))
-          expect_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
-          expect_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
-          expect_children(tree.c[1].c[2], %w[Answer Answer], form.c[1].c.map(&:id), %w[F G])
+          expect_built_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+          expect_built_children(tree.c[1], %w[AnswerGroup] * 3, Array.new(3, form.c[1].id))
+          expect_built_children(tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+          expect_built_children(tree.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
+          expect_built_children(tree.c[1].c[2], %w[Answer Answer], form.c[1].c.map(&:id), %w[F G])
         end
       end
     end
@@ -416,15 +416,15 @@ describe Results::WebResponseParser do
 
       it "builds tree with answer set" do
         expect_root(tree, form)
-        expect_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
-        expect_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
+        expect_built_children(tree, %w[Answer AnswerSet Answer], form.c.map(&:id), ["A", nil, "D"])
+        expect_built_children(tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id], %w[Plant Oak])
       end
     end
 
     context "nested repeat groups" do
       let(:question_types) { ["text", {repeating: {items: ["text", {repeating: {items: ["text"]}}]}}] }
-      let(:outer_form_grp) { form.c[1] }
-      let(:inner_form_grp) { outer_form_grp.c[1] }
+      let(:outer_q_grp) { form.c[1] }
+      let(:inner_q_grp) { outer_q_grp.c[1] }
       let(:answer_values) do # for original response
         [
           "A",
@@ -450,12 +450,12 @@ describe Results::WebResponseParser do
             _relevant: "true",
             children: {
               "0" => web_answer_group_hash(
-                outer_form_grp.id,
+                outer_q_grp.id,
                 instance_one_answers,
                 id: response.root_node.c[1].c[0].id
               ),
               "1" => web_answer_group_hash(
-                outer_form_grp.id,
+                outer_q_grp.id,
                 instance_two_answers,
                 id: response.root_node.c[1].c[1].id
               )
@@ -473,12 +473,12 @@ describe Results::WebResponseParser do
             _relevant: "true",
             children: {
               "0" => web_answer_group_hash(
-                inner_form_grp.id,
+                inner_q_grp.id,
                 answers_one_one,
                 id: res_inr_grp_set_1.c[0].id,
                 destroy: "true"
               ),
-              "1" => web_answer_group_hash(inner_form_grp.id, answers_one_two, id: res_inr_grp_set_1.c[1].id)
+              "1" => web_answer_group_hash(inner_q_grp.id, answers_one_two, id: res_inr_grp_set_1.c[1].id)
             }
           }
         }
@@ -486,7 +486,7 @@ describe Results::WebResponseParser do
       let(:instance_two_answers) do
         {
           "0" => web_answer_hash(
-            outer_form_grp.c[0].id,
+            outer_q_grp.c[0].id,
             value: "E",
             id: response.root_node.c[1].c[1].c[0].id
           ),
@@ -496,50 +496,50 @@ describe Results::WebResponseParser do
             questioning_id: form.c[1].c[1].id,
             _relevant: "true",
             children: {
-              "0" => web_answer_group_hash(inner_form_grp.id, answers_two_one, id: res_inr_grp_set_2.c[0].id),
-              "1" => web_answer_group_hash(inner_form_grp.id, answers_two_two, id: res_inr_grp_set_2.c[1].id),
-              "2" => web_answer_group_hash(inner_form_grp.id, answers_two_three)
+              "0" => web_answer_group_hash(inner_q_grp.id, answers_two_one, id: res_inr_grp_set_2.c[0].id),
+              "1" => web_answer_group_hash(inner_q_grp.id, answers_two_two, id: res_inr_grp_set_2.c[1].id),
+              "2" => web_answer_group_hash(inner_q_grp.id, answers_two_three)
             }
           }
         }
       end
       let(:answers_one_one) do
-        {"0" => web_answer_hash(inner_form_grp.c[0].id, {value: "C"}, id: res_inr_grp_set_1.c[0].c[0].id)}
+        {"0" => web_answer_hash(inner_q_grp.c[0].id, {value: "C"}, id: res_inr_grp_set_1.c[0].c[0].id)}
       end
       let(:answers_one_two) do
-        {"0" => web_answer_hash(inner_form_grp.c[0].id, {value: "D"}, id: res_inr_grp_set_1.c[1].c[0].id)}
+        {"0" => web_answer_hash(inner_q_grp.c[0].id, {value: "D"}, id: res_inr_grp_set_1.c[1].c[0].id)}
       end
       let(:answers_two_one) do
         {"0" => web_answer_hash(
-          inner_form_grp.c[0].id,
+          inner_q_grp.c[0].id,
           {value: "F"},
           id: res_inr_grp_set_2.c[0].c[0].id,
           relevant: "false"
         )}
       end
       let(:answers_two_two) do
-        {"0" => web_answer_hash(inner_form_grp.c[0].id, {value: "G"}, id: res_inr_grp_set_2.c[1].c[0].id)}
+        {"0" => web_answer_hash(inner_q_grp.c[0].id, {value: "G"}, id: res_inr_grp_set_2.c[1].c[0].id)}
       end
-      let(:answers_two_three) { {"0" => web_answer_hash(inner_form_grp.c[0].id, value: "H")} }
+      let(:answers_two_three) { {"0" => web_answer_hash(inner_q_grp.c[0].id, value: "H")} }
       let(:res_otr_grp_set) { response.root_node.c[1] }
       let(:res_inr_grp_set_1) { response.root_node.c[1].c[0].c[1] }
       let(:res_inr_grp_set_2) { response.root_node.c[1].c[1].c[1] }
       it "adds new answer group instance and marks nodes with relevant: false and destroy: true as needed" do
         expect_root(tree, form)
-        expect_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-        expect_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
+        expect_built_children(tree, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+        expect_built_children(tree.c[1], %w[AnswerGroup AnswerGroup], [form.c[1].id, form.c[1].id])
         answer_grp_one = tree.c[1].c[0]
         answer_grp_two = tree.c[1].c[1]
 
-        expect_children(answer_grp_one, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["B", nil])
-        expect_children(answer_grp_one.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_form_grp.id))
-        expect_children(answer_grp_one.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[C])
-        expect_children(answer_grp_one.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[D])
-        expect_children(answer_grp_two, %w[Answer AnswerGroupSet], outer_form_grp.c.map(&:id), ["E", nil])
-        expect_children(answer_grp_two.c[1], Array.new(3, "AnswerGroup"), Array.new(3, inner_form_grp.id))
-        expect_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_form_grp.c[0].id], %w[F])
-        expect_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_form_grp.c[0].id], %w[G])
-        expect_children(answer_grp_two.c[1].c[2], %w[Answer], [inner_form_grp.c[0].id], %w[H])
+        expect_built_children(answer_grp_one, %w[Answer AnswerGroupSet], outer_q_grp.c.map(&:id), ["B", nil])
+        expect_built_children(answer_grp_one.c[1], %w[AnswerGroup AnswerGroup], Array.new(2, inner_q_grp.id))
+        expect_built_children(answer_grp_one.c[1].c[0], %w[Answer], [inner_q_grp.c[0].id], %w[C])
+        expect_built_children(answer_grp_one.c[1].c[1], %w[Answer], [inner_q_grp.c[0].id], %w[D])
+        expect_built_children(answer_grp_two, %w[Answer AnswerGroupSet], outer_q_grp.c.map(&:id), ["E", nil])
+        expect_built_children(answer_grp_two.c[1], Array.new(3, "AnswerGroup"), Array.new(3, inner_q_grp.id))
+        expect_built_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_q_grp.c[0].id], %w[F])
+        expect_built_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_q_grp.c[0].id], %w[G])
+        expect_built_children(answer_grp_two.c[1].c[2], %w[Answer], [inner_q_grp.c[0].id], %w[H])
         expect(res_inr_grp_set_1.c[0]._destroy).to be true # group with answer C
         expect(res_inr_grp_set_2.c[0].c[0].relevant).to be false # answer with value F
       end

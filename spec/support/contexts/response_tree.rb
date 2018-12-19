@@ -12,15 +12,24 @@ shared_context "response tree" do
     expect(node.new_rank).to eq(0)
   end
 
+  # Checks response node children. Assumes they are persisted. Reloads the given node to ensure
+  # persisted properly.
   def expect_children(node, types, qing_ids, values = nil)
+    node = ResponseNode.find(node.id)
+    expect_built_children(node, types, qing_ids, values)
+
+    # This check exercises the hierarchy data whereas the above only exercise parent_id.
+    expect(node.c[0].ancestor_ids.first).to eq(node.id) if node.c[0]
+  end
+
+  # Doesn't reload the children or test any hierarchy data. Designed for testing children in memory
+  # but not persisted.
+  def expect_built_children(node, types, qing_ids, values = nil)
     children = node.children.sort_by(&:new_rank)
     expect(children.map(&:type)).to eq(types)
     expect(children.map(&:questioning_id)).to eq(qing_ids)
     expect(children.map(&:new_rank)).to eq((0...children.size).to_a)
     expect(children.map(&:parent_id).uniq).to eq([node.id])
-
-    # This check exercises the hierarchy data whereas the above only exercise parent_id.
-    expect(children.first.ancestor_ids.first).to eq(node.id) if children.any?
 
     return if values.nil?
 
