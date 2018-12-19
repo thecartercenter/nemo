@@ -74,9 +74,9 @@ module Sms
           end
         end
 
-        answers_by_qing = answers.index_by(&:questioning)
-        missing_answers = @form.questionings.select { |q| q.required? && q.visible? && answers_by_qing[q].nil? }
-        raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.present?
+        answers_by_qing = answers.index_by(&:questioning_id)
+        missing_answers = qings.select { |q| q.required? && q.visible? && answers_by_qing[q.id].nil? }
+        raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.any?
         raise_decoding_error("no_answers") unless tree_builder.answers?
 
         self.decoding_succeeded = true
@@ -136,7 +136,7 @@ module Sms
 
         # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
         @form = v.form
-        @questionings = @form.smsable_questionings
+        @ranks_to_qings = @form.smsable_questionings
       end
 
       def find_user
@@ -213,7 +213,7 @@ module Sms
       # finds the Questioning object specified by the given rank
       # raises an error if no such question exists, or if qing has already been encountered
       def find_qing(rank)
-        qing = @questionings[rank]
+        qing = @ranks_to_qings[rank]
         raise_decoding_error("question_doesnt_exist", rank: rank) unless qing
         raise_decoding_error("duplicate_answer", rank: rank) if @qings_seen[qing.id]
         @qings_seen[qing.id] = 1
@@ -250,6 +250,10 @@ module Sms
       # Checks if sender looks like a shortcode and raises error if so.
       def check_for_automated_sender
         raise_decoding_error("automated_sender") if @msg.from_shortcode?
+      end
+
+      def qings
+        @ranks_to_qings.values
       end
     end
   end
