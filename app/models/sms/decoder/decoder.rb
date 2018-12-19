@@ -88,9 +88,9 @@ module Sms
       # Finalizes the decoding process by persisting the built response.
       def finalize
         return unless decoding_succeeded?
-        
+
         Rails.logger.debug("BEGIN SAVE ************************************")
-        response.root_node.skip_sort_order_maintenance_for_tree_on_save
+        response.root_node._ct_fast_insert!
         response.save(validate: false)
         Rails.logger.debug("END SAVE ************************************")
       end
