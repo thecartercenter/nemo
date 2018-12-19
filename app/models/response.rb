@@ -11,7 +11,7 @@ class Response < ApplicationRecord
 
   attr_accessor :modifier, :excerpts, :awaiting_media
 
-  belongs_to :form, inverse_of: :responses, counter_cache: true
+  belongs_to :form, inverse_of: :responses
   belongs_to :checked_out_by, class_name: "User"
   belongs_to :user, inverse_of: :responses
   belongs_to :reviewer, class_name: "User"
