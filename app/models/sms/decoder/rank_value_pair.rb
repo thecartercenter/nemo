@@ -217,7 +217,8 @@ module Sms
 
       def build_answer(qing, attribs_set)
         Array.wrap(attribs_set).map do |attribs|
-          attribs.merge(questioning_id: qing.id)
+          # Include the full questioning object to avoid causing more queries later.
+          attribs.merge(form_item: qing)
         end
       end
 
