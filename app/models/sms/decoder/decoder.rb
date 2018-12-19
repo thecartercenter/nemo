@@ -24,7 +24,6 @@ module Sms
       # raises an Sms::Decoder::DecodingError on error
       # Builds an unsaved response accessible via `response` accessor.
       def decode
-        Rails.logger.debug("BEGIN DECODE ************************************")
         # tokenize the message by spaces
         @tokens = @msg.body.split(" ")
 
@@ -89,10 +88,8 @@ module Sms
       def finalize
         return unless decoding_succeeded?
 
-        Rails.logger.debug("BEGIN SAVE ************************************")
         response.root_node._ct_fast_insert!
         response.save(validate: false)
-        Rails.logger.debug("END SAVE ************************************")
       end
 
       private
