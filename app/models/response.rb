@@ -28,10 +28,9 @@ class Response < ApplicationRecord
 
   before_validation :normalize_reviewed
 
-  after_save { root_node.save if root_node.present? }
+  after_update { root_node.save if root_node.present? }
   before_create :generate_shortcode
-
-  before_destroy :destroy_answer_tree
+  before_destroy { root_node.destroy if root_node.present? }
 
   # Due to an acts_as_paranoid gem bug, rails counter_cache increments on creation
   # but does not decrement on deletion since we need the counter cache, we'll manually decrement on deletion
@@ -64,10 +63,6 @@ class Response < ApplicationRecord
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
   delegate :c, :children, :debug_tree, to: :root_node
-
-  def destroy_answer_tree
-    root_node.destroy if root_node.present?
-  end
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
@@ -226,8 +221,8 @@ class Response < ApplicationRecord
 
   # whether the answers should validate themselves
   def validate_answers?
-    # dont validate if this is an ODK submission as we don't want to lose data
-    modifier != "odk"
+    # ODK and SMS do their own validation
+    %w[odk web].include?(modifier)
   end
 
   # Returns an array of required questionings for which answers are missing.
@@ -293,20 +288,6 @@ class Response < ApplicationRecord
 
       self.shortcode = [mission_code, form_code, response_code].join("-")
     end while Response.exists?(shortcode: self.shortcode)
-  end
-
-  # TODO: remove in favor of build syntax. SMS parsing needs to be refactored
-  # to not rely on this function
-  def associate_tree(root)
-    associate_node_and_descendants(root)
-    self.root_node = root
-  end
-
-  def associate_node_and_descendants(node)
-    node.response = self
-    node.children.each do |child|
-      associate_node_and_descendants(child)
-    end
   end
 
   private

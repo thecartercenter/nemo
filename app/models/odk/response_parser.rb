@@ -49,6 +49,7 @@ module Odk
 
     def build_answer_tree(data)
       response.root_node = AnswerGroup.new(
+        response: response,
         questioning_id: response.form.root_id,
         new_rank: 0
       )
@@ -94,7 +95,7 @@ module Odk
       type.new(
         questioning_id: form_item.id,
         new_rank: parent.children.length,
-        response_id: response.id
+        response: response
       )
     end
 

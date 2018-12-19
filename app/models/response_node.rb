@@ -10,14 +10,18 @@ class ResponseNode < ApplicationRecord
 
   belongs_to :form_item, inverse_of: :response_nodes, foreign_key: "questioning_id"
   belongs_to :response
-  has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true, dependent: :destroy
+
+  # We don't use the advisory lock for now because it slows down concurrent inserts a lot and doesn't
+  # seem necessary since we don't do a lot of concurrent edits.
+  has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true,
+                   with_advisory_lock: false, soft_delete: true, dependent: :destroy
 
   before_save do
     destroy_obsolete_children
     propogate_response_id
   end
 
-  after_save { children.each(&:save) }
+  after_update { children.each(&:save) }
 
   validates_associated :children
 
@@ -34,6 +38,7 @@ class ResponseNode < ApplicationRecord
     chunks << self.class.name.ljust(15)
     chunks << "(FI: #{form_item.type} #{form_item.rank})" if form_item.present?
     chunks << " Value: #{casted_value}" if casted_value.present?
+    chunks << "   #{id}"
     "\n#{chunks.join}#{child_tree}"
   end
 

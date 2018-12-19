@@ -25,7 +25,7 @@ describe Odk::ResponseParser do
         shared_examples "successful submission" do
           it "should produce a simple tree from a form with three children and ignore meta tag" do
             Odk::ResponseParser.new(response: response, files: files).populate_response
-            expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+            expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
         end
 
@@ -88,7 +88,7 @@ describe Odk::ResponseParser do
 
         it "processes values correctly" do
           Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+          expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
         end
       end
 
@@ -101,12 +101,7 @@ describe Odk::ResponseParser do
 
         it "should create the appropriate answer tree" do
           Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_children(
-            response.root_node,
-            %w[Answer Answer Answer],
-            form.c.map(&:id),
-            expected_values
-          )
+          expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
         end
       end
 
@@ -118,7 +113,7 @@ describe Odk::ResponseParser do
 
         it "parses location answers correctly" do
           Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+          expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
         end
       end
 
@@ -143,7 +138,7 @@ describe Odk::ResponseParser do
               Time.zone.parse("14:30:00 UTC")
             ]
             Odk::ResponseParser.new(response: response, files: files).populate_response
-            expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+            expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
         end
 
@@ -154,7 +149,7 @@ describe Odk::ResponseParser do
 
           it "accepts data normally" do
             Odk::ResponseParser.new(response: response, files: files).populate_response
-            expect_children(response.root_node, %w[Answer Answer Answer], form.c.map(&:id), expected_values)
+            expect_built_children(response.root_node, %w[Answer] * 3, form.c.map(&:id), expected_values)
           end
         end
       end
@@ -173,13 +168,13 @@ describe Odk::ResponseParser do
 
         it "parses answers" do
           Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_children(
+          expect_built_children(
             response.root_node,
             %w[Answer AnswerSet Answer],
             form.c.map(&:id),
             [cat.option.name, nil, "#{cat2.option.name};#{dog2.option.name}"]
           )
-          expect_children(
+          expect_built_children(
             response.root_node.c[1],
             %w[Answer Answer],
             [form.c[1].id, form.c[1].id],
@@ -202,23 +197,23 @@ describe Odk::ResponseParser do
 
         it "parses answers" do
           Odk::ResponseParser.new(response: response, files: files).populate_response
-          expect_children(
+          expect_built_children(
             response.root_node,
             %w[AnswerGroupSet],
             [form.c[0].id]
           )
-          expect_children(
+          expect_built_children(
             response.root_node.c[0], # AnswerGroupSet
             %w[AnswerGroup],
             [form.c[0].id]
           )
-          expect_children(
+          expect_built_children(
             response.root_node.c[0].c[0], # AnswerGroup
             %w[Answer AnswerSet Answer],
             form.c[0].c.map(&:id),
             [cat.option.name, nil, "#{cat2.option.name};#{dog2.option.name}"]
           )
-          expect_children(
+          expect_built_children(
             response.root_node.c[0].c[0].c[1], # AnswerSet
             %w[Answer Answer],
             [form.c[0].c[1].id, form.c[0].c[1].id],
@@ -235,8 +230,9 @@ describe Odk::ResponseParser do
 
       it "should produce the correct tree" do
         Odk::ResponseParser.new(response: response, files: files).populate_response
-        expect_children(response.root_node, %w[Answer AnswerGroup Answer], form.c.map(&:id), ["A", nil, "D"])
-        expect_children(response.root_node.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+        expect_built_children(response.root_node, %w[Answer AnswerGroup Answer],
+          form.c.map(&:id), ["A", nil, "D"])
+        expect_built_children(response.root_node.c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
       end
     end
 
@@ -247,13 +243,13 @@ describe Odk::ResponseParser do
 
       it "should create the appropriate repeating group tree" do
         Odk::ResponseParser.new(response: response, files: files).populate_response
-        expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
-        expect_children(response.root_node.c[1],
+        expect_built_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), ["A", nil])
+        expect_built_children(response.root_node.c[1],
           %w[AnswerGroup AnswerGroup],
           [form.c[1].id, form.c[1].id],
           [nil, nil])
-        expect_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
-        expect_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
+        expect_built_children(response.root_node.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id), %w[B C])
+        expect_built_children(response.root_node.c[1].c[1], %w[Answer Answer], form.c[1].c.map(&:id), %w[D E])
       end
     end
 
@@ -273,34 +269,34 @@ describe Odk::ResponseParser do
 
       it "should create nested tree" do
         Odk::ResponseParser.new(response: response, files: files).populate_response
-        expect_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), [1, nil])
-        expect_children(response.root_node.c[1],
+        expect_built_children(response.root_node, %w[Answer AnswerGroupSet], form.c.map(&:id), [1, nil])
+        expect_built_children(response.root_node.c[1],
           %w[AnswerGroup AnswerGroup],
           [form.c[1].id, form.c[1].id])
         parent_group_set = response.root_node.c[1]
         child_group_set1 = parent_group_set.c[0].c[1]
-        expect_children(parent_group_set.c[0],
+        expect_built_children(parent_group_set.c[0],
           %w[Answer AnswerGroupSet],
           form.c[1].c.map(&:id),
           [2, nil])
-        expect_children(child_group_set1.c[0],
+        expect_built_children(child_group_set1.c[0],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
           [3, 4])
-        expect_children(child_group_set1.c[1],
+        expect_built_children(child_group_set1.c[1],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
           [5, 6])
-        expect_children(child_group_set1.c[1],
+        expect_built_children(child_group_set1.c[1],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
           [5, 6])
         child_group_set2 = parent_group_set.c[1].c[1]
-        expect_children(parent_group_set.c[1],
+        expect_built_children(parent_group_set.c[1],
           %w[Answer AnswerGroupSet],
           form.c[1].c.map(&:id),
           [7, nil])
-        expect_children(child_group_set2.c[0],
+        expect_built_children(child_group_set2.c[0],
           %w[Answer Answer],
           form.c[1].c[1].c.map(&:id),
           [8, 9])
@@ -333,25 +329,25 @@ describe Odk::ResponseParser do
 
       it "should create the appropriate multilevel answer tree" do
         Odk::ResponseParser.new(response: response, files: files).populate_response
-        expect_children(
+        expect_built_children(
           response.root_node,
           %w[Answer AnswerSet AnswerSet AnswerSet],
           form.c.map(&:id),
           [expected_values.first, nil, nil, nil]
         )
-        expect_children(
+        expect_built_children(
           response.root_node.c[1],
           %w[Answer Answer],
           [form.c[1].id, form.c[1].id],
           expected_values[1, 2]
         )
-        expect_children(
+        expect_built_children(
           response.root_node.c[2],
           %w[Answer Answer],
           [form.c[2].id, form.c[2].id],
           [nil, nil]
         )
-        expect_children(
+        expect_built_children(
           response.root_node.c[3],
           %w[Answer Answer],
           [form.c[3].id, form.c[3].id],

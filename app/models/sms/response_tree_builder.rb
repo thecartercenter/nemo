@@ -4,43 +4,26 @@ module Sms
   # Class for building response tree to mirror form tree, specifically in the context of SMS, where
   # things are flattened out.
   class ResponseTreeBuilder
-    attr_reader :answer_groups
+    attr_accessor :response, :answer_groups
 
-    def initialize
-      # mapping from qing group ID -> answer group
-      @answer_groups = {}
+    def initialize(response)
+      self.response = response
+
+      # mapping from qing group ID -> answer group for quick lookup
+      self.answer_groups = {}
     end
 
-    def response_node_for(qing_group)
-      answer_groups[qing_group.id]
+    def add_answer(parent, attribs)
+      build_child(parent, "Answer", **attribs)
     end
 
-    def answer_group_for(qing)
-      qing_group = qing.parent
-      answer_group = response_node_for(qing_group) || build_answer_group(qing_group)
-
+    def build_or_find_parent_node_for_qing(qing)
+      parent_node = build_or_find_parent_node_for_qing_group(parent_for(qing))
       if qing.multilevel?
-        answer_set = AnswerSet.new(form_item: qing)
-        answer_set.new_rank = answer_group.children.length
-        answer_group.children << answer_set
-        answer_group = answer_set
+        build_child(parent_node, "AnswerSet", form_item: qing)
+      else
+        parent_node
       end
-
-      answer_group
-    end
-
-    def add_answer(answer_group, answer)
-      answer.new_rank = answer_group.children.length
-      answer_group.children << answer
-      answer
-    end
-
-    def save(response)
-      root = response_node_for(response.form.root_group)
-      response.associate_tree(root)
-      # TODO: We can remove the `validate: false` once various validations are
-      # removed from the response model
-      response.save(validate: false)
     end
 
     def answers?
@@ -49,31 +32,34 @@ module Sms
 
     private
 
-    def build_answer_group(qing_group)
-      group = AnswerGroup.new(form_item: qing_group)
-      if qing_group.repeatable?
-        set = AnswerGroupSet.new(form_item: qing_group)
-        set.children << group
-        group.new_rank = 0
-        add_to_parent(set)
-      else
-        add_to_parent(group)
-      end
-      answer_groups[qing_group.id] = group
-      group
+    def build_or_find_parent_node_for_qing_group(qing_group)
+      answer_groups[qing_group.id] ||=
+        if qing_group.root?
+          response.build_root_node(response: response, type: "AnswerGroup",
+                                   form_item: qing_group, new_rank: 0)
+        else
+          parent_node = build_or_find_parent_node_for_qing_group(parent_for(qing_group))
+          if qing_group.repeatable?
+            parent_node = build_child(parent_node, "AnswerGroupSet", form_item: qing_group)
+          end
+          build_child(parent_node, "AnswerGroup", form_item: qing_group)
+        end
     end
 
-    # Link the given answer group or set to its parent.
-    # This method will create all necessary ancestor groups that do not already exist.
-    def add_to_parent(node)
-      qing_group = node.form_item
-      if qing_group.parent.nil?
-        node.new_rank = 0
-      else
-        parent = response_node_for(qing_group.parent) || build_answer_group(qing_group.parent)
-        parent.children << node
-        node.new_rank = parent.children.length
-      end
+    def build_child(response_node, type, **attribs)
+      attribs[:new_rank] = response_node.children.size
+      attribs[:type] = type
+      attribs[:response] = response
+      response_node.children.build(attribs)
+    end
+
+    def parent_for(form_item)
+      qing_groups_by_id[form_item.parent_id]
+    end
+
+    # Load parents efficiently.
+    def qing_groups_by_id
+      @qing_groups_by_id ||= QingGroup.where(form_id: response.form_id).index_by(&:id)
     end
   end
 end
