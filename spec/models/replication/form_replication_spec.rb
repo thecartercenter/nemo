@@ -267,6 +267,31 @@ describe Form do
         expect(copy.c[0].form).to eq(copy)
         expect(copy.c[1].c[0].form).to eq(copy)
       end
+
+      context "with form attributes" do
+        before { orig.update!(default_response_name: "foo") }
+
+        it "should copy default response name" do
+          expect(copy.default_response_name).to eq(orig.default_response_name)
+        end
+      end
+
+      context "with questioning attributes" do
+        let(:orig_qing) { orig.questionings.first }
+        let(:copy_qing) { copy.questionings.first }
+
+        before do
+          orig_qing.update!(hidden: true, group_item_name_translations: {en: "foo"})
+        end
+
+        it "should copy hidden attribute" do
+          expect(copy_qing.hidden).to eq(true)
+        end
+
+        it "should copy group item name translations" do
+          expect(copy_qing.group_item_name_translations).to eq("en" => "foo")
+        end
+      end
     end
 
     context "for multiple clones" do
