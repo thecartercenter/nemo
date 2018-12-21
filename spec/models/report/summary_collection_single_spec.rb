@@ -17,6 +17,13 @@ describe "summary collection with single subset" do
       expect(headers_and_items(:stat, :stat)).to eq({:mean => 6.0, :max => 10, :min => 1})
     end
 
+    it "should handle large integer values" do
+      large_int = 9_945_875_644
+      prepare_form("integer", [large_int])
+      prepare_collection
+      expect(headers_and_items(:stat, :stat)).to eq(mean: large_int.to_f, max: large_int, min: large_int)
+    end
+
     it "should be correct for enumerator" do
       prepare_form("integer", [10, 7, 6, 1, 1])
 
