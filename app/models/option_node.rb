@@ -227,7 +227,14 @@ class OptionNode < ApplicationRecord
       # output a row if we've hit a leaf node or a parent node with coordinates
       if children.empty? || (option_set.allow_coordinates? && node.option.coordinates?)
         # use the option path to construct the list of cell values
-        row = [node.id, *preferred_name_translations(path)]
+        values = *preferred_name_translations(path)
+
+        # add padding for missing values
+        num_values = option_set.multilevel? ? option_set.levels.size : 1
+        padding = [num_values - values.length, 0].max
+        values = values.concat([nil] * padding)
+
+        row = [node.id, *values]
 
         # add the coordinates if the option set allows coordinates
         row << node.option.coordinates if option_set.allow_coordinates?

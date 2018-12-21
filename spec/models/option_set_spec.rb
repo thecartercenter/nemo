@@ -98,4 +98,21 @@ describe OptionSet do
       expect(fetched_node.id).to eq option_node.id
     end
   end
+
+  describe "arrange_as_rows" do
+    let!(:option_set) { create(:option_set, multilevel: true) }
+
+    context "with missing option node" do
+      before do
+        option_set.root_node.c[1].children.destroy_all
+        expect_node([["Animal", %w[Cat Dog]], ["Plant", []]], option_set.root_node)
+        option_set.reload
+      end
+
+      it "returns all rows of equal length" do
+        lengths = option_set.arrange_as_rows.map(&:length)
+        expect(lengths).to eq([4, 4, 4])
+      end
+    end
+  end
 end
