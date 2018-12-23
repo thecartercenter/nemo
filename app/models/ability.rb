@@ -68,6 +68,8 @@ class Ability
           # Admins can edit themselves in mission mode even if they're not currently assigned.
           can [:update, :login_instructions, :change_assignments], User, id: user.id
 
+          # Only admins can bulk destroy users.
+          can :bulk_destroy, User
         end
 
         # admin can switch to any mission, regardless of mode
@@ -193,7 +195,7 @@ class Ability
             can :manage, UserGroupAssignment
 
             # can destroy users only if they have only one mission and it's the current mission
-            can [:bulk_destroy, :destroy], User do |other_user|
+            can [:destroy], User do |other_user|
               other_user.assignments.count == 1 && other_user.assignments.first.mission_id == mission.id
             end
 
