@@ -29,14 +29,14 @@ module Concerns::ApplicationController::Authorization
     elsif flash[:missionchange]
       # if the request was a CRUD, try redirecting to the index, or root if no permission
       if Ability::CRUD.include?(exception.action) && current_ability.can?(:index, exception.subject.class)
-        redirect_to(:controller => controller_name, :action => :index)
+        redirect_to(controller: controller_name, action: :index)
       else
         redirect_to(mission_root_url)
       end
 
     # else if this is not an html request, render an empty 403 (forbidden).
     elsif !request.format.html?
-      render(:body => nil, :status => 403)
+      render(body: nil, status: 403)
 
     # else redirect to welcome page with error
     else
@@ -58,7 +58,7 @@ module Concerns::ApplicationController::Authorization
   def handle_recent_login_required(exception)
     if request.xhr?
       flash[:error] = nil
-      render(:plain => "RECENT_LOGIN_REQUIRED", :status => 401)
+      render(plain: "RECENT_LOGIN_REQUIRED", status: 401)
     else
       store_location
       redirect_to(new_login_confirmation_url)

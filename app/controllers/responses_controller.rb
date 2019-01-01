@@ -59,6 +59,7 @@ class ResponsesController < ApplicationController
       # csv output is for exporting responses
       format.csv do
         authorize!(:export, Response)
+        raise CanCan::AccessDenied unless current_user.admin?
 
         enqueue_csv_export
         prep_operation_queued_flash(:response_csv_export)

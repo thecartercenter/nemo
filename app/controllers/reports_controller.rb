@@ -52,6 +52,7 @@ class ReportsController < ApplicationController
       # for csv, just render the csv template
       format.csv do
         authorize!(:export, @report)
+        raise CanCan::AccessDenied unless current_user.admin?
         # run the report
         run_or_fetch_and_handle_errors(prefer_values: true)
         raise "reports of this type are not exportable" unless @report.exportable?
