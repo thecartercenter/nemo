@@ -105,7 +105,7 @@ class Ability
           # can view and export users in same mission
           can [:index, :read, :show, :export], User, assignments: { mission_id: mission.id }
 
-          can_read_all_reports_but_only_update_destroy_own
+          # can_read_all_reports_but_only_update_destroy_own
 
           can :regenerate_sms_auth_code, User do |u|
             u == user
@@ -152,8 +152,8 @@ class Ability
           # can send broadcasts for the current mission
           can :manage, Broadcast, mission_id: mission.id
 
-          can_read_all_reports_but_only_update_destroy_own
-          can :export, Report::Report
+          # can_read_all_reports_but_only_update_destroy_own
+          # can :export, Report::Report
 
           if mission.locked?
             # can index, read, export responses for a locked mission

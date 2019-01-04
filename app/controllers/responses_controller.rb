@@ -111,6 +111,7 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
+    raise CanCan::AccessDenied unless current_user.admin?
     scope = Response.accessible_by(current_ability)
     if params[:select_all] == "1"
       if params[:search].present?
@@ -134,6 +135,7 @@ class ResponsesController < ApplicationController
   end
 
   def destroy
+    raise CanCan::AccessDenied unless current_user.admin?
     destroy_and_handle_errors(@response)
     redirect_to(index_url_with_context)
   end
