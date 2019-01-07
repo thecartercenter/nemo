@@ -33,7 +33,7 @@ class Mission < ApplicationRecord
     length: { minimum: 3, maximum: 32 }, if: Proc.new { |m| !m.name.blank? }
   validate :compact_name_unique
 
-  scope :sorted_by_name, -> { order("LOWER(name)") }
+  scope :sorted_by_name, -> { order(Arel.sql("LOWER(name)")) }
   scope :sorted_recent_first, -> { order(created_at: :desc) }
 
   delegate(:override_code, :default_locale, to: :setting)

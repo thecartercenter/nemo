@@ -30,7 +30,7 @@ feature "user form", js: true do
 
       # Make sure password email url is correct and no missing translations
       email = ActionMailer::Base.deliveries.last
-      expect(email.body.to_s).to match(%r{^https?://.+/en/password-resets/\w+/edit$})
+      expect(email.body.to_s).to match(%r{^https?://.+/en/password-resets/[\w_-]+/edit$})
       expect(email.body.to_s).not_to match(/translation_missing/)
 
       # Go to show and see if correct

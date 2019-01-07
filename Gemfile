@@ -20,7 +20,7 @@ gem "pg", "~> 0.20"
 gem "pg_search", "~> 2.1"
 gem "phony", "~> 2.15.26"
 gem "rack-attack", git: "https://github.com/sassafrastech/rack-attack.git"
-gem "rails", "~> 5.1.0"
+gem "rails", "~> 5.2.2"
 gem "rake", "~> 10.4.2"
 gem "random_data", "~> 1.6.0" # Deprecated: Use Faker instead
 gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
@@ -49,8 +49,8 @@ gem "webpacker", "~> 3.5"
 
 # Authz and Authn
 gem "activerecord-session_store", "~> 1.1.1"
-gem "authlogic", "~> 3.7.0"
-gem "cancancan", "~> 1.15.0"
+gem "authlogic", "~> 4.4.2"
+gem "cancancan", "~> 2.3.0"
 gem "draper-cancancan", "~> 1.1"
 gem "scrypt", "~> 1.2.0"
 
@@ -82,8 +82,7 @@ gem "ancestry", "~> 3.0.0"
 gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree", branch: "soft_delete_hack"
 
 # Auto rank maintenance for sorted lists.
-# Using fork due to conflict with acts_as_paranoid (see https://github.com/swanandp/acts_as_list/pull/286).
-gem "acts_as_list", git: "https://github.com/sassafrastech/acts_as_list.git"
+gem "acts_as_list"
 
 # I18n
 gem "i18n-country-translations", "~> 1.2.3"
