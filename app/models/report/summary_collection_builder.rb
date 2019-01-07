@@ -14,13 +14,7 @@ class Report::SummaryCollectionBuilder
     text: "raw",
     long_text: "raw",
     barcode: "raw",
-    location: "raw",
-    image: "raw",
-    annotated_image: "raw",
-    signature: "raw",
-    sketch: "raw",
-    audio: "raw",
-    video: "raw"
+    location: "raw"
   }
 
   # Quantity of raw answers that should be shown on report for each question
