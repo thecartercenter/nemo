@@ -13,8 +13,7 @@ class Report::SummaryCollectionBuilder
     date: "date",
     text: "raw",
     long_text: "raw",
-    barcode: "raw",
-    location: "raw"
+    barcode: "raw"
   }
 
   # Quantity of raw answers that should be shown on report for each question

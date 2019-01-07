@@ -264,15 +264,6 @@ describe "summary collection with single subset" do
     end
   end
 
-  describe "location summary" do
-    it "should be correct and ignore deleted values" do
-      prepare_form("barcode", ["0.0 0.0", "1.0 1.0", "2.0 2.0"])
-      @responses.last.destroy
-      prepare_collection
-      expect(first_summary.items.map(&:text)).to eq(["0.0 0.0", "1.0 1.0"])
-    end
-  end
-
   def prepare_form_and_collection(*args)
     prepare_form(*args)
     prepare_collection
