@@ -18,7 +18,6 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     @select_all_field = this.$el.find('input[name=select_all]')
     @alert = this.$el.find('div.alert')
     @pages = this.$el.data('pages')
-    @entries = this.$el.data('entries')
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -94,9 +93,9 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
 
     this.reset_alert()
 
-    if @pages > 1 and @select_all_field.val()
-      msg = if @is_search then 'searched_rows_selected' else 'all_rows_selected'
-      @alert.html(I18n.t("index_table.messages.#{msg}", {count: @entries}))
+    if @pages > 1 and @is_search
+      msg = 'searched_rows_selected'
+      @alert.html(I18n.t("index_table.messages.#{msg}", {count: this.get_selected_count}))
       @alert.addClass('alert-info').show()
 
   # gets all checkboxes in batch_form
@@ -104,9 +103,6 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     @form.find('input[type=checkbox].batch_op')
 
   get_selected_count: ->
-    if @select_all_field.val()
-      @entries
-    else
       _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
 
   get_selected_items: ->
