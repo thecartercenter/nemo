@@ -3,16 +3,17 @@ class Report::SummaryCollectionBuilder
 
   # hash for converting qtypes to groups (stat, select, date, raw) used for generating summaries
   QTYPE_TO_SUMMARY_GROUP = {
-    'integer' => 'stat',
-    'counter' => 'stat',
-    'decimal' => 'stat',
-    'time' => 'stat',
-    'datetime' => 'stat',
-    'select_one' => 'select',
-    'select_multiple' => 'select',
-    'date' => 'date',
-    'text' => 'raw',
-    'long_text' => 'raw'
+    integer: "stat",
+    counter: "stat",
+    decimal: "stat",
+    time: "stat",
+    datetime: "stat",
+    select_one: "select",
+    select_multiple: "select",
+    date: "date",
+    text: "raw",
+    long_text: "raw",
+    barcode: "raw"
   }
 
   # Quantity of raw answers that should be shown on report for each question
@@ -34,7 +35,10 @@ class Report::SummaryCollectionBuilder
   def build
     # split questionings by type
     grouped = {'stat' => [], 'select' => [], 'date' => [], 'raw' => []}
-    questionings.each{|qing| grouped[QTYPE_TO_SUMMARY_GROUP[qing.qtype_name]] << qing}
+    questionings.each do |qing|
+      group_name = QTYPE_TO_SUMMARY_GROUP[qing.qtype_name.to_sym]
+      grouped[group_name] << qing unless group_name.nil?
+    end
 
     # generate summary collections for each group
     collections = grouped.keys.map{|g| grouped[g].empty? ? nil : send("collection_for_#{g}_questionings", grouped[g])}.compact.flatten
