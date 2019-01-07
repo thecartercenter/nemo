@@ -251,7 +251,10 @@ class OptionNode < ApplicationRecord
   end
 
   def preferred_name_translations(path)
-    path.map { |p| p.name(configatron.preferred_locale.to_s) }
+    path.map do |p|
+      translations = configatron.preferred_locales.map { |locale| p.name(locale.to_s) }
+      translations.compact.first
+    end
   end
 
   # Returns the total number of options omitted from the JSON serialization.
