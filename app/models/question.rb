@@ -23,7 +23,7 @@ class Question < ApplicationRecord
   has_many :response_nodes, through: :questionings
   has_many :referring_conditions, through: :questionings
   has_many :forms, through: :questionings
-  has_many :calculations, class_name: "Report::Calculation",
+  has_many :calculations, class_name: "Report::Calculation", # see below for dependent: :destroy alternative
                           foreign_key: "question1_id", inverse_of: :question1
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
