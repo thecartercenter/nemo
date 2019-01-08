@@ -2,9 +2,11 @@
 
 class OptionNode < ApplicationRecord
   include Replication::Replicable
-  include Replication::Standardizable
   include FormVersionable
   include MissionBased
+
+  # Needs to be standardizable (with original_id) so we can find OptionNodes to link conditions to.
+  include Replication::Standardizable
 
   # Number of descendants that make a 'huge' node.
   HUGE_CUTOFF = 100
@@ -39,7 +41,7 @@ class OptionNode < ApplicationRecord
              dont_copy: %i[option_set_id option_id],
              # If the source of the clone is an option set, we need to replicate all nodes.
              # Otherwise they are reusable just like the OptionSet itself.
-             reusable_in_clone: ->(replicator) { !replicator.source.is_a?(OptionSet) }
+             dont_reuse: ->(replicator) { replicator.source.is_a?(OptionSet) }
 
   delegate :shortcode_length, to: :option_set
   delegate :name, to: :option, prefix: true
