@@ -37,7 +37,7 @@ class OptionSet < ApplicationRecord
   scope :default_order, -> { by_name }
 
   replicable child_assocs: :root_node, backwards_assocs: :questions, dont_copy: :root_node_id,
-             uniqueness: {field: :name, style: :sep_words}, reusable_in_clone: true
+             uniqueness: {field: :name, style: :sep_words}
 
   delegate :ranks_changed?, :children, :c, :ranks_changed?, :options_added?, :options_removed?,
     :total_options, :descendants, :all_options, :max_depth, :options_not_serialized, :arrange_as_rows,

@@ -20,7 +20,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.uuid "ancestor_id", null: false
     t.uuid "descendant_id", null: false
     t.integer "generations", null: false
-    t.index ["ancestor_id", "descendant_id", "generations"], name: "answer_anc_desc_idx", unique: true
+    t.index ["ancestor_id", "descendant_id"], name: "index_answer_hierarchies_on_ancestor_id_and_descendant_id", unique: true
     t.index ["descendant_id"], name: "answer_desc_idx"
   end
 
@@ -55,7 +55,6 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.index ["option_id"], name: "index_answers_on_option_id"
     t.index ["parent_id"], name: "index_answers_on_parent_id"
     t.index ["questioning_id"], name: "index_answers_on_questioning_id"
-    t.index ["response_id", "questioning_id", "old_inst_num", "old_rank", "deleted_at"], name: "answers_full", unique: true
     t.index ["response_id"], name: "index_answers_on_response_id"
   end
 
@@ -69,8 +68,8 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.datetime "updated_at"
     t.uuid "user_id"
     t.integer "user_old_id"
-    t.index ["deleted_at", "mission_id", "user_id"], name: "index_assignments_on_deleted_at_and_mission_id_and_user_id", unique: true
     t.index ["deleted_at"], name: "index_assignments_on_deleted_at"
+    t.index ["mission_id", "user_id"], name: "index_assignments_on_mission_id_and_user_id", unique: true, where: "(deleted_at IS NULL)"
     t.index ["mission_id"], name: "index_assignments_on_mission_id"
     t.index ["user_id"], name: "index_assignments_on_user_id"
   end
@@ -203,6 +202,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.datetime "updated_at"
     t.index ["ancestry"], name: "index_form_items_on_ancestry"
     t.index ["deleted_at"], name: "index_form_items_on_deleted_at"
+    t.index ["form_id", "question_id"], name: "index_form_items_on_form_id_and_question_id", unique: true, where: "(deleted_at IS NULL)"
     t.index ["form_id"], name: "index_form_items_on_form_id"
     t.index ["mission_id"], name: "index_form_items_on_mission_id"
     t.index ["question_id"], name: "index_form_items_on_question_id"
@@ -218,7 +218,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.integer "old_id"
     t.integer "sequence", default: 1
     t.datetime "updated_at", null: false
-    t.index ["code", "deleted_at"], name: "index_form_versions_on_code", unique: true
+    t.index ["code"], name: "index_form_versions_on_code", unique: true, where: "(deleted_at IS NULL)"
     t.index ["deleted_at"], name: "index_form_versions_on_deleted_at"
     t.index ["form_id"], name: "index_form_versions_on_form_id"
   end
@@ -254,7 +254,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.index ["deleted_at"], name: "index_forms_on_deleted_at"
     t.index ["mission_id"], name: "index_forms_on_mission_id"
     t.index ["original_id"], name: "index_forms_on_original_id"
-    t.index ["root_id"], name: "index_forms_on_root_id"
+    t.index ["root_id"], name: "index_forms_on_root_id", unique: true, where: "(deleted_at IS NULL)"
   end
 
   create_table "media_objects", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -281,9 +281,9 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.integer "old_id"
     t.string "shortcode", limit: 255, null: false
     t.datetime "updated_at"
-    t.index ["compact_name"], name: "index_missions_on_compact_name"
+    t.index ["compact_name"], name: "index_missions_on_compact_name", unique: true, where: "(deleted_at IS NULL)"
     t.index ["deleted_at"], name: "index_missions_on_deleted_at"
-    t.index ["shortcode", "deleted_at"], name: "index_missions_on_shortcode", unique: true
+    t.index ["shortcode"], name: "index_missions_on_shortcode", unique: true, where: "(deleted_at IS NULL)"
   end
 
   create_table "operations", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -361,7 +361,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.index ["geographic"], name: "index_option_sets_on_geographic"
     t.index ["mission_id"], name: "index_option_sets_on_mission_id"
     t.index ["original_id"], name: "index_option_sets_on_original_id"
-    t.index ["root_node_id"], name: "index_option_sets_on_root_node_id"
+    t.index ["root_node_id"], name: "index_option_sets_on_root_node_id", unique: true, where: "(deleted_at IS NULL)"
   end
 
   create_table "options", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -414,7 +414,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.boolean "text_type_for_sms", default: false, null: false
     t.datetime "updated_at"
     t.index ["deleted_at"], name: "index_questions_on_deleted_at"
-    t.index ["mission_id", "code", "deleted_at"], name: "index_questions_on_mission_id_and_code", unique: true
+    t.index ["mission_id", "code"], name: "index_questions_on_mission_id_and_code", unique: true, where: "(deleted_at IS NULL)"
     t.index ["mission_id"], name: "index_questions_on_mission_id"
     t.index ["option_set_id"], name: "index_questions_on_option_set_id"
     t.index ["original_id"], name: "index_questions_on_original_id"
@@ -513,12 +513,12 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.index ["checked_out_by_id"], name: "index_responses_on_checked_out_by_id"
     t.index ["created_at"], name: "index_responses_on_created_at"
     t.index ["deleted_at"], name: "index_responses_on_deleted_at"
-    t.index ["form_id", "odk_hash", "deleted_at"], name: "index_responses_on_form_id_and_odk_hash", unique: true
+    t.index ["form_id", "odk_hash"], name: "index_responses_on_form_id_and_odk_hash", unique: true, where: "(deleted_at IS NULL)"
     t.index ["form_id"], name: "index_responses_on_form_id"
     t.index ["mission_id"], name: "index_responses_on_mission_id"
     t.index ["reviewed"], name: "index_responses_on_reviewed"
     t.index ["reviewer_id"], name: "index_responses_on_reviewer_id"
-    t.index ["shortcode", "deleted_at"], name: "index_responses_on_shortcode", unique: true
+    t.index ["shortcode"], name: "index_responses_on_shortcode", unique: true, where: "(deleted_at IS NULL)"
     t.index ["updated_at"], name: "index_responses_on_updated_at"
     t.index ["user_id", "form_id"], name: "index_responses_on_user_id_and_form_id"
     t.index ["user_id"], name: "index_responses_on_user_id"
@@ -559,7 +559,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.string "twilio_auth_token", limit: 255
     t.string "twilio_phone_number", limit: 255
     t.datetime "updated_at"
-    t.index ["mission_id"], name: "index_settings_on_mission_id"
+    t.index ["mission_id"], name: "index_settings_on_mission_id", unique: true
   end
 
   create_table "skip_rules", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -647,7 +647,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.integer "user_old_id"
     t.index ["deleted_at"], name: "index_user_group_assignments_on_deleted_at"
     t.index ["user_group_id"], name: "index_user_group_assignments_on_user_group_id"
-    t.index ["user_id", "user_group_id", "deleted_at"], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true
+    t.index ["user_id", "user_group_id"], name: "index_user_group_assignments_on_user_id_and_user_group_id", unique: true, where: "(deleted_at IS NULL)"
     t.index ["user_id"], name: "index_user_group_assignments_on_user_id"
   end
 
@@ -661,7 +661,7 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.datetime "updated_at", null: false
     t.index ["deleted_at"], name: "index_user_groups_on_deleted_at"
     t.index ["mission_id"], name: "index_user_groups_on_mission_id"
-    t.index ["name", "mission_id", "deleted_at"], name: "index_user_groups_on_name_and_mission_id", unique: true
+    t.index ["name", "mission_id"], name: "index_user_groups_on_name_and_mission_id", unique: true, where: "(deleted_at IS NULL)"
   end
 
   create_table "users", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
@@ -698,9 +698,9 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.index ["deleted_at"], name: "index_users_on_deleted_at"
     t.index ["email"], name: "index_users_on_email"
     t.index ["last_mission_id"], name: "index_users_on_last_mission_id"
-    t.index ["login", "deleted_at"], name: "index_users_on_login", unique: true
+    t.index ["login"], name: "index_users_on_login", unique: true, where: "(deleted_at IS NULL)"
     t.index ["name"], name: "index_users_on_name"
-    t.index ["sms_auth_code", "deleted_at"], name: "index_users_on_sms_auth_code", unique: true
+    t.index ["sms_auth_code"], name: "index_users_on_sms_auth_code", unique: true, where: "(deleted_at IS NULL)"
   end
 
   create_table "whitelistings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

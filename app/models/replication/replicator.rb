@@ -46,6 +46,18 @@ class Replication::Replicator
     pass_num == 2
   end
 
+  def clone?
+    mode == :clone
+  end
+
+  def to_mission?
+    mode == :to_mission
+  end
+
+  def promote?
+    mode == :promote
+  end
+
   private
 
   # context[:orig] - The Obj to be replicated.

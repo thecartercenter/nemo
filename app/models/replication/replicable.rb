@@ -46,9 +46,14 @@ module Replication::Replicable
       replicable_opts[:"#{type}_assocs"].map { |a| Replication::AssocProxy.get(self, a) }.compact
     end
 
-    def self.reusable_in_clone?(replicator)
-      reusable = replicable_opts[:reusable_in_clone]
-      reusable == true || reusable.is_a?(Proc) && reusable.call(replicator)
+    # Whether we can reuse an object of this class when replicating (assuming it's not the source object).
+    # Consults the dont_reuse replication option if given (it can be a boolean or a proc).
+    def self.replication_reusable?(replicator)
+      return false unless standardizable?
+      return true unless replicable_opts.key?(:dont_reuse)
+      dont_reuse = replicable_opts[:dont_reuse]
+      return !dont_reuse.call(replicator) if dont_reuse.is_a?(Proc)
+      !dont_reuse
     end
 
     def self.has_ancestry?

@@ -48,12 +48,13 @@ class Replication::ObjProxy
   # Looks for and returns a matching copy of this obj in the context of the current replicator.
   # Returns nil if none found.
   def find_copy
-    if reusable?
+    if !replication_root? && replicator.clone? && klass.replication_reusable?(replicator)
       self
     # If reuse_if_match option is set, we check for a matching item in the dest mission using that column.
     # It differs from reuse_in_clone because it only looks at the specified column, and it applies to all
     # kinds of replication.
     # reuse_col should obviously be indexed.
+    # There is some duplication here with find_copy_id but this code will go away when options go away.
     elsif reuse_col = klass.replicable_opts[:reuse_if_match]
       build_from_sql("#{eql_sql(:mission_id, replicator.target_mission_id)}
         AND #{reuse_col} = (
@@ -63,7 +64,7 @@ class Replication::ObjProxy
         )
       ").first
     # If klass is standardizable, we can look for matching using original_id
-    elsif klass.standardizable?
+    elsif klass.replication_reusable?(replicator)
       build_from_sql("original_id = '#{id}' AND #{eql_sql(:mission_id, replicator.target_mission_id)}").first
     end
   end
@@ -107,16 +108,6 @@ class Replication::ObjProxy
       sql = "UPDATE #{klass.table_name} SET #{assignments} WHERE id = '#{context[:copy].id}'"
       db.execute(sql)
     end
-  end
-
-  protected
-
-  # If replication mode is clone and class is marked as first_class, we can reuse this object.
-  # This is because we always want to reuse first class objects when cloning since clone is shallow operation.
-  # The only first class object we don't want to reuse is the one at the top of the tree (root).
-  # reusable_in_clone differs from reuse_if_match because it expects all relevant fields to match.
-  def reusable?
-    !replication_root? && replicator.mode == :clone && klass.reusable_in_clone?(replicator)
   end
 
   private
@@ -239,28 +230,32 @@ class Replication::ObjProxy
                      else
                        assoc.target_class
       end
-      get_copy_id(target_class, orig_foreign_id) ||
+      find_copy_id(target_class, orig_foreign_id) ||
         (raise Replication::BackwardAssocError, "
           Couldn't find copy of #{target_class.name} ##{orig_foreign_id}")
     end
   end
 
-  def get_copy_id(target_class, orig_id)
+  # Finds the ID of an eligible copy of the object with given class and ID.
+  # There is some duplication here with `find_copy` but that method returns an ObjProxy
+  # and this one returns an ID.
+  def find_copy_id(target_class, orig_id)
     # Try to find the appropriate copy in the replicator history
-    if history_copy = replicator.history.get_copy(orig_id)
+    if (history_copy = replicator.history.get_copy(orig_id))
       history_copy.id
 
-    # Reuse original if it's reusable.
-    elsif self.class.new(klass: target_class, id: orig_id, replicator: replicator).reusable?
+    # Reuse original if it's reusable. (This can only work in clone mode since otherwise the original
+    # is in the wrong mission.)
+    elsif replicator.clone? && target_class.replication_reusable?(replicator)
       orig_id
 
     # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
-    elsif reuse_col = target_class.replicable_opts[:reuse_if_match]
+    elsif (reuse_col = target_class.replicable_opts[:reuse_if_match])
       orig_reuse_val = target_class.where(id: orig_id).pluck(reuse_col).first
       target_class.where(mission_id: replicator.target_mission_id, reuse_col => orig_reuse_val).first.try(:id)
 
     # Else try looking up original_id if available
-    elsif target_class.standardizable?
+    elsif target_class.replication_reusable?(replicator)
       copies_in_mission = target_class.where(mission_id: replicator.target_mission_id, original_id: orig_id)
       copies_in_mission.any? ? copies_in_mission.first.id : nil
     end

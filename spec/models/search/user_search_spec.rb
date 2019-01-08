@@ -39,11 +39,11 @@ describe User do
       let(:query) { %(role:"#{role_sought}") }
       let(:other_mission) { create(:mission) }
 
-      before(:each) do
-        first_user.assignments.create!(mission: get_mission, role: "enumerator")
+      before do
+        first_user.assignments.first.update!(role: "enumerator")
         first_user.assignments.create!(mission: other_mission, role: "staffer")
-        second_user.assignments.create!(mission: get_mission, role: "coordinator")
-        third_user.assignments.create!(mission: get_mission, role: "staffer")
+        second_user.assignments.first.update!(role: "coordinator")
+        third_user.assignments.first.update!(role: "staffer")
       end
 
       context "in mission" do
