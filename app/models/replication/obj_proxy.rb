@@ -48,7 +48,7 @@ class Replication::ObjProxy
   # Looks for and returns a matching copy of this obj in the context of the current replicator.
   # Returns nil if none found.
   def find_copy
-    if !replication_root? && replicator.mode == :clone && klass.replication_reusable?(replicator)
+    if !replication_root? && replicator.clone? && klass.replication_reusable?(replicator)
       self
     # If reuse_if_match option is set, we check for a matching item in the dest mission using that column.
     # It differs from reuse_in_clone because it only looks at the specified column, and it applies to all
@@ -242,7 +242,7 @@ class Replication::ObjProxy
 
     # Reuse original if it's reusable. (This can only work in clone mode since otherwise the original
     # is in the wrong mission.)
-    elsif replicator.mode == :clone && target_class.replication_reusable?(replicator)
+    elsif replicator.clone? && target_class.replication_reusable?(replicator)
       orig_id
 
     # Use reuse_if_match if defined (this will eventually go away when we get rid of Option)
