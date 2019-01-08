@@ -611,7 +611,7 @@ describe Sms::Decoder, :sms do
     end
   end
 
-  describe "complex hierarchy construction" do
+  describe "complex hierarchy construction", database_cleaner: :truncate do
     it "builds response tree for nested groups with repeat" do
       # QingGroup (root)
       #   QingGroup
@@ -732,8 +732,9 @@ describe Sms::Decoder, :sms do
     decoder.finalize
 
     # Reload the response before testing to ensure everything is actually stored as we expect it.
-    expect_response_basics(decoder.response.reload, form)
-    decoder.response
+    response = Response.find(decoder.response.id)
+    expect_response_basics(response, form)
+    response
   end
 
   def expect_response_basics(response, form)

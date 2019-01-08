@@ -13,7 +13,7 @@ describe Results::BlankResponseTreeBuilder do
 
     it "should produce a simple tree from a form with three children" do
       expect_root(response_tree, form)
-      expect_children(response_tree, %w[Answer Answer Answer], form.c.map(&:id))
+      expect_built_children(response_tree, %w[Answer Answer Answer], form.c.map(&:id))
     end
   end
 
@@ -22,8 +22,8 @@ describe Results::BlankResponseTreeBuilder do
 
     it "should produce the correct tree" do
       expect_root(response_tree, form)
-      expect_children(response_tree, %w[Answer AnswerGroup Answer], form.c.map(&:id))
-      expect_children(response_tree.c[1], %w[Answer Answer], form.c[1].c.map(&:id))
+      expect_built_children(response_tree, %w[Answer AnswerGroup Answer], form.c.map(&:id))
+      expect_built_children(response_tree.c[1], %w[Answer Answer], form.c[1].c.map(&:id))
     end
   end
 
@@ -32,8 +32,8 @@ describe Results::BlankResponseTreeBuilder do
 
     it "should create the appropriate multilevel answer tree" do
       expect_root(response_tree, form)
-      expect_children(response_tree, %w[Answer AnswerSet], form.c.map(&:id))
-      expect_children(response_tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id])
+      expect_built_children(response_tree, %w[Answer AnswerSet], form.c.map(&:id))
+      expect_built_children(response_tree.c[1], %w[Answer Answer], [form.c[1].id, form.c[1].id])
     end
   end
 
@@ -42,9 +42,9 @@ describe Results::BlankResponseTreeBuilder do
 
     it "should create the appropriate repeating group tree" do
       expect_root(response_tree, form)
-      expect_children(response_tree, %w[Answer AnswerGroupSet], form.c.map(&:id))
-      expect_children(response_tree.c[1], %w[AnswerGroup], [form.c[1].id])
-      expect_children(response_tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id))
+      expect_built_children(response_tree, %w[Answer AnswerGroupSet], form.c.map(&:id))
+      expect_built_children(response_tree.c[1], %w[AnswerGroup], [form.c[1].id])
+      expect_built_children(response_tree.c[1].c[0], %w[Answer Answer], form.c[1].c.map(&:id))
     end
   end
 
@@ -58,7 +58,7 @@ describe Results::BlankResponseTreeBuilder do
 
     it "does not include hidden question in the tree" do
       expect_root(response_tree, form)
-      expect_children(response_tree, %w[Answer Answer], form.c.reject(&:hidden).map(&:id))
+      expect_built_children(response_tree, %w[Answer Answer], form.c.reject(&:hidden).map(&:id))
     end
   end
 end

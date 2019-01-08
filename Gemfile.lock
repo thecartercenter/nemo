@@ -19,9 +19,8 @@ GIT
       rubyzip (~> 1.1)
 
 GIT
-  remote: https://github.com/sassafrastech/closure_tree
-  revision: b34d380a70dfb4838e238b62bf7bf3686e875a0f
-  branch: soft_delete_hack
+  remote: https://github.com/sassafrastech/closure_tree.git
+  revision: 7e303759677e9cc5cbae133433ba0d2bbce59fc9
   specs:
     closure_tree (7.0.0)
       activerecord (>= 4.2.10)
@@ -164,7 +163,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
-    concurrent-ruby (1.1.3)
+    concurrent-ruby (1.1.4)
     config (1.7.0)
       activesupport (>= 3.0)
       deep_merge (~> 1.2.1)

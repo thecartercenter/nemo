@@ -79,7 +79,7 @@ gem "configatron", "~> 4.5.0" # Deprecated, prefer `config` gem
 
 # Tree modelling
 gem "ancestry", "~> 3.0.0"
-gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree", branch: "soft_delete_hack"
+gem "closure_tree", git: "https://github.com/sassafrastech/closure_tree.git"
 
 # Auto rank maintenance for sorted lists.
 gem "acts_as_list"

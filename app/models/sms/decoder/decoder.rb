@@ -8,7 +8,8 @@ module Sms
       DUPLICATE_WINDOW = 12.hours
       AUTH_CODE_FORMAT = /[a-z0-9]{4}/i
 
-      attr_reader :response, :tree_builder
+      attr_accessor :response, :decoding_succeeded
+      alias decoding_succeeded? decoding_succeeded
 
       delegate :form, to: :response
 
@@ -19,9 +20,9 @@ module Sms
         @qings_seen = {}
       end
 
-      # main method called to do the decoding
-      # returns an unsaved Response object on success
+      # Main method called to do the decoding
       # raises an Sms::Decoder::DecodingError on error
+      # Builds an unsaved response accessible via `response` accessor.
       def decode
         # tokenize the message by spaces
         @tokens = @msg.body.split(" ")
@@ -54,7 +55,8 @@ module Sms
         authenticate_user
         check_permission
 
-        tree_builder = Sms::ResponseTreeBuilder.new
+        self.response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
+        tree_builder = Sms::ResponseTreeBuilder.new(response)
         answers = []
 
         pairs = Sms::Decoder::AnswerParser.new(@tokens[1..-1])
@@ -62,44 +64,34 @@ module Sms
           next unless (qing = find_qing(pair.rank))
 
           begin
-            answer_group = tree_builder.answer_group_for(qing)
-            pair.parse(qing).each do |result|
-              result[:new_rank] = result[:rank]
-              result.delete(:rank)
-              answer = Answer.new(result)
-              tree_builder.add_answer(answer_group, answer)
-              answers << answer
+            parent = tree_builder.build_or_find_parent_node_for_qing(qing)
+            pair.parse(qing).each do |attribs|
+              answers << tree_builder.add_answer(parent, attribs)
             end
           rescue Sms::Decoder::ParseError => err
             raise_answer_error(err.type, pair.rank, pair.value, err.params)
           end
         end
 
-        answers_by_qing = answers.index_by(&:questioning)
-        missing_answers = @form.questionings.select { |q| q.required? && q.visible? && answers_by_qing[q].nil? }
-        raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.present?
+        answers_by_qing = answers.index_by(&:questioning_id)
+        missing_answers = qings.select { |q| q.required? && q.visible? && answers_by_qing[q.id].nil? }
+        raise_decoding_error("missing_answers", missing_answers: missing_answers) if missing_answers.any?
         raise_decoding_error("no_answers") unless tree_builder.answers?
 
-        # if we get to this point everything went nicely, so we can set the response
-        @response = Response.new(user: @user, form: @form, source: "sms", mission: @form.mission)
-        @tree_builder = tree_builder
+        self.decoding_succeeded = true
+
       rescue Sms::Decoder::ParseError => err
         raise_decoding_error(err.type, err.params)
       end
 
-      def response_built?
-        response.present?
-      end
-
-      # Finalizes the process, should be called after all checks have passed.
-      # No objects are persisted before this point.
+      # Finalizes the decoding process by persisting the built response.
       def finalize
-        return unless response_built?
+        return unless decoding_succeeded?
 
-        # TODO: We can remove the `validate: false` once various validations are
-        # removed from the response model
-        response.save(validate: false)
-        tree_builder.save(response)
+        ActiveRecord::Base.transaction do
+          response.root_node._ct_fast_insert!
+          response.save(validate: false)
+        end
       end
 
       private
@@ -143,7 +135,7 @@ module Sms
 
         # otherwise, we it's cool, store it in the instance, and also store an indexed list of questionings
         @form = v.form
-        @questionings = @form.smsable_questionings
+        @ranks_to_qings = @form.smsable_questionings
       end
 
       def find_user
@@ -220,7 +212,7 @@ module Sms
       # finds the Questioning object specified by the given rank
       # raises an error if no such question exists, or if qing has already been encountered
       def find_qing(rank)
-        qing = @questionings[rank]
+        qing = @ranks_to_qings[rank]
         raise_decoding_error("question_doesnt_exist", rank: rank) unless qing
         raise_decoding_error("duplicate_answer", rank: rank) if @qings_seen[qing.id]
         @qings_seen[qing.id] = 1
@@ -257,6 +249,10 @@ module Sms
       # Checks if sender looks like a shortcode and raises error if so.
       def check_for_automated_sender
         raise_decoding_error("automated_sender") if @msg.from_shortcode?
+      end
+
+      def qings
+        @ranks_to_qings.values
       end
     end
   end
