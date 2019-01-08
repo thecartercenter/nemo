@@ -1387,6 +1387,8 @@ en:
     messages:
       all_rows_selected: "Note that <strong>all</strong> %{count} rows are now selected"
       searched_rows_selected: "Note that <strong>all</strong> %{count} rows matching the current search are now selected"
+      selected_rows_page: "All %{count} rows are selected on this page."
+      select_all_rows: "Select all %{count} rows in %{class_name}"
 
   location_picker:
     choose_location: "Choose Location"

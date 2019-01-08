@@ -7,6 +7,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     'click table.index_table tbody tr': 'row_clicked'
     'click #select_all_link': 'select_all_clicked'
     'click a.batch_op_link': 'submit_batch'
+    'click a.select_all_rows': 'select_all_rows'
     'change input[type=checkbox].batch_op': 'checkbox_changed'
     'mouseover table.index_table tbody tr': 'highlight_partner_row'
     'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
@@ -15,9 +16,12 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     @is_search = params.is_search
     @no_whole_row_link = params.no_whole_row_link
     @form = this.$el.find('form').first() || this.$el.closest('form')
-    @select_all_field = this.$el.find('input[name=select_all]')
+    @select_all_rows_field = this.$el.find('input[name=select_all_rows]')
     @alert = this.$el.find('div.alert')
     @pages = this.$el.data('pages')
+    @class_name = params.class_name
+    @entries = this.$el.data('entries')
+    @select_all_page = false
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -59,18 +63,16 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
   unhighlight_partner_row: (event) ->
     $(event.target).closest('tbody').find('tr.hovered').removeClass('hovered')
 
-  # selects/deselects all boxes
+  # selects/deselects all boxes on page
   select_all_clicked: (event) ->
     event.preventDefault() if event
 
     cbs = this.get_batch_checkboxes()
 
-    # Toggle the value of the select_all field
-    value = if @select_all_field.val() then '' else '1'
-    @select_all_field.val(value)
+    @select_all_page = !@select_all_page
 
     # check/uncheck boxes
-    cb.checked = value for cb in cbs
+    cb.checked = @select_all_page for cb in cbs
 
     # update select all view elements
     this.update_select_all_elements()
@@ -81,6 +83,14 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
   all_checked: (cbs = this.get_batch_checkboxes()) ->
     _.all(cbs, (cb) -> cb.checked)
 
+  select_all_rows: ->
+    value = if @select_all_rows_field.val() then '' else '1'
+    @select_all_field.val(value)
+    # do a new message in alert
+    this.reset_alert()
+    @alert.html("All x rows in User are selected")
+    @alert.addClass('alert-info').show()
+
   # reset the alert element
   reset_alert: ->
     @alert.stop().hide().
@@ -88,14 +98,18 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
 
   # updates the select all link to reflect the select_all field
   update_select_all_elements: ->
-    label = if @select_all_field.val() then "deselect_all" else "select_all"
+    label = if @select_all_page then "deselect_all" else "select_all"
     $('#select_all_link').html(I18n.t("layout.#{label}"))
 
     this.reset_alert()
 
-    if @pages > 1 and @is_search
-      msg = 'searched_rows_selected'
-      @alert.html(I18n.t("index_table.messages.#{msg}", {count: this.get_selected_count}))
+    if @pages > 1 and @select_all_page
+      plural_class_name = I18n.t("activerecord.models.#{@class_name}.many")
+      msg = I18n.t("index_table.messages.selected_rows_page", {count: this.get_selected_count()}) + " " +
+        "<a href='#' class='select_all_rows'>" +
+        I18n.t("index_table.messages.select_all_rows", {class_name: plural_class_name, count: @entries}) +
+        "</a>"
+      @alert.html(msg)
       @alert.addClass('alert-info').show()
 
   # gets all checkboxes in batch_form
