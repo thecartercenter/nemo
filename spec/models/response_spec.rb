@@ -86,24 +86,6 @@ describe Response do
     end
   end
 
-  context "responses count" do
-    let!(:user) { create(:user) }
-    let!(:form) { create(:form, question_types: %w[integer]) }
-    let!(:response) { create(:response, user: user, form: form, answer_values: %w[1]) }
-
-    describe "updates response count correctly" do
-      it "on response deletion after form reload" do
-        response.destroy
-        expect(form.reload.responses_count).to eq(0)
-      end
-
-      it "on response creation" do
-        create(:response, user: user, form: form, answer_values: %w[1])
-        expect(form.responses_count).to eq(2)
-      end
-    end
-  end
-
   context "destroying a response" do
     let(:question_types) do
       ["text", {repeating: {items: ["text", {repeating: {items: %w[text select_multiple image]}}]}}]

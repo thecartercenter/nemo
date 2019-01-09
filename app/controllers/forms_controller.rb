@@ -35,7 +35,7 @@ class FormsController < ApplicationController
         # otherwise, it's a normal request
         else
           # add some eager loading stuff, and ordering
-          @forms = @forms.default_order
+          @forms = @forms.with_responses_counts.default_order
           load_importable_objs
           render(:index)
         end

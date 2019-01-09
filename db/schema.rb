@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181207173641) do
+ActiveRecord::Schema.define(version: 2019_01_09_181310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -242,7 +242,6 @@ ActiveRecord::Schema.define(version: 20181207173641) do
     t.integer "original_old_id"
     t.datetime "pub_changed_at"
     t.boolean "published", default: false
-    t.integer "responses_count", default: 0
     t.uuid "root_id"
     t.integer "root_old_id"
     t.boolean "sms_relay", default: false, null: false

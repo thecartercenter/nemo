@@ -71,6 +71,7 @@ Style/MethodCallWithArgsParentheses:
     - validates # Sometimes this is called in a with_options block, confusing the cop.
   Exclude:
     - Gemfile
+    - db/migrate/*
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes

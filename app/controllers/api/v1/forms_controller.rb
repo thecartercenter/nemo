@@ -5,7 +5,7 @@ class API::V1::FormsController < API::V1::BaseController
   def index
     forms = current_mission.forms.where("access_level = 'public' OR access_level = 'protected' AND
       EXISTS (SELECT * FROM whitelistings WHERE whitelistable_id = forms.id AND user_id = ?)", @api_user.id).
-      order(:name)
+      with_responses_counts.order(:name)
     paginate json: forms, each_serializer: API::V1::FormSerializer
   end
 
