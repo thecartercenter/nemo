@@ -16,7 +16,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     @is_search = params.is_search
     @no_whole_row_link = params.no_whole_row_link
     @form = this.$el.find('form').first() || this.$el.closest('form')
-    @select_all_rows_field = this.$el.find('input[name=select_all_rows]')
+    @select_all_rows_field = this.$el.find('input[name=select_all]')
     @alert = this.$el.find('div.alert')
     @pages = this.$el.data('pages')
     @entries = this.$el.data('entries')
@@ -132,7 +132,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
   # event handler for when a checkbox is clicked
   checkbox_changed: (event) ->
     # unset the select all field if a checkbox is changed in any way
-    @select_all_field.val('')
+    @select_all_rows_field.val('')
 
     # change text of link if all checked
     this.update_select_all_elements()

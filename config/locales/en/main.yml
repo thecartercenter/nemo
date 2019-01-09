@@ -1387,11 +1387,10 @@ en:
 
   index_table:
     messages:
-      all_rows_selected: "Note that <strong>all</strong> %{count} rows are now selected"
       searched_rows_selected: "Note that <strong>all</strong> %{count} rows matching the current search are now selected"
       selected_rows_page: "All %{count} rows are selected on this page."
-      select_all_rows: "Select all %{count} rows in %{class_name}"
-      selected_all_rows: "All %{count} rows are selected in %{class_name}."
+      select_all_rows: "Select all %{count} %{class_name}"
+      selected_all_rows: "<strong>All</strong> %{count} %{class_name} are selected."
 
   location_picker:
     choose_location: "Choose Location"
