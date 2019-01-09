@@ -19,9 +19,10 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     @select_all_rows_field = this.$el.find('input[name=select_all_rows]')
     @alert = this.$el.find('div.alert')
     @pages = this.$el.data('pages')
-    @class_name = params.class_name
     @entries = this.$el.data('entries')
     @select_all_page = false
+    @class_name = I18n.t("activerecord.models.#{params.class_name}.many")
+
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -71,6 +72,10 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
 
     @select_all_page = !@select_all_page
 
+    # toggle select all rows parameter
+    if @select_all_rows_field.val()
+      @select_all_rows_field.val('')
+
     # check/uncheck boxes
     cb.checked = @select_all_page for cb in cbs
 
@@ -85,10 +90,10 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
 
   select_all_rows: ->
     value = if @select_all_rows_field.val() then '' else '1'
-    @select_all_field.val(value)
-    # do a new message in alert
+    @select_all_rows_field.val(value)
     this.reset_alert()
-    @alert.html("All x rows in User are selected")
+    msg = I18n.t("index_table.messages.selected_all_rows", {count: @entries, class_name: @class_name})
+    @alert.html(msg)
     @alert.addClass('alert-info').show()
 
   # reset the alert element
@@ -104,10 +109,9 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     this.reset_alert()
 
     if @pages > 1 and @select_all_page
-      plural_class_name = I18n.t("activerecord.models.#{@class_name}.many")
       msg = I18n.t("index_table.messages.selected_rows_page", {count: this.get_selected_count()}) + " " +
         "<a href='#' class='select_all_rows'>" +
-        I18n.t("index_table.messages.select_all_rows", {class_name: plural_class_name, count: @entries}) +
+        I18n.t("index_table.messages.select_all_rows", {class_name: @class_name, count: @entries}) +
         "</a>"
       @alert.html(msg)
       @alert.addClass('alert-info').show()
@@ -117,6 +121,9 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     @form.find('input[type=checkbox].batch_op')
 
   get_selected_count: ->
+    if @select_all_rows_field.val()
+      @entries
+    else
       _.size(_.filter(this.get_batch_checkboxes(), (cb) -> cb.checked))
 
   get_selected_items: ->
