@@ -136,5 +136,6 @@ group :development, :test do
   gem "assert_difference", "~> 1.0.0" # Deprecated: Barely used, convert usage to something else.
   gem "awesome_print", "~> 1.6.1"
   gem "database_cleaner", "~> 1.7.0"
+  gem "db-query-matchers", "~> 0.9"
   gem "timecop", "~> 0.7.3"
 end

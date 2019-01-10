@@ -39,8 +39,15 @@ class Form < ApplicationRecord
   before_create :init_downloads
 
   scope :published, -> { where(published: true) }
-  scope(:by_name, -> { order("forms.name") })
-  scope(:default_order, -> { by_name })
+  scope :by_name, -> { order("forms.name") }
+  scope :default_order, -> { by_name }
+  scope :with_responses_counts, lambda {
+    forms = Form.arel_table
+    responses = Response.arel_table
+    count_subquery = Response.select(responses[:id].count)
+      .where(responses[:form_id].eq(forms[:id])).arel.as("AS responses_count")
+    select(forms[Arel.star]).select(count_subquery)
+  }
 
   delegate :children,
     :sorted_children,
@@ -54,7 +61,7 @@ class Form < ApplicationRecord
   delegate :code, to: :current_version
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
-             dont_copy: %i[published pub_changed_at downloads responses_count upgrade_needed
+             dont_copy: %i[published pub_changed_at downloads upgrade_needed
                            smsable current_version_id allow_incomplete access_level root_id]
 
   # remove heirarchy of objects
@@ -132,13 +139,18 @@ class Form < ApplicationRecord
 
   # returns whether this form has responses; standard forms never have responses
   def has_responses?
-    is_standard? ? false : responses_count > 0
+    is_standard? ? false : responses_count.positive?
+  end
+
+  def responses_count
+    # Use the eager loaded attribute if it's present, else query the association.
+    self[:responses_count] || responses.count
   end
 
   # returns the number of responses for all copy forms
   def copy_responses_count
     raise "non-standard forms should not request copy_responses_count" unless is_standard?
-    copies.sum(:responses_count)
+    copies.to_a.sum(&:responses_count)
   end
 
   def published?

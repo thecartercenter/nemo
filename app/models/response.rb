@@ -11,7 +11,7 @@ class Response < ApplicationRecord
 
   attr_accessor :modifier, :excerpts, :awaiting_media
 
-  belongs_to :form, inverse_of: :responses, counter_cache: true
+  belongs_to :form, inverse_of: :responses
   belongs_to :checked_out_by, class_name: "User"
   belongs_to :user, inverse_of: :responses
   belongs_to :reviewer, class_name: "User"
@@ -31,11 +31,6 @@ class Response < ApplicationRecord
   after_update { root_node.save if root_node.present? }
   before_create :generate_shortcode
   before_destroy { root_node.destroy if root_node.present? }
-
-  # Due to an acts_as_paranoid gem bug, rails counter_cache increments on creation
-  # but does not decrement on deletion since we need the counter cache, we'll manually decrement on deletion
-  # Issue number: https://github.com/ActsAsParanoid/acts_as_paranoid/issues/39
-  after_destroy :update_form_response_count
 
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
@@ -302,9 +297,5 @@ class Response < ApplicationRecord
 
   def no_missing_answers
     errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
-  end
-
-  def update_form_response_count
-    Form.reset_counters(form_id, :responses)
   end
 end
