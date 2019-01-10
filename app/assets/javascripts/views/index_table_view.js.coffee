@@ -159,6 +159,8 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
       # (we do it this way in case the main form has other stuff in it that we don't want to submit)
       form.append(@form.find('input.batch_op:checked').clone())
       form.append(@form.find('input[name=select_all]').clone())
+      form.append(@form.find('input[name=search]').clone())
+
 
       token = $('meta[name="csrf-token"]').attr('content')
       $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form)

@@ -42,9 +42,9 @@ feature "user index", js: true do
       it_behaves_like "select all that exist", klass: "users", num: 111, link: "Delete Multiple Users"
     end
 
-    # context "filtered select all" do
-    #   it_behaves_like "select all that exist", klass: "users", num: 55, link: "Delete Multiple Users", query: "role:enumerator"
-    # end
+    context "filtered select all" do
+      it_behaves_like "select all that exist", klass: "users", num: 55, link: "Delete Multiple Users", query: "role:enumerator"
+    end
 
   end
 end

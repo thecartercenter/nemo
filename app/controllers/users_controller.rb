@@ -88,7 +88,10 @@ class UsersController < ApplicationController
   end
 
   def bulk_destroy
-    @users = load_selected_objects(User)
+    @users = User.accessible_by(current_ability)
+    @users = apply_search_if_given(User, @users)
+    @users = load_selected_objects(User, @users)
+
     result = BatchDestroy.new(@users, current_user, current_ability).destroy!
     success = []
     success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
