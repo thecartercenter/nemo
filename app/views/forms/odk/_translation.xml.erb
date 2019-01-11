@@ -6,7 +6,7 @@
   <% end %>
 
   <%# Regular question translations %>
-  <% Odk::DecoratorFactory.decorate_collection(@form.questionings).each do |qing| %>
+  <% @questionings.each do |qing| %>
     <% if qing.visible? %>
       <% qing.subqings.each do |subq| %>
         <text id="<%= subq.odk_code %>:label">
@@ -26,7 +26,7 @@
     <% end %>
   <% end %>
 
-  <% Odk::DecoratorFactory.decorate_collection(@form.option_sets).each do |option_set| %>
+  <% @option_sets.each do |option_set| %>
     <%= option_set.translation_tags(lang) %>
   <% end %>
 

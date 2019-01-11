@@ -84,6 +84,8 @@ class FormsController < ApplicationController
         # xml style defaults to odk but can be specified via query string
         @style = params[:style] || "odk"
         @form = Odk::DecoratorFactory.decorate(@form)
+        @questionings = Odk::DecoratorFactory.decorate_collection(@form.questionings)
+        @option_sets = Odk::DecoratorFactory.decorate_collection(@form.option_sets)
       end
     end
   end

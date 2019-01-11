@@ -19,6 +19,11 @@
   <% end %>
 </instance>
 
+<%# Instances for non-first levels of option sets. Used for cascading behavior. %>
+<% @option_sets.each do |option_set| %>
+  <%= option_set.instances %>
+<% end %>
+
 <% if @style == 'commcare' %>
   <instance id="commcaresession" src="jr://instance/session"/>
 <% end %>
