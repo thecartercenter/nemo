@@ -161,7 +161,7 @@
         <value>*optcode6*</value>
       </item>
     </select1>
-    <input ref="/data/*itemcode7*_2" query="instance('os*optsetid2*')/root/item[parent_id=/data/*itemcode7*_1]">
+    <input ref="/data/*itemcode7*_2" query="instance('*optsetcode2*')/root/item[parent_id=/data/*itemcode7*_1]">
       <label ref="jr:itext('*itemcode7*_2:label')"/>
       <hint ref="jr:itext('*itemcode7*_2:hint')"/>
     </input>

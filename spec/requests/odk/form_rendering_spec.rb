@@ -7,7 +7,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
 
-  # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk_test_forms`.
+  # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk/forms`.
   # Then use `adb push tmp/odk/forms /sdcard/odk` or similar to load them into ODK for testing.
   let(:save_fixtures) { true }
 

@@ -34,6 +34,8 @@ module GeneralSpecHelpers
   def prepare_odk_fixture(filename, path, form, options = {})
     items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
+    option_set_ids = items.map(&:option_set_id).flatten.compact.uniq
+    option_sets = OptionSet.where(id: option_set_ids).map { |os| Odk::DecoratorFactory.decorate(os) }
     xml = prepare_fixture(path,
       formname: [form.name],
       form: [form.id],
@@ -41,7 +43,7 @@ module GeneralSpecHelpers
       itemcode: items.map(&:odk_code),
       itemqcode: items.map(&:code),
       optcode: nodes.map(&:odk_code),
-      optsetid: items.map(&:option_set_id).compact.uniq,
+      optsetcode: option_sets.map(&:odk_code),
       questionid: items.map { |i| i.question&.id },
       value: options[:values].presence || [])
     if save_fixtures
