@@ -21,6 +21,8 @@
           <*itemcode13*/>
           <*itemcode14*/>
           <*itemcode15*/>
+          <*itemcode16*/>
+          <*itemcode17*/>
         </data>
       </instance>
       <itext>
@@ -103,6 +105,18 @@
           <text id="*itemcode15*:hint">
             <value>Question Hint 15</value>
           </text>
+          <text id="*itemcode16*:label">
+            <value>Counter Question Title 16</value>
+          </text>
+          <text id="*itemcode16*:hint">
+            <value>Question Hint 16</value>
+          </text>
+          <text id="*itemcode17*:label">
+            <value>Counter Question Title 17</value>
+          </text>
+          <text id="*itemcode17*:hint">
+            <value>Question Hint 17</value>
+          </text>
           <text id="*optcode1*">
             <value>Cat</value>
           </text>
@@ -142,6 +156,8 @@
       <bind nodeset="/data/*itemcode13*" type="dateTime" jr:preload="timestamp" jr:preloadParams="start"/>
       <bind nodeset="/data/*itemcode14*" type="dateTime" jr:preload="timestamp" jr:preloadParams="end"/>
       <bind nodeset="/data/*itemcode15*" type="barcode"/>
+      <bind nodeset="/data/*itemcode16*" type="int"/>
+      <bind nodeset="/data/*itemcode17*" type="int"/>
     </model>
   </h:head>
   <h:body>
@@ -220,6 +236,14 @@
     <input ref="/data/*itemcode15*">
       <label ref="jr:itext('*itemcode15*:label')"/>
       <hint ref="jr:itext('*itemcode15*:hint')"/>
+    </input>
+    <input ref="/data/*itemcode16*" appearance="ex:org.opendatakit.counter(form_id='*form1*', form_name='*formname1*', question_id='*itemcode16*', question_name='*itemqcode16*')">
+      <label ref="jr:itext('*itemcode16*:label')"/>
+      <hint ref="jr:itext('*itemcode16*:hint')"/>
+    </input>
+    <input ref="/data/*itemcode17*" appearance="ex:org.opendatakit.counter(form_id='*form1*', form_name='*formname1*', question_id='*itemcode17*', question_name='*itemqcode17*', increment=true())">
+      <label ref="jr:itext('*itemcode17*:label')"/>
+      <hint ref="jr:itext('*itemcode17*:hint')"/>
     </input>
   </h:body>
 </h:html>

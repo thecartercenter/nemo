@@ -15,7 +15,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     login(user)
   end
 
-  context "sample form" do
+  context "form with various question types" do
     let!(:form) do
       create(:form,
         :published,
@@ -23,7 +23,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         name: "Sample",
         question_types: %w[text long_text integer decimal location select_one
                            multilevel_select_one select_multiple text
-                           datetime date time formstart formend barcode])
+                           datetime date time formstart formend barcode counter counter_with_inc])
     end
 
     before do
@@ -41,308 +41,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "sample_form.xml")
-    end
-  end
-
-  context "counter form" do
-    let!(:form) do
-      create(:form, :published, :with_version, name: "Counter", question_types: %w[counter counter_with_inc])
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "counter_form.xml")
-    end
-  end
-
-  context "grid group with display condition" do
-    let!(:form) do
-      create(:form, :published, :with_version,
-        name: "Grid Group with Condition", question_types: ["text", %w[select_one select_one], "text"])
-    end
-
-    before do
-      # Make the grid questions required since we need to be careful that the hidden label row
-      # is not marked required.
-      form.c[1].c.each { |qing| qing.update!(required: true) }
-
-      # Ensure both group questions have same option set.
-      form.c[1].c[1].question.update!(option_set_id: form.c[1].c[0].question.option_set_id)
-
-      # Add condition to group.
-      form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
-      form.c[1].update!(display_if: "all_met")
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "grid_group_with_condition.xml")
-    end
-  end
-
-  context "gridable form with one_screen set to false" do
-    let(:q1) { create(:question, qtype_name: "select_one") }
-    let(:q2) { create(:question, qtype_name: "select_one", option_set: q1.option_set) }
-    let(:form) do
-      create(:form, :published, :with_version, name: "Multi-screen Gridable", questions: [[q1, q2]])
-    end
-
-    before do
-      form.sorted_children[0].update!(one_screen: false)
-    end
-
-    it "should not render with grid format" do
-      expect_xml(form, "multiscreen_gridable_form.xml")
-    end
-  end
-
-  context "form with & in option name" do
-    let(:option_set) { create(:option_set, option_names: ["Salt & Pepper", "Peanut Butter & Jelly"]) }
-    let(:question) { create(:question, option_set: option_set) }
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Form with & in Option",
-        questions: [question])
-    end
-
-    it "should not have parsing errors" do
-      do_request_and_expect_success
-      doc = Nokogiri::XML(response.body, &:noblanks)
-      expect(doc.errors).to be_empty
-    end
-  end
-
-  context "media question form" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Media Questions",
-        question_types: %w[text image annotated_image sketch signature audio video])
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "media_question_form.xml")
-    end
-  end
-
-  context "group form" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Basic Group",
-        question_types: ["text", %w[text text text]])
-    end
-
-    before do
-      # Test conditions on groups.
-      form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
-      form.c[1].update!(display_if: "all_met")
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "group_form.xml")
-    end
-  end
-
-  context "group form with condition" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Group with Condition",
-        question_types: [{repeating: {name: "Group A", items: %w[text text text]}}])
-    end
-
-    before do
-      form.questionings.last.display_conditions.create!(
-        ref_qing: form.questionings.first,
-        op: "eq",
-        value: "foo"
-      )
-      form.questionings.last.update!(display_if: "all_met")
-    end
-
-    it "should not render on single page due to condition" do
-      expect_xml(form, "group_form_with_condition.xml")
-    end
-  end
-
-  context "multiscreen group form" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Multi-screen Group",
-        question_types: [%w[text text text]])
-    end
-
-    before do
-      form.sorted_children[0].update!(one_screen: false)
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "multiscreen_group_form.xml")
-    end
-  end
-
-  context "repeat group form with dynamic item names" do
-    let!(:form) do
-      create(:form, :published, :with_version,
-        name: "Repeat Group",
-        question_types: [
-          {repeating: {name: "Grp1", item_name: %(Hi' "$Name"), items: %w[text text text]}},
-
-          # Include a normal group to ensure differentiated properly.
-          %w[text text],
-
-          # Second repeat group, one_screen false. Item name includes escapable chars (>).
-          {repeating: {
-            name: "Grp2",
-            item_name: %{calc(if($Age > 18, 'A’"yeah"', 'C'))},
-            items: %w[integer text]
-          }}
-        ])
-    end
-
-    before do
-      form.c[0].c[0].question.update!(code: "Name")
-      form.c[2].update!(one_screen: false)
-      form.c[2].c[0].question.update!(code: "Age")
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "repeat_group_form.xml")
-    end
-  end
-
-  context "nested repeat group form" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Nested Repeat Group",
-        version: "abc",
-        question_types: [
-          {repeating:
-            {
-              items:
-                ["text", # q1
-                 "text", # q2
-                 {
-                   repeating:
-                     {
-                       items: %w[integer text], # q3,q4
-                       name: "Repeat Group A"
-                     }
-                 },
-                 "long_text"], # q5
-              name: "Repeat Group 1"
-            }},
-          "text", # q6
-          {
-            repeating: {
-              items: %w[text], # q7
-              name: "Repeat Group 2"
-            }
-          }
-        ])
-    end
-
-    before do
-      form.questioning_with_code("TextQ4").update!(default: "$TextQ2-$!RepeatNum")
-      form.questioning_with_code("TextQ7").update!(default: "$TextQ2-$!RepeatNum")
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "nested_repeat_group_form.xml")
-    end
-  end
-
-  context "empty repeat group" do
-    let!(:form) do
-      create(:form, :published, :with_version,
-        name: "Empty Repeat Group",
-        question_types: ["text", {repeating: {name: "Repeat Group 1", items: []}}])
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "empty_repeat_group_form.xml")
-    end
-  end
-
-  # Tests that the single-screen group is correctly split to handle the
-  # needs of the multi-level/cascading option set.
-  context "group form with multilevel select" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Group with Multilevel Select",
-        question_types: [%w[text date multilevel_select_one integer]])
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "group_form_with_multilevel.xml")
-    end
-  end
-
-  # Tests that the multi-screen group is correctly combined with the multi-screen needs of
-  # of the multi-level/cascading option set.
-  context "multiscreen group form with multilevel select" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Multi-screen Group with Multilev",
-        question_types: [%w[text date multilevel_select_one integer]])
-    end
-
-    before do
-      form.sorted_children[0].update!(one_screen: false)
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "multiscreen_group_form_with_multilevel.xml")
-    end
-  end
-
-  # Tests that the single-screen inner repeat group is correctly split to handle the
-  # needs of the multi-level/cascading option set, without disturbing the nested structure.
-  context "nested group form with multilevel select" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Nested Group with Multilevel",
-        version: "abc",
-        question_types: [
-          {repeating:
-            {
-              name: "Repeat Group 1",
-              items:
-                [
-                  "text", # q1
-                  "text", # q2
-                  {
-                    repeating:
-                      {
-                        name: "Repeat Group A",
-                        items: %w[integer multilevel_select_one] # q3,q4
-                      }
-                  },
-                  "long_text" # q5
-                ]
-            }}
-        ])
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "nested_group_form_with_multilevel.xml")
-    end
-  end
-
-  context "form with dynamic patterns" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        default_response_name: %("$MSO" --> $TXT's), # We use a > and ' on purpose so we test escaping.
-        name: "Default Patterns",
-        question_types: [%w[integer text select_one multilevel_select_one], "text"])
-    end
-
-    before do
-      # Set codes for use in default_response_name
-      form.c[0].c[0].update!(code: "INT")
-      form.c[0].c[3].update!(code: "MSO")
-      form.c[1].update!(code: "TXT", default: %{calc(if($INT > 5, '"a"', 'b'))})
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "default_pattern_form.xml")
+      expect_xml(form, "various_question_types.xml")
     end
   end
 
@@ -392,15 +91,316 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
-  context "form with audio prompts" do
-    let(:form) { create(:form, :published, question_types: %w[integer]) }
-
-    before do
-      form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
+  context "form with & in option name" do
+    let(:option_set) { create(:option_set, option_names: ["Salt & Pepper", "Peanut Butter & Jelly"]) }
+    let(:question) { create(:question, option_set: option_set) }
+    let(:form) do
+      create(:form, :published, :with_version,
+        name: "Form with & in Option",
+        questions: [question])
     end
 
-    it "should render proper xml" do
-      expect_xml(form, "form_with_audio_prompt.xml")
+    it "should not have parsing errors" do
+      do_request_and_expect_success
+      doc = Nokogiri::XML(response.body, &:noblanks)
+      expect(doc.errors).to be_empty
+    end
+  end
+
+  describe "grids" do
+    context "grid group with display condition" do
+      let!(:form) do
+        create(:form, :published, :with_version,
+          name: "Grid Group with Condition", question_types: ["text", %w[select_one select_one], "text"])
+      end
+
+      before do
+        # Make the grid questions required since we need to be careful that the hidden label row
+        # is not marked required.
+        form.c[1].c.each { |qing| qing.update!(required: true) }
+
+        # Ensure both group questions have same option set.
+        form.c[1].c[1].question.update!(option_set_id: form.c[1].c[0].question.option_set_id)
+
+        # Add condition to group.
+        form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
+        form.c[1].update!(display_if: "all_met")
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "grid_group_with_condition.xml")
+      end
+    end
+
+    context "gridable form with one_screen set to false" do
+      let(:q1) { create(:question, qtype_name: "select_one") }
+      let(:q2) { create(:question, qtype_name: "select_one", option_set: q1.option_set) }
+      let(:form) do
+        create(:form, :published, :with_version, name: "Multi-screen Gridable", questions: [[q1, q2]])
+      end
+
+      before do
+        form.sorted_children[0].update!(one_screen: false)
+      end
+
+      it "should not render with grid format" do
+        expect_xml(form, "multiscreen_gridable_form.xml")
+      end
+    end
+  end
+
+  describe "groups" do
+    context "group form" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Basic Group",
+          question_types: ["text", %w[text text text]])
+      end
+
+      before do
+        # Test conditions on groups.
+        form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
+        form.c[1].update!(display_if: "all_met")
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "group_form.xml")
+      end
+    end
+
+    context "group form with condition" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Group with Condition",
+          question_types: [{repeating: {name: "Group A", items: %w[text text text]}}])
+      end
+
+      before do
+        form.questionings.last.display_conditions.create!(
+          ref_qing: form.questionings.first,
+          op: "eq",
+          value: "foo"
+        )
+        form.questionings.last.update!(display_if: "all_met")
+      end
+
+      it "should not render on single page due to condition" do
+        expect_xml(form, "group_form_with_condition.xml")
+      end
+    end
+
+    context "multiscreen group form" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Multi-screen Group",
+          question_types: [%w[text text text]])
+      end
+
+      before do
+        form.sorted_children[0].update!(one_screen: false)
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "multiscreen_group_form.xml")
+      end
+    end
+
+    context "nested repeat group form" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Nested Repeat Group",
+          version: "abc",
+          question_types: [
+            {repeating:
+              {
+                items:
+                  ["text", # q1
+                   "text", # q2
+                   {
+                     repeating:
+                       {
+                         items: %w[integer text], # q3,q4
+                         name: "Repeat Group A"
+                       }
+                   },
+                   "long_text"], # q5
+                name: "Repeat Group 1"
+              }},
+            "text", # q6
+            {
+              repeating: {
+                items: %w[text], # q7
+                name: "Repeat Group 2"
+              }
+            }
+          ])
+      end
+
+      before do
+        form.questioning_with_code("TextQ4").update!(default: "$TextQ2-$!RepeatNum")
+        form.questioning_with_code("TextQ7").update!(default: "$TextQ2-$!RepeatNum")
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "nested_repeat_group_form.xml")
+      end
+    end
+
+    context "empty repeat group" do
+      let!(:form) do
+        create(:form, :published, :with_version,
+          name: "Empty Repeat Group",
+          question_types: ["text", {repeating: {name: "Repeat Group 1", items: []}}])
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "empty_repeat_group_form.xml")
+      end
+    end
+  end
+
+  describe "multilevel selects" do
+    # Tests that the single-screen group is correctly split to handle the
+    # needs of the multi-level/cascading option set.
+    context "group form with multilevel select" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Group with Multilevel Select",
+          question_types: [%w[text date multilevel_select_one integer]])
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "group_form_with_multilevel.xml")
+      end
+    end
+
+    # Tests that the multi-screen group is correctly combined with the multi-screen needs of
+    # of the multi-level/cascading option set.
+    context "multiscreen group form with multilevel select" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Multi-screen Group with Multilev",
+          question_types: [%w[text date multilevel_select_one integer]])
+      end
+
+      before do
+        form.sorted_children[0].update!(one_screen: false)
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "multiscreen_group_form_with_multilevel.xml")
+      end
+    end
+
+    # Tests that the single-screen inner repeat group is correctly split to handle the
+    # needs of the multi-level/cascading option set, without disturbing the nested structure.
+    context "nested group form with multilevel select" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Nested Group with Multilevel",
+          version: "abc",
+          question_types: [
+            {repeating:
+              {
+                name: "Repeat Group 1",
+                items:
+                  [
+                    "text", # q1
+                    "text", # q2
+                    {
+                      repeating:
+                        {
+                          name: "Repeat Group A",
+                          items: %w[integer multilevel_select_one] # q3,q4
+                        }
+                    },
+                    "long_text" # q5
+                  ]
+              }}
+          ])
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "nested_group_form_with_multilevel.xml")
+      end
+    end
+  end
+
+  describe "dynamic patterns" do
+    context "form with dynamic patterns" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          default_response_name: %("$MSO" --> $TXT's), # We use a > and ' on purpose so we test escaping.
+          name: "Default Patterns",
+          question_types: [%w[integer text select_one multilevel_select_one], "text"])
+      end
+
+      before do
+        # Set codes for use in default_response_name
+        form.c[0].c[0].update!(code: "INT")
+        form.c[0].c[3].update!(code: "MSO")
+        form.c[1].update!(code: "TXT", default: %{calc(if($INT > 5, '"a"', 'b'))})
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "default_pattern_form.xml")
+      end
+    end
+
+    context "repeat group form with dynamic item names" do
+      let!(:form) do
+        create(:form, :published, :with_version,
+          name: "Repeat Group",
+          question_types: [
+            {repeating: {name: "Grp1", item_name: %(Hi' "$Name"), items: %w[text text text]}},
+
+            # Include a normal group to ensure differentiated properly.
+            %w[text text],
+
+            # Second repeat group, one_screen false. Item name includes escapable chars (>).
+            {repeating: {
+              name: "Grp2",
+              item_name: %{calc(if($Age > 18, 'A’"yeah"', 'C'))},
+              items: %w[integer text]
+            }}
+          ])
+      end
+
+      before do
+        form.c[0].c[0].question.update!(code: "Name")
+        form.c[2].update!(one_screen: false)
+        form.c[2].c[0].question.update!(code: "Age")
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "repeat_group_form.xml")
+      end
+    end
+  end
+
+  describe "media" do
+    context "form with media questions" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Media Questions",
+          question_types: %w[text image annotated_image sketch signature audio video])
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "media_question_form.xml")
+      end
+    end
+
+    context "form with audio prompts" do
+      let(:form) { create(:form, :published, question_types: %w[integer]) }
+
+      before do
+        form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "form_with_audio_prompt.xml")
+      end
     end
   end
 
@@ -411,7 +411,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
   def do_request_and_expect_success
     get(form_path(form, format: :xml))
-    expect(response).to be_success
+    expect(response).to be_successful
   end
 
   def prepare_odk_form_fixture(filename, form, options = {})
