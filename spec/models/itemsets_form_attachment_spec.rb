@@ -171,8 +171,9 @@ describe ItemsetsFormAttachment, :odk do
 
   def prepare_itemset_expectation(filename, option_sets)
     nodes = option_sets.map(&:preordered_option_nodes).uniq.flatten
+    option_sets = option_sets.map { |os| Odk::DecoratorFactory.decorate(os) }
     prepare_fixture("odk/itemsets/#{filename}",
-      optsetid: option_sets.map(&:id),
+      optsetcode: option_sets.map(&:odk_code),
       optcode: nodes.map(&:odk_code)
     )
   end
