@@ -293,22 +293,6 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
-  context "repeat group form with multilevel select" do
-    let(:form) do
-      create(:form, :published, :with_version,
-        name: "Repeat Group with Multilevel",
-        question_types: [%w[text date multilevel_select_one integer]])
-    end
-
-    before do
-      form.child_groups.first.update!(repeatable: true)
-    end
-
-    it "should render proper xml" do
-      expect_xml(form, "repeat_group_form_with_multilevel.xml")
-    end
-  end
-
   # Tests that the single-screen inner repeat group is correctly split to handle the
   # needs of the multi-level/cascading option set, without disturbing the nested structure.
   context "nested group form with multilevel select" do
