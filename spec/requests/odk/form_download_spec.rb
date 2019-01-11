@@ -8,23 +8,23 @@ describe FormsController, :odk, type: :request do
   let(:user) { create(:user, role_name: :coordinator, mission: mission) }
   let(:form_simple) { create(:form, :published, mission: mission) }
   let(:form_select) { create(:form, :published, mission: mission, question_types: %w[integer select_one]) }
-  let(:form_multiselect) do
+  let(:form_multilevel) do
     create(:form, :published, mission: mission, question_types: %w[integer multilevel_select_one])
   end
   let(:basic_auth) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
 
   context "for regular mission" do
     describe "listing forms" do
-      let!(:forms) { [form_simple, form_select, form_multiselect] }
+      let!(:forms) { [form_simple, form_select, form_multilevel] }
 
       it "should succeed" do
         get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
         expect(response).to be_success
 
-        # Only form_multiselect should have a manifest.
+        # Only form_multilevel should have a manifest.
         assert_select("xform", count: 3) do |elements|
           elements.each do |element|
-            should_have_manifest = element.to_s.include?(":#{form_multiselect.id}</formID>")
+            should_have_manifest = element.to_s.include?(":#{form_multilevel.id}</formID>")
             assert_select(element, "manifestUrl", should_have_manifest ? 1 : 0)
           end
         end
@@ -40,7 +40,7 @@ describe FormsController, :odk, type: :request do
       it "should succeed" do
         # XML rendering details are tested elsewhere.
         get(
-          "/en/m/#{mission.compact_name}/forms/#{form_multiselect.id}",
+          "/en/m/#{mission.compact_name}/forms/#{form_multilevel.id}",
           params: {format: :xml},
           headers: basic_auth
         )
@@ -49,7 +49,7 @@ describe FormsController, :odk, type: :request do
 
       it "should succeed with no locale" do
         get(
-          "/m/#{mission.compact_name}/forms/#{form_multiselect.id}",
+          "/m/#{mission.compact_name}/forms/#{form_multilevel.id}",
           params: {format: :xml},
           headers: basic_auth
         )
@@ -67,11 +67,11 @@ describe FormsController, :odk, type: :request do
         end
       end
 
-      context "for normal form" do
-        let(:ifa) { ItemsetsFormAttachment.new(form: form_multiselect) }
+      context "for form with multilevel option set" do
+        let(:ifa) { ItemsetsFormAttachment.new(form: form_multilevel) }
 
         it "should render regular manifest tag" do
-          get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}/manifest", headers: basic_auth)
+          get("/m/#{mission.compact_name}/forms/#{form_multilevel.id}/manifest", headers: basic_auth)
           expect(response).to be_success
           assert_select("filename", text: "itemsets.csv")
           assert_select("hash", text: ifa.md5)
@@ -86,7 +86,7 @@ describe FormsController, :odk, type: :request do
           end
 
           it "should use https in URL" do
-            get("/m/#{mission.compact_name}/forms/#{form_multiselect.id}/manifest", headers: basic_auth)
+            get("/m/#{mission.compact_name}/forms/#{form_multilevel.id}/manifest", headers: basic_auth)
             expect(response).to be_success
             assert_select("downloadUrl", text: "https://www.example.com/#{ifa.path}")
           end
@@ -146,7 +146,7 @@ describe FormsController, :odk, type: :request do
 
     describe "getting itemsets file" do
       context "for form with option sets" do
-        let(:ifa) { ItemsetsFormAttachment.new(form: form_multiselect) }
+        let(:ifa) { ItemsetsFormAttachment.new(form: form_multilevel) }
 
         before do
           ifa.ensure_generated

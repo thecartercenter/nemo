@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 module Odk
-  # Parses $-style patterns involving responses, like default answer and default form instance name.
+  # Parses $-style patterns involving resulting in XPath expressions. Currently these can be in:
+  # - Questioning > Default Answer
+  # - Form > Default Response Name
   class ResponsePatternParser < DynamicPatternParser
     # Returns output in xpath format using `concat`, or in the case of a calculated field,
     # returns an arbitrary xpath expression.

@@ -261,6 +261,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
+  # Tests that the single-screen group is correctly split to handle the
+  # needs of the multi-level/cascading option set.
   context "group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,
@@ -273,6 +275,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
+  # Tests that the multi-screen group is correctly combined with the multi-screen needs of
+  # of the multi-level/cascading option set.
   context "multiscreen group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,
@@ -305,6 +309,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
+  # Tests that the single-screen inner repeat group is correctly split to handle the
+  # needs of the multi-level/cascading option set, without disturbing the nested structure.
   context "nested group form with multilevel select" do
     let(:form) do
       create(:form, :published, :with_version,

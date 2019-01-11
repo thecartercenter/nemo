@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Odk
-  # Parses $-style patterns involving names, like group/question name and repeat instance name.
-  # Returns output in xml format using `output` tags.
+  # Parses $-style patterns resulting in `output` tags.  Currently these are only used in:
+  # - QingGroup > Repeat Item Name
   class NamePatternParser < DynamicPatternParser
     include ActionView::Helpers::TagHelper
 
