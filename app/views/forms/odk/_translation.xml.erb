@@ -26,7 +26,9 @@
     <% end %>
   <% end %>
 
-  <%= odk_option_translations(@form, lang) %>
+  <% Odk::DecoratorFactory.decorate_collection(@form.option_sets).each do |option_set| %>
+    <%= option_set.translation_tags(lang) %>
+  <% end %>
 
   <%# incomplete response question translations %>
   <% if allow_incomplete? %>

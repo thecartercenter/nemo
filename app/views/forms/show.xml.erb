@@ -3,7 +3,7 @@
     <h:head>
       <h:title><%= @form.full_name %></h:title>
       <model>
-        <%= render('forms/odk/instance') %>
+        <%= render('forms/odk/instances') %>
         <itext>
           <% configatron.preferred_locales.each do |lang| %>
             <%= render('forms/odk/translation', lang: lang) %>
@@ -15,7 +15,7 @@
     <h:body>
       <%# Regular question form controls. %>
       <% @form.sorted_children.each do |node| %>
-        <%= render "forms/odk/node", 
+        <%= render "forms/odk/node",
           node: node, parent: nil, grid_mode: false, xpath_prefix: "/data" %>
       <% end %>
       <%# Incomplete response question form controls. %>

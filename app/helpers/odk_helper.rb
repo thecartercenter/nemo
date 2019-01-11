@@ -113,21 +113,6 @@ module OdkHelper
     "instance('#{Odk::CodeMapper.instance.code_for_item(qing.option_set)}')/root/item#{filter}"
   end
 
-  # Returns <text> tags for all first-level options.
-  def odk_option_translations(form, lang)
-    option_nodes = form.all_first_level_option_nodes
-    # sort these deterministically for the test suite when needed, order does not matter for ODK
-    option_nodes.sort_by! { |on| [on.option_set.name, on.option_name] } if Rails.env.test?
-    odk_options = option_nodes.map do |on|
-      content_tag(:text, id: Odk::CodeMapper.instance.code_for_item(on)) do
-        content_tag(:value) do
-          on.option.name(lang, strict: false)
-        end
-      end
-    end
-    odk_options.reduce(&:concat)
-  end
-
   # The general structure for a group is:
   # group tag
   #   label
