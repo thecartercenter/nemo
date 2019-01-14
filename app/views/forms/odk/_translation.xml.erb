@@ -1,4 +1,4 @@
-<translation lang="<%= @style == "commcare" ? lang : language_name(lang) %>">
+<translation lang="<%= language_name(lang) %>">
 
   <%# group hint translations %>
   <% @form.sorted_children.each do |child| %>
@@ -17,11 +17,9 @@
             </value>
           <% end %>
         </text>
-        <% unless @style == "commcare" %>
-          <text id="<%= subq.odk_code %>:hint">
-            <value><%= subq.hint(lang, :strict => false) %></value>
-          </text>
-        <% end %>
+        <text id="<%= subq.odk_code %>:hint">
+          <value><%= subq.hint(lang, :strict => false) %></value>
+        </text>
       <% end %>
     <% end %>
   <% end %>

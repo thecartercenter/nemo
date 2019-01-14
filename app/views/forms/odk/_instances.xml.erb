@@ -1,6 +1,6 @@
 <instance>
   <%# Include both form ID and form version sequence number in ODK form ID %>
-  <%= data_tag @form, @style do %>
+  <%= content_tag(:data, id: @form.id, version: @form.current_version.code) do %>
     <%= @form.default_response_name_instance_tag %>
 
     <% @form.sorted_children.each do |node| %>
@@ -12,18 +12,10 @@
       <%= tag(Odk::FormDecorator::IR_QUESTION) %>
       <%= tag(Odk::FormDecorator::IR_CODE) %>
     <% end %>
-
-    <% if @style == 'commcare' %>
-      <username/>
-    <% end %>
   <% end %>
 </instance>
 
 <%# Instances for non-first levels of option sets. Used for cascading behavior. %>
 <% @option_sets.each do |option_set| %>
   <%= option_set.instances %>
-<% end %>
-
-<% if @style == 'commcare' %>
-  <instance id="commcaresession" src="jr://instance/session"/>
 <% end %>

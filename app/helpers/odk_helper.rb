@@ -1,32 +1,6 @@
 # frozen_string_literal: true
 
 module OdkHelper
-  def data_tag(form, style, &block)
-    if style == "commcare"
-      content_tag(
-        "data",
-        {
-          "xmlns:jrm" => "http://dev.commcarehq.org/jr/xforms",
-          "xmlns" => "http://openrosa.org/formdesigner/#{form.id}",
-          "id" => form.id.to_s,
-          "uiVersion" => "1",
-          "version" => form.current_version.code.to_s,
-          "name" => form.full_name.to_s
-        },
-        &block
-      )
-    else
-      content_tag(
-        "data",
-        {
-          "id" => form.id.to_s,
-          "version" => form.current_version.code.to_s
-        },
-        &block
-      )
-    end
-  end
-
   # For the given subqing, returns an xpath expression for the itemset tag nodeset attribute.
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or

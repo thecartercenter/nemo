@@ -66,7 +66,7 @@ module FormsHelper
   end
 
   def allow_incomplete?
-    @form.allow_incomplete? && @style != 'commcare'
+    @form.allow_incomplete?
   end
 
   # Question types not listed here use PNGs instead of FA icons.
