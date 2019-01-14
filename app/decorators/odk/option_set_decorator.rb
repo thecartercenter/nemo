@@ -24,17 +24,21 @@ module Odk
     # Returns <instance> tags for each non-first level of the set. These are used for supporting
     # cascading behavior.
     def instances
-      tags = (2..level_count).map do |level|
-        content_tag(:instance, id: "#{odk_code}_level#{level}") do
-          content_tag(:root, item_tags_for_level(level))
+      tags = (2..level_count).map do |depth|
+        content_tag(:instance, id: instance_id_for_depth(depth)) do
+          content_tag(:root, item_tags_for_depth(depth))
         end
       end
       tags.reduce(&:<<)
     end
 
+    def instance_id_for_depth(depth)
+      "#{odk_code}_level#{depth}"
+    end
+
     private
 
-    def item_tags_for_level(level)
+    def item_tags_for_depth(level)
       tags = nodes_at_depth(level).map do |node|
         content_tag(:item) do
           # Use mapper directly here for efficiency.

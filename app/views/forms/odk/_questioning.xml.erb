@@ -4,8 +4,8 @@
 
 <%# If group is a multilevel_fragment, we are supposed to just render one of the subqings here. %>
 <%# This is so they can be wrapped with the appropriate group headers/hint and such. %>
+
 <% subqings = group.try(:multilevel_fragment?) ? [qing.subqings[group.level - 1]] : qing.subqings %>
 <% subqings.each do |subq| %>
-  <%= render('forms/odk/subqing', qing: qing, grid_mode: grid_mode, label_row: label_row, 
-                                  group: group, subq: subq, xpath_prefix: xpath_prefix) %>
+  <%= subq.input_tag(grid_mode, label_row, xpath_prefix) %>
 <% end %>

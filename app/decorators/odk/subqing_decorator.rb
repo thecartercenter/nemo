@@ -3,7 +3,7 @@ module Odk
     # Delegation was working strangely here so we're doing it manually instead of using delegate_all.
     # We are delegating to two places -- these specific methods to the underlying Subqing,
     # and everything else (via method_missing) to the decorated Questioning.
-    delegate :name, :rank, :level, :first_rank?, to: :object
+    delegate :name, :questioning, :rank, :level, :first_rank?, :qtype, to: :object
 
     # If options[:previous] is true, returns the code for the
     # immediately previous subqing (multilevel only).
@@ -19,8 +19,113 @@ module Odk
       @decorated_questioning ||= decorate(object.questioning)
     end
 
+    def input_tag(grid_mode, label_row, xpath_prefix)
+      opts ||= {}
+      xpath_suffix =
+        if label_row
+          # We can't bind to the question's node here or, if the question is required,
+          # we won't be allowed to proceed since it won't be possible to fill in the question.
+          # Also, this question will appear again in a regular row so it would be weird
+          # to link it to the same instance node twice.
+          # Instead we use the parent group's header node.
+          "header"
+        else
+          odk_code
+        end
+      opts[:ref] = [xpath_prefix, xpath_suffix].compact.join("/")
+      opts[:rows] = 5 if qtype.name == "long_text"
+      opts[:appearance] = appearance(grid_mode, label_row)
+      opts[:mediatype] = media_type if qtype.multimedia?
+      content_tag(tagname, opts) do
+        [(label unless label_row), (hint unless grid_mode), items_or_itemset].compact.reduce(:<<)
+      end
+    end
+
     def method_missing(*args)
       decorated_questioning.send(*args)
+    end
+
+    private
+
+    def decorated_option_set
+      @decorated_option_set ||= decorate(option_set)
+    end
+
+    def label
+      tag(:label, ref: "jr:itext('#{odk_code}:label')")
+    end
+
+    def hint
+      tag(:hint, ref: "jr:itext('#{odk_code}:hint')")
+    end
+
+    def items_or_itemset
+      return unless has_options?
+      rank == 1 ? top_level_items : itemset
+    end
+
+    def top_level_items
+      option_set.sorted_children.map do |ch|
+        content_tag(:item) do
+          code = CodeMapper.instance.code_for_item(ch)
+          tag(:label, ref: "jr:itext('#{code}')") <<
+            content_tag(:value, code)
+        end
+      end.reduce(:<<)
+    end
+
+    def itemset
+      instance_id = decorated_option_set.instance_id_for_depth(rank)
+      path_to_prev_subqing = "current()/../#{decorated_questioning.subqings[rank - 2].odk_code}"
+      nodeset_ref = "instance('#{instance_id}')/root/item[parentId=#{path_to_prev_subqing}]"
+      content_tag(:itemset, nodeset: nodeset_ref) do
+        tag(:label, ref: "jr:itext(itextId)") <<
+          tag(:value, ref: "itextId")
+      end
+    end
+
+    def tagname
+      if qtype.name == "select_one"
+        :select1
+      elsif qtype.name == "select_multiple"
+        :select
+      elsif qtype.multimedia?
+        :upload
+      else
+        :input
+      end
+    end
+
+    def appearance(grid_mode, label_row)
+      return "label" if label_row
+      return "list-nolabel" if grid_mode
+
+      case questioning.qtype_name
+      when "annotated_image" then "annotate"
+      when "sketch" then "draw"
+      when "signature" then "signature"
+      when "counter" then counter_appearance
+      end
+    end
+
+    def media_type
+      case qtype.name
+      when "image", "annotated_image", "sketch", "signature" then "image/*"
+      when "audio" then "audio/*"
+      when "video" then "video/*"
+      end
+    end
+
+    def counter_appearance
+      params = ActiveSupport::OrderedHash.new
+      params[:form_id] = "'#{questioning.form_id}'"
+      params[:form_name] = "'#{questioning.form_name}'"
+      params[:question_id] = "'#{CodeMapper.instance.code_for_item(questioning)}'"
+      # Code instead of title because it's not locale dependent.
+      params[:question_name] = "'#{questioning.code}'"
+      params[:increment] = "true()" if questioning.auto_increment?
+      str = params.map { |k, v| "#{k}=#{v}" }.join(", ")
+      "ex:org.opendatakit.counter(#{str})".html_safe
     end
   end
 end

@@ -49,6 +49,7 @@ module GeneralSpecHelpers
     if save_fixtures
       dir = Rails.root.join("tmp", path)
       FileUtils.mkdir_p(dir)
+      puts "Saving fixture to #{dir.join(filename)}"
       File.open(dir.join(filename), "w") { |f| f.write(xml) }
     end
     xml

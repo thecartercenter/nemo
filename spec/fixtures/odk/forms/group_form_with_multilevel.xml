@@ -145,9 +145,9 @@
         <select1 ref="/data/*itemcode1*/*itemcode4*_2">
           <label ref="jr:itext('*itemcode4*_2:label')"/>
           <hint ref="jr:itext('*itemcode4*_2:hint')"/>
-          <itemset nodeset="instance('*optsetcode1*_level2')/root/item[parentId=/data/*itemcode1*/*itemcode4*_1]">
-            <value ref="itextId"/>
+          <itemset nodeset="instance('*optsetcode1*_level2')/root/item[parentId=current()/../*itemcode4*_1]">
             <label ref="jr:itext(itextId)"/>
+            <value ref="itextId"/>
           </itemset>
         </select1>
       </group>
