@@ -15,6 +15,26 @@
           </*itemcode1*>
         </data>
       </instance>
+      <instance id="*optsetcode1*_level2">
+        <root>
+          <item>
+            <itextId>*optcode2*</itextId>
+            <parentId>*optcode1*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode3*</itextId>
+            <parentId>*optcode1*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode5*</itextId>
+            <parentId>*optcode4*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode6*</itextId>
+            <parentId>*optcode4*</parentId>
+          </item>
+        </root>
+      </instance>
       <itext>
         <translation lang="English">
           <text id="*itemcode1*:label">
@@ -56,8 +76,20 @@
           <text id="*optcode1*">
             <value>Animal</value>
           </text>
+          <text id="*optcode2*">
+            <value>Cat</value>
+          </text>
+          <text id="*optcode3*">
+            <value>Dog</value>
+          </text>
           <text id="*optcode4*">
             <value>Plant</value>
+          </text>
+          <text id="*optcode5*">
+            <value>Tulip</value>
+          </text>
+          <text id="*optcode6*">
+            <value>Oak</value>
           </text>
           <text id="BLANK">
             <value/>
@@ -99,10 +131,14 @@
           <value>*optcode4*</value>
         </item>
       </select1>
-      <input ref="/data/*itemcode1*/*itemcode4*_2" query="instance('*optsetcode1*')/root/item[parent_id=/data/*itemcode1*/*itemcode4*_1]">
+      <select1 ref="/data/*itemcode1*/*itemcode4*_2">
         <label ref="jr:itext('*itemcode4*_2:label')"/>
         <hint ref="jr:itext('*itemcode4*_2:hint')"/>
-      </input>
+        <itemset nodeset="instance('*optsetcode1*_level2')/root/item[parentId=current()/../*itemcode4*_1]">
+          <label ref="jr:itext(itextId)"/>
+          <value ref="itextId"/>
+        </itemset>
+      </select1>
       <input ref="/data/*itemcode1*/*itemcode5*">
         <label ref="jr:itext('*itemcode5*:label')"/>
         <hint ref="jr:itext('*itemcode5*:hint')"/>

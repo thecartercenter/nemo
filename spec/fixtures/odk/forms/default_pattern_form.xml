@@ -19,6 +19,26 @@
           <*itemcode6*/>
         </data>
       </instance>
+      <instance id="*optsetcode2*_level2">
+        <root>
+          <item>
+            <itextId>*optcode4*</itextId>
+            <parentId>*optcode3*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode5*</itextId>
+            <parentId>*optcode3*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode7*</itextId>
+            <parentId>*optcode6*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode8*</itextId>
+            <parentId>*optcode6*</parentId>
+          </item>
+        </root>
+      </instance>
       <itext>
         <translation lang="English">
           <text id="*itemcode1*:label">
@@ -72,8 +92,20 @@
           <text id="*optcode3*">
             <value>Animal</value>
           </text>
+          <text id="*optcode4*">
+            <value>Cat</value>
+          </text>
+          <text id="*optcode5*">
+            <value>Dog</value>
+          </text>
           <text id="*optcode6*">
             <value>Plant</value>
+          </text>
+          <text id="*optcode7*">
+            <value>Tulip</value>
+          </text>
+          <text id="*optcode8*">
+            <value>Oak</value>
           </text>
           <text id="BLANK">
             <value/>
@@ -140,10 +172,14 @@
         <input ref="/data/*itemcode1*/header">
           <hint ref="jr:itext('*itemcode1*:hint')"/>
         </input>
-        <input ref="/data/*itemcode1*/*itemcode5*_2" query="instance('*optsetcode2*')/root/item[parent_id=/data/*itemcode1*/*itemcode5*_1]">
+        <select1 ref="/data/*itemcode1*/*itemcode5*_2">
           <label ref="jr:itext('*itemcode5*_2:label')"/>
           <hint ref="jr:itext('*itemcode5*_2:hint')"/>
-        </input>
+          <itemset nodeset="instance('*optsetcode2*_level2')/root/item[parentId=current()/../*itemcode5*_1]">
+            <label ref="jr:itext(itextId)"/>
+            <value ref="itextId"/>
+          </itemset>
+        </select1>
       </group>
     </group>
     <input ref="/data/*itemcode6*">

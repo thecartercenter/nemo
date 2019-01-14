@@ -35,7 +35,8 @@ module GeneralSpecHelpers
     items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
     option_set_ids = items.map(&:option_set_id).flatten.compact.uniq
-    option_sets = OptionSet.where(id: option_set_ids).map { |os| Odk::DecoratorFactory.decorate(os) }
+    option_sets = find_with_ids_maintaining_order(OptionSet, option_set_ids)
+    option_sets = option_sets.map { |os| Odk::DecoratorFactory.decorate(os) }
     xml = prepare_fixture(path,
       formname: [form.name],
       form: [form.id],
@@ -46,13 +47,19 @@ module GeneralSpecHelpers
       optsetcode: option_sets.map(&:odk_code),
       questionid: items.map { |i| i.question&.id },
       value: options[:values].presence || [])
-    if save_fixtures
-      dir = Rails.root.join("tmp", path)
-      FileUtils.mkdir_p(dir)
-      puts "Saving fixture to #{dir.join(filename)}"
-      File.open(dir.join(filename), "w") { |f| f.write(xml) }
-    end
+    write_fixture_to_file(filename, path, xml) if save_fixtures
     xml
+  end
+
+  def write_fixture_to_file(filename, path, xml)
+    dir = Rails.root.join("tmp", path)
+    FileUtils.mkdir_p(dir)
+    puts "Saving fixture to #{dir.join(filename)}"
+    File.open(dir.join(filename), "w") { |f| f.write(xml) }
+  end
+
+  def find_with_ids_maintaining_order(klass, ids)
+    klass.find(ids).index_by(&:id).slice(*ids).values
   end
 
   # `substitutions` should be a hash of arrays.
