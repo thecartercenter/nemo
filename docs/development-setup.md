@@ -23,8 +23,8 @@ Note to install the software below we recommend the following package managers:
 1. Memcached 1.4+
     - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it.
     - In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
-1. PostgreSQL 9.4+
-    - Create an empty database for use by the app (typically *elmo_development*)
+1. PostgreSQL 10+
+    - Create an empty database for use by the app (typically *nemo_development*)
 1. ImageMagick 6.7+
     - ImageMagick is used to resize uploaded images.
     - It should be available through any of the package managers listed above. If not it can be built from source.
@@ -110,7 +110,7 @@ git checkout develop
 1. Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
 1. Copy `config/settings.local.yml.example` to `config/settings.local.yml` and adjust settings as appropriate.
 1. Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
-1. Setup the UUID postgres extension (must be done as postgres superuser): `sudo -u postgres psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
+1. If using PostgreSQL 9.x, setup the UUID postgres extension (must be done as postgres superuser): `sudo -u postgres psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
 1. Load the database schema: `bundle exec rake db:schema:load`.
 1. Pre-process the theme SCSS files: `bundle exec rake theme:preprocess`
 1. Create an admin account: `bundle exec rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it and use on your first login).
@@ -126,6 +126,7 @@ git checkout develop
 #### Start the server
 
 For a development setup, run `nvm use && rails s`.
+You may want to run `bundle exec rake db:create_fake_data` to create a sample mission.
 
 #### Login
 

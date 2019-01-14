@@ -52,7 +52,7 @@ gem "activerecord-session_store", "~> 1.1.1"
 gem "authlogic", "~> 4.4.2"
 gem "cancancan", "~> 2.3.0"
 gem "draper-cancancan", "~> 1.1"
-gem "scrypt", "~> 1.2.0"
+gem "scrypt", "~> 3.0"
 
 # Spreadsheets
 gem "axlsx", "~> 2.1.1", git: "https://github.com/sassafrastech/axlsx.git", branch: "stable"
