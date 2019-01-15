@@ -32,7 +32,7 @@ class ItemsetsFormAttachment
   # True if there is nothing to put in the file.
   # If true, the file will not be generated, even if ensure_generated is called.
   def empty?
-    form.option_sets.empty?
+    !Odk::DecoratorFactory.decorate(form).needs_external_csv?
   end
 
   # The full path to the file.

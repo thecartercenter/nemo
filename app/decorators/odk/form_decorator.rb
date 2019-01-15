@@ -49,8 +49,11 @@ module Odk
 
     # Whether this form needs an accompanying manifest for odk.
     def needs_manifest?
-      # For now this is IFF there are any multilevel option sets or questions with audio prompts
-      visible_questionings.any? { |q| q.multilevel? || q.audio_prompt.exists? }
+      needs_external_csv? || visible_questionings.any? { |qing| qing.audio_prompt.exists? }
+    end
+
+    def needs_external_csv?
+      visible_questionings.any? { |q| decorate(q).select_one_with_external_csv? }
     end
   end
 end
