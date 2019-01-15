@@ -90,7 +90,7 @@ class UsersController < ApplicationController
   def bulk_destroy
     @users = User.accessible_by(current_ability)
     @users = apply_search_if_given(User, @users)
-    @users = load_selected_objects(User, @users)
+    @users = load_selected_objects(@users)
 
     result = BatchDestroy.new(@users, current_user, current_ability).destroy!
     success = []

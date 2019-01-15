@@ -25,7 +25,8 @@ feature "response index", js: true do
         r.reviewed = true
         r.save!
       end
-      it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 1, query: "reviewed:1"
+      it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 1,
+        query: "reviewed:1"
     end
 
     context "select nothing" do
@@ -42,11 +43,13 @@ feature "response index", js: true do
     end
 
     context "unfiltered select all" do
-      it_behaves_like "select all that exist", klass: "responses", num: 100, link: "Delete Selected"
+      it_behaves_like "select all that exist", klass: "responses", num: 100,
+        link: "Delete Selected"
     end
 
     context "filtered select all" do
-      it_behaves_like "select all that exist", klass: "responses", num: 50, link: "Delete Selected", query: "reviewed:1"
+      it_behaves_like "select all that exist", klass: "responses", num: 50,
+        link: "Delete Selected", query: "reviewed:1"
     end
   end
 end

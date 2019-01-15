@@ -21,13 +21,13 @@ feature "user index", js: true do
     end
 
     context "filtered" do
-      it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 5, query: "role:enumerator"
+      it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 5,
+        query: "role:enumerator"
     end
 
     context "select nothing" do
       it_behaves_like "select nothing", "users", "Delete Multiple Users"
     end
-
   end
 
   describe "bulk destroy paginated" do
@@ -39,12 +39,13 @@ feature "user index", js: true do
     end
 
     context "unfiltered select all" do
-      it_behaves_like "select all that exist", klass: "users", num: 111, link: "Delete Multiple Users"
+      it_behaves_like "select all that exist", klass: "users", num: 111,
+        link: "Delete Multiple Users"
     end
 
     context "filtered select all" do
-      it_behaves_like "select all that exist", klass: "users", num: 55, link: "Delete Multiple Users", query: "role:enumerator"
+      it_behaves_like "select all that exist", klass: "users", num: 55,
+        link: "Delete Multiple Users", query: "role:enumerator"
     end
-
   end
 end

@@ -38,5 +38,4 @@ shared_context "batch delete" do
       expect(page).to have_content("#{num} #{options[:klass]} deleted successfully")
     end
   end
-
 end

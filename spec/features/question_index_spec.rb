@@ -17,11 +17,13 @@ feature "question index", js: true do
     let!(:question1) { create(:question, mission: mission, code: "BallotBoxes") }
 
     context "unfiltered" do
-      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions", num: 5
+      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions",
+        num: 5
     end
 
     context "filtered" do
-      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions", num: 1, query: "code:BallotBoxes"
+      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions",
+        num: 1, query: "code:BallotBoxes"
     end
 
     context "select nothing" do
@@ -34,15 +36,18 @@ feature "question index", js: true do
     let!(:text_questions) { create_list(:question, 50, mission: mission, qtype_name: "text") }
 
     context "unfiltered select page" do
-      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions", num: 25
+      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions", 
+        num: 25
     end
 
     context "unfiltered select all" do
-      it_behaves_like "select all that exist", klass: "questions", num: 100, link: "Delete Multiple Questions"
+      it_behaves_like "select all that exist", klass: "questions", num: 100,
+        link: "Delete Multiple Questions"
     end
 
     context "filtered select all" do
-      it_behaves_like "select all that exist", klass: "questions", num: 50, link: "Delete Multiple Questions", query: "type:integer"
+      it_behaves_like "select all that exist", klass: "questions", num: 50,
+        link: "Delete Multiple Questions", query: "type:integer"
     end
   end
 end
