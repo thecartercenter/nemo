@@ -241,7 +241,7 @@ module OptionNodeSupport
     }
   end
 
-  GEO_SINGLE_LEVEL_ATTRIBS = [{
+  GEO_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Funton'}, latitude: -12.9, longitude: 22.7 },
     'children_attribs' => 'NONE'
   }, {
@@ -249,14 +249,14 @@ module OptionNodeSupport
     'children_attribs' => 'NONE'
   }]
 
-  LARGE_SINGLE_LEVEL_ATTRIBS = (1..100).map do |i|
+  LARGE_ATTRIBS = (1..100).map do |i|
     {
       'option_attribs' => { 'name_translations' => { 'en' => i.to_s } },
       'children_attribs' => 'NONE'
     }
   end
 
-  WITH_GRANDCHILDREN_ATTRIBS = [{
+  MULTILEVEL_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [
       { 'option_attribs' => { 'name_translations' => {'en' => 'Cat'} }, 'children_attribs' => 'NONE' },
@@ -270,7 +270,7 @@ module OptionNodeSupport
     ]
   }]
 
-  GEO_WITH_GRANDCHILDREN_ATTRIBS = [{
+  GEO_MULTILEVEL_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Canada'} },
     'children_attribs' => [
       {
@@ -294,7 +294,7 @@ module OptionNodeSupport
     ]
   }]
 
-  WITH_GREAT_GRANDCHILDREN_ATTRIBS = [{
+  SUPER_MULTILEVEL_ATTRIBS = [{
     'option_attribs' => { 'name_translations' => {'en' => 'Animal'} },
     'children_attribs' => [
       {

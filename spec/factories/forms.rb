@@ -8,33 +8,14 @@ def create_questioning(qtype_name_or_question, form, attribs = {})
   else
     pseudo_qtype_name = qtype_name_or_question
 
-    qtype_name = case pseudo_qtype_name
-    when "multilevel_select_one", "geo_select_one", "geo_multilevel_select_one", "large_select_one",
-      "select_one_as_text_for_sms", "multilevel_select_one_as_text_for_sms", "select_one_with_appendix_for_sms"
-      "select_one"
-    when "select_multiple_with_appendix_for_sms", "large_select_multiple"
-      "select_multiple"
-    when "multilingual_text", "multilingual_text_with_user_locale"
-      "text"
-    when "counter_with_inc"
-      "counter"
-    when "formstart", "formend"
-      "datetime"
-    else
-      pseudo_qtype_name
-    end
-
     q_attribs = {
-      qtype_name: qtype_name,
       mission: form.mission,
-      use_multilevel_option_set: !!(pseudo_qtype_name =~ /multilevel_select_one/),
-      use_geo_option_set: !!(pseudo_qtype_name =~ /geo/),
-      use_large_option_set: !!(pseudo_qtype_name =~ /large/),
-      multilingual: !!(pseudo_qtype_name =~ /multilingual/),
-      with_user_locale: !!(pseudo_qtype_name =~ /with_user_locale/),
+      use_geo_option_set: pseudo_qtype_name.match?(/geo/),
+      multilingual: pseudo_qtype_name.match?(/multilingual/),
+      with_user_locale: pseudo_qtype_name.match?(/with_user_locale/),
       auto_increment: pseudo_qtype_name == "counter_with_inc",
       is_standard: form.is_standard?,
-      metadata_type: %w(formstart formend).include?(pseudo_qtype_name) ? pseudo_qtype_name : nil
+      metadata_type: %w[formstart formend].include?(pseudo_qtype_name) ? pseudo_qtype_name : nil
     }
 
     if evaluator.try(:option_set)
@@ -43,9 +24,34 @@ def create_questioning(qtype_name_or_question, form, attribs = {})
       q_attribs[:option_names] = evaluator.option_names
     end
 
+    q_attribs[:qtype_name] =
+      case pseudo_qtype_name
+      when "select_one_as_text_for_sms", "select_one_with_appendix_for_sms", "geo_select_one",
+        "multilevel_select_one", "geo_multilevel_select_one", "large_select_one",
+        "super_multilevel_select_one", "multilevel_select_one_as_text_for_sms"
+        "select_one"
+      when "select_multiple_with_appendix_for_sms", "large_select_multiple"
+        "select_multiple"
+      when "multilingual_text", "multilingual_text_with_user_locale"
+        "text"
+      when "counter_with_inc"
+        "counter"
+      when "formstart", "formend"
+        "datetime"
+      else
+        pseudo_qtype_name
+      end
+
+    preset_opt_sets_qtypes = %w[geo_select_one multilevel_select_one geo_multilevel_select_one
+                                large_select_one super_multilevel_select_one
+                                multilevel_select_one_as_text_for_sms large_select_multiple]
+    if preset_opt_sets_qtypes.include?(pseudo_qtype_name)
+      q_attribs[:option_names] = pseudo_qtype_name.match(/(.+)_select_/)[1].to_sym
+    end
+
     question = build(:question, q_attribs)
-    question.option_set.sms_guide_formatting = "treat_as_text" if pseudo_qtype_name =~ /as_text_for_sms/
-    question.option_set.sms_guide_formatting = "appendix" if pseudo_qtype_name =~ /with_appendix_for_sms/
+    question.option_set.sms_guide_formatting = "treat_as_text" if pseudo_qtype_name.match?(/as_text_for_sms/)
+    question.option_set.sms_guide_formatting = "appendix" if pseudo_qtype_name.match?(/with_appendix_for_sms/)
     question
   end
 

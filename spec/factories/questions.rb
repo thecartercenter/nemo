@@ -1,9 +1,7 @@
 FactoryGirl.define do
   factory :question do
     transient do
-      use_multilevel_option_set false
       use_geo_option_set false
-      use_large_option_set false
       multilingual false
       with_user_locale false
       add_to_form false
@@ -16,12 +14,9 @@ FactoryGirl.define do
     sequence(:code) { |n| "#{qtype_name.camelize}Q#{n}" }
 
     sequence(:name_translations) do |n|
-      translation_string = "#{qtype_name.titleize} Question Title #{n}"
-      translation_string = translation_string.prepend "Geographic " if use_geo_option_set
-      translation_string = translation_string.prepend "Multilevel " if use_multilevel_option_set
-      translations = { en: translation_string }
-      translations.merge!({ fr: "fr: #{translation_string}" }) if multilingual
-      translations.merge!({ rw: "rw: #{translation_string}" }) if with_user_locale
+      translations = {en: "#{qtype_name.titleize} Question Title #{n}"}
+      translations.merge!(fr: "fr: #{translation_string}") if multilingual
+      translations.merge!(rw: "rw: #{translation_string}") if with_user_locale
       translations
     end
     name { name_translations[:en] }
@@ -41,10 +36,8 @@ FactoryGirl.define do
       if QuestionType[qtype_name].has_options?
         os_attrs = {
           mission: mission,
-          multilevel: use_multilevel_option_set,
           geographic: use_geo_option_set,
           allow_coordinates: use_geo_option_set,
-          large: use_large_option_set,
           is_standard: is_standard
         }
         os_attrs[:option_names] = option_names unless option_names.nil?
