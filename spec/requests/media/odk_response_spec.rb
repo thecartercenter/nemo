@@ -67,12 +67,12 @@ describe "odk media submissions", :odk, :reset_factory_sequences, type: :request
 
   def prepare_and_upload_submission_file(template)
     File.open(tmp_path, "w") do |f|
-      f.write(prepare_odk_fixture(template, form))
+      f.write(prepare_odk_media_upload_fixture(template, form))
     end
     fixture_file_upload(tmp_path, "text/xml")
   end
 
-  def prepare_odk_fixture(filename, form)
+  def prepare_odk_media_upload_fixture(filename, form)
     prepare_fixture("odk/responses/#{filename}",
       form: [form.id],
       formver: [form.code],

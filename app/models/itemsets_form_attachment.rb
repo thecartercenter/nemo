@@ -35,6 +35,11 @@ class ItemsetsFormAttachment
     form.option_sets.empty?
   end
 
+  # The full path to the file.
+  def priv_path
+    @priv_path ||= File.join(Rails.root, "public", path)
+  end
+
   private
 
   # The subdirectory where the attachment should go.
@@ -45,11 +50,6 @@ class ItemsetsFormAttachment
   # The full path to the directory.
   def priv_dir
     @priv_dir ||= File.join(Rails.root, "public", dir)
-  end
-
-  # The full path to the file.
-  def priv_path
-    @priv_path ||= File.join(Rails.root, "public", path)
   end
 
   def file_contents

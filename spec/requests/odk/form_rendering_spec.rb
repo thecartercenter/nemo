@@ -6,9 +6,10 @@ require "fileutils"
 describe "form rendering for odk", :odk, :reset_factory_sequences do
   let(:user) { create(:user) }
   let(:form) { create(:form) }
+  let(:fixture_filename) { "#{fixture_name}.xml" }
 
   # Set this to true temporarily to make the spec save the prepared XML files under `tmp/odk/forms`.
-  # Then use `adb push tmp/odk/forms /sdcard/odk` or similar to load them into ODK for testing.
+  # Then use e.g. `adb push tmp/odk/forms/my_form/. /sdcard/odk/forms` to push one onto a phone for testing.
   let(:save_fixtures) { true }
 
   before do
@@ -41,7 +42,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "various_question_types.xml")
+      expect_xml(form, "various_question_types")
     end
   end
 
@@ -57,7 +58,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "allows_incomplete.xml")
+      expect_xml(form, "allows_incomplete")
     end
   end
 
@@ -87,7 +88,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "form_with_skip_rule.xml")
+      expect_xml(form, "form_with_skip_rule")
     end
   end
 
@@ -128,7 +129,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "grid_group_with_condition.xml")
+        expect_xml(form, "grid_group_with_condition")
       end
     end
 
@@ -144,7 +145,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should not render with grid format" do
-        expect_xml(form, "multiscreen_gridable_form.xml")
+        expect_xml(form, "multiscreen_gridable_form")
       end
     end
   end
@@ -164,7 +165,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "group_form.xml")
+        expect_xml(form, "group_form")
       end
     end
 
@@ -185,7 +186,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should not render on single page due to condition" do
-        expect_xml(form, "group_form_with_condition.xml")
+        expect_xml(form, "group_form_with_condition")
       end
     end
 
@@ -201,7 +202,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "multiscreen_group_form.xml")
+        expect_xml(form, "multiscreen_group_form")
       end
     end
 
@@ -242,7 +243,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "nested_repeat_group_form.xml")
+        expect_xml(form, "nested_repeat_group_form")
       end
     end
 
@@ -254,7 +255,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "empty_repeat_group_form.xml")
+        expect_xml(form, "empty_repeat_group_form")
       end
     end
   end
@@ -268,7 +269,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "various_selects.xml")
+        expect_xml(form, "various_selects")
       end
     end
 
@@ -282,7 +283,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "group_form_with_multilevel.xml")
+        expect_xml(form, "group_form_with_multilevel")
       end
     end
 
@@ -300,7 +301,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "multiscreen_group_form_with_multilevel.xml")
+        expect_xml(form, "multiscreen_group_form_with_multilevel")
       end
     end
 
@@ -333,7 +334,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "nested_group_form_with_multilevel.xml")
+        expect_xml(form, "nested_group_form_with_multilevel")
       end
     end
 
@@ -343,16 +344,28 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
           name: "Small and large multilevel",
           question_types: %w[multilevel_select_one super_multilevel_select_one])
       end
+      let(:fixture_name) { "small_large_multilevel" }
 
       before do
-        Odk::OptionSetDecorator # Force autoload before stubbing const.
+        Odk::OptionSetDecorator # Force autoload # rubocop:disable Lint/Void
         # Stub threshold constant so that first opt set is rendered normally,
         # second is rendered as external CSV.
         stub_const("Odk::OptionSetDecorator::EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+
+        # Generate the itemset file and save with the saved fixture if saving fixtures.
+        # Then if we do adb push tmp/odk/forms/small_large_multilevel/. /sdcard/odk/forms
+        # it will copy the form and the required itemset file for testing.
+        if save_fixtures
+          ifa = ItemsetsFormAttachment.new(form: form).tap(&:ensure_generated)
+          media_dir = File.join(saved_fixture_dir(name: fixture_name, type: :form), "#{fixture_name}-media")
+          FileUtils.mkdir_p(media_dir)
+          puts "Saving itemsets file to #{media_dir}/itemsets.csv"
+          FileUtils.mv(ifa.priv_path, "#{media_dir}/itemsets.csv")
+        end
       end
 
       it "should render proper xml" do
-        expect_xml(form, "small_large_multilevel.xml")
+        expect_xml(form, fixture_name)
       end
     end
   end
@@ -374,7 +387,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "default_pattern_form.xml")
+        expect_xml(form, "default_pattern_form")
       end
     end
 
@@ -404,7 +417,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "repeat_group_form.xml")
+        expect_xml(form, "repeat_group_form")
       end
     end
   end
@@ -418,7 +431,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "media_question_form.xml")
+        expect_xml(form, "media_question_form")
       end
     end
 
@@ -430,14 +443,14 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "form_with_audio_prompt.xml")
+        expect_xml(form, "form_with_audio_prompt")
       end
     end
   end
 
-  def expect_xml(form, filename)
+  def expect_xml(form, fixture_name)
     do_request_and_expect_success
-    expect(tidyxml(response.body)).to eq prepare_odk_form_fixture(filename, form)
+    expect(tidyxml(response.body)).to eq(prepare_odk_form_fixture(fixture_name, form))
   end
 
   def do_request_and_expect_success
@@ -445,8 +458,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     expect(response).to be_successful
   end
 
-  def prepare_odk_form_fixture(filename, form, options = {})
-    path = "odk/forms/#{filename}"
-    prepare_odk_fixture(filename, path, form, options)
+  def prepare_odk_form_fixture(name, form, options = {})
+    prepare_odk_fixture(name: name, type: :form, form: form, **options)
   end
 end
