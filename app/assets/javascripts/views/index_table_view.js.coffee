@@ -12,7 +12,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     'mouseover table.index_table tbody tr': 'highlight_partner_row'
     'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
 
-  initialize: (params) ->
+  initialize: (params, search_form_view) ->
     @is_search = params.is_search
     @no_whole_row_link = params.no_whole_row_link
     @form = this.$el.find('form').first() || this.$el.closest('form')
@@ -22,6 +22,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     @entries = this.$el.data('entries')
     @select_all_page = false
     @class_name = I18n.t("activerecord.models.#{params.class_name}.many")
+    @search_form_view = search_form_view
 
 
     # flash the modified obj if given
@@ -159,8 +160,7 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
       # (we do it this way in case the main form has other stuff in it that we don't want to submit)
       form.append(@form.find('input.batch_op:checked').clone())
       form.append(@form.find('input[name=select_all]').clone())
-      form.append(@form.find('input[name=search]').clone())
-
+      form.append(@search_form_view.$el.find('input[name=search]').clone())
 
       token = $('meta[name="csrf-token"]').attr('content')
       $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form)

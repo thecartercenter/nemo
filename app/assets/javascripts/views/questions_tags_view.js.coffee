@@ -8,4 +8,4 @@ class ELMO.Views.QuestionsTagsView extends ELMO.Views.ApplicationView
 
   add_to_search: (e) ->
     e.stopPropagation()
-    searchFormView.setQualifier 'tag', e.currentTarget.innerText.trim()
+    ELMO.searchFormView.setQualifier 'tag', e.currentTarget.innerText.trim()

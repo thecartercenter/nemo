@@ -8,9 +8,13 @@ shared_context "batch delete" do
       search_for(options[:query]) unless options[:query].nil?
       click_on("Select All")
       click_on(options[:link])
-      expect(accept_alert).to eq("Are you sure you want to delete these #{options[:num]} #{options[:klass]}?")
+      confirm_delete_msg = options[:num] == 1 ? "Are you sure you want to delete this #{options[:klass].singularize}?" :
+        "Are you sure you want to delete these #{options[:num]} #{options[:klass]}?"
+      expect(accept_alert).to eq(confirm_delete_msg)
       num = options[:query].nil? && options[:klass] == "users" ? options[:num] - 1 : options[:num]
-      expect(page).to have_content("#{num} #{options[:klass]} deleted successfully")
+      success_msg = options[:num] == 1 ? "1 #{options[:klass].singularize} deleted successfully" :
+        "#{num} #{options[:klass]} deleted successfully"
+      expect(page).to have_content(success_msg)
     end
   end
 

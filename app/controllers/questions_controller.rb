@@ -65,7 +65,10 @@ class QuestionsController < ApplicationController
   end
 
   def bulk_destroy
-    @questions = load_selected_objects(Question)
+    @questions = Question.accessible_by(current_ability)
+    @questions = apply_search_if_given(Question, @questions)
+    @questions = load_selected_objects(Question, @questions)
+
     result = BatchDestroy.new(@questions, current_user, current_ability).destroy!
     success = []
     success << t("question.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
