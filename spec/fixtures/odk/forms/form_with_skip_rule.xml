@@ -142,7 +142,7 @@
       <bind nodeset="/data/*itemcode5*" type="geopoint" relevant="(not((/data/*itemcode3* = 0)))"/>
       <bind nodeset="/data/*itemcode6*" type="select1" relevant="(not((/data/*itemcode3* = 0)))"/>
       <bind nodeset="/data/*itemcode7*_1" type="select1" relevant="((/data/*itemcode3* &gt; 5) and (selected(/data/*itemcode6*, '*optcode1*'))) and (not((/data/*itemcode3* = 0)))"/>
-      <bind nodeset="/data/*itemcode7*_2" type="string" relevant="((/data/*itemcode3* &gt; 5) and (selected(/data/*itemcode6*, '*optcode1*'))) and (not((/data/*itemcode3* = 0)))"/>
+      <bind nodeset="/data/*itemcode7*_2" type="select1" relevant="((/data/*itemcode3* &gt; 5) and (selected(/data/*itemcode6*, '*optcode1*'))) and (not((/data/*itemcode3* = 0)))"/>
       <bind nodeset="/data/*itemcode8*" type="select"/>
       <bind nodeset="/data/*itemcode9*" type="string"/>
       <bind nodeset="/data/*itemcode10*" type="dateTime"/>

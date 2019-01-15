@@ -200,10 +200,10 @@
       </itext>
       <bind nodeset="/data/*itemcode1*" type="select1"/>
       <bind nodeset="/data/*itemcode2*_1" type="select1"/>
-      <bind nodeset="/data/*itemcode2*_2" type="string"/>
+      <bind nodeset="/data/*itemcode2*_2" type="select1"/>
       <bind nodeset="/data/*itemcode3*_1" type="select1"/>
-      <bind nodeset="/data/*itemcode3*_2" type="string"/>
-      <bind nodeset="/data/*itemcode3*_3" type="string"/>
+      <bind nodeset="/data/*itemcode3*_2" type="select1"/>
+      <bind nodeset="/data/*itemcode3*_3" type="select1"/>
     </model>
   </h:head>
   <h:body>

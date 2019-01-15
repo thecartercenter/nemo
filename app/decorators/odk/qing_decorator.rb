@@ -55,7 +55,8 @@ module Odk
 
     def binding_type_attrib(subq)
       # ODK wants non-first-level selects to have type 'string'.
-      subq.first_rank? ? subq.odk_name : "string"
+      # subq.first_rank? ? subq.odk_name : "string"
+      subq.odk_name
     end
   end
 end

@@ -120,7 +120,7 @@
       <bind nodeset="/data/*itemcode1*/*itemcode4*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode5*" type="int"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode6*_1" type="select1"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode6*_2" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode6*_2" type="select1"/>
       <bind nodeset="/data/*itemcode1*/*itemcode7*" type="string"/>
     </model>
   </h:head>
