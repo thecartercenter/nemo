@@ -260,6 +260,18 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   end
 
   describe "multilevel selects" do
+    context "form with 1-level select, 2-level select, 3-level select" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Various Types of Select",
+          question_types: %w[select_one multilevel_select_one super_multilevel_select_one])
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "various_selects.xml")
+      end
+    end
+
     # Tests that the single-screen group is correctly split to handle the
     # needs of the multi-level/cascading option set.
     context "group form with multilevel select" do
