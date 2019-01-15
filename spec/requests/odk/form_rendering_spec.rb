@@ -336,6 +336,25 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         expect_xml(form, "nested_group_form_with_multilevel.xml")
       end
     end
+
+    context "small and large multilevel selects" do
+      let(:form) do
+        create(:form, :published, :with_version,
+          name: "Small and large multilevel",
+          question_types: %w[multilevel_select_one super_multilevel_select_one])
+      end
+
+      before do
+        Odk::OptionSetDecorator # Force autoload before stubbing const.
+        # Stub threshold constant so that first opt set is rendered normally,
+        # second is rendered as external CSV.
+        stub_const("Odk::OptionSetDecorator::EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+      end
+
+      it "should render proper xml" do
+        expect_xml(form, "small_large_multilevel.xml")
+      end
+    end
   end
 
   describe "dynamic patterns" do

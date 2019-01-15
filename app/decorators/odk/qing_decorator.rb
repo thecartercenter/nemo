@@ -22,6 +22,14 @@ module Odk
       decorate_collection(object.subqings, context: context)
     end
 
+    def decorated_option_set
+      @decorated_option_set ||= decorate(option_set)
+    end
+
+    def select_one_with_external_csv?
+      qtype_name == "select_one" && decorated_option_set.external_csv?
+    end
+
     private
 
     def default_answer?
@@ -54,9 +62,8 @@ module Odk
     end
 
     def binding_type_attrib(subq)
-      # ODK wants non-first-level selects to have type 'string'.
-      # subq.first_rank? ? subq.odk_name : "string"
-      subq.odk_name
+      # When using external CSV method, ODK wants non-first-level selects to have type 'string'.
+      select_one_with_external_csv? && !subq.first_rank? ? "string" : subq.odk_name
     end
   end
 end

@@ -116,7 +116,7 @@ class OptionSet < ApplicationRecord
   end
 
   def level_count
-    levels.try(:size) || 1
+    level_names.try(:size) || 1
   end
 
   def level_name_for_depth(depth)
@@ -125,7 +125,7 @@ class OptionSet < ApplicationRecord
 
   def multilevel?
     return @multilevel if defined?(@multilevel)
-    @multilevel = root_node&.has_grandchildren? == true
+    @multilevel = level_count > 1
   end
   alias multilevel multilevel?
 

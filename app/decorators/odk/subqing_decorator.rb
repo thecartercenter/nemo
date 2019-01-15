@@ -5,6 +5,9 @@ module Odk
     # and everything else (via method_missing) to the decorated Questioning.
     delegate :name, :questioning, :rank, :level, :first_rank?, :qtype, to: :object
 
+    # method_missing delegation is a smell so delegating some things explicitly to questioning
+    delegate :decorated_option_set, :select_one_with_external_csv?, to: :decorated_questioning
+
     # If options[:previous] is true, returns the code for the
     # immediately previous subqing (multilevel only).
     def odk_code(options = {})
@@ -13,10 +16,6 @@ module Odk
 
     def absolute_xpath
       (decorate_collection(ancestors.to_a) << self).map(&:odk_code).join("/")
-    end
-
-    def decorated_questioning
-      @decorated_questioning ||= decorate(object.questioning)
     end
 
     def input_tag(grid_mode, label_row, xpath_prefix)
@@ -36,8 +35,9 @@ module Odk
       opts[:rows] = 5 if qtype.name == "long_text"
       opts[:appearance] = appearance(grid_mode, label_row)
       opts[:mediatype] = media_type if qtype.multimedia?
+      opts[:query] = external_csv_itemset_query
       content_tag(tagname, opts) do
-        [(label unless label_row), (hint unless grid_mode), items_or_itemset].compact.reduce(:<<)
+        [label(label_row), hint(grid_mode), items_or_itemset].compact.reduce(:<<)
       end
     end
 
@@ -47,20 +47,22 @@ module Odk
 
     private
 
-    def decorated_option_set
-      @decorated_option_set ||= decorate(option_set)
+    def decorated_questioning
+      @decorated_questioning ||= decorate(object.questioning)
     end
 
-    def label
+    def label(label_row)
+      return if label_row
       tag(:label, ref: "jr:itext('#{odk_code}:label')")
     end
 
-    def hint
+    def hint(grid_mode)
+      return if grid_mode
       tag(:hint, ref: "jr:itext('#{odk_code}:hint')")
     end
 
     def items_or_itemset
-      return unless has_options?
+      return if !has_options? || use_external_csv_itemset_query?
       rank == 1 ? top_level_items : itemset
     end
 
@@ -74,6 +76,12 @@ module Odk
       end.reduce(:<<)
     end
 
+    def external_csv_itemset_query
+      return unless use_external_csv_itemset_query?
+      path_to_prev_subqing = decorated_questioning.subqings[rank - 2].absolute_xpath
+      "instance('#{decorated_option_set.odk_code}')/root/item[parent_id=#{path_to_prev_subqing}]"
+    end
+
     def itemset
       instance_id = decorated_option_set.instance_id_for_depth(rank)
       path_to_prev_subqing = "current()/../#{decorated_questioning.subqings[rank - 2].odk_code}"
@@ -85,7 +93,7 @@ module Odk
     end
 
     def tagname
-      if qtype.name == "select_one"
+      if qtype.name == "select_one" && (first_rank? || !select_one_with_external_csv?)
         :select1
       elsif qtype.name == "select_multiple"
         :select
@@ -126,6 +134,10 @@ module Odk
       params[:increment] = "true()" if questioning.auto_increment?
       str = params.map { |k, v| "#{k}=#{v}" }.join(", ")
       "ex:org.opendatakit.counter(#{str})".html_safe
+    end
+
+    def use_external_csv_itemset_query?
+      select_one_with_external_csv? && !first_rank?
     end
   end
 end

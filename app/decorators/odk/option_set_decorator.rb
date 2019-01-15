@@ -5,13 +5,19 @@ module Odk
   class OptionSetDecorator < BaseDecorator
     delegate_all
 
+    EXTERNAL_CSV_METHOD_THRESHOLD = 300
+
+    def external_csv?
+      multilevel? && total_options > EXTERNAL_CSV_METHOD_THRESHOLD
+    end
+
     def odk_code
       CodeMapper.instance.code_for_item(object)
     end
 
-    # Returns <text> tags for all options.
+    # Returns <text> tags for options.
     def translation_tags(lang)
-      tags = preordered_option_nodes.map do |node|
+      tags = nodes_for_translation_tags.map do |node|
         content_tag(:text, id: Odk::CodeMapper.instance.code_for_item(node)) do
           content_tag(:value) do
             node.option.name(lang, strict: false)
@@ -37,6 +43,13 @@ module Odk
     end
 
     private
+
+    # Returns the OptionNodes that should be represented with translation tags.
+    # If using external CSV method, this should just be the top level.
+    def nodes_for_translation_tags
+      # Don't use nodes_at_depth because that loads all options unnecessarily.
+      external_csv? ? first_level_option_nodes : preordered_option_nodes
+    end
 
     def item_tags_for_depth(level)
       tags = nodes_at_depth(level).map do |node|

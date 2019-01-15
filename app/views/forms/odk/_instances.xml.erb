@@ -16,6 +16,6 @@
 </instance>
 
 <%# Instances for non-first levels of option sets. Used for cascading behavior. %>
-<% @option_sets.each do |option_set| %>
+<% @option_sets.reject(&:external_csv?).each do |option_set| %>
   <%= option_set.instances %>
 <% end %>
