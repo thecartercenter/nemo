@@ -2,13 +2,7 @@ module BatchProcessable
   extend ActiveSupport::Concern
 
   def load_selected_objects(klass, rel)
-    return rel if params[:select_all].present?
-
-    if params[:selected].present?
-      ids = params[:selected].keys
-      rel.where(id: ids)
-    else
-      rel
+    return rel if params[:select_all].present? || params[:selected].nil?
+    rel.where(id: params[:selected].keys)
     end
-  end
 end
