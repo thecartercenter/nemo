@@ -76,20 +76,24 @@ module Odk
       end.reduce(:<<)
     end
 
-    def external_csv_itemset_query
-      return unless use_external_csv_itemset_query?
-      path_to_prev_subqing = decorated_questioning.subqings[rank - 2].absolute_xpath
-      "instance('#{decorated_option_set.odk_code}')/root/item[parent_id=#{path_to_prev_subqing}]"
-    end
-
     def itemset
       instance_id = decorated_option_set.instance_id_for_depth(rank)
-      path_to_prev_subqing = "current()/../#{decorated_questioning.subqings[rank - 2].odk_code}"
       nodeset_ref = "instance('#{instance_id}')/root/item[parentId=#{path_to_prev_subqing}]"
       content_tag(:itemset, nodeset: nodeset_ref) do
         tag(:label, ref: "jr:itext(itextId)") <<
           tag(:value, ref: "itextId")
       end
+    end
+
+    def external_csv_itemset_query
+      return unless use_external_csv_itemset_query?
+      # In external csv method, we use the same instance ID (just the option set odk_code) for all levels.
+      # We use parent_id here for historical reasons.
+      "instance('#{decorated_option_set.odk_code}')/root/item[parent_id=#{path_to_prev_subqing}]"
+    end
+
+    def path_to_prev_subqing
+      "current()/../#{decorated_questioning.subqings[rank - 2].odk_code}"
     end
 
     def tagname
