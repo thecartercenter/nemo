@@ -36,7 +36,7 @@ FactoryGirl.define do
       # Deliver broadcast so that Sms::Broadcast gets created
       broadcast.deliver
 
-      os = create(:option_set, multilevel: true, mission: mission)
+      os = create(:option_set, option_names: :multilevel, mission: mission)
 
       # test that cloned objects can be deleted
       os.replicate(mode: :clone)

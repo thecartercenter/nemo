@@ -7,7 +7,7 @@ describe OptionSet do
   let(:mission2) { create(:mission) }
 
   describe "to_mission" do
-    let(:orig) { create(:option_set, multilevel: true, is_standard: true) }
+    let(:orig) { create(:option_set, option_names: :multilevel, is_standard: true) }
     let(:copy) { orig.replicate(mode: :to_mission, dest_mission: mission2) }
 
     it "should be copied properly" do
@@ -63,7 +63,7 @@ describe OptionSet do
   end
 
   describe "promote with link" do
-    let(:orig) { create(:option_set, multilevel: true, mission: mission1) }
+    let(:orig) { create(:option_set, option_names: :multilevel, mission: mission1) }
     let(:copy) { orig.replicate(mode: :promote) }
 
     it "should create a correct copy" do
@@ -76,7 +76,7 @@ describe OptionSet do
   end
 
   describe "clone" do
-    let(:orig) { create(:option_set, multilevel: true, mission: mission1) }
+    let(:orig) { create(:option_set, option_names: :multilevel, mission: mission1) }
     let(:copy) { orig.replicate(mode: :clone) }
 
     it "should make correct copy" do

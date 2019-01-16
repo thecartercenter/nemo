@@ -4,7 +4,7 @@ require "rails_helper"
 require "./lib/task_helpers/option_set_reclone"
 
 describe OptionSetReclone do
-  let!(:orig) { create(:option_set, multilevel: true) }
+  let!(:orig) { create(:option_set, option_names: :multilevel) }
   let!(:clone) { orig.replicate(mode: :clone) }
   let!(:form) { create(:form, question_types: %w[select_one integer]) }
   subject(:recloner) { described_class.new }

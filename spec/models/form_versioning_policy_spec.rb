@@ -321,7 +321,7 @@ describe FormVersioningPolicy do
 
   # creates an option set, and a question that has the option set, and adds it to first two forms
   def setup_option_set(options = {})
-    @os = FactoryGirl.create(:option_set, multilevel: true)
+    @os = FactoryGirl.create(:option_set, option_names: :multilevel)
     @q = FactoryGirl.create(:question, qtype_name: "select_one", option_set: @os)
     @forms[0...2].each do |f|
       FactoryGirl.create(:questioning, form: f, question: @q)

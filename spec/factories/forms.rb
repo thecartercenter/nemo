@@ -147,7 +147,7 @@ FactoryGirl.define do
             # Multilevel select_one question.
             create(:questioning, mission: mission, form: form, parent: form.root_group,
               question: create(:question, mission: mission, name: "Question 2", hint: "Hint 2",
-                qtype_name: "select_one", option_set: create(:option_set, name: "Set 2", multilevel: true))),
+                qtype_name: "select_one", option_set: create(:option_set, name: "Set 2", option_names: :multilevel))),
 
             # Integer question.
             create(:questioning, mission: mission, form: form, parent: form.root_group,

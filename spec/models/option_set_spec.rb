@@ -4,7 +4,7 @@ describe OptionSet do
   include OptionNodeSupport
 
   it "should get constructed properly" do
-    os = create(:option_set, multilevel: true)
+    os = create(:option_set, option_names: :multilevel)
     # This assertion checks that option_set, mission, and is_standard? get cascaded properly.
     expect_node([["Animal", ["Cat", "Dog"]], ["Plant", ["Tulip", "Oak"]]], os.root_node)
     expect(Option.count).to eq 6
@@ -42,7 +42,7 @@ describe OptionSet do
   end
 
   describe "options" do
-    before { @set = create(:option_set, multilevel: true) }
+    before { @set = create(:option_set, option_names: :multilevel) }
 
     it "should delegate to option node child options" do
       expect(@set.root_node).to receive(:child_options)
@@ -70,7 +70,7 @@ describe OptionSet do
     end
 
     it "should be correct for multi level set" do
-      set = create(:option_set, multilevel: true)
+      set = create(:option_set, option_names: :multilevel)
       expect(set.levels[0].name).to eq "Kingdom"
       expect(set.levels[1].name).to eq "Species"
     end
@@ -90,7 +90,7 @@ describe OptionSet do
   end
 
   describe "fetch_by_shortcode" do
-    let!(:option_set) { create(:option_set, super_multilevel: true) }
+    let!(:option_set) { create(:option_set, option_names: :super_multilevel) }
     let!(:option_node) { option_set.preordered_option_nodes.last }
 
     it "should fetch the correct node from shortcode" do
@@ -100,7 +100,7 @@ describe OptionSet do
   end
 
   describe "arrange_as_rows" do
-    let!(:option_set) { create(:option_set, multilevel: true) }
+    let!(:option_set) { create(:option_set, option_names: :multilevel) }
 
     context "with missing option node" do
       before do
