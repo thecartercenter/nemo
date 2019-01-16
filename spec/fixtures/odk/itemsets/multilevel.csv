@@ -13,11 +13,3 @@ list_name,name,label::English,parent_id
 *optsetcode1*,*optcode12*,Flower,*optcode8*
 *optsetcode1*,*optcode13*,Tulip,*optcode12*
 *optsetcode1*,*optcode14*,Daisy,*optcode12*
-*optsetcode2*,*optcode15*,"Cat, Large",
-*optsetcode2*,*optcode16*,Dog,
-*optsetcode3*,*optcode17*,Animal,
-*optsetcode3*,*optcode18*,Cat,*optcode17*
-*optsetcode3*,*optcode19*,Dog,*optcode17*
-*optsetcode3*,*optcode20*,Plant,
-*optsetcode3*,*optcode21*,Tulip,*optcode20*
-*optsetcode3*,*optcode22*,Oak,*optcode20*

@@ -6,13 +6,7 @@ require "fileutils"
 describe ItemsetsFormAttachment, :odk do
   let(:form) { create(:form, question_types: question_types) }
   let(:question_types) { %w[integer] }
-  let(:priv_dir) { File.dirname(ifa.priv_path) }
   subject(:ifa) { ItemsetsFormAttachment.new(form: form) }
-
-  after do
-    # Clear out CSVs
-    FileUtils.rm_rf(priv_dir)
-  end
 
   describe "path" do
     before { allow(form).to receive(:id).and_return(42) }
@@ -44,8 +38,7 @@ describe ItemsetsFormAttachment, :odk do
   describe "priv_path" do
     it "should be correct" do
       allow(ifa).to receive(:path).and_return("foo")
-      allow(Rails).to receive(:root).and_return("/some/place")
-      expect(ifa.priv_path).to eq("/some/place/public/foo")
+      expect(ifa.priv_path.to_s).to eq("#{Rails.root}/public/foo")
     end
   end
 
@@ -82,7 +75,8 @@ describe ItemsetsFormAttachment, :odk do
 
   describe "generate!" do
     let(:csv) { ifa.send(:file_contents) }
-    let(:external_csv_threshold) { 7 }
+    let(:external_csv_threshold) { 3 } # 3 means both multilevel and super_multilevel sets are included
+    let(:priv_dir) { File.dirname(ifa.priv_path) }
 
     before do
       configatron.preferred_locales = [:en]
@@ -92,8 +86,13 @@ describe ItemsetsFormAttachment, :odk do
       stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", external_csv_threshold)
     end
 
+    after do
+      # Clear out generated CSVs
+      FileUtils.rm_rf(priv_dir)
+    end
+
     context "for regular form" do
-      let(:question_types) { %w[super_multilevel_select_one] }
+      let(:question_types) { %w[multilevel_select_one] }
       let(:dummy_path) { File.join(priv_dir, "itemsets-foo.csv") }
 
       before do
@@ -110,13 +109,14 @@ describe ItemsetsFormAttachment, :odk do
 
     context "for multilevel sets" do
       let(:question_types) { %w[super_multilevel_select_one select_one multilevel_select_one] }
+      let(:external_csv_threshold) { 7 } # 7 means only super_multilevel sets are included
 
       before do
         # Add a space and comma to test string enclosure in CSV.
         form.c[1].option_set.c[0].option.update!(name: "Cat, Large")
       end
 
-      it "should build file with correct contents" do
+      it "includes only the super_multilevel set" do
         ifa.ensure_generated
         # Level names are repeated b/c each set is distinct.
         # Just a coincidence the names are the same in this CSV.
@@ -141,7 +141,6 @@ describe ItemsetsFormAttachment, :odk do
 
     context "for muliple languages" do
       let(:question_types) { %w[multilevel_select_one] }
-      let(:external_csv_threshold) { 3 }
 
       before do
         configatron.preferred_locales = %i[en fr]
@@ -160,11 +159,9 @@ describe ItemsetsFormAttachment, :odk do
     end
 
     context "for form with no option sets" do
-      let(:opt_sets) { [] }
-
       it "should not generate a file" do
         ifa.ensure_generated
-        expect(File.exist?(ifa.send(:priv_path))).to be(false)
+        expect(File.exist?(ifa.priv_path)).to be(false)
       end
     end
   end

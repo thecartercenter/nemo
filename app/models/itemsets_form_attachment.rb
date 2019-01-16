@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-# Models the itemsets CSV file that is used by ODK to store option sets.
 require "fileutils"
 require "csv"
 require "digest"
-include LanguageHelper
 
+# Models the itemsets CSV file that is used by ODK to store option sets.
 class ItemsetsFormAttachment
+  include LanguageHelper
   attr_accessor :form
 
   def initialize(attribs)
@@ -16,7 +16,7 @@ class ItemsetsFormAttachment
   # The relative path, including filename, to the attachment.
   def path
     return @path if @path
-    stamp = (form.published? ? form.pub_changed_at : Time.now).utc.strftime("%Y%m%d_%H%M%S")
+    stamp = (form.published? ? form.pub_changed_at : Time.current).utc.strftime("%Y%m%d_%H%M%S")
     @path = File.join(dir, "itemsets-#{stamp}.csv")
   end
 
@@ -37,7 +37,7 @@ class ItemsetsFormAttachment
 
   # The full path to the file.
   def priv_path
-    @priv_path ||= File.join(Rails.root, "public", path)
+    @priv_path ||= Rails.root.join("public", path)
   end
 
   private
@@ -53,7 +53,7 @@ class ItemsetsFormAttachment
 
   # The full path to the directory.
   def priv_dir
-    @priv_dir ||= File.join(Rails.root, "public", dir)
+    @priv_dir ||= Rails.root.join("public", dir)
   end
 
   def file_contents
@@ -70,7 +70,7 @@ class ItemsetsFormAttachment
 
     CSV.open(priv_path, "wb") do |csv|
       generate_header_row(csv)
-      form.option_sets.each do |os|
+      option_sets_for_external_csv.each do |os|
         generate_subtree(os.arrange_with_options, csv, os.max_depth)
       end
     end
@@ -113,6 +113,10 @@ class ItemsetsFormAttachment
     row += configatron.preferred_locales.map { |l| "[#{I18n.t('common.blank', locale: l)}]" }
     row << (options[:type] == :child ? node.odk_code : "none")
     row
+  end
+
+  def option_sets_for_external_csv
+    form.option_sets.select { |set| Odk::DecoratorFactory.decorate(set).external_csv? }
   end
 
   def option_set_code(node)
