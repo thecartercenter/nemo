@@ -44,7 +44,8 @@ class FormsController < ApplicationController
       # get only published forms and render openrosa if xml requested
       format.xml do
         authorize!(:download, Form)
-        @cache_key = Form.odk_index_cache_key(mission: current_mission)
+        # Version /2 is due to change around when manifests are required.
+        @cache_key = Form.odk_index_cache_key(mission: current_mission) << "/2"
         unless fragment_exist?(@cache_key)
           # This query is not deferred so we have to check if it should be run or not.
           @forms = @forms.published
@@ -102,13 +103,13 @@ class FormsController < ApplicationController
   # Format is always :xml
   def odk_manifest
     authorize!(:download, @form)
-    @cache_key = "#{@form.odk_download_cache_key}/manifest"
-    unless fragment_exist?(@cache_key)
-      questions = @form.visible_questionings.map(&:question).select(&:audio_prompt_file_name)
-      @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
-      @ifa = ItemsetsFormAttachment.new(form: @form)
-      @ifa.ensure_generated
-    end
+    # Version /2 is due to change around when itemsets files are required.
+    @cache_key = "#{@form.odk_download_cache_key}/manifest/2"
+    return if fragment_exist?(@cache_key)
+
+    questions = @form.visible_questionings.map(&:question).select(&:audio_prompt_file_name)
+    @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
+    @ifa = ItemsetsFormAttachment.new(form: @form).ensure_generated
   end
 
   # Format is always :csv

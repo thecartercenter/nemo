@@ -25,8 +25,10 @@ class ItemsetsFormAttachment
   end
 
   # Ensures the file exists if appropriate. Generates if not.
+  # Returns self to enable chaining.
   def ensure_generated
     generate! unless File.exist?(priv_path)
+    self
   end
 
   # True if there is nothing to put in the file.
