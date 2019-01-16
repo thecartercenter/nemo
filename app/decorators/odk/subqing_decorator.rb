@@ -1,12 +1,10 @@
 module Odk
   class SubqingDecorator < BaseDecorator
-    # Delegation was working strangely here so we're doing it manually instead of using delegate_all.
-    # We are delegating to two places -- these specific methods to the underlying Subqing,
-    # and everything else (via method_missing) to the decorated Questioning.
-    delegate :name, :questioning, :rank, :level, :first_rank?, :qtype, to: :object
+    delegate_all
 
-    # method_missing delegation is a smell so delegating some things explicitly to questioning
-    delegate :decorated_option_set, :select_one_with_external_csv?, to: :decorated_questioning
+    delegate :ancestors, :decorated_option_set, :select_one_with_external_csv?, :self_and_ancestor_ids,
+      :has_options?, :option_set, :audio_prompt, :question, :top_level?, :hint, :path_from_ancestor,
+      to: :decorated_questioning
 
     # If options[:previous] is true, returns the code for the
     # immediately previous subqing (multilevel only).
@@ -26,12 +24,8 @@ module Odk
       opts[:mediatype] = media_type if qtype.multimedia?
       opts[:query] = external_csv_itemset_query
       content_tag(tagname, opts) do
-        [label(label_row), hint(grid_mode), items_or_itemset].compact.reduce(:<<)
+        [label_tag(label_row), hint_tag(grid_mode), items_or_itemset].compact.reduce(:<<)
       end
-    end
-
-    def method_missing(*args)
-      decorated_questioning.send(*args)
     end
 
     private
@@ -53,12 +47,12 @@ module Odk
       end
     end
 
-    def label(label_row)
+    def label_tag(label_row)
       return if label_row
       tag(:label, ref: "jr:itext('#{odk_code}:label')")
     end
 
-    def hint(grid_mode)
+    def hint_tag(grid_mode)
       return if grid_mode
       tag(:hint, ref: "jr:itext('#{odk_code}:hint')")
     end
@@ -114,7 +108,7 @@ module Odk
       return "label" if label_row
       return "list-nolabel" if grid_mode
 
-      case questioning.qtype_name
+      case qtype.name
       when "annotated_image" then "annotate"
       when "sketch" then "draw"
       when "signature" then "signature"

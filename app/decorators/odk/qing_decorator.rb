@@ -11,8 +11,8 @@ module Odk
                  required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
                  readonly: default_answer? && read_only? ? "true()" : nil,
                  relevant: relevance,
-                 constraint: subq.odk_constraint,
-                 "jr:constraintMsg": subq.min_max_error_msg,
+                 constraint: odk_constraint,
+                 "jr:constraintMsg": min_max_error_msg,
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
@@ -63,7 +63,7 @@ module Odk
 
     def binding_type_attrib(subq)
       # When using external CSV method, ODK wants non-first-level selects to have type 'string'.
-      select_one_with_external_csv? && !subq.first_rank? ? "string" : subq.odk_name
+      select_one_with_external_csv? && !subq.first_rank? ? "string" : odk_name
     end
   end
 end

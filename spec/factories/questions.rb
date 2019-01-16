@@ -29,7 +29,7 @@ FactoryGirl.define do
       translations[:rw] = "rw: #{hint}" if with_user_locale
       translations
     end
-    hint { name_translations[:en] } # needed for some i18n specs
+    hint { hint_translations[:en] } # needed for some i18n specs
 
     mission { is_standard ? nil : get_mission }
 
