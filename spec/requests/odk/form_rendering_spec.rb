@@ -347,10 +347,9 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       let(:fixture_name) { "small_large_multilevel" }
 
       before do
-        Odk::OptionSetDecorator # Force autoload # rubocop:disable Lint/Void
         # Stub threshold constant so that first opt set is rendered normally,
         # second is rendered as external CSV.
-        stub_const("Odk::OptionSetDecorator::EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+        stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
 
         # Generate the itemset file and save with the saved fixture if saving fixtures.
         # Then if we do adb push tmp/odk/forms/small_large_multilevel/. /sdcard/odk/forms

@@ -9,6 +9,17 @@ module GeneralSpecHelpers
     JSON.parse(body, symbolize_names: true)
   end
 
+  # This is an override that allows the original syntax as well as a new syntax
+  # in which the first argument is the Class on which the constant is defined.
+  # This allows the class to be autoloaded, working around a common pitfall.
+  def stub_const(full_name_or_class, val_or_name, val = nil)
+    if val
+      super("#{full_name_or_class.name}::#{val_or_name}", val)
+    else
+      super(full_name_or_class, val_or_name)
+    end
+  end
+
   # reads a file from spec/fixtures
   def fixture_file(filename)
     File.read(Rails.root.join("spec", "fixtures", filename))

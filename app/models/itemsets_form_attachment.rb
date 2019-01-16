@@ -32,7 +32,7 @@ class ItemsetsFormAttachment
   # True if there is nothing to put in the file.
   # If true, the file will not be generated, even if ensure_generated is called.
   def empty?
-    !Odk::DecoratorFactory.decorate(form).needs_external_csv?
+    !decorated_form.needs_external_csv?
   end
 
   # The full path to the file.
@@ -41,6 +41,10 @@ class ItemsetsFormAttachment
   end
 
   private
+
+  def decorated_form
+    Odk::DecoratorFactory.decorate(form)
+  end
 
   # The subdirectory where the attachment should go.
   def dir

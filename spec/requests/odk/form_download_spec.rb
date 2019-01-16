@@ -18,10 +18,9 @@ describe FormsController, :odk, type: :request do
   let(:basic_auth) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
 
   before do
-    Odk::OptionSetDecorator # Force autoload # rubocop:disable Lint/Void
     # Stub threshold constant so that multilevel opt set is rendered normally,
     # but super_multilevel opt set is rendered as external.
-    stub_const("Odk::OptionSetDecorator::EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+    stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
   end
 
   context "for regular mission" do
