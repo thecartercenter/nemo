@@ -38,7 +38,7 @@ describe ItemsetsFormAttachment, :odk do
   describe "priv_path" do
     it "should be correct" do
       allow(ifa).to receive(:path).and_return("foo")
-      expect(ifa.priv_path.to_s).to eq("#{Rails.root}/public/foo")
+      expect(ifa.priv_path).to eq(Rails.root.join("public", "foo"))
     end
   end
 

@@ -19,19 +19,8 @@ module Odk
     end
 
     def input_tag(grid_mode, label_row, xpath_prefix)
-      opts ||= {}
-      xpath_suffix =
-        if label_row
-          # We can't bind to the question's node here or, if the question is required,
-          # we won't be allowed to proceed since it won't be possible to fill in the question.
-          # Also, this question will appear again in a regular row so it would be weird
-          # to link it to the same instance node twice.
-          # Instead we use the parent group's header node.
-          "header"
-        else
-          odk_code
-        end
-      opts[:ref] = [xpath_prefix, xpath_suffix].compact.join("/")
+      opts = {}
+      opts[:ref] = [xpath_prefix, xpath_suffix(label_row)].compact.join("/")
       opts[:rows] = 5 if qtype.name == "long_text"
       opts[:appearance] = appearance(grid_mode, label_row)
       opts[:mediatype] = media_type if qtype.multimedia?
@@ -49,6 +38,19 @@ module Odk
 
     def decorated_questioning
       @decorated_questioning ||= decorate(object.questioning)
+    end
+
+    def xpath_suffix(label_row)
+      if label_row
+        # We can't bind to the question's node here or, if the question is required,
+        # we won't be allowed to proceed since it won't be possible to fill in the question.
+        # Also, this question will appear again in a regular row so it would be weird
+        # to link it to the same instance node twice.
+        # Instead we use the parent group's header node.
+        "header"
+      else
+        odk_code
+      end
     end
 
     def label(label_row)
@@ -137,7 +139,9 @@ module Odk
       params[:question_name] = "'#{questioning.code}'"
       params[:increment] = "true()" if questioning.auto_increment?
       str = params.map { |k, v| "#{k}=#{v}" }.join(", ")
-      "ex:org.opendatakit.counter(#{str})".html_safe
+
+      # This is not HTML and won't be run in a browser so output safety isn't an issue.
+      "ex:org.opendatakit.counter(#{str})".html_safe # rubocop:disable Rails/OutputSafety
     end
 
     def use_external_csv_itemset_query?

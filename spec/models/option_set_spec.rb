@@ -22,18 +22,6 @@ describe OptionSet do
     expect_node([["Animal", ["Cat", "Dog"]], ["Plant", ["Tulip", "Oak"]]], os.reload.root_node)
   end
 
-  it "should delegate ranks_changed? to root node" do
-    os = create(:option_set)
-    expect(os.root_node).to receive(:ranks_changed?)
-    os.ranks_changed?
-  end
-
-  it "should delegate multilevel? to root node" do
-    os = create(:option_set)
-    expect(os.root_node).to receive(:has_grandchildren?)
-    os.multilevel?
-  end
-
   it "should be destructible" do
     os = create(:option_set)
     os.destroy

@@ -44,8 +44,8 @@ class FormsController < ApplicationController
       # get only published forms and render openrosa if xml requested
       format.xml do
         authorize!(:download, Form)
-        # Version /2 is due to change around when manifests are required.
-        @cache_key = Form.odk_index_cache_key(mission: current_mission) << "/2"
+        @cache_key = Form.odk_index_cache_key(mission: current_mission)
+        @cache_key = "#{@cache_key}/2" # Version /2 is due to change of when manifests are required.
         unless fragment_exist?(@cache_key)
           # This query is not deferred so we have to check if it should be run or not.
           @forms = @forms.published

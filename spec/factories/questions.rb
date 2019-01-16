@@ -14,21 +14,22 @@ FactoryGirl.define do
     sequence(:code) { |n| "#{qtype_name.camelize}Q#{n}" }
 
     sequence(:name_translations) do |n|
-      translations = {en: "#{qtype_name.titleize} Question Title #{n}"}
-      translations.merge!(fr: "fr: #{translation_string}") if multilingual
-      translations.merge!(rw: "rw: #{translation_string}") if with_user_locale
+      name = "#{qtype_name.titleize} Question Title #{n}"
+      translations = {en: name}
+      translations[:fr] = "fr: #{name}" if multilingual
+      translations[:rw] = "rw: #{name}" if with_user_locale
       translations
     end
     name { name_translations[:en] }
 
     sequence(:hint_translations) do |n|
-      translations = { en: "Question Hint #{n}" }
-      translations.merge!({ fr: "fr: Question Hint #{n}" }) if multilingual
-      translations.merge!({ rw: "rw: Question Hint #{n}" }) if with_user_locale
+      hint = "Question Hint #{n}"
+      translations = {en: hint}
+      translations[:fr] = "fr: #{hint}" if multilingual
+      translations[:rw] = "rw: #{hint}" if with_user_locale
       translations
     end
-    sequence(:hint) { |n| "Question Hint #{n}" } # needed for some i18n specs
-
+    hint { name_translations[:en] } # needed for some i18n specs
 
     mission { is_standard ? nil : get_mission }
 
@@ -46,7 +47,7 @@ FactoryGirl.define do
     end
 
     after(:create) do |question, evaluator|
-      FactoryGirl.create(:questioning, question: question, form: evaluator.add_to_form) if evaluator.add_to_form
+      create(:questioning, question: question, form: evaluator.add_to_form) if evaluator.add_to_form
     end
   end
 end

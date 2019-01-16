@@ -1,10 +1,9 @@
 require "rails_helper"
 
-# Using request spec b/c Authlogic won't work with controller spec
 describe "option_sets", type: :request do
   let(:user) { create(:user, role_name: "coordinator") }
-  let(:option_set) { create(:option_set, super_multilevel: multilevel) }
-  let(:multilevel) { true }
+  let(:option_set) { create(:option_set, option_names: option_names) }
+  let(:option_names) { :super_multilevel }
 
   before do
     login(user)
@@ -140,7 +139,7 @@ describe "option_sets", type: :request do
     end
 
     context "select one" do
-      let(:multilevel) { false }
+      let(:option_names) { %w[Cat Dog] }
 
       context "option selected" do
         it "should return json of with the selected option" do
