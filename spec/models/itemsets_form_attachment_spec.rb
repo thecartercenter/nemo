@@ -80,9 +80,6 @@ describe ItemsetsFormAttachment, :odk do
 
     before do
       configatron.preferred_locales = [:en]
-
-      # Stub threshold constant so that first opt set is rendered normally,
-      # second is rendered as external CSV.
       stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", external_csv_threshold)
     end
 

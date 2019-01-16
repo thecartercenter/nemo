@@ -44,11 +44,7 @@ module Odk
     def build_output(other_qing)
       output =
         if other_qing.has_options?
-          xpath = if other_qing.multilevel?
-                    other_qing.subqings.first.absolute_xpath
-                  else
-                    other_qing.absolute_xpath
-                  end
+          xpath = target_qing_or_subqing(other_qing).absolute_xpath
           # We need to use jr:itext to look up the option name instead of its odk_code
           # The coalesce is because ODK returns some ugly thing like [itext:] if it can't
           # find the requested itext resource. If the requested xml node not filled in yet
@@ -74,6 +70,18 @@ module Odk
 
     def output_tag(str)
       tag(:output, value: str)
+    end
+
+    def target_qing_or_subqing(other_qing)
+      if other_qing.multilevel?
+        if other_qing.select_one_with_external_csv?
+          other_qing.subqings.first
+        else
+          other_qing.subqings.last
+        end
+      else
+        other_qing
+      end
     end
   end
 end

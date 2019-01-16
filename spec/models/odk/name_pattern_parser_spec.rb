@@ -6,26 +6,29 @@ describe Odk::NamePatternParser do
   subject(:output) { described_class.new(pattern, src_item: form.root_group).to_odk }
 
   describe "xpath route handling" do
-    let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
-    let(:g2) { Odk::QingGroupDecorator.decorate(form.sorted_children[1]) }
-    let(:q21) { Odk::QingDecorator.decorate(form.sorted_children[1].sorted_children[0]) }
-    let(:q22) { Odk::QingDecorator.decorate(form.sorted_children[1].sorted_children[1]) }
-    let(:g3) { Odk::QingGroupDecorator.decorate(form.sorted_children[2]) }
-    let(:q31) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]) }
-    let(:q31a) { Odk::QingDecorator.decorate(form.sorted_children[2].sorted_children[0]).subqings.first }
+    let(:q1) { Odk::QingDecorator.decorate(form.c[0]) }
+    let(:g2) { Odk::QingGroupDecorator.decorate(form.c[1]) }
+    let(:q21) { Odk::QingDecorator.decorate(form.c[1].c[0]) }
+    let(:q22) { Odk::QingDecorator.decorate(form.c[1].c[1]) }
+    let(:g3) { Odk::QingGroupDecorator.decorate(form.c[2]) }
+    let(:q31) { Odk::QingDecorator.decorate(form.c[2].c[0]) }
+    let(:q31b) { Odk::QingDecorator.decorate(form.c[2].c[0]).subqings[1] }
+    let(:q4a) { Odk::QingDecorator.decorate(form.c[3]).subqings[0] }
     let(:q21path) { "/data/#{g2.odk_code}/#{q21.odk_code}" }
     let(:q22path) { "/data/#{g2.odk_code}/#{q22.odk_code}" }
-    let(:q31apath) { "/data/#{g3.odk_code}/#{q31a.odk_code}" }
+    let(:q31bpath) { "/data/#{g3.odk_code}/#{q31b.odk_code}" }
+    let(:q4apath) { "/data/#{q4a.odk_code}" }
 
     before do
-      q1.update!(code: "Q1")
-      q21.update!(code: "Q21")
-      q22.update!(code: "Q22")
-      q31.update!(code: "Q31")
+      q1.question.update!(code: "Q1")
+      q21.question.update!(code: "Q21")
+      q22.question.update!(code: "Q22")
+      q31.question.update!(code: "Q31")
+      q4a.question.update!(code: "Q4")
     end
 
     context "without select questions" do
-      let(:form) { create(:form, question_types: ["text", %w[text text], ["text"]]) }
+      let(:form) { create(:form, question_types: ["text", %w[text text], ["text"], "text"]) }
 
       context "$ phrase with question code" do
         let(:pattern) { "Person: $Q22" }
@@ -51,7 +54,14 @@ describe Odk::NamePatternParser do
     end
 
     context "with select questions" do
-      let(:form) { create(:form, question_types: ["text", %w[select_one text], ["multilevel_select_one"]]) }
+      let(:form) do
+        create(:form, question_types: ["text", %w[select_one text],
+                                       ["multilevel_select_one"], "super_multilevel_select_one"])
+      end
+
+      before do
+        stub_const(Odk::OptionSetDecorator, "EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+      end
 
       context "with code referencing regular select" do
         let(:pattern) { "Ice Cream: $Q21" }
@@ -61,11 +71,19 @@ describe Odk::NamePatternParser do
         end
       end
 
-      context "with code referencing multilevel select" do
+      context "with code referencing smaller multilevel select" do
         let(:pattern) { "Ice Cream: $Q31" }
 
-        it "uses the option name and coalesce" do
-          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q31apath},&#39;blank&#39;))" />))
+        it "uses the lowest subquestion" do
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q31bpath},&#39;blank&#39;))" />))
+        end
+      end
+
+      context "with code referencing larger multilevel select" do
+        let(:pattern) { "Ice Cream: $Q4" }
+
+        it "uses the top level subquestion" do
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q4apath},&#39;blank&#39;))" />))
         end
       end
     end
