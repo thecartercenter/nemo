@@ -91,7 +91,7 @@ describe Odk::NamePatternParser do
 
   describe "calc()" do
     let(:form) { create(:form, question_types: %w[integer integer]) }
-    let(:q1) { Odk::QingDecorator.decorate(form.sorted_children[0]) }
+    let(:q1) { Odk::QingDecorator.decorate(form.c[0]) }
     let(:q1path) { "/data/#{q1.odk_code}" }
 
     before do
