@@ -4,8 +4,8 @@ describe OptionNodePath do
   include OptionNodeSupport
 
   let(:sl_set) { create(:option_set) }
-  let(:ml_set) { create(:option_set, multilevel: true) }
-  let(:sml_set) { create(:option_set, super_multilevel: true) }
+  let(:ml_set) { create(:option_set, option_names: :multilevel) }
+  let(:sml_set) { create(:option_set, option_names: :super_multilevel) }
   let(:node) { sl_set.sorted_children[1] } # Dog
   let(:leaf_node) { ml_set.sorted_children[0].sorted_children[1] } # Dog
   let(:interior_node) { sml_set.sorted_children[1] } # Plant

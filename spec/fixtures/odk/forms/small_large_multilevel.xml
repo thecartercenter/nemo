@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <h:head>
+    <h:title>*formname1*</h:title>
+    <model>
+      <instance>
+        <data id="*form1*" version="*formver1*">
+          <*itemcode1*_1/>
+          <*itemcode1*_2/>
+          <*itemcode2*_1/>
+          <*itemcode2*_2/>
+          <*itemcode2*_3/>
+        </data>
+      </instance>
+      <instance id="*optsetcode1*_level2">
+        <root>
+          <item>
+            <itextId>*optcode2*</itextId>
+            <parentId>*optcode1*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode3*</itextId>
+            <parentId>*optcode1*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode5*</itextId>
+            <parentId>*optcode4*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode6*</itextId>
+            <parentId>*optcode4*</parentId>
+          </item>
+        </root>
+      </instance>
+      <itext>
+        <translation lang="English">
+          <text id="*itemcode1*_1:label">
+            <value>Select One Question Title 1 - Kingdom</value>
+          </text>
+          <text id="*itemcode1*_1:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="*itemcode1*_2:label">
+            <value>Select One Question Title 1 - Species</value>
+          </text>
+          <text id="*itemcode1*_2:hint">
+            <value>Question Hint 1</value>
+          </text>
+          <text id="*itemcode2*_1:label">
+            <value>Select One Question Title 2 - Kingdom</value>
+          </text>
+          <text id="*itemcode2*_1:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="*itemcode2*_2:label">
+            <value>Select One Question Title 2 - Family</value>
+          </text>
+          <text id="*itemcode2*_2:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="*itemcode2*_3:label">
+            <value>Select One Question Title 2 - Species</value>
+          </text>
+          <text id="*itemcode2*_3:hint">
+            <value>Question Hint 2</value>
+          </text>
+          <text id="*optcode1*">
+            <value>Animal</value>
+          </text>
+          <text id="*optcode2*">
+            <value>Cat</value>
+          </text>
+          <text id="*optcode3*">
+            <value>Dog</value>
+          </text>
+          <text id="*optcode4*">
+            <value>Plant</value>
+          </text>
+          <text id="*optcode5*">
+            <value>Tulip</value>
+          </text>
+          <text id="*optcode6*">
+            <value>Oak</value>
+          </text>
+          <text id="*optcode7*">
+            <value>Animal</value>
+          </text>
+          <text id="*optcode14*">
+            <value>Plant</value>
+          </text>
+          <text id="BLANK">
+            <value/>
+          </text>
+        </translation>
+      </itext>
+      <bind nodeset="/data/*itemcode1*_1" type="select1"/>
+      <bind nodeset="/data/*itemcode1*_2" type="select1"/>
+      <bind nodeset="/data/*itemcode2*_1" type="select1"/>
+      <bind nodeset="/data/*itemcode2*_2" type="string"/>
+      <bind nodeset="/data/*itemcode2*_3" type="string"/>
+    </model>
+  </h:head>
+  <h:body>
+    <select1 ref="/data/*itemcode1*_1">
+      <label ref="jr:itext('*itemcode1*_1:label')"/>
+      <hint ref="jr:itext('*itemcode1*_1:hint')"/>
+      <item>
+        <label ref="jr:itext('*optcode1*')"/>
+        <value>*optcode1*</value>
+      </item>
+      <item>
+        <label ref="jr:itext('*optcode4*')"/>
+        <value>*optcode4*</value>
+      </item>
+    </select1>
+    <select1 ref="/data/*itemcode1*_2">
+      <label ref="jr:itext('*itemcode1*_2:label')"/>
+      <hint ref="jr:itext('*itemcode1*_2:hint')"/>
+      <itemset nodeset="instance('*optsetcode1*_level2')/root/item[parentId=current()/../*itemcode1*_1]">
+        <label ref="jr:itext(itextId)"/>
+        <value ref="itextId"/>
+      </itemset>
+    </select1>
+    <select1 ref="/data/*itemcode2*_1">
+      <label ref="jr:itext('*itemcode2*_1:label')"/>
+      <hint ref="jr:itext('*itemcode2*_1:hint')"/>
+      <item>
+        <label ref="jr:itext('*optcode7*')"/>
+        <value>*optcode7*</value>
+      </item>
+      <item>
+        <label ref="jr:itext('*optcode14*')"/>
+        <value>*optcode14*</value>
+      </item>
+    </select1>
+    <input ref="/data/*itemcode2*_2" query="instance('*optsetcode2*')/root/item[parent_id=current()/../*itemcode2*_1]">
+      <label ref="jr:itext('*itemcode2*_2:label')"/>
+      <hint ref="jr:itext('*itemcode2*_2:hint')"/>
+    </input>
+    <input ref="/data/*itemcode2*_3" query="instance('*optsetcode2*')/root/item[parent_id=current()/../*itemcode2*_2]">
+      <label ref="jr:itext('*itemcode2*_3:label')"/>
+      <hint ref="jr:itext('*itemcode2*_3:hint')"/>
+    </input>
+  </h:body>
+</h:html>

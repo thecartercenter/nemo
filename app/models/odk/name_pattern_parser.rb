@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Odk
-  # Parses $-style patterns involving names, like group/question name and repeat instance name.
-  # Returns output in xml format using `output` tags.
+  # Parses $-style patterns resulting in `output` tags.  Currently these are only used in:
+  # - QingGroup > Repeat Item Name
   class NamePatternParser < DynamicPatternParser
     include ActionView::Helpers::TagHelper
 
@@ -44,11 +44,7 @@ module Odk
     def build_output(other_qing)
       output =
         if other_qing.has_options?
-          xpath = if other_qing.multilevel?
-                    other_qing.subqings.first.absolute_xpath
-                  else
-                    other_qing.absolute_xpath
-                  end
+          xpath = target_qing_or_subqing(other_qing).absolute_xpath
           # We need to use jr:itext to look up the option name instead of its odk_code
           # The coalesce is because ODK returns some ugly thing like [itext:] if it can't
           # find the requested itext resource. If the requested xml node not filled in yet

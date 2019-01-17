@@ -1,9 +1,9 @@
-<% cache("#{@form.odk_download_cache_key}/#{@style}") do %><?xml version="1.0" encoding="UTF-8"?>
+<% cache(@form.odk_download_cache_key) do %><?xml version="1.0" encoding="UTF-8"?>
   <h:html xmlns="http://www.w3.org/2002/xforms" xmlns:ev="http://www.w3.org/2001/xml-events" xmlns:h="http://www.w3.org/1999/xhtml" xmlns:jr="http://openrosa.org/javarosa" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
     <h:head>
       <h:title><%= @form.full_name %></h:title>
       <model>
-        <%= render('forms/odk/instance') %>
+        <%= render('forms/odk/instances') %>
         <itext>
           <% configatron.preferred_locales.each do |lang| %>
             <%= render('forms/odk/translation', lang: lang) %>
@@ -15,7 +15,7 @@
     <h:body>
       <%# Regular question form controls. %>
       <% @form.sorted_children.each do |node| %>
-        <%= render "forms/odk/node", 
+        <%= render "forms/odk/node",
           node: node, parent: nil, grid_mode: false, xpath_prefix: "/data" %>
       <% end %>
       <%# Incomplete response question form controls. %>

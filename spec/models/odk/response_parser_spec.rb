@@ -8,14 +8,14 @@ describe Odk::ResponseParser do
   let(:save_fixtures) { true }
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
   let(:response2) { Response.new(form: form, mission: form.mission, user: create(:user)) }
-  let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
+  let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
 
   context "responses without media" do
     let(:form) { create(:form, :published, :with_version, question_types: question_types) }
     let(:files) { {xml_submission_file: StringIO.new(xml)} }
 
     context "simple form" do
-      let(:filename) { "simple_response.xml" }
+      let(:fixture_name) { "simple_response" }
 
       context "text questions only" do
         let(:question_types) { %w[text text text] }
@@ -43,7 +43,7 @@ describe Odk::ResponseParser do
         end
 
         context "outdated form" do
-          let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values, formver: "wrong") }
+          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: "wrong") }
 
           it "should error" do
             expect do
@@ -53,7 +53,7 @@ describe Odk::ResponseParser do
         end
 
         context "missing form" do
-          let(:xml) { prepare_odk_response_fixture(filename, form, values: xml_values) }
+          let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
 
           before do
             xml
@@ -157,7 +157,7 @@ describe Odk::ResponseParser do
 
     context "forms with complex selects" do
       context "with complex selects" do
-        let(:filename) { "complex_select_response.xml" }
+        let(:fixture_name) { "complex_select_response" }
         let(:question_types) { %w[select_one multilevel_select_one select_multiple] }
         let(:cat) { form.c[0].option_set.sorted_children[0] }
         let(:plant) { form.c[1].option_set.sorted_children[0] }
@@ -186,7 +186,7 @@ describe Odk::ResponseParser do
 
     context "forms with complex selects in a repeat group" do
       context "with complex selects" do
-        let(:filename) { "repeat_and_complex_select_response.xml" }
+        let(:fixture_name) { "repeat_and_complex_select_response" }
         let(:question_types) { [{repeating: {items: %w[select_one multilevel_select_one select_multiple]}}] }
         let(:cat) { form.c[0].c[0].option_set.sorted_children[0] }
         let(:plant) { form.c[0].c[1].option_set.sorted_children[1] }
@@ -225,7 +225,7 @@ describe Odk::ResponseParser do
 
     context "forms with a group" do
       let(:question_types) { ["text", %w[text text], "text"] }
-      let(:filename) { "group_form_response.xml" }
+      let(:fixture_name) { "group_form_response" }
       let(:xml_values) { %w[A B C D] }
 
       it "should produce the correct tree" do
@@ -237,7 +237,7 @@ describe Odk::ResponseParser do
     end
 
     context "repeat group forms" do
-      let(:filename) { "repeat_group_form_response.xml" }
+      let(:fixture_name) { "repeat_group_form_response" }
       let(:question_types) { ["text", {repeating: {items: %w[text text]}}] }
       let(:xml_values) { %w[A B C D E] }
 
@@ -264,7 +264,7 @@ describe Odk::ResponseParser do
             ]}}
         ]
       end
-      let(:filename) { "nested_group_form_response.xml" }
+      let(:fixture_name) { "nested_group_form_response" }
       let(:xml_values) { [*1..9] }
 
       it "should create nested tree" do
@@ -307,7 +307,7 @@ describe Odk::ResponseParser do
       let(:question_types) { %w[text multilevel_select_one multilevel_select_one multilevel_select_one] }
       let(:level1_opt) { form.c[1].option_set.sorted_children[1] }
       let(:level2_opt) { form.c[1].option_set.sorted_children[1].sorted_children[0] }
-      let(:filename) { "multilevel_response.xml" }
+      let(:fixture_name) { "multilevel_response" }
       let(:xml_values) do
         ["A",
          "on#{level1_opt.id}",
@@ -358,7 +358,7 @@ describe Odk::ResponseParser do
   end
 
   context "responses with media" do
-    let(:filename) { "simple_response.xml" }
+    let(:fixture_name) { "simple_response" }
     let(:form) { create(:form, :published, :with_version, question_types: question_types) }
 
     context "single part media" do
@@ -424,8 +424,7 @@ describe Odk::ResponseParser do
     end
   end
 
-  def prepare_odk_response_fixture(filename, form, options = {})
-    path = "odk/responses/#{filename}"
-    prepare_odk_fixture(filename, path, form, options)
+  def prepare_odk_response_fixture(fixture_name, form, options = {})
+    prepare_odk_fixture(name: fixture_name, type: :response, form: form, **options)
   end
 end

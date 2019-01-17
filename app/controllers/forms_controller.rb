@@ -2,6 +2,9 @@
 
 # FormController
 class FormsController < ApplicationController
+  # Increment to expire caches for this controller as needed due to changes.
+  CACHE_SUFFIX = "/2"
+
   include StandardImportable
   include BatchProcessable
   include OdkHeaderable
@@ -45,6 +48,7 @@ class FormsController < ApplicationController
       format.xml do
         authorize!(:download, Form)
         @cache_key = Form.odk_index_cache_key(mission: current_mission)
+        @cache_key = "#{@cache_key}#{CACHE_SUFFIX}"
         unless fragment_exist?(@cache_key)
           # This query is not deferred so we have to check if it should be run or not.
           @forms = @forms.published
@@ -80,10 +84,9 @@ class FormsController < ApplicationController
       format.xml do
         authorize!(:download, @form)
         @form.add_download
-
-        # xml style defaults to odk but can be specified via query string
-        @style = params[:style] || "odk"
         @form = Odk::DecoratorFactory.decorate(@form)
+        @questionings = Odk::DecoratorFactory.decorate_collection(@form.questionings)
+        @option_sets = Odk::DecoratorFactory.decorate_collection(@form.option_sets)
       end
     end
   end
@@ -103,13 +106,12 @@ class FormsController < ApplicationController
   # Format is always :xml
   def odk_manifest
     authorize!(:download, @form)
-    @cache_key = "#{@form.odk_download_cache_key}/manifest"
-    unless fragment_exist?(@cache_key)
-      questions = @form.visible_questionings.map(&:question).select(&:audio_prompt_file_name)
-      @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
-      @ifa = ItemsetsFormAttachment.new(form: @form)
-      @ifa.ensure_generated
-    end
+    @cache_key = "#{@form.odk_download_cache_key}/manifest#{CACHE_SUFFIX}"
+    return if fragment_exist?(@cache_key)
+
+    questions = @form.visible_questionings.map(&:question).select(&:audio_prompt?)
+    @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
+    @ifa = Odk::ItemsetsFormAttachment.new(form: @form).ensure_generated
   end
 
   # Format is always :csv

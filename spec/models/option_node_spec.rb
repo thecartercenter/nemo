@@ -16,7 +16,7 @@ describe OptionNode do
   end
 
   describe "shortcode" do
-    let(:option_set) { create(:option_set, super_multilevel: true) }
+    let(:option_set) { create(:option_set, option_names: :super_multilevel) }
 
     it "should return shortcodes based on sequence" do
       shortcodes = option_set.descendants.map(&:shortcode).sort
@@ -25,7 +25,7 @@ describe OptionNode do
   end
 
   describe "max_sequence" do
-    let!(:option_set) { create(:option_set, multilevel: true) }
+    let!(:option_set) { create(:option_set, option_names: :multilevel) }
 
     it "should return the highest sequence in the set" do
       expect(option_set.children[0].max_sequence).to eq 6

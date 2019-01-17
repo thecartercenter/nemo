@@ -11,8 +11,3 @@
     <%= render "forms/odk/binding_node", node: child, parent: node, xpath_prefix: node.xpath(xpath_prefix) %>
   <% end %>
 <% end %>
-
-<%# Special username field for commcare. %>
-<% if @style == 'commcare' %>
-  <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
-<% end %>

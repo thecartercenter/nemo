@@ -9,6 +9,17 @@ module GeneralSpecHelpers
     JSON.parse(body, symbolize_names: true)
   end
 
+  # This is an override that allows the original syntax as well as a new syntax
+  # in which the first argument is the Class on which the constant is defined.
+  # This allows the class to be autoloaded, working around a common pitfall.
+  def stub_const(full_name_or_class, val_or_name, val = nil)
+    if val
+      super("#{full_name_or_class.name}::#{val_or_name}", val)
+    else
+      super(full_name_or_class, val_or_name)
+    end
+  end
+
   # reads a file from spec/fixtures
   def fixture_file(filename)
     File.read(Rails.root.join("spec", "fixtures", filename))
@@ -31,25 +42,40 @@ module GeneralSpecHelpers
   end
 
   # Accepts a fixture filename and form provided by a spec, and creates xml mimicking odk
-  def prepare_odk_fixture(filename, path, form, options = {})
+  def prepare_odk_fixture(name:, type:, form:, **options)
     items = form.preordered_items.map { |i| Odk::DecoratorFactory.decorate(i) }
     nodes = items.map(&:preordered_option_nodes).uniq.flatten
-    xml = prepare_fixture(path,
+    option_set_ids = items.map(&:option_set_id).flatten.compact.uniq
+    option_sets = find_with_ids_maintaining_order(OptionSet, option_set_ids)
+    option_sets = option_sets.map { |os| Odk::DecoratorFactory.decorate(os) }
+    xml = prepare_fixture("odk/#{type}s/#{name}.xml",
       formname: [form.name],
       form: [form.id],
       formver: options[:formver].present? ? [options[:formver]] : [form.code],
       itemcode: items.map(&:odk_code),
       itemqcode: items.map(&:code),
       optcode: nodes.map(&:odk_code),
-      optsetid: items.map(&:option_set_id).compact.uniq,
+      optsetcode: option_sets.map(&:odk_code),
       questionid: items.map { |i| i.question&.id },
       value: options[:values].presence || [])
-    if save_fixtures
-      dir = Rails.root.join("tmp", path)
-      FileUtils.mkdir_p(dir)
-      File.open(dir.join(filename), "w") { |f| f.write(xml) }
-    end
+    write_fixture_to_file(name: name, type: type, xml: xml) if save_fixtures
     xml
+  end
+
+  def write_fixture_to_file(name:, type:, xml:)
+    dir = saved_fixture_dir(name: name, type: type)
+    path = dir.join("#{name}.xml")
+    FileUtils.mkdir_p(dir)
+    puts "Saving fixture to #{path}"
+    File.open(path, "w") { |f| f.write(xml) }
+  end
+
+  def saved_fixture_dir(name:, type:)
+    Rails.root.join("tmp/odk/#{type}s/#{name}")
+  end
+
+  def find_with_ids_maintaining_order(klass, ids)
+    klass.find(ids).index_by(&:id).slice(*ids).values
   end
 
   # `substitutions` should be a hash of arrays.

@@ -68,6 +68,7 @@ Style/MethodCallWithArgsParentheses:
     - not_to
     - require
     - raise
+    - puts
     - validates # Sometimes this is called in a with_options block, confusing the cop.
   Exclude:
     - Gemfile

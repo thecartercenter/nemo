@@ -9,15 +9,22 @@ describe Odk::FormDecorator, :odk do
     let(:decorated_form) { decorate(form) }
     subject(:needs_manifest?) { decorated_form.needs_manifest? }
 
+    before do
+      Odk::OptionSetDecorator # Force autoload # rubocop:disable Lint/Void
+      # Stub threshold constant so that multilevel opt set is rendered normally,
+      # but super_multilevel opt set is rendered as external.
+      stub_const("Odk::OptionSetDecorator::EXTERNAL_CSV_METHOD_THRESHOLD", 7)
+    end
+
     describe "multilevel option sets" do
-      context "for form with single level option sets only" do
-        let(:form) { create(:form, question_types: %w[select_one]) }
-        it { is_expected.to be false }
+      context "for form with small multilevel option sets only" do
+        let(:form) { create(:form, question_types: %w[multilevel_select_one]) }
+        it { is_expected.to be(false) }
       end
 
-      context "for form with multi level option set" do
-        let(:form) { create(:form, question_types: %w[select_one multilevel_select_one]) }
-        it { is_expected.to be true }
+      context "for form with large multilevel option set" do
+        let(:form) { create(:form, question_types: %w[select_one super_multilevel_select_one]) }
+        it { is_expected.to be(true) }
       end
     end
 

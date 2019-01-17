@@ -1,103 +1,6 @@
 # frozen_string_literal: true
 
 module OdkHelper
-  # given a Subqing object, builds an odk <input> tag
-  # calls the provided block to get the tag content
-  def odk_input_tag(qing, subq, grid_mode, label_row, group = nil, xpath_prefix, &block)
-    opts ||= {}
-    suffix =
-      if label_row
-        # We can't bind to the question's node here or, if the question is required,
-        # we won't be allowed to proceed since it won't be possible to fill in the question.
-        # Also, this question will appear again in a regular row so it would be weird
-        # to link it to the same instance node twice.
-        # Instead we use the parent group's header node.
-        "header"
-      else
-        subq.try(:odk_code)
-      end
-    opts[:ref] = [xpath_prefix, suffix].compact.join("/")
-    opts[:rows] = 5 if subq.qtype_name == "long_text"
-    if !subq.first_rank? && subq.qtype.name == "select_one"
-      opts[:query] = multilevel_option_nodeset_ref(qing, subq, xpath_prefix)
-    end
-    opts[:appearance] = odk_input_appearance(qing, grid_mode, label_row)
-    opts[:mediatype] = odk_media_type(subq) if subq.qtype.multimedia?
-    content_tag(odk_input_tagname(subq), opts, &block)
-  end
-
-  def odk_input_appearance(qing, grid_mode, label_row)
-    return "label" if label_row
-    return "list-nolabel" if grid_mode
-
-    case qing.qtype_name
-    when "annotated_image"
-      "annotate"
-    when "sketch"
-      "draw"
-    when "signature"
-      "signature"
-    when "counter"
-      params = ActiveSupport::OrderedHash.new
-      params[:form_id] = "'#{qing.form_id}'"
-      params[:form_name] = "'#{qing.form_name}'"
-      params[:question_id] = "'#{qing.odk_code}'"
-      params[:question_name] = "'#{qing.code}'" # Code instead of title because it's not locale dependent
-      params[:increment] = "true()" if qing.auto_increment?
-      str = params.map { |k, v| "#{k}=#{v}" }.join(", ")
-      "ex:org.opendatakit.counter(#{str})".html_safe
-    end
-  end
-
-  def odk_input_tagname(subq)
-    if subq.qtype.name == "select_one" && subq.first_rank?
-      :select1
-    elsif subq.qtype.name == "select_multiple"
-      :select
-    elsif subq.qtype.multimedia?
-      :upload
-    else
-      :input
-    end
-  end
-
-  def odk_media_type(subq)
-    case subq.qtype.name
-    when "image", "annotated_image", "sketch", "signature"
-      "image/*"
-    when "audio"
-      "audio/*"
-    when "video"
-      "video/*"
-    end
-  end
-
-  def data_tag(form, style, &block)
-    if style == "commcare"
-      content_tag(
-        "data",
-        {
-          "xmlns:jrm" => "http://dev.commcarehq.org/jr/xforms",
-          "xmlns" => "http://openrosa.org/formdesigner/#{form.id}",
-          "id" => form.id.to_s,
-          "uiVersion" => "1",
-          "version" => form.current_version.code.to_s,
-          "name" => form.full_name.to_s
-        },
-        &block
-      )
-    else
-      content_tag(
-        "data",
-        {
-          "id" => form.id.to_s,
-          "version" => form.current_version.code.to_s
-        },
-        &block
-      )
-    end
-  end
-
   # For the given subqing, returns an xpath expression for the itemset tag nodeset attribute.
   # E.g. instance('os16')/root/item or
   #      instance('os16')/root/item[parent_id=/data/q2_1] or
@@ -111,21 +14,6 @@ module OdkHelper
                "[parent_id=#{path}]"
     end
     "instance('#{Odk::CodeMapper.instance.code_for_item(qing.option_set)}')/root/item#{filter}"
-  end
-
-  # Returns <text> tags for all first-level options.
-  def odk_option_translations(form, lang)
-    option_nodes = form.all_first_level_option_nodes
-    # sort these deterministically for the test suite when needed, order does not matter for ODK
-    option_nodes.sort_by! { |on| [on.option_set.name, on.option_name] } if Rails.env.test?
-    odk_options = option_nodes.map do |on|
-      content_tag(:text, id: Odk::CodeMapper.instance.code_for_item(on)) do
-        content_tag(:value) do
-          on.option.name(lang, strict: false)
-        end
-      end
-    end
-    odk_options.reduce(&:concat)
   end
 
   # The general structure for a group is:

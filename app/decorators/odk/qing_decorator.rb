@@ -11,8 +11,8 @@ module Odk
                  required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
                  readonly: default_answer? && read_only? ? "true()" : nil,
                  relevant: relevance,
-                 constraint: subq.odk_constraint,
-                 "jr:constraintMsg": subq.min_max_error_msg,
+                 constraint: odk_constraint,
+                 "jr:constraintMsg": min_max_error_msg,
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
@@ -20,6 +20,14 @@ module Odk
 
     def subqings
       decorate_collection(object.subqings, context: context)
+    end
+
+    def decorated_option_set
+      @decorated_option_set ||= decorate(option_set)
+    end
+
+    def select_one_with_external_csv?
+      qtype_name == "select_one" && decorated_option_set.external_csv?
     end
 
     private
@@ -54,8 +62,8 @@ module Odk
     end
 
     def binding_type_attrib(subq)
-      # ODK wants non-first-level selects to have type 'string'.
-      subq.first_rank? ? subq.odk_name : "string"
+      # When using external CSV method, ODK wants non-first-level selects to have type 'string'.
+      select_one_with_external_csv? && !subq.first_rank? ? "string" : odk_name
     end
   end
 end

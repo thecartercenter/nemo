@@ -19,6 +19,26 @@
           <*itemcode6*/>
         </data>
       </instance>
+      <instance id="*optsetcode2*_level2">
+        <root>
+          <item>
+            <itextId>*optcode4*</itextId>
+            <parentId>*optcode3*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode5*</itextId>
+            <parentId>*optcode3*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode7*</itextId>
+            <parentId>*optcode6*</parentId>
+          </item>
+          <item>
+            <itextId>*optcode8*</itextId>
+            <parentId>*optcode6*</parentId>
+          </item>
+        </root>
+      </instance>
       <itext>
         <translation lang="English">
           <text id="*itemcode1*:label">
@@ -46,13 +66,13 @@
             <value>Question Hint 3</value>
           </text>
           <text id="*itemcode5*_1:label">
-            <value>Multilevel Select One Question Title 4 - Kingdom</value>
+            <value>Select One Question Title 4 - Kingdom</value>
           </text>
           <text id="*itemcode5*_1:hint">
             <value>Question Hint 4</value>
           </text>
           <text id="*itemcode5*_2:label">
-            <value>Multilevel Select One Question Title 4 - Species</value>
+            <value>Select One Question Title 4 - Species</value>
           </text>
           <text id="*itemcode5*_2:hint">
             <value>Question Hint 4</value>
@@ -72,22 +92,34 @@
           <text id="*optcode3*">
             <value>Animal</value>
           </text>
+          <text id="*optcode4*">
+            <value>Cat</value>
+          </text>
+          <text id="*optcode5*">
+            <value>Dog</value>
+          </text>
           <text id="*optcode6*">
             <value>Plant</value>
+          </text>
+          <text id="*optcode7*">
+            <value>Tulip</value>
+          </text>
+          <text id="*optcode8*">
+            <value>Oak</value>
           </text>
           <text id="BLANK">
             <value/>
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/meta/instanceName" calculate="concat('&quot;',jr:itext(indexed-repeat(/data/*itemcode1*/*itemcode5*_1,/data/*itemcode1*,1)),'&quot; --&gt; ',/data/*itemcode6*,'’s')" readonly="true()" type="string"/>
+      <bind nodeset="/data/meta/instanceName" calculate="concat('&quot;',jr:itext(indexed-repeat(/data/*itemcode1*/*itemcode5*_2,/data/*itemcode1*,1)),'&quot; --&gt; ',/data/*itemcode6*,'’s')" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*"/>
       <bind nodeset="/data/*itemcode1*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode2*" type="int"/>
       <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode4*" type="select1"/>
       <bind nodeset="/data/*itemcode1*/*itemcode5*_1" type="select1"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode5*_2" type="string"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode5*_2" type="select1"/>
       <bind nodeset="/data/*itemcode6*" type="string" calculate="if((indexed-repeat(/data/*itemcode1*/*itemcode2*,/data/*itemcode1*,1)) &gt; 5, '&quot;a&quot;', 'b')"/>
     </model>
   </h:head>
@@ -140,10 +172,14 @@
         <input ref="/data/*itemcode1*/header">
           <hint ref="jr:itext('*itemcode1*:hint')"/>
         </input>
-        <input ref="/data/*itemcode1*/*itemcode5*_2" query="instance('os*optsetid2*')/root/item[parent_id=/data/*itemcode1*/*itemcode5*_1]">
+        <select1 ref="/data/*itemcode1*/*itemcode5*_2">
           <label ref="jr:itext('*itemcode5*_2:label')"/>
           <hint ref="jr:itext('*itemcode5*_2:hint')"/>
-        </input>
+          <itemset nodeset="instance('*optsetcode2*_level2')/root/item[parentId=current()/../*itemcode5*_1]">
+            <label ref="jr:itext(itextId)"/>
+            <value ref="itextId"/>
+          </itemset>
+        </select1>
       </group>
     </group>
     <input ref="/data/*itemcode6*">

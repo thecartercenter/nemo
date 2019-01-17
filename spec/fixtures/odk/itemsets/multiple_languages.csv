@@ -1,7 +1,7 @@
 list_name,name,label::English,label::Français,parent_id
-os*optsetid1*,*optcode1*,Animal,Animale,
-os*optsetid1*,*optcode2*,Cat,,*optcode1*
-os*optsetid1*,*optcode3*,Dog,,*optcode1*
-os*optsetid1*,*optcode4*,Plant,Plante,
-os*optsetid1*,*optcode5*,Tulip,,*optcode4*
-os*optsetid1*,*optcode6*,Oak,,*optcode4*
+*optsetcode1*,*optcode1*,Animal,Animale,
+*optsetcode1*,*optcode2*,Cat,,*optcode1*
+*optsetcode1*,*optcode3*,Dog,,*optcode1*
+*optsetcode1*,*optcode4*,Plant,Plante,
+*optsetcode1*,*optcode5*,Tulip,,*optcode4*
+*optsetcode1*,*optcode6*,Oak,,*optcode4*

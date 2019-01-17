@@ -1,4 +1,4 @@
-<translation lang="<%= @style == "commcare" ? lang : language_name(lang) %>">
+<translation lang="<%= language_name(lang) %>">
 
   <%# group hint translations %>
   <% @form.sorted_children.each do |child| %>
@@ -6,7 +6,7 @@
   <% end %>
 
   <%# Regular question translations %>
-  <% Odk::DecoratorFactory.decorate_collection(@form.questionings).each do |qing| %>
+  <% @questionings.each do |qing| %>
     <% if qing.visible? %>
       <% qing.subqings.each do |subq| %>
         <text id="<%= subq.odk_code %>:label">
@@ -17,16 +17,16 @@
             </value>
           <% end %>
         </text>
-        <% unless @style == "commcare" %>
-          <text id="<%= subq.odk_code %>:hint">
-            <value><%= subq.hint(lang, :strict => false) %></value>
-          </text>
-        <% end %>
+        <text id="<%= subq.odk_code %>:hint">
+          <value><%= subq.hint(lang, :strict => false) %></value>
+        </text>
       <% end %>
     <% end %>
   <% end %>
 
-  <%= odk_option_translations(@form, lang) %>
+  <% @option_sets.each do |option_set| %>
+    <%= option_set.translation_tags(lang) %>
+  <% end %>
 
   <%# incomplete response question translations %>
   <% if allow_incomplete? %>

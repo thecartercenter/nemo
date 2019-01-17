@@ -22,12 +22,12 @@ FactoryGirl.define do
 
     factory :option_node_with_grandchildren do
       option nil
-      children_attribs { OptionNodeSupport::WITH_GRANDCHILDREN_ATTRIBS }
+      children_attribs { OptionNodeSupport::MULTILEVEL_ATTRIBS }
     end
 
     factory :option_node_with_great_grandchildren do
       option nil
-      children_attribs { OptionNodeSupport::WITH_GREAT_GRANDCHILDREN_ATTRIBS }
+      children_attribs { OptionNodeSupport::SUPER_MULTILEVEL_ATTRIBS }
     end
   end
 end

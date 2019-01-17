@@ -9,8 +9,3 @@
   <%= @form.ir_question_binding %>
   <%= @form.ir_code_binding %>
 <% end %>
-
-<%# Special username field for commcare %>
-<% if @style == "commcare" %>
-  <bind nodeset="/data/username" calculate="instance('commcaresession')/session/context/username"/>
-<% end %>
