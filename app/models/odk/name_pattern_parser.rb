@@ -45,12 +45,7 @@ module Odk
       output =
         if other_qing.has_options?
           xpath = target_qing_or_subqing(other_qing).absolute_xpath
-          # We need to use jr:itext to look up the option name instead of its odk_code
-          # The coalesce is because ODK returns some ugly thing like [itext:] if it can't
-          # find the requested itext resource. If the requested xml node not filled in yet
-          # we end up in this situation. Using 'blank' assumes there is an itext node in the form
-          # with id 'blank' and an empty value.
-          "jr:itext(coalesce(#{xpath},'blank'))"
+          itext_expr(xpath)
         else
           other_qing.absolute_xpath
         end

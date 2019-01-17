@@ -56,6 +56,15 @@ module Odk
       end
     end
 
+    def itext_expr(xpath_to_node)
+      # We need to use jr:itext to look up option names instead of their odk_code.
+      # The coalesce is because ODK returns some ugly thing like [itext:] if it can't
+      # find the requested itext resource. If the requested xml node is not filled in yet
+      # we end up in this situation. Using 'BLANK' assumes there is an itext node in the form
+      # with id 'BLANK' and an empty value.
+      "jr:itext(coalesce(#{xpath_to_node},'BLANK'))"
+    end
+
     private
 
     def token_is_code?(token)

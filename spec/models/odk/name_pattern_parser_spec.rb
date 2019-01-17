@@ -67,7 +67,7 @@ describe Odk::NamePatternParser do
         let(:pattern) { "Ice Cream: $Q21" }
 
         it "uses the option name and coalesce" do
-          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q21path},&#39;blank&#39;))" />))
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q21path},&#39;BLANK&#39;))" />))
         end
       end
 
@@ -75,7 +75,7 @@ describe Odk::NamePatternParser do
         let(:pattern) { "Ice Cream: $Q31" }
 
         it "uses the lowest subquestion" do
-          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q31bpath},&#39;blank&#39;))" />))
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q31bpath},&#39;BLANK&#39;))" />))
         end
       end
 
@@ -83,7 +83,7 @@ describe Odk::NamePatternParser do
         let(:pattern) { "Ice Cream: $Q4" }
 
         it "uses the top level subquestion" do
-          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q4apath},&#39;blank&#39;))" />))
+          is_expected.to eq(%(Ice Cream: <output value="jr:itext(coalesce(#{q4apath},&#39;BLANK&#39;))" />))
         end
       end
     end

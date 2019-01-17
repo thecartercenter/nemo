@@ -99,7 +99,10 @@ describe Odk::ResponsePatternParser do
       context "with code referencing regular select" do
         let(:src_item) { q1 }
         let(:pattern) { "hai-$Q21-x" }
-        it { is_expected.to eq("concat('hai-',jr:itext(indexed-repeat(#{q21path},#{g2path},1)),'-x')") }
+        it do
+          is_expected.to eq("concat('hai-',"\
+            "jr:itext(coalesce(indexed-repeat(#{q21path},#{g2path},1),'BLANK')),'-x')")
+        end
       end
 
       context "with code referencing smaller multilevel select" do
@@ -107,7 +110,8 @@ describe Odk::ResponsePatternParser do
         let(:pattern) { "hai-$Q31-x" }
 
         it "uses the lowest subquestion" do
-          is_expected.to eq("concat('hai-',jr:itext(indexed-repeat(#{q31bpath},#{g3path},1)),'-x')")
+          is_expected.to eq("concat('hai-',"\
+            "jr:itext(coalesce(indexed-repeat(#{q31bpath},#{g3path},1),'BLANK')),'-x')")
         end
       end
 
@@ -116,7 +120,7 @@ describe Odk::ResponsePatternParser do
         let(:pattern) { "hai-$Q4-x" }
 
         it "uses the top level subquestion" do
-          is_expected.to eq("concat('hai-',jr:itext(#{q4apath}),'-x')")
+          is_expected.to eq("concat('hai-',jr:itext(coalesce(#{q4apath},'BLANK')),'-x')")
         end
       end
     end

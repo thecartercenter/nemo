@@ -20,7 +20,7 @@ module Odk
     # Returns the output fragment for the given target questioning.
     def build_output(other_qing)
       xpath = src_item.xpath_to(target_qing_or_subqing(other_qing))
-      other_qing.has_options? ? "jr:itext(#{xpath})" : xpath
+      other_qing.has_options? ? itext_expr(xpath) : xpath
     end
 
     # Returns the desired output fragment for the given token from the input text.
