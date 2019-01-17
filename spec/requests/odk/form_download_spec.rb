@@ -78,7 +78,7 @@ describe FormsController, :odk, type: :request do
       end
 
       context "for form with small and large multilevel option sets" do
-        let(:ifa) { ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:ifa) { Odk::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         it "should render regular manifest tag" do
           get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: basic_auth)
@@ -156,7 +156,7 @@ describe FormsController, :odk, type: :request do
 
     describe "getting itemsets file" do
       context "for form with option sets" do
-        let(:ifa) { ItemsetsFormAttachment.new(form: form_both_multi) }
+        let(:ifa) { Odk::ItemsetsFormAttachment.new(form: form_both_multi) }
 
         before do
           ifa.ensure_generated

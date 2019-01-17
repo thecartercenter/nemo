@@ -3,10 +3,10 @@
 require "rails_helper"
 require "fileutils"
 
-describe ItemsetsFormAttachment, :odk do
+describe Odk::ItemsetsFormAttachment, :odk do
   let(:form) { create(:form, question_types: question_types) }
   let(:question_types) { %w[integer] }
-  subject(:ifa) { ItemsetsFormAttachment.new(form: form) }
+  subject(:ifa) { Odk::ItemsetsFormAttachment.new(form: form) }
 
   describe "path" do
     before { allow(form).to receive(:id).and_return(42) }

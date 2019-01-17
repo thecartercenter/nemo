@@ -111,7 +111,7 @@ class FormsController < ApplicationController
 
     questions = @form.visible_questionings.map(&:question).select(&:audio_prompt?)
     @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
-    @ifa = ItemsetsFormAttachment.new(form: @form).ensure_generated
+    @ifa = Odk::ItemsetsFormAttachment.new(form: @form).ensure_generated
   end
 
   # Format is always :csv
