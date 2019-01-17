@@ -254,6 +254,10 @@ class Question < ApplicationRecord
     tags.order(:name)
   end
 
+  def audio_prompt?
+    audio_prompt_file_name.present?
+  end
+
   private
 
   def code_unique_per_mission
