@@ -47,14 +47,12 @@ module Odk
     # Given a decorated Questioning, determines what the actual target node
     # should be depending on if the qing is multilevel and has an external CSV.
     def target_qing_or_subqing(other_qing)
-      if other_qing.multilevel?
-        if other_qing.select_one_with_external_csv?
-          other_qing.subqings.first
-        else
-          other_qing.subqings.last
-        end
+      return other_qing unless other_qing.multilevel?
+
+      if other_qing.select_one_with_external_csv?
+        other_qing.subqings.first
       else
-        other_qing
+        other_qing.subqings.last
       end
     end
 
