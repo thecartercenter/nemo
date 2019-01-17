@@ -2,6 +2,9 @@
 
 # FormController
 class FormsController < ApplicationController
+  # Increment to expire caches for this controller as needed due to changes.
+  CACHE_SUFFIX = "/2"
+
   include StandardImportable
   include BatchProcessable
   include OdkHeaderable
@@ -45,7 +48,7 @@ class FormsController < ApplicationController
       format.xml do
         authorize!(:download, Form)
         @cache_key = Form.odk_index_cache_key(mission: current_mission)
-        @cache_key = "#{@cache_key}/2" # Version /2 is due to change of when manifests are required.
+        @cache_key = "#{@cache_key}#{CACHE_SUFFIX}"
         unless fragment_exist?(@cache_key)
           # This query is not deferred so we have to check if it should be run or not.
           @forms = @forms.published
@@ -103,8 +106,7 @@ class FormsController < ApplicationController
   # Format is always :xml
   def odk_manifest
     authorize!(:download, @form)
-    # Version /2 is due to change around when itemsets files are required.
-    @cache_key = "#{@form.odk_download_cache_key}/manifest/2"
+    @cache_key = "#{@form.odk_download_cache_key}/manifest#{CACHE_SUFFIX}"
     return if fragment_exist?(@cache_key)
 
     questions = @form.visible_questionings.map(&:question).select(&:audio_prompt_file_name)
