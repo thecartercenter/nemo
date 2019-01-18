@@ -92,7 +92,7 @@ class UsersController < ApplicationController
     @users = apply_search_if_given(User, @users)
     @users = restrict_scope_to_selected_objects(@users)
 
-    result = BatchDestroy.new(@users, current_user, current_ability).destroy!
+    result = BatchDestroy::User.new(rel: @users, user: current_user, ability: current_ability).destroy!
     success = []
     success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
     success << t("user.bulk_destroy_deactivated", count: result[:deactivated]) if result[:deactivated].positive?

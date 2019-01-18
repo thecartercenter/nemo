@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-describe BatchDestroy, type: :model do
+describe BatchDestroy::User, type: :model do
   let(:current_user) { create(:user, email: "current@user.com") }
   let(:ability) { Ability.new(user: current_user, mission: get_mission) }
-  let(:destroyer) { BatchDestroy.new(batch, current_user, ability) }
+  let(:destroyer) { BatchDestroy::User.new(rel: batch, user: current_user, ability: ability) }
 
   describe "#destroy!" do
     describe "user" do
