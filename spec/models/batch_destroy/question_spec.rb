@@ -7,7 +7,6 @@ describe BatchDestroy::Question, type: :model do
   let(:ability) { Ability.new(user: current_user, mission: get_mission) }
   let(:destroyer) { BatchDestroy::Question.new(rel: batch, user: current_user, ability: ability) }
 
-
   describe "question" do
     let(:q1) { create(:question) }
     let(:q2) { create(:question) }

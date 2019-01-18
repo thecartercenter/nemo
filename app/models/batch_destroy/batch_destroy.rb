@@ -1,4 +1,5 @@
 # frozen_string_literal: true
+
 module BatchDestroy
   # Abstract batch destroy objects in batches
   class BatchDestroy
