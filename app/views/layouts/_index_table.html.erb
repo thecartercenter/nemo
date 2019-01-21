@@ -93,13 +93,18 @@
       if (ELMO.index_table_views['<%= objects.first.class.name.underscore %>'])
         ELMO.index_table_views['<%= objects.first.class.name.underscore %>'].undelegateEvents();
 
-      ELMO.index_table_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.IndexTableView(<%=json(
+      ELMO.batch_actions_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.BatchActionsView(<%=json(
         class_name: objects[0].class.name.underscore,
-        modified_obj_id: flash[:modified_obj_id],
-        no_whole_row_link: options[:no_whole_row_link],
         batch_ops: batch_ops,
         is_search: params[:search].present?
       ) %>, ELMO.searchFormView);
+
+      ELMO.index_table_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.IndexTableView(<%=json(
+        modified_obj_id: flash[:modified_obj_id],
+        no_whole_row_link: options[:no_whole_row_link],
+      ) %>, ELMO.batch_actions_views['<%= objects.first.class.name.underscore %>']);
+
+
     <% end %>
 
   <% end %>
