@@ -65,7 +65,7 @@ class QuestionsController < ApplicationController
   end
 
   def bulk_destroy
-    @questions = Question.accessible_by(current_ability)
+    @questions = Question.accessible_by(current_ability, :destroy)
     @questions = apply_search_if_given(Question, @questions)
     @questions = restrict_scope_to_selected_objects(@questions)
 
