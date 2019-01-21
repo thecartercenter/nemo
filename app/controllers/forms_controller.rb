@@ -194,7 +194,7 @@ class FormsController < ApplicationController
   # adds questions selected in the big list to the form
   def add_questions
     # load the question objects
-    questions = load_selected_objects(Question.all)
+    questions = restrict_scope_to_selected_objects(Question.all)
 
     # raise error if no valid questions (this should be impossible)
     raise "no valid questions given" if questions.empty?
@@ -214,7 +214,7 @@ class FormsController < ApplicationController
   # removes selected questions from the form
   def remove_questions
     # get the selected questionings
-    qings = load_selected_objects(Questioning.all)
+    qings = restrict_scope_to_selected_objects(Questioning.all)
     # destroy
     begin
       @form.destroy_questionings(qings)

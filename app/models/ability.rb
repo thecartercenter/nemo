@@ -193,7 +193,7 @@ class Ability
             can :manage, UserGroupAssignment
 
             # can destroy users only if they have only one mission and it's the current mission
-            can [:bulk_destroy, :destroy], User do |other_user|
+            can [:bulk_destroy, :destroy], User, User.assigned_only_to(mission) do |other_user|
               other_user.assignments.count == 1 && other_user.assignments.first.mission_id == mission.id
             end
 

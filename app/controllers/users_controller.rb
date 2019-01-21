@@ -88,9 +88,9 @@ class UsersController < ApplicationController
   end
 
   def bulk_destroy
-    @users = User.accessible_by(current_ability)
+    @users = User.accessible_by(current_ability, :destroy)
     @users = apply_search_if_given(User, @users)
-    @users = load_selected_objects(@users)
+    @users = restrict_scope_to_selected_objects(@users)
 
     result = BatchDestroy.new(@users, current_user, current_ability).destroy!
     success = []
@@ -113,7 +113,7 @@ class UsersController < ApplicationController
   def export
     respond_to do |format|
       format.vcf do
-        @users = load_selected_objects(User)
+        @users = restrict_scope_to_selected_objects(User.all)
         render(plain: @users.collect { |u| u.to_vcf }.join("\n"))
       end
     end

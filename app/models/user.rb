@@ -74,8 +74,14 @@ class User < ApplicationRecord
   validates(:password_confirmation, length: {minimum: 8}, if: :require_password?)
 
   scope(:by_name, -> { order("users.name") })
-  scope(:assigned_to, ->(m) { where("users.id IN (
-    SELECT user_id FROM assignments WHERE deleted_at IS NULL AND mission_id = ?)", m.try(:id)) })
+  scope :assigned_to, ->(mission) {
+    where(id: Assignment.select(:user_id).where(mission_id: mission.id))
+  }
+  scope :with_only_one_assignment, -> {
+    count_query = Assignment.select("COUNT(*)").where("user_id = users.id").to_sql
+    where("(#{count_query}) = 1")
+  }
+  scope :assigned_only_to, ->(mission) { assigned_to(mission).with_only_one_assignment }
   scope(:with_assoc, -> {
     includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
   })

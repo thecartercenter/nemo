@@ -11,10 +11,12 @@ shared_context "batch delete" do
       confirm_delete_msg = options[:num] == 1 ? "Are you sure you want to delete this #{options[:klass].singularize}?" :
         "Are you sure you want to delete these #{options[:num]} #{options[:klass]}?"
       expect(accept_alert).to eq(confirm_delete_msg)
-      num = options[:query].nil? && options[:klass] == "users" ? options[:num] - 1 : options[:num]
+      # For Users, you can't delete yourself, so result should be one less
+      num_deleted = options[:query].nil? && options[:klass] == "users" ? options[:num] - 1 : options[:num]
       success_msg = options[:num] == 1 ? "1 #{options[:klass].singularize} deleted successfully" :
-        "#{num} #{options[:klass]} deleted successfully"
+        "#{num_deleted} #{options[:klass]} deleted successfully"
       expect(page).to have_content(success_msg)
+      expect(page).to have_content(preserved_obj.name) if preserved_obj.present?
     end
   end
 
@@ -34,8 +36,9 @@ shared_context "batch delete" do
       click_on("Select all #{options[:num]} #{options[:klass].capitalize}")
       click_on(options[:link])
       expect(accept_alert).to eq("Are you sure you want to delete these #{options[:num]} #{options[:klass]}?")
-      num = options[:query].nil? && options[:klass] == "users" ? options[:num] - 1 : options[:num]
-      expect(page).to have_content("#{num} #{options[:klass]} deleted successfully")
+      # For Users, you can't delete yourself, so result should be one less
+      num_deleted = options[:query].nil? && options[:klass] == "users" ? options[:num] - 1 : options[:num]
+      expect(page).to have_content("#{num_deleted} #{options[:klass]} deleted successfully")
     end
   end
 end
