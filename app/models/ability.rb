@@ -61,6 +61,7 @@ class Ability
           end
           can :manage, Mission
           can :manage, User
+          cannot [:activate, :destroy], User, id: user.id
           can :manage, Assignment
 
         when "mission"
@@ -187,14 +188,17 @@ class Ability
             # can manage users in current mission
             # special change_assignments permission is given so that users cannot update their own assignments via edit profile
             can [:create, :update, :login_instructions, :change_assignments, :activate], User, assignments: { mission_id: mission.id }
+            cannot :activate, User, id: user.id
 
             can :manage, UserImport
             can :manage, UserGroup, mission_id: mission.id
             can :manage, UserGroupAssignment
 
-            # can destroy users only if they have only one mission and it's the current mission
-            can [:bulk_destroy, :destroy], User, User.assigned_only_to(mission) do |other_user|
-              other_user.assignments.count == 1 && other_user.assignments.first.mission_id == mission.id
+            # Can destroy users only if not self, they have only one mission, and it's the current mission
+            can [:bulk_destroy, :destroy], User, User.assigned_only_to(mission).where.not(id: user.id) do |other_user|
+              other_user.id != user.id &&
+                other_user.assignments.count == 1 &&
+                other_user.assignments.first.mission_id == mission.id
             end
 
             # coord can manage these classes for the current mission
@@ -232,9 +236,6 @@ class Ability
 
       # Can't change own assignments unless admin
       cannot :change_assignments, User, id: user.id unless user.admin?
-
-      # Nobody can activate/deactivate or destroy themselves.
-      cannot [:activate, :destroy], User, id: user.id
     end
 
     ###############
