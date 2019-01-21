@@ -64,6 +64,12 @@ class Ability
        OptionNode, Option, OptionSetImport, Setting, Tag, Tagging].each do |k|
         can :manage, k, mission_id: nil
       end
+
+      can(%i[read create update update_code update_core export], Question, mission_id: nil)
+      can(:destroy, Question, Question.unpublished_and_unanswered) do |q|
+        !q.published? && !q.has_answers?
+      end
+
       can(:manage, Mission)
       can(:manage, User)
       cannot(%i[activate destroy], User, id: user.id)
@@ -123,9 +129,14 @@ class Ability
           other.assignments.first.mission_id == mission.id
       end
 
-      [Form, OptionSet, OptionSetImport, Question, Questioning, FormItem, SkipRule,
+      [Form, OptionSet, OptionSetImport, Questioning, FormItem, SkipRule,
        QingGroup, Option, Tag, Tagging].each do |klass|
         can :manage, klass, mission_id: mission.id
+      end
+
+      can(%i[read create update update_code update_core export], Question, mission_id: mission.id)
+      can(:destroy, Question, Question.unpublished_and_unanswered.for_mission(mission)) do |q|
+        !q.published? && !q.has_answers?
       end
     end
 
@@ -205,7 +216,6 @@ class Ability
     # update_core refers to the core fields: question type, option set, constraints
     cannot(:update_core, Question) { |q| q.published? || q.has_answers? }
     cannot(:update_code, Question, &:standard_copy?) # question code attribute
-    cannot(:destroy, Question) { |q| q.published? || q.has_answers? }
 
     # we need these specialized permissions because option names/hints are updated via option set
     cannot(%i[add_options remove_options reorder_options], OptionSet, &:published?)

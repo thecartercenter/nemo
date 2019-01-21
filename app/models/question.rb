@@ -61,11 +61,20 @@ class Question < ApplicationRecord
   scope :select_types, -> { where(qtype_name: %w[select_one select_multiple]) }
   scope :with_forms, -> { includes(:forms) }
   scope :reportable, -> { where.not(qtype_name: %w[image annotated_image signature sketch audio video]) }
-  scope :not_in_form, -> (form) {
+  scope :not_in_form, lambda { |form|
                         where("(questions.id NOT IN (
                           SELECT question_id FROM form_items
                             WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id)
                       }
+  scope :unpublished_and_unanswered, lambda {
+    where("NOT EXISTS (SELECT * FROM forms INNER JOIN form_items ON form_items.form_id = forms.id
+      AND form_items.question_id = questions.id
+      WHERE published = 't' AND forms.deleted_at IS NULL AND form_items.deleted_at IS NULL)")
+      .where("NOT EXISTS (SELECT * FROM answers INNER JOIN form_items
+        ON answers.questioning_id = form_items.id
+        WHERE answers.deleted_at IS NULL AND form_items.deleted_at IS NULL
+          AND form_items.question_id = questions.id)")
+  }
 
   translates :name, :hint
 
