@@ -82,6 +82,8 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
         "</a>"
       @alert.html(msg)
       @alert.addClass('alert-info').show()
+    else if @pages == 1 and @select_all_page
+      @select_all_rows_field.val('1')
 
   # gets all checkboxes in batch_form
   get_batch_checkboxes: ->
