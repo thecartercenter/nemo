@@ -16,7 +16,7 @@ shared_context "batch delete" do
       success_msg = options[:num] == 1 ? "1 #{options[:klass].singularize} deleted successfully" :
         "#{num_deleted} #{options[:klass]} deleted successfully"
       expect(page).to have_content(success_msg)
-      expect(page).to have_content(preserved_obj.name) if preserved_obj.present?
+      expect(page).to have_content(preserved_obj) if preserved_obj.present?
     end
   end
 

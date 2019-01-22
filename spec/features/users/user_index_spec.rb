@@ -17,7 +17,7 @@ feature "user index", js: true do
     let!(:enumerators) { create_list(:user, 5, mission: mission, role_name: :enumerator) }
 
     context "unfiltered" do
-      let!(:preserved_obj) { admin }
+      let!(:preserved_obj) { admin.name }
       it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 11
     end
 
@@ -37,12 +37,12 @@ feature "user index", js: true do
     let!(:enumerators) { create_list(:user, 55, mission: mission, role_name: :enumerator) }
 
     context "unfiltered select page" do
-      let!(:preserved_obj) { User.limit(55).last }
+      let!(:preserved_obj) { User.limit(55).last.name }
       it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 50
     end
 
     context "unfiltered select all" do
-      let!(:preserved_obj) { admin }
+      let!(:preserved_obj) { admin.name }
       it_behaves_like "select all that exist", klass: "users", num: 111,
         link: "Delete Multiple Users"
     end

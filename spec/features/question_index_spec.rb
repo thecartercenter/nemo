@@ -40,7 +40,7 @@ feature "question index", js: true do
     let!(:text_questions) { create_list(:question, 50, mission: mission, qtype_name: "text") }
 
     context "unfiltered select page" do
-      let!(:preserved_obj) { Question.limit(40).last }
+      let!(:preserved_obj) { Question.limit(40).last.name }
       it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions",
                                             num: 25
     end

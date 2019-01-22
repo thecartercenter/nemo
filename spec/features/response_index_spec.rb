@@ -16,6 +16,7 @@ feature "response index", js: true do
     let!(:responses) { create_list(:response, 5, mission: mission) }
 
     context "unfiltered" do
+      let!(:preserved_obj) { nil }
       it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 5
     end
 
@@ -25,6 +26,7 @@ feature "response index", js: true do
         r.reviewed = true
         r.save!
       end
+      let!(:preserved_obj) { Response.first.shortcode.upcase }
       it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 1,
         query: "reviewed:1"
     end
@@ -39,15 +41,18 @@ feature "response index", js: true do
     let!(:responses_un) { create_list(:response, 50, mission: mission) }
 
     context "unfiltered select page" do
+      let!(:preserved_obj) { Response.limit(80).last.shortcode.upcase }
       it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 20
     end
 
     context "unfiltered select all" do
+      let!(:preserved_obj) { nil }
       it_behaves_like "select all that exist", klass: "responses", num: 100,
         link: "Delete Selected"
     end
 
     context "filtered select all" do
+      let!(:preserved_obj) { nil }
       it_behaves_like "select all that exist", klass: "responses", num: 50,
         link: "Delete Selected", query: "reviewed:1"
     end
