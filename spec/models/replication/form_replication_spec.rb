@@ -7,8 +7,13 @@ describe Form do
   let(:mission1) { create(:mission) }
 
   describe "to_mission" do
-    context "with nested questions" do
-      let!(:std) { create(:form, question_types: ["integer", %w[select_one integer]], is_standard: true) }
+    context "with doubly nested questions and repeat groups" do
+      let!(:std) do
+        create(:form, question_types: ["integer",
+                                       repeating: {items: ["select_one", "integer",
+                                                           repeating: {items: %w[text text]}]}],
+                      is_standard: true)
+      end
       let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
 
       it "produces distinct child objects with correct attribs and form references" do
@@ -21,13 +26,27 @@ describe Form do
         expect(copy.root_group).not_to eq(std.root_group)
         expect(copy.root_group.form).to eq(copy)
 
-        expect(copy.c[0]).not_to eq(std.c[1])
+        expect(copy.c[0]).not_to eq(std.c[0])
         expect(copy.c[0].qtype_name).to eq("integer")
         expect(copy.c[0].form).to eq(copy)
+
+        expect(copy.c[1]).not_to eq(std.c[1])
+        expect(copy.c[1].class).to eq(QingGroup)
+        expect(copy.c[1]).to be_repeatable
+        expect(copy.c[1].form).to eq(copy)
 
         expect(copy.c[1].c[0]).not_to eq(std.c[1].c[0])
         expect(copy.c[1].c[0].qtype_name).to eq("select_one")
         expect(copy.c[1].c[0].form).to eq(copy)
+
+        expect(copy.c[1].c[2]).not_to eq(std.c[1].c[2])
+        expect(copy.c[1].c[2].class).to eq(QingGroup)
+        expect(copy.c[1].c[2]).to be_repeatable
+        expect(copy.c[1].c[2].form).to eq(copy)
+
+        expect(copy.c[1].c[2].c[1]).not_to eq(std.c[1].c[2].c[1])
+        expect(copy.c[1].c[2].c[1].qtype_name).to eq("text")
+        expect(copy.c[1].c[2].c[1].form).to eq(copy)
       end
     end
 
