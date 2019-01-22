@@ -7,29 +7,46 @@ describe Form do
   let(:mission1) { create(:mission) }
 
   describe "to_mission" do
-    context "with nested questions" do
-      let!(:std) { create(:form, question_types: ["integer", %w[select_one integer]], is_standard: true) }
+    context "with doubly nested questions and repeat groups" do
+      let!(:std) do
+        create(:form, question_types: ["integer",
+                                       repeating: {items: ["select_one", "integer",
+                                                           repeating: {items: %w[text text]}]}],
+                      is_standard: true)
+      end
       let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-      let(:std_group) { std.children.detect { |c| c.is_a?(QingGroup) } }
-      let(:copy_group) { copy.children.detect { |c| c.is_a?(QingGroup) } }
-      let(:std_group_select) { std_group.children.detect { |c| c.qtype_name == "select_one" } }
-      let(:copy_group_select) { copy_group.children.detect { |c| c.qtype_name == "select_one" } }
 
-      it "should not produce blank ancestry (only nil)" do
+      it "produces distinct child objects with correct attribs and form references" do
+        # Root group ancestry should be nil, not empty string.
         expect(copy.root_group.ancestry).to be_nil
-      end
 
-      it "should produce distinct child objects" do
-        expect(std).not_to eq(copy)
-        expect(std.root_group).not_to eq(copy.root_group)
-        expect(std_group).not_to eq(copy_group)
-        expect(std_group_select).not_to eq(copy_group_select)
-      end
+        expect(copy).not_to eq(std)
 
-      it "should produce correct form references" do
+        expect(copy.root_group.class).to eq(QingGroup)
+        expect(copy.root_group).not_to eq(std.root_group)
         expect(copy.root_group.form).to eq(copy)
-        expect(copy.sorted_children.first.form).to eq(copy)
-        expect(copy_group_select.form).to eq(copy)
+
+        expect(copy.c[0]).not_to eq(std.c[0])
+        expect(copy.c[0].qtype_name).to eq("integer")
+        expect(copy.c[0].form).to eq(copy)
+
+        expect(copy.c[1]).not_to eq(std.c[1])
+        expect(copy.c[1].class).to eq(QingGroup)
+        expect(copy.c[1]).to be_repeatable
+        expect(copy.c[1].form).to eq(copy)
+
+        expect(copy.c[1].c[0]).not_to eq(std.c[1].c[0])
+        expect(copy.c[1].c[0].qtype_name).to eq("select_one")
+        expect(copy.c[1].c[0].form).to eq(copy)
+
+        expect(copy.c[1].c[2]).not_to eq(std.c[1].c[2])
+        expect(copy.c[1].c[2].class).to eq(QingGroup)
+        expect(copy.c[1].c[2]).to be_repeatable
+        expect(copy.c[1].c[2].form).to eq(copy)
+
+        expect(copy.c[1].c[2].c[1]).not_to eq(std.c[1].c[2].c[1])
+        expect(copy.c[1].c[2].c[1].qtype_name).to eq("text")
+        expect(copy.c[1].c[2].c[1].form).to eq(copy)
       end
     end
 
@@ -37,22 +54,20 @@ describe Form do
       let!(:std) { create(:form, question_types: %w[select_one integer], is_standard: true) }
       let!(:copy1) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
       let!(:copy2) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-      let(:copy1_select) { copy1.children.detect { |c| c.qtype_name == "select_one" } }
-      let(:copy2_select) { copy2.children.detect { |c| c.qtype_name == "select_one" } }
 
       it "should create a second copy but re-use questions, option sets" do
         expect(copy1).not_to eq(copy2)
-        expect(copy1_select).not_to eq(copy2_select)
-        expect(copy1_select.question).to eq(copy2_select.question)
-        expect(copy1_select.question.option_set).to eq(copy2_select.question.option_set)
+        expect(copy1.c[0]).not_to eq(copy2.c[0])
+        expect(copy1.c[0].question).to eq(copy2.c[0].question)
+        expect(copy1.c[0].option_set).to eq(copy2.c[0].option_set)
       end
 
       context "when using eager loaded values from form items query" do
-        it "keeps the questioning count consistent" do
-          std_qing_count = form_items_qing_count(std)
-          copy1_qing_count = form_items_qing_count(copy1)
-          copy2_qing_count = form_items_qing_count(copy2)
+        let(:std_qing_count) { Questioning.where(form: std).count }
+        let(:copy1_qing_count) { Questioning.where(form: copy1).count }
+        let(:copy2_qing_count) { Questioning.where(form: copy2).count }
 
+        it "keeps the questioning count consistent" do
           expect(std_qing_count).to eq(copy1_qing_count)
           expect(std_qing_count).to eq(copy2_qing_count)
         end
@@ -60,60 +75,31 @@ describe Form do
     end
 
     context "with a condition referencing an option from a multilevel set" do
-      let!(:std) { create(:form, is_standard: true) }
-      let!(:std_questionings) do
-        {
-          multilevel: create_questioning("multilevel_select_one", std),
-          text: create_questioning("text", std),
-          integer: create_questioning("integer", std)
-        }
-      end
-      let!(:std_option_node) do
-        std_questionings[:multilevel].option_set.children
-          .detect { |c| c.option_name == "Plant" }.children
-          .detect { |c| c.option_name == "Tulip" }
-      end
+      let!(:std) { create(:form, question_types: %w[multilevel_select_one text integer], is_standard: true) }
       let!(:std_conditions) do
-        [
-          # Two conditions on the last questioning, one referencing the multilevel Q, and one the text Q.
-          std_questionings[:integer].display_conditions.create!(
-            ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id
-          ),
-          std_questionings[:integer].display_conditions.create!(
-            ref_qing: std_questionings[:text], op: "eq", value: "foo"
-          )
-        ]
-      end
-      let(:copy_questionings) do
-        {
-          multilevel: copy.children.detect { |c| c.qtype_name == "select_one" },
-          text: copy.children.detect { |c| c.qtype_name == "text" },
-          integer: copy.children.detect { |c| c.qtype_name == "integer" }
-        }
+        # Two conditions on the last questioning, one referencing the multilevel Q, and one the text Q.
+        [std.c[2].display_conditions.create!(ref_qing: std.c[0], op: "eq",
+                                             option_node_id: std.c[0].option_set.c[1].c[0].id),
+         std.c[2].display_conditions.create!(ref_qing: std.c[1], op: "eq", value: "foo")]
       end
 
       context "if all goes well" do
         let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-        let!(:copy_conditions) { copy_questionings[:integer].display_conditions.sort_by(&:ref_qing_rank) }
-        let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
-        let!(:copy_option_node) do
-          copy_questionings[:multilevel].option_set.children
-            .detect { |c| c.option_name == "Plant" }.children
-            .detect { |c| c.option_name == "Tulip" }
-        end
+        let!(:copy_conditions) { copy.c[2].display_conditions.sort_by(&:ref_qing_rank) }
+        let!(:copy_option_node) { copy.c[0].option_set.c[1].c[0] }
 
         it "should produce distinct child objects" do
-          expect(std_questionings[:integer]).not_to eq(copy_questionings[:integer])
+          expect(std.c[2]).not_to eq(copy.c[2])
           expect(copy_conditions.size).to eq(2)
           expect(std_conditions & copy_conditions).to be_empty
-          expect(std_questionings[:multilevel].options.min).not_to eq(copy_opt_set.options.min)
+          expect(std.c[0].options.min).not_to eq(copy.c[0].option_set.options.min)
           expect(std_conditions[0].option_node).not_to eq(copy_conditions[0].option_node)
           expect(std_conditions[1]).not_to eq(copy_conditions[1])
         end
 
         it "should produce correct condition-qing link" do
-          expect(copy_conditions[0].ref_qing).to eq(copy_questionings[:multilevel])
-          expect(copy_conditions[1].ref_qing).to eq(copy_questionings[:text])
+          expect(copy_conditions[0].ref_qing).to eq(copy.c[0])
+          expect(copy_conditions[1].ref_qing).to eq(copy.c[1])
         end
 
         it "should produce correct new option node reference" do
@@ -124,23 +110,19 @@ describe Form do
       end
 
       context "if the option has since been deleted in the mission" do
-        let!(:option_set_copy) do
-          # replicate the option set
-          os_copy = std_questionings[:multilevel].option_set
-            .replicate(mode: :to_mission, dest_mission: get_mission)
-          os_copy.children
-            .detect { |c| c.option_name == "Plant" }.children
-            .detect { |c| c.option_name == "Tulip" }.destroy
-          os_copy
+        let!(:os_copy) do
+          # Replicate the option set and delete an option
+          std.c[0].option_set.replicate(mode: :to_mission, dest_mission: get_mission).tap do |os_copy|
+            os_copy.c[1].c[0].destroy
+          end
         end
         let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
 
-        it "should succeed but not copy the condition" do
-          # Question should still be copied but copy should not have a condition
-          expect(copy_questionings[:integer].code).to eq(std_questionings[:integer].code)
-          expect(std_questionings[:integer].display_conditions[0]).to be_present
-          expect(copy_questionings[:integer].display_conditions.size).to eq(1)
-          expect(copy_questionings[:integer].display_conditions[0].ref_qing).to eq(copy_questionings[:text])
+        it "should copy question but not the condition" do
+          expect(copy.c[2].code).to eq(std.c[2].code)
+          expect(std.c[2].display_conditions[0]).to be_present
+          expect(copy.c[2].display_conditions.size).to eq(1)
+          expect(copy.c[2].display_conditions[0].ref_qing).to eq(copy.c[1])
         end
       end
     end
@@ -157,12 +139,13 @@ describe Form do
       end
 
       context "with same option set previously copied to mission2" do
+        let(:copy2) { std.replicate(mode: :to_mission, dest_mission: mission2) }
+
         before do
           std.c[0].option_set.replicate(mode: :to_mission, dest_mission: mission2)
         end
 
         it "should link the condition properly" do
-          copy2 = std.replicate(mode: :to_mission, dest_mission: mission2)
           expect(copy2.c[1].display_conditions.first.option_node.mission).to eq(mission2)
         end
       end
@@ -171,19 +154,16 @@ describe Form do
     context "with a condition referencing a now-incompatible question" do
       let(:std) { create(:form, question_types: %w[select_one integer], is_standard: true) }
       let(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
-      let(:first_q_copy) { std.c[0].question.replicate(mode: :to_mission, dest_mission: mission1) }
+      let(:question_copy) { std.c[0].question.replicate(mode: :to_mission, dest_mission: mission1) }
 
       before do
         # Create condition. Standard form gets created here.
-        std.c[1].display_conditions.create!(
-          ref_qing: std.c[0],
-          op: "eq",
-          option_node_id: std.c[0].option_set.c[1].id
-        )
+        std.c[1].display_conditions.create!(ref_qing: std.c[0], op: "eq",
+                                            option_node_id: std.c[0].option_set.c[1].id)
 
         # Render the first question copy incompatible.
         # First copy happens here.
-        first_q_copy.update!(option_set: create(:option_set, mission: mission1))
+        question_copy.update!(option_set: create(:option_set, mission: mission1))
       end
 
       # This also tests that OptionNodes can be found using their original_id because:
@@ -192,11 +172,11 @@ describe Form do
       # 3. therefore the only way to link the condition correctly is by finding the OptionNode by original_id
       it "should make a new copy of the question and link properly" do
         # Link should get erased when becoming incompatible.
-        expect(first_q_copy.original_id).to be_nil
-        expect(first_q_copy.standard_copy?).to be(false)
+        expect(question_copy.original_id).to be_nil
+        expect(question_copy.standard_copy?).to be(false)
 
         # New question copy should have been created. Form copy happens here.
-        expect(copy.c[0].question).not_to eq(first_q_copy)
+        expect(copy.c[0].question).not_to eq(question_copy)
         expect(copy.c[0].question.original).to eq(std.c[0].question)
         expect(copy.c[0].question.standard_copy?).to be(true)
 
@@ -277,19 +257,16 @@ describe Form do
       end
 
       context "with questioning attributes" do
-        let(:orig_qing) { orig.questionings.first }
-        let(:copy_qing) { copy.questionings.first }
-
         before do
-          orig_qing.update!(hidden: true, group_item_name_translations: {en: "foo"})
+          orig.c[0].update!(hidden: true, group_item_name_translations: {en: "foo"})
         end
 
         it "should copy hidden attribute" do
-          expect(copy_qing.hidden).to eq(true)
+          expect(copy.c[0].hidden).to eq(true)
         end
 
         it "should copy group item name translations" do
-          expect(copy_qing.group_item_name_translations).to eq("en" => "foo")
+          expect(copy.c[0].group_item_name_translations).to eq("en" => "foo")
         end
       end
     end
@@ -317,51 +294,28 @@ describe Form do
     end
 
     context "with a condition referencing an option from a multilevel set" do
-      let!(:std) { create(:form, mission: mission1) }
-      let!(:std_questionings) do
-        {
-          multilevel: create_questioning("multilevel_select_one", std),
-          integer: create_questioning("integer", std)
-        }
-      end
-      let!(:std_option_node) do
-        std_questionings[:multilevel].option_set.children
-          .detect { |c| c.option_name == "Plant" }.children
-          .detect { |c| c.option_name == "Tulip" }
-      end
+      let!(:std) { create(:form, mission: mission1, question_types: %w[multilevel_select_one text]) }
       let!(:std_condition) do
-        std_questionings[:integer].display_conditions.create!(
-          ref_qing: std_questionings[:multilevel], op: "eq", option_node_id: std_option_node.id
+        std.c[1].display_conditions.create!(
+          ref_qing: std.c[0], op: "eq", option_node_id: std.c[0].option_set.c[1].c[0].id
         )
-      end
-      let(:copy_questionings) do
-        {
-          multilevel: copy.children.detect { |c| c.qtype_name == "select_one" },
-          integer: copy.children.detect { |c| c.qtype_name == "integer" }
-        }
       end
 
       context "if all goes well" do
         let!(:copy) { std.replicate(mode: :clone) }
-        let!(:copy_condition) { copy_questionings[:integer].display_conditions[0] }
-        let!(:copy_opt_set) { copy_questionings[:multilevel].option_set }
-        let!(:copy_option_node) do
-          copy_questionings[:multilevel].option_set.children
-            .detect { |c| c.option_name == "Plant" }.children
-            .detect { |c| c.option_name == "Tulip" }
-        end
+        let!(:copy_condition) { copy.c[1].display_conditions[0] }
+        let!(:copy_option_node) { copy.c[0].option_set.c[1].c[0] }
 
         it "should produce distinct child objects" do
-          expect(std_questionings[:integer]).not_to eq(copy_questionings[:integer])
+          expect(std.c[1]).not_to eq(copy.c[1])
           expect(std_condition).not_to eq(copy_condition)
           # These two should be equal because they're referencing the same option set.
-          expect(std_questionings[:multilevel].options.min).to eq(copy_opt_set.options.min)
-          expect(std_questionings[:integer].display_conditions[0].option_node)
-            .to eq(copy_condition.option_node)
+          expect(std.c[0].options.min).to eq(copy.c[0].option_set.options.min)
+          expect(std.c[1].display_conditions[0].option_node).to eq(copy_condition.option_node)
         end
 
         it "should produce correct condition-qing link" do
-          expect(copy_condition.ref_qing).to eq(copy_questionings[:multilevel])
+          expect(copy_condition.ref_qing).to eq(copy.c[0])
         end
 
         it "should produce correct new option node reference" do
@@ -386,9 +340,5 @@ describe Form do
         expect(copy.standard_copy?).to be_falsy
       end
     end
-  end
-
-  def form_items_qing_count(form_id)
-    FormItem.where(form_id: form_id, type: "Questioning").count
   end
 end
