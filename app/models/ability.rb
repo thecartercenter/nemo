@@ -60,12 +60,13 @@ class Ability
   def admin_permissions
     if mode == "admin"
       # Standard objects, missions, settings, and all users are available in no-mission (admin) mode
-      [Form, Questioning, FormItem, SkipRule, QingGroup, Condition, Question, OptionSet,
+      [Form, Questioning, FormItem, SkipRule, QingGroup, Condition, OptionSet,
        OptionNode, Option, OptionSetImport, Setting, Tag, Tagging].each do |k|
         can :manage, k, mission_id: nil
       end
 
-      can(%i[read create update update_code update_core export], Question, mission_id: nil)
+      can(%i[read create update update_code update_core export bulk_destroy],
+        Question, mission_id: nil)
       can(:destroy, Question, Question.unpublished_and_unanswered) do |q|
         !q.published? && !q.has_answers?
       end
@@ -114,7 +115,7 @@ class Ability
     else
       # Special change_assignments permission is given so that
       # users cannot update their own assignments via edit profile.
-      can(%i[create update login_instructions change_assignments activate], User,
+      can(%i[create update login_instructions change_assignments activate bulk_destroy], User,
         assignments: {mission_id: mission.id})
       cannot(:activate, User, id: user.id)
 
@@ -122,8 +123,8 @@ class Ability
       can(:manage, UserGroup, mission_id: mission.id)
       can(:manage, UserGroupAssignment)
 
-      # Can destroy users only if not self, they have only one mission, and it's the current mission.
-      can [:bulk_destroy, :destroy], User, User.assigned_only_to(mission).where.not(id: user.id) do |other|
+      # Can destroy users only if not self, they have only one mission, and it's current mission.
+      can(:destroy, User, User.assigned_only_to(mission).where.not(id: user.id)) do |other|
         other.id != user.id &&
           other.assignments.count == 1 &&
           other.assignments.first.mission_id == mission.id
@@ -134,7 +135,8 @@ class Ability
         can :manage, klass, mission_id: mission.id
       end
 
-      can(%i[read create update update_code update_core export], Question, mission_id: mission.id)
+      can(%i[read create update update_code update_core export bulk_destroy],
+        Question, mission_id: mission.id)
       can(:destroy, Question, Question.unpublished_and_unanswered.for_mission(mission)) do |q|
         !q.published? && !q.has_answers?
       end
