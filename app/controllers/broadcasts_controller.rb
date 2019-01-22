@@ -4,6 +4,7 @@
 class BroadcastsController < ApplicationController
   include Searchable
   include OperationQueueable
+  include BatchProcessable
 
   # authorization via cancan
   load_and_authorize_resource
@@ -41,17 +42,14 @@ class BroadcastsController < ApplicationController
 
     @broadcast = Broadcast.accessible_by(current_ability).new
     users = User.accessible_by(current_ability).with_assoc.by_name
+    users = apply_search_if_given(Question, users)
+    users = restrict_scope_to_selected_objects(users)
+    @broadcast.recipient_users = users
 
-    if params[:select_all].present?
-      if params[:search].present?
-        @broadcast.recipient_users = apply_search(User, users)
+    if (params[:search].present? || params[:selected].present?) && params[:select_all].blank?
         @broadcast.recipient_selection = "specific"
-      else
-        @broadcast.recipient_selection = "all_users"
-      end
     else
-      @broadcast.recipient_users = users.where(id: params[:selected].keys)
-      @broadcast.recipient_selection = "specific"
+      @broadcast.recipient_selection = "all_users"
     end
 
     authorize!(:create, @broadcast)

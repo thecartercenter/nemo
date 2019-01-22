@@ -38,7 +38,6 @@ feature "broadcasts", :sms, js: true do
   scenario "happy path via users list" do
     click_link("Users")
     click_link("Select All")
-    screenshot_and_open_image
     click_link("Send Broadcast")
     select("Both SMS and email", from: "Medium")
     select("Main phone only", from: "Which Phone")
