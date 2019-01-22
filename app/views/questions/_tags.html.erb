@@ -1,9 +1,5 @@
-<% if read_only || cannot?(:update_tags, @question) %>
-
+<% if read_only %>
   <%= render_tags(form.object.tags.order(:name)) %>
-
 <% else %>
-
-  <%= form.text_field(:tag_ids, {class: 'text form-control'}) %>
-
+  <%= form.text_field(:tag_ids, class: 'text form-control') %>
 <% end %>

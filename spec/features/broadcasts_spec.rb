@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "broadcasts flow", :sms, js: true do
+feature "broadcasts", :sms, js: true do
   let(:max_user_dropdown_results) { 25 }
   let!(:user) { create(:user, role_name: "staffer") }
   let!(:users) { create_list(:user, max_user_dropdown_results) }
@@ -38,6 +38,7 @@ feature "broadcasts flow", :sms, js: true do
   scenario "happy path via users list" do
     click_link("Users")
     click_link("Select All")
+    screenshot_and_open_image
     click_link("Send Broadcast")
     select("Both SMS and email", from: "Medium")
     select("Main phone only", from: "Which Phone")

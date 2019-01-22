@@ -3,10 +3,10 @@
   <%= top_action_links(@broadcast, only: :index) %>
 
   <%= f.field(:medium, type: :select, required: true,
-    options: translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
-
+                       options: translate_options(@medium_options, [:broadcast, :mediums, :options])) %>
   <%= f.field(:recipient_selection, type: :select, required: true,
-    options: translate_options(Broadcast::RECIPIENT_SELECTION_OPTIONS, [:broadcast, :recipient_selection_options])) %>
+                                    options: translate_options(Broadcast::RECIPIENT_SELECTION_OPTIONS,
+                                      [:broadcast, :recipient_selection_options])) %>
 
   <%# Leaving this as non-remote fetching for now, as we will end up reusing the stuff from Form when
      we make it possible to send broadcasts to groups later. %>
