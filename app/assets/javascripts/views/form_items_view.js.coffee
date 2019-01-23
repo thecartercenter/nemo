@@ -5,11 +5,11 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
 
   events:
     'click .add-group': 'show_new_group_modal'
-    'click .form-item-group > .inner .edit': 'show_edit_group_modal'
     'click .form-item-group > .inner': 'show_edit_group_modal'
+    'click .form-item-group > .inner .edit': 'show_edit_group_modal'
     'click .form-item-group > .inner .delete': 'delete_item'
-    'click .form-item-question > .inner .delete': 'delete_item'
     'click .form-item-question': 'go_to_question'
+    'click .form-item-question > .inner .delete': 'delete_item'
 
   initialize: (params) ->
     this.draggable = new ELMO.Views.FormItemsDraggableListView({parent_view: this}) if params.can_reorder
@@ -54,7 +54,8 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
     @form_item_being_edited.find('> .inner').replaceWith(data)
 
   delete_item: (event) ->
-    event.preventDefault()
+    event.preventDefault() # Don't follow link (it's just '#')
+    event.stopPropagation() # Don't bubble up or go_to_question/show_edit_group_modal may get called.
 
     $link = $(event.currentTarget)
     return unless confirm $link.data('message')
