@@ -7,7 +7,7 @@ class UserGroup < ApplicationRecord
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
 
   validates :name, presence: true
-  validates :name, uniqueness: {scope: %i[deleted_at mission_id]}
+  validates :name, uniqueness: {scope: :mission_id}
 
   scope :by_name, -> { order(:name) }
   scope :name_matching, ->(q) { where("name ILIKE ?", "%#{q}%") }

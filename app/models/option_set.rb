@@ -66,8 +66,7 @@ class OptionSet < ApplicationRecord
   def self.all_options_for_sets(set_ids)
     return [] if set_ids.empty?
     root_node_ids = where(id: set_ids).all.map(&:root_node_id)
-    where_clause = +root_node_ids.map { |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(" OR ")
-    where_clause << " AND deleted_at IS NULL"
+    where_clause = root_node_ids.map { |id| "ancestry LIKE '#{id}/%' OR ancestry = '#{id}'" }.join(" OR ")
     Option.where("id IN (SELECT option_id FROM option_nodes WHERE #{where_clause})").to_a
   end
 

@@ -62,7 +62,7 @@ class Question < ApplicationRecord
   scope :not_in_form, lambda { |form|
                         where("(questions.id NOT IN (
                           SELECT question_id FROM form_items
-                            WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id)
+                            WHERE type = 'Questioning' AND form_id = ?))", form.id)
                       }
   scope :unpublished_and_unanswered, lambda {
     where("NOT EXISTS (SELECT * FROM forms INNER JOIN form_items ON form_items.form_id = forms.id
