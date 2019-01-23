@@ -8,19 +8,15 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
     'click a.batch_op_link': 'submit_batch'
     'click a.select_all_rows': 'select_all_rows'
     'change input[type=checkbox].batch_op': 'checkbox_changed'
-    'mouseover table.index_table tbody tr': 'highlight_partner_row'
-    'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
 
   initialize: (params, search_form_view) ->
-    @is_search = params.is_search
     @form = this.$el.find('form').first() || this.$el.closest('form')
     @select_all_rows_field = this.$el.find('input[name=select_all]')
     @alert = this.$el.find('div.alert')
-    @pages = this.$el.data('pages')
     @entries = this.$el.data('entries')
     @select_all_page = false
     @class_name = I18n.t("activerecord.models.#{params.class_name}.many")
-    @search_form_view = search_form_view
+    @search_form_view = params.search_form_view
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -70,19 +66,20 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
 
   # updates the select all link to reflect the select_all field
   update_select_all_elements: ->
+    pages = this.$el.data('pages')
     label = if @select_all_page then "deselect_all" else "select_all"
     $('#select_all_link').html(I18n.t("layout.#{label}"))
 
     this.reset_alert()
 
-    if @pages > 1 and @select_all_page
+    if pages > 1 and @select_all_page
       msg = I18n.t("index_table.messages.selected_rows_page", {count: this.get_selected_count()}) + " " +
         "<a href='#' class='select_all_rows'>" +
         I18n.t("index_table.messages.select_all_rows", {class_name: @class_name, count: @entries}) +
         "</a>"
       @alert.html(msg)
       @alert.addClass('alert-info').show()
-    else if @pages == 1 and @select_all_page
+    else if pages == 1 and @select_all_page
       @select_all_rows_field.val('1')
 
   # gets all checkboxes in batch_form

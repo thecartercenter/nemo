@@ -8,9 +8,8 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     'mouseover table.index_table tbody tr': 'highlight_partner_row'
     'mouseout table.index_table tbody tr': 'unhighlight_partner_row'
 
-  initialize: (params, batch_actions_view) ->
+  initialize: (params) ->
     @no_whole_row_link = params.no_whole_row_link
-    @batch_actions_view = batch_actions_view
 
     # flash the modified obj if given
     if params.modified_obj_id
@@ -47,11 +46,3 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
   # remove 'hovered' class on mouseout
   unhighlight_partner_row: (event) ->
     $(event.target).closest('tbody').find('tr.hovered').removeClass('hovered')
-
-  # event handler for when a checkbox is clicked
-  checkbox_changed: (event) ->
-    # unset the select all field if a checkbox is changed in any way
-    @select_all_rows_field.val('')
-
-    # change text of link if all checked
-    @batch_actions_view.update_select_all_elements()

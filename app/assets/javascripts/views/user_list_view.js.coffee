@@ -9,7 +9,7 @@ class ELMO.Views.UserListView extends ELMO.Views.ApplicationView
 
   initialize: (params) ->
     @params = params
-    @user_table_view = ELMO.index_table_views.user
+    @user_table_view = ELMO.batch_actions_views.user
     @modal_view = new ELMO.Views.UserGroupsModalView(user_table_view: @user_table_view)
     @alert = this.$el.find("div.alert")
 
