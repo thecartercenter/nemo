@@ -20,7 +20,7 @@ GIT
 
 GIT
   remote: https://github.com/sassafrastech/closure_tree.git
-  revision: 7e303759677e9cc5cbae133433ba0d2bbce59fc9
+  revision: 08dcf6910d0618395cf97686847c414996c8dde9
   specs:
     closure_tree (7.0.0)
       activerecord (>= 4.2.10)
