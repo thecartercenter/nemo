@@ -6,7 +6,7 @@ class Condition < ApplicationRecord
 
   # Condition ranks are currently not editable, but they provide a source of deterministic ordering
   # which is useful in tests and in UI consistency.
-  acts_as_list column: :rank, scope: [:conditionable_id, deleted_at: nil]
+  acts_as_list column: :rank, scope: [:conditionable_id]
 
   belongs_to :conditionable, polymorphic: true
   belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",

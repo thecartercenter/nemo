@@ -6,7 +6,7 @@ class SkipRule < ActiveRecord::Base
 
   # SkipRule ranks are currently not editable, but they provide a source of deterministic ordering
   # which is useful in tests and in UI consistency.
-  acts_as_list column: :rank, scope: [:source_item_id, deleted_at: nil]
+  acts_as_list column: :rank, scope: [:source_item_id]
 
   belongs_to :source_item, class_name: "FormItem", inverse_of: :skip_rules
   belongs_to :dest_item, class_name: "FormItem"

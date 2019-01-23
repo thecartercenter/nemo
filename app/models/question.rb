@@ -62,7 +62,7 @@ class Question < ApplicationRecord
   scope :not_in_form, -> (form) {
                         where("(questions.id NOT IN (
                           SELECT question_id FROM form_items
-                            WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id)
+                            WHERE type = 'Questioning' AND form_id = ?))", form.id)
                       }
 
   translates :name, :hint

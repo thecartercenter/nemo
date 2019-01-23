@@ -8,7 +8,7 @@ class FormItem < ApplicationRecord
 
   DISPLAY_IF_OPTIONS = %i[always all_met any_met].freeze
 
-  acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
+  acts_as_list column: :rank, scope: [:form_id, :ancestry]
 
   # These are just for mounting validation errors.
   attr_accessor :display_logic, :skip_logic
@@ -50,9 +50,9 @@ class FormItem < ApplicationRecord
   def self.rank_gaps?
     SqlRunner.instance.run("
       SELECT id FROM form_items fi1
-      WHERE fi1.deleted_at IS NULL AND fi1.rank > 1 AND NOT EXISTS (
+      WHERE fi1.rank > 1 AND NOT EXISTS (
         SELECT id FROM form_items fi2
-        WHERE fi2.deleted_at IS NULL AND fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)
+        WHERE fi2.ancestry = fi1.ancestry AND fi2.rank = fi1.rank - 1)
     ").any?
   end
 
@@ -60,8 +60,7 @@ class FormItem < ApplicationRecord
     SqlRunner.instance.run("
       SELECT ancestry, rank
       FROM form_items
-      WHERE deleted_at IS NULL AND ancestry is NOT NULL
-        AND ancestry != ''
+      WHERE ancestry is NOT NULL AND ancestry != ''
       GROUP BY ancestry, rank
       HAVING COUNT(id) > 1
     ").any?

@@ -300,7 +300,7 @@ class OptionNode < ApplicationRecord
     # For some reason ancestry scopes requests through the current node even if you don't
     # call `where` through `self`, so you need to explicitly call unscoped here.
     # Also need to explicitly ignore deleted records because using unscoped.
-    self.class.unscoped.where(option_set_id: option_set_id, deleted_at: nil).maximum(:sequence) || 0
+    self.class.unscoped.where(option_set_id: option_set_id).maximum(:sequence) || 0
   end
 
   protected

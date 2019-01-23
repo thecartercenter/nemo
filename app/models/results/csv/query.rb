@@ -29,7 +29,7 @@ module Results
 
       def where
         <<~SQL
-          WHERE #{answer_type_and_not_deleted} AND #{response_id_clause}
+          WHERE answers.type = 'Answer' AND #{response_id_clause}
         SQL
       end
 
@@ -49,14 +49,6 @@ module Results
       ensure
         # The DB should generally be in UTC zone. Rails handles conversions internally.
         SqlRunner.instance.run("SET SESSION TIME ZONE 'UTC'")
-      end
-
-      def answer_type_and_not_deleted
-        <<~SQL
-          responses.deleted_at IS NULL
-          AND answers.deleted_at IS NULL
-          AND answers.type = 'Answer'
-        SQL
       end
 
       def response_id_clause
