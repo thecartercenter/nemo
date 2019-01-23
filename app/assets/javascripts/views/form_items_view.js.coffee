@@ -29,7 +29,9 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
         ELMO.app.loading(false)
 
   show_edit_group_modal: (event) ->
-    event.preventDefault()
+    event.preventDefault() # Don't follow link (it's just '#')
+    event.stopPropagation() # Don't bubble up or we can get a double-call of this handler if pencil clicked.
+
     $link = $(event.currentTarget)
     @form_item_being_edited = $link.closest('.form-item')
     url = $link.attr("href")
@@ -41,11 +43,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
       url: url,
       method: "get",
       success: (html) =>
-        new ELMO.Views.GroupModalView
-          html: html,
-          list_view: this,
-          mode: 'edit',
-          edit_link: edit_link
+        new ELMO.Views.GroupModalView(html: html, list_view: this, mode: 'edit', edit_link: edit_link)
         ELMO.app.loading(false)
 
   add_new_group: (data) ->

@@ -38,25 +38,28 @@ feature "forms flow", js: true do
       expect(page).to have_nested_item(path: [3, 1], name: question_name)
     end
 
+    # Edit a group
+    form_item([3, 0]).find(".fa-pencil").click
+    expect(page).to have_css(".modal-title", text: "Edit Group")
+    fill_in("Name (English)", with: "Inner Groupe")
+    find(".modal-footer .btn-primary").click
+    expect(page).to have_css("li", text: "Inner Groupe")
     click_button("Save")
     expect(page).to have_content("Form updated successfully.")
 
     # Ensure the changes were persisted.
     within(".form-items .draggable-list-wrapper") do
       expect(page).to have_nested_item(path: [3], name: outer_group)
-      expect(page).to have_nested_item(path: [3, 0], name: inner_group)
+      expect(page).to have_nested_item(path: [3, 0], name: "Inner Groupe")
       expect(page).to have_nested_item(path: [3, 1], name: question_name)
     end
   end
 
   scenario "dragging form elements" do
+    old_first_question_name = form.c[0].name
+
     visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
-
-    question_name = form.questions.first.name
-
-    # drag first item to the bottom
     drag_item(from: [0], to: [3])
-
     drag_item(from: [0], to: [1], indent: true, release: false)
     expect(page).to have_content("The parent must be a group")
     release_item
@@ -64,7 +67,7 @@ feature "forms flow", js: true do
     click_button("Save")
     expect(page).to have_content("Form updated successfully.")
 
-    expect(form.reload.questions.last.name).to eq(question_name)
+    expect(form.reload.questions.last.name).to eq(old_first_question_name)
   end
 
   context "with conditions" do
