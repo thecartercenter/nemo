@@ -14,8 +14,6 @@ class OptionNode < ApplicationRecord
   # Number of nodes to return as JSON if node is 'huge'.
   TO_SERIALIZE_IF_HUGE = 10
 
-  acts_as_paranoid
-
   belongs_to :option_set
   belongs_to :option, autosave: true
   has_many :conditions

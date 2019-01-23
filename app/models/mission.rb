@@ -1,6 +1,4 @@
 class Mission < ApplicationRecord
-  acts_as_paranoid
-
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 2
 

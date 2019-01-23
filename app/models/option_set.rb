@@ -13,8 +13,6 @@ class OptionSet < ApplicationRecord
 
   SMS_GUIDE_FORMATTING_OPTIONS = %w[auto inline appendix treat_as_text].freeze
 
-  acts_as_paranoid
-
   # This need to be up here or they will run too late.
   before_destroy :check_associations
   before_destroy :nullify_root_node

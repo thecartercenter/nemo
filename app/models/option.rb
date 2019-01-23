@@ -10,8 +10,6 @@ class Option < ApplicationRecord
   MAX_NAME_LENGTH = 255
   LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
 
-  acts_as_paranoid
-
   has_many :option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true
   has_many :option_sets, through: :option_nodes
   has_many :answers, inverse_of: :option, dependent: :restrict_with_exception

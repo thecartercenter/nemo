@@ -8,7 +8,6 @@ class FormItem < ApplicationRecord
 
   DISPLAY_IF_OPTIONS = %i[always all_met any_met].freeze
 
-  acts_as_paranoid
   acts_as_list column: :rank, scope: [:form_id, :ancestry, deleted_at: nil]
 
   # These are just for mounting validation errors.

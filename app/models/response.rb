@@ -7,8 +7,6 @@ class Response < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 5
 
-  acts_as_paranoid
-
   attr_accessor :modifier, :excerpts, :awaiting_media
 
   belongs_to :form, inverse_of: :responses
