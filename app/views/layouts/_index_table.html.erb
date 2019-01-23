@@ -96,9 +96,8 @@
       ELMO.batch_actions_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.BatchActionsView(<%=json(
         class_name: objects[0].class.name.underscore,
         batch_ops: batch_ops,
-        is_search: params[:search].present?,
-        search_form_view: ELMO.searchFormView
-      ) %>);
+        is_search: params[:search].present?
+      ) %>, ELMO.searchFormView);
 
       new ELMO.Views.IndexTableView(<%=json(
         modified_obj_id: flash[:modified_obj_id],

@@ -14,8 +14,9 @@ function responses_fetch() {
     ELMO.batch_actions_views.response_decorator.get_selected_items().each(
       function() { url = Utils.add_url_param(url, "sel[]=" + $(this).data('response-id')); }
     );
-    if (ELMO.batch_actions_views.response_decorator.select_all_field.val())
+    if (ELMO.batch_actions_views.response_decorator.select_all_field.val()) {
       url = Utils.add_url_param(url, "select_all=1");
+    }
   }
 
   ELMO.app.loading(true);
