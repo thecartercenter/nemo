@@ -184,7 +184,7 @@ class Report::SummaryCollectionBuilder
           to_timestamp(AVG(extract(epoch FROM a.datetime_value))) AS mean,
           MIN(a.datetime_value) AS min,
           MAX(a.datetime_value) AS max
-        FROM answers a INNER JOIN form_items qing ON AND qing.type='Questioning'
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning'
           AND a.questioning_id = qing.id AND qing.id IN (?)
           INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
