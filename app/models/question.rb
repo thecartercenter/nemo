@@ -8,8 +8,6 @@ class Question < ApplicationRecord
   include Replication::Standardizable
   include MissionBased
 
-  acts_as_paranoid
-
   # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)
   # The user is told that the max is 20.
   # This is because we need to leave room for additional digits at the end during replication to

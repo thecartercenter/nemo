@@ -4,8 +4,6 @@
 class ResponseNode < ApplicationRecord
   self.table_name = "answers"
 
-  acts_as_paranoid
-
   attr_accessor :relevant
 
   belongs_to :form_item, inverse_of: :response_nodes, foreign_key: "questioning_id"

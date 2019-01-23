@@ -94,9 +94,6 @@ GEM
       tzinfo (~> 1.1)
     acts_as_list (0.9.17)
       activerecord (>= 3.0)
-    acts_as_paranoid (0.6.0)
-      activerecord (>= 4.2, < 6.0)
-      activesupport (>= 4.2, < 6.0)
     addressable (2.5.2)
       public_suffix (>= 2.0.2, < 4.0)
     ancestry (3.0.5)
@@ -568,7 +565,6 @@ DEPENDENCIES
   active_model_serializers (~> 0.9.3)
   activerecord-session_store (~> 1.1.1)
   acts_as_list
-  acts_as_paranoid (~> 0.6.0)
   ancestry (~> 3.0.0)
   api-pagination (~> 4.1.1)
   assert_difference (~> 1.0.0)

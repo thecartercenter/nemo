@@ -4,8 +4,6 @@
 class Tagging < ApplicationRecord
   include Replication::Replicable
 
-  acts_as_paranoid
-
   belongs_to :question
   belongs_to :tag
 

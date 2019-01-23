@@ -14,8 +14,6 @@ class Form < ApplicationRecord
 
   API_ACCESS_LEVELS = %w[private public].freeze
 
-  acts_as_paranoid
-
   has_many :responses, inverse_of: :form, dependent: :destroy
   has_many :versions, -> { order(:sequence) }, class_name: "FormVersion", inverse_of: :form,
                                                dependent: :destroy

@@ -4,8 +4,6 @@ class SkipRule < ActiveRecord::Base
   include Replication::Replicable
   include MissionBased
 
-  acts_as_paranoid
-
   # SkipRule ranks are currently not editable, but they provide a source of deterministic ordering
   # which is useful in tests and in UI consistency.
   acts_as_list column: :rank, scope: [:source_item_id, deleted_at: nil]

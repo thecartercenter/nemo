@@ -4,8 +4,6 @@ module Report
   class Calculation < ApplicationRecord
     TYPES = %w[identity zero_nonzero].freeze
 
-    acts_as_paranoid
-
     attr_writer :table_prefix
 
     belongs_to :report, class_name: "Report", foreign_key: "report_report_id",
