@@ -14,7 +14,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
   initialize: (params) ->
     this.draggable = new ELMO.Views.FormItemsDraggableListView({parent_view: this}) if params.can_reorder
     this.params = params
-    this.update_action_icons()
+    this.update_group_action_icons()
 
   show_new_group_modal: (event) ->
     event.preventDefault()
@@ -70,6 +70,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
       success: =>
         $form_item.remove()
         this.draggable.update_condition_refs()
+        @update_group_action_icons()
         ELMO.app.loading(false)
 
   update_item_position: (id, parent_and_rank) ->
@@ -82,7 +83,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
         this.show_saving_message(false)
 
   # Checks all groups and hides/shows delete icons when appropriate.
-  update_action_icons: ->
+  update_group_action_icons: ->
     for group in @$('.form-item-group')
       link = $(group).find('> .inner .action_link.delete')
       link[if $(group).find('.form-item').length > 0 then 'hide' else 'show']()
