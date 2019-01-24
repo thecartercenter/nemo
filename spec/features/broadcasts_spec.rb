@@ -3,6 +3,7 @@
 require "rails_helper"
 
 feature "broadcasts", :sms, js: true do
+  include_context "search"
   let(:max_user_dropdown_results) { 25 }
   let!(:user) { create(:user, role_name: "staffer") }
   let!(:users) { create_list(:user, max_user_dropdown_results) }
@@ -35,29 +36,89 @@ feature "broadcasts", :sms, js: true do
     expect(page).to have_content(user2.name)
   end
 
-  scenario "happy path via users list" do
+  scenario "nothing selected" do
     click_link("Users")
-    click_link("Select All")
     click_link("Send Broadcast")
-    select("Both SMS and email", from: "Medium")
-    select("Main phone only", from: "Which Phone")
-    fill_in("Message", with: "foo bar baz")
-    click_button("Send")
-    expect(page).to have_content("Broadcast queued")
-    expect(page).to have_content("All users in mission")
+    expect(page).to have_content("You haven't selected anything")
   end
 
-  scenario "happy path via users list with specific users selected" do
-    click_link("Users")
-    check("selected_#{user.id}")
-    check("selected_#{user2.id}")
-    click_link("Send Broadcast")
+  context "one page of users" do
+    scenario "unfiltered" do
+      click_link("Users")
+      click_link("Select All")
+      click_link("Send Broadcast")
+      fill_message_and_send
+      expect(page).to have_content("Broadcast queued")
+      expect(page).to have_content("All users in mission")
+    end
+
+    scenario "unfiltered with only two users selected" do
+      click_link("Users")
+      check("selected_#{user.id}")
+      check("selected_#{user2.id}")
+      click_link("Send Broadcast")
+      fill_message_and_send
+      expect(page).to have_text("Broadcast queued")
+      expect(page).to have_content(user.name)
+      expect(page).to have_content(user2.name)
+      expect(page).to have_content("Specific users/groups in mission")
+    end
+
+    scenario "filtered users selected" do
+      click_link("Users")
+      search_for("role:staffer")
+      click_link("Select All")
+      click_link("Send Broadcast")
+      fill_message_and_send
+      expect(page).to have_text("Broadcast queued")
+      expect(page).to have_content(user.name)
+      expect(page).to_not have_content(user2.name)
+      expect(page).to have_content("Specific users/groups in mission")
+    end
+  end
+
+  context "multiple pages of users" do
+    let!(:more_users) { create_list(:user, 50) }
+    let!(:more_users) { create_list(:user, 50, role_name: "staffer") }
+
+    scenario "unfiltered select users on page" do
+      click_link("Users")
+      click_link("Select All")
+      click_link("Send Broadcast")
+      fill_message_and_send
+      expect(page).to have_text("Broadcast queued")
+      expect(page).to have_content("Specific users/groups in mission")
+    end
+
+    scenario "unfiltered select all users available" do
+      click_link("Users")
+      click_link("Select All")
+      click_link("Select all 77 Users")
+      click_link("Send Broadcast")
+      fill_message_and_send
+      expect(page).to have_text("Broadcast queued")
+      expect(page).to have_text("All users in mission")
+    end
+
+    scenario "filtered select all users available" do
+      click_link("Users")
+      search_for("role:staffer")
+      click_link("Select All")
+      click_link("Select all 51 Users")
+      click_link("Send Broadcast")
+      fill_message_and_send
+      expect(page).to have_text("Broadcast queued")
+      expect(page).to have_content("Specific users/groups in mission")
+    end
+  end
+
+
+  private
+
+  def fill_message_and_send
     select("Both SMS and email", from: "broadcast_medium")
     select("Main phone only", from: "broadcast_which_phone")
     fill_in("Message", with: "foo bar baz")
     click_button("Send")
-    expect(page).to have_text("Broadcast queued")
-    expect(page).to have_content(user.name)
-    expect(page).to have_content(user2.name)
   end
 end

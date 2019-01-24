@@ -39,14 +39,13 @@ class BroadcastsController < ApplicationController
     # We default to this since it is usually the case.
     # It will be overridden if select_all is given without search.
     recipient_selection = "specific"
-
     @broadcast = Broadcast.accessible_by(current_ability).new
     users = User.accessible_by(current_ability).with_assoc.by_name
     users = apply_search_if_given(User, users)
     users = restrict_scope_to_selected_objects(users)
     @broadcast.recipient_users = users
 
-    if (params[:search].present? || params[:selected].present?) && params[:select_all].blank?
+    if params[:search].present? || (params[:selected].present? && params[:select_all].blank?)
         @broadcast.recipient_selection = "specific"
     else
       @broadcast.recipient_selection = "all_users"
