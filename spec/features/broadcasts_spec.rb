@@ -112,7 +112,6 @@ feature "broadcasts", :sms, js: true do
     end
   end
 
-
   private
 
   def fill_message_and_send
