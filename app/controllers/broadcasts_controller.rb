@@ -43,21 +43,8 @@ class BroadcastsController < ApplicationController
     users = restrict_scope_to_selected_objects(users)
     @broadcast.recipient_users = users
 
-
-    if params[:search].present? || params[:select_all_pages].blank?
-      @broadcast.recipient_selection = "specific"
-    else
-      @broadcast.recipient_selection = "all_users"
-    end
-
-    # if params[:search].present? || params[:select_all_pages].blank?
-    #   @broadcast.recipient_selection = "specific"
-    # elsif params[:select_all_pages] == "1"
-    #   @broadcast.recipient_selection = "all_users"
-    # else
-    #   @broadcast.recipient_selection = "specific"
-    # end
-
+      @broadcast.recipient_selection =
+        params[:search].present? || params[:select_all_pages].blank? ? "specific" : "all_users"
 
     authorize!(:create, @broadcast)
     prep_form_vars
