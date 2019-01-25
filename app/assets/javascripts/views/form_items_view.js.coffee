@@ -5,16 +5,16 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
 
   events:
     'click .add-group': 'show_new_group_modal'
-    'click .form-item-group > .inner .edit': 'show_edit_group_modal'
     'click .form-item-group > .inner': 'show_edit_group_modal'
+    'click .form-item-group > .inner .edit': 'show_edit_group_modal'
     'click .form-item-group > .inner .delete': 'delete_item'
-    'click .form-item-question > .inner .delete': 'delete_item'
     'click .form-item-question': 'go_to_question'
+    'click .form-item-question > .inner .delete': 'delete_item'
 
   initialize: (params) ->
     this.draggable = new ELMO.Views.FormItemsDraggableListView({parent_view: this}) if params.can_reorder
     this.params = params
-    this.update_action_icons()
+    this.update_group_action_icons()
 
   show_new_group_modal: (event) ->
     event.preventDefault()
@@ -29,7 +29,9 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
         ELMO.app.loading(false)
 
   show_edit_group_modal: (event) ->
-    event.preventDefault()
+    event.preventDefault() # Don't follow link (it's just '#')
+    event.stopPropagation() # Don't bubble up or we can get a double-call of this handler if pencil clicked.
+
     $link = $(event.currentTarget)
     @form_item_being_edited = $link.closest('.form-item')
     url = $link.attr("href")
@@ -41,11 +43,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
       url: url,
       method: "get",
       success: (html) =>
-        new ELMO.Views.GroupModalView
-          html: html,
-          list_view: this,
-          mode: 'edit',
-          edit_link: edit_link
+        new ELMO.Views.GroupModalView(html: html, list_view: this, mode: 'edit', edit_link: edit_link)
         ELMO.app.loading(false)
 
   add_new_group: (data) ->
@@ -56,7 +54,8 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
     @form_item_being_edited.find('> .inner').replaceWith(data)
 
   delete_item: (event) ->
-    event.preventDefault()
+    event.preventDefault() # Don't follow link (it's just '#')
+    event.stopPropagation() # Don't bubble up or go_to_question/show_edit_group_modal may get called.
 
     $link = $(event.currentTarget)
     return unless confirm $link.data('message')
@@ -72,6 +71,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
       success: =>
         $form_item.remove()
         this.draggable.update_condition_refs()
+        @update_group_action_icons()
         ELMO.app.loading(false)
 
   update_item_position: (id, parent_and_rank) ->
@@ -84,7 +84,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
         this.show_saving_message(false)
 
   # Checks all groups and hides/shows delete icons when appropriate.
-  update_action_icons: ->
+  update_group_action_icons: ->
     for group in @$('.form-item-group')
       link = $(group).find('> .inner .action_link.delete')
       link[if $(group).find('.form-item').length > 0 then 'hide' else 'show']()

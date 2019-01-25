@@ -6,68 +6,105 @@ feature "forms flow", js: true do
   INDENT = 40
 
   let!(:user) { create(:user) }
-  let!(:form) do
-    create(:form, name: "Foo", question_types: %w[integer multilevel_select_one select_one integer])
-  end
   let(:forms_path) { "/en/m/#{form.mission.compact_name}/forms" }
   let(:qings) { form.root_group.c }
+  let!(:form) { create(:form, name: "Foo", question_types: question_types) }
+  let(:edit_url) { edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name) }
 
   before do
     login(user)
   end
 
-  scenario "add nested groups to a form" do
-    outer_group = "Outer Group"
-    inner_group = "Inner Group"
-    question_name = form.questions.first.name
+  context "with no groups" do
+    let(:question_types) { %w[integer multilevel_select_one select_one integer] }
 
-    visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
-    create_group(outer_group)
-    create_group(inner_group)
+    scenario "adding nested groups" do
+      outer_group = "Outer Group"
+      inner_group = "Inner Group"
+      question_name = form.questions.first.name
 
-    within(".form-items .draggable-list-wrapper") do
-      expect(page).to have_nested_item(path: [4], name: outer_group)
-      expect(page).to have_nested_item(path: [5], name: inner_group)
+      visit(edit_url)
+      create_group(outer_group)
+      create_group(inner_group)
 
-      # nest inner group under outer group
-      drag_item(from: [5], to: [5], indent: true)
-      expect(page).to have_nested_item(path: [4, 0], name: inner_group)
+      within(".form-items .draggable-list-wrapper") do
+        expect(page).to have_nested_item(path: [4], name: outer_group)
+        expect(page).to have_nested_item(path: [5], name: inner_group)
 
-      # nest first question under outer group
-      drag_item(from: [0], to: [4, 0])
-      expect(page).to have_nested_item(path: [3, 1], name: question_name)
+        # nest inner group under outer group
+        drag_item(from: [5], to: [5], indent: true)
+        expect(page).to have_nested_item(path: [4, 0], name: inner_group)
+
+        # nest first question under outer group
+        drag_item(from: [0], to: [4, 0])
+        expect(page).to have_nested_item(path: [3, 1], name: question_name)
+      end
+
+      # Edit a group
+      form_item([3, 0]).find(".fa-pencil").click
+      expect(page).to have_css(".modal-title", text: "Edit Group")
+      fill_in("Name (English)", with: "Inner Groupe")
+      find(".modal-footer .btn-primary").click
+      expect(page).to have_css("li", text: "Inner Groupe")
+      click_button("Save")
+      expect(page).to have_content("Form updated successfully.")
+
+      # Ensure the changes were persisted.
+      within(".form-items .draggable-list-wrapper") do
+        expect(page).to have_nested_item(path: [3], name: outer_group)
+        expect(page).to have_nested_item(path: [3, 0], name: "Inner Groupe")
+        expect(page).to have_nested_item(path: [3, 1], name: question_name)
+      end
     end
 
-    click_button("Save")
-    expect(page).to have_content("Form updated successfully.")
+    scenario "dragging form elements" do
+      old_first_question_name = form.c[0].name
 
-    # Ensure the changes were persisted.
-    within(".form-items .draggable-list-wrapper") do
-      expect(page).to have_nested_item(path: [3], name: outer_group)
-      expect(page).to have_nested_item(path: [3, 0], name: inner_group)
-      expect(page).to have_nested_item(path: [3, 1], name: question_name)
+      visit(edit_url)
+      drag_item(from: [0], to: [3])
+      drag_item(from: [0], to: [1], indent: true, release: false)
+      expect(page).to have_content("The parent must be a group")
+      release_item
+
+      click_button("Save")
+      expect(page).to have_content("Form updated successfully.")
+
+      expect(form.reload.questions.last.name).to eq(old_first_question_name)
     end
   end
 
-  scenario "dragging form elements" do
-    visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+  context "with groups and questions" do
+    let(:question_types) { ["integer", %w[integer]] }
+    let(:q0_name) { form.c[0].code }
+    let(:g1_name) { form.c[1].group_name }
+    let(:q10_name) { form.c[1].c[0].code }
 
-    question_name = form.questions.first.name
+    scenario "deleting elements" do
+      visit(edit_url)
+      form_item([1, 0]).find(".fa-trash-o").click
+      message = accept_confirm
+      expect(message).to match("question '#{q10_name}'")
+      wait_for_ajax # Need to wait or we get down into bottom part of the test before ajax completes.
+      expect(page).not_to have_content(q10_name)
 
-    # drag first item to the bottom
-    drag_item(from: [0], to: [3])
+      form_item([1]).find(".fa-trash-o").click
+      message = accept_confirm
+      expect(message).to match("group '#{g1_name}'")
+      wait_for_ajax
+      expect(page).not_to have_content(g1_name)
 
-    drag_item(from: [0], to: [1], indent: true, release: false)
-    expect(page).to have_content("The parent must be a group")
-    release_item
-
-    click_button("Save")
-    expect(page).to have_content("Form updated successfully.")
-
-    expect(form.reload.questions.last.name).to eq(question_name)
+      # Leave page and return to ensure correctly persisted.
+      visit(forms_path)
+      click_link(form.name)
+      expect(page).to have_content(q0_name)
+      expect(page).not_to have_content(q10_name)
+      expect(page).not_to have_content(g1_name)
+    end
   end
 
   context "with conditions" do
+    let(:question_types) { %w[integer multilevel_select_one select_one integer] }
+
     before do
       qings[1].update!(
         display_if: "all_met",
@@ -78,7 +115,7 @@ feature "forms flow", js: true do
     end
 
     scenario "dragging form elements" do
-      visit(edit_form_path(form, locale: "en", mode: "m", mission_name: get_mission.compact_name))
+      visit(edit_url)
 
       # try dragging conditional item above the question on which it depends
       drag_item(from: [1], to: [0], release: false)

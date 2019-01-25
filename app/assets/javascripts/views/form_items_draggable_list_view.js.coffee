@@ -36,7 +36,7 @@ class ELMO.Views.FormItemsDraggableListView extends ELMO.Views.ApplicationView
   # Called at the end of a drag. Saves new position.
   drop_happened: (event, ui) ->
     this.update_condition_refs()
-    this.parent_view.update_action_icons()
+    this.parent_view.update_group_action_icons()
     this.parent_view.update_item_position(ui.item.data('id'), this.get_parent_id_and_rank(ui.item))
 
   # Gets the parent_id (or null if top-level) and rank of the given li.
