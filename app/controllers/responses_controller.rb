@@ -30,7 +30,7 @@ class ResponsesController < ApplicationController
         # Needed for permission check
         @responses = @responses.includes(user: :assignments)
 
-        @responses = @responses.paginate(page: params[:page], per_page: 20)
+        @responses = @responses.paginate(page: params[:page], per_page: 2)
 
         # do search, including excerpts, if applicable
         if params[:search].present?
@@ -111,7 +111,7 @@ class ResponsesController < ApplicationController
 
   def bulk_destroy
     scope = Response.accessible_by(current_ability)
-    if params[:select_all] == "1"
+    if params[:select_all_pages] == "1"
       if params[:search].present?
         begin
           scope = Response.do_search(scope, params[:search], {mission: current_mission}, include_excerpts: false)
