@@ -94,6 +94,7 @@ class User < ApplicationRecord
 
   scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
+  scope(:inactive, -> { where(active: false) })
   scope(:not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all })
 
   def self.random_password(size = 12)
