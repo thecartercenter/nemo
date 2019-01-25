@@ -66,7 +66,9 @@ class QuestionsController < ApplicationController
   end
 
   def bulk_destroy
-    @questions = Question.accessible_by(current_ability, :destroy)
+    # We only check accessible_by index permission because that is what the user would have seen in the index.
+    # The destroyer checks whether destroy is allowed and reports to the user if some objects are skipped.
+    @questions = Question.accessible_by(current_ability, :index)
     @questions = apply_search_if_given(Question, @questions)
     @questions = restrict_scope_to_selected_objects(@questions)
 

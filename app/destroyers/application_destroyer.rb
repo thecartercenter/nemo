@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-# Abstract class for destroying objects in batches efficiently.
+# Abstract class for destroying objects in batches.
+# Responsible for checking permissions for destruction (based on given Ability) and
+# handling any DeletionErrors raised during deletion.
 class ApplicationDestroyer
   attr_accessor :rel, :ability, :skipped, :destroyed, :deactivated
 
@@ -25,8 +27,6 @@ class ApplicationDestroyer
         end
       end
     end
-
-    # return counts for destroyed, skipped and deactivated objects
     {destroyed: destroyed.count, skipped: skipped.count, deactivated: deactivated.count}
   end
 

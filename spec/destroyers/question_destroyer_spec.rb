@@ -5,7 +5,7 @@ require "rails_helper"
 describe QuestionDestroyer do
   let(:current_user) { create(:user, email: "current@user.com") }
   let(:ability) { Ability.new(user: current_user, mission: get_mission) }
-  let(:destroyer) { QuestionDestroyer.new(rel: batch, user: current_user, ability: ability) }
+  let(:destroyer) { described_class.new(rel: batch, user: current_user, ability: ability) }
   let(:q1) { create(:question) }
   let(:q2) { create(:question) }
   let(:q3) { create(:question) }
