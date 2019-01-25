@@ -26,9 +26,14 @@ class Form < ApplicationRecord
   before_validation :normalize
   before_save :update_pub_changed_at
 
-  # For some reason this works but dependent: :destroy doesn't.
+  # Nullify the root_id foreign key and then delete all items before deleting the form.
+  # This ensures no foreign key constraints are violated.
   # By default, has_ancestry destroys all children of a destroyed group, so this should cascade down.
-  before_destroy { root_group.destroy }
+  before_destroy do
+    to_destroy = root_group
+    update_columns(root_id: nil, current_version_id: nil)
+    to_destroy.destroy
+  end
 
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
@@ -64,7 +69,7 @@ class Form < ApplicationRecord
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
-    Form.where(id: form_ids).update_all(original_id: nil)
+    Form.where(id: form_ids).update_all(original_id: nil, root_id: nil, current_version_id: nil)
     FormVersion.where(form_id: form_ids).delete_all
   end
 

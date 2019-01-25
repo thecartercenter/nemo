@@ -44,6 +44,7 @@ FactoryGirl.define do
       # creates questionings and questions
       form = create(:form, mission: mission,
         question_types: ["integer", "select_one", ["integer", "integer"], "select_multiple"])
+      form.publish! # Creates version
 
       create(:question, qtype_name: "select_one", option_set: os, mission: mission)
 

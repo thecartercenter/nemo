@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe "mission destroy" do
   let!(:mission) { create(:mission_with_full_heirarchy) }
-  let(:expected_counts) do
+  let(:before_counts) do
     {
       "Answer": 5,
       "Assignment": 3,
@@ -12,6 +12,7 @@ describe "mission destroy" do
       "Choice": 2,
       "Condition": 4,
       "Form": 2,
+      "FormVersion": 1,
       "Mission": 1,
       "Option": 10,
       "OptionNode": 20,
@@ -27,12 +28,12 @@ describe "mission destroy" do
       "UserGroupAssignment": 3
     }
   end
-  let(:deleted_counts) { expected_counts.map { |k, _| [k, 0] }.to_h }
+  let(:after_counts) { before_counts.map { |k, _| [k, 0] }.to_h }
 
   it "should delete all objects in mission" do
-    expect(actual_counts).to eq(expected_counts)
+    expect(actual_counts).to eq(before_counts)
     mission.destroy
-    expect(actual_counts).to eq(deleted_counts)
+    expect(actual_counts).to eq(after_counts)
   end
 
   def actual_counts
