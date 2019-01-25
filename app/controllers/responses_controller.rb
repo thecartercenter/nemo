@@ -30,7 +30,7 @@ class ResponsesController < ApplicationController
         # Needed for permission check
         @responses = @responses.includes(user: :assignments)
 
-        @responses = @responses.paginate(page: params[:page], per_page: 2)
+        @responses = @responses.paginate(page: params[:page], per_page: 20)
 
         # do search, including excerpts, if applicable
         if params[:search].present?
