@@ -123,7 +123,7 @@ class Question < ApplicationRecord
 
   # searches for questions
   # scope parameter is not used in Question search
-  def self.do_search(relation, query, _scope)
+  def self.do_search(relation, query, _scope, _options = {})
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 

@@ -6,17 +6,17 @@ module Searchable
   # passing `rel` as the relation to which to apply the search.
   # Returns the new relation if search succeeds,
   # otherwise sets flash, @search_error = true, and returns `rel` unchanged.
-  def apply_search_if_given(klass, rel)
+  def apply_search_if_given(klass, rel, **options)
     if params[:search].present?
-      apply_search(klass, rel)
+      apply_search(klass, rel, **options)
     else
       rel
     end
   end
 
-  def apply_search(klass, rel)
+  def apply_search(klass, rel, **options)
     begin
-      return klass.do_search(rel, params[:search], mission: current_mission)
+      return klass.do_search(rel, params[:search], {mission: current_mission}, options)
     rescue Search::ParseError
       flash.now[:error] = $!.to_s
       @search_error = true
