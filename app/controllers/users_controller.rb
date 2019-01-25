@@ -88,12 +88,7 @@ class UsersController < ApplicationController
   end
 
   def bulk_destroy
-    # We only check accessible_by index permission because that is what the user would have seen in the index.
-    # The destroyer checks whether destroy is allowed and reports to the user if some objects are skipped.
-    @users = User.accessible_by(current_ability, :index)
-    @users = apply_search_if_given(User, @users)
-    @users = restrict_scope_to_selected_objects(@users)
-
+    @users = restrict_by_search_and_ability_and_selection(@users, Question)
     result = UserDestroyer.new(scope: @users, user: current_user, ability: current_ability).destroy!
     success = []
     success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
