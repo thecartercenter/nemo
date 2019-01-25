@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe ResponseDestroyer do
   let(:ability) { Ability.new(user: create(:admin), mission: get_mission) }
-  let(:result) { described_class.new(rel: scope, ability: ability).destroy! }
+  let(:result) { described_class.new(scope: scope, ability: ability).destroy! }
 
   context "with responses" do
     let(:form) { create(:form, question_types: %w[select_one select_multiple image]) }

@@ -9,7 +9,7 @@ describe UserDestroyer do
   let!(:decoy) { users[0] }
   let!(:users_with_mission) { create_list(:user, 2, mission: create(:mission)) }
   let(:scope) { User.where.not(id: decoy.id) }
-  let(:destroyer) { described_class.new(rel: scope, user: current_user, ability: ability) }
+  let(:destroyer) { described_class.new(scope: scope, user: current_user, ability: ability) }
   let(:result) { destroyer.destroy! }
 
   it "ignores decoy user, skips current_user, deactivates users with other missions, deletes others" do

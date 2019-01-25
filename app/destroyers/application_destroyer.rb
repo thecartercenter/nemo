@@ -4,10 +4,10 @@
 # Responsible for checking permissions for destruction (based on given Ability) and
 # handling any DeletionErrors raised during deletion.
 class ApplicationDestroyer
-  attr_accessor :rel, :ability, :skipped, :destroyed, :deactivated
+  attr_accessor :scope, :ability, :skipped, :destroyed, :deactivated
 
   def initialize(params)
-    self.rel = params[:rel]
+    self.scope = params[:scope]
     self.ability = params[:ability]
     self.deactivated = []
     self.destroyed = []
@@ -16,7 +16,7 @@ class ApplicationDestroyer
 
   def destroy!
     ActiveRecord::Base.transaction do
-      rel.each do |object|
+      scope.each do |object|
         next if handle_explicit_skip(object)
         begin
           raise DeletionError unless ability.can?(:destroy, object)
