@@ -70,7 +70,7 @@ class QuestionsController < ApplicationController
     @questions = apply_search_if_given(Question, @questions)
     @questions = restrict_scope_to_selected_objects(@questions)
 
-    result = BatchDestroy::Question.new(rel: @questions, ability: current_ability).destroy!
+    result = QuestionDestroyer.new(rel: @questions, ability: current_ability).destroy!
     success = []
     success << t("question.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
     success << t("question.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?

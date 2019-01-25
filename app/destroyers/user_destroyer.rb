@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Destroy User objects in batches
-class BatchDestroy::User < BatchDestroy::BatchDestroy
+class UserDestroyer < ApplicationDestroyer
   def initialize(params)
     super(params)
     @user = params[:user]

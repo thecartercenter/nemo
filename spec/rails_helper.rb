@@ -63,6 +63,9 @@ RSpec.configure do |config|
   #     --seed 1234
   config.order = "random"
 
+  config.define_derived_metadata(file_path: Regexp.new("/spec/destroyers/")) do |metadata|
+    metadata[:type] = :model
+  end
   config.infer_spec_type_from_file_location!
 
   config.include AssertDifference

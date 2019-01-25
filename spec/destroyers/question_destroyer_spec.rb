@@ -2,10 +2,10 @@
 
 require "rails_helper"
 
-describe BatchDestroy::Question, type: :model do
+describe QuestionDestroyer do
   let(:current_user) { create(:user, email: "current@user.com") }
   let(:ability) { Ability.new(user: current_user, mission: get_mission) }
-  let(:destroyer) { BatchDestroy::Question.new(rel: batch, user: current_user, ability: ability) }
+  let(:destroyer) { QuestionDestroyer.new(rel: batch, user: current_user, ability: ability) }
 
   describe "question" do
     let(:q1) { create(:question) }

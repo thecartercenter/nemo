@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-# Abstract batch destroy objects in batches
-class BatchDestroy::BatchDestroy
+# Abstract class for destroying objects in batches efficiently.
+class ApplicationDestroyer
   attr_reader :rel, :ability
 
   def initialize(params)
