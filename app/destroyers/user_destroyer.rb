@@ -3,12 +3,19 @@
 # Destroy User objects in batches
 class UserDestroyer < ApplicationDestroyer
   def initialize(params)
+    self.current_user = params[:user]
     super(params)
-    @user = params[:user]
+  end
 
-    # Special case for users since we can't delete current user
-    @skipped = []
-    current_user = @rel.find { |u| u.id == @user.id }
-    @skipped << current_user if current_user
+  protected
+
+  attr_accessor :current_user
+
+  def can_deactivate?
+    true
+  end
+
+  def skip?(user)
+    user == current_user
   end
 end
