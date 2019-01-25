@@ -1,4 +1,4 @@
 # frozen_string_literal: true
 
-class QuestionDestroyer < ApplicationDestroyer
+class QuestionDestroyer < EnumeratingDestroyer
 end

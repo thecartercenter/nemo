@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Destroy User objects in batches
-class UserDestroyer < ApplicationDestroyer
+class UserDestroyer < EnumeratingDestroyer
   def initialize(params)
     self.current_user = params[:user]
     super(params)
