@@ -33,8 +33,6 @@ class BroadcastsController < ApplicationController
   # referring to recipients of the broadcast.
   # If params[:select_all] is given without params[:search],
   # it means the broadcast should be sent to all users in the system.
-  # If params[:search] is given along with params[:select_all],
-  # that search should be applied to obtain recipients.
   def new_with_users
     # We default to this since it is usually the case.
     # It will be overridden if select_all is given without search.
@@ -45,11 +43,21 @@ class BroadcastsController < ApplicationController
     users = restrict_scope_to_selected_objects(users)
     @broadcast.recipient_users = users
 
-    if params[:search].present? || (params[:selected].present? && params[:select_all].blank?)
-        @broadcast.recipient_selection = "specific"
+
+    if params[:search].present? || params[:select_all_pages].blank?
+      @broadcast.recipient_selection = "specific"
     else
       @broadcast.recipient_selection = "all_users"
     end
+
+    # if params[:search].present? || params[:select_all_pages].blank?
+    #   @broadcast.recipient_selection = "specific"
+    # elsif params[:select_all_pages] == "1"
+    #   @broadcast.recipient_selection = "all_users"
+    # else
+    #   @broadcast.recipient_selection = "specific"
+    # end
+
 
     authorize!(:create, @broadcast)
     prep_form_vars

@@ -41,13 +41,13 @@ feature "user index", js: true do
       it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 50
     end
 
-    context "unfiltered select all" do
+    context "unfiltered select all pages" do
       let!(:preserved_obj) { admin.name }
       it_behaves_like "select all that exist", klass: "users", num: 111,
-        link: "Delete Multiple Users"
+                                               link: "Delete Multiple Users"
     end
 
-    context "filtered select all" do
+    context "filtered select all pages" do
       let!(:preserved_obj) { nil }
       it_behaves_like "select all that exist", klass: "users",
                                                num: 55,
