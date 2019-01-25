@@ -4,14 +4,10 @@
 # Responsible for checking permissions for destruction (based on given Ability) and
 # handling any DeletionErrors raised during deletion.
 class ApplicationDestroyer
-  attr_accessor :scope, :ability, :skipped, :destroyed, :deactivated
-
   def initialize(params)
     self.scope = params[:scope]
     self.ability = params[:ability]
-    self.deactivated = []
-    self.destroyed = []
-    self.skipped = []
+    self.counts = {destroyed: 0, skipped: 0, deactivated: 0}
   end
 
   def destroy!
@@ -21,22 +17,24 @@ class ApplicationDestroyer
         begin
           raise DeletionError unless ability.can?(:destroy, object)
           object.destroy
-          destroyed << object
+          counts[:destroyed] += 1
         rescue DeletionError
           handle_error(object)
         end
       end
     end
-    {destroyed: destroyed.count, skipped: skipped.count, deactivated: deactivated.count}
+    counts
   end
 
   protected
+
+  attr_accessor :scope, :ability, :counts
 
   def can_deactivate?
     false
   end
 
-  def skip?(_)
+  def skip?(_object)
     false
   end
 
@@ -44,16 +42,16 @@ class ApplicationDestroyer
 
   def handle_explicit_skip(object)
     return unless skip?(object)
-    skipped << object
+    counts[:skipped] += 1
     true
   end
 
   def handle_error(object)
     if can_deactivate?
       object.activate!(false)
-      deactivated << object
+      counts[:deactivated] += 1
     else
-      skipped << object
+      counts[:skipped] += 1
     end
   end
 end
