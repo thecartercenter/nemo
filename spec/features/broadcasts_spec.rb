@@ -8,6 +8,7 @@ feature "broadcasts", :sms, js: true do
   let!(:user) { create(:user, role_name: "staffer") }
   let!(:users) { create_list(:user, max_user_dropdown_results) }
   let!(:user2) { create(:user, name: "Zied") }
+  let!(:decoy_user) { create(:user, name: "Decoy")}
 
   before do
     login(user)
@@ -61,6 +62,7 @@ feature "broadcasts", :sms, js: true do
       expect(page).to have_text("Broadcast queued")
       expect(page).to have_content(user.name)
       expect(page).to have_content(user2.name)
+      expect(page).not_to have_content(decoy_user.name)
       expect(page).to have_content("Specific users/groups in mission")
     end
 
@@ -72,7 +74,7 @@ feature "broadcasts", :sms, js: true do
       fill_message_and_send
       expect(page).to have_text("Broadcast queued")
       expect(page).to have_content(user.name)
-      expect(page).to_not have_content(user2.name)
+      expect(page).not_to have_content(user2.name)
       expect(page).to have_content("Specific users/groups in mission")
     end
   end
@@ -93,7 +95,7 @@ feature "broadcasts", :sms, js: true do
     scenario "unfiltered select all users available" do
       click_link("Users")
       click_link("Select All")
-      click_link("Select all 77 Users")
+      click_link("Select all 78 Users")
       click_link("Send Broadcast")
       fill_message_and_send
       expect(page).to have_text("Broadcast queued")

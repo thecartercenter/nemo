@@ -41,10 +41,9 @@ class BroadcastsController < ApplicationController
     users = User.accessible_by(current_ability).with_assoc.by_name
     users = apply_search_if_given(User, users)
     users = restrict_scope_to_selected_objects(users)
-    @broadcast.recipient_users = users
 
-      @broadcast.recipient_selection =
-        params[:search].present? || params[:select_all_pages].blank? ? "specific" : "all_users"
+    @broadcast.recipient_users = users
+    @broadcast.recipient_selection = specific_recipients? ? "specific" : "all_users"
 
     authorize!(:create, @broadcast)
     prep_form_vars
@@ -124,5 +123,9 @@ class BroadcastsController < ApplicationController
       job_params: {broadcast_id: @broadcast.id}
     )
     operation.enqueue
+  end
+
+  def specific_recipients?
+    params[:search].present? || params[:select_all_pages].blank?
   end
 end

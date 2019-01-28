@@ -22,9 +22,7 @@ feature "response index", js: true do
 
     context "filtered" do
       before do
-        r = Response.last
-        r.reviewed = true
-        r.save!
+        Response.last.update!(reviewed: true)
       end
       let!(:preserved_obj) { Response.first.shortcode.upcase }
       it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 1,
