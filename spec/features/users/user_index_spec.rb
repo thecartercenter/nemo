@@ -5,7 +5,7 @@ require "rails_helper"
 feature "user index", js: true do
   include_context "search"
   include_context "batch delete"
-  let(:admin) { create(:admin) }
+  let(:admin) { create(:admin, name: "Alpha") } # So that this user comes first in the list.
   let(:mission) { get_mission }
 
   before do
@@ -33,25 +33,42 @@ feature "user index", js: true do
   end
 
   describe "bulk destroy paginated" do
-    let!(:coordinators) { create_list(:user, 55, mission: mission) }
-    let!(:enumerators) { create_list(:user, 55, mission: mission, role_name: :enumerator) }
+    let!(:coordinators) do
+      [
+        create(:user, name: "Bravo", mission: mission, role_name: :coordinator),
+        create(:user, name: "Charlie", mission: mission, role_name: :coordinator),
+        create(:user, name: "Delta", mission: mission, role_name: :coordinator),
+        create(:user, name: "Echo", mission: mission, role_name: :coordinator),
+        create(:user, name: "Foxtrot", mission: mission, role_name: :coordinator)
+      ]
+    end
+    let!(:enumerators) do
+      [
+        create(:user, name: "Golf", mission: mission, role_name: :enumerator),
+        create(:user, name: "Hotel", mission: mission, role_name: :enumerator),
+        create(:user, name: "India", mission: mission, role_name: :enumerator),
+        create(:user, name: "Juliet", mission: mission, role_name: :enumerator),
+        create(:user, name: "Kilo", mission: mission, role_name: :enumerator)
+      ]
+    end
+
+    before do
+      stub_const(UsersController, "PER_PAGE", 2)
+    end
 
     context "unfiltered select page" do
-      let!(:preserved_obj) { User.limit(55).last.name }
-      it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 50
+      let!(:preserved_obj) { "Charlie" }
+      it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 2
     end
 
     context "unfiltered select all pages" do
       let!(:preserved_obj) { admin.name }
-      it_behaves_like "select all that exist", klass: "users", num: 111,
-                                               link: "Delete Multiple Users"
+      it_behaves_like "select all that exist", klass: "users", num: 11, link: "Delete Multiple Users"
     end
 
     context "filtered select all pages" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all that exist", klass: "users",
-                                               num: 55,
-                                               link: "Delete Multiple Users",
+      it_behaves_like "select all that exist", klass: "users", num: 5, link: "Delete Multiple Users",
                                                query: "role:enumerator"
     end
   end

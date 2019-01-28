@@ -35,15 +35,31 @@ feature "response index", js: true do
   end
 
   describe "bulk destroy paginated" do
-    let!(:responses) { create_list(:response, 5, mission: mission, reviewed: true) }
-    let!(:responses_un) { create_list(:response, 5, mission: mission) }
+    let!(:responses) do
+      [
+        create(:response, created_at: Time.current - 1.day, mission: mission, reviewed: true),
+        create(:response, created_at: Time.current - 2.days, mission: mission, reviewed: true),
+        create(:response, created_at: Time.current - 3.days, mission: mission, reviewed: true),
+        create(:response, created_at: Time.current - 4.days, mission: mission, reviewed: true),
+        create(:response, created_at: Time.current - 5.days, mission: mission, reviewed: true)
+      ]
+    end
+    let!(:responses_un) do
+      [
+        create(:response, created_at: Time.current - 6.days, mission: mission),
+        create(:response, created_at: Time.current - 7.days, mission: mission),
+        create(:response, created_at: Time.current - 8.days, mission: mission),
+        create(:response, created_at: Time.current - 9.days, mission: mission),
+        create(:response, created_at: Time.current - 10.days, mission: mission)
+      ]
+    end
 
     before do
       stub_const(ResponsesController, "PER_PAGE", 2)
     end
 
     context "unfiltered select page" do
-      let!(:preserved_obj) { Response.limit(8).last.shortcode.upcase }
+      let!(:preserved_obj) { responses[2].shortcode.upcase }
       it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 2
     end
 

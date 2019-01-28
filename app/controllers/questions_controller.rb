@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  PER_PAGE = 25
+
   include StandardImportable, Searchable, BatchProcessable
 
   include Parameters
@@ -13,7 +15,7 @@ class QuestionsController < ApplicationController
   def index
     @questions = apply_search_if_given(Question, @questions)
     @tags = Tag.mission_tags(@current_mission)
-    @questions = @questions.includes(:tags).by_code.paginate(:page => params[:page], :per_page => 25)
+    @questions = @questions.includes(:tags).by_code.paginate(page: params[:page], per_page: PER_PAGE)
     load_importable_objs
   end
 
