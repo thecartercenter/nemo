@@ -1,4 +1,6 @@
 class QuestionsController < ApplicationController
+  PER_PAGE = 25
+
   include StandardImportable, Searchable, BatchProcessable
 
   include Parameters
@@ -13,7 +15,7 @@ class QuestionsController < ApplicationController
   def index
     @questions = apply_search_if_given(Question, @questions)
     @tags = Tag.mission_tags(@current_mission)
-    @questions = @questions.includes(:tags).by_code.paginate(:page => params[:page], :per_page => 25)
+    @questions = @questions.includes(:tags).by_code.paginate(page: params[:page], per_page: PER_PAGE)
     load_importable_objs
   end
 
@@ -66,11 +68,8 @@ class QuestionsController < ApplicationController
   end
 
   def bulk_destroy
-    @questions = Question.accessible_by(current_ability, :destroy)
-    @questions = apply_search_if_given(Question, @questions)
-    @questions = restrict_scope_to_selected_objects(@questions)
-
-    result = BatchDestroy.new(@questions, current_user, current_ability).destroy!
+    @questions = restrict_by_search_and_ability_and_selection(@questions, Question)
+    result = QuestionDestroyer.new(scope: @questions, ability: current_ability).destroy!
     success = []
     success << t("question.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
     success << t("question.bulk_destroy_skipped", count: result[:skipped]) if result[:skipped].positive?

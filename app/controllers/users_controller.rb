@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  PER_PAGE = 50
+
   include BatchProcessable
   include Searchable
   include PasswordResettable
@@ -23,7 +25,7 @@ class UsersController < ApplicationController
     @users = apply_search_if_given(User, @users)
 
     # Apply pagination
-    @users = @users.paginate(page: params[:page], per_page: 50)
+    @users = @users.paginate(page: params[:page], per_page: PER_PAGE)
   end
 
   def new
@@ -88,11 +90,8 @@ class UsersController < ApplicationController
   end
 
   def bulk_destroy
-    @users = User.accessible_by(current_ability, :destroy)
-    @users = apply_search_if_given(User, @users)
-    @users = restrict_scope_to_selected_objects(@users)
-
-    result = BatchDestroy.new(@users, current_user, current_ability).destroy!
+    @users = restrict_by_search_and_ability_and_selection(@users, User)
+    result = UserDestroyer.new(scope: @users, user: current_user, ability: current_ability).destroy!
     success = []
     success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
     success << t("user.bulk_destroy_deactivated", count: result[:deactivated]) if result[:deactivated].positive?

@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class ResponsesController < ApplicationController
+  PER_PAGE = 20
+
   include BatchProcessable
   include OdkHeaderable
   include ResponseIndexable
   include CsvRenderable
   include OperationQueueable
+  include Searchable
 
   before_action :fix_nil_time_values, only: %i[update create]
 
@@ -24,28 +27,16 @@ class ResponsesController < ApplicationController
       format.html do
         # apply search and pagination
         params[:page] ||= 1
-
         @responses = @responses.with_basic_assoc.order(created_at: :desc)
+        @responses = @responses.includes(user: :assignments) # Needed for permission check
+        @responses = @responses.paginate(page: params[:page], per_page: PER_PAGE)
 
-        # Needed for permission check
-        @responses = @responses.includes(user: :assignments)
-
-        @responses = @responses.paginate(page: params[:page], per_page: 20)
-
-        # do search, including excerpts, if applicable
-        if params[:search].present?
-          begin
-            if resp = Response.find_by(shortcode: params[:search].downcase)
-              redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
-            end
-
-            @responses = Response.do_search(@responses, params[:search], {mission: current_mission},
-              include_excerpts: true)
-          rescue Search::ParseError => error
-            flash.now[:error] = error.to_s
-            @search_error = true
-          end
+        # Redirect immediately for exact shortcode searches.
+        if params[:search].present? && (resp = Response.find_by(shortcode: params[:search].downcase))
+          redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
+
+        @responses = apply_search_if_given(Response, @responses, include_excerpts: true)
 
         decorate_responses
 
@@ -110,25 +101,10 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
-    scope = Response.accessible_by(current_ability)
-    if params[:select_all_pages] == "1"
-      if params[:search].present?
-        begin
-          scope = Response.do_search(scope, params[:search], {mission: current_mission}, include_excerpts: false)
-        rescue Search::ParseError => error
-          flash.now[:error] = error.to_s
-          return
-        end
-      else
-        scope = scope.where(mission: current_mission)
-      end
-    else
-      scope = scope.where(id: params[:selected].keys)
-    end
-
-    ids = scope.pluck(:id)
-    Results::ResponseDeleter.instance.delete(ids)
-    flash[:success] = t("response.bulk_destroy_deleted", count: ids.size)
+    @responses = restrict_by_search_and_ability_and_selection(@responses, Response,
+      search_options: {include_excerpts: false})
+    result = ResponseDestroyer.new(scope: @responses, ability: current_ability).destroy!
+    flash[:success] = t("response.bulk_destroy_deleted", count: result[:destroyed])
     redirect_to(responses_path)
   end
 

@@ -94,6 +94,7 @@ class User < ApplicationRecord
 
   scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
+  scope(:inactive, -> { where(active: false) })
   scope(:not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all })
 
   def self.random_password(size = 12)
@@ -134,7 +135,7 @@ class User < ApplicationRecord
   # searches for users
   # relation - a User relation upon which to build the search query
   # query - the search query string (e.g. name:foo)
-  def self.do_search(relation, query, scope)
+  def self.do_search(relation, query, scope, _options = {})
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 

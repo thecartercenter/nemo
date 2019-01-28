@@ -24,7 +24,7 @@ shared_context "batch delete" do
           options[:num]
         end
       success_msg =
-        if options[:num] == 1
+        if num_deleted == 1
           "1 #{options[:klass].singularize} deleted successfully"
         else
           "#{num_deleted} #{options[:klass]} deleted successfully"
