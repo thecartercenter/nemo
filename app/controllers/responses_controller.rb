@@ -50,7 +50,7 @@ class ResponsesController < ApplicationController
         decorate_responses
 
         @selected_ids = params[:sel]
-        @selected_all = params[:select_all]
+        @selected_all_pages = params[:select_all_pages]
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
@@ -111,7 +111,7 @@ class ResponsesController < ApplicationController
 
   def bulk_destroy
     scope = Response.accessible_by(current_ability)
-    if params[:select_all] == "1"
+    if params[:select_all_pages] == "1"
       if params[:search].present?
         begin
           scope = Response.do_search(scope, params[:search], {mission: current_mission}, include_excerpts: false)

@@ -8,6 +8,7 @@ class QuestionsController < ApplicationController
   include QuestionFormable
 
   load_and_authorize_resource
+  skip_authorize_resource only: :audio_prompt
 
   def index
     @questions = apply_search_if_given(Question, @questions)
@@ -65,7 +66,10 @@ class QuestionsController < ApplicationController
   end
 
   def bulk_destroy
-    @questions = load_selected_objects(Question)
+    @questions = Question.accessible_by(current_ability, :destroy)
+    @questions = apply_search_if_given(Question, @questions)
+    @questions = restrict_scope_to_selected_objects(@questions)
+
     result = BatchDestroy.new(@questions, current_user, current_ability).destroy!
     success = []
     success << t("question.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
@@ -75,7 +79,7 @@ class QuestionsController < ApplicationController
   end
 
   def audio_prompt
-    authorize! :show, @question
+    authorize!(:show, @question)
 
     decorated_question = Odk::QuestionDecorator.decorate(@question)
 

@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-feature 'dashboard flow', js: true do
+feature 'dashboard', js: true do
   before do
     @user = create(:user)
     login(@user)

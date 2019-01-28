@@ -10,12 +10,13 @@ function responses_fetch() {
 
   var url = Utils.add_url_param(window.location.href, "auto=1");
 
-  if (ELMO.index_table_views.response_decorator) {
-    ELMO.index_table_views.response_decorator.get_selected_items().each(
+  if (ELMO.batch_actions_views.response_decorator) {
+    ELMO.batch_actions_views.response_decorator.get_selected_items().each(
       function() { url = Utils.add_url_param(url, "sel[]=" + $(this).data('response-id')); }
     );
-    if (ELMO.index_table_views.response_decorator.select_all_field.val())
+    if (ELMO.batch_actions_views.response_decorator.select_all_field.val()) {
       url = Utils.add_url_param(url, "select_all=1");
+    }
   }
 
   ELMO.app.loading(true);

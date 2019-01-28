@@ -33,7 +33,7 @@ module OperationsHelper
         end
       end
     when 'actions'
-      table_action_links(operation)
+      table_action_links(operation, exclude: :edit)
     else
       operation.send(field)
     end

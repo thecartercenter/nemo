@@ -4,6 +4,7 @@
 class BroadcastsController < ApplicationController
   include Searchable
   include OperationQueueable
+  include BatchProcessable
 
   # authorization via cancan
   load_and_authorize_resource
@@ -32,27 +33,17 @@ class BroadcastsController < ApplicationController
   # referring to recipients of the broadcast.
   # If params[:select_all] is given without params[:search],
   # it means the broadcast should be sent to all users in the system.
-  # If params[:search] is given along with params[:select_all],
-  # that search should be applied to obtain recipients.
   def new_with_users
     # We default to this since it is usually the case.
     # It will be overridden if select_all is given without search.
     recipient_selection = "specific"
-
     @broadcast = Broadcast.accessible_by(current_ability).new
     users = User.accessible_by(current_ability).with_assoc.by_name
+    users = apply_search_if_given(User, users)
+    users = restrict_scope_to_selected_objects(users)
 
-    if params[:select_all].present?
-      if params[:search].present?
-        @broadcast.recipient_users = apply_search(User, users)
-        @broadcast.recipient_selection = "specific"
-      else
-        @broadcast.recipient_selection = "all_users"
-      end
-    else
-      @broadcast.recipient_users = users.where(id: params[:selected].keys)
-      @broadcast.recipient_selection = "specific"
-    end
+    @broadcast.recipient_users = users
+    @broadcast.recipient_selection = specific_recipients? ? "specific" : "all_users"
 
     authorize!(:create, @broadcast)
     prep_form_vars
@@ -132,5 +123,9 @@ class BroadcastsController < ApplicationController
       job_params: {broadcast_id: @broadcast.id}
     )
     operation.enqueue
+  end
+
+  def specific_recipients?
+    params[:search].present? || params[:select_all_pages].blank?
   end
 end

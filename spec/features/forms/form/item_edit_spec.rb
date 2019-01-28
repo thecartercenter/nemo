@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "forms flow", js: true do
+feature "forms", js: true do
   INDENT = 40
 
   let!(:user) { create(:user) }

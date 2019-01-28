@@ -8,7 +8,6 @@ describe "abilities for questionings" do
 
     it "should be able to create but not index" do
       expect(ability).to be_able_to(:create, Questioning)
-      expect(ability).not_to be_able_to(:index, Questioning) # There is no qing index
     end
 
     context "when unpublished" do
