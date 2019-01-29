@@ -23,6 +23,7 @@ class Form < ApplicationRecord
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
+  before_create :init_downloads
   before_validation :normalize
   before_save :update_pub_changed_at
 
@@ -39,8 +40,6 @@ class Form < ApplicationRecord
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 
-  before_create :init_downloads
-
   scope :published, -> { where(published: true) }
   scope :by_name, -> { order("forms.name") }
   scope :default_order, -> { by_name }
@@ -52,15 +51,8 @@ class Form < ApplicationRecord
     select(forms[Arel.star]).select(count_subquery)
   }
 
-  delegate :children,
-    :sorted_children,
-    :visible_children,
-    :c,
-    :sc,
-    :descendants,
-    :child_groups,
-    to: :root_group
-
+  delegate :children, :sorted_children, :visible_children, :c, :sc,
+    :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},

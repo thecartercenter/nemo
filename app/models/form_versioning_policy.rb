@@ -67,7 +67,10 @@ class FormVersioningPolicy
         end
       when :destroy
         # If form smsable and the questioning was NOT the last one on the form, it's a trigger.
-        if obj.form.smsable? && obj.form.last_qing.present? && obj.rank <= obj.form.last_qing.rank
+        # We check if root_group is present because form might be in the process of deleting itself, in which
+        # case we don't need to worry about version bumps.
+        if obj.form.smsable? && obj.form.root_group.present? &&
+          obj.form.last_qing.present? && obj.rank <= obj.form.last_qing.rank
           return [obj.form]
         end
       end
