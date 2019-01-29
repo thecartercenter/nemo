@@ -1,21 +1,16 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Results::SqlGenerator do
   let(:mission) { create(:mission) }
   let(:form) do
-    create(:form,
-      mission: mission,
-      question_types: ["integer", "select_one", ["integer", "integer"], "select_multiple"]
-    )
+    create(:form, mission: mission,
+                  question_types: ["integer", "select_one", %w[integer integer], "select_multiple"])
   end
   let!(:response) do
-    create(:response,
-      mission: mission,
-      form: form,
-      answer_values: [3, "Cat", [5, 6], %w(Cat Dog)]
-    )
+    create(:response, mission: mission, form: form, answer_values: [3, "Cat", [5, 6], %w[Cat Dog]])
   end
-  let!(:deleted_response) { create(:response, :deleted, mission: mission, form: form, answer_values: [3]) }
   let(:other_mission) { create(:mission) }
   let(:other_form) { create(:form, mission: other_mission, question_types: ["integer"]) }
   let!(:other_response) { create(:response, mission: other_mission, form: other_form, answer_values: [3]) }
@@ -56,11 +51,11 @@ describe Results::SqlGenerator do
         LEFT JOIN options co ON choices.option_id = co.id
         LEFT JOIN option_nodes ch_opt_nodes ON ch_opt_nodes.option_id = co.id
           AND ch_opt_nodes.option_set_id = option_sets.id
-      WHERE responses.mission_id = '#{mission.id}'
+      WHERE (responses.mission_id = '#{mission.id}')
       ORDER BY responses.created_at DESC"))
 
     # 5 Answers, one row per answer, except two rows for the Answer with two Choices
-    expect(Answer.find_by_sql(sql).size).to eq 6
+    expect(Answer.find_by_sql(sql).size).to eq(6)
   end
 
   def normalize(str)
