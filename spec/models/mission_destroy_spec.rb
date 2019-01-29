@@ -37,6 +37,6 @@ describe "mission destroy" do
   end
 
   def actual_counts
-    expected_counts.keys.map { |k| [k, k.to_s.constantize.count] }.to_h
+    before_counts.keys.map { |k| [k, k.to_s.constantize.count] }.to_h
   end
 end

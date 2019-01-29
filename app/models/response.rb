@@ -204,7 +204,7 @@ class Response < ApplicationRecord
     answer_ids = Answer.where(response_id: response_ids).pluck(:id)
     Choice.where(answer_id: answer_ids).delete_all
     Media::Object.where(answer_id: answer_ids).delete_all
-    Answer.where(response_id: response_ids).destroy_all
+    ResponseNode.where(response_id: response_ids).delete_all
   end
 
   # We need a name field so that this class matches the Nameable duck type.

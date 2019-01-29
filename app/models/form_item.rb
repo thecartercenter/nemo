@@ -67,7 +67,8 @@ class FormItem < ApplicationRecord
   end
 
   def self.terminate_sub_relationships(form_item_ids)
-    SkipRule.where(source_item_id: form_item_ids).destroy_all
+    Form.where(root_id: form_item_ids).update_all(root_id: nil)
+    SkipRule.where(source_item_id: form_item_ids).delete_all
   end
 
   # Duck type used for retrieving the main FormItem associated with this object, which is itself.
