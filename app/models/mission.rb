@@ -55,7 +55,7 @@ class Mission < ApplicationRecord
       relationships_to_delete = [Setting, Report::Report, Response,
                                  Condition, FormItem, Question, OptionSet, Option,
                                  Form, Broadcast, Assignment, Sms::Message, UserGroup]
-      relationships_to_delete.each { |r| puts r; r.mission_pre_delete(self) }
+      relationships_to_delete.each { |r| r.mission_pre_delete(self) }
       reload
       check_associations
       delete
