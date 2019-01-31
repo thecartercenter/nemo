@@ -61,7 +61,8 @@ class FormVersioningPolicy
         # If required is changed, it's a trigger
         # Changing question rank is a trigger if form is smsable
         # Changing question visibility is a trigger if changed to visible (not hidden)
-        if obj.saved_change_to_attribute?(:required) || (obj.saved_change_to_attribute?(:rank) && obj.form.smsable?) ||
+        if obj.saved_change_to_attribute?(:required) ||
+            (obj.saved_change_to_attribute?(:rank) && obj.form.smsable?) ||
             (obj.saved_change_to_attribute?(:hidden) && !obj.hidden?)
           return [obj.form]
         end

@@ -87,8 +87,10 @@ class User < ApplicationRecord
     where(assignments: { mission: m.try(:id), role: roles }) }
 
   # returns users who are assigned to the given mission OR who submitted the given response
-  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments
-    WHERE mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
+  scope :assigned_to_or_submitter, lambda { |m, r|
+    where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?",
+      m.try(:id), r.try(:user_id))
+  }
 
   scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })

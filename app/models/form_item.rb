@@ -8,7 +8,7 @@ class FormItem < ApplicationRecord
 
   DISPLAY_IF_OPTIONS = %i[always all_met any_met].freeze
 
-  acts_as_list column: :rank, scope: [:form_id, :ancestry]
+  acts_as_list column: :rank, scope: %i[form_id ancestry]
 
   # These are just for mounting validation errors.
   attr_accessor :display_logic, :skip_logic
