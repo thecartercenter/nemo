@@ -4,6 +4,7 @@ require "rails_helper"
 
 describe "mission destroy" do
   let!(:mission) { create(:mission) }
+  let(:users) { create_list(:user, 3, mission: mission) }
   let(:before_counts) do
     {
       "Answer": 5,
@@ -33,9 +34,9 @@ describe "mission destroy" do
   before do
     Setting.load_for_mission(mission)
 
-    users = create_list(:user, 3, mission: mission)
     user_groups = create_list(:user_group, 2, mission: mission)
     users.each { |u| create(:user_group_assignment, user: u, user_group: user_groups.sample) }
+    users[0].update!(last_mission: mission)
 
     broadcast = create(:broadcast, mission: mission, medium: "sms", recipients: users)
     broadcast.deliver # Creates Sms::Broadcast
@@ -61,6 +62,7 @@ describe "mission destroy" do
     expect(actual_counts).to eq(before_counts)
     mission.destroy
     expect(actual_counts).to eq(after_counts)
+    expect(users[0].reload.last_mission).to be_nil
   end
 
   def actual_counts
