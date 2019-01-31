@@ -8,19 +8,19 @@ class RemoveDeletedAt < ActiveRecord::Migration[5.2]
     assignments
     conditions
     form_versions
-    forms
     option_nodes
-    option_sets
     options
-    questions
     report_calculations
     report_option_set_choices
     report_reports
+    option_sets
     responses
-    form_items
     skip_rules
+    form_items
+    forms
     taggings
     tags
+    questions
     user_group_assignments
     user_groups
     users
@@ -28,8 +28,12 @@ class RemoveDeletedAt < ActiveRecord::Migration[5.2]
   ].freeze
 
   def up
+    execute("UPDATE forms SET root_id = NULL WHERE deleted_at IS NOT NULL")
     execute("UPDATE forms SET current_version_id = NULL WHERE deleted_at IS NOT NULL")
+    execute("UPDATE questions SET option_set_id = NULL WHERE deleted_at IS NOT NULL")
     execute("UPDATE option_sets SET root_node_id = NULL WHERE deleted_at IS NOT NULL")
+    execute("UPDATE users SET last_mission_id = NULL WHERE EXISTS
+      (SELECT * FROM missions WHERE deleted_at IS NOT NULL AND id = users.last_mission_id)")
     TABLES.each { |t| execute("DELETE FROM #{t} WHERE deleted_at IS NOT NULL") }
 
     remove_index :answers, %w[deleted_at type]
