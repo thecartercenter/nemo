@@ -6,8 +6,6 @@ class User < ApplicationRecord
   GENDER_OPTIONS = %w[man woman no_answer specify]
   PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
 
-  acts_as_paranoid
-
   attr_writer(:reset_password_method)
   attr_accessor(:password_confirmation)
 
@@ -60,7 +58,7 @@ class User < ApplicationRecord
   validate(:must_have_password_on_enter)
   validate(:password_reset_cant_be_email_if_no_email)
   validate(:no_duplicate_assignments)
-  validates(:login, format: {with: /\A[a-zA-Z0-9\._]+\z/}, uniqueness: {scope: :deleted_at})
+  validates(:login, format: {with: /\A[a-zA-Z0-9\._]+\z/}, uniqueness: true)
   validates(:email, format: {with: /@/}, length: {maximum: 100}, allow_blank: true)
 
   # This validation causes issues when deleting missions,
@@ -89,8 +87,10 @@ class User < ApplicationRecord
     where(assignments: { mission: m.try(:id), role: roles }) }
 
   # returns users who are assigned to the given mission OR who submitted the given response
-  scope(:assigned_to_or_submitter, ->(m, r) { where("users.id IN (SELECT user_id FROM assignments
-    WHERE deleted_at IS NULL AND mission_id = ?) OR users.id = ?", m.try(:id), r.try(:user_id)) })
+  scope :assigned_to_or_submitter, lambda { |m, r|
+    where("users.id IN (SELECT user_id FROM assignments WHERE mission_id = ?) OR users.id = ?",
+      m.try(:id), r.try(:user_id))
+  }
 
   scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
@@ -167,15 +167,12 @@ class User < ApplicationRecord
       JOIN (
         SELECT assignments.user_id, COUNT(DISTINCT responses.id) AS response_count
         FROM assignments
-          LEFT JOIN responses ON responses.deleted_at IS NULL
-            AND responses.user_id = assignments.user_id AND responses.mission_id = ?
-        WHERE assignments.deleted_at IS NULL
-          AND assignments.role = 'enumerator' AND assignments.mission_id = ?
+          LEFT JOIN responses ON responses.user_id = assignments.user_id AND responses.mission_id = ?
+        WHERE assignments.role = 'enumerator' AND assignments.mission_id = ?
         GROUP BY assignments.user_id
         ORDER BY response_count
         LIMIT ?
-      ) as rc ON users.id = rc.user_id
-      WHERE users.deleted_at IS NULL", mission.id, mission.id, limit]).reverse
+      ) as rc ON users.id = rc.user_id", mission.id, mission.id, limit]).reverse
   end
 
   # Returns an array of hashes of format {name: "Some User", response_count: 0}
@@ -184,13 +181,11 @@ class User < ApplicationRecord
     find_by_sql(["SELECT users.name, 0 as response_count FROM users
       JOIN (
         SELECT a.user_id FROM assignments a
-        WHERE a.deleted_at IS NULL
-          AND NOT EXISTS (SELECT 1 FROM responses r
-            WHERE r.deleted_at IS NULL AND r.user_id = a.user_id AND r.mission_id = ?)
+        WHERE NOT EXISTS (SELECT 1 FROM responses r
+            WHERE r.user_id = a.user_id AND r.mission_id = ?)
           AND a.role = 'enumerator' AND a.mission_id = ?
         LIMIT ?
       ) as rc ON users.id = rc.user_id
-      WHERE users.deleted_at IS NULL
       ORDER BY users.name", mission.id, mission.id, limit])
   end
 
@@ -202,15 +197,14 @@ class User < ApplicationRecord
   #   one more than this number so you can report truncation to the user.
   def self.without_responses_for_form(form, options)
     find_by_sql(["SELECT * FROM users
-      INNER JOIN assignments ON assignments.deleted_at IS NULL AND assignments.user_id = users.id
-      WHERE users.deleted_at IS NULL
-        AND assignments.mission_id = ?
+      INNER JOIN assignments ON assignments.user_id = users.id
+      WHERE assignments.mission_id = ?
         AND assignments.role = ?
         AND users.admin = FALSE
         AND NOT EXISTS (
           SELECT 1
           FROM responses
-          WHERE responses.deleted_at IS NULL AND responses.user_id=users.id AND responses.form_id = ?
+          WHERE responses.user_id = users.id AND responses.form_id = ?
         )
       ORDER BY users.name
       LIMIT ?", form.mission.id, options[:role].to_s, form.id, options[:limit] + 1])

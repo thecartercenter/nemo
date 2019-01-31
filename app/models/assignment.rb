@@ -1,29 +1,25 @@
+# frozen_string_literal: true
+
+# Assignment of a user to a mission.
 class Assignment < ApplicationRecord
   include Cacheable
 
-  acts_as_paranoid
+  belongs_to :mission
+  belongs_to :user, inverse_of: :assignments
 
-  belongs_to(:mission)
-  belongs_to(:user, :inverse_of => :assignments)
+  before_validation :normalize_role
 
-  before_validation(:normalize_role)
+  validates :mission, presence: true
+  validates :role, presence: true, unless: ->(a) { a.user.admin? }
 
-  validates(:mission, :presence => true)
-  validates(:role, presence: true, unless: lambda { |a| a.user.admin? })
-
-  scope(:sorted_recent_first, -> { order("created_at DESC") })
+  scope :sorted_recent_first, -> { order("created_at DESC") }
 
   delegate :name, to: :mission, prefix: true
 
   # checks if there are any duplicates in the given set of assignments
   def self.duplicates?(assignments)
     # uniq! returns nil if there are no duplicates
-    !assignments.collect{|a| a.mission}.compact.uniq!.nil?
-  end
-
-  # When a mission is deleted, remove all sms messages from that mission
-  def self.mission_pre_delete(mission)
-    self.delete_all(mission_id:mission)
+    !assignments.collect(&:mission).compact.uniq!.nil?
   end
 
   # generates a cache key for the set of all assignments for the given mission.
@@ -32,19 +28,21 @@ class Assignment < ApplicationRecord
     count_and_date_cache_key(rel: where(mission_id: mission.id), prefix: "mission-#{mission.id}")
   end
 
+  def self.mission_pre_delete(mission)
+    where(mission: mission).delete_all
+  end
+
   def no_role?
     role.blank?
   end
 
-  # human readable
   def to_s
     ""
   end
 
   private
 
-    # ensures role is one of allowable values
-    def normalize_role
-      self.role = nil unless User::ROLES.include?(role)
-    end
+  def normalize_role
+    self.role = nil unless User::ROLES.include?(role)
+  end
 end

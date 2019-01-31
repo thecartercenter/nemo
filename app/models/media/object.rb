@@ -4,8 +4,6 @@ module Media
   # Abstract class for Answer attachments.
   # Need to use ::Media prefix or things break :(
   class ::Media::Object < ApplicationRecord
-    acts_as_paranoid
-
     belongs_to :answer
 
     has_attached_file :item

@@ -7,8 +7,6 @@ class Response < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 5
 
-  acts_as_paranoid
-
   attr_accessor :modifier, :excerpts, :awaiting_media
 
   belongs_to :form, inverse_of: :responses
@@ -189,8 +187,8 @@ class Response < ApplicationRecord
 
     find_by_sql("
       SELECT forms.name AS form_name, COUNT(responses.id) AS count
-      FROM responses INNER JOIN forms ON forms.deleted_at IS NULL AND responses.form_id = forms.id
-      WHERE responses.deleted_at IS NULL AND #{where_clause}
+      FROM responses INNER JOIN forms ON responses.form_id = forms.id
+      WHERE #{where_clause}
       GROUP BY forms.id, forms.name
       ORDER BY count DESC
       LIMIT #{n}")
@@ -206,7 +204,7 @@ class Response < ApplicationRecord
     answer_ids = Answer.where(response_id: response_ids).pluck(:id)
     Choice.where(answer_id: answer_ids).delete_all
     Media::Object.where(answer_id: answer_ids).delete_all
-    Answer.where(response_id: response_ids).destroy_all
+    ResponseNode.where(response_id: response_ids).delete_all
   end
 
   # We need a name field so that this class matches the Nameable duck type.

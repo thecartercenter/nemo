@@ -4,8 +4,6 @@
 class ResponseNode < ApplicationRecord
   self.table_name = "answers"
 
-  acts_as_paranoid
-
   attr_accessor :relevant
 
   belongs_to :form_item, inverse_of: :response_nodes, foreign_key: "questioning_id"
@@ -14,7 +12,7 @@ class ResponseNode < ApplicationRecord
   # We don't use the advisory lock for now because it slows down concurrent inserts a lot and doesn't
   # seem necessary since we don't do a lot of concurrent edits.
   has_closure_tree order: "new_rank", numeric_order: true, dont_order_roots: true,
-                   with_advisory_lock: false, soft_delete: true, dependent: :destroy
+                   with_advisory_lock: false, dependent: :destroy
 
   before_save do
     destroy_obsolete_children

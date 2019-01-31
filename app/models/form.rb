@@ -14,8 +14,6 @@ class Form < ApplicationRecord
 
   API_ACCESS_LEVELS = %w[private public].freeze
 
-  acts_as_paranoid
-
   has_many :responses, inverse_of: :form, dependent: :destroy
   has_many :versions, -> { order(:sequence) }, class_name: "FormVersion", inverse_of: :form,
                                                dependent: :destroy
@@ -25,18 +23,22 @@ class Form < ApplicationRecord
   # For some reason dependent: :destroy doesn't work with this assoc.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
+  before_create :init_downloads
   before_validation :normalize
   before_save :update_pub_changed_at
 
-  # For some reason this works but dependent: :destroy doesn't.
+  # Nullify the root_id foreign key and then delete all items before deleting the form.
+  # This ensures no foreign key constraints are violated.
   # By default, has_ancestry destroys all children of a destroyed group, so this should cascade down.
-  before_destroy { root_group.destroy }
+  before_destroy do
+    to_destroy = root_group
+    update_columns(root_id: nil, current_version_id: nil)
+    to_destroy.destroy
+  end
 
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
-
-  before_create :init_downloads
 
   scope :published, -> { where(published: true) }
   scope :by_name, -> { order("forms.name") }
@@ -49,15 +51,8 @@ class Form < ApplicationRecord
     select(forms[Arel.star]).select(count_subquery)
   }
 
-  delegate :children,
-    :sorted_children,
-    :visible_children,
-    :c,
-    :sc,
-    :descendants,
-    :child_groups,
-    to: :root_group
-
+  delegate :children, :sorted_children, :visible_children, :c, :sc,
+    :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
@@ -66,7 +61,7 @@ class Form < ApplicationRecord
 
   # remove heirarchy of objects
   def self.terminate_sub_relationships(form_ids)
-    Form.where(id: form_ids).update_all(original_id: nil)
+    Form.where(id: form_ids).update_all(original_id: nil, root_id: nil, current_version_id: nil)
     FormVersion.where(form_id: form_ids).delete_all
   end
 
@@ -293,9 +288,9 @@ class Form < ApplicationRecord
     @answer_counts ||= Questioning.find_by_sql([%{
       SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count
       FROM form_items
-        LEFT OUTER JOIN answers ON answers.deleted_at IS NULL AND answers.questioning_id = form_items.id
+        LEFT OUTER JOIN answers ON answers.questioning_id = form_items.id
           AND form_items.type = 'Questioning'
-      WHERE form_items.deleted_at IS NULL AND form_items.form_id = ?
+      WHERE form_items.form_id = ?
       GROUP BY form_items.id
     }, id]).index_by(&:id)
 

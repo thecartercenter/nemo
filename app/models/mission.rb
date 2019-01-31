@@ -1,6 +1,4 @@
 class Mission < ApplicationRecord
-  acts_as_paranoid
-
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 2
 
@@ -49,26 +47,18 @@ class Mission < ApplicationRecord
     to_check.each { |a| raise DeletionError.new(:cant_delete_if_assoc) unless self.send(a).empty? }
   end
 
-  # remove this mission and other related records from the Database
-  # * this method is designed for speed.
+  # DEPRECATED: This should go away and be replaced with use of destroy and a background job.
+  # No need to maintain all this extra logic. Mission delete happens rarely and can be slow.
   def destroy
-    ApplicationRecord.transaction do
-      begin
-        # Remove MissionBased Classes
-        # note that we don't need to remove OptionNodes directly since OptionSet takes care of that
-        # the order of deletion is also important to avoid foreign key constraints
-        relationships_to_delete = [Setting, Report::Report, Condition, FormItem,
-                                   Question, OptionSet, Option, Response,
-                                   Form, Broadcast, Assignment, Sms::Message, UserGroup]
-        relationships_to_delete.each { |r| r.mission_pre_delete(self) }
-
-        reload
-        check_associations
-        delete
-      rescue Exception => e
-        Rails.logger.error "We had to rescue from the delete for mission: #{self.id}-#{self.name}. #{e}"
-        raise e
-      end
+    transaction do
+      # The order of deletion is also important to avoid foreign key constraints
+      relationships_to_delete = [Setting, Report::Report, Response,
+                                 Condition, FormItem, Question, OptionSet, Option,
+                                 Form, Broadcast, Assignment, Sms::Message, UserGroup]
+      relationships_to_delete.each { |r| r.mission_pre_delete(self) }
+      reload
+      check_associations
+      delete
     end
   end
 

@@ -8,8 +8,6 @@ class Question < ApplicationRecord
   include Replication::Standardizable
   include MissionBased
 
-  acts_as_paranoid
-
   # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)
   # The user is told that the max is 20.
   # This is because we need to leave room for additional digits at the end during replication to
@@ -64,7 +62,7 @@ class Question < ApplicationRecord
   scope :not_in_form, lambda { |form|
                         where("(questions.id NOT IN (
                           SELECT question_id FROM form_items
-                            WHERE type = 'Questioning' AND form_id = ? AND deleted_at IS NULL))", form.id)
+                            WHERE type = 'Questioning' AND form_id = ?))", form.id)
                       }
   scope :unpublished_and_unanswered, lambda {
     where("NOT EXISTS (SELECT * FROM forms INNER JOIN form_items ON form_items.form_id = forms.id

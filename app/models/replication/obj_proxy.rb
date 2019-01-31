@@ -60,7 +60,7 @@ class Replication::ObjProxy
         AND #{reuse_col} = (
           SELECT #{reuse_col}
           FROM #{klass.table_name}
-          WHERE #{klass.table_name}.deleted_at IS NULL AND id = '#{id}'
+          WHERE id = '#{id}'
         )
       ").first
     # If klass is standardizable, we can look for matching using original_id
@@ -129,8 +129,7 @@ class Replication::ObjProxy
     data = db.select_all("
       SELECT #{concat(cols)}
       FROM #{options[:target_klass].table_name}
-      WHERE #{options[:target_klass].table_name}.deleted_at IS NULL
-        AND #{condition} #{options[:order]}
+      WHERE #{condition} #{options[:order]}
     ")
 
     data.map do |attribs|

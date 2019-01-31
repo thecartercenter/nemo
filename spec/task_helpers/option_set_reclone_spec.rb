@@ -18,7 +18,7 @@ describe OptionSetReclone do
     clone.update_column(:root_node_id, orig.root_node_id)
 
     # Clear out the option nodes that wouldn't have been there before this bug was fixed.
-    OptionNode.where(option_set: clone).delete_all!
+    OptionNode.where(option_set: clone).delete_all
 
     # Make the condition on the form point to the cloned option set.
     form.c[0].question.update!(option_set: clone)

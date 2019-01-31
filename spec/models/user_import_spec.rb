@@ -168,7 +168,6 @@ describe UserImport do
       create(:user, login: "bcod")
       create(:user, login: "shobo")
       create(:user, login: "clo")
-      create(:user, :deleted, login: "flim.flo")
     end
 
     it "returns appropriate errors and ignores deleted data" do

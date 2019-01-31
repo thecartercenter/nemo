@@ -137,12 +137,11 @@ class Report::SummaryCollectionBuilder
           CAST(MIN(CAST(a.value AS BIGINT)) AS TEXT) AS min,
           CAST(MAX(CAST(a.value AS BIGINT)) AS TEXT) AS max
         FROM answers a INNER JOIN form_items qing
-            ON qing.deleted_at IS NULL AND qing.type='Questioning'
-              AND a.questioning_id = qing.id AND qing.id IN (?)
-          INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
+            ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND (q.qtype_name = 'integer' OR q.qtype_name = 'counter')
+        WHERE a.type = 'Answer' AND (q.qtype_name = 'integer' OR q.qtype_name = 'counter')
         GROUP BY #{disagg_group_by_expr} qing.id
       SQL
 
@@ -153,12 +152,11 @@ class Report::SummaryCollectionBuilder
           CAST(MIN(CAST(a.value AS DECIMAL(20,6))) AS TEXT) AS min,
           CAST(MAX(CAST(a.value AS DECIMAL(20,6))) AS TEXT) AS max
         FROM answers a INNER JOIN form_items qing
-          ON qing.deleted_at IS NULL AND qing.type='Questioning'
-            AND a.questioning_id = qing.id AND qing.id IN (?)
-          INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
+          ON qing.type='Questioning' AND a.questioning_id = qing.id AND qing.id IN (?)
+          INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND q.qtype_name = 'decimal'
+        WHERE a.type = 'Answer' AND q.qtype_name = 'decimal'
         GROUP BY #{disagg_group_by_expr} qing.id
       SQL
 
@@ -171,12 +169,12 @@ class Report::SummaryCollectionBuilder
           CAST(TO_CHAR((AVG(#{time_extracts}) || ' seconds')::interval, 'HH24:MM:SS') AS TEXT) AS mean,
           CAST(MIN(a.time_value) AS TEXT) AS min,
           CAST(MAX(a.time_value) AS TEXT) AS max
-        FROM answers a INNER JOIN form_items qing ON qing.deleted_at IS NULL AND qing.type='Questioning'
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning'
           AND a.questioning_id = qing.id AND qing.id IN (?)
-          INNER JOIN questions q ON q.id = qing.question_id AND q.deleted_at IS NULL
+          INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND q.qtype_name = 'time'
+        WHERE a.type = 'Answer' AND q.qtype_name = 'time'
         GROUP BY #{disagg_group_by_expr} qing.id
       SQL
 
@@ -186,12 +184,12 @@ class Report::SummaryCollectionBuilder
           to_timestamp(AVG(extract(epoch FROM a.datetime_value))) AS mean,
           MIN(a.datetime_value) AS min,
           MAX(a.datetime_value) AS max
-        FROM answers a INNER JOIN form_items qing ON qing.deleted_at IS NULL AND qing.type='Questioning'
+        FROM answers a INNER JOIN form_items qing ON qing.type='Questioning'
           AND a.questioning_id = qing.id AND qing.id IN (?)
-          INNER JOIN questions q ON q.deleted_at IS NULL AND q.id = qing.question_id
+          INNER JOIN questions q ON q.id = qing.question_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-        WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND q.qtype_name = 'datetime'
+        WHERE a.type = 'Answer' AND q.qtype_name = 'datetime'
         GROUP BY #{disagg_group_by_expr} qing.id
       SQL
 
@@ -272,14 +270,12 @@ class Report::SummaryCollectionBuilder
       query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.option_id AS option_id, COUNT(a.id) AS answer_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
-          LEFT OUTER JOIN answers a
-            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
+          INNER JOIN questions q ON qings.question_id = q.id
+          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.type = 'Answer'
           INNER JOIN answers parents ON parents.id = a.parent_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE qings.deleted_at IS NULL
-            AND q.qtype_name = 'select_one'
+          WHERE q.qtype_name = 'select_one'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
             AND (parents.type != 'AnswerSet' OR a.new_rank = 0)
@@ -289,16 +285,15 @@ class Report::SummaryCollectionBuilder
       sel_one_res = sql_runner.run(query, qing_ids)
 
       query = <<-SQL
-        SELECT #{disagg_select_expr} qings.id AS qing_id, c.option_id AS option_id, COUNT(c.id) AS choice_count
+        SELECT #{disagg_select_expr} qings.id AS qing_id,
+          c.option_id AS option_id, COUNT(c.id) AS choice_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
-          LEFT OUTER JOIN answers a
-            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
-          LEFT OUTER JOIN choices c ON a.id = c.answer_id AND c.deleted_at IS NULL
+          INNER JOIN questions q ON qings.question_id = q.id
+          LEFT OUTER JOIN answers a ON qings.id = a.questioning_id AND a.type = 'Answer'
+          LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE qings.deleted_at IS NULL
-            AND q.qtype_name = 'select_multiple'
+          WHERE q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
           GROUP BY #{disagg_group_by_expr} qings.id, c.option_id
@@ -330,14 +325,13 @@ class Report::SummaryCollectionBuilder
       query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, COUNT(DISTINCT a.id) AS non_null_answer_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
+          INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a
-            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
-          LEFT OUTER JOIN choices c ON a.id = c.answer_id AND c.deleted_at IS NULL
+            ON qings.id = a.questioning_id AND a.type = 'Answer'
+          LEFT OUTER JOIN choices c ON a.id = c.answer_id
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE qings.deleted_at IS NULL
-            AND q.qtype_name = 'select_multiple'
+          WHERE q.qtype_name = 'select_multiple'
             AND qings.type = 'Questioning'
             AND qings.id IN (?)
             AND c.id IS NOT NULL
@@ -414,13 +408,12 @@ class Report::SummaryCollectionBuilder
       query = <<-SQL
         SELECT #{disagg_select_expr} qings.id AS qing_id, a.date_value AS date, COUNT(a.id) AS answer_count
         FROM form_items qings
-          INNER JOIN questions q ON qings.question_id = q.id AND q.deleted_at IS NULL
+          INNER JOIN questions q ON qings.question_id = q.id
           LEFT OUTER JOIN answers a
-            ON qings.id = a.questioning_id AND a.deleted_at IS NULL AND a.type = 'Answer'
+            ON qings.id = a.questioning_id AND a.type = 'Answer'
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE qings.deleted_at IS NULL
-            AND q.qtype_name = 'date'
+          WHERE q.qtype_name = 'date'
             AND qings.id IN (?)
             AND qings.type = 'Questioning'
           GROUP BY #{disagg_group_by_expr} qings.id, a.date_value
@@ -521,7 +514,7 @@ class Report::SummaryCollectionBuilder
         FROM answers a
           #{disagg_join_clause}
           #{current_user_join_clause}
-          WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND a.questioning_id IN (?)
+          WHERE a.type = 'Answer' AND a.questioning_id IN (?)
           ORDER BY disagg_value, a.created_at
           LIMIT #{RAW_ANSWER_LIMIT}
       SQL
@@ -542,9 +535,9 @@ class Report::SummaryCollectionBuilder
         query = <<-SQL
           SELECT a.id AS answer_id, u.name AS submitter_name
           FROM answers a
-            INNER JOIN responses r ON r.deleted_at IS NULL AND a.response_id = r.id
-            INNER JOIN users u ON u.deleted_at IS NULL AND r.user_id = u.id
-          WHERE a.deleted_at IS NULL AND a.type = 'Answer' AND a.questioning_id IN (?)
+            INNER JOIN responses r ON a.response_id = r.id
+            INNER JOIN users u ON r.user_id = u.id
+          WHERE a.type = 'Answer' AND a.questioning_id IN (?)
         SQL
 
         res = sql_runner.run(query, long_qing_ids)
@@ -593,9 +586,9 @@ class Report::SummaryCollectionBuilder
     def disagg_join_clause
       return '' if disagg_qing.nil?
       <<-SQL
-        INNER JOIN responses r ON r.deleted_at IS NULL AND a.response_id = r.id
-        LEFT OUTER JOIN answers disagg_ans ON disagg_ans.deleted_at IS NULL
-          AND r.id = disagg_ans.response_id AND disagg_ans.questioning_id = '#{disagg_qing.id}'
+        INNER JOIN responses r ON a.response_id = r.id
+        LEFT OUTER JOIN answers disagg_ans ON r.id = disagg_ans.response_id
+          AND disagg_ans.questioning_id = '#{disagg_qing.id}'
       SQL
     end
 
@@ -603,8 +596,8 @@ class Report::SummaryCollectionBuilder
     def current_user_join_clause
       return '' unless @options && @options[:restrict_to_user]
       <<-SQL
-        INNER JOIN responses res ON res.deleted_at IS NULL
-          AND a.response_id = res.id AND res.user_id = '#{@options[:restrict_to_user].id}'
+        INNER JOIN responses res ON a.response_id = res.id
+          AND res.user_id = '#{@options[:restrict_to_user].id}'
       SQL
     end
 
