@@ -275,6 +275,7 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 ssh to your server as the same root/privileged user used above. Then:
 
+    sudo systemctl stop delayed-job && sudo systemctl stop nginx
     sudo su - deploy
     cd elmo
     nvm use # v8.12 or higher only
@@ -282,7 +283,7 @@ ssh to your server as the same root/privileged user used above. Then:
 Make a backup of your database:
 
     mkdir -p tmp
-    pg_dump elmo_production > tmp/VERSION-dump.sql # Replace VERSION with current version (pre upgrade).
+    pg_dump elmo_production > tmp/`cat VERSION`-dump.sql
     ls -l tmp
 
 Ensure that the dump file you created has non-zero size by looking in the directory listing.
@@ -319,8 +320,7 @@ to see if anything needs to be updated in your local configuration.
 Finally:
 
     exit # Back to privileged/root user
-    sudo systemctl restart delayed-job
-    sudo systemctl restart nginx
+    sudo systemctl restart delayed-job && sudo systemctl restart nginx
 
 Then load the site in your browser. You should see the new version number in the page footer.
 
