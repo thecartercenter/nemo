@@ -125,7 +125,7 @@
     </model>
   </h:head>
   <h:body>
-    <group>
+    <group ref="/data/*itemcode1*">
       <label ref="jr:itext('*itemcode1*:label')"/>
       <repeat nodeset="/data/*itemcode1*">
         <group>
@@ -140,7 +140,7 @@
             <label ref="jr:itext('*itemcode3*:label')"/>
             <hint ref="jr:itext('*itemcode3*:hint')"/>
           </input>
-          <group>
+          <group ref="/data/*itemcode1*/*itemcode4*">
             <label ref="jr:itext('*itemcode4*:label')"/>
             <repeat nodeset="/data/*itemcode1*/*itemcode4*">
               <group appearance="field-list">

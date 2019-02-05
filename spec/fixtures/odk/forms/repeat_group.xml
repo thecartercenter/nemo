@@ -9,39 +9,47 @@
             <header/>
             <*itemcode2*/>
             <*itemcode3*/>
-            <*itemcode4* jr:template="">
-              <header/>
-              <*itemcode5*/>
-              <*itemcode6*/>
-            </*itemcode4*>
-            <*itemcode7*/>
+            <*itemcode4*/>
           </*itemcode1*>
-          <*itemcode8*/>
-          <*itemcode9* jr:template="">
+          <*itemcode5*>
             <header/>
+            <*itemcode6*/>
+            <*itemcode7*/>
+          </*itemcode5*>
+          <*itemcode8* jr:template="">
+            <header/>
+            <*itemcode9*/>
             <*itemcode10*/>
-          </*itemcode9*>
+          </*itemcode8*>
         </data>
       </instance>
       <itext>
         <translation lang="English">
           <text id="*itemcode1*:label">
-            <value>Repeat Group 1</value>
+            <value>Grp1</value>
           </text>
           <text id="*itemcode1*:hint">
-            <value>Repeat Group 1</value>
+            <value>Grp1</value>
           </text>
-          <text id="*itemcode4*:label">
-            <value>Repeat Group A</value>
+          <text id="*itemcode1*:itemname">
+            <value>Hi’ "<output value="/data/*itemcode1*/*itemcode2*"/>"</value>
           </text>
-          <text id="*itemcode4*:hint">
-            <value>Repeat Group A</value>
+          <text id="*itemcode5*:label">
+            <value>Group Name</value>
           </text>
-          <text id="*itemcode9*:label">
-            <value>Repeat Group 2</value>
+          <text id="*itemcode5*:hint">
+            <value>Group Hint</value>
           </text>
-          <text id="*itemcode9*:hint">
-            <value>Repeat Group 2</value>
+          <text id="*itemcode8*:label">
+            <value>Grp2</value>
+          </text>
+          <text id="*itemcode8*:hint">
+            <value>Grp2</value>
+          </text>
+          <text id="*itemcode8*:itemname">
+            <value>
+              <output value="if((/data/*itemcode8*/*itemcode9*) &gt; 18, 'A’&quot;yeah&quot;', 'C')"/>
+            </value>
           </text>
           <text id="*itemcode2*:label">
             <value>Text Question Title 1</value>
@@ -55,10 +63,10 @@
           <text id="*itemcode3*:hint">
             <value>Question Hint 2</value>
           </text>
-          <text id="*itemcode5*:label">
-            <value>Integer Question Title 3</value>
+          <text id="*itemcode4*:label">
+            <value>Text Question Title 3</value>
           </text>
-          <text id="*itemcode5*:hint">
+          <text id="*itemcode4*:hint">
             <value>Question Hint 3</value>
           </text>
           <text id="*itemcode6*:label">
@@ -68,15 +76,15 @@
             <value>Question Hint 4</value>
           </text>
           <text id="*itemcode7*:label">
-            <value>Long Text Question Title 5</value>
+            <value>Text Question Title 5</value>
           </text>
           <text id="*itemcode7*:hint">
             <value>Question Hint 5</value>
           </text>
-          <text id="*itemcode8*:label">
-            <value>Text Question Title 6</value>
+          <text id="*itemcode9*:label">
+            <value>Integer Question Title 6</value>
           </text>
-          <text id="*itemcode8*:hint">
+          <text id="*itemcode9*:hint">
             <value>Question Hint 6</value>
           </text>
           <text id="*itemcode10*:label">
@@ -94,22 +102,23 @@
       <bind nodeset="/data/*itemcode1*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode2*" type="string"/>
       <bind nodeset="/data/*itemcode1*/*itemcode3*" type="string"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*/header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode5*" type="int"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode4*/*itemcode6*" type="string" calculate="concat(../../*itemcode3*,'-',position(..))"/>
-      <bind nodeset="/data/*itemcode1*/*itemcode7*" type="string"/>
-      <bind nodeset="/data/*itemcode8*" type="string"/>
-      <bind nodeset="/data/*itemcode9*"/>
-      <bind nodeset="/data/*itemcode9*/header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode9*/*itemcode10*" type="string" calculate="concat(indexed-repeat(/data/*itemcode1*/*itemcode3*,/data/*itemcode1*,1),'-',position(..))"/>
+      <bind nodeset="/data/*itemcode1*/*itemcode4*" type="string"/>
+      <bind nodeset="/data/*itemcode5*"/>
+      <bind nodeset="/data/*itemcode5*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode6*" type="string"/>
+      <bind nodeset="/data/*itemcode5*/*itemcode7*" type="string"/>
+      <bind nodeset="/data/*itemcode8*"/>
+      <bind nodeset="/data/*itemcode8*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode8*/*itemcode9*" type="int"/>
+      <bind nodeset="/data/*itemcode8*/*itemcode10*" type="string"/>
     </model>
   </h:head>
   <h:body>
-    <group>
+    <group ref="/data/*itemcode1*">
       <label ref="jr:itext('*itemcode1*:label')"/>
       <repeat nodeset="/data/*itemcode1*">
-        <group>
+        <group appearance="field-list">
+          <label ref="jr:itext('*itemcode1*:itemname')"/>
           <input ref="/data/*itemcode1*/header">
             <hint ref="jr:itext('*itemcode1*:hint')"/>
           </input>
@@ -121,43 +130,42 @@
             <label ref="jr:itext('*itemcode3*:label')"/>
             <hint ref="jr:itext('*itemcode3*:hint')"/>
           </input>
-          <group>
+          <input ref="/data/*itemcode1*/*itemcode4*">
             <label ref="jr:itext('*itemcode4*:label')"/>
-            <repeat nodeset="/data/*itemcode1*/*itemcode4*">
-              <group appearance="field-list">
-                <input ref="/data/*itemcode1*/*itemcode4*/header">
-                  <hint ref="jr:itext('*itemcode4*:hint')"/>
-                </input>
-                <input ref="/data/*itemcode1*/*itemcode4*/*itemcode5*">
-                  <label ref="jr:itext('*itemcode5*:label')"/>
-                  <hint ref="jr:itext('*itemcode5*:hint')"/>
-                </input>
-                <input ref="/data/*itemcode1*/*itemcode4*/*itemcode6*">
-                  <label ref="jr:itext('*itemcode6*:label')"/>
-                  <hint ref="jr:itext('*itemcode6*:hint')"/>
-                </input>
-              </group>
-            </repeat>
-          </group>
-          <input ref="/data/*itemcode1*/*itemcode7*" rows="5">
-            <label ref="jr:itext('*itemcode7*:label')"/>
-            <hint ref="jr:itext('*itemcode7*:hint')"/>
+            <hint ref="jr:itext('*itemcode4*:hint')"/>
           </input>
         </group>
       </repeat>
     </group>
-    <input ref="/data/*itemcode8*">
+    <group ref="/data/*itemcode5*">
+      <label ref="jr:itext('*itemcode5*:label')"/>
+      <group appearance="field-list">
+        <input ref="/data/*itemcode5*/header">
+          <hint ref="jr:itext('*itemcode5*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode5*/*itemcode6*">
+          <label ref="jr:itext('*itemcode6*:label')"/>
+          <hint ref="jr:itext('*itemcode6*:hint')"/>
+        </input>
+        <input ref="/data/*itemcode5*/*itemcode7*">
+          <label ref="jr:itext('*itemcode7*:label')"/>
+          <hint ref="jr:itext('*itemcode7*:hint')"/>
+        </input>
+      </group>
+    </group>
+    <group ref="/data/*itemcode8*">
       <label ref="jr:itext('*itemcode8*:label')"/>
-      <hint ref="jr:itext('*itemcode8*:hint')"/>
-    </input>
-    <group>
-      <label ref="jr:itext('*itemcode9*:label')"/>
-      <repeat nodeset="/data/*itemcode9*">
-        <group appearance="field-list">
-          <input ref="/data/*itemcode9*/header">
+      <repeat nodeset="/data/*itemcode8*">
+        <group>
+          <label ref="jr:itext('*itemcode8*:itemname')"/>
+          <input ref="/data/*itemcode8*/header">
+            <hint ref="jr:itext('*itemcode8*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode8*/*itemcode9*">
+            <label ref="jr:itext('*itemcode9*:label')"/>
             <hint ref="jr:itext('*itemcode9*:hint')"/>
           </input>
-          <input ref="/data/*itemcode9*/*itemcode10*">
+          <input ref="/data/*itemcode8*/*itemcode10*">
             <label ref="jr:itext('*itemcode10*:label')"/>
             <hint ref="jr:itext('*itemcode10*:hint')"/>
           </input>
