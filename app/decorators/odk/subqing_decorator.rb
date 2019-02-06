@@ -16,7 +16,7 @@ module Odk
       (decorate_collection(ancestors.to_a) << self).map(&:odk_code).join("/")
     end
 
-    def input_tag(grid_mode, label_row, xpath_prefix)
+    def input_tag(grid_mode:, label_row:, xpath_prefix:)
       opts = {}
       opts[:ref] = [xpath_prefix, xpath_suffix(label_row)].compact.join("/")
       opts[:rows] = 5 if qtype.name == "long_text"
