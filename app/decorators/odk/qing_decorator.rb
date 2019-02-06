@@ -18,8 +18,9 @@ module Odk
                  "jr:preloadParams": jr_preload_params)
     end
 
-    def input_tags(group: nil, grid_mode: false, label_row: false, xpath_prefix:)
+    def input_tags(group: nil, render_mode: nil, xpath_prefix:)
       return unless visible?
+      render_mode ||= :normal
 
       # Note that subqings here refers to multiple levels of a cascading select question, not groups.
       # If group is a multilevel_fragment, we are supposed to just render one of the subqings here.
@@ -27,7 +28,7 @@ module Odk
       subqing_subset = group&.multilevel_fragment? ? [subqings[group.level - 1]] : subqings
 
       subqing_subset.map do |sq|
-        sq.input_tag(grid_mode: grid_mode, label_row: label_row, xpath_prefix: xpath_prefix)
+        sq.input_tag(render_mode: render_mode, xpath_prefix: xpath_prefix)
       end.reduce(:<<)
     end
 

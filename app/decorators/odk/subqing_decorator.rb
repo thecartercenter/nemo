@@ -16,15 +16,15 @@ module Odk
       (decorate_collection(ancestors.to_a) << self).map(&:odk_code).join("/")
     end
 
-    def input_tag(grid_mode:, label_row:, xpath_prefix:)
+    def input_tag(render_mode:, xpath_prefix:)
       opts = {}
-      opts[:ref] = [xpath_prefix, xpath_suffix(label_row)].compact.join("/")
+      opts[:ref] = [xpath_prefix, xpath_suffix(render_mode)].compact.join("/")
       opts[:rows] = 5 if qtype.name == "long_text"
-      opts[:appearance] = appearance(grid_mode, label_row)
+      opts[:appearance] = appearance(render_mode)
       opts[:mediatype] = media_type if qtype.multimedia?
       opts[:query] = external_csv_itemset_query
       content_tag(tagname, opts) do
-        [label_tag(label_row), hint_tag(grid_mode), items_or_itemset].compact.reduce(:<<)
+        [label_tag(render_mode), hint_tag(render_mode), items_or_itemset].compact.reduce(:<<)
       end
     end
 
@@ -34,8 +34,8 @@ module Odk
       @decorated_questioning ||= decorate(object.questioning)
     end
 
-    def xpath_suffix(label_row)
-      if label_row
+    def xpath_suffix(render_mode)
+      if render_mode == :label_row
         # We can't bind to the question's node here or, if the question is required,
         # we won't be allowed to proceed since it won't be possible to fill in the question.
         # Also, this question will appear again in a regular row so it would be weird
@@ -47,13 +47,13 @@ module Odk
       end
     end
 
-    def label_tag(label_row)
-      return if label_row
+    def label_tag(render_mode)
+      return if render_mode == :label_row
       tag(:label, ref: "jr:itext('#{odk_code}:label')")
     end
 
-    def hint_tag(grid_mode)
-      return if grid_mode
+    def hint_tag(render_mode)
+      return if render_mode != :normal
       tag(:hint, ref: "jr:itext('#{odk_code}:hint')")
     end
 
@@ -104,9 +104,9 @@ module Odk
       end
     end
 
-    def appearance(grid_mode, label_row)
-      return "label" if label_row
-      return "list-nolabel" if grid_mode
+    def appearance(render_mode)
+      return "label" if render_mode == :label_row
+      return "list-nolabel" unless render_mode == :normal
 
       case qtype.name
       when "annotated_image" then "annotate"

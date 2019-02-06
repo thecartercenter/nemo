@@ -4,7 +4,7 @@
 <% else %>
   <%= node.grid_label_row(xpath_prefix: xpath) %>
   <% node.sorted_children.each do |child| %>
-    <%= render("forms/odk/node", node: child, parent: node, grid_mode: node.render_as_grid?,
-                                 xpath_prefix: xpath) %>
+    <%= render("forms/odk/node", node: child, parent: node, xpath_prefix: xpath,
+                                 render_mode: node.render_as_grid? ? :grid : :normal) %>
   <% end %>
 <% end %>

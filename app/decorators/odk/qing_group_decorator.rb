@@ -33,7 +33,7 @@ module Odk
     # once as a label row and once as a normal row.
     def grid_label_row(xpath_prefix:)
       return unless render_as_grid?
-      sorted_children[0].input_tags(group: self, grid_mode: true, label_row: true, xpath_prefix: xpath_prefix)
+      sorted_children[0].input_tags(group: self, render_mode: :label_row, xpath_prefix: xpath_prefix)
     end
 
     def xpath(prefix = "/data")

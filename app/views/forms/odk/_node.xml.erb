@@ -1,6 +1,6 @@
 <% node = Odk::DecoratorFactory.decorate(node) %>
 <% if node.is_a?(Questioning) %>
-  <%= node.input_tags(group: parent, grid_mode: grid_mode, xpath_prefix: xpath_prefix) %>
+  <%= node.input_tags(group: parent, render_mode: local_assigns[:render_mode], xpath_prefix: xpath_prefix) %>
 <% else %>
   <%= odk_group_or_fragment(node, xpath_prefix) %>
 <% end %>
