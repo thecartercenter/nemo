@@ -18,7 +18,7 @@ module Odk
                  "jr:preloadParams": jr_preload_params)
     end
 
-    def input_tags(group: nil, render_mode: nil, xpath_prefix:)
+    def body_tags(group: nil, render_mode: nil, xpath_prefix:)
       return unless visible?
       render_mode ||= :normal
 

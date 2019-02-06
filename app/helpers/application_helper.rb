@@ -248,12 +248,4 @@ module ApplicationHelper
     end
     links.reduce(:<<)
   end
-
-  def conditional_tag(name, condition, options = {}, &block)
-    if condition
-      content_tag(name, options) { capture(&block) }
-    else
-      capture(&block)
-    end
-  end
 end
