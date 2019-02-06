@@ -1,21 +1,6 @@
 # frozen_string_literal: true
 
 module OdkHelper
-  # For the given subqing, returns an xpath expression for the itemset tag nodeset attribute.
-  # E.g. instance('os16')/root/item or
-  #      instance('os16')/root/item[parent_id=/data/q2_1] or
-  #      instance('os16')/root/item[parent_id=/data/q2_2]
-  def multilevel_option_nodeset_ref(qing, cur_subq, xpath_prefix)
-    filter = if cur_subq.first_rank?
-               ""
-             else
-               code = cur_subq.odk_code(options: {previous: true})
-               path = [xpath_prefix, code].compact.join("/")
-               "[parent_id=#{path}]"
-    end
-    "instance('#{Odk::CodeMapper.instance.code_for_item(qing.option_set)}')/root/item#{filter}"
-  end
-
   # The general structure for a group is:
   # group tag
   #   label
@@ -98,13 +83,5 @@ module OdkHelper
 
   def odk_group_body(node, xpath)
     render("forms/odk/group_body", node: Odk::DecoratorFactory.decorate(node), xpath: xpath)
-  end
-
-  def empty_qing_group?(subtree)
-    subtree.keys.empty?
-  end
-
-  def organize_qing_groups(descendants)
-    QingGroupOdkPartitioner.new(descendants).fragment
   end
 end
