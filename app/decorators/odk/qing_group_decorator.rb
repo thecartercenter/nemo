@@ -6,6 +6,20 @@ module Odk
       decorate_collection(object.sorted_children, context: context)
     end
 
+    def render_as_grid?
+      return @render_as_grid if defined?(@render_as_grid)
+      items = sorted_children
+
+      return false if items.size <= 1 || !one_screen?
+
+      items.all? do |i|
+        i.is_a?(Questioning) &&
+          i.qtype_name == "select_one" &&
+          i.option_set == items[0].option_set &&
+          !i.multilevel?
+      end
+    end
+
     def bind_tag(xpath_prefix: "/data")
       tag(:bind, nodeset: xpath(xpath_prefix), relevant: relevance)
     end
@@ -13,6 +27,13 @@ module Odk
     def note_bind_tag(xpath_prefix: "/data")
       tag(:bind, nodeset: xpath(xpath_prefix) << "/header", readonly: "true()",
                  type: "string", relevant: relevance)
+    end
+
+    # If any children have grid mode, then the first child is rendered twice:
+    # once as a label row and once as a normal row.
+    def grid_label_row(xpath_prefix:)
+      return unless render_as_grid?
+      sorted_children[0].input_tags(group: self, grid_mode: true, label_row: true, xpath_prefix: xpath_prefix)
     end
 
     def xpath(prefix = "/data")
@@ -34,14 +55,6 @@ module Odk
 
     def one_screen_allowed?
       !has_group_children? && !internal_conditions?
-    end
-
-    def fragment?
-      false # is QingGroup, so isn't a fragment
-    end
-
-    def multilevel_fragment?
-      false # is QingGroup, so isn't a fragment
     end
 
     def multilevel_children?

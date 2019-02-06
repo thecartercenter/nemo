@@ -97,20 +97,7 @@ module OdkHelper
   end
 
   def odk_group_body(node, xpath)
-    render("forms/odk/group_body", node: node, xpath: xpath)
-  end
-
-  # Tests if all items in the group are Questionings with the same type and option set.
-  def odk_grid_mode?(group)
-    items = group.sorted_children
-    return false if items.size <= 1 || !group.one_screen?
-
-    items.all? do |i|
-      i.is_a?(Questioning) &&
-        i.qtype_name == "select_one" &&
-        i.option_set == items[0].option_set &&
-        !i.multilevel?
-    end
+    render("forms/odk/group_body", node: Odk::DecoratorFactory.decorate(node), xpath: xpath)
   end
 
   def empty_qing_group?(subtree)

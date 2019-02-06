@@ -2,15 +2,9 @@
 <% if node.multilevel_fragment? %>
   <%= node.sorted_children[0].input_tags(group: node, xpath_prefix: xpath) %>
 <% else %>
-  <%# If any children have grid mode, then the first child is rendered twice: %>
-  <%# once as a label row and once as a normal row. %>
-  <% child_grid_mode = odk_grid_mode?(node) %>
-  <% if child_grid_mode %>
-    <%= node.sorted_children[0].input_tags(group: node, grid_mode: true,
-                                           label_row: true, xpath_prefix: xpath) %>
-  <% end %>
+  <%= node.grid_label_row(xpath_prefix: xpath) %>
   <% node.sorted_children.each do |child| %>
-    <%= render("forms/odk/node", node: child, parent: node, grid_mode: child_grid_mode,
+    <%= render("forms/odk/node", node: child, parent: node, grid_mode: node.render_as_grid?,
                                  xpath_prefix: xpath) %>
   <% end %>
 <% end %>

@@ -3,13 +3,13 @@
     <h:head>
       <h:title><%= @form.full_name %></h:title>
       <model>
-        <%= render('forms/odk/instances') %>
+        <%= render("forms/odk/instances") %>
         <itext>
           <% configatron.preferred_locales.each do |lang| %>
-            <%= render('forms/odk/translation', lang: lang) %>
+            <%= render("forms/odk/translation", lang: lang) %>
           <% end %>
         </itext>
-        <%= render('forms/odk/bindings') %>
+        <%= render("forms/odk/bindings") %>
       </model>
     </h:head>
     <h:body>
@@ -19,7 +19,7 @@
       <% end %>
       <%# Incomplete response question form controls. %>
       <% if allow_incomplete? %>
-        <%= render('forms/odk/incomplete_question') %>
+        <%= render("forms/odk/incomplete_question") %>
       <% end %>
     </h:body>
   </h:html>
