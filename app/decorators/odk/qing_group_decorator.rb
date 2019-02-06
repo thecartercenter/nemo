@@ -32,13 +32,6 @@ module Odk
                  type: "string", relevant: relevance)
     end
 
-    # If any children have grid mode, then the first child is rendered twice:
-    # once as a label row and once as a normal row.
-    def grid_label_row(xpath_prefix:)
-      return unless render_as_grid?
-      sorted_children[0].body_tags(group: self, render_mode: :label_row, xpath_prefix: xpath_prefix)
-    end
-
     # The general structure for a group is:
     # group tag
     #   label
@@ -63,7 +56,7 @@ module Odk
             # In the case of fragments, this means we include hint each time, which is correct.
             # This covers the case where self is a fragment, because fragments should always
             # be shown on one screen since that's what they're for.
-            safe_str << group_item_name_tag << group_hint_tag(xpath) << odk_group_body(xpath)
+            safe_str << group_item_name_tag << group_hint_tag(xpath) << main_body_tags(xpath)
           end
         end
       end
@@ -137,6 +130,12 @@ module Odk
       conditional_tag(:group, do_inner_tag, appearance: appearance, &block)
     end
 
+    def group_item_name_tag
+      # Group item name should only be present for repeatable qing groups.
+      return unless respond_to?(:group_item_name) && group_item_name && !group_item_name.empty?
+      tag(:label, ref: "jr:itext('#{odk_code}:itemname')")
+    end
+
     def group_hint_tag(xpath)
       return if no_hint?
       content_tag(:input, ref: "#{xpath}/header") do
@@ -144,14 +143,23 @@ module Odk
       end
     end
 
-    def group_item_name_tag
-      # Group item name should only be present for repeatable qing groups.
-      return unless respond_to?(:group_item_name) && group_item_name && !group_item_name.empty?
-      tag(:label, ref: "jr:itext('#{odk_code}:itemname')")
+    def main_body_tags(xpath)
+      # If this is a multilevel fragment, we are supposed to render just one of the subqings. %>
+      if multilevel_fragment?
+        sorted_children[0].body_tags(group: self, xpath_prefix: xpath)
+      else
+        safe_str << grid_label_row(xpath_prefix: xpath) <<
+          sorted_children.map do |child|
+            child.body_tags(group: self, render_mode: render_as_grid? ? :grid : :normal, xpath_prefix: xpath)
+          end.reduce(:<<)
+      end
     end
 
-    def odk_group_body(xpath)
-      h.render("forms/odk/group_body", node: self, xpath: xpath)
+    # If any children have grid mode, then the first child is rendered twice:
+    # once as a label row and once as a normal row.
+    def grid_label_row(xpath_prefix:)
+      return unless render_as_grid?
+      sorted_children[0].body_tags(group: self, render_mode: :label_row, xpath_prefix: xpath_prefix)
     end
   end
 end
