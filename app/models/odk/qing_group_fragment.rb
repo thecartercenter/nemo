@@ -15,7 +15,7 @@ module Odk
 
     attr_accessor :children, :qing_group, :level
 
-    delegate :hidden, :id, :group_name, :group_hint, :no_hint?, :group_name_translations,
+    delegate :hidden, :id, :group_name, :group_hint, :group_name_translations,
       :group_hint_translations, :repeatable, to: :qing_group
 
     def initialize(qing_group, children, level = nil)

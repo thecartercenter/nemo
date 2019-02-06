@@ -94,6 +94,12 @@ module Odk
       children.any?(&:multilevel?)
     end
 
+    private
+
+    def no_hint?
+      group_hint_translations.nil? || group_hint_translations.values.all?(&:blank?)
+    end
+
     # Checks if there are any conditions in this group that refer to other questions in this group.
     def internal_conditions?
       children.each do |item|
@@ -104,12 +110,6 @@ module Odk
       end
       false
     end
-
-    def no_hint?
-      group_hint_translations.nil? || group_hint_translations.values.all?(&:blank?)
-    end
-
-    private
 
     def body_wrapper_tag(xpath, &block)
       if fragment?
