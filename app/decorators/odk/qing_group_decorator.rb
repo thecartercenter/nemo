@@ -6,7 +6,7 @@ module Odk
     delegate_all
 
     def sorted_children
-      decorate_collection(object.sorted_children, context: context)
+      @sorted_children ||= decorate_collection(object.sorted_children, context: context)
     end
 
     def render_as_grid?
@@ -15,12 +15,7 @@ module Odk
 
       return false if items.size <= 1 || !one_screen?
 
-      items.all? do |i|
-        i.is_a?(Questioning) &&
-          i.qtype_name == "select_one" &&
-          i.option_set == items[0].option_set &&
-          !i.multilevel?
-      end
+      items.all? { |item| item.grid_renderable?(option_set: items[0].option_set) }
     end
 
     def bind_tag(xpath_prefix: "/data")
@@ -43,7 +38,7 @@ module Odk
     #   hint
     #   questions
     def body_tags(xpath_prefix:, **_options)
-      return if is_childless?
+      return if childless?
 
       xpath = "#{xpath_prefix}/#{odk_code}"
       body_wrapper_tag(xpath) do
@@ -80,7 +75,7 @@ module Odk
     end
 
     def one_screen_allowed?
-      !has_group_children? && !internal_conditions?
+      !group_children? && !internal_conditions?
     end
 
     def multilevel_children?

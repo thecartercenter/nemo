@@ -55,5 +55,9 @@ module Odk
     def display_conditions
       @display_conditions ||= decorate_collection(object.display_conditions)
     end
+
+    def grid_renderable?(option_set:)
+      is_a?(Questioning) && qtype.select_one? && !multilevel? && option_set == object.option_set
+    end
   end
 end

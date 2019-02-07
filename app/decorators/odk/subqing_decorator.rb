@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Odk
   class SubqingDecorator < BaseDecorator
     delegate_all
@@ -104,7 +106,7 @@ module Odk
       end
     end
 
-    def appearance(render_mode)
+    def appearance(render_mode) # rubocop:disable Metrics/CyclomaticComplexity # Case statements OK
       return "label" if render_mode == :label_row
       return "list-nolabel" unless render_mode == :normal
 
