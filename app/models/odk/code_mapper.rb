@@ -56,7 +56,7 @@ module Odk
     def find(type, id, form: nil)
       case type
       when :form_item
-        FormItem.where(id: id).pluck(:id).first || FormItem.where(old_id: id).pluck(:id).first
+        FormItem.where(id: id).pluck(:id).first
       when :question
         Questioning.where(question_id: id, form_id: form.id).pluck(:id).first ||
           Questioning.where(question_old_id: id, form_old_id: form.old_id).pluck(:id).first
