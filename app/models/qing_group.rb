@@ -25,6 +25,14 @@ class QingGroup < FormItem
     nil
   end
 
+  def fragment?
+    false
+  end
+
+  def multilevel_fragment?
+    false
+  end
+
   def preordered_option_nodes
     []
   end

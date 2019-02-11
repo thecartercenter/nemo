@@ -62,7 +62,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
-  context "form with skip rule and display conditions" do
+  context "skip rule and display conditions" do
     let!(:form) do
       create(:form, :published, :with_version, name: "Skip Rule and Conditions",
                                                question_types: %w[text long_text integer decimal location
@@ -88,7 +88,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
 
     it "should render proper xml" do
-      expect_xml(form, "form_with_skip_rule")
+      expect_xml(form, "skip_rule_and_conditions")
     end
   end
 
@@ -109,7 +109,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   end
 
   describe "grids" do
-    context "grid group with display condition" do
+    context "grid group with condition" do
       let!(:form) do
         create(:form, :published, :with_version,
           name: "Grid Group with Condition", question_types: ["text", %w[select_one select_one], "text"])
@@ -133,7 +133,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
     end
 
-    context "gridable form with one_screen set to false" do
+    context "multi-screen gridable" do
       let(:q1) { create(:question, qtype_name: "select_one") }
       let(:q2) { create(:question, qtype_name: "select_one", option_set: q1.option_set) }
       let(:form) do
@@ -145,56 +145,50 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should not render with grid format" do
-        expect_xml(form, "multiscreen_gridable_form")
+        expect_xml(form, "multi_screen_gridable")
       end
     end
   end
 
   describe "groups" do
-    context "group form" do
+    context "non-repeat group with condition on group" do
       let(:form) do
         create(:form, :published, :with_version,
-          name: "Basic Group",
+          name: "Non-repeat Group with Condition",
           question_types: ["text", %w[text text text]])
       end
 
       before do
-        # Test conditions on groups.
         form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
         form.c[1].update!(display_if: "all_met")
       end
 
       it "should render proper xml" do
-        expect_xml(form, "group_form")
+        expect_xml(form, "non_repeat_group_with_condition")
       end
     end
 
-    context "group form with condition" do
+    context "single-screen repeat group with condition on question" do
       let(:form) do
         create(:form, :published, :with_version,
-          name: "Group with Condition",
+          name: "Single-scrn Rpt Grp with Cond",
           question_types: [{repeating: {name: "Group A", items: %w[text text text]}}])
       end
 
       before do
-        form.questionings.last.display_conditions.create!(
-          ref_qing: form.questionings.first,
-          op: "eq",
-          value: "foo"
-        )
-        form.questionings.last.update!(display_if: "all_met")
+        form.c[0].c[2].display_conditions.create!(ref_qing: form.questionings.first, op: "eq", value: "foo")
+        form.c[0].c[2].update!(display_if: "all_met")
       end
 
       it "should not render on single page due to condition" do
-        expect_xml(form, "group_form_with_condition")
+        expect_xml(form, "single_screen_repeat_group_with_condition")
       end
     end
 
-    context "multiscreen group form" do
+    context "multi-screen group" do
       let(:form) do
-        create(:form, :published, :with_version,
-          name: "Multi-screen Group",
-          question_types: [%w[text text text]])
+        create(:form, :published, :with_version, name: "Multi-screen Group",
+                                                 question_types: [%w[text text text]])
       end
 
       before do
@@ -202,11 +196,11 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "multiscreen_group_form")
+        expect_xml(form, "multi_screen_group")
       end
     end
 
-    context "nested repeat group form" do
+    context "nested repeat group" do
       let(:form) do
         create(:form, :published, :with_version,
           name: "Nested Repeat Group",
@@ -214,24 +208,24 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
           question_types: [
             {repeating:
               {
+                name: "Repeat Group 1",
                 items:
                   ["text", # q1
                    "text", # q2
                    {
                      repeating:
                        {
-                         items: %w[integer text], # q3,q4
-                         name: "Repeat Group A"
+                         name: "Repeat Group A",
+                         items: %w[integer text] # q3,q4
                        }
                    },
-                   "long_text"], # q5
-                name: "Repeat Group 1"
+                   "long_text"] # q5
               }},
             "text", # q6
             {
               repeating: {
-                items: %w[text], # q7
-                name: "Repeat Group 2"
+                name: "Repeat Group 2",
+                items: %w[text] # q7
               }
             }
           ])
@@ -243,7 +237,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "nested_repeat_group_form")
+        expect_xml(form, "nested_repeat_group")
       end
     end
 
@@ -255,16 +249,17 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "empty_repeat_group_form")
+        expect_xml(form, "empty_repeat_group")
       end
     end
   end
 
   describe "multilevel selects" do
-    context "form with 1-level select, 2-level select, 3-level select" do
+    context "various selects" do
       let(:form) do
+        # 1-level, 2-level, 3-level
         create(:form, :published, :with_version,
-          name: "Various Types of Select",
+          name: "Various Selects",
           question_types: %w[select_one multilevel_select_one super_multilevel_select_one])
       end
 
@@ -275,24 +270,24 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     # Tests that the single-screen group is correctly split to handle the
     # needs of the multi-level/cascading option set.
-    context "group form with multilevel select" do
+    context "non-repeat group with multilevel select" do
       let(:form) do
         create(:form, :published, :with_version,
-          name: "Group with Multilevel Select",
+          name: "Non-repeat Group with Multilevel",
           question_types: [%w[text date multilevel_select_one integer]])
       end
 
       it "should render proper xml" do
-        expect_xml(form, "group_form_with_multilevel")
+        expect_xml(form, "non_repeat_group_with_multilevel_select")
       end
     end
 
     # Tests that the multi-screen group is correctly combined with the multi-screen needs of
     # of the multi-level/cascading option set.
-    context "multiscreen group form with multilevel select" do
+    context "multiscreen group with multilevel select" do
       let(:form) do
         create(:form, :published, :with_version,
-          name: "Multi-screen Group with Multilev",
+          name: "Multi-screen Grp with Multilevel",
           question_types: [%w[text date multilevel_select_one integer]])
       end
 
@@ -301,7 +296,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "multiscreen_group_form_with_multilevel")
+        expect_xml(form, "multiscreen_group_with_multilevel")
       end
     end
 
@@ -334,7 +329,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "nested_group_form_with_multilevel")
+        expect_xml(form, "nested_group_with_multilevel")
       end
     end
 
@@ -370,7 +365,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   end
 
   describe "dynamic patterns" do
-    context "form with dynamic patterns" do
+    context "default response name and answer patterns" do
       let(:form) do
         create(:form, :published, :with_version,
           default_response_name: %("$MSO" --> $TXT's), # We use a > and ' on purpose so we test escaping.
@@ -386,7 +381,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "default_pattern_form")
+        expect_xml(form, "default_patterns")
       end
     end
 
@@ -416,13 +411,13 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "repeat_group_form")
+        expect_xml(form, "repeat_group")
       end
     end
   end
 
   describe "media" do
-    context "form with media questions" do
+    context "media questions" do
       let(:form) do
         create(:form, :published, :with_version,
           name: "Media Questions",
@@ -430,19 +425,19 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       it "should render proper xml" do
-        expect_xml(form, "media_question_form")
+        expect_xml(form, "media_questions")
       end
     end
 
-    context "form with audio prompts" do
-      let(:form) { create(:form, :published, question_types: %w[integer]) }
+    context "audio prompt" do
+      let(:form) { create(:form, :published, name: "Audio Prompt", question_types: %w[integer]) }
 
       before do
         form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
       end
 
       it "should render proper xml" do
-        expect_xml(form, "form_with_audio_prompt")
+        expect_xml(form, "audio_prompt")
       end
     end
   end

@@ -16,6 +16,7 @@ module Odk
         case obj.class.name
         when "Form" then Odk::FormDecorator
         when "QingGroup" then Odk::QingGroupDecorator
+        when "Odk::QingGroupFragment" then Odk::QingGroupDecorator
         when "Question" then Odk::QuestionDecorator
         when "OptionSet" then Odk::OptionSetDecorator
         when "Questioning" then Odk::QingDecorator

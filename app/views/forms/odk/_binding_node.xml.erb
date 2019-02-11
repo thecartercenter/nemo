@@ -1,8 +1,7 @@
 <% node = Odk::DecoratorFactory.decorate(node, context: {condition_computer: @condition_computer}) %>
 <% if node.is_a?(Questioning) %>
   <% node.subqings.each do |subq| %>
-    <% group_attr = parent.present? ? parent.odk_code : nil %>
-    <%= node.bind_tag(@form, subq, group: group_attr, xpath_prefix: xpath_prefix) %>
+    <%= node.bind_tag(@form, subq, xpath_prefix: xpath_prefix) %>
   <% end %>
 <% else %>
   <%= node.bind_tag(xpath_prefix: xpath_prefix) %>

@@ -9,7 +9,6 @@ class FormsController < ApplicationController
   include BatchProcessable
   include OdkHeaderable
   include ERB::Util
-  helper OdkHelper
 
   # special find method before load_resource
   before_action :load_form, :only => [:show, :edit, :update]

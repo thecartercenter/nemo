@@ -5,7 +5,7 @@ module Odk
   class QingDecorator < FormItemDecorator
     delegate_all
 
-    def bind_tag(form, subq, group: nil, xpath_prefix: "/data")
+    def bind_tag(form, subq, xpath_prefix: "/data")
       tag(:bind, nodeset: [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
                  type: binding_type_attrib(subq),
                  required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
@@ -16,6 +16,20 @@ module Odk
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
+    end
+
+    def body_tags(group: nil, render_mode: nil, xpath_prefix:)
+      return unless visible?
+      render_mode ||= :normal
+
+      # Note that subqings here refers to multiple levels of a cascading select question, not groups.
+      # If group is a multilevel_fragment, we are supposed to just render one of the subqings here.
+      # This is so they can be wrapped with the appropriate group headers/hint and such.
+      subqing_subset = group&.multilevel_fragment? ? [subqings[group.level - 1]] : subqings
+
+      subqing_subset.map do |sq|
+        sq.input_tag(render_mode: render_mode, xpath_prefix: xpath_prefix)
+      end.reduce(:<<)
     end
 
     def subqings

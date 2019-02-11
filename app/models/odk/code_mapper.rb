@@ -17,7 +17,7 @@ module Odk
       return "/data" if item.is_a?(FormItem) && item.is_root?
       case item
       when Questioning then "qing#{item.id}"
-      when QingGroup then "grp#{item.id}"
+      when QingGroup, Odk::QingGroupFragment then "grp#{item.id}"
       when Subqing
         base = code_for_item(item.questioning)
         if item.multilevel?

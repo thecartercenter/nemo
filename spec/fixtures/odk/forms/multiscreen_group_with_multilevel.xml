@@ -106,7 +106,7 @@
     </model>
   </h:head>
   <h:body>
-    <group>
+    <group ref="/data/*itemcode1*">
       <label ref="jr:itext('*itemcode1*:label')"/>
       <input ref="/data/*itemcode1*/header">
         <hint ref="jr:itext('*itemcode1*:hint')"/>

@@ -144,7 +144,7 @@ class FormItem < ApplicationRecord
     result = super(options)
   end
 
-  def has_group_children?
+  def group_children?
     children.any? { |c| c.is_a?(QingGroup) }
   end
 
