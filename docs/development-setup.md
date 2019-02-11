@@ -111,8 +111,8 @@ git checkout develop
 1. Copy `config/settings.local.yml.example` to `config/settings.local.yml` and adjust settings as appropriate.
 1. Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
 1. Setup the UUID postgres extension:
-  1. On linux: `sudo -u postgres psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
-  1. On mac with Homebrew: `sudo -u {mac-username} psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
+    1. On Linux: `sudo -u postgres psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
+    1. On Mac with Homebrew: `psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
 1. Load the database schema: `bundle exec rake db:schema:load`.
 1. Pre-process the theme SCSS files: `bundle exec rake theme:preprocess`
 1. Create an admin account: `bundle exec rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it and use on your first login).
