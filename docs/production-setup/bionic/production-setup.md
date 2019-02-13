@@ -259,6 +259,10 @@ Upgrading should be done in stages. Start with the stage closest to your current
 1. Follow the 'General Upgrade Instructions' below to upgrade to **v9.2**.
 2. Follow the instructions above under 'Configure the App' to setup your settings.local.yml file.
 
+#### Upgrading to v9.6
+
+1. As `deploy` user in project directory, run `gem update bundler --no-document` to update to Bundler 2.x.
+
 #### Upgrading to lastest master
 
 1. Follow the 'General Upgrade Instructions' below.
