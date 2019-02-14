@@ -49,20 +49,22 @@ exports[`renders as expected 1`] = `
   className="form-control"
   defaultValue={null}
   id="root"
+  key="root"
   name={null}
   onChange={[Function]}
 >
   <option
+    key="blank"
     value=""
-  >
-    
-  </option>
+  />
   <option
+    key="item1"
     value="item1"
   >
     First
   </option>
   <option
+    key="item2"
     value="item2"
   >
     Second

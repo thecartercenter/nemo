@@ -1,5 +1,4 @@
 import React from "react";
-import renderer from "react-test-renderer";
 import { shallow } from "enzyme";
 
 import Component from "../../../app/javascript/components/FormSelect";
@@ -16,8 +15,8 @@ const defaultProps = {
 };
 
 it("renders as expected", () => {
-  const tree = renderer.create(<Component {...defaultProps} />);
-  expect(tree.toJSON()).toMatchSnapshot();
+  const wrapper = shallow(<Component {...defaultProps} />);
+  expect(wrapper).toMatchSnapshot();
 });
 
 describe("after changing value", () => {
