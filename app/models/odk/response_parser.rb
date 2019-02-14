@@ -186,7 +186,7 @@ module Odk
     # Tries to load form (will raise ActiveRecord::RecordNotFound if not found).
     def lookup_form(params)
       # If the response already has a form, don't fetch it again
-      response.form ||= Form.find_by(id: params[:id]) || Form.find_by(old_id: params[:id])
+      response.form ||= Form.find_by(id: params[:id])
       return response.form unless response.form.nil?
       raise ActiveRecord::RecordNotFound
     end

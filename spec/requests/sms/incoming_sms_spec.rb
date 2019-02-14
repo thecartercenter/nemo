@@ -273,7 +273,9 @@ describe "incoming sms", :sms do
     end
 
     context "with sms authentication enabled" do
-      let(:form) { setup_form(questions: %w(integer text), forward_recipients: recipients, authenticate_sms: true) }
+      let(:form) do
+        setup_form(questions: %w(integer text), forward_recipients: recipients, authenticate_sms: true)
+      end
 
       it "strips auth code from forward" do
         incoming_body = "#{auth_code} #{form_code} 1.20 2.something"

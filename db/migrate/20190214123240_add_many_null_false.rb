@@ -56,8 +56,6 @@ class AddManyNullFalse < ActiveRecord::Migration[5.2]
     change_column_null :option_sets, :name, false
     change_column_null :options, :name_translations, false
     change_column_null :questions, :code, false
-    execute("UPDATE questions SET hint_translations = '{}' WHERE hint_translations IS NULL")
-    change_column_null :questions, :hint_translations, false
     change_column_null :questions, :is_standard, false
     change_column_null :questions, :key, false
     change_column_null :questions, :name_translations, false
@@ -93,7 +91,6 @@ class AddManyNullFalse < ActiveRecord::Migration[5.2]
     change_column_null :sms_messages, :mission_id, false
     change_column_null :sms_messages, :sent_at, false
     change_column_null :taggings, :question_id, false
-    change_column_null :taggings, :tag_id, false
     change_column_null :user_group_assignments, :user_group_id, false
     change_column_null :user_group_assignments, :user_id, false
     change_column_null :user_groups, :mission_id, false

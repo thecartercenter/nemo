@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_14_123240) do
+ActiveRecord::Schema.define(version: 2019_02_14_205035) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(version: 2019_02_14_123240) do
   end
 
   create_table "broadcasts", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
-    t.text "body"
+    t.text "body", null: false
     t.datetime "created_at", null: false
     t.string "medium", limit: 255, null: false
     t.uuid "mission_id", null: false
@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 2019_02_14_123240) do
     t.text "send_errors"
     t.datetime "sent_at"
     t.string "source", limit: 255, default: "manual", null: false
-    t.string "subject", limit: 255, null: false
+    t.string "subject", limit: 255
     t.datetime "updated_at", null: false
     t.string "which_phone", limit: 255
     t.index ["mission_id"], name: "index_broadcasts_on_mission_id"
@@ -248,9 +248,9 @@ ActiveRecord::Schema.define(version: 2019_02_14_123240) do
     t.datetime "job_completed_at"
     t.text "job_error_report"
     t.datetime "job_failed_at"
-    t.string "job_id", limit: 255, null: false
+    t.string "job_id", limit: 255
     t.datetime "job_started_at"
-    t.uuid "mission_id", null: false
+    t.uuid "mission_id", comment: "Operations are possible in admin mode"
     t.string "provider_job_id", limit: 255
     t.boolean "unread", default: true, null: false
     t.datetime "updated_at", null: false
@@ -324,7 +324,7 @@ ActiveRecord::Schema.define(version: 2019_02_14_123240) do
     t.text "canonical_name", null: false
     t.string "code", limit: 255, null: false
     t.datetime "created_at", null: false
-    t.jsonb "hint_translations", default: {}, null: false
+    t.jsonb "hint_translations", default: {}
     t.boolean "is_standard", default: false, null: false
     t.boolean "key", default: false, null: false
     t.decimal "maximum", precision: 15, scale: 8
@@ -483,7 +483,7 @@ ActiveRecord::Schema.define(version: 2019_02_14_123240) do
     t.uuid "broadcast_id"
     t.datetime "created_at", null: false
     t.string "from", limit: 255
-    t.uuid "mission_id", null: false
+    t.uuid "mission_id", comment: "Can't set null false due to missionless SMS receive flow"
     t.string "reply_error_message"
     t.uuid "reply_to_id"
     t.datetime "sent_at", null: false
@@ -505,7 +505,7 @@ ActiveRecord::Schema.define(version: 2019_02_14_123240) do
   create_table "taggings", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.uuid "question_id", null: false
-    t.uuid "tag_id", null: false
+    t.uuid "tag_id", comment: "Can't set null false due to replication process"
     t.datetime "updated_at", null: false
     t.index ["question_id"], name: "index_taggings_on_question_id"
     t.index ["tag_id"], name: "index_taggings_on_tag_id"
