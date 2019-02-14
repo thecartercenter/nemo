@@ -1,4 +1,10 @@
 {
+  "scripts": {
+    "test": "jest"
+  },
+  "jest": {
+    "testRegex": "/spec/javascript/.*\\.test\\.jsx?$"
+  },
   "dependencies": {
     "@rails/webpacker": "3.5",
     "babel-preset-react": "^6.24.1",
@@ -8,6 +14,7 @@
     "react_ujs": "^2.4.4"
   },
   "devDependencies": {
+    "jest": "23.6.0",
     "webpack-dev-server": "2.11.2"
   }
 }
