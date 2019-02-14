@@ -32,6 +32,8 @@ class Operation < ApplicationRecord
   # Since job_params is ephemeral, enqueue should be called right after the operation is created, not
   # on an operation object retrieved from the DB.
   def enqueue
+    # We need to save before passing to perform_later b/c perform_later will need our ID.
+    # For this reason, the job_id col can't have a null constraint.
     save! unless persisted?
     job = job_class.constantize.perform_later(self, **job_params)
     update!(job_id: job.job_id, provider_job_id: job.provider_job_id)

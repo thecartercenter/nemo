@@ -45,7 +45,6 @@ class AddManyNullFalse < ActiveRecord::Migration[5.2]
     change_column_null :missions, :compact_name, false
     change_column_null :missions, :name, false
     change_column_null :operations, :creator_id, false
-    change_column_null :operations, :job_id, false
     change_column_null :operations, :mission_id, false
     change_column_null :option_nodes, :ancestry_depth, false
     change_column_null :option_nodes, :is_standard, false
