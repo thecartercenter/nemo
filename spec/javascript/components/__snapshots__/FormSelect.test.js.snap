@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders as expected 1`] = `
+<select
+  className="form-control"
+  defaultValue={null}
+  id="1"
+  name={null}
+>
+  <option
+    value=""
+  >
+    
+  </option>
+  <option
+    value="1"
+  >
+    First
+  </option>
+  <option
+    value="2"
+  >
+    Second
+  </option>
+</select>
+`;
