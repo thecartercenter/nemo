@@ -20,7 +20,7 @@ class AddManyNullFalse < ActiveRecord::Migration[5.2]
     change_column_null :broadcasts, :medium, false
     execute("DELETE FROM broadcasts WHERE mission_id IS NULL")
     change_column_null :broadcasts, :mission_id, false
-    change_column_null :broadcasts, :subject, false
+    change_column_null :broadcasts, :body, false
     change_column_null :conditions, :conditionable_type, false
     change_column_null :conditions, :op, false
     change_column_null :form_forwardings, :form_id, false
@@ -45,7 +45,7 @@ class AddManyNullFalse < ActiveRecord::Migration[5.2]
     change_column_null :missions, :compact_name, false
     change_column_null :missions, :name, false
     change_column_null :operations, :creator_id, false
-    change_column_null :operations, :mission_id, false
+    change_column_comment :operations, :mission_id, "Operations are possible in admin mode"
     change_column_null :option_nodes, :ancestry_depth, false
     change_column_null :option_nodes, :is_standard, false
     change_column_null :option_nodes, :option_set_id, false
@@ -88,9 +88,11 @@ class AddManyNullFalse < ActiveRecord::Migration[5.2]
     execute("UPDATE sms_messages SET adapter_name = 'FrontlineSms' WHERE adapter_name IS NULL")
     change_column_null :sms_messages, :adapter_name, false
     change_column_null :sms_messages, :body, false
-    change_column_null :sms_messages, :mission_id, false
+    change_column_comment :sms_messages, :mission_id,
+      "Can't set null false due to missionless SMS receive flow"
     change_column_null :sms_messages, :sent_at, false
     change_column_null :taggings, :question_id, false
+    change_column_comment :taggings, :tag_id, "Can't set null false due to replication process"
     change_column_null :user_group_assignments, :user_group_id, false
     change_column_null :user_group_assignments, :user_id, false
     change_column_null :user_groups, :mission_id, false
