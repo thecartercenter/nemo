@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class RemoveOldIdCols < ActiveRecord::Migration[5.2]
-  def up
+  def up # rubocop:disable Metrics/MethodLength, Metrics/AbcSize -- comprehension not an issue
     remove_column :answers, :old_id
     remove_column :answers, :option_old_id
     remove_column :answers, :questioning_old_id

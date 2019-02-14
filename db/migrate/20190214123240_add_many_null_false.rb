@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class AddManyNullFalse < ActiveRecord::Migration[5.2]
-  def up
+  def up # rubocop:disable Metrics/MethodLength, Metrics/AbcSize -- comprehension not an issue
     puts("************************************************************************")
     puts("************************************************************************")
     puts("This migration sets NULL constraints on a lot of database columns")

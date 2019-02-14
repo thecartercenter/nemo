@@ -41,6 +41,10 @@ Metrics/BlockLength:
   Exclude:
     - spec/**/*
 
+Metrics/ClassLength:
+  Exclude:
+    - db/migrate/*
+
 Metrics/LineLength:
   Enabled: true
   Max: 110
