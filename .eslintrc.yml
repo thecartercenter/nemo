@@ -84,9 +84,11 @@ rules:
     - error
     -
       max: 3
+  react/jsx-filename-extension: 0
   react/jsx-no-undef: 0
   react/jsx-wrap-multilines: error
   react/no-set-state: 0
+  react/prefer-stateless-function: 0
   react/react-in-jsx-scope: 0
   react/require-optimization: 0
   rest-spread-spacing: error
