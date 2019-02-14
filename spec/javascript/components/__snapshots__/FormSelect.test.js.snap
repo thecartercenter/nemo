@@ -1,11 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`calls changeFunc on change 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "item1",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`renders as expected 1`] = `
 <select
   className="form-control"
   defaultValue={null}
-  id="1"
+  id="root"
   name={null}
+  onChange={[Function]}
 >
   <option
     value=""
@@ -13,12 +30,12 @@ exports[`renders as expected 1`] = `
     
   </option>
   <option
-    value="1"
+    value="item1"
   >
     First
   </option>
   <option
-    value="2"
+    value="item2"
   >
     Second
   </option>

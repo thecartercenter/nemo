@@ -3,6 +3,7 @@
     "test": "jest"
   },
   "jest": {
+    "setupTestFrameworkScriptFile": "<rootDir>/spec/javascript/setupTests.js",
     "testRegex": "/spec/javascript/.*\\.test\\.jsx?$"
   },
   "dependencies": {
@@ -14,6 +15,8 @@
     "react_ujs": "^2.4.4"
   },
   "devDependencies": {
+    "enzyme": "3.8.0",
+    "enzyme-adapter-react-16": "1.9.1",
     "jest": "23.6.0",
     "react-test-renderer": "^16.4.1",
     "webpack-dev-server": "2.11.2"
