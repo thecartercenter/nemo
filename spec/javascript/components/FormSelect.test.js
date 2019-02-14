@@ -1,5 +1,5 @@
 import React from "react";
-import { shallow } from "enzyme";
+import {shallow} from "enzyme";
 
 import Component from "../../../app/javascript/components/FormSelect";
 
@@ -8,8 +8,8 @@ const changeFunc = jest.fn();
 const defaultProps = {
   id: "root",
   options: [
-    { id: "item1", name: "First" },
-    { id: "item2", name: "Second" },
+    {id: "item1", name: "First"},
+    {id: "item2", name: "Second"},
   ],
   changeFunc,
 };
@@ -21,7 +21,7 @@ it("renders as expected", () => {
 
 describe("after changing value", () => {
   const wrapper = shallow(<Component {...defaultProps} />);
-  wrapper.find("select").simulate("change", { target: { value: defaultProps.options[0].id } });
+  wrapper.find("select").simulate("change", {target: {value: defaultProps.options[0].id}});
 
   it("calls changeFunc", () => {
     expect(changeFunc).toMatchSnapshot();

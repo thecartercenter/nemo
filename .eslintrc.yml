@@ -1,5 +1,6 @@
 env:
   es6: true
+  jest: true
 parserOptions:
   ecmaFeatures:
     jsx: true
