@@ -26,15 +26,8 @@ class Form < ApplicationRecord
   before_create :init_downloads
   before_validation :normalize
   before_save :update_pub_changed_at
-
-  # Nullify the root_id foreign key and then delete all items before deleting the form.
-  # This ensures no foreign key constraints are violated.
-  # By default, has_ancestry destroys all children of a destroyed group, so this should cascade down.
-  before_destroy do
-    to_destroy = root_group
-    update_columns(root_id: nil, current_version_id: nil)
-    to_destroy.destroy
-  end
+  after_create :create_root_group
+  before_destroy :nullify_foreign_keys
 
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
@@ -303,6 +296,20 @@ class Form < ApplicationRecord
   def init_downloads
     self.downloads = 0
     true
+  end
+
+  def create_root_group
+    create_root_group!(mission: mission, form: self)
+    save!
+  end
+
+  def nullify_foreign_keys
+    # Nullify the root_id foreign key and then delete all items before deleting the form.
+    # This ensures no foreign key constraints are violated.
+    # By default, has_ancestry destroys all children of a destroyed group, so this should cascade down.
+    to_destroy = root_group
+    update_columns(root_id: nil, current_version_id: nil)
+    to_destroy.destroy
   end
 
   def name_unique_per_mission
