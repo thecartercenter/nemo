@@ -709,7 +709,7 @@ describe Sms::Decoder, :sms do
 
   def create_form(options)
     option_names = options[:default_option_names] ? nil : %w[Apple Banana Cherry Durian] + ["Elder Berry"]
-    authenticate_sms = options[:authenticate_sms] ? options[:authenticate_sms] : false
+    authenticate_sms = options[:authenticate_sms] || false
     form = create(:form,
       smsable: true,
       question_types: options[:questions],
@@ -726,7 +726,7 @@ describe Sms::Decoder, :sms do
     options[:mission] = get_mission unless options.key?(:mission)
     options[:from] ||= options[:user].phone
     options[:body] ||= "#{form.code} #{options[:data]}"
-    msg = Sms::Incoming.create(options.slice(:from, :body, :mission))
+    msg = Sms::Incoming.new(options.slice(:from, :body, :mission).merge(adapter_name: "Test"))
     decoder = Sms::Decoder::Decoder.new(msg)
     decoder.decode
     decoder.finalize

@@ -16,7 +16,6 @@ class Sms::Message < ApplicationRecord
   belongs_to :user
 
   before_create :default_sent_at
-  after_initialize :normalize_numbers
 
   # order by id after created_at to make sure they are in creation order
   scope(:latest_first, ->{ order('created_at DESC, id DESC') })
@@ -80,16 +79,18 @@ class Sms::Message < ApplicationRecord
     raise NotImplementedError
   end
 
+  def to=(number)
+    self[:to] = PhoneNormalizer.normalize(number)
+  end
+
+  def from=(number)
+    self[:from] = PhoneNormalizer.normalize(number)
+  end
+
   private
 
-    # sets sent_at to now unless it's already set
-    def default_sent_at
-      self.sent_at = Time.zone.now unless sent_at
-    end
-
-    # normalizes all phone numbers to ITU format
-    def normalize_numbers
-      self.from = PhoneNormalizer.normalize(from)
-      self.to = PhoneNormalizer.normalize(to)
-    end
+  # sets sent_at to now unless it's already set
+  def default_sent_at
+    self.sent_at = Time.current unless sent_at
+  end
 end
