@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`calls changeFunc on change 1`] = `
+exports[`after changing value calls changeFunc 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [
@@ -14,6 +14,34 @@ exports[`calls changeFunc on change 1`] = `
     },
   ],
 }
+`;
+
+exports[`after changing value renders as expected 1`] = `
+<select
+  className="form-control"
+  defaultValue={null}
+  id="root"
+  key="root"
+  name={null}
+  onChange={[Function]}
+>
+  <option
+    key="blank"
+    value=""
+  />
+  <option
+    key="item1"
+    value="item1"
+  >
+    First
+  </option>
+  <option
+    key="item2"
+    value="item2"
+  >
+    Second
+  </option>
+</select>
 `;
 
 exports[`renders as expected 1`] = `

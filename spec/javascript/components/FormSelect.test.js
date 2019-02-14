@@ -20,8 +20,15 @@ it("renders as expected", () => {
   expect(tree.toJSON()).toMatchSnapshot();
 });
 
-it("calls changeFunc on change", () => {
+describe("after changing value", () => {
   const wrapper = shallow(<Component {...defaultProps} />);
   wrapper.find("select").simulate("change", { target: { value: defaultProps.options[0].id } });
-  expect(changeFunc).toMatchSnapshot();
+
+  it("calls changeFunc", () => {
+    expect(changeFunc).toMatchSnapshot();
+  });
+
+  it("renders as expected", () => {
+    expect(wrapper).toMatchSnapshot();
+  });
 });
