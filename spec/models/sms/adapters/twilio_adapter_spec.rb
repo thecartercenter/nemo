@@ -58,33 +58,51 @@ describe Sms::Adapters::TwilioAdapter, :sms do
   end
 
   context "broadcast message" do
+    let(:numbers) { ["+12", "+34", "+56", "+78"] }
+    let(:delivery) { adapter.deliver(msg, dry_run: false) }
+
     before do
-      allow(msg).to receive(:recipient_numbers) { ["+12", "+34", "+56", "+78"] }
+      allow(msg).to receive(:recipient_numbers) { numbers }
+      allow(messages).to receive(:create) do |params|
+        raise Twilio::REST::RequestError, "A Twilio error" if failing_numbers.include?(params[:to])
+      end
     end
 
     context "3 non-consecutive failures" do
-      before do
-        allow(messages).to receive(:create) do |params|
-          raise Twilio::REST::RequestError, "error" unless params[:to] == "+34"
-        end
-      end
+      let(:failing_numbers) { ["+12", "+56", "+78"] }
 
       it "has at least one success and raises Sms::Adapters::PartialSendError" do
         expect(messages).to receive(:create).with(hash_including(to: "+34"))
-        expect { adapter.deliver(msg, dry_run: false) }.to raise_error(Sms::Adapters::PartialSendError)
+        expect { delivery }.to raise_error(Sms::Adapters::PartialSendError,
+          "A Twilio error\nA Twilio error\nA Twilio error")
       end
     end
 
     context "3 consecutive failures" do
-      before do
-        allow(messages).to receive(:create) do |params|
-          raise Twilio::REST::RequestError, "error" unless params[:to] == "+78"
-        end
-      end
+      let(:failing_numbers) { ["+12", "+34", "+56"] }
 
       it "raises Sms::Adapters::FatalSendError" do
         expect(messages).not_to receive(:create).with(hash_including(to: "+78"))
-        expect { adapter.deliver(msg, dry_run: false) }.to raise_error(Sms::Adapters::FatalSendError)
+        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError,
+          "A Twilio error\nA Twilio error\nA Twilio error")
+      end
+    end
+
+    context "2 failure for 2 recipients" do
+      let(:numbers) { ["+12", "+34"] }
+      let(:failing_numbers) { ["+12", "+34"] }
+
+      it "raises Sms::Adapters::FatalSendError" do
+        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError, "A Twilio error\nA Twilio error")
+      end
+    end
+
+    context "1 failure for 1 recipients" do
+      let(:numbers) { ["+12"] }
+      let(:failing_numbers) { ["+12"] }
+
+      it "raises Sms::Adapters::FatalSendError" do
+        expect { delivery }.to raise_error(Sms::Adapters::FatalSendError, "A Twilio error")
       end
     end
   end
