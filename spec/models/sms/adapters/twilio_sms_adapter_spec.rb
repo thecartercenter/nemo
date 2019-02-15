@@ -19,7 +19,7 @@ describe Sms::Adapters::TwilioAdapter, :sms do
   end
 
   it "should return true on deliver" do
-    msg = Sms::Reply.new(to: "+123", body: "foo")
+    msg = build(:sms_reply, to: "+123", body: "foo")
     expect(adapter.deliver(msg)).to be_truthy
   end
 

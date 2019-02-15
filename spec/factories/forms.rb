@@ -104,9 +104,6 @@ FactoryGirl.define do
     sequence(:name) { |n| "Sample Form #{n}" }
 
     after(:create) do |form, evaluator|
-      form.create_root_group!(form: form)
-      form.save!
-
       items = evaluator.questions.present? ? evaluator.questions : evaluator.question_types
       # Build questions.
       items.each do |item|

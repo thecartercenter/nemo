@@ -100,7 +100,7 @@ describe Form do
 
     describe "root_group" do
       it "has a root group when created from factory" do
-        expect(form.root_group).to_not be_nil
+        expect(form.root_group).not_to be_nil
       end
     end
 
@@ -125,7 +125,6 @@ describe Form do
             {ref_qing_id: qing1.id, op: "eq", value: "5"},
             {ref_qing_id: qing2.id, op: "eq", value: "fish"}
           ])
-          form.reload
         end
 
         it "should work" do

@@ -33,15 +33,6 @@ describe Odk::ResponseParser do
           it_behaves_like "successful submission"
         end
 
-        context "form matching on old_id" do
-          before do
-            form.update!(old_id: "123")
-            xml.gsub!(%(id="#{form.id}"), %(id="123"))
-          end
-
-          it_behaves_like "successful submission"
-        end
-
         context "outdated form" do
           let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values, formver: "wrong") }
 

@@ -53,7 +53,7 @@ describe "mission destroy" do
                        conditions_attributes: [{ref_qing_id: form.c[0].id, op: "eq", value: "5"}])
     form.replicate(mode: :clone) # Tests that cloned objects can be deleted
 
-    create(:report, mission: mission)
+    create(:list_report, mission: mission)
     create(:response, user: users.first, mission: mission, form: form,
                       answer_values: [3, "Cat", [5, 6], %w[Cat Dog]])
   end

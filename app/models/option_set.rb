@@ -26,7 +26,7 @@ class OptionSet < ApplicationRecord
   has_many :option_nodes, -> { order(:rank) }, dependent: :destroy, inverse_of: :option_set
   has_many :report_option_set_choices, class_name: "Report::OptionSetChoice", inverse_of: :option_set,
                                        dependent: :destroy
-  belongs_to :root_node, -> { where(option_id: nil) }, class_name: "OptionNode", dependent: :destroy
+  belongs_to :root_node, class_name: "OptionNode", dependent: :destroy
 
   before_validation :copy_attribs_to_root_node
   before_validation :normalize_fields

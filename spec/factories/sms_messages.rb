@@ -7,6 +7,7 @@ FactoryGirl.define do
     body { Faker::Lorem.sentence }
     sent_at { Time.current }
     mission { get_mission }
+    adapter_name { "Test" }
   end
 
   factory :sms_incoming, class: "Sms::Incoming", parent: :sms_message do

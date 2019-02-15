@@ -1,10 +1,11 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "abilities for reports" do
-
-  let(:own_report) { create(:report, creator: user) }
-  let(:not_own_report) { create(:report, creator: create(:user)) }
-  let(:anon_report) { create(:report, creator: nil) }
+  let(:own_report) { create(:list_report, creator: user) }
+  let(:not_own_report) { create(:list_report, creator: create(:user)) }
+  let(:anon_report) { create(:list_report, creator: nil) }
   let(:ability) { Ability.new(user: user, mission: get_mission) }
 
   context "coordinator" do
@@ -12,7 +13,7 @@ describe "abilities for reports" do
 
     it "should be able to do all" do
       expect(ability).to be_able_to(:create, Report::Report)
-      [:read, :update, :delete, :export].each do |a|
+      %i[read update delete export].each do |a|
         expect(ability).to be_able_to(a, own_report)
         expect(ability).to be_able_to(a, not_own_report)
         expect(ability).to be_able_to(a, anon_report)
@@ -21,7 +22,6 @@ describe "abilities for reports" do
   end
 
   shared_examples_for "restricted" do |role|
-
     let(:user) { create(:user, role_name: role) }
 
     it "should be able to create" do
@@ -71,5 +71,4 @@ describe "abilities for reports" do
 
     it_behaves_like "restricted", :enumerator
   end
-
 end
