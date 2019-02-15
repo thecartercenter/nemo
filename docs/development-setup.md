@@ -1,4 +1,4 @@
-# ELMO Development Setup
+# NEMO Development Setup
 
 ### Package managers
 
@@ -24,7 +24,7 @@ Note to install the software below we recommend the following package managers:
     - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it.
     - In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
 1. PostgreSQL 10+
-    - Create an empty database for use by the app (typically *nemo_development*)
+    - Create empty databases for use by the app: `createdb nemo_development && createdb nemo_test`
 1. ImageMagick 6.7+
     - ImageMagick is used to resize uploaded images.
     - It should be available through any of the package managers listed above. If not it can be built from source.
@@ -93,8 +93,8 @@ For Atom, install the `linter` package which contains shared stuff, then:
 #### Retrieve project files using Git
 
 ```
-git clone https://github.com/thecartercenter/elmo.git
-cd elmo
+git clone https://github.com/thecartercenter/nemo.git
+cd nemo
 ```
 
 If developing, it's best to work off the development branch:
@@ -107,9 +107,9 @@ git checkout develop
 
 1. Install the required gems by running `bundle install` in the project directory.
 1. Install the required Node modules by running `yarn install` in the project directory.
-1. Copy `config/database.yml.example` to `config/database.yml` and edit `database.yml` to point to your database.
-1. Copy `config/settings.local.yml.example` to `config/settings.local.yml` and adjust settings as appropriate.
-1. Copy `config/initializers/local_config.rb.example` to `config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
+1. Run `cp config/database.yml.example config/database.yml`.
+1. Run `cp config/settings.local.yml.example config/settings.local.yml` and adjust settings as appropriate.
+1. Run `cp config/initializers/local_config.rb.example config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
 1. Setup the UUID postgres extension:
     1. On Linux: `sudo -u postgres psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
     1. On Mac with Homebrew: `psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
@@ -143,10 +143,10 @@ You may want to run `bundle exec rake db:create_fake_data` to create a sample mi
 1. Configure your rails development server so ODK can find it
     - Run `rails s -p 8443 -b 0.0.0.0`
 1. Create a user and password
-1. Publish your form in ELMO
+1. Publish your form in NEMO
 1. Point the ODK app to your development server
     - In ODK, go to `General Settings > Platform Settings > URL`
     - For the URL put: `http://YOURIP:8443/m/yourmission`
     - Also put in your username and password
 1. Retrieve Form
-    - In ODK, you should now be able to go to `Get Blank Form` to download the forms from ELMO
+    - In ODK, you should now be able to go to `Get Blank Form` to download the forms from NEMO
