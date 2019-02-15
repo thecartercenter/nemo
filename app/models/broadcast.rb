@@ -114,7 +114,7 @@ class Broadcast < ApplicationRecord
   end
 
   def add_send_error(msg)
-    self.send_errors = [send_errors.presence, msg].compact.join("\n")
+    self.send_errors = (send_errors || +"") << (send_errors.blank? ? "" : "\n") << msg
   end
 
   # Returns the recipients of the message. If recipient_selection is set to all_users or all_enumerators,
