@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Broadcast < ApplicationRecord
   include MissionBased
 
@@ -15,15 +17,15 @@ class Broadcast < ApplicationRecord
   validate :validate_recipients
 
   # options for the medium used for the broadcast
-  MEDIUM_OPTIONS = %w(sms email sms_only email_only both)
+  MEDIUM_OPTIONS = %w[sms email sms_only email_only both].freeze
 
-  MEDIUM_OPTIONS_WITHOUT_SMS = %w(email_only)
+  MEDIUM_OPTIONS_WITHOUT_SMS = %w[email_only].freeze
 
   # options for which phone numbers the broadcast should be sent to
-  WHICH_PHONE_OPTIONS = %w(main_only alternate_only both)
+  WHICH_PHONE_OPTIONS = %w[main_only alternate_only both].freeze
 
   # options for recipients
-  RECIPIENT_SELECTION_OPTIONS = %w(all_users all_enumerators specific)
+  RECIPIENT_SELECTION_OPTIONS = %w[all_users all_enumerators specific].freeze
 
   scope :manual_only, -> { where(source: "manual") }
 
@@ -44,34 +46,14 @@ class Broadcast < ApplicationRecord
     recipient_selection == "specific"
   end
 
+  # Delivers broadcast and catches any errors.
+  # Re-raises the first error raised (if any) so the job can handle it.
   def deliver
-    # send emails
-    begin
-      if email_possible? && recipient_emails.present?
-        BroadcastMailer.broadcast(recipient_emails, subject, body).deliver_now
-      end
-    rescue StandardError => error
-      add_send_error(I18n.t("broadcast.email_error") + ": #{error}")
-      save
-    end
-
-    # send smses
-    begin
-      if sms_possible? && recipient_numbers.present?
-        Sms::Broadcaster.deliver(self, which_phone, "[#{Settings.broadcast_tag}] #{body}")
-      end
-    rescue Sms::Error => error
-      # one error per line
-      error.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
-      save
-
-      # Re-raise the error so it can be handled by the job class.
-      raise error
-    end
-  end
-
-  def add_send_error(msg)
-    self.send_errors = (send_errors.nil? ? "" : send_errors) + msg + "\n"
+    errors = []
+    errors << deilver_emails_and_return_any_errors
+    errors << deilver_smses_and_return_any_errors
+    errors.compact!
+    raise errors.first if errors.any?
   end
 
   def recipient_numbers
@@ -98,7 +80,7 @@ class Broadcast < ApplicationRecord
     @sms_recipient_hashes ||= [].tap do |hashes|
       actual_recipients.each do |r|
         next unless r.can_get_sms?
-        hashes << { user: r, phone: main_phone? ? r.phone : r.phone2 }
+        hashes << {user: r, phone: main_phone? ? r.phone : r.phone2}
         break if options[:max] && hashes.size >= options[:max]
       end
     end
@@ -109,6 +91,31 @@ class Broadcast < ApplicationRecord
   end
 
   private
+
+  def deilver_emails_and_return_any_errors
+    return unless email_possible? && recipient_emails.present?
+    BroadcastMailer.broadcast(recipient_emails, subject, body).deliver_now
+    nil
+  rescue StandardError => error
+    add_send_error(I18n.t("broadcast.email_error") + ": #{error}")
+    save
+    error
+  end
+
+  def deilver_smses_and_return_any_errors
+    return unless sms_possible? && recipient_numbers.present?
+    Sms::Broadcaster.deliver(self, which_phone, "[#{Settings.broadcast_tag}] #{body}")
+    nil
+  rescue Sms::Error => error
+    # one error per line
+    error.to_s.split("\n").each { |e| add_send_error(I18n.t("broadcast.sms_error") + ": #{e}") }
+    save
+    error
+  end
+
+  def add_send_error(msg)
+    self.send_errors = [send_errors.presence, msg].compact.join("\n")
+  end
 
   # Returns the recipients of the message. If recipient_selection is set to all_users or all_enumerators,
   # this will be different than `recipients`.
@@ -140,10 +147,10 @@ class Broadcast < ApplicationRecord
   end
 
   def main_phone?
-    %w(main_only both).include?(which_phone)
+    %w[main_only both].include?(which_phone)
   end
 
   def alternate_phone?
-    %w(alternate_only both).include?(which_phone)
+    %w[alternate_only both].include?(which_phone)
   end
 end

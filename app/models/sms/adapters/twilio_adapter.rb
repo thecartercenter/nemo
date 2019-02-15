@@ -74,20 +74,22 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
     client.messages.create(from: config.twilio_phone_number, to: to, body: body)
   end
 
+  # Sends one message per recipient.
+  # If the first three sends all fail OR if there are less than 3 recipients and all sends fail,
+  # raises a Sms::Adapters::FatalSendError. If some, but not all of the sends fail,
+  # raises a Sms::Adapters::PartialSendError.
+  # Errors raised will contain the error messages received separated by newlines.
   def send_message_for_each_recipient(message)
     errors = []
-
     message.recipient_numbers.each_with_index do |number, index|
       begin
         send_message(number, message.body)
       rescue Twilio::REST::RequestError => e
         errors << e
-
         # creating the first 3 messages all failed
         raise Sms::Adapters::FatalSendError, e if errors.length == 3 && index == 2
       end
     end
-
     raise Sms::Adapters::PartialSendError, errors unless errors.empty?
   end
 end
