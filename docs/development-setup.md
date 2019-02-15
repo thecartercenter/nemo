@@ -107,7 +107,7 @@ git checkout develop
 
 1. Install the required gems by running `bundle install` in the project directory.
 1. Install the required Node modules by running `yarn install` in the project directory.
-1. Run `cp config/database.yml.example config/database.yml` and edit `database.yml` to point to your database (typically *nemo_development*).
+1. Run `cp config/database.yml.example config/database.yml`.
 1. Run `cp config/settings.local.yml.example config/settings.local.yml` and adjust settings as appropriate.
 1. Run `cp config/initializers/local_config.rb.example config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
 1. Setup the UUID postgres extension:
