@@ -18,6 +18,9 @@ class BroadcastOperationJob < OperationJob
     # sending failed N times in a row) or a plain Error, which could have come up in various points
     # in the process. In the either case, the Broadcast will have more information about the failure.
     save_failure(I18n.t("operation.errors.broadcast.fatal_send", url: error_url(broadcast)))
+
+    # We still set the timestamp here b/c otherwise the broadcast will show as pending.
+    broadcast.update!(sent_at: Time.current)
   end
 
   private

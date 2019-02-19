@@ -373,6 +373,7 @@ en:
         created_at: "Send Time"
         errors: "Errors?"
         medium: "Medium"
+        sent_at: "Sent/Errored At"
         send_errors: "Delivery Errors"
         subject: "Subject"
         to: "To"

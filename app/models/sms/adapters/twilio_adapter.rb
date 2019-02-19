@@ -66,28 +66,32 @@ class Sms::Adapters::TwilioAdapter < Sms::Adapters::Adapter
 
   private
 
+  # Sends one message per recipient.
+  # If the first three sends all fail OR if there are less than 3 recipients and all sends fail,
+  # raises a Sms::Adapters::FatalSendError. If some, but not all of the sends fail,
+  # raises a Sms::Adapters::PartialSendError.
+  # Errors raised will contain the error messages received separated by newlines.
+  def send_message_for_each_recipient(message)
+    errors = []
+    (numbers = message.recipient_numbers).each_with_index do |number, index|
+      begin
+        send_message(number, message.body)
+      rescue Twilio::REST::RequestError => e
+        errors << e.to_s
+        # Check if creating the first 3 messages, or ALL the messages, all failed
+        if errors.size == numbers.size || errors.size == 3 && index == 2
+          raise Sms::Adapters::FatalSendError, errors.join("\n")
+        end
+      end
+    end
+    raise Sms::Adapters::PartialSendError, errors.join("\n") unless errors.empty?
+  end
+
   def client
     @client ||= Twilio::REST::Client.new(config.twilio_account_sid, config.twilio_auth_token)
   end
 
   def send_message(to, body)
     client.messages.create(from: config.twilio_phone_number, to: to, body: body)
-  end
-
-  def send_message_for_each_recipient(message)
-    errors = []
-
-    message.recipient_numbers.each_with_index do |number, index|
-      begin
-        send_message(number, message.body)
-      rescue Twilio::REST::RequestError => e
-        errors << e
-
-        # creating the first 3 messages all failed
-        raise Sms::Adapters::FatalSendError, e if errors.length == 3 && index == 2
-      end
-    end
-
-    raise Sms::Adapters::PartialSendError, errors unless errors.empty?
   end
 end
