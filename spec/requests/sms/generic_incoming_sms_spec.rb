@@ -6,7 +6,6 @@ describe "generic incoming sms", :sms do
   include_context "incoming sms"
 
   before do
-    @user = get_user
     get_mission.setting.update!(generic_sms_config: config)
   end
 

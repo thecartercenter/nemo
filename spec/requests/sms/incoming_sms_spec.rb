@@ -12,8 +12,7 @@ describe "incoming sms", :sms do
   let(:wrong_code) { form_code.sub(form.code[0], form.code[0] == "a" ? "b" : "a") }
   let(:bad_incoming_token) { "0" * 32 }
 
-  before :all do
-    @user = get_user
+  before do
     configatron.universal_sms_token = SecureRandom.hex
   end
 
@@ -21,7 +20,8 @@ describe "incoming sms", :sms do
     let(:form) { setup_form(questions: %w[text], required: true) }
 
     it "can accept text answers" do
-      assert_sms_response(incoming: "#{form_code} 1.this is a text answer", outgoing: /#{form_code}.+thank you/i)
+      assert_sms_response(incoming: "#{form_code} 1.this is a text answer",
+                          outgoing: /#{form_code}.+thank you/i)
       # Ensure objects are persisted
       expect(Sms::Incoming.count).to eq(1)
       expect(Sms::Reply.count).to eq(1)
@@ -92,7 +92,7 @@ describe "incoming sms", :sms do
     it "long select_multiple should have value truncated" do
       assert_sms_response(
         incoming: "#{form_code} 1.sfsdfsdfsdfsdf",
-        outgoing: /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+contained multiple invalid options/
+        outgoing: /Sorry.+answer 'sfsdfsdfsd...'.+question 1.+form '#{form_code}'.+contained/
       )
     end
 
@@ -128,7 +128,8 @@ describe "incoming sms", :sms do
   end
 
   it "GET submissions should be possible" do
-    assert_sms_response(method: :get, incoming: "#{form_code} 1.15 2.20", outgoing: /#{form_code}.+thank you/i)
+    assert_sms_response(method: :get, incoming: "#{form_code} 1.15 2.20",
+                        outgoing: /#{form_code}.+thank you/i)
   end
 
   it "message from automated sender should get no response" do
@@ -153,7 +154,7 @@ describe "incoming sms", :sms do
   end
 
   it "message inactive user should get error" do
-    @user.activate!(false)
+    user.activate!(false)
     assert_sms_response(incoming: "#{form_code} 1.x 2.x", outgoing: /couldn't find you/)
   end
 
@@ -172,11 +173,13 @@ describe "incoming sms", :sms do
   end
 
   it "message missing one answer should get error" do
-    assert_sms_response(incoming: "#{form_code} 2.20", outgoing: /answer.+required question 1 was.+#{form_code}/)
+    assert_sms_response(incoming: "#{form_code} 2.20",
+                        outgoing: /answer.+required question 1 was.+#{form_code}/)
   end
 
   it "message missing multiple answers should get error" do
-    assert_sms_response(incoming: form_code.to_s, outgoing: /answers.+required questions 1,2 were.+#{form_code}/)
+    assert_sms_response(incoming: form_code.to_s,
+                        outgoing: /answers.+required questions 1,2 were.+#{form_code}/)
   end
 
   it "too high numeric answer should get error" do
@@ -191,7 +194,7 @@ describe "incoming sms", :sms do
 
   context "duplicate response" do
     before do
-      create(:sms_incoming, from: @user.phone, body: "#{form_code} 1.15 2.20", sent_at: Time.now)
+      create(:sms_incoming, from: user.phone, body: "#{form_code} 1.15 2.20", sent_at: Time.current)
     end
 
     it "should result in error message" do
@@ -214,27 +217,28 @@ describe "incoming sms", :sms do
 
   it "reply should be in correct language" do
     # set user lang pref to french
-    @user.pref_lang = "fr"
-    @user.save(validate: false)
+    user.pref_lang = "fr"
+    user.save(validate: false)
 
     # now try to send to the new form (won't work b/c no permission)
     assert_sms_response(incoming: "#{form_code} 1.15 2.b", outgoing: /votre.+#{form_code}/i)
   end
 
   it "fails when the incoming SMS token is incorrect" do
-    begin
+    token = loop do
       token = SecureRandom.hex
-    end while token == get_mission.setting.incoming_sms_token
+      break token unless token == get_mission.setting.incoming_sms_token
+    end
 
-    do_incoming_request(
-      url: "/m/#{get_mission.compact_name}/sms/submit/#{token}",
-      incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER}
-    )
-    expect(@response.status).to eq(401)
+    do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{token}",
+                        incoming: {body: "#{form_code} 1.15 2.20", adapter: REPLY_VIA_RESPONSE_STYLE_ADAPTER})
+    expect(response.status).to eq(401)
   end
 
   context "with failing Twilio validation" do
     let(:twilio_adapter) { Sms::Adapters::Factory.instance.create("Twilio") }
+    let(:mission) { get_mission }
+    let(:token) { mission.setting.incoming_sms_token }
 
     before do
       expect(twilio_adapter).to receive(:validate).and_raise(Sms::Error)
@@ -243,8 +247,8 @@ describe "incoming sms", :sms do
 
     it "should raise error" do
       expect do
-        do_incoming_request(url: "/m/#{get_mission.compact_name}/sms/submit/#{get_mission.setting.incoming_sms_token}",
-                            from: @user.phone, incoming: {body: "#{form_code} 1.15 2.20", adapter: "TwilioSms"})
+        do_incoming_request(url: "/m/#{mission.compact_name}/sms/submit/#{token}", from: user.phone,
+                            incoming: {body: "#{form_code} 1.15 2.20", adapter: "TwilioSms"})
       end.to raise_error(Sms::Error)
     end
   end
@@ -290,7 +294,7 @@ describe "incoming sms", :sms do
       end
 
       it "strips auth code from forward" do
-        incoming_body = "#{auth_code} #{form_code} 1.20 2.something"
+        incoming_body = "#{user.sms_auth_code} #{form_code} 1.20 2.something"
         assert_sms_response(incoming: incoming_body, outgoing: /#{form_code}.+thank you/i)
         expect(sms_forward.body).to eq("#{form_code} 1.20 2.something")
       end
@@ -302,9 +306,9 @@ describe "incoming sms", :sms do
 
       context "with invalid token" do
         it "raises error and doesn't persist broacast or forward" do
-          do_incoming_request(url: "/sms/submit/#{bad_incoming_token}", from: @user.phone,
+          do_incoming_request(url: "/sms/submit/#{bad_incoming_token}", from: user.phone,
                               incoming: {body: "#{form_code} 1.15 2.something"})
-          expect(@response.status).to eq(401)
+          expect(response.status).to eq(401)
           expect(Broadcast.count).to eq(0)
           expect(Sms::Forward.count).to eq(0)
           expect(Response.count).to eq(0)
@@ -332,7 +336,7 @@ describe "incoming sms", :sms do
 
     context "with multiple missions" do
       let(:first_mission) { get_mission }
-      let(:second_mission) { create(:mission, with_user: @user) }
+      let(:second_mission) { create(:mission, with_user: user) }
       let(:first_form) { setup_form(questions: %w[integer text], mission: first_mission) }
       let(:second_form) { setup_form(questions: %w[integer text], mission: second_mission) }
       let(:first_form_code) { first_form.current_version.code }
@@ -388,16 +392,17 @@ describe "incoming sms", :sms do
     # setup extra mission
     let!(:missionless_url) { true }
     let!(:submission_url) { "/sms/submit/#{configatron.universal_sms_token}" }
-    let!(:extra_mission) { create(:mission) }
+    let!(:mission) { get_mission }
+    let!(:other_mission) { create(:mission) }
 
     # setup users
-    let!(:auth_code_user) { create(:user, phone: "+1-646-555-2638") }
-    let!(:mission_user) { create(:user, phone2: "+1-646-555-2638", mission: extra_mission) }
-    let!(:oldest_user) { create(:user, phone: "+1-646-555-2638", created_at: 2.months.ago) }
+    let!(:auth_code_user) { create(:user, phone: "+1-646-555-2638", mission: mission) }
+    let!(:mission_user) { create(:user, phone2: "+1-646-555-2638", mission: other_mission) }
+    let!(:oldest_user) { create(:user, phone: "+1-646-555-2638", mission: mission, created_at: 2.months.ago) }
 
     # setup forms
     let!(:authenticated_form) { setup_form(questions: %w[integer text], authenticate_sms: true) }
-    let!(:mission_form) { setup_form(questions: %w[integer text], mission: extra_mission) }
+    let!(:other_mission_form) { setup_form(questions: %w[integer text], mission: other_mission) }
     let!(:oldest_form) { setup_form(questions: %w[integer text]) }
 
     it "should get the user with the matching auth code if it's available" do
@@ -407,20 +412,18 @@ describe "incoming sms", :sms do
         outgoing: /#{authenticated_form.code}.+thank you/i,
         url: submission_url
       )
-      user = reply.user
-      expect(user.id).to eq(auth_code_user.id)
+      expect(reply.user.id).to eq(auth_code_user.id)
     end
 
     it "should get the user that matches the mission if it cannot match the auth code" do
       reply = assert_sms_response(
         from: mission_user.phone2,
-        incoming: {body: "#{mission_form.code} 1.5 2.Y"},
-        outgoing: /#{mission_form.code}.+thank you/i,
-        mission: extra_mission,
+        incoming: {body: "#{other_mission_form.code} 1.5 2.Y"},
+        outgoing: /#{other_mission_form.code}.+thank you/i,
+        mission: other_mission,
         url: submission_url
       )
-      user = reply.user
-      expect(user.id).to eq(mission_user.id)
+      expect(reply.user.id).to eq(mission_user.id)
     end
 
     it "should get the oldest user otherwise" do
@@ -430,8 +433,7 @@ describe "incoming sms", :sms do
         outgoing: /#{oldest_form.code}.+thank you/i,
         url: submission_url
       )
-      user = reply.user
-      expect(user.id).to eq(oldest_user.id)
+      expect(reply.user.id).to eq(oldest_user.id)
     end
   end
 end
