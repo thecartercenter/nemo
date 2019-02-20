@@ -2,6 +2,9 @@
 <%= elmo_form_for(@operation) do |f| %>
   <%= top_action_links(@operation) %>
   <%= f.field :id %>
+  <% if admin_mode? %>
+    <%= f.field :mission, read_only_content: @operation.mission&.name || t("admin_mode.admin_mode") %>
+  <% end %>
   <%= f.field :details, link: @operation.url %>
   <%= f.field :status, read_only_content: t("operation.status.#{@operation.status}") %>
   <%= f.field :creator, read_only_content: link_to(@operation.creator.try(:name), @operation.creator) %>

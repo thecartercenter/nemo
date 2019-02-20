@@ -1,29 +1,39 @@
+# frozen_string_literal: true
+
 module OperationsHelper
   def operations_index_fields
     [].tap do |fields|
-      fields.concat %w(details created_at)
-      fields << 'creator' if can?(:manage, Operation)
-      fields.concat %w(status result actions)
+      fields << "mission" if admin_mode?
+      fields.concat(%w[details created_at])
+      fields << "creator" if can?(:manage, Operation)
+      fields.concat(%w[status result actions])
     end
   end
 
-  def operations_index_links(operations)
+  def operations_index_links(_operations)
     [].tap do |links|
-      links << link_to(translate_action(Operation, :clear), clear_operations_path, method: :post, data: { confirm: t('operation.clear_confirm') })
+      links << link_to(translate_action(Operation, :clear), clear_operations_path,
+        method: :post, data: {confirm: t("operation.clear_confirm")})
     end
   end
 
   def format_operations_field(operation, field)
     case field
-    when 'details'
+    when "mission"
+      if (mission = operation.mission)
+        link_to(mission.name, operations_path(mode: "m", mission_name: mission.compact_name))
+      else
+        t("admin_mode.admin_mode")
+      end
+    when "details"
       link_to(operation.details, operation_path(operation))
-    when 'creator'
+    when "creator"
       link_to(operation.creator.name, user_path(operation.creator))
-    when 'created_at'
-      t('layout.time_ago', time: time_ago_in_words(operation.created_at))
-    when 'status'
+    when "created_at"
+      t("layout.time_ago", time: time_ago_in_words(operation.created_at))
+    when "status"
       link_to(t("operation.status.#{operation.status}"), operation_path(operation))
-    when 'result'
+    when "result"
       case operation.status
       when :failed
         link_to(t("operation.see_error_report"), operation_path(operation))
@@ -32,7 +42,7 @@ module OperationsHelper
           link_to(t("operation.result_link_text.#{operation.kind}"), download_operation_path(operation))
         end
       end
-    when 'actions'
+    when "actions"
       table_action_links(operation, exclude: :edit)
     else
       operation.send(field)
