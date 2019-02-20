@@ -31,8 +31,6 @@ shared_context "incoming sms" do
     if reply.nil?
       expect(params[:outgoing][:body]).to be_nil
     else
-      assert_instance_of(Sms::Reply, reply)
-      # Ensure attribs are appropriate
       expect(reply.to).to eq(params[:from])
       expect(reply.body).to match(params[:outgoing][:body])
       expect(reply.mission).to eq(params[:mission])
