@@ -1,11 +1,16 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from "react";
+import PropTypes from "prop-types";
+
 class FormFilter extends React.Component {
-  render () {
+  render() {
     return (
       <React.Fragment>
-        All Forms: {this.props.allForms}
-        Selected Form: {this.props.selectedFormIds}
+        <div>
+          {JSON.stringify(this.props.allForms)}
+        </div>
+        <div>
+          {JSON.stringify(this.props.selectedFormIds)}
+        </div>
       </React.Fragment>
     );
   }
@@ -18,4 +23,5 @@ FormFilter.propTypes = {
   })).isRequired,
   selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired
 };
-export default FormFilter
+
+export default FormFilter;
