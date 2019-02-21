@@ -247,12 +247,13 @@ class OptionSet < ApplicationRecord
   end
 
   def sms_formatting
-    case sms_guide_formatting
-    when "auto"
-      descendants.count <= 26 ? "inline" : "appendix"
-    else
-      sms_guide_formatting
-    end
+    @sms_formatting ||=
+      case sms_guide_formatting
+      when "auto"
+        descendants.count <= 26 ? "inline" : "appendix"
+      else
+        sms_guide_formatting
+      end
   end
 
   def sms_formatting_as_text?

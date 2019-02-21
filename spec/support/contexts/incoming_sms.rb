@@ -1,12 +1,16 @@
+# frozen_string_literal: true
+
 shared_context "incoming sms" do
+  let(:user) { get_user }
+
   # helper that sets up a new form with the given parameters
   def setup_form(options)
-    mission = options[:mission].present? ? options[:mission] : get_mission
-    if(options[:questions].all? { |q| q.is_a? Question })
-      form = create(:form, :published, smsable: true, questions: options[:questions], mission: mission)
-    else
-      form = create(:form, :published, smsable: true, question_types: options[:questions], mission: mission)
-    end
+    mission = options[:mission].presence || get_mission
+    form = if options[:questions].all? { |q| q.is_a?(Question) }
+             create(:form, :published, smsable: true, questions: options[:questions], mission: mission)
+           else
+             create(:form, :published, smsable: true, question_types: options[:questions], mission: mission)
+           end
     form.questionings.each { |q| q.update_attribute(:required, true) } if options[:required]
     if options[:forward_recipients]
       form.sms_relay = true
@@ -17,56 +21,48 @@ shared_context "incoming sms" do
     form.reload
   end
 
-  def auth_code
-    @user.sms_auth_code
-  end
-
-  # simulates the reception of an incoming sms by the SmsController and tests the response(s) that is (are) sent back
+  # Simulates the reception of an incoming sms by the SmsController
+  # and tests the response(s) that is (are) sent back. Returns the Sms::Reply object.
   def assert_sms_response(params)
-    params[:from] ||= @user.phone
-    params[:sent_at] ||= Time.now
-    params[:mission] = get_mission unless params.has_key?(:mission)
-
-    # hashify incoming/outgoing if they're not hashes
-    params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
-    params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
-
-    # do post request based on params
     do_incoming_request(params)
     assert_response(:success)
 
     reply = Sms::Reply.first
-
-    # if there was no reply, check that this was expected
     if reply.nil?
       expect(params[:outgoing][:body]).to be_nil
     else
-      assert_instance_of(Sms::Reply, reply)
-      # Ensure attribs are appropriate
       expect(reply.to).to eq(params[:from])
       expect(reply.body).to match(params[:outgoing][:body])
       expect(reply.mission).to eq(params[:mission])
       expect(reply.body).not_to match(/%\{|translation missing/)
       expect(reply.adapter_name).to eq(params[:outgoing][:adapter]) if params[:outgoing][:adapter]
     end
-
     reply
   end
 
-  # builds and sends the HTTP POST request to mimic incoming adapter
+  # Builds and sends the request.
   def do_incoming_request(params)
+    send(*build_incoming_request(params))
+  end
+
+  # Builds the method, url, params, and headers for the incoming request to mimic the incoming adapter.
+  def build_incoming_request(params)
     req_params = {}
     req_headers = params[:headers] || {}
 
     url_prefix = defined?(missionless_url) && missionless_url ? "" : "/m/#{get_mission.compact_name}"
 
-    if defined?(missionless_url) && missionless_url
-      url_token = configatron.has_key?(:universal_sms_token) ? configatron.universal_sms_token : nil
-    else
-      url_token = get_mission.setting.incoming_sms_token
-    end
+    url_token = if defined?(missionless_url) && missionless_url
+                  configatron.key?(:universal_sms_token) ? configatron.universal_sms_token : nil
+                else
+                  get_mission.setting.incoming_sms_token
+                end
 
-    params[:sent_at] ||= Time.now
+    params[:from] ||= user.phone
+    params[:mission] = get_mission unless params.key?(:mission)
+    params[:incoming] = {body: params[:incoming]} unless params[:incoming].is_a?(Hash)
+    params[:outgoing] = {body: params[:outgoing]} unless params[:outgoing].is_a?(Hash)
+    params[:sent_at] ||= Time.current
     params[:incoming][:adapter] ||= "TwilioSms"
     params[:url] ||= "#{url_prefix}/sms/submit/#{url_token}"
     params[:method] ||= :post
@@ -104,8 +100,7 @@ shared_context "incoming sms" do
       raise "Incoming adapter not recognized. Can't build test request"
     end
 
-    # do the get/post/whatever request
-    send(params[:method], params[:url], params: req_params, headers: req_headers)
+    [params[:method], params[:url], params: req_params, headers: req_headers]
   end
 
   def expect_no_messages_delivered_through_adapter
