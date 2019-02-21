@@ -25,7 +25,7 @@ class OptionSetsController < ApplicationController
     # Avoid N+1 for option names.
     OptionSet.preload_top_level_options(@option_sets)
 
-    load_importable_objs
+    # load_importable_objs
   end
 
   def new
