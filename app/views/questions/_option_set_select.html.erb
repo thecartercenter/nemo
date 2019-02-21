@@ -1,5 +1,7 @@
 <% if read_only %>
-  <div class="ro-val" data-val="<%= form.object.option_set_id %>"><%= form.object.option_set.try(:name) %></div>
+  <div class="ro-val" data-val="<%= form.object.option_set_id %>">
+    <%= link_to(form.object.option_set.name, form.object.option_set) if form.object.option_set %>
+  </div>
 <% else %>
   <%= form.select(:option_set_id,
     option_set_select_option_tags(@option_sets, form.object.option_set_id),
