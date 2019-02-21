@@ -1,7 +1,7 @@
 import React from "react";
 import {shallow} from "enzyme";
 
-import Component from "../../../../app/javascript/components/search_filters/FormFilter";
+import Component from "../../../../app/javascript/components/search/FormFilter";
 
 const defaultProps = {
   allForms: [

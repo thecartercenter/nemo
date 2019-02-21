@@ -1,4 +1,5 @@
 <form class="search_form form-inline">
+  <%= react_component("search/FormFilter", { allForms: [], selectedFormIds: [] }) %>
   <input type="text" class="form-control" name="search"
     value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
   <input type="submit" value="<%= t("common.search") %>" class="btn">
