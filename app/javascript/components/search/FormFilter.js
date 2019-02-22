@@ -28,6 +28,12 @@ class FormFilter extends React.Component {
           options={{
             placeholder: "Choose a form",
           }} />
+
+        <div className="btn-apply-container">
+          <Button className="btn-apply">
+            {I18n.t("common.apply")}
+          </Button>
+        </div>
       </Popover>
     );
   }

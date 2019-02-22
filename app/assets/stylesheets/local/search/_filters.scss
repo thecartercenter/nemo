@@ -15,4 +15,10 @@
   width: auto !important;
   min-width: 200px;
   max-width: 50vw;
+
+  .btn-apply-container {
+    // Same as padding-bottom for the popover-container.
+    margin-top: 9px;
+    text-align: right;
+  }
 }

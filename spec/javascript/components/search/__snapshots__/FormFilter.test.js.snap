@@ -29,6 +29,15 @@ exports[`renders as expected 1`] = `
           }
         }
       />
+      <div
+        className="btn-apply-container"
+      >
+        <Button
+          className="btn-apply"
+        >
+          Apply
+        </Button>
+      </div>
     </Popover>
   }
   placement="bottom"
