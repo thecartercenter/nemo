@@ -136,6 +136,16 @@ You may want to run `bundle exec rake db:create_fake_data` to create a sample mi
 1. Login with username **admin** and use the random password that was generated when you ran `bundle exec rake db:create_admin` (make sure to change the password after login).
 1. Create a new Mission and get started making forms!
 
+### Dealing with JavaScript
+
+NEMO includes several React components that are provided via [react-rails](https://github.com/reactjs/react-rails).
+
+#### Tests
+
+You can run JS-only tests with `yarn test`.
+
+These rely on separately compiled i18n translations which can be generated via `rails i18n:js:export`.
+
 ### Testing with ODK
 
 1. Download the ODK application onto your Android phone or tablet
