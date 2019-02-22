@@ -1,12 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders as expected 1`] = `
-<Fragment>
-  <div>
-    [{"id":"1","displayName":"One"},{"id":"1","displayName":"One"}]
-  </div>
-  <div>
-    ["2"]
-  </div>
-</Fragment>
+<input
+  className="btn btn-default"
+  type="button"
+  value="[translated]"
+/>
 `;

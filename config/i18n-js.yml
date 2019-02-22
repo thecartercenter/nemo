@@ -27,6 +27,7 @@ translations:
       "*.condition.*",
       "*.dashboard.*",
       "*.errors.*",
+      "*.filter.*",
       "*.form.invalid_drop_location.*",
       "*.form.remove_question_confirm.*",
       "*.form.unsaved_rank_notice",

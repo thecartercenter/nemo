@@ -4,14 +4,10 @@ import PropTypes from "prop-types";
 class FormFilter extends React.Component {
   render() {
     return (
-      <React.Fragment>
-        <div>
-          {JSON.stringify(this.props.allForms)}
-        </div>
-        <div>
-          {JSON.stringify(this.props.selectedFormIds)}
-        </div>
-      </React.Fragment>
+      <input
+        className="btn btn-default"
+        type="button"
+        value={I18n.t("filter.form")} />
     );
   }
 }
