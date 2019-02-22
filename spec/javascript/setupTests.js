@@ -7,7 +7,9 @@ import I18n from "i18n-js";
 window.$ = () => {};
 
 // Stub out Bootstrap components.
-jest.mock("react-bootstrap/lib/Button", () => "Button");
+["Button", "OverlayTrigger", "Popover"].forEach((name) => {
+  jest.doMock(`react-bootstrap/lib/${name}`, () => name);
+});
 
 // Provide translations.
 // eslint-disable-next-line no-undef
