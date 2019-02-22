@@ -1,9 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders as expected 1`] = `
-<input
+<button
   className="btn btn-default"
+  data-content="List!"
+  data-placement="bottom"
+  data-toggle="popover"
+  title="Choose form"
   type="button"
-  value="Form"
-/>
+>
+  Form
+</button>
 `;
