@@ -4,6 +4,6 @@ exports[`renders as expected 1`] = `
 <input
   className="btn btn-default"
   type="button"
-  value="[translated]"
+  value="Form"
 />
 `;
