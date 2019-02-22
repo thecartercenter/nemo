@@ -3,6 +3,7 @@
     "test": "jest"
   },
   "jest": {
+    "roots": ["<rootDir>/spec/javascript"],
     "setupTestFrameworkScriptFile": "<rootDir>/spec/javascript/setupTests.js",
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
@@ -12,10 +13,12 @@
   "dependencies": {
     "@rails/webpacker": "3.5",
     "babel-preset-react": "^6.24.1",
+    "jquery": "3.3.1",
     "prop-types": "^15.6.1",
     "react": "^16.4.1",
     "react-bootstrap": "0.32.4",
     "react-dom": "^16.4.1",
+    "react-select2-wrapper": "1.0.4-beta6",
     "react_ujs": "^2.4.4"
   },
   "devDependencies": {

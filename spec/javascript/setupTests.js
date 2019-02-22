@@ -16,6 +16,8 @@ window.$ = () => {};
   jest.doMock(`react-bootstrap/lib/${name}`, () => name);
 });
 
+jest.mock("react-select2-wrapper/css/select2.css", () => undefined);
+
 // Provide translations.
 // eslint-disable-next-line no-undef
 window.I18n = I18n;

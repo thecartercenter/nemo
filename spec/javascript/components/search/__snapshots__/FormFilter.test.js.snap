@@ -5,7 +5,20 @@ exports[`renders as expected 1`] = `
   containerPadding={25}
   overlay={
     <Popover>
-      List!
+      <Select2
+        data={
+          Array [
+            "Form A",
+            "Form B",
+            "Form C",
+          ]
+        }
+        options={
+          Object {
+            "placeholder": "Choose a form",
+          }
+        }
+      />
     </Popover>
   }
   placement="bottom"
