@@ -4,7 +4,9 @@ exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}
   overlay={
-    <Popover>
+    <Popover
+      id="form-filter"
+    >
       <Select2
         data={
           Array [
@@ -18,11 +20,7 @@ exports[`renders as expected 1`] = `
             },
           ]
         }
-        defaultValue={
-          Array [
-            "2",
-          ]
-        }
+        defaultValue="2"
         options={
           Object {
             "placeholder": "Choose a form",

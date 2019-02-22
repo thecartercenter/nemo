@@ -21,10 +21,10 @@ class FormFilter extends React.Component {
     const {allForms, selectedFormIds} = this.props;
 
     return (
-      <Popover>
+      <Popover id="form-filter">
         <Select2
           data={parseFormsForSelect2(allForms)}
-          defaultValue={selectedFormIds}
+          defaultValue={selectedFormIds && selectedFormIds[0]}
           options={{
             placeholder: "Choose a form",
           }} />
