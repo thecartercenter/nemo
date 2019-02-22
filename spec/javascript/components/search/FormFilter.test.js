@@ -10,8 +10,8 @@ const defaultProps = {
       displayName: "One"
     },
     {
-      id: "1",
-      displayName: "One"
+      id: "2",
+      displayName: "Two"
     }
   ],
   selectedFormIds: [

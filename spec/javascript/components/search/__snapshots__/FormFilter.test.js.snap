@@ -8,9 +8,19 @@ exports[`renders as expected 1`] = `
       <Select2
         data={
           Array [
-            "Form A",
-            "Form B",
-            "Form C",
+            Object {
+              "id": "1",
+              "text": "One",
+            },
+            Object {
+              "id": "2",
+              "text": "Two",
+            },
+          ]
+        }
+        defaultValue={
+          Array [
+            "2",
           ]
         }
         options={

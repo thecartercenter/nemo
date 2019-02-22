@@ -1,3 +1,4 @@
+import mapKeys from "lodash/mapKeys";
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/lib/Button";
@@ -7,12 +8,23 @@ import Select2 from "react-select2-wrapper";
 
 import "react-select2-wrapper/css/select2.css";
 
+const parseFormsForSelect2 = (allForms) => allForms
+  .map((form) => mapKeys(form, (value, key) => key === "displayName" ? "text" : key));
+
 class FormFilter extends React.Component {
+  constructor(props) {
+    super();
+    this.renderPopover = this.renderPopover.bind(this);
+  }
+
   renderPopover() {
+    const {allForms, selectedFormIds} = this.props;
+
     return (
       <Popover>
         <Select2
-          data={["Form A", "Form B", "Form C"]}
+          data={parseFormsForSelect2(allForms)}
+          defaultValue={selectedFormIds}
           options={{
             placeholder: "Choose a form",
           }} />
