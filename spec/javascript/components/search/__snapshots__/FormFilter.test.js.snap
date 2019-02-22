@@ -1,14 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`renders as expected 1`] = `
-<button
-  className="btn btn-default"
+<Button
   data-content="List!"
   data-placement="bottom"
   data-toggle="popover"
   data-viewport="{\\"selector\\": \\"body\\", \\"padding\\": 25}"
-  type="button"
 >
   Form
-</button>
+</Button>
 `;

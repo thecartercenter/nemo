@@ -6,6 +6,9 @@ import I18n from "i18n-js";
 // eslint-disable-next-line no-undef
 window.$ = () => {};
 
+// Stub out Bootstrap components.
+jest.mock("react-bootstrap/lib/Button", () => "Button");
+
 // Provide translations.
 // eslint-disable-next-line no-undef
 window.I18n = I18n;

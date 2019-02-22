@@ -1,18 +1,17 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Button from "react-bootstrap/lib/Button";
 
 class FormFilter extends React.Component {
   render() {
     return (
-      <button
-        className="btn btn-default"
+      <Button
         data-content="List!"
         data-placement="bottom"
         data-toggle="popover"
-        data-viewport={"{\"selector\": \"body\", \"padding\": 25}"}
-        type="button">
+        data-viewport={"{\"selector\": \"body\", \"padding\": 25}"}>
         {I18n.t("filter.form")}
-      </button>
+      </Button>
     );
   }
 }
