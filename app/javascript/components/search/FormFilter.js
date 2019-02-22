@@ -14,20 +14,31 @@ const parseFormsForSelect2 = (allForms) => allForms
 class FormFilter extends React.Component {
   constructor(props) {
     super();
+
+    const {selectedFormIds} = props;
+    this.state = {selectedFormIds};
+
+    this.handleSelectForm = this.handleSelectForm.bind(this);
     this.renderPopover = this.renderPopover.bind(this);
   }
 
+  handleSelectForm(event) {
+    this.setState({selectedFormIds: [event.target.value]});
+  }
+
   renderPopover() {
-    const {allForms, selectedFormIds} = this.props;
+    const {allForms} = this.props;
+    const {selectedFormIds} = this.state;
 
     return (
       <Popover id="form-filter">
         <Select2
           data={parseFormsForSelect2(allForms)}
-          defaultValue={selectedFormIds && selectedFormIds[0]}
+          onSelect={this.handleSelectForm}
           options={{
             placeholder: "Choose a form",
-          }} />
+          }}
+          value={selectedFormIds && selectedFormIds[0]} />
 
         <div className="btn-apply-container">
           <Button className="btn-apply">

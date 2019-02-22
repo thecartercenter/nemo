@@ -20,12 +20,13 @@ exports[`renders as expected 1`] = `
             },
           ]
         }
-        defaultValue="2"
+        onSelect={[Function]}
         options={
           Object {
             "placeholder": "Choose a form",
           }
         }
+        value="2"
       />
       <div
         className="btn-apply-container"
