@@ -71,6 +71,7 @@ rules:
     - never
   quotes: error
   react/destructuring-assignment: 0
+  react/forbid-component-props: 0
   react/jsx-closing-bracket-location:
     - error
     - after-props

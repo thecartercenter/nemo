@@ -7,7 +7,12 @@ import I18n from "i18n-js";
 window.$ = () => {};
 
 // Stub out Bootstrap components.
-["Button", "OverlayTrigger", "Popover"].forEach((name) => {
+[
+  "Button",
+  "ButtonToolbar",
+  "OverlayTrigger",
+  "Popover",
+].forEach((name) => {
   jest.doMock(`react-bootstrap/lib/${name}`, () => name);
 });
 

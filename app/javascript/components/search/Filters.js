@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 
 import FormFilter from "./FormFilter";
 
@@ -14,9 +15,9 @@ class Filters extends React.Component {
 
   render() {
     return (
-      <div className="filters">
+      <ButtonToolbar className="filters">
         <FormFilter {...this.props} />
-      </div>
+      </ButtonToolbar>
     );
   }
 }
