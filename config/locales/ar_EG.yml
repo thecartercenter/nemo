@@ -1381,7 +1381,6 @@ ar:
     code_label: "أدخل رمز التجاوز للغير مكتمل"
   index_table:
     messages:
-      all_rows_selected: "لاحظ بأن </strong> كافة <strong> %{count} السطور تم اختيارها الآن"
       searched_rows_selected: "لاحظ أن </strong>جميع<strong> %{count} الصفوف المطابقة للبحث الحالي محددة الآن"
   location_picker:
     choose_location: "أختار الموقع"

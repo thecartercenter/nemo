@@ -1145,7 +1145,6 @@ ko:
     code_label: "필수 응답 무효화 암호를 입력하십시오."
   index_table:
     messages:
-      all_rows_selected: "<strong>all</strong> %{count}개의 줄이 선택되었습니다"
       searched_rows_selected: "현재의 검색결과에 해당되는 <strong>all</strong> %{count}개의 줄이 선택되었습니다."
   location_picker:
     choose_location: "위치 선택"

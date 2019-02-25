@@ -1333,7 +1333,6 @@ fr:
     code_label: "Entrez le code de dérogation"
   index_table:
     messages:
-      all_rows_selected: "Notez que <strong>toutes</strong> les %{count}  lignes sont maintenant selectionnées"
       searched_rows_selected: "Notez que <strong>toutes</strong> les %{count}  lignes sont correspondant à la recherche actuelle maintenant selectionnées"
   location_picker:
     choose_location: "Choisissez l'emplacement"
