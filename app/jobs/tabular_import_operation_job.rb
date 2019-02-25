@@ -6,7 +6,7 @@ class TabularImportOperationJob < OperationJob
     if import_class
       saved_upload = SavedTabularUpload.find(saved_upload_id)
       import = import_class.constantize.new(
-        mission_id: mission.try(:id),
+        mission_id: mission&.id,
         name: name,
         file: open_file(saved_upload.file)
       )

@@ -2,8 +2,14 @@
 
 # For importing tabular data (CSV, XLSX, etc.)
 class TabularImport
-  include ActiveModel::Validations
-  include ActiveModel::Conversion
   include ActiveModel::Model
-  extend ActiveModel::Naming
+
+  attr_accessor :file, :name, :mission_id, :mission
+
+  validates :file, presence: true
+
+  def initialize(**attribs)
+    super
+    self.mission = Mission.find(mission_id) if mission_id.present?
+  end
 end

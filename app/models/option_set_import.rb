@@ -4,24 +4,9 @@ class OptionSetImport < TabularImport
   MAX_LEVEL_LENGTH = 20
   MAX_OPTION_LENGTH = 45
 
-  attr_accessor :mission_id, :name, :file
-  attr_reader :option_set
+  attr_accessor :option_set
 
   validates :name, presence: true
-  validates :file, presence: true
-
-  def persisted?
-    false
-  end
-
-  def mission
-    @mission ||= Mission.find(mission_id) if mission_id.present?
-  end
-
-  def mission=(mission)
-    self.mission_id = mission.try(:id)
-    @mission = mission
-  end
 
   def run
     # check validity before processing spreadsheet
@@ -38,7 +23,7 @@ class OptionSetImport < TabularImport
 
     transaction do
       # create the option set
-      @option_set = OptionSet.create(
+      self.option_set = OptionSet.create(
         mission: mission,
         name: name,
         levels: headers.map { |h| OptionLevel.new(name: h) },
@@ -48,7 +33,7 @@ class OptionSetImport < TabularImport
         root_node: OptionNode.new
       )
 
-      add_errors_for_row(1, @option_set.errors) unless @option_set.valid?
+      add_errors_for_row(1, option_set.errors) unless option_set.valid?
 
       # State variables. cur_ranks has a default value of 0 to simplify the code below.
       cur_nodes = Array.new(headers.size)

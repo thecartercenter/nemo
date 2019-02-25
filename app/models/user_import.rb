@@ -7,19 +7,8 @@ class UserImport < TabularImport
                          gender_custom nationality notes user_groups].freeze
   EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups].freeze
 
-  attr_accessor :file, :mission_id, :col_idx_to_attr_map
+  attr_accessor :col_idx_to_attr_map
   attr_reader :users
-
-  validates :file, presence: true
-
-  def initialize(file: nil, mission_id: nil, name: nil)
-    self.file = file
-    self.mission_id = mission_id
-  end
-
-  def persisted?
-    false
-  end
 
   def succeeded?
     errors.blank?
