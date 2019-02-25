@@ -61,12 +61,4 @@ module UsersHelper
     last_year = Time.zone.now.year
     (first_year..last_year).to_a.reverse
   end
-
-  def country_options
-    country_translations = {}
-    I18n.t("countries").keys.each do |country_code|
-      country_translations[code] = I18n.t(code, scope: :countries)
-    end
-    country_translations
-  end
 end
