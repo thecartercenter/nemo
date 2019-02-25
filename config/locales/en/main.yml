@@ -916,7 +916,12 @@ en:
     updated_at: "Updated at"
     no_published_forms: "No published forms"
 
-
+  actions:
+    clone: "Clone"
+    publish: "Publish"
+    unpublish: "Unpublish"
+    print: "Print"
+    sms: "SMS Guide"
 
   # pagination translations
   will_paginate:

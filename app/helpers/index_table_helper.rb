@@ -8,6 +8,7 @@ module IndexTableHelper
 
     klass = args.first || controller.model_class
     objects = args.second || instance_variable_get("@#{klass.name.demodulize.pluralize.underscore}")
+    options[:max_actions] ||= 1
 
     links = []
 

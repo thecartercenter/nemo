@@ -106,8 +106,8 @@ class Question < ApplicationRecord
              compatibility: %i[qtype_name option_set_id]
 
   # returns N questions marked as key questions, sorted by the number of forms they appear in
-  def self.key(n)
-    where(key: true).all.sort_by { |q| q.questionings.size }[0...n]
+  def self.key(num)
+    where(key: true).all.sort_by { |q| q.questionings.size }[0...num]
   end
 
   def self.search_qualifiers

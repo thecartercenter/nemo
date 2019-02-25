@@ -6,7 +6,7 @@ module OperationsHelper
       fields << "mission" if admin_mode?
       fields.concat(%w[details created_at])
       fields << "creator" if can?(:manage, Operation)
-      fields.concat(%w[status result actions])
+      fields.concat(%w[status result])
     end
   end
 
@@ -42,8 +42,6 @@ module OperationsHelper
           link_to(t("operation.result_link_text.#{operation.kind}"), download_operation_path(operation))
         end
       end
-    when "actions"
-      table_action_links(operation, exclude: :edit)
     else
       operation.send(field)
     end

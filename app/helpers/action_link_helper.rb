@@ -1,5 +1,4 @@
 module ActionLinkHelper
-
   def translate_action(klass_or_obj, action)
     i18nk = (klass_or_obj.respond_to?(:model_name) ? klass_or_obj : klass_or_obj.class).model_name.i18n_key
     t("activerecord.action_links.#{i18nk}.#{action}")
@@ -50,44 +49,6 @@ module ActionLinkHelper
     end
   end
 
-  # Assembles links for the basic actions in an index table (edit and destroy)
-  def table_action_links(obj, options = {})
-    options[:exclude] = Array.wrap(options[:exclude])
-
-    # always exclude edit and destroy if we are in show mode
-    options[:exclude] += [:edit, :destroy] if canonical_action == :show
-
-    # build links
-    links = %w(edit destroy).map do |action|
-
-      # skip to next action if action is excluded
-      next if options[:exclude].include?(action.to_sym)
-
-      # check for ajax mode
-      ajax_mode = options[:ajax_mode].present?
-
-      case action
-      when "edit"
-        # check permissions
-        next unless can?(:update, obj)
-
-        # build link
-        action_link(action, dynamic_path(obj, action: :edit), :title => t("common.edit"), remote: ajax_mode)
-
-      when "destroy"
-        # check permissions
-        next unless can?(:destroy, obj)
-
-        # build link
-        warning = delete_warning(obj, options.slice(:obj_description))
-        action_link(action, dynamic_path(obj), :method => :delete, data: {confirm: warning}, :title => t("common.delete"), remote: ajax_mode)
-      end
-
-    end.compact.reduce(:<<)
-
-    links || ''.html_safe
-  end
-
   def delete_warning(obj, options = {})
     description = options[:obj_description] || "#{obj.class.model_name.human} '#{obj.name}'"
     t("layout.delete_warning", :obj_description => description)
@@ -98,7 +59,8 @@ module ActionLinkHelper
     # join passed html class (if any) with the default class
     html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
 
-    link_to(icon_tag(action), href, html_options)
+    content_tag(:div, link_to(icon_tag(action) << t("actions.#{action}"), href),
+      class: "action-tag")
   end
 
   # creates a link to a batch operation

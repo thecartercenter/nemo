@@ -30,17 +30,25 @@
     <table class="index_table <%= options[:table_css_classes] %>">
       <thead>
         <tr class="header">
-          <% if batch_ops %><th></th><% end %>
+          <% if batch_ops %>
+            <th></th>
+          <% end %>
           <% fields.each do |f| %>
-            <th>
-              <%# if field def is a hash, look for the :title key %>
-              <% if f.is_a?(Hash) %>
-                <%= f[:title] %>
-              <% else %>
-                <%= f == "actions" ? "" : t("activerecord.table_headers.#{objects[0].class.model_name.i18n_key}.#{f}",
-                  :default => objects[0].class.human_attribute_name(f)) %>
+            <% if f == "actions" %>
+              <% options[:max_actions].times do %>
+                <th></th>
               <% end %>
-            </th>
+            <% else %>
+              <th>
+                <%# if field def is a hash, look for the :title key %>
+                <% if f.is_a?(Hash) %>
+                  <%= f[:title] %>
+                <% else %>
+                  <%= t("activerecord.table_headers.#{objects[0].class.model_name.i18n_key}.#{f}",
+                        default: objects[0].class.human_attribute_name(f)) %>
+                <% end %>
+              </th>
+            <% end %>
           <% end %>
         </tr>
       </thead>
@@ -60,9 +68,21 @@
               </td>
             <% end %>
             <% fields.each do |f| %>
-              <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
-                <div><%= self.send("format_#{klass.model_name.route_key}_field", o, f) %></div>
-              </td>
+              <% formatted = self.send("format_#{klass.model_name.route_key}_field", o, f) %>
+              <% if f == "actions" && formatted.is_a?(Array) %>
+                <% formatted.each do |link| %>
+                  <td class="action">
+                    <%= link %>
+                  </td>
+                <% end %>
+                <% [options[:max_actions] - formatted.size, 0].max.times do %>
+                  <td></td>
+                <% end %>
+              <% else %>
+                <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
+                  <div><%= formatted %></div>
+                </td>
+              <% end %>
             <% end %>
 
           <% end %>

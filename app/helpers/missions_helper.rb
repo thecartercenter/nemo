@@ -4,7 +4,7 @@ module MissionsHelper
   end
 
   def missions_index_fields
-    %w(name compact_name locked created_at actions)
+    %w(name compact_name locked created_at)
   end
 
   def format_missions_field(mission, field)
@@ -12,7 +12,6 @@ module MissionsHelper
     when "name" then link_to(mission.name, mission_path(mission), :title => t("common.view"))
     when "locked" then tbool(mission.locked?)
     when "created_at" then l(mission.created_at)
-    when "actions" then table_action_links(mission, :exclude => :show)
     else mission.send(field)
     end
   end
