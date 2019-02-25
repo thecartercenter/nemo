@@ -32,3 +32,13 @@ dt:first-of-type {
 dl {
   margin-bottom: 0;
 }
+
+.forms_index .index_table {
+  td {
+    background-color: $even-lighter-gray;
+  }
+
+  tr.published td {
+    background-color: $white;
+  }
+}
