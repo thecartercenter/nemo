@@ -1,9 +1,6 @@
 # frozen_string_literal: true
 
 class OptionSetImport < TabularImport
-  MAX_LEVEL_LENGTH = 20
-  MAX_OPTION_LENGTH = 45
-
   attr_accessor :option_set
 
   validates :name, presence: true
@@ -107,7 +104,11 @@ class OptionSetImport < TabularImport
       special_columns[i] = h.downcase.to_sym if [id_header, coordinates_header, shortcode_header].include?(h)
     end
 
-    headers.map! { |h| h[0...MAX_LEVEL_LENGTH] }
+    headers.each do |h|
+      if h.size > OptionLevel::MAX_NAME_LENGTH
+        add_run_error(:header_too_long, row_num: 1, limit: OptionLevel::MAX_NAME_LENGTH)
+      end
+    end
 
     # Load and clean full set as array of arrays.
     rows = []
@@ -120,7 +121,15 @@ class OptionSetImport < TabularImport
       attribs.merge!(Hash[*special_columns.keys.reverse.map { |i| [special_columns[i], row.delete_at(i)] }.flatten])
 
       next if row.all?(&:blank?)
-      row.map! { |c| c.blank? ? nil : c.to_s.strip[0...MAX_OPTION_LENGTH] }
+      row.map! do |c|
+        if c.blank?
+          nil
+        elsif c.to_s.size > Option::MAX_NAME_LENGTH
+          add_run_error(:option_too_long, row_num: r, limit: Option::MAX_NAME_LENGTH)
+        else
+          c.to_s
+        end
+      end
 
       if blank_interior_cell?(row)
         add_run_error(:blank_interior_cell, row_num: r)

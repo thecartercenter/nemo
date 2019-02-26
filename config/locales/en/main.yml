@@ -805,6 +805,8 @@ en:
           wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
           blank_interior_cell: "Error on row %{row_num}: blank interior cell."
           no_rows: "No rows to import."
+          option_too_long: "Error on row %{row_num}: options can't be more than %{limit} characters."
+          header_too_long: "Error on row %{row_num}: headers can't be more than %{limit} characters."
         question:
           at_least_one_name: "You must enter a title in at least one language."
           attributes:

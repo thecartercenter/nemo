@@ -77,7 +77,7 @@ describe OptionSetImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors[0]).to eq("The uploaded file must be a valid XLSX-type Excel file.")
+      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
     end
   end
 
@@ -86,7 +86,7 @@ describe OptionSetImport do
 
     it "should correctly report error" do
       expect(import).not_to be_succeeded
-      expect(run_errors[0]).to eq("The uploaded file must be a valid XLSX-type Excel file.")
+      expect(run_errors).to eq(["The uploaded file must be a valid XLSX-type Excel file."])
     end
   end
 
@@ -95,8 +95,10 @@ describe OptionSetImport do
 
     it "should correctly report errors" do
       expect(import).not_to be_succeeded
-      expect(run_errors[0]).to eq("Row 8: Latitude: must be less than or equal to 90")
-      expect(run_errors[1]).to eq("Row 15: Coordinates: The provided coordinates are not valid.")
+      expect(run_errors).to eq([
+        "Row 8: Latitude: must be less than or equal to 90",
+        "Row 15: Coordinates: The provided coordinates are not valid."
+      ])
     end
   end
 
@@ -105,8 +107,10 @@ describe OptionSetImport do
 
     it "should correctly report errors" do
       expect(import).not_to be_succeeded
-      expect(run_errors[0]).to eq("Error on row 36: blank interior cell.")
-      expect(run_errors[1]).to eq("Error on row 51: blank interior cell.")
+      expect(run_errors).to eq([
+        "Error on row 36: blank interior cell.",
+        "Error on row 51: blank interior cell."
+      ])
     end
   end
 
@@ -115,7 +119,19 @@ describe OptionSetImport do
 
     it "should correctly report errors" do
       expect(import).not_to be_succeeded
-      expect(run_errors[0]).to eq("No rows to import.")
+      expect(run_errors).to eq(["No rows to import."])
+    end
+  end
+
+  context "with long strings" do
+    let(:filename) { "long_strings.xlsx" }
+
+    it "should correctly report errors" do
+      expect(import).not_to be_succeeded
+      expect(run_errors).to eq([
+        "Error on row 1: headers can't be more than 20 characters.",
+        "Error on row 10: options can't be more than 255 characters."
+      ])
     end
   end
 
