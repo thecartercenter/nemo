@@ -69,7 +69,7 @@ class FormFilter extends React.Component {
         placement="bottom"
         rootClose
         trigger="click">
-        <Button>
+        <Button className="btn-form-filter">
           {I18n.t("filter.form")}
         </Button>
       </OverlayTrigger>

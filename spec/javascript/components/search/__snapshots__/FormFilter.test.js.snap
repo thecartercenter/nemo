@@ -1,5 +1,43 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`popover renders as expected 1`] = `
+<Popover
+  id="form-filter"
+>
+  <Select2
+    data={
+      Array [
+        Object {
+          "id": "1",
+          "text": "One",
+        },
+        Object {
+          "id": "2",
+          "text": "Two",
+        },
+      ]
+    }
+    onSelect={[Function]}
+    options={
+      Object {
+        "placeholder": "Choose a form",
+      }
+    }
+    value="2"
+  />
+  <div
+    className="btn-apply-container"
+  >
+    <Button
+      className="btn-apply"
+      onClick={[Function]}
+    >
+      Apply
+    </Button>
+  </div>
+</Popover>
+`;
+
 exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}
@@ -44,7 +82,9 @@ exports[`renders as expected 1`] = `
   rootClose={true}
   trigger="click"
 >
-  <Button>
+  <Button
+    className="btn-form-filter"
+  >
     Form
   </Button>
 </OverlayTrigger>
