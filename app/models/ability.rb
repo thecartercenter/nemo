@@ -77,7 +77,7 @@ class Ability
     if mode == "admin"
       # Standard objects, missions, settings, and all users are available in no-mission (admin) mode
       [Form, Questioning, FormItem, SkipRule, QingGroup, Condition, OptionSet,
-       OptionNode, Option, OptionSetImport, Setting, Tag, Tagging].each do |k|
+       OptionNode, Option, OptionSets::Import, Setting, Tag, Tagging].each do |k|
         can :manage, k, mission_id: nil
       end
 
@@ -146,7 +146,7 @@ class Ability
           other.assignments.first.mission_id == mission.id
       end
 
-      [Form, OptionSet, OptionSetImport, Questioning, FormItem, SkipRule,
+      [Form, OptionSet, OptionSets::Import, Questioning, FormItem, SkipRule,
        QingGroup, Option, Tag, Tagging].each do |klass|
         can :manage, klass, mission_id: mission.id
       end

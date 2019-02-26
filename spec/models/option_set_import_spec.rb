@@ -2,11 +2,11 @@
 
 require "rails_helper"
 
-describe OptionSetImport do
+describe OptionSets::Import do
   let(:mission) { get_mission }
   let(:mission_id) { mission.id }
   let(:file) { option_set_import_fixture(filename) }
-  let(:import) { OptionSetImport.new(mission_id: mission_id, name: "MySet", file: file).tap(&:run) }
+  let(:import) { OptionSets::Import.new(mission_id: mission_id, name: "MySet", file: file).tap(&:run) }
   let(:run_errors) { import.run_errors }
 
   context "with simple XLSX file" do

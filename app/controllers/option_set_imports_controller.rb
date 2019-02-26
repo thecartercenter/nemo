@@ -14,7 +14,7 @@ class OptionSetImportsController < TabularImportsController
   end
 
   def tabular_class
-    OptionSetImport
+    OptionSets::Import
   end
 
   def after_create_redirect_url

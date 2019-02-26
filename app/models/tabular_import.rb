@@ -31,6 +31,10 @@ class TabularImport
     run_errors << message
   end
 
+  def add_run_errors(errors)
+    errors.each { |e| add_run_error(*e) }
+  end
+
   def copy_validation_errors_for_row(row_number, errors)
     errors.keys.each do |attribute|
       errors.full_messages_for(attribute).each do |error|
