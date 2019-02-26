@@ -3,16 +3,14 @@
 # Job for importing tabular data like users and option sets.
 class TabularImportOperationJob < OperationJob
   def perform(_operation, name: nil, saved_upload_id:, import_class:)
-    if import_class
-      saved_upload = SavedTabularUpload.find(saved_upload_id)
-      import = import_class.constantize.new(
-        mission_id: mission&.id,
-        name: name,
-        file: open_file(saved_upload.file)
-      )
-      import.run
-    end
-    operation_failed(format_error_report(import.try(:errors))) unless import.succeeded?
+    saved_upload = SavedTabularUpload.find(saved_upload_id)
+    import = import_class.constantize.new(
+      mission_id: mission&.id,
+      name: name,
+      file: open_file(saved_upload.file)
+    )
+    import.run
+    operation_failed(format_error_report(import.errors)) unless import.succeeded?
   end
 
   private

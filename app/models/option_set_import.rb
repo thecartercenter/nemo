@@ -9,15 +9,10 @@ class OptionSetImport < TabularImport
   validates :name, presence: true
 
   def run
-    # check validity before processing spreadsheet
-    validate
-
-    return false if errors.present?
-
     headers, special_columns, rows = load_and_clean_data
 
     # check validity after loading and cleaning data
-    return false if errors.present?
+    return false if failed?
 
     allow_coordinates = special_columns.include?(:coordinates)
 
@@ -33,7 +28,7 @@ class OptionSetImport < TabularImport
         root_node: OptionNode.new
       )
 
-      add_errors_for_row(1, option_set.errors) unless option_set.valid?
+      copy_validation_errors_for_row(1, option_set.errors) unless option_set.valid?
 
       # State variables. cur_ranks has a default value of 0 to simplify the code below.
       cur_nodes = Array.new(headers.size)
@@ -57,7 +52,7 @@ class OptionSetImport < TabularImport
             option = Option.create(attribs)
 
             if option.invalid?
-              add_errors_for_row(row_number, option.errors)
+              copy_validation_errors_for_row(row_number, option.errors)
             else
               parent = c == 0 ? option_set.root_node : cur_nodes[c - 1]
 
@@ -72,7 +67,7 @@ class OptionSetImport < TabularImport
               )
 
               if node.invalid?
-                add_errors_for_row(row_number, node.errors)
+                copy_validation_errors_for_row(row_number, node.errors)
               else
                 cur_ranks[c] += 1
                 cur_nodes[c] = node
@@ -88,38 +83,14 @@ class OptionSetImport < TabularImport
         end
       end
 
-      raise ActiveRecord::Rollback if errors.present?
+      raise ActiveRecord::Rollback if failed?
     end
   end
 
-  def succeeded?
-    errors.blank?
-  end
-
-  protected
-
-  # TODO: Share code with UserImport
-  def add_errors_for_row(row_number, errors)
-    errors.keys.each do |attribute|
-      errors.full_messages_for(attribute).each do |error|
-        self.errors.add("option_sets[#{row_number}].#{attribute}",
-          I18n.t("operation.row_error", row: row_number, error: error))
-      end
-    end
-  end
+  private
 
   def load_and_clean_data
-    sheet = nil
-    begin
-      sheet = Roo::Spreadsheet.open(file).sheet(0)
-    rescue TypeError => e
-      if /not an Excel 2007 file/.match?(e.to_s)
-        errors.add(:base, :wrong_type)
-        return
-      else
-        raise e
-      end
-    end
+    sheet = open_sheet || return
 
     # Get headers from first row and strip nils
     headers = sheet.row(1)
@@ -136,7 +107,6 @@ class OptionSetImport < TabularImport
       special_columns[i] = h.downcase.to_sym if [id_header, coordinates_header, shortcode_header].include?(h)
     end
 
-    # Enforce maximum length limitation on headers
     headers.map! { |h| h[0...MAX_LEVEL_LENGTH] }
 
     # Load and clean full set as array of arrays.
@@ -152,10 +122,8 @@ class OptionSetImport < TabularImport
       next if row.all?(&:blank?)
       row.map! { |c| c.blank? ? nil : c.to_s.strip[0...MAX_OPTION_LENGTH] }
 
-      # Can't be any blank interior cells.
       if blank_interior_cell?(row)
-        # TODO: i18n
-        errors.add(:option_set, "Error on row #{r}: blank interior cell.")
+        add_run_error(:blank_interior_cell, row_num: r)
         next
       end
 
@@ -167,8 +135,7 @@ class OptionSetImport < TabularImport
 
     # Error out if there are no rows.
     if rows.empty?
-      # TODO: i18n
-      errors.add(:option_set, "No rows to import.")
+      add_run_error(:no_rows)
       return
     end
 
@@ -187,6 +154,14 @@ class OptionSetImport < TabularImport
     [headers, special_columns.values, rows]
   end
 
+  def open_sheet
+    Roo::Spreadsheet.open(file).sheet(0)
+  rescue TypeError, ArgumentError => error
+    raise error unless /not an Excel 2007 file|Can't detect the type/.match?(error.to_s)
+    add_run_error(:wrong_type)
+    nil
+  end
+
   def blank_interior_cell?(row)
     return false unless row.any?(&:nil?)
 
@@ -195,7 +170,7 @@ class OptionSetImport < TabularImport
   end
 
   def name_locale_key
-    :"name_#{configatron.preferred_locale}"
+    :"name_#{configatron.preferred_locales[0]}"
   end
 
   def transaction

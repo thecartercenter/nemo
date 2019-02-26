@@ -4,7 +4,7 @@ require "rails_helper"
 
 describe UserImport do
   let(:mission) { get_mission }
-  let(:error_messages) { import.errors.messages[:base] }
+  let(:run_errors) { import.run_errors }
   let(:import) do
     UserImport.new(file: user_import_fixture(filename), mission_id: mission.id, name: "").tap(&:run)
   end
@@ -136,7 +136,7 @@ describe UserImport do
 
     it "reports unrecognized headers and handles numeric type" do
       expect(import).not_to be_succeeded
-      expect(error_messages[0]).to eq("The following column headers were not recognized: 'leonobs1', "\
+      expect(run_errors[0]).to eq("The following column headers were not recognized: 'leonobs1', "\
         "'DAVID JOHNSON', 'dj3349883@gmail.com', 'CAPE MOUNT DISTRICT 1', '21655555555.0'.")
     end
   end
@@ -146,7 +146,7 @@ describe UserImport do
 
     it "handles error" do
       expect(import).not_to be_succeeded
-      expect(error_messages[0]).to eq("Row 2: Main Phone: Please enter at least 9 digits.")
+      expect(run_errors[0]).to eq("Row 2: Main Phone: Please enter at least 9 digits.")
     end
   end
 
@@ -172,12 +172,12 @@ describe UserImport do
 
     it "returns appropriate errors and ignores deleted data" do
       expect(import).not_to be_succeeded
-      expect(error_messages[0]).to eq("Row 2: Username: Please enter a unique value.")
-      expect(error_messages[1]).to eq("Row 3: Username: Please enter a unique value.")
-      expect(error_messages[2]).to eq("Row 5: Username: Please enter a unique value.")
-      expect(error_messages[3]).to eq("The uploaded spreadsheet has too many errors. "\
+      expect(run_errors[0]).to eq("Row 2: Username: Please enter a unique value.")
+      expect(run_errors[1]).to eq("Row 3: Username: Please enter a unique value.")
+      expect(run_errors[2]).to eq("Row 5: Username: Please enter a unique value.")
+      expect(run_errors[3]).to eq("The uploaded spreadsheet has too many errors. "\
         "Processing stopped at row 5.")
-      expect(error_messages.size).to eq(4) # Row 6 shouldn't be processed.
+      expect(run_errors.size).to eq(4) # Row 6 shouldn't be processed.
     end
   end
 

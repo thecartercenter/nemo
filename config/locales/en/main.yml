@@ -803,6 +803,8 @@ en:
         option_set_import:
           general: "Option Set import is invalid (see below)."
           wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
+          blank_interior_cell: "Error on row %{row_num}: blank interior cell."
+          no_rows: "No rows to import."
         question:
           at_least_one_name: "You must enter a title in at least one language."
           attributes:

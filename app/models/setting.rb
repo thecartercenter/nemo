@@ -138,7 +138,6 @@ class Setting < ApplicationRecord
       nil
     end
 
-    hsh[:preferred_locale] = preferred_locales.first
     Time.zone = timezone
 
     # Copy to configatron
