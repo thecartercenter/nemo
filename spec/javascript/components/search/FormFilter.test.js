@@ -40,6 +40,6 @@ describe("popover", () => {
     overlay.find("Select2").simulate("change", {target: {value: defaultProps.allForms[0].id}});
     overlay.find("Button.btn-apply").simulate("click");
 
-    // TODO: Validate window.location.href is updated.
+    expect(defaultProps.onSubmit).toMatchSnapshot();
   });
 });
