@@ -17,6 +17,7 @@ globals:
   $: true
   I18n: true
   console: true
+  window: true
 rules:
   array-bracket-spacing: error
   arrow-body-style: error

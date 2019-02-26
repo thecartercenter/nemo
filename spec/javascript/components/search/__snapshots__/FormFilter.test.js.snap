@@ -33,6 +33,7 @@ exports[`renders as expected 1`] = `
       >
         <Button
           className="btn-apply"
+          onClick={[Function]}
         >
           Apply
         </Button>

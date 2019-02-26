@@ -1,4 +1,5 @@
 import mapKeys from "lodash/mapKeys";
+import isEmpty from "lodash/isEmpty";
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/lib/Button";
@@ -18,8 +19,17 @@ class FormFilter extends React.Component {
     const {selectedFormIds} = props;
     this.state = {selectedFormIds};
 
+    this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectForm = this.handleSelectForm.bind(this);
     this.renderPopover = this.renderPopover.bind(this);
+  }
+
+  handleSubmit() {
+    const {selectedFormIds} = this.state;
+    const formString = isEmpty(selectedFormIds) ? "" : `form:(${selectedFormIds.join("|")})`;
+
+    // TODO: Play nicely with the other filter options instead of clobbering them.
+    window.location.href = `?search=${formString}`;
   }
 
   handleSelectForm(event) {
@@ -41,7 +51,9 @@ class FormFilter extends React.Component {
           value={selectedFormIds && selectedFormIds[0]} />
 
         <div className="btn-apply-container">
-          <Button className="btn-apply">
+          <Button
+            className="btn-apply"
+            onClick={this.handleSubmit}>
             {I18n.t("common.apply")}
           </Button>
         </div>
