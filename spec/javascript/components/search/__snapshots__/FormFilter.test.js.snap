@@ -17,7 +17,7 @@ exports[`popover renders as expected 1`] = `
         },
       ]
     }
-    onSelect={[Function]}
+    onSelect={[MockFunction]}
     options={
       Object {
         "placeholder": "Choose a form",
@@ -30,7 +30,7 @@ exports[`popover renders as expected 1`] = `
   >
     <Button
       className="btn-apply"
-      onClick={[Function]}
+      onClick={[MockFunction]}
     >
       Apply
     </Button>
@@ -58,7 +58,7 @@ exports[`renders as expected 1`] = `
             },
           ]
         }
-        onSelect={[Function]}
+        onSelect={[MockFunction]}
         options={
           Object {
             "placeholder": "Choose a form",
@@ -71,7 +71,7 @@ exports[`renders as expected 1`] = `
       >
         <Button
           className="btn-apply"
-          onClick={[Function]}
+          onClick={[MockFunction]}
         >
           Apply
         </Button>

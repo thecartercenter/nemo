@@ -1,5 +1,4 @@
 import mapKeys from "lodash/mapKeys";
-import isEmpty from "lodash/isEmpty";
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/lib/Button";
@@ -15,36 +14,17 @@ const parseFormsForSelect2 = (allForms) => allForms
 class FormFilter extends React.Component {
   constructor(props) {
     super();
-
-    const {selectedFormIds} = props;
-    this.state = {selectedFormIds};
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSelectForm = this.handleSelectForm.bind(this);
     this.renderPopover = this.renderPopover.bind(this);
   }
 
-  handleSubmit() {
-    const {selectedFormIds} = this.state;
-    const formString = isEmpty(selectedFormIds) ? "" : `form:(${selectedFormIds.join("|")})`;
-
-    // TODO: Play nicely with the other filter options instead of clobbering them.
-    window.location.href = `?search=${formString}`;
-  }
-
-  handleSelectForm(event) {
-    this.setState({selectedFormIds: [event.target.value]});
-  }
-
   renderPopover() {
-    const {allForms} = this.props;
-    const {selectedFormIds} = this.state;
+    const {allForms, selectedFormIds, onSelectForm, onSubmit} = this.props;
 
     return (
       <Popover id="form-filter">
         <Select2
           data={parseFormsForSelect2(allForms)}
-          onSelect={this.handleSelectForm}
+          onSelect={onSelectForm}
           options={{
             placeholder: "Choose a form",
           }}
@@ -53,7 +33,7 @@ class FormFilter extends React.Component {
         <div className="btn-apply-container">
           <Button
             className="btn-apply"
-            onClick={this.handleSubmit}>
+            onClick={onSubmit}>
             {I18n.t("common.apply")}
           </Button>
         </div>
@@ -82,7 +62,9 @@ FormFilter.propTypes = {
     id: PropTypes.string,
     displayName: PropTypes.string
   })).isRequired,
-  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired
+  onSelectForm: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default FormFilter;

@@ -6,6 +6,8 @@ exports[`renders as expected 1`] = `
 >
   <FormFilter
     allForms={Array []}
+    onSelectForm={[Function]}
+    onSubmit={[Function]}
     selectedFormIds={Array []}
   />
 </ButtonToolbar>

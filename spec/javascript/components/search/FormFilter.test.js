@@ -16,7 +16,9 @@ const defaultProps = {
   ],
   selectedFormIds: [
     "2"
-  ]
+  ],
+  onSelectForm: jest.fn(),
+  onSubmit: jest.fn(),
 };
 
 it("renders as expected", () => {
@@ -34,8 +36,10 @@ describe("popover", () => {
     expect(overlay).toMatchSnapshot();
   });
 
-  overlay.find("Select2").simulate("change", {target: {value: defaultProps.allForms[0].id}});
-  overlay.find("Button.btn-apply").simulate("click");
+  it("handles callbacks", () => {
+    overlay.find("Select2").simulate("change", {target: {value: defaultProps.allForms[0].id}});
+    overlay.find("Button.btn-apply").simulate("click");
 
-  // TODO: Validate window.location.href is updated.
+    // TODO: Validate window.location.href is updated.
+  });
 });
