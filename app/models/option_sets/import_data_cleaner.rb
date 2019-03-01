@@ -14,14 +14,15 @@ module OptionSets
       sheet = open_sheet || return
       headers = extract_headers(sheet)
       check_header_lengths(headers)
-      special_columns = detect_special_columns(headers)
-      rows = extract_and_clean_data_rows(sheet, headers, special_columns)
+      meta_headers = detect_meta_headers(headers)
+      rows = extract_and_clean_data_rows(sheet, headers, meta_headers)
 
       if rows.empty?
         errors << [:no_rows]
       else
-        special_columns.keys.reverse_each { |i| headers.delete_at(i) }
-        [headers, special_columns, rows]
+        # Remove the meta headers from the main headers.
+        meta_headers.keys.reverse_each { |i| headers.delete_at(i) }
+        [headers, meta_headers, rows]
       end
     end
 
@@ -35,14 +36,16 @@ module OptionSets
       nil
     end
 
-    def detect_special_columns(headers)
+    # Returns a hash of form {0 => :id, 3 => :coordinates, ...}, mapping column indices to
+    # the names of meta headers like Coordinates and Shortcode.
+    def detect_meta_headers(headers)
       special_headers = %i[coordinates shortcode].map { |k| I18n.t("activerecord.attributes.option.#{k}") }
       special_headers.unshift("Id")
-      special_columns = {}
+      meta_headers = {}
       headers.each_with_index do |h, i|
-        special_columns[i] = h.downcase.to_sym if special_headers.include?(h)
+        meta_headers[i] = h.downcase.to_sym if special_headers.include?(h)
       end
-      special_columns
+      meta_headers
     end
 
     def extract_headers(sheet)
@@ -79,11 +82,11 @@ module OptionSets
     # Extracts data rows into an array of arrays.
     # The last element of each row's array is a hash of metadata like row_num
     # and special values like coordinates.
-    def extract_and_clean_data_rows(sheet, headers, special_columns)
+    def extract_and_clean_data_rows(sheet, headers, meta_headers)
       (2..sheet.last_row).map do |row_num|
         row = sheet.row(row_num)[0...headers.size].map { |c| c.to_s.presence }
 
-        metadata = extract_row_metadata(row, row_num, special_columns)
+        metadata = extract_row_metadata(row, row_num, meta_headers)
 
         next if row.all?(&:blank?)
         next if check_option_lengths(row, row_num)
@@ -93,10 +96,10 @@ module OptionSets
       end
     end
 
-    def extract_row_metadata(row, row_num, special_columns)
+    def extract_row_metadata(row, row_num, meta_headers)
       metadata = {orig_row_num: row_num}
-      special_columns.keys.reverse_each do |col_idx|
-        metadata[special_columns[col_idx]] = row.delete_at(col_idx)
+      meta_headers.keys.reverse_each do |col_idx|
+        metadata[meta_headers[col_idx]] = row.delete_at(col_idx)
       end
       metadata
     end

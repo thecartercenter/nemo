@@ -8,7 +8,7 @@ module OptionSets
     validates :name, presence: true
 
     def run
-      headers, special_columns, rows = cleaner.clean
+      headers, meta_headers, rows = cleaner.clean
       add_run_errors(cleaner.errors)
       return false if failed?
 
@@ -16,7 +16,7 @@ module OptionSets
       init_state_vars
 
       transaction do
-        create_option_set_and_copy_any_errors(headers, special_columns.value?(:coordinates))
+        create_option_set_and_copy_any_errors(headers, meta_headers.value?(:coordinates))
         rows.each_with_index { |row, row_idx| process_row(row, row_idx) }
         raise ActiveRecord::Rollback if failed?
       end
@@ -42,16 +42,15 @@ module OptionSets
     end
 
     def process_row(row, row_idx)
-      # We don't need :id and :shortcode attributes. These may come in if re-importing exported spreadsheets.
-      leaf_attribs = row.extract_options!.without(:id, :shortcode)
-      orig_row_num = leaf_attribs.delete(:orig_row_num)
+      # Metadata about the option is included at the end of the row array.
+      metadata = row.extract_options!
 
       row.each_with_index do |cell, col_idx|
         next if cur_nodes[col_idx].present? && cell == cur_nodes[col_idx].option.name
 
         if cell.present?
-          option = create_option(row, cell, orig_row_num, col_idx, leaf_attribs)
-          create_option_node(row_idx, orig_row_num, col_idx, option) if option.present?
+          option = create_option(row, cell, col_idx, metadata)
+          create_option_node(row_idx, col_idx, metadata, option) if option.present?
         end
 
         reset_state_vars_after(col_idx)
@@ -60,27 +59,30 @@ module OptionSets
 
     # Creates and returns an option, or nil if there were validation errors.
     # Adds any validation errors to the Import.
-    def create_option(row, cell, orig_row_num, col_idx, leaf_attribs)
+    def create_option(row, cell, col_idx, metadata)
       attribs = {mission: mission, name_locale_key => cell}
-      # TODO: nicer check for leaf nodes
-      attribs.merge!(leaf_attribs) if row[col_idx + 1...level_count].all?(&:blank?)
+
+      # We use metadata as attributes of the leaf Option, except orig_row_num, id, and shortcode.
+      # id and shortcode may result from importing an exported set, and are ignored.
+      attribs.merge!(metadata.without(:orig_row_num, :id, :shortcode)) if last_cell_in_row?(row, col_idx)
+
       option = Option.create(attribs)
       if option.invalid?
-        copy_validation_errors_for_row(orig_row_num, option.errors)
+        copy_validation_errors_for_row(metadata[:orig_row_num], option.errors)
         nil
       else
         option
       end
     end
 
-    def create_option_node(row_idx, orig_row_num, col_idx, option)
+    def create_option_node(row_idx, col_idx, metadata, option)
       parent = col_idx.zero? ? option_set.root_node : cur_nodes[col_idx - 1]
 
       node = parent.children.create(mission: mission, rank: cur_ranks[col_idx], option_set: option_set,
                                     option: option, sequence: row_idx + 1, is_standard: mission.nil?)
 
       if node.invalid?
-        copy_validation_errors_for_row(orig_row_num, node.errors)
+        copy_validation_errors_for_row(metadata[:orig_row_num], node.errors)
       else
         cur_ranks[col_idx] += 1
         cur_nodes[col_idx] = node
@@ -102,6 +104,12 @@ module OptionSets
         cur_nodes[j] = nil
         cur_ranks[j] = 0
       end
+    end
+
+    # Returns true if all cells after the given col_idx in the given row are blank.
+    # Can be used to check if a given cell represents a leaf node in the option tree.
+    def last_cell_in_row?(row, col_idx)
+      row[col_idx + 1...level_count].all?(&:blank?)
     end
 
     def transaction
