@@ -38,13 +38,11 @@ class ResponsesController < ApplicationController
 
         @responses = apply_search_if_given(Response, @responses, include_excerpts: true)
 
-        decorate_responses
-
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
 
         # render just the table if this is an ajax request
-        render(partial: "table_only", locals: {responses: @responses}) if request.xhr?
+        render(partial: "table_only", locals: {responses: responses}) if request.xhr?
       end
 
       # csv output is for exporting responses

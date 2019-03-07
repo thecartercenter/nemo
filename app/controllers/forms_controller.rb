@@ -24,6 +24,9 @@ class FormsController < ApplicationController
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 
+  decorates_assigned :forms
+  helper_method :questions
+
   def index
     # handle different formats
     respond_to do |format|
@@ -239,6 +242,14 @@ class FormsController < ApplicationController
   end
 
   private
+
+  # Decorates questions for choose_questions view.
+  def questions
+    # Need to specify the plain CollectionDecorator here because otherwise it will use PaginatingDecorator
+    # which doesn't work here because we're not paginating.
+    @decorated_questions ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+      Draper::CollectionDecorator.decorate(@questions, with: QuestionDecorator)
+  end
 
   def setup_condition_computer
     @condition_computer = Forms::ConditionComputer.new(@form)

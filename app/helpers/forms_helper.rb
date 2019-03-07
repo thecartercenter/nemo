@@ -24,7 +24,7 @@ module FormsHelper
     case field
     when "std_icon" then std_icon(form)
     when "version" then form.version
-    when "name" then link_to(form.name, form_path(form), title: t("common.view"))
+    when "name" then link_to(form.name, form.default_path, title: t("common.view"))
     when "questions" then form.questionings.count
     when "updated_at" then l(form.updated_at)
     when "responses"

@@ -38,18 +38,19 @@ module QuestionsHelper
     fields
   end
 
-  def format_questions_field(q, field)
+  def format_questions_field(question, field)
     case field
-    when "std_icon" then std_icon(q)
-    when "type" then t(q.qtype_name, scope: :question_type)
-    when "published" then tbool(q.published?)
+    when "std_icon" then std_icon(question)
+    when "type" then t(question.qtype_name, scope: :question_type)
+    when "published" then tbool(question.published?)
     when "name"
       if params[:controller] == "forms"
-        html_escape(q.name_or_none) << render_tags(q.sorted_tags)
+        html_escape(question.name_or_none) << render_tags(question.sorted_tags)
       else
-        link_to(q.name_or_none, q) + render_tags(q.sorted_tags, clickable: true)
+        link_to(question.name_or_none, question.default_path) <<
+          render_tags(question.sorted_tags, clickable: true)
       end
-    else q.send(field)
+    else question.send(field)
     end
   end
 

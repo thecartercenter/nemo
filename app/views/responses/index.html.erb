@@ -1,14 +1,14 @@
-<%= render("searches/form", :search => @search) %>
+<%= render("searches/form", search: @search) %>
 
-<%= index_table %>
+<%= index_table(responses) %>
 
 <script type="text/javascript">
   // set id of latest response
-  var responses_latest_id = <%= (f = @responses.first) ? %{"#{f.id}"}.html_safe : "null" %>;
+  var responses_latest_id = <%=json responses[0]&.id %>;
   var responses_submit_times = {};
-  var responses_per_page = <%= Response.per_page %>;
-  <% @responses.each do |r| %>
-    responses_submit_times["<%= r.id %>"] = "<%= r.created_at %>";
+  var responses_per_page = <%=json Response.per_page %>;
+  <% responses.each do |r| %>
+    responses_submit_times[<%=json r.id %>] = <%=json r.created_at %>;
   <% end %>
   responses_setup_periodic_update();
 </script>

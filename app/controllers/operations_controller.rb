@@ -7,6 +7,8 @@ class OperationsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
+  decorates_assigned :operations
+
   def index
     unless Utils::DelayedJobChecker.instance.ok?
       flash.now[:error] = I18n.t("operation.errors.delayed_job_stopped")

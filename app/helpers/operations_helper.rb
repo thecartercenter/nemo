@@ -26,17 +26,17 @@ module OperationsHelper
         t("admin_mode.admin_mode")
       end
     when "details"
-      link_to(operation.details, operation_path(operation))
+      link_to(operation.details, operation.default_path)
     when "creator"
       link_to(operation.creator.name, user_path(operation.creator))
     when "created_at"
       t("layout.time_ago", time: time_ago_in_words(operation.created_at))
     when "status"
-      link_to(t("operation.status.#{operation.status}"), operation_path(operation))
+      link_to(t("operation.status.#{operation.status}"), operation.default_path)
     when "result"
       case operation.status
       when :failed
-        link_to(t("operation.see_error_report"), operation_path(operation))
+        link_to(t("operation.see_error_report"), operation.default_path)
       when :completed
         if operation.attachment.present?
           link_to(t("operation.result_link_text.#{operation.kind}"), download_operation_path(operation))

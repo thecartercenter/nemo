@@ -16,7 +16,7 @@ module OptionSetsHelper
   def format_option_sets_field(option_set, field)
     case field
     when "std_icon" then std_icon(option_set)
-    when "name" then link_to(option_set.name, option_set_path(option_set), title: t("common.view"))
+    when "name" then link_to(option_set.name, option_set.default_path, title: t("common.view"))
     when "published" then tbool(option_set.published?)
     when "options" then
       # only show the first 3 options as there could be many many

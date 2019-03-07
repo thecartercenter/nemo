@@ -66,6 +66,8 @@ Style/AsciiComments:
 
 Style/Documentation:
   Exclude:
+    - "app/controllers/**/*"
+    - "app/decorators/**/*"
     - db/migrate/*
 
 Style/EmptyMethod:

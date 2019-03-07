@@ -11,7 +11,7 @@ module ReportsHelper
 
   def format_report_reports_field(report, field)
     case field
-    when "name" then link_to(report.name, report_path(report), title: t("common.view"))
+    when "name" then link_to(report.name, report.default_path, title: t("common.view"))
     when "type" then translate_model(report.class)
     when "viewed_at" then report.viewed_at && t("layout.time_ago", time: time_ago_in_words(report.viewed_at))
     else report.send(field)

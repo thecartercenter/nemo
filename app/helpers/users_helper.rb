@@ -30,7 +30,7 @@ module UsersHelper
   def format_users_field(user, field)
     case field
     when "name"
-      link_to(user.name + (user.active? ? "" : " (#{t('common.inactive')})"), user_path(user))
+      link_to(user.name + (user.active? ? "" : " (#{t('common.inactive')})"), user.default_path)
     when "login"
       sanitize(user.login) << render_groups(user.user_groups.all)
     when "email" then mail_to(user.email)

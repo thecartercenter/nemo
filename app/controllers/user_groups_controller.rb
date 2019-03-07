@@ -3,6 +3,8 @@ class UserGroupsController < ApplicationController
   before_action :find_user_group, only: [:add_users, :remove_users]
   load_and_authorize_resource
 
+  decorates_assigned :user_groups
+
   def index
     @add_mode = params[:add].present?
     @remove_mode = params[:remove].present?

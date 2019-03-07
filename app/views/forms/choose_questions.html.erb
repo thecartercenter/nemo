@@ -1,13 +1,13 @@
 <% @title_args = {:name => @form.name} %>
 
-<% unless @questions.empty? %>
+<% unless questions.empty? %>
   <div class="question_list">
-    <%= index_table(Question, :no_whole_row_link => true) %>
+    <%= index_table(questions, klass: Question, no_whole_row_link: true) %>
   </div>
 <% end %>
 
 <div class="question_form">
-  <% unless @questions.empty? %>
+  <% unless questions.empty? %>
     <div class="link_set">
       <%= link_to(t("form.back_to_questions"), "#", :class => "question_list") %>
     </div>

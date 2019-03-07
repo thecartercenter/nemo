@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 module BroadcastsHelper
-  def broadcasts_index_links(broadcasts)
+  def broadcasts_index_links(_broadcasts)
     if can?(:create, Broadcast) && !offline_mode?
       [link_to(t("broadcast.send_broadcast"), new_broadcast_path)]
     else
@@ -24,7 +26,7 @@ module BroadcastsHelper
     when "medium"
       t("broadcast.mediums.names." + broadcast.medium)
     when "body"
-      link_to(truncate(broadcast.body, :length => 100), broadcast_path(broadcast), :title => t("common.view"))
+      link_to(truncate(broadcast.body, length: 100), broadcast.default_path, title: t("common.view"))
     when "sent_at"
       if broadcast.sent_at.present?
         l(broadcast.sent_at)
@@ -32,7 +34,7 @@ module BroadcastsHelper
         t("common.pending")
       end
     when "errors"
-      tbool(!broadcast.send_errors.blank?)
+      tbool(broadcast.send_errors.present?)
     else
       broadcast.send(field)
     end

@@ -11,6 +11,8 @@ class ReportsController < ApplicationController
   # Will do this explicitly below.
   skip_authorize_resource only: :data
 
+  decorates_assigned :reports
+
   def index
     @reports = @reports.by_popularity
   end

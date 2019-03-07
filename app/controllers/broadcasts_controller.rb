@@ -12,6 +12,8 @@ class BroadcastsController < ApplicationController
   # this method is special
   skip_load_and_authorize_resource only: :new_with_users
 
+  decorates_assigned :broadcasts
+
   def index
     @broadcasts = @broadcasts
       .manual_only
