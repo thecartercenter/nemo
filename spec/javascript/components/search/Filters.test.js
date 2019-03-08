@@ -1,6 +1,8 @@
 import React from "react";
 import {shallow, mount} from "enzyme";
 
+import {STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors} from "../../testUtils";
+
 import Component from "../../../../app/javascript/components/search/Filters";
 
 const defaultProps = {
@@ -25,7 +27,9 @@ it("renders as expected", () => {
 });
 
 describe("integration", () => {
+  suppressErrors(STUB_COMPONENT_WARNINGS);
   const wrapper = mount(<Component {...defaultProps} />);
+  unsuppressAllErrors();
 
   it("navigates on apply form filter", () => {
     wrapper.find("Button.btn-form-filter").simulate("click");
