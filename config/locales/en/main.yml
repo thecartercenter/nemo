@@ -1028,14 +1028,12 @@ en:
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
     formats:
-      default: "%b %d %Y"
+      default: "%Y-%m-%d"
       short: "%b %d"
-      long: "%B %d %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M:%S"
+      default: "%Y-%m-%d %H:%M:%S"
       short: "%b %d %H:%M"
-      long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M:%S"
 
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
