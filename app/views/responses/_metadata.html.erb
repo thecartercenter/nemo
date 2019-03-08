@@ -21,7 +21,7 @@
     </div>
     <% if @response.persisted? && can?(:review, @response) %>
       <div class="col-sm-6">
-        <%= f.field(:reviewed, type: :check_box) %>
+        <%= f.field(:reviewed, type: :check_box, label: t("response.reviewed")) %>
         <%= f.field(:reviewer_id, type: :select, options: sel_opts_from_objs(@response.reviewer)) %>
         <%= f.field(:reviewer_notes, type: :textarea) %>
 

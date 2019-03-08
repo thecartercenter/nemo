@@ -475,7 +475,7 @@ en:
         id: "Response ID"
         created_at: "Submission Time"
         form_id: "Form"
-        reviewed: "This response has been reviewed"
+        reviewed: "Reviewed?"
         reviewer_notes: "Notes"
         reviewer_id: "Reviewer"
         shortcode: "Response ID"
@@ -1677,6 +1677,7 @@ en:
       none: "Show None"
 
   response:
+    reviewed: "This response has been reviewed"
     edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
     loading: "Loading Response..."
