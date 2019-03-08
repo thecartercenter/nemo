@@ -14,6 +14,12 @@ class ResponseDecorator < ApplicationDecorator
 
   # Returns the edit path if the user has edit abilities, else the show path.
   def default_path
-    @default_path ||= h.response_path(object)
+    return @default_path if defined?(@default_path)
+    path_params = if h.params[:search].present? && !h.flash.now[:search_error]
+                    {search: h.params[:search]}
+                  else
+                    {}
+                  end
+    @default_path = h.response_path(object, path_params)
   end
 end
