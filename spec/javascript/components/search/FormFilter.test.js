@@ -1,22 +1,12 @@
 import React from "react";
 import {shallow} from "enzyme";
 
+import {formFilterProps} from "./utils";
+
 import Component from "../../../../app/javascript/components/search/FormFilter";
 
 const defaultProps = {
-  allForms: [
-    {
-      id: "1",
-      displayName: "One"
-    },
-    {
-      id: "2",
-      displayName: "Two"
-    }
-  ],
-  selectedFormIds: [
-    "2"
-  ],
+  ...formFilterProps,
   onSelectForm: jest.fn(),
   onSubmit: jest.fn(),
 };

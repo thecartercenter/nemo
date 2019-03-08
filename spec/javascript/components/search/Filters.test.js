@@ -2,23 +2,12 @@ import React from "react";
 import {shallow, mount} from "enzyme";
 
 import {STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors} from "../../testUtils";
+import {allFilterProps} from "./utils";
 
 import Component from "../../../../app/javascript/components/search/Filters";
 
 const defaultProps = {
-  allForms: [
-    {
-      id: "1",
-      displayName: "One"
-    },
-    {
-      id: "2",
-      displayName: "Two"
-    }
-  ],
-  selectedFormIds: [
-    "2"
-  ],
+  ...allFilterProps,
 };
 
 it("renders as expected", () => {
