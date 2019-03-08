@@ -16,14 +16,6 @@ class Filters extends React.Component {
     this.handleSelectForm = this.handleSelectForm.bind(this);
   }
 
-  componentDidMount() {
-    // Initialize all popovers on the page.
-    $(function() {
-      // TODO: Be more selective about which ones to initialize.
-      $("[data-toggle=\"popover\"]").popover();
-    });
-  }
-
   handleSubmit() {
     const {selectedFormIds} = this.state;
     const urlString = getUrlString(selectedFormIds);
