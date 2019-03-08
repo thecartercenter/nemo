@@ -6,13 +6,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-
-/* tag redefinitions */
-html,body { margin: 0; padding: 0 }
-body, td, textarea { font-family: 'Open Sans', Helvetica, sans-serif; font-size: 9pt; color: $body-text-color; }
-body { line-height: 1.3; height: 100%; }
-a { color: $link-text-color; }
-h1, h2, h3 { color: $body-text-color; font-family: 'Open Sans', Helvetica, sans-serif; }
 h1 { margin: 0 0 10px 0; font-size: 17pt; }
 
 h1.title {
@@ -61,7 +54,7 @@ div.tip { margin-bottom: 10px; width: 800px; }
 div.important { font-weight: bold; color: Black; }
 div.dialog { position: absolute; background-color: $white; border: 1px solid #555; padding: 10px; }
 div.dialog h2 { margin: 0 0 10px 0; }
-.translation_missing { color: $theme-red; }
+.translation_missing { color: $error-red; }
 
 /* loading indicator */
 div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
@@ -77,11 +70,11 @@ div.popover {
 
 div.inline-load-ind {
   .success {
-    color: $theme-green;
+    color: $success-green;
   }
 
   .failure {
-    color: $theme-red;
+    color: $error-red;
   }
 
   width: 20px;
@@ -109,7 +102,6 @@ div.paginate-container {
 }
 
 ul.pagination {
-  a { color: $orange; }
   li.active span, li.active span:hover {
     background-color: $theme-main;
     border-color: $theme-main;
@@ -130,7 +122,7 @@ ul.pagination {
 
 /* broadcasts */
 textarea#broadcast_body { height: 170px; }
-.broadcasts_show #send_errors div.control { color: $theme-red; font-weight: bold; }
+.broadcasts_show #send_errors div.control { color: $error-red; font-weight: bold; }
 .broadcasts_show #send_errors div.control p { margin: 0; }
 
 /* form edit */
@@ -162,7 +154,7 @@ textarea#broadcast_body { height: 170px; }
 
 /* general layout styles */
 body {
-  background-color: $body-background-color;
+  background-color: $header-background-color;
 }
 
 .alert-compact {
@@ -283,8 +275,6 @@ body {
   padding: 20px 25px 30px 25px;
   min-height: 400px;
   background-color: $white;
-  .index_table a i.fa { color: $primary-icon-color; }
-  .index_table a i.fa:hover { color: darken($primary-icon-color, 20%) }
 }
 
 #footer {
@@ -296,7 +286,7 @@ body {
   height: 300px;
 
   a {
-    color: $link-text-color;
+    color: $link-color;
   }
 
   //workaround for arabic display order issue

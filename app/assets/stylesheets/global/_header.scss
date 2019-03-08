@@ -39,7 +39,7 @@ header {
         margin: side-values(0px 6px 0px 0px);
 
         &:hover, &:hover, &:focus {
-          color: $link-text-color;
+          color: $link-color;
         }
 
         /* Overriding bootstrap navbar prefs */
@@ -68,7 +68,7 @@ header {
 
           &:hover, &:focus {
             text-decoration: none;
-            color: $link-text-color !important;
+            color: $link-color !important;
           }
         }
 
@@ -89,7 +89,7 @@ header {
         }
 
         &:hover {
-          color: $link-text-color;
+          color: $link-color;
         }
       }
 
@@ -122,7 +122,7 @@ header {
 
             &:hover, &:focus {
               background: none;
-              color: $link-text-color;
+              color: $link-color;
             }
           }
         }

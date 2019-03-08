@@ -6,11 +6,11 @@
     margin: side-values(0 10px 5px 0);
 
     &:hover {
-      color: $orange;
+      color: $link-color;
     }
 
     i {
-      color: $orange;
+      color: $link-color;
       font-size: 110%;
       margin-#{$right}: 3px;
     }

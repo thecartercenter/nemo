@@ -24,7 +24,6 @@ table.index_table {
       padding-#{$right}: 10px;
     }
 
-    /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
     a {
       color: $theme-main-darker;
       padding: 5px 0;
