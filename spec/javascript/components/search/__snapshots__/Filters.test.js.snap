@@ -1,14 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`integration navigates on apply form filter 1`] = `[MockFunction]`;
+
+exports[`integration navigates on apply form filter 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?search=form:(2)",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`renders as expected 1`] = `
 <ButtonToolbar
   className="filters"
 >
   <FormFilter
-    allForms={Array []}
+    allForms={
+      Array [
+        Object {
+          "displayName": "One",
+          "id": "1",
+        },
+        Object {
+          "displayName": "Two",
+          "id": "2",
+        },
+      ]
+    }
     onSelectForm={[Function]}
     onSubmit={[Function]}
-    selectedFormIds={Array []}
+    selectedFormIds={
+      Array [
+        "2",
+      ]
+    }
   />
 </ButtonToolbar>
 `;
