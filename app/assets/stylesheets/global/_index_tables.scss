@@ -1,10 +1,7 @@
 table.index_table {
   $cell-top-bot-padding: 6px;
 
-  &.index-table-narrow {
-    width: auto;
-    min-width: 66%;
-  }
+  min-width: 66%;
 
   tr:first-child td {
     border-top: none;
