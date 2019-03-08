@@ -1,8 +1,8 @@
-import isEmpty from "lodash/isEmpty";
 import React from "react";
 import PropTypes from "prop-types";
 import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 
+import {getUrlString, submitSearch} from "./utils";
 import FormFilter from "./FormFilter";
 
 class Filters extends React.Component {
@@ -26,10 +26,8 @@ class Filters extends React.Component {
 
   handleSubmit() {
     const {selectedFormIds} = this.state;
-    const formString = isEmpty(selectedFormIds) ? "" : `form:(${selectedFormIds.join("|")})`;
-
-    // TODO: Play nicely with the other filter options instead of clobbering them.
-    window.location.href = `?search=${formString}`;
+    const urlString = getUrlString(selectedFormIds);
+    submitSearch(urlString);
   }
 
   handleSelectForm(event) {
