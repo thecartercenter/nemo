@@ -79,7 +79,7 @@
                   <td></td>
                 <% end %>
               <% else %>
-                <td class="<%= "#{f.is_a?(Hash) ? f[:css_class] : f.gsub(/[^\w\d]/, "")}" %>">
+                <td class="<%= "#{f.is_a?(Hash) ? f[:css_class] : (f.gsub(/[^\w\d]/, "") << "_col")}" %>">
                   <div><%= formatted %></div>
                 </td>
               <% end %>
