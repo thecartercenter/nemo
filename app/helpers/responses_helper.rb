@@ -6,7 +6,7 @@ module ResponsesHelper
       %w[form_id user_id] + key_question_hashes(2) + %w[created_at reviewed]
     else
       %w[shortcode form_id user_id] + key_question_hashes(2) +
-        %w[incomplete created_at age reviewed reviewer_id]
+        %w[incomplete created_at age reviewed]
     end
   end
 
@@ -28,11 +28,8 @@ module ResponsesHelper
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
       when "incomplete" then tbool(resp.incomplete?)
-      when "reviewed" then reviewed_status(resp)
       when "user_id" then resp.user.name
-      when "reviewer_id"
-        return if resp.reviewer.blank?
-        can?(:read, resp.reviewer) ? link_to(resp.reviewer.name, resp.reviewer) : resp.reviewer.name
+      when "reviewed" then resp.reviewed_status
       else resp.send(field)
       end
     end
@@ -71,13 +68,5 @@ module ResponsesHelper
     else
       tmd("welcome.in_the_past_#{count[1]}", count: number_with_delimiter(count[0]))
     end
-  end
-
-  def reviewed_status(resp)
-    status = tbool(resp.reviewed?)
-    if !resp.checked_out_at.nil? && (resp.checked_out_at > Response::LOCK_OUT_TIME.ago)
-      status = I18n.t("common.pending")
-    end
-    status
   end
 end
