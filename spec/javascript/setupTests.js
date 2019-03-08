@@ -18,6 +18,7 @@ window.location.assign = jest.fn();
   jest.doMock(`react-bootstrap/lib/${name}`, () => name);
 });
 
+jest.mock("react-select2-wrapper/lib/components/Select2.full", () => "Select2");
 jest.mock("react-select2-wrapper/css/select2.css", () => undefined);
 
 // Provide translations.

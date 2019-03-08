@@ -16,6 +16,7 @@ exports[`popover handles callbacks 1`] = `
 
 exports[`popover renders as expected 1`] = `
 <Popover
+  className="filters-popover"
   id="form-filter"
 >
   <Select2
@@ -34,6 +35,7 @@ exports[`popover renders as expected 1`] = `
     onSelect={[MockFunction]}
     options={
       Object {
+        "dropdownCssClass": "filters-select2-dropdown",
         "placeholder": "Choose a form",
       }
     }
@@ -57,6 +59,7 @@ exports[`renders as expected 1`] = `
   containerPadding={25}
   overlay={
     <Popover
+      className="filters-popover"
       id="form-filter"
     >
       <Select2
@@ -75,6 +78,7 @@ exports[`renders as expected 1`] = `
         onSelect={[MockFunction]}
         options={
           Object {
+            "dropdownCssClass": "filters-select2-dropdown",
             "placeholder": "Choose a form",
           }
         }

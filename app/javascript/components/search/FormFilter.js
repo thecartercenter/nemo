@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Button from "react-bootstrap/lib/Button";
 import Popover from "react-bootstrap/lib/Popover";
 import OverlayTrigger from "react-bootstrap/lib/OverlayTrigger";
-import Select2 from "react-select2-wrapper";
+import Select2 from "react-select2-wrapper/lib/components/Select2.full";
 
 import "react-select2-wrapper/css/select2.css";
 
@@ -21,12 +21,15 @@ class FormFilter extends React.Component {
     const {allForms, selectedFormIds, onSelectForm, onSubmit} = this.props;
 
     return (
-      <Popover id="form-filter">
+      <Popover
+        className="filters-popover"
+        id="form-filter">
         <Select2
           data={parseFormsForSelect2(allForms)}
           onSelect={onSelectForm}
           options={{
             placeholder: "Choose a form",
+            dropdownCssClass: "filters-select2-dropdown",
           }}
           value={selectedFormIds && selectedFormIds[0]} />
 

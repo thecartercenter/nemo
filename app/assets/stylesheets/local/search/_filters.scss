@@ -2,23 +2,22 @@
   margin-bottom: 4px;
 }
 
-// TODO: Contain these classes within .filters
-.select2-container {
-  width: 100% !important;
-
-  .select2-dropdown {
-    z-index: 9999;
-  }
-}
-
-.popover {
+.filters-popover {
   width: auto !important;
   min-width: 200px;
   max-width: 50vw;
+
+  .select2-container {
+    width: 100% !important;
+  }
 
   .btn-apply-container {
     // Same as padding-bottom for the popover-container.
     margin-top: 9px;
     text-align: right;
   }
+}
+
+.filters-select2-dropdown {
+  z-index: 9999;
 }
