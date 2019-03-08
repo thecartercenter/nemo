@@ -43,7 +43,7 @@
   width: inherit;
 
   &.dz-success .dz-progress .dz-upload {
-    background: $theme-main-darker;
+    background: $darker-link-color;
   }
 
   img {
@@ -77,7 +77,7 @@
     width: 100%;
 
     .dz-upload {
-      background: $theme-main-darker;
+      background: $darker-link-color;
       display: block;
       height: 5px;
     }
