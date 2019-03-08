@@ -41,11 +41,12 @@
             <% else %>
               <th>
                 <%# if field def is a hash, look for the :title key %>
-                <% if f.is_a?(Hash) %>
+                <% if f.is_a?(Hash) && f[:title] %>
                   <%= f[:title] %>
                 <% else %>
-                  <%= t("activerecord.table_headers.#{objects[0].class.model_name.i18n_key}.#{f}",
-                        default: objects[0].class.human_attribute_name(f)) %>
+                  <% key = f.is_a?(Hash) ? f[:attrib] : f %>
+                  <%= t("activerecord.table_headers.#{objects[0].class.model_name.i18n_key}.#{key}",
+                        default: objects[0].class.human_attribute_name(key)) %>
                 <% end %>
               </th>
             <% end %>
@@ -78,7 +79,7 @@
                   <td></td>
                 <% end %>
               <% else %>
-                <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
+                <td class="<%= "#{f.is_a?(Hash) ? f[:css_class] : f.gsub(/[^\w\d]/, "")}" %>">
                   <div><%= formatted %></div>
                 </td>
               <% end %>

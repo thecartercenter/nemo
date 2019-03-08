@@ -24,15 +24,16 @@ module UsersHelper
   end
 
   def users_index_fields
-    %w[name login email phone phone2 admin] << (admin_mode? ? "latest_mission" : "role")
+    ["name", {attrib: "login", css_class: "has-tags"}, "email", "phone", "phone2", "admin"] <<
+      (admin_mode? ? "latest_mission" : "role")
   end
 
   def format_users_field(user, field)
-    case field
+    case field.is_a?(Hash) ? field[:attrib] : field
     when "name"
       link_to(user.name + (user.active? ? "" : " (#{t('common.inactive')})"), user.default_path)
     when "login"
-      sanitize(user.login) << render_groups(user.user_groups.all)
+      content_tag(:span, sanitize(user.login), class: "text") << render_groups(user.user_groups.all)
     when "email" then mail_to(user.email)
     when "latest_mission" then (lm = user.latest_mission) ? lm.name : "[#{t('common.none')}]"
     when "role" then t(user.roles[current_mission], scope: :role)

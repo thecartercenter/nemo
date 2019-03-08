@@ -12,9 +12,7 @@ module ResponsesHelper
 
   # returns an array of hashes representing the key question column(s)
   def key_question_hashes(count)
-    Question.accessible_by(current_ability).key(count).map do |q|
-      {title: q.code, css_class: q.code.downcase, question: q}
-    end
+    Question.accessible_by(current_ability).key(count).map { |q| {title: q.code, question: q} }
   end
 
   def format_responses_field(resp, field)

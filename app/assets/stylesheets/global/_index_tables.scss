@@ -1,4 +1,6 @@
 table.index_table {
+  $cell-top-bot-padding: 6px;
+
   &.index-table-narrow {
     width: auto;
     min-width: 66%;
@@ -16,8 +18,8 @@ table.index_table {
     vertical-align: middle;
 
     border-top: $light-border;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding-top: $cell-top-bot-padding;
+    padding-bottom: $cell-top-bot-padding;
     padding-#{$left}: 3px;
     padding-#{$right}: 20px;
 
@@ -29,6 +31,19 @@ table.index_table {
     a {
       color: $theme-main-darker;
       padding: 5px 0;
+    }
+  }
+
+  // For cells with tags, we remove padding and add it back on a span.text inside the cell.
+  // This prevents the tags from making the row too high.
+  td.has-tags {
+    padding-bottom: 0;
+    padding-top: 0;
+
+    span.text {
+      display: inline-block;
+      padding-top: $cell-top-bot-padding;
+      padding-bottom: $cell-top-bot-padding;
     }
   }
 
@@ -55,7 +70,7 @@ table.index_table {
     display: inline;
     line-height: 2.1;
     margin-left: 3px;
-    vertical-align: text-top;
+    vertical-align: middle;
     li {
       float: none;
       display: inline;

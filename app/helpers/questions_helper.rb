@@ -33,23 +33,26 @@ module QuestionsHelper
   end
 
   def questions_index_fields
-    fields = %w[std_icon code name type]
+    fields = ["std_icon", "code", {attrib: "name", css_class: "has-tags"}, "type"]
     fields << "published" unless admin_mode?
     fields
   end
 
   def format_questions_field(question, field)
-    case field
+    case field.is_a?(Hash) ? field[:attrib] : field
     when "std_icon" then std_icon(question)
     when "type" then t(question.qtype_name, scope: :question_type)
     when "published" then tbool(question.published?)
     when "name"
-      if params[:controller] == "forms"
-        html_escape(question.name_or_none) << render_tags(question.sorted_tags)
-      else
-        link_to(question.name_or_none, question.default_path) <<
-          render_tags(question.sorted_tags, clickable: true)
-      end
+      question_picker = params[:controller] == "forms"
+      text = content_tag(:span, class: "text") do
+              if question_picker
+                html_escape(question.name_or_none)
+              else
+                link_to(question.name_or_none, question.default_path)
+              end
+            end
+      text << render_tags(question.sorted_tags, clickable: !question_picker)
     else question.send(field)
     end
   end
