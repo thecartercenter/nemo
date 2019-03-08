@@ -34,7 +34,8 @@ class Form < ApplicationRecord
   validates_with Forms::DynamicPatternValidator, field_name: :default_response_name
 
   scope :published, -> { where(published: true) }
-  scope :by_name, -> { order("forms.name") }
+  scope :by_name, -> { order(:name) }
+  scope :by_published, -> { order(published: :desc) }
   scope :default_order, -> { by_name }
   scope :with_responses_counts, lambda {
     forms = Form.arel_table
