@@ -48,6 +48,7 @@ class Form < ApplicationRecord
   delegate :children, :sorted_children, :visible_children, :c, :sc,
     :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
+  delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},
              dont_copy: %i[published pub_changed_at downloads upgrade_needed
@@ -123,9 +124,6 @@ class Form < ApplicationRecord
     name
   end
 
-  # current override code for incomplete responses
-  delegate :override_code, to: :mission
-
   # returns whether this form has responses; standard forms never have responses
   def has_responses?
     is_standard? ? false : responses_count.positive?
@@ -180,18 +178,8 @@ class Form < ApplicationRecord
     smsable_questionings.map.with_index { |q, i| [i + 1, q] }.to_h
   end
 
-  def questioning_with_code(c)
-    questionings.detect { |q| q.code == c }
-  end
-
-  # Loads all options used on the form in a constant number of queries.
-  def all_options
-    OptionSet.all_options_for_sets(questions.map(&:option_set_id).compact)
-  end
-
-  # Gets all first level option nodes with options eagerly loaded.
-  def all_first_level_option_nodes
-    OptionSet.first_level_option_nodes_for_sets(questions.map(&:option_set_id).compact)
+  def questioning_with_code(code)
+    questionings.detect { |q| q.code == code }
   end
 
   # Gets the last Questioning on the form, ignoring the group structure.
