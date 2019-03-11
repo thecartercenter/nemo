@@ -30,6 +30,7 @@ class FormFilter extends React.Component {
           options={{
             placeholder: I18n.t("filter.chooseForm"),
             dropdownCssClass: "filters-select2-dropdown",
+            width: "100%",
           }}
           value={selectedFormIds && selectedFormIds[0]} />
 

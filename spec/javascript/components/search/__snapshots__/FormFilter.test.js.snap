@@ -37,6 +37,7 @@ exports[`popover renders as expected 1`] = `
       Object {
         "dropdownCssClass": "filters-select2-dropdown",
         "placeholder": "Choose a form",
+        "width": "100%",
       }
     }
     value="2"
@@ -80,6 +81,7 @@ exports[`renders as expected 1`] = `
           Object {
             "dropdownCssClass": "filters-select2-dropdown",
             "placeholder": "Choose a form",
+            "width": "100%",
           }
         }
         value="2"
