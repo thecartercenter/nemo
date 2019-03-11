@@ -11,3 +11,7 @@ a.action-link {
 table a.action-link {
   margin: -2px 10px -2px 0;
 }
+
+#content div.top-action-links {
+  @include top-action-links;
+}

@@ -91,14 +91,8 @@ i.fa-certificate {
   }
 }
 
-/* form index */
-.forms_index .name_col { min-width: 200px; }
-
 /* option edit */
 .options_edit td.value input#option_value, .options_new td.value input#option_value { width: 100px; }
-
-/* option set index */
-.option_sets_index td.options_col { width: 400px; }
 
 /* option set new/edit/show */
 .option_sets_edit div.optcol, .option_sets_new div.optcol, .option_sets_show div.optcol { float: left; margin-right: 20px; }
@@ -115,25 +109,6 @@ textarea#broadcast_body { height: 170px; }
 
 /* form choose questions */
 .forms_choose_questions div.question_form { display: none; }
-
-/* missions */
-.missions_index .name_col { width: 225px; }
-
-/* sms log */
-.sms_index {
-  td.to_col { width: 225px; }
-  td.from_col { width: 125px; }
-  td.direction_col { width: 50px; }
-  td.received_at_col { width: 130px }
-  td.sent_at_col { width: 130px }
-  td.adapter_name_col { width: 100px; }
-  td.body_col > div { width: auto; overflow: hidden; }
-}
-
-/* action links */
-#content div.top-action-links {
-  @include top-action-links;
-}
 
 /* general layout styles */
 body {
