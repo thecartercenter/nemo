@@ -1,9 +1,9 @@
-<form class="search_form form-inline">
+<form class="search-form form-inline">
   <input type="text" class="form-control" name="search"
     value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
-  <input type="submit" value="<%= t("common.search") %>" class="btn">
+  <input type="submit" value="<%= t("common.search") %>" class="btn btn-default">
   <% if params[:search].present? %>
-    <input type="button" value="<%= t("common.clear") %>" class="btn btn-clear">
+    <input type="button" value="<%= t("common.clear") %>" class="btn btn-default btn-clear">
   <% end %>
   <br/>
   <div class="search-footer">

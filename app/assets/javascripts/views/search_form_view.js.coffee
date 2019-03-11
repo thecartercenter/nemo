@@ -1,7 +1,7 @@
 # Models the form for entering a search query.
 class ELMO.Views.SearchFormView extends ELMO.Views.ApplicationView
 
-  el: '.search_form',
+  el: '.search-form',
 
   events:
     'click .btn-clear': 'clear_search'
