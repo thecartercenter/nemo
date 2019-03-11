@@ -149,7 +149,7 @@ textarea#broadcast_body { height: 170px; }
 
 /* action links */
 #content div.top-action-links {
-  @include action-links;
+  @include top-action-links;
 }
 
 /* general layout styles */
