@@ -55,12 +55,16 @@ module ActionLinkHelper
   end
 
   # returns the html for an action icon using font awesome and the mappings defined in IconHelper
-  def action_link(action, href, html_options = {})
+  def action_link(action, href, options = {})
     # join passed html class (if any) with the default class
-    html_options[:class] = [html_options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
+    options[:class] = [options[:class], "action_link", "action_link_#{action}"].compact.join(" ")
 
-    content_tag(:div, link_to(icon_tag(action) << t("actions.#{action}"), href),
-      class: "action-tag")
+    if options.delete(:label) == false
+      link_to(icon_tag(action), href, options)
+    else
+      label = t("actions.#{action}")
+      link_to(icon_tag(action) << label, href, options)
+    end
   end
 
   # creates a link to a batch operation
