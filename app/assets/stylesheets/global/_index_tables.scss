@@ -44,10 +44,9 @@ table.index_table {
     }
   }
 
-  td.actions_col { white-space: nowrap; }
-
-  td.actions_col img {
-    margin-right: 5px;
+  td.action {
+    white-space: nowrap;
+    width: 1px; // These shouldn't scale out on wider screens.
   }
 
   tbody tr.clickable {
