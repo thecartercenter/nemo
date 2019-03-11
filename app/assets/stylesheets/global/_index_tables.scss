@@ -12,6 +12,7 @@ table.index_table {
   }
 
   td {
+    height: 33px; // Ensure height is consistent even if icons not present.
     vertical-align: middle;
 
     border-top: $light-border;
