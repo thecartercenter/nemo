@@ -34,7 +34,7 @@ feature "adding and editing qing group on form", js: true do
     within(".modal") { click_button("Save") }
 
     within(".form-items") { expect(page).to have_content("Foo Group") }
-    all(".form-items .action_link.edit")[-1].click
+    all(".form-items .action_link.action_link_edit")[-1].click
     expect(page).to have_field("qing_group_group_name_en", with: "Foo Group")
     expect(page).to have_field("qing_group_group_name_fr", with: "Fou Groupe")
     expect(page).to have_field("qing_group_group_hint_en", with: "Bar Hint")

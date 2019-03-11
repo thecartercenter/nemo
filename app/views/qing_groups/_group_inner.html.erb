@@ -33,11 +33,11 @@
     <% end %>
 
     <% unless read_only %>
-      <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_qing_group_path(qing_group),
-        class: 'action_link edit' %>
-
-      <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
-        data: {message: I18n.t('activerecord.attributes.qing_group.delete', name: qing_group.group_name)} %>
+      <%= action_link(:edit, edit_qing_group_path(qing_group), label: false) %>
+      <% if can?(:remove_questions, qing_group.form) %>
+        <%= action_link(:destroy, "#", label: false, data:
+              {message: I18n.t("activerecord.attributes.qing_group.delete", name: qing_group.group_name)}) %>
+      <% end %>
     <% end %>
   </div>
 </div> <%# End of form group info %>
