@@ -2,5 +2,5 @@
   <span class="report_title_text"><%= t("report/report.loading_report") %></span>
 </h2>
 <span class="report_edit_link_container">
-  &nbsp;&nbsp;<a class="action_link action_link_edit" href=""><i class="fa fa-pencil icon-edit"></i></a>
+  &nbsp;&nbsp;<%= action_link(:edit, "#", label: false) %>
 </span>
