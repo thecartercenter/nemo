@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# DEPRECATED: Model-related display logic should move to a decorator.
 module ResponsesHelper
   def responses_index_fields
     if params[:controller] == "welcome" # Dashboard mode

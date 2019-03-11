@@ -5,6 +5,7 @@ module PathHelper
     'Sms::Message' => 'sms'
   }
 
+  # DEPRECATED: Prefer using path helpers directly in decorators. The below is too complex.
   def dynamic_path(obj_or_class, options = {})
     obj = obj_or_class.is_a?(Class) ? nil : obj_or_class
     klass = obj_or_class.is_a?(Class) ? obj_or_class : obj_or_class.class

@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# DEPRECATED: Model-related display logic should move to a decorator.
 module BroadcastsHelper
   def broadcasts_index_links(_broadcasts)
     if can?(:create, Broadcast) && !offline_mode?

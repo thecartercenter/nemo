@@ -1,3 +1,4 @@
+# DEPRECATED: Should move to a decorator.
 module TagsHelper
   # options[:class] - additional class(es) to add to ul
   # options[:clickable] (bool) - make tags clickable to filter by clicked tag

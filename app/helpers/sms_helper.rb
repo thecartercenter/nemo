@@ -1,3 +1,4 @@
+# DEPRECATED: Model-related display logic should move to a decorator.
 module SmsHelper
   MAX_RECIPS_TO_SHOW = 3
 

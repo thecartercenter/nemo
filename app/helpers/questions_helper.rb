@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# DEPRECATED: Model-related display logic should move to a decorator.
 module QuestionsHelper
   def questions_index_links(_questions)
     links = []

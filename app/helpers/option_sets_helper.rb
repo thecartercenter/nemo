@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# DEPRECATED: Model-related display logic should move to a decorator.
 module OptionSetsHelper
   def option_sets_index_links(_option_sets)
     links = []

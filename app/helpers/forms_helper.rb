@@ -1,3 +1,4 @@
+# DEPRECATED: Model-related display logic should move to a decorator.
 module FormsHelper
   def forms_index_links(forms)
     links = []

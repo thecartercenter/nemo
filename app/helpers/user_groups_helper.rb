@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# DEPRECATED: Model-related display logic should move to a decorator.
 module UserGroupsHelper
   def user_groups_index_fields
     if @add_mode || @remove_mode

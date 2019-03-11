@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# DEPRECATED: Model-related display logic should move to a decorator.
 module OperationsHelper
   def operations_index_fields
     [].tap do |fields|
