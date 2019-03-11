@@ -33,7 +33,7 @@ feature "display logic form fields", js: true do
       end
 
       scenario "edit conditions on an existing question" do
-        all("a.action_link.action_link_edit")[3].click
+        all("a.action-link.action-link-edit")[3].click
 
         when_conditions_are_deleted
         and_then_edited

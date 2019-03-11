@@ -2,9 +2,9 @@ class ELMO.Views.UserGroupsModalView extends ELMO.Views.ApplicationView
   el: '#user-groups-modal'
 
   events:
-    "ajax:success .action_link_edit": "process_edit"
-    "ajax:success .action_link_destroy": "process_destroy"
-    "click a.action_link_update": "update_name"
+    "ajax:success .action-link-edit": "process_edit"
+    "ajax:success .action-link-destroy": "process_destroy"
+    "click a.update-name": "update_name"
     "click .add_to_group": "add_users_to_group"
     "click .remove_from_group": "remove_users_from_group"
 

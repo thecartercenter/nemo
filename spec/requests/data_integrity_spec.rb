@@ -62,7 +62,7 @@ describe 'DataIntegrity' do
       # Load the index view for the object
       get(dynamic_path(obj, action: :index, mode: 'm', mission_name: obj.mission.compact_name))
       expect(response).to be_success
-      assert_select("tr##{obj.class.model_name.singular}_#{obj.id} a.action_link_#{action}", tf)
+      assert_select("tr##{obj.class.model_name.singular}_#{obj.id} a.action-link-#{action}", tf)
     end
 
     def assert_deletable(obj)

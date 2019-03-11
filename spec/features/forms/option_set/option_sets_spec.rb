@@ -24,13 +24,13 @@ feature "option set" do
     fill_in("English", with: "Species")
     click_modal_save_button
 
-    find("#option_levels a.action_link_edit", match: :first).click # Click first pencil link.
+    find("#option_levels a.action-link-edit", match: :first).click # Click first pencil link.
     wait_modal_to_be_visible
     fill_in("English", with: "Type") # Fix typo.
     click_modal_save_button
 
     # Go back to single level since dragging is hard here.
-    2.times { find("#option_levels a.action_link_remove", match: :first).click }
+    2.times { find("#option_levels a.action-link-remove", match: :first).click }
     uncheck("Is Multilevel?")
 
     add_options(%w[Banana Apple])
@@ -45,7 +45,7 @@ feature "option set" do
     expect(page).to have_selector("#options-wrapper div", text: "Banana")
     expect(page).to have_selector("#options-wrapper div", text: "Apple")
     expect(page).not_to have_selector("form.option_set_form input[type=text]")
-    expect(page).not_to have_selector("form.option_set_form a.action_link_edit")
+    expect(page).not_to have_selector("form.option_set_form a.action-link-edit")
 
     # Test edit mode (add another option)
     click_link("Edit Option Set")
@@ -83,7 +83,7 @@ feature "option set" do
     expect(page).to have_selector("#options-wrapper div", text: "Banana (2)")
 
     click_link("Edit Option Set")
-    find("#options a.action_link_edit", match: :first).click # Click first pencil link.
+    find("#options a.action-link-edit", match: :first).click # Click first pencil link.
     wait_modal_to_be_visible
 
     fill_in("Value", with: "3")
@@ -111,12 +111,12 @@ feature "option set" do
       expect(page).to have_selector("td.options_col div", text: "Animal, Plant")
 
       # Editing standard set (edit option level name and option name)
-      find("a.action_link_edit", match: :first).click
-      all("#option-levels-wrapper a.action_link_edit")[1].click
+      find("a.action-link-edit", match: :first).click
+      all("#option-levels-wrapper a.action-link-edit")[1].click
       wait_modal_to_be_visible
       fill_in("English", with: "Queendom")
       click_modal_save_button
-      find("#options-wrapper ol ol a.action_link_edit", match: :first).click
+      find("#options-wrapper ol ol a.action-link-edit", match: :first).click
       wait_modal_to_be_visible
       fill_in("English", with: "Kitty")
       click_modal_save_button
@@ -134,7 +134,7 @@ feature "option set" do
     scenario do
       login(user)
       visit(option_sets_path(mode: "m", mission_name: set.mission.compact_name, locale: "en"))
-      find("a.action_link_destroy").click
+      find("a.action-link-destroy").click
       expect(page).to have_selector(".alert-success", text: "Option Set deleted successfully")
     end
   end
