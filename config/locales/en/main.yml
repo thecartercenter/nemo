@@ -918,6 +918,7 @@ en:
 
   actions:
     clone: "Clone"
+    edit: "Edit"
     publish: "Publish"
     unpublish: "Unpublish"
     print: "Print"

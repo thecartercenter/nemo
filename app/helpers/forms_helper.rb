@@ -46,18 +46,19 @@ module FormsHelper
 
       # add a clone link if auth'd
       if can?(:clone, form)
-        links << action_link("clone", clone_form_path(form), :'data-method' => 'put',
+        links << action_link(:clone, clone_form_path(form), :'data-method' => 'put',
           title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
       end
 
       # add a print link if auth'd
       if can?(:print, form)
-        links << action_link("print", "#", title: t("common.print"), class: 'print-link', :'data-form-id' => form.id)
+        links << action_link(:print, "#", title: t("common.print"), class: 'print-link',
+                                          "data-form-id": form.id)
       end
 
       # add an sms template link if appropriate
       if form.smsable? && form.published? && !admin_mode?
-        links << action_link("sms", sms_guide_form_path(form), title: "SMS Guide")
+        links << action_link(:sms, sms_guide_form_path(form), title: "SMS Guide")
       end
 
       links

@@ -8,6 +8,10 @@
   }
 
   td.reviewed_col {
+    a {
+      color: $main-text-color;
+    }
+
     i.fa {
       margin-right: 5px;
       color: $success-green;

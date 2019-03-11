@@ -6,7 +6,7 @@ module ResponsesHelper
       %w[form_id user_id] + key_question_hashes(2) + %w[created_at reviewed]
     else
       %w[shortcode form_id user_id] + key_question_hashes(2) +
-        %w[incomplete created_at age reviewed]
+        %w[incomplete created_at age reviewed actions]
     end
   end
 
@@ -30,6 +30,7 @@ module ResponsesHelper
       when "incomplete" then tbool(resp.incomplete?)
       when "user_id" then resp.user.name
       when "reviewed" then resp.reviewed_status
+      when "actions" then can?(:update, resp) ? [action_link(:edit, edit_response_path(resp))] : []
       else resp.send(field)
       end
     end
