@@ -28,7 +28,7 @@ class FormFilter extends React.Component {
           data={parseFormsForSelect2(allForms)}
           onSelect={onSelectForm}
           options={{
-            placeholder: "Choose a form",
+            placeholder: I18n.t("filter.chooseForm"),
             dropdownCssClass: "filters-select2-dropdown",
           }}
           value={selectedFormIds && selectedFormIds[0]} />

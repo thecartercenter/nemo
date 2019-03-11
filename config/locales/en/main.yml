@@ -1271,6 +1271,7 @@ en:
 
   filter:
     form: "Form"
+    chooseForm: "Choose a form"
 
   form:
     select_api_users: "Select all users who can access form data via the API:"
