@@ -19,8 +19,7 @@ form.question_form {
   }
 }
 
-div.question_fields {
-
+.elmo-form .question_fields {
   textarea {
     direction: ltr;
   }
@@ -41,8 +40,8 @@ div.question_fields {
     margin-left: 10px;
   }
 
-  div.minmax {
-    input.text[type=text] {
+  .minmax {
+    .form-field .control .widget input.text[type=text] { // Needed for extra specificity
       width: 75px;
       display: inline-block;
     }
