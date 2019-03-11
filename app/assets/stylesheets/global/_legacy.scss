@@ -91,19 +91,6 @@ i.fa-certificate {
   }
 }
 
-/* pagination */
-div.paginate-container {
-  width: 100%;
-  text-align: right;
-}
-
-ul.pagination {
-  li.active span, li.active span:hover {
-    background-color: $theme-main;
-    border-color: $theme-main;
-  }
-}
-
 /* form index */
 .forms_index .name_col { min-width: 200px; }
 
