@@ -57,6 +57,9 @@ header {
           padding: 0;
           color: $nav-text-color;
 
+          // Bootstrap sets this to 11px which causes spacing issues.
+          line-height: inherit;
+
           @include if-rtl {
             display: flex;
             flex-direction: row-reverse;
