@@ -1,7 +1,7 @@
 a.action-link {
   i.fa {
     font-size: 14px;
-    margin-right: 3px;
+    margin-#{$right}: 3px;
   }
 
   text-decoration: none;
