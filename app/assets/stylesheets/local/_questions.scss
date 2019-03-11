@@ -116,22 +116,6 @@ div.form-field.question_option_set_id {
   }
 }
 
-ul.tags {
-  padding: 0;
-  li:hover { cursor: inherit; }
-  &.clickable li:hover {
-    cursor: pointer;
-    background-color: $tag-color;
-  }
-}
-
-.all-tags ul.tags {
-  //background: $super-light-gray;
-  //padding: 0 3px;
-  max-height: 93px;
-  overflow: auto;
-}
-
 .question_tag_ids .read-only {
   padding-top: 0;
 }

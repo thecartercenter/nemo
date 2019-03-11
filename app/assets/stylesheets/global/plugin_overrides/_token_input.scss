@@ -27,37 +27,10 @@ ul.token-input-list-elmo {
 }
 
 .token-input-token-elmo {
-    overflow: hidden;
-    height: auto !important;
-    height: 15px;
-    margin: 6px 3px;
-    padding: 1px 3px;
-    background-color: $light-yellow;
-    color: #000;
-    cursor: default;
-    border: 1px solid #c7bf32;
-    font-size: 12px;
-    border-radius: 5px;
-    -moz-border-radius: 5px;
-    -webkit-border-radius: 5px;
+    @include tag;
+    
     float: left;
-    white-space: nowrap;
-    text-align: center;
-
-    &.group {
-      border: 1px solid $pill-border-color;
-      background-color: $pill-background-color;
-      a {
-        color: $pill-text-color;
-        &:hover {
-          text-decoration: none;
-
-        }
-      }
-      &:hover {
-        background-color: $pill-background-hover-color;
-      }
-    }
+    margin: 6px 3px;
 }
 
 .read-only .token-input-token-elmo {
