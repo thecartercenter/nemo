@@ -1,6 +1,13 @@
 import isEmpty from "lodash/isEmpty";
 
 /**
+ * Stringified controller_name from Rails.
+ */
+export const CONTROLLER_NAME = {
+  RESPONSES: "\"responses\"",
+};
+
+/**
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */

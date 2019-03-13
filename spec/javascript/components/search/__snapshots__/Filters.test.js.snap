@@ -18,30 +18,34 @@ exports[`integration navigates on apply form filter 2`] = `
 }
 `;
 
-exports[`renders as expected 1`] = `
-<ButtonToolbar
-  className="filters"
->
-  <FormFilter
-    allForms={
-      Array [
-        Object {
-          "displayName": "One",
-          "id": "1",
-        },
-        Object {
-          "displayName": "Two",
-          "id": "2",
-        },
-      ]
-    }
-    onSelectForm={[Function]}
-    onSubmit={[Function]}
-    selectedFormIds={
-      Array [
-        "2",
-      ]
-    }
-  />
-</ButtonToolbar>
+exports[`renders as expected (other page) 1`] = `<Fragment />`;
+
+exports[`renders as expected (responses page) 1`] = `
+<Fragment>
+  <ButtonToolbar
+    className="filters"
+  >
+    <FormFilter
+      allForms={
+        Array [
+          Object {
+            "displayName": "One",
+            "id": "1",
+          },
+          Object {
+            "displayName": "Two",
+            "id": "2",
+          },
+        ]
+      }
+      onSelectForm={[Function]}
+      onSubmit={[Function]}
+      selectedFormIds={
+        Array [
+          "2",
+        ]
+      }
+    />
+  </ButtonToolbar>
+</Fragment>
 `;

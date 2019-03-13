@@ -4,14 +4,25 @@ import {shallow, mount} from "enzyme";
 import {STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors} from "../../testUtils";
 import {allFilterProps} from "./utils";
 
+import {CONTROLLER_NAME} from "../../../../app/javascript/components/search/utils";
 import Component from "../../../../app/javascript/components/search/Filters";
 
 const defaultProps = {
   ...allFilterProps,
+  controllerName: CONTROLLER_NAME.RESPONSES,
 };
 
-it("renders as expected", () => {
+it("renders as expected (responses page)", () => {
   const wrapper = shallow(<Component {...defaultProps} />);
+  expect(wrapper).toMatchSnapshot();
+});
+
+it("renders as expected (other page)", () => {
+  const wrapper = shallow(
+    <Component
+      {...defaultProps}
+      controllerName="foo" />
+  );
   expect(wrapper).toMatchSnapshot();
 });
 

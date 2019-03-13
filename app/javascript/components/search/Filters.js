@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 
-import {getFilterString, submitSearch} from "./utils";
+import {CONTROLLER_NAME, getFilterString, submitSearch} from "./utils";
 import FormFilter from "./FormFilter";
 
 class Filters extends React.Component {
@@ -19,6 +19,7 @@ class Filters extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectForm = this.handleSelectForm.bind(this);
+    this.renderFilterButtons = this.renderFilterButtons.bind(this);
   }
 
   handleSubmit() {
@@ -31,7 +32,7 @@ class Filters extends React.Component {
     this.setState({selectedFormIds: [event.target.value]});
   }
 
-  render() {
+  renderFilterButtons() {
     const {allForms} = this.props;
     const {selectedFormIds} = this.state;
 
@@ -45,6 +46,17 @@ class Filters extends React.Component {
       </ButtonToolbar>
     );
   }
+
+  render() {
+    const {controllerName} = this.props;
+    const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
+
+    return (
+      <React.Fragment>
+        {shouldRenderButtons ? this.renderFilterButtons() : null}
+      </React.Fragment>
+    );
+  }
 }
 
 Filters.propTypes = {
@@ -52,6 +64,7 @@ Filters.propTypes = {
     id: PropTypes.string,
     displayName: PropTypes.string
   })).isRequired,
+  controllerName: PropTypes.string.isRequired,
   selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
