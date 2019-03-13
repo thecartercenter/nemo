@@ -32,12 +32,12 @@ it("gets form name (not found)", () => {
 });
 
 it("gets filter string (no filters)", () => {
-  const result = getFilterString([], formFilterProps.allForms);
+  const result = getFilterString([], formFilterProps.allForms, null);
   expect(result).toMatchSnapshot();
 });
 
 it("gets filter string (all filters)", () => {
-  const result = getFilterString(["1", "3"], formFilterProps.allForms);
+  const result = getFilterString(["1", "3"], formFilterProps.allForms, "query");
   expect(result).toMatchSnapshot();
 });
 

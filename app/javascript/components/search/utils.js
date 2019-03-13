@@ -37,12 +37,13 @@ export function getFormNameFromId(allForms, searchId) {
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString(selectedFormIds, allForms) {
+export function getFilterString(selectedFormIds, allForms, advancedSearchText) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join("|")})`,
+    advancedSearchText,
   ].filter(Boolean);
 
   return parts.join(" ");

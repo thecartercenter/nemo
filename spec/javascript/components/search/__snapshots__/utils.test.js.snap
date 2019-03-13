@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\")"`;
+exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\") query"`;
 
 exports[`gets filter string (no filters) 1`] = `""`;
 
