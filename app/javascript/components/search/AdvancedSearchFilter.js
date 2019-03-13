@@ -8,10 +8,19 @@ class AdvancedSearchFilter extends React.Component {
   }
 
   render() {
-    const {onSubmit} = this.props;
+    const {advancedSearchText, onChangeAdvancedSearch, onSubmit} = this.props;
 
     return (
       <div>
+        <input
+          autoComplete="off"
+          className="form-control"
+          id="search_str"
+          name="search"
+          onChange={onChangeAdvancedSearch}
+          placeholder={I18n.t("filter.advancedSearch")}
+          type="text"
+          value={advancedSearchText} />
         <Button
           className="btn-apply"
           onClick={onSubmit}>
@@ -23,6 +32,8 @@ class AdvancedSearchFilter extends React.Component {
 }
 
 AdvancedSearchFilter.propTypes = {
+  advancedSearchText: PropTypes.string.isRequired,
+  onChangeAdvancedSearch: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 

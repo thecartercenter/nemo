@@ -18,8 +18,6 @@
     ],
     selectedFormIds: ["2"]
   }) %>
-  <input type="text" class="form-control" name="search"
-    value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
   <% if params[:search].present? %>
     <input type="button" value="<%= t("common.clear") %>" class="btn btn-default btn-clear">
   <% end %>

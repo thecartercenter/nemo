@@ -16,6 +16,16 @@ exports[`handles callbacks 1`] = `
 
 exports[`renders as expected 1`] = `
 <div>
+  <input
+    autoComplete="off"
+    className="form-control"
+    id="search_str"
+    name="search"
+    onChange={[MockFunction]}
+    placeholder="Advanced search"
+    type="text"
+    value="query"
+  />
   <Button
     className="btn-apply"
     onClick={[MockFunction]}
