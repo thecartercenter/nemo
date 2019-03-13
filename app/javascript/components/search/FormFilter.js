@@ -8,6 +8,9 @@ import Select2 from "react-select2-wrapper/lib/components/Select2.full";
 
 import "react-select2-wrapper/css/select2.css";
 
+/**
+ * Converts a list of forms from the backend into something Select2 understands.
+ */
 const parseFormsForSelect2 = (allForms) => allForms
   .map((form) => mapKeys(form, (value, key) => key === "displayName" ? "text" : key));
 

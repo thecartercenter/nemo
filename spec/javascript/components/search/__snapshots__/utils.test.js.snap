@@ -1,8 +1,8 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`gets url strings (all) 1`] = `"form:(1|2)"`;
+exports[`gets filter string (all filters) 1`] = `"form:(1|2)"`;
 
-exports[`gets url strings (none) 1`] = `""`;
+exports[`gets filter string (no filters) 1`] = `""`;
 
 exports[`submits searches 1`] = `[MockFunction]`;
 

@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 
-import {getUrlString, submitSearch} from "./utils";
+import {getFilterString, submitSearch} from "./utils";
 import FormFilter from "./FormFilter";
 
 class Filters extends React.Component {
@@ -10,6 +10,11 @@ class Filters extends React.Component {
     super();
 
     const {selectedFormIds} = props;
+
+    /*
+     * The state for all filters is held here.
+     * Individual filters invoke callbacks to notify this parent component of changes.
+     */
     this.state = {selectedFormIds};
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -18,8 +23,8 @@ class Filters extends React.Component {
 
   handleSubmit() {
     const {selectedFormIds} = this.state;
-    const urlString = getUrlString(selectedFormIds);
-    submitSearch(urlString);
+    const filterString = getFilterString(selectedFormIds);
+    submitSearch(filterString);
   }
 
   handleSelectForm(event) {

@@ -1,6 +1,10 @@
 import isEmpty from "lodash/isEmpty";
 
-export function getUrlString(selectedFormIds) {
+/**
+ * Given all of the different filter states,
+ * return a stringified version for the backend.
+ */
+export function getFilterString(selectedFormIds) {
   const parts = [
     isEmpty(selectedFormIds) ? null : `form:(${selectedFormIds.join("|")})`,
   ].filter(Boolean);
@@ -8,6 +12,9 @@ export function getUrlString(selectedFormIds) {
   return parts.join(" ");
 }
 
-export function submitSearch(urlString) {
-  window.location.assign(`?search=${urlString}`);
+/**
+ * Reload the page with the given search.
+ */
+export function submitSearch(filterString) {
+  window.location.assign(`?search=${encodeURIComponent(filterString)}`);
 }

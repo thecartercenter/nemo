@@ -1,12 +1,12 @@
-import {getUrlString, submitSearch} from "../../../../app/javascript/components/search/utils";
+import {getFilterString, submitSearch} from "../../../../app/javascript/components/search/utils";
 
-it("gets url strings (none)", () => {
-  const result = getUrlString([]);
+it("gets filter string (no filters)", () => {
+  const result = getFilterString([]);
   expect(result).toMatchSnapshot();
 });
 
-it("gets url strings (all)", () => {
-  const result = getUrlString(["1", "2"]);
+it("gets filter string (all filters)", () => {
+  const result = getFilterString(["1", "2"]);
   expect(result).toMatchSnapshot();
 });
 
