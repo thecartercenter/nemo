@@ -3,11 +3,16 @@
 }
 
 .filters-popover {
+  $container-padding: 12px;
+
   max-width: 80vw;
 
+  .popover-content {
+    padding: $container-padding;
+  }
+
   .btn-apply-container {
-    // Same as padding-bottom for the popover-container.
-    margin-top: 9px;
+    margin-top: $container-padding;
     text-align: right;
   }
 }
