@@ -3,6 +3,7 @@ import {
   getFormNameFromId,
   getFilterString,
   submitSearch,
+  isQueryParamTruthy,
 } from "../../../../app/javascript/components/search/utils";
 import {formFilterProps} from "./utils";
 
@@ -60,4 +61,11 @@ it("submits searches", () => {
   window.location.assign.mockClear();
   submitSearch(null);
   expect(window.location.assign).toMatchSnapshot();
+});
+
+it("checks if param is truthy", () => {
+  window.location.search = "?foo=&bar=baz";
+  expect(isQueryParamTruthy("foo")).toMatchSnapshot();
+  expect(isQueryParamTruthy("bar")).toMatchSnapshot();
+  expect(isQueryParamTruthy("baz")).toMatchSnapshot();
 });

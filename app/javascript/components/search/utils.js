@@ -1,4 +1,5 @@
 import isEmpty from "lodash/isEmpty";
+import queryString from "query-string";
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
@@ -54,4 +55,12 @@ export function getFilterString(allForms, {selectedFormIds, advancedSearchText})
  */
 export function submitSearch(filterString) {
   window.location.assign(`?search=${filterString ? encodeURIComponent(filterString) : ""}`);
+}
+
+/**
+ * Returns true if the given param name exists and is non-empty.
+ */
+export function isQueryParamTruthy(paramName) {
+  const parsed = queryString.parse(window.location.search);
+  return Boolean(parsed[paramName]);
 }

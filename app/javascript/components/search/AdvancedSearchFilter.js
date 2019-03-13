@@ -2,6 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/lib/Button";
 
+import {isQueryParamTruthy} from "./utils";
+
 class AdvancedSearchFilter extends React.Component {
   constructor(props) {
     super();
@@ -26,11 +28,13 @@ class AdvancedSearchFilter extends React.Component {
           onClick={onSubmit}>
           {I18n.t("common.search")}
         </Button>
-        <Button
-          className="btn-clear"
-          onClick={onClear}>
-          {I18n.t("common.clear")}
-        </Button>
+        {isQueryParamTruthy("search") ? (
+          <Button
+            className="btn-clear"
+            onClick={onClear}>
+            {I18n.t("common.clear")}
+          </Button>
+        ) : null}
       </div>
     );
   }

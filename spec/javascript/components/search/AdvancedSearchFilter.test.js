@@ -12,12 +12,28 @@ const defaultProps = {
   onClear: jest.fn(),
 };
 
-it("renders as expected", () => {
+function withQueryParam() {
+  window.location.search = "?search=foo";
+}
+
+function withoutQueryParam() {
+  window.location.search = "?search=";
+}
+
+it("renders as expected (without query param)", () => {
+  withoutQueryParam();
+  const wrapper = shallow(<Component {...defaultProps} />);
+  expect(wrapper).toMatchSnapshot();
+});
+
+it("renders as expected (with query param)", () => {
+  withQueryParam();
   const wrapper = shallow(<Component {...defaultProps} />);
   expect(wrapper).toMatchSnapshot();
 });
 
 describe("callbacks", () => {
+  withQueryParam();
   const wrapper = shallow(<Component {...defaultProps} />);
 
   it("submits", () => {

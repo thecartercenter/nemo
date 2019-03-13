@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`checks if param is truthy 1`] = `false`;
+
+exports[`checks if param is truthy 2`] = `true`;
+
+exports[`checks if param is truthy 3`] = `false`;
+
 exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\") query"`;
 
 exports[`gets filter string (no filters) 1`] = `""`;
