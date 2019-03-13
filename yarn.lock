@@ -6430,9 +6430,9 @@ react-prop-types@^0.4.0:
   dependencies:
     warning "^3.0.0"
 
-react-select2-wrapper@cooperka/react-select2-wrapper#2019-03-08-select2Full:
+react-select2-wrapper@sassafrastech/react-select2-wrapper#2019-03-08-select2Full:
   version "1.0.4-beta6"
-  resolved "https://codeload.github.com/cooperka/react-select2-wrapper/tar.gz/57d5960d6a9ec7832275f56b5ae661b6f3f9dde1"
+  resolved "https://codeload.github.com/sassafrastech/react-select2-wrapper/tar.gz/57d5960d6a9ec7832275f56b5ae661b6f3f9dde1"
   dependencies:
     prop-types "^15.6.0"
     select2 "^4.0.0"
