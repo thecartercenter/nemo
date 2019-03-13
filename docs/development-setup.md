@@ -121,9 +121,12 @@ git checkout develop
 #### Run the tests
 
 1. Run `nvm use` to ensure you have the right version of Node.js loaded. Do this once per console session.
-1. Run `rspec`.
-1. All tests should pass. Running them takes about 10-15 minutes.
-1. If you have trouble debugging a feature spec, you can run it headed (so you can watch the browser go through the spec) by doing `HEADED=1 bundle exec rspec spec/features/your_spec.rb`.
+1. Run `rspec` to test Rails.
+    * All tests should pass. Running them takes about 10-15 minutes.
+    * If you have trouble debugging a feature spec, you can run it headed (so you can watch the browser go through the spec) by doing `HEADED=1 bundle exec rspec spec/features/your_spec.rb`.
+1. Run `yarn test` to test React components.
+    * These rely on separately compiled i18n translations which can be generated via `rails i18n:js:export`
+    * Update snapshots and re-run on change: `yarn test -u --watch`
 
 #### Start the server
 
@@ -139,12 +142,6 @@ You may want to run `bundle exec rake db:create_fake_data` to create a sample mi
 ### Dealing with JavaScript
 
 NEMO includes several React components that are provided via [react-rails](https://github.com/reactjs/react-rails).
-
-#### Tests
-
-You can run JS-only tests with `yarn test`.
-
-These rely on separately compiled i18n translations which can be generated via `rails i18n:js:export`.
 
 ### Testing with ODK
 
