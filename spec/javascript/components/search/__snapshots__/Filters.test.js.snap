@@ -6,7 +6,7 @@ exports[`integration navigates on apply form filter 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A(%22Two%22)",
+      "?search=form%3A(%22Two%22)%20query",
     ],
   ],
   "results": Array [
