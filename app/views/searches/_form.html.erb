@@ -1,6 +1,6 @@
 <form class="search_form form-inline">
   <%= react_component("search/Filters", {
-    controllerName: controller_name.to_json,
+    controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
     allForms: [
       {
         id: "1",
