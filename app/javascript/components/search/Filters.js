@@ -62,7 +62,7 @@ class Filters extends React.Component {
 Filters.propTypes = {
   allForms: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
-    displayName: PropTypes.string
+    name: PropTypes.string
   })).isRequired,
   controllerName: PropTypes.string.isRequired,
   selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired

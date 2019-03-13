@@ -2,11 +2,11 @@ export const formFilterProps = {
   allForms: [
     {
       id: "1",
-      displayName: "One"
+      name: "One"
     },
     {
       id: "2",
-      displayName: "Two"
+      name: "Two"
     }
   ],
   selectedFormIds: [

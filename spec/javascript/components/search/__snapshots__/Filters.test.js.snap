@@ -29,12 +29,12 @@ exports[`renders as expected (responses page) 1`] = `
       allForms={
         Array [
           Object {
-            "displayName": "One",
             "id": "1",
+            "name": "One",
           },
           Object {
-            "displayName": "Two",
             "id": "2",
+            "name": "Two",
           },
         ]
       }

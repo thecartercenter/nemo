@@ -12,7 +12,7 @@ import "react-select2-wrapper/css/select2.css";
  * Converts a list of forms from the backend into something Select2 understands.
  */
 const parseFormsForSelect2 = (allForms) => allForms
-  .map((form) => mapKeys(form, (value, key) => key === "displayName" ? "text" : key));
+  .map((form) => mapKeys(form, (value, key) => key === "name" ? "text" : key));
 
 class FormFilter extends React.Component {
   constructor(props) {
@@ -67,7 +67,7 @@ class FormFilter extends React.Component {
 FormFilter.propTypes = {
   allForms: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
-    displayName: PropTypes.string
+    name: PropTypes.string
   })).isRequired,
   onSelectForm: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
