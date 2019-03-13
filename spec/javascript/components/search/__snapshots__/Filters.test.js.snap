@@ -1,5 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`integration navigates on apply advanced search 1`] = `[MockFunction]`;
+
+exports[`integration navigates on apply advanced search 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?search=form%3A(%22Two%22)%20something%20else",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`integration navigates on apply form filter 1`] = `[MockFunction]`;
 
 exports[`integration navigates on apply form filter 2`] = `

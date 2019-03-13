@@ -31,6 +31,8 @@ describe("integration", () => {
   const wrapper = mount(<Component {...defaultProps} />);
   unsuppressAllErrors();
 
+  beforeEach(() => window.location.assign.mockClear());
+
   it("navigates on apply form filter", () => {
     wrapper.find("Button.btn-form-filter").simulate("click");
     const overlay = shallow(wrapper.find("OverlayTrigger").prop("overlay"));
@@ -38,6 +40,14 @@ describe("integration", () => {
 
     expect(window.location.assign).toMatchSnapshot();
     overlay.find("Button.btn-apply").simulate("click");
+    expect(window.location.assign).toMatchSnapshot();
+  });
+
+  it("navigates on apply advanced search", () => {
+    wrapper.find("#search_str").simulate("change", {target: {value: "something else"}});
+
+    expect(window.location.assign).toMatchSnapshot();
+    wrapper.find("Button.btn-advanced-search").simulate("click");
     expect(window.location.assign).toMatchSnapshot();
   });
 });

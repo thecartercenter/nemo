@@ -24,7 +24,7 @@ class AdvancedSearchFilter extends React.Component {
           type="text"
           value={advancedSearchText} />
         <Button
-          className="btn-apply"
+          className="btn-apply btn-advanced-search"
           onClick={onSubmit}>
           {I18n.t("common.search")}
         </Button>
