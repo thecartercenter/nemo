@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`gets filter string (all filters) 1`] = `"form:(1|2)"`;
+exports[`gets filter string (all filters) 1`] = `"form:(One|Two)"`;
 
 exports[`gets filter string (no filters) 1`] = `""`;
 

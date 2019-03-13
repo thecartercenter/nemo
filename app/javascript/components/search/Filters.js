@@ -23,8 +23,9 @@ class Filters extends React.Component {
   }
 
   handleSubmit() {
+    const {allForms} = this.props;
     const {selectedFormIds} = this.state;
-    const filterString = getFilterString(selectedFormIds);
+    const filterString = getFilterString(selectedFormIds, allForms);
     submitSearch(filterString);
   }
 

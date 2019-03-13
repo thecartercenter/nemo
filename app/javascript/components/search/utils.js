@@ -11,9 +11,12 @@ export const CONTROLLER_NAME = {
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString(selectedFormIds) {
+export function getFilterString(selectedFormIds, allForms) {
+  const getFormNameFromId = (searchId) => allForms.find(({id}) => searchId === id).name;
+  const selectedFormNames = selectedFormIds.map(getFormNameFromId);
+
   const parts = [
-    isEmpty(selectedFormIds) ? null : `form:(${selectedFormIds.join("|")})`,
+    isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join("|")})`,
   ].filter(Boolean);
 
   return parts.join(" ");
