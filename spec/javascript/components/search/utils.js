@@ -20,6 +20,11 @@ export const formFilterProps = {
   ],
 };
 
+export const advancedSearchProps = {
+  advancedSearchText: "query"
+};
+
 export const allFilterProps = {
   ...formFilterProps,
+  ...advancedSearchProps,
 };

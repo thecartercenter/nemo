@@ -4,22 +4,30 @@ import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 
 import {CONTROLLER_NAME, getFilterString, submitSearch} from "./utils";
 import FormFilter from "./FormFilter";
+import AdvancedSearchFilter from "./AdvancedSearchFilter";
 
 class Filters extends React.Component {
   constructor(props) {
     super();
 
-    const {selectedFormIds} = props;
+    const {
+      selectedFormIds,
+      advancedSearchText,
+    } = props;
 
     /*
      * The state for all filters is held here.
      * Individual filters invoke callbacks to notify this parent component of changes.
      */
-    this.state = {selectedFormIds};
+    this.state = {
+      selectedFormIds,
+      advancedSearchText,
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectForm = this.handleSelectForm.bind(this);
     this.handleClearFormSelection = this.handleClearFormSelection.bind(this);
+    this.handleChangeAdvancedSearch = this.handleChangeAdvancedSearch.bind(this);
     this.renderFilterButtons = this.renderFilterButtons.bind(this);
   }
 
@@ -36,6 +44,10 @@ class Filters extends React.Component {
 
   handleClearFormSelection() {
     this.setState({selectedFormIds: []});
+  }
+
+  handleChangeAdvancedSearch(event) {
+    this.setState({advancedSearchText: event.target.value});
   }
 
   renderFilterButtons() {
@@ -57,17 +69,24 @@ class Filters extends React.Component {
 
   render() {
     const {controllerName} = this.props;
+    const {advancedSearchText} = this.state;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
       <React.Fragment>
         {shouldRenderButtons ? this.renderFilterButtons() : null}
+
+        <AdvancedSearchFilter
+          advancedSearchText={advancedSearchText}
+          onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
+          onSubmit={this.handleSubmit} />
       </React.Fragment>
     );
   }
 }
 
 Filters.propTypes = {
+  advancedSearchText: PropTypes.string.isRequired,
   allForms: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string

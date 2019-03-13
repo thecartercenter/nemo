@@ -1,6 +1,7 @@
 <form class="search-form form-inline">
   <%= react_component("search/Filters", {
     controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
+    advancedSearchText: "query",
     allForms: [
       {
         id: "1",
@@ -19,7 +20,6 @@
   }) %>
   <input type="text" class="form-control" name="search"
     value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
-  <input type="submit" value="<%= t("common.search") %>" class="btn btn-default">
   <% if params[:search].present? %>
     <input type="button" value="<%= t("common.clear") %>" class="btn btn-default btn-clear">
   <% end %>

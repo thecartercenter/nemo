@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`handles callbacks 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`renders as expected 1`] = `
+<div>
+  <Button
+    className="btn-apply"
+    onClick={[MockFunction]}
+  >
+    Search
+  </Button>
+</div>
+`;
