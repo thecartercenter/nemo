@@ -53,5 +53,5 @@ export function getFilterString(allForms, {selectedFormIds, advancedSearchText})
  * Reload the page with the given search.
  */
 export function submitSearch(filterString) {
-  window.location.assign(`?search=${encodeURIComponent(filterString)}`);
+  window.location.assign(`?search=${filterString ? encodeURIComponent(filterString) : ""}`);
 }

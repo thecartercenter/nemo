@@ -1,6 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`handles callbacks 1`] = `
+exports[`callbacks clears 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`callbacks submits 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [],
@@ -31,6 +45,12 @@ exports[`renders as expected 1`] = `
     onClick={[MockFunction]}
   >
     Search
+  </Button>
+  <Button
+    className="btn-clear"
+    onClick={[MockFunction]}
+  >
+    Clear
   </Button>
 </div>
 `;

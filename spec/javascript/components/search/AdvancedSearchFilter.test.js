@@ -9,6 +9,7 @@ const defaultProps = {
   ...advancedSearchProps,
   onChangeAdvancedSearch: jest.fn(),
   onSubmit: jest.fn(),
+  onClear: jest.fn(),
 };
 
 it("renders as expected", () => {
@@ -16,9 +17,16 @@ it("renders as expected", () => {
   expect(wrapper).toMatchSnapshot();
 });
 
-it("handles callbacks", () => {
+describe("callbacks", () => {
   const wrapper = shallow(<Component {...defaultProps} />);
-  wrapper.find("Button.btn-apply").simulate("click");
 
-  expect(defaultProps.onSubmit).toMatchSnapshot();
+  it("submits", () => {
+    wrapper.find("Button.btn-apply").simulate("click");
+    expect(defaultProps.onSubmit).toMatchSnapshot();
+  });
+
+  it("clears", () => {
+    wrapper.find("Button.btn-clear").simulate("click");
+    expect(defaultProps.onClear).toMatchSnapshot();
+  });
 });

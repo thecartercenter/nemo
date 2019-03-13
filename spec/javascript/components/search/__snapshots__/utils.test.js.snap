@@ -31,3 +31,19 @@ exports[`submits searches 2`] = `
   ],
 }
 `;
+
+exports[`submits searches 3`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?search=",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;

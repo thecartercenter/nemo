@@ -8,7 +8,7 @@ class AdvancedSearchFilter extends React.Component {
   }
 
   render() {
-    const {advancedSearchText, onChangeAdvancedSearch, onSubmit} = this.props;
+    const {advancedSearchText, onChangeAdvancedSearch, onClear, onSubmit} = this.props;
 
     return (
       <div>
@@ -26,6 +26,11 @@ class AdvancedSearchFilter extends React.Component {
           onClick={onSubmit}>
           {I18n.t("common.search")}
         </Button>
+        <Button
+          className="btn-clear"
+          onClick={onClear}>
+          {I18n.t("common.clear")}
+        </Button>
       </div>
     );
   }
@@ -34,6 +39,7 @@ class AdvancedSearchFilter extends React.Component {
 AdvancedSearchFilter.propTypes = {
   advancedSearchText: PropTypes.string.isRequired,
   onChangeAdvancedSearch: PropTypes.func.isRequired,
+  onClear: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
 

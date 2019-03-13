@@ -23,6 +23,7 @@ exports[`renders as expected (other page) 1`] = `
   <AdvancedSearchFilter
     advancedSearchText="query"
     onChangeAdvancedSearch={[Function]}
+    onClear={[Function]}
     onSubmit={[Function]}
   />
 </Fragment>
@@ -68,6 +69,7 @@ exports[`renders as expected (responses page) 1`] = `
   <AdvancedSearchFilter
     advancedSearchText="query"
     onChangeAdvancedSearch={[Function]}
+    onClear={[Function]}
     onSubmit={[Function]}
   />
 </Fragment>

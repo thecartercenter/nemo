@@ -28,6 +28,7 @@ class Filters extends React.Component {
     this.handleSelectForm = this.handleSelectForm.bind(this);
     this.handleClearFormSelection = this.handleClearFormSelection.bind(this);
     this.handleChangeAdvancedSearch = this.handleChangeAdvancedSearch.bind(this);
+    this.handleClearFilters = this.handleClearFilters.bind(this);
     this.renderFilterButtons = this.renderFilterButtons.bind(this);
   }
 
@@ -48,6 +49,10 @@ class Filters extends React.Component {
 
   handleChangeAdvancedSearch(event) {
     this.setState({advancedSearchText: event.target.value});
+  }
+
+  handleClearFilters() {
+    submitSearch(null);
   }
 
   renderFilterButtons() {
@@ -79,6 +84,7 @@ class Filters extends React.Component {
         <AdvancedSearchFilter
           advancedSearchText={advancedSearchText}
           onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
+          onClear={this.handleClearFilters}
           onSubmit={this.handleSubmit} />
       </React.Fragment>
     );

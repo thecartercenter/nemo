@@ -53,6 +53,11 @@ it("gets filter string (all filters)", () => {
 
 it("submits searches", () => {
   expect(window.location.assign).toMatchSnapshot();
+
   submitSearch("foo");
+  expect(window.location.assign).toMatchSnapshot();
+
+  window.location.assign.mockClear();
+  submitSearch(null);
   expect(window.location.assign).toMatchSnapshot();
 });
