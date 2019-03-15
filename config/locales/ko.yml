@@ -865,13 +865,10 @@ ko:
         verify: "검증하기"
   date:
     formats:
-      default: "%b %d %Y"
       short: "%b %d"
-      long: "%B %d %Y"
   time:
     formats:
       short: "%b %d %H:%M"
-      long: "%A, %B %d %Y %H:%M"
   search_qualifiers:
     text: "텍스트"
     email: "이메일"

@@ -482,7 +482,6 @@ fr:
         id: "Numero de la réponse"
         created_at: "Date de soumission"
         form_id: "Formulaire"
-        reviewed: "Cette réponse a été révisé"
         reviewer_notes: "Remarques"
         reviewer_id: "Réviseur"
         shortcode: "Numéro de la réponse"
@@ -998,14 +997,10 @@ fr:
         verify: "Vérifier"
   date:
     formats:
-      default: "%d %b %Y"
       short: "%d %b"
-      long: "%d %B %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M:%S"
       short: "%d %b %H:%M"
-      long: "%A, %d %B %Y %H:%M"
       time_only: "%H:%M:%S"
   search_qualifiers:
     text: "texte"
