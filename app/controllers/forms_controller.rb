@@ -24,6 +24,9 @@ class FormsController < ApplicationController
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 
+  decorates_assigned :forms
+  helper_method :questions
+
   def index
     # handle different formats
     respond_to do |format|
@@ -31,13 +34,13 @@ class FormsController < ApplicationController
       format.html do
         # if requesting the dropdown menu
         if params[:dropdown]
-          @forms = @forms.published.default_order
+          @forms = @forms.published.by_name
           render(partial: "dropdown")
 
         # otherwise, it's a normal request
         else
           # add some eager loading stuff, and ordering
-          @forms = @forms.with_responses_counts.default_order
+          @forms = @forms.with_responses_counts.by_published.by_name
           load_importable_objs
           render(:index)
         end
@@ -239,6 +242,14 @@ class FormsController < ApplicationController
   end
 
   private
+
+  # Decorates questions for choose_questions view.
+  def questions
+    # Need to specify the plain CollectionDecorator here because otherwise it will use PaginatingDecorator
+    # which doesn't work here because we're not paginating.
+    @decorated_questions ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+      Draper::CollectionDecorator.decorate(@questions, with: QuestionDecorator)
+  end
 
   def setup_condition_computer
     @condition_computer = Forms::ConditionComputer.new(@form)

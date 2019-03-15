@@ -33,19 +33,16 @@ feature "user form", js: true do
       expect(email.body.to_s).to match(%r{^https?://.+/en/password-resets/[\w_-]+/edit$})
       expect(email.body.to_s).not_to match(/translation_missing/)
 
-      # Go to show and see if correct
-      click_link("Foo Bar")
-      expect(page).to have_content("foo@bar.com")
-
       # Go to edit and change something
-      click_link("Edit User")
-      expect(page).to have_content("Foo Bar")
+      click_link("Foo Bar")
       select("Staffer", from: "user_assignments_attributes_0_role")
       click_button("Save")
 
       # Go to show page
       click_link("View User")
       expect(page).to have_content("Staffer")
+      expect(page).to have_content("foo@bar.com")
+      expect(page).to have_content("Foo Bar")
     end
   end
 
@@ -60,15 +57,13 @@ feature "user form", js: true do
       click_on("Save")
       expect(page).to have_content("Success: User created successfully")
 
-      # Go to show user
+      # Edit user and change assignment
       click_link("Ella Baker")
-      expect(page).to have_content("Staffer")
-
-      # Edit user and change assignment, verify in show
-      click_link("Edit User")
       select("Reviewer", from: "user[assignments_attributes][0][role]")
-      click_on("Save")
+      click_on("Save") # Redirects back to edit
       expect(page).to have_content("Success: User updated successfully")
+
+      # Verify in show mode
       click_on("View User")
       expect(page).to have_content("Reviewer")
     end

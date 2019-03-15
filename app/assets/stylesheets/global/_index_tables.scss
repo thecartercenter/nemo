@@ -1,10 +1,7 @@
 table.index_table {
-  width: 100%;
+  $cell-top-bot-padding: 6px;
 
-  &.index-table-narrow {
-    width: auto;
-    min-width: 66%;
-  }
+  min-width: 66%;
 
   tr:first-child td {
     border-top: none;
@@ -15,22 +12,41 @@ table.index_table {
   }
 
   td {
+    height: 34px; // Ensure height is consistent even if icons not present.
     vertical-align: middle;
 
     border-top: $light-border;
-    padding: 6px 10px 6px 3px;
+    padding-top: $cell-top-bot-padding;
+    padding-bottom: $cell-top-bot-padding;
+    padding-#{$left}: 3px;
+    padding-#{$right}: 20px;
 
-    /* many of the cells are links, and they are harder to read if they are orange, so revert to blue */
+    &.action {
+      padding-#{$right}: 10px;
+    }
+
     a {
-      color: $theme-main-darker;
+      color: $darker-link-color;
       padding: 5px 0;
     }
   }
 
-  td.actions_col { white-space: nowrap; }
+  // For cells with tags, we remove padding and add it back on a span.text inside the cell.
+  // This prevents the tags from making the row too high.
+  td.has-tags {
+    padding-bottom: 0;
+    padding-top: 0;
 
-  td.actions_col img {
-    margin-right: 5px;
+    span.text {
+      display: inline-block;
+      padding-top: $cell-top-bot-padding;
+      padding-bottom: $cell-top-bot-padding;
+    }
+  }
+
+  td.action {
+    white-space: nowrap;
+    width: 1px; // These shouldn't scale out on wider screens.
   }
 
   tbody tr.clickable {
@@ -44,18 +60,6 @@ table.index_table {
   i.fa-certificate {
     margin-bottom: -5px;
     font-size: 1.5em;
-  }
-
-  .tags {
-    display: inline;
-    line-height: 2.1;
-    margin-left: 3px;
-    vertical-align: text-top;
-    li {
-      float: none;
-      display: inline;
-    }
-    i.fa-certificate { font-size: 1em; }
   }
 }
 

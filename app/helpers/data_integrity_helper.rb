@@ -1,3 +1,4 @@
+# DEPRECATED: Model-related display logic should move to a decorator.
 module DataIntegrityHelper
 
   # constructs html for a warning about published objects (form, questioning, question, option set)

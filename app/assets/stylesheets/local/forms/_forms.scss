@@ -1,3 +1,17 @@
+.forms_index .index_table {
+  td {
+    background-color: $even-lighter-gray;
+  }
+
+  td.name_col {
+    min-width: 200px;
+  }
+
+  tr.published td {
+    background-color: $white;
+  }
+}
+
 form.form_form {
   div#index_table {
     margin-top: 10px;

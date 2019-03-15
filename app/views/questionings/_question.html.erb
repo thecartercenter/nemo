@@ -29,7 +29,7 @@
           <%# Tags %>
           <% if qing.tags.length != 0 %>
             <% qing.tags.each do |tag| %>
-              <span class="token-input-token-elmo"><%= tag.name %></span>
+              <span class="tag"><%= tag.name %></span>
             <% end %>
           <% end %>
         </div>
@@ -60,14 +60,10 @@
       <% end %>
 
       <% unless read_only %>
-        <% if can?(:update, qing) %>
-          <%= link_to content_tag(:i, '', class: 'fa fa-pencil'), edit_questioning_path(qing),
-            class: 'action_link edit' %>
-        <% end %>
-
+        <%= action_link(:edit, edit_questioning_path(qing), label: false) if can?(:update, qing) %>
         <% if can?(:destroy, qing) %>
-          <%= link_to content_tag(:i, '', class: 'fa fa-trash-o'), '#', class: 'action_link delete',
-            data: {message: I18n.t('activerecord.attributes.questioning.delete', code: qing.code)} %>
+          <%= action_link(:destroy, "#", label: false, data:
+            {message: I18n.t('activerecord.attributes.questioning.delete', code: qing.code)}) %>
         <% end %>
       <% end %>
 

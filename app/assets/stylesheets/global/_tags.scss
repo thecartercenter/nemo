@@ -1,0 +1,58 @@
+.all-tags {
+  max-height: 93px;
+  overflow: auto;
+}
+
+.tags {
+  display: inline;
+}
+
+.index_table td .tags {
+  margin-#{$left}: 10px;
+}
+
+// Be careful when editing this mixin as it is included with .token-input-token-elmo
+// which is quite sensitive.
+@mixin tag {
+  overflow: hidden;
+  height: auto !important;
+  padding: 1px 3px;
+  border: 1px solid $pill-border-color;
+  background-color: $pill-background-color;
+  color: $pill-text-color;
+  cursor: default;
+  font-size: 12px;
+  border-radius: 5px;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  white-space: nowrap;
+  text-align: center;
+  vertical-align: middle;
+
+  a {
+    color: $pill-text-color;
+    padding: 0;
+
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  &:hover {
+    background-color: $pill-background-hover-color;
+    cursor: inherit;
+  }
+
+  &.clickable:hover {
+    cursor: pointer;
+  }
+}
+
+.tag, table.index_table td .tag {
+  @include tag;
+
+  display: inline-block;
+  margin-#{$right}: 6px;
+  margin-top: 6px;
+  margin-bottom: 6px;
+}

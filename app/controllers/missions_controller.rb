@@ -5,6 +5,8 @@ class MissionsController < ApplicationController
   # authorization via cancan
   load_and_authorize_resource
 
+  decorates_assigned :missions
+
   def index
   end
 

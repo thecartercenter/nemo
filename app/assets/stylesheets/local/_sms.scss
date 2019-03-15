@@ -1,5 +1,4 @@
 .sms_index .index_table {
-
   .type_col {
     width: 100px;
   }
@@ -17,17 +16,46 @@
     }
   }
 
+  .to_col {
+    width: 225px;
+  }
+
+  .from_col {
+    width: 125px;
+  }
+
   .body_col {
     max-width: 400px;
     word-wrap: break-word;
+
+    > div {
+      width: auto;
+      overflow: hidden;
+    }
   }
 
   .bold {
     font-weight: bold;
   }
 
+  .direction_col {
+    width: 50px;
+  }
+
+  .received_at_col {
+    width: 130px
+  }
+
+  .sent_at_col {
+    width: 130px
+  }
+
+  .adapter_name_col {
+    width: 100px;
+  }
+
   .error-msg {
-    color: $theme-red;
+    color: $error-red;
     font-weight: bold;
   }
 }

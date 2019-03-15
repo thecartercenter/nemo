@@ -1,7 +1,18 @@
 // WARNING: All theme variables should appear here and optionally be also overridden in theme files.
 // If a new color is added to a theme and not here, folks with custom themes in the wild will get an
 // undefined variable error when they upgrade.
-$body-text-color: #222;
+
+// Variable/theme system:
+// - This file defines 1. custom vars and 2. any bootstrap vars that may be needed in other places
+//   in this file itself, or 2. needed in the theme file.
+// - The theme files (e.g. _nemo_theme.scss) override any custom or bootstrap vars as desired.
+// - _bootstrap.scss assigns theme vars to various bootstrap properties (e.g. it might assign the link color
+//   to the button background color). It does so using !default so that it doesn't override any
+//   customizations in the theme.
+
+// See https://github.com/twbs/bootstrap-sass/blob/master/assets/stylesheets/bootstrap/_variables.scss
+// for a list of bootstrap variables you can override.
+
 $tag-color: #eae175;
 $gold: #e4bb54;
 $gray: #3f3e3e;
@@ -11,40 +22,26 @@ $light-yellow: #f7f6d9;
 $mid-gray: #888888;
 $light-gray: #bdb9b9;
 $lighter-gray: #cccccc;
-$orange: #f77d48;
 $faint-gray: #eee;
 $super-light-gray: #f0f0f0;
+$even-lighter-gray: #f6f6f6;
 $light-background-color: $super-light-gray;
 $white: #ffffff;
 $gray-text: #777;
 $deemphasized-link-color: #ccc;
 $light-border-color: #ddd;
 $light-border: 1px solid $light-border-color;
+$error-red: #d02000;
+$success-green: #9dc400;
 
-$theme-red: #d02000;
-$theme-green: #9dc400;
 $theme-main: #879caa;
-$theme-main-darker: #02648a;
-
-$body-background-color: $theme-main;
-$header-background-color: $body-background-color;
-$header-text-color: inherit;
+$darker-link-color: #02648a;
+$header-background-color: $theme-main;
 $light-background-color: #eef2f7;
-
 $footer-background-color: $gray-blue;
-$footer-text-color: #808080;
-
-$body-text-color: $body-text-color;
-$link-text-color: $orange;
-
-$primary-icon-color: $body-background-color;
-$primary-icon-hover-color: darken($primary-icon-color, 20%);
-
-$primary-btn-background-color: $link-text-color;
-$primary-btn-text-color: #ffffff;
-
-$primary-btn-hover-background-color: darken($primary-btn-background-color, 10%);
-$primary-btn-hover-text-color: #ffffff;
+$footer-text-color: $mid-gray;
+$main-text-color: #222;
+$link-color: #f77d48;
 
 $nav-background-color: #f8f8f8;
 $nav-active-background-color: $light-blue;
@@ -53,8 +50,7 @@ $nav-icon-color: #bdb9b9;
 $nav-border-color: #e7e7e7;
 
 // For pills/tokens like user groups or question tags.
-// Not all instances of pills/tokens obey this yet.
 $pill-background-color: $light-blue;
 $pill-background-hover-color: darken($light-blue, 10%);
 $pill-border-color: darken($light-blue, 20%);
-$pill-text-color: $body-text-color;
+$pill-text-color: $main-text-color;

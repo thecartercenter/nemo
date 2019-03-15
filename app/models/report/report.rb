@@ -1,4 +1,3 @@
-require 'mission_based'
 class Report::Report < ApplicationRecord
   include MissionBased
 

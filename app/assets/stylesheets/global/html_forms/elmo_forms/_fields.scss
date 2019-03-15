@@ -15,7 +15,7 @@
   }
 
   div.reqd-sym {
-    color: $orange;
+    color: $link-color;
     display: inline;
     font-size: 125%;
     font-weight: bold;
@@ -97,4 +97,8 @@
   .control .text {
     padding: 3px;
   }
+}
+
+.form-control {
+  font-size: 14px; // App-wide size is smaller than this.
 }

@@ -1,6 +1,7 @@
 <%# ensures objects collection is paginated and .all is called %>
 <% objects = prepare_for_index(objects) %>
-<div id="index_table" data-entries="<%= objects.total_entries rescue objects.count %>" data-pages="<%= objects.total_pages rescue 1 %>">
+<div id="index_table" data-entries="<%= objects.total_entries rescue objects.count %>"
+  data-pages="<%= objects.total_pages rescue 1 %>">
 
   <%# header links %>
   <% unless options[:table_only] %>
@@ -8,7 +9,10 @@
       <% if paginable?(objects) %>
         <%# explicitly load the objects here to work around counting behavior for grouped models %>
         <% objects.load if objects.respond_to?(:load) %>
-        <%= page_entries_info(objects, :model => klass) %>.
+        <%= page_entries_info(objects, model: klass) %>.
+        &nbsp;
+      <% elsif objects.empty? %>
+        <%= t("will_paginate.#{klass.model_name.i18n_key}.page_entries_info.single_page_html.zero") %>.
         &nbsp;
       <% end %>
       <%= links %>
@@ -30,48 +34,68 @@
     <table class="index_table <%= options[:table_css_classes] %>">
       <thead>
         <tr class="header">
-          <% if batch_ops %><th></th><% end %>
+          <% if batch_ops %>
+            <th></th>
+          <% end %>
           <% fields.each do |f| %>
-            <th>
-              <%# if field def is a hash, look for the :title key %>
-              <% if f.is_a?(Hash) %>
-                <%= f[:title] %>
-              <% else %>
-                <%= f == "actions" ? "" : t("activerecord.table_headers.#{objects[0].class.model_name.i18n_key}.#{f}",
-                  :default => objects[0].class.human_attribute_name(f)) %>
+            <% if f == "actions" %>
+              <% options[:max_actions].times do %>
+                <th></th>
               <% end %>
-            </th>
+            <% else %>
+              <th>
+                <%# if field def is a hash, look for the :title key %>
+                <% if f.is_a?(Hash) && f[:title] %>
+                  <%= f[:title] %>
+                <% else %>
+                  <% key = f.is_a?(Hash) ? f[:attrib] : f %>
+                  <%= t("activerecord.table_headers.#{objects[0].class.model_name.i18n_key}.#{key}",
+                        default: objects[0].class.human_attribute_name(key)) %>
+                <% end %>
+              </th>
+            <% end %>
           <% end %>
         </tr>
       </thead>
       <tbody class="index_table_body">
-        <% objects.each do |o| %>
+        <% objects.each do |object| %>
           <%# include the path for the current object in the tr tag so that we can support clicking anywhere on the row (may be nil) %>
-          <% path = path_for_with_search(o) %>
           <%= content_tag(:tr,
-                :id => "#{klass.model_name.singular_route_key}_#{o.id}",
-                :'data-href' => path,
-                :class => index_row_class(o, clickable: path.present?)) do %>
+                id: "#{klass.model_name.singular_route_key}_#{object.id}",
+                data: {href: object.default_path},
+                class: index_row_class(object, clickable: object.default_path.present?)) do %>
 
             <% if batch_ops %>
               <td class="cb_col">
-                <%= check_box_tag("selected[#{o.id}]", 1, @selected_ids&.include?(o.id),
-                      :class => 'batch_op', :data => { "#{klass.model_name.singular_route_key}-id" => o.id }) %>
+                <%= check_box_tag("selected[#{object.id}]", 1, @selected_ids&.include?(object.id),
+                      class: 'batch_op', data: {"#{klass.model_name.singular_route_key}-id": object.id}) %>
               </td>
             <% end %>
             <% fields.each do |f| %>
-              <td class="<%= "#{(f.is_a?(Hash) ? f[:css_class] : f).gsub(/[^\w\d]/, "")}_col" %>">
-                <div><%= self.send("format_#{klass.model_name.route_key}_field", o, f) %></div>
-              </td>
+              <% formatted = send("format_#{klass.model_name.route_key}_field", object, f) %>
+              <% if f == "actions" && formatted.is_a?(Array) %>
+                <% formatted.each do |link| %>
+                  <td class="action">
+                    <%= link %>
+                  </td>
+                <% end %>
+                <% [options[:max_actions] - formatted.size, 0].max.times do %>
+                  <td></td>
+                <% end %>
+              <% else %>
+                <td class="<%= "#{f.is_a?(Hash) ? f[:css_class] : (f.gsub(/[^\w\d]/, "") << "_col")}" %>">
+                  <div><%= formatted %></div>
+                </td>
+              <% end %>
             <% end %>
 
           <% end %>
 
           <%# do second row if requested %>
-          <% if respond_to?("#{klass.model_name.route_key}_second_row") && content = send("#{klass.model_name.route_key}_second_row", o) %>
+          <% if respond_to?("#{klass.model_name.route_key}_second_row") && content = send("#{klass.model_name.route_key}_second_row", object) %>
             <%= content_tag(:tr,
-                  :'data-href' => path,
-                  :class => 'second_row' + (path ? ' clickable' : '')) do %>
+                  data: {href: object.default_path},
+                  class: 'second_row' + (object.default_path ? ' clickable' : '')) do %>
               <td colspan="<%= fields.size + 1 %>">
                 <%= content %>
               </td>
@@ -90,12 +114,13 @@
 
     <%# create js view model for index table, only necessary if there are some objects %>
     <%= javascript_doc_ready do %>
+      <% class_name = objects[0].object.class.name.underscore %>
       // Clear previous event handlers in case reloading.
-      if (ELMO.batch_actions_views['<%= objects.first.class.name.underscore %>'])
-        ELMO.batch_actions_views['<%= objects.first.class.name.underscore %>'].undelegateEvents();
+      if (ELMO.batch_actions_views['<%= class_name %>'])
+        ELMO.batch_actions_views['<%= class_name %>'].undelegateEvents();
 
-      ELMO.batch_actions_views['<%= objects.first.class.name.underscore %>'] = new ELMO.Views.BatchActionsView(<%=json(
-        class_name: objects[0].class.name.underscore,
+      ELMO.batch_actions_views['<%= class_name %>'] = new ELMO.Views.BatchActionsView(<%=json(
+        class_name: class_name,
         batch_ops: batch_ops,
         is_search: params[:search].present?
       ) %>, ELMO.searchFormView);
@@ -110,7 +135,7 @@
 
   <%# pagination links (don't show if there are no entries) %>
   <% if !options[:table_only] && paginated && paginable?(objects) && objects.total_entries > 0 %>
-    <div class="paginate-container">
+    <div class="pagination-container">
       <%= will_paginate(objects, renderer: BootstrapPagination::Rails) %>
     </div>
   <% end %>

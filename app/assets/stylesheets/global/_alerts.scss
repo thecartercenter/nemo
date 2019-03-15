@@ -1,0 +1,11 @@
+.alert-compact {
+  padding-top: 5px;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+// Make link color same as text color in alert-info box
+.alert-info a {
+  color: $alert-info-text;
+  text-decoration: underline;
+}

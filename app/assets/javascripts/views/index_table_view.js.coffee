@@ -20,8 +20,8 @@ class ELMO.Views.IndexTableView extends ELMO.Views.ApplicationView
     return if @no_whole_row_link
 
     # go to the tr's href IF...
-    # parent <td> is not .actions_col or .cb_col (to avoid misclick)
-    return unless $(event.target).closest('td').is(':not(.actions_col, .cb_col)')
+    # parent <td> is not .action or .cb_col (to avoid misclick)
+    return unless $(event.target).closest('td').is(':not(.action, .cb_col)')
 
     # the parent <tr> is .clickable
     return unless $(event.currentTarget).is('.clickable')

@@ -6,10 +6,10 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
   events:
     'click .add-group': 'show_new_group_modal'
     'click .form-item-group > .inner': 'show_edit_group_modal'
-    'click .form-item-group > .inner .edit': 'show_edit_group_modal'
-    'click .form-item-group > .inner .delete': 'delete_item'
+    'click .form-item-group > .inner .action-link-edit': 'show_edit_group_modal'
+    'click .form-item-group > .inner .action-link-destroy': 'delete_item'
     'click .form-item-question': 'go_to_question'
-    'click .form-item-question > .inner .delete': 'delete_item'
+    'click .form-item-question > .inner .action-link-destroy': 'delete_item'
 
   initialize: (params) ->
     this.draggable = new ELMO.Views.FormItemsDraggableListView({parent_view: this}) if params.can_reorder
@@ -86,7 +86,7 @@ class ELMO.Views.FormItemsView extends ELMO.Views.ApplicationView
   # Checks all groups and hides/shows delete icons when appropriate.
   update_group_action_icons: ->
     for group in @$('.form-item-group')
-      link = $(group).find('> .inner .action_link.delete')
+      link = $(group).find('> .inner .action-link.action-link-destroy')
       link[if $(group).find('.form-item').length > 0 then 'hide' else 'show']()
 
   show_saving_message: (show) ->

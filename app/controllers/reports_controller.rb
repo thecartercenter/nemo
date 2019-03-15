@@ -109,29 +109,36 @@ class ReportsController < ApplicationController
   end
 
   private
-    # custom load method because CanCan won't work with STI hack in report.rb
-    def custom_load
-      # current_user or current_mission may be nil since this method runs before authorization.
-      return unless current_user && current_mission
-      @report = Report::Report.create(report_params.merge(
-        :mission_id => current_mission.id,
-        :creator_id => current_user.id
-      ))
-    end
 
-    def show_report
-      # record viewing of report
-      @report.record_viewing
+  def reports
+    @decorated_reports ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+      ReportDecorator.decorate_collection(@reports)
+  end
+  helper_method :reports
 
-      # The data will be loaded via ajax
-      render(:show)
-    end
+  # custom load method because CanCan won't work with STI hack in report.rb
+  def custom_load
+    # current_user or current_mission may be nil since this method runs before authorization.
+    return unless current_user && current_mission
+    @report = Report::Report.create(report_params.merge(
+      :mission_id => current_mission.id,
+      :creator_id => current_user.id
+    ))
+  end
 
-    def report_params
-      params.require(:report).permit(:type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
-        :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
-        :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag,
-        option_set_choices_attributes: [:option_set_id],
-        calculations_attributes: [:id, :_destroy, :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank])
-    end
+  def show_report
+    # record viewing of report
+    @report.record_viewing
+
+    # The data will be loaded via ajax
+    render(:show)
+  end
+
+  def report_params
+    params.require(:report).permit(:type, :name, :form_id, :option_set_id, :display_type, :bar_style, :unreviewed, :filter,
+      :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
+      :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag,
+      option_set_choices_attributes: [:option_set_id],
+      calculations_attributes: [:id, :_destroy, :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank])
+  end
 end

@@ -1,12 +1,13 @@
 class WelcomeController < ApplicationController
-  include ReportEmbeddable, ResponseIndexable
+  include ReportEmbeddable
+  include ResponseIndexable
 
   # Don't need to authorize since we manually redirect to login if no user.
   # This is because anybody is 'allowed' to see the root and letting the auth system handle things
   # leads to nasty messages and weird behavior. We merely redirect because otherwise the page would be blank
   # and not very interesting.
   # We also skip the check for unauthorized because who cares if someone sees it.
-  skip_authorization_check only: [:index, :unauthorized]
+  skip_authorization_check only: %i[index unauthorized]
 
   # number of rows in the stats blocks
   STAT_ROWS = 3
@@ -38,6 +39,7 @@ class WelcomeController < ApplicationController
   end
 
   private
+
   def dashboard_index
     # we need to check for a cache fragment here because some of the below fetches are not lazy
     @cache_key = [
@@ -60,7 +62,6 @@ class WelcomeController < ApplicationController
     # load objects for the view
     @responses = accessible_responses.with_basic_assoc.with_basic_answers.latest_first
     @responses = @responses.paginate(page: 1, per_page: 20)
-    decorate_responses
 
     # total responses for this mission
     @total_response_count = accessible_responses.count

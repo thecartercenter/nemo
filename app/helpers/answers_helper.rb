@@ -1,3 +1,4 @@
+# DEPRECATED: Model-related display logic should move to a decorator.
 module AnswersHelper
   # assuming excerpts are enclosed with {{{ ... }}}, safely converts to <em> tags and returns html_safe string
   def excerpt_to_html(str)

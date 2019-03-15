@@ -19,8 +19,7 @@ form.question_form {
   }
 }
 
-div.question_fields {
-
+.elmo-form .question_fields {
   textarea {
     direction: ltr;
   }
@@ -41,8 +40,8 @@ div.question_fields {
     margin-left: 10px;
   }
 
-  div.minmax {
-    input.text[type=text] {
+  .minmax {
+    .form-field .control .widget input.text[type=text] { // Needed for extra specificity
       width: 75px;
       display: inline-block;
     }
@@ -114,22 +113,6 @@ div.form-field.question_option_set_id {
     width: 260px;
     display: inline-block;
   }
-}
-
-ul.tags {
-  padding: 0;
-  li:hover { cursor: inherit; }
-  &.clickable li:hover {
-    cursor: pointer;
-    background-color: $tag-color;
-  }
-}
-
-.all-tags ul.tags {
-  //background: $super-light-gray;
-  //padding: 0 3px;
-  max-height: 93px;
-  overflow: auto;
 }
 
 .question_tag_ids .read-only {

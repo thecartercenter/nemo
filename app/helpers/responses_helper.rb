@@ -1,17 +1,19 @@
+# frozen_string_literal: true
+
+# DEPRECATED: Model-related display logic should move to a decorator.
 module ResponsesHelper
   def responses_index_fields
-    # if in dashboard mode, don't put as many fields
-    if params[:controller] == "welcome"
-      fields = %w(form_id user_id) + key_question_hashes(2) + %w(created_at reviewed)
+    if params[:controller] == "welcome" # Dashboard mode
+      %w[form_id user_id] + key_question_hashes(2) + %w[created_at reviewed]
     else
-      fields = %w(shortcode form_id user_id) + key_question_hashes(2) +
-        %w(incomplete created_at age reviewed reviewer_id actions)
+      %w[shortcode form_id user_id] + key_question_hashes(2) +
+        %w[incomplete created_at age reviewed actions]
     end
   end
 
   # returns an array of hashes representing the key question column(s)
-  def key_question_hashes(n)
-    Question.accessible_by(current_ability).key(n).map { |q| {title: q.code, css_class: q.code.downcase, question: q} }
+  def key_question_hashes(count)
+    Question.accessible_by(current_ability).key(count).map { |q| {title: q.code, question: q} }
   end
 
   def format_responses_field(resp, field)
@@ -22,26 +24,14 @@ module ResponsesHelper
       end
     else
       case field
-      when "shortcode" then link_to(resp.shortcode, path_for_with_search(resp), title: t("common.view"))
+      when "shortcode" then link_to(resp.shortcode, resp.default_path, title: t("common.view"))
       when "form_id" then resp.form.name
       when "created_at" then resp.created_at ? l(resp.created_at) : ""
       when "age" then resp.created_at ? time_ago_in_words(resp.created_at) : ""
       when "incomplete" then tbool(resp.incomplete?)
-      when "reviewed" then reviewed_status(resp)
       when "user_id" then resp.user.name
-      when "reviewer_id"
-        if resp.reviewer.present?
-          (can?(:read, resp.reviewer) ? link_to(resp.reviewer.name, resp.reviewer) : resp.reviewer.name)
-        else
-          ""
-        end
-      when "actions"
-        # we don't need to authorize these links b/c for responses, if you can see it, you can edit it.
-        # the controller actions will still be auth'd
-        by = resp.user ? " by #{resp.user.name}" : ""
-        table_action_links(resp, obj_description: resp.user ?
-          "#{Response.model_name.human} #{t('common.by').downcase} #{resp.user.name}" :
-          "#{t('common.this').downcase} #{Response.model_name.human}")
+      when "reviewed" then resp.reviewed_status
+      when "actions" then can?(:update, resp) ? [action_link(:edit, edit_response_path(resp))] : []
       else resp.send(field)
       end
     end
@@ -67,13 +57,10 @@ module ResponsesHelper
 
   # shows response excerpts if available
   def responses_second_row(response)
-    if response.excerpts
-      # loop over each
-      response.excerpts.map do |e|
-        html = excerpt_to_html(e[:text])
-        content_tag(:p, content_tag(:b, "[#{e[:code]}]:") << " " << html)
-      end.reduce(:<<)
-    end
+    response.excerpts&.map do |e|
+      html = excerpt_to_html(e[:text])
+      content_tag(:p, content_tag(:b, "[#{e[:code]}]:") << " " << html)
+    end&.reduce(:<<)
   end
 
   # takes a recent count (e.g. [5, "week"]) and translates it
@@ -83,13 +70,5 @@ module ResponsesHelper
     else
       tmd("welcome.in_the_past_#{count[1]}", count: number_with_delimiter(count[0]))
     end
-  end
-
-  def reviewed_status(resp)
-    status = tbool(resp.reviewed?)
-    if !resp.checked_out_at.nil? && (resp.checked_out_at > Response::LOCK_OUT_TIME.ago)
-      status = I18n.t("common.pending")
-    end
-    status
   end
 end
