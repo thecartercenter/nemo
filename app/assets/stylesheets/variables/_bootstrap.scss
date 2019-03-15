@@ -28,7 +28,9 @@
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-// $body-bg:               #fff
+//   This needs to be footer color so that the footer goes fully to the bottom of the page on
+//   pages with short content.
+$body-bg:                  $footer-background-color !default;
 //** Global text color on `<body>`.
 // $text-color:            $main-text-color;
 
