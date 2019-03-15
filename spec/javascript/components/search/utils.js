@@ -7,6 +7,10 @@ export const formFilterProps = {
     {
       id: "2",
       name: "Two"
+    },
+    {
+      id: "3",
+      name: "Q\"uo'te`s"
     }
   ],
   selectedFormIds: [

@@ -36,6 +36,10 @@ exports[`renders as expected (responses page) 1`] = `
             "id": "2",
             "name": "Two",
           },
+          Object {
+            "id": "3",
+            "name": "Q\\"uo'te\`s",
+          },
         ]
       }
       onClearSelection={[Function]}

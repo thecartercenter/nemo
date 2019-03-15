@@ -30,6 +30,10 @@ exports[`popover renders as expected 1`] = `
           "id": "2",
           "text": "Two",
         },
+        Object {
+          "id": "3",
+          "text": "Q\\"uo'te\`s",
+        },
       ]
     }
     onSelect={[MockFunction]}
@@ -75,6 +79,10 @@ exports[`renders as expected 1`] = `
             Object {
               "id": "2",
               "text": "Two",
+            },
+            Object {
+              "id": "3",
+              "text": "Q\\"uo'te\`s",
             },
           ]
         }
