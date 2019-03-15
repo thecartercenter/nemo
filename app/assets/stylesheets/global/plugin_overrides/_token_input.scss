@@ -28,7 +28,7 @@ ul.token-input-list-elmo {
 
 .token-input-token-elmo {
     @include tag;
-    
+
     float: left;
     margin: 6px 3px;
 }
@@ -37,13 +37,13 @@ ul.token-input-list-elmo {
   margin: 3px;
 }
 
-.token-input-token-elmo p {
+.tag p {
     display: inline;
     padding: 0;
     margin: 0;
 }
 
-.token-input-token-elmo span {
+.tag span {
     color: #555;
     margin-left: 5px;
     font-weight: bold;

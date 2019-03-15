@@ -1002,6 +1002,10 @@ en:
           one:   "Displaying <b>1</b> User"
           other: "Displaying <b>all %{count}</b> Users"
         multi_page_html: "Displaying Users <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+    operation:
+      page_entries_info:
+        single_page_html:
+          zero:  "No Operations found"
 
   # authlogic translations
   authlogic:

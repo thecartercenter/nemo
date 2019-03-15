@@ -40,23 +40,23 @@ feature "option set" do
     # Should redirect back to index page.
     expect(page).to have_selector("td.name_col a", text: "Foo")
 
-    # Test show mode (should have 'Apple' but no visible inputs or edit links).
-    click_link("Foo")
-    expect(page).to have_selector("#options-wrapper div", text: "Banana")
-    expect(page).to have_selector("#options-wrapper div", text: "Apple")
-    expect(page).not_to have_selector("form.option_set_form input[type=text]")
-    expect(page).not_to have_selector("form.option_set_form a.action-link-edit")
-
     # Test edit mode (add another option)
-    click_link("Edit Option Set")
+    click_link("Foo")
     add_options(%w[Pear])
     click_button("Save")
     expect(page).to have_selector("td.options_col div", text: "Banana, Apple, Pear")
 
+    # Test show mode (should have 'Apple' but no visible inputs or edit links).
+    click_link("Foo")
+    click_link("View Option Set")
+    expect(page).to have_selector("#options-wrapper div", text: "Banana")
+    expect(page).to have_selector("#options-wrapper div", text: "Apple")
+    expect(page).to have_selector("#options-wrapper div", text: "Pear")
+    expect(page).not_to have_selector("form.option_set_form input[type=text]")
+    expect(page).not_to have_selector("form.option_set_form a.action-link-edit")
+
     # Test export page does not error out
-    click_on "Foo"
-    click_link("Edit Option Set")
-    click_on "Export Option Set"
+    click_on("Export Option Set")
   end
 
   scenario "creating, showing, and editing options with values", js: true do
@@ -75,22 +75,19 @@ feature "option set" do
     fill_in("Value", with: "2")
     click_button("Save and Close")
     click_button("Save")
-
     expect(page).to have_selector("td.name_col a", text: "Foo")
 
+    # Edit
     click_link("Foo")
-    expect(page).to have_selector("#options-wrapper div", text: "Apple (1)")
-    expect(page).to have_selector("#options-wrapper div", text: "Banana (2)")
-
-    click_link("Edit Option Set")
     find("#options a.action-link-edit", match: :first).click # Click first pencil link.
     wait_modal_to_be_visible
-
     fill_in("Value", with: "3")
     click_modal_save_button
     click_button("Save")
 
+    # Show
     click_link("Foo")
+    click_link("View Option Set")
     expect(page).to have_selector("#options-wrapper div", text: "Apple (3)")
     expect(page).to have_selector("#options-wrapper div", text: "Banana (2)")
   end
@@ -111,7 +108,7 @@ feature "option set" do
       expect(page).to have_selector("td.options_col div", text: "Animal, Plant")
 
       # Editing standard set (edit option level name and option name)
-      find("a.action-link-edit", match: :first).click
+      click_link("Gold")
       all("#option-levels-wrapper a.action-link-edit")[1].click
       wait_modal_to_be_visible
       fill_in("English", with: "Queendom")
@@ -124,6 +121,7 @@ feature "option set" do
 
       # Show standard set to verify save worked.
       click_link("Gold")
+      click_link("View Option Set")
       expect(page).to have_selector("#options-wrapper div.inner", text: "Kitty")
     end
   end
@@ -134,7 +132,8 @@ feature "option set" do
     scenario do
       login(user)
       visit(option_sets_path(mode: "m", mission_name: set.mission.compact_name, locale: "en"))
-      find("a.action-link-destroy").click
+      click_on(set.name)
+      click_on("Delete Option Set")
       expect(page).to have_selector(".alert-success", text: "Option Set deleted successfully")
     end
   end

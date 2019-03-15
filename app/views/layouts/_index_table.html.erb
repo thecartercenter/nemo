@@ -1,6 +1,7 @@
 <%# ensures objects collection is paginated and .all is called %>
 <% objects = prepare_for_index(objects) %>
-<div id="index_table" data-entries="<%= objects.total_entries rescue objects.count %>" data-pages="<%= objects.total_pages rescue 1 %>">
+<div id="index_table" data-entries="<%= objects.total_entries rescue objects.count %>"
+  data-pages="<%= objects.total_pages rescue 1 %>">
 
   <%# header links %>
   <% unless options[:table_only] %>
@@ -9,6 +10,9 @@
         <%# explicitly load the objects here to work around counting behavior for grouped models %>
         <% objects.load if objects.respond_to?(:load) %>
         <%= page_entries_info(objects, model: klass) %>.
+        &nbsp;
+      <% elsif objects.empty? %>
+        <%= t("will_paginate.#{klass.model_name.i18n_key}.page_entries_info.single_page_html.zero") %>.
         &nbsp;
       <% end %>
       <%= links %>

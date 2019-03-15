@@ -56,8 +56,9 @@ module ActionLinkHelper
 
   # returns the html for an action icon using font awesome and the mappings defined in IconHelper
   def action_link(action, href, options = {})
-    # join passed html class (if any) with the default class
-    options[:class] = [options[:class], "action-link", "action-link-#{action}"].compact.join(" ")
+    options[:class] = Array.wrap(options[:class])
+    options[:class] << "action-link" << "action-link-#{action.to_s.dasherize}"
+    options[:class] = options[:class].join(" ")
 
     if options.delete(:label) == false
       link_to(icon_tag(action), href, options)

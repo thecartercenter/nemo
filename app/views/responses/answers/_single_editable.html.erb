@@ -71,7 +71,7 @@
   <% else %>
 
     <%= text_field_tag(context.input_name(:value), answer.value, class: "form-control") %>
-    <%= action_link(:drop_pin, "#") if type == "location" %>
+    <%= action_link(:drop_pin, "#", label: false) if type == "location" %>
 
   <% end %>
 </div>

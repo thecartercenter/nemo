@@ -3,5 +3,8 @@
 <%= index_table(responses) %>
 
 <%= javascript_doc_ready do %>
-  new ELMO.Views.ResponseListView({el: '#content'});
+  new ELMO.Views.ResponseListView(<%=json(
+    el: "#content",
+    refreshInterval: ENV["RESPONSE_REFRESH_INTERVAL"]&.to_i || 30000
+  )%>);
 <% end %>
