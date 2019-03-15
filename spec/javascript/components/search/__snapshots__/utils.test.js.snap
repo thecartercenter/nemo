@@ -4,6 +4,16 @@ exports[`gets filter string (all filters) 1`] = `"form:(One|Two)"`;
 
 exports[`gets filter string (no filters) 1`] = `""`;
 
+exports[`gets form name (found) 1`] = `"One"`;
+
+exports[`gets form name (not found) 1`] = `"Unknown"`;
+
+exports[`gets hints (0) 1`] = `""`;
+
+exports[`gets hints (small number) 1`] = `" (one)"`;
+
+exports[`gets hints (too many) 1`] = `" (3)"`;
+
 exports[`submits searches 1`] = `[MockFunction]`;
 
 exports[`submits searches 2`] = `

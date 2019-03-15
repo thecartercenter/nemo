@@ -7,6 +7,7 @@ import OverlayTrigger from "react-bootstrap/lib/OverlayTrigger";
 import Select2 from "react-select2-wrapper/lib/components/Select2.full";
 
 import "react-select2-wrapper/css/select2.css";
+import {getButtonHintString, getFormNameFromId} from "./utils";
 
 /**
  * Converts a list of forms from the backend into something Select2 understands.
@@ -49,6 +50,9 @@ class FormFilter extends React.Component {
   }
 
   render() {
+    const {allForms, selectedFormIds} = this.props;
+    const selectedFormNames = selectedFormIds.map((id) => getFormNameFromId(allForms, id));
+
     return (
       <OverlayTrigger
         containerPadding={25}
@@ -57,7 +61,7 @@ class FormFilter extends React.Component {
         rootClose
         trigger="click">
         <Button className="btn-form-filter">
-          {I18n.t("filter.form")}
+          {I18n.t("filter.form") + getButtonHintString(selectedFormNames)}
         </Button>
       </OverlayTrigger>
     );
