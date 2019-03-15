@@ -50,8 +50,8 @@ class FormFilter extends React.Component {
   }
 
   render() {
-    const {allForms, selectedFormIds} = this.props;
-    const selectedFormNames = selectedFormIds.map((id) => getFormNameFromId(allForms, id));
+    const {allForms, originalFormIds} = this.props;
+    const originalFormNames = originalFormIds.map((id) => getFormNameFromId(allForms, id));
 
     return (
       <OverlayTrigger
@@ -61,7 +61,7 @@ class FormFilter extends React.Component {
         rootClose
         trigger="click">
         <Button className="btn-form-filter">
-          {I18n.t("filter.form") + getButtonHintString(selectedFormNames)}
+          {I18n.t("filter.form") + getButtonHintString(originalFormNames)}
         </Button>
       </OverlayTrigger>
     );
@@ -75,6 +75,7 @@ FormFilter.propTypes = {
   })).isRequired,
   onSelectForm: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 

@@ -40,6 +40,11 @@ exports[`renders as expected (responses page) 1`] = `
       }
       onSelectForm={[Function]}
       onSubmit={[Function]}
+      originalFormIds={
+        Array [
+          "2",
+        ]
+      }
       selectedFormIds={
         Array [
           "2",

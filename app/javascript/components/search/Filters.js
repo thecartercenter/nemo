@@ -34,7 +34,7 @@ class Filters extends React.Component {
   }
 
   renderFilterButtons() {
-    const {allForms} = this.props;
+    const {allForms, selectedFormIds: originalFormIds} = this.props;
     const {selectedFormIds} = this.state;
 
     return (
@@ -43,6 +43,7 @@ class Filters extends React.Component {
           allForms={allForms}
           onSelectForm={this.handleSelectForm}
           onSubmit={this.handleSubmit}
+          originalFormIds={originalFormIds}
           selectedFormIds={selectedFormIds} />
       </ButtonToolbar>
     );

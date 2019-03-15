@@ -12,6 +12,8 @@ export const formFilterProps = {
   selectedFormIds: [
     "2"
   ],
+  originalFormIds: [
+  ],
 };
 
 export const allFilterProps = {
