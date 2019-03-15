@@ -71,9 +71,4 @@ module ActionLinkHelper
   def batch_op_link(options)
     link_to(options[:name], "#", :data => options.slice(:path, :confirm), :class => "batch_op_link")
   end
-
-  # creates a link to select all the checkboxes in an index table
-  def select_all_link
-    link_to(t("layout.select_all"), '#', :id => 'select_all_link')
-  end
 end

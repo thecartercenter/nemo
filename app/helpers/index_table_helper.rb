@@ -32,6 +32,11 @@ module IndexTableHelper
       batch_ops: batch_ops)
   end
 
+  # creates a link to select all the checkboxes in an index table
+  def select_all_link
+    link_to(t("layout.select_all"), "#", id: "select-all-link")
+  end
+
   def index_row_class(obj, options = {})
     [].tap do |classes|
       method = "#{obj.class.model_name.route_key}_index_row_class"

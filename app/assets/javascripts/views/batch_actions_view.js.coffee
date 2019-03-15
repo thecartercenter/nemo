@@ -4,7 +4,7 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
   el: '#index_table'
 
   events:
-    'click #select_all_link': 'select_all_clicked'
+    'click #select-all-link': 'select_all_clicked'
     'click a.batch_op_link': 'submit_batch'
     'click a.select_all_pages': 'select_all_pages'
     'change input[type=checkbox].batch_op': 'checkbox_changed'
@@ -52,7 +52,8 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
   all_checked: (cbs = this.get_batch_checkboxes()) ->
     _.all(cbs, (cb) -> cb.checked)
 
-  select_all_pages: ->
+  select_all_pages: (event) ->
+    event.preventDefault()
     value = if @select_all_pages_field.val() then '' else '1'
     @select_all_pages_field.val(value)
     this.reset_alert()
@@ -69,7 +70,7 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
   update_select_all_elements: ->
 
     label = if @select_all then "deselect_all" else "select_all"
-    $('#select_all_link').html(I18n.t("layout.#{label}"))
+    $('#select-all-link').html(I18n.t("layout.#{label}"))
 
     this.reset_alert()
 
