@@ -38,7 +38,8 @@ export function getFormNameFromId(allForms, searchId) {
  * return a stringified version for the backend.
  */
 export function getFilterString(selectedFormIds, allForms) {
-  const selectedFormNames = selectedFormIds.map((id) => getFormNameFromId(allForms, id));
+  const selectedFormNames = selectedFormIds
+    .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join("|")})`,

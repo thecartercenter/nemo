@@ -37,7 +37,7 @@ it("gets filter string (no filters)", () => {
 });
 
 it("gets filter string (all filters)", () => {
-  const result = getFilterString(["1", "2"], formFilterProps.allForms);
+  const result = getFilterString(["1", "3"], formFilterProps.allForms);
   expect(result).toMatchSnapshot();
 });
 
