@@ -8,6 +8,7 @@ import Component from "../../../../app/javascript/components/search/FormFilter";
 const defaultProps = {
   ...formFilterProps,
   onSelectForm: jest.fn(),
+  onClearSelection: jest.fn(),
   onSubmit: jest.fn(),
 };
 

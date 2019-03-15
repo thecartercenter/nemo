@@ -33,8 +33,10 @@ exports[`popover renders as expected 1`] = `
       ]
     }
     onSelect={[MockFunction]}
+    onUnselect={[Function]}
     options={
       Object {
+        "allowClear": true,
         "dropdownCssClass": "filters-select2-dropdown",
         "placeholder": "Choose a form",
         "width": "100%",
@@ -77,8 +79,10 @@ exports[`renders as expected 1`] = `
           ]
         }
         onSelect={[MockFunction]}
+        onUnselect={[Function]}
         options={
           Object {
+            "allowClear": true,
             "dropdownCssClass": "filters-select2-dropdown",
             "placeholder": "Choose a form",
             "width": "100%",

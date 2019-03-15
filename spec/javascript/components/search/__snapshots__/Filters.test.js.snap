@@ -38,6 +38,7 @@ exports[`renders as expected (responses page) 1`] = `
           },
         ]
       }
+      onClearSelection={[Function]}
       onSelectForm={[Function]}
       onSubmit={[Function]}
       originalFormIds={

@@ -18,6 +18,7 @@ globals:
   I18n: true
   console: true
   window: true
+  setTimeout: true
 rules:
   array-bracket-spacing: error
   arrow-body-style: error

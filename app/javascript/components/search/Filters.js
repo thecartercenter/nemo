@@ -19,6 +19,7 @@ class Filters extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectForm = this.handleSelectForm.bind(this);
+    this.handleClearFormSelection = this.handleClearFormSelection.bind(this);
     this.renderFilterButtons = this.renderFilterButtons.bind(this);
   }
 
@@ -33,6 +34,10 @@ class Filters extends React.Component {
     this.setState({selectedFormIds: [event.target.value]});
   }
 
+  handleClearFormSelection() {
+    this.setState({selectedFormIds: []});
+  }
+
   renderFilterButtons() {
     const {allForms, selectedFormIds: originalFormIds} = this.props;
     const {selectedFormIds} = this.state;
@@ -41,6 +46,7 @@ class Filters extends React.Component {
       <ButtonToolbar className="filters">
         <FormFilter
           allForms={allForms}
+          onClearSelection={this.handleClearFormSelection}
           onSelectForm={this.handleSelectForm}
           onSubmit={this.handleSubmit}
           originalFormIds={originalFormIds}

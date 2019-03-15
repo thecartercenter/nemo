@@ -18,7 +18,21 @@ const parseFormsForSelect2 = (allForms) => allForms
 class FormFilter extends React.Component {
   constructor(props) {
     super();
+    this.handleClearSelection = this.handleClearSelection.bind(this);
     this.renderPopover = this.renderPopover.bind(this);
+
+    this.select2 = React.createRef();
+  }
+
+  handleClearSelection() {
+    const {onClearSelection} = this.props;
+    onClearSelection();
+
+    /*
+     * Select2 doesn't make this easy... wait for state update then close the dropdown.
+     * https://select2.org/programmatic-control/methods#closing-the-dropdown
+     */
+    setTimeout(() => this.select2.current.el.select2("close"), 1);
   }
 
   renderPopover() {
@@ -31,11 +45,14 @@ class FormFilter extends React.Component {
         <Select2
           data={parseFormsForSelect2(allForms)}
           onSelect={onSelectForm}
+          onUnselect={this.handleClearSelection}
           options={{
+            allowClear: true,
             placeholder: I18n.t("filter.chooseForm"),
             dropdownCssClass: "filters-select2-dropdown",
             width: "100%",
           }}
+          ref={this.select2}
           value={selectedFormIds && selectedFormIds[0]} />
 
         <div className="btn-apply-container">
@@ -73,6 +90,7 @@ FormFilter.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string
   })).isRequired,
+  onClearSelection: PropTypes.func.isRequired,
   onSelectForm: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
