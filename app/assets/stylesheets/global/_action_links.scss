@@ -1,0 +1,17 @@
+a.action-link {
+  i.fa {
+    font-size: 14px;
+    margin-#{$right}: 3px;
+  }
+
+  text-decoration: none;
+  display: inline-block;
+}
+
+table a.action-link {
+  margin: -2px 10px -2px 0;
+}
+
+#content div.top-action-links {
+  @include top-action-links;
+}

@@ -1,34 +1,24 @@
-/* search form */
-form.search_form {
+form.search-form {
   margin-bottom: 10px;
 
   input#search_str {
     width: 500px;
-    margin-right: 5px;
+    margin-#{$right}: 5px;
     padding: 3px;
   }
 
-  input.form-control, input.btn {
+  .form-control, .btn {
     height: 28px;
   }
 
-  input.btn {
-    background-color: $gray-blue;
-    padding: 4px 12px;
-  }
-
-  div.search-footer {
-
-    #search_examples {
-      margin: 4px 8px 10px 0;
-      color: #666;
-      display: inline-block;
-      font-size: 8pt;
-    }
+  #search_examples {
+    margin: 4px 8px 10px 0;
+    color: #666;
+    display: inline-block;
+    font-size: 8pt;
   }
 }
 
-/* search help */
 #search-help-modal {
   .modal-body {
     overflow: auto;

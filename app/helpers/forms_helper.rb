@@ -1,3 +1,4 @@
+# DEPRECATED: Model-related display logic should move to a decorator.
 module FormsHelper
   def forms_index_links(forms)
     links = []
@@ -16,7 +17,7 @@ module FormsHelper
     if admin_mode?
       %w(std_icon name updated_at actions)
     else
-      %w(std_icon version name published downloads responses smsable allow_incomplete updated_at actions)
+      %w(std_icon name downloads responses updated_at actions)
     end
   end
 
@@ -24,7 +25,7 @@ module FormsHelper
     case field
     when "std_icon" then std_icon(form)
     when "version" then form.version
-    when "name" then link_to(form.name, form_path(form), title: t("common.view"))
+    when "name" then link_to(form.name, form.default_path, title: t("common.view"))
     when "questions" then form.questionings.count
     when "updated_at" then l(form.updated_at)
     when "responses"
@@ -36,33 +37,38 @@ module FormsHelper
     when "copy_count" then form.copy_count
     when "allow_incomplete" then tbool(form.allow_incomplete?)
     when "actions"
-      # get standard action links
-      table_action_links(form).tap do |links|
+      links = []
 
-        # get the appropriate publish icon and add link, if auth'd
-        if can?(:publish, form)
-          verb = form.published? ? "unpublish" : "publish"
-          links << action_link(verb, publish_form_path(form), title: t("form.#{verb}"), :'data-method' => 'put')
-        end
-
-        # add a clone link if auth'd
-        if can?(:clone, form)
-          links << action_link("clone", clone_form_path(form), :'data-method' => 'put',
-            title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
-        end
-
-        # add a print link if auth'd
-        if can?(:print, form)
-          links << action_link("print", "#", title: t("common.print"), class: 'print-link', :'data-form-id' => form.id)
-        end
-
-        # add an sms template link if appropriate
-        if form.smsable? && form.published? && !admin_mode?
-          links << action_link("sms", sms_guide_form_path(form), title: "SMS Guide")
-        end
+      # get the appropriate publish icon and add link, if auth'd
+      if can?(:publish, form)
+        verb = form.published? ? "unpublish" : "publish"
+        links << action_link(verb, publish_form_path(form), title: t("form.#{verb}"), :'data-method' => 'put')
       end
+
+      # add a clone link if auth'd
+      if can?(:clone, form)
+        links << action_link(:clone, clone_form_path(form), :'data-method' => 'put',
+          title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
+      end
+
+      # add a print link if auth'd
+      if can?(:print, form)
+        links << action_link(:print, "#", title: t("common.print"), class: 'print-link',
+                                          "data-form-id": form.id)
+      end
+
+      # add an sms template link if appropriate
+      if form.smsable? && form.published? && !admin_mode?
+        links << action_link(:sms, sms_guide_form_path(form), title: "SMS Guide")
+      end
+
+      links
     else form.send(field)
     end
+  end
+
+  def forms_index_row_class(form)
+    "published" if form.published?
   end
 
   def allow_incomplete?

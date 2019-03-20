@@ -45,6 +45,9 @@ Metrics/ClassLength:
   Exclude:
     - db/migrate/*
 
+Metrics/CyclomaticComplexity:
+  Enabled: false
+
 Metrics/LineLength:
   Enabled: true
   Max: 110
@@ -55,11 +58,16 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Max: 30
 
+Metrics/PerceivedComplexity:
+  Max: 10
+
 Style/AsciiComments:
   Enabled: false
 
 Style/Documentation:
   Exclude:
+    - "app/controllers/**/*"
+    - "app/decorators/**/*"
     - db/migrate/*
 
 Style/EmptyMethod:

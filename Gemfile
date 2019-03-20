@@ -97,9 +97,8 @@ gem "faker", "~> 1.6"
 gem "ruby-jmeter", "~> 2.13.4"
 
 group :development do
-  gem "better_errors", "~> 2.1.1"
   gem "binding_of_caller", "~> 0.7.2"
-  gem "bullet", "~> 4.14.4"
+  gem "bullet", "~> 5.9"
   gem "fix-db-schema-conflicts", "~> 3.0"
   gem "letter_opener", "~> 1.4.1"
   gem "rails-erd", "~> 1.4.0"

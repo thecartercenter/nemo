@@ -36,7 +36,7 @@ describe Results::AnswerDecorator do
 
       context "with value" do
         let(:answer_attribs) { {datetime_value: "2012-01-01 12:34:56"} }
-        it { is_expected.to eq("Jan 01 2012 12:34:56") }
+        it { is_expected.to eq("2012-01-01 12:34:56") }
       end
 
       context "nil value" do

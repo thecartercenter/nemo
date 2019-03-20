@@ -18,11 +18,11 @@ form.user_import_form {
     }
 
     &.line_ok div.info {
-      color: $theme-green;
+      color: $success-green;
     }
 
     &.line_error div.info {
-      color: $theme-red;
+      color: $error-red;
     }
   }
 }

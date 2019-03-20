@@ -1,5 +1,8 @@
+# frozen_string_literal: true
+
+# DEPRECATED: Model-related display logic should move to a decorator.
 module OptionSetsHelper
-  def option_sets_index_links(option_sets)
+  def option_sets_index_links(_option_sets)
     links = []
     links << create_link(OptionSet) if can?(:create, OptionSet)
     links << create_link(OptionSetImport) if can?(:create, OptionSetImport)
@@ -8,41 +11,39 @@ module OptionSetsHelper
   end
 
   def option_sets_index_fields
-    %w(std_icon name options) + (admin_mode? ? [] : ['published']) + ['actions']
+    %w[std_icon name options] + (admin_mode? ? [] : ["published"]) + ["actions"]
   end
 
   def format_option_sets_field(option_set, field)
     case field
     when "std_icon" then std_icon(option_set)
-    when "name" then link_to(option_set.name, option_set_path(option_set), :title => t("common.view"))
+    when "name" then link_to(option_set.name, option_set.default_path, title: t("common.view"))
     when "published" then tbool(option_set.published?)
     when "options" then
       # only show the first 3 options as there could be many many
-      option_set.options[0...3].collect{|o| o.name}.join(", ") + (option_set.options.size > 3 ? ', ...' : '')
+      option_set.options[0...3].collect(&:name).join(", ") + (option_set.options.size > 3 ? ", ..." : "")
     when "questions" then option_set.questions_count
     when "answers" then number_with_delimiter(option_set.answer_count)
     when "actions" then
-      # get standard action links
-      links = table_action_links(option_set)
-
       # add a clone link if auth'd
       if can?(:clone, option_set)
-        links += action_link("clone", clone_option_set_path(option_set), :'data-method' => 'put',
-          :title => t("common.clone"), data: {confirm: t("option_set.clone_confirm", :name => option_set.name)})
+        confirm_msg = t("option_set.clone_confirm", name: option_set.name)
+        [action_link(:clone, clone_option_set_path(option_set),
+          title: t("common.clone"), data: {method: "put", confirm: confirm_msg})]
       end
     else option_set.send(field)
     end
   end
 
   def multilevel_forbidden_notice
-    text = tmd('option_set.multilevel_forbidden_notice')
-    icon = content_tag(:i, '', class: 'fa fa-exclamation-triangle')
+    text = tmd("option_set.multilevel_forbidden_notice")
+    icon = content_tag(:i, "", class: "fa fa-exclamation-triangle")
     content_tag(:div, (icon << content_tag(:div, text)), class: "form-warning alert alert-info")
   end
 
   def huge_notice
-    text = tmd('option_set.huge_notice', count: number_with_delimiter(@option_set.total_options))
-    icon = content_tag(:i, '', class: 'fa fa-exclamation-triangle')
+    text = tmd("option_set.huge_notice", count: number_with_delimiter(@option_set.total_options))
+    icon = content_tag(:i, "", class: "fa fa-exclamation-triangle")
     content_tag(:div, (icon << content_tag(:div, text)), class: "form-warning alert alert-info")
   end
 end

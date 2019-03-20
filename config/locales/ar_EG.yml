@@ -506,7 +506,6 @@ ar:
         id: "هوية الرد"
         created_at: "وقت التقديم"
         form_id: "استمارة"
-        reviewed: "تم مراجعة هذا الرد"
         reviewer_notes: "ملاحظات"
         reviewer_id: "مراجع"
         shortcode: "معرف الرد"
@@ -1034,14 +1033,10 @@ ar:
         verify: "تحقق"
   date:
     formats:
-      default: "%b %d %Y"
       short: "%b %d"
-      long: "%B %d %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M:%S"
       short: "%b %d %H:%M"
-      long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M:%S"
   search_qualifiers:
     text: "نص"

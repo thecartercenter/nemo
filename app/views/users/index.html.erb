@@ -1,7 +1,6 @@
-
-<%= render("searches/form", :search => @search) %>
-<div class="all-tags"><%= render_groups(@groups, class: 'clearfix', clickable: true) %></div>
-<%= index_table %>
+<%= render("searches/form", search: @search) %>
+<div class="all-tags"><%= render_tags(@groups, clickable: true, link_method: :group_filter_link) %></div>
+<%= index_table(users) %>
 
 <%= render("user_groups_modal") %>
 

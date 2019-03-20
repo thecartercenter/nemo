@@ -14,12 +14,18 @@ feature "responses index" do
   context "general index page display" do
     let(:response_link) { Response.first.decorate.shortcode }
 
+    around do |example|
+      ENV["RESPONSE_REFRESH_INTERVAL"] = "1000"
+      example.run
+      ENV.delete("RESPONSE_REFRESH_INTERVAL")
+    end
+
     scenario "returning to index after response loaded via ajax", js: true do
+      expect(page).to have_content("No Responses found")
       expect(page).not_to have_content("TheForm")
 
-      # Create response and make it show up via AJAX
+      # Create response and wait for it show up via AJAX
       create(:response, form: form)
-      page.execute_script("responses_fetch();")
       expect(page).to have_content("TheForm")
 
       # Click response and then go back. Should still be there!

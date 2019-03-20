@@ -8,6 +8,8 @@ class OptionSetsController < ApplicationController
   load_and_authorize_resource
   skip_authorization_check only: :child_nodes
 
+  decorates_assigned :option_sets
+
   def index
     # get the total entries before adding the big joins
     total = @option_sets.count

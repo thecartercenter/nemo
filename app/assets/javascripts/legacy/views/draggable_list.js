@@ -21,12 +21,12 @@
     self.render_items();
 
     // hookup setup edit/remove links (deferred)
-    self.wrapper.on('click', 'a.action_link_edit', function(){
+    self.wrapper.on('click', 'a.action-link-edit', function(){
       self.edit_item($(this).closest('div.inner').data('item'));
       return false;
     });
 
-    self.wrapper.on('click', 'a.action_link_remove', function(){
+    self.wrapper.on('click', 'a.action-link-remove', function(){
       self.remove_item($(this).closest('div.inner').data('item'));
       return false;
     });

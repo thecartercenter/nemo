@@ -232,7 +232,7 @@ describe Report::ListReport, :reports do
       expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq 2
 
       # date_submitted should be converted to right timezone
-      expect(report.data.rows[0][0]).to eq "Jan 01 2017"
+      expect(report.data.rows[0][0]).to eq "2017-01-01"
     end
   end
 end

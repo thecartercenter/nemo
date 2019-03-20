@@ -17,6 +17,8 @@ class UsersController < ApplicationController
 
   helper_method :reset_password_options
 
+  decorates_assigned :users
+
   def index
     # sort and eager load
     @users = @users.with_assoc.by_name

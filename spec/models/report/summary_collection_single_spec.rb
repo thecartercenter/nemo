@@ -211,9 +211,9 @@ describe "summary collection with single subset" do
       @responses.last.destroy
       prepare_collection
       expect(headers_and_items(:stat, :stat)).to eq(
-        mean: "Oct 27 2013 00:00:00",
-        min: "Oct 26 2013 10:15:00",
-        max: "Oct 27 2013 19:00:00"
+        mean: "2013-10-27 00:00:00",
+        min: "2013-10-26 10:15:00",
+        max: "2013-10-27 19:00:00"
       )
     end
 

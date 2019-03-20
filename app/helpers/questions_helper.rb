@@ -1,16 +1,19 @@
+# frozen_string_literal: true
+
+# DEPRECATED: Model-related display logic should move to a decorator.
 module QuestionsHelper
-  def questions_index_links(questions)
+  def questions_index_links(_questions)
     links = []
 
     # links for form mode
-    if params[:controller] == 'forms'
+    if params[:controller] == "forms"
       # add the 'add questions to form' link if there are some questions
       unless @questions.empty?
-        links << batch_op_link(:name => t("form.add_selected"), :path => add_questions_form_path(@form))
+        links << batch_op_link(name: t("form.add_selected"), path: add_questions_form_path(@form))
       end
 
       # add the create new questions link
-      links << create_link(Question, :js => true) if can?(:create, Question)
+      links << create_link(Question, js: true) if can?(:create, Question)
 
     # otherwise, we're in regular questions mode
     else
@@ -31,29 +34,27 @@ module QuestionsHelper
   end
 
   def questions_index_fields
-    fields = %w(std_icon code name type)
-
-    fields << 'published' unless admin_mode?
-
-    # dont add the actions column if we're not in the forms controller, since that means we're probably in form#choose_questions
-    fields << 'actions' unless params[:controller] == 'forms'
-
+    fields = ["std_icon", "code", {attrib: "name", css_class: "has-tags"}, "type"]
+    fields << "published" unless admin_mode?
     fields
   end
 
-  def format_questions_field(q, field)
-    case field
-    when "std_icon" then std_icon(q)
-    when "type" then t(q.qtype_name, :scope => :question_type)
-    when "published" then tbool(q.published?)
-    when "actions" then table_action_links(q)
+  def format_questions_field(question, field)
+    case field.is_a?(Hash) ? field[:attrib] : field
+    when "std_icon" then std_icon(question)
+    when "type" then t(question.qtype_name, scope: :question_type)
+    when "published" then tbool(question.published?)
     when "name"
-      if params[:controller] == 'forms'
-        html_escape(q.name_or_none) << render_tags(q.sorted_tags)
-      else
-        link_to(q.name_or_none, q) + render_tags(q.sorted_tags, clickable: true)
-      end
-    else q.send(field)
+      question_picker = params[:controller] == "forms"
+      text = content_tag(:span, class: "text") do
+              if question_picker
+                html_escape(question.name_or_none)
+              else
+                link_to(question.name_or_none, question.default_path)
+              end
+            end
+      text << render_tags(question.sorted_tags, clickable: !question_picker)
+    else question.send(field)
     end
   end
 
@@ -61,7 +62,8 @@ module QuestionsHelper
   # If no option sets found, returns empty string.
   def option_set_select_option_tags(sets, selected_id)
     sets.map do |s|
-      content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? 'selected' : nil, :'data-multilevel' => s.multilevel?)
+      content_tag(:option, s.name, value: s.id, selected: s.id == selected_id ? "selected" : nil,
+                                   "data-multilevel": s.multilevel?)
     end.reduce(:<<) || ""
   end
 

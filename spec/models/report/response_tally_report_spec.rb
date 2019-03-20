@@ -44,8 +44,8 @@ describe Report::ResponseTallyReport do
       ])
 
       expect(report).to have_data_grid(%w(             Yes No TTL ),
-                                       %w( Jan_01_2012   1  _   1 ),
-                                       %w( Jan_05_2012   2  6   8 ),
+                                       %w( 2012-01-01    1  _   1 ),
+                                       %w( 2012-01-05    2  6   8 ),
                                        %w( TTL           3  6   9 ))
     end
 

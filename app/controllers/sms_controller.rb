@@ -15,6 +15,8 @@ class SmsController < ApplicationController
   # disable csrf protection for this stuff
   protect_from_forgery except: :create
 
+  helper_method :smses
+
   def index
     @sms = apply_search_if_given(Sms::Message, @sms)
 
@@ -56,7 +58,17 @@ class SmsController < ApplicationController
     render_csv("elmo-#{current_mission.compact_name}-incoming-numbers")
   end
 
+  # specify the class the this controller controls, since it's not easily guessed
+  def model_class
+    Sms::Message
+  end
+
   private
+
+  def smses
+    @decorated_smses ||= # rubocop:disable Naming/MemoizedInstanceVariableName
+      PaginatingDecorator.decorate(@smses, with: SmsMessageDecorator)
+  end
 
   # Builds and saves the incoming SMS message based on the request.
   def incoming_msg

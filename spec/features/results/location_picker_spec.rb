@@ -26,7 +26,7 @@ feature "response form location picker", js: true do
     visit new_response_path(params)
 
     # open the location picker
-    find(".action_link_drop_pin").click
+    find(".action-link-drop-pin").click
     expect(page).to have_content("Choose Location")
 
     # search for a location
@@ -41,7 +41,7 @@ feature "response form location picker", js: true do
     expect_value([0], "49.726683 -54.173526")
 
     fill_in_question([0], with: "12 34")
-    find(".action_link_drop_pin").click
+    find(".action-link-drop-pin").click
     expect(page).to have_content("Current Location: 12.000000 34.000000")
   end
 end

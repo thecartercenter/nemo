@@ -1,10 +1,10 @@
 .draggable-list-wrapper {
 
   + .action {
-    color: $orange;
+    color: $link-color;
 
     a {
-      color: $orange;
+      color: $link-color;
     }
   }
 
@@ -53,7 +53,7 @@
           font-style: normal;
           font-size: 10px;
           margin-left: 5px;
-          color: $theme-green;
+          color: $success-green;
         }
 
         /* edit/remove links */
@@ -70,12 +70,12 @@
     border: 1px dashed #aaa;
 
     &.mjs-nestedSortable-error {
-      border: 1px dashed $theme-red;
+      border: 1px dashed $error-red;
 
       // Error message
       div {
         margin: 5px 0 0 5px;
-        color: $theme-red;
+        color: $error-red;
       }
     }
   }

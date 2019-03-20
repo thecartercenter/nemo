@@ -12,6 +12,8 @@ class QuestionsController < ApplicationController
   load_and_authorize_resource
   skip_authorize_resource only: :audio_prompt
 
+  decorates_assigned :questions
+
   def index
     @questions = apply_search_if_given(Question, @questions)
     @tags = Tag.mission_tags(@current_mission)

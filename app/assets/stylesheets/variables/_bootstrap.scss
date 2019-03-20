@@ -28,7 +28,9 @@
 //## Settings for some of the most global styles.
 
 //** Background color for `<body>`.
-// $body-bg:               #fff
+//   This needs to be footer color so that the footer goes fully to the bottom of the page on
+//   pages with short content.
+$body-bg:                  $footer-background-color !default;
 //** Global text color on `<body>`.
 // $text-color:            $main-text-color;
 
@@ -44,13 +46,13 @@
 //
 //## Font, line-height, and color for body text, headings, and more.
 
-$font-family-sans-serif:     'Open Sans', Helvetica, sans-serif;
+$font-family-sans-serif:     'Open Sans', Helvetica, sans-serif !default;
 // $font-family-serif:       Georgia, "Times New Roman", Times, serif
 //** Default monospace fonts for `<code>`, `<kbd>`, and `<pre>`.
 // $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace
 // $font-family-base:        $font-family-sans-serif
 
-// $font-size-base:          14px
+$font-size-base:             9pt !default;
 // $font-size-large:         ceil(($font-size-base * 1.25)) // ~18px
 // $font-size-small:         ceil(($font-size-base * 0.85)) // ~12px
 
@@ -62,7 +64,7 @@ $font-family-sans-serif:     'Open Sans', Helvetica, sans-serif;
 // $font-size-h6:            ceil(($font-size-base * 0.85)) // ~12px
 
 //** Unit-less `line-height` for use in components like buttons.
-// $line-height-base:        1.428571429 // 20/14
+$line-height-base:           1.3 !default;
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
 // $line-height-computed:    floor(($font-size-base * $line-height-base)) // ~20px
 
@@ -150,13 +152,13 @@ $font-family-sans-serif:     'Open Sans', Helvetica, sans-serif;
 
 // $btn-font-weight:                normal
 
-$btn-default-color:                 #666;
-$btn-default-bg:                    $faint-gray;
-$btn-default-border:                $faint-gray;
+$btn-default-color:                 #666 !default;
+$btn-default-bg:                    $faint-gray !default;
+$btn-default-border:                $faint-gray !default;
 
-$btn-primary-color:                 $primary-btn-text-color;
-$btn-primary-bg:                    $primary-btn-background-color;
-$btn-primary-border:                $primary-btn-background-color;
+$btn-primary-color:                 white !default;
+$btn-primary-bg:                    $link-color !default;
+$btn-primary-border:                $link-color !default;
 
 // $btn-success-color:              #fff
 // $btn-success-bg:                 $brand-success

@@ -476,7 +476,7 @@ en:
         id: "Response ID"
         created_at: "Submission Time"
         form_id: "Form"
-        reviewed: "This response has been reviewed"
+        reviewed: "Reviewed?"
         reviewer_notes: "Notes"
         reviewer_id: "Reviewer"
         shortcode: "Response ID"
@@ -917,7 +917,13 @@ en:
     updated_at: "Updated at"
     no_published_forms: "No published forms"
 
-
+  actions:
+    clone: "Clone"
+    edit: "Edit"
+    publish: "Publish"
+    unpublish: "Unpublish"
+    print: "Print"
+    sms: "SMS Guide"
 
   # pagination translations
   will_paginate:
@@ -997,6 +1003,10 @@ en:
           one:   "Displaying <b>1</b> User"
           other: "Displaying <b>all %{count}</b> Users"
         multi_page_html: "Displaying Users <b>%{from} - %{to}</b> of <b>%{count}</b> in total"
+    operation:
+      page_entries_info:
+        single_page_html:
+          zero:  "No Operations found"
 
   # authlogic translations
   authlogic:
@@ -1024,14 +1034,12 @@ en:
   # time/date formats (see http://www.ruby-doc.org/core-2.0/Time.html#method-i-strftime for code meanings)
   date:
     formats:
-      default: "%b %d %Y"
+      default: "%Y-%m-%d"
       short: "%b %d"
-      long: "%B %d %Y"
   time:
     formats:
-      default: "%b %d %Y %H:%M:%S"
+      default: "%Y-%m-%d %H:%M:%S"
       short: "%b %d %H:%M"
-      long: "%A, %B %d %Y %H:%M"
       time_only: "%H:%M:%S"
 
   # all search qualifier translations should have NO SPACES and NO CAPS. use '-'s instead
@@ -1677,6 +1685,7 @@ en:
       none: "Show None"
 
   response:
+    reviewed: "This response has been reviewed"
     edit_this_response: "Edit This Response"
     export_to_csv: "Export to CSV Format"
     loading: "Loading Response..."
