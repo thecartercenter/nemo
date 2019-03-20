@@ -1,0 +1,22 @@
+.filters {
+  margin-bottom: 4px;
+}
+
+.filters-popover {
+  $container-padding: 12px;
+
+  max-width: 80vw;
+
+  .popover-content {
+    padding: $container-padding;
+  }
+
+  .btn-apply-container {
+    margin-top: $container-padding;
+    text-align: right;
+  }
+}
+
+.filters-select2-dropdown {
+  z-index: 9999;
+}

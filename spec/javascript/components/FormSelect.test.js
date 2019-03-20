@@ -3,15 +3,13 @@ import {shallow} from "enzyme";
 
 import Component from "../../../app/javascript/components/FormSelect";
 
-const changeFunc = jest.fn();
-
 const defaultProps = {
   id: "root",
   options: [
     {id: "item1", name: "First"},
     {id: "item2", name: "Second"},
   ],
-  changeFunc,
+  changeFunc: jest.fn(),
 };
 
 it("renders as expected", () => {
@@ -24,7 +22,7 @@ describe("after changing value", () => {
   wrapper.find("select").simulate("change", {target: {value: defaultProps.options[0].id}});
 
   it("calls changeFunc", () => {
-    expect(changeFunc).toMatchSnapshot();
+    expect(defaultProps.changeFunc).toMatchSnapshot();
   });
 
   it("renders as expected", () => {

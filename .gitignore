@@ -21,6 +21,8 @@ NOTES
 
 # compiled assets
 public/assets
+public/javascripts/i18n.js
+app/assets/javascripts/i18n/
 
 public/form-attachments/
 

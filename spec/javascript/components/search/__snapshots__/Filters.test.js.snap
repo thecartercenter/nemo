@@ -1,0 +1,61 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`integration navigates on apply form filter 1`] = `[MockFunction]`;
+
+exports[`integration navigates on apply form filter 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?search=form%3A(%22Two%22)",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`renders as expected (other page) 1`] = `<Fragment />`;
+
+exports[`renders as expected (responses page) 1`] = `
+<Fragment>
+  <ButtonToolbar
+    className="filters"
+  >
+    <FormFilter
+      allForms={
+        Array [
+          Object {
+            "id": "1",
+            "name": "One",
+          },
+          Object {
+            "id": "2",
+            "name": "Two",
+          },
+          Object {
+            "id": "3",
+            "name": "Q\\"uo'te\`s",
+          },
+        ]
+      }
+      onClearSelection={[Function]}
+      onSelectForm={[Function]}
+      onSubmit={[Function]}
+      originalFormIds={
+        Array [
+          "2",
+        ]
+      }
+      selectedFormIds={
+        Array [
+          "2",
+        ]
+      }
+    />
+  </ButtonToolbar>
+</Fragment>
+`;

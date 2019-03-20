@@ -1,4 +1,22 @@
 <form class="search-form form-inline">
+  <%= react_component("search/Filters", {
+    controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
+    allForms: [
+      {
+        id: "1",
+        name: "Form A"
+      },
+      {
+        id: "2",
+        name: "Form B"
+      },
+      {
+        id: "3",
+        name: "Q\"uo'te`s"
+      }
+    ],
+    selectedFormIds: ["2"]
+  }) %>
   <input type="text" class="form-control" name="search"
     value="<%= params[:search] %>" id="search_str" placeholder="<%= t("common.search") %>" autocomplete="off">
   <input type="submit" value="<%= t("common.search") %>" class="btn btn-default">
