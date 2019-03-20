@@ -58,7 +58,10 @@ export function submitSearch(filterString) {
   // The `search` query param will be removed from the URL if it's `undefined`.
   const search = filterString || undefined;
   const params = queryString.stringify({...parsed, search});
-  window.location.assign(params ? `?${params}` : "?");
+
+  window.location.assign(params
+    ? `?${params}`
+    : window.location.pathname);
 }
 
 /**

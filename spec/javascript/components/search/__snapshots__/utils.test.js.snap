@@ -58,7 +58,7 @@ exports[`submits searches 4`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?",
+      "/pathname",
     ],
   ],
   "results": Array [

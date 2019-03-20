@@ -10,6 +10,7 @@ window.$ = () => {};
 delete window.location;
 window.location = {
   assign: jest.fn(),
+  pathname: "/pathname",
 };
 
 // Stub out Bootstrap components.
