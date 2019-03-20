@@ -44,7 +44,7 @@ describe("integration", () => {
   });
 
   it("navigates on apply advanced search", () => {
-    wrapper.find("#search-str").simulate("change", {target: {value: "something else"}});
+    wrapper.find(".search-str").simulate("change", {target: {value: "something else"}});
 
     expect(window.location.assign).toMatchSnapshot();
     wrapper.find("Button.btn-advanced-search").simulate("click");

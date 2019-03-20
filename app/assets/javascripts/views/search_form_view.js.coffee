@@ -17,7 +17,7 @@ class ELMO.Views.SearchFormView extends ELMO.Views.ApplicationView
 
   # Add or replace the specified search qualifier
   setQualifier: (qualifier, val) ->
-    search_box = this.$('#search-str')
+    search_box = this.$('.search-str')
     current_search = search_box.val()
 
     # Remove the qualifier text if it's already in the current search
