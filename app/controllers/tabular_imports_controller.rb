@@ -24,6 +24,7 @@ class TabularImportsController < ApplicationController
     do_import(saved_upload)
   rescue ActiveRecord::RecordNotFound
     flash.now[:error] = I18n.t("errors.file_upload.file_missing")
+    build_object
     render(:new)
   end
 

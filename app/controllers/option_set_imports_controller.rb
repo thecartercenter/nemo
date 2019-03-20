@@ -4,7 +4,7 @@
 class OptionSetImportsController < TabularImportsController
   def new
     authorize!(:create, OptionSets::Import)
-    @option_set_import = OptionSets::Import.new(mission: current_mission)
+    build_object
   end
 
   def template
@@ -13,6 +13,10 @@ class OptionSetImportsController < TabularImportsController
   end
 
   protected
+
+  def build_object
+    @option_set_import = OptionSets::Import.new(mission: current_mission)
+  end
 
   def option_sets_import_params
     params.require(:option_sets_import).permit(:name)

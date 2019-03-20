@@ -7,7 +7,7 @@ class UserImportsController < TabularImportsController
 
   def new
     authorize!(:create, UserImport)
-    @user_import = UserImport.new(mission: current_mission)
+    build_object
   end
 
   def template
@@ -17,6 +17,10 @@ class UserImportsController < TabularImportsController
   end
 
   protected
+
+  def build_object
+    @user_import = UserImport.new(mission: current_mission)
+  end
 
   def user_import_params
     {}
