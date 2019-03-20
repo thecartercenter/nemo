@@ -42,7 +42,7 @@ exports[`submits searches 3`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=",
+      "?",
     ],
   ],
   "results": Array [
