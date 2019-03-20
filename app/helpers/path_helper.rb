@@ -1,9 +1,8 @@
-module PathHelper
-  KEYS = {}
+# frozen_string_literal: true
 
-  PLURAL_KEYS = {
-    'Sms::Message' => 'sms'
-  }
+module PathHelper
+  KEYS = {"OptionSets::Import" => "option_set_import"}.freeze
+  PLURAL_KEYS = {"Sms::Message" => "sms"}.freeze
 
   # DEPRECATED: Prefer using path helpers directly in decorators. The below is too complex.
   def dynamic_path(obj_or_class, options = {})
@@ -12,15 +11,9 @@ module PathHelper
     action = options.delete(:action)
     key = KEYS[klass.name] || klass.name.demodulize.underscore
     key = PLURAL_KEYS[klass.name] || key.pluralize if action == :index
-    key = "#{action}_#{key}" if [:new, :edit].include?(action)
-    key.gsub!("_decorator", "")
-    args = [:new, :index].include?(action) ? [options] : [obj, options]
+    key = "#{action}_#{key}" if %i[new edit].include?(action)
+    key = key.gsub("_decorator", "")
+    args = %i[new index].include?(action) ? [options] : [obj, options]
     send("#{key}_path", *args)
-  end
-
-  # XXX: it's unclear why Rails is generating a plural helper for
-  # :option_set_imports with action :new, but this fixes things...
-  def new_option_set_import_path(*args)
-    new_option_set_imports_path(*args)
   end
 end

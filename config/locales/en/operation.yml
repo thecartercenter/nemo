@@ -3,7 +3,7 @@ en:
     clear_confirm: "Are you sure you want to clear all completed operations?"
     details:
       user_import: "User import from %{file}"
-      option_sets/import: "Option Set '%{file}' import"
+      option_sets_import: "Option Set '%{file}' import"
       response_csv_export: "Response CSV export"
       broadcast: "Broadcast '%{message}'"
     operations_panel: "Operations Panel"
@@ -34,7 +34,7 @@ en:
     op_panel_more_info_link_html: "Check the <a href='%{url}'>operations panel</a> for info."
     queued_msg:
       broadcast: "Broadcast queued."
-      option_set_import: "Option Set import queued."
+      option_sets_import: "Option Set import queued."
       response_csv_export: "Response CSV export queued."
       user_import: "User import queued."
     see_error_report: "See error report"

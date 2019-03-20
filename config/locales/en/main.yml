@@ -161,7 +161,7 @@ en:
     submit:
       create: "Save"
       update: "Save"
-      option_set_import:
+      option_sets_import:
         create: "Import"
       user_import:
         create: "Import"
@@ -423,7 +423,7 @@ en:
         options: "Options"
         option_levels: "Levels"
         sms_guide_formatting: "SMS Guide Formatting"
-      option_set_import:
+      option_sets/import:
         name: "Option Set Name"
         file: "File to Import"
       password_reset:
@@ -588,7 +588,7 @@ en:
         edit: "Edit Option Set"
         destroy: "Delete Option Set"
         export: "Export Option Set"
-      option_set_import:
+      option_sets/import:
         new: "Import New Option Set"
       question:
         new: "Create New Question"
