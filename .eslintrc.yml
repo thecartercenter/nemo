@@ -1,6 +1,7 @@
 env:
   es6: true
   jest: true
+parser: babel-eslint
 parserOptions:
   ecmaFeatures:
     jsx: true
@@ -16,6 +17,8 @@ globals:
   $: true
   I18n: true
   console: true
+  window: true
+  setTimeout: true
 rules:
   array-bracket-spacing: error
   arrow-body-style: error
@@ -34,7 +37,6 @@ rules:
   eqeqeq: error
   func-call-spacing: error
   func-name-matching: error
-  func-style: error
   function-paren-newline:
     - error
     - consistent
@@ -71,6 +73,7 @@ rules:
     - never
   quotes: error
   react/destructuring-assignment: 0
+  react/forbid-component-props: 0
   react/jsx-closing-bracket-location:
     - error
     - after-props

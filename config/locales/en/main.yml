@@ -9,6 +9,7 @@ en:
     add: "Add"
     and: "and"
     AND: "AND"
+    apply: "Apply"
     back: "Back"
     blank: "Blank"
     by: "By"
@@ -1275,6 +1276,10 @@ en:
       option_set: "This Option Set appears on at least one published Form, meaning it may already be in the hands of enumerators. Some fields are thus non-editable, and Options cannot be added, removed, or reordered. Please proceed with caution if editing Options."
       sms: "Such changes will cause SMS form users to receive an error if they try to submit the current version of the Form."
       odk: "Such changes will not disable Responses from ODK, but may cause some data loss and/or Responses that are not valid (e.g. missing required answers)."
+
+  filter:
+    form: "Form"
+    chooseForm: "Choose a form"
 
   form:
     select_api_users: "Select all users who can access form data via the API:"
