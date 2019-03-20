@@ -97,8 +97,13 @@ Filters.propTypes = {
     id: PropTypes.string,
     name: PropTypes.string
   })).isRequired,
-  controllerName: PropTypes.string.isRequired,
+  controllerName: PropTypes.string,
   selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired
+};
+
+Filters.defaultProps = {
+  // This is expected to be null if the feature flag is disabled.
+  controllerName: null,
 };
 
 export default Filters;
