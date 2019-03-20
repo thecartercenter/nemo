@@ -30,7 +30,7 @@ class AdvancedSearchFilter extends React.Component {
         </Button>
         {isQueryParamTruthy("search") ? (
           <Button
-            className="btn-clear"
+            className="btn-clear btn-margin-left"
             onClick={onClear}>
             {I18n.t("common.clear")}
           </Button>

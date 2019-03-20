@@ -37,21 +37,23 @@ exports[`integration navigates on apply form filter 2`] = `
 `;
 
 exports[`renders as expected (other page) 1`] = `
-<Fragment>
+<div
+  className="filters"
+>
   <AdvancedSearchFilter
     advancedSearchText="query"
     onChangeAdvancedSearch={[Function]}
     onClear={[Function]}
     onSubmit={[Function]}
   />
-</Fragment>
+</div>
 `;
 
 exports[`renders as expected (responses page) 1`] = `
-<Fragment>
-  <ButtonToolbar
-    className="filters"
-  >
+<div
+  className="filters"
+>
+  <ButtonToolbar>
     <FormFilter
       allForms={
         Array [
@@ -90,5 +92,5 @@ exports[`renders as expected (responses page) 1`] = `
     onClear={[Function]}
     onSubmit={[Function]}
   />
-</Fragment>
+</div>
 `;

@@ -47,7 +47,7 @@ exports[`renders as expected (with query param) 1`] = `
     Search
   </Button>
   <Button
-    className="btn-clear"
+    className="btn-clear btn-margin-left"
     onClick={[MockFunction]}
   >
     Clear

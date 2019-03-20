@@ -60,7 +60,7 @@ class Filters extends React.Component {
     const {selectedFormIds} = this.state;
 
     return (
-      <ButtonToolbar className="filters">
+      <ButtonToolbar>
         <FormFilter
           allForms={allForms}
           onClearSelection={this.handleClearFormSelection}
@@ -78,7 +78,7 @@ class Filters extends React.Component {
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
-      <React.Fragment>
+      <div className="filters">
         {shouldRenderButtons ? this.renderFilterButtons() : null}
 
         <AdvancedSearchFilter
@@ -86,7 +86,7 @@ class Filters extends React.Component {
           onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
           onClear={this.handleClearFilters}
           onSubmit={this.handleSubmit} />
-      </React.Fragment>
+      </div>
     );
   }
 }
