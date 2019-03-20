@@ -5,7 +5,7 @@ module OptionSetsHelper
   def option_sets_index_links(_option_sets)
     links = []
     links << create_link(OptionSet) if can?(:create, OptionSet)
-    links << create_link(OptionSetImport) if can?(:create, OptionSetImport)
+    links << create_link(OptionSets::Import) if can?(:create, OptionSets::Import)
     add_import_standard_link_if_appropriate(links)
     links
   end

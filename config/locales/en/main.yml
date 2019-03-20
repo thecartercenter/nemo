@@ -162,7 +162,7 @@ en:
     submit:
       create: "Save"
       update: "Save"
-      option_set_import:
+      option_sets_import:
         create: "Import"
       user_import:
         create: "Import"
@@ -424,7 +424,7 @@ en:
         options: "Options"
         option_levels: "Levels"
         sms_guide_formatting: "SMS Guide Formatting"
-      option_set_import:
+      option_sets/import:
         name: "Option Set Name"
         file: "File to Import"
       password_reset:
@@ -589,7 +589,7 @@ en:
         edit: "Edit Option Set"
         destroy: "Delete Option Set"
         export: "Export Option Set"
-      option_set_import:
+      option_sets/import:
         new: "Import New Option Set"
       question:
         new: "Create New Question"
@@ -801,9 +801,13 @@ en:
           cant_delete_if_has_answers: "You can't delete this Option Set because it is included in at least one Answer."
           general: "There was a problem saving the option set."
           wrong_depth: "You have %{levels} option levels but your option tree is %{depth} options deep."
-        option_set_import:
+        option_sets/import:
           general: "Option Set import is invalid (see below)."
           wrong_type: "The uploaded file must be a valid XLSX-type Excel file."
+          blank_interior_cell: "Error on row %{row_num}: blank interior cell."
+          no_rows: "No rows to import."
+          option_too_long: "Error on row %{row_num}: options can't be more than %{limit} characters."
+          header_too_long: "Error on row %{row_num}: headers can't be more than %{limit} characters."
         question:
           at_least_one_name: "You must enter a title in at least one language."
           attributes:

@@ -7,23 +7,8 @@ class UserImport < TabularImport
                          gender_custom nationality notes user_groups].freeze
   EXPECTED_HEADERS =  %i[login name phone phone2 email birth_year gender nationality notes user_groups].freeze
 
-  attr_accessor :file, :mission_id, :col_idx_to_attr_map
+  attr_accessor :col_idx_to_attr_map
   attr_reader :users
-
-  validates :file, presence: true
-
-  def initialize(file: nil, mission_id: nil, name: nil)
-    self.file = file
-    self.mission_id = mission_id
-  end
-
-  def persisted?
-    false
-  end
-
-  def succeeded?
-    errors.blank?
-  end
 
   def run
     data = Roo::Spreadsheet.open(file).parse
@@ -33,8 +18,8 @@ class UserImport < TabularImport
       parse_rows(data).each_with_index do |row, index|
         row[:assignments] = [Assignment.new(mission_id: mission_id, role: User::ROLES.first)]
         user = User.create(row)
-        add_validation_error_messages(user, index + 2) if user.invalid?
-        add_too_many_errors(index + 2) && break if errors.count >= IMPORT_ERROR_CUTOFF
+        copy_validation_errors_for_row(index + 2, user.errors) if user.invalid?
+        add_too_many_errors(index + 2) && break if run_errors.count >= IMPORT_ERROR_CUTOFF
       end
       raise ActiveRecord::Rollback unless succeeded?
     end
@@ -116,22 +101,12 @@ class UserImport < TabularImport
     end
   end
 
-  # Copies validation errors from user object to main import object.
-  def add_validation_error_messages(user, row_number)
-    return if user.errors.empty?
-    user.errors.keys.each do |attribute|
-      user.errors.full_messages_for(attribute).each do |error|
-        errors.add(:base, I18n.t("operation.row_error", row: row_number, error: error))
-      end
-    end
-  end
-
   def add_header_error(invalid_headers)
-    errors.add(:base, :invalid_headers, headers: invalid_headers.map { |h| "'#{h}'" }.join(", "),
-                                        count: invalid_headers.size)
+    add_run_error(:invalid_headers, headers: invalid_headers.map { |h| "'#{h}'" }.join(", "),
+                                    count: invalid_headers.size)
   end
 
   def add_too_many_errors(row_number)
-    errors.add(:base, :too_many_errors, row: row_number)
+    add_run_error(:too_many_errors, row: row_number)
   end
 end

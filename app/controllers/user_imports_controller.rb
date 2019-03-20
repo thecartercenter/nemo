@@ -5,6 +5,11 @@ class UserImportsController < TabularImportsController
   # ensure a recent login for all actions
   before_action :require_recent_login
 
+  def new
+    authorize!(:create, UserImport)
+    build_object
+  end
+
   def template
     authorize!(:create, UserImport)
     @sheet_name = User.model_name.human(count: 0)
@@ -12,6 +17,10 @@ class UserImportsController < TabularImportsController
   end
 
   protected
+
+  def build_object
+    @user_import = UserImport.new(mission: current_mission)
+  end
 
   def user_import_params
     {}

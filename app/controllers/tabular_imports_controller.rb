@@ -4,8 +4,6 @@
 class TabularImportsController < ApplicationController
   include OperationQueueable
 
-  load_and_authorize_resource only: %i[new create]
-
   def upload
     authorize!(:create, tabular_class)
     saved_upload = SavedTabularUpload.new(file: params[:file])
@@ -21,10 +19,12 @@ class TabularImportsController < ApplicationController
   end
 
   def create
+    authorize!(:create, tabular_class)
     saved_upload = SavedUpload.find(params[:saved_upload_id])
     do_import(saved_upload)
   rescue ActiveRecord::RecordNotFound
     flash.now[:error] = I18n.t("errors.file_upload.file_missing")
+    build_object
     render(:new)
   end
 

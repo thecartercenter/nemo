@@ -167,7 +167,7 @@ ELMO::Application.routes.draw do
       end
     end
 
-    resource :option_set_imports, path: "option-set-imports", only: [:new, :create] do
+    resources :option_set_imports, path: "option-set-imports", only: [:new, :create] do
       collection do
         get :template
         post :upload
