@@ -26,7 +26,7 @@ exports[`submits searches 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=foo",
+      "?foo=bar&search=foo",
     ],
   ],
   "results": Array [
@@ -39,6 +39,22 @@ exports[`submits searches 2`] = `
 `;
 
 exports[`submits searches 3`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?foo=bar",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`submits searches 4`] = `
 [MockFunction] {
   "calls": Array [
     Array [
