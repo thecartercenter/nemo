@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "responses index" do
+feature "responses index", js: true do
   let(:user) { create(:user) }
   let(:form) { create(:form, :published, name: "TheForm", question_types: %w[text]) }
 

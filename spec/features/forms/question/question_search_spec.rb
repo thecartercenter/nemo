@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "question search" do
+feature "question search", js: true do
   include_context "search"
 
   let!(:mission) { get_mission }
