@@ -17,7 +17,7 @@ class AdvancedSearchFilter extends React.Component {
         <input
           autoComplete="off"
           className="form-control"
-          id="search_str"
+          id="search-str"
           name="search"
           onChange={onChangeAdvancedSearch}
           placeholder={I18n.t("filter.advancedSearch")}

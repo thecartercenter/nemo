@@ -33,7 +33,7 @@ exports[`renders as expected (with query param) 1`] = `
   <input
     autoComplete="off"
     className="form-control"
-    id="search_str"
+    id="search-str"
     name="search"
     onChange={[MockFunction]}
     placeholder="Advanced search"
@@ -60,7 +60,7 @@ exports[`renders as expected (without query param) 1`] = `
   <input
     autoComplete="off"
     className="form-control"
-    id="search_str"
+    id="search-str"
     name="search"
     onChange={[MockFunction]}
     placeholder="Advanced search"
