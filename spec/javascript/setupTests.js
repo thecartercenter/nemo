@@ -20,7 +20,7 @@ window.location = {
   "OverlayTrigger",
   "Popover",
 ].forEach((name) => {
-  jest.doMock(`react-bootstrap/lib/${name}`, () => name);
+  jest.doMock(`react-bootstrap/${name}`, () => name);
 });
 
 jest.mock("react-select2-wrapper/lib/components/Select2.full", () => "Select2");
