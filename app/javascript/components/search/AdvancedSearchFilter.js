@@ -7,6 +7,16 @@ import {isQueryParamTruthy} from "./utils";
 class AdvancedSearchFilter extends React.Component {
   constructor(props) {
     super();
+    this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  handleKeyDown(event) {
+    const {onSubmit} = this.props;
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+      onSubmit();
+    }
   }
 
   render() {
@@ -19,6 +29,7 @@ class AdvancedSearchFilter extends React.Component {
           className="form-control search-str"
           name="search"
           onChange={onChangeAdvancedSearch}
+          onKeyDown={this.handleKeyDown}
           placeholder={I18n.t("filter.advancedSearch")}
           type="text"
           value={advancedSearchText} />
