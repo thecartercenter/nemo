@@ -3,6 +3,7 @@ import {
   getFormNameFromId,
   getFilterString,
   submitSearch,
+  isQueryParamTruthy,
 } from "../../../../app/javascript/components/search/utils";
 import {formFilterProps} from "./utils";
 
@@ -32,17 +33,45 @@ it("gets form name (not found)", () => {
 });
 
 it("gets filter string (no filters)", () => {
-  const result = getFilterString([], formFilterProps.allForms);
+  const emptyFilters = {
+    selectedFormIds: [],
+    advancedSearchText: null,
+  };
+
+  const result = getFilterString(formFilterProps.allForms, emptyFilters);
   expect(result).toMatchSnapshot();
 });
 
 it("gets filter string (all filters)", () => {
-  const result = getFilterString(["1", "3"], formFilterProps.allForms);
+  const populatedFilters = {
+    selectedFormIds: ["1", "3"],
+    advancedSearchText: "query",
+  };
+
+  const result = getFilterString(formFilterProps.allForms, populatedFilters);
   expect(result).toMatchSnapshot();
 });
 
 it("submits searches", () => {
+  window.location.search = "?foo=bar";
   expect(window.location.assign).toMatchSnapshot();
+
   submitSearch("foo");
   expect(window.location.assign).toMatchSnapshot();
+
+  window.location.assign.mockClear();
+  submitSearch(null);
+  expect(window.location.assign).toMatchSnapshot();
+
+  window.location.assign.mockClear();
+  window.location.search = "?";
+  submitSearch(null);
+  expect(window.location.assign).toMatchSnapshot();
+});
+
+it("checks if param is truthy", () => {
+  window.location.search = "?foo=&bar=baz";
+  expect(isQueryParamTruthy("foo")).toMatchSnapshot();
+  expect(isQueryParamTruthy("bar")).toMatchSnapshot();
+  expect(isQueryParamTruthy("baz")).toMatchSnapshot();
 });

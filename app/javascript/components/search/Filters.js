@@ -4,29 +4,38 @@ import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
 
 import {CONTROLLER_NAME, getFilterString, submitSearch} from "./utils";
 import FormFilter from "./FormFilter";
+import AdvancedSearchFilter from "./AdvancedSearchFilter";
 
 class Filters extends React.Component {
   constructor(props) {
     super();
 
-    const {selectedFormIds} = props;
+    const {
+      selectedFormIds,
+      advancedSearchText,
+    } = props;
 
     /*
      * The state for all filters is held here.
      * Individual filters invoke callbacks to notify this parent component of changes.
      */
-    this.state = {selectedFormIds};
+    this.state = {
+      selectedFormIds,
+      advancedSearchText,
+    };
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleSelectForm = this.handleSelectForm.bind(this);
     this.handleClearFormSelection = this.handleClearFormSelection.bind(this);
+    this.handleChangeAdvancedSearch = this.handleChangeAdvancedSearch.bind(this);
+    this.handleClearFilters = this.handleClearFilters.bind(this);
     this.renderFilterButtons = this.renderFilterButtons.bind(this);
   }
 
   handleSubmit() {
     const {allForms} = this.props;
     const {selectedFormIds} = this.state;
-    const filterString = getFilterString(selectedFormIds, allForms);
+    const filterString = getFilterString(allForms, this.state);
     submitSearch(filterString);
   }
 
@@ -38,12 +47,20 @@ class Filters extends React.Component {
     this.setState({selectedFormIds: []});
   }
 
+  handleChangeAdvancedSearch(event) {
+    this.setState({advancedSearchText: event.target.value});
+  }
+
+  handleClearFilters() {
+    submitSearch(null);
+  }
+
   renderFilterButtons() {
     const {allForms, selectedFormIds: originalFormIds} = this.props;
     const {selectedFormIds} = this.state;
 
     return (
-      <ButtonToolbar className="filters">
+      <ButtonToolbar>
         <FormFilter
           allForms={allForms}
           onClearSelection={this.handleClearFormSelection}
@@ -57,23 +74,36 @@ class Filters extends React.Component {
 
   render() {
     const {controllerName} = this.props;
+    const {advancedSearchText} = this.state;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
-      <React.Fragment>
+      <div className="filters">
         {shouldRenderButtons ? this.renderFilterButtons() : null}
-      </React.Fragment>
+
+        <AdvancedSearchFilter
+          advancedSearchText={advancedSearchText}
+          onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
+          onClear={this.handleClearFilters}
+          onSubmit={this.handleSubmit} />
+      </div>
     );
   }
 }
 
 Filters.propTypes = {
+  advancedSearchText: PropTypes.string.isRequired,
   allForms: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string
   })).isRequired,
-  controllerName: PropTypes.string.isRequired,
+  controllerName: PropTypes.string,
   selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired
+};
+
+Filters.defaultProps = {
+  // This is expected to be null if the feature flag is disabled.
+  controllerName: null,
 };
 
 export default Filters;

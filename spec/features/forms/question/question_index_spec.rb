@@ -22,7 +22,7 @@ feature "question index", js: true do
       visit("/en/m/#{mission.compact_name}/questions")
 
       # do a search
-      fill_in "search_str", with: "dup"
+      fill_in class: "search-str", with: "dup"
       click_on "Search"
 
       # clear search box

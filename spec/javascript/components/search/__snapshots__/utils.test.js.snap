@@ -1,6 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\")"`;
+exports[`checks if param is truthy 1`] = `false`;
+
+exports[`checks if param is truthy 2`] = `true`;
+
+exports[`checks if param is truthy 3`] = `false`;
+
+exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\") query"`;
 
 exports[`gets filter string (no filters) 1`] = `""`;
 
@@ -20,7 +26,39 @@ exports[`submits searches 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=foo",
+      "?foo=bar&search=foo",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`submits searches 3`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?foo=bar",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`submits searches 4`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "/pathname",
     ],
   ],
   "results": Array [

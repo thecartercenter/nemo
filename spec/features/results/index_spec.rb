@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "responses index" do
+feature "responses index", js: true do
   let(:user) { create(:user) }
   let(:form) { create(:form, :published, name: "TheForm", question_types: %w[text]) }
 
@@ -54,7 +54,7 @@ feature "responses index" do
     context "search" do
       describe "with answer text" do
         scenario "works" do
-          fill_in("search_str", with: "pants")
+          fill_in(class: "search-str", with: "pants")
           click_on("Search")
 
           # a scoped responses index page shows
@@ -69,7 +69,7 @@ feature "responses index" do
 
         context "lowercase" do
           before do
-            fill_in("search_str", with: response.shortcode)
+            fill_in(class: "search-str", with: response.shortcode)
             click_on("Search")
           end
 
@@ -88,7 +88,7 @@ feature "responses index" do
 
         context "uppercase" do
           before do
-            fill_in("search_str", with: response.shortcode.upcase)
+            fill_in(class: "search-str", with: response.shortcode.upcase)
             click_on("Search")
           end
 

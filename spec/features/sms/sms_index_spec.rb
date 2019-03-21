@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-feature "sms index" do
+feature "sms index", js: true do
   include_context "search"
 
   let(:user) { create(:user) }

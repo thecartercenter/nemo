@@ -2,7 +2,7 @@
 
 shared_context "search" do
   def search_for(query)
-    fill_in("search", with: query)
+    fill_in("search", with: query, fill_options: {clear: :backspace})
     click_button("Search")
   end
 

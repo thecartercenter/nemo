@@ -6,7 +6,12 @@ import I18n from "i18n-js";
 // eslint-disable-next-line no-undef
 window.$ = () => {};
 
-window.location.assign = jest.fn();
+// Stub out navigation features (otherwise jsdom complains).
+delete window.location;
+window.location = {
+  assign: jest.fn(),
+  pathname: "/pathname",
+};
 
 // Stub out Bootstrap components.
 [

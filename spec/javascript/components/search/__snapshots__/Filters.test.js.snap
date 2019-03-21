@@ -1,12 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`integration navigates on apply form filter 1`] = `[MockFunction]`;
+exports[`integration navigates on apply advanced search 1`] = `[MockFunction]`;
 
-exports[`integration navigates on apply form filter 2`] = `
+exports[`integration navigates on apply advanced search 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A(%22Two%22)",
+      "?search=form%3A%28%22Two%22%29%20something%20else",
     ],
   ],
   "results": Array [
@@ -18,13 +18,42 @@ exports[`integration navigates on apply form filter 2`] = `
 }
 `;
 
-exports[`renders as expected (other page) 1`] = `<Fragment />`;
+exports[`integration navigates on apply form filter 1`] = `[MockFunction]`;
+
+exports[`integration navigates on apply form filter 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?search=form%3A%28%22Two%22%29%20query",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`renders as expected (other page) 1`] = `
+<div
+  className="filters"
+>
+  <AdvancedSearchFilter
+    advancedSearchText="query"
+    onChangeAdvancedSearch={[Function]}
+    onClear={[Function]}
+    onSubmit={[Function]}
+  />
+</div>
+`;
 
 exports[`renders as expected (responses page) 1`] = `
-<Fragment>
-  <ButtonToolbar
-    className="filters"
-  >
+<div
+  className="filters"
+>
+  <ButtonToolbar>
     <FormFilter
       allForms={
         Array [
@@ -57,5 +86,11 @@ exports[`renders as expected (responses page) 1`] = `
       }
     />
   </ButtonToolbar>
-</Fragment>
+  <AdvancedSearchFilter
+    advancedSearchText="query"
+    onChangeAdvancedSearch={[Function]}
+    onClear={[Function]}
+    onSubmit={[Function]}
+  />
+</div>
 `;

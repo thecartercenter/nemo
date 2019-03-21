@@ -1,4 +1,5 @@
 import isEmpty from "lodash/isEmpty";
+import queryString from "query-string";
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
@@ -37,12 +38,13 @@ export function getFormNameFromId(allForms, searchId) {
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString(selectedFormIds, allForms) {
+export function getFilterString(allForms, {selectedFormIds, advancedSearchText}) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join("|")})`,
+    advancedSearchText,
   ].filter(Boolean);
 
   return parts.join(" ");
@@ -52,5 +54,20 @@ export function getFilterString(selectedFormIds, allForms) {
  * Reload the page with the given search.
  */
 export function submitSearch(filterString) {
-  window.location.assign(`?search=${encodeURIComponent(filterString)}`);
+  const parsed = queryString.parse(window.location.search);
+  // The `search` query param will be removed from the URL if it's `undefined`.
+  const search = filterString || undefined;
+  const params = queryString.stringify({...parsed, search});
+
+  window.location.assign(params
+    ? `?${params}`
+    : window.location.pathname);
+}
+
+/**
+ * Returns true if the given param name exists and is non-empty.
+ */
+export function isQueryParamTruthy(paramName) {
+  const parsed = queryString.parse(window.location.search);
+  return Boolean(parsed[paramName]);
 }
