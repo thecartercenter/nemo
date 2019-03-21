@@ -33,7 +33,7 @@ gem "whenever", "~> 0.9.4", require: false
 
 # JS/CSS
 gem "bootstrap-modal-rails", "~> 2.2.5"
-gem "bootstrap-sass", "~> 3.3.4"
+gem "bootstrap", "~> 4.3.1"
 gem "dropzonejs-rails", "~> 0.7.3"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 0.4.5"
@@ -60,7 +60,7 @@ gem "roo", "~> 2.1.1"
 
 # Pagination
 gem "will_paginate", "~> 3.0.7"
-gem "will_paginate-bootstrap", "~> 1.0.1"
+gem "will_paginate-bootstrap4", "~> 0.2.2"
 
 # Markdown
 gem "bluecloth", "~> 2.2.0"
