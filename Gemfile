@@ -26,7 +26,7 @@ gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
 gem "responders", "~> 2.4.0"
 gem "rqrcode", "~> 0.10.1"
 gem "term-ansicolor", "~> 1.3.0"
-gem "therubyracer", "~> 0.12.2", platforms: :ruby
+gem "mini_racer", "~> 0.2.4"
 gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove constraint when fixed.
 gem "twilio-ruby", "~> 4.1.0"
 gem "whenever", "~> 0.9.4", require: false
