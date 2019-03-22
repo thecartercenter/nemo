@@ -24,7 +24,7 @@ Note to install the software below we recommend the following package managers:
     - For development environments, caching is only needed if you are developing a feature that uses caching and want to test it.
     - In this case, be sure to increase the default slab page size to 2 MB. This is done by passing `-I 2m` to the `memcached` command.
 1. PostgreSQL 10+
-    - Create empty databases for use by the app: `createdb nemo_development && createdb nemo_test`
+    - Create empty databases for use by the app: `createdb elmo_development && createdb elmo_test`
 1. ImageMagick 6.7+
     - ImageMagick is used to resize uploaded images.
     - It should be available through any of the package managers listed above. If not it can be built from source.
@@ -111,8 +111,8 @@ git checkout develop
 1. Run `cp config/settings.local.yml.example config/settings.local.yml` and adjust settings as appropriate.
 1. Run `cp config/initializers/local_config.rb.example config/initializers/local_config.rb` and adjust settings as appropriate. Note that the reCAPTCHA and Google Maps API Key must be valid keys for those services in order for tests to pass.
 1. Setup the UUID postgres extension:
-    1. On Linux: `sudo -u postgres psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
-    1. On Mac with Homebrew: `psql nemo_development -c 'CREATE EXTENSION "uuid-ossp"'`
+    1. On Linux: `sudo -u postgres psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
+    1. On Mac with Homebrew: `psql elmo_development -c 'CREATE EXTENSION "uuid-ossp"'`
 1. Load the database schema: `bundle exec rake db:schema:load`.
 1. Pre-process the theme SCSS files: `bundle exec rake theme:preprocess`
 1. Create an admin account: `bundle exec rake db:create_admin`. You should receive a message like this: "Admin user created with username admin, password hTyWc9Q6" (The password is random, copy it and use on your first login).

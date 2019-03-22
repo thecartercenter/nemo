@@ -5,12 +5,12 @@ default: &default
 
 production:
   <<: *default
-  database: nemo_production
+  database: elmo_production
 
 test:
   <<: *default
-  database: nemo_test
+  database: elmo_test
 
 development:
   <<: *default
-  database: nemo_development
+  database: elmo_development
