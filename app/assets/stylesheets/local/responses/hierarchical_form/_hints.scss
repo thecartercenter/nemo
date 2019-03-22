@@ -13,4 +13,16 @@
     @include group-question-hint;
     margin-bottom: 5px;
   }
+
+  i.hint {
+    cursor: pointer;
+  }
+
+  .popover-body {
+    font-size: .75rem;
+
+    p {
+      margin-bottom: .4rem;
+    }
+  }
 }
