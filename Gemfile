@@ -60,7 +60,7 @@ gem "axlsx_rails", "~> 0.5.0"
 gem "roo", "~> 2.1.1"
 
 # Pagination
-gem "will_paginate", "~> 3.0.7"
+gem "will_paginate", "~> 3.1.7"
 gem "will_paginate-bootstrap4", "~> 0.2.2"
 
 # Markdown

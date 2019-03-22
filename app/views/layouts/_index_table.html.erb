@@ -136,7 +136,7 @@
   <%# pagination links (don't show if there are no entries) %>
   <% if !options[:table_only] && paginated && paginable?(objects) && objects.total_entries > 0 %>
     <div class="pagination-container">
-      <%= will_paginate(objects, renderer: BootstrapPagination::Rails) %>
+      <%= will_paginate(objects, renderer: WillPaginate::ActionView::BootstrapLinkRenderer) %>
     </div>
   <% end %>
 
