@@ -37,27 +37,29 @@ end %>
 
 <% end %>
 
-<div class="col left_col">
-  <h2>
-    <%= current_user.role(current_mission) == 'enumerator' ? t('dashboard.my_responses') : t('dashboard.recent_responses') %>
-  </h2>
-  <%= render partial: 'recent_responses' %>
-
-  <div>
-    <a href="#" class="expand-map toggle-map">
-      <i class="fa fa-expand"></i>
-      <%= t("dashboard.expand_map") %>
-    </a>
-    <h2 class="interior">
-      <%= t('dashboard.response_locations') %>
+<div class="row">
+  <div class="col-md left_col">
+    <h2>
+      <%= current_user.role(current_mission) == 'enumerator' ? t('dashboard.my_responses') : t('dashboard.recent_responses') %>
     </h2>
-    <%= render partial: 'response_locations' %>
-  </div>
-</div>
+    <%= render partial: 'recent_responses' %>
 
-<div class="col right_col">
-  <%= render partial: 'report_stats' %>
-  <%= render partial: 'report_pane' %>
+    <div>
+      <a href="#" class="expand-map toggle-map">
+        <i class="fa fa-expand"></i>
+        <%= t("dashboard.expand_map") %>
+      </a>
+      <h2 class="interior">
+        <%= t('dashboard.response_locations') %>
+      </h2>
+      <%= render partial: 'response_locations' %>
+    </div>
+  </div>
+
+  <div class="col-md right_col">
+    <%= render partial: 'report_stats' %>
+    <%= render partial: 'report_pane' %>
+  </div>
 </div>
 
 <%# Link for shrinking map. Shown only when expanded map is shown. %>
