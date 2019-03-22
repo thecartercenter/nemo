@@ -34,6 +34,7 @@ gem "whenever", "~> 0.9.4", require: false
 # JS/CSS
 gem "bootstrap-modal-rails", "~> 2.2.5"
 gem "bootstrap", "~> 4.3.1"
+gem "popper_js", "~> 1.14.5"
 gem "dropzonejs-rails", "~> 0.7.3"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 0.4.5"

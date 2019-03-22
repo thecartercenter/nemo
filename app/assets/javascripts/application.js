@@ -27,6 +27,7 @@
 //= require backbone_datalink
 //= require i18n
 //= require i18n/translations
+//= require popper
 //= require bootstrap
 //= require bootstrap-modal
 //= require bootstrap-modalmanager
