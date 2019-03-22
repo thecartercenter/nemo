@@ -1,10 +1,9 @@
-nav.navbar-default {
+nav.navbar-light {
   /* Override Bootstrap */
   background-color: $nav-background-color;
   margin-bottom: 0px !important;
   border-radius: 0px !important;
   border-color: $nav-border-color;
-  height: 51px;
 
   /* For standard label in admin mode */
   .navbar-header.std {

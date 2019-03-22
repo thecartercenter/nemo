@@ -54,47 +54,53 @@
     </div>
 
     <%# navigation bar %>
-    <nav id="main-nav" class="navbar navbar-default" role="navigation">
-      <% if current_user && (current_mission || admin_mode?) %>
-          <% if admin_mode? %>
-            <div class="navbar-header std"><%= t("standard.standard") %></div>
-          <% end %>
+    <nav id="main-nav" class="navbar navbar-expand-sm navbar-light bg-light" role="navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
 
-          <ul class="nav navbar-nav">
-            <% if !admin_mode? %>
-              <% if can?(:create, Response) %>
-                <%# submit response dropdown %>
-                <li class="dropdown">
-                  <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
-                    <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
-                  </a>
-                  <%# empty until ajax call %>
-                  <ul class="dropdown-menu" role="menu">
-                    <li><%= inline_load_ind %></li>
-                  </ul>
-                </li>
-              <%# else mission is locked %>
-              <% else %>
-                <%# keep nav spacing %>
-                <li>&nbsp;</li>
-              <% end %>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <% if current_user && (current_mission || admin_mode?) %>
+            <% if admin_mode? %>
+              <div class="navbar-header std"><%= t("standard.standard") %></div>
+            <% end %>
 
-              <%= nav_links(Response, Report::Report) %>
+            <ul class="nav navbar-nav mr-auto">
+              <% if !admin_mode? %>
+                <% if can?(:create, Response) %>
+                  <%# submit response dropdown %>
+                  <li class="dropdown">
+                    <a href="#" data-target="#" class="dropdown-toggle" data-toggle="dropdown">
+                      <i class="fa fa-share-square-o"></i><%= t('common.submit') %><b class="caret"></b>
+                    </a>
+                    <%# empty until ajax call %>
+                    <ul class="dropdown-menu" role="menu">
+                      <li><%= inline_load_ind %></li>
+                    </ul>
+                  </li>
+                <%# else mission is locked %>
+                <% else %>
+                  <%# keep nav spacing %>
+                  <li>&nbsp;</li>
+                <% end %>
+
+                <%= nav_links(Response, Report::Report) %>
+
+                <%# divider %>
+                <li><div class="line"></div></li>
+
+              <% end %><%# end unless admin mode %>
+
+              <%= nav_links(Form, Question, OptionSet) %>
 
               <%# divider %>
               <li><div class="line"></div></li>
 
-            <% end %><%# end unless admin mode %>
+              <%= nav_links(User, Broadcast, Sms::Message, Setting, Mission) %>
 
-            <%= nav_links(Form, Question, OptionSet) %>
-
-            <%# divider %>
-            <li><div class="line"></div></li>
-
-            <%= nav_links(User, Broadcast, Sms::Message, Setting, Mission) %>
-
-          </ul>
-      <% end %>
+            </ul>
+        <% end %>
+      </div>
     </nav>
   </header>
   <div id="content" class="<%= ctlr_action_name %>">
