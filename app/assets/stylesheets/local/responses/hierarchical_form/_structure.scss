@@ -113,6 +113,10 @@
     line-height: 16px;
   }
 
+  label {
+    font-weight: bold;
+  }
+
   label.question-label { // As opposed to e.g. a choice
     display: flex;
 
