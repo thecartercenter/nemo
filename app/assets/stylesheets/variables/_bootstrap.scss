@@ -52,8 +52,8 @@ $font-family-sans-serif:     'Open Sans', Helvetica, sans-serif !default;
 // $font-family-monospace:   Menlo, Monaco, Consolas, "Courier New", monospace
 // $font-family-base:        $font-family-sans-serif
 
-// Convert 9pt => rem
-$font-size-base:             (9/16) * 1rem !default;
+$px-per-rem:                 16;
+$font-size-base:             (9/$px-per-rem) * 1rem !default;
 // $font-size-large:         ceil(($font-size-base * 1.25)) // ~18px
 // $font-size-small:         ceil(($font-size-base * 0.85)) // ~12px
 
@@ -67,7 +67,7 @@ $font-size-base:             (9/16) * 1rem !default;
 //** Unit-less `line-height` for use in components like buttons.
 $line-height-base:           1.3 !default;
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-// $line-height-computed:    floor(($font-size-base * $line-height-base)) // ~20px
+$line-height-computed:       floor(($font-size-base * $line-height-base)); // ~20px
 
 //** By default, this inherits from the `<body>`.
 // $headings-font-family:    inherit
@@ -96,7 +96,7 @@ $line-height-base:           1.3 !default;
 //
 //## Define common padding and border radius sizes and more. Values based on 14px text and 1.428 line-height (~20px to start).
 
-// $padding-base-vertical:     6px
+$padding-base-vertical:        (6/$px-per-rem) * 1rem;
 // $padding-base-horizontal:   12px
 
 // $padding-large-vertical:    10px
@@ -197,7 +197,7 @@ $btn-primary-border:                $link-color !default;
 //** Text color for `<input>`s
 // $input-color:                    $gray
 //** `<input>` border color
-// $input-border:                   #ccc
+$input-border:                      #ccc;
 
 // TODO: Rename `$input-border-radius` to `$input-border-radius-base` in v4
 //** Default `.form-control` border radius
@@ -215,7 +215,7 @@ $btn-primary-border:                $link-color !default;
 // $input-color-placeholder:        #999
 
 //** Default `.form-control` height
-// $input-height-base:              ($line-height-computed + ($padding-base-vertical * 2) + 2)
+$input-height-base:                 ($line-height-computed + ($padding-base-vertical * 2) + 2);
 //** Large `.form-control` height
 // $input-height-large:             (ceil($font-size-large * $line-height-large) + ($padding-large-vertical * 2) + 2)
 //** Small `.form-control` height
@@ -301,8 +301,8 @@ $btn-primary-border:                $link-color !default;
 
 // Small screen / tablet
 //** Deprecated `$screen-sm` as of v3.0.1
-// $screen-sm:                  768px
-// $screen-sm-min:              $screen-sm
+$screen-sm:                     768px;
+$screen-sm-min:                 $screen-sm;
 //** Deprecated `$screen-tablet` as of v3.0.1
 // $screen-tablet:              $screen-sm-min
 
@@ -321,7 +321,7 @@ $btn-primary-border:                $link-color !default;
 // $screen-lg-desktop:          $screen-lg-min
 
 // So media queries don't overlap when required, provide a maximum
-// $screen-xs-max:              ($screen-sm-min - 1)
+$screen-xs-max:                 ($screen-sm-min - 1);
 // $screen-sm-max:              ($screen-md-min - 1)
 // $screen-md-max:              ($screen-lg-min - 1)
 
@@ -509,7 +509,7 @@ $btn-primary-border:                $link-color !default;
 // $state-success-bg:               #dff0d8;
 // $state-success-border:           #dff0d8;
 
-// $state-info-text:                #31708f;
+$state-info-text:                   #31708f;
 // $state-info-bg:                  #d9edf7;
 // $state-info-border:              #d9edf7;
 
@@ -638,7 +638,7 @@ $btn-primary-border:                $link-color !default;
 // $alert-success-border:        $state-success-border
 
 // $alert-info-bg:               $state-info-bg
-// $alert-info-text:             $state-info-text
+$alert-info-text:                $state-info-text
 // $alert-info-border:           $state-info-border
 
 // $alert-warning-bg:            $state-warning-bg
