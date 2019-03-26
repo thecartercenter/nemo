@@ -17,6 +17,16 @@
       padding: 0 3px;
 
       vertical-align: middle;
+
+      cursor: pointer;
+    }
+
+    .popover-body {
+      font-size: .75rem;
+
+      p {
+        margin-bottom: .4rem;
+      }
     }
   }
 }
