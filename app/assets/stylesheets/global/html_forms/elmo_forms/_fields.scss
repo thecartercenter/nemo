@@ -27,6 +27,16 @@
   .control {
     padding: 5px 0;
     vertical-align: top;
+
+    .modal {
+      label, .control {
+        // Undo the styles for non-modal labels.
+        padding-top: calc(0.375rem + 1px);
+        padding-bottom: calc(0.375rem + 1px);
+        padding-right: 15px;
+        padding-left: 15px;
+      }
+    }
   }
 
   label.main {
@@ -47,6 +57,7 @@
     }
 
     .modal label {
+      // Undo the styles for non-modal labels.
       font-weight: bold;
     }
 
