@@ -21,9 +21,9 @@
           <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
 
           <% configatron.preferred_locales.each do |locale| %>
-            <div class="translation form-horizontal">
-              <div class="form-group">
-                <label for="option_level_name_<%= locale %>" class="col-md-3 control-label"><%= language_name(locale) %></label>
+            <div class="translation">
+              <div class="form-group row">
+                <label for="option_level_name_<%= locale %>" class="col-md-3 col-form-label"><%= language_name(locale) %></label>
                 <div class="col-md-9">
                   <input type="text" class="form-control" id="option_level_name_<%= locale %>"
                     data-locale="<%= locale %>" maxlength="<%= OptionLevel::MAX_NAME_LENGTH %>">
