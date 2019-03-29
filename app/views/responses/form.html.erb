@@ -38,7 +38,7 @@
         <div class="submit-buttons">
           <% if form_mode == :edit && can?(:review, @response) %>
             <%= f.submit(t("response.save_and_mark_reviewed"),
-                  class: "btn btn-default", name: "commit_and_mark_reviewed", read_only: false) %>
+                  class: "btn btn-secondary", name: "commit_and_mark_reviewed", read_only: false) %>
           <% end %>
           <% unless @context.read_only? %>
             <%= f.submit(class: "btn btn-primary") %>
