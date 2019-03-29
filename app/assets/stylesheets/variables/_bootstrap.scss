@@ -153,9 +153,9 @@ $padding-base-vertical:        (6/$px-per-rem) * 1rem;
 
 // $btn-font-weight:                normal
 
-$btn-secondary-color:                 #666 !default;
-$btn-secondary-bg:                    $faint-gray !default;
-$btn-secondary-border:                $faint-gray !default;
+$theme-colors: (
+  "secondary": $faint-gray,
+);
 
 $btn-primary-color:                 white !default;
 $btn-primary-bg:                    $link-color !default;
