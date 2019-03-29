@@ -9,14 +9,14 @@ class SkipRuleFormField extends React.Component {
     super(props);
 
     const destItemIdOrEnd = props.destination === 'end' ? 'end' : props.destItemId;
-    this.state = Object.assign({}, props, { destItemIdOrEnd });
-
-    this.destinationOptionChanged = this.destinationOptionChanged.bind(this);
-    this.skipIfChanged = this.skipIfChanged.bind(this);
-    this.handleRemoveClick = this.handleRemoveClick.bind(this);
+    this.state = {
+      // TODO: Explicitly pick props to use.
+      ...props,
+      destItemIdOrEnd,
+    };
   }
 
-  destinationOptionChanged(value) {
+  destinationOptionChanged = (value) => {
     this.setState({
       destItemIdOrEnd: value,
       destination: value === 'end' ? 'end' : 'item',
@@ -24,17 +24,17 @@ class SkipRuleFormField extends React.Component {
     });
   }
 
-  skipIfChanged(event) {
+  skipIfChanged = (event) => {
     this.setState({
       skipIf: event.target.value,
     });
   }
 
-  handleRemoveClick() {
+  handleRemoveClick = () => {
     this.setState({ remove: true });
   }
 
-  formatTargetItemOptions(items) {
+  formatTargetItemOptions = (items) => {
     return items.map((o) => {
       return {
         id: o.id,
@@ -44,7 +44,7 @@ class SkipRuleFormField extends React.Component {
     }).concat([{ id: 'end', name: I18n.t('form_item.skip_logic_options.end_of_form'), key: 'end' }]);
   }
 
-  skipIfOptionTags() {
+  skipIfOptionTags = () => {
     const skipIfOptions = ['always', 'all_met', 'any_met'];
     return skipIfOptions.map((option) => (
       <option
@@ -56,7 +56,7 @@ class SkipRuleFormField extends React.Component {
     ));
   }
 
-  shouldDestroy() {
+  shouldDestroy = () => {
     const { hide } = this.props;
     const { remove } = this.state;
     return remove || hide;

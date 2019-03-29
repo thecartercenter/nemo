@@ -8,10 +8,9 @@ class UserAssignmentFormField extends React.Component {
   constructor(props) {
     super(props);
     this.state = { destroy: props.destroy };
-    this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
-  missionField() {
+  missionField = () => {
     const { newRecord, missionId, missionName, index, id } = this.props;
     if (newRecord) {
       return (
@@ -36,7 +35,7 @@ class UserAssignmentFormField extends React.Component {
     );
   }
 
-  missionOptionTags() {
+  missionOptionTags = () => {
     const { missions } = this.props;
     return missions.map((mission) => (
       <option
@@ -48,7 +47,7 @@ class UserAssignmentFormField extends React.Component {
     ));
   }
 
-  roleOptionTags() {
+  roleOptionTags = () => {
     const { roles } = this.props;
     return roles.map((option) => (
       <option
@@ -60,7 +59,7 @@ class UserAssignmentFormField extends React.Component {
     ));
   }
 
-  missionRoleFields() {
+  missionRoleFields = () => {
     const { role, index } = this.props;
     return (
       <div className="assignment-row">
@@ -88,7 +87,7 @@ class UserAssignmentFormField extends React.Component {
     );
   }
 
-  handleRemoveClick() {
+  handleRemoveClick = () => {
     this.setState({ destroy: true });
   }
 

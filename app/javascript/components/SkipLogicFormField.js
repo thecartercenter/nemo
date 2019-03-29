@@ -7,15 +7,18 @@ class SkipLogicFormField extends React.Component {
   constructor(props) {
     super(props);
     const skip = props.skipRules.length === 0 ? 'dont_skip' : 'skip';
-    this.state = Object.assign({}, props, { skip });
-    this.skipOptionChanged = this.skipOptionChanged.bind(this);
+    this.state = {
+      // TODO: Explicitly pick props to use.
+      ...props,
+      skip,
+    };
   }
 
-  skipOptionChanged(event) {
+  skipOptionChanged = (event) => {
     this.setState({ skip: event.target.value });
   }
 
-  skipOptionTags() {
+  skipOptionTags = () => {
     const skipOptions = ['dont_skip', 'skip'];
     return skipOptions.map((option) => (
       <option

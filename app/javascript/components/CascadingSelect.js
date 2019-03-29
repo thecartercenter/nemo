@@ -6,11 +6,7 @@ import FormSelect from './FormSelect';
 class CascadingSelect extends React.Component {
   constructor(props) {
     super(props);
-    this.nodeChanged = this.nodeChanged.bind(this);
-    this.buildUrl = this.buildUrl.bind(this);
-    this.buildLevelProps = this.buildLevelProps.bind(this);
-    this.buildLevels = this.buildLevels.bind(this);
-    this.isLastLevel = this.isLastLevel.bind(this);
+    // TODO: Explicitly pick props to use.
     this.state = props;
   }
 
@@ -29,7 +25,7 @@ class CascadingSelect extends React.Component {
   }
 
   // Fetches data to populate the control. nodeId may be null if there is no node selected.
-  getData(setId, nodeId) {
+  getData = (setId, nodeId) => {
     ELMO.app.loading(true);
     const self = this;
     const url = this.buildUrl(setId, nodeId);
@@ -43,16 +39,16 @@ class CascadingSelect extends React.Component {
   }
 
   // Refresh data if the selected node changed.
-  nodeChanged(newNodeId) {
+  nodeChanged = (newNodeId) => {
     const { optionSetId } = this.state;
     this.getData(optionSetId, newNodeId);
   }
 
-  buildUrl(setId, nodeId) {
+  buildUrl = (setId, nodeId) => {
     return `${ELMO.app.url_builder.build('option-sets', setId, 'condition-form-view')}?node_id=${nodeId}`;
   }
 
-  buildLevelProps(level, isLastLevel) {
+  buildLevelProps = (level, isLastLevel) => {
     const { namePrefix } = this.state;
     return {
       type: 'select',
@@ -65,7 +61,7 @@ class CascadingSelect extends React.Component {
     };
   }
 
-  buildLevels() {
+  buildLevels = () => {
     const { levels } = this.state;
     const self = this;
     let result = [];
@@ -84,12 +80,12 @@ class CascadingSelect extends React.Component {
     return result;
   }
 
-  isLastLevel(i) {
+  isLastLevel = (i) => {
     const { levels } = this.state;
     return levels && levels.length === (i + 1);
   }
 
-  optionPrompt(level) {
+  optionPrompt = (level) => {
     if (level.name) {
       return I18n.t('option_set.option_prompt_with_level', { level: level.name });
     }

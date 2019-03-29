@@ -7,16 +7,11 @@ import FormSelect from './FormSelect';
 class ConditionFormField extends React.Component {
   constructor(props) {
     super(props);
-    this.getFieldData = this.getFieldData.bind(this);
-    this.updateFieldData = this.updateFieldData.bind(this);
-    this.formatRefQingOptions = this.formatRefQingOptions.bind(this);
-    this.buildUrl = this.buildUrl.bind(this);
-    this.buildValueProps = this.buildValueProps.bind(this);
-    this.handleRemoveClick = this.handleRemoveClick.bind(this);
+    // TODO: Explicitly pick props to use.
     this.state = props;
   }
 
-  getFieldData(refQingId) {
+  getFieldData = (refQingId) => {
     ELMO.app.loading(true);
     const self = this;
     const url = this.buildUrl(refQingId);
@@ -33,11 +28,11 @@ class ConditionFormField extends React.Component {
       });
   }
 
-  updateFieldData(refQingId) {
+  updateFieldData = (refQingId) => {
     this.getFieldData(refQingId);
   }
 
-  buildUrl(refQingId) {
+  buildUrl = (refQingId) => {
     const { id, formId, conditionableId, conditionableType } = this.state;
     let url = `${ELMO.app.url_builder.build('form-items', 'condition-form')}?`;
     url += `condition_id=${id || ''}&ref_qing_id=${refQingId}&form_id=${formId}`;
@@ -48,17 +43,17 @@ class ConditionFormField extends React.Component {
     return url;
   }
 
-  formatRefQingOptions(refQingOptions) {
+  formatRefQingOptions = (refQingOptions) => {
     return refQingOptions.map((o) => {
       return { id: o.id, name: `${o.fullDottedRank}. ${o.code}`, key: o.id };
     });
   }
 
-  handleRemoveClick() {
+  handleRemoveClick = () => {
     this.setState({ remove: true });
   }
 
-  buildValueProps(namePrefix, idPrefix) {
+  buildValueProps = (namePrefix, idPrefix) => {
     const { optionSetId, optionNodeId, value } = this.state;
     if (optionSetId) {
       return {
@@ -81,7 +76,7 @@ class ConditionFormField extends React.Component {
     };
   }
 
-  shouldDestroy() {
+  shouldDestroy = () => {
     const { hide } = this.props;
     const { remove } = this.state;
     return remove || hide;

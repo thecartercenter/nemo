@@ -23,38 +23,31 @@ class Filters extends React.Component {
       selectedFormIds,
       advancedSearchText,
     };
-
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleSelectForm = this.handleSelectForm.bind(this);
-    this.handleClearFormSelection = this.handleClearFormSelection.bind(this);
-    this.handleChangeAdvancedSearch = this.handleChangeAdvancedSearch.bind(this);
-    this.handleClearFilters = this.handleClearFilters.bind(this);
-    this.renderFilterButtons = this.renderFilterButtons.bind(this);
   }
 
-  handleSubmit() {
+  handleSubmit = () => {
     const { allForms } = this.props;
     const filterString = getFilterString(allForms, this.state);
     submitSearch(filterString);
   }
 
-  handleSelectForm(event) {
+  handleSelectForm = (event) => {
     this.setState({ selectedFormIds: [event.target.value] });
   }
 
-  handleClearFormSelection() {
+  handleClearFormSelection = () => {
     this.setState({ selectedFormIds: [] });
   }
 
-  handleChangeAdvancedSearch(event) {
+  handleChangeAdvancedSearch = (event) => {
     this.setState({ advancedSearchText: event.target.value });
   }
 
-  handleClearFilters() {
+  handleClearFilters = () => {
     submitSearch(null);
   }
 
-  renderFilterButtons() {
+  renderFilterButtons = () => {
     const { allForms, selectedFormIds: originalFormIds } = this.props;
     const { selectedFormIds } = this.state;
 

@@ -6,8 +6,8 @@ import SkipRuleFormField from './SkipRuleFormField';
 class SkipRuleSetFormField extends React.Component {
   constructor(props) {
     super(props);
+    // TODO: Explicitly pick props to use.
     this.state = props;
-    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
@@ -19,7 +19,7 @@ class SkipRuleSetFormField extends React.Component {
     }
   }
 
-  handleAddClick() {
+  handleAddClick = () => {
     const { laterItems } = this.state;
     const laterItemsExist = laterItems.length > 0;
     this.setState((curState) => ({ skipRules:

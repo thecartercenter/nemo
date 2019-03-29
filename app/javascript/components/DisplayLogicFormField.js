@@ -5,15 +5,15 @@ import ConditionSetFormField from './ConditionSetFormField';
 class DisplayLogicFormField extends React.Component {
   constructor(props) {
     super(props);
+    // TODO: Explicitly pick props to use.
     this.state = props;
-    this.displayIfChanged = this.displayIfChanged.bind(this);
   }
 
-  displayIfChanged(event) {
+  displayIfChanged = (event) => {
     this.setState({ displayIf: event.target.value });
   }
 
-  displayIfOptionTags() {
+  displayIfOptionTags = () => {
     const { type } = this.state;
     const displayIfOptions = ['always', 'all_met', 'any_met'];
     return displayIfOptions.map((option) => (

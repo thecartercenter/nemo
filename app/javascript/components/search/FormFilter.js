@@ -18,13 +18,10 @@ const parseFormsForSelect2 = (allForms) => allForms
 class FormFilter extends React.Component {
   constructor(props) {
     super(props);
-    this.handleClearSelection = this.handleClearSelection.bind(this);
-    this.renderPopover = this.renderPopover.bind(this);
-
     this.select2 = React.createRef();
   }
 
-  handleClearSelection() {
+  handleClearSelection = () => {
     const { onClearSelection } = this.props;
     onClearSelection();
 
@@ -35,7 +32,7 @@ class FormFilter extends React.Component {
     setTimeout(() => this.select2.current.el.select2('close'), 1);
   }
 
-  renderPopover() {
+  renderPopover = () => {
     const { allForms, selectedFormIds, onSelectForm, onSubmit } = this.props;
 
     return (

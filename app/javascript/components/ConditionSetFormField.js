@@ -6,8 +6,8 @@ import ConditionFormField from './ConditionFormField';
 class ConditionSetFormField extends React.Component {
   constructor(props) {
     super(props);
+    // TODO: Explicitly pick props to use.
     this.state = props;
-    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
@@ -19,7 +19,7 @@ class ConditionSetFormField extends React.Component {
     }
   }
 
-  handleAddClick() {
+  handleAddClick = () => {
     this.setState((curState) => ({ conditions:
       curState.conditions.concat([{
         key: Math.round(Math.random() * 100000000),

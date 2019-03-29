@@ -5,12 +5,7 @@ import Button from 'react-bootstrap/Button';
 import { isQueryParamTruthy } from './utils';
 
 class AdvancedSearchFilter extends React.Component {
-  constructor(props) {
-    super(props);
-    this.handleKeyDown = this.handleKeyDown.bind(this);
-  }
-
-  handleKeyDown(event) {
+  handleKeyDown = (event) => {
     const { onSubmit } = this.props;
 
     if (event.key === 'Enter') {

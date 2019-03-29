@@ -11,10 +11,9 @@ class UserAssignmentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = { assignments: props.assignments };
-    this.handleAddClick = this.handleAddClick.bind(this);
   }
 
-  handleAddClick() {
+  handleAddClick = () => {
     this.setState((curState) => {
       const newAssignments = [{ key: Math.round(Math.random() * 100000000), newRecord: true }];
       return { assignments: curState.assignments.concat(newAssignments) };
