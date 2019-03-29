@@ -10,7 +10,8 @@ import UserAssignmentFormField from './UserAssignmentFormField';
 class UserAssignmentForm extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { assignments: props.assignments };
+    const { assignments } = props;
+    this.state = { assignments };
   }
 
   handleAddClick = () => {

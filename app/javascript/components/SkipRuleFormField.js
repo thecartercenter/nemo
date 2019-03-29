@@ -7,11 +7,26 @@ import FormSelect from './FormSelect';
 class SkipRuleFormField extends React.Component {
   constructor(props) {
     super(props);
-
-    const destItemIdOrEnd = props.destination === 'end' ? 'end' : props.destItemId;
+    const {
+      remove,
+      id,
+      laterItems,
+      skipIf,
+      conditions,
+      refableQings,
+      formId,
+      destination,
+      destItemId,
+    } = this.props;
+    const destItemIdOrEnd = destination === 'end' ? 'end' : destItemId;
     this.state = {
-      // TODO: Explicitly pick props to use.
-      ...props,
+      remove,
+      id,
+      laterItems,
+      skipIf,
+      conditions,
+      refableQings,
+      formId,
       destItemIdOrEnd,
     };
   }
@@ -144,6 +159,17 @@ SkipRuleFormField.propTypes = {
   hide: PropTypes.bool.isRequired,
   namePrefix: PropTypes.string.isRequired,
   ruleId: PropTypes.string.isRequired,
+
+  // TODO: Describe these prop types.
+  /* eslint-disable react/forbid-prop-types */
+  remove: PropTypes.any,
+  id: PropTypes.any,
+  laterItems: PropTypes.any,
+  skipIf: PropTypes.any,
+  conditions: PropTypes.any,
+  refableQings: PropTypes.any,
+  formId: PropTypes.any,
+  /* eslint-enable */
 };
 
 SkipRuleFormField.defaultProps = {

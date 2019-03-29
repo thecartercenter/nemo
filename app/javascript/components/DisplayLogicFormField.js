@@ -1,12 +1,25 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 import ConditionSetFormField from './ConditionSetFormField';
 
 class DisplayLogicFormField extends React.Component {
+  static propTypes = {
+    // TODO: Describe these prop types.
+    /* eslint-disable react/forbid-prop-types */
+    refableQings: PropTypes.any,
+    id: PropTypes.any,
+    type: PropTypes.any,
+    displayIf: PropTypes.any,
+    displayConditions: PropTypes.any,
+    formId: PropTypes.any,
+    /* eslint-enable */
+  };
+
   constructor(props) {
     super(props);
-    // TODO: Explicitly pick props to use.
-    this.state = props;
+    const { refableQings, id, type, displayIf, displayConditions, formId } = this.props;
+    this.state = { refableQings, id, type, displayIf, displayConditions, formId };
   }
 
   displayIfChanged = (event) => {

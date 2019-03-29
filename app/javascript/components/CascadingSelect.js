@@ -6,8 +6,8 @@ import FormSelect from './FormSelect';
 class CascadingSelect extends React.Component {
   constructor(props) {
     super(props);
-    // TODO: Explicitly pick props to use.
-    this.state = props;
+    const { optionSetId, optionNodeId, namePrefix, levels } = this.props;
+    this.state = { optionSetId, optionNodeId, namePrefix, levels };
   }
 
   // Refresh data on mount.
@@ -107,6 +107,12 @@ class CascadingSelect extends React.Component {
 CascadingSelect.propTypes = {
   optionNodeId: PropTypes.string,
   optionSetId: PropTypes.string.isRequired,
+
+  // TODO: Describe these prop types.
+  /* eslint-disable react/forbid-prop-types */
+  namePrefix: PropTypes.any,
+  levels: PropTypes.any,
+  /* eslint-enable */
 };
 
 CascadingSelect.defaultProps = {

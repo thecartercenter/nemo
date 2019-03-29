@@ -7,7 +7,8 @@ import PropTypes from 'prop-types';
 class UserAssignmentFormField extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { destroy: props.destroy };
+    const { destroy } = this.props;
+    this.state = { destroy };
   }
 
   missionField = () => {

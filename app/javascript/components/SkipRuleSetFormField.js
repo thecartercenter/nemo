@@ -6,8 +6,8 @@ import SkipRuleFormField from './SkipRuleFormField';
 class SkipRuleSetFormField extends React.Component {
   constructor(props) {
     super(props);
-    // TODO: Explicitly pick props to use.
-    this.state = props;
+    const { skipRules, formId, laterItems, type, refableQings } = this.props;
+    this.state = { skipRules, formId, laterItems, type, refableQings };
   }
 
   // If about to show the set and it's empty, add a blank one.
@@ -73,6 +73,15 @@ class SkipRuleSetFormField extends React.Component {
 
 SkipRuleSetFormField.propTypes = {
   hide: PropTypes.bool.isRequired,
+
+  // TODO: Describe these prop types.
+  /* eslint-disable react/forbid-prop-types */
+  skipRules: PropTypes.any,
+  formId: PropTypes.any,
+  laterItems: PropTypes.any,
+  type: PropTypes.any,
+  refableQings: PropTypes.any,
+  /* eslint-enable */
 };
 
 export default SkipRuleSetFormField;

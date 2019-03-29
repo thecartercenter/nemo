@@ -7,8 +7,36 @@ import FormSelect from './FormSelect';
 class ConditionFormField extends React.Component {
   constructor(props) {
     super(props);
-    // TODO: Explicitly pick props to use.
-    this.state = props;
+    const {
+      formId,
+      conditionableId,
+      conditionableType,
+      optionSetId,
+      optionNodeId,
+      value,
+      namePrefix,
+      index,
+      id,
+      refQingId,
+      refableQings,
+      op,
+      operatorOptions,
+    } = this.props;
+    this.state = {
+      formId,
+      conditionableId,
+      conditionableType,
+      optionSetId,
+      optionNodeId,
+      value,
+      namePrefix,
+      index,
+      id,
+      refQingId,
+      refableQings,
+      op,
+      operatorOptions,
+    };
   }
 
   getFieldData = (refQingId) => {
@@ -143,6 +171,23 @@ class ConditionFormField extends React.Component {
 
 ConditionFormField.propTypes = {
   hide: PropTypes.bool.isRequired,
+
+  // TODO: Describe these prop types.
+  /* eslint-disable react/forbid-prop-types */
+  formId: PropTypes.any,
+  conditionableId: PropTypes.any,
+  conditionableType: PropTypes.any,
+  optionSetId: PropTypes.any,
+  optionNodeId: PropTypes.any,
+  value: PropTypes.any,
+  namePrefix: PropTypes.any,
+  index: PropTypes.any,
+  id: PropTypes.any,
+  refQingId: PropTypes.any,
+  refableQings: PropTypes.any,
+  op: PropTypes.any,
+  operatorOptions: PropTypes.any,
+  /* eslint-enable */
 };
 
 export default ConditionFormField;
