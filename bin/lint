@@ -4,6 +4,6 @@ else
   files=`git ls-files . --exclude-standard --others -m`
 fi
 echo "$files" | egrep '\.rb$' | xargs rubocop
-echo "$files" | egrep '\.(js|jsx)$' | xargs eslint --ext .js,.jsx
-echo "$files" | egrep '\.coffee$' | xargs coffeelint -q -f coffeelint.json
+echo "$files" | egrep '\.(js|jsx)$' | xargs yarn run lint
+echo "$files" | egrep '\.coffee$' | xargs yarn run coffeelint -q -f coffeelint.json
 echo "$files" | egrep '\.scss$' | xargs scss-lint -c .scss-lint.yml

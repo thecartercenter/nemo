@@ -1,24 +1,16 @@
 env:
-  es6: true
-  jest: true
+  browser: true
 parser: babel-eslint
 parserOptions:
   ecmaFeatures:
     jsx: true
   sourceType: module
-plugins:
-  - react
 extends:
   - eslint:recommended
-  - plugin:react/all
 globals:
-  React: true
   ELMO: true
   $: true
   I18n: true
-  console: true
-  window: true
-  setTimeout: true
 rules:
   array-bracket-spacing: error
   arrow-body-style: error
@@ -72,28 +64,6 @@ rules:
     - error
     - never
   quotes: error
-  react/destructuring-assignment: 0
-  react/forbid-component-props: 0
-  react/jsx-closing-bracket-location:
-    - error
-    - after-props
-  react/jsx-indent:
-    - error
-    - 2
-  react/jsx-indent-props:
-    - error
-    - 2
-  react/jsx-max-depth:
-    - error
-    -
-      max: 3
-  react/jsx-filename-extension: 0
-  react/jsx-no-undef: 0
-  react/jsx-wrap-multilines: error
-  react/no-set-state: 0
-  react/prefer-stateless-function: 0
-  react/react-in-jsx-scope: 0
-  react/require-optimization: 0
   rest-spread-spacing: error
   semi: error
   semi-spacing: error

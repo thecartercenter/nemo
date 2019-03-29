@@ -1,0 +1,10 @@
+extends:
+  - cooperka/react
+parser: babel-eslint
+env:
+  browser: true
+  jest: true
+globals:
+  $: true
+  I18n: true
+  ELMO: true
