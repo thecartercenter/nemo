@@ -6,18 +6,19 @@ import PropTypes from 'prop-types';
  */
 class UserAssignmentFormField extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = { destroy: props.destroy };
     this.handleRemoveClick = this.handleRemoveClick.bind(this);
   }
 
   missionField() {
-    if (this.props.newRecord) {
+    const { newRecord, missionId, missionName, index, id } = this.props;
+    if (newRecord) {
       return (
         <select
           className="mission form-control"
-          defaultValue={this.props.missionId}
-          name={`user[assignments_attributes][${this.props.index}][mission_id]`}
+          defaultValue={missionId}
+          name={`user[assignments_attributes][${index}][mission_id]`}
         >
           {this.missionOptionTags()}
         </select>
@@ -25,18 +26,19 @@ class UserAssignmentFormField extends React.Component {
     }
     return (
       <div>
-        {this.props.missionName}
+        {missionName}
         <input
-          name={`user[assignments_attributes][${this.props.index}][id]`}
+          name={`user[assignments_attributes][${index}][id]`}
           type="hidden"
-          value={this.props.id || ''}
+          value={id || ''}
         />
       </div>
     );
   }
 
   missionOptionTags() {
-    return this.props.missions.map((mission) => (
+    const { missions } = this.props;
+    return missions.map((mission) => (
       <option
         key={mission.id}
         value={mission.id}
@@ -47,7 +49,8 @@ class UserAssignmentFormField extends React.Component {
   }
 
   roleOptionTags() {
-    return this.props.roles.map((option) => (
+    const { roles } = this.props;
+    return roles.map((option) => (
       <option
         key={option}
         value={option}
@@ -58,6 +61,7 @@ class UserAssignmentFormField extends React.Component {
   }
 
   missionRoleFields() {
+    const { role, index } = this.props;
     return (
       <div className="assignment-row">
         <div className="mission">
@@ -66,12 +70,14 @@ class UserAssignmentFormField extends React.Component {
         <div className="role">
           <select
             className="form-control"
-            defaultValue={this.props.role}
-            name={`user[assignments_attributes][${this.props.index}][role]`}
+            defaultValue={role}
+            name={`user[assignments_attributes][${index}][role]`}
           >
             {this.roleOptionTags()}
           </select>
         </div>
+        {/* TODO: Improve a11y. */}
+        {/* eslint-disable-next-line */}
         <a
           className="remove"
           onClick={this.handleRemoveClick}
@@ -87,18 +93,20 @@ class UserAssignmentFormField extends React.Component {
   }
 
   render() {
+    const { index, id } = this.props;
+    const { destroy } = this.state;
     return (
       <div>
-        {this.state.destroy ? '' : this.missionRoleFields()}
+        {destroy ? '' : this.missionRoleFields()}
         <input
-          name={`user[assignments_attributes][${this.props.index}][_destroy]`}
+          name={`user[assignments_attributes][${index}][_destroy]`}
           type="hidden"
-          value={this.state.destroy}
+          value={destroy}
         />
         <input
-          name={`user[assignments_attributes][${this.props.index}][id]`}
+          name={`user[assignments_attributes][${index}][id]`}
           type="hidden"
-          value={this.props.id || ''}
+          value={id || ''}
         />
       </div>
     );

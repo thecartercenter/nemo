@@ -5,20 +5,23 @@ import SkipRuleFormField from './SkipRuleFormField';
 
 class SkipRuleSetFormField extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = props;
     this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
-    if (!newProps.hide && this.props.hide && this.state.skipRules.length === 0) {
+    const { hide } = this.props;
+    const { skipRules } = this.state;
+    if (!newProps.hide && hide && skipRules.length === 0) {
       this.handleAddClick();
     }
   }
 
   handleAddClick() {
-    const laterItemsExist = this.state.laterItems.length > 0;
+    const { laterItems } = this.state;
+    const laterItemsExist = laterItems.length > 0;
     this.setState((curState) => ({ skipRules:
       curState.skipRules.concat([{
         key: Math.round(Math.random() * 100000000),
@@ -29,30 +32,35 @@ class SkipRuleSetFormField extends React.Component {
   }
 
   render() {
+    const { hide } = this.props;
+    const { skipRules, formId, laterItems, type, refableQings } = this.state;
     return (
       <div
         className="skip-rule-set"
-        style={{ display: this.props.hide ? 'none' : '' }}
+        style={{ display: hide ? 'none' : '' }}
       >
-        {this.state.skipRules.map((props, index) => (
+        {skipRules.map((props, index) => (
           <SkipRuleFormField
-            formId={this.state.formId}
-            hide={this.props.hide}
+            formId={formId}
+            hide={hide}
             key={props.key || props.id}
-            laterItems={this.state.laterItems}
+            laterItems={laterItems}
             ruleId={`rule-${index + 1}`}
-            namePrefix={`${this.state.type}[skip_rules_attributes][${index}]`}
-            refableQings={this.state.refableQings}
+            namePrefix={`${type}[skip_rules_attributes][${index}]`}
+            refableQings={refableQings}
             {...props}
           />
         ))}
         <div
           className="skip-rule-add-link-wrapper"
         >
+          {/* TODO: Improve a11y. */}
+          {/* eslint-disable */}
           <a
             onClick={this.handleAddClick}
             tabIndex="0"
           >
+          {/* eslint-enable */}
             <i className="fa fa-plus" />
             {' '}
             {I18n.t('form_item.add_rule')}

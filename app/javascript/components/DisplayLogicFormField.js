@@ -4,31 +4,32 @@ import ConditionSetFormField from './ConditionSetFormField';
 
 class DisplayLogicFormField extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = props;
     this.displayIfChanged = this.displayIfChanged.bind(this);
   }
 
   displayIfChanged(event) {
-    const value = event.target.value;
-    this.setState({ displayIf: value });
+    this.setState({ displayIf: event.target.value });
   }
 
   displayIfOptionTags() {
+    const { type } = this.state;
     const displayIfOptions = ['always', 'all_met', 'any_met'];
     return displayIfOptions.map((option) => (
       <option
         key={option}
         value={option}
       >
-        {I18n.t(`form_item.display_if_options.${this.state.type}.${option}`)}
+        {I18n.t(`form_item.display_if_options.${type}.${option}`)}
       </option>
     ));
   }
 
   render() {
+    const { refableQings: rawRefableQings, id, type, displayIf, displayConditions, formId } = this.state;
     // Display logic conditions can't reference self, as that doesn't make sense.
-    const refableQings = this.state.refableQings.filter((qing) => qing.id !== this.state.id);
+    const refableQings = rawRefableQings.filter((qing) => qing.id !== id);
 
     if (refableQings.length === 0) {
       return (
@@ -39,19 +40,19 @@ class DisplayLogicFormField extends React.Component {
     }
     const displayIfProps = {
       className: 'form-control',
-      name: `${this.state.type}[display_if]`,
-      id: `${this.state.type}_display_logic`,
-      value: this.state.displayIf,
+      name: `${type}[display_if]`,
+      id: `${type}_display_logic`,
+      value: displayIf,
       onChange: this.displayIfChanged,
     };
     const conditionSetProps = {
-      conditions: this.state.displayConditions,
-      conditionableId: this.state.id,
+      conditions: displayConditions,
+      conditionableId: id,
       conditionableType: 'FormItem',
       refableQings,
-      formId: this.state.formId,
-      hide: this.state.displayIf === 'always',
-      namePrefix: `${this.state.type}[display_conditions_attributes]`,
+      formId,
+      hide: displayIf === 'always',
+      namePrefix: `${type}[display_conditions_attributes]`,
     };
 
     return (

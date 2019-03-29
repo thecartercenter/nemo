@@ -9,7 +9,7 @@ import UserAssignmentFormField from './UserAssignmentFormField';
  */
 class UserAssignmentForm extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = { assignments: props.assignments };
     this.handleAddClick = this.handleAddClick.bind(this);
   }
@@ -22,22 +22,26 @@ class UserAssignmentForm extends React.Component {
   }
 
   render() {
+    const { missions, roles } = this.props;
+    const { assignments } = this.state;
     return (
       <div className="assignments">
         <div>
-          {this.state.assignments.map(
+          {assignments.map(
             (assignment, idx) => (
               <UserAssignmentFormField
                 {...assignment}
                 index={idx}
                 key={assignment.key || assignment.id}
-                missions={this.props.missions}
-                roles={this.props.roles}
+                missions={missions}
+                roles={roles}
               />
             ),
           )}
         </div>
         <div>
+          {/* TODO: Improve a11y. */}
+          {/* eslint-disable-next-line */}
           <a
             className="add-assignment"
             onClick={this.handleAddClick}

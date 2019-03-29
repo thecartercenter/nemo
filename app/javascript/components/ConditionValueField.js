@@ -5,16 +5,17 @@ import CascadingSelect from './CascadingSelect';
 
 class ConditionValueField extends React.Component {
   render() {
-    if (this.props.type === 'cascading_select') {
+    const { type, value, id, name } = this.props;
+    if (type === 'cascading_select') {
       return <CascadingSelect {...this.props} />;
     }
     return (
       <input
         className="text form-control"
-        defaultValue={this.props.value}
-        id={this.props.id}
+        defaultValue={value}
+        id={id}
         key="input"
-        name={this.props.name}
+        name={name}
         type="text"
       />
     );

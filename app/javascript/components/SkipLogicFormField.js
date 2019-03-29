@@ -5,7 +5,7 @@ import SkipRuleSetFormField from './SkipRuleSetFormField';
 
 class SkipLogicFormField extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     const skip = props.skipRules.length === 0 ? 'dont_skip' : 'skip';
     this.state = Object.assign({}, props, { skip });
     this.skipOptionChanged = this.skipOptionChanged.bind(this);
@@ -28,12 +28,13 @@ class SkipLogicFormField extends React.Component {
   }
 
   render() {
+    const { skip, type } = this.state;
     const selectProps = {
       className: 'form-control skip-or-not',
-      value: this.state.skip,
+      value: skip,
       onChange: this.skipOptionChanged,
-      name: `${this.state.type}[skip_if]`,
-      id: `${this.state.type}_skip_logic`,
+      name: `${type}[skip_if]`,
+      id: `${type}_skip_logic`,
     };
 
     return (
@@ -42,7 +43,7 @@ class SkipLogicFormField extends React.Component {
           {this.skipOptionTags()}
         </select>
         <SkipRuleSetFormField
-          hide={this.state.skip === 'dont_skip'}
+          hide={skip === 'dont_skip'}
           {...this.state}
         />
       </div>

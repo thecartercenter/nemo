@@ -12,3 +12,4 @@ rules:
   padded-blocks:
     - error
     - never
+  react/prefer-stateless-function: off

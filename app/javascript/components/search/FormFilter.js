@@ -16,8 +16,8 @@ const parseFormsForSelect2 = (allForms) => allForms
   .map((form) => mapKeys(form, (value, key) => (key === 'name' ? 'text' : key)));
 
 class FormFilter extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.handleClearSelection = this.handleClearSelection.bind(this);
     this.renderPopover = this.renderPopover.bind(this);
 

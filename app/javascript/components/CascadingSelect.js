@@ -5,7 +5,7 @@ import FormSelect from './FormSelect';
 
 class CascadingSelect extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.nodeChanged = this.nodeChanged.bind(this);
     this.buildUrl = this.buildUrl.bind(this);
     this.buildLevelProps = this.buildLevelProps.bind(this);
@@ -16,19 +16,16 @@ class CascadingSelect extends React.Component {
 
   // Refresh data on mount.
   componentDidMount() {
-    this.getData(this.state.optionSetId, this.state.optionNodeId);
+    const { optionSetId, optionNodeId } = this.state;
+    this.getData(optionSetId, optionNodeId);
   }
 
   // Refresh data if the option set is changing.
   componentWillReceiveProps(nextProps) {
-    if (nextProps.optionSetId !== this.state.optionSetId) {
+    const { optionSetId } = this.state;
+    if (nextProps.optionSetId !== optionSetId) {
       this.getData(nextProps.optionSetId, nextProps.optionNodeId);
     }
-  }
-
-  // Refresh data if the selected node changed.
-  nodeChanged(newNodeId) {
-    this.getData(this.state.optionSetId, newNodeId);
   }
 
   // Fetches data to populate the control. nodeId may be null if there is no node selected.
@@ -45,14 +42,21 @@ class CascadingSelect extends React.Component {
       });
   }
 
+  // Refresh data if the selected node changed.
+  nodeChanged(newNodeId) {
+    const { optionSetId } = this.state;
+    this.getData(optionSetId, newNodeId);
+  }
+
   buildUrl(setId, nodeId) {
     return `${ELMO.app.url_builder.build('option-sets', setId, 'condition-form-view')}?node_id=${nodeId}`;
   }
 
   buildLevelProps(level, isLastLevel) {
+    const { namePrefix } = this.state;
     return {
       type: 'select',
-      name: `${this.state.namePrefix}[option_node_ids][]`,
+      name: `${namePrefix}[option_node_ids][]`,
       key: 'display_conditions_attributes_option_node_ids_',
       value: level.selected,
       options: level.options,
@@ -62,10 +66,11 @@ class CascadingSelect extends React.Component {
   }
 
   buildLevels() {
+    const { levels } = this.state;
     const self = this;
     let result = [];
-    if (this.state.levels) {
-      result = this.state.levels.map((level, i) => {
+    if (levels) {
+      result = levels.map((level, i) => {
         return (
           <div
             className="level"
@@ -80,7 +85,8 @@ class CascadingSelect extends React.Component {
   }
 
   isLastLevel(i) {
-    return this.state.levels && this.state.levels.length === (i + 1);
+    const { levels } = this.state;
+    return levels && levels.length === (i + 1);
   }
 
   optionPrompt(level) {

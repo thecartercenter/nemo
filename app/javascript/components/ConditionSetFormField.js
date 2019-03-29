@@ -5,14 +5,16 @@ import ConditionFormField from './ConditionFormField';
 
 class ConditionSetFormField extends React.Component {
   constructor(props) {
-    super();
+    super(props);
     this.state = props;
     this.handleAddClick = this.handleAddClick.bind(this);
   }
 
   // If about to show the set and it's empty, add a blank one.
   componentWillReceiveProps(newProps) {
-    if (!newProps.hide && this.props.hide && this.state.conditions.length === 0) {
+    const { hide } = this.props;
+    const { conditions } = this.state;
+    if (!newProps.hide && hide && conditions.length === 0) {
       this.handleAddClick();
     }
   }
@@ -30,24 +32,29 @@ class ConditionSetFormField extends React.Component {
   }
 
   render() {
+    const { hide } = this.props;
+    const { conditions, namePrefix } = this.state;
     return (
       <div
         className="condition-set"
-        style={{ display: this.props.hide ? 'none' : '' }}
+        style={{ display: hide ? 'none' : '' }}
       >
-        {this.state.conditions.map((props, index) => (
+        {conditions.map((props, index) => (
           <ConditionFormField
-            hide={this.props.hide}
+            hide={hide}
             index={index}
             key={props.key || props.id}
-            namePrefix={this.state.namePrefix}
+            namePrefix={namePrefix}
             {...props}
           />
         ))}
+        {/* TODO: Improve a11y. */}
+        {/* eslint-disable */}
         <a
           onClick={this.handleAddClick}
           tabIndex="0"
         >
+        {/* eslint-enable */}
           <i className="fa fa-plus add-condition" />
           {' '}
           {I18n.t('form_item.add_condition')}

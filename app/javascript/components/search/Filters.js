@@ -8,7 +8,7 @@ import AdvancedSearchFilter from './AdvancedSearchFilter';
 
 class Filters extends React.Component {
   constructor(props) {
-    super();
+    super(props);
 
     const {
       selectedFormIds,
