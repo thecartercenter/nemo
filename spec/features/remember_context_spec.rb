@@ -19,7 +19,7 @@ feature "remember context", js: true do
     expect(page).to have_content displaying_responses_message(total: 22)
 
     # visit next page
-    click_link "»"
+    click_link "→"
     expect(page).to have_content displaying_responses_message(page: 2, total: 22)
 
     # view response
