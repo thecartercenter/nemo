@@ -18,8 +18,10 @@
   [data-field-name=reviewed] {
     @include left-checkbox;
 
-    @media screen and (max-width: $screen-xs-max) {
-      margin-top: 20px;
+    @include media-breakpoint-down(sm) {
+      @media screen {
+        margin-top: 20px;
+      }
     }
   }
 }
