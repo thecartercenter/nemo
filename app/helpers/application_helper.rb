@@ -231,7 +231,7 @@ module ApplicationHelper
 
   # pill label
   def pill_label(text, kind: "default")
-    content_tag(:span, text, class: "label label-#{kind}")
+    content_tag(:span, text, class: "badge badge-pill badge-#{kind}")
   end
 
   # makes a set of <li> wrapped links to the index actions of the given classes
