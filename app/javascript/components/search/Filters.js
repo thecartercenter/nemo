@@ -1,10 +1,10 @@
-import React from "react";
-import PropTypes from "prop-types";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
+import React from 'react';
+import PropTypes from 'prop-types';
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
-import {CONTROLLER_NAME, getFilterString, submitSearch} from "./utils";
-import FormFilter from "./FormFilter";
-import AdvancedSearchFilter from "./AdvancedSearchFilter";
+import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
+import FormFilter from './FormFilter';
+import AdvancedSearchFilter from './AdvancedSearchFilter';
 
 class Filters extends React.Component {
   constructor(props) {
@@ -33,22 +33,22 @@ class Filters extends React.Component {
   }
 
   handleSubmit() {
-    const {allForms} = this.props;
-    const {selectedFormIds} = this.state;
+    const { allForms } = this.props;
+    const { selectedFormIds } = this.state;
     const filterString = getFilterString(allForms, this.state);
     submitSearch(filterString);
   }
 
   handleSelectForm(event) {
-    this.setState({selectedFormIds: [event.target.value]});
+    this.setState({ selectedFormIds: [event.target.value] });
   }
 
   handleClearFormSelection() {
-    this.setState({selectedFormIds: []});
+    this.setState({ selectedFormIds: [] });
   }
 
   handleChangeAdvancedSearch(event) {
-    this.setState({advancedSearchText: event.target.value});
+    this.setState({ advancedSearchText: event.target.value });
   }
 
   handleClearFilters() {
@@ -56,8 +56,8 @@ class Filters extends React.Component {
   }
 
   renderFilterButtons() {
-    const {allForms, selectedFormIds: originalFormIds} = this.props;
-    const {selectedFormIds} = this.state;
+    const { allForms, selectedFormIds: originalFormIds } = this.props;
+    const { selectedFormIds } = this.state;
 
     return (
       <ButtonToolbar>
@@ -67,14 +67,15 @@ class Filters extends React.Component {
           onSelectForm={this.handleSelectForm}
           onSubmit={this.handleSubmit}
           originalFormIds={originalFormIds}
-          selectedFormIds={selectedFormIds} />
+          selectedFormIds={selectedFormIds}
+        />
       </ButtonToolbar>
     );
   }
 
   render() {
-    const {controllerName} = this.props;
-    const {advancedSearchText} = this.state;
+    const { controllerName } = this.props;
+    const { advancedSearchText } = this.state;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
@@ -85,7 +86,8 @@ class Filters extends React.Component {
           advancedSearchText={advancedSearchText}
           onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
           onClear={this.handleClearFilters}
-          onSubmit={this.handleSubmit} />
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
@@ -95,10 +97,10 @@ Filters.propTypes = {
   advancedSearchText: PropTypes.string.isRequired,
   allForms: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
-    name: PropTypes.string
+    name: PropTypes.string,
   })).isRequired,
   controllerName: PropTypes.string,
-  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired
+  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 Filters.defaultProps = {

@@ -1,38 +1,40 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class FormSelect extends React.Component {
   render() {
-    let options = this.props.options;
-    let optionTags = [];
+    const options = this.props.options;
+    const optionTags = [];
     if (this.props.prompt || this.props.includeBlank !== false) {
       optionTags.push(
         <option
           key="blank"
-          value="">
-          {this.props.prompt || ""}
-        </option>
+          value=""
+        >
+          {this.props.prompt || ''}
+        </option>,
       );
     }
     options.forEach((o) => optionTags.push(
       <option
         key={o.id}
-        value={o.id}>
+        value={o.id}
+      >
         {o.name}
-      </option>
+      </option>,
     ));
-    let props = {
-      className: "form-control",
+    const props = {
+      className: 'form-control',
       name: this.props.name,
       id: this.props.id,
       key: this.props.id,
-      defaultValue: this.props.value
+      defaultValue: this.props.value,
     };
     if (this.props.changeFunc) {
-      props["onChange"] = (e) => this.props.changeFunc(e.target.value);
+      props.onChange = (e) => this.props.changeFunc(e.target.value);
     }
     return (
-      <select {...props} >
+      <select {...props}>
         {optionTags}
       </select>
     );
@@ -46,10 +48,10 @@ FormSelect.propTypes = {
   name: PropTypes.string,
   options: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
-    name: PropTypes.string
+    name: PropTypes.string,
   })).isRequired,
   prompt: PropTypes.string,
-  value: PropTypes.node
+  value: PropTypes.node,
 };
 
 FormSelect.defaultProps = {
@@ -58,7 +60,7 @@ FormSelect.defaultProps = {
   includeBlank: true,
   name: null,
   prompt: null,
-  value: null
+  value: null,
 };
 
 export default FormSelect;

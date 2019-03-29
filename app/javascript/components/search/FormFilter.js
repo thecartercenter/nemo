@@ -1,19 +1,19 @@
-import mapKeys from "lodash/mapKeys";
-import React from "react";
-import PropTypes from "prop-types";
-import Button from "react-bootstrap/Button";
-import Popover from "react-bootstrap/Popover";
-import OverlayTrigger from "react-bootstrap/OverlayTrigger";
-import Select2 from "react-select2-wrapper/lib/components/Select2.full";
+import mapKeys from 'lodash/mapKeys';
+import React from 'react';
+import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import Popover from 'react-bootstrap/Popover';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 
-import "react-select2-wrapper/css/select2.css";
-import {getButtonHintString, getFormNameFromId} from "./utils";
+import 'react-select2-wrapper/css/select2.css';
+import { getButtonHintString, getFormNameFromId } from './utils';
 
 /**
  * Converts a list of forms from the backend into something Select2 understands.
  */
 const parseFormsForSelect2 = (allForms) => allForms
-  .map((form) => mapKeys(form, (value, key) => key === "name" ? "text" : key));
+  .map((form) => mapKeys(form, (value, key) => (key === 'name' ? 'text' : key)));
 
 class FormFilter extends React.Component {
   constructor(props) {
@@ -25,41 +25,44 @@ class FormFilter extends React.Component {
   }
 
   handleClearSelection() {
-    const {onClearSelection} = this.props;
+    const { onClearSelection } = this.props;
     onClearSelection();
 
     /*
      * Select2 doesn't make this easy... wait for state update then close the dropdown.
      * https://select2.org/programmatic-control/methods#closing-the-dropdown
      */
-    setTimeout(() => this.select2.current.el.select2("close"), 1);
+    setTimeout(() => this.select2.current.el.select2('close'), 1);
   }
 
   renderPopover() {
-    const {allForms, selectedFormIds, onSelectForm, onSubmit} = this.props;
+    const { allForms, selectedFormIds, onSelectForm, onSubmit } = this.props;
 
     return (
       <Popover
         className="filters-popover"
-        id="form-filter">
+        id="form-filter"
+      >
         <Select2
           data={parseFormsForSelect2(allForms)}
           onSelect={onSelectForm}
           onUnselect={this.handleClearSelection}
           options={{
             allowClear: true,
-            placeholder: I18n.t("filter.chooseForm"),
-            dropdownCssClass: "filters-select2-dropdown",
-            width: "100%",
+            placeholder: I18n.t('filter.chooseForm'),
+            dropdownCssClass: 'filters-select2-dropdown',
+            width: '100%',
           }}
           ref={this.select2}
-          value={selectedFormIds && selectedFormIds[0]} />
+          value={selectedFormIds && selectedFormIds[0]}
+        />
 
         <div className="btn-apply-container">
           <Button
             className="btn-apply"
-            onClick={onSubmit}>
-            {I18n.t("common.apply")}
+            onClick={onSubmit}
+          >
+            {I18n.t('common.apply')}
           </Button>
         </div>
       </Popover>
@@ -67,7 +70,7 @@ class FormFilter extends React.Component {
   }
 
   render() {
-    const {allForms, originalFormIds} = this.props;
+    const { allForms, originalFormIds } = this.props;
     const originalFormNames = originalFormIds.map((id) => getFormNameFromId(allForms, id));
 
     return (
@@ -76,9 +79,10 @@ class FormFilter extends React.Component {
         overlay={this.renderPopover()}
         placement="bottom"
         rootClose
-        trigger="click">
+        trigger="click"
+      >
         <Button className="btn-form-filter btn-secondary">
-          {I18n.t("filter.form") + getButtonHintString(originalFormNames)}
+          {I18n.t('filter.form') + getButtonHintString(originalFormNames)}
         </Button>
       </OverlayTrigger>
     );
@@ -88,7 +92,7 @@ class FormFilter extends React.Component {
 FormFilter.propTypes = {
   allForms: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
-    name: PropTypes.string
+    name: PropTypes.string,
   })).isRequired,
   onClearSelection: PropTypes.func.isRequired,
   onSelectForm: PropTypes.func.isRequired,

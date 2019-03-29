@@ -8,3 +8,7 @@ globals:
   $: true
   I18n: true
   ELMO: true
+rules:
+  padded-blocks:
+    - error
+    - never

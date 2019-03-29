@@ -1,5 +1,5 @@
-import isEmpty from "lodash/isEmpty";
-import queryString from "query-string";
+import isEmpty from 'lodash/isEmpty';
+import queryString from 'query-string';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
@@ -7,7 +7,7 @@ const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
  * Stringified controller_name from Rails.
  */
 export const CONTROLLER_NAME = {
-  RESPONSES: "\"responses\"",
+  RESPONSES: '"responses"',
 };
 
 /**
@@ -16,12 +16,12 @@ export const CONTROLLER_NAME = {
  */
 export function getButtonHintString(hints) {
   if (isEmpty(hints)) {
-    return "";
+    return '';
   }
 
   const joinedHints = hints.length > MAX_HINTS_BEFORE_ELLIPSIZE
     ? hints.length
-    : hints.join(", ");
+    : hints.join(', ');
 
   return ` (${joinedHints})`;
 }
@@ -30,24 +30,24 @@ export function getButtonHintString(hints) {
  * Given a form ID, find it in the list of all forms and return the name.
  */
 export function getFormNameFromId(allForms, searchId) {
-  const form = allForms.find(({id}) => searchId === id);
-  return (form && form.name) || "Unknown";
+  const form = allForms.find(({ id }) => searchId === id);
+  return (form && form.name) || 'Unknown';
 }
 
 /**
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString(allForms, {selectedFormIds, advancedSearchText}) {
+export function getFilterString(allForms, { selectedFormIds, advancedSearchText }) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
   const parts = [
-    isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join("|")})`,
+    isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
     advancedSearchText,
   ].filter(Boolean);
 
-  return parts.join(" ");
+  return parts.join(' ');
 }
 
 /**
@@ -57,7 +57,7 @@ export function submitSearch(filterString) {
   const parsed = queryString.parse(window.location.search);
   // The `search` query param will be removed from the URL if it's `undefined`.
   const search = filterString || undefined;
-  const params = queryString.stringify({...parsed, search});
+  const params = queryString.stringify({ ...parsed, search });
 
   window.location.assign(params
     ? `?${params}`
