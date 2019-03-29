@@ -1,7 +1,7 @@
 <%# new option set modal %>
 <% if form_mode != :show && can?(:create, OptionSet) %>
   <div class="new_option_set_form_wrapper" title="<%= I18n.t("activerecord.action_links.option_set.new") %>">
-    <div class="modal" id="create-option-set" tabindex="-1" role="dialog" aria-labelledby="createOptionSet" aria-hidden="true">
+    <div class="modal fade" id="create-option-set" tabindex="-1" role="dialog" aria-labelledby="createOptionSet" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
