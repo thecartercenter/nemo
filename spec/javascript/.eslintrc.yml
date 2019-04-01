@@ -1,5 +1,6 @@
 extends:
-  - ../../.eslintrc-react.yml
+  - ../../.eslintrc.yml
+
 rules:
   global-require: off
   import/no-extraneous-dependencies: off
