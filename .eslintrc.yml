@@ -9,7 +9,4 @@ globals:
   I18n: true
   ELMO: true
 rules:
-  padded-blocks:
-    - error
-    - never
   react/prefer-stateless-function: off
