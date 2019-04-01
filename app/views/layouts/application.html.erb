@@ -87,14 +87,14 @@
                 <%= nav_links(Response, Report::Report) %>
 
                 <%# divider %>
-                <li><div class="line"></div></li>
+                <li class="d-none d-sm-block"><div class="line"></div></li>
 
               <% end %><%# end unless admin mode %>
 
               <%= nav_links(Form, Question, OptionSet) %>
 
               <%# divider %>
-              <li><div class="line"></div></li>
+              <li class="d-none d-sm-block"><div class="line"></div></li>
 
               <%= nav_links(User, Broadcast, Sms::Message, Setting, Mission) %>
 
