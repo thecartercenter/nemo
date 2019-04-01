@@ -37,7 +37,7 @@
     <%= render('layouts/userinfo') %>
 
     <%# Logo and mission if selected %>
-    <div id="title">
+    <div id="title" class="d-print-none">
       <%= link_to(logo_image, current_root_path) %>
       <%# Stripping title name since we have a logo now %>
       <h2>
@@ -54,7 +54,7 @@
     </div>
 
     <%# navigation bar %>
-    <nav id="main-nav" class="navbar navbar-expand-sm navbar-light bg-light" role="navigation">
+    <nav id="main-nav" class="navbar navbar-expand-sm navbar-light bg-light d-print-none" role="navigation">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -115,7 +115,7 @@
     <%= body %>
   </div>
 
-  <div id="footer">
+  <div id="footer" class="d-print-none">
 
     <%= link_to(t("layout.change_language"), "#", :id => "locale_form_link") %>
 
