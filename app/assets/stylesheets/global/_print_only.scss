@@ -11,6 +11,11 @@
     box-shadow: none !important;
   }
 
+  // Previously provided by normalize.css but removed in BS4.
+  a[href]:after {
+    content: " (" attr(href) ")";
+  }
+
   .top-action-links,
   .screen {
     display: none;
