@@ -7,10 +7,10 @@ nav.navbar-light {
 
   /* For standard label in admin mode */
   .navbar-header.std {
-    margin-right: 1.5rem;
-    text-transform: uppercase;
     color: $nav-text-color;
     font-weight: bold;
+    margin-right: 1.5rem;
+    text-transform: uppercase;
   }
 
   @include if-rtl {

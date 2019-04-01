@@ -1,7 +1,9 @@
 // General layout styling for printing.
 @media print {
   // Previously provided by normalize.css but removed in BS4.
-  *, :after, :before {
+  *,
+  ::after,
+  ::before {
     color: rgb(0, 0, 0) !important;
     text-shadow: none !important;
     background: 0 0 !important;
