@@ -29,12 +29,13 @@
     vertical-align: top;
 
     .modal {
-      label, .control {
+      label,
+      .control {
         // Undo the styles for non-modal labels.
-        padding-top: calc(0.375rem + 1px);
         padding-bottom: calc(0.375rem + 1px);
-        padding-right: 15px;
         padding-left: 15px;
+        padding-right: 15px;
+        padding-top: calc(0.375rem + 1px);
       }
     }
   }

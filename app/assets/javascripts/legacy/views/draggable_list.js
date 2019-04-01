@@ -37,7 +37,9 @@
       self.saveItem(action || "close");
       return false;
     });
-    self.modal.find('button.btn-secondary').on('click', function(){ self.cancel_edit(); });
+    self.modal.find("button.btn-secondary").on("click", function() {
+      self.cancel_edit();
+    });
 
     // show/hide save button when translations change
     $('body').on('keyup change', '.edit-named-item div.translation input, .edit-named-item div.coordinate input', function(){ self.toggle_save_button(); });
