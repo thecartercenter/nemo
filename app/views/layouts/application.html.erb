@@ -150,7 +150,7 @@
 
   <%# Include logo-dark (used for printing) here because for just-in-time ajax loading %>
   <%# (e.g. forms) it may not load in time. %>
-  <%= logo_image(style: :dark, class: "hidden") if controller_name == "forms" %>
+  <%= logo_image(style: :dark, class: "d-none") if controller_name == "forms" %>
 
   <%# insert any audio objects at the end %>
   <%= yield(:audio) %>
