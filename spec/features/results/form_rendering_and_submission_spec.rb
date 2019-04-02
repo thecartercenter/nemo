@@ -43,7 +43,7 @@ feature "response form rendering and submission", js: true do
   let(:params) { {locale: "en", mode: "m", mission_name: get_mission.compact_name, form_id: form.id} }
 
   before do
-    form.root_group.c[0].c[0].question.update!(minimum: 123)
+    form.c[0].c[0].question.update!(minimum: 123)
     login(user)
   end
 
@@ -156,15 +156,15 @@ feature "response form rendering and submission", js: true do
       click_button("Save")
 
       expect(page).to have_content("Response is invalid")
-      expect_image([1], form.root_group.c[1].id)
+      expect_image([1], form.c[1].id)
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
       expect_value([3, 0, 1, 1, 0], "78911")
-      expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
+      expect_image([3, 0, 2], form.c[3].c[2].id)
       expect_value([3, 0, 3], "some text")
       expect_value([3, 1, 0, 0], "4562")
       expect_value([3, 1, 1, 0, 0], "7892")
-      expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
+      expect_image([3, 1, 2], form.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
       expect_value([4], "1.2")
       expect_value([5], "3")
@@ -181,21 +181,21 @@ feature "response form rendering and submission", js: true do
       fill_in_question([0, 0], with: "123")
       click_button("Save")
 
-      expect(page).to_not(have_content("Response is invalid"))
+      expect(page).not_to(have_content("Response is invalid"))
       response = Response.last
       visit edit_response_path(params.merge(id: response.shortcode))
 
       expect_value([0, 0], "123")
-      expect_image([1], form.root_group.c[1].id)
+      expect_image([1], form.c[1].id)
       expect_value([2, 0], "Animal")
       expect_value([2, 1], "Dog")
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
-      expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
+      expect_image([3, 0, 2], form.c[3].c[2].id)
       expect_value([3, 0, 3], "some text")
       expect_value([3, 1, 0, 0], "4562")
       expect_value([3, 1, 1, 0, 0], "7892")
-      expect_image([3, 1, 2], form.root_group.c[3].c[2].id)
+      expect_image([3, 1, 2], form.c[3].c[2].id)
       expect_value([3, 1, 3], "some other text")
       expect_value([4], "1.2")
       expect_value([5], "3")
@@ -217,12 +217,12 @@ feature "response form rendering and submission", js: true do
       visit edit_response_path(params.merge(id: response.shortcode))
 
       expect_value([0, 0], "1234")
-      expect_image([1], form.root_group.c[1].id)
+      expect_image([1], form.c[1].id)
       expect_value([2, 0], "Animal")
       expect_value([2, 1], "Dog")
       expect_value([3, 0, 0, 0], "4561")
       expect_value([3, 0, 1, 0, 0], "7891")
-      expect_image([3, 0, 2], form.root_group.c[3].c[2].id)
+      expect_image([3, 0, 2], form.c[3].c[2].id)
       expect_value([3, 0, 3], "some text")
       expect_value([4], "1.2")
       expect_value([5], "3")
@@ -236,9 +236,9 @@ feature "response form rendering and submission", js: true do
 
     context "with conditional logic" do
       before do
-        ref_qing = form.root_group.c[0].c[0]
+        ref_qing = form.c[0].c[0]
 
-        questioning = form.root_group.c[2]
+        questioning = form.c[2]
         questioning.display_if = "all_met"
         questioning.display_conditions_attributes = [
           {ref_qing_id: ref_qing.id, op: "eq", value: "123"}
@@ -268,7 +268,29 @@ feature "response form rendering and submission", js: true do
         expect_value([0, 0], "124")
 
         # select answers not persisted
-        expect_not_persisted(form.root_group.c[2].id)
+        expect_not_persisted(form.c[2].id)
+      end
+    end
+
+    # Normally we wouldn't feature test something as simple as validation but this form
+    # has a lot going on with e.g. skip logic.
+    context "with required question" do
+      before do
+        form.c[0].c[0].update!(required: true)
+      end
+
+      scenario do
+        visit new_response_path(params)
+
+        select2(user.name, from: "response_user_id")
+        click_button("Save")
+
+        expect(page).to have_content("Response is invalid")
+        expect(page).to have_content("Please enter a value")
+        fill_in_question([0, 0], with: "124")
+        click_button("Save")
+
+        expect(page).to have_content("created successfully")
       end
     end
   end

@@ -34,7 +34,9 @@ feature "response form skip logic", js: true do
       fill_and_expect_visible([1], "C", visible)
     end
 
-    scenario "skip to a later questioning" do
+    scenario "skip over a required question to a later questioning" do
+      qings[1].update!(required: true)
+
       # Skip from [0] to [2] if [0] is not equal to A
       create(
         :skip_rule,
@@ -43,13 +45,19 @@ feature "response form skip logic", js: true do
         dest_item_id: qings[2].id,
         conditions_attributes: [{ref_qing_id: qings[0].id, op: "neq", value: "A"}]
       )
+
       visit_new_response_page
+      select2(user.name, from: "response_user_id")
       visible = [[0], [1], [2], [3]]
       expect_visible(visible - [[1]])
       fill_and_expect_visible([0], "A", visible)
       fill_and_expect_visible([0], "B", visible - [[1]])
       fill_and_expect_visible([2], "C", visible - [[1]])
       fill_and_expect_visible([0], "A", visible)
+
+      # Save this one so we know it saves ok if required question skipped.
+      click_button("Save")
+      expect(page).to have_content("created successfully")
     end
 
     scenario "two skip rules and skip rule and condition have same ref qing, skip triggered first" do
