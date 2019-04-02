@@ -97,7 +97,12 @@ class OptionSet < ApplicationRecord
 
   # Gets the OptionLevel for the given depth (1-based)
   def level(depth)
-    levels.try(:[], depth - 1)
+    levels&.[](depth - 1)
+  end
+
+  # Gets the OptionLevel name for the given depth. Returns nil if level not found.
+  def level_name_for_depth(depth)
+    level(depth)&.name
   end
 
   def levels
@@ -113,11 +118,7 @@ class OptionSet < ApplicationRecord
   end
 
   def level_count
-    level_names.try(:size) || 1
-  end
-
-  def level_name_for_depth(depth)
-    levels[depth - 1].name
+    level_names&.size || 1
   end
 
   def multilevel?
