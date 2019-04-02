@@ -2,8 +2,8 @@ nav.navbar-light {
   /* Override Bootstrap */
   background-color: $nav-background-color;
   border-color: $nav-border-color;
-  border-radius: 0px !important;
-  margin-bottom: 0px !important;
+  border-radius: 0 !important;
+  margin-bottom: 0 !important;
 
   @include media-breakpoint-up(sm) {
     padding-bottom: 0;

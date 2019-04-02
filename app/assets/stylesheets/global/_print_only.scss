@@ -12,7 +12,7 @@
   }
 
   // Previously provided by normalize.css but removed in BS4.
-  a[href]:after {
+  a[href]::after {
     content: " (" attr(href) ")";
   }
 
