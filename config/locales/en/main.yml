@@ -846,8 +846,6 @@ en:
           no_calc_or_opt_set: "The report '%{name}' has no questions or option sets selected. Please edit the report to correct this."
         response:
           general: "Response is invalid (see below)."
-          missing_answers: "Not all questions have answers."
-          invalid_answers: "There are invalid answers."
           checked_out: "This response has been checked out by:"
           form_unavailable: "The specified form does not exist in this mission."
         setting:
