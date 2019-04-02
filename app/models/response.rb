@@ -33,7 +33,6 @@ class Response < ApplicationRecord
   # we turn off validate above and do it here so we can control the message and have only one message
   # regardless of how many answer errors there are
   validates :user, presence: true
-  validate :no_missing_answers
   validate :form_in_mission
   validates_associated :answers # Forces validation of answers even if they haven't changed
   validates_associated :root_node
@@ -218,13 +217,6 @@ class Response < ApplicationRecord
     %w[odk web].include?(modifier)
   end
 
-  # Returns an array of required questionings for which answers are missing.
-  def missing_answers
-    return @missing_answers if @missing_answers
-    answers_by_qing = answers.index_by(&:questioning)
-    @missing_answers = questionings.select { |q| q.required? && q.visible? && answers_by_qing[q].nil? }
-  end
-
   # if this response contains location questions, returns the gps location (as a 2 element array)
   # of the first such question on the form, else returns nil
   def location
@@ -291,9 +283,5 @@ class Response < ApplicationRecord
 
   def form_in_mission
     errors.add(:form, :form_unavailable) unless mission.forms.include?(form)
-  end
-
-  def no_missing_answers
-    errors.add(:base, :missing_answers) unless missing_answers.empty? || incomplete?
   end
 end
