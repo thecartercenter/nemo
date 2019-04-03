@@ -41,13 +41,13 @@ exports[`renders as expected (with query param) 1`] = `
     value="query"
   />
   <Button
-    className="btn-apply btn-advanced-search"
+    className="btn-apply btn-advanced-search btn-secondary"
     onClick={[MockFunction]}
   >
     Search
   </Button>
   <Button
-    className="btn-clear btn-margin-left"
+    className="btn-clear btn-secondary btn-margin-left"
     onClick={[MockFunction]}
   >
     Clear
@@ -68,7 +68,7 @@ exports[`renders as expected (without query param) 1`] = `
     value="query"
   />
   <Button
-    className="btn-apply btn-advanced-search"
+    className="btn-apply btn-advanced-search btn-secondary"
     onClick={[MockFunction]}
   >
     Search
