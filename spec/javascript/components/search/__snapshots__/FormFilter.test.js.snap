@@ -64,6 +64,7 @@ exports[`popover renders as expected 1`] = `
 exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}
+  id="form-filter"
   overlay={
     <Popover
       className="filters-popover"
@@ -115,7 +116,8 @@ exports[`renders as expected 1`] = `
   trigger="click"
 >
   <Button
-    className="btn-form-filter btn-secondary"
+    className="btn-secondary"
+    id="form-filter"
   >
     Form
   </Button>

@@ -35,9 +35,18 @@ describe('integration', () => {
   beforeEach(() => window.location.assign.mockClear());
 
   it('navigates on apply form filter', () => {
-    wrapper.find('Button.btn-form-filter').simulate('click');
-    const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
+    wrapper.find('Button#form-filter').simulate('click');
+    const overlay = shallow(wrapper.find('OverlayTrigger#form-filter').prop('overlay'));
     overlay.find('Select2').simulate('change', { target: { value: defaultProps.allForms[0].id } });
+
+    expect(window.location.assign).toMatchSnapshot();
+    overlay.find('Button.btn-apply').simulate('click');
+    expect(window.location.assign).toMatchSnapshot();
+  });
+
+  it('navigates on apply question filter', () => {
+    wrapper.find('Button#question-filter').simulate('click');
+    const overlay = shallow(wrapper.find('OverlayTrigger#question-filter').prop('overlay'));
 
     expect(window.location.assign).toMatchSnapshot();
     overlay.find('Button.btn-apply').simulate('click');

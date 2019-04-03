@@ -1,0 +1,67 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`popover handles callbacks 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`popover renders as expected 1`] = `
+<Popover
+  className="filters-popover"
+  id="form-filter"
+>
+  <div
+    className="btn-apply-container"
+  >
+    <Button
+      className="btn-apply"
+      onClick={[MockFunction]}
+    >
+      Apply
+    </Button>
+  </div>
+</Popover>
+`;
+
+exports[`renders as expected 1`] = `
+<OverlayTrigger
+  containerPadding={25}
+  id="question-filter"
+  overlay={
+    <Popover
+      className="filters-popover"
+      id="form-filter"
+    >
+      <div
+        className="btn-apply-container"
+      >
+        <Button
+          className="btn-apply"
+          onClick={[MockFunction]}
+        >
+          Apply
+        </Button>
+      </div>
+    </Popover>
+  }
+  placement="bottom"
+  rootClose={true}
+  trigger="click"
+>
+  <Button
+    className="btn-secondary btn-margin-left"
+    id="question-filter"
+  >
+    Question
+  </Button>
+</OverlayTrigger>
+`;

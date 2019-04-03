@@ -84,13 +84,14 @@ class FormFilter extends React.Component {
 
     return (
       <OverlayTrigger
+        id="form-filter"
         containerPadding={25}
         overlay={this.renderPopover()}
         placement="bottom"
         rootClose
         trigger="click"
       >
-        <Button className="btn-form-filter btn-secondary">
+        <Button id="form-filter" className="btn-secondary">
           {I18n.t('filter.form') + getButtonHintString(originalFormNames)}
         </Button>
       </OverlayTrigger>

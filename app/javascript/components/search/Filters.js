@@ -4,6 +4,7 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
 import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
 import FormFilter from './FormFilter';
+import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
 class Filters extends React.Component {
@@ -75,6 +76,9 @@ class Filters extends React.Component {
           onSubmit={this.handleSubmit}
           originalFormIds={originalFormIds}
           selectedFormIds={selectedFormIds}
+        />
+        <QuestionFilter
+          onSubmit={this.handleSubmit}
         />
       </ButtonToolbar>
     );

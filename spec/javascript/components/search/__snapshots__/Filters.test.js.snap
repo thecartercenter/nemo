@@ -36,6 +36,24 @@ exports[`integration navigates on apply form filter 2`] = `
 }
 `;
 
+exports[`integration navigates on apply question filter 1`] = `[MockFunction]`;
+
+exports[`integration navigates on apply question filter 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?search=form%3A%28%22Two%22%29%20query",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "isThrow": false,
+      "value": undefined,
+    },
+  ],
+}
+`;
+
 exports[`renders as expected (other page) 1`] = `
 <div
   className="filters"
@@ -84,6 +102,9 @@ exports[`renders as expected (responses page) 1`] = `
           "2",
         ]
       }
+    />
+    <QuestionFilter
+      onSubmit={[Function]}
     />
   </ButtonToolbar>
   <AdvancedSearchFilter

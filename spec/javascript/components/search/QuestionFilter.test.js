@@ -1,14 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { formFilterProps } from './utils';
+import { questionFilterProps } from './utils';
 
-import Component from '../../../../app/javascript/components/search/FormFilter';
+import Component from '../../../../app/javascript/components/search/QuestionFilter';
 
 const defaultProps = {
-  ...formFilterProps,
-  onSelectForm: jest.fn(),
-  onClearSelection: jest.fn(),
+  ...questionFilterProps,
   onSubmit: jest.fn(),
 };
 
@@ -19,7 +17,7 @@ it('renders as expected', () => {
 
 describe('popover', () => {
   const wrapper = shallow(<Component {...defaultProps} />);
-  wrapper.find('Button#form-filter').simulate('click');
+  wrapper.find('Button#question-filter').simulate('click');
 
   const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
 
@@ -28,9 +26,7 @@ describe('popover', () => {
   });
 
   it('handles callbacks', () => {
-    overlay.find('Select2').simulate('change', { target: { value: defaultProps.allForms[0].id } });
     overlay.find('Button.btn-apply').simulate('click');
-
     expect(defaultProps.onSubmit).toMatchSnapshot();
   });
 });
