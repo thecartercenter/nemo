@@ -7,6 +7,7 @@ import FormSelect from './FormSelect';
 class ConditionFormField extends React.Component {
   constructor(props) {
     super(props);
+
     const {
       formId,
       conditionableId,
@@ -22,6 +23,7 @@ class ConditionFormField extends React.Component {
       op,
       operatorOptions,
     } = this.props;
+
     this.state = {
       formId,
       conditionableId,
@@ -83,6 +85,7 @@ class ConditionFormField extends React.Component {
 
   buildValueProps = (namePrefix, idPrefix) => {
     const { optionSetId, optionNodeId, value } = this.state;
+
     if (optionSetId) {
       return {
         type: 'cascading_select',
@@ -94,6 +97,7 @@ class ConditionFormField extends React.Component {
         optionNodeId,
       };
     }
+
     return {
       type: 'text',
       name: `${namePrefix}[value]`,

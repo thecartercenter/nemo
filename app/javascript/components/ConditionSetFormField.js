@@ -34,6 +34,7 @@ class ConditionSetFormField extends React.Component {
   render() {
     const { hide } = this.props;
     const { conditions, namePrefix } = this.state;
+
     return (
       <div
         className="condition-set"

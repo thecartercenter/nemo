@@ -6,9 +6,11 @@ import CascadingSelect from './CascadingSelect';
 class ConditionValueField extends React.Component {
   render() {
     const { type, value, id, name } = this.props;
+
     if (type === 'cascading_select') {
       return <CascadingSelect {...this.props} />;
     }
+
     return (
       <input
         className="text form-control"

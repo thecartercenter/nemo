@@ -7,6 +7,7 @@ import FormSelect from './FormSelect';
 class SkipRuleFormField extends React.Component {
   constructor(props) {
     super(props);
+
     const {
       remove,
       id,
@@ -19,6 +20,7 @@ class SkipRuleFormField extends React.Component {
       destItemId,
     } = this.props;
     const destItemIdOrEnd = destination === 'end' ? 'end' : destItemId;
+
     this.state = {
       remove,
       id,

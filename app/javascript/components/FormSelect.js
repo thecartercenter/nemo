@@ -33,6 +33,7 @@ class FormSelect extends React.Component {
     if (changeFunc) {
       props.onChange = (e) => changeFunc(e.target.value);
     }
+
     return (
       <select {...props}>
         {optionTags}
