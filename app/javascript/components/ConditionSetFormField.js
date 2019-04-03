@@ -20,15 +20,16 @@ class ConditionSetFormField extends React.Component {
   }
 
   handleAddClick = () => {
-    this.setState((curState) => ({ conditions:
-      curState.conditions.concat([{
+    this.setState(({ conditions, formId, refableQings, conditionableId, conditionableType }) => ({
+      conditions: conditions.concat([{
         key: Math.round(Math.random() * 100000000),
-        formId: curState.formId,
-        refableQings: curState.refableQings,
+        formId,
+        refableQings,
         operatorOptions: [],
-        conditionableId: curState.conditionableId,
-        conditionableType: curState.conditionableType,
-      }]) }));
+        conditionableId,
+        conditionableType,
+      }]),
+    }));
   }
 
   render() {

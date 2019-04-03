@@ -22,13 +22,14 @@ class SkipRuleSetFormField extends React.Component {
   handleAddClick = () => {
     const { laterItems } = this.state;
     const laterItemsExist = laterItems.length > 0;
-    this.setState((curState) => ({ skipRules:
-      curState.skipRules.concat([{
+    this.setState(({ skipRules }) => ({
+      skipRules: skipRules.concat([{
         key: Math.round(Math.random() * 100000000),
         destination: laterItemsExist ? 'item' : 'end',
         skipIf: 'always',
         conditions: [],
-      }]) }));
+      }]),
+    }));
   }
 
   render() {
