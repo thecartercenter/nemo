@@ -6,8 +6,11 @@ import ConditionFormField from './ConditionFormField';
 class ConditionSetFormField extends React.Component {
   constructor(props) {
     super(props);
-    const { conditions, namePrefix } = this.props;
-    this.state = { conditions, namePrefix };
+    const { conditions, formId, refableQings, conditionableId, conditionableType, namePrefix } = this.props;
+    // TODO: Improve the `conditions` object;
+    //  it currently provides some of this state to children which is unconventional.
+    // eslint-disable-next-line react/no-unused-state
+    this.state = { conditions, formId, refableQings, conditionableId, conditionableType, namePrefix };
   }
 
   // If about to show the set and it's empty, add a blank one.
@@ -72,6 +75,10 @@ ConditionSetFormField.propTypes = {
   // TODO: Describe these prop types.
   /* eslint-disable react/forbid-prop-types */
   conditions: PropTypes.any,
+  formId: PropTypes.any,
+  refableQings: PropTypes.any,
+  conditionableId: PropTypes.any,
+  conditionableType: PropTypes.any,
   namePrefix: PropTypes.any,
   /* eslint-enable */
 };
