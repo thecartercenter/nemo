@@ -62,21 +62,22 @@ class ConditionFormField extends React.Component {
     };
   }
 
-  getFieldData = (refQingId) => {
+  getFieldData = async (refQingId) => {
     ELMO.app.loading(true);
-    const self = this;
     const url = this.buildUrl(refQingId);
-    $.ajax(url)
-      .done((response) => {
-        // Need to put this before we set state because setting state may trigger a new one.
-        ELMO.app.loading(false);
+    try {
+      // TODO: Decompose magical `response` before setting state.
+      const response = await $.ajax(url);
 
-        // We set option node ID to null since the new refQing may have a new option set.
-        self.setState(Object.assign(response, { optionNodeId: null }));
-      })
-      .fail(() => {
-        ELMO.app.loading(false);
-      });
+      // Need to put this before we set state because setting state may trigger a new one.
+      ELMO.app.loading(false);
+
+      // We set option node ID to null since the new refQing may have a new option set.
+      this.setState(Object.assign(response, { optionNodeId: null }));
+    } catch (error) {
+      ELMO.app.loading(false);
+      console.error('Failed to getFieldData:', error);
+    }
   }
 
   updateFieldData = (refQingId) => {

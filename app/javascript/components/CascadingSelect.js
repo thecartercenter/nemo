@@ -40,17 +40,18 @@ class CascadingSelect extends React.Component {
   }
 
   // Fetches data to populate the control. nodeId may be null if there is no node selected.
-  getData = (setId, nodeId) => {
+  getData = async (setId, nodeId) => {
     ELMO.app.loading(true);
-    const self = this;
     const url = this.buildUrl(setId, nodeId);
-    $.ajax(url)
-      .done((response) => {
-        self.setState(response);
-      })
-      .always(() => {
-        ELMO.app.loading(false);
-      });
+    try {
+      // TODO: Decompose magical `response` before setting state.
+      const response = await $.ajax(url);
+      this.setState(response);
+    } catch (error) {
+      console.error('Failed to getData:', error);
+    } finally {
+      ELMO.app.loading(false);
+    }
   }
 
   // Refresh data if the selected node changed.

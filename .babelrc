@@ -17,6 +17,7 @@
       ],
       "plugins": [
         "syntax-dynamic-import",
+        "transform-runtime",
         "transform-object-rest-spread",
         [
           "transform-class-properties",
@@ -43,6 +44,7 @@
       ],
       "plugins": [
         "syntax-dynamic-import",
+        "transform-runtime",
         "transform-object-rest-spread",
         [
           "transform-class-properties",
@@ -68,6 +70,7 @@
       ],
       "plugins": [
         "syntax-dynamic-import",
+        "transform-runtime",
         "transform-object-rest-spread",
         [
           "transform-class-properties",
