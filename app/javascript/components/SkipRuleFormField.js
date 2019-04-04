@@ -153,6 +153,13 @@ class SkipRuleFormField extends React.Component {
             <select {...skipIfProps}>
               {this.skipIfOptionTags()}
             </select>
+            <div className={`skip-rule-remove ${ruleId}`}>
+              {/* TODO: Improve a11y. */}
+              {/* eslint-disable-next-line */}
+              <a onClick={this.handleRemoveClick}>
+                <i className="fa fa-close" />
+              </a>
+            </div>
           </div>
           <ConditionSetFormField {...conditionSetProps} />
           <input {...idFieldProps} />
@@ -167,13 +174,6 @@ class SkipRuleFormField extends React.Component {
             type="hidden"
             value={destItemId || ''}
           />
-        </div>
-        <div className={`skip-rule-remove ${ruleId}`}>
-          {/* TODO: Improve a11y. */}
-          {/* eslint-disable-next-line */}
-          <a onClick={this.handleRemoveClick}>
-            <i className="fa fa-close" />
-          </a>
         </div>
       </div>
     );

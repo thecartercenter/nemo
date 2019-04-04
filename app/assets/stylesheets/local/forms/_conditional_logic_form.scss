@@ -1,9 +1,10 @@
 .display-logic-container,
 .skip-logic-container {
   @mixin remove-link-div {
-    flex: none;
+    align-items: center;
+    display: flex;
+    justify-content: flex-end;
     width: 20px;
-    text-align: $right;
 
     i {
       font-size: 16px;
