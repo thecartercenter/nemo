@@ -38,6 +38,7 @@ en:
       few: "Errors"
       many: "Errors"
       other: "Errors"
+    jsError: "Sorry, something went wrong. Please try reloading the page."
     example:
       zero: "Examples"
       one: "Example"

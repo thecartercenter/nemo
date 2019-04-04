@@ -58,12 +58,16 @@ exports[`renders as expected (other page) 1`] = `
 <div
   className="filters"
 >
-  <AdvancedSearchFilter
-    advancedSearchText="query"
-    onChangeAdvancedSearch={[Function]}
-    onClear={[Function]}
-    onSubmit={[Function]}
-  />
+  <ErrorBoundary
+    message="Sorry, something went wrong. Please try reloading the page."
+  >
+    <AdvancedSearchFilter
+      advancedSearchText="query"
+      onChangeAdvancedSearch={[Function]}
+      onClear={[Function]}
+      onSubmit={[Function]}
+    />
+  </ErrorBoundary>
 </div>
 `;
 
@@ -71,47 +75,51 @@ exports[`renders as expected (responses page) 1`] = `
 <div
   className="filters"
 >
-  <ButtonToolbar>
-    <FormFilter
-      allForms={
-        Array [
-          Object {
-            "id": "1",
-            "name": "One",
-          },
-          Object {
-            "id": "2",
-            "name": "Two",
-          },
-          Object {
-            "id": "3",
-            "name": "Q\\"uo'te\`s",
-          },
-        ]
-      }
-      onClearSelection={[Function]}
-      onSelectForm={[Function]}
+  <ErrorBoundary
+    message="Sorry, something went wrong. Please try reloading the page."
+  >
+    <ButtonToolbar>
+      <FormFilter
+        allForms={
+          Array [
+            Object {
+              "id": "1",
+              "name": "One",
+            },
+            Object {
+              "id": "2",
+              "name": "Two",
+            },
+            Object {
+              "id": "3",
+              "name": "Q\\"uo'te\`s",
+            },
+          ]
+        }
+        onClearSelection={[Function]}
+        onSelectForm={[Function]}
+        onSubmit={[Function]}
+        originalFormIds={
+          Array [
+            "2",
+          ]
+        }
+        selectedFormIds={
+          Array [
+            "2",
+          ]
+        }
+      />
+      <QuestionFilter
+        onSubmit={[Function]}
+      />
+    </ButtonToolbar>
+    <AdvancedSearchFilter
+      advancedSearchText="query"
+      onChangeAdvancedSearch={[Function]}
+      onClear={[Function]}
       onSubmit={[Function]}
-      originalFormIds={
-        Array [
-          "2",
-        ]
-      }
-      selectedFormIds={
-        Array [
-          "2",
-        ]
-      }
     />
-    <QuestionFilter
-      onSubmit={[Function]}
-    />
-  </ButtonToolbar>
-  <AdvancedSearchFilter
-    advancedSearchText="query"
-    onChangeAdvancedSearch={[Function]}
-    onClear={[Function]}
-    onSubmit={[Function]}
-  />
+  </ErrorBoundary>
 </div>
 `;

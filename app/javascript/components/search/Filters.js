@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 
 import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
+import ErrorBoundary from '../ErrorBoundary';
 import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
@@ -91,14 +92,16 @@ class Filters extends React.Component {
 
     return (
       <div className="filters">
-        {shouldRenderButtons ? this.renderFilterButtons() : null}
+        <ErrorBoundary>
+          {shouldRenderButtons ? this.renderFilterButtons() : null}
 
-        <AdvancedSearchFilter
-          advancedSearchText={advancedSearchText}
-          onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
-          onClear={this.handleClearFilters}
-          onSubmit={this.handleSubmit}
-        />
+          <AdvancedSearchFilter
+            advancedSearchText={advancedSearchText}
+            onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
+            onClear={this.handleClearFilters}
+            onSubmit={this.handleSubmit}
+          />
+        </ErrorBoundary>
       </div>
     );
   }
