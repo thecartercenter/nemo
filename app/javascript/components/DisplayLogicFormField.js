@@ -69,7 +69,7 @@ class DisplayLogicFormField extends React.Component {
     };
 
     return (
-      <div>
+      <div className="display-logic-container">
         <select {...displayIfProps}>
           {this.displayIfOptionTags()}
         </select>

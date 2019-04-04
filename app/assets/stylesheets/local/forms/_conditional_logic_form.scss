@@ -1,83 +1,81 @@
-form {
-  #display_logic,
-  #skip_logic {
-    @mixin remove-link-div {
-      flex: none;
-      width: 20px;
-      text-align: $right;
+.display-logic-container,
+.skip-logic-container {
+  @mixin remove-link-div {
+    flex: none;
+    width: 20px;
+    text-align: $right;
 
-      i {
-        font-size: 16px;
-        color: $deemphasized-accent-color;
-      }
+    i {
+      font-size: 16px;
+      color: $deemphasized-accent-color;
+    }
+  }
+
+  a {
+    cursor: pointer;
+  }
+
+  .condition-set {
+    margin-#{$left}: 20px;
+  }
+
+  .condition-set, .skip-rule-set {
+    margin-top: 10px;
+  }
+
+  .skip-rule-add-link-wrapper {
+    border-top: $light-border;
+    padding-top: 10px;
+  }
+
+  .skip-rule {
+    display: flex;
+    padding-top: 10px;
+    border-top: $light-border;
+
+    .skip-rule-main {
+      flex: auto;
+      padding-bottom: 10px;
     }
 
-    a {
-      cursor: pointer;
-    }
-
-    .condition-set {
-      margin-#{$left}: 20px;
-    }
-
-    .condition-set, .skip-rule-set {
-      margin-top: 10px;
-    }
-
-    .skip-rule-add-link-wrapper {
-      border-top: $light-border;
-      padding-top: 10px;
-    }
-
-    .skip-rule {
+    .skip-rule-attribs {
       display: flex;
-      padding-top: 10px;
-      border-top: $light-border;
 
-      .skip-rule-main {
-        flex: auto;
-        padding-bottom: 10px;
-      }
+      select {
+        flex: 1;
 
-      .skip-rule-attribs {
-        display: flex;
-
-        select {
-          flex: 1;
-
-          &:first-child {
-            margin-#{$right}: 10px;
-          }
+        &:first-child {
+          margin-#{$right}: 10px;
         }
       }
-
-      .skip-rule-remove {
-        @include remove-link-div;
-      }
     }
 
-    .condition-fields {
-      display: flex;
-      padding-bottom: 10px;
+    .skip-rule-remove {
+      @include remove-link-div;
+    }
+  }
 
-      .form-control[name$=\[ref_qing_id\]] {
-        flex: 2;
-        width: 150px;
-      }
+  .condition-fields {
+    display: flex;
+    padding-bottom: 10px;
 
-      .form-control[name$=\[op\]] {
-        flex: 1;
-        width: 75px;
-        margin: 0 10px;
-      }
+    .form-control[name$=\[ref_qing_id\]] {
+      flex: 2;
+      width: 150px;
+    }
 
-      .condition-value {
-        flex: 2;
-      }
+    .form-control[name$=\[op\]] {
+      flex: 1;
+      width: 75px;
+      margin: 0 10px;
+    }
 
-      .condition-remove {
-        @include remove-link-div;
-      }
+    .condition-value {
+      flex: 2;
+    }
+
+    .condition-remove {
+      @include remove-link-div;
     }
   }
 }

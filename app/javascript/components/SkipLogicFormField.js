@@ -43,7 +43,7 @@ class SkipLogicFormField extends React.Component {
     };
 
     return (
-      <div>
+      <div className="skip-logic-container">
         <select {...selectProps}>
           {this.skipOptionTags()}
         </select>
