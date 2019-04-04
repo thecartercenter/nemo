@@ -23,6 +23,17 @@
     margin-top: 10px;
   }
 
+  // Undo the above margins when inside a popover.
+  .popover-body {
+    .condition-set {
+      margin-#{$left}: 0;
+    }
+
+    .condition-set, .skip-rule-set {
+      margin-top: 0;
+    }
+  }
+
   .skip-rule-add-link-wrapper {
     border-top: $light-border;
     padding-top: 10px;
