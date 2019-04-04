@@ -5,6 +5,13 @@ import Button from 'react-bootstrap/Button';
 import { isQueryParamTruthy } from './utils';
 
 class AdvancedSearchFilter extends React.Component {
+  static propTypes = {
+    advancedSearchText: PropTypes.string.isRequired,
+    onChangeAdvancedSearch: PropTypes.func.isRequired,
+    onClear: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+  };
+
   handleKeyDown = (event) => {
     const { onSubmit } = this.props;
 
@@ -47,12 +54,5 @@ class AdvancedSearchFilter extends React.Component {
     );
   }
 }
-
-AdvancedSearchFilter.propTypes = {
-  advancedSearchText: PropTypes.string.isRequired,
-  onChangeAdvancedSearch: PropTypes.func.isRequired,
-  onClear: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-};
 
 export default AdvancedSearchFilter;

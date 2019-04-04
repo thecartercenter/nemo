@@ -4,6 +4,19 @@ import PropTypes from 'prop-types';
 import CascadingSelect from './CascadingSelect';
 
 class ConditionValueField extends React.Component {
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    type: PropTypes.string.isRequired,
+    value: PropTypes.string,
+  };
+
+  // These are not needed for CascadingSelect
+  static defaultProps = {
+    name: null,
+    value: null,
+  };
+
   render() {
     const { type, value, id, name } = this.props;
 
@@ -23,18 +36,5 @@ class ConditionValueField extends React.Component {
     );
   }
 }
-
-ConditionValueField.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string,
-  type: PropTypes.string.isRequired,
-  value: PropTypes.string,
-};
-
-// These are not needed for CascadingSelect
-ConditionValueField.defaultProps = {
-  name: null,
-  value: null,
-};
 
 export default ConditionValueField;

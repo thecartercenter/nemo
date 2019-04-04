@@ -5,6 +5,29 @@ import ConditionSetFormField from './ConditionSetFormField';
 import FormSelect from './FormSelect';
 
 class SkipRuleFormField extends React.Component {
+  static propTypes = {
+    destItemId: PropTypes.string,
+    destination: PropTypes.string.isRequired,
+    hide: PropTypes.bool.isRequired,
+    namePrefix: PropTypes.string.isRequired,
+    ruleId: PropTypes.string.isRequired,
+
+    // TODO: Describe these prop types.
+    /* eslint-disable react/forbid-prop-types */
+    remove: PropTypes.any,
+    id: PropTypes.any,
+    laterItems: PropTypes.any,
+    skipIf: PropTypes.any,
+    conditions: PropTypes.any,
+    refableQings: PropTypes.any,
+    formId: PropTypes.any,
+    /* eslint-enable */
+  };
+
+  static defaultProps = {
+    destItemId: null,
+  };
+
   constructor(props) {
     super(props);
 
@@ -154,28 +177,5 @@ class SkipRuleFormField extends React.Component {
     );
   }
 }
-
-SkipRuleFormField.propTypes = {
-  destItemId: PropTypes.string,
-  destination: PropTypes.string.isRequired,
-  hide: PropTypes.bool.isRequired,
-  namePrefix: PropTypes.string.isRequired,
-  ruleId: PropTypes.string.isRequired,
-
-  // TODO: Describe these prop types.
-  /* eslint-disable react/forbid-prop-types */
-  remove: PropTypes.any,
-  id: PropTypes.any,
-  laterItems: PropTypes.any,
-  skipIf: PropTypes.any,
-  conditions: PropTypes.any,
-  refableQings: PropTypes.any,
-  formId: PropTypes.any,
-  /* eslint-enable */
-};
-
-SkipRuleFormField.defaultProps = {
-  destItemId: null,
-};
 
 export default SkipRuleFormField;

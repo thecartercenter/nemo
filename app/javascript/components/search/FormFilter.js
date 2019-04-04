@@ -16,6 +16,18 @@ const parseFormsForSelect2 = (allForms) => allForms
   .map((form) => mapKeys(form, (value, key) => (key === 'name' ? 'text' : key)));
 
 class FormFilter extends React.Component {
+  static propTypes = {
+    allForms: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })).isRequired,
+    onClearSelection: PropTypes.func.isRequired,
+    onSelectForm: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
+    originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
   constructor(props) {
     super(props);
     this.select2 = React.createRef();
@@ -85,17 +97,5 @@ class FormFilter extends React.Component {
     );
   }
 }
-
-FormFilter.propTypes = {
-  allForms: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  })).isRequired,
-  onClearSelection: PropTypes.func.isRequired,
-  onSelectForm: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 
 export default FormFilter;

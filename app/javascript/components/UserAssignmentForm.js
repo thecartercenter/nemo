@@ -8,6 +8,12 @@ import UserAssignmentFormField from './UserAssignmentFormField';
  * Models the whole form consisting of rows of UserAssignmentFormFields.
  */
 class UserAssignmentForm extends React.Component {
+  static propTypes = {
+    assignments: PropTypes.arrayOf(PropTypes.object).isRequired,
+    missions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    roles: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
   constructor(props) {
     super(props);
     const { assignments } = props;
@@ -55,11 +61,5 @@ class UserAssignmentForm extends React.Component {
     );
   }
 }
-
-UserAssignmentForm.propTypes = {
-  assignments: PropTypes.arrayOf(PropTypes.object).isRequired,
-  missions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  roles: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
 
 export default UserAssignmentForm;

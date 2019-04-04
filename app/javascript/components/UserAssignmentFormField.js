@@ -5,6 +5,27 @@ import PropTypes from 'prop-types';
  * Models each row of User Assignments consisting of a mission and a role.
  */
 class UserAssignmentFormField extends React.Component {
+  static propTypes = {
+    destroy: PropTypes.bool,
+    id: PropTypes.string,
+    index: PropTypes.number.isRequired,
+    missionId: PropTypes.string,
+    missionName: PropTypes.string,
+    missions: PropTypes.arrayOf(PropTypes.object).isRequired,
+    newRecord: PropTypes.bool,
+    role: PropTypes.string,
+    roles: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
+  static defaultProps = {
+    destroy: false,
+    id: null,
+    missionId: null,
+    missionName: null,
+    newRecord: false,
+    role: null,
+  };
+
   constructor(props) {
     super(props);
     const { destroy } = this.props;
@@ -112,26 +133,5 @@ class UserAssignmentFormField extends React.Component {
     );
   }
 }
-
-UserAssignmentFormField.propTypes = {
-  destroy: PropTypes.bool,
-  id: PropTypes.string,
-  index: PropTypes.number.isRequired,
-  missionId: PropTypes.string,
-  missionName: PropTypes.string,
-  missions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  newRecord: PropTypes.bool,
-  role: PropTypes.string,
-  roles: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
-
-UserAssignmentFormField.defaultProps = {
-  destroy: false,
-  id: null,
-  missionId: null,
-  missionName: null,
-  newRecord: false,
-  role: null,
-};
 
 export default UserAssignmentFormField;

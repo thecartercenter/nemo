@@ -2,6 +2,28 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 class FormSelect extends React.Component {
+  static propTypes = {
+    changeFunc: PropTypes.func,
+    id: PropTypes.string,
+    includeBlank: PropTypes.bool,
+    name: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })).isRequired,
+    prompt: PropTypes.string,
+    value: PropTypes.node,
+  };
+
+  static defaultProps = {
+    changeFunc: null,
+    id: null,
+    includeBlank: true,
+    name: null,
+    prompt: null,
+    value: null,
+  };
+
   render() {
     const { options, prompt, includeBlank, name, id, value, changeFunc } = this.props;
     const optionTags = [];
@@ -41,27 +63,5 @@ class FormSelect extends React.Component {
     );
   }
 }
-
-FormSelect.propTypes = {
-  changeFunc: PropTypes.func,
-  id: PropTypes.string,
-  includeBlank: PropTypes.bool,
-  name: PropTypes.string,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  })).isRequired,
-  prompt: PropTypes.string,
-  value: PropTypes.node,
-};
-
-FormSelect.defaultProps = {
-  changeFunc: null,
-  id: null,
-  includeBlank: true,
-  name: null,
-  prompt: null,
-  value: null,
-};
 
 export default FormSelect;

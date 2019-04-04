@@ -7,6 +7,21 @@ import FormFilter from './FormFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
 class Filters extends React.Component {
+  static propTypes = {
+    advancedSearchText: PropTypes.string.isRequired,
+    allForms: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })).isRequired,
+    controllerName: PropTypes.string,
+    selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  };
+
+  static defaultProps = {
+    // This is expected to be null if the feature flag is disabled.
+    controllerName: null,
+  };
+
   constructor(props) {
     super(props);
 
@@ -84,20 +99,5 @@ class Filters extends React.Component {
     );
   }
 }
-
-Filters.propTypes = {
-  advancedSearchText: PropTypes.string.isRequired,
-  allForms: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-  })).isRequired,
-  controllerName: PropTypes.string,
-  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-};
-
-Filters.defaultProps = {
-  // This is expected to be null if the feature flag is disabled.
-  controllerName: null,
-};
 
 export default Filters;

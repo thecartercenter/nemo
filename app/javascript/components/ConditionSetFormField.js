@@ -4,6 +4,20 @@ import PropTypes from 'prop-types';
 import ConditionFormField from './ConditionFormField';
 
 class ConditionSetFormField extends React.Component {
+  static propTypes = {
+    hide: PropTypes.bool.isRequired,
+
+    // TODO: Describe these prop types.
+    /* eslint-disable react/forbid-prop-types */
+    conditions: PropTypes.any,
+    formId: PropTypes.any,
+    refableQings: PropTypes.any,
+    conditionableId: PropTypes.any,
+    conditionableType: PropTypes.any,
+    namePrefix: PropTypes.any,
+    /* eslint-enable */
+  };
+
   constructor(props) {
     super(props);
     const { conditions, formId, refableQings, conditionableId, conditionableType, namePrefix } = this.props;
@@ -68,19 +82,5 @@ class ConditionSetFormField extends React.Component {
     );
   }
 }
-
-ConditionSetFormField.propTypes = {
-  hide: PropTypes.bool.isRequired,
-
-  // TODO: Describe these prop types.
-  /* eslint-disable react/forbid-prop-types */
-  conditions: PropTypes.any,
-  formId: PropTypes.any,
-  refableQings: PropTypes.any,
-  conditionableId: PropTypes.any,
-  conditionableType: PropTypes.any,
-  namePrefix: PropTypes.any,
-  /* eslint-enable */
-};
 
 export default ConditionSetFormField;

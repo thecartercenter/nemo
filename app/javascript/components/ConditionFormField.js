@@ -5,6 +5,27 @@ import ConditionValueField from './ConditionValueField';
 import FormSelect from './FormSelect';
 
 class ConditionFormField extends React.Component {
+  static propTypes = {
+    hide: PropTypes.bool.isRequired,
+
+    // TODO: Describe these prop types.
+    /* eslint-disable react/forbid-prop-types */
+    formId: PropTypes.any,
+    conditionableId: PropTypes.any,
+    conditionableType: PropTypes.any,
+    optionSetId: PropTypes.any,
+    optionNodeId: PropTypes.any,
+    value: PropTypes.any,
+    namePrefix: PropTypes.any,
+    index: PropTypes.any,
+    id: PropTypes.any,
+    refQingId: PropTypes.any,
+    refableQings: PropTypes.any,
+    op: PropTypes.any,
+    operatorOptions: PropTypes.any,
+    /* eslint-enable */
+  };
+
   constructor(props) {
     super(props);
 
@@ -172,26 +193,5 @@ class ConditionFormField extends React.Component {
     );
   }
 }
-
-ConditionFormField.propTypes = {
-  hide: PropTypes.bool.isRequired,
-
-  // TODO: Describe these prop types.
-  /* eslint-disable react/forbid-prop-types */
-  formId: PropTypes.any,
-  conditionableId: PropTypes.any,
-  conditionableType: PropTypes.any,
-  optionSetId: PropTypes.any,
-  optionNodeId: PropTypes.any,
-  value: PropTypes.any,
-  namePrefix: PropTypes.any,
-  index: PropTypes.any,
-  id: PropTypes.any,
-  refQingId: PropTypes.any,
-  refableQings: PropTypes.any,
-  op: PropTypes.any,
-  operatorOptions: PropTypes.any,
-  /* eslint-enable */
-};
 
 export default ConditionFormField;

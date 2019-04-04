@@ -4,6 +4,11 @@ import PropTypes from 'prop-types';
 import SkipRuleSetFormField from './SkipRuleSetFormField';
 
 class SkipLogicFormField extends React.Component {
+  static propTypes = {
+    type: PropTypes.string.isRequired,
+    skipRules: PropTypes.arrayOf(PropTypes.object).isRequired,
+  };
+
   constructor(props) {
     super(props);
     const { type, skipRules } = this.props;
@@ -50,10 +55,5 @@ class SkipLogicFormField extends React.Component {
     );
   }
 }
-
-SkipLogicFormField.propTypes = {
-  type: PropTypes.string.isRequired,
-  skipRules: PropTypes.arrayOf(PropTypes.object).isRequired,
-};
 
 export default SkipLogicFormField;

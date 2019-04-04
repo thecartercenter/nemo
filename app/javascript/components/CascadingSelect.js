@@ -4,6 +4,21 @@ import PropTypes from 'prop-types';
 import FormSelect from './FormSelect';
 
 class CascadingSelect extends React.Component {
+  static propTypes = {
+    optionNodeId: PropTypes.string,
+    optionSetId: PropTypes.string.isRequired,
+
+    // TODO: Describe these prop types.
+    /* eslint-disable react/forbid-prop-types */
+    namePrefix: PropTypes.any,
+    levels: PropTypes.any,
+    /* eslint-enable */
+  };
+
+  static defaultProps = {
+    optionNodeId: null,
+  };
+
   constructor(props) {
     super(props);
     const { optionSetId, optionNodeId, namePrefix, levels } = this.props;
@@ -103,20 +118,5 @@ class CascadingSelect extends React.Component {
     );
   }
 }
-
-CascadingSelect.propTypes = {
-  optionNodeId: PropTypes.string,
-  optionSetId: PropTypes.string.isRequired,
-
-  // TODO: Describe these prop types.
-  /* eslint-disable react/forbid-prop-types */
-  namePrefix: PropTypes.any,
-  levels: PropTypes.any,
-  /* eslint-enable */
-};
-
-CascadingSelect.defaultProps = {
-  optionNodeId: null,
-};
 
 export default CascadingSelect;
