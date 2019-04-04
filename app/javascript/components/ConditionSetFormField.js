@@ -6,10 +6,10 @@ import ConditionFormField from './ConditionFormField';
 class ConditionSetFormField extends React.Component {
   static propTypes = {
     hide: PropTypes.bool,
+    conditions: PropTypes.arrayOf(PropTypes.object).isRequired,
 
     // TODO: Describe these prop types.
     /* eslint-disable react/forbid-prop-types */
-    conditions: PropTypes.any,
     formId: PropTypes.any,
     refableQings: PropTypes.any,
     conditionableId: PropTypes.any,
@@ -31,11 +31,24 @@ class ConditionSetFormField extends React.Component {
     this.state = { conditions, formId, refableQings, conditionableId, conditionableType, namePrefix };
   }
 
-  // If about to show the set and it's empty, add a blank one.
+  componentWillMount() {
+    const { hide } = this.props;
+    if (!hide) {
+      this.handleAddBlankCondition();
+    }
+  }
+
   componentWillReceiveProps(newProps) {
     const { hide } = this.props;
+    if (hide && !newProps.hide) {
+      this.handleAddBlankCondition();
+    }
+  }
+
+  // If about to show the set and it's empty, add a blank condition.
+  handleAddBlankCondition = () => {
     const { conditions } = this.state;
-    if (!newProps.hide && hide && conditions.length === 0) {
+    if (conditions.length === 0) {
       this.handleAddClick();
     }
   }
