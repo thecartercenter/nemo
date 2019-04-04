@@ -5,16 +5,27 @@ import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 
 import { getButtonHintString } from './utils';
+import ConditionSetFormField from '../ConditionSetFormField';
 
 class QuestionFilter extends React.Component {
   renderPopover = () => {
     const { onSubmit } = this.props;
 
+    const conditionSetProps = {
+      conditions: [],
+      conditionableId: 'id',
+      conditionableType: 'FormItem',
+      refableQings: [],
+      formId: 'id',
+      namePrefix: 'type[display_conditions_attributes]',
+    };
+
     return (
       <Popover
-        className="filters-popover"
+        className="filters-popover display-logic-container"
         id="form-filter"
       >
+        <ConditionSetFormField {...conditionSetProps} />
 
         <div className="btn-apply-container">
           <Button

@@ -16,9 +16,18 @@ exports[`popover handles callbacks 1`] = `
 
 exports[`popover renders as expected 1`] = `
 <Popover
-  className="filters-popover"
+  className="filters-popover display-logic-container"
   id="form-filter"
 >
+  <ConditionSetFormField
+    conditionableId="id"
+    conditionableType="FormItem"
+    conditions={Array []}
+    formId="id"
+    hide={false}
+    namePrefix="type[display_conditions_attributes]"
+    refableQings={Array []}
+  />
   <div
     className="btn-apply-container"
   >
@@ -38,9 +47,18 @@ exports[`renders as expected 1`] = `
   id="question-filter"
   overlay={
     <Popover
-      className="filters-popover"
+      className="filters-popover display-logic-container"
       id="form-filter"
     >
+      <ConditionSetFormField
+        conditionableId="id"
+        conditionableType="FormItem"
+        conditions={Array []}
+        formId="id"
+        hide={false}
+        namePrefix="type[display_conditions_attributes]"
+        refableQings={Array []}
+      />
       <div
         className="btn-apply-container"
       >

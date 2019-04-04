@@ -5,7 +5,7 @@ import ConditionFormField from './ConditionFormField';
 
 class ConditionSetFormField extends React.Component {
   static propTypes = {
-    hide: PropTypes.bool.isRequired,
+    hide: PropTypes.bool,
 
     // TODO: Describe these prop types.
     /* eslint-disable react/forbid-prop-types */
@@ -16,6 +16,10 @@ class ConditionSetFormField extends React.Component {
     conditionableType: PropTypes.any,
     namePrefix: PropTypes.any,
     /* eslint-enable */
+  };
+
+  static defaultProps = {
+    hide: false,
   };
 
   constructor(props) {
