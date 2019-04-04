@@ -23,11 +23,6 @@ div.dialog h2 { margin: 0 0 10px 0; }
 /* loading indicator */
 div.loader { background: image-url('loader.gif') no-repeat; padding-left: 20px; }
 
-div.popover {
-  top: -2.5px;
-  width: 300px;
-}
-
 div.inline-load-ind {
   .success {
     color: $success-green;
