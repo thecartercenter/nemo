@@ -27,14 +27,14 @@ class AdvancedSearchFilter extends React.Component {
     return (
       <div>
         <input
-          autoComplete="off"
           className="form-control search-str"
-          name="search"
-          onChange={onChangeAdvancedSearch}
-          onKeyDown={this.handleKeyDown}
-          placeholder={I18n.t('filter.advancedSearch')}
           type="text"
+          name="search"
+          autoComplete="off"
           value={advancedSearchText}
+          placeholder={I18n.t('filter.advancedSearch')}
+          onKeyDown={this.handleKeyDown}
+          onChange={onChangeAdvancedSearch}
         />
         <Button
           className="btn-apply btn-advanced-search btn-secondary"

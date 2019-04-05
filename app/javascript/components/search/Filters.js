@@ -72,15 +72,15 @@ class Filters extends React.Component {
       <ButtonToolbar>
         <FormFilter
           allForms={allForms}
-          onClearSelection={this.handleClearFormSelection}
-          onSelectForm={this.handleSelectForm}
-          onSubmit={this.handleSubmit}
-          originalFormIds={originalFormIds}
           selectedFormIds={selectedFormIds}
+          originalFormIds={originalFormIds}
+          onSelectForm={this.handleSelectForm}
+          onClearSelection={this.handleClearFormSelection}
+          onSubmit={this.handleSubmit}
         />
         <QuestionFilter
-          onSubmit={this.handleSubmit}
           selectedFormIds={selectedFormIds}
+          onSubmit={this.handleSubmit}
         />
       </ButtonToolbar>
     );

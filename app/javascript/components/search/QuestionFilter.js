@@ -10,8 +10,8 @@ import ConditionSetFormField from '../ConditionSetFormField';
 
 class QuestionFilter extends React.Component {
   static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    onSubmit: PropTypes.func.isRequired,
   };
 
   state = {

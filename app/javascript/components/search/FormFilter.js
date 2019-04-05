@@ -21,11 +21,11 @@ class FormFilter extends React.Component {
       id: PropTypes.string,
       name: PropTypes.string,
     })).isRequired,
-    onClearSelection: PropTypes.func.isRequired,
-    onSelectForm: PropTypes.func.isRequired,
-    onSubmit: PropTypes.func.isRequired,
-    originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    onSelectForm: PropTypes.func.isRequired,
+    onClearSelection: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired,
   };
 
   constructor(props) {
