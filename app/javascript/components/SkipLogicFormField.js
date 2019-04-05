@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Provider as UnstatedProvider } from 'unstated';
 
 import SkipRuleSetFormField from './SkipRuleSetFormField';
 
-class SkipLogicFormField extends React.Component {
+class SkipLogicFormFieldRoot extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
     skipRules: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -55,5 +56,11 @@ class SkipLogicFormField extends React.Component {
     );
   }
 }
+
+const SkipLogicFormField = (props) => (
+  <UnstatedProvider>
+    <SkipLogicFormFieldRoot {...props} />
+  </UnstatedProvider>
+);
 
 export default SkipLogicFormField;

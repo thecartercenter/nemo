@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Provider as UnstatedProvider } from 'unstated';
 
 import ConditionSetFormField from './ConditionSetFormField';
 
-class DisplayLogicFormField extends React.Component {
+class DisplayLogicFormFieldRoot extends React.Component {
   static propTypes = {
     // TODO: Describe these prop types.
     /* eslint-disable react/forbid-prop-types */
@@ -78,5 +79,11 @@ class DisplayLogicFormField extends React.Component {
     );
   }
 }
+
+const DisplayLogicFormField = (props) => (
+  <UnstatedProvider>
+    <DisplayLogicFormFieldRoot {...props} />
+  </UnstatedProvider>
+);
 
 export default DisplayLogicFormField;

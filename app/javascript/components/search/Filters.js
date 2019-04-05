@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+import { Provider as UnstatedProvider } from 'unstated';
 
 import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
 import ErrorBoundary from '../ErrorBoundary';
@@ -8,7 +9,7 @@ import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
-class Filters extends React.Component {
+export class FiltersRoot extends React.Component {
   static propTypes = {
     advancedSearchText: PropTypes.string.isRequired,
     allForms: PropTypes.arrayOf(PropTypes.shape({
@@ -107,5 +108,11 @@ class Filters extends React.Component {
     );
   }
 }
+
+const Filters = (props) => (
+  <UnstatedProvider>
+    <FiltersRoot {...props} />
+  </UnstatedProvider>
+);
 
 export default Filters;
