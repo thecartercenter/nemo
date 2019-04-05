@@ -24,10 +24,6 @@ class SkipRuleFormField extends React.Component {
     /* eslint-enable */
   };
 
-  static defaultProps = {
-    destItemId: null,
-  };
-
   constructor(props) {
     super(props);
 

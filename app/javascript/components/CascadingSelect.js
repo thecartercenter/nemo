@@ -16,10 +16,6 @@ class CascadingSelect extends React.Component {
     /* eslint-enable */
   };
 
-  static defaultProps = {
-    optionNodeId: null,
-  };
-
   constructor(props) {
     super(props);
     const { optionSetId, optionNodeId, namePrefix, levels } = this.props;

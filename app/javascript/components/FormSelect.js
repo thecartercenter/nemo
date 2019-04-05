@@ -16,12 +16,7 @@ class FormSelect extends React.Component {
   };
 
   static defaultProps = {
-    changeFunc: null,
-    id: null,
     includeBlank: true,
-    name: null,
-    prompt: null,
-    value: null,
   };
 
   render() {

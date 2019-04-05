@@ -17,15 +17,6 @@ class UserAssignmentFormField extends React.Component {
     roles: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
-  static defaultProps = {
-    destroy: false,
-    id: null,
-    missionId: null,
-    missionName: null,
-    newRecord: false,
-    role: null,
-  };
-
   constructor(props) {
     super(props);
     const { destroy } = this.props;
@@ -34,6 +25,7 @@ class UserAssignmentFormField extends React.Component {
 
   missionField = () => {
     const { newRecord, missionId, missionName, index, id } = this.props;
+
     if (newRecord) {
       return (
         <select
@@ -45,6 +37,7 @@ class UserAssignmentFormField extends React.Component {
         </select>
       );
     }
+
     return (
       <div>
         {missionName}
@@ -59,6 +52,7 @@ class UserAssignmentFormField extends React.Component {
 
   missionOptionTags = () => {
     const { missions } = this.props;
+
     return missions.map((mission) => (
       <option
         key={mission.id}
@@ -71,6 +65,7 @@ class UserAssignmentFormField extends React.Component {
 
   roleOptionTags = () => {
     const { roles } = this.props;
+
     return roles.map((option) => (
       <option
         key={option}
@@ -83,6 +78,7 @@ class UserAssignmentFormField extends React.Component {
 
   missionRoleFields = () => {
     const { role, index } = this.props;
+
     return (
       <div className="assignment-row">
         <div className="mission">
@@ -116,6 +112,7 @@ class UserAssignmentFormField extends React.Component {
   render() {
     const { index, id } = this.props;
     const { destroy } = this.state;
+
     return (
       <div>
         {destroy ? '' : this.missionRoleFields()}

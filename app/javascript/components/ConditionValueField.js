@@ -11,12 +11,6 @@ class ConditionValueField extends React.Component {
     value: PropTypes.string,
   };
 
-  // These are not needed for CascadingSelect
-  static defaultProps = {
-    name: null,
-    value: null,
-  };
-
   render() {
     const { type, value, id, name } = this.props;
 
