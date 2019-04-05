@@ -57,19 +57,16 @@ class QuestionFilter extends React.Component {
     const { refableQings } = this.state;
     const formId = this.getSelectedFormId();
 
-    const conditionSetProps = {
-      conditions: [],
-      conditionableId: formId,
-      conditionableType: 'FormItem',
-      refableQings,
-    };
-
     return (
       <Popover
         className="filters-popover display-logic-container"
         id="form-filter"
       >
-        <ConditionSetFormField {...conditionSetProps} />
+        <ConditionSetFormField
+          conditionableId={formId}
+          conditionableType="FormItem"
+          refableQings={refableQings}
+        />
 
         <div className="btn-apply-container">
           <Button
