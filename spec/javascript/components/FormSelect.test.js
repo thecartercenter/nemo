@@ -9,7 +9,7 @@ const defaultProps = {
     { id: 'item1', name: 'First' },
     { id: 'item2', name: 'Second' },
   ],
-  changeFunc: jest.fn(),
+  onChange: jest.fn(),
 };
 
 it('renders as expected', () => {
@@ -21,8 +21,8 @@ describe('after changing value', () => {
   const wrapper = shallow(<Component {...defaultProps} />);
   wrapper.find('select').simulate('change', { target: { value: defaultProps.options[0].id } });
 
-  it('calls changeFunc', () => {
-    expect(defaultProps.changeFunc).toMatchSnapshot();
+  it('calls onChange', () => {
+    expect(defaultProps.onChange).toMatchSnapshot();
   });
 
   it('renders as expected', () => {

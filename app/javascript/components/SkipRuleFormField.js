@@ -115,7 +115,7 @@ class SkipRuleFormField extends React.Component {
       value: destItemIdOrEnd || '',
       prompt: I18n.t('skip_rule.dest_prompt'),
       options: this.formatTargetItemOptions(laterItems),
-      changeFunc: this.destinationOptionChanged,
+      onChange: this.destinationOptionChanged,
     };
     const skipIfProps = {
       name: `${namePrefix}[skip_if]`,

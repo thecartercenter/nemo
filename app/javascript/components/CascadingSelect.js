@@ -72,7 +72,7 @@ class CascadingSelect extends React.Component {
       value: level.selected,
       options: level.options,
       prompt: this.optionPrompt(level),
-      changeFunc: isLastLevel ? null : this.nodeChanged,
+      onChange: isLastLevel ? null : this.nodeChanged,
     };
   }
 

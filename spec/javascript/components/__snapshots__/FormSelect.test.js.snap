@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`after changing value calls changeFunc 1`] = `
+exports[`after changing value calls onChange 1`] = `
 [MockFunction] {
   "calls": Array [
     Array [

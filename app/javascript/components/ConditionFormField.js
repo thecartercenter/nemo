@@ -156,7 +156,7 @@ class ConditionFormField extends React.Component {
       value: refQingId || '',
       options: this.formatRefQingOptions(refableQings),
       prompt: I18n.t('condition.ref_qing_prompt'),
-      changeFunc: this.updateFieldData,
+      onChange: this.updateFieldData,
     };
     const operatorFieldProps = {
       name: `${namePrefix}[op]`,
