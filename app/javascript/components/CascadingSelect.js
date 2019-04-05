@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -61,7 +62,9 @@ class CascadingSelect extends React.Component {
   }
 
   buildUrl = (setId, nodeId) => {
-    return `${ELMO.app.url_builder.build('option-sets', setId, 'condition-form-view')}?node_id=${nodeId}`;
+    const params = { node_id: nodeId };
+    const url = ELMO.app.url_builder.build('option-sets', setId, 'condition-form-view');
+    return `${url}?${queryString.stringify(params)}`;
   }
 
   buildLevelProps = (level, isLastLevel) => {

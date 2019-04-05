@@ -1,3 +1,4 @@
+import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -86,13 +87,15 @@ class ConditionFormField extends React.Component {
 
   buildUrl = (refQingId) => {
     const { id, formId, conditionableId, conditionableType } = this.state;
-    let url = `${ELMO.app.url_builder.build('form-items', 'condition-form')}?`;
-    url += `condition_id=${id || ''}&ref_qing_id=${refQingId}&form_id=${formId}`;
-    if (conditionableId) {
-      url += `&conditionable_id=${conditionableId}`;
-      url += `&conditionable_type=${conditionableType}`;
-    }
-    return url;
+    const params = {
+      condition_id: id || '',
+      ref_qing_id: refQingId,
+      form_id: formId,
+      conditionable_id: conditionableId || undefined,
+      conditionable_type: conditionableId ? conditionableType : undefined,
+    };
+    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
+    return `${url}?${queryString.stringify(params)}`;
   }
 
   formatRefQingOptions = (refQingOptions) => {
