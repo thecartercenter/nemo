@@ -80,6 +80,7 @@ class Filters extends React.Component {
         />
         <QuestionFilter
           onSubmit={this.handleSubmit}
+          selectedFormIds={selectedFormIds}
         />
       </ButtonToolbar>
     );

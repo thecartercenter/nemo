@@ -21,6 +21,7 @@ export const formFilterProps = {
 };
 
 export const questionFilterProps = {
+  selectedFormIds: formFilterProps.selectedFormIds,
 };
 
 export const advancedSearchProps = {

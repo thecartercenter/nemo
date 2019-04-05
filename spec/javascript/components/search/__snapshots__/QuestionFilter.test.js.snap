@@ -20,12 +20,10 @@ exports[`popover renders as expected 1`] = `
   id="form-filter"
 >
   <ConditionSetFormField
-    conditionableId="id"
+    conditionableId="2"
     conditionableType="FormItem"
     conditions={Array []}
-    formId="id"
     hide={false}
-    namePrefix="type[display_conditions_attributes]"
     refableQings={Array []}
   />
   <div
@@ -51,12 +49,10 @@ exports[`renders as expected 1`] = `
       id="form-filter"
     >
       <ConditionSetFormField
-        conditionableId="id"
+        conditionableId="2"
         conditionableType="FormItem"
         conditions={Array []}
-        formId="id"
         hide={false}
-        namePrefix="type[display_conditions_attributes]"
         refableQings={Array []}
       />
       <div

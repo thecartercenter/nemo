@@ -112,6 +112,11 @@ exports[`renders as expected (responses page) 1`] = `
       />
       <QuestionFilter
         onSubmit={[Function]}
+        selectedFormIds={
+          Array [
+            "2",
+          ]
+        }
       />
     </ButtonToolbar>
     <AdvancedSearchFilter
