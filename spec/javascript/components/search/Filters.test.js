@@ -5,7 +5,8 @@ import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '..
 import { allFilterProps } from './utils';
 
 import { CONTROLLER_NAME } from '../../../../app/javascript/components/search/utils';
-import { FiltersModel, FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
+import FiltersModel from '../../../../app/javascript/components/search/FiltersModel';
+import { FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
 
 const defaultProps = {
   ...allFilterProps,

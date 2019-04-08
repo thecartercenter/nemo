@@ -1,46 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import { observable, action } from 'mobx';
 import { observer, inject, Provider } from 'mobx-react';
 
-import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
+import { CONTROLLER_NAME, createFiltersStore, getFilterString, submitSearch } from './utils';
 import ErrorBoundary from '../ErrorBoundary';
 import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
-class FiltersModel {
-  @observable
-  selectedFormIds = [];
-
-  @observable
-  advancedSearchText = '';
-
-  @action
-  handleSelectForm = (event) => {
-    this.selectedFormIds = [event.target.value];
-  }
-
-  @action
-  handleClearFormSelection = () => {
-    this.selectedFormIds = [];
-  }
-
-  @action
-  handleChangeAdvancedSearch = (event) => {
-    this.advancedSearchText = event.target.value;
-  }
-}
-
-export { FiltersModel };
-
-const filtersStore = new FiltersModel();
-
-if (process.env.NODE_ENV === 'development') {
-  // Debug helper.
-  window.store = filtersStore;
-}
+const filtersStore = createFiltersStore();
 
 @inject('store')
 @observer

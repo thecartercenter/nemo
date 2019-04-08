@@ -1,6 +1,8 @@
 import isEmpty from 'lodash/isEmpty';
 import queryString from 'query-string';
 
+import FiltersModel from './FiltersModel';
+
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
 /**
@@ -9,6 +11,17 @@ const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 export const CONTROLLER_NAME = {
   RESPONSES: '"responses"',
 };
+
+export function createFiltersStore() {
+  const store = new FiltersModel();
+
+  if (process.env.NODE_ENV === 'development') {
+    // Debug helper.
+    window.store = store;
+  }
+
+  return store;
+}
 
 /**
  * Given a list of hints (e.g. currently selected form names for the form filter button),
