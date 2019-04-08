@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import { Provider as UnstatedProvider, Container as Store, Subscribe } from 'unstated';
+import { observable, action } from 'mobx';
+import { observer, inject, Provider } from 'mobx-react';
 
 import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
 import ErrorBoundary from '../ErrorBoundary';
@@ -9,27 +10,43 @@ import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
-class FiltersStore extends Store {
-  state = {
-    selectedFormIds: [],
-    advancedSearchText: '',
-  };
+class FiltersModel {
+  @observable
+  selectedFormIds = [];
 
+  @observable
+  advancedSearchText = '';
+
+  @action
   handleSelectForm = (event) => {
-    this.setState({ selectedFormIds: [event.target.value] });
+    this.selectedFormIds = [event.target.value];
   }
 
+  @action
   handleClearFormSelection = () => {
-    this.setState({ selectedFormIds: [] });
+    this.selectedFormIds = [];
   }
 
+  @action
   handleChangeAdvancedSearch = (event) => {
-    this.setState({ advancedSearchText: event.target.value });
+    this.advancedSearchText = event.target.value;
   }
 }
 
-export class FiltersRoot extends React.Component {
+export { FiltersModel };
+
+const filtersStore = new FiltersModel();
+
+if (process.env.NODE_ENV === 'development') {
+  // Debug helper.
+  window.store = filtersStore;
+}
+
+@inject('store')
+@observer
+class FiltersRoot extends React.Component {
   static propTypes = {
+    store: PropTypes.object.isRequired,
     advancedSearchText: PropTypes.string.isRequired,
     allForms: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
@@ -48,16 +65,21 @@ export class FiltersRoot extends React.Component {
     super(props);
 
     const {
+      store,
       selectedFormIds,
       advancedSearchText,
     } = props;
 
-    // TODO: Set initial store state based on props.
+    // Directly assign initial values to the store.
+    Object.assign(store, {
+      selectedFormIds,
+      advancedSearchText,
+    });
   }
 
-  handleSubmit = (filters) => () => {
-    const { allForms } = this.props;
-    const filterString = getFilterString(allForms, filters.state);
+  handleSubmit = () => {
+    const { store, allForms } = this.props;
+    const filterString = getFilterString(allForms, store);
     submitSearch(filterString);
   }
 
@@ -65,9 +87,9 @@ export class FiltersRoot extends React.Component {
     submitSearch(null);
   }
 
-  renderFilterButtons = (filters) => {
-    const { allForms, selectedFormIds: originalFormIds } = this.props;
-    const { selectedFormIds } = filters.state;
+  renderFilterButtons = () => {
+    const { store, allForms, selectedFormIds: originalFormIds } = this.props;
+    const { selectedFormIds, handleSelectForm, handleClearFormSelection } = store;
 
     return (
       <ButtonToolbar>
@@ -75,44 +97,34 @@ export class FiltersRoot extends React.Component {
           allForms={allForms}
           selectedFormIds={selectedFormIds}
           originalFormIds={originalFormIds}
-          onSelectForm={filters.handleSelectForm}
-          onClearSelection={filters.handleClearFormSelection}
-          onSubmit={this.handleSubmit(filters)}
+          onSelectForm={handleSelectForm}
+          onClearSelection={handleClearFormSelection}
+          onSubmit={this.handleSubmit}
         />
         <QuestionFilter
           selectedFormIds={selectedFormIds}
-          onSubmit={this.handleSubmit(filters)}
+          onSubmit={this.handleSubmit}
         />
       </ButtonToolbar>
     );
   }
 
-  renderWithFilters = (filters) => {
-    const { controllerName } = this.props;
-    const { advancedSearchText } = filters.state;
+  render() {
+    const { store, controllerName } = this.props;
+    const { advancedSearchText, handleChangeAdvancedSearch } = store;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
-      <React.Fragment>
-        {shouldRenderButtons ? this.renderFilterButtons(filters) : null}
-
-        <AdvancedSearchFilter
-          advancedSearchText={advancedSearchText}
-          onChangeAdvancedSearch={filters.handleChangeAdvancedSearch}
-          onClear={this.handleClearFilters}
-          onSubmit={this.handleSubmit(filters)}
-        />
-      </React.Fragment>
-    );
-  }
-
-  render() {
-    return (
       <div className="filters">
         <ErrorBoundary>
-          <Subscribe to={[FiltersStore]}>
-            {this.renderWithFilters}
-          </Subscribe>
+          {shouldRenderButtons ? this.renderFilterButtons() : null}
+
+          <AdvancedSearchFilter
+            advancedSearchText={advancedSearchText}
+            onChangeAdvancedSearch={handleChangeAdvancedSearch}
+            onClear={this.handleClearFilters}
+            onSubmit={this.handleSubmit}
+          />
         </ErrorBoundary>
       </div>
     );
@@ -120,9 +132,13 @@ export class FiltersRoot extends React.Component {
 }
 
 const Filters = (props) => (
-  <UnstatedProvider>
+  <Provider store={filtersStore}>
     <FiltersRoot {...props} />
-  </UnstatedProvider>
+  </Provider>
 );
 
 export default Filters;
+
+// Root component for testing.
+const { wrappedComponent } = FiltersRoot;
+export { wrappedComponent as FiltersRoot };

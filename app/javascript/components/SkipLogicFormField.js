@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Provider as UnstatedProvider } from 'unstated';
+import { observer, Provider } from 'mobx-react';
 
 import SkipRuleSetFormField from './SkipRuleSetFormField';
 
+@observer
 class SkipLogicFormFieldRoot extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
@@ -58,9 +59,9 @@ class SkipLogicFormFieldRoot extends React.Component {
 }
 
 const SkipLogicFormField = (props) => (
-  <UnstatedProvider>
+  <Provider>
     <SkipLogicFormFieldRoot {...props} />
-  </UnstatedProvider>
+  </Provider>
 );
 
 export default SkipLogicFormField;

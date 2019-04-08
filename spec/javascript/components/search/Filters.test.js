@@ -5,12 +5,12 @@ import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '..
 import { allFilterProps } from './utils';
 
 import { CONTROLLER_NAME } from '../../../../app/javascript/components/search/utils';
-import { FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
+import { FiltersModel, FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
 
 const defaultProps = {
   ...allFilterProps,
   controllerName: CONTROLLER_NAME.RESPONSES,
-  store: {},
+  store: new FiltersModel(),
 };
 
 it('renders as expected (responses page)', () => {

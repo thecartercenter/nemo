@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Provider as UnstatedProvider } from 'unstated';
+import { observer, Provider } from 'mobx-react';
 
 import ConditionSetFormField from './ConditionSetFormField';
 
+@observer
 class DisplayLogicFormFieldRoot extends React.Component {
   static propTypes = {
     // TODO: Describe these prop types.
@@ -81,9 +82,9 @@ class DisplayLogicFormFieldRoot extends React.Component {
 }
 
 const DisplayLogicFormField = (props) => (
-  <UnstatedProvider>
+  <Provider>
     <DisplayLogicFormFieldRoot {...props} />
-  </UnstatedProvider>
+  </Provider>
 );
 
 export default DisplayLogicFormField;
