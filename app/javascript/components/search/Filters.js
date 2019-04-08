@@ -1,13 +1,32 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import { Provider as UnstatedProvider } from 'unstated';
+import { Provider as UnstatedProvider, Container as Store, Subscribe } from 'unstated';
 
 import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
 import ErrorBoundary from '../ErrorBoundary';
 import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
+
+class FiltersStore extends Store {
+  state = {
+    selectedFormIds: [],
+    advancedSearchText: '',
+  };
+
+  handleSelectForm = (event) => {
+    this.setState({ selectedFormIds: [event.target.value] });
+  }
+
+  handleClearFormSelection = () => {
+    this.setState({ selectedFormIds: [] });
+  }
+
+  handleChangeAdvancedSearch = (event) => {
+    this.setState({ advancedSearchText: event.target.value });
+  }
+}
 
 export class FiltersRoot extends React.Component {
   static propTypes = {
@@ -33,41 +52,22 @@ export class FiltersRoot extends React.Component {
       advancedSearchText,
     } = props;
 
-    /*
-     * The state for all filters is held here.
-     * Individual filters invoke callbacks to notify this parent component of changes.
-     */
-    this.state = {
-      selectedFormIds,
-      advancedSearchText,
-    };
+    // TODO: Set initial store state based on props.
   }
 
-  handleSubmit = () => {
+  handleSubmit = (filters) => () => {
     const { allForms } = this.props;
-    const filterString = getFilterString(allForms, this.state);
+    const filterString = getFilterString(allForms, filters.state);
     submitSearch(filterString);
-  }
-
-  handleSelectForm = (event) => {
-    this.setState({ selectedFormIds: [event.target.value] });
-  }
-
-  handleClearFormSelection = () => {
-    this.setState({ selectedFormIds: [] });
-  }
-
-  handleChangeAdvancedSearch = (event) => {
-    this.setState({ advancedSearchText: event.target.value });
   }
 
   handleClearFilters = () => {
     submitSearch(null);
   }
 
-  renderFilterButtons = () => {
+  renderFilterButtons = (filters) => {
     const { allForms, selectedFormIds: originalFormIds } = this.props;
-    const { selectedFormIds } = this.state;
+    const { selectedFormIds } = filters.state;
 
     return (
       <ButtonToolbar>
@@ -75,34 +75,44 @@ export class FiltersRoot extends React.Component {
           allForms={allForms}
           selectedFormIds={selectedFormIds}
           originalFormIds={originalFormIds}
-          onSelectForm={this.handleSelectForm}
-          onClearSelection={this.handleClearFormSelection}
-          onSubmit={this.handleSubmit}
+          onSelectForm={filters.handleSelectForm}
+          onClearSelection={filters.handleClearFormSelection}
+          onSubmit={this.handleSubmit(filters)}
         />
         <QuestionFilter
           selectedFormIds={selectedFormIds}
-          onSubmit={this.handleSubmit}
+          onSubmit={this.handleSubmit(filters)}
         />
       </ButtonToolbar>
     );
   }
 
-  render() {
+  renderWithFilters = (filters) => {
     const { controllerName } = this.props;
-    const { advancedSearchText } = this.state;
+    const { advancedSearchText } = filters.state;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
+      <React.Fragment>
+        {shouldRenderButtons ? this.renderFilterButtons(filters) : null}
+
+        <AdvancedSearchFilter
+          advancedSearchText={advancedSearchText}
+          onChangeAdvancedSearch={filters.handleChangeAdvancedSearch}
+          onClear={this.handleClearFilters}
+          onSubmit={this.handleSubmit(filters)}
+        />
+      </React.Fragment>
+    );
+  }
+
+  render() {
+    return (
       <div className="filters">
         <ErrorBoundary>
-          {shouldRenderButtons ? this.renderFilterButtons() : null}
-
-          <AdvancedSearchFilter
-            advancedSearchText={advancedSearchText}
-            onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
-            onClear={this.handleClearFilters}
-            onSubmit={this.handleSubmit}
-          />
+          <Subscribe to={[FiltersStore]}>
+            {this.renderWithFilters}
+          </Subscribe>
         </ErrorBoundary>
       </div>
     );
