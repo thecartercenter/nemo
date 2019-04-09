@@ -9,11 +9,11 @@ import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
-@inject('store')
+@inject('filtersStore')
 @observer
 class FiltersRoot extends React.Component {
   static propTypes = {
-    store: PropTypes.object.isRequired,
+    filtersStore: PropTypes.object.isRequired,
     advancedSearchText: PropTypes.string.isRequired,
     allForms: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
@@ -32,21 +32,21 @@ class FiltersRoot extends React.Component {
     super(props);
 
     const {
-      store,
+      filtersStore,
       selectedFormIds,
       advancedSearchText,
     } = props;
 
     // Directly assign initial values to the store.
-    Object.assign(store, {
+    Object.assign(filtersStore, {
       selectedFormIds,
       advancedSearchText,
     });
   }
 
   handleSubmit = () => {
-    const { store, allForms } = this.props;
-    const filterString = getFilterString(allForms, store);
+    const { filtersStore, allForms } = this.props;
+    const filterString = getFilterString(allForms, filtersStore);
     submitSearch(filterString);
   }
 
@@ -55,8 +55,8 @@ class FiltersRoot extends React.Component {
   }
 
   renderFilterButtons = () => {
-    const { store, allForms, selectedFormIds: originalFormIds } = this.props;
-    const { selectedFormIds, handleSelectForm, handleClearFormSelection } = store;
+    const { filtersStore, allForms, selectedFormIds: originalFormIds } = this.props;
+    const { selectedFormIds, handleSelectForm, handleClearFormSelection } = filtersStore;
 
     return (
       <ButtonToolbar>
@@ -77,8 +77,8 @@ class FiltersRoot extends React.Component {
   }
 
   render() {
-    const { store, controllerName } = this.props;
-    const { advancedSearchText, handleChangeAdvancedSearch } = store;
+    const { filtersStore, controllerName } = this.props;
+    const { advancedSearchText, handleChangeAdvancedSearch } = filtersStore;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
@@ -99,7 +99,7 @@ class FiltersRoot extends React.Component {
 }
 
 const Filters = (props) => (
-  <Provider store={createFiltersStore()}>
+  <Provider filtersStore={createFiltersStore()}>
     <FiltersRoot {...props} />
   </Provider>
 );

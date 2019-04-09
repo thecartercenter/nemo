@@ -11,7 +11,7 @@ import { FiltersRoot as Component } from '../../../../app/javascript/components/
 const defaultProps = {
   ...allFilterProps,
   controllerName: CONTROLLER_NAME.RESPONSES,
-  store: new FiltersModel(),
+  filtersStore: new FiltersModel(),
 };
 
 it('renders as expected (responses page)', () => {
