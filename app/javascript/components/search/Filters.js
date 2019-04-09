@@ -9,8 +9,6 @@ import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
-const filtersStore = createFiltersStore();
-
 @inject('store')
 @observer
 class FiltersRoot extends React.Component {
@@ -101,7 +99,7 @@ class FiltersRoot extends React.Component {
 }
 
 const Filters = (props) => (
-  <Provider store={filtersStore}>
+  <Provider store={createFiltersStore()}>
     <FiltersRoot {...props} />
   </Provider>
 );
