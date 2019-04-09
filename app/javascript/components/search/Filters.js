@@ -14,13 +14,13 @@ import AdvancedSearchFilter from './AdvancedSearchFilter';
 class FiltersRoot extends React.Component {
   static propTypes = {
     filtersStore: PropTypes.object.isRequired,
-    advancedSearchText: PropTypes.string.isRequired,
+    controllerName: PropTypes.string,
     allForms: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
     })).isRequired,
-    controllerName: PropTypes.string,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    advancedSearchText: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -33,20 +33,23 @@ class FiltersRoot extends React.Component {
 
     const {
       filtersStore,
+      allForms,
       selectedFormIds,
       advancedSearchText,
     } = props;
 
     // Directly assign initial values to the store.
     Object.assign(filtersStore, {
+      allForms,
+      originalFormIds: selectedFormIds,
       selectedFormIds,
       advancedSearchText,
     });
   }
 
   handleSubmit = () => {
-    const { filtersStore, allForms } = this.props;
-    const filterString = getFilterString(allForms, filtersStore);
+    const { filtersStore } = this.props;
+    const filterString = getFilterString(filtersStore);
     submitSearch(filterString);
   }
 
@@ -55,13 +58,9 @@ class FiltersRoot extends React.Component {
   }
 
   renderFilterButtons = () => {
-    const { allForms, selectedFormIds: originalFormIds } = this.props;
-
     return (
       <ButtonToolbar>
         <FormFilter
-          allForms={allForms}
-          originalFormIds={originalFormIds}
           onSubmit={this.handleSubmit}
         />
         <QuestionFilter

@@ -15,6 +15,9 @@ export const filtersStore = Object.assign(new FiltersModel(), {
       name: "Q\"uo'te`s",
     },
   ],
+  originalFormIds: [
+    '1',
+  ],
   selectedFormIds: [
     '2',
   ],

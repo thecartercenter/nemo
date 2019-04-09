@@ -7,8 +7,6 @@ import Component from '../../../../app/javascript/components/search/FormFilter';
 
 const defaultProps = {
   filtersStore,
-  allForms: filtersStore.allForms,
-  originalFormIds: [],
   onSubmit: jest.fn(),
 };
 
@@ -28,7 +26,7 @@ describe('popover', () => {
   });
 
   it('handles callbacks', () => {
-    overlay.find('Select2').simulate('change', { target: { value: defaultProps.allForms[0].id } });
+    overlay.find('Select2').simulate('change', { target: { value: defaultProps.filtersStore.allForms[0].id } });
     overlay.find('Button.btn-apply').simulate('click');
 
     expect(defaultProps.onSubmit).toMatchSnapshot();

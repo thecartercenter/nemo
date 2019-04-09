@@ -51,7 +51,7 @@ export function getFormNameFromId(allForms, searchId) {
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString(allForms, { selectedFormIds, advancedSearchText }) {
+export function getFilterString({ allForms, selectedFormIds, advancedSearchText }) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 

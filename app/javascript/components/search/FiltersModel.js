@@ -2,6 +2,12 @@ import { action, observable } from 'mobx';
 
 class FiltersModel {
   @observable
+  allForms = [];
+
+  @observable
+  originalFormIds = [];
+
+  @observable
   selectedFormIds = [];
 
   @observable

@@ -34,21 +34,23 @@ it('gets form name (not found)', () => {
 
 it('gets filter string (no filters)', () => {
   const emptyFilters = {
+    ...filtersStore,
     selectedFormIds: [],
     advancedSearchText: null,
   };
 
-  const result = getFilterString(filtersStore.allForms, emptyFilters);
+  const result = getFilterString(emptyFilters);
   expect(result).toMatchSnapshot();
 });
 
 it('gets filter string (all filters)', () => {
   const populatedFilters = {
+    ...filtersStore,
     selectedFormIds: ['1', '3'],
     advancedSearchText: 'query',
   };
 
-  const result = getFilterString(filtersStore.allForms, populatedFilters);
+  const result = getFilterString(populatedFilters);
   expect(result).toMatchSnapshot();
 });
 

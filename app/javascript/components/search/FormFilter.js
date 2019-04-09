@@ -21,11 +21,6 @@ const parseFormsForSelect2 = (allForms) => allForms
 class FormFilter extends React.Component {
   static propTypes = {
     filtersStore: PropTypes.object,
-    allForms: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-    })).isRequired,
-    originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -47,8 +42,8 @@ class FormFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, allForms, onSubmit } = this.props;
-    const { selectedFormIds, handleSelectForm } = filtersStore;
+    const { filtersStore, onSubmit } = this.props;
+    const { allForms, selectedFormIds, handleSelectForm } = filtersStore;
 
     return (
       <Popover
@@ -82,7 +77,8 @@ class FormFilter extends React.Component {
   }
 
   render() {
-    const { allForms, originalFormIds } = this.props;
+    const { filtersStore } = this.props;
+    const { allForms, originalFormIds } = filtersStore;
     const originalFormNames = originalFormIds.map((id) => getFormNameFromId(allForms, id));
 
     return (

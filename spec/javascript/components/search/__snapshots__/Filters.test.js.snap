@@ -78,28 +78,7 @@ exports[`renders as expected (responses page) 1`] = `
   >
     <ButtonToolbar>
       <FormFilter
-        allForms={
-          Array [
-            Object {
-              "id": "1",
-              "name": "One",
-            },
-            Object {
-              "id": "2",
-              "name": "Two",
-            },
-            Object {
-              "id": "3",
-              "name": "Q\\"uo'te\`s",
-            },
-          ]
-        }
         onSubmit={[Function]}
-        originalFormIds={
-          Array [
-            "2",
-          ]
-        }
       />
       <QuestionFilter
         onSubmit={[Function]}
