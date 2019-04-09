@@ -3,8 +3,17 @@ import Adapter from 'enzyme-adapter-react-16';
 import I18n from 'i18n-js';
 
 // Stub out jquery.
-// eslint-disable-next-line no-undef
 window.$ = () => {};
+window.$.ajax = () => ({});
+
+window.ELMO = {
+  app: {
+    loading: jest.fn(),
+    url_builder: {
+      build: jest.fn(),
+    },
+  },
+};
 
 // Stub out navigation features (otherwise jsdom complains).
 delete window.location;
@@ -27,7 +36,6 @@ jest.mock('react-select2-wrapper/lib/components/Select2.full', () => 'Select2');
 jest.mock('react-select2-wrapper/css/select2.css', () => undefined);
 
 // Provide translations.
-// eslint-disable-next-line no-undef
 window.I18n = I18n;
 
 try {
