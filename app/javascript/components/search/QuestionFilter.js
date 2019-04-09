@@ -4,13 +4,16 @@ import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
+import { inject, observer } from 'mobx-react';
 
 import { getButtonHintString } from './utils';
 import ConditionSetFormField from '../ConditionSetFormField';
 
+@inject('filtersStore')
+@observer
 class QuestionFilter extends React.Component {
   static propTypes = {
-    selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    filtersStore: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -47,7 +50,8 @@ class QuestionFilter extends React.Component {
   }
 
   getSelectedFormId = () => {
-    const { selectedFormIds } = this.props;
+    const { filtersStore } = this.props;
+    const { selectedFormIds } = filtersStore;
     // For now we can assume only one form is selected at once.
     return selectedFormIds[0] || '';
   }

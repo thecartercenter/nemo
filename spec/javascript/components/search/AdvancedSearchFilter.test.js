@@ -1,13 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { advancedSearchProps } from './utils';
+import { filtersStore } from './utils';
 
 import Component from '../../../../app/javascript/components/search/AdvancedSearchFilter';
 
 const defaultProps = {
-  ...advancedSearchProps,
-  onChangeAdvancedSearch: jest.fn(),
+  filtersStore,
   onSubmit: jest.fn(),
   onClear: jest.fn(),
 };

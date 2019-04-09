@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
+import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
 import { getButtonHintString, getFormNameFromId } from './utils';
@@ -15,16 +16,16 @@ import { getButtonHintString, getFormNameFromId } from './utils';
 const parseFormsForSelect2 = (allForms) => allForms
   .map((form) => mapKeys(form, (value, key) => (key === 'name' ? 'text' : key)));
 
+@inject('filtersStore')
+@observer
 class FormFilter extends React.Component {
   static propTypes = {
+    filtersStore: PropTypes.object,
     allForms: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
     })).isRequired,
-    selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-    onSelectForm: PropTypes.func.isRequired,
-    onClearSelection: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -34,8 +35,9 @@ class FormFilter extends React.Component {
   }
 
   handleClearSelection = () => {
-    const { onClearSelection } = this.props;
-    onClearSelection();
+    const { filtersStore } = this.props;
+    const { handleClearFormSelection } = filtersStore;
+    handleClearFormSelection();
 
     /*
      * Select2 doesn't make this easy... wait for state update then close the dropdown.
@@ -45,7 +47,8 @@ class FormFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { allForms, selectedFormIds, onSelectForm, onSubmit } = this.props;
+    const { filtersStore, allForms, onSubmit } = this.props;
+    const { selectedFormIds, handleSelectForm } = filtersStore;
 
     return (
       <Popover
@@ -54,7 +57,7 @@ class FormFilter extends React.Component {
       >
         <Select2
           data={parseFormsForSelect2(allForms)}
-          onSelect={onSelectForm}
+          onSelect={handleSelectForm}
           onUnselect={this.handleClearSelection}
           options={{
             allowClear: true,

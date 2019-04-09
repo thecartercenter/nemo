@@ -36,7 +36,7 @@ exports[`popover renders as expected 1`] = `
         },
       ]
     }
-    onSelect={[MockFunction]}
+    onSelect={[Function]}
     onUnselect={[Function]}
     options={
       Object {
@@ -87,7 +87,7 @@ exports[`renders as expected 1`] = `
             },
           ]
         }
-        onSelect={[MockFunction]}
+        onSelect={[Function]}
         onUnselect={[Function]}
         options={
           Object {

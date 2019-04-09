@@ -1,17 +1,18 @@
 import React from 'react';
 import { shallow, mount } from 'enzyme';
+import { Provider } from 'mobx-react';
 
 import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../testUtils';
-import { allFilterProps } from './utils';
+import { filtersStore } from './utils';
 
 import { CONTROLLER_NAME } from '../../../../app/javascript/components/search/utils';
-import FiltersModel from '../../../../app/javascript/components/search/FiltersModel';
 import { FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
 
 const defaultProps = {
-  ...allFilterProps,
+  filtersStore,
+  // Also pass in initial props.
+  ...filtersStore,
   controllerName: CONTROLLER_NAME.RESPONSES,
-  filtersStore: new FiltersModel(),
 };
 
 it('renders as expected (responses page)', () => {
@@ -30,8 +31,18 @@ it('renders as expected (other page)', () => {
 });
 
 describe('integration', () => {
+  // Re-import Filters with unmocked @inject decorator.
+  jest.resetModules();
+  jest.unmock('mobx-react');
+  // eslint-disable-next-line no-shadow
+  const { FiltersRoot: Component } = require('../../../../app/javascript/components/search/Filters');
+
   suppressErrors(STUB_COMPONENT_WARNINGS);
-  const wrapper = mount(<Component {...defaultProps} />);
+  const wrapper = mount(
+    <Provider filtersStore={filtersStore}>
+      <Component {...defaultProps} />
+    </Provider>,
+  );
   unsuppressAllErrors();
 
   beforeEach(() => window.location.assign.mockClear());

@@ -1,12 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { questionFilterProps } from './utils';
+import { filtersStore } from './utils';
 
 import Component from '../../../../app/javascript/components/search/QuestionFilter';
 
 const defaultProps = {
-  ...questionFilterProps,
+  filtersStore,
   onSubmit: jest.fn(),
 };
 

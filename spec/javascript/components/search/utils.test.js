@@ -5,7 +5,7 @@ import {
   submitSearch,
   isQueryParamTruthy,
 } from '../../../../app/javascript/components/search/utils';
-import { formFilterProps } from './utils';
+import { filtersStore } from './utils';
 
 it('gets hints (0)', () => {
   const result = getButtonHintString([]);
@@ -38,7 +38,7 @@ it('gets filter string (no filters)', () => {
     advancedSearchText: null,
   };
 
-  const result = getFilterString(formFilterProps.allForms, emptyFilters);
+  const result = getFilterString(filtersStore.allForms, emptyFilters);
   expect(result).toMatchSnapshot();
 });
 
@@ -48,7 +48,7 @@ it('gets filter string (all filters)', () => {
     advancedSearchText: 'query',
   };
 
-  const result = getFilterString(formFilterProps.allForms, populatedFilters);
+  const result = getFilterString(filtersStore.allForms, populatedFilters);
   expect(result).toMatchSnapshot();
 });
 

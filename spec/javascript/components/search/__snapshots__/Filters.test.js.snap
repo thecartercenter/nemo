@@ -62,8 +62,6 @@ exports[`renders as expected (other page) 1`] = `
     message="Sorry, something went wrong. Please try reloading the page."
   >
     <AdvancedSearchFilter
-      advancedSearchText="query"
-      onChangeAdvancedSearch={[Function]}
       onClear={[Function]}
       onSubmit={[Function]}
     />
@@ -96,15 +94,8 @@ exports[`renders as expected (responses page) 1`] = `
             },
           ]
         }
-        onClearSelection={[Function]}
-        onSelectForm={[Function]}
         onSubmit={[Function]}
         originalFormIds={
-          Array [
-            "2",
-          ]
-        }
-        selectedFormIds={
           Array [
             "2",
           ]
@@ -112,16 +103,9 @@ exports[`renders as expected (responses page) 1`] = `
       />
       <QuestionFilter
         onSubmit={[Function]}
-        selectedFormIds={
-          Array [
-            "2",
-          ]
-        }
       />
     </ButtonToolbar>
     <AdvancedSearchFilter
-      advancedSearchText="query"
-      onChangeAdvancedSearch={[Function]}
       onClear={[Function]}
       onSubmit={[Function]}
     />

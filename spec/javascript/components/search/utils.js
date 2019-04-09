@@ -1,4 +1,6 @@
-export const formFilterProps = {
+import FiltersModel from '../../../../app/javascript/components/search/FiltersModel';
+
+export const filtersStore = Object.assign(new FiltersModel(), {
   allForms: [
     {
       id: '1',
@@ -16,20 +18,5 @@ export const formFilterProps = {
   selectedFormIds: [
     '2',
   ],
-  originalFormIds: [
-  ],
-};
-
-export const questionFilterProps = {
-  selectedFormIds: formFilterProps.selectedFormIds,
-};
-
-export const advancedSearchProps = {
   advancedSearchText: 'query',
-};
-
-export const allFilterProps = {
-  ...formFilterProps,
-  ...questionFilterProps,
-  ...advancedSearchProps,
-};
+});

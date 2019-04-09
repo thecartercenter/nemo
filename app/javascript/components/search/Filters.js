@@ -55,21 +55,16 @@ class FiltersRoot extends React.Component {
   }
 
   renderFilterButtons = () => {
-    const { filtersStore, allForms, selectedFormIds: originalFormIds } = this.props;
-    const { selectedFormIds, handleSelectForm, handleClearFormSelection } = filtersStore;
+    const { allForms, selectedFormIds: originalFormIds } = this.props;
 
     return (
       <ButtonToolbar>
         <FormFilter
           allForms={allForms}
-          selectedFormIds={selectedFormIds}
           originalFormIds={originalFormIds}
-          onSelectForm={handleSelectForm}
-          onClearSelection={handleClearFormSelection}
           onSubmit={this.handleSubmit}
         />
         <QuestionFilter
-          selectedFormIds={selectedFormIds}
           onSubmit={this.handleSubmit}
         />
       </ButtonToolbar>
@@ -77,8 +72,7 @@ class FiltersRoot extends React.Component {
   }
 
   render() {
-    const { filtersStore, controllerName } = this.props;
-    const { advancedSearchText, handleChangeAdvancedSearch } = filtersStore;
+    const { controllerName } = this.props;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
@@ -87,8 +81,6 @@ class FiltersRoot extends React.Component {
           {shouldRenderButtons ? this.renderFilterButtons() : null}
 
           <AdvancedSearchFilter
-            advancedSearchText={advancedSearchText}
-            onChangeAdvancedSearch={handleChangeAdvancedSearch}
             onClear={this.handleClearFilters}
             onSubmit={this.handleSubmit}
           />
@@ -107,5 +99,4 @@ const Filters = (props) => (
 export default Filters;
 
 // Root component for testing.
-const { wrappedComponent } = FiltersRoot;
-export { wrappedComponent as FiltersRoot };
+export { FiltersRoot };
