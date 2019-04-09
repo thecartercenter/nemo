@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer, Provider } from 'mobx-react';
+import { observer, inject, Provider } from 'mobx-react';
 
+import { createQuestionFilterStore } from './search/utils';
 import ConditionSetFormField from './ConditionSetFormField';
 
+@inject('questionStore')
 @observer
 class DisplayLogicFormFieldRoot extends React.Component {
   static propTypes = {
@@ -82,7 +84,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
 }
 
 const DisplayLogicFormField = (props) => (
-  <Provider>
+  <Provider questionStore={createQuestionFilterStore('displayLogic')}>
     <DisplayLogicFormFieldRoot {...props} />
   </Provider>
 );

@@ -2,6 +2,7 @@ import isEmpty from 'lodash/isEmpty';
 import queryString from 'query-string';
 
 import FiltersModel from './FiltersModel';
+import QuestionFilterModel from './QuestionFilterModel';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
@@ -12,12 +13,35 @@ export const CONTROLLER_NAME = {
   RESPONSES: '"responses"',
 };
 
+/**
+ * Returns a new instance of FiltersModel.
+ *
+ * Generally this should be added to a top-level Provider and only created once.
+ */
 export function createFiltersStore() {
   const store = new FiltersModel();
 
   if (process.env.NODE_ENV === 'development') {
     // Debug helper.
     window.store = store;
+  }
+
+  return store;
+}
+
+/**
+ * Returns a new instance of QuestionFilterModel.
+ *
+ * Generally this should be added to a top-level Provider and created
+ * once per group of questions.
+ */
+export function createQuestionFilterStore(debugName) {
+  const store = new QuestionFilterModel();
+
+  if (process.env.NODE_ENV === 'development') {
+    // Debug helper.
+    window.store = window.store || {};
+    window.store[debugName] = store;
   }
 
   return store;

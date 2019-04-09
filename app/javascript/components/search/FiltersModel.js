@@ -11,6 +11,9 @@ class FiltersModel {
   selectedFormIds = [];
 
   @observable
+  questionFilters = [];
+
+  @observable
   advancedSearchText = '';
 
   @action
