@@ -23,6 +23,9 @@ export function createFiltersStore() {
 
   if (process.env.NODE_ENV === 'development') {
     // Debug helper.
+    if (window.store) {
+      console.warn('WARN: Trying to create store that already exists.');
+    }
     window.store = store;
   }
 
@@ -41,6 +44,9 @@ export function createQuestionFilterStore(debugName) {
   if (process.env.NODE_ENV === 'development') {
     // Debug helper.
     window.store = window.store || {};
+    if (window.store[debugName]) {
+      console.warn('WARN: Trying to create store that already exists:', debugName);
+    }
     window.store[debugName] = store;
   }
 
