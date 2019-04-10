@@ -1,5 +1,7 @@
 import { observable, action, reaction } from 'mobx';
 
+import ConditionModel from './ConditionModel';
+
 /**
  * Represents a set of conditions (e.g. ['Question Foo' Equals 'Bar', ...]).
  */
@@ -37,16 +39,9 @@ class ConditionSetModel {
 
   @action
   handleAddClick = () => {
-    const { formId, conditions, refableQings, conditionableId, conditionableType } = this;
-
-    this.conditions = conditions.concat([{
+    this.conditions.push(new ConditionModel({
       key: Math.round(Math.random() * 100000000),
-      formId,
-      refableQings,
-      operatorOptions: [],
-      conditionableId,
-      conditionableType,
-    }]);
+    }));
   }
 
   @action

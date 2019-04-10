@@ -1,69 +1,23 @@
 import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 
 import ConditionValueField from './ConditionValueField';
 import FormSelect from './FormSelect';
 
+@inject('conditionSetStore')
+@observer
 class ConditionFormField extends React.Component {
   static propTypes = {
-    hide: PropTypes.bool.isRequired,
-
-    // TODO: Describe these prop types.
-    /* eslint-disable react/forbid-prop-types */
-    formId: PropTypes.any,
-    conditionableId: PropTypes.any,
-    conditionableType: PropTypes.any,
-    optionSetId: PropTypes.any,
-    optionNodeId: PropTypes.any,
-    value: PropTypes.any,
-    namePrefix: PropTypes.any,
-    index: PropTypes.any,
-    id: PropTypes.any,
-    refQingId: PropTypes.any,
-    refableQings: PropTypes.any,
-    op: PropTypes.any,
-    operatorOptions: PropTypes.any,
-    /* eslint-enable */
+    conditionSetStore: PropTypes.object,
+    condition: PropTypes.object,
+    index: PropTypes.number,
   };
 
-  constructor(props) {
-    super(props);
-
-    const {
-      formId,
-      conditionableId,
-      conditionableType,
-      optionSetId,
-      optionNodeId,
-      value,
-      namePrefix,
-      index,
-      id,
-      refQingId,
-      refableQings,
-      op,
-      operatorOptions,
-    } = this.props;
-
-    this.state = {
-      formId,
-      conditionableId,
-      conditionableType,
-      optionSetId,
-      optionNodeId,
-      value,
-      namePrefix,
-      index,
-      id,
-      refQingId,
-      refableQings,
-      op,
-      operatorOptions,
-    };
-  }
-
   getFieldData = async (refQingId) => {
+    const { condition } = this.props;
+
     ELMO.app.loading(true);
     const url = this.buildUrl(refQingId);
     try {
@@ -74,7 +28,7 @@ class ConditionFormField extends React.Component {
       ELMO.app.loading(false);
 
       // We set option node ID to null since the new refQing may have a new option set.
-      this.setState(Object.assign(response, { optionNodeId: null }));
+      Object.assign(condition, response, { optionNodeId: null });
     } catch (error) {
       ELMO.app.loading(false);
       console.error('Failed to getFieldData:', error);
@@ -86,7 +40,7 @@ class ConditionFormField extends React.Component {
   }
 
   buildUrl = (refQingId) => {
-    const { id, formId, conditionableId, conditionableType } = this.state;
+    const { conditionSetStore: { formId, conditionableId, conditionableType }, condition: { id } } = this.props;
     const params = {
       condition_id: id || '',
       ref_qing_id: refQingId,
@@ -105,11 +59,12 @@ class ConditionFormField extends React.Component {
   }
 
   handleRemoveClick = () => {
-    this.setState({ remove: true });
+    const { condition } = this.props;
+    condition.remove = true;
   }
 
   buildValueProps = (namePrefix, idPrefix) => {
-    const { optionSetId, optionNodeId, value } = this.state;
+    const { condition: { optionSetId, optionNodeId, value } } = this.props;
 
     if (optionSetId) {
       return {
@@ -134,13 +89,16 @@ class ConditionFormField extends React.Component {
   }
 
   shouldDestroy = () => {
-    const { hide } = this.props;
-    const { remove } = this.state;
+    const { conditionSetStore: { hide }, condition: { remove } } = this.props;
     return remove || hide;
   }
 
   render() {
-    const { namePrefix: rawNamePrefix, index, id, refQingId, refableQings, op, operatorOptions } = this.state;
+    const {
+      conditionSetStore: { namePrefix: rawNamePrefix, refableQings },
+      condition: { id, refQingId, op, operatorOptions },
+      index,
+    } = this.props;
     const namePrefix = `${rawNamePrefix}[${index}]`;
     const idPrefix = namePrefix.replace(/[[\]]/g, '_');
     const idFieldProps = {

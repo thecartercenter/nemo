@@ -13,20 +13,18 @@ class ConditionSetFormField extends React.Component {
 
   render() {
     const { conditionSetStore } = this.props;
-    const { conditions, namePrefix, hide, handleAddClick } = conditionSetStore;
+    const { conditions, hide, handleAddClick } = conditionSetStore;
 
     return (
       <div
         className="condition-set"
         style={{ display: hide ? 'none' : '' }}
       >
-        {conditions.map((props, index) => (
+        {conditions.map((condition, index) => (
           <ConditionFormField
-            hide={hide}
+            key={condition.key || condition.id}
             index={index}
-            key={props.key || props.id}
-            namePrefix={namePrefix}
-            {...props}
+            condition={condition}
           />
         ))}
         {/* TODO: Improve a11y. */}
