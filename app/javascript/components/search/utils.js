@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty';
 import queryString from 'query-string';
 
 import FiltersModel from './FiltersModel';
-import QuestionFilterModel from './QuestionFilterModel';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
@@ -27,27 +26,6 @@ export function createFiltersStore() {
       console.warn('WARN: Trying to create store that already exists.');
     }
     window.store = store;
-  }
-
-  return store;
-}
-
-/**
- * Returns a new instance of QuestionFilterModel.
- *
- * Generally this should be added to a top-level Provider and created
- * once per group of questions.
- */
-export function createQuestionFilterStore(debugName) {
-  const store = new QuestionFilterModel();
-
-  if (process.env.NODE_ENV === 'development') {
-    // Debug helper.
-    window.store = window.store || {};
-    if (window.store[debugName]) {
-      console.warn('WARN: Trying to create store that already exists:', debugName);
-    }
-    window.store[debugName] = store;
   }
 
   return store;

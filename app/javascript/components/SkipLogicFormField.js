@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { observer, inject, Provider } from 'mobx-react';
 
 import SkipRuleSetFormField from './SkipRuleSetFormField';
-import { createQuestionFilterStore } from './search/utils';
+import { createConditionSetStore } from './ConditionSetModel/utils';
 
-@inject('questionStore')
+@inject('conditionSetStore')
 @observer
 class SkipLogicFormFieldRoot extends React.Component {
   static propTypes = {
@@ -61,7 +61,7 @@ class SkipLogicFormFieldRoot extends React.Component {
 }
 
 const SkipLogicFormField = (props) => (
-  <Provider questionStore={createQuestionFilterStore('skipLogic')}>
+  <Provider conditionSetStore={createConditionSetStore('skipLogic')}>
     <SkipLogicFormFieldRoot {...props} />
   </Provider>
 );
