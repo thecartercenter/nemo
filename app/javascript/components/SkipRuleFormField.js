@@ -1,11 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 
 import ConditionSetFormField from './ConditionSetFormField';
 import FormSelect from './FormSelect';
 
+@inject('conditionSetStore')
+@observer
 class SkipRuleFormField extends React.Component {
   static propTypes = {
+    conditionSetStore: PropTypes.object.isRequired,
     destItemId: PropTypes.string,
     destination: PropTypes.string.isRequired,
     hide: PropTypes.bool.isRequired,
@@ -28,6 +32,8 @@ class SkipRuleFormField extends React.Component {
     super(props);
 
     const {
+      conditionSetStore,
+      namePrefix,
       remove,
       id,
       laterItems,
@@ -45,13 +51,21 @@ class SkipRuleFormField extends React.Component {
       id,
       laterItems,
       skipIf,
-      conditions,
-      refableQings,
-      formId,
       destItemIdOrEnd,
       destination,
       destItemId,
     };
+
+    // Directly assign initial values to the store.
+    Object.assign(conditionSetStore, {
+      formId,
+      namePrefix: `${namePrefix}[conditions_attributes]`,
+      conditions,
+      conditionableId: id,
+      conditionableType: 'SkipRule',
+      refableQings,
+      hide: skipIf === 'always',
+    });
   }
 
   destinationOptionChanged = (value) => {
@@ -63,9 +77,10 @@ class SkipRuleFormField extends React.Component {
   }
 
   skipIfChanged = (event) => {
-    this.setState({
-      skipIf: event.target.value,
-    });
+    const { conditionSetStore } = this.props;
+    const skipIf = event.target.value;
+    this.setState({ skipIf });
+    conditionSetStore.hide = skipIf === 'always';
   }
 
   handleRemoveClick = () => {
@@ -103,7 +118,7 @@ class SkipRuleFormField extends React.Component {
   render() {
     const { namePrefix, ruleId } = this.props;
     const {
-      id, destItemIdOrEnd, laterItems, skipIf, conditions, refableQings, formId, destination, destItemId,
+      id, destItemIdOrEnd, laterItems, skipIf, destination, destItemId,
     } = this.state;
     const idFieldProps = {
       type: 'hidden',
@@ -122,15 +137,6 @@ class SkipRuleFormField extends React.Component {
       value: skipIf,
       className: 'form-control',
       onChange: this.skipIfChanged,
-    };
-    const conditionSetProps = {
-      conditions,
-      conditionableId: id,
-      conditionableType: 'SkipRule',
-      refableQings,
-      namePrefix: `${namePrefix}[conditions_attributes]`,
-      formId,
-      hide: skipIf === 'always',
     };
     const destroyFieldProps = {
       type: 'hidden',
@@ -157,7 +163,7 @@ class SkipRuleFormField extends React.Component {
               </a>
             </div>
           </div>
-          <ConditionSetFormField {...conditionSetProps} />
+          <ConditionSetFormField />
           <input {...idFieldProps} />
           <input {...destroyFieldProps} />
           <input

@@ -9,6 +9,8 @@ import ConditionSetFormField from './ConditionSetFormField';
 @observer
 class DisplayLogicFormFieldRoot extends React.Component {
   static propTypes = {
+    conditionSetStore: PropTypes.object.isRequired,
+
     // TODO: Describe these prop types.
     /* eslint-disable react/forbid-prop-types */
     refableQings: PropTypes.any,
@@ -22,12 +24,26 @@ class DisplayLogicFormFieldRoot extends React.Component {
 
   constructor(props) {
     super(props);
-    const { refableQings, id, type, displayIf, displayConditions, formId } = this.props;
-    this.state = { refableQings, id, type, displayIf, displayConditions, formId };
+    const { conditionSetStore, refableQings, id, type, displayIf, displayConditions, formId } = this.props;
+    this.state = { refableQings, id, type, displayIf };
+
+    // Directly assign initial values to the store.
+    Object.assign(conditionSetStore, {
+      formId,
+      namePrefix: `${type}[display_conditions_attributes]`,
+      conditions: displayConditions,
+      conditionableId: id,
+      conditionableType: 'FormItem',
+      refableQings,
+      hide: displayIf === 'always',
+    });
   }
 
   displayIfChanged = (event) => {
-    this.setState({ displayIf: event.target.value });
+    const { conditionSetStore } = this.props;
+    const displayIf = event.target.value;
+    this.setState({ displayIf });
+    conditionSetStore.hide = displayIf === 'always';
   }
 
   displayIfOptionTags = () => {
@@ -44,7 +60,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 
   render() {
-    const { refableQings: rawRefableQings, id, type, displayIf, displayConditions, formId } = this.state;
+    const { refableQings: rawRefableQings, id, type, displayIf } = this.state;
     // Display logic conditions can't reference self, as that doesn't make sense.
     const refableQings = rawRefableQings.filter((qing) => qing.id !== id);
 
@@ -62,22 +78,13 @@ class DisplayLogicFormFieldRoot extends React.Component {
       value: displayIf,
       onChange: this.displayIfChanged,
     };
-    const conditionSetProps = {
-      conditions: displayConditions,
-      conditionableId: id,
-      conditionableType: 'FormItem',
-      refableQings,
-      formId,
-      hide: displayIf === 'always',
-      namePrefix: `${type}[display_conditions_attributes]`,
-    };
 
     return (
       <div className="display-logic-container">
         <select {...displayIfProps}>
           {this.displayIfOptionTags()}
         </select>
-        <ConditionSetFormField {...conditionSetProps} />
+        <ConditionSetFormField />
       </div>
     );
   }

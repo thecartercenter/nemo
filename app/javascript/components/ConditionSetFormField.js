@@ -1,75 +1,59 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 
 import ConditionFormField from './ConditionFormField';
 
+@inject('conditionSetStore')
+@observer
 class ConditionSetFormField extends React.Component {
   static propTypes = {
-    hide: PropTypes.bool,
-    conditions: PropTypes.arrayOf(PropTypes.object),
-
-    // TODO: Describe these prop types.
-    /* eslint-disable react/forbid-prop-types */
-    formId: PropTypes.any,
-    refableQings: PropTypes.any,
-    conditionableId: PropTypes.any,
-    conditionableType: PropTypes.any,
-    namePrefix: PropTypes.any,
-    /* eslint-enable */
+    conditionSetStore: PropTypes.object,
   };
-
-  static defaultProps = {
-    hide: false,
-    conditions: [],
-  };
-
-  constructor(props) {
-    super(props);
-    const { conditions, formId, refableQings, conditionableId, conditionableType, namePrefix } = this.props;
-    // TODO: Improve the `conditions` object;
-    //  it currently provides some of this state to children which is unconventional.
-    // eslint-disable-next-line react/no-unused-state
-    this.state = { conditions, formId, refableQings, conditionableId, conditionableType, namePrefix };
-  }
 
   componentWillMount() {
-    const { hide } = this.props;
+    const { conditionSetStore } = this.props;
+    const { hide } = conditionSetStore;
     if (!hide) {
       this.handleAddBlankCondition();
     }
   }
 
   componentWillReceiveProps(newProps) {
-    const { hide } = this.props;
-    if (hide && !newProps.hide) {
+    // TODO: This logic no longer works because of synchronous updating.
+    const { conditionSetStore: { hide: wasHidden } } = this.props;
+    const { conditionSetStore: { hide: isHidden } } = newProps;
+    if (wasHidden && !isHidden) {
       this.handleAddBlankCondition();
     }
   }
 
   // If about to show the set and it's empty, add a blank condition.
   handleAddBlankCondition = () => {
-    const { conditions } = this.state;
+    const { conditionSetStore } = this.props;
+    const { conditions } = conditionSetStore;
     if (conditions.length === 0) {
       this.handleAddClick();
     }
   }
 
   handleAddClick = () => {
-    this.setState(({ conditions, formId, refableQings, conditionableId, conditionableType }) => ({
-      conditions: conditions.concat([{
-        key: Math.round(Math.random() * 100000000),
-        formId,
-        refableQings,
-        operatorOptions: [],
-        conditionableId,
-        conditionableType,
-      }]),
-    }));
+    const { conditionSetStore } = this.props;
+    const { conditions, formId, refableQings, conditionableId, conditionableType } = conditionSetStore;
+
+    conditionSetStore.conditions = conditions.concat([{
+      key: Math.round(Math.random() * 100000000),
+      formId,
+      refableQings,
+      operatorOptions: [],
+      conditionableId,
+      conditionableType,
+    }]);
   }
 
   render() {
-    const { hide } = this.props;
-    const { conditions, namePrefix } = this.state;
+    const { conditionSetStore } = this.props;
+    const { conditions, namePrefix, hide } = conditionSetStore;
 
     return (
       <div
