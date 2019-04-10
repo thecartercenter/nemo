@@ -11,32 +11,6 @@ class ConditionSetFormField extends React.Component {
     conditionSetStore: PropTypes.object,
   };
 
-  componentWillMount() {
-    const { conditionSetStore } = this.props;
-    const { hide } = conditionSetStore;
-    if (!hide) {
-      this.handleAddBlankCondition();
-    }
-  }
-
-  componentWillReceiveProps(newProps) {
-    // TODO: This logic no longer works because of synchronous updating.
-    const { conditionSetStore: { hide: wasHidden } } = this.props;
-    const { conditionSetStore: { hide: isHidden } } = newProps;
-    if (wasHidden && !isHidden) {
-      this.handleAddBlankCondition();
-    }
-  }
-
-  // If about to show the set and it's empty, add a blank condition.
-  handleAddBlankCondition = () => {
-    const { conditionSetStore } = this.props;
-    const { conditions, handleAddClick } = conditionSetStore;
-    if (conditions.length === 0) {
-      handleAddClick();
-    }
-  }
-
   render() {
     const { conditionSetStore } = this.props;
     const { conditions, namePrefix, hide, handleAddClick } = conditionSetStore;
