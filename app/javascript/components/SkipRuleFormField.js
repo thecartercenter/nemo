@@ -53,6 +53,8 @@ class SkipRuleFormField extends React.Component {
       refableQings,
       formId,
       destItemIdOrEnd,
+      destination,
+      destItemId,
     };
   }
 
