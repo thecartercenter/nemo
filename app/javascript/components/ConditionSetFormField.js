@@ -31,29 +31,15 @@ class ConditionSetFormField extends React.Component {
   // If about to show the set and it's empty, add a blank condition.
   handleAddBlankCondition = () => {
     const { conditionSetStore } = this.props;
-    const { conditions } = conditionSetStore;
+    const { conditions, handleAddClick } = conditionSetStore;
     if (conditions.length === 0) {
-      this.handleAddClick();
+      handleAddClick();
     }
-  }
-
-  handleAddClick = () => {
-    const { conditionSetStore } = this.props;
-    const { conditions, formId, refableQings, conditionableId, conditionableType } = conditionSetStore;
-
-    conditionSetStore.conditions = conditions.concat([{
-      key: Math.round(Math.random() * 100000000),
-      formId,
-      refableQings,
-      operatorOptions: [],
-      conditionableId,
-      conditionableType,
-    }]);
   }
 
   render() {
     const { conditionSetStore } = this.props;
-    const { conditions, namePrefix, hide } = conditionSetStore;
+    const { conditions, namePrefix, hide, handleAddClick } = conditionSetStore;
 
     return (
       <div
@@ -72,7 +58,7 @@ class ConditionSetFormField extends React.Component {
         {/* TODO: Improve a11y. */}
         {/* eslint-disable */}
         <a
-          onClick={this.handleAddClick}
+          onClick={handleAddClick}
           tabIndex="0"
         >
         {/* eslint-enable */}
