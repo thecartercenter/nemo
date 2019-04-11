@@ -63,15 +63,15 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
-  // TODO: Map ID to question title; include `op`; include `value`.
-  const refQingIds = conditionSetStore.conditions
-    .map((condition) => condition.refQingId)
-    .filter(Boolean)
+  // TODO: Map ID to question title.
+  const questionFilters = conditionSetStore.conditions
+    .filter((condition) => condition.refQingId)
+    .map(({ refQingId, op, value }) => `${refQingId} ${op} ${value}`)
     .map((id) => JSON.stringify(id));
 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
-    isEmpty(refQingIds) ? null : `question:(${refQingIds.join('|')})`,
+    isEmpty(questionFilters) ? null : `question:(${questionFilters.join('|')})`,
     advancedSearchText,
   ].filter(Boolean);
 
