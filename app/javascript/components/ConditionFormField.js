@@ -15,6 +15,23 @@ class ConditionFormField extends React.Component {
     index: PropTypes.number,
   };
 
+  handleChangeRefQing = (refQingId) => {
+    const { condition } = this.props;
+    condition.refQingId = refQingId;
+
+    this.getFieldData(refQingId);
+  }
+
+  handleChangeOp = (opValue) => {
+    const { condition } = this.props;
+    condition.op = opValue;
+  }
+
+  handleChangeValue = (value) => {
+    const { condition } = this.props;
+    condition.value = value;
+  }
+
   getFieldData = async (refQingId) => {
     const { condition } = this.props;
 
@@ -33,10 +50,6 @@ class ConditionFormField extends React.Component {
       ELMO.app.loading(false);
       console.error('Failed to getFieldData:', error);
     }
-  }
-
-  updateFieldData = (refQingId) => {
-    this.getFieldData(refQingId);
   }
 
   buildUrl = (refQingId) => {
@@ -75,6 +88,7 @@ class ConditionFormField extends React.Component {
         key: `${idPrefix}_option_node_ids_`,
         optionSetId,
         optionNodeId,
+        onChange: this.handleChangeValue,
       };
     }
 
@@ -85,6 +99,7 @@ class ConditionFormField extends React.Component {
       id: `${idPrefix}_value`,
       key: `${idPrefix}_value`,
       value: value || '',
+      onChange: this.handleChangeValue,
     };
   }
 
@@ -114,7 +129,7 @@ class ConditionFormField extends React.Component {
       value: refQingId || '',
       options: this.formatRefQingOptions(refableQings),
       prompt: I18n.t('condition.ref_qing_prompt'),
-      onChange: this.updateFieldData,
+      onChange: this.handleChangeRefQing,
     };
     const operatorFieldProps = {
       name: `${namePrefix}[op]`,
@@ -122,6 +137,7 @@ class ConditionFormField extends React.Component {
       value: op || '',
       options: operatorOptions,
       includeBlank: false,
+      onChange: this.handleChangeOp,
     };
     const destroyFieldProps = {
       type: 'hidden',

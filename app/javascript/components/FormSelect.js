@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 class FormSelect extends React.Component {
   static propTypes = {
-    onChange: PropTypes.func,
     id: PropTypes.string,
     includeBlank: PropTypes.bool,
     name: PropTypes.string,
@@ -13,6 +12,7 @@ class FormSelect extends React.Component {
     })).isRequired,
     prompt: PropTypes.string,
     value: PropTypes.node,
+    onChange: PropTypes.func,
   };
 
   static defaultProps = {

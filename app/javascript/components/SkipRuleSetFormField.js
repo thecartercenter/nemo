@@ -49,21 +49,22 @@ class SkipRuleSetFormField extends React.Component {
     const { hide } = this.props;
     const { skipRules, formId, laterItems, type, refableQings } = this.state;
 
+    // TODO: Listen for changes to update the store (not currently needed).
     return (
       <div
         className="skip-rule-set"
         style={{ display: hide ? 'none' : '' }}
       >
-        {skipRules.map((props, index) => (
+        {skipRules.map((rule, index) => (
           <SkipRuleFormField
             formId={formId}
             hide={hide}
-            key={props.key || props.id}
+            key={rule.key || rule.id}
             laterItems={laterItems}
             ruleId={`rule-${index + 1}`}
             namePrefix={`${type}[skip_rules_attributes][${index}]`}
             refableQings={refableQings}
-            {...props}
+            {...rule}
           />
         ))}
         <div

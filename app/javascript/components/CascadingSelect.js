@@ -8,6 +8,7 @@ class CascadingSelect extends React.Component {
   static propTypes = {
     optionNodeId: PropTypes.string,
     optionSetId: PropTypes.string.isRequired,
+    onChange: PropTypes.func,
 
     // TODO: Describe these prop types.
     /* eslint-disable react/forbid-prop-types */
@@ -51,10 +52,17 @@ class CascadingSelect extends React.Component {
     }
   }
 
-  // Refresh data if the selected node changed.
-  nodeChanged = (newNodeId) => {
+  nodeChanged = (isLastLevel) => (newNodeId) => {
+    const { onChange } = this.props;
     const { optionSetId } = this.state;
-    this.getData(optionSetId, newNodeId);
+
+    if (onChange) {
+      onChange(newNodeId);
+    }
+
+    if (!isLastLevel) {
+      this.getData(optionSetId, newNodeId);
+    }
   }
 
   buildUrl = (setId, nodeId) => {
@@ -72,7 +80,7 @@ class CascadingSelect extends React.Component {
       value: level.selected,
       options: level.options,
       prompt: this.optionPrompt(level),
-      onChange: isLastLevel ? null : this.nodeChanged,
+      onChange: this.nodeChanged(isLastLevel),
     };
   }
 

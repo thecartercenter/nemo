@@ -9,10 +9,11 @@ class ConditionValueField extends React.Component {
     name: PropTypes.string,
     type: PropTypes.string.isRequired,
     value: PropTypes.string,
+    onChange: PropTypes.func,
   };
 
   render() {
-    const { type, value, id, name } = this.props;
+    const { type, value, id, name, onChange } = this.props;
 
     if (type === 'cascading_select') {
       return <CascadingSelect {...this.props} />;
@@ -26,6 +27,7 @@ class ConditionValueField extends React.Component {
         key="input"
         name={name}
         type="text"
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
       />
     );
   }
