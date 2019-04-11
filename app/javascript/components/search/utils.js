@@ -59,12 +59,19 @@ export function getFormNameFromId(allForms, searchId) {
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString({ allForms, selectedFormIds, advancedSearchText }) {
+export function getFilterString({ allForms, selectedFormIds, conditionSetStore, advancedSearchText }) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
+  // TODO: Map ID to question title; include `op`; include `value`.
+  const refQingIds = conditionSetStore.conditions
+    .map((condition) => condition.refQingId)
+    .filter(Boolean)
+    .map((id) => JSON.stringify(id));
+
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
+    isEmpty(refQingIds) ? null : `question:(${refQingIds.join('|')})`,
     advancedSearchText,
   ].filter(Boolean);
 
