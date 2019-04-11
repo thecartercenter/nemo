@@ -1,3 +1,4 @@
+import get from 'lodash/get';
 import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -5,6 +6,11 @@ import { inject, observer } from 'mobx-react';
 
 import ConditionValueField from './ConditionValueField';
 import FormSelect from './FormSelect';
+
+/** Return true if the given op is an available option. */
+function opIsValid(op, operatorOptions) {
+  return (operatorOptions || []).some(({ id }) => op === id);
+}
 
 @inject('conditionSetStore')
 @observer
@@ -44,8 +50,21 @@ class ConditionFormField extends React.Component {
       // Need to put this before we set state because setting state may trigger a new one.
       ELMO.app.loading(false);
 
-      // We set option node ID to null since the new refQing may have a new option set.
-      Object.assign(condition, response, { optionNodeId: null });
+      const newCondition = {
+        ...response,
+        // We set option node ID to null since the new refQing may have a new option set.
+        optionNodeId: null,
+        // Keep the old value and op if none was provided by the server.
+        value: response.value || condition.value,
+        op: response.op || condition.op,
+      };
+
+      // Default to the first op if the current one is invalid.
+      if (!opIsValid(newCondition.op, newCondition.operatorOptions)) {
+        newCondition.op = get(newCondition, 'operatorOptions[0].id') || null;
+      }
+
+      Object.assign(condition, newCondition);
     } catch (error) {
       ELMO.app.loading(false);
       console.error('Failed to getFieldData:', error);

@@ -22,7 +22,7 @@ class ConditionValueField extends React.Component {
     return (
       <input
         className="text form-control"
-        defaultValue={value}
+        value={value}
         id={id}
         key="input"
         name={name}

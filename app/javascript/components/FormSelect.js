@@ -46,7 +46,7 @@ class FormSelect extends React.Component {
       name,
       id,
       key: id,
-      defaultValue: value,
+      value,
       onChange: onChange ? (e) => onChange(e.target.value) : undefined,
     };
 
