@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { inject, observer } from 'mobx-react';
+import { inject, observer, Provider } from 'mobx-react';
 
+import { provideConditionSetStore } from './ConditionSetModel/utils';
 import ConditionSetFormField from './ConditionSetFormField';
 import FormSelect from './FormSelect';
 
 @inject('conditionSetStore')
 @observer
-class SkipRuleFormField extends React.Component {
+class SkipRuleFormFieldRoot extends React.Component {
   static propTypes = {
     conditionSetStore: PropTypes.object.isRequired,
     destItemId: PropTypes.string,
@@ -181,5 +182,12 @@ class SkipRuleFormField extends React.Component {
     );
   }
 }
+
+const SkipRuleFormField = (props) => (
+  // eslint-disable-next-line react/prop-types, react/destructuring-assignment
+  <Provider conditionSetStore={provideConditionSetStore(`skip-${props.ruleId}`)}>
+    <SkipRuleFormFieldRoot {...props} />
+  </Provider>
+);
 
 export default SkipRuleFormField;

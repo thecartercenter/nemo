@@ -12,23 +12,25 @@ export const CONTROLLER_NAME = {
   RESPONSES: '"responses"',
 };
 
+/** Cache. */
+let filtersStore = null;
+
 /**
  * Returns a new instance of FiltersModel.
  *
- * Generally this should be added to a top-level Provider and only created once.
+ * Generally this should be added to a top-level Provider and only used once.
  */
-export function createFiltersStore() {
-  const store = new FiltersModel();
+export function provideFiltersStore() {
+  if (!filtersStore) {
+    filtersStore = new FiltersModel();
 
-  if (process.env.NODE_ENV === 'development') {
-    // Debug helper.
-    if (window.store) {
-      console.warn('WARN: Trying to create store that already exists.');
+    if (process.env.NODE_ENV === 'development') {
+      // Debug helper.
+      window.store = filtersStore;
     }
-    window.store = store;
   }
 
-  return store;
+  return filtersStore;
 }
 
 /**

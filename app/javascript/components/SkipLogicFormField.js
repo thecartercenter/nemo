@@ -1,11 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Provider } from 'mobx-react';
 
 import SkipRuleSetFormField from './SkipRuleSetFormField';
-import { createConditionSetStore } from './ConditionSetModel/utils';
 
-class SkipLogicFormFieldRoot extends React.Component {
+class SkipLogicFormField extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
     skipRules: PropTypes.arrayOf(PropTypes.object).isRequired,
@@ -57,11 +55,5 @@ class SkipLogicFormFieldRoot extends React.Component {
     );
   }
 }
-
-const SkipLogicFormField = (props) => (
-  <Provider conditionSetStore={createConditionSetStore('skipLogic')}>
-    <SkipLogicFormFieldRoot {...props} />
-  </Provider>
-);
 
 export default SkipLogicFormField;

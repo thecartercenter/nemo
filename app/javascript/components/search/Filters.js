@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import { observer, inject, Provider } from 'mobx-react';
 
-import { CONTROLLER_NAME, createFiltersStore, getFilterString, submitSearch } from './utils';
+import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from './utils';
 import ErrorBoundary from '../ErrorBoundary';
 import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
@@ -90,7 +90,7 @@ class FiltersRoot extends React.Component {
 }
 
 const Filters = (props) => {
-  const filtersStore = createFiltersStore();
+  const filtersStore = provideFiltersStore();
   const { conditionSetStore } = filtersStore;
   return (
     <Provider filtersStore={filtersStore} conditionSetStore={conditionSetStore}>

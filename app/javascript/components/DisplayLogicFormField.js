@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer, inject, Provider } from 'mobx-react';
 
-import { createConditionSetStore } from './ConditionSetModel/utils';
+import { provideConditionSetStore } from './ConditionSetModel/utils';
 import ConditionSetFormField from './ConditionSetFormField';
 
 @inject('conditionSetStore')
@@ -91,7 +91,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
 }
 
 const DisplayLogicFormField = (props) => (
-  <Provider conditionSetStore={createConditionSetStore('displayLogic')}>
+  <Provider conditionSetStore={provideConditionSetStore('displayLogic')}>
     <DisplayLogicFormFieldRoot {...props} />
   </Provider>
 );
