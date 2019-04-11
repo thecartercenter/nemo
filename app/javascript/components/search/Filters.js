@@ -89,11 +89,15 @@ class FiltersRoot extends React.Component {
   }
 }
 
-const Filters = (props) => (
-  <Provider filtersStore={createFiltersStore()}>
-    <FiltersRoot {...props} />
-  </Provider>
-);
+const Filters = (props) => {
+  const filtersStore = createFiltersStore();
+  const { conditionSetStore } = filtersStore;
+  return (
+    <Provider filtersStore={filtersStore} conditionSetStore={conditionSetStore}>
+      <FiltersRoot {...props} />
+    </Provider>
+  );
+};
 
 export default Filters;
 
