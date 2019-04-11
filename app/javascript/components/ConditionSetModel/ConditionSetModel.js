@@ -25,7 +25,7 @@ class ConditionSetModel {
   refableQings = [];
 
   @observable
-  hide = false;
+  hide;
 
   constructor() {
     // If about to show the set and it's empty, add a blank condition.

@@ -1,6 +1,10 @@
-import { action, observable } from 'mobx';
+import { action, observable, reaction } from 'mobx';
+
+import ConditionSetModel from '../ConditionSetModel/ConditionSetModel';
 
 class FiltersModel {
+  conditionSetStore = new ConditionSetModel();
+
   @observable
   allForms = [];
 
@@ -11,10 +15,19 @@ class FiltersModel {
   selectedFormIds = [];
 
   @observable
-  conditionSets = [];
-
-  @observable
   advancedSearchText = '';
+
+  constructor() {
+    // Update conditionSet IDs when selected forms change.
+    reaction(
+      () => this.selectedFormIds,
+      (selectedFormIds) => {
+        const selectedFormId = selectedFormIds[0] || '';
+        this.conditionSetStore.conditionableId = selectedFormId;
+        this.conditionSetStore.formId = selectedFormId;
+      },
+    );
+  }
 
   @action
   handleSelectForm = (event) => {

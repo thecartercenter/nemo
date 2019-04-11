@@ -17,9 +17,18 @@ class QuestionFilter extends React.Component {
     onSubmit: PropTypes.func.isRequired,
   };
 
-  state = {
-    refableQings: [],
-  };
+  constructor(props) {
+    super(props);
+
+    const { filtersStore: { conditionSetStore } } = this.props;
+
+    // Set some known initial values.
+    Object.assign(conditionSetStore, {
+      namePrefix: 'questioning[display_conditions_attributes]',
+      conditionableType: 'FormItem',
+      hide: false,
+    });
+  }
 
   componentWillMount() {
     // TODO: Also handle updating data on change.
@@ -27,11 +36,13 @@ class QuestionFilter extends React.Component {
   }
 
   getData = async () => {
+    const { filtersStore: { conditionSetStore } } = this.props;
+
     ELMO.app.loading(true);
     const url = this.buildUrl();
     try {
       const { refableQings } = await $.ajax(url);
-      this.setState({ refableQings });
+      conditionSetStore.refableQings = refableQings;
     } catch (error) {
       console.error('Failed to getData:', error);
     } finally {
@@ -57,8 +68,8 @@ class QuestionFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { onSubmit } = this.props;
-    const { refableQings } = this.state;
+    const { filtersStore, onSubmit } = this.props;
+    const { conditionSetStore: { refableQings } } = filtersStore;
     const formId = this.getSelectedFormId();
 
     return (
