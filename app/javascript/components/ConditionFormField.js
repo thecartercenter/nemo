@@ -54,9 +54,9 @@ class ConditionFormField extends React.Component {
         ...response,
         // We set option node ID to null since the new refQing may have a new option set.
         optionNodeId: null,
-        // Keep the old value and op if none was provided by the server.
-        value: response.value || condition.value,
-        op: response.op || condition.op,
+        // Prefer the existing value and op if they've been set locally.
+        value: condition.value || response.value,
+        op: condition.op || response.op,
       };
 
       // Default to the first op if the current one is invalid.

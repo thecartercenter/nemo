@@ -49,7 +49,6 @@ class SkipRuleSetFormField extends React.Component {
     const { hide } = this.props;
     const { skipRules, formId, laterItems, type, refableQings } = this.state;
 
-    // TODO: Listen for changes to update the store (not currently needed).
     return (
       <div
         className="skip-rule-set"
