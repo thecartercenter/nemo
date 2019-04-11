@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer, inject, Provider } from 'mobx-react';
+import { Provider } from 'mobx-react';
 
 import SkipRuleSetFormField from './SkipRuleSetFormField';
 import { createConditionSetStore } from './ConditionSetModel/utils';
 
-@inject('conditionSetStore')
-@observer
 class SkipLogicFormFieldRoot extends React.Component {
   static propTypes = {
     type: PropTypes.string.isRequired,
