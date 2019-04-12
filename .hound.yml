@@ -3,7 +3,7 @@ ruby:
   enabled: true
   config_file: .rubocop.yml
 eslint:
-  enabled: true
+  enabled: false
   config_file: .eslintrc.yml
 coffeescript:
   enabled: true
