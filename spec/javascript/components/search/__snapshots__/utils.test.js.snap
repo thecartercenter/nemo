@@ -6,9 +6,9 @@ exports[`checks if param is truthy 2`] = `true`;
 
 exports[`checks if param is truthy 3`] = `false`;
 
-exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\") query"`;
+exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\") question:(\\"1 eq 5\\") query"`;
 
-exports[`gets filter string (no filters) 1`] = `""`;
+exports[`gets filter string (no filters) 1`] = `"question:(\\"1 eq 5\\")"`;
 
 exports[`gets form name (found) 1`] = `"One"`;
 

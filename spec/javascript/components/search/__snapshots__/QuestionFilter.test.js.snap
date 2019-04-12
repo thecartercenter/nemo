@@ -22,7 +22,22 @@ exports[`popover renders as expected 1`] = `
   <ConditionSetFormField
     conditionableId="2"
     conditionableType="FormItem"
-    refableQings={Array []}
+    refableQings={
+      Array [
+        Object {
+          "code": "One",
+          "fullDottedRank": "1",
+          "id": "1",
+          "rank": 1,
+        },
+        Object {
+          "code": "Two",
+          "fullDottedRank": "2",
+          "id": "2",
+          "rank": 2,
+        },
+      ]
+    }
   />
   <div
     className="btn-apply-container"
@@ -49,6 +64,22 @@ exports[`renders as expected 1`] = `
       <ConditionSetFormField
         conditionableId="2"
         conditionableType="FormItem"
+        refableQings={
+          Array [
+            Object {
+              "code": "One",
+              "fullDottedRank": "1",
+              "id": "1",
+              "rank": 1,
+            },
+            Object {
+              "code": "Two",
+              "fullDottedRank": "2",
+              "id": "2",
+              "rank": 2,
+            },
+          ]
+        }
       />
       <div
         className="btn-apply-container"
