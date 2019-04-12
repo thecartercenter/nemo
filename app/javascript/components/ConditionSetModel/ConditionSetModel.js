@@ -27,12 +27,20 @@ class ConditionSetModel {
   @observable
   hide;
 
-  constructor() {
+  constructor(initialValues) {
+    Object.assign(this, initialValues);
+
+    if (!initialValues.hide) {
+      this.handleAddBlankCondition();
+    }
+
     // If about to show the set and it's empty, add a blank condition.
     reaction(
       () => this.hide,
       (hide) => {
-        if (!hide) this.handleAddBlankCondition();
+        if (!hide) {
+          this.handleAddBlankCondition();
+        }
       },
     );
   }

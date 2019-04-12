@@ -1,9 +1,17 @@
-import { action, observable, reaction } from 'mobx';
+import isEmpty from 'lodash/isEmpty';
+import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../ConditionSetModel/ConditionSetModel';
 
+// Empty model to be used for resetting the store as needed.
+const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({
+  namePrefix: 'questioning[display_conditions_attributes]',
+  conditionableType: 'FormItem',
+  hide: false,
+})));
+
 class FiltersModel {
-  conditionSetStore = new ConditionSetModel();
+  conditionSetStore = new ConditionSetModel(initialConditionSetData);
 
   @observable
   allForms = [];
@@ -17,14 +25,25 @@ class FiltersModel {
   @observable
   advancedSearchText = '';
 
-  constructor() {
+  @computed
+  get selectedFormId() {
+    return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
+  }
+
+  constructor(initialValues) {
+    Object.assign(this, initialValues);
+
     // Update conditionSet IDs when selected forms change.
     reaction(
-      () => this.selectedFormIds,
-      (selectedFormIds) => {
-        const selectedFormId = selectedFormIds[0] || '';
-        this.conditionSetStore.conditionableId = selectedFormId;
-        this.conditionSetStore.formId = selectedFormId;
+      () => this.selectedFormId,
+      (selectedFormId) => {
+        if (this.conditionSetStore.formId !== selectedFormId) {
+          // Reset the entire store because the available questions will have changed.
+          Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {
+            conditionableId: selectedFormId,
+            formId: selectedFormId,
+          });
+        }
       },
     );
   }

@@ -17,19 +17,6 @@ class QuestionFilter extends React.Component {
     onSubmit: PropTypes.func.isRequired,
   };
 
-  constructor(props) {
-    super(props);
-
-    const { filtersStore: { conditionSetStore } } = this.props;
-
-    // Set some known initial values.
-    Object.assign(conditionSetStore, {
-      namePrefix: 'questioning[display_conditions_attributes]',
-      conditionableType: 'FormItem',
-      hide: false,
-    });
-  }
-
   componentWillMount() {
     // TODO: Also handle updating data on change.
     this.getData();
