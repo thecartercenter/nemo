@@ -58,6 +58,14 @@ export function getFormNameFromId(allForms, searchId) {
 }
 
 /**
+ * Given a refQingId, find it in the list of all questions and return the name.
+ */
+export function getQuestionNameFromId(allQuestions, searchId) {
+  const question = allQuestions.find(({ id }) => searchId === id);
+  return (question && question.code) || 'Unknown';
+}
+
+/**
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
@@ -65,10 +73,10 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
-  // TODO: Map ID to question title.
+  const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
     .filter((condition) => condition.refQingId)
-    .map(({ refQingId, op, value }) => `${refQingId} ${op} ${value}`)
+    .map(({ refQingId, op, value }) => `${getQuestionNameFromId(allQuestions, refQingId)} ${op} ${value}`)
     .map((id) => JSON.stringify(id));
 
   const parts = [
