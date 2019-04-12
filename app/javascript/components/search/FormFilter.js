@@ -43,7 +43,7 @@ class FormFilter extends React.Component {
 
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;
-    const { allForms, selectedFormIds, handleSelectForm } = filtersStore;
+    const { allForms, selectedFormId, handleSelectForm } = filtersStore;
 
     return (
       <Popover
@@ -61,7 +61,7 @@ class FormFilter extends React.Component {
             width: '100%',
           }}
           ref={this.select2}
-          value={selectedFormIds && selectedFormIds[0]}
+          value={selectedFormId}
         />
 
         <div className="btn-apply-container">

@@ -47,17 +47,9 @@ class QuestionFilter extends React.Component {
     return `${url}?${queryString.stringify(params)}`;
   }
 
-  getSelectedFormId = () => {
-    const { filtersStore } = this.props;
-    const { selectedFormIds } = filtersStore;
-    // For now we can assume only one form is selected at once.
-    return selectedFormIds[0] || '';
-  }
-
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;
-    const { conditionSetStore: { refableQings } } = filtersStore;
-    const formId = this.getSelectedFormId();
+    const { conditionSetStore: { refableQings }, selectedFormId } = filtersStore;
 
     return (
       <Popover
@@ -65,7 +57,7 @@ class QuestionFilter extends React.Component {
         id="form-filter"
       >
         <ConditionSetFormField
-          conditionableId={formId}
+          conditionableId={selectedFormId}
           conditionableType="FormItem"
           refableQings={refableQings}
         />
