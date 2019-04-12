@@ -23,16 +23,20 @@ class FormItemsController < ApplicationController
           SkipRule.find(params[:conditionable_id])
         end
     else
-      # Create a dummy conditionable with the given form
-      # so that the condition can look up the refable qings, etc.
-      form = Form.find(params[:form_id])
-      item = FormItem.new(form: form, mission: form.mission)
-      @conditionable =
-        if params[:conditionable_type] == "FormItem"
-          item
-        else
-          SkipRule.new(source_item: item, mission: form.mission)
-        end
+      if params[:form_id].present?
+        # Create a dummy conditionable with the given form
+        # so that the condition can look up the refable qings, etc.
+        form = Form.find(params[:form_id])
+        item = FormItem.new(form: form, mission: form.mission)
+        @conditionable =
+          if params[:conditionable_type] == "FormItem"
+            item
+          else
+            SkipRule.new(source_item: item, mission: form.mission)
+          end
+      else
+        @conditionable = FormItem.new(mission: current_mission)
+      end
     end
 
     authorize! :condition_form, @conditionable

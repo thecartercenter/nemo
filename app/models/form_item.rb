@@ -99,7 +99,13 @@ class FormItem < ApplicationRecord
   def refable_qings(eager_load: nil)
     # Always eager load :question because it's always needed
     eager_load = eager_load ? [eager_load, :question] : :question
-    all_items = form.preordered_items(eager_load: eager_load)
+    all_items =
+      if form
+        form.preordered_items(eager_load: eager_load)
+      else
+        # If no form specified, return all items for all forms.
+        Form.all.map {|form| form.preordered_items(eager_load: eager_load)}.flatten
+      end
     all_previous = persisted? ? all_items[0..(all_items.index(self))] : all_items
     all_previous.select(&:refable?)
   end
