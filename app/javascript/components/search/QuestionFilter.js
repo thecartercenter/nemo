@@ -1,4 +1,3 @@
-import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
@@ -16,36 +15,6 @@ class QuestionFilter extends React.Component {
     filtersStore: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
   };
-
-  componentWillMount() {
-    // TODO: Also handle updating data on change.
-    this.getData();
-  }
-
-  getData = async () => {
-    const { filtersStore: { conditionSetStore } } = this.props;
-
-    ELMO.app.loading(true);
-    const url = this.buildUrl();
-    try {
-      const { refableQings } = await $.ajax(url);
-      conditionSetStore.refableQings = refableQings;
-    } catch (error) {
-      console.error('Failed to getData:', error);
-    } finally {
-      ELMO.app.loading(false);
-    }
-  }
-
-  buildUrl = () => {
-    const formId = this.getSelectedFormId();
-    const params = {
-      conditionable_id: formId || undefined,
-      conditionable_type: formId ? 'FormItem' : undefined,
-    };
-    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
-    return `${url}?${queryString.stringify(params)}`;
-  }
 
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;

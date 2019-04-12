@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import queryString from 'query-string';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../ConditionSetModel/ConditionSetModel';
@@ -36,16 +37,42 @@ class FiltersModel {
     // Update conditionSet IDs when selected forms change.
     reaction(
       () => this.selectedFormId,
-      (selectedFormId) => {
+      async (selectedFormId) => {
         if (this.conditionSetStore.formId !== selectedFormId) {
           // Reset the entire store because the available questions will have changed.
           Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {
             conditionableId: selectedFormId,
             formId: selectedFormId,
           });
+
+          await this.updateRefableQings();
         }
       },
     );
+  }
+
+  @action
+  updateRefableQings = async () => {
+    ELMO.app.loading(true);
+    const url = this.buildUrl();
+    try {
+      const { refableQings } = await $.ajax(url);
+      this.conditionSetStore.refableQings = refableQings;
+    } catch (error) {
+      console.error('Failed to updateRefableQings:', error);
+    } finally {
+      ELMO.app.loading(false);
+    }
+  }
+
+  buildUrl = () => {
+    const formId = this.selectedFormId;
+    const params = {
+      conditionable_id: formId || undefined,
+      conditionable_type: formId ? 'FormItem' : undefined,
+    };
+    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
+    return `${url}?${queryString.stringify(params)}`;
   }
 
   @action
