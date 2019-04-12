@@ -31,6 +31,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
     Object.assign(conditionSetStore, {
       formId,
       namePrefix: `${type}[display_conditions_attributes]`,
+      originalConditions: displayConditions,
       conditions: displayConditions,
       conditionableId: id,
       conditionableType: 'FormItem',

@@ -13,6 +13,9 @@ class ConditionSetModel {
   namePrefix;
 
   @observable
+  originalConditions = [];
+
+  @observable
   conditions = [];
 
   @observable

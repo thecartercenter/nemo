@@ -44,6 +44,9 @@ class QuestionFilter extends React.Component {
   }
 
   render() {
+    const { filtersStore: { conditionSetStore: { originalConditions } } } = this.props;
+    const hints = originalConditions.length ? [originalConditions.length] : [];
+
     return (
       <OverlayTrigger
         id="question-filter"
@@ -54,7 +57,7 @@ class QuestionFilter extends React.Component {
         trigger="click"
       >
         <Button id="question-filter" className="btn-secondary btn-margin-left">
-          {I18n.t('filter.question') + getButtonHintString([])}
+          {I18n.t('filter.question') + getButtonHintString(hints)}
         </Button>
       </OverlayTrigger>
     );
