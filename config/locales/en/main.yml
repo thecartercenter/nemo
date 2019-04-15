@@ -1284,7 +1284,7 @@ en:
 
   filter:
     form: "Form"
-    chooseForm: "Choose a form"
+    choose_form: "Choose a form"
     question: "Question"
     reviewed: "Reviewed"
     is_reviewed: "Is marked 'reviewed'"

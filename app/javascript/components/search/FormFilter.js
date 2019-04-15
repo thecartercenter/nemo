@@ -56,7 +56,7 @@ class FormFilter extends React.Component {
           onUnselect={this.handleClearSelection}
           options={{
             allowClear: true,
-            placeholder: I18n.t('filter.chooseForm'),
+            placeholder: I18n.t('filter.choose_form'),
             dropdownCssClass: 'filters-select2-dropdown',
             width: '100%',
           }}
