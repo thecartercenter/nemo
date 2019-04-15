@@ -81,7 +81,7 @@ export function getQuestionNameFromId(allQuestions, searchId) {
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString({ allForms, selectedFormIds, conditionSetStore, advancedSearchText }) {
+export function getFilterString({ allForms, selectedFormIds, conditionSetStore, isReviewed, advancedSearchText }) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
@@ -94,6 +94,7 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
     ...questionFilters,
+    isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
     advancedSearchText,
   ].filter(Boolean);
 

@@ -34,6 +34,21 @@
     }
   }
 
+  // Optional button to the left of 'Apply'.
+  .btn-clear {
+    margin-right: 5px;
+  }
+
+  // Center checkboxes; by default they have weird margins here.
+  .form-check {
+    display: flex;
+    align-items: center;
+
+    .form-check-input {
+      margin-top: 0;
+    }
+  }
+
   .operator-text {
     max-width: 40px;
     flex: 1;

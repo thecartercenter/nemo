@@ -24,6 +24,9 @@ class FiltersModel {
   selectedFormIds = [];
 
   @observable
+  isReviewed = null;
+
+  @observable
   advancedSearchText = '';
 
   @computed
@@ -81,6 +84,11 @@ class FiltersModel {
   @action
   handleChangeAdvancedSearch = (event) => {
     this.advancedSearchText = event.target.value;
+  }
+
+  @action
+  handleChangeIsReviewed = (event) => {
+    this.isReviewed = event.target.checked;
   }
 }
 

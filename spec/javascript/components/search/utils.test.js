@@ -40,6 +40,7 @@ it('gets filter string (no filters)', () => {
       ...filtersStore.conditionSetStore,
       conditions: [],
     },
+    isReviewed: null,
     advancedSearchText: null,
   };
 
