@@ -82,6 +82,11 @@ export const getFiltersStore = () => new FiltersModel({
     ],
   },
 
+  originalSubmitterIdsForType: {
+    [submitterType.USER]: ['A'],
+    [submitterType.GROUP]: [],
+  },
+
   selectedSubmitterIdsForType: {
     [submitterType.USER]: ['B'],
     [submitterType.GROUP]: ['B'],

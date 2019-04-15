@@ -41,6 +41,9 @@ class FiltersModel {
   allSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
+  originalSubmitterIdsForType = getEmptySubmitterTypeMap();
+
+  @observable
   selectedSubmitterIdsForType = getEmptySubmitterTypeMap();
 
   @observable

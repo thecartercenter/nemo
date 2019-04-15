@@ -103,7 +103,7 @@ exports[`renders as expected 1`] = `
     className="btn-secondary btn-margin-left"
     id="submitter-filter"
   >
-    Submitter (2)
+    Submitter (User A)
   </Button>
 </OverlayTrigger>
 `;

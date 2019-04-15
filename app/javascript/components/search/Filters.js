@@ -70,6 +70,10 @@ class FiltersRoot extends React.Component {
         [submitterType.USER]: allUsers,
         [submitterType.GROUP]: allGroups,
       },
+      originalSubmitterIdsForType: {
+        [submitterType.USER]: selectedUsers,
+        [submitterType.GROUP]: selectedGroups,
+      },
       selectedSubmitterIdsForType: {
         [submitterType.USER]: selectedUsers,
         [submitterType.GROUP]: selectedGroups,
