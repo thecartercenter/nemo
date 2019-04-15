@@ -1,4 +1,3 @@
-import mapKeys from 'lodash/mapKeys';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
@@ -8,13 +7,7 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString, getFormNameFromId } from './utils';
-
-/**
- * Converts a list of forms from the backend into something Select2 understands.
- */
-const parseFormsForSelect2 = (allForms) => allForms
-  .map((form) => mapKeys(form, (value, key) => (key === 'name' ? 'text' : key)));
+import { getButtonHintString, getFormNameFromId, parseListForSelect2 } from './utils';
 
 @inject('filtersStore')
 @observer
@@ -51,7 +44,7 @@ class FormFilter extends React.Component {
         id="form-filter"
       >
         <Select2
-          data={parseFormsForSelect2(allForms)}
+          data={parseListForSelect2(allForms)}
           onSelect={handleSelectForm}
           onUnselect={this.handleClearSelection}
           options={{

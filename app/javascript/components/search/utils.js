@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
 
 import FiltersModel from './FiltersModel';
@@ -75,6 +76,15 @@ export function getFormNameFromId(allForms, searchId) {
 export function getQuestionNameFromId(allQuestions, searchId) {
   const question = allQuestions.find(({ id }) => searchId === id);
   return (question && question.code) || 'Unknown';
+}
+
+/**
+ * Converts a list of data from the backend into something Select2 understands, e.g.
+ * [{ id: '1', name: 'One' }, ...] => [{ id: '1', text: 'One' }, ...]
+ */
+export function parseListForSelect2(allItems) {
+  return allItems.map((item) =>
+    mapKeys(item, (value, key) => (key === 'name' ? 'text' : key)));
 }
 
 /**
