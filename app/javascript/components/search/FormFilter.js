@@ -24,8 +24,7 @@ class FormFilter extends React.Component {
 
   handleClearSelection = () => {
     const { filtersStore } = this.props;
-    const { handleClearFormSelection } = filtersStore;
-    handleClearFormSelection();
+    filtersStore.selectedFormIds = [];
 
     /*
      * Select2 doesn't make this easy... wait for state update then close the dropdown.

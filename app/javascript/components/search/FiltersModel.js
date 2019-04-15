@@ -80,11 +80,6 @@ class FiltersModel {
   }
 
   @action
-  handleClearFormSelection = () => {
-    this.selectedFormIds = [];
-  }
-
-  @action
   handleChangeAdvancedSearch = (event) => {
     this.advancedSearchText = event.target.value;
   }
