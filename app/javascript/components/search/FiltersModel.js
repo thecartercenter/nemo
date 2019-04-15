@@ -2,13 +2,21 @@ import isEmpty from 'lodash/isEmpty';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../ConditionSetModel/ConditionSetModel';
+import { SUBMITTER_TYPES } from './SubmitterFilter';
 
-// Empty model to be used for resetting the store as needed.
+/** Empty model to be used for resetting the store as needed. */
 const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({
   namePrefix: 'questioning[display_conditions_attributes]',
   conditionableType: 'FormItem',
   hide: false,
 })));
+
+/** Map from each type to an empty array. */
+const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction, type) => {
+  // eslint-disable-next-line no-param-reassign
+  reduction[type] = [];
+  return reduction;
+}, {});
 
 class FiltersModel {
   @observable
@@ -28,6 +36,12 @@ class FiltersModel {
 
   @observable
   isReviewed = null;
+
+  @observable
+  allSubmittersForType = getEmptySubmitterTypeMap();
+
+  @observable
+  selectedSubmitterIdsForType = getEmptySubmitterTypeMap();
 
   @observable
   advancedSearchText = '';
@@ -77,6 +91,11 @@ class FiltersModel {
   @action
   handleSelectForm = (event) => {
     this.selectedFormIds = [event.target.value];
+  }
+
+  @action
+  handleSelectSubmitterForType = (type) => (event) => {
+    this.selectedSubmitterIdsForType[type] = [event.target.value];
   }
 
   @action

@@ -8,10 +8,15 @@ import { filtersStore } from './utils';
 
 import { CONTROLLER_NAME } from '../../../../app/javascript/components/search/utils';
 import { FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
+import { SUBMITTER_TYPES, submitterType } from '../../../../app/javascript/components/search/SubmitterFilter';
 
 const defaultProps = {
   // Pass in initial props.
   ...pick(filtersStore, ['allForms', 'selectedFormIds', 'isReviewed', 'advancedSearchText']),
+  allUsers: filtersStore.allSubmittersForType[submitterType.USER],
+  selectedUsers: filtersStore.selectedSubmitterIdsForType[submitterType.USER],
+  allGroups: filtersStore.allSubmittersForType[submitterType.GROUP],
+  selectedGroups: filtersStore.selectedSubmitterIdsForType[submitterType.GROUP],
   controllerName: CONTROLLER_NAME.RESPONSES,
 };
 
@@ -78,6 +83,20 @@ describe('integration', () => {
     wrapper.find('Button#reviewed-filter').simulate('click');
     const overlay = shallow(wrapper.find('OverlayTrigger#reviewed-filter').prop('overlay'));
     overlay.find('#no').simulate('click');
+
+    expect(window.location.assign).toMatchSnapshot();
+    overlay.find('Button.btn-apply').simulate('click');
+    expect(window.location.assign).toMatchSnapshot();
+  });
+
+  it('navigates on apply submitter filter', () => {
+    wrapper.find('Button#submitter-filter').simulate('click');
+    const overlay = shallow(wrapper.find('OverlayTrigger#submitter-filter').prop('overlay'));
+
+    SUBMITTER_TYPES.forEach((type) => {
+      const value = filtersStore.allSubmittersForType[type][0].id;
+      overlay.find(`Select2#${type}`).simulate('change', { target: { value } });
+    });
 
     expect(window.location.assign).toMatchSnapshot();
     overlay.find('Button.btn-apply').simulate('click');

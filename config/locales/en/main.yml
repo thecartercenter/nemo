@@ -1288,6 +1288,10 @@ en:
     question: "Question"
     reviewed: "Reviewed"
     is_reviewed: "Is marked 'reviewed'"
+    submitter: "Submitter"
+    choose_submitter:
+      submitter: "Choose a user"
+      group: "Choose a group"
     advancedSearch: "Advanced search"
 
   form:

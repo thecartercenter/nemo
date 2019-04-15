@@ -1,5 +1,7 @@
 import FiltersModel from '../../../../app/javascript/components/search/FiltersModel';
 import ConditionSetModel from '../../../../app/javascript/components/ConditionSetModel/ConditionSetModel';
+import { observable } from 'mobx';
+import { submitterType } from '../../../../app/javascript/components/search/SubmitterFilter';
 
 export const filtersStore = new FiltersModel({
   conditionSetStore: new ConditionSetModel({
@@ -57,6 +59,34 @@ export const filtersStore = new FiltersModel({
   originalIsReviewed: null,
 
   isReviewed: true,
+
+  allSubmittersForType: {
+    [submitterType.USER]: [
+      {
+        id: 'A',
+        name: 'User A',
+      },
+      {
+        id: 'B',
+        name: 'User B',
+      },
+    ],
+    [submitterType.GROUP]: [
+      {
+        id: 'A',
+        name: 'Group A',
+      },
+      {
+        id: 'B',
+        name: 'Group B',
+      },
+    ],
+  },
+
+  selectedSubmitterIdsForType: {
+    [submitterType.USER]: ['B'],
+    [submitterType.GROUP]: ['B'],
+  },
 
   advancedSearchText: 'query',
 });

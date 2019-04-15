@@ -3,6 +3,7 @@ import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
 
 import FiltersModel from './FiltersModel';
+import { SUBMITTER_TYPES } from './SubmitterFilter';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
@@ -91,7 +92,15 @@ export function parseListForSelect2(allItems) {
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString({ allForms, selectedFormIds, conditionSetStore, isReviewed, advancedSearchText }) {
+export function getFilterString({
+  allForms,
+  selectedFormIds,
+  conditionSetStore,
+  isReviewed,
+  allSubmittersForType,
+  selectedSubmitterIdsForType,
+  advancedSearchText,
+}) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getItemNameFromId(allForms, id)));
 
@@ -101,10 +110,18 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
     .map(({ refQingId, currTextValue }) =>
       `{${getQuestionNameFromId(allQuestions, refQingId)}}:${JSON.stringify(currTextValue)}`);
 
+  const submitterParts = SUBMITTER_TYPES.map((type) => {
+    const selectedSubmitterNames = selectedSubmitterIdsForType[type]
+      .map((id) => JSON.stringify(getItemNameFromId(allSubmittersForType[type], id)));
+
+    return isEmpty(selectedSubmitterNames) ? null : `${type}:(${selectedSubmitterNames.join('|')})`;
+  });
+
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
     ...questionFilters,
     isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
+    ...submitterParts,
     advancedSearchText,
   ].filter(Boolean);
 

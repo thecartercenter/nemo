@@ -24,6 +24,17 @@
     padding: $container-padding;
   }
 
+  &.popover-multi-select2 {
+    .popover-body {
+      padding-top: 0;
+    }
+
+    .select2-container {
+      // Replace container padding top with popover margin so it's all consistent.
+      margin-top: 8px;
+    }
+  }
+
   .btn-apply-container {
     margin-top: $container-padding;
     text-align: right;
