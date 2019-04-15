@@ -21,10 +21,6 @@ describe('popover', () => {
 
   const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
 
-  it('renders as expected', () => {
-    expect(overlay).toMatchSnapshot();
-  });
-
   it('handles callbacks', () => {
     SUBMITTER_TYPES.forEach((type) => {
       const value = defaultProps.filtersStore.allSubmittersForType[type][0].id;

@@ -21,10 +21,6 @@ describe('popover', () => {
 
   const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
 
-  it('renders as expected', () => {
-    expect(overlay).toMatchSnapshot();
-  });
-
   it('handles callbacks', () => {
     overlay.find('Select2').simulate('change', { target: { value: defaultProps.filtersStore.allForms[0].id } });
     overlay.find('Button.btn-apply').simulate('click');
