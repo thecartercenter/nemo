@@ -5,7 +5,7 @@ import {
   submitSearch,
   isQueryParamTruthy,
 } from '../../../../app/javascript/components/search/utils';
-import { filtersStore } from './utils';
+import { getFiltersStore } from './utils';
 
 it('gets hints (0)', () => {
   const result = getButtonHintString([]);
@@ -33,6 +33,7 @@ it('gets item name (not found)', () => {
 });
 
 it('gets filter string (no filters)', () => {
+  const filtersStore = getFiltersStore();
   const emptyFilters = {
     ...filtersStore,
     selectedFormIds: [],
@@ -50,7 +51,7 @@ it('gets filter string (no filters)', () => {
 
 it('gets filter string (all filters)', () => {
   const populatedFilters = {
-    ...filtersStore,
+    ...getFiltersStore(),
     selectedFormIds: ['1', '3'],
     advancedSearchText: 'query',
   };

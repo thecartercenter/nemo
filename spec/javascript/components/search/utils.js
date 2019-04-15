@@ -1,9 +1,8 @@
 import FiltersModel from '../../../../app/javascript/components/search/FiltersModel';
 import ConditionSetModel from '../../../../app/javascript/components/ConditionSetModel/ConditionSetModel';
-import { observable } from 'mobx';
 import { submitterType } from '../../../../app/javascript/components/search/SubmitterFilter';
 
-export const filtersStore = new FiltersModel({
+export const getFiltersStore = () => new FiltersModel({
   conditionSetStore: new ConditionSetModel({
     conditions: [
       {

@@ -1,12 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { filtersStore } from './utils';
+import { getFiltersStore } from './utils';
 
 import Component, { SUBMITTER_TYPES } from '../../../../app/javascript/components/search/SubmitterFilter';
 
 const defaultProps = {
-  filtersStore,
+  filtersStore: getFiltersStore(),
   onSubmit: jest.fn(),
 };
 
