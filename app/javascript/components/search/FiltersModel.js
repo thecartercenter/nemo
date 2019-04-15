@@ -24,6 +24,9 @@ class FiltersModel {
   selectedFormIds = [];
 
   @observable
+  originalIsReviewed = null;
+
+  @observable
   isReviewed = null;
 
   @observable

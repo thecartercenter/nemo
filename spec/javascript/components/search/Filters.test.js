@@ -11,7 +11,7 @@ import { FiltersRoot as Component } from '../../../../app/javascript/components/
 
 const defaultProps = {
   // Pass in initial props.
-  ...pick(filtersStore, ['allForms', 'selectedFormIds', 'advancedSearchText']),
+  ...pick(filtersStore, ['allForms', 'selectedFormIds', 'isReviewed', 'advancedSearchText']),
   controllerName: CONTROLLER_NAME.RESPONSES,
 };
 

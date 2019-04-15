@@ -97,7 +97,7 @@ exports[`renders as expected 1`] = `
     className="btn-secondary btn-margin-left"
     id="reviewed-filter"
   >
-    Reviewed (Yes)
+    Reviewed
   </Button>
 </OverlayTrigger>
 `;

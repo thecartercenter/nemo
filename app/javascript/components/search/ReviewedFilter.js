@@ -61,10 +61,10 @@ class FormFilter extends React.Component {
 
   render() {
     const { filtersStore } = this.props;
-    const { isReviewed } = filtersStore;
-    const hints = isReviewed == null
+    const { originalIsReviewed } = filtersStore;
+    const hints = originalIsReviewed == null
       ? null
-      : isReviewed ? [I18n.t('common._yes')] : [I18n.t('common._no')];
+      : originalIsReviewed ? [I18n.t('common._yes')] : [I18n.t('common._no')];
 
     return (
       <OverlayTrigger

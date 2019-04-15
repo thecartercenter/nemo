@@ -23,6 +23,7 @@ class FiltersRoot extends React.Component {
       name: PropTypes.string,
     })).isRequired,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    isReviewed: PropTypes.bool,
     advancedSearchText: PropTypes.string.isRequired,
   };
 
@@ -39,6 +40,7 @@ class FiltersRoot extends React.Component {
       conditionSetStore,
       allForms,
       selectedFormIds,
+      isReviewed,
       advancedSearchText,
     } = props;
 
@@ -47,6 +49,8 @@ class FiltersRoot extends React.Component {
       allForms,
       originalFormIds: selectedFormIds,
       selectedFormIds,
+      originalIsReviewed: isReviewed,
+      isReviewed,
       advancedSearchText,
     });
     Object.assign(conditionSetStore, {
