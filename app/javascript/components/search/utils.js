@@ -63,11 +63,11 @@ export function getButtonHintString(hints) {
 }
 
 /**
- * Given a form ID, find it in the list of all forms and return the name.
+ * Given an item ID, find it in the list of items and return its `name`.
  */
-export function getFormNameFromId(allForms, searchId) {
-  const form = allForms.find(({ id }) => searchId === id);
-  return (form && form.name) || 'Unknown';
+export function getItemNameFromId(allItems, searchId) {
+  const item = allItems.find(({ id }) => searchId === id);
+  return (item && item.name) || 'Unknown';
 }
 
 /**
@@ -93,7 +93,7 @@ export function parseListForSelect2(allItems) {
  */
 export function getFilterString({ allForms, selectedFormIds, conditionSetStore, isReviewed, advancedSearchText }) {
   const selectedFormNames = selectedFormIds
-    .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
+    .map((id) => JSON.stringify(getItemNameFromId(allForms, id)));
 
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions

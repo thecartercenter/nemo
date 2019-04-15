@@ -7,7 +7,7 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString, getFormNameFromId, parseListForSelect2 } from './utils';
+import { getButtonHintString, getItemNameFromId, parseListForSelect2 } from './utils';
 
 @inject('filtersStore')
 @observer
@@ -71,7 +71,7 @@ class FormFilter extends React.Component {
   render() {
     const { filtersStore } = this.props;
     const { allForms, originalFormIds } = filtersStore;
-    const originalFormNames = originalFormIds.map((id) => getFormNameFromId(allForms, id));
+    const originalFormNames = originalFormIds.map((id) => getItemNameFromId(allForms, id));
 
     return (
       <OverlayTrigger

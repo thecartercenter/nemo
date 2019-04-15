@@ -1,6 +1,6 @@
 import {
   getButtonHintString,
-  getFormNameFromId,
+  getItemNameFromId,
   getFilterString,
   submitSearch,
   isQueryParamTruthy,
@@ -22,13 +22,13 @@ it('gets hints (too many)', () => {
   expect(result).toMatchSnapshot();
 });
 
-it('gets form name (found)', () => {
-  const result = getFormNameFromId([{ id: '1', name: 'One' }], '1');
+it('gets item name (found)', () => {
+  const result = getItemNameFromId([{ id: '1', name: 'One' }], '1');
   expect(result).toMatchSnapshot();
 });
 
-it('gets form name (not found)', () => {
-  const result = getFormNameFromId([], '1');
+it('gets item name (not found)', () => {
+  const result = getItemNameFromId([], '1');
   expect(result).toMatchSnapshot();
 });
 

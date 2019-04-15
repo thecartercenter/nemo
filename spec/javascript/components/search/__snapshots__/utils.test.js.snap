@@ -10,15 +10,15 @@ exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'
 
 exports[`gets filter string (no filters) 1`] = `""`;
 
-exports[`gets form name (found) 1`] = `"One"`;
-
-exports[`gets form name (not found) 1`] = `"Unknown"`;
-
 exports[`gets hints (0) 1`] = `""`;
 
 exports[`gets hints (small number) 1`] = `" (one)"`;
 
 exports[`gets hints (too many) 1`] = `" (3)"`;
+
+exports[`gets item name (found) 1`] = `"One"`;
+
+exports[`gets item name (not found) 1`] = `"Unknown"`;
 
 exports[`submits searches 1`] = `[MockFunction]`;
 
