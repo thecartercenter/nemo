@@ -57,7 +57,7 @@ export function getButtonHintString(hints) {
   }
 
   const joinedHints = hints.length > MAX_HINTS_BEFORE_ELLIPSIZE
-    ? hints.length
+    ? `${hints.length} filters`
     : hints.join(', ');
 
   return ` (${joinedHints})`;

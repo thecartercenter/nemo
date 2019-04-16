@@ -14,7 +14,7 @@ exports[`gets hints (0) 1`] = `""`;
 
 exports[`gets hints (small number) 1`] = `" (one)"`;
 
-exports[`gets hints (too many) 1`] = `" (3)"`;
+exports[`gets hints (too many) 1`] = `" (3 filters)"`;
 
 exports[`gets item name (found) 1`] = `"One"`;
 
