@@ -66,9 +66,9 @@ export function getButtonHintString(hints) {
 /**
  * Given an item ID, find it in the list of items and return its `name`.
  */
-export function getItemNameFromId(allItems, searchId) {
+export function getItemNameFromId(allItems, searchId, nameKey = 'name') {
   const item = allItems.find(({ id }) => searchId === id);
-  return (item && item.name) || 'Unknown';
+  return (item && item[nameKey]) || 'Unknown';
 }
 
 /**
