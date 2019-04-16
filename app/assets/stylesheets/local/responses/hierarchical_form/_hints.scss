@@ -14,13 +14,5 @@
     margin-bottom: 5px;
   }
 
-  i.hint {
-    cursor: pointer;
-  }
-
-  .popover-body {
-    p {
-      margin-bottom: 0.4rem;
-    }
-  }
+  @include hint-with-popover;
 }

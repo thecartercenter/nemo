@@ -16,3 +16,15 @@
     }
   }
 }
+
+@mixin hint-with-popover {
+  i.hint {
+    cursor: pointer;
+  }
+
+  .popover-body {
+    p {
+      margin-bottom: 0.4rem;
+    }
+  }
+}

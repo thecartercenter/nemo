@@ -8,19 +8,14 @@
     margin-top: 6px;
     white-space: nowrap;
 
+    @include hint-with-popover;
+
     i.hint {
       color: $theme-main;
-      cursor: pointer;
       display: inline-block;
       font-size: 1.5em;
       padding: 0 3px; // Right padding is so things look ok when there is a bg color.
       vertical-align: middle;
-    }
-
-    .popover-body {
-      p {
-        margin-bottom: 0.4rem;
-      }
     }
   }
 }
