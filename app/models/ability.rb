@@ -151,7 +151,10 @@ class Ability
         can :manage, klass, mission_id: mission.id
       end
 
-      can(%i[read create update update_code update_core export bulk_destroy],
+      can(:import_standard, Form, mission_id: mission.id)
+      can(:import_standard, OptionSet, mission_id: mission.id)
+
+      can(%i[read create update update_code update_core import_standard export bulk_destroy],
         Question, mission_id: mission.id)
       can(:destroy, Question, Question.unpublished_and_unanswered.for_mission(mission)) do |q|
         !q.published? && !q.has_answers?
