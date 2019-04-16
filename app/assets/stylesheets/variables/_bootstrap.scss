@@ -10,46 +10,47 @@
  * This needs to be footer color so that the footer goes fully to the bottom of the page on
  * pages with short content.
  */
-$body-bg:                  $footer-background-color !default;
+$body-bg: $footer-background-color !default;
 
 //== Typography
 //
-$font-family-sans-serif:     'Open Sans', Helvetica, sans-serif !default;
+$font-family-sans-serif: 'Open Sans', Helvetica, sans-serif !default;
 
-$px-per-rem:                 16.0;
-$font-size-base:             (12 / $px-per-rem) * 1rem !default;
+$px-per-rem: 16.0;
+$font-size-base: (12 / $px-per-rem) * 1rem !default;
 
 //** Unit-less `line-height` for use in components like buttons.
-$line-height-base:           1.3 !default;
+$line-height-base: 1.3 !default;
+
 //** Computed "line-height" (`font-size` * `line-height`) for use with `margin`, `padding`, etc.
-$line-height-computed:       $font-size-base * $line-height-base; // ~20px
+$line-height-computed: $font-size-base * $line-height-base; // ~20px
 
 //== Components
 //
-$padding-base-vertical:        (6 / $px-per-rem) * 1rem;
+$padding-base-vertical: (6 / $px-per-rem) * 1rem;
 
 //== Buttons
 //
 $theme-colors: (
-  "secondary": $faint-gray,
+ "secondary": $faint-gray,
 );
 
-$btn-primary-color:                 white !default;
-$btn-primary-bg:                    $link-color !default;
-$btn-primary-border:                $link-color !default;
+$btn-primary-color: white !default;
+$btn-primary-bg: $link-color !default;
+$btn-primary-border: $link-color !default;
 
 //== Forms
 //
-$input-border:                      #ccc;
+$input-border: #ccc;
 
 //** Default `.form-control` height
-$input-height-base:                 ($line-height-computed + ($padding-base-vertical * 2) + (2 / $px-per-rem));
+$input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + (2 / $px-per-rem));
 
 //== Form states and alerts
 //
-$state-info-text:                   #31708f;
-$alert-info-text:                $state-info-text;
+$state-info-text: #31708f;
+$alert-info-text: $state-info-text;
 
 //== Code
 //
-$pre-bg:                         #f5f5f5;
+$pre-bg: #f5f5f5;
