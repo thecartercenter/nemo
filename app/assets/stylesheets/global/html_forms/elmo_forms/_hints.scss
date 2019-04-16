@@ -10,15 +10,11 @@
 
     i.hint {
       color: $theme-main;
+      cursor: pointer;
       display: inline-block;
       font-size: 1.5em;
-
-      // Right padding is so things look ok when there is a bg color.
-      padding: 0 3px;
-
+      padding: 0 3px; // Right padding is so things look ok when there is a bg color.
       vertical-align: middle;
-
-      cursor: pointer;
     }
 
     .popover-body {
