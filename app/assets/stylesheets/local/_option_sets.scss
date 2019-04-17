@@ -52,10 +52,11 @@ form.option_set_form {
   .value {
     color: $light-gray;
   }
-}
 
-div.modal#edit-option, div.modal#edit-option-level {
-  .translation, .coordinate {
-    margin-bottom: 10px;
+  div.modal#edit-option {
+    input[type=number] {
+      // Make numeric inputs wider because some of them are GPS coordinates.
+      width: 200px;
+    }
   }
 }

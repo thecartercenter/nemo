@@ -11,47 +11,40 @@
           <% if @option_set.standard_copy? %>
             <%= data_integrity_warning(:option_standard_copy_name_change_warning) %>
           <% end %>
-
           <%# this warning will get hidden/shown by the js %>
           <%= data_integrity_warning(:option_in_use_name_change_warning) %>
 
-          <div>
-            <% configatron.preferred_locales.each do |locale| %>
-              <div class="translation form-group row">
-                <label for="option_name_<%= locale %>" class="col-md-3 col-form-label">
-                  <%= language_name(locale) %>
-                </label>
-                <div class="col-md-9">
-                  <input type="text" class="form-control" id="option_name_<%= locale %>"
-                    data-locale="<%= locale %>" maxlength="<%= Option::MAX_NAME_LENGTH %>">
-                </div>
-              </div>
-            <% end %>
-            <div class="coordinate form-group row">
-              <label for"option_latitude" class="col-md-3 col-form-label">
-                <%= t('option_set.latitude') %>
-              </label>
-              <div class="col-md-9">
-                <input type="number" step="any" class="form-control"
-                  id="option_latitude" data-field="latitude">
-              </div>
+          <%= elmo_fields_for("", Option.new) do |f| %>
+            <div class="fields">
+              <% configatron.preferred_locales.each do |locale| %>
+                <%= f.field(:"name_#{locale}", maxlength: Option::MAX_NAME_LENGTH,
+                                               wrapper_class: "translation",
+                                               label: language_name(locale),
+                                               id: "option_name_#{locale}",
+                                               unnamed: true,
+                                               data: {locale: locale}) %>
+              <% end %>
+              <%= f.field(:latitude, id: "option_latitude",
+                                     type: :number,
+                                     step: :any,
+                                     unnamed: true,
+                                     wrapper_class: "coordinate",
+                                     label: t("option_set.latitude"),
+                                     data: {field: "latitude"}) %>
+              <%= f.field(:longitude, id: "option_longitude",
+                                      type: :number,
+                                      step: :any,
+                                      unnamed: true,
+                                      wrapper_class: "coordinate",
+                                      label: t("option_set.longitude"),
+                                      data: {field: "longitude"}) %>
+              <%= f.field(:value, id: "option_value",
+                                  type: :number,
+                                  unnamed: true,
+                                  label: t("option_set.value"),
+                                  data: {field: "value"}) %>
             </div>
-            <div class="coordinate form-group row">
-              <label for"option_latitude" class="col-md-3 col-form-label">
-                <%= t('option_set.longitude') %>
-              </label>
-              <div class="col-md-9">
-                <input type="number" step="any" class="form-control"
-                  id="option_longitude" data-field="longitude">
-              </div>
-            </div>
-            <div class="form-group row">
-              <label for="option_value" class="col-md-3 col-form-label"><%= t('option_set.value') %></label>
-              <div class="col-md-9">
-                <input type="number" class="form-control" id="option_value" data-field="value">
-              </div>
-            </div>
-          </div>
+          <% end %>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">

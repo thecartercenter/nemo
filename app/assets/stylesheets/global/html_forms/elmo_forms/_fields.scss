@@ -95,6 +95,17 @@
   }
 }
 
+.elmo-form .modal .form-field {
+  &:first-of-type {
+    padding-top: 0;
+  }
+
+  &:last-of-type {
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+}
+
 .form-control {
   font-size: 14px; // App-wide size is smaller than this.
 }
