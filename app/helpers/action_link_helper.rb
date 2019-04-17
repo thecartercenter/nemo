@@ -33,7 +33,7 @@ module ActionLinkHelper
     actions_to_show += options[:append]
     actions_to_show.delete(canonical_action)
 
-    content_tag(:div, :class => 'top-action-links') do
+    content_tag(:div, :class => 'top-action-links d-print-none') do
       main_links = "".html_safe
       main_links << actions_to_show.map do |action|
         url = url_for(controller: controller, action: action) rescue nil
