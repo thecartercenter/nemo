@@ -27,17 +27,6 @@
   .control {
     padding: 5px 0;
     vertical-align: top;
-
-    .modal {
-      label,
-      .control {
-        // Undo the styles for non-modal labels.
-        padding-bottom: calc(0.375rem + 1px);
-        padding-left: 15px;
-        padding-right: 15px;
-        padding-top: calc(0.375rem + 1px);
-      }
-    }
   }
 
   label.main {
@@ -52,15 +41,6 @@
     flex-grow: 1;
     min-height: 26px;
     vertical-align: middle;
-
-    label {
-      font-weight: normal;
-    }
-
-    .modal label {
-      // Undo the styles for non-modal labels.
-      font-weight: bold;
-    }
 
     .radio {
       width: 15px;

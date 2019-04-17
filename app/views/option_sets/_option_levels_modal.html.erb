@@ -1,0 +1,32 @@
+<%# edit option level modal %>
+<div class="modal fade edit-named-item" id="edit-option-level" tabindex="-1" role="dialog" aria-labelledby="editOptionLevel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title"></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+      </div>
+      <div class="modal-body">
+
+        <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
+
+        <% configatron.preferred_locales.each do |locale| %>
+          <div class="translation">
+            <div class="form-group row">
+              <label for="option_level_name_<%= locale %>" class="col-md-3 col-form-label"><%= language_name(locale) %></label>
+              <div class="col-md-9">
+                <input type="text" class="form-control" id="option_level_name_<%= locale %>"
+                  data-locale="<%= locale %>" maxlength="<%= OptionLevel::MAX_NAME_LENGTH %>">
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
+        <button type="button" class="btn btn-primary"><%= I18n.t("common.save") %></button>
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

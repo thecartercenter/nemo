@@ -45,8 +45,9 @@
     $('body').on('keyup change', '.edit-named-item div.translation input, .edit-named-item div.coordinate input', function(){ self.toggle_save_button(); });
 
     // Catch modal form submission.
-    self.modal.on('keypress', function(e) {
-      if (e.keyCode == 13) {
+    self.modal.on('keypress', function(event) {
+      if (event.keyCode == 13) {
+        event.preventDefault(); // Prevent submission of the containing form.
         const btn = self.modal.find(".btn-primary").last();
         if (btn.is(':visible')) btn.trigger('click');
       }
