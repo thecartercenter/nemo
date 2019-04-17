@@ -131,6 +131,7 @@
       success: function(data) {
         $('.recent_responses').replaceWith(data.recent_responses);
         $('.report_stats').replaceWith(data.report_stats);
+        self.list_view.adjust_columns();
         self.map_view.update_map(data.response_locations);
         self.report_view.refresh();
         self.adjust_pane_sizes();

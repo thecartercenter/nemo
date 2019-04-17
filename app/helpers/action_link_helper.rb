@@ -9,7 +9,7 @@ module ActionLinkHelper
   def create_link(klass, options = {})
     i18nk = klass.model_name.i18n_key
     href = options[:js] ? "#" : dynamic_path(klass, action: :new)
-    link_to(translate_action(klass, :new), href, :class => "create_#{klass.model_name.param_key}")
+    link_to(translate_action(klass, :new), href, class: "create_#{klass.model_name.param_key}")
   end
 
   # Builds links for the action links at the top of a new/edit/show page.
@@ -22,7 +22,7 @@ module ActionLinkHelper
     options[:append] = Array.wrap(options[:append])
 
     obj = args.first
-    raise ArgumentError, 'Missing target object' if obj.nil?
+    raise ArgumentError, "Missing target object" if obj.nil?
 
     controller = options[:controller] || obj.class.model_name.plural
     i18nk = obj.class.model_name.i18n_key
@@ -33,7 +33,7 @@ module ActionLinkHelper
     actions_to_show += options[:append]
     actions_to_show.delete(canonical_action)
 
-    content_tag(:div, :class => 'top-action-links') do
+    content_tag(:div, class: "top-action-links d-print-none") do
       main_links = "".html_safe
       main_links << actions_to_show.map do |action|
         url = url_for(controller: controller, action: action) rescue nil
@@ -45,13 +45,13 @@ module ActionLinkHelper
             class: "#{action}-link")
         end
       end.compact.reduce(:<<)
-      main_links << (block_given? ? capture(&block) : '')
+      main_links << (block_given? ? capture(&block) : "")
     end
   end
 
   def delete_warning(obj, options = {})
     description = options[:obj_description] || "#{obj.class.model_name.human} '#{obj.name}'"
-    t("layout.delete_warning", :obj_description => description)
+    t("layout.delete_warning", obj_description: description)
   end
 
   # returns the html for an action icon using font awesome and the mappings defined in IconHelper
@@ -70,6 +70,6 @@ module ActionLinkHelper
 
   # creates a link to a batch operation
   def batch_op_link(options)
-    link_to(options[:name], "#", :data => options.slice(:path, :confirm), :class => "batch_op_link")
+    link_to(options[:name], "#", data: options.slice(:path, :confirm), class: "batch_op_link")
   end
 end

@@ -4,6 +4,8 @@
     font-style: italic;
   }
 
+  @include hint-with-popover;
+
   .answer-group > .hint {
     @include group-question-hint;
     margin-bottom: 20px;
@@ -12,15 +14,5 @@
   .answer > .hint {
     @include group-question-hint;
     margin-bottom: 5px;
-  }
-
-  i.hint {
-    cursor: pointer;
-  }
-
-  .popover-body {
-    p {
-      margin-bottom: 0.4rem;
-    }
   }
 }

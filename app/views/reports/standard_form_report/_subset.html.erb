@@ -1,7 +1,7 @@
 <% # print a header unless there is no disaggregation %>
 <% if subset.disagg_value != :all %>
   <% value_str = subset.disagg_value ? subset.disagg_value.name : "[#{t('common.blank')}]" %>
-  <h2><%= "#{@report.disagg_qing.question.code}: #{value_str}"%></h2>
+  <h2 class="mt-4"><%= "#{@report.disagg_qing.question.code}: #{value_str}"%></h2>
   <small><%= t("report/report.subset_intro", disagg_value: value_str, question: @report.disagg_qing.question.code) %></small>
 <% end %>
 

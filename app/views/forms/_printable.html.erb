@@ -1,4 +1,4 @@
-<div id="printable_form" class="printable">
+<div id="printable_form" class="d-none d-print-block">
   <%= logo_image(style: :dark, class: "logo") %>
   <h1 class="title"><%= title(name_only: true) %></h1>
   <div class="mission"><%= current_mission.try(:name) || "[#{t('form.no_mission')}]" %></div>
