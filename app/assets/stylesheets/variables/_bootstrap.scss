@@ -32,12 +32,9 @@ $padding-base-vertical: (6 / $px-per-rem) * 1rem;
 //== Buttons
 //
 $theme-colors: (
+ "primary": $link-color,
  "secondary": $faint-gray,
-);
-
-$btn-primary-color: white !default;
-$btn-primary-bg: $link-color !default;
-$btn-primary-border: $link-color !default;
+) !default;
 
 //== Forms
 //
