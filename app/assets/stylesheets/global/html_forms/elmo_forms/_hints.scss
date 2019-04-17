@@ -4,11 +4,11 @@
   text-align: center;
 
   a.hint {
+    @include hint-with-popover;
+
     display: inline-block;
     margin-top: 6px;
     white-space: nowrap;
-
-    @include hint-with-popover;
 
     i.hint {
       color: $theme-main;
