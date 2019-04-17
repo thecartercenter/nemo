@@ -4,6 +4,7 @@ import { observer, inject, Provider } from 'mobx-react';
 
 import { provideConditionSetStore } from './ConditionSetModel/utils';
 import ConditionSetFormField from './ConditionSetFormField';
+import ErrorBoundary from './ErrorBoundary';
 
 @inject('conditionSetStore')
 @observer
@@ -97,4 +98,11 @@ const DisplayLogicFormField = (props) => (
   </Provider>
 );
 
-export default DisplayLogicFormField;
+// Top-level component with an error boundary so no errors can leak out.
+const DisplayLogicFormFieldGuard = (props) => (
+  <ErrorBoundary>
+    <DisplayLogicFormField {...props} />
+  </ErrorBoundary>
+);
+
+export default DisplayLogicFormFieldGuard;

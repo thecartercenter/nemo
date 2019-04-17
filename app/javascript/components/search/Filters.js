@@ -76,14 +76,12 @@ class FiltersRoot extends React.Component {
 
     return (
       <div className="filters">
-        <ErrorBoundary>
-          {shouldRenderButtons ? this.renderFilterButtons() : null}
+        {shouldRenderButtons ? this.renderFilterButtons() : null}
 
-          <AdvancedSearchFilter
-            onClear={this.handleClearFilters}
-            onSubmit={this.handleSubmit}
-          />
-        </ErrorBoundary>
+        <AdvancedSearchFilter
+          onClear={this.handleClearFilters}
+          onSubmit={this.handleSubmit}
+        />
       </div>
     );
   }
@@ -99,7 +97,14 @@ const Filters = (props) => {
   );
 };
 
-export default Filters;
+// Top-level component with an error boundary so no errors can leak out.
+const FiltersGuard = (props) => (
+  <ErrorBoundary>
+    <Filters {...props} />
+  </ErrorBoundary>
+);
+
+export default FiltersGuard;
 
 // Root component for testing.
 export { FiltersRoot };
