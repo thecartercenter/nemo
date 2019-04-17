@@ -58,14 +58,10 @@ exports[`renders as expected (other page) 1`] = `
 <div
   className="filters"
 >
-  <ErrorBoundary
-    message="Sorry, something went wrong. Please try reloading the page."
-  >
-    <AdvancedSearchFilter
-      onClear={[Function]}
-      onSubmit={[Function]}
-    />
-  </ErrorBoundary>
+  <AdvancedSearchFilter
+    onClear={[Function]}
+    onSubmit={[Function]}
+  />
 </div>
 `;
 
@@ -73,21 +69,17 @@ exports[`renders as expected (responses page) 1`] = `
 <div
   className="filters"
 >
-  <ErrorBoundary
-    message="Sorry, something went wrong. Please try reloading the page."
-  >
-    <ButtonToolbar>
-      <FormFilter
-        onSubmit={[Function]}
-      />
-      <QuestionFilter
-        onSubmit={[Function]}
-      />
-    </ButtonToolbar>
-    <AdvancedSearchFilter
-      onClear={[Function]}
+  <ButtonToolbar>
+    <FormFilter
       onSubmit={[Function]}
     />
-  </ErrorBoundary>
+    <QuestionFilter
+      onSubmit={[Function]}
+    />
+  </ButtonToolbar>
+  <AdvancedSearchFilter
+    onClear={[Function]}
+    onSubmit={[Function]}
+  />
 </div>
 `;

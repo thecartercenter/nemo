@@ -30,7 +30,7 @@ class ConditionSetModel {
   @observable
   hide;
 
-  constructor(initialValues) {
+  constructor(initialValues = {}) {
     Object.assign(this, initialValues);
 
     if (!initialValues.hide) {
