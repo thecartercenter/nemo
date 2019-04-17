@@ -148,8 +148,8 @@
     <%= t('layout.loading') %>
   </div>
 
-  <%# Include logo-dark (used for printing) here because for just-in-time ajax loading %>
-  <%# (e.g. forms) it may not load in time. %>
+  <%# Force the pre-loading of logo-dark so that when it's included elsewhere %>
+  <%# (e.g. just-in-time ajax loading for printing), it's already available to the browser. %>
   <%= logo_image(style: :dark, class: "d-none") if controller_name == "forms" %>
 
   <%# insert any audio objects at the end %>
