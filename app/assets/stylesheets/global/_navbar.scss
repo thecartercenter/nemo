@@ -41,7 +41,7 @@ nav.navbar-light {
       margin: side-values(0px 6px 0px 0px);
 
       &:hover, &:hover, &:focus {
-        color: $link-color;
+        color: $accent-color;
       }
 
       /* Overriding bootstrap navbar prefs */
@@ -73,7 +73,7 @@ nav.navbar-light {
 
         &:hover, &:focus {
           text-decoration: none;
-          color: $link-color !important;
+          color: $accent-color !important;
         }
       }
 
@@ -94,7 +94,7 @@ nav.navbar-light {
       }
 
       &:hover {
-        color: $link-color;
+        color: $accent-color;
       }
     }
 
@@ -127,7 +127,7 @@ nav.navbar-light {
 
           &:hover, &:focus {
             background: none;
-            color: $link-color;
+            color: $accent-color;
           }
         }
       }
