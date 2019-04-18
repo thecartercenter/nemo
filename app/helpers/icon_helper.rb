@@ -39,7 +39,7 @@ module IconHelper
   }
 
   # Returns the Font Awesome icon tag for the given object type or action.
-  # Returns empty string if mapping not found.
+  # If no mapping is found, uses the given key verbatim in a an fa-* style icon name.
   def icon_tag(key, options = {})
     name = FONT_AWESOME_ICON_MAPPINGS[key.to_sym] || key.to_s
     content_tag(:i, '', options.merge(class: "fa fa-#{name} icon-#{key.to_s.dasherize}"))

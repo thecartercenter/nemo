@@ -164,7 +164,9 @@ module ApplicationHelper
       ttl << std_icon(@title_args[:standardized]) unless options[:text_only]
 
       # Add object type icon where appropriate
-      ttl << icon_tag(model_name) unless options[:text_only]
+      if !options[:text_only] && IconHelper::FONT_AWESOME_ICON_MAPPINGS.include?(model_name.to_sym)
+        ttl << icon_tag(model_name)
+      end
 
       # add text
       if options[:name_only]
