@@ -37,7 +37,9 @@
       self.saveItem(action || "close");
       return false;
     });
-    self.modal.find("button.btn-secondary").on("click", function() {
+    self.modal.find("button.btn-secondary").on("click", function(event) {
+      event.stopPropagation();
+      self.modal.modal("hide");
       self.cancel_edit();
     });
 
@@ -50,6 +52,14 @@
         event.preventDefault(); // Prevent submission of the containing form.
         const btn = self.modal.find(".btn-primary").last();
         if (btn.is(':visible')) btn.trigger('click');
+      }
+    })
+
+    // Catch ESC key to prevent closing parent modal if exists.
+    self.modal.on('keydown', function(event) {
+      if (event.keyCode == 27) {
+        event.stopPropagation();
+        self.modal.modal("hide");
       }
     })
   };
