@@ -29,7 +29,7 @@
         el: $("#answer-group-set-<%= context.path_str %>"),
         next_index: <%= group_set.children.length %>,
         tmpl: <%= json(render("responses/answers/nodes",
-          nodes: context.find(@blank_response)&.children || [],
+          nodes: @blank_response.matching_group_set(group_set)&.children || [],
           index_placeholder: true,
           removable: true,
           context: context)) %>

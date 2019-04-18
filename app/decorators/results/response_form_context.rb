@@ -49,8 +49,9 @@ module Results
       path.join("-")
     end
 
-    # Find this context's path in the given response
-    # Returns an answer node
+    # Finds the node at the same position as the node represented
+    # by this context's path in the given response.
+    # Returns an answer node.
     def find(response)
       find_node(response.root_node, path.dup)
     end

@@ -40,6 +40,17 @@ class ResponseNode < ApplicationRecord
     "\n#{chunks.join}#{child_tree}"
   end
 
+  # Finds the first (in pre-order) descendant AnswerGroupSet with the same QingGroup as the given one.
+  # Returns nil if not found.
+  def matching_group_set(group_set)
+    if is_a?(AnswerGroupSet) && form_item == group_set
+      self
+    else
+      # Find, in a short-circuit fashion, the first non-nil recursive call result.
+      children.lazy.map { |c| c.matching_group_set(group_set) }.detect(&:itself)
+    end
+  end
+
   # relevant defaults to true until set otherwise
   def relevant?
     relevant.nil? ? true : relevant

@@ -54,7 +54,7 @@ class Response < ApplicationRecord
 
   delegate :name, to: :checked_out_by, prefix: true
   delegate :questionings, to: :form
-  delegate :c, :children, :debug_tree, to: :root_node
+  delegate :c, :children, :debug_tree, :matching_group_set, to: :root_node
 
   # remove previous checkouts by a user
   def self.remove_previous_checkouts_by(user = nil)
