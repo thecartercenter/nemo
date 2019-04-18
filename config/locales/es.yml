@@ -518,8 +518,6 @@ es:
               blank: "Debe seleccionar un tipo de informe."
         response:
           general: "La Respuesta no es válida (vea a continuación)."
-          missing_answers: "No todas las preguntas tienen respuestas."
-          invalid_answers: "Hay respuestas inválidas."
           checked_out: "Esta respuesta ha sido revisada por:"
         setting:
           attributes:

@@ -505,8 +505,6 @@ ko:
         edit: "선택지 수정"
         destroy: "선택지 삭제"
         export: "선택지 내보내기"
-      option_set_import:
-        new: "선택지 가져오기"
       question:
         new: "새 질문 생성"
         index: "질문 목록"
@@ -676,9 +674,6 @@ ko:
           cant_delete_if_has_answers: "적어도 한번 이상 응답된 선택지는 삭제 할 수 없습니다."
           general: "이 선택지를 저장하는데 문제가 발생했습니다."
           wrong_depth: "%{levels}개의 층이 설정되었기에 선택 항목들 간에 %{depth}개의 층이 생성될 수 없습니다."
-        option_set_import:
-          general: "선택지를 가져올 수 없습니다. (아래의 항목을 체크하십시오.)"
-          wrong_type: "업로드 될 파일은 반드시 유효한 XLSX 형식의 엑셀파일이어야 합니다."
         question:
           at_least_one_name: "적어도 하나의 언어를 사용하여 제목을 입력하십시오. "
           attributes:
@@ -717,8 +712,6 @@ ko:
           no_calc_or_opt_set: "보고서 '%{name}'를 위해 선택된 질문이나 선택지가 없습니다. 선택 후 다시 시도해주십시오."
         response:
           general: "응답이 유효하지 않습니다. (아래의 항목을 체크하십시오.)"
-          missing_answers: "모든 질문에 응답하지 않았습니다."
-          invalid_answers: "유효하지 않은 응답이 있습니다."
           checked_out: "이 응답지는 검토되었습니다. 검토자:"
           form_unavailable: "검색된 질문지가 이 미션에 존재하지 않습니다. "
         setting:

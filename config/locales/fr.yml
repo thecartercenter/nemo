@@ -33,7 +33,6 @@ fr:
     op_panel_more_info_link_html: "Voir le <a href='%{url}'> Panneau des opérations </a> pour plus d'informations."
     queued_msg:
       broadcast: "Diffusion en attente."
-      option_set_import: "Importation d'ensembles d'options en file d'attente."
       response_csv_export: "Export de réponses CSV en attente."
       user_import: "Import d'utilisateur en attente."
     see_error_report: "Voir le rapport d'erreur"
@@ -588,8 +587,6 @@ fr:
         edit: "Modifier l'ensemble d'options"
         destroy: "Supprimer l'ensemble d'options"
         export: "Exporter l'Ensemble d'Options "
-      option_set_import:
-        new: "Importer un Ensemble d'Options"
       question:
         new: "Créer une Nouvelle Question"
         index: "Lister les questions"
@@ -792,9 +789,6 @@ fr:
           cant_delete_if_has_answers: "Impossible de supprimer cet ensemble d'options parce que c'est inclus dans au moins une réponse."
           general: "Il y avait un problème d'enregistrer l'ensemble d'options."
           wrong_depth: "Vous avez %{levels} niveaux d'options mais votre arbre d'options est %{depth} options profonde."
-        option_set_import:
-          general: "Importation d'Ensemble d'options est invalide (voir ci-dessous)."
-          wrong_type: "Le fichier telechargé doit avoir un format valide de fichier excel Xlsx"
         question:
           at_least_one_name: "Il faut entrer un titre dans au moins une langue. "
           attributes:
@@ -838,8 +832,6 @@ fr:
           no_calc_or_opt_set: "il n'y a pas de question ou d'ensemble d'option selectionné pour le rapport '%{name}'. Veuillez modifier le rapport pour corriger ceci."
         response:
           general: "La réponse est invalide (voir ci-dessous)."
-          missing_answers: "Au moins une question sans résultat."
-          invalid_answers: "Il y a des résultats invalides."
           checked_out: "Cette réponse a été examiné par:"
           form_unavailable: "le formulaire spécifié n'existe pas dans cette mission."
         setting:
