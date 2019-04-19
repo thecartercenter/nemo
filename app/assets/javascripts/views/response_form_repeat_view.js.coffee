@@ -37,4 +37,4 @@ class ELMO.Views.ResponseFormRepeatView extends ELMO.Views.ApplicationView
     @toggleEmptyNotice()
 
   toggleEmptyNotice: ->
-    @$(".empty-notice").toggle(@children().find(":visible").length == 0)
+    @$("> .empty-notice").toggle(@children().find(":visible").length == 0)

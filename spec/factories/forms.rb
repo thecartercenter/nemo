@@ -64,6 +64,7 @@ end
 def build_item(item, form, parent, evaluator)
   if item.is_a?(Hash) && item.key?(:repeating)
     item = item[:repeating]
+    item = {items: item} if item.is_a?(Array)
     group = create(:qing_group,
       parent: parent,
       form: form,

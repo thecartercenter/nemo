@@ -48,31 +48,5 @@ module Results
     def path_str
       path.join("-")
     end
-
-    # Find this context's path in the given response
-    # Returns an answer node
-    def find(response)
-      find_node(response.root_node, path.dup)
-    end
-
-    private
-
-    def find_node(node, indices)
-      if indices.empty?
-        node
-      else
-        index = indices.shift
-        index = 0 if index == "__INDEX__"
-        child = node.children[index]
-
-        # It's possible that this context's path refers to a repeat item
-        # which may not exist in the given node tree.  If that's the case,
-        # we return the first sibling instead.  This happens when finding
-        # a repeat template node in the blank response tree.
-        child = node.children[0] if child.nil?
-
-        find_node(child, indices)
-      end
-    end
   end
 end
