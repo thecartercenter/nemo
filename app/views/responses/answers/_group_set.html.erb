@@ -6,30 +6,35 @@
   </div>
 
   <% unless context.read_only? %>
-    <div class="empty-notice">
+    <div class="empty-notice collapse">
       <div class="group-header">
         <h2><%= group_set.qing_group.group_name %></h2>
       </div>
       <p><%= t("response.empty_group_notice") %></p>
     </div>
 
-    <a href="#" class="add-repeat">
-      <%= icon_tag("plus") %>
-      <%= t("response.add_to_group", group_name: group_set.name) %>
-    </a>
+    <%# If we can't find an AnswerGroupSet with the same QingGroup as this group_set in the @blank_response
+        then we don't show the add link because we have no way to render the template.
+        We _could_ theoretically reverse engineer the blank template from an existing AnswerGroupSet if
+        one exists, but we're not going down that road yet. %>
+    <% blank_group_set = @blank_response.matching_group_set(group_set.qing_group) %>
+    <% if blank_group_set %>
+      <a href="#" class="add-repeat">
+        <%= icon_tag("plus") %>
+        <%= t("response.add_to_group", group_name: group_set.name) %>
+      </a>
+    <% end %>
 
-    <%
-    # Below we render a template based on the blank response tree
-    # This template is used to insert new repeat groups and, upon
-    # insertion, the following JavaScript will be executed recursively
-    # for any nested group sets.
-    %>
+    <% # Below we render a template based on the blank response tree
+       # This template is used to insert new repeat groups and, upon
+       # insertion, the following JavaScript will be executed recursively
+       # for any nested group sets. %>
     <%= javascript_doc_ready do %>
       new ELMO.Views.ResponseFormRepeatView({
         el: $("#answer-group-set-<%= context.path_str %>"),
         next_index: <%= group_set.children.length %>,
         tmpl: <%= json(render("responses/answers/nodes",
-          nodes: @blank_response.matching_group_set(group_set.qing_group)&.children || [],
+          nodes: blank_group_set&.children || [],
           index_placeholder: true,
           removable: true,
           context: context)) %>
