@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe FormItem do
@@ -29,88 +31,88 @@ describe FormItem do
       let!(:group) { create(:qing_group, form: form, parent: form.root_group) }
 
       it "should create 4 questionings and one group with correct ranks" do
-        expect(form.c.map(&:rank)).to eq [1, 2, 3, 4, 5]
+        expect(form.c.map(&:rank)).to eq([1, 2, 3, 4, 5])
       end
 
       it "should ignore deleted items when adding rank" do
         form.c[4].destroy
         qing = create(:questioning, form: form, parent: form.root_group)
-        expect(qing.rank).to eq 5
+        expect(qing.rank).to eq(5)
       end
 
       it "should adjust ranks when existing questioning moved to the empty group" do
         old1, old2, old3, old4 = form.c
         old2.move(group, 1)
-        expect(old1.reload.rank).to eq 1
-        expect(old2.reload.rank).to eq 1
-        expect(old3.reload.rank).to eq 2 # Should move down one.
-        expect(old4.reload.rank).to eq 3 # Should move down one.
+        expect(old1.reload.rank).to eq(1)
+        expect(old2.reload.rank).to eq(1)
+        expect(old3.reload.rank).to eq(2) # Should move down one.
+        expect(old4.reload.rank).to eq(3) # Should move down one.
       end
 
       it "should change order of the questioning moved higher" do
         child2 = form.c[2]
         child3 = form.c[3]
         child3.move_higher
-        expect(child2.reload.rank).to eq 4
-        expect(child3.reload.rank).to eq 3
+        expect(child2.reload.rank).to eq(4)
+        expect(child3.reload.rank).to eq(3)
       end
 
       it "should change order of the questioning moved lower" do
         child0 = form.c[0]
         child1 = form.c[1]
         child0.move_lower
-        expect(child0.reload.rank).to eq 2
-        expect(child1.reload.rank).to eq 1
+        expect(child0.reload.rank).to eq(2)
+        expect(child1.reload.rank).to eq(1)
       end
 
       it "should fix ranks when item deleted" do
         (q = form.c[1]).destroy
-        expect(form.c).not_to include q
-        expect(form.c.map(&:rank)).to eq [1, 2, 3, 4]
+        expect(form.c).not_to include(q)
+        expect(form.c.map(&:rank)).to eq([1, 2, 3, 4])
       end
     end
 
     context "with nested form" do
-      let(:form) { create(:form, question_types: ["text", ["text", "text"]]) }
+      let(:form) { create(:form, question_types: ["text", %w[text text]]) }
 
       it "should work when changing ranks of second level items" do
         q1, q2 = form.c[1].c
         q2.move(q2.parent, 1)
-        expect(q1.reload.rank).to eq 2
-        expect(q2.reload.rank).to eq 1
+        expect(q1.reload.rank).to eq(2)
+        expect(q2.reload.rank).to eq(1)
       end
 
       it "should ignore deleted children when moving item to group" do
         form.c[1].c[1].destroy
         form.c[0].move(form.c[1], 2)
-        expect(form.reload.c[0].c.map(&:rank)).to eq [1, 2]
+        expect(form.reload.c[0].c.map(&:rank)).to eq([1, 2])
       end
 
       it "should trim requested rank when moving if too low" do
         old1 = form.c[0]
         form.c[0].move(form.c[1], 0)
-        expect(form.reload.c[0].c.map(&:rank)).to eq [1, 2, 3]
-        expect(old1.reload.rank).to eq 1
+        expect(form.reload.c[0].c.map(&:rank)).to eq([1, 2, 3])
+        expect(old1.reload.rank).to eq(1)
       end
 
       it "should trim requested rank when moving if too high" do
         old1 = form.c[0]
         form.c[0].move(form.c[1], 10)
-        expect(form.reload.c[0].c.map(&:rank)).to eq [1, 2, 3]
-        expect(old1.reload.rank).to eq 3
+        expect(form.reload.c[0].c.map(&:rank)).to eq([1, 2, 3])
+        expect(old1.reload.rank).to eq(3)
       end
     end
   end
 
   describe "tree traversal" do
     context "with deeply nested form" do
-      let(:form) { create(:form, question_types: ["text", ["text", "text"], ["text", "text", ["text", "text"]]]) }
+      let(:form) { create(:form, question_types: ["text", %w[text text], ["text", "text", %w[text text]]]) }
       let(:qing) { form.c[2].c[0] }
       let(:other_qing) { form.c[2].c[2].c[0] }
       let(:common_ancestor) { form.c[2] }
 
       it "should be able to find its lowest common ancestor with another node" do
-        expect(qing.lowest_common_ancestor(other_qing).id).to eq common_ancestor.id
+        expect(qing.lowest_common_ancestor(other_qing).id).to eq(common_ancestor.id)
       end
     end
   end
@@ -192,56 +194,61 @@ describe FormItem do
       end
 
       it "should be discarded if totally empty" do
-        expect(qing.skip_rules.count).to eq 1
-        expect(qing.skip_rules[0].destination).to eq "end"
+        expect(qing.skip_rules.count).to eq(1)
+        expect(qing.skip_rules[0].destination).to eq("end")
       end
     end
   end
 
   describe "#refable_qings" do
-    let(:form) { create(:form, question_types:
-      ["text", "location", "text", ["text", %w(text text text), "text"], "text", "text"]) }
+    let(:form) do
+      create(:form, question_types:
+      ["text", "location", "text", ["text", %w[text text text], "text"], "text", "text"])
+    end
 
     it "is correct for subsubquestion" do
-      expect(form.c[3].c[1].c[1].refable_qings).to eq [
+      expect(form.c[3].c[1].c[1].refable_qings).to eq([
         form.c[0],
         form.c[2],
         form.c[3].c[0],
         form.c[3].c[1].c[0],
         form.c[3].c[1].c[1]
-      ]
+      ])
     end
 
     it "is correct for subgroup" do
-      expect(form.c[3].c[1].refable_qings).to eq [
+      expect(form.c[3].c[1].refable_qings).to eq([
         form.c[0],
         form.c[2],
         form.c[3].c[0]
-      ]
+      ])
     end
 
     it "is correct for first question on form" do
-      expect(form.c[0].refable_qings).to eq [form.c[0]]
+      expect(form.c[0].refable_qings).to eq([form.c[0]])
     end
 
     it "returns all questionings of refable type on form if host item not persisted" do
       # Expect everything except groups and location question.
       expect(FormItem.new(form: form).refable_qings).to eq(
-        (form.preordered_items - [form.c[1], form.c[3], form.c[3].c[1]]))
+        (form.preordered_items - [form.c[1], form.c[3], form.c[3].c[1]])
+      )
     end
   end
 
   describe "#later_items" do
-    let(:form) { create(:form, question_types:
-      ["text", "text", ["text", %w(text text text), "text"], "text", "text"]) }
+    let(:form) do
+      create(:form, question_types:
+      ["text", "text", ["text", %w[text text text], "text"], "text", "text"])
+    end
 
     it "is correct for subsubquestion" do
-      expect(form.c[2].c[1].c[1].later_items).to eq [
+      expect(form.c[2].c[1].c[1].later_items).to eq([
         form.c[2].c[1].c[2],
         form.c[2].c[2],
         form.c[3],
         form.c[4]
-      ]
+      ])
     end
 
     it "is correct for first question" do
@@ -258,9 +265,27 @@ describe FormItem do
 
     it "passes along eager_load" do
       item = form.c[0]
-      expect(item).to receive(:form).and_return(form = double())
+      expect(item).to receive(:form).and_return(form = double)
       expect(form).to receive(:preordered_items).with(eager_load: %i[form question]).and_return([item])
       item.later_items(eager_load: :form)
+    end
+  end
+
+  describe "destroy" do
+    context "with incoming and outgoing skip rules" do
+      let!(:form) { create(:form, question_types: %w[text text text]) }
+      let!(:skip_rule1) do
+        form.c[0].skip_rules.create!(destination: "item", dest_item: form.c[1], skip_if: "always")
+      end
+      let!(:skip_rule2) do
+        form.c[1].skip_rules.create!(destination: "item", dest_item: form.c[2], skip_if: "always")
+      end
+
+      it "should destroy cleanly" do
+        form.c[1].destroy
+        expect(skip_rule1).to be_destroyed
+        expect(skip_rule2).to be_destroyed
+      end
     end
   end
 end
