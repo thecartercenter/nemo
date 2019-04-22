@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
-# Sends broadcast emails.
-class BroadcastMailer < ApplicationMailer
+# App-wide parent for all mailers.
+class ApplicationMailer < ActionMailer::Base
+  default from: configatron.site_email
+
   def broadcast(recips, subj, msg)
     @msg = msg
     # TODO: We should send a separate email to each recipient

@@ -1,9 +1,7 @@
 # frozen_string_literal: true
 
 # Email notifier, to send various emails
-class Notifier < ActionMailer::Base
-  default(from: configatron.site_email)
-
+class Notifier < ApplicationMailer
   def password_reset_instructions(user, mission: nil)
     build_reset_url(user)
     mail(to: user.email, reply_to: reply_to(mission),

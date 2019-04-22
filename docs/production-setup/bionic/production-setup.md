@@ -45,7 +45,8 @@ Paste the contents of [this config file](nginx-certbot.conf). Update the `server
 Then follow [instructions at the Certbot site](https://certbot.eff.org/lets-encrypt/ubuntubionic-nginx).
 The Certbot program should obtain your certificate, add the necessary settings to your nginx configuration file, and restart the server.
 
-To auto-renew your certificate (recommended), add the following to your crontab (type `sudo crontab -e`):
+Certificate auto-renewal is required since LetsEncrypt certificates are only valid for 90 days.
+To auto-renew your certificate, add the following to your crontab (type `crontab -e`):
 
     X * * * * PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin && /usr/bin/certbot renew --no-self-upgrade > /root/certbot-cron.log 2>&1
 
@@ -153,6 +154,22 @@ Entering a functioning email server is important as ELMO relies on email to send
 
     # Generate admin user (note the password that is output)
     bundle exec rake db:create_admin
+
+### Test Email
+
+Email is important for NEMO to work properly. To test it, run:
+
+    bundle exec rails console
+
+and then enter the following, replacing EMAIL with an email address you can check and that is _different from_ the one you entered for the site's email.
+
+    class T < ApplicationMailer; def t; mail(to: "EMAIL", subject: "Test 1", body: "Test 1"); end; end; T.t.deliver_now
+
+The console should print a line starting with `=> #<Mail::Message:` and the email should arrive.
+If you get an error, you will need to check your mail settings. It's also possible the email will end
+up in your spam folder because of its short body and subject.
+If this happens, try doing a NEMO password reset (click the link on the login screen).
+If this email also ends up in your spam folder, you should raise the issue with your email provider.
 
 ### Create a Delayed Job service
 
