@@ -13,8 +13,6 @@ class FormsController < ApplicationController
   # special find method before load_resource
   before_action :load_form, :only => [:show, :edit, :update]
 
-  after_action :check_rank_fail
-
   # authorization via cancan
   load_and_authorize_resource
 

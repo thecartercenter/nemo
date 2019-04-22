@@ -22,15 +22,6 @@ module Concerns::ApplicationController::ErrorHandling
     end
   end
 
-  # Temporary bug chasing code
-  def check_rank_fail
-    if Rails.configuration.x.rank_fail_warned.blank? && (FormItem.rank_gaps? || FormItem.duplicate_ranks?)
-      Rails.configuration.x.rank_fail_warned = true # Don't warn again until app restarted.
-      `pg_dump #{ActiveRecord::Base.connection.current_database} > #{Rails.root}/tmp/rankfail-#{Time.current.strftime('%Y%m%d%H%M')}.sql`
-      ExceptionNotifier.notify_exception(StandardError.new("Last request introduced rank issues. DB dumped."))
-    end
-  end
-
   def render_not_found
     respond_to do |format|
       format.html { render file: Rails.root.join("public", "404"), layout: false, status: :not_found }
