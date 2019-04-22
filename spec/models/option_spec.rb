@@ -110,4 +110,38 @@ describe Option do
       expect(option.coordinates?).to be(false)
     end
   end
+
+  describe "answer touching" do
+    let!(:form) do
+      create(:form, question_types: %w[select_one select_multiple select_one]).tap do |f|
+        # First two questions will have same option set, third (decoy) will not.
+        f.c[1].question.update!(option_set: f.c[0].option_set)
+      end
+    end
+    let!(:response) { create(:response, form: form, answer_values: ["Cat", %w[Cat Dog], "Cat"]) }
+    let(:option) { form.c[0].option_set.c[0].option }
+
+    context "when name translations haven't changed" do
+      it "doesn't call update_answer_search_vectors" do
+        expect(option).not_to receive(:update_answer_search_vectors)
+        option.update!(value: 99)
+      end
+    end
+
+    context "when name translations have changed" do
+      it "updates search index tsv on both answers but not decoy" do
+        expect(option).to receive(:update_answer_search_vectors).and_call_original
+        option.update!(name_en: "Kitty")
+        response.reload
+        expect(response.c[0].tsv).to match("'kitty'")
+        expect(response.c[1].tsv).to match("'kitty'")
+        expect(response.c[2].tsv).to match("'cat'")
+      end
+
+      it "calls update_answer_search_vectors even for different language change" do
+        expect(option).to receive(:update_answer_search_vectors)
+        option.update!(name_it: "Changed")
+      end
+    end
+  end
 end

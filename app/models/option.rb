@@ -8,7 +8,7 @@ class Option < ApplicationRecord
   include MissionBased
 
   MAX_NAME_LENGTH = 255
-  LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/
+  LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/.freeze
 
   has_many :option_nodes, -> { order(:rank) }, inverse_of: :option, dependent: :destroy, autosave: true
   has_many :option_sets, through: :option_nodes
@@ -17,7 +17,7 @@ class Option < ApplicationRecord
 
   before_validation :normalize
   after_save :invalidate_cache
-  after_save :touch_answers_choices
+  after_save :update_answer_search_vectors, if: :names_changed?
   after_destroy :invalidate_cache
 
   scope :with_questions_and_forms,
@@ -124,10 +124,12 @@ class Option < ApplicationRecord
     Rails.cache.delete("mission_options/#{mission_id}")
   end
 
-  # Touch these objects so the search index is updated.
-  def touch_answers_choices
-    answers.each(&:touch)
-    choices.each(&:touch)
+  def names_changed?
+    saved_change_to_name_translations?
+  end
+
+  def update_answer_search_vectors
+    Results::AnswerSearchVectorUpdater.instance.update_for_option(self)
   end
 
   def check_invalid_coordinates_flag

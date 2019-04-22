@@ -7,18 +7,12 @@ class Answer < ResponseNode
   include ActionView::Helpers::NumberHelper
   include PgSearch
 
-  LOCATION_ATTRIBS = %i(latitude longitude altitude accuracy)
+  LOCATION_ATTRIBS = %i[latitude longitude altitude accuracy]
 
   # Convert value to tsvector for use in full text search.
   trigger.before(:insert, :update) do
-    "new.tsv := TO_TSVECTOR('simple', COALESCE(
-      new.value,
-      (SELECT STRING_AGG(opt_name_translation.value, ' ')
-        FROM options, jsonb_each_text(options.name_translations) opt_name_translation
-        WHERE options.id = new.option_id
-          OR options.id IN (SELECT option_id FROM choices WHERE answer_id = new.id)),
-      ''
-    ));"
+    expr = Results::AnswerSearchVectorUpdater.instance.vector_expression(tblref: "new")
+    "new.tsv := #{expr};"
   end
 
   attr_accessor :location_values_replicated
