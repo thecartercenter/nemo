@@ -4,4 +4,5 @@ $theme-main: #879caa;
 $header-background-color: $theme-main;
 $footer-background-color: $gray-blue;
 $accent-color: #f77d48;
+$text-over-accent-color: $white; // Bootstrap defaults to high-contrast text but it doesn't look good on orange.
 $darker-accent-color: #02648a;

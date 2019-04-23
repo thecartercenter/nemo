@@ -34,7 +34,8 @@ $error-red: #d02000;
 $success-green: #9dc400;
 
 $theme-main: #879caa;
-$accent-color: #f77d48; // Used for things like primary buttons and links.
+$accent-color: #444; // Used for things like primary buttons and links.
+$text-over-accent-color: color-yiq($accent-color);
 $darker-accent-color: #02648a;
 $deemphasized-accent-color: #ccc;
 $header-background-color: $theme-main;
