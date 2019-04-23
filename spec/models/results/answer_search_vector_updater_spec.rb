@@ -16,7 +16,7 @@ describe Results::AnswerSearchVectorUpdater do
     option.update!(name_en: "Kitty") # This calls our class in a callback.
     response.reload
     expect(response.c[0].tsv).to eq("'kitty':1")
-    expect(response.c[1].tsv).to eq("'dog':1 'kitty':2")
+    expect(response.c[1].tsv).to match(/\A'dog':\d 'kitty':\d\z/)
     expect(response.c[2].tsv).to eq("'cat':1")
   end
 end
