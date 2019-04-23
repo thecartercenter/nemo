@@ -15,8 +15,8 @@ describe Results::AnswerSearchVectorUpdater do
   it "updates search index tsv on both answers but not decoy" do
     option.update!(name_en: "Kitty") # This calls our class in a callback.
     response.reload
-    expect(response.c[0].tsv).to match("'kitty'")
-    expect(response.c[1].tsv).to match("'kitty'")
-    expect(response.c[2].tsv).to match("'cat'")
+    expect(response.c[0].tsv).to eq("'kitty':1")
+    expect(response.c[1].tsv).to eq("'dog':1 'kitty':2")
+    expect(response.c[2].tsv).to eq("'cat':1")
   end
 end

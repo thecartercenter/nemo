@@ -11,8 +11,7 @@ class Answer < ResponseNode
 
   # Convert value to tsvector for use in full text search.
   trigger.before(:insert, :update) do
-    expr = Results::AnswerSearchVectorUpdater.instance.vector_expression(tblref: "new")
-    "new.tsv := #{expr};"
+    "new.tsv := #{Results::AnswerSearchVectorUpdater.instance.trigger_expression};"
   end
 
   attr_accessor :location_values_replicated
