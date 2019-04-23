@@ -243,8 +243,8 @@ module ApplicationHelper
       if can?(:index, k)
         path = dynamic_path(k, action: :index)
         active = current_page?(path)
-        links << content_tag(:li, class: active ? "active" : "") do
-          link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
+        links << content_tag(:li, class: "nav-item" + (active ? " active" : "")) do
+          link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path, class: "nav-link")
         end
       end
     end

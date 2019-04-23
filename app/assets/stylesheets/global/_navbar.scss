@@ -1,6 +1,7 @@
 nav.navbar-light {
   @include media-breakpoint-up(sm) {
-    padding: 0 20px;
+    padding-top: 0;
+    padding-bottom: 0;
   }
 
   /* For standard label in admin mode */
@@ -27,8 +28,8 @@ nav.navbar-light {
     }
 
     li {
-      padding: 15px 6px 15px 6px;
-      margin: side-values(0px 6px 0px 0px);
+      padding: 14px 6px;
+      margin-bottom: 0;
 
       &:hover, &:hover, &:focus {
         color: $accent-color;
@@ -58,6 +59,14 @@ nav.navbar-light {
 
           .caret {
             margin-top: 8px;
+          }
+        }
+
+        &.dropdown-toggle {
+          // Add the same padding as regular nav-link items.
+          @include media-breakpoint-up(sm) {
+            padding-right: 0.5rem;
+            padding-left: 0.5rem;
           }
         }
 
