@@ -1,15 +1,6 @@
 nav.navbar-light {
-  /* Override Bootstrap */
-  background-color: $nav-background-color;
-  border-color: $nav-border-color;
-  border-radius: 0 !important;
-  margin-bottom: 0 !important;
-
   @include media-breakpoint-up(sm) {
-    padding-bottom: 0;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 0;
+    padding: 0 20px;
   }
 
   /* For standard label in admin mode */
@@ -27,7 +18,6 @@ nav.navbar-light {
   }
 
   ul.navbar-nav {
-
     float: $left;
 
     @include if-rtl {
