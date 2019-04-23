@@ -17,7 +17,7 @@ class Option < ApplicationRecord
 
   before_validation :normalize
   after_save :invalidate_cache
-  after_save :touch_answers_choices
+  after_save :update_answer_search_vectors, if: :names_changed?
   after_destroy :invalidate_cache
 
   scope :with_questions_and_forms,
@@ -124,10 +124,12 @@ class Option < ApplicationRecord
     Rails.cache.delete("mission_options/#{mission_id}")
   end
 
-  # Touch these objects so the search index is updated.
-  def touch_answers_choices
-    answers.each(&:touch)
-    choices.each(&:touch)
+  def names_changed?
+    saved_change_to_name_translations?
+  end
+
+  def update_answer_search_vectors
+    Results::AnswerSearchVectorUpdater.instance.update_for_option(self)
   end
 
   def check_invalid_coordinates_flag

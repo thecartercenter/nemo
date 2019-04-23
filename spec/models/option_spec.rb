@@ -110,4 +110,29 @@ describe Option do
       expect(option.coordinates?).to be(false)
     end
   end
+
+  describe "#update_answer_search_vectors" do
+    let!(:form) { create(:form, question_types: %w[select_one]) }
+    let!(:response) { create(:response, form: form, answer_values: ["Cat"]) }
+    let(:option) { form.c[0].option_set.c[0].option }
+
+    context "when name translations haven't changed" do
+      it "doesn't call update_answer_search_vectors" do
+        expect(option).not_to receive(:update_answer_search_vectors)
+        option.update!(value: 99)
+      end
+    end
+
+    context "when name translations have changed" do
+      it "calls update_answer_search_vectors" do
+        expect(option).to receive(:update_answer_search_vectors)
+        option.update!(name_en: "Changed")
+      end
+
+      it "calls update_answer_search_vectors even for different language change" do
+        expect(option).to receive(:update_answer_search_vectors)
+        option.update!(name_it: "Changed")
+      end
+    end
+  end
 end
