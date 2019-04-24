@@ -57,7 +57,14 @@
   margin-bottom: 6px;
 }
 
-.badge-full {
+.badge-custom {
   font-size: 100%; // Display full-size instead of shrinking to tiny 75%.
   margin-left: 2px;
+  background-color: $pill-background-color;
+  border: 1px solid $pill-border-color;
+
+  &.clickable:hover {
+    background-color: $pill-background-hover-color;
+    cursor: pointer;
+  }
 }
