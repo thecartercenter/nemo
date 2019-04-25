@@ -231,9 +231,9 @@ module ApplicationHelper
     message
   end
 
-  # pill label
-  def pill_label(text, kind: "default")
-    content_tag(:span, text, class: "badge badge-pill badge-#{kind}")
+  # Renders a Bootstrap badge tag to be used inside a page title h1.
+  def title_badge(text)
+    content_tag(:span, text, class: "badge badge-secondary")
   end
 
   # makes a set of <li> wrapped links to the index actions of the given classes
