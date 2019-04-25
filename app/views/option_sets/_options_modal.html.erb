@@ -14,32 +14,28 @@
           <%# this warning will get hidden/shown by the js %>
           <%= data_integrity_warning(:option_in_use_name_change_warning) %>
 
-          <%= elmo_fields_for("", Option.new) do |f| %>
+          <%= elmo_fields_for("option", Option.new) do |f| %>
             <div class="fields">
               <% configatron.preferred_locales.each do |locale| %>
                 <%= f.field(:"name_#{locale}", maxlength: Option::MAX_NAME_LENGTH,
                                                wrapper_class: "translation",
                                                label: language_name(locale),
-                                               id: "option_name_#{locale}",
                                                unnamed: true,
                                                data: {locale: locale}) %>
               <% end %>
-              <%= f.field(:latitude, id: "option_latitude",
-                                     type: :number,
+              <%= f.field(:latitude, type: :number,
                                      step: :any,
                                      unnamed: true,
                                      wrapper_class: "coordinate",
                                      label: t("option_set.latitude"),
                                      data: {field: "latitude"}) %>
-              <%= f.field(:longitude, id: "option_longitude",
-                                      type: :number,
+              <%= f.field(:longitude, type: :number,
                                       step: :any,
                                       unnamed: true,
                                       wrapper_class: "coordinate",
                                       label: t("option_set.longitude"),
                                       data: {field: "longitude"}) %>
-              <%= f.field(:value, id: "option_value",
-                                  type: :number,
+              <%= f.field(:value, type: :number,
                                   unnamed: true,
                                   label: t("option_set.value"),
                                   data: {field: "value"}) %>

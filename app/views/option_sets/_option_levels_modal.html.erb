@@ -8,13 +8,12 @@
       </div>
       <div class="modal-body">
         <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
-        <%= elmo_fields_for("", OptionLevel.new({})) do |f| %>
+        <%= elmo_fields_for(:option_level, OptionLevel.new({})) do |f| %>
           <div class="fields">
             <% configatron.preferred_locales.each do |locale| %>
               <%= f.field(:"name_#{locale}", maxlength: Option::MAX_NAME_LENGTH,
                                              wrapper_class: "translation",
                                              label: language_name(locale),
-                                             id: "option_level_name_#{locale}",
                                              unnamed: true,
                                              data: {locale: locale}) %>
             <% end %>
