@@ -73,7 +73,7 @@
 
     // content window inner dimensions
     var cont_w = $('#content').width() - 4;
-    var cont_h = $(window).height() - $('#title').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
+    var cont_h = $(window).height() - $('#logo').outerHeight(true) - $('#main-nav').outerHeight(true) - 4 * spacing;
 
     // Save map center so we can recenter after resize.
     var map_center = this.map_view.center();
@@ -161,13 +161,13 @@
       $('#footer').hide();
       $('#main-nav').hide();
       $('#userinfo').hide();
-      $('#title img').css('height', '30px');
+      $('#logo img').css('height', '30px');
       $('a.full-screen i').removeClass('fa-expand').addClass('fa-compress');
     } else {
       $('#footer').show();
       $('#main-nav').show();
       $('#userinfo').show();
-      $('#title img').css('height', '54px'); //initial does weird stuff on first load with oversized logo
+      $('#logo img').css('height', '54px'); //initial does weird stuff on first load with oversized logo
       $('a.full-screen i').removeClass('fa-compress').addClass('fa-expand');
     }
 

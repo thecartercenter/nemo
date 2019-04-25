@@ -37,7 +37,7 @@
     <%= render('layouts/userinfo') %>
 
     <%# Logo and mission if selected %>
-    <div id="title" class="d-print-none">
+    <div id="logo" class="d-print-none">
       <%= link_to(logo_image, current_root_path) %>
       <%# Stripping title name since we have a logo now %>
       <h2>
@@ -108,7 +108,7 @@
     <%= alerts(flash) %>
     <%= yield(:alerts) %>
     <% unless @dont_print_title %>
-      <div id="title_container">
+      <div id="title-container">
         <%= h1_title(content: yield(:title_content)) %>
       </div>
     <% end %>

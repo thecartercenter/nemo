@@ -14,7 +14,7 @@ feature 'switching between missions and modes', js: true do
     # We get logged in to mission2, so first test that changing to mission1 from mission2 root works.
     expect(current_url).to match("/m/#{@mission2.compact_name}")
     select(@mission1.name, from: 'change-mission')
-    expect(page).to have_selector('#title h2', text: /#{@mission1.name}/i)
+    expect(page).to have_selector('#logo h2', text: /#{@mission1.name}/i)
 
     # Smart redirect on mission change should work.
     # (Note this the controller logic for this is extensively tested in mission_change_redirect_spec but this test
@@ -29,6 +29,6 @@ feature 'switching between missions and modes', js: true do
     visit('/en/unauthorized')
     select(@mission1.name, from: 'change-mission')
     sleep 2 # Test fails without this, even though have_selector is supposed to wait.
-    expect(page).to have_selector('#title h2', text: /#{@mission1.name}/i)
+    expect(page).to have_selector('#logo h2', text: /#{@mission1.name}/i)
   end
 end
