@@ -1,1 +1,3 @@
-nvm use && bundle exec rails s -p 8443
+nvm use
+yarn install
+bundle exec rails s -p 8443
