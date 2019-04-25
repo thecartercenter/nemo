@@ -25,7 +25,7 @@ table.index_table {
       padding-#{$right}: 10px;
     }
 
-    a {
+    a:not(.badge) {
       color: $darker-accent-color;
       padding: 5px 0;
     }

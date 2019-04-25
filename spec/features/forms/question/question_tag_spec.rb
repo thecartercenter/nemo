@@ -97,22 +97,22 @@ feature "question tags" do
     # Check that index/form edit page has loaded
     expect(page).to have_selector("h1", text: (options[:qtype] == "question" ? "Questions" : /^Edit Form:/))
     within options[:table_row_id] do
-      expect(page).to have_selector("span.tag", text: "snack")
+      expect(page).to have_selector("span.badge", text: "snack")
     end
 
     # On questions index page, also check that tags show at top
     if options[:qtype] == "question"
       within "div.all-tags" do
-        expect(page).to have_selector("span.tag", text: "dairy")
-        expect(page).to have_selector("span.tag", text: "snack")
+        expect(page).to have_selector("span.badge", text: "dairy")
+        expect(page).to have_selector("span.badge", text: "snack")
       end
     end
 
     # Tags show on question(ing) show page
     visit(options[:show_path])
     within "div#tag_ids" do
-      expect(page).to have_selector("span.tag", text: "snack")
-      expect(page).not_to have_selector("span.tag", text: "drink")
+      expect(page).to have_selector("span.badge", text: "snack")
+      expect(page).not_to have_selector("span.badge", text: "drink")
     end
 
     # Admin mode
@@ -132,7 +132,7 @@ feature "question tags" do
     # Tags show on question(ing) page
     visit(options[:admin_show_path])
     within "div#tag_ids" do
-      expect(page).to have_selector("span.tag", text: "beverage")
+      expect(page).to have_selector("span.badge", text: "beverage")
     end
 
     expect(Tag.find_by(name: "food").mission_id).to be_nil
@@ -147,13 +147,13 @@ feature "question tags" do
     expect(page).not_to have_content(question2.code)
 
     # Click tag
-    first("span.tag", text: "dairy").click
+    first("span.badge", text: "dairy").click
     expect(current_url).to include("search=cheese+tag%3Adairy")
     expect(page).to have_content(question1.code)
     expect(page).not_to have_content(question2.code)
 
     # Click another tag
-    first("span.tag", text: "pastry").click
+    first("span.badge", text: "pastry").click
     expect(current_url).to include("search=cheese+tag%3Apastry")
     expect(current_url).not_to include("beverage")
     expect(page).to have_content(question1.code)
@@ -161,11 +161,11 @@ feature "question tags" do
 
     # More complicated searches
     search_for("tag: (pastry |dairy )cheese")
-    first("span.tag", text: "pastry").click
+    first("span.badge", text: "pastry").click
     expect(current_url).to include("search=cheese+tag%3Apastry")
 
     search_for('cheese tag: "pastry"')
-    first("span.tag", text: "dairy").click
+    first("span.badge", text: "dairy").click
     expect(current_url).to include("search=cheese+tag%3Adairy")
   end
 end

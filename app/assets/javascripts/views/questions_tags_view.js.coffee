@@ -4,7 +4,7 @@ class ELMO.Views.QuestionsTagsView extends ELMO.Views.ApplicationView
   el: '.tags'
 
   events:
-    'click .tag': 'addToSearch'
+    'click .badge': 'addToSearch'
 
   addToSearch: (e) ->
     e.stopPropagation()
