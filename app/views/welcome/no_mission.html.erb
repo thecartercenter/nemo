@@ -1,15 +1,15 @@
-<h1 class="title"><%= t('welcome.no_mission_selected.title') %></h1>
+<% @title = t("welcome.no_mission_selected.title") %>
 <% if current_user.admin? %>
   <% if Mission.any? %>
-    <%= t('welcome.no_mission_selected.choose_or_create') %>
+    <%= t("welcome.no_mission_selected.choose_or_create") %>
   <% else %>
-    <%= t('welcome.no_mission_selected.need_to_create') %>
+    <%= t("welcome.no_mission_selected.need_to_create") %>
   <% end %>
-  <%= link_to(t('welcome.no_mission_selected.create_link'), new_mission_path(:mode => 'admin')) %>.
+  <%= link_to(t("welcome.no_mission_selected.create_link"), new_mission_path(mode: "admin")) %>.
 <% else %>
   <% if Mission.any? %>
-    <%= t('welcome.no_mission_selected.choose') %>
+    <%= t("welcome.no_mission_selected.choose") %>
   <% else %>
-    <%= t('welcome.no_mission_selected.no_missions') %>
+    <%= t("welcome.no_mission_selected.no_missions") %>
   <% end %>
 <% end %>

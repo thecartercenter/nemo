@@ -16,10 +16,9 @@ class WelcomeController < ApplicationController
   def index
     return redirect_to(login_path) unless current_user
 
-    # we set this because there is no title on the page
-    @dont_print_title = true
-
     if current_mission
+      # Dashboard has no title.
+      @dont_print_title = true
       dashboard_index
     elsif admin_mode?
       render :admin
