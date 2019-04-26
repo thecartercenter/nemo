@@ -26,8 +26,6 @@ class QuestionFilter extends React.Component {
         id="form-filter"
       >
         <ConditionSetFormField
-          conditionableId={selectedFormId}
-          conditionableType="FormItem"
           refableQings={refableQings}
         />
 

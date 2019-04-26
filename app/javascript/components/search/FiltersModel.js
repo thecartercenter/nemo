@@ -40,10 +40,7 @@ class FiltersModel {
       async (selectedFormId) => {
         if (this.conditionSetStore.formId !== selectedFormId) {
           // Reset the entire store because the available questions will have changed.
-          Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {
-            conditionableId: selectedFormId,
-            formId: selectedFormId,
-          });
+          Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {});
 
           await this.updateRefableQings();
         }
@@ -67,12 +64,7 @@ class FiltersModel {
 
   buildUrl = () => {
     const formId = this.selectedFormId;
-    const params = {
-      conditionable_id: formId || undefined,
-      conditionable_type: formId ? 'FormItem' : undefined,
-    };
-    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
-    return `${url}?${queryString.stringify(params)}`;
+    return ELMO.app.url_builder.build('form-items', 'condition-form');
   }
 
   @action

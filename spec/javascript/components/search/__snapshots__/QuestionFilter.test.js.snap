@@ -20,8 +20,6 @@ exports[`popover renders as expected 1`] = `
   id="form-filter"
 >
   <ConditionSetFormField
-    conditionableId="2"
-    conditionableType="FormItem"
     refableQings={
       Array [
         Object {
@@ -62,8 +60,6 @@ exports[`renders as expected 1`] = `
       id="form-filter"
     >
       <ConditionSetFormField
-        conditionableId="2"
-        conditionableType="FormItem"
         refableQings={
           Array [
             Object {
