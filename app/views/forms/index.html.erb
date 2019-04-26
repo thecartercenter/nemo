@@ -1,9 +1,9 @@
-<div class="screen">
+<div class="d-print-none">
   <%= index_table(forms, max_actions: 4) %>
   <%= standard_import_form %>
 </div>
 
-<%= render('print_format_tips_modal') %>
+<%= render("print_format_tips_modal") %>
 
 <%= javascript_doc_ready do %>
   new ELMO.Views.PrintFormView();

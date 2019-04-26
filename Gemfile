@@ -14,6 +14,7 @@ gem "fog-aws", "~> 3.3.0"
 gem "friendly_id", "~> 5.1.0"
 gem "hairtrigger", "~> 0.2.20"
 gem "immigrant", "~> 0.3.1" # foreign key maintenance
+gem "mini_racer", "~> 0.2.4"
 gem "paperclip", "~> 6.0"
 gem "pg", "~> 0.20"
 gem "pg_search", "~> 2.1"
@@ -26,14 +27,13 @@ gem "recaptcha", "~> 0.4.0", require: "recaptcha/rails"
 gem "responders", "~> 2.4.0"
 gem "rqrcode", "~> 0.10.1"
 gem "term-ansicolor", "~> 1.3.0"
-gem "therubyracer", "~> 0.12.2", platforms: :ruby
 gem "thor", "0.19.1" # Newer versions produce command line argument errors. Remove constraint when fixed.
 gem "twilio-ruby", "~> 4.1.0"
 gem "whenever", "~> 0.9.4", require: false
 
 # JS/CSS
-gem "bootstrap-modal-rails", "~> 2.2.5"
-gem "bootstrap-sass", "~> 3.3.4"
+gem "bootstrap", "~> 4.3.1"
+gem "popper_js", "~> 1.14.5"
 gem "dropzonejs-rails", "~> 0.7.3"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 0.4.5"
@@ -59,8 +59,8 @@ gem "axlsx_rails", "~> 0.5.0"
 gem "roo", "~> 2.1.1"
 
 # Pagination
-gem "will_paginate", "~> 3.0.7"
-gem "will_paginate-bootstrap", "~> 1.0.1"
+gem "will_paginate", "~> 3.1.7"
+gem "will_paginate-bootstrap4", "~> 0.2.2"
 
 # Markdown
 gem "bluecloth", "~> 2.2.0"

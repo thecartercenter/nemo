@@ -2,16 +2,16 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title" id="myModalLabel"><%= t("location_picker.choose_location") %></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body">
         <div class="row">
-          <div class="col-xs-8">
+          <div class="col-8">
             <div class="map-canvas"></div>
             <div class="cur-lat-lng"></div>
           </div>
-          <div class="col-xs-4">
+          <div class="col-4">
             <form class="location-search">
               <input type="text" class="query form-control" name="query" value=""/>
               <div class="results"><%= t("location_picker.enter_query") %></div>
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
         <button type="button" class="btn btn-primary" ><%= t("common.accept") %></button>
       </div>
     </div><!-- /.modal-content -->

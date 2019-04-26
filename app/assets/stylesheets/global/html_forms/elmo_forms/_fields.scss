@@ -15,7 +15,7 @@
   }
 
   div.reqd-sym {
-    color: $link-color;
+    color: $accent-color;
     display: inline;
     font-size: 125%;
     font-weight: bold;
@@ -41,10 +41,6 @@
     flex-grow: 1;
     min-height: 26px;
     vertical-align: middle;
-
-    label {
-      font-weight: normal;
-    }
 
     .radio {
       width: 15px;
@@ -96,6 +92,17 @@
   select,
   .control .text {
     padding: 3px;
+  }
+}
+
+.elmo-form .modal .form-field {
+  &:first-of-type {
+    padding-top: 0;
+  }
+
+  &:last-of-type {
+    padding-bottom: 0;
+    border-bottom: none;
   }
 }
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import Button from "react-bootstrap/lib/Button";
+import Button from "react-bootstrap/Button";
 
 import {isQueryParamTruthy} from "./utils";
 
@@ -34,13 +34,13 @@ class AdvancedSearchFilter extends React.Component {
           type="text"
           value={advancedSearchText} />
         <Button
-          className="btn-apply btn-advanced-search"
+          className="btn-apply btn-advanced-search btn-secondary"
           onClick={onSubmit}>
           {I18n.t("common.search")}
         </Button>
         {isQueryParamTruthy("search") ? (
           <Button
-            className="btn-clear btn-margin-left"
+            className="btn-clear btn-secondary btn-margin-left"
             onClick={onClear}>
             {I18n.t("common.clear")}
           </Button>

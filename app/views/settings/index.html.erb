@@ -13,7 +13,7 @@
   <% unless admin_mode? %>
     <%= f.regenerable_field(:override_code, confirm: t('setting.override_code_warning')) %>
 
-    <h2><%= t("setting.headings.sms") %></h2>
+    <h2 class="mt-4"><%= t("setting.headings.sms") %></h2>
 
     <%= f.field(:incoming_sms_numbers_str, type: :textarea) %>
 
@@ -24,7 +24,7 @@
       options: @adapter_options, prompt: t("common.none")) %>
 
 
-    <h2><%= t("setting.headings.frontlinecloud") %></h2>
+    <h2 class="mt-4"><%= t("setting.headings.frontlinecloud") %></h2>
     <div class="adapter-settings" data-adapter="FrontlineCloud">
 
       <%= link_to(t("setting.change_api_key"), "#", class: 'show-credential-fields') %>
@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <h2><%= t("setting.headings.twilio") %></h2>
+    <h2 class="mt-4"><%= t("setting.headings.twilio") %></h2>
     <div class="adapter-settings" data-adapter="Twilio">
       <%= f.field(:twilio_phone_number) %>
 
@@ -48,12 +48,12 @@
       </div>
     </div>
 
-    <h2><%= t("setting.headings.generic") %></h2>
+    <h2 class="mt-4"><%= t("setting.headings.generic") %></h2>
     <div class="adapter-settings" data-adapter="Generic">
       <%= f.field(:generic_sms_config_str, type: :textarea) %>
     </div>
 
-    <h2><%= t("activerecord.attributes.setting.external_sql") %></h2>
+    <h2 class="mt-4"><%= t("activerecord.attributes.setting.external_sql") %></h2>
     <%= f.field(:external_sql, partial: "external_sql") %>
   <% end %>
 
@@ -68,12 +68,12 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
         <h4 class="modal-title"><%= t('activerecord.hints.setting.using_incoming_sms_token_title') %></h4>
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body pane_body"></div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
           <%= I18n.t("common.close") %>
         </button>
       </div>

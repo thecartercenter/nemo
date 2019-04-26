@@ -1,7 +1,7 @@
 <%# Non-ResponseNode fields at the top of the response form. %>
 <div class="metadata">
   <div class="row">
-    <div class="col-sm-6">
+    <div class="col-md-6">
       <% if context.read_only? %>
         <%= f.field(:old_id, content: "##{@response.old_id}", read_only: true) if @response.old_id.present? %>
         <%= f.field(:form_id, content: link_to(@response.form.name, @response.form), read_only: true) %>
@@ -20,7 +20,7 @@
       <% end %>
     </div>
     <% if @response.persisted? && can?(:review, @response) %>
-      <div class="col-sm-6">
+      <div class="col-md-6">
         <%= f.field(:reviewed, type: :check_box, label: t("response.reviewed")) %>
         <%= f.field(:reviewer_id, type: :select, options: sel_opts_from_objs(@response.reviewer)) %>
         <%= f.field(:reviewer_notes, type: :textarea) %>

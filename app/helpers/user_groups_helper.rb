@@ -26,10 +26,10 @@ module UserGroupsHelper
     end
   end
 
-  def group_filter_link(group)
+  def group_filter_link(group, html_options)
     qualifier = I18n.t("search_qualifiers.group")
     link_text = group.name.to_s
     query = %(#{qualifier}:"#{group.name}")
-    link_to(link_text, users_path(search: query))
+    link_to(link_text, users_path(search: query), html_options)
   end
 end

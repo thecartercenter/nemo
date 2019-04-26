@@ -6,13 +6,25 @@
     margin: side-values(0 10px 5px 0);
 
     &:hover {
-      color: $link-color;
+      color: $accent-color;
     }
 
     i {
-      color: $link-color;
+      color: $accent-color;
       font-size: 110%;
       margin-#{$right}: 3px;
+    }
+  }
+}
+
+@mixin hint-with-popover {
+  i.hint {
+    cursor: pointer;
+  }
+
+  .popover-body {
+    p {
+      margin-bottom: 0.4rem;
     }
   }
 }

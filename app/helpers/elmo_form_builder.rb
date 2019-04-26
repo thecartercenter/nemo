@@ -1,7 +1,7 @@
 class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
   # options[:type] - The type of field to display
-  #   (:text (default), :check_box, :radio_buttons, :textarea, :password, :select, :timezone, :file)
+  #   (:text (default), :check_box, :radio_buttons, :textarea, :password, :select, :timezone, :file, :number)
   # options[:required] - Whether the field input is required.
   # options[:content] - The content of the field's main area. If nil, the default content for the field type is used.
   # options[:partial] - A partial to be used as the field's main area. Overrides options[:content].
@@ -12,6 +12,10 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:options] - The set of option tags to be used for a select control.
   # options[:prompt] - The text for the prompt/nil option to be provided in a select control.
   # options[:maxlength] - The maxlength attribute of a text field
+  # options[:id] - id attribute for tag
+  # options[:data] - Data attributes that will be included with input tag
+  # options[:unnamed] - Remove the name attribute for the tag so it doesn't show up in the submission data.
+  # options[:step] - Step attribute for number fields.
 
   # The placeholder attribute is handled using I18n. See placeholder code below
 
@@ -22,18 +26,22 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     # We do not respect the field-level override if form_mode is :show.
     options[:read_only] = read_only? if options[:read_only].nil? || form_mode == :show
 
-
     # don't render password fields in readonly mode
     return "" if options[:read_only] && options[:type] == :password
 
     # get object errors (also look under association attrib if field_name ends in _id)
     errors = @object.errors[field_name] + (field_name =~ /^(.+)_id$/ ? @object.errors[$1] : [])
 
+    wrapper_classes = ["form-field"]
+    wrapper_classes << options[:wrapper_class]
+    wrapper_classes << "#{@object.class.model_name.param_key}_#{field_name}"
+    wrapper_classes << "has-errors" if errors.present?
+
     # get key chunks and render partial
     @template.render(partial: "layouts/elmo_form_field", locals: {
       field_name: field_name,
-      object_name: @object.class.model_name.param_key,
       options: options,
+      wrapper_classes: wrapper_classes.compact.join(" "),
       label_tag: elmo_field_label(field_name, options),
       field_html: elmo_field(field_name, options) + (options[:append] || ""),
       hint_html: elmo_field_hint(field_name, options),
@@ -74,7 +82,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         data["confirm"] = options.delete(:confirm) if options[:confirm]
 
         body += @template.button_tag(@template.t("common.#{current ? 'regenerate' : 'generate'}"),
-          class: "regenerate btn btn-default btn-xs", data: data, type: "button")
+          class: "regenerate btn btn-secondary btn-sm", data: data, type: "button")
 
         # Loading indicator
         body += @template.inline_load_ind(success_failure: true)
@@ -167,45 +175,57 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         @template.content_tag(:div, human_val, class: "ro-val", :'data-val' => val != human_val ? val : nil)
 
       else
+        tag_options = options.slice(:id, :data) # Include these attribs with all tags, if given.
 
-        placeholder =
-          I18n.t("activerecord.placeholders.#{@object.class.model_name.i18n_key}.#{field_name}", default: "")
-        placeholder = nil if placeholder.blank?
+        tag_options[:name] = nil if options[:unnamed]
+        tag_options[:class] = "form-control"
+
+        placeholder_key = "activerecord.placeholders.#{@object.class.model_name.i18n_key}.#{field_name}"
+        placeholder = I18n.t(placeholder_key, default: "")
+        tag_options[:placeholder] = placeholder if placeholder.present?
 
         case options[:type]
         when :check_box
-          check_box(field_name)
+          tag_options.delete(:class) # Not sure if this is needed.
+          check_box(field_name, tag_options)
 
         when :radio_buttons
+          tag_options[:class] = "radio"
           # build set of radio buttons based on options
           safe_join(
-            options[:options].map { |o| radio_button(field_name, o, class: "radio") + o },
+            options[:options].map { |o| radio_button(field_name, o, tag_options) + o },
             "&nbsp;&nbsp;")
 
         when :textarea
-          text_area(field_name, {class: "form-control", placeholder: placeholder})
+          text_area(field_name, tag_options)
 
         when :password
           # add 'text' class for legacy support
-          password_field(field_name, class: "text form-control")
+          tag_options[:class] = "text form-control"
+          password_field(field_name, tag_options)
 
         when :select
           prompt = options[:prompt].nil? ? true : options[:prompt]
-          tag_options = {class: "form-control"}
-          tag_options[:multiple] = true if options[:multiple]
+          tag_options.merge!(options.slice(:multiple))
           select(field_name, options[:options], {include_blank: prompt}, tag_options)
 
         when :timezone
-          time_zone_select(field_name, nil, {}, {class: "form-control"})
+          time_zone_select(field_name, nil, {}, tag_options)
 
         when :file
-          file_field(field_name, options.slice(:accept, :disabled, :multiple)) << val&.original_filename
+          tag_options.merge!(options.slice(:accept, :disabled, :multiple))
+          file_field(field_name, tag_options) << val&.original_filename
+
+        when :number
+          tag_options.merge!(options.slice(:step))
+          number_field(field_name, tag_options)
 
         # text is the default type
         else
-          text_field(field_name, {
-            class: "text form-control",
-            placeholder: placeholder}.merge(options.slice(:maxlength)))
+          # add 'text' class for legacy support
+          tag_options[:class] = "text form-control"
+          tag_options.merge!(options.slice(:maxlength))
+          text_field(field_name, tag_options)
         end
       end
     end

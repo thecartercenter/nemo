@@ -1,3 +1,8 @@
 <tr class="qing-group depth <%= "depth-#{qing_group.depth}" %>">
-  <td colspan="2" class="name"><%= qing_group.full_dotted_rank %>. <%= qing_group.group_name %></td>
+  <td colspan="2" class="name">
+    <%= qing_group.full_dotted_rank %>. <%= qing_group.group_name %>
+    <% unless qing_group.group_hint.blank? %>
+      <div class="hint"><%= qing_group.group_hint %></div>
+    <% end %>
+  </td>
 </tr>

@@ -28,20 +28,21 @@ $even-lighter-gray: #f6f6f6;
 $light-background-color: $super-light-gray;
 $white: #ffffff;
 $gray-text: #777;
-$deemphasized-link-color: #ccc;
 $light-border-color: #ddd;
 $light-border: 1px solid $light-border-color;
 $error-red: #d02000;
 $success-green: #9dc400;
 
 $theme-main: #879caa;
-$darker-link-color: #02648a;
+$accent-color: #444; // Used for things like primary buttons and links.
+$text-over-accent-color: color-yiq($accent-color);
+$darker-accent-color: #02648a;
+$deemphasized-accent-color: #ccc;
 $header-background-color: $theme-main;
 $light-background-color: #eef2f7;
 $footer-background-color: $gray-blue;
 $footer-text-color: $mid-gray;
 $main-text-color: #222;
-$link-color: #f77d48;
 
 $nav-background-color: #f8f8f8;
 $nav-active-background-color: $light-blue;

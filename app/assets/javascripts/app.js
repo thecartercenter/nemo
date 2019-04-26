@@ -67,7 +67,7 @@
     window.location.href = ELMO.app.url_builder.build(window.location.pathname + window.location.search, {locale: new_locale});
   }
 
-  // sets the title in h1#title and <title>
+  // sets the title in h1.title and <title>
   klass.prototype.set_title = function(title) { var self = this;
     $("title").text(self.params.site_name + ": " + title)
     $("h1.title").text(title);

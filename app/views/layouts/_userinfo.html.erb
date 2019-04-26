@@ -1,4 +1,4 @@
-<div id="userinfo">
+<div id="userinfo" class="d-print-none">
   <% if current_user %>
     <div class="mission-operations-container">
       <% unless admin_mode? %>
@@ -38,6 +38,6 @@
 
   <% else %>
     <%# login link %>
-    <%= link_to(t("common.login"), login_path, {:class => "btn btn-default login"}) %>
+    <%= link_to(t("common.login"), login_path, {:class => "btn btn-secondary login"}) %>
   <% end %>
 </div>

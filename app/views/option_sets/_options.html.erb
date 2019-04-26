@@ -1,76 +1,15 @@
 <%# form for drag and drop and option dialog %>
-<div id="options-wrapper" class="draggable-list-wrapper" style="display: none">
-</div>
+<div id="options-wrapper" class="draggable-list-wrapper" style="display: none"></div>
 
 <% if !read_only && !@option_set.huge? && can?(:add_options, @option_set) %>
   <span class="add-options action">
     <%= icon_tag(:plus) %>
-    <%= link_to(t('option_set.add_option'), '#', class: 'add-option') if can?(:add_options, @option_set) %>
+    <%= link_to(t("option_set.add_option"), '#', class: "add-option") if can?(:add_options, @option_set) %>
   </span>
 <% end %>
 
 <% if @option_set.huge? %>
-  <strong class="and-n-more"><%= t('option_set.and_n_more', count: number_with_delimiter(@option_set.options_not_serialized)) %></strong>
-<% end %>
-
-<% unless read_only || @option_set.huge? %>
-  <%# edit option modal %>
-  <div class="modal fade edit-named-item" id="edit-option" tabindex="-1" role="dialog" aria-labelledby="editOption" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title"></h4>
-        </div>
-        <div class="modal-body">
-
-          <%= data_integrity_warning(:option_standard_copy_name_change_warning) if @option_set.standard_copy? %>
-
-          <%# this warning will get hidden/shown by the js %>
-          <%= data_integrity_warning(:option_in_use_name_change_warning) %>
-
-          <div class="form-horizontal">
-            <% configatron.preferred_locales.each do |locale| %>
-              <div class="translation form-group">
-                <label for="option_name_<%= locale %>" class="col-sm-3 control-label"><%= language_name(locale) %></label>
-                <div class="col-sm-9">
-                  <input type="text" class="form-control" id="option_name_<%= locale %>"
-                    data-locale="<%= locale %>" maxlength="<%= Option::MAX_NAME_LENGTH %>">
-                </div>
-              </div>
-            <% end %>
-
-            <div class="coordinate form-group">
-              <label for"option_latitude" class="col-sm-3 control-label"><%= t('option_set.latitude') %></label>
-              <div class="col-sm-9">
-                <input type="number" step="any" class="form-control" id="option_latitude" data-field="latitude">
-              </div>
-            </div>
-
-            <div class="coordinate form-group">
-              <label for"option_latitude" class="col-sm-3 control-label"><%= t('option_set.longitude') %></label>
-              <div class="col-sm-9">
-                <input type="number" step="any" class="form-control" id="option_longitude" data-field="longitude">
-              </div>
-            </div>
-
-            <div class="form-group">
-              <label for="option_value" class="col-sm-3 control-label"><%= t('option_set.value') %></label>
-              <div class="col-sm-9">
-                <input type="number" class="form-control" id="option_value" data-field="value">
-              </div>
-            </div>
-          </div>
-
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal"><%= I18n.t("common.cancel") %></button>
-          <button type="button" class="btn btn-primary buttons-default"><%= I18n.t("common.save") %></button>
-          <button type="button" class="btn btn-default buttons-new" data-action="close"><%= I18n.t("common.save_and_close") %></button>
-          <button type="button" class="btn btn-primary buttons-new" data-action="another"><%= I18n.t("common.save_and_add_another") %></button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-  </div><!-- /.modal -->
-
+  <strong class="and-n-more">
+    <%= t("option_set.and_n_more", count: number_with_delimiter(@option_set.options_not_serialized)) %>
+  </strong>
 <% end %>

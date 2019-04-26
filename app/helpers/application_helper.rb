@@ -164,7 +164,9 @@ module ApplicationHelper
       ttl << std_icon(@title_args[:standardized]) unless options[:text_only]
 
       # Add object type icon where appropriate
-      ttl << icon_tag(model_name) unless options[:text_only]
+      if !options[:text_only] && IconHelper::FONT_AWESOME_ICON_MAPPINGS.include?(model_name.to_sym)
+        ttl << icon_tag(model_name)
+      end
 
       # add text
       if options[:name_only]
@@ -229,9 +231,13 @@ module ApplicationHelper
     message
   end
 
-  # pill label
-  def pill_label(text, kind: "default")
-    content_tag(:span, text, class: "label label-#{kind}")
+  # Renders a Bootstrap badge tag to be used inside a page title h1.
+  def title_badge(text)
+    content_tag(:span, text,
+      class: "badge badge-secondary",
+      # For some inexplicable reason, if the title badge is 9pt (as it is in the stylesheet),
+      # a spec in spec/features/forms/form/item_edit_spec.rb fails.
+      style: Rails.env.test? ? "font-size: 17pt" : nil)
   end
 
   # makes a set of <li> wrapped links to the index actions of the given classes
@@ -241,8 +247,8 @@ module ApplicationHelper
       if can?(:index, k)
         path = dynamic_path(k, action: :index)
         active = current_page?(path)
-        links << content_tag(:li, class: active ? "active" : "") do
-          link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path)
+        links << content_tag(:li, class: "nav-item" + (active ? " active" : "")) do
+          link_to(icon_tag(k.model_name.param_key) + pluralize_model(k), path, class: "nav-link")
         end
       end
     end

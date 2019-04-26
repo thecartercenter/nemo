@@ -1,4 +1,7 @@
 form.search-form {
+  align-items: flex-start;
+  display: flex;
+  flex-direction: column;
   margin-bottom: 10px;
 
   input.search-str {
@@ -21,7 +24,7 @@ form.search-form {
 
 #search-help-modal {
   .modal-body {
-    overflow: auto;
     max-height: 500px;
+    overflow: auto;
   }
 }

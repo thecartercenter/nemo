@@ -1,12 +1,19 @@
 // General layout styling for printing.
 @media print {
-  #userinfo,
-  #title,
-  #footer,
-  .top-action-links,
-  .screen,
-  nav {
-    display: none;
+  // Previously provided by normalize.css but removed in BS4.
+  *,
+  ::after,
+  ::before {
+    color: rgb(0, 0, 0) !important;
+    text-shadow: none !important;
+    background: 0 0 !important;
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+  }
+
+  // Previously provided by normalize.css but removed in BS4.
+  a[href]::after {
+    content: " (" attr(href) ")";
   }
 
   body,

@@ -61,7 +61,38 @@ header {
   }
 }
 
-#title {
+#title-container {
+  overflow: auto;
+  clear: both;
+
+  span.label {
+    display: inline-block;
+    font-size: 10px;
+    margin: .25em .5em;
+    padding: .5em .8em;
+    vertical-align: middle;
+  }
+
+  h1.title {
+    color: #777;
+    font-weight: bold;
+    margin-bottom: 20px;
+    margin-#{$right}: 10px;
+
+    i {
+      color: $light-gray;
+      margin-#{$right}: 5px;
+    }
+  }
+
+  // std seal in title
+  h1.title img {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+#logo {
   color: $white;
   margin: side-values(10px 0 10px 15px);
   display: inline-block;
@@ -78,8 +109,19 @@ header {
     vertical-align: bottom;
   }
 
-  a { color: $white; text-decoration: none; }
-  h1 { font-size: 40px; color: $white; line-height: 1; display: inline-block; margin: 0 10px 5px 0; }
+  a {
+    color: $white;
+    text-decoration: none;
+  }
+
+  h1 {
+    font-size: 40px;
+    color: $white;
+    line-height: 1;
+    display: inline-block;
+    margin: 0 10px 5px 0;
+  }
+
   h2 {
     font-size: 24px;
     font-family: "Raleway", sans-serif;
@@ -115,7 +157,7 @@ header {
   height: 300px;
 
   a {
-    color: $link-color;
+    color: $accent-color;
   }
 
   //workaround for arabic display order issue

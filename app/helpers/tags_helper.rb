@@ -4,12 +4,15 @@ module TagsHelper
   def render_tags(objects, options = {})
     return "" if objects.blank?
     title = options[:clickable] ? I18n.t("tag.click_to_filter") : nil
-    classes = "tag"
+    classes = "badge badge-custom"
     classes << " clickable" if options[:clickable]
     content_tag(:div, class: "tags") do
       spans = objects.map do |obj|
-        content = options[:clickable] && options[:link_method] ? send(options[:link_method], obj) : obj.name
-        content_tag(:span, content, class: classes, title: title)
+        if options[:clickable] && options[:link_method]
+          send(options[:link_method], obj, class: classes, title: title)
+        else
+          content_tag(:span, obj.name, class: classes, title: title)
+        end
       end
       safe_join(spans)
     end

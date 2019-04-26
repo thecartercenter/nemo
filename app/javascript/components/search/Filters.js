@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import ButtonToolbar from "react-bootstrap/lib/ButtonToolbar";
+import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 
 import {CONTROLLER_NAME, getFilterString, submitSearch} from "./utils";
 import FormFilter from "./FormFilter";

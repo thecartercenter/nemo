@@ -1,6 +1,5 @@
 <%# TODO the id attrib below should be deprecated as its not well scoped. %>
-<div class="form-field <%= object_name %>_<%= field_name %> <%= errors.present? && "has-errors" %>"
-  id="<%= field_name %>" data-field-name="<%= field_name %>">
+<%= content_tag(:div, class: wrapper_classes, id: field_name, data: {field_name: field_name}) do %>
   <%# This appears first here but is usually moved to the end using flex box %>
   <%# We do it this way so we can move the control to its own line in certain cases %>
   <%= hint_popover(hint_html) %>
@@ -12,4 +11,4 @@
       <%= field_html %>
     </div>
   </div>
-</div>
+<% end %>

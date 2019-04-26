@@ -7,8 +7,10 @@
     min-width: 200px;
   }
 
-  tr.published td {
-    background-color: $white;
+  tr.published, .hide-unpublished-bg {
+    td {
+      background-color: $white;
+    }
   }
 }
 

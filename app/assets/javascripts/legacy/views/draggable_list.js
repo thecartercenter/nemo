@@ -37,16 +37,29 @@
       self.saveItem(action || "close");
       return false;
     });
-    self.modal.find('button.btn-default').on('click', function(){ self.cancel_edit(); });
+    self.modal.find("button.btn-secondary").on("click", function(event) {
+      event.stopPropagation();
+      self.modal.modal("hide");
+      self.cancel_edit();
+    });
 
     // show/hide save button when translations change
     $('body').on('keyup change', '.edit-named-item div.translation input, .edit-named-item div.coordinate input', function(){ self.toggle_save_button(); });
 
     // Catch modal form submission.
-    self.modal.on('keypress', function(e) {
-      if (e.keyCode == 13) {
+    self.modal.on('keypress', function(event) {
+      if (event.keyCode == 13) {
+        event.preventDefault(); // Prevent submission of the containing form.
         const btn = self.modal.find(".btn-primary").last();
         if (btn.is(':visible')) btn.trigger('click');
+      }
+    })
+
+    // Catch ESC key to prevent closing parent modal if exists.
+    self.modal.on('keydown', function(event) {
+      if (event.keyCode == 27) {
+        event.stopPropagation();
+        self.modal.modal("hide");
       }
     })
   };

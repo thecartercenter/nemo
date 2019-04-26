@@ -1,10 +1,10 @@
 <% @title_args = {:name => @form.name, :standardized => @form.standardized?} %>
 <% content_for :title_content do %>
   <% if @form.published? %>
-    <%= pill_label(t('common.published'), kind: 'success') %>
-    <%= pill_label("#{t('activerecord.attributes.form.version')}: #{@form.code}", kind: 'primary') %>
+    <%= title_badge(t("common.published")) %>
+    <%= title_badge("#{t("activerecord.attributes.form.version")}: #{@form.code}") %>
   <% else %>
-    <%= pill_label(t('common.not_published')) %>
+    <%= title_badge(t("common.not_published")) %>
   <% end %>
 <% end %>
 

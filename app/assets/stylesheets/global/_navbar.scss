@@ -1,18 +1,15 @@
-nav.navbar-default {
-  /* Override Bootstrap */
-  background-color: $nav-background-color;
-  margin-bottom: 0px !important;
-  border-radius: 0px !important;
-  border-color: $nav-border-color;
-  height: 51px;
+nav.navbar-light {
+  @include media-breakpoint-up(sm) {
+    padding-top: 0;
+    padding-bottom: 0;
+  }
 
   /* For standard label in admin mode */
   .navbar-header.std {
-    margin-left: 27px !important;
-    text-transform: uppercase;
     color: $nav-text-color;
-    margin: 18px 27px 0px 30px;
     font-weight: bold;
+    margin-right: 1.5rem;
+    text-transform: uppercase;
   }
 
   @include if-rtl {
@@ -22,7 +19,6 @@ nav.navbar-default {
   }
 
   ul.navbar-nav {
-
     float: $left;
 
     @include if-rtl {
@@ -32,11 +28,11 @@ nav.navbar-default {
     }
 
     li {
-      padding: 15px 6px 15px 6px;
-      margin: side-values(0px 6px 0px 0px);
+      padding: 14px 6px;
+      margin-bottom: 0;
 
       &:hover, &:hover, &:focus {
-        color: $link-color;
+        color: $accent-color;
       }
 
       /* Overriding bootstrap navbar prefs */
@@ -66,9 +62,17 @@ nav.navbar-default {
           }
         }
 
+        &.dropdown-toggle {
+          // Add the same padding as regular nav-link items.
+          @include media-breakpoint-up(sm) {
+            padding-right: 0.5rem;
+            padding-left: 0.5rem;
+          }
+        }
+
         &:hover, &:focus {
           text-decoration: none;
-          color: $link-color !important;
+          color: $accent-color !important;
         }
       }
 
@@ -89,7 +93,7 @@ nav.navbar-default {
       }
 
       &:hover {
-        color: $link-color;
+        color: $accent-color;
       }
     }
 
@@ -122,13 +126,10 @@ nav.navbar-default {
 
           &:hover, &:focus {
             background: none;
-            color: $link-color;
+            color: $accent-color;
           }
         }
       }
-    }
-    li.dropdown {
-      padding-#{$left}: 28px;
     }
   }
 }

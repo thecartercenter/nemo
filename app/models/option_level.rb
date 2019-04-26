@@ -1,5 +1,7 @@
 class OptionLevel
-  include ActiveModel::Serializers::JSON, Translatable
+  include ActiveModel::Serializers::JSON
+  include ActiveModel::Validations # Used by view
+  include Translatable
 
   translates :name
 
