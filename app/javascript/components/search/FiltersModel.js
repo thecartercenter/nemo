@@ -1,5 +1,4 @@
 import isEmpty from 'lodash/isEmpty';
-import queryString from 'query-string';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../ConditionSetModel/ConditionSetModel';
@@ -63,7 +62,6 @@ class FiltersModel {
   }
 
   buildUrl = () => {
-    const formId = this.selectedFormId;
     return ELMO.app.url_builder.build('form-items', 'condition-form');
   }
 
