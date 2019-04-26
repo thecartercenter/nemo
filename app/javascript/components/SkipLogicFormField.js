@@ -1,38 +1,45 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import SkipRuleSetFormField from "./SkipRuleSetFormField";
+import SkipRuleSetFormField from './SkipRuleSetFormField';
 
 class SkipLogicFormField extends React.Component {
+  static propTypes = {
+    type: PropTypes.string.isRequired,
+    skipRules: PropTypes.arrayOf(PropTypes.object).isRequired,
+  };
+
   constructor(props) {
-    super();
-    let skip = props.skipRules.length === 0 ? "dont_skip" : "skip";
-    this.state = Object.assign({}, props, {skip: skip});
-    this.skipOptionChanged = this.skipOptionChanged.bind(this);
+    super(props);
+    const { type, skipRules } = this.props;
+    const skip = skipRules.length === 0 ? 'dont_skip' : 'skip';
+    this.state = { type, skip };
   }
 
-  skipOptionChanged(event) {
-    this.setState({skip: event.target.value});
+  skipOptionChanged = (event) => {
+    this.setState({ skip: event.target.value });
   }
 
-  skipOptionTags() {
-    const skipOptions = ["dont_skip", "skip"];
+  skipOptionTags = () => {
+    const skipOptions = ['dont_skip', 'skip'];
     return skipOptions.map((option) => (
       <option
         key={option}
-        value={option}>
+        value={option}
+      >
         {I18n.t(`form_item.skip_logic_options.${option}`)}
       </option>
     ));
   }
 
   render() {
-    let selectProps = {
-      className: "form-control skip-or-not",
-      value: this.state.skip,
+    const { skip, type } = this.state;
+    const selectProps = {
+      className: 'form-control skip-or-not',
+      value: skip,
       onChange: this.skipOptionChanged,
-      name: `${this.state.type}[skip_if]`,
-      id: `${this.state.type}_skip_logic`
+      name: `${type}[skip_if]`,
+      id: `${type}_skip_logic`,
     };
 
     return (
@@ -41,15 +48,12 @@ class SkipLogicFormField extends React.Component {
           {this.skipOptionTags()}
         </select>
         <SkipRuleSetFormField
-          hide={this.state.skip === "dont_skip"}
-          {...this.state} />
+          hide={skip === 'dont_skip'}
+          {...this.props}
+        />
       </div>
     );
   }
 }
-
-SkipLogicFormField.propTypes = {
-  skipRules: PropTypes.arrayOf(PropTypes.object).isRequired
-};
 
 export default SkipLogicFormField;

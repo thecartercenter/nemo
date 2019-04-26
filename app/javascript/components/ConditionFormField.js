@@ -1,127 +1,180 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import ConditionValueField from "./ConditionValueField";
-import FormSelect from "./FormSelect";
+import ConditionValueField from './ConditionValueField';
+import FormSelect from './FormSelect';
 
 class ConditionFormField extends React.Component {
+  static propTypes = {
+    hide: PropTypes.bool.isRequired,
+
+    // TODO: Describe these prop types.
+    /* eslint-disable react/forbid-prop-types */
+    formId: PropTypes.any,
+    conditionableId: PropTypes.any,
+    conditionableType: PropTypes.any,
+    optionSetId: PropTypes.any,
+    optionNodeId: PropTypes.any,
+    value: PropTypes.any,
+    namePrefix: PropTypes.any,
+    index: PropTypes.any,
+    id: PropTypes.any,
+    refQingId: PropTypes.any,
+    refableQings: PropTypes.any,
+    op: PropTypes.any,
+    operatorOptions: PropTypes.any,
+    /* eslint-enable */
+  };
+
   constructor(props) {
-    super();
-    this.getFieldData = this.getFieldData.bind(this);
-    this.updateFieldData = this.updateFieldData.bind(this);
-    this.formatRefQingOptions = this.formatRefQingOptions.bind(this);
-    this.buildUrl = this.buildUrl.bind(this);
-    this.buildValueProps = this.buildValueProps.bind(this);
-    this.handleRemoveClick = this.handleRemoveClick.bind(this);
-    this.state = props;
+    super(props);
+
+    const {
+      formId,
+      conditionableId,
+      conditionableType,
+      optionSetId,
+      optionNodeId,
+      value,
+      namePrefix,
+      index,
+      id,
+      refQingId,
+      refableQings,
+      op,
+      operatorOptions,
+    } = this.props;
+
+    this.state = {
+      formId,
+      conditionableId,
+      conditionableType,
+      optionSetId,
+      optionNodeId,
+      value,
+      namePrefix,
+      index,
+      id,
+      refQingId,
+      refableQings,
+      op,
+      operatorOptions,
+    };
   }
 
-  updateFieldData(refQingId) {
-    this.getFieldData(refQingId);
-  }
-
-  getFieldData(refQingId) {
+  getFieldData = (refQingId) => {
     ELMO.app.loading(true);
-    let self = this;
-    let url = this.buildUrl(refQingId);
+    const self = this;
+    const url = this.buildUrl(refQingId);
     $.ajax(url)
-      .done(function(response) {
+      .done((response) => {
         // Need to put this before we set state because setting state may trigger a new one.
         ELMO.app.loading(false);
 
         // We set option node ID to null since the new refQing may have a new option set.
-        self.setState(Object.assign(response, {optionNodeId: null}));
+        self.setState(Object.assign(response, { optionNodeId: null }));
       })
-      .fail(function(jqXHR, exception) {
+      .fail(() => {
         ELMO.app.loading(false);
       });
   }
 
-  buildUrl(refQingId) {
-    let url = `${ELMO.app.url_builder.build("form-items", "condition-form")}?`;
-    url += `condition_id=${this.state.id || ""}&ref_qing_id=${refQingId}&form_id=${this.state.formId}`;
-    if (this.state.conditionableId) {
-      url += "&conditionable_id=" + this.state.conditionableId;
-      url += "&conditionable_type=" + this.state.conditionableType;
+  updateFieldData = (refQingId) => {
+    this.getFieldData(refQingId);
+  }
+
+  buildUrl = (refQingId) => {
+    const { id, formId, conditionableId, conditionableType } = this.state;
+    let url = `${ELMO.app.url_builder.build('form-items', 'condition-form')}?`;
+    url += `condition_id=${id || ''}&ref_qing_id=${refQingId}&form_id=${formId}`;
+    if (conditionableId) {
+      url += `&conditionable_id=${conditionableId}`;
+      url += `&conditionable_type=${conditionableType}`;
     }
     return url;
   }
 
-  formatRefQingOptions(refQingOptions) {
-    return refQingOptions.map(function(o) {
-      return {id: o.id, name: `${o.fullDottedRank}. ${o.code}`, key: o.id};
+  formatRefQingOptions = (refQingOptions) => {
+    return refQingOptions.map((o) => {
+      return { id: o.id, name: `${o.fullDottedRank}. ${o.code}`, key: o.id };
     });
   }
 
-  handleRemoveClick() {
-    this.setState({remove: true});
+  handleRemoveClick = () => {
+    this.setState({ remove: true });
   }
 
-  buildValueProps(namePrefix, idPrefix) {
-    if (this.state.optionSetId) {
+  buildValueProps = (namePrefix, idPrefix) => {
+    const { optionSetId, optionNodeId, value } = this.state;
+
+    if (optionSetId) {
       return {
-        type: "cascading_select",
-        namePrefix: namePrefix,
+        type: 'cascading_select',
+        namePrefix,
         for: `${idPrefix}_value`, // Not a mistake; the for is for value; the others are for selects
         id: `${idPrefix}_option_node_ids_`,
         key: `${idPrefix}_option_node_ids_`,
-        optionSetId: this.state.optionSetId,
-        optionNodeId: this.state.optionNodeId,
-      };
-    } else {
-      return {
-        type: "text",
-        name: `${namePrefix}[value]`,
-        for: `${idPrefix}_value`,
-        id: `${idPrefix}_value`,
-        key: `${idPrefix}_value`,
-        value: this.state.value ? this.state.value : "",
+        optionSetId,
+        optionNodeId,
       };
     }
+
+    return {
+      type: 'text',
+      name: `${namePrefix}[value]`,
+      for: `${idPrefix}_value`,
+      id: `${idPrefix}_value`,
+      key: `${idPrefix}_value`,
+      value: value || '',
+    };
   }
 
-  shouldDestroy() {
-    return this.state.remove || this.props.hide;
+  shouldDestroy = () => {
+    const { hide } = this.props;
+    const { remove } = this.state;
+    return remove || hide;
   }
 
   render() {
-    let namePrefix = this.state.namePrefix + `[${this.state.index}]`;
-    let idPrefix = namePrefix.replace(/[[\]]/g, "_");
-    let idFieldProps = {
-      type: "hidden",
+    const { namePrefix: rawNamePrefix, index, id, refQingId, refableQings, op, operatorOptions } = this.state;
+    const namePrefix = `${rawNamePrefix}[${index}]`;
+    const idPrefix = namePrefix.replace(/[[\]]/g, '_');
+    const idFieldProps = {
+      type: 'hidden',
       name: `${namePrefix}[id]`,
       id: `${idPrefix}_id`,
       key: `${idPrefix}_id`,
-      value: this.state.id ? this.state.id : ""
+      value: id || '',
     };
-    let refQingFieldProps = {
+    const refQingFieldProps = {
       name: `${namePrefix}[ref_qing_id]`,
       key: `${idPrefix}_ref_qing_id`,
-      value: this.state.refQingId ? this.state.refQingId : "",
-      options: this.formatRefQingOptions(this.state.refableQings),
-      prompt: I18n.t("condition.ref_qing_prompt"),
-      changeFunc: this.updateFieldData
+      value: refQingId || '',
+      options: this.formatRefQingOptions(refableQings),
+      prompt: I18n.t('condition.ref_qing_prompt'),
+      changeFunc: this.updateFieldData,
     };
-    let operatorFieldProps = {
+    const operatorFieldProps = {
       name: `${namePrefix}[op]`,
       key: `${idPrefix}_op`,
-      value: this.state.op ? this.state.op : "",
-      options: this.state.operatorOptions,
-      includeBlank: false
+      value: op || '',
+      options: operatorOptions,
+      includeBlank: false,
     };
-    let destroyFieldProps = {
-      type: "hidden",
+    const destroyFieldProps = {
+      type: 'hidden',
       name: `${namePrefix}[_destroy]`,
       id: `${idPrefix}__destroy`,
       key: `${idPrefix}__destroy`,
-      value: this.shouldDestroy() ? "1" : "0",
+      value: this.shouldDestroy() ? '1' : '0',
     };
-    let valueFieldProps = this.buildValueProps(namePrefix, idPrefix);
+    const valueFieldProps = this.buildValueProps(namePrefix, idPrefix);
 
     return (
       <div
         className="condition-fields"
-        style={{display: this.shouldDestroy() ? "none" : ""}}>
+        style={{ display: this.shouldDestroy() ? 'none' : '' }}
+      >
         <input {...idFieldProps} />
         <input {...destroyFieldProps} />
         <FormSelect {...refQingFieldProps} />
@@ -130,6 +183,8 @@ class ConditionFormField extends React.Component {
           <ConditionValueField {...valueFieldProps} />
         </div>
         <div className="condition-remove">
+          {/* TODO: Improve a11y. */}
+          {/* eslint-disable-next-line */}
           <a onClick={this.handleRemoveClick}>
             <i className="fa fa-close" />
           </a>
@@ -138,9 +193,5 @@ class ConditionFormField extends React.Component {
     );
   }
 }
-
-ConditionFormField.propTypes = {
-  hide: PropTypes.bool.isRequired
-};
 
 export default ConditionFormField;

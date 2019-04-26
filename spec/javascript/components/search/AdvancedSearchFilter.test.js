@@ -1,9 +1,9 @@
-import React from "react";
-import {shallow} from "enzyme";
+import React from 'react';
+import { shallow } from 'enzyme';
 
-import {advancedSearchProps} from "./utils";
+import { advancedSearchProps } from './utils';
 
-import Component from "../../../../app/javascript/components/search/AdvancedSearchFilter";
+import Component from '../../../../app/javascript/components/search/AdvancedSearchFilter';
 
 const defaultProps = {
   ...advancedSearchProps,
@@ -13,36 +13,36 @@ const defaultProps = {
 };
 
 function withQueryParam() {
-  window.location.search = "?search=foo";
+  window.location.search = '?search=foo';
 }
 
 function withoutQueryParam() {
-  window.location.search = "?search=";
+  window.location.search = '?search=';
 }
 
-it("renders as expected (without query param)", () => {
+it('renders as expected (without query param)', () => {
   withoutQueryParam();
   const wrapper = shallow(<Component {...defaultProps} />);
   expect(wrapper).toMatchSnapshot();
 });
 
-it("renders as expected (with query param)", () => {
+it('renders as expected (with query param)', () => {
   withQueryParam();
   const wrapper = shallow(<Component {...defaultProps} />);
   expect(wrapper).toMatchSnapshot();
 });
 
-describe("callbacks", () => {
+describe('callbacks', () => {
   withQueryParam();
   const wrapper = shallow(<Component {...defaultProps} />);
 
-  it("submits", () => {
-    wrapper.find("Button.btn-apply").simulate("click");
+  it('submits', () => {
+    wrapper.find('Button.btn-apply').simulate('click');
     expect(defaultProps.onSubmit).toMatchSnapshot();
   });
 
-  it("clears", () => {
-    wrapper.find("Button.btn-clear").simulate("click");
+  it('clears', () => {
+    wrapper.find('Button.btn-clear').simulate('click');
     expect(defaultProps.onClear).toMatchSnapshot();
   });
 });

@@ -1,64 +1,67 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React from 'react';
+import PropTypes from 'prop-types';
 
 class FormSelect extends React.Component {
+  static propTypes = {
+    changeFunc: PropTypes.func,
+    id: PropTypes.string,
+    includeBlank: PropTypes.bool,
+    name: PropTypes.string,
+    options: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })).isRequired,
+    prompt: PropTypes.string,
+    value: PropTypes.node,
+  };
+
+  static defaultProps = {
+    changeFunc: null,
+    id: null,
+    includeBlank: true,
+    name: null,
+    prompt: null,
+    value: null,
+  };
+
   render() {
-    let options = this.props.options;
-    let optionTags = [];
-    if (this.props.prompt || this.props.includeBlank !== false) {
+    const { options, prompt, includeBlank, name, id, value, changeFunc } = this.props;
+    const optionTags = [];
+    if (prompt || includeBlank !== false) {
       optionTags.push(
         <option
           key="blank"
-          value="">
-          {this.props.prompt || ""}
-        </option>
+          value=""
+        >
+          {prompt || ''}
+        </option>,
       );
     }
     options.forEach((o) => optionTags.push(
       <option
         key={o.id}
-        value={o.id}>
+        value={o.id}
+      >
         {o.name}
-      </option>
+      </option>,
     ));
-    let props = {
-      className: "form-control",
-      name: this.props.name,
-      id: this.props.id,
-      key: this.props.id,
-      defaultValue: this.props.value
+    const props = {
+      className: 'form-control',
+      name,
+      id,
+      key: id,
+      defaultValue: value,
     };
-    if (this.props.changeFunc) {
-      props["onChange"] = (e) => this.props.changeFunc(e.target.value);
+    if (changeFunc) {
+      props.onChange = (e) => changeFunc(e.target.value);
     }
+
     return (
-      <select {...props} >
+      <select {...props}>
         {optionTags}
       </select>
     );
   }
 }
-
-FormSelect.propTypes = {
-  changeFunc: PropTypes.func,
-  id: PropTypes.string,
-  includeBlank: PropTypes.bool,
-  name: PropTypes.string,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string
-  })).isRequired,
-  prompt: PropTypes.string,
-  value: PropTypes.node
-};
-
-FormSelect.defaultProps = {
-  changeFunc: null,
-  id: null,
-  includeBlank: true,
-  name: null,
-  prompt: null,
-  value: null
-};
 
 export default FormSelect;

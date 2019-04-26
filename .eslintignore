@@ -1,0 +1,6 @@
+tmp/
+public/packs*/
+uploads/
+log/
+vendor/
+app/assets/javascripts/i18n/

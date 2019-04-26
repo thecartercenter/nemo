@@ -1,17 +1,29 @@
 {
   "scripts": {
     "i18nExport": "bundle exec rake i18n:js:export",
-    "test": "jest"
+    "test": "jest",
+    "lint": "eslint --ext .js,.jsx",
+    "lint:all": "yarn run lint .",
+    "lint:react": "yarn run lint {app,spec}/javascript/"
   },
   "jest": {
     "roots": [
       "<rootDir>/spec/javascript"
     ],
-    "setupTestFrameworkScriptFile": "<rootDir>/spec/javascript/setupTests.js",
+    "setupFilesAfterEnv": [
+      "<rootDir>/spec/javascript/setupTests.js"
+    ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
-    "testRegex": "/spec/javascript/.*\\.test\\.jsx?$"
+    "testRegex": "/spec/javascript/.*\\.test\\.jsx?$",
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
+  },
+  "resolutions_README": "Force babel-jest to use v23 as a workaround until we can upgrade to Babel 7. https://github.com/facebook/jest/issues/8230",
+  "resolutions": {
+    "babel-jest": "23.6.0"
   },
   "dependencies": {
     "@rails/webpacker": "3.5",
@@ -28,11 +40,19 @@
   },
   "devDependencies": {
     "babel-eslint": "10.0.1",
+    "babel-jest": "23.6.0",
+    "coffeelint": "2.1.0",
     "enzyme": "3.8.0",
     "enzyme-adapter-react-16": "1.11.2",
     "enzyme-to-json": "3.3.5",
+    "eslint": "5.3.0",
+    "eslint-config-airbnb": "17.1.0",
+    "eslint-config-cooperka": "1.0.1",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.0",
     "i18n-js": "3.2.1",
-    "jest": "23.6.0",
+    "jest": "24.7.1",
     "webpack-dev-server": "2.11.2"
   }
 }

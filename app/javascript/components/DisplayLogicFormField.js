@@ -1,67 +1,81 @@
-import React from "react";
+import React from 'react';
+import PropTypes from 'prop-types';
 
-import ConditionSetFormField from "./ConditionSetFormField";
+import ConditionSetFormField from './ConditionSetFormField';
 
 class DisplayLogicFormField extends React.Component {
+  static propTypes = {
+    // TODO: Describe these prop types.
+    /* eslint-disable react/forbid-prop-types */
+    refableQings: PropTypes.any,
+    id: PropTypes.any,
+    type: PropTypes.any,
+    displayIf: PropTypes.any,
+    displayConditions: PropTypes.any,
+    formId: PropTypes.any,
+    /* eslint-enable */
+  };
+
   constructor(props) {
-    super();
-    this.state = props;
-    this.displayIfChanged = this.displayIfChanged.bind(this);
+    super(props);
+    const { refableQings, id, type, displayIf, displayConditions, formId } = this.props;
+    this.state = { refableQings, id, type, displayIf, displayConditions, formId };
   }
 
-  displayIfChanged(event) {
-    let value = event.target.value;
-    this.setState({displayIf: value});
+  displayIfChanged = (event) => {
+    this.setState({ displayIf: event.target.value });
   }
 
-  displayIfOptionTags() {
-    const displayIfOptions = ["always", "all_met", "any_met"];
+  displayIfOptionTags = () => {
+    const { type } = this.state;
+    const displayIfOptions = ['always', 'all_met', 'any_met'];
     return displayIfOptions.map((option) => (
       <option
         key={option}
-        value={option}>
-        {I18n.t(`form_item.display_if_options.${this.state.type}.${option}`)}
+        value={option}
+      >
+        {I18n.t(`form_item.display_if_options.${type}.${option}`)}
       </option>
     ));
   }
 
   render() {
+    const { refableQings: rawRefableQings, id, type, displayIf, displayConditions, formId } = this.state;
     // Display logic conditions can't reference self, as that doesn't make sense.
-    let refableQings = this.state.refableQings.filter(qing => qing.id !== this.state.id);
+    const refableQings = rawRefableQings.filter((qing) => qing.id !== id);
 
     if (refableQings.length === 0) {
       return (
         <div>
-          {I18n.t("condition.no_refable_qings")}
-        </div>
-      );
-    } else {
-      let displayIfProps = {
-        className: "form-control",
-        name: `${this.state.type}[display_if]`,
-        id: `${this.state.type}_display_logic`,
-        value: this.state.displayIf,
-        onChange: this.displayIfChanged
-      };
-      let conditionSetProps = {
-        conditions: this.state.displayConditions,
-        conditionableId: this.state.id,
-        conditionableType: "FormItem",
-        refableQings: refableQings,
-        formId: this.state.formId,
-        hide: this.state.displayIf === "always",
-        namePrefix: `${this.state.type}[display_conditions_attributes]`
-      };
-
-      return (
-        <div>
-          <select {...displayIfProps}>
-            {this.displayIfOptionTags()}
-          </select>
-          <ConditionSetFormField {...conditionSetProps} />
+          {I18n.t('condition.no_refable_qings')}
         </div>
       );
     }
+    const displayIfProps = {
+      className: 'form-control',
+      name: `${type}[display_if]`,
+      id: `${type}_display_logic`,
+      value: displayIf,
+      onChange: this.displayIfChanged,
+    };
+    const conditionSetProps = {
+      conditions: displayConditions,
+      conditionableId: id,
+      conditionableType: 'FormItem',
+      refableQings,
+      formId,
+      hide: displayIf === 'always',
+      namePrefix: `${type}[display_conditions_attributes]`,
+    };
+
+    return (
+      <div>
+        <select {...displayIfProps}>
+          {this.displayIfOptionTags()}
+        </select>
+        <ConditionSetFormField {...conditionSetProps} />
+      </div>
+    );
   }
 }
 

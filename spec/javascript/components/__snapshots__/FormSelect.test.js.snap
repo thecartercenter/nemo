@@ -9,7 +9,7 @@ exports[`after changing value calls changeFunc 1`] = `
   ],
   "results": Array [
     Object {
-      "isThrow": false,
+      "type": "return",
       "value": undefined,
     },
   ],

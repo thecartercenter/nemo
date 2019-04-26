@@ -25,7 +25,7 @@ before_script:
   - unzip chromedriver_linux64.zip
   - sudo cp chromedriver /usr/local/bin/.
   - export DISPLAY=:99.0
-  - yarn install
+  - yarn install --ignore-engines
 script:
   - bundle exec rspec --format progress
   - yarn i18nExport

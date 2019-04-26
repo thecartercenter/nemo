@@ -56,5 +56,5 @@ config/environments/*.local.yml
 /public/packs
 /public/packs-test
 /node_modules
-yarn-debug.log*
+yarn-*.log*
 .yarn-integrity
