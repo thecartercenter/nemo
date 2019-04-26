@@ -16,6 +16,11 @@ class QuestionFilter extends React.Component {
     onSubmit: PropTypes.func.isRequired,
   };
 
+  async componentWillMount() {
+    const { filtersStore } = this.props;
+    await filtersStore.updateRefableQings();
+  }
+
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;
     const { conditionSetStore: { refableQings } } = filtersStore;
