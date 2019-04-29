@@ -20,8 +20,9 @@ class CascadingSelect extends React.Component {
     await updateLevels();
   }
 
-  nodeChanged = (isLastLevel) => (newNodeId) => {
+  nodeChanged = (levelIndex) => (newNodeId) => {
     const { onChange, updateLevels } = this.props;
+    const isLastLevel = this.isLastLevel(levelIndex);
 
     if (onChange) {
       onChange(newNodeId);
@@ -32,7 +33,7 @@ class CascadingSelect extends React.Component {
     }
   }
 
-  buildLevelProps = (level, isLastLevel) => {
+  buildLevelProps = (level, levelIndex) => {
     const { namePrefix } = this.props;
     return {
       type: 'select',
@@ -41,22 +42,21 @@ class CascadingSelect extends React.Component {
       value: level.selected,
       options: level.options,
       prompt: this.optionPrompt(level),
-      onChange: this.nodeChanged(isLastLevel),
+      onChange: this.nodeChanged(levelIndex),
     };
   }
 
   buildLevels = () => {
     const { levels } = this.props;
-    const self = this;
     let result = [];
     if (levels) {
-      result = levels.map((level, i) => {
+      result = levels.map((level, index) => {
         return (
           <div
             className="level"
             key={level.name}
           >
-            <FormSelect {...self.buildLevelProps(level, self.isLastLevel(i))} />
+            <FormSelect {...this.buildLevelProps(level, index)} />
           </div>
         );
       });
