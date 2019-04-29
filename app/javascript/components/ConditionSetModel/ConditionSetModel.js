@@ -31,6 +31,21 @@ class ConditionSetModel {
   hide;
 
   constructor(initialValues = {}) {
+    // Make sure conditions are always instances of the model.
+    // TODO: MobX-state-tree can do this automatically for us.
+    reaction(
+      () => this.originalConditions,
+      (originalConditions) => {
+        this.originalConditions = this.mapConditionsToStores(originalConditions);
+      },
+    );
+    reaction(
+      () => this.conditions,
+      (conditions) => {
+        this.conditions = this.mapConditionsToStores(conditions);
+      },
+    );
+
     Object.assign(this, initialValues);
 
     if (!initialValues.hide) {
@@ -46,6 +61,14 @@ class ConditionSetModel {
         }
       },
     );
+  }
+
+  mapConditionsToStores(conditions) {
+    // Only modify if necessary to prevent a cycle.
+    if (conditions.some((condition) => !(condition instanceof ConditionModel))) {
+      return conditions.map((condition) => new ConditionModel(condition));
+    }
+    return conditions;
   }
 
   @action
