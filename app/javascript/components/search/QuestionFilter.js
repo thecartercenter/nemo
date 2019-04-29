@@ -16,7 +16,7 @@ class QuestionFilter extends React.Component {
     onSubmit: PropTypes.func.isRequired,
   };
 
-  async componentWillMount() {
+  async componentDidMount() {
     const { filtersStore } = this.props;
     await filtersStore.updateRefableQings();
   }
