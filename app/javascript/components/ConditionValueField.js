@@ -9,6 +9,8 @@ class ConditionValueField extends React.Component {
     name: PropTypes.string,
     type: PropTypes.string.isRequired,
     value: PropTypes.string,
+    levels: PropTypes.arrayOf(PropTypes.object),
+    updateLevels: PropTypes.func,
     onChange: PropTypes.func,
   };
 

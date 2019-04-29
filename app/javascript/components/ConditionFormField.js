@@ -96,7 +96,7 @@ class ConditionFormField extends React.Component {
   }
 
   buildValueProps = (namePrefix, idPrefix) => {
-    const { condition: { optionSetId, optionNodeId, value } } = this.props;
+    const { condition: { optionSetId, optionNodeId, value, levels, updateLevels } } = this.props;
 
     if (optionSetId) {
       return {
@@ -107,6 +107,8 @@ class ConditionFormField extends React.Component {
         key: `${idPrefix}_option_node_ids_`,
         optionSetId,
         optionNodeId,
+        levels,
+        updateLevels,
         onChange: this.handleChangeValue,
       };
     }

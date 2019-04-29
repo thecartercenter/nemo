@@ -1,78 +1,39 @@
-import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react';
 
 import FormSelect from './FormSelect';
 
+@observer
 class CascadingSelect extends React.Component {
   static propTypes = {
+    namePrefix: PropTypes.string,
     optionNodeId: PropTypes.string,
     optionSetId: PropTypes.string.isRequired,
+    levels: PropTypes.arrayOf(PropTypes.object),
+    updateLevels: PropTypes.func.isRequired,
     onChange: PropTypes.func,
-
-    // TODO: Describe these prop types.
-    /* eslint-disable react/forbid-prop-types */
-    namePrefix: PropTypes.any,
-    levels: PropTypes.any,
-    /* eslint-enable */
   };
 
-  constructor(props) {
-    super(props);
-    const { optionSetId, optionNodeId, namePrefix, levels } = this.props;
-    this.state = { optionSetId, optionNodeId, namePrefix, levels };
-  }
-
-  // Refresh data on mount.
-  componentDidMount() {
-    const { optionSetId, optionNodeId } = this.state;
-    this.getData(optionSetId, optionNodeId);
-  }
-
-  // Refresh data if the option set is changing.
-  componentWillReceiveProps(nextProps) {
-    const { optionSetId } = this.state;
-    if (nextProps.optionSetId !== optionSetId) {
-      this.getData(nextProps.optionSetId, nextProps.optionNodeId);
-    }
-  }
-
-  // Fetches data to populate the control. nodeId may be null if there is no node selected.
-  getData = async (setId, nodeId) => {
-    ELMO.app.loading(true);
-    const url = this.buildUrl(setId, nodeId);
-    try {
-      // TODO: Decompose magical `response` before setting state.
-      const response = await $.ajax(url);
-      this.setState(response);
-    } catch (error) {
-      console.error('Failed to getData:', error);
-    } finally {
-      ELMO.app.loading(false);
-    }
+  async componentDidMount() {
+    const { updateLevels } = this.props;
+    await updateLevels();
   }
 
   nodeChanged = (isLastLevel) => (newNodeId) => {
-    const { onChange } = this.props;
-    const { optionSetId } = this.state;
+    const { onChange, updateLevels } = this.props;
 
     if (onChange) {
       onChange(newNodeId);
     }
 
     if (!isLastLevel) {
-      this.getData(optionSetId, newNodeId);
+      updateLevels();
     }
   }
 
-  buildUrl = (setId, nodeId) => {
-    const params = { node_id: nodeId };
-    const url = ELMO.app.url_builder.build('option-sets', setId, 'condition-form-view');
-    return `${url}?${queryString.stringify(params)}`;
-  }
-
   buildLevelProps = (level, isLastLevel) => {
-    const { namePrefix } = this.state;
+    const { namePrefix } = this.props;
     return {
       type: 'select',
       name: `${namePrefix}[option_node_ids][]`,
@@ -85,7 +46,7 @@ class CascadingSelect extends React.Component {
   }
 
   buildLevels = () => {
-    const { levels } = this.state;
+    const { levels } = this.props;
     const self = this;
     let result = [];
     if (levels) {
@@ -104,7 +65,7 @@ class CascadingSelect extends React.Component {
   }
 
   isLastLevel = (i) => {
-    const { levels } = this.state;
+    const { levels } = this.props;
     return levels && levels.length === (i + 1);
   }
 
