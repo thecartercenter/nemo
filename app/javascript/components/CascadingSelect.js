@@ -20,12 +20,12 @@ class CascadingSelect extends React.Component {
     await updateLevels();
   }
 
-  nodeChanged = (levelIndex) => (newNodeId) => {
+  nodeChanged = (level, levelIndex) => (newNodeId) => {
     const { onChange, updateLevels } = this.props;
     const isLastLevel = this.isLastLevel(levelIndex);
 
     if (onChange) {
-      onChange(newNodeId);
+      onChange(newNodeId, level.name);
     }
 
     if (!isLastLevel) {
@@ -42,7 +42,7 @@ class CascadingSelect extends React.Component {
       value: level.selected,
       options: level.options,
       prompt: this.optionPrompt(level),
-      onChange: this.nodeChanged(levelIndex),
+      onChange: this.nodeChanged(level, levelIndex),
     };
   }
 

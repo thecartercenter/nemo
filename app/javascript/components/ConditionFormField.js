@@ -33,9 +33,24 @@ class ConditionFormField extends React.Component {
     condition.op = opValue;
   }
 
-  handleChangeValue = (value) => {
+  /**
+   * Update the value in the store.
+   * If levelName is provided, will update the cascading select 'level' value map.
+   */
+  handleChangeValue = (value, levelName) => {
     const { condition } = this.props;
-    condition.value = value;
+
+    if (levelName !== undefined) {
+      const level = condition.levels.find(({ name }) => name === levelName);
+
+      if (!level) {
+        console.error('Failed to find level with name:', levelName);
+      } else {
+        level.selected = value;
+      }
+    } else {
+      condition.value = value;
+    }
   }
 
   getFieldData = async (refQingId) => {
