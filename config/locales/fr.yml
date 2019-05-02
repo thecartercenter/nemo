@@ -989,11 +989,13 @@ fr:
         verify: "Vérifier"
   date:
     formats:
-      short: "%d %b"
+      default: "%Y-%m-%d"
+      short: "%b %d"
   time:
     formats:
-      short: "%d %b %H:%M"
-      time_only: "%H:%M:%S"
+      default: "%Y-%m-%d %H:%M:%S"
+      short: "%b %d %H:%M"
+      time_only: "%H:%M:%S" 
   search_qualifiers:
     text: "texte"
     email: "email"
