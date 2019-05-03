@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`applies default levels values 1`] = `
+Array [
+  Object {
+    "name": "foo",
+    "selected": "bar",
+  },
+  Object {
+    "name": "baz",
+    "selected": "qux",
+  },
+]
+`;
+
+exports[`gets levels values 1`] = `
+Object {
+  "baz": "qux",
+  "foo": "bar",
+}
+`;

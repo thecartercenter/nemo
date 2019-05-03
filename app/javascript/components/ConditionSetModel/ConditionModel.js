@@ -1,6 +1,8 @@
 import queryString from 'query-string';
 import { observable, action, reaction } from 'mobx';
 
+import { getLevelsValues, applyDefaultLevelsValues } from './utils';
+
 /**
  * Represents a single condition (e.g. 'Question Foo' Equals 'Bar').
  */
@@ -30,7 +32,7 @@ class ConditionModel {
   value;
 
   @observable
-  levels;
+  levels = [];
 
   @observable
   remove;
@@ -57,7 +59,8 @@ class ConditionModel {
     const url = this.buildUrl();
     try {
       const { levels } = await $.ajax(url);
-      this.levels = levels;
+      const oldValues = getLevelsValues(this.levels);
+      this.levels = applyDefaultLevelsValues(levels, oldValues);
     } catch (error) {
       console.error('Failed to updateLevels:', error);
     } finally {

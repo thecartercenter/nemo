@@ -22,3 +22,21 @@ export function provideConditionSetStore(uniqueId) {
 
   return conditionSetStores[uniqueId];
 }
+
+export function getLevelsValues(levels) {
+  return levels.reduce((reduction, { name, selected }) => {
+    // eslint-disable-next-line no-param-reassign
+    reduction[name] = selected;
+    return reduction;
+  }, {});
+}
+
+export function applyDefaultLevelsValues(levels, defaultValues) {
+  return levels.map((level) => {
+    const { name, selected } = level;
+    return {
+      ...level,
+      selected: defaultValues[name] || selected,
+    };
+  });
+}
