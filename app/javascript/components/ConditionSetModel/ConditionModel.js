@@ -43,8 +43,10 @@ class ConditionModel {
     // Update levels when optionSet changes.
     reaction(
       () => this.optionSetId,
-      async () => {
-        await this.updateLevels();
+      async (optionSetId) => {
+        if (optionSetId) {
+          await this.updateLevels();
+        }
       },
     );
   }
