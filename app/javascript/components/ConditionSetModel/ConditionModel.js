@@ -56,9 +56,18 @@ class ConditionModel {
    * nodeId may be null if there is no node selected.
    */
   @action
-  updateLevels = async (changedNodeId = null, optionSetId = null) => {
+  updateLevels = async (changedNodeId = null, changedOptionSetId = null) => {
+    const nodeId = changedNodeId || this.optionNodeId;
+    const optionSetId = changedOptionSetId || this.optionSetId;
+
+    if (!optionSetId) {
+      // We don't have enough info yet to load values (probably mounting
+      // a new component that will be updated momentarily).
+      return;
+    }
+
     ELMO.app.loading(true);
-    const url = this.buildUrl(changedNodeId, optionSetId);
+    const url = this.buildUrl(nodeId, optionSetId);
     try {
       const { levels } = await $.ajax(url);
       const oldValues = getLevelsValues(this.levels);
@@ -70,9 +79,9 @@ class ConditionModel {
     }
   }
 
-  buildUrl = (changedNodeId = null, optionSetId = null) => {
-    const params = { node_id: changedNodeId || this.optionNodeId || 'null' };
-    const url = ELMO.app.url_builder.build('option-sets', optionSetId || this.optionSetId, 'condition-form-view');
+  buildUrl = (nodeId, optionSetId) => {
+    const params = { node_id: nodeId || 'null' };
+    const url = ELMO.app.url_builder.build('option-sets', optionSetId, 'condition-form-view');
     return `${url}?${queryString.stringify(params)}`;
   }
 }
