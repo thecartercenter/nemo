@@ -6,7 +6,7 @@ exports[`integration navigates on apply advanced search 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A%28%22Two%22%29%20question%3A%28%22One%20eq%205%22%29%20something%20else",
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3D%225%22%20something%20else",
     ],
   ],
   "results": Array [
@@ -24,7 +24,7 @@ exports[`integration navigates on apply form filter 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A%28%22Two%22%29%20question%3A%28%22One%20eq%205%22%29%20query",
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3D%225%22%20query",
     ],
   ],
   "results": Array [
@@ -42,7 +42,7 @@ exports[`integration navigates on apply question filter 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A%28%22Two%22%29%20question%3A%28%22One%20eq%205%22%29%20query",
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3D%225%22%20query",
     ],
   ],
   "results": Array [

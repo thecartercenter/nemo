@@ -12,6 +12,18 @@ export const CONTROLLER_NAME = {
   RESPONSES: '"responses"',
 };
 
+/**
+ * Symbol values for possible operation types.
+ */
+const OP_SYMBOL = {
+  eq: '=',
+  neq: '!=',
+  gt: '>',
+  lt: '<',
+  geq: '>=',
+  leq: '<=',
+};
+
 /** Cache. */
 let filtersStore = null;
 
@@ -76,12 +88,12 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
     .filter((condition) => condition.refQingId)
-    .map(({ refQingId, op, value }) => `${getQuestionNameFromId(allQuestions, refQingId)} ${op} ${value}`)
-    .map((id) => JSON.stringify(id));
+    .map(({ refQingId, op, value }) =>
+      `{${getQuestionNameFromId(allQuestions, refQingId)}}${OP_SYMBOL[op]}${JSON.stringify(value)}`);
 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
-    isEmpty(questionFilters) ? null : `question:(${questionFilters.join('|')})`,
+    isEmpty(questionFilters) ? null : questionFilters,
     advancedSearchText,
   ].filter(Boolean);
 
