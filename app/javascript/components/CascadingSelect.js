@@ -28,8 +28,9 @@ class CascadingSelect extends React.Component {
       onChange(newNodeId, level.name);
     }
 
+    // Refresh data if the selected node changed.
     if (!isLastLevel) {
-      updateLevels();
+      updateLevels(newNodeId);
     }
   }
 

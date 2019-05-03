@@ -56,9 +56,9 @@ class ConditionModel {
    * nodeId may be null if there is no node selected.
    */
   @action
-  updateLevels = async () => {
+  updateLevels = async (changedNodeId = null) => {
     ELMO.app.loading(true);
-    const url = this.buildUrl();
+    const url = this.buildUrl(changedNodeId);
     try {
       const { levels } = await $.ajax(url);
       const oldValues = getLevelsValues(this.levels);
@@ -70,8 +70,8 @@ class ConditionModel {
     }
   }
 
-  buildUrl = () => {
-    const params = { node_id: this.optionNodeId };
+  buildUrl = (changedNodeId = null) => {
+    const params = { node_id: changedNodeId || this.optionNodeId };
     const url = ELMO.app.url_builder.build('option-sets', this.optionSetId, 'condition-form-view');
     return `${url}?${queryString.stringify(params)}`;
   }
