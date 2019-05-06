@@ -30,6 +30,10 @@ class ConditionSetModel {
   @observable
   hide;
 
+  /** If enabled, only allow 'equals' or 'includes' as the operation. */
+  @observable
+  forceEqualsOp = false;
+
   constructor(initialValues = {}) {
     Object.assign(this, initialValues);
 

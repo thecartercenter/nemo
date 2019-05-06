@@ -15,7 +15,7 @@ class ConditionValueField extends React.Component {
   };
 
   render() {
-    const { type, value, id, name, onChange } = this.props;
+    const { id, name, type, value, onChange } = this.props;
 
     if (type === 'cascading_select') {
       return <CascadingSelect {...this.props} />;

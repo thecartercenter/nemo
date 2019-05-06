@@ -54,6 +54,7 @@ en:
     inactive: "Inactive"
     import: "Import"
     incoming: "Incoming"
+    is: "is"
     language: "Language"
     login: "Login"
     confirm_login: "Confirm Login"

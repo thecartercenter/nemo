@@ -25,6 +25,13 @@
     margin-top: $container-padding;
     text-align: right;
   }
+
+  .operator-text {
+    flex: 1;
+    font-size: 14px;
+    line-height: 32px;
+    text-align: center;
+  }
 }
 
 .filters-select2-dropdown {

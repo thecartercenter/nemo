@@ -10,10 +10,12 @@ import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
 @inject('filtersStore')
+@inject('conditionSetStore')
 @observer
 class FiltersRoot extends React.Component {
   static propTypes = {
     filtersStore: PropTypes.object.isRequired,
+    conditionSetStore: PropTypes.object.isRequired,
     controllerName: PropTypes.string,
     allForms: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
@@ -33,6 +35,7 @@ class FiltersRoot extends React.Component {
 
     const {
       filtersStore,
+      conditionSetStore,
       allForms,
       selectedFormIds,
       advancedSearchText,
@@ -44,6 +47,9 @@ class FiltersRoot extends React.Component {
       originalFormIds: selectedFormIds,
       selectedFormIds,
       advancedSearchText,
+    });
+    Object.assign(conditionSetStore, {
+      forceEqualsOp: true,
     });
   }
 

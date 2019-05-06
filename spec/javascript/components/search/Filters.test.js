@@ -18,6 +18,7 @@ const defaultProps = {
 const defaultPropsWithStore = {
   ...defaultProps,
   filtersStore,
+  conditionSetStore: filtersStore.conditionSetStore,
 };
 
 it('renders as expected (responses page)', () => {

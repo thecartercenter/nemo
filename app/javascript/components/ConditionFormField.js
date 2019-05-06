@@ -148,7 +148,7 @@ class ConditionFormField extends React.Component {
 
   render() {
     const {
-      conditionSetStore: { namePrefix: rawNamePrefix, refableQings },
+      conditionSetStore: { namePrefix: rawNamePrefix, refableQings, forceEqualsOp },
       condition: { id, refQingId, op, operatorOptions },
       index,
     } = this.props;
@@ -175,6 +175,7 @@ class ConditionFormField extends React.Component {
       value: op || '',
       options: operatorOptions,
       includeBlank: false,
+      forceEqualsOp,
       onChange: this.handleChangeOp,
     };
     const destroyFieldProps = {
@@ -194,7 +195,11 @@ class ConditionFormField extends React.Component {
         <input {...idFieldProps} />
         <input {...destroyFieldProps} />
         <FormSelect {...refQingFieldProps} />
-        <FormSelect {...operatorFieldProps} />
+        {forceEqualsOp ? (
+          <div className="operator-text">{I18n.t('common.is')}</div>
+        ) : (
+          <FormSelect {...operatorFieldProps} />
+        )}
         <div className="condition-value">
           <ConditionValueField {...valueFieldProps} />
         </div>
