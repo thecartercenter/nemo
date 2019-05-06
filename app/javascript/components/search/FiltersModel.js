@@ -12,7 +12,7 @@ const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({
 })));
 
 /** Map from each type to an empty array. */
-const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction, type) => {
+export const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction, type) => {
   // eslint-disable-next-line no-param-reassign
   reduction[type] = [];
   return reduction;

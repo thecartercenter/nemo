@@ -5,6 +5,8 @@ import {
   submitSearch,
   isQueryParamTruthy,
 } from '../../../../app/javascript/components/search/utils';
+import { getEmptySubmitterTypeMap } from '../../../../app/javascript/components/search/FiltersModel';
+
 import { getFiltersStore } from './utils';
 
 it('gets hints (0)', () => {
@@ -42,6 +44,7 @@ it('gets filter string (no filters)', () => {
       conditions: [],
     },
     isReviewed: null,
+    selectedSubmitterIdsForType: getEmptySubmitterTypeMap(),
     advancedSearchText: null,
   };
 

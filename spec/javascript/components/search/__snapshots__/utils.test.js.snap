@@ -8,7 +8,7 @@ exports[`checks if param is truthy 3`] = `false`;
 
 exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\") {One}:\\"5\\" reviewed:1 submitter:(\\"User B\\") group:(\\"Group B\\") query"`;
 
-exports[`gets filter string (no filters) 1`] = `"submitter:(\\"User B\\") group:(\\"Group B\\")"`;
+exports[`gets filter string (no filters) 1`] = `""`;
 
 exports[`gets hints (0) 1`] = `""`;
 
