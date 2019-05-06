@@ -52,6 +52,8 @@ class FiltersModel {
     ELMO.app.loading(true);
     const url = this.buildUrl();
     try {
+      if (process.env.NODE_ENV === 'test') return;
+
       const { refableQings } = await $.ajax(url);
       this.conditionSetStore.refableQings = refableQings;
     } catch (error) {

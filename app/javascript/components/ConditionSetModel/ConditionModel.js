@@ -69,6 +69,8 @@ class ConditionModel {
     ELMO.app.loading(true);
     const url = this.buildUrl(nodeId, optionSetId);
     try {
+      if (process.env.NODE_ENV === 'test') return;
+
       const { levels } = await $.ajax(url);
       const oldValues = getLevelsValues(this.levels);
       this.levels = applyDefaultLevelsValues(levels, oldValues);

@@ -22,6 +22,7 @@ exports[`after changing value renders as expected 1`] = `
   id="root"
   key="root"
   onChange={[Function]}
+  value=""
 >
   <option
     key="blank"
@@ -48,6 +49,7 @@ exports[`renders as expected 1`] = `
   id="root"
   key="root"
   onChange={[Function]}
+  value=""
 >
   <option
     key="blank"
