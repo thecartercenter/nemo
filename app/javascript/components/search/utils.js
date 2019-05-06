@@ -93,7 +93,7 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
-    isEmpty(questionFilters) ? null : questionFilters,
+    ...questionFilters,
     advancedSearchText,
   ].filter(Boolean);
 
