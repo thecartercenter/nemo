@@ -88,8 +88,8 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
     .filter((condition) => condition.refQingId)
-    .map(({ refQingId, op, value }) =>
-      `{${getQuestionNameFromId(allQuestions, refQingId)}}${OP_SYMBOL[op]}${JSON.stringify(value)}`);
+    .map(({ refQingId, value }) =>
+      `{${getQuestionNameFromId(allQuestions, refQingId)}}:${JSON.stringify(value)}`);
 
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
