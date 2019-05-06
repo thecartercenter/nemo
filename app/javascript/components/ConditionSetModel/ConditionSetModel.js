@@ -31,6 +31,8 @@ class ConditionSetModel {
   hide;
 
   constructor(initialValues = {}) {
+    Object.assign(this, initialValues);
+
     // Make sure conditions are always instances of the model.
     // TODO: MobX-state-tree can do this automatically for us.
     reaction(
@@ -38,19 +40,15 @@ class ConditionSetModel {
       (originalConditions) => {
         this.originalConditions = this.mapConditionsToStores(originalConditions);
       },
+      { fireImmediately: true },
     );
     reaction(
       () => this.conditions,
       (conditions) => {
         this.conditions = this.mapConditionsToStores(conditions);
       },
+      { fireImmediately: true },
     );
-
-    Object.assign(this, initialValues);
-
-    if (!initialValues.hide) {
-      this.handleAddBlankCondition();
-    }
 
     // If about to show the set and it's empty, add a blank condition.
     reaction(
@@ -60,6 +58,7 @@ class ConditionSetModel {
           this.handleAddBlankCondition();
         }
       },
+      { fireImmediately: true },
     );
   }
 

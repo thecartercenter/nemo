@@ -11,6 +11,7 @@ const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({
 })));
 
 class FiltersModel {
+  @observable
   conditionSetStore = new ConditionSetModel(initialConditionSetData);
 
   @observable
