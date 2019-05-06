@@ -19,24 +19,7 @@ exports[`popover renders as expected 1`] = `
   className="filters-popover display-logic-container"
   id="form-filter"
 >
-  <ConditionSetFormField
-    refableQings={
-      Array [
-        Object {
-          "code": "One",
-          "fullDottedRank": "1",
-          "id": "1",
-          "rank": 1,
-        },
-        Object {
-          "code": "Two",
-          "fullDottedRank": "2",
-          "id": "2",
-          "rank": 2,
-        },
-      ]
-    }
-  />
+  <ConditionSetFormField />
   <div
     className="btn-apply-container"
   >
@@ -59,24 +42,7 @@ exports[`renders as expected 1`] = `
       className="filters-popover display-logic-container"
       id="form-filter"
     >
-      <ConditionSetFormField
-        refableQings={
-          Array [
-            Object {
-              "code": "One",
-              "fullDottedRank": "1",
-              "id": "1",
-              "rank": 1,
-            },
-            Object {
-              "code": "Two",
-              "fullDottedRank": "2",
-              "id": "2",
-              "rank": 2,
-            },
-          ]
-        }
-      />
+      <ConditionSetFormField />
       <div
         className="btn-apply-container"
       >

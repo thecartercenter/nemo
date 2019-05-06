@@ -22,17 +22,14 @@ class QuestionFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, onSubmit } = this.props;
-    const { conditionSetStore: { refableQings } } = filtersStore;
+    const { onSubmit } = this.props;
 
     return (
       <Popover
         className="filters-popover display-logic-container"
         id="form-filter"
       >
-        <ConditionSetFormField
-          refableQings={refableQings}
-        />
+        <ConditionSetFormField />
 
         <div className="btn-apply-container">
           <Button

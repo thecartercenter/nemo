@@ -36,6 +36,10 @@ it('gets filter string (no filters)', () => {
   const emptyFilters = {
     ...filtersStore,
     selectedFormIds: [],
+    conditionSetStore: {
+      ...filtersStore.conditionSetStore,
+      conditions: [],
+    },
     advancedSearchText: null,
   };
 

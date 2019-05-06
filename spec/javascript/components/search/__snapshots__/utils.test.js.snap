@@ -8,7 +8,7 @@ exports[`checks if param is truthy 3`] = `false`;
 
 exports[`gets filter string (all filters) 1`] = `"form:(\\"One\\"|\\"Q\\\\\\"uo'te\`s\\") {One}=\\"5\\" query"`;
 
-exports[`gets filter string (no filters) 1`] = `"{One}=\\"5\\""`;
+exports[`gets filter string (no filters) 1`] = `""`;
 
 exports[`gets form name (found) 1`] = `"One"`;
 

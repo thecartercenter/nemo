@@ -1,3 +1,4 @@
+import pick from 'lodash/pick';
 import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Provider } from 'mobx-react';
@@ -9,21 +10,25 @@ import { CONTROLLER_NAME } from '../../../../app/javascript/components/search/ut
 import { FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
 
 const defaultProps = {
-  filtersStore,
-  // Also pass in initial props.
-  ...filtersStore,
+  // Pass in initial props.
+  ...pick(filtersStore, ['allForms', 'selectedFormIds', 'advancedSearchText']),
   controllerName: CONTROLLER_NAME.RESPONSES,
 };
 
+const defaultPropsWithStore = {
+  ...defaultProps,
+  filtersStore,
+};
+
 it('renders as expected (responses page)', () => {
-  const wrapper = shallow(<Component {...defaultProps} />);
+  const wrapper = shallow(<Component {...defaultPropsWithStore} />);
   expect(wrapper).toMatchSnapshot();
 });
 
 it('renders as expected (other page)', () => {
   const wrapper = shallow(
     <Component
-      {...defaultProps}
+      {...defaultPropsWithStore}
       controllerName="foo"
     />,
   );
@@ -31,7 +36,7 @@ it('renders as expected (other page)', () => {
 });
 
 describe('integration', () => {
-  // Re-import Filters with unmocked @inject decorator.
+  // Re-import Filters with unmocked @inject decorator so we can deep render.
   jest.resetModules();
   jest.unmock('mobx-react');
   // eslint-disable-next-line no-shadow
@@ -39,13 +44,15 @@ describe('integration', () => {
 
   suppressErrors(STUB_COMPONENT_WARNINGS);
   const wrapper = mount(
-    <Provider filtersStore={filtersStore}>
+    <Provider filtersStore={filtersStore} conditionSetStore={filtersStore.conditionSetStore}>
       <Component {...defaultProps} />
     </Provider>,
   );
   unsuppressAllErrors();
 
-  beforeEach(() => window.location.assign.mockClear());
+  beforeEach(() => {
+    window.location.assign.mockClear();
+  });
 
   it('navigates on apply form filter', () => {
     wrapper.find('Button#form-filter').simulate('click');
