@@ -1,5 +1,5 @@
 import queryString from 'query-string';
-import { observable, action, reaction } from 'mobx';
+import { observable, action, reaction, computed } from 'mobx';
 
 import { getLevelsValues, applyDefaultLevelsValues } from './utils';
 
@@ -49,6 +49,27 @@ class ConditionModel {
         }
       },
     );
+  }
+
+  /** Return either the current value or the value of the deepest defined level. */
+  @computed
+  get currTextValue() {
+    if (this.optionSetId) {
+      const lastIndex = this.levels.length - 1;
+
+      for (let i = lastIndex; i >= 0; i -= 1) {
+        const { selected, options } = this.levels[i];
+
+        if (selected != null) {
+          const { name = '' } = options.find(({ id }) => selected === id) || {};
+          return name;
+        }
+      }
+
+      return null;
+    }
+
+    return this.value;
   }
 
   /**
