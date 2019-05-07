@@ -11,6 +11,14 @@ feature "login instructions" do
     login(actor)
   end
 
+  scenario "regular instructions mask password", js: true do
+    query = "password=testpass"
+    visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/login-instructions?#{query}"
+    expect(page).to have_content("Login Instructions")
+    expect(page).not_to have_content("testpass")
+    expect(evaluate_script("$('.masked').is(':visible')")).to eq true
+  end
+
   scenario "printable instructions do not mask password", js: true do
     query = "password=testpass&medium=print"
     visit "/en/m/#{mission.compact_name}/users/#{enumerator.id}/login-instructions?#{query}"
