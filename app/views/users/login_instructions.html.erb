@@ -2,7 +2,7 @@
 <% @dont_print_title = true %>
 
 <div id="login_instructions">
-  <div id="preamble">
+  <div id="preamble" class="d-print-none">
     <p><%= t("user.login_instructions.preamble_singular") %></p>
     <p><%= link_to(t("user.back_to_index"), users_path) %></p>
   </div>
