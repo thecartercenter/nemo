@@ -54,7 +54,7 @@ class Mission < ApplicationRecord
       # The order of deletion is also important to avoid foreign key constraints
       relationships_to_delete = [Setting, Report::Report, Response,
                                  Condition, FormItem, Question, OptionSet, Option,
-                                 Form, Broadcast, Assignment, Sms::Message, UserGroup]
+                                 Form, Broadcast, Assignment, Sms::Message, UserGroup, Operation]
       relationships_to_delete.each { |r| r.mission_pre_delete(self) }
       reload
       check_associations

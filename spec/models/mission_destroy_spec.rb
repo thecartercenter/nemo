@@ -15,6 +15,7 @@ describe "mission destroy" do
       "Form": 2,
       "FormVersion": 1,
       "Mission": 1,
+      "Operation": 1,
       "Option": 10,
       "OptionNode": 20,
       "OptionSet": 4,
@@ -52,6 +53,8 @@ describe "mission destroy" do
     create(:skip_rule, source_item: form.c[1], destination: "item", dest_item: form.c[3],
                        conditions_attributes: [{ref_qing_id: form.c[0].id, op: "eq", value: "5"}])
     form.replicate(mode: :clone) # Tests that cloned objects can be deleted
+
+    create(:operation, mission: mission, creator: users[0])
 
     create(:list_report, mission: mission)
     create(:response, user: users.first, mission: mission, form: form,
