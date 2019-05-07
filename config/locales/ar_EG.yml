@@ -1025,9 +1025,11 @@ ar:
         verify: "تحقق"
   date:
     formats:
+      default: "%Y-%m-%d"
       short: "%b %d"
   time:
     formats:
+      default: "%Y-%m-%d %H:%M:%S"
       short: "%b %d %H:%M"
       time_only: "%H:%M:%S"
   search_qualifiers:

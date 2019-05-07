@@ -858,10 +858,11 @@ ko:
         verify: "검증하기"
   date:
     formats:
-      short: "%b %d"
+      short: "%d %b"
   time:
     formats:
-      short: "%b %d %H:%M"
+      short: "%d %b %H:%M"
+      time_only: "%H:%M:%S"  
   search_qualifiers:
     text: "텍스트"
     email: "이메일"
