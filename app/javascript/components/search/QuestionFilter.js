@@ -31,7 +31,7 @@ class QuestionFilter extends React.Component {
       >
         <ConditionSetFormField />
 
-        <div className="btn-apply-container no-margin">
+        <div className="btn-apply-container condition-margin">
           <Button
             className="btn-apply"
             onClick={onSubmit}

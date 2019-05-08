@@ -28,8 +28,9 @@
     margin-top: $container-padding;
     text-align: right;
 
-    &.no-margin {
-      margin-top: 0;
+    &.condition-margin {
+      // Account for margin already present from the condition set UI.
+      margin-top: -15px;
     }
   }
 
