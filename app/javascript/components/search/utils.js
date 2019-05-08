@@ -87,7 +87,7 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
 
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
-    .filter((condition) => condition.refQingId)
+    .filter(({ refQingId, currTextValue }) => refQingId && currTextValue)
     .map(({ refQingId, currTextValue }) =>
       `{${getQuestionNameFromId(allQuestions, refQingId)}}:${JSON.stringify(currTextValue)}`);
 
