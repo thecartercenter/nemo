@@ -17,7 +17,7 @@
 
     <%= f.field(:incoming_sms_numbers_str, type: :textarea) %>
 
-    <%= f.regenerable_field(:incoming_sms_token,
+    <%= f.regenerable_field(:incoming_sms_token, confirm: t('setting.sms_token_warning'),
       append: link_to(t('setting.using_incoming_sms_token'), '#', class: 'using-incoming_sms_token')) %>
 
     <%= f.field(:default_outgoing_sms_adapter, type: :select,
