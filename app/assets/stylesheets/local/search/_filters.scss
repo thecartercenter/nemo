@@ -13,12 +13,11 @@
 .filters-popover {
   $container-padding: 12px;
 
-  width: auto !important;
-  min-width: 300px;
-  max-width: 80vw;
+  width: 80vw !important;
+  max-width: 300px;
 
   &.wide {
-    min-width: 450px;
+    max-width: 450px;
   }
 
   .popover-content {
