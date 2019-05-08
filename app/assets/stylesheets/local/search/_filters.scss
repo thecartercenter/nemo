@@ -17,6 +17,10 @@
   min-width: 300px;
   max-width: 80vw;
 
+  &.wide {
+    min-width: 450px;
+  }
+
   .popover-content {
     padding: $container-padding;
   }
@@ -27,6 +31,7 @@
   }
 
   .operator-text {
+    max-width: 40px;
     flex: 1;
     font-size: 14px;
     line-height: 32px;

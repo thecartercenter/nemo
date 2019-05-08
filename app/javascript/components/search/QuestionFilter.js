@@ -26,7 +26,7 @@ class QuestionFilter extends React.Component {
 
     return (
       <Popover
-        className="filters-popover display-logic-container"
+        className="filters-popover wide display-logic-container"
         id="form-filter"
       >
         <ConditionSetFormField />
