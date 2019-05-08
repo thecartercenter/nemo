@@ -37,7 +37,6 @@ class SkipRuleFormFieldRoot extends React.Component {
       namePrefix,
       remove,
       id,
-      laterItems,
       skipIf,
       conditions,
       refableQings,
@@ -49,8 +48,6 @@ class SkipRuleFormFieldRoot extends React.Component {
 
     this.state = {
       remove,
-      id,
-      laterItems,
       skipIf,
       destItemIdOrEnd,
       destination,
@@ -117,10 +114,8 @@ class SkipRuleFormFieldRoot extends React.Component {
   }
 
   render() {
-    const { namePrefix, ruleId } = this.props;
-    const {
-      id, destItemIdOrEnd, laterItems, skipIf, destination, destItemId,
-    } = this.state;
+    const { id, laterItems, namePrefix, ruleId } = this.props;
+    const { destItemIdOrEnd, skipIf, destination, destItemId } = this.state;
     const idFieldProps = {
       type: 'hidden',
       name: `${namePrefix}[id]`,

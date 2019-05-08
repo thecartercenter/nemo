@@ -26,7 +26,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
   constructor(props) {
     super(props);
     const { conditionSetStore, refableQings, id, type, displayIf, displayConditions, formId } = this.props;
-    this.state = { refableQings, type, displayIf };
+    this.state = { displayIf };
 
     // Directly assign initial values to the store.
     Object.assign(conditionSetStore, {
@@ -50,7 +50,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 
   displayIfOptionTags = () => {
-    const { type } = this.state;
+    const { type } = this.props;
     const displayIfOptions = ['always', 'all_met', 'any_met'];
     return displayIfOptions.map((option) => (
       <option
@@ -63,7 +63,8 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 
   render() {
-    const { refableQings, type, displayIf } = this.state;
+    const { refableQings, type } = this.props;
+    const { displayIf } = this.state;
 
     if (refableQings.length === 0) {
       return (
