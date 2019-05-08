@@ -15,6 +15,13 @@ class Notifier < ApplicationMailer
          subject: t("notifier.welcome", site: Settings.site_name))
   end
 
+  def sms_token_change_alert(mission)
+    @mission = mission
+    @site_name = Settings.site_name
+    mail(to: reply_to(mission), reply_to: reply_to(mission),
+         subject: t("notifier.sms_token_change.subject", mission_name: mission.name))
+  end
+
   private
 
   def reply_to(mission)
