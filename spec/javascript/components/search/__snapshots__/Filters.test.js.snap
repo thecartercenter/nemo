@@ -6,7 +6,7 @@ exports[`integration navigates on apply advanced search 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A%28%22Two%22%29%20something%20else",
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3A%225%22%20something%20else",
     ],
   ],
   "results": Array [
@@ -24,7 +24,25 @@ exports[`integration navigates on apply form filter 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A%28%22Two%22%29%20query",
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3A%225%22%20query",
+    ],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`integration navigates on apply question filter 1`] = `[MockFunction]`;
+
+exports[`integration navigates on apply question filter 2`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3A%225%22%20query",
     ],
   ],
   "results": Array [
@@ -41,8 +59,6 @@ exports[`renders as expected (other page) 1`] = `
   className="filters"
 >
   <AdvancedSearchFilter
-    advancedSearchText="query"
-    onChangeAdvancedSearch={[Function]}
     onClear={[Function]}
     onSubmit={[Function]}
   />
@@ -55,40 +71,13 @@ exports[`renders as expected (responses page) 1`] = `
 >
   <ButtonToolbar>
     <FormFilter
-      allForms={
-        Array [
-          Object {
-            "id": "1",
-            "name": "One",
-          },
-          Object {
-            "id": "2",
-            "name": "Two",
-          },
-          Object {
-            "id": "3",
-            "name": "Q\\"uo'te\`s",
-          },
-        ]
-      }
-      onClearSelection={[Function]}
-      onSelectForm={[Function]}
       onSubmit={[Function]}
-      originalFormIds={
-        Array [
-          "2",
-        ]
-      }
-      selectedFormIds={
-        Array [
-          "2",
-        ]
-      }
+    />
+    <QuestionFilter
+      onSubmit={[Function]}
     />
   </ButtonToolbar>
   <AdvancedSearchFilter
-    advancedSearchText="query"
-    onChangeAdvancedSearch={[Function]}
     onClear={[Function]}
     onSubmit={[Function]}
   />

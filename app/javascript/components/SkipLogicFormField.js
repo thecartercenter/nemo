@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import SkipRuleSetFormField from './SkipRuleSetFormField';
+import ErrorBoundary from './ErrorBoundary';
 
 class SkipLogicFormField extends React.Component {
   static propTypes = {
@@ -43,7 +44,7 @@ class SkipLogicFormField extends React.Component {
     };
 
     return (
-      <div>
+      <div className="skip-logic-container">
         <select {...selectProps}>
           {this.skipOptionTags()}
         </select>
@@ -56,4 +57,11 @@ class SkipLogicFormField extends React.Component {
   }
 }
 
-export default SkipLogicFormField;
+// Top-level component with an error boundary so no errors can leak out.
+const SkipLogicFormFieldGuard = (props) => (
+  <ErrorBoundary>
+    <SkipLogicFormField {...props} />
+  </ErrorBoundary>
+);
+
+export default SkipLogicFormFieldGuard;

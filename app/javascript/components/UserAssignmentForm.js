@@ -30,6 +30,7 @@ class UserAssignmentForm extends React.Component {
   render() {
     const { missions, roles } = this.props;
     const { assignments } = this.state;
+
     return (
       <div className="assignments">
         <div>

@@ -1,6 +1,8 @@
 import isEmpty from 'lodash/isEmpty';
 import queryString from 'query-string';
 
+import FiltersModel from './FiltersModel';
+
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
 /**
@@ -9,6 +11,39 @@ const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 export const CONTROLLER_NAME = {
   RESPONSES: '"responses"',
 };
+
+/**
+ * Symbol values for possible operation types.
+ */
+const OP_SYMBOL = {
+  eq: '=',
+  neq: '!=',
+  gt: '>',
+  lt: '<',
+  geq: '>=',
+  leq: '<=',
+};
+
+/** Cache. */
+let filtersStore = null;
+
+/**
+ * Returns a new instance of FiltersModel.
+ *
+ * Generally this should be added to a top-level Provider and only used once.
+ */
+export function provideFiltersStore() {
+  if (!filtersStore) {
+    filtersStore = new FiltersModel();
+
+    if (process.env.NODE_ENV === 'development') {
+      // Debug helper.
+      window.store = filtersStore;
+    }
+  }
+
+  return filtersStore;
+}
 
 /**
  * Given a list of hints (e.g. currently selected form names for the form filter button),
@@ -35,15 +70,30 @@ export function getFormNameFromId(allForms, searchId) {
 }
 
 /**
+ * Given a refQingId, find it in the list of all questions and return the name.
+ */
+export function getQuestionNameFromId(allQuestions, searchId) {
+  const question = allQuestions.find(({ id }) => searchId === id);
+  return (question && question.code) || 'Unknown';
+}
+
+/**
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString(allForms, { selectedFormIds, advancedSearchText }) {
+export function getFilterString({ allForms, selectedFormIds, conditionSetStore, advancedSearchText }) {
   const selectedFormNames = selectedFormIds
     .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
 
+  const allQuestions = conditionSetStore.refableQings;
+  const questionFilters = conditionSetStore.conditions
+    .filter(({ refQingId, currTextValue, remove }) => refQingId && currTextValue && !remove)
+    .map(({ refQingId, currTextValue }) =>
+      `{${getQuestionNameFromId(allQuestions, refQingId)}}:${JSON.stringify(currTextValue)}`);
+
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
+    ...questionFilters,
     advancedSearchText,
   ].filter(Boolean);
 

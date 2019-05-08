@@ -38,6 +38,7 @@ en:
       few: "Errors"
       many: "Errors"
       other: "Errors"
+    jsError: "Sorry, something went wrong. Please try reloading the page."
     example:
       zero: "Examples"
       one: "Example"
@@ -53,6 +54,7 @@ en:
     inactive: "Inactive"
     import: "Import"
     incoming: "Incoming"
+    is: "is"
     language: "Language"
     login: "Login"
     confirm_login: "Confirm Login"
@@ -1282,6 +1284,7 @@ en:
   filter:
     form: "Form"
     chooseForm: "Choose a form"
+    question: "Question"
     advancedSearch: "Advanced search"
 
   form:

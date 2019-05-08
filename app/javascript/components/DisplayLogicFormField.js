@@ -1,10 +1,17 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { observer, inject, Provider } from 'mobx-react';
 
+import { provideConditionSetStore } from './ConditionSetModel/utils';
 import ConditionSetFormField from './ConditionSetFormField';
+import ErrorBoundary from './ErrorBoundary';
 
-class DisplayLogicFormField extends React.Component {
+@inject('conditionSetStore')
+@observer
+class DisplayLogicFormFieldRoot extends React.Component {
   static propTypes = {
+    conditionSetStore: PropTypes.object.isRequired,
+
     // TODO: Describe these prop types.
     /* eslint-disable react/forbid-prop-types */
     refableQings: PropTypes.any,
@@ -18,12 +25,27 @@ class DisplayLogicFormField extends React.Component {
 
   constructor(props) {
     super(props);
-    const { refableQings, id, type, displayIf, displayConditions, formId } = this.props;
-    this.state = { refableQings, id, type, displayIf, displayConditions, formId };
+    const { conditionSetStore, refableQings, id, type, displayIf, displayConditions, formId } = this.props;
+    this.state = { refableQings, id, type, displayIf };
+
+    // Directly assign initial values to the store.
+    Object.assign(conditionSetStore, {
+      formId,
+      namePrefix: `${type}[display_conditions_attributes]`,
+      originalConditions: displayConditions,
+      conditions: displayConditions,
+      conditionableId: id,
+      conditionableType: 'FormItem',
+      refableQings,
+      hide: displayIf === 'always',
+    });
   }
 
   displayIfChanged = (event) => {
-    this.setState({ displayIf: event.target.value });
+    const { conditionSetStore } = this.props;
+    const displayIf = event.target.value;
+    this.setState({ displayIf });
+    conditionSetStore.hide = displayIf === 'always';
   }
 
   displayIfOptionTags = () => {
@@ -40,7 +62,7 @@ class DisplayLogicFormField extends React.Component {
   }
 
   render() {
-    const { refableQings: rawRefableQings, id, type, displayIf, displayConditions, formId } = this.state;
+    const { refableQings: rawRefableQings, id, type, displayIf } = this.state;
     // Display logic conditions can't reference self, as that doesn't make sense.
     const refableQings = rawRefableQings.filter((qing) => qing.id !== id);
 
@@ -58,25 +80,29 @@ class DisplayLogicFormField extends React.Component {
       value: displayIf,
       onChange: this.displayIfChanged,
     };
-    const conditionSetProps = {
-      conditions: displayConditions,
-      conditionableId: id,
-      conditionableType: 'FormItem',
-      refableQings,
-      formId,
-      hide: displayIf === 'always',
-      namePrefix: `${type}[display_conditions_attributes]`,
-    };
 
     return (
-      <div>
+      <div className="display-logic-container">
         <select {...displayIfProps}>
           {this.displayIfOptionTags()}
         </select>
-        <ConditionSetFormField {...conditionSetProps} />
+        <ConditionSetFormField />
       </div>
     );
   }
 }
 
-export default DisplayLogicFormField;
+const DisplayLogicFormField = (props) => (
+  <Provider conditionSetStore={provideConditionSetStore('displayLogic')}>
+    <DisplayLogicFormFieldRoot {...props} />
+  </Provider>
+);
+
+// Top-level component with an error boundary so no errors can leak out.
+const DisplayLogicFormFieldGuard = (props) => (
+  <ErrorBoundary>
+    <DisplayLogicFormField {...props} />
+  </ErrorBoundary>
+);
+
+export default DisplayLogicFormFieldGuard;

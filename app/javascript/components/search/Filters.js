@@ -1,20 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
+import { observer, inject, Provider } from 'mobx-react';
 
-import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
+import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from './utils';
+import ErrorBoundary from '../ErrorBoundary';
 import FormFilter from './FormFilter';
+import QuestionFilter from './QuestionFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
-class Filters extends React.Component {
+@inject('filtersStore')
+@inject('conditionSetStore')
+@observer
+class FiltersRoot extends React.Component {
   static propTypes = {
-    advancedSearchText: PropTypes.string.isRequired,
+    filtersStore: PropTypes.object.isRequired,
+    conditionSetStore: PropTypes.object.isRequired,
+    controllerName: PropTypes.string,
     allForms: PropTypes.arrayOf(PropTypes.shape({
       id: PropTypes.string,
       name: PropTypes.string,
     })).isRequired,
-    controllerName: PropTypes.string,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    advancedSearchText: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
@@ -26,36 +34,29 @@ class Filters extends React.Component {
     super(props);
 
     const {
+      filtersStore,
+      conditionSetStore,
+      allForms,
       selectedFormIds,
       advancedSearchText,
     } = props;
 
-    /*
-     * The state for all filters is held here.
-     * Individual filters invoke callbacks to notify this parent component of changes.
-     */
-    this.state = {
+    // Directly assign initial values to the store.
+    Object.assign(filtersStore, {
+      allForms,
+      originalFormIds: selectedFormIds,
       selectedFormIds,
       advancedSearchText,
-    };
+    });
+    Object.assign(conditionSetStore, {
+      forceEqualsOp: true,
+    });
   }
 
   handleSubmit = () => {
-    const { allForms } = this.props;
-    const filterString = getFilterString(allForms, this.state);
+    const { filtersStore } = this.props;
+    const filterString = getFilterString(filtersStore);
     submitSearch(filterString);
-  }
-
-  handleSelectForm = (event) => {
-    this.setState({ selectedFormIds: [event.target.value] });
-  }
-
-  handleClearFormSelection = () => {
-    this.setState({ selectedFormIds: [] });
-  }
-
-  handleChangeAdvancedSearch = (event) => {
-    this.setState({ advancedSearchText: event.target.value });
   }
 
   handleClearFilters = () => {
@@ -63,18 +64,13 @@ class Filters extends React.Component {
   }
 
   renderFilterButtons = () => {
-    const { allForms, selectedFormIds: originalFormIds } = this.props;
-    const { selectedFormIds } = this.state;
-
     return (
       <ButtonToolbar>
         <FormFilter
-          allForms={allForms}
-          onClearSelection={this.handleClearFormSelection}
-          onSelectForm={this.handleSelectForm}
           onSubmit={this.handleSubmit}
-          originalFormIds={originalFormIds}
-          selectedFormIds={selectedFormIds}
+        />
+        <QuestionFilter
+          onSubmit={this.handleSubmit}
         />
       </ButtonToolbar>
     );
@@ -82,7 +78,6 @@ class Filters extends React.Component {
 
   render() {
     const { controllerName } = this.props;
-    const { advancedSearchText } = this.state;
     const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
 
     return (
@@ -90,8 +85,6 @@ class Filters extends React.Component {
         {shouldRenderButtons ? this.renderFilterButtons() : null}
 
         <AdvancedSearchFilter
-          advancedSearchText={advancedSearchText}
-          onChangeAdvancedSearch={this.handleChangeAdvancedSearch}
           onClear={this.handleClearFilters}
           onSubmit={this.handleSubmit}
         />
@@ -100,4 +93,24 @@ class Filters extends React.Component {
   }
 }
 
-export default Filters;
+const Filters = (props) => {
+  const filtersStore = provideFiltersStore();
+  const { conditionSetStore } = filtersStore;
+  return (
+    <Provider filtersStore={filtersStore} conditionSetStore={conditionSetStore}>
+      <FiltersRoot {...props} />
+    </Provider>
+  );
+};
+
+// Top-level component with an error boundary so no errors can leak out.
+const FiltersGuard = (props) => (
+  <ErrorBoundary>
+    <Filters {...props} />
+  </ErrorBoundary>
+);
+
+export default FiltersGuard;
+
+// Root component for testing.
+export { FiltersRoot };

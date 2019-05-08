@@ -17,11 +17,13 @@
       ],
       "plugins": [
         "syntax-dynamic-import",
+        "transform-runtime",
+        "transform-decorators-legacy",
         "transform-object-rest-spread",
         [
           "transform-class-properties",
           {
-            "spec": true
+            "loose": true
           }
         ]
       ]
@@ -43,11 +45,13 @@
       ],
       "plugins": [
         "syntax-dynamic-import",
+        "transform-runtime",
+        "transform-decorators-legacy",
         "transform-object-rest-spread",
         [
           "transform-class-properties",
           {
-            "spec": true
+            "loose": true
           }
         ]
       ]
@@ -68,11 +72,13 @@
       ],
       "plugins": [
         "syntax-dynamic-import",
+        "transform-runtime",
+        "transform-decorators-legacy",
         "transform-object-rest-spread",
         [
           "transform-class-properties",
           {
-            "spec": true
+            "loose": true
           }
         ]
       ]

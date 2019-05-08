@@ -1,11 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer, Provider } from 'mobx-react';
 
+import { provideConditionSetStore } from './ConditionSetModel/utils';
 import ConditionSetFormField from './ConditionSetFormField';
 import FormSelect from './FormSelect';
 
-class SkipRuleFormField extends React.Component {
+@inject('conditionSetStore')
+@observer
+class SkipRuleFormFieldRoot extends React.Component {
   static propTypes = {
+    conditionSetStore: PropTypes.object.isRequired,
     destItemId: PropTypes.string,
     destination: PropTypes.string.isRequired,
     hide: PropTypes.bool.isRequired,
@@ -24,14 +29,12 @@ class SkipRuleFormField extends React.Component {
     /* eslint-enable */
   };
 
-  static defaultProps = {
-    destItemId: null,
-  };
-
   constructor(props) {
     super(props);
 
     const {
+      conditionSetStore,
+      namePrefix,
       remove,
       id,
       laterItems,
@@ -49,13 +52,21 @@ class SkipRuleFormField extends React.Component {
       id,
       laterItems,
       skipIf,
-      conditions,
-      refableQings,
-      formId,
       destItemIdOrEnd,
       destination,
       destItemId,
     };
+
+    // Directly assign initial values to the store.
+    Object.assign(conditionSetStore, {
+      formId,
+      namePrefix: `${namePrefix}[conditions_attributes]`,
+      conditions,
+      conditionableId: id,
+      conditionableType: 'SkipRule',
+      refableQings,
+      hide: skipIf === 'always',
+    });
   }
 
   destinationOptionChanged = (value) => {
@@ -67,9 +78,10 @@ class SkipRuleFormField extends React.Component {
   }
 
   skipIfChanged = (event) => {
-    this.setState({
-      skipIf: event.target.value,
-    });
+    const { conditionSetStore } = this.props;
+    const skipIf = event.target.value;
+    this.setState({ skipIf });
+    conditionSetStore.hide = skipIf === 'always';
   }
 
   handleRemoveClick = () => {
@@ -107,7 +119,7 @@ class SkipRuleFormField extends React.Component {
   render() {
     const { namePrefix, ruleId } = this.props;
     const {
-      id, destItemIdOrEnd, laterItems, skipIf, conditions, refableQings, formId, destination, destItemId,
+      id, destItemIdOrEnd, laterItems, skipIf, destination, destItemId,
     } = this.state;
     const idFieldProps = {
       type: 'hidden',
@@ -119,22 +131,13 @@ class SkipRuleFormField extends React.Component {
       value: destItemIdOrEnd || '',
       prompt: I18n.t('skip_rule.dest_prompt'),
       options: this.formatTargetItemOptions(laterItems),
-      changeFunc: this.destinationOptionChanged,
+      onChange: this.destinationOptionChanged,
     };
     const skipIfProps = {
       name: `${namePrefix}[skip_if]`,
       value: skipIf,
       className: 'form-control',
       onChange: this.skipIfChanged,
-    };
-    const conditionSetProps = {
-      conditions,
-      conditionableId: id,
-      conditionableType: 'SkipRule',
-      refableQings,
-      namePrefix: `${namePrefix}[conditions_attributes]`,
-      formId,
-      hide: skipIf === 'always',
     };
     const destroyFieldProps = {
       type: 'hidden',
@@ -153,8 +156,15 @@ class SkipRuleFormField extends React.Component {
             <select {...skipIfProps}>
               {this.skipIfOptionTags()}
             </select>
+            <div className={`skip-rule-remove ${ruleId}`}>
+              {/* TODO: Improve a11y. */}
+              {/* eslint-disable-next-line */}
+              <a onClick={this.handleRemoveClick}>
+                <i className="fa fa-close" />
+              </a>
+            </div>
           </div>
-          <ConditionSetFormField {...conditionSetProps} />
+          <ConditionSetFormField />
           <input {...idFieldProps} />
           <input {...destroyFieldProps} />
           <input
@@ -168,16 +178,16 @@ class SkipRuleFormField extends React.Component {
             value={destItemId || ''}
           />
         </div>
-        <div className={`skip-rule-remove ${ruleId}`}>
-          {/* TODO: Improve a11y. */}
-          {/* eslint-disable-next-line */}
-          <a onClick={this.handleRemoveClick}>
-            <i className="fa fa-close" />
-          </a>
-        </div>
       </div>
     );
   }
 }
+
+const SkipRuleFormField = (props) => (
+  // eslint-disable-next-line react/prop-types, react/destructuring-assignment
+  <Provider conditionSetStore={provideConditionSetStore(`skip-${props.ruleId}`)}>
+    <SkipRuleFormFieldRoot {...props} />
+  </Provider>
+);
 
 export default SkipRuleFormField;

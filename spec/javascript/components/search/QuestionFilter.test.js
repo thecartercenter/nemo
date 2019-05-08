@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 
 import { filtersStore } from './utils';
 
-import Component from '../../../../app/javascript/components/search/FormFilter';
+import Component from '../../../../app/javascript/components/search/QuestionFilter';
 
 const defaultProps = {
   filtersStore,
@@ -17,7 +17,7 @@ it('renders as expected', () => {
 
 describe('popover', () => {
   const wrapper = shallow(<Component {...defaultProps} />);
-  wrapper.find('Button#form-filter').simulate('click');
+  wrapper.find('Button#question-filter').simulate('click');
 
   const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
 
@@ -26,9 +26,7 @@ describe('popover', () => {
   });
 
   it('handles callbacks', () => {
-    overlay.find('Select2').simulate('change', { target: { value: defaultProps.filtersStore.allForms[0].id } });
     overlay.find('Button.btn-apply').simulate('click');
-
     expect(defaultProps.onSubmit).toMatchSnapshot();
   });
 });

@@ -54,16 +54,16 @@ class SkipRuleSetFormField extends React.Component {
         className="skip-rule-set"
         style={{ display: hide ? 'none' : '' }}
       >
-        {skipRules.map((props, index) => (
+        {skipRules.map((rule, index) => (
           <SkipRuleFormField
             formId={formId}
             hide={hide}
-            key={props.key || props.id}
+            key={rule.key || rule.id}
             laterItems={laterItems}
             ruleId={`rule-${index + 1}`}
             namePrefix={`${type}[skip_rules_attributes][${index}]`}
             refableQings={refableQings}
-            {...props}
+            {...rule}
           />
         ))}
         <div

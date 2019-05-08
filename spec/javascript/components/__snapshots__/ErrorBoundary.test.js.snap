@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders (default) 1`] = `"children"`;
+
+exports[`renders (error) 1`] = `<DangerousComponent />`;

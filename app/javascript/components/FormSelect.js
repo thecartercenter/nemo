@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 class FormSelect extends React.Component {
   static propTypes = {
-    changeFunc: PropTypes.func,
     id: PropTypes.string,
     includeBlank: PropTypes.bool,
     name: PropTypes.string,
@@ -13,19 +12,15 @@ class FormSelect extends React.Component {
     })).isRequired,
     prompt: PropTypes.string,
     value: PropTypes.node,
+    onChange: PropTypes.func,
   };
 
   static defaultProps = {
-    changeFunc: null,
-    id: null,
     includeBlank: true,
-    name: null,
-    prompt: null,
-    value: null,
   };
 
   render() {
-    const { options, prompt, includeBlank, name, id, value, changeFunc } = this.props;
+    const { options, prompt, includeBlank, name, id, value, onChange } = this.props;
     const optionTags = [];
     if (prompt || includeBlank !== false) {
       optionTags.push(
@@ -45,16 +40,15 @@ class FormSelect extends React.Component {
         {o.name}
       </option>,
     ));
+
     const props = {
       className: 'form-control',
       name,
       id,
       key: id,
-      defaultValue: value,
+      value: value || '',
+      onChange: onChange ? (e) => onChange(e.target.value) : undefined,
     };
-    if (changeFunc) {
-      props.onChange = (e) => changeFunc(e.target.value);
-    }
 
     return (
       <select {...props}>

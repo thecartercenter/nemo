@@ -1,97 +1,104 @@
+import get from 'lodash/get';
+import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
+import { inject, observer } from 'mobx-react';
 
 import ConditionValueField from './ConditionValueField';
 import FormSelect from './FormSelect';
 
+/** Return true if the given op is an available option. */
+function opIsValid(op, operatorOptions) {
+  return (operatorOptions || []).some(({ id }) => op === id);
+}
+
+@inject('conditionSetStore')
+@observer
 class ConditionFormField extends React.Component {
   static propTypes = {
-    hide: PropTypes.bool.isRequired,
-
-    // TODO: Describe these prop types.
-    /* eslint-disable react/forbid-prop-types */
-    formId: PropTypes.any,
-    conditionableId: PropTypes.any,
-    conditionableType: PropTypes.any,
-    optionSetId: PropTypes.any,
-    optionNodeId: PropTypes.any,
-    value: PropTypes.any,
-    namePrefix: PropTypes.any,
-    index: PropTypes.any,
-    id: PropTypes.any,
-    refQingId: PropTypes.any,
-    refableQings: PropTypes.any,
-    op: PropTypes.any,
-    operatorOptions: PropTypes.any,
-    /* eslint-enable */
+    conditionSetStore: PropTypes.object,
+    condition: PropTypes.object,
+    index: PropTypes.number,
   };
 
-  constructor(props) {
-    super(props);
+  handleChangeRefQing = (refQingId) => {
+    const { condition } = this.props;
+    condition.refQingId = refQingId;
 
-    const {
-      formId,
-      conditionableId,
-      conditionableType,
-      optionSetId,
-      optionNodeId,
-      value,
-      namePrefix,
-      index,
-      id,
-      refQingId,
-      refableQings,
-      op,
-      operatorOptions,
-    } = this.props;
-
-    this.state = {
-      formId,
-      conditionableId,
-      conditionableType,
-      optionSetId,
-      optionNodeId,
-      value,
-      namePrefix,
-      index,
-      id,
-      refQingId,
-      refableQings,
-      op,
-      operatorOptions,
-    };
-  }
-
-  getFieldData = (refQingId) => {
-    ELMO.app.loading(true);
-    const self = this;
-    const url = this.buildUrl(refQingId);
-    $.ajax(url)
-      .done((response) => {
-        // Need to put this before we set state because setting state may trigger a new one.
-        ELMO.app.loading(false);
-
-        // We set option node ID to null since the new refQing may have a new option set.
-        self.setState(Object.assign(response, { optionNodeId: null }));
-      })
-      .fail(() => {
-        ELMO.app.loading(false);
-      });
-  }
-
-  updateFieldData = (refQingId) => {
     this.getFieldData(refQingId);
   }
 
-  buildUrl = (refQingId) => {
-    const { id, formId, conditionableId, conditionableType } = this.state;
-    let url = `${ELMO.app.url_builder.build('form-items', 'condition-form')}?`;
-    url += `condition_id=${id || ''}&ref_qing_id=${refQingId}&form_id=${formId}`;
-    if (conditionableId) {
-      url += `&conditionable_id=${conditionableId}`;
-      url += `&conditionable_type=${conditionableType}`;
+  handleChangeOp = (opValue) => {
+    const { condition } = this.props;
+    condition.op = opValue;
+  }
+
+  /**
+   * Update the value in the store.
+   * If levelName is provided, will update the cascading select 'level' value map.
+   */
+  handleChangeValue = (value, levelName) => {
+    const { condition } = this.props;
+
+    if (levelName !== undefined) {
+      const level = condition.levels.find(({ name }) => name === levelName);
+
+      if (!level) {
+        console.error('Failed to find level with name:', levelName);
+      } else {
+        level.selected = value;
+      }
+    } else {
+      condition.value = value;
     }
-    return url;
+  }
+
+  getFieldData = async (refQingId) => {
+    const { condition } = this.props;
+
+    ELMO.app.loading(true);
+    const url = this.buildUrl(refQingId);
+    try {
+      if (process.env.NODE_ENV === 'test') return;
+
+      // TODO: Decompose magical `response` before setting state.
+      const response = await $.ajax(url);
+
+      // Need to put this before we set state because setting state may trigger a new one.
+      ELMO.app.loading(false);
+
+      const newCondition = {
+        ...response,
+        // We set option node ID to null since the new refQing may have a new option set.
+        optionNodeId: null,
+        // Prefer the existing value and op if they've been set locally.
+        value: condition.value || response.value,
+        op: condition.op || response.op,
+      };
+
+      // Default to the first op if the current one is invalid.
+      if (!opIsValid(newCondition.op, newCondition.operatorOptions)) {
+        newCondition.op = get(newCondition, 'operatorOptions[0].id') || null;
+      }
+
+      Object.assign(condition, newCondition);
+    } catch (error) {
+      ELMO.app.loading(false);
+      console.error('Failed to getFieldData:', error);
+    }
+  }
+
+  buildUrl = (refQingId) => {
+    const { conditionSetStore: { formId, conditionableId, conditionableType }, condition: { id } } = this.props;
+    const params = {
+      condition_id: id || '',
+      ref_qing_id: refQingId,
+      form_id: formId,
+      conditionable_id: conditionableId || undefined,
+      conditionable_type: conditionableId ? conditionableType : undefined,
+    };
+    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
+    return `${url}?${queryString.stringify(params)}`;
   }
 
   formatRefQingOptions = (refQingOptions) => {
@@ -101,11 +108,12 @@ class ConditionFormField extends React.Component {
   }
 
   handleRemoveClick = () => {
-    this.setState({ remove: true });
+    const { condition } = this.props;
+    condition.remove = true;
   }
 
   buildValueProps = (namePrefix, idPrefix) => {
-    const { optionSetId, optionNodeId, value } = this.state;
+    const { condition: { optionSetId, optionNodeId, value, levels, updateLevels } } = this.props;
 
     if (optionSetId) {
       return {
@@ -116,6 +124,9 @@ class ConditionFormField extends React.Component {
         key: `${idPrefix}_option_node_ids_`,
         optionSetId,
         optionNodeId,
+        levels,
+        updateLevels,
+        onChange: this.handleChangeValue,
       };
     }
 
@@ -126,17 +137,21 @@ class ConditionFormField extends React.Component {
       id: `${idPrefix}_value`,
       key: `${idPrefix}_value`,
       value: value || '',
+      onChange: this.handleChangeValue,
     };
   }
 
   shouldDestroy = () => {
-    const { hide } = this.props;
-    const { remove } = this.state;
+    const { conditionSetStore: { hide }, condition: { remove } } = this.props;
     return remove || hide;
   }
 
   render() {
-    const { namePrefix: rawNamePrefix, index, id, refQingId, refableQings, op, operatorOptions } = this.state;
+    const {
+      conditionSetStore: { namePrefix: rawNamePrefix, refableQings, forceEqualsOp },
+      condition: { id, refQingId, op, operatorOptions },
+      index,
+    } = this.props;
     const namePrefix = `${rawNamePrefix}[${index}]`;
     const idPrefix = namePrefix.replace(/[[\]]/g, '_');
     const idFieldProps = {
@@ -152,7 +167,7 @@ class ConditionFormField extends React.Component {
       value: refQingId || '',
       options: this.formatRefQingOptions(refableQings),
       prompt: I18n.t('condition.ref_qing_prompt'),
-      changeFunc: this.updateFieldData,
+      onChange: this.handleChangeRefQing,
     };
     const operatorFieldProps = {
       name: `${namePrefix}[op]`,
@@ -160,6 +175,8 @@ class ConditionFormField extends React.Component {
       value: op || '',
       options: operatorOptions,
       includeBlank: false,
+      forceEqualsOp,
+      onChange: this.handleChangeOp,
     };
     const destroyFieldProps = {
       type: 'hidden',
@@ -178,7 +195,11 @@ class ConditionFormField extends React.Component {
         <input {...idFieldProps} />
         <input {...destroyFieldProps} />
         <FormSelect {...refQingFieldProps} />
-        <FormSelect {...operatorFieldProps} />
+        {forceEqualsOp ? (
+          <div className="operator-text">{I18n.t('common.is')}</div>
+        ) : (
+          <FormSelect {...operatorFieldProps} />
+        )}
         <div className="condition-value">
           <ConditionValueField {...valueFieldProps} />
         </div>

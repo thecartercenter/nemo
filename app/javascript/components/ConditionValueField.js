@@ -9,16 +9,13 @@ class ConditionValueField extends React.Component {
     name: PropTypes.string,
     type: PropTypes.string.isRequired,
     value: PropTypes.string,
-  };
-
-  // These are not needed for CascadingSelect
-  static defaultProps = {
-    name: null,
-    value: null,
+    levels: PropTypes.arrayOf(PropTypes.object),
+    updateLevels: PropTypes.func,
+    onChange: PropTypes.func,
   };
 
   render() {
-    const { type, value, id, name } = this.props;
+    const { id, name, type, value, onChange } = this.props;
 
     if (type === 'cascading_select') {
       return <CascadingSelect {...this.props} />;
@@ -27,11 +24,12 @@ class ConditionValueField extends React.Component {
     return (
       <input
         className="text form-control"
-        defaultValue={value}
+        value={value}
         id={id}
         key="input"
         name={name}
         type="text"
+        onChange={onChange ? (e) => onChange(e.target.value) : undefined}
       />
     );
   }

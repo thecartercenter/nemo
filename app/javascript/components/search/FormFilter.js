@@ -5,6 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
+import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
 import { getButtonHintString, getFormNameFromId } from './utils';
@@ -15,17 +16,12 @@ import { getButtonHintString, getFormNameFromId } from './utils';
 const parseFormsForSelect2 = (allForms) => allForms
   .map((form) => mapKeys(form, (value, key) => (key === 'name' ? 'text' : key)));
 
+@inject('filtersStore')
+@observer
 class FormFilter extends React.Component {
   static propTypes = {
-    allForms: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-    })).isRequired,
-    onClearSelection: PropTypes.func.isRequired,
-    onSelectForm: PropTypes.func.isRequired,
+    filtersStore: PropTypes.object,
     onSubmit: PropTypes.func.isRequired,
-    originalFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-    selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   };
 
   constructor(props) {
@@ -34,8 +30,9 @@ class FormFilter extends React.Component {
   }
 
   handleClearSelection = () => {
-    const { onClearSelection } = this.props;
-    onClearSelection();
+    const { filtersStore } = this.props;
+    const { handleClearFormSelection } = filtersStore;
+    handleClearFormSelection();
 
     /*
      * Select2 doesn't make this easy... wait for state update then close the dropdown.
@@ -45,7 +42,8 @@ class FormFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { allForms, selectedFormIds, onSelectForm, onSubmit } = this.props;
+    const { filtersStore, onSubmit } = this.props;
+    const { allForms, selectedFormId, handleSelectForm } = filtersStore;
 
     return (
       <Popover
@@ -54,7 +52,7 @@ class FormFilter extends React.Component {
       >
         <Select2
           data={parseFormsForSelect2(allForms)}
-          onSelect={onSelectForm}
+          onSelect={handleSelectForm}
           onUnselect={this.handleClearSelection}
           options={{
             allowClear: true,
@@ -63,7 +61,7 @@ class FormFilter extends React.Component {
             width: '100%',
           }}
           ref={this.select2}
-          value={selectedFormIds && selectedFormIds[0]}
+          value={selectedFormId}
         />
 
         <div className="btn-apply-container">
@@ -79,18 +77,20 @@ class FormFilter extends React.Component {
   }
 
   render() {
-    const { allForms, originalFormIds } = this.props;
+    const { filtersStore } = this.props;
+    const { allForms, originalFormIds } = filtersStore;
     const originalFormNames = originalFormIds.map((id) => getFormNameFromId(allForms, id));
 
     return (
       <OverlayTrigger
+        id="form-filter"
         containerPadding={25}
         overlay={this.renderPopover()}
         placement="bottom"
         rootClose
         trigger="click"
       >
-        <Button className="btn-form-filter btn-secondary">
+        <Button id="form-filter" className="btn-secondary">
           {I18n.t('filter.form') + getButtonHintString(originalFormNames)}
         </Button>
       </OverlayTrigger>

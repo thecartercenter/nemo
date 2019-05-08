@@ -13,7 +13,12 @@
 .filters-popover {
   $container-padding: 12px;
 
-  max-width: 80vw;
+  width: 80vw !important;
+  max-width: 300px;
+
+  &.wide {
+    max-width: 450px;
+  }
 
   .popover-content {
     padding: $container-padding;
@@ -22,6 +27,19 @@
   .btn-apply-container {
     margin-top: $container-padding;
     text-align: right;
+
+    &.condition-margin {
+      // Account for margin already present from the condition set UI.
+      margin-top: -15px;
+    }
+  }
+
+  .operator-text {
+    max-width: 40px;
+    flex: 1;
+    font-size: 14px;
+    line-height: 32px;
+    text-align: center;
   }
 }
 

@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`computes currTextValue (basic value) 1`] = `"foo"`;
+
+exports[`computes currTextValue (cascading select with nothing selected) 1`] = `null`;
+
+exports[`computes currTextValue (cascading select with something selected) 1`] = `"One"`;

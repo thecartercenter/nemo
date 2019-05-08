@@ -5,7 +5,7 @@ import {
   submitSearch,
   isQueryParamTruthy,
 } from '../../../../app/javascript/components/search/utils';
-import { formFilterProps } from './utils';
+import { filtersStore } from './utils';
 
 it('gets hints (0)', () => {
   const result = getButtonHintString([]);
@@ -34,21 +34,27 @@ it('gets form name (not found)', () => {
 
 it('gets filter string (no filters)', () => {
   const emptyFilters = {
+    ...filtersStore,
     selectedFormIds: [],
+    conditionSetStore: {
+      ...filtersStore.conditionSetStore,
+      conditions: [],
+    },
     advancedSearchText: null,
   };
 
-  const result = getFilterString(formFilterProps.allForms, emptyFilters);
+  const result = getFilterString(emptyFilters);
   expect(result).toMatchSnapshot();
 });
 
 it('gets filter string (all filters)', () => {
   const populatedFilters = {
+    ...filtersStore,
     selectedFormIds: ['1', '3'],
     advancedSearchText: 'query',
   };
 
-  const result = getFilterString(formFilterProps.allForms, populatedFilters);
+  const result = getFilterString(populatedFilters);
   expect(result).toMatchSnapshot();
 });
 
