@@ -28,6 +28,10 @@
   .btn-apply-container {
     margin-top: $container-padding;
     text-align: right;
+
+    &.no-margin {
+      margin-top: 0;
+    }
   }
 
   .operator-text {
