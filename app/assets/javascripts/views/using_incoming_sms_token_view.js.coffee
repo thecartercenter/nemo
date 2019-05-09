@@ -1,5 +1,5 @@
 class ELMO.Views.UsingIncomingSmsTokenModalView extends ELMO.Views.ApplicationView
-  el: '#using-incoming_sms_token-modal'
+  el: '#using-incoming-sms-token-modal'
 
   initialize: (options) ->
     @$('.modal-body').html(options.html)
