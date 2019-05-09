@@ -16,6 +16,8 @@ class Notifier < ApplicationMailer
   end
 
   def sms_token_change_alert(mission)
+    raise ArgumentError, "Mission must not be nil" unless mission
+
     @mission = mission
     @site_name = Settings.site_name
     mail(to: reply_to(mission), reply_to: reply_to(mission),
