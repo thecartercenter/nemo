@@ -1,6 +1,6 @@
 <%# special title if user is editing self %>
-<% @title_args = {name: @user.name || ''} %>
-<% @title_args[:name] += " (#{t('common.inactive')})" if !@user.active? %>
+<% @title_args = {name: @user.name || ""} %>
+<% @title_args[:name] += " (#{t("common.inactive")})" if !@user.active? %>
 <% @title = t("page_titles.users.#{form_mode}_profile", name: @user.name) if @user == current_user %>
 
 <%= elmo_form_for(@user) do |f| %>
@@ -48,9 +48,9 @@
       <%= f.field(:password_confirmation, type: :password) %>
     </div>
   <% end %>
-  <%= f.regenerable_field(:api_key, confirm: t('setting.api_key_warning')) if
+  <%= f.regenerable_field(:api_key, confirm: t("setting.api_key_warning")) if
           !@user.new_record? && can?(:regenerate_api_key, @user) %>
-  <%= f.regenerable_field(:sms_auth_code, confirm: t('setting.sms_auth_code_warning')) if
+  <%= f.regenerable_field(:sms_auth_code, confirm: t("setting.sms_auth_code_warning")) if
           !@user.new_record? && can?(:regenerate_sms_auth_code, @user) %>
   <div class="submit-buttons">
     <%= f.submit(class: "btn btn-primary") %>
