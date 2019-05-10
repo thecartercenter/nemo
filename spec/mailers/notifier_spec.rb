@@ -47,12 +47,13 @@ describe Notifier do
 
     context "mission has coordinators" do
       let!(:coordinator1) { create(:user, role_name: :coordinator, mission: mission) }
-      let!(:coordinator2) { create(:user, role_name: :coordinator, mission: mission) }
-      let!(:staffer) { create(:user, role_name: :staffer, mission: mission) }
+      let!(:coordinator2) { create(:user, role_name: :coordinator, mission: mission, admin: true) }
+      let!(:staffer1) { create(:user, role_name: :staffer, mission: mission) }
+      let!(:staffer2) { create(:user, role_name: :staffer, mission: mission, admin: true) }
 
-      it "should have all coordinators in to and reply-to" do
-        expect(mail.to).to contain_exactly(coordinator1.email, coordinator2.email)
-        expect(mail.reply_to).to contain_exactly(coordinator1.email, coordinator2.email)
+      it "should have all coordinators/admins in 'to' and 'reply-to'" do
+        expect(mail.to).to contain_exactly(coordinator1.email, coordinator2.email, staffer2.email)
+        expect(mail.reply_to).to contain_exactly(coordinator1.email, coordinator2.email, staffer2.email)
       end
     end
   end

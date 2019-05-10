@@ -20,7 +20,8 @@ class Notifier < ApplicationMailer
 
     @mission = mission
     @site_name = Settings.site_name
-    mail(to: coordinator_emails(mission), reply_to: coordinator_emails(mission),
+    all_emails = (coordinator_emails(mission) + admin_emails).uniq
+    mail(to: all_emails, reply_to: all_emails,
          subject: t("notifier.sms_token_change.subject", mission_name: mission.name))
   end
 
@@ -28,7 +29,11 @@ class Notifier < ApplicationMailer
 
   def coordinator_emails(mission)
     return [] if mission.nil?
-    User.with_roles(mission, :coordinator).pluck(:email).uniq[0, 10] # Max of 10 reply to, should be rare.
+    User.with_roles(mission, :coordinator).pluck(:email).uniq[0, 10] # Max of 10, should be rare.
+  end
+
+  def admin_emails
+    User.where(admin: true).pluck(:email).uniq[0, 10] # Max of 10, should be rare.
   end
 
   def build_reset_url(user)
