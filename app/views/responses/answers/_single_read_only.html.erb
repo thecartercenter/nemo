@@ -2,38 +2,38 @@
     data-val so that conditions can still be eval'd in JS %>
 <% case type = answer.qtype.name
 
-   when 'select_one' %>
+   when "select_one" %>
 
   <%= content_tag(:div, answer.option.try(:name), data: {val: [answer.option_node_id]}) %>
 
-  <%= render('responses/answers/map', answer: answer) if answer.coordinates? %>
+  <%= render("responses/answers/map", answer: answer) if answer.coordinates? %>
 
-<% when 'select_multiple' %>
+<% when "select_multiple" %>
 
-  <%= render('responses/answers/map', answer: answer) if answer.coordinates? %>
+  <%= render("responses/answers/map", answer: answer) if answer.coordinates? %>
 
   <%= content_tag(:div, safe_join(answer.choices.map(&:option_name), tag(:br)),
         data: {val: answer.choices.map(&:option_node_id).to_json}) %>
 
-<% when 'datetime', 'date', 'time' %>
+<% when "datetime", "date", "time" %>
 
   <% format = type == "time" ? :time_only : :default %>
   <% val = answer.send("#{type}_value") %>
 
   <%# output time value in human readable and machine readable formats %>
-  <%= content_tag(:div, val.nil? ? '' : l(val, format: format), :'data-val' => val.nil? ? '' : val.to_s(:"std_#{type}")) %>
+  <%= content_tag(:div, val.nil? ? "" : l(val, format: format), :"data-val" => val.nil? ? "" : val.to_s(:"std_#{type}")) %>
 
-<% when 'integer', 'decimal', 'counter' %>
+<% when "integer", "decimal", "counter" %>
 
-  <%= content_tag(:div, answer.value, :'data-val' => answer.value) %>
+  <%= content_tag(:div, answer.value, :"data-val" => answer.value) %>
 
-<% when 'text', 'long_text' %>
+<% when "text", "long_text" %>
 
   <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
   <%# no need to output data-val here since same as human readable %>
   <%= content_tag(:div, excerpt_if_exists(@response, answer)) %>
 
-<% when 'image', 'annotated_image', 'signature', 'sketch', 'audio', 'video' %>
+<% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
   <%= media_link answer.media_object %>
 
