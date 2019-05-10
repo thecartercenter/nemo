@@ -27,7 +27,7 @@
 
   <%= content_tag(:div, answer.value, :"data-val" => answer.value) %>
 
-<% when "text", "long_text" %>
+<% when "text", "long_text", "barcode" %>
 
   <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
   <%# no need to output data-val here since same as human readable %>
