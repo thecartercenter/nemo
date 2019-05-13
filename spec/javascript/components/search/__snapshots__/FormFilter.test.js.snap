@@ -69,8 +69,8 @@ exports[`renders as expected 1`] = `
   trigger="click"
 >
   <Button
-    className="btn-secondary"
     id="form-filter"
+    variant="secondary"
   >
     Form (One)
   </Button>
