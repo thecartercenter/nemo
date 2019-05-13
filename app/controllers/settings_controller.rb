@@ -30,6 +30,8 @@ class SettingsController < ApplicationController
   def regenerate_incoming_sms_token
     @setting.regenerate_incoming_sms_token!
 
+    Notifier.sms_token_change_alert(current_mission).deliver_now
+
     render json: { value: @setting.incoming_sms_token }
   end
 
