@@ -53,5 +53,13 @@ module Odk
     def childless?
       false
     end
+
+    def root?
+      false
+    end
+
+    def renderable?
+      true
+    end
   end
 end

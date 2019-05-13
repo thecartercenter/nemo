@@ -9,7 +9,7 @@
   <%= conditional_tag(node.odk_code, !node.root?,
         node.repeatable? && node.children? ? {"jr:template" => ""} : nil) do %>
     <%= tag(:header) unless node.root? %>
-    <% node.sorted_children.each do |child| %>
+    <% node.renderable_children.each do |child| %>
       <%= render "forms/odk/instance_node", node: child %>
     <% end %>
   <% end %>

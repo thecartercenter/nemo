@@ -13,7 +13,7 @@
       </text>
     <% end %>
   <% end %>
-  <% node.sorted_children.each do |child| %>
+  <% node.renderable_children.each do |child| %>
     <%= render('forms/odk/translation_group_node', node: child, lang: lang) %>
   <% end %>
 <% end %>
