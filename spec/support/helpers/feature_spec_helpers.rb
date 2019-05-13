@@ -122,4 +122,11 @@ module FeatureSpecHelpers
     # assert that the original select field was updated with the intended value
     select(value, options)
   end
+
+  # Returns all emails sent by the given block.
+  def emails_sent_by
+    old_count = ActionMailer::Base.deliveries.size
+    yield
+    ActionMailer::Base.deliveries[old_count..-1] || []
+  end
 end

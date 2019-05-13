@@ -2071,6 +2071,9 @@ en:
     change_twilio_auth_token: "Change Auth Token"
     change_api_key: "Change API Key"
     override_code_warning: "Note that the new override code will not work with forms that have already been downloaded. You should record the existing code if this is a problem. Are you sure you want to regenerate the code?"
+    sms_token_warning: "Note that this will invalidate the previous SMS token for this mission. All incoming SMSes will be rejected until your SMS gateway settings are updated accordingly. Are you sure you want to regenerate the token?"
+    api_key_warning: "Note that this will invalidate the previous API key for this user. Are you sure you want to regenerate the key?"
+    sms_auth_code_warning: "Note that this will invalidate the previous SMS auth code for this user. Are you sure you want to regenerate the code?"
     using_incoming_sms_token: "How do I use this?"
     headings:
       general: "General Settings"

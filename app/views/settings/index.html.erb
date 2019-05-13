@@ -6,32 +6,31 @@
   <%= f.field(:theme, type: :select, options: Setting.theme_options, required: true, prompt: false) %>
   <% if configatron.has_key?(:universal_sms_token) %>
     <%= f.regenerable_field(:universal_sms_token, no_button: true,
-      append: link_to(t('setting.using_incoming_sms_token'), '#', class: 'using-universal_sms_token')) %>
+      append: link_to(t("setting.using_incoming_sms_token"), "#", class: "using-universal-sms-token")) %>
   <% end %>
 
   <%# None of the rest of this is relevant in admin mode. %>
   <% unless admin_mode? %>
-    <%= f.regenerable_field(:override_code, confirm: t('setting.override_code_warning')) %>
+    <%= f.regenerable_field(:override_code, confirm: t("setting.override_code_warning")) %>
 
     <h2 class="mt-4"><%= t("setting.headings.sms") %></h2>
 
     <%= f.field(:incoming_sms_numbers_str, type: :textarea) %>
 
-    <%= f.regenerable_field(:incoming_sms_token,
-      append: link_to(t('setting.using_incoming_sms_token'), '#', class: 'using-incoming_sms_token')) %>
+    <%= f.regenerable_field(:incoming_sms_token, confirm: t("setting.sms_token_warning"),
+      append: link_to(t("setting.using_incoming_sms_token"), "#", class: "using-incoming-sms-token")) %>
 
     <%= f.field(:default_outgoing_sms_adapter, type: :select,
       options: @adapter_options, prompt: t("common.none")) %>
 
-
     <h2 class="mt-4"><%= t("setting.headings.frontlinecloud") %></h2>
     <div class="adapter-settings" data-adapter="FrontlineCloud">
 
-      <%= link_to(t("setting.change_api_key"), "#", class: 'show-credential-fields') %>
+      <%= link_to(t("setting.change_api_key"), "#", class: "show-credential-fields") %>
 
       <div class="credential-fields">
         <%= f.field(:frontlinecloud_api_key1, type: :password) %>
-        <%= f.field(:clear_frontlinecloud, type: :check_box, label: t('common.clear')) %>
+        <%= f.field(:clear_frontlinecloud, type: :check_box, label: t("common.clear")) %>
       </div>
     </div>
 
@@ -40,11 +39,11 @@
       <%= f.field(:twilio_phone_number) %>
 
       <%= f.field(:twilio_account_sid,
-        append: link_to(t("setting.change_twilio_auth_token"), "#", class: 'show-credential-fields')) %>
+        append: link_to(t("setting.change_twilio_auth_token"), "#", class: "show-credential-fields")) %>
 
       <div class="credential-fields">
         <%= f.field(:twilio_auth_token1, type: :password) %>
-        <%= f.field(:clear_twilio, type: :check_box, label: t('common.clear')) %>
+        <%= f.field(:clear_twilio, type: :check_box, label: t("common.clear")) %>
       </div>
     </div>
 
@@ -64,11 +63,11 @@
 <% end %>
 
 <%# using incoming_sms_token modal %>
-<div class="modal fade" id="using-incoming_sms_token-modal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" id="using-incoming-sms-token-modal" tabindex="-1" role="dialog" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title"><%= t('activerecord.hints.setting.using_incoming_sms_token_title') %></h4>
+        <h4 class="modal-title"><%= t("activerecord.hints.setting.using_incoming_sms_token_title") %></h4>
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
       </div>
       <div class="modal-body pane_body"></div>

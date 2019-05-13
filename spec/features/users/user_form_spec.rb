@@ -25,11 +25,12 @@ feature "user form", js: true do
       fill_in("Alternate Phone", with: "+2347033772211")
       select("Enumerator", from: "user_assignments_attributes_0_role")
       select("Send password reset instructions via email", from: "user_reset_password_method")
-      click_button("Save")
+      emails = emails_sent_by { click_button("Save") }
       expect(page).to have_content("Success: User created successfully")
 
       # Make sure password email url is correct and no missing translations
-      email = ActionMailer::Base.deliveries.last
+      expect(emails.length).to eq(1)
+      email = emails.first
       expect(email.body.to_s).to match(%r{^https?://.+/en/password-resets/[\w_-]+/edit$})
       expect(email.body.to_s).not_to match(/translation_missing/)
 

@@ -1,5 +1,7 @@
 require 'rails_helper'
 
+# TODO: Most of these tests should live in authorization specs instead.
+#   Please move at the next opportunity.
 describe 'api key form field', database_cleaner: :all do
 
   before(:all) do
