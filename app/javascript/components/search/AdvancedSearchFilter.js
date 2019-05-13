@@ -40,14 +40,16 @@ class AdvancedSearchFilter extends React.Component {
           onChange={handleChangeAdvancedSearch}
         />
         <Button
-          className="btn-apply btn-advanced-search btn-secondary"
+          variant="secondary"
+          className="btn-apply btn-advanced-search"
           onClick={onSubmit}
         >
           {I18n.t('common.search')}
         </Button>
         {isQueryParamTruthy('search') ? (
           <Button
-            className="btn-clear btn-secondary btn-margin-left"
+            variant="secondary"
+            className="btn-clear btn-margin-left"
             onClick={onClear}
           >
             {I18n.t('common.clear')}
