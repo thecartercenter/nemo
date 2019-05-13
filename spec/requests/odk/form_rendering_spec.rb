@@ -23,17 +23,11 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         :with_version,
         name: "Sample",
         question_types: %w[text long_text integer decimal location select_one
-                           multilevel_select_one select_multiple text
-                           datetime date time formstart formend barcode counter counter_with_inc])
+                           multilevel_select_one select_multiple datetime date time
+                           formstart formend barcode counter counter_with_inc])
     end
 
     before do
-      # Include a hidden question.
-      # Hidden questions should be included in the bind and instance sections but nowhere else.
-      # Required flag should be ignored for hidden questions.
-      # This is so they can be used for prefilled data.
-      form.sorted_children[8].update!(hidden: true, required: true)
-
       # Include multiple conditions on one question.
       form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
       form.c[6].display_conditions.create!(ref_qing: form.c[5], op: "eq",
@@ -67,12 +61,10 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       create(:form, :published, :with_version, name: "Skip Rule and Conditions",
                                                question_types: %w[text long_text integer decimal location
                                                                   select_one multilevel_select_one
-                                                                  select_multiple text datetime])
+                                                                  select_multiple datetime])
     end
 
     before do
-      form.sorted_children[8].update!(hidden: true, required: true)
-
       # Include multiple conditions on one question.
       form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
       form.c[6].display_conditions.create!(ref_qing: form.c[5],
@@ -241,15 +233,25 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
     end
 
-    context "empty repeat group" do
+    context "empty group, hidden group, group with hidden question, group with only hidden question" do
       let!(:form) do
         create(:form, :published, :with_version,
-          name: "Empty Repeat Group",
-          question_types: ["text", {repeating: {name: "Repeat Group 1", items: []}}])
+          name: "Empty and Hidden",
+          question_types: ["text",
+                           {repeating: {name: "Repeat Group 1", items: []}},
+                           {repeating: {name: "Repeat Group 2", items: %w[text text]}},
+                           {repeating: {name: "Repeat Group 3", items: %w[text]}},
+                           {repeating: {name: "Repeat Group 4", items: %w[text]}}])
+      end
+
+      before do
+        form.c[2].c[0].update!(hidden: true, required: true)
+        form.c[3].c[0].update!(hidden: true)
+        form.c[4].update!(hidden: true)
       end
 
       it "should render proper xml" do
-        expect_xml(form, "empty_repeat_group")
+        expect_xml(form, "empty_and_hidden")
       end
     end
   end

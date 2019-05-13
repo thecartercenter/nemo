@@ -15,7 +15,6 @@
           <*itemcode7*_2/>
           <*itemcode8*/>
           <*itemcode9*/>
-          <*itemcode10*/>
         </data>
       </instance>
       <instance id="*optsetcode2*_level2">
@@ -94,11 +93,11 @@
           <text id="*itemcode8*:hint">
             <value>Question Hint 8</value>
           </text>
-          <text id="*itemcode10*:label">
-            <value>Datetime Question Title 10</value>
+          <text id="*itemcode9*:label">
+            <value>Datetime Question Title 9</value>
           </text>
-          <text id="*itemcode10*:hint">
-            <value>Question Hint 10</value>
+          <text id="*itemcode9*:hint">
+            <value>Question Hint 9</value>
           </text>
           <text id="*optcode1*">
             <value>Cat</value>
@@ -144,8 +143,7 @@
       <bind nodeset="/data/*itemcode7*_1" type="select1" relevant="((/data/*itemcode3* &gt; 5) and (selected(/data/*itemcode6*, '*optcode1*'))) and (not((/data/*itemcode3* = 0)))"/>
       <bind nodeset="/data/*itemcode7*_2" type="select1" relevant="((/data/*itemcode3* &gt; 5) and (selected(/data/*itemcode6*, '*optcode1*'))) and (not((/data/*itemcode3* = 0)))"/>
       <bind nodeset="/data/*itemcode8*" type="select"/>
-      <bind nodeset="/data/*itemcode9*" type="string"/>
-      <bind nodeset="/data/*itemcode10*" type="dateTime"/>
+      <bind nodeset="/data/*itemcode9*" type="dateTime"/>
     </model>
   </h:head>
   <h:body>
@@ -213,9 +211,9 @@
         <value>*optcode10*</value>
       </item>
     </select>
-    <input ref="/data/*itemcode10*">
-      <label ref="jr:itext('*itemcode10*:label')"/>
-      <hint ref="jr:itext('*itemcode10*:hint')"/>
+    <input ref="/data/*itemcode9*">
+      <label ref="jr:itext('*itemcode9*:label')"/>
+      <hint ref="jr:itext('*itemcode9*:hint')"/>
     </input>
   </h:body>
 </h:html>

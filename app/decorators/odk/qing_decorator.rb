@@ -19,7 +19,7 @@ module Odk
     end
 
     def body_tags(group: nil, render_mode: nil, xpath_prefix:)
-      return unless visible?
+      return +"" unless visible?
       render_mode ||= :normal
 
       # Note that subqings here refers to multiple levels of a cascading select question, not groups.
@@ -44,6 +44,13 @@ module Odk
       qtype_name == "select_one" && decorated_option_set.external_csv?
     end
 
+    # Whether this question is either visible or has some important behind the scenes thing like
+    # preload or calculate. Ideally hidden questions and disabled questions would be different things
+    # and we'd render the former but not the latter, but this is what it is for now.
+    def renderable?
+      visible? || jr_preload || calculate
+    end
+
     private
 
     def default_answer?
@@ -51,20 +58,22 @@ module Odk
     end
 
     def calculate
-      default_answer? ? Odk::ResponsePatternParser.new(default, src_item: self).to_odk : nil
+      @calculate ||= default_answer? ? Odk::ResponsePatternParser.new(default, src_item: self).to_odk : nil
     end
 
     def jr_preload
-      case metadata_type
-      when "formstart", "formend" then "timestamp"
-      end
+      @jr_preload ||=
+        case metadata_type
+        when "formstart", "formend" then "timestamp"
+        end
     end
 
     def jr_preload_params
-      case metadata_type
-      when "formstart" then "start"
-      when "formend" then "end"
-      end
+      @jr_preload_params ||=
+        case metadata_type
+        when "formstart" then "start"
+        when "formend" then "end"
+        end
     end
 
     # If a question is required, then determine the appropriate value
