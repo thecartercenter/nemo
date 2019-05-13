@@ -88,11 +88,6 @@ class FiltersModel {
   handleChangeAdvancedSearch = (event) => {
     this.advancedSearchText = event.target.value;
   }
-
-  @action
-  handleChangeIsReviewed = (event) => {
-    this.isReviewed = event.target.checked;
-  }
 }
 
 export default FiltersModel;

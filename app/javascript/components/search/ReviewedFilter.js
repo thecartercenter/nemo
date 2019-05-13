@@ -4,9 +4,16 @@ import Button from 'react-bootstrap/Button';
 import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { inject, observer } from 'mobx-react';
 
 import { getButtonHintString } from './utils';
+
+const CHOICES = [
+  { name: I18n.t('common._yes'), value: true },
+  { name: I18n.t('common._no'), value: false },
+  { name: I18n.t('common.either'), value: null },
+];
 
 @inject('filtersStore')
 @observer
@@ -16,38 +23,37 @@ class FormFilter extends React.Component {
     onSubmit: PropTypes.func.isRequired,
   };
 
-  handleClearReviewed = () => {
-    const { filtersStore, onSubmit } = this.props;
-
-    filtersStore.isReviewed = null;
-    onSubmit();
+  handleChangeIsReviewed = (value) => {
+    const { filtersStore } = this.props;
+    filtersStore.isReviewed = value;
   }
 
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;
-    const { isReviewed, handleChangeIsReviewed } = filtersStore;
+    const { isReviewed } = filtersStore;
 
     return (
       <Popover
         className="filters-popover"
         id="reviewed-filter"
       >
-        {/* Note: `id` is required for checkbox label to be clickable. */}
-        <Form.Check
-          id="is-reviewed"
-          type="checkbox"
-          label={I18n.t('filter.is_reviewed')}
-          checked={isReviewed || ''}
-          onChange={handleChangeIsReviewed}
-        />
+        <div>
+          <Form.Label>{I18n.t('filter.is_reviewed')}</Form.Label>
+        </div>
+        <ButtonGroup>
+          {CHOICES.map(({ name, value }) => (
+            <Button
+              key={name}
+              variant="secondary"
+              active={isReviewed === value}
+              onClick={() => this.handleChangeIsReviewed(value)}
+            >
+              {name}
+            </Button>
+          ))}
+        </ButtonGroup>
 
         <div className="btn-apply-container">
-          <Button
-            className="btn-clear btn-secondary"
-            onClick={this.handleClearReviewed}
-          >
-            {I18n.t('common.clear')}
-          </Button>
           <Button
             className="btn-apply"
             onClick={onSubmit}
