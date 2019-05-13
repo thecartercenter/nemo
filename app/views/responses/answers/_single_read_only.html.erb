@@ -1,5 +1,4 @@
-<%# render the answer value based on question type. we include machine readable value in
-    data-val so that conditions can still be eval'd in JS %>
+<%# render the answer value based on question type. %>
 <% case type = answer.qtype.name
 
    when "select_one" %>
@@ -21,17 +20,11 @@
   <% val = answer.send("#{type}_value") %>
 
   <%# output time value in human readable and machine readable formats %>
-  <%= content_tag(:div, val.nil? ? "" : l(val, format: format), :"data-val" => val.nil? ? "" : val.to_s(:"std_#{type}")) %>
+  <%= content_tag(:div, val.nil? ? "" : l(val, format: format)) %>
 
 <% when "integer", "decimal", "counter" %>
 
-  <%= content_tag(:div, answer.value, :"data-val" => answer.value) %>
-
-<% when "text", "long_text", "barcode" %>
-
-  <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
-  <%# no need to output data-val here since same as human readable %>
-  <%= content_tag(:div, excerpt_if_exists(@response, answer)) %>
+  <%= content_tag(:div, answer.value) %>
 
 <% when "image", "annotated_image", "signature", "sketch", "audio", "video" %>
 
@@ -39,6 +32,7 @@
 
 <% else %>
 
-  <%# no need to output data-val here since same as human readable %>
+  <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
+  <%= content_tag(:div, excerpt_if_exists(@response, answer)) %>
 
 <% end %>
