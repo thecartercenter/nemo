@@ -33,7 +33,7 @@ class Notifier < ApplicationMailer
   end
 
   def admin_emails
-    User.where(admin: true).pluck(:email).uniq[0, 10] # Max of 10, should be rare.
+    User.where(admin: true).pluck(:email)
   end
 
   def build_reset_url(user)
