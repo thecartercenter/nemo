@@ -35,7 +35,7 @@
     "prop-types": "^15.6.1",
     "query-string": "6.3.0",
     "react": "16.8.4",
-    "react-bootstrap": "1.0.0-beta.6",
+    "react-bootstrap": "1.0.0-beta.8",
     "react-dom": "16.8.4",
     "react-select2-wrapper": "sassafrastech/react-select2-wrapper#2019-03-08-select2Full",
     "react_ujs": "^2.4.4"

@@ -11,7 +11,7 @@ import { FiltersRoot as Component } from '../../../../app/javascript/components/
 
 const defaultProps = {
   // Pass in initial props.
-  ...pick(filtersStore, ['allForms', 'selectedFormIds', 'advancedSearchText']),
+  ...pick(filtersStore, ['allForms', 'selectedFormIds', 'isReviewed', 'advancedSearchText']),
   controllerName: CONTROLLER_NAME.RESPONSES,
 };
 
@@ -58,7 +58,7 @@ describe('integration', () => {
   it('navigates on apply form filter', () => {
     wrapper.find('Button#form-filter').simulate('click');
     const overlay = shallow(wrapper.find('OverlayTrigger#form-filter').prop('overlay'));
-    overlay.find('Select2').simulate('change', { target: { value: defaultProps.allForms[0].id } });
+    overlay.find('Select2').simulate('change', { target: { value: filtersStore.allForms[0].id } });
 
     expect(window.location.assign).toMatchSnapshot();
     overlay.find('Button.btn-apply').simulate('click');
@@ -68,6 +68,16 @@ describe('integration', () => {
   it('navigates on apply question filter', () => {
     wrapper.find('Button#question-filter').simulate('click');
     const overlay = shallow(wrapper.find('OverlayTrigger#question-filter').prop('overlay'));
+
+    expect(window.location.assign).toMatchSnapshot();
+    overlay.find('Button.btn-apply').simulate('click');
+    expect(window.location.assign).toMatchSnapshot();
+  });
+
+  it('navigates on apply reviewed filter', () => {
+    wrapper.find('Button#reviewed-filter').simulate('click');
+    const overlay = shallow(wrapper.find('OverlayTrigger#reviewed-filter').prop('overlay'));
+    overlay.find('#no').simulate('click');
 
     expect(window.location.assign).toMatchSnapshot();
     overlay.find('Button.btn-apply').simulate('click');

@@ -1,0 +1,148 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`popover handles callbacks 1`] = `
+[MockFunction] {
+  "calls": Array [
+    Array [],
+  ],
+  "results": Array [
+    Object {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`popover renders as expected 1`] = `
+<Popover
+  className="filters-popover"
+  id="reviewed-filter"
+>
+  <div>
+    <FormLabel
+      column={false}
+      srOnly={false}
+    >
+      Is marked 'reviewed'
+    </FormLabel>
+  </div>
+  <ButtonGroup
+    as="div"
+    role="group"
+    toggle={false}
+    vertical={false}
+  >
+    <Button
+      active={true}
+      id="yes"
+      key="yes"
+      onClick={[Function]}
+      variant="secondary"
+    >
+      Yes
+    </Button>
+    <Button
+      active={false}
+      id="no"
+      key="no"
+      onClick={[Function]}
+      variant="secondary"
+    >
+      No
+    </Button>
+    <Button
+      active={false}
+      id="either"
+      key="either"
+      onClick={[Function]}
+      variant="secondary"
+    >
+      Either
+    </Button>
+  </ButtonGroup>
+  <div
+    className="btn-apply-container"
+  >
+    <Button
+      className="btn-apply"
+      onClick={[MockFunction]}
+    >
+      Apply
+    </Button>
+  </div>
+</Popover>
+`;
+
+exports[`renders as expected 1`] = `
+<OverlayTrigger
+  containerPadding={25}
+  id="reviewed-filter"
+  overlay={
+    <Popover
+      className="filters-popover"
+      id="reviewed-filter"
+    >
+      <div>
+        <ForwardRef
+          column={false}
+          srOnly={false}
+        >
+          Is marked 'reviewed'
+        </ForwardRef>
+      </div>
+      <ForwardRef
+        as="div"
+        role="group"
+        toggle={false}
+        vertical={false}
+      >
+        <Button
+          active={true}
+          id="yes"
+          onClick={[Function]}
+          variant="secondary"
+        >
+          Yes
+        </Button>
+        <Button
+          active={false}
+          id="no"
+          onClick={[Function]}
+          variant="secondary"
+        >
+          No
+        </Button>
+        <Button
+          active={false}
+          id="either"
+          onClick={[Function]}
+          variant="secondary"
+        >
+          Either
+        </Button>
+      </ForwardRef>
+      <div
+        className="btn-apply-container"
+      >
+        <Button
+          className="btn-apply"
+          onClick={[MockFunction]}
+        >
+          Apply
+        </Button>
+      </div>
+    </Popover>
+  }
+  placement="bottom"
+  rootClose={true}
+  trigger="click"
+>
+  <Button
+    className="btn-secondary btn-margin-left"
+    id="reviewed-filter"
+  >
+    Reviewed
+  </Button>
+</OverlayTrigger>
+`;

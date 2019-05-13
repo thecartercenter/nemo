@@ -31,6 +31,7 @@ en:
     delete: "Delete"
     design: "Design"
     edit: "Edit"
+    either: 'Either'
     error:
       zero: "Errors"
       one: "Error"
@@ -1285,6 +1286,8 @@ en:
     form: "Form"
     chooseForm: "Choose a form"
     question: "Question"
+    reviewed: "Reviewed"
+    is_reviewed: "Is marked 'reviewed'"
     advancedSearch: "Advanced search"
 
   form:

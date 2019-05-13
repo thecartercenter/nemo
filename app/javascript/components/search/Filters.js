@@ -7,6 +7,7 @@ import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } f
 import ErrorBoundary from '../ErrorBoundary';
 import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
+import ReviewedFilter from './ReviewedFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
 @inject('filtersStore')
@@ -22,6 +23,7 @@ class FiltersRoot extends React.Component {
       name: PropTypes.string,
     })).isRequired,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+    isReviewed: PropTypes.bool,
     advancedSearchText: PropTypes.string.isRequired,
   };
 
@@ -38,6 +40,7 @@ class FiltersRoot extends React.Component {
       conditionSetStore,
       allForms,
       selectedFormIds,
+      isReviewed,
       advancedSearchText,
     } = props;
 
@@ -46,6 +49,8 @@ class FiltersRoot extends React.Component {
       allForms,
       originalFormIds: selectedFormIds,
       selectedFormIds,
+      originalIsReviewed: isReviewed,
+      isReviewed,
       advancedSearchText,
     });
     Object.assign(conditionSetStore, {
@@ -70,6 +75,9 @@ class FiltersRoot extends React.Component {
           onSubmit={this.handleSubmit}
         />
         <QuestionFilter
+          onSubmit={this.handleSubmit}
+        />
+        <ReviewedFilter
           onSubmit={this.handleSubmit}
         />
       </ButtonToolbar>

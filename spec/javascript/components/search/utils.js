@@ -54,5 +54,9 @@ export const filtersStore = new FiltersModel({
     '2',
   ],
 
+  originalIsReviewed: null,
+
+  isReviewed: true,
+
   advancedSearchText: 'query',
 });
