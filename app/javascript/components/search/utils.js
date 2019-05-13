@@ -1,7 +1,9 @@
 import isEmpty from 'lodash/isEmpty';
+import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
 
 import FiltersModel from './FiltersModel';
+import { SUBMITTER_TYPES } from './SubmitterFilter';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
@@ -55,18 +57,18 @@ export function getButtonHintString(hints) {
   }
 
   const joinedHints = hints.length > MAX_HINTS_BEFORE_ELLIPSIZE
-    ? hints.length
+    ? `${hints.length} filters`
     : hints.join(', ');
 
   return ` (${joinedHints})`;
 }
 
 /**
- * Given a form ID, find it in the list of all forms and return the name.
+ * Given an item ID, find it in the list of items and return its `name`.
  */
-export function getFormNameFromId(allForms, searchId) {
-  const form = allForms.find(({ id }) => searchId === id);
-  return (form && form.name) || 'Unknown';
+export function getItemNameFromId(allItems, searchId, nameKey = 'name') {
+  const item = allItems.find(({ id }) => searchId === id);
+  return (item && item[nameKey]) || 'Unknown';
 }
 
 /**
@@ -78,12 +80,29 @@ export function getQuestionNameFromId(allQuestions, searchId) {
 }
 
 /**
+ * Converts a list of data from the backend into something Select2 understands, e.g.
+ * [{ id: '1', name: 'One' }, ...] => [{ id: '1', text: 'One' }, ...]
+ */
+export function parseListForSelect2(allItems) {
+  return allItems.map((item) =>
+    mapKeys(item, (value, key) => (key === 'name' ? 'text' : key)));
+}
+
+/**
  * Given all of the different filter states,
  * return a stringified version for the backend.
  */
-export function getFilterString({ allForms, selectedFormIds, conditionSetStore, isReviewed, advancedSearchText }) {
+export function getFilterString({
+  allForms,
+  selectedFormIds,
+  conditionSetStore,
+  isReviewed,
+  allSubmittersForType,
+  selectedSubmitterIdsForType,
+  advancedSearchText,
+}) {
   const selectedFormNames = selectedFormIds
-    .map((id) => JSON.stringify(getFormNameFromId(allForms, id)));
+    .map((id) => JSON.stringify(getItemNameFromId(allForms, id)));
 
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
@@ -91,10 +110,18 @@ export function getFilterString({ allForms, selectedFormIds, conditionSetStore, 
     .map(({ refQingId, currTextValue }) =>
       `{${getQuestionNameFromId(allQuestions, refQingId)}}:${JSON.stringify(currTextValue)}`);
 
+  const submitterParts = SUBMITTER_TYPES.map((type) => {
+    const selectedSubmitterNames = selectedSubmitterIdsForType[type]
+      .map((id) => JSON.stringify(getItemNameFromId(allSubmittersForType[type], id)));
+
+    return isEmpty(selectedSubmitterNames) ? null : `${type}:(${selectedSubmitterNames.join('|')})`;
+  });
+
   const parts = [
     isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
     ...questionFilters,
     isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
+    ...submitterParts,
     advancedSearchText,
   ].filter(Boolean);
 

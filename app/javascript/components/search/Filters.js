@@ -8,6 +8,7 @@ import ErrorBoundary from '../ErrorBoundary';
 import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import ReviewedFilter from './ReviewedFilter';
+import SubmitterFilter, { submitterType } from './SubmitterFilter';
 import AdvancedSearchFilter from './AdvancedSearchFilter';
 
 @inject('filtersStore')
@@ -24,6 +25,16 @@ class FiltersRoot extends React.Component {
     })).isRequired,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     isReviewed: PropTypes.bool,
+    allUsers: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })).isRequired,
+    selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
+    allGroups: PropTypes.arrayOf(PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+    })).isRequired,
+    selectedGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
     advancedSearchText: PropTypes.string.isRequired,
   };
 
@@ -41,6 +52,10 @@ class FiltersRoot extends React.Component {
       allForms,
       selectedFormIds,
       isReviewed,
+      allUsers,
+      selectedUsers,
+      allGroups,
+      selectedGroups,
       advancedSearchText,
     } = props;
 
@@ -51,6 +66,18 @@ class FiltersRoot extends React.Component {
       selectedFormIds,
       originalIsReviewed: isReviewed,
       isReviewed,
+      allSubmittersForType: {
+        [submitterType.USER]: allUsers,
+        [submitterType.GROUP]: allGroups,
+      },
+      originalSubmitterIdsForType: {
+        [submitterType.USER]: selectedUsers,
+        [submitterType.GROUP]: selectedGroups,
+      },
+      selectedSubmitterIdsForType: {
+        [submitterType.USER]: selectedUsers,
+        [submitterType.GROUP]: selectedGroups,
+      },
       advancedSearchText,
     });
     Object.assign(conditionSetStore, {
@@ -78,6 +105,9 @@ class FiltersRoot extends React.Component {
           onSubmit={this.handleSubmit}
         />
         <ReviewedFilter
+          onSubmit={this.handleSubmit}
+        />
+        <SubmitterFilter
           onSubmit={this.handleSubmit}
         />
       </ButtonToolbar>

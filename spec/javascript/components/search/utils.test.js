@@ -1,11 +1,13 @@
 import {
   getButtonHintString,
-  getFormNameFromId,
+  getItemNameFromId,
   getFilterString,
   submitSearch,
   isQueryParamTruthy,
 } from '../../../../app/javascript/components/search/utils';
-import { filtersStore } from './utils';
+import { getEmptySubmitterTypeMap } from '../../../../app/javascript/components/search/FiltersModel';
+
+import { getFiltersStore } from './utils';
 
 it('gets hints (0)', () => {
   const result = getButtonHintString([]);
@@ -22,17 +24,18 @@ it('gets hints (too many)', () => {
   expect(result).toMatchSnapshot();
 });
 
-it('gets form name (found)', () => {
-  const result = getFormNameFromId([{ id: '1', name: 'One' }], '1');
+it('gets item name (found)', () => {
+  const result = getItemNameFromId([{ id: '1', name: 'One' }], '1');
   expect(result).toMatchSnapshot();
 });
 
-it('gets form name (not found)', () => {
-  const result = getFormNameFromId([], '1');
+it('gets item name (not found)', () => {
+  const result = getItemNameFromId([], '1');
   expect(result).toMatchSnapshot();
 });
 
 it('gets filter string (no filters)', () => {
+  const filtersStore = getFiltersStore();
   const emptyFilters = {
     ...filtersStore,
     selectedFormIds: [],
@@ -41,6 +44,7 @@ it('gets filter string (no filters)', () => {
       conditions: [],
     },
     isReviewed: null,
+    selectedSubmitterIdsForType: getEmptySubmitterTypeMap(),
     advancedSearchText: null,
   };
 
@@ -50,7 +54,7 @@ it('gets filter string (no filters)', () => {
 
 it('gets filter string (all filters)', () => {
   const populatedFilters = {
-    ...filtersStore,
+    ...getFiltersStore(),
     selectedFormIds: ['1', '3'],
     advancedSearchText: 'query',
   };

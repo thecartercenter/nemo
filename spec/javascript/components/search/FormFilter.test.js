@@ -1,12 +1,12 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { filtersStore } from './utils';
+import { getFiltersStore } from './utils';
 
 import Component from '../../../../app/javascript/components/search/FormFilter';
 
 const defaultProps = {
-  filtersStore,
+  filtersStore: getFiltersStore(),
   onSubmit: jest.fn(),
 };
 
@@ -20,10 +20,6 @@ describe('popover', () => {
   wrapper.find('Button#form-filter').simulate('click');
 
   const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
-
-  it('renders as expected', () => {
-    expect(overlay).toMatchSnapshot();
-  });
 
   it('handles callbacks', () => {
     overlay.find('Select2').simulate('change', { target: { value: defaultProps.filtersStore.allForms[0].id } });
