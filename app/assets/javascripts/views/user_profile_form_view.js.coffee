@@ -38,4 +38,4 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
 
   toggle_password_fields: (event) ->
     select_value = @$("select#user_reset_password_method").val()
-    @$(".password-fields").toggleClass("hide", select_value != "enter" && select_value != "enter_and_show")
+    @$(".password-fields").toggleClass("d-none", select_value != "enter" && select_value != "enter_and_show")

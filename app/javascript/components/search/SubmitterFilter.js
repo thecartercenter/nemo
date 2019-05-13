@@ -101,7 +101,7 @@ class SubmitterFilter extends React.Component {
         rootClose
         trigger="click"
       >
-        <Button id="submitter-filter" className="btn-secondary btn-margin-left">
+        <Button id="submitter-filter" variant="secondary" className="btn-margin-left">
           {I18n.t('filter.submitter') + getButtonHintString(submitterNames)}
         </Button>
       </OverlayTrigger>

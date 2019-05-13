@@ -6,11 +6,11 @@ class ELMO.Views.UserLoginInstructionsView extends ELMO.Views.ApplicationView
   unmask: (event) ->
     event.preventDefault()
     container = $(event.target).closest('.mask-container')
-    container.find('.masked').addClass('hide')
-    container.find('.unmasked').removeClass('hide')
+    container.find('.masked').addClass('d-none')
+    container.find('.unmasked').removeClass('d-none')
 
   mask: (event) ->
     event.preventDefault()
     container = $(event.target).closest('.mask-container')
-    container.find('.unmasked').addClass('hide')
-    container.find('.masked').removeClass('hide')
+    container.find('.unmasked').addClass('d-none')
+    container.find('.masked').removeClass('d-none')

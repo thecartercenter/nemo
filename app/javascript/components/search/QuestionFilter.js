@@ -59,7 +59,7 @@ class QuestionFilter extends React.Component {
         rootClose
         trigger="click"
       >
-        <Button id="question-filter" className="btn-secondary btn-margin-left">
+        <Button id="question-filter" variant="secondary" className="btn-margin-left">
           {I18n.t('filter.question') + getButtonHintString(hints)}
         </Button>
       </OverlayTrigger>

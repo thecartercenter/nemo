@@ -43,7 +43,7 @@
     <%= f.field(:reset_password_method, label: label, hint: hint, type: :select, prompt: false,
       options: translate_options(reset_password_options(@user), [:user, :password_options])) %>
 
-    <div class="hide password-fields">
+    <div class="d-none password-fields">
       <%= f.field(:password, type: :password) %>
       <%= f.field(:password_confirmation, type: :password) %>
     </div>

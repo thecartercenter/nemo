@@ -105,6 +105,7 @@ class UsersController < ApplicationController
 
   # shows printable login instructions for the user
   def login_instructions
+    @password = flash[:password] || Rails.env.test? && ENV["STUB_PASSWORD"]
     @site_url = admin_mode? ? basic_root_url : mission_root_url
     encoded_config = ODK::UserConfigEncoder.new(@user.login, flash[:password], @site_url).encode_config
     @config_qr = RQRCode::QRCode.new(encoded_config)

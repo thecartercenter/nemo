@@ -79,8 +79,9 @@ exports[`renders as expected 1`] = `
   trigger="click"
 >
   <Button
-    className="btn-secondary btn-margin-left"
+    className="btn-margin-left"
     id="reviewed-filter"
+    variant="secondary"
   >
     Reviewed
   </Button>

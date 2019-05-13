@@ -82,7 +82,7 @@ class FormFilter extends React.Component {
         rootClose
         trigger="click"
       >
-        <Button id="reviewed-filter" className="btn-secondary btn-margin-left">
+        <Button id="reviewed-filter" variant="secondary" className="btn-margin-left">
           {I18n.t('filter.reviewed') + getButtonHintString(hints)}
         </Button>
       </OverlayTrigger>
