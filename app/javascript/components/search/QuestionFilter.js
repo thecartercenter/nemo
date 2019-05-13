@@ -5,7 +5,7 @@ import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { inject, observer } from 'mobx-react';
 
-import { getButtonHintString } from './utils';
+import { getButtonHintString, getItemNameFromId } from './utils';
 import ConditionSetFormField from '../ConditionSetFormField';
 
 @inject('filtersStore')
@@ -44,8 +44,11 @@ class QuestionFilter extends React.Component {
   }
 
   render() {
-    const { filtersStore: { conditionSetStore: { originalConditions } } } = this.props;
-    const hints = originalConditions.length ? [originalConditions.length] : [];
+    const { filtersStore: { conditionSetStore } } = this.props;
+    const { originalConditions, refableQings } = conditionSetStore;
+    const hints = originalConditions
+      .filter(({ refQingId }) => refQingId)
+      .map(({ refQingId }) => getItemNameFromId(refableQings, refQingId, 'code'));
 
     return (
       <OverlayTrigger

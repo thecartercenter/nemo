@@ -14,66 +14,6 @@ exports[`popover handles callbacks 1`] = `
 }
 `;
 
-exports[`popover renders as expected 1`] = `
-<Popover
-  className="filters-popover"
-  id="reviewed-filter"
->
-  <div>
-    <FormLabel
-      column={false}
-      srOnly={false}
-    >
-      Is marked 'reviewed'
-    </FormLabel>
-  </div>
-  <ButtonGroup
-    as="div"
-    role="group"
-    toggle={false}
-    vertical={false}
-  >
-    <Button
-      active={true}
-      id="yes"
-      key="yes"
-      onClick={[Function]}
-      variant="secondary"
-    >
-      Yes
-    </Button>
-    <Button
-      active={false}
-      id="no"
-      key="no"
-      onClick={[Function]}
-      variant="secondary"
-    >
-      No
-    </Button>
-    <Button
-      active={false}
-      id="either"
-      key="either"
-      onClick={[Function]}
-      variant="secondary"
-    >
-      Either
-    </Button>
-  </ButtonGroup>
-  <div
-    className="btn-apply-container"
-  >
-    <Button
-      className="btn-apply"
-      onClick={[MockFunction]}
-    >
-      Apply
-    </Button>
-  </div>
-</Popover>
-`;
-
 exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}

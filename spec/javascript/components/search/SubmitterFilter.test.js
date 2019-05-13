@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 
 import { getFiltersStore } from './utils';
 
-import Component from '../../../../app/javascript/components/search/ReviewedFilter';
+import Component, { SUBMITTER_TYPES } from '../../../../app/javascript/components/search/SubmitterFilter';
 
 const defaultProps = {
   filtersStore: getFiltersStore(),
@@ -17,12 +17,15 @@ it('renders as expected', () => {
 
 describe('popover', () => {
   const wrapper = shallow(<Component {...defaultProps} />);
-  wrapper.find('Button#reviewed-filter').simulate('click');
+  wrapper.find('Button#submitter-filter').simulate('click');
 
   const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
 
   it('handles callbacks', () => {
-    overlay.find('#no').simulate('click');
+    SUBMITTER_TYPES.forEach((type) => {
+      const value = defaultProps.filtersStore.allSubmittersForType[type][0].id;
+      overlay.find(`Select2#${type}`).simulate('change', { target: { value } });
+    });
     overlay.find('Button.btn-apply').simulate('click');
 
     expect(defaultProps.onSubmit).toMatchSnapshot();

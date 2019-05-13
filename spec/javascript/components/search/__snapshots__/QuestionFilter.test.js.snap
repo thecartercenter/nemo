@@ -14,25 +14,6 @@ exports[`popover handles callbacks 1`] = `
 }
 `;
 
-exports[`popover renders as expected 1`] = `
-<Popover
-  className="filters-popover wide display-logic-container"
-  id="form-filter"
->
-  <ConditionSetFormField />
-  <div
-    className="btn-apply-container condition-margin"
-  >
-    <Button
-      className="btn-apply"
-      onClick={[MockFunction]}
-    >
-      Apply
-    </Button>
-  </div>
-</Popover>
-`;
-
 exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}

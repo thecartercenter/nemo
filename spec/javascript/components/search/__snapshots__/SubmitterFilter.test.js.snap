@@ -17,40 +17,71 @@ exports[`popover handles callbacks 1`] = `
 exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}
-  id="form-filter"
+  id="submitter-filter"
   overlay={
     <Popover
-      className="filters-popover"
-      id="form-filter"
+      className="filters-popover popover-multi-select2"
+      id="submitter-filter"
     >
       <Select2
         data={
           Array [
             Object {
-              "id": "1",
-              "text": "One",
+              "id": "A",
+              "text": "User A",
             },
             Object {
-              "id": "2",
-              "text": "Two",
-            },
-            Object {
-              "id": "3",
-              "text": "Q\\"uo'te\`s",
+              "id": "B",
+              "text": "User B",
             },
           ]
         }
+        id="submitter"
         onSelect={[Function]}
         onUnselect={[Function]}
         options={
           Object {
             "allowClear": true,
             "dropdownCssClass": "filters-select2-dropdown",
-            "placeholder": "Choose a form",
+            "placeholder": "Choose a user",
             "width": "100%",
           }
         }
-        value="2"
+        value={
+          Array [
+            "B",
+          ]
+        }
+      />
+      <Select2
+        data={
+          Array [
+            Object {
+              "id": "A",
+              "text": "Group A",
+            },
+            Object {
+              "id": "B",
+              "text": "Group B",
+            },
+          ]
+        }
+        id="group"
+        onSelect={[Function]}
+        onUnselect={[Function]}
+        options={
+          Object {
+            "allowClear": true,
+            "dropdownCssClass": "filters-select2-dropdown",
+            "placeholder": "Choose a group",
+            "width": "100%",
+          }
+        }
+        value={
+          Array [
+            "B",
+          ]
+        }
       />
       <div
         className="btn-apply-container"
@@ -69,10 +100,10 @@ exports[`renders as expected 1`] = `
   trigger="click"
 >
   <Button
-    className="btn-secondary"
-    id="form-filter"
+    className="btn-secondary btn-margin-left"
+    id="submitter-filter"
   >
-    Form (One)
+    Submitter (User A)
   </Button>
 </OverlayTrigger>
 `;
