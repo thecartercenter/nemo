@@ -7,6 +7,6 @@
   <%= node.bind_tag(xpath_prefix: xpath_prefix) %>
   <%= node.note_bind_tag(xpath_prefix: xpath_prefix) %>
   <% node.sorted_children.each do |child| %>
-    <%= render "forms/odk/binding_node", node: child, parent: node, xpath_prefix: node.xpath(xpath_prefix) %>
+    <%= render("forms/odk/binding_node", node: child, parent: node, xpath_prefix: node.xpath(xpath_prefix)) %>
   <% end %>
 <% end %>

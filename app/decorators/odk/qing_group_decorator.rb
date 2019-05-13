@@ -11,18 +11,19 @@ module Odk
 
     def render_as_grid?
       return @render_as_grid if defined?(@render_as_grid)
+      return (@render_as_grid = false) if root?
       items = sorted_children
-
-      return false if items.size <= 1 || !one_screen?
-
-      items.all? { |item| item.grid_renderable?(option_set: items[0].option_set) }
+      return (@render_as_grid = false) if items.size <= 1 || !one_screen?
+      @render_as_grid = items.all? { |item| item.grid_renderable?(option_set: items[0].option_set) }
     end
 
     def bind_tag(xpath_prefix: "/data")
+      return +"" if root?
       tag(:bind, nodeset: xpath(xpath_prefix), relevant: relevance)
     end
 
     def note_bind_tag(xpath_prefix: "/data")
+      return +"" if root?
       tag(:bind, nodeset: "#{xpath(xpath_prefix)}/header", readonly: "true()",
                  type: "string", relevant: relevance)
     end
@@ -38,7 +39,7 @@ module Odk
     #   hint
     #   questions
     def body_tags(xpath_prefix:, **_options)
-      return if childless?
+      return main_body_tags(xpath_prefix) if root?
 
       xpath = "#{xpath_prefix}/#{odk_code}"
       body_wrapper_tag(xpath) do
@@ -58,7 +59,7 @@ module Odk
     end
 
     def xpath(prefix = "/data")
-      "#{prefix}/#{odk_code}"
+      [prefix, odk_code].compact.join("/")
     end
 
     # Duck type

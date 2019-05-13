@@ -1,15 +1,17 @@
 <% if node.is_a?(QingGroup) %>
   <% node = Odk::DecoratorFactory.decorate(node) %>
-  <text id="<%= node.odk_code %>:label">
-    <value><%= node.group_name(lang, strict: false) %></value>
-  </text>
-  <text id="<%= node.odk_code %>:hint">
-    <value><%= node.group_hint(lang, strict: false) %></value>
-  </text>
-  <% if node.group_item_name.present? %>
-    <text id="<%= node.odk_code %>:itemname">
-      <value><%= Odk::NamePatternParser.new(node.group_item_name(lang, strict: false), src_item: node).to_odk.html_safe %></value>
+  <% unless node.root? %>
+    <text id="<%= node.odk_code %>:label">
+      <value><%= node.group_name(lang, strict: false) %></value>
     </text>
+    <text id="<%= node.odk_code %>:hint">
+      <value><%= node.group_hint(lang, strict: false) %></value>
+    </text>
+    <% if node.group_item_name.present? %>
+      <text id="<%= node.odk_code %>:itemname">
+        <value><%= Odk::NamePatternParser.new(node.group_item_name(lang, strict: false), src_item: node).to_odk.html_safe %></value>
+      </text>
+    <% end %>
   <% end %>
   <% node.sorted_children.each do |child| %>
     <%= render('forms/odk/translation_group_node', node: child, lang: lang) %>

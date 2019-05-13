@@ -1,8 +1,5 @@
 <%= @form.default_response_name_bind_tag %>
-
-<% @form.sorted_children.each do |node| %>
-  <%= render "forms/odk/binding_node", node: node, parent: nil, xpath_prefix: "/data" %>
-<% end %>
+<%= render("forms/odk/binding_node", node: @form.root_group, parent: nil, xpath_prefix: nil) %>
 
 <%# Incomplete response question bindings %>
 <% if allow_incomplete? %>

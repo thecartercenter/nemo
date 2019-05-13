@@ -14,9 +14,7 @@
     </h:head>
     <h:body>
       <%# Regular question form controls. %>
-      <% Odk::DecoratorFactory.decorate_collection(@form.sorted_children).each do |node| %>
-        <%= node.body_tags(xpath_prefix: "/data") %>
-      <% end %>
+      <%= Odk::DecoratorFactory.decorate(@form.root_group).body_tags(xpath_prefix: "/data") %>
       <%# Incomplete response question form controls. %>
       <% if allow_incomplete? %>
         <%= render("forms/odk/incomplete_question") %>
