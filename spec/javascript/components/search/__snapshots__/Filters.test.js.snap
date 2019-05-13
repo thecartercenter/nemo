@@ -6,7 +6,7 @@ exports[`integration navigates on apply advanced search 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3A%225%22%20reviewed%3A1%20something%20else",
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3A%225%22%20reviewed%3A0%20something%20else",
     ],
   ],
   "results": Array [
@@ -60,7 +60,7 @@ exports[`integration navigates on apply reviewed filter 2`] = `
 [MockFunction] {
   "calls": Array [
     Array [
-      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3A%225%22%20reviewed%3A1%20query",
+      "?search=form%3A%28%22Two%22%29%20%7BOne%7D%3A%225%22%20reviewed%3A0%20query",
     ],
   ],
   "results": Array [

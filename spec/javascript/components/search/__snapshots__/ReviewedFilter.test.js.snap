@@ -19,27 +19,51 @@ exports[`popover renders as expected 1`] = `
   className="filters-popover"
   id="reviewed-filter"
 >
-  <FormCheck
-    checked={true}
-    disabled={false}
-    id="is-reviewed"
-    inline={false}
-    isInvalid={false}
-    isValid={false}
-    label="Is marked 'reviewed'"
-    onChange={[Function]}
-    title=""
-    type="checkbox"
-  />
+  <div>
+    <FormLabel
+      column={false}
+      srOnly={false}
+    >
+      Is marked 'reviewed'
+    </FormLabel>
+  </div>
+  <ButtonGroup
+    as="div"
+    role="group"
+    toggle={false}
+    vertical={false}
+  >
+    <Button
+      active={true}
+      id="yes"
+      key="yes"
+      onClick={[Function]}
+      variant="secondary"
+    >
+      Yes
+    </Button>
+    <Button
+      active={false}
+      id="no"
+      key="no"
+      onClick={[Function]}
+      variant="secondary"
+    >
+      No
+    </Button>
+    <Button
+      active={false}
+      id="either"
+      key="either"
+      onClick={[Function]}
+      variant="secondary"
+    >
+      Either
+    </Button>
+  </ButtonGroup>
   <div
     className="btn-apply-container"
   >
-    <Button
-      className="btn-clear btn-secondary"
-      onClick={[Function]}
-    >
-      Clear
-    </Button>
     <Button
       className="btn-apply"
       onClick={[MockFunction]}
@@ -59,27 +83,48 @@ exports[`renders as expected 1`] = `
       className="filters-popover"
       id="reviewed-filter"
     >
+      <div>
+        <ForwardRef
+          column={false}
+          srOnly={false}
+        >
+          Is marked 'reviewed'
+        </ForwardRef>
+      </div>
       <ForwardRef
-        checked={true}
-        disabled={false}
-        id="is-reviewed"
-        inline={false}
-        isInvalid={false}
-        isValid={false}
-        label="Is marked 'reviewed'"
-        onChange={[Function]}
-        title=""
-        type="checkbox"
-      />
+        as="div"
+        role="group"
+        toggle={false}
+        vertical={false}
+      >
+        <Button
+          active={true}
+          id="yes"
+          onClick={[Function]}
+          variant="secondary"
+        >
+          Yes
+        </Button>
+        <Button
+          active={false}
+          id="no"
+          onClick={[Function]}
+          variant="secondary"
+        >
+          No
+        </Button>
+        <Button
+          active={false}
+          id="either"
+          onClick={[Function]}
+          variant="secondary"
+        >
+          Either
+        </Button>
+      </ForwardRef>
       <div
         className="btn-apply-container"
       >
-        <Button
-          className="btn-clear btn-secondary"
-          onClick={[Function]}
-        >
-          Clear
-        </Button>
         <Button
           className="btn-apply"
           onClick={[MockFunction]}

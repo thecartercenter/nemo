@@ -77,7 +77,7 @@ describe('integration', () => {
   it('navigates on apply reviewed filter', () => {
     wrapper.find('Button#reviewed-filter').simulate('click');
     const overlay = shallow(wrapper.find('OverlayTrigger#reviewed-filter').prop('overlay'));
-    overlay.find('#is-reviewed').simulate('click', { target: { checked: !filtersStore.isReviewed } });
+    overlay.find('#no').simulate('click');
 
     expect(window.location.assign).toMatchSnapshot();
     overlay.find('Button.btn-apply').simulate('click');

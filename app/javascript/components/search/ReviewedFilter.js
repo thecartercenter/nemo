@@ -10,9 +10,9 @@ import { inject, observer } from 'mobx-react';
 import { getButtonHintString } from './utils';
 
 const CHOICES = [
-  { name: I18n.t('common._yes'), value: true },
-  { name: I18n.t('common._no'), value: false },
-  { name: I18n.t('common.either'), value: null },
+  { name: I18n.t('common._yes'), value: true, id: 'yes' },
+  { name: I18n.t('common._no'), value: false, id: 'no' },
+  { name: I18n.t('common.either'), value: null, id: 'either' },
 ];
 
 @inject('filtersStore')
@@ -41,9 +41,10 @@ class FormFilter extends React.Component {
           <Form.Label>{I18n.t('filter.is_reviewed')}</Form.Label>
         </div>
         <ButtonGroup>
-          {CHOICES.map(({ name, value }) => (
+          {CHOICES.map(({ name, value, id }) => (
             <Button
-              key={name}
+              key={id}
+              id={id}
               variant="secondary"
               active={isReviewed === value}
               onClick={() => this.handleChangeIsReviewed(value)}

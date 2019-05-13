@@ -26,7 +26,7 @@ describe('popover', () => {
   });
 
   it('handles callbacks', () => {
-    overlay.find('#is-reviewed').simulate('click', { target: { checked: !defaultProps.filtersStore.isReviewed } });
+    overlay.find('#no').simulate('click');
     overlay.find('Button.btn-apply').simulate('click');
 
     expect(defaultProps.onSubmit).toMatchSnapshot();
