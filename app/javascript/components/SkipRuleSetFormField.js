@@ -19,8 +19,8 @@ class SkipRuleSetFormField extends React.Component {
 
   constructor(props) {
     super(props);
-    const { skipRules, formId, laterItems, type, refableQings } = this.props;
-    this.state = { skipRules, formId, laterItems, type, refableQings };
+    const { skipRules } = this.props;
+    this.state = { skipRules };
   }
 
   // If about to show the set and it's empty, add a blank one.
@@ -33,7 +33,7 @@ class SkipRuleSetFormField extends React.Component {
   }
 
   handleAddClick = () => {
-    const { laterItems } = this.state;
+    const { laterItems } = this.props;
     const laterItemsExist = laterItems.length > 0;
     this.setState(({ skipRules }) => ({
       skipRules: skipRules.concat([{
@@ -46,8 +46,8 @@ class SkipRuleSetFormField extends React.Component {
   }
 
   render() {
-    const { hide } = this.props;
-    const { skipRules, formId, laterItems, type, refableQings } = this.state;
+    const { hide, formId, laterItems, type, refableQings } = this.props;
+    const { skipRules } = this.state;
 
     return (
       <div

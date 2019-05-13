@@ -26,7 +26,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
   constructor(props) {
     super(props);
     const { conditionSetStore, refableQings, id, type, displayIf, displayConditions, formId } = this.props;
-    this.state = { refableQings, id, type, displayIf };
+    this.state = { displayIf };
 
     // Directly assign initial values to the store.
     Object.assign(conditionSetStore, {
@@ -36,7 +36,8 @@ class DisplayLogicFormFieldRoot extends React.Component {
       conditions: displayConditions,
       conditionableId: id,
       conditionableType: 'FormItem',
-      refableQings,
+      // Display logic conditions can't reference self, as that doesn't make sense.
+      refableQings: refableQings.filter((qing) => qing.id !== id),
       hide: displayIf === 'always',
     });
   }
@@ -49,7 +50,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 
   displayIfOptionTags = () => {
-    const { type } = this.state;
+    const { type } = this.props;
     const displayIfOptions = ['always', 'all_met', 'any_met'];
     return displayIfOptions.map((option) => (
       <option
@@ -62,9 +63,8 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 
   render() {
-    const { refableQings: rawRefableQings, id, type, displayIf } = this.state;
-    // Display logic conditions can't reference self, as that doesn't make sense.
-    const refableQings = rawRefableQings.filter((qing) => qing.id !== id);
+    const { refableQings, type } = this.props;
+    const { displayIf } = this.state;
 
     if (refableQings.length === 0) {
       return (
