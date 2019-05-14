@@ -2,6 +2,7 @@
 
 # Models a restriction on valid answers, similar to a Rails validation, but for NEMO forms.
 class Constraint < ApplicationRecord
+  include MissionBased
   include Translatable
 
   translates :rejection_msg
@@ -10,6 +11,5 @@ class Constraint < ApplicationRecord
   # which is useful in tests and in UI consistency.
   acts_as_list column: :rank, scope: [:questioning_id]
 
-  belongs_to :mission
   belongs_to :questioning
 end
