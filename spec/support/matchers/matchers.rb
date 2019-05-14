@@ -50,7 +50,7 @@ RSpec::Matchers.define(:have_data_grid) do |*expected|
     actual.map { |row| row.map { |cell| cell.to_s.empty? ? "_" : cell.to_s } }
   end
 
-  def actual_row(report, row)
+  def actual_row(report, row, row_idx)
     result = []
 
     # Add col header.
