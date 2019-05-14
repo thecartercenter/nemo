@@ -21,4 +21,12 @@ module SearchesHelper
   def all_forms
     Form.all.map { |form| {name: form.name, id: form.id} }
   end
+
+  def all_users
+    User.all.map { |user| {name: user.name, id: user.id} }
+  end
+
+  def all_groups
+    UserGroup.all.map { |group| {name: group.name, id: group.id} }
+  end
 end
