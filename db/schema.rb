@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_14_153122) do
+ActiveRecord::Schema.define(version: 2019_05_14_154405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -124,7 +124,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_153122) do
     t.string "accept_if", limit: 16, null: false
     t.datetime "created_at", null: false
     t.uuid "mission_id"
-    t.uuid "questioning_id"
+    t.uuid "questioning_id", null: false
     t.integer "rank", null: false
     t.jsonb "rejection_msg_translations", default: {}, null: false
     t.datetime "updated_at", null: false
