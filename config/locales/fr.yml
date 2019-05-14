@@ -3,6 +3,7 @@ fr:
     clear_confirm: "Etes vous sûr de vouloir supprimer toutes les opérations terminées?"
     details:
       user_import: "Importation d'utilisateur à partir de %{file}"
+      option_sets_import: "Importation de l'ensemble d'options '%{file}' "
       response_csv_export: "Export des réponses au format CSV"
       broadcast: "Diffusion '%{message}'"
     operations_panel: "Panneau des opérations"
@@ -33,6 +34,7 @@ fr:
     op_panel_more_info_link_html: "Voir le <a href='%{url}'> Panneau des opérations </a> pour plus d'informations."
     queued_msg:
       broadcast: "Diffusion en attente."
+      option_sets_import: "Importation d'ensembles d'options en file d'attente."
       response_csv_export: "Export de réponses CSV en attente."
       user_import: "Import d'utilisateur en attente."
     see_error_report: "Voir le rapport d'erreur"
@@ -45,6 +47,7 @@ fr:
     add: "Ajouter"
     and: "et"
     AND: "Et"
+    apply: "Appliquer"
     back: "Retour"
     blank: "Vide"
     by: "Par"
@@ -178,6 +181,8 @@ fr:
     file_upload:
       error: "Il y a eu une erreur lors du téléchargement du fichier."
       file_missing: "Aucun fichier sélectionné pour l'import."
+      invalid_format: "Le fichier téléchargé n'était pas au format accepté"
+      internal: "une erreur interne s'est produite lors du traitement de votre téléchargement."
     messages:
       deleted_successfully: "supprimé avec succès"
       generic_delete_error: "erreur lors de l'opération."
@@ -185,6 +190,10 @@ fr:
     submit:
       create: "Sauvegarder"
       update: "Sauvegarder"
+      option_sets_import:
+        create: "Importer"
+      user_import:
+        create: "Importer"
   flash_message_types:
     success: "Succès"
     error: "Erreur"
@@ -339,6 +348,8 @@ fr:
         few: "Réponses"
         many: "Réponses"
         other: "Réponses"
+      response_decorator:
+        many: "Réponses"
       search/search:
         zero: "Recherches"
         one: "Rechercher"
@@ -435,6 +446,8 @@ fr:
         options: "Options"
         option_levels: "Niveaux"
         sms_guide_formatting: "Formatage du guide SMS"
+      option_sets/import:
+        name: "Nom de l'Ensemble d'options"
       password_reset:
         identifier: "Identifiant ou Email"
       qing_group:
@@ -587,6 +600,8 @@ fr:
         edit: "Modifier l'ensemble d'options"
         destroy: "Supprimer l'ensemble d'options"
         export: "Exporter l'Ensemble d'Options "
+      option_sets/import:
+        new: "Importer un ensemble d'options"
       question:
         new: "Créer une Nouvelle Question"
         index: "Lister les questions"
@@ -789,6 +804,8 @@ fr:
           cant_delete_if_has_answers: "Impossible de supprimer cet ensemble d'options parce que c'est inclus dans au moins une réponse."
           general: "Il y avait un problème d'enregistrer l'ensemble d'options."
           wrong_depth: "Vous avez %{levels} niveaux d'options mais votre arbre d'options est %{depth} options profonde."
+        option_sets/import:
+          general: "L'importation de l'ensemble d'options est invalide (voir ci-dessous)"
         question:
           at_least_one_name: "Il faut entrer un titre dans au moins une langue. "
           attributes:
@@ -995,7 +1012,7 @@ fr:
     formats:
       default: "%Y-%m-%d %H:%M:%S"
       short: "%b %d %H:%M"
-      time_only: "%H:%M:%S" 
+      time_only: "%H:%M:%S"
   search_qualifiers:
     text: "texte"
     email: "email"
