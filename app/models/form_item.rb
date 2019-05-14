@@ -48,6 +48,7 @@ class FormItem < ApplicationRecord
 
   accepts_nested_attributes_for :display_conditions, allow_destroy: true
   accepts_nested_attributes_for :skip_rules, allow_destroy: true
+  accepts_nested_attributes_for :constraints, allow_destroy: true
 
   def self.rank_gaps?
     SqlRunner.instance.run("
