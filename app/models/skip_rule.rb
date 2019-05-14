@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# Models a rule directing the user to a given question if some conditions are true.
 class SkipRule < ActiveRecord::Base
   include Replication::Replicable
   include MissionBased

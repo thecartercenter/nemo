@@ -45,7 +45,7 @@ class FormItem < ApplicationRecord
   delegate :condition_computer, to: :form
   delegate :name, to: :form, prefix: true
 
-  replicable child_assocs: %i[question display_conditions skip_rules children],
+  replicable child_assocs: %i[question display_conditions skip_rules constraints children],
              backward_assocs: :form, dont_copy: %i[form_id question_id]
 
   accepts_nested_attributes_for :display_conditions, allow_destroy: true

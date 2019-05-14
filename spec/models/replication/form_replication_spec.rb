@@ -216,6 +216,39 @@ describe Form do
         end
       end
     end
+
+    context "with constraints" do
+      let(:std) { create(:form, is_standard: true, question_types: %w[integer integer]) }
+
+      before do
+        std.c[1].constraints.create!(accept_if: "any_met", rejection_msg_translations: {en: "Foo", fr: "Bar"},
+                                     conditions_attributes: [
+                                       {ref_qing_id: std.c[0].id, op: "lt", value: "4"},
+                                       {ref_qing_id: std.c[1].id, op: "gt", value: "8"}
+                                     ])
+      end
+
+      context "if all goes well" do
+        let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+
+        it "should produce distinct child objects with correct references" do
+          expect(std.reload.c[1].constraints.size).to eq(1)
+          expect(copy.c[0].constraints.size).to eq(0)
+          expect(copy.c[1].constraints.size).to eq(1)
+          expect(copy.c[1].constraints[0].accept_if).to eq("any_met")
+          expect(copy.c[1].constraints[0].rejection_msg_translations).to eq("en" => "Foo", "fr" => "Bar")
+          expect(copy.c[1].constraints[0].conditions.size).to eq(2)
+          expect(copy.c[1].constraints[0].conditions[0].ref_qing_id).to eq(copy.c[0].id)
+          expect(copy.c[1].constraints[0].conditions[0].op).to eq("lt")
+          expect(copy.c[1].constraints[0].conditions[0].value).to eq("4")
+          expect(copy.c[1].constraints[0].conditions[1].ref_qing_id).to eq(copy.c[1].id)
+          expect(copy.c[1].constraints[0].conditions[1].op).to eq("gt")
+          expect(copy.c[1].constraints[0].conditions[1].value).to eq("8")
+          expect(copy.c[0].id).not_to eq(std.c[0].id)
+          expect(copy.c[1].id).not_to eq(std.c[1].id)
+        end
+      end
+    end
   end
 
   describe "clone" do
