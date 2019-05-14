@@ -1,4 +1,6 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 opts = configatron.translatable.default_options
 configatron.translatable.default_options = nil
@@ -16,7 +18,7 @@ end
 
 class RestrictedLocales
   include Translatable
-  translates :name, :hint, locales: %i(en fr es)
+  translates :name, :hint, locales: %i[en fr es]
   attr_accessor :canonical_name, :canonical_hint
 end
 
@@ -37,9 +39,9 @@ describe "Translatable" do
     expect(obj.name).to eq("foo")
     expect(obj.name_en).to eq("foo")
     expect(obj.name(:fr)).to eq(nil)
-    expect(obj.name(:fr, :strict => false)).to eq("foo")
-    expect(obj.name("fr", :strict => false)).to eq("foo")
-    expect(obj.name_fr(:strict => false)).to eq("foo")
+    expect(obj.name(:fr, strict: false)).to eq("foo")
+    expect(obj.name("fr", strict: false)).to eq("foo")
+    expect(obj.name_fr(strict: false)).to eq("foo")
 
     obj.name = "bar"
 
@@ -74,15 +76,15 @@ describe "Translatable" do
     expect(obj.name).to eq("bar")
   end
 
-  it "blanks" do
+  it "blanks and whitespace" do
     obj.name_en = ""
     expect(obj.name_en).to be_nil
     expect(obj.name_translations).to be_nil
 
     obj.name_fr = "foo"
-    obj.name_en = ""
+    obj.name_en = " "
     expect(obj.name_en).to be_nil
-    expect(obj.name_fr).to eq "foo"
+    expect(obj.name_fr).to eq("foo")
   end
 
   it "available locales" do
@@ -92,8 +94,8 @@ describe "Translatable" do
     obj.name_en = "foo"
     expect(obj.available_locales).to eq([:en])
     obj.hint_fr = "foo"
-    expect(obj.available_locales).to eq([:en, :fr])
-    expect(obj.available_locales(:except_current => true)).to eq([:fr])
+    expect(obj.available_locales).to eq(%i[en fr])
+    expect(obj.available_locales(except_current: true)).to eq([:fr])
   end
 
   it "all_blank" do
@@ -112,57 +114,57 @@ describe "Translatable" do
     expect(obj.name_all_blank?).to eq(true)
   end
 
-  describe 'canonical name' do
-    it 'should be default locale if available' do
-      obj.name_en = 'Foo'
-      expect(obj.canonical_name).to eq 'Foo'
+  describe "canonical name" do
+    it "should be default locale if available" do
+      obj.name_en = "Foo"
+      expect(obj.canonical_name).to eq("Foo")
     end
 
-    it 'should be first-entered locale if default is blank' do
-      obj.name_en = ''
-      obj.name_fr = 'Bar'
-      expect(obj.canonical_name).to eq 'Bar'
+    it "should be first-entered locale if default is blank" do
+      obj.name_en = ""
+      obj.name_fr = "Bar"
+      expect(obj.canonical_name).to eq("Bar")
 
-      obj.name_en = 'Foo'
-      expect(obj.canonical_name).to eq 'Foo'
+      obj.name_en = "Foo"
+      expect(obj.canonical_name).to eq("Foo")
     end
 
-    it 'should be first-entered locale if default is nil' do
-      obj.name_fr = 'Bar'
-      expect(obj.canonical_name).to eq 'Bar'
+    it "should be first-entered locale if default is nil" do
+      obj.name_fr = "Bar"
+      expect(obj.canonical_name).to eq("Bar")
 
-      obj.name_en = 'Foo'
-      expect(obj.canonical_name).to eq 'Foo'
+      obj.name_en = "Foo"
+      expect(obj.canonical_name).to eq("Foo")
     end
 
-    it 'should be nil if no translations' do
+    it "should be nil if no translations" do
       expect(obj.canonical_name).to be_nil
-      obj.name_en = 'Foo'
+      obj.name_en = "Foo"
       expect(obj.canonical_name).not_to be_nil
-      obj.name_en = ''
+      obj.name_en = ""
       expect(obj.canonical_name).to be_nil
     end
 
-    it 'should not get stored if no canonical_name attrib available' do
+    it "should not get stored if no canonical_name attrib available" do
       b = NoCanonical.new
-      b.name = 'Foo'
-      expect { b.canonical_name }.to raise_error NoMethodError, /canonical_name/
+      b.name = "Foo"
+      expect { b.canonical_name }.to raise_error(NoMethodError, /canonical_name/)
     end
 
-    it 'should be updated if name_translations gets updated directly' do
-      obj.name_translations = {en: 'Foo'}
-      expect(obj.canonical_name).to eq 'Foo'
+    it "should be updated if name_translations gets updated directly" do
+      obj.name_translations = {en: "Foo"}
+      expect(obj.canonical_name).to eq("Foo")
     end
   end
 
   describe "direct assignment of foo_translations" do
     it "should remove blank values" do
-      obj.name_translations = { en: "Foo", fr: "" }
-      expect(obj.name_translations).to eq({ "en" => "Foo" })
+      obj.name_translations = {en: "Foo", fr: ""}
+      expect(obj.name_translations).to eq("en" => "Foo")
     end
 
     it "should reset to nil if no non-blank translations" do
-      obj.name_translations = { en: "" }
+      obj.name_translations = {en: ""}
       expect(obj.name_translations).to be_nil
     end
   end
@@ -182,11 +184,11 @@ describe "Translatable" do
     end
 
     it "should return french if second fallback but first fallback not found" do
-      expect(obj.name(:es, fallbacks: [:de, :fr])).to eq("Fra")
+      expect(obj.name(:es, fallbacks: %i[de fr])).to eq("Fra")
     end
 
     it "should return english if strict mode and no fallbacks found" do
-      expect(obj.name(:es, strict: false, fallbacks: [:de, :it])).to eq("Eng")
+      expect(obj.name(:es, strict: false, fallbacks: %i[de it])).to eq("Eng")
     end
   end
 
@@ -202,7 +204,7 @@ describe "Translatable" do
         end
 
         it "should work normally for an allowed locale" do
-          expect(obj.name_en).to eq "Eng"
+          expect(obj.name_en).to eq("Eng")
         end
 
         it "should not return a disallowed locale and return nil instead if strict mode on" do
@@ -210,7 +212,7 @@ describe "Translatable" do
         end
 
         it "should not return a disallowed locale and fallback to an allowed one if strict mode off" do
-          expect(obj.name(:it, strict: false)).to eq "Eng"
+          expect(obj.name(:it, strict: false)).to eq("Eng")
         end
       end
 
@@ -242,11 +244,11 @@ describe "Translatable" do
         obj = X.new
         obj.name_it = "Ita"
 
-        allowed = %i(en fr)
+        allowed = %i[en fr]
         expect(obj.name).to be_nil
 
-        allowed = %i(en it)
-        expect(obj.name).to eq "Ita"
+        allowed = %i[en it]
+        expect(obj.name).to eq("Ita")
 
         configatron.translatable.default_options = nil
       end
