@@ -19,16 +19,18 @@ class FormItem < ApplicationRecord
 
   belongs_to :form
   has_many :response_nodes, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :form_item
-  has_many :standard_form_reports, class_name: "Report::StandardFormReport",
+  has_many :standard_form_reports, class_name: "Report::StandardFormReport", inverse_of: :disagg_qing,
                                    foreign_key: :disagg_qing_id, dependent: :nullify
-  has_many :display_conditions, -> { by_rank },
-    as: :conditionable, class_name: "Condition", dependent: :destroy
+  has_many :display_conditions, -> { by_rank }, inverse_of: :conditionable, as: :conditionable,
+                                                class_name: "Condition", dependent: :destroy
   has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
                                   dependent: :destroy, inverse_of: :ref_qing
-  has_many :skip_rules, -> { by_rank },
-    foreign_key: :source_item_id, inverse_of: :source_item, dependent: :destroy
+  has_many :skip_rules, -> { by_rank }, foreign_key: :source_item_id, inverse_of: :source_item,
+                                        dependent: :destroy
   has_many :incoming_skip_rules, class_name: "SkipRule", foreign_key: :dest_item_id,
                                  inverse_of: :dest_item, dependent: :destroy
+  has_many :constraints, -> { by_rank }, inverse_of: :questioning, foreign_key: :questioning_id,
+                                         dependent: :destroy
 
   before_validation :normalize
 

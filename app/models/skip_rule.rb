@@ -10,7 +10,7 @@ class SkipRule < ActiveRecord::Base
 
   belongs_to :source_item, class_name: "FormItem", inverse_of: :skip_rules
   belongs_to :dest_item, class_name: "FormItem", inverse_of: :incoming_skip_rules
-  has_many :conditions, -> { by_rank }, as: :conditionable, dependent: :destroy
+  has_many :conditions, -> { by_rank }, as: :conditionable, inverse_of: :conditionable, dependent: :destroy
 
   before_validation :set_foreign_key_on_conditions
   before_validation :normalize

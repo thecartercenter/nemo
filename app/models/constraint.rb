@@ -12,8 +12,13 @@ class Constraint < ApplicationRecord
   acts_as_list column: :rank, scope: [:questioning_id]
 
   belongs_to :questioning
+  has_many :conditions, -> { by_rank }, as: :conditionable, inverse_of: :conditionable, dependent: :destroy
 
   before_create :inherit_mission
+
+  scope :by_rank, -> { order(:rank) }
+
+  accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
   private
 
