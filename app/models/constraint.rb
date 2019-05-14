@@ -17,6 +17,8 @@ class Constraint < ApplicationRecord
 
   before_create :inherit_mission
 
+  validates :conditions, presence: true
+
   scope :by_rank, -> { order(:rank) }
 
   accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
