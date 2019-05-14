@@ -1,7 +1,7 @@
 [Unit]
 Description=delayed_job
 After=syslog.target
-After=postgresql@9.4-main.service
+After=postgresql.service
 
 [Service]
 Type=forking
