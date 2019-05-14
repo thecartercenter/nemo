@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_14_154405) do
+ActiveRecord::Schema.define(version: 2019_05_14_195656) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -124,13 +124,13 @@ ActiveRecord::Schema.define(version: 2019_05_14_154405) do
     t.string "accept_if", limit: 16, null: false
     t.datetime "created_at", null: false
     t.uuid "mission_id"
-    t.uuid "questioning_id", null: false
     t.integer "rank", null: false
     t.jsonb "rejection_msg_translations", default: {}, null: false
+    t.uuid "source_item_id", null: false
     t.datetime "updated_at", null: false
     t.index ["mission_id"], name: "index_constraints_on_mission_id"
-    t.index ["questioning_id", "rank"], name: "index_constraints_on_questioning_id_and_rank", unique: true
-    t.index ["questioning_id"], name: "index_constraints_on_questioning_id"
+    t.index ["source_item_id", "rank"], name: "index_constraints_on_source_item_id_and_rank", unique: true
+    t.index ["source_item_id"], name: "index_constraints_on_source_item_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -610,7 +610,7 @@ ActiveRecord::Schema.define(version: 2019_05_14_154405) do
   add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "constraints", "form_items", column: "questioning_id"
+  add_foreign_key "constraints", "form_items", column: "source_item_id"
   add_foreign_key "constraints", "missions"
   add_foreign_key "form_forwardings", "forms", name: "form_forwardings_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_items", "forms", name: "form_items_form_id_fkey", on_update: :restrict, on_delete: :restrict

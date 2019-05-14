@@ -29,7 +29,7 @@ class FormItem < ApplicationRecord
                                         dependent: :destroy
   has_many :incoming_skip_rules, class_name: "SkipRule", foreign_key: :dest_item_id,
                                  inverse_of: :dest_item, dependent: :destroy
-  has_many :constraints, -> { by_rank }, inverse_of: :questioning, foreign_key: :questioning_id,
+  has_many :constraints, -> { by_rank }, foreign_key: :source_item_id, inverse_of: :source_item,
                                          dependent: :destroy
 
   before_validation :normalize

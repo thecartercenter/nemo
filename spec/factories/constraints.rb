@@ -9,13 +9,13 @@ FactoryGirl.define do
     accept_if { "all_met" }
     rank { 1 }
     mission { get_mission }
-    questioning
+    association :source_item, factory: :questioning
     rejection_msg { "It's invalid" }
 
     after(:build) do |constraint, evaluator|
       unless evaluator.no_conditions
         constraint.conditions << build(:condition, conditionable: constraint,
-                                                   ref_qing: constraint.questioning)
+                                                   ref_qing: constraint.source_item)
       end
     end
   end
