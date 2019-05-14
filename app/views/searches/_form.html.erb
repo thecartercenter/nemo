@@ -2,20 +2,7 @@
   <%= react_component("search/Filters", {
     controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
     advancedSearchText: params[:search] || "",
-    allForms: Settings.filters_beta.present? ? [
-      {
-        id: "1",
-        name: "Form A"
-      },
-      {
-        id: "2",
-        name: "Form B"
-      },
-      {
-        id: "3",
-        name: "Q\"uo'te`s"
-      }
-    ] : [],
+    allForms: Settings.filters_beta.present? ? all_forms : [],
     selectedFormIds: [],
     isReviewed: nil,
     allUsers: Settings.filters_beta.present? ? [

@@ -17,4 +17,8 @@ module SearchesHelper
       {}
     end
   end
+
+  def all_forms
+    Form.all.map { |form| {name: form.name, id: form.id} }
+  end
 end
