@@ -9,6 +9,6 @@ class Constraint < ApplicationRecord
 
   validates :conditions, presence: true
 
-  replicable child_assocs: [:conditions], dont_copy: %i[questioning_id],
-             backward_assocs: [:questioning]
+  replicable child_assocs: [:conditions], dont_copy: %i[source_item_id],
+             backward_assocs: [:source_item]
 end
