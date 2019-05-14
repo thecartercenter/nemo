@@ -49,7 +49,7 @@ feature "response form rendering and submission", js: true do
 
   describe "form rendering" do
     scenario "renders new form with hierarchical structure" do
-      visit new_response_path(params)
+      visit(new_response_path(params))
 
       expect_path([".cascading-selects select"])
       expect_path([
@@ -82,7 +82,7 @@ feature "response form rendering and submission", js: true do
       end
 
       scenario "renders edit form with hierarchical structure" do
-        visit edit_response_path(params.merge(id: response.shortcode))
+        visit(edit_response_path(params.merge(id: response.shortcode)))
 
         expect_path([".cascading-selects select"])
         expect_path([
@@ -91,7 +91,7 @@ feature "response form rendering and submission", js: true do
       end
 
       scenario "allows dynamic add/remove of nested repeat groups", js: true do
-        visit edit_response_path(params.merge(id: response.shortcode))
+        visit(edit_response_path(params.merge(id: response.shortcode)))
 
         # 1 "Add" and "Remove" button per repeat group
         expect(page).to have_css("a.add-repeat", count: 2)
@@ -123,7 +123,7 @@ feature "response form rendering and submission", js: true do
     let(:image) { Rails.root.join("spec", "fixtures", "media", "images", "the_swing.jpg") }
 
     scenario "submitting response" do
-      visit new_response_path(params)
+      visit(new_response_path(params))
 
       select2(user.name, from: "response_user_id")
       fill_in_question([0, 0], with: "1")
@@ -183,7 +183,7 @@ feature "response form rendering and submission", js: true do
 
       expect(page).not_to(have_content("Response is invalid"))
       response = Response.last
-      visit edit_response_path(params.merge(id: response.shortcode))
+      visit(edit_response_path(params.merge(id: response.shortcode)))
 
       expect_value([0, 0], "123")
       expect_image([1], form.c[1].id)
@@ -214,7 +214,7 @@ feature "response form rendering and submission", js: true do
       click_button("Save")
       expect(page).not_to have_content("Response is invalid")
 
-      visit edit_response_path(params.merge(id: response.shortcode))
+      visit(edit_response_path(params.merge(id: response.shortcode)))
 
       expect_value([0, 0], "1234")
       expect_image([1], form.c[1].id)
@@ -236,39 +236,23 @@ feature "response form rendering and submission", js: true do
 
     context "with conditional logic" do
       before do
-        ref_qing = form.c[0].c[0]
-
-        questioning = form.c[2]
-        questioning.display_if = "all_met"
-        questioning.display_conditions_attributes = [
-          {ref_qing_id: ref_qing.id, op: "eq", value: "123"}
-        ]
-        questioning.save!
+        form.c[2].update!(display_if: "all_met",
+                          display_conditions_attributes: [{ref_qing_id: form.c[0].c[0].id, op: "eq",
+                                                           value: "123"}])
       end
 
-      scenario "submitting response" do
-        visit new_response_path(params)
-
+      scenario "submitting response with irrelevant answers" do
+        visit(new_response_path(params))
         select2(user.name, from: "response_user_id")
-
-        # makes select boxes visible
-        fill_in_question([0, 0], with: "123")
-
-        select("Animal")
-        select("Dog")
-
-        # hides select boxes, they are now irrelevant
-        fill_in_question([0, 0], with: "124")
-
+        fill_in_question([0, 0], with: "123") # Makes select boxes visible
+        fill_in_question([2], with: %w[Animal Dog])
+        fill_in_question([0, 0], with: "124") # Hides select boxes (making them irrelevant)
         click_button("Save")
 
-        response = Response.last
-        visit edit_response_path(params.merge(id: response.shortcode))
-
+        visit(edit_response_path(params.merge(id: Response.last.shortcode)))
         expect_value([0, 0], "124")
 
-        # select answers not persisted
-        expect_not_persisted(form.c[2].id)
+        expect_not_persisted(form.c[2].id) # Irrelevant answers not persisted
       end
     end
 
@@ -280,8 +264,7 @@ feature "response form rendering and submission", js: true do
       end
 
       scenario do
-        visit new_response_path(params)
-
+        visit(new_response_path(params))
         select2(user.name, from: "response_user_id")
         click_button("Save")
 
