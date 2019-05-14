@@ -19,14 +19,46 @@ module SearchesHelper
   end
 
   def all_forms
-    Form.all.map { |form| {name: form.name, id: form.id} }
+    all_of_type(Form)
   end
 
   def all_users
-    User.all.map { |user| {name: user.name, id: user.id} }
+    all_of_type(User)
   end
 
   def all_groups
-    UserGroup.all.map { |group| {name: group.name, id: group.id} }
+    all_of_type(UserGroup)
+  end
+
+  def all_of_type(model)
+    items = model.all.map { |item| {name: item.name, id: item.id} }
+    simple_smart_sort(items)
+  end
+
+  # Sorts a list of hashes by item key, using simple_smart_compare below.
+  def simple_smart_sort(list, key = :name)
+    list.sort do |x, y|
+      x_value = x[key]
+      y_value = y[key]
+      simple_smart_compare(x_value, y_value)
+    end
+  end
+
+  # Compares two strings alphabetically, ignoring case, properly understanding
+  # numbers at the BEGINNING of the string only (for performance reasons).
+  def simple_smart_compare(x_value, y_value)
+    pattern = /(\d*)(.*)/
+    x_match = x_value.downcase.match(pattern)
+    y_match = y_value.downcase.match(pattern)
+
+    # If both start with numbers, compare the numbers first.
+    if !x_match[1].empty? && !y_match[1].empty?
+      comparison = x_match[1].to_i <=> y_match[1].to_i
+      return comparison unless comparison.zero?
+      return x_match[2] <=> y_match[2]
+    end
+
+    # Otherwise compare the entire string.
+    x_match[0] <=> y_match[0]
   end
 end
