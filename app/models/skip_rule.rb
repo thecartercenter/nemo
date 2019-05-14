@@ -14,7 +14,7 @@ class SkipRule < ActiveRecord::Base
 
   before_validation :set_foreign_key_on_conditions
   before_validation :normalize
-  before_create :set_mission
+  before_create :inherit_mission
 
   validate :require_dest_item
   validate :collect_condition_errors
@@ -80,7 +80,7 @@ class SkipRule < ActiveRecord::Base
     errors.add(:base, :all_required) if conditions.any?(&:invalid?)
   end
 
-  def set_mission
+  def inherit_mission
     self.mission = source_item.mission
   end
 end

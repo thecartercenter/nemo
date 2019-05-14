@@ -34,7 +34,7 @@ class FormItem < ApplicationRecord
 
   before_validation :set_foreign_key_on_conditions
   before_validation :ensure_parent_is_group
-  before_create :set_mission
+  before_create :inherit_mission
 
   has_ancestry cache_depth: true
 
@@ -213,9 +213,8 @@ class FormItem < ApplicationRecord
     end
   end
 
-  # copy mission from question
-  def set_mission
-    self.mission = form.try(:mission)
+  def inherit_mission
+    self.mission = form.mission
   end
 
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly

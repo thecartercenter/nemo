@@ -12,4 +12,12 @@ class Constraint < ApplicationRecord
   acts_as_list column: :rank, scope: [:questioning_id]
 
   belongs_to :questioning
+
+  before_create :inherit_mission
+
+  private
+
+  def inherit_mission
+    self.mission = questioning.mission
+  end
 end
