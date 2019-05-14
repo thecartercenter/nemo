@@ -31,9 +31,8 @@ describe Constraint do
         end
 
         it "should set validation error" do
-          expect(constraint).not_to be_valid
-          expect(constraint.errors["conditions.base"].join).to eq("All condition fields are required.")
-          expect(constraint.conditions[0].errors[:base].join).to eq("All condition fields are required.")
+          expect(constraint).to have_errors("conditions.base": "All condition fields are required.")
+          expect(constraint.conditions[0]).to have_errors(base: "All condition fields are required.")
         end
       end
     end

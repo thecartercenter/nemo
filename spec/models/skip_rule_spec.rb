@@ -99,21 +99,22 @@ describe SkipRule do
 
   describe "validation" do
     describe "dest_item" do
+      let(:rule) { build(:skip_rule, source_item: qing2, destination: "item", dest_item_id: nil) }
+
       it "should be required if destination is 'item'" do
-        rule = build(:skip_rule, source_item: qing2, destination: "item", dest_item_id: nil)
-        expect(rule).not_to be_valid
-        expect(rule.errors[:dest_item_id].join).to match /unless you choose 'skip to end of form'/
+        expect(rule).to have_errors(dest_item_id: /unless you choose 'skip to end of form'/)
       end
     end
 
     describe "conditions" do
+      let(:rule) do
+        build(:skip_rule, source_item: qing2,
+                          conditions_attributes: [{ref_qing_id: qing1.id, op: "eq", value: ""}])
+      end
+
       it "should set validation error if incomplete condition" do
-        rule = build(:skip_rule, source_item: qing2, conditions_attributes: [
-          {ref_qing_id: qing1.id, op: "eq", value: ""}
-        ])
-        expect(rule).not_to be_valid
-        expect(rule.errors["conditions.base"].join).to eq "All condition fields are required."
-        expect(rule.conditions[0].errors[:base].join).to eq "All condition fields are required."
+        expect(rule).to have_errors("conditions.base": "All condition fields are required.")
+        expect(rule.conditions[0]).to have_errors(base: "All condition fields are required.")
       end
     end
   end
