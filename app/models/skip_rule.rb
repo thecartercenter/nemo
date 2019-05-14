@@ -18,7 +18,6 @@ class SkipRule < ActiveRecord::Base
   before_create :inherit_mission
 
   validate :require_dest_item
-  validate :collect_condition_errors
 
   scope :by_rank, -> { order(:rank) }
 
@@ -73,12 +72,6 @@ class SkipRule < ActiveRecord::Base
 
   def require_dest_item
     errors.add(:dest_item_id, :blank_unless_goto_end) if destination != "end" && dest_item.nil?
-  end
-
-  # If there is a validation error on the conditions, we know it has to be due
-  # to a missing field. This is easier to catch here instead of React for now.
-  def collect_condition_errors
-    errors.add(:base, :all_required) if conditions.any?(&:invalid?)
   end
 
   def inherit_mission
