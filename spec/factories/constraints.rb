@@ -6,5 +6,6 @@ FactoryGirl.define do
     rank { 1 }
     mission { get_mission }
     questioning
+    rejection_msg { "It's invalid" }
   end
 end
