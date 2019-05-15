@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -42,32 +44,32 @@ describe Condition do
 
     it "should be true if missing left_qing" do
       condition = Condition.new(left_qing: nil, op: "eq", option_node_id: option_node_id)
-      expect(condition.send(:any_fields_blank?)).to be true
+      expect(condition.send(:any_fields_blank?)).to be(true)
     end
 
     it "should be true if missing operator" do
       condition = Condition.new(left_qing: form.questionings[0], op: nil, option_node_id: option_node_id)
-      expect(condition.send(:any_fields_blank?)).to be true
+      expect(condition.send(:any_fields_blank?)).to be(true)
     end
 
     it "should be true if missing option node" do
       condition = Condition.new(left_qing: form.questionings[0], op: "eq", option_node_id: nil)
-      expect(condition.send(:any_fields_blank?)).to be true
+      expect(condition.send(:any_fields_blank?)).to be(true)
     end
 
     it "should be true if missing value" do
       condition = Condition.new(left_qing: form.questionings[1], op: "eq", value: nil)
-      expect(condition.send(:any_fields_blank?)).to be true
+      expect(condition.send(:any_fields_blank?)).to be(true)
     end
 
     it "should be false if option node given" do
       condition = Condition.new(left_qing: form.questionings[0], op: "eq", option_node_id: option_node_id)
-      expect(condition.send(:any_fields_blank?)).to be false
+      expect(condition.send(:any_fields_blank?)).to be(false)
     end
 
     it "should be false if value given" do
       condition = Condition.new(left_qing: form.questionings[1], op: "eq", value: "5")
-      expect(condition.send(:any_fields_blank?)).to be false
+      expect(condition.send(:any_fields_blank?)).to be(false)
     end
   end
 
@@ -86,7 +88,7 @@ describe Condition do
 
     it "should clean time" do
       cond.valid?
-      expect(cond.value).to eq "2013-04-30 14:14:12"
+      expect(cond.value).to eq("2013-04-30 14:14:12")
     end
   end
 
@@ -98,7 +100,7 @@ describe Condition do
       let(:qtype) { "select_one" }
 
       it "should be correct" do
-        expect(cond.applicable_operator_names).to eq %i[eq neq]
+        expect(cond.applicable_operator_names).to eq(%i[eq neq])
       end
     end
 
@@ -106,7 +108,7 @@ describe Condition do
       let(:qtype) { "barcode" }
 
       it "should be correct" do
-        expect(cond.applicable_operator_names).to eq %i[eq neq]
+        expect(cond.applicable_operator_names).to eq(%i[eq neq])
       end
     end
 
@@ -114,7 +116,7 @@ describe Condition do
       let(:qtype) { "decimal" }
 
       it "should be correct" do
-        expect(cond.applicable_operator_names).to eq %i[eq lt gt leq geq neq]
+        expect(cond.applicable_operator_names).to eq(%i[eq lt gt leq geq neq])
       end
     end
 
@@ -122,7 +124,7 @@ describe Condition do
       let(:qtype) { "datetime" }
 
       it "should be correct" do
-        expect(cond.applicable_operator_names).to eq %i[eq lt gt leq geq neq]
+        expect(cond.applicable_operator_names).to eq(%i[eq lt gt leq geq neq])
       end
     end
 
@@ -130,7 +132,7 @@ describe Condition do
       let(:qtype) { "select_multiple" }
 
       it "should be correct" do
-        expect(cond.applicable_operator_names).to eq %i[inc ninc]
+        expect(cond.applicable_operator_names).to eq(%i[inc ninc])
       end
     end
   end
@@ -142,12 +144,12 @@ describe Condition do
 
     it "should delete the condition on option set change" do
       question.update!(option_set: create(:option_set))
-      expect(Condition.exists?(cond.id)).to be false
+      expect(Condition.exists?(cond.id)).to be(false)
     end
 
     it "should delete the condition on question destroy" do
       question.destroy
-      expect(Condition.exists?(cond.id)).to be false
+      expect(Condition.exists?(cond.id)).to be(false)
     end
   end
 
