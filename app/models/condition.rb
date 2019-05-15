@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -132,19 +134,17 @@ class Condition < ApplicationRecord
   private
 
   def clear_blanks
-    unless destroyed?
-      self.value = nil if value.blank? || left_qing && left_qing.has_options?
-    end
+    return if destroyed?
+    self.value = nil if value.blank? || left_qing&.has_options?
   end
 
   # Parses and reformats time strings given as conditions.
   def clean_times
-    if !destroyed? && temporal_ref_question? && value.present?
-      begin
-        self.value = Time.zone.parse(value).to_s(:"std_#{left_qing.qtype_name}")
-      rescue ArgumentError
-        self.value = nil
-      end
+    return unless !destroyed? && temporal_ref_question? && value.present?
+    begin
+      self.value = Time.zone.parse(value).to_s(:"std_#{left_qing.qtype_name}")
+    rescue ArgumentError
+      self.value = nil
     end
   end
 
