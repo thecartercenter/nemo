@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_15_165206) do
+ActiveRecord::Schema.define(version: 2019_05_15_170116) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,18 +105,18 @@ ActiveRecord::Schema.define(version: 2019_02_15_165206) do
     t.uuid "conditionable_id", null: false
     t.string "conditionable_type", null: false
     t.datetime "created_at", null: false
+    t.uuid "left_qing_id", null: false
     t.uuid "mission_id"
     t.string "op", limit: 255, null: false
     t.uuid "option_node_id"
     t.integer "rank", null: false
-    t.uuid "ref_qing_id", null: false
     t.datetime "updated_at", null: false
     t.string "value", limit: 255
     t.index ["conditionable_id"], name: "index_conditions_on_conditionable_id"
     t.index ["conditionable_type", "conditionable_id"], name: "index_conditions_on_conditionable_type_and_conditionable_id"
+    t.index ["left_qing_id"], name: "index_conditions_on_left_qing_id"
     t.index ["mission_id"], name: "index_conditions_on_mission_id"
     t.index ["option_node_id"], name: "index_conditions_on_option_node_id"
-    t.index ["ref_qing_id"], name: "index_conditions_on_ref_qing_id"
   end
 
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
@@ -593,7 +593,7 @@ ActiveRecord::Schema.define(version: 2019_02_15_165206) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "options", name: "choices_option_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "conditions", "form_items", column: "left_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_forwardings", "forms", name: "form_forwardings_form_id_fkey", on_update: :restrict, on_delete: :restrict

@@ -51,7 +51,7 @@ SELECT id
       SELECT option_set_id
       FROM questions
       WHERE id IN (
-        SELECT question_id FROM form_items WHERE id = conditions.ref_qing_id
+        SELECT question_id FROM form_items WHERE id = conditions.left_qing_id
       )
     );
 

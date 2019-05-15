@@ -1,5 +1,5 @@
 class ConditionViewSerializer < ActiveModel::Serializer
-  attributes :id, :ref_qing_id, :op, :value, :option_node_id, :option_set_id,
+  attributes :id, :left_qing_id, :op, :value, :option_node_id, :option_set_id,
     :form_id, :conditionable_id, :conditionable_type, :operator_options
   format_keys :lower_camel
 
@@ -22,6 +22,6 @@ class ConditionViewSerializer < ActiveModel::Serializer
   end
 
   def option_set_id
-    object.ref_qing.try(:option_set_id)
+    object.left_qing.try(:option_set_id)
   end
 end

@@ -137,8 +137,8 @@ feature "display logic form fields", js: true do
 
   def add_existing_conditions
     form.c[3].update_attributes!(display_if: "any_met", display_conditions_attributes: [
-      {ref_qing_id: form.c[0].id, op: "geq", value: "64"},
-      {ref_qing_id: form.c[2].id, op: "eq", option_node_id: form.c[2].option_set.c[0].id}
+      {left_qing_id: form.c[0].id, op: "geq", value: "64"},
+      {left_qing_id: form.c[2].id, op: "eq", option_node_id: form.c[2].option_set.c[0].id}
     ])
   end
 

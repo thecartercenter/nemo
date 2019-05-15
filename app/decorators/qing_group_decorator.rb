@@ -6,7 +6,7 @@ class QingGroupDecorator < ApplicationDecorator
 
   # Unique, sorted list of questionings this group refers to via display conditions
   def refd_qings
-    qing_group.display_conditions.map(&:ref_qing).uniq.sort_by(&:full_rank)
+    qing_group.display_conditions.map(&:left_qing).uniq.sort_by(&:full_rank)
   end
 
   def group_link

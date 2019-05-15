@@ -22,7 +22,7 @@ describe OptionSetReclone do
 
     # Make the condition on the form point to the cloned option set.
     form.c[0].question.update!(option_set: clone)
-    form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", option_node: clone.c[0].c[1])
+    form.c[1].display_conditions.create!(left_qing: form.c[0], op: "eq", option_node: clone.c[0].c[1])
   end
 
   describe "#run" do

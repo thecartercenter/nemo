@@ -45,7 +45,7 @@ describe "questionings", type: :request do
           params: {
             "questioning" => {
               "display_conditions_attributes" => [{
-                "ref_qing_id" => form.c[0].id,
+                "left_qing_id" => form.c[0].id,
                 "op" => "eq",
                 "value" => "foo"
               }]

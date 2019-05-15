@@ -40,8 +40,8 @@ describe Forms::ConditionComputer do
       let!(:rule) do
         form.c[1].skip_rules.create!(destination: "item", dest_item: form.c[6], skip_if: "any_met",
                                      conditions_attributes: [
-                                       {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                       {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                       {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                       {left_qing_id: form.c[1].id, op: "eq", value: "10"}
                                      ])
       end
 

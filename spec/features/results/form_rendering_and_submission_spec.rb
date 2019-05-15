@@ -236,12 +236,12 @@ feature "response form rendering and submission", js: true do
 
     context "with conditional logic" do
       before do
-        ref_qing = form.c[0].c[0]
+        left_qing = form.c[0].c[0]
 
         questioning = form.c[2]
         questioning.display_if = "all_met"
         questioning.display_conditions_attributes = [
-          {ref_qing_id: ref_qing.id, op: "eq", value: "123"}
+          {left_qing_id: left_qing.id, op: "eq", value: "123"}
         ]
         questioning.save!
       end

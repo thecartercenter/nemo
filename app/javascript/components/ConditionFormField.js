@@ -21,11 +21,11 @@ class ConditionFormField extends React.Component {
     index: PropTypes.number,
   };
 
-  handleChangeRefQing = (refQingId) => {
+  handleChangeRefQing = (leftQingId) => {
     const { condition } = this.props;
-    condition.refQingId = refQingId;
+    condition.leftQingId = leftQingId;
 
-    this.getFieldData(refQingId);
+    this.getFieldData(leftQingId);
   }
 
   handleChangeOp = (opValue) => {
@@ -53,11 +53,11 @@ class ConditionFormField extends React.Component {
     }
   }
 
-  getFieldData = async (refQingId) => {
+  getFieldData = async (leftQingId) => {
     const { condition } = this.props;
 
     ELMO.app.loading(true);
-    const url = this.buildUrl(refQingId);
+    const url = this.buildUrl(leftQingId);
     try {
       if (process.env.NODE_ENV === 'test') return;
 
@@ -69,7 +69,7 @@ class ConditionFormField extends React.Component {
 
       const newCondition = {
         ...response,
-        // We set option node ID to null since the new refQing may have a new option set.
+        // We set option node ID to null since the new leftQing may have a new option set.
         optionNodeId: null,
         // Prefer the existing value and op if they've been set locally.
         value: condition.value || response.value,
@@ -88,11 +88,11 @@ class ConditionFormField extends React.Component {
     }
   }
 
-  buildUrl = (refQingId) => {
+  buildUrl = (leftQingId) => {
     const { conditionSetStore: { formId, conditionableId, conditionableType }, condition: { id } } = this.props;
     const params = {
       condition_id: id || '',
-      ref_qing_id: refQingId,
+      left_qing_id: leftQingId,
       form_id: formId,
       conditionable_id: conditionableId || undefined,
       conditionable_type: conditionableId ? conditionableType : undefined,
@@ -101,8 +101,8 @@ class ConditionFormField extends React.Component {
     return `${url}?${queryString.stringify(params)}`;
   }
 
-  formatRefQingOptions = (refQingOptions) => {
-    return refQingOptions.map((o) => {
+  formatRefQingOptions = (leftQingOptions) => {
+    return leftQingOptions.map((o) => {
       return { id: o.id, name: `${o.fullDottedRank}. ${o.code}`, key: o.id };
     });
   }
@@ -149,7 +149,7 @@ class ConditionFormField extends React.Component {
   render() {
     const {
       conditionSetStore: { namePrefix: rawNamePrefix, refableQings, forceEqualsOp },
-      condition: { id, refQingId, op, operatorOptions },
+      condition: { id, leftQingId, op, operatorOptions },
       index,
     } = this.props;
     const namePrefix = `${rawNamePrefix}[${index}]`;
@@ -161,12 +161,12 @@ class ConditionFormField extends React.Component {
       key: `${idPrefix}_id`,
       value: id || '',
     };
-    const refQingFieldProps = {
-      name: `${namePrefix}[ref_qing_id]`,
-      key: `${idPrefix}_ref_qing_id`,
-      value: refQingId || '',
+    const leftQingFieldProps = {
+      name: `${namePrefix}[left_qing_id]`,
+      key: `${idPrefix}_left_qing_id`,
+      value: leftQingId || '',
       options: this.formatRefQingOptions(refableQings),
-      prompt: I18n.t('condition.ref_qing_prompt'),
+      prompt: I18n.t('condition.left_qing_prompt'),
       onChange: this.handleChangeRefQing,
     };
     const operatorFieldProps = {
@@ -194,7 +194,7 @@ class ConditionFormField extends React.Component {
       >
         <input {...idFieldProps} />
         <input {...destroyFieldProps} />
-        <FormSelect {...refQingFieldProps} />
+        <FormSelect {...leftQingFieldProps} />
         {forceEqualsOp ? (
           <div className="operator-text">{I18n.t('common.is')}</div>
         ) : (

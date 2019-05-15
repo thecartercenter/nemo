@@ -49,9 +49,9 @@ describe "mission destroy" do
                          question_types: ["integer", "select_one", %w[integer integer], "select_multiple"])
     form.publish! # Creates version
     create(:question, qtype_name: "select_one", option_set: opt_set, mission: mission)
-    create(:condition, ref_qing: form.c[0], conditionable: form.c[3], mission: mission)
+    create(:condition, left_qing: form.c[0], conditionable: form.c[3], mission: mission)
     create(:skip_rule, source_item: form.c[1], destination: "item", dest_item: form.c[3],
-                       conditions_attributes: [{ref_qing_id: form.c[0].id, op: "eq", value: "5"}])
+                       conditions_attributes: [{left_qing_id: form.c[0].id, op: "eq", value: "5"}])
     form.replicate(mode: :clone) # Tests that cloned objects can be deleted
 
     create(:operation, mission: mission, creator: users[0])

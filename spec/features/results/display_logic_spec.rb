@@ -53,35 +53,35 @@ feature "response form display logic", js: true do
       qings[1].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[0].id, op: "eq", value: "foo"}
+          {left_qing_id: qings[0].id, op: "eq", value: "foo"}
         ]
       )
 
       qings[2].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[1].id, op: "neq", value: "bar"}
+          {left_qing_id: qings[1].id, op: "neq", value: "bar"}
         ]
       )
 
       qings[3].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[2].id, op: "gt", value: "10"}
+          {left_qing_id: qings[2].id, op: "gt", value: "10"}
         ]
       )
 
       qings[5].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[3].id, op: "gt", value: "5"}
+          {left_qing_id: qings[3].id, op: "gt", value: "5"}
         ]
       )
 
       qings[6].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[5].id, op: "eq", value: "21.72"}
+          {left_qing_id: qings[5].id, op: "eq", value: "21.72"}
         ]
       )
 
@@ -89,7 +89,7 @@ feature "response form display logic", js: true do
       qings[7].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[6].id, op: "eq", option_node_id: oset.node("Dog").id}
+          {left_qing_id: qings[6].id, op: "eq", option_node_id: oset.node("Dog").id}
         ]
       )
 
@@ -97,7 +97,7 @@ feature "response form display logic", js: true do
       qings[8].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[7].id, op: "eq", option_node_id: oset.node("Plant", "Tulip").id}
+          {left_qing_id: qings[7].id, op: "eq", option_node_id: oset.node("Plant", "Tulip").id}
         ]
       )
 
@@ -105,7 +105,7 @@ feature "response form display logic", js: true do
       qings[9].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[8].id, op: "eq", option_node_id: oset.node("Canada").id}
+          {left_qing_id: qings[8].id, op: "eq", option_node_id: oset.node("Canada").id}
         ]
       )
 
@@ -113,56 +113,56 @@ feature "response form display logic", js: true do
       qings[10].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[9].id, op: "inc", option_node_id: oset.node("Cat").id}
+          {left_qing_id: qings[9].id, op: "inc", option_node_id: oset.node("Cat").id}
         ]
       )
 
       qings[11].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[10].id, op: "lt", value: "#{year}-01-01 5:00:21"}
+          {left_qing_id: qings[10].id, op: "lt", value: "#{year}-01-01 5:00:21"}
         ]
       )
 
       qings[12].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[11].id, op: "eq", value: "#{year}-03-22"}
+          {left_qing_id: qings[11].id, op: "eq", value: "#{year}-03-22"}
         ]
       )
 
       qings[13].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[12].id, op: "geq", value: "3:00pm"}
+          {left_qing_id: qings[12].id, op: "geq", value: "3:00pm"}
         ]
       )
 
       qings[15].c[0].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[13].id, op: "eq", value: "baz"} # References top level Q
+          {left_qing_id: qings[13].id, op: "eq", value: "baz"} # References top level Q
         ]
       )
 
       qings[15].c[1].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[15].c[0].id, op: "eq", value: "qux"} # References same group Q
+          {left_qing_id: qings[15].c[0].id, op: "eq", value: "qux"} # References same group Q
         ]
       )
 
       qings[15].c[2].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[14].c[0].id, op: "eq", value: "nix"} # References Q from sibling group
+          {left_qing_id: qings[14].c[0].id, op: "eq", value: "nix"} # References Q from sibling group
         ]
       )
 
       qings[15].c[3].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[14].c[0].id, op: "geq", value: 5}
+          {left_qing_id: qings[14].c[0].id, op: "geq", value: 5}
         ]
       )
     end
@@ -247,7 +247,7 @@ feature "response form display logic", js: true do
         qings[4].update!(
           display_if: "all_met",
           display_conditions_attributes: [{
-            ref_qing_id: qings[3].id,
+            left_qing_id: qings[3].id,
             op: "eq",
             value: "foo"
           }]
@@ -267,8 +267,8 @@ feature "response form display logic", js: true do
         qings[2].update!(
           display_if: display_if,
           display_conditions_attributes: [
-            {ref_qing_id: qings[0].id, op: "gt", value: "10"},
-            {ref_qing_id: qings[1].id, op: "gt", value: "20"}
+            {left_qing_id: qings[0].id, op: "gt", value: "10"},
+            {left_qing_id: qings[1].id, op: "gt", value: "20"}
           ]
         )
       end

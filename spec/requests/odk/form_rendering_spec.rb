@@ -29,8 +29,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     before do
       # Include multiple conditions on one question.
-      form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
-      form.c[6].display_conditions.create!(ref_qing: form.c[5], op: "eq",
+      form.c[6].display_conditions.create!(left_qing: form.c[2], op: "gt", value: "5")
+      form.c[6].display_conditions.create!(left_qing: form.c[5], op: "eq",
                                            option_node: form.c[5].option_set.c[0])
       form.c[6].update!(display_if: "all_met")
     end
@@ -66,8 +66,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
     before do
       # Include multiple conditions on one question.
-      form.c[6].display_conditions.create!(ref_qing: form.c[2], op: "gt", value: "5")
-      form.c[6].display_conditions.create!(ref_qing: form.c[5],
+      form.c[6].display_conditions.create!(left_qing: form.c[2], op: "gt", value: "5")
+      form.c[6].display_conditions.create!(left_qing: form.c[5],
                                            op: "eq",
                                            option_node: form.c[5].option_set.c[0])
       form.c[6].update!(display_if: "all_met")
@@ -76,7 +76,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         destination: "item",
         dest_item_id: form.c[7].id,
         skip_if: "all_met",
-        conditions_attributes: [{ref_qing_id: form.c[2].id, op: "eq", value: 0}])
+        conditions_attributes: [{left_qing_id: form.c[2].id, op: "eq", value: 0}])
     end
 
     it "should render proper xml" do
@@ -116,7 +116,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         form.c[1].c[1].question.update!(option_set_id: form.c[1].c[0].question.option_set_id)
 
         # Add condition to group.
-        form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
+        form.c[1].display_conditions.create!(left_qing: form.c[0], op: "eq", value: "foo")
         form.c[1].update!(display_if: "all_met")
       end
 
@@ -151,7 +151,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       before do
-        form.c[1].display_conditions.create!(ref_qing: form.c[0], op: "eq", value: "foo")
+        form.c[1].display_conditions.create!(left_qing: form.c[0], op: "eq", value: "foo")
         form.c[1].update!(display_if: "all_met")
       end
 
@@ -168,7 +168,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
 
       before do
-        form.c[0].c[2].display_conditions.create!(ref_qing: form.questionings.first, op: "eq", value: "foo")
+        form.c[0].c[2].display_conditions.create!(left_qing: form.questionings.first, op: "eq", value: "foo")
         form.c[0].c[2].update!(display_if: "all_met")
       end
 

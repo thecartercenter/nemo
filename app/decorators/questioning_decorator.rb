@@ -10,7 +10,7 @@ class QuestioningDecorator < ApplicationDecorator
   # whether by display logic or skip logic.
   def refd_qings
     return @refd_qings if defined?(@refd_qings)
-    qings = display_conditions.map(&:ref_qing) + skip_rules.flat_map(&:ref_qings)
+    qings = display_conditions.map(&:left_qing) + skip_rules.flat_map(&:left_qings)
     @refd_qings = qings.uniq.sort_by(&:full_rank)
   end
 

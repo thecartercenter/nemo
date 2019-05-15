@@ -385,7 +385,7 @@ en:
         recipient_selection: "Recipients"
         recipient_ids: "Users/Groups"
       condition:
-        ref_qing_id: "Question"
+        left_qing_id: "Question"
         op: "Comparison"
         value: "Value"
       form:
@@ -1247,7 +1247,7 @@ en:
     no_refable_qings: "There are no questions on this form to which a condition could refer."
     op: "Comparison"
     value: "Value"
-    ref_qing_prompt: "Choose question ..."
+    left_qing_prompt: "Choose question ..."
 
   dashboard:
     close_dashboard: "Close Dashboard"

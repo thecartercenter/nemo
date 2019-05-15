@@ -20,13 +20,13 @@ feature "skip logic form fields", js: true do
     login(user)
     form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
                                  conditions_attributes: [
-                                   {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                   {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                   {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                   {left_qing_id: form.c[1].id, op: "eq", value: "10"}
                                  ])
     form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "all_met",
                                  conditions_attributes: [
-                                   {ref_qing_id: form.c[0].id, op: "eq", value: "25"},
-                                   {ref_qing_id: form.c[1].id, op: "neq", value: "20"}
+                                   {left_qing_id: form.c[0].id, op: "eq", value: "25"},
+                                   {left_qing_id: form.c[1].id, op: "neq", value: "20"}
                                  ])
   end
 

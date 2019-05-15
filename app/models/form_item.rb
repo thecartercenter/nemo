@@ -67,8 +67,8 @@ class FormItem < ApplicationRecord
                                    foreign_key: :disagg_qing_id, dependent: :nullify
   has_many :display_conditions, -> { by_rank },
     as: :conditionable, class_name: "Condition", dependent: :destroy
-  has_many :referring_conditions, class_name: "Condition", foreign_key: :ref_qing_id,
-                                  dependent: :destroy, inverse_of: :ref_qing
+  has_many :referring_conditions, class_name: "Condition", foreign_key: :left_qing_id,
+                                  dependent: :destroy, inverse_of: :left_qing
   has_many :skip_rules, -> { by_rank },
     foreign_key: :source_item_id, inverse_of: :source_item, dependent: :destroy
   has_many :incoming_skip_rules, class_name: "SkipRule", foreign_key: :dest_item_id,

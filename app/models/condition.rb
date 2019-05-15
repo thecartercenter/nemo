@@ -1,3 +1,4 @@
+# # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: conditions
@@ -10,24 +11,25 @@
 #  created_at         :datetime         not null
 #  updated_at         :datetime         not null
 #  conditionable_id   :uuid             not null
+#  left_qing_id       :uuid             not null
 #  mission_id         :uuid
 #  option_node_id     :uuid
-#  ref_qing_id        :uuid             not null
 #
 # Indexes
 #
 #  index_conditions_on_conditionable_id                         (conditionable_id)
 #  index_conditions_on_conditionable_type_and_conditionable_id  (conditionable_type,conditionable_id)
+#  index_conditions_on_left_qing_id                             (left_qing_id)
 #  index_conditions_on_mission_id                               (mission_id)
 #  index_conditions_on_option_node_id                           (option_node_id)
-#  index_conditions_on_ref_qing_id                              (ref_qing_id)
 #
 # Foreign Keys
 #
 #  conditions_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  conditions_option_node_id_fkey  (option_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
-#  conditions_ref_qing_id_fkey     (ref_qing_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#  fk_rails_...                    (left_qing_id => form_items.id)
 #
+# # rubocop:enable Metrics/LineLength
 
 # Represents a condition in a question's display logic or skip logic.
 class Condition < ApplicationRecord
@@ -40,7 +42,7 @@ class Condition < ApplicationRecord
   acts_as_list column: :rank, scope: [:conditionable_id]
 
   belongs_to :conditionable, polymorphic: true
-  belongs_to :ref_qing, class_name: "Questioning", foreign_key: "ref_qing_id",
+  belongs_to :left_qing, class_name: "Questioning", foreign_key: "left_qing_id",
                         inverse_of: :referring_conditions
   belongs_to :option_node
 
@@ -50,21 +52,21 @@ class Condition < ApplicationRecord
 
   validate :all_fields_required
 
-  delegate :has_options?, :rank, :full_rank, :full_dotted_rank, to: :ref_qing, prefix: true
+  delegate :has_options?, :rank, :full_rank, :full_dotted_rank, to: :left_qing, prefix: true
   delegate :form, :form_id, :refable_qings, to: :conditionable
 
-  scope :referring_to_question, ->(q) { where(ref_qing_id: q.qing_ids) }
+  scope :referring_to_question, ->(q) { where(left_qing_id: q.qing_ids) }
   scope :by_rank, -> { order(:rank) }
 
   OPERATOR_CODES = %i[eq lt gt leq geq neq inc ninc].freeze
 
-  replicable dont_copy: %i[ref_qing_id conditionable_id option_node_id], backward_assocs: [
+  replicable dont_copy: %i[left_qing_id conditionable_id option_node_id], backward_assocs: [
     :conditionable,
     {name: :option_node, skip_obj_if_missing: true},
-    # This is a second pass association because the ref_qing may not have been copied yet.
-    # We have to set ref_qing to something due to a null constraint.
+    # This is a second pass association because the left_qing may not have been copied yet.
+    # We have to set left_qing to something due to a null constraint.
     # For a temporary object, we can just use the FormItem this condition is attached to (base_item).
-    {name: :ref_qing, second_pass: true, temp_id: ->(conditionable) { conditionable.base_item.id }}
+    {name: :left_qing, second_pass: true, temp_id: ->(conditionable) { conditionable.base_item.id }}
   ]
 
   # Deletes any that have become invalid due to changes in the given question
@@ -89,13 +91,13 @@ class Condition < ApplicationRecord
   end
 
   def option_node_path
-    OptionNodePath.new(option_set: ref_qing.option_set, target_node: option_node)
+    OptionNodePath.new(option_set: left_qing.option_set, target_node: option_node)
   end
 
   # returns names of all operators that are applicable to this condition based on its referred question
   def applicable_operator_names
-    return [] unless ref_qing
-    qtype = ref_qing.qtype
+    return [] unless left_qing
+    qtype = left_qing.qtype
     OPERATOR_CODES.select do |oc|
       case oc
       when :eq, :neq then !qtype.select_multiple?
@@ -106,29 +108,29 @@ class Condition < ApplicationRecord
   end
 
   def temporal_ref_question?
-    ref_qing.try(:temporal?)
+    left_qing.try(:temporal?)
   end
 
   def numeric_ref_question?
-    ref_qing.try(:numeric?)
+    left_qing.try(:numeric?)
   end
 
   # Gets the referenced Subqing.
-  # If option_node is not set, returns the first subqing of ref_qing (just an alias).
+  # If option_node is not set, returns the first subqing of left_qing (just an alias).
   # If option_node is set, uses the depth to determine the subqing rank.
   def ref_subqing
-    ref_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1]
+    left_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1]
   end
 
   def all_fields_blank?
-    ref_qing.blank? && op.blank? && option_node_id.blank? && value.blank?
+    left_qing.blank? && op.blank? && option_node_id.blank? && value.blank?
   end
 
   private
 
   def clear_blanks
     unless destroyed?
-      self.value = nil if value.blank? || ref_qing && ref_qing.has_options?
+      self.value = nil if value.blank? || left_qing && left_qing.has_options?
     end
     return true
   end
@@ -137,7 +139,7 @@ class Condition < ApplicationRecord
   def clean_times
     if !destroyed? && temporal_ref_question? && value.present?
       begin
-        self.value = Time.zone.parse(value).to_s(:"std_#{ref_qing.qtype_name}")
+        self.value = Time.zone.parse(value).to_s(:"std_#{left_qing.qtype_name}")
       rescue ArgumentError
         self.value = nil
       end
@@ -150,7 +152,7 @@ class Condition < ApplicationRecord
   end
 
   def any_fields_blank?
-    ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
+    left_qing.blank? || op.blank? || (left_qing.has_options? ? option_node_id.blank? : value.blank?)
   end
 
   def set_mission

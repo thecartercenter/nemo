@@ -163,7 +163,7 @@ describe FormItem do
 
   describe "normalization" do
     let(:form_item) { create(:qing_group, submitted.merge(display_conditions_attributes: cond_attrs)) }
-    let(:ref_qing) { create(:questioning) }
+    let(:left_qing) { create(:questioning) }
     subject { submitted.keys.map { |k| [k, form_item.send(k)] }.to_h }
 
     describe "display_conditions and display_if" do
@@ -187,7 +187,7 @@ describe FormItem do
       end
 
       context "with blank condition" do
-        let(:cond_attrs) { [{ref_qing_id: "", op: "", value: "  "}] }
+        let(:cond_attrs) { [{left_qing_id: "", op: "", value: "  "}] }
 
         context do
           let(:submitted) { {display_if: "all_met"} }
@@ -200,7 +200,7 @@ describe FormItem do
       end
 
       context "with partial condition" do
-        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "", value: "  "}] }
+        let(:cond_attrs) { [{left_qing_id: left_qing.id, op: "", value: "  "}] }
         let(:submitted) { {display_if: "all_met"} }
 
         it "should fail validation" do
@@ -209,7 +209,7 @@ describe FormItem do
       end
 
       context "with full condition" do
-        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "eq", value: "foo"}] }
+        let(:cond_attrs) { [{left_qing_id: left_qing.id, op: "eq", value: "foo"}] }
 
         context do
           let(:submitted) { {display_if: "all_met"} }
@@ -233,7 +233,7 @@ describe FormItem do
         create(:questioning, skip_rules_attributes: [
           {destination: "end", skip_if: "always"},
           {destination: "", skip_if: "", conditions_attributes: []},
-          {destination: "", skip_if: "", conditions_attributes: [{ref_qing_id: "", op: "", value: ""}]}
+          {destination: "", skip_if: "", conditions_attributes: [{left_qing_id: "", op: "", value: ""}]}
         ])
       end
 

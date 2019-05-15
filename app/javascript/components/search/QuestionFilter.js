@@ -47,8 +47,8 @@ class QuestionFilter extends React.Component {
     const { filtersStore: { conditionSetStore } } = this.props;
     const { originalConditions, refableQings } = conditionSetStore;
     const hints = originalConditions
-      .filter(({ refQingId }) => refQingId)
-      .map(({ refQingId }) => getItemNameFromId(refableQings, refQingId, 'code'));
+      .filter(({ leftQingId }) => leftQingId)
+      .map(({ leftQingId }) => getItemNameFromId(refableQings, leftQingId, 'code'));
 
     return (
       <OverlayTrigger

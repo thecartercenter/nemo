@@ -42,7 +42,7 @@ class FormItemsController < ApplicationController
     @condition = Condition.find_by(id: params[:condition_id])
     @condition ||= Condition.new(conditionable: @conditionable)
 
-    @condition.ref_qing_id = params[:ref_qing_id]
+    @condition.left_qing_id = params[:left_qing_id]
     render json: ConditionViewSerializer.new(@condition), status: 200
   end
 end

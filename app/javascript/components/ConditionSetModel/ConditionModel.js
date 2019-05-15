@@ -20,7 +20,7 @@ class ConditionModel {
   optionNodeId;
 
   @observable
-  refQingId;
+  leftQingId;
 
   @observable
   op;

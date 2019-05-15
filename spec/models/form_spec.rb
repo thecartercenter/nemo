@@ -163,8 +163,8 @@ describe Form do
       context "forms with associations" do
         before do
           create(:skip_rule, source_item: qing_group, conditions_attributes: [
-            {ref_qing_id: qing1.id, op: "eq", value: "5"},
-            {ref_qing_id: qing2.id, op: "eq", value: "fish"}
+            {left_qing_id: qing1.id, op: "eq", value: "5"},
+            {left_qing_id: qing2.id, op: "eq", value: "fish"}
           ])
         end
 

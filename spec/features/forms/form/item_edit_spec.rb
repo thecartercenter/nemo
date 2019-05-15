@@ -109,7 +109,7 @@ feature "forms", js: true do
       qings[1].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {ref_qing_id: qings[0].id, op: "eq", value: 123}
+          {left_qing_id: qings[0].id, op: "eq", value: 123}
         ]
       )
     end

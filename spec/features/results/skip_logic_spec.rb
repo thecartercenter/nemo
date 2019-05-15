@@ -24,7 +24,7 @@ feature "response form skip logic", js: true do
         :skip_rule,
         source_item: qings[1],
         destination: "end",
-        conditions_attributes: [{ref_qing_id: qings[1].id, op: "eq", value: "B"}]
+        conditions_attributes: [{left_qing_id: qings[1].id, op: "eq", value: "B"}]
       )
       visit_new_response_page
       visible = [[0], [1], [2], [3]]
@@ -43,7 +43,7 @@ feature "response form skip logic", js: true do
         source_item: qings[0],
         destination: "item",
         dest_item_id: qings[2].id,
-        conditions_attributes: [{ref_qing_id: qings[0].id, op: "neq", value: "A"}]
+        conditions_attributes: [{left_qing_id: qings[0].id, op: "neq", value: "A"}]
       )
 
       visit_new_response_page
@@ -65,7 +65,7 @@ feature "response form skip logic", js: true do
       # Skip from [1] to [3] if [0] is A
       # Skip from [0] to [2] if [0] is Skip2
       qings[3].display_conditions << Condition.new(
-        ref_qing_id: qings[0].id,
+        left_qing_id: qings[0].id,
         op: "neq",
         value: "B"
       )
@@ -75,14 +75,14 @@ feature "response form skip logic", js: true do
         source_item: qings[1],
         destination: "item",
         dest_item_id: qings[3].id,
-        conditions_attributes: [{ref_qing_id: qings[0].id, op: "eq", value: "A"}]
+        conditions_attributes: [{left_qing_id: qings[0].id, op: "eq", value: "A"}]
       )
       create(
         :skip_rule,
         source_item: qings[0],
         destination: "item",
         dest_item_id: qings[2].id,
-        conditions_attributes: [{ref_qing_id: qings[0].id, op: "eq", value: "Skip2"}]
+        conditions_attributes: [{left_qing_id: qings[0].id, op: "eq", value: "Skip2"}]
       )
       visit_new_response_page
       visible = [[0], [1], [2], [3]]
@@ -103,7 +103,7 @@ feature "response form skip logic", js: true do
       # Skip from [1] to [3] if [0] is A
       # Skip from [0] to [2] if [0] is Skip2
       qings[3].display_conditions << Condition.new(
-        ref_qing_id: qings[0].id,
+        left_qing_id: qings[0].id,
         op: "neq",
         value: "B"
       )
@@ -113,14 +113,14 @@ feature "response form skip logic", js: true do
         source_item: qings[1],
         destination: "item",
         dest_item_id: qings[3].id,
-        conditions_attributes: [{ref_qing_id: qings[0].id, op: "eq", value: "A"}]
+        conditions_attributes: [{left_qing_id: qings[0].id, op: "eq", value: "A"}]
       )
       create(
         :skip_rule,
         source_item: qings[0],
         destination: "item",
         dest_item_id: qings[2].id,
-        conditions_attributes: [{ref_qing_id: qings[0].id, op: "eq", value: "Skip2"}]
+        conditions_attributes: [{left_qing_id: qings[0].id, op: "eq", value: "Skip2"}]
       )
       visit_new_response_page
       visible = [[0], [1], [2], [3]]
@@ -148,11 +148,11 @@ feature "response form skip logic", js: true do
         :skip_rule,
         source_item: qings[1],
         destination: "end",
-        conditions_attributes: [{ref_qing_id: qings[1].id, op: "eq", value: "B"}]
+        conditions_attributes: [{left_qing_id: qings[1].id, op: "eq", value: "B"}]
       )
       form.c[4].update!(
         display_if: "all_met",
-        display_conditions_attributes: [{ref_qing_id: qings[2].id, op: "eq", value: "ShowRepeat"}]
+        display_conditions_attributes: [{left_qing_id: qings[2].id, op: "eq", value: "ShowRepeat"}]
       )
       visit_new_response_page
       visible = [[0], [1], [2], [3], [4, 0, 0]]

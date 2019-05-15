@@ -5,7 +5,7 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
     @refresh = options.refresh
     @condition = options.condition
 
-    @rqElement = @refQingElement(@$el, @condition.refQingId)
+    @rqElement = @leftQingElement(@$el, @condition.leftQingId)
     @rqType = @rqElement.data('qtype-name')
     @result = true
 
@@ -57,14 +57,14 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
 
   # We walk up the node tree until a descendant node contains the given qing ID.
   # Once found we return the first matching child.
-  refQingElement: (srcElement, refQingId) ->
+  leftQingElement: (srcElement, leftQingId) ->
     parent = srcElement.parent().closest(".node")
     return null unless parent.length > 0
-    children = parent.find(".node[data-qing-id=#{refQingId}]")
+    children = parent.find(".node[data-qing-id=#{leftQingId}]")
     if children.length > 0
       return children.first()
     else
-      return @refQingElement(parent, refQingId)
+      return @leftQingElement(parent, leftQingId)
 
   # Uses a special array comparison method if appropriate.
   testEquality: (a, b) ->
