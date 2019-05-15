@@ -38,6 +38,22 @@
 require "rails_helper"
 
 describe Condition do
+  describe "normalization" do
+    let(:form) { create(:form, question_types: %w[integer integer]) }
+    let(:condition) { build(:condition, submitted).tap(&:validate) }
+    subject(:normalized) { submitted.keys.map { |k| [k, condition.send(k)] }.to_h }
+
+    context "extraneous value" do
+      let(:submitted) { {right_side_type: "qing", right_qing_id: form.c[0].id, value: "10"} }
+      it { is_expected.to eq(right_side_type: "qing", right_qing_id: form.c[0].id, value: nil) }
+    end
+
+    context "extraneous right qing" do
+      let(:submitted) { {right_side_type: "value", right_qing_id: form.c[0].id, value: "10"} }
+      it { is_expected.to eq(right_side_type: "value", right_qing_id: nil, value: "10") }
+    end
+  end
+
   describe "any_fields_blank?" do
     let(:form) { create(:form, question_types: %w[select_one integer]) }
     let(:option_node_id) { form.questionings[0].option_set.children.first.id }

@@ -51,6 +51,7 @@ class Condition < ApplicationRecord
   belongs_to :right_qing, class_name: "Questioning", foreign_key: "right_qing_id", inverse_of: false
   belongs_to :option_node
 
+  before_validation :normalize
   before_validation :clear_blanks
   before_validation :clean_times
   before_create :set_mission
@@ -139,6 +140,14 @@ class Condition < ApplicationRecord
   attr_writer :right_side_type
 
   private
+
+  def normalize
+    if right_side_type == "qing"
+      self.value = nil
+    else
+      self.right_qing = nil
+    end
+  end
 
   def clear_blanks
     return if destroyed?
