@@ -150,4 +150,26 @@ describe Condition do
       expect(Condition.exists?(cond.id)).to be false
     end
   end
+
+  describe "#right_side_type" do
+    subject(:right_side_type) { condition.right_side_type }
+
+    context "with no value" do
+      context "with right_qing_id set" do
+        let(:condition) { build(:condition, right_qing: create(:questioning)) }
+        it { is_expected.to eq("qing") }
+      end
+
+      context "without set" do
+        let(:condition) { build(:condition) }
+        it { is_expected.to eq("value") }
+      end
+    end
+
+    context "with value" do
+      let(:condition) { build(:condition, right_qing: create(:questioning)) }
+      before { condition.right_side_type = "value" }
+      it { is_expected.to eq("value") }
+    end
+  end
 end

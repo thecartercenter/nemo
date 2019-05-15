@@ -131,6 +131,13 @@ class Condition < ApplicationRecord
     left_qing.blank? && op.blank? && option_node_id.blank? && value.blank?
   end
 
+  # The type of the right side of the condition expression. Either `qing` or `value`.
+  # Behaves as an ephemeral attribute.
+  def right_side_type
+    @right_side_type || (right_qing_id.present? ? "qing" : "value")
+  end
+  attr_writer :right_side_type
+
   private
 
   def clear_blanks
