@@ -111,17 +111,6 @@ class ResponsesController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
-  def possible_submitters
-    # get the users to which this response can be assigned
-    # which is the users in this mission plus the submitter of this response
-    @possible_submitters = User.assigned_to_or_submitter(current_mission, @response).by_name
-    @possible_submitters = apply_search_if_given(User, @possible_submitters)
-    @possible_submitters = @possible_submitters.paginate(page: params[:page], per_page: 20)
-
-    render(json: {possible_submitters: ActiveModel::ArraySerializer.new(@possible_submitters),
-                  more: @possible_submitters.next_page.present?}, select2: true)
-  end
-
   def possible_users
     search_mode = params[:search_mode] || "submitters"
 
