@@ -13,7 +13,7 @@ FactoryGirl.define do
     rejection_msg { "It's invalid" }
 
     after(:build) do |constraint, evaluator|
-      unless evaluator.no_conditions
+      if !evaluator.no_conditions && constraint.conditions.none?
         constraint.conditions << build(:condition, conditionable: constraint,
                                                    ref_qing: constraint.source_item)
       end
