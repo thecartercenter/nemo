@@ -31,34 +31,6 @@ module SearchesHelper
   end
 
   def all_of_type(model)
-    items = model.all.map { |item| {name: item.name, id: item.id} }
-    simple_smart_sort(items)
-  end
-
-  # Sorts a list of hashes by item key, using simple_smart_compare below.
-  def simple_smart_sort(list, key = :name)
-    list.sort do |x, y|
-      x_value = x[key]
-      y_value = y[key]
-      simple_smart_compare(x_value, y_value)
-    end
-  end
-
-  # Compares two strings alphabetically, ignoring case, properly understanding
-  # numbers at the BEGINNING of the string only (for performance reasons).
-  def simple_smart_compare(x_value, y_value)
-    pattern = /(\d*)(.*)/
-    x_match = x_value.downcase.match(pattern)
-    y_match = y_value.downcase.match(pattern)
-
-    # If both start with numbers, compare the numbers first.
-    if !x_match[1].empty? && !y_match[1].empty?
-      comparison = x_match[1].to_i <=> y_match[1].to_i
-      return comparison unless comparison.zero?
-      return x_match[2] <=> y_match[2]
-    end
-
-    # Otherwise compare the entire string.
-    x_match[0] <=> y_match[0]
+    model.all.map { |item| {name: item.name, id: item.id} }.smart_sort_by_key
   end
 end
