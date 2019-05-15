@@ -14,6 +14,7 @@
 #  left_qing_id       :uuid             not null
 #  mission_id         :uuid
 #  option_node_id     :uuid
+#  right_qing_id      :uuid
 #
 # Indexes
 #
@@ -28,6 +29,7 @@
 #  conditions_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  conditions_option_node_id_fkey  (option_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
 #  fk_rails_...                    (left_qing_id => form_items.id)
+#  fk_rails_...                    (right_qing_id => form_items.id)
 #
 # # rubocop:enable Metrics/LineLength
 

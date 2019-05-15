@@ -14,6 +14,7 @@
 #  left_qing_id       :uuid             not null
 #  mission_id         :uuid
 #  option_node_id     :uuid
+#  right_qing_id      :uuid
 #
 # Indexes
 #
@@ -28,6 +29,7 @@
 #  conditions_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #  conditions_option_node_id_fkey  (option_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
 #  fk_rails_...                    (left_qing_id => form_items.id)
+#  fk_rails_...                    (right_qing_id => form_items.id)
 #
 # # rubocop:enable Metrics/LineLength
 
@@ -43,7 +45,8 @@ class Condition < ApplicationRecord
 
   belongs_to :conditionable, polymorphic: true
   belongs_to :left_qing, class_name: "Questioning", foreign_key: "left_qing_id",
-                        inverse_of: :referring_conditions
+                         inverse_of: :referring_conditions
+  belongs_to :right_qing, class_name: "Questioning", foreign_key: "right_qing_id", inverse_of: false
   belongs_to :option_node
 
   before_validation :clear_blanks

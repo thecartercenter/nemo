@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_15_170116) do
+ActiveRecord::Schema.define(version: 2019_05_15_180412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,7 @@ ActiveRecord::Schema.define(version: 2019_05_15_170116) do
     t.string "op", limit: 255, null: false
     t.uuid "option_node_id"
     t.integer "rank", null: false
+    t.uuid "right_qing_id"
     t.datetime "updated_at", null: false
     t.string "value", limit: 255
     t.index ["conditionable_id"], name: "index_conditions_on_conditionable_id"
@@ -594,6 +595,7 @@ ActiveRecord::Schema.define(version: 2019_05_15_170116) do
   add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "options", name: "choices_option_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "form_items", column: "left_qing_id"
+  add_foreign_key "conditions", "form_items", column: "right_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_forwardings", "forms", name: "form_forwardings_form_id_fkey", on_update: :restrict, on_delete: :restrict
