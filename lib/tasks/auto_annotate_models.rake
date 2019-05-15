@@ -3,6 +3,9 @@
 # NOTE: only doing this in development as some production environments (Heroku)
 # NOTE: are sensitive to local FS writes, and besides -- it's just not proper
 # NOTE: to have a dev-mode tool do its thing in production.
+
+# NOTE: The 'constant already defined' warnings seem to be happening on POROs that are not in the root folder.
+# Need to look into this more.
 if Rails.env.development?
   require "annotate"
   task :set_annotation_options do # rubocop:disable Metrics/BlockLength
