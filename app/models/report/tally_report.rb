@@ -96,7 +96,7 @@ class Report::TallyReport < Report::Report
 
   # totaling is appropriate
   def can_total?
-    return true
+    true
   end
 
   def data_table_dimensions

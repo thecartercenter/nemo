@@ -401,7 +401,6 @@ class User < ApplicationRecord
     self.email = nil if email.blank?
     self.phone = PhoneNormalizer.normalize(phone)
     self.phone2 = PhoneNormalizer.normalize(phone2)
-    return true
   end
 
   def phone_length_or_empty

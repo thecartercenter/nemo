@@ -135,7 +135,6 @@ class Condition < ApplicationRecord
     unless destroyed?
       self.value = nil if value.blank? || left_qing && left_qing.has_options?
     end
-    return true
   end
 
   # Parses and reformats time strings given as conditions.
@@ -147,7 +146,6 @@ class Condition < ApplicationRecord
         self.value = nil
       end
     end
-    return true
   end
 
   def all_fields_required

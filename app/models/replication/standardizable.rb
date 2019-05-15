@@ -54,7 +54,6 @@ module Replication::Standardizable
         end
       end
     end
-    return true
   end
 
   def non_standard_items_must_have_mission

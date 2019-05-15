@@ -137,7 +137,7 @@ class Report::AnswerTallyReport < Report::TallyReport
   end
 
   def has_grouping(which)
-    return true
+    true
   end
 
   private
