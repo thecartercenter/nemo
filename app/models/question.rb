@@ -1,5 +1,53 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: questions
+#
+#  id                        :uuid             not null, primary key
+#  access_level              :string(255)      default("inherit"), not null
+#  audio_prompt_content_type :string
+#  audio_prompt_file_name    :string
+#  audio_prompt_file_size    :integer
+#  audio_prompt_updated_at   :datetime
+#  auto_increment            :boolean          default(FALSE), not null
+#  canonical_name            :text             not null
+#  code                      :string(255)      not null
+#  hint_translations         :jsonb
+#  is_standard               :boolean          default(FALSE), not null
+#  key                       :boolean          default(FALSE), not null
+#  maximum                   :decimal(15, 8)
+#  maxstrictly               :boolean
+#  metadata_type             :string
+#  minimum                   :decimal(15, 8)
+#  minstrictly               :boolean
+#  name_translations         :jsonb            not null
+#  qtype_name                :string(255)      not null
+#  reference                 :string
+#  standard_copy             :boolean          default(FALSE), not null
+#  text_type_for_sms         :boolean          default(FALSE), not null
+#  created_at                :datetime         not null
+#  updated_at                :datetime         not null
+#  mission_id                :uuid
+#  option_set_id             :uuid
+#  original_id               :uuid
+#
+# Indexes
+#
+#  index_questions_on_mission_id           (mission_id)
+#  index_questions_on_mission_id_and_code  (mission_id,code) UNIQUE
+#  index_questions_on_option_set_id        (option_set_id)
+#  index_questions_on_original_id          (original_id)
+#  index_questions_on_qtype_name           (qtype_name)
+#
+# Foreign Keys
+#
+#  questions_mission_id_fkey     (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  questions_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
+#  questions_original_id_fkey    (original_id => questions.id) ON DELETE => nullify ON UPDATE => restrict
+#
+
+
 # a question on a form
 class Question < ApplicationRecord
   include Translatable

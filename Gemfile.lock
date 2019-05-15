@@ -98,6 +98,9 @@ GEM
       public_suffix (>= 2.0.2, < 4.0)
     ancestry (3.0.5)
       activerecord (>= 3.2.0)
+    annotate (2.7.5)
+      activerecord (>= 3.2, < 7.0)
+      rake (>= 10.4, < 13.0)
     api-pagination (4.1.1)
     arel (9.0.0)
     assert_difference (1.0.0)
@@ -567,6 +570,7 @@ DEPENDENCIES
   activerecord-session_store (~> 1.1.1)
   acts_as_list
   ancestry (~> 3.0.0)
+  annotate (~> 2)
   api-pagination (~> 4.1.1)
   assert_difference (~> 1.0.0)
   attribute_normalizer (~> 1.2.0)

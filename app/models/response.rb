@@ -1,3 +1,49 @@
+# == Schema Information
+#
+# Table name: responses
+#
+#  id                :uuid             not null, primary key
+#  checked_out_at    :datetime
+#  incomplete        :boolean          default(FALSE), not null
+#  odk_hash          :string(255)
+#  odk_xml           :text
+#  reviewed          :boolean          default(FALSE), not null
+#  reviewer_notes    :text
+#  shortcode         :string(255)      not null
+#  source            :string(255)      not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  checked_out_by_id :uuid
+#  form_id           :uuid             not null
+#  mission_id        :uuid             not null
+#  old_id            :integer
+#  reviewer_id       :uuid
+#  user_id           :uuid             not null
+#
+# Indexes
+#
+#  index_responses_on_checked_out_at        (checked_out_at)
+#  index_responses_on_checked_out_by_id     (checked_out_by_id)
+#  index_responses_on_created_at            (created_at)
+#  index_responses_on_form_id               (form_id)
+#  index_responses_on_form_id_and_odk_hash  (form_id,odk_hash) UNIQUE
+#  index_responses_on_mission_id            (mission_id)
+#  index_responses_on_reviewed              (reviewed)
+#  index_responses_on_reviewer_id           (reviewer_id)
+#  index_responses_on_shortcode             (shortcode) UNIQUE
+#  index_responses_on_updated_at            (updated_at)
+#  index_responses_on_user_id               (user_id)
+#  index_responses_on_user_id_and_form_id   (user_id,form_id)
+#
+# Foreign Keys
+#
+#  responses_checked_out_by_id_fkey  (checked_out_by_id => users.id) ON DELETE => restrict ON UPDATE => restrict
+#  responses_form_id_fkey            (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
+#  responses_mission_id_fkey         (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  responses_reviewer_id_fkey        (reviewer_id => users.id) ON DELETE => restrict ON UPDATE => restrict
+#  responses_user_id_fkey            (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
+#
+
 class Response < ApplicationRecord
   extend FriendlyId
   include MissionBased

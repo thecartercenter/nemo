@@ -1,3 +1,39 @@
+# == Schema Information
+#
+# Table name: option_nodes
+#
+#  id             :uuid             not null, primary key
+#  ancestry       :text
+#  ancestry_depth :integer          default(0), not null
+#  is_standard    :boolean          default(FALSE), not null
+#  rank           :integer          default(1), not null
+#  sequence       :integer          default(0), not null
+#  standard_copy  :boolean          default(FALSE), not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  mission_id     :uuid
+#  old_id         :integer
+#  option_id      :uuid
+#  option_set_id  :uuid             not null
+#  original_id    :uuid
+#
+# Indexes
+#
+#  index_option_nodes_on_ancestry       (ancestry)
+#  index_option_nodes_on_mission_id     (mission_id)
+#  index_option_nodes_on_option_id      (option_id)
+#  index_option_nodes_on_option_set_id  (option_set_id)
+#  index_option_nodes_on_original_id    (original_id)
+#  index_option_nodes_on_rank           (rank)
+#
+# Foreign Keys
+#
+#  option_nodes_mission_id_fkey     (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_nodes_option_id_fkey      (option_id => options.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_nodes_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_nodes_original_id_fkey    (original_id => option_nodes.id) ON DELETE => nullify ON UPDATE => restrict
+#
+
 require "rails_helper"
 
 describe OptionNode do

@@ -1,3 +1,21 @@
+# == Schema Information
+#
+# Table name: missions
+#
+#  id           :uuid             not null, primary key
+#  compact_name :string(255)      not null
+#  locked       :boolean          default(FALSE), not null
+#  name         :string(255)      not null
+#  shortcode    :string(255)      not null
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#
+# Indexes
+#
+#  index_missions_on_compact_name  (compact_name) UNIQUE
+#  index_missions_on_shortcode     (shortcode) UNIQUE
+#
+
 class Mission < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 2
@@ -18,7 +36,6 @@ class Mission < ApplicationRecord
   has_many :options, inverse_of: :mission, dependent: :destroy
   has_many :option_sets, inverse_of: :mission, dependent: :destroy
   has_many :option_nodes, inverse_of: :mission, dependent: :destroy
-  has_many :taggings, inverse_of: :mission, dependent: :destroy
   has_one :setting, inverse_of: :mission, dependent: :destroy
   has_many :skip_rules, inverse_of: :mission, dependent: :destroy
 

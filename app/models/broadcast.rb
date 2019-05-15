@@ -1,5 +1,32 @@
 # frozen_string_literal: true
 
+# == Schema Information
+#
+# Table name: broadcasts
+#
+#  id                  :uuid             not null, primary key
+#  body                :text             not null
+#  medium              :string(255)      not null
+#  recipient_selection :string(255)      not null
+#  send_errors         :text
+#  sent_at             :datetime
+#  source              :string(255)      default("manual"), not null
+#  subject             :string(255)
+#  which_phone         :string(255)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  mission_id          :uuid             not null
+#
+# Indexes
+#
+#  index_broadcasts_on_mission_id  (mission_id)
+#
+# Foreign Keys
+#
+#  broadcasts_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#
+
+
 class Broadcast < ApplicationRecord
   include MissionBased
 
