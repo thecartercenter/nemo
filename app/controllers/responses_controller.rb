@@ -111,22 +111,32 @@ class ResponsesController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
-  def possible_users
-    search_mode = params[:search_mode] || "submitters"
+  def possible_submitters
+    users = if params[:response_id].present?
+              response = Response.find(params[:response_id])
+              User.assigned_to_or_submitter(current_mission, response).by_name
+            else
+              User.assigned_to(current_mission).by_name
+            end
+    render_possible_users(users)
+  end
 
-    @possible_users =
-      case search_mode
-      when "submitters" then User.assigned_to_or_submitter(current_mission, @response).by_name
-      when "reviewers" then User.with_roles(current_mission, %w[coordinator staffer reviewer]).by_name
-      end
-    @possible_users = apply_search_if_given(User, @possible_users)
-    @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
-
-    render(json: {possible_users: ActiveModel::ArraySerializer.new(@possible_users),
-                  more: @possible_users.next_page.present?}, select2: true)
+  def possible_reviewers
+    users = User.with_roles(current_mission, %w[coordinator staffer reviewer]).by_name
+    render_possible_users(users)
   end
 
   private
+
+  def render_possible_users(possible_users)
+    @possible_users = apply_search_if_given(User, possible_users)
+    @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
+
+    render(json: {
+        possible_users: ActiveModel::ArraySerializer.new(@possible_users),
+        more: @possible_users.next_page.present?
+    }, select2: true)
+  end
 
   def setup_condition_computer
     @condition_computer = Forms::ConditionComputer.new(@response.form)
