@@ -114,7 +114,8 @@ class ResponsesController < ApplicationController
   def possible_submitters
     users = if params[:response_id].present?
               response = Response.find(params[:response_id])
-              User.assigned_to_or_submitter(current_mission, response).by_name
+              response_user_id = response.try(:user_id)
+              User.assigned_to(current_mission).or(User.where(id: response_user_id)).by_name
             else
               User.assigned_to(current_mission).by_name
             end
