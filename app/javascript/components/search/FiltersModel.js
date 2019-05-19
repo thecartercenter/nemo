@@ -41,10 +41,10 @@ class FiltersModel {
   allSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
-  originalSubmitterIdsForType = getEmptySubmitterTypeMap();
+  originalSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
-  selectedSubmitterIdsForType = getEmptySubmitterTypeMap();
+  selectedSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
   advancedSearchText = '';
@@ -98,7 +98,8 @@ class FiltersModel {
 
   @action
   handleSelectSubmitterForType = (type) => (event) => {
-    this.selectedSubmitterIdsForType[type] = [event.target.value];
+    const { id, text: name } = event.params.data;
+    this.selectedSubmittersForType[type] = [{ id, name }];
   }
 
   @action

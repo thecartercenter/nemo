@@ -44,7 +44,7 @@ it('gets filter string (no filters)', () => {
       conditions: [],
     },
     isReviewed: null,
-    selectedSubmitterIdsForType: getEmptySubmitterTypeMap(),
+    selectedSubmittersForType: getEmptySubmitterTypeMap(),
     advancedSearchText: null,
   };
 

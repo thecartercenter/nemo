@@ -8,7 +8,7 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString, getItemNameFromId, parseListForSelect2 } from './utils';
+import { getButtonHintString, parseListForSelect2 } from './utils';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
 export const submitterType = {
@@ -37,7 +37,7 @@ class SubmitterFilter extends React.Component {
 
   handleClearSelection = (type) => () => {
     const { filtersStore } = this.props;
-    filtersStore.selectedSubmitterIdsForType[type] = [];
+    filtersStore.selectedSubmittersForType[type] = [];
 
     /*
      * Select2 doesn't make this easy... wait for state update then close the dropdown.
@@ -48,7 +48,7 @@ class SubmitterFilter extends React.Component {
 
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;
-    const { allSubmittersForType, selectedSubmitterIdsForType, handleSelectSubmitterForType } = filtersStore;
+    const { allSubmittersForType, selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
 
     return (
       <Popover
@@ -69,7 +69,7 @@ class SubmitterFilter extends React.Component {
               width: '100%',
             }}
             ref={this.select2[type]}
-            value={selectedSubmitterIdsForType[type]}
+            value={selectedSubmittersForType[type].map(({ id }) => id)}
           />
         ))}
 
@@ -87,9 +87,9 @@ class SubmitterFilter extends React.Component {
 
   render() {
     const { filtersStore } = this.props;
-    const { allSubmittersForType, originalSubmitterIdsForType } = filtersStore;
+    const { originalSubmittersForType } = filtersStore;
     const submitterNames = flatten(SUBMITTER_TYPES.map((type) => {
-      return originalSubmitterIdsForType[type].map((id) => getItemNameFromId(allSubmittersForType[type], id));
+      return originalSubmittersForType[type].map(({ name }) => name);
     }));
 
     return (

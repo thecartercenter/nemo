@@ -23,9 +23,9 @@ function resetDefaultProps() {
     // Initial props.
     ...pick(filtersStore, ['allForms', 'selectedFormIds', 'isReviewed', 'advancedSearchText']),
     allUsers: filtersStore.allSubmittersForType[submitterType.USER],
-    selectedUsers: filtersStore.selectedSubmitterIdsForType[submitterType.USER],
+    selectedUsers: filtersStore.selectedSubmittersForType[submitterType.USER],
     allGroups: filtersStore.allSubmittersForType[submitterType.GROUP],
-    selectedGroups: filtersStore.selectedSubmitterIdsForType[submitterType.GROUP],
+    selectedGroups: filtersStore.selectedSubmittersForType[submitterType.GROUP],
     controllerName: CONTROLLER_NAME.RESPONSES,
   };
 }
