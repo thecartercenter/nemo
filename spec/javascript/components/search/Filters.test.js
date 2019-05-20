@@ -106,9 +106,9 @@ describe('integration', () => {
     const overlay = shallow(wrapper.find('OverlayTrigger#submitter-filter').prop('overlay'));
 
     SUBMITTER_TYPES.forEach((type) => {
-      const value = defaultProps.filtersStore.allSubmittersForType[type][0].id;
+      const { id, name } = defaultProps.filtersStore.allSubmittersForType[type][0];
       // Call prop directly since Select2 is stubbed out.
-      overlay.find(`Select2#${type}`).prop('onSelect')({ target: { value } });
+      overlay.find(`Select2#${type}`).prop('onSelect')({ params: { data: { id, text: name } } });
     });
 
     expect(window.location.assign).toMatchSnapshot();

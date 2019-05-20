@@ -24,23 +24,19 @@ exports[`renders as expected 1`] = `
       id="submitter-filter"
     >
       <Select2
-        data={
-          Array [
-            Object {
-              "id": "A",
-              "text": "User A",
-            },
-            Object {
-              "id": "B",
-              "text": "User B",
-            },
-          ]
-        }
         id="submitter"
         onSelect={[Function]}
         onUnselect={[Function]}
         options={
           Object {
+            "ajax": Object {
+              "cache": true,
+              "data": [Function],
+              "dataType": "json",
+              "delay": 250,
+              "processResults": [Function],
+              "url": undefined,
+            },
             "allowClear": true,
             "dropdownCssClass": "filters-select2-dropdown",
             "placeholder": "Choose a user",
@@ -54,23 +50,19 @@ exports[`renders as expected 1`] = `
         }
       />
       <Select2
-        data={
-          Array [
-            Object {
-              "id": "A",
-              "text": "Group A",
-            },
-            Object {
-              "id": "B",
-              "text": "Group B",
-            },
-          ]
-        }
         id="group"
         onSelect={[Function]}
         onUnselect={[Function]}
         options={
           Object {
+            "ajax": Object {
+              "cache": true,
+              "data": [Function],
+              "dataType": "json",
+              "delay": 250,
+              "processResults": [Function],
+              "url": undefined,
+            },
             "allowClear": true,
             "dropdownCssClass": "filters-select2-dropdown",
             "placeholder": "Choose a group",

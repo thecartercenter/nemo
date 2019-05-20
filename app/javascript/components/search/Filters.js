@@ -25,8 +25,8 @@ class FiltersRoot extends React.Component {
     })).isRequired,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     isReviewed: PropTypes.bool,
-    selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
-    selectedGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
+    selectedUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
+    selectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
     advancedSearchText: PropTypes.string.isRequired,
   };
 
