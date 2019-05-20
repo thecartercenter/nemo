@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'will_paginate/array'
 class ResponsesController < ApplicationController
   PER_PAGE = 20
 
@@ -133,11 +134,12 @@ class ResponsesController < ApplicationController
 
   def render_possible_users(possible_users)
     @possible_users = apply_search_if_given(User, possible_users)
-    @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
+      .natural_sort_by_key
+      .paginate(page: params[:page], per_page: 20)
 
     render(json: {
-        possible_users: ActiveModel::ArraySerializer.new(@possible_users),
-        more: @possible_users.next_page.present?
+      possible_users: ActiveModel::ArraySerializer.new(@possible_users),
+      more: @possible_users.next_page.present?
     }, select2: true)
   end
 

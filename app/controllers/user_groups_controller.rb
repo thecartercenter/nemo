@@ -1,3 +1,4 @@
+require 'will_paginate/array'
 class UserGroupsController < ApplicationController
   before_action :load_user_groups
   before_action :find_user_group, only: [:add_users, :remove_users]
@@ -78,7 +79,9 @@ class UserGroupsController < ApplicationController
 
   def possible_groups_select2
     @user_groups = @user_groups.name_matching(params[:search]) if params[:search].present?
-    @user_groups = @user_groups.paginate(page: params[:page], per_page: 20)
+    @user_groups = @user_groups
+      .natural_sort_by_key
+      .paginate(page: params[:page], per_page: 20)
 
     render(json: {
       possible_groups: ActiveModel::ArraySerializer.new(@user_groups),
