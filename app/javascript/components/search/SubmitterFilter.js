@@ -19,10 +19,15 @@ export const submitterType = {
 };
 export const SUBMITTER_TYPES = Object.values(submitterType);
 
-const select2Url = {
-  [submitterType.USER]: ELMO.app.url_builder.build('responses', 'possible-submitters'),
-  // TODO new endpoint
-  [submitterType.GROUP]: ELMO.app.url_builder.build('responses', 'possible-submitters'),
+const select2Options = {
+  [submitterType.USER]: {
+    dataUrl: ELMO.app.url_builder.build('responses', 'possible-submitters'),
+    resultsKey: 'possible_users',
+  },
+  [submitterType.GROUP]: {
+    dataUrl: ELMO.app.url_builder.build('user_groups', 'possible-groups', '?select2=true'),
+    resultsKey: 'possible_groups',
+  },
 };
 
 @inject('filtersStore')
@@ -63,23 +68,27 @@ class SubmitterFilter extends React.Component {
         className="filters-popover popover-multi-select2"
         id="submitter-filter"
       >
-        {SUBMITTER_TYPES.map((type) => (
-          <Select2
-            key={type}
-            id={type}
-            onSelect={handleSelectSubmitterForType(type)}
-            onUnselect={this.handleClearSelection(type)}
-            options={{
-              allowClear: true,
-              placeholder: I18n.t(`filter.choose_submitter.${type}`),
-              dropdownCssClass: 'filters-select2-dropdown',
-              width: '100%',
-              ajax: select2AjaxParams(select2Url[type]),
-            }}
-            ref={this.select2[type]}
-            value={selectedSubmittersForType[type].map(({ id }) => id)}
-          />
-        ))}
+        {SUBMITTER_TYPES.map((type) => {
+          const { dataUrl, resultsKey } = select2Options[type];
+
+          return (
+            <Select2
+              key={type}
+              id={type}
+              onSelect={handleSelectSubmitterForType(type)}
+              onUnselect={this.handleClearSelection(type)}
+              options={{
+                allowClear: true,
+                placeholder: I18n.t(`filter.choose_submitter.${type}`),
+                dropdownCssClass: 'filters-select2-dropdown',
+                width: '100%',
+                ajax: select2AjaxParams(dataUrl, resultsKey),
+              }}
+              ref={this.select2[type]}
+              value={selectedSubmittersForType[type].map(({ id }) => id)}
+            />
+          );
+        })}
 
         <div className="btn-apply-container">
           <Button

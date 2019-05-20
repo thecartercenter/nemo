@@ -66,11 +66,25 @@ class UserGroupsController < ApplicationController
   end
 
   def possible_groups
-    @user_groups = @user_groups.name_matching(params[:q])
-    render json: @user_groups
+    if params[:select2].present?
+      possible_groups_select2
+    else
+      @user_groups = @user_groups.name_matching(params[:q])
+      render(json: @user_groups)
+    end
   end
 
   private
+
+  def possible_groups_select2
+    @user_groups = @user_groups.name_matching(params[:search]) if params[:search].present?
+    @user_groups = @user_groups.paginate(page: params[:page], per_page: 20)
+
+    render(json: {
+      possible_groups: ActiveModel::ArraySerializer.new(@user_groups),
+      more: @user_groups.next_page.present?
+    })
+  end
 
   def load_user_groups
     @user_groups = UserGroup.accessible_by(current_ability).order(:name).paginate(page: 1, per_page: 500)

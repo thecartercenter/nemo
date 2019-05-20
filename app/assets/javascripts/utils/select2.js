@@ -1,4 +1,4 @@
-export function select2AjaxParams(url) {
+export function select2AjaxParams(url, resultsKey = 'results') {
   return {
     url,
     dataType: 'json',
@@ -7,7 +7,7 @@ export function select2AjaxParams(url) {
       search,
       page,
     }),
-    processResults: ({ possible_users: results, more }) => ({
+    processResults: ({ [resultsKey]: results, more }) => ({
       results,
       pagination: { more },
     }),
