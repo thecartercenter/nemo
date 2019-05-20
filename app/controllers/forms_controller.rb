@@ -121,8 +121,6 @@ class FormsController < ApplicationController
 
   def create
     set_api_users
-    @form.is_standard = true if current_mode == "admin"
-
     if @form.save
       set_success_and_redirect(@form, to: edit_form_path(@form))
     else
@@ -265,13 +263,9 @@ class FormsController < ApplicationController
 
   # prepares objects and renders the form template
   def prepare_and_render_form
-    if admin_mode?
-      @form.is_standard = true
-    else
-      # We need this array only when in mission mode since it's for the API permissions which are not
-      # shown in admin mode.
-      @users = User.assigned_to(current_mission).by_name
-    end
+    # We need this array only when in mission mode since it's for the API permissions which are not
+    # shown in admin mode.
+    @users = User.assigned_to(current_mission).by_name unless admin_mode?
     render(:form)
   end
 

@@ -6,12 +6,8 @@ describe "replicating questions with tags" do
   let(:mission) { create(:mission) }
   let(:orig_tag1) { create(:tag, name: "a", mission: orig_mission) }
   let(:orig_tag2) { create(:tag, name: "b", mission: orig_mission) }
-  let(:orig_is_standard) { orig_mission.nil? }
   let(:orig_q) do
-    create(
-      :question,
-      mission: orig_mission, qtype_name: "text", is_standard: orig_is_standard, tags: [orig_tag1, orig_tag2]
-    )
+    create(:question, mission: orig_mission, qtype_name: "text", tags: [orig_tag1, orig_tag2])
   end
 
   describe "to_mission" do

@@ -173,10 +173,9 @@ class Replication::ObjProxy
     mappings = []
     case replicator.mode
     when :promote
-      mappings << ["is_standard", true] if klass.standardizable?
+      mappings << ["mission_id", nil] if klass_has_mission_id
     when :clone
       mappings << "mission_id" if klass_has_mission_id
-      mappings << "is_standard" if klass.standardizable?
     when :to_mission
       mappings << ["mission_id", quote_or_null(replicator.target_mission_id)] if klass_has_mission_id
       mappings << ["standard_copy", true] if klass.standardizable? && replicator.source_is_standard?

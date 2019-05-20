@@ -31,16 +31,11 @@ FactoryGirl.define do
     end
     hint { hint_translations[:en] } # needed for some i18n specs
 
-    mission { is_standard ? nil : get_mission }
+    mission { get_mission }
 
     option_set do
       if QuestionType[qtype_name].has_options?
-        os_attrs = {
-          mission: mission,
-          geographic: use_geo_option_set,
-          allow_coordinates: use_geo_option_set,
-          is_standard: is_standard
-        }
+        os_attrs = {mission: mission, geographic: use_geo_option_set, allow_coordinates: use_geo_option_set}
         os_attrs[:option_names] = option_names unless option_names.nil?
         build(:option_set, os_attrs)
       end
@@ -48,6 +43,10 @@ FactoryGirl.define do
 
     after(:create) do |question, evaluator|
       create(:questioning, question: question, form: evaluator.add_to_form) if evaluator.add_to_form
+    end
+
+    trait :standard do
+      mission { nil }
     end
   end
 end

@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 class OptionSetsController < ApplicationController
   include StandardImportable
   include Parameters
 
-  before_action :arrayify_attribs, only: [:create, :update]
+  before_action :arrayify_attribs, only: %i[create update]
 
   # authorization via cancan
   load_and_authorize_resource
@@ -17,9 +19,10 @@ class OptionSetsController < ApplicationController
     # add the included assocations and order
     @option_sets = @option_sets.includes(:root_node).by_name
 
-    # paginate all on one page for now. we specify the total entries so that the autogen'd count query isn't huge.
-    # we still bother to call pagination so that the table header works
-    @option_sets = @option_sets.paginate(page: 1, per_page: 10000000, total_entries: total)
+    # Paginate all on one page for now.
+    # We specify the total entries so that the autogen'd count query isn't huge.
+    # We still bother to call pagination so that the table header works.
+    @option_sets = @option_sets.paginate(page: 1, per_page: 10_000_000, total_entries: total)
 
     # now we apply .all so that any .empty? or .count calls in the template don't cause more queries
     @option_sets = @option_sets.to_a
@@ -54,15 +57,12 @@ class OptionSetsController < ApplicationController
     @headers = @option_set.headers_for_export
     @rows = @option_set.arrange_as_rows
 
-    render xlsx: "export", filename: "#{@option_set.name}.xlsx"
+    render(xlsx: "export", filename: "#{@option_set.name}.xlsx")
   end
 
   # always via AJAX
   def create
-    @option_set.is_standard = true if current_mode == "admin"
-    OptionSet.transaction do
-      create_or_update
-    end
+    OptionSet.transaction { create_or_update }
   end
 
   # always via AJAX
@@ -73,7 +73,7 @@ class OptionSetsController < ApplicationController
 
       # validate now so that normalization runs before authorizing and saving
       # We raise if there is an error since validation should happen client side.
-      raise ActiveRecord::RecordInvalid.new("Option set is invalid") unless @option_set.valid?
+      raise ActiveRecord::RecordInvalid, "Option set is invalid" unless @option_set.valid?
 
       # authorize special abilities
       authorize!(:update_core, @option_set) if @option_set.core_changed?
@@ -105,16 +105,16 @@ class OptionSetsController < ApplicationController
       flash[:modified_obj_id] = cloned.id
 
       flash[:success] = t("option_set.clone_success", name: @option_set.name)
-    rescue
-      flash[:error] = t("option_set.clone_error", msg: $!.to_s)
+    rescue StandardError
+      flash[:error] = t("option_set.clone_error", msg: $ERROR_INFO.to_s)
     end
     redirect_to(index_url_with_context)
   end
 
   def condition_form_view
-    option_node = OptionNode.find_by_id(params[:node_id]) # null if not found instead of throwing exception
+    option_node = OptionNode.find_by(id: params[:node_id]) # null if not found instead of throwing exception
     option_node ||= @option_set.root_node
-    render json: OptionNodeConditionViewSerializer.new(option_node)
+    render(json: OptionNodeConditionViewSerializer.new(option_node))
   end
 
   private
@@ -135,48 +135,39 @@ class OptionSetsController < ApplicationController
 
   # creates/updates the option set
   def create_or_update
-    begin
-      @option_set.save!
+    @option_set.save!
 
-      # set the flash, which will be shown when the next request is issued as expected
-      # (not needed in modal mode)
-      set_success(@option_set) unless params[:modal_mode]
+    # set the flash, which will be shown when the next request is issued as expected
+    # (not needed in modal mode)
+    set_success(@option_set) unless params[:modal_mode]
 
-      if params[:modal_mode]
-        # render the option set's ID in json format
-        render(json: @option_set.id.to_json)
-      else
-        # render where we should redirect
-        render(json: option_sets_path.to_json)
-      end
-
-    # These shouldn't generally happen since the delete link is hidden in cases where options shouldn't be deleted.
-    # Only remotely possible if answer arrives between when form rendered and submitted.
-    # Also, we don't catch validation errors since they should be handled on client side.
-    rescue DeletionError
-      flash.now[:error] = $!.to_s
-      render(partial: "form")
-      raise ActiveRecord::Rollback # Rollback the transaction without re-raising the error.
+    if params[:modal_mode]
+      # render the option set's ID in json format
+      render(json: @option_set.id.to_json)
+    else
+      # render where we should redirect
+      render(json: option_sets_path.to_json)
     end
+
+  # These shouldn't generally happen since the delete link
+  # is hidden in cases where options shouldn't be deleted.
+  # Only remotely possible if answer arrives between when form rendered and submitted.
+  # Also, we don't catch validation errors since they should be handled on client side.
+  rescue DeletionError
+    flash.now[:error] = $ERROR_INFO.to_s
+    render(partial: "form")
+    raise ActiveRecord::Rollback # Rollback the transaction without re-raising the error.
   end
 
   def option_set_params
     params.require(:option_set).permit(
       :name, :geographic, :allow_coordinates, :sms_guide_formatting, :multilevel,
       level_names: configatron.preferred_locales,
-      children_attribs: permit_children(
-        params[:option_set],
-        key: :children_attribs,
-        permitted: [
-          :id,
-          {
-            option_attribs: [
-              :id, :latitude, :longitude, :value,
-              {name_translations: configatron.preferred_locales}
-            ]
-          }
-        ]
-      )
+      children_attribs: permit_children(params[:option_set],
+        key: :children_attribs, permitted: [
+          :id, {option_attribs: [:id, :latitude, :longitude, :value,
+                                 name_translations: configatron.preferred_locales]}
+        ])
     )
   end
 end

@@ -220,7 +220,7 @@ class Ability
     cannot(:destroy, Form) { |f| f.published? || f.has_responses? }
     cannot(:download, Form, published: false)
     cannot(%i[add_questions remove_questions reorder_questions], Form, &:published?)
-    cannot(:publish, Form, is_standard: true)
+    cannot(:publish, Form, &:standard?)
 
     cannot(%i[destroy update update_core], Questioning, &:published?)
 

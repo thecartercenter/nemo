@@ -7,14 +7,14 @@ describe OptionSet do
   let(:mission2) { create(:mission) }
 
   describe "to_mission" do
-    let(:orig) { create(:option_set, option_names: :multilevel, is_standard: true) }
+    let(:orig) { create(:option_set, :standard, option_names: :multilevel) }
     let(:copy) { orig.replicate(mode: :to_mission, dest_mission: mission2) }
 
     it "should be copied properly" do
       expect(copy.mission).to eq(mission2)
       expect(copy.name).to eq(orig.name)
       expect(copy.standard).to eq(orig)
-      expect(copy.is_standard).to be(false)
+      expect(copy.mission_id).to eq(mission1.id)
       expect(copy.total_options).to eq(6)
 
       # Ensure options are correct.
@@ -36,8 +36,8 @@ describe OptionSet do
       expect(copy.c[0].c[0].option_set_id).to eq(copy.id)
 
       # Ensure option nodes get correct attributes
-      expect(copy.c[0].is_standard).to be(false)
-      expect(copy.c[0].c[0].is_standard).to be(false)
+      expect(copy.c[0].mission_id).to eq(mission1.id)
+      expect(copy.c[0].c[0].mission_id).to eq(mission1.id)
       expect(copy.c[0].standard_copy).to be(true)
       expect(copy.c[0].c[0].standard_copy).to be(true)
 
@@ -68,7 +68,6 @@ describe OptionSet do
 
     it "should create a correct copy" do
       expect(copy.mission).to be_nil
-      expect(copy.is_standard).to eq(true)
       expect(copy.original).to eq(orig)
       expect(copy.total_options).to eq(6)
       expect(copy.options).not_to eq(orig.options)
@@ -83,7 +82,6 @@ describe OptionSet do
 
       it "should make correct copy" do
         expect(copy.mission).to eq(mission1)
-        expect(copy.is_standard).to be(false)
         expect(copy.original).to eq(orig)
         expect(copy.total_options).to eq(6)
         expect(copy.options).to eq(orig.options)
@@ -110,8 +108,8 @@ describe OptionSet do
         expect(copy.c[0].c[0].mission).to eq(mission1)
 
         # Ensure option nodes get correct attributes
-        expect(copy.c[0].is_standard).to be(false)
-        expect(copy.c[0].c[0].is_standard).to be(false)
+        expect(copy.c[0].mission_id).to eq(mission1.id)
+        expect(copy.c[0].c[0].mission_id).to eq(mission1.id)
         expect(copy.c[0].standard_copy).to be(false)
         expect(copy.c[0].c[0].standard_copy).to be(false)
 
@@ -128,18 +126,17 @@ describe OptionSet do
     end
 
     context "within admin mode" do
-      let(:orig) { create(:option_set, option_names: :multilevel, is_standard: true) }
+      let(:orig) { create(:option_set, :standard, option_names: :multilevel) }
 
       it "should make correct copy" do
         expect(copy.mission).to be_nil
-        expect(copy.is_standard).to be(true)
         expect(copy.original).to eq(orig)
         expect(copy.total_options).to eq(6)
         expect(copy.options).to eq(orig.options)
 
         # Ensure option nodes get correct attributes
-        expect(copy.c[0].is_standard).to be(true)
-        expect(copy.c[0].c[0].is_standard).to be(true)
+        expect(copy.c[0].mission).to be_nil
+        expect(copy.c[0].c[0].mission).to be_nil
         expect(copy.c[0].standard_copy).to be(false)
         expect(copy.c[0].c[0].standard_copy).to be(false)
 
