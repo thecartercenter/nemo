@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_15_165206) do
+ActiveRecord::Schema.define(version: 2019_05_20_185424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,7 +194,6 @@ ActiveRecord::Schema.define(version: 2019_02_15_165206) do
     t.uuid "current_version_id"
     t.string "default_response_name"
     t.integer "downloads"
-    t.boolean "is_standard", default: false, null: false
     t.uuid "mission_id"
     t.string "name", limit: 255, null: false
     t.uuid "original_id"
@@ -264,7 +263,6 @@ ActiveRecord::Schema.define(version: 2019_02_15_165206) do
     t.text "ancestry"
     t.integer "ancestry_depth", default: 0, null: false
     t.datetime "created_at", null: false
-    t.boolean "is_standard", default: false, null: false
     t.uuid "mission_id"
     t.integer "old_id"
     t.uuid "option_id"
@@ -286,7 +284,6 @@ ActiveRecord::Schema.define(version: 2019_02_15_165206) do
     t.boolean "allow_coordinates", default: false, null: false
     t.datetime "created_at", null: false
     t.boolean "geographic", default: false, null: false
-    t.boolean "is_standard", default: false, null: false
     t.jsonb "level_names"
     t.uuid "mission_id"
     t.string "name", limit: 255, null: false
@@ -325,7 +322,6 @@ ActiveRecord::Schema.define(version: 2019_02_15_165206) do
     t.string "code", limit: 255, null: false
     t.datetime "created_at", null: false
     t.jsonb "hint_translations", default: {}
-    t.boolean "is_standard", default: false, null: false
     t.boolean "key", default: false, null: false
     t.decimal "maximum", precision: 15, scale: 8
     t.boolean "maxstrictly"
