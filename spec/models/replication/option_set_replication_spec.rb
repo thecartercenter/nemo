@@ -14,7 +14,6 @@ describe OptionSet do
       expect(copy.mission).to eq(mission2)
       expect(copy.name).to eq(orig.name)
       expect(copy.standard).to eq(orig)
-      expect(copy.mission_id).to eq(mission1.id)
       expect(copy.total_options).to eq(6)
 
       # Ensure options are correct.
@@ -36,8 +35,8 @@ describe OptionSet do
       expect(copy.c[0].c[0].option_set_id).to eq(copy.id)
 
       # Ensure option nodes get correct attributes
-      expect(copy.c[0].mission_id).to eq(mission1.id)
-      expect(copy.c[0].c[0].mission_id).to eq(mission1.id)
+      expect(copy.c[0].mission_id).to eq(mission2.id)
+      expect(copy.c[0].c[0].mission_id).to eq(mission2.id)
       expect(copy.c[0].standard_copy).to be(true)
       expect(copy.c[0].c[0].standard_copy).to be(true)
 

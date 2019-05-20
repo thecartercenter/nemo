@@ -109,7 +109,7 @@ module Replication::Replicable
   def sync_chosen_attributes
     return unless standardizable? && standard?
 
-    copies.standard.find_each do |c|
+    copies.not_standard.find_each do |c|
       Array.wrap(replicable_opts[:sync]).each do |a|
         sync_attribute_with_copy(a, c)
       end

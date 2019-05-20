@@ -14,6 +14,7 @@ module Replication::Standardizable
     before_save :scrub_original_link_if_becoming_incompatible
 
     scope :standard, -> { where(mission_id: nil) }
+    scope :not_standard, -> { where.not(mission_id: nil) }
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
     def self.importable_to(_mission)
