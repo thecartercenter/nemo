@@ -7,8 +7,10 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
+import { select2AjaxParams } from 'javascripts/utils/select2';
+
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString, parseListForSelect2 } from './utils';
+import { getButtonHintString } from './utils';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
 export const submitterType = {
@@ -16,6 +18,12 @@ export const submitterType = {
   GROUP: 'group',
 };
 export const SUBMITTER_TYPES = Object.values(submitterType);
+
+const select2Url = {
+  [submitterType.USER]: ELMO.app.url_builder.build('responses', 'possible-submitters'),
+  // TODO new endpoint
+  [submitterType.GROUP]: ELMO.app.url_builder.build('responses', 'possible-submitters'),
+};
 
 @inject('filtersStore')
 @observer
@@ -48,7 +56,7 @@ class SubmitterFilter extends React.Component {
 
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;
-    const { allSubmittersForType, selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
+    const { selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
 
     return (
       <Popover
@@ -59,7 +67,6 @@ class SubmitterFilter extends React.Component {
           <Select2
             key={type}
             id={type}
-            data={parseListForSelect2(allSubmittersForType[type])}
             onSelect={handleSelectSubmitterForType(type)}
             onUnselect={this.handleClearSelection(type)}
             options={{
@@ -67,6 +74,7 @@ class SubmitterFilter extends React.Component {
               placeholder: I18n.t(`filter.choose_submitter.${type}`),
               dropdownCssClass: 'filters-select2-dropdown',
               width: '100%',
+              ajax: select2AjaxParams(select2Url[type]),
             }}
             ref={this.select2[type]}
             value={selectedSubmittersForType[type].map(({ id }) => id)}

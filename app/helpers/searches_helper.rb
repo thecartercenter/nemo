@@ -19,18 +19,6 @@ module SearchesHelper
   end
 
   def all_forms
-    all_of_type(Form)
-  end
-
-  def all_users
-    all_of_type(User)
-  end
-
-  def all_groups
-    all_of_type(UserGroup)
-  end
-
-  def all_of_type(model)
-    model.all.map { |item| {name: item.name, id: item.id} }.smart_sort_by_key
+    Form.all.map { |item| {name: item.name, id: item.id} }.smart_sort_by_key
   end
 end

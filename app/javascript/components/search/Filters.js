@@ -25,15 +25,7 @@ class FiltersRoot extends React.Component {
     })).isRequired,
     selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
     isReviewed: PropTypes.bool,
-    allUsers: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-    })).isRequired,
     selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
-    allGroups: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-    })).isRequired,
     selectedGroups: PropTypes.arrayOf(PropTypes.string).isRequired,
     advancedSearchText: PropTypes.string.isRequired,
   };
@@ -52,9 +44,7 @@ class FiltersRoot extends React.Component {
       allForms,
       selectedFormIds,
       isReviewed,
-      allUsers,
       selectedUsers,
-      allGroups,
       selectedGroups,
       advancedSearchText,
     } = props;
@@ -66,10 +56,6 @@ class FiltersRoot extends React.Component {
       selectedFormIds,
       originalIsReviewed: isReviewed,
       isReviewed,
-      allSubmittersForType: {
-        [submitterType.USER]: allUsers,
-        [submitterType.GROUP]: allGroups,
-      },
       originalSubmittersForType: {
         [submitterType.USER]: selectedUsers,
         [submitterType.GROUP]: selectedGroups,

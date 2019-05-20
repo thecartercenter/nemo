@@ -38,9 +38,6 @@ class FiltersModel {
   isReviewed = null;
 
   @observable
-  allSubmittersForType = getEmptySubmitterTypeMap();
-
-  @observable
   originalSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
@@ -74,7 +71,7 @@ class FiltersModel {
   @action
   updateRefableQings = async () => {
     ELMO.app.loading(true);
-    const url = this.buildUrl();
+    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
     try {
       if (process.env.NODE_ENV === 'test') return;
 
@@ -85,10 +82,6 @@ class FiltersModel {
     } finally {
       ELMO.app.loading(false);
     }
-  }
-
-  buildUrl = () => {
-    return ELMO.app.url_builder.build('form-items', 'condition-form');
   }
 
   @action
