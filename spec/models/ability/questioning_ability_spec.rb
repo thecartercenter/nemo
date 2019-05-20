@@ -49,7 +49,7 @@ describe "abilities for questionings" do
     end
 
     context "when unpublished std copy" do
-      let(:std) { create(:form, question_types: %w(text), is_standard: true) }
+      let(:std) { create(:form, :standard, question_types: %w(text)) }
       let(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
       let(:qing) { copy.questionings.first }
 

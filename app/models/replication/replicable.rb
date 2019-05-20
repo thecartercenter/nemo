@@ -6,10 +6,10 @@ module Replication::Replicable
   extend ActiveSupport::Concern
 
   # A basic list of attributes that we don't want to copy from the src_obj to the dest_obj.
-  ATTRIBS_NOT_TO_COPY = %w[id created_at updated_at mission_id is_standard standard_copy original_id ancestry].freeze
+  ATTRIBS_NOT_TO_COPY = %w[id created_at updated_at mission_id standard_copy original_id ancestry].freeze
 
   included do
-    after_save(:sync_chosen_attributes)
+    after_save :sync_chosen_attributes
 
     # dsl-style method for setting options from base class
     # backward_assocs denotes a fk to an object copied before this one in the replication process
@@ -85,7 +85,6 @@ module Replication::Replicable
     raise "dest_mission only valid for to_mission mode" if options[:mode] != :to_mission && options[:dest_mission]
 
     result = Replication::Replicator.new(options.merge(source: self)).replicate
-    do_standard_assertions
     result
   end
 
@@ -101,16 +100,6 @@ module Replication::Replicable
 
   private
 
-  # Runs some assertions against the database and raises an error if they fail so that the cause
-  # can be investigated.
-  def do_standard_assertions
-    return unless standardizable?
-
-    tbl = self.class.table_name
-    assert_no_results("SELECT id FROM #{tbl} WHERE mission_id IS NOT NULL AND is_standard = TRUE",
-      "mission based objects should not standard")
-  end
-
   # Raises an error if the given sql returns any results.
   def assert_no_results(sql, msg)
     raise "Assertion failed: #{msg}" unless self.class.find_by_sql(sql).empty?
@@ -118,9 +107,9 @@ module Replication::Replicable
 
   # Syncs attributes chosen for syncing with copies via the ":sync' option in the replicable declaration.
   def sync_chosen_attributes
-    return unless standardizable? && is_standard?
+    return unless standardizable? && standard?
 
-    copies.where(is_standard: false).find_each do |c|
+    copies.not_standard.find_each do |c|
       Array.wrap(replicable_opts[:sync]).each do |a|
         sync_attribute_with_copy(a, c)
       end

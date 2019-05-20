@@ -126,7 +126,7 @@ class Form < ApplicationRecord
 
   # returns whether this form has responses; standard forms never have responses
   def has_responses?
-    is_standard? ? false : responses_count.positive?
+    !standard? && responses_count.positive?
   end
 
   def responses_count
@@ -136,13 +136,13 @@ class Form < ApplicationRecord
 
   # returns the number of responses for all copy forms
   def copy_responses_count
-    raise "non-standard forms should not request copy_responses_count" unless is_standard?
+    raise "non-standard forms should not request copy_responses_count" unless standard?
     copies.to_a.sum(&:responses_count)
   end
 
   def published?
     # Standard forms are never published
-    is_standard? ? false : self[:published]
+    !standard? && self[:published]
   end
 
   def published_copy_count
@@ -237,7 +237,7 @@ class Form < ApplicationRecord
   # upgrades the version of the form and saves it
   # also resets the download count
   def upgrade_version!
-    raise "standard forms should not be versioned" if is_standard?
+    raise "standard forms should not be versioned" if standard?
 
     if current_version
       current_version.upgrade!
@@ -256,7 +256,7 @@ class Form < ApplicationRecord
 
   # sets the upgrade flag so that the form will be upgraded when next published
   def flag_for_upgrade!
-    raise "standard forms should not be versioned" if is_standard?
+    raise "standard forms should not be versioned" if standard?
 
     self.upgrade_needed = true
     save(validate: false)
@@ -265,7 +265,7 @@ class Form < ApplicationRecord
   # efficiently gets the number of answers for the given questioning on this form
   # returns zero if form is standard
   def qing_answer_count(qing)
-    return 0 if is_standard?
+    return 0 if standard?
 
     @answer_counts ||= Questioning.find_by_sql([%{
       SELECT form_items.id, COUNT(DISTINCT answers.id) AS answer_count

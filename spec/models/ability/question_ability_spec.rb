@@ -49,7 +49,7 @@ describe "abilities for questions" do
 
     context "when unpublished std copy" do
       before do
-        @std = create(:form, question_types: %w(text), is_standard: true)
+        @std = create(:form, :standard, question_types: %w(text))
         @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
         @question = @copy.questions.first
       end

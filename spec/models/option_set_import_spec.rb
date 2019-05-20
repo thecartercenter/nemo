@@ -14,7 +14,7 @@ describe OptionSets::Import do
 
     context "in mission mode" do
       it "should succeed" do
-        expect_simple_option_set(import)
+        expect_simple_option_set(import, mission: mission)
       end
     end
 
@@ -22,7 +22,7 @@ describe OptionSets::Import do
       let(:mission_id) { nil }
 
       it "should be able to import an option set in admin mode" do
-        expect_simple_option_set(import, standard: true)
+        expect_simple_option_set(import, mission: nil)
       end
     end
   end
@@ -31,7 +31,7 @@ describe OptionSets::Import do
     let(:filename) { "simple.csv" }
 
     it "should successfully import csv option set" do
-      expect_simple_option_set(import)
+      expect_simple_option_set(import, mission: mission)
     end
   end
 
@@ -137,11 +137,11 @@ describe OptionSets::Import do
 
   private
 
-  def expect_simple_option_set(import, standard: false)
+  def expect_simple_option_set(import, mission:)
     expect(import).to be_succeeded
 
     option_set = import.option_set
-    expect(option_set).to have_attributes(name: "MySet", geographic?: false, is_standard: standard)
+    expect(option_set).to have_attributes(name: "MySet", geographic?: false, mission: mission)
     expect(option_set.levels).to be_nil
     expect(option_set.level_names).to include("en" => "Province")
     expect(option_set.total_options).to eq(26)

@@ -165,7 +165,7 @@ class OptionSet < ApplicationRecord
   end
 
   def published?
-    is_standard? ? false : questionings.any?(&:published?)
+    !standard? && questionings.any?(&:published?)
   end
 
   # Checks if this option set is used in at least one question
@@ -190,11 +190,11 @@ class OptionSet < ApplicationRecord
   end
 
   def copy_question_count
-    is_standard? ? copies.to_a.sum(&:question_count) : 0
+    standard? ? copies.to_a.sum(&:question_count) : 0
   end
 
   def has_answers?
-    is_standard? ? copies.any?(&:has_answers?) : questionings.any?(&:has_answers?)
+    standard? ? copies.any?(&:has_answers?) : questionings.any?(&:has_answers?)
   end
 
   def answers_for_option?(option_id)
@@ -202,11 +202,7 @@ class OptionSet < ApplicationRecord
   end
 
   def answer_count
-    if is_standard?
-      copies.to_a.sum(&:answer_count)
-    else
-      questionings.to_a.sum(&:answer_count)
-    end
+    standard? ? copies.to_a.sum(&:answer_count) : questionings.to_a.sum(&:answer_count)
   end
 
   # gets all forms to which this option set is linked (through questionings)
@@ -330,7 +326,6 @@ class OptionSet < ApplicationRecord
       mission: mission,
       option_set: self,
       sequence: 0,
-      is_standard: is_standard,
       standard_copy: standard_copy
     )
   end

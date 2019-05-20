@@ -102,7 +102,7 @@ describe "questionings form", js: true  do
   end
 
   context "for unpublished std copy" do
-    let(:standard_form) { create(:form, question_types: %w[text text], is_standard: true) }
+    let(:standard_form) { create(:form, :standard, question_types: %w[text text]) }
     let(:copied_form) { standard_form.replicate(mode: :to_mission, dest_mission: get_mission) }
     let(:qing) { copied_form.questionings.last }
 

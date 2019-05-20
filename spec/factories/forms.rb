@@ -14,7 +14,6 @@ def create_questioning(qtype_name_or_question, form, attribs = {})
       multilingual: pseudo_qtype_name.match?(/multilingual/),
       with_user_locale: pseudo_qtype_name.match?(/with_user_locale/),
       auto_increment: pseudo_qtype_name == "counter_with_inc",
-      is_standard: form.is_standard?,
       metadata_type: %w[formstart formend].include?(pseudo_qtype_name) ? pseudo_qtype_name : nil
     }
 
@@ -101,7 +100,7 @@ FactoryGirl.define do
     end
 
     authenticate_sms false
-    mission { is_standard ? nil : get_mission }
+    mission { get_mission }
     sequence(:name) { |n| "Sample Form #{n}" }
 
     after(:create) do |form, evaluator|
@@ -110,6 +109,10 @@ FactoryGirl.define do
       items.each do |item|
         build_item(item, form, form.root_group, evaluator)
       end
+    end
+
+    trait :standard do
+      mission { nil }
     end
 
     trait :with_version do

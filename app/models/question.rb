@@ -169,7 +169,7 @@ class Question < ApplicationRecord
   end
 
   def answer_count
-    is_standard? ? copies.to_a.sum(&:answer_count) : response_nodes.count
+    standard? ? copies.to_a.sum(&:answer_count) : response_nodes.count
   end
 
   def has_answers?
@@ -178,7 +178,7 @@ class Question < ApplicationRecord
 
   # determines if the question appears on any published forms
   def published?
-    is_standard? ? false : forms.any?(&:published?)
+    !standard? && forms.any?(&:published?)
   end
 
   # checks if any associated forms are smsable

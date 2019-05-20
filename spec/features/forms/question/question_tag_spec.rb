@@ -8,9 +8,9 @@ feature "question tags" do
   let!(:mission) { get_mission }
   let!(:question1) { create(:question, name: "How many cheeses?") }
   let!(:question2) { create(:question, name: "How many pies?") }
-  let!(:question3) { create(:question, name: "How much juice?", is_standard: true, mission: nil) }
+  let!(:question3) { create(:question, :standard, name: "How much juice?") }
   let!(:form) { create(:form) }
-  let!(:standard_form) { create(:form, is_standard: true, mission: nil) }
+  let!(:standard_form) { create(:form, :standard) }
   let!(:questioning1) { create(:questioning, form: form, question: question1) }
   let!(:questioning2) { create(:questioning, form: form, question: question2) }
   let!(:questioning3) { create(:questioning, form: standard_form, question: question3) }

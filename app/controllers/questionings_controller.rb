@@ -18,8 +18,6 @@ class QuestioningsController < ApplicationController
   end
 
   def create
-    @questioning.question.is_standard = true if current_mode == 'admin'
-
     permitted_params = questioning_params
 
     # Convert tag string from TokenInput to array
