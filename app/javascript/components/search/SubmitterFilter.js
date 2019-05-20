@@ -19,7 +19,7 @@ export const submitterType = {
 };
 export const SUBMITTER_TYPES = Object.values(submitterType);
 
-const select2Options = {
+const select2Config = {
   [submitterType.USER]: {
     dataUrl: ELMO.app.url_builder.build('responses', 'possible-submitters'),
     resultsKey: 'possible_users',
@@ -69,7 +69,7 @@ class SubmitterFilter extends React.Component {
         id="submitter-filter"
       >
         {SUBMITTER_TYPES.map((type) => {
-          const { dataUrl, resultsKey } = select2Options[type];
+          const { dataUrl, resultsKey } = select2Config[type];
 
           return (
             <Select2
