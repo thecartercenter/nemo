@@ -43,6 +43,8 @@ class ResponsesController < ApplicationController
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?
+
+        init_filter_data
       end
 
       # csv output is for exporting responses

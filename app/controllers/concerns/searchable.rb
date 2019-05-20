@@ -17,4 +17,8 @@ module Searchable
     flash.now[:search_error] = true
     rel
   end
+
+  def init_filter_data
+    @all_forms = Form.all.map { |item| {name: item.name, id: item.id} }.smart_sort_by_key
+  end
 end

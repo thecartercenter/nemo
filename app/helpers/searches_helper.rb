@@ -17,8 +17,4 @@ module SearchesHelper
       {}
     end
   end
-
-  def all_forms
-    Form.all.map { |item| {name: item.name, id: item.id} }.smart_sort_by_key
-  end
 end
