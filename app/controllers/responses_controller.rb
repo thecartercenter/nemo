@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'will_paginate/array'
+require "will_paginate/array"
 class ResponsesController < ApplicationController
   PER_PAGE = 20
 
@@ -63,7 +63,7 @@ class ResponsesController < ApplicationController
     # if there is a search param, we try to load the response via the do_search mechanism
     # so that we get highlighted excerpts
     if params[:search]
-      # we pass a relation matching only one respoonse, so there should be at most one match
+      # we pass a relation matching only one response, so there should be at most one match
       matches = Response.do_search(Response.where(id: @response.id), params[:search],
         {mission: current_mission}, include_excerpts: true, dont_truncate_excerpts: true)
 
