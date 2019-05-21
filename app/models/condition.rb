@@ -52,9 +52,10 @@ class Condition < ApplicationRecord
   belongs_to :option_node
 
   before_validation :normalize
-  before_validation :clear_blanks
   before_validation :clean_times
   before_create :set_mission
+
+  normalize_attribute :value
 
   validate :all_fields_required
 
@@ -144,14 +145,12 @@ class Condition < ApplicationRecord
   def normalize
     if right_side_type == "qing"
       self.value = nil
+      self.option_node_id = nil
     else
       self.right_qing = nil
+      self.value = nil if left_qing&.has_options?
+      self.option_node_id = nil if !left_qing || !left_qing.has_options?
     end
-  end
-
-  def clear_blanks
-    return if destroyed?
-    self.value = nil if value.blank? || left_qing&.has_options?
   end
 
   # Parses and reformats time strings given as conditions.

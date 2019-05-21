@@ -39,18 +39,57 @@ require "rails_helper"
 
 describe Condition do
   describe "normalization" do
-    let(:form) { create(:form, question_types: %w[integer integer]) }
+    let(:form) { create(:form, question_types: %w[integer select_one]) }
     let(:condition) { build(:condition, submitted).tap(&:validate) }
+    let(:opt_node_id) { form.c[1].option_set.c[0].id }
     subject(:normalized) { submitted.keys.map { |k| [k, condition.send(k)] }.to_h }
 
-    context "extraneous value" do
-      let(:submitted) { {right_side_type: "qing", right_qing_id: form.c[0].id, value: "10"} }
-      it { is_expected.to eq(right_side_type: "qing", right_qing_id: form.c[0].id, value: nil) }
+    describe "effects of right_side_type" do
+      context "extraneous value due to right_side_type=qing" do
+        let(:submitted) do
+          {right_side_type: "qing", right_qing_id: form.c[0].id, value: "10"}
+        end
+        it { is_expected.to eq(right_side_type: "qing", right_qing_id: form.c[0].id, value: nil) }
+      end
+
+      context "extraneous option_node_id due to right_side_type=qing" do
+        let(:submitted) do
+          {right_side_type: "qing", right_qing_id: form.c[1].id, option_node_id: opt_node_id}
+        end
+        it { is_expected.to eq(right_side_type: "qing", right_qing_id: form.c[1].id, option_node_id: nil) }
+      end
+
+      context "extraneous right qing due to right_side_type=value" do
+        let(:submitted) do
+          {right_side_type: "value", right_qing_id: form.c[0].id, value: "10"}
+        end
+        it { is_expected.to eq(right_side_type: "value", right_qing_id: nil, value: "10") }
+      end
     end
 
-    context "extraneous right qing" do
-      let(:submitted) { {right_side_type: "value", right_qing_id: form.c[0].id, value: "10"} }
-      it { is_expected.to eq(right_side_type: "value", right_qing_id: nil, value: "10") }
+    describe "effects of left_qing question type" do
+      context "extraneous value due to left qing with options" do
+        let(:submitted) do
+          {left_qing_id: form.c[1].id, option_node_id: opt_node_id, value: "10"}
+        end
+        it do
+          is_expected.to eq(left_qing_id: form.c[1].id, option_node_id: opt_node_id, value: nil)
+        end
+      end
+
+      context "extraneous option_node_id due to left qing without options" do
+        let(:submitted) do
+          {left_qing_id: form.c[0].id, option_node_id: opt_node_id, value: "10"}
+        end
+        it { is_expected.to eq(left_qing_id: form.c[0].id, option_node_id: nil, value: "10") }
+      end
+    end
+
+    describe "with no left_qing or right_side_type" do
+      let(:submitted) do
+        {left_qing_id: nil, right_side_type: nil, option_node_id: opt_node_id, value: "10"}
+      end
+      it { is_expected.to eq(left_qing_id: nil, option_node_id: nil, value: "10", right_side_type: "value") }
     end
   end
 
@@ -86,15 +125,6 @@ describe Condition do
     it "should be false if value given" do
       condition = Condition.new(left_qing: form.questionings[1], op: "eq", value: "5")
       expect(condition.send(:any_fields_blank?)).to be(false)
-    end
-  end
-
-  describe "clear blanks" do
-    let(:cond) { Condition.new(op: "eq", value: "  ") }
-
-    it "should clear blanks" do
-      cond.valid?
-      expect(cond.value).to be_nil
     end
   end
 
