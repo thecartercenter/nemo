@@ -7,8 +7,6 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
-import { select2AjaxParams } from 'javascripts/utils/select2';
-
 import 'react-select2-wrapper/css/select2.css';
 import { getButtonHintString } from './utils';
 
@@ -82,7 +80,7 @@ class SubmitterFilter extends React.Component {
                 placeholder: I18n.t(`filter.choose_submitter.${type}`),
                 dropdownCssClass: 'filters-select2-dropdown',
                 width: '100%',
-                ajax: select2AjaxParams(dataUrl, resultsKey),
+                ajax: ELMO.select2.getAjaxParams(dataUrl, resultsKey),
               }}
               ref={this.select2[type]}
               value={selectedSubmittersForType[type].map(({ id }) => id)}

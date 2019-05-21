@@ -10,9 +10,6 @@
     "roots": [
       "<rootDir>/spec/javascript"
     ],
-    "modulePaths": [
-      "<rootDir>/app/assets"
-    ],
     "setupFilesAfterEnv": [
       "<rootDir>/spec/javascript/setupTests.js"
     ],

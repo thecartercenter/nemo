@@ -13,6 +13,9 @@ window.ELMO = {
       build: jest.fn(),
     },
   },
+  select2: {
+    getAjaxParams: () => ({ url: 'mock' }),
+  },
 };
 
 // Stub out navigation features (otherwise jsdom complains).

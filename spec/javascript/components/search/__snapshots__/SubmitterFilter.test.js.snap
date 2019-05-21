@@ -30,12 +30,7 @@ exports[`renders as expected 1`] = `
         options={
           Object {
             "ajax": Object {
-              "cache": true,
-              "data": [Function],
-              "dataType": "json",
-              "delay": 250,
-              "processResults": [Function],
-              "url": undefined,
+              "url": "mock",
             },
             "allowClear": true,
             "dropdownCssClass": "filters-select2-dropdown",
@@ -56,12 +51,7 @@ exports[`renders as expected 1`] = `
         options={
           Object {
             "ajax": Object {
-              "cache": true,
-              "data": [Function],
-              "dataType": "json",
-              "delay": 250,
-              "processResults": [Function],
-              "url": undefined,
+              "url": "mock",
             },
             "allowClear": true,
             "dropdownCssClass": "filters-select2-dropdown",
