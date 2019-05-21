@@ -140,6 +140,14 @@ class Condition < ApplicationRecord
   end
   attr_writer :right_side_type
 
+  def right_side_is_qing?
+    right_side_type == "qing"
+  end
+
+  def right_side_is_value?
+    right_side_type == "value"
+  end
+
   private
 
   def normalize
@@ -164,11 +172,10 @@ class Condition < ApplicationRecord
   end
 
   def all_fields_required
-    errors.add(:base, :all_required) if any_fields_blank?
-  end
-
-  def any_fields_blank?
-    left_qing.blank? || op.blank? || (left_qing.has_options? ? option_node_id.blank? : value.blank?)
+    return unless left_qing.blank? || op.blank? ||
+      right_side_is_qing? && right_qing_id.blank? ||
+      right_side_is_value? && (left_qing.has_options? ? option_node_id.blank? : value.blank?)
+    errors.add(:base, :all_required)
   end
 
   def inherit_mission
