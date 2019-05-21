@@ -47,21 +47,21 @@ describe Condition do
     describe "effects of right_side_type" do
       context "extraneous value due to right_side_type=qing" do
         let(:submitted) do
-          {right_side_type: "qing", right_qing: form.c[0].id, value: "10"}
+          {right_side_type: "qing", right_qing: form.c[0], value: "10"}
         end
-        it { is_expected.to eq(right_side_type: "qing", right_qing: form.c[0].id, value: nil) }
+        it { is_expected.to eq(right_side_type: "qing", right_qing: form.c[0], value: nil) }
       end
 
       context "extraneous option_node due to right_side_type=qing" do
         let(:submitted) do
-          {right_side_type: "qing", right_qing: form.c[1].id, option_node: opt_node}
+          {right_side_type: "qing", right_qing: form.c[1], option_node: opt_node}
         end
-        it { is_expected.to eq(right_side_type: "qing", right_qing: form.c[1].id, option_node: nil) }
+        it { is_expected.to eq(right_side_type: "qing", right_qing: form.c[1], option_node: nil) }
       end
 
       context "extraneous right qing due to right_side_type=value" do
         let(:submitted) do
-          {right_side_type: "value", right_qing: form.c[0].id, value: "10"}
+          {right_side_type: "value", right_qing: form.c[0], value: "10"}
         end
         it { is_expected.to eq(right_side_type: "value", right_qing: nil, value: "10") }
       end
@@ -90,6 +90,16 @@ describe Condition do
         {left_qing_id: nil, right_side_type: nil, option_node: opt_node, value: "10"}
       end
       it { is_expected.to eq(left_qing_id: nil, option_node: nil, value: "10", right_side_type: "value") }
+    end
+
+    describe "clean times" do
+      let(:form) { create(:form, question_types: %w[datetime integer]) }
+      let(:cond) { Condition.new(left_qing: form.c[0], value: "2013-04-30 2:14:12pm") }
+
+      it "should clean time" do
+        cond.valid?
+        expect(cond.value).to eq("2013-04-30 14:14:12")
+      end
     end
   end
 
@@ -147,16 +157,6 @@ describe Condition do
     end
   end
 
-  describe "clean times" do
-    let(:form) { create(:form, question_types: %w[datetime integer]) }
-    let(:cond) { Condition.new(left_qing: form.c[0], value: "2013-04-30 2:14:12pm") }
-
-    it "should clean time" do
-      cond.valid?
-      expect(cond.value).to eq("2013-04-30 14:14:12")
-    end
-  end
-
   describe "#applicable_operator_names" do
     let(:form) { create(:form, question_types: [qtype] << "integer") }
     let(:cond) { Condition.new(left_qing: form.c[0]) }
@@ -202,7 +202,7 @@ describe Condition do
     end
   end
 
-  describe ".check_integrity_after_question_change" do
+  describe "#check_integrity_after_question_change" do
     let(:form) { create(:form, question_types: %w[select_one integer]) }
     let(:question) { form.c[0].question }
     let!(:cond) { create(:condition, conditionable: form.c[1], left_qing: form.c[0]) }
