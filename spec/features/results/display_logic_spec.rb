@@ -67,7 +67,9 @@ feature "response form display logic", js: true do
       qings[3].update!(
         display_if: "all_met",
         display_conditions_attributes: [
-          {left_qing_id: qings[2].id, op: "gt", value: "10"}
+          {left_qing_id: qings[2].id, op: "gt", value: "10"},
+          # Include a right_side_is_qing condition, which should be ignored for now
+          {left_qing_id: qings[1].id, op: "eq", right_qing_id: qings[0].id}
         ]
       )
 

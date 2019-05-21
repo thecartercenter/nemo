@@ -28,6 +28,11 @@ class ELMO.Views.ResponseConditionChecker extends ELMO.Views.ApplicationView
 
   # Checks the result of the condition and sets the result value.
   check: ->
+    # Temporarily ignoring these.
+    if @condition.rightSideIsQing
+      @result = true
+      return
+
     unless @rqElement.is(':visible')
       @result = false
       return
