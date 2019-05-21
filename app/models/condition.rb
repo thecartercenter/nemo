@@ -53,7 +53,7 @@ class Condition < ApplicationRecord
 
   before_validation :normalize
   before_validation :clean_times
-  before_create :set_mission
+  before_create :inherit_mission
 
   normalize_attribute :value
 
@@ -171,7 +171,7 @@ class Condition < ApplicationRecord
     left_qing.blank? || op.blank? || (left_qing.has_options? ? option_node_id.blank? : value.blank?)
   end
 
-  def set_mission
-    self.mission = conditionable.try(:mission)
+  def inherit_mission
+    self.mission = conditionable.mission
   end
 end

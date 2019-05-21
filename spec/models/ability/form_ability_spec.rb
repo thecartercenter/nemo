@@ -10,7 +10,7 @@ describe "abilities for forms" do
 
     context "when standard" do
       before do
-        @form = create(:form, question_types: %w(text), is_standard: true)
+        @form = create(:form, :standard, question_types: %w(text))
       end
 
       it "should have limited abilities" do
@@ -67,7 +67,7 @@ describe "abilities for forms" do
 
     context "when standard" do
       before do
-        @form = create(:form, question_types: %w(text), is_standard: true)
+        @form = create(:form, :standard, question_types: %w(text))
       end
 
       it "should be able to do nothing" do
@@ -77,7 +77,7 @@ describe "abilities for forms" do
 
     context "when unpublished std copy" do
       before do
-        @std = create(:form, question_types: %w(text), is_standard: true)
+        @std = create(:form, :standard, question_types: %w(text))
         @copy = @std.replicate(mode: :to_mission, dest_mission: get_mission)
       end
 

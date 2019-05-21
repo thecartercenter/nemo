@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -37,7 +39,7 @@ FactoryGirl.define do
   factory :condition do
     op "eq"
     left_qing { build(:questioning) }
-    value { left_qing.has_options? ? nil : '1' }
+    value { left_qing.has_options? ? nil : "1" }
     option_node { left_qing.has_options? ? left_qing.option_set.c[0] : nil }
     mission { get_mission }
   end

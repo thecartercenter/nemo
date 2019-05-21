@@ -34,8 +34,6 @@ class QuestionsController < ApplicationController
   end
 
   def create
-    @question.is_standard = true if current_mode == 'admin'
-
     permitted_params = question_params
 
     # Convert tag string from TokenInput to array

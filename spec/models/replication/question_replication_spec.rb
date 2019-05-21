@@ -7,7 +7,7 @@ describe Question do
   let(:mission2) { create(:mission) }
 
   describe "to_mission" do
-    let(:orig) { create(:question, qtype_name: "select_one", is_standard: true) }
+    let(:orig) { create(:question, :standard, qtype_name: "select_one") }
     let(:copy) { orig.replicate(mode: :to_mission, dest_mission: mission2) }
 
     before do
@@ -69,8 +69,6 @@ describe Question do
     let(:std) { orig.replicate(mode: :promote) }
 
     it "should work" do
-      expect(std.is_standard?).to be(true)
-      expect(std.option_set.is_standard?).to be(true)
       expect(std.mission).to be_nil
       expect(std).not_to eq(orig)
       expect(std.option_set).not_to eq(orig.option_set)
@@ -115,7 +113,7 @@ describe Question do
     end
 
     context "in admin mode" do
-      let(:orig) { create(:question, code: code, is_standard: true) }
+      let(:orig) { create(:question, :standard, code: code) }
 
       before do
         copy # Force orig & copy creation before updating orig code

@@ -10,9 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_15_180412) do
+ActiveRecord::Schema.define(version: 2019_05_20_185424) do
 
   # These are extensions that must be enabled in order to support this database
+  enable_extension "pgcrypto"
   enable_extension "plpgsql"
   enable_extension "uuid-ossp"
 
@@ -120,6 +121,19 @@ ActiveRecord::Schema.define(version: 2019_05_15_180412) do
     t.index ["option_node_id"], name: "index_conditions_on_option_node_id"
   end
 
+  create_table "constraints", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "accept_if", limit: 16, null: false
+    t.datetime "created_at", null: false
+    t.uuid "mission_id"
+    t.integer "rank", null: false
+    t.jsonb "rejection_msg_translations", default: {}, null: false
+    t.uuid "source_item_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mission_id"], name: "index_constraints_on_mission_id"
+    t.index ["source_item_id", "rank"], name: "index_constraints_on_source_item_id_and_rank", unique: true
+    t.index ["source_item_id"], name: "index_constraints_on_source_item_id"
+  end
+
   create_table "delayed_jobs", id: :serial, force: :cascade do |t|
     t.integer "attempts", default: 0, null: false
     t.datetime "created_at", null: false
@@ -195,7 +209,6 @@ ActiveRecord::Schema.define(version: 2019_05_15_180412) do
     t.uuid "current_version_id"
     t.string "default_response_name"
     t.integer "downloads"
-    t.boolean "is_standard", default: false, null: false
     t.uuid "mission_id"
     t.string "name", limit: 255, null: false
     t.uuid "original_id"
@@ -265,7 +278,6 @@ ActiveRecord::Schema.define(version: 2019_05_15_180412) do
     t.text "ancestry"
     t.integer "ancestry_depth", default: 0, null: false
     t.datetime "created_at", null: false
-    t.boolean "is_standard", default: false, null: false
     t.uuid "mission_id"
     t.integer "old_id"
     t.uuid "option_id"
@@ -287,7 +299,6 @@ ActiveRecord::Schema.define(version: 2019_05_15_180412) do
     t.boolean "allow_coordinates", default: false, null: false
     t.datetime "created_at", null: false
     t.boolean "geographic", default: false, null: false
-    t.boolean "is_standard", default: false, null: false
     t.jsonb "level_names"
     t.uuid "mission_id"
     t.string "name", limit: 255, null: false
@@ -326,7 +337,6 @@ ActiveRecord::Schema.define(version: 2019_05_15_180412) do
     t.string "code", limit: 255, null: false
     t.datetime "created_at", null: false
     t.jsonb "hint_translations", default: {}
-    t.boolean "is_standard", default: false, null: false
     t.boolean "key", default: false, null: false
     t.decimal "maximum", precision: 15, scale: 8
     t.boolean "maxstrictly"
@@ -598,6 +608,8 @@ ActiveRecord::Schema.define(version: 2019_05_15_180412) do
   add_foreign_key "conditions", "form_items", column: "right_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "constraints", "form_items", column: "source_item_id"
+  add_foreign_key "constraints", "missions"
   add_foreign_key "form_forwardings", "forms", name: "form_forwardings_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_items", "forms", name: "form_items_form_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "form_items", "missions", name: "form_items_mission_id_fkey", on_update: :restrict, on_delete: :restrict

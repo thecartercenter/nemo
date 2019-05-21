@@ -93,7 +93,7 @@ feature "option set" do
   end
 
   context "with standard set" do
-    let!(:std_set) { create(:option_set, name: "Gold", is_standard: true, option_names: :multilevel) }
+    let!(:std_set) { create(:option_set, :standard, name: "Gold", option_names: :multilevel) }
 
     scenario "importing, editing, and showing", js: true do
       login(user)

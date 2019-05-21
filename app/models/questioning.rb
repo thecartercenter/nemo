@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: form_items
@@ -41,6 +43,7 @@
 #  form_items_question_id_fkey  (question_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
 #
 
+# Models the appearance of a question on a form.
 class Questioning < FormItem
   alias answers response_nodes
 
@@ -68,7 +71,7 @@ class Questioning < FormItem
   # uses the form.qing_answer_count method because these requests tend to come in batches so better
   # to fetch the counts for all qings on the form at once
   def has_answers?
-    form.qing_answer_count(self) > 0
+    form.qing_answer_count(self).positive?
   end
 
   def answer_count
@@ -80,15 +83,16 @@ class Questioning < FormItem
   end
 
   def subqings
-    @subqings ||= if multilevel?
-      levels.each_with_index.map { |l, i| Subqing.new(questioning: self, level: l, rank: i + 1) }
-    else
-      [Subqing.new(questioning: self, rank: 1)]
-    end
+    @subqings ||=
+      if multilevel?
+        levels.each_with_index.map { |l, i| Subqing.new(questioning: self, level: l, rank: i + 1) }
+      else
+        [Subqing.new(questioning: self, rank: 1)]
+      end
   end
 
   def core_changed?
-    (changed & %w(required hidden default)).any? || conditions_changed?
+    (changed & %w[required hidden default]).any? || conditions_changed?
   end
 
   # Checks if this Questioning is in a repeat group.

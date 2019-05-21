@@ -411,7 +411,7 @@ class OptionNode < ApplicationRecord
   # 2. The given hash's subhash at key :option_attribs, if present.
   # Returns the modified hash.
   def copy_denormalized_attribs_to_attrib_hash(hash)
-    %w[mission_id option_set_id is_standard standard_copy].each { |k| hash[k.to_sym] = send(k) }
+    %w[mission_id option_set_id standard_copy].each { |k| hash[k.to_sym] = send(k) }
     %w[mission_id].each { |k| hash[:option_attribs][k.to_sym] = send(k) } if hash[:option_attribs]
     hash
   end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: user_groups
@@ -20,7 +22,7 @@
 
 FactoryGirl.define do
   factory :user_group do
-    name { Faker::Team.name }
+    sequence(:name) { |n| "UserGroup #{n}" }
     mission { get_mission }
   end
 end

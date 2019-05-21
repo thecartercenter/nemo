@@ -35,7 +35,6 @@ module OptionSets
         levels: headers.map { |h| OptionLevel.new(name: h) },
         geographic: geographic,
         allow_coordinates: geographic,
-        is_standard: mission.nil?,
         root_node: OptionNode.new
       )
       copy_validation_errors_for_row(1, option_set.errors) unless option_set.valid?
@@ -79,7 +78,7 @@ module OptionSets
       parent = col_idx.zero? ? option_set.root_node : cur_nodes[col_idx - 1]
 
       node = parent.children.create(mission: mission, rank: cur_ranks[col_idx], option_set: option_set,
-                                    option: option, sequence: row_idx + 1, is_standard: mission.nil?)
+                                    option: option, sequence: row_idx + 1)
 
       if node.invalid?
         copy_validation_errors_for_row(metadata[:orig_row_num], node.errors)

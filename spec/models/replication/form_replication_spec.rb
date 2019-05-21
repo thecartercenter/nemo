@@ -9,10 +9,9 @@ describe Form do
   describe "to_mission" do
     context "with doubly nested questions and repeat groups" do
       let!(:std) do
-        create(:form, question_types: ["integer",
-                                       repeating: {items: ["select_one", "integer",
-                                                           repeating: {items: %w[text text]}]}],
-                      is_standard: true)
+        create(:form, :standard,
+          question_types: ["integer", repeating: {items: ["select_one", "integer",
+                                                          repeating: {items: %w[text text]}]}])
       end
       let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
 
@@ -51,7 +50,7 @@ describe Form do
     end
 
     context "with an existing copy of form in mission" do
-      let!(:std) { create(:form, question_types: %w[select_one integer], is_standard: true) }
+      let!(:std) { create(:form, :standard, question_types: %w[select_one integer]) }
       let!(:copy1) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
       let!(:copy2) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
 
@@ -75,7 +74,7 @@ describe Form do
     end
 
     context "with a condition referencing an option from a multilevel set" do
-      let!(:std) { create(:form, question_types: %w[multilevel_select_one text integer], is_standard: true) }
+      let!(:std) { create(:form, :standard, question_types: %w[multilevel_select_one text integer]) }
       let!(:std_conditions) do
         # Two conditions on the last questioning, one referencing the multilevel Q, and one the text Q.
         [std.c[2].display_conditions.create!(left_qing: std.c[0], op: "eq",
@@ -130,7 +129,7 @@ describe Form do
     context "with an option set already imported to a different mission" do
       let(:mission1) { create(:mission) }
       let(:mission2) { create(:mission) }
-      let!(:std) { create(:form, is_standard: true, question_types: %w[select_one integer]) }
+      let!(:std) { create(:form, :standard, question_types: %w[select_one integer]) }
 
       before do
         std.c[1].display_conditions.create!(left_qing: std.c[0], op: "eq",
@@ -152,7 +151,7 @@ describe Form do
     end
 
     context "with a condition referencing a now-incompatible question" do
-      let(:std) { create(:form, question_types: %w[select_one integer], is_standard: true) }
+      let(:std) { create(:form, :standard, question_types: %w[select_one integer]) }
       let(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
       let(:question_copy) { std.c[0].question.replicate(mode: :to_mission, dest_mission: mission1) }
 
@@ -187,7 +186,7 @@ describe Form do
     end
 
     context "with skip rules" do
-      let(:std) { create(:form, is_standard: true, question_types: %w[integer integer integer integer]) }
+      let(:std) { create(:form, :standard, question_types: %w[integer integer integer integer]) }
 
       before do
         std.c[1].skip_rules.create!(destination: "item", dest_item: std.c[3], skip_if: "all_met",
@@ -216,11 +215,44 @@ describe Form do
         end
       end
     end
+
+    context "with constraints" do
+      let(:std) { create(:form, :standard, question_types: %w[integer integer]) }
+
+      before do
+        std.c[1].constraints.create!(accept_if: "any_met", rejection_msg_translations: {en: "Foo", fr: "Bar"},
+                                     conditions_attributes: [
+                                       {ref_qing_id: std.c[0].id, op: "lt", value: "4"},
+                                       {ref_qing_id: std.c[1].id, op: "gt", value: "8"}
+                                     ])
+      end
+
+      context "if all goes well" do
+        let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
+
+        it "should produce distinct child objects with correct references" do
+          expect(std.reload.c[1].constraints.size).to eq(1)
+          expect(copy.c[0].constraints.size).to eq(0)
+          expect(copy.c[1].constraints.size).to eq(1)
+          expect(copy.c[1].constraints[0].accept_if).to eq("any_met")
+          expect(copy.c[1].constraints[0].rejection_msg_translations).to eq("en" => "Foo", "fr" => "Bar")
+          expect(copy.c[1].constraints[0].conditions.size).to eq(2)
+          expect(copy.c[1].constraints[0].conditions[0].ref_qing_id).to eq(copy.c[0].id)
+          expect(copy.c[1].constraints[0].conditions[0].op).to eq("lt")
+          expect(copy.c[1].constraints[0].conditions[0].value).to eq("4")
+          expect(copy.c[1].constraints[0].conditions[1].ref_qing_id).to eq(copy.c[1].id)
+          expect(copy.c[1].constraints[0].conditions[1].op).to eq("gt")
+          expect(copy.c[1].constraints[0].conditions[1].value).to eq("8")
+          expect(copy.c[0].id).not_to eq(std.c[0].id)
+          expect(copy.c[1].id).not_to eq(std.c[1].id)
+        end
+      end
+    end
   end
 
   describe "clone" do
     context "basic" do
-      let(:orig) { create(:form, question_types: ["integer", %w[select_one integer]], is_standard: true) }
+      let(:orig) { create(:form, :standard, question_types: ["integer", %w[select_one integer]]) }
       let(:copy) { orig.replicate(mode: :clone) }
 
       before do
@@ -329,7 +361,7 @@ describe Form do
 
   describe "destroy" do
     context "with copies" do
-      let!(:std) { create(:form, is_standard: true) }
+      let!(:std) { create(:form, :standard) }
       let!(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
       let!(:response) { create(:response, form: copy) }
 

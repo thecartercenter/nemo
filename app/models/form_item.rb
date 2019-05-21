@@ -63,22 +63,24 @@ class FormItem < ApplicationRecord
 
   belongs_to :form
   has_many :response_nodes, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :form_item
-  has_many :standard_form_reports, class_name: "Report::StandardFormReport",
+  has_many :standard_form_reports, class_name: "Report::StandardFormReport", inverse_of: :disagg_qing,
                                    foreign_key: :disagg_qing_id, dependent: :nullify
-  has_many :display_conditions, -> { by_rank },
-    as: :conditionable, class_name: "Condition", dependent: :destroy
+  has_many :display_conditions, -> { by_rank }, inverse_of: :conditionable, as: :conditionable,
+                                                class_name: "Condition", dependent: :destroy
   has_many :referring_conditions, class_name: "Condition", foreign_key: :left_qing_id,
                                   dependent: :destroy, inverse_of: :left_qing
-  has_many :skip_rules, -> { by_rank },
-    foreign_key: :source_item_id, inverse_of: :source_item, dependent: :destroy
+  has_many :skip_rules, -> { by_rank }, foreign_key: :source_item_id, inverse_of: :source_item,
+                                        dependent: :destroy
   has_many :incoming_skip_rules, class_name: "SkipRule", foreign_key: :dest_item_id,
                                  inverse_of: :dest_item, dependent: :destroy
+  has_many :constraints, -> { by_rank }, foreign_key: :source_item_id, inverse_of: :source_item,
+                                         dependent: :destroy
 
   before_validation :normalize
 
   before_validation :set_foreign_key_on_conditions
   before_validation :ensure_parent_is_group
-  before_create :set_mission
+  before_create :inherit_mission
 
   has_ancestry cache_depth: true
 
@@ -87,11 +89,12 @@ class FormItem < ApplicationRecord
   delegate :condition_computer, to: :form
   delegate :name, to: :form, prefix: true
 
-  replicable child_assocs: %i[question display_conditions skip_rules children],
+  replicable child_assocs: %i[question display_conditions skip_rules constraints children],
              backward_assocs: :form, dont_copy: %i[form_id question_id]
 
   accepts_nested_attributes_for :display_conditions, allow_destroy: true
   accepts_nested_attributes_for :skip_rules, allow_destroy: true
+  accepts_nested_attributes_for :constraints, allow_destroy: true
 
   def self.rank_gaps?
     SqlRunner.instance.run("
@@ -115,6 +118,7 @@ class FormItem < ApplicationRecord
   def self.terminate_sub_relationships(form_item_ids)
     Form.where(root_id: form_item_ids).update_all(root_id: nil)
     SkipRule.where(source_item_id: form_item_ids).delete_all
+    Constraint.where(source_item_id: form_item_ids).delete_all
   end
 
   # Duck type used for retrieving the main FormItem associated with this object, which is itself.
@@ -257,9 +261,8 @@ class FormItem < ApplicationRecord
     end
   end
 
-  # copy mission from question
-  def set_mission
-    self.mission = form.try(:mission)
+  def inherit_mission
+    self.mission = form.mission
   end
 
   # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly

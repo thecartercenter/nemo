@@ -4,11 +4,10 @@ require "rails_helper"
 
 feature "skip logic form fields", js: true do
   let!(:user) { create(:admin) }
+  let(:standard) { false }
+  let(:traits) { standard ? [:standard] : [] }
   let(:form) do
-    create(:form,
-      name: "Foo",
-      question_types: %w[integer integer integer integer integer],
-      is_standard: is_standard)
+    create(:form, *traits, name: "Foo", question_types: %w[integer integer integer integer integer])
   end
   let(:dest_qing_str) { dest_qing_str }
   let(:first_cond_str) { first_cond_str }
@@ -178,13 +177,12 @@ feature "skip logic form fields", js: true do
   end
 
   context "regular mode" do
-    let(:is_standard) { false }
     let(:url_prefix) { "/en/m/#{form.mission.compact_name}" }
     include_examples "correct behavior"
   end
 
   context "admin mode" do
-    let(:is_standard) { true }
+    let(:standard) { true }
     let(:url_prefix) { "/en/admin" }
     include_examples "correct behavior"
   end

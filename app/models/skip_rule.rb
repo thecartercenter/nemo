@@ -25,31 +25,15 @@
 #  fk_rails_...  (source_item_id => form_items.id)
 #
 
-
+# Models a rule directing the user to a given question if some conditions are true.
 class SkipRule < ActiveRecord::Base
-  include Replication::Replicable
-  include MissionBased
+  include FormLogical
 
-  # SkipRule ranks are currently not editable, but they provide a source of deterministic ordering
-  # which is useful in tests and in UI consistency.
-  acts_as_list column: :rank, scope: [:source_item_id]
-
-  belongs_to :source_item, class_name: "FormItem", inverse_of: :skip_rules
   belongs_to :dest_item, class_name: "FormItem", inverse_of: :incoming_skip_rules
-  has_many :conditions, -> { by_rank }, as: :conditionable, dependent: :destroy
 
-  before_validation :set_foreign_key_on_conditions
   before_validation :normalize
-  before_create :set_mission
 
   validate :require_dest_item
-  validate :collect_condition_errors
-
-  scope :by_rank, -> { order(:rank) }
-
-  delegate :form, :form_id, :refable_qings, to: :source_item
-
-  accepts_nested_attributes_for :conditions, allow_destroy: true, reject_if: :all_blank
 
   replicable child_assocs: [:conditions], dont_copy: %i[source_item_id dest_item_id],
              backward_assocs: [
@@ -83,11 +67,6 @@ class SkipRule < ActiveRecord::Base
 
   private
 
-  # Since conditionable is polymorphic, inverse is not available and we have to do this explicitly
-  def set_foreign_key_on_conditions
-    conditions.each { |c| c.conditionable = self }
-  end
-
   def normalize
     if conditions.reject(&:marked_for_destruction?).none?
       self.skip_if = "always"
@@ -98,15 +77,5 @@ class SkipRule < ActiveRecord::Base
 
   def require_dest_item
     errors.add(:dest_item_id, :blank_unless_goto_end) if destination != "end" && dest_item.nil?
-  end
-
-  # If there is a validation error on the conditions, we know it has to be due
-  # to a missing field. This is easier to catch here instead of React for now.
-  def collect_condition_errors
-    errors.add(:base, :all_required) if conditions.any?(&:invalid?)
-  end
-
-  def set_mission
-    self.mission = source_item.mission
   end
 end

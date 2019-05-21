@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: skip_rules
@@ -23,44 +25,16 @@
 #  fk_rails_...  (source_item_id => form_items.id)
 #
 
-require 'rails_helper'
+require "rails_helper"
 
 describe SkipRule do
-  let(:form) { create(:form, question_types: %w(integer integer integer)) }
-  let(:qing1) { form.c[0] }
-  let(:qing2) { form.c[1] }
-  let(:qing3) { form.c[2] }
+  let(:form) { create(:form, question_types: %w[integer integer integer]) }
 
   describe "normalization" do
-    describe "rank" do
-      let(:skip_rule) { create(:skip_rule, source_item: qing2) }
-      let!(:decoy_rule) { create(:skip_rule) } # On a different form/qing, ensures acts_as_list is scoped.
-      subject { skip_rule.rank }
-
-      context "when no other rules for this qing" do
-        it { is_expected.to eq 1 }
-      end
-
-      context "when two other rules for this qing" do
-        let!(:other_skip_rules) { create_list(:skip_rule, 2, source_item: qing2) }
-        it { is_expected.to eq 3 }
-      end
-    end
-
-    describe "conditions" do
-      it "should be discarded if totally empty" do
-        rule = create(:skip_rule, source_item: qing2, conditions_attributes: [
-          {left_qing_id: qing1.id, op: "eq", value: "5"},
-          {left_qing_id: "", op: "", value: ""}
-        ])
-        expect(rule.conditions.count).to eq 1
-        expect(rule.conditions[0].left_qing).to eq qing1
-      end
-    end
-
     describe "skip_if" do
-      let(:skip_rule) { create(:skip_rule,
-        submitted.merge(destination: "end", conditions_attributes: cond_attrs)) }
+      let(:skip_rule) do
+        create(:skip_rule, submitted.merge(destination: "end", conditions_attributes: cond_attrs))
+      end
       let(:left_qing) { create(:questioning) }
       subject { submitted.keys.map { |k| [k, skip_rule.send(k)] }.to_h }
 
@@ -124,21 +98,10 @@ describe SkipRule do
 
   describe "validation" do
     describe "dest_item" do
-      it "should be required if destination is 'item'" do
-        rule = build(:skip_rule, source_item: qing2, destination: "item", dest_item_id: nil)
-        expect(rule).not_to be_valid
-        expect(rule.errors[:dest_item_id].join).to match /unless you choose 'skip to end of form'/
-      end
-    end
+      let(:rule) { build(:skip_rule, source_item: form.c[1], destination: "item", dest_item_id: nil) }
 
-    describe "conditions" do
-      it "should set validation error if incomplete condition" do
-        rule = build(:skip_rule, source_item: qing2, conditions_attributes: [
-          {left_qing_id: qing1.id, op: "eq", value: ""}
-        ])
-        expect(rule).not_to be_valid
-        expect(rule.errors["conditions.base"].join).to eq "All condition fields are required."
-        expect(rule.conditions[0].errors[:base].join).to eq "All condition fields are required."
+      it "should be required if destination is 'item'" do
+        expect(rule).to have_errors(dest_item_id: /unless you choose 'skip to end of form'/)
       end
     end
   end

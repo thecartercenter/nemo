@@ -41,7 +41,7 @@ FactoryGirl.define do
     end
 
     sequence(:name) { |n| "Option Set #{n}" }
-    mission { is_standard ? nil : get_mission }
+    mission { get_mission }
 
     children_attribs do
       if option_names.is_a?(Symbol)
@@ -63,6 +63,10 @@ FactoryGirl.define do
 
     factory :empty_option_set do
       children_attribs []
+    end
+
+    trait :standard do
+      mission { nil }
     end
   end
 end

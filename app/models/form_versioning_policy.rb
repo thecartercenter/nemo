@@ -11,7 +11,7 @@
 class FormVersioningPolicy
   # Sets the upgrade_neccessary flag on forms where necessary.
   def notify(obj, action)
-    forms_needing_upgrade(obj, action).reject(&:is_standard?).each do |f|
+    forms_needing_upgrade(obj, action).reject(&:standard?).each do |f|
       f.reload
       f.flag_for_upgrade!
     end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: option_sets
@@ -37,28 +39,28 @@ describe OptionSet do
 
   it "should get constructed properly" do
     os = create(:option_set, option_names: :multilevel)
-    # This assertion checks that option_set, mission, and is_standard? get cascaded properly.
-    expect_node([["Animal", ["Cat", "Dog"]], ["Plant", ["Tulip", "Oak"]]], os.root_node)
-    expect(Option.count).to eq 6
-    expect(OptionNode.count).to eq 7
+    # This assertion checks that option_set and mission get cascaded properly.
+    expect_node([["Animal", %w[Cat Dog]], ["Plant", %w[Tulip Oak]]], os.root_node)
+    expect(Option.count).to eq(6)
+    expect(OptionNode.count).to eq(7)
   end
 
   it "should get constructed properly if standard" do
-    os = create(:option_set, is_standard: true)
-    expect_node(["Cat", "Dog"], os.root_node)
+    os = create(:option_set, :standard)
+    expect_node(%w[Cat Dog], os.root_node)
   end
 
   it "should get updated properly" do
     os = create(:option_set)
-    os.update_attributes!(children_attribs: OptionNodeSupport::MULTILEVEL_ATTRIBS)
-    expect_node([["Animal", ["Cat", "Dog"]], ["Plant", ["Tulip", "Oak"]]], os.reload.root_node)
+    os.update!(children_attribs: OptionNodeSupport::MULTILEVEL_ATTRIBS)
+    expect_node([["Animal", %w[Cat Dog]], ["Plant", %w[Tulip Oak]]], os.reload.root_node)
   end
 
   it "should be destructible" do
     os = create(:option_set)
     os.destroy
-    expect(OptionSet.exists?(os.id)).to be false
-    expect(OptionNode.where(option_set_id: os.id).count).to eq 0
+    expect(OptionSet.exists?(os.id)).to be(false)
+    expect(OptionNode.where(option_set_id: os.id).count).to eq(0)
   end
 
   describe "options" do
@@ -75,11 +77,11 @@ describe OptionSet do
 
     it "should return true if name changed" do
       @set.name = "Foobar"
-      expect(@set.core_changed?).to eq true
+      expect(@set.core_changed?).to eq(true)
     end
 
     it "should return false if name didnt change" do
-      expect(@set.core_changed?).to eq false
+      expect(@set.core_changed?).to eq(false)
     end
   end
 
@@ -91,21 +93,21 @@ describe OptionSet do
 
     it "should be correct for multi level set" do
       set = create(:option_set, option_names: :multilevel)
-      expect(set.levels[0].name).to eq "Kingdom"
-      expect(set.levels[1].name).to eq "Species"
+      expect(set.levels[0].name).to eq("Kingdom")
+      expect(set.levels[1].name).to eq("Species")
     end
   end
 
   describe "worksheet_name" do
     it "should return the original name if valid" do
       set = create(:option_set)
-      expect(set.worksheet_name).to eq set.name
+      expect(set.worksheet_name).to eq(set.name)
     end
 
     it "should return a replaced name if invalid" do
       set = create(:option_set, name: 'My Options?: ~*[Yes/No:No\Yes]*~')
       expect(set.worksheet_name.size).to be <= 31
-      expect(set.worksheet_name).to eq "My Options- ~∗(Yes-No-No-Ye..."
+      expect(set.worksheet_name).to eq("My Options- ~∗(Yes-No-No-Ye...")
     end
   end
 
@@ -115,7 +117,7 @@ describe OptionSet do
 
     it "should fetch the correct node from shortcode" do
       fetched_node = option_set.fetch_by_shortcode("e")
-      expect(fetched_node.id).to eq option_node.id
+      expect(fetched_node.id).to eq(option_node.id)
     end
   end
 

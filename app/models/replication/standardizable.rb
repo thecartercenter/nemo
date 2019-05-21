@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Holds behaviors related to standard objects including importing, etc.
 # All Replication::Standardizable objects are assumed to be Replication::Replicable also.
 module Replication::Standardizable
@@ -5,16 +7,18 @@ module Replication::Standardizable
 
   included do
     # create self-associations in both directions for is-copy-of relationship
-    belongs_to(:original, :class_name => name, :inverse_of => :copies)
-    has_many(:copies, :class_name => name, :foreign_key => 'original_id', :inverse_of => :original)
+    belongs_to :original, class_name: name, inverse_of: :copies
+    has_many :copies, class_name: name, foreign_key: "original_id", inverse_of: :original
 
-    before_destroy(:unlink_copies)
-    before_save(:scrub_original_link_if_becoming_incompatible)
-    validate(:non_standard_items_must_have_mission)
+    before_destroy :unlink_copies
+    before_save :scrub_original_link_if_becoming_incompatible
+
+    scope :standard, -> { where(mission_id: nil) }
+    scope :not_standard, -> { where.not(mission_id: nil) }
 
     # returns a scope for all standard objects of the current class that are importable to the given mission
-    def self.importable_to(mission)
-      where(:is_standard => true)
+    def self.importable_to(_mission)
+      standard
     end
 
     def self.standardizable_included?
@@ -27,9 +31,13 @@ module Replication::Standardizable
     standard_copy? ? original : nil
   end
 
+  def standard?
+    mission_id.nil?
+  end
+
   # returns whether the object is standard or related to a standard object
   def standardized?
-    is_standard? || standard_copy?
+    standard? || standard_copy?
   end
 
   # Gets a copy of this object in the given mission, if one. exists.
@@ -47,18 +55,11 @@ module Replication::Standardizable
   def scrub_original_link_if_becoming_incompatible
     if restricted_attribs = replicable_opts[:compatibility]
       restricted_attribs.each do |attrib|
-        if send("#{attrib}_changed?")
-          self.original_id = nil
-          self.standard_copy = false
-          break
-        end
+        next unless send("#{attrib}_changed?")
+        self.original_id = nil
+        self.standard_copy = false
+        break
       end
-    end
-  end
-
-  def non_standard_items_must_have_mission
-    unless is_standard? || self.mission.present?
-      errors.add(:mission, :blank)
     end
   end
 
