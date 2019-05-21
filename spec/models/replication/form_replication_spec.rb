@@ -223,7 +223,7 @@ describe Form do
         std.c[1].constraints.create!(accept_if: "any_met", rejection_msg_translations: {en: "Foo", fr: "Bar"},
                                      conditions_attributes: [
                                        {left_qing_id: std.c[0].id, op: "lt", value: "4"},
-                                       {left_qing_id: std.c[1].id, op: "gt", value: "8"}
+                                       {left_qing_id: std.c[1].id, op: "eq", right_qing_id: std.c[0].id}
                                      ])
       end
 
@@ -241,8 +241,8 @@ describe Form do
           expect(copy.c[1].constraints[0].conditions[0].op).to eq("lt")
           expect(copy.c[1].constraints[0].conditions[0].value).to eq("4")
           expect(copy.c[1].constraints[0].conditions[1].left_qing_id).to eq(copy.c[1].id)
-          expect(copy.c[1].constraints[0].conditions[1].op).to eq("gt")
-          expect(copy.c[1].constraints[0].conditions[1].value).to eq("8")
+          expect(copy.c[1].constraints[0].conditions[1].op).to eq("eq")
+          expect(copy.c[1].constraints[0].conditions[1].right_qing_id).to eq(copy.c[0].id)
           expect(copy.c[0].id).not_to eq(std.c[0].id)
           expect(copy.c[1].id).not_to eq(std.c[1].id)
         end

@@ -70,10 +70,11 @@ class Condition < ApplicationRecord
   replicable backward_assocs: [
     :conditionable,
     {name: :option_node, skip_obj_if_missing: true},
-    # This is a second pass association because the left_qing may not have been copied yet.
+    # These are a second pass associations because the left_qing/right_qing may not have been copied yet.
     # We have to set left_qing to something due to a null constraint.
     # For a temporary object, we can just use the FormItem this condition is attached to (base_item).
-    {name: :left_qing, second_pass: true, temp_id: ->(conditionable) { conditionable.base_item.id }}
+    {name: :left_qing, second_pass: true, temp_id: ->(conditionable) { conditionable.base_item.id }},
+    {name: :right_qing, second_pass: true}
   ]
 
   # Deletes any that have become invalid due to changes in the given question
