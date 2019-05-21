@@ -15,7 +15,7 @@ class Condition < ApplicationRecord
 
   before_validation :clear_blanks
   before_validation :clean_times
-  before_create :set_mission
+  before_create :inherit_mission
 
   validate :all_fields_required
 
@@ -122,7 +122,7 @@ class Condition < ApplicationRecord
     ref_qing.blank? || op.blank? || (ref_qing.has_options? ? option_node_id.blank? : value.blank?)
   end
 
-  def set_mission
-    self.mission = conditionable.try(:mission)
+  def inherit_mission
+    self.mission = conditionable.mission
   end
 end

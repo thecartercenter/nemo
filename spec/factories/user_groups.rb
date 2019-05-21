@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 FactoryGirl.define do
   factory :user_group do
-    name { Faker::Team.name }
+    sequence(:name) { |n| "UserGroup #{n}" }
     mission { get_mission }
   end
 end

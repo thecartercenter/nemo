@@ -777,6 +777,10 @@ en:
           no_recipients: "Nobody would receive this broadcast."
         condition:
           all_required: "All condition fields are required."
+        constraint:
+          attributes:
+            conditions:
+              blank: "There must be at least one condition."
         form:
           cant_delete_if_has_responses: "You can't delete this Form because it has associated responses."
           cant_delete_published: "A published Form can't be deleted."
