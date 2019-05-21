@@ -114,13 +114,10 @@ class ResponsesController < ApplicationController
   end
 
   def possible_submitters
-    users = if params[:response_id].present?
-              response = Response.find(params[:response_id])
-              response_user_id = response.try(:user_id)
-              User.assigned_to(current_mission).or(User.where(id: response_user_id))
-            else
-              User.assigned_to(current_mission)
-            end
+    users = User.assigned_to(current_mission)
+    if params[:response_id].present? && (response = Response.find(params[:response_id]))
+      users = users.or(User.where(id: response.user_id))
+    end
     render_possible_users(users)
   end
 
@@ -132,12 +129,12 @@ class ResponsesController < ApplicationController
   private
 
   def render_possible_users(possible_users)
-    @possible_users = apply_search_if_given(User, possible_users).by_name
+    possible_users = apply_search_if_given(User, possible_users).by_name
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {
-      possible_users: ActiveModel::ArraySerializer.new(@possible_users),
-      more: @possible_users.next_page.present?
+      possible_users: ActiveModel::ArraySerializer.new(possible_users),
+      more: possible_users.next_page.present?
     }, select2: true)
   end
 
