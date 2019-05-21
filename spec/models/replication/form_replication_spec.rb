@@ -217,7 +217,7 @@ describe Form do
     end
 
     context "with constraints" do
-      let(:std) { create(:form, is_standard: true, question_types: %w[integer integer]) }
+      let(:std) { create(:form, :standard, question_types: %w[integer integer]) }
 
       before do
         std.c[1].constraints.create!(accept_if: "any_met", rejection_msg_translations: {en: "Foo", fr: "Bar"},
