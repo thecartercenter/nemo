@@ -19,6 +19,6 @@ module Searchable
   end
 
   def init_filter_data
-    @all_forms = Form.all.map { |item| {name: item.name, id: item.id} }.natural_sort_by_key
+    @all_forms = Form.all.map { |item| {name: item.name, id: item.id} }.sort_by_key
   end
 end

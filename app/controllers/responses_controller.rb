@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "will_paginate/array"
 class ResponsesController < ApplicationController
   PER_PAGE = 20
 
@@ -118,23 +117,22 @@ class ResponsesController < ApplicationController
     users = if params[:response_id].present?
               response = Response.find(params[:response_id])
               response_user_id = response.try(:user_id)
-              User.assigned_to(current_mission).or(User.where(id: response_user_id)).by_name
+              User.assigned_to(current_mission).or(User.where(id: response_user_id))
             else
-              User.assigned_to(current_mission).by_name
+              User.assigned_to(current_mission)
             end
     render_possible_users(users)
   end
 
   def possible_reviewers
-    users = User.with_roles(current_mission, %w[coordinator staffer reviewer]).by_name
+    users = User.with_roles(current_mission, %w[coordinator staffer reviewer])
     render_possible_users(users)
   end
 
   private
 
   def render_possible_users(possible_users)
-    @possible_users = apply_search_if_given(User, possible_users)
-      .natural_sort_by_key
+    @possible_users = apply_search_if_given(User, possible_users).by_name
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {
