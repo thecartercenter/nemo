@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: questions
@@ -14,7 +15,6 @@
 #  canonical_name            :text             not null
 #  code                      :string(255)      not null
 #  hint_translations         :jsonb
-#  is_standard               :boolean          default(FALSE), not null
 #  key                       :boolean          default(FALSE), not null
 #  maximum                   :decimal(15, 8)
 #  maxstrictly               :boolean
@@ -46,6 +46,7 @@
 #  questions_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
 #  questions_original_id_fkey    (original_id => questions.id) ON DELETE => nullify ON UPDATE => restrict
 #
+# # rubocop:enable Metrics/LineLength
 
 
 # a question on a form

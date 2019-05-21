@@ -1,3 +1,4 @@
+# # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: option_nodes
@@ -5,7 +6,6 @@
 #  id             :uuid             not null, primary key
 #  ancestry       :text
 #  ancestry_depth :integer          default(0), not null
-#  is_standard    :boolean          default(FALSE), not null
 #  rank           :integer          default(1), not null
 #  sequence       :integer          default(0), not null
 #  standard_copy  :boolean          default(FALSE), not null
@@ -33,6 +33,7 @@
 #  option_nodes_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
 #  option_nodes_original_id_fkey    (original_id => option_nodes.id) ON DELETE => nullify ON UPDATE => restrict
 #
+# # rubocop:enable Metrics/LineLength
 
 require "rails_helper"
 

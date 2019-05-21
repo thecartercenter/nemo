@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: forms
@@ -10,7 +11,6 @@
 #  authenticate_sms      :boolean          default(TRUE), not null
 #  default_response_name :string
 #  downloads             :integer
-#  is_standard           :boolean          default(FALSE), not null
 #  name                  :string(255)      not null
 #  pub_changed_at        :datetime
 #  published             :boolean          default(FALSE), not null
@@ -39,6 +39,7 @@
 #  forms_original_id_fkey         (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
 #  forms_root_id_fkey             (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# # rubocop:enable Metrics/LineLength
 
 
 require "rails_helper"

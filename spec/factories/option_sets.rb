@@ -1,3 +1,4 @@
+# # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: option_sets
@@ -5,7 +6,6 @@
 #  id                   :uuid             not null, primary key
 #  allow_coordinates    :boolean          default(FALSE), not null
 #  geographic           :boolean          default(FALSE), not null
-#  is_standard          :boolean          default(FALSE), not null
 #  level_names          :jsonb
 #  name                 :string(255)      not null
 #  sms_guide_formatting :string(255)      default("auto"), not null
@@ -29,6 +29,7 @@
 #  option_sets_option_node_id_fkey  (root_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
 #  option_sets_original_id_fkey     (original_id => option_sets.id) ON DELETE => nullify ON UPDATE => restrict
 #
+# # rubocop:enable Metrics/LineLength
 
 FactoryGirl.define do
   factory :option_set do
