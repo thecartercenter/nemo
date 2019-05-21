@@ -68,17 +68,6 @@ class UserGroupsController < ApplicationController
   end
 
   def possible_groups
-    if params[:select2].present?
-      possible_groups_select2
-    else
-      @user_groups = @user_groups.name_matching(params[:q])
-      render(json: @user_groups)
-    end
-  end
-
-  private
-
-  def possible_groups_select2
     @user_groups = @user_groups.name_matching(params[:search]) if params[:search].present?
     @user_groups = @user_groups.by_name
       .paginate(page: params[:page], per_page: 20)
@@ -88,6 +77,8 @@ class UserGroupsController < ApplicationController
       more: @user_groups.next_page.present?
     })
   end
+
+  private
 
   def load_user_groups
     @user_groups = UserGroup.accessible_by(current_ability).order(:name).paginate(page: 1, per_page: 500)

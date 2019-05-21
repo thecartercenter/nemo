@@ -14,12 +14,7 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
     @$("#user_user_group_ids").select2
       tags: true
       templateResult: @format_suggestions
-      ajax:
-        url: @params.user_group_options_url
-        dataType: "json"
-        delay: 250
-        cache: true
-        processResults: (data) -> {results: data}
+      ajax: ELMO.select2.getAjaxParams(@params.user_group_options_url, 'possible_groups')
 
   format_suggestions: (item) ->
     if item.id == item.text

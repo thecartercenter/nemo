@@ -23,7 +23,7 @@ const select2Config = {
     resultsKey: 'possible_users',
   },
   [submitterType.GROUP]: {
-    dataUrl: ELMO.app.url_builder.build('user_groups', 'possible-groups', '?select2=true'),
+    dataUrl: ELMO.app.url_builder.build('user_groups', 'possible-groups'),
     resultsKey: 'possible_groups',
   },
 };
