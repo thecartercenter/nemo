@@ -30,8 +30,8 @@ module FormLogical
     source_item
   end
 
-  def ref_qings
-    conditions.map(&:ref_qing)
+  def left_qings
+    conditions.map(&:left_qing)
   end
 
   private

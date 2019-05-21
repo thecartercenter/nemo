@@ -25,14 +25,14 @@ describe FormLogical do
     describe "conditions" do
       let(:rule) do
         create(:skip_rule, source_item: form.c[1], conditions_attributes: [
-          {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-          {ref_qing_id: "", op: "", value: ""}
+          {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+          {left_qing_id: "", op: "", value: ""}
         ])
       end
 
       it "should be discarded if totally empty" do
         expect(rule.conditions.count).to eq(1)
-        expect(rule.conditions[0].ref_qing).to eq(form.c[0])
+        expect(rule.conditions[0].left_qing).to eq(form.c[0])
       end
     end
   end
@@ -47,7 +47,7 @@ describe FormLogical do
     describe "condition validation passthrough" do
       let(:rule) do
         build(:skip_rule, source_item: form.c[1],
-                          conditions_attributes: [{ref_qing_id: form.c[0].id, op: "eq", value: ""}])
+                          conditions_attributes: [{left_qing_id: form.c[0].id, op: "eq", value: ""}])
       end
 
       it "should set validation error if incomplete condition" do
