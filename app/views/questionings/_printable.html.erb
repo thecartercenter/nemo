@@ -1,9 +1,10 @@
-<tr class="question depth <%= "depth-#{qing.depth}" %><%= qing.display_conditionally? ? ' conditional' : '' %>">
+<% condition = qing.decorate.concatenated_conditions.presence %>
+<tr class="question depth <%= "depth-#{qing.depth}" %><%= condition ? ' conditional' : '' %>">
   <td class="name">
-    <% if qing.display_conditionally?%>
+    <% if condition %>
       <div class="condition">
-        <%= t("question.answer_only_caps") %>
-        <%= qing.decorate.concatenated_conditions %></div>
+        <%= t("question.answer_only_caps") %> <%= condition %>
+      </div>
     <% end %>
     <div class="name"><%= qing.name_and_rank %></div>
     <% unless qing.hint.blank? %>

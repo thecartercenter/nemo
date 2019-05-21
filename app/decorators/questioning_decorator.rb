@@ -1,9 +1,12 @@
+# frozen_string_literal: true
+
 class QuestioningDecorator < ApplicationDecorator
   delegate_all
 
   def concatenated_conditions
     concatenator = display_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
-    decorated_conditions.map(&:human_readable).join(" #{concatenator} ")
+    # Temporarily ignoring right_side_is_qing conditions
+    decorated_conditions.reject(&:right_side_is_qing?).map(&:human_readable).join(" #{concatenator} ")
   end
 
   # Unique, sorted list of questionings to which this question actually refers,
@@ -23,7 +26,7 @@ class QuestioningDecorator < ApplicationDecorator
   end
 
   def name_and_rank
-    str = "#{full_dotted_rank}. ".html_safe
+    str = safe_str << "#{full_dotted_rank}. "
     str << h.reqd_sym if required?
     str << (name.presence || code)
   end
