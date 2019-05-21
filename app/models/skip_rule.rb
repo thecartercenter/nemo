@@ -30,12 +30,13 @@ class SkipRule < ActiveRecord::Base
   include FormLogical
 
   belongs_to :dest_item, class_name: "FormItem", inverse_of: :incoming_skip_rules
+  belongs_to :source_item, class_name: "FormItem"
 
   before_validation :normalize
 
   validate :require_dest_item
 
-  replicable child_assocs: [:conditions], dont_copy: %i[source_item_id dest_item_id],
+  replicable child_assocs: [:conditions],
              backward_assocs: [
                :source_item,
                # This is a second pass association because the

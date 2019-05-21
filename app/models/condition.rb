@@ -67,7 +67,7 @@ class Condition < ApplicationRecord
 
   OPERATOR_CODES = %i[eq lt gt leq geq neq inc ninc].freeze
 
-  replicable dont_copy: %i[left_qing_id conditionable_id option_node_id], backward_assocs: [
+  replicable backward_assocs: [
     :conditionable,
     {name: :option_node, skip_obj_if_missing: true},
     # This is a second pass association because the left_qing may not have been copied yet.
