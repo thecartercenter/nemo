@@ -149,6 +149,10 @@ class Condition < ApplicationRecord
     right_side_type == "value"
   end
 
+  def refd_qings
+    [left_qing, right_qing].compact
+  end
+
   private
 
   def normalize

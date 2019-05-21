@@ -57,15 +57,6 @@ class SkipRule < ActiveRecord::Base
     )
   end
 
-  # Duck type used for retrieving the main FormItem associated with this object, which is src_item.
-  def base_item
-    source_item
-  end
-
-  def left_qings
-    conditions.map(&:left_qing)
-  end
-
   private
 
   def normalize

@@ -1,12 +1,10 @@
 # frozen_string_literal: true
 
 # Decorates QingGroups for rendering outside ODK. There is a separate QingGroup decorator for ODK.
-class QingGroupDecorator < ApplicationDecorator
-  delegate_all
-
+class QingGroupDecorator < FormItemDecorator
   # Unique, sorted list of questionings this group refers to via display conditions
   def refd_qings
-    qing_group.display_conditions.map(&:left_qing).uniq.sort_by(&:full_rank)
+    @refd_qings ||= super.uniq.sort_by(&:full_rank)
   end
 
   def group_link

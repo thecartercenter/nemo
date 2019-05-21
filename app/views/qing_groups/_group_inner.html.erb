@@ -23,7 +23,7 @@
     <%# Ranks of questions this group refers to by display conditions.
         Used to inform the user, and data in data-ref-id used by the drag-drop system for constraint
         enforcement. %>
-    <% if qing_group.display_conditions.any? %>
+    <% if qing_group.refd_qings.any? %>
       <div class="refd-qing-links">
         <i class="fa fa-link"></i>
         <% qing_group.refd_qings.each do |q| %>
