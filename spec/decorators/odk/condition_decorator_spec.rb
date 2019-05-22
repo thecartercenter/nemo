@@ -8,7 +8,6 @@ describe Odk::ConditionDecorator do
   describe "to_odk", :odk do
     let(:q1) { decorate(form.c[0]) }
     let(:opt_set) { form.c[0].option_set }
-    let(:option_node) { form.c[0].option_set.c[0] }
     let(:hostq) { decorate(form.c.last) }
     let(:condition) { Condition.new({conditionable: hostq.object}.merge(params)) }
     subject(:xpath) { decorate(condition).to_odk }
@@ -18,13 +17,13 @@ describe Odk::ConditionDecorator do
         let(:form) { create(:form, question_types: %w[select_one text]) }
 
         context "with eq operator" do
-          let(:params) { {left_qing: q1.object, op: "eq", option_node: option_node} }
-          it { is_expected.to eq("selected(/data/#{q1.odk_code}, 'on#{option_node.id}')") }
+          let(:params) { {left_qing: q1.object, op: "eq", option_node: opt_set.c[0]} }
+          it { is_expected.to eq("/data/#{q1.odk_code} = '#{opt_set.c[0].odk_code}'") }
         end
 
         context "with neq operator" do
-          let(:params) { {left_qing: q1.object, op: "neq", option_node: option_node} }
-          it { is_expected.to eq("not(selected(/data/#{q1.odk_code}, 'on#{option_node.id}'))") }
+          let(:params) { {left_qing: q1.object, op: "neq", option_node: opt_set.c[0]} }
+          it { is_expected.to eq("/data/#{q1.odk_code} != '#{opt_set.c[0].odk_code}'") }
         end
       end
 
@@ -35,12 +34,12 @@ describe Odk::ConditionDecorator do
 
         context "for first level" do
           let(:params) { {left_qing: q1.object, op: "eq", option_node: opt_set.c[0]} }
-          it { is_expected.to eq("selected(/data/#{subq1.odk_code}, 'on#{opt_set.c[0].id}')") }
+          it { is_expected.to eq("/data/#{subq1.odk_code} = '#{opt_set.c[0].odk_code}'") }
         end
 
         context "for second level" do
           let(:params) { {left_qing: q1.object, op: "eq", option_node: opt_set.c[0].c[1]} }
-          it { is_expected.to eq("selected(/data/#{subq2.odk_code}, 'on#{opt_set.c[0].c[1].id}')") }
+          it { is_expected.to eq("/data/#{subq2.odk_code} = '#{opt_set.c[0].c[1].odk_code}'") }
         end
       end
 
@@ -48,13 +47,13 @@ describe Odk::ConditionDecorator do
         let(:form) { create(:form, question_types: %w[select_multiple text]) }
 
         context "with inc operator" do
-          let(:params) { {left_qing: q1.object, op: "inc", option_node: option_node} }
-          it { is_expected.to eq("selected(/data/#{q1.odk_code}, 'on#{option_node.id}')") }
+          let(:params) { {left_qing: q1.object, op: "inc", option_node: opt_set.c[0]} }
+          it { is_expected.to eq("selected(/data/#{q1.odk_code}, '#{opt_set.c[0].odk_code}')") }
         end
 
         context "with ninc operator" do
-          let(:params) { {left_qing: q1.object, op: "ninc", option_node: option_node} }
-          it { is_expected.to eq("not(selected(/data/#{q1.odk_code}, 'on#{option_node.id}'))") }
+          let(:params) { {left_qing: q1.object, op: "ninc", option_node: opt_set.c[0]} }
+          it { is_expected.to eq("not(selected(/data/#{q1.odk_code}, '#{opt_set.c[0].odk_code}'))") }
         end
       end
 
@@ -103,9 +102,9 @@ describe Odk::ConditionDecorator do
         end
 
         context "for multilevel ref qing" do
-          let(:option_node) { q1.option_set.c[0].c[0] }
-          let(:params) { {left_qing: q1.object, op: "eq", option_node: option_node} }
-          it { is_expected.to eq("selected(../#{q1.odk_code}_2, '#{option_node.odk_code}')") }
+          let(:opt_set) { q1.option_set }
+          let(:params) { {left_qing: q1.object, op: "eq", option_node: opt_set.c[0].c[0]} }
+          it { is_expected.to eq("../#{q1.odk_code}_2 = '#{opt_set.c[0].c[0].odk_code}'") }
         end
       end
     end

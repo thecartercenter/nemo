@@ -17,8 +17,8 @@ module Odk
     }.freeze
 
     def to_odk
-      if left_qing.has_options?
-        select_to_odk
+      if left_qing.select_multiple?
+        select_multiple_to_odk
       elsif left_qing.temporal? && right_side_is_literal?
         temporal_to_odk
       else
@@ -36,7 +36,7 @@ module Odk
 
     private
 
-    def select_to_odk
+    def select_multiple_to_odk
       selected = "selected(#{left_xpath}, '#{option_node.odk_code}')"
       %w[neq ninc].include?(op) ? "not(#{selected})" : selected
     end
@@ -54,7 +54,7 @@ module Odk
       right = if right_side_is_qing?
                 right_xpath
               else
-                left_qing.numeric? ? value : "'#{value}'"
+                left_qing.numeric? ? value : "'#{option_node&.odk_code || value}'"
               end
       join_with_operator(left, right)
     end

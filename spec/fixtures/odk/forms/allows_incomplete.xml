@@ -41,9 +41,9 @@
           </text>
         </translation>
       </itext>
-      <bind nodeset="/data/*itemcode1*" type="int" required="selected(/data/ir01, 'no')"/>
+      <bind nodeset="/data/*itemcode1*" type="int" required="/data/ir01 = 'no'"/>
       <bind nodeset="/data/ir01" required="true()" type="select1"/>
-      <bind nodeset="/data/ir02" required="true()" relevant="selected(/data/ir01, 'yes')" constraint=". = ''" type="string"/>
+      <bind nodeset="/data/ir02" required="true()" relevant="/data/ir01 = 'yes'" constraint=". = ''" type="string"/>
     </model>
   </h:head>
   <h:body>

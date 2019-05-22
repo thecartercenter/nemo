@@ -55,7 +55,7 @@ class Questioning < FormItem
     :option_set_id, :option_set_id=, :option_set, :option_set=, :options, :preordered_option_nodes,
     :printable?, :qtype_name, :qtype_name=, :qtype, :select_options, :sms_formatting_as_appendix?,
     :sms_formatting_as_text?, :standardized?, :subqings, :tags, :temporal?, :title, :metadata_type,
-    :reference,
+    :reference, :select_multiple?,
     to: :question
   delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
