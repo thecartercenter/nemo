@@ -123,13 +123,6 @@ class Condition < ApplicationRecord
     left_qing.try(:numeric?)
   end
 
-  # Gets the referenced Subqing.
-  # If option_node is not set, returns the first subqing of left_qing (just an alias).
-  # If option_node is set, uses the depth to determine the subqing rank.
-  def ref_subqing
-    left_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1]
-  end
-
   def all_fields_blank?
     left_qing.blank? && op.blank? && option_node_id.blank? && value.blank?
   end

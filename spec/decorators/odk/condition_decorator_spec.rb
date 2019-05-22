@@ -114,13 +114,13 @@ describe Odk::ConditionDecorator do
 
       context "with straight equality" do
         let(:form) { create(:form, question_types: %w[text text]) }
-        let(:params) { {left_qing: q2.object, op: "eq", right_side_type: "qing", right_qing: q1.object} }
+        let(:params) { {left_qing: q2.object, op: "eq", right_qing: q1.object} }
         it { is_expected.to eq("/data/#{q2.odk_code} = /data/#{q1.odk_code}") }
       end
 
       context "with temporal questions" do
         let(:form) { create(:form, question_types: %w[date date]) }
-        let(:params) { {left_qing: q2.object, op: "eq", right_side_type: "qing", right_qing: q1.object} }
+        let(:params) { {left_qing: q2.object, op: "eq", right_qing: q1.object} }
         it { is_expected.to eq("/data/#{q2.odk_code} = /data/#{q1.odk_code}") }
       end
 
@@ -128,8 +128,22 @@ describe Odk::ConditionDecorator do
         let(:form) { create(:form, question_types: [%w[integer integer]]) }
         let(:q1) { decorate(form.c[0].c[0]) }
         let(:q2) { decorate(form.c[0].c[1]) }
-        let(:params) { {left_qing: q2.object, op: "gt", right_side_type: "qing", right_qing: q1.object} }
+        let(:params) { {left_qing: q2.object, op: "gt", right_qing: q1.object} }
         it { is_expected.to eq("../#{q2.odk_code} > ../#{q1.odk_code}") }
+      end
+
+      context "with multilevel questions" do
+        let(:form) { create(:form, question_types: %w[multilevel_select_one super_multilevel_select_one]) }
+        let(:params) { {left_qing: q2.object, op: "eq", right_qing: q1.object} }
+        let(:xp1_1) { "/data/#{decorate(q1.subqings[0]).odk_code}" }
+        let(:xp1_2) { "/data/#{decorate(q1.subqings[1]).odk_code}" }
+        let(:xp2_1) { "/data/#{decorate(q2.subqings[0]).odk_code}" }
+        let(:xp2_2) { "/data/#{decorate(q2.subqings[1]).odk_code}" }
+        let(:xp2_3) { "/data/#{decorate(q2.subqings[2]).odk_code}" }
+
+        it "uses the lowest specified level for both" do
+          is_expected.to eq("coalesce(coalesce(#{xp2_3}, #{xp2_2}), #{xp2_1}) = coalesce(#{xp1_2}, #{xp1_1})")
+        end
       end
     end
   end

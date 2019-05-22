@@ -34,25 +34,29 @@ module Odk
       decorate(object.left_qing)
     end
 
+    def right_qing
+      decorate(object.right_qing)
+    end
+
     private
 
     def select_multiple_to_odk
-      selected = "selected(#{left_xpath}, '#{option_node.odk_code}')"
+      selected = "selected(#{left_actual}, '#{option_node.odk_code}')"
       %w[neq ninc].include?(op) ? "not(#{selected})" : selected
     end
 
     def temporal_to_odk
       format = :"javarosa_#{left_qing.qtype_name}"
       formatted = Time.zone.parse(value).to_s(format)
-      left = "format-date(#{left_xpath}, '#{Time::DATE_FORMATS[format]}')"
+      left = "format-date(#{left_actual}, '#{Time::DATE_FORMATS[format]}')"
       right = "'#{formatted}'"
       join_with_operator(left, right)
     end
 
     def other_types_to_odk
-      left = left_xpath
+      left = left_actual(coalesce_multilevel: right_side_is_qing?)
       right = if right_side_is_qing?
-                right_xpath
+                right_actual
               else
                 left_qing.numeric? ? value : "'#{option_node&.odk_code || value}'"
               end
@@ -63,12 +67,26 @@ module Odk
       "#{left} #{OP_XPATH[op.to_sym]} #{right}"
     end
 
-    def left_xpath
-      questioning.xpath_to(ref_subqing)
+    def left_actual(coalesce_multilevel: false)
+      if coalesce_multilevel
+        multilevel_coalesce_expr(left_qing)
+      else
+        questioning.xpath_to(left_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1])
+      end
     end
 
-    def right_xpath
-      questioning.xpath_to(right_qing)
+    def right_actual
+      multilevel_coalesce_expr(right_qing)
+    end
+
+    # Builds an expression that searches from the bottom up in a multilevel question for a non-empty value.
+    # Example output: coalesce(coalesce(/data/qing1234_3, /data/qing1234_2), /data/qing1234_1))
+    def multilevel_coalesce_expr(qing)
+      return questioning.xpath_to(qing) unless qing.multilevel?
+      qing.subqings.reverse.inject(nil) do |expr, subq|
+        xpath = questioning.xpath_to(subq)
+        expr.nil? ? xpath : "coalesce(#{expr}, #{xpath})"
+      end
     end
   end
 end
