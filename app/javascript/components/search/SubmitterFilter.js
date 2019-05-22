@@ -8,7 +8,7 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString, getItemNameFromId, parseListForSelect2 } from './utils';
+import { getButtonHintString } from './utils';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
 export const submitterType = {
@@ -16,6 +16,17 @@ export const submitterType = {
   GROUP: 'group',
 };
 export const SUBMITTER_TYPES = Object.values(submitterType);
+
+const select2Config = {
+  [submitterType.USER]: {
+    dataUrl: ELMO.app.url_builder.build('responses', 'possible-submitters'),
+    resultsKey: 'possible_users',
+  },
+  [submitterType.GROUP]: {
+    dataUrl: ELMO.app.url_builder.build('user_groups', 'possible-groups'),
+    resultsKey: 'possible_groups',
+  },
+};
 
 @inject('filtersStore')
 @observer
@@ -37,7 +48,7 @@ class SubmitterFilter extends React.Component {
 
   handleClearSelection = (type) => () => {
     const { filtersStore } = this.props;
-    filtersStore.selectedSubmitterIdsForType[type] = [];
+    filtersStore.selectedSubmittersForType[type] = [];
 
     /*
      * Select2 doesn't make this easy... wait for state update then close the dropdown.
@@ -48,30 +59,34 @@ class SubmitterFilter extends React.Component {
 
   renderPopover = () => {
     const { filtersStore, onSubmit } = this.props;
-    const { allSubmittersForType, selectedSubmitterIdsForType, handleSelectSubmitterForType } = filtersStore;
+    const { selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
 
     return (
       <Popover
         className="filters-popover popover-multi-select2"
         id="submitter-filter"
       >
-        {SUBMITTER_TYPES.map((type) => (
-          <Select2
-            key={type}
-            id={type}
-            data={parseListForSelect2(allSubmittersForType[type])}
-            onSelect={handleSelectSubmitterForType(type)}
-            onUnselect={this.handleClearSelection(type)}
-            options={{
-              allowClear: true,
-              placeholder: I18n.t(`filter.choose_submitter.${type}`),
-              dropdownCssClass: 'filters-select2-dropdown',
-              width: '100%',
-            }}
-            ref={this.select2[type]}
-            value={selectedSubmitterIdsForType[type]}
-          />
-        ))}
+        {SUBMITTER_TYPES.map((type) => {
+          const { dataUrl, resultsKey } = select2Config[type];
+
+          return (
+            <Select2
+              key={type}
+              id={type}
+              onSelect={handleSelectSubmitterForType(type)}
+              onUnselect={this.handleClearSelection(type)}
+              options={{
+                allowClear: true,
+                placeholder: I18n.t(`filter.choose_submitter.${type}`),
+                dropdownCssClass: 'filters-select2-dropdown',
+                width: '100%',
+                ajax: ELMO.select2.getAjaxParams(dataUrl, resultsKey),
+              }}
+              ref={this.select2[type]}
+              value={selectedSubmittersForType[type].map(({ id }) => id)}
+            />
+          );
+        })}
 
         <div className="btn-apply-container">
           <Button
@@ -87,9 +102,9 @@ class SubmitterFilter extends React.Component {
 
   render() {
     const { filtersStore } = this.props;
-    const { allSubmittersForType, originalSubmitterIdsForType } = filtersStore;
+    const { originalSubmittersForType } = filtersStore;
     const submitterNames = flatten(SUBMITTER_TYPES.map((type) => {
-      return originalSubmitterIdsForType[type].map((id) => getItemNameFromId(allSubmittersForType[type], id));
+      return originalSubmittersForType[type].map(({ name }) => name);
     }));
 
     return (

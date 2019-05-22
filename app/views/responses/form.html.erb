@@ -55,9 +55,9 @@
 <%= javascript_doc_ready do %>
   new ELMO.Views.ResponseFormView(<%=json(
     el: "#response-form-wrapper",
-    submitter_url: @response.new_record? ? possible_users_new_response_path(search_mode: "submitters") :
-      possible_users_response_path(@response, search_mode: "submitters"),
-    reviewer_url: @response.new_record? ? possible_users_new_response_path(search_mode: "reviewers") :
-      possible_users_response_path(@response, search_mode: "reviewers")
+    submitter_url: @response.new_record? ? possible_submitters_responses_path :
+      possible_submitters_responses_path(response_id: @response.id),
+    reviewer_url: @response.new_record? ? possible_reviewers_responses_path :
+      possible_reviewers_responses_path(response_id: @response.id)
   )%>);
 <% end %>

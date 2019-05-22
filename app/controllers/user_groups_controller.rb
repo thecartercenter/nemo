@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class UserGroupsController < ApplicationController
   before_action :load_user_groups
-  before_action :find_user_group, only: [:add_users, :remove_users]
+  before_action :find_user_group, only: %i[add_users remove_users]
   load_and_authorize_resource
 
   decorates_assigned :user_groups
@@ -23,7 +25,7 @@ class UserGroupsController < ApplicationController
   def update
     @user_group.name = params[:name]
     if @user_group.save
-      render json: { name: @user_group.name }
+      render(json: {name: @user_group.name})
     else
       flash[:error] = @user_group.errors.full_messages.join(", ")
       head(422)
@@ -44,7 +46,7 @@ class UserGroupsController < ApplicationController
   def destroy
     @user_group.destroy
     page_info = view_context.page_entries_info(load_user_groups, model: UserGroup)
-    render json: { page_entries_info: page_info }
+    render(json: {page_entries_info: page_info})
   end
 
   def add_users
@@ -66,8 +68,14 @@ class UserGroupsController < ApplicationController
   end
 
   def possible_groups
-    @user_groups = @user_groups.name_matching(params[:q])
-    render json: @user_groups
+    @user_groups = @user_groups.name_matching(params[:search]) if params[:search].present?
+    @user_groups = @user_groups.by_name
+      .paginate(page: params[:page], per_page: 20)
+
+    render(json: {
+      possible_groups: ActiveModel::ArraySerializer.new(@user_groups),
+      more: @user_groups.next_page.present?
+    })
   end
 
   private
@@ -81,6 +89,6 @@ class UserGroupsController < ApplicationController
   end
 
   def load_users(user_ids)
-    @user_groups = User.accessible_by(current_ability).includes(:assignments).where(id: user_ids, assignments: { mission: current_mission})
+    @user_groups = User.accessible_by(current_ability).includes(:assignments).where(id: user_ids, assignments: {mission: current_mission})
   end
 end

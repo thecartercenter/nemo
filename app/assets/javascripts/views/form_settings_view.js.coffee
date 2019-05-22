@@ -50,9 +50,4 @@ class ELMO.Views.FormSettingsView extends ELMO.Views.ApplicationView
 
   init_recipient_select: ->
     @$('#form_recipient_ids').select2
-      ajax:
-        url: @recipient_options_url
-        dataType: 'json'
-        data: (params) -> {term: params.term, page: params.page || 1}
-        delay: 250
-        cache: true
+      ajax: ELMO.select2.getAjaxParams(@recipient_options_url)

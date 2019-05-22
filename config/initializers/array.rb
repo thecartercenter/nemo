@@ -39,4 +39,13 @@ class Array
   def map_hash
     Hash[*map{ |x| [x, yield(x)] }.flatten(1)]
   end
+
+  # Sorts a list of hashes by item key.
+  def sort_by_key(key = :name)
+    sort do |x, y|
+      x_value = x[key]
+      y_value = y[key]
+      x_value <=> y_value
+    end
+  end
 end

@@ -41,6 +41,7 @@
 //= require core_ext/jquery_ext
 //= require legacy/common
 //= require sassafras/utils
+//= require_tree ./utils
 
 // Superclasses that need to come first due to inheritance
 //= require legacy/views/control/control

@@ -38,13 +38,10 @@ class FiltersModel {
   isReviewed = null;
 
   @observable
-  allSubmittersForType = getEmptySubmitterTypeMap();
+  originalSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
-  originalSubmitterIdsForType = getEmptySubmitterTypeMap();
-
-  @observable
-  selectedSubmitterIdsForType = getEmptySubmitterTypeMap();
+  selectedSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
   advancedSearchText = '';
@@ -74,7 +71,7 @@ class FiltersModel {
   @action
   updateRefableQings = async () => {
     ELMO.app.loading(true);
-    const url = this.buildUrl();
+    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
     try {
       if (process.env.NODE_ENV === 'test') return;
 
@@ -87,10 +84,6 @@ class FiltersModel {
     }
   }
 
-  buildUrl = () => {
-    return ELMO.app.url_builder.build('form-items', 'condition-form');
-  }
-
   @action
   handleSelectForm = (event) => {
     this.selectedFormIds = [event.target.value];
@@ -98,7 +91,8 @@ class FiltersModel {
 
   @action
   handleSelectSubmitterForType = (type) => (event) => {
-    this.selectedSubmitterIdsForType[type] = [event.target.value];
+    const { id, text: name } = event.params.data;
+    this.selectedSubmittersForType[type] = [{ id, name }];
   }
 
   @action

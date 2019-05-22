@@ -97,8 +97,7 @@ export function getFilterString({
   selectedFormIds,
   conditionSetStore,
   isReviewed,
-  allSubmittersForType,
-  selectedSubmitterIdsForType,
+  selectedSubmittersForType,
   advancedSearchText,
 }) {
   const selectedFormNames = selectedFormIds
@@ -111,8 +110,8 @@ export function getFilterString({
       `{${getQuestionNameFromId(allQuestions, refQingId)}}:${JSON.stringify(currTextValue)}`);
 
   const submitterParts = SUBMITTER_TYPES.map((type) => {
-    const selectedSubmitterNames = selectedSubmitterIdsForType[type]
-      .map((id) => JSON.stringify(getItemNameFromId(allSubmittersForType[type], id)));
+    const selectedSubmitterNames = selectedSubmittersForType[type]
+      .map(({ name }) => JSON.stringify(name));
 
     return isEmpty(selectedSubmitterNames) ? null : `${type}:(${selectedSubmitterNames.join('|')})`;
   });

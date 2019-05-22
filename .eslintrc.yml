@@ -9,4 +9,5 @@ globals:
   I18n: true
   ELMO: true
 rules:
+  import/no-unresolved: ['error', { ignore: ['^javascripts/'] }]
   react/prefer-stateless-function: off

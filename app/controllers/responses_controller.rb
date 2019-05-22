@@ -43,6 +43,8 @@ class ResponsesController < ApplicationController
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?
+
+        init_filter_data
       end
 
       # csv output is for exporting responses
@@ -60,7 +62,7 @@ class ResponsesController < ApplicationController
     # if there is a search param, we try to load the response via the do_search mechanism
     # so that we get highlighted excerpts
     if params[:search]
-      # we pass a relation matching only one respoonse, so there should be at most one match
+      # we pass a relation matching only one response, so there should be at most one match
       matches = Response.do_search(Response.where(id: @response.id), params[:search],
         {mission: current_mission}, include_excerpts: true, dont_truncate_excerpts: true)
 
@@ -112,32 +114,29 @@ class ResponsesController < ApplicationController
   end
 
   def possible_submitters
-    # get the users to which this response can be assigned
-    # which is the users in this mission plus the submitter of this response
-    @possible_submitters = User.assigned_to_or_submitter(current_mission, @response).by_name
-    @possible_submitters = apply_search_if_given(User, @possible_submitters)
-    @possible_submitters = @possible_submitters.paginate(page: params[:page], per_page: 20)
-
-    render(json: {possible_submitters: ActiveModel::ArraySerializer.new(@possible_submitters),
-                  more: @possible_submitters.next_page.present?}, select2: true)
+    users = User.assigned_to(current_mission)
+    if params[:response_id].present? && (response = Response.find(params[:response_id]))
+      users = users.or(User.where(id: response.user_id))
+    end
+    render_possible_users(users)
   end
 
-  def possible_users
-    search_mode = params[:search_mode] || "submitters"
-
-    @possible_users =
-      case search_mode
-      when "submitters" then User.assigned_to_or_submitter(current_mission, @response).by_name
-      when "reviewers" then User.with_roles(current_mission, %w[coordinator staffer reviewer]).by_name
-      end
-    @possible_users = apply_search_if_given(User, @possible_users)
-    @possible_users = @possible_users.paginate(page: params[:page], per_page: 20)
-
-    render(json: {possible_users: ActiveModel::ArraySerializer.new(@possible_users),
-                  more: @possible_users.next_page.present?}, select2: true)
+  def possible_reviewers
+    users = User.with_roles(current_mission, %w[coordinator staffer reviewer])
+    render_possible_users(users)
   end
 
   private
+
+  def render_possible_users(possible_users)
+    possible_users = apply_search_if_given(User, possible_users).by_name
+      .paginate(page: params[:page], per_page: 20)
+
+    render(json: {
+      possible_users: ActiveModel::ArraySerializer.new(possible_users),
+      more: possible_users.next_page.present?
+    }, select2: true)
+  end
 
   def setup_condition_computer
     @condition_computer = Forms::ConditionComputer.new(@response.form)

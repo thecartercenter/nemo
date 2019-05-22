@@ -77,9 +77,9 @@ class BroadcastsController < ApplicationController
     @users = User.assigned_to(current_mission).by_name
     @groups = UserGroup.for_mission(current_mission).by_name
 
-    if params[:q].present?
-      @users = @users.name_matching(params[:q])
-      @groups = @groups.name_matching(params[:q])
+    if params[:search].present?
+      @users = @users.name_matching(params[:search])
+      @groups = @groups.name_matching(params[:search])
     end
 
     @users = @users.paginate(page: params[:page], per_page: 5)
@@ -93,10 +93,10 @@ class BroadcastsController < ApplicationController
       set.each { |u| @recipients << Recipient.new(object: u) }
     end
 
-    render json: {
+    render(json: {
       results: ActiveModel::ArraySerializer.new(@recipients, each_serializer: RecipientSerializer),
-      pagination: {more: (users_fetched || groups_fetched)}
-    }
+      more: (users_fetched || groups_fetched)
+    })
   end
 
   private

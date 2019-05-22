@@ -33,18 +33,9 @@ export const getFiltersStore = () => new FiltersModel({
   }),
 
   allForms: [
-    {
-      id: '1',
-      name: 'One',
-    },
-    {
-      id: '2',
-      name: 'Two',
-    },
-    {
-      id: '3',
-      name: "Q\"uo'te`s",
-    },
+    { id: '1', name: 'One' },
+    { id: '2', name: 'Two' },
+    { id: '3', name: "Q\"uo'te`s" },
   ],
 
   originalFormIds: [
@@ -61,35 +52,23 @@ export const getFiltersStore = () => new FiltersModel({
 
   allSubmittersForType: {
     [submitterType.USER]: [
-      {
-        id: 'A',
-        name: 'User A',
-      },
-      {
-        id: 'B',
-        name: 'User B',
-      },
+      { id: 'A', name: 'User A' },
+      { id: 'B', name: 'User B' },
     ],
     [submitterType.GROUP]: [
-      {
-        id: 'A',
-        name: 'Group A',
-      },
-      {
-        id: 'B',
-        name: 'Group B',
-      },
+      { id: 'A', name: 'Group A' },
+      { id: 'B', name: 'Group B' },
     ],
   },
 
-  originalSubmitterIdsForType: {
-    [submitterType.USER]: ['A'],
+  originalSubmittersForType: {
+    [submitterType.USER]: [{ id: 'A', name: 'User A' }],
     [submitterType.GROUP]: [],
   },
 
-  selectedSubmitterIdsForType: {
-    [submitterType.USER]: ['B'],
-    [submitterType.GROUP]: ['B'],
+  selectedSubmittersForType: {
+    [submitterType.USER]: [{ id: 'B', name: 'User B' }],
+    [submitterType.GROUP]: [{ id: 'B', name: 'Group B' }],
   },
 
   advancedSearchText: 'query',
