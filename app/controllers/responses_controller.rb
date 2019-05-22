@@ -36,7 +36,7 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
-        @responses = apply_search_if_given(Response, @responses, include_excerpts: true)
+        @responses = apply_search_if_given(Response, @responses)
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
@@ -64,7 +64,7 @@ class ResponsesController < ApplicationController
     if params[:search]
       # we pass a relation matching only one response, so there should be at most one match
       matches = Response.do_search(Response.where(id: @response.id), params[:search],
-        {mission: current_mission}, include_excerpts: true, dont_truncate_excerpts: true)
+        mission: current_mission)
 
       # if we get a match, then we use that object instead, since it contains excerpts
       @response = matches.first if matches.first
@@ -101,8 +101,7 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
-    @responses = restrict_by_search_and_ability_and_selection(@responses, Response,
-      search_options: {include_excerpts: false})
+    @responses = restrict_by_search_and_ability_and_selection(@responses, Response)
     result = ResponseDestroyer.new(scope: @responses, ability: current_ability).destroy!
     flash[:success] = t("response.bulk_destroy_deleted", count: result[:destroyed])
     redirect_to(responses_path)

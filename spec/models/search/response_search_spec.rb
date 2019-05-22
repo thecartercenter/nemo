@@ -178,13 +178,12 @@ describe Response do
     def assert_excerpts(query, excerpts)
       # TODO: FIX EXCERPTING IN PG_SEARCH
       return "SKIPPING UNTIL WE RE-ENABLE EXCERPTS"
-      responses = run_search(query, include_excerpts: true)
+      responses = run_search(query)
       expect(responses.size).to eq(excerpts.size)
       responses.each_with_index { |r, i| expect(r.excerpts).to eq(excerpts[i]) }
     end
 
     def run_search(query, options = {})
-      options[:include_excerpts] ||= false
       Response.do_search(Response, query, {mission: get_mission}, options)
     end
   end
