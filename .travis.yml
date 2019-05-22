@@ -27,7 +27,9 @@ before_script:
   - export DISPLAY=:99.0
   - yarn install --ignore-engines
 script:
-  - bundle exec rspec ./spec/features/results/location_picker_spec.rb:25 ./spec/features/results/skip_logic_spec.rb:37 ./spec/features/results/form_rendering_and_submission_spec.rb:125 ./spec/features/results/form_rendering_and_submission_spec.rb:266 ./spec/features/results/form_rendering_and_submission_spec.rb:244 ./spec/features/results/file_upload_spec.rb:20 --format progress
+  - bundle exec rspec --format progress
+  - yarn i18nExport
+  - yarn test
 env:
   global:
     # Set reCAPTCHA keys to dummy values
