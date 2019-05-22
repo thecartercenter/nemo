@@ -109,8 +109,8 @@ class Condition < ApplicationRecord
     OPERATOR_CODES.select do |oc|
       case oc
       when :eq, :neq then !qtype.select_multiple?
-      when :lt, :gt, :leq, :geq then qtype.temporal? || qtype.numeric?
       when :inc, :ninc then qtype.select_multiple?
+      when :lt, :gt, :leq, :geq then qtype.temporal? || qtype.numeric?
       end
     end
   end
