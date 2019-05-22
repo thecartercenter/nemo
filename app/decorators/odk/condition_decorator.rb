@@ -17,7 +17,7 @@ module Odk
     }.freeze
 
     def to_odk
-      if left_qing.select_multiple?
+      if left_qing.select_multiple? && right_side_is_literal?
         select_multiple_to_odk
       elsif left_qing.temporal? && right_side_is_literal?
         temporal_to_odk
