@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# # rubocop:disable Metrics/LineLength
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: forms
@@ -39,8 +39,7 @@
 #  forms_original_id_fkey         (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
 #  forms_root_id_fkey             (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #
-# # rubocop:enable Metrics/LineLength
-
+# rubocop:enable Metrics/LineLength
 
 # A survey or checklist.
 class Form < ApplicationRecord

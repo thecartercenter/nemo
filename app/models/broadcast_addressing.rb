@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: broadcast_addressings
@@ -18,6 +19,7 @@
 #
 #  broadcast_addressings_broadcast_id_fkey  (broadcast_id => broadcasts.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 class BroadcastAddressing < ApplicationRecord
   belongs_to :broadcast, inverse_of: :broadcast_addressings

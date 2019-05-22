@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: report_reports
@@ -40,6 +41,7 @@
 #  report_reports_form_id_fkey         (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #  report_reports_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 # Methods common to all tally reports.
 class Report::TallyReport < Report::Report

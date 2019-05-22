@@ -1,4 +1,6 @@
-# # rubocop:disable Metrics/LineLength
+# frozen_string_literal: true
+
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: conditions
@@ -31,7 +33,7 @@
 #  fk_rails_...                    (left_qing_id => form_items.id)
 #  fk_rails_...                    (right_qing_id => form_items.id)
 #
-# # rubocop:enable Metrics/LineLength
+# rubocop:enable Metrics/LineLength
 
 class ConditionSerializer < ActiveModel::Serializer
   attributes :id, :conditionable_id, :conditionable_type, :left_qing_id, :form_id,

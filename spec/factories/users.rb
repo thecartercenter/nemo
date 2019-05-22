@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: users
@@ -43,6 +44,7 @@
 #
 #  users_last_mission_id_fkey  (last_mission_id => missions.id) ON DELETE => nullify ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 def get_user
   u = FactoryGirl.create(:user)

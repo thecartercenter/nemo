@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: form_versions
@@ -21,7 +22,7 @@
 #
 #  form_versions_form_id_fkey  (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #
-
+# rubocop:enable Metrics/LineLength
 
 require "rails_helper"
 

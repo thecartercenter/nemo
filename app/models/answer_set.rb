@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: answers
@@ -41,7 +42,7 @@
 #  answers_questioning_id_fkey  (questioning_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
 #  answers_response_id_fkey     (response_id => responses.id) ON DELETE => restrict ON UPDATE => restrict
 #
-
+# rubocop:enable Metrics/LineLength
 
 # Corresponds with a multilevel questioning. An AnswerSet's parent is an AnswerGroup. Its children are Answers
 class AnswerSet < ResponseNode

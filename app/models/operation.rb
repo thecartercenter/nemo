@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: operations
@@ -36,7 +37,7 @@
 #  fk_rails_...                (mission_id => missions.id)
 #  operations_creator_id_fkey  (creator_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
-
+# rubocop:enable Metrics/LineLength
 
 # An operation represents work to be performed in the background.
 # This model stores the state of the background job but does not

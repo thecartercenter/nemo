@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: choices
@@ -21,6 +22,7 @@
 #  choices_answer_id_fkey  (answer_id => answers.id) ON DELETE => restrict ON UPDATE => restrict
 #  choices_option_id_fkey  (option_id => options.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 FactoryGirl.define do
   factory :choice do

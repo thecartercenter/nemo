@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: report_calculations
@@ -21,6 +22,7 @@
 #  report_calculations_question1_id_fkey      (question1_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
 #  report_calculations_report_report_id_fkey  (report_report_id => report_reports.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 # A calculation that just returns the referenced argument with no modification
 class Report::IdentityCalculation < Report::Calculation

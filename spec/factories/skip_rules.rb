@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: skip_rules
@@ -22,6 +23,7 @@
 #  fk_rails_...  (dest_item_id => form_items.id)
 #  fk_rails_...  (source_item_id => form_items.id)
 #
+# rubocop:enable Metrics/LineLength
 
 FactoryGirl.define do
   factory :skip_rule do

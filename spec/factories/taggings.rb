@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: taggings
@@ -18,6 +19,7 @@
 #  taggings_question_id_fkey  (question_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
 #  taggings_tag_id_fkey       (tag_id => tags.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 FactoryGirl.define do
   factory :tagging do

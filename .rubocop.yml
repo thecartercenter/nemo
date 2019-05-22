@@ -36,6 +36,9 @@ Layout/MultilineOperationIndentation:
 Layout/SpaceInsideHashLiteralBraces:
   EnforcedStyle: no_space
 
+Lint/UnneededCopDisableDirective:
+  Enabled: false
+
 Metrics/BlockLength:
   Enabled: true
   Exclude:

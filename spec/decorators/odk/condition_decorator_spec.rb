@@ -76,7 +76,7 @@ describe Odk::ConditionDecorator do
     end
 
     context "for non-select question" do
-      let(:form) { form = create(:form, question_types: %w[integer text date time datetime text]) }
+      let(:form) { create(:form, question_types: %w[integer text date time datetime text]) }
       let(:int_q) { decorate(form.c[0]) }
       let(:text_q) { decorate(form.c[1]) }
       let(:date_q) { decorate(form.c[2]) }

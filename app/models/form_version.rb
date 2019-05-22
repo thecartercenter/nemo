@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: form_versions
@@ -19,6 +20,7 @@
 #
 #  form_versions_form_id_fkey  (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 # models a version number for a Form object. allows forms to have multiple uniquely identifiable versions.
 # provides 3 letter code for use with sms encoded forms.

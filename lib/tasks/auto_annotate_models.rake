@@ -50,8 +50,8 @@ if Rails.env.development?
       "frozen" => "false",
       "classified_sort" => "true",
       "trace" => "false",
-      "wrapper_open" => "# rubocop:disable Metrics/LineLength",
-      "wrapper_close" => "# rubocop:enable Metrics/LineLength",
+      "wrapper_open" => "rubocop:disable Metrics/LineLength",
+      "wrapper_close" => "rubocop:enable Metrics/LineLength",
       "with_comment" => "true"
     )
   end

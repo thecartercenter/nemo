@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: form_forwardings
@@ -19,6 +20,7 @@
 #
 #  form_forwardings_form_id_fkey  (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 class FormForwarding < ApplicationRecord
   belongs_to :form

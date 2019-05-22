@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: missions
@@ -17,7 +18,7 @@
 #  index_missions_on_compact_name  (compact_name) UNIQUE
 #  index_missions_on_shortcode     (shortcode) UNIQUE
 #
-
+# rubocop:enable Metrics/LineLength
 
 class MissionSerializer < ActiveModel::Serializer
   attributes :id, :name

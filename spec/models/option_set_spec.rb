@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# # rubocop:disable Metrics/LineLength
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: option_sets
@@ -31,7 +31,7 @@
 #  option_sets_option_node_id_fkey  (root_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
 #  option_sets_original_id_fkey     (original_id => option_sets.id) ON DELETE => nullify ON UPDATE => restrict
 #
-# # rubocop:enable Metrics/LineLength
+# rubocop:enable Metrics/LineLength
 
 require "rails_helper"
 

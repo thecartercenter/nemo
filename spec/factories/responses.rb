@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: responses
@@ -45,7 +46,7 @@
 #  responses_reviewer_id_fkey        (reviewer_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #  responses_user_id_fkey            (user_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
-
+# rubocop:enable Metrics/LineLength
 
 # ResponseFactoryHelper builds a response tree based on answer_values
 # About the answer_values format:

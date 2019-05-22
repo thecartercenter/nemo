@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: saved_uploads
@@ -12,7 +13,7 @@
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
 #
-
+# rubocop:enable Metrics/LineLength
 
 # A model for a generic file upload, managed by Paperclip
 class SavedUpload < ApplicationRecord

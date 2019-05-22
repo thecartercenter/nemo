@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# # rubocop:disable Metrics/LineLength
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: conditions
@@ -33,7 +33,7 @@
 #  fk_rails_...                    (left_qing_id => form_items.id)
 #  fk_rails_...                    (right_qing_id => form_items.id)
 #
-# # rubocop:enable Metrics/LineLength
+# rubocop:enable Metrics/LineLength
 
 FactoryGirl.define do
   factory :condition do

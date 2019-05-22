@@ -1,3 +1,4 @@
+# rubocop:disable Metrics/LineLength
 # == Schema Information
 #
 # Table name: operations
@@ -34,6 +35,7 @@
 #  fk_rails_...                (mission_id => missions.id)
 #  operations_creator_id_fkey  (creator_id => users.id) ON DELETE => restrict ON UPDATE => restrict
 #
+# rubocop:enable Metrics/LineLength
 
 FactoryGirl.define do
   factory :operation do
