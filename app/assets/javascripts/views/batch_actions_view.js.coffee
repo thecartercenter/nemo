@@ -27,7 +27,6 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
     if params.batch_ops
       this.update_select_all_elements()
 
-
   # selects/deselects all boxes on page
   select_all_clicked: (event) ->
     event.preventDefault() if event
@@ -54,8 +53,12 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
 
   select_all_pages: (event) ->
     event.preventDefault()
-    value = if @select_all_pages_field.val() then '' else '1'
-    @select_all_pages_field.val(value)
+    new_value = if @select_all_pages_field.val() then '' else '1'
+    @select_all_pages_field.val(new_value)
+
+    # check/uncheck boxes
+    cb.checked = @select_all for cb in cbs
+
     this.reset_alert()
     msg = I18n.t("index_table.messages.selected_all_rows", {count: @entries, class_name: @class_name})
     @alert.html(msg)
@@ -68,7 +71,6 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
 
   # updates the select all link to reflect the select_all_pages field
   update_select_all_elements: ->
-
     label = if @select_all then "deselect_all" else "select_all"
     $('#select-all-link').html(I18n.t("layout.#{label}"))
 
@@ -81,9 +83,14 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
         "</a>"
       @alert.html(msg)
       @alert.addClass('alert-info').show()
+
+    console.debug 'val during change: ' + @select_all_pages_field.val()
+
     if @pages == 1 && @select_all
-      value = if @select_all_pages_field.val() then '' else '1'
-      @select_all_pages_field.val(value)
+      new_value = if @select_all_pages_field.val() then '' else '1'
+      @select_all_pages_field.val(new_value)
+
+    console.debug 'val after change: ' + @select_all_pages_field.val()
 
   # gets all checkboxes in batch_form
   get_batch_checkboxes: ->
@@ -100,6 +107,8 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
 
   # event handler for when a checkbox is clicked
   checkbox_changed: (event) ->
+    console.debug 'val before change: ' + @select_all_pages_field.val()
+
     # unset the select all field if a checkbox is changed in any way
     @select_all_pages_field.val('')
 
