@@ -70,12 +70,20 @@ module Odk
     def left_actual(coalesce_multilevel: false)
       if coalesce_multilevel
         multilevel_coalesce_expr(left_qing)
+      elsif option_node.present?
+        # If we're not coalescing and there is a literal option_node,
+        # we get the xpath to the same level as the option node.
+        # This way if the condition refers to Canada > Ontario and the answered value
+        # is Canada > Ontario > Kingston, the condition will still be true.
+        questioning.xpath_to(left_qing.subqings[option_node.depth - 1])
       else
-        questioning.xpath_to(left_qing.subqings[option_node.blank? ? 0 : option_node.depth - 1])
+        questioning.xpath_to(left_qing)
       end
     end
 
     def right_actual
+      # We always coalesce when there is a right_qing because the bottommost selection is a stand-in for the
+      # whole answer value.
       multilevel_coalesce_expr(right_qing)
     end
 
