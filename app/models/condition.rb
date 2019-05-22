@@ -134,10 +134,10 @@ class Condition < ApplicationRecord
     left_qing.blank? && op.blank? && option_node_id.blank? && value.blank?
   end
 
-  # The type of the right side of the condition expression. Either `qing` or `value`.
+  # The type of the right side of the condition expression. Either `qing` or `literal`.
   # Behaves as an ephemeral attribute.
   def right_side_type
-    @right_side_type || (right_qing_id.present? ? "qing" : "value")
+    @right_side_type || (right_qing_id.present? ? "qing" : "literal")
   end
   attr_writer :right_side_type
 
@@ -145,8 +145,8 @@ class Condition < ApplicationRecord
     right_side_type == "qing"
   end
 
-  def right_side_is_value?
-    right_side_type == "value"
+  def right_side_is_literal?
+    right_side_type == "literal"
   end
 
   def refd_qings
@@ -179,7 +179,7 @@ class Condition < ApplicationRecord
   def all_fields_required
     return unless left_qing.blank? || op.blank? ||
       right_side_is_qing? && right_qing_id.blank? ||
-      right_side_is_value? && (left_qing.has_options? ? option_node_id.blank? : value.blank?)
+      right_side_is_literal? && (left_qing.has_options? ? option_node_id.blank? : value.blank?)
     errors.add(:base, :all_required)
   end
 
