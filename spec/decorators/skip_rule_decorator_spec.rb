@@ -16,8 +16,8 @@ describe SkipRuleDecorator do
     it "should use OR for any_met" do
       form.c[2].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "any_met",
                                    conditions_attributes: [
-                                     {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                     {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                     {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                     {left_qing_id: form.c[1].id, op: "eq", value: "10"}
                                    ])
       skip_rule = form.c[2].skip_rules[0]
       actual = SkipRuleDecorator.new(skip_rule).human_readable
@@ -28,8 +28,8 @@ describe SkipRuleDecorator do
     it "should use AND for all_met" do
       form.c[3].skip_rules.create!(destination: "item", dest_item: form.c[4], skip_if: "all_met",
                                    conditions_attributes: [
-                                     {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                     {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                     {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                     {left_qing_id: form.c[1].id, op: "eq", value: "10"}
                                    ])
       skip_rule = form.c[3].skip_rules[0]
       actual = SkipRuleDecorator.new(skip_rule).human_readable
@@ -48,8 +48,8 @@ describe SkipRuleDecorator do
     it "displays correctly when destination is end of the form" do
       form.c[3].skip_rules.create!(destination: "end", dest_item: nil, skip_if: "all_met",
                                    conditions_attributes: [
-                                     {ref_qing_id: form.c[0].id, op: "eq", value: "5"},
-                                     {ref_qing_id: form.c[1].id, op: "eq", value: "10"}
+                                     {left_qing_id: form.c[0].id, op: "eq", value: "5"},
+                                     {left_qing_id: form.c[1].id, op: "eq", value: "10"}
                                    ])
       skip_rule = form.c[3].skip_rules[0]
       actual = SkipRuleDecorator.new(skip_rule).human_readable

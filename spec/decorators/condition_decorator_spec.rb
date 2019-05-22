@@ -8,7 +8,7 @@ describe ConditionDecorator do
     context "for numeric ref question" do
       let(:form) { create(:form, question_types: %w(integer)) }
       let(:int_q) { form.questionings.first }
-      let(:cond) { Condition.new(ref_qing: int_q, op: "lt", value: "5") }
+      let(:cond) { Condition.new(left_qing: int_q, op: "lt", value: "5") }
 
       it { is_expected.to eq "Question #1 is less than 5" }
 
@@ -21,7 +21,7 @@ describe ConditionDecorator do
     context "for non-numeric ref question" do
       let(:form) { create(:form, question_types: %w(text)) }
       let(:text_q) { form.questionings.first }
-      let(:cond) { Condition.new(ref_qing: text_q, op: "eq", value: "foo") }
+      let(:cond) { Condition.new(left_qing: text_q, op: "eq", value: "foo") }
 
       it { is_expected.to eq "Question #1 is equal to \"foo\"" }
     end
@@ -31,12 +31,12 @@ describe ConditionDecorator do
       let(:sel_q) { form.questionings.first }
 
       context "positive should work" do
-        let(:cond) { Condition.new(ref_qing: sel_q, op: "inc", option_node: sel_q.option_set.c[1]) }
+        let(:cond) { Condition.new(left_qing: sel_q, op: "inc", option_node: sel_q.option_set.c[1]) }
         it { is_expected.to eq "Question #1 includes \"Dog\"" }
       end
 
       context "negation should work" do
-        let(:cond) { Condition.new(ref_qing: sel_q, op: "ninc", option_node: sel_q.option_set.c[1]) }
+        let(:cond) { Condition.new(left_qing: sel_q, op: "ninc", option_node: sel_q.option_set.c[1]) }
         it { is_expected.to eq "Question #1 excludes \"Dog\"" }
       end
     end
@@ -44,7 +44,7 @@ describe ConditionDecorator do
     context "for single level select ref question" do
       let(:form) { create(:form, question_types: %w(select_one)) }
       let(:sel_q) { form.questionings.first }
-      let(:cond) { Condition.new(ref_qing: sel_q, op: "eq", option_node: sel_q.option_set.c[1]) }
+      let(:cond) { Condition.new(left_qing: sel_q, op: "eq", option_node: sel_q.option_set.c[1]) }
 
       it { is_expected.to eq "Question #1 is equal to \"Dog\"" }
     end
@@ -54,12 +54,12 @@ describe ConditionDecorator do
       let(:sel_q) { form.questionings.first }
 
       context "matching first level" do
-        let(:cond) { Condition.new(ref_qing: sel_q, op: "eq", option_node: sel_q.option_set.c[0]) }
+        let(:cond) { Condition.new(left_qing: sel_q, op: "eq", option_node: sel_q.option_set.c[0]) }
         it { is_expected.to eq "Question #1 Kingdom is equal to \"Animal\"" }
       end
 
       context "matching second level" do
-        let(:cond) { Condition.new(ref_qing: sel_q, op: "eq", option_node: sel_q.option_set.c[1].c[0]) }
+        let(:cond) { Condition.new(left_qing: sel_q, op: "eq", option_node: sel_q.option_set.c[1].c[0]) }
 
         it { is_expected.to eq "Question #1 Species is equal to \"Tulip\"" }
 

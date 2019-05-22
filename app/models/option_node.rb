@@ -1,5 +1,42 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: option_nodes
+#
+#  id             :uuid             not null, primary key
+#  ancestry       :text
+#  ancestry_depth :integer          default(0), not null
+#  rank           :integer          default(1), not null
+#  sequence       :integer          default(0), not null
+#  standard_copy  :boolean          default(FALSE), not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  mission_id     :uuid
+#  old_id         :integer
+#  option_id      :uuid
+#  option_set_id  :uuid             not null
+#  original_id    :uuid
+#
+# Indexes
+#
+#  index_option_nodes_on_ancestry       (ancestry)
+#  index_option_nodes_on_mission_id     (mission_id)
+#  index_option_nodes_on_option_id      (option_id)
+#  index_option_nodes_on_option_set_id  (option_set_id)
+#  index_option_nodes_on_original_id    (original_id)
+#  index_option_nodes_on_rank           (rank)
+#
+# Foreign Keys
+#
+#  option_nodes_mission_id_fkey     (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_nodes_option_id_fkey      (option_id => options.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_nodes_option_set_id_fkey  (option_set_id => option_sets.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_nodes_original_id_fkey    (original_id => option_nodes.id) ON DELETE => nullify ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 class OptionNode < ApplicationRecord
   include Replication::Replicable
   include FormVersionable
@@ -36,7 +73,6 @@ class OptionNode < ApplicationRecord
   alias options_removed? options_removed
 
   replicable child_assocs: %i[children option], backward_assocs: :option_set,
-             dont_copy: %i[option_set_id option_id],
              # If the source of the clone is an option set, we need to replicate all nodes.
              # Otherwise they are reusable just like the OptionSet itself.
              dont_reuse: ->(replicator) { replicator.source.is_a?(OptionSet) }

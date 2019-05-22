@@ -22,7 +22,7 @@ feature "adding and editing qing group on form", js: true do
     # Test display conditions when creating new group
     select("Display this group if all of these conditions are met", from: "qing_group_display_logic")
     find(".add-condition")
-    find('select[name$="[ref_qing_id]"]').select(form.c[0].code)
+    find('select[name$="[left_qing_id]"]').select(form.c[0].code)
     find('select[name$="[op]"]').select("= equals")
     find('input[name$="[value]"]').set("3")
 

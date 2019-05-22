@@ -1,5 +1,31 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: options
+#
+#  id                :uuid             not null, primary key
+#  canonical_name    :string(255)      not null
+#  latitude          :decimal(8, 6)
+#  longitude         :decimal(9, 6)
+#  name_translations :jsonb            not null
+#  value             :integer
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  mission_id        :uuid
+#
+# Indexes
+#
+#  index_options_on_canonical_name  (canonical_name)
+#  index_options_on_mission_id      (mission_id)
+#
+# Foreign Keys
+#
+#  options_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 # A single selectable option in an OptionSet for a select question.
 class Option < ApplicationRecord
   include Replication::Replicable

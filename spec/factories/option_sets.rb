@@ -1,3 +1,36 @@
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: option_sets
+#
+#  id                   :uuid             not null, primary key
+#  allow_coordinates    :boolean          default(FALSE), not null
+#  geographic           :boolean          default(FALSE), not null
+#  level_names          :jsonb
+#  name                 :string(255)      not null
+#  sms_guide_formatting :string(255)      default("auto"), not null
+#  standard_copy        :boolean          default(FALSE), not null
+#  created_at           :datetime         not null
+#  updated_at           :datetime         not null
+#  mission_id           :uuid
+#  original_id          :uuid
+#  root_node_id         :uuid
+#
+# Indexes
+#
+#  index_option_sets_on_geographic    (geographic)
+#  index_option_sets_on_mission_id    (mission_id)
+#  index_option_sets_on_original_id   (original_id)
+#  index_option_sets_on_root_node_id  (root_node_id) UNIQUE
+#
+# Foreign Keys
+#
+#  option_sets_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_sets_option_node_id_fkey  (root_node_id => option_nodes.id) ON DELETE => restrict ON UPDATE => restrict
+#  option_sets_original_id_fkey     (original_id => option_sets.id) ON DELETE => nullify ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 FactoryGirl.define do
   factory :option_set do
     transient do

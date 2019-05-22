@@ -95,10 +95,10 @@ conditions:
         foreign_table: form_items
         foreign_class: Questioning
         name: conditions_questioning_id_fkey
-      ref_qing_id:
+      left_qing_id:
         foreign_table: form_items
         foreign_class: Questioning
-        name: conditions_ref_qing_id_fkey
+        name: conditions_left_qing_id_fkey
 
 form_forwardings:
   class: FormForwarding

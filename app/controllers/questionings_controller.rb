@@ -77,7 +77,7 @@ class QuestioningsController < ApplicationController
   end
 
   def questioning_params
-    condition_params = [:id, :ref_qing_id, :op, :value, :_destroy, option_node_ids: []]
+    condition_params = [:id, :left_qing_id, :op, :value, :_destroy, option_node_ids: []]
     params.require(:questioning).permit(:form_id, :allow_incomplete, :access_level, :hidden,
       :required, :default, :read_only, :display_if,
       {display_conditions_attributes: condition_params},

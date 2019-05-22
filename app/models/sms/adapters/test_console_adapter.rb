@@ -1,6 +1,5 @@
 # A dummy adapter used only for the SMS test console.
 class Sms::Adapters::TestConsoleAdapter < Sms::Adapters::Adapter
-
   def self.can_deliver?
     true
   end
@@ -8,7 +7,7 @@ class Sms::Adapters::TestConsoleAdapter < Sms::Adapters::Adapter
   def deliver(message)
     # Don't have to do much here as we're not really sending this message, just pretending!
     prepare_message_for_delivery(message)
-    return true
+    true
   end
 
   # Not implemented because the SMS console creates messages directly. Could refactor this later.

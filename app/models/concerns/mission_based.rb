@@ -2,7 +2,7 @@
 module MissionBased
   module ClassMethods
     def mission_based?
-      return true
+      true
     end
   end
 

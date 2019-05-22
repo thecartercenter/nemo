@@ -1,16 +1,44 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: skip_rules
+#
+#  id             :uuid             not null, primary key
+#  destination    :string           not null
+#  rank           :integer          not null
+#  skip_if        :string           not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  dest_item_id   :uuid
+#  mission_id     :uuid
+#  source_item_id :uuid             not null
+#
+# Indexes
+#
+#  index_skip_rules_on_dest_item_id    (dest_item_id)
+#  index_skip_rules_on_source_item_id  (source_item_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (dest_item_id => form_items.id)
+#  fk_rails_...  (source_item_id => form_items.id)
+#
+# rubocop:enable Metrics/LineLength
+
 # Models a rule directing the user to a given question if some conditions are true.
 class SkipRule < ActiveRecord::Base
   include FormLogical
 
   belongs_to :dest_item, class_name: "FormItem", inverse_of: :incoming_skip_rules
+  belongs_to :source_item, class_name: "FormItem"
 
   before_validation :normalize
 
   validate :require_dest_item
 
-  replicable child_assocs: [:conditions], dont_copy: %i[source_item_id dest_item_id],
+  replicable child_assocs: [:conditions],
              backward_assocs: [
                :source_item,
                # This is a second pass association because the

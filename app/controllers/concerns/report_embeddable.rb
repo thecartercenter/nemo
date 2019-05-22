@@ -44,11 +44,10 @@ module ReportEmbeddable
         @report.run(current_ability, options)
         @report
       end
-
-      return true
+      true
     rescue Report::ReportError, Search::ParseError
       flash.now[:error] = $!.to_s
-      return false
+      false
     end
   end
 

@@ -32,17 +32,17 @@ describe "form items" do
   describe "condition_form" do
     let(:form) { create(:form, :published, question_types: %w[integer text select_one integer text]) }
     let(:qing) { form.c[3] }
-    let(:expected_ref_qing_options) do
+    let(:expected_left_qing_options) do
       form.c[0..3].map do |q|
         {id: q.id, code: q.question.code, rank: q.rank, fullDottedRank: q.full_dotted_rank}
       end
     end
 
-    context "without ref_qing_id" do
+    context "without left_qing_id" do
       it "returns json with ref qing id options, no operator options, and no value options" do
         expected = {
           id: nil,
-          refQingId: nil,
+          leftQingId: nil,
           op: nil,
           value: nil,
           optionNodeId: nil,
@@ -51,11 +51,11 @@ describe "form items" do
           conditionableId: qing.id,
           conditionableType: "FormItem",
           operatorOptions: [],
-          refableQings: expected_ref_qing_options
+          refableQings: expected_left_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
           params: {
-            ref_qing_id: nil,
+            left_qing_id: nil,
             form_id: form.id,
             conditionable_id: qing.id,
             conditionable_type: "FormItem"
@@ -65,7 +65,7 @@ describe "form items" do
       end
     end
 
-    context "with ref_qing_id" do
+    context "with left_qing_id" do
       it "returns json with operator options" do
         expected_operator_options = [
           {name: "= equals", id: "eq"},
@@ -77,7 +77,7 @@ describe "form items" do
         ]
         expected = {
           id: nil,
-          refQingId: form.c[0].id,
+          leftQingId: form.c[0].id,
           op: nil,
           value: nil,
           optionNodeId: nil,
@@ -86,11 +86,11 @@ describe "form items" do
           conditionableId: qing.id,
           conditionableType: "FormItem",
           operatorOptions: expected_operator_options,
-          refableQings: expected_ref_qing_options
+          refableQings: expected_left_qing_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
           params: {
-            ref_qing_id: form.c[0].id,
+            left_qing_id: form.c[0].id,
             form_id: form.id,
             conditionable_id: qing.id,
             conditionable_type: "FormItem"
@@ -100,7 +100,7 @@ describe "form items" do
       end
 
       context "text value exists" do
-        let(:condition) { create(:condition, conditionable: qing, ref_qing: form.c[1], value: "Test") }
+        let(:condition) { create(:condition, conditionable: qing, left_qing: form.c[1], value: "Test") }
 
         it "returns text value" do
           expected_operator_options = [
@@ -109,7 +109,7 @@ describe "form items" do
           ]
           expected = {
             id: condition.id,
-            refQingId: condition.ref_qing.id,
+            leftQingId: condition.left_qing.id,
             op: condition.op,
             value: "Test",
             optionNodeId: nil,
@@ -118,12 +118,12 @@ describe "form items" do
             conditionableId: qing.id,
             conditionableType: "FormItem",
             operatorOptions: expected_operator_options,
-            refableQings: expected_ref_qing_options
+            refableQings: expected_left_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
             params: {
               condition_id: condition.id,
-              ref_qing_id: form.c[1].id,
+              left_qing_id: form.c[1].id,
               form_id: form.id,
               conditionable_id: qing.id,
               conditionable_type: "FormItem"
@@ -134,7 +134,7 @@ describe "form items" do
       end
 
       context "option node value exists" do
-        let(:condition) { create(:condition, conditionable: qing, ref_qing: form.c[2], value: nil) }
+        let(:condition) { create(:condition, conditionable: qing, left_qing: form.c[2], value: nil) }
 
         it "returns text value" do
           expected_operator_options = [
@@ -143,7 +143,7 @@ describe "form items" do
           ]
           expected = {
             id: condition.id,
-            refQingId: condition.ref_qing.id,
+            leftQingId: condition.left_qing.id,
             op: condition.op,
             value: nil,
             optionNodeId: form.c[2].option_set.c[0].id,
@@ -152,12 +152,12 @@ describe "form items" do
             conditionableId: qing.id,
             conditionableType: "FormItem",
             operatorOptions: expected_operator_options,
-            refableQings: expected_ref_qing_options
+            refableQings: expected_left_qing_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
             params: {
               condition_id: condition.id,
-              ref_qing_id: form.c[2].id,
+              left_qing_id: form.c[2].id,
               form_id: form.id,
               conditionable_id: qing.id,
               conditionable_type: "FormItem"

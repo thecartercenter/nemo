@@ -1,5 +1,50 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: form_items
+#
+#  id                           :uuid             not null, primary key
+#  ancestry                     :text
+#  ancestry_depth               :integer          not null
+#  default                      :string
+#  display_if                   :string           default("always"), not null
+#  group_hint_translations      :jsonb
+#  group_item_name_translations :jsonb
+#  group_name_translations      :jsonb
+#  hidden                       :boolean          default(FALSE), not null
+#  one_screen                   :boolean
+#  rank                         :integer          not null
+#  read_only                    :boolean
+#  repeatable                   :boolean
+#  required                     :boolean          default(FALSE), not null
+#  type                         :string(255)      not null
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  form_id                      :uuid             not null
+#  form_old_id                  :integer
+#  mission_id                   :uuid
+#  old_id                       :integer
+#  question_id                  :uuid
+#  question_old_id              :integer
+#
+# Indexes
+#
+#  index_form_items_on_ancestry                 (ancestry)
+#  index_form_items_on_form_id                  (form_id)
+#  index_form_items_on_form_id_and_question_id  (form_id,question_id) UNIQUE
+#  index_form_items_on_mission_id               (mission_id)
+#  index_form_items_on_question_id              (question_id)
+#
+# Foreign Keys
+#
+#  form_items_form_id_fkey      (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
+#  form_items_mission_id_fkey   (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  form_items_question_id_fkey  (question_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 require "rails_helper"
 
 describe FormItem do
@@ -119,7 +164,7 @@ describe FormItem do
 
   describe "normalization" do
     let(:form_item) { create(:qing_group, submitted.merge(display_conditions_attributes: cond_attrs)) }
-    let(:ref_qing) { create(:questioning) }
+    let(:left_qing) { create(:questioning) }
     subject { submitted.keys.map { |k| [k, form_item.send(k)] }.to_h }
 
     describe "display_conditions and display_if" do
@@ -143,7 +188,7 @@ describe FormItem do
       end
 
       context "with blank condition" do
-        let(:cond_attrs) { [{ref_qing_id: "", op: "", value: "  "}] }
+        let(:cond_attrs) { [{left_qing_id: "", op: "", value: "  "}] }
 
         context do
           let(:submitted) { {display_if: "all_met"} }
@@ -156,7 +201,7 @@ describe FormItem do
       end
 
       context "with partial condition" do
-        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "", value: "  "}] }
+        let(:cond_attrs) { [{left_qing_id: left_qing.id, op: "", value: "  "}] }
         let(:submitted) { {display_if: "all_met"} }
 
         it "should fail validation" do
@@ -165,7 +210,7 @@ describe FormItem do
       end
 
       context "with full condition" do
-        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "eq", value: "foo"}] }
+        let(:cond_attrs) { [{left_qing_id: left_qing.id, op: "eq", value: "foo"}] }
 
         context do
           let(:submitted) { {display_if: "all_met"} }
@@ -189,7 +234,7 @@ describe FormItem do
         create(:questioning, skip_rules_attributes: [
           {destination: "end", skip_if: "always"},
           {destination: "", skip_if: "", conditions_attributes: []},
-          {destination: "", skip_if: "", conditions_attributes: [{ref_qing_id: "", op: "", value: ""}]}
+          {destination: "", skip_if: "", conditions_attributes: [{left_qing_id: "", op: "", value: ""}]}
         ])
       end
 

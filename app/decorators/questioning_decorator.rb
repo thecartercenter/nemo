@@ -1,17 +1,17 @@
-class QuestioningDecorator < ApplicationDecorator
-  delegate_all
+# frozen_string_literal: true
 
+# Decorates Questionings for rendering outside ODK. There is a separate Questioning decorator for ODK.
+class QuestioningDecorator < FormItemDecorator
   def concatenated_conditions
     concatenator = display_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
-    decorated_conditions.map(&:human_readable).join(" #{concatenator} ")
+    # Temporarily ignoring right_side_is_qing conditions
+    decorated_conditions.reject(&:right_side_is_qing?).map(&:human_readable).join(" #{concatenator} ")
   end
 
   # Unique, sorted list of questionings to which this question actually refers,
   # whether by display logic or skip logic.
   def refd_qings
-    return @refd_qings if defined?(@refd_qings)
-    qings = display_conditions.map(&:ref_qing) + skip_rules.flat_map(&:ref_qings)
-    @refd_qings = qings.uniq.sort_by(&:full_rank)
+    @refd_qings ||= (super + skip_rules.flat_map(&:refd_qings)).uniq.sort_by(&:full_rank)
   end
 
   # Sorted, unique list of full dotted ranks or the word "End"
@@ -23,7 +23,7 @@ class QuestioningDecorator < ApplicationDecorator
   end
 
   def name_and_rank
-    str = "#{full_dotted_rank}. ".html_safe
+    str = safe_str << "#{full_dotted_rank}. "
     str << h.reqd_sym if required?
     str << (name.presence || code)
   end

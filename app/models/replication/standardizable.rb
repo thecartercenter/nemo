@@ -61,7 +61,6 @@ module Replication::Standardizable
         break
       end
     end
-    true
   end
 
   private

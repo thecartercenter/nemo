@@ -27,7 +27,10 @@ module Replication::Replicable
 
     # Gets a list of columns (strings) of this object that should NOT be copied to the dest obj
     def self.attribs_to_replicate
-      column_names - ATTRIBS_NOT_TO_COPY - replicable_opts[:dont_copy].map(&:to_s)
+      foreign_keys = (child_assocs + backward_assocs).map do |assoc|
+        assoc.foreign_key.to_s if assoc.belongs_to?
+      end
+      column_names - ATTRIBS_NOT_TO_COPY - replicable_opts[:dont_copy].map(&:to_s) - foreign_keys
     end
 
     def self.child_assocs

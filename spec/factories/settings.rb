@@ -1,3 +1,35 @@
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: settings
+#
+#  id                           :uuid             not null, primary key
+#  default_outgoing_sms_adapter :string(255)
+#  frontlinecloud_api_key       :string(255)
+#  generic_sms_config           :jsonb
+#  incoming_sms_numbers         :text
+#  incoming_sms_token           :string(255)
+#  override_code                :string(255)
+#  preferred_locales            :string(255)      not null
+#  theme                        :string           default("nemo"), not null
+#  timezone                     :string(255)      not null
+#  twilio_account_sid           :string(255)
+#  twilio_auth_token            :string(255)
+#  twilio_phone_number          :string(255)
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  mission_id                   :uuid
+#
+# Indexes
+#
+#  index_settings_on_mission_id  (mission_id) UNIQUE
+#
+# Foreign Keys
+#
+#  settings_mission_id_fkey  (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 FactoryGirl.define do
   factory :setting do
     timezone "Saskatchewan" # No DST!

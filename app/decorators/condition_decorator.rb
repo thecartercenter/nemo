@@ -7,16 +7,16 @@ class ConditionDecorator < ApplicationDecorator
   # prefs[:include_code] - Includes the question code in the string.
   #   May not always be desireable e.g. with printable forms.
   def human_readable(prefs = {})
-    if ref_qing_id.blank?
+    if left_qing_id.blank?
       "" # need to return something here to avoid nil errors
     else
       bits = []
       bits << Question.model_name.human
-      bits << "##{ref_qing.full_dotted_rank}"
-      bits << ref_qing.code if prefs[:include_code]
+      bits << "##{left_qing.full_dotted_rank}"
+      bits << left_qing.code if prefs[:include_code]
 
-      if ref_qing_has_options?
-        bits << option_node.level_name if ref_qing.multilevel?
+      if left_qing_has_options?
+        bits << option_node.level_name if left_qing.multilevel?
         target = option_node.option_name
       else
         target = value

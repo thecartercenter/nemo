@@ -72,7 +72,7 @@ export function getItemNameFromId(allItems, searchId, nameKey = 'name') {
 }
 
 /**
- * Given a refQingId, find it in the list of all questions and return the name.
+ * Given a leftQingId, find it in the list of all questions and return the name.
  */
 export function getQuestionNameFromId(allQuestions, searchId) {
   const question = allQuestions.find(({ id }) => searchId === id);
@@ -105,9 +105,9 @@ export function getFilterString({
 
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
-    .filter(({ refQingId, currTextValue, remove }) => refQingId && currTextValue && !remove)
-    .map(({ refQingId, currTextValue }) =>
-      `{${getQuestionNameFromId(allQuestions, refQingId)}}:${JSON.stringify(currTextValue)}`);
+    .filter(({ leftQingId, currTextValue, remove }) => leftQingId && currTextValue && !remove)
+    .map(({ leftQingId, currTextValue }) =>
+      `{${getQuestionNameFromId(allQuestions, leftQingId)}}:${JSON.stringify(currTextValue)}`);
 
   const submitterParts = SUBMITTER_TYPES.map((type) => {
     const selectedSubmitterNames = selectedSubmittersForType[type]

@@ -17,30 +17,36 @@ module Odk
     }.freeze
 
     def to_odk
+      return "true()" if right_side_is_qing?
       lhs = questioning.xpath_to(ref_subqing)
-
-      if ref_qing.has_options?
-        selected = "selected(#{lhs}, '#{option_node.odk_code}')"
-        %w[neq ninc].include?(op) ? "not(#{selected})" : selected
-      else
-        if ref_qing.temporal?
-          format = :"javarosa_#{ref_qing.qtype_name}"
-          formatted = Time.zone.parse(value).to_s(format)
-          lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
-          rhs = "'#{formatted}'"
-        else
-          rhs = ref_qing.numeric? ? value : "'#{value}'"
-        end
-        "#{lhs} #{OP_XPATH[op.to_sym]} #{rhs}"
-      end
+      left_qing.has_options? ? select_to_odk(lhs) : non_select_to_odk(lhs)
     end
 
     def questioning
       decorate(object.conditionable)
     end
 
-    def ref_qing
-      decorate(object.ref_qing)
+    def left_qing
+      decorate(object.left_qing)
+    end
+
+    private
+
+    def select_to_odk(lhs)
+      selected = "selected(#{lhs}, '#{option_node.odk_code}')"
+      %w[neq ninc].include?(op) ? "not(#{selected})" : selected
+    end
+
+    def non_select_to_odk(lhs)
+      if left_qing.temporal?
+        format = :"javarosa_#{left_qing.qtype_name}"
+        formatted = Time.zone.parse(value).to_s(format)
+        lhs = "format-date(#{lhs}, '#{Time::DATE_FORMATS[format]}')"
+        rhs = "'#{formatted}'"
+      else
+        rhs = left_qing.numeric? ? value : "'#{value}'"
+      end
+      "#{lhs} #{OP_XPATH[op.to_sym]} #{rhs}"
     end
   end
 end

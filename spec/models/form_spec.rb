@@ -1,5 +1,46 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: forms
+#
+#  id                    :uuid             not null, primary key
+#  access_level          :string(255)      default("private"), not null
+#  allow_incomplete      :boolean          default(FALSE), not null
+#  authenticate_sms      :boolean          default(TRUE), not null
+#  default_response_name :string
+#  downloads             :integer
+#  name                  :string(255)      not null
+#  pub_changed_at        :datetime
+#  published             :boolean          default(FALSE), not null
+#  sms_relay             :boolean          default(FALSE), not null
+#  smsable               :boolean          default(FALSE), not null
+#  standard_copy         :boolean          default(FALSE), not null
+#  upgrade_needed        :boolean          default(FALSE), not null
+#  created_at            :datetime         not null
+#  updated_at            :datetime         not null
+#  current_version_id    :uuid
+#  mission_id            :uuid
+#  original_id           :uuid
+#  root_id               :uuid
+#
+# Indexes
+#
+#  index_forms_on_current_version_id  (current_version_id)
+#  index_forms_on_mission_id          (mission_id)
+#  index_forms_on_original_id         (original_id)
+#  index_forms_on_root_id             (root_id) UNIQUE
+#
+# Foreign Keys
+#
+#  forms_current_version_id_fkey  (current_version_id => form_versions.id) ON DELETE => nullify ON UPDATE => restrict
+#  forms_mission_id_fkey          (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#  forms_original_id_fkey         (original_id => forms.id) ON DELETE => nullify ON UPDATE => restrict
+#  forms_root_id_fkey             (root_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 require "rails_helper"
 
 describe Form do
@@ -122,8 +163,8 @@ describe Form do
       context "forms with associations" do
         before do
           create(:skip_rule, source_item: qing_group, conditions_attributes: [
-            {ref_qing_id: qing1.id, op: "eq", value: "5"},
-            {ref_qing_id: qing2.id, op: "eq", value: "fish"}
+            {left_qing_id: qing1.id, op: "eq", value: "5"},
+            {left_qing_id: qing2.id, op: "eq", value: "fish"}
           ])
         end
 

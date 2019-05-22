@@ -6,7 +6,7 @@ export const getFiltersStore = () => new FiltersModel({
   conditionSetStore: new ConditionSetModel({
     conditions: [
       {
-        refQingId: '1',
+        leftQingId: '1',
         op: 'eq',
         operatorOptions: [
           { name: '= equals', id: 'eq' },

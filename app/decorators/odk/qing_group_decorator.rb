@@ -100,7 +100,7 @@ module Odk
       children.each do |item|
         next unless item.display_conditionally?
         item.display_conditions.each do |condition|
-          return true if condition.ref_qing.parent_id == id
+          return true if condition.left_qing.parent_id == id
         end
       end
       false

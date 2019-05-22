@@ -2,12 +2,12 @@
 
 shared_context "form design conditional logic" do
   def select_question(code)
-    find('select[name*="\\[ref_qing_id\\]"]').select(code)
+    find('select[name*="\\[left_qing_id\\]"]').select(code)
     wait_for_ajax # Changing the question triggers an ajax call (for now)
   end
 
   def expect_selected_question(qing)
-    select = find('select[name*="\\[ref_qing_id\\]"]')
+    select = find('select[name*="\\[left_qing_id\\]"]')
     expect(page).to have_select(select[:name], selected: "#{qing.full_dotted_rank}. #{qing.code}")
   end
 

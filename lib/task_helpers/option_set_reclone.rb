@@ -46,7 +46,7 @@ class OptionSetReclone
   # Updates them to point to the equivalent node in the new set.
   def update_conditions(old_clone_id:, new_clone_id:)
     conditions = Condition
-      .joins(ref_qing: :question)
+      .joins(left_qing: :question)
       .where("questions.option_set_id" => old_clone_id)
       .where("option_node_id IS NOT NULL")
 

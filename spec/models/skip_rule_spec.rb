@@ -1,5 +1,32 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: skip_rules
+#
+#  id             :uuid             not null, primary key
+#  destination    :string           not null
+#  rank           :integer          not null
+#  skip_if        :string           not null
+#  created_at     :datetime         not null
+#  updated_at     :datetime         not null
+#  dest_item_id   :uuid
+#  mission_id     :uuid
+#  source_item_id :uuid             not null
+#
+# Indexes
+#
+#  index_skip_rules_on_dest_item_id    (dest_item_id)
+#  index_skip_rules_on_source_item_id  (source_item_id)
+#
+# Foreign Keys
+#
+#  fk_rails_...  (dest_item_id => form_items.id)
+#  fk_rails_...  (source_item_id => form_items.id)
+#
+# rubocop:enable Metrics/LineLength
+
 require "rails_helper"
 
 describe SkipRule do
@@ -10,7 +37,7 @@ describe SkipRule do
       let(:skip_rule) do
         create(:skip_rule, submitted.merge(destination: "end", conditions_attributes: cond_attrs))
       end
-      let(:ref_qing) { create(:questioning) }
+      let(:left_qing) { create(:questioning) }
       subject { submitted.keys.map { |k| [k, skip_rule.send(k)] }.to_h }
 
       context "with no conditions" do
@@ -33,7 +60,7 @@ describe SkipRule do
       end
 
       context "with blank condition" do
-        let(:cond_attrs) { [{ref_qing_id: "", op: "", value: "  "}] }
+        let(:cond_attrs) { [{left_qing_id: "", op: "", value: "  "}] }
 
         context do
           let(:submitted) { {skip_if: "all_met"} }
@@ -42,7 +69,7 @@ describe SkipRule do
       end
 
       context "with partial condition" do
-        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "", value: "  "}] }
+        let(:cond_attrs) { [{left_qing_id: left_qing.id, op: "", value: "  "}] }
         let(:submitted) { {skip_if: "all_met"} }
 
         it "should fail validation" do
@@ -51,7 +78,7 @@ describe SkipRule do
       end
 
       context "with full condition" do
-        let(:cond_attrs) { [{ref_qing_id: ref_qing.id, op: "eq", value: "foo"}] }
+        let(:cond_attrs) { [{left_qing_id: left_qing.id, op: "eq", value: "foo"}] }
 
         context do
           let(:submitted) { {skip_if: "all_met"} }

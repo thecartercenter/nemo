@@ -1,5 +1,31 @@
 # frozen_string_literal: true
 
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: report_calculations
+#
+#  id               :uuid             not null, primary key
+#  attrib1_name     :string(255)
+#  rank             :integer          default(1), not null
+#  type             :string(255)      not null
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  question1_id     :uuid
+#  report_report_id :uuid             not null
+#
+# Indexes
+#
+#  index_report_calculations_on_question1_id      (question1_id)
+#  index_report_calculations_on_report_report_id  (report_report_id)
+#
+# Foreign Keys
+#
+#  report_calculations_question1_id_fkey      (question1_id => questions.id) ON DELETE => restrict ON UPDATE => restrict
+#  report_calculations_report_report_id_fkey  (report_report_id => report_reports.id) ON DELETE => restrict ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 module Report
   class Calculation < ApplicationRecord
     TYPES = %w[identity zero_nonzero].freeze

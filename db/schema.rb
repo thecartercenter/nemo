@@ -106,18 +106,19 @@ ActiveRecord::Schema.define(version: 2019_05_20_185424) do
     t.uuid "conditionable_id", null: false
     t.string "conditionable_type", null: false
     t.datetime "created_at", null: false
+    t.uuid "left_qing_id", null: false
     t.uuid "mission_id"
     t.string "op", limit: 255, null: false
     t.uuid "option_node_id"
     t.integer "rank", null: false
-    t.uuid "ref_qing_id", null: false
+    t.uuid "right_qing_id"
     t.datetime "updated_at", null: false
     t.string "value", limit: 255
     t.index ["conditionable_id"], name: "index_conditions_on_conditionable_id"
     t.index ["conditionable_type", "conditionable_id"], name: "index_conditions_on_conditionable_type_and_conditionable_id"
+    t.index ["left_qing_id"], name: "index_conditions_on_left_qing_id"
     t.index ["mission_id"], name: "index_conditions_on_mission_id"
     t.index ["option_node_id"], name: "index_conditions_on_option_node_id"
-    t.index ["ref_qing_id"], name: "index_conditions_on_ref_qing_id"
   end
 
   create_table "constraints", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -603,7 +604,8 @@ ActiveRecord::Schema.define(version: 2019_05_20_185424) do
   add_foreign_key "broadcasts", "missions", name: "broadcasts_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "answers", name: "choices_answer_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "choices", "options", name: "choices_option_id_fkey", on_update: :restrict, on_delete: :restrict
-  add_foreign_key "conditions", "form_items", column: "ref_qing_id", name: "conditions_ref_qing_id_fkey", on_update: :restrict, on_delete: :restrict
+  add_foreign_key "conditions", "form_items", column: "left_qing_id"
+  add_foreign_key "conditions", "form_items", column: "right_qing_id"
   add_foreign_key "conditions", "missions", name: "conditions_mission_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "conditions", "option_nodes", name: "conditions_option_node_id_fkey", on_update: :restrict, on_delete: :restrict
   add_foreign_key "constraints", "form_items", column: "source_item_id"

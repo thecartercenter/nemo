@@ -1,3 +1,48 @@
+# rubocop:disable Metrics/LineLength
+# == Schema Information
+#
+# Table name: report_reports
+#
+#  id               :uuid             not null, primary key
+#  aggregation_name :string(255)
+#  bar_style        :string(255)      default("side_by_side")
+#  display_type     :string(255)      default("table")
+#  filter           :text
+#  group_by_tag     :boolean          default(FALSE), not null
+#  name             :string(255)      not null
+#  percent_type     :string(255)      default("none")
+#  question_labels  :string(255)      default("title")
+#  question_order   :string(255)      default("number"), not null
+#  text_responses   :string(255)      default("all")
+#  type             :string(255)      not null
+#  unique_rows      :boolean          default(FALSE)
+#  unreviewed       :boolean          default(FALSE)
+#  view_count       :integer          default(0), not null
+#  viewed_at        :datetime
+#  created_at       :datetime         not null
+#  updated_at       :datetime         not null
+#  creator_id       :uuid
+#  disagg_qing_id   :uuid
+#  form_id          :uuid
+#  mission_id       :uuid             not null
+#
+# Indexes
+#
+#  index_report_reports_on_creator_id      (creator_id)
+#  index_report_reports_on_disagg_qing_id  (disagg_qing_id)
+#  index_report_reports_on_form_id         (form_id)
+#  index_report_reports_on_mission_id      (mission_id)
+#  index_report_reports_on_view_count      (view_count)
+#
+# Foreign Keys
+#
+#  report_reports_creator_id_fkey      (creator_id => users.id) ON DELETE => restrict ON UPDATE => restrict
+#  report_reports_disagg_qing_id_fkey  (disagg_qing_id => form_items.id) ON DELETE => restrict ON UPDATE => restrict
+#  report_reports_form_id_fkey         (form_id => forms.id) ON DELETE => restrict ON UPDATE => restrict
+#  report_reports_mission_id_fkey      (mission_id => missions.id) ON DELETE => restrict ON UPDATE => restrict
+#
+# rubocop:enable Metrics/LineLength
+
 class Report::ResponseTallyReport < Report::TallyReport
 
   def as_json(options = {})
