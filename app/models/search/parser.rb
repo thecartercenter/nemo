@@ -25,7 +25,7 @@ class Search::Parser
       @lexer = Search::Lexer.new(@search.str)
       @lexer.lex
       @query = take(nil, :query)
-      # puts "PARSE TREE\n" + @query.to_s_indented
+      puts "PARSE TREE\n" + @query.to_s_indented
       @sql = @query.to_sql
     end
   end

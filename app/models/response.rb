@@ -155,16 +155,7 @@ class Response < ApplicationRecord
 
   # searches for responses
   # relation - a Response relation upon which to build the search query
-  # query - the search query string (e.g. form:polling text:interference, tomfoolery)
-  # scope - the scope to pass to the search qualifiers generator
-  # options[:include_excerpts] - if true, execute the query and return the results
-  #   with answer excerpts (if applicable) included;
-  #   if false, doesn't execute the query and just returns the relation
-  # options[:dont_truncate_excerpts] - if true, excerpt length limit is very high,
-  #   so full answer is returned with matches highlighted
-  def self.do_search(relation, query, scope, options = {})
-    options[:include_excerpts] ||= false
-
+  def apply(relation)
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers(scope))
 

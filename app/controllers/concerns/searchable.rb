@@ -8,10 +8,19 @@ module Searchable
   # otherwise sets flash, flash[:search_error] = true, and returns `rel` unchanged.
   def apply_search_if_given(klass, rel, **options)
     params[:search].present? ? apply_search(klass, rel, **options) : rel
+    searcher = build_searcher(...)
+    seacher.apply_scope(rel)
+  end
+
+  def build_searcher(...)
+    searcher_class.new(params[:search], **options)
+
   end
 
   def apply_search(klass, rel, **options)
     klass.do_search(rel, params[:search], {mission: current_mission}, options)
+    searcher = searcher_class.new(params[:search], **options)
+
   rescue Search::ParseError => error
     flash.now[:error] = error.to_s
     flash.now[:search_error] = true

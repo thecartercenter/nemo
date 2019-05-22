@@ -36,7 +36,9 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
-        @responses = apply_search_if_given(Response, @responses, include_excerpts: true)
+        @searcher = build_searcher(Response, @responses, include_excerpts: true)
+        @responses = searcher.apply_scope(@responses)
+        
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
