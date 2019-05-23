@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class UsersSearcher
-  def self.search_qualifiers
+class UsersSearcher < Searcher
+  def search_qualifiers
     [
       Search::Qualifier.new(name: "name", col: "users.name", type: :text, default: true),
       Search::Qualifier.new(name: "login", col: "users.login", type: :text, default: true),
@@ -15,7 +15,7 @@ class UsersSearcher
   # searches for users
   # relation - a User relation upon which to build the search query
   # query - the search query string (e.g. name:foo)
-  def self.do_search(relation, query, scope, _options = {})
+  def do_search
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
