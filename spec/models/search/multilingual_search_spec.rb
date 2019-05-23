@@ -6,10 +6,10 @@ describe "search qualifiers" do
   let(:mission) { get_mission }
   let(:qualifier_sets) do
     {
-      response: Response.search_qualifiers(mission: mission),
-      user: User.search_qualifiers,
-      question: Question.search_qualifiers,
-      sms: Sms::Message.search_qualifiers
+      response: ResponsesSearcher.new(nil, nil, mission: mission).search_qualifiers,
+      user: UsersSearcher.search_qualifiers,
+      question: QuestionsSearcher.search_qualifiers,
+      sms: SmsMessagesSearcher.search_qualifiers
     }
   end
 
