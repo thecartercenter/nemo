@@ -86,7 +86,7 @@ class Sms::Message < ApplicationRecord
   end
 
   # searches for sms messages
-  # based on User.do_search
+  # based on UsersSearcher.do_search
   # scope is not used in Message search
   def self.do_search(relation, query, _scope, _options = {})
     # create a search object and generate qualifiers
