@@ -36,7 +36,7 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
-        @responses = apply_search_if_given(ResponsesSearcher, @responses)
+        @responses = apply_search(ResponsesSearcher, @responses)
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
@@ -128,7 +128,7 @@ class ResponsesController < ApplicationController
   private
 
   def render_possible_users(possible_users)
-    possible_users = apply_search_if_given(UsersSearcher, possible_users).by_name
+    possible_users = apply_search(UsersSearcher, possible_users).by_name
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {

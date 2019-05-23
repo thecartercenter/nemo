@@ -13,7 +13,7 @@ module BatchProcessable
     # view where they initiate an action.
     # Downstream users of this method's output should check additional permissions if appropriate.
     scope = scope.accessible_by(current_ability, :index)
-    scope = apply_search_if_given(klass, scope, **search_options)
+    scope = apply_search(klass, scope, **search_options)
     restrict_scope_to_selected_objects(scope)
   end
 end
