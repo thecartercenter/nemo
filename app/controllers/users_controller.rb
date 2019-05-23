@@ -26,7 +26,7 @@ class UsersController < ApplicationController
     @users = @users.with_assoc.by_name
     @groups = UserGroup.accessible_by(current_ability).order(:name)
     @search_params = params[:search]
-    @users = apply_search_if_given(UsersSearcher, @users)
+    @users = apply_search(UsersSearcher, @users)
 
     # Apply pagination
     @users = @users.paginate(page: params[:page], per_page: PER_PAGE)
