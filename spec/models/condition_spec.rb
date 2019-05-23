@@ -61,9 +61,9 @@ describe Condition do
 
       context "extraneous right qing due to right_side_type=value" do
         let(:submitted) do
-          {right_side_type: "value", right_qing: form.c[0], value: "10"}
+          {right_side_type: "literal", right_qing: form.c[0], value: "10"}
         end
-        it { is_expected.to eq(right_side_type: "value", right_qing: nil, value: "10") }
+        it { is_expected.to eq(right_side_type: "literal", right_qing: nil, value: "10") }
       end
     end
 
@@ -89,7 +89,7 @@ describe Condition do
       let(:submitted) do
         {left_qing_id: nil, right_side_type: nil, option_node: opt_node, value: "10"}
       end
-      it { is_expected.to eq(left_qing_id: nil, option_node: nil, value: "10", right_side_type: "value") }
+      it { is_expected.to eq(left_qing_id: nil, option_node: nil, value: "10", right_side_type: "literal") }
     end
 
     describe "clean times" do
@@ -110,23 +110,23 @@ describe Condition do
 
       context "with missing left_qing" do
         subject do
-          build(:condition, left_qing: nil, right_side_type: "value", option_node: opt_node)
+          build(:condition, left_qing: nil, right_side_type: "literal", option_node: opt_node)
         end
         it { is_expected.to have_errors(base: "All condition fields are required.") }
       end
 
       context "with missing operator" do
-        subject { build(:condition, left_qing: form.c[0], right_side_type: "value", op: nil) }
+        subject { build(:condition, left_qing: form.c[0], right_side_type: "literal", op: nil) }
         it { is_expected.to have_errors(base: "All condition fields are required.") }
       end
 
       context "with missing option node" do
-        subject { build(:condition, left_qing: form.c[0], right_side_type: "value", option_node: nil) }
+        subject { build(:condition, left_qing: form.c[0], right_side_type: "literal", option_node: nil) }
         it { is_expected.to have_errors(base: "All condition fields are required.") }
       end
 
       context "with missing value" do
-        subject { build(:condition, left_qing: form.c[1], right_side_type: "value", value: nil) }
+        subject { build(:condition, left_qing: form.c[1], right_side_type: "literal", value: nil) }
         it { is_expected.to have_errors(base: "All condition fields are required.") }
       end
 
@@ -137,13 +137,13 @@ describe Condition do
 
       context "with option node given" do
         subject do
-          build(:condition, left_qing: form.c[0], right_side_type: "value", option_node: opt_node)
+          build(:condition, left_qing: form.c[0], right_side_type: "literal", option_node: opt_node)
         end
         it { is_expected.to be_valid }
       end
 
       context "with value given" do
-        subject { build(:condition, left_qing: form.c[1], right_side_type: "value", value: "5") }
+        subject { build(:condition, left_qing: form.c[1], right_side_type: "literal", value: "5") }
         it { is_expected.to be_valid }
       end
 
@@ -229,14 +229,14 @@ describe Condition do
 
       context "without set" do
         let(:condition) { build(:condition) }
-        it { is_expected.to eq("value") }
+        it { is_expected.to eq("literal") }
       end
     end
 
     context "with value" do
       let(:condition) { build(:condition, right_qing: create(:questioning)) }
-      before { condition.right_side_type = "value" }
-      it { is_expected.to eq("value") }
+      before { condition.right_side_type = "literal" }
+      it { is_expected.to eq("literal") }
     end
   end
 end

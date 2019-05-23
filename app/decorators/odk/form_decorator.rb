@@ -42,7 +42,7 @@ module Odk
       tag("bind",
         nodeset: "/data/#{IR_CODE}",
         required: "true()",
-        relevant: "selected(/data/#{IR_QUESTION}, 'yes')",
+        relevant: "/data/#{IR_QUESTION} = 'yes'",
         constraint: ". = '#{override_code}'",
         type: "string")
     end
