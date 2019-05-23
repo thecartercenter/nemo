@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-class QuestionsSearcher
-  def self.search_qualifiers
+class QuestionsSearcher < Searcher
+  def search_qualifiers
     [
       Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
       Search::Qualifier.new(name: "title", col: "questions.name_translations", type: :translated,
@@ -14,7 +14,7 @@ class QuestionsSearcher
 
   # searches for questions
   # scope parameter is not used in Question search
-  def self.do_search(relation, query, _scope, _options = {})
+  def do_search
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 

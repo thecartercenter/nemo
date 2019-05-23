@@ -7,9 +7,9 @@ describe "search qualifiers" do
   let(:qualifier_sets) do
     {
       response: ResponsesSearcher.new(nil, nil, mission: mission).search_qualifiers,
-      user: UsersSearcher.search_qualifiers,
-      question: QuestionsSearcher.search_qualifiers,
-      sms: SmsMessagesSearcher.search_qualifiers
+      user: UsersSearcher.new(nil, nil, nil).search_qualifiers,
+      question: QuestionsSearcher.new(nil, nil, nil).search_qualifiers,
+      sms: SmsMessagesSearcher.new(nil, nil, nil).search_qualifiers
     }
   end
 
