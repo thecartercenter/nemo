@@ -36,7 +36,7 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
-        @responses = apply_search_if_given(Response, @responses)
+        @responses = apply_search_if_given(ResponsesSearcher, @responses)
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
@@ -63,7 +63,7 @@ class ResponsesController < ApplicationController
     # so that we get highlighted excerpts
     if params[:search]
       # we pass a relation matching only one response, so there should be at most one match
-      matches = Response.do_search(Response.where(id: @response.id), params[:search],
+      matches = ResponsesSearcher.do_search(Response.where(id: @response.id), params[:search],
         mission: current_mission)
 
       # if we get a match, then we use that object instead, since it contains excerpts
