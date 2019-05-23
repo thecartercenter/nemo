@@ -124,20 +124,6 @@ describe Odk::ConditionDecorator do
         it { is_expected.to eq("/data/#{q2.odk_code} = /data/#{q1.odk_code}") }
       end
 
-      context "with select multiple questions" do
-        let(:form) { create(:form, question_types: %w[select_multiple select_multiple]) }
-
-        context "with inc operator" do
-          let(:params) { {left_qing: q2.object, op: "inc", right_qing: q1.object} }
-          it { is_expected.to eq("/data/#{q2.odk_code} = /data/#{q1.odk_code}") }
-        end
-
-        context "with ninc operator" do
-          let(:params) { {left_qing: q2.object, op: "ninc", right_qing: q1.object} }
-          it { is_expected.to eq("/data/#{q2.odk_code} != /data/#{q1.odk_code}") }
-        end
-      end
-
       context "with intra group references" do
         let(:form) { create(:form, question_types: [%w[integer integer]]) }
         let(:q1) { decorate(form.c[0].c[0]) }
