@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Question do
@@ -11,34 +13,34 @@ describe Question do
     end
 
     it "partial title search" do
-      expect(search "cheese").to eq [@questions[0]]
-      expect(search "title: many").to eq [@questions[0]]
-      expect(search "fromage").to eq []
+      expect(search("cheese")).to eq([@questions[0]])
+      expect(search("title: many")).to eq([@questions[0]])
+      expect(search("fromage")).to eq([])
     end
 
     it "different locale" do
       I18n.locale = :fr
-      expect(search "job").to eq []
-      expect(search "metier").to eq [@questions[1]]
+      expect(search("job")).to eq([])
+      expect(search("metier")).to eq([@questions[1]])
       I18n.locale = :en
-      expect(search "job").to eq [@questions[1]]
+      expect(search("job")).to eq([@questions[1]])
     end
 
     it "partial code search" do
-      expect(search "code: eese").to eq [@questions[0]]
+      expect(search("code: eese")).to eq([@questions[0]])
     end
 
     it "question type search" do
-      expect(search "type: text").to eq [@questions[1]]
-      expect(search "type: select-one").to eq [@questions[2]]
+      expect(search("type: text")).to eq([@questions[1]])
+      expect(search("type: select-one")).to eq([@questions[2]])
     end
 
     it "tag search" do
-      expect(search "tag: employment").to eq [@questions[1]]
+      expect(search("tag: employment")).to eq([@questions[1]])
     end
 
     it "empty search" do
-      expect(search "").to match_array(@questions)
+      expect(search("")).to match_array(@questions)
     end
 
     def search(query)

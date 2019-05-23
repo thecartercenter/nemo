@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Sms::Message do
@@ -10,7 +12,7 @@ describe Sms::Message do
       end
 
       it "should work even if timestamp in UTC is the next day" do
-        expect(search "date:2017-01-01").to eq [m1]
+        expect(search("date:2017-01-01")).to eq([m1])
       end
     end
   end
