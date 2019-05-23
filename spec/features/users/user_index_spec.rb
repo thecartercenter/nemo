@@ -4,9 +4,11 @@ require "rails_helper"
 
 feature "user index", js: true do
   include_context "search"
-  include_context "batch delete"
+  include_context "bulk destroy"
   let(:admin) { create(:admin, name: "Alpha") } # So that this user comes first in the list.
   let(:mission) { get_mission }
+  let(:delete_link_name) { "Delete Multiple Users" }
+  let(:klass) { User }
 
   before do
     login(admin)
@@ -18,17 +20,16 @@ feature "user index", js: true do
 
     context "unfiltered" do
       let!(:preserved_obj) { admin.name }
-      it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 11
+      it_behaves_like "select all on page", expect_to_delete: 11
     end
 
     context "filtered" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 5,
-                                            query: "role:enumerator"
+      it_behaves_like "select all on page", expect_to_delete: 5, query: "role:enumerator"
     end
 
     context "select nothing" do
-      it_behaves_like "select nothing", "users", "Delete Multiple Users"
+      it_behaves_like "select nothing"
     end
   end
 
@@ -58,18 +59,17 @@ feature "user index", js: true do
 
     context "unfiltered select page" do
       let!(:preserved_obj) { "Charlie" }
-      it_behaves_like "select all on page", link: "Delete Multiple Users", klass: "users", num: 2
+      it_behaves_like "select all on page", expect_to_delete: 2
     end
 
     context "unfiltered select all pages" do
       let!(:preserved_obj) { admin.name }
-      it_behaves_like "select all that exist", klass: "users", num: 11, link: "Delete Multiple Users"
+      it_behaves_like "select all that exist", expect_to_delete: 11
     end
 
     context "filtered select all pages" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all that exist", klass: "users", num: 5, link: "Delete Multiple Users",
-                                               query: "role:enumerator"
+      it_behaves_like "select all that exist", expect_to_delete: 5, query: "role:enumerator"
     end
   end
 end

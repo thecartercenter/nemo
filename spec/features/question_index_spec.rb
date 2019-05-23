@@ -4,9 +4,11 @@ require "rails_helper"
 
 feature "question index", js: true do
   include_context "search"
-  include_context "batch delete"
+  include_context "bulk destroy"
   let(:admin) { create(:admin) }
   let(:mission) { get_mission }
+  let(:delete_link_name) { "Delete Multiple Questions" }
+  let(:klass) { Question }
 
   before do
     login(admin)
@@ -18,17 +20,16 @@ feature "question index", js: true do
 
     context "unfiltered" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions", num: 5
+      it_behaves_like "select all on page", expect_to_delete: 5
     end
 
     context "filtered" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions", num: 1,
-                                            query: "code:BallotBoxes"
+      it_behaves_like "select all on page", expect_to_delete: 1, query: "code:BallotBoxes"
     end
 
     context "select nothing" do
-      it_behaves_like "select nothing", "questions", "Delete Multiple Questions"
+      it_behaves_like "select nothing"
     end
   end
 
@@ -58,18 +59,17 @@ feature "question index", js: true do
 
     context "unfiltered select page" do
       let!(:preserved_obj) { "Delta" }
-      it_behaves_like "select all on page", link: "Delete Multiple Questions", klass: "questions", num: 2
+      it_behaves_like "select all on page", expect_to_delete: 2
     end
 
     context "unfiltered select all" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all that exist", klass: "questions", num: 10, link: "Delete Multiple Questions"
+      it_behaves_like "select all that exist", expect_to_delete: 10
     end
 
     context "filtered select all" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all that exist", klass: "questions", num: 5,
-                                               link: "Delete Multiple Questions", query: "type:integer"
+      it_behaves_like "select all that exist", expect_to_delete: 5, query: "type:integer"
     end
   end
 end

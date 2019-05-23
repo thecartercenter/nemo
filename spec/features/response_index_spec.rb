@@ -4,9 +4,11 @@ require "rails_helper"
 
 feature "response index", js: true do
   include_context "search"
-  include_context "batch delete"
+  include_context "bulk destroy"
   let(:admin) { create(:admin) }
   let(:mission) { get_mission }
+  let(:delete_link_name) { "Delete Selected" }
+  let(:klass) { Response }
 
   before do
     login(admin)
@@ -17,7 +19,7 @@ feature "response index", js: true do
 
     context "unfiltered" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 5
+      it_behaves_like "select all on page", expect_to_delete: 5
     end
 
     context "filtered" do
@@ -25,12 +27,11 @@ feature "response index", js: true do
         Response.last.update!(reviewed: true)
       end
       let!(:preserved_obj) { Response.first.shortcode.upcase }
-      it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 1,
-                                            query: "reviewed:1"
+      it_behaves_like "select all on page", expect_to_delete: 1, query: "reviewed:1"
     end
 
     context "select nothing" do
-      it_behaves_like "select nothing", "responses", "Delete Selected"
+      it_behaves_like "select nothing"
     end
   end
 
@@ -60,18 +61,17 @@ feature "response index", js: true do
 
     context "unfiltered select page" do
       let!(:preserved_obj) { responses[2].shortcode.upcase }
-      it_behaves_like "select all on page", link: "Delete Selected", klass: "responses", num: 2
+      it_behaves_like "select all on page", expect_to_delete: 2
     end
 
     context "unfiltered select all" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all that exist", klass: "responses", num: 10, link: "Delete Selected"
+      it_behaves_like "select all that exist", expect_to_delete: 10
     end
 
     context "filtered select all" do
       let!(:preserved_obj) { nil }
-      it_behaves_like "select all that exist", klass: "responses", num: 5,
-                                               link: "Delete Selected", query: "reviewed:1"
+      it_behaves_like "select all that exist", expect_to_delete: 5, query: "reviewed:1"
     end
   end
 end

@@ -11,14 +11,14 @@ feature "question index", js: true do
     login(admin)
   end
 
-  describe "batch delete" do
+  describe "bulk destroy" do
     scenario "works" do
       visit("/en/m/#{mission.compact_name}/questions")
-      perform_batch_delete
+      perform_bulk_destroy
       expect(page).to have_content("3 questions deleted successfully")
     end
 
-    scenario "redirects correctly after batch delete" do
+    scenario "redirects correctly after bulk destroy" do
       visit("/en/m/#{mission.compact_name}/questions")
 
       # do a search
@@ -28,15 +28,15 @@ feature "question index", js: true do
       # clear search box
       click_on "Clear"
 
-      # perform a batch delete
-      perform_batch_delete
+      # perform a bulk destroy
+      perform_bulk_destroy
 
       # page redirects without query string
       expect(page).to have_current_path("/en/m/#{mission.compact_name}/questions")
     end
   end
 
-  def perform_batch_delete
+  def perform_bulk_destroy
     all("input.batch_op").each { |b| b.set(true) }
     accept_confirm { click_on("Delete Multiple Questions") }
   end

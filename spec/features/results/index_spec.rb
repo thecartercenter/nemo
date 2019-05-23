@@ -120,7 +120,7 @@ feature "responses index", js: true do
     end
   end
 
-  describe "batch delete", js: true do
+  describe "bulk destroy", js: true do
     let(:admin) { create(:admin) }
     let(:mission) { get_mission }
     let!(:responses) { create_list(:response, 3, mission: mission) }
