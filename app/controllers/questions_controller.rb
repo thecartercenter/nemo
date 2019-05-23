@@ -19,7 +19,7 @@ class QuestionsController < ApplicationController
   decorates_assigned :questions
 
   def index
-    @questions = apply_search_if_given(Question, @questions)
+    @questions = apply_search_if_given(QuestionsSearcher, @questions)
     @tags = Tag.mission_tags(@current_mission)
     @questions = @questions.includes(:tags).by_code.paginate(page: params[:page], per_page: PER_PAGE)
     load_importable_objs
