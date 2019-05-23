@@ -128,7 +128,7 @@ class ResponsesController < ApplicationController
   private
 
   def render_possible_users(possible_users)
-    possible_users = apply_search_if_given(User, possible_users).by_name
+    possible_users = apply_search_if_given(UsersSearcher, possible_users).by_name
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {
