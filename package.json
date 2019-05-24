@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "i18nExport": "bundle exec rake i18n:js:export",
+    "i18n:export": "bundle exec rake i18n:js:export",
     "test": "jest",
     "lint": "eslint --ext .js,.jsx",
     "lint:all": "yarn run lint .",
