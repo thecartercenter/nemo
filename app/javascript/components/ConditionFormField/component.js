@@ -1,5 +1,5 @@
 import get from 'lodash/get';
-import queryString from 'query-string/index';
+import queryString from 'query-string';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';

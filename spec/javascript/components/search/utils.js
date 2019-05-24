@@ -1,4 +1,4 @@
-import FiltersModel from '../../../../app/javascript/components/search/FiltersModel';
+import FiltersModel from '../../../../app/javascript/components/Filters/model';
 import ConditionSetModel from '../../../../app/javascript/components/ConditionSetModel/ConditionSetModel';
 import { submitterType } from '../../../../app/javascript/components/SubmitterFilter/component';
 

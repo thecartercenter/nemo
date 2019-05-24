@@ -4,8 +4,8 @@ import {
   getFilterString,
   submitSearch,
   isQueryParamTruthy,
-} from '../../../../app/javascript/components/search/utils';
-import { getEmptySubmitterTypeMap } from '../../../../app/javascript/components/search/FiltersModel';
+} from '../../../../app/javascript/components/Filters/utils';
+import { getEmptySubmitterTypeMap } from '../../../../app/javascript/components/Filters/model';
 
 import { getFiltersStore } from './utils';
 

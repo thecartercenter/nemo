@@ -6,7 +6,7 @@ import { Provider } from 'mobx-react';
 import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../testUtils';
 import { getFiltersStore } from './utils';
 
-import { CONTROLLER_NAME } from '../../../../app/javascript/components/search/utils';
+import { CONTROLLER_NAME } from '../../../../app/javascript/components/Filters/utils';
 import { FiltersRoot as Component } from '../../../../app/javascript/components/Filters/component';
 import { SUBMITTER_TYPES, submitterType } from '../../../../app/javascript/components/SubmitterFilter/component';
 
