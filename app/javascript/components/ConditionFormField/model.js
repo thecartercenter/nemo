@@ -1,4 +1,4 @@
-import queryString from 'query-string/index';
+import queryString from 'query-string';
 import { observable, action, reaction, computed } from 'mobx';
 
 import { getLevelsValues, applyDefaultLevelsValues } from '../ConditionSetFormField/utils';

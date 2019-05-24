@@ -5,11 +5,11 @@ import { observer, inject, Provider } from 'mobx-react';
 
 import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from './utils';
 import ErrorBoundary from '../ErrorBoundary/component';
-import FormFilter from '../FormFilter/component';
-import QuestionFilter from '../QuestionFilter/component';
-import ReviewedFilter from '../ReviewedFilter/component';
-import SubmitterFilter, { submitterType } from '../SubmitterFilter/component';
-import AdvancedSearchFilter from '../AdvancedSearchFilter/component';
+import FormFilter from './FormFilter/component';
+import QuestionFilter from './QuestionFilter/component';
+import ReviewedFilter from './ReviewedFilter/component';
+import SubmitterFilter, { submitterType } from './SubmitterFilter/component';
+import AdvancedSearchFilter from './AdvancedSearchFilter/component';
 
 @inject('filtersStore')
 @inject('conditionSetStore')

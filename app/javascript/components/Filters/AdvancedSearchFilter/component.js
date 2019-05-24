@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { inject, observer } from 'mobx-react';
 
-import { isQueryParamTruthy } from '../Filters/utils';
+import { isQueryParamTruthy } from '../utils';
 
 @inject('filtersStore')
 @observer

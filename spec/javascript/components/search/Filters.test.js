@@ -8,7 +8,7 @@ import { getFiltersStore } from './utils';
 
 import { CONTROLLER_NAME } from '../../../../app/javascript/components/Filters/utils';
 import { FiltersRoot as Component } from '../../../../app/javascript/components/Filters/component';
-import { SUBMITTER_TYPES, submitterType } from '../../../../app/javascript/components/SubmitterFilter/component';
+import { SUBMITTER_TYPES, submitterType } from '../../../../app/javascript/components/Filters/SubmitterFilter/component';
 
 let defaultProps = {};
 resetDefaultProps();
