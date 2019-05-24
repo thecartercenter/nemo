@@ -20,7 +20,7 @@ module Searchable
     return relation if query.blank?
 
     searcher = build_searcher(searcher_class, relation, query, {mission: current_mission}, options)
-    searcher.do_search
+    searcher.apply
   rescue Search::ParseError => error
     flash.now[:error] = error.to_s
     flash.now[:search_error] = true
