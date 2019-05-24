@@ -414,6 +414,6 @@ class User < ApplicationRecord
   def set_default_pref_lang
     self.pref_lang ||= configatron.key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : "en"
   rescue ActiveModel::MissingAttributeError
-      # we rescue this error in case find_by_sql is being used
-    end
+    # we rescue this error in case find_by_sql is being used
+  end
 end
