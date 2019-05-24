@@ -49,7 +49,7 @@ class ResponsesSearcher < Searcher
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     # apply the needed associations
-    relation = relation.joins(Results::Join.list_to_sql(search.associations))
+    self.relation = relation.joins(Results::Join.list_to_sql(search.associations))
 
     # get the sql
     sql = search.sql

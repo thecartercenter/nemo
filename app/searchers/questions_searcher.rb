@@ -21,7 +21,7 @@ class QuestionsSearcher < Searcher
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     # apply the needed associations
-    relation = relation.joins(search.associations)
+    self.relation = relation.joins(search.associations)
 
     # apply the conditions
     relation.where(search.sql)
