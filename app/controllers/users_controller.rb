@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class UsersController < ApplicationController
   PER_PAGE = 50
 
@@ -9,11 +11,11 @@ class UsersController < ApplicationController
   # before load_and_authorize_resource because if left to its own devices, load_and_authorize_resource
   # would mess things up with user_groups and mission permissions!
   before_action :build_user_with_proper_mission, only: :new
-  before_action :load_user, only: [:update, :create]
+  before_action :load_user, only: %i[update create]
 
   load_and_authorize_resource
 
-  before_action :require_recent_login, except: [:export, :index, :login_instructions]
+  before_action :require_recent_login, except: %i[export index login_instructions]
 
   helper_method :reset_password_options
 
@@ -61,8 +63,8 @@ class UsersController < ApplicationController
   def update
     # In cases where the user can't change these things, the params shouldn't even appear at all
     # since the fields shouldn't be rendered. So it's enough to just check if they're there.
-    authorize!(:change_assignments, @user) if params[:user].has_key?(:assignments_attributes)
-    authorize!(:activate, @user) if params[:user].has_key?(:active)
+    authorize!(:change_assignments, @user) if params[:user].key?(:assignments_attributes)
+    authorize!(:activate, @user) if params[:user].key?(:active)
 
     pref_lang_changed = @user.pref_lang_changed?
 
@@ -116,19 +118,19 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.vcf do
         @users = restrict_scope_to_selected_objects(User.all)
-        render(plain: @users.collect { |u| u.to_vcf }.join("\n"))
+        render(plain: @users.collect(&:to_vcf).join("\n"))
       end
     end
   end
 
   def regenerate_api_key
     @user.regenerate_api_key
-    render json: { value: @user.api_key }
+    render(json: {value: @user.api_key})
   end
 
   def regenerate_sms_auth_code
     @user.regenerate_sms_auth_code
-    render json: { value: @user.sms_auth_code }
+    render(json: {value: @user.sms_auth_code})
   end
 
   private
@@ -176,9 +178,7 @@ class UsersController < ApplicationController
   # If we don't do this before load_and_authorize_resource runs, we will get a 403.
   def build_user_with_proper_mission
     @user = User.new
-    if cannot?(:create, @user)
-      @user.assignments.build(mission: current_mission)
-    end
+    @user.assignments.build(mission: current_mission) if cannot?(:create, @user)
   end
 
   # Finds or builds a User object and populates with the provided params.
@@ -204,20 +204,14 @@ class UsersController < ApplicationController
   def process_user_groups(user_group_ids)
     user_groups = []
 
-    if user_group_ids
-      user_group_ids.reject(&:blank?).each do |group_id|
-        begin
-          group = UserGroup.accessible_by(current_ability).find(group_id)
-        rescue ActiveRecord::RecordNotFound
-          group = nil
-        end
-
-        if group
-          user_groups << group
-        else
-          user_groups << UserGroup.new(name: group_id, mission: current_mission)
-        end
+    user_group_ids&.reject(&:blank?)&.each do |group_id|
+      begin
+        group = UserGroup.accessible_by(current_ability).find(group_id)
+      rescue ActiveRecord::RecordNotFound
+        group = nil
       end
+
+      user_groups << (group || UserGroup.new(name: group_id, mission: current_mission))
     end
     user_groups
   end
@@ -227,6 +221,6 @@ class UsersController < ApplicationController
 
     params.require(:user).permit(*admin_only, :name, :login, :birth_year, :gender, :gender_custom, :nationality,
       :email, :phone, :active, :phone2, :pref_lang, :notes, :password, :password_confirmation,
-      :reset_password_method, user_group_ids: [], assignments_attributes: [:role, :mission_id, :_destroy, :id])
+      :reset_password_method, user_group_ids: [], assignments_attributes: %i[role mission_id _destroy id])
   end
 end

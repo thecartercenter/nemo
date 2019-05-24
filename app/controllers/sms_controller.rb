@@ -1,8 +1,11 @@
+# frozen_string_literal: true
+
 # handles incoming sms messages from various providers
 class SmsController < ApplicationController
-  include CsvRenderable, Searchable
+  include Searchable
+  include CsvRenderable
 
-  rescue_from Sms::UnverifiedTokenError do |exception|
+  rescue_from Sms::UnverifiedTokenError do |_exception|
     render plain: "Unauthorized", status: :unauthorized
   end
 
@@ -86,9 +89,7 @@ class SmsController < ApplicationController
     if reply
       if incoming_adapter.reply_style == :via_adapter
         begin
-          if Rails.env.test? && ENV["STUB_REPLY_ERROR"].present?
-            raise Sms::Error, ENV["STUB_REPLY_ERROR"]
-          end
+          raise Sms::Error, ENV["STUB_REPLY_ERROR"] if Rails.env.test? && ENV["STUB_REPLY_ERROR"].present?
           outgoing_adapter.deliver(reply)
         rescue Sms::Error => e
           reply.adapter_name = "None"
@@ -98,10 +99,10 @@ class SmsController < ApplicationController
       else # reply via response
         incoming_adapter.prepare_message_for_delivery(reply)
       end
-      render plain: incoming_adapter.response_body(reply),
-             content_type: incoming_adapter.response_content_type
+      render(plain: incoming_adapter.response_body(reply),
+             content_type: incoming_adapter.response_content_type)
     else
-      render plain: "", status: 204 # No Content
+      render(plain: "", status: :no_content) # No Content
     end
   end
 
@@ -128,8 +129,8 @@ class SmsController < ApplicationController
 
   def verify_token(token)
     mission_token = current_mission.setting.incoming_sms_token
-    global_token = configatron.has_key?(:universal_sms_token) ? configatron.universal_sms_token : nil
+    global_token = configatron.key?(:universal_sms_token) ? configatron.universal_sms_token : nil
 
-    [mission_token, global_token].compact.include? token
+    [mission_token, global_token].compact.include?(token)
   end
 end

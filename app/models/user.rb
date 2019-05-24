@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -49,10 +51,10 @@
 class User < ApplicationRecord
   include Cacheable
 
-  ROLES = %w[enumerator reviewer staffer coordinator]
+  ROLES = %w[enumerator reviewer staffer coordinator].freeze
   SESSION_TIMEOUT = (Rails.env.development? ? 2.weeks : 60.minutes)
-  GENDER_OPTIONS = %w[man woman no_answer specify]
-  PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/
+  GENDER_OPTIONS = %w[man woman no_answer specify].freeze
+  PASSWORD_FORMAT = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])/.freeze
 
   attr_writer(:reset_password_method)
   attr_accessor(:password_confirmation)
@@ -61,13 +63,13 @@ class User < ApplicationRecord
   has_many :broadcast_addressings, inverse_of: :addressee, foreign_key: :addressee_id, dependent: :destroy
   has_many :form_forwardings, inverse_of: :recipient, foreign_key: :recipient_id, dependent: :destroy
   has_many :assignments, -> { includes(:mission) }, autosave: true, dependent: :destroy,
-    validate: true, inverse_of: :user
+                                                    validate: true, inverse_of: :user
   has_many :missions, -> { order "missions.created_at DESC" }, through: :assignments
   has_many :operations, inverse_of: :creator, foreign_key: :creator_id, dependent: :destroy
-  has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: 'Report::Report'
+  has_many :reports, inverse_of: :creator, foreign_key: :creator_id, dependent: :nullify, class_name: "Report::Report"
   has_many :user_group_assignments, dependent: :destroy
   has_many :user_groups, through: :user_group_assignments
-  belongs_to :last_mission, class_name: 'Mission'
+  belongs_to :last_mission, class_name: "Mission"
 
   accepts_nested_attributes_for(:assignments, allow_destroy: true)
   accepts_nested_attributes_for(:user_groups)
@@ -98,7 +100,7 @@ class User < ApplicationRecord
   before_destroy(:check_assoc)
   before_save(:clear_assignments_without_roles)
 
-  normalize_attribute :login, with: [:strip, :downcase]
+  normalize_attribute :login, with: %i[strip downcase]
 
   validates(:name, presence: true)
   validates(:pref_lang, presence: true)
@@ -121,20 +123,22 @@ class User < ApplicationRecord
 
   scope(:by_name, -> { order("users.name") })
   scope :assigned_to, ->(mission) { where(id: Assignment.select(:user_id).where(mission_id: mission.id)) }
-  scope :with_only_one_assignment, -> {
+  scope :with_only_one_assignment, lambda {
     count_query = Assignment.select("COUNT(*)").where("user_id = users.id").to_sql
     where("(#{count_query}) = 1")
   }
   scope :assigned_only_to, ->(mission) { assigned_to(mission).with_only_one_assignment }
-  scope(:with_assoc, -> {
-    includes(:missions, { assignments: :mission }, { user_group_assignments: :user_group } )
+  scope(:with_assoc, lambda {
+    includes(:missions, {assignments: :mission}, user_group_assignments: :user_group)
   })
   scope(:with_groups, -> { joins(:user_groups) })
   scope :name_matching, ->(q) { where("name ILIKE ?", "%#{q}%") }
-  scope :with_roles, -> (m, roles) { includes(:missions, { assignments: :mission }).
-    where(assignments: { mission: m.try(:id), role: roles }) }
+  scope :with_roles, lambda { |m, roles|
+                       includes(:missions, assignments: :mission)
+                         .where(assignments: {mission: m.try(:id), role: roles})
+                     }
 
-  scope(:by_phone, -> (phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
+  scope(:by_phone, ->(phone) { where("phone = :phone OR phone2 = :phone2", phone: phone, phone2: phone) })
   scope(:active, -> { where(active: true) })
   scope(:inactive, -> { where(active: false) })
   scope(:not_self, ->(s) { s.persisted? ? where("id != ?", s.id) : all })
@@ -146,9 +150,9 @@ class User < ApplicationRecord
     symbol_size = 2
     alpha_size = (size - num_size - symbol_size) / 2
 
-    num = %w{2 3 4 6 7 9}
-    alpha = %w{a c d e f g h j k m n p q r t v w x y z}
-    symbol = %w{@ & # + %}
+    num = %w[2 3 4 6 7 9]
+    alpha = %w[a c d e f g h j k m n p q r t v w x y z]
+    symbol = %w[@ & # + %]
 
     alpha_component = alpha_size.times.map { alpha.sample }
     upper_component = alpha_size.times.map { alpha.sample.upcase }
@@ -159,8 +163,8 @@ class User < ApplicationRecord
   end
 
   def self.find_with_credentials(login, password)
-    user = find_by_login(login)
-    (user && user.valid_password?(password)) ? user : nil
+    user = find_by(login: login)
+    user&.valid_password?(password) ? user : nil
   end
 
   def self.search_qualifiers
@@ -200,7 +204,7 @@ class User < ApplicationRecord
   # of enumerator response counts for the given mission
   def self.sorted_enumerator_response_counts(mission, limit)
     # First it tries to get user enumerators that don't have any response
-    result = self.enumerators_without_responses(mission, limit)
+    result = enumerators_without_responses(mission, limit)
     return result unless result.length < limit
 
     # If the first query didn't get the necessary users quantity,
@@ -271,7 +275,7 @@ class User < ApplicationRecord
   end
 
   def active?
-    self.active
+    active
   end
 
   def activate!(bool)
@@ -284,10 +288,10 @@ class User < ApplicationRecord
 
   def to_vcf
     "BEGIN:VCARD\nVERSION:3.0\nFN:#{name}\n" +
-    (email ? "EMAIL:#{email}\n" : "") +
-    (phone ? "TEL;TYPE=CELL:#{phone}\n" : "") +
-    (phone2 ? "TEL;TYPE=CELL:#{phone2}\n" : "") +
-    "END:VCARD"
+      (email ? "EMAIL:#{email}\n" : "") +
+      (phone ? "TEL;TYPE=CELL:#{phone}\n" : "") +
+      (phone2 ? "TEL;TYPE=CELL:#{phone2}\n" : "") +
+      "END:VCARD"
   end
 
   def can_get_sms?
@@ -295,17 +299,17 @@ class User < ApplicationRecord
   end
 
   def can_get_email?
-    !email.blank?
+    email.present?
   end
 
   def assignments_by_mission
-    @assignments_by_mission ||= Hash[*assignments.collect{|a| [a.mission, a]}.flatten]
+    @assignments_by_mission ||= Hash[*assignments.collect { |a| [a.mission, a] }.flatten]
   end
 
   # returns the last mission with which this user is associated
   def latest_mission
     # the mission association is already sorted by date so we just take the last one
-    missions[missions.size-1]
+    missions[missions.size - 1]
   end
 
   # gets the user's role for the given mission
@@ -347,7 +351,7 @@ class User < ApplicationRecord
     Time.now - current_login_at if current_login_at.present?
   end
 
-  def current_login_recent?(max_age=nil)
+  def current_login_recent?(max_age = nil)
     max_age ||= configatron.recent_login_max_age
 
     current_login_age < max_age if current_login_at.present?
@@ -355,7 +359,7 @@ class User < ApplicationRecord
 
   # returns hash of missions to roles
   def roles
-    Hash[*assignments.map{|a| [a.mission, a.role]}.flatten]
+    Hash[*assignments.map { |a| [a.mission, a.role] }.flatten]
   end
 
   def regenerate_api_key
@@ -379,21 +383,19 @@ class User < ApplicationRecord
     if last_mission && (admin? || assignments.map(&:mission).include?(last_mission))
       last_mission
     elsif assignments.any?
-      assignments.sort_by(&:updated_at).last.mission
-    else
-      nil
+      assignments.max_by(&:updated_at).mission
     end
   end
 
   def remember_last_mission(mission)
     self.last_mission = mission
-    save validate: false
+    save(validate: false)
   end
 
   private
 
   def normalize_fields
-    %w(phone phone2 name email).each{|f| self.send("#{f}").try(:strip!)}
+    %w[phone phone2 name email].each { |f| send(f.to_s).try(:strip!) }
     self.email = nil if email.blank?
     self.phone = PhoneNormalizer.normalize(phone)
     self.phone2 = PhoneNormalizer.normalize(phone2)
@@ -406,10 +408,10 @@ class User < ApplicationRecord
 
   def check_assoc
     # can't delete users with related responses.
-    raise DeletionError.new(:cant_delete_if_responses) unless responses.empty?
+    raise DeletionError, :cant_delete_if_responses unless responses.empty?
 
     # can't delete users with related sms messages.
-    raise DeletionError.new(:cant_delete_if_sms_messages) unless Sms::Message.where(user_id: id).empty?
+    raise DeletionError, :cant_delete_if_sms_messages unless Sms::Message.where(user_id: id).empty?
   end
 
   def must_have_password_on_enter
@@ -423,11 +425,11 @@ class User < ApplicationRecord
   end
 
   def no_duplicate_assignments
-    errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject{|a| a.marked_for_destruction?})
+    errors.add(:assignments, :duplicate_assignments) if Assignment.duplicates?(assignments.reject(&:marked_for_destruction?))
   end
 
   def must_have_assignments_if_not_admin
-    if !admin? && assignments.reject{|a| a.marked_for_destruction?}.empty?
+    if !admin? && assignments.reject(&:marked_for_destruction?).empty?
       errors.add(:assignments, :cant_be_empty_if_not_admin)
     end
   end
@@ -443,10 +445,8 @@ class User < ApplicationRecord
 
   # sets the user's preferred language to the mission default
   def set_default_pref_lang
-    begin
-      self.pref_lang ||= configatron.has_key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : 'en'
-    rescue ActiveModel::MissingAttributeError
+    self.pref_lang ||= configatron.key?(:preferred_locales) ? configatron.preferred_locales.first.to_s : "en"
+  rescue ActiveModel::MissingAttributeError
       # we rescue this error in case find_by_sql is being used
-    end
     end
 end

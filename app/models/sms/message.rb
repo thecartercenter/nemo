@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -60,15 +62,15 @@ class Sms::Message < ApplicationRecord
   before_create :default_sent_at
 
   # order by id after created_at to make sure they are in creation order
-  scope(:latest_first, ->{ order('created_at DESC, id DESC') })
-  scope :since, -> (time) { where('created_at > ?', time) }
+  scope(:latest_first, -> { order("created_at DESC, id DESC") })
+  scope :since, ->(time) { where("created_at > ?", time) }
 
   # Remove all non-digit chars and add a plus at the front.
   # (unless the number looks like a shortcode, in which case we leave it alone)
   def self.search_qualifiers
     # We pass explicit SQL here or else we end up with an INNER JOIN which excludes any message
     # with no associated user.
-    user_assoc = 'LEFT JOIN users ON users.id = sms_messages.user_id'
+    user_assoc = "LEFT JOIN users ON users.id = sms_messages.user_id"
 
     [
       Search::Qualifier.new(name: "content", col: "sms_messages.body", type: :text, default: true),
@@ -117,7 +119,7 @@ class Sms::Message < ApplicationRecord
     raise NotImplementedError
   end
 
-  def recipient_hashes(options = {})
+  def recipient_hashes(_options = {})
     raise NotImplementedError
   end
 
