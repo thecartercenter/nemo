@@ -1,4 +1,4 @@
-import ConditionModel from '../../../../app/javascript/components/ConditionSetModel/ConditionModel';
+import ConditionModel from '../../../../app/javascript/components/ConditionFormField/model';
 
 it('computes currTextValue (basic value)', () => {
   const store = new ConditionModel({ value: 'foo' });

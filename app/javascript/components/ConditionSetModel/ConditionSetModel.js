@@ -1,6 +1,6 @@
 import { observable, action, reaction } from 'mobx';
 
-import ConditionModel from './ConditionModel';
+import ConditionModel from '../ConditionFormField/model';
 
 /**
  * Represents a set of conditions (e.g. ['Question Foo' Equals 'Bar', ...]).
