@@ -18,6 +18,6 @@ describe Sms::Message do
   end
 
   def search(query)
-    SmsMessagesSearcher.do_search(Sms::Message, query, nil)
+    SmsMessagesSearcher.apply(Sms::Message, query, nil)
   end
 end

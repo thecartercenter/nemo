@@ -44,7 +44,7 @@ describe Question do
     end
 
     def search(query)
-      QuestionsSearcher.do_search(Question, query, nil)
+      QuestionsSearcher.apply(Question, query, nil)
     end
   end
 end

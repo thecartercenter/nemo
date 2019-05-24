@@ -44,7 +44,7 @@ class ResponsesSearcher < Searcher
     ]
   end
 
-  def do_search
+  def apply
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
