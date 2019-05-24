@@ -7,7 +7,7 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString, getItemNameFromId, parseListForSelect2 } from './utils';
+import { getButtonHintString, getItemNameFromId, parseListForSelect2 } from '../search/utils';
 
 @inject('filtersStore')
 @observer

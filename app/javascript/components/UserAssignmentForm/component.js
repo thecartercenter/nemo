@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import UserAssignmentFormField from '../UserAssignmentFormField/UserAssignmentFormField';
+import UserAssignmentFormField from '../UserAssignmentFormField/component';
 
 /**
  * User assignments form in edit user in admin mode.

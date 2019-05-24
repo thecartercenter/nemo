@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 
 import { getFiltersStore } from './utils';
 
-import Component, { SUBMITTER_TYPES } from '../../../../app/javascript/components/SubmitterFilter/SubmitterFilter';
+import Component, { SUBMITTER_TYPES } from '../../../../app/javascript/components/SubmitterFilter/component';
 
 const defaultProps = {
   filtersStore: getFiltersStore(),

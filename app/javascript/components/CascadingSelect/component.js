@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { observer } from 'mobx-react';
 
-import FormSelect from '../FormSelect/FormSelect';
+import FormSelect from '../FormSelect/component';
 
 @observer
 class CascadingSelect extends React.Component {

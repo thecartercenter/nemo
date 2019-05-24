@@ -3,7 +3,7 @@ import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
 
 import FiltersModel from './FiltersModel';
-import { SUBMITTER_TYPES } from '../SubmitterFilter/SubmitterFilter';
+import { SUBMITTER_TYPES } from '../SubmitterFilter/component';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 

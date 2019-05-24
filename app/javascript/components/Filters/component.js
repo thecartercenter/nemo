@@ -4,12 +4,12 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import { observer, inject, Provider } from 'mobx-react';
 
 import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from '../search/utils';
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
-import FormFilter from '../FormFilter/FormFilter';
-import QuestionFilter from '../QuestionFilter/QuestionFilter';
-import ReviewedFilter from '../ReviewedFilter/ReviewedFilter';
-import SubmitterFilter, { submitterType } from '../SubmitterFilter/SubmitterFilter';
-import AdvancedSearchFilter from '../AdvancedSearchFilter/AdvancedSearchFilter';
+import ErrorBoundary from '../ErrorBoundary/component';
+import FormFilter from '../FormFilter/component';
+import QuestionFilter from '../QuestionFilter/component';
+import ReviewedFilter from '../ReviewedFilter/component';
+import SubmitterFilter, { submitterType } from '../SubmitterFilter/component';
+import AdvancedSearchFilter from '../AdvancedSearchFilter/component';
 
 @inject('filtersStore')
 @inject('conditionSetStore')

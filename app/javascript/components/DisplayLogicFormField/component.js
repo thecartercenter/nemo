@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import { observer, inject, Provider } from 'mobx-react';
 
 import { provideConditionSetStore } from '../ConditionSetModel/utils';
-import ConditionSetFormField from '../ConditionSetFormField/ConditionSetFormField';
-import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import ConditionSetFormField from '../ConditionSetFormField/component';
+import ErrorBoundary from '../ErrorBoundary/component';
 
 @inject('conditionSetStore')
 @observer

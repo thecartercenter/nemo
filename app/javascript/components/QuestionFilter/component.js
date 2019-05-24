@@ -6,7 +6,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { inject, observer } from 'mobx-react';
 
 import { getButtonHintString, getItemNameFromId } from '../search/utils';
-import ConditionSetFormField from '../ConditionSetFormField/ConditionSetFormField';
+import ConditionSetFormField from '../ConditionSetFormField/component';
 
 @inject('filtersStore')
 @observer
