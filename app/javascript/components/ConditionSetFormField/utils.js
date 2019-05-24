@@ -1,4 +1,4 @@
-import ConditionSetModel from './ConditionSetModel';
+import ConditionSetModel from './model';
 
 /** Cache. */
 const conditionSetStores = {};

@@ -1,4 +1,4 @@
-import { getLevelsValues, applyDefaultLevelsValues } from '../../../../app/javascript/components/ConditionSetModel/utils';
+import { getLevelsValues, applyDefaultLevelsValues } from '../../../../app/javascript/components/ConditionSetFormField/utils';
 
 it('gets levels values', () => {
   const result = getLevelsValues([
