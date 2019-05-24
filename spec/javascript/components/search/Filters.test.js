@@ -7,8 +7,8 @@ import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '..
 import { getFiltersStore } from './utils';
 
 import { CONTROLLER_NAME } from '../../../../app/javascript/components/search/utils';
-import { FiltersRoot as Component } from '../../../../app/javascript/components/search/Filters';
-import { SUBMITTER_TYPES, submitterType } from '../../../../app/javascript/components/search/SubmitterFilter';
+import { FiltersRoot as Component } from '../../../../app/javascript/components/Filters';
+import { SUBMITTER_TYPES, submitterType } from '../../../../app/javascript/components/SubmitterFilter';
 
 let defaultProps = {};
 resetDefaultProps();
@@ -50,7 +50,7 @@ describe('integration', () => {
   jest.resetModules();
   jest.unmock('mobx-react');
   // eslint-disable-next-line no-shadow
-  const { FiltersRoot: Component } = require('../../../../app/javascript/components/search/Filters');
+  const { FiltersRoot: Component } = require('../../../../app/javascript/components/Filters');
 
   let wrapper;
 

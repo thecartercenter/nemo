@@ -3,8 +3,8 @@ import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import { observer, inject, Provider } from 'mobx-react';
 
-import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from './utils';
-import ErrorBoundary from '../ErrorBoundary';
+import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from './search/utils';
+import ErrorBoundary from './ErrorBoundary';
 import FormFilter from './FormFilter';
 import QuestionFilter from './QuestionFilter';
 import ReviewedFilter from './ReviewedFilter';

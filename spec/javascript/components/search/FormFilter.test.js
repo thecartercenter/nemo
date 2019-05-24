@@ -3,7 +3,7 @@ import { shallow } from 'enzyme';
 
 import { getFiltersStore } from './utils';
 
-import Component from '../../../../app/javascript/components/search/FormFilter';
+import Component from '../../../../app/javascript/components/FormFilter';
 
 const defaultProps = {
   filtersStore: getFiltersStore(),
