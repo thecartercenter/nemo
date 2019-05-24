@@ -1,6 +1,10 @@
 # frozen_string_literal: true
 
+# Class to help search for Questions.
 class QuestionsSearcher < Searcher
+  # Returns the list of fields to be searched for this class.
+  # Includes whether they should be included in a default, unqualified search
+  # and whether they are searchable by a regular expression.
   def search_qualifiers
     [
       Search::Qualifier.new(name: "code", col: "questions.code", type: :text),
@@ -12,8 +16,6 @@ class QuestionsSearcher < Searcher
     ]
   end
 
-  # searches for questions
-  # scope parameter is not used in Question search
   def do_search
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)

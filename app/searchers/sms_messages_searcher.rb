@@ -1,8 +1,13 @@
 # frozen_string_literal: true
 
+# Class to help search for Sms::Messages.
 class SmsMessagesSearcher < Searcher
-  # Remove all non-digit chars and add a plus at the front.
-  # (unless the number looks like a shortcode, in which case we leave it alone)
+  # Returns the list of fields to be searched for this class.
+  # Includes whether they should be included in a default, unqualified search
+  # and whether they are searchable by a regular expression.
+  #
+  # Removes all non-digit chars and adds a plus at the front
+  # (unless the number looks like a shortcode, in which case we leave it alone).
   def search_qualifiers
     # We pass explicit SQL here or else we end up with an INNER JOIN which excludes any message
     # with no associated user.
@@ -24,9 +29,6 @@ class SmsMessagesSearcher < Searcher
     ]
   end
 
-  # searches for sms messages
-  # based on UsersSearcher.do_search
-  # scope is not used in Message search
   def do_search
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
