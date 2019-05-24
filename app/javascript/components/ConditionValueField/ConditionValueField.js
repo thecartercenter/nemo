@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import CascadingSelect from './CascadingSelect';
+import CascadingSelect from '../CascadingSelect/CascadingSelect';
 
 class ConditionValueField extends React.Component {
   static propTypes = {

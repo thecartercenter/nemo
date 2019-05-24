@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import Component from '../../../app/javascript/components/ErrorBoundary';
+import Component from '../../../app/javascript/components/ErrorBoundary/ErrorBoundary';
 
 const mockProps = {
   message: 'message',

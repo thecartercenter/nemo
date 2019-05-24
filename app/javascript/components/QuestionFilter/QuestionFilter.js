@@ -5,8 +5,8 @@ import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { inject, observer } from 'mobx-react';
 
-import { getButtonHintString, getItemNameFromId } from './search/utils';
-import ConditionSetFormField from './ConditionSetFormField';
+import { getButtonHintString, getItemNameFromId } from '../search/utils';
+import ConditionSetFormField from '../ConditionSetFormField/ConditionSetFormField';
 
 @inject('filtersStore')
 @observer

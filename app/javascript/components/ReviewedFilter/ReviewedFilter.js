@@ -7,7 +7,7 @@ import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { inject, observer } from 'mobx-react';
 
-import { getButtonHintString } from './search/utils';
+import { getButtonHintString } from '../search/utils';
 
 const CHOICES = [
   { name: I18n.t('common._yes'), value: true, id: 'yes' },

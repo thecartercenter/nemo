@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer, Provider } from 'mobx-react';
 
-import { provideConditionSetStore } from './ConditionSetModel/utils';
-import ConditionSetFormField from './ConditionSetFormField';
-import FormSelect from './FormSelect';
+import { provideConditionSetStore } from '../ConditionSetModel/utils';
+import ConditionSetFormField from '../ConditionSetFormField/ConditionSetFormField';
+import FormSelect from '../FormSelect/FormSelect';
 
 @inject('conditionSetStore')
 @observer

@@ -3,13 +3,13 @@ import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
 import { observer, inject, Provider } from 'mobx-react';
 
-import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from './search/utils';
-import ErrorBoundary from './ErrorBoundary';
-import FormFilter from './FormFilter';
-import QuestionFilter from './QuestionFilter';
-import ReviewedFilter from './ReviewedFilter';
-import SubmitterFilter, { submitterType } from './SubmitterFilter';
-import AdvancedSearchFilter from './AdvancedSearchFilter';
+import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from '../search/utils';
+import ErrorBoundary from '../ErrorBoundary/ErrorBoundary';
+import FormFilter from '../FormFilter/FormFilter';
+import QuestionFilter from '../QuestionFilter/QuestionFilter';
+import ReviewedFilter from '../ReviewedFilter/ReviewedFilter';
+import SubmitterFilter, { submitterType } from '../SubmitterFilter/SubmitterFilter';
+import AdvancedSearchFilter from '../AdvancedSearchFilter/AdvancedSearchFilter';
 
 @inject('filtersStore')
 @inject('conditionSetStore')

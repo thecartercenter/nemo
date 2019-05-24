@@ -1,6 +1,6 @@
 import FiltersModel from '../../../../app/javascript/components/search/FiltersModel';
 import ConditionSetModel from '../../../../app/javascript/components/ConditionSetModel/ConditionSetModel';
-import { submitterType } from '../../../../app/javascript/components/SubmitterFilter';
+import { submitterType } from '../../../../app/javascript/components/SubmitterFilter/SubmitterFilter';
 
 export const getFiltersStore = () => new FiltersModel({
   conditionSetStore: new ConditionSetModel({

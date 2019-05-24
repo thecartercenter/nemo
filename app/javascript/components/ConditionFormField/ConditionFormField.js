@@ -1,11 +1,11 @@
 import get from 'lodash/get';
-import queryString from 'query-string';
+import queryString from 'query-string/index';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
-import ConditionValueField from './ConditionValueField';
-import FormSelect from './FormSelect';
+import ConditionValueField from '../ConditionValueField/ConditionValueField';
+import FormSelect from '../FormSelect/FormSelect';
 
 /** Return true if the given op is an available option. */
 function opIsValid(op, operatorOptions) {

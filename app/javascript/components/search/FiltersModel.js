@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../ConditionSetModel/ConditionSetModel';
-import { SUBMITTER_TYPES } from '../SubmitterFilter';
+import { SUBMITTER_TYPES } from '../SubmitterFilter/SubmitterFilter';
 
 /** Empty model to be used for resetting the store as needed. */
 const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({

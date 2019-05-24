@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import SkipRuleFormField from './SkipRuleFormField';
+import SkipRuleFormField from '../SkipRuleFormField/SkipRuleFormField';
 
 class SkipRuleSetFormField extends React.Component {
   static propTypes = {
