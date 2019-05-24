@@ -94,7 +94,7 @@ class UsersController < ApplicationController
   end
 
   def bulk_destroy
-    @users = restrict_by_search_and_ability_and_selection(@users, User)
+    @users = restrict_by_search_and_ability_and_selection(@users, UsersSearcher)
     result = UserDestroyer.new(scope: @users, user: current_user, ability: current_ability).destroy!
     success = []
     success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?

@@ -8,12 +8,12 @@ module BatchProcessable
     rel.where(id: params[:selected].keys)
   end
 
-  def restrict_by_search_and_ability_and_selection(scope, klass, search_options: {})
+  def restrict_by_search_and_ability_and_selection(scope, searcher_class, search_options: {})
     # We only check accessible_by index permission because that is what the user would have seen in the index
     # view where they initiate an action.
     # Downstream users of this method's output should check additional permissions if appropriate.
     scope = scope.accessible_by(current_ability, :index)
-    scope = apply_search(klass, scope, **search_options)
+    scope = apply_search(searcher_class, scope, **search_options)
     restrict_scope_to_selected_objects(scope)
   end
 end
