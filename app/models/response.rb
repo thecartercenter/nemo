@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -170,7 +172,7 @@ class Response < ApplicationRecord
     # replace any fulltext search placeholders
     sql = sql.gsub(/###(\d+)###/) do
       # the matched number is the index of the expression in the search's expression list
-      expression = search.expressions[$1.to_i]
+      expression = search.expressions[Regexp.last_match(1).to_i]
 
       # search all answers in this mission for a match
       # not escaping the query value because double quotes were getting escaped which makes exact phrase not work
@@ -187,7 +189,7 @@ class Response < ApplicationRecord
         raise "question with code '#{question_code}' not found" if question.nil?
 
         # add an attrib to this search
-        attribs.merge!({form_items: { question_id: question.id}})
+        attribs[:form_items] = {question_id: question.id}
       end
 
       # Run the full text search and get the matching answer IDs
@@ -196,8 +198,8 @@ class Response < ApplicationRecord
 
       # turn into an sql fragment
       fragment = if answer_ids.present?
-        # Get all response IDs and join into string
-        Answer.select("response_id").distinct.where(id: answer_ids).map{|r| "'#{r.response_id}'"}.join(",")
+                   # Get all response IDs and join into string
+                   Answer.select("response_id").distinct.where(id: answer_ids).map { |r| "'#{r.response_id}'" }.join(",")
       end
 
       # fall back to 00000000-0000-0000-0000-000000000000' if we get an empty fragment
@@ -212,7 +214,7 @@ class Response < ApplicationRecord
   # format e.g. [5, "week"] (5 in the last week)
   # nil means no recent responses
   def self.recent_count(rel)
-    %w(hour day week month year).each do |p|
+    %w[hour day week month year].each do |p|
       if (count = rel.where("created_at > ?", 1.send(p).ago).count) > 0
         return [count, p]
       end
@@ -277,13 +279,13 @@ class Response < ApplicationRecord
   def checked_out_by_others?(user = nil)
     raise ArguementError, "A user is required" unless user
 
-    !self.checked_out_by.nil? && self.checked_out_by != user && check_out_valid?
+    !checked_out_by.nil? && checked_out_by != user && check_out_valid?
   end
 
   def check_out!(user = nil)
     raise ArgumentError, "A user is required to checkout a response" unless user
 
-    if !checked_out_by_others?(user)
+    unless checked_out_by_others?(user)
       transaction do
         Response.remove_previous_checkouts_by(user)
 
@@ -300,8 +302,8 @@ class Response < ApplicationRecord
   end
 
   def check_in!
-    self.check_in
-    self.save!
+    check_in
+    save!
   end
 
   def generate_shortcode
@@ -313,7 +315,7 @@ class Response < ApplicationRecord
       form_code = form.code || "000"
 
       self.shortcode = [mission_code, form_code, response_code].join("-")
-    end while Response.exists?(shortcode: self.shortcode)
+    end while Response.exists?(shortcode: shortcode)
   end
 
   private

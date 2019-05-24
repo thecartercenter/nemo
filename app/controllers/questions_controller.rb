@@ -1,7 +1,11 @@
+# frozen_string_literal: true
+
 class QuestionsController < ApplicationController
   PER_PAGE = 25
 
-  include StandardImportable, Searchable, BatchProcessable
+  include BatchProcessable
+  include Searchable
+  include StandardImportable
 
   include Parameters
   include Storage
@@ -37,7 +41,7 @@ class QuestionsController < ApplicationController
     permitted_params = question_params
 
     # Convert tag string from TokenInput to array
-    @question.tag_ids = (permitted_params[:tag_ids] || '').split(',')
+    @question.tag_ids = (permitted_params[:tag_ids] || "").split(",")
 
     # Convert tags_attributes hidden inputs to create new tags (why doesn't this happen automatically here?)
     @question.tags_attributes = permitted_params[:tags_attributes] || []
@@ -49,7 +53,7 @@ class QuestionsController < ApplicationController
     permitted_params = question_params
 
     # Convert tag string from TokenInput to array
-    permitted_params[:tag_ids] = permitted_params[:tag_ids].split(',')
+    permitted_params[:tag_ids] = permitted_params[:tag_ids].split(",")
 
     # assign attribs and validate now so that normalization runs before authorizing and saving
     @question.assign_attributes(permitted_params)
@@ -93,7 +97,7 @@ class QuestionsController < ApplicationController
     if @question.save
       set_success_and_redirect(@question)
     else
-      flash.now[:error] = I18n.t('activerecord.errors.models.question.general')
+      flash.now[:error] = I18n.t("activerecord.errors.models.question.general")
       prepare_and_render_form
     end
   end
