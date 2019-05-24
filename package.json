@@ -8,6 +8,7 @@
   },
   "jest": {
     "roots": [
+      "<rootDir>/app/javascript",
       "<rootDir>/spec/javascript"
     ],
     "setupFilesAfterEnv": [
@@ -16,7 +17,7 @@
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
     ],
-    "testRegex": "/spec/javascript/.*\\.test\\.jsx?$",
+    "testRegex": "/app/javascript/.*\\.test\\.jsx?$",
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
     }

@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { getFiltersStore } from './utils';
+import { getFiltersStore } from '../testUtils';
 
-import Component from '../../../../app/javascript/components/Filters/ReviewedFilter/component';
+import Component from './component';
 
 const defaultProps = {
   filtersStore: getFiltersStore(),

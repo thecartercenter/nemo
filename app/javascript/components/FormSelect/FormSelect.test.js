@@ -1,7 +1,7 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import Component from '../../../app/javascript/components/FormSelect/component';
+import Component from './component';
 
 const defaultProps = {
   id: 'root',

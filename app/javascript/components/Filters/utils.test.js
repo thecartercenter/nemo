@@ -4,10 +4,10 @@ import {
   getFilterString,
   submitSearch,
   isQueryParamTruthy,
-} from '../../../../app/javascript/components/Filters/utils';
-import { getEmptySubmitterTypeMap } from '../../../../app/javascript/components/Filters/model';
+} from './utils';
+import { getEmptySubmitterTypeMap } from './model';
 
-import { getFiltersStore } from './utils';
+import { getFiltersStore } from './testUtils';
 
 it('gets hints (0)', () => {
   const result = getButtonHintString([]);

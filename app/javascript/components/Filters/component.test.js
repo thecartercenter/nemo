@@ -3,12 +3,12 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Provider } from 'mobx-react';
 
-import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../testUtils';
-import { getFiltersStore } from './utils';
+import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../../../spec/javascript/testUtils';
+import { getFiltersStore } from './testUtils';
 
-import { CONTROLLER_NAME } from '../../../../app/javascript/components/Filters/utils';
-import { FiltersRoot as Component } from '../../../../app/javascript/components/Filters/component';
-import { SUBMITTER_TYPES, submitterType } from '../../../../app/javascript/components/Filters/SubmitterFilter/component';
+import { CONTROLLER_NAME } from './utils';
+import { FiltersRoot as Component } from './component';
+import { SUBMITTER_TYPES, submitterType } from './SubmitterFilter/component';
 
 let defaultProps = {};
 resetDefaultProps();
@@ -50,7 +50,7 @@ describe('integration', () => {
   jest.resetModules();
   jest.unmock('mobx-react');
   // eslint-disable-next-line no-shadow
-  const { FiltersRoot: Component } = require('../../../../app/javascript/components/Filters/component');
+  const { FiltersRoot: Component } = require('./component');
 
   let wrapper;
 

@@ -8,7 +8,7 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString } from '../Filters/utils';
+import { getButtonHintString } from '../utils';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
 export const submitterType = {

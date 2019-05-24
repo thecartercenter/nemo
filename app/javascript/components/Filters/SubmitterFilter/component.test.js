@@ -1,9 +1,9 @@
 import React from 'react';
 import { shallow } from 'enzyme';
 
-import { getFiltersStore } from './utils';
+import { getFiltersStore } from '../testUtils';
 
-import Component, { SUBMITTER_TYPES } from '../../../../app/javascript/components/Filters/SubmitterFilter/component';
+import Component, { SUBMITTER_TYPES } from './component';
 
 const defaultProps = {
   filtersStore: getFiltersStore(),
