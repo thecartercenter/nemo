@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
+# Class to help search for Responses.
 class ResponsesSearcher < Searcher
-  # gets the list of fields to be searched for this class
-  # includes whether they should be included in a default, unqualified search
-  # and whether they are searchable by a regular expression
+  # Returns the list of fields to be searched for this class.
+  # Includes whether they should be included in a default, unqualified search
+  # and whether they are searchable by a regular expression.
   def search_qualifiers
     [
       Search::Qualifier.new(name: "form", col: "forms.name", assoc: :forms, type: :text),
@@ -43,10 +44,6 @@ class ResponsesSearcher < Searcher
     ]
   end
 
-  # searches for responses
-  # relation - a Response relation upon which to build the search query
-  # query - the search query string (e.g. form:polling text:interference, tomfoolery)
-  # scope - the scope to pass to the search qualifiers generator
   def do_search
     # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
