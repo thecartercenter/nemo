@@ -101,7 +101,7 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
-    @responses = restrict_by_search_and_ability_and_selection(@responses, Response)
+    @responses = restrict_by_search_and_ability_and_selection(@responses, ResponsesSearcher)
     result = ResponseDestroyer.new(scope: @responses, ability: current_ability).destroy!
     flash[:success] = t("response.bulk_destroy_deleted", count: result[:destroyed])
     redirect_to(responses_path)

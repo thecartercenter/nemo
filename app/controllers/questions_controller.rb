@@ -72,7 +72,7 @@ class QuestionsController < ApplicationController
   end
 
   def bulk_destroy
-    @questions = restrict_by_search_and_ability_and_selection(@questions, Question)
+    @questions = restrict_by_search_and_ability_and_selection(@questions, QuestionsSearcher)
     result = QuestionDestroyer.new(scope: @questions, ability: current_ability).destroy!
     success = []
     success << t("question.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
