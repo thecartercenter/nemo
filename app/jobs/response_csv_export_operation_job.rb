@@ -22,7 +22,7 @@ class ResponseCsvExportOperationJob < OperationJob
   end
 
   def apply_search_scope(responses, search, mission)
-    ResponsesSearcher.apply(responses, search, mission: mission)
+    ResponsesSearcher.new(responses, search, mission: mission).apply
   end
 
   def generate_csv(responses)

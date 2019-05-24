@@ -12,7 +12,7 @@ describe User do
     let!(:third_user) { create(:user_group_assignment, user_group: second_group).user }
 
     # use User.all because rel needs to be an ActiveRecord relation
-    subject { UsersSearcher.apply(User.all, query, scope).to_a }
+    subject { UsersSearcher.new(User.all, query, scope).apply.to_a }
 
     context "searching by group" do
       let(:query) { %(group:"#{group_sought.name}") }
