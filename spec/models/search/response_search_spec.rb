@@ -147,15 +147,6 @@ describe Response do
 
         # Mixture of indexed and normal qualifiers should work
         assert_search("{Green}:ipswitch reviewed:1", r2)
-
-        # Excerpts should be correct
-        assert_excerpts("text:heaven", [
-          [{questioning_id: form.questionings[1].id, code: "mauve", text: "fox {{{heaven}}} jumps"},
-           {questioning_id: form.questionings[4].id, code: "Green", text: "apple {{{heaven}}} ipswitch"}]
-        ])
-        assert_excerpts("{green}:heaven", [
-          [{questioning_id: form.questionings[4].id, code: "Green", text: "apple {{{heaven}}} ipswitch"}]
-        ])
       end
     end
 
@@ -172,15 +163,6 @@ describe Response do
         objs_or_error.compact!
         expect(run_search(query)).to contain_exactly(*objs_or_error)
       end
-    end
-
-    # Runs a search with the given query and checks the returned excerpts
-    def assert_excerpts(query, excerpts)
-      # TODO: FIX EXCERPTING IN PG_SEARCH
-      return "SKIPPING UNTIL WE RE-ENABLE EXCERPTS"
-      responses = run_search(query)
-      expect(responses.size).to eq(excerpts.size)
-      responses.each_with_index { |r, i| expect(r.excerpts).to eq(excerpts[i]) }
     end
 
     def run_search(query)

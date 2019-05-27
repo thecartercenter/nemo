@@ -32,7 +32,7 @@
 
 <% else %>
 
-  <%# show search excerpt (highlights search terms) if exists for this questioning, else just show plain answer value %>
-  <%= content_tag(:div, excerpt_if_exists(@response, answer)) %>
+  <!-- Rely on simple_format to sanitize by default. -->
+  <%= content_tag(:div, simple_format(answer.value)) %>
 
 <% end %>
