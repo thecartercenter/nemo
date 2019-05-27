@@ -184,7 +184,7 @@ describe Response do
     end
 
     def run_search(query, options = {})
-      ResponsesSearcher.new(Response, query, {mission: get_mission}, options).apply
+      ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission}, options: options).apply
     end
   end
 end

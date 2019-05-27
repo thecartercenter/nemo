@@ -63,8 +63,9 @@ class ResponsesController < ApplicationController
     # so that we get highlighted excerpts
     if params[:search]
       # we pass a relation matching only one response, so there should be at most one match
-      matches = ResponsesSearcher.new(Response.where(id: @response.id), params[:search],
-        mission: current_mission).apply
+      matches = ResponsesSearcher.new(relation: Response.where(id: @response.id),
+                                      query: params[:search],
+                                      scope: {mission: current_mission}).apply
 
       # if we get a match, then we use that object instead, since it contains excerpts
       @response = matches.first if matches.first

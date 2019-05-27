@@ -80,7 +80,7 @@ module Report::Gridable
   # and applies it to the given relation, returning the result
   def apply_filter(rel)
     if filter.present?
-      ResponsesSearcher.new(rel, filter, mission: mission).apply
+      ResponsesSearcher.new(relation: rel, query: filter, scope: {mission: mission}).apply
     else
       rel
     end

@@ -14,7 +14,7 @@ module Searchable
     query = params[:search]
     return relation if query.blank?
 
-    searcher_class.new(relation, query, {mission: current_mission}, options).apply
+    searcher_class.new(relation: relation, query: query, scope: {mission: current_mission}, options: options).apply
   rescue Search::ParseError => error
     flash.now[:error] = error.to_s
     flash.now[:search_error] = true
