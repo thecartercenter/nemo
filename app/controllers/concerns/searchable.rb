@@ -4,11 +4,6 @@
 module Searchable
   extend ActiveSupport::Concern
 
-  # Builds a searcher with which to search.
-  def build_searcher(searcher_class, relation, query, scope, **options)
-    searcher_class.new(relation, query, scope, options)
-  end
-
   # If params[:search] is present, runs a search of `klass`,
   # passing `relation` as the relation to which to apply the search,
   # and the current_mission as the search scope.
@@ -19,8 +14,7 @@ module Searchable
     query = params[:search]
     return relation if query.blank?
 
-    searcher = build_searcher(searcher_class, relation, query, {mission: current_mission}, options)
-    searcher.apply
+    searcher_class.new(relation, query, {mission: current_mission}, options).apply
   rescue Search::ParseError => error
     flash.now[:error] = error.to_s
     flash.now[:search_error] = true
