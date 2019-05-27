@@ -55,14 +55,6 @@ module ResponsesHelper
     links
   end
 
-  # shows response excerpts if available
-  def responses_second_row(response)
-    response.excerpts&.map do |e|
-      html = excerpt_to_html(e[:text])
-      content_tag(:p, content_tag(:b, "[#{e[:code]}]:") << " " << html)
-    end&.reduce(:<<)
-  end
-
   # takes a recent count (e.g. [5, "week"]) and translates it
   def translate_recent_responses(count)
     if count.nil?

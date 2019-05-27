@@ -1,21 +1,5 @@
 # DEPRECATED: Model-related display logic should move to a decorator.
 module AnswersHelper
-  # assuming excerpts are enclosed with {{{ ... }}}, safely converts to <em> tags and returns html_safe string
-  def excerpt_to_html(str)
-    html_escape(str).gsub('{{{', '<em class="match">').gsub('}}}', '</em>').html_safe
-  end
-
-  # checks for an excerpt for the given answer in the given response object and shows it if found
-  # applies simple formatting
-  def excerpt_if_exists(response, answer)
-    html = if excerpt = response.excerpts_by_questioning_id[answer.questioning_id]
-      excerpt_to_html(excerpt[:text])
-    else
-      answer.value
-    end
-    simple_format(html) #rely on simple_format to sanitize by default
-  end
-
   def media_path(object, params = {})
     media_object_path(object, params.merge(type: object.kind.pluralize))
   end

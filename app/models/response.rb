@@ -57,7 +57,7 @@ class Response < ApplicationRecord
   CODE_CHARS = ("a".."z").to_a + ("0".."9").to_a
   CODE_LENGTH = 5
 
-  attr_accessor :modifier, :excerpts, :awaiting_media
+  attr_accessor :modifier, :awaiting_media
 
   belongs_to :form, inverse_of: :responses
   belongs_to :checked_out_by, class_name: "User"
@@ -168,11 +168,6 @@ class Response < ApplicationRecord
   def location
     ans = location_answers.first
     ans ? ans.location : nil
-  end
-
-  # indexes excerpts by questioning_id
-  def excerpts_by_questioning_id
-    @excerpts_by_questioning_id ||= (excerpts || []).index_by { |e| e[:questioning_id] }
   end
 
   def check_out_valid?

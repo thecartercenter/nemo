@@ -17,22 +17,6 @@
       color: $success-green;
     }
   }
-
-  // Search excerpt
-  tr.second_row td {
-    border-top: none !important;
-    padding-top: 0;
-    color: #aaa;
-
-    p {
-      margin-top: 0;
-      margin-bottom: 3px;
-    }
-
-    p:last-child {
-      margin: 0;
-    }
-  }
 }
 
 // Highlighted search match

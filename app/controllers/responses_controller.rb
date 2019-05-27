@@ -59,18 +59,6 @@ class ResponsesController < ApplicationController
   end
 
   def show
-    # if there is a search param, we try to load the response via the apply mechanism
-    # so that we get highlighted excerpts
-    if params[:search]
-      # we pass a relation matching only one response, so there should be at most one match
-      matches = ResponsesSearcher.new(relation: Response.where(id: @response.id),
-                                      query: params[:search],
-                                      scope: {mission: current_mission}).apply
-
-      # if we get a match, then we use that object instead, since it contains excerpts
-      @response = matches.first if matches.first
-    end
-
     prepare_and_render_form
   end
 
