@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+# Knows how to convert a query string + qualifiers into SQL.
+#
+# See also Searcher which can apply more complex logic.
 class Search::Search
   attr_accessor :str, :qualifiers, :expressions
 
