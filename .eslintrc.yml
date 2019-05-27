@@ -11,3 +11,12 @@ globals:
 rules:
   import/no-unresolved: ['error', { ignore: ['^javascripts/'] }]
   react/prefer-stateless-function: off
+
+overrides:
+  -
+    files:
+      - '*.test.js'
+      - 'setupTests.js'
+    rules:
+      global-require: off
+      import/no-extraneous-dependencies: off

@@ -4,15 +4,14 @@
     "test": "jest",
     "lint": "eslint --ext .js,.jsx",
     "lint:all": "yarn run lint .",
-    "lint:react": "yarn run lint {app,spec}/javascript/"
+    "lint:react": "yarn run lint app/javascript/"
   },
   "jest": {
     "roots": [
-      "<rootDir>/app/javascript",
-      "<rootDir>/spec/javascript"
+      "<rootDir>/app/javascript"
     ],
     "setupFilesAfterEnv": [
-      "<rootDir>/spec/javascript/setupTests.js"
+      "<rootDir>/app/javascript/setupTests.js"
     ],
     "snapshotSerializers": [
       "enzyme-to-json/serializer"

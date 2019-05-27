@@ -42,7 +42,7 @@ jest.mock('react-select2-wrapper/css/select2.css', () => undefined);
 window.I18n = I18n;
 
 try {
-  require('../../app/assets/javascripts/i18n/translations');
+  require('../assets/javascripts/i18n/translations');
 } catch (error) {
   // eslint-disable-next-line no-console
   console.error('Failed to find translations. Did you run `rails i18n:js:export` yet?');

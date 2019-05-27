@@ -3,7 +3,7 @@ import React from 'react';
 import { shallow, mount } from 'enzyme';
 import { Provider } from 'mobx-react';
 
-import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../../../spec/javascript/testUtils';
+import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../testUtils';
 import { getFiltersStore } from './testUtils';
 
 import { CONTROLLER_NAME } from './utils';
