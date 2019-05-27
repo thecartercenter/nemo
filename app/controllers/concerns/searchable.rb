@@ -33,7 +33,7 @@ module Searchable
     return ResponsesSearcher if klass == Response
     return UsersSearcher if klass == User
     return QuestionsSearcher if klass == Question
-    return SmsMessagesSearcher if klass == Sms::Message
+    return Sms::MessagesSearcher if klass == Sms::Message
     raise "No Searcher class for #{relation.klass.name}"
   end
 end
