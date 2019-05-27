@@ -4,7 +4,7 @@
 class Searcher
   attr_accessor :relation, :query, :scope, :options
 
-  def initialize(relation, query, scope, options = nil)
+  def initialize(relation:, query:, scope: nil, **options)
     self.relation = relation
     self.query = query
     self.scope = scope
