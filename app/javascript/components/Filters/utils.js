@@ -14,18 +14,6 @@ export const CONTROLLER_NAME = {
   RESPONSES: '"responses"',
 };
 
-/**
- * Symbol values for possible operation types.
- */
-const OP_SYMBOL = {
-  eq: '=',
-  neq: '!=',
-  gt: '>',
-  lt: '<',
-  geq: '>=',
-  leq: '<=',
-};
-
 /** Cache. */
 let filtersStore = null;
 
