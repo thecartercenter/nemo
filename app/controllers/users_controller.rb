@@ -26,7 +26,7 @@ class UsersController < ApplicationController
     @users = @users.with_assoc.by_name
     @groups = UserGroup.accessible_by(current_ability).order(:name)
     @search_params = params[:search]
-    @users = apply_search(UsersSearcher, @users)
+    @users = apply_search(@users)
 
     # Apply pagination
     @users = @users.paginate(page: params[:page], per_page: PER_PAGE)
@@ -94,7 +94,7 @@ class UsersController < ApplicationController
   end
 
   def bulk_destroy
-    @users = restrict_by_search_and_ability_and_selection(@users, UsersSearcher)
+    @users = restrict_by_search_and_ability_and_selection(@users)
     result = UserDestroyer.new(scope: @users, user: current_user, ability: current_ability).destroy!
     success = []
     success << t("user.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?

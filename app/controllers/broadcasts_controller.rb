@@ -41,7 +41,7 @@ class BroadcastsController < ApplicationController
     recipient_selection = "specific"
     @broadcast = Broadcast.accessible_by(current_ability).new
     users = User.accessible_by(current_ability).with_assoc.by_name
-    users = apply_search(UsersSearcher, users)
+    users = apply_search(users)
     users = restrict_scope_to_selected_objects(users)
 
     @broadcast.recipient_users = users

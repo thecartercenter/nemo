@@ -21,7 +21,7 @@ class SmsController < ApplicationController
   helper_method :smses
 
   def index
-    @sms = apply_search(SmsMessagesSearcher, @sms)
+    @sms = apply_search(@sms)
 
     # cancan load_resource messes up the inflection so we need to create smses from sms
     @smses = @sms.latest_first.paginate(page: params[:page], per_page: 50)
