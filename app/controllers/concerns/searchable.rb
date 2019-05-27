@@ -10,11 +10,11 @@ module Searchable
   #
   # Returns the new relation if search succeeds,
   # otherwise sets flash, flash[:search_error] = true, and returns `relation` unchanged.
-  def apply_search(searcher_class, relation, **options)
+  def apply_search(searcher_class, relation)
     query = params[:search]
     return relation if query.blank?
 
-    searcher_class.new(relation: relation, query: query, scope: {mission: current_mission}, options: options).apply
+    searcher_class.new(relation: relation, query: query, scope: {mission: current_mission}).apply
   rescue Search::ParseError => error
     flash.now[:error] = error.to_s
     flash.now[:search_error] = true
