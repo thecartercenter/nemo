@@ -1,7 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
-import ConditionSetModel from '../ConditionSetFormField/model';
+import ConditionSetModel from '../conditions/ConditionSetFormField/model';
 import { SUBMITTER_TYPES } from './SubmitterFilter/component';
 
 /** Empty model to be used for resetting the store as needed. */

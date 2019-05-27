@@ -1,5 +1,5 @@
 import FiltersModel from './model';
-import ConditionSetModel from '../ConditionSetFormField/model';
+import ConditionSetModel from '../conditions/ConditionSetFormField/model';
 import { submitterType } from './SubmitterFilter/component';
 
 export const getFiltersStore = () => new FiltersModel({

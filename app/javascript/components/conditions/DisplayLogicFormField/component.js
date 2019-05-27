@@ -4,7 +4,7 @@ import { observer, inject, Provider } from 'mobx-react';
 
 import { provideConditionSetStore } from '../ConditionSetFormField/utils';
 import ConditionSetFormField from '../ConditionSetFormField/component';
-import ErrorBoundary from '../ErrorBoundary/component';
+import ErrorBoundary from '../../ErrorBoundary/component';
 
 @inject('conditionSetStore')
 @observer
