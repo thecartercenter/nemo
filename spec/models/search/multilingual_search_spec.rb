@@ -6,10 +6,11 @@ describe "search qualifiers" do
   let(:mission) { get_mission }
   let(:qualifier_sets) do
     {
-      response: ResponsesSearcher.new(relation: nil, query: nil, scope: {mission: mission}).search_qualifiers,
-      user: UsersSearcher.new(relation: nil, query: nil).search_qualifiers,
-      question: QuestionsSearcher.new(relation: nil, query: nil).search_qualifiers,
-      sms: SmsMessagesSearcher.new(relation: nil, query: nil).search_qualifiers
+      response: ResponsesSearcher.new(relation: Response.all, query: "test",
+                                      scope: {mission: mission}).search_qualifiers,
+      user: UsersSearcher.new(relation: User.all, query: "test").search_qualifiers,
+      question: QuestionsSearcher.new(relation: Question.all, query: "test").search_qualifiers,
+      sms: SmsMessagesSearcher.new(relation: Sms::Message.all, query: "test").search_qualifiers
     }
   end
 
