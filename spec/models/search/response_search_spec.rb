@@ -183,8 +183,8 @@ describe Response do
       responses.each_with_index { |r, i| expect(r.excerpts).to eq(excerpts[i]) }
     end
 
-    def run_search(query, options = {})
-      ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission}, options: options).apply
+    def run_search(query)
+      ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission}).apply
     end
   end
 end

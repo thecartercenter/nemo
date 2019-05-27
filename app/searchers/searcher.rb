@@ -2,12 +2,11 @@
 
 # Abstract class for searching a relation via query params.
 class Searcher
-  attr_accessor :relation, :query, :scope, :options
+  attr_accessor :relation, :query, :scope
 
-  def initialize(relation:, query:, scope: nil, **options)
+  def initialize(relation:, query:, scope: nil)
     self.relation = relation
     self.query = query
     self.scope = scope
-    self.options = options
   end
 end
