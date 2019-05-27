@@ -17,13 +17,10 @@ class QuestionsSearcher < Searcher
   end
 
   def apply
-    # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
-    # apply the needed associations
     self.relation = relation.joins(search.associations)
 
-    # apply the conditions
     relation.where(search.sql)
   end
 end

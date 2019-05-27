@@ -18,18 +18,18 @@ class ResponsesSearcher < Searcher
                             col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT
                             TIME ZONE '#{Time.zone.tzinfo.name}' AS DATE)"),
 
-      # this qualifier matches responses that have answers to questions with the given option set
+      # match responses that have answers to questions with the given option set
       Search::Qualifier.new(name: "option_set", col: "option_sets.name", assoc: :option_sets, type: :text),
 
-      # this qualifier matches responses that have answers to questions with the given type
+      # match responses that have answers to questions with the given type
       # this and other qualifiers use the 'questions' table because the join code below creates a table alias
       # the actual STI table name is 'questions'
       Search::Qualifier.new(name: "question_type", col: "questions.qtype_name", assoc: :questions),
 
-      # this qualifier matches responses that have answers to the given question
+      # match responses that have answers to the given question
       Search::Qualifier.new(name: "question", col: "questions.code", assoc: :questions, type: :text),
 
-      # this qualifier inserts a placeholder that we replace later
+      # insert a placeholder that we replace later
       Search::Qualifier.new(name: "text", col: "responses.id", type: :indexed, default: true),
       Search::Qualifier.new(name: "shortcode", col: "responses.shortcode", default: true),
 
@@ -45,13 +45,10 @@ class ResponsesSearcher < Searcher
   end
 
   def apply
-    # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
-    # apply the needed associations
     self.relation = relation.joins(Results::Join.list_to_sql(search.associations))
 
-    # get the sql
     sql = search.sql
 
     # replace any fulltext search placeholders
@@ -71,7 +68,7 @@ class ResponsesSearcher < Searcher
         # get the question with the given code
         question = Question.for_mission(scope[:mission]).with_code(question_code).first
 
-        # raising here since this shouldn't happen due to validator
+        # this shouldn't happen due to validator
         raise "question with code '#{question_code}' not found" if question.nil?
 
         # add an attrib to this search
@@ -90,11 +87,10 @@ class ResponsesSearcher < Searcher
                      .join(",")
                  end
 
-      # fall back to 00000000-0000-0000-0000-000000000000' if we get an empty fragment
+      # fall back if we get an empty fragment
       fragment.presence || "'00000000-0000-0000-0000-000000000000'"
     end
 
-    # apply the conditions
     relation.where(sql)
   end
 end
