@@ -36,7 +36,7 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
-        @responses = apply_search(ResponsesSearcher, @responses)
+        @responses = apply_search(@responses)
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
@@ -102,7 +102,7 @@ class ResponsesController < ApplicationController
   end
 
   def bulk_destroy
-    @responses = restrict_by_search_and_ability_and_selection(@responses, ResponsesSearcher)
+    @responses = restrict_by_search_and_ability_and_selection(@responses)
     result = ResponseDestroyer.new(scope: @responses, ability: current_ability).destroy!
     flash[:success] = t("response.bulk_destroy_deleted", count: result[:destroyed])
     redirect_to(responses_path)
@@ -129,7 +129,7 @@ class ResponsesController < ApplicationController
   private
 
   def render_possible_users(possible_users)
-    possible_users = apply_search(UsersSearcher, possible_users).by_name
+    possible_users = apply_search(possible_users).by_name
       .paginate(page: params[:page], per_page: 20)
 
     render(json: {

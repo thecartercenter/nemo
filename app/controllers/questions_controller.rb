@@ -19,7 +19,7 @@ class QuestionsController < ApplicationController
   decorates_assigned :questions
 
   def index
-    @questions = apply_search(QuestionsSearcher, @questions)
+    @questions = apply_search(@questions)
     @tags = Tag.mission_tags(@current_mission)
     @questions = @questions.includes(:tags).by_code.paginate(page: params[:page], per_page: PER_PAGE)
     load_importable_objs
@@ -72,7 +72,7 @@ class QuestionsController < ApplicationController
   end
 
   def bulk_destroy
-    @questions = restrict_by_search_and_ability_and_selection(@questions, QuestionsSearcher)
+    @questions = restrict_by_search_and_ability_and_selection(@questions)
     result = QuestionDestroyer.new(scope: @questions, ability: current_ability).destroy!
     success = []
     success << t("question.bulk_destroy_deleted", count: result[:destroyed]) if result[:destroyed].positive?
