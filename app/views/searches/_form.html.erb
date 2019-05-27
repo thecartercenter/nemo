@@ -1,5 +1,5 @@
 <form class="search-form form-inline">
-  <%= react_component("search/Filters", {
+  <%= react_component("Filters/component", {
     controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
     advancedSearchText: params[:search] || "",
     allForms: @all_forms || [],

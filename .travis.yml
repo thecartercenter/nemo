@@ -28,7 +28,7 @@ before_script:
   - yarn install --ignore-engines
 script:
   - bundle exec rspec --format progress
-  - yarn i18nExport
+  - yarn i18n:export
   - yarn test
 env:
   global:
