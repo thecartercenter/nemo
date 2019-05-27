@@ -2,7 +2,7 @@
 
 module Sms
   # Class to help search for Sms::Messages.
-  class Sms::MessagesSearcher < Searcher
+  class MessagesSearcher < Searcher
     # Returns the list of fields to be searched for this class.
     # Includes whether they should be included in a default, unqualified search
     # and whether they are searchable by a regular expression.
