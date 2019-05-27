@@ -17,7 +17,6 @@ class UsersSearcher < Searcher
   end
 
   def apply
-    # create a search object and generate qualifiers
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     # because assignments association is often added by the controller, only add if not already in relation

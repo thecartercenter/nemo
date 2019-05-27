@@ -6,9 +6,6 @@ module Sms
     # Returns the list of fields to be searched for this class.
     # Includes whether they should be included in a default, unqualified search
     # and whether they are searchable by a regular expression.
-    #
-    # Removes all non-digit chars and adds a plus at the front
-    # (unless the number looks like a shortcode, in which case we leave it alone).
     def search_qualifiers
       # We pass explicit SQL here or else we end up with an INNER JOIN which excludes any message
       # with no associated user.
@@ -31,13 +28,10 @@ module Sms
     end
 
     def apply
-      # create a search object and generate qualifiers
       search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
-      # apply the needed associations
       self.relation = relation.joins(search.associations)
 
-      # apply the conditions
       relation.where(search.sql)
     end
   end
