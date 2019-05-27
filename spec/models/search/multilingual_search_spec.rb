@@ -10,7 +10,7 @@ describe "search qualifiers" do
                                       scope: {mission: mission}).search_qualifiers,
       user: UsersSearcher.new(relation: User.all, query: "test").search_qualifiers,
       question: QuestionsSearcher.new(relation: Question.all, query: "test").search_qualifiers,
-      sms: SmsMessagesSearcher.new(relation: Sms::Message.all, query: "test").search_qualifiers
+      sms: Sms::MessagesSearcher.new(relation: Sms::Message.all, query: "test").search_qualifiers
     }
   end
 
