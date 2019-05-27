@@ -4,8 +4,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
-import ConditionValueField from '../ConditionValueField/component';
-import FormSelect from '../FormSelect/component';
+import ConditionValueField from './ConditionValueField/component';
+import FormSelect from '../../FormSelect/component';
 
 /** Return true if the given op is an available option. */
 function opIsValid(op, operatorOptions) {

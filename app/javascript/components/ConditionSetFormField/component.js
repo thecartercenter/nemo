@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
-import ConditionFormField from '../ConditionFormField/component';
+import ConditionFormField from './ConditionFormField/component';
 
 @inject('conditionSetStore')
 @observer

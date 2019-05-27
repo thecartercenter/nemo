@@ -1,7 +1,7 @@
 import queryString from 'query-string';
 import { observable, action, reaction, computed } from 'mobx';
 
-import { getLevelsValues, applyDefaultLevelsValues } from '../ConditionSetFormField/utils';
+import { getLevelsValues, applyDefaultLevelsValues } from '../utils';
 
 /**
  * Represents a single condition (e.g. 'Question Foo' Equals 'Bar').
