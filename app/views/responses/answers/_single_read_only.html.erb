@@ -32,7 +32,7 @@
 
 <% else %>
 
-  <!-- Rely on simple_format to sanitize by default. -->
+  <%# Rely on simple_format to sanitize by default. %>
   <%= content_tag(:div, simple_format(answer.value)) %>
 
 <% end %>
