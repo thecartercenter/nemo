@@ -405,7 +405,6 @@ fr:
         recipient_selection: "Destinataires"
         recipient_ids: "Groupes d'Utilisateurs"
       condition:
-        left_qing_id: "Question"
         op: "Comparaison"
         value: "Valeur"
       form:
@@ -1193,7 +1192,6 @@ fr:
     no_refable_qings: "Il n'y a pas de questions sur le formulaire à laquelle une condition pourrait se référer."
     op: "Comparaison"
     value: "Valeur"
-    left_qing_prompt: "Choisissez une question..."
   dashboard:
     close_dashboard: "Quitter le Dashboard"
     enter_full_screen: "Agrandir l'écran"

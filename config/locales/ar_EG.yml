@@ -418,7 +418,6 @@ ar:
         recipient_selection: "المستلمين"
         recipient_ids: "المستخدمين/المجموعات"
       condition:
-        left_qing_id: "سؤال"
         op: "مقارنة"
         value: "القيمة"
       form:
@@ -1220,7 +1219,6 @@ ar:
     no_refable_qings: "لا يوجد أي سؤال في هذه الإستمار يمكن أن يستدل به أي شرط"
     op: "مقارنة"
     value: "قيمة"
-    left_qing_prompt: "أختار سؤال..."
   dashboard:
     close_dashboard: "إغلاق اللوحة الرئيسية"
     enter_full_screen: "دخول الشاشة الكاملة"
