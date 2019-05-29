@@ -1,3 +1,9 @@
-const { environment } = require('@rails/webpacker')
+const { environment } = require('@rails/webpacker');
 
-module.exports = environment
+// Ignore JS test files.
+environment.loaders.append('ignore', {
+  test: /\.test\.js$/,
+  loader: 'ignore-loader',
+});
+
+module.exports = environment;
