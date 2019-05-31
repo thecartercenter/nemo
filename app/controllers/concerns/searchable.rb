@@ -4,18 +4,29 @@
 module Searchable
   extend ActiveSupport::Concern
 
-  # If params[:search] is present, runs a search of `klass`,
-  # passing `relation` as the relation to which to apply the search,
-  # and the current_mission as the search scope.
-  #
-  # Returns the new relation if search succeeds,
-  # otherwise sets flash, flash[:search_error] = true, and returns `relation` unchanged.
-  def apply_search(relation)
+  # Returns a Searcher. See apply_search for details.
+  def get_searcher(relation)
     query = params[:search]
     return relation if query.blank?
 
     searcher_class = infer_searcher_class(relation)
-    searcher_class.new(relation: relation, query: query, scope: {mission: current_mission}).apply
+    searcher_class.new(relation: relation, query: query, scope: {mission: current_mission})
+  end
+
+  # If params[:search] is present, runs a search using Searcher,
+  # passing `relation` as the relation to which to apply the search,
+  # and the `current_mission` as the search scope.
+  #
+  # Returns the new relation if search succeeds,
+  # otherwise sets flash, flash[:search_error] = true, and returns `relation` unchanged.
+  def apply_search(relation)
+    searcher = get_searcher(relation)
+    apply_searcher_safely(searcher)
+  end
+
+  # Applies the given Searcher, handling errors via flash.
+  def apply_searcher_safely(searcher)
+    searcher.apply
   rescue Search::ParseError => error
     flash.now[:error] = error.to_s
     flash.now[:search_error] = true
