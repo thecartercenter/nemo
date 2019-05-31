@@ -91,6 +91,13 @@ class ResponsesSearcher < Searcher
       fragment.presence || "'00000000-0000-0000-0000-000000000000'"
     end
 
+    if search.associations.include?(:forms)
+      # For now, only supports a single form ID.
+      form_name = sql.match(/forms.name ILIKE '%(.+)%'/)&.[](1)
+      form_id = Form.find_by(name: form_name).try(:id) if form_name.present?
+      self.form_ids = form_id ? [form_id] : []
+    end
+
     relation.where(sql)
   end
 end

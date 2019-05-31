@@ -4,7 +4,11 @@
 #
 # See also Search::Search which is simpler and just deals with SQL.
 class Searcher
+  # Search params
   attr_accessor :relation, :query, :scope
+
+  # Parsed search values
+  attr_accessor :form_ids
 
   def initialize(relation:, query:, scope: nil)
     self.relation = relation
