@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Search::Token
   attr_accessor :children
   attr_reader :kind
@@ -9,7 +11,7 @@ class Search::Token
   end
 
   def to_s_indented(level = 0)
-    ("  " * level) + "#{kind}\n" + children.collect{|c| c.to_s_indented(level + 1)}.join("\n")
+    ("  " * level) + "#{kind}\n" + children.collect { |c| c.to_s_indented(level + 1) }.join("\n")
   end
 
   # returns an sql string
@@ -22,7 +24,7 @@ class Search::Token
 
     when :unqualified_expression
       eq = Search::LexToken.new(Search::LexToken::EQUAL, "=")
-      "(" + default_qualifiers.map{ |q| comparison(q, eq, children[0]) }.join(' OR ') + ")"
+      "(" + default_qualifiers.map { |q| comparison(q, eq, children[0]) }.join(" OR ") + ")"
 
     when :qualified_expression
       # children[2] will be an :rhs token
@@ -42,158 +44,159 @@ class Search::Token
   end
 
   protected
-    # generates an sql fragment for a comparison
-    # qual - a LexToken representing a search qualifier, or a Search::Qualifier object
-    # op - a LexToken representing an operator. these should be checked for compatibility with Qualifier
-    # rhs_or_values - an :rhs or :values Token
-    def comparison(qual, op, rhs_or_values)
-      # make an expression object for this comparison
-      expr = Search::Expression.new
 
-      # if qual was given as a lex token, save its original content as we might need it later
-      # then lookup the qualifier
-      if qual.is_a?(Search::LexToken)
-        expr.qualifier_text = qual.content
-        qual = Search::Qualifier.find_in_set(@search.qualifiers, qual.content)
-      end
+  # generates an sql fragment for a comparison
+  # qual - a LexToken representing a search qualifier, or a Search::Qualifier object
+  # op - a LexToken representing an operator. these should be checked for compatibility with Qualifier
+  # rhs_or_values - an :rhs or :values Token
+  def comparison(qual, op, rhs_or_values)
+    # make an expression object for this comparison
+    expr = Search::Expression.new
 
-      qual_name = expr.qualifier_text || I18n.t("search_qualifiers.#{qual.name}")
+    # if qual was given as a lex token, save its original content as we might need it later
+    # then lookup the qualifier
+    if qual.is_a?(Search::LexToken)
+      expr.qualifier_text = qual.content
+      qual = Search::Qualifier.find_in_set(@search.qualifiers, qual.content)
+    end
 
-      expr.qualifier = qual
+    qual_name = expr.qualifier_text || I18n.t("search_qualifiers.#{qual.name}")
 
-      # ensure valid operator
-      raise_error_with_qualifier('invalid_op', qual_name, :op => op.content) unless qual.op_valid?(op.to_sql)
+    expr.qualifier = qual
 
-      # expand rhs into leaves and iterate
-      previous = nil
-      sql = ""
-      expr.values = ""
-      leaves = rhs_or_values.expand
-      leaves.each do |lex_tok|
-        # if this is a value token descendant
-        if lex_tok.parent.is?(:value)
+    # ensure valid operator
+    raise_error_with_qualifier("invalid_op", qual_name, op: op.content) unless qual.op_valid?(op.to_sql)
 
-          # if the previous token was also a value token, need to insert the implicit AND
-          if previous && previous.parent.is?(:value)
-            sql += " AND "
-            expr.values += " "
-          end
+    # expand rhs into leaves and iterate
+    previous = nil
+    sql = ""
+    expr.values = ""
+    leaves = rhs_or_values.expand
+    leaves.each do |lex_tok|
+      # if this is a value token descendant
+      if lex_tok.parent.is?(:value)
 
-          if qual.has_more_than_one_column?
-            sql += comparisons_for_all_columns(qual, op, lex_tok)
-          else
-            sql += comparison_fragment(qual, qual.col, op, lex_tok)
-          end
-
-          expr.values += lex_tok.is?(:string) ? "\"#{lex_tok.content}\"" : lex_tok.content
-
-        # else, if this is an 'OR', insert that
-        elsif lex_tok.is?(:or)
-          sql += " OR "
-          expr.values += " | "
+        # if the previous token was also a value token, need to insert the implicit AND
+        if previous&.parent&.is?(:value)
+          sql += " AND "
+          expr.values += " "
         end
 
-        previous = lex_tok
+        sql += if qual.has_more_than_one_column?
+                 comparisons_for_all_columns(qual, op, lex_tok)
+               else
+                 comparison_fragment(qual, qual.col, op, lex_tok)
+               end
+
+        expr.values += lex_tok.is?(:string) ? "\"#{lex_tok.content}\"" : lex_tok.content
+
+      # else, if this is an 'OR', insert that
+      elsif lex_tok.is?(:or)
+        sql += " OR "
+        expr.values += " | "
       end
 
-      @search.expressions << expr
+      previous = lex_tok
+    end
 
-      if qual.type == :indexed
-        "(#{qual.col} IN (####{@search.expressions.size-1}###))"
+    @search.expressions << expr
+
+    if qual.type == :indexed
+      "(#{qual.col} IN (####{@search.expressions.size - 1}###))"
+    else
+      if op.kind == :noteq
+        "NOT(#{sql})"
       else
-        if op.kind == :noteq
-          "NOT(#{sql})"
-        else
-          sql
-        end
+        sql
+      end
+    end
+  end
+
+  def comparisons_for_all_columns(qualifier, op, lex_tok)
+    qualifier.col.map { |c| comparison_fragment(qualifier, c, op, lex_tok) }.join(" OR ")
+  end
+
+  # generates an sql where clause fragment for a comparison with the
+  # given qualifier, operator, and value token
+  def comparison_fragment(qualifier, column, op, value_token)
+    # get the sql representations
+    value_sql = value_token.to_sql
+    op_sql = op.to_sql
+    # Since we are negating the entire expression, treat != as = within the comparison
+    op_sql = "=" if op.kind == :noteq
+
+    # Transform the value if qualifier has transformer.
+    value_sql = qualifier.preprocessor.call(value_sql) if qualifier.preprocessor
+
+    # Need to use this or negations don't work as expected.
+    and_not_null = op.kind == :noteq ? " AND #{column} IS NOT NULL" : ""
+
+    if qualifier.type == :date
+      begin
+        time = Time.zone.parse(value_sql)
+        value_sql = time.to_s(:std_datetime)
+      rescue ArgumentError
+        raise_error_with_qualifier("invalid_date", qualifier, value: value_sql)
       end
     end
 
-    def comparisons_for_all_columns(qualifier, op, lex_tok)
-      qualifier.col.map{ |c| comparison_fragment(qualifier, c, op, lex_tok) }.join(' OR ')
-    end
+    # if rhs is [blank], act accordingly
+    inner =
+      if [I18n.locale, :en].map { |l| "[" + I18n.t("search.blank", locale: l) + "]" }.include?(value_sql)
+        op_sql = "IS"
+        "#{column} #{op_sql} NULL"
 
-    # generates an sql where clause fragment for a comparison with the
-    # given qualifier, operator, and value token
-    def comparison_fragment(qualifier, column, op, value_token)
-      # get the sql representations
-      value_sql = value_token.to_sql
-      op_sql = op.to_sql
-      # Since we are negating the entire expression, treat != as = within the comparison
-      op_sql = "=" if op.kind == :noteq
+      elsif qualifier.type == :translated
+        sanitize("#{column} ->> ? ILIKE ?#{and_not_null}", I18n.locale, "%#{value_sql}%")
 
-      # Transform the value if qualifier has transformer.
-      value_sql = qualifier.preprocessor.call(value_sql) if qualifier.preprocessor
+      elsif qualifier.type == :boolean
+        truthy = ["1", I18n.t("common._yes").downcase]
+        falsy = ["0", I18n.t("common._no").downcase]
 
-      # Need to use this or negations don't work as expected.
-      and_not_null = op.kind == :noteq ? " AND #{column} IS NOT NULL" : ""
+        input_value = value_sql.downcase
+        bool_value = if truthy.include?(input_value)
+                       "t"
+                     elsif falsy.include?(input_value)
+                       "f"
+                     else
+                       raise_error_with_qualifier("boolean_error", qualifier.name)
+                     end
 
-      if qualifier.type == :date
-        begin
-          time = Time.zone.parse(value_sql)
-          value_sql = time.to_s(:std_datetime)
-        rescue ArgumentError
-          raise_error_with_qualifier("invalid_date", qualifier, value: value_sql)
-        end
+        sanitize("#{column} = ?", bool_value)
+
+      # if partial matches are allowed, change to LIKE
+      elsif qualifier.type == :text
+        op_sql = "ILIKE"
+        sanitize("#{column} #{op_sql} ?#{and_not_null}", "%#{value_sql}%")
+      else
+        sanitize("#{column} #{op_sql} ?#{and_not_null}", value_sql)
       end
 
-      # if rhs is [blank], act accordingly
-      inner =
-        if [I18n.locale, :en].map{|l| '[' + I18n.t('search.blank', :locale => l) + ']'}.include?(value_sql)
-          op_sql = "IS"
-          "#{column} #{op_sql} NULL"
+    "(#{inner})"
+  end
 
-        elsif qualifier.type == :translated
-          sanitize("#{column} ->> ? ILIKE ?#{and_not_null}", I18n.locale, "%#{value_sql}%")
-
-        elsif qualifier.type == :boolean
-          truthy = ["1", I18n.t("common._yes").downcase]
-          falsy = ["0", I18n.t("common._no").downcase]
-
-          input_value = value_sql.downcase
-          bool_value = if truthy.include?(input_value)
-                         "t"
-                       elsif falsy.include?(input_value)
-                         "f"
-                       else
-                         raise_error_with_qualifier("boolean_error", qualifier.name)
-                       end
-
-          sanitize("#{column} = ?", bool_value)
-
-        # if partial matches are allowed, change to LIKE
-        elsif qualifier.type == :text
-          op_sql = "ILIKE"
-          sanitize("#{column} #{op_sql} ?#{and_not_null}", "%#{value_sql}%")
-        else
-          sanitize("#{column} #{op_sql} ?#{and_not_null}", value_sql)
-        end
-
-      "(#{inner})"
+  # looks up the default qualifiers
+  # raises an error if there are none
+  def default_qualifiers
+    @search.qualifiers.select(&:default?).tap do |dq|
+      raise Search::ParseError, I18n.t("search.must_use_qualifier") if dq.empty?
     end
+  end
 
-    # looks up the default qualifiers
-    # raises an error if there are none
-    def default_qualifiers
-      @search.qualifiers.select(&:default?).tap do |dq|
-        raise Search::ParseError.new(I18n.t("search.must_use_qualifier")) if dq.empty?
-      end
-    end
+  def is?(kind)
+    @kind == kind
+  end
 
-    def is?(kind)
-      @kind == kind
-    end
+  def sanitize(*args)
+    SqlRunner.instance.sanitize(*args)
+  end
 
-    def sanitize(*args)
-      SqlRunner.instance.sanitize(*args)
-    end
+  # expands the current token into its component lextokens (leaf nodes)
+  def expand
+    children.map { |c| c.is_a?(Search::LexToken) ? c : c.expand }.flatten
+  end
 
-    # expands the current token into its component lextokens (leaf nodes)
-    def expand
-      children.map{|c| c.is_a?(Search::LexToken) ? c : c.expand}.flatten
-    end
-
-    def raise_error_with_qualifier(err_name, qual, params = {})
-      raise Search::ParseError.new(I18n.t("search.#{err_name}", params.merge(:qualifier => qual)))
-    end
+  def raise_error_with_qualifier(err_name, qual, params = {})
+    raise Search::ParseError, I18n.t("search.#{err_name}", params.merge(qualifier: qual))
+  end
 end
