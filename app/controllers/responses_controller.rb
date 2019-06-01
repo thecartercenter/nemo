@@ -37,7 +37,8 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
-        @responses = apply_search(@responses)
+        searcher = get_searcher(@responses)
+        @responses = apply_searcher_safely(searcher)
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
@@ -45,7 +46,7 @@ class ResponsesController < ApplicationController
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?
 
-        init_filter_data
+        init_filter_data(searcher)
       end
 
       # csv output is for exporting responses

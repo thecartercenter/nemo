@@ -33,8 +33,10 @@ module Searchable
     relation
   end
 
-  def init_filter_data
+  # Initializes variables used by the search filters.
+  def init_filter_data(searcher = nil)
     @all_forms = Form.all.map { |item| {name: item.name, id: item.id} }.sort_by_key
+    @form_ids = searcher.form_ids if searcher
   end
 
   private
