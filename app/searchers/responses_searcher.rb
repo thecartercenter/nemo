@@ -91,13 +91,20 @@ class ResponsesSearcher < Searcher
       fragment.presence || "'00000000-0000-0000-0000-000000000000'"
     end
 
-    if search.associations.include?(:forms)
-      # For now, only supports a single form ID.
-      form_name = sql.match(/forms.name ILIKE '%(.+)%'/)&.[](1)
-      form_id = Form.find_by(name: form_name).try(:id) if form_name.present?
-      self.form_ids = form_id ? [form_id] : []
-    end
+    save_filter_data(search)
 
     relation.where(sql)
+  end
+
+  # Save specific data that can be used for search filters.
+  def save_filter_data(search)
+    search.expressions.each do |expression|
+      if expression.qualifier.assoc.include?(:forms) # rubocop:disable Style/Next
+        form_names = expression.values_list
+        form_ids = form_names.map { |name| Form.find_by(name: name).try(:id) }
+          .reject(&:blank?)
+        self.form_ids += form_ids
+      end
+    end
   end
 end

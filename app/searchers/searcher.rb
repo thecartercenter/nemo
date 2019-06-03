@@ -14,5 +14,6 @@ class Searcher
     self.relation = relation
     self.query = query
     self.scope = scope
+    self.form_ids = []
   end
 end

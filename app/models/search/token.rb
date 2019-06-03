@@ -71,6 +71,7 @@ class Search::Token
     previous = nil
     sql = ""
     expr.values = ""
+    expr.values_list = []
     leaves = rhs_or_values.expand
     leaves.each do |lex_tok|
       # if this is a value token descendant
@@ -89,6 +90,7 @@ class Search::Token
                end
 
         expr.values += lex_tok.is?(:string) ? "\"#{lex_tok.content}\"" : lex_tok.content
+        expr.values_list.push(lex_tok.content)
 
       # else, if this is an 'OR', insert that
       elsif lex_tok.is?(:or)
