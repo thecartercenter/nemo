@@ -28,7 +28,7 @@ module Searchable
   rescue Search::ParseError => error
     flash.now[:error] = error.to_s
     flash.now[:search_error] = true
-    relation
+    searcher.relation
   end
 
   # Initializes variables used by the search filters.
