@@ -104,6 +104,8 @@ class ResponsesSearcher < Searcher
         form_ids = form_names.map { |name| Form.find_by(name: name).try(:id) }
           .reject(&:blank?)
         self.form_ids += form_ids
+      else
+        self.advanced_text += " #{expression.qualifier_text}:(#{expression.values})"
       end
     end
   end

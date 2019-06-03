@@ -8,12 +8,13 @@ class Searcher
   attr_accessor :relation, :query, :scope
 
   # Parsed search values
-  attr_accessor :form_ids
+  attr_accessor :form_ids, :advanced_text
 
   def initialize(relation:, query:, scope: nil)
     self.relation = relation
     self.query = query
     self.scope = scope
     self.form_ids = []
+    self.advanced_text = ""
   end
 end
