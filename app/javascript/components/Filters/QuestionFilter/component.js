@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { inject, observer } from 'mobx-react';
 
 import { getButtonHintString, getItemNameFromId } from '../utils';
 import ConditionSetFormField from '../../conditions/ConditionSetFormField/component';
+import FilterPopover from '../FilterPopover/component';
 
 @inject('filtersStore')
 @observer
@@ -25,9 +25,9 @@ class QuestionFilter extends React.Component {
     const { onSubmit } = this.props;
 
     return (
-      <Popover
-        className="filters-popover wide display-logic-container"
-        id="form-filter"
+      <FilterPopover
+        className="wide display-logic-container"
+        id="question-filter"
       >
         <ConditionSetFormField />
 
@@ -39,7 +39,7 @@ class QuestionFilter extends React.Component {
             {I18n.t('common.apply')}
           </Button>
         </div>
-      </Popover>
+      </FilterPopover>
     );
   }
 

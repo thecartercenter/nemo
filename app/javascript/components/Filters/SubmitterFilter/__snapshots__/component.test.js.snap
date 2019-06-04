@@ -19,8 +19,8 @@ exports[`renders as expected 1`] = `
   containerPadding={25}
   id="submitter-filter"
   overlay={
-    <Popover
-      className="filters-popover popover-multi-select2"
+    <FilterPopover
+      className="popover-multi-select2"
       id="submitter-filter"
     >
       <Select2
@@ -75,7 +75,7 @@ exports[`renders as expected 1`] = `
           Apply
         </Button>
       </div>
-    </Popover>
+    </FilterPopover>
   }
   placement="bottom"
   rootClose={true}

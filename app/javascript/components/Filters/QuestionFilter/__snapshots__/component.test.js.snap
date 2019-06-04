@@ -19,9 +19,9 @@ exports[`renders as expected 1`] = `
   containerPadding={25}
   id="question-filter"
   overlay={
-    <Popover
-      className="filters-popover wide display-logic-container"
-      id="form-filter"
+    <FilterPopover
+      className="wide display-logic-container"
+      id="question-filter"
     >
       <ConditionSetFormField />
       <div
@@ -34,7 +34,7 @@ exports[`renders as expected 1`] = `
           Apply
         </Button>
       </div>
-    </Popover>
+    </FilterPopover>
   }
   placement="bottom"
   rootClose={true}

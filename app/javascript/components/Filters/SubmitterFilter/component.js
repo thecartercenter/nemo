@@ -2,13 +2,13 @@ import flatten from 'lodash/flatten';
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
 import { getButtonHintString } from '../utils';
+import FilterPopover from '../FilterPopover/component';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
 export const submitterType = {
@@ -62,8 +62,8 @@ class SubmitterFilter extends React.Component {
     const { selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
 
     return (
-      <Popover
-        className="filters-popover popover-multi-select2"
+      <FilterPopover
+        className="popover-multi-select2"
         id="submitter-filter"
       >
         {SUBMITTER_TYPES.map((type) => {
@@ -96,7 +96,7 @@ class SubmitterFilter extends React.Component {
             {I18n.t('common.apply')}
           </Button>
         </div>
-      </Popover>
+      </FilterPopover>
     );
   }
 

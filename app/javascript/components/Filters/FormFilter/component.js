@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
 import { getButtonHintString, getItemNameFromId, parseListForSelect2 } from '../utils';
+import FilterPopover from '../FilterPopover/component';
 
 @inject('filtersStore')
 @observer
@@ -38,8 +38,7 @@ class FormFilter extends React.Component {
     const { allForms, selectedFormId, handleSelectForm } = filtersStore;
 
     return (
-      <Popover
-        className="filters-popover"
+      <FilterPopover
         id="form-filter"
       >
         <Select2
@@ -64,7 +63,7 @@ class FormFilter extends React.Component {
             {I18n.t('common.apply')}
           </Button>
         </div>
-      </Popover>
+      </FilterPopover>
     );
   }
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { inject, observer } from 'mobx-react';
 
 import { getButtonHintString } from '../utils';
+import FilterPopover from '../FilterPopover/component';
 
 const CHOICES = [
   { name: I18n.t('common._yes'), value: true, id: 'yes' },
@@ -33,8 +33,7 @@ class FormFilter extends React.Component {
     const { isReviewed } = filtersStore;
 
     return (
-      <Popover
-        className="filters-popover"
+      <FilterPopover
         id="reviewed-filter"
       >
         <div>
@@ -62,7 +61,7 @@ class FormFilter extends React.Component {
             {I18n.t('common.apply')}
           </Button>
         </div>
-      </Popover>
+      </FilterPopover>
     );
   }
 
