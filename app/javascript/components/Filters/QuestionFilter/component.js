@@ -28,17 +28,10 @@ class QuestionFilter extends React.Component {
       <FilterPopover
         className="wide display-logic-container"
         id="question-filter"
+        onSubmit={onSubmit}
+        buttonsContainerClass="condition-margin"
       >
         <ConditionSetFormField />
-
-        <div className="btn-apply-container condition-margin">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
       </FilterPopover>
     );
   }

@@ -1,13 +1,11 @@
 import React from 'react';
-import { shallow } from 'enzyme';
+import { shallow } from 'enzyme/build';
 
 import Component from './component';
 
 const defaultProps = {
-  children: <div>Test</div>,
-  id: 'id',
-  className: 'class',
   onSubmit: jest.fn(),
+  containerClass: 'class',
 };
 
 it('renders as expected', () => {

@@ -40,6 +40,7 @@ class FormFilter extends React.Component {
     return (
       <FilterPopover
         id="form-filter"
+        onSubmit={onSubmit}
       >
         <Select2
           data={parseListForSelect2(allForms)}
@@ -54,15 +55,6 @@ class FormFilter extends React.Component {
           ref={this.select2}
           value={selectedFormId}
         />
-
-        <div className="btn-apply-container">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
       </FilterPopover>
     );
   }

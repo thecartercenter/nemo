@@ -35,6 +35,7 @@ class FormFilter extends React.Component {
     return (
       <FilterPopover
         id="reviewed-filter"
+        onSubmit={onSubmit}
       >
         <div>
           <Form.Label>{I18n.t('filter.is_reviewed')}</Form.Label>
@@ -52,15 +53,6 @@ class FormFilter extends React.Component {
             </Button>
           ))}
         </ButtonGroup>
-
-        <div className="btn-apply-container">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
       </FilterPopover>
     );
   }

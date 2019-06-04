@@ -65,6 +65,7 @@ class SubmitterFilter extends React.Component {
       <FilterPopover
         className="popover-multi-select2"
         id="submitter-filter"
+        onSubmit={onSubmit}
       >
         {SUBMITTER_TYPES.map((type) => {
           const { dataUrl, resultsKey } = select2Config[type];
@@ -87,15 +88,6 @@ class SubmitterFilter extends React.Component {
             />
           );
         })}
-
-        <div className="btn-apply-container">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
       </FilterPopover>
     );
   }

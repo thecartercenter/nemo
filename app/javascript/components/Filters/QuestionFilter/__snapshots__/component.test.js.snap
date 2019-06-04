@@ -1,17 +1,14 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`popover handles callbacks 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+exports[`popover handles callbacks 1`] = `1`;
+
+exports[`popover handles callbacks 2`] = `
+Array [
+  Object {
+    "type": "return",
+    "value": undefined,
+  },
+]
 `;
 
 exports[`renders as expected 1`] = `
@@ -20,20 +17,12 @@ exports[`renders as expected 1`] = `
   id="question-filter"
   overlay={
     <FilterPopover
+      buttonsContainerClass="condition-margin"
       className="wide display-logic-container"
       id="question-filter"
+      onSubmit={[MockFunction]}
     >
       <ConditionSetFormField />
-      <div
-        className="btn-apply-container condition-margin"
-      >
-        <Button
-          className="btn-apply"
-          onClick={[MockFunction]}
-        >
-          Apply
-        </Button>
-      </div>
     </FilterPopover>
   }
   placement="bottom"

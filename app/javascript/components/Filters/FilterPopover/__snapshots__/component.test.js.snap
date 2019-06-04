@@ -8,5 +8,8 @@ exports[`renders as expected 1`] = `
   <div>
     Test
   </div>
+  <FilterPopoverButtons
+    onSubmit={[MockFunction]}
+  />
 </Popover>
 `;
