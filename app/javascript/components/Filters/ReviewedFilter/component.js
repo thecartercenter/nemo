@@ -5,7 +5,6 @@ import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { inject, observer } from 'mobx-react';
 
-import FilterPopover from '../FilterPopover/component';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 const CHOICES = [
@@ -28,14 +27,11 @@ class FormFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, onSubmit } = this.props;
+    const { filtersStore } = this.props;
     const { isReviewed } = filtersStore;
 
     return (
-      <FilterPopover
-        id="reviewed-filter"
-        onSubmit={onSubmit}
-      >
+      <React.Fragment>
         <div>
           <Form.Label>{I18n.t('filter.is_reviewed')}</Form.Label>
         </div>
@@ -52,12 +48,12 @@ class FormFilter extends React.Component {
             </Button>
           ))}
         </ButtonGroup>
-      </FilterPopover>
+      </React.Fragment>
     );
   }
 
   render() {
-    const { filtersStore } = this.props;
+    const { filtersStore, onSubmit } = this.props;
     const { originalIsReviewed } = filtersStore;
     const hints = originalIsReviewed == null
       ? null
@@ -67,7 +63,8 @@ class FormFilter extends React.Component {
       <FilterOverlayTrigger
         id="reviewed-filter"
         title={I18n.t('filter.reviewed')}
-        overlay={this.renderPopover()}
+        popoverContent={this.renderPopover()}
+        onSubmit={onSubmit}
         hints={hints}
         buttonClass="btn-margin-left"
       />

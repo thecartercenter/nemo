@@ -20,12 +20,10 @@ exports[`renders as expected 1`] = `
     ]
   }
   id="submitter-filter"
-  overlay={
-    <FilterPopover
-      className="popover-multi-select2"
-      id="submitter-filter"
-      onSubmit={[MockFunction]}
-    >
+  onSubmit={[MockFunction]}
+  popoverClass="popover-multi-select2"
+  popoverContent={
+    <React.Fragment>
       <Select2
         id="submitter"
         onSelect={[Function]}
@@ -68,7 +66,7 @@ exports[`renders as expected 1`] = `
           ]
         }
       />
-    </FilterPopover>
+    </React.Fragment>
   }
   title="Submitter"
 />

@@ -14,18 +14,12 @@ Array [
 exports[`renders as expected 1`] = `
 <FilterOverlayTrigger
   buttonClass="btn-margin-left"
+  buttonsContainerClass="condition-margin"
   hints={Array []}
   id="question-filter"
-  overlay={
-    <FilterPopover
-      buttonsContainerClass="condition-margin"
-      className="wide display-logic-container"
-      id="question-filter"
-      onSubmit={[MockFunction]}
-    >
-      <ConditionSetFormField />
-    </FilterPopover>
-  }
+  onSubmit={[MockFunction]}
+  popoverClass="wide display-logic-container"
+  popoverContent={<ConditionSetFormField />}
   title="Question"
 />
 `;

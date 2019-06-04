@@ -6,8 +6,12 @@ import Component from './component';
 const defaultProps = {
   id: 'id',
   title: 'title',
-  overlay: 'overlay',
+  popoverContent: 'content',
+  popoverClass: 'popover',
+  buttonsContainerClass: 'buttonsContainer',
+  onSubmit: jest.fn(),
   hints: ['hint'],
+  buttonClass: 'button',
 };
 
 it('renders as expected', () => {

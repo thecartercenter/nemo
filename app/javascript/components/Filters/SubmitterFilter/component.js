@@ -5,7 +5,6 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import FilterPopover from '../FilterPopover/component';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
@@ -56,15 +55,11 @@ class SubmitterFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, onSubmit } = this.props;
+    const { filtersStore } = this.props;
     const { selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
 
     return (
-      <FilterPopover
-        className="popover-multi-select2"
-        id="submitter-filter"
-        onSubmit={onSubmit}
-      >
+      <React.Fragment>
         {SUBMITTER_TYPES.map((type) => {
           const { dataUrl, resultsKey } = select2Config[type];
 
@@ -86,12 +81,12 @@ class SubmitterFilter extends React.Component {
             />
           );
         })}
-      </FilterPopover>
+      </React.Fragment>
     );
   }
 
   render() {
-    const { filtersStore } = this.props;
+    const { filtersStore, onSubmit } = this.props;
     const { originalSubmittersForType } = filtersStore;
     const submitterNames = flatten(SUBMITTER_TYPES.map((type) => {
       return originalSubmittersForType[type].map(({ name }) => name);
@@ -101,7 +96,9 @@ class SubmitterFilter extends React.Component {
       <FilterOverlayTrigger
         id="submitter-filter"
         title={I18n.t('filter.submitter')}
-        overlay={this.renderPopover()}
+        popoverContent={this.renderPopover()}
+        popoverClass="popover-multi-select2"
+        onSubmit={onSubmit}
         hints={submitterNames}
         buttonClass="btn-margin-left"
       />

@@ -16,11 +16,9 @@ exports[`renders as expected 1`] = `
   buttonClass="btn-margin-left"
   hints={null}
   id="reviewed-filter"
-  overlay={
-    <FilterPopover
-      id="reviewed-filter"
-      onSubmit={[MockFunction]}
-    >
+  onSubmit={[MockFunction]}
+  popoverContent={
+    <React.Fragment>
       <div>
         <Label>
           Is marked 'reviewed'
@@ -52,7 +50,7 @@ exports[`renders as expected 1`] = `
           Either
         </Button>
       </ButtonGroup>
-    </FilterPopover>
+    </React.Fragment>
   }
   title="Reviewed"
 />

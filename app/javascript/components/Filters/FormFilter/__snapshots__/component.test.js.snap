@@ -19,41 +19,37 @@ exports[`renders as expected 1`] = `
     ]
   }
   id="form-filter"
-  overlay={
-    <FilterPopover
-      id="form-filter"
-      onSubmit={[MockFunction]}
-    >
-      <Select2
-        data={
-          Array [
-            Object {
-              "id": "1",
-              "text": "One",
-            },
-            Object {
-              "id": "2",
-              "text": "Two",
-            },
-            Object {
-              "id": "3",
-              "text": "Q\\"uo'te\`s",
-            },
-          ]
-        }
-        onSelect={[Function]}
-        onUnselect={[Function]}
-        options={
+  onSubmit={[MockFunction]}
+  popoverContent={
+    <Select2
+      data={
+        Array [
           Object {
-            "allowClear": true,
-            "dropdownCssClass": "filters-select2-dropdown",
-            "placeholder": "Choose a form",
-            "width": "100%",
-          }
+            "id": "1",
+            "text": "One",
+          },
+          Object {
+            "id": "2",
+            "text": "Two",
+          },
+          Object {
+            "id": "3",
+            "text": "Q\\"uo'te\`s",
+          },
+        ]
+      }
+      onSelect={[Function]}
+      onUnselect={[Function]}
+      options={
+        Object {
+          "allowClear": true,
+          "dropdownCssClass": "filters-select2-dropdown",
+          "placeholder": "Choose a form",
+          "width": "100%",
         }
-        value="2"
-      />
-    </FilterPopover>
+      }
+      value="2"
+    />
   }
   title="Form"
 />

@@ -4,7 +4,6 @@ import { inject, observer } from 'mobx-react';
 
 import { getItemNameFromId } from '../utils';
 import ConditionSetFormField from '../../conditions/ConditionSetFormField/component';
-import FilterPopover from '../FilterPopover/component';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 @inject('filtersStore')
@@ -21,22 +20,13 @@ class QuestionFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { onSubmit } = this.props;
-
     return (
-      <FilterPopover
-        className="wide display-logic-container"
-        id="question-filter"
-        onSubmit={onSubmit}
-        buttonsContainerClass="condition-margin"
-      >
-        <ConditionSetFormField />
-      </FilterPopover>
+      <ConditionSetFormField />
     );
   }
 
   render() {
-    const { filtersStore: { conditionSetStore } } = this.props;
+    const { filtersStore: { conditionSetStore }, onSubmit } = this.props;
     const { originalConditions, refableQings } = conditionSetStore;
     const hints = originalConditions
       .filter(({ leftQingId }) => leftQingId)
@@ -46,7 +36,10 @@ class QuestionFilter extends React.Component {
       <FilterOverlayTrigger
         id="question-filter"
         title={I18n.t('filter.question')}
-        overlay={this.renderPopover()}
+        popoverContent={this.renderPopover()}
+        popoverClass="wide display-logic-container"
+        buttonsContainerClass="condition-margin"
+        onSubmit={onSubmit}
         hints={hints}
         buttonClass="btn-margin-left"
       />

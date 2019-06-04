@@ -5,7 +5,6 @@ import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
 import { getItemNameFromId, parseListForSelect2 } from '../utils';
-import FilterPopover from '../FilterPopover/component';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 @inject('filtersStore')
@@ -33,33 +32,28 @@ class FormFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, onSubmit } = this.props;
+    const { filtersStore } = this.props;
     const { allForms, selectedFormId, handleSelectForm } = filtersStore;
 
     return (
-      <FilterPopover
-        id="form-filter"
-        onSubmit={onSubmit}
-      >
-        <Select2
-          data={parseListForSelect2(allForms)}
-          onSelect={handleSelectForm}
-          onUnselect={this.handleClearSelection}
-          options={{
-            allowClear: true,
-            placeholder: I18n.t('filter.choose_form'),
-            dropdownCssClass: 'filters-select2-dropdown',
-            width: '100%',
-          }}
-          ref={this.select2}
-          value={selectedFormId}
-        />
-      </FilterPopover>
+      <Select2
+        data={parseListForSelect2(allForms)}
+        onSelect={handleSelectForm}
+        onUnselect={this.handleClearSelection}
+        options={{
+          allowClear: true,
+          placeholder: I18n.t('filter.choose_form'),
+          dropdownCssClass: 'filters-select2-dropdown',
+          width: '100%',
+        }}
+        ref={this.select2}
+        value={selectedFormId}
+      />
     );
   }
 
   render() {
-    const { filtersStore } = this.props;
+    const { filtersStore, onSubmit } = this.props;
     const { allForms, originalFormIds } = filtersStore;
     const originalFormNames = originalFormIds.map((id) => getItemNameFromId(allForms, id));
 
@@ -67,7 +61,8 @@ class FormFilter extends React.Component {
       <FilterOverlayTrigger
         id="form-filter"
         title={I18n.t('filter.form')}
-        overlay={this.renderPopover()}
+        popoverContent={this.renderPopover()}
+        onSubmit={onSubmit}
         hints={originalFormNames}
       />
     );

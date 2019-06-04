@@ -4,12 +4,22 @@ exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}
   id="id"
-  overlay="overlay"
+  overlay={
+    <FilterPopover
+      buttonsContainerClass="buttonsContainer"
+      className="popover"
+      id="id"
+      onSubmit={[MockFunction]}
+    >
+      content
+    </FilterPopover>
+  }
   placement="bottom"
   rootClose={true}
   trigger="click"
 >
   <Button
+    className="button"
     id="id"
     variant="secondary"
   >
