@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import { observable, action, reaction } from 'mobx';
 
 import ConditionModel from './ConditionFormField/model';
@@ -35,7 +36,7 @@ class ConditionSetModel {
   forceEqualsOp = false;
 
   constructor(initialValues = {}) {
-    Object.assign(this, initialValues);
+    this.initialize(initialValues);
 
     // Make sure conditions are always instances of the model.
     // TODO: MobX-state-tree can do this automatically for us.
@@ -72,6 +73,15 @@ class ConditionSetModel {
       return conditions.map((condition) => new ConditionModel(condition));
     }
     return conditions;
+  }
+
+  // Initial values may not be known at the time the store is created.
+  // This method can be used to set the initial values at a later point.
+  @action
+  initialize = (initialValues) => {
+    Object.assign(this, initialValues, {
+      originalConditions: cloneDeep(initialValues.conditions) || [],
+    });
   }
 
   @action

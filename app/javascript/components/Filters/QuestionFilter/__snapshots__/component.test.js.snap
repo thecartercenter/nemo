@@ -15,7 +15,11 @@ exports[`renders as expected 1`] = `
 <FilterOverlayTrigger
   buttonClass="btn-margin-left"
   buttonsContainerClass="condition-margin"
-  hints={Array []}
+  hints={
+    Array [
+      "One",
+    ]
+  }
   id="question-filter"
   onSubmit={[MockFunction]}
   popoverClass="wide display-logic-container"

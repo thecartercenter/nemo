@@ -49,24 +49,17 @@ class FiltersRoot extends React.Component {
       advancedSearchText,
     } = props;
 
-    // Directly assign initial values to the store.
-    Object.assign(filtersStore, {
+    filtersStore.initialize({
       allForms,
-      originalFormIds: selectedFormIds,
       selectedFormIds,
-      originalIsReviewed: isReviewed,
       isReviewed,
-      originalSubmittersForType: {
-        [submitterType.USER]: selectedUsers,
-        [submitterType.GROUP]: selectedGroups,
-      },
       selectedSubmittersForType: {
         [submitterType.USER]: selectedUsers,
         [submitterType.GROUP]: selectedGroups,
       },
       advancedSearchText,
     });
-    Object.assign(conditionSetStore, {
+    conditionSetStore.initialize({
       forceEqualsOp: true,
     });
   }

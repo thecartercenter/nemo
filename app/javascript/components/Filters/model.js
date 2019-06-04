@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import cloneDeep from 'lodash/cloneDeep';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../conditions/ConditionSetFormField/model';
@@ -51,8 +52,8 @@ class FiltersModel {
     return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
   }
 
-  constructor(initialValues) {
-    Object.assign(this, initialValues);
+  constructor(initialValues = {}) {
+    this.initialize(initialValues);
 
     // Update conditionSet IDs when selected forms change.
     reaction(
@@ -68,6 +69,17 @@ class FiltersModel {
         }
       },
     );
+  }
+
+  // Initial values may not be known at the time the store is created.
+  // This method can be used to set the initial values at a later point.
+  @action
+  initialize = (initialValues) => {
+    Object.assign(this, initialValues, {
+      originalFormIds: initialValues.selectedFormIds || [],
+      originalIsReviewed: initialValues.isReviewed || null,
+      originalSubmittersForType: cloneDeep(initialValues.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
+    });
   }
 
   @action
