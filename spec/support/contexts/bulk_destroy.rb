@@ -50,14 +50,21 @@ shared_context "bulk destroy" do
       visit("/en/m/#{mission.compact_name}/#{plural_name}")
       search_for(options[:query]) unless options[:query].nil?
       click_on("Select All")
-      click_on("Select all #{options[:expect_to_delete]} #{plural_name.capitalize}")
+      find("a", text: /Select all \d+ #{plural_name.capitalize}/).click
+
+      if options[:uncheck_one]
+        checkboxes = all(".cb_col input")
+        checkboxes[checkboxes.size / 2].click
+        expect(page).not_to have_css(".alert", text: "rows are selected")
+      end
+
       click_on(delete_link_name)
       expect(accept_alert).to eq("Are you sure you want to delete these "\
         "#{options[:expect_to_delete]} #{plural_name}?")
 
       # For Users, you can't delete yourself, so result should be one less
       options[:expect_to_delete] -= 1 if options[:query].nil? && klass == User
-      expect(page).to have_content("#{options[:expect_to_delete]} #{plural_name} deleted successfully")
+      expect(page).to have_content(/#{options[:expect_to_delete]} #{plural_name}? deleted successfully/)
       expect(prev_count - klass.count).to eq(options[:expect_to_delete])
     end
   end

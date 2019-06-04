@@ -56,22 +56,26 @@ feature "user bulk destroy", js: true do
     end
 
     before do
-      stub_const(UsersController, "PER_PAGE", 2)
+      stub_const(UsersController, "PER_PAGE", 3)
     end
 
     context "unfiltered select current page" do
-      let!(:preserved_obj) { "Charlie" }
-      it_behaves_like "select all on page", expect_to_delete: 2
+      let!(:preserved_obj) { "Delta" }
+      it_behaves_like "select all on page", expect_to_delete: 3
+      it_behaves_like "select all on page", uncheck_one: true, expect_to_delete: 2
     end
 
     context "unfiltered select all pages" do
       let!(:preserved_obj) { admin.name }
       it_behaves_like "select all that exist", expect_to_delete: 11
+      it_behaves_like "select all that exist", uncheck_one: true, expect_to_delete: 2
     end
 
     context "filtered select all pages" do
       let!(:preserved_obj) { nil }
       it_behaves_like "select all that exist", expect_to_delete: 5, query: "role:enumerator"
+      it_behaves_like "select all that exist", uncheck_one: true, expect_to_delete: 2,
+                                               query: "role:enumerator"
     end
   end
 end
