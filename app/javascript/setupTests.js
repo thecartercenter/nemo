@@ -29,11 +29,16 @@ window.location = {
 [
   'Button',
   'ButtonToolbar',
+  'ButtonGroup',
   'OverlayTrigger',
   'Popover',
 ].forEach((name) => {
   jest.doMock(`react-bootstrap/${name}`, () => name);
 });
+
+jest.mock('react-bootstrap/Form', () => ({
+  Label: () => 'Label',
+}));
 
 jest.mock('react-select2-wrapper/lib/components/Select2.full', () => 'Select2');
 jest.mock('react-select2-wrapper/css/select2.css', () => undefined);

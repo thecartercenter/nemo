@@ -23,19 +23,11 @@ exports[`renders as expected 1`] = `
       id="reviewed-filter"
     >
       <div>
-        <ForwardRef
-          column={false}
-          srOnly={false}
-        >
+        <Label>
           Is marked 'reviewed'
-        </ForwardRef>
+        </Label>
       </div>
-      <ForwardRef
-        as="div"
-        role="group"
-        toggle={false}
-        vertical={false}
-      >
+      <ButtonGroup>
         <Button
           active={true}
           id="yes"
@@ -60,7 +52,7 @@ exports[`renders as expected 1`] = `
         >
           Either
         </Button>
-      </ForwardRef>
+      </ButtonGroup>
       <div
         className="btn-apply-container"
       >
