@@ -82,20 +82,16 @@ class FiltersRoot extends React.Component {
   }
 
   renderFilterButtons = () => {
+    const defaultProps = {
+      onSubmit: this.handleSubmit,
+    };
+
     return (
       <ButtonToolbar>
-        <FormFilter
-          onSubmit={this.handleSubmit}
-        />
-        <QuestionFilter
-          onSubmit={this.handleSubmit}
-        />
-        <ReviewedFilter
-          onSubmit={this.handleSubmit}
-        />
-        <SubmitterFilter
-          onSubmit={this.handleSubmit}
-        />
+        <FormFilter {...defaultProps} />
+        <QuestionFilter {...defaultProps} />
+        <ReviewedFilter {...defaultProps} />
+        <SubmitterFilter {...defaultProps} />
       </ButtonToolbar>
     );
   }
