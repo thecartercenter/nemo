@@ -2,7 +2,8 @@
 
 require "rails_helper"
 
-feature "user index", js: true do
+# This spec covers bulk destroy and select/deselect all logic for all index pages.
+feature "user bulk destroy", js: true do
   include_context "search"
   include_context "bulk destroy"
   let(:admin) { create(:admin, name: "Alpha") } # So that this user comes first in the list.
@@ -14,7 +15,7 @@ feature "user index", js: true do
     login(admin)
   end
 
-  describe "bulk destroy not paginated" do
+  describe "unpaginated" do
     let!(:coordinators) { create_list(:user, 5, mission: mission) }
     let!(:enumerators) { create_list(:user, 5, mission: mission, role_name: :enumerator) }
 
@@ -34,7 +35,7 @@ feature "user index", js: true do
     end
   end
 
-  describe "bulk destroy paginated" do
+  describe "paginated" do
     let!(:coordinators) do
       [
         create(:user, name: "Bravo", mission: mission, role_name: :coordinator),
@@ -58,7 +59,7 @@ feature "user index", js: true do
       stub_const(UsersController, "PER_PAGE", 2)
     end
 
-    context "unfiltered select page" do
+    context "unfiltered select current page" do
       let!(:preserved_obj) { "Charlie" }
       it_behaves_like "select all on page", expect_to_delete: 2
     end
