@@ -59,8 +59,10 @@ class FiltersModel {
       () => this.selectedFormId,
       async (selectedFormId) => {
         if (this.conditionSetStore.formId !== selectedFormId) {
-          // Reset the entire store because the available questions will have changed.
-          Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {});
+          // Reset the store because the available questions will have changed.
+          Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {
+            originalConditions: this.conditionSetStore.originalConditions,
+          });
 
           await this.updateRefableQings();
         }
