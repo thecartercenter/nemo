@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { inject, observer } from 'mobx-react';
 
-import { getButtonHintString, getItemNameFromId } from '../utils';
+import { getItemNameFromId } from '../utils';
 import ConditionSetFormField from '../../conditions/ConditionSetFormField/component';
 import FilterPopover from '../FilterPopover/component';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 @inject('filtersStore')
 @observer
@@ -44,18 +43,13 @@ class QuestionFilter extends React.Component {
       .map(({ leftQingId }) => getItemNameFromId(refableQings, leftQingId, 'code'));
 
     return (
-      <OverlayTrigger
+      <FilterOverlayTrigger
         id="question-filter"
-        containerPadding={25}
+        title={I18n.t('filter.question')}
         overlay={this.renderPopover()}
-        placement="bottom"
-        rootClose
-        trigger="click"
-      >
-        <Button id="question-filter" variant="secondary" className="btn-margin-left">
-          {I18n.t('filter.question') + getButtonHintString(hints)}
-        </Button>
-      </OverlayTrigger>
+        hints={hints}
+        buttonClass="btn-margin-left"
+      />
     );
   }
 }

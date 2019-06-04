@@ -19,7 +19,7 @@ it('renders as expected', () => {
 });
 
 describe('popover', () => {
-  const wrapper = shallow(<Component {...defaultProps} />);
+  const wrapper = quietMount(<Component {...defaultProps} />);
   wrapper.find('Button#question-filter').simulate('click');
 
   const overlay = quietMount(wrapper.find('OverlayTrigger').prop('overlay'));

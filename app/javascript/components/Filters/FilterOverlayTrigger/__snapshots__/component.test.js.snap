@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders as expected 1`] = `
+<OverlayTrigger
+  containerPadding={25}
+  id="id"
+  overlay="overlay"
+  placement="bottom"
+  rootClose={true}
+  trigger="click"
+>
+  <Button
+    id="id"
+    variant="secondary"
+  >
+    title (hint)
+  </Button>
+</OverlayTrigger>
+`;

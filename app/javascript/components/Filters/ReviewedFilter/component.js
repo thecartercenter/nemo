@@ -1,13 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { inject, observer } from 'mobx-react';
 
-import { getButtonHintString } from '../utils';
 import FilterPopover from '../FilterPopover/component';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 const CHOICES = [
   { name: I18n.t('common._yes'), value: true, id: 'yes' },
@@ -65,18 +64,13 @@ class FormFilter extends React.Component {
       : originalIsReviewed ? [I18n.t('common._yes')] : [I18n.t('common._no')];
 
     return (
-      <OverlayTrigger
+      <FilterOverlayTrigger
         id="reviewed-filter"
-        containerPadding={25}
+        title={I18n.t('filter.reviewed')}
         overlay={this.renderPopover()}
-        placement="bottom"
-        rootClose
-        trigger="click"
-      >
-        <Button id="reviewed-filter" variant="secondary" className="btn-margin-left">
-          {I18n.t('filter.reviewed') + getButtonHintString(hints)}
-        </Button>
-      </OverlayTrigger>
+        hints={hints}
+        buttonClass="btn-margin-left"
+      />
     );
   }
 }

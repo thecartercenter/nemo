@@ -12,8 +12,9 @@ Array [
 `;
 
 exports[`renders as expected 1`] = `
-<OverlayTrigger
-  containerPadding={25}
+<FilterOverlayTrigger
+  buttonClass="btn-margin-left"
+  hints={Array []}
   id="question-filter"
   overlay={
     <FilterPopover
@@ -25,16 +26,6 @@ exports[`renders as expected 1`] = `
       <ConditionSetFormField />
     </FilterPopover>
   }
-  placement="bottom"
-  rootClose={true}
-  trigger="click"
->
-  <Button
-    className="btn-margin-left"
-    id="question-filter"
-    variant="secondary"
-  >
-    Question
-  </Button>
-</OverlayTrigger>
+  title="Question"
+/>
 `;

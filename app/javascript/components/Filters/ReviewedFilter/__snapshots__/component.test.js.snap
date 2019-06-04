@@ -12,8 +12,9 @@ Array [
 `;
 
 exports[`renders as expected 1`] = `
-<OverlayTrigger
-  containerPadding={25}
+<FilterOverlayTrigger
+  buttonClass="btn-margin-left"
+  hints={null}
   id="reviewed-filter"
   overlay={
     <FilterPopover
@@ -53,16 +54,6 @@ exports[`renders as expected 1`] = `
       </ButtonGroup>
     </FilterPopover>
   }
-  placement="bottom"
-  rootClose={true}
-  trigger="click"
->
-  <Button
-    className="btn-margin-left"
-    id="reviewed-filter"
-    variant="secondary"
-  >
-    Reviewed
-  </Button>
-</OverlayTrigger>
+  title="Reviewed"
+/>
 `;

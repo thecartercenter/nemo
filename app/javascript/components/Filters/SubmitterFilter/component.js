@@ -1,14 +1,12 @@
 import flatten from 'lodash/flatten';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString } from '../utils';
 import FilterPopover from '../FilterPopover/component';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
 export const submitterType = {
@@ -100,18 +98,13 @@ class SubmitterFilter extends React.Component {
     }));
 
     return (
-      <OverlayTrigger
+      <FilterOverlayTrigger
         id="submitter-filter"
-        containerPadding={25}
+        title={I18n.t('filter.submitter')}
         overlay={this.renderPopover()}
-        placement="bottom"
-        rootClose
-        trigger="click"
-      >
-        <Button id="submitter-filter" variant="secondary" className="btn-margin-left">
-          {I18n.t('filter.submitter') + getButtonHintString(submitterNames)}
-        </Button>
-      </OverlayTrigger>
+        hints={submitterNames}
+        buttonClass="btn-margin-left"
+      />
     );
   }
 }
