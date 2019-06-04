@@ -20,6 +20,10 @@ export const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction,
 }, {});
 
 class FiltersModel {
+  /** Deep copy of this model's original values (e.g. to enable reverting). */
+  @observable
+  original = new Map();
+
   @observable
   conditionSetStore = new ConditionSetModel(initialConditionSetData);
 
@@ -27,19 +31,10 @@ class FiltersModel {
   allForms = [];
 
   @observable
-  originalFormIds = [];
-
-  @observable
   selectedFormIds = [];
 
   @observable
-  originalIsReviewed = null;
-
-  @observable
   isReviewed = null;
-
-  @observable
-  originalSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
   selectedSubmittersForType = getEmptySubmitterTypeMap();
@@ -62,7 +57,7 @@ class FiltersModel {
         if (this.conditionSetStore.formId !== selectedFormId) {
           // Reset the store because the available questions will have changed.
           Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {
-            originalConditions: this.conditionSetStore.originalConditions,
+            original: this.conditionSetStore.original,
           });
 
           await this.updateRefableQings();
@@ -75,10 +70,12 @@ class FiltersModel {
   // This method can be used to set the initial values at a later point.
   @action
   initialize = (initialValues) => {
-    Object.assign(this, initialValues, {
-      originalFormIds: initialValues.selectedFormIds || [],
-      originalIsReviewed: initialValues.isReviewed || null,
-      originalSubmittersForType: cloneDeep(initialValues.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
+    Object.assign(this, initialValues);
+
+    Object.assign(this.original, {
+      selectedFormIds: cloneDeep(initialValues.selectedFormIds) || [],
+      isReviewed: initialValues.isReviewed || null,
+      selectedSubmittersForType: cloneDeep(initialValues.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
     });
   }
 

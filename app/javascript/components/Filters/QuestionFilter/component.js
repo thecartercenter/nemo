@@ -27,8 +27,8 @@ class QuestionFilter extends React.Component {
 
   render() {
     const { filtersStore: { conditionSetStore }, onSubmit } = this.props;
-    const { originalConditions, refableQings } = conditionSetStore;
-    const hints = originalConditions
+    const { original: { conditions }, refableQings } = conditionSetStore;
+    const hints = conditions
       .filter(({ leftQingId }) => leftQingId)
       .map(({ leftQingId }) => getItemNameFromId(refableQings, leftQingId, 'code'));
 

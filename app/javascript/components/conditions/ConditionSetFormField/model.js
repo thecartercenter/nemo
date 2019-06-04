@@ -7,14 +7,15 @@ import ConditionModel from './ConditionFormField/model';
  * Represents a set of conditions (e.g. ['Question Foo' Equals 'Bar', ...]).
  */
 class ConditionSetModel {
+  /** Deep copy of this model's original values (e.g. to enable reverting). */
+  @observable
+  original = new Map();
+
   @observable
   formId;
 
   @observable
   namePrefix;
-
-  @observable
-  originalConditions = [];
 
   @observable
   conditions = [];
@@ -41,9 +42,9 @@ class ConditionSetModel {
     // Make sure conditions are always instances of the model.
     // TODO: MobX-state-tree can do this automatically for us.
     reaction(
-      () => this.originalConditions,
-      (originalConditions) => {
-        this.originalConditions = this.mapConditionsToStores(originalConditions);
+      () => this.original,
+      (original) => {
+        this.original.conditions = this.mapConditionsToStores(original.conditions);
       },
       { fireImmediately: true },
     );
@@ -79,8 +80,10 @@ class ConditionSetModel {
   // This method can be used to set the initial values at a later point.
   @action
   initialize = (initialValues) => {
-    Object.assign(this, initialValues, {
-      originalConditions: cloneDeep(initialValues.conditions) || [],
+    Object.assign(this, initialValues);
+
+    Object.assign(this.original, {
+      conditions: cloneDeep(initialValues.conditions) || [],
     });
   }
 

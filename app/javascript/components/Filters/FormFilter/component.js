@@ -54,8 +54,8 @@ class FormFilter extends React.Component {
 
   render() {
     const { filtersStore, onSubmit } = this.props;
-    const { allForms, originalFormIds } = filtersStore;
-    const originalFormNames = originalFormIds.map((id) => getItemNameFromId(allForms, id));
+    const { allForms, original: { selectedFormIds } } = filtersStore;
+    const originalFormNames = selectedFormIds.map((id) => getItemNameFromId(allForms, id));
 
     return (
       <FilterOverlayTrigger

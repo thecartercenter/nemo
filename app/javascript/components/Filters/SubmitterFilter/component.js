@@ -87,9 +87,9 @@ class SubmitterFilter extends React.Component {
 
   render() {
     const { filtersStore, onSubmit } = this.props;
-    const { originalSubmittersForType } = filtersStore;
+    const { original: { selectedSubmittersForType } } = filtersStore;
     const submitterNames = flatten(SUBMITTER_TYPES.map((type) => {
-      return originalSubmittersForType[type].map(({ name }) => name);
+      return selectedSubmittersForType[type].map(({ name }) => name);
     }));
 
     return (

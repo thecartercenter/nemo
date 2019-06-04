@@ -64,13 +64,13 @@ export function getFiltersStore() {
     advancedSearchText: 'query',
   });
 
-  model.originalFormIds = [
+  model.original.selectedFormIds = [
     '1',
   ];
 
-  model.originalIsReviewed = null;
+  model.original.isReviewed = null;
 
-  model.originalSubmittersForType = {
+  model.original.selectedSubmittersForType = {
     [submitterType.USER]: [{ id: 'A', name: 'User A' }],
     [submitterType.GROUP]: [],
   };
