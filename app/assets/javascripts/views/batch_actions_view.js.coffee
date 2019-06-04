@@ -43,7 +43,6 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
     # check/uncheck boxes
     cb.checked = @select_all for cb in cbs
 
-    # update select all view elements
     this.update_select_all_elements()
 
     return false
@@ -74,16 +73,13 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
 
     this.reset_alert()
 
-    if @pages > 1 and @select_all
+    if @pages > 1 && @select_all
       msg = I18n.t("index_table.messages.selected_rows_page", {count: this.get_selected_count()}) + " " +
         "<a href='#' class='select_all_pages'>" +
         I18n.t("index_table.messages.select_all_rows", {class_name: @class_name, count: @entries}) +
         "</a>"
       @alert.html(msg)
       @alert.addClass('alert-info').show()
-    if @pages == 1 && @select_all
-      value = if @select_all_pages_field.val() then '' else '1'
-      @select_all_pages_field.val(value)
 
   # gets all checkboxes in batch_form
   get_batch_checkboxes: ->
@@ -137,10 +133,7 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
       token = $('meta[name="csrf-token"]').attr('content')
       $('<input>').attr({type: 'hidden', name: 'authenticity_token', value: token}).appendTo(form)
 
-      # need to append form to body before submitting
       form.appendTo($('body'))
-
-      # submit the form
       form.submit()
 
     return false

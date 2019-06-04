@@ -21,6 +21,7 @@ feature "user index", js: true do
     context "unfiltered" do
       let!(:preserved_obj) { admin.name }
       it_behaves_like "select all on page", expect_to_delete: 11
+      it_behaves_like "select all on page", uncheck_one: true, expect_to_delete: 10
     end
 
     context "filtered" do

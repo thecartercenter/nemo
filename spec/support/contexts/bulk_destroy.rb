@@ -9,6 +9,12 @@ shared_context "bulk destroy" do
       visit("/en/m/#{mission.compact_name}/#{plural_name}")
       search_for(options[:query]) unless options[:query].nil?
       click_on("Select All")
+
+      if options[:uncheck_one]
+        checkboxes = all(".cb_col input")
+        checkboxes[checkboxes.size / 2].click
+      end
+
       click_on(delete_link_name)
       confirm_delete_msg =
         if options[:expect_to_delete] == 1
