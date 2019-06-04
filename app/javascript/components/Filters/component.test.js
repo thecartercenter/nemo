@@ -1,9 +1,9 @@
 import pick from 'lodash/pick';
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { Provider } from 'mobx-react';
 
-import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../testUtils';
+import { quietMount } from '../../testUtils';
 import { getFiltersStore } from './testUtils';
 
 import { CONTROLLER_NAME } from './utils';
@@ -59,8 +59,7 @@ describe('integration', () => {
 
     resetDefaultProps();
 
-    suppressErrors(STUB_COMPONENT_WARNINGS);
-    wrapper = mount(
+    wrapper = quietMount(
       <Provider
         filtersStore={defaultProps.filtersStore}
         conditionSetStore={defaultProps.filtersStore.conditionSetStore}
@@ -68,7 +67,6 @@ describe('integration', () => {
         <Component {...defaultProps} />
       </Provider>,
     );
-    unsuppressAllErrors();
   });
 
   it('navigates on apply form filter', () => {
