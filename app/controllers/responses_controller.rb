@@ -37,7 +37,7 @@ class ResponsesController < ApplicationController
           redirect_to(can?(:update, resp) ? edit_response_path(resp) : response_path(resp))
         end
 
-        searcher = get_searcher(@responses)
+        searcher = build_searcher(@responses)
         @responses = apply_searcher_safely(searcher)
 
         @selected_ids = params[:sel]
