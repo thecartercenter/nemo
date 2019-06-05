@@ -43,6 +43,15 @@ class Search::Token
     end
   end
 
+  # expands the current token into its component lextokens (leaf nodes)
+  def expand
+    children.map { |c| c.is_a?(Search::LexToken) ? c : c.expand }.flatten
+  end
+
+  def is?(kind)
+    @kind == kind
+  end
+
   protected
 
   # generates an sql fragment for a comparison
@@ -63,6 +72,7 @@ class Search::Token
     qual_name = expr.qualifier_text || I18n.t("search_qualifiers.#{qual.name}")
 
     expr.qualifier = qual
+    expr.op = op
 
     # ensure valid operator
     raise_error_with_qualifier("invalid_op", qual_name, op: op.content) unless qual.op_valid?(op.to_sql)
@@ -71,7 +81,7 @@ class Search::Token
     previous = nil
     sql = ""
     expr.values = ""
-    expr.values_list = []
+    expr.values_tokens = rhs_or_values
     leaves = rhs_or_values.expand
     leaves.each do |lex_tok|
       # if this is a value token descendant
@@ -90,7 +100,6 @@ class Search::Token
                end
 
         expr.values += lex_tok.is?(:string) ? "\"#{lex_tok.content}\"" : lex_tok.content
-        expr.values_list.push(lex_tok.content)
 
       # else, if this is an 'OR', insert that
       elsif lex_tok.is?(:or)
@@ -185,17 +194,8 @@ class Search::Token
     end
   end
 
-  def is?(kind)
-    @kind == kind
-  end
-
   def sanitize(*args)
     SqlRunner.instance.sanitize(*args)
-  end
-
-  # expands the current token into its component lextokens (leaf nodes)
-  def expand
-    children.map { |c| c.is_a?(Search::LexToken) ? c : c.expand }.flatten
   end
 
   def raise_error_with_qualifier(err_name, qual, params = {})

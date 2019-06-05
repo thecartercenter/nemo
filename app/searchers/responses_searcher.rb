@@ -99,12 +99,39 @@ class ResponsesSearcher < Searcher
   # Save specific data that can be used for search filters.
   def save_filter_data(search)
     search.expressions.each do |expression|
-      if expression.qualifier.name == "form"
-        form_names = expression.values_list
+      op_kind = expression.op.kind
+      token_values = []
+      token_ops = []
+      previous = nil
+
+      leaves = expression.values_tokens.expand
+      leaves.each do |lex_tok|
+        # if this is a value token descendant
+        if lex_tok.parent.is?(:value)
+          # if the previous token was also a value token, it's an implicit AND
+          if previous&.parent&.is?(:value)
+            token_ops.push(:and)
+          end
+
+          token_values.push(lex_tok.content)
+        elsif lex_tok.is?(:or)
+          token_ops.push(:or)
+        end
+
+        previous = lex_tok
+      end
+
+      # Find filters that can be created using the filter UI.
+      if expression.qualifier.name == "form" && equality_op?(op_kind) && !token_ops.include?(:and)
+        form_names = token_values
         self.form_ids = form_ids.concat(Form.where(name: form_names).pluck(:id))
       else
         advanced_text << " #{expression.qualifier_text}:(#{expression.values})"
       end
     end
+  end
+
+  def equality_op?(op_kind)
+    Search::LexToken::EQUALITY_OPS.include?(op_kind)
   end
 end
