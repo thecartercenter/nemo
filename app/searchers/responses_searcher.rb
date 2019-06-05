@@ -101,9 +101,7 @@ class ResponsesSearcher < Searcher
     search.expressions.each do |expression|
       if expression.qualifier.name == "form"
         form_names = expression.values_list
-        form_ids = form_names.map { |name| Form.find_by(name: name).try(:id) }
-          .reject(&:blank?)
-        self.form_ids += form_ids
+        self.form_ids = form_ids.concat(Form.where(name: form_names).pluck(:id))
       else
         self.advanced_text += " #{expression.qualifier_text}:(#{expression.values})"
       end
