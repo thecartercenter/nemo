@@ -15,6 +15,6 @@ class Searcher
     self.query = query
     self.scope = scope
     self.form_ids = []
-    self.advanced_text = ""
+    self.advanced_text = +""
   end
 end

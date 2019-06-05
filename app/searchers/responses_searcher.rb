@@ -103,7 +103,7 @@ class ResponsesSearcher < Searcher
         form_names = expression.values_list
         self.form_ids = form_ids.concat(Form.where(name: form_names).pluck(:id))
       else
-        self.advanced_text += " #{expression.qualifier_text}:(#{expression.values})"
+        advanced_text << " #{expression.qualifier_text}:(#{expression.values})"
       end
     end
   end
