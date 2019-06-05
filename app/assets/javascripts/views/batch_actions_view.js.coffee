@@ -29,10 +29,7 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
   select_all_clicked: (event) ->
     event.preventDefault()
     @toggle_all_boxes(!@all_checked())
-
-    # Clicking a checkbox or 'select all' always unsets this flag.
-    @select_all_pages_field.val('')
-
+    @set_select_all_pages_true_if_all_checked_and_only_one_page_else_false()
     @update_links()
 
   select_all_pages_clicked: (event) ->
@@ -41,8 +38,7 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
     @update_links()
 
   checkbox_changed: (event) ->
-    # Clicking a checkbox or 'select all' always unsets this flag.
-    @select_all_pages_field.val('')
+    @set_select_all_pages_true_if_all_checked_and_only_one_page_else_false()
     @update_links()
 
   reset_alert: ->
@@ -88,6 +84,9 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
   # tests if all boxes are checked
   all_checked: (cbs = @get_batch_checkboxes()) ->
     _.all(cbs, (cb) -> cb.checked)
+
+  set_select_all_pages_true_if_all_checked_and_only_one_page_else_false: ->
+    @select_all_pages_field.val(if @all_checked() && @pages == 1 then '1' else '')
 
   # submits the batch form to the given path
   submit_batch: (event) ->
