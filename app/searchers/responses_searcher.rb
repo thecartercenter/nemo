@@ -99,7 +99,7 @@ class ResponsesSearcher < Searcher
   # Save specific data that can be used for search filters.
   def save_filter_data(search)
     search.expressions.each do |expression|
-      if expression.qualifier.assoc.include?(:forms)
+      if expression.qualifier.name == "form"
         form_names = expression.values_list
         form_ids = form_names.map { |name| Form.find_by(name: name).try(:id) }
           .reject(&:blank?)
