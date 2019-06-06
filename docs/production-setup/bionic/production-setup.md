@@ -16,29 +16,31 @@ This will be the (unprivileged) user under which the app runs.
 ### Install dependencies
 
     sudo apt update && sudo apt upgrade -y
-    sudo apt install -y nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev memcached imagemagick
+    sudo apt install -y nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev memcached imagemagick vim-gtk
+
+Remove the default ruby installation so we can install our own later:
+
+    sudo apt remove ruby
 
 ### Install Nginx and Passenger
 
-    sudo apt install -y nginx
     sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 561F9B9CAC40B2F7
-    sudo apt install -y apt-transport-https ca-certificates
     sudo sh -c 'echo deb https://oss-binaries.phusionpassenger.com/apt/passenger bionic main > /etc/apt/sources.list.d/passenger.list'
-    sudo apt update
-    sudo apt install -y libnginx-mod-http-passenger
+    sudo apt update && sudo apt install -y nginx apt-transport-https ca-certificates libnginx-mod-http-passenger
 
 ### Install PostgreSQL and create database
 
     sudo apt install -y postgresql postgresql-contrib postgresql-server-dev-10
     sudo -u postgres createuser -d deploy
     sudo -u postgres createdb elmo_production -O deploy
-    sudo -u postgres psql elmo_production -c 'CREATE EXTENSION "uuid-ossp"'
+    sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "uuid-ossp"'
+    sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'
 
 ### Setup SSL and configure Nginx
 
 #### To get a free SSL certificate from LetsEncrypt
 
-    sudo rm /etc/nginx/nginx.conf && sudo nano /etc/nginx/nginx.conf
+    sudo rm -f /etc/nginx/nginx.conf && sudo nano /etc/nginx/nginx.conf
 
 Paste the contents of [this config file](nginx-certbot.conf). Update the `server_name` setting to match your domain.
 
@@ -109,7 +111,7 @@ To switch to the `deploy` user, do:
 
 ### Install nvm, Node.js, and Yarn
 
-    wget -qO- https://raw.githubusercontent.com/creationix/nvm/v0.33.11/install.sh | bash
+    wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
     exec $SHELL
     nvm install
     npm install -g yarn
@@ -141,7 +143,7 @@ Entering a functioning email server is important as ELMO relies on email to send
 
     # Install gems and yarn packages.
     bundle install --without development test --deployment
-    yarn install
+    yarn install --production
 
     # Setup cron jobs
     bundle exec whenever -i elmo
@@ -194,6 +196,30 @@ If you then run:
 you should see the text "Active: active (running)" in the output. If something went wrong, there will be some
 log output that will help you determine the issue.
 
+### Enable log rotation
+
+This will prevent your log files from becoming too large.
+
+    sudo nano /etc/logrotate.conf
+
+Add the following lines at the bottom of that file:
+
+    /home/deploy/elmo/current/log/*.log {
+      daily
+      missingok
+      rotate 7
+      compress
+      delaycompress
+      notifempty
+      copytruncate
+    }
+
+### Upgrade and clean up
+
+The following command will upgrade and clean up your installed packages. Sometimes `autoremove` is helpful if you run low on disk space.
+
+    sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+
 ### Check out the site!
 
 You should now be able to visit https://yourdomain.example.org in your browser (replace with your real domain name).
@@ -213,9 +239,17 @@ Update those files to reflect the desired theme. Ensure your new logos are the s
 You will need to run `nvm use && bundle exec rake assets:precompile` (and re-start your server if it's currently running) for the theme to take effect.
 The compiler will tell you if there are any errors in your `style.scss` file.
 
+### Capistrano
+
+If you want to use Capistrano to manage this instance, follow the [migration guide](https://redmine.sassafras.coop/projects/nemo/wiki/Migrating_a_manual_server_to_Capistrano).
+This is mainly for Sassafras-managed instances.
+
 ### Upgrading
 
 Upgrading should be done in stages. Start with the stage closest to your current version.
+
+<details>
+<summary>View older versions</summary>
 
 #### Upgrading to v5.16.2
 
@@ -260,6 +294,8 @@ Upgrading should be done in stages. Start with the stage closest to your current
         npm install -g yarn
 3. Follow the 'General Upgrade Instructions' below to upgrade to **v8.12**.
 
+</details>
+
 #### Upgrading to v9.0
 
 1. The data migrations in this upgrade may take some time if you have a lot of data. To protect your data, stop your server and DelayedJob, as privileged user: `sudo systemctl stop nginx && sudo systemctl stop delayed-job`
@@ -280,7 +316,11 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 1. As `deploy` user in project directory, run `gem update bundler --no-document` to update to Bundler 2.x.
 
-#### Upgrading to lastest master
+#### Upgrading to v9.13
+
+1. As the root user, run `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'` to enable a new extension.
+
+#### Upgrading to latest master
 
 1. Follow the 'General Upgrade Instructions' below.
 
