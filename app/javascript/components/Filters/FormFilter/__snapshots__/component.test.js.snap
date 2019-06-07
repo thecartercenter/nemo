@@ -1,78 +1,56 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`popover handles callbacks 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+exports[`popover handles callbacks 1`] = `1`;
+
+exports[`popover handles callbacks 2`] = `
+Array [
+  Object {
+    "type": "return",
+    "value": undefined,
+  },
+]
 `;
 
 exports[`renders as expected 1`] = `
-<OverlayTrigger
-  containerPadding={25}
-  id="form-filter"
-  overlay={
-    <Popover
-      className="filters-popover"
-      id="form-filter"
-    >
-      <Select2
-        data={
-          Array [
-            Object {
-              "id": "1",
-              "text": "One",
-            },
-            Object {
-              "id": "2",
-              "text": "Two",
-            },
-            Object {
-              "id": "3",
-              "text": "Q\\"uo'te\`s",
-            },
-          ]
-        }
-        onSelect={[Function]}
-        onUnselect={[Function]}
-        options={
-          Object {
-            "allowClear": true,
-            "dropdownCssClass": "filters-select2-dropdown",
-            "placeholder": "Choose a form",
-            "width": "100%",
-          }
-        }
-        value="2"
-      />
-      <div
-        className="btn-apply-container"
-      >
-        <Button
-          className="btn-apply"
-          onClick={[MockFunction]}
-        >
-          Apply
-        </Button>
-      </div>
-    </Popover>
+<FilterOverlayTrigger
+  hints={
+    Array [
+      "One",
+    ]
   }
-  placement="bottom"
-  rootClose={true}
-  trigger="click"
->
-  <Button
-    id="form-filter"
-    variant="secondary"
-  >
-    Form (One)
-  </Button>
-</OverlayTrigger>
+  id="form-filter"
+  onSubmit={[MockFunction]}
+  popoverContent={
+    <Select2
+      data={
+        Array [
+          Object {
+            "id": "1",
+            "text": "One",
+          },
+          Object {
+            "id": "2",
+            "text": "Two",
+          },
+          Object {
+            "id": "3",
+            "text": "Q\\"uo'te\`s",
+          },
+        ]
+      }
+      onSelect={[Function]}
+      onUnselect={[Function]}
+      options={
+        Object {
+          "allowClear": true,
+          "dropdownCssClass": "filters-select2-dropdown",
+          "placeholder": "Choose a form",
+          "width": "100%",
+        }
+      }
+      value="2"
+    />
+  }
+  title="Form"
+/>
 `;

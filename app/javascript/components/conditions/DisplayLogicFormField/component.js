@@ -28,11 +28,9 @@ class DisplayLogicFormFieldRoot extends React.Component {
     const { conditionSetStore, refableQings, id, type, displayIf, displayConditions, formId } = this.props;
     this.state = { displayIf };
 
-    // Directly assign initial values to the store.
-    Object.assign(conditionSetStore, {
+    conditionSetStore.initialize({
       formId,
       namePrefix: `${type}[display_conditions_attributes]`,
-      originalConditions: displayConditions,
       conditions: displayConditions,
       conditionableId: id,
       conditionableType: 'FormItem',

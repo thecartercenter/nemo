@@ -1,51 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`popover handles callbacks 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+exports[`popover handles callbacks 1`] = `1`;
+
+exports[`popover handles callbacks 2`] = `
+Array [
+  Object {
+    "type": "return",
+    "value": undefined,
+  },
+]
 `;
 
 exports[`renders as expected 1`] = `
-<OverlayTrigger
-  containerPadding={25}
-  id="question-filter"
-  overlay={
-    <Popover
-      className="filters-popover wide display-logic-container"
-      id="form-filter"
-    >
-      <ConditionSetFormField />
-      <div
-        className="btn-apply-container condition-margin"
-      >
-        <Button
-          className="btn-apply"
-          onClick={[MockFunction]}
-        >
-          Apply
-        </Button>
-      </div>
-    </Popover>
+<FilterOverlayTrigger
+  buttonClass="btn-margin-left"
+  buttonsContainerClass="condition-margin"
+  hints={
+    Array [
+      "One",
+    ]
   }
-  placement="bottom"
-  rootClose={true}
-  trigger="click"
->
-  <Button
-    className="btn-margin-left"
-    id="question-filter"
-    variant="secondary"
-  >
-    Question
-  </Button>
-</OverlayTrigger>
+  id="question-filter"
+  onSubmit={[MockFunction]}
+  popoverClass="wide display-logic-container"
+  popoverContent={<ConditionSetFormField />}
+  title="Question"
+/>
 `;

@@ -2,6 +2,7 @@ import queryString from 'query-string';
 import { observable, action, reaction, computed } from 'mobx';
 
 import { getLevelsValues, applyDefaultLevelsValues } from '../utils';
+import cloneDeep from 'lodash/cloneDeep';
 
 /**
  * Represents a single condition (e.g. 'Question Foo' Equals 'Bar').
@@ -37,8 +38,8 @@ class ConditionModel {
   @observable
   remove;
 
-  constructor(initialValues) {
-    Object.assign(this, initialValues);
+  constructor(initialValues = {}) {
+    this.initialize(initialValues);
 
     // Update levels when optionSet changes.
     reaction(
@@ -49,6 +50,13 @@ class ConditionModel {
         }
       },
     );
+  }
+
+  // Initial values may not be known at the time the store is created.
+  // This method can be used to set the initial values at a later point.
+  @action
+  initialize = (initialValues) => {
+    Object.assign(this, initialValues);
   }
 
   /** Return either the current value or the value of the deepest defined level. */

@@ -49,24 +49,17 @@ class FiltersRoot extends React.Component {
       advancedSearchText,
     } = props;
 
-    // Directly assign initial values to the store.
-    Object.assign(filtersStore, {
+    filtersStore.initialize({
       allForms,
-      originalFormIds: selectedFormIds,
       selectedFormIds,
-      originalIsReviewed: isReviewed,
       isReviewed,
-      originalSubmittersForType: {
-        [submitterType.USER]: selectedUsers,
-        [submitterType.GROUP]: selectedGroups,
-      },
       selectedSubmittersForType: {
         [submitterType.USER]: selectedUsers,
         [submitterType.GROUP]: selectedGroups,
       },
       advancedSearchText,
     });
-    Object.assign(conditionSetStore, {
+    conditionSetStore.initialize({
       forceEqualsOp: true,
     });
   }
@@ -82,20 +75,16 @@ class FiltersRoot extends React.Component {
   }
 
   renderFilterButtons = () => {
+    const defaultProps = {
+      onSubmit: this.handleSubmit,
+    };
+
     return (
       <ButtonToolbar>
-        <FormFilter
-          onSubmit={this.handleSubmit}
-        />
-        <QuestionFilter
-          onSubmit={this.handleSubmit}
-        />
-        <ReviewedFilter
-          onSubmit={this.handleSubmit}
-        />
-        <SubmitterFilter
-          onSubmit={this.handleSubmit}
-        />
+        <FormFilter {...defaultProps} />
+        <QuestionFilter {...defaultProps} />
+        <ReviewedFilter {...defaultProps} />
+        <SubmitterFilter {...defaultProps} />
       </ButtonToolbar>
     );
   }

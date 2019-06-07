@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders as expected 1`] = `
+<div
+  className="btn-apply-container class"
+>
+  <Button
+    className="btn-apply"
+    onClick={[MockFunction]}
+  >
+    Apply
+  </Button>
+</div>
+`;

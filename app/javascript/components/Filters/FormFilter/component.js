@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString, getItemNameFromId, parseListForSelect2 } from '../utils';
+import { getItemNameFromId, parseListForSelect2 } from '../utils';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 @inject('filtersStore')
 @observer
@@ -34,58 +32,39 @@ class FormFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, onSubmit } = this.props;
+    const { filtersStore } = this.props;
     const { allForms, selectedFormId, handleSelectForm } = filtersStore;
 
     return (
-      <Popover
-        className="filters-popover"
-        id="form-filter"
-      >
-        <Select2
-          data={parseListForSelect2(allForms)}
-          onSelect={handleSelectForm}
-          onUnselect={this.handleClearSelection}
-          options={{
-            allowClear: true,
-            placeholder: I18n.t('filter.choose_form'),
-            dropdownCssClass: 'filters-select2-dropdown',
-            width: '100%',
-          }}
-          ref={this.select2}
-          value={selectedFormId}
-        />
-
-        <div className="btn-apply-container">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
-      </Popover>
+      <Select2
+        data={parseListForSelect2(allForms)}
+        onSelect={handleSelectForm}
+        onUnselect={this.handleClearSelection}
+        options={{
+          allowClear: true,
+          placeholder: I18n.t('filter.choose_form'),
+          dropdownCssClass: 'filters-select2-dropdown',
+          width: '100%',
+        }}
+        ref={this.select2}
+        value={selectedFormId}
+      />
     );
   }
 
   render() {
-    const { filtersStore } = this.props;
-    const { allForms, originalFormIds } = filtersStore;
-    const originalFormNames = originalFormIds.map((id) => getItemNameFromId(allForms, id));
+    const { filtersStore, onSubmit } = this.props;
+    const { allForms, original: { selectedFormIds } } = filtersStore;
+    const originalFormNames = selectedFormIds.map((id) => getItemNameFromId(allForms, id));
 
     return (
-      <OverlayTrigger
+      <FilterOverlayTrigger
         id="form-filter"
-        containerPadding={25}
-        overlay={this.renderPopover()}
-        placement="bottom"
-        rootClose
-        trigger="click"
-      >
-        <Button id="form-filter" variant="secondary">
-          {I18n.t('filter.form') + getButtonHintString(originalFormNames)}
-        </Button>
-      </OverlayTrigger>
+        title={I18n.t('filter.form')}
+        popoverContent={this.renderPopover()}
+        onSubmit={onSubmit}
+        hints={originalFormNames}
+      />
     );
   }
 }

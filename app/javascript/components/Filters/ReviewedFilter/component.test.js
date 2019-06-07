@@ -4,6 +4,7 @@ import { shallow } from 'enzyme';
 import { getFiltersStore } from '../testUtils';
 
 import Component from './component';
+import { quietMount } from '../../../testUtils';
 
 const defaultProps = {
   filtersStore: getFiltersStore(),
@@ -16,15 +17,16 @@ it('renders as expected', () => {
 });
 
 describe('popover', () => {
-  const wrapper = shallow(<Component {...defaultProps} />);
+  const wrapper = quietMount(<Component {...defaultProps} />);
   wrapper.find('Button#reviewed-filter').simulate('click');
 
-  const overlay = shallow(wrapper.find('OverlayTrigger').prop('overlay'));
+  const overlay = quietMount(wrapper.find('OverlayTrigger').prop('overlay'));
 
   it('handles callbacks', () => {
     overlay.find('#no').simulate('click');
     overlay.find('Button.btn-apply').simulate('click');
 
-    expect(defaultProps.onSubmit).toMatchSnapshot();
+    expect(defaultProps.onSubmit.mock.calls.length).toMatchSnapshot();
+    expect(defaultProps.onSubmit.mock.results).toMatchSnapshot();
   });
 });

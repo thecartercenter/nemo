@@ -1,28 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`popover handles callbacks 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+exports[`popover handles callbacks 1`] = `1`;
+
+exports[`popover handles callbacks 2`] = `
+Array [
+  Object {
+    "type": "return",
+    "value": undefined,
+  },
+]
 `;
 
 exports[`renders as expected 1`] = `
-<OverlayTrigger
-  containerPadding={25}
+<FilterOverlayTrigger
+  buttonClass="btn-margin-left"
+  hints={
+    Array [
+      "User A",
+    ]
+  }
   id="submitter-filter"
-  overlay={
-    <Popover
-      className="filters-popover popover-multi-select2"
-      id="submitter-filter"
-    >
+  onSubmit={[MockFunction]}
+  popoverClass="popover-multi-select2"
+  popoverContent={
+    <React.Fragment>
       <Select2
         id="submitter"
         onSelect={[Function]}
@@ -65,28 +66,8 @@ exports[`renders as expected 1`] = `
           ]
         }
       />
-      <div
-        className="btn-apply-container"
-      >
-        <Button
-          className="btn-apply"
-          onClick={[MockFunction]}
-        >
-          Apply
-        </Button>
-      </div>
-    </Popover>
+    </React.Fragment>
   }
-  placement="bottom"
-  rootClose={true}
-  trigger="click"
->
-  <Button
-    className="btn-margin-left"
-    id="submitter-filter"
-    variant="secondary"
-  >
-    Submitter (User A)
-  </Button>
-</OverlayTrigger>
+  title="Submitter"
+/>
 `;

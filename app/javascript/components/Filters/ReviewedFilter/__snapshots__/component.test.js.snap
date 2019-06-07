@@ -1,42 +1,30 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`popover handles callbacks 1`] = `
-[MockFunction] {
-  "calls": Array [
-    Array [],
-  ],
-  "results": Array [
-    Object {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
+exports[`popover handles callbacks 1`] = `1`;
+
+exports[`popover handles callbacks 2`] = `
+Array [
+  Object {
+    "type": "return",
+    "value": undefined,
+  },
+]
 `;
 
 exports[`renders as expected 1`] = `
-<OverlayTrigger
-  containerPadding={25}
+<FilterOverlayTrigger
+  buttonClass="btn-margin-left"
+  hints={null}
   id="reviewed-filter"
-  overlay={
-    <Popover
-      className="filters-popover"
-      id="reviewed-filter"
-    >
+  onSubmit={[MockFunction]}
+  popoverContent={
+    <React.Fragment>
       <div>
-        <ForwardRef
-          column={false}
-          srOnly={false}
-        >
+        <Label>
           Is marked 'reviewed'
-        </ForwardRef>
+        </Label>
       </div>
-      <ForwardRef
-        as="div"
-        role="group"
-        toggle={false}
-        vertical={false}
-      >
+      <ButtonGroup>
         <Button
           active={true}
           id="yes"
@@ -61,29 +49,9 @@ exports[`renders as expected 1`] = `
         >
           Either
         </Button>
-      </ForwardRef>
-      <div
-        className="btn-apply-container"
-      >
-        <Button
-          className="btn-apply"
-          onClick={[MockFunction]}
-        >
-          Apply
-        </Button>
-      </div>
-    </Popover>
+      </ButtonGroup>
+    </React.Fragment>
   }
-  placement="bottom"
-  rootClose={true}
-  trigger="click"
->
-  <Button
-    className="btn-margin-left"
-    id="reviewed-filter"
-    variant="secondary"
-  >
-    Reviewed
-  </Button>
-</OverlayTrigger>
+  title="Reviewed"
+/>
 `;

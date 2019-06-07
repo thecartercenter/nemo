@@ -54,8 +54,7 @@ class SkipRuleFormFieldRoot extends React.Component {
       destItemId,
     };
 
-    // Directly assign initial values to the store.
-    Object.assign(conditionSetStore, {
+    conditionSetStore.initialize({
       formId,
       namePrefix: `${namePrefix}[conditions_attributes]`,
       conditions,

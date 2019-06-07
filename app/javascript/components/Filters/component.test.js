@@ -1,14 +1,16 @@
 import pick from 'lodash/pick';
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { shallow } from 'enzyme';
 import { Provider } from 'mobx-react';
 
-import { STUB_COMPONENT_WARNINGS, suppressErrors, unsuppressAllErrors } from '../../testUtils';
+import { quietMount } from '../../testUtils';
 import { getFiltersStore } from './testUtils';
 
 import { CONTROLLER_NAME } from './utils';
 import { FiltersRoot as Component } from './component';
 import { SUBMITTER_TYPES, submitterType } from './SubmitterFilter/component';
+
+jest.mock('../conditions/ConditionSetFormField/component', () => 'ConditionSetFormField');
 
 let defaultProps = {};
 resetDefaultProps();
@@ -59,8 +61,7 @@ describe('integration', () => {
 
     resetDefaultProps();
 
-    suppressErrors(STUB_COMPONENT_WARNINGS);
-    wrapper = mount(
+    wrapper = quietMount(
       <Provider
         filtersStore={defaultProps.filtersStore}
         conditionSetStore={defaultProps.filtersStore.conditionSetStore}
@@ -68,12 +69,11 @@ describe('integration', () => {
         <Component {...defaultProps} />
       </Provider>,
     );
-    unsuppressAllErrors();
   });
 
   it('navigates on apply form filter', () => {
     wrapper.find('Button#form-filter').simulate('click');
-    const overlay = shallow(wrapper.find('OverlayTrigger#form-filter').prop('overlay'));
+    const overlay = quietMount(wrapper.find('OverlayTrigger#form-filter').prop('overlay'));
     // Call prop directly since Select2 is stubbed out.
     overlay.find('Select2').prop('onSelect')({ target: { value: defaultProps.filtersStore.allForms[0].id } });
 
@@ -84,7 +84,7 @@ describe('integration', () => {
 
   it('navigates on apply question filter', () => {
     wrapper.find('Button#question-filter').simulate('click');
-    const overlay = shallow(wrapper.find('OverlayTrigger#question-filter').prop('overlay'));
+    const overlay = quietMount(wrapper.find('OverlayTrigger#question-filter').prop('overlay'));
 
     expect(window.location.assign).toMatchSnapshot();
     overlay.find('Button.btn-apply').simulate('click');
@@ -93,7 +93,7 @@ describe('integration', () => {
 
   it('navigates on apply reviewed filter', () => {
     wrapper.find('Button#reviewed-filter').simulate('click');
-    const overlay = shallow(wrapper.find('OverlayTrigger#reviewed-filter').prop('overlay'));
+    const overlay = quietMount(wrapper.find('OverlayTrigger#reviewed-filter').prop('overlay'));
     overlay.find('#no').simulate('click');
 
     expect(window.location.assign).toMatchSnapshot();
@@ -103,7 +103,7 @@ describe('integration', () => {
 
   it('navigates on apply submitter filter', () => {
     wrapper.find('Button#submitter-filter').simulate('click');
-    const overlay = shallow(wrapper.find('OverlayTrigger#submitter-filter').prop('overlay'));
+    const overlay = quietMount(wrapper.find('OverlayTrigger#submitter-filter').prop('overlay'));
 
     SUBMITTER_TYPES.forEach((type) => {
       const { id, name } = defaultProps.filtersStore.allSubmittersForType[type][0];

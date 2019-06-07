@@ -1,4 +1,5 @@
 import isEmpty from 'lodash/isEmpty';
+import cloneDeep from 'lodash/cloneDeep';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../conditions/ConditionSetFormField/model';
@@ -19,6 +20,10 @@ export const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction,
 }, {});
 
 class FiltersModel {
+  /** Deep copy of this model's original values (e.g. to enable reverting). */
+  @observable
+  original = new Map();
+
   @observable
   conditionSetStore = new ConditionSetModel(initialConditionSetData);
 
@@ -26,19 +31,10 @@ class FiltersModel {
   allForms = [];
 
   @observable
-  originalFormIds = [];
-
-  @observable
   selectedFormIds = [];
 
   @observable
-  originalIsReviewed = null;
-
-  @observable
   isReviewed = null;
-
-  @observable
-  originalSubmittersForType = getEmptySubmitterTypeMap();
 
   @observable
   selectedSubmittersForType = getEmptySubmitterTypeMap();
@@ -51,21 +47,36 @@ class FiltersModel {
     return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
   }
 
-  constructor(initialValues) {
-    Object.assign(this, initialValues);
+  constructor(initialValues = {}) {
+    this.initialize(initialValues);
 
     // Update conditionSet IDs when selected forms change.
     reaction(
       () => this.selectedFormId,
       async (selectedFormId) => {
         if (this.conditionSetStore.formId !== selectedFormId) {
-          // Reset the entire store because the available questions will have changed.
-          Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {});
+          // Reset the store because the available questions will have changed.
+          Object.assign(this.conditionSetStore, new ConditionSetModel(initialConditionSetData), {
+            original: this.conditionSetStore.original,
+          });
 
           await this.updateRefableQings();
         }
       },
     );
+  }
+
+  // Initial values may not be known at the time the store is created.
+  // This method can be used to set the initial values at a later point.
+  @action
+  initialize = (initialValues) => {
+    Object.assign(this, initialValues);
+
+    Object.assign(this.original, {
+      selectedFormIds: cloneDeep(initialValues.selectedFormIds) || [],
+      isReviewed: initialValues.isReviewed || null,
+      selectedSubmittersForType: cloneDeep(initialValues.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
+    });
   }
 
   @action

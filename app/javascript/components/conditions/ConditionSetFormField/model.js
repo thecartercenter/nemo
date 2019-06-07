@@ -1,3 +1,4 @@
+import cloneDeep from 'lodash/cloneDeep';
 import { observable, action, reaction } from 'mobx';
 
 import ConditionModel from './ConditionFormField/model';
@@ -6,14 +7,15 @@ import ConditionModel from './ConditionFormField/model';
  * Represents a set of conditions (e.g. ['Question Foo' Equals 'Bar', ...]).
  */
 class ConditionSetModel {
+  /** Deep copy of this model's original values (e.g. to enable reverting). */
+  @observable
+  original = new Map();
+
   @observable
   formId;
 
   @observable
   namePrefix;
-
-  @observable
-  originalConditions = [];
 
   @observable
   conditions = [];
@@ -35,14 +37,14 @@ class ConditionSetModel {
   forceEqualsOp = false;
 
   constructor(initialValues = {}) {
-    Object.assign(this, initialValues);
+    this.initialize(initialValues);
 
     // Make sure conditions are always instances of the model.
     // TODO: MobX-state-tree can do this automatically for us.
     reaction(
-      () => this.originalConditions,
-      (originalConditions) => {
-        this.originalConditions = this.mapConditionsToStores(originalConditions);
+      () => this.original,
+      (original) => {
+        this.original.conditions = this.mapConditionsToStores(original.conditions);
       },
       { fireImmediately: true },
     );
@@ -72,6 +74,17 @@ class ConditionSetModel {
       return conditions.map((condition) => new ConditionModel(condition));
     }
     return conditions;
+  }
+
+  // Initial values may not be known at the time the store is created.
+  // This method can be used to set the initial values at a later point.
+  @action
+  initialize = (initialValues) => {
+    Object.assign(this, initialValues);
+
+    Object.assign(this.original, {
+      conditions: cloneDeep(initialValues.conditions) || [],
+    });
   }
 
   @action

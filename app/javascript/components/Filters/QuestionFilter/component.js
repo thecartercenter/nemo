@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import { inject, observer } from 'mobx-react';
 
-import { getButtonHintString, getItemNameFromId } from '../utils';
+import { getItemNameFromId } from '../utils';
 import ConditionSetFormField from '../../conditions/ConditionSetFormField/component';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 @inject('filtersStore')
 @observer
@@ -22,47 +20,29 @@ class QuestionFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { onSubmit } = this.props;
-
     return (
-      <Popover
-        className="filters-popover wide display-logic-container"
-        id="form-filter"
-      >
-        <ConditionSetFormField />
-
-        <div className="btn-apply-container condition-margin">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
-      </Popover>
+      <ConditionSetFormField />
     );
   }
 
   render() {
-    const { filtersStore: { conditionSetStore } } = this.props;
-    const { originalConditions, refableQings } = conditionSetStore;
-    const hints = originalConditions
+    const { filtersStore: { conditionSetStore }, onSubmit } = this.props;
+    const { original: { conditions }, refableQings } = conditionSetStore;
+    const hints = conditions
       .filter(({ leftQingId }) => leftQingId)
       .map(({ leftQingId }) => getItemNameFromId(refableQings, leftQingId, 'code'));
 
     return (
-      <OverlayTrigger
+      <FilterOverlayTrigger
         id="question-filter"
-        containerPadding={25}
-        overlay={this.renderPopover()}
-        placement="bottom"
-        rootClose
-        trigger="click"
-      >
-        <Button id="question-filter" variant="secondary" className="btn-margin-left">
-          {I18n.t('filter.question') + getButtonHintString(hints)}
-        </Button>
-      </OverlayTrigger>
+        title={I18n.t('filter.question')}
+        popoverContent={this.renderPopover()}
+        popoverClass="wide display-logic-container"
+        buttonsContainerClass="condition-margin"
+        onSubmit={onSubmit}
+        hints={hints}
+        buttonClass="btn-margin-left"
+      />
     );
   }
 }

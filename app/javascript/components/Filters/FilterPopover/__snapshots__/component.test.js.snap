@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders as expected 1`] = `
+<Popover
+  className="filters-popover class"
+  id="id"
+>
+  <div>
+    Test
+  </div>
+  <FilterPopoverButtons
+    onSubmit={[MockFunction]}
+  />
+</Popover>
+`;

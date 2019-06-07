@@ -1,13 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Form from 'react-bootstrap/Form';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import { inject, observer } from 'mobx-react';
 
-import { getButtonHintString } from '../utils';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 const CHOICES = [
   { name: I18n.t('common._yes'), value: true, id: 'yes' },
@@ -29,14 +27,11 @@ class FormFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, onSubmit } = this.props;
+    const { filtersStore } = this.props;
     const { isReviewed } = filtersStore;
 
     return (
-      <Popover
-        className="filters-popover"
-        id="reviewed-filter"
-      >
+      <React.Fragment>
         <div>
           <Form.Label>{I18n.t('filter.is_reviewed')}</Form.Label>
         </div>
@@ -53,39 +48,26 @@ class FormFilter extends React.Component {
             </Button>
           ))}
         </ButtonGroup>
-
-        <div className="btn-apply-container">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
-      </Popover>
+      </React.Fragment>
     );
   }
 
   render() {
-    const { filtersStore } = this.props;
-    const { originalIsReviewed } = filtersStore;
-    const hints = originalIsReviewed == null
+    const { filtersStore, onSubmit } = this.props;
+    const { original: { isReviewed } } = filtersStore;
+    const hints = isReviewed == null
       ? null
-      : originalIsReviewed ? [I18n.t('common._yes')] : [I18n.t('common._no')];
+      : isReviewed ? [I18n.t('common._yes')] : [I18n.t('common._no')];
 
     return (
-      <OverlayTrigger
+      <FilterOverlayTrigger
         id="reviewed-filter"
-        containerPadding={25}
-        overlay={this.renderPopover()}
-        placement="bottom"
-        rootClose
-        trigger="click"
-      >
-        <Button id="reviewed-filter" variant="secondary" className="btn-margin-left">
-          {I18n.t('filter.reviewed') + getButtonHintString(hints)}
-        </Button>
-      </OverlayTrigger>
+        title={I18n.t('filter.reviewed')}
+        popoverContent={this.renderPopover()}
+        onSubmit={onSubmit}
+        hints={hints}
+        buttonClass="btn-margin-left"
+      />
     );
   }
 }

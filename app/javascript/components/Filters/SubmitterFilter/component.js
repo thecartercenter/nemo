@@ -1,14 +1,11 @@
 import flatten from 'lodash/flatten';
 import React from 'react';
 import PropTypes from 'prop-types';
-import Button from 'react-bootstrap/Button';
-import Popover from 'react-bootstrap/Popover';
-import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import { getButtonHintString } from '../utils';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 // Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
 export const submitterType = {
@@ -58,14 +55,11 @@ class SubmitterFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { filtersStore, onSubmit } = this.props;
+    const { filtersStore } = this.props;
     const { selectedSubmittersForType, handleSelectSubmitterForType } = filtersStore;
 
     return (
-      <Popover
-        className="filters-popover popover-multi-select2"
-        id="submitter-filter"
-      >
+      <React.Fragment>
         {SUBMITTER_TYPES.map((type) => {
           const { dataUrl, resultsKey } = select2Config[type];
 
@@ -87,39 +81,27 @@ class SubmitterFilter extends React.Component {
             />
           );
         })}
-
-        <div className="btn-apply-container">
-          <Button
-            className="btn-apply"
-            onClick={onSubmit}
-          >
-            {I18n.t('common.apply')}
-          </Button>
-        </div>
-      </Popover>
+      </React.Fragment>
     );
   }
 
   render() {
-    const { filtersStore } = this.props;
-    const { originalSubmittersForType } = filtersStore;
+    const { filtersStore, onSubmit } = this.props;
+    const { original: { selectedSubmittersForType } } = filtersStore;
     const submitterNames = flatten(SUBMITTER_TYPES.map((type) => {
-      return originalSubmittersForType[type].map(({ name }) => name);
+      return selectedSubmittersForType[type].map(({ name }) => name);
     }));
 
     return (
-      <OverlayTrigger
+      <FilterOverlayTrigger
         id="submitter-filter"
-        containerPadding={25}
-        overlay={this.renderPopover()}
-        placement="bottom"
-        rootClose
-        trigger="click"
-      >
-        <Button id="submitter-filter" variant="secondary" className="btn-margin-left">
-          {I18n.t('filter.submitter') + getButtonHintString(submitterNames)}
-        </Button>
-      </OverlayTrigger>
+        title={I18n.t('filter.submitter')}
+        popoverContent={this.renderPopover()}
+        popoverClass="popover-multi-select2"
+        onSubmit={onSubmit}
+        hints={submitterNames}
+        buttonClass="btn-margin-left"
+      />
     );
   }
 }
