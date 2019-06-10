@@ -2,7 +2,11 @@
 class ELMO.Views.ResponseListView extends ELMO.Views.ApplicationView
 
   initialize: (options) ->
-    setInterval(@fetch.bind(this), options.refreshInterval)
+    @reloadCount = 0
+    if options.refreshInterval > 0
+      setInterval(@fetch.bind(this), options.refreshInterval)
+    if options.showReloadCount
+      $('<span id="reload-count"> | Reloads: 0</span>').appendTo($('#footer'))
 
   fetch: ->
     @oldIds = @getIds()
@@ -20,10 +24,11 @@ class ELMO.Views.ResponseListView extends ELMO.Views.ApplicationView
 
   update: (data) ->
     ELMO.app.loading(false)
-    $('#index_table').html(data)
+    $('#index_table').replaceWith(data)
+    @reloadCount += 1
+    $('#reload-count').html(" | Reloads: #{@reloadCount}")
 
-    batchView = ELMO.batch_actions_views.response
-    batchView.update_select_all_elements()
+    ELMO.batch_actions_views.response.update_links()
 
     # Highlight any new rows.
     @getIds().forEach (id) =>

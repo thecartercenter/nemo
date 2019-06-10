@@ -53,11 +53,12 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
     @reset_alert()
 
     if @select_all_pages_field.val()
-      msg = I18n.t("index_table.messages.selected_all_rows", {count: @entries, class_name: @class_name})
+      msg = I18n.t("index_table.messages.selected_all_rows", {class_name: @class_name, count: @entries})
       @alert.html(msg)
       @alert.addClass('alert-info').show()
     else if @pages > 1 && @all_checked()
-      msg = I18n.t("index_table.messages.selected_rows_page", {count: @get_selected_count()}) + " " +
+      msg = I18n.t("index_table.messages.selected_rows_page",
+        {class_name: @class_name, count: @get_selected_count()}) + " " +
         "<a href='#' class='select_all_pages'>" +
         I18n.t("index_table.messages.select_all_rows", {class_name: @class_name, count: @entries}) +
         "</a>"

@@ -55,7 +55,7 @@ shared_context "bulk destroy" do
       if options[:uncheck_one]
         checkboxes = all(".cb_col input")
         checkboxes[checkboxes.size / 2].click
-        expect(page).not_to have_css(".alert", text: "rows are selected")
+        expect(page).not_to have_css(".alert", text: "are selected")
       end
 
       click_on(delete_link_name)

@@ -2,6 +2,7 @@
 
 class ResponsesController < ApplicationController
   PER_PAGE = 20
+  REFRESH_INTERVAL = 30_000 # ms
 
   include BatchProcessable
   include OdkHeaderable
