@@ -97,7 +97,7 @@ class ConditionFormField extends React.Component {
       conditionable_id: conditionableId || undefined,
       conditionable_type: conditionableId ? conditionableType : undefined,
     };
-    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
+    const url = ELMO.app.url_builder.build('condition-form', 'base');
     return `${url}?${queryString.stringify(params)}`;
   }
 

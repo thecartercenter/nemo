@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Serializes an OptionNode for use in the Condition form.
-class OptionNodeConditionViewSerializer < ApplicationSerializer
+class ConditionFormOptionPathSerializer < ApplicationSerializer
   attributes :levels
 
   def levels

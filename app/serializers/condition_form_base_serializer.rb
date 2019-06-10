@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Serializes Condition for use in condition form.
-class ConditionViewSerializer < ApplicationSerializer
+class ConditionFormBaseSerializer < ApplicationSerializer
   attributes :id, :left_qing_id, :op, :value, :option_node_id, :option_set_id,
     :form_id, :conditionable_id, :conditionable_type, :operator_options
 

@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "form items" do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:form) { create(:form, question_types: ["text", %w[text text]]) }
-  let(:qing) { form.sorted_children.select { |c| c.type == "Questioning" }.first }
-  let(:qing_group) { form.sorted_children.select { |c| c.type == "QingGroup" }.first }
+  let(:qing) { form.c[0] }
+  let(:qing_group) { form.c[1] }
 
   before do
     login(user)
@@ -23,8 +25,8 @@ describe "form items" do
 
       it "should update rank and ancestry" do
         params = controller.params
-        expect(params[:rank]).to eq "3"
-        expect(params[:parent_id]).to eq qing_group.id.to_s
+        expect(params[:rank]).to eq("3")
+        expect(params[:parent_id]).to eq(qing_group.id.to_s)
       end
     end
   end
@@ -53,7 +55,7 @@ describe "form items" do
           operatorOptions: [],
           refableQings: expected_left_qing_options
         }.to_json
-        get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
+        get "/en/m/#{get_mission.compact_name}/condition-form/base",
           params: {
             left_qing_id: nil,
             form_id: form.id,
@@ -61,7 +63,7 @@ describe "form items" do
             conditionable_type: "FormItem"
           }
         expect(response).to have_http_status(200)
-        expect(response.body).to eq expected
+        expect(response.body).to eq(expected)
       end
     end
 
@@ -88,7 +90,7 @@ describe "form items" do
           operatorOptions: expected_operator_options,
           refableQings: expected_left_qing_options
         }.to_json
-        get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
+        get "/en/m/#{get_mission.compact_name}/condition-form/base",
           params: {
             left_qing_id: form.c[0].id,
             form_id: form.id,
@@ -96,7 +98,7 @@ describe "form items" do
             conditionable_type: "FormItem"
           }
         expect(response).to have_http_status(200)
-        expect(response.body).to eq expected
+        expect(response.body).to eq(expected)
       end
 
       context "text value exists" do
@@ -120,7 +122,7 @@ describe "form items" do
             operatorOptions: expected_operator_options,
             refableQings: expected_left_qing_options
           }.to_json
-          get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
+          get "/en/m/#{get_mission.compact_name}/condition-form/base",
             params: {
               condition_id: condition.id,
               left_qing_id: form.c[1].id,
@@ -129,7 +131,7 @@ describe "form items" do
               conditionable_type: "FormItem"
             }
           expect(response).to have_http_status(200)
-          expect(response.body).to eq expected
+          expect(response.body).to eq(expected)
         end
       end
 
@@ -154,7 +156,7 @@ describe "form items" do
             operatorOptions: expected_operator_options,
             refableQings: expected_left_qing_options
           }.to_json
-          get "/en/m/#{get_mission.compact_name}/form-items/condition-form",
+          get "/en/m/#{get_mission.compact_name}/condition-form/base",
             params: {
               condition_id: condition.id,
               left_qing_id: form.c[2].id,
@@ -163,7 +165,7 @@ describe "form items" do
               conditionable_type: "FormItem"
             }
           expect(response).to have_http_status(200)
-          expect(response.body).to eq expected
+          expect(response.body).to eq(expected)
         end
       end
     end
