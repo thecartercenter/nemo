@@ -71,6 +71,7 @@ Style/Documentation:
   Exclude:
     - "app/controllers/**/*"
     - "app/decorators/**/*"
+    - "app/serializers/**/*"
     - db/migrate/*
 
 Style/EmptyMethod:

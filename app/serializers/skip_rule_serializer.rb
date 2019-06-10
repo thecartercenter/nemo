@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -25,8 +27,8 @@
 #
 # rubocop:enable Metrics/LineLength
 
-class SkipRuleSerializer < ActiveModel::Serializer
+# Serializes SkipRules for use in skip rule form.
+class SkipRuleSerializer < ApplicationSerializer
   attributes :id, :skip_if, :destination, :rank, :source_item_id, :dest_item_id
-  format_keys :lower_camel
   has_many :conditions, serializer: ConditionViewSerializer
 end

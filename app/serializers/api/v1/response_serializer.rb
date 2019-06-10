@@ -1,5 +1,6 @@
 class API::V1::ResponseSerializer < ActiveModel::Serializer
   attributes :id, :submitter, :created_at, :updated_at
+  format_keys :underscore
 
   has_many :answers, serializer: API::V1::AnswerSerializer
 

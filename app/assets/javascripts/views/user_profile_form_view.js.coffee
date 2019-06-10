@@ -14,7 +14,7 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
     @$("#user_user_group_ids").select2
       tags: true
       templateResult: @format_suggestions
-      ajax: ELMO.select2.getAjaxParams(@params.user_group_options_url, 'possible_groups')
+      ajax: ELMO.select2.getAjaxParams(@params.user_group_options_url, 'possible_groups', 'name')
 
   format_suggestions: (item) ->
     if item.id == item.text

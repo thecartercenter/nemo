@@ -2,9 +2,8 @@
 
 module ResponseCondition
   # Serializes condition group for response web form display logic
-  class ConditionGroupSerializer < ActiveModel::Serializer
+  class ConditionGroupSerializer < ApplicationSerializer
     attributes :members, :true_if, :negate, :type, :name
-    format_keys :lower_camel
 
     def members
       object.members.map do |m|

@@ -1,5 +1,5 @@
 select2 = {
-  getAjaxParams: (url, resultsKey = 'results') ->
+  getAjaxParams: (url, resultsKey = 'results', textKey = 'text') ->
     url: url
     dataType: 'json'
     delay: 250,
@@ -7,8 +7,9 @@ select2 = {
       search: params.term
       page: params.page
     processResults: (data) ->
-      results: data[resultsKey]
-      pagination: {more: data.more}
+      results = data[resultsKey]
+      results.forEach((r) -> r['text'] = r[textKey]) unless textKey == 'text'
+      {results: results, pagination: {more: data.more}}
     cache: true
 }
 
