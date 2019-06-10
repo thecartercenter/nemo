@@ -1,5 +1,5 @@
 // namespaces
-window.ELMO = {Report: {}, Control: {}, Views: {}, Models: {}};
+window.ELMO = {Report: {}, Control: {}, Views: {}, Models: {}, Utils: {}};
 window.Sassafras = {};
 
 ELMO.LAT_LNG_REGEXP = /^(-?\d+(\.\d+)?)\s*[,;:\s]\s*(-?\d+(\.\d+)?)/

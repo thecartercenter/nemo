@@ -1,5 +1,8 @@
-select2 = {
-  getAjaxParams: (url, resultsKey = 'results', textKey = 'text') ->
+# Builds options for select2 controls so that common options can be reused without duplication.
+# It's designed like this, instead of as a wrapper of select2, so it can be used in React as well
+# as Backbone.
+class ELMO.Utils.Select2OptionBuilder
+  ajax: (url, resultsKey = 'results', textKey = 'text') ->
     url: url
     dataType: 'json'
     delay: 250,
@@ -11,6 +14,3 @@ select2 = {
       results.forEach((r) -> r['text'] = r[textKey]) unless textKey == 'text'
       {results: results, pagination: {more: data.more}}
     cache: true
-}
-
-ELMO.select2 = select2

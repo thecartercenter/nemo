@@ -74,7 +74,7 @@ class SubmitterFilter extends React.Component {
                 placeholder: I18n.t(`filter.choose_submitter.${type}`),
                 dropdownCssClass: 'filters-select2-dropdown',
                 width: '100%',
-                ajax: ELMO.select2.getAjaxParams(dataUrl, resultsKey),
+                ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(dataUrl, resultsKey),
               }}
               ref={this.select2[type]}
               value={selectedSubmittersForType[type].map(({ id }) => id)}
