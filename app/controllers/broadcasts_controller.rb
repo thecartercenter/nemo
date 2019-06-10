@@ -6,6 +6,8 @@ class BroadcastsController < ApplicationController
   include OperationQueueable
   include BatchProcessable
 
+  USERS_OR_GROUPS_PER_PAGE = 5
+
   # authorization via cancan
   load_and_authorize_resource
 
@@ -82,8 +84,8 @@ class BroadcastsController < ApplicationController
       @groups = @groups.name_matching(params[:search])
     end
 
-    @users = @users.paginate(page: params[:page], per_page: 5)
-    @groups = @groups.paginate(page: params[:page], per_page: 5)
+    @users = @users.paginate(page: params[:page], per_page: USERS_OR_GROUPS_PER_PAGE)
+    @groups = @groups.paginate(page: params[:page], per_page: USERS_OR_GROUPS_PER_PAGE)
 
     users_fetched = @users.total_pages > params[:page].to_i
     groups_fetched = @groups.total_pages > params[:page].to_i

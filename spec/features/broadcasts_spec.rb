@@ -4,17 +4,17 @@ require "rails_helper"
 
 feature "broadcasts", :sms, js: true do
   include_context "search"
-  let(:max_user_dropdown_results) { 25 }
+  let(:max_user_dropdown_results) { BroadcastsController::USERS_OR_GROUPS_PER_PAGE * 2 }
   let!(:user) { create(:user, role_name: "staffer") }
-  let!(:users) { create_list(:user, max_user_dropdown_results) }
+  let!(:users) { create_list(:user, max_user_dropdown_results, role_name: "enumerator") }
   let!(:user2) { create(:user, name: "Zied") }
-  let!(:decoy_user) { create(:user, name: "Decoy")}
+  let!(:decoy_user) { create(:user, name: "Decoy") }
 
   before do
     login(user)
   end
 
-  scenario "happy path" do
+  scenario "via broadcast index" do
     click_link("Broadcasts")
     click_link("Send Broadcast")
 
@@ -37,80 +37,77 @@ feature "broadcasts", :sms, js: true do
     expect(page).to have_content(user2.name)
   end
 
-  scenario "nothing selected" do
-    click_link("Users")
-    click_link("Send Broadcast")
-    expect(page).to have_content("You haven't selected anything")
-  end
+  describe "via user index" do
+    context "with one page of users" do
+      scenario "select all shows as 'all users in mission'" do
+        click_link("Users")
+        click_link("Select All")
+        click_link("Send Broadcast")
+        fill_message_and_send
+        expect(page).to have_content("Broadcast queued")
+        expect(page).to have_content("All users in mission")
+      end
 
-  context "one page of users" do
-    scenario "unfiltered" do
-      click_link("Users")
-      click_link("Select All")
-      click_link("Send Broadcast")
-      fill_message_and_send
-      expect(page).to have_content("Broadcast queued")
-      expect(page).to have_content("All users in mission")
+      scenario "only two users selected  shows as 'specific users'" do
+        click_link("Users")
+        check("selected_#{user.id}")
+        check("selected_#{user2.id}")
+        click_link("Send Broadcast")
+        fill_message_and_send
+        expect(page).to have_text("Broadcast queued")
+        expect(page).to have_content(user.name)
+        expect(page).to have_content(user2.name)
+        expect(page).not_to have_content(decoy_user.name)
+        expect(page).to have_content("Specific users/groups in mission")
+      end
+
+      scenario "filtered select all shows as 'specific users'" do
+        click_link("Users")
+        search_for("role:staffer")
+        click_link("Select All")
+        click_link("Send Broadcast")
+        fill_message_and_send
+        expect(page).to have_text("Broadcast queued")
+        expect(page).to have_content(user.name)
+        expect(page).not_to have_content(user2.name)
+        expect(page).to have_content("Specific users/groups in mission")
+      end
     end
 
-    scenario "unfiltered with only two users selected" do
-      click_link("Users")
-      check("selected_#{user.id}")
-      check("selected_#{user2.id}")
-      click_link("Send Broadcast")
-      fill_message_and_send
-      expect(page).to have_text("Broadcast queued")
-      expect(page).to have_content(user.name)
-      expect(page).to have_content(user2.name)
-      expect(page).not_to have_content(decoy_user.name)
-      expect(page).to have_content("Specific users/groups in mission")
-    end
+    context "with multiple pages of users" do
+      before do
+        stub_const(UsersController, "PER_PAGE", 3)
+      end
 
-    scenario "filtered users selected" do
-      click_link("Users")
-      search_for("role:staffer")
-      click_link("Select All")
-      click_link("Send Broadcast")
-      fill_message_and_send
-      expect(page).to have_text("Broadcast queued")
-      expect(page).to have_content(user.name)
-      expect(page).not_to have_content(user2.name)
-      expect(page).to have_content("Specific users/groups in mission")
-    end
-  end
+      scenario "unfiltered select all users on page shows as 'specific users'" do
+        click_link("Users")
+        click_link("Select All")
+        click_link("Send Broadcast")
+        fill_message_and_send
+        expect(page).to have_text("Broadcast queued")
+        expect(page).to have_content("Specific users/groups in mission")
+      end
 
-  context "multiple pages of users" do
-    let!(:more_users) { create_list(:user, 50) }
-    let!(:more_users) { create_list(:user, 50, role_name: "staffer") }
+      scenario "unfiltered select all users available shows as 'all users in mission'" do
+        click_link("Users")
+        click_link("Select All")
+        click_link("Select all 13 Users")
+        click_link("Send Broadcast")
+        fill_message_and_send
+        expect(page).to have_text("Broadcast queued")
+        expect(page).to have_text("All users in mission")
+      end
 
-    scenario "unfiltered select users on page" do
-      click_link("Users")
-      click_link("Select All")
-      click_link("Send Broadcast")
-      fill_message_and_send
-      expect(page).to have_text("Broadcast queued")
-      expect(page).to have_content("Specific users/groups in mission")
-    end
-
-    scenario "unfiltered select all users available" do
-      click_link("Users")
-      click_link("Select All")
-      click_link("Select all 78 Users")
-      click_link("Send Broadcast")
-      fill_message_and_send
-      expect(page).to have_text("Broadcast queued")
-      expect(page).to have_text("All users in mission")
-    end
-
-    scenario "filtered select all users available" do
-      click_link("Users")
-      search_for("role:staffer")
-      click_link("Select All")
-      click_link("Select all 51 Users")
-      click_link("Send Broadcast")
-      fill_message_and_send
-      expect(page).to have_text("Broadcast queued")
-      expect(page).to have_content("Specific users/groups in mission")
+      scenario "filtered select all users available shows as 'specific users'" do
+        click_link("Users")
+        search_for("role:enumerator")
+        click_link("Select All")
+        click_link("Select all 10 Users")
+        click_link("Send Broadcast")
+        fill_message_and_send
+        expect(page).to have_text("Broadcast queued")
+        expect(page).to have_content("Specific users/groups in mission")
+      end
     end
   end
 
