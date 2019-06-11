@@ -28,9 +28,14 @@ class ConditionFormField extends React.Component {
     this.getFieldData(leftQingId);
   }
 
-  handleChangeOp = (opValue) => {
+  handleChangeOp = (op) => {
     const { condition } = this.props;
-    condition.op = opValue;
+    condition.op = op;
+  }
+
+  handleChangeRightSideType = (rightSideType) => {
+    const { condition } = this.props;
+    condition.rightSideType = rightSideType;
   }
 
   /**
@@ -149,7 +154,7 @@ class ConditionFormField extends React.Component {
   render() {
     const {
       conditionSetStore: { namePrefix: rawNamePrefix, refableQings, forceEqualsOp },
-      condition: { id, leftQingId, op, operatorOptions },
+      condition: { id, leftQingId, rightQingId, rightSideType, op, operatorOptions },
       index,
     } = this.props;
     const namePrefix = `${rawNamePrefix}[${index}]`;
@@ -178,6 +183,14 @@ class ConditionFormField extends React.Component {
       forceEqualsOp,
       onChange: this.handleChangeOp,
     };
+    const rightSideTypeFieldProps = {
+      name: `${namePrefix}[right_side_type]`,
+      key: `${idPrefix}_right_side_type`,
+      value: rightSideType || '',
+      options: ['literal', 'qing'].map((o) => ({ id: o, name: I18n.t(`condition.right_side_type.${o}`) })),
+      includeBlank: false,
+      onChange: this.handleChangeRightSideType,
+    };
     const destroyFieldProps = {
       type: 'hidden',
       name: `${namePrefix}[_destroy]`,
@@ -200,6 +213,9 @@ class ConditionFormField extends React.Component {
         ) : (
           <FormSelect {...operatorFieldProps} />
         )}
+        <div className="condition-right-side-type">
+          <FormSelect {...rightSideTypeFieldProps} />
+        </div>
         <div className="condition-value">
           <ConditionValueField {...valueFieldProps} />
         </div>

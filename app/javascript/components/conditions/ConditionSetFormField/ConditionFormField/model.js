@@ -24,7 +24,13 @@ class ConditionModel {
   leftQingId;
 
   @observable
+  rightQingId;
+
+  @observable
   op;
+
+  @observable
+  rightSideType;
 
   @observable
   operatorOptions = [];
