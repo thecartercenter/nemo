@@ -21,11 +21,16 @@ class ConditionFormField extends React.Component {
     index: PropTypes.number,
   };
 
-  handleChangeRefQing = (leftQingId) => {
+  handleChangeLeftQing = (leftQingId) => {
     const { condition } = this.props;
     condition.leftQingId = leftQingId;
 
     this.getFieldData(leftQingId);
+  }
+
+  handleChangeRightQing = (rightQingId) => {
+    const { condition } = this.props;
+    condition.rightQingId = rightQingId;
   }
 
   handleChangeOp = (op) => {
@@ -106,8 +111,8 @@ class ConditionFormField extends React.Component {
     return `${url}?${queryString.stringify(params)}`;
   }
 
-  formatRefQingOptions = (leftQingOptions) => {
-    return leftQingOptions.map((o) => {
+  formatRefQingOptions = (qingOptions) => {
+    return qingOptions.map((o) => {
       return { id: o.id, name: `${o.fullDottedRank}. ${o.code}`, key: o.id };
     });
   }
@@ -172,7 +177,7 @@ class ConditionFormField extends React.Component {
       value: leftQingId || '',
       options: this.formatRefQingOptions(refableQings),
       prompt: I18n.t('condition.left_qing_prompt'),
-      onChange: this.handleChangeRefQing,
+      onChange: this.handleChangeLeftQing,
     };
     const operatorFieldProps = {
       name: `${namePrefix}[op]`,
@@ -190,6 +195,14 @@ class ConditionFormField extends React.Component {
       options: ['literal', 'qing'].map((o) => ({ id: o, name: I18n.t(`condition.right_side_type.${o}`) })),
       includeBlank: false,
       onChange: this.handleChangeRightSideType,
+    };
+    const rightQingFieldProps = {
+      name: `${namePrefix}[right_qing_id]`,
+      key: `${idPrefix}_right_qing_id`,
+      value: rightQingId || '',
+      options: this.formatRefQingOptions(refableQings),
+      includeBlank: false,
+      onChange: this.handleChangeRightQing,
     };
     const destroyFieldProps = {
       type: 'hidden',
@@ -218,6 +231,9 @@ class ConditionFormField extends React.Component {
         </div>
         <div className="condition-value">
           <ConditionValueField {...valueFieldProps} />
+        </div>
+        <div className="condition-right-qing">
+          <FormSelect {...rightQingFieldProps} />
         </div>
         <div className="condition-remove">
           {/* TODO: Improve a11y. */}
