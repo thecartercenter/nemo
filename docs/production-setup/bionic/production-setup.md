@@ -16,7 +16,8 @@ This will be the (unprivileged) user under which the app runs.
 ### Install dependencies
 
     sudo apt update && sudo apt upgrade -y
-    sudo apt install -y nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev memcached imagemagick vim-gtk
+    sudo apt install -y nano git-core curl zlib1g-dev build-essential libssl-dev libreadline-dev libyaml-dev libsqlite3-dev sqlite3 libxml2-dev libxslt1-dev libcurl4-openssl-dev libffi-dev memcached imagemagick vim-gtk ntp
+    sudo systemctl enable ntp
 
 Remove the default ruby installation so we can install our own later:
 
