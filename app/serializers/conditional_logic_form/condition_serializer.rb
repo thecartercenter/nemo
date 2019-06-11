@@ -6,8 +6,6 @@ module ConditionalLogicForm
     attributes :id, :left_qing_id, :right_qing_id, :right_side_type, :op, :value,
       :option_node_id, :option_set_id, :form_id, :conditionable_id, :conditionable_type, :operator_options
 
-    has_many :refable_qings, serializer: TargetFormItemSerializer
-
     delegate :id, :conditionable_id, :value, to: :object
 
     def operator_options
