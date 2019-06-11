@@ -1,10 +1,12 @@
 # This is the preferred location for local configuration.
 # config/initializers/local_config.rb is deprecated.
+#
 # Settings in this file can also be set using environment variables.
 # For instance, the AWS access_key_id can be set with NEMO__AWS__ACCESS_KEY_ID.
 
 paperclip:
-  # Set to 'cloud' to use cloud storage with AWS. Set to 'local' to store files locally.
+  # Set to 'cloud' to use cloud storage with AWS.
+  # Set to 'local' to store files locally.
   storage: local
 
 aws:

@@ -7,21 +7,21 @@
 # This should be set to true if the server doesn't have an internet connection.
 configatron.offline_mode = false
 
-# Base secret token for app. Extremely crucial for security. Knowledge of this token allows
-# impersonation of any user.
+# Base secret token for app. Extremely crucial for security.
+# Knowledge of this token allows impersonation of any user.
 # Generate with: ruby -e "require 'securerandom'; puts SecureRandom.hex(64)"
 ELMO::Application.config.secret_key_base = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
-# The hostname of your site
-# If offline_mode is set to true, then the hostname is optional
+# The hostname of your site.
+# If offline_mode is set to true, then the hostname is optional.
 configatron.url.host = "elmo.example.com"
 
-# Whether to use HTTPS in URLs. This should be "https" if your site uses SSL, and "http" if not.
+# Whether to use HTTPS in URLs.
+# This should be "https" if your site uses SSL, and "http" if not.
 configatron.url.protocol = "https"
 
 # The port your site runs on (optional).
 #configatron.url.port = 80
-
 
 ##################################
 # Email Settings
@@ -30,12 +30,12 @@ configatron.url.protocol = "https"
 # Address(es) where webmaster notifications (e.g. for system errors) will be sent.
 configatron.webmaster_emails = ["someone@example.com"]
 
-# Email address from which ELMO emails will appear to be from. Some mail servers require
-# that this be a real address controlled by the mailserver itself. e.g. if you're using Google Apps
-# for email, use an email address hosted in your Google Apps account.
+# Email address from which ELMO emails will appear to be from.
+# Some mail servers require that this be a real address controlled by the mailserver itself.
+# e.g. if you're using Google Apps for email, use an email address hosted in your Google Apps account.
 configatron.site_email = "\"#{Settings.site_name}\" <someone@example.com>"
 
-# Mailer settings
+# Mailer settings.
 ActionMailer::Base.smtp_settings = {
   address: "smtp.example.com",
   port: 587,
@@ -45,36 +45,38 @@ ActionMailer::Base.smtp_settings = {
   password: "XXXXXXXXXXXXXXXX"
 }
 
-
 ##################################
 # SMS Settings
 # You can leave these unchanged for offline setups or if not using SMS.
 
-# Default outgoing SMS adapter settings. Uncomment one of the below sets of settings as needed.
+# Default outgoing SMS adapter settings.
+# Uncomment one of the below sets of settings as needed.
+#
 # These settings are copied by default to any new mission in the system.
-# This adapter is also used to send replies if the incoming message has an unknown mission and the
-# incoming adapter's reply style is `via_adapter`.
-# ** Twilio **
-# configatron.default_settings.outgoing_sms_adapter = "Twilio"
-# configatron.default_settings.twilio_account_sid = "XXXXXXXXXXXXXXXXXX"
-# configatron.default_settings.twilio_auth_token = "XXXXXXXXXXXXXXXXXX"
-# configatron.default_settings.twilio_phone_number = "+15555551212"
-# ** FrontlineCloud **
-# configatron.default_settings.outgoing_sms_adapter = "FrontlineCloud"
-# configatron.default_settings.frontlinecloud_api_key = "XXXXXXXXXXXXXXXXXX"
+# This adapter is also used to send replies if the incoming message has an unknown mission and
+# the incoming adapter's reply style is `via_adapter`.
+#
+# Twilio.
+#configatron.default_settings.outgoing_sms_adapter = "Twilio"
+#configatron.default_settings.twilio_account_sid = "XXXXXXXXXXXXXXXXXX"
+#configatron.default_settings.twilio_auth_token = "XXXXXXXXXXXXXXXXXX"
+#configatron.default_settings.twilio_phone_number = "+15555551212"
+#
+# FrontlineCloud.
+#configatron.default_settings.outgoing_sms_adapter = "FrontlineCloud"
+#configatron.default_settings.frontlinecloud_api_key = "XXXXXXXXXXXXXXXXXX"
 
-# Sets a universal SMS token so that multiple missions can submit to the same URL
-# Generate with: ruby -e "require 'securerandom'; puts SecureRandom.hex(16)"
-# configatron.universal_sms_token = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-
+# Sets a universal SMS token so that multiple missions can submit to the same URL.
+# Generate with: ruby -e "require 'securerandom'; puts SecureRandom.hex(16)".
+#configatron.universal_sms_token = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 
 ##################################
 # Other Online-Dependent Settings
 # You can leave these unchanged for offline setups.
 
-# reCAPTCHA for brute-force login protection
-# Keys may be obtained from https://www.google.com/recaptcha/admin
+# reCAPTCHA v2 for brute-force login protection.
 # Can be left unchanged in offline setups.
+# Keys may be obtained from https://www.google.com/recaptcha/admin
 Recaptcha.configure do |config|
   config.public_key = "XXXXXXXXXXXXXXXXXX"
   config.private_key = "XXXXXXXXXXXXXXXXXX"
@@ -83,7 +85,9 @@ end
 # Google Maps API Key (Requires Google Maps Javascript and Geocoding APIs)
 # Can be left unchanged in offline setups.
 # Key can be obtained from https://developers.google.com/maps/documentation/javascript/get-api-key
-# Note the below values for easy access to Google API Console later
+# Make sure to restrict the key to your domain only, otherwise other sites can steal it.
+#
+# Note the below values for easy access to Google API Console later:
 # Google API Console project name: XXXXXXXXXXXXXXXXXX
-# Google Accounts with access to project: someone@gmail.com, someoneelse@gmail.com
+# Google Accounts with access to project: XXXXXX@gmail.com, XXXXXX@gmail.com
 configatron.google_maps_api_key = ENV["ELMO_GOOGLE_MAPS_KEY"] || "XXXXXXXXXXXXXXXXXX"
