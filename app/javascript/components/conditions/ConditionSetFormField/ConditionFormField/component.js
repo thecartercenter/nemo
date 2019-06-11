@@ -226,14 +226,19 @@ class ConditionFormField extends React.Component {
         ) : (
           <FormSelect {...operatorFieldProps} />
         )}
-        <div className="condition-right-side-type">
-          <FormSelect {...rightSideTypeFieldProps} />
-        </div>
-        <div className="condition-value">
-          <ConditionValueField {...valueFieldProps} />
-        </div>
-        <div className="condition-right-qing">
-          <FormSelect {...rightQingFieldProps} />
+        <div className="condition-right-side">
+          <div className="condition-right-side-type">
+            <FormSelect {...rightSideTypeFieldProps} />
+          </div>
+          {rightSideType == 'literal' ? (
+            <div className="condition-value">
+              <ConditionValueField {...valueFieldProps} />
+            </div>
+          ) : (
+            <div className="condition-right-qing">
+              <FormSelect {...rightQingFieldProps} />
+            </div>
+          )}
         </div>
         <div className="condition-remove">
           {/* TODO: Improve a11y. */}
