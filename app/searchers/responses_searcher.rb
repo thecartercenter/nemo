@@ -110,12 +110,12 @@ class ResponsesSearcher < Searcher
         if lex_tok.parent.is?(:value)
           # if the previous token was also a value token, it's an implicit AND
           if previous&.parent&.is?(:value)
-            token_ops.push(:and)
+            token_ops << :and
           end
 
-          token_values.push(lex_tok.content)
+          token_values << lex_tok.content
         elsif lex_tok.is?(:or)
-          token_ops.push(:or)
+          token_ops << :or
         end
 
         previous = lex_tok
