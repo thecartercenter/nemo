@@ -138,11 +138,10 @@ class ResponsesSearcher < Searcher
   # otherwise fall back to raw search text.
   def maybe_filter_by_expression(expression, op_kind, token_values, is_filterable)
     # Find filters that can be created using the filter UI.
-    if is_filterable
-      return if filter_by_expression(expression, op_kind, token_values)
-    end
+    was_handled = is_filterable &&
+      filter_by_expression(expression, op_kind, token_values)
 
-    advanced_text << " #{expression.qualifier_text}:(#{expression.values})"
+    advanced_text << " #{expression.qualifier_text}:(#{expression.values})" unless was_handled
   end
 
   # Save specific data that can be used for search filters,
