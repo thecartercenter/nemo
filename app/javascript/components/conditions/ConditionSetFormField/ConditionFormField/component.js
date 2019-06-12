@@ -159,7 +159,7 @@ class ConditionFormField extends React.Component {
   render() {
     const {
       conditionSetStore: { namePrefix: rawNamePrefix, refableQings, forceEqualsOp },
-      condition: { id, leftQingId, rightQingId, rightSideType, op, operatorOptions },
+      condition: { id, leftQingId, rightQingId, rightQingOptions, rightSideType, op, operatorOptions },
       index,
     } = this.props;
     const namePrefix = `${rawNamePrefix}[${index}]`;
@@ -200,7 +200,7 @@ class ConditionFormField extends React.Component {
       name: `${namePrefix}[right_qing_id]`,
       key: `${idPrefix}_right_qing_id`,
       value: rightQingId || '',
-      options: this.formatRefQingOptions(refableQings),
+      options: this.formatRefQingOptions(rightQingOptions),
       includeBlank: false,
       onChange: this.handleChangeRightQing,
     };

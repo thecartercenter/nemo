@@ -52,7 +52,7 @@ module ConditionalLogicForm
 
     has_many :display_conditions, serializer: ConditionSerializer
     has_many :skip_rules, serializer: SkipRuleSerializer
-    has_many :refable_qings, serializer: TargetFormItemSerializer
+    has_many :refable_qings, serializer: TargetQuestioningSerializer
     has_many :later_items, serializer: TargetFormItemSerializer
 
     def type

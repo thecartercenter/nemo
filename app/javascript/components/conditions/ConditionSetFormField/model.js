@@ -71,7 +71,10 @@ class ConditionSetModel {
   mapConditionsToStores(conditions) {
     // Only modify if necessary to prevent a cycle.
     if (conditions.some((condition) => !(condition instanceof ConditionModel))) {
-      return conditions.map((condition) => new ConditionModel(condition));
+      return conditions.map((condition) => {
+        condition.refableQings = this.refableQings;
+        return new ConditionModel(condition);
+      });
     }
     return conditions;
   }
@@ -90,6 +93,7 @@ class ConditionSetModel {
   @action
   handleAddClick = () => {
     this.conditions.push(new ConditionModel({
+      refableQings: this.refableQings,
       key: Math.round(Math.random() * 100000000),
     }));
   }

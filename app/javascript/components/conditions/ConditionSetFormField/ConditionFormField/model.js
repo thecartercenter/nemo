@@ -39,6 +39,12 @@ class ConditionModel {
   value;
 
   @observable
+  refableQings = [];
+
+  @observable
+  rightQingOptions = [];
+
+  @observable
   levels = [];
 
   @observable
@@ -56,6 +62,31 @@ class ConditionModel {
         }
       },
     );
+
+    // Update rightQingOptions based on the selected leftQing, according to these rules:
+    // - Don't show selected leftQing in rightQingOptions
+    // - Allow only these type pairs:
+    //   - textual type -> textual type
+    //   - numeric type -> numeric type
+    //   - select_multiple -> none (literals only, due to ODK restriction)
+    //   - exact match for all other question types (qtypes must be identical)
+    reaction(
+      () => this.leftQingId,
+      (leftQingId) => {
+        if (leftQingId) {
+          const leftQing = this.refableQings.find((qing) => qing.id == leftQingId);
+          this.rightQingOptions = this.refableQings.filter((rightQing) => {
+            return leftQing.id != rightQing.id
+              && leftQing.qtype_name != 'select_multiple'
+              && (leftQing.textual && rightQing.textual
+                || leftQing.numeric && rightQing.numeric
+                || leftQing.qtypeName == rightQing.qtypeName);
+          });
+        }
+      },
+      { fireImmediately: true },
+    );
+
   }
 
   // Initial values may not be known at the time the store is created.
