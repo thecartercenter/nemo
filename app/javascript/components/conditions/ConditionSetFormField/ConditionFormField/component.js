@@ -84,6 +84,9 @@ class ConditionFormField extends React.Component {
         // Prefer the existing value and op if they've been set locally.
         value: condition.value || response.value,
         op: condition.op || response.op,
+        // Explicitly switch to literal right side type since even if the user had made a selection
+        // it probably won't be valid after the change.
+        rightSideType: 'literal',
       };
 
       // Default to the first op if the current one is invalid.
@@ -227,9 +230,11 @@ class ConditionFormField extends React.Component {
           <FormSelect {...operatorFieldProps} />
         )}
         <div className="condition-right-side">
-          <div className="condition-right-side-type">
-            <FormSelect {...rightSideTypeFieldProps} />
-          </div>
+          {rightQingOptions.length > 0 &&
+            <div className="condition-right-side-type">
+              <FormSelect {...rightSideTypeFieldProps} />
+            </div>
+          }
           {rightSideType == 'literal' ? (
             <div className="condition-value">
               <ConditionValueField {...valueFieldProps} />
