@@ -104,8 +104,7 @@ class ResponsesSearcher < Searcher
       token_ops = []
       previous = nil
 
-      leaves = expression.values_tokens.expand
-      leaves.each do |lex_tok|
+      expression.leaves.each do |lex_tok|
         # if this is a value token descendant
         if lex_tok.parent.is?(:value)
           # if the previous token was also a value token, it's an implicit AND

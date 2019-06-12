@@ -81,8 +81,8 @@ class Search::Token
     previous = nil
     sql = ""
     expr.values = ""
-    expr.values_tokens = rhs_or_values
     leaves = rhs_or_values.expand
+    expr.leaves = leaves
     leaves.each do |lex_tok|
       # if this is a value token descendant
       if lex_tok.parent.is?(:value)
