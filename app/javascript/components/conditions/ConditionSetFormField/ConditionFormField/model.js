@@ -69,6 +69,7 @@ class ConditionModel {
     //   - textual type -> textual type
     //   - numeric type -> numeric type
     //   - select_multiple -> none (literals only, due to ODK restriction)
+    //   - select_one -> others with same option set
     //   - exact match for all other question types (qtypes must be identical)
     reaction(
       () => this.leftQingId,
@@ -76,11 +77,16 @@ class ConditionModel {
         if (leftQingId) {
           const leftQing = this.refableQings.find((qing) => qing.id == leftQingId);
           this.rightQingOptions = this.refableQings.filter((rightQing) => {
-            return leftQing.id != rightQing.id
-              && leftQing.qtype_name != 'select_multiple'
-              && (leftQing.textual && rightQing.textual
-                || leftQing.numeric && rightQing.numeric
-                || leftQing.qtypeName == rightQing.qtypeName);
+            if (leftQing.id == rightQing.id || leftQing.qtype_name == 'select_multiple') {
+              return false;
+            } else if (leftQing.textual) {
+              return rightQing.textual;
+            } else if (leftQing.numeric) {
+              return rightQing.numeric;
+            } else {
+              return leftQing.qtypeName == rightQing.qtypeName
+                && leftQing.optionSetId == rightQing.optionSetId;
+            }
           });
         }
       },
