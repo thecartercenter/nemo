@@ -175,8 +175,9 @@ ELMO::Application.routes.draw do
     end
 
     # Non-RESTful, JSON only controllers for React
-    get "/condition-form/base" => "condition_form_data#base"
-    get "/condition-form/option-path" => "condition_form_data#option_path"
+    get "/condition-form-data/base" => "condition_form_data#base"
+    get "/condition-form-data/option-path" => "condition_form_data#option_path"
+    get "/filter-data/qings" => "filter_data#qings"
 
     # special routes for tokeninput suggestions
     get "/tags/suggest" => "tags#suggest", as: :suggest_tags

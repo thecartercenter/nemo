@@ -155,7 +155,7 @@ class ConditionModel {
 
   buildUrl = (nodeId, optionSetId) => {
     const params = { node_id: nodeId || 'null', option_set_id: optionSetId };
-    const url = ELMO.app.url_builder.build('condition-form', 'option-path');
+    const url = ELMO.app.url_builder.build('condition-form-data', 'option-path');
     return `${url}?${queryString.stringify(params)}`;
   }
 }

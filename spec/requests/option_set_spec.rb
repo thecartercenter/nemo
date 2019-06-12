@@ -6,7 +6,7 @@ describe "option_sets", type: :request do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:option_set) { create(:option_set, option_names: option_names) }
   let(:option_names) { :super_multilevel }
-  let(:endpoint) { "/en/m/#{get_mission.compact_name}/condition-form/option-path" }
+  let(:endpoint) { "/en/m/#{get_mission.compact_name}/condition-form-data/option-path" }
 
   before do
     login(user)

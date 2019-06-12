@@ -55,7 +55,7 @@ describe "form items" do
           operatorOptions: [],
           refableQings: expected_left_qing_options
         }.to_json
-        get "/en/m/#{get_mission.compact_name}/condition-form/base",
+        get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
           params: {
             left_qing_id: nil,
             form_id: form.id,
@@ -90,7 +90,7 @@ describe "form items" do
           operatorOptions: expected_operator_options,
           refableQings: expected_left_qing_options
         }.to_json
-        get "/en/m/#{get_mission.compact_name}/condition-form/base",
+        get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
           params: {
             left_qing_id: form.c[0].id,
             form_id: form.id,
@@ -122,7 +122,7 @@ describe "form items" do
             operatorOptions: expected_operator_options,
             refableQings: expected_left_qing_options
           }.to_json
-          get "/en/m/#{get_mission.compact_name}/condition-form/base",
+          get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
             params: {
               condition_id: condition.id,
               left_qing_id: form.c[1].id,
@@ -156,7 +156,7 @@ describe "form items" do
             operatorOptions: expected_operator_options,
             refableQings: expected_left_qing_options
           }.to_json
-          get "/en/m/#{get_mission.compact_name}/condition-form/base",
+          get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
             params: {
               condition_id: condition.id,
               left_qing_id: form.c[2].id,
