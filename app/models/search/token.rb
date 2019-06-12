@@ -43,11 +43,6 @@ class Search::Token
     end
   end
 
-  # expands the current token into its component lextokens (leaf nodes)
-  def expand
-    children.map { |c| c.is_a?(Search::LexToken) ? c : c.expand }.flatten
-  end
-
   def is?(kind)
     @kind == kind
   end
@@ -196,6 +191,11 @@ class Search::Token
 
   def sanitize(*args)
     SqlRunner.instance.sanitize(*args)
+  end
+
+  # expands the current token into its component lextokens (leaf nodes)
+  def expand
+    children.map { |c| c.is_a?(Search::LexToken) ? c : c.expand }.flatten
   end
 
   def raise_error_with_qualifier(err_name, qual, params = {})
