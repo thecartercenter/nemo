@@ -96,37 +96,50 @@ class ResponsesSearcher < Searcher
     relation.where(sql)
   end
 
-  # Save specific data that can be used for search filters.
+  # Parse the search expressions and
+  # save specific data that can be used for search filters.
   def save_filter_data(search)
-    search.expressions.each do |expression|
-      op_kind = expression.op.kind
-      token_values = []
-      token_ops = []
-      previous = nil
+    search.expressions.each(&method(:parse_expression))
+  end
 
-      expression.leaves.each do |lex_tok|
-        # if this is a value token descendant
-        if lex_tok.parent.is?(:value)
-          # if the previous token was also a value token, it's an implicit AND
-          if previous&.parent&.is?(:value)
-            token_ops << :and
-          end
+  private
 
-          token_values << lex_tok.content
-        elsif lex_tok.is?(:or)
-          token_ops << :or
-        end
+  # Parse a single expression, saving data that can be used for search filters.
+  def parse_expression(expression)
+    op_kind = expression.op.kind
+    token_values = []
+    token_ops = []
+    previous = nil
 
-        previous = lex_tok
-      end
+    expression.leaves.each do |lex_tok|
+      parse_lex_tok(lex_tok, token_values, token_ops, previous)
+      previous = lex_tok
+    end
 
-      # Find filters that can be created using the filter UI.
-      if expression.qualifier.name == "form" && equality_op?(op_kind) && !token_ops.include?(:and)
-        form_names = token_values
-        self.form_ids = form_ids.concat(Form.where(name: form_names).pluck(:id))
-      else
-        advanced_text << " #{expression.qualifier_text}:(#{expression.values})"
-      end
+    filter_by_expression(expression, op_kind, token_values, token_ops)
+  end
+
+  # Parse a single token in an expression, saving data in the given arrays.
+  def parse_lex_tok(lex_tok, token_values, token_ops, previous)
+    # If this is a value token descendant, get the value.
+    if lex_tok.parent.is?(:value)
+      # If the previous token was also a value token, it's an implicit AND.
+      token_ops << :and if previous&.parent&.is?(:value)
+
+      token_values << lex_tok.content
+    elsif lex_tok.is?(:or)
+      token_ops << :or
+    end
+  end
+
+  # Save specific data that can be used for search filters.
+  def filter_by_expression(expression, op_kind, token_values, token_ops)
+    # Find filters that can be created using the filter UI.
+    if expression.qualifier.name == "form" && equality_op?(op_kind) && !token_ops.include?(:and)
+      form_names = token_values
+      self.form_ids = form_ids.concat(Form.where(name: form_names).pluck(:id))
+    else
+      advanced_text << " #{expression.qualifier_text}:(#{expression.values})"
     end
   end
 
