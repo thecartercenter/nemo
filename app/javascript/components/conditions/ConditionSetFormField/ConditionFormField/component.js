@@ -188,7 +188,6 @@ class ConditionFormField extends React.Component {
       value: op || '',
       options: operatorOptions,
       includeBlank: false,
-      forceEqualsOp,
       onChange: this.handleChangeOp,
     };
     const rightSideTypeFieldProps = {
