@@ -36,6 +36,10 @@ class ConditionSetModel {
   @observable
   forceEqualsOp = false;
 
+  /** If enabled, only allow 'equals' or 'includes' as the operation. */
+  @observable
+  forceRightSideLiteral = false;
+
   constructor(initialValues = {}) {
     this.initialize(initialValues);
 

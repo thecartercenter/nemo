@@ -61,6 +61,7 @@ class FiltersRoot extends React.Component {
     });
     conditionSetStore.initialize({
       forceEqualsOp: true,
+      forceRightSideLiteral: true,
     });
   }
 

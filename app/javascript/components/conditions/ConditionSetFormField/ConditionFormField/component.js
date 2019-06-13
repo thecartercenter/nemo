@@ -161,7 +161,7 @@ class ConditionFormField extends React.Component {
 
   render() {
     const {
-      conditionSetStore: { namePrefix: rawNamePrefix, refableQings, forceEqualsOp },
+      conditionSetStore: { namePrefix: rawNamePrefix, refableQings, forceEqualsOp, forceRightSideLiteral },
       condition: { id, leftQingId, rightQingId, rightQingOptions, rightSideType, op, operatorOptions },
       index,
     } = this.props;
@@ -230,12 +230,12 @@ class ConditionFormField extends React.Component {
           <FormSelect {...operatorFieldProps} />
         )}
         <div className="condition-right-side">
-          {rightQingOptions.length > 0 &&
+          {rightQingOptions.length > 0 && !forceRightSideLiteral &&
             <div className="condition-right-side-type">
               <FormSelect {...rightSideTypeFieldProps} />
             </div>
           }
-          {rightSideType == 'literal' ? (
+          {forceRightSideLiteral || rightSideType == 'literal' ? (
             <div className="condition-value">
               <ConditionValueField {...valueFieldProps} />
             </div>
