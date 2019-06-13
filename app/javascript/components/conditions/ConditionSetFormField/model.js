@@ -32,11 +32,14 @@ class ConditionSetModel {
   @observable
   hide;
 
+  @observable
+  showQingRank = true;
+
   /** If enabled, only allow 'equals' or 'includes' as the operation. */
   @observable
   forceEqualsOp = false;
 
-  /** If enabled, only allow 'equals' or 'includes' as the operation. */
+  /** If enabled, only allow literals on right side of all conditions. */
   @observable
   forceRightSideLiteral = false;
 

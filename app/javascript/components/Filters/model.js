@@ -12,6 +12,7 @@ const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({
   hide: false,
   forceEqualsOp: true,
   forceRightSideLiteral: true,
+  showQingRank: false,
 })));
 
 /** Map from each type to an empty array. */

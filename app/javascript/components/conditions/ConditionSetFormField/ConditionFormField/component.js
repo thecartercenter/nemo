@@ -102,7 +102,10 @@ class ConditionFormField extends React.Component {
   }
 
   buildUrl = (leftQingId) => {
-    const { conditionSetStore: { formId, conditionableId, conditionableType }, condition: { id } } = this.props;
+    const {
+      conditionSetStore: { formId, conditionableId, conditionableType },
+      condition: { id }
+    } = this.props;
     const params = {
       condition_id: id || '',
       left_qing_id: leftQingId,
@@ -115,8 +118,10 @@ class ConditionFormField extends React.Component {
   }
 
   formatRefQingOptions = (qingOptions) => {
+    const { conditionSetStore: { showQingRank } } = this.props;
     return qingOptions.map((o) => {
-      return { id: o.id, name: `${o.fullDottedRank}. ${o.code}`, key: o.id };
+      const rank = showQingRank ? `${o.fullDottedRank}. ` : '';
+      return { id: o.id, name: `${rank}${o.code}`, key: o.id };
     });
   }
 
