@@ -59,10 +59,6 @@ class FiltersRoot extends React.Component {
       },
       advancedSearchText,
     });
-    conditionSetStore.initialize({
-      forceEqualsOp: true,
-      forceRightSideLiteral: true,
-    });
   }
 
   handleSubmit = () => {

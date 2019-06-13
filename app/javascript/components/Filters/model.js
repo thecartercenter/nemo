@@ -10,6 +10,8 @@ const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({
   namePrefix: 'questioning[display_conditions_attributes]',
   conditionableType: 'FormItem',
   hide: false,
+  forceEqualsOp: true,
+  forceRightSideLiteral: true,
 })));
 
 /** Map from each type to an empty array. */
