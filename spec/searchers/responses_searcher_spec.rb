@@ -16,6 +16,10 @@ describe ResponsesSearcher do
     it "should work" do
       assert_search(%(form:"foo 1.0"), r1, r3)
     end
+
+    it "should parse filter data" do
+      assert_filter_data(%(form:"foo 1.0"), form_ids: [form.id], advanced_text: "")
+    end
   end
 
   describe "submit_date qualifier" do
@@ -164,7 +168,18 @@ describe ResponsesSearcher do
     end
   end
 
+  def assert_filter_data(query, form_ids:, advanced_text:)
+    searcher = build_searcher(query)
+    searcher.apply
+    expect(searcher.form_ids).to match(form_ids)
+    expect(searcher.advanced_text).to match(advanced_text)
+  end
+
   def run_search(query)
-    ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission}).apply
+    build_searcher(query).apply
+  end
+
+  def build_searcher(query)
+    ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission})
   end
 end
