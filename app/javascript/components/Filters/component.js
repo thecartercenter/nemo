@@ -1,10 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar';
-import { observer, inject, Provider } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
-import { CONTROLLER_NAME, provideFiltersStore, getFilterString, submitSearch } from './utils';
-import ErrorBoundary from '../ErrorBoundary/component';
+import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
 import FormFilter from './FormFilter/component';
 import QuestionFilter from './QuestionFilter/component';
 import ReviewedFilter from './ReviewedFilter/component';
@@ -14,7 +13,7 @@ import AdvancedSearchFilter from './AdvancedSearchFilter/component';
 @inject('filtersStore')
 @inject('conditionSetStore')
 @observer
-class FiltersRoot extends React.Component {
+class Filters extends React.Component {
   static propTypes = {
     filtersStore: PropTypes.object.isRequired,
     conditionSetStore: PropTypes.object.isRequired,
@@ -103,24 +102,4 @@ class FiltersRoot extends React.Component {
   }
 }
 
-const Filters = (props) => {
-  const filtersStore = provideFiltersStore();
-  const { conditionSetStore } = filtersStore;
-  return (
-    <Provider filtersStore={filtersStore} conditionSetStore={conditionSetStore}>
-      <FiltersRoot {...props} />
-    </Provider>
-  );
-};
-
-// Top-level component with an error boundary so no errors can leak out.
-const FiltersGuard = (props) => (
-  <ErrorBoundary>
-    <Filters {...props} />
-  </ErrorBoundary>
-);
-
-export default FiltersGuard;
-
-// Root component for testing.
-export { FiltersRoot };
+export default Filters;

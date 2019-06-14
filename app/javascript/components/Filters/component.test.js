@@ -7,7 +7,7 @@ import { quietMount } from '../../testUtils';
 import { getFiltersStore } from './testUtils';
 
 import { CONTROLLER_NAME } from './utils';
-import { FiltersRoot as Component } from './component';
+import Component from './component';
 import { SUBMITTER_TYPES, submitterType } from './SubmitterFilter/component';
 
 jest.mock('../conditions/ConditionSetFormField/component', () => 'ConditionSetFormField');
@@ -52,7 +52,7 @@ describe('integration', () => {
   jest.resetModules();
   jest.unmock('mobx-react');
   // eslint-disable-next-line no-shadow
-  const { FiltersRoot: Component } = require('./component');
+  const Component = require('./component').default;
 
   let wrapper;
 

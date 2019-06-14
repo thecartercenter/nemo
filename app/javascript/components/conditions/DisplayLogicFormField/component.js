@@ -1,14 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer, inject, Provider } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
-import { provideConditionSetStore } from '../ConditionSetFormField/utils';
 import ConditionSetFormField from '../ConditionSetFormField/component';
-import ErrorBoundary from '../../ErrorBoundary/component';
 
 @inject('conditionSetStore')
 @observer
-class DisplayLogicFormFieldRoot extends React.Component {
+class DisplayLogicFormField extends React.Component {
   static propTypes = {
     conditionSetStore: PropTypes.object.isRequired,
 
@@ -90,17 +88,4 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 }
 
-const DisplayLogicFormField = (props) => (
-  <Provider conditionSetStore={provideConditionSetStore('displayLogic')}>
-    <DisplayLogicFormFieldRoot {...props} />
-  </Provider>
-);
-
-// Top-level component with an error boundary so no errors can leak out.
-const DisplayLogicFormFieldGuard = (props) => (
-  <ErrorBoundary>
-    <DisplayLogicFormField {...props} />
-  </ErrorBoundary>
-);
-
-export default DisplayLogicFormFieldGuard;
+export default DisplayLogicFormField;
