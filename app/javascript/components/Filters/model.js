@@ -50,8 +50,14 @@ class FiltersModel {
     return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
   }
 
-  constructor(initialValues = {}) {
-    this.initialize(initialValues);
+  constructor(initialState = {}) {
+    Object.assign(this, initialState);
+
+    Object.assign(this.original, {
+      selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
+      isReviewed: initialState.isReviewed || null,
+      selectedSubmittersForType: cloneDeep(initialState.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
+    });
 
     // Update conditionSet IDs when selected forms change.
     reaction(
@@ -67,19 +73,6 @@ class FiltersModel {
         }
       },
     );
-  }
-
-  // Initial values may not be known at the time the store is created.
-  // This method can be used to set the initial values at a later point.
-  @action
-  initialize = (initialValues) => {
-    Object.assign(this, initialValues);
-
-    Object.assign(this.original, {
-      selectedFormIds: cloneDeep(initialValues.selectedFormIds) || [],
-      isReviewed: initialValues.isReviewed || null,
-      selectedSubmittersForType: cloneDeep(initialValues.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
-    });
   }
 
   @action

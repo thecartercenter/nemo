@@ -43,8 +43,12 @@ class ConditionSetModel {
   @observable
   forceRightSideLiteral = false;
 
-  constructor(initialValues = {}) {
-    this.initialize(initialValues);
+  constructor(initialState = {}) {
+    Object.assign(this, initialState);
+
+    Object.assign(this.original, {
+      conditions: cloneDeep(initialState.conditions) || [],
+    });
 
     // Make sure conditions are always instances of the model.
     // TODO: MobX-state-tree can do this automatically for us.
@@ -84,17 +88,6 @@ class ConditionSetModel {
       });
     }
     return conditions;
-  }
-
-  // Initial values may not be known at the time the store is created.
-  // This method can be used to set the initial values at a later point.
-  @action
-  initialize = (initialValues) => {
-    Object.assign(this, initialValues);
-
-    Object.assign(this.original, {
-      conditions: cloneDeep(initialValues.conditions) || [],
-    });
   }
 
   @action

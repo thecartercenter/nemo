@@ -9,9 +9,9 @@ const conditionSetStores = {};
  * Generally this should be added to a top-level Provider and used
  * once per condition set.
  */
-export function provideConditionSetStore(uniqueId) {
+export function provideConditionSetStore(uniqueId, initialState) {
   if (!conditionSetStores[uniqueId]) {
-    conditionSetStores[uniqueId] = new ConditionSetModel();
+    conditionSetStores[uniqueId] = new ConditionSetModel(initialState);
 
     if (process.env.NODE_ENV === 'development') {
       // Debug helper.

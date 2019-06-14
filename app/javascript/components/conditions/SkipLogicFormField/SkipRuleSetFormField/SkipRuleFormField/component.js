@@ -22,9 +22,6 @@ class SkipRuleFormField extends React.Component {
     id: PropTypes.any,
     laterItems: PropTypes.any,
     skipIf: PropTypes.any,
-    conditions: PropTypes.any,
-    refableQings: PropTypes.any,
-    formId: PropTypes.any,
     /* eslint-enable */
   };
 
@@ -32,14 +29,8 @@ class SkipRuleFormField extends React.Component {
     super(props);
 
     const {
-      conditionSetStore,
-      namePrefix,
       remove,
-      id,
       skipIf,
-      conditions,
-      refableQings,
-      formId,
       destination,
       destItemId,
     } = this.props;
@@ -52,16 +43,6 @@ class SkipRuleFormField extends React.Component {
       destination,
       destItemId,
     };
-
-    conditionSetStore.initialize({
-      formId,
-      namePrefix: `${namePrefix}[conditions_attributes]`,
-      conditions,
-      conditionableId: id,
-      conditionableType: 'SkipRule',
-      refableQings,
-      hide: skipIf === 'always',
-    });
   }
 
   destinationOptionChanged = (value) => {

@@ -7,7 +7,7 @@ import { CONTROLLER_NAME, getFilterString, submitSearch } from './utils';
 import FormFilter from './FormFilter/component';
 import QuestionFilter from './QuestionFilter/component';
 import ReviewedFilter from './ReviewedFilter/component';
-import SubmitterFilter, { submitterType } from './SubmitterFilter/component';
+import SubmitterFilter from './SubmitterFilter/component';
 import AdvancedSearchFilter from './AdvancedSearchFilter/component';
 
 @inject('filtersStore')
@@ -18,47 +18,12 @@ class Filters extends React.Component {
     filtersStore: PropTypes.object.isRequired,
     conditionSetStore: PropTypes.object.isRequired,
     controllerName: PropTypes.string,
-    allForms: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      name: PropTypes.string,
-    })).isRequired,
-    selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-    isReviewed: PropTypes.bool,
-    selectedUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
-    selectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
-    advancedSearchText: PropTypes.string.isRequired,
   };
 
   static defaultProps = {
     // This is expected to be null if the feature flag is disabled.
     controllerName: null,
   };
-
-  constructor(props) {
-    super(props);
-
-    const {
-      filtersStore,
-      conditionSetStore,
-      allForms,
-      selectedFormIds,
-      isReviewed,
-      selectedUsers,
-      selectedGroups,
-      advancedSearchText,
-    } = props;
-
-    filtersStore.initialize({
-      allForms,
-      selectedFormIds,
-      isReviewed,
-      selectedSubmittersForType: {
-        [submitterType.USER]: selectedUsers,
-        [submitterType.GROUP]: selectedGroups,
-      },
-      advancedSearchText,
-    });
-  }
 
   handleSubmit = () => {
     const { filtersStore } = this.props;

@@ -22,9 +22,9 @@ let filtersStore = null;
  *
  * Generally this should be added to a top-level Provider and only used once.
  */
-export function provideFiltersStore() {
+export function provideFiltersStore(initialState) {
   if (!filtersStore) {
-    filtersStore = new FiltersModel();
+    filtersStore = new FiltersModel(initialState);
 
     if (process.env.NODE_ENV === 'development') {
       // Debug helper.

@@ -9,33 +9,14 @@ import ConditionSetFormField from '../ConditionSetFormField/component';
 class DisplayLogicFormField extends React.Component {
   static propTypes = {
     conditionSetStore: PropTypes.object.isRequired,
-
-    // TODO: Describe these prop types.
-    /* eslint-disable react/forbid-prop-types */
-    refableQings: PropTypes.any,
-    id: PropTypes.any,
-    type: PropTypes.any,
-    displayIf: PropTypes.any,
-    displayConditions: PropTypes.any,
-    formId: PropTypes.any,
-    /* eslint-enable */
+    type: PropTypes.string,
+    displayIf: PropTypes.string,
   };
 
   constructor(props) {
     super(props);
-    const { conditionSetStore, refableQings, id, type, displayIf, displayConditions, formId } = this.props;
+    const { displayIf } = this.props;
     this.state = { displayIf };
-
-    conditionSetStore.initialize({
-      formId,
-      namePrefix: `${type}[display_conditions_attributes]`,
-      conditions: displayConditions,
-      conditionableId: id,
-      conditionableType: 'FormItem',
-      // Display logic conditions can't reference self, as that doesn't make sense.
-      refableQings: refableQings.filter((qing) => qing.id !== id),
-      hide: displayIf === 'always',
-    });
   }
 
   displayIfChanged = (event) => {
@@ -59,7 +40,7 @@ class DisplayLogicFormField extends React.Component {
   }
 
   render() {
-    const { refableQings, type } = this.props;
+    const { conditionSetStore: { refableQings }, type } = this.props;
     const { displayIf } = this.state;
 
     if (refableQings.length === 0) {

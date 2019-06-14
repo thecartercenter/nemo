@@ -50,8 +50,8 @@ class ConditionModel {
   @observable
   remove;
 
-  constructor(initialValues = {}) {
-    this.initialize(initialValues);
+  constructor(initialState = {}) {
+    Object.assign(this, initialState);
 
     // Update levels when optionSet changes.
     reaction(
@@ -93,13 +93,6 @@ class ConditionModel {
       { fireImmediately: true },
     );
 
-  }
-
-  // Initial values may not be known at the time the store is created.
-  // This method can be used to set the initial values at a later point.
-  @action
-  initialize = (initialValues) => {
-    Object.assign(this, initialValues);
   }
 
   /** Return either the current value or the value of the deepest defined level. */

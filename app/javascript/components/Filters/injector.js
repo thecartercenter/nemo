@@ -1,14 +1,34 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { Provider } from 'mobx-react';
 
 import { provideFiltersStore } from './utils';
+import { submitterType } from './SubmitterFilter/component';
 import Filters from './component';
 
 /**
  * Provides any needed stores to its children.
  */
 function Injector(props) {
-  const filtersStore = provideFiltersStore();
+  const {
+    allForms,
+    selectedFormIds,
+    isReviewed,
+    selectedUsers,
+    selectedGroups,
+    advancedSearchText,
+  } = props;
+
+  const filtersStore = provideFiltersStore({
+    allForms,
+    selectedFormIds,
+    isReviewed,
+    selectedSubmittersForType: {
+      [submitterType.USER]: selectedUsers,
+      [submitterType.GROUP]: selectedGroups,
+    },
+    advancedSearchText,
+  });
   const { conditionSetStore } = filtersStore;
 
   return (
@@ -17,5 +37,17 @@ function Injector(props) {
     </Provider>
   );
 }
+
+Injector.propTypes = {
+  allForms: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    name: PropTypes.string,
+  })).isRequired,
+  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  isReviewed: PropTypes.bool,
+  selectedUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  advancedSearchText: PropTypes.string.isRequired,
+};
 
 export default Injector;
