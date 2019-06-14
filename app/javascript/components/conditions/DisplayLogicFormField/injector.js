@@ -7,10 +7,14 @@ import DisplayLogicFormField from './component';
 /**
  * Provides any needed stores to its children.
  */
-const Injector = (props) => (
-  <Provider conditionSetStore={provideConditionSetStore('displayLogic')}>
-    <DisplayLogicFormField {...props} />
-  </Provider>
-);
+function Injector(props) {
+  const conditionSetStore = provideConditionSetStore('displayLogic');
+
+  return (
+    <Provider conditionSetStore={conditionSetStore}>
+      <DisplayLogicFormField {...props} />
+    </Provider>
+  );
+}
 
 export default Injector;

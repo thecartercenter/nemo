@@ -7,11 +7,15 @@ import SkipRuleFormField from './component';
 /**
  * Provides any needed stores to its children.
  */
-const Injector = (props) => (
+function Injector(props) {
   // eslint-disable-next-line react/prop-types, react/destructuring-assignment
-  <Provider conditionSetStore={provideConditionSetStore(`skip-${props.ruleId}`)}>
-    <SkipRuleFormField {...props} />
-  </Provider>
-);
+  const conditionSetStore = provideConditionSetStore(`skip-${props.ruleId}`);
+
+  return (
+    <Provider conditionSetStore={conditionSetStore}>
+      <SkipRuleFormField {...props} />
+    </Provider>
+  );
+}
 
 export default Injector;
