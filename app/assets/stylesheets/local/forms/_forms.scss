@@ -37,14 +37,20 @@ form.form_form {
 
 // dl can be used for non bulleted lists of things in a read only form view.
 // These styles put 20px of space between each dt, but not on either end.
-dt {
-  margin-top: 20px;
-}
+.widget {
+  dl {
+    margin-bottom: 0;
+  }
 
-dt:first-of-type {
-  margin-top: 0;
-}
+  dt {
+    margin-top: 20px;
+  }
 
-dl {
-  margin-bottom: 0;
+  dt:first-of-type {
+    margin-top: 0;
+  }
+
+  dd {
+    margin: 0;
+  }
 }
