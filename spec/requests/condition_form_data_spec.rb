@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "form items" do
+describe "condition form data" do
   let(:user) { create(:user, role_name: "coordinator") }
   let(:form) { create(:form, question_types: ["text", %w[text text]]) }
   let(:qing) { form.c[0] }
@@ -10,25 +10,6 @@ describe "form items" do
 
   before do
     login(user)
-  end
-
-  describe "update" do
-    context "when valid ancestry" do
-      before(:each) do
-        put(form_item_path(qing, mode: "m", mission_name: get_mission.compact_name),
-          params: {"rank" => 3, "parent_id" => qing_group.id})
-      end
-
-      it "should be successful" do
-        expect(response).to be_success
-      end
-
-      it "should update rank and ancestry" do
-        params = controller.params
-        expect(params[:rank]).to eq("3")
-        expect(params[:parent_id]).to eq(qing_group.id.to_s)
-      end
-    end
   end
 
   describe "condition_form" do
@@ -45,6 +26,8 @@ describe "form items" do
         expected = {
           id: nil,
           leftQingId: nil,
+          rightQingId: nil,
+          rightSideType: "literal",
           op: nil,
           value: nil,
           optionNodeId: nil,
@@ -52,8 +35,7 @@ describe "form items" do
           formId: form.id,
           conditionableId: qing.id,
           conditionableType: "FormItem",
-          operatorOptions: [],
-          refableQings: expected_left_qing_options
+          operatorOptions: []
         }.to_json
         get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
           params: {
@@ -80,6 +62,8 @@ describe "form items" do
         expected = {
           id: nil,
           leftQingId: form.c[0].id,
+          rightQingId: nil,
+          rightSideType: "literal",
           op: nil,
           value: nil,
           optionNodeId: nil,
@@ -87,8 +71,7 @@ describe "form items" do
           formId: form.id,
           conditionableId: qing.id,
           conditionableType: "FormItem",
-          operatorOptions: expected_operator_options,
-          refableQings: expected_left_qing_options
+          operatorOptions: expected_operator_options
         }.to_json
         get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
           params: {
@@ -112,6 +95,8 @@ describe "form items" do
           expected = {
             id: condition.id,
             leftQingId: condition.left_qing.id,
+            rightQingId: nil,
+            rightSideType: "literal",
             op: condition.op,
             value: "Test",
             optionNodeId: nil,
@@ -119,8 +104,7 @@ describe "form items" do
             formId: form.id,
             conditionableId: qing.id,
             conditionableType: "FormItem",
-            operatorOptions: expected_operator_options,
-            refableQings: expected_left_qing_options
+            operatorOptions: expected_operator_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
             params: {
@@ -146,6 +130,8 @@ describe "form items" do
           expected = {
             id: condition.id,
             leftQingId: condition.left_qing.id,
+            rightQingId: nil,
+            rightSideType: "literal",
             op: condition.op,
             value: nil,
             optionNodeId: form.c[2].option_set.c[0].id,
@@ -153,8 +139,7 @@ describe "form items" do
             formId: form.id,
             conditionableId: qing.id,
             conditionableType: "FormItem",
-            operatorOptions: expected_operator_options,
-            refableQings: expected_left_qing_options
+            operatorOptions: expected_operator_options
           }.to_json
           get "/en/m/#{get_mission.compact_name}/condition-form-data/base",
             params: {
