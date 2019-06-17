@@ -117,7 +117,7 @@ class UsersController < ApplicationController
   def export
     respond_to do |format|
       format.vcf do
-        @users = restrict_scope_to_selected_objects(User.all)
+        @users = restrict_scope_to_selected_objects(User.accessible_by(current_ability))
         render(plain: @users.collect(&:to_vcf).join("\n"))
       end
     end

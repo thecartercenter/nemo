@@ -190,7 +190,7 @@ class FormsController < ApplicationController
   # adds questions selected in the big list to the form
   def add_questions
     # load the question objects
-    questions = restrict_scope_to_selected_objects(Question.all)
+    questions = restrict_scope_to_selected_objects(Question.accessible_by(current_ability))
 
     # raise error if no valid questions (this should be impossible)
     raise "no valid questions given" if questions.empty?
@@ -207,11 +207,8 @@ class FormsController < ApplicationController
     redirect_to(edit_form_url(@form))
   end
 
-  # removes selected questions from the form
   def remove_questions
-    # get the selected questionings
-    qings = restrict_scope_to_selected_objects(Questioning.all)
-    # destroy
+    qings = restrict_scope_to_selected_objects(Questioning.accessible_by(current_ability))
     begin
       @form.destroy_questionings(qings)
       flash[:success] = t("form.questions_remove_success")
