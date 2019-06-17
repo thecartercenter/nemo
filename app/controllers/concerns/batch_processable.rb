@@ -7,7 +7,7 @@ module BatchProcessable
   # If no boxes checked, or if the select_all_pages option is set, returns the scope unchanged.
   def restrict_scope_to_selected_objects(relation)
     return relation if params[:select_all_pages] == "1" || params[:selected].nil?
-    rel.where(id: params[:selected].keys)
+    relation.where(id: params[:selected].keys)
   end
 
   def restrict_by_search_and_ability_and_selection(relation)

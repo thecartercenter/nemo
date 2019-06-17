@@ -207,18 +207,6 @@ class FormsController < ApplicationController
     redirect_to(edit_form_url(@form))
   end
 
-  def remove_questions
-    qings = restrict_scope_to_selected_objects(Questioning.accessible_by(current_ability))
-    begin
-      @form.destroy_questionings(qings)
-      flash[:success] = t("form.questions_remove_success")
-    rescue StandardError => e
-      flash[:error] = t("form.#{e}")
-    end
-    # redirect to form edit
-    redirect_to(edit_form_url(@form))
-  end
-
   # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
