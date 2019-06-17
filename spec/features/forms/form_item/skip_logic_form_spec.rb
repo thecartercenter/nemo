@@ -61,7 +61,7 @@ feature "skip logic form fields", js: true do
           find('select[name*="\\[skip_if\\]"]').select("if any of these conditions are met")
 
           within(all(".condition-fields")[0]) do
-            select_question(form.c[0].code)
+            select_left_qing(form.c[0].code)
             select_operator("< less than")
             fill_in_value("25")
           end
@@ -73,7 +73,7 @@ feature "skip logic form fields", js: true do
         within(all(".skip-rule")[1]) do
           find('select[name*="\\[skip_if\\]"]').select("if any of these conditions are met")
           within(all(".condition-fields")[0]) do
-            select_question(form.c[0].code)
+            select_left_qing(form.c[0].code)
             select_operator("< less than")
             fill_in_value("20")
           end
@@ -96,7 +96,7 @@ feature "skip logic form fields", js: true do
         expect(all(".condition-fields").size).to eq 1
 
         within(all(".condition-fields")[0]) do
-          expect_selected_question(form.c[0])
+          expect_selected_left_qing(form.c[0])
           expect_selected_operator("< less than")
           expect_filled_in_value("20")
         end
@@ -115,7 +115,7 @@ feature "skip logic form fields", js: true do
         within(all(".skip-rule")[0]) do
           find('select[name*="\\[skip_if\\]"]').select("if all of these conditions are met")
           within(all(".condition-fields")[0]) do
-            select_question(form.c[0].code)
+            select_left_qing(form.c[0].code)
             select_operator("< less than")
             fill_in_value("1000")
           end
