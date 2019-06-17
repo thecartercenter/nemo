@@ -2,7 +2,6 @@ import queryString from 'query-string';
 import { observable, action, reaction, computed } from 'mobx';
 
 import { getLevelsValues, applyDefaultLevelsValues } from '../utils';
-import cloneDeep from 'lodash/cloneDeep';
 
 /**
  * Represents a single condition (e.g. 'Question Foo' Equals 'Bar').
@@ -75,24 +74,18 @@ class ConditionModel {
       () => this.leftQingId,
       (leftQingId) => {
         if (leftQingId) {
-          const leftQing = this.refableQings.find((qing) => qing.id == leftQingId);
+          const leftQing = this.refableQings.find((qing) => qing.id === leftQingId);
           this.rightQingOptions = this.refableQings.filter((rightQing) => {
-            if (leftQing.id == rightQing.id || leftQing.qtype_name == 'select_multiple') {
-              return false;
-            } else if (leftQing.textual) {
-              return rightQing.textual;
-            } else if (leftQing.numeric) {
-              return rightQing.numeric;
-            } else {
-              return leftQing.qtypeName == rightQing.qtypeName
-                && leftQing.optionSetId == rightQing.optionSetId;
-            }
+            if (leftQing.id === rightQing.id || leftQing.qtypeName === 'select_multiple') return false;
+            if (leftQing.textual) return rightQing.textual;
+            if (leftQing.numeric) return rightQing.numeric;
+            return leftQing.qtypeName === rightQing.qtypeName
+              && leftQing.optionSetId === rightQing.optionSetId;
           });
         }
       },
       { fireImmediately: true },
     );
-
   }
 
   /** Return either the current value or the value of the deepest defined level. */
