@@ -104,7 +104,7 @@ class ConditionFormField extends React.Component {
   buildUrl = (leftQingId) => {
     const {
       conditionSetStore: { formId, conditionableId, conditionableType },
-      condition: { id }
+      condition: { id },
     } = this.props;
     const params = {
       condition_id: id || '',
@@ -234,12 +234,12 @@ class ConditionFormField extends React.Component {
           <FormSelect {...operatorFieldProps} />
         )}
         <div className="condition-right-side">
-          {rightQingOptions.length > 0 && !forceRightSideLiteral &&
+          {rightQingOptions.length > 0 && !forceRightSideLiteral && (
             <div className="condition-right-side-type">
               <FormSelect {...rightSideTypeFieldProps} />
             </div>
-          }
-          {forceRightSideLiteral || rightSideType == 'literal' ? (
+          )}
+          {rightQingOptions.length === 0 || forceRightSideLiteral || rightSideType === 'literal' ? (
             <div className="condition-value">
               <ConditionValueField {...valueFieldProps} />
             </div>
