@@ -11,10 +11,11 @@ class ELMO.Views.UserProfileFormView extends ELMO.Views.ApplicationView
     @toggle_custom_gender_visibility()
 
   init_user_group_select: ->
+    option_builder = new ELMO.Utils.Select2OptionBuilder()
     @$("#user_user_group_ids").select2
       tags: true
       templateResult: @format_suggestions
-      ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(@params.user_group_options_url, 'possible_groups', 'name')
+      ajax: option_builder.ajax(@params.user_group_options_url, 'possible_groups', 'name')
 
   format_suggestions: (item) ->
     if item.id == item.text

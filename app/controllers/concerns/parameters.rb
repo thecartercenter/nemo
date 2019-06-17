@@ -22,16 +22,15 @@ module Parameters
   def permit_children(params, options)
     key = options[:key]
     permitted = options[:permitted]
-    if params[key].present?
-      children = []
-      params[key].each { |_i, child| children << child }
-      child = children.find { |child| child[key].present? && child[key] != "NONE" }
+    return if params[key].blank?
 
-      if child
-        permitted + [{key => permit_children(child, options)}]
-      else
-        permitted + [key]
-      end
+    children = []
+    params[key].each { |_i, child| children << child }
+    child = children.find { |c| c[key].present? && c[key] != "NONE" }
+    if child
+      permitted + [{key => permit_children(child, options)}]
+    else
+      permitted + [key]
     end
   end
 end
