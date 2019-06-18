@@ -14,11 +14,11 @@ describe ResponsesSearcher do
     let!(:r3) { create(:response, form: form) }
 
     it "should work" do
-      assert_search(%(form:"foo 1.0"), r1, r3)
+      expect(search(%(form:"foo 1.0"))).to contain_exactly(r1, r3)
     end
 
     it "should parse filter data" do
-      assert_filter_data(%(form:"foo 1.0"), form_ids: [form.id], advanced_text: "")
+      expect(searcher(%(form:"foo 1.0"))).to have_filter_data(form_ids: [form.id], advanced_text: "")
     end
   end
 
@@ -31,8 +31,8 @@ describe ResponsesSearcher do
           response # Build response inside correct timezone.
           # Verify time stored in UTC (Jan 2), but search matches Jan 1.
           expect(SqlRunner.instance.run("SELECT created_at FROM responses")[0]["created_at"].day).to eq(2)
-          assert_search(%(submit-date:2017-01-01), response)
-          assert_search(%(submit-date:2017-01-02))
+          expect(search(%(submit-date:2017-01-01))).to contain_exactly(response)
+          expect(search(%(submit-date:2017-01-02))).to be_empty
         end
       end
     end
@@ -47,8 +47,8 @@ describe ResponsesSearcher do
       end
 
       it "should match correctly" do
-        assert_search(%(submit-date < 2017-01-04), *responses[0..1])
-        assert_search(%(submit-date > 2017-01-04), responses[2])
+        expect(search(%(submit-date < 2017-01-04))).to match_array(responses[0..1])
+        expect(search(%(submit-date > 2017-01-04))).to contain_exactly(responses[2])
       end
     end
   end
@@ -64,11 +64,11 @@ describe ResponsesSearcher do
     end
 
     it "should return responses from users in group" do
-      assert_search(%(group:"fun group"), *responses[0..1])
+      expect(search(%(group:"fun group"))).to match_array(responses[0..1])
     end
 
     it "should return nothing for non-existent group" do
-      assert_search(%(group:norble), nil)
+      expect(search(%(group:norble))).to be_empty
     end
   end
 
@@ -102,84 +102,73 @@ describe ResponsesSearcher do
     end
 
     it "should work" do
-      assert_search("text:brown", r1, r3)
-      assert_search("text:bravo", r2, r3)
-      assert_search("cat", r1, r3)
-      assert_search("chat", r1, r3)
-      assert_search("wrench", r2)
+      expect(search("text:brown")).to contain_exactly(r1, r3)
+      expect(search("text:bravo")).to contain_exactly(r2, r3)
+      expect(search("cat")).to contain_exactly(r1, r3)
+      expect(search("chat")).to contain_exactly(r1, r3)
+      expect(search("wrench")).to contain_exactly(r2)
 
       # Answers qualifier should be the default
-      assert_search("quick brown", r1, r3)
+      expect(search("quick brown")).to contain_exactly(r1, r3)
 
       # Exact phrase matching should work
-      assert_search(%{text:(quick brown)}, r1, r3) # Parenthesis don't force exact phrase matching
+      # Parentheses don't force exact phrase matching
+      expect(search(%{text:(quick brown)})). to contain_exactly(r1, r3)
 
       # TODO: FIX EXACT PHRASE MATCHING
-      # assert_search(%{text:"quick brown"}, r1)
-      # assert_search(%{"quick brown"}, r1)
+      # expect(search(%{text:"quick brown"}, r1)
+      # expect(search(%{"quick brown"}, r1)
 
       # Question codes should work as qualifiers
-      assert_search("text:apple", r1, r2)
-      assert_search("{blue}:apple", r1)
-      assert_search("{Green}:apple", r2)
+      expect(search("text:apple")).to contain_exactly(r1, r2)
+      expect(search("{blue}:apple")).to contain_exactly(r1)
+      expect(search("{Green}:apple")).to contain_exactly(r2)
 
       # Searching for option names should work in any language
-      assert_search("{Pink}:dog", r2)
-      assert_search("{Brown}:hammer", r1, r2)
-      assert_search("{Brown}:marteau", r1, r2)
-      assert_search("{Brown}:wrench", r2)
+      expect(search("{Pink}:dog")).to contain_exactly(r2)
+      expect(search("{Brown}:hammer")).to contain_exactly(r1, r2)
+      expect(search("{Brown}:marteau")).to contain_exactly(r1, r2)
+      expect(search("{Brown}:wrench")).to contain_exactly(r2)
 
       # Invalid question codes should raise error
-      assert_search("{foo}:bar", error: /'{foo}' is not a valid search qualifier./)
+      expect { search("{foo}:bar") }.to raise_error(/'{foo}' is not a valid search qualifier./)
 
       # Using code from other mission should raise error
       # Create other mission and question
       other_mission = create(:mission, name: "other")
       create(:question, qtype_name: "long_text", code: "purple", mission: other_mission)
-      assert_search("{purple}:bar", error: /valid search qualifier/)
+      expect { search("{purple}:bar") }.to raise_error(/valid search qualifier/)
       # Now create in the default mission and try again
       create(:question, qtype_name: "long_text", code: "purple")
-      assert_search("{purple}:bar") # Should match nothing, but not error
+      expect(search("{purple}:bar")).to be_empty # Should match nothing, but not error
 
       # Response should only appear once even if it has two matching answers
-      assert_search("text:heaven", r2)
+      expect(search("text:heaven")).to contain_exactly(r2)
 
       # Multiple indexed qualifiers should work
-      assert_search("{blue}:lumpy {Green}:meal", r3)
-      assert_search("{blue}:lumpy {Green}:ipswitch")
+      expect(search("{blue}:lumpy {Green}:meal")).to contain_exactly(r3)
+      expect(search("{blue}:lumpy {Green}:ipswitch")).to be_empty
 
       # Mixture of indexed and normal qualifiers should work
-      assert_search("{Green}:ipswitch reviewed:1", r2)
+      expect(search("{Green}:ipswitch reviewed:1")).to contain_exactly(r2)
     end
   end
 
-  def assert_search(query, *objs_or_error)
-    if objs_or_error[0].is_a?(Hash)
-      begin
-        run_search(query)
-      rescue StandardError
-        assert_match(objs_or_error[0][:error], $ERROR_INFO.to_s)
-      else
-        raise("No error was raised.")
-      end
-    else
-      objs_or_error.compact!
-      expect(run_search(query)).to contain_exactly(*objs_or_error)
+  RSpec::Matchers.define(:have_filter_data) do |expected|
+    match do |actual|
+      actual.apply
+      @actual = expected.keys.map { |k| [k, actual.send(k)] }.to_h
+      @actual == expected
     end
+
+    diffable
   end
 
-  def assert_filter_data(query, form_ids:, advanced_text:)
-    searcher = build_searcher(query)
-    searcher.apply
-    expect(searcher.form_ids).to match(form_ids)
-    expect(searcher.advanced_text).to match(advanced_text)
+  def search(query)
+    searcher(query).apply
   end
 
-  def run_search(query)
-    build_searcher(query).apply
-  end
-
-  def build_searcher(query)
+  def searcher(query)
     ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission})
   end
 end
