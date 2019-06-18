@@ -4,14 +4,14 @@ require "rails_helper"
 #   Please move at the next opportunity.
 describe "sms auth code field", :sms, database_cleaner: :all do
 
-  before(:all) do
+  before do
     @user = FactoryGirl.create(:user)
     @staffer = FactoryGirl.create(:user, role_name: :staffer)
     @enumerator = FactoryGirl.create(:user, role_name: :enumerator)
   end
 
   context 'in show mode for staffer' do
-    before(:all) do
+    before do
       login(@staffer)
       get("/en/m/#{get_mission.compact_name}/users/#{@user.id}")
       assert_response(:success)
@@ -27,7 +27,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
   end
 
   context 'in edit mode for same user' do
-    before(:all) do
+    before do
       login(@user)
       get("/en/m/#{get_mission.compact_name}/users/#{@user.id}/edit")
     end
@@ -64,7 +64,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
   end
 
   context 'in show mode for enumerator' do
-    before(:all) do
+    before do
       login(@enumerator)
       get("/en/m/#{get_mission.compact_name}/users/#{@user.id}")
     end
@@ -75,12 +75,12 @@ describe "sms auth code field", :sms, database_cleaner: :all do
   end
 
   context 'in edit mode for enumerator' do
-    before(:all) do
+    before do
       login(@enumerator)
     end
 
     context 'with other user' do
-      before(:all) { get("/en/m/#{get_mission.compact_name}/users/#{@user.id}/edit") }
+      before { get("/en/m/#{get_mission.compact_name}/users/#{@user.id}/edit") }
 
       it 'should not be visible' do
         assert_select('div.user_sms_auth_code', false)
@@ -88,7 +88,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
     end
 
     context 'with own user' do
-      before(:all) { get("/en/m/#{get_mission.compact_name}/users/#{@enumerator.id}/edit") }
+      before { get("/en/m/#{get_mission.compact_name}/users/#{@enumerator.id}/edit") }
 
       old_key = nil
 

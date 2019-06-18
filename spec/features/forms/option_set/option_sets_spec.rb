@@ -5,9 +5,12 @@ require "rails_helper"
 feature "option set" do
   let(:user) { create(:user, role_name: "coordinator") }
 
-  scenario "creating, showing, editing and exporting", js: true do
+  before do
     login(user)
-    click_link("Option Sets")
+  end
+
+  scenario "creating, showing, editing and exporting", js: true do
+    visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
 
     # Fill in basic values
     click_link("Create New Option Set")
@@ -60,8 +63,7 @@ feature "option set" do
   end
 
   scenario "creating, showing, and editing options with values", js: true do
-    login(user)
-    click_link("Option Sets")
+    visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
 
     click_link("Create New Option Set")
     fill_in("Name", with: "Foo")
@@ -96,8 +98,7 @@ feature "option set" do
     let!(:std_set) { create(:option_set, :standard, name: "Gold", option_names: :multilevel) }
 
     scenario "importing, editing, and showing", js: true do
-      login(user)
-      click_link("Option Sets")
+      visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
 
       # Import
       click_link("Import Standard Option Sets")
@@ -127,11 +128,10 @@ feature "option set" do
   end
 
   describe "deleting" do
-    let(:set) { create(:option_set, option_names: :multilevel) }
+    let!(:set) { create(:option_set, option_names: :multilevel) }
 
     scenario do
-      login(user)
-      visit(option_sets_path(mode: "m", mission_name: set.mission.compact_name, locale: "en"))
+      visit(option_sets_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       click_on(set.name)
       click_on("Delete Option Set")
       expect(page).to have_selector(".alert-success", text: "Option Set deleted successfully")

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
-feature "password reset"  do
+feature "password reset" do
   let(:user) { create(:user) }
 
   context "if not logged in" do
@@ -15,7 +17,7 @@ feature "password reset"  do
         request_password_reset(user.email)
         expect(page).to have_content("Success: Instructions to reset")
       end
-      expect(old_tok).not_to eq user.reload.perishable_token
+      expect(old_tok).not_to eq(user.reload.perishable_token)
     end
 
     it "should not automatically reset password" do
@@ -29,7 +31,7 @@ feature "password reset"  do
         assert_difference("ActionMailer::Base.deliveries.size", +1) do
           request_password_reset(user.login)
           expect(page).to have_content("Success: Instructions to reset")
-          expect(ActionMailer::Base.deliveries.last.to).to eq [user.email]
+          expect(ActionMailer::Base.deliveries.last.to).to eq([user.email])
         end
       end
     end
@@ -61,21 +63,21 @@ feature "password reset"  do
     let(:user2) { create(:user) }
 
     before do
-      login(user)
       user2.reset_perishable_token!
     end
 
     it "attempting to load edit should logout existing user" do
-      visit "/en/password-resets/#{user2.perishable_token}/edit"
+      real_login(user)
+      visit("/en/password-resets/#{user2.perishable_token}/edit")
       expect(page).to have_content("please enter a new password for your account")
-      visit "/en"
+      visit("/en")
       expect(page).to have_css("h1", text: "Login")
     end
   end
 
   def request_password_reset(value)
-    visit "/en/password-resets/new"
-    fill_in "Email or Username", with: value
-    click_button "Send"
+    visit("/en/password-resets/new")
+    fill_in("Email or Username", with: value)
+    click_button("Send")
   end
 end

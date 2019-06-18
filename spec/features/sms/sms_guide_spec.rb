@@ -12,23 +12,20 @@ feature "SMS Guide", js: true do
 
   context "with SMSable form" do
     let!(:form) do
-      create(:form, name: "SMS Form", smsable: true, mission: get_mission, question_types: %w[text]).publish!
+      create(:form, name: "SMS Form", smsable: true,
+                    mission: get_mission, question_types: %w[text]).tap(&:publish!)
     end
 
     scenario "happy path" do
-      click_link "Forms"
-      click_link "SMS Guide"
+      visit(sms_guide_form_path(form, mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       expect(page).to have_content("Text Question Title")
     end
   end
 
   context "with Multilingual fields" do
     let!(:form) do
-      create(:form,
-        name: "SMS Form",
-        smsable: true,
-        mission: get_mission,
-        question_types: %w[multilingual_text multilingual_text_with_user_locale]).publish!
+      create(:form, name: "SMS Form", smsable: true, mission: get_mission,
+                    question_types: %w[multilingual_text multilingual_text_with_user_locale]).tap(&:publish!)
     end
 
     around do |example|
@@ -43,8 +40,7 @@ feature "SMS Guide", js: true do
     end
 
     scenario "view :fr guide" do
-      click_link "Forms"
-      click_link "SMS Guide"
+      visit(sms_guide_form_path(form, mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       select("Français", from: "lang")
       expect(page).to have_content("Formulaire")
       expect(page).to have_content("fr: Text Question Title")
@@ -52,8 +48,7 @@ feature "SMS Guide", js: true do
     end
 
     scenario "view :rw guide" do
-      click_link "Forms"
-      click_link "SMS Guide"
+      visit(sms_guide_form_path(form, mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       select("Kinyarwanda", from: "lang")
       expect(page).to have_content("Paper")
       expect(page).to have_content("rw: Text Question Title")

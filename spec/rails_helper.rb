@@ -95,6 +95,9 @@ RSpec.configure do |config|
     # something other than [:en] by a previous spec.
     configatron.preferred_locales = [:en]
 
+    # Ensure no leftover logged in user.
+    ENV.delete("TEST_LOGGED_IN_USER_ID")
+
     example.run
   end
 

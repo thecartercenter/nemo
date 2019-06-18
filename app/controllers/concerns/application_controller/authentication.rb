@@ -7,27 +7,30 @@ module Concerns::ApplicationController::Authentication
   attr_reader :current_user, :current_mission
 
   def load_current_mission
-    # If we're in admin mode, the current mission is nil and
-    # we need to set the user's current mission to nil also
-    if mission_mode? && params[:mission_name].present?
-      # Look up the current mission based on the mission_id.
-      # This will return 404 immediately if the mission was specified but isn't found.
-      # This helps out people typing in the URL (esp. ODK users)
-      # by letting them know permission is not an issue.
-      @current_mission = Mission.with_compact_name(params[:mission_name])
+    @current_mission = nil
+    return unless mission_mode? && params[:mission_name].present?
 
-      # save the current mission in the session so we can remember it if the user goes into admin mode
-      session[:last_mission_name] = @current_mission.try(:compact_name)
-    else
-      @current_mission = nil
-    end
+    # Look up the current mission based on the mission_id.
+    # This will return 404 immediately if the mission was specified but isn't found.
+    # This helps out people typing in the URL (esp. ODK users)
+    # by letting them know permission is not an issue.
+    @current_mission = Mission.with_compact_name(params[:mission_name])
+
+    # save the current mission in the session so we can remember it if the user goes into admin mode
+    session[:last_mission_name] = @current_mission&.compact_name
   end
 
   # Determines the user and saves in the @current_user var.
   def load_current_user
-    # If user already logged in via Authlogic, we are done.
-    if (user_session = UserSession.find) && user_session.user
+    @current_user = nil
 
+    # If stubbed user from testing, look them up.
+    if Rails.env.test? && ENV["TEST_LOGGED_IN_USER_ID"].present?
+      @current_user = User.includes(:assignments).find(ENV["TEST_LOGGED_IN_USER_ID"])
+      @current_user.update_column(:current_login_at, Time.current)
+
+    # If user already logged in via Authlogic, we are done.
+    elsif (user_session = UserSession.find) && user_session.user
       @current_user = user_session.user
 
     # If the direct_auth parameter is set (usually set in the routes file), we
@@ -41,11 +44,7 @@ module Concerns::ApplicationController::Authentication
       end
 
       return request_http_basic_authentication unless @current_user
-
       return render(plain: "USER_INACTIVE", status: :unauthorized) unless @current_user.active?
-    else
-      # If we get here, nothing worked!
-      @current_user = nil
     end
   end
 

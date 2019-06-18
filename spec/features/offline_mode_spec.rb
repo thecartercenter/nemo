@@ -21,7 +21,7 @@ feature "offline mode" do
 
     scenario "broadcast links" do
       login(user)
-      click_on("Broadcasts")
+      visit(broadcasts_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
       expect(page).not_to have_content("Send Broadcast")
       click_on("Users")
       expect(page).not_to have_content("Send Broadcast")

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe 'basic authentication for xml requests' do
 
-  before(:all) do
+  before do
     @user = create(:user)
   end
 

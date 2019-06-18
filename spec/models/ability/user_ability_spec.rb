@@ -8,7 +8,7 @@ require "rails_helper"
 
 describe "abilities for users" do
   shared_examples_for "admin abilities in mission mode" do
-    before(:all) do
+    before do
       @ability = Ability.new(user: @user, mode: "mission", mission: get_mission)
     end
 
@@ -31,7 +31,7 @@ describe "abilities for users" do
 
   shared_examples_for "admin or coordinator shared abilities" do
     context "in basic mode" do
-      before(:all) do
+      before do
         @ability = Ability.new(user: @user, mode: "basic")
       end
 
@@ -66,7 +66,7 @@ describe "abilities for users" do
     end
 
     context "in mission mode" do
-      before(:all) do
+      before do
         @ability = Ability.new(user: @user, mode: "mission", mission: get_mission)
       end
 
@@ -101,7 +101,7 @@ describe "abilities for users" do
   end
 
   context "for a coordinator" do
-    before(:all) do
+    before do
       @user = create(:user, name: "self", role_name: "coordinator")
       @user2 = create(:user, name: "other")
     end
@@ -109,7 +109,7 @@ describe "abilities for users" do
     it_behaves_like "admin or coordinator shared abilities"
 
     context "in mission mode" do
-      before(:all) do
+      before do
         @ability = Ability.new(user: @user, mode: "mission", mission: get_mission)
       end
 
@@ -125,7 +125,7 @@ describe "abilities for users" do
   end
 
   context "for an admin user" do
-    before(:all) do
+    before do
       @user = create(:user, admin: true)
       @user2 = create(:user, name: "other")
     end
@@ -146,7 +146,7 @@ describe "abilities for users" do
     # None of these are covered in admin/coord shared abilities since only admins
     # can be in admin mode.
     context "in admin mode" do
-      before(:all) do
+      before do
         @ability = Ability.new(user: @user, mode: "admin")
       end
 
