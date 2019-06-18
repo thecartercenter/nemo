@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -48,7 +50,7 @@ class QingGroup < FormItem
 
   translates :group_name, :group_hint, :group_item_name
 
-  alias_method :c, :sorted_children
+  alias c sorted_children
 
   def code
     group_name

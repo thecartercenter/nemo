@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class AddIndexInitialFormItemType < ActiveRecord::Migration[4.2]
   def up
     add_index :form_items, :ancestry
     FormItem.update_all(type: "Questioning")
   end
 
-  def down 
+  def down
   end
 end

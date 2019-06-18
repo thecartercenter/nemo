@@ -11,7 +11,7 @@ module Sms
         return false if config["params"].blank?
         params_match = config["params"].values - request.params.keys == []
         headers_match =
-          if config["matchHeaders"] && config["matchHeaders"].is_a?(Hash)
+          if config["matchHeaders"]&.is_a?(Hash)
             config["matchHeaders"].all? { |k, v| request.headers[k] == v }
           else
             true

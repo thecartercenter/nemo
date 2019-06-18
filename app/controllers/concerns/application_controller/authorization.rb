@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Concerns::ApplicationController::Authorization
   extend ActiveSupport::Concern
 
@@ -14,10 +16,10 @@ module Concerns::ApplicationController::Authorization
     @access_denied = true
 
     # log to debug log
-    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message} " +
-      "(Mission: #{current_mission.try(:name)}; " +
-      "User: #{current_user.try(:login)}; " +
-      "Role: #{current_user.try(:role, current_mission)}; " +
+    Rails.logger.debug("ACCESS DENIED on #{exception.action} #{exception.subject.inspect} #{exception.message} " \
+      "(Mission: #{current_mission.try(:name)}; " \
+      "User: #{current_user.try(:login)}; " \
+      "Role: #{current_user.try(:role, current_mission)}; " \
       "Admin?: #{current_user.try(:admin?) ? 'Yes' : 'No'}")
 
     # if not logged in, offer a login page
@@ -29,14 +31,14 @@ module Concerns::ApplicationController::Authorization
     elsif flash[:missionchange]
       # if the request was a CRUD, try redirecting to the index, or root if no permission
       if Ability::CRUD.include?(exception.action) && current_ability.can?(:index, exception.subject.class)
-        redirect_to(:controller => controller_name, :action => :index)
+        redirect_to(controller: controller_name, action: :index)
       else
         redirect_to(mission_root_url)
       end
 
     # else if this is not an html request, render an empty 403 (forbidden).
     elsif !request.format.html?
-      render(:body => nil, :status => 403)
+      render(body: nil, status: :forbidden)
 
     # else redirect to welcome page with error
     else
@@ -49,16 +51,14 @@ module Concerns::ApplicationController::Authorization
   # authorization. If a recent login is not found, a RecentLoginRequireError
   # will be thrown. The default handling for this error in
   # ApplicationController is to call handle_recent_login_required.
-  def require_recent_login(options={})
-    unless current_user && current_user.current_login_recent?(options[:max_age])
-      raise RecentLoginRequiredError
-    end
+  def require_recent_login(options = {})
+    raise RecentLoginRequiredError unless current_user&.current_login_recent?(options[:max_age])
   end
 
-  def handle_recent_login_required(exception)
+  def handle_recent_login_required(_exception)
     if request.xhr?
       flash[:error] = nil
-      render(:plain => "RECENT_LOGIN_REQUIRED", :status => 401)
+      render(plain: "RECENT_LOGIN_REQUIRED", status: :unauthorized)
     else
       store_location
       redirect_to(new_login_confirmation_url)

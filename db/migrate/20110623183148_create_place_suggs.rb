@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePlaceSuggs < ActiveRecord::Migration[4.2]
   def self.up
     create_table :place_suggs do |t|

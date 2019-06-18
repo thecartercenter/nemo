@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Reprocesses ALL response XML. May overwrite data and will cause
 # incorrect create/update stamps for answers.
 # WARNING: Does not work properly with media objects.

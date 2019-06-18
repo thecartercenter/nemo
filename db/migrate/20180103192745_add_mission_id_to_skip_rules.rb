@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddMissionIdToSkipRules < ActiveRecord::Migration[4.2]
   def change
     add_column :skip_rules, :mission_id, :uuid, index: true

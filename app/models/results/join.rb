@@ -1,6 +1,7 @@
+# frozen_string_literal: true
+
 # models the various joins in the Response/Answer db structure
 class Results::Join
-
   attr_reader :name, :sql, :dependencies
 
   def self.list_to_sql(*list, prefix: "")
@@ -17,20 +18,20 @@ class Results::Join
     @sql = params[:sql]
     @name = params[:name]
     @dependencies = if params[:dependencies]
-      params[:dependencies].is_a?(Symbol) ? [params[:dependencies]] : params[:dependencies]
-    else
-      []
+                      params[:dependencies].is_a?(Symbol) ? [params[:dependencies]] : params[:dependencies]
+                    else
+                      []
     end
   end
 
   # expands dependencies to find all necessary joins
   def expand
-    (dependencies ? dependencies.collect{|dep| @@joins[dep].expand}.flatten : []) + [self]
+    (dependencies ? dependencies.collect { |dep| @@joins[dep].expand }.flatten : []) + [self]
   end
 
   # returns the appropriate sql for the given join, adding the optional prefix to all table names
   def to_sql(prefix = "")
-    prefix += "_" unless prefix.blank?
+    prefix += "_" if prefix.present?
     Array.wrap(sql).join(" ").gsub(/__/, prefix)
   end
 
@@ -57,7 +58,7 @@ class Results::Join
       sql: "LEFT JOIN option_sets __option_sets ON __questions.option_set_id = __option_sets.id"
     ),
     options: new(
-      dependencies: [:answers, :option_sets],
+      dependencies: %i[answers option_sets],
       name: :options,
       sql: [
         "LEFT JOIN options __ao ON __answers.option_id = __ao.id",
@@ -66,7 +67,7 @@ class Results::Join
       ]
     ),
     choices: new(
-      dependencies: [:answers, :option_sets],
+      dependencies: %i[answers option_sets],
       name: :choices,
       sql: [
         "LEFT JOIN choices __choices ON __choices.answer_id = __answers.id",

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameForwardeeIdToRecipient < ActiveRecord::Migration[4.2]
   def up
     rename_column :form_forwardings, :forwardee_id, :recipient_id

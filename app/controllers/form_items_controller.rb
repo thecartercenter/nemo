@@ -10,7 +10,7 @@ class FormItemsController < ApplicationController
     params[:parent_id] = @form_item.form.root_id if params[:parent_id].blank?
 
     @form_item.move(FormItem.find(params[:parent_id]), params[:rank].to_i)
-    render body: nil, status: 204
+    render(body: nil, status: :no_content)
   end
 
   # Responds to ajax request with json containing data needed for condition form.
@@ -37,12 +37,12 @@ class FormItemsController < ApplicationController
       @conditionable = FormItem.new(mission: current_mission)
     end
 
-    authorize! :condition_form, @conditionable
+    authorize!(:condition_form, @conditionable)
 
     @condition = Condition.find_by(id: params[:condition_id])
     @condition ||= Condition.new(conditionable: @conditionable)
 
     @condition.left_qing_id = params[:left_qing_id]
-    render json: ConditionViewSerializer.new(@condition), status: 200
+    render(json: ConditionViewSerializer.new(@condition), status: :ok)
   end
 end

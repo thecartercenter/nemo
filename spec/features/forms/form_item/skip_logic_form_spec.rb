@@ -93,7 +93,7 @@ feature "skip logic form fields", js: true do
         visit("#{url_prefix}/questionings/#{form.c[5].id}/edit")
 
         # data is persisted
-        expect(all(".condition-fields").size).to eq 1
+        expect(all(".condition-fields").size).to eq(1)
 
         within(all(".condition-fields")[0]) do
           expect_selected_question(form.c[0])
@@ -150,12 +150,12 @@ feature "skip logic form fields", js: true do
           find('select[name*="\\[skip_if\\]"]').select("in all cases")
 
           # condition fields are hidden for the first skip rule
-          expect(all(".condition-fields").size).to eq 0
+          expect(all(".condition-fields").size).to eq(0)
         end
 
         # condition fields still exist for the second skip rule
         within(all(".skip-rule")[1]) do
-          expect(all(".condition-fields").size).to eq 2
+          expect(all(".condition-fields").size).to eq(2)
         end
       end
 

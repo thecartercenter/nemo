@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateConditions < ActiveRecord::Migration[4.2]
   def self.up
     create_table :conditions do |t|

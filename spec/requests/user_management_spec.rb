@@ -1,7 +1,8 @@
-require 'rails_helper'
+# frozen_string_literal: true
+
+require "rails_helper"
 
 describe "user management" do
-
   let(:user) { create(:user) }
   let(:mission) { get_mission }
 
@@ -32,7 +33,6 @@ describe "user management" do
         test_create_user(mission)
       end
     end
-
 
     it "can adminify user in current mission" do
       user_to_adminify = create(:user, role_name: :enumerator)
@@ -75,11 +75,11 @@ describe "user management" do
   end
 
   def test_adminify_user(user: create(:user), mission: get_mission, result: false)
-    expect(user.admin).to be false
-    put(user_path(user, mode: "m", mission: mission), params: {user: { admin: true }})
+    expect(user.admin).to be(false)
+    put(user_path(user, mode: "m", mission: mission), params: {user: {admin: true}})
     follow_redirect!
     expect(response).to be_success
-    expect(user.reload.admin).to be result
+    expect(user.reload.admin).to be(result)
   end
 
   # Checks that roles are as specified.

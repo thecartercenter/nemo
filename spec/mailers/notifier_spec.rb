@@ -10,7 +10,7 @@ describe Notifier do
     let(:mail) { described_class.password_reset_instructions(*args).deliver_now }
 
     it "should have user's email in to field" do
-      expect(mail.to).to eq [user.email]
+      expect(mail.to).to eq([user.email])
     end
 
     context "no mission given" do

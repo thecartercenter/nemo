@@ -1,7 +1,8 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "redirect on mission change" do
-
   before do
     @mission1 = create(:mission, name: "Mission1")
     @mission2 = create(:mission, name: "Mission2")
@@ -19,13 +20,14 @@ describe "redirect on mission change" do
     @user.assignments.create!(mission: @mission2, role: "coordinator")
 
     # Try multiple object types.
-    %w(form option_set).each do |type|
+    %w[form option_set].each do |type|
       @obj = create(type, mission: @mission1)
 
-      path_chunk = type.gsub("_", "-") << "s"
+      path_chunk = type.tr("_", "-") << "s"
       assert_redirect_after_mission_change_from(
         from: "/en/m/mission1/#{path_chunk}/#{@obj.id}",
-        to: "/en/m/mission2/#{path_chunk}")
+        to: "/en/m/mission2/#{path_chunk}"
+      )
     end
   end
 
@@ -37,7 +39,8 @@ describe "redirect on mission change" do
 
     assert_redirect_after_mission_change_from(
       from: "/en/m/mission1/option-sets/#{@option_set.id}",
-      to: "/en/m/mission2")
+      to: "/en/m/mission2"
+    )
   end
 
   it "user should be redirected to home screen if viewing new response but form not available in new mission" do
@@ -58,7 +61,8 @@ describe "redirect on mission change" do
 
     assert_redirect_after_mission_change_from(
       from: "/en/m/mission1/option-sets",
-      to: "/en/m/mission2")
+      to: "/en/m/mission2"
+    )
   end
 
   describe "missionchange flag" do

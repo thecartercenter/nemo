@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "form items" do
@@ -23,8 +25,8 @@ describe "form items" do
 
       it "should update rank and ancestry" do
         params = controller.params
-        expect(params[:rank]).to eq "3"
-        expect(params[:parent_id]).to eq qing_group.id.to_s
+        expect(params[:rank]).to eq("3")
+        expect(params[:parent_id]).to eq(qing_group.id.to_s)
       end
     end
   end
@@ -61,7 +63,7 @@ describe "form items" do
             conditionable_type: "FormItem"
           }
         expect(response).to have_http_status(200)
-        expect(response.body).to eq expected
+        expect(response.body).to eq(expected)
       end
     end
 
@@ -96,7 +98,7 @@ describe "form items" do
             conditionable_type: "FormItem"
           }
         expect(response).to have_http_status(200)
-        expect(response.body).to eq expected
+        expect(response.body).to eq(expected)
       end
 
       context "text value exists" do
@@ -129,7 +131,7 @@ describe "form items" do
               conditionable_type: "FormItem"
             }
           expect(response).to have_http_status(200)
-          expect(response.body).to eq expected
+          expect(response.body).to eq(expected)
         end
       end
 
@@ -163,7 +165,7 @@ describe "form items" do
               conditionable_type: "FormItem"
             }
           expect(response).to have_http_status(200)
-          expect(response.body).to eq expected
+          expect(response.body).to eq(expected)
         end
       end
     end

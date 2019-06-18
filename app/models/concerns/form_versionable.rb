@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # common methods for classes that need to notify the FormVersioningPolicy when they are modified
 module FormVersionable
   extend ActiveSupport::Concern

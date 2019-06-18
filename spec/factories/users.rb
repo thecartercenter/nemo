@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -50,9 +52,9 @@ def get_user
   u = FactoryGirl.create(:user)
 
   # set the mission to get_mission so that ability stuff will work
-  u.save(:validate => false)
+  u.save(validate: false)
 
-  return u
+  u
 end
 
 def test_password
@@ -68,7 +70,7 @@ FactoryGirl.define do
 
     login { Random.letters(8) }
     sequence(:name) { |n| "A User #{n}" }
-    email { Random.letters(8) + '@example.com' }
+    email { Random.letters(8) + "@example.com" }
     reset_password_method "email"
     password { test_password }
     password_confirmation { test_password }

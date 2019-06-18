@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DenormalizeGeographicAnswerData < ActiveRecord::Migration[4.2]
   def up
     create_new_columns
@@ -27,12 +29,12 @@ class DenormalizeGeographicAnswerData < ActiveRecord::Migration[4.2]
 
     puts "Coping #{location_answers.size} answer values"
     location_answers.each_with_index do |answer, i|
-      puts "#{i}" if i % 100 == 0
+      puts i.to_s if i % 100 == 0
 
       # Regular location question
       if answer.value
-        lat, long = answer.value.split(' ')
-        setLatLongValueOnNewColumns(answer, BigDecimal.new(lat), BigDecimal.new(long))
+        lat, long = answer.value.split(" ")
+        setLatLongValueOnNewColumns(answer, BigDecimal(lat), BigDecimal(long))
       # Select one location question
       elsif answer.option
         setLatLongValueOnNewColumns(answer, answer.option.latitude, answer.option.longitude)

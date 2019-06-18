@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class MoveMediaUploads < ActiveRecord::Migration[4.2]
-  TABLES = [Media::Object, Media::Image, Media::Audio, Media::Video]
+  TABLES = [Media::Object, Media::Image, Media::Audio, Media::Video].freeze
 
   def up
-    TABLES.each { |table| table.reset_column_information }
+    TABLES.each(&:reset_column_information)
 
     Media::Object.find_each do |object|
       class_path = object.type.underscore.pluralize
-      old_id_part = ("%09d" % object.old_id).scan(/\d{3}/).join("/")
+      old_id_part = format("%09d", object.old_id).scan(/\d{3}/).join("/")
       new_id_part = object.id.split("-").join("/")
 
       old_path = Rails.root.join("uploads", class_path, "items", old_id_part).to_s

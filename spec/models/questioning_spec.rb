@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -43,11 +45,11 @@
 #
 # rubocop:enable Metrics/LineLength
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Questioning do
   it "mission should get copied from question on creation" do
-    f = create(:form, :question_types => %w(integer), :mission => get_mission)
+    f = create(:form, question_types: %w[integer], mission: get_mission)
     expect(f.questionings[0].mission).to eq(get_mission)
   end
 
@@ -108,7 +110,7 @@ describe Questioning do
     describe "question metadata and condition" do
       let(:condition) { build(:condition) }
 
-      context "not adding a metadata_type"do
+      context "not adding a metadata_type" do
         let(:q_attrs) { {qtype_name: "datetime", metadata_type: nil} }
         let(:submitted) { {display_conditions: [condition]} }
         it "should not destroy existing conditions" do

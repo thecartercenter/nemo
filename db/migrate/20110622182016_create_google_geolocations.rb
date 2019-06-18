@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class CreateGoogleGeolocations < ActiveRecord::Migration[4.2]
   def self.up
     create_table :google_geolocations do |t|
       t.string :full_name
       t.text :json
       t.integer :place_type_id
-      t.decimal :latitude, :precision => 20, :scale => 15
-      t.decimal :longitude, :precision => 20, :scale => 15
+      t.decimal :latitude, precision: 20, scale: 15
+      t.decimal :longitude, precision: 20, scale: 15
       t.string :formatted_addr
 
       t.timestamps

@@ -30,7 +30,7 @@ module Forms
     # Makes sure the expression is wrapped in calc() if it uses any dollar references.
     def force_calc_for_dollar_refs(record)
       return if record[field_name].blank? || record[field_name].start_with?("calc(") ||
-          !record[field_name].match?(Odk::DynamicPatternParser::CODE_REGEX)
+        !record[field_name].match?(Odk::DynamicPatternParser::CODE_REGEX)
       record.errors.add(field_name, :must_use_calc)
     end
   end

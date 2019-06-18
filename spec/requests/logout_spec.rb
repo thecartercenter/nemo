@@ -1,6 +1,8 @@
-require 'rails_helper'
+# frozen_string_literal: true
 
-describe 'Logout' do
+require "rails_helper"
+
+describe "Logout" do
   let(:user) { create(:user, admin: true) }
 
   before do
@@ -17,7 +19,7 @@ describe 'Logout' do
   end
 
   it "redirect after logout from admin mode should be correct" do
-    get_s('/en/admin')
+    get_s("/en/admin")
     check_logout_link_and_redirect
   end
 
@@ -25,8 +27,7 @@ describe 'Logout' do
 
   def check_logout_link_and_redirect
     assert_select('#logout_button[href="/en/logout"]', true)
-    delete('/en/logout')
-    expect(response).to redirect_to('/en/logged-out')
+    delete("/en/logout")
+    expect(response).to redirect_to("/en/logged-out")
   end
 end
-

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class DisableSmsAuthenticationOnForms < ActiveRecord::Migration[4.2]
   def up
     Form.update_all(authenticate_sms: false)

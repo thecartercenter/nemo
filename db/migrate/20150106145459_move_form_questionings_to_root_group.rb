@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class FormItem < ActiveRecord::Base; end
 class QingGroup < FormItem; end
 class Questioning < FormItem

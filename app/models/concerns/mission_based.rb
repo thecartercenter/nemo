@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # common methods for classes that are related to a mission
 module MissionBased
   module ClassMethods
@@ -14,12 +16,12 @@ module MissionBased
     base.class_eval do
       # only Setting has a has_one association, so don't pluralize
       inverse = (base.model_name == "Setting" ? base.model_name.to_s : base.model_name.plural).downcase.to_sym
-      belongs_to(:mission, :inverse_of => inverse)
+      belongs_to(:mission, inverse_of: inverse)
 
       # scope to find objects with the given mission
       # mission can be nil
-      scope(:for_mission, lambda{|m| where(:mission_id => m.try(:id))})
-      scope(:for_mission_id, lambda{|m| where(:mission_id => m)})
+      scope(:for_mission, ->(m) { where(mission_id: m.try(:id)) })
+      scope(:for_mission_id, ->(m) { where(mission_id: m) })
 
       # DEPRECATED: This should go away and be replaced with use of destroy and a background job.
       # No need to maintain all this extra logic. Mission delete happens rarely and can be slow.
@@ -37,6 +39,5 @@ module MissionBased
       rel = rel.where("id != ?", id) unless new_record?
       rel.count == 0
     end
-
   end
 end

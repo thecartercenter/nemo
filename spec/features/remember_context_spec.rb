@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 feature "remember context", js: true do
@@ -11,27 +13,27 @@ feature "remember context", js: true do
     login(user)
     # visit responses
     click_link("Responses")
-    expect(page).to have_content displaying_responses_message(total: 23)
+    expect(page).to have_content(displaying_responses_message(total: 23))
 
     # perform search
     fill_in "search", with: %(submitter:"#{user.name}")
     click_button("Search")
-    expect(page).to have_content displaying_responses_message(total: 22)
+    expect(page).to have_content(displaying_responses_message(total: 22))
 
     # visit next page
     click_link "→"
-    expect(page).to have_content displaying_responses_message(page: 2, total: 22)
+    expect(page).to have_content(displaying_responses_message(page: 2, total: 22))
 
     # view response
     first("tr.clickable").click
-    expect(page).to have_content "Response: "
+    expect(page).to have_content("Response: ")
 
     # delete response
     accept_alert do
       click_link "Delete Response"
     end
 
-    expect(page).to have_content displaying_responses_message(page: 2, total: 21)
+    expect(page).to have_content(displaying_responses_message(page: 2, total: 21))
   end
 end
 

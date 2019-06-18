@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class API::V1::BaseController < ApplicationController
-  skip_authorization_check  #for now at least
+  skip_authorization_check # for now at least
 
   rescue_from Exception, with: :handle_error
 
@@ -14,24 +16,24 @@ class API::V1::BaseController < ApplicationController
   end
 
   def authenticate_token
-    authenticate_or_request_with_http_token do |token, options|
-      @api_user = User.find_by_api_key(token)
+    authenticate_or_request_with_http_token do |token, _options|
+      @api_user = User.find_by(api_key: token)
     end
   end
 
   protected
 
-  def request_http_token_authentication(realm = "Application", message = nil)
-    self.headers["WWW-Authenticate"] = %(Token realm="#{realm.gsub(/"/, "")}")
-    render json: { errors: ["invalid_api_token"] }, status: :unauthorized
+  def request_http_token_authentication(realm = "Application", _message = nil)
+    headers["WWW-Authenticate"] = %(Token realm="#{realm.delete('"')}")
+    render(json: {errors: ["invalid_api_token"]}, status: :unauthorized)
   end
 
   private
 
   # Handles errors to give nice JSON response
-  def handle_error(exception, options = {})
+  def handle_error(exception, _options = {})
     if exception.is_a?(ActiveRecord::RecordNotFound)
-      render json: { errors: [exception.message.downcase.gsub(" ", "_")] }
+      render(json: {errors: [exception.message.downcase.tr(" ", "_")]})
     else
       raise exception
     end
@@ -39,14 +41,14 @@ class API::V1::BaseController < ApplicationController
 
   def find_form
     if params[:form_id].blank?
-      render json: { errors: ["form_id_required"] }, status: 422
+      render(json: {errors: ["form_id_required"]}, status: :unprocessable_entity)
     else
       @form = Form.where(id: params[:form_id]).includes(:whitelistings).first
 
       if @form.nil?
-        return render json: { errors: ["form_not_found"] }, status: 404
+        return render(json: {errors: ["form_not_found"]}, status: :not_found)
       elsif !@form.api_user_id_can_see?(@api_user.id)
-        return render json: { errors: ["access_denied"] }, status: 403
+        return render(json: {errors: ["access_denied"]}, status: :forbidden)
       end
     end
   end

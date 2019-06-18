@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveQuestionTypes < ActiveRecord::Migration[4.2]
   def up
     # add a qtype_name column to the questions table

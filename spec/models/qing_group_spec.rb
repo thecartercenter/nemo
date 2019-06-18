@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -46,7 +48,7 @@
 require "rails_helper"
 
 describe QingGroup do
-  let(:form) { create(:form, question_types: [["text", "text", "text"]]) }
+  let(:form) { create(:form, question_types: [%w[text text text]]) }
 
   it "should return a list of groups" do
     group = create(:qing_group, form: form, ancestry: form.root_group.id)
@@ -64,8 +66,7 @@ describe QingGroup do
         form: form,
         ancestry: form.root_group.id,
         repeatable: false,
-        group_item_name_translations: {en: "Name", fr: "Nom"}
-      )
+        group_item_name_translations: {en: "Name", fr: "Nom"})
       expect(group.group_item_name_translations).to be_blank
     end
 
@@ -74,8 +75,7 @@ describe QingGroup do
         form: form,
         ancestry: form.root_group.id,
         repeatable: true,
-        group_item_name_translations: {en: "Name", fr: "Nom"}
-      )
+        group_item_name_translations: {en: "Name", fr: "Nom"})
       expect(group.group_item_name_translations).to eq("en" => "Name", "fr" => "Nom")
     end
   end

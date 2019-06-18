@@ -1,7 +1,13 @@
+# frozen_string_literal: true
+
 namespace :db do
   desc "Create an admin user."
-  task :create_admin, [:password] => :environment do |t, args|
-    if (configatron.webmaster_emails! rescue []).empty?
+  task :create_admin, [:password] => :environment do |_t, args|
+    if (begin
+          configatron.webmaster_emails!
+        rescue StandardError
+          []
+        end).empty?
       raise "Webmaster email must be configured in config/initializers/local_settings.rb before admin can be generated."
     end
 
@@ -9,8 +15,6 @@ namespace :db do
 
     admin_password = args[:password] || User.random_password
     u.password = u.password_confirmation = admin_password
-
-
 
     # need to turn off validation because there are no assignments and no password reset method
     u.save(validate: false)

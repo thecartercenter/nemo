@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module OdkHeaderable
   extend ActiveSupport::Concern
 
@@ -7,11 +9,12 @@ module OdkHeaderable
   end
 
   def odk_headers
-    authorize! :create, Response
-    render(body: nil, status: 204)
+    authorize!(:create, Response)
+    render(body: nil, status: :no_content)
   end
 
   private
+
   # adds the appropriate headers for openrosa content
   def add_openrosa_headers
     response.content_type = "text/xml" if request.format.xml?

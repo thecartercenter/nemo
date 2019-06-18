@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveUniqueKeyFromOptionLevel < ActiveRecord::Migration[4.2]
   def up
     # removing this because is causes trouble when trying to reorder

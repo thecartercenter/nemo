@@ -1,5 +1,6 @@
-class ElmoFormBuilder < ActionView::Helpers::FormBuilder
+# frozen_string_literal: true
 
+class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   # options[:type] - The type of field to display
   #   (:text (default), :check_box, :radio_buttons, :textarea, :password, :select, :timezone, :file, :number)
   # options[:required] - Whether the field input is required.
@@ -30,7 +31,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
     return "" if options[:read_only] && options[:type] == :password
 
     # get object errors (also look under association attrib if field_name ends in _id)
-    errors = @object.errors[field_name] + (field_name =~ /^(.+)_id$/ ? @object.errors[$1] : [])
+    errors = @object.errors[field_name] + (field_name =~ /^(.+)_id$/ ? @object.errors[Regexp.last_match(1)] : [])
 
     wrapper_classes = ["form-field"]
     wrapper_classes << options[:wrapper_class]
@@ -72,7 +73,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       current = @object.send(field_name)
 
       # Current value display
-      body = @template.content_tag(:span, current || "[#{@template.t('common.none')}]", data: { value: current || "" })
+      body = @template.content_tag(:span, current || "[#{@template.t('common.none')}]", data: {value: current || ""})
 
       unless read_only? || options[:no_button] == true
         # Generate/Regenerate button
@@ -103,7 +104,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
   end
 
   def read_only?
-    options.has_key?(:read_only) ? options[:read_only] : form_mode == :show
+    options.key?(:read_only) ? options[:read_only] : form_mode == :show
   end
 
   def form_mode
@@ -172,7 +173,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
         human_val = "[#{@template.t('common.none')}]" if human_val.blank?
 
         # render a div with the human val, and embed the real val in a data attrib if it differs
-        @template.content_tag(:div, human_val, class: "ro-val", :'data-val' => val != human_val ? val : nil)
+        @template.content_tag(:div, human_val, class: "ro-val", 'data-val': val != human_val ? val : nil)
 
       else
         tag_options = options.slice(:id, :data) # Include these attribs with all tags, if given.
@@ -194,7 +195,8 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
           # build set of radio buttons based on options
           safe_join(
             options[:options].map { |o| radio_button(field_name, o, tag_options) + o },
-            "&nbsp;&nbsp;")
+            "&nbsp;&nbsp;"
+          )
 
         when :textarea
           text_area(field_name, tag_options)
@@ -264,7 +266,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
       # run the hint text through simple format, but no need to sanitize since we don't want to lose links
       # AND we know this text will not be coming from the user
       # We also need to be careful not to allow any double quotes as this value will be included in a HTML attrib.
-      @template.simple_format(options[:hint], {}, sanitize: false).gsub('"', "'")
+      @template.simple_format(options[:hint], {}, sanitize: false).tr('"', "'")
     end
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddRootNodeIdToOptionSets < ActiveRecord::Migration[4.2]
   def change
     add_column :option_sets, :root_node_id, :integer

@@ -119,7 +119,7 @@ class Setting < ApplicationRecord
   end
 
   def self.theme_exists?
-    # TODO refactor to get this path from the Themeing system.
+    # TODO: refactor to get this path from the Themeing system.
     File.exist?(Rails.root.join("app", "assets", "stylesheets", "all",
       "themes", "_custom_theme.scss"))
   end
@@ -166,8 +166,8 @@ class Setting < ApplicationRecord
     # get class based on sms adapter setting; default to nil if setting is invalid
     hsh[:outgoing_sms_adapter] = begin
       Sms::Adapters::Factory.instance.create(default_outgoing_sms_adapter)
-    rescue ArgumentError
-      nil
+                                 rescue ArgumentError
+                                   nil
     end
 
     Time.zone = timezone
@@ -270,7 +270,7 @@ class Setting < ApplicationRecord
   # sms adapter can be blank or must be valid according to the Factory
   def sms_adapter_is_valid
     errors.add(:default_outgoing_sms_adapter, :is_invalid) unless default_outgoing_sms_adapter.blank? ||
-        Sms::Adapters::Factory.name_is_valid?(default_outgoing_sms_adapter)
+      Sms::Adapters::Factory.name_is_valid?(default_outgoing_sms_adapter)
   end
 
   # check if settings for a particular adapter should be validated
@@ -306,7 +306,7 @@ class Setting < ApplicationRecord
   def generic_sms_valid_keys
     return if generic_sms_config.nil?
     return if generic_sms_config.is_a?(Hash) &&
-        (generic_sms_config.keys - Sms::Adapters::GenericAdapter::VALID_KEYS).empty?
+      (generic_sms_config.keys - Sms::Adapters::GenericAdapter::VALID_KEYS).empty?
     errors.add(:generic_sms_config_str, :invalid_keys)
   end
 

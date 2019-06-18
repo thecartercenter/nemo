@@ -1,11 +1,13 @@
+# frozen_string_literal: true
+
 class PhoneNormalizer
   def self.is_shortcode?(phone)
     return nil if phone.blank?
-    if phone =~ /[a-z]/i
+    if /[a-z]/i.match?(phone)
       true
     else
       phone_digits = phone.gsub(/\D/, "")
-      return false unless phone_digits.present?
+      return false if phone_digits.blank?
       return true if phone_digits.size <= 6
       begin
         country_code = Phony.split(phone_digits).first
@@ -17,9 +19,9 @@ class PhoneNormalizer
   end
 
   def self.normalize(phone)
-    return unless phone.present?
+    return if phone.blank?
     return phone if is_shortcode?(phone)
-    return unless phone.gsub(/\D/, "").present?
+    return if phone.gsub(/\D/, "").blank?
     begin
       normalized = Phony.normalize(phone)
     rescue Phony::NormalizationError
@@ -27,7 +29,7 @@ class PhoneNormalizer
       normalized = phone.gsub(/\D/, "")
       return "+#{normalized}"
     end
-    return unless normalized.present?
+    return if normalized.blank?
     Phony.format(normalized, format: :+, spaces: "", local_spaces: "", parentheses: false)
   end
 end

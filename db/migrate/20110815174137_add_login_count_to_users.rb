@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 class AddLoginCountToUsers < ActiveRecord::Migration[4.2]
   def self.up
-    add_column :users, :login_count, :integer, :default => 0
+    add_column :users, :login_count, :integer, default: 0
   end
 
   def self.down

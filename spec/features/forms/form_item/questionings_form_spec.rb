@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe "questionings form", js: true  do
@@ -74,7 +76,7 @@ describe "questionings form", js: true  do
         fill_in "Default Answer", with: "Test"
         expect_editable("read_only", true)
         fill_in "Default Answer", with: ""
-        page.execute_script '$("#questioning_default").trigger("keyup")'
+        page.execute_script('$("#questioning_default").trigger("keyup")')
         expect_editable("read_only", false)
       end
 

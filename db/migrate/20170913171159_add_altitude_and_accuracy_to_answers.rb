@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddAltitudeAndAccuracyToAnswers < ActiveRecord::Migration[4.2]
   def change
     add_column :answers, :altitude, :decimal, precision: 9, scale: 3

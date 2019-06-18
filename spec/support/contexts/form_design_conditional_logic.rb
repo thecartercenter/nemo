@@ -29,7 +29,7 @@ shared_context "form design conditional logic" do
 
   def expect_selected_values(*values)
     selects = all('select[name*="\\[option_node_ids\\]"]')
-    expect(selects.size).to eq values.size
+    expect(selects.size).to eq(values.size)
     selects.each_with_index do |select, i|
       expect(page).to have_select(select[:name], selected: values[i])
     end

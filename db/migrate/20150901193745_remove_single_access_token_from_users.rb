@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveSingleAccessTokenFromUsers < ActiveRecord::Migration[4.2]
   def change
     remove_column :users, :single_access_token

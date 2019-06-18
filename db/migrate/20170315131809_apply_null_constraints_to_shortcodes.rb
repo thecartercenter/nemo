@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ApplyNullConstraintsToShortcodes < ActiveRecord::Migration[4.2]
   def change
     change_column :missions, :shortcode, :string, null: false

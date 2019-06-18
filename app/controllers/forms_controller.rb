@@ -11,7 +11,7 @@ class FormsController < ApplicationController
   include ERB::Util
 
   # special find method before load_resource
-  before_action :load_form, :only => [:show, :edit, :update]
+  before_action :load_form, only: %i[show edit update]
 
   # authorization via cancan
   load_and_authorize_resource
@@ -130,30 +130,28 @@ class FormsController < ApplicationController
   end
 
   def update
-    begin
-      Form.transaction do
-        set_api_users
-        # save basic attribs
-        @form.assign_attributes(form_params)
+    Form.transaction do
+      set_api_users
+      # save basic attribs
+      @form.assign_attributes(form_params)
 
-        # check special permissions
-        authorize!(:rename, @form) if @form.name_changed?
+      # check special permissions
+      authorize!(:rename, @form) if @form.name_changed?
 
-        # save everything
-        @form.save!
+      # save everything
+      @form.save!
 
-        # publish if requested
-        if params[:save_and_publish].present?
-          @form.publish!
-          set_success_and_redirect(@form, to: forms_path)
-        else
-          set_success_and_redirect(@form, to: edit_form_path(@form))
-        end
+      # publish if requested
+      if params[:save_and_publish].present?
+        @form.publish!
+        set_success_and_redirect(@form, to: forms_path)
+      else
+        set_success_and_redirect(@form, to: edit_form_path(@form))
       end
-    # handle other validation errors
-    rescue ActiveRecord::RecordInvalid
-      prepare_and_render_form
     end
+  # handle other validation errors
+  rescue ActiveRecord::RecordInvalid
+    prepare_and_render_form
   end
 
   def destroy

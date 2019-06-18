@@ -1,12 +1,14 @@
+# frozen_string_literal: true
+
 class ReportsController < ApplicationController
   include ReportEmbeddable
   include CsvRenderable
 
   # need to do special load for new/create/update because CanCan won't work with the STI hack in report.rb
-  before_action :custom_load, :only => [:create]
+  before_action :custom_load, only: [:create]
 
   # authorization via cancan
-  load_and_authorize_resource :class => 'Report::Report'
+  load_and_authorize_resource class: "Report::Report"
 
   # Will do this explicitly below.
   skip_authorize_resource only: :data
@@ -21,7 +23,7 @@ class ReportsController < ApplicationController
 
     # setup data to be used on client side
     # set edit mode if it was passed in the flash
-    build_report_data(:edit_mode => flash[:edit_mode])
+    build_report_data(edit_mode: flash[:edit_mode])
 
     render(:show)
   end
@@ -62,7 +64,7 @@ class ReportsController < ApplicationController
 
   def destroy
     destroy_and_handle_errors(@report)
-    redirect_to(:action => :index)
+    redirect_to(action: :index)
   end
 
   # this method only reached through ajax
@@ -71,8 +73,8 @@ class ReportsController < ApplicationController
     @report.just_created = true if @report.errors.empty?
 
     # return data in json format
-    build_report_data(:read_only => true)
-    render(:json => @report_data.to_json)
+    build_report_data(read_only: true)
+    render(json: @report_data.to_json)
   end
 
   # this method only reached through ajax
@@ -90,8 +92,8 @@ class ReportsController < ApplicationController
     end
 
     # return data in json format
-    build_report_data(:read_only => true)
-    render(:json => @report_data.to_json)
+    build_report_data(read_only: true)
+    render(json: @report_data.to_json)
   end
 
   # Executed via ajax. It just runs the report and returns the report_data json.
@@ -100,7 +102,7 @@ class ReportsController < ApplicationController
     @report = Report::Report.find(params[:id])
     run_or_fetch_and_handle_errors
     build_report_data(read_only: true)
-    render(:json => @report_data.to_json)
+    render(json: @report_data.to_json)
   end
 
   # specify the class the this controller controls, since it's not easily guessed
@@ -121,8 +123,8 @@ class ReportsController < ApplicationController
     # current_user or current_mission may be nil since this method runs before authorization.
     return unless current_user && current_mission
     @report = Report::Report.create(report_params.merge(
-      :mission_id => current_mission.id,
-      :creator_id => current_user.id
+      mission_id: current_mission.id,
+      creator_id: current_user.id
     ))
   end
 
@@ -139,6 +141,6 @@ class ReportsController < ApplicationController
       :question_labels, :show_question_labels, :question_order, :text_responses, :percent_type, :unique_rows,
       :calculations, :option_set, :mission_id, :mission, :disagg_question_id, :group_by_tag,
       option_set_choices_attributes: [:option_set_id],
-      calculations_attributes: [:id, :_destroy, :type, :report_report_id, :attrib1_name, :question1_id, :arg1, :attrib1, :question1, :rank])
+      calculations_attributes: %i[id _destroy type report_report_id attrib1_name question1_id arg1 attrib1 question1 rank])
   end
 end

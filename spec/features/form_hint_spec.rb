@@ -1,8 +1,10 @@
-# Tests the hint popovers in regular forms and modal forms.
-require 'rails_helper'
+# frozen_string_literal: true
 
-feature 'form hints', js: true do
-  let(:form) { create(:form, question_types: %w(integer image image)) }
+# Tests the hint popovers in regular forms and modal forms.
+require "rails_helper"
+
+feature "form hints", js: true do
+  let(:form) { create(:form, question_types: %w[integer image image]) }
   let(:mission_name) { get_mission.compact_name }
 
   before do

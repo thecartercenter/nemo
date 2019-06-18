@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # models a single cell in a header
 class Report::HeaderCell
   attr_accessor :name, :sort_value, :key
@@ -8,7 +10,7 @@ class Report::HeaderCell
     @key = params[:key] || @name
   end
 
-  def as_json(options = {})
-    {:name => name, :sort_value => sort_value, :key => key}
+  def as_json(_options = {})
+    {name: name, sort_value: sort_value, key: key}
   end
 end

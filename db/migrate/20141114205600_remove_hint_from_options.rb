@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveHintFromOptions < ActiveRecord::Migration[4.2]
   def up
     remove_column :options, :_hint

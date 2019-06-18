@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddPreloadStuffToQuestionTypes < ActiveRecord::Migration[4.2]
   def self.up
     add_column :question_types, :odk_preload, :string

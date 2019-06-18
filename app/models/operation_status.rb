@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class OperationStatus
   attr_reader :total, :started, :failed, :completed, :in_progress
 
@@ -14,7 +16,7 @@ class OperationStatus
   end
 
   # define a prop? method for each value checking if it's > 0
-  %i(total started failed completed in_progress).each do |sym|
+  %i[total started failed completed in_progress].each do |sym|
     define_method("#{sym}?", -> { send(sym) > 0 })
   end
 end

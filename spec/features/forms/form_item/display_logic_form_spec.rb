@@ -118,7 +118,7 @@ feature "display logic form fields", js: true do
   end
 
   def then_conditions_are_persisted
-    expect(all(".condition-fields").size).to eq 2
+    expect(all(".condition-fields").size).to eq(2)
 
     within(all(".condition-fields")[0]) do
       expect_selected_question(form.c[0])
@@ -134,7 +134,7 @@ feature "display logic form fields", js: true do
   end
 
   def add_existing_conditions
-    form.c[3].update_attributes!(display_if: "any_met", display_conditions_attributes: [
+    form.c[3].update!(display_if: "any_met", display_conditions_attributes: [
       {left_qing_id: form.c[0].id, op: "geq", value: "64"},
       {left_qing_id: form.c[2].id, op: "eq", option_node_id: form.c[2].option_set.c[0].id}
     ])
@@ -195,7 +195,7 @@ feature "display logic form fields", js: true do
   def then_changes_are_persisted
     expect(page).to have_select("questioning_display_logic",
       selected: "Display this question if any of these conditions are met")
-    expect(all(".condition-fields").size).to eq 2
+    expect(all(".condition-fields").size).to eq(2)
 
     within(all(".condition-fields")[0]) do
       expect_selected_question(form.c[0])

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateSkipRules < ActiveRecord::Migration[4.2]
   def change
     create_table :skip_rules do |t|

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateBroadcastAddressings < ActiveRecord::Migration[4.2]
   def self.up
     create_table :broadcast_addressings do |t|

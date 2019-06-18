@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameReportFieldsAttribName < ActiveRecord::Migration[4.2]
   def up
     remove_column :report_fields, :attrib_name

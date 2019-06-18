@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # common methods for classes that have fields that are translatable into other languages
 module Translatable
   extend ActiveSupport::Concern
@@ -14,19 +16,17 @@ module Translatable
       # Tidy options if given.
       options[:locales] = options[:locales].map(&:to_s) if options[:locales].is_a?(Array)
 
-      class_variable_set('@@translate_options', options)
-      class_variable_set('@@translated_fields', args)
+      class_variable_set("@@translate_options", options)
+      class_variable_set("@@translated_fields", args)
 
       # Setup an accessor if not present.
       translated_fields.each do |f|
-        unless ancestors.include?(ActiveRecord::Base)
-          attr_accessor "#{f}_translations"
-        end
+        attr_accessor("#{f}_translations") unless ancestors.include?(ActiveRecord::Base)
       end
 
       # Setup *_translations assignment handlers for each field.
       translated_fields.each do |field|
-        class_eval %Q{
+        class_eval %{
           def #{field}_translations=(val)
             translatable_set_hash('#{field}', val)
           end
@@ -36,18 +36,18 @@ module Translatable
 
     # special accessors that we have to use for class vars in concerns
     def translated_fields
-      class_variable_defined?('@@translated_fields') ? class_variable_get('@@translated_fields') : nil
+      class_variable_defined?("@@translated_fields") ? class_variable_get("@@translated_fields") : nil
     end
 
     def translate_options
-      class_variable_defined?('@@translate_options') ? class_variable_get('@@translate_options') : nil
+      class_variable_defined?("@@translate_options") ? class_variable_get("@@translate_options") : nil
     end
 
     def validates_translated_length_of(*attr_names)
       attr_names = attr_names.map do |attr_name|
         attr_name.is_a?(Symbol) ? "#{attr_name}_translations".to_sym : attr_name
       end
-      validates_with Translatable::TranslatableLengthValidator, _merge_attributes(attr_names)
+      validates_with(Translatable::TranslatableLengthValidator, _merge_attributes(attr_names))
     end
   end
 
@@ -71,7 +71,7 @@ module Translatable
 
     # do the action if we found one
     if action
-      self.send("translatable_#{action}", field, locale, is_setter, options, args)
+      send("translatable_#{action}", field, locale, is_setter, options, args)
     else
       super
     end
@@ -89,7 +89,7 @@ module Translatable
   def translatable_set_hash(field, value)
     unless value.nil?
       # Remove any blank values and stringify.
-      value = value.reject{ |_, v| v.blank? }.stringify_keys
+      value = value.reject { |_, v| v.blank? }.stringify_keys
 
       # Set back to nil if empty
       value = nil if value.empty?
@@ -129,9 +129,7 @@ module Translatable
 
       # Strict options mean we only use the specified locale and fallbacks.
       # Else we can try other locales too.
-      unless options[:strict]
-        to_try += [I18n.locale.to_s, I18n.default_locale.to_s] + translations.keys
-      end
+      to_try += [I18n.locale.to_s, I18n.default_locale.to_s] + translations.keys unless options[:strict]
 
       # If allowed locales are given, restrict attempted locales to those.
       allowed = self.class.translate_options[:locales]
@@ -149,21 +147,21 @@ module Translatable
   end
 
   # checks if all the translations are blank for the given field
-  def translatable_all_blank?(field, locale, is_setter, options, args)
-    translatable_get(field).nil? || !translatable_get(field).detect{|l,t| !t.blank?}
+  def translatable_all_blank?(field, _locale, _is_setter, _options, _args)
+    translatable_get(field).nil? || !translatable_get(field).detect { |_l, t| t.present? }
   end
 
   def translatable_parse_method(symbol, arg1 = nil, arg2 = nil)
     return nil if self.class.translated_fields.nil?
 
     fields = self.class.translated_fields.join("|")
-    if symbol.to_s.match(/\A(#{fields})(_([a-z]{2}))?(_before_type_cast)?(=?)\z/)
+    if symbol.to_s =~ /\A(#{fields})(_([a-z]{2}))?(_before_type_cast)?(=?)\z/
 
       # get bits
       action = :translate
-      field = $1
-      locale = $3
-      is_setter = $5 == "="
+      field = Regexp.last_match(1)
+      locale = Regexp.last_match(3)
+      is_setter = Regexp.last_match(5) == "="
       options = arg1.is_a?(Hash) ? arg1 : (arg2.is_a?(Hash) ? arg2 : {})
 
       # if locale is nil, we need to figure out what it is
@@ -192,19 +190,17 @@ module Translatable
       # if we get this far, return the bits (locale should always be a string)
       [action, field, locale.to_s, is_setter, options]
 
-    elsif symbol.to_s.match(/\A(#{fields})_all_blank\?\z/)
+    elsif symbol.to_s =~ /\A(#{fields})_all_blank\?\z/
       action = :all_blank?
-      field = $1
+      field = Regexp.last_match(1)
 
       [action, field]
-    else
-      nil
     end
   end
 
   def translatable_get(field)
     if is_a?(ActiveRecord::Base)
-      read_attribute(:"#{field}_translations")
+      self[:"#{field}_translations"]
     else
       instance_variable_get("@#{field}_translations")
     end
@@ -212,7 +208,7 @@ module Translatable
 
   def translatable_set(field, value)
     if is_a?(ActiveRecord::Base)
-      write_attribute(:"#{field}_translations", value)
+      self[:"#{field}_translations"] = value
     else
       instance_variable_set("@#{field}_translations", value)
     end

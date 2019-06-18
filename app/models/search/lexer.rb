@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Search::Lexer
   attr_reader :tokens
 
@@ -9,7 +11,7 @@ class Search::Lexer
   # performs a lexical analysis on @str
   def lex
     # while there are characters left
-    while @str.size > 0
+    until @str.empty?
       token = nil
       match = nil
       chop = nil
@@ -18,7 +20,7 @@ class Search::Lexer
         pattern = defn[:pattern]
         # look for a match at the start of the string for this token type
         if pattern.is_a?(String)
-          if @str[0,pattern.size] == pattern
+          if @str[0, pattern.size] == pattern
             match = pattern
             chop = pattern.size
           else
@@ -34,15 +36,14 @@ class Search::Lexer
         end
 
         # if we found a match, create the LexToken and break
-        unless match.nil?
-          match = match.gsub('\\"', '"') if defn[:unescape_dbl_quotes]
-          token = Search::LexToken.new(defn, match, @str)
-          break
-        end
+        next if match.nil?
+        match = match.gsub('\\"', '"') if defn[:unescape_dbl_quotes]
+        token = Search::LexToken.new(defn, match, @str)
+        break
       end
       # if no token found, raise error
       if token.nil?
-        raise Search::ParseError.new(I18n.t("search.unexpected", :str => @str))
+        raise Search::ParseError, I18n.t("search.unexpected", str: @str)
       # otherwise, add to token list and delete from the front
       else
         @tokens << token
@@ -51,6 +52,6 @@ class Search::Lexer
       end
     end
     # add the end-of-text token to the end
-    @tokens << Search::LexToken.new(:name => :eot)
+    @tokens << Search::LexToken.new(name: :eot)
   end
 end

@@ -302,7 +302,7 @@ describe Results::WebResponseParser do
         it "updates destroy appropriately in in-memory tree" do
           expect_root(tree, form)
           expect_built_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
-          expect(tree.c[1]._destroy).to be true
+          expect(tree.c[1]._destroy).to be(true)
         end
       end
 
@@ -323,7 +323,7 @@ describe Results::WebResponseParser do
         it "updates relevant appropriately in in-memory tree" do
           expect_root(tree, form)
           expect_built_children(tree, %w[Answer Answer Answer], form.sorted_children.map(&:id), %w[A B C])
-          expect(tree.children[1].relevant).to eq false
+          expect(tree.children[1].relevant).to eq(false)
         end
       end
     end
@@ -540,8 +540,8 @@ describe Results::WebResponseParser do
         expect_built_children(answer_grp_two.c[1].c[0], %w[Answer], [inner_q_grp.c[0].id], %w[F])
         expect_built_children(answer_grp_two.c[1].c[1], %w[Answer], [inner_q_grp.c[0].id], %w[G])
         expect_built_children(answer_grp_two.c[1].c[2], %w[Answer], [inner_q_grp.c[0].id], %w[H])
-        expect(res_inr_grp_set_1.c[0]._destroy).to be true # group with answer C
-        expect(res_inr_grp_set_2.c[0].c[0].relevant).to be false # answer with value F
+        expect(res_inr_grp_set_1.c[0]._destroy).to be(true) # group with answer C
+        expect(res_inr_grp_set_2.c[0].c[0].relevant).to be(false) # answer with value F
       end
     end
   end

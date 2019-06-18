@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddForeignKeyIndicesToAssignments < ActiveRecord::Migration[4.2]
   def change
     add_index :assignments, :mission_id

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddFieldsToSmsMessages < ActiveRecord::Migration[4.2]
   def change
     add_column :sms_messages, :type, :string, null: false

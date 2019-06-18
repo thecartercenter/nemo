@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddOrderingToOptionSets < ActiveRecord::Migration[4.2]
   def self.up
     add_column :option_sets, :ordering, :string

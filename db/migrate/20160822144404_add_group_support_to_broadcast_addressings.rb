@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddGroupSupportToBroadcastAddressings < ActiveRecord::Migration[4.2]
   def up
     # Might as well do this, should have been done before.

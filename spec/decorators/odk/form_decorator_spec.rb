@@ -37,7 +37,7 @@ describe Odk::FormDecorator, :odk do
         end
 
         context "when question is visible" do
-          it { is_expected.to be true }
+          it { is_expected.to be(true) }
         end
 
         context "when question is invisible" do
@@ -45,12 +45,12 @@ describe Odk::FormDecorator, :odk do
             form.c[0].update!(hidden: true)
           end
 
-          it { is_expected.to be false }
+          it { is_expected.to be(false) }
         end
       end
 
       context "without audio prompt question" do
-        it { is_expected.to be false }
+        it { is_expected.to be(false) }
       end
     end
   end

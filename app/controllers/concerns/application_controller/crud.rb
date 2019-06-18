@@ -1,22 +1,22 @@
+# frozen_string_literal: true
+
 module Concerns::ApplicationController::Crud
   extend ActiveSupport::Concern
 
   # attempts to destroy obj and add an i18n'd success message to flash
   # on error, translates the error message and adds that to flash
   def destroy_and_handle_errors(obj, options = {})
-    begin
-      obj.send(options[:but_first]) if options[:but_first]
-      obj.destroy
-      flash[:success] = "#{obj.class.model_name.human} #{t('errors.messages.deleted_successfully')}"
-    rescue DeletionError
-      flash[:error] = t($!.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key],
-        default: t("errors.messages.generic_delete_error"))
-    end
+    obj.send(options[:but_first]) if options[:but_first]
+    obj.destroy
+    flash[:success] = "#{obj.class.model_name.human} #{t('errors.messages.deleted_successfully')}"
+  rescue DeletionError
+    flash[:error] = t($ERROR_INFO.to_s, scope: [:activerecord, :errors, :models, obj.class.model_name.i18n_key],
+                                        default: t("errors.messages.generic_delete_error"))
   end
 
   # Handles ParamaterMissing errors
   def handle_parameter_missing
-    render body: nil, status: 400
+    render(body: nil, status: :bad_request)
   end
 
   # sets a success message based on the given object
@@ -92,7 +92,7 @@ module Concerns::ApplicationController::Crud
 
   # gets the request's referrer without the query string
   def referrer_without_query_string
-    ref = URI(request.referrer)
-    ref.to_s.gsub("?#{ref.query}", '')
+    ref = URI(request.referer)
+    ref.to_s.gsub("?#{ref.query}", "")
   end
 end

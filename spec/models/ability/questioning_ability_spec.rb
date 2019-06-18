@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Tests for abilities related to Questioning object.
 require "rails_helper"
 
@@ -11,11 +13,11 @@ describe "abilities for questionings" do
     end
 
     context "when unpublished" do
-      let(:form) { create(:form, question_types: %w(text)) }
+      let(:form) { create(:form, question_types: %w[text]) }
       let(:qing) { form.questionings.first }
 
       it "should be able to do all" do
-        %i(show update update_core destroy).each do |op|
+        %i[show update update_core destroy].each do |op|
           expect(ability).to be_able_to(op, qing)
         end
       end
@@ -24,10 +26,10 @@ describe "abilities for questionings" do
         let!(:response) { create(:response, form: form, answer_values: ["foo"]) }
 
         it "should be able to do all but destroy" do
-          %i(show update update_core).each do |op|
+          %i[show update update_core].each do |op|
             expect(ability).to be_able_to(op, qing)
           end
-          %i(destroy).each do |op|
+          %i[destroy].each do |op|
             expect(ability).not_to be_able_to(op, qing)
           end
         end
@@ -35,26 +37,26 @@ describe "abilities for questionings" do
     end
 
     context "when published" do
-      let(:form) { create(:form, :published, question_types: %w(text)) }
+      let(:form) { create(:form, :published, question_types: %w[text]) }
       let(:qing) { form.questionings.first }
 
       it "should be able show and update only" do
-        %i(show update).each do |op|
+        %i[show update].each do |op|
           expect(ability).to be_able_to(op, qing)
         end
-        %i(update_core destroy).each do |op|
+        %i[update_core destroy].each do |op|
           expect(ability).not_to be_able_to(op.to_sym, qing)
         end
       end
     end
 
     context "when unpublished std copy" do
-      let(:std) { create(:form, :standard, question_types: %w(text)) }
+      let(:std) { create(:form, :standard, question_types: %w[text]) }
       let(:copy) { std.replicate(mode: :to_mission, dest_mission: get_mission) }
       let(:qing) { copy.questionings.first }
 
       it "should be able to do all" do
-        %i(show update update_core destroy).each do |op|
+        %i[show update update_core destroy].each do |op|
           expect(ability).to be_able_to(op, qing)
         end
       end

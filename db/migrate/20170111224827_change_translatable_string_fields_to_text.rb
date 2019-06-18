@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ChangeTranslatableStringFieldsToText < ActiveRecord::Migration[4.2]
   def up
     change_column :form_items, :group_name_translations, :text

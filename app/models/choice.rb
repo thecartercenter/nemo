@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -38,10 +40,10 @@ class Choice < ApplicationRecord
     # This is so that the default value is true.
     @checked || @checked.nil?
   end
-  alias_method :checked?, :checked
+  alias checked? checked
 
   def checked=(value)
-    @checked = (value == true || value == '1')
+    @checked = (value == true || value == "1")
   end
 
   # We need to override this because of the transient `checked` attribute.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreateUserGroupAssignments < ActiveRecord::Migration[4.2]
   def change
     create_table :user_group_assignments do |t|
@@ -6,6 +8,6 @@ class CreateUserGroupAssignments < ActiveRecord::Migration[4.2]
 
       t.timestamps null: false
     end
-    add_index :user_group_assignments, [:user_id, :user_group_id], unique: true
+    add_index :user_group_assignments, %i[user_id user_group_id], unique: true
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePlaceCreators < ActiveRecord::Migration[4.2]
   def self.up
     create_table :place_creators do |t|

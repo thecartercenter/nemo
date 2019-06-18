@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 # DEPRECATED: Model-related display logic should move to a decorator.
 module FormsHelper
-  def forms_index_links(forms)
+  def forms_index_links(_forms)
     links = []
 
     # add links based on authorization
@@ -15,9 +17,9 @@ module FormsHelper
 
   def forms_index_fields
     if admin_mode?
-      %w(std_icon name updated_at actions)
+      %w[std_icon name updated_at actions]
     else
-      %w(std_icon name downloads responses updated_at actions)
+      %w[std_icon name downloads responses updated_at actions]
     end
   end
 
@@ -42,18 +44,18 @@ module FormsHelper
       # get the appropriate publish icon and add link, if auth'd
       if can?(:publish, form)
         verb = form.published? ? "unpublish" : "publish"
-        links << action_link(verb, publish_form_path(form), title: t("form.#{verb}"), :'data-method' => 'put')
+        links << action_link(verb, publish_form_path(form), title: t("form.#{verb}"), 'data-method': "put")
       end
 
       # add a clone link if auth'd
       if can?(:clone, form)
-        links << action_link(:clone, clone_form_path(form), :'data-method' => 'put',
-          title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
+        links << action_link(:clone, clone_form_path(form), 'data-method': "put",
+                                                            title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
       end
 
       # add a print link if auth'd
       if can?(:print, form)
-        links << action_link(:print, "#", title: t("common.print"), class: 'print-link',
+        links << action_link(:print, "#", title: t("common.print"), class: "print-link",
                                           "data-form-id": form.id)
       end
 
@@ -77,17 +79,17 @@ module FormsHelper
 
   # Question types not listed here use PNGs instead of FA icons.
   FORM_ITEM_ICON_CLASSES = {
-    'long_text' => 'fa-align-left',
-    'date' => 'fa-calendar',
-    'time' => 'fa-clock-o',
-    'location' => 'fa-map-marker',
-    'group' => 'fa-folder-open-o',
-    'image' => 'fa-image',
-    'sketch' => 'fa-pencil-square-o',
-    'audio' => 'fa-volume-up',
-    'video' => 'fa-film',
-    'counter' => 'fa-plus'
-  }
+    "long_text" => "fa-align-left",
+    "date" => "fa-calendar",
+    "time" => "fa-clock-o",
+    "location" => "fa-map-marker",
+    "group" => "fa-folder-open-o",
+    "image" => "fa-image",
+    "sketch" => "fa-pencil-square-o",
+    "audio" => "fa-volume-up",
+    "video" => "fa-film",
+    "counter" => "fa-plus"
+  }.freeze
 
   def form_item_icon(type)
     # Use font awesome icon if defined, else use custom icon from assets dir.

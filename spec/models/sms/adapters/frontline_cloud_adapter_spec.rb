@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe Sms::Adapters::FrontlineCloudAdapter, :sms do
@@ -6,11 +8,11 @@ describe Sms::Adapters::FrontlineCloudAdapter, :sms do
   end
 
   it "should be created by factory" do
-    expect(@adapter).to_not be_nil
+    expect(@adapter).to_not(be_nil)
   end
 
   it "should have correct service name" do
-    expect(@adapter.service_name).to eq "FrontlineCloud"
+    expect(@adapter.service_name).to eq("FrontlineCloud")
   end
 
   it "should recognize an incoming request with the proper params" do
@@ -19,12 +21,12 @@ describe Sms::Adapters::FrontlineCloudAdapter, :sms do
   end
 
   it "should not recognize an incoming request without the special frontlinecloud param" do
-    request = double(params: frontlinecloud_params({ "frontlinecloud" => nil }))
+    request = double(params: frontlinecloud_params("frontlinecloud" => nil))
     expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
   end
 
   it "should not recognize an incoming request without the other params" do
-    request = double(params: frontlinecloud_params({ "body" => nil, "from" => nil, "sent_at" => nil }))
+    request = double(params: frontlinecloud_params("body" => nil, "from" => nil, "sent_at" => nil))
     expect(@adapter.class.recognize_receive_request?(request)).to be_falsey
   end
 
@@ -59,12 +61,12 @@ def frontlinecloud_params(params = {})
 end
 
 def parsing_expectations(msg, request)
-  expect(msg).to be_a Sms::Incoming
+  expect(msg).to be_a(Sms::Incoming)
   expect(msg.to).to be_nil
-  expect(msg.from).to eq "+2348036801489"
-  expect(msg.body).to eq "foo"
-  expect(msg.adapter_name).to eq "FrontlineCloud"
-  expect(msg.sent_at).to eq Time.at((request.params["sent_at"].to_i / 1000))
-  expect(msg.sent_at.zone).not_to eq "UTC"
+  expect(msg.from).to eq("+2348036801489")
+  expect(msg.body).to eq("foo")
+  expect(msg.adapter_name).to eq("FrontlineCloud")
+  expect(msg.sent_at).to eq(Time.at((request.params["sent_at"].to_i / 1000)))
+  expect(msg.sent_at.zone).not_to eq("UTC")
   expect(msg.mission).to be_nil # This gets set in controller.
 end

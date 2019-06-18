@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -59,7 +61,7 @@ class FormVersion < ApplicationRecord
   # double checks that code is still unique
   def ensure_unique_code
     # keep trying new random codes until no match
-    while self.class.find_by_code(self.code = Random.letters(CODE_LENGTH)); end
+    while self.class.find_by(code: self.code = Random.letters(CODE_LENGTH)); end
     true
   end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Response < ActiveRecord::Base
   belongs_to :mission
   belongs_to :form
@@ -11,7 +13,7 @@ class Response < ActiveRecord::Base
       form_code = form.code
       shortcode = [mission_code, form_code, response_code].join("-")
       self.shortcode = shortcode
-    end while Response.exists?(shortcode: self.shortcode)
+    end while Response.exists?(shortcode: shortcode)
   end
 end
 

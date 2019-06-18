@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveOptionIdsFromConditions < ActiveRecord::Migration[4.2]
   def change
     remove_column :conditions, :option_ids, :string

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "rails_helper"
 
 describe FormVersioningPolicy do
@@ -8,7 +10,7 @@ describe FormVersioningPolicy do
     @forms = create_list(:form, 3)
 
     # publish and then unpublish the forms so they get versions
-    @forms.each{|f| f.publish!; f.unpublish!}
+    @forms.each { |f| f.publish!; f.unpublish! }
 
     # get the old version codes for comparison
     save_old_version_codes
@@ -41,10 +43,10 @@ describe FormVersioningPolicy do
 
   it "removing question from form should only cause upgrade if form is smsable and it is not the last question" do
     # ensure the forms are not smsable
-    @forms.each{|f| f.smsable = false; f.save!}
+    @forms.each { |f| f.smsable = false; f.save! }
 
     # add 4 questions to all three forms
-    qs = (0...4).map{FactoryGirl.create(:question)}
+    qs = (0...4).map { FactoryGirl.create(:question) }
     @forms.each do |f|
       qs.each do |q|
         f.questions << q
@@ -62,7 +64,7 @@ describe FormVersioningPolicy do
     publish_and_check_versions(should_change: false)
 
     # now make the form smsable and delete the last question -- still should not get a bump
-    @forms.each{|f| f.smsable = true; f.save!}
+    @forms.each { |f| f.smsable = true; f.save! }
     @forms[0...2].each do |f|
       f.destroy_questionings([f.root_questionings.last])
     end
@@ -88,7 +90,7 @@ describe FormVersioningPolicy do
     save_old_version_codes
 
     # make forms not smsable
-    @forms.each{ |f| f.smsable = false; f.save! }
+    @forms.each { |f| f.smsable = false; f.save! }
 
     # now flip the ranks
     @forms[0..1].each do |f|
@@ -99,7 +101,7 @@ describe FormVersioningPolicy do
     publish_and_check_versions(should_change: false)
 
     # make forms smsable and try again -- should get a bump
-    @forms.each{ |f| f.smsable = true; f.save! }
+    @forms.each { |f| f.smsable = true; f.save! }
     @forms[0..1].each do |f|
       old1 = f.root_questionings(true).find { |q| q.rank == 1 }
       old2 = f.root_questionings.find { |q| q.rank == 2 }
@@ -123,7 +125,7 @@ describe FormVersioningPolicy do
     # add a condition in first 2 forms, should not cause bump
     qings2[0...2].each_with_index do |qing, i|
       qing.reload
-      qing.display_conditions.build(left_qing: qings1[i], op: 'eq', value: '1')
+      qing.display_conditions.build(left_qing: qings1[i], op: "eq", value: "1")
       qing.save!
     end
     publish_and_check_versions(should_change: false)
@@ -131,10 +133,10 @@ describe FormVersioningPolicy do
     save_old_version_codes
 
     # modify condition, should cause bump
-    qings2[0...2].each_with_index do |qing, i|
+    qings2[0...2].each_with_index do |qing, _i|
       qing.reload
       condition = qing.display_conditions.first
-      condition.value = '2'
+      condition.value = "2"
       condition.save!
       qing.save!
     end
@@ -143,13 +145,12 @@ describe FormVersioningPolicy do
     save_old_version_codes
 
     # destroy condition, should cause bump
-    qings2[0...2].each_with_index do |qing, i|
+    qings2[0...2].each_with_index do |qing, _i|
       qing.reload
       qing.display_conditions.destroy_all
       qing.save!
     end
     publish_and_check_versions(should_change: true)
-
   end
 
   it "changing question required status should cause upgrade" do
@@ -163,7 +164,7 @@ describe FormVersioningPolicy do
 
     # now change questioning type to required
     @forms[0...2].each do |f|
-      f.questionings.first.update_attributes(required: true)
+      f.questionings.first.update(required: true)
     end
 
     publish_and_check_versions(should_change: true)
@@ -172,7 +173,7 @@ describe FormVersioningPolicy do
 
     # now change questioning type back to not required
     @forms[0...2].each do |f|
-      f.questionings.first.update_attributes(required: false)
+      f.questionings.first.update(required: false)
     end
 
     publish_and_check_versions(should_change: true)
@@ -184,7 +185,7 @@ describe FormVersioningPolicy do
     q2 = FactoryGirl.create(:question)
 
     # ensure forms are smsable
-    @forms.each{|f| f.smsable = true; f.save!}
+    @forms.each { |f| f.smsable = true; f.save! }
 
     @forms[0...2].each do |f|
       Questioning.create(form_id: f.id, question_id: q1.id, parent: f.root_group)
@@ -202,7 +203,6 @@ describe FormVersioningPolicy do
     publish_and_check_versions(should_change: true)
   end
 
-
   it "changing question type should cause upgrade" do
     # add question to first two forms
     q = FactoryGirl.create(:question)
@@ -216,7 +216,7 @@ describe FormVersioningPolicy do
     save_old_version_codes
 
     # now change question type to decimal
-    q.update_attributes(qtype_name: "decimal")
+    q.update(qtype_name: "decimal")
 
     publish_and_check_versions(should_change: true)
   end
@@ -226,7 +226,7 @@ describe FormVersioningPolicy do
 
     save_old_version_codes
 
-    @os.update_attributes!(no_change_changeset(@os.root_node))
+    @os.update!(no_change_changeset(@os.root_node))
 
     publish_and_check_versions(should_change: false)
   end
@@ -234,11 +234,11 @@ describe FormVersioningPolicy do
   it "changing option set sms_guide_formatting should cause bump on smsable form" do
     setup_option_set
 
-    @os.forms.each{|f| f.update_attributes(smsable: true)}
+    @os.forms.each { |f| f.update(smsable: true) }
 
     save_old_version_codes
 
-    @os.update_attributes(sms_guide_formatting: "appendix")
+    @os.update(sms_guide_formatting: "appendix")
 
     publish_and_check_versions(should_change: true)
   end
@@ -248,7 +248,7 @@ describe FormVersioningPolicy do
 
     save_old_version_codes
 
-    @os.update_attributes!(additive_changeset(@os.root_node))
+    @os.update!(additive_changeset(@os.root_node))
 
     publish_and_check_versions(should_change: false)
   end
@@ -256,11 +256,11 @@ describe FormVersioningPolicy do
   it "adding an option to a set should cause upgrade on smsable form" do
     setup_option_set
 
-    @os.forms.each{|f| f.update_attributes(smsable: true)}
+    @os.forms.each { |f| f.update(smsable: true) }
 
     save_old_version_codes
 
-    @os.update_attributes!(additive_changeset(@os.root_node))
+    @os.update!(additive_changeset(@os.root_node))
 
     publish_and_check_versions(should_change: true)
   end
@@ -271,7 +271,7 @@ describe FormVersioningPolicy do
     save_old_version_codes
 
     # change the option
-    @os.options.first.update_attributes!(name_en: "New name")
+    @os.options.first.update!(name_en: "New name")
 
     publish_and_check_versions(should_change: false)
   end
@@ -289,7 +289,7 @@ describe FormVersioningPolicy do
   it "changing option order should cause upgrade if form smsable" do
     setup_option_set
 
-    @os.forms.each { |f| f.update_attributes(smsable: true) }
+    @os.forms.each { |f| f.update(smsable: true) }
 
     save_old_version_codes
 
@@ -304,7 +304,7 @@ describe FormVersioningPolicy do
 
     save_old_version_codes
 
-    @os.update_attributes!(reorder_changeset(@os.root_node))
+    @os.update!(reorder_changeset(@os.root_node))
 
     publish_and_check_versions(should_change: false)
   end
@@ -314,13 +314,13 @@ describe FormVersioningPolicy do
 
     save_old_version_codes
 
-    @os.update_attributes!(removal_changeset(@os.root_node))
+    @os.update!(removal_changeset(@os.root_node))
 
     publish_and_check_versions(should_change: true)
   end
 
   # creates an option set, and a question that has the option set, and adds it to first two forms
-  def setup_option_set(options = {})
+  def setup_option_set(_options = {})
     @os = FactoryGirl.create(:option_set, option_names: :multilevel)
     @q = FactoryGirl.create(:question, qtype_name: "select_one", option_set: @os)
     @forms[0...2].each do |f|
@@ -333,21 +333,21 @@ describe FormVersioningPolicy do
 
   # reloads all forms
   def reload_forms
-    @forms.each{|f| f.reload}
+    @forms.each(&:reload)
   end
 
   def save_old_version_codes
     # publish and unpublish so any pending upgrades are performed
     reload_forms
-    @forms.each{|f| f.publish!; f.unpublish!}
+    @forms.each { |f| f.publish!; f.unpublish! }
     reload_forms
-    @old_versions = @forms.collect{|f| f.current_version.code}
+    @old_versions = @forms.collect { |f| f.current_version.code }
   end
 
   def publish_and_check_versions(options)
     reload_forms
 
-    @forms.each{|f| f.publish!}
+    @forms.each(&:publish!)
 
     reload_forms
 
@@ -357,6 +357,6 @@ describe FormVersioningPolicy do
     expect(@old_versions[1]).send(method, eq(@forms[1].current_version.code))
 
     # third form code should never change
-    expect(@old_versions[2]).to eq @forms[2].current_version.code
+    expect(@old_versions[2]).to eq(@forms[2].current_version.code)
   end
 end

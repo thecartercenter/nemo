@@ -12,7 +12,7 @@ describe Results::Csv::GroupPath do
 
   it "should work with nested groups" do
     expect(path.changes).to eq([0, 0])
-    expect(path.changed?).to be false
+    expect(path.changed?).to be(false)
 
     # Start with a nested answer.
     path.process_row(
@@ -23,7 +23,7 @@ describe Results::Csv::GroupPath do
 
     # Response and both group levels have changed, hence the 3.
     expect(path.changes).to eq([0, 3])
-    expect(path.changed?).to be true
+    expect(path.changed?).to be(true)
     expect(path.parent_repeat_group_id).to eq(fi2)
 
     # Next answer is root-level.
@@ -32,7 +32,7 @@ describe Results::Csv::GroupPath do
       "ancestry" => "{AnswerGroup:0:#{fi0},Answer:1:#{fi4}}"
     )
     expect(path.changes).to eq([-2, 0])
-    expect(path.changed?).to be true
+    expect(path.changed?).to be(true)
     expect(path.parent_repeat_group_id).to be_nil
 
     # Next answer is in non-repeat group (no change).
@@ -41,7 +41,7 @@ describe Results::Csv::GroupPath do
       "ancestry" => "{AnswerGroup:0:#{fi0},AnswerGroup:2:#{fi5},Answer:0:#{fi6}}"
     )
     expect(path.changes).to eq([0, 0])
-    expect(path.changed?).to be false
+    expect(path.changed?).to be(false)
     expect(path.parent_repeat_group_id).to be_nil
 
     # Down to first level of repeat group on new response.
@@ -50,7 +50,7 @@ describe Results::Csv::GroupPath do
       "ancestry" => "{AnswerGroup:0:#{fi0},AnswerGroupSet:0:#{fi1},AnswerGroup:0:#{fi1},Answer:0:#{fi7}}"
     )
     expect(path.changes).to eq([-1, 2])
-    expect(path.changed?).to be true
+    expect(path.changed?).to be(true)
     expect(path.parent_repeat_group_id).to eq(fi1)
 
     # No change in group.
@@ -59,7 +59,7 @@ describe Results::Csv::GroupPath do
       "ancestry" => "{AnswerGroup:0:#{fi0},AnswerGroupSet:0:#{fi1},AnswerGroup:0:#{fi1},Answer:1:#{fi8}}"
     )
     expect(path.changes).to eq([0, 0])
-    expect(path.changed?).to be false
+    expect(path.changed?).to be(false)
     expect(path.parent_repeat_group_id).to eq(fi1)
 
     # Into next item.

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddOneScreenToFormItems < ActiveRecord::Migration[4.2]
   def change
     add_column :form_items, :one_screen, :boolean

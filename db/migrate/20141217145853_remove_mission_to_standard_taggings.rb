@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RemoveMissionToStandardTaggings < ActiveRecord::Migration[4.2]
   def up
     # Taggings should no longer span from mission to standards

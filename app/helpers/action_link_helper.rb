@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module ActionLinkHelper
   def translate_action(klass_or_obj, action)
     i18nk = (klass_or_obj.respond_to?(:model_name) ? klass_or_obj : klass_or_obj.class).model_name.i18n_key
@@ -27,8 +29,8 @@ module ActionLinkHelper
     controller = options[:controller] || obj.class.model_name.plural
     i18nk = obj.class.model_name.i18n_key
 
-    actions_to_show = options[:only] || [:index, :new, :show, :edit, :destroy]
-    actions_to_show -= [:new, :show, :edit, :destroy] if canonical_action == :new
+    actions_to_show = options[:only] || %i[index new show edit destroy]
+    actions_to_show -= %i[new show edit destroy] if canonical_action == :new
     actions_to_show -= options[:except]
     actions_to_show += options[:append]
     actions_to_show.delete(canonical_action)
@@ -36,14 +38,17 @@ module ActionLinkHelper
     content_tag(:div, class: "top-action-links d-print-none") do
       main_links = "".html_safe
       main_links << actions_to_show.map do |action|
-        url = url_for(controller: controller, action: action) rescue nil
+        url = begin
+                url_for(controller: controller, action: action)
+              rescue StandardError
+                nil
+              end
 
-        if url && can?(action, %w(index new).include?(action) ? obj.class : obj)
-          link_to(icon_tag(action) + translate_action(obj, action), url,
-            method: action == :destroy ? :delete : nil,
-            data: {confirm: (action == :destroy) ? delete_warning(obj) : nil},
-            class: "#{action}-link")
-        end
+        next unless url && can?(action, %w[index new].include?(action) ? obj.class : obj)
+        link_to(icon_tag(action) + translate_action(obj, action), url,
+          method: action == :destroy ? :delete : nil,
+          data: {confirm: action == :destroy ? delete_warning(obj) : nil},
+          class: "#{action}-link")
       end.compact.reduce(:<<)
       main_links << (block_given? ? capture(&block) : "")
     end

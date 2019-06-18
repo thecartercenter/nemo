@@ -71,7 +71,7 @@ class FormVersioningPolicy
         # We check if root_group is present because form might be in the process of deleting itself, in which
         # case we don't need to worry about version bumps.
         if obj.form.smsable? && obj.form.root_group.present? &&
-          obj.form.last_qing.present? && obj.rank <= obj.form.last_qing.rank
+            obj.form.last_qing.present? && obj.rank <= obj.form.last_qing.rank
           return [obj.form]
         end
       end
@@ -101,7 +101,7 @@ class FormVersioningPolicy
       when :update
         # Changing question type, option set, constraints
         return obj.forms if obj.saved_change_to_attribute?(:qtype_name) || obj.saved_change_to_attribute?(:option_set_id) ||
-            obj.saved_change_to_attribute?(:constraint)
+          obj.saved_change_to_attribute?(:constraint)
       end
     end
 

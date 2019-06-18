@@ -1,5 +1,7 @@
+# frozen_string_literal: true
+
 class AddAccessLevelToQuestion < ActiveRecord::Migration[4.2]
   def change
-    add_column :questionables, :access_level, :tinyint  
+    add_column :questionables, :access_level, :tinyint
   end
 end

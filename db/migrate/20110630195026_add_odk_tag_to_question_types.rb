@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddOdkTagToQuestionTypes < ActiveRecord::Migration[4.2]
   def self.up
     add_column :question_types, :odk_tag, :string

@@ -22,7 +22,7 @@ describe SkipRuleDecorator do
       skip_rule = form.c[2].skip_rules[0]
       actual = SkipRuleDecorator.new(skip_rule).human_readable
       expected = "SKIP TO #{dest_qing_str} if #{first_cond_str} OR #{second_cond_str}"
-      expect(actual).to eq expected
+      expect(actual).to eq(expected)
     end
 
     it "should use AND for all_met" do
@@ -34,7 +34,7 @@ describe SkipRuleDecorator do
       skip_rule = form.c[3].skip_rules[0]
       actual = SkipRuleDecorator.new(skip_rule).human_readable
       expected = "SKIP TO #{dest_qing_str} if #{first_cond_str} AND #{second_cond_str}"
-      expect(actual).to eq expected
+      expect(actual).to eq(expected)
     end
 
     it "should display properly for skip_if == always" do
@@ -42,7 +42,7 @@ describe SkipRuleDecorator do
       skip_rule = form.c[3].skip_rules[0]
       actual = SkipRuleDecorator.new(skip_rule).human_readable
       expected = "SKIP TO #{dest_qing_str}"
-      expect(actual).to eq expected
+      expect(actual).to eq(expected)
     end
 
     it "displays correctly when destination is end of the form" do
@@ -54,7 +54,7 @@ describe SkipRuleDecorator do
       skip_rule = form.c[3].skip_rules[0]
       actual = SkipRuleDecorator.new(skip_rule).human_readable
       expected = "SKIP TO end of form if #{first_cond_str} AND #{second_cond_str}"
-      expect(actual).to eq expected
+      expect(actual).to eq(expected)
     end
   end
 end

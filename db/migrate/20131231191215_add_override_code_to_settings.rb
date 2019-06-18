@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddOverrideCodeToSettings < ActiveRecord::Migration[4.2]
   def change
     add_column :settings, :override_code, :string

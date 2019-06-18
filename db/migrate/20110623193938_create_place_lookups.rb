@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CreatePlaceLookups < ActiveRecord::Migration[4.2]
   def self.up
     create_table :place_lookups do |t|

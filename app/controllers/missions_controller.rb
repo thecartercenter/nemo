@@ -23,22 +23,18 @@ class MissionsController < ApplicationController
   end
 
   def create
-    begin
-      @mission.save!
-      set_success_and_redirect(@mission)
-    rescue ActiveRecord::RecordInvalid
-      flash.now[:error] = I18n.t("activerecord.errors.models.mission.general")
-      render(:form)
-    end
+    @mission.save!
+    set_success_and_redirect(@mission)
+  rescue ActiveRecord::RecordInvalid
+    flash.now[:error] = I18n.t("activerecord.errors.models.mission.general")
+    render(:form)
   end
 
   def update
-    begin
-      @mission.update_attributes!(mission_params)
-      set_success_and_redirect(@mission)
-    rescue ActiveRecord::RecordInvalid
-      render(:form)
-    end
+    @mission.update!(mission_params)
+    set_success_and_redirect(@mission)
+  rescue ActiveRecord::RecordInvalid
+    render(:form)
   end
 
   def destroy

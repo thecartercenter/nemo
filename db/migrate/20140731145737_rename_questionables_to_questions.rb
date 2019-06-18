@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class RenameQuestionablesToQuestions < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :questionables, :option_level

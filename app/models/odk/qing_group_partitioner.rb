@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Separates a qing group that contains multilevel questionings into several groups.
 # The idea here is to just remove the multilevel questioning from the group and create a QingGroupFragment
 # for each level of the multilevel questioning, since ODK doesn't show multilevel questions correctly
@@ -53,7 +55,5 @@ module Odk
       result << QingGroupFragment.new(group, temp_group_children) unless temp_group_children.empty?
       result
     end
-
-
   end
 end

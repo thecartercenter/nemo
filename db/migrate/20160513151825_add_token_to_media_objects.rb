@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class AddTokenToMediaObjects < ActiveRecord::Migration[4.2]
   def change
     add_column :media_objects, :token, :string

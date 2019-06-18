@@ -42,7 +42,7 @@ module ReportsHelper
 
   # Formats paragraph style textual data in CSV to play nice with Excel.
   def format_csv_para_text(text)
-    return text unless text.is_a?(String) && !text.blank?
+    return text unless text.is_a?(String) && text.present?
 
     # We convert to Markdown since there is a gem to do it and it's much more
     # readable. Conversion also strips unknown tags.

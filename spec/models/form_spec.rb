@@ -103,7 +103,7 @@ describe Form do
     before { publish_and_reset_pub_changed_at }
 
     it "should be correct" do
-      expect(form.odk_download_cache_key).to eq "odk-form/#{form.id}-#{form.pub_changed_at}"
+      expect(form.odk_download_cache_key).to eq("odk-form/#{form.id}-#{form.pub_changed_at}")
     end
   end
 
@@ -119,7 +119,7 @@ describe Form do
       it "should be correct" do
         expect(
           Form.odk_index_cache_key(mission: get_mission)
-        ).to eq "odk-form-list/mission-#{get_mission.id}/#{form2.pub_changed_at.utc.to_s(:cache_datetime)}"
+        ).to eq("odk-form-list/mission-#{get_mission.id}/#{form2.pub_changed_at.utc.to_s(:cache_datetime)}")
       end
     end
 
@@ -147,11 +147,11 @@ describe Form do
 
     describe "ancestry" do
       it "has 3 children" do
-        expect(form.root_group.sorted_children.count).to eq 3
+        expect(form.root_group.sorted_children.count).to eq(3)
       end
 
       it "has one subgroup with two children" do
-        expect(form.root_group.sorted_children[1].sorted_children.count).to eq 2
+        expect(form.root_group.sorted_children[1].sorted_children.count).to eq(2)
       end
     end
 
@@ -170,19 +170,19 @@ describe Form do
 
         it "should work" do
           form.destroy
-          expect([Form.count, FormItem.count, SkipRule.count]).to eq [0, 0, 0]
+          expect([Form.count, FormItem.count, SkipRule.count]).to eq([0, 0, 0])
         end
       end
 
       it "should work" do
         form.destroy
-        expect([Form.count, FormItem.count]).to eq [0, 0]
+        expect([Form.count, FormItem.count]).to eq([0, 0])
       end
 
       it "should work with an smsable form" do
         form.update(smsable: true)
         form.destroy
-        expect([Form.count, FormItem.count]).to eq [0, 0]
+        expect([Form.count, FormItem.count]).to eq([0, 0])
       end
     end
   end

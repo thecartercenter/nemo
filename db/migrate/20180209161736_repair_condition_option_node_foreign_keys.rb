@@ -1,9 +1,11 @@
+# frozen_string_literal: true
+
 class RepairConditionOptionNodeForeignKeys < ActiveRecord::Migration[4.2]
   def up
     transaction do
       puts "Repairing condition -> option node links"
-      broken = Condition.with_deleted.joins(:option_node).
-        where("conditions.mission_id != option_nodes.mission_id").to_a
+      broken = Condition.with_deleted.joins(:option_node)
+        .where("conditions.mission_id != option_nodes.mission_id").to_a
       puts "#{broken.size} broken links found"
       broken.each do |c|
         incorrect = c.option_node

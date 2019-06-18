@@ -8,7 +8,7 @@ module ResponseCondition
 
     def members
       object.members.map do |m|
-        if m.is_a? Forms::ConditionGroup
+        if m.is_a?(Forms::ConditionGroup)
           ResponseCondition::ConditionGroupSerializer.new(m)
         else
           ResponseCondition::ConditionSerializer.new(m)

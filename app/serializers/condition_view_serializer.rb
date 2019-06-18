@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ConditionViewSerializer < ActiveModel::Serializer
   attributes :id, :left_qing_id, :op, :value, :option_node_id, :option_set_id,
     :form_id, :conditionable_id, :conditionable_type, :operator_options
@@ -5,21 +7,15 @@ class ConditionViewSerializer < ActiveModel::Serializer
 
   has_many :refable_qings, serializer: TargetFormItemSerializer
 
-  def id
-    object.id
-  end
+  delegate :id, to: :object
 
-  def conditionable_id
-    object.conditionable_id
-  end
+  delegate :conditionable_id, to: :object
 
   def operator_options
     object.applicable_operator_names.map { |n| {name: I18n.t("condition.operators.select.#{n}"), id: n} }
   end
 
-  def value
-    object.value
-  end
+  delegate :value, to: :object
 
   def option_set_id
     object.left_qing.try(:option_set_id)

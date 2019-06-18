@@ -33,11 +33,11 @@ gem "whenever", "~> 0.9.4", require: false
 
 # JS/CSS
 gem "bootstrap", "~> 4.3.1"
-gem "popper_js", "~> 1.14.5"
 gem "dropzonejs-rails", "~> 0.7.3"
 gem "font-awesome-rails", "~> 4.7"
 gem "jquery-fileupload-rails", "~> 0.4.5"
 gem "jquery-rails", "~> 4.3.3"
+gem "popper_js", "~> 1.14.5"
 gem "rails-backbone", git: "https://github.com/codebrew/backbone-rails.git"
 gem "react-rails", "~> 2.4"
 gem "sass-rails", "~> 5.0.7"
