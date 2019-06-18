@@ -9,9 +9,6 @@ feature "skip logic form fields", js: true do
   let(:form) do
     create(:form, *traits, name: "Foo", question_types: %w[integer integer integer integer integer])
   end
-  let(:dest_qing_str) { dest_qing_str }
-  let(:first_cond_str) { first_cond_str }
-  let(:second_cond_str) { second_cond_str }
 
   include_context "form design conditional logic"
 
@@ -31,9 +28,9 @@ feature "skip logic form fields", js: true do
 
   shared_examples_for "correct behavior" do
     context "with existing skip rule" do
-      let(:dest_qing_str) { "Question ##{form.c[4].full_dotted_rank} #{form.c[4].code}" }
-      let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} #{form.c[0].code} is equal to 5" }
-      let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} #{form.c[1].code} is equal to 10" }
+      let(:dest_qing_str) { "Question ##{form.c[4].full_dotted_rank} [#{form.c[4].code}]" }
+      let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} [#{form.c[0].code}] is equal to 5" }
+      let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} [#{form.c[1].code}] is equal to 10" }
 
       scenario "read-only mode" do
         expected = "Skip to #{dest_qing_str} if any of these conditions are met "\
@@ -104,9 +101,9 @@ feature "skip logic form fields", js: true do
     end
 
     context "existing questioning" do
-      let(:dest_qing_str) { "Question ##{form.c[4].full_dotted_rank} #{form.c[4].code}" }
-      let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} #{form.c[0].code} is less than 1000" }
-      let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} #{form.c[1].code} is equal to 10" }
+      let(:dest_qing_str) { "Question ##{form.c[4].full_dotted_rank} [#{form.c[4].code}]" }
+      let(:first_cond_str) { "Question ##{form.c[0].full_dotted_rank} [#{form.c[0].code}] is less than 1000" }
+      let(:second_cond_str) { "Question ##{form.c[1].full_dotted_rank} [#{form.c[1].code}] is equal to 10" }
 
       scenario "rules are updated correctly" do
         visit("#{url_prefix}/questionings/#{form.c[2].id}/edit")
