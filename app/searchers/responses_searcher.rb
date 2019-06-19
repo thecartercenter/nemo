@@ -106,13 +106,13 @@ class ResponsesSearcher < Searcher
     relation.where(sql)
   end
 
+  private
+
   # Parse the search expressions and
   # save specific data that can be used for search filters.
   def save_filter_data(search)
     search.expressions.each(&method(:parse_expression))
   end
-
-  private
 
   # Parse a single expression, saving data that can be used for search filters.
   def parse_expression(expression)
