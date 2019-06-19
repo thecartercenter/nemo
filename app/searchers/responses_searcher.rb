@@ -165,7 +165,10 @@ class ResponsesSearcher < Searcher
   def filter_by_expression(expression, op_kind, token_values)
     if expression.qualifier.name == "form" && equality_op?(op_kind)
       form_names = token_values
-      self.form_ids = form_ids.concat(Form.where(name: form_names).pluck(:id))
+      matched_form_ids = Form.where(name: form_names).pluck(:id)
+      return false if matched_form_ids.empty?
+
+      self.form_ids = form_ids.concat(matched_form_ids)
       return true
     end
 

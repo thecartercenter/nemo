@@ -20,7 +20,7 @@ describe ResponsesSearcher do
       expect(searcher(%(form:("foo 1.0" | bar)))).to have_filter_data(form_ids: [form2.id, form.id], advanced_text: "")
       expect(searcher(%(form:(foo bar)))).to have_filter_data(form_ids: [], advanced_text: "form:(foo bar)")
       expect(searcher(%(form:bar))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
-      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "")
+      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:(x)")
       expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:(x)")
     end
   end
