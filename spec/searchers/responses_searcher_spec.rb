@@ -15,10 +15,13 @@ describe ResponsesSearcher do
 
     it "should work" do
       expect(search(%(form:"foo 1.0"))).to contain_exactly(r1, r3)
-    end
 
-    it "should parse filter data" do
       expect(searcher(%(form:"foo 1.0"))).to have_filter_data(form_ids: [form.id], advanced_text: "")
+      expect(searcher(%(form:("foo 1.0" | bar)))).to have_filter_data(form_ids: [form2.id, form.id], advanced_text: "")
+      expect(searcher(%(form:(foo bar)))).to have_filter_data(form_ids: [], advanced_text: "form:(foo bar)")
+      expect(searcher(%(form:bar))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
+      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "")
+      expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:(x)")
     end
   end
 

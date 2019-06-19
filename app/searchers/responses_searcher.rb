@@ -112,6 +112,12 @@ class ResponsesSearcher < Searcher
   # save specific data that can be used for search filters.
   def save_filter_data(search)
     search.expressions.each(&method(:parse_expression))
+    clean_up
+  end
+
+  # Clean up filter data after parsing everything.
+  def clean_up
+    self.advanced_text = advanced_text.strip
   end
 
   # Parse a single expression, saving data that can be used for search filters.
