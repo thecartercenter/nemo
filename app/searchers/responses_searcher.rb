@@ -2,6 +2,16 @@
 
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
+  # Parsed search values
+  attr_accessor :form_ids, :advanced_text
+
+  def initialize(**opts)
+    super(opts)
+
+    self.form_ids = []
+    self.advanced_text = +""
+  end
+
   # Returns the list of fields to be searched for this class.
   # Includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression.

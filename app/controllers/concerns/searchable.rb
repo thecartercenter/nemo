@@ -34,8 +34,10 @@ module Searchable
   # Initializes variables used by the search filters.
   def init_filter_data(searcher = nil)
     @all_forms = Form.all.map { |item| {name: item.name, id: item.id} }.sort_by_key
-    @form_ids = searcher.form_ids if searcher
-    @advanced_text = searcher.advanced_text.strip
+
+    return unless searcher
+    @form_ids = searcher.try(:form_ids)
+    @advanced_text = searcher.try(:advanced_text)
   end
 
   private
