@@ -169,6 +169,17 @@ class ResponsesController < ApplicationController
     end
   end
 
+  # Initializes variables used by the search filters.
+  def init_filter_data(searcher)
+    @all_forms = Form.all.map { |item| {name: item.name, id: item.id} }.sort_by_key
+
+    # There may not be an active search.
+    return if searcher.is_a?(NoopSearcher)
+
+    @form_ids = searcher.form_ids
+    @advanced_text = searcher.advanced_text
+  end
+
   def handle_odk_submission
     return render_xml_submission_failure("No XML file attached.", 422) unless params[:xml_submission_file]
 
