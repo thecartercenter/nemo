@@ -10,6 +10,10 @@
     h1.title {
       display: block;
       margin-bottom: 3px;
+
+      i {
+        margin-#{$right}: 5px;
+      }
     }
 
     img.logo {
@@ -70,6 +74,10 @@
       &.depth-4 td.name {
         border-left: 60px solid $light-border-color;
       }
+    }
+
+    div.qing-code {
+      text-align: right;
     }
 
     div.condition {
