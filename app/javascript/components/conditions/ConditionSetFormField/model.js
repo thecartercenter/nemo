@@ -50,19 +50,18 @@ class ConditionSetModel {
       conditions: cloneDeep(initialState.conditions) || [],
     });
 
-    // Make sure conditions are always instances of the model.
-    // TODO: MobX-state-tree can do this automatically for us.
     reaction(
       () => this.original,
       (original) => {
-        this.original.conditions = this.mapConditionsToStores(original.conditions);
+        this.original.conditions = this.prepareConditions(original.conditions);
       },
       { fireImmediately: true },
     );
+
     reaction(
       () => this.conditions,
       (conditions) => {
-        this.conditions = this.mapConditionsToStores(conditions);
+        this.conditions = this.prepareConditions(conditions);
       },
       { fireImmediately: true },
     );
@@ -79,15 +78,25 @@ class ConditionSetModel {
     );
   }
 
-  mapConditionsToStores(conditions) {
-    // Only modify if necessary to prevent a cycle.
-    if (conditions.some((condition) => !(condition instanceof ConditionModel))) {
-      return conditions.map((condition) => {
-        condition.refableQings = this.refableQings;
-        return new ConditionModel(condition);
-      });
-    }
-    return conditions;
+  // Ensures conditions contains all instances of ConditionModel (and not plain objects)
+  // Adds refableQings to the ConditionModels
+  // Returns the original value if nothing is changed to avoid a reaction cycle.
+  prepareConditions(conditions) {
+    let changed = false;
+    const newConditions = conditions.map((condition) => {
+      if (!(condition instanceof ConditionModel)) {
+        changed = true;
+        return new ConditionModel({ ...condition, refableQings: this.refableQings });
+      }
+      if (!condition.refableQings) {
+        changed = true;
+        const fixedCondition = condition;
+        fixedCondition.refableQings = this.refableQings;
+        return fixedCondition;
+      }
+      return condition;
+    });
+    return changed ? newConditions : conditions;
   }
 
   @action
