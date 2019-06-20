@@ -2,7 +2,6 @@ import React from 'react';
 import { shallow } from 'enzyme';
 
 import ConditionSetModel from '../model';
-import ConditionModel from './model';
 import Component from './component';
 
 let defaultProps;

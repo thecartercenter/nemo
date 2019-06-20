@@ -14,8 +14,8 @@ window.ELMO = {
     },
   },
   Utils: {
-    Select2OptionBuilder: class { ajax() { return { url: 'mock' } } }
-  }
+    Select2OptionBuilder: class { ajax() { return { url: 'mock' }; } },
+  },
 };
 
 // Stub out navigation features (otherwise jsdom complains).
