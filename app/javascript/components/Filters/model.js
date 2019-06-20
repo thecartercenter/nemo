@@ -55,7 +55,7 @@ class FiltersModel {
 
     Object.assign(this.original, {
       selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
-      isReviewed: initialState.isReviewed || null,
+      isReviewed: initialState.isReviewed == null ? null : initialState.isReviewed,
       selectedSubmittersForType: cloneDeep(initialState.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
     });
 

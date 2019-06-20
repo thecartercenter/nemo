@@ -25,6 +25,20 @@ describe ResponsesSearcher do
     end
   end
 
+  describe "reviewed qualifier" do
+    let!(:r1) { create(:response, form: form, reviewed: true) }
+    let!(:r2) { create(:response, form: form) }
+
+    it "should work" do
+      expect(search(%(reviewed:1))).to contain_exactly(r1)
+
+      expect(searcher(%(reviewed:1))).to have_filter_data(is_reviewed: true, advanced_text: "")
+      expect(searcher(%(reviewed:yes))).to have_filter_data(is_reviewed: true, advanced_text: "")
+      expect(searcher(%(reviewed:("0")))).to have_filter_data(is_reviewed: false, advanced_text: "")
+      expect(searcher(%(reviewed:(1 0)))).to have_filter_data(is_reviewed: nil, advanced_text: "reviewed:(1 0)")
+    end
+  end
+
   describe "submit_date qualifier" do
     context "with tricky timezone" do
       let(:response) { create(:response, form: form, created_at: "2017-01-01 22:00") }

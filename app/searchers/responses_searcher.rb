@@ -3,12 +3,13 @@
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
   # Parsed search values
-  attr_accessor :form_ids
+  attr_accessor :form_ids, :is_reviewed
 
   def initialize(**opts)
     super(opts)
 
     self.form_ids = []
+    self.is_reviewed = nil
   end
 
   # Returns the list of fields to be searched for this class.
@@ -162,16 +163,23 @@ class ResponsesSearcher < Searcher
   # Save specific data that can be used for search filters,
   # or return false if it can't be handled.
   def filter_by_expression(expression, op_kind, token_values)
-    if expression.qualifier.name == "form" && equality_op?(op_kind)
+    return false unless equality_op?(op_kind)
+
+    if expression.qualifier.name == "form"
       form_names = token_values
       matched_form_ids = Form.where(name: form_names).pluck(:id)
       return false if matched_form_ids.empty?
 
       form_ids.concat(matched_form_ids)
-      return true
+    elsif expression.qualifier.name == "reviewed"
+      return false unless token_values.length == 1
+      value = token_values[0]
+      return false unless %w[1 0 yes no].include?(value)
+
+      self.is_reviewed = %w[1 yes].include?(value)
     end
 
-    false
+    true
   end
 
   def equality_op?(op_kind)

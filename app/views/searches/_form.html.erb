@@ -4,7 +4,7 @@
     advancedSearchText: (Settings.filters_beta.present? ? @advanced_text : params[:search]) || "",
     allForms: @all_forms || [],
     selectedFormIds: @form_ids || [],
-    isReviewed: nil,
+    isReviewed: @is_reviewed,
     selectedUsers: Settings.filters_beta.present? ? [] : [],
     selectedGroups: Settings.filters_beta.present? ? [] : [],
   }) %>
