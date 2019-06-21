@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'mobx-react';
 
+import FiltersModel from './model';
 import { provideFiltersStore } from './utils';
 import { submitterType } from './SubmitterFilter/component';
 import Filters from './component';
@@ -19,7 +20,7 @@ function Injector(props) {
     advancedSearchText,
   } = props;
 
-  const filtersStore = provideFiltersStore({
+  const filtersStore = provideFiltersStore(FiltersModel, {
     allForms,
     selectedFormIds,
     isReviewed,

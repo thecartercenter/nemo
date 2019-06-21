@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty';
 import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
 
-import FiltersModel from './model';
 import { SUBMITTER_TYPES } from './SubmitterFilter/component';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
@@ -22,7 +21,7 @@ let filtersStore = null;
  *
  * Generally this should be added to a top-level Provider and only used once.
  */
-export function provideFiltersStore(initialState) {
+export function provideFiltersStore(FiltersModel, initialState) {
   if (!filtersStore) {
     filtersStore = new FiltersModel(initialState);
 
