@@ -177,7 +177,7 @@ class ResponsesController < ApplicationController
     # There may not be an active search.
     return if searcher.is_a?(NoopSearcher)
 
-    @form_ids = searcher.form_ids
+    @selected_form_ids = searcher.form_ids
     @is_reviewed = searcher.is_reviewed
     @advanced_text = searcher.advanced_text
   end

@@ -3,7 +3,7 @@
     controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
     advancedSearchText: (Settings.filters_beta.present? ? @advanced_text : params[:search]) || "",
     allForms: @all_forms || [],
-    selectedFormIds: @form_ids || [],
+    selectedFormIds: @selected_form_ids || [],
     isReviewed: @is_reviewed,
     selectedUsers: Settings.filters_beta.present? ? [] : [],
     selectedGroups: Settings.filters_beta.present? ? [] : [],
