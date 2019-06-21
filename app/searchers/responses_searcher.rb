@@ -3,13 +3,12 @@
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
   # Parsed search values
-  attr_accessor :form_ids, :advanced_text
+  attr_accessor :form_ids
 
   def initialize(**opts)
     super(opts)
 
     self.form_ids = []
-    self.advanced_text = +""
   end
 
   # Returns the list of fields to be searched for this class.
