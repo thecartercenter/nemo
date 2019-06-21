@@ -30,6 +30,7 @@ script:
   - bundle exec rspec --format progress
   - yarn i18n:export
   - yarn test
+  - yarn run lint:react
 env:
   global:
     # Set reCAPTCHA keys to dummy values
