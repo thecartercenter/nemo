@@ -12,6 +12,9 @@
   <% unless read_only && @questioning.skip_rules.none? %>
     <%= f.field(:skip_logic, partial: "questionings/skip_logic", locals: {form_item: @questioning}) %>
   <% end %>
+  <% unless read_only && @questioning.constraints.none? %>
+    <%= f.field(:constraints, partial: "questionings/constraints", locals: {form_item: @questioning}) %>
+  <% end %>
   <%= f.field(:default, type: :string, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>

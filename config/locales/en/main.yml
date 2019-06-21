@@ -1390,10 +1390,12 @@ en:
       unknown_number: "[unknown number]"
 
   form_item:
-    all_above_must_be_true: "All above must be true"
-    at_least_one_above_must_be_true: "At least one of above must be true"
+    accept_if_options:
+      all_met: "All above must be true"
+      any_met: "At least one of above must be true"
     add_condition: "Add Condition"
     add_rule: "Add Rule"
+    add_constraint: "Add Constraint"
     display_if_options:
       qing_group:
         always: "Always display this group"
@@ -1410,9 +1412,9 @@ en:
       dont_skip: "After this question, go to the next question"
       skip: "After this question, skip ..."
       end_of_form: "Skip to the end of the form"
-    constraints_options:
-      any_answer: "Accept any answer to this question"
-      only_if: "Only accept an answer if these constraints are met ..."
+    constrain_options:
+      dont_constrain: "Accept any answer to this question"
+      constrain: "Only accept an answer if ..."
 
   incomplete_response:
     missing_answers:
