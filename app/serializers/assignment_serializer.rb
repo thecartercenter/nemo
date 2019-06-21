@@ -25,9 +25,9 @@
 #
 # rubocop:enable Metrics/LineLength
 
-class AssignmentSerializer < ActiveModel::Serializer
+# Serializes user assignments
+class AssignmentSerializer < ApplicationSerializer
   attributes :id, :mission_id, :mission_name, :role, :new_record, :destroy
-  format_keys :lower_camel
 
   def new_record
     object.new_record?

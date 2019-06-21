@@ -1,13 +1,20 @@
 # frozen_string_literal: true
 
 shared_context "form design conditional logic" do
-  def select_question(code)
+  def select_left_qing(code)
     find('select[name*="\\[left_qing_id\\]"]').select(code)
     wait_for_ajax # Changing the question triggers an ajax call (for now)
   end
 
-  def expect_selected_question(qing)
+  def expect_selected_left_qing(qing)
     select = find('select[name*="\\[left_qing_id\\]"]')
+    expect(page).to have_select(select[:name], selected: "#{qing.full_dotted_rank}. #{qing.code}")
+  end
+
+  def expect_selected_right_qing(qing)
+    select = find('select[name*="\\[right_side_type\\]"]')
+    expect(page).to have_select(select[:name], selected: "Another question ...")
+    select = find('select[name*="\\[right_qing_id\\]"]')
     expect(page).to have_select(select[:name], selected: "#{qing.full_dotted_rank}. #{qing.code}")
   end
 
@@ -20,6 +27,11 @@ shared_context "form design conditional logic" do
     expect(page).to have_select(select[:name], selected: op)
   end
 
+  def select_right_qing(code)
+    find('select[name*="\\[right_side_type\\]"]').select("Another question ...")
+    find('select[name*="\\[right_qing_id\\]"]').select(code)
+  end
+
   def select_values(*values)
     selects = all('select[name*="\\[option_node_ids\\]"]')
     values.each_with_index do |value, i|
@@ -29,7 +41,7 @@ shared_context "form design conditional logic" do
 
   def expect_selected_values(*values)
     selects = all('select[name*="\\[option_node_ids\\]"]')
-    expect(selects.size).to eq values.size
+    expect(selects.size).to eq(values.size)
     selects.each_with_index do |select, i|
       expect(page).to have_select(select[:name], selected: values[i])
     end

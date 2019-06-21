@@ -4,8 +4,7 @@
 class QuestioningDecorator < FormItemDecorator
   def concatenated_conditions
     concatenator = display_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
-    # Temporarily ignoring right_side_is_qing conditions
-    decorated_conditions.reject(&:right_side_is_qing?).map(&:human_readable).join(" #{concatenator} ")
+    decorated_conditions.map(&:human_readable).join(" #{concatenator} ")
   end
 
   # Unique, sorted list of questionings to which this question actually refers,

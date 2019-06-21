@@ -151,18 +151,13 @@ ELMO::Application.routes.draw do
       end
     end
 
-    resources :form_items, path: "form-items", only: [:update] do
-      collection do
-        get "condition-form", as: "condition_form", action: "condition_form"
-      end
-    end
+    resources :form_items, path: "form-items", only: [:update]
 
     resources :option_sets, path: "option-sets" do
       member do
         get "child-nodes", as: "child-nodes", action: "child_nodes"
         put "clone"
-        get "export", defaults: { format: "xlsx" }
-        get "condition-form-view", as: "condition_form_view", action: "condition_form_view"
+        get "export", defaults: {format: "xlsx"}
       end
     end
 
@@ -177,6 +172,11 @@ ELMO::Application.routes.draw do
     %w(forms questions option_sets).each do |k|
       post "/#{k.gsub('_', '-')}/import-standard" => "#{k}#import_standard", as: "import_standard_#{k}"
     end
+
+    # Non-RESTful, JSON only controllers for React
+    get "/condition-form-data/base" => "condition_form_data#base"
+    get "/condition-form-data/option-path" => "condition_form_data#option_path"
+    get "/filter-data/qings" => "filter_data#qings"
 
     # special routes for tokeninput suggestions
     get "/tags/suggest" => "tags#suggest", as: :suggest_tags

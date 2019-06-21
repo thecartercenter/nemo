@@ -1,43 +1,22 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer, inject, Provider } from 'mobx-react';
+import { observer, inject } from 'mobx-react';
 
-import { provideConditionSetStore } from '../ConditionSetFormField/utils';
 import ConditionSetFormField from '../ConditionSetFormField/component';
-import ErrorBoundary from '../../ErrorBoundary/component';
 
 @inject('conditionSetStore')
 @observer
-class DisplayLogicFormFieldRoot extends React.Component {
+class DisplayLogicFormField extends React.Component {
   static propTypes = {
     conditionSetStore: PropTypes.object.isRequired,
-
-    // TODO: Describe these prop types.
-    /* eslint-disable react/forbid-prop-types */
-    refableQings: PropTypes.any,
-    id: PropTypes.any,
-    type: PropTypes.any,
-    displayIf: PropTypes.any,
-    displayConditions: PropTypes.any,
-    formId: PropTypes.any,
-    /* eslint-enable */
+    type: PropTypes.string,
+    displayIf: PropTypes.string,
   };
 
   constructor(props) {
     super(props);
-    const { conditionSetStore, refableQings, id, type, displayIf, displayConditions, formId } = this.props;
+    const { displayIf } = this.props;
     this.state = { displayIf };
-
-    conditionSetStore.initialize({
-      formId,
-      namePrefix: `${type}[display_conditions_attributes]`,
-      conditions: displayConditions,
-      conditionableId: id,
-      conditionableType: 'FormItem',
-      // Display logic conditions can't reference self, as that doesn't make sense.
-      refableQings: refableQings.filter((qing) => qing.id !== id),
-      hide: displayIf === 'always',
-    });
   }
 
   displayIfChanged = (event) => {
@@ -61,7 +40,7 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 
   render() {
-    const { refableQings, type } = this.props;
+    const { conditionSetStore: { refableQings }, type } = this.props;
     const { displayIf } = this.state;
 
     if (refableQings.length === 0) {
@@ -90,17 +69,4 @@ class DisplayLogicFormFieldRoot extends React.Component {
   }
 }
 
-const DisplayLogicFormField = (props) => (
-  <Provider conditionSetStore={provideConditionSetStore('displayLogic')}>
-    <DisplayLogicFormFieldRoot {...props} />
-  </Provider>
-);
-
-// Top-level component with an error boundary so no errors can leak out.
-const DisplayLogicFormFieldGuard = (props) => (
-  <ErrorBoundary>
-    <DisplayLogicFormField {...props} />
-  </ErrorBoundary>
-);
-
-export default DisplayLogicFormFieldGuard;
+export default DisplayLogicFormField;

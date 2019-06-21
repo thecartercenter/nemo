@@ -124,7 +124,7 @@ class ResponsesController < ApplicationController
     render(json: {
       possible_users: ActiveModel::ArraySerializer.new(possible_users),
       more: possible_users.next_page.present?
-    }, select2: true)
+    })
   end
 
   def setup_condition_computer

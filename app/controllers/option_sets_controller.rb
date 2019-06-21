@@ -111,12 +111,6 @@ class OptionSetsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
-  def condition_form_view
-    option_node = OptionNode.find_by(id: params[:node_id]) # null if not found instead of throwing exception
-    option_node ||= @option_set.root_node
-    render(json: OptionNodeConditionViewSerializer.new(option_node))
-  end
-
   private
 
   # Converts level_names and children (recursively) attribs hashes to arrays.

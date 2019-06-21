@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -20,10 +22,7 @@
 #
 # rubocop:enable Metrics/LineLength
 
-class UserGroupSerializer < ActiveModel::Serializer
-  attributes :id, :text
-
-  def text
-    object.name
-  end
+# Serializes UserGroups for multiple purposes.
+class UserGroupSerializer < ApplicationSerializer
+  attributes :id, :name
 end

@@ -6,7 +6,7 @@ class ELMO.Views.BroadcastsView extends ELMO.Views.FormView
     @recipient_selection_changed()
 
     @$("#broadcast_recipient_ids").select2
-      ajax: ELMO.select2.getAjaxParams(options.recipient_options_url)
+      ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(options.recipient_options_url)
 
   events:
     'change #broadcast_medium': 'medium_changed'

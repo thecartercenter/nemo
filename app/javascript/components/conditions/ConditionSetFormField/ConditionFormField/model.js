@@ -2,7 +2,6 @@ import queryString from 'query-string';
 import { observable, action, reaction, computed } from 'mobx';
 
 import { getLevelsValues, applyDefaultLevelsValues } from '../utils';
-import cloneDeep from 'lodash/cloneDeep';
 
 /**
  * Represents a single condition (e.g. 'Question Foo' Equals 'Bar').
@@ -24,7 +23,13 @@ class ConditionModel {
   leftQingId;
 
   @observable
+  rightQingId;
+
+  @observable
   op;
+
+  @observable
+  rightSideType;
 
   @observable
   operatorOptions = [];
@@ -33,13 +38,19 @@ class ConditionModel {
   value;
 
   @observable
+  refableQings = [];
+
+  @observable
+  rightQingOptions = [];
+
+  @observable
   levels = [];
 
   @observable
   remove;
 
-  constructor(initialValues = {}) {
-    this.initialize(initialValues);
+  constructor(initialState = {}) {
+    Object.assign(this, initialState);
 
     // Update levels when optionSet changes.
     reaction(
@@ -50,13 +61,31 @@ class ConditionModel {
         }
       },
     );
-  }
 
-  // Initial values may not be known at the time the store is created.
-  // This method can be used to set the initial values at a later point.
-  @action
-  initialize = (initialValues) => {
-    Object.assign(this, initialValues);
+    // Update rightQingOptions based on the selected leftQing, according to these rules:
+    // - Don't show selected leftQing in rightQingOptions
+    // - Allow only these type pairs:
+    //   - textual type -> textual type
+    //   - numeric type -> numeric type
+    //   - select_multiple -> none (literals only, due to ODK restriction)
+    //   - select_one -> others with same option set
+    //   - exact match for all other question types (qtypes must be identical)
+    reaction(
+      () => this.leftQingId,
+      (leftQingId) => {
+        if (leftQingId) {
+          const leftQing = this.refableQings.find((qing) => qing.id === leftQingId);
+          this.rightQingOptions = this.refableQings.filter((rightQing) => {
+            if (leftQing.id === rightQing.id || leftQing.qtypeName === 'select_multiple') return false;
+            if (leftQing.textual) return rightQing.textual;
+            if (leftQing.numeric) return rightQing.numeric;
+            return leftQing.qtypeName === rightQing.qtypeName
+              && leftQing.optionSetId === rightQing.optionSetId;
+          });
+        }
+      },
+      { fireImmediately: true },
+    );
   }
 
   /** Return either the current value or the value of the deepest defined level. */
@@ -111,8 +140,8 @@ class ConditionModel {
   }
 
   buildUrl = (nodeId, optionSetId) => {
-    const params = { node_id: nodeId || 'null' };
-    const url = ELMO.app.url_builder.build('option-sets', optionSetId, 'condition-form-view');
+    const params = { node_id: nodeId || 'null', option_set_id: optionSetId };
+    const url = ELMO.app.url_builder.build('condition-form-data', 'option-path');
     return `${url}?${queryString.stringify(params)}`;
   }
 }

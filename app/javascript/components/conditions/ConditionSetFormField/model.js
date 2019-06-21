@@ -32,26 +32,36 @@ class ConditionSetModel {
   @observable
   hide;
 
+  @observable
+  showQingRank = true;
+
   /** If enabled, only allow 'equals' or 'includes' as the operation. */
   @observable
   forceEqualsOp = false;
 
-  constructor(initialValues = {}) {
-    this.initialize(initialValues);
+  /** If enabled, only allow literals on right side of all conditions. */
+  @observable
+  forceRightSideLiteral = false;
 
-    // Make sure conditions are always instances of the model.
-    // TODO: MobX-state-tree can do this automatically for us.
+  constructor(initialState = {}) {
+    Object.assign(this, initialState);
+
+    Object.assign(this.original, {
+      conditions: cloneDeep(initialState.conditions) || [],
+    });
+
     reaction(
       () => this.original,
       (original) => {
-        this.original.conditions = this.mapConditionsToStores(original.conditions);
+        this.original.conditions = this.prepareConditions(original.conditions);
       },
       { fireImmediately: true },
     );
+
     reaction(
       () => this.conditions,
       (conditions) => {
-        this.conditions = this.mapConditionsToStores(conditions);
+        this.conditions = this.prepareConditions(conditions);
       },
       { fireImmediately: true },
     );
@@ -68,28 +78,31 @@ class ConditionSetModel {
     );
   }
 
-  mapConditionsToStores(conditions) {
-    // Only modify if necessary to prevent a cycle.
-    if (conditions.some((condition) => !(condition instanceof ConditionModel))) {
-      return conditions.map((condition) => new ConditionModel(condition));
-    }
-    return conditions;
-  }
-
-  // Initial values may not be known at the time the store is created.
-  // This method can be used to set the initial values at a later point.
-  @action
-  initialize = (initialValues) => {
-    Object.assign(this, initialValues);
-
-    Object.assign(this.original, {
-      conditions: cloneDeep(initialValues.conditions) || [],
+  // Ensures conditions contains all instances of ConditionModel (and not plain objects)
+  // Adds refableQings to the ConditionModels
+  // Returns the original value if nothing is changed to avoid a reaction cycle.
+  prepareConditions(conditions) {
+    let changed = false;
+    const newConditions = conditions.map((condition) => {
+      if (!(condition instanceof ConditionModel)) {
+        changed = true;
+        return new ConditionModel({ ...condition, refableQings: this.refableQings });
+      }
+      if (!condition.refableQings) {
+        changed = true;
+        const fixedCondition = condition;
+        fixedCondition.refableQings = this.refableQings;
+        return fixedCondition;
+      }
+      return condition;
     });
+    return changed ? newConditions : conditions;
   }
 
   @action
   handleAddClick = () => {
     this.conditions.push(new ConditionModel({
+      refableQings: this.refableQings,
       key: Math.round(Math.random() * 100000000),
     }));
   }

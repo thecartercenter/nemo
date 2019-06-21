@@ -20,6 +20,6 @@
 #
 # rubocop:enable Metrics/LineLength
 
-class MissionSerializer < ActiveModel::Serializer
+class MissionSerializer < ApplicationSerializer
   attributes :id, :name
 end

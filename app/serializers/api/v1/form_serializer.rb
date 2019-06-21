@@ -1,5 +1,6 @@
 class API::V1::FormSerializer < ActiveModel::Serializer
   attributes :id, :name, :responses_count, :questions
+  format_keys :underscore
 
   def filter(keys)
     # Only show questions if show action.

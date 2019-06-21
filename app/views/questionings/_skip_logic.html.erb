@@ -8,5 +8,6 @@
       <% end %>
     </dl>
 <% else %>
-  <%= react_component("conditions/SkipLogicFormField/component", FormItemSerializer.new(form_item)) %>
+  <%= react_component("conditions/SkipLogicFormField",
+        ConditionalLogicForm::FormItemSerializer.new(form_item)) %>
 <% end %>

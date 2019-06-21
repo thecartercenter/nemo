@@ -10,6 +10,9 @@ const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({
   namePrefix: 'questioning[display_conditions_attributes]',
   conditionableType: 'FormItem',
   hide: false,
+  forceEqualsOp: true,
+  forceRightSideLiteral: true,
+  showQingRank: false,
 })));
 
 /** Map from each type to an empty array. */
@@ -47,8 +50,14 @@ class FiltersModel {
     return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
   }
 
-  constructor(initialValues = {}) {
-    this.initialize(initialValues);
+  constructor(initialState = {}) {
+    Object.assign(this, initialState);
+
+    Object.assign(this.original, {
+      selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
+      isReviewed: initialState.isReviewed || null,
+      selectedSubmittersForType: cloneDeep(initialState.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
+    });
 
     // Update conditionSet IDs when selected forms change.
     reaction(
@@ -66,28 +75,14 @@ class FiltersModel {
     );
   }
 
-  // Initial values may not be known at the time the store is created.
-  // This method can be used to set the initial values at a later point.
-  @action
-  initialize = (initialValues) => {
-    Object.assign(this, initialValues);
-
-    Object.assign(this.original, {
-      selectedFormIds: cloneDeep(initialValues.selectedFormIds) || [],
-      isReviewed: initialValues.isReviewed || null,
-      selectedSubmittersForType: cloneDeep(initialValues.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
-    });
-  }
-
   @action
   updateRefableQings = async () => {
     ELMO.app.loading(true);
-    const url = ELMO.app.url_builder.build('form-items', 'condition-form');
+    const url = ELMO.app.url_builder.build('filter-data', 'qings');
     try {
       if (process.env.NODE_ENV === 'test') return;
-
-      const { refableQings } = await $.ajax(url);
-      this.conditionSetStore.refableQings = refableQings;
+      const qings = await $.ajax({ url, data: { form_ids: this.selectedFormIds } });
+      this.conditionSetStore.refableQings = qings;
     } catch (error) {
       console.error('Failed to updateRefableQings:', error);
     } finally {
