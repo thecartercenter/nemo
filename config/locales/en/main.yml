@@ -678,6 +678,7 @@ en:
         read_only: "If checked, the enumerator won't be able to change the pre-filled value when using ODK. Does not affect web or SMS responses."
         required: "Whether this question must be completed on this form or is optional. Only enforced if question is not hidden the condition specified above is met."
         skip_logic: "Rules for which question should be shown to the user after this question."
+        constraints: "Conditions which must be met in order for an answer to be accepted. Currently for ODK only."
       report/report:
         name: "A descriptive title for this report."
         aggregation_id: "The operation you want to perform on the combined data."
@@ -1389,6 +1390,8 @@ en:
       unknown_number: "[unknown number]"
 
   form_item:
+    all_above_must_be_true: "All above must be true"
+    at_least_one_above_must_be_true: "At least one of above must be true"
     add_condition: "Add Condition"
     add_rule: "Add Rule"
     display_if_options:
@@ -1407,6 +1410,9 @@ en:
       dont_skip: "After this question, go to the next question"
       skip: "After this question, skip ..."
       end_of_form: "Skip to the end of the form"
+    constraints_options:
+      any_answer: "Accept any answer to this question"
+      only_if: "Only accept an answer if these constraints are met ..."
 
   incomplete_response:
     missing_answers:
