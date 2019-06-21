@@ -39,7 +39,7 @@ class SkipLogicFormField extends React.Component {
       className: 'form-control skip-or-not',
       value: skip,
       onChange: this.skipOptionChanged,
-      name: `${type}[skip_if]`,
+      name: `${type}[skip_logic]`,
       id: `${type}_skip_logic`,
     };
 

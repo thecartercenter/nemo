@@ -95,11 +95,6 @@ class SkipRuleFormField extends React.Component {
   render() {
     const { id, laterItems, namePrefix, ruleId } = this.props;
     const { destItemIdOrEnd, skipIf, destination, destItemId } = this.state;
-    const idFieldProps = {
-      type: 'hidden',
-      name: `${namePrefix}[id]`,
-      value: id || '',
-    };
     const destinationProps = {
       name: `${namePrefix}[destination]`,
       value: destItemIdOrEnd || '',
@@ -112,11 +107,6 @@ class SkipRuleFormField extends React.Component {
       value: skipIf,
       className: 'form-control',
       onChange: this.skipIfChanged,
-    };
-    const destroyFieldProps = {
-      type: 'hidden',
-      name: `${namePrefix}[_destroy]`,
-      value: this.shouldDestroy() ? '1' : '0',
     };
 
     return (
@@ -139,8 +129,16 @@ class SkipRuleFormField extends React.Component {
             </div>
           </div>
           <ConditionSetFormField />
-          <input {...idFieldProps} />
-          <input {...destroyFieldProps} />
+          <input
+            type="hidden"
+            name={`${namePrefix}[id]`}
+            value={id || ''}
+          />
+          <input
+            type="hidden"
+            name={`${namePrefix}[_destroy]`}
+            value={this.shouldDestroy() ? '1' : '0'}
+          />
           <input
             name={`${namePrefix}[destination]`}
             type="hidden"
