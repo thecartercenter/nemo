@@ -2,6 +2,15 @@
 
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
+  # Parsed search values
+  attr_accessor :form_ids
+
+  def initialize(**opts)
+    super(opts)
+
+    self.form_ids = []
+  end
+
   # Returns the list of fields to be searched for this class.
   # Includes whether they should be included in a default, unqualified search
   # and whether they are searchable by a regular expression.
@@ -91,6 +100,81 @@ class ResponsesSearcher < Searcher
       fragment.presence || "'00000000-0000-0000-0000-000000000000'"
     end
 
+    save_filter_data(search)
+
     relation.where(sql)
+  end
+
+  private
+
+  # Parse the search expressions and
+  # save specific data that can be used for search filters.
+  def save_filter_data(search)
+    search.expressions.each(&method(:parse_expression))
+    clean_up
+  end
+
+  # Clean up filter data after parsing everything.
+  def clean_up
+    self.advanced_text = advanced_text.strip
+  end
+
+  # Parse a single expression, saving data that can be used for search filters.
+  def parse_expression(expression)
+    op_kind = expression.op.kind
+    token_values = []
+    is_filterable = true
+    previous = nil
+
+    expression.leaves.each do |lex_tok|
+      is_filterable &&= parse_lex_tok(lex_tok, token_values, previous)
+      previous = lex_tok
+    end
+
+    maybe_filter_by_expression(expression, op_kind, token_values, is_filterable)
+  end
+
+  # Parse a single token in an expression, saving data in the given arrays.
+  # Returns false if this token can't be used for search filters (e.g. it contains an AND).
+  def parse_lex_tok(lex_tok, token_values, previous)
+    # If this is a value token descendant, get the value.
+    # Otherwise it's an OR op.
+    if lex_tok.parent.is?(:value)
+      # If the previous token was also a value token, it's an implicit AND.
+      return false if previous&.parent&.is?(:value)
+
+      token_values << lex_tok.content
+    end
+
+    true
+  end
+
+  # Try to save specific data that can be used for search filters,
+  # otherwise fall back to raw search text.
+  def maybe_filter_by_expression(expression, op_kind, token_values, is_filterable)
+    # Find filters that can be created using the filter UI.
+    was_handled = is_filterable &&
+      filter_by_expression(expression, op_kind, token_values)
+
+    advanced_text << " #{expression.qualifier_text}:(#{expression.values})" unless was_handled
+  end
+
+  # Save specific data that can be used for search filters,
+  # or return false if it can't be handled.
+  def filter_by_expression(expression, op_kind, token_values)
+    if expression.qualifier.name == "form" && equality_op?(op_kind)
+      form_names = token_values
+      matched_form_ids = Form.where(name: form_names).pluck(:id)
+      return false if matched_form_ids.empty?
+
+      form_ids.concat(matched_form_ids)
+      return true
+    end
+
+    false
+  end
+
+  def equality_op?(op_kind)
+    Search::LexToken::EQUALITY_OPS.include?(op_kind)
   end
 end

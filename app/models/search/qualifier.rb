@@ -1,5 +1,6 @@
-class Search::Qualifier
+# frozen_string_literal: true
 
+class Search::Qualifier
   attr_reader :name, :col, :type, :pattern, :default, :validator, :assoc, :preprocessor
 
   # Looks up the qualifier for the given chunk in the given set.
@@ -14,7 +15,7 @@ class Search::Qualifier
 
     # add a bunch of entries with accents removed
     normalized = {}
-    trans.each do |k,v|
+    trans.each do |k, v|
       k_normalized = ActiveSupport::Inflector.transliterate(k)
       normalized[k_normalized] = v if k != k_normalized
     end
@@ -24,13 +25,11 @@ class Search::Qualifier
     qualifier_name = trans[chunk].to_s
 
     # if qualifier_name is not nil, try to find the qualifier object
-    unless qualifier_name.nil?
-      qualifier = set.detect{|q| q.name == qualifier_name}
-    end
+    qualifier = set.detect { |q| q.name == qualifier_name } unless qualifier_name.nil?
 
     # if we haven't found a matching qualifier yet, look for any regexp style ones
     if qualifier.nil?
-      set.find_all { |q| q.regexp? }.each do |q|
+      set.find_all(&:regexp?).each do |q|
         # check against the regular expression and then against the validator (if defined)
         if q.matches(chunk)
           qualifier = q
@@ -39,14 +38,14 @@ class Search::Qualifier
       end
     end
 
-    raise Search::ParseError.new(I18n.t("search.invalid_qualifier", chunk: chunk)) if qualifier.nil?
+    raise Search::ParseError, I18n.t("search.invalid_qualifier", chunk: chunk) if qualifier.nil?
 
     qualifier
   end
 
   def self.translation_key(set, locale = nil)
     names = set.map(&:name)
-    I18n.t("search_qualifiers", locale: locale || I18n.locale, default: {}).select{ |k,v| names.include?(k.to_s) }.invert
+    I18n.t("search_qualifiers", locale: locale || I18n.locale, default: {}).select { |k, _v| names.include?(k.to_s) }.invert
   end
 
   # name  - the name of the qualifier (required, underscored)
@@ -56,7 +55,7 @@ class Search::Qualifier
   # default - whether this qualifier should be assumed for terms with no qualifier (defaults to false)
   # validator - a lambda that accepts a MatchData object and returns whether the given string should be accepted as a valid qualifier
   def initialize(attribs)
-    attribs.each{|k,v| instance_variable_set("@#{k}", v)}
+    attribs.each { |k, v| instance_variable_set("@#{k}", v) }
 
     @default ||= false
     @assoc = Array.wrap(@assoc)
@@ -67,7 +66,7 @@ class Search::Qualifier
   def op_valid?(op)
     case type
     when :regular, :text, :translated, :boolean then %w[= !=].include?(op)
-    when :indexed then op == '='
+    when :indexed then op == "="
     else true
     end
   end
@@ -89,6 +88,6 @@ class Search::Qualifier
   end
 
   def has_more_than_one_column?
-    col.is_a? Array
+    col.is_a?(Array)
   end
 end

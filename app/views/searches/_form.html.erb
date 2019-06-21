@@ -1,9 +1,9 @@
 <form class="search-form form-inline">
   <%= react_component("Filters", {
     controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
-    advancedSearchText: params[:search] || "",
+    advancedSearchText: (Settings.filters_beta.present? ? @advanced_text : params[:search]) || "",
     allForms: @all_forms || [],
-    selectedFormIds: [],
+    selectedFormIds: @form_ids || [],
     isReviewed: nil,
     selectedUsers: Settings.filters_beta.present? ? [] : [],
     selectedGroups: Settings.filters_beta.present? ? [] : [],
