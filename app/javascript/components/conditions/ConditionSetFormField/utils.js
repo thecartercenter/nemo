@@ -1,5 +1,3 @@
-import ConditionSetModel from './model';
-
 /** Cache. */
 const conditionSetStores = {};
 
@@ -9,7 +7,7 @@ const conditionSetStores = {};
  * Generally this should be added to a top-level Provider and used
  * once per condition set.
  */
-export function provideConditionSetStore(uniqueId, initialState) {
+export function provideConditionSetStore(ConditionSetModel, uniqueId, initialState) {
   if (!conditionSetStores[uniqueId]) {
     conditionSetStores[uniqueId] = new ConditionSetModel(initialState);
 

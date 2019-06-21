@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'mobx-react';
 
+import ConditionSetModel from '../../../ConditionSetFormField/model';
 import { provideConditionSetStore } from '../../../ConditionSetFormField/utils';
 import SkipRuleFormField from './component';
 
@@ -20,7 +21,7 @@ function Injector(props) {
   } = props;
 
   // eslint-disable-next-line react/prop-types, react/destructuring-assignment
-  const conditionSetStore = provideConditionSetStore(`skip-${ruleId}`, {
+  const conditionSetStore = provideConditionSetStore(ConditionSetModel, `skip-${ruleId}`, {
     formId,
     namePrefix: `${namePrefix}[conditions_attributes]`,
     conditions,
