@@ -168,7 +168,7 @@ class ResponsesSearcher < Searcher
       matched_form_ids = Form.where(name: form_names).pluck(:id)
       return false if matched_form_ids.empty?
 
-      self.form_ids = form_ids.concat(matched_form_ids)
+      form_ids.concat(matched_form_ids)
       return true
     end
 
