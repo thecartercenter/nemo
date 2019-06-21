@@ -100,7 +100,6 @@ ELMO::Application.routes.draw do
     resources :forms, constraints: -> (req) { req.format == :html } do
       member do
         post "add-questions", as: "add_questions", action: "add_questions"
-        post "remove-questions", as: "remove_questions", action: "remove_questions"
         put "clone"
         put "publish"
         get "choose-questions", as: "choose_questions", action: "choose_questions"

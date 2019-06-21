@@ -4,14 +4,14 @@ require 'rails_helper'
 #   Please move at the next opportunity.
 describe 'api key form field', database_cleaner: :all do
 
-  before(:all) do
+  before do
     @user = FactoryGirl.create(:user)
     @user2 = FactoryGirl.create(:user)
     login(@user)
   end
 
   context 'in show mode for same user' do
-    before(:all) do
+    before do
       get("/en/m/#{get_mission.compact_name}/users/#{@user.id}")
       assert_response(:success)
     end
@@ -26,7 +26,7 @@ describe 'api key form field', database_cleaner: :all do
   end
 
   context 'in edit mode for same user' do
-    before(:all) do
+    before do
       get("/en/m/#{get_mission.compact_name}/users/#{@user.id}/edit")
     end
 
@@ -62,7 +62,7 @@ describe 'api key form field', database_cleaner: :all do
   end
 
   context 'in show mode for different user' do
-    before(:all) do
+    before do
       get("/en/m/#{get_mission.compact_name}/users/#{@user2.id}")
     end
 
@@ -72,7 +72,7 @@ describe 'api key form field', database_cleaner: :all do
   end
 
   context 'in edit mode for different user' do
-    before(:all) do
+    before do
       get("/en/m/#{get_mission.compact_name}/users/#{@user2.id}/edit")
     end
 

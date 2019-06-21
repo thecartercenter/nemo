@@ -19,14 +19,14 @@ feature "sms index", js: true do
   end
 
   scenario "general content" do
-    click_on("SMSes")
+    visit(sms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
     expect(page).to have_content("When sending reply: foo")
     expect(page).to have_content("(sent 1m earlier)")
     smses.each { |sms| expect(page).to have_content(sms.body) }
   end
 
   scenario "search" do
-    click_on("SMSes")
+    visit(sms_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
     expect(page).to have_content(/Displaying all \d+ SMSes/)
     expect(page).to have_content(smses[0].body)
     expect(page).to have_content(smses[1].body)

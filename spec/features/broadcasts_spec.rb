@@ -15,7 +15,7 @@ feature "broadcasts", :sms, js: true do
   end
 
   scenario "via broadcast index" do
-    click_link("Broadcasts")
+    visit(broadcasts_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
     click_link("Send Broadcast")
 
     # Validation should kick in if form empty.
@@ -40,7 +40,7 @@ feature "broadcasts", :sms, js: true do
   describe "via user index" do
     context "with one page of users" do
       scenario "select all shows as 'all users in mission'" do
-        click_link("Users")
+        visit(users_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
         click_link("Select All")
         click_link("Send Broadcast")
         fill_message_and_send
@@ -49,7 +49,7 @@ feature "broadcasts", :sms, js: true do
       end
 
       scenario "only two users selected  shows as 'specific users'" do
-        click_link("Users")
+        visit(users_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
         check("selected_#{user.id}")
         check("selected_#{user2.id}")
         click_link("Send Broadcast")
@@ -62,7 +62,7 @@ feature "broadcasts", :sms, js: true do
       end
 
       scenario "filtered select all shows as 'specific users'" do
-        click_link("Users")
+        visit(users_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
         search_for("role:staffer")
         click_link("Select All")
         click_link("Send Broadcast")
@@ -80,7 +80,7 @@ feature "broadcasts", :sms, js: true do
       end
 
       scenario "unfiltered select all users on page shows as 'specific users'" do
-        click_link("Users")
+        visit(users_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
         click_link("Select All")
         click_link("Send Broadcast")
         fill_message_and_send
@@ -89,7 +89,7 @@ feature "broadcasts", :sms, js: true do
       end
 
       scenario "unfiltered select all users available shows as 'all users in mission'" do
-        click_link("Users")
+        visit(users_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
         click_link("Select All")
         click_link("Select all 13 Users")
         click_link("Send Broadcast")
@@ -99,7 +99,7 @@ feature "broadcasts", :sms, js: true do
       end
 
       scenario "filtered select all users available shows as 'specific users'" do
-        click_link("Users")
+        visit(users_path(mode: "m", mission_name: get_mission.compact_name, locale: "en"))
         search_for("role:enumerator")
         click_link("Select All")
         click_link("Select all 10 Users")

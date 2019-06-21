@@ -12,6 +12,9 @@
     <% end %>
   </td>
   <td class="answer <%= qing.qtype_name %>_answer">
+    <div class="qing-code <%= qing.has_options? ? "float-right" : "" %>">
+      [<%= qing.code %>]
+    </div>
     <% # print options if necessary %>
     <% if qing.has_options? %>
       <%= qing.selection_instructions %>
