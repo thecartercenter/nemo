@@ -1,0 +1,507 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`with rightSideType as literal with non-select leftQing sends correct props to ConditionValueField 1`] = `
+<div
+  className="condition-fields"
+  style={
+    Object {
+      "display": "",
+    }
+  }
+>
+  <input
+    id="questioning_display_conditions_attributes__5__id"
+    key="questioning_display_conditions_attributes__5__id"
+    name="questioning[display_conditions_attributes][5][id]"
+    type="hidden"
+    value=""
+  />
+  <input
+    id="questioning_display_conditions_attributes__5___destroy"
+    key="questioning_display_conditions_attributes__5___destroy"
+    name="questioning[display_conditions_attributes][5][_destroy]"
+    type="hidden"
+    value="0"
+  />
+  <FormSelect
+    includeBlank={true}
+    key="questioning_display_conditions_attributes__5__left_qing_id"
+    name="questioning[display_conditions_attributes][5][left_qing_id]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "1",
+          "key": "1",
+          "name": "1. One",
+        },
+        Object {
+          "id": "2",
+          "key": "2",
+          "name": "2. Two",
+        },
+      ]
+    }
+    prompt="Choose question ..."
+    value="1"
+  />
+  <FormSelect
+    includeBlank={false}
+    key="questioning_display_conditions_attributes__5__op"
+    name="questioning[display_conditions_attributes][5][op]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "eq",
+          "name": "= equals",
+        },
+        Object {
+          "id": "neq",
+          "name": "≠ does not equal",
+        },
+      ]
+    }
+    value="eq"
+  />
+  <div
+    className="condition-right-side"
+  >
+    <div
+      className="condition-value"
+    >
+      <ConditionValueField
+        for="questioning_display_conditions_attributes__5__value"
+        id="questioning_display_conditions_attributes__5__value"
+        key="questioning_display_conditions_attributes__5__value"
+        name="questioning[display_conditions_attributes][5][value]"
+        onChange={[Function]}
+        type="text"
+        value="123"
+      />
+    </div>
+  </div>
+  <div
+    className="condition-remove"
+  >
+    <a
+      onClick={[Function]}
+    >
+      <i
+        className="fa fa-close"
+      />
+    </a>
+  </div>
+</div>
+`;
+
+exports[`with rightSideType as literal with select leftQing sends correct props to ConditionValueField 1`] = `
+<div
+  className="condition-fields"
+  style={
+    Object {
+      "display": "",
+    }
+  }
+>
+  <input
+    id="questioning_display_conditions_attributes__5__id"
+    key="questioning_display_conditions_attributes__5__id"
+    name="questioning[display_conditions_attributes][5][id]"
+    type="hidden"
+    value=""
+  />
+  <input
+    id="questioning_display_conditions_attributes__5___destroy"
+    key="questioning_display_conditions_attributes__5___destroy"
+    name="questioning[display_conditions_attributes][5][_destroy]"
+    type="hidden"
+    value="0"
+  />
+  <FormSelect
+    includeBlank={true}
+    key="questioning_display_conditions_attributes__5__left_qing_id"
+    name="questioning[display_conditions_attributes][5][left_qing_id]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "1",
+          "key": "1",
+          "name": "1. One",
+        },
+        Object {
+          "id": "2",
+          "key": "2",
+          "name": "2. Two",
+        },
+      ]
+    }
+    prompt="Choose question ..."
+    value="1"
+  />
+  <FormSelect
+    includeBlank={false}
+    key="questioning_display_conditions_attributes__5__op"
+    name="questioning[display_conditions_attributes][5][op]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "eq",
+          "name": "= equals",
+        },
+        Object {
+          "id": "neq",
+          "name": "≠ does not equal",
+        },
+      ]
+    }
+    value="eq"
+  />
+  <div
+    className="condition-right-side"
+  >
+    <div
+      className="condition-value"
+    >
+      <ConditionValueField
+        for="questioning_display_conditions_attributes__5__value"
+        id="questioning_display_conditions_attributes__5__option_node_ids_"
+        key="questioning_display_conditions_attributes__5__option_node_ids_"
+        namePrefix="questioning[display_conditions_attributes][5]"
+        onChange={[Function]}
+        optionNodeId="7b5"
+        optionSetId="1a2"
+        type="cascading_select"
+      />
+    </div>
+  </div>
+  <div
+    className="condition-remove"
+  >
+    <a
+      onClick={[Function]}
+    >
+      <i
+        className="fa fa-close"
+      />
+    </a>
+  </div>
+</div>
+`;
+
+exports[`with rightSideType as qing with applicable rightQingOptions with forceRightSideLiteral false renders rightQingType dropdown and rightQing dropdown 1`] = `
+<div
+  className="condition-fields"
+  style={
+    Object {
+      "display": "",
+    }
+  }
+>
+  <input
+    id="questioning_display_conditions_attributes__5__id"
+    key="questioning_display_conditions_attributes__5__id"
+    name="questioning[display_conditions_attributes][5][id]"
+    type="hidden"
+    value=""
+  />
+  <input
+    id="questioning_display_conditions_attributes__5___destroy"
+    key="questioning_display_conditions_attributes__5___destroy"
+    name="questioning[display_conditions_attributes][5][_destroy]"
+    type="hidden"
+    value="0"
+  />
+  <FormSelect
+    includeBlank={true}
+    key="questioning_display_conditions_attributes__5__left_qing_id"
+    name="questioning[display_conditions_attributes][5][left_qing_id]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "1",
+          "key": "1",
+          "name": "1. One",
+        },
+        Object {
+          "id": "2",
+          "key": "2",
+          "name": "2. Two",
+        },
+      ]
+    }
+    prompt="Choose question ..."
+    value="3"
+  />
+  <FormSelect
+    includeBlank={false}
+    key="questioning_display_conditions_attributes__5__op"
+    name="questioning[display_conditions_attributes][5][op]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "eq",
+          "name": "= equals",
+        },
+        Object {
+          "id": "neq",
+          "name": "≠ does not equal",
+        },
+      ]
+    }
+    value="eq"
+  />
+  <div
+    className="condition-right-side"
+  >
+    <div
+      className="condition-right-side-type"
+    >
+      <FormSelect
+        includeBlank={false}
+        key="questioning_display_conditions_attributes__5__right_side_type"
+        name="questioning[display_conditions_attributes][5][right_side_type]"
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "id": "literal",
+              "name": "A specific value ...",
+            },
+            Object {
+              "id": "qing",
+              "name": "Another question ...",
+            },
+          ]
+        }
+        value="qing"
+      />
+    </div>
+    <div
+      className="condition-right-qing"
+    >
+      <FormSelect
+        includeBlank={false}
+        key="questioning_display_conditions_attributes__5__right_qing_id"
+        name="questioning[display_conditions_attributes][5][right_qing_id]"
+        onChange={[Function]}
+        options={
+          Array [
+            Object {
+              "id": "3",
+              "key": "3",
+              "name": "3. Three",
+            },
+          ]
+        }
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="condition-remove"
+  >
+    <a
+      onClick={[Function]}
+    >
+      <i
+        className="fa fa-close"
+      />
+    </a>
+  </div>
+</div>
+`;
+
+exports[`with rightSideType as qing with applicable rightQingOptions with forceRightSideLiteral true renders no rightQingType dropdown 1`] = `
+<div
+  className="condition-fields"
+  style={
+    Object {
+      "display": "",
+    }
+  }
+>
+  <input
+    id="questioning_display_conditions_attributes__5__id"
+    key="questioning_display_conditions_attributes__5__id"
+    name="questioning[display_conditions_attributes][5][id]"
+    type="hidden"
+    value=""
+  />
+  <input
+    id="questioning_display_conditions_attributes__5___destroy"
+    key="questioning_display_conditions_attributes__5___destroy"
+    name="questioning[display_conditions_attributes][5][_destroy]"
+    type="hidden"
+    value="0"
+  />
+  <FormSelect
+    includeBlank={true}
+    key="questioning_display_conditions_attributes__5__left_qing_id"
+    name="questioning[display_conditions_attributes][5][left_qing_id]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "1",
+          "key": "1",
+          "name": "1. One",
+        },
+        Object {
+          "id": "2",
+          "key": "2",
+          "name": "2. Two",
+        },
+      ]
+    }
+    prompt="Choose question ..."
+    value="3"
+  />
+  <FormSelect
+    includeBlank={false}
+    key="questioning_display_conditions_attributes__5__op"
+    name="questioning[display_conditions_attributes][5][op]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "eq",
+          "name": "= equals",
+        },
+        Object {
+          "id": "neq",
+          "name": "≠ does not equal",
+        },
+      ]
+    }
+    value="eq"
+  />
+  <div
+    className="condition-right-side"
+  >
+    <div
+      className="condition-value"
+    >
+      <ConditionValueField
+        for="questioning_display_conditions_attributes__5__value"
+        id="questioning_display_conditions_attributes__5__value"
+        key="questioning_display_conditions_attributes__5__value"
+        name="questioning[display_conditions_attributes][5][value]"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="condition-remove"
+  >
+    <a
+      onClick={[Function]}
+    >
+      <i
+        className="fa fa-close"
+      />
+    </a>
+  </div>
+</div>
+`;
+
+exports[`with rightSideType as qing with no applicable rightQingOptions renders no rightQingType dropdown 1`] = `
+<div
+  className="condition-fields"
+  style={
+    Object {
+      "display": "",
+    }
+  }
+>
+  <input
+    id="questioning_display_conditions_attributes__5__id"
+    key="questioning_display_conditions_attributes__5__id"
+    name="questioning[display_conditions_attributes][5][id]"
+    type="hidden"
+    value=""
+  />
+  <input
+    id="questioning_display_conditions_attributes__5___destroy"
+    key="questioning_display_conditions_attributes__5___destroy"
+    name="questioning[display_conditions_attributes][5][_destroy]"
+    type="hidden"
+    value="0"
+  />
+  <FormSelect
+    includeBlank={true}
+    key="questioning_display_conditions_attributes__5__left_qing_id"
+    name="questioning[display_conditions_attributes][5][left_qing_id]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "1",
+          "key": "1",
+          "name": "1. One",
+        },
+        Object {
+          "id": "2",
+          "key": "2",
+          "name": "2. Two",
+        },
+      ]
+    }
+    prompt="Choose question ..."
+    value="1"
+  />
+  <FormSelect
+    includeBlank={false}
+    key="questioning_display_conditions_attributes__5__op"
+    name="questioning[display_conditions_attributes][5][op]"
+    onChange={[Function]}
+    options={
+      Array [
+        Object {
+          "id": "eq",
+          "name": "= equals",
+        },
+        Object {
+          "id": "neq",
+          "name": "≠ does not equal",
+        },
+      ]
+    }
+    value="eq"
+  />
+  <div
+    className="condition-right-side"
+  >
+    <div
+      className="condition-value"
+    >
+      <ConditionValueField
+        for="questioning_display_conditions_attributes__5__value"
+        id="questioning_display_conditions_attributes__5__value"
+        key="questioning_display_conditions_attributes__5__value"
+        name="questioning[display_conditions_attributes][5][value]"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="condition-remove"
+  >
+    <a
+      onClick={[Function]}
+    >
+      <i
+        className="fa fa-close"
+      />
+    </a>
+  </div>
+</div>
+`;

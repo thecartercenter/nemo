@@ -1,7 +1,15 @@
+# frozen_string_literal: true
+
 module FeatureSpecHelpers
   def login(user)
-    visit "/test-login?user_id=#{user.id}"
-    expect(page).to have_content("Profile:")
+    ENV["TEST_LOGGED_IN_USER_ID"] = user.id
+  end
+
+  def real_login(user, password = "Password1")
+    visit(login_path(locale: "en"))
+    fill_in("Username", with: user.login)
+    fill_in("Password", with: password)
+    click_button("Login")
   end
 
   # Fills in a token input *JS MUST BE ENABLED
@@ -25,7 +33,7 @@ module FeatureSpecHelpers
     # Trigger clicking on the token input
     page.driver.execute_script("$('#{token_input_list_selector}').trigger('click');")
     # Wait until the 'Type in a search term' box appears
-    page.has_xpath? "//div[contains(text(),'Type an option name')]"
+    page.has_xpath?("//div[contains(text(),'Type an option name')]")
 
     # Fill in the visible text box
     page.driver.execute_script("$('#{text_input_selector}').val('#{options[:with]}');")
@@ -37,16 +45,16 @@ module FeatureSpecHelpers
     # Pick the result
     unless options[:dont_pick]
       if options[:pick]
-        textual_numbers = [:first, :second, :third, :fourth, :fifth]
+        textual_numbers = %i[first second third fourth fifth]
         if index = textual_numbers.index(options[:pick])
-          selector = ":nth-child(#{index+1})"
+          selector = ":nth-child(#{index + 1})"
         elsif options[:pick].class == String
           selector = ":contains(\"#{options[:pick]}\")"
         elsif options[:pick].class == Integer
           selector = ":nth-child(#{options[:pick]})"
         end
       else
-        selector = ':first-child'
+        selector = ":first-child"
       end
 
       page.driver.execute_script("$('#{result_list_selector}#{selector}').trigger('mousedown');")
@@ -74,16 +82,16 @@ module FeatureSpecHelpers
   # Clears a tokenInput
   # @param id [String] *required
   #
-  def clear_token_input(id, options={})
+  def clear_token_input(id, options = {})
     page.driver.execute_script("$('##{id}').tokenInput('clear', #{options.to_json})")
     sleep(0.1)
   end
 
-  def wait_modal_to_be_visible(modal_selector='.modal-dialog')
+  def wait_modal_to_be_visible(modal_selector = ".modal-dialog")
     expect(page).to have_selector(modal_selector, visible: true)
   end
 
-  def wait_modal_to_hide(modal_selector='.modal-dialog')
+  def wait_modal_to_hide(modal_selector = ".modal-dialog")
     expect(page).to have_selector(modal_selector, visible: false)
   end
 
@@ -94,7 +102,7 @@ module FeatureSpecHelpers
   end
 
   def finished_all_ajax_requests?
-    page.evaluate_script('jQuery.active').zero?
+    page.evaluate_script("jQuery.active").zero?
   end
 
   def select2(value, options = {})

@@ -1252,6 +1252,9 @@ en:
     op: "Comparison"
     value: "Value"
     left_qing_prompt: "Choose question ..."
+    right_side_type:
+      literal: "A specific value ..."
+      qing: "Another question ..."
 
   dashboard:
     close_dashboard: "Close Dashboard"

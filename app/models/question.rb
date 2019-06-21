@@ -128,6 +128,7 @@ class Question < ApplicationRecord
     :has_options?,
     :temporal?,
     :numeric?,
+    :textual?,
     :printable?,
     :multimedia?,
     :odk_tag,

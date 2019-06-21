@@ -1,14 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { inject, observer, Provider } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 
-import { provideConditionSetStore } from '../../../ConditionSetFormField/utils';
 import ConditionSetFormField from '../../../ConditionSetFormField/component';
 import FormSelect from '../../../FormSelect/component';
 
 @inject('conditionSetStore')
 @observer
-class SkipRuleFormFieldRoot extends React.Component {
+class SkipRuleFormField extends React.Component {
   static propTypes = {
     conditionSetStore: PropTypes.object.isRequired,
     destItemId: PropTypes.string,
@@ -23,9 +22,6 @@ class SkipRuleFormFieldRoot extends React.Component {
     id: PropTypes.any,
     laterItems: PropTypes.any,
     skipIf: PropTypes.any,
-    conditions: PropTypes.any,
-    refableQings: PropTypes.any,
-    formId: PropTypes.any,
     /* eslint-enable */
   };
 
@@ -33,14 +29,8 @@ class SkipRuleFormFieldRoot extends React.Component {
     super(props);
 
     const {
-      conditionSetStore,
-      namePrefix,
       remove,
-      id,
       skipIf,
-      conditions,
-      refableQings,
-      formId,
       destination,
       destItemId,
     } = this.props;
@@ -53,16 +43,6 @@ class SkipRuleFormFieldRoot extends React.Component {
       destination,
       destItemId,
     };
-
-    conditionSetStore.initialize({
-      formId,
-      namePrefix: `${namePrefix}[conditions_attributes]`,
-      conditions,
-      conditionableId: id,
-      conditionableType: 'SkipRule',
-      refableQings,
-      hide: skipIf === 'always',
-    });
   }
 
   destinationOptionChanged = (value) => {
@@ -176,12 +156,5 @@ class SkipRuleFormFieldRoot extends React.Component {
     );
   }
 }
-
-const SkipRuleFormField = (props) => (
-  // eslint-disable-next-line react/prop-types, react/destructuring-assignment
-  <Provider conditionSetStore={provideConditionSetStore(`skip-${props.ruleId}`)}>
-    <SkipRuleFormFieldRoot {...props} />
-  </Provider>
-);
 
 export default SkipRuleFormField;

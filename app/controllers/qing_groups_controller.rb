@@ -1,7 +1,9 @@
+# frozen_string_literal: true
+
 # Actions for QingGroups
 # All requests in this controller are AJAX based.
 class QingGroupsController < ApplicationController
-
+  include ConditionFormable
   include Parameters
 
   # authorization via cancan
@@ -47,7 +49,7 @@ class QingGroupsController < ApplicationController
   end
 
   def update
-    @qing_group.update_attributes!(qing_group_params)
+    @qing_group.update!(qing_group_params)
     render(partial: "group_inner", locals: {qing_group: @qing_group.decorate})
   end
 
@@ -55,15 +57,13 @@ class QingGroupsController < ApplicationController
     # Removing group requires same permissions as removing questions.
     authorize!(:remove_questions, @qing_group.form)
     @qing_group.destroy
-    render body: nil, status: 204
+    render(body: nil, status: :no_content)
   end
 
   private
 
   def validate_destroy
-    if @qing_group.children.size > 0
-      return render json: [], status: 404
-    end
+    return render(json: [], status: :not_found) unless @qing_group.children.empty?
   end
 
   # prepares qing_group

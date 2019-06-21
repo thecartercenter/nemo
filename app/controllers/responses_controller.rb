@@ -125,7 +125,7 @@ class ResponsesController < ApplicationController
     render(json: {
       possible_users: ActiveModel::ArraySerializer.new(possible_users),
       more: possible_users.next_page.present?
-    }, select2: true)
+    })
   end
 
   def setup_condition_computer
@@ -171,7 +171,8 @@ class ResponsesController < ApplicationController
 
   # Initializes variables used by the search filters.
   def init_filter_data(searcher)
-    @all_forms = Form.all.map { |item| {name: item.name, id: item.id} }.sort_by_key
+    @all_forms = Form.for_mission(current_mission)
+      .map { |item| {name: item.name, id: item.id} }.sort_by_key
 
     # There may not be an active search.
     return if searcher.is_a?(NoopSearcher)

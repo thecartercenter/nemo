@@ -50,4 +50,4 @@ class ELMO.Views.FormSettingsView extends ELMO.Views.ApplicationView
 
   init_recipient_select: ->
     @$('#form_recipient_ids').select2
-      ajax: ELMO.select2.getAjaxParams(@recipient_options_url)
+      ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(@recipient_options_url)

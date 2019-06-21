@@ -12,37 +12,4 @@ class FormItemsController < ApplicationController
     @form_item.move(FormItem.find(params[:parent_id]), params[:rank].to_i)
     render body: nil, status: 204
   end
-
-  # Responds to ajax request with json containing data needed for condition form.
-  def condition_form
-    if params[:conditionable_id].present?
-      @conditionable =
-        if params[:conditionable_type] == "FormItem"
-          FormItem.find(params[:conditionable_id])
-        else
-          SkipRule.find(params[:conditionable_id])
-        end
-    elsif params[:form_id].present?
-      # Create a dummy conditionable with the given form
-      # so that the condition can look up the refable qings, etc.
-      form = Form.find(params[:form_id])
-      item = FormItem.new(form: form, mission: form.mission)
-      @conditionable =
-        if params[:conditionable_type] == "FormItem"
-          item
-        else
-          SkipRule.new(source_item: item, mission: form.mission)
-        end
-    else
-      @conditionable = FormItem.new(mission: current_mission)
-    end
-
-    authorize! :condition_form, @conditionable
-
-    @condition = Condition.find_by(id: params[:condition_id])
-    @condition ||= Condition.new(conditionable: @conditionable)
-
-    @condition.left_qing_id = params[:left_qing_id]
-    render json: ConditionViewSerializer.new(@condition), status: 200
-  end
 end

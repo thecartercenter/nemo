@@ -30,7 +30,7 @@ class SkipRuleDecorator < ApplicationDecorator
   def display_dest
     if destination == "item"
       prefix = I18n.t("activerecord.models.question.one")
-      prefix << " " << "##{dest_item.full_dotted_rank} #{dest_item.code}"
+      prefix << " " << "##{dest_item.full_dotted_rank} [#{dest_item.code}]"
     else
       I18n.t("skip_rule.end_of_form")
     end
