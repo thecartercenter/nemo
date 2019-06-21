@@ -5,14 +5,9 @@ import Select2 from 'react-select2-wrapper/lib/components/Select2.full';
 import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
-import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
-// Note: These string values are hard-coded as i18n keys, and are also used for search string keywords.
-export const submitterType = {
-  USER: 'submitter',
-  GROUP: 'group',
-};
-export const SUBMITTER_TYPES = Object.values(submitterType);
+import { submitterType, SUBMITTER_TYPES } from './utils';
+import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 const select2Config = {
   [submitterType.USER]: {

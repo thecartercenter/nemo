@@ -3,7 +3,8 @@ import { shallow } from 'enzyme';
 
 import { getFiltersStore } from '../testUtils';
 
-import Component, { SUBMITTER_TYPES } from './component';
+import Component from './component';
+import { SUBMITTER_TYPES } from './utils';
 import { quietMount } from '../../../testUtils';
 
 const defaultProps = {
