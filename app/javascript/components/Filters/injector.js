@@ -4,7 +4,7 @@ import { Provider } from 'mobx-react';
 
 import FiltersModel from './model';
 import { provideFiltersStore } from './utils';
-import { submitterType } from './SubmitterFilter/component';
+import { submitterType } from './SubmitterFilter/utils';
 import Filters from './component';
 
 /**

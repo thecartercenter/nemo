@@ -8,7 +8,7 @@ import { getFiltersStore } from './testUtils';
 
 import { CONTROLLER_NAME } from './utils';
 import Component from './component';
-import { SUBMITTER_TYPES, submitterType } from './SubmitterFilter/component';
+import { SUBMITTER_TYPES, submitterType } from './SubmitterFilter/utils';
 
 jest.mock('../conditions/ConditionSetFormField/component', () => 'ConditionSetFormField');
 

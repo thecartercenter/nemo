@@ -3,7 +3,7 @@ import cloneDeep from 'lodash/cloneDeep';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../conditions/ConditionSetFormField/model';
-import { SUBMITTER_TYPES } from './SubmitterFilter/component';
+import { SUBMITTER_TYPES } from './SubmitterFilter/utils';
 
 /** Empty model to be used for resetting the store as needed. */
 const initialConditionSetData = Object.freeze(toJS(new ConditionSetModel({

@@ -2,7 +2,7 @@ import isEmpty from 'lodash/isEmpty';
 import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
 
-import { SUBMITTER_TYPES } from './SubmitterFilter/component';
+import { SUBMITTER_TYPES } from './SubmitterFilter/utils';
 
 const MAX_HINTS_BEFORE_ELLIPSIZE = 1;
 
