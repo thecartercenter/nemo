@@ -119,6 +119,9 @@ class ResponsesSearcher < Searcher
 
   # Clean up filter data after parsing everything.
   def clean_up
+    self.form_ids = form_ids.uniq
+    self.submitters = submitters.uniq
+    self.groups = groups.uniq
     self.advanced_text = advanced_text.strip
   end
 
