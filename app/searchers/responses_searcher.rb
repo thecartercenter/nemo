@@ -166,11 +166,7 @@ class ResponsesSearcher < Searcher
     return false unless equality_op?(op_kind)
 
     if expression.qualifier.name == "form"
-      form_names = token_values
-      matched_form_ids = Form.where(name: form_names).pluck(:id)
-      return false if matched_form_ids.empty?
-
-      form_ids.concat(matched_form_ids)
+      filter_by_names(token_values, Form, current_ids: form_ids)
     elsif expression.qualifier.name == "reviewed"
       return false unless token_values.length == 1
       value = token_values[0]
@@ -180,6 +176,14 @@ class ResponsesSearcher < Searcher
     end
 
     true
+  end
+
+  # Given a list of names, find all instances of this class that match,
+  # and append their IDs to the existing list of IDs to filter by.
+  def filter_by_names(names, klass, current_ids: [])
+    matched_ids = klass.where(name: names).pluck(:id)
+    return false if matched_ids.empty?
+    current_ids.concat(matched_ids)
   end
 
   def equality_op?(op_kind)
