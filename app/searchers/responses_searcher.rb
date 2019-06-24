@@ -3,12 +3,14 @@
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
   # Parsed search values
-  attr_accessor :form_ids, :is_reviewed
+  attr_accessor :form_ids, :is_reviewed, :submitters, :groups
 
   def initialize(**opts)
     super(opts)
 
     self.form_ids = []
+    self.submitters = []
+    self.groups = []
     self.is_reviewed = nil
   end
 
@@ -173,6 +175,10 @@ class ResponsesSearcher < Searcher
       return false unless %w[1 0 yes no].include?(value)
 
       self.is_reviewed = %w[1 yes].include?(value)
+    elsif expression.qualifier.name == "submitter"
+      filter_by_names(token_values, User, current_ids: submitters)
+    elsif expression.qualifier.name == "group"
+      filter_by_names(token_values, UserGroup, current_ids: groups)
     end
 
     true

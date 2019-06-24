@@ -179,6 +179,8 @@ class ResponsesController < ApplicationController
 
     @selected_form_ids = searcher.form_ids
     @is_reviewed = searcher.is_reviewed
+    @selected_users = searcher.submitters
+    @selected_groups = searcher.groups
     @advanced_text = searcher.advanced_text
   end
 
