@@ -15,11 +15,8 @@ class AddConditionLink extends React.Component {
     return (
       <span>
         {/* TODO: Improve a11y. */}
-        {/* eslint-disable */}
-        <a
-          onClick={handleAddClick}
-          tabIndex="0"
-        >
+        {/* eslint-disable-next-line */}
+        <a onClick={handleAddClick} tabIndex="0">
           <i className="fa fa-plus add-condition" />
           {' '}
           {I18n.t('form_item.add_condition')}

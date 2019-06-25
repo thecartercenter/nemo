@@ -60,18 +60,8 @@ class ConstraintFormField extends React.Component {
         className="rule"
         style={{ display: this.shouldDestroy() ? 'none' : '' }}
       >
-        <div className="rule-main">
-          <div className="rule-attribs">
-            <div className={`rule-remove ${constraintId}`}>
-              {/* TODO: Improve a11y. */}
-              {/* eslint-disable-next-line */}
-              <a onClick={this.handleRemoveClick}>
-                <i className="fa fa-close" />
-              </a>
-            </div>
-          </div>
+        <div className={`rule-main rule-${constraintId}`}>
           <ConditionSetFormField />
-          <AddConditionLink />
           <div key="accept-if">
             {['all_met', 'any_met'].map((key) => (
               <Form.Check
@@ -85,6 +75,17 @@ class ConstraintFormField extends React.Component {
                 name={`${namePrefix}[accept_if]`}
               />
             ))}
+            <div className="links">
+              <AddConditionLink />
+              &nbsp;&nbsp;
+              {/* TODO: Improve a11y. */}
+              {/* eslint-disable-next-line */}
+              <a onClick={this.handleRemoveClick} tabIndex="0">
+                <i className="fa fa-trash" />
+                {' '}
+                {I18n.t('form_item.delete_rule')}
+              </a>
+            </div>
           </div>
           <input
             type="hidden"

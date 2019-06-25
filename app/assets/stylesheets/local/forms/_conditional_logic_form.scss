@@ -1,18 +1,6 @@
 .display-logic-container,
 .skip-logic-container,
 .constraints-container {
-  @mixin remove-link-div {
-    align-items: center;
-    display: flex;
-    justify-content: flex-end;
-    width: 20px;
-
-    i {
-      font-size: 16px;
-      color: $deemphasized-accent-color;
-    }
-  }
-
   a {
     cursor: pointer;
   }
@@ -62,10 +50,6 @@
         }
       }
     }
-
-    .rule-remove {
-      @include remove-link-div;
-    }
   }
 
   .condition-fields {
@@ -92,7 +76,15 @@
     }
 
     .condition-remove {
-      @include remove-link-div;
+      align-items: center;
+      display: flex;
+      justify-content: flex-end;
+      width: 20px;
+
+      i {
+        font-size: 16px;
+        color: $deemphasized-accent-color;
+      }
     }
   }
 }
