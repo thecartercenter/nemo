@@ -5,10 +5,6 @@
     cursor: pointer;
   }
 
-  .condition-set {
-    margin-#{$left}: 20px;
-  }
-
   .condition-set, .rule-set {
     margin-top: 10px;
   }
@@ -33,6 +29,7 @@
     display: flex;
     padding-top: 10px;
     border-top: $light-border;
+    margin-#{$left}: 20px;
 
     .rule-main {
       flex: auto;
