@@ -13,7 +13,7 @@ class AddConditionLink extends React.Component {
     const { conditionSetStore: { handleAddClick } } = this.props;
 
     return (
-      <span>
+      <React.Fragment>
         {/* TODO: Improve a11y. */}
         {/* eslint-disable-next-line */}
         <a onClick={handleAddClick} tabIndex="0">
@@ -22,7 +22,7 @@ class AddConditionLink extends React.Component {
           {I18n.t('form_item.add_condition')}
         </a>
         {/* eslint-enable */}
-      </span>
+      </React.Fragment>
     );
   }
 }

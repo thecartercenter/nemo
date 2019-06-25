@@ -42,7 +42,7 @@ class DisplayLogicFormField extends React.Component {
 
   render() {
     const { conditionSetStore, type } = this.props;
-    const { refableQings, handleAddClick } = conditionSetStore;
+    const { refableQings } = conditionSetStore;
     const { displayIf } = this.state;
 
     if (refableQings.length === 0) {
@@ -65,8 +65,12 @@ class DisplayLogicFormField extends React.Component {
         <select {...displayIfProps}>
           {this.displayIfOptionTags()}
         </select>
-        <ConditionSetFormField />
-        <AddConditionLink />
+        {displayIf !== 'always' && (
+          <React.Fragment>
+            <ConditionSetFormField />
+            <AddConditionLink />
+          </React.Fragment>
+        )}
       </div>
     );
   }
