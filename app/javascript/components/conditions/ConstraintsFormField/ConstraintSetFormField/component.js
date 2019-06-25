@@ -66,7 +66,7 @@ class ConstraintSetFormField extends React.Component {
           {/* eslint-enable */}
             <i className="fa fa-plus" />
             {' '}
-            {I18n.t('form_item.add_constraint')}
+            {I18n.t('form_item.add_rule')}
           </a>
         </div>
       </div>
