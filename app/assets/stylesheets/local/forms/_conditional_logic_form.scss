@@ -1,5 +1,6 @@
 .display-logic-container,
-.skip-logic-container {
+.skip-logic-container,
+.constraints-container {
   @mixin remove-link-div {
     align-items: center;
     display: flex;
@@ -20,7 +21,7 @@
     margin-#{$left}: 20px;
   }
 
-  .condition-set, .skip-rule-set {
+  .condition-set, .rule-set {
     margin-top: 10px;
   }
 
@@ -30,27 +31,27 @@
       margin-#{$left}: 0;
     }
 
-    .condition-set, .skip-rule-set {
+    .condition-set, .rule-set {
       margin-top: 0;
     }
   }
 
-  .skip-rule-add-link-wrapper {
+  .rule-add-link-wrapper {
     border-top: $light-border;
     padding-top: 10px;
   }
 
-  .skip-rule {
+  .rule {
     display: flex;
     padding-top: 10px;
     border-top: $light-border;
 
-    .skip-rule-main {
+    .rule-main {
       flex: auto;
       padding-bottom: 10px;
     }
 
-    .skip-rule-attribs {
+    .rule-attribs {
       display: flex;
 
       select {
@@ -62,7 +63,7 @@
       }
     }
 
-    .skip-rule-remove {
+    .rule-remove {
       @include remove-link-div;
     }
   }

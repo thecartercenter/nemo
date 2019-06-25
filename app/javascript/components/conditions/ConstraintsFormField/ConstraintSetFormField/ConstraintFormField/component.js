@@ -56,12 +56,12 @@ class ConstraintFormField extends React.Component {
 
     return (
       <div
-        className="constraint"
+        className="rule"
         style={{ display: this.shouldDestroy() ? 'none' : '' }}
       >
-        <div className="constraint-main">
-          <div className="constraint-attribs">
-            <div className={`constraint-remove ${constraintId}`}>
+        <div className="rule-main">
+          <div className="rule-attribs">
+            <div className={`rule-remove ${constraintId}`}>
               {/* TODO: Improve a11y. */}
               {/* eslint-disable-next-line */}
               <a onClick={this.handleRemoveClick}>
@@ -80,6 +80,7 @@ class ConstraintFormField extends React.Component {
                 type="radio"
                 value={key}
                 key={key}
+                name={`${namePrefix}[accept_if]`}
               />
             ))}
           </div>

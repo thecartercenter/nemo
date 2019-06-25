@@ -41,7 +41,7 @@ class ConstraintSetFormField extends React.Component {
 
     return (
       <div
-        className="constraint-set"
+        className="rule-set"
         style={{ display: hide ? 'none' : '' }}
       >
         {constraints.map((constraint, index) => (
@@ -55,7 +55,7 @@ class ConstraintSetFormField extends React.Component {
           />
         ))}
         <div
-          className="constraint-add-link-wrapper"
+          className="rule-add-link-wrapper"
         >
           {/* TODO: Improve a11y. */}
           {/* eslint-disable */}
