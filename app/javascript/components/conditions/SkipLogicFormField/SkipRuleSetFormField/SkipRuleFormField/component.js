@@ -111,16 +111,16 @@ class SkipRuleFormField extends React.Component {
 
     return (
       <div
-        className="skip-rule"
+        className="rule"
         style={{ display: this.shouldDestroy() ? 'none' : '' }}
       >
-        <div className="skip-rule-main">
-          <div className="skip-rule-attribs">
+        <div className="rule-main">
+          <div className="rule-attribs">
             <FormSelect {...destinationProps} />
             <select {...skipIfProps}>
               {this.skipIfOptionTags()}
             </select>
-            <div className={`skip-rule-remove ${ruleId}`}>
+            <div className={`rule-remove ${ruleId}`}>
               {/* TODO: Improve a11y. */}
               {/* eslint-disable-next-line */}
               <a onClick={this.handleRemoveClick}>

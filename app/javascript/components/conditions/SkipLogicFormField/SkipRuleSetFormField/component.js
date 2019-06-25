@@ -51,7 +51,7 @@ class SkipRuleSetFormField extends React.Component {
 
     return (
       <div
-        className="skip-rule-set"
+        className="rule-set"
         style={{ display: hide ? 'none' : '' }}
       >
         {skipRules.map((rule, index) => (
@@ -67,7 +67,7 @@ class SkipRuleSetFormField extends React.Component {
           />
         ))}
         <div
-          className="skip-rule-add-link-wrapper"
+          className="rule-add-link-wrapper"
         >
           {/* TODO: Improve a11y. */}
           {/* eslint-disable */}

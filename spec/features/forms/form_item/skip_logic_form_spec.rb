@@ -54,7 +54,7 @@ feature "skip logic form fields", js: true do
         select "After this question, skip ...", from: "Skip Logic"
 
         # first skip rule
-        within(all(".skip-rule")[0]) do
+        within(all(".rule")[0]) do
           find('select[name*="\\[skip_if\\]"]').select("if any of these conditions are met")
 
           within(all(".condition-fields")[0]) do
@@ -67,7 +67,7 @@ feature "skip logic form fields", js: true do
         click_add_rule
 
         # second skip rule
-        within(all(".skip-rule")[1]) do
+        within(all(".rule")[1]) do
           find('select[name*="\\[skip_if\\]"]').select("if any of these conditions are met")
           within(all(".condition-fields")[0]) do
             select_left_qing(form.c[0].code)
@@ -109,7 +109,7 @@ feature "skip logic form fields", js: true do
         visit("#{url_prefix}/questionings/#{form.c[2].id}/edit")
 
         # edit first rule
-        within(all(".skip-rule")[0]) do
+        within(all(".rule")[0]) do
           find('select[name*="\\[skip_if\\]"]').select("if all of these conditions are met")
           within(all(".condition-fields")[0]) do
             select_left_qing(form.c[0].code)
@@ -143,7 +143,7 @@ feature "skip logic form fields", js: true do
           selected: "After this question, skip ...")
 
         # set skip rule to always
-        within(all(".skip-rule")[0]) do
+        within(all(".rule")[0]) do
           find('select[name*="\\[skip_if\\]"]').select("in all cases")
 
           # condition fields are hidden for the first skip rule
@@ -151,7 +151,7 @@ feature "skip logic form fields", js: true do
         end
 
         # condition fields still exist for the second skip rule
-        within(all(".skip-rule")[1]) do
+        within(all(".rule")[1]) do
           expect(all(".condition-fields").size).to eq 2
         end
       end
@@ -168,7 +168,7 @@ feature "skip logic form fields", js: true do
         # set skip to always
         select "After this question, go to the next question", from: "questioning_skip_logic"
 
-        expect(page).not_to have_css(".skip-rule-set")
+        expect(page).not_to have_css(".rule-set")
       end
     end
   end
