@@ -1396,6 +1396,7 @@ en:
     add_condition: "Add Condition"
     add_rule: "Add Rule"
     add_constraint: "Add Constraint"
+    delete_rule: "Delete Rule"
     display_if_options:
       qing_group:
         always: "Always display this group"
