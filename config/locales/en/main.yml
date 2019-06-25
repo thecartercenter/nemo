@@ -2110,6 +2110,12 @@ en:
       without_conditions: "SKIP TO %{destination}"
     end_of_form: "end of form"
 
+  constraint:
+    accept_if_options:
+      all_met: "Valid only if all of these conditions are met"
+      any_met: "Valid only if any of these conditions are met"
+    instructions: "VALID ONLY IF %{conditions}"
+
   sms:
     extra_recipients_html: "<br/>... and %{count} more"
     error: "Error"

@@ -1,4 +1,12 @@
 <% if read_only || cannot?(:update_core, form_item) %>
+  <dl>
+    <% form_item.constraints.each do |constraint| %>
+      <dt><%= ConstraintDecorator.new(constraint).read_only_header %></dt>
+      <% constraint.condition_group.members.each do |condition| %>
+        <dd><%= condition.decorate.human_readable(include_code: true) %></dd>
+      <% end %>
+    <% end %>
+  </dl>
 <% else %>
   <%= react_component("conditions/ConstraintsFormField",
         ConditionalLogicForm::FormItemSerializer.new(form_item)) %>

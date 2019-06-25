@@ -2,8 +2,8 @@
     <dl>
       <% form_item.skip_rules.each do |rule| %>
         <dt><%= SkipRuleDecorator.new(rule).read_only_header %></dt>
-        <% rule.condition_group.members.each do |c| %>
-          <dd><%= c.decorate.human_readable(include_code: true) %></dd>
+        <% rule.condition_group.members.each do |condition| %>
+          <dd><%= condition.decorate.human_readable(include_code: true) %></dd>
         <% end %>
       <% end %>
     </dl>
