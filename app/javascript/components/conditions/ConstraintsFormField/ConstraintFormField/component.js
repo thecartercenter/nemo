@@ -62,7 +62,7 @@ class ConstraintFormField extends React.Component {
         className="rule"
         style={{ display: this.shouldDestroy() ? 'none' : '' }}
       >
-        <div className={`rule-main rule-${constraintId}`}>
+        <div className={`rule-main ${constraintId}`}>
           <ConditionSetFormField />
           { conditionCount > 1 && (
             <div className="accept-if" key="accept-if">
