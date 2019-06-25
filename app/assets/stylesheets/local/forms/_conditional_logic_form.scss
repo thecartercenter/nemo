@@ -27,7 +27,6 @@
 
   .rule {
     display: flex;
-    padding-top: 10px;
     border-top: $light-border;
     margin-#{$left}: 20px;
 
@@ -38,6 +37,7 @@
 
     .rule-attribs {
       display: flex;
+      margin-top: 10px;
 
       select {
         flex: 1;
@@ -82,6 +82,14 @@
         font-size: 16px;
         color: $deemphasized-accent-color;
       }
+    }
+  }
+
+  .accept-if {
+    margin-bottom: 10px;
+
+    label {
+      font-weight: normal;
     }
   }
 }

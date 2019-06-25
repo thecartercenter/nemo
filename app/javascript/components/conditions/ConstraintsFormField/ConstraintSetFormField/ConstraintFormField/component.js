@@ -65,7 +65,7 @@ class ConstraintFormField extends React.Component {
         <div className={`rule-main rule-${constraintId}`}>
           <ConditionSetFormField />
           { conditionCount > 1 && (
-            <div key="accept-if">
+            <div className="accept-if" key="accept-if">
               {['all_met', 'any_met'].map((key) => (
                 <Form.Check
                   inline
