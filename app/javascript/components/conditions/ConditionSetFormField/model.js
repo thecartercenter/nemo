@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep';
-import { observable, action, reaction } from 'mobx';
+import { observable, action, reaction, computed } from 'mobx';
 
 import ConditionModel from './ConditionFormField/model';
 
@@ -42,6 +42,12 @@ class ConditionSetModel {
   /** If enabled, only allow literals on right side of all conditions. */
   @observable
   forceRightSideLiteral = false;
+
+  // Get the number of non-deleted conditions in the set.
+  @computed
+  get conditionCount() {
+    return this.conditions.reduce((sum, condition) => sum + (condition.remove ? 0 : 1), 0);
+  }
 
   constructor(initialState = {}) {
     Object.assign(this, initialState);
