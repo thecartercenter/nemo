@@ -13,7 +13,7 @@ class ConditionSetFormField extends React.Component {
 
   render() {
     const { conditionSetStore } = this.props;
-    const { conditions, hide, handleAddClick } = conditionSetStore;
+    const { conditions, hide } = conditionSetStore;
 
     return (
       <div
@@ -27,17 +27,6 @@ class ConditionSetFormField extends React.Component {
             condition={condition}
           />
         ))}
-        {/* TODO: Improve a11y. */}
-        {/* eslint-disable */}
-        <a
-          onClick={handleAddClick}
-          tabIndex="0"
-        >
-        {/* eslint-enable */}
-          <i className="fa fa-plus add-condition" />
-          {' '}
-          {I18n.t('form_item.add_condition')}
-        </a>
       </div>
     );
   }
