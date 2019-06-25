@@ -37,4 +37,12 @@ class Constraint < ApplicationRecord
   validates :conditions, presence: true
 
   replicable child_assocs: [:conditions], backward_assocs: [:source_item]
+
+  def condition_group
+    @condition_group ||= Forms::ConditionGroup.new(
+      true_if: accept_if,
+      members: conditions,
+      name: "Constraint for #{source_item.code}"
+    )
+  end
 end
