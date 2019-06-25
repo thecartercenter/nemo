@@ -27,10 +27,11 @@ class ConditionFormDataController < ApplicationController
 
   def conditionable_from_provided_id
     return nil if params[:conditionable_id].blank?
-    if params[:conditionable_type] == "FormItem"
-      FormItem.find(params[:conditionable_id])
-    else
-      SkipRule.find(params[:conditionable_id])
+    case params[:conditionable_type]
+    when "FormItem" then FormItem.find(params[:conditionable_id])
+    when "Constraint" then Constraint.find(params[:conditionable_id])
+    when "SkipRule" then SkipRule.find(params[:conditionable_id])
+    else render(plain: "Invalid conditionable type")
     end
   end
 
