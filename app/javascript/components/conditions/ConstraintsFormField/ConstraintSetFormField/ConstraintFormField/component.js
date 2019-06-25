@@ -1,14 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { observer } from 'mobx-react';
+import { inject, observer } from 'mobx-react';
 import Form from 'react-bootstrap/Form';
 
 import ConditionSetFormField from '../../../ConditionSetFormField/component';
 import AddConditionLink from '../../../AddConditionLink/component';
 
+@inject('conditionSetStore')
 @observer
 class ConstraintFormField extends React.Component {
   static propTypes = {
+    conditionSetStore: PropTypes.object.isRequired,
     id: PropTypes.string,
     constraintId: PropTypes.string.isRequired,
     acceptIf: PropTypes.string.isRequired,
@@ -52,7 +54,7 @@ class ConstraintFormField extends React.Component {
   }
 
   render() {
-    const { id, namePrefix, constraintId } = this.props;
+    const { id, namePrefix, constraintId, conditionSetStore: { conditionCount } } = this.props;
     const { acceptIf } = this.state;
 
     return (
@@ -62,30 +64,32 @@ class ConstraintFormField extends React.Component {
       >
         <div className={`rule-main rule-${constraintId}`}>
           <ConditionSetFormField />
-          <div key="accept-if">
-            {['all_met', 'any_met'].map((key) => (
-              <Form.Check
-                inline
-                checked={acceptIf === key}
-                onChange={this.handleAcceptIfChange}
-                label={I18n.t(`form_item.accept_if_options.${key}`)}
-                type="radio"
-                value={key}
-                key={key}
-                name={`${namePrefix}[accept_if]`}
-              />
-            ))}
-            <div className="links">
-              <AddConditionLink />
-              &nbsp;&nbsp;
-              {/* TODO: Improve a11y. */}
-              {/* eslint-disable-next-line */}
-              <a onClick={this.handleRemoveClick} tabIndex="0">
-                <i className="fa fa-trash" />
-                {' '}
-                {I18n.t('form_item.delete_rule')}
-              </a>
+          { conditionCount > 1 && (
+            <div key="accept-if">
+              {['all_met', 'any_met'].map((key) => (
+                <Form.Check
+                  inline
+                  checked={acceptIf === key}
+                  onChange={this.handleAcceptIfChange}
+                  label={I18n.t(`form_item.accept_if_options.${key}`)}
+                  type="radio"
+                  value={key}
+                  key={key}
+                  name={`${namePrefix}[accept_if]`}
+                />
+              ))}
             </div>
+          )}
+          <div className="links">
+            <AddConditionLink />
+            &nbsp;&nbsp;
+            {/* TODO: Improve a11y. */}
+            {/* eslint-disable-next-line */}
+            <a onClick={this.handleRemoveClick} tabIndex="0">
+              <i className="fa fa-trash" />
+              {' '}
+              {I18n.t('form_item.delete_rule')}
+            </a>
           </div>
           <input
             type="hidden"
