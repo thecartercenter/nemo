@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
 import ConditionSetFormField from '../../../ConditionSetFormField/component';
+import AddConditionLink from '../../../AddConditionLink/component';
 import FormSelect from '../../../FormSelect/component';
 
 @inject('conditionSetStore')
@@ -129,6 +130,7 @@ class SkipRuleFormField extends React.Component {
             </div>
           </div>
           <ConditionSetFormField />
+          <AddConditionLink />
           <input
             type="hidden"
             name={`${namePrefix}[id]`}

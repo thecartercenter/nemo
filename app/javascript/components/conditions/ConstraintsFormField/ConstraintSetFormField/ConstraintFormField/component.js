@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import Form from 'react-bootstrap/Form';
 
 import ConditionSetFormField from '../../../ConditionSetFormField/component';
+import AddConditionLink from '../../../AddConditionLink/component';
 
 @observer
 class ConstraintFormField extends React.Component {
@@ -70,6 +71,7 @@ class ConstraintFormField extends React.Component {
             </div>
           </div>
           <ConditionSetFormField />
+          <AddConditionLink />
           <div key="accept-if">
             {['all_met', 'any_met'].map((key) => (
               <Form.Check

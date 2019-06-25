@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { observer, inject } from 'mobx-react';
 
 import ConditionSetFormField from '../ConditionSetFormField/component';
+import AddConditionLink from '../AddConditionLink/component';
 
 @inject('conditionSetStore')
 @observer
@@ -40,7 +41,8 @@ class DisplayLogicFormField extends React.Component {
   }
 
   render() {
-    const { conditionSetStore: { refableQings }, type } = this.props;
+    const { conditionSetStore, type } = this.props;
+    const { refableQings, handleAddClick } = conditionSetStore;
     const { displayIf } = this.state;
 
     if (refableQings.length === 0) {
@@ -64,6 +66,7 @@ class DisplayLogicFormField extends React.Component {
           {this.displayIfOptionTags()}
         </select>
         <ConditionSetFormField />
+        <AddConditionLink />
       </div>
     );
   }
