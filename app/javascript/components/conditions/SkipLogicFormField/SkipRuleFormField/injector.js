@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'mobx-react';
 
-import ConditionSetModel from '../../../ConditionSetFormField/model';
-import { provideConditionSetStore } from '../../../ConditionSetFormField/utils';
+import ConditionSetModel from '../../ConditionSetFormField/model';
+import { provideConditionSetStore } from '../../ConditionSetFormField/utils';
 import SkipRuleFormField from './component';
 
 /**
