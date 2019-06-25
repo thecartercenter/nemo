@@ -10,7 +10,8 @@ class QuestioningDecorator < FormItemDecorator
   # Unique, sorted list of questionings to which this question actually refers,
   # whether by display logic or skip logic.
   def refd_qings
-    @refd_qings ||= (super + skip_rules.flat_map(&:refd_qings)).uniq.sort_by(&:full_rank)
+    @refd_qings ||= (super + skip_rules.flat_map(&:refd_qings) + constraints.flat_map(&:refd_qings))
+      .uniq.sort_by(&:full_rank)
   end
 
   # Sorted, unique list of full dotted ranks or the word "End"
