@@ -7,16 +7,25 @@ import { inject, observer } from 'mobx-react';
 class AddConditionLink extends React.Component {
   static propTypes = {
     conditionSetStore: PropTypes.object,
+    defaultLeftQingToCurrent: PropTypes.bool,
   };
 
+  static defaultProps = {
+    defaultLeftQingToCurrent: false,
+  };
+
+  handleAddClick = () => {
+    const { defaultLeftQingToCurrent, conditionSetStore: { addCondition } } = this.props;
+    addCondition(defaultLeftQingToCurrent);
+  }
+
   render() {
-    const { conditionSetStore: { handleAddClick } } = this.props;
 
     return (
       <React.Fragment>
         {/* TODO: Improve a11y. */}
         {/* eslint-disable-next-line */}
-        <a onClick={handleAddClick} tabIndex="0">
+        <a onClick={this.handleAddClick} tabIndex="0">
           <i className="fa fa-plus add-condition" />
           {' '}
           {I18n.t('form_item.add_condition')}

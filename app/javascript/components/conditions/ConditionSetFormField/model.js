@@ -106,8 +106,9 @@ class ConditionSetModel {
   }
 
   @action
-  handleAddClick = () => {
+  addCondition = (defaultLeftQingToLast = false) => {
     this.conditions.push(new ConditionModel({
+      leftQingId: defaultLeftQingToLast ? this.refableQings[this.refableQings.length - 1].id : null,
       refableQings: this.refableQings,
       key: Math.round(Math.random() * 100000000),
     }));
@@ -116,7 +117,7 @@ class ConditionSetModel {
   @action
   handleAddBlankCondition = () => {
     if (this.conditions.length === 0) {
-      this.handleAddClick();
+      this.addCondition();
     }
   }
 }

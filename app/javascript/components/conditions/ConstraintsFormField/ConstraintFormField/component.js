@@ -81,7 +81,7 @@ class ConstraintFormField extends React.Component {
             </div>
           )}
           <div className="links">
-            <AddConditionLink />
+            <AddConditionLink defaultLeftQingToCurrent />
             &nbsp;&nbsp;
             {/* TODO: Improve a11y. */}
             {/* eslint-disable-next-line */}
