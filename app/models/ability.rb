@@ -150,6 +150,7 @@ class Ability
        QingGroup, Option, Tag, Tagging].each do |klass|
         can :manage, klass, mission_id: mission.id
       end
+      can :condition_form, Constraint, mission_id: mission.id
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
