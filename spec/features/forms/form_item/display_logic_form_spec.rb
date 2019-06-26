@@ -40,7 +40,7 @@ feature "display logic form fields", js: true do
         select_left_qing(form.c[0].code)
         select_operator("> greater than")
         fill_in_value("0")
-        click_delete_link
+        click_remove_link
       end
       click_add_condition
       within(all(".condition-fields")[1]) do
@@ -98,7 +98,7 @@ feature "display logic form fields", js: true do
 
         # Delete existing condition
         within(all(".condition-fields")[0]) do
-          click_delete_link
+          click_remove_link
           expect(page).not_to have_css(".condition-fields", visible: true)
         end
 
@@ -138,7 +138,7 @@ feature "display logic form fields", js: true do
           select_left_qing(form.c[0].code)
           select_operator("≤ less than or equal to")
           fill_in_value("99")
-          click_delete_link
+          click_remove_link
         end
 
         click_button("Save")

@@ -67,4 +67,8 @@ shared_context "form design conditional logic" do
   def click_delete_link
     find(".fa-trash", match: :first).click
   end
+
+  def click_remove_link
+    find(".fa-close", match: :first).click
+  end
 end
