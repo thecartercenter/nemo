@@ -275,12 +275,12 @@ class FormItem < ApplicationRecord
     raise ParentMustBeGroupError unless parent.nil? || parent.group?
   end
 
-  # If there is a validation error on display logic or skip logic, we know it has to be due
+  # If there is a validation error on display logic, skip logic, or constraints we know it has to be due
   # to a missing field. This is easier to catch here instead of React for now.
   def collect_conditional_logic_errors
     errors.add(:display_logic, :all_required) if display_conditions.any?(&:invalid?)
-
     errors.add(:skip_logic, :all_required) if skip_rules.any?(&:invalid?)
+    errors.add(:constraints, :all_required) if constraints.any?(&:invalid?)
   end
 end
 
