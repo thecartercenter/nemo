@@ -168,7 +168,7 @@ feature "display logic form fields", js: true do
         # Ensure that setting 'display always' removes condition fields
         visit("#{url_prefix}/questionings/#{form.c[4].id}/edit")
         select("Always display this question", from: "Display Logic")
-        click_on "Save"
+        click_on("Save")
         visit("#{url_prefix}/questionings/#{form.c[4].id}/edit")
         expect(page).to have_select("questioning_display_logic",
           selected: "Always display this question")
