@@ -21,6 +21,14 @@ class ConditionFormField extends React.Component {
     index: PropTypes.number,
   };
 
+  componentDidMount() {
+    // Immediately call getFieldData if condition has initial value for leftQing.
+    const { condition } = this.props;
+    if (condition.leftQingId) {
+      this.getFieldData(condition.leftQingId);
+    }
+  }
+
   handleChangeLeftQing = (leftQingId) => {
     const { condition } = this.props;
     condition.leftQingId = leftQingId;

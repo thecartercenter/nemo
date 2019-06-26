@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Provider } from 'mobx-react';
 
+import ConditionSetModel from '../../ConditionSetFormField/model';
 import { provideConditionSetStore } from '../../ConditionSetFormField/utils';
 import ConstraintFormField from './component';
 
@@ -18,7 +19,7 @@ function Injector(props) {
   } = props;
 
   // eslint-disable-next-line react/prop-types, react/destructuring-assignment
-  const conditionSetStore = provideConditionSetStore(`constraint-${constraintId}`, {
+  const conditionSetStore = provideConditionSetStore(ConditionSetModel, `constraint-${constraintId}`, {
     namePrefix: `${namePrefix}[conditions_attributes]`,
     conditions,
     conditionableId: id,
