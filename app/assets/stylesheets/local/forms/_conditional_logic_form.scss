@@ -5,7 +5,8 @@
     cursor: pointer;
   }
 
-  .condition-set, .rule-set {
+  .condition-set,
+  .rule-set {
     margin-top: 10px;
   }
 
@@ -15,7 +16,8 @@
       margin-#{$left}: 0;
     }
 
-    .condition-set, .rule-set {
+    .condition-set,
+    .rule-set {
       margin-top: 0;
     }
   }
@@ -79,8 +81,8 @@
       width: 20px;
 
       i {
-        font-size: 16px;
         color: $deemphasized-accent-color;
+        font-size: 16px;
       }
     }
   }
