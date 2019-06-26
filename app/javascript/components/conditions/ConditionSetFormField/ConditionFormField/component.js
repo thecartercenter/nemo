@@ -22,9 +22,11 @@ class ConditionFormField extends React.Component {
   };
 
   componentDidMount() {
-    // Immediately call getFieldData if condition has initial value for leftQing.
+    // Immediately call getFieldData if condition has
+    // initial value for leftQingId but data has not been loaded.
+    // This can happen if the leftQingId is requested to default to a value instead of the prompt.
     const { condition } = this.props;
-    if (condition.leftQingId) {
+    if (condition.leftQingId && condition.operatorOptions.length === 0) {
       this.getFieldData(condition.leftQingId);
     }
   }
