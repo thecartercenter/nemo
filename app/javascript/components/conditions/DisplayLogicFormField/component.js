@@ -65,11 +65,9 @@ class DisplayLogicFormField extends React.Component {
         <select {...displayIfProps}>
           {this.displayIfOptionTags()}
         </select>
+        <ConditionSetFormField />
         {displayIf !== 'always' && (
-          <React.Fragment>
-            <ConditionSetFormField />
-            <AddConditionLink />
-          </React.Fragment>
+          <AddConditionLink />
         )}
       </div>
     );
