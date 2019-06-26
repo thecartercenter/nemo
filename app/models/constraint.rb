@@ -6,7 +6,7 @@
 # Table name: constraints
 #
 #  id                         :uuid             not null, primary key
-#  accept_if                  :string(16)       not null
+#  accept_if                  :string(16)       default("all_met"), not null
 #  rank                       :integer          not null
 #  rejection_msg_translations :jsonb            not null
 #  created_at                 :datetime         not null
