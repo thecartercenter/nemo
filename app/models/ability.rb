@@ -78,7 +78,7 @@ class Ability
       # Standard objects, missions, settings, and all users are available in no-mission (admin) mode
       [Form, Questioning, FormItem, SkipRule, QingGroup, Condition, OptionSet,
        OptionNode, Option, OptionSets::Import, Setting, Tag, Tagging].each do |k|
-        can :manage, k, mission_id: nil
+        can(:manage, k, mission_id: nil)
       end
 
       can(%i[read create update update_code update_core export bulk_destroy],
@@ -148,9 +148,9 @@ class Ability
 
       [Form, OptionSet, OptionSets::Import, Questioning, FormItem, SkipRule,
        QingGroup, Option, Tag, Tagging].each do |klass|
-        can :manage, klass, mission_id: mission.id
+        can(:manage, klass, mission_id: mission.id)
       end
-      can :condition_form, Constraint, mission_id: mission.id
+      can(:condition_form, Constraint, mission_id: mission.id)
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
@@ -160,7 +160,7 @@ class Ability
     end
 
     # Can manage these classes for the current mission even if locked
-    [Setting, Sms::Message].each { |klass| can :manage, klass, mission_id: mission.id }
+    [Setting, Sms::Message].each { |klass| can(:manage, klass, mission_id: mission.id) }
   end
 
   def staffer_permissions

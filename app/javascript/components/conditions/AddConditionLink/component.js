@@ -20,7 +20,6 @@ class AddConditionLink extends React.Component {
   }
 
   render() {
-
     return (
       <React.Fragment>
         {/* TODO: Improve a11y. */}
