@@ -18,7 +18,6 @@ function Injector(props) {
     refableQings,
   } = props;
 
-  // eslint-disable-next-line react/prop-types, react/destructuring-assignment
   const conditionSetStore = provideConditionSetStore(ConditionSetModel, `constraint-${constraintId}`, {
     namePrefix: `${namePrefix}[conditions_attributes]`,
     conditions,
