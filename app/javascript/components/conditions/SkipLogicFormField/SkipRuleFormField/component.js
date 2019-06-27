@@ -123,19 +123,21 @@ class SkipRuleFormField extends React.Component {
             </select>
           </div>
           <ConditionSetFormField />
-          {skipIf !== 'always' && (
-            <div className="links">
-              <AddConditionLink />
-              &nbsp;&nbsp;
-              {/* TODO: Improve a11y. */}
-              {/* eslint-disable-next-line */}
-              <a onClick={this.handleRemoveClick} tabIndex="0">
-                <i className="fa fa-trash" />
-                {' '}
-                {I18n.t('form_item.delete_rule')}
-              </a>
-            </div>
-          )}
+          <div className="links">
+            {skipIf !== 'always' && (
+              <React.Fragment>
+                <AddConditionLink />
+                &nbsp;&nbsp;
+              </React.Fragment>
+            )}
+            {/* TODO: Improve a11y. */}
+            {/* eslint-disable-next-line */}
+            <a onClick={this.handleRemoveClick} tabIndex="0">
+              <i className="fa fa-trash" />
+              {' '}
+              {I18n.t('form_item.delete_rule')}
+            </a>
+          </div>
           <input
             type="hidden"
             name={`${namePrefix}[id]`}
