@@ -5,9 +5,31 @@
     cursor: pointer;
   }
 
-  .condition-set,
+  //////////////////////////////////////////////////////////////////
+  // Vertical spacing (tricky for this stuff, so separated out here)
+  // General rule is to prefer adding space below things unless there is a clear reason to add on top.
+  // Top padding is also always needed when there is a border.
+
   .rule-set {
+    // We do top spacing here instead of bottom on the above control because this one is not always visible.
     margin-top: 10px;
+  }
+
+  .rule-attribs,
+  .rule,
+  .condition-fields,
+  .accept-if {
+    margin-bottom: 10px;
+  }
+
+  .rule {
+    // Padding needed under top border.
+    padding-top: 10px;
+  }
+
+  .rule-add-link-wrapper {
+    // Padding needed between border and link.
+    padding-top: 10px;
   }
 
   // Undo the above margins when inside a popover.
@@ -22,9 +44,10 @@
     }
   }
 
+  ////////////////////////////////////////////////////////////////////
+
   .rule-add-link-wrapper {
     border-top: $light-border;
-    padding-top: 10px;
   }
 
   .rule {
@@ -34,12 +57,10 @@
 
     .rule-main {
       flex: auto;
-      padding-bottom: 10px;
     }
 
     .rule-attribs {
       display: flex;
-      margin-top: 10px;
 
       select {
         flex: 1;
@@ -53,7 +74,6 @@
 
   .condition-fields {
     display: flex;
-    padding-bottom: 10px;
 
     .form-control[name$=\[left_qing_id\]] {
       flex: 2;
@@ -88,8 +108,6 @@
   }
 
   .accept-if {
-    margin-bottom: 10px;
-
     label {
       font-weight: normal;
     }

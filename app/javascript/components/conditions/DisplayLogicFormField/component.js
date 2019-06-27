@@ -65,10 +65,15 @@ class DisplayLogicFormField extends React.Component {
         <select {...displayIfProps}>
           {this.displayIfOptionTags()}
         </select>
-        <ConditionSetFormField />
-        {displayIf !== 'always' && (
-          <AddConditionLink />
-        )}
+        <div
+          className="rule-set"
+          style={{ display: displayIf === 'always' ? 'none' : '' }}
+        >
+          <ConditionSetFormField />
+          {displayIf !== 'always' && (
+            <AddConditionLink />
+          )}
+        </div>
       </div>
     );
   }
