@@ -191,7 +191,7 @@ class ResponsesSearcher < Searcher
   # Given a list of names, find all instances of this class that match,
   # and append their IDs to the existing list of IDs to filter by.
   def filter_by_names(names, klass, current_ids: [])
-    matched_ids = klass.where(name: names).pluck(:id)
+    matched_ids = klass.where("name ILIKE ANY (array[?])", names).pluck(:id)
     return false if matched_ids.empty?
     current_ids.concat(matched_ids)
   end

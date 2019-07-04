@@ -104,6 +104,12 @@ describe ResponsesSearcher do
     it "should return nothing for non-existent group" do
       expect(search(%(group:norble))).to be_empty
     end
+
+    it "should parse searcher props" do
+      expect(searcher(%(group:"fun group"))).to have_filter_data(groups: [group.id], advanced_text: "")
+      expect(searcher(%(group:foo))).to have_filter_data(groups: [], advanced_text: "group:(foo)")
+      expect(searcher(%(group:foo source:x))).to have_filter_data(groups: [], advanced_text: "group:(foo) source:(x)")
+    end
   end
 
   describe "full text search" do
