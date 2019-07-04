@@ -19,7 +19,7 @@ describe ResponsesSearcher do
       expect(searcher(%(form:"foo 1.0"))).to have_filter_data(form_ids: [form.id], advanced_text: "")
       expect(searcher(%(form:("foo 1.0" | bar)))).to have_filter_data(form_ids: [form2.id, form.id], advanced_text: "")
       expect(searcher(%(form:(foo bar)))).to have_filter_data(form_ids: [], advanced_text: "form:(foo bar)")
-      expect(searcher(%(form:bar))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
+      expect(searcher(%(form:BAR))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
       expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:(x)")
       expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:(x)")
     end
@@ -34,6 +34,7 @@ describe ResponsesSearcher do
 
       expect(searcher(%(reviewed:1))).to have_filter_data(is_reviewed: true, advanced_text: "")
       expect(searcher(%(reviewed:yes))).to have_filter_data(is_reviewed: true, advanced_text: "")
+      expect(searcher(%(reviewed:"NO"))).to have_filter_data(is_reviewed: false, advanced_text: "")
       expect(searcher(%(reviewed:("0")))).to have_filter_data(is_reviewed: false, advanced_text: "")
       expect(searcher(%(reviewed:(1 0)))).to have_filter_data(is_reviewed: nil, advanced_text: "reviewed:(1 0)")
     end
