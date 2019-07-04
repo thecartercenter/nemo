@@ -81,8 +81,8 @@ describe ResponsesSearcher do
     it "should work" do
       expect(search(%(submitter:#{u1.name}))).to contain_exactly(r1)
 
-      expect(searcher(%(submitter:#{u1.name}))).to have_filter_data(submitters: [u1.id], advanced_text: "")
-      expect(searcher(%(submitter:(#{u1.name} | "#{u2.name}")))).to have_filter_data(submitters: [u1.id, u2.id], advanced_text: "")
+      expect(searcher(%(submitter:#{u1.name}))).to have_filter_data(submitters: items_by_name_and_id(u1), advanced_text: "")
+      expect(searcher(%(submitter:(#{u1.name} | "#{u2.name}")))).to have_filter_data(submitters: items_by_name_and_id(u1, u2), advanced_text: "")
       expect(searcher(%(submitter:foo))).to have_filter_data(submitters: [], advanced_text: "submitter:(foo)")
       expect(searcher(%(submitter:foo source:x))).to have_filter_data(submitters: [], advanced_text: "submitter:(foo) source:(x)")
     end
@@ -107,7 +107,7 @@ describe ResponsesSearcher do
     end
 
     it "should parse searcher props" do
-      expect(searcher(%(group:"fun group"))).to have_filter_data(groups: [group.id], advanced_text: "")
+      expect(searcher(%(group:"fun group"))).to have_filter_data(groups: items_by_name_and_id(group), advanced_text: "")
       expect(searcher(%(group:foo))).to have_filter_data(groups: [], advanced_text: "group:(foo)")
       expect(searcher(%(group:foo source:x))).to have_filter_data(groups: [], advanced_text: "group:(foo) source:(x)")
     end
@@ -211,5 +211,9 @@ describe ResponsesSearcher do
 
   def searcher(query)
     ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission})
+  end
+
+  def items_by_name_and_id(*items)
+    items.pluck(:id, :name).map { |id, name| {id: id, name: name} }
   end
 end

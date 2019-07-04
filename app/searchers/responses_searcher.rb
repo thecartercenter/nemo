@@ -180,9 +180,9 @@ class ResponsesSearcher < Searcher
       self.is_reviewed = %w[1 yes].include?(value)
       return true
     when "submitter"
-      return filter_by_names(token_values, User, current_ids: submitters)
+      return filter_by_names(token_values, User, current_ids: submitters, include_name: true)
     when "group"
-      return filter_by_names(token_values, UserGroup, current_ids: groups)
+      return filter_by_names(token_values, UserGroup, current_ids: groups, include_name: true)
     else
       return false
     end
@@ -190,10 +190,10 @@ class ResponsesSearcher < Searcher
 
   # Given a list of names, find all instances of this class that match,
   # and append their IDs to the existing list of IDs to filter by.
-  def filter_by_names(names, klass, current_ids: [])
-    matched_ids = klass.where("name ILIKE ANY (array[?])", names).pluck(:id)
-    return false if matched_ids.empty?
-    current_ids.concat(matched_ids)
+  def filter_by_names(names, klass, current_ids: [], include_name: false)
+    matches = klass.where("name ILIKE ANY (array[?])", names).pluck(:id, :name)
+    return false if matches.empty?
+    current_ids.concat(matches.map { |id, name| include_name ? {id: id, name: name} : id })
   end
 
   def equality_op?(op_kind)
