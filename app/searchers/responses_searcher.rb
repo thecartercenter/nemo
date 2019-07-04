@@ -170,23 +170,22 @@ class ResponsesSearcher < Searcher
   def filter_by_expression(expression, op_kind, token_values)
     return false unless equality_op?(op_kind)
 
-    qualifier_name = expression.qualifier.name.downcase
-
-    if qualifier_name == "form"
+    case expression.qualifier.name.downcase
+    when "form"
       return filter_by_names(token_values, Form, current_ids: form_ids)
-    elsif qualifier_name == "reviewed"
+    when "reviewed"
       return false unless token_values.length == 1
       value = token_values[0].downcase
       return false unless %w[1 0 yes no].include?(value)
       self.is_reviewed = %w[1 yes].include?(value)
       return true
-    elsif qualifier_name == "submitter"
+    when "submitter"
       return filter_by_names(token_values, User, current_ids: submitters)
-    elsif qualifier_name == "group"
+    when "group"
       return filter_by_names(token_values, UserGroup, current_ids: groups)
+    else
+      return false
     end
-
-    false
   end
 
   # Given a list of names, find all instances of this class that match,
