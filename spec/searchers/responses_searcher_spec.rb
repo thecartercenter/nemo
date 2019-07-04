@@ -70,6 +70,23 @@ describe ResponsesSearcher do
     end
   end
 
+  describe "submitter qualifier" do
+    let!(:u1) { create(:user, name: "u1") }
+    let!(:u2) { create(:user, name: "u2 name") }
+    let!(:u3) { create(:user, name: "u3") }
+    let!(:r1) { create(:response, user: u1) }
+    let!(:r2) { create(:response, user: u2) }
+
+    it "should work" do
+      expect(search(%(submitter:#{u1.name}))).to contain_exactly(r1)
+
+      expect(searcher(%(submitter:#{u1.name}))).to have_filter_data(submitters: [u1.id], advanced_text: "")
+      expect(searcher(%(submitter:(#{u1.name} | "#{u2.name}")))).to have_filter_data(submitters: [u1.id, u2.id], advanced_text: "")
+      expect(searcher(%(submitter:foo))).to have_filter_data(submitters: [], advanced_text: "submitter:(foo)")
+      expect(searcher(%(submitter:foo source:x))).to have_filter_data(submitters: [], advanced_text: "submitter:(foo) source:(x)")
+    end
+  end
+
   describe "group qualifier" do
     let(:users) { create_list(:user, 3) }
     let(:group) { create(:user_group, name: "Fun Group") }
