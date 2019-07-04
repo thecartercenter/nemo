@@ -6,6 +6,7 @@ import { inject, observer } from 'mobx-react';
 
 import 'react-select2-wrapper/css/select2.css';
 
+import { parseListForSelect2 } from '../utils';
 import { submitterType, SUBMITTER_TYPES } from './utils';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
@@ -62,6 +63,7 @@ class SubmitterFilter extends React.Component {
             <Select2
               key={type}
               id={type}
+              data={parseListForSelect2(selectedSubmittersForType[type])}
               onSelect={handleSelectSubmitterForType(type)}
               onUnselect={this.handleClearSelection(type)}
               options={{
@@ -72,7 +74,7 @@ class SubmitterFilter extends React.Component {
                 ajax: (new ELMO.Utils.Select2OptionBuilder()).ajax(dataUrl, resultsKey, 'name'),
               }}
               ref={this.select2[type]}
-              value={selectedSubmittersForType[type].map(({ id }) => id)}
+              value={selectedSubmittersForType[type].map(({ id }) => id)[0]}
             />
           );
         })}
