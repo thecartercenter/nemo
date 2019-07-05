@@ -14,6 +14,7 @@ function Injector(props) {
   const {
     allForms,
     selectedFormIds,
+    selectedQings,
     isReviewed,
     selectedUsers,
     selectedGroups,
@@ -23,6 +24,7 @@ function Injector(props) {
   const filtersStore = provideFiltersStore(FiltersModel, {
     allForms,
     selectedFormIds,
+    selectedQings,
     isReviewed,
     selectedSubmittersForType: {
       [submitterType.USER]: selectedUsers,
@@ -45,6 +47,7 @@ Injector.propTypes = {
     name: PropTypes.string,
   })).isRequired,
   selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  selectedQings: PropTypes.arrayOf(PropTypes.object).isRequired,
   isReviewed: PropTypes.bool,
   selectedUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
   selectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,

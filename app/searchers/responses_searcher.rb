@@ -3,12 +3,13 @@
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
   # Parsed search values
-  attr_accessor :form_ids, :is_reviewed, :submitters, :groups
+  attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups
 
   def initialize(**opts)
     super(opts)
 
     self.form_ids = []
+    self.qings = []
     self.submitters = []
     self.groups = []
     self.is_reviewed = nil
@@ -173,6 +174,8 @@ class ResponsesSearcher < Searcher
     case expression.qualifier.name.downcase
     when "form"
       return filter_by_names(token_values, Form, current_ids: form_ids)
+    when "text_by_code"
+      return filter_by_questions(expression.qualifier_text, token_values)
     when "reviewed"
       return filter_by_boolean(token_values, filter_name: :is_reviewed)
     when "submitter"
@@ -201,6 +204,21 @@ class ResponsesSearcher < Searcher
     value = token_values[0].downcase
     return false unless %w[1 0 yes no].include?(value)
     self[filter_name] = %w[1 yes].include?(value)
+    true
+  end
+
+  # Filter by a question code + question value.
+  # Returns false if unable to handle this case.
+  def filter_by_questions(qualifier_text, token_values)
+    return false unless token_values.length == 1
+    # Strip the surrounding {QuestionCode} braces.
+    question_code = qualifier_text[1..-2]
+    matched_question = Question.where("code ILIKE ?", question_code).first
+    return false if matched_question.blank?
+    matched_qings = Questioning.where(question: matched_question)
+    return false if matched_qings.blank?
+    matched_qing_id = FilterDataController.filter_unique(matched_qings).first.id
+    qings.concat([{id: matched_qing_id, value: token_values[0]}])
     true
   end
 

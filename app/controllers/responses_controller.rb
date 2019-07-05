@@ -178,6 +178,7 @@ class ResponsesController < ApplicationController
     return if searcher.is_a?(NoopSearcher)
 
     @selected_form_ids = searcher.form_ids
+    @selected_qings = searcher.qings
     @is_reviewed = searcher.is_reviewed
     @selected_users = searcher.submitters
     @selected_groups = searcher.groups

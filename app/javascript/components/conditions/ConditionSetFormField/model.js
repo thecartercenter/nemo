@@ -106,11 +106,23 @@ class ConditionSetModel {
   }
 
   @action
-  addCondition = (defaultLeftQingToLast = false) => {
+  addFromQuestionsFilter = (qings) => {
+    // TODO: Handle other cases besides basic `value`.
+    qings.forEach(({ id, value }) => {
+      this.addCondition(false, {
+        leftQingId: id,
+        value,
+      });
+    });
+  }
+
+  @action
+  addCondition = (defaultLeftQingToLast = false, params = {}) => {
     this.conditions.push(new ConditionModel({
       leftQingId: defaultLeftQingToLast ? this.refableQings[this.refableQings.length - 1].id : null,
       refableQings: this.refableQings,
       key: Math.round(Math.random() * 100000000),
+      ...params,
     }));
   }
 
@@ -119,6 +131,11 @@ class ConditionSetModel {
     if (this.conditions.length === 0) {
       this.addCondition();
     }
+  }
+
+  @action
+  clear = () => {
+    this.conditions = [];
   }
 }
 

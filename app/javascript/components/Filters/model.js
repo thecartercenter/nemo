@@ -51,6 +51,15 @@ class FiltersModel {
   }
 
   constructor(initialState = {}) {
+    const { selectedQings } = initialState;
+    if (!isEmpty(selectedQings)) {
+      this.conditionSetStore.clear();
+      this.conditionSetStore.addFromQuestionsFilter(selectedQings);
+
+      // eslint-disable-next-line no-param-reassign
+      delete initialState.selectedQings;
+    }
+
     Object.assign(this, initialState);
 
     Object.assign(this.original, {
