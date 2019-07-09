@@ -107,11 +107,12 @@ class ConditionSetModel {
 
   @action
   addFromQuestionsFilter = (qings) => {
-    // TODO: Handle other cases besides basic `value`.
-    qings.forEach(({ id, value }) => {
+    qings.forEach(({ id, value, option_node_id: optionNodeId }) => {
+      // Upon being rendered, any necessary additional data will be fetched.
       this.addCondition(false, {
         leftQingId: id,
         value,
+        optionNodeId,
       });
     });
   }

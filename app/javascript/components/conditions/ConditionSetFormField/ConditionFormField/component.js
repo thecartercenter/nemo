@@ -26,8 +26,10 @@ class ConditionFormField extends React.Component {
     // initial value for leftQingId but data has not been loaded.
     // This can happen if the leftQingId is requested to default to a value instead of the prompt.
     const { condition } = this.props;
+    const { optionNodeId } = condition;
     if (condition.leftQingId && condition.operatorOptions.length === 0) {
-      this.getFieldData(condition.leftQingId);
+      // Preserve optionNodeId if it exists on first load; it must have been initialized this way.
+      this.getFieldData(condition.leftQingId, !!optionNodeId);
     }
   }
 
@@ -73,7 +75,7 @@ class ConditionFormField extends React.Component {
     }
   }
 
-  getFieldData = async (leftQingId) => {
+  getFieldData = async (leftQingId, preserveOptionNodeId) => {
     const { condition } = this.props;
 
     ELMO.app.loading(true);
@@ -90,7 +92,7 @@ class ConditionFormField extends React.Component {
       const newCondition = {
         ...response,
         // We set option node ID to null since the new leftQing may have a new option set.
-        optionNodeId: null,
+        optionNodeId: preserveOptionNodeId ? condition.optionNodeId : null,
         // Prefer the existing value and op if they've been set locally.
         value: condition.value || response.value,
         op: condition.op || response.op,

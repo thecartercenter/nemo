@@ -217,9 +217,25 @@ class ResponsesSearcher < Searcher
     return false if matched_question.blank?
     matched_qings = Questioning.where(question: matched_question)
     return false if matched_qings.blank?
+    # Get the deterministic Questioning ID from the Question
     matched_qing_id = FilterDataController.filter_unique(matched_qings).first.id
-    qings.concat([{id: matched_qing_id, value: token_values[0]}])
+    value = qing_value(matched_question, token_values)
+    qings.concat([{id: matched_qing_id}.merge(value)])
     true
+  end
+
+  # Get the qing value from the user input (either a string to match or an Option ID).
+  def qing_value(matched_question, token_values)
+    value = token_values[0]
+    return {value: value} unless matched_question.option_set_id
+    {option_node_id: find_option_node_id(matched_question.option_set_id, value)}
+  end
+
+  def find_option_node_id(option_set_id, value)
+    OptionNode.joins(:option)
+      .where(option_set_id: option_set_id, options: {canonical_name: value})
+      .pluck(:id)
+      .first
   end
 
   def equality_op?(op_kind)
