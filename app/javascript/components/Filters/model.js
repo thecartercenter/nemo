@@ -52,9 +52,12 @@ class FiltersModel {
 
   constructor(initialState = {}) {
     const { selectedQings } = initialState;
+
+    // If any qings should be selected, create new conditions for them.
     if (!isEmpty(selectedQings)) {
       this.conditionSetStore.resetConditionsFromQings(selectedQings);
 
+      // No longer needed now that conditions have been created.
       // eslint-disable-next-line no-param-reassign
       delete initialState.selectedQings;
     }
