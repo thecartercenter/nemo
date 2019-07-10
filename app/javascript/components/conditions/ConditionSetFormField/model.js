@@ -105,8 +105,14 @@ class ConditionSetModel {
     return changed ? newConditions : conditions;
   }
 
+  /**
+   * Clear the existing conditions and add the ones provided.
+   * Meant to be used by the questions search filter since it gets props separately.
+   */
   @action
-  addFromQuestionsFilter = (qings) => {
+  resetConditionsFromQings = (qings) => {
+    this.conditions = [];
+
     qings.forEach(({ id, value, option_node_id: optionNodeId }) => {
       // Upon being rendered, any necessary additional data will be fetched.
       this.addCondition(false, {
@@ -115,6 +121,9 @@ class ConditionSetModel {
         optionNodeId,
       });
     });
+
+    // Update original conditions since these came from original props.
+    this.original.conditions = cloneDeep(this.conditions);
   }
 
   @action
@@ -132,11 +141,6 @@ class ConditionSetModel {
     if (this.conditions.length === 0) {
       this.addCondition();
     }
-  }
-
-  @action
-  clear = () => {
-    this.conditions = [];
   }
 }
 
