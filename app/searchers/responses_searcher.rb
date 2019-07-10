@@ -228,7 +228,7 @@ class ResponsesSearcher < Searcher
     matched_qings = Questioning.where(question: matched_question)
     return false if matched_qings.blank?
     # Get the deterministic Questioning ID from the Question
-    matched_qing_id = FilterDataController.filter_unique(matched_qings).first.id
+    matched_qing_id = matched_qings.filter_unique.first.id
     value = qing_value(matched_question, token_values)
     qings.concat([{id: matched_qing_id}.merge(value)])
     true

@@ -282,6 +282,6 @@ describe ResponsesSearcher do
   end
 
   def qing_for_question(question)
-    FilterDataController.filter_unique(Questioning.where(question: question)).first
+    Questioning.where(question: question).filter_unique.first
   end
 end
