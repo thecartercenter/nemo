@@ -113,6 +113,38 @@ describe ResponsesSearcher do
     end
   end
 
+  describe "question qualifier" do
+    let!(:opt_set) { create(:option_set, option_names: :multilevel) }
+    let!(:q1) { create(:question, qtype_name: "long_text", code: "blue", add_to_form: form) }
+    let!(:q2) { create(:question, qtype_name: "long_text", code: "Green", add_to_form: form) }
+    let!(:q3) do
+      create(:question, qtype_name: "select_one", code: "red", option_set: opt_set, add_to_form: form)
+    end
+
+    it("should work") do
+      qing1 = qing_for_question(q1) # {blue}
+      qing2 = qing_for_question(q2) # {Green}
+      qing3 = qing_for_question(q3) # {red}
+      node3 = OptionNode.find_by(option_set_id: opt_set.id)
+      expect(searcher(%(text:apple))).to have_filter_data(
+        qings: [],
+        advanced_text: "text:(apple)"
+      )
+      expect(searcher(%({blue}:apple))).to have_filter_data(
+        qings: [{id: qing1.id, value: "apple"}],
+        advanced_text: ""
+      )
+      expect(searcher(%({Green}:apple {blue}:apple text:apple))).to have_filter_data(
+        qings: [{id: qing2.id, value: "apple"}, {id: qing1.id, value: "apple"}],
+        advanced_text: "text:(apple)"
+      )
+      expect(searcher(%({red}:#{node3.option.canonical_name}))).to have_filter_data(
+        qings: [{id: qing3.id, option_node_id: node3.id}],
+        advanced_text: ""
+      )
+    end
+  end
+
   describe "full text search" do
     let!(:q1) { create(:question, qtype_name: "long_text", code: "mauve", add_to_form: form) }
     let!(:q2) { create(:question, qtype_name: "text", add_to_form: form) }
@@ -215,5 +247,9 @@ describe ResponsesSearcher do
 
   def items_by_name_and_id(*items)
     items.pluck(:id, :name).map { |id, name| {id: id, name: name} }
+  end
+
+  def qing_for_question(question)
+    FilterDataController.filter_unique(Questioning.where(question: question)).first
   end
 end
