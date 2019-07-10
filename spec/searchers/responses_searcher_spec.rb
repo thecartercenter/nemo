@@ -20,8 +20,8 @@ describe ResponsesSearcher do
       expect(searcher(%(form:("foo 1.0" | bar)))).to have_filter_data(form_ids: [form2.id, form.id], advanced_text: "")
       expect(searcher(%(form:(foo bar)))).to have_filter_data(form_ids: [], advanced_text: "form:(foo bar)")
       expect(searcher(%(form:BAR))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
-      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:(x)")
-      expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:(x)")
+      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:x")
+      expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:x")
     end
   end
 
@@ -83,8 +83,8 @@ describe ResponsesSearcher do
 
       expect(searcher(%(submitter:#{u1.name}))).to have_filter_data(submitters: items_by_name_and_id(u1), advanced_text: "")
       expect(searcher(%(submitter:(#{u1.name} | "#{u2.name}")))).to have_filter_data(submitters: items_by_name_and_id(u1, u2), advanced_text: "")
-      expect(searcher(%(submitter:foo))).to have_filter_data(submitters: [], advanced_text: "submitter:(foo)")
-      expect(searcher(%(submitter:foo source:x))).to have_filter_data(submitters: [], advanced_text: "submitter:(foo) source:(x)")
+      expect(searcher(%(submitter:foo))).to have_filter_data(submitters: [], advanced_text: "submitter:foo")
+      expect(searcher(%(submitter:foo source:x))).to have_filter_data(submitters: [], advanced_text: "submitter:foo source:x")
     end
   end
 
@@ -108,8 +108,8 @@ describe ResponsesSearcher do
 
     it "should parse searcher props" do
       expect(searcher(%(group:"fun group"))).to have_filter_data(groups: items_by_name_and_id(group), advanced_text: "")
-      expect(searcher(%(group:foo))).to have_filter_data(groups: [], advanced_text: "group:(foo)")
-      expect(searcher(%(group:foo source:x))).to have_filter_data(groups: [], advanced_text: "group:(foo) source:(x)")
+      expect(searcher(%(group:foo))).to have_filter_data(groups: [], advanced_text: "group:foo")
+      expect(searcher(%(group:foo source:x))).to have_filter_data(groups: [], advanced_text: "group:foo source:x")
     end
   end
 
@@ -252,7 +252,7 @@ describe ResponsesSearcher do
       expect(searcher("text:foo")).to have_filter_data(advanced_text: "foo")
       expect(searcher("bar bar")).to have_filter_data(advanced_text: "bar bar")
       expect(searcher("reviewed:1 foo")).to have_filter_data(advanced_text: "foo")
-      expect(searcher("foo reviewed:1 123.4 source:x")).to have_filter_data(advanced_text: "foo 123.4 source:(x)")
+      expect(searcher("foo reviewed:1 123.4 source:x")).to have_filter_data(advanced_text: "foo 123.4 source:x")
     end
   end
 

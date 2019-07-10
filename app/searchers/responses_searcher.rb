@@ -166,7 +166,7 @@ class ResponsesSearcher < Searcher
     was_handled = is_filterable &&
       filter_by_expression(expression, op_kind, token_values)
 
-    advanced_text << " #{expression.qualifier_text}:(#{expression.values})" unless was_handled
+    advanced_text << " #{advanced_text_string(expression)}" unless was_handled
   end
 
   # Save specific data that can be used for search filters,
@@ -257,5 +257,15 @@ class ResponsesSearcher < Searcher
 
   def equality_op?(op_kind)
     Search::LexToken::EQUALITY_OPS.include?(op_kind)
+  end
+
+  # Stringify an expression for the advanced text search box.
+  def advanced_text_string(expression)
+    lhs = expression.qualifier_text
+    rhs = expression.values
+    # Conservative check: if it includes whitespace, wrap in parens.
+    # Any quotes will also be preserved, regardless.
+    rhs = "(#{rhs})" if rhs.match?(/\s/)
+    "#{lhs}:#{rhs}"
   end
 end
