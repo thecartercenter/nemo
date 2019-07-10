@@ -127,17 +127,17 @@ describe ResponsesSearcher do
     let(:node3) { OptionNode.find_by(option_set_id: opt_set.id) }
 
     it("should work") do
-      expect(searcher(%(text:apple))).to have_filter_data(
+      expect(searcher(%(apple))).to have_filter_data(
         qings: [],
-        advanced_text: "text:(apple)"
+        advanced_text: "apple"
       )
       expect(searcher(%({blue}:apple))).to have_filter_data(
         qings: [{id: qing1.id, value: "apple"}],
         advanced_text: ""
       )
-      expect(searcher(%({GREEN}:apple {blue}:apple text:apple))).to have_filter_data(
+      expect(searcher(%({GREEN}:apple {blue}:apple apple))).to have_filter_data(
         qings: [{id: qing2.id, value: "apple"}, {id: qing1.id, value: "apple"}],
-        advanced_text: "text:(apple)"
+        advanced_text: "apple"
       )
       expect(searcher(%({red}:#{node3.option.canonical_name}))).to have_filter_data(
         qings: [{id: qing3.id, option_node_id: node3.id}],
@@ -234,6 +234,25 @@ describe ResponsesSearcher do
 
       # Mixture of indexed and normal qualifiers should work
       expect(search("{Green}:ipswitch reviewed:1")).to contain_exactly(r2)
+    end
+  end
+
+  describe "default text qualifier" do
+    let!(:q1) { create(:question, qtype_name: "long_text", add_to_form: form) }
+    let!(:q2) { create(:question, qtype_name: "text", add_to_form: form) }
+    let!(:r1) { create(:response, form: form, answer_values: [1, "foo bar", "foo"]) }
+    let!(:r2) { create(:response, form: form, answer_values: [1, "baz", "qux"]) }
+
+    it "should work" do
+      expect(search("foo")).to contain_exactly(r1)
+      expect(search("bar bar")).to contain_exactly(r1)
+      expect(search("foo baz")).to contain_exactly
+
+      expect(searcher("foo")).to have_filter_data(advanced_text: "foo")
+      expect(searcher("text:foo")).to have_filter_data(advanced_text: "foo")
+      expect(searcher("bar bar")).to have_filter_data(advanced_text: "bar bar")
+      expect(searcher("reviewed:1 foo")).to have_filter_data(advanced_text: "foo")
+      expect(searcher("foo reviewed:1 123.4 source:x")).to have_filter_data(advanced_text: "foo 123.4 source:(x)")
     end
   end
 

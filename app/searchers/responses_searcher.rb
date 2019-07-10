@@ -133,9 +133,12 @@ class ResponsesSearcher < Searcher
     is_filterable = true
     previous = nil
 
-    expression.leaves.each do |lex_tok|
-      is_filterable &&= parse_lex_tok(lex_tok, token_values, previous)
-      previous = lex_tok
+    # Text/shortcode is always filterable.
+    unless %w[text shortcode].include?(expression.qualifier.name.downcase)
+      expression.leaves.each do |lex_tok|
+        is_filterable &&= parse_lex_tok(lex_tok, token_values, previous)
+        previous = lex_tok
+      end
     end
 
     maybe_filter_by_expression(expression, op_kind, token_values, is_filterable)
@@ -182,6 +185,12 @@ class ResponsesSearcher < Searcher
       return filter_by_names(token_values, User, current_ids: submitters, include_name: true)
     when "group"
       return filter_by_names(token_values, UserGroup, current_ids: groups, include_name: true)
+    when "text"
+      advanced_text << " #{expression.values}"
+      return true
+    when "shortcode"
+      # Skip to prevent duplicate handling as `text`.
+      return true
     else
       return false
     end
