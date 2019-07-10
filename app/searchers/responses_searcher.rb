@@ -203,7 +203,8 @@ class ResponsesSearcher < Searcher
     return false unless token_values.length == 1
     value = token_values[0].downcase
     return false unless %w[1 0 yes no].include?(value)
-    self[filter_name] = %w[1 yes].include?(value)
+    is_truthy = %w[1 yes].include?(value)
+    instance_variable_set("@#{filter_name}", is_truthy)
     true
   end
 
