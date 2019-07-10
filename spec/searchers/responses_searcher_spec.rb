@@ -250,9 +250,12 @@ describe ResponsesSearcher do
 
       expect(searcher("foo")).to have_filter_data(advanced_text: "foo")
       expect(searcher("text:foo")).to have_filter_data(advanced_text: "foo")
+      expect(searcher("text=it's")).to have_filter_data(advanced_text: "it's")
       expect(searcher("bar bar")).to have_filter_data(advanced_text: "bar bar")
       expect(searcher("reviewed:1 foo")).to have_filter_data(advanced_text: "foo")
-      expect(searcher("foo reviewed:1 123.4 source:x")).to have_filter_data(advanced_text: "foo 123.4 source:x")
+      expect(searcher("foo reviewed:1 123.4 source:(x)")).to have_filter_data(advanced_text: "foo 123.4 source:x")
+      expect(searcher("source:(\"x y\" z)")).to have_filter_data(advanced_text: "source:(\"x y\" z)")
+      expect(searcher("submit-date >= 2013-10-15 submit-date < 2013-10-20")).to have_filter_data(advanced_text: "submit-date>=2013-10-15 submit-date<2013-10-20")
     end
   end
 

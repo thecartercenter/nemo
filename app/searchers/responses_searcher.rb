@@ -262,10 +262,11 @@ class ResponsesSearcher < Searcher
   # Stringify an expression for the advanced text search box.
   def advanced_text_string(expression)
     lhs = expression.qualifier_text
+    op = expression.op.content
     rhs = expression.values
     # Conservative check: if it includes whitespace, wrap in parens.
     # Any quotes will also be preserved, regardless.
     rhs = "(#{rhs})" if rhs.match?(/\s/)
-    "#{lhs}:#{rhs}"
+    "#{lhs}#{op}#{rhs}"
   end
 end
