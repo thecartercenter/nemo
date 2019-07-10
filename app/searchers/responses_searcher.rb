@@ -233,10 +233,17 @@ class ResponsesSearcher < Searcher
   end
 
   def find_option_node_id(option_set_id, value)
-    OptionNode.joins(:option)
-      .where(option_set_id: option_set_id, options: {canonical_name: value})
-      .pluck(:id)
-      .first
+    partial_match = OptionNode.joins(:option).includes(:option)
+      .where(option_set_id: option_set_id)
+
+    # TODO: Can this be more efficient?
+    # Doesn't work with jsonb: `partial_match.where("options.name_translations ILIKE ?", value)`
+    full_match = partial_match.where("options.canonical_name ILIKE ?", value) +
+      partial_match.select do |node|
+        node.option.name_translations.values.map(&:downcase).include?(value.downcase)
+      end
+
+    full_match.pluck(:id).first
   end
 
   def equality_op?(op_kind)

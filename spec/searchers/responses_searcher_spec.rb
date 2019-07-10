@@ -121,11 +121,12 @@ describe ResponsesSearcher do
       create(:question, qtype_name: "select_one", code: "red", option_set: opt_set, add_to_form: form)
     end
 
+    let(:qing1) { qing_for_question(q1) } # {blue}
+    let(:qing2) { qing_for_question(q2) } # {Green}
+    let(:qing3) { qing_for_question(q3) } # {red}
+    let(:node3) { OptionNode.find_by(option_set_id: opt_set.id) }
+
     it("should work") do
-      qing1 = qing_for_question(q1) # {blue}
-      qing2 = qing_for_question(q2) # {Green}
-      qing3 = qing_for_question(q3) # {red}
-      node3 = OptionNode.find_by(option_set_id: opt_set.id)
       expect(searcher(%(text:apple))).to have_filter_data(
         qings: [],
         advanced_text: "text:(apple)"
@@ -134,11 +135,20 @@ describe ResponsesSearcher do
         qings: [{id: qing1.id, value: "apple"}],
         advanced_text: ""
       )
-      expect(searcher(%({Green}:apple {blue}:apple text:apple))).to have_filter_data(
+      expect(searcher(%({GREEN}:apple {blue}:apple text:apple))).to have_filter_data(
         qings: [{id: qing2.id, value: "apple"}, {id: qing1.id, value: "apple"}],
         advanced_text: "text:(apple)"
       )
       expect(searcher(%({red}:#{node3.option.canonical_name}))).to have_filter_data(
+        qings: [{id: qing3.id, option_node_id: node3.id}],
+        advanced_text: ""
+      )
+    end
+
+    it("should handle translations") do
+      node3.option.update!(name_fr: "Chat")
+
+      expect(searcher(%({red}:chat))).to have_filter_data(
         qings: [{id: qing3.id, option_node_id: node3.id}],
         advanced_text: ""
       )
