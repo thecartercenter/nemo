@@ -180,7 +180,7 @@ class ResponsesSearcher < Searcher
     when "text_by_code"
       filter_by_questions(expression.qualifier_text, token_values)
     when "reviewed"
-      filter_by_boolean(token_values, filter_name: :is_reviewed)
+      filter_by_is_reviewed(token_values)
     when "submitter"
       filter_by_names(token_values, User, current_ids: submitters, include_name: true)
     when "group"
@@ -206,14 +206,13 @@ class ResponsesSearcher < Searcher
     true
   end
 
-  # Filter by a valid boolean.
+  # Determine if is_reviewed is a valid boolean and filter by it.
   # Returns false if unable to handle this case.
-  def filter_by_boolean(token_values, filter_name:)
+  def filter_by_is_reviewed(token_values)
     return false unless token_values.length == 1
     value = token_values[0].downcase
     return false unless %w[1 0 yes no].include?(value)
-    is_truthy = %w[1 yes].include?(value)
-    instance_variable_set("@#{filter_name}", is_truthy)
+    self.is_reviewed = %w[1 yes].include?(value)
     true
   end
 
