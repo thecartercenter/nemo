@@ -276,6 +276,8 @@ describe ResponsesSearcher do
     match do |actual|
       actual.apply
       @actual = expected.keys.map { |k| [k, actual.send(k)] }.to_h
+      @actual = @actual.values.map(&method(:safe_sort))
+      expected = expected.values.map(&method(:safe_sort))
       @actual == expected
     end
 
@@ -288,5 +290,9 @@ describe ResponsesSearcher do
 
   def searcher(query)
     ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission})
+  end
+
+  def safe_sort(object)
+    object.respond_to?(:sort_by) ? object.sort_by(&:hash) : object
   end
 end
