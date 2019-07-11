@@ -1,14 +1,7 @@
 <form class="search-form form-inline">
-  <%= react_component("Filters", {
+  <%= react_component("Filters", @searcher_serializer.as_json.merge({
     controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
-    advancedSearchText: (Settings.filters_beta.present? ? @advanced_text : params[:search]) || "",
-    allForms: @all_forms || [],
-    selectedFormIds: @selected_form_ids || [],
-    selectedQings: @selected_qings || [],
-    isReviewed: @is_reviewed,
-    selectedUsers: @selected_users || [],
-    selectedGroups: @selected_groups || [],
-  }) %>
+  })) %>
   <div class="search-footer">
     <%= search_examples %>
     <a href="#"><%= t('search.help_link') %></a>
