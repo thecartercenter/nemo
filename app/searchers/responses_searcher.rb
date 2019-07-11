@@ -176,23 +176,23 @@ class ResponsesSearcher < Searcher
 
     case expression.qualifier.name.downcase
     when "form"
-      return filter_by_names(token_values, Form, current_ids: form_ids)
+      filter_by_names(token_values, Form, current_ids: form_ids)
     when "text_by_code"
-      return filter_by_questions(expression.qualifier_text, token_values)
+      filter_by_questions(expression.qualifier_text, token_values)
     when "reviewed"
-      return filter_by_boolean(token_values, filter_name: :is_reviewed)
+      filter_by_boolean(token_values, filter_name: :is_reviewed)
     when "submitter"
-      return filter_by_names(token_values, User, current_ids: submitters, include_name: true)
+      filter_by_names(token_values, User, current_ids: submitters, include_name: true)
     when "group"
-      return filter_by_names(token_values, UserGroup, current_ids: groups, include_name: true)
+      filter_by_names(token_values, UserGroup, current_ids: groups, include_name: true)
     when "text"
       advanced_text << " #{expression.values}"
-      return true
+      true
     when "shortcode"
       # Skip to prevent duplicate handling as `text`.
-      return true
+      true
     else
-      return false
+      false
     end
   end
 
