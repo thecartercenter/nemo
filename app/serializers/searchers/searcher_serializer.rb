@@ -7,7 +7,8 @@ module Searchers
     format_keys :lower_camel
 
     def advanced_search_text
-      (Settings.filters_beta.present? ? object.advanced_text : object.query) || ""
+      # We can't assume advanced_text was actually parsed, so return the original query.
+      object.query || ""
     end
   end
 end

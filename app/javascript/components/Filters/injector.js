@@ -45,12 +45,12 @@ Injector.propTypes = {
   allForms: PropTypes.arrayOf(PropTypes.shape({
     id: PropTypes.string,
     name: PropTypes.string,
-  })).isRequired,
-  selectedFormIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectedQings: PropTypes.arrayOf(PropTypes.object).isRequired,
+  })),
+  selectedFormIds: PropTypes.arrayOf(PropTypes.string),
+  selectedQings: PropTypes.arrayOf(PropTypes.object),
   isReviewed: PropTypes.bool,
-  selectedUsers: PropTypes.arrayOf(PropTypes.object).isRequired,
-  selectedGroups: PropTypes.arrayOf(PropTypes.object).isRequired,
+  selectedUsers: PropTypes.arrayOf(PropTypes.object),
+  selectedGroups: PropTypes.arrayOf(PropTypes.object),
   advancedSearchText: PropTypes.string.isRequired,
 };
 

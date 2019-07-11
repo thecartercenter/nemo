@@ -32,5 +32,9 @@ module Searchers
     def selected_groups
       object.try(:groups) || []
     end
+
+    def advanced_search_text
+      (Settings.filters_beta.present? ? object.advanced_text : object.query) || ""
+    end
   end
 end

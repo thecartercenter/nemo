@@ -25,9 +25,20 @@ class Filters extends React.Component {
     controllerName: null,
   };
 
+  constructor(props) {
+    super(props);
+
+    const { controllerName } = props;
+    this.state = {
+      shouldRenderButtons: controllerName === CONTROLLER_NAME.RESPONSES,
+    };
+  }
+
   handleSubmit = () => {
     const { filtersStore } = this.props;
-    const filterString = getFilterString(filtersStore);
+    const { advancedSearchText } = filtersStore;
+    const { shouldRenderButtons } = this.state;
+    const filterString = shouldRenderButtons ? getFilterString(filtersStore) : advancedSearchText;
     submitSearch(filterString);
   }
 
@@ -51,8 +62,7 @@ class Filters extends React.Component {
   }
 
   render() {
-    const { controllerName } = this.props;
-    const shouldRenderButtons = controllerName === CONTROLLER_NAME.RESPONSES;
+    const { shouldRenderButtons } = this.state;
 
     return (
       <div className="filters">
