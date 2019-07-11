@@ -136,6 +136,7 @@ describe ResponsesSearcher do
 
   describe "question qualifier" do
     let(:form) { create(:form, question_types: %w[long_text long_text multilevel_select_one]) }
+    let(:codes) { form.c[0..2].map(&:code) }
     let(:node3) { form.c[2].question.option_set.c[0] }
 
     it("should work") do
@@ -143,23 +144,24 @@ describe ResponsesSearcher do
         qings: [],
         advanced_text: "apple"
       )
-      expect(searcher(%({LongTextQ1}:apple))).to have_filter_data(
+      expect(searcher(%({#{codes[0]}}:apple))).to have_filter_data(
         qings: [{id: form.c[0].id, value: "apple"}],
         advanced_text: ""
       )
-      expect(searcher(%({LONGTEXTq2}:apple {longtextq1}:apple apple))).to have_filter_data(
+      expect(searcher(%({#{codes[1].upcase}}:apple {#{codes[0].downcase}}:apple apple))).to have_filter_data(
         qings: [{id: form.c[1].id, value: "apple"}, {id: form.c[0].id, value: "apple"}],
         advanced_text: "apple"
       )
-      expect(searcher(%({SelectOneQ3}:#{node3.option.canonical_name}))).to have_filter_data(
+      expect(searcher(%({#{codes[2]}}:#{node3.option.canonical_name}))).to have_filter_data(
         qings: [{id: form.c[2].id, option_node_id: node3.id}],
         advanced_text: ""
       )
+    end
 
-      # Should handle translations
+    it("should handle translations") do
       node3.option.update!(name_fr: "Chat")
 
-      expect(searcher(%({SelectOneQ3}:chat))).to have_filter_data(
+      expect(searcher(%({#{codes[2]}}:chat))).to have_filter_data(
         qings: [{id: form.c[2].id, option_node_id: node3.id}],
         advanced_text: ""
       )
