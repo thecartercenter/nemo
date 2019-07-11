@@ -200,7 +200,7 @@ class ResponsesSearcher < Searcher
   # and append their IDs to the existing list of IDs to filter by.
   # Returns false if unable to handle this case.
   def filter_by_names(names, klass, current_ids: [], include_name: false)
-    matches = klass.where("name ILIKE ANY (array[?])", names).pluck(:id, :name)
+    matches = klass.where("LOWER(name) = ANY (ARRAY[?])", names.map(&:downcase)).pluck(:id, :name)
     return false if matches.empty?
     current_ids.concat(matches.map { |id, name| include_name ? {id: id, name: name} : id })
     true
@@ -222,7 +222,7 @@ class ResponsesSearcher < Searcher
     return false unless token_values.length == 1
     # Strip the surrounding {QuestionCode} braces.
     question_code = qualifier_text[1..-2]
-    matched_question = Question.where("code ILIKE ?", question_code).first
+    matched_question = Question.where("LOWER(code) = ?", question_code.downcase).first
     return false if matched_question.blank?
     matched_qings = Questioning.where(question: matched_question)
     return false if matched_qings.blank?
@@ -246,9 +246,10 @@ class ResponsesSearcher < Searcher
 
     # TODO: Can this be more efficient?
     # Doesn't work with jsonb: `partial_match.where("options.name_translations ILIKE ?", value)`
-    full_match = partial_match.where("options.canonical_name ILIKE ?", value) +
+    value = value.downcase
+    full_match = partial_match.where("LOWER(options.canonical_name) = ?", value) +
       partial_match.select do |node|
-        node.option.name_translations.values.map(&:downcase).include?(value.downcase)
+        node.option.name_translations.values.map(&:downcase).include?(value)
       end
 
     full_match.pluck(:id).first
