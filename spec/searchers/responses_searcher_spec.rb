@@ -155,12 +155,11 @@ describe ResponsesSearcher do
         qings: [{id: form.c[2].id, option_node_id: node3.id}],
         advanced_text: ""
       )
-    end
 
-    it("should handle translations") do
+      # Should handle translations
       node3.option.update!(name_fr: "Chat")
 
-      expect(searcher(%({SelectOneQ6}:chat))).to have_filter_data(
+      expect(searcher(%({SelectOneQ3}:chat))).to have_filter_data(
         qings: [{id: form.c[2].id, option_node_id: node3.id}],
         advanced_text: ""
       )
