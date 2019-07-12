@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import cloneDeep from 'lodash/cloneDeep';
 import { observable, action, reaction, computed } from 'mobx';
 
@@ -9,7 +10,7 @@ import ConditionModel from './ConditionFormField/model';
 class ConditionSetModel {
   /** Deep copy of this model's original values (e.g. to enable reverting). */
   @observable
-  original = new Map();
+  original = {};
 
   @observable
   formId;
@@ -60,6 +61,18 @@ class ConditionSetModel {
       () => this.original,
       (original) => {
         this.original.conditions = this.prepareConditions(original.conditions);
+      },
+      { fireImmediately: true },
+    );
+
+    // Original refableQings may not exist until after data loads.
+    reaction(
+      () => this.refableQings,
+      (newRefableQings) => {
+        const { original: { refableQings: originalRefableQings } } = this;
+        if (isEmpty(originalRefableQings)) {
+          this.original.refableQings = cloneDeep(newRefableQings) || [];
+        }
       },
       { fireImmediately: true },
     );

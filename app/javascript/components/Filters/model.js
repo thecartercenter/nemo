@@ -25,7 +25,7 @@ export const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction,
 class FiltersModel {
   /** Deep copy of this model's original values (e.g. to enable reverting). */
   @observable
-  original = new Map();
+  original = {};
 
   @observable
   conditionSetStore = new ConditionSetModel(initialConditionSetData);
