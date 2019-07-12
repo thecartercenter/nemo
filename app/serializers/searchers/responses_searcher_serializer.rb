@@ -7,24 +7,23 @@ module Searchers
       :selected_users, :selected_groups
 
     def selected_form_ids
-      # NoopSearcher doesn't know about these types.
-      object.try(:form_ids) || []
+      object.form_ids || []
     end
 
     def selected_qings
-      object.try(:qings) || []
+      object.qings || []
     end
 
     def is_reviewed
-      object.try(:is_reviewed)
+      object.is_reviewed
     end
 
     def selected_users
-      object.try(:submitters) || []
+      object.submitters || []
     end
 
     def selected_groups
-      object.try(:groups) || []
+      object.groups || []
     end
 
     def advanced_search_text
