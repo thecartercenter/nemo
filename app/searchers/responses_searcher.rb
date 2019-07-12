@@ -111,6 +111,12 @@ class ResponsesSearcher < Searcher
 
   private
 
+  def all_forms
+    Form.for_mission(scope[:mission])
+      .map { |item| {name: item.name, id: item.id} }
+      .sort_by_key || []
+  end
+
   # Parse the search expressions and
   # save specific data that can be used for search filters.
   def save_filter_data(search)

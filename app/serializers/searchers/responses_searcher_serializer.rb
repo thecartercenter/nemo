@@ -6,12 +6,6 @@ module Searchers
     attributes :all_forms, :selected_form_ids, :selected_qings, :is_reviewed,
       :selected_users, :selected_groups
 
-    def all_forms
-      Form.for_mission(@current_mission)
-        .map { |item| {name: item.name, id: item.id} }
-        .sort_by_key || []
-    end
-
     def selected_form_ids
       # NoopSearcher doesn't know about these types.
       object.try(:form_ids) || []
