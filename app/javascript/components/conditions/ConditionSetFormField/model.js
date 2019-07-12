@@ -126,12 +126,13 @@ class ConditionSetModel {
   resetConditionsFromQings = (qings) => {
     this.conditions = [];
 
-    qings.forEach(({ id, value, option_node_id: optionNodeId }) => {
+    qings.forEach(({ id, value, option_node_id: optionNodeId, option_node_value: optionNodeValue }) => {
       // Upon being rendered, any necessary additional data will be fetched.
       this.addCondition(false, {
         leftQingId: id,
         value,
         optionNodeId,
+        optionNodeValue,
       });
     });
 

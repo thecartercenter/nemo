@@ -245,7 +245,7 @@ class ResponsesSearcher < Searcher
   def qing_value(matched_question, token_values)
     value = token_values[0]
     return {value: value} unless matched_question.option_set_id
-    {option_node_id: find_option_node_id(matched_question.option_set_id, value)}
+    {option_node_value: value, option_node_id: find_option_node_id(matched_question.option_set_id, value)}
   end
 
   def find_option_node_id(option_set_id, value)

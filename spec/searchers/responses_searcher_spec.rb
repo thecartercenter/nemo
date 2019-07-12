@@ -153,7 +153,7 @@ describe ResponsesSearcher do
         advanced_text: "apple"
       )
       expect(searcher(%({#{codes[2]}}:#{node3.option.canonical_name}))).to have_filter_data(
-        qings: [{id: form.c[2].id, option_node_id: node3.id}],
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: node3.option.canonical_name}],
         advanced_text: ""
       )
     end
@@ -162,7 +162,7 @@ describe ResponsesSearcher do
       node3.option.update!(name_fr: "Chat")
 
       expect(searcher(%({#{codes[2]}}:chat))).to have_filter_data(
-        qings: [{id: form.c[2].id, option_node_id: node3.id}],
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: "chat"}],
         advanced_text: ""
       )
     end
