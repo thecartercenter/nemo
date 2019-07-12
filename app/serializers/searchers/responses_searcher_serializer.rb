@@ -14,10 +14,6 @@ module Searchers
       object.qings || []
     end
 
-    def is_reviewed
-      object.is_reviewed
-    end
-
     def selected_users
       object.submitters || []
     end
