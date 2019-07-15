@@ -7,10 +7,6 @@
 #
 #  id                        :uuid             not null, primary key
 #  access_level              :string(255)      default("inherit"), not null
-#  audio_prompt_content_type :string
-#  audio_prompt_file_name    :string
-#  audio_prompt_file_size    :integer
-#  audio_prompt_updated_at   :datetime
 #  auto_increment            :boolean          default(FALSE), not null
 #  canonical_name            :text             not null
 #  code                      :string(255)      not null
@@ -18,6 +14,10 @@
 #  key                       :boolean          default(FALSE), not null
 #  maximum                   :decimal(15, 8)
 #  maxstrictly               :boolean
+#  media_prompt_content_type :string
+#  media_prompt_file_name    :string
+#  media_prompt_file_size    :integer
+#  media_prompt_updated_at   :datetime
 #  metadata_type             :string
 #  minimum                   :decimal(15, 8)
 #  minstrictly               :boolean
