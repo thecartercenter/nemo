@@ -100,11 +100,11 @@ describe "redirect on mission change" do
     expect(request.url).not_to match(/missionchange/)
 
     if params[:no_redirect]
-      expect(response).to be_success
+      expect(response).to be_successful
     else
       expect(response).to redirect_to(params[:to])
       follow_redirect!
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 end

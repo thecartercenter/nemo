@@ -46,7 +46,7 @@ describe 'api key form field', database_cleaner: :all do
     context 'on regenerate' do
       it 'should return the new api_key value as json' do
         post(regenerate_api_key_user_path(@user))
-        expect(response).to be_success
+        expect(response).to be_successful
 
         @user.reload
         expect(response.body).to eq({ value: @user.api_key }.to_json)

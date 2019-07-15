@@ -48,7 +48,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
     context 'on regenerate' do
       it 'should return the new sms_auth_code value as json' do
         post(regenerate_sms_auth_code_user_path(@user))
-        expect(response).to be_success
+        expect(response).to be_successful
 
         @user.reload
         expect(response.body).to eq({ value: @user.sms_auth_code }.to_json)
@@ -106,7 +106,7 @@ describe "sms auth code field", :sms, database_cleaner: :all do
       context 'on regenerate' do
         it 'should return the new sms_auth_code value as json' do
           post(regenerate_sms_auth_code_user_path(@enumerator))
-          expect(response).to be_success
+          expect(response).to be_successful
 
           @enumerator.reload
           expect(response.body).to eq({ value: @enumerator.sms_auth_code }.to_json)

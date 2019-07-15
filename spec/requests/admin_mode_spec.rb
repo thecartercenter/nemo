@@ -11,7 +11,7 @@ describe 'AdminMode' do
     login(@admin)
     assert_select('a.admin-mode[href="/en/admin"]', true)
     get('/en/admin')
-    expect(response).to be_success
+    expect(response).to be_successful
   end
 
   it "controller admin_mode helper should work properly" do
@@ -41,7 +41,7 @@ describe 'AdminMode' do
   it "params admin_mode should be correct" do
     login(@admin)
     get_s(basic_root_url)
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(request.params[:mode]).to be_nil
     get_s('/en/admin')
     expect(request.params[:mode]).to eq('admin')

@@ -29,7 +29,7 @@ describe FormsController, :odk, type: :request do
 
       it "should succeed" do
         get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
-        expect(response).to be_success
+        expect(response).to be_successful
 
         # Only form_both_multi should have a manifest.
         assert_select("xform", count: 4) do |elements|
@@ -42,7 +42,7 @@ describe FormsController, :odk, type: :request do
 
       it "should succeed with no locale" do
         get("/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -54,7 +54,7 @@ describe FormsController, :odk, type: :request do
           params: {format: :xml},
           headers: basic_auth
         )
-        expect(response).to be_success
+        expect(response).to be_successful
       end
 
       it "should succeed with no locale" do
@@ -63,7 +63,7 @@ describe FormsController, :odk, type: :request do
           params: {format: :xml},
           headers: basic_auth
         )
-        expect(response).to be_success
+        expect(response).to be_successful
       end
     end
 
@@ -71,7 +71,7 @@ describe FormsController, :odk, type: :request do
       context "for form with only small option sets" do
         it "should render empty manifest tag" do
           get("/en/m/#{mission.compact_name}/forms/#{form_small_multi.id}/manifest", headers: basic_auth)
-          expect(response).to be_success
+          expect(response).to be_successful
           assert_select("manifest", count: 1)
           assert_select("mediaFile", count: 0)
         end
@@ -82,7 +82,7 @@ describe FormsController, :odk, type: :request do
 
         it "should render regular manifest tag" do
           get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: basic_auth)
-          expect(response).to be_success
+          expect(response).to be_successful
           assert_select("filename", text: "itemsets.csv")
           assert_select("hash", text: ifa.md5)
           assert_select("downloadUrl", text: "http://www.example.com/#{ifa.path}")
@@ -97,7 +97,7 @@ describe FormsController, :odk, type: :request do
 
           it "should use https in URL" do
             get("/m/#{mission.compact_name}/forms/#{form_both_multi.id}/manifest", headers: basic_auth)
-            expect(response).to be_success
+            expect(response).to be_successful
             assert_select("downloadUrl", text: "https://www.example.com/#{ifa.path}")
           end
         end
@@ -113,7 +113,7 @@ describe FormsController, :odk, type: :request do
 
         it "should render manifest tags correctly" do
           get("/m/#{mission.compact_name}/forms/#{form.id}/manifest", headers: basic_auth)
-          expect(response).to be_success
+          expect(response).to be_successful
 
           download_url = "http://www.example.com/en/m/#{mission.compact_name}/questions"
 
@@ -141,19 +141,19 @@ describe FormsController, :odk, type: :request do
 
           it do
             get("#{url_prefix}/#{form.c[0].question_id}/media_prompt", headers: basic_auth)
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)
           end
 
           it do
             get("#{url_prefix}/#{form.c[1].question_id}/media_prompt", headers: basic_auth)
-            expect(response).to be_success
+            expect(response).to be_successful
             expect(response.header["Content-Disposition"]).to include(form.c[1].question.id)
           end
 
           it "should work with legacy endpoint" do
             get("#{url_prefix}/#{form.c[1].question_id}/audio_prompt", headers: basic_auth)
-            expect(response).to be_success
+            expect(response).to be_successful
           end
         end
       end
@@ -169,7 +169,7 @@ describe FormsController, :odk, type: :request do
 
         it "should succeed" do
           get("/#{ifa.path}", headers: basic_auth)
-          expect(response).to be_success
+          expect(response).to be_successful
           expect(response.body).to match(/,Cat/) # Full contents tested in model spec
         end
       end

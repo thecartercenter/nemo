@@ -28,7 +28,7 @@ describe 'user' do
 
     it 'should be linked to basic path for admin mode exit' do
       get admin_root_path
-      expect(response).to be_success
+      expect(response).to be_successful
       assert_select(%Q{a.admin-mode[href="#{basic_root_path}"]}, true)
     end
   end
@@ -52,7 +52,7 @@ describe 'user' do
 
     it 'should be linked to that missions path for admin mode exit' do
       get admin_root_path
-      expect(response).to be_success
+      expect(response).to be_successful
       path = mission_root_path(mission_name: @other_mission.compact_name)
       assert_select(%Q{a.admin-mode[href="#{path}"]}, true)
     end
