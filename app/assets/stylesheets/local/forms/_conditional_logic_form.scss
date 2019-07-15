@@ -32,7 +32,7 @@
     padding-top: 10px;
   }
 
-  // Undo the above margins when inside a popover.
+  // Undo the above margins when inside a popover, such as a filter.
   .popover-body {
     .condition-set {
       margin-#{$left}: 0;
