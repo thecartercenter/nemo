@@ -20,7 +20,6 @@ class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
       previewTemplate: options.previewTemplate,
       thumbnailWidth: 100,
       thumbnailHeight: 100,
-      acceptedFiles: options.acceptedFileFormats,
       maxFilesize: options.maxUploadSizeMb # Note dz docs were wrong on param name, look at source.
     })
 
