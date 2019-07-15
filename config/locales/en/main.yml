@@ -658,7 +658,7 @@ en:
       qing_group:
         group_item_name: "You can enter $QuestionCode to include the value of a question (for ODK only).\n\nFor example, suppose you are making a repeat group where the code for the first question is 'HouseholdID' and you enter\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID \n\n You create one group and answer '123' for 'HouseholdID.' Then you create a second group and answer '789' for 'HouseholdID.' The first group item name will be 'Household: 123.' The second group item name will be 'Household: 789.'"
       question:
-        media_prompt: "Attach a media file that enumerators can view or listen to when viewing the question in ODK. Video (mp4), audio (mp3, ogg, wav, flac), and image (png, jpg) files are all acceptable."
+        media_prompt: "Attach a media file that enumerators can view or listen to when viewing the question in ODK. Video (mp4), audio (mp3, ogg, wav, flac), and image (png, jpg) files are all acceptable. File can be up to %{max_size_mib}MiB in size."
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
         key: "Answers to key questions help summarize responses and appear in the response listing. Common key questions are location and overall evaluation."

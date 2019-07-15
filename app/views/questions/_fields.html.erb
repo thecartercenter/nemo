@@ -29,7 +29,8 @@
   </div>
 
   <%= f.field(:reference, type: :text) %>
-  <%= f.field(:media_prompt, type: :file) %>
+  <%= f.field(:media_prompt, type: :file, hint: t("activerecord.hints.question.media_prompt",
+        max_size_mib: Settings.max_upload_size_mib)) %>
 
   <div class="minmax">
     <%= f.field(:casted_minimum, partial: "questions/min_max_condition") %>
