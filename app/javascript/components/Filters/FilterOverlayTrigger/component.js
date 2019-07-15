@@ -18,6 +18,12 @@ class FilterOverlayTrigger extends React.Component {
     buttonClass: PropTypes.string,
   };
 
+  handleExit = () => {
+    const { onSubmit } = this.props;
+    // TODO: Don't search if nothing was modified.
+    onSubmit();
+  }
+
   renderPopover = () => {
     const { id, popoverContent, popoverClass, buttonsContainerClass, onSubmit } = this.props;
 
@@ -43,6 +49,7 @@ class FilterOverlayTrigger extends React.Component {
         overlay={this.renderPopover()}
         placement="bottom"
         rootClose
+        onExit={this.handleExit}
         trigger="click"
       >
         <Button id={id} variant="secondary" className={buttonClass}>
