@@ -60,7 +60,7 @@ describe "question form" do
     fill_in("Title", with: "Jay's")
     select("Text", from: "Type")
 
-    attach_file("Audio Prompt", audio_fixture("powerup.mp3").path)
+    attach_file("Media Prompt", audio_fixture("powerup.mp3").path)
     click_on("Save")
 
     visit(question_path(locale: "en", mode: "m", mission_name: mission.compact_name, id: Question.last.id))
@@ -69,13 +69,13 @@ describe "question form" do
     # Edit view shows file name and allows edit
     click_on("Edit Question")
     expect(page).to have_content("powerup.mp3")
-    attach_file("Audio Prompt", audio_fixture("powerup.wav").path)
+    attach_file("Media Prompt", audio_fixture("powerup.wav").path)
     click_on("Save")
 
-    # and still allows you change the audio prompt file
+    # and still allows you change the media prompt file
     visit(edit_question_path(Question.last.id, locale: "en", mode: "m",
                                                mission_name: get_mission.compact_name))
-    expect(page).to have_css("input#question_audio_prompt")
+    expect(page).to have_css("input#question_media_prompt")
     expect(page).to have_content("powerup.wav")
     expect(page).not_to have_content("powerup.mp3")
   end

@@ -103,12 +103,12 @@ describe FormsController, :odk, type: :request do
         end
       end
 
-      context "for forms with audio prompts" do
+      context "for forms with media prompts" do
         let(:form) { create(:form, :published, mission: mission, question_types: %w[text integer]) }
 
         before do
-          form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
-          form.c[1].question.update!(audio_prompt: audio_fixture("powerup.wav"))
+          form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
+          form.c[1].question.update!(media_prompt: audio_fixture("powerup.wav"))
         end
 
         it "should render manifest tags correctly" do
@@ -118,20 +118,20 @@ describe FormsController, :odk, type: :request do
           download_url = "http://www.example.com/en/m/#{mission.compact_name}/questions"
 
           assert_select("mediaFile", count: 2) do |elements|
-            assert_select(elements[0], "filename", text: "#{form.c[0].question.id}_audio_prompt.mp3")
+            assert_select(elements[0], "filename", text: "#{form.c[0].question.id}_media_prompt.mp3")
             assert_select(elements[0], "hash", text: "e7fe3aa406b8b67209b9d89c0cd50aa8")
             assert_select(
               elements[0],
               "downloadUrl",
-              text: "#{download_url}/#{form.c[0].question.id}/audio_prompt"
+              text: "#{download_url}/#{form.c[0].question.id}/media_prompt"
             )
 
-            assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_audio_prompt.wav")
+            assert_select(elements[1], "filename", text: "#{form.c[1].question.id}_media_prompt.wav")
             assert_select(elements[1], "hash", text: "ff2fd1e209465c5bffa784b5c57d84c4")
             assert_select(
               elements[1],
               "downloadUrl",
-              text: "#{download_url}/#{form.c[1].question.id}/audio_prompt"
+              text: "#{download_url}/#{form.c[1].question.id}/media_prompt"
             )
           end
         end
@@ -140,13 +140,13 @@ describe FormsController, :odk, type: :request do
           let(:url_prefix) { "/en/m/#{mission.compact_name}/questions" }
 
           it do
-            get("#{url_prefix}/#{form.c[0].question_id}/audio_prompt", headers: basic_auth)
+            get("#{url_prefix}/#{form.c[0].question_id}/media_prompt", headers: basic_auth)
             expect(response).to be_success
             expect(response.header["Content-Disposition"]).to include(form.c[0].question.id)
           end
 
           it do
-            get("#{url_prefix}/#{form.c[1].question_id}/audio_prompt", headers: basic_auth)
+            get("#{url_prefix}/#{form.c[1].question_id}/media_prompt", headers: basic_auth)
             expect(response).to be_success
             expect(response.header["Content-Disposition"]).to include(form.c[1].question.id)
           end

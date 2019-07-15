@@ -14,7 +14,7 @@ class QuestionsController < ApplicationController
   include QuestionFormable
 
   load_and_authorize_resource
-  skip_authorize_resource only: :audio_prompt
+  skip_authorize_resource only: :media_prompt
 
   decorates_assigned :questions
 
@@ -81,13 +81,13 @@ class QuestionsController < ApplicationController
     redirect_to(questions_path)
   end
 
-  def audio_prompt
+  def media_prompt
     authorize!(:show, @question)
 
     decorated_question = Odk::QuestionDecorator.decorate(@question)
 
-    send_attachment(decorated_question.audio_prompt,
-      filename: decorated_question.unique_audio_prompt_filename)
+    send_attachment(decorated_question.media_prompt,
+      filename: decorated_question.unique_media_prompt_filename)
   end
 
   private

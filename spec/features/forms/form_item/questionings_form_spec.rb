@@ -78,12 +78,12 @@ describe "questionings form", js: true  do
         expect_editable("read_only", false)
       end
 
-      it "should be able to add audio prompt to through questioning form" do
+      it "should be able to add media prompt to through questioning form" do
         visit edit_qing_path
-        attach_file("Audio Prompt", audio_fixture("powerup.mp3").path)
+        attach_file("Media Prompt", audio_fixture("powerup.mp3").path)
         click_on "Save"
 
-        # we can still see the audio prompt file
+        # we can still see the media prompt file
         visit edit_questioning_path(qing, locale: "en", mode: "m", mission_name: get_mission.compact_name)
         expect(page).to have_content("powerup.mp3")
       end

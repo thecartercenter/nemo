@@ -447,15 +447,15 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
     end
 
-    context "audio prompt" do
-      let(:form) { create(:form, :published, name: "Audio Prompt", question_types: %w[integer]) }
+    context "media prompt" do
+      let(:form) { create(:form, :published, name: "Media Prompt", question_types: %w[integer]) }
 
       before do
-        form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
+        form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
       end
 
       it "should render proper xml" do
-        expect_xml(form, "audio_prompt")
+        expect_xml(form, "media_prompt")
       end
     end
   end

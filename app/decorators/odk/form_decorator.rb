@@ -49,7 +49,7 @@ module Odk
 
     # Whether this form needs an accompanying manifest for odk.
     def needs_manifest?
-      needs_external_csv? || visible_questionings.any? { |qing| qing.audio_prompt.exists? }
+      needs_external_csv? || visible_questionings.any? { |qing| qing.media_prompt.exists? }
     end
 
     def needs_external_csv?

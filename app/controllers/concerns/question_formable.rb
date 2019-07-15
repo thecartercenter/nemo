@@ -30,7 +30,7 @@ module QuestionFormable
   def whitelisted_question_params(submitted)
     # We include :id because it's needed when question attribs are nested.
     permit_translations(submitted, :name, :hint) + [
-      :id, :code, :qtype_name, :option_set_id, :casted_minimum, :audio_prompt,
+      :id, :code, :qtype_name, :option_set_id, :casted_minimum, :media_prompt,
       :minstrictly, :casted_maximum, :maxstrictly, :auto_increment, :tag_ids, :metadata_type, :key,
       :access_level, :reference, {tags_attributes: [:name, :mission_id]}]
   end
