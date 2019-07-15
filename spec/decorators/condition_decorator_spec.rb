@@ -4,8 +4,14 @@ require "rails_helper"
 
 describe ConditionDecorator do
   describe "human_readable" do
-    let(:include_code) { false }
-    subject { cond.decorate.human_readable(include_code: include_code) }
+    let(:nums) { true }
+    let(:codes) { false }
+    let(:base_item) { nil } # This is not needed for most tests.
+    subject { cond.decorate.human_readable(codes: codes, nums: nums) }
+
+    before do
+      allow(cond).to receive(:conditionable).and_return(double(base_item: base_item))
+    end
 
     context "for numeric ref question" do
       let(:form) { create(:form, question_types: %w[integer]) }
@@ -16,8 +22,14 @@ describe ConditionDecorator do
         it { is_expected.to eq("Question #1 is less than 5") }
       end
 
+      context "not including nums" do
+        let(:nums) { false }
+        let(:codes) { true }
+        it { is_expected.to eq("[#{int_q.code}] is less than 5") }
+      end
+
       context "including code" do
-        let(:include_code) { true }
+        let(:codes) { true }
         it { is_expected.to eq("Question #1 [#{int_q.code}] is less than 5") }
       end
     end
@@ -70,7 +82,7 @@ describe ConditionDecorator do
         end
 
         context "including code" do
-          let(:include_code) { true }
+          let(:codes) { true }
           it { is_expected.to eq("Question #1 [#{sel_q.code}] Species is equal to \"Tulip\"") }
         end
       end
@@ -85,11 +97,20 @@ describe ConditionDecorator do
       end
 
       context "including code" do
-        let(:include_code) { true }
+        let(:codes) { true }
         it do
           is_expected.to eq("Question #2 [#{form.c[1].code}] is equal to Question #1 [#{form.c[0].code}]")
         end
       end
+    end
+
+    context "when left qing is the base item" do
+      let(:form) { create(:form, question_types: %w[integer integer]) }
+      let(:int_q) { form.c[0] }
+      let(:cond) { Condition.new(left_qing: int_q, op: "lt", value: "5") }
+      let(:base_item) { int_q }
+
+      it { is_expected.to eq("This question is less than 5") }
     end
   end
 end

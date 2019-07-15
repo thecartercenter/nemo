@@ -1256,6 +1256,7 @@ en:
     right_side_type:
       literal: "A specific value ..."
       qing: "Another question ..."
+    this_question: "This question"
 
   dashboard:
     close_dashboard: "Close Dashboard"

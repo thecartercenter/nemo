@@ -4,7 +4,7 @@ class ConditionDecorator < ApplicationDecorator
   delegate_all
 
   # Generates a human readable representation of condition.
-  # include_code - Includes the question code in the string.
+  # codes - Includes the question code in the string.
   #   May not always be desireable e.g. with printable forms.
   def human_readable(**opts)
     if left_qing_id.blank?
@@ -39,7 +39,14 @@ class ConditionDecorator < ApplicationDecorator
     bits
   end
 
-  def qing_name_and_code(qing, include_code: false)
-    [Question.model_name.human, "##{qing.full_dotted_rank}", ("[#{qing.code}]" if include_code)].compact
+  def qing_name_and_code(qing, codes: false, nums: true)
+    bits = []
+    if conditionable.base_item == qing
+      bits << I18n.t("condition.this_question")
+    else
+      bits << Question.model_name.human << "##{qing.full_dotted_rank}" if nums
+      bits << "[#{qing.code}]" if codes
+    end
+    bits
   end
 end
