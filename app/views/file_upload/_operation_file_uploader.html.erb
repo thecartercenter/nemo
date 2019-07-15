@@ -20,7 +20,7 @@
     postPath: "#{send("#{operation_type_prefix}_path")}/upload",
     previewTemplate: render("file_upload/dropzone_preview"),
     paramName: "file",
-    maxUploadSizeMb: Settings.max_upload_size_mb
+    maxUploadSizeMib: Settings.max_upload_size_mib
   )%>
   options.listener = ELMO.fileUploaderManager;
   new ELMO.Views.FileUploaderView(options);
