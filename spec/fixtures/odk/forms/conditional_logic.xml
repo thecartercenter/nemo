@@ -15,6 +15,7 @@
           <*itemcode7*_2/>
           <*itemcode8*/>
           <*itemcode9*/>
+          <*itemcode10*/>
         </data>
       </instance>
       <instance id="*optsetcode2*_level2">
@@ -99,6 +100,12 @@
           <text id="*itemcode9*:hint">
             <value>Question Hint 9</value>
           </text>
+          <text id="*itemcode10*:label">
+            <value>Integer Question Title 10</value>
+          </text>
+          <text id="*itemcode10*:hint">
+            <value>Question Hint 10</value>
+          </text>
           <text id="*optcode1*">
             <value>Cat</value>
           </text>
@@ -144,6 +151,7 @@
       <bind nodeset="/data/*itemcode7*_2" type="select1" relevant="((/data/*itemcode3* &gt; 5) and (/data/*itemcode6* = '*optcode1*')) and (not((/data/*itemcode3* = 0)))"/>
       <bind nodeset="/data/*itemcode8*" type="select"/>
       <bind nodeset="/data/*itemcode9*" type="dateTime"/>
+      <bind nodeset="/data/*itemcode10*" type="int" constraint="(. &gt;= 10 and . &lt;= 100) and ((/data/*itemcode4* = 10) or (/data/*itemcode10* = /data/*itemcode3*)) and ((/data/*itemcode10* != 55))" jr:constraintMsg="Must be greater than or equal to 10 and less than or equal to 100"/>
     </model>
   </h:head>
   <h:body>
@@ -214,6 +222,10 @@
     <input ref="/data/*itemcode9*">
       <label ref="jr:itext('*itemcode9*:label')"/>
       <hint ref="jr:itext('*itemcode9*:hint')"/>
+    </input>
+    <input ref="/data/*itemcode10*">
+      <label ref="jr:itext('*itemcode10*:label')"/>
+      <hint ref="jr:itext('*itemcode10*:hint')"/>
     </input>
   </h:body>
 </h:html>

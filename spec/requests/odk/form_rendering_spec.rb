@@ -56,12 +56,12 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
     end
   end
 
-  context "skip rule and display conditions" do
+  context "display conditions, skip rules, constraints" do
     let!(:form) do
-      create(:form, :published, :with_version, name: "Skip Rule and Conditions",
+      create(:form, :published, :with_version, name: "Conditional Logic",
                                                question_types: %w[text long_text integer decimal location
                                                                   select_one multilevel_select_one
-                                                                  select_multiple datetime])
+                                                                  select_multiple datetime integer])
     end
 
     before do
@@ -77,10 +77,26 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         dest_item_id: form.c[7].id,
         skip_if: "all_met",
         conditions_attributes: [{left_qing_id: form.c[2].id, op: "eq", value: 0}])
+
+      # Add both old style constraints and new style so we can check for the right expression.
+      form.c[9].question.update!(minimum: 10, maximum: 100)
+      form.c[9].constraints.create!(
+        accept_if: "any_met",
+        conditions_attributes: [
+          {left_qing_id: form.c[3].id, op: "eq", value: 10},
+          {left_qing_id: form.c[9].id, op: "eq", right_side_type: "qing", right_qing_id: form.c[2].id}
+        ]
+      )
+      form.c[9].constraints.create!(
+        accept_if: "all_met",
+        conditions_attributes: [
+          {left_qing_id: form.c[9].id, op: "neq", value: 55}
+        ]
+      )
     end
 
     it "should render proper xml" do
-      expect_xml(form, "skip_rule_and_conditions")
+      expect_xml(form, "conditional_logic")
     end
   end
 
