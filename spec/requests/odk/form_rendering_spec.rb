@@ -467,7 +467,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
 
   def do_request_and_expect_success
     get(form_path(form, format: :xml))
-    expect(response).to be_successfulful
+    expect(response).to be_successful
   end
 
   def prepare_odk_form_fixture(name, form, options = {})
