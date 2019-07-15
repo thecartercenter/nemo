@@ -86,7 +86,8 @@ class Question < ApplicationRecord
   # 2. to prevent people from uploading content that won't be playable on an Android device
   # #1 is mostly handled by content type validation and #2 is mostly handled by content type validation.
   # We don't care too much if people upload e.g. a video with the wrong extension. This may sneak through
-  # the validations and it may not play back properly but it should be rare and is not a security risk.
+  # the validations (e.g. an ogg video file with an .ogg extension (should be .ogv))
+  # and it may not play back properly but this should be rare and is not a security risk.
   # Executable code should definitely be caught by the content type validation.
   validates_attachment_content_type :media_prompt, content_type: MEDIA_PROMPT_MIME_TYPES,
                                                    message: :invalid_type
