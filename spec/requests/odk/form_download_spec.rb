@@ -150,6 +150,11 @@ describe FormsController, :odk, type: :request do
             expect(response).to be_success
             expect(response.header["Content-Disposition"]).to include(form.c[1].question.id)
           end
+
+          it "should work with legacy endpoint" do
+            get("#{url_prefix}/#{form.c[1].question_id}/audio_prompt", headers: basic_auth)
+            expect(response).to be_success
+          end
         end
       end
     end
