@@ -64,6 +64,11 @@ class Question < ApplicationRecord
   API_ACCESS_LEVELS = %w[inherit private].freeze
   METADATA_TYPES = %w[formstart formend].freeze
 
+  # video/ogg is needed for audio OGG files for some weird reason.
+  MEDIA_PROMPT_MIME_TYPES = %w[audio/mpeg audio/ogg audio/wave audio/wav audio/x-wav audio/x-pn-wav
+                               audio/flac video/ogg application/ogg video/mp4 image/png image/jpeg].freeze
+  MEDIA_PROMPT_EXTENSIONS = %w[mp3 ogg wav flac mp4 png jpg].freeze
+
   belongs_to :option_set, inverse_of: :questions, autosave: true
   has_many :questionings, dependent: :destroy, autosave: true, inverse_of: :question
   has_many :response_nodes, through: :questionings
@@ -75,8 +80,18 @@ class Question < ApplicationRecord
   has_many :tags, through: :taggings
 
   has_attached_file :media_prompt
-  validates_attachment_content_type :media_prompt, content_type: [%r{\Aaudio/.*\Z}, "video/ogg"]
-  validates_attachment_file_name :media_prompt, matches: /\.(mp3|ogg|wav)\Z/i
+
+  # The purpose of these validations is twofold:
+  # 1. to prevent malicious content from being uploaded to the server (e.g. executable code)
+  # 2. to prevent people from uploading content that won't be playable on an Android device
+  # #1 is mostly handled by content type validation and #2 is mostly handled by content type validation.
+  # We don't care too much if people upload e.g. a video with the wrong extension. This may sneak through
+  # the validations and it may not play back properly but it should be rare and is not a security risk.
+  # Executable code should definitely be caught by the content type validation.
+  validates_attachment_content_type :media_prompt, content_type: MEDIA_PROMPT_MIME_TYPES,
+                                                   message: :invalid_type
+  validates_attachment_file_name :media_prompt, matches: /\.(#{MEDIA_PROMPT_EXTENSIONS.join("|")})\Z/i,
+                                                message: :invalid_type
 
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 

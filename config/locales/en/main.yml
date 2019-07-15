@@ -821,6 +821,10 @@ en:
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
+            media_prompt_file_name:
+              invalid_type: "The file type is invalid."
+            media_prompt_content_type:
+              invalid_type: "The file type is invalid."
             reference:
               invalid: "Your reference link must begin with https or http."
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."
