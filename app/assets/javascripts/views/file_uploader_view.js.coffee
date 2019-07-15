@@ -9,25 +9,19 @@
 
 class ELMO.Views.FileUploaderView extends ELMO.Views.ApplicationView
   initialize: (options) ->
-    @zoneId = options.zoneId
-    @postPath = options.postPath
     @genericThumbPath = options.genericThumbPath
-    @previewTemplate = options.previewTemplate
-    @paramName = options.paramName
-    @acceptedFileFormats = options.acceptedFileFormats
     @listener = options.listener
 
-
-    @dropzone = new Dropzone(@zoneId, {
-      url: @postPath,
-      paramName: @paramName, # The name that will be used to transfer the file
+    @dropzone = new Dropzone(options.zoneId, {
+      url: options.postPath,
+      paramName: options.paramName, # The name that will be used to transfer the file
       maxFiles: 1,
       uploadMultiple: false,
-      previewTemplate: @previewTemplate,
+      previewTemplate: options.previewTemplate,
       thumbnailWidth: 100,
       thumbnailHeight: 100,
-      acceptedFiles: @acceptedFileFormats,
-      maxFilesize: 50 #MB, fits a maximum row xlsx file. Note dz docs wrong, look at source.
+      acceptedFiles: options.acceptedFileFormats,
+      maxFilesize: options.maxUploadSizeMb # Note dz docs were wrong on param name, look at source.
     })
 
     @dropzone.on 'removedfile', => @fileRemoved()
