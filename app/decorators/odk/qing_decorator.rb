@@ -12,7 +12,7 @@ module Odk
                  readonly: default_answer? && read_only? ? "true()" : nil,
                  relevant: relevance,
                  constraint: constraint,
-                 "jr:constraintMsg": min_max_error_msg,
+                 "jr:constraintMsg": constraint_msg,
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
@@ -65,6 +65,15 @@ module Odk
       exprs = [odk_constraint] # Old min/max style, going away later.
       constraints.each { |c| exprs << "(#{ConditionGroupDecorator.decorate(c.condition_group).to_odk})" }
       exprs.compact.join(" and ").presence
+    end
+
+    def constraint_msg
+      msgs = [min_max_error_msg] # Old min/max style, going away later.
+      constraints.each do |constraint|
+        msgs << ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
+      end
+      return nil unless (str = msgs.compact.join("; ").presence)
+      I18n.t("constraint.odk_message", conditions: str)
     end
 
     def jr_preload

@@ -2116,6 +2116,7 @@ en:
       all_met: "Valid only if all of these conditions are met"
       any_met: "Valid only if any of these conditions are met"
     instructions: "VALID ONLY IF %{conditions}"
+    odk_message: "Valid only if: %{conditions}"
 
   sms:
     extra_recipients_html: "<br/>... and %{count} more"
