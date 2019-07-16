@@ -27,7 +27,7 @@ module Odk
     end
 
     def questioning
-      decorate(object.conditionable)
+      decorate(object.conditionable.base_item)
     end
 
     def left_qing

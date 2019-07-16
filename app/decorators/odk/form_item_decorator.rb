@@ -12,6 +12,7 @@ module Odk
 
     def xpath_to(dest)
       dest = decorate(dest)
+      return "." if object == dest.object
       return dest.absolute_xpath if dest.top_level?
 
       common_ancestor = object.lowest_common_ancestor(dest)
