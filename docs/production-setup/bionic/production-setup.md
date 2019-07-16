@@ -21,7 +21,13 @@ This will be the (unprivileged) user under which the app runs.
 
 Remove the default ruby installation so we can install our own later:
 
-    sudo apt remove ruby
+    sudo apt remove -y ruby
+
+### Configure a default text editor
+
+    echo 'export EDITOR=vim' | sudo tee -a ~/.bashrc /home/deploy/.bashrc
+    # OR:
+    echo 'export EDITOR=nano' | sudo tee -a ~/.bashrc /home/deploy/.bashrc
 
 ### Install Nginx and Passenger
 
@@ -41,7 +47,7 @@ Remove the default ruby installation so we can install our own later:
 
 #### To get a free SSL certificate from LetsEncrypt
 
-    sudo rm -f /etc/nginx/nginx.conf && sudo nano /etc/nginx/nginx.conf
+    sudo rm -f /etc/nginx/nginx.conf && sudo $EDITOR /etc/nginx/nginx.conf
 
 Paste the contents of [this config file](nginx-certbot.conf). Update the `server_name` setting to match your domain.
 
@@ -65,15 +71,15 @@ Obtain or locate your SSL certificate's `.crt` and `.key` files.
 
     sudo mkdir /etc/nginx/ssl
     sudo chmod 400 /etc/nginx/ssl
-    sudo nano /etc/nginx/ssl/ssl.crt
+    sudo $EDITOR /etc/nginx/ssl/ssl.crt
 
 Paste the contents of your `.crt` file, save, and exit.
 
-    sudo nano /etc/nginx/ssl/ssl.key
+    sudo $EDITOR /etc/nginx/ssl/ssl.key
 
 Paste the contents of your `.key` file, save, and exit. Be careful not to share the contents of your `.key` file with anyone. Then:
 
-    sudo rm /etc/nginx/nginx.conf && sudo nano /etc/nginx/nginx.conf
+    sudo rm /etc/nginx/nginx.conf && sudo $EDITOR /etc/nginx/nginx.conf
 
 Paste the contents of [this config file](nginx-self-ssl.conf). Update the `server_name` setting to match your domain.
 
@@ -101,9 +107,11 @@ To switch to the `deploy` user, do:
     git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
     echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
     echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+
     git clone git://github.com/sstephenson/ruby-build.git ~/.rbenv/plugins/ruby-build
     echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bashrc
     exec $SHELL
+
     # This step will take a few minutes.
     rbenv install `cat .ruby-version`
     echo "gem: --no-ri --no-rdoc" > ~/.gemrc
@@ -124,12 +132,12 @@ To switch to the `deploy` user, do:
 You shouldn't need to edit `database.yml` if you followed the PostgreSQL setup instructions above.
 
     cp config/initializers/local_config.rb.example config/initializers/local_config.rb
-    nano config/initializers/local_config.rb
+    $EDITOR config/initializers/local_config.rb
 
 Read the comments in the file and enter sensible values for the settings. Then:
 
     cp config/settings.local.yml.example config/settings.local.yml
-    nano config/settings.local.yml
+    $EDITOR config/settings.local.yml
 
 Similarly, read the comments in the file and enter sensible values for the settings.
 
@@ -182,7 +190,7 @@ when the system is rebooted. (Nginx/Passenger handle starting the main web servi
 To do so:
 
     exit # Return to root/privileged user
-    sudo nano /etc/systemd/system/delayed-job.service
+    sudo $EDITOR /etc/systemd/system/delayed-job.service
 
 Now paste the contents of [this configuration file](delayed-job.service) and save. Then:
 
@@ -201,7 +209,7 @@ log output that will help you determine the issue.
 
 This will prevent your log files from becoming too large.
 
-    sudo nano /etc/logrotate.conf
+    sudo $EDITOR /etc/logrotate.conf
 
 Add the following lines at the bottom of that file:
 
