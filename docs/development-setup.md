@@ -145,7 +145,7 @@ NEMO includes several React components that are provided via [react-rails](https
 1. Download the ODK application onto your Android phone or tablet
     - https://opendatakit.org/
 1. Configure your rails development server so ODK can find it
-    - Run `rails s -p 8443 -b 0.0.0.0`
+    - Run `. bin/server -b 0.0.0.0`
 1. Create a user and password
 1. Publish your form in NEMO
 1. Point the ODK app to your development server
