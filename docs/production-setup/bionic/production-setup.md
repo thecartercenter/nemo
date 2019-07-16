@@ -213,7 +213,7 @@ This will prevent your log files from becoming too large.
 
 Add the following lines at the bottom of that file:
 
-    /home/deploy/elmo/current/log/*.log {
+    /home/deploy/elmo/log/*.log {
       daily
       missingok
       rotate 7
