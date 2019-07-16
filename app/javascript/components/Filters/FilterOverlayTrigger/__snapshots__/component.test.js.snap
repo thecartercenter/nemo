@@ -4,6 +4,7 @@ exports[`renders as expected 1`] = `
 <OverlayTrigger
   containerPadding={25}
   id="id"
+  onExit={[Function]}
   overlay={
     <FilterPopover
       buttonsContainerClass="buttonsContainer"
