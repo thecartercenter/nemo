@@ -106,11 +106,18 @@ describe ConditionDecorator do
 
     context "when left qing is the base item" do
       let(:form) { create(:form, question_types: %w[integer integer]) }
-      let(:int_q) { form.c[0] }
-      let(:cond) { Condition.new(left_qing: int_q, op: "lt", value: "5") }
-      let(:base_item) { int_q }
+      let(:cond) { Condition.new(left_qing: form.c[0], op: "lt", value: "5") }
+      let(:base_item) { form.c[0] }
 
       it { is_expected.to eq("This question is less than 5") }
+    end
+
+    context "when right qing is the base item" do
+      let(:form) { create(:form, question_types: %w[integer integer]) }
+      let(:cond) { Condition.new(left_qing: form.c[1], op: "lt", right_qing: form.c[0]) }
+      let(:base_item) { form.c[0] }
+
+      it { is_expected.to eq("Question #2 is less than this question") }
     end
   end
 end

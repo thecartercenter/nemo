@@ -35,14 +35,16 @@ class ConditionDecorator < ApplicationDecorator
   def right_side_qing_bits(**opts)
     bits = []
     bits << I18n.t("condition.operators.human_readable.#{op}")
-    bits.concat(qing_name_and_code(right_qing, **opts))
+    bits.concat(qing_name_and_code(right_qing, **opts.merge(sentence_start: false)))
     bits
   end
 
-  def qing_name_and_code(qing, codes: false, nums: true)
+  def qing_name_and_code(qing, codes: false, nums: true, sentence_start: true)
     bits = []
     if conditionable.base_item == qing
-      bits << I18n.t("condition.this_question")
+      this_q = I18n.t("condition.this_question")
+      this_q.downcase! unless sentence_start
+      bits << this_q
     else
       bits << Question.model_name.human << "##{qing.full_dotted_rank}" if nums
       bits << "[#{qing.code}]" if codes
