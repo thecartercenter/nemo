@@ -72,7 +72,8 @@ module Odk
       constraints.each do |constraint|
         msgs << ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
       end
-      return nil unless (str = msgs.compact.join("; ").presence)
+      str = msgs.compact.join("; ").presence
+      return nil if str.nil?
       I18n.t("constraint.odk_message", conditions: str)
     end
 
