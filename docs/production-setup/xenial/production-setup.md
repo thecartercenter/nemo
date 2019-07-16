@@ -288,6 +288,10 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 1. As `deploy` user in project directory, run `gem update bundler --no-document` to update to Bundler 2.x.
 
+#### Upgrading to v9.16
+
+1. The `uploads/questions/audio_prompts` directory must be renamed to `media_prompts`. If you are using cloud storage, this will need to be done via your cloud provider's console or API. If you are using local storage, this will be taken care of automatically.
+
 #### Upgrading to lastest master
 
 1. Follow the 'General Upgrade Instructions' below.

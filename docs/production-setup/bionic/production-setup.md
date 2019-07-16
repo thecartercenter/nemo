@@ -321,6 +321,10 @@ Upgrading should be done in stages. Start with the stage closest to your current
 
 1. As the root user, run `sudo -u postgres psql elmo_production -c 'CREATE EXTENSION IF NOT EXISTS "pgcrypto"'` to enable a new extension.
 
+#### Upgrading to v9.16
+
+1. The `uploads/questions/audio_prompts` directory must be renamed to `media_prompts`. If you are using cloud storage, this will need to be done via your cloud provider's console or API. If you are using local storage, this will be taken care of automatically.
+
 #### Upgrading to latest master
 
 1. Follow the 'General Upgrade Instructions' below.
