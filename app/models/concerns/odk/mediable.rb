@@ -31,6 +31,14 @@ module Odk
           def #{col_name}?
             #{col_name}_file_name.present?
           end
+
+          def #{col_name}_type
+            return nil unless #{col_name}?
+            extension = File.extname(#{col_name}_file_name)[1..-1]
+            @#{col_name}_media_type ||= ODK_MEDIA_EXTS.map do |type, exts|
+              type if exts.include?(extension)
+            end.compact.first
+          end
         RUBY
       end
     end
