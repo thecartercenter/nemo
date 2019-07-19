@@ -11,9 +11,9 @@
     <% unless @decorated_questions.empty? %>
       <% @decorated_questions.each do |question| %>
         <mediaFile>
-          <filename><%= question.unique_audio_prompt_filename %></filename>
-          <hash><%= question.audio_prompt_md5 %></hash>
-          <downloadUrl><%= audio_prompt_question_url(question) %></downloadUrl>
+          <filename><%= question.unique_media_prompt_filename %></filename>
+          <hash><%= question.media_prompt_md5 %></hash>
+          <downloadUrl><%= media_prompt_question_url(question) %></downloadUrl>
         </mediaFile>
       <% end %>
     <% end %>

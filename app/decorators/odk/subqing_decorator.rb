@@ -5,7 +5,7 @@ module Odk
     delegate_all
 
     delegate :ancestors, :decorated_option_set, :select_one_with_external_csv?, :self_and_ancestor_ids,
-      :has_options?, :option_set, :audio_prompt, :question, :top_level?, :hint, :path_from_ancestor,
+      :has_options?, :option_set, :media_prompt?, :question, :top_level?, :hint, :path_from_ancestor,
       to: :decorated_questioning
 
     # If options[:previous] is true, returns the code for the

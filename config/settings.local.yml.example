@@ -15,3 +15,7 @@ aws:
   secret_access_key: "XXXXXXXXXXXXXXXX"
   region: "us-east-1"
   bucket: "your-bucket-name"
+
+# Max upload size in MiB (1 MiB = 2^20 bytes).
+# This should match the client_max_body_size setting in nginx.conf, which is the ultimate authority.
+max_upload_size_mib: 50

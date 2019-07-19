@@ -86,6 +86,7 @@ Style/MethodCallWithArgsParentheses:
     - raise
     - puts
     - validates # Sometimes this is called in a with_options block, confusing the cop.
+    - class_eval
   Exclude:
     - Gemfile
     - db/migrate/*

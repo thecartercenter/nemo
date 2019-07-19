@@ -5,7 +5,7 @@ describe "authentication" do
     user = create(:user)
     login(user)
     get '/en'
-    expect(response).to be_success
+    expect(response).to be_successful
     user.activate!(false)
     get '/en'
     expect(response).to redirect_to("/en/login")

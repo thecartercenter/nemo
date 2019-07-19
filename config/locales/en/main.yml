@@ -130,7 +130,7 @@ en:
     title: "Title"
     type: "Type"
     value: "Value"
-    audio_prompt: "Audio Prompt"
+    media_prompt: "Media Prompt"
 
   access_levels:
     public: "Public"
@@ -658,7 +658,7 @@ en:
       qing_group:
         group_item_name: "You can enter $QuestionCode to include the value of a question (for ODK only).\n\nFor example, suppose you are making a repeat group where the code for the first question is 'HouseholdID' and you enter\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID \n\n You create one group and answer '123' for 'HouseholdID.' Then you create a second group and answer '789' for 'HouseholdID.' The first group item name will be 'Household: 123.' The second group item name will be 'Household: 789.'"
       question:
-        audio_prompt: "Attach an audio file that enumerators can listen to when viewing the question in ODK. Accepted formats are: mp3, ogg, wav."
+        media_prompt: "Attach a media file that enumerators can view or listen to when viewing the question in ODK. Video (mp4), audio (mp3, ogg, wav, flac), and image (png, jpg) files are all acceptable. File can be up to %{max_size_mib}MiB in size."
         code: "A short codename (between 2-20 characters). Should contain only letters and numbers, e.g. BallotBoxSealed, DepartTime."
         hint: "Additional instructions, e.g. 'Enter an approximate count of the people waiting to vote.'"
         key: "Answers to key questions help summarize responses and appear in the response listing. Common key questions are location and overall evaluation."
@@ -821,6 +821,10 @@ en:
           attributes:
             code:
               invalid: "Should start with a letter, use only letters and numbers, and be a maximum of 20 characters."
+            media_prompt_file_name:
+              invalid_type: "The file type is invalid."
+            media_prompt_content_type:
+              invalid_type: "The file type is invalid."
             reference:
               invalid: "Your reference link must begin with https or http."
           cant_change_if_conditions: "You can't change the Type or Option Set because there are Conditions that refer to this Question."

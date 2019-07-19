@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_26_122653) do
+ActiveRecord::Schema.define(version: 2019_07_16_153953) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -328,10 +328,6 @@ ActiveRecord::Schema.define(version: 2019_06_26_122653) do
 
   create_table "questions", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.string "access_level", limit: 255, default: "inherit", null: false
-    t.string "audio_prompt_content_type"
-    t.string "audio_prompt_file_name"
-    t.integer "audio_prompt_file_size"
-    t.datetime "audio_prompt_updated_at"
     t.boolean "auto_increment", default: false, null: false
     t.text "canonical_name", null: false
     t.string "code", limit: 255, null: false
@@ -340,6 +336,10 @@ ActiveRecord::Schema.define(version: 2019_06_26_122653) do
     t.boolean "key", default: false, null: false
     t.decimal "maximum", precision: 15, scale: 8
     t.boolean "maxstrictly"
+    t.string "media_prompt_content_type"
+    t.string "media_prompt_file_name"
+    t.integer "media_prompt_file_size"
+    t.datetime "media_prompt_updated_at"
     t.string "metadata_type"
     t.decimal "minimum", precision: 15, scale: 8
     t.boolean "minstrictly"

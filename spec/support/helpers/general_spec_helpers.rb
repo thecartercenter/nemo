@@ -33,6 +33,14 @@ module GeneralSpecHelpers
     fixture("media", "audio", name)
   end
 
+  def video_fixture(name)
+    fixture("media", "video", name)
+  end
+
+  def image_fixture(name)
+    fixture("media", "images", name)
+  end
+
   def option_set_import_fixture(name)
     fixture("option_set_imports", name)
   end

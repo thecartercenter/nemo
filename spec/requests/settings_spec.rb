@@ -7,7 +7,7 @@ describe 'settings' do
   it "settings should be default on first load" do
     get('/en')
     follow_redirect!
-    expect(response).to be_success
+    expect(response).to be_successful
 
     # ensure default timezone got loaded
     expect(Time.zone.name).to eq(Setting::DEFAULT_TIMEZONE)
@@ -38,7 +38,7 @@ describe 'settings' do
       # create a new mission and ensure that a new setting object was created with the default timezone
       post(missions_path, params: {mission: {name: "Foo"}})
       follow_redirect!
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(Mission.find_by_name("Foo").setting.timezone).to eq(Setting::DEFAULT_TIMEZONE)
 
       # change to that mission and see that timezone changed
@@ -68,6 +68,6 @@ describe 'settings' do
   def update_timezone_for_setting(setting, timezone)
     put(setting_path(setting, mode: "m", mission_name: setting.mission.compact_name), params: {setting: {timezone: timezone}})
     follow_redirect!
-    expect(response).to be_success
+    expect(response).to be_successful
   end
 end

@@ -69,7 +69,7 @@ describe "user management" do
 
     new_u = assigns(:user)
     follow_redirect!
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(new_u.missions.size).to eq(1)
     expect(new_u.missions[0]).to eq(mission)
   end
@@ -78,7 +78,7 @@ describe "user management" do
     expect(user.admin).to be false
     put(user_path(user, mode: "m", mission: mission), params: {user: { admin: true }})
     follow_redirect!
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(user.reload.admin).to be result
   end
 
