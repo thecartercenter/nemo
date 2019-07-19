@@ -9,9 +9,10 @@
       <% qing.subqings.each do |subq| %>
         <text id="<%= subq.odk_code %>:label">
           <value><%= subq.name(lang, :strict => false) %></value>
-          <% if subq.media_prompt.exists? %>
-            <value form="audio">
-              jr://audio/<%= Odk::DecoratorFactory.decorate(subq.question).unique_media_prompt_filename %>
+          <% if subq.media_prompt? %>
+            <% question = Odk::DecoratorFactory.decorate(subq.question) %>
+            <value form="<%= question.media_prompt_type %>">
+              <%= question.media_prompt_odk_uri %>
             </value>
           <% end %>
         </text>

@@ -447,15 +447,17 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       end
     end
 
-    context "media prompt" do
-      let(:form) { create(:form, :published, name: "Media Prompt", question_types: %w[integer]) }
+    context "media prompts" do
+      let(:form) { create(:form, :published, name: "Media Prompts", question_types: %w[text text text]) }
 
       before do
         form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
+        form.c[1].question.update!(media_prompt: video_fixture("jupiter.mp4"))
+        form.c[2].question.update!(media_prompt: image_fixture("the_swing.png"))
       end
 
       it "should render proper xml" do
-        expect_xml(form, "media_prompt")
+        expect_xml(form, "media_prompts")
       end
     end
   end
