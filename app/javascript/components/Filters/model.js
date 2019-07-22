@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../conditions/ConditionSetFormField/model';
@@ -48,6 +49,18 @@ class FiltersModel {
   @computed
   get selectedFormId() {
     return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
+  }
+
+  /** Returns true if the user may have modified any values (conservative). */
+  @computed
+  get isDirty() {
+    const clean = (
+      isEqual(this.original.selectedFormIds, this.selectedFormIds)
+      && isEqual(this.original.isReviewed, this.isReviewed)
+      && isEqual(this.original.selectedSubmittersForType, this.selectedSubmittersForType)
+      && !this.conditionSetStore.isDirty
+    );
+    return !clean;
   }
 
   constructor(initialState = {}) {
