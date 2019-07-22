@@ -143,7 +143,7 @@ class ReportsController < ApplicationController
       :unreviewed, :filter, :question_labels, :show_question_labels, :question_order, :text_responses,
       :percent_type, :unique_rows, :calculations, :option_set, :mission_id, :mission,
       :disagg_question_id, :group_by_tag,
-      option_set_choices_attributes: %i[option_set_id],
-      calculations_attributes: %i[id type report_report_id attrib1_name question1_id arg1 attrib1 question1 rank _destroy])
+      option_set_choices_attributes: %i[id option_set_id _destroy],
+      calculations_attributes: %i[id type attrib1_name question1_id arg1 attrib1 question1 rank _destroy])
   end
 end
