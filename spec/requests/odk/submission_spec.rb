@@ -88,7 +88,7 @@ describe "odk submissions", :odk, type: :request do
       # Attempt submission to proper form
       xml = build_odk_submission(form2, data: {form2.questionings[0] => "5"})
       do_submission(submission_path(get_mission), xml)
-      expect(response).to be_success
+      expect(response).to be_successful
 
       # Answer should look right
       resp = form2.reload.responses.last
@@ -97,7 +97,7 @@ describe "odk submissions", :odk, type: :request do
       # Attempt submission of value to wrong question
       xml = build_odk_submission(form)
       do_submission(submission_path(get_mission), xml)
-      expect(response).to be_success
+      expect(response).to be_successful
 
       # Answer should remain blank, integer value should not get stored
       resp = form.reload.responses.last
@@ -124,7 +124,7 @@ describe "odk submissions", :odk, type: :request do
 
       xml = build_odk_submission(form, data: {form.c[0] => "5"})
       do_submission(submission_path(get_mission), xml)
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(Answer.where(questioning_id: form.c[0].id).first.value).to eq("5")
     end
   end

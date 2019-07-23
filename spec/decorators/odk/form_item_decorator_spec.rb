@@ -14,7 +14,7 @@ module Odk
             "text",       # --> sc[0] (q2)
             "text",       # --> sc[1] (q3)
             [             # --> sc[2] (grp6)
-              "integer",  # --> --> sc[0] (q4)
+              "integer"   # --> --> sc[0] (q4)
             ],
             [             # --> sc[3] (grp8)
               "text",     # --> --> sc[0] (q5)
@@ -42,53 +42,57 @@ module Odk
 
       describe "absolute_xpath" do
         it do
-          expect(q4.absolute_xpath).to eq "/data/grp#{grp3.id}/grp#{grp6.id}/qing#{q4.id}"
-          expect(q6.absolute_xpath).to eq "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}/qing#{q6.id}"
+          expect(q4.absolute_xpath).to eq("/data/grp#{grp3.id}/grp#{grp6.id}/qing#{q4.id}")
+          expect(q6.absolute_xpath).to eq("/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}/qing#{q6.id}")
         end
       end
 
       describe "xpath_to" do
+        it "returns . when same question" do
+          expect(q2.xpath_to(q2)).to eq(".")
+        end
+
         it "returns the relative xpath when staying on same level within group" do
-          expect(q3.xpath_to(q2)).to eq "../qing#{q2.id}"
+          expect(q3.xpath_to(q2)).to eq("../qing#{q2.id}")
         end
 
         it "returns the relative xpath when going up within group" do
-          expect(q4.xpath_to(q2)).to eq "../../qing#{q2.id}"
+          expect(q4.xpath_to(q2)).to eq("../../qing#{q2.id}")
         end
 
         it "returns the absolute xpath when going from top-level to top-level" do
-          expect(q1.xpath_to(q7)).to eq "/data/qing#{q7.id}"
+          expect(q1.xpath_to(q7)).to eq("/data/qing#{q7.id}")
         end
 
         it "returns the absolute xpath when going from group to top-level" do
-          expect(q4.xpath_to(q1)).to eq "/data/qing#{q1.id}"
+          expect(q4.xpath_to(q1)).to eq("/data/qing#{q1.id}")
         end
 
         it "uses indexed-repeat when going down into a subgroup" do
-          expect(q5.xpath_to(q6)).to eq "indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}"\
+          expect(q5.xpath_to(q6)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id}"\
           "/qing#{q6.id},/data/grp#{grp3.id},position(../..),/data/grp#{grp3.id}/grp#{grp8.id},position(..),"\
-          "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)"
+          "/data/grp#{grp3.id}/grp#{grp8.id}/grp#{grp10.id},1)")
         end
 
         it "uses indexed-repeat when going from group to group" do
-          expect(q4.xpath_to(q6)).to eq "indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}"\
+          expect(q4.xpath_to(q6)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp8.id}"\
           "/grp#{grp10.id}/qing#{q6.id},"\
           "/data/grp#{grp3.id},position(../..),/data/grp#{grp3.id}/grp#{grp8.id},1,/data/grp#{grp3.id}"\
-          "/grp#{grp8.id}/grp#{grp10.id},1)"
+          "/grp#{grp8.id}/grp#{grp10.id},1)")
         end
 
         it "uses indexed-repeat when going from top-level to group" do
-          expect(q1.xpath_to(q4)).to eq "indexed-repeat(/data/grp#{grp3.id}/grp#{grp6.id}/qing#{q4.id},"\
-            "/data/grp#{grp3.id},1,/data/grp#{grp3.id}/grp#{grp6.id},1)"
+          expect(q1.xpath_to(q4)).to eq("indexed-repeat(/data/grp#{grp3.id}/grp#{grp6.id}/qing#{q4.id},"\
+            "/data/grp#{grp3.id},1,/data/grp#{grp3.id}/grp#{grp6.id},1)")
         end
 
         it "handles root to subitem properly" do
-          expect(root.xpath_to(q2)).to eq "indexed-repeat(/data/grp#{grp3.id}/qing#{q2.id},"\
-          "/data/grp#{grp3.id},1)"
+          expect(root.xpath_to(q2)).to eq("indexed-repeat(/data/grp#{grp3.id}/qing#{q2.id},"\
+          "/data/grp#{grp3.id},1)")
         end
 
         it "handles root to top-level item properly" do
-          expect(root.xpath_to(q7)).to eq "/data/qing#{q7.id}"
+          expect(root.xpath_to(q7)).to eq("/data/qing#{q7.id}")
         end
       end
     end

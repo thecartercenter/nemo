@@ -13,7 +13,7 @@ Consider NEMO/ELMO if you need:
 - Custom, real-time reporting
 - Offline operation in poorly-connected areas
 
-To learn more about the history and goals of the project, [visit the project site](http://getnemo.org).
+To learn more about the history and goals of the project, [visit the project site](http://getelmo.org).
 You can also learn more about The Carter Center's Election Standards [here](http://cartercenter.org).
 
 ## Production Setup

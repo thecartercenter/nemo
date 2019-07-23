@@ -7,10 +7,6 @@
 #
 #  id                        :uuid             not null, primary key
 #  access_level              :string(255)      default("inherit"), not null
-#  audio_prompt_content_type :string
-#  audio_prompt_file_name    :string
-#  audio_prompt_file_size    :integer
-#  audio_prompt_updated_at   :datetime
 #  auto_increment            :boolean          default(FALSE), not null
 #  canonical_name            :text             not null
 #  code                      :string(255)      not null
@@ -18,6 +14,10 @@
 #  key                       :boolean          default(FALSE), not null
 #  maximum                   :decimal(15, 8)
 #  maxstrictly               :boolean
+#  media_prompt_content_type :string
+#  media_prompt_file_name    :string
+#  media_prompt_file_size    :integer
+#  media_prompt_updated_at   :datetime
 #  metadata_type             :string
 #  minimum                   :decimal(15, 8)
 #  minstrictly               :boolean
@@ -55,6 +55,7 @@ class Question < ApplicationRecord
   include Replication::Replicable
   include Replication::Standardizable
   include MissionBased
+  include Odk::Mediable
 
   # Note that the maximum allowable length is 22 chars (1 letter plus 21 letters/numbers)
   # The user is told that the max is 20.
@@ -74,9 +75,7 @@ class Question < ApplicationRecord
   has_many :taggings, dependent: :destroy
   has_many :tags, through: :taggings
 
-  has_attached_file :audio_prompt
-  validates_attachment_content_type :audio_prompt, content_type: [%r{\Aaudio/.*\Z}, "video/ogg"]
-  validates_attachment_file_name :audio_prompt, matches: /\.(mp3|ogg|wav)\Z/i
+  odk_media_attachment :media_prompt
 
   accepts_nested_attributes_for :tags, reject_if: proc { |attributes| attributes[:name].blank? }
 
@@ -286,10 +285,6 @@ class Question < ApplicationRecord
   # This should be able to be done by adding `order: :name` to the association, but that causes a cryptic SQL error
   def sorted_tags
     tags.order(:name)
-  end
-
-  def audio_prompt?
-    audio_prompt_file_name.present?
   end
 
   private

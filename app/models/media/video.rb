@@ -34,6 +34,8 @@ module Media
     # and there is no easy way to allow the user to correct behavior on validation fail-we just have to
     # discard the file. So for that we reason we limit to mime type validation only since that still
     # provides some security but is less restrictive and less superficial.
+    #
+    # The list of types here is those we expect to be captured by an Android phone.
     validates_attachment_content_type :item, content_type: [%r{\Avideo/.*\Z}, "application/vnd.ms-asf"]
 
     def static_thumb_path

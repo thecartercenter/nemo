@@ -4,6 +4,7 @@ import { shallow } from 'enzyme';
 import Component from './component';
 
 const defaultProps = {
+  filtersStore: {},
   id: 'id',
   title: 'title',
   popoverContent: 'content',

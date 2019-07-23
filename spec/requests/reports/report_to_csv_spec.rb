@@ -13,7 +13,7 @@ describe "report CSV output", :csv do
     create_list(:response, 3, form: form, answer_values: %w(Dog))
     report = create(:answer_tally_report, _calculations: [form.questions[0]])
     get("/en/m/#{form.mission.compact_name}/reports/#{report.id}.csv")
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(response.body).to match_csv %Q{"",Cat,Dog\r\n#{form.questions[0].name},2,3\r\n}
   end
 
@@ -24,7 +24,7 @@ describe "report CSV output", :csv do
       answer_values: ["Foo", "Some\n<strong>long</strong><br/><ol><li>text</li><li>stuff&nbsp;&amp;stuff</li></ol>"])
     report = create(:list_report, _calculations: qs)
     get("/en/m/#{form.mission.compact_name}/reports/#{report.id}.csv")
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(response.body).to match_csv %Q{#{qs[0].name},#{qs[1].name}\r\nFoo,\"Some **long**\r\n\r\n1. text\r\n2. stuff&stuff\"\r\n}
   end
 
@@ -37,7 +37,7 @@ describe "report CSV output", :csv do
 
     report = create(:list_report, _calculations: form.questions)
     get("/en/m/#{form.mission.compact_name}/reports/#{report.id}.csv")
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(response.body).to match_csv "#{form.questions[0].name}\r\n123\r\nDog\r\n"
   end
 end

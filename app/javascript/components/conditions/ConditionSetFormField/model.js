@@ -1,5 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import cloneDeep from 'lodash/cloneDeep';
+import isEqual from 'lodash/isEqual';
 import { observable, action, reaction, computed } from 'mobx';
 
 import ConditionModel from './ConditionFormField/model';
@@ -44,10 +45,16 @@ class ConditionSetModel {
   @observable
   forceRightSideLiteral = false;
 
-  // Get the number of non-deleted conditions in the set.
+  /** Returns the number of non-deleted conditions in the set. */
   @computed
   get conditionCount() {
     return this.conditions.reduce((sum, condition) => sum + (condition.remove ? 0 : 1), 0);
+  }
+
+  /** Returns true if the user may have modified any values (conservative). */
+  @computed
+  get isDirty() {
+    return !isEqual(this.original.conditions, this.conditions);
   }
 
   constructor(initialState = {}) {
@@ -58,9 +65,9 @@ class ConditionSetModel {
     });
 
     reaction(
-      () => this.original,
-      (original) => {
-        this.original.conditions = this.prepareConditions(original.conditions);
+      () => this.original.conditions,
+      (conditions) => {
+        this.original.conditions = this.prepareConditions(conditions);
       },
       { fireImmediately: true },
     );

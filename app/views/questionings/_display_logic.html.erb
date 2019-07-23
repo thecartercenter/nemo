@@ -9,7 +9,7 @@
         <%= t("form_item.display_if_options.#{form_item.model_name.param_key}.#{form_item.display_if}") %>
       </dt>
       <% form_item.display_conditions.each do |condition| %>
-        <dd><%= condition.decorate.human_readable(include_code: true) %></dd>
+        <dd><%= condition.decorate.human_readable(codes: true) %></dd>
       <% end %>
     </dl>
   <% end %>

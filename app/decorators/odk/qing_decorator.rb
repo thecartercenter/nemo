@@ -11,8 +11,8 @@ module Odk
                  required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
                  readonly: default_answer? && read_only? ? "true()" : nil,
                  relevant: relevance,
-                 constraint: odk_constraint,
-                 "jr:constraintMsg": min_max_error_msg,
+                 constraint: constraint,
+                 "jr:constraintMsg": constraint_msg,
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
@@ -59,6 +59,22 @@ module Odk
 
     def calculate
       @calculate ||= default_answer? ? Odk::ResponsePatternParser.new(default, src_item: self).to_odk : nil
+    end
+
+    def constraint
+      exprs = [odk_constraint] # Old min/max style, going away later.
+      constraints.each { |c| exprs << "(#{ConditionGroupDecorator.decorate(c.condition_group).to_odk})" }
+      exprs.compact.join(" and ").presence
+    end
+
+    def constraint_msg
+      msgs = [min_max_error_msg] # Old min/max style, going away later.
+      constraints.each do |constraint|
+        msgs << ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
+      end
+      str = msgs.compact.join("; ").presence
+      return nil if str.nil?
+      I18n.t("constraint.odk_message", conditions: str)
     end
 
     def jr_preload

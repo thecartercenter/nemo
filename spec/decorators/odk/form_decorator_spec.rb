@@ -28,12 +28,12 @@ describe Odk::FormDecorator, :odk do
       end
     end
 
-    describe "audio prompts" do
+    describe "media prompts" do
       let(:form) { create(:form, question_types: %w[text]) }
 
-      context "with audio prompt question" do
+      context "with media prompt question" do
         before do
-          form.c[0].question.update!(audio_prompt: audio_fixture("powerup.mp3"))
+          form.c[0].question.update!(media_prompt: audio_fixture("powerup.mp3"))
         end
 
         context "when question is visible" do
@@ -49,7 +49,7 @@ describe Odk::FormDecorator, :odk do
         end
       end
 
-      context "without audio prompt question" do
+      context "without media prompt question" do
         it { is_expected.to be false }
       end
     end

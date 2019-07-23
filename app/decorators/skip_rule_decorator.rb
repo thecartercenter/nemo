@@ -24,7 +24,7 @@ class SkipRuleDecorator < ApplicationDecorator
   def human_readable_conditions
     decorated_conditions = ConditionDecorator.decorate_collection(condition_group.members)
     concatenator = condition_group.true_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
-    decorated_conditions.map { |c| c.human_readable(include_code: true) }.join(" #{concatenator} ")
+    decorated_conditions.map { |c| c.human_readable(codes: true) }.join(" #{concatenator} ")
   end
 
   def display_dest

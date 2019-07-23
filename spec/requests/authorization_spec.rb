@@ -32,7 +32,7 @@ describe 'authorization' do
     assert_cannot_access(user, '/en/admin/missions') # This assertion checks redirect
 
     follow_redirect!
-    expect(response).to be_success
+    expect(response).to be_successful
     expect(flash[:error]).to be_nil # Not needed since we have unauth page
   end
 
@@ -119,7 +119,7 @@ describe 'authorization' do
         follow_redirect!
       end
 
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     def assert_cannot_access(user, path, options = {})

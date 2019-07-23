@@ -109,7 +109,7 @@ class FormsController < ApplicationController
     @cache_key = "#{@form.odk_download_cache_key}/manifest#{CACHE_SUFFIX}"
     return if fragment_exist?(@cache_key)
 
-    questions = @form.visible_questionings.map(&:question).select(&:audio_prompt?)
+    questions = @form.visible_questionings.map(&:question).select(&:media_prompt?)
     @decorated_questions = Odk::QuestionDecorator.decorate_collection(questions)
     @ifa = Odk::ItemsetsFormAttachment.new(form: @form).ensure_generated
   end

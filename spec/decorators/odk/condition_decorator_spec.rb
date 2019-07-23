@@ -115,13 +115,13 @@ describe Odk::ConditionDecorator do
       context "with straight equality" do
         let(:form) { create(:form, question_types: %w[text text]) }
         let(:params) { {left_qing: q2.object, op: "eq", right_qing: q1.object} }
-        it { is_expected.to eq("/data/#{q2.odk_code} = /data/#{q1.odk_code}") }
+        it { is_expected.to eq(". = /data/#{q1.odk_code}") }
       end
 
       context "with temporal questions" do
         let(:form) { create(:form, question_types: %w[date date]) }
         let(:params) { {left_qing: q2.object, op: "eq", right_qing: q1.object} }
-        it { is_expected.to eq("/data/#{q2.odk_code} = /data/#{q1.odk_code}") }
+        it { is_expected.to eq(". = /data/#{q1.odk_code}") }
       end
 
       context "with intra group references" do

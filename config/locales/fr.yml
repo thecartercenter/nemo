@@ -162,7 +162,6 @@ fr:
     title: "Titre"
     type: "Type"
     value: "Valeur"
-    audio_prompt: "Avertissement Audio"
   access_levels:
     public: "Publique"
     private: "Privé"
@@ -660,7 +659,6 @@ fr:
       qing_group:
         group_item_name: "Vous pouvez saisir $QuestionCode pour inclure la valeur d'une question (pour ODK seulement)\nPar exemple, imaginons que nous créons un groupe répétable où le code de la question est 'HouseholdID' et nous saisissons\n\n&nbsp;&nbsp;&nbsp;Household: $HouseholdID\n\nVous créez un groupe et répondez '123' pour \"HouseholdID'. En suite vous créez un deuxième groupe et vous répondez '789' pour 'HouseholdID'. Le premier nom du groupe sera 'HouseholdID:123'. Le second groupe sera 'Household:789'"
       question:
-        audio_prompt: "Attacher un fichier audio que les observateurs peuvent écouter en lisant cette question dans ODK. Les formats acceptés sont: mp3, ogg, wav."
         code: "Un nom de code court (entre 2-20 caractères), qui devrait contenir seulement des lettres et des chiffres, par ex. UrneClos, HeureDeDepart."
         hint: "Instructions additionnels, par ex. 'Entrez un nombre approximatif de personnes qui sont dans la file d'attente pour voter.'"
         key: "Les réponses aux questions clés aident à résumer les réponses et apparaissent dans la liste des réponses. Exemples de questions clé: Région, Evaluation globale."
