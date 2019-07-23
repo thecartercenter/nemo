@@ -140,6 +140,11 @@ You may want to run `bundle exec rake db:create_fake_data` to create a sample mi
 
 NEMO includes several React components that are provided via [react-rails](https://github.com/reactjs/react-rails).
 
+### Migrations
+
+Database schema migrations can be run with `rails db:migrate`.
+You'll also need to run `rails db:test:prepare` for specs to pass.
+
 ### Testing with ODK
 
 1. Download the ODK application onto your Android phone or tablet
