@@ -40,7 +40,8 @@ describe QuestionsSearcher do
   end
 
   it "empty search" do
-    expect(search("")).to match_array(@questions)
+    # Match the relation passed in `search` below.
+    expect(search("")).to eq(Question)
   end
 
   def search(query)
