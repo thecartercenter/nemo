@@ -5,6 +5,7 @@ import { inject, observer } from 'mobx-react';
 
 import { getItemNameFromId } from '../utils';
 import ConditionSetFormField from '../../conditions/ConditionSetFormField/component';
+import AddConditionLink from '../../conditions/AddConditionLink/component';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 @inject('filtersStore')
@@ -33,6 +34,7 @@ class QuestionFilter extends React.Component {
           ? <p className="mb-2">{formConstraintText}</p>
           : null}
         <ConditionSetFormField />
+        <AddConditionLink />
       </div>
     );
   }
