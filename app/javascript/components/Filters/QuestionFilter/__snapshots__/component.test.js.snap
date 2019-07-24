@@ -23,7 +23,16 @@ exports[`renders as expected 1`] = `
   id="question-filter"
   onSubmit={[MockFunction]}
   popoverClass="wide display-logic-container"
-  popoverContent={<ConditionSetFormField />}
+  popoverContent={
+    <div>
+      <p
+        className="mb-2"
+      >
+        Showing questions from Two only.
+      </p>
+      <ConditionSetFormField />
+    </div>
+  }
   title="Question"
 />
 `;
