@@ -29,7 +29,12 @@ exports[`callbacks submits 1`] = `
 `;
 
 exports[`renders as expected (with query param) 1`] = `
-<div>
+<div
+  className="d-flex"
+>
+  <i
+    className="fa fa-search"
+  />
   <input
     autoComplete="off"
     className="form-control search-str"
@@ -58,7 +63,12 @@ exports[`renders as expected (with query param) 1`] = `
 `;
 
 exports[`renders as expected (without query param) 1`] = `
-<div>
+<div
+  className="d-flex"
+>
+  <i
+    className="fa fa-search"
+  />
   <input
     autoComplete="off"
     className="form-control search-str"

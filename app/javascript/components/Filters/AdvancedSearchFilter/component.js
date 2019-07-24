@@ -28,7 +28,7 @@ class AdvancedSearchFilter extends React.Component {
     const { advancedSearchText, handleChangeAdvancedSearch } = filtersStore;
 
     return (
-      <div>
+      <div className="d-flex">
         <i className="fa fa-search" />
         <input
           className="form-control search-str"

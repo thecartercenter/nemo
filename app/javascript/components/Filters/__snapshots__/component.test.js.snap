@@ -106,6 +106,9 @@ exports[`renders as expected (responses page) 1`] = `
   className="filters"
 >
   <ButtonToolbar>
+    <i
+      className="fa fa-filter"
+    />
     <FormFilter
       onSubmit={[Function]}
     />
