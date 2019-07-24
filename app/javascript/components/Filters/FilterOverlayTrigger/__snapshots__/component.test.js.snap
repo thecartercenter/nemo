@@ -25,6 +25,9 @@ exports[`renders as expected 1`] = `
     variant="secondary"
   >
     title (hint)
+    <i
+      className="fa fa-chevron-down inline"
+    />
   </Button>
 </OverlayTrigger>
 `;

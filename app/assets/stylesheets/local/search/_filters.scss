@@ -9,13 +9,18 @@
     margin-left: 5px;
   }
 
-  i {
+  i:not(.inline) {
     color: $nav-icon-color;
     font-size: 12pt;
     // Same height as `form.search-form .btn`
     line-height: 28px;
     margin-right: 5px;
     width: 15px;
+  }
+
+  i.inline {
+    color: $nav-icon-color;
+    margin-left: 5px;
   }
 }
 

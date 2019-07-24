@@ -59,6 +59,7 @@ class FilterOverlayTrigger extends React.Component {
       >
         <Button id={id} variant="secondary" className={buttonClass}>
           {title + getButtonHintString(hints)}
+          <i className="fa fa-chevron-down inline" />
         </Button>
       </OverlayTrigger>
     );
