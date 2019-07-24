@@ -39,9 +39,4 @@ describe('callbacks', () => {
     wrapper.find('Button.btn-apply').simulate('click');
     expect(defaultProps.onSubmit).toMatchSnapshot();
   });
-
-  it('clears', () => {
-    wrapper.find('Button.btn-clear').simulate('click');
-    expect(defaultProps.onClear).toMatchSnapshot();
-  });
 });

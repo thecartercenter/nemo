@@ -3,14 +3,11 @@ import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { inject, observer } from 'mobx-react';
 
-import { isQueryParamTruthy } from '../utils';
-
 @inject('filtersStore')
 @observer
 class AdvancedSearchFilter extends React.Component {
   static propTypes = {
     filtersStore: PropTypes.object,
-    onClear: PropTypes.func.isRequired,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -24,7 +21,7 @@ class AdvancedSearchFilter extends React.Component {
   }
 
   render() {
-    const { filtersStore, onClear, onSubmit } = this.props;
+    const { filtersStore, onSubmit } = this.props;
     const { advancedSearchText, handleChangeAdvancedSearch } = filtersStore;
 
     return (
@@ -47,15 +44,6 @@ class AdvancedSearchFilter extends React.Component {
         >
           {I18n.t('common.search')}
         </Button>
-        {isQueryParamTruthy('search') ? (
-          <Button
-            variant="secondary"
-            className="btn-clear btn-margin-left"
-            onClick={onClear}
-          >
-            {I18n.t('common.clear')}
-          </Button>
-        ) : null}
       </div>
     );
   }
