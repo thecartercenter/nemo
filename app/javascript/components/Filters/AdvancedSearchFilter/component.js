@@ -29,6 +29,7 @@ class AdvancedSearchFilter extends React.Component {
 
     return (
       <div>
+        <i className="fa fa-search" />
         <input
           className="form-control search-str"
           type="text"

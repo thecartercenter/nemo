@@ -53,6 +53,7 @@ class Filters extends React.Component {
 
     return (
       <ButtonToolbar>
+        <i className="fa fa-filter" />
         <FormFilter {...defaultProps} />
         <QuestionFilter {...defaultProps} />
         <ReviewedFilter {...defaultProps} />
