@@ -38,6 +38,13 @@ exports[`renders as expected (with info button) 1`] = `
   >
     Search
   </Button>
+  <i
+    className="fa fa-info-circle hint"
+    onClick={[Function]}
+    onKeyDown={[Function]}
+    role="button"
+    tabIndex={0}
+  />
 </div>
 `;
 

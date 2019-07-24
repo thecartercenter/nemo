@@ -12,13 +12,15 @@ class AdvancedSearchFilter extends React.Component {
     onSubmit: PropTypes.func.isRequired,
   };
 
-  handleKeyDown = (event) => {
-    const { onSubmit } = this.props;
-
+  handleKeyDown = (callback) => (event) => {
     if (event.key === 'Enter') {
       event.preventDefault();
-      onSubmit();
+      callback();
     }
+  }
+
+  showSearchHelp = () => {
+    $('#search-help-modal').modal('show');
   }
 
   render() {
@@ -35,7 +37,7 @@ class AdvancedSearchFilter extends React.Component {
           autoComplete="off"
           value={advancedSearchText}
           placeholder={I18n.t('filter.search_box_placeholder')}
-          onKeyDown={this.handleKeyDown}
+          onKeyDown={this.handleKeyDown(onSubmit)}
           onChange={handleChangeAdvancedSearch}
         />
         <Button
@@ -45,6 +47,15 @@ class AdvancedSearchFilter extends React.Component {
         >
           {I18n.t('common.search')}
         </Button>
+        {renderInfoButton ? (
+          <i
+            className="fa fa-info-circle hint"
+            role="button"
+            tabIndex={0}
+            onKeyDown={this.handleKeyDown(this.showSearchHelp)}
+            onClick={this.showSearchHelp}
+          />
+        ) : null}
       </div>
     );
   }
