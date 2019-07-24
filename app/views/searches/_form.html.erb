@@ -3,7 +3,7 @@
     controllerName: Settings.filters_beta.present? ? controller_name.to_json : nil,
   })) %>
   <div class="search-footer">
-    <%= search_examples %>
+    <%= Settings.filters_beta.present? && controller.is_a?(ResponsesController) ? nil : search_examples %>
     <a href="#"><%= t('search.help_link') %></a>
   </div>
 </form>
