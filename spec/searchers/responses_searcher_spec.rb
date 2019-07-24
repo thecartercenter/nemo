@@ -138,6 +138,15 @@ describe ResponsesSearcher do
     let(:form) { create(:form, question_types: %w[long_text long_text multilevel_select_one]) }
     let(:codes) { form.c[0..2].map(&:code) }
     let(:node3) { form.c[2].question.option_set.c[0] }
+    let(:preferred_locales) { configatron.preferred_locales }
+
+    before do
+      configatron.preferred_locales = %i[en fr]
+    end
+
+    after do
+      configatron.preferred_locales = preferred_locales
+    end
 
     it("should work") do
       expect(searcher(%(apple))).to have_filter_data(
