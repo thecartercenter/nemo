@@ -20,7 +20,12 @@ exports[`renders as expected 1`] = `
   trigger="click"
 >
   <Button
-    className="button"
+    className={
+      Array [
+        "button",
+        "active-filter",
+      ]
+    }
     id="id"
     variant="secondary"
   >

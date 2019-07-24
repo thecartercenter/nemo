@@ -46,6 +46,8 @@ class FilterOverlayTrigger extends React.Component {
 
   render() {
     const { id, title, hints, buttonClass } = this.props;
+    const hintString = getButtonHintString(hints);
+    const active = Boolean(hintString);
 
     return (
       <OverlayTrigger
@@ -57,8 +59,12 @@ class FilterOverlayTrigger extends React.Component {
         onExit={this.handleExit}
         trigger="click"
       >
-        <Button id={id} variant="secondary" className={buttonClass}>
-          {title + getButtonHintString(hints)}
+        <Button
+          id={id}
+          variant="secondary"
+          className={[buttonClass, active ? 'active-filter' : null]}
+        >
+          {title + hintString}
           <i className="fa fa-chevron-down inline" />
         </Button>
       </OverlayTrigger>

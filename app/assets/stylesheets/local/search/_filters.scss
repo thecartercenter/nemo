@@ -3,6 +3,18 @@
 
   .btn-toolbar {
     margin-bottom: 5px;
+
+    button {
+      background-color: transparent;
+
+      &.active-filter {
+        background-color: $light-blue;
+
+        &:not(:hover) {
+          border-color: transparent;
+        }
+      }
+    }
   }
 
   .btn-margin-left {
