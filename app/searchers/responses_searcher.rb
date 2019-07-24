@@ -255,8 +255,7 @@ class ResponsesSearcher < Searcher
     # TODO: Can this be more efficient?
     # Doesn't work with jsonb: `partial_match.where("options.name_translations ILIKE ?", value)`
     value = value.downcase
-    full_match = partial_match.where("LOWER(options.canonical_name) = ?", value) +
-      partial_match.select do |node|
+    full_match = partial_match.select do |node|
         node.option.name_translations.values.map(&:downcase).include?(value)
       end
 
