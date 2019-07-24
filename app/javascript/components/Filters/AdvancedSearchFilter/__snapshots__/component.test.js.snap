@@ -27,7 +27,7 @@ exports[`renders as expected (with query param) 1`] = `
     name="search"
     onChange={[Function]}
     onKeyDown={[Function]}
-    placeholder="Advanced search"
+    placeholder="Search"
     type="text"
     value="query"
   />
@@ -54,7 +54,7 @@ exports[`renders as expected (without query param) 1`] = `
     name="search"
     onChange={[Function]}
     onKeyDown={[Function]}
-    placeholder="Advanced search"
+    placeholder="Search"
     type="text"
     value="query"
   />

@@ -33,7 +33,7 @@ class AdvancedSearchFilter extends React.Component {
           name="search"
           autoComplete="off"
           value={advancedSearchText}
-          placeholder={I18n.t('filter.advancedSearch')}
+          placeholder={I18n.t('filter.search_box_placeholder')}
           onKeyDown={this.handleKeyDown}
           onChange={handleChangeAdvancedSearch}
         />

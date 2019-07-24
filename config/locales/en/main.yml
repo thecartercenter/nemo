@@ -1305,7 +1305,7 @@ en:
     choose_submitter:
       submitter: "Choose a user"
       group: "Choose a group"
-    advancedSearch: "Advanced search"
+    search_box_placeholder: "Search"
 
   form:
     select_api_users: "Select all users who can access form data via the API:"
