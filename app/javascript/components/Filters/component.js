@@ -70,6 +70,7 @@ class Filters extends React.Component {
         {shouldRenderButtons ? this.renderFilterButtons() : null}
 
         <AdvancedSearchFilter
+          renderInfoButton={shouldRenderButtons}
           onClear={this.handleClearFilters}
           onSubmit={this.handleSubmit}
         />

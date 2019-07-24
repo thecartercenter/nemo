@@ -14,6 +14,33 @@ exports[`callbacks submits 1`] = `
 }
 `;
 
+exports[`renders as expected (with info button) 1`] = `
+<div
+  className="d-flex"
+>
+  <i
+    className="fa fa-search"
+  />
+  <input
+    autoComplete="off"
+    className="form-control search-str"
+    name="search"
+    onChange={[Function]}
+    onKeyDown={[Function]}
+    placeholder="Search"
+    type="text"
+    value="query"
+  />
+  <Button
+    className="btn-apply btn-advanced-search"
+    onClick={[MockFunction]}
+    variant="secondary"
+  >
+    Search
+  </Button>
+</div>
+`;
+
 exports[`renders as expected (with query param) 1`] = `
 <div
   className="d-flex"

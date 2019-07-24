@@ -31,6 +31,11 @@ it('renders as expected (with query param)', () => {
   expect(wrapper).toMatchSnapshot();
 });
 
+it('renders as expected (with info button)', () => {
+  const wrapper = shallow(<Component {...defaultProps} renderInfoButton />);
+  expect(wrapper).toMatchSnapshot();
+});
+
 describe('callbacks', () => {
   withQueryParam();
   const wrapper = shallow(<Component {...defaultProps} />);

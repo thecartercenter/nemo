@@ -8,6 +8,7 @@ import { inject, observer } from 'mobx-react';
 class AdvancedSearchFilter extends React.Component {
   static propTypes = {
     filtersStore: PropTypes.object,
+    renderInfoButton: PropTypes.bool,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -21,7 +22,7 @@ class AdvancedSearchFilter extends React.Component {
   }
 
   render() {
-    const { filtersStore, onSubmit } = this.props;
+    const { filtersStore, renderInfoButton, onSubmit } = this.props;
     const { advancedSearchText, handleChangeAdvancedSearch } = filtersStore;
 
     return (
