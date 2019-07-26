@@ -229,22 +229,7 @@ class Form < ApplicationRecord
     children.where(type: "Questioning").order(:rank).last
   end
 
-  def destroy_questionings(qings)
-    qings = Array.wrap(qings)
-    transaction do
-      # delete the qings, last first, to avoid version bump if possible.
-      qings.sort_by(&:rank).reverse_each do |qing|
-        # if this qing has a non-zero answer count, raise an error
-        # this is necessary due to bulk deletion operations
-        raise DeletionError, "question_remove_answer_error" if qing_answer_count(qing).positive?
-        qing.destroy
-      end
-      save
-    end
-  end
-
-  # publishes the form
-  # upgrades the version if necessary
+  # Publishes the form, upgrading the version if necessary.
   def publish!
     self.published = true
 
@@ -256,7 +241,6 @@ class Form < ApplicationRecord
     end
   end
 
-  # unpublishes this form
   def unpublish!
     self.published = false
     save(validate: false)

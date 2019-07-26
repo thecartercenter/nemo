@@ -221,18 +221,6 @@ describe Form do
     end
   end
 
-  describe "destroy_questionings" do
-    it "should work" do
-      f = create(:form, question_types: %w[integer decimal decimal integer])
-      f.destroy_questionings(f.root_questionings[1..2])
-      f.reload
-
-      # make sure they're gone and ranks are ok
-      expect(f.root_questionings.count).to eq(2)
-      expect(f.root_questionings.map(&:rank)).to eq([1, 2])
-    end
-  end
-
   describe "questioning" do
     let(:form) { create(:form, mission: mission, question_types: [%w[text long_text], "integer", "decimal"]) }
 
