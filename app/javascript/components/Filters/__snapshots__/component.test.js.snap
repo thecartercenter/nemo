@@ -97,6 +97,7 @@ exports[`renders as expected (other page) 1`] = `
   <AdvancedSearchFilter
     onClear={[Function]}
     onSubmit={[Function]}
+    renderInfoButton={false}
   />
 </div>
 `;
@@ -106,6 +107,9 @@ exports[`renders as expected (responses page) 1`] = `
   className="filters"
 >
   <ButtonToolbar>
+    <i
+      className="fa fa-filter"
+    />
     <FormFilter
       onSubmit={[Function]}
     />
@@ -122,6 +126,7 @@ exports[`renders as expected (responses page) 1`] = `
   <AdvancedSearchFilter
     onClear={[Function]}
     onSubmit={[Function]}
+    renderInfoButton={true}
   />
 </div>
 `;

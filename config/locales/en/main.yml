@@ -1299,13 +1299,14 @@ en:
     form: "Form"
     choose_form: "Choose a form"
     question: "Question"
+    showing_questions_from: "Showing questions from %{form_list} only."
     reviewed: "Reviewed"
     is_reviewed: "Is marked 'reviewed'"
     submitter: "Submitter"
     choose_submitter:
       submitter: "Choose a user"
       group: "Choose a group"
-    advancedSearch: "Advanced search"
+    search_box_placeholder: "Search"
 
   form:
     select_api_users: "Select all users who can access form data via the API:"

@@ -1,9 +1,11 @@
+import isEmpty from 'lodash/isEmpty';
 import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
 import { getItemNameFromId } from '../utils';
 import ConditionSetFormField from '../../conditions/ConditionSetFormField/component';
+import AddConditionLink from '../../conditions/AddConditionLink/component';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 @inject('filtersStore')
@@ -20,8 +22,20 @@ class QuestionFilter extends React.Component {
   }
 
   renderPopover = () => {
+    const { filtersStore: { allForms, selectedFormIds } } = this.props;
+    const formNames = selectedFormIds.map((id) => getItemNameFromId(allForms, id));
+    const formConstraintText = isEmpty(formNames)
+      ? null
+      : I18n.t('filter.showing_questions_from', { form_list: formNames.join(', ') });
+
     return (
-      <ConditionSetFormField />
+      <div>
+        {formConstraintText
+          ? <p className="mb-2">{formConstraintText}</p>
+          : null}
+        <ConditionSetFormField />
+        <AddConditionLink />
+      </div>
     );
   }
 

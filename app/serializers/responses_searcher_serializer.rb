@@ -22,6 +22,6 @@ class ResponsesSearcherSerializer < SearcherSerializer
   end
 
   def advanced_search_text
-    (Settings.filters_beta.present? ? object.advanced_text : object.query) || ""
+    object.advanced_text || ""
   end
 end
