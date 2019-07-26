@@ -17,6 +17,8 @@ class QuestionsSearcher < Searcher
   end
 
   def apply
+    return relation if query.blank?
+
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     self.relation = relation.joins(search.associations)

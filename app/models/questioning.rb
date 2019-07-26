@@ -116,6 +116,12 @@ class Questioning < FormItem
     question.id
   end
 
+  # Filter qings in a deterministic way. This allows us to pass a single qing
+  # to the search filters, knowing that it will match.
+  def self.filter_unique
+    order(:id).uniq(&:question_id)
+  end
+
   # REFACTOR: should use translation delegation, from abandoned std_objs branch
   def method_missing(*args)
     # pass appropriate methods on to question

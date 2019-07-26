@@ -4,6 +4,8 @@
 #
 # See also Search::Search which is simpler and just deals with SQL.
 class Searcher
+  include ActiveModel::Serialization
+
   # Search params
   attr_accessor :relation, :query, :scope
 

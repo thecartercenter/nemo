@@ -19,6 +19,10 @@ class ConditionModel {
   @observable
   optionNodeId;
 
+  /** Initial string value to represent the current option before `levels` are loaded. */
+  @observable
+  optionNodeValue;
+
   @observable
   leftQingId;
 
@@ -104,6 +108,10 @@ class ConditionModel {
       }
 
       return null;
+    } if (this.optionNodeId) {
+      // If optionSet hasn't been loaded (for example, if question filter popover
+      // hasn't yet been mounted), fall back to the string value passed by backend.
+      return this.optionNodeValue;
     }
 
     return this.value;

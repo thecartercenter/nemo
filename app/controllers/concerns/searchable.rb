@@ -7,8 +7,14 @@ module Searchable
   # Returns a Searcher. See apply_search for details.
   def build_searcher(relation)
     query = params[:search]
-    searcher_class = query.blank? ? NoopSearcher : infer_searcher_class(relation)
-    searcher_class.new(relation: relation, query: query, scope: {mission: current_mission})
+    searcher_class = infer_searcher_class(relation)
+    searcher = searcher_class.new(relation: relation, query: query, scope: {mission: current_mission})
+
+    # In the simple case, give it a basic serializer that knows about search queries.
+    # This can be replaced in the controller if needed.
+    @searcher_serializer = SearcherSerializer.new(searcher)
+
+    searcher
   end
 
   # If params[:search] is present, runs a search using Searcher,

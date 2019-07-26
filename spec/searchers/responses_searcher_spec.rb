@@ -19,9 +19,24 @@ describe ResponsesSearcher do
       expect(searcher(%(form:"foo 1.0"))).to have_filter_data(form_ids: [form.id], advanced_text: "")
       expect(searcher(%(form:("foo 1.0" | bar)))).to have_filter_data(form_ids: [form2.id, form.id], advanced_text: "")
       expect(searcher(%(form:(foo bar)))).to have_filter_data(form_ids: [], advanced_text: "form:(foo bar)")
-      expect(searcher(%(form:bar))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
-      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:(x)")
-      expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:(x)")
+      expect(searcher(%(form:BAR))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
+      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:x")
+      expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:x")
+    end
+  end
+
+  describe "reviewed qualifier" do
+    let!(:r1) { create(:response, form: form, reviewed: true) }
+    let!(:r2) { create(:response, form: form) }
+
+    it "should work" do
+      expect(search(%(reviewed:1))).to contain_exactly(r1)
+
+      expect(searcher(%(reviewed:1))).to have_filter_data(is_reviewed: true, advanced_text: "")
+      expect(searcher(%(reviewed:yes))).to have_filter_data(is_reviewed: true, advanced_text: "")
+      expect(searcher(%(reviewed:"NO"))).to have_filter_data(is_reviewed: false, advanced_text: "")
+      expect(searcher(%(reviewed:("0")))).to have_filter_data(is_reviewed: false, advanced_text: "")
+      expect(searcher(%(reviewed:(1 0)))).to have_filter_data(is_reviewed: nil, advanced_text: "reviewed:(1 0)")
     end
   end
 
@@ -56,6 +71,35 @@ describe ResponsesSearcher do
     end
   end
 
+  describe "submitter qualifier" do
+    let!(:u1) { create(:user, name: "u1") }
+    let!(:u2) { create(:user, name: "u2 name") }
+    let!(:u3) { create(:user, name: "u3") }
+    let!(:r1) { create(:response, user: u1) }
+    let!(:r2) { create(:response, user: u2) }
+
+    it "should work" do
+      expect(search(%(submitter:#{u1.name}))).to contain_exactly(r1)
+
+      expect(searcher(%(submitter:#{u1.name}))).to have_filter_data(
+        submitters: [{id: u1.id, name: u1.name}],
+        advanced_text: ""
+      )
+      expect(searcher(%(submitter:(#{u1.name} | "#{u2.name}")))).to have_filter_data(
+        submitters: [{id: u1.id, name: u1.name}, {id: u2.id, name: u2.name}],
+        advanced_text: ""
+      )
+      expect(searcher(%(submitter:foo))).to have_filter_data(
+        submitters: [],
+        advanced_text: "submitter:foo"
+      )
+      expect(searcher(%(submitter:foo source:x))).to have_filter_data(
+        submitters: [],
+        advanced_text: "submitter:foo source:x"
+      )
+    end
+  end
+
   describe "group qualifier" do
     let(:users) { create_list(:user, 3) }
     let(:group) { create(:user_group, name: "Fun Group") }
@@ -72,6 +116,64 @@ describe ResponsesSearcher do
 
     it "should return nothing for non-existent group" do
       expect(search(%(group:norble))).to be_empty
+    end
+
+    it "should parse searcher props" do
+      expect(searcher(%(group:"fun group"))).to have_filter_data(
+        groups: [{id: group.id, name: group.name}],
+        advanced_text: ""
+      )
+      expect(searcher(%(group:foo))).to have_filter_data(
+        groups: [],
+        advanced_text: "group:foo"
+      )
+      expect(searcher(%(group:foo source:x))).to have_filter_data(
+        groups: [],
+        advanced_text: "group:foo source:x"
+      )
+    end
+  end
+
+  describe "question qualifier" do
+    let(:form) { create(:form, question_types: %w[long_text long_text multilevel_select_one]) }
+    let(:codes) { form.c[0..2].map(&:code) }
+    let(:node3) { form.c[2].question.option_set.c[0] }
+    let(:preferred_locales) { configatron.preferred_locales }
+
+    before do
+      configatron.preferred_locales = %i[en fr]
+    end
+
+    after do
+      configatron.preferred_locales = preferred_locales
+    end
+
+    it("should work") do
+      expect(searcher(%(apple))).to have_filter_data(
+        qings: [],
+        advanced_text: "apple"
+      )
+      expect(searcher(%({#{codes[0]}}:apple))).to have_filter_data(
+        qings: [{id: form.c[0].id, value: "apple"}],
+        advanced_text: ""
+      )
+      expect(searcher(%({#{codes[1].upcase}}:apple {#{codes[0].downcase}}:apple apple))).to have_filter_data(
+        qings: [{id: form.c[1].id, value: "apple"}, {id: form.c[0].id, value: "apple"}],
+        advanced_text: "apple"
+      )
+      expect(searcher(%({#{codes[2]}}:#{node3.option.canonical_name}))).to have_filter_data(
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: node3.option.canonical_name}],
+        advanced_text: ""
+      )
+    end
+
+    it("should handle translations") do
+      node3.option.update!(name_fr: "Chat")
+
+      expect(searcher(%({#{codes[2]}}:chat))).to have_filter_data(
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: "chat"}],
+        advanced_text: ""
+      )
     end
   end
 
@@ -157,10 +259,34 @@ describe ResponsesSearcher do
     end
   end
 
+  describe "default text qualifier" do
+    let!(:q1) { create(:question, qtype_name: "long_text", add_to_form: form) }
+    let!(:q2) { create(:question, qtype_name: "text", add_to_form: form) }
+    let!(:r1) { create(:response, form: form, answer_values: [1, "foo bar", "foo"]) }
+    let!(:r2) { create(:response, form: form, answer_values: [1, "baz", "qux"]) }
+
+    it "should work" do
+      expect(search("foo")).to contain_exactly(r1)
+      expect(search("bar bar")).to contain_exactly(r1)
+      expect(search("foo baz")).to contain_exactly
+
+      expect(searcher("foo")).to have_filter_data(advanced_text: "foo")
+      expect(searcher("text:foo")).to have_filter_data(advanced_text: "foo")
+      expect(searcher("text=it's")).to have_filter_data(advanced_text: "it's")
+      expect(searcher("bar bar")).to have_filter_data(advanced_text: "bar bar")
+      expect(searcher("reviewed:1 foo")).to have_filter_data(advanced_text: "foo")
+      expect(searcher("foo reviewed:1 123.4 source:(x)")).to have_filter_data(advanced_text: "foo 123.4 source:x")
+      expect(searcher("source:(\"x y\" z)")).to have_filter_data(advanced_text: "source:(\"x y\" z)")
+      expect(searcher("submit-date >= 2013-10-15 submit-date < 2013-10-20")).to have_filter_data(advanced_text: "submit-date>=2013-10-15 submit-date<2013-10-20")
+    end
+  end
+
   RSpec::Matchers.define(:have_filter_data) do |expected|
     match do |actual|
       actual.apply
       @actual = expected.keys.map { |k| [k, actual.send(k)] }.to_h
+      @actual = @actual.values.map(&method(:safe_sort))
+      expected = expected.values.map(&method(:safe_sort))
       @actual == expected
     end
 
@@ -173,5 +299,9 @@ describe ResponsesSearcher do
 
   def searcher(query)
     ResponsesSearcher.new(relation: Response, query: query, scope: {mission: get_mission})
+  end
+
+  def safe_sort(object)
+    object.respond_to?(:sort_by) ? object.sort_by(&:hash) : object
   end
 end

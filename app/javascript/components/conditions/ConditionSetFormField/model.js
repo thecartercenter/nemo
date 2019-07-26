@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
 import { observable, action, reaction, computed } from 'mobx';
@@ -10,7 +11,7 @@ import ConditionModel from './ConditionFormField/model';
 class ConditionSetModel {
   /** Deep copy of this model's original values (e.g. to enable reverting). */
   @observable
-  original = new Map();
+  original = {};
 
   @observable
   formId;
@@ -71,6 +72,18 @@ class ConditionSetModel {
       { fireImmediately: true },
     );
 
+    // Original refableQings may not exist until after data loads.
+    reaction(
+      () => this.refableQings,
+      (newRefableQings) => {
+        const { original: { refableQings: originalRefableQings } } = this;
+        if (isEmpty(originalRefableQings)) {
+          this.original.refableQings = cloneDeep(newRefableQings) || [];
+        }
+      },
+      { fireImmediately: true },
+    );
+
     reaction(
       () => this.conditions,
       (conditions) => {
@@ -112,12 +125,35 @@ class ConditionSetModel {
     return changed ? newConditions : conditions;
   }
 
+  /**
+   * Clear the existing conditions and add the ones provided.
+   * Meant to be used by the questions search filter since it gets props separately.
+   */
   @action
-  addCondition = (defaultLeftQingToLast = false) => {
+  resetConditionsFromQings = (qings) => {
+    this.conditions = [];
+
+    qings.forEach(({ id, value, option_node_id: optionNodeId, option_node_value: optionNodeValue }) => {
+      // Upon being rendered, any necessary additional data will be fetched.
+      this.addCondition(false, {
+        leftQingId: id,
+        value,
+        optionNodeId,
+        optionNodeValue,
+      });
+    });
+
+    // Update original conditions since these came from original props.
+    this.original.conditions = cloneDeep(this.conditions);
+  }
+
+  @action
+  addCondition = (defaultLeftQingToLast = false, params = {}) => {
     this.conditions.push(new ConditionModel({
       leftQingId: defaultLeftQingToLast ? this.refableQings[this.refableQings.length - 1].id : null,
       refableQings: this.refableQings,
       key: Math.round(Math.random() * 100000000),
+      ...params,
     }));
   }
 

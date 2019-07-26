@@ -26,7 +26,7 @@ export const getEmptySubmitterTypeMap = () => SUBMITTER_TYPES.reduce((reduction,
 class FiltersModel {
   /** Deep copy of this model's original values (e.g. to enable reverting). */
   @observable
-  original = new Map();
+  original = {};
 
   @observable
   conditionSetStore = new ConditionSetModel(initialConditionSetData);
@@ -64,11 +64,22 @@ class FiltersModel {
   }
 
   constructor(initialState = {}) {
+    const { selectedQings } = initialState;
+
+    // If any qings should be selected, create new conditions for them.
+    if (!isEmpty(selectedQings)) {
+      this.conditionSetStore.resetConditionsFromQings(selectedQings);
+
+      // No longer needed now that conditions have been created.
+      // eslint-disable-next-line no-param-reassign
+      delete initialState.selectedQings;
+    }
+
     Object.assign(this, initialState);
 
     Object.assign(this.original, {
       selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
-      isReviewed: initialState.isReviewed || null,
+      isReviewed: initialState.isReviewed == null ? null : initialState.isReviewed,
       selectedSubmittersForType: cloneDeep(initialState.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
     });
 

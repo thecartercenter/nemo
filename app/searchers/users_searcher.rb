@@ -17,6 +17,8 @@ class UsersSearcher < Searcher
   end
 
   def apply
+    return relation if query.blank?
+
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     # because assignments association is often added by the controller, only add if not already in relation

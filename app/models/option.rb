@@ -17,8 +17,9 @@
 #
 # Indexes
 #
-#  index_options_on_canonical_name  (canonical_name)
-#  index_options_on_mission_id      (mission_id)
+#  index_options_on_canonical_name     (canonical_name)
+#  index_options_on_mission_id         (mission_id)
+#  index_options_on_name_translations  (name_translations) USING gin
 #
 # Foreign Keys
 #

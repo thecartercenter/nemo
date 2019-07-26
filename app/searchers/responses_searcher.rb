@@ -3,12 +3,16 @@
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
   # Parsed search values
-  attr_accessor :form_ids
+  attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups
 
   def initialize(**opts)
     super(opts)
 
     self.form_ids = []
+    self.qings = []
+    self.submitters = []
+    self.groups = []
+    self.is_reviewed = nil
   end
 
   # Returns the list of fields to be searched for this class.
@@ -54,6 +58,8 @@ class ResponsesSearcher < Searcher
   end
 
   def apply
+    return relation if query.blank?
+
     search = Search::Search.new(str: query, qualifiers: search_qualifiers)
 
     self.relation = relation.joins(Results::Join.list_to_sql(search.associations))
@@ -107,6 +113,12 @@ class ResponsesSearcher < Searcher
 
   private
 
+  def all_forms
+    Form.for_mission(scope[:mission])
+      .map { |item| {name: item.name, id: item.id} }
+      .sort_by_key || []
+  end
+
   # Parse the search expressions and
   # save specific data that can be used for search filters.
   def save_filter_data(search)
@@ -116,6 +128,9 @@ class ResponsesSearcher < Searcher
 
   # Clean up filter data after parsing everything.
   def clean_up
+    self.form_ids = form_ids.uniq
+    self.submitters = submitters.uniq
+    self.groups = groups.uniq
     self.advanced_text = advanced_text.strip
   end
 
@@ -126,9 +141,12 @@ class ResponsesSearcher < Searcher
     is_filterable = true
     previous = nil
 
-    expression.leaves.each do |lex_tok|
-      is_filterable &&= parse_lex_tok(lex_tok, token_values, previous)
-      previous = lex_tok
+    # Text/shortcode is always filterable.
+    unless %w[text shortcode].include?(expression.qualifier.name.downcase)
+      expression.leaves.each do |lex_tok|
+        is_filterable &&= parse_lex_tok(lex_tok, token_values, previous)
+        previous = lex_tok
+      end
     end
 
     maybe_filter_by_expression(expression, op_kind, token_values, is_filterable)
@@ -156,25 +174,105 @@ class ResponsesSearcher < Searcher
     was_handled = is_filterable &&
       filter_by_expression(expression, op_kind, token_values)
 
-    advanced_text << " #{expression.qualifier_text}:(#{expression.values})" unless was_handled
+    advanced_text << " #{advanced_text_string(expression)}" unless was_handled
   end
 
   # Save specific data that can be used for search filters,
   # or return false if it can't be handled.
   def filter_by_expression(expression, op_kind, token_values)
-    if expression.qualifier.name == "form" && equality_op?(op_kind)
-      form_names = token_values
-      matched_form_ids = Form.where(name: form_names).pluck(:id)
-      return false if matched_form_ids.empty?
+    return false unless equality_op?(op_kind)
 
-      form_ids.concat(matched_form_ids)
-      return true
+    case expression.qualifier.name.downcase
+    when "form"
+      filter_by_names(token_values, Form, current_ids: form_ids)
+    when "text_by_code"
+      filter_by_questions(expression.qualifier_text, token_values)
+    when "reviewed"
+      filter_by_is_reviewed(token_values)
+    when "submitter"
+      filter_by_names(token_values, User, current_ids: submitters, include_name: true)
+    when "group"
+      filter_by_names(token_values, UserGroup, current_ids: groups, include_name: true)
+    when "text"
+      advanced_text << " #{expression.values}"
+      true
+    when "shortcode"
+      # Skip to prevent duplicate handling as `text`.
+      true
+    else
+      false
+    end
+  end
+
+  # Given a list of values, find all instances of this class that match,
+  # and append their IDs to the existing list of IDs to filter by.
+  # Returns false if unable to handle this case.
+  def filter_by_names(names, klass, current_ids: [], include_name: false)
+    matches = klass.where("LOWER(name) = ANY (ARRAY[?])", names.map(&:downcase)).pluck(:id, :name)
+    return false if matches.empty?
+    current_ids.concat(matches.map { |id, name| include_name ? {id: id, name: name} : id })
+    true
+  end
+
+  # Determine if is_reviewed is a valid boolean and filter by it.
+  # Returns false if unable to handle this case.
+  def filter_by_is_reviewed(token_values)
+    return false unless token_values.length == 1
+    value = token_values[0].downcase
+    return false unless %w[1 0 yes no].include?(value)
+    self.is_reviewed = %w[1 yes].include?(value)
+    true
+  end
+
+  # Filter by a question code + question value.
+  # Returns false if unable to handle this case.
+  def filter_by_questions(qualifier_text, token_values)
+    return false unless token_values.length == 1
+    # Strip the surrounding {QuestionCode} braces.
+    question_code = qualifier_text[1..-2]
+    matched_question = Question.where("LOWER(code) = ?", question_code.downcase).first
+    return false if matched_question.blank?
+    matched_qings = Questioning.where(question: matched_question)
+    return false if matched_qings.blank?
+    # Get the deterministic Questioning ID from the Question
+    matched_qing_id = matched_qings.filter_unique.first.id
+    value = qing_value(matched_question, token_values)
+    qings.concat([{id: matched_qing_id}.merge(value)])
+    true
+  end
+
+  # Get the qing value from the user input (either a string to match or an Option ID).
+  def qing_value(matched_question, token_values)
+    value = token_values[0]
+    return {value: value} unless matched_question.option_set_id
+    {option_node_value: value, option_node_id: find_option_node_id(matched_question.option_set_id, value)}
+  end
+
+  def find_option_node_id(option_set_id, value)
+    value = value.downcase
+    possibilities = OptionNode.joins(:option).where(option_set_id: option_set_id)
+    results = OptionNode.none
+
+    # Allow matching any translation in the mission's locales.
+    configatron.preferred_locales.each do |locale|
+      results = results.or(possibilities.where("LOWER(options.name_translations ->> ?) = ?", locale, value))
     end
 
-    false
+    results.pluck(:id).first
   end
 
   def equality_op?(op_kind)
     Search::LexToken::EQUALITY_OPS.include?(op_kind)
+  end
+
+  # Stringify an expression for the advanced text search box.
+  def advanced_text_string(expression)
+    lhs = expression.qualifier_text
+    op = expression.op.content
+    rhs = expression.values
+    # Conservative check: if it includes whitespace, wrap in parens.
+    # Any quotes will also be preserved, regardless.
+    rhs = "(#{rhs})" if rhs.match?(/\s/)
+    "#{lhs}#{op}#{rhs}"
   end
 end

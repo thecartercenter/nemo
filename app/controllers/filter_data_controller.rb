@@ -11,7 +11,7 @@ class FilterDataController < ApplicationController
     qings = Questioning.for_mission(current_mission).joins(:question)
       .includes(:question).order("questions.code")
     qings = qings.where(form_id: params[:form_ids]) if params[:form_ids].present?
-    qings = qings.uniq(&:question_id)
+    qings = qings.filter_unique
     render(json: ActiveModel::ArraySerializer.new(qings,
       each_serializer: ConditionalLogicForm::TargetQuestioningSerializer))
   end

@@ -39,14 +39,13 @@ class ResponsesController < ApplicationController
 
         searcher = build_searcher(@responses)
         @responses = apply_searcher_safely(searcher)
+        @searcher_serializer = ResponsesSearcherSerializer.new(searcher)
 
         @selected_ids = params[:sel]
         @selected_all_pages = params[:select_all_pages]
 
         # render just the table if this is an ajax request
         render(partial: "table_only", locals: {responses: responses}) if request.xhr?
-
-        init_filter_data(searcher)
       end
 
       # csv output is for exporting responses
@@ -167,18 +166,6 @@ class ResponsesController < ApplicationController
       flash.now[:error] = I18n.t("activerecord.errors.models.response.general")
       prepare_and_render_form
     end
-  end
-
-  # Initializes variables used by the search filters.
-  def init_filter_data(searcher)
-    @all_forms = Form.for_mission(current_mission)
-      .map { |item| {name: item.name, id: item.id} }.sort_by_key
-
-    # There may not be an active search.
-    return if searcher.is_a?(NoopSearcher)
-
-    @form_ids = searcher.form_ids
-    @advanced_text = searcher.advanced_text
   end
 
   def handle_odk_submission
