@@ -8,9 +8,9 @@ import { inject, observer } from 'mobx-react';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
 const CHOICES = [
-  { name: I18n.t('common._yes'), value: true, id: 'yes', variant: 'success' },
-  { name: I18n.t('common._no'), value: false, id: 'no', variant: 'danger' },
-  { name: I18n.t('common.either'), value: null, id: 'either', variant: 'secondary' },
+  { name: I18n.t('common._yes'), value: true, id: 'yes' },
+  { name: I18n.t('common._no'), value: false, id: 'no' },
+  { name: I18n.t('common.either'), value: null, id: 'either' },
 ];
 
 @inject('filtersStore')
@@ -36,11 +36,11 @@ class FormFilter extends React.Component {
           <Form.Label>{I18n.t('filter.is_reviewed')}</Form.Label>
         </div>
         <ButtonGroup>
-          {CHOICES.map(({ name, value, id, variant }) => (
+          {CHOICES.map(({ name, value, id }) => (
             <Button
               key={id}
               id={id}
-              variant={variant}
+              variant="secondary"
               active={isReviewed === value}
               onClick={() => this.handleChangeIsReviewed(value)}
             >

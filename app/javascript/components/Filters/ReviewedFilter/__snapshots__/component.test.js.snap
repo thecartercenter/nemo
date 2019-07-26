@@ -29,7 +29,7 @@ exports[`renders as expected 1`] = `
           active={true}
           id="yes"
           onClick={[Function]}
-          variant="success"
+          variant="secondary"
         >
           Yes
         </Button>
@@ -37,7 +37,7 @@ exports[`renders as expected 1`] = `
           active={false}
           id="no"
           onClick={[Function]}
-          variant="danger"
+          variant="secondary"
         >
           No
         </Button>
