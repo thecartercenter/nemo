@@ -3,10 +3,50 @@
 
   .btn-toolbar {
     margin-bottom: 5px;
+
+    button {
+      background-color: transparent;
+      // Same color that Bootstrap uses for the search box.
+      border-color: $gray-400;
+
+      &:hover {
+        // Arbitrary choice that's slightly darker than default.
+        border-color: $gray-500;
+      }
+
+      &.active-filter {
+        background-color: $light-blue;
+
+        &:not(:hover) {
+          border-color: transparent;
+        }
+      }
+    }
   }
 
   .btn-margin-left {
     margin-left: 5px;
+  }
+
+  i {
+    color: $nav-icon-color;
+
+    &:not(.inline) {
+      font-size: 12pt;
+      // Same height as `form.search-form .btn`
+      line-height: 28px;
+      margin-right: 5px;
+      width: 15px;
+    }
+
+    &.inline {
+      margin-left: 5px;
+    }
+
+    &.hint {
+      cursor: pointer;
+      margin-left: 15px;
+    }
   }
 }
 

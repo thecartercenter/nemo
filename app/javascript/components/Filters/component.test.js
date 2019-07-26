@@ -11,6 +11,7 @@ import Component from './component';
 import { SUBMITTER_TYPES, submitterType } from './SubmitterFilter/utils';
 
 jest.mock('../conditions/ConditionSetFormField/component', () => 'ConditionSetFormField');
+jest.mock('../conditions/AddConditionLink/component', () => 'AddConditionLink');
 
 let defaultProps = {};
 resetDefaultProps();

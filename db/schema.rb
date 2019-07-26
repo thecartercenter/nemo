@@ -375,6 +375,7 @@ ActiveRecord::Schema.define(version: 2019_07_24_011207) do
   create_table "report_option_set_choices", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
     t.uuid "option_set_id", null: false
     t.uuid "report_report_id", null: false
+    t.index ["option_set_id", "report_report_id"], name: "report_option_set_choice_unique", unique: true
     t.index ["option_set_id"], name: "index_report_option_set_choices_on_option_set_id"
     t.index ["report_report_id"], name: "index_report_option_set_choices_on_report_report_id"
   end
