@@ -47,8 +47,9 @@ class Condition < ApplicationRecord
 
   belongs_to :conditionable, polymorphic: true
   belongs_to :left_qing, class_name: "Questioning", foreign_key: "left_qing_id",
-                         inverse_of: :referring_conditions
-  belongs_to :right_qing, class_name: "Questioning", foreign_key: "right_qing_id", inverse_of: false
+                         inverse_of: :referring_conditions_via_left
+  belongs_to :right_qing, class_name: "Questioning", foreign_key: "right_qing_id",
+                          inverse_of: :referring_conditions_via_right
   belongs_to :option_node
 
   before_validation :normalize

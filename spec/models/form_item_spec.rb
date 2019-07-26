@@ -317,6 +317,22 @@ describe FormItem do
   end
 
   describe "destroy" do
+    context "with referring conditions (via both left_qing and right_qing)" do
+      let!(:form) { create(:form, question_types: %w[text text text]) }
+      let!(:left_condition) do
+        form.c[1].display_conditions.create!(left_qing: form.c[0], op: "eq", value: "foo")
+      end
+      let!(:right_condition) do
+        form.c[2].display_conditions.create!(left_qing: form.c[1], op: "eq", right_side_type: "qing",
+                                             right_qing: form.c[0])
+      end
+
+      it "should destroy cleanly" do
+        form.c[0].destroy
+        expect(Condition.count).to be_zero
+      end
+    end
+
     context "with incoming and outgoing skip rules" do
       let!(:form) { create(:form, question_types: %w[text text text]) }
       let!(:skip_rule1) do
