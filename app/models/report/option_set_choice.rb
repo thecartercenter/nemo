@@ -11,6 +11,7 @@
 #
 #  index_report_option_set_choices_on_option_set_id     (option_set_id)
 #  index_report_option_set_choices_on_report_report_id  (report_report_id)
+#  report_option_set_choice_unique                      (option_set_id,report_report_id) UNIQUE
 #
 # Foreign Keys
 #
