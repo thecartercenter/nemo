@@ -16,21 +16,6 @@ feature "question index", js: true do
       visit("/en/m/#{mission.compact_name}/questions")
       perform_bulk_destroy
       expect(page).to have_content("3 questions deleted successfully")
-    end
-
-    scenario "redirects correctly after bulk destroy" do
-      visit("/en/m/#{mission.compact_name}/questions")
-
-      # do a search
-      fill_in class: "search-str", with: "dup"
-      click_on "Search"
-
-      # clear search box
-      click_on "Clear"
-
-      # perform a bulk destroy
-      perform_bulk_destroy
-
       # page redirects without query string
       expect(page).to have_current_path("/en/m/#{mission.compact_name}/questions")
     end
