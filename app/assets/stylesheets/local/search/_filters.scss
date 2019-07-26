@@ -6,6 +6,13 @@
 
     button {
       background-color: transparent;
+      // Same color that Bootstrap uses for the search box.
+      border-color: $gray-400;
+
+      &:hover {
+        // Arbitrary choice that's slightly darker than default.
+        border-color: $gray-500;
+      }
 
       &.active-filter {
         background-color: $light-blue;
