@@ -5,7 +5,8 @@ form.search-form {
   margin-bottom: 10px;
 
   input.search-str {
-    width: 500px;
+    // Match the width of the filter buttons on most browsers.
+    width: 481px;
     margin-#{$right}: 5px;
     padding: 3px;
   }
