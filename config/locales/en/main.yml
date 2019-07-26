@@ -1299,6 +1299,7 @@ en:
     form: "Form"
     choose_form: "Choose a form"
     question: "Question"
+    showing_questions_from: "Showing questions from %{form_list} only."
     reviewed: "Reviewed"
     is_reviewed: "Is marked 'reviewed'"
     submitter: "Submitter"

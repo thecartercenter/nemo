@@ -26,7 +26,7 @@ class QuestionFilter extends React.Component {
     const formNames = selectedFormIds.map((id) => getItemNameFromId(allForms, id));
     const formConstraintText = isEmpty(formNames)
       ? null
-      : `Showing questions from ${formNames.join(', ')} only.`;
+      : I18n.t('filter.showing_questions_from', { form_list: formNames.join(', ') });
 
     return (
       <div>
