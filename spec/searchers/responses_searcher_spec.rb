@@ -9,6 +9,7 @@ describe ResponsesSearcher do
 
   describe "form qualifier" do
     let(:form2) { create(:form, name: "bar", question_types: %w[integer]) }
+    let(:form3) { create(:form, name: "qu'o`t\"es") }
     let!(:r1) { create(:response, form: form) }
     let!(:r2) { create(:response, form: form2) }
     let!(:r3) { create(:response, form: form) }
@@ -22,6 +23,7 @@ describe ResponsesSearcher do
       expect(searcher(%(form:BAR))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
       expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:x")
       expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:x")
+      expect(searcher(%(form:(qu'o`t"es)))).to have_filter_data(form_ids: [form3.id])
     end
   end
 
