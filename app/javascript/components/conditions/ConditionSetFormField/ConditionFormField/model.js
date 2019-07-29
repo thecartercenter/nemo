@@ -53,12 +53,16 @@ class ConditionModel {
   @observable
   remove;
 
-  /** Return either the current value or the value of the deepest defined level. */
+  /**
+   * Return a string representation of the current value.
+   * Both user-facing and sent to the backend when performing a search.
+   */
   @computed
   get currTextValue() {
     if (this.optionSetId) {
       const lastIndex = this.levels.length - 1;
 
+      // Iterate back through each level, trying to find the deepest selected item.
       for (let i = lastIndex; i >= 0; i -= 1) {
         const { selected, options } = this.levels[i];
 

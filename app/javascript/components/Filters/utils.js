@@ -62,8 +62,7 @@ export function getItemNameFromId(allItems, searchId, nameKey = 'name') {
  * Given a leftQingId, find it in the list of all questions and return the name.
  */
 export function getQuestionNameFromId(allQuestions, searchId) {
-  const question = allQuestions.find(({ id }) => searchId === id);
-  return (question && question.code) || 'Unknown';
+  return getItemNameFromId(allQuestions, searchId, 'code');
 }
 
 /**
