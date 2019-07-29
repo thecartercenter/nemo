@@ -53,6 +53,31 @@ class ConditionModel {
   @observable
   remove;
 
+  /** Return either the current value or the value of the deepest defined level. */
+  @computed
+  get currTextValue() {
+    if (this.optionSetId) {
+      const lastIndex = this.levels.length - 1;
+
+      for (let i = lastIndex; i >= 0; i -= 1) {
+        const { selected, options } = this.levels[i];
+
+        if (selected != null) {
+          const { name = '' } = options.find(({ id }) => selected === id) || {};
+          return name;
+        }
+      }
+
+      return null;
+    } if (this.optionNodeId) {
+      // If optionSet hasn't been loaded (for example, if question filter popover
+      // hasn't yet been mounted), fall back to the string value passed by backend.
+      return this.optionNodeValue;
+    }
+
+    return this.value;
+  }
+
   constructor(initialState = {}) {
     Object.assign(this, initialState);
 
@@ -90,31 +115,6 @@ class ConditionModel {
       },
       { fireImmediately: true },
     );
-  }
-
-  /** Return either the current value or the value of the deepest defined level. */
-  @computed
-  get currTextValue() {
-    if (this.optionSetId) {
-      const lastIndex = this.levels.length - 1;
-
-      for (let i = lastIndex; i >= 0; i -= 1) {
-        const { selected, options } = this.levels[i];
-
-        if (selected != null) {
-          const { name = '' } = options.find(({ id }) => selected === id) || {};
-          return name;
-        }
-      }
-
-      return null;
-    } if (this.optionNodeId) {
-      // If optionSet hasn't been loaded (for example, if question filter popover
-      // hasn't yet been mounted), fall back to the string value passed by backend.
-      return this.optionNodeValue;
-    }
-
-    return this.value;
   }
 
   /**
