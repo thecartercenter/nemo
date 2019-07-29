@@ -136,6 +136,7 @@ describe ResponsesSearcher do
 
   describe "question qualifier" do
     let(:form) { create(:form, question_types: %w[long_text long_text multilevel_select_one]) }
+    let(:form2) { create(:form) }
     let(:codes) { form.c[0..2].map(&:code) }
     let(:node3) { form.c[2].question.option_set.c[0] }
     let(:preferred_locales) { configatron.preferred_locales }
@@ -160,6 +161,16 @@ describe ResponsesSearcher do
       expect(searcher(%({#{codes[1].upcase}}:apple {#{codes[0].downcase}}:apple apple))).to have_filter_data(
         qings: [{id: form.c[1].id, value: "apple"}, {id: form.c[0].id, value: "apple"}],
         advanced_text: "apple"
+      )
+      expect(searcher(%({#{codes[0]}}:apple form:"#{form2.name}"))).to have_filter_data(
+        # This question doesn't exist on this form, so it won't be found.
+        qings: [{id: nil, value: "apple"}],
+        advanced_text: ""
+      )
+      expect(searcher(%({#{codes[0]}}:apple form:"#{form.name}"))).to have_filter_data(
+        # But it does exist on this form.
+        qings: [{id: form.c[0].id, value: "apple"}],
+        advanced_text: ""
       )
       expect(searcher(%({#{codes[2]}}:#{node3.option.canonical_name}))).to have_filter_data(
         qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: node3.option.canonical_name}],

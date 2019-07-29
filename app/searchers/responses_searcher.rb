@@ -131,6 +131,14 @@ class ResponsesSearcher < Searcher
     self.form_ids = form_ids.uniq
     self.submitters = submitters.uniq
     self.groups = groups.uniq
+    # Map possible_ids to a single id based on any active form filters.
+    self.qings = qings.map do |qing|
+      return qing unless qing[:possible_ids]
+      qings = Questioning.where(id: qing[:possible_ids])
+      qings = qings.where(form_id: form_ids) if form_ids.present?
+      qing[:id] = qings.filter_unique.pluck(:id).first
+      qing.except(:possible_ids)
+    end
     self.advanced_text = advanced_text.strip
   end
 
@@ -232,12 +240,10 @@ class ResponsesSearcher < Searcher
     question_code = qualifier_text[1..-2]
     matched_question = Question.where("LOWER(code) = ?", question_code.downcase).first
     return false if matched_question.blank?
-    matched_qings = Questioning.where(question: matched_question)
-    return false if matched_qings.blank?
-    # Get the deterministic Questioning ID from the Question
-    matched_qing_id = matched_qings.filter_unique.first.id
+    matched_qing_ids = Questioning.where(question: matched_question).pluck(:id)
+    return false if matched_qing_ids.blank?
     value = qing_value(matched_question, token_values)
-    qings.concat([{id: matched_qing_id}.merge(value)])
+    qings.concat([{possible_ids: matched_qing_ids}.merge(value)])
     true
   end
 
