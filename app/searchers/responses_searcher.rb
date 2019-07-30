@@ -131,13 +131,13 @@ class ResponsesSearcher < Searcher
     self.form_ids = form_ids.uniq
     self.submitters = submitters.uniq
     self.groups = groups.uniq
-    # Map possible_ids to a single id based on any active form filters.
+    # Map possibilities to a single id based on any active form filters.
     self.qings = qings.map do |qing|
-      return qing unless qing[:possible_ids]
-      qings = Questioning.where(id: qing[:possible_ids])
+      return qing unless qing[:possibilities]
+      qings = Questioning.where(id: qing[:possibilities])
       qings = qings.where(form_id: form_ids) if form_ids.present?
       qing[:id] = qings.filter_unique.pluck(:id).first
-      qing.except(:possible_ids)
+      qing.except(:possibilities)
     end
     self.advanced_text = advanced_text.strip
   end
@@ -240,10 +240,12 @@ class ResponsesSearcher < Searcher
     question_code = qualifier_text[1..-2]
     matched_question = Question.where("LOWER(code) = ?", question_code.downcase).first
     return false if matched_question.blank?
-    matched_qing_ids = Questioning.where(question: matched_question).pluck(:id)
-    return false if matched_qing_ids.blank?
+    matched_qings = Questioning.where(question: matched_question)
+    return false if matched_qings.blank?
     value = qing_value(matched_question, token_values)
-    qings.concat([{possible_ids: matched_qing_ids}.merge(value)])
+    # This is an intermediate result -- it will be further refined in the second pass
+    # once the form filters have been parsed.
+    qings.concat([{possibilities: matched_qings}.merge(value)])
     true
   end
 
