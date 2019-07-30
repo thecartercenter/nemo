@@ -265,10 +265,10 @@ class ResponsesSearcher < Searcher
 
   # Map possibilities to a single id based on any active form filters.
   def refine_qing_possibilities(qing)
-    return qing unless qing[:possibilities]
-    qings = Questioning.where(id: qing[:possibilities])
-    qings = qings.where(form_id: form_ids) if form_ids.present?
-    qing[:id] = qings.filter_unique.pluck(:id).first
+    possibilities = qing[:possibilities]
+    return qing unless possibilities
+    possibilities = possibilities.where(form_id: form_ids) if form_ids.present?
+    qing[:id] = possibilities.filter_unique.pluck(:id).first
     qing.except(:possibilities)
   end
 
