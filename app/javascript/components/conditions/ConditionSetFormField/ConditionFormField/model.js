@@ -73,7 +73,7 @@ class ConditionModel {
       }
 
       return null;
-    } if (this.optionNodeId) {
+    } else if (this.optionNodeId) {
       // If optionSet hasn't been loaded (for example, if question filter popover
       // hasn't yet been mounted), fall back to the string value passed by backend.
       return this.optionNodeValue;
