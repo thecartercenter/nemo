@@ -9,7 +9,7 @@ class FilterDataController < ApplicationController
   def qings
     authorize!(:index, Response)
     qings = Questioning.for_mission(current_mission).joins(:question)
-      .includes(:question).order("questions.code")
+      .includes(:question).where(question: Question.reportable).order("questions.code")
     qings = qings.where(form_id: params[:form_ids]) if params[:form_ids].present?
     qings = qings.filter_unique
     render(json: ActiveModel::ArraySerializer.new(qings,
