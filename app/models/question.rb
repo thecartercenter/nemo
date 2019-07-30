@@ -68,7 +68,6 @@ class Question < ApplicationRecord
   belongs_to :option_set, inverse_of: :questions, autosave: true
   has_many :questionings, dependent: :destroy, autosave: true, inverse_of: :question
   has_many :response_nodes, through: :questionings
-  has_many :referring_conditions, through: :questionings
   has_many :forms, through: :questionings
   has_many :calculations, class_name: "Report::Calculation", # see below for dependent: :destroy alternative
                           foreign_key: "question1_id", inverse_of: :question1

@@ -57,20 +57,20 @@ describe FormVersioningPolicy do
 
     # now delete the first question from first two forms -- this should not cause a bump b/c form is not smsable
     @forms[0...2].each do |f|
-      f.destroy_questionings([f.root_questionings(reload = true).first])
+      f.root_questionings(reload: true).first.destroy
     end
     publish_and_check_versions(should_change: false)
 
     # now make the form smsable and delete the last question -- still should not get a bump
     @forms.each{|f| f.smsable = true; f.save!}
     @forms[0...2].each do |f|
-      f.destroy_questionings([f.root_questionings.last])
+      f.root_questionings.last.destroy
     end
     publish_and_check_versions(should_change: false)
 
     # now delete the first question -- this should cause a bump
     @forms[0...2].each do |f|
-      f.destroy_questionings([f.root_questionings.first])
+      f.root_questionings.first.destroy
     end
 
     publish_and_check_versions(should_change: true)

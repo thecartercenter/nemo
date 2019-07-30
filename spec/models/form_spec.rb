@@ -187,15 +187,37 @@ describe Form do
     end
   end
 
-  describe "destroy_questionings" do
-    it "should work" do
-      f = create(:form, question_types: %w[integer decimal decimal integer])
-      f.destroy_questionings(f.root_questionings[1..2])
-      f.reload
+  describe "destroy" do
+    let!(:form) { create(:form, :standard, question_types: %w[text text text]) }
+    let!(:form2) { form.replicate(mode: :to_mission, dest_mission: get_mission) }
+    let!(:report) { create(:standard_form_report, form: form2) }
+    let!(:response) { create(:response, form: form2) }
+    let!(:recipient) { create(:user) }
 
-      # make sure they're gone and ranks are ok
-      expect(f.root_questionings.count).to eq(2)
-      expect(f.root_questionings.map(&:rank)).to eq([1, 2])
+    before do
+      # Ensure there are related form version(s).
+      form2.publish!
+      form2.upgrade_version!
+
+      form2.recipient_users << recipient
+    end
+
+    it "destroys cleanly" do
+      # Ensure creation went as planned.
+      expect(form2.original).to be_present
+      expect(form2.versions).not_to be_empty
+      expect(form2.form_forwardings).not_to be_empty
+
+      form2.destroy
+      expect(FormVersion.count).to be_zero
+      expect(Response.count).to be_zero
+      expect(FormForwarding.count).to be_zero
+      expect(Report::Report.count).to be_zero
+      expect(FormItem.where.not(mission: nil).count).to be_zero
+
+      # These should not have been deleted.
+      expect { form.reload }.not_to raise_error
+      expect { recipient.reload }.not_to raise_error
     end
   end
 

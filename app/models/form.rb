@@ -61,14 +61,15 @@ class Form < ApplicationRecord
   has_many :whitelistings, as: :whitelistable, class_name: "Whitelisting", dependent: :destroy
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", dependent: :destroy
 
-  # For some reason dependent: :destroy doesn't work with this assoc.
+  # For some reason dependent: :destroy doesn't work with this assoc. See destroy_items for workaround.
   belongs_to :root_group, autosave: true, class_name: "QingGroup", foreign_key: :root_id
 
   before_create :init_downloads
   before_validation :normalize
   before_save :update_pub_changed_at
   after_create :create_root_group
-  before_destroy :nullify_foreign_keys
+  before_destroy :destroy_items
+  before_destroy :nullify_current_version_foreign_key
 
   validates :name, presence: true, length: {maximum: 32}
   validate :name_unique_per_mission
@@ -228,22 +229,7 @@ class Form < ApplicationRecord
     children.where(type: "Questioning").order(:rank).last
   end
 
-  def destroy_questionings(qings)
-    qings = Array.wrap(qings)
-    transaction do
-      # delete the qings, last first, to avoid version bump if possible.
-      qings.sort_by(&:rank).reverse_each do |qing|
-        # if this qing has a non-zero answer count, raise an error
-        # this is necessary due to bulk deletion operations
-        raise DeletionError, "question_remove_answer_error" if qing_answer_count(qing).positive?
-        qing.destroy
-      end
-      save
-    end
-  end
-
-  # publishes the form
-  # upgrades the version if necessary
+  # Publishes the form, upgrading the version if necessary.
   def publish!
     self.published = true
 
@@ -255,7 +241,6 @@ class Form < ApplicationRecord
     end
   end
 
-  # unpublishes this form
   def unpublish!
     self.published = false
     save(validate: false)
@@ -333,13 +318,17 @@ class Form < ApplicationRecord
     save!
   end
 
-  def nullify_foreign_keys
-    # Nullify the root_id foreign key and then delete all items before deleting the form.
-    # This ensures no foreign key constraints are violated.
-    # By default, has_ancestry destroys all children of a destroyed group, so this should cascade down.
-    to_destroy = root_group
-    update_columns(root_id: nil, current_version_id: nil)
-    to_destroy.destroy
+  # Nullifies the root_id foreign key and then deletes all items before deleting the form.
+  # This ensures root_id constraint is not violated.
+  # By default, has_ancestry destroys all children of a destroyed group, so this should cascade down.
+  def destroy_items
+    group_to_destroy = root_group
+    update_columns(root_id: nil)
+    group_to_destroy.destroy
+  end
+
+  def nullify_current_version_foreign_key
+    update_columns(current_version_id: nil)
   end
 
   def name_unique_per_mission
