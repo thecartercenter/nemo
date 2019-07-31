@@ -3154,10 +3154,10 @@ eslint-config-airbnb@17.1.0:
     object.assign "^4.1.0"
     object.entries "^1.0.4"
 
-eslint-config-cooperka@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/eslint-config-cooperka/-/eslint-config-cooperka-1.0.1.tgz#4311a067e79a28310440fd93b5c0daa8654c1a24"
-  integrity sha512-6y+a8KwWi8RgxIQBCTCAK2WuL2UoJXhU56X7dJGc+SAaJeN4cA9sdL6ks7AeKYz/xeM9nnApbb+y7qbtkAMxRQ==
+eslint-config-cooperka@1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/eslint-config-cooperka/-/eslint-config-cooperka-1.0.2.tgz#9c2294bfe276102d545c20b550d4e79da778e42b"
+  integrity sha512-YH/kPPgLDtHrhEIiVTgRY3dcpMMsSOCRAYPwbsfQMvt7UiZHp253G4lWK0hyu2sP2PO19xGn4Mhb8/NZV26muQ==
 
 eslint-import-resolver-node@^0.3.2:
   version "0.3.2"

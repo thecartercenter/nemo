@@ -123,14 +123,16 @@ class ResponsesSearcher < Searcher
   # save specific data that can be used for search filters.
   def save_filter_data(search)
     search.expressions.each(&method(:parse_expression))
-    clean_up
+    second_pass
   end
 
-  # Clean up filter data after parsing everything.
-  def clean_up
+  # Do a second pass after parsing everything, e.g. to
+  # clean up data and refine the results.
+  def second_pass
     self.form_ids = form_ids.uniq
     self.submitters = submitters.uniq
     self.groups = groups.uniq
+    self.qings = qings.map(&method(:refine_qing_possibilities))
     self.advanced_text = advanced_text.strip
   end
 
@@ -234,10 +236,10 @@ class ResponsesSearcher < Searcher
     return false if matched_question.blank?
     matched_qings = Questioning.where(question: matched_question)
     return false if matched_qings.blank?
-    # Get the deterministic Questioning ID from the Question
-    matched_qing_id = matched_qings.filter_unique.first.id
     value = qing_value(matched_question, token_values)
-    qings.concat([{id: matched_qing_id}.merge(value)])
+    # This is an intermediate result -- it will be further refined in the second pass
+    # once the form filters have been parsed.
+    qings.concat([{possibilities: matched_qings}.merge(value)])
     true
   end
 
@@ -259,6 +261,15 @@ class ResponsesSearcher < Searcher
     end
 
     results.pluck(:id).first
+  end
+
+  # Map possibilities to a single id based on any active form filters.
+  def refine_qing_possibilities(qing)
+    possibilities = qing[:possibilities]
+    return qing unless possibilities
+    possibilities = possibilities.where(form_id: form_ids) if form_ids.present?
+    qing[:id] = possibilities.filter_unique.pluck(:id).first
+    qing.except(:possibilities)
   end
 
   def equality_op?(op_kind)

@@ -9,6 +9,7 @@ describe ResponsesSearcher do
 
   describe "form qualifier" do
     let(:form2) { create(:form, name: "bar", question_types: %w[integer]) }
+    let(:form3) { create(:form, name: "qu'o`t\"es") }
     let!(:r1) { create(:response, form: form) }
     let!(:r2) { create(:response, form: form2) }
     let!(:r3) { create(:response, form: form) }
@@ -22,6 +23,7 @@ describe ResponsesSearcher do
       expect(searcher(%(form:BAR))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
       expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:x")
       expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:x")
+      expect(searcher(%(form:(qu'o`t"es)))).to have_filter_data(form_ids: [form3.id])
     end
   end
 
@@ -136,6 +138,7 @@ describe ResponsesSearcher do
 
   describe "question qualifier" do
     let(:form) { create(:form, question_types: %w[long_text long_text multilevel_select_one]) }
+    let(:form2) { create(:form) }
     let(:codes) { form.c[0..2].map(&:code) }
     let(:node3) { form.c[2].question.option_set.c[0] }
     let(:preferred_locales) { configatron.preferred_locales }
@@ -160,6 +163,16 @@ describe ResponsesSearcher do
       expect(searcher(%({#{codes[1].upcase}}:apple {#{codes[0].downcase}}:apple apple))).to have_filter_data(
         qings: [{id: form.c[1].id, value: "apple"}, {id: form.c[0].id, value: "apple"}],
         advanced_text: "apple"
+      )
+      expect(searcher(%({#{codes[0]}}:apple form:"#{form2.name}"))).to have_filter_data(
+        # This question doesn't exist on this form, so it won't be found.
+        qings: [{id: nil, value: "apple"}],
+        advanced_text: ""
+      )
+      expect(searcher(%({#{codes[0]}}:apple form:"#{form.name}"))).to have_filter_data(
+        # But it does exist on this form.
+        qings: [{id: form.c[0].id, value: "apple"}],
+        advanced_text: ""
       )
       expect(searcher(%({#{codes[2]}}:#{node3.option.canonical_name}))).to have_filter_data(
         qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: node3.option.canonical_name}],

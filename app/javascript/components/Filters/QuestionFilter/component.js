@@ -3,7 +3,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
-import { getItemNameFromId } from '../utils';
+import { getItemNameFromId, getQuestionNameFromId } from '../utils';
 import ConditionSetFormField from '../../conditions/ConditionSetFormField/component';
 import AddConditionLink from '../../conditions/AddConditionLink/component';
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
@@ -44,7 +44,7 @@ class QuestionFilter extends React.Component {
     const { original: { conditions, refableQings } } = conditionSetStore;
     const hints = conditions
       .filter(({ leftQingId }) => leftQingId)
-      .map(({ leftQingId }) => getItemNameFromId(refableQings, leftQingId, 'code'));
+      .map(({ leftQingId }) => getQuestionNameFromId(refableQings, leftQingId));
 
     return (
       <FilterOverlayTrigger
