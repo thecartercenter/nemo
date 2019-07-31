@@ -1,56 +1,56 @@
 class QuestionType
   AVAILABLE_PROPERTIES = %w[printable smsable textual headerable defaultable numeric
-                            multimedia temporal has_options has_timezone refable].freeze
+                            multimedia temporal has_options has_timezone refable reportable].freeze
   attr_reader :name, :odk_name, :properties
 
   @attributes = [{
     name: "text",
     odk_name: "string",
-    properties: %w[printable smsable textual headerable defaultable refable]
+    properties: %w[printable smsable textual headerable defaultable refable reportable]
   }, {
     name: "long_text",
     odk_name: "string",
-    properties: %w[printable smsable textual refable defaultable]
+    properties: %w[printable smsable textual refable defaultable reportable]
   }, {
     name: "barcode",
     odk_name: "barcode",
-    properties: %w[printable smsable textual refable]
+    properties: %w[printable smsable textual refable reportable]
   }, {
     name: "integer",
     odk_name: "int",
-    properties: %w[printable smsable numeric headerable refable defaultable]
+    properties: %w[printable smsable numeric headerable refable defaultable reportable]
   }, {
     name: "counter",
     odk_name: "int",
-    properties: %w[printable smsable numeric headerable refable defaultable]
+    properties: %w[printable smsable numeric headerable refable defaultable reportable]
   }, {
     name: "decimal",
     odk_name: "decimal",
-    properties: %w[printable smsable numeric headerable refable defaultable]
+    properties: %w[printable smsable numeric headerable refable defaultable reportable]
   }, {
     name: "location",
     odk_name: "geopoint",
-    properties: %w[]
+    properties: %w[reportable]
   }, {
     name: "select_one",
     odk_name: "select1",
-    properties: %w[printable has_options smsable headerable refable]
+    properties: %w[printable has_options smsable headerable refable reportable]
   }, {
     name: "select_multiple",
     odk_name: "select",
-    properties: %w[printable has_options smsable headerable refable]
+    properties: %w[printable has_options smsable headerable refable reportable]
   }, {
     name: "datetime",
     odk_name: "dateTime",
-    properties: %w[printable temporal has_timezone smsable headerable refable defaultable]
+    properties: %w[printable temporal has_timezone smsable headerable refable defaultable reportable]
   }, {
     name: "date",
     odk_name: "date",
-    properties: %w[printable temporal smsable headerable refable defaultable]
+    properties: %w[printable temporal smsable headerable refable defaultable reportable]
   }, {
     name: "time",
     odk_name: "time",
-    properties: %w[printable temporal smsable headerable refable defaultable]
+    properties: %w[printable temporal smsable headerable refable defaultable reportable]
   }, {
     name: "image",
     odk_name: "binary",

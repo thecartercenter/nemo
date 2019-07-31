@@ -15,10 +15,11 @@ module ReportEmbeddable
         attribs: Report::AttribField.all,
         forms: Form.for_mission(current_mission).by_name.as_json(only: %i[id name]),
         calculation_types: Report::Calculation::TYPES,
-        questions: Question.for_mission(current_mission).reportable.includes(:forms, :option_set).by_code.as_json(
-          only: %i[id code qtype_name],
-          methods: %i[form_ids geographic?]
-        ),
+        questions: Question.for_mission(current_mission).with_type_property(:reportable)
+          .includes(:forms, :option_set).by_code.as_json(
+            only: %i[id code qtype_name],
+            methods: %i[form_ids geographic?]
+          ),
         option_sets: OptionSet.for_mission(current_mission).by_name.as_json(only: %i[id name]),
         percent_types: Report::Report::PERCENT_TYPES,
 

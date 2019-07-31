@@ -104,7 +104,9 @@ class Question < ApplicationRecord
   scope :default_order, -> { by_code }
   scope :select_types, -> { where(qtype_name: %w[select_one select_multiple]) }
   scope :with_forms, -> { includes(:forms) }
-  scope :reportable, -> { where.not(qtype_name: %w[image annotated_image signature sketch audio video]) }
+  scope :with_type_property, lambda { |property|
+    where(qtype_name: QuestionType.with_property(property).map(&:name))
+  }
   scope :not_in_form, lambda { |form|
                         where("(questions.id NOT IN (
                           SELECT question_id FROM form_items
