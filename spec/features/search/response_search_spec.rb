@@ -10,22 +10,20 @@ feature "response search", js: true do
   let!(:form) { create(:form, name: "Form 1", question_types: %w[text]) }
   let!(:response1) { create(:response, user: user, form: form, answer_values: ["foo"]) }
   let!(:response2) { create(:response, user: user, form: form, answer_values: ["bar"]) }
+  let(:codes) { Response.all.pluck(:shortcode).map(&:upcase) }
 
   scenario "search results" do
-    r1_code = response1.shortcode.upcase
-    r2_code = response2.shortcode.upcase
-
     login(user)
     visit "/en/m/#{mission.compact_name}/responses"
     expect(page).to have_content("Displaying all 2 Responses")
     expect(page).to have_content(form.name)
-    expect(page).to have_content(r1_code)
-    expect(page).to have_content(r2_code)
+    expect(page).to have_content(codes[0])
+    expect(page).to have_content(codes[1])
 
     # Working search.
     search_for("foo")
-    expect(page).to have_content(r1_code)
-    expect(page).not_to have_content(r2_code)
+    expect(page).to have_content(codes[0])
+    expect(page).not_to have_content(codes[1])
 
     # Failing search.
     search_for("bobby fisher")
