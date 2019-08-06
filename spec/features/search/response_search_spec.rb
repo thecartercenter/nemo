@@ -62,5 +62,17 @@ feature "response search", js: true do
     expect(page).to have_field("search", with: "")
     expect(page).to have_css("#submitter-filter.active-filter", text: "Submitter (2 filters)")
     expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (No)")
+
+    new_search_for(%(form:"Form 1"))
+    click_on("Question")
+    expect(page).to have_content("Showing questions from Form 1 only.")
+    click_on("Form (Form 1)")
+    # Clear the form filter.
+    find(".select2-selection__clear").click
+    # The hint should still be there until the search is submitted.
+    expect(page).to(have_css(".active-filter"))
+    # Click off to dismiss the popover and automatically submit the search.
+    find("h1").click
+    expect(page).to_not(have_css(".active-filter"))
   end
 end
