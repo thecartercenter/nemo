@@ -45,6 +45,6 @@ feature "question search", js: true do
     expect(page).to have_field("search", with: "foo")
 
     # Filters UI shouldn't be active on this page.
-    expect(page).to_not(have_css("#form-filter"))
+    expect(page).not_to have_css("#form-filter")
   end
 end

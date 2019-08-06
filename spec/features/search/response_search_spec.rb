@@ -78,7 +78,7 @@ feature "response search", js: true do
       expect(page).to(have_css(".active-filter"))
       # Click off to dismiss the popover and automatically submit the search.
       find("h1").click
-      expect(page).to_not(have_css(".active-filter"))
+      expect(page).not_to have_css(".active-filter")
       expect(page).to have_content("Displaying all 3 Responses")
     end
   end
