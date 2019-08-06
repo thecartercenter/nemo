@@ -145,6 +145,11 @@ NEMO includes several React components that are provided via [react-rails](https
 Database schema migrations can be run with `rails db:migrate`.
 You'll also need to run `rails db:test:prepare` for specs to pass.
 
+### Delayed Job Operations
+
+Operations like data import run asynchronously using a background tool called delayed_job.
+You can run this locally via `bin/delayed_job start`.
+
 ### Testing with ODK
 
 1. Download the ODK application onto your Android phone or tablet
