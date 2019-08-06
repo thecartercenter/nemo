@@ -7,7 +7,6 @@ feature "response search", js: true do
 
   let!(:mission) { get_mission }
   let!(:user) { create(:user, role_name: "coordinator", admin: true) }
-  let(:user2) { create(:user) }
   let!(:form) { create(:form, name: "Form 1", question_types: %w[text]) }
   let!(:response1) { create(:response, user: user, form: form, answer_values: ["foo"]) }
   let!(:response2) { create(:response, user: user, form: form, answer_values: ["bar"]) }
@@ -43,36 +42,42 @@ feature "response search", js: true do
     )
   end
 
-  scenario "search filters" do
-    login(user)
-    visit "/en/m/#{mission.compact_name}/responses"
+  context "with more complex data" do
+    let!(:user2) { create(:user) }
+    let!(:form2) { create(:form, name: "Form 2", question_types: %w[text]) }
+    let!(:response3) { create(:response, user: user2, form: form2, answer_values: ["baz"]) }
 
-    search_for(%(foo))
-    expect(page).to have_field("search", with: "foo")
+    scenario "search filters" do
+      login(user)
+      visit "/en/m/#{mission.compact_name}/responses"
 
-    new_search_for(%(form:"Form 1"))
-    expect(page).to have_field("search", with: "")
-    expect(page).to have_css("#form-filter.active-filter", text: "Form (Form 1)")
+      search_for(%(foo))
+      expect(page).to have_field("search", with: "foo")
 
-    new_search_for(%(reviewed:YES))
-    expect(page).to have_field("search", with: "")
-    expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (Yes)")
+      new_search_for(%(form:"Form 1"))
+      expect(page).to have_field("search", with: "")
+      expect(page).to have_css("#form-filter.active-filter", text: "Form (Form 1)")
 
-    new_search_for(%(submitter:("#{user.name}" | "#{user2.name}") reviewed:0))
-    expect(page).to have_field("search", with: "")
-    expect(page).to have_css("#submitter-filter.active-filter", text: "Submitter (2 filters)")
-    expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (No)")
+      new_search_for(%(reviewed:YES))
+      expect(page).to have_field("search", with: "")
+      expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (Yes)")
 
-    new_search_for(%(form:"Form 1"))
-    click_on("Question")
-    expect(page).to have_content("Showing questions from Form 1 only.")
-    click_on("Form (Form 1)")
-    # Clear the form filter.
-    find(".select2-selection__clear").click
-    # The hint should still be there until the search is submitted.
-    expect(page).to(have_css(".active-filter"))
-    # Click off to dismiss the popover and automatically submit the search.
-    find("h1").click
-    expect(page).to_not(have_css(".active-filter"))
+      new_search_for(%(submitter:("#{user.name}" | "#{user2.name}") reviewed:0))
+      expect(page).to have_field("search", with: "")
+      expect(page).to have_css("#submitter-filter.active-filter", text: "Submitter (2 filters)")
+      expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (No)")
+
+      new_search_for(%(form:"Form 1"))
+      click_on("Question")
+      expect(page).to have_content("Showing questions from Form 1 only.")
+      click_on("Form (Form 1)")
+      # Clear the form filter.
+      find(".select2-selection__clear").click
+      # The hint should still be there until the search is submitted.
+      expect(page).to(have_css(".active-filter"))
+      # Click off to dismiss the popover and automatically submit the search.
+      find("h1").click
+      expect(page).to_not(have_css(".active-filter"))
+    end
   end
 end
