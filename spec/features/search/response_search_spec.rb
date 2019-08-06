@@ -66,6 +66,9 @@ feature "response search", js: true do
       expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (No)")
 
       new_search_for(%(form:"Form 1"))
+      expect(page).to have_content(codes[0])
+      expect(page).to have_content(codes[1])
+      expect(page).not_to have_content(codes[2])
       click_on("Question")
       expect(page).to have_content("Showing questions from Form 1 only.")
       click_on("Form (Form 1)")
@@ -76,6 +79,7 @@ feature "response search", js: true do
       # Click off to dismiss the popover and automatically submit the search.
       find("h1").click
       expect(page).to_not(have_css(".active-filter"))
+      expect(page).to have_content("Displaying all 3 Responses")
     end
   end
 end
