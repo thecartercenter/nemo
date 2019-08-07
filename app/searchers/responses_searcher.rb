@@ -22,10 +22,13 @@ class ResponsesSearcher < Searcher
     [
       Search::Qualifier.new(name: "form", col: "forms.name", assoc: :forms, type: :text),
       Search::Qualifier.new(name: "exact_form", col: "forms.name", assoc: :forms),
+      Search::Qualifier.new(name: "form_id", col: "forms.id", assoc: :forms),
       Search::Qualifier.new(name: "reviewed", col: "responses.reviewed", type: :boolean),
       Search::Qualifier.new(name: "submitter", col: "users.name", assoc: :users, type: :text),
+      Search::Qualifier.new(name: "submitter_id", col: "users.id", assoc: :users),
       Search::Qualifier.new(name: "group", col: "user_groups.name",
                             assoc: :user_groups, type: :text),
+      Search::Qualifier.new(name: "group_id", col: "user_groups.id", assoc: :user_groups),
       Search::Qualifier.new(name: "source", col: "responses.source"),
       Search::Qualifier.new(name: "submit_date", type: :date,
                             col: "CAST((responses.created_at AT TIME ZONE 'UTC') AT
@@ -185,16 +188,16 @@ class ResponsesSearcher < Searcher
     return false unless equality_op?(op_kind)
 
     case expression.qualifier.name.downcase
-    when "form"
-      filter_by_names(token_values, Form, current_ids: form_ids)
+    when "form_id"
+      filter_by_ids(token_values, Form, current_ids: form_ids)
     when "text_by_code"
       filter_by_questions(expression.qualifier_text, token_values)
     when "reviewed"
       filter_by_is_reviewed(token_values)
-    when "submitter"
-      filter_by_names(token_values, User, current_ids: submitters, include_name: true)
-    when "group"
-      filter_by_names(token_values, UserGroup, current_ids: groups, include_name: true)
+    when "submitter_id"
+      filter_by_ids(token_values, User, current_ids: submitters, include_name: true)
+    when "group_id"
+      filter_by_ids(token_values, UserGroup, current_ids: groups, include_name: true)
     when "text"
       advanced_text << " #{expression.values}"
       true
@@ -209,8 +212,8 @@ class ResponsesSearcher < Searcher
   # Given a list of values, find all instances of this class that match,
   # and append their IDs to the existing list of IDs to filter by.
   # Returns false if unable to handle this case.
-  def filter_by_names(names, klass, current_ids: [], include_name: false)
-    matches = klass.where("LOWER(name) = ANY (ARRAY[?])", names.map(&:downcase)).pluck(:id, :name)
+  def filter_by_ids(ids, klass, current_ids: [], include_name: false)
+    matches = klass.where(id: ids).pluck(:id, :name)
     return false if matches.empty?
     current_ids.concat(matches.map { |id, name| include_name ? {id: id, name: name} : id })
     true
