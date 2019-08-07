@@ -34,10 +34,12 @@ class OperationJob < ApplicationJob
   end
 
   def operation_succeeded(attributes = nil)
+    puts "@@@ SUCCEEDED"
     operation.update!(attributes) if attributes.present?
   end
 
   def operation_failed(report)
+    puts "@@@ FAILED"
     save_failure(report)
   end
 

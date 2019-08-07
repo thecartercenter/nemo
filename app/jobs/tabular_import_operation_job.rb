@@ -3,6 +3,8 @@
 # Job for importing tabular data like users and option sets.
 class TabularImportOperationJob < OperationJob
   def perform(_operation, name: nil, saved_upload_id:, import_class:)
+    puts "@@@"
+    puts name
     saved_upload = SavedTabularUpload.find(saved_upload_id)
     import = import_class.constantize.new(
       mission_id: mission&.id,

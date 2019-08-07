@@ -147,8 +147,11 @@ You'll also need to run `rails db:test:prepare` for specs to pass.
 
 ### Delayed Job Operations
 
-Operations like data import run asynchronously using a background tool called delayed_job.
-You can run this locally via `bin/delayed_job start`.
+Operations such as data import run asynchronously using a background tool called delayed_job.
+You can run this locally via:
+
+- `bin/delayed_job start`
+- Or, to run in the foreground with console output??: `bin/delayed_job run --exit-on-complete`
 
 ### Testing with ODK
 
