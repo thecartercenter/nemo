@@ -97,6 +97,9 @@ header {
   margin: side-values(10px 0 10px 15px);
   display: inline-block;
 
+  // Don't allow the large bounding box to obstruct other header links.
+  pointer-events: none;
+
   > div {
     display: inline-block;
     vertical-align: top;
@@ -107,6 +110,9 @@ header {
     margin: 12px 0 12px 12px;
     height: 54px;  /* explicit height to prevent shifting during load */
     vertical-align: bottom;
+
+    // Undo 'none' on the parent div.
+    pointer-events: all;
   }
 
   a {
