@@ -10,7 +10,7 @@ feature "question search", js: true do
   let!(:question2) { create(:question, name: "How many pies?") }
   let!(:user) { create(:user, role_name: "coordinator", admin: true) }
 
-  scenario "search" do
+  scenario "search results" do
     login(user)
     visit "/en/m/#{mission.compact_name}/questions"
     expect(page).to have_content("Displaying all 2 Questions")
@@ -35,5 +35,16 @@ feature "question search", js: true do
     expect(page).to have_content(
       "Error: Your search query could not be understood due to unexpected text near the end."
     )
+  end
+
+  scenario "search filters" do
+    login(user)
+    visit "/en/m/#{mission.compact_name}/questions"
+
+    search_for(%(foo))
+    expect(page).to have_field("search", with: "foo")
+
+    # Filters UI shouldn't be active on this page.
+    expect(page).not_to have_css("#form-filter")
   end
 end
