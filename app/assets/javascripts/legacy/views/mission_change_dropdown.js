@@ -15,8 +15,11 @@
         var path = ELMO.app.params.mode == 'basic' ? '' : window.location.pathname;
 
         // Preserve query string and add missionchange param to it.
-        var qs = window.location.search;
-        qs += (qs == '' ? '?' : '&') + 'missionchange=1';
+        var params = new URLSearchParams(window.location.search);
+        params.append('missionchange', '1');
+        // Remove the 'search' param for search filters.
+        params.delete('search');
+        var qs = '?' + params.toString();
 
         window.location.href = ELMO.app.url_builder.build(path, {mode: 'mission', mission_name: new_mission_name}) + qs;
       }
