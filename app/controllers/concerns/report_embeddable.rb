@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # methods required to embed a report display in a page
 module ReportEmbeddable
   # sets up the @report_data structure which will be converted to json
@@ -11,13 +13,14 @@ module ReportEmbeddable
     unless options[:read_only]
       @report_data[:options] = {
         attribs: Report::AttribField.all,
-        forms: Form.for_mission(current_mission).by_name.as_json(only: [:id, :name]),
+        forms: Form.for_mission(current_mission).by_name.as_json(only: %i[id name]),
         calculation_types: Report::Calculation::TYPES,
-        questions: Question.for_mission(current_mission).reportable.includes(:forms, :option_set).by_code.as_json(
-          only: [:id, :code, :qtype_name],
-          methods: [:form_ids, :geographic?]
-        ),
-        option_sets: OptionSet.for_mission(current_mission).by_name.as_json(only: [:id, :name]),
+        questions: Question.for_mission(current_mission).with_type_property(:reportable)
+          .includes(:forms, :option_set).by_code.as_json(
+            only: %i[id code qtype_name],
+            methods: %i[form_ids geographic?]
+          ),
+        option_sets: OptionSet.for_mission(current_mission).by_name.as_json(only: %i[id name]),
         percent_types: Report::Report::PERCENT_TYPES,
 
         # the names of qtypes that can be used in headers
@@ -39,16 +42,14 @@ module ReportEmbeddable
   #
   # returns true if no errors, false otherwise
   def run_or_fetch_and_handle_errors(options = {})
-    begin
-      @report = Rails.cache.fetch(cache_key_with_responses) do
-        @report.run(current_ability, options)
-        @report
-      end
-      true
-    rescue Report::ReportError, Search::ParseError
-      flash.now[:error] = $!.to_s
-      false
+    @report = Rails.cache.fetch(cache_key_with_responses) do
+      @report.run(current_ability, options)
+      @report
     end
+    true
+  rescue Report::ReportError, Search::ParseError
+    flash.now[:error] = $ERROR_INFO.to_s
+    false
   end
 
   def cache_key_with_responses
@@ -60,6 +61,6 @@ module ReportEmbeddable
 
       Response.per_mission_cache_key(current_mission),
       @report.cache_key
-    ].compact.join('-')
+    ].compact.join("-")
   end
 end

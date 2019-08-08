@@ -62,6 +62,7 @@ class Questioning < FormItem
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
   scope :visible, -> { where(hidden: false) }
+  scope :with_type_property, ->(property) { joins(:question).merge(Question.with_type_property(property)) }
 
   validates_with Forms::DynamicPatternValidator,
     field_name: :default,
