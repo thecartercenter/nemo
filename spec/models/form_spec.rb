@@ -230,6 +230,66 @@ describe Form do
     end
   end
 
+  describe "associations" do
+    let(:form) do
+      Timecop.freeze(-1.minute) do
+        create(:form, question_types: ["integer", %w[text text]])
+      end
+    end
+    let(:qing) { form.c[0] }
+    let(:qing_group) { form.c[1] }
+    let(:q) { form.c[0].question }
+    let(:updated_at) { form.updated_at }
+
+    it "updates form when a question is destroyed" do
+      q.destroy
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a question is updated" do
+      q.update!(maximum: 10)
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a qing group is destroyed" do
+      qing_group.destroy
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a qing group is updated" do
+      qing_group.update!(group_name: "New group name")
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when qing group is added" do
+      QingGroup.create!(form_id: form.id)
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a questioning is updated" do
+      qing.update!(rank: 10)
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a questioning is deleted" do
+      qing.destroy
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a questioning is added (covers adding a question)" do
+      Questioning.create!(form_id: form.id, question: create(:question))
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+  end
+
   def publish_and_reset_pub_changed_at(options = {})
     f = options[:form] || form
     f.publish!
