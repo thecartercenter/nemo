@@ -10,15 +10,15 @@ class TabularImportOperationJob < OperationJob
       file: open_file(saved_upload.file)
     )
     import.run
-    operation_failed(format_error_report(import.errors)) unless import.succeeded?
+    operation_failed(format_error_report(import.run_errors)) unless import.succeeded?
   end
 
   private
 
-  # turn the ActiveModel::Errors into a report in markdown format
+  # turn the import errors into a report in markdown format
   def format_error_report(errors)
     return if errors.empty?
-    errors.values.flatten.map { |error| "* #{error}" }.join("\n")
+    errors.map { |error| "* #{error}" }.join("\n")
   end
 
   def open_file(file)
