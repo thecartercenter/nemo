@@ -250,8 +250,20 @@ class ResponsesSearcher < Searcher
   def qing_value(matched_question, token_values)
     value = token_values[0]
     return {value: value} unless matched_question.option_set_id
-    # It's an option set, so value must be an ID.
-    {option_node_id: value}
+    {option_node_value: value, option_node_id: find_option_node_id(matched_question.option_set_id, value)}
+  end
+
+  def find_option_node_id(option_set_id, value)
+    value = value.downcase
+    possibilities = OptionNode.joins(:option).where(option_set_id: option_set_id)
+    results = OptionNode.none
+
+    # Allow matching any translation in the mission's locales.
+    configatron.preferred_locales.each do |locale|
+      results = results.or(possibilities.where("LOWER(options.name_translations ->> ?) = ?", locale, value))
+    end
+
+    results.pluck(:id).first
   end
 
   # Map possibilities to a single id based on any active form filters.

@@ -1,17 +1,17 @@
 import ConditionModel from './model';
 
-describe('searchValue', () => {
-  it('computes searchValue (basic value)', () => {
+describe('currTextValue', () => {
+  it('computes currTextValue (basic value)', () => {
     const store = new ConditionModel({ value: 'foo' });
-    expect(store.searchValue).toMatchSnapshot();
+    expect(store.currTextValue).toMatchSnapshot();
   });
 
-  it('computes searchValue (cascading select with nothing selected)', () => {
+  it('computes currTextValue (cascading select with nothing selected)', () => {
     const store = new ConditionModel({ value: 'unused', optionSetId: 'something' });
-    expect(store.searchValue).toMatchSnapshot();
+    expect(store.currTextValue).toMatchSnapshot();
   });
 
-  it('computes searchValue (cascading select with something selected)', () => {
+  it('computes currTextValue (cascading select with something selected)', () => {
     const store = new ConditionModel({
       optionSetId: 'something',
       levels: [
@@ -23,7 +23,7 @@ describe('searchValue', () => {
         },
       ],
     });
-    expect(store.searchValue).toMatchSnapshot();
+    expect(store.currTextValue).toMatchSnapshot();
   });
 });
 

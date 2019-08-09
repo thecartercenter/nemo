@@ -1,5 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`currTextValue computes currTextValue (basic value) 1`] = `"foo"`;
+
+exports[`currTextValue computes currTextValue (cascading select with nothing selected) 1`] = `null`;
+
+exports[`currTextValue computes currTextValue (cascading select with something selected) 1`] = `"One"`;
+
 exports[`rightQingOptions reaction filters out all qings when leftQing is select_multiple 1`] = `Array []`;
 
 exports[`rightQingOptions reaction filters out the correct qings when leftQing is datetime 1`] = `
@@ -73,9 +79,3 @@ Array [
 `;
 
 exports[`rightQingOptions reaction is empty with no leftQingId 1`] = `Array []`;
-
-exports[`searchValue computes searchValue (basic value) 1`] = `"foo"`;
-
-exports[`searchValue computes searchValue (cascading select with nothing selected) 1`] = `null`;
-
-exports[`searchValue computes searchValue (cascading select with something selected) 1`] = `"1"`;

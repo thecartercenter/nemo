@@ -147,6 +147,15 @@ describe ResponsesSearcher do
     let(:form2) { create(:form) }
     let(:codes) { form.c[0..2].map(&:code) }
     let(:node3) { form.c[2].question.option_set.c[0] }
+    let(:preferred_locales) { configatron.preferred_locales }
+
+    before do
+      configatron.preferred_locales = %i[en fr]
+    end
+
+    after do
+      configatron.preferred_locales = preferred_locales
+    end
 
     it("should work") do
       expect(searcher(%(apple))).to have_filter_data(
@@ -171,8 +180,17 @@ describe ResponsesSearcher do
         qings: [{id: form.c[0].id, value: "apple"}],
         advanced_text: ""
       )
-      expect(searcher(%({#{codes[2]}}:#{node3.id}))).to have_filter_data(
-        qings: [{id: form.c[2].id, option_node_id: node3.id}],
+      expect(searcher(%({#{codes[2]}}:#{node3.option.canonical_name}))).to have_filter_data(
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: node3.option.canonical_name}],
+        advanced_text: ""
+      )
+    end
+
+    it("should handle translations") do
+      node3.option.update!(name_fr: "Chat")
+
+      expect(searcher(%({#{codes[2]}}:chat))).to have_filter_data(
+        qings: [{id: form.c[2].id, option_node_id: node3.id, option_node_value: "chat"}],
         advanced_text: ""
       )
     end
