@@ -87,9 +87,9 @@ export function getFilterString({
 }) {
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
-    .filter(({ leftQingId, currTextValue, remove }) => leftQingId && currTextValue && !remove)
-    .map(({ leftQingId, currTextValue }) =>
-      `{${getQuestionNameFromId(allQuestions, leftQingId)}}:${JSON.stringify(currTextValue)}`);
+    .filter(({ leftQingId, searchValue, remove }) => leftQingId && searchValue && !remove)
+    .map(({ leftQingId, searchValue }) =>
+      `{${getQuestionNameFromId(allQuestions, leftQingId)}}:${JSON.stringify(searchValue)}`);
 
   const submitterParts = SUBMITTER_TYPES.map((type) => {
     const selectedSubmitterIds = selectedSubmittersForType[type].map(({ id }) => id);

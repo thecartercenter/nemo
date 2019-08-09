@@ -54,29 +54,29 @@ class ConditionModel {
   remove;
 
   /**
-   * Return a string representation of the current value.
-   * Both user-facing and sent to the backend when performing a search.
+   * Return the current value to search for on the backend:
+   * either a basic string, or a selected option ID.
    */
   @computed
-  get currTextValue() {
+  get searchValue() {
     if (this.optionSetId) {
       const lastIndex = this.levels.length - 1;
 
       // Iterate back through each level, trying to find the deepest selected item.
       for (let i = lastIndex; i >= 0; i -= 1) {
-        const { selected, options } = this.levels[i];
+        const { selected } = this.levels[i];
 
         if (selected != null) {
-          const { name = '' } = options.find(({ id }) => selected === id) || {};
-          return name;
+          return selected;
         }
       }
 
       return null;
     } else if (this.optionNodeId) {
-      // If optionSet hasn't been loaded (for example, if question filter popover
-      // hasn't yet been mounted), fall back to the string value passed by backend.
-      return this.optionNodeValue;
+      // If something is selected but the optionSet hasn't been loaded yet
+      // (for example, if question filter popover hasn't yet been mounted),
+      // fall back to ID passed by backend.
+      return this.optionNodeId;
     }
 
     return this.value;
