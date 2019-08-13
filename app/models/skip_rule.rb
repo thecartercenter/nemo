@@ -32,7 +32,6 @@ class SkipRule < ActiveRecord::Base
   include FormLogical
 
   belongs_to :dest_item, class_name: "FormItem", inverse_of: :incoming_skip_rules
-  belongs_to :source_item, class_name: "FormItem"
 
   before_validation :normalize
 

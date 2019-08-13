@@ -277,6 +277,26 @@ describe Form do
       expect(updated_form.updated_at).not_to eq(updated_at)
     end
 
+    it "updates form when a display condition is added" do
+      form.c[1].c[0].update!(display_conditions_attributes:
+        [{left_qing_id: form.c[0].id, op: "eq", value: "5"}])
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a skip rule is added" do
+      qing.update!(skip_rules_attributes: [{destination: "end", skip_if: "always"}])
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
+    it "updates form when a constraint is added" do
+      qing.update!(constraints_attributes:
+        [{conditions_attributes: [{left_qing_id: qing.id, op: "eq", value: "5"}]}])
+      updated_form = Form.find(form.id)
+      expect(updated_form.updated_at).not_to eq(updated_at)
+    end
+
     it "updates form when a questioning is deleted" do
       qing.destroy
       updated_form = Form.find(form.id)

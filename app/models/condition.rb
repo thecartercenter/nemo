@@ -45,7 +45,7 @@ class Condition < ApplicationRecord
   # which is useful in tests and in UI consistency.
   acts_as_list column: :rank, scope: [:conditionable_id]
 
-  belongs_to :conditionable, polymorphic: true
+  belongs_to :conditionable, polymorphic: true, touch: true
   belongs_to :left_qing, class_name: "Questioning", foreign_key: "left_qing_id",
                          inverse_of: :referring_conditions_via_left
   belongs_to :right_qing, class_name: "Questioning", foreign_key: "right_qing_id",
