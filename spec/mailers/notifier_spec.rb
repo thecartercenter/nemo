@@ -10,7 +10,7 @@ describe Notifier do
     let(:mail) { described_class.password_reset_instructions(*args).deliver_now }
 
     it "should have user's email in to field" do
-      expect(mail.to).to eq [user.email]
+      expect(mail.to).to eq([user.email])
     end
 
     context "no mission given" do
@@ -54,6 +54,18 @@ describe Notifier do
       it "should have all coordinators/admins in 'to' and 'reply-to'" do
         expect(mail.to).to contain_exactly(coordinator1.email, coordinator2.email, staffer2.email)
         expect(mail.reply_to).to contain_exactly(coordinator1.email, coordinator2.email, staffer2.email)
+      end
+    end
+
+    context "mission has inactive admins and coordinators" do
+      let!(:coordinator1) { create(:user, role_name: :coordinator, mission: mission, active: false) }
+      let!(:coordinator2) { create(:user, role_name: :coordinator, mission: mission) }
+      let!(:admin1) { create(:user, role_name: :staffer, mission: mission, admin: true, active: false) }
+      let!(:admin2) { create(:user, role_name: :staffer, mission: mission, admin: true) }
+
+      it "should only email active users" do
+        expect(mail.to).to contain_exactly(coordinator2.email, admin2.email)
+        expect(mail.reply_to).to contain_exactly(coordinator2.email, admin2.email)
       end
     end
   end

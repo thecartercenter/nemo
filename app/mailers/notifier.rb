@@ -29,11 +29,11 @@ class Notifier < ApplicationMailer
 
   def coordinator_emails(mission)
     return [] if mission.nil?
-    User.with_roles(mission, :coordinator).pluck(:email).uniq[0, 10] # Max of 10, should be rare.
+    User.with_roles(mission, :coordinator).active.pluck(:email).uniq[0, 10] # Max of 10, should be rare.
   end
 
   def admin_emails
-    User.where(admin: true).pluck(:email)
+    User.where(admin: true).active.pluck(:email)
   end
 
   def build_reset_url(user)
