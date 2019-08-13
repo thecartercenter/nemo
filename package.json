@@ -26,7 +26,7 @@
     "babel-jest": "23.6.0"
   },
   "dependencies": {
-    "@rails/webpacker": "3.5.5",
+    "@rails/webpacker": "^4.0.0",
     "babel-eslint": "10.0.1",
     "babel-jest": "23.6.0",
     "babel-plugin-transform-decorators-legacy": "1.3.5",
@@ -34,7 +34,8 @@
     "babel-preset-react": "6.24.1",
     "ignore-loader": "0.1.2",
     "jquery": "3.4.1",
-    "lodash": "4.17.11",
+    "lodash": "4.17.13",
+    "lodash.template": "^4.5.0",
     "mobx": "5.9.4",
     "mobx-react": "5.4.3",
     "prop-types": "15.7.2",
