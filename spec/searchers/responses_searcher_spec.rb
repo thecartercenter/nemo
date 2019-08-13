@@ -13,17 +13,29 @@ describe ResponsesSearcher do
     let!(:r1) { create(:response, form: form) }
     let!(:r2) { create(:response, form: form2) }
     let!(:r3) { create(:response, form: form) }
+    let!(:r4) { create(:response, form: form3) }
 
     it "should work" do
       expect(search(%(form:"foo 1.0"))).to contain_exactly(r1, r3)
+      expect(search(%(form:(qu'o`t"es)))).to contain_exactly(r4)
+      expect(search(%(form-id:"#{form.id}"))).to contain_exactly(r1, r3)
 
-      expect(searcher(%(form:"foo 1.0"))).to have_filter_data(form_ids: [form.id], advanced_text: "")
-      expect(searcher(%(form:("foo 1.0" | bar)))).to have_filter_data(form_ids: [form2.id, form.id], advanced_text: "")
-      expect(searcher(%(form:(foo bar)))).to have_filter_data(form_ids: [], advanced_text: "form:(foo bar)")
-      expect(searcher(%(form:BAR))).to have_filter_data(form_ids: [form2.id], advanced_text: "")
-      expect(searcher(%(form:x))).to have_filter_data(form_ids: [], advanced_text: "form:x")
-      expect(searcher(%(form:bar source:x))).to have_filter_data(form_ids: [form2.id], advanced_text: "source:x")
-      expect(searcher(%(form:(qu'o`t"es)))).to have_filter_data(form_ids: [form3.id])
+      expect(searcher(%(form:"foo 1.0"))).to have_filter_data(
+        form_ids: [],
+        advanced_text: "form:(\"foo 1.0\")"
+      )
+      expect(searcher(%(form-id:"#{form.id}"))).to have_filter_data(
+        form_ids: [form.id],
+        advanced_text: ""
+      )
+      expect(searcher(%(form-id:("#{form.id}" | #{form2.id})))).to have_filter_data(
+        form_ids: [form2.id, form.id],
+        advanced_text: ""
+      )
+      expect(searcher(%(form-id:"#{form.id}" source:x))).to have_filter_data(
+        form_ids: [form.id],
+        advanced_text: "source:x"
+      )
     end
   end
 
@@ -82,22 +94,19 @@ describe ResponsesSearcher do
 
     it "should work" do
       expect(search(%(submitter:#{u1.name}))).to contain_exactly(r1)
+      expect(search(%(submitter-id:#{u1.id}))).to contain_exactly(r1)
 
       expect(searcher(%(submitter:#{u1.name}))).to have_filter_data(
+        submitters: [],
+        advanced_text: "submitter:#{u1.name}"
+      )
+      expect(searcher(%(submitter-id:#{u1.id}))).to have_filter_data(
         submitters: [{id: u1.id, name: u1.name}],
         advanced_text: ""
       )
-      expect(searcher(%(submitter:(#{u1.name} | "#{u2.name}")))).to have_filter_data(
+      expect(searcher(%(submitter-id:(#{u1.id} | "#{u2.id}") source:x))).to have_filter_data(
         submitters: [{id: u1.id, name: u1.name}, {id: u2.id, name: u2.name}],
-        advanced_text: ""
-      )
-      expect(searcher(%(submitter:foo))).to have_filter_data(
-        submitters: [],
-        advanced_text: "submitter:foo"
-      )
-      expect(searcher(%(submitter:foo source:x))).to have_filter_data(
-        submitters: [],
-        advanced_text: "submitter:foo source:x"
+        advanced_text: "source:x"
       )
     end
   end
@@ -114,6 +123,7 @@ describe ResponsesSearcher do
 
     it "should return responses from users in group" do
       expect(search(%(group:"fun group"))).to match_array(responses[0..1])
+      expect(search(%(group-id:"#{group.id}"))).to match_array(responses[0..1])
     end
 
     it "should return nothing for non-existent group" do
@@ -122,16 +132,12 @@ describe ResponsesSearcher do
 
     it "should parse searcher props" do
       expect(searcher(%(group:"fun group"))).to have_filter_data(
+        groups: [],
+        advanced_text: "group:(\"fun group\")"
+      )
+      expect(searcher(%(group-id:#{group.id} source:x))).to have_filter_data(
         groups: [{id: group.id, name: group.name}],
-        advanced_text: ""
-      )
-      expect(searcher(%(group:foo))).to have_filter_data(
-        groups: [],
-        advanced_text: "group:foo"
-      )
-      expect(searcher(%(group:foo source:x))).to have_filter_data(
-        groups: [],
-        advanced_text: "group:foo source:x"
+        advanced_text: "source:x"
       )
     end
   end
@@ -164,12 +170,12 @@ describe ResponsesSearcher do
         qings: [{id: form.c[1].id, value: "apple"}, {id: form.c[0].id, value: "apple"}],
         advanced_text: "apple"
       )
-      expect(searcher(%({#{codes[0]}}:apple form:"#{form2.name}"))).to have_filter_data(
+      expect(searcher(%({#{codes[0]}}:apple form-id:"#{form2.id}"))).to have_filter_data(
         # This question doesn't exist on this form, so it won't be found.
         qings: [{id: nil, value: "apple"}],
         advanced_text: ""
       )
-      expect(searcher(%({#{codes[0]}}:apple form:"#{form.name}"))).to have_filter_data(
+      expect(searcher(%({#{codes[0]}}:apple form-id:"#{form.id}"))).to have_filter_data(
         # But it does exist on this form.
         qings: [{id: form.c[0].id, value: "apple"}],
         advanced_text: ""

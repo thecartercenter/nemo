@@ -51,8 +51,13 @@ feature "response search", js: true do
 
       search_for(%(foo))
       expect(page).to have_field("search", with: "foo")
+      expect(page).not_to have_css(".active-filter")
 
       new_search_for(%(form:"Form 1"))
+      expect(page).to have_field("search", with: "form:(\"Form 1\")")
+      expect(page).not_to have_css(".active-filter")
+
+      new_search_for(%(form-id:#{form.id}))
       expect(page).to have_field("search", with: "")
       expect(page).to have_css("#form-filter.active-filter", text: "Form (Form 1)")
 
@@ -60,12 +65,12 @@ feature "response search", js: true do
       expect(page).to have_field("search", with: "")
       expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (Yes)")
 
-      new_search_for(%(submitter:("#{user.name}" | "#{user2.name}") reviewed:0))
+      new_search_for(%(submitter-id:("#{user.id}" | "#{user2.id}") reviewed:0))
       expect(page).to have_field("search", with: "")
       expect(page).to have_css("#submitter-filter.active-filter", text: "Submitter (2 filters)")
       expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (No)")
 
-      new_search_for(%(form:"Form 1"))
+      new_search_for(%(form-id:#{form.id}))
       expect(page).to have_content(codes[0])
       expect(page).to have_content(codes[1])
       expect(page).not_to have_content(codes[2])

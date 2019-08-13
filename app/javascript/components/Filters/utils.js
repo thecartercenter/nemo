@@ -79,16 +79,12 @@ export function parseListForSelect2(allItems) {
  * return a stringified version for the backend.
  */
 export function getFilterString({
-  allForms,
   selectedFormIds,
   conditionSetStore,
   isReviewed,
   selectedSubmittersForType,
   advancedSearchText,
 }) {
-  const selectedFormNames = selectedFormIds
-    .map((id) => JSON.stringify(getItemNameFromId(allForms, id)));
-
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
     .filter(({ leftQingId, currTextValue, remove }) => leftQingId && currTextValue && !remove)
@@ -96,14 +92,12 @@ export function getFilterString({
       `{${getQuestionNameFromId(allQuestions, leftQingId)}}:${JSON.stringify(currTextValue)}`);
 
   const submitterParts = SUBMITTER_TYPES.map((type) => {
-    const selectedSubmitterNames = selectedSubmittersForType[type]
-      .map(({ name }) => JSON.stringify(name));
-
-    return isEmpty(selectedSubmitterNames) ? null : `${type}:(${selectedSubmitterNames.join('|')})`;
+    const selectedSubmitterIds = selectedSubmittersForType[type].map(({ id }) => id);
+    return isEmpty(selectedSubmitterIds) ? null : `${type}-id:(${selectedSubmitterIds.join('|')})`;
   });
 
   const parts = [
-    isEmpty(selectedFormNames) ? null : `form:(${selectedFormNames.join('|')})`,
+    isEmpty(selectedFormIds) ? null : `form-id:(${selectedFormIds.join('|')})`,
     ...questionFilters,
     isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
     ...submitterParts,
