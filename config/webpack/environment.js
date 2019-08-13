@@ -6,4 +6,6 @@ environment.loaders.append('ignore', {
   loader: 'ignore-loader',
 });
 
+environment.loaders.delete('nodeModules');
+
 module.exports = environment;
