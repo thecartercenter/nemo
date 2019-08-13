@@ -80,6 +80,7 @@ class Question < ApplicationRecord
 
   before_validation :normalize
   before_save :check_condition_integrity
+  after_save :update_forms
 
   # We do this instead of using dependent: :destroy because in the latter case
   # the dependent object doesn't know who destroyed it.
@@ -320,6 +321,10 @@ class Question < ApplicationRecord
 
   def check_condition_integrity
     Condition.check_integrity_after_question_change(self)
+  end
+
+  def update_forms
+    forms.each(&:touch)
   end
 
   def valid_reference_url

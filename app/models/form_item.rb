@@ -60,9 +60,9 @@ class FormItem < ApplicationRecord
 
   # These associations are really only applicable to Questioning, but
   # they are defined here to allow eager loading.
-  belongs_to :question, autosave: true, inverse_of: :questionings
+  belongs_to :question, autosave: true, inverse_of: :questionings, touch: true
 
-  belongs_to :form
+  belongs_to :form, touch: true, autosave: true
   has_many :response_nodes, foreign_key: :questioning_id, dependent: :destroy, inverse_of: :form_item
   has_many :standard_form_reports, class_name: "Report::StandardFormReport", inverse_of: :disagg_qing,
                                    foreign_key: :disagg_qing_id, dependent: :nullify
@@ -84,6 +84,7 @@ class FormItem < ApplicationRecord
   before_validation :set_foreign_key_on_conditions
   before_validation :ensure_parent_is_group
   before_create :inherit_mission
+  after_create :update_form
 
   has_ancestry cache_depth: true
 
@@ -283,6 +284,10 @@ class FormItem < ApplicationRecord
     errors.add(:display_logic, :all_required) if display_conditions.any?(&:invalid?)
     errors.add(:skip_logic, :all_required) if skip_rules.any?(&:invalid?)
     errors.add(:constraints, :all_required) if constraints.any?(&:invalid?)
+  end
+
+  def update_form
+    form.touch
   end
 end
 

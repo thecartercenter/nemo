@@ -12,7 +12,7 @@ module FormLogical
     # which is useful in tests and in UI consistency.
     acts_as_list column: :rank, scope: [:source_item_id]
 
-    belongs_to :source_item, class_name: "FormItem", inverse_of: model_name.plural
+    belongs_to :source_item, class_name: "FormItem", inverse_of: model_name.plural, touch: true
     has_many :conditions, -> { by_rank }, as: :conditionable, inverse_of: :conditionable, dependent: :destroy
 
     before_validation :set_foreign_key_on_conditions
