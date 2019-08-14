@@ -178,11 +178,13 @@ class FormItem < ApplicationRecord
 
   # Returns an array of ranks of all parents plus self, e.g. [2,5].
   # Uses the cached value setup by descendant_questionings if available.
+  # Returns empty array if this is the root node (i.e. path is [])
   def full_rank
     @full_rank ||= path.map(&:rank)[1..-1] || []
   end
 
   # Returns the full rank joined with a period separator, e.g. 2.5.
+  # Returns empty array if this is the root node (i.e. full_rank is [])
   def full_dotted_rank
     @full_dotted_rank ||= full_rank.join(".")
   end
@@ -201,7 +203,7 @@ class FormItem < ApplicationRecord
   def as_json(options = {})
     options[:methods] ||= []
     options[:methods] << :full_dotted_rank
-    result = super(options)
+    super(options)
   end
 
   def group_children?
