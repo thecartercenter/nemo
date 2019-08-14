@@ -3,25 +3,30 @@
     "production": {
       "presets": [
         [
-          "env",
+          "@babel/env",
           {
             "modules": false,
             "targets": {
               "browsers": "> 1%",
               "uglify": true
             },
-            "useBuiltIns": true
+            "useBuiltIns": "entry"
           }
         ],
-        "react"
+        "@babel/react"
       ],
       "plugins": [
-        "syntax-dynamic-import",
-        "transform-runtime",
-        "transform-decorators-legacy",
-        "transform-object-rest-spread",
+        "@babel/syntax-dynamic-import",
+        "@babel/transform-runtime",
+        "@babel/plugin-proposal-object-rest-spread",
         [
-          "transform-class-properties",
+          "@babel/plugin-proposal-decorators",
+          {
+            "legacy": true
+          }
+        ],
+        [
+          "@babel/plugin-proposal-class-properties",
           {
             "loose": true
           }
@@ -31,25 +36,30 @@
     "development": {
       "presets": [
         [
-          "env",
+          "@babel/env",
           {
             "modules": false,
             "targets": {
               "browsers": "> 1%",
               "uglify": true
             },
-            "useBuiltIns": true
+            "useBuiltIns": "entry"
           }
         ],
-        "react"
+        "@babel/react"
       ],
       "plugins": [
-        "syntax-dynamic-import",
-        "transform-runtime",
-        "transform-decorators-legacy",
-        "transform-object-rest-spread",
+        "@babel/syntax-dynamic-import",
+        "@babel/transform-runtime",
+        "@babel/plugin-proposal-object-rest-spread",
         [
-          "transform-class-properties",
+          "@babel/plugin-proposal-decorators",
+          {
+            "legacy": true
+          }
+        ],
+        [
+          "@babel/plugin-proposal-class-properties",
           {
             "loose": true
           }
@@ -59,24 +69,29 @@
     "test": {
       "presets": [
         [
-          "env",
+          "@babel/env",
           {
             "targets": {
               "browsers": "> 1%",
               "uglify": true
             },
-            "useBuiltIns": true
+            "useBuiltIns": "entry"
           }
         ],
-        "react"
+        "@babel/react"
       ],
       "plugins": [
-        "syntax-dynamic-import",
-        "transform-runtime",
-        "transform-decorators-legacy",
-        "transform-object-rest-spread",
+        "@babel/syntax-dynamic-import",
+        "@babel/transform-runtime",
+        "@babel/plugin-proposal-object-rest-spread",
         [
-          "transform-class-properties",
+          "@babel/plugin-proposal-decorators",
+          {
+            "legacy": true
+          }
+        ],
+        [
+          "@babel/plugin-proposal-class-properties",
           {
             "loose": true
           }
