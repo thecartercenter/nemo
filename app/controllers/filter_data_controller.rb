@@ -12,6 +12,13 @@ class FilterDataController < ApplicationController
       .includes(:question).with_type_property(:refable).order("questions.code")
     qings = qings.where(form_id: params[:form_ids]) if params[:form_ids].present?
     qings = qings.filter_unique
+
+    # Temporary guard clause to investigate a strange flapping spec.
+    if (weird = qings.select { |qing| qing.full_rank.empty? }).any?
+      pp(weird)
+      raise "qing rank should always be non-empty"
+    end
+
     render(json: ActiveModel::ArraySerializer.new(qings,
       each_serializer: ConditionalLogicForm::TargetQuestioningSerializer))
   end
