@@ -5,6 +5,7 @@ import Form from 'react-bootstrap/Form';
 
 import ConditionSetFormField from '../../ConditionSetFormField/component';
 import AddConditionLink from '../../AddConditionLink/component';
+import RejectionMessageLink from '../../RejectionMessageLink/component';
 
 @inject('conditionSetStore')
 @observer
@@ -90,6 +91,9 @@ class ConstraintFormField extends React.Component {
               {' '}
               {I18n.t('form_item.delete_rule')}
             </a>
+            &nbsp;&nbsp;
+            {/* eslint-disable-next-line */}
+            <RejectionMessageLink />
           </div>
           <input
             type="hidden"
