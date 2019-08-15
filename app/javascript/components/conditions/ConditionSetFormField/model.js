@@ -45,6 +45,9 @@ class ConditionSetModel {
   @observable
   forceRightSideLiteral = false;
 
+  @observable
+  customRejectionMessage = null;
+
   /** Returns the number of non-deleted conditions in the set. */
   @computed
   get conditionCount() {
@@ -155,6 +158,11 @@ class ConditionSetModel {
       key: Math.round(Math.random() * 100000000),
       ...params,
     }));
+  }
+
+  @action
+  setCustomMessage = (customMessage = null) => {
+    this.customMessage = customMessage;
   }
 
   @action

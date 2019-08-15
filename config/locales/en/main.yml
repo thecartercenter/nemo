@@ -1424,6 +1424,9 @@ en:
     constrain_options:
       dont_constrain: "Accept any answer to this question"
       constrain: "Only accept an answer if ..."
+    rejection_message:
+      add: "Add Rejection Message"
+      edit: "Edit Rejection Message"
 
   incomplete_response:
     missing_answers:
