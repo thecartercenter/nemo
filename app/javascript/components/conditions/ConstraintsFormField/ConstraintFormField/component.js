@@ -55,7 +55,7 @@ class ConstraintFormField extends React.Component {
   }
 
   render() {
-    const { id, namePrefix, constraintId, conditionSetStore: { conditionCount } } = this.props;
+    const { id, namePrefix, constraintId, conditionSetStore: { conditionCount, rejectionMsgTranslations } } = this.props;
     const { acceptIf } = this.state;
 
     return (
@@ -81,6 +81,7 @@ class ConstraintFormField extends React.Component {
               ))}
             </div>
           )}
+          <input type="hidden" name={`${namePrefix}[rejection_msg]`} value={rejectionMsgTranslations.en} />
           <div className="links">
             <AddConditionLink defaultLeftQingToCurrent />
             &nbsp;&nbsp;
@@ -93,7 +94,7 @@ class ConstraintFormField extends React.Component {
             </a>
             &nbsp;&nbsp;
             {/* eslint-disable-next-line */}
-            <RejectionMessageLink />
+            <RejectionMessageLink rejectionMsgTranslations={rejectionMsgTranslations} />
           </div>
           <input
             type="hidden"

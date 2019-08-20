@@ -46,7 +46,7 @@ class ConditionSetModel {
   forceRightSideLiteral = false;
 
   @observable
-  customRejectionMessage = null;
+  rejectionMsgTranslations = {};
 
   /** Returns the number of non-deleted conditions in the set. */
   @computed
@@ -161,8 +161,8 @@ class ConditionSetModel {
   }
 
   @action
-  setCustomMessage = (customMessage = null) => {
-    this.customMessage = customMessage;
+  setRejectionMessage = (message) => {
+    this.rejectionMsgTranslations.en = message;
   }
 
   @action

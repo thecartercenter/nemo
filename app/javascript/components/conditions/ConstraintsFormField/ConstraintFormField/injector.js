@@ -16,6 +16,7 @@ function Injector(props) {
     conditions,
     id,
     refableQings,
+    rejectionMsgTranslations,
   } = props;
 
   const conditionSetStore = provideConditionSetStore(ConditionSetModel, `constraint-${constraintId}`, {
@@ -25,6 +26,7 @@ function Injector(props) {
     conditionableType: 'Constraint',
     refableQings,
     hide: false,
+    rejectionMsgTranslations: rejectionMsgTranslations || {},
   });
 
   return (
@@ -41,6 +43,7 @@ Injector.propTypes = {
   id: PropTypes.string,
   refableQings: PropTypes.arrayOf(PropTypes.object).isRequired,
   acceptIf: PropTypes.string.isRequired,
+  rejectionMsgTranslations: PropTypes.object,
 };
 
 export default Injector;

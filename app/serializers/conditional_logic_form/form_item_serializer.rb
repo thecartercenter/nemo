@@ -3,7 +3,7 @@
 module ConditionalLogicForm
   # Serializes Questioning or QingGroup for creating display and skip rule form fields in browser
   class FormItemSerializer < ApplicationSerializer
-    attributes :id, :display_if, :code, :rank, :full_dotted_rank, :form_id, :type
+    attributes :id, :display_if, :code, :rank, :full_dotted_rank, :form_id, :type, :group_name_translations
 
     has_many :display_conditions, serializer: ConditionSerializer
     has_many :skip_rules, serializer: SkipRuleSerializer

@@ -18,7 +18,10 @@ feature "constraints form fields", js: true do
                                   conditions_attributes: [
                                     {left_qing_id: form.c[0].id, op: "eq", value: "5"},
                                     {left_qing_id: form.c[1].id, op: "eq", value: "10"}
-                                  ])
+                                  ],
+                                  rejection_msg_translations: {
+                                    en: "Custom rejection message"
+                                  })
     form.c[2].constraints.create!(accept_if: "all_met",
                                   conditions_attributes: [
                                     {left_qing_id: form.c[0].id, op: "eq", value: "25"},
@@ -58,6 +61,10 @@ feature "constraints form fields", js: true do
             select_operator("< less than")
             fill_in_value("25")
           end
+          click_link("Add Rejection Message")
+          wait_modal_to_be_visible
+          fill_in("Message:", with: "Custom Rejection Message")
+          click_modal_save_button
         end
 
         click_add_rule
@@ -111,6 +118,10 @@ feature "constraints form fields", js: true do
             select_operator("< less than")
             fill_in_value("1000")
           end
+          click_link("Edit Rejection Message")
+          wait_modal_to_be_visible
+          fill_in("Message:", with: "A different custom rejection message")
+          click_modal_save_button
         end
 
         # delete second rule
