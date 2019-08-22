@@ -37,7 +37,7 @@ module Results
       end
 
       def write_header(csv)
-        csv << header_map.translated_headers
+        csv << ["\xEF\xBB\xBF"] + header_map.translated_headers
       end
 
       def write_body(csv)
