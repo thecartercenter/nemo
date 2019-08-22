@@ -20,7 +20,7 @@ module Results
 
         tempfile = Tempfile.new
 
-        CSV.open(tempfile.path, "wb", row_sep: configatron.csv_row_separator) do |csv|
+        UserFacingCSV.open(tempfile.path, "wb", row_sep: configatron.csv_row_separator) do |csv|
           write_header(csv)
           write_body(csv)
         end
