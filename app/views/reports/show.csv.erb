@@ -1,1 +1,1 @@
-<%=raw report_to_csv(@report) -%>
+<%= ReportDecorator.decorate(@report).to_csv -%>

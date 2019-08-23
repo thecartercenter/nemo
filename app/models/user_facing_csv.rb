@@ -4,7 +4,7 @@
 class UserFacingCSV
   BOM = "\xEF\xBB\xBF"
 
-  def self.generate(&block)
+  def self.generate(**options, &block)
     CSV.generate(BOM.dup, &block)
   end
 
