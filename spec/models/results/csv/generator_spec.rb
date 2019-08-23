@@ -94,11 +94,7 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
 
     it "produces correct csv" do
-      is_expected.to eq(prepare_response_csv_expectation("basic.csv"))
-    end
-
-    it "includes BOM" do
-      is_expected.to include("\xEF\xBB\xBF")
+      is_expected.to match_user_facing_csv(prepare_response_csv_expectation("basic.csv"))
     end
   end
 

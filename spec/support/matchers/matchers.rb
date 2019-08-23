@@ -75,6 +75,13 @@ RSpec::Matchers.define(:match_csv) do |expected|
   end
 end
 
+RSpec::Matchers.define(:match_user_facing_csv) do |expected|
+  match do |actual|
+    doc = "\xEF\xBB\xBF" + actual
+    doc.to_s == expected
+  end
+end
+
 RSpec::Matchers.define(:have_errors) do |errors|
   match do |object|
     object.invalid? && errors.all? do |field, pattern|

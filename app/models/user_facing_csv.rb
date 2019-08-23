@@ -9,9 +9,12 @@ class UserFacingCSV
   end
 
   def self.open(filename, mode = "rb", **options, &block)
-    CSV.open(filename, mode, **options) do |csv|
-      csv << [BOM]
-      block.call(csv)
+    # Prepend BOM.
+    unless mode.include?("r")
+      File.open(filename, mode) do |f|
+        f << BOM
+      end
     end
+    CSV.open(filename, "ab", options, &block)
   end
 end
