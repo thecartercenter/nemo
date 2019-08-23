@@ -13,6 +13,8 @@ Rails.application.config.assets.version = "1.0"
 Rails.application.config.assets.precompile.concat(%w[
   application_nemo_ltr.css
   application_elmo_ltr.css
+  application_nemo_rtl.css
+  application_elmo_rtl.css
 ])
 
 Rails.application.config.assets.precompile << "disable_bootstrap_modal_transitions.css" if Rails.env.test?
