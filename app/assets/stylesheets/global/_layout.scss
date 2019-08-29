@@ -2,7 +2,7 @@ header {
   background-color: $header-background-color;
 }
 
-body{
+body {
   text-align: #{$left};
 }
 
@@ -47,8 +47,8 @@ body{
 
   div.operations {
     display: block;
-    text-align: $left;
     margin: 5px;
+    text-align: $left;
 
     .icon-operation {
       margin-#{$right}: 0.5em;
