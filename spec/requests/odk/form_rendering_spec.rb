@@ -224,7 +224,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
                      repeating:
                        {
                          name: "Repeat Group A",
-                         items: %w[integer text] # q3,q4
+                         items: %w[integer text] # q3, q4
                        }
                    },
                    "long_text"] # q5
@@ -233,7 +233,8 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
             {
               repeating: {
                 name: "Repeat Group 2",
-                items: %w[text] # q7
+                # Group as first question in parent group (this caused a bug at one time).
+                items: [%w[text], "text", "text"] # q7, q8, q9
               }
             }
           ])
