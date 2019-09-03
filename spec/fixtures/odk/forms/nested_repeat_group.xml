@@ -19,7 +19,12 @@
           <*itemcode8*/>
           <*itemcode9* jr:template="">
             <header/>
-            <*itemcode10*/>
+            <*itemcode10*>
+              <header/>
+              <*itemcode11*/>
+            </*itemcode10*>
+            <*itemcode12*/>
+            <*itemcode13*/>
           </*itemcode9*>
         </data>
       </instance>
@@ -42,6 +47,12 @@
           </text>
           <text id="*itemcode9*:hint">
             <value>Repeat Group 2</value>
+          </text>
+          <text id="*itemcode10*:label">
+            <value>Group Name</value>
+          </text>
+          <text id="*itemcode10*:hint">
+            <value>Group Hint</value>
           </text>
           <text id="*itemcode2*:label">
             <value>Text Question Title 1</value>
@@ -79,11 +90,23 @@
           <text id="*itemcode8*:hint">
             <value>Question Hint 6</value>
           </text>
-          <text id="*itemcode10*:label">
+          <text id="*itemcode11*:label">
             <value>Text Question Title 7</value>
           </text>
-          <text id="*itemcode10*:hint">
+          <text id="*itemcode11*:hint">
             <value>Question Hint 7</value>
+          </text>
+          <text id="*itemcode12*:label">
+            <value>Text Question Title 8</value>
+          </text>
+          <text id="*itemcode12*:hint">
+            <value>Question Hint 8</value>
+          </text>
+          <text id="*itemcode13*:label">
+            <value>Text Question Title 9</value>
+          </text>
+          <text id="*itemcode13*:hint">
+            <value>Question Hint 9</value>
           </text>
           <text id="BLANK">
             <value/>
@@ -102,7 +125,11 @@
       <bind nodeset="/data/*itemcode8*" type="string"/>
       <bind nodeset="/data/*itemcode9*"/>
       <bind nodeset="/data/*itemcode9*/header" readonly="true()" type="string"/>
-      <bind nodeset="/data/*itemcode9*/*itemcode10*" type="string" calculate="concat(indexed-repeat(/data/*itemcode1*/*itemcode3*,/data/*itemcode1*,1),'-',position(..))"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode10*"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode10*/header" readonly="true()" type="string"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode10*/*itemcode11*" type="string" calculate="concat(indexed-repeat(/data/*itemcode1*/*itemcode3*,/data/*itemcode1*,1),'-',position(..))"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode12*" type="string"/>
+      <bind nodeset="/data/*itemcode9*/*itemcode13*" type="string"/>
     </model>
   </h:head>
   <h:body>
@@ -153,13 +180,29 @@
     <group ref="/data/*itemcode9*">
       <label ref="jr:itext('*itemcode9*:label')"/>
       <repeat nodeset="/data/*itemcode9*">
-        <group appearance="field-list">
+        <group>
           <input ref="/data/*itemcode9*/header">
             <hint ref="jr:itext('*itemcode9*:hint')"/>
           </input>
-          <input ref="/data/*itemcode9*/*itemcode10*">
+          <group ref="/data/*itemcode9*/*itemcode10*">
             <label ref="jr:itext('*itemcode10*:label')"/>
-            <hint ref="jr:itext('*itemcode10*:hint')"/>
+            <group appearance="field-list">
+              <input ref="/data/*itemcode9*/*itemcode10*/header">
+                <hint ref="jr:itext('*itemcode10*:hint')"/>
+              </input>
+              <input ref="/data/*itemcode9*/*itemcode10*/*itemcode11*">
+                <label ref="jr:itext('*itemcode11*:label')"/>
+                <hint ref="jr:itext('*itemcode11*:hint')"/>
+              </input>
+            </group>
+          </group>
+          <input ref="/data/*itemcode9*/*itemcode12*">
+            <label ref="jr:itext('*itemcode12*:label')"/>
+            <hint ref="jr:itext('*itemcode12*:hint')"/>
+          </input>
+          <input ref="/data/*itemcode9*/*itemcode13*">
+            <label ref="jr:itext('*itemcode13*:label')"/>
+            <hint ref="jr:itext('*itemcode13*:hint')"/>
           </input>
         </group>
       </repeat>

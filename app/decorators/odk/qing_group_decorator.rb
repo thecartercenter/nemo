@@ -15,7 +15,7 @@ module Odk
       return (@render_as_grid = false) if root?
       return (@render_as_grid = false) if renderable_children.size <= 1 || !one_screen?
       @render_as_grid = renderable_children.all? do |item|
-        item.grid_renderable?(option_set: renderable_children[0].option_set)
+        !item.group? && item.grid_renderable?(option_set: renderable_children[0].option_set)
       end
     end
 
