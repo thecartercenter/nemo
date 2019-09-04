@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 
-import RejectionModal from '../RejectionModal/component';
+import RejectionModal from './RejectionModal/component';
 
 @inject('conditionSetStore')
 @observer
 class RejectionMessageLink extends React.Component {
   static propTypes = {
-    conditionSetStore: PropTypes.object,
     rejectionMsgTranslations: PropTypes.object,
+    namePrefix: PropTypes.string,
   };
 
   constructor(props) {
@@ -28,8 +28,10 @@ class RejectionMessageLink extends React.Component {
 
   render() {
     const { show } = this.state;
-    const { conditionSetStore: { rejectionMsgTranslations } } = this.props;
-    const messageId = rejectionMsgTranslations.en ? 'form_item.rejection_message.edit' : 'form_item.rejection_message.add';
+    const { rejectionMsgTranslations, namePrefix } = this.props;
+    const messageId = Object.values(rejectionMsgTranslations).some((v) => v === '')
+      ? 'form_item.rejection_message.add'
+      : 'form_item.rejection_message.edit';
     return (
       <React.Fragment>
         {/* eslint-disable-next-line */}
@@ -43,6 +45,8 @@ class RejectionMessageLink extends React.Component {
           show={show}
           title={I18n.t(messageId)}
           handleClose={this.handleClose}
+          namePrefix={namePrefix}
+          rejectionMsgTranslations={rejectionMsgTranslations}
         />
         {/* eslint-enable */}
       </React.Fragment>

@@ -20,7 +20,7 @@
       mission_name: current_mission.try(:compact_name),
       locale: I18n.locale,
       default_locale: I18n.default_locale,
-      mission_locales: configatron.preferred_locales,
+      preferred_locales: configatron.preferred_locales,
       logged_in: !current_user.nil?,
       site_name: Settings.site_name,
       session_timeout: User::SESSION_TIMEOUT,

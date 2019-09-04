@@ -161,11 +161,6 @@ class ConditionSetModel {
   }
 
   @action
-  setRejectionMessage = (message) => {
-    this.rejectionMsgTranslations.en = message;
-  }
-
-  @action
   handleAddBlankCondition = () => {
     if (this.conditions.length === 0) {
       this.addCondition();

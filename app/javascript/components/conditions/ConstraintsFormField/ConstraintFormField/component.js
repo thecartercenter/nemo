@@ -2,10 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 import ConditionSetFormField from '../../ConditionSetFormField/component';
 import AddConditionLink from '../../AddConditionLink/component';
-import RejectionMessageLink from '../../RejectionMessageLink/component';
+import RejectionMessageLink from './RejectionMessageLink/component';
 
 @inject('conditionSetStore')
 @observer
@@ -81,20 +82,16 @@ class ConstraintFormField extends React.Component {
               ))}
             </div>
           )}
-          <input type="hidden" name={`${namePrefix}[rejection_msg]`} value={rejectionMsgTranslations.en} />
           <div className="links">
             <AddConditionLink defaultLeftQingToCurrent />
             &nbsp;&nbsp;
-            {/* TODO: Improve a11y. */}
-            {/* eslint-disable-next-line */}
-            <a onClick={this.handleRemoveClick} tabIndex="0">
+            <Button variant="link" onClick={this.handleRemoveClick} tabIndex="0">
               <i className="fa fa-trash" />
               {' '}
               {I18n.t('form_item.delete_rule')}
-            </a>
+            </Button>
             &nbsp;&nbsp;
-            {/* eslint-disable-next-line */}
-            <RejectionMessageLink rejectionMsgTranslations={rejectionMsgTranslations} />
+            <RejectionMessageLink namePrefix={namePrefix} rejectionMsgTranslations={rejectionMsgTranslations} />
           </div>
           <input
             type="hidden"

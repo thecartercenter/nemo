@@ -11,6 +11,7 @@ globals:
 rules:
   import/no-unresolved: ['error', { ignore: ['^javascripts/'] }]
   react/prefer-stateless-function: off
+  jsx-a11y/label-has-for: ['error', { required: { some: ['nesting', 'id']}}]
 
 overrides:
   -
