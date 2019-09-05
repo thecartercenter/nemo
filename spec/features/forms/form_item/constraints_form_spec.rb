@@ -62,10 +62,14 @@ feature "constraints form fields", js: true do
             fill_in_value("25")
           end
           click_link("Add Rejection Message")
-          wait_modal_to_be_visible
-          fill_in("Message:", with: "Custom Rejection Message")
-          click_modal_save_button
         end
+        wait_modal_to_be_visible
+        within(".modal-dialog") do
+          within(".modal-body") do
+            fill_in("English", with: "Custom Rejection Message")
+          end
+        end
+        click_modal_save_button
 
         click_add_rule
 
@@ -76,7 +80,15 @@ feature "constraints form fields", js: true do
             select_operator("< less than")
             fill_in_value("20")
           end
+          click_link("Add Rejection Message")
         end
+        wait_modal_to_be_visible
+        within(".modal-dialog") do
+          within(".modal-body") do
+            fill_in("English", with: "Custom Rejection Message")
+          end
+        end
+        click_modal_save_button
 
         # delete first constraint
         within(".constraint-1") do
@@ -119,10 +131,14 @@ feature "constraints form fields", js: true do
             fill_in_value("1000")
           end
           click_link("Edit Rejection Message")
-          wait_modal_to_be_visible
-          fill_in("Message:", with: "A different custom rejection message")
-          click_modal_save_button
         end
+        wait_modal_to_be_visible
+        within(".modal-dialog") do
+          within(".modal-body") do
+            fill_in("English", with: "Custom Rejection Message")
+          end
+        end
+        click_modal_save_button
 
         # delete second rule
         within(".constraint-2") do
@@ -151,6 +167,11 @@ feature "constraints form fields", js: true do
         expect(page).not_to have_css(".rule-set")
       end
     end
+  end
+
+  def click_modal_save_button
+    find(".modal-footer .btn-primary").click
+    wait_modal_to_hide
   end
 
   context "regular mode" do

@@ -29,7 +29,7 @@ class RejectionMessageLink extends React.Component {
   render() {
     const { show } = this.state;
     const { rejectionMsgTranslations, namePrefix } = this.props;
-    const messageId = Object.values(rejectionMsgTranslations).some((v) => v === '')
+    const messageId = Object.values(rejectionMsgTranslations).length === 0
       ? 'form_item.rejection_message.add'
       : 'form_item.rejection_message.edit';
     return (

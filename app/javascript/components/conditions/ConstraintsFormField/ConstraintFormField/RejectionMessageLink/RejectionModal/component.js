@@ -28,7 +28,7 @@ class RejectionModal extends React.Component {
     const { show, title, handleClose, namePrefix } = this.props;
     const rejectionMsgs = this.state;
     const inputs = ELMO.app.params.preferred_locales.map((locale) => (
-      <input type="hidden" name={`${namePrefix}[rejection_msg_translations][${locale}]`} value={rejectionMsgs[locale]} />
+      <input type="hidden" key={locale} name={`${namePrefix}[rejection_msg_translations][${locale}]`} value={rejectionMsgs[locale]} onChange={(e) => this.setState({ [locale]: e.target.value })} />
     ));
 
     const fields = ELMO.app.params.preferred_locales.map((locale) => (
@@ -38,6 +38,7 @@ class RejectionModal extends React.Component {
           <div className="widget">
             <input
               className="form-control"
+              id={`${namePrefix}[rejection_msg_translations][${locale}]`}
               type="text"
               value={rejectionMsgs[locale]}
               onChange={(e) => this.setState({ [locale]: e.target.value })}
