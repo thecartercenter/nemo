@@ -56,7 +56,12 @@ class ConstraintFormField extends React.Component {
   }
 
   render() {
-    const { id, namePrefix, constraintId, conditionSetStore: { conditionCount, rejectionMsgTranslations } } = this.props;
+    const {
+      id,
+      namePrefix,
+      constraintId,
+      conditionSetStore: { conditionCount, rejectionMsgTranslations },
+    } = this.props;
     const { acceptIf } = this.state;
 
     return (
