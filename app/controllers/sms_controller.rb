@@ -58,7 +58,7 @@ class SmsController < ApplicationController
   def incoming_numbers
     authorize!(:manage, Form)
     @numbers = configatron.incoming_sms_numbers
-    render_csv("elmo-#{current_mission.compact_name}-incoming-numbers")
+    setup_csv_headers("elmo-#{current_mission.compact_name}-incoming-numbers")
   end
 
   # specify the class the this controller controls, since it's not easily guessed

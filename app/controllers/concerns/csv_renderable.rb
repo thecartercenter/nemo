@@ -3,7 +3,7 @@ module CsvRenderable
   # Renders a file with the browser-appropriate MIME type for CSV data.
   # Sanitizes the filename.
   # filename - The filename to render, not including the .csv suffix.
-  def render_csv(filename)
+  def setup_csv_headers(filename)
     filename = sanitize_filename("#{filename}.csv")
 
     if request.env['HTTP_USER_AGENT'] =~ /msie/i

@@ -78,7 +78,7 @@ end
 RSpec::Matchers.define(:match_user_facing_csv) do |expected|
   match do |actual|
     doc = "\xEF\xBB\xBF" + expected
-    actual == doc
+    doc.to_s == actual
   end
 end
 
