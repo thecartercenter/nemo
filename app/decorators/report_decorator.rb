@@ -23,11 +23,7 @@ class ReportDecorator < ApplicationDecorator
       # add data rows
       object.data.rows.each_with_index do |row, idx|
         # get row header if exists
-        row_header = object.header_set[:row] ? [object.header_set[:row].cells[idx].name || "NULL"] : []
-
-        # Add the data. All report data has the potential to be paragraph style text so we run it through
-        # the formatter.
-        csv << row_header + row.map { |c| format_csv_para_text(c) }
+        write_row(csv, row, idx)
       end
     end
   end
@@ -46,5 +42,13 @@ class ReportDecorator < ApplicationDecorator
 
     # Also remove html entities.
     text.gsub(/&(?:[a-z\d]+|#\d+|#x[a-f\d]+);/i, "")
+  end
+
+  def write_row(csv, row, idx)
+    row_header = object.header_set[:row] ? [object.header_set[:row].cells[idx].name || "NULL"] : []
+
+    # Add the data. All report data has the potential to be paragraph style text so we run it through
+    # the formatter.
+    csv << row_header + row.map { |c| format_csv_para_text(c) }
   end
 end
