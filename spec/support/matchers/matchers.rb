@@ -67,11 +67,10 @@ RSpec::Matchers.define(:have_data_grid) do |*expected|
   end
 end
 
-RSpec::Matchers.define(:match_csv) do |expected|
+RSpec::Matchers.define(:match_user_facing_csv) do |expected|
   match do |actual|
-    # Strip BOM from actual
-    doc = actual.delete("\xEF\xBB\xBF")
-    doc.to_s == expected
+    doc = "\xEF\xBB\xBF" + expected
+    doc.to_s == actual
   end
 end
 

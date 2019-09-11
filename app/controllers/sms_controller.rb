@@ -3,7 +3,6 @@
 # handles incoming sms messages from various providers
 class SmsController < ApplicationController
   include Searchable
-  include CsvRenderable
 
   rescue_from Sms::UnverifiedTokenError do |_exception|
     render plain: "Unauthorized", status: :unauthorized
@@ -57,8 +56,9 @@ class SmsController < ApplicationController
   # Returns a CSV list of available incoming numbers.
   def incoming_numbers
     authorize!(:manage, Form)
-    @numbers = configatron.incoming_sms_numbers
-    render_csv("elmo-#{current_mission.compact_name}-incoming-numbers")
+    generator = Sms::IncomingNumberCsvGenerator.new(numbers: configatron.incoming_sms_numbers)
+    filename = "elmo-#{current_mission.compact_name}-incoming-numbers"
+    render(csv: generator, filename: filename)
   end
 
   # specify the class the this controller controls, since it's not easily guessed

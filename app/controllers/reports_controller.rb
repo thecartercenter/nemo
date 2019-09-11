@@ -2,7 +2,6 @@
 
 class ReportsController < ApplicationController
   include ReportEmbeddable
-  include CsvRenderable
 
   # need to do special load for new/create/update because CanCan won't work with the STI hack in report.rb
   before_action :custom_load, only: [:create]
@@ -51,13 +50,12 @@ class ReportsController < ApplicationController
         end
       end
 
-      # for csv, just render the csv template
       format.csv do
         authorize!(:export, @report)
         # run the report
         run_or_fetch_and_handle_errors(prefer_values: true)
         raise "reports of this type are not exportable" unless @report.exportable?
-        render_csv(@report.name.downcase)
+        render(csv: Report::CsvGenerator.new(report: @report), filename: @report.name.downcase)
       end
     end
   end
