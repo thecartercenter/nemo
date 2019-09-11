@@ -13,7 +13,7 @@ class ReportDecorator < ApplicationDecorator
   end
 
   def to_csv
-    UserFacingCSV.generate(row_sep: "\r\n") do |csv|
+    UserFacingCSV.generate do |csv|
       # determine if we need blank cell for row headers
       blank = object.header_set[:row] ? [""] : []
 

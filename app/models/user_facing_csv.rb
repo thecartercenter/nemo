@@ -15,6 +15,8 @@ class UserFacingCSV
         f << BOM
       end
     end
-    CSV.open(filename, "ab", options, &block)
+
+    # We default to \r\n for CSV row separator because Excel seems to prefer it.
+    CSV.open(filename, "ab", {row_sep: "\r\n"}.merge(options), &block)
   end
 end
