@@ -45,6 +45,9 @@ class ConditionSetModel {
   @observable
   forceRightSideLiteral = false;
 
+  @observable
+  rejectionMsgTranslations = {};
+
   /** Returns the number of non-deleted conditions in the set. */
   @computed
   get conditionCount() {

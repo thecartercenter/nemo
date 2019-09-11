@@ -33,6 +33,7 @@ translations:
       "*.form.unsaved_rank_notice",
       "*.form_item.*",
       "*.index_table.*",
+      "*.locale_name",
       "*.location_picker.*",
       "*.layout.*",
       "*.option_set.*",

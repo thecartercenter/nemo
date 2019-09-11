@@ -2,9 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
 import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 import ConditionSetFormField from '../../ConditionSetFormField/component';
 import AddConditionLink from '../../AddConditionLink/component';
+import RejectionMessageLink from './RejectionMessageLink/component';
 
 @inject('conditionSetStore')
 @observer
@@ -54,7 +56,12 @@ class ConstraintFormField extends React.Component {
   }
 
   render() {
-    const { id, namePrefix, constraintId, conditionSetStore: { conditionCount } } = this.props;
+    const {
+      id,
+      namePrefix,
+      constraintId,
+      conditionSetStore: { conditionCount, rejectionMsgTranslations },
+    } = this.props;
     const { acceptIf } = this.state;
 
     return (
@@ -83,13 +90,13 @@ class ConstraintFormField extends React.Component {
           <div className="links">
             <AddConditionLink defaultLeftQingToCurrent />
             &nbsp;&nbsp;
-            {/* TODO: Improve a11y. */}
-            {/* eslint-disable-next-line */}
-            <a onClick={this.handleRemoveClick} tabIndex="0">
+            <Button variant="link" onClick={this.handleRemoveClick} tabIndex="0">
               <i className="fa fa-trash" />
               {' '}
               {I18n.t('form_item.delete_rule')}
-            </a>
+            </Button>
+            &nbsp;&nbsp;
+            <RejectionMessageLink namePrefix={namePrefix} rejectionMsgTranslations={rejectionMsgTranslations} />
           </div>
           <input
             type="hidden"
