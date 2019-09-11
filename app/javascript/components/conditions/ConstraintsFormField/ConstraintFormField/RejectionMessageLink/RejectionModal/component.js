@@ -49,6 +49,9 @@ class RejectionModal extends React.Component {
     ));
     return (
       <>
+        {/* These hidden inputs are placed here outside the modal because the modal gets moved/inserted
+          at the bottom of the `<body>` tag outside the form element. If we don't have the hidden inputs,
+          the data isnt included in the submission. */}
         {inputs}
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
