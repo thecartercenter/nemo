@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# Creates CSVs with BOM.
+# Creates CSVs with byte-order mark to assist Excel in opening files.
 class UserFacingCSV
   BOM = "\xEF\xBB\xBF"
 
@@ -15,8 +15,6 @@ class UserFacingCSV
         f << BOM
       end
     end
-
-
     CSV.open(filename, "ab", defaults.merge(options), &block)
   end
 
