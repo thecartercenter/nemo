@@ -55,7 +55,7 @@ class ReportsController < ApplicationController
         # run the report
         run_or_fetch_and_handle_errors(prefer_values: true)
         raise "reports of this type are not exportable" unless @report.exportable?
-        render(csv: ReportDecorator.new(@report), filename: @report.name.downcase)
+        render(csv: Report::CsvGenerator.new(report: @report), filename: @report.name.downcase)
       end
     end
   end

@@ -5,7 +5,7 @@ class UserFacingCSV
   BOM = "\xEF\xBB\xBF"
 
   def self.generate(**options, &block)
-    CSV.generate(BOM.dup, options, &block)
+    CSV.generate(BOM.dup, defaults.merge(options), &block)
   end
 
   def self.open(filename, mode = "rb", **options, &block)
@@ -16,7 +16,12 @@ class UserFacingCSV
       end
     end
 
+
+    CSV.open(filename, "ab", defaults.merge(options), &block)
+  end
+
+  def self.defaults
     # We default to \r\n for CSV row separator because Excel seems to prefer it.
-    CSV.open(filename, "ab", {row_sep: "\r\n"}.merge(options), &block)
+    {row_sep: "\r\n"}
   end
 end
