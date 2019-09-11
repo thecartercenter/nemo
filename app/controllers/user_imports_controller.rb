@@ -12,8 +12,15 @@ class UserImportsController < TabularImportsController
 
   def template
     authorize!(:create, UserImport)
-    @sheet_name = User.model_name.human(count: 0)
     @headers = UserImport::EXPECTED_HEADERS.map { |f| User.human_attribute_name(f) }
+    respond_to do |format|
+      format.csv do
+        render(csv: UserFacingCSV.generate { |csv| csv << @headers })
+      end
+      format.xlsx do
+        @sheet_name = User.model_name.human(count: 0)
+      end
+    end
   end
 
   protected
