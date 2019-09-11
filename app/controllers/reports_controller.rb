@@ -2,7 +2,6 @@
 
 class ReportsController < ApplicationController
   include ReportEmbeddable
-  include CsvRenderable
 
   # need to do special load for new/create/update because CanCan won't work with the STI hack in report.rb
   before_action :custom_load, only: [:create]

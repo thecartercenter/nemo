@@ -7,7 +7,6 @@ class ResponsesController < ApplicationController
   include BatchProcessable
   include OdkHeaderable
   include ResponseIndexable
-  include CsvRenderable
   include OperationQueueable
   include Searchable
 
