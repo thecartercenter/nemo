@@ -20,7 +20,7 @@ Capybara.register_driver :selenium_chrome_headless do |app|
   )
 
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: options).tap do |driver|
-    driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(1280, 1024)
+    driver.browser.manage.window.size = Selenium::WebDriver::Dimension.new(1280, 2048)
   end
 end
 
