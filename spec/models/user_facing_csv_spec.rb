@@ -17,12 +17,14 @@ describe UserFacingCSV do
   end
 
   context "#generate" do
-    it "creates a CSV with BOM as first three bytes" do
-      generated_csv = UserFacingCSV.generate do |csv|
+    let(:generated_csv) do
+      UserFacingCSV.generate do |csv|
         csv << ["id"]
         csv << ["1"]
       end
+    end
 
+    it "creates a CSV with BOM as first three bytes" do
       expect(generated_csv.bytes.slice(0, 3)).to eq(BOM_BYTES)
     end
   end
