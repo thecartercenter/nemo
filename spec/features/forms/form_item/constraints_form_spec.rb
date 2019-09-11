@@ -61,15 +61,7 @@ feature "constraints form fields", js: true do
             select_operator("< less than")
             fill_in_value("25")
           end
-          click_link("Add Rejection Message")
         end
-        wait_modal_to_be_visible
-        within(".modal-dialog") do
-          within(".modal-body") do
-            fill_in("English", with: "Custom Rejection Message")
-          end
-        end
-        click_modal_save_button
 
         click_add_rule
 
@@ -105,12 +97,14 @@ feature "constraints form fields", js: true do
 
         # data is persisted
         expect(all(".condition-fields").size).to eq(1)
-
         within(all(".condition-fields")[0]) do
           expect_selected_left_qing(form.c[0])
           expect_selected_operator("< less than")
           expect_filled_in_value("20")
         end
+        click_link("Edit Rejection Message")
+        wait_modal_to_be_visible
+        expect(page).to have_field("English", with: "Custom Rejection Message")
       end
     end
 
