@@ -59,7 +59,7 @@
       </itext>
       <bind nodeset="/data/*itemcode1*" type="string"/>
       <bind nodeset="/data/*itemcode2*" relevant="((/data/*itemcode1* = 'foo'))"/>
-      <bind nodeset="/data/*itemcode2*/header" readonly="true()" type="string" relevant="((/data/*itemcode1* = 'foo'))"/>
+      <bind nodeset="/data/*itemcode2*/header" readonly="true()" type="string"/>
       <bind nodeset="/data/*itemcode2*/*itemcode3*" type="select1" required="true()"/>
       <bind nodeset="/data/*itemcode2*/*itemcode4*" type="select1" required="true()"/>
       <bind nodeset="/data/*itemcode5*" type="string"/>

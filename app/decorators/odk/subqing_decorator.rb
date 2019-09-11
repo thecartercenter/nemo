@@ -42,7 +42,7 @@ module Odk
         # we won't be allowed to proceed since it won't be possible to fill in the question.
         # Also, this question will appear again in a regular row so it would be weird
         # to link it to the same instance node twice.
-        # Instead we use the parent group's header node.
+        # Instead we use the parent group's header node, which never holds any value.
         "header"
       else
         odk_code
