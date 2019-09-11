@@ -24,10 +24,17 @@ module Odk
       tag(:bind, nodeset: xpath(xpath_prefix), relevant: relevance)
     end
 
-    def note_bind_tag(xpath_prefix: "/data")
+    def header_bind_tag(xpath_prefix: "/data")
       return +"" if root?
-      tag(:bind, nodeset: "#{xpath(xpath_prefix)}/header", readonly: "true()",
-                 type: "string", relevant: relevance)
+      # We don't include the relevance expression here because it doesn't seem necessary
+      # and including it was causing the grid label row not to display because it shares the same ref.
+      # This was only happening with nested groups where the ref is defined as a relative xpath reference.
+      # Because the header element is one level deeper than the group element, the path was incorrect,
+      # so it evaluated to false, so the header was being hidden.
+      # The relevant attr was added in #8252 seemingly because not including it was causing the group
+      # to show up even if the condition was false, but that doesn't seem to make sense and does not happen
+      # anymore. Perhaps a bug was fixed within ODK.
+      tag(:bind, nodeset: "#{xpath(xpath_prefix)}/header", readonly: "true()", type: "string")
     end
 
     # The general structure for a group is:
