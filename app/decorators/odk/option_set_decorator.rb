@@ -62,6 +62,7 @@ module Odk
       tags.reduce(&:<<)
     end
 
+    # Gets all OptionNodes at given depth. Memoizes. Returns empty array if no nodes at that level.
     def nodes_at_depth(depth)
       unless @nodes_by_depth
         @nodes_by_depth = {}
@@ -69,7 +70,7 @@ module Odk
           (@nodes_by_depth[node.depth] ||= []) << node
         end
       end
-      @nodes_by_depth[depth]
+      @nodes_by_depth[depth] || []
     end
   end
 end
