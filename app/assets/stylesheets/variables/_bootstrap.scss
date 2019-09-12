@@ -39,6 +39,7 @@ $theme-colors: (
 //== Forms
 //
 $input-border: #ccc;
+$input-placeholder-color: #bbb !default;
 
 //** Default `.form-control` height
 $input-height-base: ($line-height-computed + ($padding-base-vertical * 2) + (2 / $px-per-rem));

@@ -15,8 +15,8 @@ feature "user form", js: true do
       visit("/en/m/#{mission.compact_name}/users/new")
 
       # check for placeholders since they have not yet been overwritten
-      expect(page).to have_field("Main Phone", placeholder: "+17123241235")
-      expect(page).to have_field("Alternate Phone", placeholder: "+2348123456789")
+      expect(page).to have_field("Main Phone", placeholder: "e.g. +17123241235")
+      expect(page).to have_field("Alternate Phone", placeholder: "e.g. +2348123456789")
 
       fill_in("Full Name", with: "Foo Bar")
       fill_in("Username", with: "foobar")
