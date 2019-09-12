@@ -84,6 +84,8 @@ export function getFilterString({
   isReviewed,
   selectedSubmittersForType,
   advancedSearchText,
+  startDate,
+  endDate,
 }) {
   const allQuestions = conditionSetStore.refableQings;
   const questionFilters = conditionSetStore.conditions
@@ -102,6 +104,8 @@ export function getFilterString({
     isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
     ...submitterParts,
     advancedSearchText,
+    startDate === null ? null : `submit-date >= ${startDate.format('YYYY-MM-DD')}`,
+    endDate === null ? null : `submit-date <= ${endDate.format('YYYY-MM-DD')}`,
   ].filter(Boolean);
 
   return parts.join(' ');

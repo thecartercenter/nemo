@@ -46,6 +46,12 @@ class FiltersModel {
   @observable
   advancedSearchText = '';
 
+  @observable
+  startDate = null;
+
+  @observable
+  endDate = null;
+
   @computed
   get selectedFormId() {
     return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
@@ -128,6 +134,12 @@ class FiltersModel {
   @action
   handleChangeAdvancedSearch = (event) => {
     this.advancedSearchText = event.target.value;
+  }
+
+  @action
+  handleDateChange = ({ startDate, endDate }) => {
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 }
 

@@ -18,8 +18,6 @@ class DateFilter extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      startDate: null,
-      endDate: null,
       focusedInput: null,
     };
   }
@@ -30,7 +28,9 @@ class DateFilter extends React.Component {
   }
 
   renderPopover = () => {
-    const { startDate: start, endDate: end, focusedInput: focus } = this.state;
+    const { filtersStore } = this.props;
+    const { startDate: start, endDate: end, handleDateChange } = filtersStore;
+    const { focusedInput: focus } = this.state;
     return (
       <div>
         <DateRangePicker
@@ -38,7 +38,7 @@ class DateFilter extends React.Component {
           startDateId="start-date"
           endDate={end}
           endDateId="end-date"
-          onDatesChange={({ startDate, endDate }) => this.setState({ startDate, endDate })}
+          onDatesChange={handleDateChange}
           focusedInput={focus}
           onFocusChange={(focusedInput) => this.setState({ focusedInput })}
           isOutsideRange={() => false}
@@ -48,7 +48,12 @@ class DateFilter extends React.Component {
   }
 
   render() {
-    const { onSubmit } = this.props;
+    const { filtersStore, onSubmit } = this.props;
+    const { startDate, endDate } = filtersStore;
+
+    const hints = [[startDate, 'Start Date'], [endDate, 'End Date']]
+      .map(([date, label]) => (date === null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
+      .filter((h) => h !== null);
 
     return (
       <FilterOverlayTrigger
@@ -59,6 +64,7 @@ class DateFilter extends React.Component {
         buttonsContainerClass="condition-margin"
         onSubmit={onSubmit}
         buttonClass="btn-margin-left"
+        hints={hints}
       />
     );
   }
