@@ -1,6 +1,8 @@
 import isEmpty from 'lodash/isEmpty';
 import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
+import moment from 'moment';
+import { last } from 'lodash';
 
 import { SUBMITTER_TYPES } from './SubmitterFilter/utils';
 
@@ -98,14 +100,42 @@ export function getFilterString({
     return isEmpty(selectedSubmitterIds) ? null : `${type}-id:(${selectedSubmitterIds.join('|')})`;
   });
 
+  // Only include one upper bound and one lower bound date. Use widest range.
+  let searchDates = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1).map(queryToMoment);
+  const searchText = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') === -1).join(' ');
+  searchDates = [...searchDates, startDate, endDate].filter((d) => d !== null);
+  if (searchDates.length >= 2) {
+    searchDates.sort((a, b) => {
+      if (a.isSameOrBefore(b)) return -1;
+      return 1;
+    });
+  }
+
+  let dateQueries = null;
+  if (searchDates.length === 0) {
+    // No-op
+  } else if (searchDates.length === 1) {
+    // Figure out if this was supposed to be an upper or lower bound.
+    if (searchDates[0] === startDate) {
+      dateQueries = `submit-date >= ${searchDates[0].format('YYYY-MM-DD')}`;
+    } else if (searchDates[0] === endDate) {
+      dateQueries = `submit-date <= ${searchDates[0].format('YYYY-MM-DD')}`;
+    } else {
+      // Date entered in search bar, use original string.
+      dateQueries = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1).join(' ');
+    }
+  } else {
+    // Take first and last dates.
+    dateQueries = `submit-date >= ${searchDates[0].format('YYYY-MM-DD')} submit-date <= ${last(searchDates).format('YYYY-MM-DD')}`;
+  }
+
   const parts = [
     isEmpty(selectedFormIds) ? null : `form-id:(${selectedFormIds.join('|')})`,
     ...questionFilters,
     isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
     ...submitterParts,
-    advancedSearchText,
-    startDate === null ? null : `submit-date >= ${startDate.format('YYYY-MM-DD')}`,
-    endDate === null ? null : `submit-date <= ${endDate.format('YYYY-MM-DD')}`,
+    searchText,
+    dateQueries,
   ].filter(Boolean);
 
   return parts.join(' ');
@@ -131,4 +161,16 @@ export function submitSearch(filterString) {
 export function isQueryParamTruthy(paramName) {
   const parsed = queryString.parse(window.location.search);
   return Boolean(parsed[paramName]);
+}
+
+export function queryToMoment(query) {
+  if (query === null || query === undefined) return null;
+  const dateString = query.split(/submit-date[<>=]+/)[1];
+  // If this doesn't parse an actual date, don't use it.
+  if (dateString === undefined) return null;
+  const date = moment(dateString);
+  if (date._isValid) { /* eslint-disable-line no-underscore-dangle */
+    return date;
+  }
+  return null;
 }

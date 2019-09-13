@@ -4,6 +4,8 @@ import { inject, observer } from 'mobx-react';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
+import { last } from 'lodash';
+import { queryToMoment } from '../utils';
 
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
@@ -29,14 +31,18 @@ class DateFilter extends React.Component {
 
   renderPopover = () => {
     const { filtersStore } = this.props;
-    const { startDate: start, endDate: end, handleDateChange } = filtersStore;
+    const { handleDateChange, advancedSearchText } = filtersStore;
+    let { startDate, endDate } = filtersStore;
+    const searchDates = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1);
+    startDate = startDate === null ? queryToMoment(last(searchDates.filter((s) => s.indexOf('>') !== -1))) : startDate;
+    endDate = endDate === null ? queryToMoment(last(searchDates.filter((s) => s.indexOf('<') !== -1))) : endDate;
     const { focusedInput: focus } = this.state;
     return (
       <div>
         <DateRangePicker
-          startDate={start}
+          startDate={startDate}
           startDateId="start-date"
-          endDate={end}
+          endDate={endDate}
           endDateId="end-date"
           onDatesChange={handleDateChange}
           focusedInput={focus}
@@ -49,7 +55,11 @@ class DateFilter extends React.Component {
 
   render() {
     const { filtersStore, onSubmit } = this.props;
-    const { startDate, endDate } = filtersStore;
+    const { advancedSearchText } = filtersStore;
+    let { startDate, endDate } = filtersStore;
+    const searchDates = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1);
+    startDate = startDate === null ? queryToMoment(searchDates.filter((s) => s.indexOf('>') !== -1)[0]) : startDate;
+    endDate = endDate === null ? queryToMoment(searchDates.filter((s) => s.indexOf('<') !== -1)[0]) : endDate;
 
     const hints = [[startDate, 'Start Date'], [endDate, 'End Date']]
       .map(([date, label]) => (date === null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
