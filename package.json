@@ -19,6 +19,9 @@
     "testRegex": "/app/javascript/.*\\.test\\.jsx?$",
     "transform": {
       "^.+\\.jsx?$": "babel-jest"
+    },
+    "moduleNameMapper": {
+      "\\.css$": "<rootDir>/app/javascript/__mocks__/style-mock.js"
     }
   },
   "resolutions_README": "Force babel-jest to use v23 as a workaround until we can upgrade to Babel 7. https://github.com/facebook/jest/issues/8230",
