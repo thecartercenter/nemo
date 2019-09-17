@@ -157,6 +157,5 @@ class Questioning < FormItem
     end
     self.required = false if hidden? || read_only?
     self.all_levels_required = false unless multilevel? && required?
-    true
   end
 end

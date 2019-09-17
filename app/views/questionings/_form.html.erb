@@ -19,6 +19,11 @@
   <%= f.field(:hidden, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:read_only, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
   <%= f.field(:required, type: :check_box, read_only: cannot?(:update_core, @questioning)) %>
+  <%= f.field(:all_levels_required,
+        type: :select,
+        prompt: false,
+        options: translate_options(%w[false true], [:form_item, :all_levels_required_options]),
+        read_only: cannot?(:update_core, @questioning)) %>
 
   <div class="submit-buttons">
     <%= f.submit(class: "btn btn-primary") %>
