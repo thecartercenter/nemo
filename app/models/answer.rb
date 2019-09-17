@@ -202,13 +202,6 @@ class Answer < ResponseNode
     value.present? && value.size >= 1000
   end
 
-  # Checks if answer must be non-empty to be valid.
-  # Non-first-rank answers are currently not required even if their questioning is required
-  # (i.e. partial answers allowed).
-  def required_and_relevant?
-    required? && !hidden? && relevant? && first_rank? && qtype.name != "select_multiple"
-  end
-
   # Whether this Answer is the first in its set (i.e. rank is nil or 1)
   def first_rank?
     new_rank.nil? || new_rank.zero?
@@ -220,11 +213,6 @@ class Answer < ResponseNode
       datetime_value.blank? && option_id.nil? && media_object.nil?
   end
   alias_method :blank?, :empty?
-
-  # checks if answer is required and relevant but also empty
-  def required_but_empty?
-    required_and_relevant? && empty?
-  end
 
   def location_type_with_value?
     qtype.name == "location" && value.present?
@@ -369,7 +357,9 @@ class Answer < ResponseNode
   end
 
   def validate_required
-    errors.add(:value, :required) if required_but_empty?
+    return unless empty? && required? && !hidden? && relevant? && !qtype.select_multiple? &&
+      (first_rank? || questioning.all_levels_required?)
+    errors.add(:value, :required)
   end
 
   def validate_min_max
