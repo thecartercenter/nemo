@@ -6,6 +6,7 @@
 # Table name: form_items
 #
 #  id                           :uuid             not null, primary key
+#  all_levels_required          :boolean          default(FALSE), not null
 #  ancestry                     :text
 #  ancestry_depth               :integer          not null
 #  default                      :string
