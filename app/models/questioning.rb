@@ -156,6 +156,7 @@ class Questioning < FormItem
       display_conditions.destroy_all
     end
     self.required = false if hidden? || read_only?
+    self.all_levels_required = false unless multilevel? && required?
     true
   end
 end
