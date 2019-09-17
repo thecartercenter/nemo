@@ -276,10 +276,15 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
   describe "multilevel selects" do
     context "various selects" do
       let(:form) do
-        # 1-level, 2-level, 3-level
+        # 1-level, 2-level, 3-level; one at least one level required, one all levels required
         create(:form, :published, :with_version,
           name: "Various Selects",
           question_types: %w[select_one multilevel_select_one super_multilevel_select_one])
+      end
+
+      before do
+        form.c[1].update!(required: true)
+        form.c[2].update!(required: true, all_levels_required: true)
       end
 
       it "should render proper xml" do

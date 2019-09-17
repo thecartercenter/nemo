@@ -6,9 +6,9 @@ module Odk
     delegate_all
 
     def bind_tag(form, subq, xpath_prefix: "/data")
-      tag(:bind, nodeset: [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
+      tag(:bind, nodeset: [xpath_prefix, subq&.odk_code].compact.join("/"),
                  type: binding_type_attrib(subq),
-                 required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
+                 required: subq.required? ? required_value(form) : nil,
                  readonly: default_answer? && read_only? ? "true()" : nil,
                  relevant: relevance,
                  constraint: constraint,

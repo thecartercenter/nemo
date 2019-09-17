@@ -30,6 +30,10 @@ module Odk
       end
     end
 
+    def required?
+      questioning.required? && questioning.visible? && (questioning.all_levels_required? || first_rank?)
+    end
+
     private
 
     def decorated_questioning
