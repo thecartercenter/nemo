@@ -319,9 +319,6 @@ es:
         incomplete: "¿Incompleto?"
       user:
         admin: "¿Administrador?"
-    placeholders:
-      question:
-        code: "Mi Pregunta"
     action_links:
       broadcast:
         index: "Lista de Emisiones"

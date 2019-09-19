@@ -473,9 +473,6 @@ ko:
         incomplete: "미완성입니까?"
       user:
         admin: "관리자입니까?"
-    placeholders:
-      question:
-        code: "내 질문"
     action_links:
       broadcast:
         index: "발송 기록"
