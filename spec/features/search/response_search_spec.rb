@@ -70,12 +70,22 @@ feature "response search", js: true do
       expect(page).to have_css("#submitter-filter.active-filter", text: "Submitter (2 filters)")
       expect(page).to have_css("#reviewed-filter.active-filter", text: "Reviewed (No)")
 
+      new_search_for(%(submit-date>=2018-01-01))
+      click_on("Date (Start Date: 2018-01-01)")
+      expect(page).to have_content("Apply")
+
+      new_search_for(%(submit-date<=2019-01-01))
+      click_on("Date (End Date: 2019-01-01)")
+      expect(page).to have_content("Apply")
+
       new_search_for(%(form-id:#{form.id}))
       expect(page).to have_content(codes[0])
       expect(page).to have_content(codes[1])
       expect(page).not_to have_content(codes[2])
       click_on("Question")
       expect(page).to have_content("Showing questions from Form 1 only.")
+      click_on("Date")
+      expect(page).to have_content("Apply")
       click_on("Form (Form 1)")
       # Clear the form filter.
       find(".select2-selection__clear").click
