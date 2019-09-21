@@ -61,7 +61,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
       create(:form, :published, :with_version, name: "Conditional Logic",
                                                question_types: %w[text long_text integer decimal location
                                                                   select_one multilevel_select_one
-                                                                  select_multiple datetime integer])
+                                                                  select_multiple datetime integer integer])
     end
 
     before do
@@ -92,6 +92,14 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         conditions_attributes: [
           {left_qing_id: form.c[9].id, op: "neq", value: 55}
         ]
+      )
+
+      form.c[10].constraints.create!(
+        accept_if: "all_met",
+        conditions_attributes: [
+          {left_qing_id: form.c[10].id, op: "eq", value: 10}
+        ],
+        rejection_msg_translations: {"en": "Custom rejection message."}
       )
     end
 
