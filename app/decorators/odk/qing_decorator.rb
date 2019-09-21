@@ -68,13 +68,18 @@ module Odk
     end
 
     def constraint_msg
-      msgs = [min_max_error_msg] # Old min/max style, going away later.
+      msgs = [] # Old min/max style, going away later.
+      custom_msgs = []
       constraints.each do |constraint|
-        msgs << ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
+        custom_msgs << constraint.rejection_msg_translations[I18n.locale.to_s]
+        msgs << ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false) unless
+          constraint.rejection_msg_translations[I18n.locale.to_s]
       end
-      str = msgs.compact.join("; ").presence
-      return nil if str.nil?
-      I18n.t("constraint.odk_message", conditions: str)
+      msgs = msgs.compact.join("; ").presence
+      custom_msgs = custom_msgs.compact.join("; ").presence
+      return nil if msgs.nil? && custom_msgs.nil?
+      [min_max_error_msg, msgs.nil? ? msgs : I18n.t("constraint.odk_message", conditions: msgs), custom_msgs]
+        .compact.join("; ")
     end
 
     def jr_preload
