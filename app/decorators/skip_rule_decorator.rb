@@ -3,6 +3,7 @@
 # Generates human readable representation of Skip Rules
 class SkipRuleDecorator < ApplicationDecorator
   delegate_all
+  include ConditionFormable
 
   def human_readable
     if skip_if == "always"
@@ -20,12 +21,6 @@ class SkipRuleDecorator < ApplicationDecorator
   end
 
   private
-
-  def human_readable_conditions
-    decorated_conditions = ConditionDecorator.decorate_collection(condition_group.members)
-    concatenator = condition_group.true_if == "all_met" ? I18n.t("common.AND") : I18n.t("common.OR")
-    decorated_conditions.map { |c| c.human_readable(codes: true) }.join(" #{concatenator} ")
-  end
 
   def display_dest
     if destination == "item"
