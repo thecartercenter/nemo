@@ -7,8 +7,10 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
 
   events:
     'change select[id$="_qtype_name"]': 'toggleFields'
+    'change select[id$="_option_set_id"]': 'toggleFields'
     'change select[id$="_metadata_type"]': 'toggleFields'
     'click #questioning_read_only': 'toggleFields'
+    'click #questioning_required': 'toggleFields'
     'keyup #questioning_default': 'toggleFields'
 
   toggleFields: ->
@@ -16,6 +18,7 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
     @showField('default', @showDefault())
     @showField('read_only', @showReadOnly())
     @showField('required', @showRequired())
+    @showField('all_levels_required', @showAllLevelsRequired())
     @showField('hidden', @showHidden())
     @showField('display_logic', @showDisplayLogic())
     @showField('skip_logic', @showSkipLogic())
@@ -28,6 +31,12 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
 
   showRequired: ->
     !@fieldValue('read_only') && @super.metadataTypeBlank.call(this)
+
+  showAllLevelsRequired: ->
+    @showRequired() &&
+      @fieldValue('required').toString() == 'true' &&
+      @fieldValue('qtype_name') == 'select_one' &&
+      @super.fieldElement.call(this, 'option_set_id').find('option:selected').data('multilevel')
 
   showHidden: ->
     @super.metadataTypeBlank.call(this)
