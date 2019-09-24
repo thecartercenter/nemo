@@ -84,6 +84,24 @@ describe ResponsesSearcher do
         expect(search(%(submit-date > 2017-01-04))).to contain_exactly(responses[2])
         expect(search(%(submit-date:2017-01-08))).to contain_exactly(responses[2])
       end
+
+      it "has correct filter data" do
+        expect(searcher(%(submit-date <= 2017-01-04))).to have_filter_data(
+          submit_date: [nil, Date.new(2017, 1, 4)]
+        )
+        expect(searcher(%(submit-date:2017-01-08))).to have_filter_data(
+          submit_date: [Date.new(2017, 1, 8), Date.new(2017, 1, 8)]
+        )
+        complex = %(submit-date > 2017-01-31 submit-date > 2017-01-02
+                    submit-date <= 2017-03-05 submit-date <= 2017-02-28)
+        expect(searcher(complex)).to have_filter_data(
+          submit_date: [Date.new(2017, 2, 1), Date.new(2017, 2, 28)]
+        )
+      end
+
+      it "handles bad date gracefullly" do
+        expect { search(%(submit-date < 2017-14-04)) }.to raise_error(/is not a valid date/)
+      end
     end
   end
 
