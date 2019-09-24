@@ -3,7 +3,7 @@
 # Serializes a ResponsesSearcher for search filters.
 class ResponsesSearcherSerializer < SearcherSerializer
   attributes :all_forms, :selected_form_ids, :selected_qings, :is_reviewed,
-    :selected_users, :selected_groups
+    :selected_users, :selected_groups, :start_date, :end_date
 
   def selected_form_ids
     object.form_ids || []

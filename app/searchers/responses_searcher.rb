@@ -3,7 +3,7 @@
 # Class to help search for Responses.
 class ResponsesSearcher < Searcher
   # Parsed search values
-  attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups, :submit_date
+  attr_accessor :form_ids, :qings, :is_reviewed, :submitters, :groups, :start_date, :end_date
 
   def initialize(**opts)
     super(opts)
@@ -12,7 +12,8 @@ class ResponsesSearcher < Searcher
     self.qings = []
     self.submitters = []
     self.groups = []
-    self.submit_date = [nil, nil]
+    self.start_date = nil
+    self.end_date = nil
     self.is_reviewed = nil
   end
 
@@ -250,8 +251,8 @@ class ResponsesSearcher < Searcher
     date = Date.parse(token_values[0])
     date += 1 if op_kind == :gt
     date -= 1 if op_kind == :lt
-    submit_date[0] = [submit_date[0], date].compact.max if %i[gt gteq colon].include?(op_kind)
-    submit_date[1] = [submit_date[1], date].compact.min if %i[lt lteq colon].include?(op_kind)
+    self.start_date = [start_date, date].compact.max if %i[gt gteq colon].include?(op_kind)
+    self.end_date = [end_date, date].compact.min if %i[lt lteq colon].include?(op_kind)
     true
   end
 

@@ -87,15 +87,15 @@ describe ResponsesSearcher do
 
       it "has correct filter data" do
         expect(searcher(%(submit-date <= 2017-01-04))).to have_filter_data(
-          submit_date: [nil, Date.new(2017, 1, 4)]
+          start_date: nil, end_date: Date.new(2017, 1, 4)
         )
         expect(searcher(%(submit-date:2017-01-08))).to have_filter_data(
-          submit_date: [Date.new(2017, 1, 8), Date.new(2017, 1, 8)]
+          start_date: Date.new(2017, 1, 8), end_date: Date.new(2017, 1, 8)
         )
         complex = %(submit-date > 2017-01-31 submit-date > 2017-01-02
                     submit-date <= 2017-03-05 submit-date <= 2017-02-28)
         expect(searcher(complex)).to have_filter_data(
-          submit_date: [Date.new(2017, 2, 1), Date.new(2017, 2, 28)]
+          start_date: Date.new(2017, 2, 1), end_date: Date.new(2017, 2, 28)
         )
       end
 
