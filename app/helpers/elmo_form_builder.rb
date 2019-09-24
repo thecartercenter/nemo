@@ -147,7 +147,7 @@ class ElmoFormBuilder < ActionView::Helpers::FormBuilder
 
         when :radio_buttons, :select
           # grab selected option value from options set
-          if option = options[:options].find { |o| o[1].to_s == val }
+          if option = options[:options].find { |o| o[1].to_s == val.to_s }
             option[0]
           else
             ""

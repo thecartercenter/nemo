@@ -25,10 +25,10 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.FormView
 
   # Gets form field value, or static value if field is read-only
   fieldValue: (attrib) ->
-    div = @$(".form-field[data-field-name=#{attrib}] .control")
+    div = @fieldElement(attrib)
     if div.is('.read-only')
       wrapper = div.find('.ro-val')
-      wrapper.data('val') || wrapper.text()
+      if typeof wrapper.data('val') != 'undefined' then wrapper.data('val') else wrapper.text()
     else
       # Rails checkbox fields have a hidden field followed by a checkbox. We need to ignore the hidden.
       field = div.find('input[type!=hidden], select, textarea')
@@ -36,3 +36,6 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.FormView
         field.is(':checked')
       else
         field.val()
+
+  fieldElement: (attrib) ->
+    @$(".form-field[data-field-name=#{attrib}] .control")

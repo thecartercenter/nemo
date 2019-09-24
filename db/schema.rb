@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_24_011207) do
+ActiveRecord::Schema.define(version: 2019_09_17_185223) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 2019_07_24_011207) do
   end
 
   create_table "form_items", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|
+    t.boolean "all_levels_required", default: false, null: false
     t.text "ancestry"
     t.integer "ancestry_depth", null: false
     t.datetime "created_at", null: false

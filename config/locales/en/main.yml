@@ -469,6 +469,7 @@ en:
         hidden: "Hidden?"
         rank: "Rank"
         required: "Required?"
+        all_levels_required: "Required Levels"
         default: "Default Answer"
         delete: "Are you sure you want to remove the question '%{code}' from this form?"
         read_only: "Read Only?"
@@ -679,6 +680,7 @@ en:
         required: "Whether this question must be completed on this form or is optional. Only enforced if question is not hidden the condition specified above is met."
         skip_logic: "Rules for which question should be shown to the user after this question."
         constraints: "Conditions which must be met in order for an answer to be accepted. Currently for ODK only."
+        all_levels_required: "For a multi-level select question, should the enumerator be required to enter a value for every level of the question?"
       report/report:
         name: "A descriptive title for this report."
         aggregation_id: "The operation you want to perform on the combined data."
@@ -1427,6 +1429,9 @@ en:
     rejection_message:
       add: "Add Rejection Message"
       edit: "Edit Rejection Message"
+    all_levels_required_options:
+      "true": "All levels of the question are required"
+      "false": "At least one level of the question is required"
 
   incomplete_response:
     missing_answers:

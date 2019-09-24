@@ -2,7 +2,7 @@
 
 require "rails_helper"
 
-describe "question form" do
+describe "question form", js: true do
   let!(:mission) { get_mission }
   let!(:user) { create(:admin, role_name: "coordinator") }
 
@@ -39,7 +39,7 @@ describe "question form" do
     metadata: "Metadata Type"
   }.freeze
 
-  scenario "correct fields show for various question types", js: true do
+  scenario "correct fields show for various question types" do
     visit(new_question_path(locale: "en", mode: "m", mission_name: mission.compact_name))
     fill_in("Code", with: "AQuestion")
 
@@ -54,7 +54,26 @@ describe "question form" do
     end
   end
 
-  scenario "audio upload works", js: true do
+  scenario "adding option set works" do
+    visit(new_question_path(locale: "en", mode: "m", mission_name: mission.compact_name))
+    select("Select One", from: "Type")
+
+    click_link("Create New Option Set")
+    within("#create-option-set.modal") do
+      fill_in("Name", with: "Flat")
+      click_link("Add Option")
+      fill_in("English", with: "One")
+      click_button("Save and Add Another")
+      expect(page).to have_field("English", with: "")
+      fill_in("English", with: "Two")
+      click_button("Save and Close")
+      click_button("Save")
+    end
+
+    expect(page).to have_select("Option Set", selected: "Flat")
+  end
+
+  scenario "audio upload works" do
     visit(new_question_path(locale: "en", mode: "m", mission_name: mission.compact_name))
     fill_in("Code", with: "AQuestion")
     fill_in("Title", with: "Jay's")
@@ -80,7 +99,7 @@ describe "question form" do
     expect(page).not_to have_content("powerup.mp3")
   end
 
-  scenario "tags are deduplicated", js: true do
+  scenario "tags are deduplicated" do
     visit(new_question_path(locale: "en", mode: "m", mission_name: mission.compact_name))
 
     fill_in("token-input-question_tag_ids", with: "foo")

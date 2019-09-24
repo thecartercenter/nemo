@@ -6,6 +6,7 @@
 # Table name: form_items
 #
 #  id                           :uuid             not null, primary key
+#  all_levels_required          :boolean          default(FALSE), not null
 #  ancestry                     :text
 #  ancestry_depth               :integer          not null
 #  default                      :string
@@ -155,6 +156,6 @@ class Questioning < FormItem
       display_conditions.destroy_all
     end
     self.required = false if hidden? || read_only?
-    true
+    self.all_levels_required = false unless multilevel? && required?
   end
 end
