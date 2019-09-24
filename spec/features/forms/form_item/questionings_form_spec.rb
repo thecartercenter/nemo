@@ -80,6 +80,23 @@ describe "questionings form", js: true  do
         expect_editable("read_only", false)
       end
 
+      it "should display required only if not read_only and no metadata type" do
+        visit(edit_qing_path)
+        expect_visible("required", true)
+
+        select("Date/Time", from: "Type")
+        select("Form Start Time", from: "Metadata Type")
+        expect_visible("required", false)
+
+        select("", from: "Metadata Type")
+        expect_visible("required", true)
+
+        select("Text", from: "Type", match: :prefer_exact) # Text is defaultable
+        fill_in("Default Answer", with: "Test")
+        check("Read Only")
+        expect_visible("required", false)
+      end
+
       it "should be able to add media prompt to through questioning form" do
         visit(edit_qing_path)
         attach_file("Media Prompt", audio_fixture("powerup.mp3").path)
