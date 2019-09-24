@@ -24,11 +24,6 @@ class DateFilter extends React.Component {
     };
   }
 
-  async componentDidMount() {
-    const { filtersStore } = this.props;
-    await filtersStore.updateRefableQings();
-  }
-
   renderPopover = () => {
     const { filtersStore } = this.props;
     const { handleDateChange, advancedSearchText } = filtersStore;
