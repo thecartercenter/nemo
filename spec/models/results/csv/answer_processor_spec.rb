@@ -71,21 +71,6 @@ describe Results::Csv::AnswerProcessor do
     )
   end
 
-  it "handles select_multiple data" do
-    expect(buffer).to receive(:write).with("Q1", "Mars", append: true)
-    expect(buffer).to receive(:write).with("Q1", "Snickers", append: true)
-    processor.process(
-      "question_code" => "Q1",
-      "option_level_name" => nil,
-      "choice_option_name" => "Mars"
-    )
-    processor.process(
-      "question_code" => "Q1",
-      "option_level_name" => nil,
-      "choice_option_name" => "Snickers"
-    )
-  end
-
   it "handles select_one with geo data" do
     # Latter location writes will supersede earlier ones.
     expect(buffer).to receive(:write).with("Q1:Region", "Topeka").ordered
@@ -113,6 +98,31 @@ describe Results::Csv::AnswerProcessor do
       "altitude" => "78.9",
       "option_level_name" => "Landmark",
       "answer_option_name" => "The old watering hole"
+    )
+  end
+
+  it "handles select_multiple data" do
+    expect(buffer).to receive(:write).with("Q1", "Mars", append: true)
+    expect(buffer).to receive(:write).with("Q1", "Snickers", append: true)
+    processor.process(
+      "question_code" => "Q1",
+      "option_level_name" => nil,
+      "choice_option_name" => "Mars"
+    )
+    processor.process(
+      "question_code" => "Q1",
+      "option_level_name" => nil,
+      "choice_option_name" => "Snickers"
+    )
+  end
+
+  it "handles select_multiple data with numeric data" do
+    expect(buffer).to receive(:write).with("Q1", 123, append: true)
+    processor.process(
+      "question_code" => "Q1",
+      "option_level_name" => nil,
+      "choice_option_name" => "Cat",
+      "choice_option_value" => 123
     )
   end
 end
