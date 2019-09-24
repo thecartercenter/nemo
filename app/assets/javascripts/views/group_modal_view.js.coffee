@@ -13,6 +13,7 @@ class ELMO.Views.GroupModalView extends ELMO.Views.FormView
     @edit_link = options.edit_link
 
     if $('#group-modal').length
+      ReactRailsUJS.unmountComponents("#group-modal")
       $('#group-modal').replaceWith(options.html)
     else
       $('body').append(options.html)

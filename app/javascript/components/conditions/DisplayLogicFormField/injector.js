@@ -19,7 +19,7 @@ function Injector(props) {
     formId,
   } = props;
 
-  const conditionSetStore = provideConditionSetStore(ConditionSetModel, 'displayLogic', {
+  const conditionSetStore = provideConditionSetStore(ConditionSetModel, `displayLogic-${id}`, {
     formId,
     namePrefix: `${type}[display_conditions_attributes]`,
     conditions: displayConditions,
