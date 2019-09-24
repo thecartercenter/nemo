@@ -15,7 +15,6 @@
 #
 # rubocop:enable Metrics/LineLength
 
-
 FactoryGirl.define do
   factory :saved_upload, class: SavedTabularUpload do
     transient { filename nil }
