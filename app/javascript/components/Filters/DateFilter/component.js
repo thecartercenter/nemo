@@ -26,11 +26,8 @@ class DateFilter extends React.Component {
 
   renderPopover = () => {
     const { filtersStore } = this.props;
-    const { handleDateChange, advancedSearchText } = filtersStore;
-    let { startDate, endDate } = filtersStore;
-    const searchDates = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1);
-    startDate = startDate === null ? queryToMoment(last(searchDates.filter((s) => s.indexOf('>') !== -1))) : startDate;
-    endDate = endDate === null ? queryToMoment(last(searchDates.filter((s) => s.indexOf('<') !== -1))) : endDate;
+    const { handleDateChange } = filtersStore;
+    const { startDate, endDate } = filtersStore;
     const { focusedInput: focus } = this.state;
     return (
       <div>
@@ -50,11 +47,7 @@ class DateFilter extends React.Component {
 
   render() {
     const { filtersStore, onSubmit } = this.props;
-    const { advancedSearchText } = filtersStore;
-    let { startDate, endDate } = filtersStore;
-    const searchDates = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1);
-    startDate = startDate === null ? queryToMoment(searchDates.filter((s) => s.indexOf('>') !== -1)[0]) : startDate;
-    endDate = endDate === null ? queryToMoment(searchDates.filter((s) => s.indexOf('<') !== -1)[0]) : endDate;
+    const { startDate, endDate } = filtersStore;
 
     const hints = [[startDate, 'Start Date'], [endDate, 'End Date']]
       .map(([date, label]) => (date === null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))

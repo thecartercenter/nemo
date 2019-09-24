@@ -2,7 +2,6 @@ import isEmpty from 'lodash/isEmpty';
 import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
 import moment from 'moment';
-import { last } from 'lodash';
 
 import { SUBMITTER_TYPES } from './SubmitterFilter/utils';
 
@@ -100,33 +99,12 @@ export function getFilterString({
     return isEmpty(selectedSubmitterIds) ? null : `${type}-id:(${selectedSubmitterIds.join('|')})`;
   });
 
-  // Only include one upper bound and one lower bound date. Use widest range.
-  let searchDates = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1).map(queryToMoment);
-  const searchText = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') === -1).join(' ');
-  searchDates = [...searchDates, startDate, endDate].filter((d) => d !== null);
-  if (searchDates.length >= 2) {
-    searchDates.sort((a, b) => {
-      if (a.isSameOrBefore(b)) return -1;
-      return 1;
-    });
+  const dateParts = [];
+  if (startDate) {
+    dateParts.push(`submit-date>=${startDate.format('YYYY-MM-DD')}`);
   }
-
-  let dateQueries = null;
-  if (searchDates.length === 0) {
-    // No-op
-  } else if (searchDates.length === 1) {
-    // Figure out if this was supposed to be an upper or lower bound.
-    if (searchDates[0] === startDate) {
-      dateQueries = `submit-date >= ${searchDates[0].format('YYYY-MM-DD')}`;
-    } else if (searchDates[0] === endDate) {
-      dateQueries = `submit-date <= ${searchDates[0].format('YYYY-MM-DD')}`;
-    } else {
-      // Date entered in search bar, use original string.
-      dateQueries = advancedSearchText.split(' ').filter((s) => s.indexOf('submit-date') !== -1).join(' ');
-    }
-  } else {
-    // Take first and last dates.
-    dateQueries = `submit-date >= ${searchDates[0].format('YYYY-MM-DD')} submit-date <= ${last(searchDates).format('YYYY-MM-DD')}`;
+  if (endDate) {
+    dateParts.push(`submit-date<=${endDate.format('YYYY-MM-DD')}`);
   }
 
   const parts = [
@@ -134,8 +112,8 @@ export function getFilterString({
     ...questionFilters,
     isReviewed == null ? null : `reviewed:${isReviewed ? '1' : '0'}`,
     ...submitterParts,
-    searchText,
-    dateQueries,
+    dateParts.join(' '),
+    advancedSearchText,
   ].filter(Boolean);
 
   return parts.join(' ');

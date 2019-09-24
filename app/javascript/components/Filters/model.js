@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
+import moment from 'moment';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../conditions/ConditionSetFormField/model';
@@ -70,7 +71,7 @@ class FiltersModel {
   }
 
   constructor(initialState = {}) {
-    const { selectedQings } = initialState;
+    const { selectedQings, startDate, endDate } = initialState;
 
     // If any qings should be selected, create new conditions for them.
     if (!isEmpty(selectedQings)) {
@@ -82,6 +83,14 @@ class FiltersModel {
     }
 
     Object.assign(this, initialState);
+
+    // Convert dates to moment if given
+    if (startDate) {
+      this.startDate = moment(startDate);
+    }
+    if (endDate) {
+      this.endDate = moment(endDate);
+    }
 
     Object.assign(this.original, {
       selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
