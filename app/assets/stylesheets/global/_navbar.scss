@@ -18,6 +18,11 @@ nav.navbar-light {
     }
   }
 
+  // Overriding bootstrap navbar prefs causing RTL bug
+  .navbar-collapse {
+    flex-grow: unset;
+  }
+
   ul.navbar-nav {
     float: $left;
 

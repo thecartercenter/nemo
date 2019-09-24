@@ -2,6 +2,10 @@ header {
   background-color: $header-background-color;
 }
 
+body {
+  text-align: $left;
+}
+
 #userinfo {
   color: $white;
   text-align: right;
@@ -43,11 +47,11 @@ header {
 
   div.operations {
     display: block;
-    text-align: left;
     margin: 5px;
+    text-align: $left;
 
     .icon-operation {
-      margin-right: 0.5em;
+      margin-#{$right}: 0.5em;
     }
   }
 
@@ -57,7 +61,7 @@ header {
     display: inline-block;
     width: 190px;
     height: 31px;
-    margin-right: 10px;
+    margin-#{$right}: 10px;
   }
 }
 
