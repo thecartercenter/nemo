@@ -1,4 +1,7 @@
 <% if read_only || cannot?(:update_core, form_item) %>
+  <% if form_item.skip_rules.none? %>
+    <%= t("form_item.skip_logic_options.dont_skip") %>
+  <% else %>
     <dl>
       <% form_item.skip_rules.each do |rule| %>
         <dt><%= SkipRuleDecorator.new(rule).read_only_header %></dt>
@@ -7,6 +10,7 @@
         <% end %>
       <% end %>
     </dl>
+  <% end %>
 <% else %>
   <%= react_component("conditions/SkipLogicFormField",
         ConditionalLogicForm::FormItemSerializer.new(form_item)) %>

@@ -1,12 +1,16 @@
 <% if read_only || cannot?(:update_core, form_item) %>
-  <dl>
-    <% form_item.constraints.each do |constraint| %>
-      <dt><%= ConstraintDecorator.new(constraint).read_only_header %></dt>
-      <% constraint.condition_group.members.each do |condition| %>
-        <dd><%= condition.decorate.human_readable(codes: true) %></dd>
+  <% if form_item.constraints.none? %>
+    <%= t("form_item.constrain_options.dont_constrain") %>
+  <% else %>
+    <dl>
+      <% form_item.constraints.each do |constraint| %>
+        <dt><%= ConstraintDecorator.new(constraint).read_only_header %></dt>
+        <% constraint.condition_group.members.each do |condition| %>
+          <dd><%= condition.decorate.human_readable(codes: true) %></dd>
+        <% end %>
       <% end %>
-    <% end %>
-  </dl>
+    </dl>
+  <% end %>
 <% else %>
   <%= react_component("conditions/ConstraintsFormField",
         ConditionalLogicForm::FormItemSerializer.new(form_item)) %>
