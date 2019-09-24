@@ -7,7 +7,7 @@
         <%= answer_set.level_name(level_context) %>
       </label>
       <% if answer.invalid? %>
-        <%= content_tag(:div, answer.errors.to_hash.values.join(', '), class: "form-errors") %>
+        <%= content_tag(:div, answer.errors.to_hash.values.join(", "), class: "form-errors") %>
       <% end %>
       <%= answer_set.select_tag(answer, level_context) %>
     </div>
