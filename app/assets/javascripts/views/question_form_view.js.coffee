@@ -28,7 +28,7 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.FormView
     div = @$(".form-field[data-field-name=#{attrib}] .control")
     if div.is('.read-only')
       wrapper = div.find('.ro-val')
-      wrapper.data('val') || wrapper.text()
+      if typeof wrapper.data('val') != 'undefined' then wrapper.data('val') else wrapper.text()
     else
       # Rails checkbox fields have a hidden field followed by a checkbox. We need to ignore the hidden.
       field = div.find('input[type!=hidden], select, textarea')
