@@ -72,6 +72,8 @@ RSpec::Matchers.define(:match_user_facing_csv) do |expected|
     doc = "\xEF\xBB\xBF" + expected
     doc.to_s == actual
   end
+
+  diffable
 end
 
 RSpec::Matchers.define(:have_errors) do |errors|

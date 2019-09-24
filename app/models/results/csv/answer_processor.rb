@@ -61,7 +61,8 @@ module Results
           value = row["answer_option_value"] || row["answer_option_name"]
           buffer.write("#{code}#{suffix}", value)
         else # select multiple
-          buffer.write(code, row["choice_option_name"], append: true)
+          value = row["choice_option_value"] || row["choice_option_name"]
+          buffer.write(code, value, append: true)
         end
       end
 

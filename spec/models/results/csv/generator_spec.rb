@@ -280,6 +280,24 @@ describe Results::Csv::Generator, :reset_factory_sequences do
     end
   end
 
+  context "with numeric values for select_one and select_multiple questions" do
+    let(:form) { create(:form, question_types: %w[select_one select_multiple]) }
+
+    before do
+      form.c[0].option_set.options[0].update!(value: 2)
+      form.c[0].option_set.options[1].update!(value: 3)
+      form.c[1].option_set.options[0].update!(value: 5)
+      form.c[1].option_set.options[1].update!(value: 8)
+      Timecop.freeze(Time.zone.parse("2015-11-20 12:30 UTC")) do
+        create_response(form: form, answer_values: ["Cat", %w[Cat Dog]])
+      end
+    end
+
+    it "exports numeric values" do
+      is_expected.to match_user_facing_csv(prepare_response_csv_expectation("option_values.csv"))
+    end
+  end
+
   def create_response(params)
     responses << create(:response, params)
   end
