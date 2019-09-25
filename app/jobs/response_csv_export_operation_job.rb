@@ -28,7 +28,7 @@ class ResponseCsvExportOperationJob < OperationJob
   def generate_csv(responses)
     attachment = Results::Csv::Generator.new(responses).export
     timestamp = Time.current.to_s(:filename_datetime)
-    attachment_download_name = "elmo-#{mission.compact_name}-responses-#{timestamp}.csv"
+    attachment_download_name = "#{mission.compact_name}-responses-#{timestamp}.csv"
     {attachment: attachment, attachment_download_name: attachment_download_name}
   end
 end
