@@ -3,7 +3,7 @@
 # Generates human readable representation of Skip Rules
 class SkipRuleDecorator < ApplicationDecorator
   delegate_all
-  include ConditionFormable
+  include ConditionalLogicDecorable
 
   def human_readable
     if skip_if == "always"

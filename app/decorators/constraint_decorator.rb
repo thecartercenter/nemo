@@ -3,7 +3,7 @@
 # Generates human readable representation of Constraints
 class ConstraintDecorator < ApplicationDecorator
   delegate_all
-  include ConditionFormable
+  include ConditionalLogicDecorable
 
   def human_readable
     I18n.t("constraint.instructions", conditions: human_readable_conditions)
