@@ -99,7 +99,7 @@ describe "form rendering for odk", :odk, :reset_factory_sequences do
         conditions_attributes: [
           {left_qing_id: form.c[10].id, op: "eq", value: 10}
         ],
-        rejection_msg_translations: {"en": "Custom rejection message."}
+        rejection_msg_translations: {:en => "Custom rejection message."}
       )
     end
 
