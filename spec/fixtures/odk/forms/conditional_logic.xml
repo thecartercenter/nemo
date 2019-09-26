@@ -107,11 +107,17 @@
           <text id="*itemcode10*:hint">
             <value>Question Hint 10</value>
           </text>
+          <text id="*itemcode10*:constraintMsg">
+            <value>Must be greater than or equal to 10 and less than or equal to 100; Valid only if: [DecimalQ4] is equal to 10 OR This question is equal to [IntegerQ3]; Valid only if: This question is not equal to 55</value>
+          </text>
           <text id="*itemcode11*:label">
             <value>Integer Question Title 11</value>
           </text>
           <text id="*itemcode11*:hint">
             <value>Question Hint 11</value>
+          </text>
+          <text id="*itemcode11*:constraintMsg">
+            <value>Custom rejection message.</value>
           </text>
           <text id="*optcode1*">
             <value>Cat</value>
@@ -158,8 +164,8 @@
       <bind nodeset="/data/*itemcode7*_2" type="select1" relevant="((/data/*itemcode3* &gt; 5) and (/data/*itemcode6* = '*optcode1*')) and (not((/data/*itemcode3* = 0)))"/>
       <bind nodeset="/data/*itemcode8*" type="select"/>
       <bind nodeset="/data/*itemcode9*" type="dateTime"/>
-      <bind nodeset="/data/*itemcode10*" type="int" constraint="(. &gt;= 10 and . &lt;= 100) and ((/data/*itemcode4* = 10) or (. = /data/*itemcode3*)) and ((. != 55))" jr:constraintMsg="Must be greater than or equal to 10 and less than or equal to 100; Valid only if: [DecimalQ4] is equal to 10 OR This question is equal to [IntegerQ3]; Valid only if: This question is not equal to 55"/>
-      <bind nodeset="/data/*itemcode11*" type="int" constraint="((. = 10))" jr:constraintMsg="Custom rejection message."/>
+      <bind nodeset="/data/*itemcode10*" type="int" constraint="(. &gt;= 10 and . &lt;= 100) and ((/data/*itemcode4* = 10) or (. = /data/*itemcode3*)) and ((. != 55))" jr:constraintMsg="jr:itext('*itemcode10*:constraintMsg')"/>
+      <bind nodeset="/data/*itemcode11*" type="int" constraint="((. = 10))" jr:constraintMsg="jr:itext('*itemcode11*:constraintMsg')"/>
     </model>
   </h:head>
   <h:body>

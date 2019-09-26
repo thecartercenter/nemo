@@ -19,6 +19,11 @@
         <text id="<%= subq.odk_code %>:hint">
           <value><%= subq.hint(lang, :strict => false) %></value>
         </text>
+        <% unless subq.questioning.constraints.empty? %>
+          <text id="<%= subq.odk_code %>:constraintMsg">
+            <value><%= Odk::DecoratorFactory.decorate(subq.questioning).constraint_msg %></value>
+          </text>
+        <% end %>
       <% end %>
     <% end %>
   <% end %>

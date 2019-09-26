@@ -12,7 +12,7 @@ module Odk
                  readonly: default_answer? && read_only? ? "true()" : nil,
                  relevant: relevance,
                  constraint: constraint,
-                 "jr:constraintMsg": constraint_msg,
+                 "jr:constraintMsg": constraint_msg.nil? ? nil : jr_constraint_msg(subq),
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
@@ -51,6 +51,20 @@ module Odk
       visible? || jr_preload || calculate
     end
 
+    def constraint_msg
+      msgs = [min_max_error_msg] # Old min/max style, going away later.
+      constraints.each do |constraint|
+        msgs << if constraint.rejection_msg_translations[I18n.locale.to_s]
+                  constraint.rejection_msg_translations[I18n.locale.to_s]
+                else
+                  conditions = ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
+                  I18n.t("constraint.odk_message", conditions: conditions)
+                end
+      end
+      msgs = msgs.compact.join("; ").presence
+      msgs.nil? ? nil : msgs
+    end
+
     private
 
     def default_answer?
@@ -67,20 +81,6 @@ module Odk
       exprs.compact.join(" and ").presence
     end
 
-    def constraint_msg
-      msgs = [min_max_error_msg] # Old min/max style, going away later.
-      constraints.each do |constraint|
-        msgs << if constraint.rejection_msg_translations[I18n.locale.to_s]
-                  constraint.rejection_msg_translations[I18n.locale.to_s]
-                else
-                  conditions = ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
-                  I18n.t("constraint.odk_message", conditions: conditions)
-                end
-      end
-      msgs = msgs.compact.join("; ").presence
-      msgs.nil? ? nil : msgs
-    end
-
     def jr_preload
       @jr_preload ||=
         case metadata_type
@@ -94,6 +94,10 @@ module Odk
         when "formstart" then "start"
         when "formend" then "end"
         end
+    end
+
+    def jr_constraint_msg(subq)
+      "jr:itext('#{subq.try(:odk_code)}:constraintMsg')"
     end
 
     # If a question is required, then determine the appropriate value
