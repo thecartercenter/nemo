@@ -11,14 +11,13 @@ module OptionSetsHelper
   end
 
   def option_sets_index_fields
-    %w[std_icon name options] + (admin_mode? ? [] : ["published"]) + ["actions"]
+    %w[std_icon name options actions]
   end
 
   def format_option_sets_field(option_set, field)
     case field
     when "std_icon" then std_icon(option_set)
     when "name" then link_to(option_set.name, option_set.default_path, title: t("common.view"))
-    when "published" then tbool(option_set.published?)
     when "options" then
       # only show the first 3 options as there could be many many
       option_set.options[0...3].collect(&:name).join(", ") + (option_set.options.size > 3 ? ", ..." : "")
