@@ -6,7 +6,7 @@ module Odk
     delegate_all
 
     def bind_tag(form, subq, xpath_prefix: "/data")
-      tag(:bind, nodeset: [xpath_prefix, subq.try(:odk_code)].compact.join("/"),
+      tag(:bind, nodeset: [xpath_prefix, subq&.odk_code].compact.join("/"),
                  type: binding_type_attrib(subq),
                  required: required? && visible? && subq.first_rank? ? required_value(form) : nil,
                  readonly: default_answer? && read_only? ? "true()" : nil,
@@ -61,8 +61,7 @@ module Odk
                   I18n.t("constraint.odk_message", conditions: conditions)
                 end
       end
-      msgs = msgs.compact.join("; ").presence
-      msgs.nil? ? nil : msgs
+      msgs.compact.join("; ").presence
     end
 
     private
@@ -97,7 +96,7 @@ module Odk
     end
 
     def jr_constraint_msg(subq)
-      "jr:itext('#{subq.try(:odk_code)}:constraintMsg')"
+      "jr:itext('#{subq.odk_code}:constraintMsg')"
     end
 
     # If a question is required, then determine the appropriate value
