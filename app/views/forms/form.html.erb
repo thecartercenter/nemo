@@ -1,13 +1,10 @@
-<% @title_args = {:name => @form.name, :standardized => @form.standardized?} %>
-<% content_for :title_content do %>
+<% @title_args = {name: @form.name, standardized: @form.standardized?} %>
+<% content_for(:title_content) do %>
   <% if @form.published? %>
-    <%= title_badge(t("common.published")) %>
     <%= title_badge("#{t("activerecord.attributes.form.version")}: #{@form.code}") %>
-  <% else %>
-    <%= title_badge(t("common.not_published")) %>
   <% end %>
 <% end %>
 
 <%# If print=1 is specified, just show the printable form. %>
 <%# We have to pass @form as an instance variable because the printable partial is also used in the index action. %>
-<%= render(params[:print] ? 'printable' : 'screen', form: @form) %>
+<%= render(params[:print] ? "printable" : "screen", form: @form) %>
