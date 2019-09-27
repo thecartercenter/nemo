@@ -84,14 +84,14 @@
         <tr>
           <td>
             <div class="question">
-              <strong><%= index %>. <%= qing.question.name(@locale, strict: false) %><%= reqd_sym if qing.required? %></strong>
+              <strong><%= index %>. <%= qing.question.name(@locale, fallbacks: true) %><%= reqd_sym if qing.required? %></strong>
             </div>
 
             <%# Options area, for select_* questions %>
             <% if qing.has_options? && qing.option_set.sms_formatting == "inline" %>
               <div class="options">
                 <% qing.options.each_with_index do |opt, idx| %>
-                  <span><%= index_to_letter(idx + 1) %>) <%= opt.name(@locale, strict: false) %></span>
+                  <span><%= index_to_letter(idx + 1) %>) <%= opt.name(@locale, fallbacks: true) %></span>
                 <% end %>
               </div>
             <% end %>

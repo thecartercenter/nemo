@@ -39,9 +39,9 @@ describe "Translatable" do
     expect(obj.name).to eq("foo")
     expect(obj.name_en).to eq("foo")
     expect(obj.name(:fr)).to eq(nil)
-    expect(obj.name(:fr, strict: false)).to eq("foo")
-    expect(obj.name("fr", strict: false)).to eq("foo")
-    expect(obj.name_fr(strict: false)).to eq("foo")
+    expect(obj.name(:fr, fallbacks: true)).to eq("foo")
+    expect(obj.name("fr", fallbacks: true)).to eq("foo")
+    expect(obj.name_fr(fallbacks: true)).to eq("foo")
 
     obj.name = "bar"
 
@@ -179,16 +179,8 @@ describe "Translatable" do
       expect(obj.name(:es)).to be_nil
     end
 
-    it "should return french if given as first fallback" do
-      expect(obj.name(:es, fallbacks: [:fr])).to eq("Fra")
-    end
-
-    it "should return french if second fallback but first fallback not found" do
-      expect(obj.name(:es, fallbacks: %i[de fr])).to eq("Fra")
-    end
-
-    it "should return english if strict mode and no fallbacks found" do
-      expect(obj.name(:es, strict: false, fallbacks: %i[de it])).to eq("Eng")
+    it "should return english if fallbacks allowed" do
+      expect(obj.name(:es, fallbacks: true)).to eq("Eng")
     end
   end
 
@@ -207,12 +199,12 @@ describe "Translatable" do
           expect(obj.name_en).to eq("Eng")
         end
 
-        it "should not return a disallowed locale and return nil instead if strict mode on" do
-          expect(obj.name(:it, strict: true)).to be_nil
+        it "should not return a disallowed locale and return nil instead if fallbacks disallowed" do
+          expect(obj.name(:it)).to be_nil
         end
 
-        it "should not return a disallowed locale and fallback to an allowed one if strict mode off" do
-          expect(obj.name(:it, strict: false)).to eq("Eng")
+        it "should not return a disallowed locale and fallback to an allowed one if fallbacks allowed" do
+          expect(obj.name(:it, fallbacks: true)).to eq("Eng")
         end
       end
 

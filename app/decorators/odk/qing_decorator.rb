@@ -54,7 +54,7 @@ module Odk
     def constraint_msg(locale)
       msgs = [min_max_error_msg] # Old min/max style, going away later.
       constraints.each do |constraint|
-        msgs << if (custom = constraint.rejection_msg(locale, strict: false))
+        msgs << if (custom = constraint.rejection_msg(locale, fallbacks: true))
                   custom
                 else
                   conditions = ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
