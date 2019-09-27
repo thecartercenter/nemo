@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
 # DEPRECATED: Model-related display logic should move to a decorator.
 module FormsHelper
-  def forms_index_links(forms)
+  def forms_index_links(_forms)
     links = []
 
     # add links based on authorization
@@ -15,9 +17,9 @@ module FormsHelper
 
   def forms_index_fields
     if admin_mode?
-      %w(std_icon name updated_at actions)
+      %w[std_icon name updated_at actions]
     else
-      %w(std_icon name status downloads responses updated_at actions)
+      %w[std_icon name status downloads responses updated_at actions]
     end
   end
 
@@ -30,8 +32,11 @@ module FormsHelper
     when "questions" then form.questionings.count
     when "updated_at" then l(form.updated_at)
     when "responses"
-      form.responses_count == 0 ? 0 :
-        link_to(form.responses_count, responses_path(search: "form:\"#{form.name}\""))
+      if (count = form.responses_count).zero?
+        0
+      else
+        link_to(count, responses_path(search: "form:\"#{form.name}\""))
+      end
     when "downloads" then form.downloads || 0
     when "published" then tbool(form.published?)
     when "smsable" then tbool(form.smsable?)
@@ -39,30 +44,23 @@ module FormsHelper
     when "allow_incomplete" then tbool(form.allow_incomplete?)
     when "actions"
       links = []
-
-      # get the appropriate publish icon and add link, if auth'd
-      if can?(:publish, form)
-        verb = form.published? ? "unpublish" : "publish"
-        links << action_link(verb, publish_form_path(form), title: t("form.#{verb}"), :'data-method' => 'put')
+      if can?(:change_status, form)
+        links << if form.live?
+                   action_link(:pause, pause_form_path(form), method: :put)
+                 else
+                   action_link(:go_live, go_live_form_path(form), method: :put)
+                 end
       end
-
-      # add a clone link if auth'd
       if can?(:clone, form)
-        links << action_link(:clone, clone_form_path(form), :'data-method' => 'put',
-          title: t("common.clone"), data: {confim: t("form.clone_confirm")}, form_name: form.name)
+        links << action_link(:clone, clone_form_path(form),
+          method: :put, data: {confirm: t("form.clone_confirm", form_name: form.name)})
       end
-
-      # add a print link if auth'd
-      if can?(:print, form)
-        links << action_link(:print, "#", title: t("common.print"), class: 'print-link',
-                                          "data-form-id": form.id)
+      if can?(:print, form) # rubocop:disable Style/IfUnlessModifier
+        links << action_link(:print, "#", class: "print-link", data: {form_id: form.id})
       end
-
-      # add an sms template link if appropriate
       if form.smsable? && form.published? && !admin_mode?
-        links << action_link(:sms, sms_guide_form_path(form), title: "SMS Guide")
+        links << action_link(:sms, sms_guide_form_path(form))
       end
-
       links
     else form.send(field)
     end
@@ -78,17 +76,17 @@ module FormsHelper
 
   # Question types not listed here use PNGs instead of FA icons.
   FORM_ITEM_ICON_CLASSES = {
-    'long_text' => 'fa-align-left',
-    'date' => 'fa-calendar',
-    'time' => 'fa-clock-o',
-    'location' => 'fa-map-marker',
-    'group' => 'fa-folder-open-o',
-    'image' => 'fa-image',
-    'sketch' => 'fa-pencil-square-o',
-    'audio' => 'fa-volume-up',
-    'video' => 'fa-film',
-    'counter' => 'fa-plus'
-  }
+    "long_text" => "fa-align-left",
+    "date" => "fa-calendar",
+    "time" => "fa-clock-o",
+    "location" => "fa-map-marker",
+    "group" => "fa-folder-open-o",
+    "image" => "fa-image",
+    "sketch" => "fa-pencil-square-o",
+    "audio" => "fa-volume-up",
+    "video" => "fa-film",
+    "counter" => "fa-plus"
+  }.freeze
 
   def form_item_icon(type)
     # Use font awesome icon if defined, else use custom icon from assets dir.

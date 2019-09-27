@@ -252,6 +252,18 @@ class Form < ApplicationRecord
     published? ? "unpublish" : "publish"
   end
 
+  def live?
+    status == "live"
+  end
+
+  def paused?
+    status == "paused"
+  end
+
+  def draft?
+    status == "draft"
+  end
+
   # increments the download counter
   def add_download
     self.downloads += 1

@@ -80,6 +80,8 @@ class Ability
        OptionNode, Option, OptionSets::Import, Setting, Tag, Tagging].each do |k|
         can(:manage, k, mission_id: nil)
       end
+      cannot(:publish, Form, &:standard?) # TODO: remove
+      cannot(:change_status, Form, &:standard?)
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: nil)
@@ -154,6 +156,7 @@ class Ability
         can(:manage, klass, mission_id: mission.id)
       end
       can(:condition_form, Constraint, mission_id: mission.id)
+      can(:change_status, Form, mission_id: mission.id)
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
@@ -224,7 +227,6 @@ class Ability
     cannot(:destroy, Form) { |f| f.published? || f.has_responses? }
     cannot(:download, Form, published: false)
     cannot(%i[add_questions remove_questions reorder_questions], Form, &:published?)
-    cannot(:publish, Form, &:standard?)
 
     cannot(%i[destroy update update_core], Questioning, &:published?)
 

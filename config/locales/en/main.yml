@@ -575,6 +575,8 @@ en:
         destroy: "Delete Form"
         publish: "Publish Form"
         unpublish: "Unpublish Form"
+        go_live: "Go Live"
+        pause: "Pause"
         print: "Print Form"
       mission:
         new: "Create New Mission"
@@ -938,6 +940,8 @@ en:
     edit: "Edit"
     publish: "Publish"
     unpublish: "Unpublish"
+    go_live: "Go Live"
+    pause: "Pause"
     print: "Print"
     sms: "SMS Guide"
 
