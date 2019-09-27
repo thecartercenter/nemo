@@ -12,7 +12,7 @@ module Odk
                  readonly: default_answer? && read_only? ? "true()" : nil,
                  relevant: relevance,
                  constraint: constraint,
-                 "jr:constraintMsg": constraint_msg.nil? ? nil : jr_constraint_msg(subq),
+                 "jr:constraintMsg": constraints? ? jr_constraint_msg : nil,
                  calculate: calculate,
                  "jr:preload": jr_preload,
                  "jr:preloadParams": jr_preload_params)
@@ -51,11 +51,11 @@ module Odk
       visible? || jr_preload || calculate
     end
 
-    def constraint_msg
+    def constraint_msg(locale)
       msgs = [min_max_error_msg] # Old min/max style, going away later.
       constraints.each do |constraint|
-        msgs << if constraint.rejection_msg_translations[I18n.locale.to_s]
-                  constraint.rejection_msg_translations[I18n.locale.to_s]
+        msgs << if (custom = constraint.rejection_msg(locale, strict: false))
+                  custom
                 else
                   conditions = ConstraintDecorator.decorate(constraint).human_readable_conditions(nums: false)
                   I18n.t("constraint.odk_message", conditions: conditions)
@@ -95,8 +95,8 @@ module Odk
         end
     end
 
-    def jr_constraint_msg(subq)
-      "jr:itext('#{subq.odk_code}:constraintMsg')"
+    def jr_constraint_msg
+      "jr:itext('#{odk_code}:constraintMsg')"
     end
 
     # If a question is required, then determine the appropriate value

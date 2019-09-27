@@ -8,7 +8,7 @@
     <% if qing.visible? %>
       <% qing.subqings.each do |subq| %>
         <text id="<%= subq.odk_code %>:label">
-          <value><%= subq.name(lang, :strict => false) %></value>
+          <value><%= subq.name(lang, strict: false) %></value>
           <% if subq.media_prompt? %>
             <% question = Odk::DecoratorFactory.decorate(subq.question) %>
             <value form="<%= question.media_prompt_type %>">
@@ -17,13 +17,13 @@
           <% end %>
         </text>
         <text id="<%= subq.odk_code %>:hint">
-          <value><%= subq.hint(lang, :strict => false) %></value>
+          <value><%= subq.hint(lang, strict: false) %></value>
         </text>
-        <% unless subq.questioning.constraints.empty? %>
-          <text id="<%= subq.odk_code %>:constraintMsg">
-            <value><%= Odk::DecoratorFactory.decorate(subq.questioning).constraint_msg %></value>
-          </text>
-        <% end %>
+      <% end %>
+      <% if qing.constraints? %>
+        <text id="<%= qing.odk_code %>:constraintMsg">
+          <value><%= qing.constraint_msg(lang) %></value>
+        </text>
       <% end %>
     <% end %>
   <% end %>
