@@ -219,12 +219,14 @@ ActiveRecord::Schema.define(version: 2019_10_09_175040) do
     t.boolean "sms_relay", default: false, null: false
     t.boolean "smsable", default: false, null: false
     t.boolean "standard_copy", default: false, null: false
+    t.string "status", default: "draft", null: false
     t.datetime "updated_at", null: false
     t.boolean "upgrade_needed", default: false, null: false
     t.index ["current_version_id"], name: "index_forms_on_current_version_id"
     t.index ["mission_id"], name: "index_forms_on_mission_id"
     t.index ["original_id"], name: "index_forms_on_original_id"
     t.index ["root_id"], name: "index_forms_on_root_id", unique: true
+    t.index ["status"], name: "index_forms_on_status"
   end
 
   create_table "media_objects", id: :uuid, default: -> { "uuid_generate_v4()" }, force: :cascade do |t|

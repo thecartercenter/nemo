@@ -17,6 +17,7 @@
 #  sms_relay             :boolean          default(FALSE), not null
 #  smsable               :boolean          default(FALSE), not null
 #  standard_copy         :boolean          default(FALSE), not null
+#  status                :string           default("draft"), not null
 #  upgrade_needed        :boolean          default(FALSE), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
@@ -31,6 +32,7 @@
 #  index_forms_on_mission_id          (mission_id)
 #  index_forms_on_original_id         (original_id)
 #  index_forms_on_root_id             (root_id) UNIQUE
+#  index_forms_on_status              (status)
 #
 # Foreign Keys
 #
