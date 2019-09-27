@@ -316,9 +316,6 @@ describe ResponsesSearcher do
         advanced_text: "foo 123.4 source:x"
       )
       expect(searcher("source:(\"x y\" z)")).to have_filter_data(advanced_text: "source:(\"x y\" z)")
-      expect(searcher("submit-date >= 2013-10-15 submit-date < 2013-10-20")).to have_filter_data(
-        advanced_text: "submit-date>=2013-10-15 submit-date<2013-10-20"
-      )
     end
   end
 
