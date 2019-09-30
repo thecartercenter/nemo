@@ -22,7 +22,7 @@ class FormsController < ApplicationController
   # in the choose_questions action we have a question form so we need this Concern
   include QuestionFormable
 
-  decorates_assigned :forms
+  decorates_assigned :forms, :form
   helper_method :questions
 
   def index
