@@ -3,9 +3,25 @@
     min-width: 200px;
   }
 
+  td.status_col {
+    white-space: nowrap;
+  }
+
   tr.status-draft {
     td {
       background-color: $even-lighter-gray;
+    }
+  }
+
+  .status-live {
+    .status-circle {
+      color: $success-green;
+    }
+  }
+
+  .status-paused {
+    .status-circle {
+      color: $gold;
     }
   }
 }

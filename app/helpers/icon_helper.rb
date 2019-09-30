@@ -44,7 +44,8 @@ module IconHelper
   # If no mapping is found, uses the given key verbatim in a an fa-* style icon name.
   def icon_tag(key, options = {})
     name = FONT_AWESOME_ICON_MAPPINGS[key.to_sym] || key.to_s
-    content_tag(:i, '', options.merge(class: "fa fa-#{name} icon-#{key.to_s.dasherize}"))
+    options[:class] = ((options[:class] || "") + " fa fa-#{name} icon-#{key.to_s.dasherize}").strip
+    content_tag(:i, "", options)
   end
 
   # Returns icon tag for standard icon if obj is standard (or boolean == true), '' otherwise.
