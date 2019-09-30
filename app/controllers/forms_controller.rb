@@ -70,11 +70,9 @@ class FormsController < ApplicationController
   def show
     setup_condition_computer
     respond_to do |format|
-      # for html, render the printable style if requested, otherwise render the form
       format.html do
         if params[:print] && request.xhr?
-          render(:form, layout: false)
-        # otherwise just normal!
+          render(partial: "printable")
         else
           prepare_and_render_form
         end
