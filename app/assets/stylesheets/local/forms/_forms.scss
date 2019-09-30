@@ -1,15 +1,11 @@
 .forms_index .index_table {
-  td {
-    background-color: $even-lighter-gray;
-  }
-
   td.name_col {
     min-width: 200px;
   }
 
-  tr.published, .hide-unpublished-bg {
+  tr.status-draft {
     td {
-      background-color: $white;
+      background-color: $even-lighter-gray;
     }
   }
 }

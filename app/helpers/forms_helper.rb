@@ -67,7 +67,7 @@ module FormsHelper
   end
 
   def forms_index_row_class(form)
-    "published" if form.published?
+    "status-#{form.status}"
   end
 
   def allow_incomplete?
