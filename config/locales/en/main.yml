@@ -1357,6 +1357,10 @@ en:
     reqd_sym_definition: "Required questions are marked with a"
     save_and_publish: "Save and Publish"
     saving_order: "Saving order..."
+    statuses:
+      draft: "Draft"
+      live: "Live"
+      paused: "Paused"
     unpublish_error: "There was a problem unpublishing the form (%{msg})."
     unpublish_success: "Form unpublished successfully."
     unpublish: "Unpublish"
