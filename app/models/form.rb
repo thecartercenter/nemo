@@ -248,6 +248,11 @@ class Form < ApplicationRecord
     save(validate: false)
   end
 
+  def update_status(status)
+    # Don't run validations in case form has become invalid due to a migration or other change.
+    update_column(:status, status)
+  end
+
   def verb
     published? ? "unpublish" : "publish"
   end

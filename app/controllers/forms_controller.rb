@@ -175,6 +175,16 @@ class FormsController < ApplicationController
     redirect_to(verb == :publish ? index_url_with_context : edit_form_path(@form))
   end
 
+  def go_live
+    @form.update_status(:live)
+    redirect_to(index_url_with_context)
+  end
+
+  def pause
+    @form.update_status(:paused)
+    redirect_to(index_url_with_context)
+  end
+
   # shows the form to either choose existing questions or create a new one to add
   def choose_questions
     authorize!(:add_questions, @form)
