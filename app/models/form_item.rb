@@ -167,6 +167,10 @@ class FormItem < ApplicationRecord
     qtype_name && QuestionType[qtype_name].refable?
   end
 
+  def constraints?
+    constraints.any?
+  end
+
   # Returns all form items after this one in the form, in preorder traversal order.
   # If item is not persisted, returns empty array.
   def later_items(eager_load: nil)

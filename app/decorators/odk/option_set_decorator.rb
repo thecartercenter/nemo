@@ -20,7 +20,7 @@ module Odk
       tags = nodes_for_translation_tags.map do |node|
         content_tag(:text, id: Odk::CodeMapper.instance.code_for_item(node)) do
           content_tag(:value) do
-            node.option.name(lang, strict: false)
+            node.option.name(lang, fallbacks: true)
           end
         end
       end
