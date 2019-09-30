@@ -12,18 +12,6 @@
       background-color: $even-lighter-gray;
     }
   }
-
-  .status-live {
-    .status-circle {
-      color: $success-green;
-    }
-  }
-
-  .status-paused {
-    .status-circle {
-      color: $gold;
-    }
-  }
 }
 
 form.form_form {
@@ -44,6 +32,18 @@ form.form_form {
       display: inline-block;
       margin: 0px 5px 0px 0px;
     }
+  }
+}
+
+.status-live {
+  .status-circle {
+    color: $success-green;
+  }
+}
+
+.status-paused {
+  .status-circle {
+    color: $gold;
   }
 }
 

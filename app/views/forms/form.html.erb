@@ -34,6 +34,7 @@
     <%= f.base_errors %>
 
     <%= f.field(:name, required: true, read_only: cannot?(:rename, form)) %>
+    <%= f.field(:status, content: form.status_with_icon) %>
 
     <% if admin_mode? %>
       <ul class="admin-stats">

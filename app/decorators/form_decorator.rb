@@ -9,7 +9,7 @@ class FormDecorator < ApplicationDecorator
   end
 
   def status_with_icon
-    h.content_tag(:div, class: "form-status") do
+    h.content_tag(:div, class: "form-status status-#{form.status}") do
       circle = (draft? ? +"" : h.icon_tag("circle", class: "status-circle") << nbsp)
       circle << t("form.statuses.#{form.status}")
     end
