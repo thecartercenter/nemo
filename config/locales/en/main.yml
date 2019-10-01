@@ -32,6 +32,8 @@ en:
     design: "Design"
     edit: "Edit"
     either: 'Either'
+    endDate: "End"
+    endDatePlaceholder: "End Date"
     error:
       zero: "Errors"
       one: "Error"
@@ -96,6 +98,8 @@ en:
     search: "Search"
     send: "Send"
     showing: "Showing"
+    startDate: "Start"
+    startDatePlaceholder: "Start Date"
     step: "Step"
     suggest: "Suggest"
     submit: "Submit"

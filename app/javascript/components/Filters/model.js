@@ -66,6 +66,8 @@ class FiltersModel {
       && isEqual(this.original.isReviewed, this.isReviewed)
       && isEqual(this.original.selectedSubmittersForType, this.selectedSubmittersForType)
       && !this.conditionSetStore.isDirty
+      && isEqual(this.original.startDate, this.startDate)
+      && isEqual(this.original.endDate, this.endDate)
     );
     return !clean;
   }

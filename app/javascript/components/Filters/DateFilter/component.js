@@ -24,8 +24,7 @@ class DateFilter extends React.Component {
 
   renderPopover = () => {
     const { filtersStore } = this.props;
-    const { handleDateChange } = filtersStore;
-    const { startDate, endDate } = filtersStore;
+    const { startDate, endDate, handleDateChange } = filtersStore;
     const { focusedInput: focus } = this.state;
     return (
       <div>
@@ -38,6 +37,10 @@ class DateFilter extends React.Component {
           focusedInput={focus}
           onFocusChange={(focusedInput) => this.setState({ focusedInput })}
           isOutsideRange={() => false}
+          showClearDates
+          displayFormat="YYYY-MM-DD"
+          startDatePlaceholderText={I18n.t('common.startDatePlaceholder')}
+          endDatePlaceholderText={I18n.t('common.endDatePlaceholder')}
         />
       </div>
     );
@@ -51,7 +54,7 @@ class DateFilter extends React.Component {
     if (startDate !== null && endDate !== null) {
       hints = [`${startDate.format('YYYY-MM-DD')} - ${endDate.format('YYYY-MM-DD')}`];
     } else {
-      hints = [[startDate, 'Start'], [endDate, 'End']]
+      hints = [[startDate, I18n.t('common.startDate')], [endDate, I18n.t('common.endDate')]]
         .map(([date, label]) => (date === null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
         .filter((h) => h !== null);
     }
