@@ -65,9 +65,9 @@ class FiltersModel {
       isEqual(this.original.selectedFormIds, this.selectedFormIds)
       && isEqual(this.original.isReviewed, this.isReviewed)
       && isEqual(this.original.selectedSubmittersForType, this.selectedSubmittersForType)
-      && !this.conditionSetStore.isDirty
       && isEqual(this.original.startDate, this.startDate)
       && isEqual(this.original.endDate, this.endDate)
+      && !this.conditionSetStore.isDirty
     );
     return !clean;
   }
@@ -98,6 +98,8 @@ class FiltersModel {
       selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
       isReviewed: initialState.isReviewed == null ? null : initialState.isReviewed,
       selectedSubmittersForType: cloneDeep(initialState.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
+      startDate: initialState.startDate === null ? null : initialState.startDate,
+      endDate: initialState.endDate === null ? null : initialState.endDate,
     });
 
     // Update conditionSet IDs when selected forms change.
