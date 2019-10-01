@@ -75,7 +75,7 @@ module ELMO
     configatron.system_version = File.read(Rails.root.join("VERSION")).strip
 
     # locales with full translations (I18n.available_locales returns a whole bunch more defined by i18n-js)
-    configatron.full_locales = %i[en fr es ar ko]
+    configatron.full_locales = %i[en fr es ar ko pt pt-BR]
 
     # Of the locales in full_locales, the ones displayed RTL.
     configatron.rtl_locales = %i[ar]
