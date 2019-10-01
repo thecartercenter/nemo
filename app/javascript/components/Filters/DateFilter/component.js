@@ -4,8 +4,6 @@ import { inject, observer } from 'mobx-react';
 import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
 import 'react-dates/lib/css/_datepicker.css';
-import { last } from 'lodash';
-import { queryToMoment } from '../utils';
 
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
 
@@ -49,10 +47,14 @@ class DateFilter extends React.Component {
     const { filtersStore, onSubmit } = this.props;
     const { startDate, endDate } = filtersStore;
 
-    const hints = [[startDate, 'Start Date'], [endDate, 'End Date']]
-      .map(([date, label]) => (date === null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
-      .filter((h) => h !== null);
-
+    let hints = [];
+    if (startDate !== null && endDate !== null) {
+      hints = [`${startDate.format('YYYY-MM-DD')} - ${endDate.format('YYYY-MM-DD')}`];
+    } else {
+      hints = [[startDate, 'Start'], [endDate, 'End']]
+        .map(([date, label]) => (date === null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
+        .filter((h) => h !== null);
+    }
     return (
       <FilterOverlayTrigger
         id="date-filter"
