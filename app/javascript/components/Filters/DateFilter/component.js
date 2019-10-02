@@ -64,7 +64,7 @@ class DateFilter extends React.Component {
         title={I18n.t('filter.date')}
         popoverContent={this.renderPopover()}
         popoverClass="wide display-logic-container"
-        buttonsContainerClass="condition-margin"
+        buttonsContainerClass="inline"
         onSubmit={onSubmit}
         buttonClass="btn-margin-left"
         hints={hints}

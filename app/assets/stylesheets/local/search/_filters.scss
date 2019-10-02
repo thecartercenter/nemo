@@ -83,6 +83,10 @@
       // Account for margin already present from the condition set UI.
       margin-top: -15px;
     }
+
+    &.inline {
+      margin-top: -32px;
+    }
   }
 
   // Optional button to the left of 'Apply'.
