@@ -93,7 +93,7 @@ module OptionSets
         next if check_for_blank_interior_cells(row, row_num)
 
         row << metadata
-      end
+      end.compact
     end
 
     def extract_row_metadata(row, row_num, meta_headers)
