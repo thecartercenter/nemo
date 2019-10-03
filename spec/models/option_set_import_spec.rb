@@ -35,6 +35,14 @@ describe OptionSets::Import do
     end
   end
 
+  context "with blank row" do
+    let(:filename) { "blank_row.csv" }
+
+    it "should skip the row" do
+      expect_simple_option_set(import, mission: mission)
+    end
+  end
+
   context "multi-level geographic" do
     let(:filename) { "multilevel_geographic.xlsx" }
 
