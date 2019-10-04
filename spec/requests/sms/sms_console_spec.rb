@@ -9,19 +9,6 @@ describe "sms console", :sms do
     login(user)
   end
 
-  context "with integer form" do
-    let(:qtypes) { %w(integer) }
-
-    it "going to the page to create a new sms should succeed" do
-      get_s("/en/m/#{mission_name}/sms-tests/new")
-    end
-
-    it "submitting a test sms should succeed" do
-      post("/en/m/#{mission_name}/sms-tests", params: {sms_test: {from: user.phone, body: "#{form.code} 1.123"}})
-      expect(response.body).to match /\AYour response to form '.+' was received. Thank you!\z/
-    end
-  end
-
   context "with datetime form" do
     let(:qtypes) { %w(datetime) }
 
