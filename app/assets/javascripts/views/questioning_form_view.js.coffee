@@ -36,7 +36,7 @@ class ELMO.Views.QuestioningFormView extends ELMO.Views.QuestionFormView
     @showRequired() &&
       @fieldValue('required').toString() == 'true' &&
       @fieldValue('qtype_name') == 'select_one' &&
-      @super.fieldElement.call(this, 'option_set_id').find('option:selected').data('multilevel')
+      @selectedOptionData('option_set_id', 'multilevel')
 
   showHidden: ->
     @super.metadataTypeBlank.call(this)

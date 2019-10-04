@@ -1,17 +1,19 @@
+<% option_set = form.object.option_set %>
 <% if read_only %>
-  <div class="ro-val" data-val="<%= form.object.option_set_id %>">
-    <%= link_to(form.object.option_set.name, form.object.option_set) if form.object.option_set %>
-  </div>
+  <%= content_tag(:div, class: "ro-val",
+                        data: {"val": option_set&.id, multilevel: option_set&.multilevel? || nil}) do %>
+    <%= link_to(option_set.name, option_set) if option_set %>
+  <% end %>
 <% else %>
   <%= form.select(:option_set_id,
-    option_set_select_option_tags(@option_sets, form.object.option_set_id),
-    {include_blank: true}, class: "form-control") %>
-  <%= link_to('+ ' + t('activerecord.action_links.option_set.new'), '#', class: 'create_option_set') %>
+        option_set_select_option_tags(@option_sets, option_set&.id),
+        {include_blank: true}, class: "form-control") %>
+  <%= link_to("+ " + t("activerecord.action_links.option_set.new"), '#', class: "create_option_set") %>
   <br/>
   <% if form.object.has_conditions? %>
     <div class="note">
       <%= icon_tag("warning") %>
-      <%= t('question.opt_set_warning') %>
+      <%= t("question.opt_set_warning") %>
     </div>
   <% end %>
 <% end %>

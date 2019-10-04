@@ -37,5 +37,14 @@ class ELMO.Views.QuestionFormView extends ELMO.Views.FormView
       else
         field.val()
 
+  # Gets a data- value from the selected option for the given select-type field,
+  # or from the div.ro-val tag if read only.
+  selectedOptionData: (attrib, dataAttrib) ->
+    div = @fieldElement(attrib)
+    if div.is('.read-only')
+      div.find('.ro-val').data(dataAttrib)
+    else
+      div.find('option:selected').data(dataAttrib)
+
   fieldElement: (attrib) ->
     @$(".form-field[data-field-name=#{attrib}] .control")
