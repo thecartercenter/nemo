@@ -8,7 +8,7 @@
 #  id                         :uuid             not null, primary key
 #  accept_if                  :string(16)       default("all_met"), not null
 #  rank                       :integer          not null
-#  rejection_msg_translations :jsonb            not null
+#  rejection_msg_translations :jsonb
 #  created_at                 :datetime         not null
 #  updated_at                 :datetime         not null
 #  mission_id                 :uuid
