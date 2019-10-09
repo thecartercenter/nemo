@@ -113,6 +113,9 @@ class Ability
   end
 
   def mission_dependent_permissions
+    can(%i[possible_submitters possible_reviewers], Response, mission_id: mission.id)
+    can(%i[index possible_groups], UserGroup, mission_id: mission.id)
+
     enumerator_permissions if user_has_this_or_higher_role_in_mission?(:enumerator)
     reviewer_permissions if user_has_this_or_higher_role_in_mission?(:reviewer)
     staffer_permissions if user_has_this_or_higher_role_in_mission?(:staffer)
