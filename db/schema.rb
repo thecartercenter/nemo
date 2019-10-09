@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_17_185223) do
+ActiveRecord::Schema.define(version: 2019_10_09_175040) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -126,7 +126,7 @@ ActiveRecord::Schema.define(version: 2019_09_17_185223) do
     t.datetime "created_at", null: false
     t.uuid "mission_id"
     t.integer "rank", null: false
-    t.jsonb "rejection_msg_translations", default: {}, null: false
+    t.jsonb "rejection_msg_translations", default: {}
     t.uuid "source_item_id", null: false
     t.datetime "updated_at", null: false
     t.index ["mission_id"], name: "index_constraints_on_mission_id"
