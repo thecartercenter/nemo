@@ -140,15 +140,3 @@ export function isQueryParamTruthy(paramName) {
   const parsed = queryString.parse(window.location.search);
   return Boolean(parsed[paramName]);
 }
-
-export function queryToMoment(query) {
-  if (query === null || query === undefined) return null;
-  const dateString = query.split(/submit-date[<>=]+/)[1];
-  // If this doesn't parse an actual date, don't use it.
-  if (dateString === undefined) return null;
-  const date = moment(dateString);
-  if (date._isValid) { /* eslint-disable-line no-underscore-dangle */
-    return date;
-  }
-  return null;
-}
