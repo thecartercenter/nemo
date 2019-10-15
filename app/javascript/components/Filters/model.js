@@ -75,6 +75,16 @@ class FiltersModel {
   constructor(initialState = {}) {
     const { selectedQings, startDate, endDate } = initialState;
 
+    // Convert dates to moment if given.
+    if (startDate) {
+      // eslint-disable-next-line no-param-reassign
+      initialState.startDate = moment(startDate);
+    }
+    if (endDate) {
+      // eslint-disable-next-line no-param-reassign
+      initialState.endDate = moment(endDate);
+    }
+
     // If any qings should be selected, create new conditions for them.
     if (!isEmpty(selectedQings)) {
       this.conditionSetStore.resetConditionsFromQings(selectedQings);
@@ -85,14 +95,6 @@ class FiltersModel {
     }
 
     Object.assign(this, initialState);
-
-    // Convert dates to moment if given
-    if (startDate) {
-      this.startDate = moment(startDate);
-    }
-    if (endDate) {
-      this.endDate = moment(endDate);
-    }
 
     Object.assign(this.original, {
       selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
