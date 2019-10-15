@@ -6,6 +6,8 @@ module ActionLinks
     attr_accessor :object, :actions, :options, :controller
 
     def initialize(object, actions, **options)
+      actions.delete(:edit) if edit_action?
+      actions.delete(:show) if show_action?
       self.object = object
       self.actions = actions
       self.options = options
@@ -13,8 +15,7 @@ module ActionLinks
     end
 
     def to_s
-      actions.delete(:edit) if edit_action?
-      actions.delete(:show) if show_action?
+      return nil if object.new_record?
       h.content_tag(:div, class: "top-action-links d-print-none") do
         safe_str << actions.map do |action|
           action, url = unpack_action(action)
