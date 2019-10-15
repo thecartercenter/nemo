@@ -38,7 +38,6 @@ module FormsHelper
         link_to(count, responses_path(search: "form:\"#{form.name}\""))
       end
     when "downloads" then form.downloads || 0
-    when "published" then tbool(form.published?)
     when "smsable" then tbool(form.smsable?)
     when "copy_count" then form.copy_count
     when "allow_incomplete" then tbool(form.allow_incomplete?)
