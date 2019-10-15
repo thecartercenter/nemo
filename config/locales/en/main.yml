@@ -585,13 +585,14 @@ en:
           destroy: "Clear"
         option_set:
           new: "Create New Option Set"
-          export: "Export"
+          export: "Export to XLSX"
         option_sets/import:
           new: "Import New Option Set"
         question:
           new: "Create New Question"
         report/report:
           new: "Create New Report"
+          export: "Export to CSV"
         user:
           new: "Create New User"
         user_group:

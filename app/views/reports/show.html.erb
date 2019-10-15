@@ -2,12 +2,7 @@
 <% content_for(:per_page_js){report_js_includes} %>
 
 <div class="report_links">
-  <%= top_action_links(@report.becomes(Report::Report), :controller => 'reports') do %>
-    <% if !@report.new_record? && @report.exportable? && can?(:export, @report) %>
-      <%= link_to(icon_tag(:export) + t("report/report.export_to_csv"),
-        report_path(@report, :format => :csv), :class => 'export-link') %>
-    <% end %>
-  <% end %>
+  <%= ActionLinks::ReportLinkBuilder.new(@report) %>
 </div>
 <div class="report_view">
   <div class="report_main">

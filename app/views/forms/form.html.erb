@@ -8,11 +8,6 @@
 <div class="d-print-none">
   <%= top_action_links(form) do %>
     <% if form.any_questions? %>
-      <% if can?(:publish, form) %>
-        <% lbl = t("form.#{form.verb}_form") %>
-        <%= link_to(icon_tag(form.verb) + lbl, publish_form_path(form), "data-method": "put") %>
-      <% end %>
-
       <% if form.smsable? && !admin_mode? %>
         <% if form.published? %>
           <%= link_to(icon_tag(:sms) + t("form.view_sms_guide"), sms_guide_form_path(form)) %>

@@ -14,8 +14,6 @@ module ActionLinkHelper
   end
 
   # Builds links for the action links at the top of a new/edit/show page.
-  # If a block is given, appends return value from block to end of div.
-  # Block should returns an html_safe string.
   def top_action_links(*args, &block)
     options = args.extract_options!
     options[:except] = Array.wrap(options[:except])
