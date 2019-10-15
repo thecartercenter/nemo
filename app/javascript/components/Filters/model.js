@@ -98,10 +98,11 @@ class FiltersModel {
 
     Object.assign(this.original, {
       selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
+      // Convert undefined to null for consistency, since this is a tri-state boolean.
       isReviewed: initialState.isReviewed == null ? null : initialState.isReviewed,
       selectedSubmittersForType: cloneDeep(initialState.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
-      startDate: initialState.startDate === null ? null : initialState.startDate,
-      endDate: initialState.endDate === null ? null : initialState.endDate,
+      startDate: initialState.startDate,
+      endDate: initialState.endDate,
     });
 
     // Update conditionSet IDs when selected forms change.
