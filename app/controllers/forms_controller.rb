@@ -159,20 +159,6 @@ class FormsController < ApplicationController
     redirect_to(index_url_with_context)
   end
 
-  # publishes/unpublishes a form
-  def publish
-    verb = @form.published? ? :unpublish : :publish
-    begin
-      @form.send("#{verb}!")
-      flash[:success] = t("form.#{verb}_success")
-    rescue StandardError => e
-      flash[:error] = t("form.#{verb}_error", msg: e.to_s)
-    end
-
-    # redirect to index or edit
-    redirect_to(verb == :publish ? index_url_with_context : edit_form_path(@form))
-  end
-
   def go_live
     @form.update_status(:live)
     redirect_to(index_url_with_context)
