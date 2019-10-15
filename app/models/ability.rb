@@ -215,7 +215,7 @@ class Ability
     # Only need this ability if not also a coordinator
     # Duplicating the lines for each of live and paused status to achieve 'OR'.
     return if user_has_this_or_higher_role_in_mission?(:coordinator)
-    can(%i[read download], Form, mission_id: mission.id, status: "live")
+    can(%i[index show download], Form, mission_id: mission.id, status: "live")
   end
 
   # Should be called after other main methods as it restricts some permissions granted earlier.
