@@ -21,7 +21,6 @@ module IconHelper
     option_set_import: "list-ul",
     pause: "pause",
     print: "print",
-    publish: "arrow-up",
     question: "question-circle",
     remove: "times",
     report: "bar-chart-o",
@@ -36,7 +35,6 @@ module IconHelper
     sms_message: "comment",
     standard: "certificate",
     submit: "share-square-o",
-    unpublish: "arrow-down",
     user: "users",
     userimport: "users"
   }
