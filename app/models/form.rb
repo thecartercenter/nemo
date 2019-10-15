@@ -269,6 +269,10 @@ class Form < ApplicationRecord
     status == "draft"
   end
 
+  def not_draft?
+    status != "draft"
+  end
+
   # increments the download counter
   def add_download
     self.downloads += 1

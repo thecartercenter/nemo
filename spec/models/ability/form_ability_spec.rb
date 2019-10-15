@@ -17,12 +17,12 @@ describe "abilities for forms" do
 
       it "should have limited abilities" do
         %i[show clone update add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @form) }
-        %i[publish].each { |op| expect(@ability).not_to be_able_to(op, @form) }
+        %i[change_status].each { |op| expect(@ability).not_to be_able_to(op, @form) }
       end
     end
   end
 
-  context "for coordinator role" do
+  context "for coordinator" do
     before do
       @user = create(:user, role_name: "coordinator")
       @ability = Ability.new(user: @user, mode: "mission", mission: get_mission)
@@ -32,13 +32,13 @@ describe "abilities for forms" do
       %i[create index].each { |op| expect(@ability).to be_able_to(op, Form) }
     end
 
-    context "when unpublished" do
+    context "when draft" do
       before do
         @form = create(:form, question_types: %w[text])
       end
 
       it "should be able to do all except download" do
-        %i[show update publish clone add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @form) }
+        %i[show update change_status clone add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @form) }
         %i[download].each { |op| expect(@ability).not_to be_able_to(op, @form) }
       end
 
@@ -49,20 +49,19 @@ describe "abilities for forms" do
         end
 
         it "should be able to do all but destroy" do
-          %i[show update publish clone add_questions remove_questions reorder_questions].each { |op| expect(@ability).to be_able_to(op, @form) }
+          %i[show update change_status clone add_questions remove_questions reorder_questions].each { |op| expect(@ability).to be_able_to(op, @form) }
           %i[download destroy].each { |op| expect(@ability).not_to be_able_to(op, @form) }
         end
       end
     end
 
-    context "when published" do
+    context "when live" do
       before do
-        @form = create(:form, question_types: %w[text])
-        @form.publish!
+        @form = create(:form, :live, question_types: %w[text])
       end
 
       it "should have limited abilities" do
-        %i[show update publish download clone].each { |op| expect(@ability).to be_able_to(op, @form) }
+        %i[show update change_status download clone].each { |op| expect(@ability).to be_able_to(op, @form) }
         %i[add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).not_to be_able_to(op, @form) }
       end
     end
@@ -73,7 +72,7 @@ describe "abilities for forms" do
       end
 
       it "should be able to do nothing" do
-        %i[show update add_questions remove_questions reorder_questions destroy download publish clone].each { |op| expect(@ability).not_to be_able_to(op, @form) }
+        %i[show update add_questions remove_questions reorder_questions destroy download change_status clone].each { |op| expect(@ability).not_to be_able_to(op, @form) }
       end
     end
 
@@ -84,7 +83,7 @@ describe "abilities for forms" do
       end
 
       it "should have same abilities as unlinked unpublished form" do
-        %i[show update publish clone add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @copy) }
+        %i[show update change_status clone add_questions remove_questions reorder_questions destroy].each { |op| expect(@ability).to be_able_to(op, @copy) }
         %i[download].each { |op| expect(@ability).not_to be_able_to(op, @copy) }
       end
     end
