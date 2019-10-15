@@ -11,6 +11,10 @@
   border-color: $accent-color;
 }
 
+.CalendarDay {
+  vertical-align: middle;
+}
+
 .CalendarDay__selected_span {
   background: $light-blue;
   border-color: $accent-color;
