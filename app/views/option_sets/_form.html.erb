@@ -2,7 +2,7 @@
   <%# need to print this here if in ajax mode %>
   <%= alerts(flash) if request.xhr? %>
 
-  <%= top_action_links(@option_set, append: [:export]) unless request.xhr? %>
+  <%= ActionLinks::LinkBuilder.new(@option_set, %i[show edit clone export destroy]) unless request.xhr? %>
 
   <% if form_mode == :edit %>
     <%= published_warning(@option_set) if @option_set.published? %>

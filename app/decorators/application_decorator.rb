@@ -2,7 +2,7 @@
 
 # Base decorator for all decorators in app.
 class ApplicationDecorator < Draper::Decorator
-  delegate :t, to: :h
+  delegate :t, :can?, to: :h
 
   def conditional_tag(name, condition, options = {}, &block)
     condition ? content_tag(name, options, &block) : yield
@@ -16,5 +16,13 @@ class ApplicationDecorator < Draper::Decorator
 
   def nbsp
     "&nbsp;".html_safe # rubocop:disable Rails/OutputSafety
+  end
+
+  def show_action?
+    h.controller.action_name == "show"
+  end
+
+  def edit_action?
+    %w[edit update].include?(h.controller.action_name)
   end
 end

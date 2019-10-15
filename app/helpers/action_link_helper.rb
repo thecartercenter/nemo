@@ -1,7 +1,8 @@
+# This file is deprecated. New development should prefer the new ActionLinks::LinkBuilder decorator class.
 module ActionLinkHelper
   def translate_action(klass_or_obj, action)
     i18nk = (klass_or_obj.respond_to?(:model_name) ? klass_or_obj : klass_or_obj.class).model_name.i18n_key
-    t("activerecord.action_links.#{i18nk}.#{action}")
+    t("activerecord.action_links.#{action}", default: :"activerecord.action_links.models.#{i18nk}.#{action}")
   end
 
   # Generates a link like "Create New Option Set" given a klass

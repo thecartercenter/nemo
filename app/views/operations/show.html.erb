@@ -1,6 +1,6 @@
 <% @title_args = { name: @operation.name } %>
 <%= elmo_form_for(@operation) do |f| %>
-  <%= top_action_links(@operation) %>
+  <%= ActionLinks::LinkBuilder.new(@operation, %i[destroy]) %>
   <%= f.field :id %>
   <% if admin_mode? %>
     <%= f.field :mission, read_only_content: @operation.mission&.name || t("admin_mode.admin_mode") %>

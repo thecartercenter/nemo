@@ -4,8 +4,7 @@
 <% @title = t("page_titles.users.#{form_mode}_profile", name: @user.name) if @user == current_user %>
 
 <%= elmo_form_for(@user) do |f| %>
-
-  <%= top_action_links(@user, except: [:export]) %>
+  <%= ActionLinks::LinkBuilder.new(@user, %i[show edit destroy]) %>
 
   <%= f.field(:name, required: true) %>
   <%= f.field(:login, required: true) %>

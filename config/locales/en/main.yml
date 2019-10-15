@@ -565,68 +565,38 @@ en:
         phone2: "e.g. +2348123456789"
 
     action_links:
-      broadcast:
-        index: "List Broadcasts"
-      form:
-        new: "Create New Form"
-        index: "List Forms"
-        show: "View Form"
-        edit: "Edit Form"
-        destroy: "Delete Form"
-        publish: "Publish Form"
-        unpublish: "Unpublish Form"
-        go_live: "Go Live"
-        pause: "Pause"
-        print: "Print Form"
-      mission:
-        new: "Create New Mission"
-        index: "List Missions"
-        show: "View Mission"
-        edit: "Edit Mission"
-        destroy: "Delete Mission"
-      operation:
-        clear: "Clear All Completed Operations"
-        destroy: "Clear Operation"
-        index: "List Operations"
-      option_set:
-        new: "Create New Option Set"
-        index: "List Option Sets"
-        show: "View Option Set"
-        edit: "Edit Option Set"
-        destroy: "Delete Option Set"
-        export: "Export Option Set"
-      option_sets/import:
-        new: "Import New Option Set"
-      question:
-        new: "Create New Question"
-        index: "List Questions"
-        show: "View Question"
-        edit: "Edit Question"
-        destroy: "Delete Question"
-      report/report:
-        new: "Create New Report"
-        index: "List Reports"
-        show: "View Report"
-        edit: "Edit Report"
-        destroy: "Delete Report"
-      response:
-        index: "List Responses"
-        show: "View Response"
-        edit: "Edit Response"
-        destroy: "Delete Response"
-      user:
-        new: "Create New User"
-        index: "List Users"
-        show: "View User"
-        edit: "Edit User"
-        destroy: "Delete User"
-      user_group:
-        new: "New Group"
-        index: "User Groups"
-        show: "View User Group"
-        edit: "Edit User Group"
-        destroy: "Delete User Group"
-        members: "List Members"
+      show: "View"
+      edit: "Edit"
+      destroy: "Delete"
+      index: "List"
+      clone: "Clone"
+      models:
+        form:
+          new: "Create New Form"
+          sms_guide: "SMS Guide"
+          sms_console: "SMS Test Console"
+          go_live: "Go Live"
+          pause: "Pause"
+          print: "Print"
+        mission:
+          new: "Create Mission"
+        operation:
+          clear: "Clear All Completed"
+          destroy: "Clear"
+        option_set:
+          new: "Create New Option Set"
+          export: "Export"
+        option_sets/import:
+          new: "Import New Option Set"
+        question:
+          new: "Create New Question"
+        report/report:
+          new: "Create New Report"
+        user:
+          new: "Create New User"
+        user_group:
+          new: "New Group"
+          members: "List Members"
 
     hints:
       form:

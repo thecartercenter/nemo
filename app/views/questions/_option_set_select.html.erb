@@ -8,7 +8,7 @@
   <%= form.select(:option_set_id,
         option_set_select_option_tags(@option_sets, option_set&.id),
         {include_blank: true}, class: "form-control") %>
-  <%= link_to("+ " + t("activerecord.action_links.option_set.new"), '#', class: "create_option_set") %>
+  <%= link_to("+ " + t("activerecord.action_links.models.option_set.new"), '#', class: "create_option_set") %>
   <br/>
   <% if form.object.has_conditions? %>
     <div class="note">
