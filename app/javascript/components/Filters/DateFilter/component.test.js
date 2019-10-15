@@ -6,9 +6,6 @@ import { getFiltersStore } from '../testUtils';
 import Component from './component';
 import { quietMount } from '../../../testUtils';
 
-jest.mock('../../conditions/ConditionSetFormField/component', () => 'ConditionSetFormField');
-jest.mock('../../conditions/AddConditionLink/component', () => 'AddConditionLink');
-
 const defaultProps = {
   filtersStore: getFiltersStore(),
   onSubmit: jest.fn(),

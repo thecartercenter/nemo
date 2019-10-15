@@ -1,7 +1,6 @@
 import isEmpty from 'lodash/isEmpty';
 import mapKeys from 'lodash/mapKeys';
 import queryString from 'query-string';
-import moment from 'moment';
 
 import { SUBMITTER_TYPES } from './SubmitterFilter/utils';
 
