@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { inject, observer } from 'mobx-react';
-import 'react-dates/initialize';
 import { DateRangePicker } from 'react-dates';
+
+import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 
 import FilterOverlayTrigger from '../FilterOverlayTrigger/component';
