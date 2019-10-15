@@ -7,6 +7,7 @@
     // Counter the margin-top of the children, so that there's
     // no margin UNLESS the buttons wrap to a second row.
     margin-top: -5px;
+
     > * {
       margin-top: 5px;
     }
