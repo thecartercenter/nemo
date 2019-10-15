@@ -18,11 +18,10 @@ module ActionLinks
       return nil if object.new_record?
       h.content_tag(:div, class: "top-action-links d-print-none") do
         safe_str << actions.map do |action|
-          action, url = unpack_action(action)
+          action, url, method = unpack_action(action)
           next unless url && can?(action, object)
           h.link_to(h.icon_tag(action) << translate_action(action), url,
-            method: method_for_action(action),
-            data: {confirm: action == :destroy ? delete_warning : nil},
+            method: method, data: {confirm: action == :destroy ? delete_warning : nil},
             class: "#{action}-link")
         end.compact.reduce(:<<)
       end
@@ -32,7 +31,13 @@ module ActionLinks
 
     def unpack_action(action)
       if action.is_a?(Array)
-        action
+        if action[1].is_a?(Hash)
+          [action[0],
+           action[1][:url] || url_for_action(action[0]),
+           action[1][:method] || method_for_action(action[0])]
+        else
+          action << method_for_action(action[0])
+        end
       else
         [action, url_for_action(action)]
       end
