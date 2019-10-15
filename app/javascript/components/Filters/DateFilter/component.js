@@ -52,7 +52,7 @@ class DateFilter extends React.Component {
 
     let hints = [];
     if (startDate != null && endDate != null) {
-      hints = [`${startDate.format('YYYY-MM-DD')} — ${endDate.format('YYYY-MM-DD')}`];
+      hints = [`${startDate.format('YYYY-MM-DD')} – ${endDate.format('YYYY-MM-DD')}`];
     } else {
       hints = [[startDate, I18n.t('common.startDate')], [endDate, I18n.t('common.endDate')]]
         .map(([date, label]) => (date == null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
