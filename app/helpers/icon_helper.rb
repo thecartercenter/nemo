@@ -31,6 +31,7 @@ module IconHelper
     setting: "gear",
     show: "file-o",
     sms: "comment",
+    sms_guide: "comment",
     sms_console: "laptop",
     sms_message: "comment",
     standard: "certificate",

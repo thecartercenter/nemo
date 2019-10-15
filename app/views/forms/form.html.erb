@@ -6,25 +6,8 @@
 <% end %>
 
 <div class="d-print-none">
-  <%= top_action_links(form) do %>
-    <% if form.any_questions? %>
-      <% if form.smsable? && !admin_mode? %>
-        <% if form.published? %>
-          <%= link_to(icon_tag(:sms) + t("form.view_sms_guide"), sms_guide_form_path(form)) %>
-        <% end %>
-        <% if can?(:create, Sms::Test) %>
-          <%= link_to(icon_tag(:sms_console) + t("page_titles.sms_tests.all"), new_sms_test_path) %>
-        <% end %>
-      <% end %>
-
-      <%# This link should be last because it has loading ind after it. %>
-      <%= link_to(icon_tag(:print) + t("form.print_form"), "#", class: "print-link",
-        "data-form-id": form.id) %>
-    <% end %>
-  <% end %>
-
+  <%= ActionLinks::FormLinkBuilder.new(@form) %>
   <%= published_warning(form) if form.published? && form_mode == :edit %>
-
   <%= elmo_form_for(form) do |f| %>
     <%= f.base_errors %>
 
