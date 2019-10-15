@@ -4,6 +4,13 @@
   .btn-toolbar {
     margin-bottom: 5px;
 
+    // Counter the margin-top of the children, so that there's
+    // no margin UNLESS the buttons wrap to a second row.
+    margin-top: -5px;
+    > * {
+      margin-top: 5px;
+    }
+
     button {
       background-color: transparent;
       // Same color that Bootstrap uses for the search box.
