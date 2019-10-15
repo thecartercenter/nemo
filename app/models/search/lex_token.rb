@@ -22,11 +22,6 @@ class Search::LexToken
     {name: :chunk, pattern: /[^\s:=<>!,)]+/}
   ].freeze
 
-  EQUALITY_OPS = %i[
-    equal
-    colon
-  ].freeze
-
   def initialize(defn, content = "", fragment = "")
     @kind = defn[:name]
     @content = content

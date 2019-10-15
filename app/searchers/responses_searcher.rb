@@ -191,6 +191,7 @@ class ResponsesSearcher < Searcher
     when "text_by_code"
       filter_by_questions(expression.qualifier_text, token_values)
     when "reviewed"
+      return false if op_kind == :noteq
       filter_by_is_reviewed(token_values)
     when "submitter_id"
       filter_by_ids(token_values, User, current_ids: submitters, include_name: true)
@@ -283,10 +284,6 @@ class ResponsesSearcher < Searcher
     possibilities = possibilities.where(form_id: form_ids) if form_ids.present?
     qing[:id] = possibilities.filter_unique.pluck(:id).first
     qing.except(:possibilities)
-  end
-
-  def equality_op?(op_kind)
-    Search::LexToken::EQUALITY_OPS.include?(op_kind)
   end
 
   # Stringify an expression for the advanced text search box.
