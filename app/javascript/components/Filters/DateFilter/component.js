@@ -51,12 +51,12 @@ class DateFilter extends React.Component {
     const { startDate, endDate } = filtersStore;
 
     let hints = [];
-    if (startDate !== null && endDate !== null) {
+    if (startDate != null && endDate != null) {
       hints = [`${startDate.format('YYYY-MM-DD')} — ${endDate.format('YYYY-MM-DD')}`];
     } else {
       hints = [[startDate, I18n.t('common.startDate')], [endDate, I18n.t('common.endDate')]]
-        .map(([date, label]) => (date === null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
-        .filter((h) => h !== null);
+        .map(([date, label]) => (date == null ? null : `${label}: ${date.format('YYYY-MM-DD')}`))
+        .filter((hint) => hint != null);
     }
     return (
       <FilterOverlayTrigger
