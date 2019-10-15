@@ -141,8 +141,8 @@ class FormsController < ApplicationController
         @form.save!
 
         # publish if requested
-        if params[:save_and_publish].present?
-          @form.publish!
+        if params[:save_and_go_live].present?
+          @form.update_status(:live)
           set_success_and_redirect(@form, to: forms_path)
         else
           set_success_and_redirect(@form, to: edit_form_path(@form))

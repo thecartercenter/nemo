@@ -1326,7 +1326,7 @@ en:
       many: "Are you sure you want to remove these %{count} questions from the form?"
       other: "Are you sure you want to remove these %{count} questions from the form?"
     reqd_sym_definition: "Required questions are marked with a"
-    save_and_publish: "Save and Publish"
+    save_and_go_live: "Save and Go Live"
     saving_order: "Saving order..."
     statuses:
       draft: "Draft"

@@ -43,7 +43,8 @@
       <% show_sp_btn = !form.new_record? && !form.published? && can?(:publish, form) %>
       <div class="submit-buttons <%= "publish" if show_sp_btn %>">
         <% if show_sp_btn %>
-          <%= f.submit(I18n.t("form.save_and_publish"), name: "save_and_publish", class: "btn btn-secondary") %>
+          <%= f.submit(I18n.t("form.save_and_go_live"),
+                name: "save_and_go_live", class: "btn btn-secondary") %>
         <% end %>
         <%= f.submit(class: "btn btn-primary") %>
       </div>
