@@ -128,30 +128,21 @@ class FormsController < ApplicationController
   end
 
   def update
-    begin
-      Form.transaction do
-        set_api_users
-        # save basic attribs
-        @form.assign_attributes(form_params)
-
-        # check special permissions
-        authorize!(:rename, @form) if @form.name_changed?
-
-        # save everything
-        @form.save!
-
-        # publish if requested
-        if params[:save_and_go_live].present?
-          @form.update_status(:live)
-          set_success_and_redirect(@form, to: forms_path)
-        else
-          set_success_and_redirect(@form, to: edit_form_path(@form))
-        end
+    Form.transaction do
+      set_api_users
+      @form.assign_attributes(form_params)
+      authorize!(:rename, @form) if @form.name_changed?
+      @form.save!
+      if params[:save_and_go_live].present?
+        @form.update_status(:live)
+        set_success_and_redirect(@form, to: forms_path)
+      else
+        set_success_and_redirect(@form, to: edit_form_path(@form))
       end
-    # handle other validation errors
-    rescue ActiveRecord::RecordInvalid
-      prepare_and_render_form
     end
+  # handle other validation errors
+  rescue ActiveRecord::RecordInvalid
+    prepare_and_render_form
   end
 
   def destroy
@@ -201,14 +192,10 @@ class FormsController < ApplicationController
     redirect_to(edit_form_url(@form))
   end
 
-  # makes an unpublished copy of the form that can be edited without affecting the original
   def clone
     begin
       cloned = @form.replicate(mode: :clone)
-
-      # save the cloned obj id so that it will flash
       flash[:modified_obj_id] = cloned.id
-
       flash[:success] = t("form.clone_success", form_name: @form.name)
     rescue StandardError => e
       flash[:error] = t("form.clone_error", msg: e.to_s)
