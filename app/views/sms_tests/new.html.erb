@@ -7,7 +7,7 @@
   <%= f.field(:body, :type => :textarea) %>
 
   <div class="submit-buttons">
-    <%= f.submit(:send, class: "btn btn-primary") %>
+    <%= f.submit(:send, class: "btn btn-primary", data: { disable_with: false }) %>
   </div>
 
   <div class="sms_test_result">
