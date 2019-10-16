@@ -2148,7 +2148,7 @@ en:
       first_answer_invalid: "Sorry, but %{token} is not a valid answer. Be sure to include a period after the question number."
       form_not_found: "Sorry, there is no form with code '%{form_code}'."
       form_not_permitted: "Sorry, you don't have permission to submit to form '%{form_code}'."
-      form_not_published: "Sorry, form '%{form_code}' is not currently available for submissions."
+      form_not_live: "Sorry, form '%{form_code}' is not currently available for submissions."
       form_not_smsable: "Sorry, form '%{form_code}' is not currently available for SMS submissions."
       form_version_outdated: "Sorry, the form code '%{form_code}' refers to an old version. Please obtain an updated submission guide."
       invalid_form_code: "Sorry, '%{form_code}' is not a valid form code."

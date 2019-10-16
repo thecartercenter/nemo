@@ -251,6 +251,10 @@ class Form < ApplicationRecord
   def update_status(status)
     # Don't run validations in case form has become invalid due to a migration or other change.
     update_column(:status, status)
+
+    # TODO remove when manual form versioning removed
+    return unless live? && (upgrade_needed? || current_version.nil?)
+    upgrade_version!
   end
 
   def verb

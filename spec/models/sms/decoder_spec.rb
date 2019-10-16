@@ -58,9 +58,8 @@ describe Sms::Decoder, :sms do
 
   describe "form lookup" do
     it "submitting to unpublished form should produce appropriate error" do
-      form = create_form(questions: %w[integer])
-      form.unpublish!
-      expect_decoding_fail(form, data: "1.15", error: "form_not_published")
+      form = create_form(questions: %w[integer], status: :paused)
+      expect_decoding_fail(form, data: "1.15", error: "form_not_live")
     end
 
     it "submitting to non-existent form should produce appropriate error" do
@@ -78,13 +77,7 @@ describe Sms::Decoder, :sms do
     end
 
     it "submitting to non-smsable form should produce appropriate error" do
-      form = create_form(questions: %w[integer])
-
-      # turn off smsable before submitting
-      form.unpublish!
-      form.update!(smsable: false)
-      form.publish!
-
+      form = create_form(questions: %w[integer], smsable: false)
       expect_decoding_fail(form, data: "1.15", error: "form_not_smsable")
     end
 
@@ -707,15 +700,16 @@ describe Sms::Decoder, :sms do
 
   private
 
-  def create_form(options)
+  def create_form(**options)
+    options[:smsable] = true unless options.key?(:smsable)
     option_names = options[:default_option_names] ? nil : %w[Apple Banana Cherry Durian] + ["Elder Berry"]
     authenticate_sms = options[:authenticate_sms] || false
-    form = create(:form,
-      smsable: true,
-      question_types: options[:questions],
-      option_names: option_names,
-      authenticate_sms: authenticate_sms)
-    form.publish!
+    form = create(:form, smsable: options[:smsable], question_types: options[:questions],
+                         option_names: option_names, authenticate_sms: authenticate_sms)
+
+    # Update status to live so we get a version. Then optionall update again to requested status.
+    form.update_status(:live)
+    form.update_status(options[:status]) if options.key?(:status)
     form.reload
   end
 
