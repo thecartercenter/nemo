@@ -58,7 +58,6 @@ class Questioning < FormItem
     :sms_formatting_as_appendix?, :sms_formatting_as_text?, :standardized?, :subqings, :tags,
     :temporal?, :textual?, :title, :metadata_type, :reference, :select_multiple?,
     to: :question
-  delegate :published?, to: :form
   delegate :smsable?, to: :form, prefix: true
   delegate :group_name, to: :parent, prefix: true, allow_nil: true
 
@@ -70,6 +69,10 @@ class Questioning < FormItem
     force_calc_if: ->(qing) { qing.qtype&.numeric? }
 
   accepts_nested_attributes_for :question
+
+  def published?
+    form.not_draft?
+  end
 
   # checks if this form has any answers
   # uses the form.qing_answer_count method because these requests tend to come in batches so better

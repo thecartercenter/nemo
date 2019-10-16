@@ -84,7 +84,7 @@ class Ability
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: nil)
-      can(:destroy, Question) { |q| !q.not_draft? && !q.has_answers? }
+      can(:destroy, Question) { |q| !q.published? && !q.has_answers? }
 
       can(:manage, Mission)
       can(:manage, User)
@@ -224,7 +224,7 @@ class Ability
     cannot(:download, Form, status: "draft")
     cannot(%i[add_questions remove_questions reorder_questions], Form, &:not_draft?)
 
-    cannot(%i[destroy update update_core], Questioning, &:not_draft?)
+    cannot(%i[destroy update update_core], Questioning, &:published?)
 
     # BUT can update questioning (though not its core) if can update related question
     # we need this because questions are updated via questionings
@@ -234,12 +234,12 @@ class Ability
     cannot(:destroy, Questioning, &:has_answers?)
 
     # update_core refers to the core fields: question type, option set, constraints
-    cannot(:update_core, Question) { |q| q.not_draft? || q.has_answers? }
+    cannot(:update_core, Question) { |q| q.published? || q.has_answers? }
     cannot(:update_code, Question, &:standard_copy?) # question code attribute
 
     # we need these specialized permissions because option names/hints are updated via option set
-    cannot(%i[add_options remove_options reorder_options], OptionSet, &:not_draft?)
-    cannot(:destroy, OptionSet) { |o| o.has_answers? || o.any_questions? || o.not_draft? }
+    cannot(%i[add_options remove_options reorder_options], OptionSet, &:published?)
+    cannot(:destroy, OptionSet) { |o| o.has_answers? || o.any_questions? || o.published? }
 
     # operations can't be destroyed while their underlying job is in progress
     cannot :destroy, Operation do |op|

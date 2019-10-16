@@ -197,7 +197,7 @@ class Question < ApplicationRecord
 
   # determines if the question appears on any published forms
   def published?
-    !standard? && forms.any?(&:published?)
+    !standard? && forms.any?(&:not_draft?)
   end
 
   # checks if any associated forms are smsable
