@@ -1,6 +1,7 @@
 import isEmpty from 'lodash/isEmpty';
 import cloneDeep from 'lodash/cloneDeep';
 import isEqual from 'lodash/isEqual';
+import moment from 'moment';
 import { action, observable, computed, reaction, toJS } from 'mobx';
 
 import ConditionSetModel from '../conditions/ConditionSetFormField/model';
@@ -46,6 +47,12 @@ class FiltersModel {
   @observable
   advancedSearchText = '';
 
+  @observable
+  startDate = null;
+
+  @observable
+  endDate = null;
+
   @computed
   get selectedFormId() {
     return isEmpty(this.selectedFormIds) ? '' : this.selectedFormIds[0];
@@ -58,13 +65,25 @@ class FiltersModel {
       isEqual(this.original.selectedFormIds, this.selectedFormIds)
       && isEqual(this.original.isReviewed, this.isReviewed)
       && isEqual(this.original.selectedSubmittersForType, this.selectedSubmittersForType)
+      && isEqual(this.original.startDate, this.startDate)
+      && isEqual(this.original.endDate, this.endDate)
       && !this.conditionSetStore.isDirty
     );
     return !clean;
   }
 
   constructor(initialState = {}) {
-    const { selectedQings } = initialState;
+    const { selectedQings, startDate, endDate } = initialState;
+
+    // Convert dates to moment if given.
+    if (startDate) {
+      // eslint-disable-next-line no-param-reassign
+      initialState.startDate = moment(startDate);
+    }
+    if (endDate) {
+      // eslint-disable-next-line no-param-reassign
+      initialState.endDate = moment(endDate);
+    }
 
     // If any qings should be selected, create new conditions for them.
     if (!isEmpty(selectedQings)) {
@@ -79,8 +98,11 @@ class FiltersModel {
 
     Object.assign(this.original, {
       selectedFormIds: cloneDeep(initialState.selectedFormIds) || [],
+      // Convert undefined to null for consistency, since this is a tri-state boolean.
       isReviewed: initialState.isReviewed == null ? null : initialState.isReviewed,
       selectedSubmittersForType: cloneDeep(initialState.selectedSubmittersForType) || getEmptySubmitterTypeMap(),
+      startDate: initialState.startDate,
+      endDate: initialState.endDate,
     });
 
     // Update conditionSet IDs when selected forms change.
@@ -128,6 +150,12 @@ class FiltersModel {
   @action
   handleChangeAdvancedSearch = (event) => {
     this.advancedSearchText = event.target.value;
+  }
+
+  @action
+  handleDateChange = ({ startDate, endDate }) => {
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 }
 

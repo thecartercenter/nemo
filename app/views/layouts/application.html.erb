@@ -5,6 +5,7 @@
 <head>
   <title><%= Settings.site_name %><%= (ttl = title(:text_only => true)).blank? ? "" : ": #{ttl}" %></title>
 
+  <%= stylesheet_pack_tag("application") %>
   <%= main_stylesheet_tag(params) %>
   <%= stylesheet_link_tag("disable_bootstrap_modal_transitions") if Rails.env.test? %>
   <%= javascript_include_tag("application") %>

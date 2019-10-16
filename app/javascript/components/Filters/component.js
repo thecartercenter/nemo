@@ -9,6 +9,7 @@ import QuestionFilter from './QuestionFilter/component';
 import ReviewedFilter from './ReviewedFilter/component';
 import SubmitterFilter from './SubmitterFilter/component';
 import AdvancedSearchFilter from './AdvancedSearchFilter/component';
+import DateFilter from './DateFilter/component';
 
 @inject('filtersStore')
 @inject('conditionSetStore')
@@ -58,6 +59,7 @@ class Filters extends React.Component {
         <QuestionFilter {...defaultProps} />
         <ReviewedFilter {...defaultProps} />
         <SubmitterFilter {...defaultProps} />
+        <DateFilter {...defaultProps} />
       </ButtonToolbar>
     );
   }

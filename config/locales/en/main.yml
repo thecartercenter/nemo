@@ -32,6 +32,8 @@ en:
     design: "Design"
     edit: "Edit"
     either: 'Either'
+    endDate: "End"
+    endDatePlaceholder: "End Date"
     error:
       zero: "Errors"
       one: "Error"
@@ -96,6 +98,8 @@ en:
     search: "Search"
     send: "Send"
     showing: "Showing"
+    startDate: "Start"
+    startDatePlaceholder: "Start Date"
     step: "Step"
     suggest: "Suggest"
     submit: "Submit"
@@ -1304,6 +1308,7 @@ en:
     form: "Form"
     choose_form: "Choose a form"
     question: "Question"
+    date: "Date"
     showing_questions_from: "Showing questions from %{form_list} only."
     reviewed: "Reviewed"
     is_reviewed: "Is marked 'reviewed'"

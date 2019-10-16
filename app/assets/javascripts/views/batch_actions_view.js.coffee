@@ -84,7 +84,7 @@ class ELMO.Views.BatchActionsView extends ELMO.Views.ApplicationView
 
   # tests if all boxes are checked
   all_checked: (cbs = @get_batch_checkboxes()) ->
-    _.all(cbs, (cb) -> cb.checked)
+    _.every(cbs, (cb) -> cb.checked)
 
   set_select_all_pages_true_if_all_checked_and_only_one_page_else_false: ->
     @select_all_pages_field.val(if @all_checked() && @pages == 1 then '1' else '')
