@@ -44,7 +44,7 @@ class FormVersion < ApplicationRecord
   def upgrade!
     upgraded = self.class.new(form_id: form_id, is_current: true)
     self.is_current = false
-    save
+    save!
     upgraded.save!
     upgraded
   end
