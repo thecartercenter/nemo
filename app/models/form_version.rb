@@ -77,7 +77,7 @@ class FormVersion < ApplicationRecord
     # Increment the revision number until no match
     while self.class.find_by(number: number)
       revision += 1
-      raise "Revision can't be more than 2 digits" if revision >= 100
+      raise RevisionTooHighError if revision >= 100
       self.number = number[0, 8] + revision.to_s.rjust(2, "0")
     end
   end

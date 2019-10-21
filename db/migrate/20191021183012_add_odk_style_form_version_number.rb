@@ -18,7 +18,7 @@ class AddOdkStyleFormVersionNumber < ActiveRecord::Migration[5.2]
 
     # Set version number using ODK date-revision convention
     loop do
-      raise "Revision can't be more than 2 digits" if revision >= 100
+      raise RevisionTooHighError if revision >= 100
       form_version.number = date + revision.to_s.rjust(2, "0")
       revision += 1
       break unless FormVersion.find_by(number: form_version.number)
