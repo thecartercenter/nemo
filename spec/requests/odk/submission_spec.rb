@@ -56,13 +56,15 @@ describe "odk submissions", :odk, type: :request do
       f = create(:form, question_types: %w[integer integer])
       f.publish!
       xml = build_odk_submission(f)
-      old_version = f.current_version.code
+      old_code = f.current_version.code
+      old_number = f.current_version.number
 
       # Change form and force an upgrade (verify upgrade happened)
       f.unpublish!
       f.c[0].update!(required: true)
       f.reload.publish!
-      expect(f.reload.current_version.code).not_to eq(old_version)
+      expect(f.reload.current_version.code).not_to eq(old_code)
+      expect(f.reload.current_version.number).not_to eq(old_number)
 
       # Try to submit old xml and check for error
       do_submission(submission_path(get_mission), xml)

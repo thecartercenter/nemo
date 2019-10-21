@@ -341,7 +341,8 @@ describe FormVersioningPolicy do
     reload_forms
     @forms.each { |f| f.publish!; f.unpublish! }
     reload_forms
-    @old_versions = @forms.collect { |f| f.current_version.code }
+    @old_codes = @forms.collect { |f| f.current_version.code }
+    @old_numbers = @forms.collect { |f| f.current_version.number }
   end
 
   def publish_and_check_versions(options)
@@ -353,10 +354,13 @@ describe FormVersioningPolicy do
 
     method = options[:should_change] ? :not_to : :to
 
-    expect(@old_versions[0]).send(method, eq(@forms[0].current_version.code))
-    expect(@old_versions[1]).send(method, eq(@forms[1].current_version.code))
+    expect(@old_codes[0]).send(method, eq(@forms[0].current_version.code))
+    expect(@old_numbers[0]).send(method, eq(@forms[0].current_version.number))
+    expect(@old_codes[1]).send(method, eq(@forms[1].current_version.code))
+    expect(@old_numbers[1]).send(method, eq(@forms[1].current_version.number))
 
     # third form code should never change
-    expect(@old_versions[2]).to eq(@forms[2].current_version.code)
+    expect(@old_codes[2]).to eq(@forms[2].current_version.code)
+    expect(@old_numbers[2]).to eq(@forms[2].current_version.number)
   end
 end
