@@ -80,7 +80,6 @@ describe FormVersion do
     # publish and check again
     form.publish!
     form.reload
-    expect(form.current_version.sequence).to eq(1)
 
     # ensure form_id is set properly on version object
     expect(form.current_version.form_id).to eq(form.id)
