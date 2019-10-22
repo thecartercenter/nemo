@@ -231,23 +231,6 @@ class Form < ApplicationRecord
     children.where(type: "Questioning").order(:rank).last
   end
 
-  # Publishes the form, upgrading the version if necessary.
-  def publish!
-    self.published = true
-
-    # upgrade if necessary
-    if upgrade_needed? || current_version.nil?
-      upgrade_version!
-    else
-      save(validate: false)
-    end
-  end
-
-  def unpublish!
-    self.published = false
-    save(validate: false)
-  end
-
   def update_status(status)
     # Don't run validations in case form has become invalid due to a migration or other change.
     update_column(:status, status)

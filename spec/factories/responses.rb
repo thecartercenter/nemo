@@ -224,13 +224,7 @@ FactoryGirl.define do
       reviewer { create(:user, name: reviewer_name) }
     end
 
-    # Ensure unpublished form associations have been published at least once
     after(:build) do |response, evaluator|
-      form = response.form
-      unless form.published? && form.current_version.present?
-        form.publish!
-        form.unpublish!
-      end
       # Build answer objects from answer_values array
       ResponseFactoryHelper.build_answers(response, evaluator.answer_values) if evaluator.answer_values
     end
