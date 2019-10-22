@@ -39,7 +39,7 @@ module ActionLinks
           action << method_for_action(action[0])
         end
       else
-        [action, url_for_action(action)]
+        [action, url_for_action(action), method_for_action(action)]
       end
     end
 
