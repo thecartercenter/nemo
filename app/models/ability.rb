@@ -157,7 +157,7 @@ class Ability
 
       can(%i[read create update update_code update_core export bulk_destroy],
         Question, mission_id: mission.id)
-      can(:destroy, Question) { |q| q.mission_id == mission.id && q.draft? && !q.has_answers? }
+      can(:destroy, Question) { |q| q.mission_id == mission.id && !q.published? && !q.has_answers? }
     end
 
     # Can manage these classes for the current mission even if locked
