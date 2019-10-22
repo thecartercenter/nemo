@@ -74,11 +74,6 @@ shared_context "odk submissions" do
     end
   end
 
-  def submission_path(mission = nil)
-    mission ||= get_mission
-    "/m/#{mission.compact_name}/submission"
-  end
-
   def allow_forgery_protection(allow)
     ActionController::Base.allow_forgery_protection = allow
   end
