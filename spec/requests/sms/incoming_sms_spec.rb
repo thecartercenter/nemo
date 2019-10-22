@@ -202,9 +202,7 @@ describe "incoming sms", :sms do
 
   it "too high numeric answer should get error" do
     # add a maximum constraint to the first question
-    form.unpublish!
     form.questions.first.update!(maximum: 20)
-    form.publish!
 
     # check that it works
     assert_sms_response(incoming: "#{form_code} 1.21 2.21", outgoing: /was not less than or equal to 20/)

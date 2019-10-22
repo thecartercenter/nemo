@@ -17,7 +17,7 @@ shared_context "incoming sms" do
       form.recipients = options[:forward_recipients]
     end
     form.authenticate_sms = true if options[:authenticate_sms]
-    form.publish!
+    form.save!
     form.reload
   end
 
