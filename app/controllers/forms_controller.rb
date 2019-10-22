@@ -51,7 +51,7 @@ class FormsController < ApplicationController
         @cache_key = "#{@cache_key}#{CACHE_SUFFIX}"
         unless fragment_exist?(@cache_key)
           # This query is not deferred so we have to check if it should be run or not.
-          @forms = @forms.published
+          @forms = @forms.live
         end
       end
     end
