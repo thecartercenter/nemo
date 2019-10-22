@@ -68,7 +68,6 @@ class Form < ApplicationRecord
 
   before_create :init_downloads
   before_validation :normalize
-  before_save :update_pub_changed_at
   after_create :create_root_group
   before_destroy :destroy_items
   before_destroy :nullify_current_version_foreign_key
@@ -109,7 +108,7 @@ class Form < ApplicationRecord
   def self.odk_index_cache_key(options)
     # Note that since we're using maximum method, dates don't seem to be TZ adjusted on load,
     # which is fine as long as it's consistent.
-    max_pub_changed_at = if for_mission(options[:mission]).published.any?
+    max_pub_changed_at = if for_mission(options[:mission]).live.any?
                            for_mission(options[:mission]).maximum(:pub_changed_at).utc.to_s(:cache_datetime)
                          else
                            "no-pubd-forms"
@@ -232,11 +231,12 @@ class Form < ApplicationRecord
     children.where(type: "Questioning").order(:rank).last
   end
 
-  def update_status(status)
+  def update_status(new_status)
+    return if new_status == status
     # Don't run validations in case form has become invalid due to a migration or other change.
-    update_column(:status, status)
+    update_columns(status: new_status, pub_changed_at: Time.current)
 
-    # TODO remove when manual form versioning removed
+    # TODO: remove when manual form versioning removed
     return unless live? && (upgrade_needed? || current_version.nil?)
     upgrade_version!
   end
@@ -349,11 +349,6 @@ class Form < ApplicationRecord
   def normalize
     self.name = name.strip
     self.default_response_name = default_response_name.try(:strip).presence
-    true
-  end
-
-  def update_pub_changed_at
-    self.pub_changed_at = Time.current if published_changed?
     true
   end
 end

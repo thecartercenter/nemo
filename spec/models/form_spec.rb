@@ -82,19 +82,19 @@ describe Form do
       expect(form.pub_changed_at).to be_nil
     end
 
-    it "should be updated when form published" do
-      form.publish!
+    it "should be updated when form goes live" do
+      form.update_status(:live)
       expect(form.pub_changed_at).to be_within(0.1).of(Time.zone.now)
     end
 
-    it "should be updated when form unpublished" do
-      publish_and_reset_pub_changed_at(save: true)
-      form.unpublish!
+    it "should be updated when form paused" do
+      go_live_and_reset_pub_changed_at(save: true)
+      form.update_status(:paused)
       expect(form.pub_changed_at).to be_within(0.1).of(Time.zone.now)
     end
 
     it "should not be updated when form saved otherwise" do
-      publish_and_reset_pub_changed_at
+      go_live_and_reset_pub_changed_at
       form.name = "Something else"
       form.save!
       expect(form.pub_changed_at).not_to be_within(5.minutes).of(Time.zone.now)
@@ -102,10 +102,10 @@ describe Form do
   end
 
   describe "odk_download_cache_key", :odk do
-    before { publish_and_reset_pub_changed_at }
+    before { go_live_and_reset_pub_changed_at }
 
     it "should be correct" do
-      expect(form.odk_download_cache_key).to eq "odk-form/#{form.id}-#{form.pub_changed_at}"
+      expect(form.odk_download_cache_key).to eq("odk-form/#{form.id}-#{form.pub_changed_at}")
     end
   end
 
@@ -113,15 +113,15 @@ describe Form do
     let(:form2) { create(:form) }
 
     before do
-      publish_and_reset_pub_changed_at(save: true)
-      publish_and_reset_pub_changed_at(form: form2, diff: 30.minutes, save: true)
+      go_live_and_reset_pub_changed_at(save: true)
+      go_live_and_reset_pub_changed_at(form: form2, diff: 30.minutes, save: true)
     end
 
     context "for mission with forms" do
       it "should be correct" do
-        expect(
-          Form.odk_index_cache_key(mission: get_mission)
-        ).to eq "odk-form-list/mission-#{get_mission.id}/#{form2.pub_changed_at.utc.to_s(:cache_datetime)}"
+        expect(Form.odk_index_cache_key(mission: get_mission)).to eq(
+          "odk-form-list/mission-#{get_mission.id}/#{form2.pub_changed_at.utc.to_s(:cache_datetime)}"
+        )
       end
     end
 
@@ -149,11 +149,11 @@ describe Form do
 
     describe "ancestry" do
       it "has 3 children" do
-        expect(form.root_group.sorted_children.count).to eq 3
+        expect(form.root_group.sorted_children.count).to eq(3)
       end
 
       it "has one subgroup with two children" do
-        expect(form.root_group.sorted_children[1].sorted_children.count).to eq 2
+        expect(form.root_group.sorted_children[1].sorted_children.count).to eq(2)
       end
     end
 
@@ -172,19 +172,19 @@ describe Form do
 
         it "should work" do
           form.destroy
-          expect([Form.count, FormItem.count, SkipRule.count]).to eq [0, 0, 0]
+          expect([Form.count, FormItem.count, SkipRule.count]).to eq([0, 0, 0])
         end
       end
 
       it "should work" do
         form.destroy
-        expect([Form.count, FormItem.count]).to eq [0, 0]
+        expect([Form.count, FormItem.count]).to eq([0, 0])
       end
 
       it "should work with an smsable form" do
         form.update(smsable: true)
         form.destroy
-        expect([Form.count, FormItem.count]).to eq [0, 0]
+        expect([Form.count, FormItem.count]).to eq([0, 0])
       end
     end
   end
@@ -197,10 +197,8 @@ describe Form do
     let!(:recipient) { create(:user) }
 
     before do
-      # Ensure there are related form version(s).
-      form2.publish!
-      form2.upgrade_version!
-
+      # Ensure there are related form version(s) and recipients.
+      form2.update_status(:live)
       form2.recipient_users << recipient
     end
 
@@ -312,9 +310,9 @@ describe Form do
     end
   end
 
-  def publish_and_reset_pub_changed_at(options = {})
+  def go_live_and_reset_pub_changed_at(options = {})
     f = options[:form] || form
-    f.publish!
+    f.update_status(:live)
     f.pub_changed_at -= (options[:diff] || 1.hour)
     f.save! if options[:save]
   end
