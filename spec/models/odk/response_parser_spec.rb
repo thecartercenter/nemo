@@ -10,10 +10,10 @@ describe Odk::ResponseParser do
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
   let(:response2) { Response.new(form: form, mission: form.mission, user: create(:user)) }
   let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: xml_values) }
+  let(:files) { {xml_submission_file: StringIO.new(xml)} }
 
   context "responses without media" do
     let(:form) { create(:form, :live, :with_version, question_types: question_types) }
-    let(:files) { {xml_submission_file: StringIO.new(xml)} }
 
     context "simple form" do
       let(:fixture_name) { "simple_response" }
@@ -443,6 +443,18 @@ describe Odk::ResponseParser do
         expect(populated.root_node.c[2].media_object.item_file_name).to include(media_file_name_2)
         expect(populated.root_node.c[3].media_object).to be_nil
       end
+    end
+  end
+
+  context "with incomplete response" do
+    let(:fixture_name) { "incomplete" }
+    let(:form) { create(:form, :live, :with_version, question_types: %w[integer]) }
+    let(:xml_values) { [] }
+    let(:expected_values) { [] }
+
+    it "should mark response as incomplete" do
+      populated = Odk::ResponseParser.new(response: response, files: files).populate_response
+      expect(populated).to be_incomplete
     end
   end
 end
