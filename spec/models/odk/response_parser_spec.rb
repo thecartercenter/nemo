@@ -4,6 +4,7 @@ require "rails_helper"
 
 describe Odk::ResponseParser do
   include_context "response tree"
+  include_context "odk submissions"
   include ActionDispatch::TestProcess
   let(:save_fixtures) { true }
   let(:response) { Response.new(form: form, mission: form.mission, user: create(:user)) }
@@ -433,9 +434,5 @@ describe Odk::ResponseParser do
         expect(populated.root_node.c[3].media_object).to be_nil
       end
     end
-  end
-
-  def prepare_odk_response_fixture(fixture_name, form, options = {})
-    prepare_odk_fixture(name: fixture_name, type: :response, form: form, **options)
   end
 end

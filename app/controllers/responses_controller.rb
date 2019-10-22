@@ -187,6 +187,9 @@ class ResponsesController < ApplicationController
       # 426 - upgrade needed
       # We use this because ODK can't display custom failure messages so this provides a little more info.
       render_xml_submission_failure(e, 426)
+    rescue FormStatusError => e
+      # 460 - Custom code meaning form is not live
+      render_xml_submission_failure(e, 460)
     rescue SubmissionError => e
       render_xml_submission_failure(e, 422)
     end

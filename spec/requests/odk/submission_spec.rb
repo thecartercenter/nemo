@@ -14,6 +14,11 @@ describe "odk submissions", :odk, type: :request do
   let(:submission_path) { "/m/#{submission_mission.compact_name}/submission" }
   let(:user) { create(:user, role_name: "enumerator", mission: mission) }
   let(:auth_headers) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
+  let(:xml) { prepare_odk_response_fixture("single_question", form, values: [1]) }
+  let(:file) { Tempfile.new.tap { |f| f.write(xml) && f.rewind } }
+  let(:upload) { fixture_file_upload(file, "text/xml") }
+  let(:request_params) { {xml_submission_file: upload, format: "xml"} }
+  let(:save_fixtures) { true }
 
   before do
     allow_forgery_protection true
@@ -56,6 +61,24 @@ describe "odk submissions", :odk, type: :request do
 
     it "should fail for non-existent mission" do
       expect { do_submission("/m/foo/submission") }.to raise_error(ActiveRecord::RecordNotFound)
+    end
+
+    context "with draft form" do
+      let(:form) { create(:form, :draft, question_types: %w[integer]) }
+
+      it "should fail with 460" do
+        post(submission_path, params: request_params, headers: auth_headers)
+        expect(response.response_code).to eq(460)
+      end
+    end
+
+    context "with paused form" do
+      let(:form) { create(:form, :paused, question_types: %w[integer]) }
+
+      it "should fail with 460" do
+        post(submission_path, params: request_params, headers: auth_headers)
+        expect(response.response_code).to eq(460)
+      end
     end
 
     it "should return error 426 upgrade required if old version of form" do
