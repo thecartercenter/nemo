@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # rubocop:disable Metrics/LineLength
 # == Schema Information
 #
@@ -46,13 +48,12 @@
 #
 # rubocop:enable Metrics/LineLength
 
-require 'rails_helper'
+require "rails_helper"
 
 describe Response do
   it "cache key" do
     user = create(:user)
-    form = create(:form, question_types: %w[integer])
-    form.publish!
+    form = create(:form, :live, question_types: %w[integer])
 
     # ensure key changes on edits, creates, and deletes
     r1 = create(:response, user: user, form: form, answer_values: [1])
@@ -78,25 +79,23 @@ describe Response do
 
   it "incomplete response will not save if it is not marked as incomplete" do
     user = create(:user)
-    form = create(:form, question_types: %w[integer])
-    form.root_questionings.first.update_attribute(:required, true)
-    form.publish!
+    form = create(:form, :live, question_types: %w[integer])
+    form.c[0].update!(required: true)
     form.reload
 
     # Submit answer with first (and only) answer empty
     # This should show up as a missing response.
     invalid_response = build(:response, user: user, form: form, answer_values: [""])
     expect(invalid_response.valid?).to eq(false)
-    expect{ invalid_response.save! }.to raise_error(ActiveRecord::RecordInvalid)
+    expect { invalid_response.save! }.to raise_error(ActiveRecord::RecordInvalid)
   end
 
   it "incomplete response will save if it is marked as incomplete" do
     user = create(:user)
-    form = create(:form, question_types: %w[integer])
-    form.root_questionings.first.required = true
-    form.publish!
+    form = create(:form, :live, question_types: %w[integer])
+    form.c[0].update!(required: true)
     form.reload
-    expect{ create(:response, user: user, form: form, incomplete: true) }.not_to raise_error
+    expect { create(:response, user: user, form: form, incomplete: true) }.not_to raise_error
   end
 
   it "a user can checkout a response" do
@@ -106,9 +105,9 @@ describe Response do
     expect(response.checked_out_at).to be_nil
     expect(response.checked_out_by_id).to be_nil
 
-    Timecop.freeze(Date.today) do
+    Timecop.freeze(Time.zone.today) do
       response.check_out!(user)
-      expect(Time.now).to eq(response.checked_out_at)
+      expect(Time.current).to eq(response.checked_out_at)
       expect(response.checked_out_by).to eq(user)
     end
   end
@@ -116,8 +115,8 @@ describe Response do
   it "a users previous checkout will be removed if they have more than one checkout" do
     user = create(:user)
 
-    Timecop.freeze(Date.today) do
-      r_previous = create(:response, checked_out_at: Time.now, checked_out_by: user)
+    Timecop.freeze(Time.zone.today) do
+      r_previous = create(:response, checked_out_at: Time.current, checked_out_by: user)
       r_new = build(:response)
 
       expect(r_new.checked_out_at).to be_nil
@@ -126,7 +125,7 @@ describe Response do
       r_new.check_out!(user)
       r_previous.reload
 
-      expect(Time.zone.parse(DateTime.now.to_s)).to eq(r_new.checked_out_at)
+      expect(r_new.checked_out_at).to eq(Time.current)
       expect(r_new.checked_out_by).to eq(user)
 
       expect(r_previous.checked_out_at).to be_nil
@@ -160,21 +159,21 @@ describe Response do
     let(:response) { create(:response, user: user, form: form, answer_values: answer_values) }
 
     it "destroys nested response tree nodes, media, choices" do
-      expect(ResponseNode.count).to eq 0
-      expect(Choice.all.count).to eq 0
-      expect(Media::Image.all.count).to eq 0
+      expect(ResponseNode.count).to eq(0)
+      expect(Choice.all.count).to eq(0)
+      expect(Media::Image.all.count).to eq(0)
       response # create response
       # 21 response nodes comes from:
       # 12 answers, 3 inner grps, 2 inner grp sets, 2 outer grp, 1 outer  grp set, 1 root grp
-      expect(ResponseNode.count).to eq 21
-      expect(Answer.count).to eq 12
+      expect(ResponseNode.count).to eq(21)
+      expect(Answer.count).to eq(12)
       expect(Choice.count).to be > 0
       expect(Media::Image.count).to be > 0
 
       response.destroy
-      expect(ResponseNode.count).to eq 0
-      expect(Choice.count).to eq 0
-      expect(Media::Image.count).to eq 0
+      expect(ResponseNode.count).to eq(0)
+      expect(Choice.count).to eq(0)
+      expect(Media::Image.count).to eq(0)
     end
   end
 end
