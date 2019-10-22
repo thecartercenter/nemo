@@ -51,7 +51,7 @@ describe FormVersion do
   end
 
   it "upgrade" do
-    form.publish!
+    form.update_status(:live)
     fv1 = form.current_version
     expect(fv1).not_to be_nil
     old_v1_code = fv1.code
@@ -77,7 +77,7 @@ describe FormVersion do
     expect(form.current_version).to be_nil
 
     # publish and check again
-    form.publish!
+    form.update_status(:live)
     form.reload
     expect(form.current_version.sequence).to eq(1)
 
@@ -86,28 +86,28 @@ describe FormVersion do
 
     # unpublish (shouldn't change)
     old = form.current_version.code
-    form.unpublish!
+    form.update_status(:draft)
     form.reload
     expect(form.current_version.code).to eq(old)
 
     # publish again (shouldn't change)
     old = form.current_version.code
-    form.publish!
+    form.update_status(:live)
     form.reload
     expect(form.current_version.code).to eq(old)
 
     # unpublish, set upgrade flag, and publish (should change)
     old = form.current_version.code
-    form.unpublish!
+    form.update_status(:draft)
     form.flag_for_upgrade!
-    form.publish!
+    form.update_status(:live)
     form.reload
     expect(form.current_version.code).not_to eq(old)
 
     # unpublish and publish (shouldn't change)
     old = form.current_version.code
-    form.unpublish!
-    form.publish!
+    form.update_status(:draft)
+    form.update_status(:live)
     form.reload
     expect(form.current_version.code).to eq(old)
   end
