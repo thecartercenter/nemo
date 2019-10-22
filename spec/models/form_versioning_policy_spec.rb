@@ -8,7 +8,7 @@ describe FormVersioningPolicy do
     @forms = create_list(:form, 3)
 
     # publish and then unpublish the forms so they get versions
-    @forms.each{|f| f.publish!; f.unpublish!}
+    @forms.each{ |f| f.update_status(:live); f.update_status(:draft) }
 
     # get the old version codes for comparison
     save_old_version_codes
@@ -339,7 +339,7 @@ describe FormVersioningPolicy do
   def save_old_version_codes
     # publish and unpublish so any pending upgrades are performed
     reload_forms
-    @forms.each{|f| f.publish!; f.unpublish!}
+    @forms.each{|f| f.update_status(:live); f.update_status(:draft)}
     reload_forms
     @old_versions = @forms.collect{|f| f.current_version.code}
   end
@@ -347,7 +347,7 @@ describe FormVersioningPolicy do
   def publish_and_check_versions(options)
     reload_forms
 
-    @forms.each{|f| f.publish!}
+    @forms.each{|f| f.update_status(:live)}
 
     reload_forms
 
