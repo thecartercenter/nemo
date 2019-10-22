@@ -90,6 +90,7 @@ class Form < ApplicationRecord
   delegate :children, :sorted_children, :visible_children, :c, :sc,
     :descendants, :child_groups, to: :root_group
   delegate :code, to: :current_version
+  delegate :number, to: :current_version
   delegate :override_code, to: :mission
 
   replicable child_assocs: :root_group, uniqueness: {field: :name, style: :sep_words},

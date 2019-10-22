@@ -1,5 +1,3 @@
-# frozen_string_literal: true
-
 #######################################################################################################
 # This context is DEPRECATED. Use newer methods of building XML fixtures instead. See ODK parser specs.
 #######################################################################################################
@@ -34,7 +32,7 @@ shared_context "odk submissions" do
     raise "form should have version" if form.current_version.nil?
 
     "".tap do |xml|
-      xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.code}\">"
+      xml << "<?xml version='1.0' ?><data id=\"#{form_id}\" version=\"#{form.current_version.number}\">"
 
       if no_data
         xml << "<#{Odk::FormDecorator::IR_QUESTION}>yes</#{Odk::FormDecorator::IR_QUESTION}>" if form.allow_incomplete?
