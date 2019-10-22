@@ -5,7 +5,7 @@ require "rails_helper"
 feature "remember context", js: true do
   let!(:user) { create(:user) }
   let!(:other_user) { create(:user) }
-  let!(:form) { create(:form) }
+  let!(:form) { create(:form, :live) }
   let!(:responses) { create_list(:response, 1, form: form, user: other_user) }
   let!(:user_responses) { create_list(:response, 22, form: form, user: user) }
 
@@ -32,7 +32,7 @@ feature "remember context", js: true do
 
     # delete response
     accept_alert do
-      click_link("Delete Response")
+      click_link("Delete")
     end
 
     expect(page).to have_content(displaying_responses_message(page: 2, total: 21))
