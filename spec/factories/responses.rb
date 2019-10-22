@@ -225,6 +225,13 @@ FactoryGirl.define do
     end
 
     after(:build) do |response, evaluator|
+      # If form is draft, it will need a version for use in the shortcode, so create one
+      # by going live and then reverting.
+      if response.form.draft?
+        response.form.update_status(:live)
+        response.form.update_status(:draft)
+      end
+      
       # Build answer objects from answer_values array
       ResponseFactoryHelper.build_answers(response, evaluator.answer_values) if evaluator.answer_values
     end
