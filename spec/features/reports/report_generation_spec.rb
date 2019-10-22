@@ -81,7 +81,7 @@ feature "report generation", js: true do
   end
 
   def edit_report
-    click_link("Edit Report")
+    click_link("Edit")
     expect(page).to have_selector(".modal-title", text: /Edit Report: Options/)
   end
 
