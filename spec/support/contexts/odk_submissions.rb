@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 #######################################################################################################
 # This context is DEPRECATED. Use newer methods of building XML fixtures instead. See ODK parser specs.
 #######################################################################################################
@@ -5,7 +7,7 @@ shared_context "odk submissions" do
   # Builds a form (unless xml provided) and sends a submission to the given path.
   def do_submission(path, xml = nil)
     if xml.nil?
-      form = create(:form, question_types: %w(integer integer))
+      form = create(:form, question_types: %w[integer integer])
       form.publish!
       xml = build_odk_submission(form, data: {form.questionings[0] => "5", form.questionings[1] => "10"})
     end
@@ -18,7 +20,7 @@ shared_context "odk submissions" do
     # Upload and do request.
     uploaded = fixture_file_upload(fixture_file, "text/xml")
     post(path, params: {xml_submission_file: uploaded, format: "xml"},
-      headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)})
+               headers: {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)})
     assigns(:response)
   end
 
@@ -42,17 +44,16 @@ shared_context "odk submissions" do
 
         descendants.each do |item, subitems|
           decorated_item = Odk::DecoratorFactory.decorate(item)
-          if item.is_a? QingGroup
+          if item.is_a?(QingGroup)
             # Iterate over repeat instances (if any)
             Array.wrap(data[item] || {}).each do |instance|
               xml << "<grp#{item.id}><header/>"
               subitems.each do |subitem, _|
-                if instance[subitem]
-                  decorated_subitem = Odk::DecoratorFactory.decorate(subitem)
-                  xml << "<#{decorated_subitem.odk_code}>"
-                  xml << instance[subitem]
-                  xml << "</#{decorated_subitem.odk_code}>"
-                end
+                next unless instance[subitem]
+                decorated_subitem = Odk::DecoratorFactory.decorate(subitem)
+                xml << "<#{decorated_subitem.odk_code}>"
+                xml << instance[subitem]
+                xml << "</#{decorated_subitem.odk_code}>"
               end
               xml << "</grp#{item.id}>"
             end

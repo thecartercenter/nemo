@@ -181,13 +181,13 @@ describe FormsController, :odk, type: :request do
 
     it "listing forms should return 403" do
       get("/en/m/#{mission.compact_name}/formList", params: {format: :xml}, headers: basic_auth)
-      expect(response.status).to eq 403
+      expect(response.status).to eq(403)
       expect(response.body.strip).to be_empty
     end
 
     it "showing form with format xml should return 403" do
       get("/m/#{mission.compact_name}/forms/#{form_simple.id}", params: {format: :xml}, headers: basic_auth)
-      expect(response.status).to eq 403
+      expect(response.status).to eq(403)
       expect(response.body.strip).to be_empty
     end
   end
