@@ -14,7 +14,7 @@ describe "odk submissions", :odk, type: :request do
   let(:submission_path) { "/m/#{submission_mission.compact_name}/submission" }
   let(:user) { create(:user, role_name: "enumerator", mission: mission) }
   let(:auth_headers) { {"HTTP_AUTHORIZATION" => encode_credentials(user.login, test_password)} }
-  let(:form) { create(:form, :live, :with_version, mission: mission, question_types: %w[integer]) }
+  let(:form) { create(:form, :live, mission: mission, question_types: %w[integer]) }
   let(:formver) { nil } # Don't override the version by default
   let(:fixture_name) { "single_question" }
   let(:xml) { prepare_odk_response_fixture(fixture_name, form, values: [1], formver: formver) }
@@ -125,7 +125,7 @@ describe "odk submissions", :odk, type: :request do
 
   context "with missing answer to required question" do
     let(:fixture_name) { "single_question" }
-    let(:form) { create(:form, :live, :with_version, mission: mission, question_types: %w[integer integer]) }
+    let(:form) { create(:form, :live, mission: mission, question_types: %w[integer integer]) }
 
     before do
       form.c[1].update!(required: true)

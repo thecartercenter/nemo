@@ -13,7 +13,7 @@ describe Odk::ResponseParser do
   let(:files) { {xml_submission_file: StringIO.new(xml)} }
 
   context "responses without media" do
-    let(:form) { create(:form, :live, :with_version, question_types: question_types) }
+    let(:form) { create(:form, :live, question_types: question_types) }
 
     context "simple form" do
       let(:fixture_name) { "simple_response" }
@@ -31,7 +31,7 @@ describe Odk::ResponseParser do
         end
 
         context "draft form" do
-          let(:form) { create(:form, :draft, :with_version, question_types: question_types) }
+          let(:form) { create(:form, :draft, question_types: question_types) }
 
           it "should error" do
             expect do
@@ -41,7 +41,7 @@ describe Odk::ResponseParser do
         end
 
         context "paused form" do
-          let(:form) { create(:form, :paused, :with_version, question_types: question_types) }
+          let(:form) { create(:form, :paused, question_types: question_types) }
 
           it "should error" do
             expect do
@@ -381,7 +381,7 @@ describe Odk::ResponseParser do
 
   context "responses with media" do
     let(:fixture_name) { "simple_response" }
-    let(:form) { create(:form, :live, :with_version, question_types: question_types) }
+    let(:form) { create(:form, :live, question_types: question_types) }
 
     context "single part media" do
       let(:media_file_name) { "the_swing.jpg" }
@@ -448,7 +448,7 @@ describe Odk::ResponseParser do
 
   context "with incomplete response" do
     let(:fixture_name) { "incomplete" }
-    let(:form) { create(:form, :live, :with_version, question_types: %w[integer]) }
+    let(:form) { create(:form, :live, question_types: %w[integer]) }
     let(:xml_values) { [] }
     let(:expected_values) { [] }
 
