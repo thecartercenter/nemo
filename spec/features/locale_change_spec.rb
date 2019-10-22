@@ -4,7 +4,7 @@ require "rails_helper"
 
 feature "locale change", js: true do
   let!(:user) { create(:user) }
-  let!(:form) { create(:sample_form).tap(&:publish!) }
+  let!(:form) { create(:form, :live) }
 
   before do
     login(user)

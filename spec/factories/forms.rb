@@ -173,34 +173,5 @@ FactoryGirl.define do
         form.update_status(:paused)
       end
     end
-
-    # DO NOT USE, USE FORM ABOVE
-    # A form with different question types.
-    # We hardcode names to make expectations easier, since we assume no more than one sample form per test.
-    # Used in the feature specs
-    factory :sample_form do
-      name "Sample Form"
-
-      after(:create) do |form, evaluator|
-        form.questionings do
-          [
-            # Single level select_one question.
-            create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: "Question 1", hint: "Hint 1",
-                qtype_name: "select_one", option_set: create(:option_set, name: "Set 1"))),
-
-            # Multilevel select_one question.
-            create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: "Question 2", hint: "Hint 2",
-                qtype_name: "select_one", option_set: create(:option_set, name: "Set 2", option_names: :multilevel))),
-
-            # Integer question.
-            create(:questioning, mission: mission, form: form, parent: form.root_group,
-              question: create(:question, mission: mission, name: "Question 3", hint: "Hint 3",
-                qtype_name: "integer"))
-          ]
-        end
-      end
-    end
   end
 end
